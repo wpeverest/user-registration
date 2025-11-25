@@ -162,6 +162,11 @@ jQuery(function ($) {
 							user_registration_locked_form_fields_notice_params.license_activation_required_message;
 						title +=
 							user_registration_locked_form_fields_notice_params.license_activation_required_title;
+					} else if (action_button.hasClass("renew-license")) {
+						var message =
+							user_registration_locked_form_fields_notice_params.license_renew_required_message;
+						title +=
+							user_registration_locked_form_fields_notice_params.license_renew_required_title;
 					} else if (action_button.hasClass("activate-now")) {
 						var message =
 							user_registration_locked_form_fields_notice_params.activation_required_message.replace(
@@ -191,10 +196,17 @@ jQuery(function ($) {
 
 					title += "</span>";
 					message =
-						video +
+						(!action_button.hasClass("renew-license")
+							? video
+							: "") +
 						message +
 						"<br><br>" +
 						response.data.action_button;
+
+					var size = !action_button.hasClass("renew-license")
+						? "575px"
+						: "400px";
+
 					Swal.fire({
 						title: title,
 						html: message,
@@ -204,13 +216,114 @@ jQuery(function ($) {
 						showConfirmButton: false,
 						allowOutsideClick: true,
 						heightAuto: false,
-						width: "575px"
+						width: size
 					}).then(function (result) {
 						// Do Nothing.
 					});
 				}
 			});
 		}
+	});
+
+	$(document).on("click", ".ur-required-renewable", function (e) {
+		e.preventDefault();
+
+		var icon =
+				'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>',
+			$this = $(this);
+
+		var title =
+			icon + '<span class="user-registration-swal2-modal__title" > ';
+		var message =
+			user_registration_locked_form_fields_notice_params.license_renew_required_message;
+		title +=
+			user_registration_locked_form_fields_notice_params.license_renew_required_title;
+		title += "</span>";
+
+		message =
+			message +
+			"<br><br>" +
+			user_registration_locked_form_fields_notice_params.renew_action_button;
+		Swal.fire({
+			title: title,
+			html: message,
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
+			showCloseButton: true,
+			showConfirmButton: false,
+			allowOutsideClick: true,
+			heightAuto: false,
+			width: "400px"
+		}).then(function (result) {
+			// Do Nothing.
+		});
+	});
+
+	$(document).on("click", ".ur-required-renewable", function (e) {
+		e.preventDefault();
+
+		var icon =
+				'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>',
+			$this = $(this);
+
+		var title =
+			icon + '<span class="user-registration-swal2-modal__title" > ';
+		var message =
+			user_registration_locked_form_fields_notice_params.license_renew_required_message;
+		title +=
+			user_registration_locked_form_fields_notice_params.license_renew_required_title;
+		title += "</span>";
+
+		message =
+			message +
+			"<br><br>" +
+			user_registration_locked_form_fields_notice_params.renew_action_button;
+		Swal.fire({
+			title: title,
+			html: message,
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
+			showCloseButton: true,
+			showConfirmButton: false,
+			allowOutsideClick: true,
+			heightAuto: false,
+			width: "400px"
+		}).then(function (result) {
+			// Do Nothing.
+		});
+	});
+	$(document).on("click", ".ur-required-license-activation", function (e) {
+		e.preventDefault();
+
+		var icon =
+				'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>',
+			$this = $(this);
+
+		var title =
+			icon + '<span class="user-registration-swal2-modal__title" > ';
+		var message =
+			user_registration_locked_form_fields_notice_params.required_license_message;
+		title +=
+			user_registration_locked_form_fields_notice_params.required_license_title;
+		title += "</span>";
+
+		message =
+			message +
+			"<br><br>" +
+			user_registration_locked_form_fields_notice_params.activation_action_button;
+		Swal.fire({
+			title: title,
+			html: message,
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
+			showCloseButton: true,
+			showConfirmButton: false,
+			allowOutsideClick: true,
+			heightAuto: false,
+			width: "400px"
+		}).then(function (result) {
+			// Do Nothing.
+		});
 	});
 
 	// Adjust builder width
@@ -786,7 +899,7 @@ jQuery(function ($) {
 					.show()
 					.css("display", "block");
 				$("#user_registration_reset_password_page_id")
-					.closest('.user-registration-login-form-global-settings')
+					.closest(".user-registration-login-form-global-settings")
 					.css("display", "block");
 				$("#user_registration_label_lost_your_password")
 					.closest(".user-registration-login-form-global-settings")
@@ -797,7 +910,7 @@ jQuery(function ($) {
 					.closest(".user-registration-login-form-global-settings")
 					.hide();
 				$("#user_registration_reset_password_page_id")
-					.closest('.user-registration-login-form-global-settings')
+					.closest(".user-registration-login-form-global-settings")
 					.hide();
 				$("#user_registration_label_lost_your_password")
 					.closest(".user-registration-login-form-global-settings")
@@ -1187,8 +1300,10 @@ jQuery(function ($) {
 
 	var check_email_confirmation_disabled = function () {
 		var email_confirmation_disabled =
-			(typeof ur_login_form_params !== 'undefined' && ur_login_form_params.email_confirmation_disabled) ||
-			(typeof user_registration_form_builder_data !== 'undefined' && user_registration_form_builder_data.email_confirmation_disabled);
+			(typeof ur_login_form_params !== "undefined" &&
+				ur_login_form_params.email_confirmation_disabled) ||
+			(typeof user_registration_form_builder_data !== "undefined" &&
+				user_registration_form_builder_data.email_confirmation_disabled);
 		if (email_confirmation_disabled === "yes") {
 			var login_options = $(
 				"#user_registration_form_setting_login_options"
@@ -2119,7 +2234,8 @@ jQuery(function ($) {
 	$(".ur-admin-page-topnav").on("click", ".ur-nav-link", function () {
 		setTimeout(updateActive, 0);
 	});
-	$('li.toplevel_page_user-registration > a').attr('href', 'admin.php?page=user-registration');
-
+	$("li.toplevel_page_user-registration > a").attr(
+		"href",
+		"admin.php?page=user-registration"
+	);
 });
-

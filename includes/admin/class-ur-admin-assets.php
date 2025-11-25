@@ -325,7 +325,7 @@ class UR_Admin_Assets {
 			wp_enqueue_script( 'jquery-ui-widget' );
 			wp_enqueue_script( 'ur-copy' );
 
-			$form_id = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0;//phpcs:ignore WordPress.Security.NonceVerification
+			$form_id             = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : 0;//phpcs:ignore WordPress.Security.NonceVerification
 			$ur_enabled_captchas = array();
 			$ur_captchas         = ur_get_captcha_integrations();
 			foreach ( $ur_captchas as $key => $value ) {
@@ -333,13 +333,14 @@ class UR_Admin_Assets {
 					$ur_enabled_captchas[ $key ] = $value;
 				}
 			}
-			$no_captcha_set = (count($ur_enabled_captchas) < 1);
+			$no_captcha_set        = ( count( $ur_enabled_captchas ) < 1 );
 			$captcha_not_set_error = sprintf(
 			/* translators: %s - Integration tab url */
 				'%s <a href="%s" class="ur-captcha-error" rel="noreferrer noopener" target="_blank">here</a> to add them and save your form.',
 				esc_html__( 'Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click', 'user-registration' ),
-				esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) )  );
-			$params  = array(
+				esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) )
+			);
+			$params = array(
 				'required_form_html'                       => self::get_form_required_html(),
 				'ajax_url'                                 => admin_url( 'admin-ajax.php' ),
 				'user_input_dropped'                       => wp_create_nonce( 'user_input_dropped_nonce' ),
@@ -424,7 +425,9 @@ class UR_Admin_Assets {
 						'return_url'   => ur_get_single_post_meta( $form_id, 'user_registration_paypal_return_url', wp_login_url() ),
 					),
 				),
-				'no_captcha_set'                           => $no_captcha_set
+				'no_captcha_set'                           => $no_captcha_set,
+				'license_validity'                         => urm_check_license_validity(),
+				'premium_fields'                           => UR_PRO_ACTIVE ? urm_get_premium_fields() : array(),
 			);
 
 			wp_localize_script(
@@ -463,6 +466,9 @@ class UR_Admin_Assets {
 					'card_switch_disabled_text' => __( 'Disabled', 'user-registration' ),
 				)
 			);
+
+			$license_data = ur_get_license_plan();
+
 			wp_localize_script(
 				'user-registration-admin',
 				'user_registration_locked_form_fields_notice_params',
@@ -473,11 +479,17 @@ class UR_Admin_Assets {
 					/* translators: %field%: Field Label %plan%: License Plan. */
 					'unlock_message'                      => __( '%field% field is locked. Upgrade to <strong>%plan%</strong> to unlock this field.', 'user-registration' ),
 					'license_activation_required_title'   => __( 'License Activation Required', 'user-registration' ),
+					'license_renew_required_title'        => __( 'License Expired', 'user-registration' ),
 					'license_activation_required_message' => __( 'Please activate your <strong>User Registration & Membership License</strong> to use this field', 'user-registration' ),
+					'license_renew_required_message'      => __( 'Please renew your <strong>User Registration & Membership License</strong> to use this field', 'user-registration' ),
 					'activation_required_title'           => __( 'Addon Activation Required', 'user-registration' ),
 					'activation_required_message'         => __( 'Please activate <strong>%plugin%</strong> addon to use this field.', 'user-registration' ),
 					'installation_required_title'         => __( 'Addon Installation Required', 'user-registration' ),
 					'installation_required_message'       => __( 'Please install <strong>%plugin%</strong> addon to use this field.', 'user-registration' ),
+					'renew_action_button'                 => '<div class="action-buttons"><a class="renew-license button" href="' . esc_url( 'https://wpeverest.com/checkout/?edd_license_key=' . get_option( 'registration_license_key' ) . '&utm_campaign=admin&utm_source=form-builder&utm_medium=' . ( $license_data ? $license_data->license : '' ) . '' ) . '">' . __( 'Renew License', 'user-registration' ) . '</a></div>',
+					'required_license_message'            => __( 'Please activate your license plan to use this feature.', 'user-registration' ),
+					'required_license_title'              => __( 'License activation Required', 'user-registraiton' ),
+					'activation_action_button'            => '<div class="action-buttons"><a class="renew-license button" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) . '">' . __( 'Activate License', 'user-registration' ) . '</a></div>',
 
 				)
 			);
@@ -655,7 +667,9 @@ class UR_Admin_Assets {
 			'license_activation_required_title'           => __( 'License Activation Required', 'user-registration' ),
 			'license_activation_required_message'         => __( 'Please activate your <strong>User Registration & Membership License</strong> to use this integration', 'user-registration' ),
 			'activation_required_title'                   => __( 'Addon Activation Required', 'user-registration' ),
+			'license_renew_required_title'                => __( 'License Renew Required', 'user-registration' ),
 			'activation_required_message'                 => __( 'Please activate <strong>%plugin%</strong> addon to use this integration.', 'user-registration' ),
+			'license_renew_required_message'              => __( 'Please renew your <strong>User Registration & Membership License</strong> to use this integration', 'user-registration' ),
 			'installation_required_title'                 => __( 'Addon Installation Required', 'user-registration' ),
 			'installation_required_message'               => __( 'Please install <strong>%plugin%</strong> addon to use this integration.', 'user-registration' ),
 			'min_length_less_than_max_length'             => esc_html__( 'Minimum length count should be less than maximum length count for', 'user-registration' ),

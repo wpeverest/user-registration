@@ -34,18 +34,18 @@ $is_editing = ! empty( $_GET['post_id'] );
 							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
 								<div class="ur-field" data-field-key="membership_name">
 									<input type="text" data-key-name="Membership Name"
-										   id="ur-input-type-membership-name" name="ur_membership_name"
-										   style="width: 100%"
-										   autocomplete="off"
-										   value="<?php echo isset( $membership->post_title ) && ! empty( $membership->post_title ) ? $membership->post_title : ''; ?>"
-										   required>
+											id="ur-input-type-membership-name" name="ur_membership_name"
+											style="width: 100%"
+											autocomplete="off"
+											value="<?php echo isset( $membership->post_title ) && ! empty( $membership->post_title ) ? $membership->post_title : ''; ?>"
+											required>
 								</div>
 							</div>
 
 						</div>
 						<!--					membership description-->
 						<div class="ur-membership-input-container ur-input-type-textarea ur-d-flex ur-p-1 ur-mt-3"
-							 style="gap:20px;">
+							style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
 								<label for="ur-input-type-membership-description">Membership Description</label>
 							</div>
@@ -63,22 +63,22 @@ $is_editing = ! empty( $_GET['post_id'] );
 										'textarea_name' => 'Membership Description',
 										'textarea_rows' => 50,
 										'media_buttons' => false,
-										'quicktags' => false,
-										'teeny' => true,
+										'quicktags'     => false,
+										'teeny'         => true,
 										'show-ur-registration-form-button' => false, // Hide Add Registration button
 										'show-smart-tags-button' => true, // Show Smart Tags button
-										'tinymce' => array(
-											'theme' => 'modern',
-											'skin' => 'lightgray',
-											'toolbar1' => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
+										'tinymce'       => array(
+											'theme'       => 'modern',
+											'skin'        => 'lightgray',
+											'toolbar1'    => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
 											'content_css' => 'default',
-											'branding' => false,
-											'resize' => true,
-											'statusbar' => false,
-											'menubar' => false,
-											'menu' => false,
+											'branding'    => false,
+											'resize'      => true,
+											'statusbar'   => false,
+											'menubar'     => false,
+											'menu'        => false,
 											'elementpath' => true,
-											'plugins' => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
+											'plugins'     => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
 										),
 									)
 								);
@@ -87,10 +87,10 @@ $is_editing = ! empty( $_GET['post_id'] );
 						</div>
 						<!--					membership status-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
-							 style="gap:20px; <?php echo $is_editing ? '' : 'display:none !important'; ?> ">
+							style="gap:20px; <?php echo $is_editing ? '' : 'display:none !important'; ?> ">
 							<div class="ur-label" style="width: 30%">
 								<label for="ur-membership-status"><?php esc_html_e( 'Membership Status', 'user-registration' ); ?>
-									<span class="user-registration-help-tip tooltipstered" data-tip="<?php echo esc_attr__( "Active or Inactive state of a membership." ) ?>"></span>
+									<span class="user-registration-help-tip tooltipstered" data-tip="<?php echo esc_attr__( 'Active or Inactive state of a membership.' ); ?>"></span>
 								</label>
 							</div>
 
@@ -115,7 +115,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 									for="ur-input-type-membership-role"><?php esc_html_e( 'Membership Role', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 									<span class="user-registration-help-tip tooltipstered"
-										  data-tip="Assign members to the selected role upon registration.(Overrides role set through form)"></span>
+											data-tip="Assign members to the selected role upon registration.(Overrides role set through form)"></span>
 								</label>
 							</div>
 							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
@@ -132,9 +132,9 @@ $is_editing = ! empty( $_GET['post_id'] );
 												: ( ( $k === 'subscriber' && ! isset( $membership_details['role'] ) ) ? 'selected="selected"' : '' );
 											?>
 											<option
-												<?php echo $selected ?>
+												<?php echo $selected; ?>
 												value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $role ); ?></option>
-										<?php
+											<?php
 										endforeach;
 										?>
 									</select>
@@ -159,17 +159,17 @@ $is_editing = ! empty( $_GET['post_id'] );
 									</div>
 									<div class="ur-input-type-select ur-admin-template" style="width: 100%">
 										<div class="ur-field ur-d-flex"
-											 data-field-key="radio">
+											data-field-key="radio">
 											<!--											free type-->
 											<label class="ur-membership-types" for="ur-membership-free-type">
 												<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
 													<input data-key-name="Type" id="ur-membership-free-type"
-														   type="radio" value="free"
-														   name="ur_membership_type"
-														   style="margin: 0"
-														   checked
+															type="radio" value="free"
+															name="ur_membership_type"
+															style="margin: 0"
+															checked
 														<?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'free' ? 'checked' : ''; ?>
-														   required>
+															required>
 													<label class="ur-p-2" for="ur-membership-free-type">
 														<b
 															class="user-registration-image-label "><?php esc_html_e( 'Free', 'user-registration' ); ?>
@@ -216,7 +216,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 											</label>
 											<!--											subscription type-->
 											<label
-												class="ur-membership-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : '' ?>"
+												class="ur-membership-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ( ! $license ? 'upgradable-type' : ( $license['renew'] ? 'ur-required-renewable upgradable-type' : '' ) ); ?>"
 												for="ur-membership-subscription-type">
 												<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
 													<input
@@ -227,7 +227,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 														name="ur_membership_type"
 														class="ur_membership_paid_type"
 														<?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'subscription' ? 'checked' : ''; ?>
-														<?php echo ! UR_PRO_ACTIVE ? 'disabled' : '' ?>
+														<?php echo ! UR_PRO_ACTIVE ? 'disabled' : ''; ?>
 													>
 													<label class="ur-p-2" for="ur-membership-subscription-type">
 														<b
@@ -248,14 +248,14 @@ $is_editing = ! empty( $_GET['post_id'] );
 									</div>
 								</div>
 								<?php
-								if ( false ):
+								if ( false ) :
 									?>
 									<div
 										class="ur-membership-cancellation-container"
 									>
 										<!--								cancel subscription section-->
 										<div class="ur-membership-selection-container ur-d-flex ur-p-1 ur-mt-3"
-											 style="gap:20px;">
+											style="gap:20px;">
 											<div class="ur-label" style="width: 30%">
 												<label
 													for="ur-membership-cancel-sub-immediately"><?php esc_html_e( 'Cancel Membership', 'user - registration' ); ?></label>
@@ -267,17 +267,21 @@ $is_editing = ! empty( $_GET['post_id'] );
 													<!--													   id="ur-membership-cancel-sub-on-expiry"-->
 													<!--													   name="ur_membership_cancel_on" style="margin: 0"-->
 													<!--													   value="expiry"-->
-													<!--													--><?php // echo isset( $membership_details['cancel_subscription'] ) && $membership_details['cancel_subscription'] == 'expiry' ? 'checked' : ''
+													<!--													-->
+													<?php
+													// echo isset( $membership_details['cancel_subscription'] ) && $membership_details['cancel_subscription'] == 'expiry' ? 'checked' : ''
 													?>
 													<!--												>-->
 													<!--												<label for="ur-membership-cancel-sub-on-expiry">-->
-													<?php // echo __("Do not cancel subscription until plan expired.", "user-registration")
-													?><!--</label>-->
+													<?php
+													// echo __("Do not cancel subscription until plan expired.", "user-registration")
+													?>
+													<!--</label>-->
 													<input data-key-name="Cancel Subscription" type="radio"
-														   id="ur-membership-cancel-sub-immediately"
-														   style="margin: 0"
-														   name="ur_membership_cancel_on"
-														   value="immediately"
+															id="ur-membership-cancel-sub-immediately"
+															style="margin: 0"
+															name="ur_membership_cancel_on"
+															value="immediately"
 														<?php echo ! isset( $membership_details['cancel_subscription'] ) ? 'checked' : ''; ?>
 														<?php echo isset( $membership_details['cancel_subscription'] ) && $membership_details['cancel_subscription'] == 'immediately' ? 'checked' : ''; ?>
 													>
@@ -287,25 +291,25 @@ $is_editing = ! empty( $_GET['post_id'] );
 											</div>
 										</div>
 									</div>
-								<?php
+									<?php
 								endif;
 								?>
 								<!-- paid plan fields including subscription wise membership fields-->
 								<div id="paid-plan-container"
-									 class="
+									class="
 									<?php
-									 echo isset( $membership_details['type'] ) && in_array(
-										 $membership_details['type'],
-										 array(
-											 'paid',
-											 'subscription',
-										 )
-									 ) ? '' : 'ur-d-none'
-									 ?>
-									 ">
+									echo isset( $membership_details['type'] ) && in_array(
+										$membership_details['type'],
+										array(
+											'paid',
+											'subscription',
+										)
+									) ? '' : 'ur-d-none'
+									?>
+									">
 									<!--								membership amount-->
 									<div class="ur-membership-selection-container ur-d-flex ur-p-1 ur-mt-3"
-										 style="gap:20px;">
+										style="gap:20px;">
 										<div class="ur-label" style="width: 30%">
 											<label
 												for="ur-membership-amount"><?php esc_html_e( 'Amount', 'user-registration' ); ?>
@@ -314,7 +318,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 										</div>
 
 										<div class="ur-field field-amount" data-field-key="membership_amount"
-											 style="width: 100%">
+											style="width: 100%">
 											<span>
 												<?php
 												$currency   = get_option( 'user_registration_payment_currency', 'USD' );
@@ -324,10 +328,10 @@ $is_editing = ! empty( $_GET['post_id'] );
 												?>
 											</span>
 											<input data-key-name="Amount" type="number" id="ur-membership-amount"
-												   value="<?php echo $membership_details['amount'] ?? 1; ?>"
-												   name="ur_membership_amount"
-												   style="width: 100%" min="0"
-												   required>
+													value="<?php echo $membership_details['amount'] ?? 1; ?>"
+													name="ur_membership_amount"
+													style="width: 100%" min="0"
+													required>
 										</div>
 									</div>
 									<!--									subscription fields container-->
@@ -335,7 +339,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 										class="ur-membership-subscription-field-container <?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'subscription' ? '' : 'ur-d-none'; ?>">
 										<!--								membership duration-->
 										<div class="ur-membership-selection-container ur-d-flex ur-p-1 ur-mt-3"
-											 style="gap:20px;">
+											style="gap:20px;">
 											<div class="ur-label" style="width: 30%">
 												<label
 													for="ur-membership-duration"><?php esc_html_e( 'Duration', 'user-registration' ); ?>
@@ -343,7 +347,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 												</label>
 											</div>
 											<div class="ur-field ur-d-flex ur-align-items-center"
-												 data-field-key="membership_duration" style="width: 100%; gap: 20px;">
+												data-field-key="membership_duration" style="width: 100%; gap: 20px;">
 												<input
 													data-key-name="Duration Value"
 													value="<?php echo isset( $membership_details['subscription'] ) ? $membership_details['subscription']['value'] : 1; ?>"
@@ -381,10 +385,10 @@ $is_editing = ! empty( $_GET['post_id'] );
 										</div>
 										<!--								trial section-->
 										<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
-											 style="gap:20px">
+											style="gap:20px">
 											<div class="ur-label" style="width: 30%">
 												<label class="ur-membership-trial-status"
-													   for="ur-membership-trial-status"><?php esc_html_e( 'Trial Period', 'user - registration' ); ?></label>
+														for="ur-membership-trial-status"><?php esc_html_e( 'Trial Period', 'user - registration' ); ?></label>
 											</div>
 											<div class="ur-toggle-section m1-auto" style="width: 100%">
 												<span class="user-registration-toggle-form">
@@ -407,7 +411,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 												class="trial-container--wrapper ur-d-flex ur-p-3 ur-ml-2 ur-align-items-center">
 												<div class="ur-label">
 													<label class="ur-membership-trial-status"
-														   for="ur-membership-trial-duration"><?php esc_html_e( 'Trial Period Duration', 'user - registration' ); ?>
+															for="ur-membership-trial-duration"><?php esc_html_e( 'Trial Period Duration', 'user - registration' ); ?>
 														<span style="color:red">*</span>
 													</label>
 												</div>
@@ -453,10 +457,10 @@ $is_editing = ! empty( $_GET['post_id'] );
 								$is_upgrade_enabled = isset( $membership_details['upgrade_settings']['upgrade_action'] ) && $membership_details['upgrade_settings']['upgrade_action'] == true;
 								?>
 								<div class="ur-membership-selection-container ur-d-flex ur-mt-5 ur-align-items-center"
-									 style="gap:20px;">
+									style="gap:20px;">
 									<div class="ur-label" style="width: 30%">
 										<label class="ur-membership-enable-upgrade-action"
-											   for="ur-membership-upgrade-action"><?php esc_html_e( 'Upgrade Action', 'user-registration' ); ?>
+												for="ur-membership-upgrade-action"><?php esc_html_e( 'Upgrade Action', 'user-registration' ); ?>
 										</label>
 									</div>
 									<div class="ur-toggle-section m1-auto" style="width: 100%">
@@ -474,12 +478,12 @@ $is_editing = ! empty( $_GET['post_id'] );
 								</div>
 
 								<div id="upgrade-settings-container" class="ur-membership-selection-container ur-mt-5"
-									 style="<?php echo $is_upgrade_enabled == true ? '' : 'display: none' ?>"
+									style="<?php echo $is_upgrade_enabled == true ? '' : 'display: none'; ?>"
 								>
 
 									<!--									Membership Upgrade Path field-->
 									<div class="ur-membership-input-container ur-d-flex ur-align-items-center"
-										 style="gap:20px;">
+										style="gap:20px;">
 										<div class="ur-label" style="width: 30%; margin-bottom: 0;">
 											<label
 												for="ur-input-type-membership-upgrade-path"><?php esc_html_e( 'Upgrade Path', 'user-registration' ); ?>
@@ -487,27 +491,27 @@ $is_editing = ! empty( $_GET['post_id'] );
 											</label>
 										</div>
 										<div class="ur-input-type-membership-upgrade-path ur-admin-template"
-											 style="width: 100%">
+											style="width: 100%">
 											<div class="ur-field" data-field-key="membership_upgrade_path"
-												 style="width: 100%">
+												style="width: 100%">
 												<select
 													multiple
 													data-key-name="<?php echo esc_html__( 'Upgrade Path', 'user-registration' ); ?>"
 													id="ur-input-type-membership-upgrade-path"
 													class="user-membership-enhanced-select2">
 													<?php
-													$upgrade_path = isset( $membership_details['upgrade_settings']['upgrade_path'] ) ? explode( ",", $membership_details['upgrade_settings']['upgrade_path'] ) : array();
+													$upgrade_path = isset( $membership_details['upgrade_settings']['upgrade_path'] ) ? explode( ',', $membership_details['upgrade_settings']['upgrade_path'] ) : array();
 
 													foreach ( $memberships as $k => $m ) :
-														if ( isset( $_GET["post_id"] ) && $_GET["post_id"] == $m["ID"] ) {
+														if ( isset( $_GET['post_id'] ) && $_GET['post_id'] == $m['ID'] ) {
 															continue;
 														}
 														$selected = ( $upgrade_path ) && in_array( $m['ID'], $upgrade_path ) ? 'selected="selected"' : '';
 														?>
 														<option
-															<?php echo $selected ?>
+															<?php echo $selected; ?>
 															value="<?php echo esc_attr( $m['ID'] ); ?>"><?php echo esc_html( $m['title'] ); ?></option>
-													<?php
+														<?php
 													endforeach;
 													?>
 												</select>
@@ -530,9 +534,9 @@ $is_editing = ! empty( $_GET['post_id'] );
 										</div>
 										<div class="ur-input-type-select ur-admin-template" style="width: 100%">
 											<div class="ur-field ur-d-flex"
-												 data-field-key="radio">
+												data-field-key="radio">
 												<label class="ur-membership-upgrade-types"
-													   for="ur-membership-upgrade-type-full">
+														for="ur-membership-upgrade-type-full">
 													<div
 														class="ur-membership-type-title ur-d-flex ur-align-items-center">
 														<input
@@ -553,7 +557,7 @@ $is_editing = ! empty( $_GET['post_id'] );
 												<!--											Pro rata type-->
 
 												<label
-													class="ur-membership-upgrade-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : '' ?>  <?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'free' ? 'ur-d-none' : ''; ?>"
+													class="ur-membership-upgrade-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>  <?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'free' ? 'ur-d-none' : ''; ?>"
 													for="ur-membership-upgrade-type-pro-rata">
 													<div
 														class="ur-membership-type-title ur-d-flex ur-align-items-center">
@@ -564,8 +568,8 @@ $is_editing = ! empty( $_GET['post_id'] );
 															value="pro-rata"
 															name="ur_membership_upgrade_type"
 															style="margin: 0"
-															<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && $membership_details['upgrade_settings']['upgrade_type'] == 'pro-rata' ) ) ? 'checked' : ""; ?>
-															<?php echo ! UR_PRO_ACTIVE ? 'disabled' : '' ?>
+															<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && $membership_details['upgrade_settings']['upgrade_type'] == 'pro-rata' ) ) ? 'checked' : ''; ?>
+															<?php echo ! UR_PRO_ACTIVE ? 'disabled' : ''; ?>
 															required>
 														<label class="ur-membership-upgrade-type-full--label" for="ur-membership-upgrade-type-pro-rata">
 															<b

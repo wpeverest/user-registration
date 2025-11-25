@@ -157,7 +157,7 @@ class Orders {
 		global $orders_list_table;
 
 		if ( ! $orders_list_table ) {
-		return;
+			return;
 		}
 		$enable_members_button = true;
 		?>
@@ -170,12 +170,12 @@ class Orders {
 			}
 		</style>
 		<div class="ur-membership-header ur-d-flex ur-mr-0 ur-p-3 ur-align-items-center" id=""
-			 style="margin-left: -20px; background:white; gap: 20px; position: sticky; top: 32px; z-index: 700">
+			style="margin-left: -20px; background:white; gap: 20px; position: sticky; top: 32px; z-index: 700">
 			<img style="max-width: 30px"
-				 src="<?php echo UR()->plugin_url() . '/assets/images/logo.svg'; ?>" alt="">
+				src="<?php echo UR()->plugin_url() . '/assets/images/logo.svg'; ?>" alt="">
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page ) ); ?>"
-			   class="<?php echo esc_attr( ( $_GET['page'] == $this->page ) ? 'row-title' : '' ); ?>"
-			   style="text-decoration: none"
+				class="<?php echo esc_attr( ( $_GET['page'] == $this->page ) ? 'row-title' : '' ); ?>"
+				style="text-decoration: none"
 			>
 				<?php esc_html_e( 'Payment History', 'user-registration' ); ?>
 			</a>
@@ -206,7 +206,7 @@ class Orders {
 	public function render_add_new_payment_history() {
 		global $wpdb;
 		$subscription_table = \WPEverest\URMembership\TableList::subscriptions_table();
-		$users = $wpdb->get_results(
+		$users              = $wpdb->get_results(
 			"
 						SELECT s.user_id, s.item_id, u.user_login, u.user_email
 						FROM $subscription_table AS s
@@ -215,18 +215,24 @@ class Orders {
 						",
 			ARRAY_A
 		);
-		$users = array_filter( $users, function( $user ) {
-			 $post = get_post( $user[ 'item_id' ], array(
-				'post_type' => 'ur_memberships',
-				'post_status' => 'publish'
-			));
-			if( $post && ! empty( $post->post_content ) ) {
-				$membership = json_decode( wp_unslash( $post->post_content ), true );
-				return isset( $membership[ 'type' ] ) && $membership[ 'type' ] !== 'free';
+		$users              = array_filter(
+			$users,
+			function ( $user ) {
+				$post = get_post(
+					$user['item_id'],
+					array(
+						'post_type'   => 'ur_memberships',
+						'post_status' => 'publish',
+					)
+				);
+				if ( $post && ! empty( $post->post_content ) ) {
+					$membership = json_decode( wp_unslash( $post->post_content ), true );
+					return isset( $membership['type'] ) && $membership['type'] !== 'free';
+				}
+				return false;
 			}
-			return false;
-		});
-		$memberships = $wpdb->get_results(
+		);
+		$memberships        = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT ID, post_title as title FROM {$wpdb->posts} WHERE post_type = %s AND post_status=%s",
 				'ur_membership',
@@ -234,10 +240,10 @@ class Orders {
 			),
 			ARRAY_A
 		);
-		$membership_plans = array();
-		foreach( $memberships as $membership ) {
+		$membership_plans   = array();
+		foreach ( $memberships as $membership ) {
 			$membership_details = json_decode( wp_unslash( ur_get_single_post_meta( $membership['ID'], 'ur_membership' ) ), true );
-			$membership_plans[] = array_merge( $membership, array( 'amount' => $membership_details[ 'amount' ] ) );
+			$membership_plans[] = array_merge( $membership, array( 'amount' => $membership_details['amount'] ) );
 		}
 		$payment_methods = get_option( 'ur_membership_payment_gateways', array() );
 		include __DIR__ . '/Views/orders-create.php';
@@ -254,6 +260,8 @@ class Orders {
 			return;
 		}
 		$enable_members_button = true;
+		$license_validity      = urm_check_license_validity();
+
 		?>
 		<hr class="wp-header-end">
 		<?php echo user_registration_plugin_main_header(); ?>
@@ -276,7 +284,7 @@ class Orders {
 					</h1>
 				</div>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_new_payment' ) ); ?>"
-					id="user-registration-members-add-btn" class="page-title-action">
+					id="user-registration-members-add-btn" class="page-title-action <?php echo ( UR_PRO_ACTIVE ? ( ! $license_validity ? 'ur-required-license-activation' : ( $license_validity['renew'] ? 'ur-required-renewable' : '' ) ) : '' ); ?>">
 					<?php esc_html_e( 'Add New', 'user-registration' ); ?>
 				</a>
 			</div>
@@ -339,15 +347,15 @@ class Orders {
 			'payment-history',
 			'urm_orders_localized_data',
 			array(
-				'_nonce'              => wp_create_nonce( 'ur_member_orders' ),
-				'ajax_url'            => admin_url( 'admin-ajax.php' ),
-				'labels'              => $this->get_i18_labels(),
-				'membership_page_url' => admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' ),
-				'ur_forms'            => ur_get_all_user_registration_form(),
-				'memberships'         => $memberships,
-				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
+				'_nonce'                 => wp_create_nonce( 'ur_member_orders' ),
+				'ajax_url'               => admin_url( 'admin-ajax.php' ),
+				'labels'                 => $this->get_i18_labels(),
+				'membership_page_url'    => admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' ),
+				'ur_forms'               => ur_get_all_user_registration_form(),
+				'memberships'            => $memberships,
+				'delete_icon'            => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
 				'add_manual_payment_url' => admin_url( 'admin.php?page=member-payment-history&action=add_new_payment' ),
-				'payment_history_url' => admin_url( 'admin.php?page=member-payment-history' ),
+				'payment_history_url'    => admin_url( 'admin.php?page=member-payment-history' ),
 			)
 		);
 	}
@@ -382,16 +390,16 @@ class Orders {
 	public function add_payment_gateway_options() {
 
 		$payment_gateways = array(
-				'paypal'      => __( 'Paypal', 'user-registration' ),
-				'stripe'      => __( 'Stripe', 'user-registration' ),
-				'credit_card' => __( 'Stripe (Credit Card)', 'user-registration' ),
-				'bank'        => __( 'Bank', 'user-registration' ),
+			'paypal'      => __( 'Paypal', 'user-registration' ),
+			'stripe'      => __( 'Stripe', 'user-registration' ),
+			'credit_card' => __( 'Stripe (Credit Card)', 'user-registration' ),
+			'bank'        => __( 'Bank', 'user-registration' ),
 		);
 		/**
 		 * Filters that hold the list of payment gateway for payment orders.
 		 *
 		 *@param array $payment_gateways
-   		*/
+		*/
 		$payment_gateways = apply_filters( 'user_registration_payment_gateways', $payment_gateways );
 
 		update_option( 'ur_payment_gateways', $payment_gateways );
@@ -399,12 +407,11 @@ class Orders {
 		 * Filters that hold the list of payment gateway for payment orders.
 		 *
 		 *@param array $payment_gateways
-   		*/
+		*/
 		$payment_gateways = apply_filters( 'user_registration_payment_gateways', $payment_gateways );
 
 		update_option( 'ur_payment_gateways', $payment_gateways );
 	}
-
 }
 
 new Orders();

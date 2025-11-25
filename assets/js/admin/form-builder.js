@@ -2931,6 +2931,42 @@
 											);
 										}
 									}
+
+									var license_validity =
+										user_registration_form_builder_data.license_validity;
+									if (!license_validity) {
+										if (
+											$.inArray(
+												data_field_id,
+												user_registration_form_builder_data.premium_fields
+											) >= 0 &&
+											!$this.hasClass(
+												"ur-upgradable-field"
+											)
+										) {
+											$this.draggable("disable");
+											$this.addClass("ur-locked-field");
+											$this.addClass(
+												"ur-upgradable-field"
+											);
+										}
+									} else if (license_validity["renew"]) {
+										if (
+											$.inArray(
+												data_field_id,
+												user_registration_form_builder_data.premium_fields
+											) >= 0 &&
+											!$this.hasClass(
+												"ur-upgradable-field"
+											)
+										) {
+											$this.draggable("disable");
+											// $this.addClass("ur-locked-field");
+											$this.addClass(
+												"ur-required-renewable"
+											);
+										}
+									}
 								});
 
 								var locked = ul_node.find(".ur-locked-field");

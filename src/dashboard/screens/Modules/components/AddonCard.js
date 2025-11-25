@@ -28,17 +28,26 @@ import { FaCog, FaPlay, FaLock } from "react-icons/fa";
 import YouTubePlayer from "react-player/youtube";
 import { activateModule, deactivateModule } from "./modules-api";
 
+/* global _UR_DASHBOARD_ */
+const { isPro, licensePlan } =
+	typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+
 const AddonCard = ({ addon, showToast }) => {
 	const [isActive, setIsActive] = useState(addon.status === "active");
 	const [isLoading, setIsLoading] = useState(false);
 	const [moduleEnabled, setModuleEnabled] = useState(false);
 	const [videoLoading, setVideoLoading] = useState(false);
-	const { isOpen: isVideoOpen, onOpen: onVideoOpen, onClose: onVideoClose } = useDisclosure();
+	const {
+		isOpen: isVideoOpen,
+		onOpen: onVideoOpen,
+		onClose: onVideoClose
+	} = useDisclosure();
 
 	// Get assets URL from global variable
 	const getImageUrl = (imagePath) => {
 		/* global _UR_DASHBOARD_ */
-		const { assetsURL } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+		const { assetsURL } =
+			typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 		if (imagePath && assetsURL) {
 			return assetsURL + imagePath;
 		}
@@ -48,11 +57,12 @@ const AddonCard = ({ addon, showToast }) => {
 	// Check if module is enabled based on plan requirements
 	useEffect(() => {
 		/* global _UR_DASHBOARD_ */
-		const { isPro, licensePlan } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+		const { isPro, licensePlan } =
+			typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
 		if (addon.plan && addon.plan.includes("free")) {
 			setModuleEnabled(true);
-		} else if (isPro && licensePlan) {
+		} else if (isPro && licensePlan && licensePlan.license === "valid") {
 			const requiredPlan = licensePlan.item_plan.replace(" lifetime", "");
 			if (addon.plan && addon.plan.includes(requiredPlan.trim())) {
 				setModuleEnabled(true);
@@ -65,10 +75,21 @@ const AddonCard = ({ addon, showToast }) => {
 	}, [addon.plan]);
 
 	const handleUpgradePlan = () => {
-		const { upgradeURL } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+		const { upgradeURL } =
+			typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 		if (upgradeURL) {
-			const plan_upgrade_url = upgradeURL + "&utm_source=dashboard-all-feature&utm_medium=dashboard-upgrade-plan";
+			const plan_upgrade_url =
+				upgradeURL +
+				"&utm_source=dashboard-all-feature&utm_medium=dashboard-upgrade-plan";
 			window.open(plan_upgrade_url, "_blank");
+		}
+	};
+
+	const handleRenewLicense = () => {
+		const { renewUrl } =
+			typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+		if (renewUrl) {
+			window.open(renewUrl, "_blank");
 		}
 	};
 
@@ -85,17 +106,33 @@ const AddonCard = ({ addon, showToast }) => {
 				response = await deactivateModule(addon.slug, addon.type);
 				if (response.success) {
 					setIsActive(false);
-					showToast(response.message || "Module deactivated successfully", "success");
+					showToast(
+						response.message || "Module deactivated successfully",
+						"success"
+					);
 				} else {
-					showToast(response.message || "Failed to deactivate module", "error");
+					showToast(
+						response.message || "Failed to deactivate module",
+						"error"
+					);
 				}
 			} else {
-				response = await activateModule(addon.slug, addon.name, addon.type);
+				response = await activateModule(
+					addon.slug,
+					addon.name,
+					addon.type
+				);
 				if (response.success) {
 					setIsActive(true);
-					showToast(response.message || "Module activated successfully", "success");
+					showToast(
+						response.message || "Module activated successfully",
+						"success"
+					);
 				} else {
-					showToast(response.message || "Failed to activate module", "error");
+					showToast(
+						response.message || "Failed to activate module",
+						"error"
+					);
 				}
 			}
 		} catch (error) {
@@ -119,7 +156,6 @@ const AddonCard = ({ addon, showToast }) => {
 		if (plan.includes("professional")) return "blue";
 		return "gray";
 	};
-
 
 	return (
 		<Box
@@ -150,11 +186,7 @@ const AddonCard = ({ addon, showToast }) => {
 					justifyContent="center"
 					zIndex="10"
 				>
-					<Spinner
-						size="lg"
-						color="gray.500"
-						thickness="3px"
-					/>
+					<Spinner size="lg" color="gray.500" thickness="3px" />
 				</Flex>
 			)}
 			{/* Main Content Layout */}
@@ -205,7 +237,12 @@ const AddonCard = ({ addon, showToast }) => {
 				<VStack align="start" spacing="3" flex="1">
 					{/* Title and Plan Badge */}
 					<HStack justify="space-between" w="full" align="start">
-						<Heading size="sm" color="gray.800" fontWeight="600" fontSize="16px">
+						<Heading
+							size="sm"
+							color="gray.800"
+							fontWeight="600"
+							fontSize="16px"
+						>
 							{addon.title}
 						</Heading>
 						<Badge
@@ -214,25 +251,40 @@ const AddonCard = ({ addon, showToast }) => {
 							py="1"
 							borderRadius="base"
 							bg={
-								getPlanBadge(addon.plan) === "Free" ? "transparent" :
-								getPlanBadge(addon.plan) === "Personal" ? "#F0FDF4" :
-								getPlanBadge(addon.plan) === "Plus" ? "#f0f3fa" :
-								getPlanBadge(addon.plan) === "Professional" ? "#EFF6FF" :
-								"#EFF6FF"
+								getPlanBadge(addon.plan) === "Free"
+									? "transparent"
+									: getPlanBadge(addon.plan) === "Personal"
+									? "#F0FDF4"
+									: getPlanBadge(addon.plan) === "Plus"
+									? "#f0f3fa"
+									: getPlanBadge(addon.plan) ===
+									  "Professional"
+									? "#EFF6FF"
+									: "#EFF6FF"
 							}
 							border={
-								getPlanBadge(addon.plan) === "Free" ? "1px solid #D1D5DB" :
-								getPlanBadge(addon.plan) === "Personal" ? "1px solid #16A34A" :
-								getPlanBadge(addon.plan) === "Plus" ? "1px solid #92a2e4" :
-								getPlanBadge(addon.plan) === "Professional" ? "1px solid #BFDBFE" :
-								"1px solid #BFDBFE"
+								getPlanBadge(addon.plan) === "Free"
+									? "1px solid #D1D5DB"
+									: getPlanBadge(addon.plan) === "Personal"
+									? "1px solid #16A34A"
+									: getPlanBadge(addon.plan) === "Plus"
+									? "1px solid #92a2e4"
+									: getPlanBadge(addon.plan) ===
+									  "Professional"
+									? "1px solid #BFDBFE"
+									: "1px solid #BFDBFE"
 							}
 							color={
-								getPlanBadge(addon.plan) === "Free" ? "#4B5563" :
-								getPlanBadge(addon.plan) === "Personal" ? "#16A34A" :
-								getPlanBadge(addon.plan) === "Plus" ? "#92a2e4" :
-								getPlanBadge(addon.plan) === "Professional" ? "#3B82F6" :
-								"#3B82F6"
+								getPlanBadge(addon.plan) === "Free"
+									? "#4B5563"
+									: getPlanBadge(addon.plan) === "Personal"
+									? "#16A34A"
+									: getPlanBadge(addon.plan) === "Plus"
+									? "#92a2e4"
+									: getPlanBadge(addon.plan) ===
+									  "Professional"
+									? "#3B82F6"
+									: "#3B82F6"
 							}
 						>
 							{getPlanBadge(addon.plan)}
@@ -240,9 +292,9 @@ const AddonCard = ({ addon, showToast }) => {
 					</HStack>
 
 					{/* Description */}
-					<Tooltip 
-						label={addon.excerpt} 
-						placement="top" 
+					<Tooltip
+						label={addon.excerpt}
+						placement="top"
 						hasArrow
 						isDisabled={addon.excerpt.length <= 120}
 						backgroundColor="white"
@@ -251,18 +303,18 @@ const AddonCard = ({ addon, showToast }) => {
 						p="5"
 						cursor="default"
 					>
-					<Text 
-						fontSize="13px !important" 
-						color="gray.500 !important" 
-						lineHeight="1.5" 
-						flex="1"
-						noOfLines={2}
-						cursor={"text"}
-						sx={{ 
-							color: "gray.500 !important",
-							fontSize: "13px !important"
-						}}
-					>
+						<Text
+							fontSize="13px !important"
+							color="gray.500 !important"
+							lineHeight="1.5"
+							flex="1"
+							noOfLines={2}
+							cursor={"text"}
+							sx={{
+								color: "gray.500 !important",
+								fontSize: "13px !important"
+							}}
+						>
 							{addon.excerpt}
 						</Text>
 					</Tooltip>
@@ -289,7 +341,9 @@ const AddonCard = ({ addon, showToast }) => {
 								icon={<FaCog />}
 								aria-label="Settings"
 								variant="ghost"
-								onClick={() => window.open(addon.setting_url, "_blank")}
+								onClick={() =>
+									window.open(addon.setting_url, "_blank")
+								}
 							/>
 						</>
 					)}
@@ -318,6 +372,25 @@ const AddonCard = ({ addon, showToast }) => {
 								}
 							}}
 						/>
+					) : isPro &&
+					  licensePlan &&
+					  licensePlan.license !== "valid" ? (
+						<Button
+							size="sm"
+							variant="solid"
+							fontSize="xs"
+							fontWeight="normal"
+							bg="#475bb2"
+							color="white"
+							borderColor="#475bb2"
+							_hover={{
+								bg: "#3a4a8f",
+								borderColor: "#3a4a8f"
+							}}
+							onClick={handleRenewLicense}
+						>
+							Renew License
+						</Button>
 					) : (
 						<Button
 							size="sm"

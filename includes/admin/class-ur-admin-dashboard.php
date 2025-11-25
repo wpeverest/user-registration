@@ -19,11 +19,17 @@ class UR_Admin_Dashboard {
 	 * Show the Dashboard Page.
 	 */
 	public static function output() {
-		wp_enqueue_script( 'ur-dashboard-script', UR()->plugin_url() . '/chunks/dashboard.js', array(
-			'wp-element',
-			'wp-blocks',
-			'wp-editor'
-		), UR()->version, true );
+		wp_enqueue_script(
+			'ur-dashboard-script',
+			UR()->plugin_url() . '/chunks/dashboard.js',
+			array(
+				'wp-element',
+				'wp-blocks',
+				'wp-editor',
+			),
+			UR()->version,
+			true
+		);
 
 		if ( ! function_exists( 'get_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -93,6 +99,7 @@ class UR_Admin_Dashboard {
 					in_array( 'colormag', $installed_theme_slugs, true ) || in_array( 'colormag-pro', $installed_theme_slugs, true ) ? 'inactive' : 'not-installed'
 					),
 				),
+				'renewUrl'             => 'https://wpeverest.com/checkout/?edd_license_key=' . get_option( 'registration_license_key' ) . '&utm_campaign=admin&utm_source=dashboard&utm_medium=expired',
 			)
 		);
 
@@ -135,5 +142,4 @@ class UR_Admin_Dashboard {
 		</html>
 		<?php
 	}
-
 }

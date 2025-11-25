@@ -85,8 +85,8 @@ class MembershipGroupsListTable extends \UR_List_Table {
 		$membership_group_service = new MembershipGroupService();
 		$is_form_related          = $membership_group_service->get_group_form_id( $row->ID );
 
-		$url = 'admin.php?membership_group_id=' . $row->ID . '&action=delete&page=' . $this->page;
-		$url .= ( "" != $is_form_related ) ? "&form=" . get_the_title( $is_form_related ) : '';
+		$url  = 'admin.php?membership_group_id=' . $row->ID . '&action=delete&page=' . $this->page;
+		$url .= ( '' != $is_form_related ) ? '&form=' . get_the_title( $is_form_related ) : '';
 
 		return admin_url( $url );
 	}
@@ -184,6 +184,9 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	public function display_page() {
 		$this->prepare_items();
 		if ( ! isset( $_GET['add-new-membership'] ) ) { // phpcs:ignore Standard.Category.SniffName.ErrorCode: input var okay, CSRF ok.
+
+			$license_validity = urm_check_license_validity();
+
 			?>
 			<div id="user-registration-list-table-page">
 				<div class="user-registration-list-table-heading">
@@ -191,7 +194,11 @@ class MembershipGroupsListTable extends \UR_List_Table {
 						<?php esc_html_e( 'All Membership Groups', 'user-registration' ); ?>
 					</h1>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_groups' ) ); ?>"
-					   class="page-title-action">
+						class="page-title-action
+						<?php
+						echo ( UR_PRO_ACTIVE ? ( ! $license_validity ? 'ur-required-license-activation' : ( $license_validity['renew'] ? 'ur-required-renewable' : '' ) ) : '' );
+						?>
+">
 						<?php echo __( 'Add New', 'user-registration' ); ?>
 					</a>
 				</div>
@@ -231,13 +238,13 @@ class MembershipGroupsListTable extends \UR_List_Table {
 			</p>
 			<div>
 				<input type="search" id="<?php echo $search_id; ?>" name="s" value="<?php echo esc_attr( $_GET['s'] ?? '' ); ?>"
-					   placeholder="<?php echo esc_attr( 'Search Membership Groups',' user-registration' ); ?> ..."
-					   autocomplete="off">
+						placeholder="<?php echo esc_attr( 'Search Membership Groups', ' user-registration' ); ?> ..."
+						autocomplete="off">
 				<button type="submit" id="search-submit">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 						<path fill="#000" fill-rule="evenodd"
-							  d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z"
-							  clip-rule="evenodd"></path>
+								d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z"
+								clip-rule="evenodd"></path>
 					</svg>
 				</button>
 			</div>
@@ -245,7 +252,6 @@ class MembershipGroupsListTable extends \UR_List_Table {
 
 		</form>
 		<?php
-
 	}
 
 	/**
@@ -255,7 +261,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'delete' => __( 'Delete permanently' )
+			'delete' => __( 'Delete permanently' ),
 		);
 
 		return $actions;

@@ -33,7 +33,14 @@ import { IoPlayOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 
-const { restURL, security, siteURL } = ur_templates_script;
+const {
+	restURL,
+	security,
+	siteURL,
+	licenseValidity,
+	licenseKey,
+	activateLicenseUrl
+} = ur_templates_script;
 
 const LockIcon = (props) => (
 	<Icon viewBox="0 0 24 24" {...props}>
@@ -59,6 +66,8 @@ const TemplateList = ({ selectedCategory, templates }) => {
 	const toast = useToast();
 	const queryClient = useQueryClient();
 	const [isPluginModalOpen, setIsPluginModalOpen] = useState(false);
+	const [licenseExpired, setLicenseExpired] = useState(false);
+	const [licenseRequired, setLicenseRequired] = useState(false);
 	const [upgradePlan, setUpgradePlan] = useState(false);
 
 	const openModal = () => onOpen();
@@ -114,6 +123,12 @@ const TemplateList = ({ selectedCategory, templates }) => {
 			? Object.keys(template.addons)
 			: [];
 
+		//Checking the license expiration.
+		if (licenseValidity && licenseValidity.license !== "valid") {
+			setLicenseExpired(true);
+			return;
+		}
+
 		if (template.isPro) {
 			let activatedLicensePlan = userLicensePlan
 				.toLocaleLowerCase()
@@ -139,14 +154,22 @@ const TemplateList = ({ selectedCategory, templates }) => {
 						"themegrill agency"
 					];
 					break;
+				default:
+					requiredLicensePlan = [];
+					break;
 			}
 
 			if (requiredLicensePlan.indexOf(activatedLicensePlan) < 0) {
 				setUpgradePlan(true);
 				setIsPluginModalOpen(true);
+				return;
 			} else {
-				setUpgradePlan(false);
-				setIsPluginModalOpen(false);
+				if (!licenseValidity) {
+					setLicenseRequired(true);
+					return;
+				} else {
+					setUpgradePlan(false);
+				}
 			}
 		} else {
 			setUpgradePlan(false);
@@ -749,6 +772,148 @@ const TemplateList = ({ selectedCategory, templates }) => {
 							/>
 						</Box>
 					</ModalBody>
+				</ModalContent>
+			</Modal>
+
+			<Modal
+				isCentered
+				isOpen={licenseExpired}
+				onClose={() => setLicenseExpired(false)}
+				size="md"
+			>
+				<ModalOverlay />
+				<ModalContent borderRadius="8px" padding="20px">
+					<ModalHeader
+						padding="0px"
+						textAlign="center"
+						fontSize="20px"
+						lineHeight="28px"
+						color="#26262E"
+					>
+						<LockIcon boxSize={10} />
+						<Heading
+							as="h2"
+							margin="10px 0px 0px 0px"
+							fontSize="20px"
+							lineHeight="28px"
+							fontWeight="bold"
+						>
+							{licenseValidity.license !== "valid" &&
+								__("License Expired ", "user-registration")}
+						</Heading>
+					</ModalHeader>
+					<ModalCloseButton top="12px" right="12px" />
+					<ModalBody
+						padding="0px"
+						marginTop="16px"
+						textAlign="center"
+					>
+						<Text
+							margin="0px"
+							fontSize="16px"
+							lineHeight="24px"
+							mb="20px"
+						>
+							{licenseValidity.license !== "valid" &&
+								__(
+									"Your license is expired. Please renew license to unlock all these feature.",
+									"user-registration"
+								)}
+						</Text>
+					</ModalBody>
+					<ModalFooter justifyContent="flex-end" padding="0px">
+						<Button
+							variant="ghost"
+							onClick={() => setLicenseExpired(false)}
+							border="1px solid #DFDFDF"
+						>
+							{__("Later", "user-registration")}
+						</Button>
+						<a
+							href={`https://wpeverest.com/checkout/?edd_license_key=${licenseKey}&utm_campaign=admin&utm_source=add-form&utm_medium=${licenseValidity.license}`}
+							target="_blank"
+							rel="noopener noreferrer"
+							style={{
+								width: "inherit"
+							}}
+						>
+							<Button
+								style={{
+									backgroundColor: "#475BB2",
+									color: "#FFFFFF"
+								}}
+								ml={3}
+							>
+								{__("Renew License", "user-registration")}
+							</Button>
+						</a>
+					</ModalFooter>
+				</ModalContent>
+			</Modal>
+			<Modal
+				isCentered
+				isOpen={licenseRequired}
+				onClose={() => setLicenseRequired(false)}
+				size="md"
+			>
+				<ModalOverlay />
+				<ModalContent borderRadius="8px" padding="20px">
+					<ModalHeader
+						padding="0px"
+						textAlign="center"
+						fontSize="20px"
+						lineHeight="28px"
+						color="#26262E"
+					>
+						<LockIcon boxSize={10} />
+						<Heading
+							as="h2"
+							margin="10px 0px 0px 0px"
+							fontSize="20px"
+							lineHeight="28px"
+							fontWeight="bold"
+						>
+							{__("License Required ", "user-registration")}
+						</Heading>
+					</ModalHeader>
+					<ModalCloseButton top="12px" right="12px" />
+					<ModalBody
+						padding="0px"
+						marginTop="16px"
+						textAlign="center"
+					>
+						<Text
+							margin="0px"
+							fontSize="16px"
+							lineHeight="24px"
+							mb="20px"
+						>
+							{__(
+								"Please activate your license to unlock all these feature.",
+								"user-registration"
+							)}
+						</Text>
+					</ModalBody>
+					<ModalFooter justifyContent="flex-end" padding="0px">
+						<a
+							href={activateLicenseUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							style={{
+								width: "inherit"
+							}}
+						>
+							<Button
+								style={{
+									backgroundColor: "#475BB2",
+									color: "#FFFFFF"
+								}}
+								ml={3}
+							>
+								{__("Activate License", "user-registration")}
+							</Button>
+						</a>
+					</ModalFooter>
 				</ModalContent>
 			</Modal>
 		</Box>

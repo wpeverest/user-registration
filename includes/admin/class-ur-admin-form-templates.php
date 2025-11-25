@@ -95,9 +95,14 @@ class UR_Admin_Form_Templates {
 			'ur-templates',
 			'ur_templates_script',
 			array(
-				'security' => wp_create_nonce( 'wp_rest' ),
-				'restURL'  => rest_url(),
-				'siteURL'  => esc_url( home_url( '/' ) ),
+				'security'           => wp_create_nonce( 'wp_rest' ),
+				'restURL'            => rest_url(),
+				'siteURL'            => esc_url( home_url( '/' ) ),
+				'licenseValidity'    => urm_check_license_validity(),
+				'activateLicenseUrl' => esc_url(
+					admin_url( 'admin.php?page=user-registration-settings&tab=license' ),
+				),
+				'licenseKey'         => get_option( 'user-registration_license_key' ),
 			)
 		);
 		wp_enqueue_script( 'ur-templates' );

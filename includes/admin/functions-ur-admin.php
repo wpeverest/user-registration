@@ -116,6 +116,7 @@ function ur_get_screen_ids() {
 		$ur_screen_id . '_page_member-payment-history',
 		$ur_screen_id . '_page_user-registration-users',
 		$ur_screen_id . '_page_user-registration-members',
+		$ur_screen_id . '_page_user-registration-private-notes',
 		'profile',
 		'user-edit',
 	);
@@ -1187,3 +1188,62 @@ if ( ! function_exists( 'user_registration_set_login_page' ) ) {
 	}
 }
 add_action( 'save_post_page', 'user_registration_set_login_page', 10, 2 );
+if ( ! function_exists( 'urm_get_premium_addons' ) ) {
+	/**
+	 * Get the list of premium addons.
+	 *
+	 * @since xx.xx.xx
+	 * @return array
+	 */
+	function urm_get_premium_addons() {
+		return array(
+			'user-registration-invite-codes/user-registration-invite-codes.php',
+			'user-registration-stripe/user-registration-stripe.php',
+			'user-registration-file-upload/user-registration-file-upload.php',
+			'user-registration-private-notes/user-registration-private-notes.php',
+		);
+	}
+}
+add_filter( 'plugin_action_links', 'urm_control_addons_activation', 20, 2 );
+
+function urm_control_addons_activation( $actions, $plugin_file ) {
+
+	if ( is_plugin_active( $plugin_file ) ) {
+		return $actions;
+	}
+
+	if ( ! UR_PRO_ACTIVE || ( function_exists( 'urm_check_license_validity' ) && ! urm_check_license_validity() ) || ( function_exists( 'urm_check_license_validity' ) && urm_check_license_validity()['renew'] ) ) {
+
+		$addons = urm_get_premium_addons();
+
+		if ( in_array( $plugin_file, $addons, true ) ) {
+			$actions['activate'] = 'Activate<span class="screen-reader-text">You cannot deactivate this plugin as other plugins depend on it.</span>';
+		}
+	}
+
+	return $actions;
+}
+
+add_filter( 'plugin_row_meta', 'urm_control_addons_metas', 10, 4 );
+
+function urm_control_addons_metas( $meta, $plugin_file, $plugin_data, $status ) {
+
+	$addons = urm_get_premium_addons();
+
+	if ( ! UR_PRO_ACTIVE ) {
+
+		if ( in_array( $plugin_file, $addons, true ) ) {
+			$meta['pro_version_require'] = '<strong style="color:#d63638;">Requires: ' . esc_html__( 'User Registration Pro', 'user-registration' ) . '</strong>';
+		}
+	} else {
+		$validity = urm_check_license_validity();
+
+		if ( in_array( $plugin_file, $addons, true ) && ! $validity ) {
+			$meta['activate_license_settings'] = '<a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) . '">' . __( 'Activate License', 'user-registration' ) . '</a>';
+		} elseif ( in_array( $plugin_file, $addons, true ) && $validity['renew'] ) {
+			$meta['activate_license_settings'] = '<a href="' . esc_url( 'https://wpeverest.com/checkout/?edd_license_key=' . $validity['key'] . '&utm_campaign=admin&utm_source=plugins&utm_medium=' . $validity['status'] . '' ) . '">' . __( 'Renew License', 'user-registration' ) . '</a>';
+		}
+	}
+
+	return $meta;
+}

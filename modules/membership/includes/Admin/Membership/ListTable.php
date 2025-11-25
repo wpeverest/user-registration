@@ -62,12 +62,12 @@ class ListTable extends \UR_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'title'           => __( 'Membership Name', 'user-registration' ),
+			'title'            => __( 'Membership Name', 'user-registration' ),
 			'membership_price' => __( 'Membership Price', 'user-registration' ),
-			'membership_type' => __( 'Membership Plan Type', 'user-registration' ),
-			'members'         => __( 'Members', 'user-registration' ),
-			'status'          => __( 'Status', 'user-registration' ),
-			'action'          => __( 'Action', 'user-registration' ),
+			'membership_type'  => __( 'Membership Plan Type', 'user-registration' ),
+			'members'          => __( 'Members', 'user-registration' ),
+			'status'           => __( 'Status', 'user-registration' ),
+			'action'           => __( 'Action', 'user-registration' ),
 		);
 	}
 
@@ -114,7 +114,7 @@ class ListTable extends \UR_List_Table {
 	 */
 	public function column_title( $membership ) {
 		$post_title = '';
-		if(!empty($membership)) {
+		if ( ! empty( $membership ) ) {
 			$post_title = $membership->post_title;
 		}
 		return $post_title;
@@ -125,13 +125,13 @@ class ListTable extends \UR_List_Table {
 	 * @return string
 	 */
 	public function column_membership_price( $membership ) {
-		$membership_repository = new MembershipRepository();
-		$membership = $membership_repository->get_single_membership_by_ID($membership->ID);
-		$membership['post_content'] = json_decode($membership['post_content'], true);
-		$membership['meta_value'] = json_decode($membership['meta_value'], true);
-		$membership = apply_filters('build_membership_list_frontend', array( (array) $membership));
-		$price = 0;
-		if(!empty($membership)) {
+		$membership_repository      = new MembershipRepository();
+		$membership                 = $membership_repository->get_single_membership_by_ID( $membership->ID );
+		$membership['post_content'] = json_decode( $membership['post_content'], true );
+		$membership['meta_value']   = json_decode( $membership['meta_value'], true );
+		$membership                 = apply_filters( 'build_membership_list_frontend', array( (array) $membership ) );
+		$price                      = 0;
+		if ( ! empty( $membership ) ) {
 			$price = $membership[0]['period'];
 		}
 		return $price;
@@ -180,8 +180,7 @@ class ListTable extends \UR_List_Table {
 			ARRAY_A
 		);
 
-		return sprintf( '<a target="_blank" href="%s"> %d </a>',  admin_url( "admin.php?page=user-registration-members&membership_id=$membership->ID" ), $result[0]['total'] );
-
+		return sprintf( '<a target="_blank" href="%s"> %d </a>', admin_url( "admin.php?page=user-registration-members&membership_id=$membership->ID" ), $result[0]['total'] );
 	}
 
 	/**
@@ -195,17 +194,17 @@ class ListTable extends \UR_List_Table {
 		$delete_link = $this->get_delete_links( $membership );
 		$content     = json_decode( $membership->post_content, true );
 
-		$checked = isset( $content['status'] ) ? $content['status'] : false ;
+		$checked = isset( $content['status'] ) ? $content['status'] : false;
 
 		$actions  = '<div class="row-actions ur-d-flex ur-align-items-center visible" style="gap: 5px">';
 		$actions .= '<div class="ur-toggle-section">';
 		$actions .= '<span class="user-registration-toggle-form">';
-		$actions .=  '<input
+		$actions .= '<input
 						id="ur-membership-change-status"
 						class="ur-membership-change-status user-registration-switch__control hide-show-check enabled"
 						type="checkbox"
 						value="1"
-						' . esc_attr( checked( true, ur_string_to_bool( $checked ), false ) ). '
+						' . esc_attr( checked( true, ur_string_to_bool( $checked ), false ) ) . '
 						data-ur-membership-id="' . esc_attr( $membership->ID ) . '">';
 		$actions .= '<span class="slider round"></span>';
 		$actions .= '</span>';
@@ -213,12 +212,12 @@ class ListTable extends \UR_List_Table {
 		$actions .= '&nbsp; | &nbsp;';
 		$actions .= '<span class="edit">';
 		$actions .= '<a href="' . esc_url( $edit_link ) . '">' . esc_html__( 'Edit', 'user-registration' ) . '</a>';
-		$actions .=  '</span>';
+		$actions .= '</span>';
 		$actions .= '&nbsp; | &nbsp;';
 		$actions .= '<span class="delete">';
 		$actions .= '<a
 						class="delete-membership"
-						data-membership-id="'. esc_attr( $membership->ID ) . '"
+						data-membership-id="' . esc_attr( $membership->ID ) . '"
 						aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '"
 						href="' . esc_url( $delete_link ) . '"
 					>' . esc_html__( 'Delete', 'user-registration' ) . '</a>';
@@ -236,6 +235,7 @@ class ListTable extends \UR_List_Table {
 	public function display_page() {
 		$this->prepare_items();
 		if ( ! isset( $_GET['add-new-membership'] ) ) { // phpcs:ignore Standard.Category.SniffName.ErrorCode: input var okay, CSRF ok.
+			$license_validity = urm_check_license_validity();
 			?>
 			<div id="user-registration-list-table-page">
 				<div class="user-registration-list-table-heading">
@@ -243,7 +243,7 @@ class ListTable extends \UR_List_Table {
 						<?php esc_html_e( 'All Membership', 'user-registration' ); ?>
 					</h1>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_new_membership' ) ); ?>"
-					   class="page-title-action">
+						class="page-title-action <?php echo ( UR_PRO_ACTIVE ? ( ! $license_validity ? 'ur-required-license-activation' : ( $license_validity['renew'] ? 'ur-required-renewable' : '' ) ) : '' ); ?>">
 						<?php echo __( 'Add New', 'user-registration' ); ?>
 					</a>
 				</div>
@@ -282,14 +282,14 @@ class ListTable extends \UR_List_Table {
 			</p>
 			<div>
 				<input type="search" id="<?php echo $search_id; ?>" name="s"
-					   value="<?php echo esc_attr( $_GET['s'] ?? '' ); ?>"
-					   placeholder="<?php echo esc_attr( 'Search Membership', ' user-registration' ); ?> ..."
-					   autocomplete="off">
+						value="<?php echo esc_attr( $_GET['s'] ?? '' ); ?>"
+						placeholder="<?php echo esc_attr( 'Search Membership', ' user-registration' ); ?> ..."
+						autocomplete="off">
 				<button type="submit" id="search-submit">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 						<path fill="#000" fill-rule="evenodd"
-							  d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z"
-							  clip-rule="evenodd"></path>
+								d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z"
+								clip-rule="evenodd"></path>
 					</svg>
 				</button>
 			</div>
@@ -297,7 +297,6 @@ class ListTable extends \UR_List_Table {
 
 		</form>
 		<?php
-
 	}
 
 	/**
@@ -307,7 +306,7 @@ class ListTable extends \UR_List_Table {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-//			'delete' => __( 'Delete permanently' )
+		//          'delete' => __( 'Delete permanently' )
 		);
 
 		return $actions;

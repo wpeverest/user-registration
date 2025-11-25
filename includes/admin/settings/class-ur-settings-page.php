@@ -113,13 +113,16 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 
 			echo '<div class="ur-scroll-ui__scroll-nav"><ul class="subsubsub  ur-scroll-ui__items">';
 
-			$array_keys = array_keys( $sections );
+			$array_keys       = array_keys( $sections );
+			$license_validity = urm_check_license_validity();
 
 			foreach ( $sections as $id => $label ) {
+				$extra_class = in_array( $id, array( 'add-new', 'generate-codes' ), true ) ? ( ! $license_validity ? 'ur-required-license-activation' : ( $license_validity['renew'] ? 'ur-required-renewable' : '' ) ) : '';
+
 				if ( 'login-options' === $id ) {
 					echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=user-registration-login-forms' ) ) . '" class="' . ( $current_section === $id ? 'current' : '' ) . ' ur-scroll-ui__item">' . esc_html( $label ) . '</a></li>';
 				} else {
-					echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) ) . '" class="' . ( $current_section === $id ? 'current' : '' ) . ' ur-scroll-ui__item">' . esc_html( $label ) . '</a></li>';
+					echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) ) . '" class="' . ( $current_section === $id ? 'current' : '' ) . ' ur-scroll-ui__item ' . esc_attr( $extra_class ) . '">' . esc_html( $label ) . '</a></li>';
 				}
 			}
 
