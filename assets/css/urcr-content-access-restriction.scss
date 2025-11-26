@@ -1,0 +1,819 @@
+/**
+ * Content Access Restriction Styles
+ * Card-based design for rules viewer
+ * Reuses existing utility classes and components where possible
+ */
+
+@import "variables/variables";
+
+// ============================================================================
+// Main Container
+// ============================================================================
+
+.user-registration-content-restriction-viewer {
+	padding: 20px;
+
+	// Ensure notices appear properly
+	& ~ .notice,
+	& + .notice {
+		margin: 15px 0;
+	}
+}
+
+// Notices placed before the viewer container
+.wrap > .notice[id^="urcr-notice-"] {
+	margin: 15px 20px 15px 0;
+	position: relative;
+	z-index: 1;
+}
+
+// Container styles handled by existing classes
+
+.urcr-header {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	margin-bottom: 20px;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+// ============================================================================
+// Header & Add New Button
+// ============================================================================
+
+.urcr-add-new-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	box-sizing: border-box;
+	cursor: pointer;
+	white-space: nowrap;
+	text-decoration: none;
+	text-shadow: none;
+	border: 1px solid $primary_color;
+	border-radius: $border_radius_3;
+	background: $primary_color;
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 2.15384615;
+	color: $white;
+	padding: 0 10px;
+	min-height: 30px;
+	-webkit-appearance: none;
+	appearance: none;
+	vertical-align: middle;
+	margin: 0;
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+		line-height: 1;
+	}
+
+	&:hover {
+		background: $primary_dark;
+		border-color: $primary_dark;
+		color: $white;
+	}
+
+	&:active,
+	&:focus {
+		background: $primary_dark;
+		border-color: $primary_dark;
+		color: $white;
+		box-shadow: 0 0 0 1px $white, 0 0 0 3px $primary_color;
+		outline: 2px solid transparent;
+	}
+}
+
+// ============================================================================
+// Loading & Error States
+// ============================================================================
+
+.urcr-loading-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 400px;
+
+	.spinner {
+		float: none;
+		margin: 0;
+	}
+}
+
+.urcr-error-container {
+	text-align: center;
+	padding: 40px 0;
+
+	p {
+		font-size: 16px;
+		color: #d63638;
+		margin-bottom: 16px;
+	}
+}
+
+// ============================================================================
+// No Rules State
+// ============================================================================
+
+.urcr-no-rules {
+	background: $white;
+	border-radius: 8px;
+	padding: 48px;
+	text-align: center;
+	border: 1px solid #e0e0e0;
+
+	p {
+		font-size: 16px;
+		color: #646970;
+		margin-bottom: 16px;
+	}
+}
+
+// ============================================================================
+// Rules List
+// ============================================================================
+
+.urcr-rules-list {
+	margin-top: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+// ============================================================================
+// Rule Card
+// ============================================================================
+
+.urcr-rule-card {
+	background: #f6f7f7;
+	border-radius: 8px!important;
+	border: 1px solid #e0e0e0;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	transition: box-shadow 0.2s ease;
+
+	&:hover {
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+}
+
+// Accordion styles are handled by existing CSS from settings
+// Content-restriction-specific extensions and overrides
+
+// Override accordion header styles for content restriction
+.urcr-rule-card {
+	.user-registration-card__header.integration-header-info {
+		border-bottom: none !important;
+		border-radius: 10px;
+		&.active {
+			border-bottom: none !important;
+		}
+	}
+}
+
+// Extend integration-detail to handle rule-specific content
+.urcr-integration-detail {
+	display: flex;
+	align-items: center;
+	gap: 0;
+	flex: 1;
+
+	.user-registration-card__title {
+		margin: 0;
+		flex-shrink: 0;
+	}
+
+	.urcr-separator {
+		color: $grey-400;
+		margin: 0 4px;
+	}
+}
+
+.urcr-rule-title-link {
+	color: $grey-400;
+	text-decoration: none;
+	font-weight: 600;
+
+	&:hover {
+		color: $primary_color;
+	}
+}
+
+.urcr-rule-id {
+	color: $grey-400;
+	font-size: 13px;
+	margin: 0 4px;
+}
+
+.urcr-separator {
+	color: $grey-400;
+	font-size: 13px;
+}
+
+.urcr-status-label {
+	color: $grey-400;
+	font-size: 13px;
+	font-weight: 400;
+	margin-left: 4px;
+	margin-right: 8px;
+}
+
+// Extend integration-action to handle multiple items
+.urcr-integration-action {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: auto;
+	height: auto;
+	background: transparent;
+	border: none;
+	padding: 0;
+	margin-left: auto;
+
+	// SVG arrow styling - black by default, blue when active
+	svg.css-i6dzq1 {
+		width: 24px;
+		height: 24px;
+		stroke: #1d2327; // Black color
+		transition: transform 0.3s ease, stroke 0.3s ease;
+		background: transparent;
+		border-radius: 0;
+		padding: 0;
+		color: #1d2327;
+	}
+}
+
+// Icons turn blue only when individually active (clicked)
+.urcr-icon-active {
+	color: $primary_color !important;
+
+	.dashicons {
+		color: $primary_color !important;
+	}
+
+	&.css-i6dzq1 {
+		stroke: $primary_color !important;
+		color: $primary_color !important;
+	}
+}
+
+.urcr-status-toggle-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 52px; // Toggle width (36px) + gap (8px) + spinner width (16px) + some padding
+}
+
+.urcr-status-toggle {
+	position: relative;
+	display: inline-block;
+	width: 36px;
+	height: 20px;
+
+	input[type="checkbox"] {
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+
+	.urcr-slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: #ccc;
+		transition: 0.4s;
+		border-radius: 20px;
+
+		&::before {
+			position: absolute;
+			content: "";
+			height: 14px;
+			width: 14px;
+			left: 3px;
+			bottom: 3px;
+			background-color: white;
+			transition: 0.4s;
+			border-radius: 50%;
+		}
+	}
+
+	input:checked + .urcr-slider {
+		background-color: #00a32a;
+	}
+
+	input:checked + .urcr-slider::before {
+		transform: translateX(16px);
+	}
+
+	input:disabled + .urcr-slider {
+		cursor: not-allowed;
+		opacity: 0.6;
+	}
+}
+
+.urcr-toggle-loader {
+	float: none;
+	margin: 0;
+	width: 20px;
+	height: 20px;
+	flex-shrink: 0;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+// Settings text and icon styles - black by default, blue when active
+.urcr-settings-text {
+	color: #1d2327; // Black by default
+	font-size: 13px;
+	margin-right: 5px;
+	text-decoration: none;
+	transition: color 0.3s ease;
+}
+
+.urcr-settings-icon,
+.urcr-menu-toggle {
+	padding: 4px;
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	color: #1d2327; // Black by default
+	border-radius: $border_radius_3;
+	transition: background-color 0.2s ease, color 0.3s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none !important;
+	outline: none !important;
+	box-shadow: none !important;
+
+	&:hover {
+		background: #f0f0f1;
+		color: #1d2327;
+		text-decoration: none !important;
+		outline: none !important;
+		box-shadow: none !important;
+	}
+
+	&:focus {
+		text-decoration: none !important;
+		box-shadow: none !important;
+		outline: none !important;
+		border: none !important;
+	}
+
+	&:active {
+		outline: none !important;
+		box-shadow: none !important;
+		border: none !important;
+	}
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+		color: #1d2327; // Black by default
+		text-decoration: none;
+		transition: color 0.3s ease;
+	}
+}
+
+// Rotate ellipsis icon 90 degrees (from vertical to horizontal)
+.urcr-menu-toggle .dashicons-ellipsis {
+	transform: rotate(90deg);
+	display: inline-block;
+}
+
+// Individual icon active states handled by .urcr-icon-active class
+
+// ============================================================================
+// Menu Dropdown
+// ============================================================================
+
+.urcr-menu-wrapper {
+	position: relative;
+}
+
+.urcr-menu-dropdown {
+	position: absolute;
+	top: 100%;
+	right: 0;
+	background: $white;
+	border: $border_width solid $border-color;
+	border-radius: $border_radius_4;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	min-width: 150px;
+	z-index: 1000;
+	margin-top: 4px;
+}
+
+.urcr-menu-item {
+	display: block;
+	width: 100%;
+	padding: 8px 12px;
+	text-align: left;
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	color: $grey-400;
+	text-decoration: none;
+	font-size: 13px;
+	transition: background-color 0.2s ease;
+
+	&:hover {
+		background: #f0f0f1;
+		color: $grey-400;
+	}
+
+	&:disabled {
+		cursor: not-allowed;
+		opacity: 0.6;
+	}
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+		margin-right: 8px;
+		vertical-align: middle;
+	}
+}
+
+.urcr-menu-trash {
+	color: $red;
+
+	&:hover {
+		background: #fcf0f1;
+		color: $red;
+	}
+}
+
+// ============================================================================
+// Settings Panel
+// ============================================================================
+
+.urcr-rule-settings-panel {
+	margin-bottom: $spacing_20px;
+	padding-bottom: $spacing_20px;
+	border-bottom: $border_width solid $border-color;
+
+	h4 {
+		font-size: 14px;
+		font-weight: 600;
+		margin-bottom: 12px;
+	}
+
+	p {
+		font-size: 13px;
+		color: #646970;
+		margin: 0;
+	}
+
+	hr {
+		margin: 8px 0;
+	}
+}
+
+.urcr-settings-panel-actions {
+	margin-top: $spacing_20px;
+	padding-top: $spacing_15px;
+	border-top: $border_width solid $border-color;
+}
+
+// ============================================================================
+// Rule Content Display
+// ============================================================================
+
+.urcr-rule-content-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.urcr-rule-condition-display {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-bottom: 16px;
+
+	.urcr-field-input {
+		width: auto;
+		min-width: 120px;
+	}
+
+	.urcr-condition-separator {
+		font-size: 14px;
+		color: $grey-400;
+	}
+}
+
+.urcr-target-contents-display {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-bottom: 16px;
+
+	.urcr-access-select {
+		width: auto;
+		min-width: 100px;
+	}
+
+	.urcr-arrow-icon {
+		color: #00a32a;
+		font-size: 18px;
+		font-weight: bold;
+	}
+
+	.urcr-target-type-group {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	.urcr-target-type-label {
+		font-size: 14px;
+		color: $grey-400;
+		font-weight: 500;
+	}
+
+	.urcr-target-tags {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		flex-wrap: wrap;
+	}
+
+	.urcr-target-tag {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 4px 8px;
+		background-color: #f0f0f1;
+		border-radius: 12px;
+		font-size: 13px;
+		color: $grey-400;
+		line-height: 1.4;
+
+		.urcr-tag-remove {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 0;
+			margin: 0;
+			border: none;
+			background: transparent;
+			cursor: pointer;
+			color: $grey-400;
+			line-height: 1;
+			transition: color 0.2s ease;
+
+			&:hover {
+				color: $red;
+			}
+
+			.dashicons {
+				font-size: 14px;
+				width: 14px;
+				height: 14px;
+			}
+		}
+	}
+}
+
+.urcr-empty-rule-state {
+	display: flex;
+	justify-content: flex-start;
+	margin-bottom: 16px;
+}
+
+.urcr-add-condition-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	background: #e8d5ff;
+	border-color: #e8d5ff;
+	color: #6b46c1;
+	padding: 6px 12px;
+	font-size: 13px;
+
+	&:hover {
+		background: #d4b3ff;
+		border-color: #d4b3ff;
+		color: #553c9a;
+	}
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
+}
+
+.urcr-add-content-wrapper {
+	display: flex;
+	justify-content: center;
+	margin: 16px 0;
+}
+
+.urcr-add-content-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	background: #e5f5fa;
+	border-color: #e5f5fa;
+	color: #2271b1;
+	padding: 6px 12px;
+	font-size: 13px;
+
+	&:hover {
+		background: #d0e8f0;
+		border-color: #d0e8f0;
+		color: #135e96;
+	}
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
+}
+
+.urcr-rule-field {
+	margin-bottom: 16px;
+}
+
+.urcr-field-label {
+	display: block;
+	font-weight: 500;
+	color: $grey-400;
+	font-size: 13px;
+	margin-bottom: 8px;
+}
+
+.urcr-field-input {
+	width: 100%;
+	padding: 6px 8px;
+	border: $border_width solid #8c8f94;
+	border-radius: $border_radius_3;
+	font-size: 14px;
+	line-height: 1.5;
+
+	&:focus {
+		border-color: $primary_color;
+		box-shadow: 0 0 0 1px $primary_color;
+		outline: none;
+	}
+
+	&:disabled {
+		background-color: #f0f0f1;
+		cursor: not-allowed;
+	}
+}
+
+.urcr-field-input-wrapper {
+	position: relative;
+	display: flex;
+	align-items: center;
+
+	.urcr-field-input {
+		padding-right: 32px;
+	}
+}
+
+.urcr-field-dropdown-toggle {
+	position: absolute;
+	right: 4px;
+	padding: 4px;
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	color: $grey-400;
+
+	&:hover {
+		color: $grey-400;
+	}
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
+}
+
+.urcr-rule-actions {
+	margin-top: 8px;
+}
+
+// .urcr-save-rule-btn uses WordPress button-primary class
+
+// ============================================================================
+// Add New Rule Modal
+// ============================================================================
+
+.urcr-modal-backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 100000;
+}
+
+.urcr-modal {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 100001;
+	width: 100%;
+	max-width: 500px;
+}
+
+.urcr-modal-content {
+	background-color: $white;
+	border-radius: 8px;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+	overflow: hidden;
+}
+
+.urcr-modal-header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 20px;
+	border-bottom: 1px solid #e0e0e0;
+	background-color: $white;
+
+	.dashicons {
+		font-size: 20px;
+		width: 20px;
+		height: 20px;
+		color: $primary_color;
+	}
+
+	h2 {
+		margin: 0;
+		font-size: 18px;
+		font-weight: 600;
+		color: #1d2327;
+	}
+}
+
+.urcr-modal-body {
+	padding: 20px;
+}
+
+.urcr-modal-label {
+	display: block;
+	font-size: 13px;
+	font-weight: 500;
+	color: #1d2327;
+	margin-bottom: 8px;
+}
+
+.urcr-modal-input {
+	width: 100%;
+	padding: 8px 12px;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	font-size: 14px;
+	line-height: 1.5;
+	box-sizing: border-box;
+
+	&:focus {
+		border-color: $primary_color;
+		box-shadow: 0 0 0 1px $primary_color;
+		outline: none;
+	}
+}
+
+.urcr-modal-footer {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+	padding: 15px 20px;
+	border-top: 1px solid #e0e0e0;
+	background-color: #f6f7f7;
+}
+
+.urcr-modal-cancel {
+	background: $white;
+	border: 1px solid #8c8f94;
+	color: #2c3338;
+
+	&:hover {
+		background: #f6f7f7;
+		border-color: #787c82;
+	}
+}
+
+// .urcr-modal-continue uses button-primary class

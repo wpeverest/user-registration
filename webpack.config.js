@@ -11,7 +11,8 @@ module.exports = (env, argv) => {
 			blocks: "./src/blocks/index.js",
 			formblock: "./assets/js/admin/gutenberg/form-block.js",
 			form_templates: "./src/form-templates/index.js",
-			"divi-builder": "./src/widgets/divi-builder/index.js"
+			"divi-builder": "./src/widgets/divi-builder/index.js",
+			"content-access-rules": "./src/content-restriction/index.js"
 		},
 		output: {
 			path: path.resolve(__dirname + "/chunks"),

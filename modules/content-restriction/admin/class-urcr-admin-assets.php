@@ -27,7 +27,6 @@ class URCR_Admin_Assets {
 	 */
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
 		$this->current_page = isset( $_GET['page'] ) ? $_GET['page'] : '';
 		$this->action       = isset( $_GET['action'] ) ? $_GET['action'] : '';
@@ -38,30 +37,24 @@ class URCR_Admin_Assets {
 	 */
 	public function enqueue_admin_styles() {
 		/**
-		 * Third party style scripts.
-		 */
-		if ( function_exists( 'UR' ) ) {
-			wp_register_style( 'sweetalert2', UR()->plugin_url() . '/assets/css/sweetalert2/sweetalert2.min.css', array(), '8.17.1' );
-			wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', '4.5.1' );
-		}
-
-		/**
 		 * Local style scripts.
 		 */
-		wp_register_style( 'urcr-content-access-rule-creator', UR()->plugin_url() . '/assets/css/urcr-content-access-rule-creator.css', array( 'ur-snackbar' ), '1.0.0' );
 
 		if ( function_exists( 'UR' ) ) {
-			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
 			wp_register_style( 'ur-core-builder-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR_VERSION );
 		}
 
 		if ( 'user-registration-content-restriction' === $this->current_page ) {
-			wp_enqueue_style( 'select2' );
-			wp_enqueue_style( 'sweetalert2' );
-			wp_enqueue_style( 'flatpickr' );
-			wp_enqueue_style( 'urcr-content-access-rule-creator' );
-
-			wp_enqueue_style( 'ur-core-builder-style' );
+			// Only load creator styles when in creator mode
+				// React viewer mode - only load viewer styles
+				wp_register_style(
+					'urcr-content-access-restriction',
+					UR()->plugin_url() . '/assets/css/urcr-content-access-restriction.css',
+					array(),
+					'1.0.0'
+				);
+				wp_enqueue_style( 'urcr-content-access-restriction' );
+			
 		}
 	}
 
@@ -101,13 +94,17 @@ class URCR_Admin_Assets {
 		}
 
 		if ( 'user-registration-content-restriction' === $this->current_page ) {
-			wp_enqueue_script( 'sweetalert2' );
-			wp_enqueue_script( 'flatpickr' );
-			wp_enqueue_script( 'jquery-tiptip' );
-			wp_enqueue_script( 'ur-components' );
-			wp_enqueue_script( 'urcr-content-access-rule-creator' );
-
-			$this->localize_scripts();
+			// Only load creator scripts when in creator mode
+			if ( 'add_new_urcr_content_access_rule' === $this->action ) {
+				wp_enqueue_script( 'sweetalert2' );
+				wp_enqueue_script( 'flatpickr' );
+				wp_enqueue_script( 'jquery-tiptip' );
+				wp_enqueue_script( 'ur-components' );
+				wp_enqueue_script( 'urcr-content-access-rule-creator' );
+				$this->localize_scripts();
+			}
+			// React viewer scripts are handled in class-urcr-admin.php
+			// No need to enqueue old viewer scripts here
 		}
 	}
 
@@ -377,6 +374,29 @@ class URCR_Admin_Assets {
 			'conditional_logic_field_template' => $conditional_logic_field_template,
 			'target_content_template'          => $target_content_template,
 		);
+	}
+
+	/**
+	 * Localize viewer scripts.
+	 */
+	public function localize_viewer_scripts() {
+				wp_localize_script(
+					'urcr-content-access-rules-viewer-v2',
+					'urcr_viewer_data',
+					array(
+						'ajax_url'        => admin_url( 'admin-ajax.php' ),
+						'nonce'           => wp_create_nonce( 'urcr_manage_content_access_rule' ),
+						'edit_url'        => admin_url( 'admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule&post-id=%RULE_ID%' ),
+						'labels'          => array(
+							'rule_enabled'   => esc_html__( 'Rule enabled successfully', 'user-registration' ),
+							'rule_disabled'  => esc_html__( 'Rule disabled successfully', 'user-registration' ),
+							'rule_saved'     => esc_html__( 'Rule saved successfully', 'user-registration' ),
+							'saving'         => esc_html__( 'Saving...', 'user-registration' ),
+							'save'           => esc_html__( 'Save', 'user-registration' ),
+							'error_occurred' => esc_html__( 'An error occurred. Please try again.', 'user-registration' ),
+						),
+					)
+				);
 	}
 }
 

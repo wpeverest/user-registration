@@ -107,7 +107,7 @@ class URCR_Admin {
 			)
 		);
 
-		add_action( 'load-' . $rules_page, array( $this, 'content_restriction_initializations' ) );
+//		add_action( 'load-' . $rules_page, array( $this, 'content_restriction_initializations' ) );
 	}
 
 	/**
@@ -149,7 +149,8 @@ class URCR_Admin {
 				break;
 
 			default:
-				$this->render_content_access_rules_viewer();
+				// Use React viewer instead of old PHP viewer
+				$this->render_content_access_rules();
 				break;
 		}
 	}
@@ -164,11 +165,95 @@ class URCR_Admin {
 	}
 
 	/**
-	 * Render settings page with Content Access Rules.
+	 * Render settings page with Content Access Rules (React version).
 	 *
 	 * @since 4.0
 	 */
-	public function render_content_access_rules_viewer() {
+	public function render_content_access_rules() {
+		$script_path = UR()->plugin_path() . '/chunks/content-access-rules.js';
+		$script_url  = UR()->plugin_url() . '/chunks/content-access-rules.js';
+
+		// Check if the built file exists, if not, use dashboard script as fallback
+		if ( ! file_exists( $script_path ) ) {
+			// Use dashboard script temporarily until build is run
+			wp_enqueue_script(
+				'ur-dashboard-script',
+				UR()->plugin_url() . '/chunks/dashboard.js',
+				array(
+					'wp-element',
+					'wp-blocks',
+					'wp-editor',
+				),
+				UR()->version,
+				true
+			);
+
+			// Localize script with necessary data (without site assistant data)
+			wp_localize_script(
+				'ur-dashboard-script',
+				'_UR_DASHBOARD_',
+				array(
+					'adminURL'             => esc_url( admin_url() ),
+					'assetsURL'            => esc_url( UR()->plugin_url() . '/assets/' ),
+					'urRestApiNonce'       => wp_create_nonce( 'wp_rest' ),
+					'restURL'              => rest_url(),
+					'version'              => UR()->version,
+				)
+			);
+
+			// Render React mount point with route redirect
+			?>
+			<div class="wrap">
+				<?php echo user_registration_plugin_main_header(); ?>
+				<div id="user-registration-dashboard"></div>
+			</div>
+			<script>
+				// Redirect to content access rules route when React app loads
+				document.addEventListener('DOMContentLoaded', function() {
+					if (window.location.hash !== '#/content-access-rules') {
+						window.location.hash = '#/content-access-rules';
+					}
+				});
+			</script>
+			<?php
+			return;
+		}
+
+		// Enqueue standalone content access rules script
+		wp_enqueue_script(
+			'ur-content-access-rules-script',
+			$script_url,
+			array(
+				'wp-element',
+				'wp-blocks',
+				'wp-editor',
+			),
+			UR()->version,
+			true
+		);
+
+		// Localize script with necessary data
+		wp_localize_script(
+			'ur-content-access-rules-script',
+			'_UR_DASHBOARD_',
+			array(
+				'adminURL'       => esc_url( admin_url() ),
+				'assetsURL'      => esc_url( UR()->plugin_url() . '/assets/' ),
+				'urRestApiNonce' => wp_create_nonce( 'wp_rest' ),
+				'restURL'        => rest_url(),
+				'version'        => UR()->version,
+			)
+		);
+
+		// Render React mount point
+		?>
+		<div>
+			<?php echo user_registration_plugin_main_header(); ?>
+			<div id="user-registration-content-access-rules"></div>
+		</div>
+		<?php
+	}
+	public function render_content_access_rules_viewer_old() {
 		global $content_access_rules_table_list;
 
 		if ( ! $content_access_rules_table_list ) {

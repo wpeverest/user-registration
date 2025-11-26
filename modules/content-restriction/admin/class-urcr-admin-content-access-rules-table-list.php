@@ -226,9 +226,9 @@ class URCR_Admin_Content_Access_Rules_Table_List extends UR_List_Table {
 						<input type="hidden" name="page" value="user-registration-content-restriction" />
 						<?php
 						echo "<div id='user-registration-list-filters-row'>";
-						$this->views();
-						$this->search_box( esc_html__( 'Search Rule', 'user-registration' ), 'content-access-rule' );
-						echo '</div>';
+//						$this->views();
+//						$this->search_box( esc_html__( 'Search Rule', 'user-registration' ), 'content-access-rule' );
+//						echo '</div>';
 						$this->display();
 						?>
 					</form>
