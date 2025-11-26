@@ -5625,7 +5625,7 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 			}
 			$data->value = json_encode( $field_data );
 		}
-		
+
 		if ( in_array( $data->field_name, $form_key_list, true ) ) {
 			$form_data_index    = array_search( $data->field_name, $form_key_list, true );
 			$single_form_field  = $form_field_data[ $form_data_index ];
@@ -6233,7 +6233,9 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					 * Embed the current country value to allow to remove it if it's not allowed.
 					 */
 					if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
-						printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( $value ), esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $value ] ) );
+						$value 	 = json_decode( $value, true );
+						$country = is_array( $value ) ? $value['country'] : $value;
+						printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( $country ), esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $country ] ) );
 					}
 					?>
 					</div>

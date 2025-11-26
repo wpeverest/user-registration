@@ -3090,8 +3090,6 @@
 							manage_state_fields: function(){
 								$('input[data-advance-field="enable_state"]').each(
 									function () {
-										console.log('manage_state_fields', $( this ));
-
 										if ($(this).is(":checked")) {
 											$(this)
 												.closest(".ur-selected-item")

@@ -2471,7 +2471,14 @@ class UR_AJAX {
 		);
 	}
 
+	/**
+	 * Update state fields when country is changed.
+	 *
+	 * @since xx.xx.xx
+	 */
 	public static function update_state_field(){
+		check_ajax_referer( 'user_registration_update_state_field_nonce', 'security' );
+
 		$country = $_POST['country'];
 
 		$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
@@ -2481,7 +2488,7 @@ class UR_AJAX {
 		$option 	= '';
 		$has_state 	= false;
 		if ( is_array( $states ) ) {
-			foreach ($states as $state_key => $state ) {
+			foreach ( $states as $state_key => $state ) {
 				$option .= '<option value="' . $state_key . '">' . esc_html( $state ) . '</option>';
 			}
 			$has_state = true;

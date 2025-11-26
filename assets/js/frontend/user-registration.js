@@ -3082,6 +3082,7 @@
 
 		data = {
 			action: 'user_registration_update_state_field',
+			security : user_registration_params.user_registration_update_state_field,
 			country: country
 		}
 
