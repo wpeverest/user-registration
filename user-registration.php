@@ -8,6 +8,8 @@
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
  * Domain Path: /languages/
+ * WordPress Available:  yes
+ * Requires License:    no
  *
  * @package UserRegistration
  */
