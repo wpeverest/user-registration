@@ -824,15 +824,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . $selected_attribute . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
 
-					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
+					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="ur-field-address-country select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
 					' . $options . '
 					</select>';
 
 
 						if ( ! empty( $args['enable_state'] ) && '1' == $args['enable_state'] ) {
 							$field .= '<label for="' . $args['id'] . '" class="ur-label">' . __( 'State', 'user-registration' ) . '</label>';
-							$field .= '<span class="input-wrapper">';
-							$field .= '<input type="text" class="urm-field-address-state input-text ur-frontend-field" name="' . $args['id'] . '_state" />';
+							$field .= '<span class="input-wrapper ur-field-address-state-outer-wrapper">';
+							$field .= '<input type="text" class="ur-field-address-state input-text ur-frontend-field" name="' . $args['id'] . '_state" />';
 							$field .= '</span>';
 						}
 				}

@@ -988,7 +988,7 @@
 													.find("#user_pass-error")
 													.remove();
 													console.log("hello");
-													
+
 												var error_msg_dom =
 													'<label id="user_pass-error" class="user-registration-error" for="user_pass">' +
 													ursL10n.password_strength_error +
@@ -3072,6 +3072,40 @@
 			}
 		}
 	);
+
+	$( document ).on( 'change', '.ur-field-address-country', function( e ){
+		e.stopPropagation();
+		e.preventDefault();
+		var $el = $( this );
+		var fieldId = $el.data( 'id' );
+		var country = $( this ).val();
+
+		data = {
+			action: 'user_registration_update_state_field',
+			country: country
+		}
+
+		$.ajax({
+			type: "POST",
+			url: user_registration_params.ajax_url,
+			data: data,
+			success: function( response ){
+				$el.siblings( '.ur-field-address-state-outer-wrapper' ).empty();
+				var html = '';
+				if ( response.success && response.data.has_state ) {
+
+					html += '<select class="urm-field-address-state select ur-frontend-field" name="' + fieldId + '_state">';
+					html += response.data.state;
+					html += '</select>';
+
+				}else{
+					html += '<input type="text" class="ur-field-address-state input-text ur-frontend-field" name="' + fieldId + '_state"/>';
+				}
+				$el.siblings( '.ur-field-address-state-outer-wrapper' ).append( html );
+			}
+		})
+
+	});
 })(jQuery);
 
 function ur_includes(arr, item) {
