@@ -6312,6 +6312,16 @@ if ( ! file_exists( 'user_registration_sanitize_profile_update' ) ) {
 					$value = '';
 				}
 				break;
+			case 'country':
+				$country_data = array();
+				if ( isset( $submitted_data[ $key ] ) ) { // phpcs:ignore
+					$country_data['country'] = sanitize_text_field( wp_unslash( $submitted_data[ $key ] ) ); // phpcs:ignore
+				}
+				if ( isset( $submitted_data[ $key . '_state' ] ) ) { // phpcs:ignore
+					$country_data['state'] = sanitize_text_field( wp_unslash( $submitted_data[ $key . '_state' ] ) ); // phpcs:ignore
+				}
+				$value = json_encode( $country_data );
+				break;
 			default:
 				$value = isset( $submitted_data[ $key ] ) ? $submitted_data[ $key ] : ''; // phpcs:ignore
 				break;
