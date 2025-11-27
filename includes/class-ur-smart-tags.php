@@ -248,7 +248,7 @@ class UR_Smart_Tags {
 						break;
 
 					case 'user_roles':
-						if ( ! empty( $values['user_id'] ) || ! empty( $values[ 'member_id' ] ) || is_user_logged_in() ) {
+						if ( ! empty( $values['user_id'] ) || ! empty( $values['member_id'] ) || is_user_logged_in() ) {
 							$user_id    = $values['user_id'] ?? $values['member_id'] ?? get_current_user_id();
 							$user_roles = ur_get_user_roles( $user_id )[0];
 						} else {
@@ -298,8 +298,8 @@ class UR_Smart_Tags {
 						break;
 
 					case 'all_fields':
-						if ( ! empty( $values[ 'user_id' ] ) || ! empty( $values[ 'member_id' ] )  ) {
-							$user_id = $values[ 'user_id' ] ?? $values[ 'member_id' ];
+						if ( ! empty( $values['user_id'] ) || ! empty( $values['member_id'] ) ) {
+							$user_id = $values['user_id'] ?? $values['member_id'];
 						} else {
 							$user_id = (int) get_current_user_id();
 						}
@@ -381,9 +381,9 @@ class UR_Smart_Tags {
 						break;
 
 					case 'form_id':
-						if( ! empty( $values[ 'form_id'] ) ) {
+						if ( ! empty( $values['form_id'] ) ) {
 							$form_id = $values['form_id'];
-						} elseif( !empty( $values['user_id'] ) || !empty( $values['member_id'] ) || is_user_logged_in() ) {
+						} elseif ( ! empty( $values['user_id'] ) || ! empty( $values['member_id'] ) || is_user_logged_in() ) {
 							$user_id = $values['user_id'] ?? $values['member_id'] ?? get_current_user_id();
 							$form_id = ur_get_form_id_by_userid( $user_id );
 						} else {
@@ -394,14 +394,14 @@ class UR_Smart_Tags {
 					case 'form_name':
 						if ( isset( $values['form_id'] ) ) {
 							$form_name = ucfirst( get_the_title( $values['form_id'] ) );
-						} elseif( !empty( 'user_id' ) || !empty( 'member_id' ) || is_user_logged_in() ) {
-							$user_id = $values['user_id'] ?? $values['member_id'] ?? get_current_user_id();
-							$form_id = ur_get_form_id_by_userid( $user_id );
+						} elseif ( ! empty( 'user_id' ) || ! empty( 'member_id' ) || is_user_logged_in() ) {
+							$user_id   = $values['user_id'] ?? $values['member_id'] ?? get_current_user_id();
+							$form_id   = ur_get_form_id_by_userid( $user_id );
 							$form_name = ucfirst( get_the_title( $form_id ) );
 						} else {
 							$form_name = '';
 						}
-						$content   = str_replace( '{{' . $other_tag . '}}', $form_name, $content );
+						$content = str_replace( '{{' . $other_tag . '}}', $form_name, $content );
 						break;
 
 					case 'user_ip_address':
@@ -525,10 +525,10 @@ class UR_Smart_Tags {
 						}
 						break;
 					case 'display_name':
-						$user_id   = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
-						$user_data = get_userdata( $user_id );
+						$user_id      = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
+						$user_data    = get_userdata( $user_id );
 						$display_name = isset( $user_data->display_name ) ? $user_data->display_name : '';
-						$content   = str_replace( '{{' . $tag . '}}', esc_html( $display_name ), $content );
+						$content      = str_replace( '{{' . $tag . '}}', esc_html( $display_name ), $content );
 						break;
 
 					case 'profile_pic_box':
@@ -549,7 +549,7 @@ class UR_Smart_Tags {
 						$last_name  = ucfirst( get_user_meta( get_current_user_id(), 'last_name', true ) );
 						$full_name  = $first_name . ' ' . $last_name;
 						if ( empty( $first_name ) && empty( $last_name ) ) {
-							$userdata = get_userdata( get_current_user_id() );
+							$userdata  = get_userdata( get_current_user_id() );
 							$full_name = isset( $userdata->display_name ) ? $userdata->display_name : '';
 						}
 						$content = str_replace( '{{' . $tag . '}}', esc_html( $full_name ), $content );
@@ -575,14 +575,20 @@ class UR_Smart_Tags {
 						break;
 					case 'ur_reset_pass_slug':
 						$reset_password_page = get_option( 'user_registration_reset_password_page_id', false );
-						$lost_password_page = get_option( 'user_registration_lost_password_page_id', false );
-						$reset_pass_slug    = '';
-						if( $reset_password_page ) {
+						$lost_password_page  = get_option( 'user_registration_lost_password_page_id', false );
+						$reset_pass_slug     = '';
+
+						$reset_password_page_exists = false;
+
+						if ( $reset_password_page ) {
+							$reset_password_page_exists = get_post( $reset_password_page ) ? true : false;
+						}
+
+						if ( $reset_password_page_exists ) {
 							$reset_password_url = get_permalink( $reset_password_page );
 							$ur_reset_pass      = ( get_home_url() !== $reset_password_url ) ? $reset_password_url : wp_lostpassword_url();
-							$reset_pass_slug   = str_replace( get_home_url() . '/', '', $ur_reset_pass );
-						}
-						else if ( $lost_password_page ) {
+							$reset_pass_slug    = str_replace( get_home_url() . '/', '', $ur_reset_pass );
+						} elseif ( $lost_password_page ) {
 							$lost_password_url = get_permalink( $lost_password_page );
 							$ur_lost_pass      = ( get_home_url() !== $lost_password_url ) ? $lost_password_url : wp_login_url();
 							$reset_pass_slug   = str_replace( get_home_url() . '/', '', $ur_lost_pass );
@@ -627,7 +633,7 @@ class UR_Smart_Tags {
 					case 'membership_renewal_link':
 						if ( isset( $values[ $other_tag ] ) ) {
 							$value = $values[ $other_tag ];
-						} elseif ( isset( $values[ 'membership_tags' ][ $other_tag ] ) ) {
+						} elseif ( isset( $values['membership_tags'][ $other_tag ] ) ) {
 							$value = $values['membership_tags'][ $other_tag ];
 						} else {
 							$value = '';
@@ -639,9 +645,9 @@ class UR_Smart_Tags {
 						if ( ! empty( $values['membership_tags'] ) ) {
 							$membership_tags                  = $values['membership_tags'];
 							$membership_plan_types            = array(
-								'One-Time Payment'         => __( 'One-Time Payment', 'user-registration' ),
-								'Free'                     => __( 'Free', 'user-registration' ),
-								'Subscription'             => __( 'Subscription', 'user-registration' ),
+								'One-Time Payment' => __( 'One-Time Payment', 'user-registration' ),
+								'Free'             => __( 'Free', 'user-registration' ),
+								'Subscription'     => __( 'Subscription', 'user-registration' ),
 							);
 							$membership_plan_payment_statuses = array(
 								'Completed' => __( 'Completed', 'user-registration' ),
