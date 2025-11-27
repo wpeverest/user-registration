@@ -39,7 +39,8 @@ abstract class UR_Log_Handler implements UR_Log_Handler_Interface {
 	protected static function format_entry( $timestamp, $level, $message, $context ) {
 		$time_string  = self::format_time( $timestamp );
 		$level_string = strtoupper( $level );
-		$entry        = "{$time_string} {$level_string} {$message}";
+		$entry_message = is_array( $message ) ? json_encode( $message ) : $message;
+		$entry         = "{$time_string} {$level_string} {$entry_message}";
 		/**
 		 * Filter the format log entry.
 		 *
