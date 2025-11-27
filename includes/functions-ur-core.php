@@ -5971,6 +5971,10 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						continue;
 					}
 
+					if ( 'country' === $single_item->field_key && isset( $single_item->advance_setting->enable_state ) ) {
+						$field['enable_state'] = ur_string_to_bool( $single_item->advance_setting->enable_state );
+					}
+
 					// Unset multiple choice and single item.
 					if ( 'subscription_plan' === $single_item->field_key || 'multiple_choice' === $single_item->field_key || 'single_item' === $single_item->field_key || 'captcha' === $single_item->field_key || 'stripe_gateway' === $single_item->field_key ) {
 						continue;
@@ -6233,9 +6237,18 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					 * Embed the current country value to allow to remove it if it's not allowed.
 					 */
 					if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
-						$value 	 = json_decode( $value, true );
+						$isJson = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
+						if ( $isJson ) {
+							$value 	 = json_decode( $value, true );
+						}
 						$country = is_array( $value ) ? $value['country'] : $value;
-						printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( $country ), esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $country ] ) );
+						printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $country ] ) , esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $country ] ) );
+
+						if ( isset( $single_item->advance_setting->enable_state ) ) {
+							if ( is_array( $value ) && isset( $value['state'] ) ) {
+								printf( '<span class="ur-data-holder" data-state-value="%s"></span>', esc_attr( $value['state'] ) );
+							}
+						}
 					}
 					?>
 					</div>
