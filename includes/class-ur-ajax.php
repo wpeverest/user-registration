@@ -314,6 +314,17 @@ class UR_AJAX {
 			}
 		}
 
+		if ( 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
+			$single_field[ $key ] = json_encode(
+				array(
+					'country' => sanitize_text_field( $single_field[ $key ] ),
+					'state'   => sanitize_text_field(
+						isset( $single_field[ $key . '_state' ] ) ? $single_field[ $key . '_state' ] : ''
+					),
+				)
+			);
+		}
+
 		/**
 		 * Action hook to perform validation of edit profile form.
 		 *
@@ -378,6 +389,7 @@ class UR_AJAX {
 					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
 
 					if ( 'disabled' !== $disabled ) {
+						error_log( print_r( $update_key, true ) );
 						update_user_meta( $user_id, $update_key, $single_field[ $key ] );
 					}
 				}
