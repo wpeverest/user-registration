@@ -42,8 +42,6 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 		);
 
 		return $membership_groups;
-
-
 	}
 
 	/**
@@ -63,19 +61,21 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 				       wpp.post_content,
 				       wpp.post_status,
 				       wpp.post_type,
-				       wpm.meta_value as memberships
+				       wpm.meta_value as memberships,
+				       wpmm.meta_value as multiple_memberships
 				FROM $this->table wpp
-				         JOIN $this->posts_meta_table wpm on wpm.post_id = wpp.ID
-				WHERE wpm.meta_key = 'urmg_memberships'
-				  AND wpp.post_type = 'ur_membership_groups'
-				  AND wpp.post_status = 'publish'
+				LEFT JOIN $this->posts_meta_table wpm
+						ON wpm.post_id = wpp.ID AND wpm.meta_key = 'urmg_memberships'
+				LEFT JOIN $this->posts_meta_table wpmm
+						ON wpmm.post_id = wpp.ID AND wpmm.meta_key = 'urmg_multiple_memberships'
+				WHERE wpp.post_type = 'ur_membership_groups'
+				AND wpp.post_status = 'publish'
 				AND wpp.ID = %d
-				ORDER BY 1 DESC",
+				ORDER BY wpp.ID DESC",
 				$id
 			),
 			ARRAY_A
 		);
-
 	}
 
 	/**
@@ -122,11 +122,10 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 				  AND wpp.post_type = 'ur_membership_groups'
 				AND wpp.post_title = %s
 				ORDER BY 1 DESC",
-				strtolower($name)
+				strtolower( $name )
 			),
 			ARRAY_A
 		);
-
 	}
 
 	/**
@@ -141,7 +140,7 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 		$meta_key_exists = $this->wpdb()->get_var(
 			$this->wpdb()->prepare(
 				"SELECT post_id FROM $this->posts_meta_table WHERE meta_key = %s LIMIT 1",
-				"urm_form_group_" . $group_id
+				'urm_form_group_' . $group_id
 			)
 		);
 
@@ -157,7 +156,7 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 		return $this->wpdb()->get_var(
 			$this->wpdb()->prepare(
 				"SELECT post_id FROM $this->posts_meta_table WHERE meta_key = %s LIMIT 1",
-				"urmg_default_group"
+				'urmg_default_group'
 			)
 		);
 	}

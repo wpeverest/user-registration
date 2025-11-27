@@ -32,30 +32,30 @@ $return_url = admin_url( 'admin.php?page=user-registration-membership&action=lis
 									for="ur-input-type-membership-group-name"><?php esc_html_e( 'Group Name', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 									<span class="user-registration-help-tip tooltipstered"
-										  data-tip="<?php echo esc_attr__( "Title for the group." ) ?>"></span>
+											data-tip="<?php echo esc_attr__( 'Title for the group.' ); ?>"></span>
 								</label>
 							</div>
 							<div class="ur-input-type-membership-group-name ur-admin-template" style="width: 100%">
 								<div class="ur-field" data-field-key="membership_group_name">
 									<input type="text" data-key-name="Membership Group Name"
-										   id="ur-input-type-membership-group-name" name="ur_membership_group_name"
-										   style="width: 100%"
-										   autocomplete="off"
-										   value="<?php echo ! empty( $membership_group['post_title'] ) ? $membership_group['post_title'] : ''; ?>"
-									       class="urmg-input"
-										   required>
+											id="ur-input-type-membership-group-name" name="ur_membership_group_name"
+											style="width: 100%"
+											autocomplete="off"
+											value="<?php echo ! empty( $membership_group['post_title'] ) ? $membership_group['post_title'] : ''; ?>"
+											class="urmg-input"
+											required>
 								</div>
 							</div>
 
 						</div>
 						<!--					membership description-->
 						<div class="ur-membership-input-container ur-input-type-textarea ur-d-flex ur-p-1 ur-mt-3"
-							 style="gap:20px;">
+							style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
 								<label for="ur-input-type-membership-group-description">
 									Group Description
 									<span class="user-registration-help-tip tooltipstered"
-										  data-tip="<?php echo esc_attr__( "Describe the group." ) ?>"></span>
+											data-tip="<?php echo esc_attr__( 'Describe the group.' ); ?>"></span>
 								</label>
 							</div>
 							<div class="ur-field" data-field-key="textarea" style="width: 100%">
@@ -70,20 +70,20 @@ $return_url = admin_url( 'admin.php?page=user-registration-membership&action=lis
 
 								?>
 								<textarea data-key-name="Membership Description"
-										  id="ur-input-type-membership-group-description"
-										  name="ur_membership_description"
-										  style="width: 100%" rows="5"
-										  class="urmg-input"
-										  value=""><?php echo $membership_description; ?></textarea>
+											id="ur-input-type-membership-group-description"
+											name="ur_membership_description"
+											style="width: 100%" rows="5"
+											class="urmg-input"
+											value=""><?php echo $membership_description; ?></textarea>
 							</div>
 						</div>
 						<!--					membership status-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px">
 							<div class="ur-label" style="width: 30%">
 								<label class="ur-membership-group-enable-status"
-									   for="ur-membership-group-status"><?php esc_html_e( 'Group Status', 'user-registration' ); ?>
+										for="ur-membership-group-status"><?php esc_html_e( 'Group Status', 'user-registration' ); ?>
 									<span class="user-registration-help-tip tooltipstered"
-										  data-tip="<?php echo esc_attr__( "Only active groups will be visible in the frontend." ) ?>"></span>
+											data-tip="<?php echo esc_attr__( 'Only active groups will be visible in the frontend.' ); ?>"></span>
 								</label>
 							</div>
 							<div class="ur-toggle-section m1-auto" style="width:100%">
@@ -106,7 +106,7 @@ $return_url = admin_url( 'admin.php?page=user-registration-membership&action=lis
 									for="ur-input-type-membership-group-role"><?php esc_html_e( 'Select Memberships', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 									<span class="user-registration-help-tip tooltipstered"
-										  data-tip="Select which membership fall under this group."></span>
+											data-tip="Select which membership fall under this group."></span>
 								</label>
 							</div>
 							<div class="ur-input-type-membership-group-name ur-admin-template" style="width: 100%">
@@ -120,8 +120,8 @@ $return_url = admin_url( 'admin.php?page=user-registration-membership&action=lis
 
 										<?php
 										$selected_memberships = array();
-										if ( isset( $membership_group["memberships"] ) ) {
-											$selected_memberships = json_decode( $membership_group["memberships"], true );
+										if ( isset( $membership_group['memberships'] ) ) {
+											$selected_memberships = json_decode( $membership_group['memberships'], true );
 										}
 
 										foreach ( $memberships as $membership ) :
@@ -129,11 +129,32 @@ $return_url = admin_url( 'admin.php?page=user-registration-membership&action=lis
 											<option
 												<?php echo isset( $membership_group['memberships'] ) && in_array( $membership['ID'], $selected_memberships ) ? 'selected="selected"' : ''; ?>
 												value="<?php echo esc_attr( $membership['ID'] ); ?>"><?php echo esc_html( $membership['title'] ); ?></option>
-										<?php
+											<?php
 										endforeach;
 										?>
 									</select>
 								</div>
+							</div>
+						</div>
+						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px">
+							<div class="ur-label" style="width: 30%">
+								<label class="ur-membership-group-enable-status"
+										for="ur-membership-group-status"><?php esc_html_e( 'Multiple Membership Selections', 'user-registration' ); ?>
+									<span class="user-registration-help-tip tooltipstered"
+											data-tip="<?php echo esc_attr__( 'Users can buy more than one membership plan from this group', 'user-registration' ); ?>"></span>
+								</label>
+							</div>
+							<div class="ur-toggle-section m1-auto" style="width:100%">
+								<span class="user-registration-toggle-form">
+									<input
+										data-key-name="Allow Multiple Memberships Selections"
+										id="ur-membership-group-multiple-membership" type="checkbox"
+										class="user-registration-switch__control hide-show-check enabled urmg-input"
+										<?php echo isset( $membership_group['multiple_memberships'] ) && $membership_group['multiple_memberships'] ? 'checked' : ''; ?>
+										name="ur_membership_group_multiple_membership"
+										style="width: 100%; text-align: left">
+									<span class="slider round"></span>
+								</span>
 							</div>
 						</div>
 					</div>
