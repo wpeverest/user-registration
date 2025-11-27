@@ -109,15 +109,14 @@ const RuleCard = ({
 	};
 
 	const formattedId = String(rule.id).padStart(2, "0");
-	const headerClass = `user-registration-card__header ur-d-flex ur-align-items-center ur-p-4 integration-header-info accordion${isExpanded ? " active" : ""}`;
+	const headerClass = `user-registration-card__header ur-d-flex ur-align-items-center ur-p-5 integration-header-info accordion${isExpanded ? " active" : ""}`;
 
 	return (
-		<div className="user-registration-card ur-mb-2 urcr-rule-card">
+		<div className="user-registration-card ur-mb-2 urcr-rule-card ">
 			{/* Header */}
 			<div
 				className={headerClass}
 				onClick={(e) => {
-					// Only toggle if clicking on the header itself, not on action buttons
 					if (!e.target.closest('.integration-action') && !e.target.closest('.urcr-status-toggle')) {
 						onToggleExpand();
 					}

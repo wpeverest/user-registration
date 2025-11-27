@@ -367,9 +367,7 @@ class URCR_Content_Access_Rules {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public static function update_rule( $request ) {
-		$rule_id        = absint( $request['id'] );
-		$access_control = isset( $request['access_control'] ) ? sanitize_text_field( $request['access_control'] ) : 'access';
-		$redirect_url   = isset( $request['redirect_url'] ) ? esc_url_raw( $request['redirect_url'] ) : '';
+		$rule_id = absint( $request['id'] );
 
 		$content_rule = get_post( $rule_id );
 
@@ -383,47 +381,103 @@ class URCR_Content_Access_Rules {
 			);
 		}
 
-		$content_rule_content = json_decode( $content_rule->post_content, true );
+		// Get title from request, or keep existing title
+		$title = isset( $request['title'] ) ? sanitize_text_field( $request['title'] ) : $content_rule->post_title;
 
-		if ( ! is_array( $content_rule_content ) ) {
-			$content_rule_content = array();
-		}
+		// Get access_rule_data from request
+		$access_rule_data = isset( $request['access_rule_data'] ) ? $request['access_rule_data'] : null;
 
-		if ( ! isset( $content_rule_content['actions'] ) || ! is_array( $content_rule_content['actions'] ) ) {
-			$content_rule_content['actions'] = array();
-		}
+		// If access_rule_data is provided, use it directly (same as old AJAX handler)
+		if ( $access_rule_data && is_array( $access_rule_data ) ) {
+			// Use the same logic as prepare_access_rule_as_wp_post
+			$access_rule_data_json = wp_json_encode( $access_rule_data );
 
-		if ( empty( $content_rule_content['actions'] ) ) {
-			$content_rule_content['actions'][] = array();
-		}
-
-		$content_rule_content['actions'][0]['access_control'] = $access_control;
-		if ( ! empty( $redirect_url ) ) {
-			$content_rule_content['actions'][0]['type']         = 'redirect';
-			$content_rule_content['actions'][0]['redirect_url'] = $redirect_url;
-		}
-
-		$content_rule->post_content = wp_json_encode( $content_rule_content );
-
-		$saved_post = wp_insert_post( $content_rule );
-
-		if ( $saved_post ) {
-			return new \WP_REST_Response(
+			$access_rule_post = apply_filters(
+				'urcr_prepared_access_rule_as_wp_post',
 				array(
-					'success' => true,
-					'rule_id' => $saved_post,
-					'message' => esc_html__( 'Successfully saved the Access Rule.', 'user-registration' ),
+					'ID'             => $rule_id,
+					'post_title'     => $title,
+					'post_content'   => $access_rule_data_json,
+					'post_type'      => 'urcr_access_rule',
+					'post_status'    => $content_rule->post_status,
+					'comment_status' => 'closed',
+					'ping_status'    => 'closed',
 				),
-				200
+				'save-content-access-rule'
 			);
+
+			do_action( 'urcr_pre_save_content_access_rule', $access_rule_post );
+
+			$saved_post = wp_insert_post( $access_rule_post );
+
+			if ( $saved_post ) {
+				do_action( 'urcr_post_save_content_access_rule', $access_rule_post, $saved_post );
+				return new \WP_REST_Response(
+					array(
+						'success' => true,
+						'rule_id' => $saved_post,
+						'message' => esc_html__( 'Successfully saved the Access Rule.', 'user-registration' ),
+					),
+					200
+				);
+			} else {
+				do_action( 'urcr_save_content_access_rule_failure', $access_rule_post, $saved_post );
+				return new \WP_REST_Response(
+					array(
+						'success' => false,
+						'message' => esc_html__( 'Sorry! There was an unexpected error while saving the Content Access Rule.', 'user-registration' ),
+					),
+					500
+				);
+			}
 		} else {
-			return new \WP_REST_Response(
-				array(
-					'success' => false,
-					'message' => esc_html__( 'Sorry! There was an unexpected error while saving the Content Access Rule.', 'user-registration' ),
-				),
-				500
-			);
+			// Fallback: Handle legacy format (access_control and redirect_url only)
+			$access_control = isset( $request['access_control'] ) ? sanitize_text_field( $request['access_control'] ) : 'access';
+			$redirect_url   = isset( $request['redirect_url'] ) ? esc_url_raw( $request['redirect_url'] ) : '';
+
+			$content_rule_content = json_decode( $content_rule->post_content, true );
+
+			if ( ! is_array( $content_rule_content ) ) {
+				$content_rule_content = array();
+			}
+
+			if ( ! isset( $content_rule_content['actions'] ) || ! is_array( $content_rule_content['actions'] ) ) {
+				$content_rule_content['actions'] = array();
+			}
+
+			if ( empty( $content_rule_content['actions'] ) ) {
+				$content_rule_content['actions'][] = array();
+			}
+
+			$content_rule_content['actions'][0]['access_control'] = $access_control;
+			if ( ! empty( $redirect_url ) ) {
+				$content_rule_content['actions'][0]['type']         = 'redirect';
+				$content_rule_content['actions'][0]['redirect_url'] = $redirect_url;
+			}
+
+			$content_rule->post_title   = $title;
+			$content_rule->post_content = wp_json_encode( $content_rule_content );
+
+			$saved_post = wp_insert_post( $content_rule );
+
+			if ( $saved_post ) {
+				return new \WP_REST_Response(
+					array(
+						'success' => true,
+						'rule_id' => $saved_post,
+						'message' => esc_html__( 'Successfully saved the Access Rule.', 'user-registration' ),
+					),
+					200
+				);
+			} else {
+				return new \WP_REST_Response(
+					array(
+						'success' => false,
+						'message' => esc_html__( 'Sorry! There was an unexpected error while saving the Content Access Rule.', 'user-registration' ),
+					),
+					500
+				);
+			}
 		}
 	}
 

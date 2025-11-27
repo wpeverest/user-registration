@@ -14,5 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		const root = createRoot(appRoot);
 
 		root.render(<ContentAccessRules />);
+
 	}
 });
+

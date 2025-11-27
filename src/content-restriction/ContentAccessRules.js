@@ -7,6 +7,7 @@ import { getAllRules } from "./api/content-access-rules-api";
 import RuleCard from "./components/RuleCard";
 import AddNewRuleModal from "./components/AddNewRuleModal";
 import { showError } from "./utils/notifications";
+import { getURCRLocalizedData, getURCRData } from "./utils/localized-data";
 
 /* global _UR_DASHBOARD_ */
 const { adminURL } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
@@ -18,6 +19,9 @@ const ContentAccessRules = () => {
 	const [expandedRules, setExpandedRules] = useState(new Set());
 	const [openSettingsPanels, setOpenSettingsPanels] = useState(new Set());
 	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	// Access urcr_localized_data
+	const urcrData = getURCRLocalizedData();
 
 	const fetchRules = useCallback(() => {
 		setIsLoading(true);
@@ -45,6 +49,14 @@ const ContentAccessRules = () => {
 	useEffect(() => {
 		fetchRules();
 	}, [fetchRules]);
+
+	// For testing: Auto-expand all rules when they're loaded
+	useEffect(() => {
+		if (rules.length > 0) {
+			const allRuleIds = new Set(rules.map((rule) => rule.id));
+			setExpandedRules(allRuleIds);
+		}
+	}, [rules]);
 
 	const handleToggleExpand = (ruleId) => {
 		setExpandedRules((prev) => {

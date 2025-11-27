@@ -33,7 +33,7 @@
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
-	margin-bottom: 20px;
+	margin-bottom: 30px;
 	flex-wrap: wrap;
 	gap: 12px;
 }
@@ -58,7 +58,7 @@
 	font-weight: 400;
 	line-height: 2.15384615;
 	color: $white;
-	padding: 0 10px;
+	padding: 5px 10px;
 	min-height: 30px;
 	-webkit-appearance: none;
 	appearance: none;
@@ -169,7 +169,8 @@
 		border-bottom: none !important;
 		border-radius: 10px;
 		&.active {
-			border-bottom: none !important;
+			border-bottom: 1px solid #80808021 !important;
+			border-radius: 10px 10px 0 0 !important;
 		}
 	}
 }
@@ -513,107 +514,45 @@
 	}
 }
 
-.urcr-target-contents-display {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	flex-wrap: wrap;
-	margin-bottom: 16px;
 
-	.urcr-access-select {
-		width: auto;
-		min-width: 100px;
-	}
-
-	.urcr-arrow-icon {
-		color: #00a32a;
-		font-size: 18px;
-		font-weight: bold;
-	}
-
-	.urcr-target-type-group {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		flex-wrap: wrap;
-	}
-
-	.urcr-target-type-label {
-		font-size: 14px;
-		color: $grey-400;
-		font-weight: 500;
-	}
-
-	.urcr-target-tags {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		flex-wrap: wrap;
-	}
-
-	.urcr-target-tag {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		padding: 4px 8px;
-		background-color: #f0f0f1;
-		border-radius: 12px;
-		font-size: 13px;
-		color: $grey-400;
-		line-height: 1.4;
-
-		.urcr-tag-remove {
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			padding: 0;
-			margin: 0;
-			border: none;
-			background: transparent;
-			cursor: pointer;
-			color: $grey-400;
-			line-height: 1;
-			transition: color 0.2s ease;
-
-			&:hover {
-				color: $red;
-			}
-
-			.dashicons {
-				font-size: 14px;
-				width: 14px;
-				height: 14px;
-			}
-		}
-	}
-}
 
 .urcr-empty-rule-state {
 	display: flex;
 	justify-content: flex-start;
 	margin-bottom: 16px;
+	flex-direction: column;
 }
 
-.urcr-add-condition-button {
-	display: inline-flex;
+// Common base class for add buttons
+.urcr-add-button {
+	display: inline-flex!important;
 	align-items: center;
 	gap: 6px;
-	background: #e8d5ff;
-	border-color: #e8d5ff;
-	color: #6b46c1;
-	padding: 6px 12px;
+	padding: 6px 12px !important;
 	font-size: 13px;
-
-	&:hover {
-		background: #d4b3ff;
-		border-color: #d4b3ff;
-		color: #553c9a;
-	}
+	border-radius: 4px;
+	cursor: pointer;
+	border: 1px solid;
+	transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 
 	.dashicons {
 		font-size: 16px;
 		width: 16px;
 		height: 16px;
+	}
+}
+
+// Condition button variant (purple)
+.urcr-add-condition-button {
+	@extend .urcr-add-button;
+	background: #e8d5ff;
+	border-color: #e8d5ff;
+	color: #6b46c1;
+
+	&:hover {
+		background: #d4b3ff;
+		border-color: #d4b3ff;
+		color: #553c9a;
 	}
 }
 
@@ -623,26 +562,91 @@
 	margin: 16px 0;
 }
 
+.urcr-content-dropdown-wrapper {
+	position: relative;
+	display: inline-block;
+}
+
+// Content button variant (blue)
 .urcr-add-content-button {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
+	@extend .urcr-add-button;
 	background: #e5f5fa;
 	border-color: #e5f5fa;
 	color: #2271b1;
-	padding: 6px 12px;
-	font-size: 13px;
 
 	&:hover {
 		background: #d0e8f0;
 		border-color: #d0e8f0;
 		color: #135e96;
 	}
+}
 
-	.dashicons {
-		font-size: 16px;
-		width: 16px;
-		height: 16px;
+// Content Type Dropdown Menu
+.urcr-content-type-dropdown-menu {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	margin-top: 4px;
+	background-color: $white;
+	border: $border_width solid #8c8f94;
+	border-radius: $border_radius_3;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	min-width: 200px;
+	z-index: 1000;
+	animation: urcr-dropdown-fade-in 0.15s ease-out;
+}
+
+.urcr-content-type-dropdown-option {
+	display: block;
+	width: 100%;
+	padding: 8px 12px;
+	text-align: left;
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 400;
+	color: $grey-400;
+	transition: background-color 0.15s ease, color 0.15s ease;
+	margin: 0;
+	box-sizing: border-box;
+
+	&:hover:not(.is-disabled) {
+		background-color: #f0f0f1;
+		color: #1d2327;
+	}
+
+	&:focus:not(.is-disabled) {
+		background-color: #f0f0f1;
+		color: #1d2327;
+		outline: none;
+	}
+
+	&.is-selected {
+		background-color: #f0f0f1;
+		color: #1d2327;
+		font-weight: 500;
+	}
+
+	&.is-disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+		color: #8c8f94;
+
+		&:hover {
+			background-color: transparent;
+			color: #8c8f94;
+		}
+	}
+
+	&:first-child {
+		border-top-left-radius: $border_radius_3;
+		border-top-right-radius: $border_radius_3;
+	}
+
+	&:last-child {
+		border-bottom-left-radius: $border_radius_3;
+		border-bottom-right-radius: $border_radius_3;
 	}
 }
 
@@ -711,6 +715,133 @@
 .urcr-rule-actions {
 	margin-top: 8px;
 }
+
+// ============================================================================
+// Conditional Logic Field Dropdown (Custom Floating Dropdown)
+// ============================================================================
+
+.urcr-condition-dropdown-wrapper {
+	position: relative;
+	display: inline-block;
+}
+
+.urcr-condition-field-dropdown-menu {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	margin-top: 4px;
+	background-color: $white;
+	border: $border_width solid #8c8f94;
+	border-radius: $border_radius_3;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	min-width: 400px;
+	max-height: 500px;
+	overflow-y: auto;
+	z-index: 1000;
+	animation: urcr-dropdown-fade-in 0.15s ease-out;
+}
+
+@keyframes urcr-dropdown-fade-in {
+	from {
+		opacity: 0;
+		transform: translateY(-4px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.urcr-condition-field-dropdown-group {
+	padding: 4px 0;
+
+	&:first-child {
+		padding-top: 8px;
+	}
+
+	&:last-child {
+		padding-bottom: 8px;
+	}
+}
+
+.urcr-condition-field-dropdown-group-label {
+	padding: 8px 12px 4px;
+	font-weight: 600;
+	font-size: 13px;
+	color: #1d2327;
+	text-transform: none;
+	letter-spacing: 0;
+}
+
+.urcr-condition-field-dropdown-option {
+	display: block;
+	width: 100%;
+	padding: 6px 12px 6px 24px;
+	text-align: left;
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 400;
+	color: $grey-400;
+	transition: background-color 0.15s ease, color 0.15s ease;
+	margin: 0;
+	box-sizing: border-box;
+
+	&:hover {
+		background-color: #f0f0f1;
+		color: #1d2327;
+	}
+
+	&:focus {
+		background-color: #f0f0f1;
+		color: #1d2327;
+		outline: none;
+	}
+
+	&.is-selected {
+		background-color: #f0f0f1;
+		color: #1d2327;
+		font-weight: 500;
+	}
+}
+
+// Legacy select field styles (for backward compatibility)
+.urcr-add-new-conditional-logic-field {
+	display: inline-block;
+	width: auto;
+	min-width: 200px;
+	padding: 6px 24px 6px 12px;
+	font-size: 13px;
+	line-height: 1.5;
+	color: $grey-400;
+	background-color: $white;
+	border: $border_width solid #8c8f94;
+	border-radius: $border_radius_3;
+	cursor: pointer;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23464646' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 8px center;
+	background-size: 12px;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+	&:hover {
+		border-color: $primary_color;
+	}
+
+	&:focus {
+		border-color: $primary_color;
+		box-shadow: 0 0 0 1px $primary_color;
+		outline: none;
+	}
+}
+
+// ============================================================================
+// Save Button
+// ============================================================================
 
 // .urcr-save-rule-btn uses WordPress button-primary class
 
@@ -817,3 +948,228 @@
 }
 
 // .urcr-modal-continue uses button-primary class
+
+// ============================================================================
+// Condition Row & Value Input Styles
+// ============================================================================
+
+.urcr-conditions-list {
+	margin-bottom: 16px;
+}
+
+.urcr-condition-row {
+	border-radius: 4px;
+	margin-bottom: 8px;
+	justify-content: space-between;
+	.urcr-condition-selection-section {
+		.urcr-condition-value {
+			max-width: 400px;
+			min-width: 400px;
+		}
+	}
+	.urcr-target-selection-section {
+		align-items: flex-start;
+		gap: 20px;
+
+		.urcr-access-select {
+			width: 150px;
+		}
+
+		.urcr-arrow-icon {
+			display: inline-block;
+			width: 40px;
+			height: 2px;
+			background-color: #00a32a;
+			position: relative;
+			margin-top: 18px;
+			margin-left: 4px;
+			margin-right: 4px;
+			vertical-align: middle;
+
+			// Arrow head
+			&::after {
+				content: "";
+				position: absolute;
+				right: -6px;
+				top: 50%;
+				transform: translateY(-50%);
+				width: 0;
+				height: 0;
+				border-left: 6px solid #00a32a;
+				border-top: 4px solid transparent;
+				border-bottom: 4px solid transparent;
+			}
+		}
+
+		.urcr-target-type-group {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			flex: 1;
+			min-width: 0;
+		}
+
+		.urcr-target-item {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+
+			.urcr-target-type-label {
+				font-size: 14px;
+				color: $grey-400;
+				font-weight: 500;
+				white-space: nowrap;
+				width: 100px;
+			}
+
+			.urcr-condition-value-select {
+				flex: 1;
+				min-width: 200px;
+			}
+
+			.urcr-whole-site-text {
+				font-size: 14px;
+				color: $grey-400;
+				font-weight: 500;
+			}
+
+			.urcr-target-remove {
+				padding: 4px;
+				border: none;
+				background: transparent;
+				cursor: pointer;
+				color: $grey-400;
+				line-height: 1;
+				transition: color 0.2s ease;
+
+				&:hover {
+					color: $red;
+				}
+
+				.dashicons {
+					font-size: 16px;
+					width: 16px;
+					height: 16px;
+					text-decoration: none;
+				}
+			}
+
+			.select2-container  {
+				max-width: 350px;
+				min-width: 350px;
+			}
+		}
+	}
+}
+
+.urcr-condition-field-name {
+	min-width: 250px;
+	margin-right: 8px;
+
+	input,
+	select {
+		width: 100%;
+		padding: 6px 8px;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		font-size: 14px;
+		line-height: 1.5;
+		background-color: #fff;
+		cursor: pointer;
+
+		&:focus {
+			border-color: $primary_color;
+			box-shadow: 0 0 0 1px $primary_color;
+			outline: none;
+		}
+	}
+
+	input[readonly] {
+		background-color: #f5f5f5;
+		cursor: not-allowed;
+	}
+}
+
+.urcr-condition-operator {
+	margin-right: 8px;
+	padding: 6px 0;
+	font-size: 14px;
+	color: #333;
+}
+
+.urcr-condition-value {
+	flex: 1;
+	margin-right: 8px;
+}
+
+// Condition Value Input Base Styles
+.urcr-condition-value-input {
+	width: 100%;
+	padding: 6px 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+	line-height: 1.5;
+	background-color: #fff;
+	box-sizing: border-box;
+
+	&:focus {
+		border-color: $primary_color;
+		box-shadow: 0 0 0 1px $primary_color;
+		outline: none;
+	}
+
+	&:disabled {
+		background-color: #f5f5f5;
+		cursor: not-allowed;
+	}
+}
+
+// Select/Multiselect specific styles
+.urcr-condition-value-select {
+	@extend .urcr-condition-value-input;
+	min-height: auto;
+
+	&.urcr-condition-value-select--multiselect {
+		min-height: 80px;
+	}
+}
+
+// Date input
+.urcr-condition-value-date {
+	@extend .urcr-condition-value-input;
+}
+
+// Number input
+.urcr-condition-value-number {
+	@extend .urcr-condition-value-input;
+}
+
+// Text input
+.urcr-condition-value-text {
+	@extend .urcr-condition-value-input;
+}
+
+// Delete button for condition row
+.urcr-condition-row {
+	.button-link-delete {
+		padding: 4px 8px;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		color: $grey-400;
+		line-height: 1;
+		transition: color 0.2s ease;
+		text-decoration: none;
+
+		&:hover {
+			color: $red;
+		}
+
+		.dashicons {
+			font-size: 16px;
+			width: 16px;
+			height: 16px;
+		}
+	}
+}

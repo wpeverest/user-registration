@@ -170,54 +170,7 @@ class URCR_Admin {
 	 * @since 4.0
 	 */
 	public function render_content_access_rules() {
-		$script_path = UR()->plugin_path() . '/chunks/content-access-rules.js';
-		$script_url  = UR()->plugin_url() . '/chunks/content-access-rules.js';
-
-		// Check if the built file exists, if not, use dashboard script as fallback
-		if ( ! file_exists( $script_path ) ) {
-			// Use dashboard script temporarily until build is run
-			wp_enqueue_script(
-				'ur-dashboard-script',
-				UR()->plugin_url() . '/chunks/dashboard.js',
-				array(
-					'wp-element',
-					'wp-blocks',
-					'wp-editor',
-				),
-				UR()->version,
-				true
-			);
-
-			// Localize script with necessary data (without site assistant data)
-			wp_localize_script(
-				'ur-dashboard-script',
-				'_UR_DASHBOARD_',
-				array(
-					'adminURL'             => esc_url( admin_url() ),
-					'assetsURL'            => esc_url( UR()->plugin_url() . '/assets/' ),
-					'urRestApiNonce'       => wp_create_nonce( 'wp_rest' ),
-					'restURL'              => rest_url(),
-					'version'              => UR()->version,
-				)
-			);
-
-			// Render React mount point with route redirect
-			?>
-			<div class="wrap">
-				<?php echo user_registration_plugin_main_header(); ?>
-				<div id="user-registration-dashboard"></div>
-			</div>
-			<script>
-				// Redirect to content access rules route when React app loads
-				document.addEventListener('DOMContentLoaded', function() {
-					if (window.location.hash !== '#/content-access-rules') {
-						window.location.hash = '#/content-access-rules';
-					}
-				});
-			</script>
-			<?php
-			return;
-		}
+		$script_url = UR()->plugin_url() . '/chunks/content-access-rules.js';
 
 		// Enqueue standalone content access rules script
 		wp_enqueue_script(
@@ -244,6 +197,11 @@ class URCR_Admin {
 				'version'        => UR()->version,
 			)
 		);
+
+		// Localize urcr_localized_data for React components
+		if ( class_exists( 'URCR_Admin_Assets' ) ) {
+			URCR_Admin_Assets::localize_react_scripts( 'ur-content-access-rules-script' );
+		}
 
 		// Render React mount point
 		?>
