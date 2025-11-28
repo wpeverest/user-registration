@@ -5608,6 +5608,24 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 		$form_key_list  = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$form_validator = new UR_Form_Validation();
 
+		if ( preg_match('/^country_/', $data->field_name ) && in_array( $data->field_name, $form_key_list, true ) ) {
+			$field_data = array(
+				'country' => $data->value
+			);
+
+			foreach ( $form_data as $state ) {
+				switch ( $state->field_name) {
+					case $data->field_name . '_state':
+						$field_data['state'] = ! empty( $state->value ) ? $state->value : '' ;
+						break;
+
+					default:
+						break;
+				}
+			}
+			$data->value = json_encode( $field_data );
+		}
+
 		if ( in_array( $data->field_name, $form_key_list, true ) ) {
 			$form_data_index    = array_search( $data->field_name, $form_key_list, true );
 			$single_form_field  = $form_field_data[ $form_data_index ];
@@ -5953,6 +5971,10 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						continue;
 					}
 
+					if ( 'country' === $single_item->field_key && isset( $single_item->advance_setting->enable_state ) ) {
+						$field['enable_state'] = ur_string_to_bool( $single_item->advance_setting->enable_state );
+					}
+
 					// Unset multiple choice and single item.
 					if ( 'subscription_plan' === $single_item->field_key || 'multiple_choice' === $single_item->field_key || 'single_item' === $single_item->field_key || 'captcha' === $single_item->field_key || 'stripe_gateway' === $single_item->field_key ) {
 						continue;
@@ -6214,9 +6236,14 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					/**
 					 * Embed the current country value to allow to remove it if it's not allowed.
 					 */
-					if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
-						printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( $value ), esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $value ] ) );
-					}
+					// if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
+					// 	$isJson = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
+					// 	if ( $isJson ) {
+					// 		$value 	 = json_decode( $value, true );
+					// 	}
+					// 	$country = is_array( $value ) ? $value['country'] : $value;
+					// 	printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $country ] ) , esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $country ] ) );
+					// }
 					?>
 					</div>
 					<?php } ?>
@@ -6278,6 +6305,16 @@ if ( ! file_exists( 'user_registration_sanitize_profile_update' ) ) {
 				} else {
 					$value = '';
 				}
+				break;
+			case 'country':
+				$country_data = array();
+				if ( isset( $submitted_data[ $key ] ) ) { // phpcs:ignore
+					$country_data['country'] = sanitize_text_field( wp_unslash( $submitted_data[ $key ] ) ); // phpcs:ignore
+				}
+				if ( isset( $submitted_data[ $key . '_state' ] ) ) { // phpcs:ignore
+					$country_data['state'] = sanitize_text_field( wp_unslash( $submitted_data[ $key . '_state' ] ) ); // phpcs:ignore
+				}
+				$value = json_encode( $country_data );
 				break;
 			default:
 				$value = isset( $submitted_data[ $key ] ) ? $submitted_data[ $key ] : ''; // phpcs:ignore

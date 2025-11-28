@@ -95,6 +95,7 @@ class UR_AJAX {
 			'handle_default_wordpress_login'    => false,
 			'skip_site_assistant_section'       => false,
 			'login_settings_page_validation'    => false,
+			'update_state_field'				=> true,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -313,6 +314,17 @@ class UR_AJAX {
 			}
 		}
 
+		if ( 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
+			$single_field[ $key ] = json_encode(
+				array(
+					'country' => sanitize_text_field( $single_field[ $key ] ),
+					'state'   => sanitize_text_field(
+						isset( $single_field[ $key . '_state' ] ) ? $single_field[ $key . '_state' ] : ''
+					),
+				)
+			);
+		}
+
 		/**
 		 * Action hook to perform validation of edit profile form.
 		 *
@@ -377,6 +389,7 @@ class UR_AJAX {
 					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
 
 					if ( 'disabled' !== $disabled ) {
+						error_log( print_r( $update_key, true ) );
 						update_user_meta( $user_id, $update_key, $single_field[ $key ] );
 					}
 				}
@@ -2466,6 +2479,37 @@ class UR_AJAX {
 		wp_send_json_success(
 			array(
 				'message' => __( 'Page validation successful.', 'user-registration' ),
+			)
+		);
+	}
+
+	/**
+	 * Update state fields when country is changed.
+	 *
+	 * @since xx.xx.xx
+	 */
+	public static function update_state_field(){
+		check_ajax_referer( 'user_registration_update_state_field_nonce', 'security' );
+
+		$country = $_POST['country'];
+
+		$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
+		$state_list = json_decode( $states_json, true );
+
+		$states 	= isset( $state_list[ $country ] ) ? $state_list[ $country ] : '';
+		$option 	= '';
+		$has_state 	= false;
+		if ( is_array( $states ) ) {
+			foreach ( $states as $state_key => $state ) {
+				$option .= '<option value="' . $state_key . '">' . esc_html( $state ) . '</option>';
+			}
+			$has_state = true;
+		}
+
+		wp_send_json_success(
+			array(
+				'state' 	=> $option,
+				'has_state' => $has_state
 			)
 		);
 	}

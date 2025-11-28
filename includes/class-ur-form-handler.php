@@ -277,6 +277,14 @@ class UR_Form_Handler {
 			 */
 			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
 
+			if ( 'country' === $field['field_key'] ) {
+				foreach ( $fields as $field_key => $field_value ) {
+					if ( $field_value->field_type === 'country' ) {
+						update_user_meta( $user_id, 'user_registration_' . $field_value->field_name, $field_value->value );
+					}
+				}
+			}
+
 			wp_safe_redirect( ur_get_account_endpoint_url( $profile_endpoint ) );
 			exit;
 		}
