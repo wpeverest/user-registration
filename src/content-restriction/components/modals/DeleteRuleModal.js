@@ -3,8 +3,8 @@
  */
 import React, { useState } from "react";
 import { __ } from "@wordpress/i18n";
-import { deleteRule } from "../api/content-access-rules-api";
-import { showSuccess, showError } from "../utils/notifications";
+import { deleteRule } from "../../api/content-access-rules-api";
+import { showSuccess, showError } from "../../utils/notifications";
 import Modal from "./Modal";
 
 const DeleteRuleModal = ({ isOpen, onClose, rule, onDeleteSuccess }) => {

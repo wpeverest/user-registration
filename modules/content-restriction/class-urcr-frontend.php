@@ -855,6 +855,7 @@ class URCR_Frontend {
 					$is_target = urcr_is_target_post( $access_rule['target_contents'], $post );
 
 					if ( true === $is_target ) {
+
 						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
 						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
 

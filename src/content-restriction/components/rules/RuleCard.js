@@ -3,11 +3,11 @@
  */
 import React, {useState, useEffect, useRef} from "react";
 import {__} from "@wordpress/i18n";
-import {toggleRuleStatus, duplicateRule} from "../api/content-access-rules-api";
-import SettingsPanel from "./SettingsPanel";
+import {toggleRuleStatus, duplicateRule} from "../../api/content-access-rules-api";
+import SettingsPanel from "../settings/SettingsPanel";
 import RuleContentDisplay from "./RuleContentDisplay";
-import DeleteRuleModal from "./DeleteRuleModal";
-import {showSuccess, showError} from "../utils/notifications";
+import DeleteRuleModal from "../modals/DeleteRuleModal";
+import {showSuccess, showError} from "../../utils/notifications";
 
 /* global _UR_DASHBOARD_ */
 const {adminURL} = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
@@ -20,6 +20,7 @@ const RuleCard = ({
 					  onToggleSettings,
 					  onRuleUpdate,
 					  onRuleStatusUpdate,
+					  onRuleDeleteOrDuplicate,
 				  }) => {
 	const [isToggling, setIsToggling] = useState(false);
 	const [isDuplicating, setIsDuplicating] = useState(false);
@@ -75,7 +76,7 @@ const RuleCard = ({
 	};
 
 	const handleDeleteSuccess = () => {
-		onRuleUpdate();
+		onRuleDeleteOrDuplicate();
 	};
 
 	const handleDuplicate = async () => {
@@ -85,7 +86,7 @@ const RuleCard = ({
 			const response = await duplicateRule(rule.id);
 			if (response.success) {
 				showSuccess(response.message || __("Rule duplicated successfully", "user-registration"));
-				onRuleUpdate();
+				onRuleDeleteOrDuplicate();
 			} else {
 				showError(response.message || __("Failed to duplicate rule", "user-registration"));
 			}

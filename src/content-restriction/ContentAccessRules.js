@@ -4,8 +4,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { __ } from "@wordpress/i18n";
 import { getAllRules } from "./api/content-access-rules-api";
-import RuleCard from "./components/RuleCard";
-import AddNewRuleModal from "./components/AddNewRuleModal";
+import RuleCard from "./components/rules/RuleCard";
+import AddNewRuleModal from "./components/modals/AddNewRuleModal";
 import { showError } from "./utils/notifications";
 import { getURCRLocalizedData, getURCRData } from "./utils/localized-data";
 
@@ -82,7 +82,21 @@ const ContentAccessRules = () => {
 		});
 	};
 
-	const handleRuleUpdate = () => {
+	const handleRuleUpdate = (updatedRule) => {
+		// If updatedRule is provided, update local state without refetching
+		if (updatedRule) {
+			setRules((prevRules) =>
+				prevRules.map((rule) =>
+					rule.id === updatedRule.id ? { ...rule, ...updatedRule } : rule
+				)
+			);
+		}
+		// If called without parameter (delete/duplicate), refetch is needed
+		// But for updates, we don't refetch - just update local state
+	};
+	
+	const handleRuleDeleteOrDuplicate = () => {
+		// Refetch rules after delete or duplicate operations
 		fetchRules();
 	};
 
@@ -166,6 +180,7 @@ const ContentAccessRules = () => {
 								onToggleSettings={() => handleToggleSettings(rule.id)}
 								onRuleUpdate={handleRuleUpdate}
 								onRuleStatusUpdate={handleRuleStatusUpdate}
+								onRuleDeleteOrDuplicate={handleRuleDeleteOrDuplicate}
 							/>
 						))}
 					</div>

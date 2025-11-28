@@ -3,11 +3,13 @@
  */
 import React, {useState, useRef, useEffect, useCallback} from "react";
 import {__} from "@wordpress/i18n";
-import {updateRule} from "../api/content-access-rules-api";
-import {showSuccess, showError} from "../utils/notifications";
-import ConditionFieldDropdown from "./ConditionFieldDropdown";
+import {updateRule} from "../../api/content-access-rules-api";
+import {showSuccess, showError} from "../../utils/notifications";
+import ConditionFieldDropdown from "../dropdowns/ConditionFieldDropdown";
 import ConditionRow from "./ConditionRow";
-import {getURCRLocalizedData, getURCRData} from "../utils/localized-data";
+import AdvancedLogicGates from "./AdvancedLogicGates";
+import AccessControlSection from "./AccessControlSection";
+import {getURCRLocalizedData, getURCRData} from "../../utils/localized-data";
 
 /* global _UR_DASHBOARD_ */
 const {adminURL} = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
@@ -18,27 +20,56 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 	const [showCondition, setShowCondition] = useState(false);
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [conditions, setConditions] = useState([]);
-	const [conditionContentTargets, setConditionContentTargets] = useState({}); // Map condition ID to content targets
+	const [accessControl, setAccessControl] = useState(rule.access_control || "access");
+	const [contentTargets, setContentTargets] = useState([]); // Rule-level content targets
+	const [logicGate, setLogicGate] = useState("AND"); // Default logic gate
 	const dropdownWrapperRef = useRef(null);
 
 	// Initialize conditions and content targets from rule data
 	useEffect(() => {
 		if (rule.logic_map && rule.logic_map.conditions && rule.logic_map.conditions.length > 0) {
-			const initialConditions = rule.logic_map.conditions.map((cond) => ({
-				id: cond.id || `x${Date.now()}`,
-				value: cond.type, // Field identifier
-				label: cond.type, // Will be updated based on type
-				type: getConditionType(cond.type),
-				operator: "is",
-				conditionValue: cond.value || (getConditionType(cond.type) === "multiselect" ? [] : ""),
-				accessControl: cond.access_control || rule.access_control || "access", // Get from condition or fallback to rule level
-			}));
+			const initialConditions = rule.logic_map.conditions.map((cond) => {
+				let conditionValue = cond.value;
+				const conditionType = getConditionType(cond.type);
+				
+				// Normalize user_state: if it's an array, extract the first value
+				// Also convert old format (logged_in/logged_out) to new format (logged-in/logged-out)
+				if (cond.type === "user_state") {
+					if (Array.isArray(conditionValue)) {
+						conditionValue = conditionValue[0] || "";
+					}
+					// Convert underscore format to hyphen format for backward compatibility
+					if (conditionValue === "logged_in") {
+						conditionValue = "logged-in";
+					} else if (conditionValue === "logged_out") {
+						conditionValue = "logged-out";
+					}
+				} else if (!conditionValue) {
+					conditionValue = conditionType === "multiselect" ? [] : "";
+				}
+				
+				return {
+					id: cond.id || `x${Date.now()}`,
+					value: cond.type, // Field identifier
+					label: cond.type, // Will be updated based on type
+					type: conditionType,
+					operator: "is",
+					conditionValue: conditionValue,
+				};
+			});
 			setConditions(initialConditions);
+			// Initialize logic gate from rule
+			if (rule.logic_map.logic_gate) {
+				setLogicGate(rule.logic_map.logic_gate);
+			}
 
-			// Initialize content targets from rule.target_contents
-			// Map all targets to the first condition (or distribute as needed)
+			// Initialize access control from rule
+			if (rule.access_control) {
+				setAccessControl(rule.access_control);
+			}
+
+			// Initialize content targets from rule.target_contents (rule-level)
 			if (rule.target_contents && Array.isArray(rule.target_contents) && rule.target_contents.length > 0) {
-				const targetsMap = {};
 				// Convert old format to new format
 				const convertedTargets = rule.target_contents.map((target) => {
 					// Map old type names to new ones
@@ -63,8 +94,7 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 						value: value,
 					};
 				});
-				targetsMap[initialConditions[0].id] = convertedTargets;
-				setConditionContentTargets(targetsMap);
+				setContentTargets(convertedTargets);
 			}
 		}
 	}, [rule.id]); // Only run on initial load
@@ -93,10 +123,12 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 	const handleSave = async () => {
 		setIsSaving(true);
 		try {
+			// Check if advanced logic is enabled
+			const isAdvancedLogicEnabled = getURCRData("is_advanced_logic_enabled", false);
 			// Build conditions array for logic_map
 			const logicConditions = conditions.map((cond) => {
 				let conditionValue = cond.conditionValue;
-				
+
 				// Handle special cases for condition values
 				if (cond.type === "period" && typeof conditionValue === "object") {
 					// Keep as object for period type
@@ -108,10 +140,14 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 							form_fields: [conditionValue.field_name],
 						};
 					} else {
-						conditionValue = { form_id: "", form_fields: [] };
+						conditionValue = {form_id: "", form_fields: []};
 					}
+				} else if (cond.value === "user_state") {
+					// user_state should be a scalar string, not an array
+					// Extract from array if it was converted incorrectly
+					conditionValue = Array.isArray(conditionValue) ? (conditionValue[0] || "") : (conditionValue || "");
 				} else if (cond.type === "multiselect" || cond.type === "checkbox") {
-					// Ensure array format
+					// Ensure array format for other checkbox/multiselect fields
 					conditionValue = Array.isArray(conditionValue) ? conditionValue : (conditionValue ? [conditionValue] : []);
 				} else if (cond.operator === "empty" || cond.operator === "not empty") {
 					conditionValue = null;
@@ -123,24 +159,11 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 					value: conditionValue,
 				};
 
-				// Add access_control to condition if it exists
-				if (cond.accessControl) {
-					conditionData.access_control = cond.accessControl;
-				}
-
 				return conditionData;
 			});
 
-			// Collect all content targets from all conditions
-			const allTargetContents = [];
-			Object.values(conditionContentTargets).forEach((targets) => {
-				if (Array.isArray(targets)) {
-					allTargetContents.push(...targets);
-				}
-			});
-
-			// Build target_contents array
-			const targetContents = allTargetContents.map((target) => {
+			// Build target_contents array from rule-level contentTargets
+			const targetContents = contentTargets.map((target) => {
 				// Map new type names back to old format
 				let type = target.type;
 				if (type === "pages") type = "wp_pages";
@@ -170,10 +193,8 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 			});
 
 			// Build actions array
-			// Use the first condition's accessControl, or fallback to rule's access_control
-			const defaultAccessControl = conditions.length > 0 && conditions[0].accessControl 
-				? conditions[0].accessControl 
-				: (rule.access_control || "access");
+			// Use rule-level accessControl
+			const defaultAccessControl = accessControl || "access";
 
 			const actions = [
 				{
@@ -196,13 +217,24 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 			const logicMap = {
 				type: "group",
 				id: rule.logic_map?.id || `x${Date.now()}`,
-				logic_gate: rule.logic_map?.logic_gate || "AND",
 				conditions: logicConditions,
 			};
+
+			// Only include logic_gate if advanced logic is enabled
+			if (isAdvancedLogicEnabled) {
+				logicMap.logic_gate = logicGate || rule.logic_map?.logic_gate || "AND";
+			} else {
+				// When disabled, either set to AND or remove the key
+				// Remove the key to keep it clean
+				if (rule.logic_map?.logic_gate) {
+					// Key will not be included in the object
+				}
+			}
 
 			// Build the full access_rule_data structure
 			const accessRuleData = {
 				enabled: rule.enabled !== undefined ? rule.enabled : true,
+				access_control: accessControl || "access",
 				logic_map: logicMap,
 				target_contents: targetContents,
 				actions: actions,
@@ -216,7 +248,16 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 			const response = await updateRule(rule.id, data);
 			if (response.success) {
 				showSuccess(response.message || __("Rule saved successfully", "user-registration"));
-				onRuleUpdate();
+				// Update local state with the updated rule data without refetching
+				const updatedRule = {
+					...rule,
+					title: data.title,
+					access_control: accessControl,
+					logic_map: logicMap,
+					target_contents: targetContents,
+					actions: actions,
+				};
+				onRuleUpdate(updatedRule);
 			} else {
 				showError(response.message || __("Failed to save rule", "user-registration"));
 			}
@@ -281,21 +322,23 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 
 	const handleAfterConditionSelection = (option) => {
 		// Add new condition
+		// user_state should be initialized as empty string, not array
+		let initialValue = "";
+		if (option.type === "multiselect") {
+			initialValue = [];
+		} else if (option.type === "checkbox" && option.value !== "user_state") {
+			initialValue = [];
+		}
+		
 		const newCondition = {
 			id: `x${Date.now()}`, // ID format matching old system
 			value: option.value, // Field identifier
 			label: option.label,
 			type: option.type,
 			operator: "is",
-			conditionValue: option.type === "multiselect" || option.type === "checkbox" ? [] : "", // The actual value for the condition
-			accessControl: "access", // Default access control for each condition
-			contentTargets: [], // Initialize empty content targets
+			conditionValue: initialValue, // The actual value for the condition
 		};
 		setConditions([...conditions, newCondition]);
-		setConditionContentTargets((prev) => ({
-			...prev,
-			[newCondition.id]: [],
-		}));
 		setDropdownOpen(false);
 	};
 
@@ -309,47 +352,64 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 
 	const handleConditionRemove = (conditionId) => {
 		setConditions(conditions.filter((cond) => cond.id !== conditionId));
-		setConditionContentTargets((prev) => {
-			const updated = { ...prev };
-			delete updated[conditionId];
-			return updated;
-		});
 	};
+	// Check if advanced logic is enabled
+	const isAdvancedLogicEnabled = getURCRData("is_advanced_logic_enabled", false);
 
-	const handleContentTargetsChange = useCallback((conditionId, targets) => {
-		setConditionContentTargets((prev) => {
-			// Only update if the value actually changed (deep comparison for arrays)
-			const prevTargets = prev[conditionId];
-			if (JSON.stringify(prevTargets) === JSON.stringify(targets)) {
-				return prev;
-			}
-			return {
-				...prev,
-				[conditionId]: targets,
-			};
-		});
-	}, []);
 
 	return (
 		<div className="urcr-rule-content-panel">
+			{/* Advanced Logic Gates */}
+			{
+				isAdvancedLogicEnabled && <AdvancedLogicGates
+					logicGate={logicGate}
+					onLogicGateChange={setLogicGate}
+				/>
+			}
 			<div className="urcr-rule-body ur-p-2">
-				{/* Conditions List */}
-				{conditions.length > 0 && (
-					<div className="urcr-conditions-list">
-						{conditions.map((condition) => (
-							<ConditionRow
-								key={condition.id}
-								condition={{
-									...condition,
-									contentTargets: conditionContentTargets[condition.id] || [],
-								}}
-								onUpdate={handleConditionUpdate}
-								onRemove={() => handleConditionRemove(condition.id)}
-								onContentTargetsChange={handleContentTargetsChange}
-							/>
-						))}
-					</div>
-				)}
+				<div className="urcr-condition-row-parent">
+					{/* Conditions List */}
+					{conditions.length > 0 && (
+						<div
+							className={`urcr-conditions-list ${getURCRData("is_advanced_logic_enabled", false) ? "urcr-conditional-logic-definitions" : ""}`}>
+							{getURCRData("is_advanced_logic_enabled", false) && (
+								<div className={`urcr-condition-logic-gate-wrapper urcr-logic-group-rule-${logicGate}`}>
+									<div
+										className={`urcr-condition-logic-gate-button urcr-sub-logic-group-rule-${logicGate}`}
+									>
+										{logicGate}
+									</div>
+								</div>
+							)}
+							{conditions.map((condition, index) => (
+								<div key={condition.id} className="urcr-condition-wrapper">
+									<ConditionRow
+										condition={condition}
+										onUpdate={handleConditionUpdate}
+									/>
+									<button
+										type="button"
+										className="button button-link-delete"
+										onClick={() => handleConditionRemove(condition.id)}
+										aria-label={__("Remove condition", "user-registration")}
+									>
+										<span className="dashicons dashicons-no-alt"></span>
+									</button>
+								</div>
+							))}
+						</div>
+					)}
+
+					{/* Access Control Section - Show once for all conditions */}
+					{conditions.length > 0 && (
+						<AccessControlSection
+							accessControl={accessControl}
+							onAccessControlChange={setAccessControl}
+							contentTargets={contentTargets}
+							onContentTargetsChange={setContentTargets}
+						/>
+					)}
+				</div>
 
 				{/* Add Condition Button */}
 

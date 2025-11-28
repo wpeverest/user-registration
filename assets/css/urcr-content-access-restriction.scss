@@ -1,33 +1,56 @@
-/**
- * Content Access Restriction Styles
- * Card-based design for rules viewer
- * Reuses existing utility classes and components where possible
- */
+$color_1: #fff;
+$color_2: #d63638;
+$color_3: #646970;
+$color_4: #383838;
+$color_5: #475bb2;
+$color_6: #1d2327;
+$color_7: #ff4f55;
+$color_8: #6b46c1;
+$color_9: #553c9a;
+$color_10: #2271b1;
+$color_11: #135e96;
+$color_12: #8c8f94;
+$color_13: #2c3338;
+$color_14: #333;
+$color_15: #46b450;
+$color_16: #dc3232;
+$color_17: #0073aa;
+$color_18: #787c82;
+$background-color_1: #ccc;
+$background-color_2: #fff;
+$background-color_3: #00a32a;
+$background-color_4: #f0f0f1;
+$background-color_5: transparent;
+$background-color_6: rgba(0, 0, 0, .5);
+$background-color_7: #f6f7f7;
+$background-color_8: #f5f5f5;
+$background-color_9: #f8f8fa;
+$background-color_10: #475bb2;
+$border-color_1: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+$border-color_2: #e8d5ff;
+$border-color_3: #d4b3ff;
+$border-color_4: #e5f5fa;
+$border-color_5: #d0e8f0;
+$border-color_6: #475bb2;
+$border-color_7: #787c82;
+$border-left-color_1: #46b450;
+$border-left-color_2: #dc3232;
+$border-left-color_3: #0073aa;
 
-@import "variables/variables";
-
-// ============================================================================
-// Main Container
-// ============================================================================
-
-.user-registration-content-restriction-viewer {
-	padding: 20px;
-
-	// Ensure notices appear properly
-	& ~ .notice,
-	& + .notice {
-		margin: 15px 0;
+@keyframes urcr-dropdown-fade-in {
+	from {
+		opacity: 0;
+		transform: translateY(-4px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
 	}
 }
 
-// Notices placed before the viewer container
-.wrap > .notice[id^="urcr-notice-"] {
-	margin: 15px 20px 15px 0;
-	position: relative;
-	z-index: 1;
+.user-registration-content-restriction-viewer {
+	padding: 20px;
 }
-
-// Container styles handled by existing classes
 
 .urcr-header {
 	display: flex;
@@ -38,10 +61,6 @@
 	gap: 12px;
 }
 
-// ============================================================================
-// Header & Add New Button
-// ============================================================================
-
 .urcr-add-new-button {
 	display: inline-flex;
 	align-items: center;
@@ -51,13 +70,13 @@
 	white-space: nowrap;
 	text-decoration: none;
 	text-shadow: none;
-	border: 1px solid $primary_color;
-	border-radius: $border_radius_3;
-	background: $primary_color;
+	border: 1px solid #475bb2;
+	border-radius: 3px;
+	background: #475bb2;
 	font-size: 13px;
 	font-weight: 400;
 	line-height: 2.15384615;
-	color: $white;
+	color: $color_1;
 	padding: 5px 10px;
 	min-height: 30px;
 	-webkit-appearance: none;
@@ -73,24 +92,27 @@
 	}
 
 	&:hover {
-		background: $primary_dark;
-		border-color: $primary_dark;
-		color: $white;
+		background: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+		border-color: $border-color_1;
+		color: $color_1;
 	}
 
-	&:active,
+	&:active {
+		background: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+		border-color: $border-color_1;
+		color: $color_1;
+		box-shadow: 0 0 0 1px #fff, 0 0 0 3px #475bb2;
+		outline: 2px solid transparent;
+	}
+
 	&:focus {
-		background: $primary_dark;
-		border-color: $primary_dark;
-		color: $white;
-		box-shadow: 0 0 0 1px $white, 0 0 0 3px $primary_color;
+		background: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+		border-color: $border-color_1;
+		color: $color_1;
+		box-shadow: 0 0 0 1px #fff, 0 0 0 3px #475bb2;
 		outline: 2px solid transparent;
 	}
 }
-
-// ============================================================================
-// Loading & Error States
-// ============================================================================
 
 .urcr-loading-container {
 	display: flex;
@@ -110,17 +132,13 @@
 
 	p {
 		font-size: 16px;
-		color: #d63638;
+		color: $color_2;
 		margin-bottom: 16px;
 	}
 }
 
-// ============================================================================
-// No Rules State
-// ============================================================================
-
 .urcr-no-rules {
-	background: $white;
+	background: #fff;
 	border-radius: 8px;
 	padding: 48px;
 	text-align: center;
@@ -128,14 +146,10 @@
 
 	p {
 		font-size: 16px;
-		color: #646970;
+		color: $color_3;
 		margin-bottom: 16px;
 	}
 }
-
-// ============================================================================
-// Rules List
-// ============================================================================
 
 .urcr-rules-list {
 	margin-top: 20px;
@@ -144,38 +158,28 @@
 	gap: 16px;
 }
 
-// ============================================================================
-// Rule Card
-// ============================================================================
-
 .urcr-rule-card {
 	background: #f6f7f7;
-	border-radius: 8px!important;
+	border-radius: 8px !important;
 	border: 1px solid #e0e0e0;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-	transition: box-shadow 0.2s ease;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+	transition: box-shadow .2s ease;
 
 	&:hover {
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
 	}
-}
 
-// Accordion styles are handled by existing CSS from settings
-// Content-restriction-specific extensions and overrides
-
-// Override accordion header styles for content restriction
-.urcr-rule-card {
 	.user-registration-card__header.integration-header-info {
 		border-bottom: none !important;
 		border-radius: 10px;
-		&.active {
-			border-bottom: 1px solid #80808021 !important;
-			border-radius: 10px 10px 0 0 !important;
-		}
+	}
+
+	.user-registration-card__header.integration-header-info.active {
+		border-bottom: 1px solid rgba(128, 128, 128, .1294117647) !important;
+		border-radius: 10px 10px 0 0 !important;
 	}
 }
 
-// Extend integration-detail to handle rule-specific content
 .urcr-integration-detail {
 	display: flex;
 	align-items: center;
@@ -188,84 +192,81 @@
 	}
 
 	.urcr-separator {
-		color: $grey-400;
+		color: $color_4;
 		margin: 0 4px;
 	}
 }
 
 .urcr-rule-title-link {
-	color: $grey-400;
+	color: $color_4;
 	text-decoration: none;
 	font-weight: 600;
 
 	&:hover {
-		color: $primary_color;
+		color: $color_5;
 	}
 }
 
 .urcr-rule-id {
-	color: $grey-400;
+	color: $color_4;
 	font-size: 13px;
 	margin: 0 4px;
 }
 
 .urcr-separator {
-	color: $grey-400;
+	color: $color_4;
 	font-size: 13px;
 }
 
 .urcr-status-label {
-	color: $grey-400;
+	color: $color_4;
 	font-size: 13px;
 	font-weight: 400;
 	margin-left: 4px;
 	margin-right: 8px;
 }
 
-// Extend integration-action to handle multiple items
 .urcr-integration-action {
 	display: flex;
 	align-items: center;
 	gap: 8px;
 	width: auto;
 	height: auto;
-	background: transparent;
+	background: 0 0;
 	border: none;
 	padding: 0;
 	margin-left: auto;
 
-	// SVG arrow styling - black by default, blue when active
 	svg.css-i6dzq1 {
 		width: 24px;
 		height: 24px;
-		stroke: #1d2327; // Black color
-		transition: transform 0.3s ease, stroke 0.3s ease;
-		background: transparent;
+		stroke: #1d2327;
+		transition: transform .3s ease, stroke .3s ease;
+		background: 0 0;
 		border-radius: 0;
 		padding: 0;
-		color: #1d2327;
+		color: $color_6;
 	}
 }
 
-// Icons turn blue only when individually active (clicked)
 .urcr-icon-active {
-	color: $primary_color !important;
+	color: $color_5 !important;
 
 	.dashicons {
-		color: $primary_color !important;
+		color: $color_5 !important;
 	}
+}
 
-	&.css-i6dzq1 {
-		stroke: $primary_color !important;
-		color: $primary_color !important;
-	}
+.urcr-icon-active.css-i6dzq1 {
+	stroke: #475bb2 !important;
+	color: $color_5 !important;
 }
 
 .urcr-status-toggle-wrapper {
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	min-width: 52px; // Toggle width (36px) + gap (8px) + spinner width (16px) + some padding
+	min-width: 52px;
 }
 
 .urcr-status-toggle {
@@ -274,7 +275,7 @@
 	width: 36px;
 	height: 20px;
 
-	input[type="checkbox"] {
+	input[type=checkbox] {
 		opacity: 0;
 		width: 0;
 		height: 0;
@@ -287,8 +288,8 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background-color: #ccc;
-		transition: 0.4s;
+		background-color: $background-color_1;
+		transition: .4s;
 		border-radius: 20px;
 
 		&::before {
@@ -298,23 +299,33 @@
 			width: 14px;
 			left: 3px;
 			bottom: 3px;
-			background-color: white;
-			transition: 0.4s;
+			background-color: $background-color_2;
+			transition: .4s;
 			border-radius: 50%;
 		}
 	}
 
-	input:checked + .urcr-slider {
-		background-color: #00a32a;
-	}
+	input {
+		&:checked {
+			+ {
+				.urcr-slider {
+					background-color: $background-color_3;
 
-	input:checked + .urcr-slider::before {
-		transform: translateX(16px);
-	}
+					&::before {
+						transform: translateX(16px);
+					}
+				}
+			}
+		}
 
-	input:disabled + .urcr-slider {
-		cursor: not-allowed;
-		opacity: 0.6;
+		&:disabled {
+			+ {
+				.urcr-slider {
+					cursor: not-allowed;
+					opacity: .6;
+				}
+			}
+		}
 	}
 }
 
@@ -328,48 +339,46 @@
 	vertical-align: middle;
 }
 
-// Settings text and icon styles - black by default, blue when active
 .urcr-settings-text {
-	color: #1d2327; // Black by default
+	color: $color_6;
 	font-size: 13px;
 	margin-right: 5px;
 	text-decoration: none;
-	transition: color 0.3s ease;
+	transition: color .3s ease;
 }
 
-.urcr-settings-icon,
 .urcr-menu-toggle {
 	padding: 4px;
 	border: none;
-	background: transparent;
+	background: 0 0;
 	cursor: pointer;
-	color: #1d2327; // Black by default
-	border-radius: $border_radius_3;
-	transition: background-color 0.2s ease, color 0.3s ease;
+	color: $color_6;
+	border-radius: 3px;
+	transition: background-color .2s ease, color .3s ease;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	text-decoration: none !important;
-	outline: none !important;
+	outline: 0 !important;
 	box-shadow: none !important;
 
 	&:hover {
 		background: #f0f0f1;
-		color: #1d2327;
+		color: $color_6;
 		text-decoration: none !important;
-		outline: none !important;
+		outline: 0 !important;
 		box-shadow: none !important;
 	}
 
 	&:focus {
 		text-decoration: none !important;
 		box-shadow: none !important;
-		outline: none !important;
+		outline: 0 !important;
 		border: none !important;
 	}
 
 	&:active {
-		outline: none !important;
+		outline: 0 !important;
 		box-shadow: none !important;
 		border: none !important;
 	}
@@ -378,23 +387,62 @@
 		font-size: 16px;
 		width: 16px;
 		height: 16px;
-		color: #1d2327; // Black by default
+		color: $color_6;
 		text-decoration: none;
-		transition: color 0.3s ease;
+		transition: color .3s ease;
+	}
+
+	.dashicons-ellipsis {
+		transform: rotate(90deg);
+		display: inline-block;
 	}
 }
 
-// Rotate ellipsis icon 90 degrees (from vertical to horizontal)
-.urcr-menu-toggle .dashicons-ellipsis {
-	transform: rotate(90deg);
-	display: inline-block;
+.urcr-settings-icon {
+	padding: 4px;
+	border: none;
+	background: 0 0;
+	cursor: pointer;
+	color: $color_6;
+	border-radius: 3px;
+	transition: background-color .2s ease, color .3s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none !important;
+	outline: 0 !important;
+	box-shadow: none !important;
+
+	&:hover {
+		background: #f0f0f1;
+		color: $color_6;
+		text-decoration: none !important;
+		outline: 0 !important;
+		box-shadow: none !important;
+	}
+
+	&:focus {
+		text-decoration: none !important;
+		box-shadow: none !important;
+		outline: 0 !important;
+		border: none !important;
+	}
+
+	&:active {
+		outline: 0 !important;
+		box-shadow: none !important;
+		border: none !important;
+	}
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+		color: $color_6;
+		text-decoration: none;
+		transition: color .3s ease;
+	}
 }
-
-// Individual icon active states handled by .urcr-icon-active class
-
-// ============================================================================
-// Menu Dropdown
-// ============================================================================
 
 .urcr-menu-wrapper {
 	position: relative;
@@ -404,10 +452,10 @@
 	position: absolute;
 	top: 100%;
 	right: 0;
-	background: $white;
-	border: $border_width solid $border-color;
-	border-radius: $border_radius_4;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	background: #fff;
+	border: 1px solid #e1e1e1;
+	border-radius: 4px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
 	min-width: 150px;
 	z-index: 1000;
 	margin-top: 4px;
@@ -419,21 +467,21 @@
 	padding: 8px 12px;
 	text-align: left;
 	border: none;
-	background: transparent;
+	background: 0 0;
 	cursor: pointer;
-	color: $grey-400;
+	color: $color_4;
 	text-decoration: none;
 	font-size: 13px;
-	transition: background-color 0.2s ease;
+	transition: background-color .2s ease;
 
 	&:hover {
 		background: #f0f0f1;
-		color: $grey-400;
+		color: $color_4;
 	}
 
 	&:disabled {
 		cursor: not-allowed;
-		opacity: 0.6;
+		opacity: .6;
 	}
 
 	.dashicons {
@@ -446,22 +494,18 @@
 }
 
 .urcr-menu-trash {
-	color: $red;
+	color: $color_7;
 
 	&:hover {
 		background: #fcf0f1;
-		color: $red;
+		color: $color_7;
 	}
 }
 
-// ============================================================================
-// Settings Panel
-// ============================================================================
-
 .urcr-rule-settings-panel {
-	margin-bottom: $spacing_20px;
-	padding-bottom: $spacing_20px;
-	border-bottom: $border_width solid $border-color;
+	margin-bottom: 20px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #e1e1e1;
 
 	h4 {
 		font-size: 14px;
@@ -471,7 +515,7 @@
 
 	p {
 		font-size: 13px;
-		color: #646970;
+		color: $color_3;
 		margin: 0;
 	}
 
@@ -481,14 +525,10 @@
 }
 
 .urcr-settings-panel-actions {
-	margin-top: $spacing_20px;
-	padding-top: $spacing_15px;
-	border-top: $border_width solid $border-color;
+	margin-top: 20px;
+	padding-top: 15px;
+	border-top: 1px solid #e1e1e1;
 }
-
-// ============================================================================
-// Rule Content Display
-// ============================================================================
 
 .urcr-rule-content-panel {
 	display: flex;
@@ -510,11 +550,9 @@
 
 	.urcr-condition-separator {
 		font-size: 14px;
-		color: $grey-400;
+		color: $color_4;
 	}
 }
-
-
 
 .urcr-empty-rule-state {
 	display: flex;
@@ -523,9 +561,8 @@
 	flex-direction: column;
 }
 
-// Common base class for add buttons
 .urcr-add-button {
-	display: inline-flex!important;
+	display: inline-flex !important;
 	align-items: center;
 	gap: 6px;
 	padding: 6px 12px !important;
@@ -533,7 +570,7 @@
 	border-radius: 4px;
 	cursor: pointer;
 	border: 1px solid;
-	transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+	transition: background-color .2s ease, border-color .2s ease, color .2s ease;
 
 	.dashicons {
 		font-size: 16px;
@@ -542,17 +579,57 @@
 	}
 }
 
-// Condition button variant (purple)
 .urcr-add-condition-button {
-	@extend .urcr-add-button;
+	display: inline-flex !important;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 12px !important;
+	font-size: 13px;
+	border-radius: 4px;
+	cursor: pointer;
+	border: 1px solid;
+	transition: background-color .2s ease, border-color .2s ease, color .2s ease;
 	background: #e8d5ff;
-	border-color: #e8d5ff;
-	color: #6b46c1;
+	border-color: $border-color_2;
+	color: $color_8;
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
 
 	&:hover {
 		background: #d4b3ff;
-		border-color: #d4b3ff;
-		color: #553c9a;
+		border-color: $border-color_3;
+		color: $color_9;
+	}
+}
+
+.urcr-add-content-button {
+	display: inline-flex !important;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 12px !important;
+	font-size: 13px;
+	border-radius: 4px;
+	cursor: pointer;
+	border: 1px solid;
+	transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+	background: #e5f5fa;
+	border-color: $border-color_4;
+	color: $color_10;
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
+
+	&:hover {
+		background: #d0e8f0;
+		border-color: $border-color_5;
+		color: $color_11;
 	}
 }
 
@@ -567,33 +644,18 @@
 	display: inline-block;
 }
 
-// Content button variant (blue)
-.urcr-add-content-button {
-	@extend .urcr-add-button;
-	background: #e5f5fa;
-	border-color: #e5f5fa;
-	color: #2271b1;
-
-	&:hover {
-		background: #d0e8f0;
-		border-color: #d0e8f0;
-		color: #135e96;
-	}
-}
-
-// Content Type Dropdown Menu
 .urcr-content-type-dropdown-menu {
 	position: absolute;
 	top: 100%;
 	left: 0;
 	margin-top: 4px;
-	background-color: $white;
-	border: $border_width solid #8c8f94;
-	border-radius: $border_radius_3;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	background-color: $background-color_2;
+	border: 1px solid #8c8f94;
+	border-radius: 3px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
 	min-width: 200px;
 	z-index: 1000;
-	animation: urcr-dropdown-fade-in 0.15s ease-out;
+	animation: urcr-dropdown-fade-in .15s ease-out;
 }
 
 .urcr-content-type-dropdown-option {
@@ -602,51 +664,55 @@
 	padding: 8px 12px;
 	text-align: left;
 	border: none;
-	background: transparent;
+	background: 0 0;
 	cursor: pointer;
 	font-size: 13px;
 	font-weight: 400;
-	color: $grey-400;
-	transition: background-color 0.15s ease, color 0.15s ease;
+	color: $color_4;
+	transition: background-color .15s ease, color .15s ease;
 	margin: 0;
 	box-sizing: border-box;
 
-	&:hover:not(.is-disabled) {
-		background-color: #f0f0f1;
-		color: #1d2327;
+	&:hover {
+		&:not(.is-disabled) {
+			background-color: $background-color_4;
+			color: $color_6;
+		}
 	}
 
-	&:focus:not(.is-disabled) {
-		background-color: #f0f0f1;
-		color: #1d2327;
-		outline: none;
-	}
-
-	&.is-selected {
-		background-color: #f0f0f1;
-		color: #1d2327;
-		font-weight: 500;
-	}
-
-	&.is-disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-		color: #8c8f94;
-
-		&:hover {
-			background-color: transparent;
-			color: #8c8f94;
+	&:focus {
+		&:not(.is-disabled) {
+			background-color: $background-color_4;
+			color: $color_6;
+			outline: 0;
 		}
 	}
 
 	&:first-child {
-		border-top-left-radius: $border_radius_3;
-		border-top-right-radius: $border_radius_3;
+		border-top-left-radius: 3px;
+		border-top-right-radius: 3px;
 	}
 
 	&:last-child {
-		border-bottom-left-radius: $border_radius_3;
-		border-bottom-right-radius: $border_radius_3;
+		border-bottom-left-radius: 3px;
+		border-bottom-right-radius: 3px;
+	}
+}
+
+.urcr-content-type-dropdown-option.is-selected {
+	background-color: $background-color_4;
+	color: $color_6;
+	font-weight: 500;
+}
+
+.urcr-content-type-dropdown-option.is-disabled {
+	opacity: .5;
+	cursor: not-allowed;
+	color: $color_12;
+
+	&:hover {
+		background-color: $background-color_5;
+		color: $color_12;
 	}
 }
 
@@ -657,7 +723,7 @@
 .urcr-field-label {
 	display: block;
 	font-weight: 500;
-	color: $grey-400;
+	color: $color_4;
 	font-size: 13px;
 	margin-bottom: 8px;
 }
@@ -665,19 +731,19 @@
 .urcr-field-input {
 	width: 100%;
 	padding: 6px 8px;
-	border: $border_width solid #8c8f94;
-	border-radius: $border_radius_3;
+	border: 1px solid #8c8f94;
+	border-radius: 3px;
 	font-size: 14px;
 	line-height: 1.5;
 
 	&:focus {
-		border-color: $primary_color;
-		box-shadow: 0 0 0 1px $primary_color;
-		outline: none;
+		border-color: $border-color_6;
+		box-shadow: 0 0 0 1px #475bb2;
+		outline: 0;
 	}
 
 	&:disabled {
-		background-color: #f0f0f1;
+		background-color: $background-color_4;
 		cursor: not-allowed;
 	}
 }
@@ -697,12 +763,12 @@
 	right: 4px;
 	padding: 4px;
 	border: none;
-	background: transparent;
+	background: 0 0;
 	cursor: pointer;
-	color: $grey-400;
+	color: $color_4;
 
 	&:hover {
-		color: $grey-400;
+		color: $color_4;
 	}
 
 	.dashicons {
@@ -716,10 +782,6 @@
 	margin-top: 8px;
 }
 
-// ============================================================================
-// Conditional Logic Field Dropdown (Custom Floating Dropdown)
-// ============================================================================
-
 .urcr-condition-dropdown-wrapper {
 	position: relative;
 	display: inline-block;
@@ -730,26 +792,15 @@
 	top: 100%;
 	left: 0;
 	margin-top: 4px;
-	background-color: $white;
-	border: $border_width solid #8c8f94;
-	border-radius: $border_radius_3;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	background-color: $background-color_2;
+	border: 1px solid #8c8f94;
+	border-radius: 3px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
 	min-width: 400px;
 	max-height: 500px;
 	overflow-y: auto;
 	z-index: 1000;
-	animation: urcr-dropdown-fade-in 0.15s ease-out;
-}
-
-@keyframes urcr-dropdown-fade-in {
-	from {
-		opacity: 0;
-		transform: translateY(-4px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
+	animation: urcr-dropdown-fade-in .15s ease-out;
 }
 
 .urcr-condition-field-dropdown-group {
@@ -768,7 +819,7 @@
 	padding: 8px 12px 4px;
 	font-weight: 600;
 	font-size: 13px;
-	color: #1d2327;
+	color: $color_6;
 	text-transform: none;
 	letter-spacing: 0;
 }
@@ -779,34 +830,33 @@
 	padding: 6px 12px 6px 24px;
 	text-align: left;
 	border: none;
-	background: transparent;
+	background: 0 0;
 	cursor: pointer;
 	font-size: 13px;
 	font-weight: 400;
-	color: $grey-400;
-	transition: background-color 0.15s ease, color 0.15s ease;
+	color: $color_4;
+	transition: background-color .15s ease, color .15s ease;
 	margin: 0;
 	box-sizing: border-box;
 
 	&:hover {
-		background-color: #f0f0f1;
-		color: #1d2327;
+		background-color: $background-color_4;
+		color: $color_6;
 	}
 
 	&:focus {
-		background-color: #f0f0f1;
-		color: #1d2327;
-		outline: none;
-	}
-
-	&.is-selected {
-		background-color: #f0f0f1;
-		color: #1d2327;
-		font-weight: 500;
+		background-color: $background-color_4;
+		color: $color_6;
+		outline: 0;
 	}
 }
 
-// Legacy select field styles (for backward compatibility)
+.urcr-condition-field-dropdown-option.is-selected {
+	background-color: $background-color_4;
+	color: $color_6;
+	font-weight: 500;
+}
+
 .urcr-add-new-conditional-logic-field {
 	display: inline-block;
 	width: auto;
@@ -814,10 +864,10 @@
 	padding: 6px 24px 6px 12px;
 	font-size: 13px;
 	line-height: 1.5;
-	color: $grey-400;
-	background-color: $white;
-	border: $border_width solid #8c8f94;
-	border-radius: $border_radius_3;
+	color: $color_4;
+	background-color: $background-color_2;
+	border: 1px solid #8c8f94;
+	border-radius: 3px;
 	cursor: pointer;
 	-webkit-appearance: none;
 	-moz-appearance: none;
@@ -826,28 +876,18 @@
 	background-repeat: no-repeat;
 	background-position: right 8px center;
 	background-size: 12px;
-	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	transition: border-color .2s ease, box-shadow .2s ease;
 
 	&:hover {
-		border-color: $primary_color;
+		border-color: $border-color_6;
 	}
 
 	&:focus {
-		border-color: $primary_color;
-		box-shadow: 0 0 0 1px $primary_color;
-		outline: none;
+		border-color: $border-color_6;
+		box-shadow: 0 0 0 1px #475bb2;
+		outline: 0;
 	}
 }
-
-// ============================================================================
-// Save Button
-// ============================================================================
-
-// .urcr-save-rule-btn uses WordPress button-primary class
-
-// ============================================================================
-// Add New Rule Modal
-// ============================================================================
 
 .urcr-modal-backdrop {
 	position: fixed;
@@ -855,7 +895,7 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: $background-color_6;
 	z-index: 100000;
 }
 
@@ -870,9 +910,9 @@
 }
 
 .urcr-modal-content {
-	background-color: $white;
+	background-color: $background-color_2;
 	border-radius: 8px;
-	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 3px 6px rgba(0, 0, 0, .3);
 	overflow: hidden;
 }
 
@@ -882,20 +922,20 @@
 	gap: 10px;
 	padding: 20px;
 	border-bottom: 1px solid #e0e0e0;
-	background-color: $white;
+	background-color: $background-color_2;
 
 	.dashicons {
 		font-size: 20px;
 		width: 20px;
 		height: 20px;
-		color: $primary_color;
+		color: $color_5;
 	}
 
 	h2 {
 		margin: 0;
 		font-size: 18px;
 		font-weight: 600;
-		color: #1d2327;
+		color: $color_6;
 	}
 }
 
@@ -907,7 +947,7 @@
 	display: block;
 	font-size: 13px;
 	font-weight: 500;
-	color: #1d2327;
+	color: $color_6;
 	margin-bottom: 8px;
 }
 
@@ -921,9 +961,9 @@
 	box-sizing: border-box;
 
 	&:focus {
-		border-color: $primary_color;
-		box-shadow: 0 0 0 1px $primary_color;
-		outline: none;
+		border-color: $border-color_6;
+		box-shadow: 0 0 0 1px #475bb2;
+		outline: 0;
 	}
 }
 
@@ -933,105 +973,328 @@
 	gap: 10px;
 	padding: 15px 20px;
 	border-top: 1px solid #e0e0e0;
-	background-color: #f6f7f7;
+	background-color: $background-color_7;
 }
 
 .urcr-modal-cancel {
-	background: $white;
+	background: #fff;
 	border: 1px solid #8c8f94;
-	color: #2c3338;
+	color: $color_13;
 
 	&:hover {
 		background: #f6f7f7;
-		border-color: #787c82;
+		border-color: $border-color_7;
 	}
 }
 
-// Delete modal specific styles
 .urcr-modal--delete {
 	.urcr-modal-header {
 		.dashicons {
-			color: $red;
+			color: $color_7;
 		}
 	}
 
 	.urcr-modal-message {
 		font-size: 14px;
-		color: #1d2327;
+		color: $color_6;
 		margin: 0;
 		line-height: 1.5;
 	}
 
 	.urcr-modal-delete {
-		// Uses button-primary class, no custom styling needed
 		&:disabled {
-			opacity: 0.6;
+			opacity: .6;
 			cursor: not-allowed;
 		}
 	}
 }
 
-// .urcr-modal-continue uses button-primary class
-
-// ============================================================================
-// Condition Row & Value Input Styles
-// ============================================================================
-
 .urcr-conditions-list {
 	margin-bottom: 16px;
 }
 
+.urcr-condition-wrapper {
+	display: flex;
+	flex-direction: row;
+	position: relative;
+
+	.button.button-link-delete {
+		align-self: flex-end;
+		margin-top: 8px;
+		padding: 4px !important;
+		border: none !important;
+		background: transparent !important;
+		background-color: transparent !important;
+		cursor: pointer;
+		color: inherit !important;
+		line-height: 1;
+		text-decoration: none !important;
+		box-shadow: none !important;
+		outline: none !important;
+
+		&:hover {
+			background: transparent !important;
+			background-color: transparent !important;
+			border: none !important;
+			box-shadow: none !important;
+			color: inherit !important;
+		}
+
+		&:focus {
+			background: transparent !important;
+			background-color: transparent !important;
+			border: none !important;
+			box-shadow: none !important;
+			outline: none !important;
+			color: inherit !important;
+		}
+
+		&:active {
+			background: transparent !important;
+			background-color: transparent !important;
+			border: none !important;
+			box-shadow: none !important;
+			color: inherit !important;
+		}
+
+		.dashicons,
+		.dashicons-no-alt {
+			font-size: 16px;
+			width: 16px;
+			height: 16px;
+			text-decoration: none !important;
+			border: none !important;
+			background: transparent !important;
+			background-color: transparent !important;
+			color: inherit !important;
+			box-shadow: none !important;
+		}
+
+		&:hover .dashicons,
+		&:hover .dashicons-no-alt {
+			border: none !important;
+			background: transparent !important;
+			background-color: transparent !important;
+			color: inherit !important;
+			box-shadow: none !important;
+		}
+	}
+}
+
 .urcr-condition-row {
+
 	border-radius: 4px;
 	margin-bottom: 8px;
 	justify-content: space-between;
-	.urcr-condition-selection-section {
-		.urcr-condition-value {
-			max-width: 400px;
-			min-width: 400px;
-		}
-	}
-	.urcr-target-selection-section {
-		align-items: flex-start;
-		gap: 20px;
 
-		.urcr-access-select {
-			width: 150px;
-		}
-
-		.urcr-arrow-icon {
-			display: inline-block;
-			width: 40px;
-			height: 2px;
-			background-color: #00a32a;
-			position: relative;
-			margin-top: 18px;
-			margin-left: 4px;
-			margin-right: 4px;
-			vertical-align: middle;
-
-			// Arrow head
-			&::after {
-				content: "";
-				position: absolute;
-				right: -6px;
-				top: 50%;
-				transform: translateY(-50%);
-				width: 0;
-				height: 0;
-				border-left: 6px solid #00a32a;
-				border-top: 4px solid transparent;
-				border-bottom: 4px solid transparent;
+	.urcr-condition-only {
+		.urcr-condition-selection-section {
+			.urcr-condition-value {
+				max-width: 250px;
+				min-width: 250px;
 			}
 		}
 
-		.urcr-target-type-group {
-			display: flex;
-			flex-direction: column;
-			gap: 8px;
-			flex: 1;
-			min-width: 0;
+		.urcr-target-selection-section {
+			align-items: flex-start;
+			gap: 20px;
+
+			.urcr-access-select {
+				width: 150px;
+			}
+
+			.urcr-arrow-icon {
+				display: inline-block;
+				width: 40px;
+				height: 2px;
+				background-color: $background-color_3;
+				position: relative;
+				margin-top: 18px;
+				margin-left: 4px;
+				margin-right: 4px;
+				vertical-align: middle;
+
+				&::after {
+					content: "";
+					position: absolute;
+					right: -6px;
+					top: 50%;
+					transform: translateY(-50%);
+					width: 0;
+					height: 0;
+					border-left: 6px solid #00a32a;
+					border-top: 4px solid transparent;
+					border-bottom: 4px solid transparent;
+				}
+			}
+
+			.urcr-target-type-group {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+				flex: 1;
+				min-width: 0;
+
+				.urcr-target-item {
+					display: flex;
+					align-items: center;
+					gap: 8px;
+
+					.urcr-target-type-label {
+						font-size: 14px;
+						color: $color_4;
+						font-weight: 500;
+						white-space: nowrap;
+						width: 100px;
+					}
+
+					.urcr-condition-value-select {
+						flex: 1;
+						min-width: 200px;
+					}
+
+					.urcr-whole-site-text {
+						font-size: 14px;
+						color: $color_4;
+						font-weight: 500;
+					}
+
+					.urcr-target-remove {
+						padding: 4px;
+						border: none;
+						background: 0 0;
+						cursor: pointer;
+						color: $color_4;
+						line-height: 1;
+						transition: color .2s ease;
+
+						&:hover {
+							color: $color_7;
+						}
+
+						.dashicons {
+							font-size: 16px;
+							width: 16px;
+							height: 16px;
+							text-decoration: none;
+						}
+					}
+
+					.select2-container {
+						max-width: 350px;
+						min-width: 350px;
+					}
+				}
+			}
+
+
 		}
+	}
+
+	.button.button-link-delete {
+		padding: 4px !important;
+		border: none !important;
+		background: transparent !important;
+		background-color: transparent !important;
+		cursor: pointer;
+		color: inherit !important;
+		line-height: 1;
+		text-decoration: none !important;
+		box-shadow: none !important;
+		outline: none !important;
+
+		&:hover {
+			background: transparent !important;
+			background-color: transparent !important;
+			border: none !important;
+			box-shadow: none !important;
+			color: inherit !important;
+		}
+
+		&:focus {
+			background: transparent !important;
+			background-color: transparent !important;
+			border: none !important;
+			box-shadow: none !important;
+			outline: none !important;
+			color: inherit !important;
+		}
+
+		&:active {
+			background: transparent !important;
+			background-color: transparent !important;
+			border: none !important;
+			box-shadow: none !important;
+			color: inherit !important;
+		}
+
+		.dashicons,
+		.dashicons-no-alt {
+			font-size: 16px;
+			width: 16px;
+			height: 16px;
+			text-decoration: none !important;
+			border: none !important;
+			background: transparent !important;
+			background-color: transparent !important;
+			color: inherit !important;
+			box-shadow: none !important;
+		}
+
+		&:hover .dashicons,
+		&:hover .dashicons-no-alt {
+			border: none !important;
+			background: transparent !important;
+			background-color: transparent !important;
+			color: inherit !important;
+			box-shadow: none !important;
+		}
+	}
+}
+
+// ============================================================================
+// Target Selection Section (Standalone - not nested in condition-row)
+// ============================================================================
+
+.urcr-target-selection-section {
+	align-items: flex-start;
+	gap: 20px;
+
+	.urcr-access-select {
+		width: 150px;
+	}
+
+	.urcr-arrow-icon {
+		display: inline-block;
+		width: 40px;
+		height: 2px;
+		background-color: $background-color_3;
+		position: relative;
+		margin-top: 18px;
+		margin-left: 4px;
+		margin-right: 4px;
+		vertical-align: middle;
+
+		&::after {
+			content: "";
+			position: absolute;
+			right: -6px;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 0;
+			height: 0;
+			border-left: 6px solid #00a32a;
+			border-top: 4px solid transparent;
+			border-bottom: 4px solid transparent;
+		}
+	}
+
+	.urcr-target-type-group {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		flex: 1;
+		min-width: 0;
 
 		.urcr-target-item {
 			display: flex;
@@ -1040,7 +1303,7 @@
 
 			.urcr-target-type-label {
 				font-size: 14px;
-				color: $grey-400;
+				color: $color_4;
 				font-weight: 500;
 				white-space: nowrap;
 				width: 100px;
@@ -1053,21 +1316,21 @@
 
 			.urcr-whole-site-text {
 				font-size: 14px;
-				color: $grey-400;
+				color: $color_4;
 				font-weight: 500;
 			}
 
 			.urcr-target-remove {
 				padding: 4px;
 				border: none;
-				background: transparent;
+				background: 0 0;
 				cursor: pointer;
-				color: $grey-400;
+				color: $color_4;
 				line-height: 1;
-				transition: color 0.2s ease;
+				transition: color .2s ease;
 
 				&:hover {
-					color: $red;
+					color: $color_7;
 				}
 
 				.dashicons {
@@ -1078,7 +1341,7 @@
 				}
 			}
 
-			.select2-container  {
+			.select2-container {
 				max-width: 350px;
 				min-width: 350px;
 			}
@@ -1086,11 +1349,221 @@
 	}
 }
 
+// ============================================================================
+// Advanced Logic Gates
+// ============================================================================
+
+.urcr-advanced-logic-gates {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 16px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.urcr-advanced-logic-label {
+	font-size: 14px;
+	font-weight: 400;
+	color: #646970;
+	margin: 0;
+	white-space: nowrap;
+}
+
+.urcr-logic-gate-buttons {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	padding: 5px;
+	background: $background-color_9;
+	border-radius: 20px;
+}
+
+.urcr-logic-gate-button {
+	padding: 6px 16px;
+	border: 2px solid transparent;
+	border-radius: 20px;
+	background-color: transparent;
+	color: #646970;
+	font-size: 13px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	white-space: nowrap;
+	text-align: center;
+	line-height: 1.5;
+
+	&:hover {
+		color: #1d2327;
+	}
+
+	&.active {
+		background-color: transparent;
+		border-color: $background-color_10;
+		color: $background-color_10;
+		font-weight: 700;
+	}
+}
+
+// ============================================================================
+// Condition Logic Gate (Left Side) - Matching urcr-content-access-rule-creator.scss
+// ============================================================================
+
+$or-line: #89A7E5;
+$and-line: #F9E2CA;
+$not-line: #F9CACA;
+$or-tag: #E9F0FE;
+$and-tag: #FED9A8;
+$not-tag: #F9CACA;
+
+.urcr-condition-row-parent {
+	display: flex;
+	gap: 30px;
+
+	.urcr-conditions-list {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+
+		&.urcr-conditional-logic-definitions {
+			&:has(.urcr-logic-group-rule-OR),
+			&:has(.urcr-logic-group-rule-AND),
+			&:has(.urcr-logic-group-rule-NOT) {
+				padding-left: 42px;
+			}
+		}
+
+		.urcr-condition-row {
+			position: relative;
+			display: flex;
+			align-items: flex-start;
+		}
+
+		.urcr-condition-logic-gate-wrapper {
+			position: absolute;
+			top: 0;
+			left: 5px;
+			width: 2px;
+			height: 100%;
+
+			&.urcr-logic-group-rule-OR {
+				background: $or-line;
+
+				&::before,
+				&::after {
+					content: "";
+					position: absolute;
+					left: 0;
+					width: 22px;
+					height: 2px;
+					background: $or-line;
+				}
+
+				&::before {
+					top: 0;
+				}
+
+				&::after {
+					bottom: 0;
+				}
+			}
+
+			&.urcr-logic-group-rule-AND {
+				background: $and-line;
+
+				&::before,
+				&::after {
+					content: "";
+					position: absolute;
+					left: 0;
+					width: 22px;
+					height: 2px;
+					background: $and-line;
+				}
+
+				&::before {
+					top: 0;
+				}
+
+				&::after {
+					bottom: 0;
+				}
+			}
+
+			&.urcr-logic-group-rule-NOT {
+				background: $not-line;
+
+				&::before,
+				&::after {
+					content: "";
+					position: absolute;
+					left: 0;
+					width: 22px;
+					height: 2px;
+					background: $not-line;
+				}
+
+				&::before {
+					top: 0;
+				}
+
+				&::after {
+					bottom: 0;
+				}
+			}
+		}
+
+		.urcr-condition-logic-gate-button {
+			position: absolute;
+			top: 50%;
+			left: 0;
+			transform: translateY(-50%);
+			padding: 4px 10px;
+			border-radius: 50px;
+			color: #383838;
+			font-size: 13px;
+			line-height: 120%;
+			font-weight: 600;
+			white-space: nowrap;
+
+			&.urcr-sub-logic-group-rule-OR {
+				background: $or-tag;
+				left: -17px;
+			}
+
+			&.urcr-sub-logic-group-rule-AND {
+				background: $and-tag;
+				left: -21px;
+			}
+
+			&.urcr-sub-logic-group-rule-NOT {
+				background: $not-tag;
+				left: -21px;
+			}
+		}
+	}
+}
+
 .urcr-condition-field-name {
-	min-width: 250px;
 	margin-right: 8px;
 
-	input,
+	input {
+		width: 100%;
+		padding: 6px 8px;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		font-size: 14px;
+		line-height: 1.5;
+		background-color: $background-color_2;
+		cursor: pointer;
+
+		&:focus {
+			border-color: $border-color_6;
+			box-shadow: 0 0 0 1px #475bb2;
+			outline: 0;
+		}
+	}
+
 	select {
 		width: 100%;
 		padding: 6px 8px;
@@ -1098,18 +1571,18 @@
 		border-radius: 4px;
 		font-size: 14px;
 		line-height: 1.5;
-		background-color: #fff;
+		background-color: $background-color_2;
 		cursor: pointer;
 
 		&:focus {
-			border-color: $primary_color;
-			box-shadow: 0 0 0 1px $primary_color;
-			outline: none;
+			border-color: $border-color_6;
+			box-shadow: 0 0 0 1px #475bb2;
+			outline: 0;
 		}
 	}
 
 	input[readonly] {
-		background-color: #f5f5f5;
+		background-color: $background-color_8;
 		cursor: not-allowed;
 	}
 }
@@ -1118,7 +1591,7 @@
 	margin-right: 8px;
 	padding: 6px 0;
 	font-size: 14px;
-	color: #333;
+	color: $color_14;
 }
 
 .urcr-condition-value {
@@ -1126,7 +1599,28 @@
 	margin-right: 8px;
 }
 
-// Condition Value Input Base Styles
+.urcr-condition-value-date {
+	width: 100%;
+	padding: 6px 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+	line-height: 1.5;
+	background-color: $background-color_2;
+	box-sizing: border-box;
+
+	&:focus {
+		border-color: $border-color_6;
+		box-shadow: 0 0 0 1px #475bb2;
+		outline: 0;
+	}
+
+	&:disabled {
+		background-color: $background-color_8;
+		cursor: not-allowed;
+	}
+}
+
 .urcr-condition-value-input {
 	width: 100%;
 	padding: 6px 8px;
@@ -1134,47 +1628,92 @@
 	border-radius: 4px;
 	font-size: 14px;
 	line-height: 1.5;
-	background-color: #fff;
+	background-color: $background-color_2;
 	box-sizing: border-box;
 
 	&:focus {
-		border-color: $primary_color;
-		box-shadow: 0 0 0 1px $primary_color;
-		outline: none;
+		border-color: $border-color_6;
+		box-shadow: 0 0 0 1px #475bb2;
+		outline: 0;
 	}
 
 	&:disabled {
-		background-color: #f5f5f5;
+		background-color: $background-color_8;
 		cursor: not-allowed;
 	}
 }
 
-// Select/Multiselect specific styles
-.urcr-condition-value-select {
-	@extend .urcr-condition-value-input;
-	min-height: auto;
+.urcr-condition-value-number {
+	width: 100%;
+	padding: 6px 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+	line-height: 1.5;
+	background-color: $background-color_2;
+	box-sizing: border-box;
 
-	&.urcr-condition-value-select--multiselect {
-		min-height: 80px;
+	&:focus {
+		border-color: $border-color_6;
+		box-shadow: 0 0 0 1px #475bb2;
+		outline: 0;
+	}
+
+	&:disabled {
+		background-color: $background-color_8;
+		cursor: not-allowed;
 	}
 }
 
-// Date input
-.urcr-condition-value-date {
-	@extend .urcr-condition-value-input;
+.urcr-condition-value-select {
+	width: 100%;
+	padding: 6px 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+	line-height: 1.5;
+	background-color: $background-color_2;
+	box-sizing: border-box;
+	min-height: auto;
+
+	&:focus {
+		border-color: $border-color_6;
+		box-shadow: 0 0 0 1px #475bb2;
+		outline: 0;
+	}
+
+	&:disabled {
+		background-color: $background-color_8;
+		cursor: not-allowed;
+	}
 }
 
-// Number input
-.urcr-condition-value-number {
-	@extend .urcr-condition-value-input;
-}
-
-// Text input
 .urcr-condition-value-text {
-	@extend .urcr-condition-value-input;
+	width: 100%;
+	padding: 6px 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+	line-height: 1.5;
+	background-color: $background-color_2;
+	box-sizing: border-box;
+
+	&:focus {
+		border-color: $border-color_6;
+		box-shadow: 0 0 0 1px #475bb2;
+		outline: 0;
+	}
+
+	&:disabled {
+		background-color: $background-color_8;
+		cursor: not-allowed;
+	}
 }
 
-// Taxonomy select group
+.urcr-condition-value-select.urcr-condition-value-select--multiselect {
+	min-height: 80px;
+}
+
 .urcr-taxonomy-select-group {
 	display: flex;
 	align-items: flex-start;
@@ -1182,31 +1721,219 @@
 	flex-wrap: wrap;
 
 	.urcr-taxonomy-select {
-		min-width: 200px;
-		max-width: 250px;
+		min-width: 250px;
+		max-width: 350px;
 	}
 
 	.urcr-taxonomy-terms-select {
 		flex: 1;
-		min-width: 200px;
+		min-width: 250px;
 		max-width: 350px;
 	}
 }
 
-// Delete button for condition row
-.urcr-condition-row {
-	.button-link-delete {
-		padding: 4px 8px;
+// ============================================================================
+// Checkbox Radio Input (Radio Buttons)
+// ============================================================================
+
+.urcr-checkbox-radio-group {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+.urcr-checkbox-radio-option {
+	display: flex;
+	align-items: center;
+	padding: 8px 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	background: #fff;
+	cursor: pointer;
+	transition: border-color 0.2s ease, background-color 0.2s ease;
+
+	&:hover {
+		border-color: #475bb2;
+		background: #f6f7f7;
+	}
+
+	&.is-checked {
+		border-color: #475bb2;
+		background: #f0f4ff;
+
+		.urcr-checkbox-radio-label {
+			color: #475bb2;
+			font-weight: 500;
+		}
+	}
+}
+
+.urcr-checkbox-radio-input {
+	margin: 0;
+	margin-right: 8px;
+	cursor: pointer;
+	width: 16px;
+	height: 16px;
+	accent-color: #475bb2;
+}
+
+.urcr-checkbox-radio-label {
+	font-size: 14px;
+	color: #1d2327;
+	cursor: pointer;
+	user-select: none;
+}
+
+// ============================================================================
+// Period Input (Dropdown + Number Input)
+// ============================================================================
+
+.urcr-period-input-group {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.urcr-period-select {
+	min-width: 120px;
+	padding: 6px 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+	line-height: 1.5;
+	background-color: #fff;
+	cursor: pointer;
+
+	&:focus {
+		border-color: #475bb2;
+		box-shadow: 0 0 0 1px #475bb2;
+		outline: 0;
+	}
+}
+
+.urcr-period-number {
+	width: 100px;
+	padding: 6px 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+	line-height: 1.5;
+	background-color: #fff;
+
+	&:focus {
+		border-color: #475bb2;
+		box-shadow: 0 0 0 1px #475bb2;
+		outline: 0;
+	}
+}
+
+.urcr-period-label {
+	font-size: 14px;
+	color: #1d2327;
+	white-space: nowrap;
+}
+
+.urcr-toast-container {
+	position: fixed;
+	top: 100px;
+	right: 20px;
+	z-index: 999999;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	pointer-events: none;
+	max-width: 400px;
+
+	.urcr-toast {
+		display: flex;
+		align-items: flex-start;
+		gap: 12px;
+		padding: 12px 16px;
+		background: #fff;
+		border-left: 4px solid;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+		border-radius: 4px;
+		pointer-events: auto;
+		opacity: 0;
+		transform: translateX(100%);
+		transition: opacity .3s ease, transform .3s ease;
+		min-width: 300px;
+		max-width: 100%;
+	}
+
+	.urcr-toast--show {
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	.urcr-toast--hide {
+		opacity: 0;
+		transform: translateX(100%);
+	}
+
+	.urcr-toast--success {
+		border-left-color: $border-left-color_1;
+
+		.urcr-toast__icon {
+			color: $color_15;
+		}
+	}
+
+	.urcr-toast--error {
+		border-left-color: $border-left-color_2;
+
+		.urcr-toast__icon {
+			color: $color_16;
+		}
+	}
+
+	.urcr-toast--info {
+		border-left-color: $border-left-color_3;
+
+		.urcr-toast__icon {
+			color: $color_17;
+		}
+	}
+
+	.urcr-toast__icon {
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-top: 2px;
+
+		.dashicons {
+			font-size: 20px;
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+	.urcr-toast__message {
+		flex: 1;
+		font-size: 14px;
+		line-height: 1.5;
+		color: $color_6;
+		margin: 0;
+		padding: 0;
+	}
+
+	.urcr-toast__close {
+		flex-shrink: 0;
+		background: 0 0;
 		border: none;
-		background: transparent;
+		padding: 0;
 		cursor: pointer;
-		color: $grey-400;
-		line-height: 1;
-		transition: color 0.2s ease;
-		text-decoration: none;
+		color: $color_18;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-top: 2px;
+		transition: color .2s ease;
 
 		&:hover {
-			color: $red;
+			color: $color_6;
 		}
 
 		.dashicons {
@@ -1214,5 +1941,14 @@
 			width: 16px;
 			height: 16px;
 		}
+	}
+}
+
+@media screen and (max-width: 782px) {
+	.urcr-toast-container {
+		top: 46px;
+		right: 10px;
+		left: 10px;
+		max-width: none;
 	}
 }

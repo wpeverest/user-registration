@@ -32,6 +32,7 @@ class URCR_Admin_Assets {
 		$this->current_page = isset( $_GET['page'] ) ? $_GET['page'] : '';
 		$this->action       = isset( $_GET['action'] ) ? $_GET['action'] : '';
 	}
+
 	public function enqueue_admin_scripts() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) ? '' : '.min';
 		/**
@@ -51,6 +52,7 @@ class URCR_Admin_Assets {
 			wp_enqueue_script( 'urcr-content-access-rule-creator' );
 		}
 	}
+
 	/**
 	 * Enqueue styles.
 	 */
@@ -303,7 +305,7 @@ class URCR_Admin_Assets {
 					'hide_empty' => false,
 				)
 			);
-			
+
 			// Handle WP_Error or empty results
 			if ( is_wp_error( $terms ) || empty( $terms ) ) {
 				$terms_list[ $tax_name ] = array();
@@ -354,33 +356,34 @@ class URCR_Admin_Assets {
 		}
 
 		return array(
-			'URCR_DEBUG'           => apply_filters( 'urcr_debug_mode', true ),
-			'_nonce'               => wp_create_nonce( 'urcr_manage_content_access_rule' ),
-			'ajax_url'             => admin_url( 'admin-ajax.php' ),
-			'rule_id'              => $rule_id,
-			'is_draft'             => $is_draft,
-			'title'                => $title,
-			'access_rule_data'     => $rule_to_edit,
-			'wp_roles'             => ur_get_all_roles(),
-			'wp_capabilities'      => urcr_get_all_capabilities(),
-			'ur_forms'             => ur_get_all_user_registration_form(),
-			'registration_sources' => $registration_sources,
-			'post_types'           => $post_types,
-			'taxonomies'           => $taxonomies,
-			'terms_list'           => $terms_list,
-			'posts'                => $posts,
-			'pages'                => $pages,
-			'ur_form_data'         => $ur_forms,
-			'shortcodes'           => $shortcodes_list,
-			'labels'               => self::get_i18_labels(),
-			'templates'            => self::get_templates(),
-			'content_rule_url'     => admin_url( 'admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule' ),
-			'payment_status'       => array(
+			'URCR_DEBUG'                => apply_filters( 'urcr_debug_mode', true ),
+			'_nonce'                    => wp_create_nonce( 'urcr_manage_content_access_rule' ),
+			'ajax_url'                  => admin_url( 'admin-ajax.php' ),
+			'rule_id'                   => $rule_id,
+			'is_draft'                  => $is_draft,
+			'title'                     => $title,
+			'access_rule_data'          => $rule_to_edit,
+			'wp_roles'                  => ur_get_all_roles(),
+			'wp_capabilities'           => urcr_get_all_capabilities(),
+			'ur_forms'                  => ur_get_all_user_registration_form(),
+			'registration_sources'      => $registration_sources,
+			'post_types'                => $post_types,
+			'taxonomies'                => $taxonomies,
+			'terms_list'                => $terms_list,
+			'posts'                     => $posts,
+			'pages'                     => $pages,
+			'ur_form_data'              => $ur_forms,
+			'shortcodes'                => $shortcodes_list,
+			'labels'                    => self::get_i18_labels(),
+			'templates'                 => self::get_templates(),
+			'content_rule_url'          => admin_url( 'admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule' ),
+			'is_advanced_logic_enabled' => get_option( 'urcr_content_access_rule_is_advanced_logic_enabled', true ),
+			'payment_status'            => array(
 				'pending'   => __( 'Pending', 'user-registration' ),
 				'completed' => __( 'Completed', 'user-registration' ),
 				'failed'    => __( 'Failed', 'user-registration' ),
 			),
-			'memberships'          => $formatted_memberships,
+			'memberships'               => $formatted_memberships,
 		);
 	}
 

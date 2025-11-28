@@ -1,88 +1,84 @@
 /**
- * Simple notification utility for WordPress admin notices
+ * Toast notification utility for WordPress admin
  */
+let toastContainer = null;
+
+const getToastContainer = () => {
+	if (!toastContainer) {
+		toastContainer = document.createElement("div");
+		toastContainer.className = "urcr-toast-container";
+		document.body.appendChild(toastContainer);
+	}
+	return toastContainer;
+};
+
 export const showNotice = (message, type = "info", duration = 5000) => {
-	const noticeId = `urcr-notice-${Date.now()}`;
-	const noticeClass = `notice notice-${type} is-dismissible`;
+	const noticeId = `urcr-toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+	const container = getToastContainer();
 	
-	const notice = document.createElement("div");
-	notice.id = noticeId;
-	notice.className = noticeClass;
-	notice.innerHTML = `<p>${message}</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>`;
+	const toast = document.createElement("div");
+	toast.id = noticeId;
+	toast.className = `urcr-toast urcr-toast--${type}`;
 	
-	// Try to find the React app container first
-	const reactContainer = document.getElementById("user-registration-content-access-rules");
-	const wrap = document.querySelector(".wrap");
-	
-	let target = null;
-	
-	// Priority 1: Place inside React container if it exists
-	if (reactContainer && reactContainer.parentElement) {
-		// Insert at the beginning of the React container's parent (wrap)
-		target = reactContainer.parentElement;
-		// Insert before the React container
-		target.insertBefore(notice, reactContainer);
-	} 
-	// Priority 2: Use wp-header-end if available
-	else if (document.querySelector(".wp-header-end")) {
-		target = document.querySelector(".wp-header-end");
-		target.after(notice);
-	} 
-	// Priority 3: Use wrap h1
-	else if (wrap) {
-		const h1 = wrap.querySelector("h1");
-		if (h1) {
-			h1.after(notice);
-		} else {
-			wrap.insertBefore(notice, wrap.firstChild);
-		}
-	} 
-	// Fallback: append to body at the top
-	else {
-		const adminMain = document.querySelector("#wpbody-content");
-		if (adminMain) {
-			adminMain.insertBefore(notice, adminMain.firstChild);
-		} else {
-			document.body.insertBefore(notice, document.body.firstChild);
-		}
+	// Icon based on type
+	let icon = "";
+	if (type === "success") {
+		icon = '<span class="dashicons dashicons-yes-alt"></span>';
+	} else if (type === "error") {
+		icon = '<span class="dashicons dashicons-warning"></span>';
+	} else {
+		icon = '<span class="dashicons dashicons-info"></span>';
 	}
 	
-	// Trigger WordPress dismiss functionality if available
-	if (window.jQuery && window.jQuery.fn.on) {
-		window.jQuery(document).trigger("wp-updates-notice-added");
-	}
+	toast.innerHTML = `
+		<div class="urcr-toast__icon">${icon}</div>
+		<div class="urcr-toast__message">${message}</div>
+		<button type="button" class="urcr-toast__close" aria-label="Dismiss">
+			<span class="dashicons dashicons-no-alt"></span>
+		</button>
+	`;
 	
-	// Handle dismiss button manually
-	const dismissBtn = notice.querySelector(".notice-dismiss");
-	if (dismissBtn) {
-		dismissBtn.addEventListener("click", (e) => {
-			e.preventDefault();
-			notice.style.transition = "opacity 0.3s ease";
-			notice.style.opacity = "0";
-			setTimeout(() => {
-				if (notice.parentNode) {
-					notice.remove();
-				}
-			}, 300);
+	container.appendChild(toast);
+	
+	// Trigger animation
+	requestAnimationFrame(() => {
+		toast.classList.add("urcr-toast--show");
+	});
+	
+	// Handle dismiss button
+	const closeBtn = toast.querySelector(".urcr-toast__close");
+	if (closeBtn) {
+		closeBtn.addEventListener("click", () => {
+			dismissToast(toast);
 		});
 	}
 	
-	// Auto-remove after duration
+	// Auto-dismiss after duration
 	if (duration > 0) {
 		setTimeout(() => {
-			if (notice.parentNode) {
-				notice.style.transition = "opacity 0.3s ease";
-				notice.style.opacity = "0";
-				setTimeout(() => {
-					if (notice.parentNode) {
-						notice.remove();
-					}
-				}, 300);
-			}
+			dismissToast(toast);
 		}, duration);
 	}
 	
-	return notice;
+	return toast;
+};
+
+const dismissToast = (toast) => {
+	if (!toast || !toast.parentNode) return;
+	
+	toast.classList.remove("urcr-toast--show");
+	toast.classList.add("urcr-toast--hide");
+	
+	setTimeout(() => {
+		if (toast.parentNode) {
+			toast.remove();
+		}
+		// Remove container if empty
+		if (toastContainer && toastContainer.children.length === 0) {
+			toastContainer.remove();
+			toastContainer = null;
+		}
+	}, 300);
 };
 
 export const showSuccess = (message, duration = 3000) => {
