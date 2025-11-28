@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-3393-enhance/state-options-on-country-fields
     workflow_dispatch:
 jobs:
   sync:
