@@ -120,11 +120,13 @@ class UR_Admin_Export_Users {
 		// Loop over users in batches.
 		while ( true ) {
 			// Fetch users in batches.
-			$users = get_users( array(
+			$users = get_users(
+				array(
 					'ur_form_id' => $form_id,
 					'number'     => $batch_size,
 					'offset'     => $offset,
-			) );
+				)
+			);
 
 			// If no users are found, break the loop.
 			if ( empty( $users ) ) {
@@ -244,8 +246,8 @@ class UR_Admin_Export_Users {
 			if ( $user_form_id !== $form_id ) {
 				continue;
 			}
-			$user_id_row    = array();
-			$user_extra_row = ur_get_user_extra_fields( $user->data->ID );
+			$user_id_row                  = array();
+			$user_extra_row               = ur_get_user_extra_fields( $user->data->ID, 'export_users' );
 			$user_form_fields             = ur_get_form_fields( $form_id );
 			$urm_form_has_profile_picture = false;
 			$user_profile_picture_key     = '';
