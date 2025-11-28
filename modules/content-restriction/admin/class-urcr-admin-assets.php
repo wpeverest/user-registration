@@ -297,13 +297,19 @@ class URCR_Admin_Assets {
 		$terms_list = array();
 
 		foreach ( $taxonomies as $tax_name => $tax_label ) {
-			$terms                   = get_terms(
+			$terms = get_terms(
 				array(
 					'taxonomy'   => $tax_name,
 					'hide_empty' => false,
 				)
 			);
-			$terms_list[ $tax_name ] = wp_list_pluck( $terms, 'name', 'term_id' );
+			
+			// Handle WP_Error or empty results
+			if ( is_wp_error( $terms ) || empty( $terms ) ) {
+				$terms_list[ $tax_name ] = array();
+			} else {
+				$terms_list[ $tax_name ] = wp_list_pluck( $terms, 'name', 'term_id' );
+			}
 		}
 
 		//

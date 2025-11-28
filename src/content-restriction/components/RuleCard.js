@@ -3,9 +3,10 @@
  */
 import React, {useState, useEffect, useRef} from "react";
 import {__} from "@wordpress/i18n";
-import {toggleRuleStatus, deleteRule, duplicateRule} from "../api/content-access-rules-api";
+import {toggleRuleStatus, duplicateRule} from "../api/content-access-rules-api";
 import SettingsPanel from "./SettingsPanel";
 import RuleContentDisplay from "./RuleContentDisplay";
+import DeleteRuleModal from "./DeleteRuleModal";
 import {showSuccess, showError} from "../utils/notifications";
 
 /* global _UR_DASHBOARD_ */
@@ -21,9 +22,9 @@ const RuleCard = ({
 					  onRuleStatusUpdate,
 				  }) => {
 	const [isToggling, setIsToggling] = useState(false);
-	const [isDeleting, setIsDeleting] = useState(false);
 	const [isDuplicating, setIsDuplicating] = useState(false);
 	const [menuOpen, setMenuOpen] = useState(false);
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const menuWrapperRef = useRef(null);
 
 	const editUrl = adminURL
@@ -68,26 +69,13 @@ const RuleCard = ({
 		}
 	};
 
-	const handleDelete = async () => {
-		if (!window.confirm(__("Are you sure you want to delete this rule?", "user-registration"))) {
-			return;
-		}
-
-		setIsDeleting(true);
+	const handleDeleteClick = () => {
 		setMenuOpen(false);
-		try {
-			const response = await deleteRule(rule.id, false);
-			if (response.success) {
-				showSuccess(response.message || __("Rule deleted successfully", "user-registration"));
-				onRuleUpdate();
-			} else {
-				showError(response.message || __("Failed to delete rule", "user-registration"));
-			}
-		} catch (error) {
-			showError(error.message || __("An error occurred", "user-registration"));
-		} finally {
-			setIsDeleting(false);
-		}
+		setIsDeleteModalOpen(true);
+	};
+
+	const handleDeleteSuccess = () => {
+		onRuleUpdate();
 	};
 
 	const handleDuplicate = async () => {
@@ -184,9 +172,8 @@ const RuleCard = ({
 									type="button"
 									onClick={(e) => {
 										e.stopPropagation();
-										handleDelete();
+										handleDeleteClick();
 									}}
-									disabled={isDeleting}
 								>
 									<span className="dashicons dashicons-trash"></span>
 									{__("Trash", "user-registration")}
@@ -247,6 +234,14 @@ const RuleCard = ({
 					onRuleUpdate={onRuleUpdate}
 				/>
 			</div>
+
+			{/* Delete Modal */}
+			<DeleteRuleModal
+				isOpen={isDeleteModalOpen}
+				onClose={() => setIsDeleteModalOpen(false)}
+				rule={rule}
+				onDeleteSuccess={handleDeleteSuccess}
+			/>
 		</div>
 	);
 };

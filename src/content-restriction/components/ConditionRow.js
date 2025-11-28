@@ -29,12 +29,11 @@ const ConditionRow = ({
 	condition,
 	onUpdate,
 	onRemove,
-	accessControl = "access",
-	onAccessControlChange,
 	onContentTargetsChange,
 }) => {
 	const [operator] = useState(condition.operator || "is");
 	const [value, setValue] = useState(condition.conditionValue || "");
+	const [accessControl, setAccessControl] = useState(condition.accessControl || "access");
 	const [contentTargets, setContentTargets] = useState(condition.contentTargets || []);
 	const [contentDropdownOpen, setContentDropdownOpen] = useState(false);
 	const contentDropdownWrapperRef = useRef(null);
@@ -44,8 +43,9 @@ const ConditionRow = ({
 			...condition,
 			operator,
 			conditionValue: value,
+			accessControl: accessControl,
 		});
-	}, [operator, value]);
+	}, [operator, value, accessControl]);
 
 	// Sync value when condition type or field changes
 	useEffect(() => {
@@ -55,6 +55,13 @@ const ConditionRow = ({
 			setValue(condition.type === "multiselect" ? [] : "");
 		}
 	}, [condition.type, condition.value]);
+
+	// Sync accessControl when condition changes
+	useEffect(() => {
+		if (condition.accessControl !== undefined) {
+			setAccessControl(condition.accessControl);
+		}
+	}, [condition.accessControl]);
 
 	const handleValueChange = (newValue) => {
 		setValue(newValue);
@@ -145,18 +152,24 @@ const ConditionRow = ({
 
 	// Notify parent when contentTargets change (but not on initial mount to avoid duplicate calls)
 	const isInitialMount = useRef(true);
+	const prevContentTargetsRef = useRef(contentTargets);
+	
 	useEffect(() => {
+		// Deep comparison to check if contentTargets actually changed
+		const prevTargets = prevContentTargetsRef.current;
+		const targetsChanged = JSON.stringify(prevTargets) !== JSON.stringify(contentTargets);
+		
 		if (isInitialMount.current) {
 			isInitialMount.current = false;
+			prevContentTargetsRef.current = contentTargets;
 			// Still notify on initial mount to sync state
 			if (onContentTargetsChange) {
 				onContentTargetsChange(condition.id, contentTargets);
 			}
-		} else {
-			// Notify on subsequent changes
-			if (onContentTargetsChange) {
-				onContentTargetsChange(condition.id, contentTargets);
-			}
+		} else if (targetsChanged && onContentTargetsChange) {
+			// Only notify if targets actually changed
+			prevContentTargetsRef.current = contentTargets;
+			onContentTargetsChange(condition.id, contentTargets);
 		}
 	}, [contentTargets, condition.id, onContentTargetsChange]);
 
@@ -201,7 +214,7 @@ const ConditionRow = ({
 					<select
 						className="urcr-access-select urcr-condition-value-input"
 						value={accessControl}
-						onChange={(e) => onAccessControlChange && onAccessControlChange(e.target.value)}
+						onChange={(e) => setAccessControl(e.target.value)}
 					>
 						<option value="access">{__("Access", "user-registration")}</option>
 						<option value="restrict">{__("Restrict", "user-registration")}</option>
@@ -214,13 +227,11 @@ const ConditionRow = ({
 								{contentTargets.map((target) => (
 									<div key={target.id} className="urcr-target-item">
 										<span className="urcr-target-type-label">{target.label}:</span>
-										{target.type !== "taxonomy" && (
-											<ContentValueInput
-												contentType={target.type}
-												value={target.value}
-												onChange={(newValue) => handleContentTargetUpdate(target.id, newValue)}
-											/>
-										)}
+										<ContentValueInput
+											contentType={target.type}
+											value={target.value}
+											onChange={(newValue) => handleContentTargetUpdate(target.id, newValue)}
+										/>
 										<button
 											type="button"
 											className="button-link urcr-target-remove"

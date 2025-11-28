@@ -947,6 +947,30 @@
 	}
 }
 
+// Delete modal specific styles
+.urcr-modal--delete {
+	.urcr-modal-header {
+		.dashicons {
+			color: $red;
+		}
+	}
+
+	.urcr-modal-message {
+		font-size: 14px;
+		color: #1d2327;
+		margin: 0;
+		line-height: 1.5;
+	}
+
+	.urcr-modal-delete {
+		// Uses button-primary class, no custom styling needed
+		&:disabled {
+			opacity: 0.6;
+			cursor: not-allowed;
+		}
+	}
+}
+
 // .urcr-modal-continue uses button-primary class
 
 // ============================================================================
@@ -1148,6 +1172,25 @@
 // Text input
 .urcr-condition-value-text {
 	@extend .urcr-condition-value-input;
+}
+
+// Taxonomy select group
+.urcr-taxonomy-select-group {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	flex-wrap: wrap;
+
+	.urcr-taxonomy-select {
+		min-width: 200px;
+		max-width: 250px;
+	}
+
+	.urcr-taxonomy-terms-select {
+		flex: 1;
+		min-width: 200px;
+		max-width: 350px;
+	}
 }
 
 // Delete button for condition row

@@ -1,7 +1,7 @@
 /**
  * External Dependencies
  */
-import React, {useState, useRef, useEffect} from "react";
+import React, {useState, useRef, useEffect, useCallback} from "react";
 import {__} from "@wordpress/i18n";
 import {updateRule} from "../api/content-access-rules-api";
 import {showSuccess, showError} from "../utils/notifications";
@@ -13,7 +13,6 @@ import {getURCRLocalizedData, getURCRData} from "../utils/localized-data";
 const {adminURL} = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
 const RuleContentDisplay = ({rule, onRuleUpdate}) => {
-	const [accessControl, setAccessControl] = useState(rule.access_control || "access");
 	const [redirectUrl, setRedirectUrl] = useState(rule.redirect_url || "");
 	const [isSaving, setIsSaving] = useState(false);
 	const [showCondition, setShowCondition] = useState(false);
@@ -32,6 +31,7 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 				type: getConditionType(cond.type),
 				operator: "is",
 				conditionValue: cond.value || (getConditionType(cond.type) === "multiselect" ? [] : ""),
+				accessControl: cond.access_control || rule.access_control || "access", // Get from condition or fallback to rule level
 			}));
 			setConditions(initialConditions);
 
@@ -46,12 +46,21 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 					if (type === "wp_pages") type = "pages";
 					if (type === "wp_posts") type = "posts";
 
+					// Handle taxonomy type - convert old format to new format
+					let value = target.value || (type === "whole_site" ? "whole_site" : []);
+					if (type === "taxonomy" && target.taxonomy) {
+						// Convert old format { taxonomy: "category", value: [] } to new format
+						value = {
+							taxonomy: target.taxonomy,
+							value: Array.isArray(target.value) ? target.value : [],
+						};
+					}
+
 					return {
 						id: target.id || `x${Date.now()}`,
 						type: type,
 						label: getTypeLabel(type),
-						value: target.value || (type === "whole_site" ? "whole_site" : []),
-						taxonomy: target.taxonomy || (type === "taxonomy" ? "" : undefined),
+						value: value,
 					};
 				});
 				targetsMap[initialConditions[0].id] = convertedTargets;
@@ -108,11 +117,18 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 					conditionValue = null;
 				}
 
-				return {
+				const conditionData = {
 					type: cond.value, // The field identifier
 					id: cond.id || `x${Date.now()}`,
 					value: conditionValue,
 				};
+
+				// Add access_control to condition if it exists
+				if (cond.accessControl) {
+					conditionData.access_control = cond.accessControl;
+				}
+
+				return conditionData;
 			});
 
 			// Collect all content targets from all conditions
@@ -135,20 +151,30 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 					type: type,
 				};
 
-				// Add value if not whole_site
-				if (type !== "whole_site") {
-					targetData.value = Array.isArray(target.value) ? target.value : [];
-				}
-
-				// Add taxonomy if it's a taxonomy type
+				// Handle taxonomy type specially
 				if (type === "taxonomy") {
-					targetData.taxonomy = target.taxonomy || "";
+					// For taxonomy, value is an object with taxonomy and value properties
+					if (target.value && typeof target.value === "object" && target.value.taxonomy) {
+						targetData.taxonomy = target.value.taxonomy;
+						targetData.value = Array.isArray(target.value.value) ? target.value.value : [];
+					} else {
+						targetData.taxonomy = target.taxonomy || "";
+						targetData.value = Array.isArray(target.value) ? target.value : [];
+					}
+				} else if (type !== "whole_site") {
+					// Add value if not whole_site
+					targetData.value = Array.isArray(target.value) ? target.value : [];
 				}
 
 				return targetData;
 			});
 
 			// Build actions array
+			// Use the first condition's accessControl, or fallback to rule's access_control
+			const defaultAccessControl = conditions.length > 0 && conditions[0].accessControl 
+				? conditions[0].accessControl 
+				: (rule.access_control || "access");
+
 			const actions = [
 				{
 					id: `x${Date.now()}`,
@@ -156,7 +182,7 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 					label: redirectUrl ? __("Redirect", "user-registration") : __("Show Message", "user-registration"),
 					message: redirectUrl ? "" : "<p>" + __("You do not have sufficient permission to access this content.", "user-registration") + "</p>",
 					redirect_url: redirectUrl || "",
-					access_control: accessControl,
+					access_control: defaultAccessControl,
 					local_page: "",
 					ur_form: "",
 					shortcode: {
@@ -262,6 +288,7 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 			type: option.type,
 			operator: "is",
 			conditionValue: option.type === "multiselect" || option.type === "checkbox" ? [] : "", // The actual value for the condition
+			accessControl: "access", // Default access control for each condition
 			contentTargets: [], // Initialize empty content targets
 		};
 		setConditions([...conditions, newCondition]);
@@ -289,12 +316,19 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 		});
 	};
 
-	const handleContentTargetsChange = (conditionId, targets) => {
-		setConditionContentTargets((prev) => ({
-			...prev,
-			[conditionId]: targets,
-		}));
-	};
+	const handleContentTargetsChange = useCallback((conditionId, targets) => {
+		setConditionContentTargets((prev) => {
+			// Only update if the value actually changed (deep comparison for arrays)
+			const prevTargets = prev[conditionId];
+			if (JSON.stringify(prevTargets) === JSON.stringify(targets)) {
+				return prev;
+			}
+			return {
+				...prev,
+				[conditionId]: targets,
+			};
+		});
+	}, []);
 
 	return (
 		<div className="urcr-rule-content-panel">
@@ -311,8 +345,6 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 								}}
 								onUpdate={handleConditionUpdate}
 								onRemove={() => handleConditionRemove(condition.id)}
-								accessControl={accessControl}
-								onAccessControlChange={setAccessControl}
 								onContentTargetsChange={handleContentTargetsChange}
 							/>
 						))}
