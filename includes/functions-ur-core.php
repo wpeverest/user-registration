@@ -6440,9 +6440,10 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 			return;
 		}
 
-		if ( in_array( $membership['status'], array( 'pending', 'inactive' ) ) ) {
-			wp_logout();
-		}
+		//TODO - Multiple Membership ( Uncomment the wp_logout line after testing ).
+		// if ( in_array( $membership['status'], array( 'pending', 'inactive' ) ) ) {
+		// 	wp_logout();
+		// }
 
 	}
 }

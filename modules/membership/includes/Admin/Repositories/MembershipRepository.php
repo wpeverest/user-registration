@@ -10,9 +10,9 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 	protected $table, $members_meta, $posts_meta_table, $subscription_table;
 
 	public function __construct() {
-		$this->table            = TableList::posts_table();
-		$this->members_meta     = TableList::users_meta_table();
-		$this->posts_meta_table = TableList::posts_meta_table();
+		$this->table              = TableList::posts_table();
+		$this->members_meta       = TableList::users_meta_table();
+		$this->posts_meta_table   = TableList::posts_meta_table();
 		$this->subscription_table = TableList::subscriptions_table();
 	}
 
@@ -43,7 +43,6 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 		);
 		$membership_service = new MembershipService();
 		return $membership_service->prepare_membership_data( $memberships );
-
 	}
 
 	/**
@@ -76,7 +75,6 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 			),
 			ARRAY_A
 		);
-
 	}
 
 
@@ -202,20 +200,20 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 	 * @return array|false|object|\stdClass|null
 	 */
 	public function check_deletable_membership( $id, $statuses ) {
-		if (!is_array($statuses)) {
+		if ( ! is_array( $statuses ) ) {
 			return false;
 		}
 
 		$placeholders = array();
-		$values = array();
+		$values       = array();
 
-		foreach ($statuses as $status) {
+		foreach ( $statuses as $status ) {
 			$placeholders[] = '%s';
-			$values[] = trim($status);
+			$values[]       = trim( $status );
 		}
 
-		$placeholders_string = implode(',', $placeholders);
-		$values = array_merge(array($id), $values);
+		$placeholders_string = implode( ',', $placeholders );
+		$values              = array_merge( array( $id ), $values );
 
 		return $this->wpdb()->get_row(
 			$this->wpdb()->prepare(

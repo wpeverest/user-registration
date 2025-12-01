@@ -543,6 +543,13 @@
 			}
 		}
 
+		// TODO: Remove this CSS after testing
+		.user-registration-membership-wrapper {
+			padding: $spacing_32px;
+			margin-bottom: $spacing_32px;
+			border: 1px solid #383838;
+		}
+
 		.user-registration-membership-content {
 			display: flex;
 			flex-direction: column;

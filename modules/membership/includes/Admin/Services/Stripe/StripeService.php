@@ -288,20 +288,22 @@ class StripeService {
 	}
 
 	public function update_order( $data ) {
-		$transaction_id = $data['payment_result']['paymentIntent']['id'] ?? '';
-		$payment_status = sanitize_text_field( $data['payment_status'] );
-		$member_id      = absint( $_POST['member_id'] );
-		$is_upgrading   = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? '';
+		$payment_status         = sanitize_text_field( $data['payment_status'] );
+		$member_id              = absint( $_POST['member_id'] );
+		$is_upgrading           = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+		$is_purchasing_multiple = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_purchasing_multiple', true ) );
 
 		PaymentGatewayLogging::log_webhook_received(
 			'stripe',
 			'Stripe payment confirmation callback received',
 			array(
-				'webhook_type'   => 'payment_confirmation',
-				'transaction_id' => $transaction_id,
-				'payment_status' => $payment_status,
-				'member_id'      => $member_id,
-				'is_upgrade'     => $is_upgrading,
+				'webhook_type'           => 'payment_confirmation',
+				'transaction_id'         => $transaction_id,
+				'payment_status'         => $payment_status,
+				'member_id'              => $member_id,
+				'is_upgrade'             => $is_upgrading,
+				'is_purchasing_multiple' => $is_purchasing_multiple,
 			)
 		);
 
@@ -347,7 +349,7 @@ class StripeService {
 				)
 			);
 
-			if ( ! $is_upgrading && ! $is_renewing ) {
+			if ( ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
 				wp_delete_user( absint( $member_id ) );
 				$this->members_orders_repository->delete_member_order( $member_id );
 			}

@@ -202,4 +202,10 @@ class MembershipGroupService {
 
 		return $updated_array;
 	}
+
+	public function check_if_multiple_memberships_allowed( $group_id ) {
+		$multiple_memberships = get_post_meta( $group_id, 'urmg_multiple_memberships', true );
+
+		return ur_string_to_bool( $multiple_memberships );
+	}
 }

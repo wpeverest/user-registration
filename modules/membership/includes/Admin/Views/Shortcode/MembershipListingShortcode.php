@@ -7,6 +7,7 @@ use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\MembershipService;
+use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 
 /**
  * Registration Shortcodes
@@ -30,19 +31,19 @@ class MembershipListingShortcode {
 	/**
 	 * Output the shortcode.
 	 *
-	 * @param array $attributes Shortcode attributes.
+	 * @param array  $attributes Shortcode attributes.
 	 * @param string $shortcode Shortcode itself.
 	 */
 	public static function render_template( $attributes, $shortcode ) {
 		global $wp, $post;
 
-
 		$membership_service = new MembershipService();
 		$memberships        = $membership_service->list_active_memberships();
 
+		$membership_repository      = new MembersRepository();
+		$membershp_group_repository = new MembershipGroupRepository();
 
-
-		$type = "user_registration_groups" === $shortcode ? 'list' : '';
+		$type = 'user_registration_groups' === $shortcode ? 'list' : '';
 
 		if ( ! empty( $attributes['list_type'] ) ) {
 			$type = $attributes['list_type'];
@@ -54,20 +55,55 @@ class MembershipListingShortcode {
 			$group_id                 = absint( $group_id );
 			$membership_group_service = new MembershipGroupService();
 			$memberships              = $membership_group_service->get_group_memberships( $group_id );
+
+			$memberships                  = array_map(
+				function ( $membership ) {
+						$membership['multiple_membership'] = true;
+					return $membership;
+				},
+				$memberships
+			);
+			$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $group_id );
+
+			if ( $multiple_memberships_allowed ) {
+				$memberships = array_map(
+					function ( $membership ) {
+							$membership['multiple_membership'] = true;
+						return $membership;
+					},
+					$memberships
+				);
+			}
 		}
 
+		$sign_up_text   = ! empty( $attributes['button_text'] ) ? esc_html__( sanitize_text_field( $attributes['button_text'] ), 'user-registration' ) : __( 'Sign Up', 'user-registration' );
+		$action_to_take = 'register';
 
-
-		$sign_up_text         = ! empty( $attributes['button_text'] ) ? esc_html__( sanitize_text_field( $attributes['button_text'] ), 'user-registration' ) : __( 'Sign Up', 'user-registration' );
 		$currency             = get_option( 'user_registration_payment_currency', 'USD' );
 		$currencies           = ur_payment_integration_get_currencies();
 		$symbol               = $currencies[ $currency ]['symbol'];
-		$registration_page_id = ! empty( $attributes['registration_page_id'] ) ? absint($attributes['registration_page_id']) : get_option( 'user_registration_member_registration_page_id', false );
-		$thank_you_page_id = ! empty( $attributes['thank_you_page_id'] ) ? absint($attributes['thank_you_page_id']) : get_option( 'user_registration_thank_you_page_id', false );
-		$uuid = ! empty( $attributes['uuid'] ) ? $attributes['uuid'] : ur_generate_random_key();
-		$redirect_page_url = get_permalink( $registration_page_id );
+		$registration_page_id = ! empty( $attributes['registration_page_id'] ) ? absint( $attributes['registration_page_id'] ) : get_option( 'user_registration_member_registration_page_id', false );
+		$thank_you_page_id    = ! empty( $attributes['thank_you_page_id'] ) ? absint( $attributes['thank_you_page_id'] ) : get_option( 'user_registration_thank_you_page_id', false );
+		$uuid                 = ! empty( $attributes['uuid'] ) ? $attributes['uuid'] : ur_generate_random_key();
+		$redirect_page_url    = get_permalink( $registration_page_id );
 
+		$current_user_id     = get_current_user_id();
+		$user_membership_ids = array();
 
+		if ( $current_user_id ) {
+			$user_memberships    = $membership_repository->get_member_membership_by_id( $current_user_id );
+			$user_membership_ids = array_filter(
+				array_map(
+					function ( $user_memberships ) {
+						return $user_memberships['post_id'];
+					},
+					$user_memberships
+				)
+			);
+
+			$ur_account_page_url = ur_get_page_permalink( 'myaccount' );
+			$redirect_page_url   = ur_get_endpoint_url( 'ur-membership', '', $ur_account_page_url );
+		}
 
 		if ( empty( $memberships ) ) {
 			echo wp_kses_post( apply_filters( 'user_registration_membership_no_membership_message', __( 'Empty membership group.', 'user-registration' ) ) );
@@ -81,6 +117,5 @@ class MembershipListingShortcode {
 			$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/membership-listing.php';
 		}
 		require $template_file;
-
 	}
 }

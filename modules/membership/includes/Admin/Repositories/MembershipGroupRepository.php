@@ -160,4 +160,28 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 			)
 		);
 	}
+
+	public function get_membership_group_by_membership_id( $membership_id ) {
+		$membership_id = intval( $membership_id );
+
+		return $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT wpp.ID,
+                wpp.post_title,
+                wpp.post_content,
+                wpp.post_status,
+                wpp.post_type,
+                wpm.meta_value as memberships
+				FROM $this->table wpp
+				JOIN $this->posts_meta_table wpm
+					ON wpm.post_id = wpp.ID
+				WHERE wpm.meta_key = 'urmg_memberships'
+				AND wpp.post_type = 'ur_membership_groups'
+				AND wpm.meta_value LIKE %s
+				ORDER BY wpp.ID DESC",
+				'%"' . $membership_id . '"%'
+			),
+			ARRAY_A
+		);
+	}
 }
