@@ -466,7 +466,11 @@
 			prepare_members_data,
 			form_response
 		) {
-			if (response.data.is_upgrading || response.data.is_renewing) {
+			if (
+				response.data.is_upgrading ||
+				response.data.is_renewing ||
+				response.data.is_purchasing_multiple
+			) {
 				location.reload();
 			} else {
 				var bank_data = {
@@ -712,8 +716,7 @@
 			//handle differently in case of Authorize.NET
 			//gets the nonce token from ANET and send it via the AJAX request.
 			if ("authorize" === selected_pg) {
-				this.handle_authorize_upgrade(
-					current_plan,
+				this.handle_authorize_multiple_purchase(
 					selected_membership_id,
 					selected_pg,
 					btn
@@ -841,6 +844,76 @@
 							selected_membership_id: data.selected_membership_id,
 							current_subscription_id:
 								data.current_subscription_id,
+							selected_pg: data.selected_pg,
+							ur_authorize_data: data.ur_authorize_data
+						},
+						{
+							success: function (response) {
+								if (response.success) {
+									ur_membership_frontend_utils.show_success_message(
+										response.data.message
+									);
+									var prepare_members_data = {
+										payment_method: selected_pg,
+										username: response.data.username
+									};
+
+									ur_membership_ajax_utils.handle_update_response(
+										response,
+										prepare_members_data
+									);
+								} else {
+									ur_membership_frontend_utils.show_failure_message(
+										response.data.message
+									);
+									$(document)
+										.find(".swal2-confirm")
+										.find("span")
+										.removeClass("urm-spinner");
+								}
+							},
+							failure: function (xhr, statusText) {
+								ur_membership_frontend_utils.show_failure_message(
+									user_registration_pro_frontend_data.network_error +
+										"(" +
+										statusText +
+										")"
+								);
+								$(document)
+									.find(".swal2-confirm")
+									.find("span")
+									.removeClass("urm-spinner");
+							},
+							complete: function () {
+								ur_membership_frontend_utils.toggleSaveButtons(
+									false,
+									btn
+								);
+							}
+						}
+					);
+				}
+			});
+		},
+		handle_authorize_multiple_purchase: function (
+			selected_membership_id,
+			selected_pg,
+			btn
+		) {
+			var data = {
+				selected_membership_id: selected_membership_id,
+				selected_pg: selected_pg,
+				btn: btn
+			};
+
+			$(document).trigger("urm_before_multiple_membership_submit", {
+				data: data,
+				onComplete: function (data) {
+					ur_membership_ajax_utils.send_data(
+						{
+							_wpnonce: urmf_data.upgrade_membership_nonce,
+							action: "user_registration_membership_add_multiple_membership",
+							selected_membership_id: data.selected_membership_id,
 							selected_pg: data.selected_pg,
 							ur_authorize_data: data.ur_authorize_data
 						},
@@ -1159,8 +1232,9 @@
 					break;
 				case "authorize":
 				case "free":
-					location.reload();
-					break;
+					const cleanUrl =
+						window.location.origin + window.location.pathname;
+					window.location.replace(cleanUrl);
 				default:
 					ur_membership_ajax_utils.show_bank_response(
 						response,
@@ -1551,7 +1625,8 @@
 						if (response.success) {
 							if (
 								response.data.is_upgrading ||
-								response.data.is_renewing
+								response.data.is_renewing ||
+								response.data.is_purchasing_multiple
 							) {
 								var thank_you_data = {
 									username: prepare_members_data.username,
@@ -1797,9 +1872,13 @@
 				is_renewing =
 					data.response_data.data.is_renewing !== undefined
 						? data.response_data.data.is_renewing
+						: false,
+				is_purchasing_multiple =
+					data.response_data.data.is_purchasing_multiple !== undefined
+						? data.response_data.data.is_purchasing_multiple
 						: false;
 
-			if (is_upgrading || is_renewing) {
+			if (is_upgrading || is_renewing || is_purchasing_multiple) {
 				stripe_settings.update_order_status(
 					data.subscription,
 					data.response_data,
@@ -1813,7 +1892,8 @@
 				(data.subscription.status === "active" ||
 					data.subscription.status === "trialing") &&
 				!is_upgrading &&
-				!is_renewing
+				!is_renewing &&
+				!is_purchasing_multiple
 			) {
 				ur_membership_frontend_utils.show_form_success_message(
 					data.form_response,

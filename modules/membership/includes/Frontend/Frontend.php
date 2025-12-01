@@ -127,6 +127,7 @@ class Frontend {
 
 			$membership['active_gateways'] = $active_gateways;
 			$is_upgrading                  = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
+			$is_purchasing_multiple        = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_purchasing_multiple', true ) );
 			$last_order                    = $members_order_repository->get_member_orders( $user_id );
 			$bank_data                     = array();
 			if ( ! empty( $last_order ) && $last_order['status'] == 'pending' && $last_order['payment_method'] === 'bank' ) {
@@ -135,17 +136,19 @@ class Frontend {
 					'bank_data'        => get_option( 'user_registration_global_bank_details', '' ),
 					'notice_1'         => apply_filters( 'urm_bank_info_notice_1_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your upgraded membership will be activated. Kindly wait for the admin\'s confirmation.', 'user-registration' ) ),
 					'notice_2'         => apply_filters( 'urm_bank_info_notice_2_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Your membership will be renewed once the payment is verified. Kindly wait for the admin\'s confirmation.', 'user-registration' ) ),
+					'notice_3'         => apply_filters( 'urm_bank_info_notice_3_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your new membership will be activated. Kindly wait for the admin\'s confirmation.', 'user-registration' ) ),
 				);
 			}
 			$subscription_data = $members_subscription_repository->get_member_subscription( $user_id );
 
 			$membership_data = array(
-				'user'              => get_user_by( 'id', get_current_user_id() ),
-				'membership'        => $membership,
-				'is_upgrading'      => $is_upgrading,
-				'bank_data'         => $bank_data,
-				'renewal_behaviour' => get_option( 'user_registration_renewal_behaviour', 'automatic' ),
-				'subscription_data' => $subscription_data,
+				'user'                   => get_user_by( 'id', get_current_user_id() ),
+				'membership'             => $membership,
+				'is_upgrading'           => $is_upgrading,
+				'is_purchasing_multiple' => $is_purchasing_multiple,
+				'bank_data'              => $bank_data,
+				'renewal_behaviour'      => get_option( 'user_registration_renewal_behaviour', 'automatic' ),
+				'subscription_data'      => $subscription_data,
 			);
 
 			if ( ! empty( $last_order ) ) {

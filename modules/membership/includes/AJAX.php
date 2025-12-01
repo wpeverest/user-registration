@@ -883,9 +883,10 @@ class AJAX {
 
 			delete_user_meta( $member_id, 'urm_user_just_created' );
 			$response = array(
-				'message'      => $update_stripe_order['message'],
-				'is_upgrading' => ur_string_to_bool( $is_upgrading ),
-				'is_renewing'  => ur_string_to_bool( $is_renewing ),
+				'message'                => $update_stripe_order['message'],
+				'is_upgrading'           => ur_string_to_bool( $is_upgrading ),
+				'is_renewing'            => ur_string_to_bool( $is_renewing ),
+				'is_purchasing_multiple' => ur_string_to_bool( $is_purchasing_multiple ),
 			);
 			if ( $is_upgrading ) {
 				$response['message'] = __( 'Membership upgraded successfully', 'user-registration' );
@@ -927,18 +928,20 @@ class AJAX {
 
 	public static function create_stripe_subscription() {
 		ur_membership_verify_nonce( 'urm_confirm_payment' );
-		$customer_id       = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
-		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
-		$member_id         = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$is_upgrading      = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
-		$is_renewing       = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
-		$is_user_created   = get_user_meta( $member_id, 'urm_user_just_created' );
-		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Invalid Request.', 'user-registration' ),
-				)
-			);
+		$customer_id            = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
+		$payment_method_id      = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
+		$member_id              = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$is_upgrading           = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+		$is_renewing            = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+		$is_user_created        = get_user_meta( $member_id, 'urm_user_just_created' );
+		$is_purchasing_multiple = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_purchasing_multiple', true ) );
+
+		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Invalid Request.', 'user-registration' ),
+						)
+					);
 		}
 		if ( is_user_logged_in() && ! current_user_can( 'edit_user', $member_id ) ) {
 			wp_send_json_error(
@@ -1646,11 +1649,7 @@ class AJAX {
 
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
 			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
-
-			$form_response    = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-			$ur_authorize_net = array( 'ur_authorize_net' => ! empty( $form_response['ur_authorize_net'] ) ? $form_response['ur_authorize_net'] : array() );
-			$data             = array_merge( $data, $ur_authorize_net );
-			$pg_data          = $payment_service->build_response( $data );
+			$pg_data         = $payment_service->build_response( $data );
 		}
 
 		if ( $response['status'] ) {
@@ -1686,7 +1685,7 @@ class AJAX {
 			$message = 'free' === $selected_pg ? __( 'Membership purchased successfully.', 'user-registration-membership' ) : __( 'New Order created, initializing payment...', 'user-registration-membership' );
 			wp_send_json_success(
 				array(
-					'is_purchasing'            => true,
+					'is_purchasing_multiple'   => true,
 					'pg_data'                  => $pg_data,
 					'member_id'                => $member_id,
 					'username'                 => $member_username,

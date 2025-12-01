@@ -240,7 +240,7 @@ class StripeService {
 					)
 				);
 
-				$intent                    = \Stripe\PaymentIntent::create(
+				$intent = \Stripe\PaymentIntent::create(
 					array(
 						'amount'               => $amount,
 						'currency'             => $currency,
@@ -248,6 +248,7 @@ class StripeService {
 						'customer'             => $customer->id,
 					)
 				);
+
 				$response['client_secret'] = $intent->client_secret;
 
 				PaymentGatewayLogging::log_transaction_success(
@@ -288,6 +289,7 @@ class StripeService {
 	}
 
 	public function update_order( $data ) {
+
 		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? '';
 		$payment_status         = sanitize_text_field( $data['payment_status'] );
 		$member_id              = absint( $_POST['member_id'] );

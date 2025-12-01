@@ -259,7 +259,8 @@ if ( 'subscription' == $membership['post_content']['type'] ) {
 					</span>
 			</div>
 			<?php
-			if ( $is_upgrading || $is_renewing ) :
+			if ( $is_upgrading || $is_renewing || $is_purchasing_multiple ) :
+
 				if ( ! empty( $bank_data['notice_1'] ) ) :
 					?>
 					<div id="bank-notice" class="btn-success">
@@ -290,10 +291,13 @@ if ( 'subscription' == $membership['post_content']['type'] ) {
 							</defs>
 						</svg>
 						<?php
+
 						if ( $is_upgrading ) {
 							echo isset( $bank_data['notice_1'] ) ? $bank_data['notice_1'] : '';
 						} elseif ( $is_renewing ) {
 							echo isset( $bank_data['notice_2'] ) ? $bank_data['notice_2'] : '';
+						} elseif ( $is_purchasing_multiple ) {
+							echo isset( $bank_data['notice_3'] ) ? $bank_data['notice_3'] : '';
 						}
 						?>
 					</span>
