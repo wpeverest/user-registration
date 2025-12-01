@@ -172,6 +172,9 @@ class URCR_Admin {
 	public function render_content_access_rules() {
 		$script_url = UR()->plugin_url() . '/chunks/content-access-rules.js';
 
+		// Enqueue WordPress editor (free TinyMCE) for rich text editing
+		wp_enqueue_editor();
+
 		// Enqueue standalone content access rules script
 		wp_enqueue_script(
 			'ur-content-access-rules-script',

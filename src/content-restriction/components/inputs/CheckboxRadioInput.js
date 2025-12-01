@@ -5,7 +5,7 @@ import React from "react";
 import { __ } from "@wordpress/i18n";
 import { getURCRData } from "../../utils/localized-data";
 
-const CheckboxRadioInput = ({ field, value, onChange }) => {
+const CheckboxRadioInput = ({ field, value, onChange, uniqueId }) => {
 	const labels = getURCRData("labels", {});
 	
 	// Get options based on field
@@ -43,6 +43,9 @@ const CheckboxRadioInput = ({ field, value, onChange }) => {
 		onChange(optionValue);
 	};
 
+	// Generate unique name for radio group using uniqueId or fallback to timestamp
+	const radioName = uniqueId ? `urcr-radio-${field}-${uniqueId}` : `urcr-radio-${field}-${Date.now()}`;
+
 	return (
 		<div className="urcr-checkbox-radio-group">
 			{options.map((option) => {
@@ -54,7 +57,7 @@ const CheckboxRadioInput = ({ field, value, onChange }) => {
 					>
 						<input
 							type="radio"
-							name={`urcr-radio-${field}`}
+							name={radioName}
 							value={option.value}
 							checked={isChecked}
 							onChange={(e) => handleChange(e.target.value)}

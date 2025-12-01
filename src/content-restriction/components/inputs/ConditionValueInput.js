@@ -7,7 +7,7 @@ import { getURCRLocalizedData, getURCRData } from "../../utils/localized-data";
 import CheckboxRadioInput from "./CheckboxRadioInput";
 import PeriodInput from "./PeriodInput";
 
-const ConditionValueInput = ({ type, field, value, operator, onChange }) => {
+const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId }) => {
 	const urcrData = getURCRLocalizedData();
 	
 	// Normalize initial value: for checkbox, ensure it's a scalar; for multiselect, ensure it's an array
@@ -204,6 +204,7 @@ const ConditionValueInput = ({ type, field, value, operator, onChange }) => {
 					field={field}
 					value={inputValue}
 					onChange={handleChange}
+					uniqueId={uniqueId}
 				/>
 			);
 

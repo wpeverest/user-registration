@@ -3,10 +3,11 @@
  */
 import React, {useState, useEffect, useRef} from "react";
 import {__} from "@wordpress/i18n";
-import {toggleRuleStatus, duplicateRule} from "../../api/content-access-rules-api";
+import {toggleRuleStatus} from "../../api/content-access-rules-api";
 import SettingsPanel from "../settings/SettingsPanel";
 import RuleContentDisplay from "./RuleContentDisplay";
 import DeleteRuleModal from "../modals/DeleteRuleModal";
+import DuplicateRuleModal from "../modals/DuplicateRuleModal";
 import {showSuccess, showError} from "../../utils/notifications";
 
 /* global _UR_DASHBOARD_ */
@@ -23,9 +24,9 @@ const RuleCard = ({
 					  onRuleDeleteOrDuplicate,
 				  }) => {
 	const [isToggling, setIsToggling] = useState(false);
-	const [isDuplicating, setIsDuplicating] = useState(false);
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false);
 	const menuWrapperRef = useRef(null);
 
 	const editUrl = adminURL
@@ -79,22 +80,13 @@ const RuleCard = ({
 		onRuleDeleteOrDuplicate();
 	};
 
-	const handleDuplicate = async () => {
-		setIsDuplicating(true);
+	const handleDuplicateClick = () => {
 		setMenuOpen(false);
-		try {
-			const response = await duplicateRule(rule.id);
-			if (response.success) {
-				showSuccess(response.message || __("Rule duplicated successfully", "user-registration"));
-				onRuleDeleteOrDuplicate();
-			} else {
-				showError(response.message || __("Failed to duplicate rule", "user-registration"));
-			}
-		} catch (error) {
-			showError(error.message || __("An error occurred", "user-registration"));
-		} finally {
-			setIsDuplicating(false);
-		}
+		setIsDuplicateModalOpen(true);
+	};
+
+	const handleDuplicateSuccess = () => {
+		onRuleDeleteOrDuplicate();
 	};
 
 	const formattedId = String(rule.id).padStart(2, "0");
@@ -184,9 +176,8 @@ const RuleCard = ({
 									type="button"
 									onClick={(e) => {
 										e.stopPropagation();
-										handleDuplicate();
+										handleDuplicateClick();
 									}}
-									disabled={isDuplicating}
 								>
 									<span className="dashicons dashicons-admin-page"></span>
 									{__("Duplicate", "user-registration")}
@@ -224,16 +215,19 @@ const RuleCard = ({
 				className="user-registration-card__body ur-p-3 integration-body-info"
 				style={{display: isExpanded ? "block" : "none"}}
 			>
-				{isSettingsOpen && (
+				<div style={{display: isSettingsOpen ? "block" : "none"}}>
 					<SettingsPanel
 						rule={rule}
 						onRuleUpdate={onRuleUpdate}
+						onGoBack={onToggleSettings}
 					/>
-				)}
-				<RuleContentDisplay
-					rule={rule}
-					onRuleUpdate={onRuleUpdate}
-				/>
+				</div>
+				<div style={{display: !isSettingsOpen ? "block" : "none"}}>
+					<RuleContentDisplay
+						rule={rule}
+						onRuleUpdate={onRuleUpdate}
+					/>
+				</div>
 			</div>
 
 			{/* Delete Modal */}
@@ -242,6 +236,14 @@ const RuleCard = ({
 				onClose={() => setIsDeleteModalOpen(false)}
 				rule={rule}
 				onDeleteSuccess={handleDeleteSuccess}
+			/>
+
+			{/* Duplicate Modal */}
+			<DuplicateRuleModal
+				isOpen={isDuplicateModalOpen}
+				onClose={() => setIsDuplicateModalOpen(false)}
+				rule={rule}
+				onDuplicateSuccess={handleDuplicateSuccess}
 			/>
 		</div>
 	);

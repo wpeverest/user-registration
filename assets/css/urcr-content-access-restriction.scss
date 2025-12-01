@@ -505,7 +505,6 @@ $border-left-color_3: #0073aa;
 .urcr-rule-settings-panel {
 	margin-bottom: 20px;
 	padding-bottom: 20px;
-	border-bottom: 1px solid #e1e1e1;
 
 	h4 {
 		font-size: 14px;
@@ -521,6 +520,174 @@ $border-left-color_3: #0073aa;
 
 	hr {
 		margin: 8px 0;
+	}
+
+	// Settings panel form groups
+	.ur-form-group {
+		display: flex;
+		margin-bottom: 28px;
+		flex-wrap: nowrap;
+		align-items: center;
+
+		&:has(.urcr-form-fields-wrapper),
+		&:has(.urcr-notice),
+		&:has(.urcrra-shortcode-input),
+		&:has(.wp-editor-wrap),
+		&:has(.tox-tinymce) {
+			align-items: flex-start !important;
+
+			.urcr-label-container {
+				margin-top: 6px;
+			}
+		}
+
+		&:has(.urcrra-shortcode-input) {
+			.select2-container {
+				margin-bottom: 16px;
+			}
+		}
+
+		@media (max-width: 991px) {
+			flex-direction: column;
+			align-items: unset !important;
+			gap: 16px;
+
+			.urcr-label-container {
+				max-width: 100%;
+				flex: unset;
+			}
+
+			.ur-row,
+			.urcr-body,
+			.urcr-input-container {
+				max-width: 100%;
+				flex: unset;
+			}
+		}
+	}
+
+	.urcr-label-input-pair,
+	.urcr-title-body-pair {
+		display: flex;
+		align-items: center;
+	}
+
+	.urcr-label-container {
+		position: relative;
+		vertical-align: top;
+		line-height: 24px;
+		font-weight: 500;
+		color: #646970;
+		font-size: 14px;
+		flex: 0 0 38%;
+		margin-bottom: 0;
+
+		label {
+			margin: 0;
+			display: block;
+		}
+
+		.urcr-target-content-label {
+			display: inline-block;
+		}
+
+		.urcr-puncher {
+			display: inline-block;
+			margin: 0 4px;
+		}
+
+		.user-registration-help-tip {
+			// Tooltip icon is handled by admin.scss via ::after pseudo-element
+			// No additional icon needed here to avoid conflicts
+			// Just ensure proper spacing
+			margin-left: 5px;
+		}
+	}
+
+	.urcr-input-container,
+	.urcr-body {
+		flex: 1;
+		min-width: 0;
+
+		.urcr-input {
+			width: 100%;
+			padding: 6px 8px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			font-size: 14px;
+			line-height: 1.5;
+			background-color: $background-color_2;
+			box-sizing: border-box;
+
+			&:focus {
+				border-color: $border-color_6;
+				box-shadow: 0 0 0 1px #475bb2;
+				outline: 0;
+			}
+		}
+
+		select.urcr-input,
+		.urcr-action-type-select {
+			width: 100%;
+			padding: 6px 8px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			font-size: 14px;
+			line-height: 1.5;
+			background-color: $background-color_2;
+			cursor: pointer;
+			box-sizing: border-box;
+
+			&:focus {
+				border-color: $border-color_6;
+				box-shadow: 0 0 0 1px #475bb2;
+				outline: 0;
+			}
+		}
+	}
+
+	.urcrra-shortcode-input {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+
+		select,
+		input {
+			width: 100%;
+		}
+	}
+
+	// WordPress editor wrapper
+	.wp-editor-wrap,
+	.tox-tinymce {
+		width: 100%;
+	}
+
+	// Column classes
+	.ur-col-4 {
+		flex: 0 0 33.333333%;
+		max-width: 33.333333%;
+	}
+
+	.ur-col-8 {
+		flex: 0 0 66.666667%;
+		max-width: 66.666667%;
+	}
+
+	.ur-row {
+		display: flex;
+		flex-wrap: wrap;
+		margin-left: -12px;
+		margin-right: -12px;
+
+		> * {
+			padding-left: 12px;
+			padding-right: 12px;
+		}
+	}
+
+	.ur-align-items-center {
+		align-items: center;
 	}
 }
 
@@ -580,6 +747,33 @@ $border-left-color_3: #0073aa;
 }
 
 .urcr-add-condition-button {
+	display: inline-flex !important;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 12px !important;
+	font-size: 13px;
+	border-radius: 4px;
+	cursor: pointer;
+	border: 1px solid;
+	transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+	background: #e8d5ff;
+	border-color: $border-color_2;
+	color: $color_8;
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
+
+	&:hover {
+		background: #d4b3ff;
+		border-color: $border-color_3;
+		color: $color_9;
+	}
+}
+
+.urcr-add-group-button {
 	display: inline-flex !important;
 	align-items: center;
 	gap: 6px;
@@ -1540,6 +1734,41 @@ $not-tag: #F9CACA;
 				background: $not-tag;
 				left: -21px;
 			}
+		}
+	}
+}
+
+// Nested group styles
+.urcr-content-group {
+	&.urcr-nested-group {
+		margin-top: 10px;
+		margin-bottom: 10px;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		padding: 10px;
+
+		.urcr-conditions-list {
+			&.urcr-conditional-logic-definitions {
+				&:has(.urcr-logic-group-rule-OR),
+				&:has(.urcr-logic-group-rule-AND),
+				&:has(.urcr-logic-group-rule-NOT) {
+					padding-left: 42px;
+				}
+			}
+		}
+	}
+
+	.urcr-buttons-wrapper {
+		display: flex;
+		gap: 10px;
+		margin-top: 10px;
+		align-items: center;
+
+		.urcr-add-condition-button,
+		.urcr-add-group-button {
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
 		}
 	}
 }

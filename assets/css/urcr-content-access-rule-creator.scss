@@ -241,7 +241,7 @@ $not-tag: #F9CACA;
 						width: 103px;
 					}
 
-					.handlediv {						
+					.handlediv {
 						box-shadow: none;
 						background: $white;
 						border: $border_width solid $primary_color;
@@ -376,9 +376,11 @@ $not-tag: #F9CACA;
 						&::after {
 							bottom: 0;
 						}
-					}					
+					}
 
 					.urcr-label-input-pair {
+						display: flex;
+						flex-direction: row;
 						.urcr-input-container {
 							display: flex;
 							align-items: center;
@@ -398,7 +400,7 @@ $not-tag: #F9CACA;
 
 							> input[type="number"] {
 								width: 160px;
-							}							
+							}
 
 							.user-registration-button-group {
 								display: flex;
@@ -547,7 +549,7 @@ $not-tag: #F9CACA;
 						color: $grey-400;
 						font-size: 14px;
 						flex: 0 0 38%;
-						margin-bottom: 0;						
+						margin-bottom: 0;
 					}
 
 					.urcr-form-fields-wrapper {
@@ -623,7 +625,7 @@ $not-tag: #F9CACA;
 								}
 							}
 						}
-					}												
+					}
 				}
 
 				// .select2-container {

@@ -43,9 +43,10 @@ const ConditionRow = ({
 		if (condition.conditionValue !== undefined) {
 			setValue(condition.conditionValue);
 		} else {
-			setValue(condition.type === "multiselect" ? [] : "");
+			const inputType = condition.inputType || condition.type;
+			setValue(inputType === "multiselect" ? [] : "");
 		}
-	}, [condition.type, condition.value]);
+	}, [condition.inputType, condition.type, condition.value]);
 
 
 	const handleValueChange = (newValue) => {
@@ -58,13 +59,14 @@ const ConditionRow = ({
 		const selectedOption = allOptions.find(opt => opt.value === selectedValue);
 
 		if (selectedOption) {
-			// Update the condition with new field, label, and type
+			// Update the condition with new field, label, and inputType
 			// Reset the value since the field type changed
 			const updatedCondition = {
 				...condition,
 				value: selectedOption.value,
 				label: selectedOption.label,
-				type: selectedOption.type,
+				inputType: selectedOption.type,
+				type: condition.type || "condition", // Preserve type to distinguish from groups
 				conditionValue: "", // Reset value when field changes
 			};
 			setValue(""); // Reset local value
@@ -100,11 +102,12 @@ const ConditionRow = ({
 					{/* Value Input */}
 					<div className="urcr-condition-value">
 						<ConditionValueInput
-							type={condition.type}
+							type={condition.inputType || condition.type}
 							field={condition.value}
 							value={value}
 							operator={operator}
 							onChange={handleValueChange}
+							uniqueId={condition.id}
 						/>
 					</div>
 				</div>

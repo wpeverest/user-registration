@@ -10,7 +10,7 @@ import { showError } from "./utils/notifications";
 import { getURCRLocalizedData, getURCRData } from "./utils/localized-data";
 
 /* global _UR_DASHBOARD_ */
-const { adminURL } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+const { adminURL, assetsURL } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_ ? _UR_DASHBOARD_ : {};
 
 const ContentAccessRules = () => {
 	const [rules, setRules] = useState([]);
@@ -94,7 +94,7 @@ const ContentAccessRules = () => {
 		// If called without parameter (delete/duplicate), refetch is needed
 		// But for updates, we don't refetch - just update local state
 	};
-	
+
 	const handleRuleDeleteOrDuplicate = () => {
 		// Refetch rules after delete or duplicate operations
 		fetchRules();
@@ -161,12 +161,11 @@ const ContentAccessRules = () => {
 
 				{rules.length === 0 ? (
 					<div className="user-registration-card ur-text-center urcr-no-rules">
-						<p>
-							{__("No content access rules found.", "user-registration")}
-						</p>
-						<button type="button" className="button button-primary" onClick={handleOpenModal}>
-							{__("Create Your First Rule", "user-registration")}
-						</button>
+						<img 
+							src={`${assetsURL || ""}images/empty-table.png`}
+							alt={__("No rules found", "user-registration")}
+							style={{maxWidth: "100%", height: "auto", margin: "20px 0"}}
+						/>
 					</div>
 				) : (
 					<div className="urcr-rules-list">
