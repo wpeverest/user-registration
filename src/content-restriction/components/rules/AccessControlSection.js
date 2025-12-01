@@ -5,6 +5,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { __ } from "@wordpress/i18n";
 import ContentTypeDropdown from "../dropdowns/ContentTypeDropdown";
 import ContentValueInput from "../inputs/ContentValueInput";
+import { isProAccess } from "../../utils/localized-data";
 
 const AccessControlSection = ({
 	accessControl = "access",
@@ -62,15 +63,34 @@ const AccessControlSection = ({
 		onContentTargetsChange(updatedTargets);
 	};
 
+	// Ensure free users can only use "restrict"
+	useEffect(() => {
+		if (!isProAccess() && accessControl === "access") {
+			onAccessControlChange("restrict");
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [accessControl]);
+
+	const handleAccessControlChange = (e) => {
+		const newValue = e.target.value;
+		// Prevent free users from selecting "access"
+		if (!isProAccess() && newValue === "access") {
+			return;
+		}
+		onAccessControlChange(newValue);
+	};
+
 	return (
 		<div className="urcr-target-selection-section ur-d-flex ur-align-items-start">
 			{/* Access/Restrict Section */}
 			<select
 				className="urcr-access-select urcr-condition-value-input"
 				value={accessControl}
-				onChange={(e) => onAccessControlChange(e.target.value)}
+				onChange={handleAccessControlChange}
 			>
-				<option value="access">{__("Access", "user-registration")}</option>
+				{isProAccess() && (
+					<option value="access">{__("Access", "user-registration")}</option>
+				)}
 				<option value="restrict">{__("Restrict", "user-registration")}</option>
 			</select>
 

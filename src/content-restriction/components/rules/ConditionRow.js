@@ -4,11 +4,11 @@
 import React, {useState, useEffect} from "react";
 import {__} from "@wordpress/i18n";
 import ConditionValueInput from "../inputs/ConditionValueInput";
-import {getURCRLocalizedData, getURCRData} from "../../utils/localized-data";
+import {getURCRLocalizedData, getURCRData, isProAccess} from "../../utils/localized-data";
 
 // Get all condition options as a flat array for select dropdown
 const getAllConditionOptions = () => {
-	return [
+	const allOptions = [
 		{value: "membership", label: __("Membership", "user-registration"), type: "multiselect"},
 		{value: "roles", label: __("Roles", "user-registration"), type: "multiselect"},
 		{value: "user_registered_date", label: __("User Registered Date", "user-registration"), type: "date"},
@@ -21,6 +21,12 @@ const getAllConditionOptions = () => {
 		{value: "ur_form_field", label: __("UR Form Field", "user-registration"), type: "multiselect"},
 		{value: "payment_status", label: __("Payment Status", "user-registration"), type: "multiselect"},
 	];
+
+	// Filter options based on pro access
+	// For free users, only show membership condition
+	return isProAccess()
+		? allOptions
+		: allOptions.filter(option => option.value === "membership");
 };
 
 const ConditionRow = ({

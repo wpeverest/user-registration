@@ -3,11 +3,12 @@
  */
 import React, {useState} from "react";
 import {__} from "@wordpress/i18n";
+import {isProAccess} from "../../utils/localized-data";
 
 const ConditionFieldDropdown = ({onSelect}) => {
 	const [selectedValue, setSelectedValue] = useState("");
 
-	const options = [
+	const allOptions = [
 		{
 			group: __("Membership", "user-registration"),
 			options: [
@@ -44,6 +45,14 @@ const ConditionFieldDropdown = ({onSelect}) => {
 			],
 		},
 	];
+
+	// Filter options based on pro access
+	// For free users, only show membership condition
+	const options = isProAccess() 
+		? allOptions 
+		: allOptions.filter(group => 
+			group.options && group.options.some(option => option.value === "membership")
+		);
 
 	const handleOptionClick = (option) => {
 		setSelectedValue(option.value);

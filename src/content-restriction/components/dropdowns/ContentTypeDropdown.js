@@ -3,17 +3,24 @@
  */
 import React, { useState } from "react";
 import { __ } from "@wordpress/i18n";
+import { isProAccess } from "../../utils/localized-data";
 
 const ContentTypeDropdown = ({ onSelect, existingContentTypes = [] }) => {
 	const [selectedValue, setSelectedValue] = useState("");
 
-	const options = [
+	const allOptions = [
 		{ value: "pages", label: __("Pages", "user-registration") },
 		{ value: "posts", label: __("Posts", "user-registration") },
 		{ value: "post_types", label: __("Post Type", "user-registration") },
 		{ value: "taxonomy", label: __("Taxonomy", "user-registration") },
 		{ value: "whole_site", label: __("Whole Site", "user-registration") },
 	];
+
+	// Filter options based on pro access
+	// For free users, only show posts and pages
+	const options = isProAccess()
+		? allOptions
+		: allOptions.filter(option => option.value === "posts" || option.value === "pages");
 
 	// Check if a content type already exists
 	const isContentTypeExists = (contentType) => {

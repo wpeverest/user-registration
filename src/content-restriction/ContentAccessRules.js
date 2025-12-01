@@ -7,7 +7,7 @@ import { getAllRules } from "./api/content-access-rules-api";
 import RuleCard from "./components/rules/RuleCard";
 import AddNewRuleModal from "./components/modals/AddNewRuleModal";
 import { showError } from "./utils/notifications";
-import { getURCRLocalizedData, getURCRData } from "./utils/localized-data";
+import { getURCRLocalizedData, getURCRData, isProAccess } from "./utils/localized-data";
 
 /* global _UR_DASHBOARD_ */
 const { adminURL, assetsURL } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_ ? _UR_DASHBOARD_ : {};
@@ -151,17 +151,19 @@ const ContentAccessRules = () => {
 			<div className="urcr-viewer-container">
 				<div className="urcr-header">
 					<h1>{__("All Rules", "user-registration")}</h1>
-					<button type="button" className="urcr-add-new-button" onClick={handleOpenModal}>
-						<span className="dashicons dashicons-plus-alt2"></span>
-						{__("Add New", "user-registration")}
-					</button>
+					{isProAccess() && (
+						<button type="button" className="urcr-add-new-button" onClick={handleOpenModal}>
+							<span className="dashicons dashicons-plus-alt2"></span>
+							{__("Add New", "user-registration")}
+						</button>
+					)}
 				</div>
 
 				<AddNewRuleModal isOpen={isModalOpen} onClose={handleCloseModal} onCreateSuccess={handleRuleCreated} />
 
 				{rules.length === 0 ? (
 					<div className="user-registration-card ur-text-center urcr-no-rules">
-						<img 
+						<img
 							src={`${assetsURL || ""}images/empty-table.png`}
 							alt={__("No rules found", "user-registration")}
 							style={{maxWidth: "100%", height: "auto", margin: "20px 0"}}

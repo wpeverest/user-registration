@@ -7,7 +7,7 @@ import ConditionFieldDropdown from "../dropdowns/ConditionFieldDropdown";
 import ConditionRow from "./ConditionRow";
 import AdvancedLogicGates from "./AdvancedLogicGates";
 import AccessControlSection from "./AccessControlSection";
-import {getURCRData} from "../../utils/localized-data";
+import {getURCRData, isProAccess} from "../../utils/localized-data";
 
 // Helper function to determine condition input type
 const getConditionType = (conditionType) => {
@@ -307,14 +307,16 @@ const RuleGroup = ({
 						)}
 					</div>
 
-					<button
-						type="button"
-						className="button urcr-add-group-button"
-						onClick={handleAddGroup}
-					>
-						<span className="dashicons dashicons-plus-alt2"></span>
-						{__("Group", "user-registration")}
-					</button>
+					{isProAccess() && (
+						<button
+							type="button"
+							className="button urcr-add-group-button"
+							onClick={handleAddGroup}
+						>
+							<span className="dashicons dashicons-plus-alt2"></span>
+							{__("Group", "user-registration")}
+						</button>
+					)}
 				</div>
 			</div>
 		</div>

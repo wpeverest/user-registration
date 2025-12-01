@@ -384,6 +384,7 @@ class URCR_Admin_Assets {
 				'failed'    => __( 'Failed', 'user-registration' ),
 			),
 			'memberships'               => $formatted_memberships,
+			'is_pro'	=> UR_PRO_ACTIVE
 		);
 	}
 
