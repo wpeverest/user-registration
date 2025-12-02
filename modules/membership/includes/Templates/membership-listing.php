@@ -25,12 +25,12 @@ if ( 'block' === $type ) :
 
 			foreach ( $memberships as $k => $membership ) :
 				$current_plan = false;
+				$button_text  = $sign_up_text;
 
 				if ( in_array( $membership['ID'], $user_membership_ids ) ) {
 					$current_plan = true;
+					$button_text  = esc_html__( 'Current Plan', 'user-registration' );
 				}
-
-				$sign_up_text = $current_plan ? esc_html__( 'Current Plan', 'user-registration' ) : $sign_up_text;
 
 				if ( isset( $membership['multiple_membership'] ) && $membership['multiple_membership'] ) {
 					$action_to_take = 'multiple';
@@ -56,7 +56,7 @@ if ( 'block' === $type ) :
 						<span
 							class="membership-amount"><?php echo $symbol; ?><?php echo esc_html( sprintf( '%.2f', $membership['amount'] ) ); ?></span>
 						<button type="button"
-								class="membership-signup-button" <?php echo( empty( $registration_page_id ) || $current_plan ? 'disabled' : '' ); ?> ><?php echo $sign_up_text; ?></button>
+								class="membership-signup-button" <?php echo( empty( $registration_page_id ) || $current_plan ? 'disabled' : '' ); ?> ><?php echo $button_text; ?></button>
 					</div>
 				</div>
 				<?php

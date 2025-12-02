@@ -260,7 +260,7 @@ class SubscriptionService {
 			'membership_plan_trial_period'      => esc_html( $trial_period ),
 			'membership_plan_next_billing_date' => esc_html( $next_billing_date ),
 			'membership_plan_expiry_date'       => esc_html( $expiry_date ),
-			'membership_plan_status'            => esc_html( ucwords( $subscription['status'] ) ),
+			'membership_plan_status'            => isset( $subscription['status'] ) ? esc_html( ucwords( $subscription['status'] ) ) : '',
 			'membership_plan_payment_date'      => esc_html( date( 'Y, F d', strtotime( $order['created_at'] ) ) ),
 			'membership_plan_billing_cycle'     => esc_html( ucwords( $billing_cycle ) ),
 			'membership_plan_payment_amount'    => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $membership_metas['amount'], 2 ) : number_format( $membership_metas['amount'], 2 ) . $symbol,

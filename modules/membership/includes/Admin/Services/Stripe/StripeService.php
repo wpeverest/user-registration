@@ -294,7 +294,9 @@ class StripeService {
 		$payment_status         = sanitize_text_field( $data['payment_status'] );
 		$member_id              = absint( $_POST['member_id'] );
 		$is_upgrading           = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
-		$is_purchasing_multiple = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_purchasing_multiple', true ) );
+		$membership_process     = urm_get_membership_process( $member_id );
+		$selected_membership_id = isset( $data['selected_membership_id'] ) && '' !== $data['selected_membership_id'] ? absint( $data['selected_membership_id'] ) : 0;
+		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
 
 		PaymentGatewayLogging::log_webhook_received(
 			'stripe',
@@ -376,7 +378,7 @@ class StripeService {
 			$membership                     = $this->membership_repository->get_single_membership_by_ID( $member_order['item_id'] );
 			$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 			$membership_metas['post_title'] = $membership['post_title'];
-			$member_subscription            = $this->members_subscription_repository->get_member_subscription( $member_id );
+			$member_subscription            = $this->members_subscription_repository->get_subscription_data_by_member_and_membership_id( $member_id, $member_order['item_id'] );
 			$is_order_updated               = $this->members_orders_repository->update(
 				$member_order['ID'],
 				array(

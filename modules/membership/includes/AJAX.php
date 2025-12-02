@@ -827,9 +827,12 @@ class AJAX {
 
 		$member_id              = absint( $_POST['member_id'] );
 		$is_user_created        = get_user_meta( $member_id, 'urm_user_just_created' );
-		$is_upgrading           = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
-		$is_renewing            = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
-		$is_purchasing_multiple = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_purchasing_multiple', true ) );
+		$membership_process     = urm_get_membership_process( $member_id );
+		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
+		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
+
+		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+		$is_renewing  = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 
 		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
 			wp_send_json_error(
@@ -896,8 +899,8 @@ class AJAX {
 			}
 			if ( $is_purchasing_multiple ) {
 				$response['message'] = __( 'Membership purchased successfully', 'user-registration' );
-				delete_user_meta( $member_id, 'urm_is_purchasing_multiple' );
-				delete_user_meta( $member_id, 'urm_is_purchasing_multiple_to' );
+				unset( $membership_process['multiple'][ array_search( $selected_membership_id, $membership_process['multiple'], true ) ] );
+				update_user_meta( $member_id, 'urm_membership_process', $membership_process );
 			}
 
 			if ( $is_renewing ) {
@@ -928,14 +931,17 @@ class AJAX {
 
 	public static function create_stripe_subscription() {
 		ur_membership_verify_nonce( 'urm_confirm_payment' );
-		$customer_id            = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
-		$payment_method_id      = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
-		$member_id              = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$is_upgrading           = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
-		$is_renewing            = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
-		$is_user_created        = get_user_meta( $member_id, 'urm_user_just_created' );
-		$is_purchasing_multiple = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_purchasing_multiple', true ) );
+		$customer_id       = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
+		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
+		$member_id         = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$is_user_created   = get_user_meta( $member_id, 'urm_user_just_created' );
 
+		$membership_process     = urm_get_membership_process( $member_id );
+		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
+		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
+
+		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+		$is_renewing  = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
 					wp_send_json_error(
 						array(
@@ -1666,8 +1672,17 @@ class AJAX {
 			$membership_type       = $membership_metas['type'] ?? 'unknown';
 
 			if ( $selected_pg !== 'free' ) {
-				update_user_meta( $member_id, 'urm_is_purchasing_multiple', true );
-				update_user_meta( $member_id, 'urm_is_purchasing_multiple_to', $data['selected_membership_id'] );
+				$membership_process = urm_get_membership_process( $member_id );
+				if ( $membership_process && ! in_array( $data['selected_membership_id'], $membership_process['multiple'] ) ) {
+					$membership_process['multiple'][] = $data['selected_membership_id'];
+					update_user_meta( $member_id, 'urm_membership_process', $membership_process );
+				} else {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Membership purchase process already initiated.', 'user-registration' ),
+						)
+					);
+				}
 			} else {
 				// Free membership updates immediately
 				PaymentGatewayLogging::log_transaction_success(
@@ -1692,6 +1707,7 @@ class AJAX {
 					'transaction_id'           => $transaction_id,
 					'updated_membership_title' => $added_membership_title,
 					'message'                  => $message,
+					'selected_membership_id'   => $data['selected_membership_id'],
 				)
 			);
 		}

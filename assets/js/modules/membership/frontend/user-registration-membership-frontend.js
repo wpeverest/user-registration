@@ -1618,7 +1618,13 @@
 					member_id: response.data.member_id,
 					payment_status: result.error ? "failed" : "succeeded",
 					form_response: JSON.stringify(form_response.data),
-					payment_result: result
+					payment_result: result,
+					selected_membership_id: response.data.selected_membership_id
+						? response.data.selected_membership_id
+						: "",
+					current_membership_id: response.data.current_membership_id
+						? response.data.current_membership_id
+						: ""
 				},
 				{
 					success: function (response) {
@@ -1683,7 +1689,13 @@
 		handle_recurring_payment: function (response, data) {
 			Promise.resolve(
 				$.extend({}, data, {
-					customer_id: response.data.pg_data.stripe_cus_id
+					customer_id: response.data.pg_data.stripe_cus_id,
+					selected_membership_id: response.data.selected_membership_id
+						? response.data.selected_membership_id
+						: "",
+					current_membership_id: response.data.current_membership_id
+						? response.data.current_membership_id
+						: ""
 				})
 			)
 				.then(stripe_settings.createPaymentMethod)

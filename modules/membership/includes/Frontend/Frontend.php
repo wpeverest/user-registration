@@ -127,9 +127,11 @@ class Frontend {
 
 			$membership['active_gateways'] = $active_gateways;
 			$is_upgrading                  = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
-			$is_purchasing_multiple        = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_purchasing_multiple', true ) );
-			$last_order                    = $members_order_repository->get_member_orders( $user_id );
-			$bank_data                     = array();
+			$membership_process            = urm_get_membership_process( $user_id );
+			$is_purchasing_multiple        = ! empty( $membership_process['multiple'] ) && in_array( $membership['post_id'], $membership_process['multiple'] );
+
+			$last_order = $members_order_repository->get_member_orders( $user_id );
+			$bank_data  = array();
 			if ( ! empty( $last_order ) && $last_order['status'] == 'pending' && $last_order['payment_method'] === 'bank' ) {
 				$bank_data = array(
 					'show_bank_notice' => true,
@@ -139,7 +141,7 @@ class Frontend {
 					'notice_3'         => apply_filters( 'urm_bank_info_notice_3_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your new membership will be activated. Kindly wait for the admin\'s confirmation.', 'user-registration' ) ),
 				);
 			}
-			$subscription_data = $members_subscription_repository->get_member_subscription( $user_id );
+			$subscription_data = $members_subscription_repository->get_subscription_data_by_subscription_id( $membership['subscription_id'] );
 
 			$membership_data = array(
 				'user'                   => get_user_by( 'id', get_current_user_id() ),
