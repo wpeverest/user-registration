@@ -386,6 +386,7 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 											autocomplete="off"
 											id="ur-membership-trial-duration-value"
 											min="1"
+											style="width: 80%"
 										>
 										<select
 											class="Trial Period Duration"
