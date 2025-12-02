@@ -560,6 +560,7 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 			wp_redirect( $redirect_url ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect
 			exit;
 		} elseif ( 'redirect_to_local_page' === $action['type'] ) {
+
 			$page_id = ! empty( $action['local_page'] ) ? $action['local_page'] : null;
 
 			if ( $target_post->ID && strval( $page_id ) === strval( $target_post->ID ) ) {
@@ -605,6 +606,7 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 			}
 
 			$shortcode                 = sprintf( '[%s %s]', $shortcode_tag, $shortcode_args );
+
 			$target_post->post_content = $shortcode;
 
 			// Add filter for elementor content.
@@ -830,5 +832,87 @@ function ur_restrict_files( $file, $restriction_conditions, $restricted_files ) 
 		fclose( $fp );
 		exit;
 	}
+}
+
+/**
+ * Check if all conditions in logic_map are valid for free users (only membership).
+ *
+ * @param array $logic_map Logic map array.
+ * @return bool True if all conditions are membership, false otherwise.
+ */
+function urcr_validate_conditions_for_free_users( $logic_map ) {
+	if ( empty( $logic_map ) || ! is_array( $logic_map ) ) {
+		return true; // Empty conditions are valid
+	}
+
+	// If it's a group, recursively check all conditions
+	if ( isset( $logic_map['type'] ) && 'group' === $logic_map['type'] ) {
+		if ( ! empty( $logic_map['conditions'] ) && is_array( $logic_map['conditions'] ) ) {
+			foreach ( $logic_map['conditions'] as $condition ) {
+				if ( ! urcr_validate_conditions_for_free_users( $condition ) ) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	// For individual conditions, check if type is membership
+	if ( isset( $logic_map['type'] ) ) {
+		return 'membership' === $logic_map['type'];
+	}
+
+	// If no type is set, it's invalid
+	return false;
+}
+
+/**
+ * Check if an access rule is valid for free users.
+ * Free users can only use:
+ * - Membership condition only
+ * - wp_posts and wp_pages content types only
+ * - restrict access control only
+ *
+ * @param array $access_rule Access rule array.
+ * @return bool True if rule is valid for free users, false otherwise.
+ */
+function urcr_is_rule_valid_for_free_users( $access_rule ) {
+	if ( empty( $access_rule ) || ! is_array( $access_rule ) ) {
+		return false;
+	}
+
+	// Validate conditions in logic_map - only membership allowed
+	if ( ! empty( $access_rule['logic_map'] ) && is_array( $access_rule['logic_map'] ) ) {
+		if ( ! urcr_validate_conditions_for_free_users( $access_rule['logic_map'] ) ) {
+			return false;
+		}
+	}
+
+	// Validate target_contents - only wp_posts and wp_pages allowed
+	if ( ! empty( $access_rule['target_contents'] ) && is_array( $access_rule['target_contents'] ) ) {
+		$allowed_content_types = array( 'wp_posts', 'wp_pages' );
+		foreach ( $access_rule['target_contents'] as $target_content ) {
+			if ( ! empty( $target_content['type'] ) && ! in_array( $target_content['type'], $allowed_content_types, true ) ) {
+				return false;
+			}
+		}
+	}
+
+	// Validate access_control - only restrict allowed
+	if ( ! empty( $access_rule['actions'] ) && is_array( $access_rule['actions'] ) ) {
+		$first_action = $access_rule['actions'][0];
+		$access_control = isset( $first_action['access_control'] ) ? $first_action['access_control'] : 'access';
+		if ( 'restrict' !== $access_control ) {
+			return false;
+		}
+	} else {
+		// If no actions, check access_control at rule level
+		$access_control = isset( $access_rule['access_control'] ) ? $access_rule['access_control'] : 'access';
+		if ( 'restrict' !== $access_control ) {
+			return false;
+		}
+	}
+
+	return true;
 }
 

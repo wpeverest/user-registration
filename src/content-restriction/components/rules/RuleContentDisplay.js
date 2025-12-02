@@ -123,7 +123,8 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 			});
 
 			// Use actions from rule, or create default if none exist
-			const defaultAccessControl = accessControl || "access";
+			// Always use the current accessControl state value, not the existing action's value
+			const currentAccessControl = accessControl || "access";
 			let actions = rule.actions || [];
 			
 			if (actions.length === 0) {
@@ -135,7 +136,7 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 						label: __("Show Message", "user-registration"),
 						message: "<p>" + __("You do not have sufficient permission to access this content.", "user-registration") + "</p>",
 						redirect_url: "",
-						access_control: defaultAccessControl,
+						access_control: currentAccessControl,
 						local_page: "",
 						ur_form: "",
 						shortcode: {
@@ -145,10 +146,10 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 					},
 				];
 			} else {
-				// Ensure access_control is set on actions
+				// Always update access_control to match the current state
 				actions = actions.map(action => ({
 					...action,
-					access_control: action.access_control || defaultAccessControl,
+					access_control: currentAccessControl,
 				}));
 			}
 

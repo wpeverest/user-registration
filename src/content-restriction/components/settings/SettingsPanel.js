@@ -31,7 +31,11 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			const action = ruleActions[0];
 			if (action.type) {
 				// Handle both "ur-form" and "ur_form" for backward compatibility
-				const normalizedType = action.type === "ur_form" ? "ur-form" : action.type;
+				let normalizedType = action.type === "ur_form" ? "ur-form" : action.type;
+				// Map backend type "redirect_to_local_page" to frontend type "local_page"
+				if (normalizedType === "redirect_to_local_page") {
+					normalizedType = "local_page";
+				}
 				setActionType(normalizedType);
 			}
 			if (action.message) {
@@ -254,6 +258,7 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 					actionData.shortcode = {tag: "", args: ""};
 					break;
 				case "local_page":
+					actionData.type = "redirect_to_local_page"; // Map to backend type
 					actionData.label = __("Redirect to a Local Page", "user-registration");
 					actionData.message = "";
 					actionData.redirect_url = "";
