@@ -150,17 +150,28 @@
 }
 
 .field-amount {
+	display: flex;
 	position: relative;
 
-	span {
+	.ur-currency-symbol {
 		position: absolute;
-		top: 6px;
+		top: 10px;
 		left: 10px;
 		font-weight: 600;
 	}
 
 	input {
 		padding-left: 20px !important;
+		border-top-right-radius: 0 !important;
+		border-bottom-right-radius: 0 !important;
+	}
+
+	.ur-currency{
+		border: 1px solid $border-color;
+		border-top-right-radius: 4px;
+		border-bottom-right-radius: 4px;
+		border-left: none;
+		padding: 10px 22px;
 	}
 }
 
@@ -620,7 +631,7 @@
 				&__body {
 					padding: 0;
 
-					#ur-membership-main-fields {
+					#ur-membership-main-fields, #ur-membership-plan-and-price-section {
 						display: flex;
 						flex-direction: column;
 						gap: 24px;
@@ -738,175 +749,208 @@
 								@include form-toggle;
 							}
 						}
+
+						.ur-membership-type-toggle{
+							&-container{
+								display: inline-flex;
+								padding: 4px;
+								border-radius: 3px;
+								background-color: $blue-25;
+
+								input[type="radio"]{
+									display: none;
+
+									&:checked + .ur-membership-type-toggle-option{
+										background-color: $primary_color;
+										border: 1px solid $primary_color;
+										color: #ffffff;
+									}
+								}
+							}
+							&-option{
+								padding: 8px 12px;
+								cursor: pointer;
+								border-radius: 3px;
+								color: $grey-300;
+								font-size: 13px;
+								font-weight: 500;
+								margin-bottom: 0;
+							}
+						}
+
+						.ur-membership-selection-container {
+							align-items: center;
+							padding: 0 !important;
+
+							.ur-label{
+								margin-bottom: 0;
+
+								label{
+									margin-bottom: 0;
+								}
+							}
+						}
 					}
 
 					#ur-membership-plan-and-price-section {
-						margin: 0 !important;
-						padding: 0 !important;
+						.ur-membership-selection-container {
+							padding: 0 !important;
 
-						.user-registration-card {
+							.ur-label {
+								label {
+									margin-bottom: 0 !important;
+									font-size: 15px;
+									line-height: 21px;
+									color: $grey-400;
+								}
+							}
 
-							&__body {
-								.ur-membership-selection-container {
-									padding: 0 !important;
+							.ur-input-type-select {
+								.ur-field {
+									gap: 16px;
+									flex-wrap: wrap;
 
-									.ur-label {
-										label {
-											margin-bottom: 0 !important;
-											font-size: 15px;
-											line-height: 21px;
-											color: $grey-400;
-										}
-									}
+									.ur-membership-types {
+										max-width: 250px;
+										margin-bottom: 0;
+										border-radius: 4px;
+										border: 1px solid #E9E9E9;
+										background: #FFF;
+										padding: 12px 14px;
+										cursor: pointer;
 
-									.ur-input-type-select {
-										.ur-field {
-											gap: 16px;
-											flex-wrap: wrap;
+										.ur-membership-type {
+											&-title {
+												gap: $spacing_8px;
+												margin-bottom: $spacing_12px;
 
-											.ur-membership-types {
-												max-width: 250px;
-												margin-bottom: 0;
-												border-radius: 4px;
-												border: 1px solid #E9E9E9;
-												background: #FFF;
-												padding: 12px 14px;
-												cursor: pointer;
+												label {
+													padding: 0 !important;
+													font-size: 16px;
+													line-height: 24px;
+													cursor: pointer;
+												}
 
-												.ur-membership-type {
-													&-title {
-														gap: $spacing_8px;
-														margin-bottom: $spacing_12px;
-
-														label {
-															padding: 0 !important;
-															font-size: 16px;
-															line-height: 24px;
-															cursor: pointer;
-														}													
-
-														input[type="radio"] {
-															&:checked::before {
-																background: $primary_color;
-															}
-														}
-
-														@media screen and (max-width: 782px) {
-															input[type="radio"] {
-																width: 1rem;
-																height: 1rem;
-
-																&::before {
-																	width: 0.5rem;
-																	height: 0.5rem;
-																	margin: 0.1875rem;
-																}
-
-																&:checked::before {
-																	background: $primary_color;
-																}
-															}															
-														}
-													}
-
-													&-description {
-														p {
-															color: #383838;
-															font-size: 14px !important;
-															font-weight: 400;
-															line-height: 20px;
-															margin: 0;
-														}
+												input[type="radio"] {
+													&:checked::before {
+														background: $primary_color;
 													}
 												}
 
-												&:has(input[type="radio"]:checked) {
-													border-color: $primary_color;
-												}
-											}
-
-											.ur-membership-upgrade-types {
-												width: 100%;
-												max-width: 220px;
-												margin-bottom: 0;
-												border-radius: $border_radius_4;
-												border: $border_width solid $border-color;
-												background: $white;
-												padding: $spacing_16px;
-												cursor: pointer;
-												display: flex;
-												align-items: center;
-												gap: $spacing_12px;
-
-												.ur-membership-upgrade-type {
-													&-title {
-														gap: $spacing_8px;
-														margin-bottom: $spacing_12px;
-
-														label {
-															padding: 0 !important;
-															font-size: 16px;
-															line-height: 24px;
-														}
-													}
-
-													&-full {
-														&--label {
-															padding: 0;
-														}
-													}
-												}
-
-												.ur-membership-type-title {
-													gap: $spacing_8px;
-
-													input[type="radio"],
-													.ur-membership-upgrade-type-full--label {
-														cursor: pointer;
-													}
-
+												@media screen and (max-width: 782px) {
 													input[type="radio"] {
+														width: 1rem;
+														height: 1rem;
+
+														&::before {
+															width: 0.5rem;
+															height: 0.5rem;
+															margin: 0.1875rem;
+														}
+
 														&:checked::before {
 															background: $primary_color;
 														}
 													}
 												}
+											}
 
-												&:has(input[type="radio"]:checked) {
-													border-color: $primary_color;
-												}
-
-												&:has(input:disabled) {
-													cursor: not-allowed;
-
-													.ur-membership-type-title {
-														input[type="radio"],
-														.ur-membership-upgrade-type-full--label {
-															cursor: not-allowed;
-														}
-													}
+											&-description {
+												p {
+													color: #383838;
+													font-size: 14px !important;
+													font-weight: 400;
+													line-height: 20px;
+													margin: 0;
 												}
 											}
 										}
+
+										&:has(input[type="radio"]:checked) {
+											border-color: $primary_color;
+										}
 									}
 
-									.ur-label {
+									.ur-membership-upgrade-types {
+										width: 100%;
+										max-width: 220px;
 										margin-bottom: 0;
-									}
+										border-radius: $border_radius_4;
+										border: $border_width solid $border-color;
+										background: $white;
+										padding: $spacing_16px;
+										cursor: pointer;
+										display: flex;
+										align-items: center;
+										gap: $spacing_12px;
 
-									.ur-input-type-membership-upgrade-path {
-										.select2 {
-											&-selection {
-												&__rendered {
-													flex-wrap: wrap;
+										.ur-membership-upgrade-type {
+											&-title {
+												gap: $spacing_8px;
+												margin-bottom: $spacing_12px;
+
+												label {
+													padding: 0 !important;
+													font-size: 16px;
+													line-height: 24px;
+												}
+											}
+
+											&-full {
+												&--label {
+													padding: 0;
 												}
 											}
 										}
-									}
-									.user-registration-switch {
-										@include form-toggle;
+
+										.ur-membership-type-title {
+											gap: $spacing_8px;
+
+											input[type="radio"],
+											.ur-membership-upgrade-type-full--label {
+												cursor: pointer;
+											}
+
+											input[type="radio"] {
+												&:checked::before {
+													background: $primary_color;
+												}
+											}
+										}
+
+										&:has(input[type="radio"]:checked) {
+											border-color: $primary_color;
+										}
+
+										&:has(input:disabled) {
+											cursor: not-allowed;
+
+											.ur-membership-type-title {
+												input[type="radio"],
+												.ur-membership-upgrade-type-full--label {
+													cursor: not-allowed;
+												}
+											}
+										}
 									}
 								}
+							}
+
+							.ur-label {
+								margin-bottom: 0;
+							}
+
+							.ur-input-type-membership-upgrade-path {
+								.select2 {
+									&-selection {
+										&__rendered {
+											flex-wrap: wrap;
+										}
+									}
+								}
+							}
+							.user-registration-switch {
+								@include form-toggle;
 							}
 						}
 
@@ -926,7 +970,6 @@
 						display: flex;
 						flex-direction: column;
 						gap: $spacing_24px;
-						margin-top: $spacing_24px;
 
 						.ur-membership-selection-container {
 							align-items: center;
@@ -948,17 +991,37 @@
 								}
 							}
 						}
+					}
 
-						.ur-membership-subscription-field-container {
-							.ur-membership-selection-container {
-								.ur-field {
-									gap: $spacing_12px;
+					.ur-membership-subscription-field-container {
+						.ur-membership-selection-container {
+							.ur-field {
+								gap: $spacing_12px;
+							}
+						}
+
+						.ur-membership-input-container {
+							margin-top: $spacing_24px !important;
+							padding: 0 !important;
+
+							.ur-label {
+								margin-bottom: 0;
+
+								label {
+									margin-bottom: 0;
+									font-size: 15px;
+									line-height: 21px;
+									color: $grey-400;
 								}
 							}
 
-							.ur-membership-input-container {
-								margin-top: $spacing_24px !important;
-								padding: 0 !important;
+							.user-registration-switch {
+								@include form-toggle;
+							}
+						}
+
+						.trial-container {
+							&--wrapper {
 
 								.ur-label {
 									margin-bottom: 0;
@@ -971,44 +1034,16 @@
 									}
 								}
 
-								.user-registration-switch {
-									@include form-toggle;
-								}
-							}
+								.ur-field {
+									flex: 1;
+									gap: $spacing_12px;
 
-							.trial-container {
-								margin-top: $spacing_16px;
-
-								&--wrapper {
-									max-width: 650px;
-									background: #f4f4f4;
-									margin-left: 0 !important;
-									padding: $spacing_20px !important;
-									border-radius: $border_radius_4;
-
-									.ur-label {
-										margin-bottom: 0;
-										width: 260px !important;
-
-										label {
-											margin-bottom: 0;
-											font-size: 15px;
-											line-height: 21px;
-											color: $grey-400;
-										}
+									input[type="number"] {
+										width: 100px;
 									}
 
-									.ur-field {
+									select {
 										flex: 1;
-										gap: $spacing_12px;
-
-										input[type="number"] {
-											width: 100px;
-										}
-
-										select {
-											flex: 1;
-										}
 									}
 								}
 							}
@@ -1016,7 +1051,7 @@
 					}
 
 					#payment-gateway-container {
-						margin-top: 60px;
+						margin-top: 20px;
 
 						.user-registration-card {
 							border-radius: $border_radius_7;
@@ -1118,6 +1153,13 @@
 
 				.submit {
 					@include form-footer-button;
+				}
+
+				&--form-step{
+					display: none;
+					&-active{
+						display: block;
+					}
 				}
 			}
 		}
@@ -1446,3 +1488,4 @@
 		}
 	}
 }
+
