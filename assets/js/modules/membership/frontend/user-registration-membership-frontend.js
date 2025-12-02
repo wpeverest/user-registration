@@ -1499,9 +1499,11 @@
 									data.subscription.status = "active";
 									resolve({
 										subscription: data.subscription,
-										form_id: data.form_id,
+										form_id: data.form_response.form_id,
 										response_data: data.response_data,
-										form_response: data.form_response
+										prepare_members_data: data.prepare_members_data,
+										form_response: data.form_response,
+										three_d_secure: true
 									});
 								} else {
 									var message =
@@ -1529,7 +1531,7 @@
 						? data.response_data.data.is_renewing
 						: false;
 
-			if (is_upgrading || is_renewing) {
+			if (is_upgrading || is_renewing || true === data.three_d_secure) {
 				stripe_settings.update_order_status(
 					data.subscription,
 					data.response_data,
