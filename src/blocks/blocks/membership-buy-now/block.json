@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schemas.wp.org/block-json/1.1",
+  "apiVersion": 3,
+  "name": "user-registration/membership-buy-now",
+  "version": "1.0.0",
+  "title": "Membership Buy Now",
+  "category": "user-registration",
+  "description": "The block allow to buy now the membership.",
+  "keywords": [
+    "user registration membership buy now",
+    "button",
+    "buy now"
+  ],
+  "textdomain": "user-registration",
+  "example": {
+    "attributes": {}
+  },
+  "supports": {
+    "className": false,
+    "customClassName": false
+  },
+  "attributes": {
+    "membershipType": {
+      "type": "string"
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Buy Now"
+    }
+  },
+  "editorScript": "user-registration-blocks-editor",
+  "editorStyle": "user-registration-blocks-editor"
+}
