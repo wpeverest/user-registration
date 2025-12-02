@@ -60,7 +60,6 @@ class User_Registration_Content_Restriction {
 		}
 
 		include_once __DIR__ . '/functions-urcr-core.php';
-		include_once __DIR__ . '/class-urcr-ajax.php';
 
 		include_once __DIR__ . '/class-urcr-post-types.php';
 		include_once __DIR__ . '/class-urcr-shortcodes.php';

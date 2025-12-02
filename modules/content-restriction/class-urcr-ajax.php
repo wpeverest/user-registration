@@ -24,14 +24,8 @@ class URCR_AJAX {
 		/**
 		 * Register ajax handlers.
 		 */
-		add_action( 'wp_ajax_urcr_create_access_rule', array( __CLASS__, 'ajax_create_content_access_rule_handler' ) );
-		add_action( 'wp_ajax_urcr_save_access_rule', array( __CLASS__, 'ajax_save_access_rule_handler' ) );
-		add_action( 'wp_ajax_urcr_enable_disable_access_rule', array( __CLASS__, 'ajax_enable_disable_access_rule_handler' ) );
-		add_action( 'wp_ajax_urcr_save_access_rule_as_draft', array( __CLASS__, 'ajax_save_access_rule_as_draft_handler' ) );
-
 		add_action( 'wp_ajax_urcr_create_content_rules', array( __CLASS__, 'ajax_create_create_content_rules' ) );
 		add_action( 'wp_ajax_urcr_update_rule_status', array( __CLASS__, 'ajax_update_rule_status' ) );
-		add_action( 'wp_ajax_urcr_update_rule_from_viewer', array( __CLASS__, 'ajax_update_rule_from_viewer' ) );
 	}
 
 

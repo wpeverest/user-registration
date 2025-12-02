@@ -90,129 +90,6 @@ class URCR_Admin_Assets {
 		}
 	}
 
-	/**
-	 * Get translated labels.
-	 */
-	public static function get_i18_labels() {
-		return array(
-			'roles'                        => esc_html__( 'Roles', 'user-registration' ),
-			'user_registered_date'         => esc_html__( 'User Registered Date', 'user-registration' ),
-			'access_period'                => esc_html__( 'Period after Registration', 'user-registration' ),
-			'user_state'                   => esc_html__( 'User State', 'user-registration' ),
-			'payment_status'               => esc_html__( 'Payment Status', 'user-registration' ),
-			'membership'                   => esc_html__( 'Memberships', 'user-registration' ),
-			'profile_completeness'         => esc_html__( 'Profile Completeness', 'user-registration' ),
-			'logged_in'                    => esc_html__( 'Logged In', 'user-registration' ),
-			'logged_out'                   => esc_html__( 'Logged Out', 'user-registration' ),
-			'post_count'                   => esc_html__( 'Minimum Public Posts Count', 'user-registration' ),
-			'capabilities'                 => esc_html__( 'Capabilities', 'user-registration' ),
-			'content_published_date'       => esc_html__( 'Content Published Date', 'user-registration' ),
-			'ur_form_field_value'          => esc_html__( 'UR Form Field Value', 'user-registration' ),
-			'registration_source'          => esc_html__( 'Registration Source', 'user-registration' ),
-			'ur_form_field'                => esc_html__( 'UR Forms', 'user-registration' ),
-			'email_domain'                 => esc_html__( 'Allowed Email Domains', 'user-registration' ),
-			'post_types'                   => esc_html__( 'Post Types', 'user-registration' ),
-			'taxonomy'                     => esc_html__( 'Taxonomy', 'user-registration' ),
-			'archives'                     => esc_html__( 'Archives', 'user-registration' ),
-			'pick_posts'                   => esc_html__( 'Pick Posts', 'user-registration' ),
-			'pick_pages'                   => esc_html__( 'Pick Pages', 'user-registration' ),
-			'whole_site'                   => esc_html__( 'Whole Site', 'user-registration' ),
-			'select_ur_form'               => esc_html__( 'Select a UR form', 'user-registration' ),
-			'select_ur_shortcode'          => esc_html__( 'Select a shortcode', 'user-registration' ),
-			'enter_shortcode_args'         => esc_html__( 'Enter shortcode arguments here. Eg: id="345"', 'user-registration' ),
-			'save_rule'                    => esc_html__( 'Save', 'user-registration' ),
-			'save_draft'                   => esc_html__( 'Save Draft', 'user-registration' ),
-			'publish_rule'                 => esc_html__( 'Publish', 'user-registration' ),
-			'edit_access_rule'             => esc_html__( 'Edit Access Rule', 'user-registration' ),
-			'publish_draft_warning'        => esc_html__( 'Are you sure you want to publish this draft? You will not be able to revert this.', 'user-registration' ),
-			'network_error'                => esc_html__( 'Network error', 'user-registration' ),
-			'title_is_required'            => esc_html__( 'Title cannot be empty. Please give the Access Rule a short descriptive title.', 'user-registration' ),
-			'enabled'                      => esc_html__( 'Enabled', 'user-registration' ),
-			'disabled'                     => esc_html__( 'Disabled', 'user-registration' ),
-			'are_you_sure'                 => esc_html__( 'Are you sure?', 'user-registration' ),
-			'cannot_revert'                => esc_html__( 'You will not be able to revert this!', 'user-registration' ),
-			'clfog_deletion_message'       => esc_html__( 'Are you sure you want to delete this field/group? You will not be able to revert this!', 'user-registration' ),
-			// clfog => Conditional Logic Field or Group.
-			'delete'                       => esc_html__( 'Delete', 'user-registration' ),
-			'publish'                      => esc_html__( 'Publish', 'user-registration' ),
-			'select_a_page'                => esc_html__( 'Select a page', 'user-registration' ),
-			'main_logic_group'             => esc_html__( 'Main Logic Group', 'user-registration' ),
-			'add_new'                      => esc_html__( 'Add New Content Rules', 'user-registration' ),
-			'content_rule_name'            => esc_html__( 'Content Rule Name', 'user-registration' ),
-			'cancel_text'                  => esc_html__( 'Cancel', 'user-registration' ),
-			'confirm_text'                 => esc_html__( 'Continue', 'user-registration' ),
-			'access_control'               => esc_html__( 'Access Control', 'user-registration' ),
-			'access'                       => esc_html__( 'Access', 'user-registration' ),
-			'restrict'                     => esc_html__( 'Restrict', 'user-registration' ),
-
-			/**
-			 * Tooltips.
-			 */
-			'roles_tooltip'                => esc_html__( 'User should have one of the selected roles', 'user-registration' ),
-			'registered_date_tooltip'      => esc_html__( 'Users must have been registered in the specified date range', 'user-registration' ),
-			'access_period_tooltip'        => esc_html__( 'User will access content during or after numbers of days from the registration', 'user-registration' ),
-			'user_state_tooltip'           => esc_html__( 'Whether users should be logged in or logged out', 'user-registration' ),
-			'payment_status_tooltip'       => esc_html__( 'Select the payment state at which to display the content.', 'user-registration' ),
-			'membership_tooltip'           => esc_html__( 'Select the membership for which to show or restrict the content.', 'user-registration' ),
-			'profile_completeness_tooltip' => esc_html__( 'User must have profile completeness above the specified threshold', 'user-registration' ),
-			'email_domains_tooltip'        => esc_html__( 'Email domain of User must be included in the list', 'user-registration' ),
-			'min_post_count_tooltip'       => esc_html__( 'Users must have published minimum specified posts as public', 'user-registration' ),
-			'capabilities_tooltip'         => esc_html__( 'Users must have all of the listed capabilities', 'user-registration' ),
-			'registration_source_tooltip'  => esc_html__( 'Users must have been registered through one of the listed sources', 'user-registration' ),
-			'ur_form_field_tooltip'        => esc_html__( 'Users must have the specified form field value', 'user-registration' ),
-			'post_types_tooltip'           => esc_html__( 'Target post types to apply restriction', 'user-registration' ),
-			'taxonomy_tooltip'             => esc_html__( 'Target taxonomies to apply restriction', 'user-registration' ),
-			'pick_posts_tooltip'           => esc_html__( 'Cherry picked posts to apply restriction', 'user-registration' ),
-			'whole_site_tooltip'           => esc_html__( 'Enable to whole site restriction', 'user-registration' ),
-			'pick_pages_tooltip'           => esc_html__( 'Cherry picked pages to apply restriction', 'user-registration' ),
-		);
-	}
-
-	/**
-	 * Get frontend templates.
-	 */
-	public static function get_templates() {
-		ob_start();
-		include URCR_TEMPLATES_DIR . '/conditional-logic-group-template.php';
-		$conditional_logic_group_template = ob_get_clean();
-
-		ob_start();
-		include URCR_TEMPLATES_DIR . '/conditional-logic-field-template.php';
-		$conditional_logic_field_template = ob_get_clean();
-
-		ob_start();
-		include URCR_TEMPLATES_DIR . '/urcr-target-content-template.php';
-		$target_content_template = ob_get_clean();
-
-		return array(
-			'conditional_logic_group_template' => $conditional_logic_group_template,
-			'conditional_logic_field_template' => $conditional_logic_field_template,
-			'target_content_template'          => $target_content_template,
-		);
-	}
-
-	/**
-	 * Localize viewer scripts.
-	 */
-	public function localize_viewer_scripts() {
-		wp_localize_script(
-			'urcr-content-access-rules-viewer-v2',
-			'urcr_viewer_data',
-			array(
-				'ajax_url' => admin_url( 'admin-ajax.php' ),
-				'nonce'    => wp_create_nonce( 'urcr_manage_content_access_rule' ),
-				'edit_url' => admin_url( 'admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule&post-id=%RULE_ID%' ),
-				'labels'   => array(
-					'rule_enabled'   => esc_html__( 'Rule enabled successfully', 'user-registration' ),
-					'rule_disabled'  => esc_html__( 'Rule disabled successfully', 'user-registration' ),
-					'rule_saved'     => esc_html__( 'Rule saved successfully', 'user-registration' ),
-					'saving'         => esc_html__( 'Saving...', 'user-registration' ),
-					'save'           => esc_html__( 'Save', 'user-registration' ),
-					'error_occurred' => esc_html__( 'An error occurred. Please try again.', 'user-registration' ),
-				),
-			)
-		);
-	}
 
 	/**
 	 * Get localized data array for scripts.
@@ -221,9 +98,8 @@ class URCR_Admin_Assets {
 	 * @return array Localized data array.
 	 */
 	public static function get_localized_data() {
-		//
-		// Prepare rule to edit, if a rule id has been provided.
-		//
+
+//		Prepare rule to edit, if a rule id has been provided.
 		$rule_id      = ! empty( $_GET['post-id'] ) ? $_GET['post-id'] : null;
 		$rule_to_edit = null;
 		$is_draft     = false;
@@ -246,9 +122,9 @@ class URCR_Admin_Assets {
 			}
 		}
 
-		//
+
 		// Prepare user registration sources.
-		//
+
 		$ur_forms = ur_get_all_user_registration_form();
 
 		$networks                = array(
@@ -260,7 +136,6 @@ class URCR_Admin_Assets {
 		$registration_source_ids = array_merge( array_keys( $ur_forms ), array_keys( $networks ) );
 		$registration_sources    = array_combine( $registration_source_ids, array_merge( $ur_forms, $networks ) );
 
-		$ur_form_data = array();
 		foreach ( $ur_forms as $form_id => $label ) {
 			$form_data   = ur_pro_get_form_fields( $form_id );
 			$form_fields = array();
@@ -270,9 +145,9 @@ class URCR_Admin_Assets {
 			$ur_forms[ $form_id ] = $form_fields;
 		}
 
-		//
+
 		// Prepare list of posttypes.
-		//
+
 		$post_types = get_post_types(
 			array(
 				'public' => true,
@@ -281,9 +156,9 @@ class URCR_Admin_Assets {
 		);
 		$post_types = wp_list_pluck( $post_types, 'label', 'name' );
 
-		//
+
 		// Prepare list of taxonomy.
-		//
+
 		$taxonomies = get_taxonomies(
 			array(
 				'public' => true,
@@ -293,9 +168,9 @@ class URCR_Admin_Assets {
 
 		$taxonomies = wp_list_pluck( $taxonomies, 'label', 'name' );
 
-		//
+
 		// Prepare terms of taxonomy.
-		//
+
 		$terms_list = array();
 
 		foreach ( $taxonomies as $tax_name => $tax_label ) {
@@ -314,9 +189,9 @@ class URCR_Admin_Assets {
 			}
 		}
 
-		//
+
 		// Prepare list of posts.
-		//
+
 		$posts = get_posts(
 			array(
 				'post_status' => 'publish',
@@ -325,9 +200,9 @@ class URCR_Admin_Assets {
 		);
 		$posts = wp_list_pluck( $posts, 'post_title', 'ID' );
 
-		//
+
 		// Prepare list of pages.
-		//
+
 		$pages = get_pages(
 			array(
 				'post_status' => 'publish',
@@ -336,9 +211,9 @@ class URCR_Admin_Assets {
 		);
 		$pages = wp_list_pluck( $pages, 'post_title', 'ID' );
 
-		//
+
 		// Prepare list of shortcodes.
-		//
+
 		global $shortcode_tags;
 		$shortcode_names       = array_keys( $shortcode_tags );
 		$shortcodes_list       = array_combine( $shortcode_names, $shortcode_names );
@@ -374,8 +249,6 @@ class URCR_Admin_Assets {
 			'pages'                     => $pages,
 			'ur_form_data'              => $ur_forms,
 			'shortcodes'                => $shortcodes_list,
-			'labels'                    => self::get_i18_labels(),
-			'templates'                 => self::get_templates(),
 			'content_rule_url'          => admin_url( 'admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule' ),
 			'is_advanced_logic_enabled' => get_option( 'urcr_content_access_rule_is_advanced_logic_enabled', true ),
 			'payment_status'            => array(
@@ -384,7 +257,7 @@ class URCR_Admin_Assets {
 				'failed'    => __( 'Failed', 'user-registration' ),
 			),
 			'memberships'               => $formatted_memberships,
-			'is_pro'	=> UR_PRO_ACTIVE
+			'is_pro'                    => UR_PRO_ACTIVE
 		);
 	}
 

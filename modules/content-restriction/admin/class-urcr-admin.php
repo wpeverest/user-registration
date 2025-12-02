@@ -39,7 +39,10 @@ class URCR_Admin {
 		/**
 		 * Elementor Section Restriction
 		 */
-		add_action( 'elementor/element/before_section_end', array( $this, 'urcr_add_option_to_restrict_elementor_section' ), 10, 3 );
+		add_action( 'elementor/element/before_section_end', array(
+			$this,
+			'urcr_add_option_to_restrict_elementor_section'
+		), 10, 3 );
 	}
 
 	/**
@@ -103,65 +106,9 @@ class URCR_Admin {
 			'user-registration-content-restriction',
 			array(
 				$this,
-				'render_content_restriction_page',
+				'render_content_access_rules',
 			)
 		);
-
-//		add_action( 'load-' . $rules_page, array( $this, 'content_restriction_initializations' ) );
-	}
-
-	/**
-	 * Do initializations before loading content restriction pages.
-	 *
-	 * @since 4.0
-	 */
-	public function content_restriction_initializations() {
-		if ( isset( $_GET['page'] ) && 'user-registration-content-restriction' === $_GET['page'] ) {
-
-			$action_page = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-
-			switch ( $action_page ) {
-				case 'add_new_urcr_content_access_rule':
-					break;
-
-				default:
-					global $content_access_rules_table_list;
-
-					require_once __DIR__ . '/class-urcr-admin-content-access-rules-table-list.php';
-					$content_access_rules_table_list = new URCR_Admin_Content_Access_Rules_Table_List();
-					$content_access_rules_table_list->process_actions();
-					break;
-			}
-		}
-	}
-
-	/**
-	 * Render content restriction page.
-	 *
-	 * @since 4.0
-	 */
-	public function render_content_restriction_page() {
-		$action_page = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-
-		switch ( $action_page ) {
-			case 'add_new_urcr_content_access_rule':
-				$this->render_content_access_rules_creator();
-				break;
-
-			default:
-				// Use React viewer instead of old PHP viewer
-				$this->render_content_access_rules();
-				break;
-		}
-	}
-
-	/**
-	 * Render settings page to manage Content Access Rules.
-	 *
-	 * @since 4.0
-	 */
-	public function render_content_access_rules_creator() {
-		include __DIR__ . '/content-access-rules-creator.php';
 	}
 
 	/**
@@ -214,15 +161,7 @@ class URCR_Admin {
 		</div>
 		<?php
 	}
-	public function render_content_access_rules_viewer_old() {
-		global $content_access_rules_table_list;
 
-		if ( ! $content_access_rules_table_list ) {
-			return;
-		}
-
-		$content_access_rules_table_list->display_page();
-	}
 
 	/**
 	 * Include Content Restriction settings in the settings list.
@@ -233,6 +172,7 @@ class URCR_Admin {
 		if ( class_exists( 'UR_Settings_Page' ) ) {
 			$settings[] = include 'settings/class-urcr-settings-file.php';
 		}
+
 		return $settings;
 	}
 }
