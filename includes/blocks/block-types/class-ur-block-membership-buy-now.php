@@ -25,8 +25,14 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 	 * @return string
 	 */
 	protected function build_html( $content ) {
+		do_action( 'wp_enqueue_membership_scripts' );
 		$attr       = $this->attributes;
 		$parameters = array();
-		return '<button class="urm-buy-now-btn"><span class="label">' . esc_html( $attr['buttonText'] ) . '</span></button>';
+		if ( ! isset( $attr['pageID'] ) ) {
+			return '';
+		}
+		$page_url = get_permalink( absint( $attr['pageID'] ) );
+
+		return '<a href="' . esc_url( $page_url ) . '" target="__blank"><button type="button" class="urm-buy-now-btn"><span class="label">' . esc_html( $attr['buttonText'] ) . '</span></button></a>';
 	}
 }

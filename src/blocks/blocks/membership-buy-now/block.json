@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "title": "Membership Buy Now",
   "category": "user-registration",
-  "description": "The block allow to buy now the membership.",
+  "description": "The block allows users to purchase a membership.",
   "keywords": [
     "user registration membership buy now",
     "button",
@@ -20,6 +20,9 @@
     "customClassName": false
   },
   "attributes": {
+    "pageID": {
+      "type": "string"
+    },
     "membershipType": {
       "type": "string"
     },

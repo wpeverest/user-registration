@@ -16,7 +16,7 @@ const ServerSideRender = wp.serverSideRender
 	? wp.serverSideRender
 	: wp.components.ServerSideRender;
 
-const { urRestApiNonce, restURL } =
+const { urRestApiNonce, restURL, pages } =
 	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 const Edit = (props) => {
@@ -25,7 +25,7 @@ const Edit = (props) => {
 
 	const { attributes, setAttributes } = props;
 
-	const { membershipType, buttonText } = attributes;
+	const { membershipType, buttonText, pageID } = attributes;
 
 	const [membsershipList, setMembershipList] = useState("");
 
@@ -71,7 +71,22 @@ const Edit = (props) => {
 			<InspectorControls key="ur-gutenberg-membership-buy-now-form-inspector-controls">
 				<PanelBody title={__("General Settings", "user-registration")}>
 					<SelectControl
-						key="ur-gutenberg-membership-buy-now-user-membership-buy-now-state"
+						key="urm-select-page"
+						label={__("Membership Form Pages", "user-registration")}
+						value={pageID}
+						options={[
+							{
+								label: __("Select Page", "user-registration"),
+								value: ""
+							},
+							...pages
+						]}
+						onChange={(page) =>
+							setAttributes({ pageID: Number(page) })
+						}
+					/>
+					<SelectControl
+						key="urm-select-membership-type"
 						label={__("Membership Type", "user-registration")}
 						value={membershipType}
 						options={[
