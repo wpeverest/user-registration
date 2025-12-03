@@ -72,6 +72,19 @@ if ( ! class_exists( 'UR_Stats_Helpers' ) ) {
 		}
 
 		/**
+		 * Check if a plugin slug or path is the email-templates plugin.
+		 *
+		 * @param string $plugin_slug_or_path Plugin slug (e.g., 'user-registration-email-templates') or full path (e.g., 'user-registration-email-templates/user-registration-email-templates.php').
+		 * @return bool True if it's the email-templates plugin.
+		 */
+		public static function is_email_template_plugin( $plugin_slug_or_path ) {
+			// Extract slug from full path if needed
+			$slug = self::extract_plugin_slug( $plugin_slug_or_path );
+
+			return 'user-registration-email-templates' === $slug;
+		}
+
+		/**
 		 * Extract plugin slug from plugin path.
 		 *
 		 * @param string $plugin_path
@@ -98,6 +111,61 @@ if ( ! class_exists( 'UR_Stats_Helpers' ) ) {
 				$addon_info = array_merge( $addon_info, $content_restriction_stats );
 			}
 			return $addon_info;
+		}
+
+		/**
+		 * Add email template stats to addon info array if applicable.
+		 *
+		 * @param array  $addon_info Addon info array to merge stats into.
+		 * @param string $plugin_slug_or_path Plugin slug or path to check.
+		 * @return array
+		 */
+		public static function maybe_add_email_template_stats( $addon_info, $plugin_slug_or_path ) {
+			if ( self::is_email_template_plugin( $plugin_slug_or_path ) ) {
+				$email_template_count = self::get_email_template_stats();
+				$addon_info['total_email_template_count'] = $email_template_count;
+			}
+			return $addon_info;
+		}
+
+		/**
+		 * Get popup statistics.
+		 *
+		 * @return int Total count of active popup posts.
+		 */
+		public static function get_popup_stats() {
+			$popup_query = new WP_Query(
+				array(
+					'post_type'      => 'ur_pro_popup',
+					'post_status'    => 'publish',
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+				)
+			);
+
+			return $popup_query->found_posts;
+		}
+
+		/**
+		 * Get email template statistics.
+		 *
+		 * @return int Total count of active email template posts.
+		 */
+		public static function get_email_template_stats() {
+			if ( ! function_exists( 'is_plugin_active' ) ) {
+				include_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+
+			$email_template_query = new WP_Query(
+				array(
+					'post_type'      => 'ur_email_templates',
+					'post_status'    => 'publish',
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+				)
+			);
+
+			return $email_template_query->found_posts;
 		}
 
 		/**
