@@ -230,7 +230,40 @@ class URCR_Admin_Assets {
 			);
 		}
 
-		return array(
+		// Prepare content type options.
+		$content_type_options = array(
+			array(
+				'value' => 'pages',
+				'label' => esc_html__( 'Pages', 'user-registration' ),
+			),
+			array(
+				'value' => 'posts',
+				'label' => esc_html__( 'Posts', 'user-registration' ),
+			),
+			array(
+				'value' => 'post_types',
+				'label' => esc_html__( 'Post Type', 'user-registration' ),
+			),
+			array(
+				'value' => 'taxonomy',
+				'label' => esc_html__( 'Taxonomy', 'user-registration' ),
+			),
+			array(
+				'value' => 'whole_site',
+				'label' => esc_html__( 'Whole Site', 'user-registration' ),
+			),
+		);
+
+		/**
+		 * Filter content type options for the content restriction dropdown.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $content_type_options Array of content type options with 'value' and 'label' keys.
+		 */
+		$content_type_options = apply_filters( 'urcr_content_type_options', $content_type_options );
+
+		$localized_data = array(
 			'URCR_DEBUG'                => apply_filters( 'urcr_debug_mode', true ),
 			'_nonce'                    => wp_create_nonce( 'urcr_manage_content_access_rule' ),
 			'ajax_url'                  => admin_url( 'admin-ajax.php' ),
@@ -257,8 +290,16 @@ class URCR_Admin_Assets {
 				'failed'    => __( 'Failed', 'user-registration' ),
 			),
 			'memberships'               => $formatted_memberships,
-			'is_pro'                    => UR_PRO_ACTIVE
+			'is_pro'                    => UR_PRO_ACTIVE,
+			'content_type_options'      => $content_type_options,
 		);
+
+		/**
+		 * Filter the entire localized data array for content restriction.
+		 *
+		 * @param array $localized_data The complete localized data array.
+		 */
+		return apply_filters( 'urcr_localized_data', $localized_data );
 	}
 
 	/**
