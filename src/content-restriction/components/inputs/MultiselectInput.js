@@ -35,33 +35,13 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 	}, []);
 
 	// Get options based on content type
-	const getOptions = () => {
-		switch (contentType) {
-			case "pages":
-				const pages = getURCRData("pages", {});
-				return Object.entries(pages).map(([id, label]) => ({
-					value: id,
-					label: label || id,
-				}));
-
-			case "posts":
-				const posts = getURCRData("posts", {});
-				return Object.entries(posts).map(([id, label]) => ({
-					value: id,
-					label: label || id,
-				}));
-
-			case "post_types":
-				const postTypes = getURCRData("post_types", {});
-				return Object.entries(postTypes).map(([id, label]) => ({
-					value: id,
-					label: label || id,
-				}));
-
-			default:
-				return [];
-		}
-	};
+	const getOptions = () =>
+		Object.entries(getURCRData()?.[contentType] ?? {}).map(
+			([id = "", label = ""]) => ({
+				value: id,
+				label: label || id
+			})
+		) ?? [];
 
 	const options = getOptions();
 	const selectedValues = Array.isArray(inputValue) ? inputValue : (inputValue ? [inputValue] : []);
@@ -70,7 +50,7 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 	useLayoutEffect(() => {
 		if (selectRef.current) {
 			const $select = window.jQuery(selectRef.current);
-			
+
 			// Destroy existing select2 instance if any
 			if ($select.hasClass("select2-hidden-accessible")) {
 				$select.select2("destroy");
@@ -79,7 +59,7 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 			// Initialize select2 immediately
 			var select2_changed_flag_up = false;
 			var isInitializing = true;
-			
+
 			// Create a stable change handler
 			const changeHandler = function (e) {
 				// Only handle change if not initializing and not updating
@@ -88,7 +68,7 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 					handleChange(selected);
 				}
 			};
-			
+
 			$select
 				.select2({
 					containerCssClass: $select.data("select2_class"),
@@ -140,18 +120,18 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 				const currentVal = $select.val() || [];
 				const currentArray = Array.isArray(currentVal) ? currentVal : (currentVal ? [currentVal] : []);
 				const newArray = Array.isArray(inputValue) ? inputValue : (inputValue ? [inputValue] : []);
-				
+
 				// Only update if values actually differ
 				const currentSorted = [...currentArray].sort().join(",");
 				const newSorted = [...newArray].sort().join(",");
-				
+
 				if (currentSorted !== newSorted) {
 					// Mark as updating to prevent handleChange from firing
 					isUpdatingRef.current = true;
-					
+
 					// Update value without triggering change events
 					$select.val(inputValue);
-					
+
 					// Reset flag after a brief delay
 					setTimeout(() => {
 						isUpdatingRef.current = false;
