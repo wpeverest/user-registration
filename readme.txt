@@ -4,7 +4,7 @@ Tags: user registration, membership, user profile, registration form, login form
 Requires at least: 5.5
 Requires PHP: 7.2
 Tested up to: 6.8.3
-Stable tag: 4.4.5
+Stable tag: 4.4.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,54 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 4.4.6    - 13/11/2025 =
+* Enhance  - Added required pages in system info.
+* Enhance  - Design consistency in Site Assistance.
+* Enhance  - Cache handling in reset password process.
+* Enhance  - Introduce edit icon on hover for login fields.
+* Enhance  - Helper icon content and design in form builder.
+* Enhance  - Inline error for page selection in login form settings.
+* Enhance  - Password strength validation in edit password shortcode.
+* Enhance  - Preview and Embed functionality added in Login Form Builder.
+* Enhance  - Added a reset button to reset captcha keys in global settings.
+* Enhance  - Added no conflict mode to force our plugin's captchas in pages.
+* Dev      - Conditional logic support on Salesforce.
+* Dev      - Payment process logging interface for membership.
+* Dev      - Added a hook to hide the postal code in Stripe credit card.
+* Dev      - Added filter hook for setting default value for remember me checkbox in login form.
+* Tweak    - Typo in field and row deletion popup.
+* Tweak    - Updated all email content and spacing.
+* Tweak    - Show URMs page tag on our plugin's pages.
+* Tweak    - Typo in the order note of payment history.
+* Tweak    - Registration form link not displayed when Anyone can register is disabled.
+* Fix      - Banner notice design issues.
+* Fix      - Default reCAPTCHA v2 enable issue.
+* Fix      - WYSIWYG design fix in form builder.
+* Fix      - Design inconsistencies in setup wizard.
+* Fix      - Membership fields data not translatable.
+* Fix      - Form template page design inconsistencies.
+* Fix      - Select2 width overflow in general settings.
+* Fix      - Error message expiration text translatable.
+* Fix      - Form builder search fields box sticky design.
+* Fix      - Setup Wizard flickering on first installation.
+* Fix      - Smart Tags not working with membership emails.
+* Fix      - Not a member text in the login page is not translating.
+* Fix      - User login failed while using email as a login option.
+* Fix      - Invalid error message on user password failed on login.
+* Fix      - Membership details in my account page are not translatable.
+* Fix      - Custom password strength not working in Lost Password Page.
+* Fix      - Undefined variable warning being thrown in payment success email.
+* Fix      - Registration link in login form throws 404 on fresh installation.
+* Fix      - User role not updated while updating the plan from the user's dashboard.
+* Fix      - Form submission not working while making the invite code field required.
+* Fix      - Duplicate Profile Detail text on My Account Page while using Vertical Layout.
+* Fix      - Redirection logic for the membership form to the previous page is not working.
+* Fix      - Custom title and description for login and registration form are not translatable.
+* Fix      - Navigation tab not displaying in My Account page while using the Kadence theme.
+* Fix      - Membership plan details not changing while changing the plan of the edit member.
+* Fix      - Coupon service not working with Stripe and process/display decimal price for membership.
+
 = 4.4.5    - 09/10/2025 =
 * Fix      - Duplicate renewal setting.
 * Fix      - Reset Password smart tag slug.

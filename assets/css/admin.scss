@@ -38,10 +38,26 @@
 	@include loader();
 }
 
+// body {
+// 	&.user-registration,
+// 	&.user-registration-page {
+// 		font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+// 	}
+// }
+
 body {
 	&.user-registration,
 	&.user-registration-page {
-		font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+		#wpbody-content {
+			.ur-admin-page-topnav,
+			.memberships,
+			div[class*="user-registration-"],
+			div[id*="user-registration-"],
+			table th, table td,
+			h1, h2, h3, h4, h5, h6, p, small, label {
+				font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+			}
+		}
 	}
 
 	.wp-responsive-open {
@@ -533,7 +549,8 @@ body {
 	 * Form Builder Styles
 	 **/
 .user-registration-membership_page_add-new-registration,
-.toplevel_page_user-registration {
+.toplevel_page_user-registration,
+.user-registration-membership_page_user-registration-login-forms {
 
 	#wpfooter {
 		display: none; //Hide WP footer on form builder page
@@ -1173,7 +1190,8 @@ body {
 			.ur-tab-contents {
 				.ur-tab-content {
 					&#ur-tab-field-settings {
-						margin-top: -$spacing_32px;
+						// margin-top: -$spacing_32px;
+						margin-top: 0;
 						margin-left: -$spacing_12px;
 						margin-right: -$spacing_12px;
 					}
@@ -1363,7 +1381,16 @@ body {
 
 				&.ps--active-y {
 					.ur-tab-content {
-						padding: $spacing_32px $spacing_12px $spacing_12px;
+						// padding: $spacing_32px $spacing_12px $spacing_12px;
+						padding: 0 $spacing_12px $spacing_12px;
+
+						#ur-setting-form {
+							padding-top: $spacing_20px;
+						}
+					}
+
+					.ps__rail-y {
+						z-index: 1;
 					}
 				}
 			}
@@ -1494,7 +1521,8 @@ body {
 			}
 
 			.ur-tab-content {
-				padding: $spacing_32px $spacing_12px $spacing_12px;
+				// padding: $spacing_32px $spacing_12px $spacing_12px;
+				padding: 0 $spacing_12px $spacing_12px;
 
 				.ur-fields-not-found {
 					text-align: center;
@@ -1688,12 +1716,12 @@ body {
 					}
 
 					&:first-child {
-						border-radius: 0 0 0 $border_radius_7;
-						border-right: 1px solid transparentize($white, 0.8);
+						border-radius: 0 0 0 $border_radius_4;
+						border-right: $border_width solid transparentize($white, 0.8);
 					}
 
 					&:nth-child(2) {
-						border-radius: 0 $border_radius_7 0 0;
+						border-radius: 0 $border_radius_4 0 0;
 						border-left: $border_width solid $grey-0;
 					}
 				}
@@ -1812,15 +1840,13 @@ body {
 						.ur-action-buttons {
 							display: none;
 							position: absolute;
-							right: 10px;
-							width: 50px;
+							// width: 50px;
 							text-align: center;
 							padding: 0;
 							font-size: 10px;
-							top: 10px;
 							color: $color_gray_three;
 							top: 0;
-							right: -1px;
+							right: 0;
 
 							span {
 								cursor: pointer;
@@ -1834,9 +1860,10 @@ body {
 								&:first-child {
 									background: #676f8a;
 									padding: $spacing_4px;
-									width: 24px;
+									width: 28px;
 									height: 24px;
-									border-radius: 0 0 0 $border_radius_7;
+									flex: 0 0 28px;
+									border-radius: 0 0 0 $border_radius_3;
 
 									&::before {
 										color: $grey-0;
@@ -1846,9 +1873,10 @@ body {
 								&:last-child {
 									background: #676d8a;
 									padding: $spacing_4px;
-									width: 24px;
+									width: 28px;
 									height: 24px;
-									border-radius: 0 $border_radius_7 0 0;
+									flex: 0	0 28px;
+									border-radius: 0 $border_radius_3 0 0;
 									border-left: $border_width solid $grey-0;
 
 									&:before {
@@ -1891,7 +1919,8 @@ body {
 
 						&:hover {
 							.ur-action-buttons {
-								display: block;
+								display: flex;
+								align-items: center;
 							}
 						}
 
@@ -3038,7 +3067,7 @@ body {
 .user-registration-setup {
 	font-size: 14px;
 	max-width: calc(100% - 32px);
-	margin: 20px auto;
+	margin: $spacing_20px auto;
 	background: white;
 
 	@media (min-width: 960px) {
@@ -3050,7 +3079,7 @@ body {
 	}
 
 	.ur-brand-logo {
-		border-right: 1px solid $border_color;
+		border-right: $border_width solid $border_color;
 
 		img {
 			width: 32px;
@@ -3078,7 +3107,7 @@ body {
 		flex-wrap: wrap;
 		align-items: center;
 		padding: 0 $spacing_16px;
-		background-color: white;
+		background-color: $white;
 		border-bottom: $border_width solid $color_gray-lighten;
 
 		@media only screen and (max-width: 768px) {
@@ -3664,6 +3693,14 @@ a.button.ur-smart-tags-list-button {
 						width: 33px;
 						height: 33px;
 					}
+					&#ur-view-live-button {
+						a {
+							color: #475bb2;
+						}
+						a::after {
+							background-image: url(../images/icons/external-link.svg);
+						}
+					}
 
 					// .dashicons-editor-expand,
 					// .dashicons-editor-contract {
@@ -3711,8 +3748,8 @@ a.button.ur-smart-tags-list-button {
 					}
 
 					&.ur-copy-shortcode {
-						width: 33px;
-						height: 33px;
+						width: 36px;
+						height: 36px;
 						padding-left: 0;
 						padding-right: 0;
 						background: $primary_color;
@@ -3937,6 +3974,7 @@ a.button.ur-smart-tags-list-button {
 			transition: all 0.3s ease-in-out;
 			right: -$spacing_22px;
 			transform: translateY(-50%);
+			box-shadow: none;
 
 			svg {
 				width: 12px;
@@ -4016,7 +4054,7 @@ a.button.ur-smart-tags-list-button {
 
 		.ur-builder {
 			&-header {
-				padding-bottom: $spacing_16px;
+				padding-bottom: $spacing_20px;
 				border-bottom: $border_width solid $border-color;
 				margin-bottom: $spacing_32px;
 
@@ -4028,9 +4066,17 @@ a.button.ur-smart-tags-list-button {
 						font-size: 22px;
 						line-height: 130%;
 						color: $grey-500;
-						padding: $spacing_4px $spacing_8px $spacing_4px
-							$spacing_12px;
+						padding: $spacing_4px $spacing_8px $spacing_4px $spacing_12px;
 						margin: 0;
+						border: $border_width solid transparent;
+						border-radius: 0;
+
+						&.is-editing {
+							font-size: 18px;
+							line-height: 28px;
+							border: $border_width solid $primary_color;
+							border-radius: 0 $border_radius_4 $border_radius_4 0;
+						}
 					}
 				}
 			}
@@ -4288,7 +4334,8 @@ a.button.ur-smart-tags-list-button {
 
 					.user-registration-notice {
 						margin: 0;
-						padding: 0;
+						padding: 10px;
+						font-weight: 500;
 					}
 
 					.user-registration-card {
@@ -4596,7 +4643,7 @@ a.button.ur-smart-tags-list-button {
 												font-size: 13px;
 												transform: scaleX(-1);
 
-											}											
+											}
 										}
 
 										&.active:hover {
@@ -8056,10 +8103,21 @@ body.user-registration-page {
 }
 .ur-sticky-wrapper {
 	top: 0;
-	background: white;
+	background: $white;
 	position: sticky;
+	position: -webkit-sticky;
 	z-index: 1;
-	box-shadow: 0 19px 20px 20px rgb(0 0 0 / 6%)
+	// box-shadow: 0 19px 20px 20px rgb(0 0 0 / 6%);
+	padding: $spacing_20px $spacing_12px;
+	margin-left: -$spacing_12px;
+	margin-right: -$spacing_12px;
+	border-bottom: $border_width solid #f1f1f1;
+	margin-bottom: $spacing_24px;
+
+	.ur-search-input {
+		background: $white;
+		margin-bottom: 0;
+	}
 }
 .user-registration {
 	.user-registration-settings {

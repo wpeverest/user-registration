@@ -191,17 +191,21 @@
 					return $checked.length <= choiceLimit;
 				},
 
-				$.validator.format(user_registration_params.user_registration_checkbox_validation_message)
+				$.validator.format(
+					user_registration_params.user_registration_checkbox_validation_message
+				)
 			);
 
 			$.validator.addMethod(
 				"patternValidator",
-				function(value, element, params) {
+				function (value, element, params) {
 					var regex = new RegExp(params.pattern);
 					return this.optional(element) || regex.test(value);
-				}, function(params, element) {
+				},
+				function (params, element) {
 					return params.errorMessage;
-				});
+				}
+			);
 		},
 		load_validation: function () {
 			if (typeof $.fn.validate === "undefined") {
@@ -268,9 +272,9 @@
 					},
 					errorPlacement: function (error, element) {
 						if (
-							  element.is("#password_current")
-							||element.is("#password_1")
-							||element.is("#password_2")
+							element.is("#password_current") ||
+							element.is("#password_1") ||
+							element.is("#password_2")
 						) {
 							element.parent().after(error);
 						} else if (
@@ -516,7 +520,10 @@
 				};
 			}
 
-			if (this_node.hasClass("edit-password")) {
+			if (
+				this_node.hasClass("edit-password") ||
+				this_node.hasClass("ur_lost_reset_password")
+			) {
 				/**
 				 * Password matching for `Change Password` form
 				 */
@@ -624,22 +631,22 @@
 				});
 			}
 
-			$('div[data-field-pattern-enabled="1"]').each(function() {
+			$('div[data-field-pattern-enabled="1"]').each(function () {
 				var $div = $(this);
-				var inputId = $div.data('field-id');
-				var pattern = $div.data('field-pattern-value');
-				var errorMessage = $div.data('field-pattern-message');
+				var inputId = $div.data("field-id");
+				var pattern = $div.data("field-pattern-value");
+				var errorMessage = $div.data("field-pattern-message");
 
-				rules[inputId]= {
+				rules[inputId] = {
 					patternValidator: {
 						pattern: pattern,
 						errorMessage: errorMessage,
 						param: {
 							pattern: pattern,
-							errorMessage: errorMessage,
+							errorMessage: errorMessage
 						}
 					}
-				}
+				};
 			});
 
 			return { rules: rules, messages: messages };

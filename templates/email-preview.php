@@ -25,6 +25,11 @@ defined( 'ABSPATH' ) || exit;
 					margin: 0;
 					min-height: 100vh;
 				}
+
+				a {
+					pointer-events: none;
+					cursor: default;
+				}
 			</style>
 		</head>
 		<body <?php body_class(); ?> >
