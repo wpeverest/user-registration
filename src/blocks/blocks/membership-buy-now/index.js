@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import metadata from "./block.json";
 import { LoginForm } from "./../../components/Icon";
 import Edit from "./Edit";
+import "./editor.scss";
 
 export const name = metadata.name;
 export const settings = {

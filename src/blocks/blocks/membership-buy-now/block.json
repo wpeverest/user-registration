@@ -16,8 +16,15 @@
     "attributes": {}
   },
   "supports": {
-    "className": false,
-    "customClassName": false
+    "align": [
+      "wide",
+      "full"
+    ],
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "blockGap": true
+    }
   },
   "attributes": {
     "pageID": {
@@ -26,9 +33,25 @@
     "membershipType": {
       "type": "string"
     },
-    "buttonText": {
+    "text": {
       "type": "string",
       "default": "Buy Now"
+    },
+    "width": {
+      "type": "string",
+      "default": ""
+    },
+    "justifyContent": {
+      "type": "string",
+      "default": "flex-start"
+    },
+    "gap": {
+      "type": "string",
+      "default": "0.5rem"
+    },
+    "borderRadius": {
+      "type": "number",
+      "default": 4
     }
   },
   "editorScript": "user-registration-blocks-editor",

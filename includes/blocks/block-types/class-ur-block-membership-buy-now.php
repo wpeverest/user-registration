@@ -33,6 +33,6 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 		}
 		$page_url = get_permalink( absint( $attr['pageID'] ) );
 
-		return '<a href="' . esc_url( $page_url ) . '" target="__blank"><button type="button" class="urm-buy-now-btn"><span class="label">' . esc_html( $attr['buttonText'] ) . '</span></button></a>';
+		return '<a href="' . esc_url( $page_url ) . '" target="__blank"><button type="button" class="urm-buy-now-btn"><span class="label">' . esc_html( $attr['text'] ) . '</span></button></a>';
 	}
 }
