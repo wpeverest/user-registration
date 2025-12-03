@@ -79,7 +79,7 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 			$this->wpdb()->prepare(
 				"SELECT wp.ID as post_id,
                 urs.ID as subscription_id,
-                wo.ID as order_id,
+                -- wo.ID as order_id,
                 urs.user_id,
                 urs.cancel_sub,
                 wp.post_title,
@@ -95,8 +95,8 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 				FROM $this->subscription_table AS urs
 				JOIN $this->posts_table AS wp
 						ON wp.ID = urs.item_id
-				LEFT JOIN $this->orders_table AS wo
-						ON urs.ID = wo.subscription_id
+				-- LEFT JOIN $this->orders_table AS wo
+				-- 		ON urs.ID = wo.subscription_id
 				WHERE urs.user_id = %d
 				AND wp.post_type = 'ur_membership'
 				ORDER BY urs.ID DESC",

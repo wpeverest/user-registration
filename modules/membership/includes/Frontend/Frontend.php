@@ -126,9 +126,12 @@ class Frontend {
 			}
 
 			$membership['active_gateways'] = $active_gateways;
-			$is_upgrading                  = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
 			$membership_process            = urm_get_membership_process( $user_id );
-			$is_purchasing_multiple        = ! empty( $membership_process['multiple'] ) && in_array( $membership['post_id'], $membership_process['multiple'] );
+
+			$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $membership['post_id'] ] );
+
+			$membership_process     = urm_get_membership_process( $user_id );
+			$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $membership['post_id'], $membership_process['multiple'] );
 
 			$last_order = $members_order_repository->get_member_orders( $user_id );
 			$bank_data  = array();
@@ -315,11 +318,17 @@ class Frontend {
 			return;
 		}
 		$next_subscription_data = json_decode( get_user_meta( $user_id, 'urm_next_subscription_data', true ), true );
+		$prev_subscription_data = json_decode( get_user_meta( $user_id, 'urm_previous_subscription_data', true ), true );
 
 		if ( ! empty( $next_subscription_data ) && empty( $next_subscription_data['delayed_until'] ) && ! empty( $next_subscription_data['payment_method'] ) && ( 'paypal' === $next_subscription_data['payment_method'] ) ) {
-			if ( $user_subscription['status'] === 'active' ) {
-				delete_user_meta( $user_id, 'urm_is_upgrading' );
-				delete_user_meta( $user_id, 'urm_is_upgrading_to' );
+
+			if ( $prev_subscription_data['status'] === 'active' ) {
+				$membership_process = urm_get_membership_process( $user_id );
+
+				if ( ! empty( $membership_process ) && isset( $membership_process['upgrade'][ $prev_subscription_data['item_id'] ] ) ) {
+					unset( $membership_process['upgrade'][ $prev_subscription_data['item_id'] ] );
+					update_user_meta( $user_id, 'urm_membership_process', $membership_process );
+				}
 			}
 		}
 	}

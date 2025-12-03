@@ -79,6 +79,7 @@ class PaymentService {
 		}
 
 		$payment_data['selected_membership_id'] = isset( $response_data['selected_membership_id'] ) ? $response_data['selected_membership_id'] : 0;
+		$payment_data['current_membership_id']  = isset( $response_data['current_membership_id'] ) ? $response_data['current_membership_id'] : 0;
 		switch ( $this->payment_method ) {
 			case 'stripe':
 				return $this->build_stripe_response( $payment_data, $response_data );

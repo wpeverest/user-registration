@@ -829,10 +829,11 @@ class AJAX {
 		$is_user_created        = get_user_meta( $member_id, 'urm_user_just_created' );
 		$membership_process     = urm_get_membership_process( $member_id );
 		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
+		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( $_POST['current_membership_id'] ) : 0;
 		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
+		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
 
-		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
-		$is_renewing  = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+		$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 
 		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
 			wp_send_json_error(
@@ -893,8 +894,8 @@ class AJAX {
 			);
 			if ( $is_upgrading ) {
 				$response['message'] = __( 'Membership upgraded successfully', 'user-registration' );
-				delete_user_meta( $member_id, 'urm_is_upgrading' );
-				delete_user_meta( $member_id, 'urm_is_upgrading_to' );
+				unset( $membership_process['upgrade'][ $current_membership_id ] );
+				update_user_meta( $member_id, 'urm_membership_process', $membership_process );
 				update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
 			}
 			if ( $is_purchasing_multiple ) {
@@ -918,6 +919,7 @@ class AJAX {
 				$response
 			);
 		}
+
 		if ( $is_upgrading ) {
 			$stripe_service->revert_subscription( $member_id );
 		}
@@ -938,10 +940,11 @@ class AJAX {
 
 		$membership_process     = urm_get_membership_process( $member_id );
 		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
+		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( $_POST['current_membership_id'] ) : 0;
 		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
+		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
 
-		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
-		$is_renewing  = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+		$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
 					wp_send_json_error(
 						array(
@@ -1476,8 +1479,22 @@ class AJAX {
 			}
 
 			if ( $selected_pg !== 'free' ) {
-				update_user_meta( $member_id, 'urm_is_upgrading', true );
-				update_user_meta( $member_id, 'urm_is_upgrading_to', $data['selected_membership_id'] );
+				$membership_process = urm_get_membership_process( $member_id );
+				if ( $membership_process && ! isset( $membership_process['upgrade'][ $data['current_membership_id'] ] ) ) {
+					$membership_process['upgrade'][ $data['current_membership_id'] ] = array(
+						'from'            => $data['current_membership_id'],
+						'to'              => $data['selected_membership_id'],
+						'subscription_id' => $data['current_subscription_id'],
+					);
+
+					update_user_meta( $member_id, 'urm_membership_process', $membership_process );
+				} else {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Membership upgrade process already initiated.', 'user-registration' ),
+						)
+					);
+				}
 			} else {
 				// Free upgrade completes immediately
 				PaymentGatewayLogging::log_transaction_success(
@@ -1501,6 +1518,8 @@ class AJAX {
 					'transaction_id'           => $upgrade_membership_response['extra']['transaction_id'],
 					'updated_membership_title' => $upgrade_membership_response['extra']['updated_membership_title'],
 					'message'                  => $message,
+					'selected_membership_id'   => $data['selected_membership_id'],
+					'current_membership_id'    => $data['current_membership_id'],
 				)
 			);
 		}

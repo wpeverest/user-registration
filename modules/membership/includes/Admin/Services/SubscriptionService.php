@@ -345,14 +345,16 @@ class SubscriptionService {
 		$payment_service       = new PaymentService( $payment_method, $data['selected_membership_id'], $user->data->user_email );
 		$ur_authorize_net_data = isset( $data['ur_authorize_net'] ) ? $data['ur_authorize_net'] : array();
 		$data                  = array(
-			'membership'        => $data['selected_membership_id'],
-			'subscription_id'   => $subscription['ID'],
-			'member_id'         => $user->ID,
-			'email'             => $user->user_email,
-			'transaction_id'    => $orders_data['orders_data']['transaction_id'],
-			'upgrade'           => true,
-			'subscription_data' => $subscription,
-			'ur_authorize_net'  => $ur_authorize_net_data,
+			'membership'             => $data['selected_membership_id'],
+			'subscription_id'        => $subscription['ID'],
+			'member_id'              => $user->ID,
+			'email'                  => $user->user_email,
+			'transaction_id'         => $orders_data['orders_data']['transaction_id'],
+			'upgrade'                => true,
+			'subscription_data'      => $subscription,
+			'ur_authorize_net'       => $ur_authorize_net_data,
+			'selected_membership_id' => $data['selected_membership_id'],
+			'current_membership_id'  => $data['current_membership_id'],
 		);
 		$data                  = $data + $upgrade_details;
 

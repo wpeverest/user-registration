@@ -1758,7 +1758,13 @@
 						member_id: data.user_id,
 						customer_id: data.customer_id,
 						payment_method_id: data.payment_method_id,
-						form_response: JSON.stringify(data.form_response.data)
+						form_response: JSON.stringify(data.form_response.data),
+						selected_membership_id: data.selected_membership_id
+							? data.selected_membership_id
+							: "",
+						current_membership_id: data.current_membership_id
+							? data.current_membership_id
+							: ""
 					},
 					{
 						success: function (response) {

@@ -28,13 +28,20 @@ class PaymentGatewaysWebhookActions {
 		add_action( 'init', array( $this, 'handle_paypal_redirect_response' ), 1 );
 		add_action( 'init', array( $this, 'handle_membership_paypal_ipn' ) );
 
-		add_action( 'rest_api_init', function () {
-			register_rest_route( 'user-registration', '/stripe-webhook', [
-				'methods'  => 'POST',
-				'callback' => array( $this, 'handle_stripe_webhook', ),
-				'permission_callback' => '__return_true',
-			] );
-		} );
+		add_action(
+			'rest_api_init',
+			function () {
+				register_rest_route(
+					'user-registration',
+					'/stripe-webhook',
+					array(
+						'methods'             => 'POST',
+						'callback'            => array( $this, 'handle_stripe_webhook' ),
+						'permission_callback' => '__return_true',
+					)
+				);
+			}
+		);
 	}
 
 	/**
@@ -49,6 +56,7 @@ class PaymentGatewaysWebhookActions {
 		$get_params = base64_decode( $_GET['ur-membership-return'] );
 
 		$payer_id = $_GET['PayerID'] ?? '';
+
 		$this->paypal_service->handle_paypal_redirect_response( $get_params, $payer_id );
 	}
 	/**
@@ -77,20 +85,17 @@ class PaymentGatewaysWebhookActions {
 
 		$stripe_signature = $request->get_header( 'stripe-signature' );
 
-		$body             = $request->get_body();
+		$body = $request->get_body();
 
-		$event            = json_decode( $body, true );
+		$event = json_decode( $body, true );
 
 		$subscription_id = $event['data']['object']['subscription'];
 
-		if ( empty( $body ) && "" == $subscription_id ) {
+		if ( empty( $body ) && '' == $subscription_id ) {
 			return;
 		}
 
 		$stripe_service = new StripeService();
 		$stripe_service->handle_webhook( $event, $subscription_id );
-
-
 	}
 }
-
