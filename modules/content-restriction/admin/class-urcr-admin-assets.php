@@ -263,6 +263,74 @@ class URCR_Admin_Assets {
 		 */
 		$content_type_options = apply_filters( 'urcr_content_type_options', $content_type_options );
 
+		// Prepare condition options.
+		$condition_options = array(
+			array(
+				'value' => 'membership',
+				'label' => esc_html__( 'Membership', 'user-registration' ),
+				'type'  => 'multiselect',
+			),
+			array(
+				'value' => 'roles',
+				'label' => esc_html__( 'Roles', 'user-registration' ),
+				'type'  => 'multiselect',
+			),
+			array(
+				'value' => 'user_registered_date',
+				'label' => esc_html__( 'User Registered Date', 'user-registration' ),
+				'type'  => 'date',
+			),
+			array(
+				'value' => 'access_period',
+				'label' => esc_html__( 'Period after Registration', 'user-registration' ),
+				'type'  => 'period',
+			),
+			array(
+				'value' => 'user_state',
+				'label' => esc_html__( 'User State', 'user-registration' ),
+				'type'  => 'checkbox',
+			),
+			array(
+				'value' => 'email_domain',
+				'label' => esc_html__( 'Email Domain', 'user-registration' ),
+				'type'  => 'text',
+			),
+			array(
+				'value' => 'post_count',
+				'label' => esc_html__( 'Minimum Public Posts Count', 'user-registration' ),
+				'type'  => 'number',
+			),
+			array(
+				'value' => 'capabilities',
+				'label' => esc_html__( 'Capabilities', 'user-registration' ),
+				'type'  => 'multiselect',
+			),
+			array(
+				'value' => 'registration_source',
+				'label' => esc_html__( 'User Registration Source', 'user-registration' ),
+				'type'  => 'multiselect',
+			),
+			array(
+				'value' => 'ur_form_field',
+				'label' => esc_html__( 'UR Form Field', 'user-registration' ),
+				'type'  => 'multiselect',
+			),
+			array(
+				'value' => 'payment_status',
+				'label' => esc_html__( 'Payment Status', 'user-registration' ),
+				'type'  => 'multiselect',
+			),
+		);
+
+		/**
+		 * Filter condition options for the condition row dropdown.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $condition_options Array of condition options with 'value', 'label', and 'type' keys.
+		 */
+		$condition_options = apply_filters( 'urcr_condition_options', $condition_options );
+
 		$localized_data = array(
 			'URCR_DEBUG'                => apply_filters( 'urcr_debug_mode', true ),
 			'_nonce'                    => wp_create_nonce( 'urcr_manage_content_access_rule' ),
@@ -292,6 +360,7 @@ class URCR_Admin_Assets {
 			'memberships'               => $formatted_memberships,
 			'is_pro'                    => UR_PRO_ACTIVE,
 			'content_type_options'      => $content_type_options,
+			'condition_options'         => $condition_options,
 		);
 
 		/**
