@@ -1,38 +1,179 @@
 <?php
 /**
- * User registration Membership buy now block.
+ * User registration membership buy now.
  *
  * @since xx.xx.xx
  * @package user-registration
  */
 
 defined( 'ABSPATH' ) || exit;
+
 /**
- * Block registration form class.
+ * Block Membership buy now class.
  */
 class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
-	/**
-	 * Block name.
-	 *
-	 * @var string Block name.
-	 */
+
 	protected $block_name = 'membership-buy-now';
 
+	/** Parse preset color */
+	private function parse_preset_color( $value ) {
+		if ( strpos( $value, 'var:preset|color|' ) !== false ) {
+			$slug = str_replace( 'var:preset|color|', '', $value );
+			return 'var(--wp--preset--color--' . $slug . ')';
+		}
+		return $value;
+	}
+
+	/** Parse preset spacing */
+	private function parse_preset_spacing( $value ) {
+		if ( strpos( $value, 'var:preset|spacing|' ) !== false ) {
+			$slug = str_replace( 'var:preset|spacing|', '', $value );
+			return 'var(--wp--preset--spacing--' . $slug . ')';
+		}
+		return $value;
+	}
+
 	/**
-	 * Build html.
-	 *
-	 * @param string $content Build html content.
-	 * @return string
+	 * Build HTML.
 	 */
 	protected function build_html( $content ) {
-		do_action( 'wp_enqueue_membership_scripts' );
-		$attr       = $this->attributes;
-		$parameters = array();
-		if ( ! isset( $attr['pageID'] ) ) {
+
+		$attr = $this->attributes;
+
+		if ( empty( $attr['pageID'] ) ) {
 			return '';
 		}
+
 		$page_url = get_permalink( absint( $attr['pageID'] ) );
 
-		return '<a href="' . esc_url( $page_url ) . '" target="__blank"><button type="button" class="urm-buy-now-btn"><span class="label">' . esc_html( $attr['text'] ) . '</span></button></a>';
+		$style = isset( $attr['style'] ) ? $attr['style'] : array();
+
+		$button_classes = 'urm-buy-now-btn1';
+		if ( ! empty( $attr['className'] ) ) {
+			$button_classes .= ' ' . $attr['className'];
+		}
+
+		// Colors
+		$text_color_raw = isset( $style['elements']['link']['color']['text'] )
+			? $style['elements']['link']['color']['text'] : '';
+
+		$text_color = $this->parse_preset_color( $text_color_raw );
+
+		$background = isset( $style['color']['background'] ) ? $style['color']['background'] : '';
+
+		// Border
+		$border_color = isset( $style['border']['color'] ) ? $style['border']['color'] : '';
+		$border_width = isset( $style['border']['width'] ) ? $style['border']['width'] : '';
+		$radius       = isset( $style['border']['radius'] ) ? $style['border']['radius'] : array();
+
+		$border_radius = sprintf(
+			'%s %s %s %s',
+			isset( $radius['topLeft'] ) ? $radius['topLeft'] : '0',
+			isset( $radius['topRight'] ) ? $radius['topRight'] : '0',
+			isset( $radius['bottomRight'] ) ? $radius['bottomRight'] : '0',
+			isset( $radius['bottomLeft'] ) ? $radius['bottomLeft'] : '0'
+		);
+
+		// Spacing
+		$padding = isset( $style['spacing']['padding'] ) ? $style['spacing']['padding'] : array();
+
+		$padding_top    = isset( $padding['top'] ) ? $this->parse_preset_spacing( $padding['top'] ) : '';
+		$padding_bottom = isset( $padding['bottom'] ) ? $this->parse_preset_spacing( $padding['bottom'] ) : '';
+		$padding_left   = isset( $padding['left'] ) ? $this->parse_preset_spacing( $padding['left'] ) : '';
+		$padding_right  = isset( $padding['right'] ) ? $this->parse_preset_spacing( $padding['right'] ) : '';
+
+		// TYPOGRAPHY
+		$typography = isset( $style['typography'] ) ? $style['typography'] : array();
+
+		$font_style      = isset( $typography['fontStyle'] ) ? $typography['fontStyle'] : '';
+		$font_weight     = isset( $typography['fontWeight'] ) ? $typography['fontWeight'] : '';
+		$text_decoration = isset( $typography['textDecoration'] ) ? $typography['textDecoration'] : '';
+		$letter_spacing  = isset( $typography['letterSpacing'] ) ? $typography['letterSpacing'] : '';
+		$text_transform  = isset( $typography['textTransform'] ) ? $typography['textTransform'] : '';
+		$font_size       = isset( $typography['fontSize'] ) ? $typography['fontSize'] : '';
+
+		// Build BUTTON inline style
+		$button_style = 'width:100%;';
+
+		// Style variations
+		if ( strpos( $button_classes, 'is-style-fill' ) !== false ) {
+			$button_style .= 'background:#000;color:#fff;';
+		}
+
+		if ( strpos( $button_classes, 'is-style-outline' ) !== false ) {
+			$button_style .= 'background:transparent;border:1px solid #000;color:#000;';
+		}
+
+		if ( $text_color ) {
+			$button_style .= 'color:' . $text_color . ';';
+		}
+		if ( $background ) {
+			$button_style .= 'background:' . $background . ';';
+		}
+		if ( $border_color ) {
+			$button_style .= 'border-color:' . $border_color . ';';
+		}
+		if ( $border_width ) {
+			$button_style .= 'border-width:' . $border_width . ';border-style:solid;';
+		}
+
+		// Padding
+		if ( $padding_top ) {
+			$button_style .= 'padding-top:' . $padding_top . ';';
+		}
+		if ( $padding_bottom ) {
+			$button_style .= 'padding-bottom:' . $padding_bottom . ';';
+		}
+		if ( $padding_left ) {
+			$button_style .= 'padding-left:' . $padding_left . ';';
+		}
+		if ( $padding_right ) {
+			$button_style .= 'padding-right:' . $padding_right . ';';
+		}
+
+		$button_style .= 'border-radius:' . $border_radius . ';';
+
+		// Typography
+		if ( $font_style ) {
+			$button_style .= 'font-style:' . $font_style . ';';
+		}
+		if ( $font_weight ) {
+			$button_style .= 'font-weight:' . $font_weight . ';';
+		}
+		if ( $text_decoration ) {
+			$button_style .= 'text-decoration:' . $text_decoration . ';';
+		}
+		if ( $letter_spacing ) {
+			$button_style .= 'letter-spacing:' . $letter_spacing . ';';
+		}
+		if ( $text_transform ) {
+			$button_style .= 'text-transform:' . $text_transform . ';';
+		}
+		if ( $font_size ) {
+			$button_style .= 'font-size:' . $font_size . ';';
+		}
+
+		// Wrapper attributes
+		$justify = isset( $attr['justifyContent'] ) ? $attr['justifyContent'] : 'flex-start';
+
+		$wrapper_attributes = get_block_wrapper_attributes(
+			array(
+				'class' => 'wp-block-buttons',
+				'style' => 'display:flex;flex-direction:row;justify-content:' . esc_attr( $justify ) . ';',
+			)
+		);
+
+		// FINAL HTML
+		$html  = '<div ' . $wrapper_attributes . '>';
+		$html .= '<div style="width:' . esc_attr( $attr['width'] ) . ';">';
+		$html .= '<a href="' . esc_url( $page_url ) . '" target="_blank">';
+		$html .= '<button type="button" class="' . esc_attr( $button_classes ) . '" style="' . esc_attr( $button_style ) . '">';
+		$html .= '<span class="label">' . esc_html( $attr['text'] ) . '</span>';
+		$html .= '</button>';
+		$html .= '</a>';
+		$html .= '</div>';
+		$html .= '</div>';
+
+		return $html;
 	}
 }

@@ -12,19 +12,83 @@
     "buy now"
   ],
   "textdomain": "user-registration",
-  "example": {
-    "attributes": {}
-  },
+  "styles": [
+    {
+      "name": "fill",
+      "label": "Fill",
+      "isDefault": true
+    },
+    {
+      "name": "outline",
+      "label": "Outline"
+    }
+  ],
   "supports": {
+    "className": true,
     "align": [
       "wide",
       "full"
     ],
+    "color": {
+      "__experimentalSkipSerialization": true,
+      "gradients": true,
+      "__experimentalDefaultControls": {
+        "background": true,
+        "text": true
+      }
+    },
+    "typography": {
+      "__experimentalSkipSerialization": [
+        "fontSize",
+        "lineHeight",
+        "fontFamily",
+        "fontWeight",
+        "fontStyle",
+        "textTransform",
+        "textDecoration",
+        "letterSpacing"
+      ],
+      "fontSize": true,
+      "lineHeight": true,
+      "__experimentalFontFamily": true,
+      "__experimentalFontWeight": true,
+      "__experimentalFontStyle": true,
+      "__experimentalTextTransform": true,
+      "__experimentalTextDecoration": true,
+      "__experimentalLetterSpacing": true,
+      "__experimentalWritingMode": true,
+      "__experimentalDefaultControls": {
+        "fontSize": true
+      }
+    },
+    "reusable": false,
+    "shadow": {
+      "__experimentalSkipSerialization": true
+    },
     "spacing": {
-      "margin": true,
-      "padding": true,
-      "blockGap": true
-    }
+      "__experimentalSkipSerialization": true,
+      "padding": [
+        "horizontal",
+        "vertical"
+      ],
+      "__experimentalDefaultControls": {
+        "padding": true
+      }
+    },
+    "__experimentalBorder": {
+      "color": true,
+      "radius": true,
+      "style": true,
+      "width": true,
+      "__experimentalSkipSerialization": true,
+      "__experimentalDefaultControls": {
+        "color": true,
+        "radius": true,
+        "style": true,
+        "width": true
+      }
+    },
+    "__experimentalSelector": ".urm-buy-now-btn"
   },
   "attributes": {
     "pageID": {
@@ -49,11 +113,22 @@
       "type": "string",
       "default": "0.5rem"
     },
-    "borderRadius": {
-      "type": "number",
-      "default": 4
+    "textColor": {
+      "type": "string"
+    },
+    "borderWidth": {
+      "type": "string"
+    },
+    "borderColor": {
+      "type": "string"
     }
   },
   "editorScript": "user-registration-blocks-editor",
-  "editorStyle": "user-registration-blocks-editor"
+  "editorStyle": "user-registration-blocks-editor",
+  "selectors": {
+    "root": ".wp-block-user-registration-membership-buy-now .urm-buy-now-btn",
+    "typography": {
+      "writingMode": ".urm-buy-now-btn"
+    }
+  }
 }

@@ -31,18 +31,11 @@ const Edit = (props) => {
 
 	const { attributes, setAttributes } = props;
 
-	const { membershipType, text, pageID } = attributes;
-	const { justifyContent, width, borderRadius } = attributes;
+	const { membershipType, text, pageID, width } = attributes;
 
 	const [membsershipList, setMembershipList] = useState("");
 	const useProps = useBlockProps({
-		className: "wp-block-buttons",
-		style: {
-			display: "flex",
-			flexDirection: "row",
-			justifyContent: justifyContent,
-			width: width
-		}
+		// className: "wp-block-buttons"
 	});
 
 	// Fetch data for pages and groups
@@ -116,7 +109,7 @@ const Edit = (props) => {
 										]}
 										onChange={(page) =>
 											setAttributes({
-												pageID: Number(page)
+												pageID: page
 											})
 										}
 									/>
@@ -189,19 +182,17 @@ const Edit = (props) => {
 
 							{tab.name === "styles" && (
 								<PanelBody title="" initialOpen={true}>
-									<UnitControl
-										label="Button Gap"
-										value={gap}
+									<BorderControl
+										value={attributes.border}
 										onChange={(value) =>
-											setAttributes({ gap: value })
+											setAttributes({ border: value })
 										}
 									/>
-
 									<RangeControl
-										label="Border Radius"
+										label="Radius"
 										min={0}
 										max={50}
-										value={borderRadius}
+										value={attributes.borderRadius}
 										onChange={(value) =>
 											setAttributes({
 												borderRadius: value
@@ -214,15 +205,8 @@ const Edit = (props) => {
 					)}
 				</TabPanel>
 			</InspectorControls>
-			<div
-				{...useProps}
-				style={{
-					display: "flex",
-					flexDirection: "row",
-					justifyContent: justifyContent
-				}}
-			>
-				<Disabled style={{ width: attributes.width || undefined }}>
+			<div {...useProps}>
+				<Disabled>
 					<ServerSideRender
 						key="ur-gutenberg-membership-buy-now-form-server-side-renderer"
 						block={blockName}
