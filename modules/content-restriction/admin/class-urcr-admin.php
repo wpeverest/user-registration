@@ -43,6 +43,11 @@ class URCR_Admin {
 			$this,
 			'urcr_add_option_to_restrict_elementor_section'
 		), 10, 3 );
+
+		/**
+		 * Run migration on admin init (only once)
+		 */
+		add_action( 'admin_init', array( $this, 'run_migration' ), 5 );
 	}
 
 	/**
@@ -95,7 +100,6 @@ class URCR_Admin {
 	/**
 	 * Add admin menus for Content Restriction settings.
 	 *
-	 * @since 4.0
 	 */
 	public function add_urcr_menus() {
 		$rules_page = add_submenu_page(
@@ -114,7 +118,6 @@ class URCR_Admin {
 	/**
 	 * Render settings page with Content Access Rules (React version).
 	 *
-	 * @since 4.0
 	 */
 	public function render_content_access_rules() {
 		$script_url = UR()->plugin_url() . '/chunks/content-access-rules.js';
@@ -174,6 +177,48 @@ class URCR_Admin {
 		}
 
 		return $settings;
+	}
+
+	/**
+	 * Run migration script to migrate old restriction settings to new content rules.
+	 * This runs only once or when there are unmigrated posts/pages.
+	 *
+	 */
+	public function run_migration() {
+		// Only run in admin and for users with proper capabilities
+		if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		// Check if we should run migration
+		$global_migrated = get_option( 'urcr_global_restriction_migrated', false );
+		$post_page_migrated = get_option( 'urcr_post_page_restrictions_migrated', false );
+
+		// Check if there are unmigrated posts/pages
+		$has_unmigrated = false;
+		if ( ! $post_page_migrated ) {
+			$args = array(
+				'post_type'      => array( 'post', 'page' ),
+				'post_status'    => 'publish',
+				'posts_per_page' => 1,
+				'meta_query'     => array(
+					array(
+						'key'   => 'urcr_meta_checkbox',
+						'value' => 'on',
+					),
+				),
+			);
+			$posts = get_posts( $args );
+
+			$has_unmigrated = ! empty( $posts );
+		}
+
+		// Run migration if needed
+		if ( ! $global_migrated || $has_unmigrated ) {
+			if ( function_exists( 'urcr_run_migration' ) ) {
+				urcr_run_migration();
+			}
+		}
 	}
 }
 

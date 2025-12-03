@@ -50,13 +50,7 @@ const ContentAccessRules = () => {
 		fetchRules();
 	}, [fetchRules]);
 
-	// For testing: Auto-expand all rules when they're loaded
-	useEffect(() => {
-		if (rules.length > 0) {
-			const allRuleIds = new Set(rules.map((rule) => rule.id));
-			setExpandedRules(allRuleIds);
-		}
-	}, [rules]);
+
 
 	const handleToggleExpand = (ruleId) => {
 		setExpandedRules((prev) => {
