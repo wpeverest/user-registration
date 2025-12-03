@@ -36,7 +36,7 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 
 	// Get options based on content type
 	const getOptions = () =>
-		Object.entries(getURCRData()?.[contentType] ?? {}).map(
+		Object.entries(getURCRLocalizedData()?.[contentType] ?? {}).map(
 			([id = "", label = ""]) => ({
 				value: id,
 				label: label || id
