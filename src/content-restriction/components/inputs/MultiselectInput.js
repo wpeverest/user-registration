@@ -3,7 +3,7 @@
  */
 import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import { __ } from "@wordpress/i18n";
-import { getURCRData, getURCRLocalizedData } from "../../utils/localized-data";
+import { getURCRLocalizedData } from "../../utils/localized-data";
 
 const MultiselectInput = ({ contentType, value, onChange }) => {
 	const [inputValue, setInputValue] = useState(
