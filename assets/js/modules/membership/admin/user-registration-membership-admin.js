@@ -3,6 +3,8 @@
 	if (UR_Snackbar) {
 		var snackbar = new UR_Snackbar();
 	}
+	var basic_error = false,
+		advanced_error = false;
 	$(".user-membership-enhanced-select2").select2();
 
 	//extra utils for membership add ons
@@ -123,6 +125,7 @@
 					is_required = $this.attr("required"),
 					type = $this.attr("type"),
 					name = $this.data("key-name");
+				$this.removeClass("ur-membership-error");
 				if (is_required && value === "") {
 					no_errors = false;
 					var message =
@@ -139,6 +142,7 @@
 							? ur_membership_data.labels.i18n_paypal_setup_error
 							: "");
 					ur_membership_utils.show_failure_message(message);
+					$this.addClass("ur-membership-error");
 					return false;
 				} else if (type === "url") {
 					if (!ur_membership_utils.url_validations(value)) {
@@ -153,6 +157,7 @@
 								" " +
 								name
 						);
+						$this.addClass("ur-membership-error");
 						return false;
 					}
 				}
@@ -277,10 +282,6 @@
 			post_meta_data.type = form
 				.find('input[name="ur_membership_type"]:checked')
 				.val();
-
-			if ($("#ur-membership-duration").val() !== "one-time") {
-				post_meta_data.type = "subscription";
-			}
 
 			post_meta_data.cancel_subscription = form
 				.find('input[name="ur_membership_cancel_on"]:checked')
@@ -426,6 +427,9 @@
 		 * @returns {boolean}
 		 */
 		validate_membership_form: function () {
+			basic_error = false;
+			advanced_error = false;
+
 			var plan_and_price_section = $(
 					"#ur-membership-plan-and-price-section"
 				),
@@ -434,9 +438,9 @@
 				upgrade_action = $("#ur-membership-upgrade-action").is(
 					":checked"
 				),
-				no_errors = true;
-			//main fields validation
-			main_fields = Object.values(main_fields).reverse().slice(2);
+				no_errors = true,
+				//main fields validation
+				main_fields = Object.values(main_fields).reverse().slice(2);
 			var result = ur_membership_utils.regular_validation(
 				main_fields,
 				true,
@@ -454,22 +458,21 @@
 					.find("#ur-membership-amount")
 					.val();
 
-			if ($("#ur-membership-duration").val() !== "one-time") {
-				selectedPlanType = "subscription";
-			}
-			console.log(selectedPlanType);
 			if (
 				selectedPlanType === "paid" ||
 				selectedPlanType === "subscription"
 			) {
+				$("#ur-membership-amount").removeClass("ur-membership-error");
 				if (amount <= 0) {
 					no_errors = false;
+					basic_error = true;
 					ur_membership_utils.show_failure_message(
 						ur_membership_data.labels.i18n_error +
 							"! " +
 							ur_membership_data.labels
 								.i18n_valid_amount_field_validation
 					);
+					$("#ur-membership-amount").addClass("ur-membership-error");
 				}
 				//trial validations
 				var trial_status = $("#ur-membership-trial-status").val();
@@ -499,31 +502,62 @@
 								parseInt(subscription_duration_value, 10),
 								subscription_duration
 							);
+					$("#ur-membership-trial-duration-value").removeClass(
+						"ur-membership-error"
+					);
+					$("#ur-membership-trial-duration").removeClass(
+						"ur-membership-error"
+					);
 					if (total_trial_time >= total_subscription_time) {
 						no_errors = false;
+						advanced_error = true;
 						ur_membership_utils.show_failure_message(
 							ur_membership_data.labels.i18n_error +
 								"! " +
 								ur_membership_data.labels
 									.i18n_valid_trial_period_field_validation
 						);
+						$("#ur-membership-trial-duration-value").addClass(
+							"ur-membership-error"
+						);
+						$("#ur-membership-trial-duration").addClass(
+							"ur-membership-error"
+						);
 					}
+					$("#ur-membership-duration-value").removeClass(
+						"ur-membership-error"
+					);
+					$("#ur-membership-trial-duration-value").removeClass(
+						"ur-membership-error"
+					);
+					if (trial_duration_value < 1) {
+						no_errors = false;
+						advanced_error = true;
+						ur_membership_utils.show_failure_message(
+							ur_membership_data.labels.i18n_error +
+								"! " +
+								ur_membership_data.labels
+									.i18n_valid_min_trial_period_field_validation
+						);
+						$("#ur-membership-trial-duration-value").addClass(
+							"ur-membership-error"
+						);
+					}
+				}
+
+				//subscription duration validation
+				if (selectedPlanType === "subscription") {
 					if (subscription_duration_value < 1) {
 						no_errors = false;
+						basic_error = true;
 						ur_membership_utils.show_failure_message(
 							ur_membership_data.labels.i18n_error +
 								"! " +
 								ur_membership_data.labels
 									.i18n_valid_min_subs_period_field_validation
 						);
-					}
-					if (trial_duration_value < 1) {
-						no_errors = false;
-						ur_membership_utils.show_failure_message(
-							ur_membership_data.labels.i18n_error +
-								"! " +
-								ur_membership_data.labels
-									.i18n_valid_min_trial_period_field_validation
+						$("#ur-membership-duration-value").addClass(
+							"ur-membership-error"
 						);
 					}
 				}
@@ -541,13 +575,20 @@
 					}
 				});
 
+				$(
+					"#payment-gateway-container .user-registration-card"
+				).removeClass("ur-membership-error");
 				if (!is_one_selected) {
 					no_errors = false;
+					advanced_error = true;
 					ur_membership_utils.show_failure_message(
 						ur_membership_data.labels.i18n_error +
 							"! " +
 							ur_membership_data.labels.i18n_pg_validation_error
 					);
+					$(
+						"#payment-gateway-container .user-registration-card"
+					).addClass("ur-membership-error");
 				}
 				// paypal validations
 				var is_paypal_selected = form
@@ -556,6 +597,7 @@
 				if (is_paypal_selected) {
 					var paypal_section = $("#paypal-section"),
 						paypal_inputs = paypal_section.find("input");
+					$("#paypal-section").removeClass("ur-membership-error");
 					if (selectedPlanType !== "subscription") {
 						paypal_inputs = paypal_section
 							.find("input")
@@ -571,6 +613,10 @@
 						);
 						if (!result) {
 							no_errors = false;
+							advanced_error = true;
+							$("#paypal-section").addClass(
+								"ur-membership-error"
+							);
 						}
 					} else {
 						var client_id = paypal_section
@@ -582,6 +628,7 @@
 
 						if (client_id === "" || client_secret === "") {
 							no_errors = false;
+							advanced_error = true;
 							ur_membership_utils.show_failure_message(
 								ur_membership_data.labels.i18n_paypal +
 									" " +
@@ -589,6 +636,9 @@
 									"! " +
 									ur_membership_data.labels
 										.i18n_paypal_client_secret_id_error
+							);
+							$("#paypal-section").addClass(
+								"ur-membership-error"
 							);
 						}
 					}
@@ -605,8 +655,13 @@
 							'input[name="ur_membership_upgrade_type"]:checked'
 						)
 						.val();
+				$(
+					".ur-input-type-membership-upgrade-path .select2-selection--multiple"
+				).removeClass("ur-membership-error");
+
 				if (upgrade_path.val().length < 1) {
 					no_errors = false;
+					advanced_error = true;
 					ur_membership_utils.show_failure_message(
 						ur_membership_data.labels.i18n_error +
 							"! " +
@@ -614,10 +669,14 @@
 							" " +
 							ur_membership_data.labels.i18n_field_is_required
 					);
+					$(
+						".ur-input-type-membership-upgrade-path .select2-selection--multiple"
+					).addClass("ur-membership-error");
 				}
 
 				if (upgrade_type === undefined) {
 					no_errors = false;
+					advanced_error = true;
 					ur_membership_utils.show_failure_message(
 						ur_membership_data.labels.i18n_error +
 							"! " +
@@ -627,6 +686,7 @@
 					);
 				}
 			}
+
 			return no_errors;
 		},
 
@@ -680,6 +740,11 @@
 					}
 				);
 			} else {
+				if (basic_error) {
+					$("#ur-basic-tab").trigger("click");
+				} else if (advanced_error) {
+					$("#ur-advanced-tab").trigger("click");
+				}
 				ur_membership_utils.remove_spinner($this);
 				ur_membership_utils.toggleSaveButtons(false);
 			}
@@ -729,6 +794,11 @@
 					}
 				);
 			} else {
+				if (basic_error) {
+					$("#ur-basic-tab").trigger("click");
+				} else if (advanced_error) {
+					$("#ur-advanced-tab").trigger("click");
+				}
 				ur_membership_utils.remove_spinner($this);
 				ur_membership_utils.toggleSaveButtons(false);
 			}
@@ -907,37 +977,47 @@
 	};
 
 	//toggle event for different payment types
-	// $(document).on(
-	// 	"click",
-	// 	"input:radio[name=ur_membership_type]",
-	// 	function () {
-	// 		var val = $(this).val(),
-	// 			plan_container = $("#paid-plan-container"),
-	// 			sub_container = $(
-	// 				".ur-membership-subscription-field-container"
-	// 			),
-	// 			payment_gateway_container = $("#payment-gateway-container"),
-	// 			pro_rate_settings = $(
-	// 				'label.ur-membership-upgrade-types[for="ur-membership-upgrade-type-pro-rata"]'
-	// 			),
-	// 			membership_duration_period = $("#ur-membership-duration");
-
-	// 		plan_container.addClass("ur-d-none");
-	// 		payment_gateway_container.addClass("ur-d-none");
-	// 		pro_rate_settings.addClass("ur-d-none");
-	// 		sub_container.show();
-	// 		if ("free" !== val) {
-	// 			if ("paid" === val) {
-	// 				sub_container.hide();
-	// 			} else {
-	// 				sub_container.removeClass("ur-d-none");
-	// 			}
-	// 			pro_rate_settings.removeClass("ur-d-none");
-	// 			payment_gateway_container.removeClass("ur-d-none");
-	// 			plan_container.removeClass("ur-d-none");
-	// 		}
-	// 	}
-	// );
+	$(document).on(
+		"click",
+		"input:radio[name=ur_membership_type]",
+		function () {
+			var val = $(this).val(),
+				plan_container = $("#paid-plan-container"),
+				sub_container = $(
+					".ur-membership-subscription-field-container"
+				),
+				payment_gateway_container = $("#payment-gateway-container"),
+				pro_rate_settings = $(
+					'label.ur-membership-upgrade-types[for="ur-membership-upgrade-type-pro-rata"]'
+				),
+				membership_duration_period = $("#ur-membership-duration"),
+				membership_duration_container_period = $(
+					"#ur-membership-duration-container"
+				);
+			plan_container.addClass("ur-d-none");
+			payment_gateway_container.addClass("ur-d-none");
+			pro_rate_settings.addClass("ur-d-none");
+			membership_duration_period.addClass("ur-d-none");
+			membership_duration_container_period.removeClass("ur-d-flex");
+			membership_duration_container_period.addClass("ur-d-none");
+			sub_container.show();
+			if ("free" !== val) {
+				if ("paid" === val) {
+					sub_container.hide();
+				} else {
+					sub_container.removeClass("ur-d-none");
+					membership_duration_period.removeClass("ur-d-none");
+					membership_duration_container_period.addClass("ur-d-flex");
+					membership_duration_container_period.removeClass(
+						"ur-d-none"
+					);
+				}
+				pro_rate_settings.removeClass("ur-d-none");
+				payment_gateway_container.removeClass("ur-d-none");
+				plan_container.removeClass("ur-d-none");
+			}
+		}
+	);
 
 	$(document).on("click", "#ur-membership-upgrade-action", function () {
 		$("#upgrade-settings-container").toggle();
@@ -1154,59 +1234,4 @@
 	$steps.on("click", function () {
 		showStep($(this).data("step"));
 	});
-
-	// Next buttons
-	$(".next").on("click", function () {
-		showStep(current + 1);
-	});
-
-	// Previous buttons
-	$(".prev").on("click", function () {
-		showStep(current - 1);
-	});
-
-	function updateMembershipVisibility() {
-		const membershipType = $(
-			'input[name="ur_membership_type"]:checked'
-		).val();
-		const durationValue = $("#ur-membership-duration").val();
-
-		var plan_container = $("#paid-plan-container"),
-			sub_container = $(".ur-membership-subscription-field-container"),
-			payment_gateway_container = $("#payment-gateway-container"),
-			pro_rate_settings = $(
-				'label.ur-membership-upgrade-types[for="ur-membership-upgrade-type-pro-rata"]'
-			),
-			duration_container = $(".ur-membership-duration-container");
-
-		plan_container.addClass("ur-d-none");
-		payment_gateway_container.addClass("ur-d-none");
-		pro_rate_settings.addClass("ur-d-none");
-		sub_container.hide();
-
-		if (membershipType === "free") {
-			duration_container.removeClass("ur-d-flex").addClass("ur-d-none");
-			return;
-		}
-
-		if (durationValue === "one-time") {
-			duration_container.removeClass("ur-d-flex").addClass("ur-d-none");
-			sub_container.hide();
-		} else {
-			duration_container.removeClass("ur-d-none").addClass("ur-d-flex");
-			sub_container.removeClass("ur-d-none");
-			sub_container.show();
-		}
-
-		pro_rate_settings.removeClass("ur-d-none");
-		payment_gateway_container.removeClass("ur-d-none");
-		plan_container.removeClass("ur-d-none");
-	}
-
-	$('input[name="ur_membership_type"]').on(
-		"change",
-		updateMembershipVisibility
-	);
-
-	$("#ur-membership-duration").on("change", updateMembershipVisibility);
 })(jQuery, window.ur_membership_localized_data);
