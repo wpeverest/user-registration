@@ -13,14 +13,14 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 			</a>
 			<div class="ur-page-title__wrapper--left-menu">
 				<div class="ur-page-title__wrapper--left-menu__items ur-page-title__wrapper--steps">
-					<button class="ur-page-title__wrapper--steps-btn ur-page-title__wrapper--steps-btn-active" data-step="0">
+					<button class="ur-page-title__wrapper--steps-btn ur-page-title__wrapper--steps-btn-active" data-step="0" id="ur-basic-tab">
 						<div class="ur-page-title__wrapper--steps-wrapper">
 							<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32"><path stroke="#e9e9e9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 3.667c6.811 0 12.334 5.521 12.334 12.333 0 6.811-5.523 12.334-12.334 12.334S3.667 22.81 3.667 16C3.667 9.188 9.189 3.667 16 3.667"/><g clip-path="url(#a)"><path stroke="#222" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M15.997 10.802a.65.65 0 0 1 .36.11l.097.08 4.554 4.553a.65.65 0 0 1 .08.817l-.08.098-4.554 4.553a.65.65 0 0 1-.816.08l-.098-.08-4.554-4.554a.65.65 0 0 1-.19-.457l.014-.125a.6.6 0 0 1 .096-.234l.08-.098 4.554-4.553a.65.65 0 0 1 .457-.19"/></g><defs><clipPath id="a"><path fill="#fff" d="M10 9.5h12v13H10z"/></clipPath></defs></svg>
 							<span>Basics</span>
 						</div>
 					</button>
 					<hr class="ur-page-title__wrapper--steps-separator" />
-					<button class="ur-page-title__wrapper--steps-btn" data-step="1">
+					<button class="ur-page-title__wrapper--steps-btn" data-step="1" id="ur-advanced-tab">
 						<div class="ur-page-title__wrapper--steps-wrapper">
 							<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32"><path stroke="#e9e9e9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 29.333c7.364 0 13.334-5.97 13.334-13.333S23.364 2.667 16 2.667 2.667 8.637 2.667 16 8.637 29.333 16 29.333"/><g stroke="#222" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.569" clip-path="url(#a)"><path d="M17.199 19h-5.4M20.199 13h-5.4M19.001 20.8a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6M13.001 14.8a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6"/></g><defs><clipPath id="a"><path fill="#fff" d="M10 10h12v12H10z"/></clipPath></defs></svg>
 							<span>Advanced</span>
@@ -134,31 +134,73 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 								?>
 							</div>
 						</div>
-						<!--					membership type-->
+						<!--								membership type-->
 						<div class="ur-membership-selection-container ur-d-flex ur-p-1" style="gap:20px;">
 							<div class="ur-label" style="width: 30%">
 								<label
-									for="ur-membership-type"><?php esc_html_e( 'Type :', 'user-registration' ); ?></label>
+									for="ur-membership-free-type"><?php esc_html_e( 'Type :', 'user-registration' ); ?></label>
 							</div>
 							<div class="ur-input-type-select ur-admin-template" style="width: 100%">
-								<div class="ur-membership-type-toggle-container ur-membership-types">
-									<input data-key-name="Type" id="ur-membership-free-type"
+								<div class="ur-field ur-d-flex"
+									data-field-key="radio">
+									<!--											free type-->
+									<label class="ur-membership-types" for="ur-membership-free-type">
+										<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
+											<input data-key-name="Type" id="ur-membership-free-type"
 													type="radio" value="free"
 													name="ur_membership_type"
 													style="margin: 0"
-													<?php echo ! isset( $membership_details['type'] ) || 'free' === $membership_details['type'] ? 'checked' : ''; ?>
+													checked
+												<?php echo isset( $membership_details['type'] ) && 'free' === $membership_details['type'] ? 'checked' : ''; ?>
 													required>
-									<label for="ur-membership-free-type" class="ur-membership-type-toggle-option">Free</label>
-									<input
+											<label class="ur-p-2" for="ur-membership-free-type">
+												<b
+													class="user-registration-image-label "><?php esc_html_e( 'Free', 'user-registration' ); ?>
+												</b>
+											</label>
+										</div>
+									</label>
+									<!--											paid type-->
+									<label class="ur-membership-types" for="ur-membership-paid-type">
+										<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
+											<input
 												data-key-name="Type"
 												id="ur-membership-paid-type" type="radio" style="margin: 0"
 												value="paid"
 												name="ur_membership_type"
 												class="ur_membership_paid_type"
-												<?php echo isset( $membership_details['type'] ) && in_array( $membership_details['type'], array( 'paid', 'subscription' ), true ) ? 'checked' : ''; ?>
+												<?php echo isset( $membership_details['type'] ) && 'paid' === $membership_details['type'] ? 'checked' : ''; ?>
 
 											>
-									<label for="ur-membership-paid-type" class="ur-membership-type-toggle-option">Paid</label>
+											<label class="ur-p-2" for="ur-membership-paid-type">
+												<b
+													class="user-registration-image-label"><?php esc_html_e( 'One-Time Payment', 'user-registration' ); ?>
+												</b>
+											</label>
+										</div>
+									</label>
+									<!--											subscription type-->
+									<label
+										class="ur-membership-types <?php echo !UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>"
+										for="ur-membership-subscription-type">
+										<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
+											<input
+												data-key-name="Type"
+												id="ur-membership-subscription-type" style="margin: 0"
+												type="radio"
+												value="subscription"
+												name="ur_membership_type"
+												class="ur_membership_paid_type"
+												<?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'subscription' ? 'checked' : ''; ?>
+												<?php echo !UR_PRO_ACTIVE ? 'disabled' : ''; ?>
+											>
+											<label class="ur-p-2" for="ur-membership-subscription-type">
+												<b
+													class="user-registration-image-label"><?php esc_html_e( 'Subscription Based', 'user-registration' ); ?>
+												</b>
+											</label>
+										</div>
+									</label>
 								</div>
 							</div>
 						</div>
@@ -255,10 +297,6 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 										class="ur-subscription-fields <?php echo isset( $membership_details['type'] ) && 'subscription' === $membership_details['type'] ? '' : 'ur-d-none'; ?>"
 										name="ur_membership[duration]_period" style="width: 15%">
 										<option
-											value="one-time" <?php echo ! isset( $membership_details['subscription'] ) && 'paid' === $membership_details['type'] ? 'selected="selected"' : ''; ?>
-										>One-Time
-										</option>
-										<option
 											value="day" <?php echo isset( $membership_details['subscription'] ) && 'day' === $membership_details['subscription']['duration'] ? 'selected="selected"' : ''; ?>
 										>
 											Day(s)
@@ -281,7 +319,7 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 								</div>
 							</div>
 							<!--				membership duration-->
-							<div class="ur-membership-selection-container ur-p-1 ur-mt-3 ur-subscription-fields <?php echo isset( $membership_details['subscription']['duration'] ) && in_array( $membership_details['subscription']['duration'], array( 'day', 'week', 'month', 'year' ), true ) ? 'ur-d-flex' : 'ur-d-none'; ?> ur-membership-duration-container"
+							<div class="ur-membership-selection-container ur-p-1 ur-mt-3 ur-subscription-fields <?php echo isset( $membership_details['type'] ) && 'subscription' === $membership_details['type'] ? 'ur-d-flex' : 'ur-d-none'; ?>" id="ur-membership-duration-container"
 								style="gap:20px;">
 								<div class="ur-label" style="width: 30%">
 									<label
