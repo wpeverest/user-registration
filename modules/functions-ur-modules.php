@@ -534,44 +534,81 @@ if ( ! function_exists( 'check_membership_field_in_form' ) ) {
 	}
 }
 
-/**
- * Get or initialize the membership process structure for a user.
- *
- * @param int $user_id
- * @return array
- */
-function urm_get_membership_process( $user_id ) {
-	$process = get_user_meta( $user_id, 'urm_membership_process', true );
+if ( ! function_exists( 'urm_get_membership_process' ) ) {
+	/**
+	 * Get or initialize the membership process structure for a user.
+	 *
+	 * @param int $user_id
+	 * @return array
+	 */
+	function urm_get_membership_process( $user_id ) {
+		$process = get_user_meta( $user_id, 'urm_membership_process', true );
 
-	// If nothing is stored, initialize fresh structure
-	if ( empty( $process ) || ! is_array( $process ) ) {
-		$process = array(
-			'upgrade'  => array(),
-			'renew'    => array(),
-			'multiple' => array(),
-		);
+		// If nothing is stored, initialize fresh structure
+		if ( empty( $process ) || ! is_array( $process ) ) {
+			$process = array(
+				'upgrade'  => array(),
+				'renew'    => array(),
+				'multiple' => array(),
+			);
+			update_user_meta( $user_id, 'urm_membership_process', $process );
+			return $process;
+		}
+
+		// Ensure all keys exist
+		if ( ! isset( $process['upgrade'] ) || ! is_array( $process['upgrade'] ) ) {
+			$process['upgrade'] = array();
+		}
+
+		if ( ! isset( $process['renew'] ) || ! is_array( $process['renew'] ) ) {
+			$process['renew'] = array();
+		}
+
+		if ( ! isset( $process['multiple'] ) || ! is_array( $process['multiple'] ) ) {
+			$process['multiple'] = array();
+		}
+
 		update_user_meta( $user_id, 'urm_membership_process', $process );
+
 		return $process;
 	}
-
-	// Ensure all keys exist
-	if ( ! isset( $process['upgrade'] ) || ! is_array( $process['upgrade'] ) ) {
-		$process['upgrade'] = array();
-	}
-
-	if ( ! isset( $process['renew'] ) || ! is_array( $process['renew'] ) ) {
-		$process['renew'] = array();
-	}
-
-	if ( ! isset( $process['multiple'] ) || ! is_array( $process['multiple'] ) ) {
-		$process['multiple'] = array();
-	}
-
-	update_user_meta( $user_id, 'urm_membership_process', $process );
-
-	return $process;
 }
 
+
+if ( ! function_exists( 'urm_check_user_membership_has_access' ) ) {
+	/**
+	 * Function to check if user has active membership that is required by restriction rule.
+	 *
+	 * @param array $allowed_memberships Allowed memberships for access.
+	 */
+	function urm_check_user_membership_has_access( $allowed_memberships ) {
+		$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
+
+		if ( ! is_user_logged_in() ) {
+			return false;
+		}
+
+		$user_memberships = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
+
+		if ( empty( $user_memberships ) ) {
+			return false;
+		}
+
+		$active_memberships = array_filter(
+			array_map(
+				function ( $user_memberships ) {
+					if ( ! empty( $user_memberships['status'] ) && 'active' === $user_memberships['status'] ) {
+						return $user_memberships['item_id'];
+					}
+				},
+				$user_memberships
+			)
+		);
+
+		$common = array_intersect( $allowed_memberships, $active_memberships );
+		return ! empty( $common );
+	}
+}
 
 /**
  * Deprecating function code start
