@@ -227,7 +227,7 @@ class OrderService {
 				$prev_subscription_data = json_decode( get_user_meta( $user_id, 'urm_previous_subscription_data', true ), true );
 				$membership_process     = urm_get_membership_process( $user_id );
 				$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $prev_subscription_data['item_id'] ] );
-				$is_renewing            = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_member_renewing', true ) );
+				$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $order['item_id'], $membership_process['renew'] );
 
 				if ( $is_upgrading ) {
 					$next_subscription_data      = json_decode( get_user_meta( $user_id, 'urm_next_subscription_data', true ), true );

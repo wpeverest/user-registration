@@ -78,6 +78,7 @@ class PaymentService {
 			unset( $response_data['subscription_data'] );
 		}
 
+		$payment_data['item_id']                = isset( $response_data['membership'] ) ? $response_data['membership'] : 0;
 		$payment_data['selected_membership_id'] = isset( $response_data['selected_membership_id'] ) ? $response_data['selected_membership_id'] : 0;
 		$payment_data['current_membership_id']  = isset( $response_data['current_membership_id'] ) ? $response_data['current_membership_id'] : 0;
 		switch ( $this->payment_method ) {

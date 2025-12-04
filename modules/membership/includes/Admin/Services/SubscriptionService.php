@@ -636,12 +636,11 @@ class SubscriptionService {
 		ur_get_logger()->notice( __( 'Subscription updated for ' . implode( ',', $updated_subscription_for_users ), 'user-registration' ), array( 'source' => 'urm-membership-crons' ) );
 	}
 
-	public function renew_membership( $user, $selected_pg ) {
+	public function renew_membership( $user, $selected_pg, $membership_id ) {
 		$member_id                            = $user->ID;
 		$username                             = $user->user_login;
-		$member_subscription                  = $this->members_subscription_repository->get_member_subscription( $member_id );
+		$member_subscription                  = $this->members_subscription_repository->get_subscription_data_by_member_and_membership_id( $member_id, $membership_id );
 		$membership                           = $this->membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
-		$membership_id                        = $membership['ID'];
 		$membership_details                   = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_details['payment_method'] = $selected_pg;
 		$membership_details['post_title']     = $membership['post_title'];
@@ -650,7 +649,18 @@ class SubscriptionService {
 		$members_data                         = array(
 			'membership_data' => $membership_details,
 		);
-		$this->update_membership_renewal_metas( $member_id );
+
+		$membership_process = urm_get_membership_process( $member_id );
+		if ( $membership_process && ! in_array( $membership_id, $membership_process['renew'] ) ) {
+			$membership_process['renew'][] = $membership_id;
+			update_user_meta( $member_id, 'urm_membership_process', $membership_process );
+		} else {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Membership renew process already initiated.', 'user-registration' ),
+				)
+			);
+		}
 
 		$orders_data     = $order_service->prepare_orders_data( $members_data, $member_id, $member_subscription, array(), true ); // prepare data for orders table.
 		$order           = $this->orders_repository->create( $orders_data );
@@ -690,10 +700,11 @@ class SubscriptionService {
 	 * update_membership_renewal_metas
 	 *
 	 * @param $member_id
+	 * @param $membership_id
 	 *
 	 * @return void
 	 */
-	public function update_membership_renewal_metas( $member_id ) {
+	public function update_membership_renewal_metas( $member_id, $membership_id ) {
 		update_user_meta( $member_id, 'urm_is_member_renewing', true );
 	}
 
@@ -719,7 +730,12 @@ class SubscriptionService {
 			)
 		);
 		update_user_meta( $member_subscription['user_id'], 'urm_last_renewed_on', date( 'Y-m-d 00:00:00' ) );
-		delete_user_meta( $member_subscription['user_id'], 'urm_is_member_renewing' );
+		$membership_process = urm_get_membership_process( $member_subscription['user_id'] );
+
+		if ( ! empty( $membership_process ) && in_array( $member_subscription['item_id'], $membership_process['renew'] ) ) {
+			unset( $membership_process['renew'][ array_search( $member_subscription['item_id'], $membership_process['renew'], true ) ] );
+			update_user_meta( $member_subscription['user_id'], 'urm_membership_process', $membership_process );
+		}
 	}
 
 	/**

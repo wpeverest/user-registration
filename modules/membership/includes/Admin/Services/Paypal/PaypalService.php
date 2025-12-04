@@ -71,7 +71,7 @@ class PaypalService {
 		$membership_amount = number_format( $membership_metas['amount'] );
 		$is_automatic      = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
 		$discount_amount   = 0;
-		$is_renewing       = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+		$is_renewing       = ! empty( $membership_process['renew'] ) && in_array( $data['current_membership_id'], $membership_process['renew'] );
 
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details  = ur_get_coupon_details( $data['coupon'] );
@@ -213,8 +213,8 @@ class PaypalService {
 				'membership_type' => $membership_type,
 			)
 		);
-		$member_subscription = $this->members_subscription_repository->get_subscription_data_by_member_and_membership_id( $member_id, $url_params['current_membership_id'] );
-		$is_renewing         = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+		$member_subscription = $this->members_subscription_repository->get_subscription_data_by_member_and_membership_id( $member_id, $member_order['item_id'] );
+		$is_renewing         = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'] );
 
 		if ( 'completed' === $member_order['status'] ) {
 			ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
@@ -224,7 +224,7 @@ class PaypalService {
 		$is_order_updated = true;
 
 		if ( $is_order_updated && ( 'paid' === $member_order['order_type'] || 'subscription' === $member_order['order_type'] ) ) {
-			$member_subscription = $this->members_subscription_repository->get_subscription_data_by_member_and_membership_id( $member_id, $url_params['current_membership_id'] );
+			$member_subscription = $this->members_subscription_repository->get_subscription_data_by_member_and_membership_id( $member_id, $member_order['item_id'] );
 			$status              = 'on' === $member_order['trial_status'] ? 'trial' : 'active';
 			$this->members_subscription_repository->update(
 				$member_subscription['ID'],
@@ -833,7 +833,8 @@ class PaypalService {
 
 			$this->handle_upgrade_for_paypal( $member_id, $subscription_id );
 		}
-		$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+
+		$is_renewing = ! empty( $membership_process['renew'] ) && in_array( $membership_id, $membership_process['renew'] );
 
 		if ( $is_renewing ) {
 			$subscription_service = new SubscriptionService();

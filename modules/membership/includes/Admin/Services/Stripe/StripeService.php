@@ -338,9 +338,10 @@ class StripeService {
 		$membership_type  = $membership_metas['type'] ?? 'unknown';
 
 		if ( 'failed' === $payment_status ) {
-			$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
-			$error_msg   = __( 'Stripe Payment failed.', 'user-registration' );
-			$error_msg   = $data['payment_result']['error']['message'] ?? $error_msg;
+			$is_renewing = ! empty( $membership_process['renew'] ) && in_array( $latest_order['item_id'], $membership_process['renew'] );
+
+			$error_msg = __( 'Stripe Payment failed.', 'user-registration' );
+			$error_msg = $data['payment_result']['error']['message'] ?? $error_msg;
 
 			PaymentGatewayLogging::log_transaction_failure(
 				'stripe',
@@ -359,7 +360,8 @@ class StripeService {
 				$this->members_orders_repository->delete_member_order( $member_id );
 			}
 			if ( $is_renewing ) {
-				update_user_meta( $member_id, 'urm_is_member_renewing', false );
+				unset( $membership_process['upgrade'][ $latest_order['item_id'] ] );
+				update_user_meta( $member_id, 'urm_membership_process', $membership_process );
 			}
 
 			$response['message'] = $error_msg;
@@ -461,8 +463,11 @@ class StripeService {
 
 		$member_subscription = $this->members_subscription_repository->get_subscription_data_by_member_and_membership_id( $member_id, $membership['ID'] );
 		$is_automatic        = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
-		$is_renewing         = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
-		$membership_type     = $membership_metas['type'] ?? 'unknown';
+
+		$membership_process = urm_get_membership_process( $member_id );
+		$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'] );
+
+		$membership_type = $membership_metas['type'] ?? 'unknown';
 
 		PaymentGatewayLogging::log_api_request(
 			'stripe',
@@ -1098,7 +1103,8 @@ class StripeService {
 				'status'            => $subscription_status,
 			)
 		);
-		$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+		$membership_process = urm_get_membership_process( $member_id );
+		$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $membership_id, $membership_process['renew'] );
 
 		if ( $is_renewing ) {
 			$subscription_service = new SubscriptionService();

@@ -832,8 +832,7 @@ class AJAX {
 		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( $_POST['current_membership_id'] ) : 0;
 		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
 		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
-
-		$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $current_membership_id, $membership_process['renew'] );
 
 		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
 			wp_send_json_error(
@@ -851,7 +850,6 @@ class AJAX {
 		}
 		$stripe_service = new StripeService();
 		$payment_status = sanitize_text_field( $_POST['payment_status'] );
-		$is_renewing    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 
 		$update_stripe_order = $stripe_service->update_order( $_POST );
 
@@ -909,7 +907,7 @@ class AJAX {
 				$subscription_service           = new SubscriptionService();
 				$members_subscription_repo      = new MembersSubscriptionRepository();
 				$membership_repository          = new MembershipRepository();
-				$member_subscription            = $members_subscription_repo->get_member_subscription( $member_id );
+				$member_subscription            = $members_subscription_repo->get_subscription_data_by_member_and_membership_id( $member_id, $current_membership_id );
 				$membership                     = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
 				$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 				$membership_metas['post_title'] = $membership['post_title'];
@@ -943,8 +941,8 @@ class AJAX {
 		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( $_POST['current_membership_id'] ) : 0;
 		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
 		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
+		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $current_membership_id, $membership_process['renew'] );
 
-		$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
 					wp_send_json_error(
 						array(
@@ -1781,11 +1779,12 @@ class AJAX {
 		$user                 = get_userdata( $member_id );
 		$subscription_service = new SubscriptionService();
 		$selected_pg          = sanitize_text_field( $_POST['selected_pg'] );
+		$membership_id        = absint( $_POST['membership_id'] );
 
 		// Get membership type for logging
 		$members_subscription_repo = new MembersSubscriptionRepository();
 		$membership_repository     = new MembershipRepository();
-		$member_subscription       = $members_subscription_repo->get_member_subscription( $member_id );
+		$member_subscription       = $members_subscription_repo->get_subscription_data_by_member_and_membership_id( $member_id, $membership_id );
 		$membership_type           = 'unknown';
 		if ( ! empty( $member_subscription ) && ! empty( $member_subscription['item_id'] ) ) {
 			$membership = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
@@ -1826,19 +1825,20 @@ class AJAX {
 			);
 		}
 
-		$renew_membership = $subscription_service->renew_membership( $user, $selected_pg );
+		$renew_membership = $subscription_service->renew_membership( $user, $selected_pg, $membership_id );
 
 		$response = $renew_membership['response'];
 		if ( $response['status'] ) {
 			$message = __( 'New Order created, initializing payment...', 'user-registration-membership' );
 			wp_send_json_success(
 				array(
-					'pg_data'        => $response,
-					'member_id'      => $renew_membership['extra']['member_id'],
-					'username'       => $renew_membership['extra']['username'],
-					'transaction_id' => $renew_membership['extra']['transaction_id'],
-					'message'        => $message,
-					'is_renewing'    => true,
+					'pg_data'               => $response,
+					'member_id'             => $renew_membership['extra']['member_id'],
+					'username'              => $renew_membership['extra']['username'],
+					'transaction_id'        => $renew_membership['extra']['transaction_id'],
+					'message'               => $message,
+					'is_renewing'           => true,
+					'current_membership_id' => $membership_id,
 				)
 			);
 		}

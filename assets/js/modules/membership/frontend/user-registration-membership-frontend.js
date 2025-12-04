@@ -773,12 +773,13 @@
 				);
 			}
 		},
-		renew_membership: function (selected_pg, btn) {
+		renew_membership: function (selected_pg, btn, membership_id) {
 			this.send_data(
 				{
 					_wpnonce: urmf_data.renew_membership_nonce,
 					action: "user_registration_membership_renew_membership",
-					selected_pg: selected_pg
+					selected_pg: selected_pg,
+					membership_id: membership_id
 				},
 				{
 					success: function (response) {
@@ -2521,6 +2522,7 @@
 					has_error = false,
 					selected_pg = "free",
 					pg_gateways = $this.data("pg-gateways").split(","),
+					membership_id = $this.data("id"),
 					html =
 						ur_membership_ajax_utils.prepare_renew_membership_html(
 							pg_gateways
@@ -2569,7 +2571,8 @@
 						//validation end
 						ur_membership_ajax_utils.renew_membership(
 							selected_pg,
-							btn
+							btn,
+							membership_id
 						);
 						return false;
 					},
