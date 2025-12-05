@@ -16,10 +16,66 @@
     "attributes": {}
   },
   "supports": {
-    "className": false,
-    "customClassName": false,
-    "reusable": false
+    "reusable": false,
+    "className": true,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "color": {
+      "__experimentalSkipSerialization": true,
+      "gradients": true,
+      "__experimentalDefaultControls": {
+        "text": true
+      }
+    },
+    "typography": {
+      "__experimentalSkipSerialization": [
+        "fontSize",
+        "lineHeight",
+        "fontFamily",
+        "fontWeight",
+        "fontStyle",
+        "textTransform",
+        "textDecoration",
+        "letterSpacing"
+      ],
+      "fontSize": true,
+      "lineHeight": true,
+      "__experimentalFontFamily": true,
+      "__experimentalFontWeight": true,
+      "__experimentalFontStyle": true,
+      "__experimentalTextTransform": true,
+      "__experimentalTextDecoration": true,
+      "__experimentalLetterSpacing": true,
+      "__experimentalWritingMode": true,
+      "__experimentalDefaultControls": {
+        "fontSize": true
+      }
+    },
+    "spacing": {
+      "__experimentalSkipSerialization": true,
+      "margin": true,
+      "padding": true,
+      "blockGap": true,
+      "__experimentalDefaultControls": {
+        "padding": true,
+        "blockGap": true,
+        "margin": true
+      }
+    }
   },
+  "styles": [
+    {
+      "name": "fill",
+      "label": "Fill",
+      "isDefault": true
+    },
+    {
+      "name": "outline",
+      "label": "Outline"
+    }
+  ],
   "attributes": {
     "id": {
       "type": "string"
@@ -43,6 +99,55 @@
     "button_text": {
       "type": "string",
       "default": "Sign Up"
+    },
+    "openInNewTab": {
+      "type": "boolean",
+      "default": true
+    },
+    "showDescription": {
+      "type": "boolean",
+      "default": true
+    },
+    "columnNumber": {
+      "type": "number",
+      "default": 3
+    },
+    "buttonTextColor": {
+      "type": "string"
+    },
+    "buttonBgColor": {
+      "type": "string"
+    },
+    "buttonTextHoverColor": {
+      "type": "string"
+    },
+    "buttonBgHoverColor": {
+      "type": "string"
+    },
+    "radioColor": {
+      "type": "string"
+    },
+    "buttonPadding": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "buttonMargin": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "buttonWidth": {
+      "type": "string",
+      "default": ""
     }
   },
   "editorScript": "user-registration-blocks-editor",
