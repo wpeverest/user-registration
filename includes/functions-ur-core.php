@@ -1147,6 +1147,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', ucwords( str_replace( '_', ' ', get_option( 'user_registration_form_template', 'default' ) ) ) ),
 				'tip'               => __( 'Choose how your registration form looks.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'toggle',
@@ -1253,7 +1254,8 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'type'              => 'section',
 				'title'             => __( 'Advanced', 'user-registration' ),
 				'id'                => 'user_registration_form_setting_general_advanced',
-				'class'				=> array( 'ur-form-settings-section')
+				'class'				=> array( 'ur-form-settings-section'),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'toggle',
@@ -1390,6 +1392,8 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Submit' ),
 				'tip'               => __( 'The label shown on the form’s submit button.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
+
 			),
 			array(
 				'type'              => 'text',
@@ -3382,13 +3386,7 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 			'user_registration_lost_password_page_id' => array(
 				'name' => 'lost-password',
 				'title' => __( 'Lost Password', 'user-registration' ),
-				'content' => '[user_registration_reset_password_form]',
-				'requires_membership' => false,
-			),
-			'user_registration_reset_password_page_id' => array(
-				'name' => 'reset-password',
-				'title' => __( 'Reset Password', 'user-registration' ),
-				'content' => '[user_registration_reset_password_form]',
+				'content' => '[user_registration_lost_password]',
 				'requires_membership' => false,
 			),
 			'user_registration_member_registration_page_id' => array(
