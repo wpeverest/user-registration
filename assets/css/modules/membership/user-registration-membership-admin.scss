@@ -783,7 +783,7 @@
 															font-size: 16px;
 															line-height: 24px;
 															cursor: pointer;
-														}													
+														}
 
 														input[type="radio"] {
 															&:checked::before {
@@ -805,7 +805,7 @@
 																&:checked::before {
 																	background: $primary_color;
 																}
-															}															
+															}
 														}
 													}
 
@@ -1118,6 +1118,139 @@
 
 				.submit {
 					@include form-footer-button;
+				}
+			}
+		}
+	}
+
+	#user-registration-base-list-table-page {
+
+		.user-registration-base-list-table-form {
+			.tablenav {
+				&-pages {
+					margin-top: 5px;
+					margin-bottom: 0;
+				}
+			}
+
+			.wp-list-table.memberships {
+				thead {
+					tr {
+						th {
+							&#title, &#membership_price, &#membership_type, &#members, &#status {
+								width: 20%;
+							}
+
+						}
+					}
+				}
+
+				tbody {
+					tr {
+						&:nth-child(odd) {
+							background: #F8F8FA;
+						}
+
+						td {
+							font-size: 14px;
+							line-height: 24px;
+							color: #383838;
+
+							strong {
+								margin: 0;
+
+								.ur-edit-title {
+									a {
+										line-height: 24px;
+										font-weight: 400;
+									}
+								}
+							}
+
+							&.membership_type {
+								.user-registration-badge {
+									padding: 0;
+									background: none;
+									font-size: 14px;
+									text-transform: capitalize;
+									color: #383838;
+									font-weight: 500;
+								}
+							}
+
+							&.status{
+								.ur-toggle-section{
+									.user-registration-toggle-form {
+
+										input {
+
+											&:checked + .slider {
+												background-color: $green;
+											}
+										}
+
+									}
+								}
+							}
+						}
+
+						&.no-items {
+							background: #ffffff;
+
+							td {
+								padding: 0;
+
+								.empty-list-table-container {
+									text-align: center;
+									margin-top: 30px;
+									margin-bottom: 30px;
+
+									img {
+										width: 300px;
+									}
+
+									h3 {
+										margin-top: 16px;
+										margin-bottom: 8px;
+										color: #222222;
+										font-size: 22px;
+										font-weight: 600;
+										line-height: 32px;
+									}
+
+									p {
+										color: #6B6B6B;
+										font-size: 14px;
+										font-weight: 400;
+										line-height: 24px;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				tfoot {
+					tr {
+						td,
+						th {
+							border-top: $border_width solid $border_color;
+						}
+
+						th {
+							font-size: 14px;
+							font-weight: 600;
+							line-height: 24px;
+							color: #383838;
+
+							a {
+								padding: 12px 8px;
+								display: flex;
+								align-items: center;
+								gap: 8px;
+							}
+						}
+					}
 				}
 			}
 		}
