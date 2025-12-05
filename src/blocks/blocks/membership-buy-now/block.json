@@ -61,18 +61,15 @@
         "fontSize": true
       }
     },
-    "reusable": false,
-    "shadow": {
-      "__experimentalSkipSerialization": true
-    },
     "spacing": {
       "__experimentalSkipSerialization": true,
-      "padding": [
-        "horizontal",
-        "vertical"
-      ],
+      "margin": true,
+      "padding": true,
+      "blockGap": true,
       "__experimentalDefaultControls": {
-        "padding": true
+        "padding": true,
+        "blockGap": true,
+        "margin": true
       }
     },
     "__experimentalBorder": {
@@ -121,6 +118,14 @@
     },
     "borderColor": {
       "type": "string"
+    },
+    "hoverTextColor": {
+      "type": "string",
+      "default": ""
+    },
+    "hoverBgColor": {
+      "type": "string",
+      "default": ""
     }
   },
   "editorScript": "user-registration-blocks-editor",

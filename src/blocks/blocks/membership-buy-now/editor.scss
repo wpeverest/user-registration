@@ -7,3 +7,77 @@
 		text-transform: capitalize;
 	}
 }
+
+/* In your editor.css */
+.color-block-support-panel {
+	padding: 0 16px;
+}
+
+.color-block-support-panel__inner-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.block-editor-panel-color-gradient-settings__dropdown {
+	width: 100%;
+	justify-content: flex-start;
+	padding: 8px 0;
+	height: auto;
+	min-height: 40px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	background: #fff;
+}
+
+.block-editor-panel-color-gradient-settings__dropdown:hover {
+	background: #f0f0f0;
+}
+
+.block-editor-panel-color-gradient-settings__color-name {
+	font-size: 13px;
+	font-weight: 500;
+	color: #1e1e1e;
+}
+
+.custom-component-color-indicator {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 1px solid #ddd;
+	background-color: transparent;
+}
+
+.block-editor-panel-color-gradient-settings__dropdown-content {
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+	border-radius: 4px;
+	background: #fff;
+}
+
+/* Add some margin to separate from built-in controls */
+.color-block-support-panel {
+	margin-top: 8px;
+	padding-top: 16px;
+}
+/* In your editor.css */
+.color-block-support-panel {
+	padding: 16px;
+	border-top: 1px solid #e0e0e0;
+	margin-top: 16px;
+}
+
+.block-editor-panel-color-gradient-settings__panel-title {
+	color: #1e1e1e;
+	font-size: 13px;
+	font-weight: 500;
+	margin: 0 !important;
+	margin-bottom: 16px;
+	display: block;
+}
+
+.color-block-support-panel__inner-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}

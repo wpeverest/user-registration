@@ -7,15 +7,22 @@ import {
 	SelectControl,
 	Disabled,
 	PanelBody,
-	RangeControl,
-	__experimentalUnitControl as UnitControl,
-	__experimentalHStack as HStack,
 	TabPanel,
 	__experimentalToggleGroupControl as ToggleGroupControl,
-	__experimentalToggleGroupControlOption as ToggleGroupControlOption
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+	ColorPalette,
+	BaseControl,
+	Dropdown,
+	Button,
+	Flex,
+	FlexItem
 } from "@wordpress/components";
 
-import { InspectorControls, useBlockProps } from "@wordpress/block-editor";
+import {
+	InspectorControls,
+	useBlockProps,
+	useSettings
+} from "@wordpress/block-editor";
 import apiFetch from "@wordpress/api-fetch";
 import JustifyControl from "./components/JustifyContentControl";
 
@@ -31,12 +38,20 @@ const Edit = (props) => {
 
 	const { attributes, setAttributes } = props;
 
-	const { membershipType, text, pageID, width } = attributes;
+	const {
+		membershipType,
+		text,
+		pageID,
+		width,
+		hoverTextColor,
+		hoverBgColor
+	} = attributes;
 
 	const [membsershipList, setMembershipList] = useState("");
-	const useProps = useBlockProps({
-		// className: "wp-block-buttons"
-	});
+	const useProps = useBlockProps();
+
+	// Get colors from settings
+	const colors = useSettings("color.palette");
 
 	// Fetch data for pages and groups
 	const fetchData = async () => {
@@ -75,16 +90,54 @@ const Edit = (props) => {
 		})
 	);
 
+	const HoverColorControl = ({ label, colorValue, onChange }) => (
+		<div className="components-tools-panel-item block-editor-tools-panel-color-gradient-settings__item">
+			<Dropdown
+				className="block-editor-tools-panel-color-gradient-settings__dropdown"
+				contentClassName="block-editor-panel-color-gradient-settings__dropdown-content"
+				renderToggle={({ isOpen, onToggle }) => (
+					<Button
+						className="block-editor-panel-color-gradient-settings__dropdown"
+						onClick={onToggle}
+						aria-expanded={isOpen}
+					>
+						<Flex justify="flex-start" align="center" gap={2}>
+							<FlexItem>
+								<span
+									className="custom-component-color-indicator"
+									style={{
+										backgroundColor:
+											colorValue || "transparent"
+									}}
+								/>
+							</FlexItem>
+							<FlexItem className="block-editor-panel-color-gradient-settings__color-name">
+								{label}
+							</FlexItem>
+						</Flex>
+					</Button>
+				)}
+				renderContent={() => (
+					<div style={{ padding: "16px", width: "240px" }}>
+						<ColorPalette
+							value={colorValue}
+							onChange={onChange}
+							colors={colors}
+							clearable={true}
+						/>
+					</div>
+				)}
+			/>
+		</div>
+	);
+
 	return (
 		<>
 			<InspectorControls>
 				<TabPanel
 					className="urm-buy-now-tabs"
 					activeClass="active-tab"
-					tabs={[
-						{ name: "general", title: "General" },
-						{ name: "styles", title: "Styles" }
-					]}
+					tabs={[{ name: "general", title: "General" }]}
 				>
 					{(tab) => (
 						<>
@@ -179,40 +232,41 @@ const Edit = (props) => {
 									/>
 								</PanelBody>
 							)}
-
-							{tab.name === "styles" && (
-								<PanelBody title="" initialOpen={true}>
-									<BorderControl
-										value={attributes.border}
-										onChange={(value) =>
-											setAttributes({ border: value })
-										}
-									/>
-									<RangeControl
-										label="Radius"
-										min={0}
-										max={50}
-										value={attributes.borderRadius}
-										onChange={(value) =>
-											setAttributes({
-												borderRadius: value
-											})
-										}
-									/>
-								</PanelBody>
-							)}
 						</>
 					)}
 				</TabPanel>
 			</InspectorControls>
+
+			<InspectorControls group="styles">
+				<div className="color-block-support-panel">
+					<div className="color-block-support-panel__inner-wrapper">
+						<div className="block-editor-panel-color-gradient-settings__panel-title">
+							{__("Hover", "user-registration")}
+						</div>
+						<HoverColorControl
+							label={__("Text", "user-registration")}
+							colorValue={hoverTextColor}
+							onChange={(color) =>
+								setAttributes({ hoverTextColor: color })
+							}
+						/>
+						<HoverColorControl
+							label={__("Background", "user-registration")}
+							colorValue={hoverBgColor}
+							onChange={(color) =>
+								setAttributes({ hoverBgColor: color })
+							}
+						/>
+					</div>
+				</div>
+			</InspectorControls>
+
 			<div {...useProps}>
-				<Disabled>
-					<ServerSideRender
-						key="ur-gutenberg-membership-buy-now-form-server-side-renderer"
-						block={blockName}
-						attributes={attributes}
-					/>
-				</Disabled>
+				<ServerSideRender
+					key="ur-gutenberg-membership-buy-now-form-server-side-renderer"
+					block={blockName}
+					attributes={attributes}
+				/>
 			</div>
 		</>
 	);
