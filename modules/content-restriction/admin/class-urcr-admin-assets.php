@@ -351,7 +351,7 @@ class URCR_Admin_Assets {
 			'ur_form_data'              => $ur_forms,
 			'shortcodes'                => $shortcodes_list,
 			'content_rule_url'          => admin_url( 'admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule' ),
-			'is_advanced_logic_enabled' => get_option( 'urcr_content_access_rule_is_advanced_logic_enabled', true ),
+			'is_advanced_logic_enabled' => ur_string_to_bool( get_option( 'urcr_content_access_rule_is_advanced_logic_enabled', 'no' ) ),
 			'payment_status'            => array(
 				'pending'   => __( 'Pending', 'user-registration' ),
 				'completed' => __( 'Completed', 'user-registration' ),

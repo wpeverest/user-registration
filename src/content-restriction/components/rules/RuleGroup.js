@@ -42,8 +42,7 @@ const RuleGroup = ({
 	const [logicGate, setLogicGate] = useState(group.logic_gate || "AND");
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const dropdownWrapperRef = useRef(null);
-	const isAdvancedLogicEnabled = getURCRData("is_advanced_logic_enabled", false);
-
+	const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
 	// Initialize conditions from group data
 	useEffect(() => {
 		if (group.conditions && group.conditions.length > 0) {
@@ -239,6 +238,10 @@ const RuleGroup = ({
 							)}
 							{conditions.map((condition) => {
 								if (condition.type === "group") {
+									// Only show nested groups when advanced logic is enabled
+									if (!isAdvancedLogicEnabled) {
+										return null;
+									}
 									return (
 										<div key={condition.id} className="urcr-condition-wrapper">
 											<RuleGroup
@@ -307,7 +310,7 @@ const RuleGroup = ({
 						)}
 					</div>
 
-					{isProAccess() && (
+					{isProAccess() && isAdvancedLogicEnabled && (
 						<button
 							type="button"
 							className="button urcr-add-group-button"

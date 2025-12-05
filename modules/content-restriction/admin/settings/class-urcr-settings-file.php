@@ -79,15 +79,15 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 					'desc'     => UR_PRO_ACTIVE ? $link_html : '',
 					'sections' => array(
 						'user_registration_site_restriction_settings' => array(
-							'title'    => __( 'Whole Site Restriction', 'user-registration' ),
+							'title'    => __( 'Enable Advance Logic', 'user-registration' ),
 							'type'     => 'card',
 							'desc'     => '',
 							'settings' => array(
 								array(
-									'row_class' => 'urcr_enable_disable urcr_whole_site_access_enable',
-									'title'     => __( 'Enable Whole Site Restriction', 'user-registration' ),
-									'desc'      => __( 'Check this option to restrict your whole site. ', 'user-registration' ),
-									'id'        => 'user_registration_content_restriction_whole_site_access',
+									'row_class' => 'urcr_enable_disable urcr_content_access_rule_is_advanced_logic_enabled',
+									'title'     => __( 'Enable Advance Logic', 'user-registration' ),
+									'desc'      => __( 'Check this option to enable advance grouping and logic gates. ', 'user-registration' ),
+									'id'        => 'urcr_content_access_rule_is_advanced_logic_enabled',
 									'default'   => 'no',
 									'desc_tip'  => true,
 									'type'      => 'toggle',
@@ -100,31 +100,6 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 							'type'     => 'card',
 							'desc'     => sprintf( __( 'These settings affect whole site restriction as well as individual page/post restriction if enabled. <a href="%1$s" target="_blank" style="text-decoration: underline;" >Learn More.</a>', 'user-registration' ), esc_url_raw( 'https://docs.wpuserregistration.com/docs/content-restriction/' ) ),
 							'settings' => array(
-								array(
-									'row_class' => 'urcr_content_restriction_allow_access_to',
-									'title'     => __( 'Allow Access To', 'user-registration' ),
-									'desc'      => __( 'Select Option To Allow Access To', 'user-registration' ),
-									'id'        => 'user_registration_content_restriction_allow_access_to',
-									'type'      => 'select',
-									'class'     => 'ur-enhanced-select',
-									'css'       => '',
-									'desc_tip'  => true,
-								    'options'   => $access_options,
-								),
-
-								array(
-									'row_class' => 'urcr_content_restriction_allow_access_to_roles',
-									'title'     => __( 'Select Roles', 'user-registration' ),
-									'desc'      => __( 'The roles selected here will have access to restricted content.', 'user-registration' ),
-									'id'        => 'user_registration_content_restriction_allow_to_roles',
-									'default'   => array( 'administrator' ),
-									'type'      => 'multiselect',
-									'class'     => 'ur-enhanced-select',
-									'css'       => 'min-width: 350px; ' . ( '1' != get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) ? 'display:none;' : '',
-									'desc_tip'  => true,
-									'options'   => ur_get_all_roles(),
-								),
-
 								array(
 									'title'    => __( 'Restricted Content Message', 'user-registration' ),
 									'desc'     => __( 'The message you would like to display in restricted content.', 'user-registration' ),

@@ -12,7 +12,7 @@ const ConditionLogicGate = ({
 	totalConditions = 0,
 }) => {
 	// Check if advanced logic is enabled
-	const isAdvancedLogicEnabled = getURCRData("is_advanced_logic_enabled", false);
+	const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
 
 	// Don't render if advanced logic is not enabled
 	if (!isAdvancedLogicEnabled) {
