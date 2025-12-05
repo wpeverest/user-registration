@@ -384,15 +384,7 @@ if (!class_exists('UR_Stats')) {
 		 */
 		private function get_stats_api_url()
 		{
-			$url = '';
-			// Ingore for development mode.
-			if (defined('UR_DEV') && UR_DEV) {
-				$url = self::REMOTE_URL . 'dev/log';
-			} else {
-				$url = self::REMOTE_URL . 'tracking/log';
-			}
-
-			return $url;
+			return self::REMOTE_URL . (defined('UR_DEV') && UR_DEV) ?  'dev/log': 'tracking/log';
 		}
 
 		/**
@@ -442,11 +434,15 @@ if (!class_exists('UR_Stats')) {
 					$default_value = !empty($setting['default_value']) ? $setting['default_value'] : '';
 					$settings_default_value = is_bool($default_value) ? ur_bool_to_string($default_value) : $default_value;
 
+					// Convert arrays and other non-scalar values to JSON strings to avoid array to string conversion warnings
+					$settings_value_str = is_scalar($settings_value) ? (string)$settings_value : wp_json_encode($settings_value);
+					$settings_default_value_str = is_scalar($settings_default_value) ? (string)$settings_default_value : wp_json_encode($settings_default_value);
+
 					$settings[] = array(
 						'type' => 'form',
 						'setting_key' => $setting_id,
-						'setting_value' => strpos("$settings_value", '<br>') > 0 ? preg_replace('#<\s*br\s*/?\s*>#i', ' ', $settings_value) : $settings_value,
-						'default_value' => strpos("$settings_default_value", '<br>') > 0 ? preg_replace('#<\s*br\s*/?\s*>#i', ' ', $settings_default_value) : $settings_default_value,
+						'setting_value' => strpos($settings_value_str, '<br>') !== false ? preg_replace('#<\s*br\s*/?\s*>#i', ' ', $settings_value_str) : $settings_value_str,
+						'default_value' => strpos($settings_default_value_str, '<br>') !== false ? preg_replace('#<\s*br\s*/?\s*>#i', ' ', $settings_default_value_str) : $settings_default_value_str,
 						'form_id' => $form_id
 					);
 				}
