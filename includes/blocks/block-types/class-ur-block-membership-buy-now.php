@@ -46,7 +46,17 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 
 		$page_url = get_permalink( absint( $attr['pageID'] ) );
 
-		$page_url = function_exists( 'wp_is_block_editor' ) && wp_is_block_editor() ? '#' : $page_url;
+		$is_editor = false;
+
+		if ( function_exists( 'wp_is_block_editor' ) && wp_is_block_editor() ) {
+			$is_editor = true;
+		}
+
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			$is_editor = true;
+		}
+
+		$page_url = $is_editor ? '#' : $page_url;
 
 		$style = isset( $attr['style'] ) ? $attr['style'] : array();
 
@@ -168,6 +178,12 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 			)
 		);
 
+		$link_extra_attributes = '';
+
+		if ( ! $is_editor ) {
+			$link_extra_attributes = $attr['openInNewTab'] ? 'target="_blank"' : '';
+		}
+
 		// Build inline hover styles
 		$inline_hover_styles = '';
 		if ( $text_hover_color ) {
@@ -187,7 +203,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 
 		$html .= '<div ' . $wrapper_attributes . '>';
 		$html .= '<div style="width:' . esc_attr( $attr['width'] ) . ';">';
-		$html .= '<a href="' . esc_url( $page_url ) . '" target="_blank">';
+		$html .= '<a href="' . esc_url( $page_url ) . '" ' . $link_extra_attributes . ' >';
 		$html .= '<button type="button" class="' . esc_attr( $button_classes ) . '" style="' . esc_attr( $button_style ) . '">';
 		$html .= '<span class="label">' . esc_html( $attr['text'] ) . '</span>';
 		$html .= '</button>';

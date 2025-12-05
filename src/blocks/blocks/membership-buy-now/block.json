@@ -94,6 +94,10 @@
     "membershipType": {
       "type": "string"
     },
+    "openInNewTab": {
+      "type": "boolean",
+      "default": true
+    },
     "text": {
       "type": "string",
       "default": "Buy Now"

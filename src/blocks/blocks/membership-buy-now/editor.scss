@@ -1,35 +1,13 @@
 .urm-buy-now-tabs {
-	.components-tab-panel__tabs {
-		display: none;
-		margin-bottom: 10px;
-	}
 	.components-input-control__label {
 		text-transform: capitalize;
 	}
 }
 
 /* In your editor.css */
-.color-block-support-panel {
-	padding: 0 16px;
+.urm-custom-hover-tool-panel {
+	grid-column: 1 / -1;
 }
-
-.color-block-support-panel__inner-wrapper {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-}
-
-.block-editor-panel-color-gradient-settings__dropdown {
-	width: 100%;
-	justify-content: flex-start;
-	padding: 8px 0;
-	height: auto;
-	min-height: 40px;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	background: #fff;
-}
-
 .block-editor-panel-color-gradient-settings__dropdown:hover {
 	background: #f0f0f0;
 }
@@ -55,29 +33,17 @@
 	background: #fff;
 }
 
-/* Add some margin to separate from built-in controls */
-.color-block-support-panel {
-	margin-top: 8px;
-	padding-top: 16px;
-}
-/* In your editor.css */
-.color-block-support-panel {
-	padding: 16px;
-	border-top: 1px solid #e0e0e0;
-	margin-top: 16px;
-}
-
-.block-editor-panel-color-gradient-settings__panel-title {
-	color: #1e1e1e;
-	font-size: 13px;
-	font-weight: 500;
-	margin: 0 !important;
-	margin-bottom: 16px;
+.ur-hover-color-picker__title {
 	display: block;
-}
+	color: #757575;
+	font-size: 11px;
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin: 16px 0 12px;
+	padding: 0;
 
-.color-block-support-panel__inner-wrapper {
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
+	&:first-child {
+		margin-top: 0;
+	}
 }

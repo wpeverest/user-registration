@@ -5,17 +5,16 @@ import metadata from "./block.json";
 import {
 	TextControl,
 	SelectControl,
-	Disabled,
 	PanelBody,
 	TabPanel,
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 	ColorPalette,
-	BaseControl,
 	Dropdown,
 	Button,
 	Flex,
-	FlexItem
+	FlexItem,
+	ToggleControl
 } from "@wordpress/components";
 
 import {
@@ -44,15 +43,17 @@ const Edit = (props) => {
 		pageID,
 		width,
 		hoverTextColor,
-		hoverBgColor
+		hoverBgColor,
+		openInNewTab
 	} = attributes;
 
 	const [membsershipList, setMembershipList] = useState("");
 	const useProps = useBlockProps();
 
 	// Get colors from settings
-	const colors = useSettings("color.palette");
-
+	const [themeColors] = useSettings("color.palette.theme");
+	const [defaultColors] = useSettings("color.palette.default");
+	const [customColors] = useSettings("color.palette.custom");
 	// Fetch data for pages and groups
 	const fetchData = async () => {
 		try {
@@ -91,20 +92,36 @@ const Edit = (props) => {
 	);
 
 	const HoverColorControl = ({ label, colorValue, onChange }) => (
-		<div className="components-tools-panel-item block-editor-tools-panel-color-gradient-settings__item">
+		<div
+			data-wp-component="ToolsPanelItem"
+			className="components-tools-panel-item block-editor-tools-panel-color-gradient-settings__item urm-custom-hover-tool-panel"
+		>
 			<Dropdown
 				className="block-editor-tools-panel-color-gradient-settings__dropdown"
 				contentClassName="block-editor-panel-color-gradient-settings__dropdown-content"
+				popoverProps={{
+					placement: "left-start",
+					offset: 36,
+					shift: true,
+					focusOnMount: "container",
+					__unstableSlotName: "Popover"
+				}}
+				focusOnMount={false}
 				renderToggle={({ isOpen, onToggle }) => (
 					<Button
 						className="block-editor-panel-color-gradient-settings__dropdown"
 						onClick={onToggle}
 						aria-expanded={isOpen}
+						style={{ width: "100%" }}
 					>
 						<Flex justify="flex-start" align="center" gap={2}>
 							<FlexItem>
 								<span
-									className="custom-component-color-indicator"
+									className={
+										colorValue
+											? "custom-component-color-indicator"
+											: "component-color-indicator"
+									}
 									style={{
 										backgroundColor:
 											colorValue || "transparent"
@@ -117,14 +134,35 @@ const Edit = (props) => {
 						</Flex>
 					</Button>
 				)}
-				renderContent={() => (
-					<div style={{ padding: "16px", width: "240px" }}>
+				renderContent={({ onClose }) => (
+					<div
+						style={{ padding: "16px", width: "240px" }}
+						onClick={(e) => e.stopPropagation()}
+						onMouseDown={(e) => e.stopPropagation()}
+					>
 						<ColorPalette
+							enableCustomColor
 							value={colorValue}
 							onChange={onChange}
-							colors={colors}
+							colors={[]}
 							clearable={true}
+							enableAlpha={true}
+							__experimentalIsRenderedInSidebar={true}
 						/>
+						{themeColors && themeColors.length > 0 && (
+							<>
+								<span className="ur-hover-color-picker__title">
+									{__("Theme", "user-registration")}
+								</span>
+								<ColorPalette
+									colors={themeColors}
+									value={colorValue}
+									onChange={onChange}
+									clearable={false}
+									disableCustomColors={true}
+								/>
+							</>
+						)}
 					</div>
 				)}
 			/>
@@ -185,6 +223,19 @@ const Edit = (props) => {
 										]}
 										onChange={setMembershipType}
 									/>
+									<ToggleControl
+										__nextHasNoMarginBottom
+										label={__(
+											"Open in a new tab",
+											"user-registration"
+										)}
+										checked={openInNewTab}
+										onChange={(value) => {
+											setAttributes({
+												openInNewTab: value
+											});
+										}}
+									/>
 									<TextControl
 										label={__(
 											"Button Text",
@@ -237,28 +288,23 @@ const Edit = (props) => {
 				</TabPanel>
 			</InspectorControls>
 
-			<InspectorControls group="styles">
-				<div className="color-block-support-panel">
-					<div className="color-block-support-panel__inner-wrapper">
-						<div className="block-editor-panel-color-gradient-settings__panel-title">
-							{__("Hover", "user-registration")}
-						</div>
-						<HoverColorControl
-							label={__("Text", "user-registration")}
-							colorValue={hoverTextColor}
-							onChange={(color) =>
-								setAttributes({ hoverTextColor: color })
-							}
-						/>
-						<HoverColorControl
-							label={__("Background", "user-registration")}
-							colorValue={hoverBgColor}
-							onChange={(color) =>
-								setAttributes({ hoverBgColor: color })
-							}
-						/>
-					</div>
-				</div>
+			<InspectorControls group="color">
+				<>
+					<HoverColorControl
+						label={__("Text Hover", "user-registration")}
+						colorValue={hoverTextColor}
+						onChange={(color) =>
+							setAttributes({ hoverTextColor: color })
+						}
+					/>
+					<HoverColorControl
+						label={__("Background Hover", "user-registration")}
+						colorValue={hoverBgColor}
+						onChange={(color) =>
+							setAttributes({ hoverBgColor: color })
+						}
+					/>
+				</>
 			</InspectorControls>
 
 			<div {...useProps}>
