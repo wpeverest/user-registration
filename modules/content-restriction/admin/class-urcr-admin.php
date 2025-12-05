@@ -26,12 +26,10 @@ class URCR_Admin {
 		 */
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 
-		if ( UR_PRO_ACTIVE ) {
-			/**
-			 * Register admin menus.
-			 */
-			add_action( 'admin_menu', array( $this, 'add_urcr_menus' ), 30 );
-		}
+		/**
+		 * Register admin menus.
+		 */
+		add_action( 'admin_menu', array( $this, 'add_urcr_menus' ), 30 );
 
 		/**
 		 * Register a settings in the core settings list.
@@ -41,7 +39,15 @@ class URCR_Admin {
 		/**
 		 * Elementor Section Restriction
 		 */
-		add_action( 'elementor/element/before_section_end', array( $this, 'urcr_add_option_to_restrict_elementor_section' ), 10, 3 );
+		add_action( 'elementor/element/before_section_end', array(
+			$this,
+			'urcr_add_option_to_restrict_elementor_section'
+		), 10, 3 );
+
+		/**
+		 * Run migration on admin init (only once)
+		 */
+		add_action( 'admin_init', array( $this, 'run_migration' ), 5 );
 	}
 
 	/**
@@ -94,7 +100,6 @@ class URCR_Admin {
 	/**
 	 * Add admin menus for Content Restriction settings.
 	 *
-	 * @since 4.0
 	 */
 	public function add_urcr_menus() {
 		$rules_page = add_submenu_page(
@@ -105,80 +110,61 @@ class URCR_Admin {
 			'user-registration-content-restriction',
 			array(
 				$this,
-				'render_content_restriction_page',
+				'render_content_access_rules',
+			)
+		);
+	}
+
+	/**
+	 * Render settings page with Content Access Rules (React version).
+	 *
+	 */
+	public function render_content_access_rules() {
+		$script_url = UR()->plugin_url() . '/chunks/content-access-rules.js';
+
+		// Enqueue WordPress editor (free TinyMCE) for rich text editing
+		wp_enqueue_editor();
+
+		// Enqueue standalone content access rules script
+		wp_enqueue_script(
+			'ur-content-access-rules-script',
+			$script_url,
+			array(
+				'wp-element',
+				'wp-blocks',
+				'wp-editor',
+			),
+			UR()->version,
+			true
+		);
+
+		// Localize script with necessary data
+		wp_localize_script(
+			'ur-content-access-rules-script',
+			'_UR_DASHBOARD_',
+			array(
+				'adminURL'       => esc_url( admin_url() ),
+				'assetsURL'      => esc_url( UR()->plugin_url() . '/assets/' ),
+				'urRestApiNonce' => wp_create_nonce( 'wp_rest' ),
+				'restURL'        => rest_url(),
+				'version'        => UR()->version,
 			)
 		);
 
-		add_action( 'load-' . $rules_page, array( $this, 'content_restriction_initializations' ) );
-	}
-
-	/**
-	 * Do initializations before loading content restriction pages.
-	 *
-	 * @since 4.0
-	 */
-	public function content_restriction_initializations() {
-		if ( isset( $_GET['page'] ) && 'user-registration-content-restriction' === $_GET['page'] ) {
-
-			$action_page = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-
-			switch ( $action_page ) {
-				case 'add_new_urcr_content_access_rule':
-					break;
-
-				default:
-					global $content_access_rules_table_list;
-
-					require_once UR_ABSPATH . 'includes/pro/addons/content-restriction/admin/class-urcr-admin-content-access-rules-table-list.php';
-					$content_access_rules_table_list = new URCR_Admin_Content_Access_Rules_Table_List();
-					$content_access_rules_table_list->process_actions();
-					break;
-			}
-		}
-	}
-
-	/**
-	 * Render content restriction page.
-	 *
-	 * @since 4.0
-	 */
-	public function render_content_restriction_page() {
-		$action_page = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-
-		switch ( $action_page ) {
-			case 'add_new_urcr_content_access_rule':
-				$this->render_content_access_rules_creator();
-				break;
-
-			default:
-				$this->render_content_access_rules_viewer();
-				break;
-		}
-	}
-
-	/**
-	 * Render settings page to manage Content Access Rules.
-	 *
-	 * @since 4.0
-	 */
-	public function render_content_access_rules_creator() {
-		include UR_ABSPATH . 'includes/pro/addons/content-restriction/admin/content-access-rules-creator.php';
-	}
-
-	/**
-	 * Render settings page with Content Access Rules.
-	 *
-	 * @since 4.0
-	 */
-	public function render_content_access_rules_viewer() {
-		global $content_access_rules_table_list;
-
-		if ( ! $content_access_rules_table_list ) {
-			return;
+		// Localize urcr_localized_data for React components
+		if ( class_exists( 'URCR_Admin_Assets' ) ) {
+			URCR_Admin_Assets::localize_react_scripts( 'ur-content-access-rules-script' );
 		}
 
-		$content_access_rules_table_list->display_page();
+		// Render React mount point
+		?>
+		<div>
+			<?php echo user_registration_plugin_main_header(); ?>
+			<div id="user-registration-content-access-rules"></div>
+		</div>
+		<?php
 	}
+
 
 	/**
 	 * Include Content Restriction settings in the settings list.
@@ -189,7 +175,50 @@ class URCR_Admin {
 		if ( class_exists( 'UR_Settings_Page' ) ) {
 			$settings[] = include 'settings/class-urcr-settings-file.php';
 		}
+
 		return $settings;
+	}
+
+	/**
+	 * Run migration script to migrate old restriction settings to new content rules.
+	 * This runs only once or when there are unmigrated posts/pages.
+	 *
+	 */
+	public function run_migration() {
+		// Only run in admin and for users with proper capabilities
+		if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		// Check if we should run migration
+		$global_migrated = get_option( 'urcr_global_restriction_migrated', false );
+		$post_page_migrated = get_option( 'urcr_post_page_restrictions_migrated', false );
+
+		// Check if there are unmigrated posts/pages
+		$has_unmigrated = false;
+		if ( ! $post_page_migrated ) {
+			$args = array(
+				'post_type'      => array( 'post', 'page' ),
+				'post_status'    => 'publish',
+				'posts_per_page' => 1,
+				'meta_query'     => array(
+					array(
+						'key'   => 'urcr_meta_checkbox',
+						'value' => 'on',
+					),
+				),
+			);
+			$posts = get_posts( $args );
+
+			$has_unmigrated = ! empty( $posts );
+		}
+
+		// Run migration if needed
+		if ( ! $global_migrated || $has_unmigrated ) {
+			if ( function_exists( 'urcr_run_migration' ) ) {
+				urcr_run_migration();
+			}
+		}
 	}
 }
 

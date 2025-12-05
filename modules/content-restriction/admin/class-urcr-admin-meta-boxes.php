@@ -87,6 +87,13 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 	 * Adds the meta box.
 	 */
 	public function add_metabox() {
+		global $post;
+
+		// Check if we should show the metabox
+		if ( ! $this->should_show_metabox( $post ) ) {
+			return;
+		}
+
 		add_meta_box(
 			'urcr-meta-box',
 			__( 'Restrict This Content', 'user-registration' ),
@@ -95,6 +102,41 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 			'advanced',
 			'default'
 		);
+	}
+
+	/**
+	 * Check if metabox should be shown for this post/page.
+	 *
+	 * @param WP_Post $post Post object.
+	 * @return bool True if metabox should be shown, false otherwise.
+	 */
+	private function should_show_metabox( $post ) {
+		if ( ! $post || ! isset( $post->ID ) ) {
+			return false;
+		}
+
+		// Get migrated post/page IDs
+		$migrated_ids = get_option( 'urcr_migrated_post_page_ids', array() );
+		if ( ! is_array( $migrated_ids ) ) {
+			$migrated_ids = array();
+		}
+
+		// Check if this post/page has urcr_meta_checkbox enabled and migration not done
+		$has_checkbox = get_post_meta( $post->ID, 'urcr_meta_checkbox', true ) === 'on';
+		$is_migrated = in_array( $post->ID, $migrated_ids, true );
+
+		if ( $has_checkbox && ! $is_migrated ) {
+			return true; // Show metabox for posts with checkbox that haven't been migrated
+		}
+
+		// Check if this post/page has override global settings enabled
+		$has_override = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', true ) === 'on';
+		if ( $has_override ) {
+			return true; // Show metabox for posts with override enabled
+		}
+
+		// Don't show metabox for migrated posts/pages
+		return false;
 	}
 
 	/**
