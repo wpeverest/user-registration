@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration & Membership plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration & Membership 4.4.7\n"
+"Project-Id-Version: User Registration & Membership 4.4.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-12-05T07:56:01+00:00\n"
+"POT-Creation-Date: 2025-12-07T15:25:29+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -36,7 +36,6 @@ msgstr ""
 
 #: includes/3rd-party/DiviBuilder/Modules/ContentRestriction.php:41
 #: modules/content-restriction/admin/settings/class-urcr-settings-file.php:35
-#: chunks/welcome.js:85734
 #: src/welcome/components/screens/LastPage.js:96
 #: chunks/welcome.js:75376
 msgid "Content Restriction"
@@ -58,7 +57,6 @@ msgstr ""
 
 #: includes/3rd-party/DiviBuilder/Modules/ContentRestriction.php:77
 #: chunks/content-access-rules.js:36647
-#: chunks/dashboard.js:135188
 #: chunks/content-access-rules.js:35468
 #: chunks/dashboard.js:118178
 msgid "Content"
@@ -102,7 +100,6 @@ msgstr ""
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Ended_User_Email.php:71
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Expiring_Soon_User_Email.php:102
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Renewal_Reminder_User_Email.php:102
-#: chunks/form_templates.js:115536
 #: src/form-templates/components/TemplateList.js:499
 #: chunks/form_templates.js:97234
 msgid "Preview"
@@ -142,7 +139,6 @@ msgstr ""
 #: includes/functions-ur-core.php:1555
 #: includes/functions-ur-core.php:7307
 #: includes/functions-ur-core.php:7332
-#: chunks/blocks.js:78943
 #: src/blocks/blocks/myaccount/Edit.js:43
 #: chunks/blocks.js:69734
 msgid "Redirect URL"
@@ -166,13 +162,8 @@ msgstr ""
 #: includes/3rd-party/DiviBuilder/Modules/LoginForm.php:76
 #: includes/3rd-party/DiviBuilder/Modules/MyAccount.php:76
 #: includes/3rd-party/DiviBuilder/Modules/RegistrationForm.php:71
-#: chunks/blocks.js:78185
-#: chunks/blocks.js:78953
-#: chunks/blocks.js:79198
 #: chunks/content-access-rules.js:34725
 #: chunks/content-access-rules.js:36776
-#: chunks/dashboard.js:133266
-#: chunks/dashboard.js:135317
 #: src/blocks/blocks/login-form/Edit.js:43
 #: src/blocks/blocks/myaccount/Edit.js:55
 #: src/blocks/blocks/registration-form/Edit.js:104
@@ -191,8 +182,6 @@ msgstr ""
 #: includes/3rd-party/DiviBuilder/Modules/RegistrationForm.php:77
 #: chunks/content-access-rules.js:34944
 #: chunks/content-access-rules.js:35227
-#: chunks/dashboard.js:133485
-#: chunks/dashboard.js:133768
 #: chunks/content-access-rules.js:34096
 #: chunks/content-access-rules.js:34340
 #: chunks/dashboard.js:116806
@@ -205,8 +194,6 @@ msgstr ""
 #: includes/3rd-party/DiviBuilder/Modules/RegistrationForm.php:78
 #: chunks/content-access-rules.js:34947
 #: chunks/content-access-rules.js:35230
-#: chunks/dashboard.js:133488
-#: chunks/dashboard.js:133771
 #: chunks/content-access-rules.js:34100
 #: chunks/content-access-rules.js:34344
 #: chunks/dashboard.js:116810
@@ -228,7 +215,6 @@ msgstr ""
 
 #: includes/3rd-party/DiviBuilder/Modules/MembershipGroups.php:77
 #: includes/functions-ur-core.php:7874
-#: chunks/blocks.js:78797
 #: src/blocks/blocks/membership-listing/Edit.js:271
 #: chunks/blocks.js:69651
 msgid "Button Text"
@@ -381,8 +367,6 @@ msgstr ""
 #: includes/3rd-party/oxygen/widgets/class-ur-oxygen-widgets.php:169
 #: includes/3rd-party/oxygen/widgets/class-ur-oxygen-widgets.php:174
 #: includes/class-ur-form-block.php:64
-#: chunks/blocks.js:79192
-#: chunks/blocks.js:79225
 #: src/blocks/blocks/registration-form/Edit.js:91
 #: src/blocks/blocks/registration-form/Edit.js:149
 #: chunks/blocks.js:69882
@@ -575,10 +559,6 @@ msgstr ""
 #: includes/abstracts/abstract-ur-list-table.php:664
 #: includes/admin/settings/class-ur-users-list-table.php:670
 #: includes/admin/views/html-admin-page-form-templates.php:47
-#: chunks/dashboard.js:141562
-#: chunks/form_templates.js:114064
-#: chunks/form_templates.js:114094
-#: chunks/form_templates.js:114101
 #: src/dashboard/screens/Modules/Modules.js:121
 #: src/form-templates/App.js:23
 #: src/form-templates/App.js:58
@@ -612,7 +592,6 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:232
 #: includes/admin/class-ur-admin-menus.php:955
-#: chunks/form_templates.js:114580
 #: src/form-templates/components/PluginStatus.js:106
 #: chunks/form_templates.js:96344
 msgid "Install & Activate"
@@ -626,7 +605,6 @@ msgstr ""
 #: includes/admin/class-ur-admin-assets.php:234
 #: includes/admin/class-ur-admin-assets.php:643
 #: includes/admin/class-ur-admin-menus.php:957
-#: chunks/form_templates.js:115641
 #: src/form-templates/components/TemplateList.js:675
 #: chunks/form_templates.js:97410
 msgid "OK"
@@ -638,7 +616,6 @@ msgstr ""
 #: includes/admin/class-ur-admin-settings.php:306
 #: includes/class-ur-ajax.php:1776
 #: includes/functions-ur-core.php:4160
-#: chunks/form_templates.js:115654
 #: src/form-templates/components/TemplateList.js:692
 #: chunks/form_templates.js:97427
 msgid "Upgrade Plan"
@@ -657,9 +634,6 @@ msgstr ""
 #: includes/admin/class-ur-admin-assets.php:245
 #: includes/admin/class-ur-admin-menus.php:968
 #: chunks/content-access-rules.js:36111
-#: chunks/dashboard.js:134652
-#: chunks/form_templates.js:114577
-#: chunks/form_templates.js:114586
 #: src/form-templates/components/PluginStatus.js:103
 #: src/form-templates/components/PluginStatus.js:112
 #: chunks/content-access-rules.js:35062
@@ -676,7 +650,6 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:247
 #: includes/admin/class-ur-admin-menus.php:970
-#: chunks/form_templates.js:115668
 #: src/form-templates/components/TemplateList.js:714
 #: chunks/form_templates.js:97449
 msgid "Uplift your form experience to the next level."
@@ -858,7 +831,6 @@ msgstr ""
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:195
 #: modules/payment-history/Orders.php:280
 #: chunks/content-access-rules.js:34499
-#: chunks/dashboard.js:133040
 #: chunks/content-access-rules.js:33768
 #: chunks/dashboard.js:116478
 msgid "Add New"
@@ -918,7 +890,6 @@ msgid "Please choose at least one form to export."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:449
-#: chunks/dashboard.js:140338
 #: src/dashboard/screens/Help/Help.js:232
 #: chunks/dashboard.js:123005
 msgid "Smart Tags"
@@ -982,7 +953,6 @@ msgstr ""
 #: includes/admin/class-ur-admin-registrations-table-list.php:108
 #: modules/payment-history/Admin/OrdersListTable.php:308
 #: chunks/content-access-rules.js:37113
-#: chunks/dashboard.js:135654
 #: chunks/content-access-rules.js:35842
 #: chunks/dashboard.js:118552
 msgid "Trash"
@@ -1000,7 +970,6 @@ msgstr ""
 #: modules/payment-history/Admin/OrdersListTable.php:596
 #: modules/payment-history/Orders.php:366
 #: chunks/content-access-rules.js:36245
-#: chunks/dashboard.js:134786
 #: chunks/content-access-rules.js:35146
 #: chunks/dashboard.js:117856
 msgid "Delete"
@@ -1022,11 +991,6 @@ msgstr ""
 #: chunks/content-access-rules.js:36106
 #: chunks/content-access-rules.js:36240
 #: chunks/content-access-rules.js:36363
-#: chunks/dashboard.js:134647
-#: chunks/dashboard.js:134781
-#: chunks/dashboard.js:134904
-#: chunks/dashboard.js:139567
-#: chunks/welcome.js:85053
 #: src/dashboard/components/common/UsePluginInstallActivate.js:166
 #: src/welcome/components/common/InputHandler.js:301
 #: chunks/content-access-rules.js:35059
@@ -1310,7 +1274,6 @@ msgstr ""
 #: includes/admin/class-ur-admin-assets.php:641
 #: includes/admin/notifications/views/html-notice-php-deprecation.php:28
 #: includes/blocks/class-ur-blocks.php:85
-#: chunks/dashboard.js:143304
 #: src/dashboard/screens/Products/components/ProductCard.js:95
 #: chunks/dashboard.js:126117
 msgid "Learn More"
@@ -1562,9 +1525,6 @@ msgstr ""
 #: includes/admin/settings/class-ur-users-list-table.php:821
 #: includes/functions-ur-core.php:5356
 #: modules/payment-history/Admin/OrdersListTable.php:431
-#: chunks/form_templates.js:114308
-#: chunks/form_templates.js:114329
-#: chunks/form_templates.js:114342
 #: src/form-templates/components/Main.js:31
 #: src/form-templates/components/Main.js:53
 #: src/form-templates/components/Main.js:68
@@ -1597,14 +1557,8 @@ msgstr ""
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:332
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:384
 #: user-registration.php:451
-#: chunks/blocks.js:77637
 #: chunks/content-access-rules.js:37079
 #: chunks/content-access-rules.js:37086
-#: chunks/dashboard.js:135620
-#: chunks/dashboard.js:135627
-#: chunks/dashboard.js:137412
-#: chunks/dashboard.js:144567
-#: chunks/welcome.js:84217
 #: src/blocks/blocks/content-restriction-enhanced/Edit.js:92
 #: src/dashboard/Constants/index.js:30
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:249
@@ -1653,7 +1607,6 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:674
 #: includes/admin/functions-ur-admin.php:917
-#: chunks/dashboard.js:137405
 #: src/dashboard/Constants/index.js:21
 #: chunks/dashboard.js:120137
 msgid "Site Assistant"
@@ -1671,7 +1624,6 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:751
 #: includes/admin/functions-ur-admin.php:982
-#: chunks/dashboard.js:139950
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:276
 #: chunks/dashboard.js:122595
 msgid "Addons"
@@ -1821,8 +1773,6 @@ msgstr ""
 #: includes/admin/class-ur-admin-registrations-table-list.php:132
 #: chunks/content-access-rules.js:36368
 #: chunks/content-access-rules.js:37122
-#: chunks/dashboard.js:134909
-#: chunks/dashboard.js:135663
 #: chunks/content-access-rules.js:35221
 #: chunks/content-access-rules.js:35853
 #: chunks/dashboard.js:117931
@@ -2111,7 +2061,6 @@ msgid "User Registration - Setup Wizard"
 msgstr ""
 
 #: includes/admin/class-ur-admin-welcome.php:148
-#: chunks/dashboard.js:143587
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:255
 #: chunks/dashboard.js:126497
 msgid "Welcome to User Registration & Membership"
@@ -2123,7 +2072,6 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-welcome.php:153
 #: includes/admin/views/html-admin-page-form-templates.php:106
-#: chunks/form_templates.js:115522
 #: src/form-templates/components/TemplateList.js:473
 #: chunks/form_templates.js:97208
 msgid "Get Started"
@@ -2252,9 +2200,6 @@ msgstr ""
 #: chunks/content-access-rules.js:34703
 #: chunks/content-access-rules.js:34706
 #: chunks/content-access-rules.js:36760
-#: chunks/dashboard.js:133244
-#: chunks/dashboard.js:133247
-#: chunks/dashboard.js:135301
 #: chunks/content-access-rules.js:33914
 #: chunks/content-access-rules.js:33916
 #: chunks/content-access-rules.js:35555
@@ -2284,21 +2229,18 @@ msgid "Members"
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:988
-#: chunks/dashboard.js:137415
 #: src/dashboard/Constants/index.js:35
 #: chunks/dashboard.js:120151
 msgid "Help"
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:994
-#: chunks/dashboard.js:137428
 #: src/dashboard/Constants/index.js:49
 #: chunks/dashboard.js:120165
 msgid "Free vs Pro"
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:1000
-#: chunks/dashboard.js:137418
 #: src/dashboard/Constants/index.js:39
 #: chunks/dashboard.js:120155
 msgid "Other Products"
@@ -2309,7 +2251,6 @@ msgid "You are currently using User Registration & Membership %1$s v%2$s"
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:1067
-#: chunks/dashboard.js:137962
 #: src/dashboard/components/Header/Header.js:138
 #: chunks/dashboard.js:120645
 msgid "Upgrade To Pro"
@@ -2521,8 +2462,6 @@ msgstr ""
 #: modules/stripe/class-ur-stripe-module.php:92
 #: templates/myaccount/form-reset-password.php:95
 #: chunks/content-access-rules.js:37483
-#: chunks/dashboard.js:136024
-#: chunks/dashboard.js:144297
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:296
 #: chunks/content-access-rules.js:36176
 #: chunks/dashboard.js:118886
@@ -2758,7 +2697,6 @@ msgstr ""
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:68
 #: modules/payment-history/Admin/OrdersListTable.php:215
 #: chunks/content-access-rules.js:37059
-#: chunks/dashboard.js:135600
 #: chunks/content-access-rules.js:35786
 #: chunks/dashboard.js:118496
 msgid "Status"
@@ -2977,7 +2915,6 @@ msgstr ""
 #: includes/admin/settings/class-ur-users-menu.php:200
 #: includes/class-ur-frontend-scripts.php:465
 #: modules/membership/includes/Frontend/Frontend.php:251
-#: chunks/dashboard.js:144865
 #: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:49
 #: chunks/dashboard.js:127795
 msgid "Please enter a valid email address."
@@ -3074,14 +3011,12 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-import-export.php:49
 #: includes/admin/views/html-admin-page-export-users.php:49
-#: chunks/dashboard.js:139868
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:155
 #: chunks/dashboard.js:122474
 msgid "Export Users"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-import-export.php:50
-#: chunks/dashboard.js:139864
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:150
 #: chunks/dashboard.js:122469
 msgid "Import/Export Forms"
@@ -4063,22 +3998,6 @@ msgstr ""
 #: includes/admin/updater/class-ur-addon-updater.php:591
 #: modules/membership/includes/Admin/Members/Members.php:156
 #: modules/membership/includes/Frontend/Frontend.php:271
-#: chunks/dashboard.js:143910
-#: chunks/dashboard.js:144115
-#: chunks/dashboard.js:144187
-#: chunks/dashboard.js:144439
-#: chunks/dashboard.js:144702
-#: chunks/dashboard.js:144922
-#: chunks/dashboard.js:145130
-#: chunks/form_templates.js:114519
-#: chunks/form_templates.js:114532
-#: chunks/form_templates.js:114547
-#: chunks/form_templates.js:114658
-#: chunks/form_templates.js:114670
-#: chunks/form_templates.js:115237
-#: chunks/form_templates.js:115295
-#: chunks/form_templates.js:115310
-#: chunks/form_templates.js:115361
 #: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:58
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:90
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:151
@@ -4115,8 +4034,6 @@ msgid "Error"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-builder-setup.php:20
-#: chunks/dashboard.js:140539
-#: chunks/dashboard.js:143701
 #: src/dashboard/screens/Help/Help.js:462
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:415
 #: chunks/dashboard.js:123235
@@ -4165,14 +4082,12 @@ msgid "No Forms Available, please create one."
 msgstr ""
 
 #: includes/admin/views/html-admin-page-form-templates.php:33
-#: chunks/form_templates.js:114148
 #: src/form-templates/App.js:108
 #: chunks/form_templates.js:96032
 msgid "Add New Form"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-form-templates.php:42
-#: chunks/form_templates.js:114181
 #: src/form-templates/App.js:138
 #: chunks/form_templates.js:96062
 msgid "Refresh Templates"
@@ -4188,9 +4103,6 @@ msgstr ""
 #: modules/membership/includes/Admin/Views/membership-create.php:175
 #: templates/myaccount/membership.php:81
 #: templates/myaccount/membership.php:181
-#: chunks/dashboard.js:140023
-#: chunks/form_templates.js:114064
-#: chunks/form_templates.js:114101
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:354
 #: src/form-templates/App.js:24
 #: src/form-templates/App.js:65
@@ -4201,8 +4113,6 @@ msgid "Free"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-form-templates.php:53
-#: chunks/form_templates.js:114064
-#: chunks/form_templates.js:114101
 #: src/form-templates/App.js:25
 #: src/form-templates/App.js:66
 #: chunks/form_templates.js:95949
@@ -4335,8 +4245,6 @@ msgid "Chat with our team"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-forms.php:248
-#: chunks/dashboard.js:140638
-#: chunks/dashboard.js:143800
 #: src/dashboard/screens/Help/Help.js:582
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:535
 #: chunks/dashboard.js:123355
@@ -4471,7 +4379,6 @@ msgid "Site URL"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-system-info.php:217
-#: chunks/dashboard.js:143134
 #: src/dashboard/screens/Products/Products.js:21
 #: chunks/dashboard.js:125983
 msgid "Plugins"
@@ -4539,7 +4446,6 @@ msgid "Required Pages"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-system-info.php:385
-#: chunks/blocks.js:78319
 #: src/blocks/blocks/login-logout-menu/Edit.js:26
 #: chunks/blocks.js:69346
 msgid "Login Page"
@@ -4725,8 +4631,6 @@ msgid "If you want to create a My Account page, you need to create a new page an
 msgstr ""
 
 #: includes/admin/views/html-login-page-forms-new.php:116
-#: chunks/dashboard.js:140547
-#: chunks/dashboard.js:143709
 #: src/dashboard/screens/Help/Help.js:477
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:430
 #: chunks/dashboard.js:123250
@@ -5440,7 +5344,6 @@ msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:493
 #: templates/myaccount/form-edit-profile.php:173
-#: chunks/welcome.js:85714
 #: src/welcome/components/screens/LastPage.js:60
 #: chunks/welcome.js:75340
 msgid "Change"
@@ -5775,7 +5678,6 @@ msgid "Unlock more functionality with these popular add-ons, loved by users like
 msgstr ""
 
 #: includes/class-ur-preview.php:385
-#: chunks/welcome.js:85722
 #: src/welcome/components/screens/LastPage.js:72
 #: chunks/welcome.js:75352
 msgid "Advanced Fields"
@@ -5783,7 +5685,6 @@ msgstr ""
 
 #: includes/class-ur-preview.php:386
 #: includes/functions-ur-core.php:4096
-#: chunks/welcome.js:85730
 #: src/welcome/components/screens/LastPage.js:88
 #: chunks/welcome.js:75368
 msgid "WooCommerce"
@@ -5791,7 +5692,6 @@ msgstr ""
 
 #: includes/class-ur-preview.php:387
 #: includes/functions-ur-core.php:4108
-#: chunks/welcome.js:85726
 #: src/welcome/components/screens/LastPage.js:80
 #: chunks/welcome.js:75360
 msgid "Customize My Account"
@@ -5802,7 +5702,6 @@ msgid "File Upload"
 msgstr ""
 
 #: includes/class-ur-preview.php:389
-#: chunks/welcome.js:85738
 #: src/welcome/components/screens/LastPage.js:104
 #: chunks/welcome.js:75384
 msgid "Style Customizer"
@@ -6188,7 +6087,6 @@ msgstr ""
 #: includes/class-ur-smart-tags.php:666
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:205
 #: templates/myaccount/membership.php:84
-#: chunks/dashboard.js:143334
 #: src/dashboard/screens/Products/components/ProductCard.js:142
 #: chunks/dashboard.js:126164
 msgid "Active"
@@ -8781,7 +8679,6 @@ msgstr ""
 
 #: includes/functions-ur-core.php:7314
 #: includes/functions-ur-core.php:7339
-#: chunks/blocks.js:78948
 #: src/blocks/blocks/myaccount/Edit.js:49
 #: chunks/blocks.js:69740
 msgid "Logout URL"
@@ -8918,7 +8815,7 @@ msgid "Customize the label shown for your registration link."
 msgstr ""
 
 #: includes/functions-ur-core.php:7791
-#: includes/stats/class-ur-stats.php:585
+#: includes/stats/class-ur-stats.php:584
 #: templates/myaccount/form-login.php:334
 msgid "Not a member yet? Register now."
 msgstr ""
@@ -8989,7 +8886,7 @@ msgid "This text will appear as the login form title"
 msgstr ""
 
 #: includes/functions-ur-core.php:8022
-#: includes/stats/class-ur-stats.php:601
+#: includes/stats/class-ur-stats.php:600
 #: templates/myaccount/form-login.php:138
 msgid "Welcome"
 msgstr ""
@@ -9028,7 +8925,6 @@ msgid "Choose which Captcha type to show on the login form."
 msgstr ""
 
 #: includes/functions-ur-core.php:8076
-#: chunks/dashboard.js:144277
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:260
 #: chunks/dashboard.js:127211
 msgid "Disable Default WordPress Login Screen"
@@ -9682,7 +9578,6 @@ msgid "The roles selected here will have access to restricted content."
 msgstr ""
 
 #: modules/content-restriction/admin/settings/class-urcr-settings-file.php:129
-#: chunks/blocks.js:77711
 #: src/blocks/blocks/content-restriction-enhanced/Edit.js:167
 #: chunks/blocks.js:68961
 msgid "Restricted Content Message"
@@ -9887,7 +9782,6 @@ msgstr ""
 
 #: modules/membership/includes/Admin.php:166
 #: modules/membership/includes/Admin/Views/membership-groups-create.php:106
-#: chunks/blocks.js:77692
 #: src/blocks/blocks/content-restriction-enhanced/Edit.js:146
 #: chunks/blocks.js:68940
 msgid "Select Memberships"
@@ -10215,7 +10109,6 @@ msgstr ""
 #: modules/payment-history/Admin/OrdersListTable.php:593
 #: templates/myaccount/form-edit-profile-non-urm-user.php:134
 #: chunks/content-access-rules.js:36634
-#: chunks/dashboard.js:135175
 #: chunks/content-access-rules.js:35451
 #: chunks/dashboard.js:118161
 msgid "Remove"
@@ -10247,7 +10140,6 @@ msgstr ""
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:69
 #: modules/payment-history/Admin/OrdersListTable.php:217
 #: chunks/content-access-rules.js:38258
-#: chunks/dashboard.js:136799
 #: chunks/content-access-rules.js:36852
 #: chunks/dashboard.js:119562
 msgid "Action"
@@ -12097,262 +11989,37 @@ msgstr ""
 msgid "As <strong>User Registration & Membership Pro</strong> is active, <strong>User Registration Free</strong> is now not needed."
 msgstr ""
 
-#: chunks/blocks.js:77630
-#: src/blocks/blocks/content-restriction-enhanced/Edit.js:85
-#: chunks/blocks.js:68879
-msgid "Allow Access to"
-msgstr ""
-
-#: chunks/blocks.js:77630
-#: src/blocks/blocks/content-restriction-enhanced/Edit.js:86
-#: chunks/blocks.js:68880
-msgid "Restrict Access to"
-msgstr ""
-
-#: chunks/blocks.js:77639
-#: src/blocks/blocks/content-restriction-enhanced/Edit.js:94
-#: chunks/blocks.js:68888
-msgid "Enable Content Restriction"
-msgstr ""
-
-#: chunks/blocks.js:77647
-#: src/blocks/blocks/content-restriction-enhanced/Edit.js:102
-#: chunks/blocks.js:68896
-msgid "Select Access Control"
-msgstr ""
-
-#: chunks/blocks.js:77650
-#: chunks/content-access-rules.js:36607
-#: chunks/dashboard.js:135148
-#: src/blocks/blocks/content-restriction-enhanced/Edit.js:105
-#: chunks/blocks.js:68899
-#: chunks/content-access-rules.js:35430
-#: chunks/dashboard.js:118140
-msgid "Access"
-msgstr ""
-
-#: chunks/blocks.js:77653
-#: chunks/content-access-rules.js:36609
-#: chunks/dashboard.js:135150
-#: src/blocks/blocks/content-restriction-enhanced/Edit.js:106
-#: chunks/blocks.js:68900
-#: chunks/content-access-rules.js:35432
-#: chunks/dashboard.js:118142
-msgid "Restrict"
-msgstr ""
-
-#: chunks/blocks.js:77675
-#: src/blocks/blocks/content-restriction-enhanced/Edit.js:124
-#: chunks/blocks.js:68918
-msgid "Specific Roles"
-msgstr ""
-
-#: chunks/blocks.js:77679
-#: src/blocks/blocks/content-restriction-enhanced/Edit.js:130
-#: chunks/blocks.js:68924
-msgid "Select specific roles..."
-msgstr ""
-
-#: chunks/blocks.js:77696
-#: src/blocks/blocks/content-restriction-enhanced/Edit.js:152
-#: chunks/blocks.js:68946
-msgid "Select membership roles..."
-msgstr ""
-
-#: chunks/blocks.js:77735
-#: src/blocks/blocks/content-restriction-enhanced/Edit.js:192
-#: chunks/blocks.js:68986
-msgid "This block has global content restriction settings."
-msgstr ""
-
-#: chunks/blocks.js:78179
-#: src/blocks/blocks/login-form/Edit.js:36
-#: chunks/blocks.js:69269
-msgid "Login Form Settings"
-msgstr ""
-
-#: chunks/blocks.js:78311
-#: src/blocks/blocks/login-logout-menu/Edit.js:19
-#: chunks/blocks.js:69339
-msgid "Login Label"
-msgstr ""
-
-#: chunks/blocks.js:78328
-#: src/blocks/blocks/login-logout-menu/Edit.js:34
-#: chunks/blocks.js:69354
-msgid "Logout Label"
-msgstr ""
-
-#: chunks/blocks.js:78707
-#: src/blocks/blocks/membership-listing/Edit.js:182
-#: chunks/blocks.js:69562
-msgid "Redirection Page settings"
-msgstr ""
-
-#: chunks/blocks.js:78711
-#: src/blocks/blocks/membership-listing/Edit.js:186
-#: chunks/blocks.js:69566
-msgid "Set Redirection Page"
-msgstr ""
-
-#: chunks/blocks.js:78713
-#: chunks/content-access-rules.js:38337
-#: chunks/dashboard.js:136878
-#: src/blocks/blocks/membership-listing/Edit.js:188
-#: chunks/blocks.js:69568
-#: chunks/content-access-rules.js:36931
-#: chunks/dashboard.js:119641
-msgid "Select a page"
-msgstr ""
-
-#: chunks/blocks.js:78731
-#: src/blocks/blocks/membership-listing/Edit.js:206
-#: chunks/blocks.js:69586
-msgid "Set Thank You Page"
-msgstr ""
-
-#: chunks/blocks.js:78733
-#: src/blocks/blocks/membership-listing/Edit.js:208
-#: chunks/blocks.js:69588
-msgid "Select thank you page"
-msgstr ""
-
-#: chunks/blocks.js:78759
-#: src/blocks/blocks/membership-listing/Edit.js:235
-#: chunks/blocks.js:69615
-msgid "Page's verified successfully!"
-msgstr ""
-
-#: chunks/blocks.js:78760
-#: src/blocks/blocks/membership-listing/Edit.js:239
-#: chunks/blocks.js:69619
-msgid "Group Settings"
-msgstr ""
-
-#: chunks/blocks.js:78764
-#: src/blocks/blocks/membership-listing/Edit.js:244
-#: chunks/blocks.js:69624
-msgid "Set Group"
-msgstr ""
-
-#: chunks/blocks.js:78766
-#: src/blocks/blocks/membership-listing/Edit.js:246
-#: chunks/blocks.js:69626
-msgid "Select a Group"
-msgstr ""
-
-#: chunks/blocks.js:78779
-#: src/blocks/blocks/membership-listing/Edit.js:256
-#: chunks/blocks.js:69636
-msgid "Set Group Type"
-msgstr ""
-
-#: chunks/blocks.js:78781
-#: src/blocks/blocks/membership-listing/Edit.js:258
-#: chunks/blocks.js:69638
-msgid "Select a Group Type"
-msgstr ""
-
-#: chunks/blocks.js:78784
-#: src/blocks/blocks/membership-listing/Edit.js:259
-#: chunks/blocks.js:69639
-msgid "List"
-msgstr ""
-
-#: chunks/blocks.js:78787
-#: src/blocks/blocks/membership-listing/Edit.js:260
-#: chunks/blocks.js:69640
-msgid "Block"
-msgstr ""
-
-#: chunks/blocks.js:78794
-#: src/blocks/blocks/membership-listing/Edit.js:268
-#: chunks/blocks.js:69648
-msgid "Content Settings"
-msgstr ""
-
-#: chunks/blocks.js:78940
-#: src/blocks/blocks/myaccount/Edit.js:36
-#: chunks/blocks.js:69727
-msgid "Myaccount Settings"
-msgstr ""
-
-#: chunks/blocks.js:79187
-#: chunks/blocks.js:79213
-#: src/blocks/blocks/registration-form/Edit.js:81
-#: src/blocks/blocks/registration-form/Edit.js:126
-#: chunks/blocks.js:69872
-#: chunks/blocks.js:69917
-msgid "User Registration Forms"
-msgstr ""
-
-#: chunks/blocks.js:79218
-#: src/blocks/blocks/registration-form/Edit.js:135
-#: chunks/blocks.js:69926
-msgid "Select a registration form name to display one of your form."
-msgstr ""
-
-#: chunks/blocks.js:79376
-#: src/blocks/blocks/thank-you/Edit.js:33
-#: chunks/blocks.js:70023
-msgid "Header Content"
-msgstr ""
-
-#: chunks/blocks.js:79393
-#: src/blocks/blocks/thank-you/Edit.js:60
-#: chunks/blocks.js:70050
-msgid "Payment Information"
-msgstr ""
-
-#: chunks/blocks.js:79400
-#: src/blocks/blocks/thank-you/Edit.js:62
-#: chunks/blocks.js:70052
-msgid "This information is shown only when a payment is processed during registration."
-msgstr ""
-
-#: chunks/blocks.js:79450
-#: src/blocks/blocks/thank-you/Edit.js:109
-#: chunks/blocks.js:70099
-msgid "Footer Content"
-msgstr ""
-
 #: chunks/content-access-rules.js:34390
-#: chunks/dashboard.js:132931
 #: chunks/content-access-rules.js:33651
 #: chunks/dashboard.js:116361
 msgid "Failed to load rules"
 msgstr ""
 
 #: chunks/content-access-rules.js:34395
-#: chunks/dashboard.js:132936
 #: chunks/content-access-rules.js:33657
 #: chunks/dashboard.js:116367
 msgid "An error occurred while loading rules"
 msgstr ""
 
 #: chunks/content-access-rules.js:34485
-#: chunks/dashboard.js:133026
 #: chunks/content-access-rules.js:33753
 #: chunks/dashboard.js:116463
 msgid "Retry"
 msgstr ""
 
 #: chunks/content-access-rules.js:34493
-#: chunks/dashboard.js:133034
 #: chunks/content-access-rules.js:33764
 #: chunks/dashboard.js:116474
 msgid "All Rules"
 msgstr ""
 
 #: chunks/content-access-rules.js:34507
-#: chunks/dashboard.js:133048
 #: chunks/content-access-rules.js:33779
 #: chunks/dashboard.js:116489
 msgid "No rules found"
 msgstr ""
 
 #: chunks/content-access-rules.js:34710
-#: chunks/dashboard.js:133251
 #: chunks/content-access-rules.js:33920
 #: chunks/dashboard.js:116630
 msgid "User Based"
@@ -12360,8 +12027,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:34713
 #: chunks/content-access-rules.js:36764
-#: chunks/dashboard.js:133254
-#: chunks/dashboard.js:135305
 #: chunks/content-access-rules.js:33922
 #: chunks/content-access-rules.js:35556
 #: chunks/dashboard.js:116632
@@ -12371,8 +12036,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:34717
 #: chunks/content-access-rules.js:36768
-#: chunks/dashboard.js:133258
-#: chunks/dashboard.js:135309
 #: chunks/content-access-rules.js:33923
 #: chunks/content-access-rules.js:35557
 #: chunks/dashboard.js:116633
@@ -12382,8 +12045,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:34721
 #: chunks/content-access-rules.js:36772
-#: chunks/dashboard.js:133262
-#: chunks/dashboard.js:135313
 #: chunks/content-access-rules.js:33924
 #: chunks/content-access-rules.js:35558
 #: chunks/dashboard.js:116634
@@ -12392,7 +12053,6 @@ msgid "Period after Registration"
 msgstr ""
 
 #: chunks/content-access-rules.js:34729
-#: chunks/dashboard.js:133270
 #: chunks/content-access-rules.js:33929
 #: chunks/dashboard.js:116639
 msgid "User Assets Based"
@@ -12400,8 +12060,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:34732
 #: chunks/content-access-rules.js:36780
-#: chunks/dashboard.js:133273
-#: chunks/dashboard.js:135321
 #: chunks/content-access-rules.js:33931
 #: chunks/content-access-rules.js:35560
 #: chunks/dashboard.js:116641
@@ -12411,8 +12069,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:34736
 #: chunks/content-access-rules.js:36784
-#: chunks/dashboard.js:133277
-#: chunks/dashboard.js:135325
 #: chunks/content-access-rules.js:33932
 #: chunks/content-access-rules.js:35561
 #: chunks/dashboard.js:116642
@@ -12421,7 +12077,6 @@ msgid "Minimum Public Posts Count"
 msgstr ""
 
 #: chunks/content-access-rules.js:34740
-#: chunks/dashboard.js:133281
 #: chunks/content-access-rules.js:33936
 #: chunks/dashboard.js:116646
 msgid "Others"
@@ -12429,8 +12084,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:34743
 #: chunks/content-access-rules.js:36788
-#: chunks/dashboard.js:133284
-#: chunks/dashboard.js:135329
 #: chunks/content-access-rules.js:33938
 #: chunks/content-access-rules.js:35562
 #: chunks/dashboard.js:116648
@@ -12440,8 +12093,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:34747
 #: chunks/content-access-rules.js:36792
-#: chunks/dashboard.js:133288
-#: chunks/dashboard.js:135333
 #: chunks/content-access-rules.js:33941
 #: chunks/content-access-rules.js:35563
 #: chunks/dashboard.js:116651
@@ -12451,8 +12102,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:34751
 #: chunks/content-access-rules.js:36796
-#: chunks/dashboard.js:133292
-#: chunks/dashboard.js:135337
 #: chunks/content-access-rules.js:33944
 #: chunks/content-access-rules.js:35564
 #: chunks/dashboard.js:116654
@@ -12462,8 +12111,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:34755
 #: chunks/content-access-rules.js:36800
-#: chunks/dashboard.js:133296
-#: chunks/dashboard.js:135341
 #: chunks/content-access-rules.js:33945
 #: chunks/content-access-rules.js:35565
 #: chunks/dashboard.js:116655
@@ -12473,8 +12120,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:34845
 #: chunks/content-access-rules.js:37446
-#: chunks/dashboard.js:133386
-#: chunks/dashboard.js:135987
 #: chunks/content-access-rules.js:34014
 #: chunks/content-access-rules.js:36131
 #: chunks/dashboard.js:116724
@@ -12484,8 +12129,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:34848
 #: chunks/content-access-rules.js:37447
-#: chunks/dashboard.js:133389
-#: chunks/dashboard.js:135988
 #: chunks/content-access-rules.js:34015
 #: chunks/content-access-rules.js:36132
 #: chunks/dashboard.js:116725
@@ -12494,7 +12137,6 @@ msgid "Posts"
 msgstr ""
 
 #: chunks/content-access-rules.js:34851
-#: chunks/dashboard.js:133392
 #: chunks/content-access-rules.js:34016
 #: chunks/dashboard.js:116726
 msgid "Post Type"
@@ -12502,8 +12144,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:34854
 #: chunks/content-access-rules.js:37449
-#: chunks/dashboard.js:133395
-#: chunks/dashboard.js:135990
 #: chunks/content-access-rules.js:34017
 #: chunks/content-access-rules.js:36134
 #: chunks/dashboard.js:116727
@@ -12514,9 +12154,6 @@ msgstr ""
 #: chunks/content-access-rules.js:34857
 #: chunks/content-access-rules.js:36000
 #: chunks/content-access-rules.js:37450
-#: chunks/dashboard.js:133398
-#: chunks/dashboard.js:134541
-#: chunks/dashboard.js:135991
 #: chunks/content-access-rules.js:34018
 #: chunks/content-access-rules.js:35005
 #: chunks/content-access-rules.js:36135
@@ -12528,8 +12165,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:35266
 #: chunks/content-access-rules.js:35544
-#: chunks/dashboard.js:133807
-#: chunks/dashboard.js:134085
 #: chunks/content-access-rules.js:34387
 #: chunks/content-access-rules.js:34627
 #: chunks/dashboard.js:117097
@@ -12538,42 +12173,36 @@ msgid "No options available"
 msgstr ""
 
 #: chunks/content-access-rules.js:35304
-#: chunks/dashboard.js:133845
 #: chunks/content-access-rules.js:34438
 #: chunks/dashboard.js:117148
 msgid "Enter value"
 msgstr ""
 
 #: chunks/content-access-rules.js:35635
-#: chunks/dashboard.js:134176
 #: chunks/content-access-rules.js:34696
 #: chunks/dashboard.js:117406
 msgid "During"
 msgstr ""
 
 #: chunks/content-access-rules.js:35637
-#: chunks/dashboard.js:134178
 #: chunks/content-access-rules.js:34697
 #: chunks/dashboard.js:117407
 msgid "After"
 msgstr ""
 
 #: chunks/content-access-rules.js:35643
-#: chunks/dashboard.js:134184
 #: chunks/content-access-rules.js:34705
 #: chunks/dashboard.js:117415
 msgid "Days"
 msgstr ""
 
 #: chunks/content-access-rules.js:35818
-#: chunks/dashboard.js:134359
 #: chunks/content-access-rules.js:34841
 #: chunks/dashboard.js:117551
 msgid "Select Taxonomy"
 msgstr ""
 
 #: chunks/content-access-rules.js:35967
-#: chunks/dashboard.js:134508
 #: chunks/content-access-rules.js:34980
 #: chunks/dashboard.js:117690
 msgid "No terms available"
@@ -12582,9 +12211,6 @@ msgstr ""
 #: chunks/content-access-rules.js:36059
 #: chunks/content-access-rules.js:37402
 #: chunks/content-access-rules.js:38213
-#: chunks/dashboard.js:134600
-#: chunks/dashboard.js:135943
-#: chunks/dashboard.js:136754
 #: chunks/content-access-rules.js:35027
 #: chunks/content-access-rules.js:36101
 #: chunks/content-access-rules.js:36822
@@ -12595,14 +12221,12 @@ msgid "Untitled Rule"
 msgstr ""
 
 #: chunks/content-access-rules.js:36067
-#: chunks/dashboard.js:134608
 #: chunks/content-access-rules.js:35033
 #: chunks/dashboard.js:117743
 msgid "Rule created successfully"
 msgstr ""
 
 #: chunks/content-access-rules.js:36074
-#: chunks/dashboard.js:134615
 #: chunks/content-access-rules.js:35040
 #: chunks/dashboard.js:117750
 msgid "Failed to create rule"
@@ -12614,13 +12238,6 @@ msgstr ""
 #: chunks/content-access-rules.js:37008
 #: chunks/content-access-rules.js:37428
 #: chunks/content-access-rules.js:38236
-#: chunks/dashboard.js:134622
-#: chunks/dashboard.js:134756
-#: chunks/dashboard.js:134879
-#: chunks/dashboard.js:135549
-#: chunks/dashboard.js:135969
-#: chunks/dashboard.js:136777
-#: chunks/dashboard.js:139464
 #: src/dashboard/components/common/UsePluginInstallActivate.js:78
 #: chunks/content-access-rules.js:35043
 #: chunks/content-access-rules.js:35127
@@ -12639,8 +12256,6 @@ msgid "An error occurred"
 msgstr ""
 
 #: chunks/content-access-rules.js:36111
-#: chunks/dashboard.js:134652
-#: chunks/dashboard.js:143978
 #: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:138
 #: chunks/content-access-rules.js:35062
 #: chunks/dashboard.js:117772
@@ -12649,22 +12264,18 @@ msgid "Creating..."
 msgstr ""
 
 #: chunks/content-access-rules.js:36115
-#: chunks/dashboard.js:134656
 #: chunks/content-access-rules.js:35071
 #: chunks/dashboard.js:117781
 msgid "Add New Content Rule"
 msgstr ""
 
 #: chunks/content-access-rules.js:36122
-#: chunks/dashboard.js:134663
 #: chunks/content-access-rules.js:35077
 #: chunks/dashboard.js:117787
 msgid "Content Rule Name"
 msgstr ""
 
 #: chunks/content-access-rules.js:36126
-#: chunks/dashboard.js:134667
-#: chunks/form_templates.js:115681
 #: src/form-templates/components/TemplateList.js:727
 #: chunks/content-access-rules.js:35083
 #: chunks/dashboard.js:117793
@@ -12673,77 +12284,82 @@ msgid "Give it a name"
 msgstr ""
 
 #: chunks/content-access-rules.js:36202
-#: chunks/dashboard.js:134743
 #: chunks/content-access-rules.js:35118
 #: chunks/dashboard.js:117828
 msgid "Rule deleted successfully"
 msgstr ""
 
 #: chunks/content-access-rules.js:36208
-#: chunks/dashboard.js:134749
 #: chunks/content-access-rules.js:35124
 #: chunks/dashboard.js:117834
 msgid "Failed to delete rule"
 msgstr ""
 
 #: chunks/content-access-rules.js:36245
-#: chunks/dashboard.js:134786
 #: chunks/content-access-rules.js:35146
 #: chunks/dashboard.js:117856
 msgid "Deleting..."
 msgstr ""
 
 #: chunks/content-access-rules.js:36249
-#: chunks/dashboard.js:134790
 #: chunks/content-access-rules.js:35155
 #: chunks/dashboard.js:117865
 msgid "Delete Content Rule"
 msgstr ""
 
 #: chunks/content-access-rules.js:36256
-#: chunks/dashboard.js:134797
 #: chunks/content-access-rules.js:35162
 #: chunks/dashboard.js:117872
 msgid "Are you sure you want to delete this rule permanently?"
 msgstr ""
 
 #: chunks/content-access-rules.js:36325
-#: chunks/dashboard.js:134866
 #: chunks/content-access-rules.js:35193
 #: chunks/dashboard.js:117903
 msgid "Rule duplicated successfully"
 msgstr ""
 
 #: chunks/content-access-rules.js:36331
-#: chunks/dashboard.js:134872
 #: chunks/content-access-rules.js:35199
 #: chunks/dashboard.js:117909
 msgid "Failed to duplicate rule"
 msgstr ""
 
 #: chunks/content-access-rules.js:36368
-#: chunks/dashboard.js:134909
 #: chunks/content-access-rules.js:35221
 #: chunks/dashboard.js:117931
 msgid "Duplicating..."
 msgstr ""
 
 #: chunks/content-access-rules.js:36372
-#: chunks/dashboard.js:134913
 #: chunks/content-access-rules.js:35230
 #: chunks/dashboard.js:117940
 msgid "Duplicate Content Rule"
 msgstr ""
 
 #: chunks/content-access-rules.js:36379
-#: chunks/dashboard.js:134920
 #: chunks/content-access-rules.js:35237
 #: chunks/dashboard.js:117947
 msgid "Are you sure you want to duplicate this rule? A copy will be created with the same settings."
 msgstr ""
 
+#: chunks/content-access-rules.js:36607
+#: src/blocks/blocks/content-restriction-enhanced/Edit.js:105
+#: chunks/blocks.js:68899
+#: chunks/content-access-rules.js:35430
+#: chunks/dashboard.js:118140
+msgid "Access"
+msgstr ""
+
+#: chunks/content-access-rules.js:36609
+#: src/blocks/blocks/content-restriction-enhanced/Edit.js:106
+#: chunks/blocks.js:68900
+#: chunks/content-access-rules.js:35432
+#: chunks/dashboard.js:118142
+msgid "Restrict"
+msgstr ""
+
 #: chunks/content-access-rules.js:36690
-#: chunks/dashboard.js:135231
 #: chunks/content-access-rules.js:35508
 #: chunks/dashboard.js:118218
 msgid "Add Logic:"
@@ -12751,8 +12367,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:36698
 #: chunks/content-access-rules.js:36699
-#: chunks/dashboard.js:135239
-#: chunks/dashboard.js:135240
 #: chunks/content-access-rules.js:35515
 #: chunks/content-access-rules.js:35517
 #: chunks/dashboard.js:118225
@@ -12762,8 +12376,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:36705
 #: chunks/content-access-rules.js:36706
-#: chunks/dashboard.js:135246
-#: chunks/dashboard.js:135247
 #: chunks/content-access-rules.js:35523
 #: chunks/content-access-rules.js:35525
 #: chunks/dashboard.js:118233
@@ -12773,8 +12385,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:36712
 #: chunks/content-access-rules.js:36713
-#: chunks/dashboard.js:135253
-#: chunks/dashboard.js:135254
 #: chunks/content-access-rules.js:35531
 #: chunks/content-access-rules.js:35533
 #: chunks/dashboard.js:118241
@@ -12783,28 +12393,24 @@ msgid "NOT"
 msgstr ""
 
 #: chunks/content-access-rules.js:36999
-#: chunks/dashboard.js:135540
 #: chunks/content-access-rules.js:35733
 #: chunks/dashboard.js:118443
 msgid "Rule status updated"
 msgstr ""
 
 #: chunks/content-access-rules.js:37001
-#: chunks/dashboard.js:135542
 #: chunks/content-access-rules.js:35735
 #: chunks/dashboard.js:118445
 msgid "Failed to update rule status"
 msgstr ""
 
 #: chunks/content-access-rules.js:37099
-#: chunks/dashboard.js:135640
 #: chunks/content-access-rules.js:35827
 #: chunks/dashboard.js:118537
 msgid "More options"
 msgstr ""
 
 #: chunks/content-access-rules.js:37323
-#: chunks/dashboard.js:135864
 #: chunks/content-access-rules.js:36010
 #: chunks/dashboard.js:118720
 msgid "No group data to save"
@@ -12813,9 +12419,6 @@ msgstr ""
 #: chunks/content-access-rules.js:37363
 #: chunks/content-access-rules.js:38141
 #: chunks/content-access-rules.js:38274
-#: chunks/dashboard.js:135904
-#: chunks/dashboard.js:136682
-#: chunks/dashboard.js:136815
 #: chunks/content-access-rules.js:36059
 #: chunks/content-access-rules.js:36760
 #: chunks/content-access-rules.js:36864
@@ -12828,9 +12431,6 @@ msgstr ""
 #: chunks/content-access-rules.js:37364
 #: chunks/content-access-rules.js:37973
 #: chunks/content-access-rules.js:38142
-#: chunks/dashboard.js:135905
-#: chunks/dashboard.js:136514
-#: chunks/dashboard.js:136683
 #: chunks/content-access-rules.js:36060
 #: chunks/content-access-rules.js:36600
 #: chunks/content-access-rules.js:36761
@@ -12841,21 +12441,18 @@ msgid "You do not have sufficient permission to access this content."
 msgstr ""
 
 #: chunks/content-access-rules.js:37410
-#: chunks/dashboard.js:135951
 #: chunks/content-access-rules.js:36107
 #: chunks/dashboard.js:118817
 msgid "Rule saved successfully"
 msgstr ""
 
 #: chunks/content-access-rules.js:37421
-#: chunks/dashboard.js:135962
 #: chunks/content-access-rules.js:36119
 #: chunks/dashboard.js:118829
 msgid "Failed to save rule"
 msgstr ""
 
 #: chunks/content-access-rules.js:37448
-#: chunks/dashboard.js:135989
 #: chunks/content-access-rules.js:36133
 #: chunks/dashboard.js:118843
 msgid "Post Types"
@@ -12863,9 +12460,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:37483
 #: chunks/content-access-rules.js:38407
-#: chunks/dashboard.js:136024
-#: chunks/dashboard.js:136948
-#: chunks/dashboard.js:144294
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:292
 #: chunks/content-access-rules.js:36176
 #: chunks/content-access-rules.js:37009
@@ -12876,28 +12470,24 @@ msgid "Saving..."
 msgstr ""
 
 #: chunks/content-access-rules.js:37779
-#: chunks/dashboard.js:136320
 #: chunks/content-access-rules.js:36441
 #: chunks/dashboard.js:119151
 msgid "Remove group"
 msgstr ""
 
 #: chunks/content-access-rules.js:37796
-#: chunks/dashboard.js:136337
 #: chunks/content-access-rules.js:36458
 #: chunks/dashboard.js:119168
 msgid "Remove condition"
 msgstr ""
 
 #: chunks/content-access-rules.js:37822
-#: chunks/dashboard.js:136363
 #: chunks/content-access-rules.js:36488
 #: chunks/dashboard.js:119198
 msgid "Condition"
 msgstr ""
 
 #: chunks/content-access-rules.js:37830
-#: chunks/dashboard.js:136371
 #: chunks/content-access-rules.js:36504
 #: chunks/dashboard.js:119214
 msgid "Group"
@@ -12905,8 +12495,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:38152
 #: chunks/content-access-rules.js:38276
-#: chunks/dashboard.js:136693
-#: chunks/dashboard.js:136817
 #: chunks/content-access-rules.js:36768
 #: chunks/content-access-rules.js:36865
 #: chunks/dashboard.js:119478
@@ -12916,8 +12504,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:38164
 #: chunks/content-access-rules.js:38278
-#: chunks/dashboard.js:136705
-#: chunks/dashboard.js:136819
 #: chunks/content-access-rules.js:36777
 #: chunks/content-access-rules.js:36866
 #: chunks/dashboard.js:119487
@@ -12927,8 +12513,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:38176
 #: chunks/content-access-rules.js:38280
-#: chunks/dashboard.js:136717
-#: chunks/dashboard.js:136821
 #: chunks/content-access-rules.js:36787
 #: chunks/content-access-rules.js:36867
 #: chunks/dashboard.js:119497
@@ -12938,8 +12522,6 @@ msgstr ""
 
 #: chunks/content-access-rules.js:38187
 #: chunks/content-access-rules.js:38282
-#: chunks/dashboard.js:136728
-#: chunks/dashboard.js:136823
 #: chunks/content-access-rules.js:36795
 #: chunks/content-access-rules.js:36868
 #: chunks/dashboard.js:119505
@@ -12948,158 +12530,242 @@ msgid "Render Shortcode"
 msgstr ""
 
 #: chunks/content-access-rules.js:38226
-#: chunks/dashboard.js:136767
 #: chunks/content-access-rules.js:36835
 #: chunks/dashboard.js:119545
 msgid "Settings saved successfully"
 msgstr ""
 
 #: chunks/content-access-rules.js:38229
-#: chunks/dashboard.js:136770
 #: chunks/content-access-rules.js:36838
 #: chunks/dashboard.js:119548
 msgid "Failed to save settings"
 msgstr ""
 
 #: chunks/content-access-rules.js:38262
-#: chunks/dashboard.js:136803
 #: chunks/content-access-rules.js:36855
 #: chunks/dashboard.js:119565
 msgid "Action to perform for restricting the specified contents"
 msgstr ""
 
 #: chunks/content-access-rules.js:38288
-#: chunks/dashboard.js:136829
 #: chunks/content-access-rules.js:36879
 #: chunks/dashboard.js:119589
 msgid "Redirection Message"
 msgstr ""
 
 #: chunks/content-access-rules.js:38311
-#: chunks/dashboard.js:136852
 #: chunks/content-access-rules.js:36903
 #: chunks/dashboard.js:119613
 msgid "Redirection URL"
 msgstr ""
 
 #: chunks/content-access-rules.js:38320
-#: chunks/dashboard.js:136861
 #: chunks/content-access-rules.js:36911
 #: chunks/dashboard.js:119621
 msgid "Enter a URL to redirect to..."
 msgstr ""
 
 #: chunks/content-access-rules.js:38327
-#: chunks/dashboard.js:136868
 #: chunks/content-access-rules.js:36923
 #: chunks/dashboard.js:119633
 msgid "Redirect to a local page"
 msgstr ""
 
+#: chunks/content-access-rules.js:38337
+#: src/blocks/blocks/membership-listing/Edit.js:188
+#: chunks/blocks.js:69568
+#: chunks/content-access-rules.js:36931
+#: chunks/dashboard.js:119641
+msgid "Select a page"
+msgstr ""
+
 #: chunks/content-access-rules.js:38348
-#: chunks/dashboard.js:136889
 #: chunks/content-access-rules.js:36948
 #: chunks/dashboard.js:119658
 msgid "Display User Registration Form"
 msgstr ""
 
 #: chunks/content-access-rules.js:38358
-#: chunks/dashboard.js:136899
 #: chunks/content-access-rules.js:36956
 #: chunks/dashboard.js:119666
 msgid "Select a form"
 msgstr ""
 
 #: chunks/content-access-rules.js:38369
-#: chunks/dashboard.js:136910
 #: chunks/content-access-rules.js:36973
 #: chunks/dashboard.js:119683
 msgid "Render a Shortcode"
 msgstr ""
 
 #: chunks/content-access-rules.js:38384
-#: chunks/dashboard.js:136925
 #: chunks/content-access-rules.js:36983
 #: chunks/dashboard.js:119693
 msgid "Select shortcode"
 msgstr ""
 
 #: chunks/content-access-rules.js:38407
-#: chunks/dashboard.js:136948
 #: chunks/content-access-rules.js:37009
 #: chunks/dashboard.js:119719
 msgid "Save Settings"
 msgstr ""
 
-#: chunks/dashboard.js:137321
-#: src/dashboard/Constants/Products.js:21
-#: chunks/dashboard.js:120023
-msgid "Revolutionize e-learning effortlessly with Masteriyo, a WordPress LMS plugin. Sell courses with quizzes, assignments, etc., for a dynamic learning experience."
+#: src/blocks/blocks/content-restriction-enhanced/Edit.js:85
+#: chunks/blocks.js:68879
+msgid "Allow Access to"
 msgstr ""
 
-#: chunks/dashboard.js:137325
-#: src/dashboard/Constants/Products.js:28
-#: chunks/dashboard.js:120030
-msgid "WordPress LMS plugin with Quiz Builder"
+#: src/blocks/blocks/content-restriction-enhanced/Edit.js:86
+#: chunks/blocks.js:68880
+msgid "Restrict Access to"
 msgstr ""
 
-#: chunks/dashboard.js:137331
-#: src/dashboard/Constants/Products.js:38
-#: chunks/dashboard.js:120040
-msgid "Fuel your digital creativity with BlockArt Blocks, a dynamic collection of custom Gutenberg blocks for designing captivating WordPress sites."
+#: src/blocks/blocks/content-restriction-enhanced/Edit.js:94
+#: chunks/blocks.js:68888
+msgid "Enable Content Restriction"
 msgstr ""
 
-#: chunks/dashboard.js:137335
-#: src/dashboard/Constants/Products.js:45
-#: chunks/dashboard.js:120047
-msgid "Custom Gutenberg Blocks Plugin"
+#: src/blocks/blocks/content-restriction-enhanced/Edit.js:102
+#: chunks/blocks.js:68896
+msgid "Select Access Control"
 msgstr ""
 
-#: chunks/dashboard.js:137341
-#: src/dashboard/Constants/Products.js:55
-#: chunks/dashboard.js:120057
-msgid "Manage online communication with Everest Forms, a lightning-fast and secure contact form plugin offering beautiful templates for professional forms."
+#: src/blocks/blocks/content-restriction-enhanced/Edit.js:124
+#: chunks/blocks.js:68918
+msgid "Specific Roles"
 msgstr ""
 
-#: chunks/dashboard.js:137345
-#: src/dashboard/Constants/Products.js:62
-#: chunks/dashboard.js:120064
-msgid "User-friendly Contact Form Plugin for WordPress"
+#: src/blocks/blocks/content-restriction-enhanced/Edit.js:130
+#: chunks/blocks.js:68924
+msgid "Select specific roles..."
 msgstr ""
 
-#: chunks/dashboard.js:137351
-#: src/dashboard/Constants/Products.js:72
-#: chunks/dashboard.js:120074
-msgid "Experience advanced Gutenberg blocks with Magazine Blocks, designed for crafting stunning magazine and news websites."
+#: src/blocks/blocks/content-restriction-enhanced/Edit.js:152
+#: chunks/blocks.js:68946
+msgid "Select membership roles..."
 msgstr ""
 
-#: chunks/dashboard.js:137355
-#: src/dashboard/Constants/Products.js:79
-#: chunks/dashboard.js:120081
-msgid "Gutenberg Blocks for Magazine-style Websites"
+#: src/blocks/blocks/content-restriction-enhanced/Edit.js:192
+#: chunks/blocks.js:68986
+msgid "This block has global content restriction settings."
 msgstr ""
 
-#: chunks/dashboard.js:137362
-#: src/dashboard/Constants/Products.js:92
-#: chunks/dashboard.js:120094
-msgid "Unlock boundless website possibilities with Zakra, a versatile multipurpose theme offering over 40 free starter sites for a tailored web experience."
+#: src/blocks/blocks/login-form/Edit.js:36
+#: chunks/blocks.js:69269
+msgid "Login Form Settings"
 msgstr ""
 
-#: chunks/dashboard.js:137370
-#: src/dashboard/Constants/Products.js:104
-#: chunks/dashboard.js:120106
-msgid "Elevate your website's style with Colormag, the go-to choice for news, blogs, and magazines. Embark on a digital spectacle of website-building excellence! "
+#: src/blocks/blocks/login-logout-menu/Edit.js:19
+#: chunks/blocks.js:69339
+msgid "Login Label"
 msgstr ""
 
-#: chunks/dashboard.js:137409
-#: src/dashboard/Constants/index.js:26
-#: chunks/dashboard.js:120142
-msgid "All Features"
+#: src/blocks/blocks/login-logout-menu/Edit.js:34
+#: chunks/blocks.js:69354
+msgid "Logout Label"
 msgstr ""
 
-#: chunks/dashboard.js:137650
-#: chunks/dashboard.js:137984
-#: chunks/dashboard.js:138008
+#: src/blocks/blocks/membership-listing/Edit.js:182
+#: chunks/blocks.js:69562
+msgid "Redirection Page settings"
+msgstr ""
+
+#: src/blocks/blocks/membership-listing/Edit.js:186
+#: chunks/blocks.js:69566
+msgid "Set Redirection Page"
+msgstr ""
+
+#: src/blocks/blocks/membership-listing/Edit.js:206
+#: chunks/blocks.js:69586
+msgid "Set Thank You Page"
+msgstr ""
+
+#: src/blocks/blocks/membership-listing/Edit.js:208
+#: chunks/blocks.js:69588
+msgid "Select thank you page"
+msgstr ""
+
+#: src/blocks/blocks/membership-listing/Edit.js:235
+#: chunks/blocks.js:69615
+msgid "Page's verified successfully!"
+msgstr ""
+
+#: src/blocks/blocks/membership-listing/Edit.js:239
+#: chunks/blocks.js:69619
+msgid "Group Settings"
+msgstr ""
+
+#: src/blocks/blocks/membership-listing/Edit.js:244
+#: chunks/blocks.js:69624
+msgid "Set Group"
+msgstr ""
+
+#: src/blocks/blocks/membership-listing/Edit.js:246
+#: chunks/blocks.js:69626
+msgid "Select a Group"
+msgstr ""
+
+#: src/blocks/blocks/membership-listing/Edit.js:256
+#: chunks/blocks.js:69636
+msgid "Set Group Type"
+msgstr ""
+
+#: src/blocks/blocks/membership-listing/Edit.js:258
+#: chunks/blocks.js:69638
+msgid "Select a Group Type"
+msgstr ""
+
+#: src/blocks/blocks/membership-listing/Edit.js:259
+#: chunks/blocks.js:69639
+msgid "List"
+msgstr ""
+
+#: src/blocks/blocks/membership-listing/Edit.js:260
+#: chunks/blocks.js:69640
+msgid "Block"
+msgstr ""
+
+#: src/blocks/blocks/membership-listing/Edit.js:268
+#: chunks/blocks.js:69648
+msgid "Content Settings"
+msgstr ""
+
+#: src/blocks/blocks/myaccount/Edit.js:36
+#: chunks/blocks.js:69727
+msgid "Myaccount Settings"
+msgstr ""
+
+#: src/blocks/blocks/registration-form/Edit.js:81
+#: src/blocks/blocks/registration-form/Edit.js:126
+#: chunks/blocks.js:69872
+#: chunks/blocks.js:69917
+msgid "User Registration Forms"
+msgstr ""
+
+#: src/blocks/blocks/registration-form/Edit.js:135
+#: chunks/blocks.js:69926
+msgid "Select a registration form name to display one of your form."
+msgstr ""
+
+#: src/blocks/blocks/thank-you/Edit.js:33
+#: chunks/blocks.js:70023
+msgid "Header Content"
+msgstr ""
+
+#: src/blocks/blocks/thank-you/Edit.js:60
+#: chunks/blocks.js:70050
+msgid "Payment Information"
+msgstr ""
+
+#: src/blocks/blocks/thank-you/Edit.js:62
+#: chunks/blocks.js:70052
+msgid "This information is shown only when a payment is processed during registration."
+msgstr ""
+
+#: src/blocks/blocks/thank-you/Edit.js:109
+#: chunks/blocks.js:70099
+msgid "Footer Content"
+msgstr ""
+
 #: src/dashboard/components/App.js:100
 #: src/dashboard/components/Header/Header.js:174
 #: src/dashboard/components/Header/Header.js:212
@@ -13109,27 +12775,16 @@ msgstr ""
 msgid "Latest Updates"
 msgstr ""
 
-#: chunks/dashboard.js:137967
-#: src/dashboard/components/Header/Header.js:146
-#: chunks/dashboard.js:120653
-msgid "You are currently using User Registration %s"
-msgstr ""
-
-#: chunks/dashboard.js:139451
 #: src/dashboard/components/common/UsePluginInstallActivate.js:65
 #: chunks/dashboard.js:122186
 msgid "%s plugin activated successfully"
 msgstr ""
 
-#: chunks/dashboard.js:139513
 #: src/dashboard/components/common/UsePluginInstallActivate.js:115
 #: chunks/dashboard.js:122236
 msgid "%s plugin installed and activated successfully"
 msgstr ""
 
-#: chunks/dashboard.js:139577
-#: chunks/dashboard.js:141883
-#: chunks/dashboard.js:143334
 #: src/dashboard/components/common/UsePluginInstallActivate.js:180
 #: src/dashboard/screens/Modules/Modules.js:419
 #: src/dashboard/screens/Products/components/ProductCard.js:144
@@ -13139,8 +12794,6 @@ msgstr ""
 msgid "Activate"
 msgstr ""
 
-#: chunks/dashboard.js:139577
-#: chunks/dashboard.js:143334
 #: src/dashboard/components/common/UsePluginInstallActivate.js:181
 #: src/dashboard/screens/Products/components/ProductCard.js:145
 #: chunks/dashboard.js:122302
@@ -13148,225 +12801,246 @@ msgstr ""
 msgid "Install"
 msgstr ""
 
-#: chunks/dashboard.js:139798
+#: src/dashboard/components/Header/Header.js:146
+#: chunks/dashboard.js:120653
+msgid "You are currently using User Registration %s"
+msgstr ""
+
+#: src/dashboard/Constants/index.js:26
+#: chunks/dashboard.js:120142
+msgid "All Features"
+msgstr ""
+
+#: src/dashboard/Constants/Products.js:21
+#: chunks/dashboard.js:120023
+msgid "Revolutionize e-learning effortlessly with Masteriyo, a WordPress LMS plugin. Sell courses with quizzes, assignments, etc., for a dynamic learning experience."
+msgstr ""
+
+#: src/dashboard/Constants/Products.js:28
+#: chunks/dashboard.js:120030
+msgid "WordPress LMS plugin with Quiz Builder"
+msgstr ""
+
+#: src/dashboard/Constants/Products.js:38
+#: chunks/dashboard.js:120040
+msgid "Fuel your digital creativity with BlockArt Blocks, a dynamic collection of custom Gutenberg blocks for designing captivating WordPress sites."
+msgstr ""
+
+#: src/dashboard/Constants/Products.js:45
+#: chunks/dashboard.js:120047
+msgid "Custom Gutenberg Blocks Plugin"
+msgstr ""
+
+#: src/dashboard/Constants/Products.js:55
+#: chunks/dashboard.js:120057
+msgid "Manage online communication with Everest Forms, a lightning-fast and secure contact form plugin offering beautiful templates for professional forms."
+msgstr ""
+
+#: src/dashboard/Constants/Products.js:62
+#: chunks/dashboard.js:120064
+msgid "User-friendly Contact Form Plugin for WordPress"
+msgstr ""
+
+#: src/dashboard/Constants/Products.js:72
+#: chunks/dashboard.js:120074
+msgid "Experience advanced Gutenberg blocks with Magazine Blocks, designed for crafting stunning magazine and news websites."
+msgstr ""
+
+#: src/dashboard/Constants/Products.js:79
+#: chunks/dashboard.js:120081
+msgid "Gutenberg Blocks for Magazine-style Websites"
+msgstr ""
+
+#: src/dashboard/Constants/Products.js:92
+#: chunks/dashboard.js:120094
+msgid "Unlock boundless website possibilities with Zakra, a versatile multipurpose theme offering over 40 free starter sites for a tailored web experience."
+msgstr ""
+
+#: src/dashboard/Constants/Products.js:104
+#: chunks/dashboard.js:120106
+msgid "Elevate your website's style with Colormag, the go-to choice for news, blogs, and magazines. Embark on a digital spectacle of website-building excellence! "
+msgstr ""
+
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:43
 #: chunks/dashboard.js:122362
 msgid "Features"
 msgstr ""
 
-#: chunks/dashboard.js:139800
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:46
 #: chunks/dashboard.js:122365
 msgid "Unlimited Registration Forms"
 msgstr ""
 
-#: chunks/dashboard.js:139804
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:54
 #: chunks/dashboard.js:122373
 msgid "Unlimited User Registrations"
 msgstr ""
 
-#: chunks/dashboard.js:139808
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:62
 #: chunks/dashboard.js:122381
 msgid "Built-in Login Forms"
 msgstr ""
 
-#: chunks/dashboard.js:139812
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:67
 #: chunks/dashboard.js:122386
 msgid "Login Form Templates"
 msgstr ""
 
-#: chunks/dashboard.js:139816
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:72
 #: chunks/dashboard.js:122391
 msgid "AJAX Login"
 msgstr ""
 
-#: chunks/dashboard.js:139820
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:77
 #: chunks/dashboard.js:122396
 msgid "Replace Default WordPress Login"
 msgstr ""
 
-#: chunks/dashboard.js:139824
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:85
 #: chunks/dashboard.js:122404
 msgid "Logout Confirmation"
 msgstr ""
 
-#: chunks/dashboard.js:139828
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:90
 #: chunks/dashboard.js:122409
 msgid "4 Registration Approval Methods"
 msgstr ""
 
-#: chunks/dashboard.js:139832
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:98
 #: chunks/dashboard.js:122417
 msgid "Individual User Profiles"
 msgstr ""
 
-#: chunks/dashboard.js:139836
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:103
 #: chunks/dashboard.js:122422
 msgid "Account Page Layouts"
 msgstr ""
 
-#: chunks/dashboard.js:139840
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:108
 #: chunks/dashboard.js:122427
 msgid "User Registration Analytics widget"
 msgstr ""
 
-#: chunks/dashboard.js:139844
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:116
 #: chunks/dashboard.js:122435
 msgid "Customizable Email Notifications"
 msgstr ""
 
-#: chunks/dashboard.js:139848
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:124
 #: chunks/dashboard.js:122443
 msgid "User Redirection After Registration"
 msgstr ""
 
-#: chunks/dashboard.js:139852
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:132
 #: chunks/dashboard.js:122451
 msgid "Google reCAPTCHA v2 and V3"
 msgstr ""
 
-#: chunks/dashboard.js:139856
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:140
 #: chunks/dashboard.js:122459
 msgid "HCaptcha"
 msgstr ""
 
-#: chunks/dashboard.js:139860
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:145
 #: chunks/dashboard.js:122464
 msgid "Cloudflare Turnstile"
 msgstr ""
 
-#: chunks/dashboard.js:139872
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:160
 #: chunks/dashboard.js:122479
 msgid "Erase Data After Uninstallation"
 msgstr ""
 
-#: chunks/dashboard.js:139876
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:168
 #: chunks/dashboard.js:122487
 msgid "Strong Password"
 msgstr ""
 
-#: chunks/dashboard.js:139880
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:173
 #: chunks/dashboard.js:122492
 msgid "GDPR Compliance"
 msgstr ""
 
-#: chunks/dashboard.js:139884
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:178
 #: chunks/dashboard.js:122497
 msgid "Dashboard Analytics"
 msgstr ""
 
-#: chunks/dashboard.js:139888
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:183
 #: chunks/dashboard.js:122502
 msgid "Admin Approval after Email Confirmation"
 msgstr ""
 
-#: chunks/dashboard.js:139892
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:191
 #: chunks/dashboard.js:122510
 msgid "Login Form Field Icons"
 msgstr ""
 
-#: chunks/dashboard.js:139896
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:196
 #: chunks/dashboard.js:122515
 msgid "Password-less Login"
 msgstr ""
 
-#: chunks/dashboard.js:139900
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:201
 #: chunks/dashboard.js:122520
 msgid "Multiple Login Prevention"
 msgstr ""
 
-#: chunks/dashboard.js:139904
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:206
 #: chunks/dashboard.js:122525
 msgid "Whitelisted Domains"
 msgstr ""
 
-#: chunks/dashboard.js:139908
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:211
 #: chunks/dashboard.js:122530
 msgid "Registration And Login Popups"
 msgstr ""
 
-#: chunks/dashboard.js:139912
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:219
 #: chunks/dashboard.js:122538
 msgid "Role Based Redirection"
 msgstr ""
 
-#: chunks/dashboard.js:139916
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:224
 #: chunks/dashboard.js:122543
 msgid "Keyboard Friendly Forms"
 msgstr ""
 
-#: chunks/dashboard.js:139920
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:229
 #: chunks/dashboard.js:122548
 msgid "Form Reset Button"
 msgstr ""
 
-#: chunks/dashboard.js:139924
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:234
 #: chunks/dashboard.js:122553
 msgid "Honeypot Spam Protection"
 msgstr ""
 
-#: chunks/dashboard.js:139928
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:239
 #: chunks/dashboard.js:122558
 msgid "Field Mapping with External Plugins"
 msgstr ""
 
-#: chunks/dashboard.js:139932
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:247
 #: chunks/dashboard.js:122566
 msgid "Unique Field Validation"
 msgstr ""
 
-#: chunks/dashboard.js:139936
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:252
 #: chunks/dashboard.js:122571
 msgid "Auto Populate Form Fields"
 msgstr ""
 
-#: chunks/dashboard.js:139940
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:257
 #: chunks/dashboard.js:122576
 msgid "Auto Logout After Inactivity"
 msgstr ""
 
-#: chunks/dashboard.js:139944
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:265
 #: chunks/dashboard.js:122584
 msgid "Send Form Data to External URL After Registration"
 msgstr ""
 
-#: chunks/dashboard.js:140026
-#: chunks/form_templates.js:115488
-#: chunks/form_templates.js:115500
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:357
 #: src/form-templates/components/TemplateList.js:423
 #: src/form-templates/components/TemplateList.js:440
@@ -13376,140 +13050,116 @@ msgstr ""
 msgid "Pro"
 msgstr ""
 
-#: chunks/dashboard.js:140065
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:417
 #: chunks/dashboard.js:122736
 msgid "Upgrade Now"
 msgstr ""
 
-#: chunks/dashboard.js:140071
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:426
 #: chunks/dashboard.js:122745
 msgid "Access all premium addons, features and upcoming updates right away by upgrading to the Pro version."
 msgstr ""
 
-#: chunks/dashboard.js:140080
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:444
 #: chunks/dashboard.js:122763
 msgid "Get User Registration Pro Now"
 msgstr ""
 
-#: chunks/dashboard.js:140232
 #: src/dashboard/screens/Help/Help.js:107
 #: chunks/dashboard.js:122880
 msgid "Welcome to User Registration & Membership!"
 msgstr ""
 
-#: chunks/dashboard.js:140236
 #: src/dashboard/screens/Help/Help.js:113
 #: chunks/dashboard.js:122886
 msgid "Create powerful registration forms and manage your members with our comprehensive toolkit."
 msgstr ""
 
-#: chunks/dashboard.js:140258
 #: src/dashboard/screens/Help/Help.js:136
 #: chunks/dashboard.js:122909
 msgid "Create a Registration Form"
 msgstr ""
 
-#: chunks/dashboard.js:140269
 #: src/dashboard/screens/Help/Help.js:150
 #: chunks/dashboard.js:122923
 msgid "View all forms"
 msgstr ""
 
-#: chunks/dashboard.js:140305
 #: src/dashboard/screens/Help/Help.js:195
 #: chunks/dashboard.js:122968
 msgid "Shortcodes"
 msgstr ""
 
-#: chunks/dashboard.js:140308
 #: src/dashboard/screens/Help/Help.js:198
 #: chunks/dashboard.js:122971
 msgid "Find the complete list of shortcodes with their usage information and parameter details."
 msgstr ""
 
-#: chunks/dashboard.js:140320
 #: src/dashboard/screens/Help/Help.js:216
 #: chunks/dashboard.js:122989
 msgid "View all Shortcodes"
 msgstr ""
 
-#: chunks/dashboard.js:140341
 #: src/dashboard/screens/Help/Help.js:235
 #: chunks/dashboard.js:123008
 msgid "Find the complete list of smart tags with their usage information and parameter details."
 msgstr ""
 
-#: chunks/dashboard.js:140353
 #: src/dashboard/screens/Help/Help.js:253
 #: chunks/dashboard.js:123026
 msgid "View Tags"
 msgstr ""
 
-#: chunks/dashboard.js:140359
 #: src/dashboard/screens/Help/Help.js:261
 #: chunks/dashboard.js:123034
 msgid "Join Our Community"
 msgstr ""
 
-#: chunks/dashboard.js:140389
 #: src/dashboard/screens/Help/Help.js:289
 #: chunks/dashboard.js:123062
 msgid "Facebook Community"
 msgstr ""
 
-#: chunks/dashboard.js:140392
 #: src/dashboard/screens/Help/Help.js:292
 #: chunks/dashboard.js:123065
 msgid "Join our exclusive group and connect with fellow members. Ask questions, contribute to discussions, and share feedback!"
 msgstr ""
 
-#: chunks/dashboard.js:140407
 #: src/dashboard/screens/Help/Help.js:312
 #: chunks/dashboard.js:123085
 msgid "Join Group"
 msgstr ""
 
-#: chunks/dashboard.js:140433
 #: src/dashboard/screens/Help/Help.js:337
 #: chunks/dashboard.js:123110
 msgid "X ( Twitter )"
 msgstr ""
 
-#: chunks/dashboard.js:140436
 #: src/dashboard/screens/Help/Help.js:340
 #: chunks/dashboard.js:123113
 msgid "Follow us on X to get the latest news and updates about User Registration & Membership."
 msgstr ""
 
-#: chunks/dashboard.js:140451
 #: src/dashboard/screens/Help/Help.js:360
 #: chunks/dashboard.js:123133
 msgid "Follow"
 msgstr ""
 
-#: chunks/dashboard.js:140477
 #: src/dashboard/screens/Help/Help.js:385
 #: chunks/dashboard.js:123158
 msgid "YouTube"
 msgstr ""
 
-#: chunks/dashboard.js:140480
 #: src/dashboard/screens/Help/Help.js:388
 #: chunks/dashboard.js:123161
 msgid "Subscribe to our YouTube channel, where we guide you on using User Registration & Membership features and add-ons."
 msgstr ""
 
-#: chunks/dashboard.js:140495
 #: src/dashboard/screens/Help/Help.js:408
 #: chunks/dashboard.js:123181
 msgid "Subscribe"
 msgstr ""
 
-#: chunks/dashboard.js:140514
-#: chunks/dashboard.js:143676
 #: src/dashboard/screens/Help/Help.js:426
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:379
 #: chunks/dashboard.js:123199
@@ -13517,8 +13167,6 @@ msgstr ""
 msgid "User Registration Community"
 msgstr ""
 
-#: chunks/dashboard.js:140517
-#: chunks/dashboard.js:143679
 #: src/dashboard/screens/Help/Help.js:433
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:386
 #: chunks/dashboard.js:123206
@@ -13526,8 +13174,6 @@ msgstr ""
 msgid "Join our exclusive group and connect with fellow User Registration members. Ask questions, contribute to discussions, and share feedback!"
 msgstr ""
 
-#: chunks/dashboard.js:140522
-#: chunks/dashboard.js:143684
 #: src/dashboard/screens/Help/Help.js:444
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:397
 #: chunks/dashboard.js:123217
@@ -13535,8 +13181,6 @@ msgstr ""
 msgid "Join our Facebook Group"
 msgstr ""
 
-#: chunks/dashboard.js:140542
-#: chunks/dashboard.js:143704
 #: src/dashboard/screens/Help/Help.js:466
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:419
 #: chunks/dashboard.js:123239
@@ -13544,8 +13188,6 @@ msgstr ""
 msgid "Check our documentation for detailed information on User Registration features and how to use them."
 msgstr ""
 
-#: chunks/dashboard.js:140564
-#: chunks/dashboard.js:143726
 #: src/dashboard/screens/Help/Help.js:495
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:448
 #: chunks/dashboard.js:123268
@@ -13553,8 +13195,6 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: chunks/dashboard.js:140567
-#: chunks/dashboard.js:143729
 #: src/dashboard/screens/Help/Help.js:499
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:452
 #: chunks/dashboard.js:123272
@@ -13562,8 +13202,6 @@ msgstr ""
 msgid "Submit a ticket for encountered issues and get help from our support team instantly."
 msgstr ""
 
-#: chunks/dashboard.js:140572
-#: chunks/dashboard.js:143734
 #: src/dashboard/screens/Help/Help.js:510
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:463
 #: chunks/dashboard.js:123283
@@ -13571,8 +13209,6 @@ msgstr ""
 msgid "Create a Ticket"
 msgstr ""
 
-#: chunks/dashboard.js:140588
-#: chunks/dashboard.js:143750
 #: src/dashboard/screens/Help/Help.js:524
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:477
 #: chunks/dashboard.js:123297
@@ -13580,8 +13216,6 @@ msgstr ""
 msgid "Feature Request"
 msgstr ""
 
-#: chunks/dashboard.js:140591
-#: chunks/dashboard.js:143753
 #: src/dashboard/screens/Help/Help.js:528
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:481
 #: chunks/dashboard.js:123301
@@ -13589,8 +13223,6 @@ msgstr ""
 msgid "Don't find a feature you're looking for? Suggest any features you think would enhance our product."
 msgstr ""
 
-#: chunks/dashboard.js:140596
-#: chunks/dashboard.js:143758
 #: src/dashboard/screens/Help/Help.js:539
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:492
 #: chunks/dashboard.js:123312
@@ -13598,10 +13230,6 @@ msgstr ""
 msgid "Request a Feature"
 msgstr ""
 
-#: chunks/dashboard.js:140613
-#: chunks/dashboard.js:140621
-#: chunks/dashboard.js:143775
-#: chunks/dashboard.js:143783
 #: src/dashboard/screens/Help/Help.js:553
 #: src/dashboard/screens/Help/Help.js:568
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:506
@@ -13613,8 +13241,6 @@ msgstr ""
 msgid "Submit a Review"
 msgstr ""
 
-#: chunks/dashboard.js:140616
-#: chunks/dashboard.js:143778
 #: src/dashboard/screens/Help/Help.js:557
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:510
 #: chunks/dashboard.js:123330
@@ -13622,8 +13248,6 @@ msgstr ""
 msgid "Please take a moment to give us a review. We appreciate honest feedback that'll help us improve our plugin."
 msgstr ""
 
-#: chunks/dashboard.js:140641
-#: chunks/dashboard.js:143803
 #: src/dashboard/screens/Help/Help.js:586
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:539
 #: chunks/dashboard.js:123359
@@ -13631,8 +13255,6 @@ msgstr ""
 msgid "Watch our step-by-step video tutorials that'll help you get the best out of User Registration's features."
 msgstr ""
 
-#: chunks/dashboard.js:140646
-#: chunks/dashboard.js:143808
 #: src/dashboard/screens/Help/Help.js:597
 #: src/dashboard/screens/SiteAssistant/SiteAssistant.js:550
 #: chunks/dashboard.js:123370
@@ -13640,32 +13262,26 @@ msgstr ""
 msgid "Watch Videos"
 msgstr ""
 
-#: chunks/dashboard.js:140713
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:37
 #: chunks/dashboard.js:123416
 msgid "Displays registration form in the front end."
 msgstr ""
 
-#: chunks/dashboard.js:140716
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:44
 #: chunks/dashboard.js:123423
 msgid "ID of the form to display."
 msgstr ""
 
-#: chunks/dashboard.js:140721
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:54
 #: chunks/dashboard.js:123433
 msgid "Displays Registration form with id 5"
 msgstr ""
 
-#: chunks/dashboard.js:140725
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:63
 #: chunks/dashboard.js:123442
 msgid "Displays login form in the front end."
 msgstr ""
 
-#: chunks/dashboard.js:140728
-#: chunks/dashboard.js:140745
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:70
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:111
 #: chunks/dashboard.js:123449
@@ -13673,76 +13289,61 @@ msgstr ""
 msgid "Slug or Link of the page to redirect users to after login."
 msgstr ""
 
-#: chunks/dashboard.js:140732
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:80
 #: chunks/dashboard.js:123459
 msgid "Redirects to the page with the slug sample-page, i.e., Sample Page after login."
 msgstr ""
 
-#: chunks/dashboard.js:140735
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:88
 #: chunks/dashboard.js:123467
 msgid "Redirects to User Registration website after login."
 msgstr ""
 
-#: chunks/dashboard.js:140739
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:97
 #: chunks/dashboard.js:123476
 msgid "Displays My Account page in the front end when the user is logged in and the login page when the user is logged out."
 msgstr ""
 
-#: chunks/dashboard.js:140742
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:104
 #: chunks/dashboard.js:123483
 msgid "Displays registration form of provided ID along with login form."
 msgstr ""
 
-#: chunks/dashboard.js:140748
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:118
 #: chunks/dashboard.js:123497
 msgid "Slug or Link of the page to redirect users to after logout."
 msgstr ""
 
-#: chunks/dashboard.js:140752
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:127
 #: chunks/dashboard.js:123506
 msgid "Renders login form and registration form with form ID 5 on the same page."
 msgstr ""
 
-#: chunks/dashboard.js:140755
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:135
 #: chunks/dashboard.js:123514
 msgid "Redirects to page with the slug sample-page, i.e., Sample Page after login. Redirects to page with the slug hello-world after user logout."
 msgstr ""
 
-#: chunks/dashboard.js:140758
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:143
 #: chunks/dashboard.js:123522
 msgid "Redirects to the User Registration website on login and redirects to the Everest Forms website after user logout."
 msgstr ""
 
-#: chunks/dashboard.js:140762
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:152
 #: chunks/dashboard.js:123531
 msgid "Displays the Edit Profile form in the front end."
 msgstr ""
 
-#: chunks/dashboard.js:140765
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:159
 #: chunks/dashboard.js:123538
 msgid "Displays the Password Change form in the front end."
 msgstr ""
 
-#: chunks/dashboard.js:140768
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:166
 #: chunks/dashboard.js:123545
 msgid "Displays profile details of the logged-in user in the front end."
 msgstr ""
 
-#: chunks/dashboard.js:140769
-#: chunks/dashboard.js:140788
-#: chunks/dashboard.js:140800
-#: chunks/dashboard.js:140813
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:170
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:214
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:244
@@ -13754,458 +13355,361 @@ msgstr ""
 msgid "Requires User Registration Pro to be activated."
 msgstr ""
 
-#: chunks/dashboard.js:140772
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:177
 #: chunks/dashboard.js:123556
 msgid "Displays the registration form as a popup in the front end."
 msgstr ""
 
-#: chunks/dashboard.js:140775
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:184
 #: chunks/dashboard.js:123563
 msgid "ID of the form to display as a popup."
 msgstr ""
 
-#: chunks/dashboard.js:140779
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:192
 #: chunks/dashboard.js:123571
 msgid "Type of the popup to be displayed. (It will be rendered by default on page load. But, if you set it to ‘button,’ a button that opens the popup when clicked will be displayed.)"
 msgstr ""
 
-#: chunks/dashboard.js:140783
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:201
 #: chunks/dashboard.js:123580
 msgid "Displays user registration popup with id 1"
 msgstr ""
 
-#: chunks/dashboard.js:140786
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:208
 #: chunks/dashboard.js:123587
 msgid "Displays a button on the area where this shortcode is used which will display the popup when clicked."
 msgstr ""
 
-#: chunks/dashboard.js:140791
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:221
 #: chunks/dashboard.js:123600
 msgid "Restricts the text inside the shortcode."
 msgstr ""
 
-#: chunks/dashboard.js:140794
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:228
 #: chunks/dashboard.js:123607
 msgid "Allow access to the mentioned user role only."
 msgstr ""
 
-#: chunks/dashboard.js:140798
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:238
 #: chunks/dashboard.js:123617
 msgid "Restricts the text inside the shortcode for all users except Administrators."
 msgstr ""
 
-#: chunks/dashboard.js:140803
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:251
 #: chunks/dashboard.js:123630
 msgid "Displays member directories in the front end."
 msgstr ""
 
-#: chunks/dashboard.js:140806
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:258
 #: chunks/dashboard.js:123637
 msgid "Frontend Listing ID to render."
 msgstr ""
 
-#: chunks/dashboard.js:140811
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:268
 #: chunks/dashboard.js:123647
 msgid "Displays user listing with ID 1 in the front end."
 msgstr ""
 
-#: chunks/dashboard.js:140816
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:281
 #: chunks/dashboard.js:123660
 msgid "Show a Download PDF button on your site. The PDF will have the user details for that specific user. This button will only be visible once the users are logged in."
 msgstr ""
 
-#: chunks/dashboard.js:140817
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:285
 #: chunks/dashboard.js:123664
 msgid "Requires User Registration Pro and User Registration PDF Form Submission add-on to be activated."
 msgstr ""
 
-#: chunks/dashboard.js:140820
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:292
 #: chunks/dashboard.js:123671
 msgid "Shows a list of available membership options for users to browse."
 msgstr ""
 
-#: chunks/dashboard.js:140823
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:299
 #: chunks/dashboard.js:123678
 msgid "ID of the membership group to display."
 msgstr ""
 
-#: chunks/dashboard.js:140827
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:307
 #: chunks/dashboard.js:123686
 msgid "Override the signup button text."
 msgstr ""
 
-#: chunks/dashboard.js:140832
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:318
 #: chunks/dashboard.js:123697
 msgid "Displays Membership listing attached to group with id 5"
 msgstr ""
 
-#: chunks/dashboard.js:140836
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:327
 #: chunks/dashboard.js:123706
 msgid "Displays a thank you message to users after successfully registering for a membership."
 msgstr ""
 
-#: chunks/dashboard.js:140839
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:334
 #: chunks/dashboard.js:123713
 msgid "Displays a section for recovering a lost password."
 msgstr ""
 
-#: chunks/dashboard.js:140842
-#: chunks/dashboard.js:123720
-msgid "Provides a section for users to reset their password after email verification."
-msgstr ""
-
-#: chunks/dashboard.js:140946
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:449
 #: chunks/dashboard.js:123835
 msgid "All Shortcodes"
 msgstr ""
 
-#: chunks/dashboard.js:141011
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:522
 #: chunks/dashboard.js:123908
 msgid "Parameters:"
 msgstr ""
 
-#: chunks/dashboard.js:141037
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:567
 #: chunks/dashboard.js:123953
 msgid "REQUIRED."
 msgstr ""
 
-#: chunks/dashboard.js:141053
 #: src/dashboard/screens/Help/Lists/ShortcodesLists/ShortcodesLists.js:602
 #: chunks/dashboard.js:123988
 msgid "Examples:"
 msgstr ""
 
-#: chunks/dashboard.js:141155
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:31
 #: chunks/dashboard.js:124119
 msgid "The Smart Tags listed below can be used to parse user data that doesn’t require user to be registered in the email content."
 msgstr ""
 
-#: chunks/dashboard.js:141158
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:38
 #: chunks/dashboard.js:124126
 msgid "Retrieves information about the current site."
 msgstr ""
 
-#: chunks/dashboard.js:141161
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:45
 #: chunks/dashboard.js:124133
 msgid "Retrieves the URL for a given site where the front end is accessible."
 msgstr ""
 
-#: chunks/dashboard.js:141164
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:52
 #: chunks/dashboard.js:124140
 msgid "Site admin email."
 msgstr ""
 
-#: chunks/dashboard.js:141167
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:56
 #: chunks/dashboard.js:124144
 msgid "Name of the website."
 msgstr ""
 
-#: chunks/dashboard.js:141170
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:63
 #: chunks/dashboard.js:124151
 msgid "URL of the website."
 msgstr ""
 
-#: chunks/dashboard.js:141173
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:67
 #: chunks/dashboard.js:124155
 msgid "Current Page title."
 msgstr ""
 
-#: chunks/dashboard.js:141176
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:71
 #: chunks/dashboard.js:124159
 msgid "Current Page URL."
 msgstr ""
 
-#: chunks/dashboard.js:141179
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:75
 #: chunks/dashboard.js:124163
 msgid "Current Page ID."
 msgstr ""
 
-#: chunks/dashboard.js:141182
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:79
 #: chunks/dashboard.js:124167
 msgid "Current Post title."
 msgstr ""
 
-#: chunks/dashboard.js:141185
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:83
 #: chunks/dashboard.js:124171
 msgid "Current date."
 msgstr ""
 
-#: chunks/dashboard.js:141188
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:87
 #: chunks/dashboard.js:124175
 msgid "Current time."
 msgstr ""
 
-#: chunks/dashboard.js:141191
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:91
 #: chunks/dashboard.js:124179
 msgid "Current language of the site."
 msgstr ""
 
-#: chunks/dashboard.js:141194
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:98
 #: chunks/dashboard.js:124186
 msgid "Token generated for an email confirmation."
 msgstr ""
 
-#: chunks/dashboard.js:141197
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:105
 #: chunks/dashboard.js:124193
 msgid "Current user's ip address."
 msgstr ""
 
-#: chunks/dashboard.js:141200
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:112
 #: chunks/dashboard.js:124200
 msgid "URL of the referrer page from where users landed on the form."
 msgstr ""
 
-#: chunks/dashboard.js:141203
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:119
 #: chunks/dashboard.js:124207
 msgid "Current form ID."
 msgstr ""
 
-#: chunks/dashboard.js:141206
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:123
 #: chunks/dashboard.js:124211
 msgid "Current form name."
 msgstr ""
 
-#: chunks/dashboard.js:141209
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:127
 #: chunks/dashboard.js:124215
 msgid "Current page or post's author name."
 msgstr ""
 
-#: chunks/dashboard.js:141212
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:134
 #: chunks/dashboard.js:124222
 msgid "Current page or post's author email."
 msgstr ""
 
-#: chunks/dashboard.js:141215
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:141
 #: chunks/dashboard.js:124229
 msgid "Generates a unique string that can be used as an ID."
 msgstr ""
 
-#: chunks/dashboard.js:141219
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:150
 #: chunks/dashboard.js:124238
 msgid "The Smart Tags listed below can be used to parse a registered user’s submitted field value and other data in the email content."
 msgstr ""
 
-#: chunks/dashboard.js:141222
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:157
 #: chunks/dashboard.js:124245
 msgid "ID of the registered user."
 msgstr ""
 
-#: chunks/dashboard.js:141225
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:164
 #: chunks/dashboard.js:124252
 msgid "Username of the registered user."
 msgstr ""
 
-#: chunks/dashboard.js:141228
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:171
 #: chunks/dashboard.js:124259
 msgid "Password of the registered user."
 msgstr ""
 
-#: chunks/dashboard.js:141231
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:178
 #: chunks/dashboard.js:124266
 msgid "First name of the registered user."
 msgstr ""
 
-#: chunks/dashboard.js:141234
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:185
 #: chunks/dashboard.js:124273
 msgid "Bio of the registered user."
 msgstr ""
 
-#: chunks/dashboard.js:141237
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:192
 #: chunks/dashboard.js:124280
 msgid "Nickname of the registered user"
 msgstr ""
 
-#: chunks/dashboard.js:141240
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:199
 #: chunks/dashboard.js:124287
 msgid "Website/URL of the registered user."
 msgstr ""
 
-#: chunks/dashboard.js:141243
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:206
 #: chunks/dashboard.js:124294
 msgid "Display name of the registered user."
 msgstr ""
 
-#: chunks/dashboard.js:141246
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:213
 #: chunks/dashboard.js:124301
 msgid "Email of the registered user."
 msgstr ""
 
-#: chunks/dashboard.js:141249
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:220
 #: chunks/dashboard.js:124308
 msgid "All form field values filled and submitted by the user."
 msgstr ""
 
-#: chunks/dashboard.js:141252
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:227
 #: chunks/dashboard.js:124315
 msgid "The user’s assigned role."
 msgstr ""
 
-#: chunks/dashboard.js:141255
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:234
 #: chunks/dashboard.js:124322
 msgid "Auto generated password for the user. It works only if auto-generated password feature is enabled in User Registration & Membership Pro"
 msgstr ""
 
-#: chunks/dashboard.js:141297
 #: src/dashboard/screens/Help/Lists/SmartTagsLists/SmartTagsLists.js:287
 #: chunks/dashboard.js:124375
 msgid "All Smart Tags"
 msgstr ""
 
-#: chunks/dashboard.js:141565
 #: src/dashboard/screens/Modules/Modules.js:122
 #: chunks/dashboard.js:124595
 msgid "Newest"
 msgstr ""
 
-#: chunks/dashboard.js:141568
 #: src/dashboard/screens/Modules/Modules.js:123
 #: chunks/dashboard.js:124596
 msgid "Oldest"
 msgstr ""
 
-#: chunks/dashboard.js:141571
 #: src/dashboard/screens/Modules/Modules.js:124
 #: chunks/dashboard.js:124597
 msgid "Ascending"
 msgstr ""
 
-#: chunks/dashboard.js:141574
 #: src/dashboard/screens/Modules/Modules.js:125
 #: chunks/dashboard.js:124598
 msgid "Descending"
 msgstr ""
 
-#: chunks/dashboard.js:141886
 #: src/dashboard/screens/Modules/Modules.js:420
 #: chunks/dashboard.js:124893
 msgid "Deactivate"
 msgstr ""
 
-#: chunks/dashboard.js:141978
 #: src/dashboard/screens/Modules/Modules.js:500
 #: chunks/dashboard.js:124973
 msgid "Sorry, no result found."
 msgstr ""
 
-#: chunks/dashboard.js:141981
 #: src/dashboard/screens/Modules/Modules.js:503
 #: chunks/dashboard.js:124976
 msgid "Please try another search"
 msgstr ""
 
-#: chunks/dashboard.js:143154
-#: src/dashboard/screens/Products/Products.js:39
-#: chunks/dashboard.js:126001
-msgid "Themes"
-msgstr ""
-
-#: chunks/dashboard.js:143314
 #: src/dashboard/screens/Products/components/ProductCard.js:107
 #: chunks/dashboard.js:126129
 msgid "Live Demo"
 msgstr ""
 
-#: chunks/dashboard.js:143342
 #: src/dashboard/screens/Products/components/ProductCard.js:163
 #: chunks/dashboard.js:126185
 msgid "Activate Plugin"
 msgstr ""
 
-#: chunks/dashboard.js:143342
 #: src/dashboard/screens/Products/components/ProductCard.js:164
 #: chunks/dashboard.js:126186
 msgid "Install Plugin"
 msgstr ""
 
-#: chunks/dashboard.js:143342
 #: src/dashboard/screens/Products/components/ProductCard.js:169
 #: chunks/dashboard.js:126191
 msgid "Are you sure? You want to activate %s plugin."
 msgstr ""
 
-#: chunks/dashboard.js:143342
 #: src/dashboard/screens/Products/components/ProductCard.js:176
 #: chunks/dashboard.js:126198
 msgid "Are you sure? You want to install and activate %s plugin."
 msgstr ""
 
-#: chunks/dashboard.js:143590
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:261
-#: chunks/dashboard.js:126503
-msgid "Let's get your user registration system set up and ready to go!"
+#: src/dashboard/screens/Products/Products.js:39
+#: chunks/dashboard.js:126001
+msgid "Themes"
 msgstr ""
 
-#: chunks/dashboard.js:143611
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:292
-#: chunks/dashboard.js:126534
-msgid "Setup Complete!"
-msgstr ""
-
-#: chunks/dashboard.js:143614
-#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:296
-#: chunks/dashboard.js:126538
-msgid "Redirecting to All forms..."
-msgstr ""
-
-#: chunks/dashboard.js:143892
-#: chunks/dashboard.js:144684
-#: chunks/form_templates.js:114651
 #: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:43
 #: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:53
 #: src/form-templates/components/PluginStatus.js:169
@@ -14215,63 +13719,51 @@ msgstr ""
 msgid "Success"
 msgstr ""
 
-#: chunks/dashboard.js:143911
 #: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:61
 #: chunks/dashboard.js:126863
 msgid "Failed to create default form. Please try again."
 msgstr ""
 
-#: chunks/dashboard.js:143948
 #: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:99
 #: chunks/dashboard.js:126901
 msgid "Default Form Missing"
 msgstr ""
 
-#: chunks/dashboard.js:143969
 #: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:123
 #: chunks/dashboard.js:126925
 msgid "To start using User Registration & Membership, you first need to create a registration form."
 msgstr ""
 
-#: chunks/dashboard.js:143979
 #: src/dashboard/screens/SiteAssistant/components/DefaultFormMissing.js:140
 #: chunks/dashboard.js:126942
 msgid "Create Default Form"
 msgstr ""
 
-#: chunks/dashboard.js:144060
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:34
 #: chunks/dashboard.js:126985
 msgid "Action Required"
 msgstr ""
 
-#: chunks/dashboard.js:144061
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:35
 #: chunks/dashboard.js:126986
 msgid "Please turn on the switch to disable WordPress login before saving."
 msgstr ""
 
-#: chunks/dashboard.js:144094
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:68
 #: chunks/dashboard.js:127019
 msgid "Settings Saved"
 msgstr ""
 
-#: chunks/dashboard.js:144095
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:71
 #: chunks/dashboard.js:127022
 msgid "WordPress login has been disabled successfully."
 msgstr ""
 
-#: chunks/dashboard.js:144116
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:93
 #: chunks/dashboard.js:127044
 msgid "Failed to save settings. Please try again."
 msgstr ""
 
-#: chunks/dashboard.js:144166
-#: chunks/dashboard.js:144419
-#: chunks/dashboard.js:145109
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:129
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:72
 #: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:60
@@ -14281,14 +13773,11 @@ msgstr ""
 msgid "Skipped"
 msgstr ""
 
-#: chunks/dashboard.js:144167
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:132
 #: chunks/dashboard.js:127083
 msgid "WordPress login settings have been acknowledged and skipped."
 msgstr ""
 
-#: chunks/dashboard.js:144188
-#: chunks/dashboard.js:145131
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:154
 #: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:85
 #: chunks/dashboard.js:127105
@@ -14296,33 +13785,26 @@ msgstr ""
 msgid "Failed to skip settings. Please try again."
 msgstr ""
 
-#: chunks/dashboard.js:144226
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:193
 #: chunks/dashboard.js:127144
 msgid "Default WordPress Login Enabled"
 msgstr ""
 
-#: chunks/dashboard.js:144262
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:237
 #: chunks/dashboard.js:127188
 msgid "Recommended"
 msgstr ""
 
-#: chunks/dashboard.js:144266
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:245
 #: chunks/dashboard.js:127196
 msgid "WordPress default login is still active. This can lead to spam registrations on your site. Disable it to keep your site safe."
 msgstr ""
 
-#: chunks/dashboard.js:144279
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:266
 #: chunks/dashboard.js:127217
 msgid "Prevents access to wp-login.php"
 msgstr ""
 
-#: chunks/dashboard.js:144305
-#: chunks/dashboard.js:144588
-#: chunks/dashboard.js:145235
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:308
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:298
 #: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:222
@@ -14332,9 +13814,6 @@ msgstr ""
 msgid "Skipping..."
 msgstr ""
 
-#: chunks/dashboard.js:144305
-#: chunks/dashboard.js:144588
-#: chunks/dashboard.js:145235
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:309
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:299
 #: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:223
@@ -14344,110 +13823,91 @@ msgstr ""
 msgid "Skip Setup"
 msgstr ""
 
-#: chunks/dashboard.js:144420
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:75
 #: chunks/dashboard.js:127345
 msgid "Payment setup has been acknowledged and skipped."
 msgstr ""
 
-#: chunks/dashboard.js:144440
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:96
 #: chunks/dashboard.js:127366
 msgid "Failed to skip payment setup. Please try again."
 msgstr ""
 
-#: chunks/dashboard.js:144483
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:142
 #: chunks/dashboard.js:127412
 msgid "Payment Setup"
 msgstr ""
 
-#: chunks/dashboard.js:144504
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:165
 #: chunks/dashboard.js:127435
 msgid "Configure payment methods to start selling your memberships. You can set up multiple payment options for your members."
 msgstr ""
 
-#: chunks/dashboard.js:144556
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:227
 #: chunks/dashboard.js:127497
 msgid "Connected"
 msgstr ""
 
-#: chunks/dashboard.js:144574
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:270
 #: chunks/dashboard.js:127540
 msgid "Additional payment setup can be configured from "
 msgstr ""
 
-#: chunks/dashboard.js:144579
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:280
 #: chunks/dashboard.js:127550
 msgid "Payment > Settings"
 msgstr ""
 
-#: chunks/dashboard.js:144703
 #: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:70
 #: chunks/dashboard.js:127650
 msgid "Failed to generate pages. Please try again."
 msgstr ""
 
-#: chunks/dashboard.js:144741
 #: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:109
 #: chunks/dashboard.js:127689
 msgid "Required Pages Missing"
 msgstr ""
 
-#: chunks/dashboard.js:144762
 #: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:132
 #: chunks/dashboard.js:127712
 msgid "Some essential pages are missing. These pages are needed to make your website work correctly. The following pages need to be created:"
 msgstr ""
 
-#: chunks/dashboard.js:144778
 #: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:155
 #: chunks/dashboard.js:127735
 msgid "Generating..."
 msgstr ""
 
-#: chunks/dashboard.js:144779
 #: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:157
 #: chunks/dashboard.js:127737
 msgid "Generate Pages"
 msgstr ""
 
-#: chunks/dashboard.js:144864
 #: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:48
 #: chunks/dashboard.js:127794
 msgid "Invalid Email"
 msgstr ""
 
-#: chunks/dashboard.js:144898
 #: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:82
 #: chunks/dashboard.js:127828
 msgid "Test Email Sent"
 msgstr ""
 
-#: chunks/dashboard.js:144899
 #: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:85
 #: chunks/dashboard.js:127831
 msgid "Test email has been sent successfully."
 msgstr ""
 
-#: chunks/dashboard.js:144911
 #: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:100
 #: chunks/dashboard.js:127846
 msgid "Test email has was unsuccessfully."
 msgstr ""
 
-#: chunks/dashboard.js:144919
 #: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:110
 #: chunks/dashboard.js:127856
 msgid "Failed to send test email. Please try again."
 msgstr ""
 
-#: chunks/dashboard.js:144966
-#: chunks/dashboard.js:145011
 #: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:161
 #: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:222
 #: chunks/dashboard.js:127907
@@ -14455,230 +13915,206 @@ msgstr ""
 msgid "Send Test Email"
 msgstr ""
 
-#: chunks/dashboard.js:144987
 #: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:184
 #: chunks/dashboard.js:127930
 msgid "Make sure emails are being sent to your users during registration. Test by sending a sample email to yourself."
 msgstr ""
 
-#: chunks/dashboard.js:144990
 #: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:194
 #: chunks/dashboard.js:127940
 msgid "Email Address (To send test email to)"
 msgstr ""
 
-#: chunks/dashboard.js:145010
 #: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:220
 #: chunks/dashboard.js:127966
 msgid "Sending..."
 msgstr ""
 
-#: chunks/dashboard.js:145110
 #: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:63
 #: chunks/dashboard.js:128040
 msgid "Spam protection setting has been acknowledged and skipped."
 msgstr ""
 
-#: chunks/dashboard.js:145169
 #: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:124
 #: chunks/dashboard.js:128101
 msgid "Spam Protection"
 msgstr ""
 
-#: chunks/dashboard.js:145190
 #: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:147
 #: chunks/dashboard.js:128124
 msgid "Set up protection against spam registrations. We recommend enabling reCaptcha v2."
 msgstr ""
 
-#: chunks/dashboard.js:145207
 #: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:173
 #: chunks/dashboard.js:128150
 msgid "reCaptcha v2"
 msgstr ""
 
-#: chunks/dashboard.js:145210
 #: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:176
 #: chunks/dashboard.js:128153
 msgid "Enable Google reCaptcha protection"
 msgstr ""
 
-#: chunks/dashboard.js:145215
 #: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:188
 #: chunks/dashboard.js:128165
 msgid "Configure Settings"
 msgstr ""
 
-#: chunks/dashboard.js:145221
 #: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:196
 #: chunks/dashboard.js:128173
 msgid "You can also set up other spam protection features from "
 msgstr ""
 
-#: chunks/dashboard.js:145226
 #: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:206
 #: chunks/dashboard.js:128183
 msgid "here"
 msgstr ""
 
-#: chunks/form_templates.js:114199
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:261
+#: chunks/dashboard.js:126503
+msgid "Let's get your user registration system set up and ready to go!"
+msgstr ""
+
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:292
+#: chunks/dashboard.js:126534
+msgid "Setup Complete!"
+msgstr ""
+
+#: src/dashboard/screens/SiteAssistant/SiteAssistant.js:296
+#: chunks/dashboard.js:126538
+msgid "Redirecting to All forms..."
+msgstr ""
+
 #: src/form-templates/App.js:155
 #: chunks/form_templates.js:96079
 msgid "Select a Template"
 msgstr ""
 
-#: chunks/form_templates.js:114205
 #: src/form-templates/App.js:164
 #: chunks/form_templates.js:96088
 msgid "To get started quickly, you can pick from our ready-made templates, begin with a blank form, or design your own."
 msgstr ""
 
-#: chunks/form_templates.js:114295
 #: src/form-templates/components/Main.js:25
 #: chunks/form_templates.js:96130
 msgid "Unexpected response format."
 msgstr ""
 
-#: chunks/form_templates.js:114520
 #: src/form-templates/components/PluginStatus.js:47
 #: chunks/form_templates.js:96285
 msgid "Invalid response format."
 msgstr ""
 
-#: chunks/form_templates.js:114533
 #: src/form-templates/components/PluginStatus.js:61
 #: chunks/form_templates.js:96299
 msgid "HTTP request failed."
 msgstr ""
 
-#: chunks/form_templates.js:114548
 #: src/form-templates/components/PluginStatus.js:75
 #: chunks/form_templates.js:96313
 msgid "Unable to check plugin status."
 msgstr ""
 
-#: chunks/form_templates.js:114583
 #: src/form-templates/components/PluginStatus.js:109
 #: chunks/form_templates.js:96347
 msgid "Activate and Continue"
 msgstr ""
 
-#: chunks/form_templates.js:114650
 #: src/form-templates/components/PluginStatus.js:165
 #: chunks/form_templates.js:96403
 msgid "Plugin activated successfully."
 msgstr ""
 
-#: chunks/form_templates.js:114657
 #: src/form-templates/components/PluginStatus.js:180
 #: chunks/form_templates.js:96418
 msgid "Failed to activate plugin: %s."
 msgstr ""
 
-#: chunks/form_templates.js:114669
 #: src/form-templates/components/PluginStatus.js:198
 #: chunks/form_templates.js:96436
 msgid "Unable to activate %s."
 msgstr ""
 
-#: chunks/form_templates.js:114852
 #: src/form-templates/components/Sidebar.js:62
 #: chunks/form_templates.js:96593
 msgid "Search Templates"
 msgstr ""
 
-#: chunks/form_templates.js:114924
 #: src/form-templates/components/Sidebar.js:164
 #: chunks/form_templates.js:96695
 msgid "Can't Find The Form Template You Need?"
 msgstr ""
 
-#: chunks/form_templates.js:114945
 #: src/form-templates/components/Sidebar.js:189
 #: chunks/form_templates.js:96720
 msgid "Request Template"
 msgstr ""
 
-#: chunks/form_templates.js:115238
 #: src/form-templates/components/TemplateList.js:181
 #: chunks/form_templates.js:96916
 msgid "An error occurred while checking the plugin status. Please try again."
 msgstr ""
 
-#: chunks/form_templates.js:115265
 #: src/form-templates/components/TemplateList.js:197
 #: chunks/form_templates.js:96932
 msgid "Form name required"
 msgstr ""
 
-#: chunks/form_templates.js:115266
 #: src/form-templates/components/TemplateList.js:198
 #: chunks/form_templates.js:96933
 msgid "Please provide a name for your form."
 msgstr ""
 
-#: chunks/form_templates.js:115296
 #: src/form-templates/components/TemplateList.js:232
 #: chunks/form_templates.js:96967
 msgid "Failed to create form template."
 msgstr ""
 
-#: chunks/form_templates.js:115311
 #: src/form-templates/components/TemplateList.js:246
 #: chunks/form_templates.js:96981
 msgid "An error occurred while creating the form template."
 msgstr ""
 
-#: chunks/form_templates.js:115362
 #: src/form-templates/components/TemplateList.js:288
 #: chunks/form_templates.js:97023
 msgid "An error occurred while updating favorites."
 msgstr ""
 
-#: chunks/form_templates.js:115583
 #: src/form-templates/components/TemplateList.js:581
 #: chunks/form_templates.js:97316
 msgid "Not Found"
 msgstr ""
 
-#: chunks/form_templates.js:115591
 #: src/form-templates/components/TemplateList.js:591
 #: chunks/form_templates.js:97326
 msgid "No Templates Found"
 msgstr ""
 
-#: chunks/form_templates.js:115596
 #: src/form-templates/components/TemplateList.js:599
 #: chunks/form_templates.js:97334
 msgid "Sorry, we didn't find any templates that match your criteria"
 msgstr ""
 
-#: chunks/form_templates.js:115620
 #: src/form-templates/components/TemplateList.js:631
 #: chunks/form_templates.js:97366
 msgid "%s Requires License Upgrade"
 msgstr ""
 
-#: chunks/form_templates.js:115620
 #: src/form-templates/components/TemplateList.js:638
 #: chunks/form_templates.js:97373
 msgid "%s is a Premium Template"
 msgstr ""
 
-#: chunks/form_templates.js:115632
 #: src/form-templates/components/TemplateList.js:659
 #: chunks/form_templates.js:97394
 msgid "This template requires plus and above plan. Please upgrade to the Plus and above to unlock all these awesome templates."
 msgstr ""
 
-#: chunks/form_templates.js:115632
 #: src/form-templates/components/TemplateList.js:663
 #: chunks/form_templates.js:97398
 msgid "This template requires premium addons. Please upgrade to the Premium to unlock all these awesome templates."
 msgstr ""
 
-#: chunks/welcome.js:84204
-#: chunks/welcome.js:84205
 #: src/welcome/components/App.js:52
 #: src/welcome/components/App.js:53
 #: chunks/welcome.js:73560
@@ -14686,154 +14122,39 @@ msgstr ""
 msgid "Registration Type"
 msgstr ""
 
-#: chunks/welcome.js:84206
 #: src/welcome/components/App.js:54
 #: chunks/welcome.js:73562
 msgid "Get started by choosing the type of registration that best fits your website's needs. Whether you're creating a simple sign-up process or a full membership platform, we've got you covered!"
 msgstr ""
 
-#: chunks/welcome.js:84211
 #: src/welcome/components/App.js:63
 #: chunks/welcome.js:73571
 msgid "Initial Setup Details"
 msgstr ""
 
-#: chunks/welcome.js:84212
 #: src/welcome/components/App.js:64
 #: chunks/welcome.js:73572
 msgid "To provide your users with a warm welcome, we've configured important settings and prepared essential pages."
 msgstr ""
 
-#: chunks/welcome.js:84218
 #: src/welcome/components/App.js:74
 #: chunks/welcome.js:73582
 msgid "Configure how new users register, gain access, and maintain account security."
 msgstr ""
 
-#: chunks/welcome.js:84223
 #: src/welcome/components/App.js:83
 #: chunks/welcome.js:73591
 msgid "Final Step"
 msgstr ""
 
-#: chunks/welcome.js:84488
 #: src/welcome/components/App.js:415
 #: chunks/welcome.js:73923
 msgid "Back"
 msgstr ""
 
-#: chunks/welcome.js:84569
 #: src/welcome/components/App.js:542
 #: chunks/welcome.js:74050
 msgid "Next"
-msgstr ""
-
-#: chunks/welcome.js:85045
-#: src/welcome/components/common/InputHandler.js:290
-#: chunks/welcome.js:74632
-msgid "Update"
-msgstr ""
-
-#: chunks/welcome.js:85619
-#: src/welcome/components/screens/InstallPage.js:231
-#: chunks/welcome.js:75256
-msgid "Installed Pages"
-msgstr ""
-
-#: chunks/welcome.js:85702
-#: src/welcome/components/screens/LastPage.js:41
-#: chunks/welcome.js:75321
-msgid "Help us improve User Registration by sharing non-sensitive diagnostic and usage data. See what’s shared "
-msgstr ""
-
-#: chunks/welcome.js:85707
-#: src/welcome/components/screens/LastPage.js:49
-#: chunks/welcome.js:75329
-msgid "here."
-msgstr ""
-
-#: chunks/welcome.js:85709
-#: src/welcome/components/screens/LastPage.js:52
-#: chunks/welcome.js:75332
-msgid "Get security updates, new features, and occasional offers by email. We’ll use your email: "
-msgstr ""
-
-#: chunks/welcome.js:85723
-#: src/welcome/components/screens/LastPage.js:73
-#: chunks/welcome.js:75353
-msgid "Add custom fields like profile pictures, phone numbers, and more."
-msgstr ""
-
-#: chunks/welcome.js:85727
-#: src/welcome/components/screens/LastPage.js:81
-#: chunks/welcome.js:75361
-msgid "Personalize user account pages with custom tabs and layouts."
-msgstr ""
-
-#: chunks/welcome.js:85731
-#: src/welcome/components/screens/LastPage.js:89
-#: chunks/welcome.js:75369
-msgid "Add and sync billing/shipping fields with the checkout page."
-msgstr ""
-
-#: chunks/welcome.js:85735
-#: src/welcome/components/screens/LastPage.js:97
-#: chunks/welcome.js:75377
-msgid "Control content access by user role or login status."
-msgstr ""
-
-#: chunks/welcome.js:85739
-#: src/welcome/components/screens/LastPage.js:105
-#: chunks/welcome.js:75385
-msgid "Style registration and login forms to match your brand."
-msgstr ""
-
-#: chunks/welcome.js:85764
-#: src/welcome/components/screens/LastPage.js:136
-#: chunks/welcome.js:75416
-msgid "Success! You're all set!"
-msgstr ""
-
-#: chunks/welcome.js:85777
-#: src/welcome/components/screens/LastPage.js:154
-#: chunks/welcome.js:75434
-msgid "Help us serve you better – review these preferences before you start."
-msgstr ""
-
-#: chunks/welcome.js:85841
-#: src/welcome/components/screens/LastPage.js:230
-#: chunks/welcome.js:75510
-msgid "Unlock more features with PRO"
-msgstr ""
-
-#: chunks/welcome.js:85899
-#: src/welcome/components/screens/LastPage.js:312
-#: chunks/welcome.js:75592
-msgid "30+ addons & tons of features"
-msgstr ""
-
-#: chunks/welcome.js:85963
-#: src/welcome/components/screens/RegistrationType.js:36
-#: chunks/welcome.js:75643
-msgid "Normal registration"
-msgstr ""
-
-#: chunks/welcome.js:85964
-#: src/welcome/components/screens/RegistrationType.js:37
-#: chunks/welcome.js:75644
-msgid "Suitable for simple websites requiring basic user sign-ups without membership tiers."
-msgstr ""
-
-#: chunks/welcome.js:85968
-#: src/welcome/components/screens/RegistrationType.js:44
-#: chunks/welcome.js:75651
-msgid "Membership registration"
-msgstr ""
-
-#: chunks/welcome.js:85969
-#: src/welcome/components/screens/RegistrationType.js:45
-#: chunks/welcome.js:75652
-msgid "Best for sites offering premium content, subscriptions, or exclusive member access with multiple membership levels."
 msgstr ""
 
 #: src/welcome/components/common/ConsentModal.js:40
@@ -14846,6 +14167,100 @@ msgstr ""
 
 #: src/welcome/components/common/ConsentModal.js:54
 msgid "with us."
+msgstr ""
+
+#: src/welcome/components/common/InputHandler.js:290
+#: chunks/welcome.js:74632
+msgid "Update"
+msgstr ""
+
+#: src/welcome/components/screens/InstallPage.js:231
+#: chunks/welcome.js:75256
+msgid "Installed Pages"
+msgstr ""
+
+#: src/welcome/components/screens/LastPage.js:41
+#: chunks/welcome.js:75321
+msgid "Help us improve User Registration by sharing non-sensitive diagnostic and usage data. See what’s shared "
+msgstr ""
+
+#: src/welcome/components/screens/LastPage.js:49
+#: chunks/welcome.js:75329
+msgid "here."
+msgstr ""
+
+#: src/welcome/components/screens/LastPage.js:52
+#: chunks/welcome.js:75332
+msgid "Get security updates, new features, and occasional offers by email. We’ll use your email: "
+msgstr ""
+
+#: src/welcome/components/screens/LastPage.js:73
+#: chunks/welcome.js:75353
+msgid "Add custom fields like profile pictures, phone numbers, and more."
+msgstr ""
+
+#: src/welcome/components/screens/LastPage.js:81
+#: chunks/welcome.js:75361
+msgid "Personalize user account pages with custom tabs and layouts."
+msgstr ""
+
+#: src/welcome/components/screens/LastPage.js:89
+#: chunks/welcome.js:75369
+msgid "Add and sync billing/shipping fields with the checkout page."
+msgstr ""
+
+#: src/welcome/components/screens/LastPage.js:97
+#: chunks/welcome.js:75377
+msgid "Control content access by user role or login status."
+msgstr ""
+
+#: src/welcome/components/screens/LastPage.js:105
+#: chunks/welcome.js:75385
+msgid "Style registration and login forms to match your brand."
+msgstr ""
+
+#: src/welcome/components/screens/LastPage.js:136
+#: chunks/welcome.js:75416
+msgid "Success! You're all set!"
+msgstr ""
+
+#: src/welcome/components/screens/LastPage.js:154
+#: chunks/welcome.js:75434
+msgid "Help us serve you better – review these preferences before you start."
+msgstr ""
+
+#: src/welcome/components/screens/LastPage.js:230
+#: chunks/welcome.js:75510
+msgid "Unlock more features with PRO"
+msgstr ""
+
+#: src/welcome/components/screens/LastPage.js:312
+#: chunks/welcome.js:75592
+msgid "30+ addons & tons of features"
+msgstr ""
+
+#: src/welcome/components/screens/RegistrationType.js:36
+#: chunks/welcome.js:75643
+msgid "Normal registration"
+msgstr ""
+
+#: src/welcome/components/screens/RegistrationType.js:37
+#: chunks/welcome.js:75644
+msgid "Suitable for simple websites requiring basic user sign-ups without membership tiers."
+msgstr ""
+
+#: src/welcome/components/screens/RegistrationType.js:44
+#: chunks/welcome.js:75651
+msgid "Membership registration"
+msgstr ""
+
+#: src/welcome/components/screens/RegistrationType.js:45
+#: chunks/welcome.js:75652
+msgid "Best for sites offering premium content, subscriptions, or exclusive member access with multiple membership levels."
+msgstr ""
+
+#: chunks/dashboard.js:123720
+msgid "Provides a section for users to reset their password after email verification."
 msgstr ""
 
 #: chunks/content-restriction-enhanced/block.json

@@ -384,7 +384,7 @@ if (!class_exists('UR_Stats')) {
 		 */
 		private function get_stats_api_url()
 		{
-			return self::REMOTE_URL . (defined('UR_DEV') && UR_DEV) ?  'dev/log': 'tracking/log';
+			return self::REMOTE_URL . ((defined('UR_DEV') && UR_DEV) ?  'dev/log': 'tracking/log');
 		}
 
 		/**
@@ -462,7 +462,6 @@ if (!class_exists('UR_Stats')) {
 			ur_get_logger()->debug('------------- TG SDK API log tracking initiated -------------', array('source' => 'urm-tg-sdk-logs'));
 
 			$stats_api_url = $this->get_stats_api_url();
-
 			if ('' === $stats_api_url) {
 				return;
 			}
