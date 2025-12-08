@@ -28,41 +28,6 @@
       "__experimentalDefaultControls": {
         "text": true
       }
-    },
-    "typography": {
-      "__experimentalSkipSerialization": [
-        "fontSize",
-        "lineHeight",
-        "fontFamily",
-        "fontWeight",
-        "fontStyle",
-        "textTransform",
-        "textDecoration",
-        "letterSpacing"
-      ],
-      "fontSize": true,
-      "lineHeight": true,
-      "__experimentalFontFamily": true,
-      "__experimentalFontWeight": true,
-      "__experimentalFontStyle": true,
-      "__experimentalTextTransform": true,
-      "__experimentalTextDecoration": true,
-      "__experimentalLetterSpacing": true,
-      "__experimentalWritingMode": true,
-      "__experimentalDefaultControls": {
-        "fontSize": true
-      }
-    },
-    "spacing": {
-      "__experimentalSkipSerialization": true,
-      "margin": true,
-      "padding": true,
-      "blockGap": true,
-      "__experimentalDefaultControls": {
-        "padding": true,
-        "blockGap": true,
-        "margin": true
-      }
     }
   },
   "styles": [
@@ -127,6 +92,20 @@
     "radioColor": {
       "type": "string"
     },
+    "buttonWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonFontSize": {
+      "type": "string"
+    },
+    "buttonTypography": {
+      "type": "object",
+      "default": {
+        "fontWeight": "",
+        "fontStyle": ""
+      }
+    },
     "buttonPadding": {
       "type": "object",
       "default": {
@@ -144,10 +123,6 @@
         "bottom": "",
         "left": ""
       }
-    },
-    "buttonWidth": {
-      "type": "string",
-      "default": ""
     }
   },
   "editorScript": "user-registration-blocks-editor",

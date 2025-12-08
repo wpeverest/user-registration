@@ -51,3 +51,60 @@
 .color-block-support-panel__inner-wrapper:nth-child(2) {
 	border-top: 1px solid #ddd;
 }
+
+/* Typography Panel */
+.ur-button-typography-panel,
+.ur-button-dimensions-panel {
+	border-top: 1px solid #e0e0e0;
+	padding-top: 16px;
+	margin-top: 16px;
+
+	.components-tools-panel-header {
+		padding: 0;
+		margin-bottom: 16px;
+	}
+
+	.components-tools-panel-item {
+		margin-bottom: 16px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
+/* Font Size Control */
+.ur-fontsize-control {
+	width: 100%;
+}
+
+.ur-fontsize-control__header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 8px;
+}
+
+.ur-fontsize-control__label {
+	font-size: 11px;
+	text-transform: uppercase;
+	font-weight: 500;
+	color: #1e1e1e;
+}
+
+.ur-fontsize-control .components-unit-control-wrapper {
+	max-width: 90px;
+}
+
+.ur-fontsize-control .components-range-control {
+	margin-bottom: 0;
+}
+
+/* BoxControl styling */
+.ur-button-dimensions-panel .components-box-control {
+	width: 100%;
+}
+
+.ur-button-dimensions-panel .components-box-control__header {
+	margin-bottom: 8px;
+}

@@ -24,7 +24,10 @@ import {
 	FontSizePicker,
 	__experimentalUnitControl as UnitControl,
 	__experimentalBoxControl as BoxControl,
-	SelectControl as FontFamilySelect
+	SelectControl as FontFamilySelect,
+	__experimentalToolsPanel as ToolsPanel,
+	__experimentalToolsPanelItem as ToolsPanelItem,
+	RangeControl
 } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
 import apiFetch from "@wordpress/api-fetch";
@@ -61,7 +64,11 @@ const Edit = (props) => {
 			buttonBgColor,
 			buttonTextHoverColor,
 			buttonBgHoverColor,
-			radioColor
+			radioColor,
+			buttonFontSize,
+			buttonTypography,
+			buttonPadding,
+			buttonMargin
 		},
 		setAttributes
 	} = props;
@@ -82,6 +89,14 @@ const Edit = (props) => {
 	const [success, setSuccess] = useState(false);
 	const [isBlockList, setIsBlockList] = useState(type === "block");
 
+	const updateTypography = (key, value) => {
+		setAttributes({
+			buttonTypography: {
+				...buttonTypography,
+				[key]: value
+			}
+		});
+	};
 	// Fetch data for pages and groups
 	const fetchData = async () => {
 		try {
@@ -518,6 +533,268 @@ const Edit = (props) => {
 						}
 					/>
 				</>
+			</InspectorControls>
+
+			<InspectorControls group="styles">
+				{/* Button Typography Panel */}
+				<ToolsPanel
+					label={__("Button Typography", "user-registration")}
+					resetAll={() => {
+						setAttributes({
+							buttonFontSize: undefined,
+							buttonTypography: {}
+						});
+					}}
+					className="ur-button-typography-panel"
+				>
+					{/* Font Size */}
+					<ToolsPanelItem
+						label={__("Font Size", "user-registration")}
+						hasValue={() => !!buttonFontSize}
+						onDeselect={() =>
+							setAttributes({ buttonFontSize: undefined })
+						}
+						isShownByDefault
+					>
+						{(() => {
+							const fontSizeValue = buttonFontSize || "";
+							const numericValue = parseFloat(fontSizeValue) || 0;
+							const unitValue =
+								fontSizeValue.replace(/[0-9.]/g, "") || "px";
+
+							const getConfig = (unit) => {
+								switch (unit) {
+									case "em":
+									case "rem":
+										return { max: 10, step: 0.1 };
+									case "%":
+										return { max: 200, step: 1 };
+									default:
+										return { max: 100, step: 1 };
+								}
+							};
+
+							const config = getConfig(unitValue);
+
+							return (
+								<div className="ur-fontsize-control">
+									<div className="ur-fontsize-control__header">
+										<span className="ur-fontsize-control__label">
+											{__(
+												"Font Size",
+												"user-registration"
+											)}
+										</span>
+										<UnitControl
+											value={buttonFontSize}
+											onChange={(value) => {
+												setAttributes({
+													buttonFontSize: value
+												});
+											}}
+											units={[
+												{
+													value: "px",
+													label: "px",
+													default: 16
+												},
+												{
+													value: "em",
+													label: "em",
+													default: 1
+												},
+												{
+													value: "rem",
+													label: "rem",
+													default: 1
+												},
+												{
+													value: "%",
+													label: "%",
+													default: 100
+												}
+											]}
+											min={0}
+											max={config.max}
+											__nextHasNoMarginBottom
+										/>
+									</div>
+									<RangeControl
+										value={numericValue}
+										onChange={(value) => {
+											setAttributes({
+												buttonFontSize:
+													value + unitValue
+											});
+										}}
+										min={0}
+										max={config.max}
+										step={config.step}
+										withInputField={false}
+										__nextHasNoMarginBottom
+									/>
+								</div>
+							);
+						})()}
+					</ToolsPanelItem>
+
+					{/* Font Weight / Appearance */}
+					<ToolsPanelItem
+						label={__("Appearance", "user-registration")}
+						hasValue={() => !!buttonTypography?.fontWeight}
+						onDeselect={() => updateTypography("fontWeight", "")}
+						isShownByDefault
+					>
+						<SelectControl
+							className="ur-button-font-weight"
+							label={__("Font Weight", "user-registration")}
+							value={buttonTypography?.fontWeight || ""}
+							options={[
+								{
+									label: __("Default", "user-registration"),
+									value: ""
+								},
+								{ label: "400 (Normal)", value: "400" },
+								{ label: "500 (Medium)", value: "500" },
+								{ label: "600 (Semi Bold)", value: "600" },
+								{ label: "700 (Bold)", value: "700" }
+							]}
+							onChange={(value) =>
+								updateTypography("fontWeight", value)
+							}
+							__nextHasNoMarginBottom
+						/>
+					</ToolsPanelItem>
+
+					{/* Font Style */}
+					<ToolsPanelItem
+						label={__("Font Style", "user-registration")}
+						hasValue={() => !!buttonTypography?.fontStyle}
+						onDeselect={() => updateTypography("fontStyle", "")}
+						isShownByDefault
+					>
+						<SelectControl
+							label={__("Style", "user-registration")}
+							value={buttonTypography?.fontStyle || ""}
+							options={[
+								{
+									label: __("Default", "user-registration"),
+									value: ""
+								},
+								{
+									label: __("Normal", "user-registration"),
+									value: "normal"
+								},
+								{
+									label: __("Italic", "user-registration"),
+									value: "italic"
+								}
+							]}
+							onChange={(value) =>
+								updateTypography("fontStyle", value)
+							}
+							__nextHasNoMarginBottom
+						/>
+					</ToolsPanelItem>
+				</ToolsPanel>
+
+				{/* Button Dimensions Panel */}
+				<ToolsPanel
+					label={__("Button Dimensions", "user-registration")}
+					resetAll={() => {
+						setAttributes({
+							buttonPadding: {
+								top: undefined,
+								right: undefined,
+								bottom: undefined,
+								left: undefined
+							},
+							buttonMargin: {
+								top: undefined,
+								right: undefined,
+								bottom: undefined,
+								left: undefined
+							}
+						});
+					}}
+					className="ur-button-dimensions-panel"
+				>
+					{/* Padding */}
+					<ToolsPanelItem
+						label={__("Padding", "user-registration")}
+						hasValue={() =>
+							buttonPadding?.top ||
+							buttonPadding?.right ||
+							buttonPadding?.bottom ||
+							buttonPadding?.left
+						}
+						onDeselect={() =>
+							setAttributes({
+								buttonPadding: {
+									top: undefined,
+									right: undefined,
+									bottom: undefined,
+									left: undefined
+								}
+							})
+						}
+						isShownByDefault
+					>
+						<BoxControl
+							label={__("Padding", "user-registration")}
+							values={buttonPadding}
+							onChange={(value) =>
+								setAttributes({ buttonPadding: value })
+							}
+							units={[
+								{ value: "px", label: "px", default: 0 },
+								{ value: "em", label: "em", default: 0 },
+								{ value: "rem", label: "rem", default: 0 },
+								{ value: "%", label: "%", default: 0 }
+							]}
+							allowReset={true}
+							splitOnAxis={false}
+						/>
+					</ToolsPanelItem>
+
+					{/* Margin */}
+					<ToolsPanelItem
+						label={__("Margin", "user-registration")}
+						hasValue={() =>
+							buttonMargin?.top ||
+							buttonMargin?.right ||
+							buttonMargin?.bottom ||
+							buttonMargin?.left
+						}
+						onDeselect={() =>
+							setAttributes({
+								buttonMargin: {
+									top: undefined,
+									right: undefined,
+									bottom: undefined,
+									left: undefined
+								}
+							})
+						}
+						isShownByDefault
+					>
+						<BoxControl
+							label={__("Margin", "user-registration")}
+							values={buttonMargin}
+							onChange={(value) =>
+								setAttributes({ buttonMargin: value })
+							}
+							units={[
+								{ value: "px", label: "px", default: 0 },
+								{ value: "em", label: "em", default: 0 },
+								{ value: "rem", label: "rem", default: 0 },
+								{ value: "%", label: "%", default: 0 }
+							]}
+							allowReset={true}
+							splitOnAxis={false}
+						/>
+					</ToolsPanelItem>
+				</ToolsPanel>
 			</InspectorControls>
 
 			<Box {...useProps}>
