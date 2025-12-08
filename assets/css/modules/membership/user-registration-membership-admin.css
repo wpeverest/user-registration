@@ -1509,15 +1509,16 @@
   transform: rotate(-90deg);
 }
 
-#ur-membership-main-fields .upgradable-type {
+#ur-membership-main-fields .upgradable-type, #upgrade-settings-container .upgradable-type {
   position: relative;
   color: #bababa;
 }
 #ur-membership-main-fields .upgradable-type .ur-membership-type-title,
-#ur-membership-main-fields .upgradable-type .ur-membership-type-description {
+#ur-membership-main-fields .upgradable-type .ur-membership-type-description, #upgrade-settings-container .upgradable-type .ur-membership-type-title,
+#upgrade-settings-container .upgradable-type .ur-membership-type-description {
   opacity: 0.5;
 }
-#ur-membership-main-fields .upgradable-type::before {
+#ur-membership-main-fields .upgradable-type::before, #upgrade-settings-container .upgradable-type::before {
   opacity: 1;
   content: "";
   background-image: url("../../../images/icons/ur-pro-icon.png");
