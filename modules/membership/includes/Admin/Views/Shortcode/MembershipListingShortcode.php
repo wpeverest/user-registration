@@ -56,13 +56,6 @@ class MembershipListingShortcode {
 			$membership_group_service = new MembershipGroupService();
 			$memberships              = $membership_group_service->get_group_memberships( $group_id );
 
-			$memberships                  = array_map(
-				function ( $membership ) {
-						$membership['multiple_membership'] = true;
-					return $membership;
-				},
-				$memberships
-			);
 			$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $group_id );
 
 			if ( $multiple_memberships_allowed ) {
@@ -77,7 +70,7 @@ class MembershipListingShortcode {
 		}
 
 		$sign_up_text   = ! empty( $attributes['button_text'] ) ? esc_html__( sanitize_text_field( $attributes['button_text'] ), 'user-registration' ) : __( 'Sign Up', 'user-registration' );
-		$action_to_take = 'register';
+		$action_to_take = 'upgrade';
 
 		$currency             = get_option( 'user_registration_payment_currency', 'USD' );
 		$currencies           = ur_payment_integration_get_currencies();
@@ -91,8 +84,8 @@ class MembershipListingShortcode {
 		$user_membership_ids = array();
 
 		if ( $current_user_id ) {
-			$user_memberships    = $membership_repository->get_member_membership_by_id( $current_user_id );
-			$user_membership_ids = array_filter(
+			$user_memberships            = $membership_repository->get_member_membership_by_id( $current_user_id );
+			$user_membership_ids         = array_filter(
 				array_map(
 					function ( $user_memberships ) {
 						return $user_memberships['post_id'];
@@ -100,9 +93,9 @@ class MembershipListingShortcode {
 					$user_memberships
 				)
 			);
+			$membership_checkout_page_id = get_option( 'user_registration_member_registration_page_id', false );
 
-			$ur_account_page_url = ur_get_page_permalink( 'myaccount' );
-			$redirect_page_url   = ur_get_endpoint_url( 'ur-membership', '', $ur_account_page_url );
+			$redirect_page_url = get_permalink( $membership_checkout_page_id );
 		}
 
 		if ( empty( $memberships ) ) {

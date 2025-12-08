@@ -203,10 +203,18 @@ if ( 'subscription' == $membership['post_content']['type'] ) {
 			<div class="btn-div">
 				<?php
 				if ( ! $is_upgrading && ! empty( $membership ) ) :
+					$membership_checkout_page_id = get_option( 'user_registration_member_registration_page_id', false );
+					$redirect_page_url           = get_permalink( $membership_checkout_page_id );
+					$thank_you_page_id           = get_option( 'user_registration_thank_you_page_id', false );
+					$uuid                        = ur_generate_random_key();
+					$subscription_id             = $membership['subscription_id'];
+					$redirect_page_url           = $redirect_page_url . '?action=upgrade&current="' . $membership['post_id'] . '"&subscription_id="' . $membership['subscription_id'] . '"&urm_uuid="' . $uuid . '"&thank_you="' . $thank_you_page_id . '"';
+
 					?>
 					<?php if ( 'canceled' !== $membership['status'] ) : ?>
 					<button type="button" class="membership-tab-btn change-membership-button"
 							data-id="<?php echo ( isset( $membership['post_id'] ) && ! empty( $membership['post_id'] ) ) ? esc_attr( $membership['post_id'] ) : ''; ?>"
+							data-redirect-url="<?php echo esc_url_raw( $redirect_page_url ); ?>"
 					>
 						<?php echo __( 'Change Plan', 'user-registration' ); ?>
 					</button>

@@ -960,7 +960,6 @@ class URCR_Frontend {
 
 		$is_membership_active         = ur_check_module_activation( 'membership' );
 		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
-				error_log( print_r( 'from post', true ) );
 
 		if ( $whole_site_access_restricted || $get_meta_data_checkbox ) {
 

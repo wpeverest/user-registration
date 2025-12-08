@@ -6,6 +6,7 @@ use DateTime;
 use WPEverest\URM\Mollie\Services\PaymentService as MollieService;
 use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
@@ -552,6 +553,7 @@ class SubscriptionService {
 	public function can_purchase_multiple( $data ) {
 		$membership_service                = new MembershipService();
 		$membership_group_repository       = new MembershipGroupRepository();
+		$members_repository                = new MembersRepository();
 		$membership_group_service          = new MembershipGroupService();
 		$multiple_purchasable_with_current = array();
 		$multiple_allowed                  = false;
@@ -563,23 +565,34 @@ class SubscriptionService {
 			if ( ! empty( $membership_group ) && isset( $membership_group['ID'] ) ) {
 				$multiple_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group['ID'] );
 			}
+
+			$user_membership_group_ids = array();
+			$current_user_id           = get_current_user_id();
+
+			if ( $current_user_id ) {
+				$user_memberships          = $members_repository->get_member_membership_by_id( $current_user_id );
+				$user_membership_group_ids = array_filter(
+					array_map(
+						function ( $user_memberships ) use ( $membership_group_repository ) {
+							$group = $membership_group_repository->get_membership_group_by_membership_id( $user_memberships['post_id'] );
+							if ( isset( $group['ID'] ) ) {
+								return $group['ID'];
+							}
+						},
+						$user_memberships
+					)
+				);
+
+				$user_membership_group_ids = array_values( array_unique( $user_membership_group_ids ) );
+
+				if ( ! in_array( $membership_group, $user_membership_group_ids ) ) {
+					$multiple_allowed = true;
+				}
+			}
 		}
 
 		if ( $multiple_allowed ) {
 
-			// TODO - Multiple Membership ( Handle Later ).
-			// $status = true;
-
-			// $subscription                = $this->subscription_repository->retrieve( $data['current_subscription_id'] );
-			// $membership                  = $this->membership_repository->get_single_membership_by_ID( $data['selected_membership_id'] );
-			// $selected_membership_details = wp_unslash( json_decode( $membership['meta_value'], true ) );
-
-			// if ( isset( $selected_membership_details['trial_status'] ) && 'on' === $selected_membership_details['trial_status'] && ! empty( $subscription['trial_end_date'] ) && $subscription['trial_end_date'] < date( 'Y-m-d H:i:s' ) ) {
-			// return array(
-			// 'status'  => false,
-			// 'message' => __( 'Sorry, You’re not eligible for another trial. Please choose a regular membership plan.', 'user-registration' ),
-			// );
-			// }
 			return array(
 				'status' => true,
 			);

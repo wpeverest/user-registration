@@ -22,7 +22,6 @@ if ( 'block' === $type ) :
 		<form id="membership-old-selection-form" class="ur-membership-container"
 				method="GET">
 			<?php
-
 			foreach ( $memberships as $k => $membership ) :
 				$current_plan = false;
 				$button_text  = $sign_up_text;
@@ -32,7 +31,20 @@ if ( 'block' === $type ) :
 					$button_text  = esc_html__( 'Current Plan', 'user-registration' );
 				}
 
+				$membership_group_repository = new WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository();
+				$current_membership_group    = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
+				$user_membership_group_ids   = array();
+
+				foreach ( $user_membership_ids as $user_membership_id ) {
+					$user_membership_group_id    = $membership_group_repository->get_membership_group_by_membership_id( $user_membership_id );
+					$user_membership_group_ids[] = $user_membership_group_id['ID'];
+				}
+
+				$user_membership_group_ids = array_values( array_unique( $user_membership_group_ids ) );
+
 				if ( isset( $membership['multiple_membership'] ) && $membership['multiple_membership'] ) {
+					$action_to_take = 'multiple';
+				} elseif ( isset( $current_membership_group['ID'] ) && ! in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
 					$action_to_take = 'multiple';
 				}
 
