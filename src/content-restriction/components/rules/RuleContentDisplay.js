@@ -81,7 +81,7 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 		setIsSaving(true);
 		try {
 			// Check if advanced logic is enabled
-			const isAdvancedLogicEnabled = getURCRData("is_advanced_logic_enabled", false);
+			const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
 			
 			if (!rootGroup) {
 				showError(__("No group data to save", "user-registration"));
@@ -219,7 +219,7 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 	};
 
 	// Check if advanced logic is enabled
-	const isAdvancedLogicEnabled = getURCRData("is_advanced_logic_enabled", false);
+	const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
 
 	if (!rootGroup) {
 		return <div>Loading...</div>;

@@ -245,11 +245,39 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 
 	$logic_map = (array) $logic_map;
 
+	// Check if advanced logic is enabled
+	$is_advanced_logic_enabled = ur_string_to_bool( get_option( 'urcr_content_access_rule_is_advanced_logic_enabled', 'no' ) );
+
 	if ( ! empty( $logic_map ) ) {
 		$type = $logic_map['type'];
 
 		// Process Logic Map.
 		if ( 'group' === $type ) {
+			// If advanced logic is disabled, flatten groups and process all conditions as AND
+			if ( ! $is_advanced_logic_enabled ) {
+				// Flatten the group: process all conditions as AND (all conditions must match to grant access)
+				if ( ! empty( $logic_map['conditions'] ) && is_array( $logic_map['conditions'] ) ) {
+					foreach ( $logic_map['conditions'] as $sub_logic_map ) {
+						// Skip nested groups when advanced logic is disabled
+						if ( isset( $sub_logic_map['type'] ) && 'group' === $sub_logic_map['type'] ) {
+							// Recursively flatten nested groups
+							$nested_result = urcr_is_allow_access( $sub_logic_map, $target_post );
+							if ( ! $nested_result ) {
+								return false;
+							}
+						} else {
+							// Process regular conditions
+							$is_allow_access = urcr_is_allow_access( $sub_logic_map, $target_post );
+							if ( ! $is_allow_access ) {
+								return false;
+							}
+						}
+					}
+				}
+				return true;
+			}
+
+			// Advanced logic is enabled - process with gates
 			$gate = ! empty( $logic_map['logic_gate'] ) ? $logic_map['logic_gate'] : 'OR';
 
 			foreach ( $logic_map['conditions'] as $sub_logic_map ) {
