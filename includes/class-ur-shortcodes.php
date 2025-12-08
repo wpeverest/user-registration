@@ -23,13 +23,13 @@ class UR_Shortcodes {
 	 */
 	public static function init() {
 		$shortcodes = array(
-			'user_registration_form'          => __CLASS__ . '::form', // change it to user_registration_form.
-			'user_registration_my_account'    => __CLASS__ . '::my_account',
-			'user_registration_login'         => __CLASS__ . '::login',
-			'user_registration_lost_password' => __CLASS__ . '::lost_password',
+			'user_registration_form'                => __CLASS__ . '::form', // change it to user_registration_form.
+			'user_registration_my_account'          => __CLASS__ . '::my_account',
+			'user_registration_login'               => __CLASS__ . '::login',
+			'user_registration_lost_password'       => __CLASS__ . '::lost_password',
 			'user_registration_reset_password_form' => __CLASS__ . '::reset_password_form',
-			'user_registration_edit_profile'  => __CLASS__ . '::edit_profile',
-			'user_registration_edit_password' => __CLASS__ . '::edit_password',
+			'user_registration_edit_profile'        => __CLASS__ . '::edit_profile',
+			'user_registration_edit_password'       => __CLASS__ . '::edit_password',
 		);
 		add_filter( 'pre_do_shortcode_tag', array( UR_Shortcode_My_Account::class, 'pre_do_shortcode_tag' ), 10, 4 ); // phpcs:ignore
 
@@ -280,33 +280,80 @@ class UR_Shortcodes {
 		$users_can_register = apply_filters( 'ur_register_setting_override', get_option( 'users_can_register' ) );
 		$check_user_state   = isset( $atts['userState'] ) && 'logged_in' === $atts['userState'];
 
-		if ( $check_user_state ) {
-			return wp_kses_post( apply_filters( 'user_registration_logged_in_message', sprintf( __( 'You are already logged in. <a href="%s">Log out?</a>', 'user-registration' ), ur_logout_url() ) ) );
-		}
+		if ( is_user_logged_in() || $check_user_state ) {
 
-		if ( is_user_logged_in() ) {
-			/**
-			 * Applies a filter to customize the capability required for user registration.
-			 *
-			 * @param string $default_capability Default user capability.
-			 */
-			$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
+			$is_membership_module_active = ur_check_module_activation( 'membership' );
+			global $wp_query;
+			$page_id                     = $wp_query->get_queried_object_id();
+			$membership_checkout_page_id = get_option( 'user_registration_member_registration_page_id', false );
 
-			if ( ! current_user_can( $current_user_capability ) ) {
-				global $wp;
+			if ( $is_membership_module_active && is_user_logged_in() && $membership_checkout_page_id && $membership_checkout_page_id == $page_id ) {
+				$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+				do_action( 'wp_enqueue_membership_scripts' );
+				wp_enqueue_script( 'user-registration' );
+				wp_register_script( 'user-registration-membership-frontend-script', UR_MEMBERSHIP_JS_ASSETS_URL . '/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
+				wp_enqueue_script( 'user-registration-membership-frontend-script' );
+				wp_register_style( 'user-registration-membership-frontend-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-frontend.css', array(), UR_MEMBERSHIP_VERSION );
+				wp_register_style( 'user-registration-general', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
+				wp_enqueue_style( 'user-registration-membership-frontend-style' );
+				wp_enqueue_style( 'user-registration-general' );
 
-				$user_ID      = get_current_user_id();
-				$user         = get_user_by( 'ID', $user_ID );
-				$current_url  = home_url( add_query_arg( array(), $wp->request ) );
-				$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
+				$url_params = array( 'action', 'urm_uuid', 'thank_you' );
+
+				$has_all_params = ! array_diff( $url_params, array_keys( $_GET ) );
+
+				if ( ! $has_all_params ) {
+					global $wp;
+
+					$user_id      = get_current_user_id();
+					$user         = get_user_by( 'ID', $user_id );
+					$current_url  = home_url( add_query_arg( array(), $wp->request ) );
+					$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
+					/**
+					 * Applies a filter to customize the pre-form message for user registration.
+					 *
+					 * @param string $default_message Default pre-form message.
+					 */
+					/* translators: 1: Link and username of user 2: Logout url */
+					return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . esc_attr( $display_name ) . '">' . esc_html( $display_name ) . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_id );
+
+				} else {
+
+					ob_start();
+					echo '<div class="user-registration ur-frontend-form">';
+					$template_file = locate_template( 'membership-checkout.php' );
+
+					if ( ! $template_file ) {
+						$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/membership-checkout.php';
+					}
+					include_once $template_file;
+					echo '</div>';
+					return ob_get_clean();
+				}
+			} else {
 				/**
-				 * Applies a filter to customize the pre-form message for user registration.
+				 * Applies a filter to customize the capability required for user registration.
 				 *
-				 * @param string $default_message Default pre-form message.
+				 * @param string $default_capability Default user capability.
 				 */
-				/* translators: 1: Link and username of user 2: Logout url */
-				return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . esc_attr( $display_name ) . '">' . esc_html( $display_name ) . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_ID );
+				$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
 
+				if ( ! current_user_can( $current_user_capability ) ) {
+					global $wp;
+
+					$user_ID      = get_current_user_id();
+					$user         = get_user_by( 'ID', $user_ID );
+					$current_url  = home_url( add_query_arg( array(), $wp->request ) );
+					$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
+					/**
+					 * Applies a filter to customize the pre-form message for user registration.
+					 *
+					 * @param string $default_message Default pre-form message.
+					 */
+					/* translators: 1: Link and username of user 2: Logout url */
+					return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . esc_attr( $display_name ) . '">' . esc_html( $display_name ) . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_ID );
+
+				}
 			}
 		}
 
@@ -377,7 +424,6 @@ class UR_Shortcodes {
 		wp_enqueue_script( 'ur-form-validator' );
 		wp_enqueue_script( 'ur-common' );
 
-
 		/**
 		 * Fires when enqueueing scripts for the User Registration plugin.
 		 *
@@ -438,6 +484,7 @@ class UR_Shortcodes {
 		self::$parts = apply_filters( 'user_registration_parts_data', self::$parts, $form_id, $form_data_array );
 
 		include_once UR_ABSPATH . 'includes/frontend/class-ur-frontend.php';
+
 		ur_get_template(
 			'form-registration.php',
 			array(

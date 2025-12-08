@@ -472,6 +472,7 @@ class MembershipService {
 
 	public function get_upgradable_membership( $membership_id ) {
 		$membership_details = $this->get_membership_details( $membership_id );
+
 		if ( ! empty( $membership_details['upgrade_settings'] ) && $membership_details['upgrade_settings']['upgrade_action'] ) {
 			$memberships = $this->membership_repository->get_multiple_membership_by_ID( $membership_details['upgrade_settings']['upgrade_path'] );
 

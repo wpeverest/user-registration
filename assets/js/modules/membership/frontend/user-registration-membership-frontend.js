@@ -312,6 +312,7 @@
 			if (no_errors) {
 				ur_membership_frontend_utils.clear_validation_error();
 			}
+
 			return no_errors;
 		},
 		validate_coupon_data: function () {
@@ -492,9 +493,11 @@
 		 */
 		show_default_response: function (url, thank_you_data, timeout) {
 			timeout = timeout || 2000;
+			var thank_you_page_url = urmf_data.thank_you_page_url;
+
 			var url_params = $.param(thank_you_data).toString();
 			window.setTimeout(function () {
-				window.location.replace(url + "?" + url_params);
+				window.location.replace(thank_you_page_url + "?" + url_params);
 			}, timeout);
 		},
 		validate_coupon: function ($this) {
@@ -1701,6 +1704,87 @@
 			var searchParams = new URLSearchParams(window.location.search),
 				visible_memberships = $('input[name="urm_membership"]');
 
+			$(document).on(
+				"click",
+				".urm-update-membership-button",
+				function (e) {
+					e.preventDefault();
+					var has_error = false,
+						selected_pg = "free",
+						selected_plan = "";
+					var pg_type = $(
+							'input[name="urm_membership"]:checked'
+						).data("urm-pg-type"),
+						btn = $(this);
+
+					//append spinner
+					ur_membership_frontend_utils.append_spinner($(this));
+
+					//validation before request start
+					selected_plan = $(
+						'input[name="urm_membership"]:checked'
+					).val();
+					selected_pg =
+						$('input[name="urm_payment_method"]:checked').val() ===
+						undefined
+							? selected_pg
+							: $(
+									'input[name="urm_payment_method"]:checked'
+							  ).val();
+
+					if ("free" !== pg_type) {
+						if (selected_plan === undefined) {
+							has_error = true;
+							ur_membership_frontend_utils.show_failure_message(
+								urmf_data.labels.i18n_change_plan_required
+							);
+							ur_membership_frontend_utils.remove_spinner(btn);
+							return false;
+						}
+
+						if (
+							selected_pg === undefined ||
+							selected_pg === "free"
+						) {
+							has_error = true;
+							ur_membership_frontend_utils.show_failure_message(
+								urmf_data.labels
+									.i18n_field_payment_gateway_field_validation
+							);
+							ur_membership_frontend_utils.remove_spinner(btn);
+							return false;
+						}
+					}
+
+					if (
+						!ur_membership_ajax_utils.validate_membership_form(true)
+					) {
+						ur_membership_frontend_utils.remove_spinner(btn);
+						return false;
+					}
+					//validation end
+					var action = searchParams.get("action"),
+						current_membership_id = searchParams.get("current"),
+						subscription_id = searchParams.get("subscription_id");
+
+					if (action == "multiple") {
+						ur_membership_ajax_utils.add_multiple_membership(
+							selected_plan,
+							selected_pg,
+							btn
+						);
+					} else if (action == "upgrade") {
+						ur_membership_ajax_utils.upgrade_membership(
+							current_membership_id,
+							selected_plan,
+							subscription_id,
+							selected_pg,
+							btn
+						);
+					}
+				}
+			);
+
 			if (searchParams.has("membership_id")) {
 				$('input[name="urm_membership"]:checked').change();
 			}
@@ -2005,9 +2089,13 @@
 				}
 			);
 
-			$(document).on("click", ".renew-membership-button", function (e) {
+			$(document).on("click", ".change-membership-button", function (e) {
 				e.preventDefault();
 
+				window.location.href = $(this).attr("data-redirect-url");
+			});
+
+			$(document).on("click", ".renew-membership-button", function () {
 				var $this = $(this),
 					has_error = false,
 					selected_pg = "free",

@@ -1,3 +1,5 @@
+@import "../../variables/variables";
+
 $color_1: #475bb2;
 $color_2: white;
 $color_3: red;
@@ -938,6 +940,77 @@ html {
 				gap: 5px;
 				align-items: center;
 			}
+		}
+	}
+}
+
+.user-registration {
+	.membership-upgrade-container {
+		> span {
+			display: block;
+			margin-bottom: 20px;
+			font-size: 16px;
+			color: $grey-300;
+		}
+	}
+
+	.ur-upgrade-label {
+		display: block;
+		margin-bottom: 10px;
+		font-weight: 600;
+		font-size: 17px;
+		color: $grey-600;
+	}
+
+	#upgradable-plans {
+		display: grid;
+		gap: 12px;
+		margin-bottom: 20px;
+
+		.upgrade-membership-label {
+			font-size: 14px;
+
+			.ur-membership-duration {
+				font-weight: 500;
+				color: $grey-600;
+			}
+		}
+	}
+
+	.ur_payment_gateway_container {
+		margin-top: 25px;
+
+		#payment-gateway-body {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 12px;
+		}
+	}
+
+	.notice_red,
+	#upgrade-membership-notice {
+		margin-top: 10px;
+		font-size: 14px;
+		color: #ef4444;
+	}
+
+	.urm-update-membership-button {
+		margin-top: 25px;
+		width: 100%;
+		padding: 14px;
+		font-size: 16px;
+		font-weight: 600;
+		background: $primary_color;
+		color: #fff !important;
+		border-radius: 4px;
+		border: none;
+		cursor: pointer;
+		box-shadow: 0 4px 12px rgba($primary_color, 0.25);
+		transition: 0.25s;
+
+		&:hover {
+			background: $primary_color;
+			box-shadow: 0 6px 20px rgba($primary_color, 0.35);
 		}
 	}
 }
