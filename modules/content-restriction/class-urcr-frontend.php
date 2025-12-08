@@ -78,6 +78,11 @@ class URCR_Frontend {
 		}
 
 		if ( null !== $post_id ) {
+			// Check if this page should be excluded from whole site restriction
+			if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
+				return $template;
+			}
+
 			$urcr_meta_override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', true );
 			$whole_site_access_restricted       = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
@@ -134,6 +139,12 @@ class URCR_Frontend {
 		global $wp_query;
 		$post                               = $wp_query->posts;
 		$current_post_id                    = get_queried_object_id();
+
+		// Check if this page should be excluded from whole site restriction
+		if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $current_post_id ) ) {
+			return $template;
+		}
+
 		$urcr_meta_override_global_settings = get_post_meta( $current_post_id, 'urcr_meta_override_global_settings', true );
 
 		if (  ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
@@ -186,6 +197,7 @@ class URCR_Frontend {
 
 						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
 						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
+
 						if ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
 							do_action( 'urcr_pre_content_restriction_applied', $access_rule, $post );
 
@@ -357,6 +369,13 @@ class URCR_Frontend {
 	 * @param mixed $post Post Data.
 	 */
 	public function advanced_restriction_wc_with_access_rule( $template, $post ) {
+		// Get post ID from post object
+		$post_id = null;
+		if ( is_object( $post ) && isset( $post->ID ) ) {
+			$post_id = absint( $post->ID );
+		} elseif ( is_array( $post ) && isset( $post['ID'] ) ) {
+			$post_id = absint( $post['ID'] );
+		}
 
 		$access_rule_posts         = get_posts(
 			array(
@@ -376,6 +395,16 @@ class URCR_Frontend {
 				if ( in_array( 'whole_site', $types, true ) ) {
 					$is_whole_site_restriction = true;
 				}
+			}
+		}
+
+		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
+
+		// Check if this page should be excluded from whole site restriction
+		if ( ! empty( $post_id ) && function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
+			// If whole site restriction is active (via access rules or old option), skip restriction for excluded pages
+			if ( $is_whole_site_restriction || $whole_site_access_restricted ) {
+				return $template;
 			}
 		}
 
@@ -882,6 +911,7 @@ class URCR_Frontend {
 					if ( true === $is_target ) {
 
 						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
+
 						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
 
 						if ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
@@ -899,6 +929,7 @@ class URCR_Frontend {
 				}
 			}
 		}
+
 		return $is_restriction_applied;
 	}
 

@@ -30,9 +30,9 @@ class URCR_Content_Access_Rules {
 	/**
 	 * Register routes.
 	 *
+	 * @return void
 	 * @since 4.0
 	 *
-	 * @return void
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -110,6 +110,7 @@ class URCR_Content_Access_Rules {
 	 * Check if a given request has access.
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
+	 *
 	 * @return WP_Error|bool
 	 */
 	public static function check_permissions( $request ) {
@@ -119,39 +120,70 @@ class URCR_Content_Access_Rules {
 	/**
 	 * Get all content access rules.
 	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response
 	 * @since 4.0
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
 	 */
 	public static function get_rules( $request ) {
-		$access_rules = get_posts(
-			array(
-				'numberposts' => -1,
-				'post_status' => 'publish',
-				'post_type'   => 'urcr_access_rule',
-				'orderby'     => 'ID',
-				'order'       => 'ASC',
-			)
+		$query_args = array(
+			'numberposts' => - 1,
+			'post_status' => 'publish',
+			'post_type'   => 'urcr_access_rule',
+			'orderby'     => 'ID',
+			'order'       => 'ASC',
 		);
+
+		/**
+		 * @param array $query_args
+		 * @param WP_REST_Request $request
+		 */
+		$query_args = apply_filters( 'urm_content_access_rules_query_args', $query_args, $request );
+
+		$access_rules = get_posts( $query_args );
 
 		$rules = array();
 
 		foreach ( $access_rules as $rule_post ) {
 			$rule_content = json_decode( $rule_post->post_content, true );
-			$rules[]      = array(
-				'id'            => $rule_post->ID,
-				'title'         => $rule_post->post_title,
-				'content'       => $rule_content,
-				'enabled'       => urcr_is_access_rule_enabled( $rule_content ),
-				'access_control' => isset( $rule_content['actions'][0]['access_control'] ) ? $rule_content['actions'][0]['access_control'] : 'access',
-				'action_type'   => isset( $rule_content['actions'][0]['type'] ) ? $rule_content['actions'][0]['type'] : '',
-				'redirect_url'  => isset( $rule_content['actions'][0]['redirect_url'] ) ? $rule_content['actions'][0]['redirect_url'] : '',
-				'local_page'    => isset( $rule_content['actions'][0]['local_page'] ) ? $rule_content['actions'][0]['local_page'] : '',
-				'logic_map'     => isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array(),
+
+			// Flatten groups in logic_map if advanced logic is disabled and groups exist
+			$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
+			if ( ! empty( $logic_map ) && isset( $logic_map['type'] ) && 'group' === $logic_map['type'] ) {
+				$logic_map = urcr_flatten_logic_map_groups( $logic_map );
+				// Update rule_content with flattened logic_map
+				$rule_content['logic_map'] = $logic_map;
+			}
+
+			$rule_data = array(
+				'id'              => $rule_post->ID,
+				'title'           => $rule_post->post_title,
+				'content'         => $rule_content,
+				'enabled'         => urcr_is_access_rule_enabled( $rule_content ),
+				'access_control'  => isset( $rule_content['actions'][0]['access_control'] ) ? $rule_content['actions'][0]['access_control'] : 'access',
+				'action_type'     => isset( $rule_content['actions'][0]['type'] ) ? $rule_content['actions'][0]['type'] : '',
+				'redirect_url'    => isset( $rule_content['actions'][0]['redirect_url'] ) ? $rule_content['actions'][0]['redirect_url'] : '',
+				'local_page'      => isset( $rule_content['actions'][0]['local_page'] ) ? $rule_content['actions'][0]['local_page'] : '',
+				'logic_map'       => $logic_map,
 				'target_contents' => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
 			);
+
+			/**
+			 * @param array $rule_data
+			 * @param WP_Post $rule_post
+			 * @param WP_REST_Request $request
+			 */
+			$rule_data = apply_filters( 'urm_content_access_rule_data', $rule_data, $rule_post, $request );
+
+			$rules[] = $rule_data;
 		}
+
+		/**
+		 * @param array $rules
+		 * @param WP_REST_Request $request
+		 */
+		$rules = apply_filters( 'urm_content_access_rules_list', $rules, $request );
 
 		return new \WP_REST_Response(
 			array(
@@ -165,10 +197,11 @@ class URCR_Content_Access_Rules {
 	/**
 	 * Create a new content access rule.
 	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response
 	 * @since 4.0
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
 	 */
 	public static function create_rule( $request ) {
 		// Get title from request, default to 'Untitled Rule'
@@ -192,6 +225,24 @@ class URCR_Content_Access_Rules {
 					),
 				),
 			);
+		}
+
+		/**
+		 * @param array $access_rule_data
+		 * @param WP_REST_Request $request
+		 * @param string $context
+		 */
+		$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'create' );
+
+		// Flatten groups if advanced logic is disabled
+		if ( isset( $access_rule_data['logic_map'] ) && is_array( $access_rule_data['logic_map'] ) ) {
+			/**
+			 * @param array $logic_map
+			 * @param array $access_rule_data
+			 * @param WP_REST_Request $request
+			 */
+			$logic_map                     = apply_filters( 'urm_content_access_rule_logic_map_before_flatten', $access_rule_data['logic_map'], $access_rule_data, $request );
+			$access_rule_data['logic_map'] = urcr_flatten_logic_map_groups( $logic_map );
 		}
 
 		// Prepare the post data similar to prepare_access_rule_as_wp_post
@@ -220,28 +271,40 @@ class URCR_Content_Access_Rules {
 			do_action( 'urcr_post_create_content_access_rule', $access_rule_post, $rule_id );
 
 			// Get the created rule
-			$rule_post = get_post( $rule_id );
+			$rule_post    = get_post( $rule_id );
 			$rule_content = json_decode( $rule_post->post_content, true );
 
-			return new \WP_REST_Response(
-				array(
-					'success' => true,
-					'rule'    => array(
-						'id'            => $rule_post->ID,
-						'title'         => $rule_post->post_title,
-						'content'       => $rule_content,
-						'enabled'       => urcr_is_access_rule_enabled( $rule_content ),
-						'access_control' => isset( $rule_content['actions'][0]['access_control'] ) ? $rule_content['actions'][0]['access_control'] : 'access',
-						'action_type'   => isset( $rule_content['actions'][0]['type'] ) ? $rule_content['actions'][0]['type'] : '',
-						'redirect_url'  => isset( $rule_content['actions'][0]['redirect_url'] ) ? $rule_content['actions'][0]['redirect_url'] : '',
-						'local_page'    => isset( $rule_content['actions'][0]['local_page'] ) ? $rule_content['actions'][0]['local_page'] : '',
-						'logic_map'     => isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array(),
-						'target_contents' => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
-					),
-					'message' => esc_html__( 'Successfully created an Access Rule.', 'user-registration' ),
+			// Flatten groups in logic_map if advanced logic is disabled and groups exist (for response)
+			$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
+			if ( ! empty( $logic_map ) && isset( $logic_map['type'] ) && 'group' === $logic_map['type'] ) {
+				$logic_map = urcr_flatten_logic_map_groups( $logic_map );
+			}
+
+			$response_data = array(
+				'success' => true,
+				'rule'    => array(
+					'id'              => $rule_post->ID,
+					'title'           => $rule_post->post_title,
+					'content'         => $rule_content,
+					'enabled'         => urcr_is_access_rule_enabled( $rule_content ),
+					'access_control'  => isset( $rule_content['actions'][0]['access_control'] ) ? $rule_content['actions'][0]['access_control'] : 'access',
+					'action_type'     => isset( $rule_content['actions'][0]['type'] ) ? $rule_content['actions'][0]['type'] : '',
+					'redirect_url'    => isset( $rule_content['actions'][0]['redirect_url'] ) ? $rule_content['actions'][0]['redirect_url'] : '',
+					'local_page'      => isset( $rule_content['actions'][0]['local_page'] ) ? $rule_content['actions'][0]['local_page'] : '',
+					'logic_map'       => $logic_map,
+					'target_contents' => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
 				),
-				200
+				'message' => esc_html__( 'Successfully created an Access Rule.', 'user-registration' ),
 			);
+
+			/**
+			 * @param array $response_data
+			 * @param WP_Post $rule_post
+			 * @param WP_REST_Request $request
+			 */
+			$response_data = apply_filters( 'urm_content_access_rule_create_response', $response_data, $rule_post, $request );
+
+			return new \WP_REST_Response( $response_data, 200 );
 		} else {
 			// Fire failure action
 			do_action( 'urcr_create_content_access_rule_failure', $access_rule_post, $rule_id );
@@ -259,13 +322,14 @@ class URCR_Content_Access_Rules {
 	/**
 	 * Get a single content access rule.
 	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response
 	 * @since 4.0
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
 	 */
 	public static function get_rule( $request ) {
-		$rule_id = absint( $request['id'] );
+		$rule_id   = absint( $request['id'] );
 		$rule_post = get_post( $rule_id );
 
 		if ( ! $rule_post || 'urcr_access_rule' !== $rule_post->post_type ) {
@@ -280,21 +344,38 @@ class URCR_Content_Access_Rules {
 
 		$rule_content = json_decode( $rule_post->post_content, true );
 
+		// Flatten groups in logic_map if advanced logic is disabled and groups exist
+		$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
+		if ( ! empty( $logic_map ) && isset( $logic_map['type'] ) && 'group' === $logic_map['type'] ) {
+			$logic_map = urcr_flatten_logic_map_groups( $logic_map );
+			// Update rule_content with flattened logic_map
+			$rule_content['logic_map'] = $logic_map;
+		}
+
+		$rule_data = array(
+			'id'              => $rule_post->ID,
+			'title'           => $rule_post->post_title,
+			'content'         => $rule_content,
+			'enabled'         => urcr_is_access_rule_enabled( $rule_content ),
+			'access_control'  => isset( $rule_content['actions'][0]['access_control'] ) ? $rule_content['actions'][0]['access_control'] : 'access',
+			'action_type'     => isset( $rule_content['actions'][0]['type'] ) ? $rule_content['actions'][0]['type'] : '',
+			'redirect_url'    => isset( $rule_content['actions'][0]['redirect_url'] ) ? $rule_content['actions'][0]['redirect_url'] : '',
+			'local_page'      => isset( $rule_content['actions'][0]['local_page'] ) ? $rule_content['actions'][0]['local_page'] : '',
+			'logic_map'       => $logic_map,
+			'target_contents' => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
+		);
+
+		/**
+		 * @param array $rule_data
+		 * @param WP_Post $rule_post
+		 * @param WP_REST_Request $request
+		 */
+		$rule_data = apply_filters( 'urm_content_access_rule_get_response', $rule_data, $rule_post, $request );
+
 		return new \WP_REST_Response(
 			array(
 				'success' => true,
-				'rule'    => array(
-					'id'            => $rule_post->ID,
-					'title'         => $rule_post->post_title,
-					'content'       => $rule_content,
-					'enabled'       => urcr_is_access_rule_enabled( $rule_content ),
-					'access_control' => isset( $rule_content['actions'][0]['access_control'] ) ? $rule_content['actions'][0]['access_control'] : 'access',
-					'action_type'   => isset( $rule_content['actions'][0]['type'] ) ? $rule_content['actions'][0]['type'] : '',
-					'redirect_url'  => isset( $rule_content['actions'][0]['redirect_url'] ) ? $rule_content['actions'][0]['redirect_url'] : '',
-					'local_page'    => isset( $rule_content['actions'][0]['local_page'] ) ? $rule_content['actions'][0]['local_page'] : '',
-					'logic_map'     => isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array(),
-					'target_contents' => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
-				),
+				'rule'    => $rule_data,
 			),
 			200
 		);
@@ -303,10 +384,11 @@ class URCR_Content_Access_Rules {
 	/**
 	 * Toggle rule status (enabled/disabled).
 	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response
 	 * @since 4.0
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
 	 */
 	public static function toggle_rule_status( $request ) {
 		$rule_id = absint( $request['id'] );
@@ -361,10 +443,11 @@ class URCR_Content_Access_Rules {
 	/**
 	 * Update rule data.
 	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response
 	 * @since 4.0
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
 	 */
 	public static function update_rule( $request ) {
 		$rule_id = absint( $request['id'] );
@@ -389,6 +472,24 @@ class URCR_Content_Access_Rules {
 
 		// If access_rule_data is provided, use it directly (same as old AJAX handler)
 		if ( $access_rule_data && is_array( $access_rule_data ) ) {
+			/**
+			 * @param array $access_rule_data
+			 * @param WP_REST_Request $request
+			 * @param string $context
+			 */
+			$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'update' );
+
+			// Flatten groups if advanced logic is disabled
+			if ( isset( $access_rule_data['logic_map'] ) && is_array( $access_rule_data['logic_map'] ) ) {
+				/**
+				 * @param array $logic_map
+				 * @param array $access_rule_data
+				 * @param WP_REST_Request $request
+				 */
+				$logic_map                     = apply_filters( 'urm_content_access_rule_logic_map_before_flatten', $access_rule_data['logic_map'], $access_rule_data, $request );
+				$access_rule_data['logic_map'] = urcr_flatten_logic_map_groups( $logic_map );
+			}
+
 			// Use the same logic as prepare_access_rule_as_wp_post
 			$access_rule_data_json = wp_json_encode( $access_rule_data );
 
@@ -412,16 +513,24 @@ class URCR_Content_Access_Rules {
 
 			if ( $saved_post ) {
 				do_action( 'urcr_post_save_content_access_rule', $access_rule_post, $saved_post );
-				return new \WP_REST_Response(
-					array(
-						'success' => true,
-						'rule_id' => $saved_post,
-						'message' => esc_html__( 'Successfully saved the Access Rule.', 'user-registration' ),
-					),
-					200
+
+				$response_data = array(
+					'success' => true,
+					'rule_id' => $saved_post,
+					'message' => esc_html__( 'Successfully saved the Access Rule.', 'user-registration' ),
 				);
+
+				/**
+				 * @param array $response_data
+				 * @param int $saved_post
+				 * @param WP_REST_Request $request
+				 */
+				$response_data = apply_filters( 'urm_content_access_rule_update_response', $response_data, $saved_post, $request );
+
+				return new \WP_REST_Response( $response_data, 200 );
 			} else {
 				do_action( 'urcr_save_content_access_rule_failure', $access_rule_post, $saved_post );
+
 				return new \WP_REST_Response(
 					array(
 						'success' => false,
@@ -484,13 +593,14 @@ class URCR_Content_Access_Rules {
 	/**
 	 * Duplicate a rule.
 	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response
 	 * @since 4.0
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
 	 */
 	public static function duplicate_rule( $request ) {
-		$rule_id = absint( $request['id'] );
+		$rule_id   = absint( $request['id'] );
 		$rule_post = get_post( $rule_id );
 
 		if ( ! $rule_post || 'urcr_access_rule' !== $rule_post->post_type ) {
@@ -535,10 +645,11 @@ class URCR_Content_Access_Rules {
 	/**
 	 * Delete/trash a rule.
 	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_Error|WP_REST_Response
 	 * @since 4.0
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
 	 */
 	public static function delete_rule( $request ) {
 		$rule_id = absint( $request['id'] );
