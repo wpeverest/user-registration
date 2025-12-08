@@ -128,6 +128,11 @@
 				$this.removeClass("ur-membership-error");
 				if (is_required && value === "") {
 					no_errors = false;
+					if ("form" === from) {
+						basic_error = true;
+					} else if ("paypal" === from) {
+						advanced_error = true;
+					}
 					var message =
 						("paypal" === from
 							? ur_membership_data.labels.i18n_paypal
@@ -147,6 +152,11 @@
 				} else if (type === "url") {
 					if (!ur_membership_utils.url_validations(value)) {
 						no_errors = false;
+						if ("form" === from) {
+							basic_error = true;
+						} else if ("paypal" === from) {
+							advanced_error = true;
+						}
 						ur_membership_utils.show_failure_message(
 							ur_membership_data.labels.i18n_error +
 								"! " +
