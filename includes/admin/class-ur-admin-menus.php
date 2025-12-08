@@ -26,7 +26,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			// Add menus.
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 1 );
 			add_action( 'admin_menu', array( $this, 'settings_menu' ), 20 );
-			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
+			// add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
 			add_action( 'admin_menu', array( $this, 'status_menu' ), 75 );
 			add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 3 );
 
@@ -516,7 +516,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					$this,
 					'registration_page',
 				),
-				5
+				9
 			);
 
 			if ( isset( $_GET['page'] ) && in_array(
@@ -539,7 +539,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						$this,
 						'registration_page',
 					),
-					6
+					10
 				);
 				add_submenu_page(
 					'user-registration',
@@ -551,7 +551,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						$this,
 						'registration_page',
 					),
-					7
+					11
 				);
 			}
 		}
@@ -872,7 +872,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				);
 				$login_option_settings = get_login_field_settings();
 				$login_form_settings   = get_login_form_settings();
-				$login_page_id = get_option( 'user_registration_login_page_id', 0 ); 
+				$login_page_id = get_option( 'user_registration_login_page_id', 0 );
 				$login_page_url = $login_page_id ? get_permalink( $login_page_id ) : '';
 				$login_page_title = $login_page_id ? get_the_title( $login_page_id ) : '';
 				include_once __DIR__ . '/views/html-login-page-forms.php';

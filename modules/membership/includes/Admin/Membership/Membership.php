@@ -286,31 +286,32 @@ class Membership {
 	public function add_urm_menu() {
 		$rules_page = add_submenu_page(
 			'user-registration',
-			__( 'Membership', 'user-registration' ), // page title
-			__( 'Membership', 'user-registration' ), // menu title
+			__( 'Memberships', 'user-registration' ), // page title
+			__( 'Memberships', 'user-registration' ), // menu title
 			'edit_posts', // capability
 			'user-registration-membership', // slug
 			array(
 				$this,
 				'render_membership_page',
-			)
+			),
+			2
 		);
 		add_action( 'load-' . $rules_page, array( $this, 'membership_initialization' ) );
 
-		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-membership', 'user-registration-membership-groups', 'user-registration-members'] ) ) {
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ] ) ) {
 
-			add_submenu_page(
-				'user-registration',
-				__( 'All Plans', 'user-registration' ),
-				'↳ ' . __( 'All Plans', 'user-registration' ),
-				'edit_posts',
-				'user-registration-membership',
-				array(
-					$this,
-					'render_membership_page',
-				),
-				16
-			);
+			// add_submenu_page(
+			// 	'user-registration',
+			// 	__( 'All Plans', 'user-registration' ),
+			// 	'↳ ' . __( 'All Plans', 'user-registration' ),
+			// 	'edit_posts',
+			// 	'user-registration-membership',
+			// 	array(
+			// 		$this,
+			// 		'render_membership_page',
+			// 	),
+			// 	3
+			// );
 
 			add_submenu_page(
 				'user-registration',
@@ -322,7 +323,7 @@ class Membership {
 					$this,
 					'render_membership_page',
 				),
-				17
+				3
 			);
 
 			$members = new Members();
@@ -333,7 +334,7 @@ class Membership {
 				'manage_user_registration',
 				'user-registration-members',
 				array( $members, 'render_members_page'),
-				18
+				4
 			);
 		}
 	}
@@ -485,7 +486,7 @@ class Membership {
 			)
 		);
 	}
-	
+
 
 	/**
 	 * Get i18 Labels
