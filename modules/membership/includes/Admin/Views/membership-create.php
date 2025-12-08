@@ -388,7 +388,7 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 								style="gap:20px">
 								<div class="ur-label" style="width: 30%">
 									<label class="ur-membership-trial-status"
-											for="ur-membership-trial-status"><?php esc_html_e( 'Trial Period :', 'user - registration' ); ?></label>
+											for="ur-membership-trial-status"><?php esc_html_e( 'Trial Period :', 'user-registration' ); ?></label>
 								</div>
 								<div class="ur-toggle-section m1-auto" style="width: 100%">
 									<span class="user-registration-toggle-form">
