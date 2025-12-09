@@ -4,13 +4,11 @@
  *
  */
 
-namespace WPEverest\URMembership\Admin;
-
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class BaseLayout {
+class UR_Base_Layout {
     /**
      * Render a standard list-table page layout for a given WP_List_Table instance.
      *
@@ -77,12 +75,13 @@ class BaseLayout {
 	 * Display Search Input with button
 	 *
 	 * @param $search_id
+	 * @param $placeholder
 	 *
 	 * @return void
 	 */
 	public static function display_search_field( $search_id, $placeholder ) {
 		?>
-			<input type="search" id="<?php echo $search_id; ?>" name="s"
+			<input type="search" id="<?php echo esc_attr($search_id); ?>" name="s"
 					value="<?php echo esc_attr( $_GET['s'] ?? '' ); ?>"
 					placeholder="<?php echo esc_attr($placeholder); ?> ..."
 					autocomplete="off">

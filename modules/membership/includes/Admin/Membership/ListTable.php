@@ -7,12 +7,15 @@
 
 namespace WPEverest\URMembership\Admin\Membership;
 
-use WPEverest\URMembership\Admin\BaseLayout;
+use UR_Base_Layout;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\TableList;
 
 if ( ! class_exists( 'UR_List_Table' ) ) {
 	include_once dirname( UR_PLUGIN_FILE ) . '/includes/abstracts/abstract-ur-list-table.php';
+}
+if ( ! class_exists( 'UR_Base_Layout' ) ) {
+	include_once dirname( UR_PLUGIN_FILE ) . '/includes/admin/class-ur-admin-base-layout.php';
 }
 
 /**
@@ -112,14 +115,14 @@ class ListTable extends \UR_List_Table {
 		$actions['edit'] = sprintf(
 			'<a href="%s" class="ur-row-actions">%s</a>',
 			esc_url( $this->get_edit_links( $membership ) ),
-			__( 'Edit', 'text-domain' )
+			__( 'Edit', 'user-registration' )
 		);
 
 		// Add Delete action
 		$actions['delete'] = sprintf(
 			'<a href="%s" class="delete-membership ur-row-actions" data-membership-id="'. esc_attr( $membership->ID ) . '" aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '">%s</a>',
-			esc_url( wp_nonce_url( $this->get_delete_links($membership), 'my_delete_nonce' ) ),
-			__( 'Delete', 'text-domain' )
+			esc_url( wp_nonce_url( $this->get_delete_links($membership), 'urm_delete_nonce' ) ),
+			__( 'Delete', 'user-registration' )
 		);
 		return $actions;
 	}
@@ -204,7 +207,7 @@ class ListTable extends \UR_List_Table {
 	 * Render the list table page, including header, notices, status filters and table.
 	 */
 	public function display_page() {
-		BaseLayout::render_layout( $this, array(
+		UR_Base_Layout::render_layout( $this, array(
 			'page'           => $this->page,
 			'title'          => esc_html__( 'All Membership', 'user-registration' ),
 			'add_new_action' => 'add_new_membership',
@@ -230,7 +233,7 @@ class ListTable extends \UR_List_Table {
 			<div>
 				<?php
 					$placeholder = __( 'Search Membership', 'user-registration' );
-					BaseLayout::display_search_field($search_id, $placeholder);
+					UR_Base_Layout::display_search_field($search_id, $placeholder);
 				?>
 			</div>
 			<p></p>
