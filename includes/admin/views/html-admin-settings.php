@@ -9,8 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-// $collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-registration-customize-my-account' ) !== false || strpos( $_GET['tab'], 'user-registration-invite-codes' ) !== false ); //phpcs:ignore
-$collapse_by_default = true;
+$collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-registration-customize-my-account' ) !== false || strpos( $_GET['tab'], 'user-registration-invite-codes' ) !== false ); //phpcs:ignore
 /**
  * Filter to add form method tabs.
  *
@@ -29,6 +28,9 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 		position: relative;
 		overflow: visible;
 		margin: 0 0 0 30px; /* left margin for timeline */
+	}
+	.ur-nav__link.is-active::after {
+		opacity: 0 !important;
 	}
 	.ur-scroll-ui__items::before {
 		content: '';
