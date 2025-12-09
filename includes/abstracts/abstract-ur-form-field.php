@@ -280,6 +280,7 @@ abstract class UR_Form_Field {
 
 				$form_data['options'] = $filtered_options;
 			}
+			$form_data['enable_state'] = isset( $data['advance_setting']->enable_state ) ? $data['advance_setting']->enable_state : '';
 		}
 
 		/**  Redundant codes. */

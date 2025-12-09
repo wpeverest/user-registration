@@ -453,6 +453,7 @@ class UR_Frontend_Scripts {
 					'ajax_url'                          => admin_url( 'admin-ajax.php' ),
 					'user_registration_form_data_save'  => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
 					'user_registration_profile_details_save' => wp_create_nonce( 'user_registration_profile_details_save_nonce' ),
+					'user_registration_update_state_field' => wp_create_nonce( 'user_registration_update_state_field_nonce' ),
 					'user_registration_profile_picture_upload_nonce' => wp_create_nonce( 'user_registration_profile_picture_upload_nonce' ),
 					'user_registration_profile_picture_remove_nonce' => wp_create_nonce( 'user_registration_profile_picture_remove_nonce' ),
 					'form_required_fields'              => ur_get_required_fields(),
