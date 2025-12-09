@@ -244,7 +244,7 @@ const RuleGroup = ({
 							className={`urcr-conditions-list ${isAdvancedLogicEnabled ? "urcr-conditional-logic-definitions" : ""}`}
 						>
 							{isAdvancedLogicEnabled && (
-								<div className={`urcr-condition-logic-gate-wrapper urcr-logic-group-rule-${logicGate}`}>
+								<div className={`urcr-condition-logic-gate-wrapper urcr-logic-group-rule-${logicGate} ${conditions.length === 1 ? "urcr-single-condition" : ""}`}>
 									<div
 										className={`urcr-condition-logic-gate-button urcr-sub-logic-group-rule-${logicGate}`}
 									>
