@@ -58,13 +58,22 @@ class UR_Blocks {
 			'user-registration-blocks-editor',
 			'_UR_BLOCKS_',
 			array(
-				'logoUrl'              => UR()->plugin_url() . '/assets/images/logo.png',
-				'urRestApiNonce'       => wp_create_nonce( 'wp_rest' ),
-				'restURL'              => rest_url(),
-				'isPro'                => is_plugin_active( 'user-registration-pro/user-registration.php' ),
-				'iscRestrictionActive' => ur_check_module_activation( 'content-restriction' ),
-				'pages' 			   => array_map( function( $page ) { return [ 'label' => $page->post_title, 'value' => $page->ID ]; }, get_pages() ),
-				'login_page_id'		   => get_option('user_registration_login_page_id')
+				'logoUrl'                 => UR()->plugin_url() . '/assets/images/logo.png',
+				'urRestApiNonce'          => wp_create_nonce( 'wp_rest' ),
+				'restURL'                 => rest_url(),
+				'isPro'                   => is_plugin_active( 'user-registration-pro/user-registration.php' ),
+				'iscRestrictionActive'    => ur_check_module_activation( 'content-restriction' ),
+				'pages'                   => array_map(
+					function ( $page ) {
+						return array(
+							'label' => $page->post_title,
+							'value' => $page->ID,
+						); },
+					get_pages()
+				),
+				'login_page_id'           => get_option( 'user_registration_login_page_id' ),
+				'membership_all_plan_url' => admin_url( 'admin.php?page=user-registration-membership' ),
+				'membership_group_url'    => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
 			)
 		);
 		wp_register_script(
@@ -140,7 +149,7 @@ class UR_Blocks {
 		}
 		if ( ur_check_module_activation( 'membership' ) ) {
 			$ur_blocks_classes[] = UR_Block_Membership_Listing::class;
-			$ur_blocks_classes[] = 	UR_Block_Thank_You::class;
+			$ur_blocks_classes[] = UR_Block_Thank_You::class;
 		}
 
 		return apply_filters(

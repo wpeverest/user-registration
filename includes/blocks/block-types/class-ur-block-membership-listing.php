@@ -46,6 +46,18 @@ class UR_Block_Membership_Listing extends UR_Block_Abstract {
 		$open_in_new_tab  = isset( $attr['openInNewTab'] ) ? $attr['openInNewTab'] : false;
 		$show_description = isset( $attr['showDescription'] ) ? $attr['showDescription'] : false;
 
+		$style = array();
+
+		$style['buttonTextColor']      = isset( $attr['buttonTextColor'] ) ? $attr['buttonTextColor'] : '';
+		$style['buttonBgColor']        = isset( $attr['buttonBgColor'] ) ? $attr['buttonBgColor'] : '';
+		$style['buttonTextHoverColor'] = isset( $attr['buttonTextHoverColor'] ) ? $attr['buttonTextHoverColor'] : '';
+		$style['buttonBgHoverColor']   = isset( $attr['buttonBgHoverColor'] ) ? $attr['buttonBgHoverColor'] : '';
+		$style['radioColor']           = isset( $attr['radioColor'] ) ? $attr['radioColor'] : '';
+		$style['buttonFontSize']       = isset( $attr['buttonFontSize'] ) ? $attr['buttonFontSize'] : '';
+		$style['buttonTypography']     = $attr['buttonTypography'];
+		$style['buttonPadding']        = $attr['buttonPadding'];
+		$style['buttonMargin']         = $attr['buttonMargin'];
+
 		return ShortCodes::membership_listing(
 			array(
 				'id'                   => $group_id,
@@ -57,6 +69,7 @@ class UR_Block_Membership_Listing extends UR_Block_Abstract {
 				'column_number'        => $column_number,
 				'open_in_new_tab'      => $open_in_new_tab,
 				'show_description'     => $show_description,
+				'style'                => $style,
 			),
 			'user_registration_groups'
 		);

@@ -32,8 +32,12 @@ import {
 import { __ } from "@wordpress/i18n";
 import apiFetch from "@wordpress/api-fetch";
 
-const { urRestApiNonce, restURL } =
-	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
+const {
+	urRestApiNonce,
+	restURL,
+	membership_all_plan_url,
+	membership_group_url
+} = typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 // Helper function to map options for SelectControl
 const mapOptions = (list) =>
@@ -413,12 +417,18 @@ const Edit = (props) => {
 						__nextHasNoMarginBottom={true}
 						__next40pxDefaultSize
 					/>
-					<a href="#">
-						{__(
-							"Configure membership groups from here",
-							"user-registration"
-						)}
-					</a>
+					<div className="ur-membership-listing-config-link">
+						<a
+							className="ur-membership-listing-config-link"
+							href={membership_group_url}
+							target="__blank"
+						>
+							{__(
+								"Configure groups from here",
+								"user-registration"
+							)}
+						</a>
+					</div>
 					<ToggleControl
 						__nextHasNoMarginBottom
 						label={__("Open in a new tab", "user-registration")}
@@ -439,6 +449,18 @@ const Edit = (props) => {
 							});
 						}}
 					/>
+					<div className="ur-membership-listing-config-link">
+						<a
+							className="ur-membership-listing-config-link"
+							href={membership_all_plan_url}
+							target="__blank"
+						>
+							{__(
+								"Configure description from here",
+								"user-registration"
+							)}
+						</a>
+					</div>
 					<ToggleGroupControl
 						label="Layout"
 						value={type}
@@ -798,13 +820,11 @@ const Edit = (props) => {
 			</InspectorControls>
 
 			<Box {...useProps}>
-				<Disabled>
-					<wp.serverSideRender
-						key="ur-gutenberg-membership-listing-server-side-renderer"
-						block={blockName}
-						attributes={props.attributes}
-					/>
-				</Disabled>
+				<wp.serverSideRender
+					key="ur-gutenberg-membership-listing-server-side-renderer"
+					block={blockName}
+					attributes={props.attributes}
+				/>
 			</Box>
 		</>
 	);

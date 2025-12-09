@@ -1,4 +1,49 @@
 <?php
+if ( ! empty( $button_class ) && ! empty( $button_hover_style ) ) :
+	?>
+<style>
+.<?php echo esc_attr( $button_class ); ?>:hover {
+	<?php echo esc_html( $button_hover_style ); ?>
+}
+
+
+	<?php if ( ! empty( $radio_color ) ) : ?>
+
+.<?php echo esc_attr( $radio_class ); ?> {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 16px !important;
+	height: 16px !important;
+	border: 2px solid
+		<?php
+		echo esc_attr( $radio_color . ' !important;' );
+		?>
+	;
+	border-radius: 50%;
+	cursor: pointer;
+	position: relative;
+}
+.<?php echo esc_attr( $radio_class ); ?>:checked::before {
+	content: "";
+	width: 10px;
+	height: 10px;
+	background:
+		<?php
+		echo esc_attr( $radio_color ) . ' !important;';
+		?>
+	;
+	border-radius: 50%;
+	position: absolute !important;
+	top: 50% !important;
+	left: 50% !important;
+	transform: translate(-50%, -50%) !important;
+	margin: 0px !important;
+}
+
+		<?php endif ?>
+</style>
+	<?php
+endif;
 if ( 'block' === $type ) :
 	?>
 	<div class="ur-membership-list-container">
@@ -38,11 +83,11 @@ if ( 'block' === $type ) :
 						<input type="hidden" name="membership_id" value="<?php echo esc_html( $membership['ID'] ); ?>">
 						<input type="hidden" name="redirection_url"
 								value="<?php echo esc_url( $redirect_page_url ); ?>">
-						<input type="hidden" name="urm_uuid" value="<?php echo $uuid; ?>">
-						<input type="hidden" name="thank_you_page_id" value="<?php echo $thank_you_page_id; ?>">
+						<input type="hidden" name="urm_uuid" value="<?php echo esc_html( $uuid ); ?>">
+						<input type="hidden" name="thank_you_page_id" value="<?php echo absint( $thank_you_page_id ); ?>">
 						<?php if ( 'free' !== $membership['type'] ) { ?>
 						<span
-							class="membership-amount"><?php echo $symbol; ?>
+							class="membership-amount"><?php echo esc_html( $symbol ); ?>
 							<?php
 							echo esc_html( sprintf( '%.2f', $membership['amount'] ) ); if ( $time ) {
 								echo ' / ' . esc_html( $time ); }
@@ -53,14 +98,14 @@ if ( 'block' === $type ) :
 							class="membership-amount"><?php echo esc_html__( 'Free', 'user-registration' ); ?></span>
 								<?php } ?>
 						<button type="button"
-								class="membership-signup-button" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ); ?> ><?php echo $sign_up_text; ?>
+								class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>" ><?php echo esc_html( $sign_up_text ); ?>
 						</button>
 					</div>
 					<?php if ( $show_description ) { ?>
 					<div class="membership-footer">
 						<span><?php echo esc_html__( 'Benefits', 'user-registration' ); ?></span>
 						<div class="membership-description">
-							<?php echo( $membership['description'] ); ?>
+							<?php echo $membership['description']; ?>
 						</div>
 					</div>
 					<?php } ?>
@@ -73,8 +118,8 @@ if ( 'block' === $type ) :
 
 	</div>
 	<?php
-elseif ( 'row' === $type ) :
-	?>
+	elseif ( 'row' === $type ) :
+		?>
 	<div class="ur-membership-list-container">
 
 		<!--		<div class="membership-list-notice-div">-->
@@ -112,7 +157,7 @@ elseif ( 'row' === $type ) :
 					</div>
 					<div class="membership-body">
 						<div class="membership-description">
-							<?php echo( $membership['description'] ); ?>
+							<?php echo $membership['description']; ?>
 						</div>
 					</div>
 					</div>
@@ -120,11 +165,11 @@ elseif ( 'row' === $type ) :
 						<input type="hidden" name="membership_id" value="<?php echo esc_html( $membership['ID'] ); ?>">
 						<input type="hidden" name="redirection_url"
 								value="<?php echo esc_url( $redirect_page_url ); ?>">
-						<input type="hidden" name="urm_uuid" value="<?php echo $uuid; ?>">
-						<input type="hidden" name="thank_you_page_id" value="<?php echo $thank_you_page_id; ?>">
+						<input type="hidden" name="urm_uuid" value="<?php echo esc_html( $uuid ); ?>">
+						<input type="hidden" name="thank_you_page_id" value="<?php echo absint( $thank_you_page_id ); ?>">
 							<?php if ( 'free' !== $membership['type'] ) { ?>
 						<span
-							class="membership-amount"><?php echo $symbol; ?>
+							class="membership-amount"><?php echo esc_html( $symbol ); ?>
 								<?php
 								echo esc_html( sprintf( '%.2f', $membership['amount'] ) ); if ( $time ) {
 									echo ' / ' . esc_html( $time ); }
@@ -135,22 +180,22 @@ elseif ( 'row' === $type ) :
 							class="membership-amount"><?php echo esc_html__( 'Free', 'user-registration' ); ?></span>
 								<?php } ?>
 						<button type="button"
-								class="membership-signup-button" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ); ?> ><?php echo $sign_up_text; ?></button>
+								class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) || $is_editor ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>" ><?php echo esc_html( $sign_up_text ); ?></button>
 					</div>
 				</div>
 				<?php
-			endforeach;
+				endforeach;
 			?>
 		</form>
 
 	</div>
-	<?php
+		<?php
 elseif ( 'list' === $type ) :
 	?>
-	<form id="membership-selection-form-<?php echo $uuid; ?>" class="ur-membership-container layout-list" method="GET"
-			action="<?php echo $redirect_page_url; ?>">
-		<input type="hidden" name="urm_uuid" value="<?php echo $uuid; ?>">
-		<input type="hidden" name="thank_you" value="<?php echo $thank_you_page_id; ?>">
+	<form id="membership-selection-form-<?php echo esc_html( $uuid ); ?>" class="ur-membership-container layout-list" method="GET"
+			action="<?php echo esc_url( $redirect_page_url ); ?>">
+		<input type="hidden" name="urm_uuid" value="<?php echo esc_html( $uuid ); ?>">
+		<input type="hidden" name="thank_you" value="<?php echo absint( $thank_you_page_id ); ?>">
 		<div class="ur_membership_frontend_input_container radio">
 			<?php
 			if ( ! empty( $memberships ) ) :
@@ -159,7 +204,7 @@ elseif ( 'list' === $type ) :
 					<div class="membership-block">
 						<label class="ur_membership_input_label ur-label"
 								for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>">
-							<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field"
+							<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field <?php echo esc_html( $radio_class ); ?>"
 									id="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
 									type="radio"
 									name="membership_id"
@@ -178,7 +223,7 @@ elseif ( 'list' === $type ) :
 			?>
 			<div class="membership-footer">
 				<button type="submit"
-						class="membership-signup-button" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ); ?>><?php echo $sign_up_text; ?></button>
+						class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>"  ><?php echo esc_html( $sign_up_text ); ?></button>
 			</div>
 		</div>
 	</form>
