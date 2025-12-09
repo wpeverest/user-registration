@@ -7,7 +7,7 @@ import ConditionValueInput from "../inputs/ConditionValueInput";
 import {getURCRLocalizedData, getURCRData, isProAccess} from "../../utils/localized-data";
 
 // Get all condition options as a flat array for select dropdown
-const getAllConditionOptions = () => {
+const getAllConditionOptions = (isMigrated = false) => {
 	// Get condition options from localized data
 	const allOptions = getURCRData("condition_options", [
 		{value: "membership", label: __("Membership", "user-registration"), type: "multiselect"},
@@ -23,16 +23,32 @@ const getAllConditionOptions = () => {
 		{value: "payment_status", label: __("Payment Status", "user-registration"), type: "multiselect"},
 	]);
 
-	// Filter options based on pro access
-	// For free users, only show membership condition
-	return isProAccess()
-		? allOptions
-		: allOptions.filter(option => option.value === "membership");
+	// Filter options based on pro access and migration status
+	const isMigratedBool = Boolean(isMigrated);
+	const isPro = isProAccess();
+	
+	// Pro users: show all conditions
+	if (isPro) {
+		return allOptions;
+	}
+	
+	// Free users with migrated rules: show only user_state, roles, and membership
+	if (isMigratedBool) {
+		return allOptions.filter(option => 
+			option.value === "membership" || 
+			option.value === "roles" || 
+			option.value === "user_state"
+		);
+	}
+	
+	// Free users with non-migrated rules: only show membership
+	return allOptions.filter(option => option.value === "membership");
 };
 
 const ConditionRow = ({
 						  condition,
 						  onUpdate,
+						  isMigrated = false,
 					  }) => {
 	const [operator] = useState(condition.operator || "is");
 	const [value, setValue] = useState(condition.conditionValue || "");
@@ -62,7 +78,7 @@ const ConditionRow = ({
 
 	const handleFieldChange = (e) => {
 		const selectedValue = e.target.value;
-		const allOptions = getAllConditionOptions();
+		const allOptions = getAllConditionOptions(isMigrated);
 		const selectedOption = allOptions.find(opt => opt.value === selectedValue);
 
 		if (selectedOption) {
@@ -93,7 +109,7 @@ const ConditionRow = ({
 							value={condition.value || ""}
 							onChange={handleFieldChange}
 						>
-							{getAllConditionOptions().map((option) => (
+							{getAllConditionOptions(isMigrated).map((option) => (
 								<option key={option.value} value={option.value}>
 									{option.label}
 								</option>

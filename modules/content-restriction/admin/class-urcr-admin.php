@@ -193,9 +193,10 @@ class URCR_Admin {
 		// Check if we should run migration
 		$global_migrated = get_option( 'urcr_global_restriction_migrated', false );
 		$post_page_migrated = get_option( 'urcr_post_page_restrictions_migrated', false );
+		$memberships_migrated = get_option( 'urcr_memberships_migrated', false );
 
 		// Check if there are unmigrated posts/pages
-		$has_unmigrated = false;
+		$has_unmigrated_posts = false;
 		if ( ! $post_page_migrated ) {
 			$args = array(
 				'post_type'      => array( 'post', 'page' ),
@@ -210,11 +211,19 @@ class URCR_Admin {
 			);
 			$posts = get_posts( $args );
 
-			$has_unmigrated = ! empty( $posts );
+			$has_unmigrated_posts = ! empty( $posts );
 		}
 
-		// Run migration if needed
-		if ( ! $global_migrated || $has_unmigrated ) {
+		// Check if there are unmigrated memberships
+		$has_unmigrated_memberships = false;
+		if ( ! $memberships_migrated ) {
+			if ( function_exists( 'urcr_has_unmigrated_memberships' ) ) {
+				$has_unmigrated_memberships = urcr_has_unmigrated_memberships();
+			}
+		}
+
+		// Run migration if any step needs to run
+		if ( ! $global_migrated || $has_unmigrated_posts || ! $memberships_migrated || $has_unmigrated_memberships ) {
 			if ( function_exists( 'urcr_run_migration' ) ) {
 				urcr_run_migration();
 			}

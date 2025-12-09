@@ -3,56 +3,68 @@
  */
 import React, {useState} from "react";
 import {__} from "@wordpress/i18n";
-import {isProAccess} from "../../utils/localized-data";
+import {getURCRData, isProAccess} from "../../utils/localized-data";
 
-const ConditionFieldDropdown = ({onSelect}) => {
+// Group options by category
+const groupOptions = (options) => {
+	const groups = {
+		"Membership": [],
+		"User Based": [],
+		"User Assets Based": [],
+		"Others": []
+	};
+
+	options.forEach(option => {
+		if (option.value === "membership") {
+			groups["Membership"].push(option);
+		} else if (["roles", "user_registered_date", "access_period", "user_state"].includes(option.value)) {
+			groups["User Based"].push(option);
+		} else if (["email_domain", "post_count"].includes(option.value)) {
+			groups["User Assets Based"].push(option);
+		} else {
+			groups["Others"].push(option);
+		}
+	});
+
+	// Convert to array format and filter out empty groups
+	return Object.entries(groups)
+		.filter(([group, opts]) => opts.length > 0)
+		.map(([group, opts]) => ({
+			group: __(group, "user-registration"),
+			options: opts
+		}));
+};
+
+const ConditionFieldDropdown = ({onSelect, isMigrated = false}) => {
 	const [selectedValue, setSelectedValue] = useState("");
 
-	const allOptions = [
-		{
-			group: __("Membership", "user-registration"),
-			options: [
-				{value: "membership", label: __("Membership", "user-registration"), type: "multiselect"},
-			],
-		},
-		{
-			group: __("User Based", "user-registration"),
-			options: [
-				{value: "roles", label: __("Roles", "user-registration"), type: "multiselect"},
-				{value: "user_registered_date", label: __("User Registered Date", "user-registration"), type: "date"},
-				{value: "access_period", label: __("Period after Registration", "user-registration"), type: "period"},
-				{value: "user_state", label: __("User State", "user-registration"), type: "checkbox"},
-			],
-		},
-		{
-			group: __("User Assets Based", "user-registration"),
-			options: [
-				{value: "email_domain", label: __("Email Domain", "user-registration"), type: "text"},
-				{value: "post_count", label: __("Minimum Public Posts Count", "user-registration"), type: "number"},
-			],
-		},
-		{
-			group: __("Others", "user-registration"),
-			options: [
-				{value: "capabilities", label: __("Capabilities", "user-registration"), type: "multiselect"},
-				{
-					value: "registration_source",
-					label: __("User Registration Source", "user-registration"),
-					type: "multiselect"
-				},
-				{value: "ur_form_field", label: __("UR Form Field", "user-registration"), type: "multiselect"},
-				{value: "payment_status", label: __("Payment Status", "user-registration"), type: "multiselect"},
-			],
-		},
-	];
-
-	// Filter options based on pro access
-	// For free users, only show membership condition
-	const options = isProAccess() 
-		? allOptions 
-		: allOptions.filter(group => 
-			group.options && group.options.some(option => option.value === "membership")
+	// Get condition options from localized data
+	const allConditionOptions = getURCRData("condition_options", []);
+	
+	// Filter options based on pro access and migration status
+	const isMigratedBool = Boolean(isMigrated);
+	const isPro = isProAccess();
+	
+	let filteredOptions;
+	
+	// Pro users: show all conditions
+	if (isPro) {
+		filteredOptions = allConditionOptions;
+	}
+	// Free users with migrated rules: show only user_state, roles, and membership
+	else if (isMigratedBool) {
+		filteredOptions = allConditionOptions.filter(option => 
+			option.value === "membership" || 
+			option.value === "roles" || 
+			option.value === "user_state"
 		);
+	}
+	// Free users with non-migrated rules: only show membership
+	else {
+		filteredOptions = allConditionOptions.filter(option => option.value === "membership");
+	}
+
+	const options = groupOptions(filteredOptions);
 
 	const handleOptionClick = (option) => {
 		setSelectedValue(option.value);

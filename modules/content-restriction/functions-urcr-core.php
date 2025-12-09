@@ -903,91 +903,6 @@ function ur_restrict_files( $file, $restriction_conditions, $restricted_files ) 
 }
 
 /**
- * Check if all conditions in logic_map are valid for free users (only membership).
- *
- * @param array $logic_map Logic map array.
- *
- * @return bool True if all conditions are membership, false otherwise.
- */
-function urcr_validate_conditions_for_free_users( $logic_map ) {
-	if ( empty( $logic_map ) || ! is_array( $logic_map ) ) {
-		return true; // Empty conditions are valid
-	}
-
-	// If it's a group, recursively check all conditions
-	if ( isset( $logic_map['type'] ) && 'group' === $logic_map['type'] ) {
-		if ( ! empty( $logic_map['conditions'] ) && is_array( $logic_map['conditions'] ) ) {
-			foreach ( $logic_map['conditions'] as $condition ) {
-				if ( ! urcr_validate_conditions_for_free_users( $condition ) ) {
-					return false;
-				}
-			}
-		}
-
-		return true;
-	}
-
-	// For individual conditions, check if type is membership
-	if ( isset( $logic_map['type'] ) ) {
-		return 'membership' === $logic_map['type'];
-	}
-
-	// If no type is set, it's invalid
-	return false;
-}
-
-/**
- * Check if an access rule is valid for free users.
- * Free users can only use:
- * - Membership condition only
- * - wp_posts and wp_pages content types only
- * - restrict access control only
- *
- * @param array $access_rule Access rule array.
- *
- * @return bool True if rule is valid for free users, false otherwise.
- */
-function urcr_is_rule_valid_for_free_users( $access_rule ) {
-	if ( empty( $access_rule ) || ! is_array( $access_rule ) ) {
-		return false;
-	}
-
-	// Validate conditions in logic_map - only membership allowed
-	if ( ! empty( $access_rule['logic_map'] ) && is_array( $access_rule['logic_map'] ) ) {
-		if ( ! urcr_validate_conditions_for_free_users( $access_rule['logic_map'] ) ) {
-			return false;
-		}
-	}
-
-	// Validate target_contents - only wp_posts and wp_pages allowed
-	if ( ! empty( $access_rule['target_contents'] ) && is_array( $access_rule['target_contents'] ) ) {
-		$allowed_content_types = array( 'wp_posts', 'wp_pages' );
-		foreach ( $access_rule['target_contents'] as $target_content ) {
-			if ( ! empty( $target_content['type'] ) && ! in_array( $target_content['type'], $allowed_content_types, true ) ) {
-				return false;
-			}
-		}
-	}
-
-	// Validate access_control - only restrict allowed
-	if ( ! empty( $access_rule['actions'] ) && is_array( $access_rule['actions'] ) ) {
-		$first_action   = $access_rule['actions'][0];
-		$access_control = isset( $first_action['access_control'] ) ? $first_action['access_control'] : 'access';
-		if ( 'restrict' !== $access_control ) {
-			return false;
-		}
-	} else {
-		// If no actions, check access_control at rule level
-		$access_control = isset( $access_rule['access_control'] ) ? $access_rule['access_control'] : 'access';
-		if ( 'restrict' !== $access_control ) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
-/**
  * Build conditions array based on allow_to option value.
  * This is a reusable function for migration.
  *
@@ -1065,22 +980,76 @@ function urcr_build_migration_conditions( $allow_to_value ) {
 }
 
 /**
+ * Build default actions for migrated rules.
+ *
+ * @return array Actions array.
+ */
+function urcr_build_migration_actions() {
+	$default_message = '<p>' . esc_html__( 'You do not have sufficient permission to access this content.', 'user-registration' ) . '</p>';
+	$timestamp       = time() * 1000;
+
+	return array(
+		array(
+			'id'             => 'x' . ( $timestamp + 200 ),
+			'type'           => 'message',
+			'label'          => 'Show Message',
+			'message'        => $default_message,
+			'redirect_url'   => '',
+			'access_control' => 'access',
+			'local_page'     => '',
+			'ur_form'        => '',
+			'shortcode'      => array(
+				'tag'  => '',
+				'args' => '',
+			),
+		),
+	);
+}
+
+/**
+ * Create a migrated rule post.
+ *
+ * @param string $title Rule title.
+ * @param array  $rule_data Rule data array.
+ *
+ * @return int|false Rule ID on success, false on failure.
+ */
+function urcr_create_migrated_rule( $title, $rule_data ) {
+	$rule_post = array(
+		'post_title'   => $title,
+		'post_content' => wp_json_encode( $rule_data ),
+		'post_type'    => 'urcr_access_rule',
+		'post_status'  => 'publish',
+	);
+
+	$rule_id = wp_insert_post( $rule_post );
+
+	if ( $rule_id && ! is_wp_error( $rule_id ) ) {
+		update_post_meta( $rule_id, 'urcr_is_migrated', true );
+		return $rule_id;
+	}
+
+	return false;
+}
+
+/**
  * Migrate global restriction settings to content access rules.
  *
  * @return int|false Rule ID on success, false on failure.
  */
 function urcr_migrate_global_restriction_settings() {
-	// Check if global restriction is enabled
-	$whole_site_access = get_option( 'user_registration_content_restriction_whole_site_access', false );
-
-	if ( ! ur_string_to_bool( $whole_site_access ) ) {
-		return false; // Global restriction not enabled
-	}
-
 	// Check if migration already done
 	$migration_done = get_option( 'urcr_global_restriction_migrated', false );
 	if ( $migration_done ) {
 		return false; // Already migrated
+	}
+
+	// Check if global restriction is enabled
+	$whole_site_access = get_option( 'user_registration_content_restriction_whole_site_access', false );
+	if ( ! ur_string_to_bool( $whole_site_access ) ) {
+		// Mark as done even if not enabled, so we don't check again
+		update_option( 'urcr_global_restriction_migrated', true );
+		return false; // Global restriction not enabled
 	}
 
 	// Get allow_to option value
@@ -1089,8 +1058,9 @@ function urcr_migrate_global_restriction_settings() {
 
 	// Build conditions
 	$conditions = urcr_build_migration_conditions( $allow_to );
-
 	if ( empty( $conditions ) ) {
+		// Mark as done even if no conditions, so we don't check again
+		update_option( 'urcr_global_restriction_migrated', true );
 		return false; // No conditions to migrate
 	}
 
@@ -1112,48 +1082,21 @@ function urcr_migrate_global_restriction_settings() {
 		),
 	);
 
-	// Build actions
-	$default_message = '<p>' . esc_html__( 'You do not have sufficient permission to access this content.', 'user-registration' ) . '</p>';
-	$actions         = array(
-		array(
-			'id'             => 'x' . ( $timestamp + 200 ),
-			'type'           => 'message',
-			'label'          => 'Show Message',
-			'message'        => $default_message,
-			'redirect_url'   => '',
-			'access_control' => 'access',
-			'local_page'     => '',
-			'ur_form'        => '',
-			'shortcode'      => array(
-				'tag'  => '',
-				'args' => '',
-			),
-		),
-	);
-
 	// Build rule data
 	$rule_data = array(
 		'enabled'         => true,
 		'access_control'  => 'access',
 		'logic_map'       => $logic_map,
 		'target_contents' => $target_contents,
-		'actions'         => $actions,
+		'actions'         => urcr_build_migration_actions(),
 	);
 
 	// Create the rule post
-	$rule_post = array(
-		'post_title'   => __( 'Migrated: Global Site Restriction', 'user-registration' ),
-		'post_content' => wp_json_encode( $rule_data ),
-		'post_type'    => 'urcr_access_rule',
-		'post_status'  => 'publish',
-	);
+	$rule_id = urcr_create_migrated_rule( __( 'Migrated: Global Site Restriction', 'user-registration' ), $rule_data );
 
-	$rule_id = wp_insert_post( $rule_post );
-
-	if ( $rule_id && ! is_wp_error( $rule_id ) ) {
+	if ( $rule_id ) {
 		// Mark migration as done
 		update_option( 'urcr_global_restriction_migrated', true );
-
 		return $rule_id;
 	}
 
@@ -1166,6 +1109,12 @@ function urcr_migrate_global_restriction_settings() {
  * @return array Array of migrated rule IDs and post/page IDs.
  */
 function urcr_migrate_post_page_restrictions() {
+	// Check if migration already done
+	$migration_done = get_option( 'urcr_post_page_restrictions_migrated', false );
+	if ( $migration_done ) {
+		return array(); // Already migrated
+	}
+
 	// Get all posts and pages with urcr_meta_checkbox enabled
 	$args = array(
 		'post_type'      => array( 'post', 'page' ),
@@ -1184,7 +1133,6 @@ function urcr_migrate_post_page_restrictions() {
 	if ( empty( $posts ) ) {
 		// No posts to migrate, mark as done
 		update_option( 'urcr_post_page_restrictions_migrated', true );
-
 		return array();
 	}
 
@@ -1205,7 +1153,6 @@ function urcr_migrate_post_page_restrictions() {
 	if ( empty( $posts_to_migrate ) ) {
 		// All posts migrated, mark as done
 		update_option( 'urcr_post_page_restrictions_migrated', true );
-
 		return array();
 	}
 
@@ -1229,7 +1176,6 @@ function urcr_migrate_post_page_restrictions() {
 
 	// Build conditions
 	$conditions = urcr_build_migration_conditions( $allow_to );
-
 	if ( empty( $conditions ) ) {
 		return array(); // No conditions to migrate
 	}
@@ -1271,45 +1217,19 @@ function urcr_migrate_post_page_restrictions() {
 		return array(); // No posts/pages to migrate
 	}
 
-	// Build actions
-	$default_message = '<p>' . esc_html__( 'You do not have sufficient permission to access this content.', 'user-registration' ) . '</p>';
-	$actions         = array(
-		array(
-			'id'             => 'x' . ( $timestamp + 200 ),
-			'type'           => 'message',
-			'label'          => 'Show Message',
-			'message'        => $default_message,
-			'redirect_url'   => '',
-			'access_control' => 'access',
-			'local_page'     => '',
-			'ur_form'        => '',
-			'shortcode'      => array(
-				'tag'  => '',
-				'args' => '',
-			),
-		),
-	);
-
 	// Build rule data
 	$rule_data = array(
 		'enabled'         => true,
 		'access_control'  => 'access',
 		'logic_map'       => $logic_map,
 		'target_contents' => $target_contents,
-		'actions'         => $actions,
+		'actions'         => urcr_build_migration_actions(),
 	);
 
 	// Create the rule post
-	$rule_post = array(
-		'post_title'   => __( 'Migrated: Post/Page Restrictions', 'user-registration' ),
-		'post_content' => wp_json_encode( $rule_data ),
-		'post_type'    => 'urcr_access_rule',
-		'post_status'  => 'publish',
-	);
+	$rule_id = urcr_create_migrated_rule( __( 'Migrated: Post/Page Restrictions', 'user-registration' ), $rule_data );
 
-	$rule_id = wp_insert_post( $rule_post );
-
-	if ( $rule_id && ! is_wp_error( $rule_id ) ) {
+	if ( $rule_id ) {
 		// Delete urcr_meta_checkbox meta for each migrated post/page
 		foreach ( $new_migrated_ids as $post_id ) {
 			delete_post_meta( $post_id, 'urcr_meta_checkbox' );
@@ -1338,24 +1258,45 @@ function urcr_migrate_post_page_restrictions() {
  *
  * @param array $logic_map Logic map to check.
  *
- * @return bool True if logic map has advanced logic, false otherwise.
+ * @return bool True if logic map has advanced logic (nested groups or non-AND gates), false otherwise.
  */
 function urcr_logic_map_has_advanced_logic( $logic_map ) {
+
 	if ( empty( $logic_map ) || ! is_array( $logic_map ) ) {
 		return false;
 	}
 
-	// Check if logic_map has a group type
-	if ( isset( $logic_map['type'] ) && 'group' === $logic_map['type'] ) {
-		// Check if logic gate is not AND (OR or NOT indicates advanced logic)
-		$logic_gate = isset( $logic_map['logic_gate'] ) ? $logic_map['logic_gate'] : 'AND';
-		if ( 'AND' !== $logic_gate ) {
-			return true;
-		}
 
+	if ( isset( $logic_map['type'] )  ) {
 		// Check for nested groups in conditions recursively
 		if ( ! empty( $logic_map['conditions'] ) && is_array( $logic_map['conditions'] ) ) {
+			$conditions_count = count( $logic_map['conditions'] );
+
+			if ( 1 === $conditions_count ) {
+				$condition = $logic_map['conditions'][0];
+				if ( ! isset( $condition['type'] ) || 'group' !== $condition['type'] ) {
+					return false;
+				}
+				// If it is a group, recursively check it for advanced logic
+				return urcr_logic_map_has_advanced_logic( $condition );
+			}
+
+			// If multiple conditions exist, check logic gate
+			if ( $conditions_count > 1 ) {
+				$logic_gate = isset( $logic_map['logic_gate'] ) ? $logic_map['logic_gate'] : 'AND';
+
+				// If logic gate is OR or NOT, it's advanced logic
+				if ( 'AND' !== $logic_gate ) {
+					return true;
+				}
+			}
+
+			// Check for nested groups in any condition
 			foreach ( $logic_map['conditions'] as $condition ) {
+				// Check if any condition is itself a group (nested group)
+				if ( isset( $condition['type'] ) && 'group' === $condition['type'] ) {
+					return true;
+				}
 				// Recursively check nested conditions (will detect nested groups)
 				if ( urcr_logic_map_has_advanced_logic( $condition ) ) {
 					return true;
@@ -1368,9 +1309,9 @@ function urcr_logic_map_has_advanced_logic( $logic_map ) {
 }
 
 /**
- * Check if any existing rules have advanced logic (groups or logic gates other than AND).
+ * Check if any existing rules have advanced logic (nested groups).
  *
- * @return bool True if any rule has advanced logic, false otherwise.
+ * @return bool True if any rule has advanced logic (nested groups), false otherwise.
  */
 function urcr_has_rules_with_advanced_logic() {
 	$access_rule_posts = get_posts(
@@ -1399,8 +1340,166 @@ function urcr_has_rules_with_advanced_logic() {
 }
 
 /**
+ * Migrate memberships to individual content access rules.
+ * Creates one rule per active membership.
+ *
+ * @return array Array of migrated rule IDs.
+ */
+function urcr_migrate_memberships() {
+	// Check if migration already done
+	$migration_done = get_option( 'urcr_memberships_migrated', false );
+
+	if ( $migration_done ) {
+		return array(); // Already migrated
+	}
+
+	// Check if membership module is active
+	if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'membership' ) ) {
+		// Mark as done even if module not active, so we don't check again
+		update_option( 'urcr_memberships_migrated', true );
+		return array();
+	}
+
+	// Get active memberships
+	$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
+	$memberships        = $membership_service->list_active_memberships();
+
+	if ( empty( $memberships ) || ! is_array( $memberships ) ) {
+		// No memberships to migrate, mark as done
+		update_option( 'urcr_memberships_migrated', true );
+		return array();
+	}
+
+	// Get already migrated membership IDs
+	$migrated_membership_ids = get_option( 'urcr_migrated_membership_ids', array() );
+
+	if ( ! is_array( $migrated_membership_ids ) ) {
+		$migrated_membership_ids = array();
+	}
+
+	$migrated_rule_ids = array();
+	$base_timestamp = time() * 1000;
+	$timestamp_counter = 0;
+
+	foreach ( $memberships as $membership ) {
+
+		$membership_id = isset( $membership['ID'] ) ? $membership['ID'] : 0;
+
+		$membership_title = isset( $membership['title'] ) ? $membership['title'] : '';
+
+		if ( empty( $membership_id ) || empty( $membership_title ) ) {
+			continue;
+		}
+
+		// Skip if already migrated
+		if ( in_array( $membership_id, $migrated_membership_ids, true ) ) {
+			continue;
+		}
+
+		$timestamp = $base_timestamp + ( $timestamp_counter * 1000 );
+		$timestamp_counter++;
+
+		// Build condition for this membership
+		$condition = array(
+			'type'  => 'membership',
+			'id'    => 'x' . $timestamp,
+			'value' => array( strval( $membership_id ) ),
+		);
+
+		// Build logic_map
+		$logic_map = array(
+			'type'       => 'group',
+			'id'         => 'x' . ( $timestamp + 1 ),
+			'conditions' => array( $condition ),
+			'logic_gate' => 'AND',
+		);
+
+		// Build target_contents - empty for membership rules
+		$target_contents = array();
+
+		// Build rule data
+		$rule_data = array(
+			'enabled'         => true,
+			'access_control'  => 'access',
+			'logic_map'       => $logic_map,
+			'target_contents' => $target_contents,
+			'actions'         => urcr_build_migration_actions(),
+		);
+
+		$rule_title = sprintf( __( '%s Rule', 'user-registration' ), $membership_title );
+
+		// Create the rule post (without migrated meta)
+		$rule_post = array(
+			'post_title'   => $rule_title,
+			'post_content' => wp_json_encode( $rule_data ),
+			'post_type'    => 'urcr_access_rule',
+			'post_status'  => 'publish',
+		);
+
+		$rule_id = wp_insert_post( $rule_post );
+
+		if ( $rule_id && ! is_wp_error( $rule_id ) ) {
+			$migrated_rule_ids[] = $rule_id;
+			$migrated_membership_ids[] = $membership_id;
+		}
+	}
+
+	// Update migrated membership IDs
+	if ( ! empty( $migrated_membership_ids ) ) {
+		update_option( 'urcr_migrated_membership_ids', $migrated_membership_ids );
+	}
+
+	// Mark migration as done only if all memberships are migrated
+	if ( count( $migrated_membership_ids ) >= count( $memberships ) ) {
+		update_option( 'urcr_memberships_migrated', true );
+	}
+
+	return $migrated_rule_ids;
+}
+
+/**
+ * Check if there are unmigrated memberships.
+ *
+ * @return bool True if there are unmigrated memberships, false otherwise.
+ */
+function urcr_has_unmigrated_memberships() {
+	// Check if membership module is active
+	if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'membership' ) ) {
+		return false;
+	}
+
+	// Check if there are active memberships that haven't been migrated
+	$migrated_membership_ids = get_option( 'urcr_migrated_membership_ids', array() );
+	if ( ! is_array( $migrated_membership_ids ) ) {
+		$migrated_membership_ids = array();
+	}
+
+	if ( ! class_exists( '\WPEverest\URMembership\Admin\Services\MembershipService' ) ) {
+		return false;
+	}
+
+	$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
+	$memberships        = $membership_service->list_active_memberships();
+
+	if ( empty( $memberships ) || ! is_array( $memberships ) ) {
+		return false;
+	}
+
+	// Check if any membership hasn't been migrated
+	foreach ( $memberships as $membership ) {
+		$membership_id = isset( $membership['ID'] ) ? $membership['ID'] : 0;
+		if ( ! empty( $membership_id ) && ! in_array( $membership_id, $migrated_membership_ids, true ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Run the migration script.
  * This function should be called from admin class.
+ * Each step only runs if not already completed.
  *
  * @return array Migration results.
  */
@@ -1409,19 +1508,27 @@ function urcr_run_migration() {
 		'global_rule_id'    => false,
 		'post_page_rule_id' => false,
 		'migrated_post_ids' => array(),
+		'membership_rule_ids' => array(),
 	);
 
-	// Case 1: Migrate global restriction settings
+	// Step 1: Migrate global restriction settings
 	$global_rule_id = urcr_migrate_global_restriction_settings();
 	if ( $global_rule_id ) {
 		$results['global_rule_id'] = $global_rule_id;
 	}
 
-	// Case 2: Migrate post/page specific restrictions
+	// Step 2: Migrate post/page specific restrictions
 	$post_page_migration = urcr_migrate_post_page_restrictions();
 	if ( ! empty( $post_page_migration ) && isset( $post_page_migration['rule_id'] ) ) {
 		$results['post_page_rule_id'] = $post_page_migration['rule_id'];
 		$results['migrated_post_ids'] = $post_page_migration['post_ids'];
+	}
+
+	// Step 3: Migrate memberships (one rule per membership)
+	$membership_rule_ids = urcr_migrate_memberships();
+
+	if ( ! empty( $membership_rule_ids ) ) {
+		$results['membership_rule_ids'] = $membership_rule_ids;
 	}
 
 	// Check if any existing rules have advanced logic (groups or logic gates)

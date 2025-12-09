@@ -150,6 +150,9 @@ class URCR_Content_Access_Rules {
 
 			$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
 
+			// Check if rule is migrated
+			$is_migrated = get_post_meta( $rule_post->ID, 'urcr_is_migrated', true );
+
 			$rule_data = array(
 				'id'              => $rule_post->ID,
 				'title'           => $rule_post->post_title,
@@ -161,6 +164,7 @@ class URCR_Content_Access_Rules {
 				'local_page'      => isset( $rule_content['actions'][0]['local_page'] ) ? $rule_content['actions'][0]['local_page'] : '',
 				'logic_map'       => $logic_map,
 				'target_contents' => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
+				'is_migrated'     => ! empty( $is_migrated ),
 			);
 
 			/**
@@ -325,6 +329,9 @@ class URCR_Content_Access_Rules {
 
 		$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
 
+		// Check if rule is migrated
+		$is_migrated = get_post_meta( $rule_post->ID, 'urcr_is_migrated', true );
+
 		$rule_data = array(
 			'id'              => $rule_post->ID,
 			'title'           => $rule_post->post_title,
@@ -336,6 +343,7 @@ class URCR_Content_Access_Rules {
 			'local_page'      => isset( $rule_content['actions'][0]['local_page'] ) ? $rule_content['actions'][0]['local_page'] : '',
 			'logic_map'       => $logic_map,
 			'target_contents' => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
+			'is_migrated'     => ! empty( $is_migrated ),
 		);
 
 		/**

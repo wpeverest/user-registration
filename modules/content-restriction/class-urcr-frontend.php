@@ -175,11 +175,6 @@ class URCR_Frontend {
 				foreach ( $access_rule_posts as $access_rule_post ) {
 					$access_rule = json_decode( $access_rule_post->post_content, true );
 
-					// Skip invalid rules for free users
-					if ( ! UR_PRO_ACTIVE && ! urcr_is_rule_valid_for_free_users( $access_rule ) ) {
-						continue;
-					}
-
 					// Verify if required params are available.
 					if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
 						continue;
@@ -412,11 +407,6 @@ class URCR_Frontend {
 			foreach ( $access_rule_posts as $access_rule_post ) {
 				$access_rule = json_decode( $access_rule_post->post_content, true );
 
-				// Skip invalid rules for free users
-				if ( ! UR_PRO_ACTIVE && ! urcr_is_rule_valid_for_free_users( $access_rule ) ) {
-					continue;
-				}
-
 				// Verify if required params are available.
 				if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
 					continue;
@@ -501,11 +491,6 @@ class URCR_Frontend {
 		if ( ! $is_whole_site_restriction ) {
 			foreach ( $access_rule_posts as $access_rule_post ) {
 				$access_rule = json_decode( $access_rule_post->post_content, true );
-
-				// Skip invalid rules for free users
-				if ( ! UR_PRO_ACTIVE && ! urcr_is_rule_valid_for_free_users( $access_rule ) ) {
-					continue;
-				}
 
 				$target_contents        = isset( $post_content->target_contents ) ? $post_content->target_contents : array();
 				$cat_values             = array();
@@ -796,11 +781,6 @@ class URCR_Frontend {
 			foreach ( $access_rule_posts as $access_rule_post ) {
 				$access_rule = json_decode( $access_rule_post->post_content, true );
 
-				// Skip invalid rules for free users
-				if ( ! UR_PRO_ACTIVE && ! urcr_is_rule_valid_for_free_users( $access_rule ) ) {
-					continue;
-				}
-
 				// Verify if required params are available.
 				if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
 					continue;
@@ -885,11 +865,6 @@ class URCR_Frontend {
 		foreach ( $access_rule_posts as $access_rule_post ) {
 			$access_rule = json_decode( $access_rule_post->post_content, true );
 
-			// Skip invalid rules for free users
-			if ( ! UR_PRO_ACTIVE && ! urcr_is_rule_valid_for_free_users( $access_rule ) ) {
-				continue;
-			}
-
 			// Verify if required params are available.
 			if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
 				continue;
@@ -952,11 +927,6 @@ class URCR_Frontend {
 
 		foreach ( $access_rule_posts as $access_rule_post ) {
 			$access_rule = json_decode( $access_rule_post->post_content, true );
-
-			// Skip invalid rules for free users
-			if ( ! UR_PRO_ACTIVE && ! urcr_is_rule_valid_for_free_users( $access_rule ) ) {
-				continue;
-			}
 
 			// Verify if required params are available.
 			if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
