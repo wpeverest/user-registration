@@ -33,7 +33,7 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 		public function __construct() {
 			$this->id    = 'content_restriction';
 			$this->label = __( 'Content Restriction', 'user-registration' );
-			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
+			// add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
 			add_action( 'user_registration_sections_' . $this->id, array( $this, 'output_sections' ) );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );

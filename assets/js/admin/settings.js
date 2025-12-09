@@ -645,7 +645,6 @@
 			}
 		);
 	});
-
 	/**
 	 * Open collapsed menu on search input clicked.
 	 */
@@ -1431,4 +1430,16 @@
 	function ur_remove_cookie(cookie_key) {
 		document.cookie = cookie_key + "=; Max-Age=-99999999; path=/";
 	}
+	$(document).on("click", ".user-registration-options-header__burger", function() {
+		$(".user-registration-header").addClass("user-registration-header--open");
+		$(".user-registration-settings-container").addClass("user-registration-settings-container--dimmed");
+		$(this).addClass(".user-registration-header__burger--hidden");
+		$(".user-registration-header__close").removeClass("user-registration-header__close--hidden");
+	});
+	$(document).on("click", ".user-registration-header__close", function() {
+		$(".user-registration-header").removeClass("user-registration-header--open");
+		$(".user-registration-settings-container").removeClass("user-registration-settings-container--dimmed");
+		$(this).addClass("user-registration-header__close--hidden");
+		$(".user-registration-options-header__burger").removeClass("user-registration-header__close--hidden");
+	});
 })(jQuery);

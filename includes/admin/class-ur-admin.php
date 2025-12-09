@@ -25,7 +25,9 @@ class UR_Admin {
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'init', array( $this, 'translation_migration' ) );
 		add_action( 'init', array( $this, 'run_migration_script' ) );
-		add_action( 'init', array( $this, 'run_membership_migration_script' ) );
+		if( ur_check_module_activation( 'membership' ) ) {
+			add_action( 'init', array( $this, 'run_membership_migration_script' ) );
+		}
 		add_action( 'current_screen', array( $this, 'conditional_includes' ) );
 		add_action( 'admin_init', array( $this, 'prevent_admin_access' ), 10, 2 );
 		add_action( 'load-users.php', array( $this, 'live_user_read' ), 10, 2 );

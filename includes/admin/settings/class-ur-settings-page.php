@@ -14,7 +14,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 
 	/**
 	 * UR_Settings_Page.
-	 */
+	*/
 	abstract class UR_Settings_Page {
 
 		/**
@@ -35,9 +35,16 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 		 * Constructor.
 		 */
 		public function __construct() {
+			//nav link (left sidebar).
 			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
+			
+			//horizontal tab-like view for sections.
 			add_action( 'user_registration_sections_' . $this->id, array( $this, 'output_sections' ) );
+			
+			//main content : options fields as UI.
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
+			
+			//save settings.
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
 		}
 
@@ -111,19 +118,15 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 				return;
 			}
 
-			echo '<div class="ur-scroll-ui__scroll-nav"><ul class="subsubsub  ur-scroll-ui__items">';
+			echo '<ul class="subsubsub  ur-scroll-ui__items" style="display: flex; flex-direction: column;">';
 
 			$array_keys = array_keys( $sections );
 
 			foreach ( $sections as $id => $label ) {
-				if ( 'login-options' === $id ) {
-					echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=user-registration-login-forms' ) ) . '" class="' . ( $current_section === $id ? 'current' : '' ) . ' ur-scroll-ui__item">' . esc_html( $label ) . '</a></li>';
-				} else {
-					echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) ) . '" class="' . ( $current_section === $id ? 'current' : '' ) . ' ur-scroll-ui__item">' . esc_html( $label ) . '</a></li>';
-				}
+				echo '<li' .  ( $current_section === $id ? ' class="current" ' : '' ) . '><a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) ) . '" class="' . ( $current_section === $id ? 'current' : '' ) . ' ur-scroll-ui__item"><span class="timeline"></span><span class="submenu">' . esc_html( $label ) . '</span></a></li>';
 			}
 
-			echo '</ul></div>';
+			echo '</ul>';
 		}
 
 		/**

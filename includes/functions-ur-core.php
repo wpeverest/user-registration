@@ -4178,7 +4178,7 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 	}
 }
 
-add_action( 'user_registration_settings_tabs', 'ur_display_premium_settings_tab' );
+// add_action( 'user_registration_settings_tabs', 'ur_display_premium_settings_tab' );
 
 if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
 
