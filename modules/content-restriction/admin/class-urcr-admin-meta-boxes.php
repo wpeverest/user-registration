@@ -89,6 +89,16 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 	public function add_metabox() {
 		global $post;
 
+		// Only show meta box for posts and pages
+		if ( ! $post || ! isset( $post->post_type ) ) {
+			return;
+		}
+
+		// Restrict to only 'post' and 'page' post types
+		if ( ! in_array( $post->post_type, array( 'post', 'page' ), true ) ) {
+			return;
+		}
+
 		// Check if we should show the metabox
 		if ( ! $this->should_show_metabox( $post ) ) {
 			return;
@@ -98,7 +108,7 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 			'urcr-meta-box',
 			__( 'Restrict This Content', 'user-registration' ),
 			array( $this, 'render_metabox' ),
-			$screen = null,
+			array( 'post', 'page' ),
 			'advanced',
 			'default'
 		);
@@ -112,6 +122,11 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 	 */
 	private function should_show_metabox( $post ) {
 		if ( ! $post || ! isset( $post->ID ) ) {
+			return false;
+		}
+
+		// Only show for posts and pages
+		if ( ! isset( $post->post_type ) || ! in_array( $post->post_type, array( 'post', 'page' ), true ) ) {
 			return false;
 		}
 
@@ -224,7 +239,12 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 	public function save_metabox( $post_id, $post ) {
 
 		if ( empty( $_POST ) ) {
-			return false;
+			return;
+		}
+
+		// Only save meta for posts and pages
+		if ( ! $post || ! isset( $post->post_type ) || ! in_array( $post->post_type, array( 'post', 'page' ), true ) ) {
+			return;
 		}
 
 		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );

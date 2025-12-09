@@ -211,6 +211,15 @@ class URCR_Admin_Assets {
 		);
 		$pages = wp_list_pluck( $pages, 'post_title', 'ID' );
 
+		// Filter out excluded pages
+		if ( function_exists( 'urcr_get_excluded_page_ids' ) ) {
+			$excluded_page_ids = urcr_get_excluded_page_ids();
+			foreach ( $excluded_page_ids as $excluded_page_id ) {
+				if ( isset( $pages[ $excluded_page_id ] ) ) {
+					unset( $pages[ $excluded_page_id ] );
+				}
+			}
+		}
 
 		// Prepare list of shortcodes.
 

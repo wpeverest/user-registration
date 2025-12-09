@@ -43,12 +43,13 @@ const RuleGroup = ({
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const dropdownWrapperRef = useRef(null);
 	const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
+	
 	// Initialize conditions from group data
 	useEffect(() => {
 		if (group.conditions && group.conditions.length > 0) {
 			const initialConditions = group.conditions.map((cond) => {
 				if (cond.type === "group") {
-					// This is a nested group
+					// This is a nested group (only if advanced logic is enabled)
 					return {
 						type: "group",
 						id: cond.id,
@@ -87,10 +88,21 @@ const RuleGroup = ({
 		} else {
 			setConditions([]);
 		}
-		if (group.logic_gate) {
+		
+		// Force logic gate to AND when advanced logic is disabled
+		if (!isAdvancedLogicEnabled) {
+			setLogicGate("AND");
+		} else if (group.logic_gate) {
 			setLogicGate(group.logic_gate);
 		}
-	}, [group.id]);
+	}, [group.id, isAdvancedLogicEnabled]);
+
+	// Force logic gate to AND when advanced logic is disabled (in case it changes dynamically)
+	useEffect(() => {
+		if (!isAdvancedLogicEnabled && logicGate !== "AND") {
+			setLogicGate("AND");
+		}
+	}, [isAdvancedLogicEnabled, logicGate]);
 
 	// Close dropdown when clicking outside
 	useEffect(() => {
@@ -177,42 +189,45 @@ const RuleGroup = ({
 	// Notify parent of changes whenever conditions or logicGate changes
 	useEffect(() => {
 		// Build the updated group structure
+		// Note: Flattening is now handled on the backend API side when advanced logic is disabled
+		const conditionsToSerialize = conditions.map((cond) => {
+			if (cond.type === "group") {
+				return cond.group;
+			} else {
+				let conditionValue = cond.conditionValue;
+				if (cond.inputType === "ur_form_field" && typeof conditionValue === "object") {
+					if (conditionValue.form_id && conditionValue.field_name) {
+						conditionValue = {
+							form_id: conditionValue.form_id,
+							form_fields: [conditionValue.field_name],
+						};
+					} else {
+						conditionValue = {form_id: "", form_fields: []};
+					}
+				} else if (cond.value === "user_state") {
+					conditionValue = Array.isArray(conditionValue) ? (conditionValue[0] || "") : (conditionValue || "");
+				} else if (cond.inputType === "multiselect" || cond.inputType === "checkbox") {
+					conditionValue = Array.isArray(conditionValue) ? conditionValue : (conditionValue ? [conditionValue] : []);
+				} else if (cond.operator === "empty" || cond.operator === "not empty") {
+					conditionValue = null;
+				}
+
+				return {
+					type: cond.value,
+					id: cond.id,
+					value: conditionValue,
+				};
+			}
+		});
+		
 		const updatedGroup = {
 			id: group.id,
 			type: "group",
-			logic_gate: logicGate,
-			conditions: conditions.map((cond) => {
-				if (cond.type === "group") {
-					return cond.group;
-				} else {
-					let conditionValue = cond.conditionValue;
-					if (cond.inputType === "ur_form_field" && typeof conditionValue === "object") {
-						if (conditionValue.form_id && conditionValue.field_name) {
-							conditionValue = {
-								form_id: conditionValue.form_id,
-								form_fields: [conditionValue.field_name],
-							};
-						} else {
-							conditionValue = {form_id: "", form_fields: []};
-						}
-					} else if (cond.value === "user_state") {
-						conditionValue = Array.isArray(conditionValue) ? (conditionValue[0] || "") : (conditionValue || "");
-					} else if (cond.inputType === "multiselect" || cond.inputType === "checkbox") {
-						conditionValue = Array.isArray(conditionValue) ? conditionValue : (conditionValue ? [conditionValue] : []);
-					} else if (cond.operator === "empty" || cond.operator === "not empty") {
-						conditionValue = null;
-					}
-
-					return {
-						type: cond.value,
-						id: cond.id,
-						value: conditionValue,
-					};
-				}
-			}),
+			logic_gate: isAdvancedLogicEnabled ? logicGate : "AND", // Force AND when advanced logic is disabled (UI only, backend will flatten)
+			conditions: conditionsToSerialize,
 		};
 		onGroupUpdate(updatedGroup);
-	}, [conditions, logicGate, group.id]);
+	}, [conditions, logicGate, group.id, isAdvancedLogicEnabled]);
 	return (
 		<div className={`urcr-content-group ${isNested ? "urcr-nested-group" : ""}`}>
 			{isAdvancedLogicEnabled && (

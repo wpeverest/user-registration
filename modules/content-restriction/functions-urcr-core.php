@@ -70,6 +70,125 @@ function urcr_get_all_capabilities() {
 }
 
 /**
+ * Get list of page IDs that should be excluded from whole site content restriction.
+ * This function retrieves page IDs from various options and allows filtering for extensibility.
+ *
+ * @return array Array of page IDs to exclude from restriction.
+ * @since 4.0.0
+ */
+function urcr_get_excluded_page_ids() {
+	// List of option names that contain page IDs to exclude
+	$option_names = array(
+		'user_registration_login_page_id',
+		'user_registration_login_options_login_redirect_url',
+		'user_registration_myaccount_page_id',
+		'user_registration_member_registration_page_id',
+	);
+
+	/**
+	 * Filter the list of option names to check for excluded page IDs.
+	 *
+	 * @param array $option_names Array of option names to check.
+	 *
+	 * @since 4.0.0
+	 */
+	$option_names = apply_filters( 'urcr_excluded_page_ids_option_names', $option_names );
+
+	$excluded_page_ids = array();
+
+	// Collect page IDs from all options
+	foreach ( $option_names as $option_name ) {
+		$page_id = get_option( $option_name );
+		if ( ! empty( $page_id ) && is_numeric( $page_id ) ) {
+			$excluded_page_ids[] = absint( $page_id );
+		}
+	}
+
+	// Remove duplicates and re-index array
+	$excluded_page_ids = array_values( array_unique( $excluded_page_ids ) );
+
+	/**
+	 * Filter the list of excluded page IDs from whole site content restriction.
+	 *
+	 * @param array $excluded_page_ids Array of page IDs to exclude.
+	 *
+	 * @since 4.0.0
+	 *
+	 */
+	return apply_filters( 'urcr_excluded_page_ids', $excluded_page_ids );
+}
+
+/**
+ * Check if a page ID should be excluded from whole site content restriction.
+ *
+ * @param int $page_id The page ID to check.
+ *
+ * @return bool True if the page should be excluded, false otherwise.
+ * @since 4.0.0
+ */
+function urcr_is_page_excluded( $page_id ) {
+	if ( empty( $page_id ) ) {
+		return false;
+	}
+
+	$excluded_page_ids = urcr_get_excluded_page_ids();
+
+	return in_array( absint( $page_id ), $excluded_page_ids, true );
+}
+
+/**
+ * Flatten nested groups in logic_map when advanced logic is disabled.
+ *
+ * @param array $logic_map
+ *
+ * @return array
+ * @since 4.0.0
+ */
+function urcr_flatten_logic_map_groups( $logic_map ) {
+	if ( ! is_array( $logic_map ) || empty( $logic_map ) ) {
+		return $logic_map;
+	}
+
+	// Check if advanced logic is enabled
+	$is_advanced_logic_enabled = ur_string_to_bool( get_option( 'urcr_content_access_rule_is_advanced_logic_enabled', 'no' ) );
+
+	// If advanced logic is enabled, return as-is
+	if ( $is_advanced_logic_enabled ) {
+		return $logic_map;
+	}
+
+	// Advanced logic is disabled - flatten groups
+	if ( isset( $logic_map['type'] ) && 'group' === $logic_map['type'] ) {
+		$flattened_conditions = array();
+
+		if ( ! empty( $logic_map['conditions'] ) && is_array( $logic_map['conditions'] ) ) {
+			foreach ( $logic_map['conditions'] as $condition ) {
+				if ( isset( $condition['type'] ) && 'group' === $condition['type'] ) {
+					// Recursively flatten nested groups
+					$nested_flattened = urcr_flatten_logic_map_groups( $condition );
+					if ( ! empty( $nested_flattened['conditions'] ) && is_array( $nested_flattened['conditions'] ) ) {
+						$flattened_conditions = array_merge( $flattened_conditions, $nested_flattened['conditions'] );
+					}
+				} else {
+					// Regular condition - add it directly
+					$flattened_conditions[] = $condition;
+				}
+			}
+		}
+
+		// Return flattened group with AND logic gate
+		return array(
+			'id'         => isset( $logic_map['id'] ) ? $logic_map['id'] : '',
+			'type'       => 'group',
+			'logic_gate' => 'AND',
+			'conditions' => $flattened_conditions,
+		);
+	}
+
+	return $logic_map;
+}
+
+/**
  * See if the given access rule is enabled.
  *
  * @param array $access_rule Acess Rule.
@@ -114,7 +233,7 @@ function urcr_is_action_specified( $access_rule = array() ) {
 /**
  * See if the post is in the provided targets list.
  *
- * @param array       $targets Targets list.
+ * @param array $targets Targets list.
  * @param object|null $target_post Post to check against.
  *
  * @return bool
@@ -181,7 +300,7 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 							$post_status = apply_filters( 'user_registration_membership_post_taxonomy_status', '' );
 
 							if ( ! empty( $post_status ) && isset( $target_post->post_status ) && $target_post->post_status === $post_status ) {
-								return -1;
+								return - 1;
 							}
 
 							$terms = get_the_terms( $target_post, $target['taxonomy'] );
@@ -230,7 +349,7 @@ function urcr_is_current_target( $targets = array() ) {
 /**
  * See if the required conditions are met by the given logic map to be resolved as true.
  *
- * @param array       $logic_map Logic Map.
+ * @param array $logic_map Logic Map.
  * @param object|null $target_post Post to check against.
  *
  * @return bool
@@ -255,25 +374,21 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 		if ( 'group' === $type ) {
 			// If advanced logic is disabled, flatten groups and process all conditions as AND
 			if ( ! $is_advanced_logic_enabled ) {
-				// Flatten the group: process all conditions as AND (all conditions must match to grant access)
-				if ( ! empty( $logic_map['conditions'] ) && is_array( $logic_map['conditions'] ) ) {
-					foreach ( $logic_map['conditions'] as $sub_logic_map ) {
-						// Skip nested groups when advanced logic is disabled
-						if ( isset( $sub_logic_map['type'] ) && 'group' === $sub_logic_map['type'] ) {
-							// Recursively flatten nested groups
-							$nested_result = urcr_is_allow_access( $sub_logic_map, $target_post );
-							if ( ! $nested_result ) {
-								return false;
-							}
-						} else {
-							// Process regular conditions
-							$is_allow_access = urcr_is_allow_access( $sub_logic_map, $target_post );
-							if ( ! $is_allow_access ) {
-								return false;
-							}
+				// Flatten the group structure
+				$flattened_logic_map = urcr_flatten_logic_map_groups( $logic_map );
+
+				// Process all flattened conditions as AND (all conditions must match to grant access)
+				if ( ! empty( $flattened_logic_map['conditions'] ) && is_array( $flattened_logic_map['conditions'] ) ) {
+					foreach ( $flattened_logic_map['conditions'] as $sub_logic_map ) {
+
+						$is_allow_access = urcr_is_allow_access( $sub_logic_map, $target_post );
+
+						if ( ! $is_allow_access ) {
+							return false;
 						}
 					}
 				}
+
 				return true;
 			}
 
@@ -477,10 +592,10 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 					break;
 				case 'membership':
 					if ( $user->ID && ur_check_module_activation( 'membership' ) ) {
-						$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
-						$user_membership    = $members_repository->get_member_membership_by_id( $user->ID );
+						$members_repository        = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
+						$user_membership           = $members_repository->get_member_membership_by_id( $user->ID );
 						$is_user_membership_active = ! empty( $user_membership['status'] ) && 'active' === $user_membership['status'];
-						$sources            = ! empty( $logic_map['value'] ) ? $logic_map['value'] : array();
+						$sources                   = ! empty( $logic_map['value'] ) ? $logic_map['value'] : array();
 
 						if ( ! empty( $user_membership ) && in_array( $user_membership['post_id'], $sources, true ) && $is_user_membership_active ) {
 							return true;
@@ -533,7 +648,7 @@ function urcr_set_elementor_content_restricted() {
 /**
  * Apply content restriction to the current content.
  *
- * @param array       $actions Sequence of actions to run.
+ * @param array $actions Sequence of actions to run.
  * @param object|null $target_post Post to check against.
  *
  * @return bool
@@ -633,7 +748,7 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 				}
 			}
 
-			$shortcode                 = sprintf( '[%s %s]', $shortcode_tag, $shortcode_args );
+			$shortcode = sprintf( '[%s %s]', $shortcode_tag, $shortcode_args );
 
 			$target_post->post_content = $shortcode;
 
@@ -662,7 +777,7 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
  * Get other templates (e.g. my account) passing attributes and including the file.
  *
  * @param string $template_name Template Name.
- * @param array  $args Extra arguments(default: array()).
+ * @param array $args Extra arguments(default: array()).
  * @param string $template_path Path of template provided (default: '').
  * @param string $default_path Default path of template provided(default: '').
  */
@@ -850,8 +965,8 @@ function ur_restrict_files( $file, $restriction_conditions, $restricted_files ) 
 			exit;
 		}
 		// Default send 403 forbidden.
-			header( 'HTTP/1.0 403 Forbidden' );
-			exit;
+		header( 'HTTP/1.0 403 Forbidden' );
+		exit;
 
 	} else {
 		$fp = fopen( $file, 'r' );
@@ -866,6 +981,7 @@ function ur_restrict_files( $file, $restriction_conditions, $restricted_files ) 
  * Check if all conditions in logic_map are valid for free users (only membership).
  *
  * @param array $logic_map Logic map array.
+ *
  * @return bool True if all conditions are membership, false otherwise.
  */
 function urcr_validate_conditions_for_free_users( $logic_map ) {
@@ -882,6 +998,7 @@ function urcr_validate_conditions_for_free_users( $logic_map ) {
 				}
 			}
 		}
+
 		return true;
 	}
 
@@ -902,6 +1019,7 @@ function urcr_validate_conditions_for_free_users( $logic_map ) {
  * - restrict access control only
  *
  * @param array $access_rule Access rule array.
+ *
  * @return bool True if rule is valid for free users, false otherwise.
  */
 function urcr_is_rule_valid_for_free_users( $access_rule ) {
@@ -928,7 +1046,7 @@ function urcr_is_rule_valid_for_free_users( $access_rule ) {
 
 	// Validate access_control - only restrict allowed
 	if ( ! empty( $access_rule['actions'] ) && is_array( $access_rule['actions'] ) ) {
-		$first_action = $access_rule['actions'][0];
+		$first_action   = $access_rule['actions'][0];
 		$access_control = isset( $first_action['access_control'] ) ? $first_action['access_control'] : 'access';
 		if ( 'restrict' !== $access_control ) {
 			return false;
@@ -949,11 +1067,12 @@ function urcr_is_rule_valid_for_free_users( $access_rule ) {
  * This is a reusable function for migration.
  *
  * @param int $allow_to_value The allow_to option value (0, 1, 2, or 3).
+ *
  * @return array Array of conditions.
  */
 function urcr_build_migration_conditions( $allow_to_value ) {
 	$conditions = array();
-	$timestamp = time() * 1000; // JavaScript timestamp format
+	$timestamp  = time() * 1000; // JavaScript timestamp format
 
 	switch ( $allow_to_value ) {
 		case 0: // All logged in users
@@ -970,7 +1089,7 @@ function urcr_build_migration_conditions( $allow_to_value ) {
 
 			if ( ! empty( $allowed_roles ) ) {
 				if ( is_string( $allowed_roles ) ) {
-					$decoded = json_decode( $allowed_roles, true );
+					$decoded     = json_decode( $allowed_roles, true );
 					$roles_array = is_array( $decoded ) ? $decoded : array( $allowed_roles );
 				} elseif ( is_array( $allowed_roles ) ) {
 					$roles_array = $allowed_roles;
@@ -1000,7 +1119,7 @@ function urcr_build_migration_conditions( $allow_to_value ) {
 
 			if ( ! empty( $allowed_memberships ) ) {
 				if ( is_string( $allowed_memberships ) ) {
-					$decoded = json_decode( $allowed_memberships, true );
+					$decoded           = json_decode( $allowed_memberships, true );
 					$memberships_array = is_array( $decoded ) ? $decoded : array( $allowed_memberships );
 				} elseif ( is_array( $allowed_memberships ) ) {
 					$memberships_array = $allowed_memberships;
@@ -1028,7 +1147,7 @@ function urcr_build_migration_conditions( $allow_to_value ) {
 function urcr_migrate_global_restriction_settings() {
 	// Check if global restriction is enabled
 	$whole_site_access = get_option( 'user_registration_content_restriction_whole_site_access', false );
-	
+
 	if ( ! ur_string_to_bool( $whole_site_access ) ) {
 		return false; // Global restriction not enabled
 	}
@@ -1070,7 +1189,7 @@ function urcr_migrate_global_restriction_settings() {
 
 	// Build actions
 	$default_message = '<p>' . esc_html__( 'You do not have sufficient permission to access this content.', 'user-registration' ) . '</p>';
-	$actions = array(
+	$actions         = array(
 		array(
 			'id'             => 'x' . ( $timestamp + 200 ),
 			'type'           => 'message',
@@ -1109,6 +1228,7 @@ function urcr_migrate_global_restriction_settings() {
 	if ( $rule_id && ! is_wp_error( $rule_id ) ) {
 		// Mark migration as done
 		update_option( 'urcr_global_restriction_migrated', true );
+
 		return $rule_id;
 	}
 
@@ -1125,7 +1245,7 @@ function urcr_migrate_post_page_restrictions() {
 	$args = array(
 		'post_type'      => array( 'post', 'page' ),
 		'post_status'    => 'publish',
-		'posts_per_page' => -1,
+		'posts_per_page' => - 1,
 		'meta_query'     => array(
 			array(
 				'key'   => 'urcr_meta_checkbox',
@@ -1135,10 +1255,11 @@ function urcr_migrate_post_page_restrictions() {
 	);
 
 	$posts = get_posts( $args );
-	
+
 	if ( empty( $posts ) ) {
 		// No posts to migrate, mark as done
 		update_option( 'urcr_post_page_restrictions_migrated', true );
+
 		return array();
 	}
 
@@ -1159,6 +1280,7 @@ function urcr_migrate_post_page_restrictions() {
 	if ( empty( $posts_to_migrate ) ) {
 		// All posts migrated, mark as done
 		update_option( 'urcr_post_page_restrictions_migrated', true );
+
 		return array();
 	}
 
@@ -1198,26 +1320,26 @@ function urcr_migrate_post_page_restrictions() {
 	);
 
 	// Build target_contents
-	$target_contents = array();
+	$target_contents   = array();
 	$target_id_counter = $timestamp + 100;
-	$new_migrated_ids = array();
+	$new_migrated_ids  = array();
 
 	if ( ! empty( $posts_by_type['wp_posts'] ) ) {
 		$target_contents[] = array(
-			'id'    => 'x' . $target_id_counter++,
+			'id'    => 'x' . $target_id_counter ++,
 			'type'  => 'wp_posts',
 			'value' => array_map( 'strval', $posts_by_type['wp_posts'] ),
 		);
-		$new_migrated_ids = array_merge( $new_migrated_ids, $posts_by_type['wp_posts'] );
+		$new_migrated_ids  = array_merge( $new_migrated_ids, $posts_by_type['wp_posts'] );
 	}
 
 	if ( ! empty( $posts_by_type['wp_pages'] ) ) {
 		$target_contents[] = array(
-			'id'    => 'x' . $target_id_counter++,
+			'id'    => 'x' . $target_id_counter ++,
 			'type'  => 'wp_pages',
 			'value' => array_map( 'strval', $posts_by_type['wp_pages'] ),
 		);
-		$new_migrated_ids = array_merge( $new_migrated_ids, $posts_by_type['wp_pages'] );
+		$new_migrated_ids  = array_merge( $new_migrated_ids, $posts_by_type['wp_pages'] );
 	}
 
 	if ( empty( $target_contents ) ) {
@@ -1226,7 +1348,7 @@ function urcr_migrate_post_page_restrictions() {
 
 	// Build actions
 	$default_message = '<p>' . esc_html__( 'You do not have sufficient permission to access this content.', 'user-registration' ) . '</p>';
-	$actions = array(
+	$actions         = array(
 		array(
 			'id'             => 'x' . ( $timestamp + 200 ),
 			'type'           => 'message',
@@ -1263,17 +1385,22 @@ function urcr_migrate_post_page_restrictions() {
 	$rule_id = wp_insert_post( $rule_post );
 
 	if ( $rule_id && ! is_wp_error( $rule_id ) ) {
+		// Delete urcr_meta_checkbox meta for each migrated post/page
+		foreach ( $new_migrated_ids as $post_id ) {
+			delete_post_meta( $post_id, 'urcr_meta_checkbox' );
+		}
+
 		// Update migrated IDs
 		$all_migrated_ids = array_unique( array_merge( $migrated_ids, $new_migrated_ids ) );
 		update_option( 'urcr_migrated_post_page_ids', $all_migrated_ids );
-		
+
 		// Mark migration as done only if all posts are migrated
 		if ( count( $all_migrated_ids ) >= count( $posts ) ) {
 			update_option( 'urcr_post_page_restrictions_migrated', true );
 		}
 
 		return array(
-			'rule_id' => $rule_id,
+			'rule_id'  => $rule_id,
 			'post_ids' => $new_migrated_ids,
 		);
 	}
@@ -1289,7 +1416,7 @@ function urcr_migrate_post_page_restrictions() {
  */
 function urcr_run_migration() {
 	$results = array(
-		'global_rule_id' => false,
+		'global_rule_id'    => false,
 		'post_page_rule_id' => false,
 		'migrated_post_ids' => array(),
 	);

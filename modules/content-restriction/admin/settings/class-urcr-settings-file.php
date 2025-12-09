@@ -79,7 +79,7 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 					'desc'     => UR_PRO_ACTIVE ? $link_html : '',
 					'sections' => array(
 						'user_registration_site_restriction_settings' => array(
-							'title'    => __( 'Enable Advance Logic', 'user-registration' ),
+							'title'    => __( 'Advanced', 'user-registration' ),
 							'type'     => 'card',
 							'desc'     => '',
 							'settings' => array(
