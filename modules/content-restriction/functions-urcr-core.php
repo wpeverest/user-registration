@@ -137,58 +137,6 @@ function urcr_is_page_excluded( $page_id ) {
 }
 
 /**
- * Flatten nested groups in logic_map when advanced logic is disabled.
- *
- * @param array $logic_map
- *
- * @return array
- * @since 4.0.0
- */
-function urcr_flatten_logic_map_groups( $logic_map ) {
-	if ( ! is_array( $logic_map ) || empty( $logic_map ) ) {
-		return $logic_map;
-	}
-
-	// Check if advanced logic is enabled
-	$is_advanced_logic_enabled = ur_string_to_bool( get_option( 'urcr_content_access_rule_is_advanced_logic_enabled', 'no' ) );
-
-	// If advanced logic is enabled, return as-is
-	if ( $is_advanced_logic_enabled ) {
-		return $logic_map;
-	}
-
-	// Advanced logic is disabled - flatten groups
-	if ( isset( $logic_map['type'] ) && 'group' === $logic_map['type'] ) {
-		$flattened_conditions = array();
-
-		if ( ! empty( $logic_map['conditions'] ) && is_array( $logic_map['conditions'] ) ) {
-			foreach ( $logic_map['conditions'] as $condition ) {
-				if ( isset( $condition['type'] ) && 'group' === $condition['type'] ) {
-					// Recursively flatten nested groups
-					$nested_flattened = urcr_flatten_logic_map_groups( $condition );
-					if ( ! empty( $nested_flattened['conditions'] ) && is_array( $nested_flattened['conditions'] ) ) {
-						$flattened_conditions = array_merge( $flattened_conditions, $nested_flattened['conditions'] );
-					}
-				} else {
-					// Regular condition - add it directly
-					$flattened_conditions[] = $condition;
-				}
-			}
-		}
-
-		// Return flattened group with AND logic gate
-		return array(
-			'id'         => isset( $logic_map['id'] ) ? $logic_map['id'] : '',
-			'type'       => 'group',
-			'logic_gate' => 'AND',
-			'conditions' => $flattened_conditions,
-		);
-	}
-
-	return $logic_map;
-}
-
-/**
  * See if the given access rule is enabled.
  *
  * @param array $access_rule Acess Rule.
@@ -364,35 +312,12 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 
 	$logic_map = (array) $logic_map;
 
-	// Check if advanced logic is enabled
-	$is_advanced_logic_enabled = ur_string_to_bool( get_option( 'urcr_content_access_rule_is_advanced_logic_enabled', 'no' ) );
-
 	if ( ! empty( $logic_map ) ) {
 		$type = $logic_map['type'];
 
 		// Process Logic Map.
 		if ( 'group' === $type ) {
-			// If advanced logic is disabled, flatten groups and process all conditions as AND
-			if ( ! $is_advanced_logic_enabled ) {
-				// Flatten the group structure
-				$flattened_logic_map = urcr_flatten_logic_map_groups( $logic_map );
-
-				// Process all flattened conditions as AND (all conditions must match to grant access)
-				if ( ! empty( $flattened_logic_map['conditions'] ) && is_array( $flattened_logic_map['conditions'] ) ) {
-					foreach ( $flattened_logic_map['conditions'] as $sub_logic_map ) {
-
-						$is_allow_access = urcr_is_allow_access( $sub_logic_map, $target_post );
-
-						if ( ! $is_allow_access ) {
-							return false;
-						}
-					}
-				}
-
-				return true;
-			}
-
-			// Advanced logic is enabled - process with gates
+			// Process with gates
 			$gate = ! empty( $logic_map['logic_gate'] ) ? $logic_map['logic_gate'] : 'OR';
 
 			foreach ( $logic_map['conditions'] as $sub_logic_map ) {
@@ -1409,6 +1334,71 @@ function urcr_migrate_post_page_restrictions() {
 }
 
 /**
+ * Recursively check if a logic map has advanced logic (nested groups or logic gates other than AND).
+ *
+ * @param array $logic_map Logic map to check.
+ *
+ * @return bool True if logic map has advanced logic, false otherwise.
+ */
+function urcr_logic_map_has_advanced_logic( $logic_map ) {
+	if ( empty( $logic_map ) || ! is_array( $logic_map ) ) {
+		return false;
+	}
+
+	// Check if logic_map has a group type
+	if ( isset( $logic_map['type'] ) && 'group' === $logic_map['type'] ) {
+		// Check if logic gate is not AND (OR or NOT indicates advanced logic)
+		$logic_gate = isset( $logic_map['logic_gate'] ) ? $logic_map['logic_gate'] : 'AND';
+		if ( 'AND' !== $logic_gate ) {
+			return true;
+		}
+
+		// Check for nested groups in conditions recursively
+		if ( ! empty( $logic_map['conditions'] ) && is_array( $logic_map['conditions'] ) ) {
+			foreach ( $logic_map['conditions'] as $condition ) {
+				// Recursively check nested conditions (will detect nested groups)
+				if ( urcr_logic_map_has_advanced_logic( $condition ) ) {
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Check if any existing rules have advanced logic (groups or logic gates other than AND).
+ *
+ * @return bool True if any rule has advanced logic, false otherwise.
+ */
+function urcr_has_rules_with_advanced_logic() {
+	$access_rule_posts = get_posts(
+		array(
+			'numberposts' => -1,
+			'post_status' => 'publish',
+			'post_type'   => 'urcr_access_rule',
+		)
+	);
+
+	foreach ( $access_rule_posts as $rule_post ) {
+		$rule_content = json_decode( $rule_post->post_content, true );
+
+		if ( empty( $rule_content ) || ! is_array( $rule_content ) ) {
+			continue;
+		}
+
+		$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
+
+		if ( urcr_logic_map_has_advanced_logic( $logic_map ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Run the migration script.
  * This function should be called from admin class.
  *
@@ -1433,6 +1423,10 @@ function urcr_run_migration() {
 		$results['post_page_rule_id'] = $post_page_migration['rule_id'];
 		$results['migrated_post_ids'] = $post_page_migration['post_ids'];
 	}
+
+	// Check if any existing rules have advanced logic (groups or logic gates)
+	$has_advanced_logic = urcr_has_rules_with_advanced_logic();
+	update_option( 'urcr_is_advanced_logic_enabled', $has_advanced_logic ? 'yes' : 'no' );
 
 	return $results;
 }
