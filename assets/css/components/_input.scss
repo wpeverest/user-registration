@@ -20,6 +20,7 @@
     }
 
     input {
+
         &[type="text"],
         &[type="password"],
         &[type="email"],
@@ -43,6 +44,7 @@
             font-weight: $regular;
             margin: 0;
             box-shadow: none;
+            font-family: inherit;
 
             &::placeholder {
                 color: #bababa;

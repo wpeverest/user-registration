@@ -142,9 +142,7 @@ $border-left-color_3: #0073aa;
 	}
 }
 
-.urcr-rules-list {
-	
-}
+.urcr-rules-list {}
 
 .urcr-rule-card {
 	background: #f6f7f7;
@@ -857,10 +855,10 @@ $border-left-color_3: #0073aa;
 		border-top: 1px solid #EDF2F7;
 
 		.button {
-			border-radius: 4px;			
+			border-radius: 4px;
 			border: 0;
 			min-height: 40px;
-			padding: 0 16px;			
+			padding: 0 16px;
 			font-size: 14px;
 			letter-spacing: 0.2px;
 			font-weight: 500;
@@ -934,7 +932,7 @@ $border-left-color_3: #0073aa;
 			width: 30px !important;
 			padding: 0;
 			// opacity: 0;
-			transition: all .3s; 
+			transition: all .3s;
 
 			.dashicons {
 				width: 20px !important;
@@ -969,7 +967,7 @@ $border-left-color_3: #0073aa;
 		margin: 24px 0 0;
 		width: 100%;
 		position: relative;
-		
+
 		&::after {
 			content: "Sub Group";
 			position: absolute;
@@ -987,7 +985,7 @@ $border-left-color_3: #0073aa;
 	}
 }
 
-.urcr-content-group  {
+.urcr-content-group {
 	.select2 {
 		&-selection {
 			&__rendered {
@@ -1077,7 +1075,7 @@ $border-left-color_3: #0073aa;
 					}
 
 					.urcr-condition-value-select {
-						flex: 1;						
+						flex: 1;
 						min-width: 200px;
 					}
 
@@ -1338,7 +1336,7 @@ $border-left-color_3: #0073aa;
 				color: #F25656;
 				border-color: #F25656;
 			}
-		}		
+		}
 
 		&:hover {
 			color: #383838;
@@ -1346,10 +1344,10 @@ $border-left-color_3: #0073aa;
 	}
 }
 
-.urcr-content-group  {
+.urcr-content-group {
 	.urcr-rule-body {
 		padding: 0 !important;
-	
+
 		.urcr-buttons-wrapper {
 			margin-top: 16px !important;
 
@@ -1380,14 +1378,22 @@ $not-tag: #F9CACA;
 .urcr-condition-row-parent {
 	display: flex;
 	gap: 30px;
+	align-items: flex-start;
+
+	@media screen and (max-width: 1199px) {
+		flex-direction: column;
+	}
 
 	.urcr-conditions-list {
 		position: relative;
 		display: flex;
 		flex-direction: column;
 		gap: 24px;
+		flex: 1;
+		padding-right: 30px;
 
 		&.urcr-conditional-logic-definitions {
+
 			&:has(.urcr-logic-group-rule-OR),
 			&:has(.urcr-logic-group-rule-AND),
 			&:has(.urcr-logic-group-rule-NOT) {
@@ -1696,6 +1702,26 @@ $not-tag: #F9CACA;
 	display: flex;
 	gap: 12px;
 	flex-wrap: wrap;
+
+	.urcr-checkbox-radio-option {
+		.urcr-checkbox-radio-input {
+			margin: 0;
+			margin-right: 8px;
+
+			&:focus {
+				outline: none;
+				box-shadow: none;
+			}
+
+			&:checked {
+				border-color: #475BB2;
+
+				&::before {
+					background: #475BB2;
+				}
+			}
+		}
+	}
 }
 
 .urcr-checkbox-radio-option {
@@ -1715,7 +1741,7 @@ $not-tag: #F9CACA;
 
 	&.is-checked {
 		border-color: #475bb2;
-		background: #f0f4ff;
+		// background: #f0f4ff;
 
 		.urcr-checkbox-radio-label {
 			color: #475bb2;
@@ -1914,6 +1940,7 @@ $not-tag: #F9CACA;
 		opacity: 0;
 		transform: translateY(-4px);
 	}
+
 	to {
 		opacity: 1;
 		transform: translateY(0);
@@ -1924,129 +1951,133 @@ $not-tag: #F9CACA;
 
 // Content Right Sidepart Access and Restrict Area CSS
 .urcr-condition-row-parent {
-    gap: 30px;
-	align-items: flex-start;
-    
-    .urcr-conditions-list {
-        flex: 1;
-        padding-right: 30px;
-        
-        .urcr-condition-wrapper {
-            position: relative;
-            
-            .button-link-delete {
-                position: absolute;
-                top: 50%;
-                right: -32px;
-                transform: translateY(-50%);
-                background: none !important;
-                opacity: 0;
-            }
-            
-            &:hover {
-                > .button-link-delete {
-                    opacity: 1;
-                    
-                    .dashicons {
-                        opacity: 1;
-                    }
-                }
-            }
-        }
-    }
-    
-    .urcr-target-selection-section {
-        max-width: 420px;
-        width: 100%;
-        flex-direction: column;
-        border: 1px solid #e1e1e1;
+	.urcr-conditions-list {
+		.urcr-condition-wrapper {
+			position: relative;
+
+			.button-link-delete {
+				position: absolute;
+				top: 50%;
+				right: -32px;
+				transform: translateY(-50%);
+				background: none !important;
+				opacity: 0;
+			}
+
+			&:hover {
+				>.button-link-delete {
+					opacity: 1;
+
+					.dashicons {
+						opacity: 1;
+					}
+				}
+			}
+		}
+	}
+
+	.urcr-target-selection-section {
+		// max-width: 420px;
+		max-width: 45%;
+		width: 100%;
+		flex-direction: column;
+		border: 1px solid #e1e1e1;
 		padding-bottom: 24px;
-        // padding: 24px;
-        border-radius: 5px;
-        box-sizing: border-box;
+		// padding: 24px;
+		border-radius: 5px;
+		box-sizing: border-box;
 		position: sticky;
 		position: -webkit-sticky;
 		top: 60px;
-        
-        > .ur-d-flex {
-            width: 100%;
-            gap: 20px;
-        }
-        
-        .urcr-access-select {
-            border: 0;
-            padding: 0;
-            background: rgba(0,163,42,0.05);
-            color: #00a32a;
-            border-radius: 0px;
-            padding: 24px;
-            display: block;
-            width: 100%;
-            border-radius: 5px 5px 0 0;
-        }
-        
-        .urcr-arrow-icon {
-            display: none;
-        }
-        
-        .urcr-target-type-group {
-            padding: 0 24px;
-            width: 100%;
-            gap: 24px;
-            box-sizing: border-box;
-            
-            .urcr-target-item {
-                position: relative;
-                flex-direction: column;
-                align-items: flex-start;
-                
-                .urcr-target-type-label {
-                    max-width: 120px;
-                    width: 100%;
-                }
-                
-                > select {
-                    display: none;
-                }
-                
-                .select2 {
-                    &-container {
-                        flex: 1;
-                        min-width: unset;
-                        max-width: unset;
-                    }
-                }
-                
-                .urcr-target-remove {
-                    position: absolute;
-                    top: 30px;
-                    right: -25px;
-                    padding: 0;
-                    opacity: 0;
-                    
-                }
-                
-                &:hover {
-                    .urcr-target-remove {
-                        background: none;
-                        width: 30px;
-                        height: 30px;
-                        opacity: 1;
-                        
-                        .dashicons {
-                            opacity: 1;
-                        }
-                    }
-                }
-                
-                .urcr-taxonomy-select-group {
-                    width: 100%;
-                }
-            }
-        }
-        
-        .urcr-content-dropdown-wrapper {
-            padding: 0 24px;
-        }
-    }
+
+		>.ur-d-flex {
+			width: 100%;
+			gap: 20px;
+		}
+
+		.urcr-access-select {
+			border: 0;
+			padding: 0;
+			background: rgba(0, 163, 42, 0.05);
+			color: #00a32a;
+			border-radius: 0px;
+			padding: 24px;
+			display: block;
+			width: 100%;
+			border-radius: 5px 5px 0 0;
+		}
+
+		.urcr-arrow-icon {
+			display: none;
+		}
+
+		.urcr-target-type-group {
+			padding: 0 24px;
+			width: 100%;
+			gap: 24px;
+			box-sizing: border-box;
+
+			.urcr-target-item {
+				position: relative;
+				align-items: center;
+
+				.urcr-target-type-label {
+					max-width: 120px;
+					width: 100%;
+				}
+
+				>select {
+					display: none;
+				}
+
+				.select2 {
+					&-container {
+						flex: 1;
+						min-width: unset;
+						max-width: unset;
+					}
+				}
+
+				.urcr-target-remove {
+					position: absolute;
+					top: 50%;
+					right: -22px;
+					padding: 0;
+					opacity: 0;
+					transform: translateY(-50%);
+					display: inline-block;
+
+					.dashicons {
+						opacity: 0;
+
+						&::before {
+							font-size: 20px;
+							color: #f25656;
+						}
+					}
+				}
+
+				&:hover {
+					.urcr-target-remove {
+						background: none;
+						width: 20px;
+						height: 20px;
+						opacity: 1;
+
+						.dashicons {
+							opacity: 1;
+						}
+					}
+				}
+
+				.urcr-taxonomy-select-group {
+					width: 100%;
+				}
+			}
+		}
+
+		.urcr-content-dropdown-wrapper {
+			padding: 0 24px;
+		}
+	}
 }
