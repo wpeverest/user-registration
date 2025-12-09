@@ -26,6 +26,7 @@ class URCR_AJAX {
 		 */
 		add_action( 'wp_ajax_urcr_create_content_rules', array( __CLASS__, 'ajax_create_create_content_rules' ) );
 		add_action( 'wp_ajax_urcr_update_rule_status', array( __CLASS__, 'ajax_update_rule_status' ) );
+		add_action( 'wp_ajax_user_registration_check_advanced_logic_rules', array( __CLASS__, 'ajax_check_advanced_logic_rules' ) );
 	}
 
 

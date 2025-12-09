@@ -92,16 +92,7 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 									'desc_tip'  => true,
 									'type'      => 'toggle',
 									'autoload'  => false,
-								),
-								array(
-									'row_class' => 'urcr_enable_disable',
-									'title'     => __( 'Show MetaBox for pages & posts', 'user-registration' ),
-									'desc'      => __( 'Check this option to enable page & post wise restriction from the metabox section. ', 'user-registration' ),
-									'id'        => 'urcr_is_page_metabox_enabled',
-									'default'   => false,
-									'desc_tip'  => true,
-									'type'      => 'toggle',
-									'autoload'  => false,
+									'class' => 'urcr-advance-logic-toggle'
 								)
 							),
 						),
@@ -146,6 +137,27 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 			global $current_section;
 
 			$settings = $this->get_settings( $current_section );
+
+			// Validate advanced logic setting before saving
+			if ( isset( $_POST['urcr_is_advanced_logic_enabled'] ) ) {
+				$new_value = ur_string_to_bool( $_POST['urcr_is_advanced_logic_enabled'] );
+				$old_value = ur_string_to_bool( get_option( 'urcr_is_advanced_logic_enabled', 'no' ) );
+
+				// If trying to disable advanced logic, check if rules with advanced logic exist
+				if ( $old_value && ! $new_value ) {
+					if ( function_exists( 'urcr_has_rules_with_advanced_logic' ) ) {
+						$has_advanced_logic = urcr_has_rules_with_advanced_logic();
+						if ( $has_advanced_logic ) {
+							UR_Admin_Settings::add_error(
+								esc_html__( 'Rules with advanced logic already exist. Please delete them first before disabling advanced logic.', 'user-registration' )
+							);
+							// Prevent saving by unsetting the POST value
+							unset( $_POST['urcr_is_advanced_logic_enabled'] );
+							return;
+						}
+					}
+				}
+			}
 
 			UR_Admin_Settings::save_fields( $settings );
 		}
