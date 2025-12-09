@@ -23,7 +23,6 @@ if ( 'block' === $type ) :
 				method="GET" data-layout="block">
 			<?php
 			foreach ( $memberships as $k => $membership ) :
-				error_log( print_r( $membership, true ) );
 				$time = '';
 				if ( 'paid' === $membership['type'] ) {
 					$time = esc_html__( 'lifetime', 'user-registration' );
@@ -41,7 +40,7 @@ if ( 'block' === $type ) :
 								value="<?php echo esc_url( $redirect_page_url ); ?>">
 						<input type="hidden" name="urm_uuid" value="<?php echo $uuid; ?>">
 						<input type="hidden" name="thank_you_page_id" value="<?php echo $thank_you_page_id; ?>">
-						<?php if ( 'Free' !== $membership['period'] ) { ?>
+						<?php if ( 'free' !== $membership['type'] ) { ?>
 						<span
 							class="membership-amount"><?php echo $symbol; ?>
 							<?php
@@ -98,9 +97,16 @@ elseif ( 'row' === $type ) :
 				method="GET" data-layout="row">
 			<?php
 			foreach ( $memberships as $k => $membership ) :
-				?>
+				$time = '';
 
+				if ( 'paid' === $membership['type'] ) {
+					$time = esc_html__( 'lifetime', 'user-registration' );
+				}
+
+				?>
 				<div class="membership-block">
+					<div class="left-container">
+
 					<div class="membership-title">
 						<span><?php echo esc_html( $membership['title'] ); ?></span>
 					</div>
@@ -109,14 +115,25 @@ elseif ( 'row' === $type ) :
 							<?php echo( $membership['description'] ); ?>
 						</div>
 					</div>
-					<div class="membership-footer">
+					</div>
+					<div class="membership-footer right-container">
 						<input type="hidden" name="membership_id" value="<?php echo esc_html( $membership['ID'] ); ?>">
 						<input type="hidden" name="redirection_url"
 								value="<?php echo esc_url( $redirect_page_url ); ?>">
 						<input type="hidden" name="urm_uuid" value="<?php echo $uuid; ?>">
 						<input type="hidden" name="thank_you_page_id" value="<?php echo $thank_you_page_id; ?>">
+							<?php if ( 'free' !== $membership['type'] ) { ?>
 						<span
-							class="membership-amount"><?php echo $symbol; ?><?php echo esc_html( sprintf( '%.2f', $membership['amount'] ) ); ?></span>
+							class="membership-amount"><?php echo $symbol; ?>
+								<?php
+								echo esc_html( sprintf( '%.2f', $membership['amount'] ) ); if ( $time ) {
+									echo ' / ' . esc_html( $time ); }
+								?>
+							</span>
+							<?php } else { ?>
+								<span
+							class="membership-amount"><?php echo esc_html__( 'Free', 'user-registration' ); ?></span>
+								<?php } ?>
 						<button type="button"
 								class="membership-signup-button" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ); ?> ><?php echo $sign_up_text; ?></button>
 					</div>
