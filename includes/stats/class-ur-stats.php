@@ -570,7 +570,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					// General Settings
 					array( 'user_registration_general_setting_disabled_user_roles', '["subscriber"]' ),
 					array( 'user_registration_myaccount_page_id', '', true ),
-					array( 'user_registration_my_account_layout', 'horizontal' ),
+					array( 'user_registration_my_account_layout', 'vertical' ),
 					array( 'user_registration_general_setting_registration_url_options', '', true ),
 					array(
 						'user_registration_general_setting_registration_label',

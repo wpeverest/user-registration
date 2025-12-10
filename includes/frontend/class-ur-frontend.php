@@ -18,6 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @version 1.0.0
  * @package UserRegistration/Frontend
  */
+
+use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 class UR_Frontend {
 
 	/**
@@ -38,6 +40,7 @@ class UR_Frontend {
 		add_filter( 'user_registration_before_save_profile_details', array( $this, 'user_registration_before_save_profile_details' ), 10, 3 );
 		add_filter( 'user_registration_login_redirect', array( $this, 'login_redirect' ), 10, 2 );
 		add_filter( 'user_registration_redirect_after_logout', array( $this, 'logout_redirect' ), 10, 1 );
+		add_action( 'init', array( $this, 'ur_register_payment_tab_if_eligible' ) );
 	}
 
 	/**
@@ -296,6 +299,134 @@ class UR_Frontend {
 				exit;
 			}
 		}
+	}
+
+	/**
+	 * Check if can add payment tabs.
+	 */
+	public function ur_register_payment_tab_if_eligible() {
+		$user_id = get_current_user_id();
+
+		$payment_method = get_user_meta( $user_id, 'ur_payment_method', true );
+
+		$user_source = get_user_meta( $user_id, 'ur_registration_source', true );
+
+		if ( 'membership' === $user_source || $payment_method ) {
+			add_action( 'wp_loaded', array( $this, 'ur_add_payments_tab_endpoint' ) );
+			add_filter( 'user_registration_account_menu_items', array( $this, 'urm_payment_history_tab' ), 10, 1 );
+			add_action(
+				'user_registration_account_urm-payments_endpoint',
+				array(
+					$this,
+					'user_registration_urm_payments_tab_endpoint_content',
+				)
+			);
+
+		}
+	}
+
+	/**
+	 * Add the item to $items array.
+	 *
+	 * @param array $items Items.
+	 */
+	public function urm_payment_history_tab( $items ) {
+		$new_items                 = array();
+		$new_items['urm-payments'] = __( 'Payments', 'user-registration' );
+		$items                     = array_merge( $items, $new_items );
+
+		$mask = Ur()->query->get_endpoints_mask();
+		add_rewrite_endpoint( 'ur-membership', $mask );
+
+		return $this->delete_account_insert_before_helper( $items, $new_items, 'user-logout' );
+	}
+
+	/**
+	 * Delete Account insert after helper.
+	 *
+	 * @param mixed $items Items.
+	 * @param mixed $new_items New items.
+	 * @param mixed $before Before item.
+	 */
+	public function delete_account_insert_before_helper( $items, $new_items, $before ) {
+
+		// Search for the item position.
+		$position = array_search( $before, array_keys( $items ), true );
+
+		// Insert the new item.
+		$return_items  = array_slice( $items, 0, $position, true );
+		$return_items += $new_items;
+		$return_items += array_slice( $items, $position, count( $items ) - $position, true );
+
+		return $return_items;
+	}
+
+	/**
+	 * Membership tab content.
+	 */
+	public function user_registration_urm_payments_tab_endpoint_content() {
+		do_action( 'user_registration_before_payments_tab_contents' );
+
+		$layout = get_option( 'user_registration_my_account_layout', 'vertical' );
+
+		if ( 'vertical' === $layout && isset( ur_get_account_menu_items()['urm-payments'] ) ) {
+			?>
+			<div class="user-registration-MyAccount-content__header">
+				<h1><?php echo wp_kses_post( ur_get_account_menu_items()['urm-payments'] ); ?></h1>
+			</div>
+			<?php
+		}
+
+		ur_get_template(
+			'myaccount/payments.php',
+			array(
+				'orders' => $this->get_user_payments(),
+			)
+		);
+		do_action( 'user_registration_after_payments_tab_contents' );
+	}
+
+	/**
+	 * Add Membership tab endpoint.
+	 */
+	public function ur_add_payments_tab_endpoint() {
+		$mask = Ur()->query->get_endpoints_mask();
+
+		add_rewrite_endpoint( 'urm-payments', $mask );
+		flush_rewrite_rules();
+	}
+
+	/**
+	 * @param $args
+	 *
+	 * @return array
+	 */
+	private function get_user_payments() {
+		$user_id     = get_current_user_id();
+		$user_source = get_user_meta( $user_id, 'ur_registration_source', true );
+		$total_items = array();
+
+		if ( 'membership' === $user_source ) {
+			$order_repository = new MembersOrderRepository();
+			$total_items      = $order_repository->get_member_all_orders( get_current_user_id() );
+		} else {
+			$meta_value = get_user_meta( '74', 'ur_payment_invoices', true );
+
+			foreach ( $meta_value as $values ) {
+				$total_items[] = array(
+					'user_id'        => $user_id,
+					'transaction_id' => $values['invoice_no'] ?? '',
+					'post_title'     => $values['invoice_plan'] ?? '',
+					'status'         => get_user_meta( $user_id, 'ur_payment_status', true ),
+					'created_at'     => $values['invoice_date'] ?? '',
+					'type'           => get_user_meta( $user_id, 'ur_payment_type', true ),
+					'payment_method' => str_replace( '_', ' ', get_user_meta( $user_id, 'ur_payment_method', true ) ),
+					'total_amount'   => $values['invoice_amount'] ?? '' . ' ' . $values['invoice_currency'],
+				);
+			}
+		}
+
+		return $total_items;
 	}
 }
 

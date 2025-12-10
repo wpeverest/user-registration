@@ -1134,6 +1134,124 @@
 							}
 						}
 					}
+
+					// Table Details Design
+					.ur-account-table-container {
+						margin-top: 20px;
+					}
+
+					.ur-account-table {
+						width: 100%;
+						border-collapse: separate;
+						border-spacing: 0;
+						background: #fff;
+						border-radius: 8px;
+						overflow: hidden;
+						box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+
+						thead {
+							background: #f4f6fa;
+
+							.ur-account-table__header-cell {
+								padding: 14px 20px;
+								font-size: 14px;
+								font-weight: 600;
+								color: #3c434a;
+								text-align: left;
+								border-bottom: 1px solid #e0e4ea;
+
+								&:first-child {
+									border-top-left-radius: 8px;
+								}
+
+								&:last-child {
+									border-top-right-radius: 8px;
+								}
+							}
+						}
+
+						tbody {
+
+							.ur-account-table__row {
+								border-bottom: 1px solid #f0f2f5;
+
+								&:nth-child(odd) {
+									.ur-account-table__cell {
+										background: #fafbfc;
+									}
+								}
+							}
+
+							.ur-account-table__cell {
+								padding: 14px 20px;
+								font-size: 14px;
+								color: #50565f;
+								vertical-align: middle;
+							}
+
+							tr:last-child {
+								.ur-account-table__cell:first-child {
+									border-bottom-left-radius: 8px;
+								}
+								.ur-account-table__cell:last-child {
+									border-bottom-right-radius: 8px;
+								}
+							}
+						}
+					}
+
+					.ur-account-status-badge {
+						display: inline-block;
+						padding: 4px 10px;
+						border-radius: 20px;
+						font-size: 12px;
+						font-weight: 500;
+
+						&.is-success,
+						&.completed,
+						&.active {
+							background: #e4f7e8;
+							color: #289b43;
+						}
+
+						&.is-warning,
+						&.pending {
+							background: #fff7d9;
+							color: #d1a200;
+						}
+
+						&.is-error,
+						&.failed {
+							background: #ffe6e6;
+							color: #d33;
+						}
+					}
+
+					.ur-account-action-link {
+						color: $primary_color;
+						font-weight: 500;
+						position: relative;
+						text-decoration: none;
+
+						&::after {
+							content: "";
+							width: 0;
+							height: 2px;
+							background: darken($primary_color, 10%);
+							position: absolute;
+							left: 0;
+							bottom: -2px;
+							transition: width .2s ease-in-out;
+						}
+
+						&:hover {
+							color: darken($primary_color, 10%);
+
+							&::after {
+								width: 100%;
+							}
+						}
+					}
 				}
 			}
 		}
