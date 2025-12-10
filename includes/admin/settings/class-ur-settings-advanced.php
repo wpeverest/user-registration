@@ -1,8 +1,8 @@
 <?php
 /**
- * Class UR_Settings_Email
+ * Class UR_Settings_Advanced
  *
- * Handles the scaffold related settings for the User Registration & Membership plugin.
+ * Handles the advanced related settings for the User Registration & Membership plugin.
  *
  * This class is responsible for:
  * 
@@ -10,18 +10,18 @@
  * @version   5.0.0
  * @since     5.0.0
  */
-if ( ! class_exists( 'UR_Settings_Email' ) ) {
+if ( ! class_exists( 'UR_Settings_Advanced' ) ) {
 	/**
-	 * UR_Settings_Email Class
+	 * UR_Settings_Advanced Class
 	 */
-	class UR_Settings_Email extends UR_Settings_Page {
+	class UR_Settings_Advanced extends UR_Settings_Page {
         private static $_instance = null;
 		/**
 		 * Constructor.
 		 */
 		private function __construct() {            
-			$this->id    = 'email';
-			$this->label = __( 'Email', 'user-registration' );
+			$this->id    = 'advanced';
+			$this->label = __( 'Advanced', 'user-registration' );
             parent::__construct();
             $this->handle_hooks();
 		}
@@ -40,25 +40,23 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) {
             add_filter( "user_registration_get_settings_{$this->id}", array( $this, 'get_settings_callback' ), 1, 1 );
         }
         /**
-         * Filter to provide sections submenu for scaffold settings.
+         * Filter to provide sections submenu for advanced settings.
          */
         public function get_sections_callback( $sections ) {
-            $sections['general'] = __( 'General', 'user-registration' );
-            $sections[ 'to-admin' ] = __( 'To Admin', 'user-registration' );
-            $sections[ 'to-user' ] = __( 'To User', 'user-registration' );
-            $sections[ 'templates' ] = __( 'Templates', 'user-registration' );
+            $sections[ 'import-export' ] = __( 'Import/Export', 'user-registration' );
+            $sections[ 'plugin-deletion' ] = __( 'Plugin Deletion', 'user-registration' );
+            $sections[ 'others' ] = __( 'Others', 'user-registration' );
             return $sections;
         }
         /**
-         * Filter to provide sections UI for scaffold settings.
+         * Filter to provide sections UI for advanced settings.
          */
         public function get_settings_callback( $settings ) {
             global $current_section;
-
             return $this->upgrade_to_pro_setting();
         }
     }
 }
 
 //Backward Compatibility.
-return method_exists( 'UR_Settings_Email', 'get_instance' ) ? UR_Settings_Email::get_instance() : new UR_Settings_Email();
+return method_exists( 'UR_Settings_Advanced', 'get_instance' ) ? UR_Settings_Advanced::get_instance() : new UR_Settings_Advanced();

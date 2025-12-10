@@ -57,64 +57,11 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-payment.php';
 			$settings[] = include 'settings/class-ur-settings-email.php';
 			$settings[] = include 'settings/class-ur-settings-registration-login.php';
-			// $settings[] = include 'settings/class-ur-settings-my-account.php';
-			// $settings[] = include 'settings/class-ur-settings-integration.php';
-			// $settings[] = include 'settings/class-ur-settings-security.php';
-			// $settings[] = include 'settings/class-ur-settings-advanced.php';
+			$settings[] = include 'settings/class-ur-settings-my-account.php';
+			$settings[] = include 'settings/class-ur-settings-integration.php';
+			$settings[] = include 'settings/class-ur-settings-security.php';
+			$settings[] = include 'settings/class-ur-settings-advanced.php';
 
-
-			// $settings[] = include 'settings/class-ur-settings-captcha.php';
-			// $settings[] = include 'settings/class-ur-settings-email.php';
-			// $settings[] = include 'settings/class-ur-settings-import-export.php';
-			// $settings[] = include 'settings/class-ur-settings-misc.php';
-
-			// if ( UR_PRO_ACTIVE ) {
-			// 	$settings[] = include 'settings/class-ur-settings-integration.php';
-			// }
-
-			// $modules = array();
-
-			// if ( UR_PRO_ACTIVE ) {
-			// 	if ( ur_check_module_activation( 'membership' ) ) {
-			// 		$modules = array(
-			// 			'class-ur-payment-settings.php',
-			// 			'stripe/class-ur-stripe-module.php',
-			// 			'paypal/class-ur-paypal-module.php',
-			// 		);
-			// 	} else {
-			// 		if ( ur_check_module_activation( 'payments' ) ) {
-			// 			$modules[] = 'class-ur-payment-settings.php';
-			// 			$modules[] = 'paypal/class-ur-paypal-module.php';
-			// 		}
-			// 		if ( is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
-			// 			$modules[] = 'class-ur-payment-settings.php';
-			// 			$modules[] = 'stripe/class-ur-stripe-module.php';
-			// 		}
-			// 		if ( is_plugin_active( 'user-registration-authorize-net/user-registration-authorize-net.php' ) ) {
-			// 			$modules[] = 'class-ur-payment-settings.php';
-			// 		}
-			// 		if ( is_plugin_active( 'user-registration-mollie/user-registration-mollie.php' ) ) {
-			// 			$modules[] = 'class-ur-payment-settings.php';
-			// 		}
-			// 	}
-			// } elseif ( ur_check_module_activation( 'membership' ) ) {
-			// 	$modules = array(
-			// 		'class-ur-payment-settings.php',
-			// 		'stripe/class-ur-stripe-module.php',
-			// 		'paypal/class-ur-paypal-module.php',
-			// 	);
-			// }
-
-			// foreach ( $modules as $module ) {
-			// 	include_once UR_ABSPATH . 'modules/' . $module;
-			// }
-
-			// if ( ! function_exists( 'is_plugin_active' ) ) {
-			// 	include_once ABSPATH . 'wp-admin/includes/plugin.php';
-			// }
-
-			//insert license page via filter in pro version.
-			// $settings[] = include 'settings/class-ur-settings-license.php';
 			/**
 			 * Filter to retrieve settings pages
 			 *
@@ -468,7 +415,9 @@ class UR_Admin_Settings {
 								$settings .= $section['back_link']; // removed kses since the inputs are sanitized in the function ur_back_link itself
 							}
 							$settings .= '<h3 class="user-registration-card__title">';
-
+							if ( isset( $section[ 'is_premium' ] ) && $section[ 'is_premium' ] ) {
+								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png'. '" /></div>';
+							}
 							$settings .= esc_html( strtoupper( $section['title'] ) );
 							$settings .= '</h3>';
 

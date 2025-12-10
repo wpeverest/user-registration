@@ -150,13 +150,22 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 		}
 		public function upgrade_to_pro_setting() {
 			global $current_section;
-			$title = ucwords(str_replace( '-', ' ', $current_section ));
+			global $current_tab;
+			$title = ucwords( str_replace( '-', ' ', $current_section ) );
+			$setting = ucwords( str_replace( '_', ' ', $current_tab ) );
 			return array(
 				'title' => '',
 				'sections' => array(
 					'premium_setting_section' => array(
 						'type' => 'card',
+						'is_premium' => true,
 						'title' => $title,
+						'before_desc' => "$setting > $title is only available in User Registration & Membership Pro.",
+						'desc' => 'To unlock this setting, consider upgrading to Pro.',
+						'button' => array(
+							'button_text' => 'Upgrade to Pro',
+							'button_link' => 'https://wpuserregistration.com/upgrade/?utm_source=ur-settings-' . $current_section . '&utm_medium=upgrade-link&utm_campaign=lite-version',
+						),
 					),
 				),
 			);

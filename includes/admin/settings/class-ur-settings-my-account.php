@@ -54,7 +54,7 @@ if ( ! class_exists( 'UR_Settings_My_Account' ) ) {
          */
         public function get_settings_callback( $settings ) {
             global $current_section;
-            
+            return $this->upgrade_to_pro_setting();
             return $settings;
         }
     }
