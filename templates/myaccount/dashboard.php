@@ -20,7 +20,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-$layout = get_option( 'user_registration_my_account_layout', 'horizontal' );
+$layout = get_option( 'user_registration_my_account_layout', 'vertical' );
 
 if ( 'vertical' === $layout ) {
 	?>
