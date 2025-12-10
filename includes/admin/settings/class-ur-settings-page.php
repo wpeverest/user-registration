@@ -44,8 +44,19 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			//main content : options fields as UI.
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			
+			//default section. ( automatically selects first section if not set ).
+			add_filter( "user_registration_settings_{$this->id}_default_section", array( $this, 'get_default_section' ) );
+
 			//save settings.
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
+		}
+
+		/**
+		 * Get default section.
+		 */
+		public function get_default_section( $default_section ) {
+			//COMPAT: php >= 7.3
+			return $this->get_sections() ? array_key_first( $this->get_sections() ) : $default_section;
 		}
 
 		/**
@@ -137,7 +148,19 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 
 			UR_Admin_Settings::output_fields( $settings );
 		}
-
+		public function upgrade_to_pro_setting() {
+			global $current_section;
+			$title = ucwords(str_replace( '-', ' ', $current_section ));
+			return array(
+				'title' => '',
+				'sections' => array(
+					'premium_setting_section' => array(
+						'type' => 'card',
+						'title' => $title,
+					),
+				),
+			);
+		}
 		/**
 		 * Save settings.
 		 */

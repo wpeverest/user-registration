@@ -211,6 +211,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 							}
 							?>
 						</div>
+						<div class="user-registration-options-header--bottom"></div>
 					</div>
 					<div class="user-registration-options-container">
 						<?php
@@ -228,7 +229,8 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 					</div>
 					<p class="submit">
 						<?php
-						if ( ! isset( $GLOBALS['hide_save_button'] ) ) :
+						$hide_save_button = apply_filters( 'user_registration_settings_' . $current_section . '_hide_save_button', $GLOBALS['hide_save_button'] );
+						if ( ! isset( $hide_save_button ) ) :
 							/**
 							 * Filter to save the setting label.
 							 *

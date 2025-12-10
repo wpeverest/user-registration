@@ -53,9 +53,8 @@ class UR_Admin_Settings {
 			}
 
 			$settings[] = include 'settings/class-ur-settings-general.php';
-
 			$settings[] = include 'settings/class-ur-settings-membership.php';
-			// $settings[] = include 'settings/class-ur-settings-payment.php';
+			$settings[] = include 'settings/class-ur-settings-payment.php';
 			// $settings[] = include 'settings/class-ur-settings-email.php';
 			// $settings[] = include 'settings/class-ur-settings-registration-login.php';
 			// $settings[] = include 'settings/class-ur-settings-my-account.php';
@@ -325,7 +324,7 @@ class UR_Admin_Settings {
 
 		// Get current tab/section.
 		$current_tab     = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$current_section = empty( $_REQUEST['section'] ) ? ( ! empty( get_option( 'user-registration_license_key', '' ) ) ? 'pages' : 'license' ) : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$current_section = empty( $_REQUEST['section'] ) ? apply_filters( 'user_registration_settings_' . $current_tab . '_default_section', 'general' ) : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		/**
 		 * Filter to save settings actions
 		 *
@@ -356,6 +355,7 @@ class UR_Admin_Settings {
 		 */
 		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
 
+		$GLOBALS[ 'hide_save_button' ] = false;
 		if ( 'import_export' === $current_tab ) {
 			$GLOBALS['hide_save_button'] = true;
 		}
