@@ -580,7 +580,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					}
 				}
 
-			$all_forms = ur_get_all_user_registration_form();
+				$all_forms = ur_get_all_user_registration_form();
+				$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';
 
 			if ( ur_check_module_activation( 'multiple-registration' ) ) {
 				add_submenu_page(
@@ -603,7 +604,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						'user-registration-login-forms',
 						)
 				) ) {
-					$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';
 					add_submenu_page(
 						'user-registration',
 						__( 'Registration Forms', 'user-registration' ),
@@ -633,7 +633,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				add_submenu_page(
 					'user-registration',
 					__( 'Registration Form', 'user-registration' ),
-					__( 'Registration Form', 'user-registration' ),
+					sprintf( __( 'Registration %s', 'user-registration' ), $postfix ),
 					'manage_user_registration',
 					'user-registration',
 					array(
