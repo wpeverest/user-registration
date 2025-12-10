@@ -1198,6 +1198,83 @@
   line-height: 24px;
   border: 0;
 }
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .tablenav-pages {
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#title, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#membership_price, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#membership_type, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#members, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#status {
+  width: 20%;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr:nth-child(odd) {
+  background: #F8F8FA;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td {
+  font-size: 14px;
+  line-height: 24px;
+  color: #383838;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td strong {
+  margin: 0;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td strong .ur-edit-title a {
+  line-height: 24px;
+  font-weight: 400;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td.membership_type .user-registration-badge {
+  padding: 0;
+  background: none;
+  font-size: 14px;
+  text-transform: capitalize;
+  color: #383838;
+  font-weight: 500;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td.status .ur-toggle-section .user-registration-toggle-form input:checked + .slider {
+  background-color: #4CC741;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items {
+  background: #ffffff;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items td {
+  padding: 0;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container img {
+  width: 300px;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container h3 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  color: #222222;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 32px;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container p {
+  color: #6B6B6B;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tfoot tr td,
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tfoot tr th {
+  border-top: 1px solid #e1e1e1;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tfoot tr th {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+  color: #383838;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tfoot tr th a {
+  padding: 12px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
 .ur-membership-tab-contents-wrapper {
   max-width: 100%;

@@ -7,11 +7,15 @@
 
 namespace WPEverest\URMembership\Admin\Membership;
 
+use UR_Base_Layout;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\TableList;
 
 if ( ! class_exists( 'UR_List_Table' ) ) {
 	include_once dirname( UR_PLUGIN_FILE ) . '/includes/abstracts/abstract-ur-list-table.php';
+}
+if ( ! class_exists( 'UR_Base_Layout' ) ) {
+	include_once dirname( UR_PLUGIN_FILE ) . '/includes/admin/class-ur-admin-base-layout.php';
 }
 
 /**
@@ -62,12 +66,11 @@ class ListTable extends \UR_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'title'           => __( 'Membership Name', 'user-registration' ),
-			'membership_price' => __( 'Membership Price', 'user-registration' ),
-			'membership_type' => __( 'Membership Plan Type', 'user-registration' ),
-			'members'         => __( 'Members', 'user-registration' ),
+			'title'           => __( 'Name', 'user-registration' ),
+			'membership_price' => __( 'Price', 'user-registration' ),
+			'membership_type' => __( 'Plan', 'user-registration' ),
 			'status'          => __( 'Status', 'user-registration' ),
-			'action'          => __( 'Action', 'user-registration' ),
+			'members'         => __( 'Members', 'user-registration' ),
 		);
 	}
 
@@ -104,21 +107,26 @@ class ListTable extends \UR_List_Table {
 	 * @return array
 	 */
 	public function get_row_actions( $membership ) {
+		$actions = array();
 
-		return array();
+		$actions['id'] = '<span>ID: ' . $membership->ID . '</span>';
+
+		// Add Edit action
+		$actions['edit'] = sprintf(
+			'<a href="%s" class="ur-row-actions">%s</a>',
+			esc_url( $this->get_edit_links( $membership ) ),
+			__( 'Edit', 'user-registration' )
+		);
+
+		// Add Delete action
+		$actions['delete'] = sprintf(
+			'<a href="%s" class="delete-membership ur-row-actions" data-membership-id="'. esc_attr( $membership->ID ) . '" aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '">%s</a>',
+			esc_url( wp_nonce_url( $this->get_delete_links($membership), 'urm_delete_nonce' ) ),
+			__( 'Delete', 'user-registration' )
+		);
+		return $actions;
 	}
-	/**
-	 * @param $membership
-	 *
-	 * @return string
-	 */
-	public function column_title( $membership ) {
-		$post_title = '';
-		if(!empty($membership)) {
-			$post_title = $membership->post_title;
-		}
-		return $post_title;
-	}
+
 	/**
 	 * @param $membership
 	 *
@@ -144,10 +152,21 @@ class ListTable extends \UR_List_Table {
 	public function column_status( $membership ) {
 		$membership_content = json_decode( $membership->post_content, true );
 		$enabled            = $membership_content['status'] == 'true';
-		$status_class       = $enabled ? 'user-registration-badge user-registration-badge--success-subtle' : 'user-registration-badge user-registration-badge--secondary-subtle';
-		$status_label       = $enabled ? esc_html__( 'Active', 'user-registration-content-restriction' ) : esc_html__( 'Inactive', 'user-registration-content-restriction' );
-
-		return sprintf( '<span id="ur-membership-list-status-' . $membership->ID . '" class="%s">%s</span>', $status_class, $status_label );
+		$actions  = '<div class="ur-status-toggle ur-d-flex ur-align-items-center visible" style="gap: 5px">';
+		$actions .= '<div class="ur-toggle-section">';
+		$actions .= '<span class="user-registration-toggle-form">';
+		$actions .=  '<input
+						id="ur-membership-change-status"
+						class="ur-membership-change-status user-registration-switch__control hide-show-check enabled"
+						type="checkbox"
+						value="1"
+						' . esc_attr( checked( true, ur_string_to_bool( $enabled ), false ) ). '
+						data-ur-membership-id="' . esc_attr( $membership->ID ) . '">';
+		$actions .= '<span class="slider round"></span>';
+		$actions .= '</span>';
+		$actions .= '</div>';
+		$actions .= '</div>';
+		return $actions;
 	}
 
 	/**
@@ -185,86 +204,17 @@ class ListTable extends \UR_List_Table {
 	}
 
 	/**
-	 * @param $membership
-	 *
-	 * @return string
-	 */
-	public function column_action( $membership ) {
-
-		$edit_link   = $this->get_edit_links( $membership );
-		$delete_link = $this->get_delete_links( $membership );
-		$content     = json_decode( $membership->post_content, true );
-
-		$checked = isset( $content['status'] ) ? $content['status'] : false ;
-
-		$actions  = '<div class="row-actions ur-d-flex ur-align-items-center visible" style="gap: 5px">';
-		$actions .= '<div class="ur-toggle-section">';
-		$actions .= '<span class="user-registration-toggle-form">';
-		$actions .=  '<input
-						id="ur-membership-change-status"
-						class="ur-membership-change-status user-registration-switch__control hide-show-check enabled"
-						type="checkbox"
-						value="1"
-						' . esc_attr( checked( true, ur_string_to_bool( $checked ), false ) ). '
-						data-ur-membership-id="' . esc_attr( $membership->ID ) . '">';
-		$actions .= '<span class="slider round"></span>';
-		$actions .= '</span>';
-		$actions .= '</div>';
-		$actions .= '&nbsp; | &nbsp;';
-		$actions .= '<span class="edit">';
-		$actions .= '<a href="' . esc_url( $edit_link ) . '">' . esc_html__( 'Edit', 'user-registration' ) . '</a>';
-		$actions .=  '</span>';
-		$actions .= '&nbsp; | &nbsp;';
-		$actions .= '<span class="delete">';
-		$actions .= '<a
-						class="delete-membership"
-						data-membership-id="'. esc_attr( $membership->ID ) . '"
-						aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '"
-						href="' . esc_url( $delete_link ) . '"
-					>' . esc_html__( 'Delete', 'user-registration' ) . '</a>';
-		$actions .= '</span>';
-
-		$actions .= '</div>';
-
-		return $actions;
-	}
-
-
-	/**
 	 * Render the list table page, including header, notices, status filters and table.
 	 */
 	public function display_page() {
-		$this->prepare_items();
-		if ( ! isset( $_GET['add-new-membership'] ) ) { // phpcs:ignore Standard.Category.SniffName.ErrorCode: input var okay, CSRF ok.
-			?>
-			<div id="user-registration-list-table-page">
-				<div class="user-registration-list-table-heading">
-					<h1>
-						<?php esc_html_e( 'All Membership', 'user-registration' ); ?>
-					</h1>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_new_membership' ) ); ?>"
-					   class="page-title-action">
-						<?php echo __( 'Add New', 'user-registration' ); ?>
-					</a>
-				</div>
-				<div id="user-registration-list-filters-row">
-
-					<?php
-					$this->display_search_box( 'membership-list-search-input' );
-					?>
-				</div>
-				<hr>
-				<form id="membership-list" method="get">
-					<input type="hidden" name="page" value="<?php echo $this->page; ?>"/>
-					<?php
-					$this->screen->render_screen_reader_content( 'heading_list' );
-
-					$this->display();
-					?>
-				</form>
-			</div>
-			<?php
-		}
+		UR_Base_Layout::render_layout( $this, array(
+			'page'           => $this->page,
+			'title'          => esc_html__( 'All Membership', 'user-registration' ),
+			'add_new_action' => 'add_new_membership',
+			'search_id'      => 'membership-list-search-input',
+			'skip_query_key' => 'add-new-membership',
+			'form_id'       => 'membership-list',
+		) );
 	}
 
 	/**
@@ -281,20 +231,12 @@ class ListTable extends \UR_List_Table {
 			<p class="search-box">
 			</p>
 			<div>
-				<input type="search" id="<?php echo $search_id; ?>" name="s"
-					   value="<?php echo esc_attr( $_GET['s'] ?? '' ); ?>"
-					   placeholder="<?php echo esc_attr( 'Search Membership', ' user-registration' ); ?> ..."
-					   autocomplete="off">
-				<button type="submit" id="search-submit">
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-						<path fill="#000" fill-rule="evenodd"
-							  d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z"
-							  clip-rule="evenodd"></path>
-					</svg>
-				</button>
+				<?php
+					$placeholder = __( 'Search Membership', 'user-registration' );
+					UR_Base_Layout::display_search_field($search_id, $placeholder);
+				?>
 			</div>
 			<p></p>
-
 		</form>
 		<?php
 
