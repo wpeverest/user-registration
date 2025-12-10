@@ -28,10 +28,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			// Add menus.
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 1 );
 			add_action( 'admin_menu', array( $this, 'settings_menu' ), 20 );
-			// add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
+			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
 			add_action( 'admin_menu', array( $this, 'status_menu' ), 75 );
 			add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 3 );
-			// add_action('admin_head', array($this, 'remove_duplicate_menu_items'));
 
 			if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) && empty( get_option( 'user-registration_license_key', '' ) ) ) {
 				add_action( 'admin_menu', array( $this, 'activate_license_menu' ), 100 );
@@ -579,35 +578,62 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 							4
 						);
 					}
-			}
+				}
 
-			add_submenu_page(
-				'user-registration',
-				__( 'All Forms', 'user-registration' ),
-				__( 'All Forms', 'user-registration' ),
-				'manage_user_registration',
-				'user-registration',
-				array(
-					$this,
-					'registration_page',
-				),
-				9
-			);
+			$all_forms = ur_get_all_user_registration_form();
 
-			if ( isset( $_GET['page'] ) && in_array(
-				$_GET['page'],
-				array(
-					'user-registration',
-					'user-registration-login-forms',
-				)
-			) ) {
-				$all_forms = ur_get_all_user_registration_form();
-				$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';
-
+			if ( ur_check_module_activation( 'multiple-registration' ) ) {
 				add_submenu_page(
 					'user-registration',
-					__( 'Registration Forms', 'user-registration' ),
-					'↳ ' . sprintf( __( 'Registration %s', 'user-registration' ), $postfix ),
+					__( 'All Forms', 'user-registration' ),
+					__( 'All Forms', 'user-registration' ),
+					'manage_user_registration',
+					'user-registration',
+					array(
+						$this,
+						'registration_page',
+					),
+					9
+				);
+
+				if ( isset( $_GET['page'] ) && in_array(
+					$_GET['page'],
+					array(
+						'user-registration',
+						'user-registration-login-forms',
+						)
+				) ) {
+					$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';
+					add_submenu_page(
+						'user-registration',
+						__( 'Registration Forms', 'user-registration' ),
+						'↳ ' . sprintf( __( 'Registration %s', 'user-registration' ), $postfix ),
+						'manage_user_registration',
+						'user-registration',
+						array(
+							$this,
+							'registration_page',
+						),
+						10
+					);
+					add_submenu_page(
+						'user-registration',
+						__( 'Login Form', 'user-registration' ),
+						'↳ ' . __( 'Login Form', 'user-registration' ),
+						'manage_user_registration',
+						'user-registration-login-forms',
+						array(
+							$this,
+							'registration_page',
+						),
+						11
+					);
+				}
+			}else{
+				add_submenu_page(
+					'user-registration',
+					__( 'Registration Form', 'user-registration' ),
+					__( 'Registration Form', 'user-registration' ),
 					'manage_user_registration',
 					'user-registration',
 					array(
@@ -619,7 +645,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				add_submenu_page(
 					'user-registration',
 					__( 'Login Form', 'user-registration' ),
-					'↳ ' . __( 'Login Form', 'user-registration' ),
+					__( 'Login Form', 'user-registration' ),
 					'manage_user_registration',
 					'user-registration-login-forms',
 					array(
@@ -629,6 +655,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					11
 				);
 			}
+
 		}
 
 		/**
@@ -894,6 +921,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			global $registration_table_list;
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
+			$all_forms = ur_get_all_user_registration_form();
+
 			if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
 				wp_enqueue_script( 'user-registration-login-settings', UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js', array(
 					'jquery',
@@ -951,6 +980,13 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$login_page_url = $login_page_id ? get_permalink( $login_page_id ) : '';
 				$login_page_title = $login_page_id ? get_the_title( $login_page_id ) : '';
 				include_once __DIR__ . '/views/html-login-page-forms.php';
+			}elseif ( count( $all_forms ) <= 1 && isset( $all_forms ) && ! empty( $all_forms ) && ! ur_check_module_activation( 'multiple-registration' ) )  {
+				$form_id = key( $all_forms );
+
+				if ( ! isset( $_GET['edit-registration'] ) ) {
+					wp_redirect( admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $form_id ) );
+					exit;
+				}
 			} else {
 				$registration_table_list->display_page();
 			}
