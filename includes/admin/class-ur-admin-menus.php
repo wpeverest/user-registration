@@ -7,6 +7,8 @@
  * @package  UserRegistration/Admin
  */
 
+use WPEverest\URMembership\Admin\Members\Members;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -29,6 +31,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			// add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
 			add_action( 'admin_menu', array( $this, 'status_menu' ), 75 );
 			add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 3 );
+			// add_action('admin_head', array($this, 'remove_duplicate_menu_items'));
 
 			if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) && empty( get_option( 'user-registration_license_key', '' ) ) ) {
 				add_action( 'admin_menu', array( $this, 'activate_license_menu' ), 100 );
@@ -506,6 +509,78 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			);
 
 			add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
+
+			add_action( 'admin_menu', function() {
+				global $submenu;
+
+				if ( isset( $submenu['user-registration'] ) ) {
+					foreach ( $submenu['user-registration'] as $key => $item ) {
+						if ( $item[0] === 'User Registration & Membership' ) {
+							unset( $submenu['user-registration'][$key] );
+							break;
+						}
+					}
+				}
+			}, 999 );
+
+			if ( class_exists( 'WPEverest\URMembership\Admin\Membership\Membership' ) ) {
+				$membership_obj = new WPEverest\URMembership\Admin\Membership\Membership();
+
+					$rules_page = add_submenu_page(
+						'user-registration',
+						__( 'Memberships', 'user-registration' ), // page title
+						__( 'Memberships', 'user-registration' ), // menu title
+						'edit_posts', // capability
+						'user-registration-membership', // slug
+						array(
+							$membership_obj,
+							'render_membership_page',
+						),
+						2
+					);
+					add_action( 'load-' . $rules_page, array( $membership_obj, 'membership_initialization' ) );
+
+					if ( isset( $_GET['page'] ) && in_array( $_GET['page'], [ 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ] ) ) {
+
+						// add_submenu_page(
+						// 	'user-registration',
+						// 	__( 'All Plans', 'user-registration' ),
+						// 	'↳ ' . __( 'All Plans', 'user-registration' ),
+						// 	'edit_posts',
+						// 	'user-registration-membership',
+						// 	array(
+						// 		$this,
+						// 		'render_membership_page',
+						// 	),
+						// 	3
+						// );
+
+						add_submenu_page(
+							'user-registration',
+							__( 'Membership Groups', 'user-registration' ),
+							'↳ ' . __( 'Groups', 'user-registration' ),
+							'manage_user_registration',
+							'user-registration-membership&action=list_groups',
+							array(
+								$membership_obj,
+								'render_membership_page',
+							),
+							3
+						);
+
+						$members = new Members();
+						add_submenu_page(
+							'user-registration',
+							__( 'Membership Members', 'user-registration' ),
+							'↳ ' . __( 'Members', 'user-registration' ),
+							'manage_user_registration',
+							'user-registration-members',
+							array( $members, 'render_members_page'),
+							4
+						);
+					}
+			}
+
 			add_submenu_page(
 				'user-registration',
 				__( 'All Forms', 'user-registration' ),

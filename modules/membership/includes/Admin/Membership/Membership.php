@@ -45,7 +45,7 @@ class Membership {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_filter( 'user_registration_screen_ids', array( $this, 'ur_membership_add_screen_id' ) );
-		add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 15 );
+		// add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 15 );
 		add_action( 'admin_init', array( $this, 'actions' ) );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_filter( 'user_registration_login_options', array( $this, 'add_payment_login_option' ) );
@@ -298,7 +298,7 @@ class Membership {
 		);
 		add_action( 'load-' . $rules_page, array( $this, 'membership_initialization' ) );
 
-		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ] ) ) {
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], [ 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ] ) ) {
 
 			// add_submenu_page(
 			// 	'user-registration',
