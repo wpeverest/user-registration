@@ -42,10 +42,13 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			 *
 			 * @since 4.0
 			 */
-			add_action( 'user_registration_feature_track_data_for_tg_user_tracking', array(
-				$this,
-				'on_module_activate'
-			) ); // Hook on module activation ( Our UR module activation ).
+			add_action(
+				'user_registration_feature_track_data_for_tg_user_tracking',
+				array(
+					$this,
+					'on_module_activate',
+				)
+			); // Hook on module activation ( Our UR module activation ).
 		}
 
 		/**
@@ -94,8 +97,9 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		public function get_form_users_count( $for_membership = false ) {
 			global $wpdb;
 			if ( $for_membership ) {
-				return $wpdb->get_results( $wpdb->prepare(
-					"SELECT wum.meta_value AS ur_form_id,
+				return $wpdb->get_results(
+					$wpdb->prepare(
+						'SELECT wum.meta_value AS ur_form_id,
 			                COUNT(DISTINCT wu.ID) AS total
 							FROM wp_users wu
 							         JOIN wp_usermeta wum
@@ -106,13 +110,18 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 							                  AND wpum.meta_key = %s
 							                  AND wpum.meta_value = %s
 							GROUP BY wum.meta_value
-							ORDER BY total DESC;",
-					'ur_form_id', 'ur_registration_source', 'membership'
-				), ARRAY_A );
+							ORDER BY total DESC;',
+						'ur_form_id',
+						'ur_registration_source',
+						'membership'
+					),
+					ARRAY_A
+				);
 			}
 
-			return $wpdb->get_results( $wpdb->prepare(
-				"SELECT wum.meta_value AS ur_form_id,
+			return $wpdb->get_results(
+				$wpdb->prepare(
+					'SELECT wum.meta_value AS ur_form_id,
 				       COUNT(DISTINCT wu.ID) AS total
 						FROM wp_users wu
 						         JOIN wp_usermeta wum
@@ -124,9 +133,13 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 						                    AND wpum.meta_key = %s
 						                    AND wpum.meta_value = %s)
 						GROUP BY wum.meta_value
-						ORDER BY total DESC;",
-				'ur_form_id', 'ur_registration_source', 'membership'
-			), ARRAY_A );
+						ORDER BY total DESC;',
+					'ur_form_id',
+					'ur_registration_source',
+					'membership'
+				),
+				ARRAY_A
+			);
 		}
 
 		/**
@@ -218,7 +231,6 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				}
 			}
 
-
 			/**
 			 * Format module data to track in TG Tracking.
 			 *
@@ -245,7 +257,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 							'product_version' => UR()->version,
 							'product_type'    => in_array( $slug, $addons_list_moved_into_module ) ? 'plugin' : 'module',
 							'product_slug'    => $product_slug,
-							'is_premium'      => $is_premium
+							'is_premium'      => $is_premium,
 						);
 					}
 				}
@@ -317,8 +329,8 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		/**
 		 * Run the process once when user gives consent.
 		 *
-		 * @param int $old_value Old Value.
-		 * @param int $value Value.
+		 * @param int   $old_value Old Value.
+		 * @param int   $value Value.
 		 * @param mixed $option Options.
 		 *
 		 * @return mixed
@@ -398,7 +410,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 		/**
 		 * Get Form Specific Settings.
-		 *'form_settings' =>
+		 * 'form_settings' =>
 		 * );
 		 *
 		 * @param int $form_id Form ID.
@@ -422,7 +434,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 					$settings[ $product ][ $setting_id ] = array(
 						'settings_value' => strpos( "$settings_value", '<br>' ) > 0 ? preg_replace( '#<\s*br\s*/?\s*>#i', ' ', $settings_value ) : $settings_value,
-						'default_value'  => strpos( "$settings_default_value", '<br>' ) > 0 ? preg_replace( '#<\s*br\s*/?\s*>#i', ' ', $settings_default_value ) : $settings_default_value
+						'default_value'  => strpos( "$settings_default_value", '<br>' ) > 0 ? preg_replace( '#<\s*br\s*/?\s*>#i', ' ', $settings_default_value ) : $settings_default_value,
 					);
 				}
 			}
@@ -437,7 +449,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 */
 		public function call_api() {
 			global $wpdb;
-			ur_get_logger()->debug('------------- TG SDK API log tracking initiated -------------', array('source'=> 'urm-tg-sdk-logs'));
+			ur_get_logger()->debug( '------------- TG SDK API log tracking initiated -------------', array( 'source' => 'urm-tg-sdk-logs' ) );
 
 			$stats_api_url = $this->get_stats_api_url();
 
@@ -463,7 +475,6 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				'global_settings'  => $this->get_global_settings(),
 				'form_settings'    => $this->get_form_settings(),
 			);
-
 
 			$this->send_request( apply_filters( 'user_registration_tg_tracking_remote_url', $stats_api_url ), $data );
 		}
@@ -514,10 +525,13 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 * Send Request to API.
 		 *
 		 * @param string $url URL.
-		 * @param array $data Data.
+		 * @param array  $data Data.
 		 */
 		public function send_request( $url, $data ) {
-			$headers  = array( 'Content-Type' => 'application/json', 'User-Agent' => 'ThemeGrillSDK' );
+			$headers  = array(
+				'Content-Type' => 'application/json',
+				'User-Agent'   => 'ThemeGrillSDK',
+			);
 			$response = wp_remote_post(
 				$url,
 				array(
@@ -530,8 +544,8 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					'body'        => wp_json_encode( $data ),
 				)
 			);
-			ur_get_logger()->notice(json_decode( wp_remote_retrieve_body( $response ), true ), array('source'=> 'urm-tg-sdk-logs'));
-			ur_get_logger()->debug('------------- TG SDK API log tracking response received -------------', array('source'=> 'urm-tg-sdk-logs'));
+			ur_get_logger()->notice( json_decode( wp_remote_retrieve_body( $response ), true ), array( 'source' => 'urm-tg-sdk-logs' ) );
+			ur_get_logger()->debug( '------------- TG SDK API log tracking response received -------------', array( 'source' => 'urm-tg-sdk-logs' ) );
 			return json_decode( wp_remote_retrieve_body( $response ), true );
 		}
 
@@ -542,15 +556,15 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		 */
 		private function setting_keys() {
 			return array(
-				'user-registration/user-registration.php'                                                     => array(
+				'user-registration/user-registration.php' => array(
 					// General Settings
 					array( 'user_registration_general_setting_disabled_user_roles', '["subscriber"]' ),
 					array( 'user_registration_myaccount_page_id', '', true ),
-					array( 'user_registration_my_account_layout', 'horizontal' ),
+					array( 'user_registration_my_account_layout', 'vertical' ),
 					array( 'user_registration_general_setting_registration_url_options', '', true ),
 					array(
 						'user_registration_general_setting_registration_label',
-						__( 'Not a member yet? Register now.', 'user-registration' )
+						__( 'Not a member yet? Register now.', 'user-registration' ),
 					),
 					array( 'user_registration_general_setting_uninstall_option', false ),
 					array( 'user_registration_allow_usage_tracking', false ),
@@ -561,7 +575,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_disable_profile_picture', false ),
 					array(
 						'user_registration_disable_logout_confirmation',
-						apply_filters( 'user_registration_disable_logout_confirmation_status', true )
+						apply_filters( 'user_registration_disable_logout_confirmation_status', true ),
 					),
 					array( 'user_registration_login_options_form_template', 'default' ),
 					array( 'user_registration_general_setting_login_options_with', 'default' ),
@@ -593,7 +607,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					// Email Settings
 					array( 'user_registration_email_setting_disable_email', false ),
 				),
-				'user-registration-pro/user-registration.php'                                                 => array(
+				'user-registration-pro/user-registration.php' => array(
 					array( 'user_registration_pro_general_setting_delete_account', 'disable' ),
 					array( 'user_registration_pro_general_setting_login_form', false ),
 					array( 'user_registration_pro_general_setting_prevent_active_login', false ),
@@ -606,11 +620,11 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_content_restriction_enable', true ),
 					array( 'user_registration_content_restriction_allow_to_roles', '["administrator"]' ) //phpcs:ignore
 				),
-				'user-registration-file-upload/user-registration-file-upload.php'                             => array(
+				'user-registration-file-upload/user-registration-file-upload.php' => array(
 					array( 'user_registration_file_upload_setting_valid_file_type', '["pdf"]' ),
 					array( 'user_registration_file_upload_setting_max_file_size', '1024' ) //phpcs:ignore
 				),
-				'user-registration-pdf-submission/user-registration-pdf-submission.php'                       => array(
+				'user-registration-pdf-submission/user-registration-pdf-submission.php' => array(
 					array( 'user_registration_pdf_template', 'default' ),
 					array( 'user_registration_pdf_logo_image', '', true ),
 					array( 'user_registration_pdf_setting_header', '' ),
@@ -628,7 +642,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					array( 'user_registration_pdf_print_user_default_fields', false ),
 					array( 'user_registration_pdf_hide_empty_fields', false ) //phpcs:ignore
 				),
-				'user-registration-social-connect/user-registration-social-connect.php'                       => array(
+				'user-registration-social-connect/user-registration-social-connect.php' => array(
 					array( 'user_registration_social_setting_enable_facebook_connect', '' ),
 					array( 'user_registration_social_setting_enable_twitter_connect', '' ),
 					array( 'user_registration_social_setting_enable_google_connect', '' ),
@@ -691,7 +705,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 			$data                = array();
 			$theme               = wp_get_theme();
 			$data['site']        = get_bloginfo( 'url' );
-			$data['slug']        = "user-registration";
+			$data['slug']        = 'user-registration';
 			$data['version']     = UR()->version;
 			$data['wp_version']  = get_bloginfo( 'version' );
 			$data['locale']      = get_locale();
@@ -702,7 +716,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					'name'   => $theme->name,
 					'author' => $theme->author,
 					'parent' => $theme->parent() !== false ? $theme->parent()->get( 'Name' ) : $theme->get( 'Name' ),
-				)
+				),
 			);
 
 			return $data;

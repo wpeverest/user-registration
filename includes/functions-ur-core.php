@@ -8946,7 +8946,7 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
                 array( 'user_registration_general_setting_disabled_user_roles', '["subscriber"]' ),
                 array( 'user_registration_login_option_hide_show_password', false ),
                 array( 'user_registration_myaccount_page_id', '' ),
-                array( 'user_registration_my_account_layout', 'horizontal' ),
+                array( 'user_registration_my_account_layout', 'vertical' ),
                 array( 'user_registration_ajax_form_submission_on_edit_profile', false ),
                 array( 'user_registration_disable_profile_picture', false ),
                 array( 'user_registration_disable_logout_confirmation', apply_filters('user_registration_disable_logout_confirmation_status', true) ),
