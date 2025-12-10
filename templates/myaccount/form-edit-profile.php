@@ -56,9 +56,9 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 						?>
 						<h2>
 						<?php
-						$urm_my_account_layout = get_option( 'user_registration_my_account_layout', 'horizontal' );
+						$urm_my_account_layout = get_option( 'user_registration_my_account_layout', 'vertical' );
 
-						if('horizontal' === $urm_my_account_layout) {
+						if ( 'horizontal' === $urm_my_account_layout ) {
 							esc_html_e(
 								/**
 								 * Filter to modify the profile detail title.
@@ -68,7 +68,8 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 								 */
 								apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore
 						}
-						?></h2>
+						?>
+						</h2>
 
 						<?php
 
@@ -254,13 +255,13 @@ do_action( 'user_registration_before_edit_profile_form_data', $user_id, $form_id
 							if ( ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ) ) {
 								?>
 								<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span>
-									<?php echo esc_html( $submit_btn_text); ?>
+									<?php echo esc_html( $submit_btn_text ); ?>
 								</button>
 								<?php
 							} else {
 								wp_nonce_field( 'save_profile_details' );
 								?>
-								<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php echo esc_attr( $submit_btn_text); ?>"/>
+								<input type="submit" class="user-registration-Button button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" value="<?php echo esc_attr( $submit_btn_text ); ?>"/>
 								<?php
 								echo apply_filters( 'user_registration_edit_profile_extra_data_div', '', $form_id ); // phpcs:ignore.
 								?>

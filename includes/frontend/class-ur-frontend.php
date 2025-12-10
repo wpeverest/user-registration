@@ -162,7 +162,6 @@ class UR_Frontend {
 			$setting['icon']            = isset( $field_object->icon ) ? $field_object->icon : '';
 			$field_type                 = ur_get_field_type( $field_object->field_key );
 
-
 			// Force drop the custom class because it has been addressed in prior container.
 			if ( ! empty( $setting['advance_setting']->custom_class ) ) {
 				unset( $setting['advance_setting']->custom_class );
@@ -182,18 +181,18 @@ class UR_Frontend {
 	public function user_registration_my_account_layout( $attributes ) {
 
 		if ( is_user_logged_in() ) {
-			$layout              = get_option( 'user_registration_my_account_layout', 'horizontal' );
+			$layout              = get_option( 'user_registration_my_account_layout', 'vertical' );
 			$attributes['class'] = $attributes['class'] . ' user-registration-MyAccount ' . $layout;
 		}
 		return $attributes;
 	}
 	public function login_redirect( $redirect, $user ) {
-		if( ! ur_string_to_bool( get_option( 'user_registration_login_options_enable_custom_redirect', false ) ) ) {
+		if ( ! ur_string_to_bool( get_option( 'user_registration_login_options_enable_custom_redirect', false ) ) ) {
 			return $redirect;
 		}
 
 		$redirect_option = get_option( 'user_registration_login_options_redirect_after_login', 'no-redirection' );
-		
+
 		if ( 'no-redirection' === $redirect_option ) {
 			return $redirect;
 		}
@@ -220,7 +219,7 @@ class UR_Frontend {
 		return apply_filters( 'user_registration_login_redirect_url', $redirect, $user, $redirect_option );
 	}
 	public function logout_redirect( $redirect ) {
-		if( ! ur_string_to_bool( get_option( 'user_registration_login_options_enable_custom_redirect', false ) ) ) {
+		if ( ! ur_string_to_bool( get_option( 'user_registration_login_options_enable_custom_redirect', false ) ) ) {
 			return $redirect;
 		}
 		$redirect_option = get_option( 'user_registration_login_options_redirect_after_logout', 'no-redirection' );

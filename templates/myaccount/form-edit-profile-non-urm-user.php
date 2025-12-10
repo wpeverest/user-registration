@@ -16,7 +16,7 @@
  * @version 1.0.0
  */
 
-if (! defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -27,20 +27,20 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 ?>
 <div class="user-registration-MyAccount-content__body">
 	<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
-	<?php if ( current_user_can( 'manage_options' ) ): ?>
+	<?php if ( current_user_can( 'manage_options' ) ) : ?>
 				<div class="user-registration-myaccount-notice-box">
 				<div class="user-registration-myaccount-notice-box--title">
 					<div class="user-registration-myaccount-notice-box--title-icon">
 						<span class="dashicons dashicons-info-outline notice-icon"></span>
 					</div>
 					<div class="user-registration-myaccount-notice-box--title-text">
-						<h2><?php echo esc_html__( "Hey! Your users see a different account page", "user-registration"); ?></h2>
+						<h2><?php echo esc_html__( 'Hey! Your users see a different account page', 'user-registration' ); ?></h2>
 					</div>
 				</div>
-				<p><?php echo esc_html__( "What you're seeing isn't the full user experience. Users who register through your form get more profile features and a better interface.", "user-registration"); ?></p>
-				<p class="pro-tip"><?php echo wp_kses_post(__( "<strong>Pro tip:</strong> Create a test user with your registration form to see how the account page really looks!", "user-registration") ); ?></p>
+				<p><?php echo esc_html__( "What you're seeing isn't the full user experience. Users who register through your form get more profile features and a better interface.", 'user-registration' ); ?></p>
+				<p class="pro-tip"><?php echo wp_kses_post( __( '<strong>Pro tip:</strong> Create a test user with your registration form to see how the account page really looks!', 'user-registration' ) ); ?></p>
 				<?php
-					$user_args = array(
+					$user_args             = array(
 						'meta_query'  => array(
 							array(
 								'key'     => 'ur_form_id',
@@ -50,14 +50,14 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 						'count_total' => true,
 						'fields'      => 'ID',
 					);
-					$user_query = new WP_User_Query( $user_args );
+					$user_query            = new WP_User_Query( $user_args );
 					$existing_non_urm_user = $user_query->get_total();
 					?>
-				<?php if ( $existing_non_urm_user >= 5 ): ?>
+				<?php if ( $existing_non_urm_user >= 5 ) : ?>
 					<p class="existing-users">
 					<strong>Existing users:</strong> Your site has <span class="highlight"><?php echo $existing_non_urm_user; ?> users</span> registered before this plugin.
 					Want them to enjoy the new profile features too? Use the
-					<a class="addon-link" href="https://wpuserregistration.com/features/profile-connect/?utm_source=my-account&utm_medium=profile-connect-addon-link&utm_campaign=<?php echo UR()->utm_campaign ?>" rel="noreferrer noopener" target="_blank">Profile Connect addon</a> to link these existing users to your new registration form.
+					<a class="addon-link" href="https://wpuserregistration.com/features/profile-connect/?utm_source=my-account&utm_medium=profile-connect-addon-link&utm_campaign=<?php echo UR()->utm_campaign; ?>" rel="noreferrer noopener" target="_blank">Profile Connect addon</a> to link these existing users to your new registration form.
 					</p>
 				<?php endif; ?>
 			</div>
@@ -74,21 +74,22 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 						?>
 						<h2>
 						<?php
-							$urm_my_account_layout = get_option( 'user_registration_my_account_layout', 'horizontal' );
+							$urm_my_account_layout = get_option( 'user_registration_my_account_layout', 'vertical' );
 
-							if('horizontal' === $urm_my_account_layout) {
-								esc_html_e(
-									/**
-									 * Filter to modify the profile detail title.
-									 *
-									 * @param string Profile detail title content.
-									 * @return string modified profile detail title.
-									 */
-									apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore
-							}
-						?></h2>
+						if ( 'horizontal' === $urm_my_account_layout ) {
+							esc_html_e(
+								/**
+								 * Filter to modify the profile detail title.
+								 *
+								 * @param string Profile detail title content.
+								 * @return string modified profile detail title.
+								 */
+								apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore
+						}
+						?>
+						</h2>
 						<?php
-						$is_profile_pic_on_form    = ! ur_option_checked( 'user_registration_disable_profile_picture', false );
+						$is_profile_pic_on_form = ! ur_option_checked( 'user_registration_disable_profile_picture', false );
 						if ( $is_profile_pic_on_form ) {
 							?>
 						<div class="user-registration-profile-header">
@@ -151,7 +152,7 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 												<div class="form-row validate-required" id="user_registration_user_login_field" data-priority=""><label for="user_registration_user_login" class="ur-label"><?php _e( 'Username', 'user-registration' ); ?> <abbr class="required" title="required">*</abbr></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_user_login" type="text" class="input-text  without_icon input-text ur-edit-profile-field  user-registration-help-tip" name="user_registration_user_login" id="user_registration_user_login" placeholder="" value="<?php echo $user->user_login; ?>" readonly="readonly" title="Username can not be changed." required="required" data-default="copaturer"> </span> </div>
 											</div>
 											<div class="ur-field-item field-first_name" data-field-id="first_name" data-ref-id="user_registration_first_name">
-												<div class="form-row" id="user_registration_first_name_field" data-priority=""><label for="user_registration_first_name" class="ur-label"><?php _e( 'First Name', 'user-registration' ); ?></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_first_name" type="text" class="input-text  without_icon input-text ur-edit-profile-field" name="user_registration_first_name" id="user_registration_first_name" placeholder="" value="<?php echo esc_attr($user->first_name); ?>" data-default=""> </span> </div>
+												<div class="form-row" id="user_registration_first_name_field" data-priority=""><label for="user_registration_first_name" class="ur-label"><?php _e( 'First Name', 'user-registration' ); ?></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_first_name" type="text" class="input-text  without_icon input-text ur-edit-profile-field" name="user_registration_first_name" id="user_registration_first_name" placeholder="" value="<?php echo esc_attr( $user->first_name ); ?>" data-default=""> </span> </div>
 											</div>
 										</div>
 										<div class="ur-form-grid ur-grid-2" style="width:48%;">
@@ -159,7 +160,7 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 												<div class="form-row validate-required" id="user_registration_user_email_field" data-priority=""><label for="user_registration_user_email" class="ur-label"><?php _e( 'User Email', 'user-registration' ); ?> <abbr class="required" title="required">*</abbr></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_user_email" type="email" class="input-text  without_icon input-email ur-edit-profile-field " name="user_registration_user_email" id="user_registration_user_email" placeholder="" value="<?php echo $user->user_email; ?>" required="required" data-default="zapoda@mailinator.com"> </span> </div>
 											</div>
 											<div class="ur-field-item field-last_name" data-field-id="last_name" data-ref-id="user_registration_last_name">
-												<div class="form-row" id="user_registration_last_name_field" data-priority=""><label for="user_registration_last_name" class="ur-label"><?php _e( 'Last Name', 'user-registration' ); ?></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_last_name" type="text" class="input-text  without_icon input-text ur-edit-profile-field " name="user_registration_last_name" id="user_registration_last_name" placeholder="" value="<?php echo esc_attr($user->last_name); ?>" data-default=""> </span> </div>
+												<div class="form-row" id="user_registration_last_name_field" data-priority=""><label for="user_registration_last_name" class="ur-label"><?php _e( 'Last Name', 'user-registration' ); ?></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_last_name" type="text" class="input-text  without_icon input-text ur-edit-profile-field " name="user_registration_last_name" id="user_registration_last_name" placeholder="" value="<?php echo esc_attr( $user->last_name ); ?>" data-default=""> </span> </div>
 											</div>
 										</div>
 									</div>
@@ -193,7 +194,7 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 								$submit_button_text = apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) );
 								?>
 								<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span>
-									<?php echo esc_html($submit_button_text);?>
+									<?php echo esc_html( $submit_button_text ); ?>
 								</button>
 								<?php
 							} else {
@@ -225,6 +226,6 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 	/**
 	 * Fires after rendering the user registration edit profile form.
 	 */
-	do_action('user_registration_after_edit_profile_form');
+	do_action( 'user_registration_after_edit_profile_form' );
 	?>
 </div>
