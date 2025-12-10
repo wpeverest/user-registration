@@ -363,10 +363,17 @@ class UR_Modules {
 		}
 
 		if ( isset( $status['success'] ) && ! $status['success'] ) {
+
+			if ( 'user-registration-multiple-registration' === $slug ) {
+				$message = esc_html__( "You have multiple registration forms, so you can't deactivate the plugin.", 'user-registration' );
+			}else{
+				$message =  esc_html__( "Module couldn't be deactivated. Please try again later.", 'user-registration' );
+			}
+
 			return new \WP_REST_Response(
 				array(
 					'success' => false,
-					'message' => esc_html__( "Module couldn't be deactivated. Please try again later.", 'user-registration' ),
+					'message' => $message,
 				),
 				400
 			);
@@ -412,6 +419,14 @@ class UR_Modules {
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
 		$enabled_features = array_values( array_diff( $enabled_features, array( $slug ) ) );
 		update_option( 'user_registration_enabled_features', $enabled_features );
+
+		if ( 'user-registration-multiple-registration' === $slug ) {
+			$all_forms = ur_get_all_user_registration_form();
+
+			if ( count( $all_forms ) > 1 ) {
+				return array( 'success' => false );
+			}
+		}
 
 		return in_array( $slug, $enabled_features, true ) ? array( 'success' => false ) : array( 'success' => true );
 	}
