@@ -55,7 +55,7 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-general.php';
 			$settings[] = include 'settings/class-ur-settings-membership.php';
 			$settings[] = include 'settings/class-ur-settings-payment.php';
-			// $settings[] = include 'settings/class-ur-settings-email.php';
+			$settings[] = include 'settings/class-ur-settings-email.php';
 			// $settings[] = include 'settings/class-ur-settings-registration-login.php';
 			// $settings[] = include 'settings/class-ur-settings-my-account.php';
 			// $settings[] = include 'settings/class-ur-settings-integration.php';
