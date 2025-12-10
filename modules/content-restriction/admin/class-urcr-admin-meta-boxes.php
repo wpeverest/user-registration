@@ -89,16 +89,6 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 	public function add_metabox() {
 		global $post;
 
-		// Only show meta box for posts and pages
-		if ( ! $post || ! isset( $post->post_type ) ) {
-			return;
-		}
-
-		// Restrict to only 'post' and 'page' post types
-		if ( ! in_array( $post->post_type, array( 'post', 'page' ), true ) ) {
-			return;
-		}
-
 		// Check if we should show the metabox
 		if ( ! $this->should_show_metabox( $post ) ) {
 			return;

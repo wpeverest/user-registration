@@ -148,13 +148,10 @@ class URCR_Content_Access_Rules {
 		foreach ( $access_rules as $rule_post ) {
 			$rule_content = json_decode( $rule_post->post_content, true );
 
-			// Flatten groups in logic_map if advanced logic is disabled and groups exist
 			$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
-			if ( ! empty( $logic_map ) && isset( $logic_map['type'] ) && 'group' === $logic_map['type'] ) {
-				$logic_map = urcr_flatten_logic_map_groups( $logic_map );
-				// Update rule_content with flattened logic_map
-				$rule_content['logic_map'] = $logic_map;
-			}
+
+			// Check if rule is migrated
+			$is_migrated = get_post_meta( $rule_post->ID, 'urcr_is_migrated', true );
 
 			$rule_data = array(
 				'id'              => $rule_post->ID,
@@ -167,6 +164,7 @@ class URCR_Content_Access_Rules {
 				'local_page'      => isset( $rule_content['actions'][0]['local_page'] ) ? $rule_content['actions'][0]['local_page'] : '',
 				'logic_map'       => $logic_map,
 				'target_contents' => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
+				'is_migrated'     => ! empty( $is_migrated ),
 			);
 
 			/**
@@ -234,17 +232,6 @@ class URCR_Content_Access_Rules {
 		 */
 		$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'create' );
 
-		// Flatten groups if advanced logic is disabled
-		if ( isset( $access_rule_data['logic_map'] ) && is_array( $access_rule_data['logic_map'] ) ) {
-			/**
-			 * @param array $logic_map
-			 * @param array $access_rule_data
-			 * @param WP_REST_Request $request
-			 */
-			$logic_map                     = apply_filters( 'urm_content_access_rule_logic_map_before_flatten', $access_rule_data['logic_map'], $access_rule_data, $request );
-			$access_rule_data['logic_map'] = urcr_flatten_logic_map_groups( $logic_map );
-		}
-
 		// Prepare the post data similar to prepare_access_rule_as_wp_post
 		$access_rule_post = apply_filters(
 			'urcr_prepared_access_rule_as_wp_post',
@@ -274,11 +261,7 @@ class URCR_Content_Access_Rules {
 			$rule_post    = get_post( $rule_id );
 			$rule_content = json_decode( $rule_post->post_content, true );
 
-			// Flatten groups in logic_map if advanced logic is disabled and groups exist (for response)
 			$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
-			if ( ! empty( $logic_map ) && isset( $logic_map['type'] ) && 'group' === $logic_map['type'] ) {
-				$logic_map = urcr_flatten_logic_map_groups( $logic_map );
-			}
 
 			$response_data = array(
 				'success' => true,
@@ -344,13 +327,10 @@ class URCR_Content_Access_Rules {
 
 		$rule_content = json_decode( $rule_post->post_content, true );
 
-		// Flatten groups in logic_map if advanced logic is disabled and groups exist
 		$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
-		if ( ! empty( $logic_map ) && isset( $logic_map['type'] ) && 'group' === $logic_map['type'] ) {
-			$logic_map = urcr_flatten_logic_map_groups( $logic_map );
-			// Update rule_content with flattened logic_map
-			$rule_content['logic_map'] = $logic_map;
-		}
+
+		// Check if rule is migrated
+		$is_migrated = get_post_meta( $rule_post->ID, 'urcr_is_migrated', true );
 
 		$rule_data = array(
 			'id'              => $rule_post->ID,
@@ -363,6 +343,7 @@ class URCR_Content_Access_Rules {
 			'local_page'      => isset( $rule_content['actions'][0]['local_page'] ) ? $rule_content['actions'][0]['local_page'] : '',
 			'logic_map'       => $logic_map,
 			'target_contents' => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
+			'is_migrated'     => ! empty( $is_migrated ),
 		);
 
 		/**
@@ -478,17 +459,6 @@ class URCR_Content_Access_Rules {
 			 * @param string $context
 			 */
 			$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'update' );
-
-			// Flatten groups if advanced logic is disabled
-			if ( isset( $access_rule_data['logic_map'] ) && is_array( $access_rule_data['logic_map'] ) ) {
-				/**
-				 * @param array $logic_map
-				 * @param array $access_rule_data
-				 * @param WP_REST_Request $request
-				 */
-				$logic_map                     = apply_filters( 'urm_content_access_rule_logic_map_before_flatten', $access_rule_data['logic_map'], $access_rule_data, $request );
-				$access_rule_data['logic_map'] = urcr_flatten_logic_map_groups( $logic_map );
-			}
 
 			// Use the same logic as prepare_access_rule_as_wp_post
 			$access_rule_data_json = wp_json_encode( $access_rule_data );

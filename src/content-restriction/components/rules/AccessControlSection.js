@@ -15,6 +15,7 @@ const AccessControlSection = ({
 }) => {
 	const [contentDropdownOpen, setContentDropdownOpen] = useState(false);
 	const contentDropdownWrapperRef = useRef(null);
+	const conditionValueInputWrapperRef = useRef(null);
 
 	// Close content dropdown when clicking outside
 	useEffect(() => {
@@ -66,9 +67,22 @@ const AccessControlSection = ({
 	// Ensure free users can only use "restrict"
 	useEffect(() => {
 		if (!isProAccess() && accessControl === "access") {
-			onAccessControlChange("restrict");
+			onAccessControlChange("access");
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [accessControl]);
+
+	// Set initial class based on accessControl value
+	useEffect(() => {
+		if (conditionValueInputWrapperRef.current) {
+			if (accessControl === "access") {
+				conditionValueInputWrapperRef.current.classList.add("urcr-access-content");
+				conditionValueInputWrapperRef.current.classList.remove("urcr-restrict-content");
+			} else {
+				conditionValueInputWrapperRef.current.classList.add("urcr-restrict-content");
+				conditionValueInputWrapperRef.current.classList.remove("urcr-access-content");
+			}
+		}
 	}, [accessControl]);
 
 	const handleAccessControlChange = (e) => {
@@ -77,22 +91,37 @@ const AccessControlSection = ({
 		if (!isProAccess() && newValue === "access") {
 			return;
 		}
+		
+		// Add or remove classes based on value
+		if (conditionValueInputWrapperRef.current) {
+			if (newValue === "access") {
+				conditionValueInputWrapperRef.current.classList.add("urcr-access-content");
+				conditionValueInputWrapperRef.current.classList.remove("urcr-restrict-content");
+			} else {
+				conditionValueInputWrapperRef.current.classList.add("urcr-restrict-content");
+				conditionValueInputWrapperRef.current.classList.remove("urcr-access-content");
+			}
+		}
+		
 		onAccessControlChange(newValue);
 	};
 
 	return (
 		<div className="urcr-target-selection-section ur-d-flex ur-align-items-start">
 			{/* Access/Restrict Section */}
-			<select
-				className="urcr-access-select urcr-condition-value-input"
-				value={accessControl}
-				onChange={handleAccessControlChange}
-			>
-				{isProAccess() && (
+			<div className="urcr-condition-value-input-wrapper" ref={conditionValueInputWrapperRef}>
+				<select
+					className="urcr-access-select urcr-condition-value-input"
+					value={accessControl}
+					onChange={handleAccessControlChange}
+				>
+					{isProAccess() && (
+						<option value="restrict">{__("Restrict", "user-registration")}</option>
+					)}
 					<option value="access">{__("Access", "user-registration")}</option>
-				)}
-				<option value="restrict">{__("Restrict", "user-registration")}</option>
-			</select>
+
+				</select>
+			</div>
 
 			<span className="urcr-arrow-icon" aria-hidden="true"></span>
 			<div className="ur-d-flex ur-flex-column">

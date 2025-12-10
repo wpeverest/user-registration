@@ -26,6 +26,7 @@ class URCR_AJAX {
 		 */
 		add_action( 'wp_ajax_urcr_create_content_rules', array( __CLASS__, 'ajax_create_create_content_rules' ) );
 		add_action( 'wp_ajax_urcr_update_rule_status', array( __CLASS__, 'ajax_update_rule_status' ) );
+		add_action( 'wp_ajax_user_registration_check_advanced_logic_rules', array( __CLASS__, 'ajax_check_advanced_logic_rules' ) );
 	}
 
 
@@ -457,6 +458,40 @@ class URCR_AJAX {
 			wp_send_json_error(
 				array(
 					'message' => esc_html__( 'Sorry! You do not have permission to edit Content Access Rules.', 'user-registration' ),
+				)
+			);
+		}
+	}
+
+	/**
+	 * Ajax handler: Check if rules with advanced logic exist.
+	 *
+	 * @since 4.0
+	 */
+	public static function ajax_check_advanced_logic_rules() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'You do not have permission to check advanced logic rules.', 'user-registration' ),
+				)
+			);
+			return;
+		}
+
+		check_ajax_referer( 'user_registration_settings_nonce', 'security' );
+
+		if ( function_exists( 'urcr_has_rules_with_advanced_logic' ) ) {
+			$has_advanced_logic = urcr_has_rules_with_advanced_logic();
+
+			wp_send_json_success(
+				array(
+					'has_advanced_logic' => $has_advanced_logic,
+				)
+			);
+		} else {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Function not found.', 'user-registration' ),
 				)
 			);
 		}

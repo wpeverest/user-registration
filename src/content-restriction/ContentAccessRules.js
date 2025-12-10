@@ -89,8 +89,24 @@ const ContentAccessRules = () => {
 		// But for updates, we don't refetch - just update local state
 	};
 
-	const handleRuleDeleteOrDuplicate = () => {
-		// Refetch rules after delete or duplicate operations
+	const handleRuleDelete = (ruleId) => {
+		// Remove deleted rule from local state without refetching
+		setRules((prevRules) => prevRules.filter((rule) => rule.id !== ruleId));
+		// Also remove from expanded and settings panels if present
+		setExpandedRules((prev) => {
+			const newSet = new Set(prev);
+			newSet.delete(ruleId);
+			return newSet;
+		});
+		setOpenSettingsPanels((prev) => {
+			const newSet = new Set(prev);
+			newSet.delete(ruleId);
+			return newSet;
+		});
+	};
+
+	const handleRuleDuplicate = () => {
+		// Refetch rules after duplicate operation to get the new rule
 		fetchRules();
 	};
 
@@ -175,7 +191,8 @@ const ContentAccessRules = () => {
 								onToggleSettings={() => handleToggleSettings(rule.id)}
 								onRuleUpdate={handleRuleUpdate}
 								onRuleStatusUpdate={handleRuleStatusUpdate}
-								onRuleDeleteOrDuplicate={handleRuleDeleteOrDuplicate}
+								onRuleDelete={handleRuleDelete}
+								onRuleDuplicate={handleRuleDuplicate}
 							/>
 						))}
 					</div>

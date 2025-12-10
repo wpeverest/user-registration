@@ -99,30 +99,6 @@ class URCR_Admin_Assets {
 	 */
 	public static function get_localized_data() {
 
-//		Prepare rule to edit, if a rule id has been provided.
-		$rule_id      = ! empty( $_GET['post-id'] ) ? $_GET['post-id'] : null;
-		$rule_to_edit = null;
-		$is_draft     = false;
-		$title        = esc_html__( 'Untitled', 'user-registration' );
-
-		if ( $rule_id ) {
-			$rule_as_wp_post = get_post( $rule_id, ARRAY_A );
-
-			if ( $rule_as_wp_post ) {
-				$title        = $rule_as_wp_post['post_title'];
-				$rule_to_edit = json_decode( stripslashes( $rule_as_wp_post['post_content'] ), true );
-			} else {
-				$rule_id = null;
-			}
-
-			if ( isset( $rule_as_wp_post ) && 'draft' === $rule_as_wp_post['post_status'] ) {
-				$is_draft = true;
-			} else {
-				$GLOBALS['urcr_hide_save_draft_button'] = true;
-			}
-		}
-
-
 		// Prepare user registration sources.
 
 		$ur_forms = ur_get_all_user_registration_form();
@@ -344,10 +320,6 @@ class URCR_Admin_Assets {
 			'URCR_DEBUG'                => apply_filters( 'urcr_debug_mode', true ),
 			'_nonce'                    => wp_create_nonce( 'urcr_manage_content_access_rule' ),
 			'ajax_url'                  => admin_url( 'admin-ajax.php' ),
-			'rule_id'                   => $rule_id,
-			'is_draft'                  => $is_draft,
-			'title'                     => $title,
-			'access_rule_data'          => $rule_to_edit,
 			'wp_roles'                  => ur_get_all_roles(),
 			'wp_capabilities'           => urcr_get_all_capabilities(),
 			'ur_forms'                  => ur_get_all_user_registration_form(),
@@ -360,7 +332,7 @@ class URCR_Admin_Assets {
 			'ur_form_data'              => $ur_forms,
 			'shortcodes'                => $shortcodes_list,
 			'content_rule_url'          => admin_url( 'admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule' ),
-			'is_advanced_logic_enabled' => ur_string_to_bool( get_option( 'urcr_content_access_rule_is_advanced_logic_enabled', 'no' ) ),
+			'is_advanced_logic_enabled' => ur_string_to_bool( get_option( 'urcr_is_advanced_logic_enabled', 'no' ) ),
 			'payment_status'            => array(
 				'pending'   => __( 'Pending', 'user-registration' ),
 				'completed' => __( 'Completed', 'user-registration' ),

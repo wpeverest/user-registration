@@ -21,7 +21,8 @@ const RuleCard = ({
 					  onToggleSettings,
 					  onRuleUpdate,
 					  onRuleStatusUpdate,
-					  onRuleDeleteOrDuplicate,
+					  onRuleDelete,
+					  onRuleDuplicate,
 				  }) => {
 	const [isToggling, setIsToggling] = useState(false);
 	const [menuOpen, setMenuOpen] = useState(false);
@@ -77,7 +78,9 @@ const RuleCard = ({
 	};
 
 	const handleDeleteSuccess = () => {
-		onRuleDeleteOrDuplicate();
+		if (onRuleDelete) {
+			onRuleDelete(rule.id);
+		}
 	};
 
 	const handleDuplicateClick = () => {
@@ -86,7 +89,9 @@ const RuleCard = ({
 	};
 
 	const handleDuplicateSuccess = () => {
-		onRuleDeleteOrDuplicate();
+		if (onRuleDuplicate) {
+			onRuleDuplicate();
+		}
 	};
 
 	const formattedId = String(rule.id).padStart(2, "0");

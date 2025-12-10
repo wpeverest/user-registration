@@ -37,13 +37,14 @@ const RuleGroup = ({
 	onAccessControlChange,
 	contentTargets,
 	onContentTargetsChange,
+	isMigrated = false,
 }) => {
 	const [conditions, setConditions] = useState([]);
 	const [logicGate, setLogicGate] = useState(group.logic_gate || "AND");
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const dropdownWrapperRef = useRef(null);
 	const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
-	
+
 	// Initialize conditions from group data
 	useEffect(() => {
 		if (group.conditions && group.conditions.length > 0) {
@@ -88,7 +89,7 @@ const RuleGroup = ({
 		} else {
 			setConditions([]);
 		}
-		
+
 		// Force logic gate to AND when advanced logic is disabled
 		if (!isAdvancedLogicEnabled) {
 			setLogicGate("AND");
@@ -219,7 +220,7 @@ const RuleGroup = ({
 				};
 			}
 		});
-		
+
 		const updatedGroup = {
 			id: group.id,
 			type: "group",
@@ -243,7 +244,7 @@ const RuleGroup = ({
 							className={`urcr-conditions-list ${isAdvancedLogicEnabled ? "urcr-conditional-logic-definitions" : ""}`}
 						>
 							{isAdvancedLogicEnabled && (
-								<div className={`urcr-condition-logic-gate-wrapper urcr-logic-group-rule-${logicGate}`}>
+								<div className={`urcr-condition-logic-gate-wrapper urcr-logic-group-rule-${logicGate} ${conditions.length === 1 ? "urcr-single-condition" : ""}`}>
 									<div
 										className={`urcr-condition-logic-gate-button urcr-sub-logic-group-rule-${logicGate}`}
 									>
@@ -264,6 +265,7 @@ const RuleGroup = ({
 												onGroupUpdate={(updatedGroup) => handleGroupUpdate(condition.id, updatedGroup)}
 												onGroupRemove={() => handleGroupRemove(condition.id)}
 												isNested={true}
+												isMigrated={isMigrated}
 											/>
 											<button
 												type="button"
@@ -281,6 +283,7 @@ const RuleGroup = ({
 											<ConditionRow
 												condition={condition}
 												onUpdate={handleConditionUpdate}
+												isMigrated={isMigrated}
 											/>
 											<button
 												type="button"
@@ -321,6 +324,7 @@ const RuleGroup = ({
 						{dropdownOpen && (
 							<ConditionFieldDropdown
 								onSelect={handleAfterConditionSelection}
+								isMigrated={isMigrated}
 							/>
 						)}
 					</div>

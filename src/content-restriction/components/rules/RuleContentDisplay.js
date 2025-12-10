@@ -17,6 +17,7 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 	const [rootGroup, setRootGroup] = useState(null);
 	const [accessControl, setAccessControl] = useState(rule.access_control || "access");
 	const [contentTargets, setContentTargets] = useState([]); // Rule-level content targets
+	
 
 	// Initialize root group from rule data
 	useEffect(() => {
@@ -233,11 +234,12 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 				onGroupUpdate={handleRootGroupUpdate}
 				onGroupRemove={() => {}} // Root group cannot be removed
 				isNested={false}
-								accessControl={accessControl}
-								onAccessControlChange={setAccessControl}
-								contentTargets={contentTargets}
-								onContentTargetsChange={setContentTargets}
-							/>
+				accessControl={accessControl}
+				onAccessControlChange={setAccessControl}
+				contentTargets={contentTargets}
+				onContentTargetsChange={setContentTargets}
+				isMigrated={Boolean(rule.is_migrated)}
+			/>
 
 				{/* Save Button */}
 
