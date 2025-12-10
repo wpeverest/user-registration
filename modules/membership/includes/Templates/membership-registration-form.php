@@ -7,6 +7,10 @@
 <!--user registration section-->
 <div id="ur-membership-registration" class="ur_membership_registration_container ur-form-container">
 	<?php
+		$is_coupon_addon_activated = ur_check_module_activation('coupon');
+		if ( $is_coupon_addon_activated ) :
+			$membership_ids_link_with_coupons = ur_get_membership_ids_link_with_coupons();
+		endif;
 	if ( false ):
 		?>
 		<h3 class="ur_membership_title"><?php echo esc_html__( 'Sign Up', 'user-registration' ); ?></h3>
@@ -131,7 +135,8 @@
 							data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
 							data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
 							data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['amount'] ); ?>"
-							data-urm-default-pg="<?php echo $urm_default_pg; ?>"
+							data-urm-default-pg="<?php echo esc_attr( $urm_default_pg ); ?>"
+							data-has-coupon-link="<?php echo esc_attr( in_array( $membership['ID'], $membership_ids_link_with_coupons ) ? 'yes' : 'no' ); ?>"
 						<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
 					>
 					<span
@@ -150,7 +155,6 @@
 	</div>
 	<!--	coupon container-->
 	<?php
-	$is_coupon_addon_activated = ur_check_module_activation('coupon');
 
 	if ( $is_coupon_addon_activated ) :
 		?>
