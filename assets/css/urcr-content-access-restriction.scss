@@ -444,7 +444,22 @@ $border-left-color_3: #0073aa;
 .urcr-rule-settings-panel {
 	.ur-form-group {
 		display: flex;
+		align-items: center;
 		margin-bottom: 28px;
+
+		@media screen and (max-width: 600px) {
+			flex-direction: column;
+			align-items: flex-start !important;
+			gap: 8px;
+		}
+
+		&:has(.wp-editor-wrap) {
+			align-items: flex-start;
+
+			.urcr-label-container {
+				margin-bottom: 10px;
+			}
+		}
 
 		.urcr-label-container {
 			position: relative;
@@ -456,6 +471,12 @@ $border-left-color_3: #0073aa;
 			flex: 0 0 38%;
 			margin-bottom: 0;
 			padding: 0;
+
+			@media screen and (max-width: 600px) {
+				flex: unset;
+				max-width: 100%;
+				width: 100%;
+			}
 
 			.user-registration-help-tip {
 				font-size: 16px;
@@ -471,6 +492,10 @@ $border-left-color_3: #0073aa;
 		.urcr-body,
 		.urcr-input-container {
 			flex: 1;
+
+			@media screen and (max-width: 600px) {
+				width: 100%;
+			}
 		}
 
 		.urcr-body {
@@ -478,6 +503,10 @@ $border-left-color_3: #0073aa;
 				display: flex;
 				align-items: center;
 				gap: 12px;
+
+				@media screen and (max-width: 1199px) {
+					flex-direction: column;
+				}
 
 				.urcr-input {
 					margin-bottom: 0 !important;
