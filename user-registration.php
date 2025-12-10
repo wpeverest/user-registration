@@ -549,7 +549,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		/**
 		 * Enable multiple registration module for old user.
 		 *
-		 * @since xx.xx.xx
+		 * @since 5.0.0
 		 */
 		public function enable_multiple_registration_forms(){
 			$is_migrated = get_option( 'user_registration_multiple_registration_migration', false );
