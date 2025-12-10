@@ -254,4 +254,85 @@ class ListTable extends \UR_List_Table {
 
 		return $actions;
 	}
+
+	/**
+	 * Override prepare_items to use saved membership order.
+	 *
+	 * @return void
+	 */
+	public function prepare_items() {
+		$this->prepare_column_headers();
+		$per_page     = $this->get_items_per_page( $this->per_page_option );
+		$current_page = $this->get_pagenum();
+
+		// Query args.
+		$args = array(
+			'post_type'           => $this->post_type,
+			'posts_per_page'      => $per_page,
+			'ignore_sticky_posts' => true,
+			'paged'               => $current_page,
+		);
+
+		// Handle the status query.
+		if ( ! empty( $_REQUEST['status'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$args['post_status'] = sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
+		// Handle the search query.
+		if ( ! empty( $_REQUEST['s'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$args['s'] = trim( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
+		// Check for saved membership order (only if not searching and no status filter)
+		$saved_order = get_option( 'ur_membership_order', array() );
+		if ( ! empty( $saved_order ) && empty( $_REQUEST['s'] ) && empty( $_REQUEST['status'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			// Get all membership IDs to find any new ones not in saved order
+			$all_memberships_query = new \WP_Query(
+				array(
+					'post_type'      => $this->post_type,
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+					'post_status'    => ! empty( $args['post_status'] ) ? $args['post_status'] : 'any',
+				)
+			);
+			$all_membership_ids = $all_memberships_query->posts;
+			
+			// Merge saved order with any new memberships not in the saved order
+			$new_memberships = array_diff( $all_membership_ids, $saved_order );
+			$final_order     = array_merge( $saved_order, $new_memberships );
+			
+			// Use saved order with new memberships appended
+			$args['post__in'] = $final_order;
+			$args['orderby']  = 'post__in';
+			$args['order']    = 'ASC';
+		} else {
+			// Use default ordering
+			$args['orderby'] = isset( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'date_created'; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$args['order']   = isset( $_REQUEST['order'] ) && 'ASC' === strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ) ? 'ASC' : 'DESC'; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
+		// Get the memberships.
+		$query_posts = new \WP_Query( $args );
+		$this->items = $query_posts->posts;
+
+		// Set the pagination.
+		$this->set_pagination_args(
+			array(
+				'total_items' => $query_posts->found_posts,
+				'per_page'    => $per_page,
+				'total_pages' => $query_posts->max_num_pages,
+			)
+		);
+	}
+
+	/**
+	 * Override single_row to add data-membership-id attribute.
+	 *
+	 * @param object $item The current item.
+	 */
+	public function single_row( $item ) {
+		echo '<tr id="membership-' . esc_attr( $item->ID ) . '" data-membership-id="' . esc_attr( $item->ID ) . '" class="ur-membership-sortable-row">';
+		$this->single_row_columns( $item );
+		echo '</tr>';
+	}
 }

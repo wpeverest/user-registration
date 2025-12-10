@@ -1754,3 +1754,74 @@
 		}
 	}
 }
+
+// Drag-and-drop sorting styles for membership table
+#membership-list {
+	tbody#the-list {
+		.ur-membership-sortable-row {
+			cursor: move;
+			cursor: grab;
+			cursor: -webkit-grab;
+
+			&:active {
+				cursor: grabbing;
+				cursor: -webkit-grabbing;
+			}
+		}
+
+		// Sortable drag states (jQuery UI Sortable)
+		.ui-sortable-helper {
+			opacity: 0.8;
+			box-shadow: 0 2px 8px rgba(72, 91, 178, 0.2);
+			background: rgba(72, 91, 178, 0.1);
+			border-color: rgba(72, 91, 178, 0.3);
+		}
+
+		.ur-sortable-placeholder {
+			opacity: 0.5;
+			background: rgba(72, 91, 178, 0.08);
+			border: 2px dashed rgba(72, 91, 178, 0.2);
+			visibility: visible !important;
+		}
+
+		tr.ui-sortable-helper {
+			display: table-row;
+		}
+	}
+}
+
+// Update Order button container
+.ur-membership-order-controls {
+	display: flex;
+	align-items: center;
+	margin: 15px 0;
+	padding: 12px 15px;
+	background: #fff;
+	border: 1px solid #ccd0d4;
+	border-radius: 4px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+
+	&.ur-hidden {
+		display: none;
+	}
+
+	.ur-update-membership-order-btn {
+		margin: 0;
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 120px;
+
+		.ur-update-order-btn-text {
+			display: inline-block;
+		}
+
+		.ur-spinner {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+		}
+	}
+}

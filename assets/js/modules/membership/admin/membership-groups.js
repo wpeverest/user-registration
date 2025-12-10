@@ -570,13 +570,13 @@
 				active_payment_gateways = urmg_data.active_payment_gateways || {},
 				plugin_url = urmg_data.plugin_url || '',
 				currency_symbol = urmg_data.currency_symbol || '$';
-			
+
 			if (plans.length === 0) {
 				empty_urmg.text(user_registration_form_builder_data.i18n_admin.i18n_prompt_no_membership_available);
 				empty_urmg.show();
 				return;
 			}
-			
+
 			// Hide empty label when there are memberships
 			empty_urmg.hide();
 			// Build membership plans HTML
@@ -626,7 +626,7 @@
 
 			if (show_payment_gateways && Object.keys(active_payment_gateways).length > 0) {
 				html += '<div class="urmg-payment-gateways">';
-				html += '<label class="urmg-payment-gateways-label">Select Payment Gateway <span class="required">*</span></label>';
+				html += '<label class="urmg-payment-gateways-label">'+ urmg_data.labels.i18n_prompt_no_membership_selected +'<span class="required">*</span></label>';
 				html += '<div class="urmg-gateway-buttons">';
 
 				var gateway_index = 0;

@@ -413,6 +413,31 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 			$active_payment_gateways = array();
 		}
 
+		// Sort memberships by saved order if available
+		$saved_order = get_option( 'ur_membership_order', array() );
+		if ( ! empty( $saved_order ) && ! empty( $new_mem ) ) {
+			$order_map = array_flip( $saved_order );
+
+			$ordered_memberships = array();
+			$unordered_memberships = array();
+
+			foreach ( $new_mem as $membership ) {
+				$membership_id = isset( $membership['ID'] ) ? (int) $membership['ID'] : 0;
+				if ( isset( $order_map[ $membership_id ] ) ) {
+					$ordered_memberships[ $order_map[ $membership_id ] ] = $membership;
+				} else {
+					// Membership is not in saved order, append at end
+					$unordered_memberships[] = $membership;
+				}
+			}
+
+			ksort( $ordered_memberships );
+
+			// Merge ordered and unordered memberships
+			$new_mem = array_values( $ordered_memberships );
+			$new_mem = array_merge( $new_mem, $unordered_memberships );
+		}
+
 		return $new_mem;
 	}
 }
@@ -701,7 +726,7 @@ if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
 		switch ( $gateway_key ) {
 			case 'paypal':
 				$paypal_email = get_option( 'user_registration_global_paypal_email_address' );
-				
+
 				// For subscription type, also check for client_id and client_secret.
 				if ( 'subscription' === $membership_type ) {
 					$paypal_client_id     = get_option( 'user_registration_global_paypal_client_id' );

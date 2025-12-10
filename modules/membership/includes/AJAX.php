@@ -56,6 +56,7 @@ class AJAX {
 			'delete_memberships'           => false,
 			'delete_membership'            => false,
 			'update_membership_status'     => false,
+			'update_membership_order'      => false,
 			'create_member'                => false,
 			'edit_member'                  => false,
 			'delete_members'               => false,
@@ -699,6 +700,76 @@ class AJAX {
 			wp_send_json_error(
 				array(
 					'message' => esc_html__( 'Sorry! There was an unexpected error while saving the membership data . ', 'user-registration' ),
+				)
+			);
+		}
+	}
+
+	/**
+	 * Update membership order.
+	 *
+	 * @return void
+	 */
+	public static function update_membership_order() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Sorry, You do not have permission to update membership order', 'user-registration' ),
+				)
+			);
+		}
+
+		// Verify nonce
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'ur_membership_update_order' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Security check failed. Please refresh the page and try again.', 'user-registration' ),
+				)
+			);
+		}
+
+		// Get membership order array
+		if ( ! isset( $_POST['membership_order'] ) || ! is_array( $_POST['membership_order'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Invalid membership order data.', 'user-registration' ),
+				)
+			);
+		}
+
+		// Sanitize membership IDs
+		$membership_order = array_map( 'absint', $_POST['membership_order'] );
+
+		// Validate that all IDs are valid membership posts
+		$valid_ids = array();
+		foreach ( $membership_order as $membership_id ) {
+			$post = get_post( $membership_id );
+			if ( $post && 'ur_membership' === $post->post_type ) {
+				$valid_ids[] = $membership_id;
+			}
+		}
+
+		if ( empty( $valid_ids ) ) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'No valid membership IDs provided.', 'user-registration' ),
+				)
+			);
+		}
+
+		// Save order to WordPress option
+		$updated = update_option( 'ur_membership_order', $valid_ids, false );
+
+		if ( $updated !== false ) {
+			wp_send_json_success(
+				array(
+					'message' => esc_html__( 'Membership order updated successfully.', 'user-registration' ),
+				)
+			);
+		} else {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Failed to update membership order.', 'user-registration' ),
 				)
 			);
 		}

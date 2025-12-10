@@ -1734,3 +1734,56 @@
 .wp-list-table.users td p {
   margin: 7px 0 5px;
 }
+
+#membership-list tbody#the-list .ur-membership-sortable-row {
+  cursor: move;
+  cursor: grab;
+  cursor: -webkit-grab;
+}
+#membership-list tbody#the-list .ur-membership-sortable-row:active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+#membership-list tbody#the-list .ur-sortable-ghost {
+  opacity: 0.4;
+  background: #f0f0f1;
+}
+#membership-list tbody#the-list .ur-sortable-chosen {
+  background: rgba(72, 91, 178, 0.1);
+  border-color: rgba(72, 91, 178, 0.3);
+}
+#membership-list tbody#the-list .ur-sortable-drag {
+  opacity: 0.8;
+  box-shadow: 0 2px 8px rgba(72, 91, 178, 0.2);
+}
+
+.ur-membership-order-controls {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+  padding: 12px 15px;
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+.ur-membership-order-controls.ur-hidden {
+  display: none;
+}
+.ur-membership-order-controls .ur-update-membership-order-btn {
+  margin: 0;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+}
+.ur-membership-order-controls .ur-update-membership-order-btn .ur-update-order-btn-text {
+  display: inline-block;
+}
+.ur-membership-order-controls .ur-update-membership-order-btn .ur-spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}

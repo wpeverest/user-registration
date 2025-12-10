@@ -1127,4 +1127,123 @@
 				break;
 		}
 	});
+
+	// Initialize drag-and-drop sorting for membership table
+	var $membershipTable = $('#membership-list tbody#the-list');
+	
+	if ($membershipTable.length > 0 && $.fn.sortable) {
+		// Get button text
+		var updateOrderButtonText = ur_membership_data.labels && ur_membership_data.labels.i18n_update_order ? ur_membership_data.labels.i18n_update_order : 'Update Order';
+		
+		// Add Update Order button container
+		var $updateOrderContainer = $('<div class="ur-membership-order-controls ur-hidden"><button type="button" class="button button-primary ur-update-membership-order-btn">' + 
+			'<span class="ur-update-order-btn-text">' + updateOrderButtonText + '</span>' + 
+			'</button></div>');
+		
+		$membershipTable.before($updateOrderContainer);
+		var $updateOrderBtn = $updateOrderContainer.find('.ur-update-membership-order-btn');
+		var $updateOrderBtnText = $updateOrderContainer.find('.ur-update-order-btn-text');
+		
+		// Initialize jQuery UI Sortable
+		$membershipTable.sortable({
+			items: 'tr[data-membership-id]',
+			cancel: '.no-items',
+			cursor: 'move',
+			opacity: 0.8,
+			placeholder: 'ur-sortable-placeholder',
+			helper: function(e, tr) {
+				var $originals = tr.children();
+				var $helper = tr.clone();
+				$helper.children().each(function(index) {
+					$(this).width($originals.eq(index).width());
+				});
+				return $helper;
+			},
+			start: function(e, ui) {
+				ui.placeholder.height(ui.item.height());
+			},
+			stop: function(e, ui) {
+				// Reset button state and show Update Order button when drag ends
+				$updateOrderBtn.prop('disabled', false);
+				$updateOrderBtn.find('.ur-spinner').remove();
+				$updateOrderBtnText.text(updateOrderButtonText).show();
+				$updateOrderContainer.removeClass('ur-hidden').fadeIn(200);
+			}
+		});
+
+			// Handle Update Order button click
+			$updateOrderContainer.on('click', '.ur-update-membership-order-btn', function(e) {
+				e.preventDefault();
+
+				// Disable button and show spinner during request
+				$updateOrderBtn.prop('disabled', true);
+				$updateOrderBtnText.hide();
+				$updateOrderBtn.append('<span class="ur-spinner is-active"></span>');
+
+				// Collect membership IDs in current order
+				var membershipOrder = [];
+				$membershipTable.find('tr[data-membership-id]').each(function() {
+					var membershipId = $(this).attr('data-membership-id');
+					if (membershipId) {
+						membershipOrder.push(parseInt(membershipId, 10));
+					}
+				});
+
+				if (membershipOrder.length === 0) {
+					$updateOrderBtn.find('.ur-spinner').remove();
+					$updateOrderBtnText.text(updateOrderButtonText).show();
+					$updateOrderBtn.prop('disabled', false);
+
+					// Show error message via snackbar if available
+					if (ur_membership_utils && ur_membership_utils.show_failure_message) {
+						ur_membership_utils.show_failure_message('No memberships found.');
+					}
+					return;
+				}
+
+				// Send AJAX request
+				$.ajax({
+					url: ur_membership_data.ajax_url,
+					type: 'POST',
+					data: {
+						action: ur_membership_data.update_order_action,
+						nonce: ur_membership_data.update_order_nonce,
+						membership_order: membershipOrder
+					},
+					success: function(response) {
+						// Remove spinner and reset button
+						$updateOrderBtn.find('.ur-spinner').remove();
+						$updateOrderBtnText.text(updateOrderButtonText).show();
+						$updateOrderBtn.prop('disabled', false);
+
+						if (response.success) {
+							// Show success message via snackbar if available
+							if (ur_membership_utils && ur_membership_utils.show_success_message) {
+								ur_membership_utils.show_success_message(response.data.message || 'Membership order updated successfully.');
+							}
+
+							// Hide container after delay
+							$updateOrderContainer.delay(1000).fadeOut(300, function() {
+								$updateOrderContainer.addClass('ur-hidden');
+							});
+						} else {
+							// Show error message via snackbar if available
+							if (ur_membership_utils && ur_membership_utils.show_failure_message) {
+								ur_membership_utils.show_failure_message(response.data.message || 'Failed to update membership order.');
+							}
+						}
+					},
+					error: function(xhr, status, error) {
+						// Remove spinner and reset button
+						$updateOrderBtn.find('.ur-spinner').remove();
+						$updateOrderBtnText.text(updateOrderButtonText).show();
+						$updateOrderBtn.prop('disabled', false);
+
+						if (ur_membership_utils && ur_membership_utils.show_failure_message) {
+							ur_membership_utils.show_failure_message('Network error. Please try again.');
+						}
+					}
+				});
+			});
+		}
 })(jQuery, window.ur_membership_localized_data);
