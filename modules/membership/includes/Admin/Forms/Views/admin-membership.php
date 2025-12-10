@@ -22,8 +22,7 @@ $membership_list_options = isset( $this->admin_data->general_setting->membership
 	: 'all';
 
 // Initialize variables.
-$memberships       = array();
-$empty_label_style = "style='display:none;'";
+$memberships = array();
 
 // Fetch memberships based on listing option.
 if ( 'group' === $membership_list_options ) {
@@ -52,17 +51,13 @@ if ( 'group' === $membership_list_options ) {
 			$memberships = $membership_group_service->get_group_memberships( $selected_group_id );
 		}
 	}
-
-	$empty_label_style = ! empty( $selected_group_id )
-						 && $group_status
-						 && ! empty( $memberships )
-						 && 'group' === $membership_list_options
-		? ''
-		: " style='display:none;'";
 } else {
 	$membership_service = new MembershipService();
 	$memberships        = $membership_service->list_active_memberships();
 }
+
+// Set empty label style based on whether memberships array is empty
+$empty_label_style = empty( $memberships ) ? '' : " style='display:none;'";
 
 // Get currency configuration.
 $currency   = get_option( 'user_registration_payment_currency', 'USD' );

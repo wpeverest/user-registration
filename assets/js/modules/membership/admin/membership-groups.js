@@ -563,16 +563,22 @@
 		 */
 		handle_membership_by_group_success_response: function (data, group_id) {
 			var urmg_container = $('.urmg-container'),
+				empty_urmg = $('.empty-urmg-label'),
 				plans = data.plans || [],
 				html = '',
 				gateway_images = urmg_data.gateway_images || {},
 				active_payment_gateways = urmg_data.active_payment_gateways || {},
 				plugin_url = urmg_data.plugin_url || '',
 				currency_symbol = urmg_data.currency_symbol || '$';
-			console.log(active_payment_gateways)
+			
 			if (plans.length === 0) {
+				empty_urmg.text(user_registration_form_builder_data.i18n_admin.i18n_prompt_no_membership_available);
+				empty_urmg.show();
 				return;
 			}
+			
+			// Hide empty label when there are memberships
+			empty_urmg.hide();
 			// Build membership plans HTML
 			html += '<div class="urmg-membership-plans">';
 			$(plans).each(function (k, item) {
