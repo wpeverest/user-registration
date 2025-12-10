@@ -45,12 +45,12 @@ class MembershipGroups {
 			'user-registration-membership-groups',
 			'urmg_localized_data',
 			array(
-				'_nonce'              => wp_create_nonce( 'ur_membership_group' ),
-				'ajax_url'            => admin_url( 'admin-ajax.php' ),
-				'membership_group_id' => $membership_group_id,
-				'labels'              => $this->get_i18_labels(),
+				'_nonce'               => wp_create_nonce( 'ur_membership_group' ),
+				'ajax_url'             => admin_url( 'admin-ajax.php' ),
+				'membership_group_id'  => $membership_group_id,
+				'labels'               => $this->get_i18_labels(),
 				'membership_group_url' => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
-				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE )
+				'delete_icon'          => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
 			)
 		);
 	}

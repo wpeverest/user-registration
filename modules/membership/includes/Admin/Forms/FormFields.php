@@ -73,13 +73,46 @@ class FormFields {
 	}
 
 	public function localize_scripts() {
+		// Get all available payment gateways
+		$payment_gateways = get_option(
+			'ur_membership_payment_gateways',
+			array(
+				'paypal' => __( 'PayPal', 'user-registration' ),
+				'stripe' => __( 'Stripe', 'user-registration' ),
+				'bank'   => __( 'Bank', 'user-registration' ),
+			)
+		);
+
+		// Get active/configured payment gateways
+		$active_payment_gateways = urm_get_all_active_payment_gateways( 'paid' );
+
+		// Map payment gateway keys to their image filenames
+		$gateway_images = array(
+			'paypal'        => 'paypal.png',
+			'stripe'        => 'stripe.png',
+			'bank'          => 'bank.png',
+			'authorize'     => 'authorize-net.png',
+			'authorize_net' => 'authorize-net.png',
+			'mollie'        => 'mollie.png',
+		);
+
+		// Get currency symbol
+		$currency   = get_option( 'user_registration_payment_currency', 'USD' );
+		$currencies = ur_payment_integration_get_currencies();
+		$symbol     = isset( $currencies[ $currency ]['symbol'] ) ? $currencies[ $currency ]['symbol'] : '$';
+
 		wp_localize_script(
 			'user-registration-membership-groups',
 			'urmg_localized_data',
 			array(
-				'_nonce'   => wp_create_nonce( 'ur_membership_group' ),
-				'ajax_url' => admin_url( 'admin-ajax.php' ),
-				'labels'   => $this->get_i18_labels(),
+				'_nonce'                  => wp_create_nonce( 'ur_membership_group' ),
+				'ajax_url'                => admin_url( 'admin-ajax.php' ),
+				'labels'                  => $this->get_i18_labels(),
+				'plugin_url'              => UR()->plugin_url(),
+				'gateway_images'          => $gateway_images,
+				'payment_gateways'        => $payment_gateways,
+				'active_payment_gateways' => $active_payment_gateways,
+				'currency_symbol'         => $symbol,
 			)
 		);
 	}

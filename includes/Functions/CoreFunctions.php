@@ -557,3 +557,183 @@ if ( ! function_exists( 'urm_get_date_at_percent_interval' ) ) {
 		return $targetDate->format( 'Y-m-d 00:00:00' );
 	}
 }
+
+if ( ! function_exists( 'urm_get_plan_description' ) ) {
+	/**
+	 * Get plan description based on type and period.
+	 *
+	 * @param string $plan_type Plan type.
+	 * @param string $plan_period Plan period.
+	 * @return string
+	 */
+	function urm_get_plan_description( $plan_type, $plan_period ) {
+		if ( 'free' === $plan_type ) {
+			return __( 'Completely Free', 'user-registration' );
+		}
+
+		$period_lower = strtolower( $plan_period );
+		if ( false !== strpos( $period_lower, 'month' ) ) {
+			return __( 'This will be billed every month', 'user-registration' );
+		}
+
+		if ( false !== strpos( $period_lower, 'lifetime' ) ) {
+			return __( 'This is a one-time payment', 'user-registration' );
+		}
+
+		return '';
+	}
+}
+
+if ( ! function_exists( 'urm_get_gateway_image_url' ) ) {
+	/**
+	 * Get payment gateway image URL.
+	 *
+	 * @param string $gateway_key Gateway key.
+	 * @param array  $gateway_images Gateway images mapping.
+	 * @param string $plugin_url Plugin URL.
+	 * @return string
+	 */
+	function urm_get_gateway_image_url( $gateway_key, $gateway_images, $plugin_url ) {
+		$image_file = isset( $gateway_images[ $gateway_key ] ) ? $gateway_images[ $gateway_key ] : '';
+
+		if ( empty( $image_file ) ) {
+			return '';
+		}
+
+		return esc_url( $plugin_url . '/assets/images/settings-icons/' . $image_file );
+	}
+}
+
+if ( ! function_exists( 'urm_get_active_gateways_for_plan' ) ) {
+	/**
+	 * Parse active payment gateways from membership option.
+	 *
+	 * @param array $option Membership option data.
+	 * @param array $payment_gateways Available payment gateways.
+	 * @return array
+	 */
+	function urm_get_active_gateways_for_plan( $option, $payment_gateways ) {
+		$active_gateways = array();
+
+		if ( empty( $option['active_payment_gateways'] ) ) {
+			return $active_gateways;
+		}
+
+		$gateways_json = is_string( $option['active_payment_gateways'] )
+			? json_decode( $option['active_payment_gateways'], true )
+			: $option['active_payment_gateways'];
+
+		if ( ! is_array( $gateways_json ) ) {
+			return $active_gateways;
+		}
+
+		foreach ( $gateways_json as $gateway => $status ) {
+			if ( 'on' === $status && isset( $payment_gateways[ $gateway ] ) ) {
+				$active_gateways[ $gateway ] = $payment_gateways[ $gateway ];
+			}
+		}
+
+		return $active_gateways;
+	}
+}
+
+if ( ! function_exists( 'urm_get_all_active_payment_gateways' ) ) {
+	/**
+	 * Get all payment gateways that are configured/setup.
+	 *
+	 * This function retrieves all available payment gateways and checks if they
+	 * have the required settings configured. Only gateways with settings are returned.
+	 *
+	 * @param string $membership_type Optional. The membership type ('paid' or 'subscription').
+	 *                                Used for PayPal check. Default 'paid'.
+	 * @return array Associative array of configured payment gateways where keys are gateway IDs
+	 *               and values are gateway labels.
+	 */
+	function urm_get_all_active_payment_gateways( $membership_type = 'paid' ) {
+		// Get all available payment gateways.
+		$payment_gateways = get_option(
+			'ur_membership_payment_gateways',
+			array(
+				'paypal' => __( 'PayPal', 'user-registration' ),
+				'stripe' => __( 'Stripe', 'user-registration' ),
+				'bank'   => __( 'Bank', 'user-registration' ),
+			)
+		);
+
+		if ( empty( $payment_gateways ) || ! is_array( $payment_gateways ) ) {
+			return array();
+		}
+
+		$active_gateways = array();
+
+		foreach ( $payment_gateways as $gateway_key => $gateway_label ) {
+			// Check if payment gateway is configured.
+			if ( urm_is_payment_gateway_configured( $gateway_key, $membership_type ) ) {
+				$active_gateways[ $gateway_key ] = $gateway_label;
+			}
+		}
+
+		/**
+		 * Filters the list of active payment gateways.
+		 *
+		 * @param array  $active_gateways Active payment gateways.
+		 * @param string $membership_type Membership type.
+		 * @return array
+		 */
+		return apply_filters( 'urm_active_payment_gateways', $active_gateways, $membership_type );
+	}
+}
+
+if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
+	/**
+	 * Check if a payment gateway is configured (has settings).
+	 *
+	 * This function checks if a payment gateway has the required settings configured,
+	 * without validating if they are correct or complete.
+	 *
+	 * @param string $gateway_key     Payment gateway key (e.g., 'paypal', 'stripe', 'bank').
+	 * @param string $membership_type Optional. Membership type for PayPal check. Default 'paid'.
+	 * @return bool True if gateway is configured, false otherwise.
+	 */
+	function urm_is_payment_gateway_configured( $gateway_key, $membership_type = 'paid' ) {
+		$is_configured = false;
+
+		switch ( $gateway_key ) {
+			case 'paypal':
+				$paypal_email = get_option( 'user_registration_global_paypal_email_address' );
+				
+				// For subscription type, also check for client_id and client_secret.
+				if ( 'subscription' === $membership_type ) {
+					$paypal_client_id     = get_option( 'user_registration_global_paypal_client_id' );
+					$paypal_client_secret = get_option( 'user_registration_global_paypal_client_secret' );
+					$is_configured        = ! empty( $paypal_email ) && ! empty( $paypal_client_id ) && ! empty( $paypal_client_secret );
+				} else {
+					$is_configured = ! empty( $paypal_email );
+				}
+				break;
+
+			case 'stripe':
+				$mode            = get_option( 'user_registration_stripe_test_mode', false ) ? 'test' : 'live';
+				$publishable_key = get_option( sprintf( 'user_registration_stripe_%s_publishable_key', $mode ) );
+				$secret_key      = get_option( sprintf( 'user_registration_stripe_%s_secret_key', $mode ) );
+				$is_configured   = ! empty( $publishable_key ) && ! empty( $secret_key );
+				break;
+
+			default:
+				// For bank and other gateways, check if bank details are configured.
+				$bank_details = get_option( 'user_registration_global_bank_details' );
+				$is_configured = ! empty( $bank_details );
+				break;
+		}
+
+		/**
+		 * Filters whether the payment gateway is configured.
+		 *
+		 * @param bool   $is_configured  Whether the gateway is configured.
+		 * @param string $gateway_key    Payment gateway key.
+		 * @param string $membership_type Membership type.
+		 * @return bool
+		 */
+		return apply_filters( 'urm_is_payment_gateway_configured', $is_configured, $gateway_key, $membership_type );
+	}
+}

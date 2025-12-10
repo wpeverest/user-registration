@@ -562,12 +562,89 @@
 		 * @return {void}
 		 */
 		handle_membership_by_group_success_response: function (data, group_id) {
-			var membership_details = '',
-				urmg_container = $('.urmg-container');
-			$(data.plans).each(function (k, item) {
-				membership_details += '<label><input type="radio" value="' + item.ID + '" disabled/><span class="urm-membership-title">' + item.title + '</span> - <span> ' + item.period + ' </span></label>';
+			var urmg_container = $('.urmg-container'),
+				plans = data.plans || [],
+				html = '',
+				gateway_images = urmg_data.gateway_images || {},
+				active_payment_gateways = urmg_data.active_payment_gateways || {},
+				plugin_url = urmg_data.plugin_url || '',
+				currency_symbol = urmg_data.currency_symbol || '$';
+			console.log(active_payment_gateways)
+			if (plans.length === 0) {
+				return;
+			}
+			// Build membership plans HTML
+			html += '<div class="urmg-membership-plans">';
+			$(plans).each(function (k, item) {
+				var is_first = k === 0,
+					selected_class = is_first ? 'selected' : '',
+					plan_id = item.ID || '',
+					plan_title = item.title || '',
+					plan_period = item.period || '',
+					plan_type = item.type || 'free',
+					plan_amount = item.amount || 0;
+
+				html += '<div class="urmg-plan-card ' + selected_class + '" data-plan-id="' + plan_id + '" data-plan-amount="' + plan_amount + '" data-plan-type="' + plan_type + '">';
+				html += '<input type="radio" name="urm_membership" value="' + plan_id + '" ' + (is_first ? 'checked' : '') + ' disabled/>';
+				html += '<div class="urmg-plan-header">';
+				html += '<div>';
+				html += '<div class="urmg-plan-title">' + plan_title + '</div>';
+				html += '</div>';
+				html += '<div class="urmg-plan-price">' + plan_period + '</div>';
+				html += '</div>';
+				html += '</div>';
 			});
-			urmg_container.append(membership_details);
+			html += '</div>';
+
+			// Build total section
+			var total_amount = currency_symbol + '0.00';
+			html += '<div class="urmg-total-container">';
+			html += '<span class="urmg-total-label">Total:</span>';
+			html += '<span class="urmg-total-amount" id="urmg-total-amount">' + total_amount + '</span>';
+			html += '</div>';
+
+			// Build payment gateway selection - only show if there's more than one membership, or if single membership is not free
+			var show_payment_gateways = false;
+
+			if (plans.length > 1) {
+				// If more than one membership, always show payment gateways
+				show_payment_gateways = true;
+			} else if (plans.length === 1) {
+				// If only one membership, check if it's not free
+				var first_plan = plans[0];
+				var plan_type = first_plan.type || 'free';
+				if (plan_type !== 'free') {
+					show_payment_gateways = true;
+				}
+			}
+
+			if (show_payment_gateways && Object.keys(active_payment_gateways).length > 0) {
+				html += '<div class="urmg-payment-gateways">';
+				html += '<label class="urmg-payment-gateways-label">Select Payment Gateway <span class="required">*</span></label>';
+				html += '<div class="urmg-gateway-buttons">';
+
+				var gateway_index = 0;
+				$.each(active_payment_gateways, function(gateway_key, gateway_label) {
+					var is_first_gateway = gateway_index === 0,
+						selected_gateway_class = is_first_gateway ? 'selected' : '',
+						image_file = gateway_images[gateway_key] || '',
+						image_url = image_file ? plugin_url + '/assets/images/settings-icons/' + image_file : '';
+
+					html += '<label class="urmg-gateway-btn ' + selected_gateway_class + '">';
+					html += '<input type="radio" name="urm_payment_method" value="' + gateway_key + '" ' + (is_first_gateway ? 'checked' : '') + ' disabled/>';
+					if (image_url) {
+						html += '<img src="' + image_url + '" alt="' + gateway_label + '" class="urmg-gateway-icon" />';
+					}
+					html += '<span class="urmg-gateway-label">' + gateway_label + '</span>';
+					html += '</label>';
+					gateway_index++;
+				});
+
+				html += '</div>';
+				html += '</div>';
+			}
+
+			urmg_container.append(html);
 			$('.ur-selected-inputs .ur-general-setting-membership_group').find('select[data-field="membership_group"]  option[value="' + group_id + '"]').attr('selected', 'selected');
 		},
 		/**

@@ -1518,6 +1518,181 @@
 	line-height: 1;
 }
 
+// Membership field admin template styles
+.ur-admin-template {
+	&.ur-input-type-select {
+		.urmg-container {
+			.urmg-membership-plans {
+				display: flex;
+				flex-direction: column;
+				gap: $spacing_16px;
+				margin: $spacing_20px 0;
+
+				.urmg-plan-card {
+					border: 2px solid #e0e0e0;
+					border-radius: $border_radius_4;
+					padding: $spacing_20px;
+					cursor: pointer;
+					transition: all 0.3s ease;
+					background: $white;
+					position: relative;
+
+					&:hover {
+						border-color: $primary_color;
+					}
+
+					&.selected {
+						border-color: $primary_color;
+						background: #f0f8ff;
+					}
+
+					input[type="radio"] {
+						position: absolute;
+						opacity: 0;
+						pointer-events: none;
+					}
+
+					.urmg-plan-header {
+						display: flex;
+						justify-content: space-between;
+						align-items: flex-start;
+						margin-bottom: $spacing_10px;
+						padding-left: $spacing_28px;
+					}
+
+					.urmg-plan-title {
+						font-size: 18px;
+						font-weight: $semi_bold;
+						color: #333;
+						margin: 0;
+					}
+
+					.urmg-plan-price {
+						font-size: 18px;
+						font-weight: $semi_bold;
+						color: #333;
+						text-align: right;
+					}
+
+					.urmg-plan-description {
+						font-size: 14px;
+						color: $grey-400;
+						margin-top: $spacing_8px;
+					}
+
+					.urmg-plan-radio {
+						position: absolute;
+						top: $spacing_20px;
+						left: $spacing_20px;
+						width: 20px;
+						height: 20px;
+						border: 2px solid #ccc;
+						border-radius: 50%;
+						background: $white;
+						transition: all 0.3s ease;
+					}
+
+					&.selected {
+						.urmg-plan-radio {
+							border-color: $primary_color;
+							background: $primary_color;
+
+							&::after {
+								content: '';
+								position: absolute;
+								top: 50%;
+								left: 50%;
+								transform: translate(-50%, -50%);
+								width: 8px;
+								height: 8px;
+								border-radius: 50%;
+								background: $white;
+							}
+						}
+					}
+				}
+			}
+
+			.urmg-total-container {
+				border: 2px dashed #ccc;
+				border-radius: $border_radius_4;
+				padding: $spacing_16px $spacing_20px;
+				margin: $spacing_20px 0;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				background: #f9f9f9;
+
+				.urmg-total-label {
+					font-size: 16px;
+					font-weight: $semi_bold;
+					color: #333;
+				}
+
+				.urmg-total-amount {
+					font-size: 18px;
+					font-weight: 700;
+					color: $primary_color;
+				}
+			}
+
+			.urmg-payment-gateways {
+				margin: $spacing_32px 0 $spacing_20px 0;
+
+				.urmg-payment-gateways-label {
+					font-size: 14px;
+					font-weight: $semi_bold;
+					color: #333;
+					margin-bottom: $spacing_16px;
+					display: block;
+
+					.required {
+						color: #dc3232;
+					}
+				}
+
+				.urmg-gateway-buttons {
+					display: flex;
+					gap: $spacing_16px;
+					flex-wrap: wrap;
+
+					.urmg-gateway-btn {
+						flex: 1;
+						min-width: 120px;
+						padding: $spacing_12px $spacing_20px;
+						border: 2px solid #e0e0e0;
+						border-radius: $border_radius_4;
+						background: $white;
+						cursor: pointer;
+						transition: all 0.3s ease;
+						text-align: center;
+						font-size: 14px;
+						font-weight: $medium;
+						color: #333;
+						position: relative;
+
+						&:hover {
+							border-color: $primary_color;
+						}
+
+						&.selected {
+							border-color: $primary_color;
+							background: #f0f8ff;
+							color: $primary_color;
+						}
+
+						input[type="radio"] {
+							position: absolute;
+							opacity: 0;
+							pointer-events: none;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 .user-registration-membership_page_user-registration-members {
 	background-color: #fafafa;
 }

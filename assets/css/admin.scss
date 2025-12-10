@@ -5811,6 +5811,11 @@ body.user-registration {
 											display: none;
 										}
 									}
+									&.ur-input-type-multi-select2 {
+										  .select2-search__field {
+											display: none;
+										}
+									}
 
 									.ur-field {
 										.ur-coupon-discount-type {
@@ -8541,6 +8546,172 @@ body.user-registration-page {
 				td,
 				th {
 					border-top-color: $border_color;
+				}
+			}
+		}
+	}
+}
+
+// Membership field admin template styles
+.ur-admin-template {
+	&.ur-input-type-select {
+		.ur-field {
+			.urmg-container {
+				.urmg-membership-plans {
+					display: flex;
+					flex-direction: column;
+					gap: $spacing_16px;
+					margin: $spacing_20px 0;
+
+					.urmg-plan-card {
+						border: 2px solid #e0e0e0;
+						border-radius: $border_radius_4;
+						padding: $spacing_20px;
+						cursor: pointer;
+						transition: all 0.3s ease;
+						background: $white;
+						position: relative;
+
+						&:hover {
+							border-color: $primary_color;
+						}
+
+						&.selected {
+							border-color: $primary_color;
+							background: #f0f8ff;
+						}
+
+						input[type="radio"] {
+							position: absolute;
+							top: $spacing_20px;
+							left: $spacing_20px;
+
+							&:checked::before {
+								background: $primary_color;
+							}
+						}
+
+						.urmg-plan-header {
+							display: flex;
+							justify-content: space-between;
+							align-items: flex-start;
+							margin-bottom: $spacing_10px;
+							padding-left: $spacing_28px;
+						}
+
+						.urmg-plan-title {
+							font-size: 18px;
+							font-weight: $semi_bold;
+							color: #333;
+							margin: 0;
+						}
+
+						.urmg-plan-price {
+							font-size: 18px;
+							font-weight: $semi_bold;
+							color: #333;
+							text-align: right;
+						}
+
+						.urmg-plan-description {
+							font-size: 14px;
+							color: $grey-400;
+							margin-top: $spacing_8px;
+						}
+					}
+				}
+
+				.urmg-total-container {
+					border: 2px dashed #ccc;
+					border-radius: $border_radius_4;
+					padding: $spacing_16px $spacing_20px;
+					margin: $spacing_20px 0;
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					background: #f9f9f9;
+
+					.urmg-total-label {
+						font-size: 16px;
+						font-weight: $semi_bold;
+						color: #333;
+					}
+
+					.urmg-total-amount {
+						font-size: 18px;
+						font-weight: 700;
+						color: $primary_color;
+					}
+				}
+				.urmg-payment-gateways {
+					margin: $spacing_32px 0 $spacing_20px 0;
+
+					.urmg-payment-gateways-label {
+						font-size: 14px;
+						font-weight: $semi_bold;
+						color: #333;
+						margin-bottom: $spacing_16px;
+						display: block;
+
+						.required {
+							color: #dc3232;
+						}
+					}
+
+					.urmg-gateway-buttons {
+						display: flex;
+						gap: $spacing_16px;
+						flex-wrap: wrap;
+
+						.urmg-gateway-btn {
+							flex: 1;
+							min-width: 120px;
+							padding: $spacing_12px $spacing_20px;
+							border: 2px solid #e0e0e0;
+							border-radius: $border_radius_4;
+							background: $white;
+							cursor: pointer;
+							transition: all 0.3s ease;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							gap: $spacing_8px;
+							font-size: 14px;
+							font-weight: $medium;
+							color: #333;
+							position: relative;
+
+							&:hover {
+								border-color: $primary_color;
+							}
+
+							&.selected {
+								border-color: $primary_color;
+								background: #f0f8ff;
+								color: $primary_color;
+							}
+
+							input[type="radio"] {
+								position: absolute;
+								opacity: 0;
+								pointer-events: none;
+							}
+
+							.urmg-gateway-icon {
+								width: 24px;
+								height: 24px;
+								max-width: 24px;
+								max-height: 24px;
+								object-fit: contain;
+								display: block;
+								flex-shrink: 0;
+							}
+
+							.urmg-gateway-label {
+								display: block;
+							}
+						}
+					}
 				}
 			}
 		}
