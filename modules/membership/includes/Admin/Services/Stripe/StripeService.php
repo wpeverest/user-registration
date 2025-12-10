@@ -836,7 +836,7 @@ class StripeService {
 			}
 		}
 		// delete coupon if new changes introduced
-		if ( $coupon_exists && ( $old_coupon_data['coupon_discount'] !== $data['post_meta_data']['coupon_discount'] || $old_coupon_data['coupon_discount_type'] !== $data['post_meta_data']['post_meta_data'] ) ) {
+		if ( $coupon_exists && ( $old_coupon_data['coupon_discount'] !== $data['post_meta_data']['coupon_discount'] || $old_coupon_data['coupon_discount_type'] !== $data['post_meta_data']['coupon_discount_type'] ) ) {
 			$coupon = \Stripe\Coupon::retrieve( $stripe_coupon_id );
 			$coupon->delete();
 		}
