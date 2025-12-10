@@ -5,9 +5,11 @@
 
         .accordion {
             padding: 22px 24px !important;
+            gap: 16px;
 
             .integration-detail {
                 display: flex;
+                flex-wrap: wrap;
                 align-items: center;
                 gap: 12px;
                 flex: 1;
@@ -31,7 +33,7 @@
                 align-items: center;
                 gap: 6px;
 
-                > svg {
+                >svg {
                     width: 24px;
                     height: 24px;
                     stroke: #737373;
@@ -46,7 +48,7 @@
             &.active {
                 border-bottom: 1px solid #EDF2F7;
 
-                ~ .user-registration-card__body {
+                ~.user-registration-card__body {
                     padding: 24px !important;
 
                     .urcr-rule-content-panel {
@@ -142,7 +144,7 @@
             height: 30px;
             background: transparent;
             border-radius: 4px;
-            transition: all .3s ease;   
+            transition: all .3s ease;
 
             &:hover {
                 background: #f4f4f4;

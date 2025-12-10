@@ -167,11 +167,6 @@ $border-left-color_3: #0073aa;
 }
 
 .urcr-integration-detail {
-	display: flex;
-	align-items: center;
-	gap: 0;
-	flex: 1;
-
 	.user-registration-card__title {
 		margin: 0;
 		flex-shrink: 0;
@@ -447,9 +442,49 @@ $border-left-color_3: #0073aa;
 }
 
 .urcr-rule-settings-panel {
-	margin-bottom: 20px;
-	padding-bottom: 20px;
-	border-bottom: 1px solid #e1e1e1;
+	.ur-form-group {
+		display: flex;
+		margin-bottom: 28px;
+
+		.urcr-label-container {
+			position: relative;
+			vertical-align: top;
+			line-height: 24px;
+			font-weight: 500;
+			color: #383838;
+			font-size: 14px;
+			flex: 0 0 38%;
+			margin-bottom: 0;
+			padding: 0;
+
+			.user-registration-help-tip {
+				font-size: 16px;
+				top: 3px;
+				left: 4px;
+
+				&::after {
+					height: 8px;
+				}
+			}
+		}
+
+		.urcr-body,
+		.urcr-input-container {
+			flex: 1;
+		}
+
+		.urcr-body {
+			.urcrra-shortcode-input {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+
+				.urcr-input {
+					margin-bottom: 0 !important;
+				}
+			}
+		}
+	}
 
 	h4 {
 		font-size: 14px;
@@ -990,7 +1025,8 @@ $border-left-color_3: #0073aa;
 		&-selection {
 			&__rendered {
 				.select2-search {
-					display: none;
+					height: 34px;
+					min-height: 34px;
 				}
 			}
 		}
@@ -1014,10 +1050,16 @@ $border-left-color_3: #0073aa;
 			width: 100%;
 			gap: 12px;
 
+			@media screen and (max-width: 1550px) {
+				flex-direction: column;
+				align-items: flex-start !important;
+			}
+
 			.urcr-condition-field-name,
 			.urcr-condition-value {
 				flex: 1;
 				margin: 0;
+				width: 100%;
 			}
 		}
 
@@ -1284,6 +1326,7 @@ $border-left-color_3: #0073aa;
 .urcr-advanced-logic {
 	&-gates {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: 12px;
 		margin-bottom: 24px;
@@ -1369,11 +1412,11 @@ $border-left-color_3: #0073aa;
 // ============================================================================
 
 $or-line: #89A7E5;
-$and-line: #F9E2CA;
-$not-line: #F9CACA;
+$and-line: #6dba8e;
+$not-line: #f68484;
 $or-tag: #E9F0FE;
-$and-tag: #FED9A8;
-$not-tag: #F9CACA;
+$and-tag: #d7ece0;
+$not-tag: #fcdddd;
 
 .urcr-condition-row-parent {
 	display: flex;
@@ -1391,6 +1434,16 @@ $not-tag: #F9CACA;
 		gap: 24px;
 		flex: 1;
 		padding-right: 30px;
+		box-sizing: border-box;
+
+		@media screen and (max-width: 1550px) {
+			gap: 32px;
+		}
+
+		@media screen and (max-width: 1199px) {
+			width: 100%;
+			padding-right: 20px;
+		}
 
 		&.urcr-conditional-logic-definitions {
 
@@ -1978,7 +2031,7 @@ $not-tag: #F9CACA;
 
 	.urcr-target-selection-section {
 		// max-width: 420px;
-		max-width: 45%;
+		max-width: 60%;
 		width: 100%;
 		flex-direction: column;
 		border: 1px solid #e1e1e1;
@@ -1989,6 +2042,14 @@ $not-tag: #F9CACA;
 		position: sticky;
 		position: -webkit-sticky;
 		top: 60px;
+
+		@media screen and (max-width: 1399px) {
+			max-width: 420px;
+		}
+
+		@media screen and (max-width: 1199px) {
+			max-width: 100%;
+		}
 
 		>.ur-d-flex {
 			width: 100%;
@@ -2001,7 +2062,7 @@ $not-tag: #F9CACA;
 			background: rgba(0, 163, 42, 0.05);
 			color: #00a32a;
 			border-radius: 0px;
-			padding: 24px;
+			padding: 16px 24px;
 			display: block;
 			width: 100%;
 			border-radius: 5px 5px 0 0;
