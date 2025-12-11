@@ -1258,10 +1258,16 @@
 		$('.user-registration-base-list-table-heading').append($updateOrderContainer);
 
 		// Helper function to get current order of membership IDs
+		// Excludes rows that are being dragged (ui-sortable-helper)
 		function getCurrentOrder() {
 			var order = [];
 			$membershipTable.find('tr[data-membership-id]').each(function () {
-				var membershipId = $(this).attr('data-membership-id');
+				var $row = $(this);
+				// Skip rows that are being dragged (helper) or are placeholders
+				if ($row.hasClass('ui-sortable-helper') || $row.hasClass('ur-sortable-placeholder')) {
+					return;
+				}
+				var membershipId = $row.attr('data-membership-id');
 				if (membershipId) {
 					order.push(parseInt(membershipId, 10));
 				}
@@ -1289,9 +1295,38 @@
 			cursor: 'move',
 			opacity: 0.8,
 			placeholder: 'ur-sortable-placeholder',
+			helper: function(e, tr) {
+				// Capture initial order before the drag starts affecting the DOM
+				// Get order from all rows in their original positions
+				initialOrder = [];
+				$membershipTable.find('tr[data-membership-id]').each(function () {
+					var membershipId = $(this).attr('data-membership-id');
+					if (membershipId) {
+						initialOrder.push(parseInt(membershipId, 10));
+					}
+				});
+				
+				var $originals = tr.children();
+				var $helper = tr.clone();
+				$helper.children().each(function(index) {
+					// Set width of each cell to match original
+					$(this).width($originals.eq(index).width());
+				});
+				// Create a temporary table to maintain table structure
+				var $table = $('<table></table>');
+				$table.css({
+					width: tr.closest('table').width() + 'px',
+					margin: 0
+				});
+				$table.append($helper);
+				return $table;
+			},
 			start: function (e, ui) {
-				// Store the initial order when dragging starts
-				initialOrder = getCurrentOrder();
+				// Initial order should already be captured in helper callback
+				// This is just a fallback in case helper didn't run
+				if (initialOrder.length === 0) {
+					initialOrder = getCurrentOrder();
+				}
 			},
 			stop: function (e, ui) {
 				// Get the current order after dragging stops
@@ -1303,6 +1338,9 @@
 					$updateOrderContainer.removeClass('ur-d-none');
 					$updateOrderContainer.find('.ur-spinner').remove();
 				}
+				
+				// Reset initialOrder for next drag
+				initialOrder = [];
 			}
 		});
 
