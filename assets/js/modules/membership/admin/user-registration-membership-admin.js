@@ -145,13 +145,13 @@
 						no_errors = false;
 						ur_membership_utils.show_failure_message(
 							ur_membership_data.labels.i18n_error +
-								"! " +
-								name +
-								" " +
-								ur_membership_data.labels
-									.i18n_valid_url_field_validation +
-								" " +
-								name
+							"! " +
+							name +
+							" " +
+							ur_membership_data.labels
+								.i18n_valid_url_field_validation +
+							" " +
+							name
 						);
 						return false;
 					}
@@ -229,9 +229,9 @@
 							failure: function (xhr, statusText) {
 								ur_membership_utils.show_failure_message(
 									ur_membership_data.labels.network_error +
-										"(" +
-										statusText +
-										")"
+									"(" +
+									statusText +
+									")"
 								);
 							},
 							complete: function () {
@@ -456,9 +456,9 @@
 					no_errors = false;
 					ur_membership_utils.show_failure_message(
 						ur_membership_data.labels.i18n_error +
-							"! " +
-							ur_membership_data.labels
-								.i18n_valid_amount_field_validation
+						"! " +
+						ur_membership_data.labels
+							.i18n_valid_amount_field_validation
 					);
 				}
 				//trial validations
@@ -493,27 +493,27 @@
 						no_errors = false;
 						ur_membership_utils.show_failure_message(
 							ur_membership_data.labels.i18n_error +
-								"! " +
-								ur_membership_data.labels
-									.i18n_valid_trial_period_field_validation
+							"! " +
+							ur_membership_data.labels
+								.i18n_valid_trial_period_field_validation
 						);
 					}
 					if (subscription_duration_value < 1) {
 						no_errors = false;
 						ur_membership_utils.show_failure_message(
 							ur_membership_data.labels.i18n_error +
-								"! " +
-								ur_membership_data.labels
-									.i18n_valid_min_subs_period_field_validation
+							"! " +
+							ur_membership_data.labels
+								.i18n_valid_min_subs_period_field_validation
 						);
 					}
 					if (trial_duration_value < 1) {
 						no_errors = false;
 						ur_membership_utils.show_failure_message(
 							ur_membership_data.labels.i18n_error +
-								"! " +
-								ur_membership_data.labels
-									.i18n_valid_min_trial_period_field_validation
+							"! " +
+							ur_membership_data.labels
+								.i18n_valid_min_trial_period_field_validation
 						);
 					}
 				}
@@ -535,8 +535,8 @@
 					no_errors = false;
 					ur_membership_utils.show_failure_message(
 						ur_membership_data.labels.i18n_error +
-							"! " +
-							ur_membership_data.labels.i18n_pg_validation_error
+						"! " +
+						ur_membership_data.labels.i18n_pg_validation_error
 					);
 				}
 				// paypal validations
@@ -574,11 +574,11 @@
 							no_errors = false;
 							ur_membership_utils.show_failure_message(
 								ur_membership_data.labels.i18n_paypal +
-									" " +
-									ur_membership_data.labels.i18n_error +
-									"! " +
-									ur_membership_data.labels
-										.i18n_paypal_client_secret_id_error
+								" " +
+								ur_membership_data.labels.i18n_error +
+								"! " +
+								ur_membership_data.labels
+									.i18n_paypal_client_secret_id_error
 							);
 						}
 					}
@@ -599,10 +599,10 @@
 					no_errors = false;
 					ur_membership_utils.show_failure_message(
 						ur_membership_data.labels.i18n_error +
-							"! " +
-							upgrade_path.data("key-name") +
-							" " +
-							ur_membership_data.labels.i18n_field_is_required
+						"! " +
+						upgrade_path.data("key-name") +
+						" " +
+						ur_membership_data.labels.i18n_field_is_required
 					);
 				}
 
@@ -610,10 +610,10 @@
 					no_errors = false;
 					ur_membership_utils.show_failure_message(
 						ur_membership_data.labels.i18n_error +
-							"! " +
-							upgrade_type_container.data("key-name") +
-							" " +
-							ur_membership_data.labels.i18n_field_is_required
+						"! " +
+						upgrade_type_container.data("key-name") +
+						" " +
+						ur_membership_data.labels.i18n_field_is_required
 					);
 				}
 			}
@@ -658,9 +658,9 @@
 						failure: function (xhr, statusText) {
 							ur_membership_utils.show_failure_message(
 								ur_membership_data.labels.network_error +
-									"(" +
-									statusText +
-									")"
+								"(" +
+								statusText +
+								")"
 							);
 						},
 						complete: function () {
@@ -707,9 +707,9 @@
 						failure: function (xhr, statusText) {
 							ur_membership_utils.show_failure_message(
 								ur_membership_data.labels.network_error +
-									"(" +
-									statusText +
-									")"
+								"(" +
+								statusText +
+								")"
 							);
 						},
 						complete: function () {
@@ -754,9 +754,9 @@
 					failure: function (xhr, statusText) {
 						ur_membership_utils.show_failure_message(
 							ur_membership_data.labels.network_error +
-								"(" +
-								statusText +
-								")"
+							"(" +
+							statusText +
+							")"
 						);
 					},
 					complete: function () {
@@ -826,9 +826,9 @@
 					failure: function (xhr, statusText) {
 						ur_membership_utils.show_failure_message(
 							ur_membership_data.labels.network_error +
-								"(" +
-								statusText +
-								")"
+							"(" +
+							statusText +
+							")"
 						);
 					},
 					complete: function () {
@@ -849,19 +849,23 @@
 			var success_callback =
 					"function" === typeof callbacks.success
 						? callbacks.success
-						: function () {},
+						: function () {
+						},
 				failure_callback =
 					"function" === typeof callbacks.failure
 						? callbacks.failure
-						: function () {},
+						: function () {
+						},
 				beforeSend_callback =
 					"function" === typeof callbacks.beforeSend
 						? callbacks.beforeSend
-						: function () {},
+						: function () {
+						},
 				complete_callback =
 					"function" === typeof callbacks.complete
 						? callbacks.complete
-						: function () {};
+						: function () {
+						};
 
 			// Inject default data.
 			if (!data._wpnonce && ur_membership_data) {
@@ -1084,8 +1088,8 @@
 											.i18n_prompt_title,
 									html: response.data.message,
 									confirmButtonText:
-										ur_membership_data.labels
-											.i18n_prompt_ok,
+									ur_membership_data.labels
+										.i18n_prompt_ok,
 									allowOutsideClick: false
 								});
 							}
@@ -1093,9 +1097,9 @@
 						failure: function (xhr, statusText) {
 							ur_membership_utils.show_failure_message(
 								ur_membership_data.labels.network_error +
-									"(" +
-									statusText +
-									")"
+								"(" +
+								statusText +
+								")"
 							);
 						},
 						complete: function () {
@@ -1130,20 +1134,20 @@
 
 	// Initialize drag-and-drop sorting for membership table
 	var $membershipTable = $('#membership-list tbody#the-list');
-	
+
 	if ($membershipTable.length > 0 && $.fn.sortable) {
 		// Get button text
 		var updateOrderButtonText = ur_membership_data.labels && ur_membership_data.labels.i18n_update_order ? ur_membership_data.labels.i18n_update_order : 'Update Order';
-		
-		// Add Update Order button container
-		var $updateOrderContainer = $('<div class="ur-membership-order-controls ur-hidden"><button type="button" class="button button-primary ur-update-membership-order-btn">' + 
-			'<span class="ur-update-order-btn-text">' + updateOrderButtonText + '</span>' + 
+
+		// Add Update Order button container inside the heading div
+		var $updateOrderContainer = $('<div class="ur-membership-order-controls ur-d-none"><button type="button" class="button button-primary ur-update-membership-order-btn">' +
+			'<span class="ur-update-order-btn-text">' + updateOrderButtonText + '</span>' +
 			'</button></div>');
-		
-		$membershipTable.before($updateOrderContainer);
+
+		$('.user-registration-base-list-table-heading').append($updateOrderContainer);
 		var $updateOrderBtn = $updateOrderContainer.find('.ur-update-membership-order-btn');
-		var $updateOrderBtnText = $updateOrderContainer.find('.ur-update-order-btn-text');
-		
+		var $spinner = '<span class="ur-spinner"></span>';
+
 		// Initialize jQuery UI Sortable
 		$membershipTable.sortable({
 			items: 'tr[data-membership-id]',
@@ -1151,99 +1155,78 @@
 			cursor: 'move',
 			opacity: 0.8,
 			placeholder: 'ur-sortable-placeholder',
-			helper: function(e, tr) {
+			helper: function (e, tr) {
 				var $originals = tr.children();
 				var $helper = tr.clone();
-				$helper.children().each(function(index) {
+				$helper.children().each(function (index) {
 					$(this).width($originals.eq(index).width());
 				});
 				return $helper;
 			},
-			start: function(e, ui) {
+			start: function (e, ui) {
 				ui.placeholder.height(ui.item.height());
 			},
-			stop: function(e, ui) {
+			stop: function (e, ui) {
 				// Reset button state and show Update Order button when drag ends
 				$updateOrderBtn.prop('disabled', false);
-				$updateOrderBtn.find('.ur-spinner').remove();
-				$updateOrderBtnText.text(updateOrderButtonText).show();
-				$updateOrderContainer.removeClass('ur-hidden').fadeIn(200);
+				$updateOrderContainer.removeClass('ur-d-none');
+				$updateOrderContainer.find('.ur-spinner').remove();
 			}
 		});
 
-			// Handle Update Order button click
-			$updateOrderContainer.on('click', '.ur-update-membership-order-btn', function(e) {
-				e.preventDefault();
+		// Handle Update Order button click
+		$updateOrderContainer.on('click', '.ur-update-membership-order-btn', function (e) {
+			e.preventDefault();
+			if ($updateOrderContainer.find('.ur-spinner').length > 0) {
+				return;
+			}
+			$updateOrderContainer.append($spinner)
 
-				// Disable button and show spinner during request
-				$updateOrderBtn.prop('disabled', true);
-				$updateOrderBtnText.hide();
-				$updateOrderBtn.append('<span class="ur-spinner is-active"></span>');
-
-				// Collect membership IDs in current order
-				var membershipOrder = [];
-				$membershipTable.find('tr[data-membership-id]').each(function() {
-					var membershipId = $(this).attr('data-membership-id');
-					if (membershipId) {
-						membershipOrder.push(parseInt(membershipId, 10));
-					}
-				});
-
-				if (membershipOrder.length === 0) {
-					$updateOrderBtn.find('.ur-spinner').remove();
-					$updateOrderBtnText.text(updateOrderButtonText).show();
-					$updateOrderBtn.prop('disabled', false);
-
-					// Show error message via snackbar if available
-					if (ur_membership_utils && ur_membership_utils.show_failure_message) {
-						ur_membership_utils.show_failure_message('No memberships found.');
-					}
-					return;
+			// Collect membership IDs in current order
+			var membershipOrder = [];
+			$membershipTable.find('tr[data-membership-id]').each(function () {
+				var membershipId = $(this).attr('data-membership-id');
+				if (membershipId) {
+					membershipOrder.push(parseInt(membershipId, 10));
 				}
-
-				// Send AJAX request
-				$.ajax({
-					url: ur_membership_data.ajax_url,
-					type: 'POST',
-					data: {
-						action: ur_membership_data.update_order_action,
-						nonce: ur_membership_data.update_order_nonce,
-						membership_order: membershipOrder
-					},
-					success: function(response) {
-						// Remove spinner and reset button
-						$updateOrderBtn.find('.ur-spinner').remove();
-						$updateOrderBtnText.text(updateOrderButtonText).show();
-						$updateOrderBtn.prop('disabled', false);
-
-						if (response.success) {
-							// Show success message via snackbar if available
-							if (ur_membership_utils && ur_membership_utils.show_success_message) {
-								ur_membership_utils.show_success_message(response.data.message || 'Membership order updated successfully.');
-							}
-
-							// Hide container after delay
-							$updateOrderContainer.delay(1000).fadeOut(300, function() {
-								$updateOrderContainer.addClass('ur-hidden');
-							});
-						} else {
-							// Show error message via snackbar if available
-							if (ur_membership_utils && ur_membership_utils.show_failure_message) {
-								ur_membership_utils.show_failure_message(response.data.message || 'Failed to update membership order.');
-							}
-						}
-					},
-					error: function(xhr, status, error) {
-						// Remove spinner and reset button
-						$updateOrderBtn.find('.ur-spinner').remove();
-						$updateOrderBtnText.text(updateOrderButtonText).show();
-						$updateOrderBtn.prop('disabled', false);
-
-						if (ur_membership_utils && ur_membership_utils.show_failure_message) {
-							ur_membership_utils.show_failure_message('Network error. Please try again.');
-						}
-					}
-				});
 			});
-		}
+
+			if (membershipOrder.length === 0) {
+				$spinner.removeClass('is-active');
+				$updateOrderBtn.prop('disabled', false);
+				$updateOrderContainer.find('.ur-spinner').remove();
+				return;
+			}
+
+			// Send AJAX request
+			$.ajax({
+				url: ur_membership_data.ajax_url,
+				type: 'POST',
+				data: {
+					action: ur_membership_data.update_order_action,
+					nonce: ur_membership_data.update_order_nonce,
+					membership_order: membershipOrder
+				},
+				success: function (response) {
+					// Remove spinner and reset button
+					$updateOrderContainer.find('.ur-spinner').remove();
+
+					if (response.success) {
+
+						ur_membership_utils.show_success_message(response.data.message);
+
+						$updateOrderContainer.addClass('ur-d-none');
+					} else {
+
+						ur_membership_utils.show_failure_message(response.data.message);
+
+					}
+				},
+				error: function (xhr, status, error) {
+					$updateOrderContainer.find('.ur-spinner').remove();
+					ur_membership_utils.show_failure_message(ur_membership_data.labels.network_error);
+				}
+			});
+		});
+	}
 })(jQuery, window.ur_membership_localized_data);

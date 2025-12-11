@@ -1744,46 +1744,59 @@
   cursor: grabbing;
   cursor: -webkit-grabbing;
 }
-#membership-list tbody#the-list .ur-sortable-ghost {
-  opacity: 0.4;
-  background: #f0f0f1;
-}
-#membership-list tbody#the-list .ur-sortable-chosen {
+#membership-list tbody#the-list .ui-sortable-helper {
+  opacity: 0.8;
+  box-shadow: 0 2px 8px rgba(72, 91, 178, 0.2);
   background: rgba(72, 91, 178, 0.1);
   border-color: rgba(72, 91, 178, 0.3);
 }
-#membership-list tbody#the-list .ur-sortable-drag {
-  opacity: 0.8;
-  box-shadow: 0 2px 8px rgba(72, 91, 178, 0.2);
+#membership-list tbody#the-list .ur-sortable-placeholder {
+  opacity: 0.5;
+  background: rgba(72, 91, 178, 0.08);
+  border: 2px dashed rgba(72, 91, 178, 0.2);
+  visibility: visible !important;
+}
+#membership-list tbody#the-list tr.ui-sortable-helper {
+  display: table-row;
 }
 
-.ur-membership-order-controls {
-  display: flex;
+.user-registration-base-list-table-heading .ur-membership-order-controls {
+  display: inline-flex;
   align-items: center;
-  margin: 15px 0;
-  padding: 12px 15px;
-  background: #fff;
-  border: 1px solid #ccd0d4;
-  border-radius: 4px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 }
-.ur-membership-order-controls.ur-hidden {
+.user-registration-base-list-table-heading .ur-membership-order-controls.ur-hidden {
   display: none;
 }
-.ur-membership-order-controls .ur-update-membership-order-btn {
+.user-registration-base-list-table-heading .ur-membership-order-controls .ur-update-membership-order-btn {
   margin: 0;
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 120px;
+  min-height: 36px;
+  border: 1px solid #475bb2;
+  color: #ffffff;
+  background: #475bb2;
+  padding: 0 14px 0 12px;
+  font-size: 14px;
+  line-height: 20px;
+  border-radius: 4px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+  box-sizing: border-box;
+  cursor: pointer;
 }
-.ur-membership-order-controls .ur-update-membership-order-btn .ur-update-order-btn-text {
+.user-registration-base-list-table-heading .ur-membership-order-controls .ur-update-membership-order-btn:hover {
+  background: #475bb2;
+  color: #ffffff;
+  border-color: #475bb2;
+}
+.user-registration-base-list-table-heading .ur-membership-order-controls .ur-update-membership-order-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.user-registration-base-list-table-heading .ur-membership-order-controls .ur-update-membership-order-btn .ur-update-order-btn-text {
   display: inline-block;
-}
-.ur-membership-order-controls .ur-update-membership-order-btn .ur-spinner {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
 }
