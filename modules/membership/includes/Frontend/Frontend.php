@@ -106,6 +106,8 @@ class Frontend {
 		$orders_repository               = new OrdersRepository();
 		$memberships                     = $membership_repositories->get_member_membership_by_id( $user_id );
 
+		$membership_data = array();
+
 		foreach ( $memberships as $membership ) {
 
 			if ( ! empty( $membership['post_content'] ) ) {
@@ -146,8 +148,7 @@ class Frontend {
 			}
 			$subscription_data = $members_subscription_repository->get_subscription_data_by_subscription_id( $membership['subscription_id'] );
 
-			$membership_data = array(
-				'user'                   => get_user_by( 'id', get_current_user_id() ),
+			$data = array(
 				'membership'             => $membership,
 				'is_upgrading'           => $is_upgrading,
 				'is_purchasing_multiple' => $is_purchasing_multiple,
@@ -158,16 +159,50 @@ class Frontend {
 
 			if ( ! empty( $last_order ) ) {
 				$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
+
 				if ( ! empty( $order_meta ) ) {
-					$membership_data['delayed_until'] = $order_meta['meta_value'];
+					$data['delayed_until'] = $order_meta['meta_value'];
 				}
 			}
 
-			ur_get_template(
-				'myaccount/membership.php',
-				$membership_data
-			);
+			$data['period'] = 'subscription' === $membership['post_content']['type'] ? $membership['billing_amount'] . ' / ' . $membership['billing_cycle'] : $membership['billing_amount'];
+
+			array_push( $membership_data, $data );
 		}
+
+		$current_page = 1;
+
+		if ( isset( $_GET['paged'] ) && intval( $_GET['paged'] ) > 0 ) {
+			$current_page = intval( $_GET['paged'] );
+		} else {
+			$request_path = trim( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), '/' );
+			$segments     = explode( '/', $request_path );
+
+			$page_index = array_search( 'page', $segments );
+			if ( false !== $page_index && isset( $segments[ $page_index + 1 ] ) ) {
+				$current_page = max( 1, intval( $segments[ $page_index + 1 ] ) );
+			}
+		}
+
+		$per_page = 10;
+
+		$total_count = count( $membership_data );
+		$page        = max( 1, intval( $current_page ) );
+		$per_page    = max( 1, intval( $per_page ) );
+		$offset      = ( $page - 1 ) * $per_page;
+		$items       = array_slice( $membership_data, $offset, $per_page );
+
+		ur_get_template(
+			'myaccount/membership.php',
+			array(
+				'membership_data'    => $items,
+				'membership_service' => $membership_service,
+				'total_items'        => $total_count,
+				'page'               => $page,
+				'per_page'           => $per_page,
+				'total_pages'        => ( $per_page > 0 ) ? (int) ceil( $total_count / $per_page ) : 1,
+			)
+		);
 	}
 
 	/**
@@ -227,8 +262,9 @@ class Frontend {
 
 		$redirect_page_url = get_permalink( $registration_page_id );
 
-		$thank_you_page  = urm_get_thank_you_page();
-		$stripe_settings = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
+		$thank_you_page          = urm_get_thank_you_page();
+		$stripe_settings         = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
+		$membership_endpoint_url = ur_get_my_account_url() . '/ur-membership';
 
 		wp_localize_script(
 			'user-registration-membership-frontend-script',
@@ -245,6 +281,7 @@ class Frontend {
 				'curreny_pos'                      => isset( $currencies[ $currency ]['symbol_pos'] ) ? $currencies[ $currency ]['symbol_pos'] : 'left',
 				'membership_registration_page_url' => $redirect_page_url,
 				'thank_you_page_url'               => $thank_you_page,
+				'membership_endpoint_url'          => $membership_endpoint_url,
 				'stripe_publishable_key'           => $stripe_settings['publishable_key'],
 				'membership_gateways'              => get_option( 'ur_membership_payment_gateways', array() ),
 				'urm_hide_stripe_card_postal_code' => apply_filters( 'user_registration_membership_disable_stripe_card_postal_code', false ),

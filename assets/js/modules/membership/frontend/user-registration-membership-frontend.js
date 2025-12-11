@@ -472,7 +472,7 @@
 				response.data.is_renewing ||
 				response.data.is_purchasing_multiple
 			) {
-				location.reload();
+				window.location.replace(urmf_data.membership_endpoint_url);
 			} else {
 				var bank_data = {
 					transaction_id: response.data.transaction_id,
@@ -1236,9 +1236,9 @@
 					break;
 				case "authorize":
 				case "free":
-					const cleanUrl =
+					var cleanUrl =
 						window.location.origin + window.location.pathname;
-					window.location.replace(cleanUrl);
+					window.location.replace(response.data.pg_data.payment_url);
 				default:
 					ur_membership_ajax_utils.show_bank_response(
 						response,
@@ -2203,7 +2203,8 @@
 				}
 			);
 			//cancel membership button
-			$(document).on("click", ".cancel-membership-button", function () {
+			$(document).on("click", ".cancel-membership-button", function (e) {
+				e.preventDefault();
 				var $this = $(this),
 					error_div = $("#membership-error-div"),
 					button_text = $this.text(),
@@ -2261,7 +2262,9 @@
 			$(document).on(
 				"click",
 				".reactivate-membership-button",
-				function () {
+				function (e) {
+					e.preventDefault();
+
 					var $this = $(this),
 						error_div = $("#membership-error-div"),
 						button_text = $this.text(),
@@ -2302,13 +2305,9 @@
 				}
 			);
 
-			$(document).on("click", ".change-membership-button", function (e) {
+			$(document).on("click", ".renew-membership-button", function (e) {
 				e.preventDefault();
 
-				window.location.href = $(this).attr("data-redirect-url");
-			});
-
-			$(document).on("click", ".renew-membership-button", function () {
 				var $this = $(this),
 					has_error = false,
 					selected_pg = "free",
