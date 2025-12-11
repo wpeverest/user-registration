@@ -16,90 +16,100 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
-if ( empty( $orders ) ) {
-	return esc_html_e( 'You do not have any payment records', 'user-registration' );
+if ( empty( $orders ) || empty( $orders['items'] ) ) {
+	echo esc_html_e( 'You do not have any payment records', 'user-registration' );
+	return;
 }
 
+$items       = $orders['items'];
+$current     = intval( $orders['page'] ?? 1 );
+$total_pages = intval( $orders['total_pages'] ?? 1 );
+$per_page    = intval( $orders['per_page'] ?? 10 );
+
+$current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' ) ) . 'urm-payments/';
 ?>
-<div class="user-registration-MyAccount-content__body">
 
+<div class="user-registration-MyAccount-content__body">
 	<div class="ur-account-table-container">
 		<div class="ur-account-table-wrapper">
 
 			<table class="ur-account-table">
 				<thead class="ur-account-table__header">
 					<tr class="ur-account-table__row">
-						<th class="ur-account-table__cell ur-account-table__header-cell">
-							<?php esc_html_e( 'Transaction ID', 'user-registration' ); ?>
-						</th>
-						<th class="ur-account-table__cell ur-account-table__header-cell">
-							<?php esc_html_e( 'Gateway', 'user-registration' ); ?>
-						</th>
-						<th class="ur-account-table__cell ur-account-table__header-cell">
-							<?php esc_html_e( 'Amount', 'user-registration' ); ?>
-						</th>
-						<th class="ur-account-table__cell ur-account-table__header-cell">
-							<?php esc_html_e( 'Status', 'user-registration' ); ?>
-						</th>
-						<th class="ur-account-table__cell ur-account-table__header-cell">
-							<?php esc_html_e( 'Payment Date', 'user-registration' ); ?>
-						</th>
-						<th class="ur-account-table__cell ur-account-table__header-cell">
-							<?php esc_html_e( 'Action', 'user-registration' ); ?>
-						</th>
+						<th class="ur-account-table__cell ur-account-table__header-cell"><?php esc_html_e( 'Transaction ID', 'user-registration' ); ?></th>
+						<th class="ur-account-table__cell ur-account-table__header-cell"><?php esc_html_e( 'Gateway', 'user-registration' ); ?></th>
+						<th class="ur-account-table__cell ur-account-table__header-cell"><?php esc_html_e( 'Amount', 'user-registration' ); ?></th>
+						<th class="ur-account-table__cell ur-account-table__header-cell"><?php esc_html_e( 'Status', 'user-registration' ); ?></th>
+						<th class="ur-account-table__cell ur-account-table__header-cell"><?php esc_html_e( 'Payment Date', 'user-registration' ); ?></th>
+						<th class="ur-account-table__cell ur-account-table__header-cell"><?php esc_html_e( 'Action', 'user-registration' ); ?></th>
 					</tr>
 				</thead>
 
 				<tbody class="ur-account-table__body">
-					<?php foreach ( $orders as $user_order ) : ?>
+
+					<?php
+					foreach ( $items as $user_order ) :
+						?>
 						<tr class="ur-account-table__row">
-							<td class="ur-account-table__cell">
-								<?php echo esc_html( $user_order['transaction_id'] ?? '-' ); ?>
-							</td>
-
-							<td class="ur-account-table__cell">
-								<?php echo esc_html( $user_order['payment_method'] ?? '-' ); ?>
-							</td>
-
-							<td class="ur-account-table__cell">
-								<?php echo esc_html( $user_order['total_amount'] ?? '-' ); ?>
-							</td>
-
-							<td class="ur-account-table__cell">
-								<?php echo esc_html( $user_order['status'] ?? '-' ); ?>
-							</td>
-
+							<td class="ur-account-table__cell"><?php echo esc_html( $user_order['transaction_id'] ?? '-' ); ?></td>
+							<td class="ur-account-table__cell"><?php echo esc_html( $user_order['payment_method'] ?? '-' ); ?></td>
+							<td class="ur-account-table__cell"><?php echo esc_html( $user_order['total_amount'] ?? '-' ); ?></td>
+							<td class="ur-account-table__cell"><span id="ur-membership-status" class="btn-<?php echo esc_attr( $user_order['status'] ?? '-' ); ?>"><?php echo esc_html( $user_order['status'] ?? '-' ); ?></span></td>
 							<td class="ur-account-table__cell">
 								<?php
 								echo ! empty( $user_order['created_at'] )
-									? esc_html( gmdate( 'Y-m-d H:i:s', strtotime( $user_order['created_at'] ) ) )
+									? esc_html( date_i18n( get_option( 'date_format' ), strtotime( $user_order['created_at'] ) ) )
 									: '-';
 								?>
 							</td>
-
 							<td class="ur-account-table__cell ur-account-table__cell--action">
 								<?php
-								$url          = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-								$url          = substr( $url, 0, strpos( $url, '?' ) );
-								$download_url = wp_nonce_url( $url . '?payment_action=invoice_download&transaction_id=' . $user_order['transaction_id'], 'ur_payment_action' );
+								// Build download link safely using add_query_arg and wp_nonce_url
+								$download_args = array(
+									'payment_action' => 'invoice_download',
+									'transaction_id' => $user_order['transaction_id'] ?? '',
+								);
+								$download_url  = wp_nonce_url( add_query_arg( $download_args, $current_url ), 'ur_payment_action' );
 								?>
-
 								<a class="ur-account-action-link" href="<?php echo esc_url( $download_url ); ?>">
 									<?php esc_html_e( 'Download', 'user-registration' ); ?>
 								</a>
 							</td>
 						</tr>
 					<?php endforeach; ?>
-				</tbody>
 
+				</tbody>
 			</table>
 
 		</div>
+
+		<!--
+		<?php
+		if ( $total_pages > 1 ) :
+			?>
+			-->
+			<div class="ur-pagination">
+				<?php
+				echo paginate_links(
+					array(
+						'base'      => trailingslashit( $current_url ) . '%_%',
+						'format'    => 'page/%#%/',
+						'current'   => $current,
+						'total'     => $total_pages,
+						'prev_text' => '&laquo;',
+						'next_text' => '&raquo;',
+						'type'      => 'list',
+					)
+				);
+				?>
+				</div>
+
+				<?php
+				endif;
+		?>
+
 	</div>
-
 </div>
-
-<?php

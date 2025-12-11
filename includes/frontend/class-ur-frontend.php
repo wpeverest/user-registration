@@ -377,10 +377,25 @@ class UR_Frontend {
 			<?php
 		}
 
+		$current_page = 1;
+
+		if ( isset( $_GET['paged'] ) && intval( $_GET['paged'] ) > 0 ) {
+			$current_page = intval( $_GET['paged'] );
+		} else {
+			$request_path = trim( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), '/' );
+			$segments     = explode( '/', $request_path );
+
+			$page_index = array_search( 'page', $segments );
+			if ( false !== $page_index && isset( $segments[ $page_index + 1 ] ) ) {
+				$current_page = max( 1, intval( $segments[ $page_index + 1 ] ) );
+			}
+		}
+
 		ur_get_template(
 			'myaccount/payments.php',
 			array(
-				'orders' => $this->get_user_payments(),
+				'orders'       => $this->get_user_payments( $current_page, 10 ),
+				'current_page' => $current_page,
 			)
 		);
 		do_action( 'user_registration_after_payments_tab_contents' );
@@ -401,32 +416,46 @@ class UR_Frontend {
 	 *
 	 * @return array
 	 */
-	private function get_user_payments() {
+	private function get_user_payments( $page = 1, $per_page = 10 ) {
 		$user_id     = get_current_user_id();
 		$user_source = get_user_meta( $user_id, 'ur_registration_source', true );
 		$total_items = array();
 
 		if ( 'membership' === $user_source ) {
 			$order_repository = new MembersOrderRepository();
-			$total_items      = $order_repository->get_member_all_orders( get_current_user_id() );
+			$total_items      = $order_repository->get_member_all_orders( $user_id );
 		} else {
-			$meta_value = get_user_meta( '74', 'ur_payment_invoices', true );
+			$meta_value = get_user_meta( $user_id, 'ur_payment_invoices', true );
 
-			foreach ( $meta_value as $values ) {
-				$total_items[] = array(
-					'user_id'        => $user_id,
-					'transaction_id' => $values['invoice_no'] ?? '',
-					'post_title'     => $values['invoice_plan'] ?? '',
-					'status'         => get_user_meta( $user_id, 'ur_payment_status', true ),
-					'created_at'     => $values['invoice_date'] ?? '',
-					'type'           => get_user_meta( $user_id, 'ur_payment_type', true ),
-					'payment_method' => str_replace( '_', ' ', get_user_meta( $user_id, 'ur_payment_method', true ) ),
-					'total_amount'   => $values['invoice_amount'] ?? '' . ' ' . $values['invoice_currency'],
-				);
+			if ( ! empty( $meta_value ) && is_array( $meta_value ) ) {
+				foreach ( $meta_value as $values ) {
+					$total_items[] = array(
+						'user_id'        => $user_id,
+						'transaction_id' => $values['invoice_no'] ?? '',
+						'post_title'     => $values['invoice_plan'] ?? '',
+						'status'         => get_user_meta( $user_id, 'ur_payment_status', true ),
+						'created_at'     => $values['invoice_date'] ?? '',
+						'type'           => get_user_meta( $user_id, 'ur_payment_type', true ),
+						'payment_method' => str_replace( '_', ' ', get_user_meta( $user_id, 'ur_payment_method', true ) ),
+						'total_amount'   => ( $values['invoice_amount'] ?? '' ) . ' ' . ( $values['invoice_currency'] ?? '' ),
+					);
+				}
 			}
 		}
 
-		return $total_items;
+		$total_count = count( $total_items );
+		$page        = max( 1, intval( $page ) );
+		$per_page    = max( 1, intval( $per_page ) );
+		$offset      = ( $page - 1 ) * $per_page;
+		$items       = array_slice( $total_items, $offset, $per_page );
+
+		return array(
+			'items'       => $items,
+			'total_items' => $total_count,
+			'page'        => $page,
+			'per_page'    => $per_page,
+			'total_pages' => ( $per_page > 0 ) ? (int) ceil( $total_count / $per_page ) : 1,
+		);
 	}
 }
 
