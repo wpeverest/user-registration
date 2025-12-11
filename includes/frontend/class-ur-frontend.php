@@ -19,7 +19,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package UserRegistration/Frontend
  */
 
+use WPEverest\URMembership\Frontend\Frontend;
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
+use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
+use WPEverest\URMembership\Admin\Services\MembershipService;
 class UR_Frontend {
 
 	/**
@@ -311,6 +316,8 @@ class UR_Frontend {
 
 		$user_source = get_user_meta( $user_id, 'ur_registration_source', true );
 
+		$ur_payment_subscription = get_user_meta( $user_id, 'ur_payment_subscription', true );
+
 		if ( 'membership' === $user_source || $payment_method ) {
 			add_action( 'wp_loaded', array( $this, 'ur_add_payments_tab_endpoint' ) );
 			add_filter( 'user_registration_account_menu_items', array( $this, 'urm_payment_history_tab' ), 10, 1 );
@@ -321,7 +328,18 @@ class UR_Frontend {
 					'user_registration_urm_payments_tab_endpoint_content',
 				)
 			);
+		}
 
+		if ( 'membership' === $user_source || ( '' !== $payment_method && ( '' !== $ur_payment_subscription || 'paypal_standard' === $payment_method ) ) ) {
+			add_action( 'wp_loaded', array( $this, 'ur_add_membership_tab_endpoint' ) );
+			add_filter( 'user_registration_account_menu_items', array( $this, 'ur_membership_tab' ), 10, 1 );
+			add_action(
+				'user_registration_account_ur-membership_endpoint',
+				array(
+					$this,
+					'user_registration_membership_tab_endpoint_content',
+				)
+			);
 		}
 	}
 
@@ -412,6 +430,16 @@ class UR_Frontend {
 	}
 
 	/**
+	 * Add Membership tab endpoint.
+	 */
+	public function ur_add_membership_tab_endpoint() {
+		$mask = Ur()->query->get_endpoints_mask();
+
+		add_rewrite_endpoint( 'ur-membership', $mask );
+		flush_rewrite_rules();
+	}
+
+	/**
 	 * @param $args
 	 *
 	 * @return array
@@ -424,22 +452,23 @@ class UR_Frontend {
 		if ( 'membership' === $user_source ) {
 			$order_repository = new MembersOrderRepository();
 			$total_items      = $order_repository->get_member_all_orders( $user_id );
-		} else {
-			$meta_value = get_user_meta( $user_id, 'ur_payment_invoices', true );
+		}
 
-			if ( ! empty( $meta_value ) && is_array( $meta_value ) ) {
-				foreach ( $meta_value as $values ) {
-					$total_items[] = array(
-						'user_id'        => $user_id,
-						'transaction_id' => $values['invoice_no'] ?? '',
-						'post_title'     => $values['invoice_plan'] ?? '',
-						'status'         => get_user_meta( $user_id, 'ur_payment_status', true ),
-						'created_at'     => $values['invoice_date'] ?? '',
-						'type'           => get_user_meta( $user_id, 'ur_payment_type', true ),
-						'payment_method' => str_replace( '_', ' ', get_user_meta( $user_id, 'ur_payment_method', true ) ),
-						'total_amount'   => ( $values['invoice_amount'] ?? '' ) . ' ' . ( $values['invoice_currency'] ?? '' ),
-					);
-				}
+		$meta_value = get_user_meta( $user_id, 'ur_payment_invoices', true );
+
+		if ( ! empty( $meta_value ) && is_array( $meta_value ) ) {
+			foreach ( $meta_value as $values ) {
+				$total_items[] = array(
+					'user_id'        => $user_id,
+					'transaction_id' => $values['invoice_no'] ?? '',
+					'post_title'     => $values['invoice_plan'] ?? '',
+					'status'         => get_user_meta( $user_id, 'ur_payment_status', true ),
+					'created_at'     => $values['invoice_date'] ?? '',
+					'type'           => get_user_meta( $user_id, 'ur_payment_type', true ),
+					'payment_method' => str_replace( '_', ' ', get_user_meta( $user_id, 'ur_payment_method', true ) ),
+					'total_amount'   => ( $values['invoice_amount'] ?? '' ),
+					'currency'       => ( $values['invoice_currency'] ?? '' ),
+				);
 			}
 		}
 
@@ -456,6 +485,198 @@ class UR_Frontend {
 			'per_page'    => $per_page,
 			'total_pages' => ( $per_page > 0 ) ? (int) ceil( $total_count / $per_page ) : 1,
 		);
+	}
+
+	/**
+	 * Add the item to $items array.
+	 *
+	 * @param array $items Items.
+	 */
+	public function ur_membership_tab( $items ) {
+		$new_items                  = array();
+		$new_items['ur-membership'] = __( 'Subscriptions', 'user-registration' );
+		$items                      = array_merge( $items, $new_items );
+
+		return $this->delete_account_insert_before_helper( $items, $new_items, 'user-logout' );
+	}
+
+	/**
+	 * Membership tab content.
+	 */
+	public function user_registration_membership_tab_endpoint_content() {
+		$user_id         = get_current_user_id();
+		$user_source     = get_user_meta( $user_id, 'ur_registration_source', true );
+		$total_items     = array();
+		$membership_data = array();
+
+		$payment_method = get_user_meta( $user_id, 'ur_payment_method', true );
+
+		$user_source = get_user_meta( $user_id, 'ur_registration_source', true );
+
+		$ur_payment_subscription = get_user_meta( $user_id, 'ur_payment_subscription', true );
+
+		if ( 'membership' === $user_source ) {
+			$membership_repositories         = new MembersRepository();
+			$members_order_repository        = new MembersOrderRepository();
+			$members_subscription_repository = new MembersSubscriptionRepository();
+			$orders_repository               = new OrdersRepository();
+			$memberships                     = $membership_repositories->get_member_membership_by_id( $user_id );
+
+			if ( ! empty( $memberships ) ) {
+
+				foreach ( $memberships as $membership ) {
+
+					if ( ! empty( $membership['post_content'] ) ) {
+						$membership['post_content'] = json_decode( $membership['post_content'], true );
+					}
+					$membership_service = new MembershipService();
+					$membership_details = ( is_array( $membership ) && ! empty( $membership['post_id'] ) ) ? $membership_service->get_membership_details( $membership['post_id'] ) : array();
+					$active_gateways    = array();
+
+					if ( ! empty( $membership_details['payment_gateways'] ) ) {
+						$active_gateways = array_filter(
+							$membership_details['payment_gateways'],
+							function ( $item, $key ) {
+								return 'on' == $item['status'] && in_array( $key, array( 'paypal', 'stripe', 'bank' ) );
+							},
+							ARRAY_FILTER_USE_BOTH
+						);
+					}
+
+					$membership['active_gateways'] = $active_gateways;
+					$membership_process            = urm_get_membership_process( $user_id );
+
+					$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $membership['post_id'] ] );
+
+					$membership_process     = urm_get_membership_process( $user_id );
+					$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $membership['post_id'], $membership_process['multiple'] );
+
+					$last_order = $members_order_repository->get_member_orders( $user_id );
+					$bank_data  = array();
+					if ( ! empty( $last_order ) && $last_order['status'] == 'pending' && $last_order['payment_method'] === 'bank' ) {
+						$bank_data = array(
+							'show_bank_notice' => true,
+							'bank_data'        => get_option( 'user_registration_global_bank_details', '' ),
+							'notice_1'         => apply_filters( 'urm_bank_info_notice_1_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your upgraded membership will be activated. Kindly wait for the admin\'s confirmation.', 'user-registration' ) ),
+							'notice_2'         => apply_filters( 'urm_bank_info_notice_2_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Your membership will be renewed once the payment is verified. Kindly wait for the admin\'s confirmation.', 'user-registration' ) ),
+							'notice_3'         => apply_filters( 'urm_bank_info_notice_3_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your new membership will be activated. Kindly wait for the admin\'s confirmation.', 'user-registration' ) ),
+						);
+					}
+					$subscription_data = $members_subscription_repository->get_subscription_data_by_subscription_id( $membership['subscription_id'] );
+
+					$data = array(
+						'membership'             => $membership,
+						'is_upgrading'           => $is_upgrading,
+						'is_purchasing_multiple' => $is_purchasing_multiple,
+						'bank_data'              => $bank_data,
+						'renewal_behaviour'      => get_option( 'user_registration_renewal_behaviour', 'automatic' ),
+						'subscription_data'      => $subscription_data,
+					);
+
+					if ( ! empty( $last_order ) ) {
+						$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
+
+						if ( ! empty( $order_meta ) ) {
+							$data['delayed_until'] = $order_meta['meta_value'];
+						}
+					}
+
+					$data['period'] = 'subscription' === $membership['post_content']['type'] ? $membership['billing_amount'] . ' / ' . $membership['billing_cycle'] : $membership['billing_amount'];
+
+					array_push( $membership_data, $data );
+				}
+			}
+		}
+
+		if ( '' !== $payment_method && ( '' !== $ur_payment_subscription || 'paypal_standard' === $payment_method ) ) {
+			$payment_details               = array();
+			$user                          = get_userdata( $user_id );
+			$form_id                       = ur_get_form_id_by_userid( $user_id );
+			$ur_payment_subscription       = get_user_meta( $user_id, 'ur_payment_subscription', true );
+			$payment_details['membership'] = array();
+
+			if ( 'paypal_standard' === $payment_method ) {
+				$ur_payment_subscription_status              = get_user_meta( $user_id, 'ur_paypal_subscription_status', true );
+				$payment_details['membership']['post_title'] = get_user_meta( $user_id, 'ur_paypal_subscription_plan_name', true );
+			} else {
+				$ur_payment_subscription_status              = get_user_meta( $user_id, 'ur_payment_subscription_status', true );
+				$payment_details['membership']['post_title'] = get_user_meta( $user_id, 'ur_payment_subscription_plan_name', true );
+			}
+
+			$payment_details['membership']['subscription_id'] = $ur_payment_subscription;
+			$payment_details['membership']['user_id']         = $user_id;
+			$payment_details['membership']['cancel_sub']      = get_user_meta( $user_id, 'ur_payment_cancel_sub', true );
+
+			$payment_details['membership']['post_content']       = array(
+				'type'   => 'subscription',
+				'status' => 'active' === $ur_payment_subscription_status,
+			);
+			$payment_details['membership']['status']             = $ur_payment_subscription_status;
+			$payment_details['membership']['expiry_date']        = get_user_meta( $user_id, 'ur_payment_subscription_expiry', true );
+			$payment_details['subscription_data']['expiry_date'] = get_user_meta( $user_id, 'ur_payment_subscription_expiry', true );
+			$payment_details['membership']['start_date']         = $user->user_registered;
+			$payment_details['subscription_data']['start_date']  = $user->user_registered;
+			$payment_details['membership']['next_billing_date']  = get_user_meta( $user_id, 'ur_payment_next_billing_date', true );
+
+			if ( 'paypal_standard' === $payment_method ) {
+				$payment_details['membership']['billing_amount'] = get_user_meta( $user_id, 'ur_payment_total_amount', true );
+				$payment_details['membership']['billing_cycle']  = get_user_meta( $user_id, 'ur_paypal_interval_count', true ) . ' ' . get_user_meta( $user_id, 'ur_paypal_recurring_period', true );
+			} else {
+				$payment_details['membership']['billing_amount'] = get_user_meta( $user_id, 'ur_payment_product_amount', true );
+				$payment_details['membership']['billing_cycle']  = get_user_meta( $user_id, 'ur_payment_interval', true );
+			}
+
+			$payment_details['membership']['currency'] = get_user_meta( $user_id, 'ur_payment_currency', true );
+
+			$payment_details['renewal_behaviour'] = get_option( 'user_registration_renewal_type', 'automatic' );
+			$currencies                           = ur_payment_integration_get_currencies();
+			$currency                             = get_user_meta( $user_id, 'ur_payment_currency', true );
+			$amount                               = $payment_details['membership']['billing_amount'];
+
+			if ( isset( $currencies[ $currency ]['symbol_pos'] ) && 'right' === $currencies[ $currency ]['symbol_pos'] ) {
+				$amount = $amount . '' . $currencies[ $currency ]['symbol'];
+			} else {
+				$amount = $currencies[ $currency ]['symbol'] . '' . $amount;
+			}
+			$payment_details['period'] = $amount . ' / ' . str_replace( '1 ', '', $payment_details['membership']['billing_cycle'] );
+			$buttons                   = array();
+			$stripe_is_enabled         = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_stripe', false ) );
+
+			if ( ur_string_to_bool( $stripe_is_enabled ) ) {
+				$url                  = ( ! empty( $_SERVER['HTTPS'] ) ) ? 'https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] : 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+				$url                  = substr( $url, 0, strpos( $url, '?' ) );
+				$cancellation_url     = wp_nonce_url( $url . '?stripe_action=cancellation&subscriptionid=' . $ur_payment_subscription, 'ur_stripe_action' );
+				$reactivation_url     = wp_nonce_url( $url . '?stripe_action=reactivation&subscriptionid=' . $ur_payment_subscription, 'ur_stripe_action' );
+				$recurring_is_enabled = ur_get_single_post_meta( $form_id, 'user_registration_enable_stripe_recurring', '0' );
+				if ( ur_string_to_bool( $recurring_is_enabled ) && ( 'active' === $ur_payment_subscription_status || 'cancel_at_end_of_cycle' === $ur_payment_subscription_status ) ) {
+					?>
+					<br/>
+					<div class="ur-payment-actions"	>
+						<?php
+						if ( 'cancel_at_end_of_cycle' === $ur_payment_subscription_status ) {
+							$buttons[] = '<a id="ur_reactivate_payment" class="ur-account-action-link" href="' . esc_url_raw( $reactivation_url ) . '">' . esc_html__( 'Reactivate', 'user-registration' ) . '</a>';
+						} else {
+							$buttons[] = '<a id="ur_cancel_payment" class="ur-account-action-link" href="' . esc_url_raw( $cancellation_url ) . '">' . esc_html__( 'Cancel', 'user-registration' ) . '</a>';
+						}
+						$buttons[] = '<a id="ur_change_payment" class="ur-account-action-link" href="#">' . esc_html__( 'Change Payment', 'user-registration' ) . '</a>';
+						?>
+					</div>
+					<?php
+				}
+			}
+
+			if ( ! empty( $buttons ) ) {
+				$payment_details['buttons'] = $buttons;
+			}
+
+			if ( ! empty( $payment_details ) ) {
+				$payment_details['form_type'] = 'normal';
+				array_push( $membership_data, $payment_details );
+			}
+		}
+
+		$membership_frontend = new Frontend();
+		$membership_frontend->user_registration_membership_tab_endpoint_content( $membership_data );
 	}
 }
 

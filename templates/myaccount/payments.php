@@ -52,11 +52,21 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 
 					<?php
 					foreach ( $items as $user_order ) :
+						$total_amount = $user_order['total_amount'] ? number_format( $user_order['total_amount'], 2 ) : '-';
+
+						if ( isset( $user_order['currency'] ) ) {
+							$total_amount .= ' ' . $user_order['currency'];
+						} else {
+							$user_id       = get_current_user_id();
+							$currency      = get_user_meta( $user_id, 'ur_payment_currency', true );
+							$total_amount .= ' ' . $currency;
+						}
+
 						?>
 						<tr class="ur-account-table__row">
 							<td class="ur-account-table__cell"><?php echo esc_html( $user_order['transaction_id'] ?? '-' ); ?></td>
 							<td class="ur-account-table__cell"><?php echo esc_html( $user_order['payment_method'] ?? '-' ); ?></td>
-							<td class="ur-account-table__cell"><?php echo esc_html( $user_order['total_amount'] ?? '-' ); ?></td>
+							<td class="ur-account-table__cell"><?php echo esc_html( $total_amount ); ?></td>
 							<td class="ur-account-table__cell"><span id="ur-membership-status" class="btn-<?php echo esc_attr( $user_order['status'] ?? '-' ); ?>"><?php echo esc_html( $user_order['status'] ?? '-' ); ?></span></td>
 							<td class="ur-account-table__cell">
 								<?php
