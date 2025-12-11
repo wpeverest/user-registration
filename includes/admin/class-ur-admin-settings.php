@@ -279,8 +279,11 @@ class UR_Admin_Settings {
 				'user_registration_membership_payment_settings_nonce' => wp_create_nonce( 'user_registration_validate_payment_settings_none' ),
 				'user_registration_membership_validate_payment_currency_nonce' => wp_create_nonce( 'user_registration_validate_payment_currency' ),
 				'user_registration_membership_captcha_settings_nonce' => wp_create_nonce( 'user_registration_validate_captcha_settings_nonce' ),
+				'user_registration_settings_nonce'     => wp_create_nonce( 'user_registration_settings_nonce' ),
 				'i18n_nav_warning'                     => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 				'i18n'                                 => array(
+					'advanced_logic_rules_exist_error' => esc_html__( 'Remove all rules with advance logics first before disabling.', 'user-registration' ),
+					'advanced_logic_check_error'       => esc_html__( 'An error occurred while checking for advanced logic rules.', 'user-registration' ),
 					'captcha_success'                    => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
 					'captcha_reset_title'                => esc_html__( 'Reset Keys', 'user-registration' ),
 					'i18n_prompt_reset'                  => esc_html__( 'Reset', 'user-registration' ),
