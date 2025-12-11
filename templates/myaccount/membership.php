@@ -19,8 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( empty( $membership_data ) || empty( $membership_data ) ) {
-	echo esc_html_e( 'You do not have any payment records', 'user-registration' );
+if ( empty( $membership_data ) ) {
+	echo esc_html_e( 'You do not have any records', 'user-registration' );
 	return;
 }
 
@@ -112,38 +112,45 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 										<?php
 										$buttons = array();
 
-										if ( ! $data['is_upgrading'] && ! empty( $membership ) ) :
-											$membership_checkout_page_id = get_option( 'user_registration_member_registration_page_id', false );
-											$redirect_page_url           = get_permalink( $membership_checkout_page_id );
-											$thank_you_page_id           = get_option( 'user_registration_thank_you_page_id', false );
-											$uuid                        = ur_generate_random_key();
-											$subscription_id             = $membership['subscription_id'];
-											$redirect_page_url           = $redirect_page_url . '?action=upgrade&current="' . $membership['post_id'] . '"&subscription_id="' . $membership['subscription_id'] . '"&urm_uuid="' . $uuid . '"&thank_you="' . $thank_you_page_id . '"';
-											$upgradable_plans            = $membership_service->get_upgradable_membership( $membership['post_id'] );
+										if ( isset( $data['form_type'] ) && 'normal' === $data['form_type'] ) {
+											if ( isset( $data['buttons'] ) && ! empty( $data['buttons'] ) ) {
+												$buttons = $data['buttons'];
+											}
+										} else {
+
+											if ( isset( $data['is_upgrading'] ) && ! $data['is_upgrading'] && ! empty( $membership ) ) :
+												$membership_checkout_page_id = get_option( 'user_registration_member_registration_page_id', false );
+												$redirect_page_url           = get_permalink( $membership_checkout_page_id );
+												$thank_you_page_id           = get_option( 'user_registration_thank_you_page_id', false );
+												$uuid                        = ur_generate_random_key();
+												$subscription_id             = $membership['subscription_id'];
+												$redirect_page_url           = $redirect_page_url . '?action=upgrade&current="' . $membership['post_id'] . '"&subscription_id="' . $membership['subscription_id'] . '"&urm_uuid="' . $uuid . '"&thank_you="' . $thank_you_page_id . '"';
+												$upgradable_plans            = $membership_service->get_upgradable_membership( $membership['post_id'] );
+												?>
+												<?php
+												if ( 'canceled' !== $membership['status'] && ! empty( $upgradable_plans ) ) :
+													$buttons[] = '<a class="ur-account-action-link membership-tab-btn change-membership-button" href="' . esc_url_raw( $redirect_page_url ) . '" data-id="' . esc_attr( $membership['post_id'] ?? '' ) . '">' . esc_html__( 'Change Plan', 'user-registration' ) . '</a>';
+													?>
+											<?php endif; ?>
+												<?php
+												$membership_type = isset( $membership['post_content'] ) && ! empty( $membership['post_content'] ) ? esc_html( ucfirst( wp_unslash( $membership['post_content']['type'] ) ) ) : 'NA';
+												if ( 'canceled' === $membership['status'] && ( $membership_type !== 'subscription' || $date_to_renew > date( 'Y-m-d 00:00:00' ) ) ) {
+													$buttons[] = '<a class="ur-account-action-link membership-tab-btn reactivate-membership-button" href="' . esc_url( $redirect_page_url ) . '" data-id="' . esc_attr( $membership['subscription_id'] ?? '' ) . '">' . esc_html__( 'Reactivate Membership', 'user-registration' ) . '</a>';
+												}
+												?>
+												<?php
+											endif;
 											?>
 											<?php
-											if ( 'canceled' !== $membership['status'] && ! empty( $upgradable_plans ) ) :
-												$buttons[] = '<a class="ur-account-action-link membership-tab-btn change-membership-button" href="' . esc_url_raw( $redirect_page_url ) . '" data-id="' . esc_attr( $membership['post_id'] ?? '' ) . '">' . esc_html__( 'Change Plan', 'user-registration' ) . '</a>';
-												?>
-										<?php endif; ?>
-											<?php
-											$membership_type = isset( $membership['post_content'] ) && ! empty( $membership['post_content'] ) ? esc_html( ucfirst( wp_unslash( $membership['post_content']['type'] ) ) ) : 'NA';
-											if ( 'canceled' === $membership['status'] && ( $membership_type !== 'subscription' || $date_to_renew > date( 'Y-m-d 00:00:00' ) ) ) {
-												$buttons[] = '<a class="ur-account-action-link membership-tab-btn reactivate-membership-button" href="' . esc_url( $redirect_page_url ) . '" data-id="' . esc_attr( $membership['subscription_id'] ?? '' ) . '">' . esc_html__( 'Reactivate Membership', 'user-registration' ) . '</a>';
+
+											if ( $can_renew && $date_to_renew <= date( 'Y-m-d 00:00:00' ) && 'canceled' !== $membership['status'] ) {
+												$buttons[] = '<a class="ur-account-action-link membership-tab-btn renew-membership-button" href="' . esc_url( $redirect_page_url ) . '" data-pg-gateways="' . ( isset( $membership['active_gateways'] ) ? implode( ',', array_keys( $membership['active_gateways'] ) ) : '' ) . '" data-id="' . esc_attr( $membership['post_id'] ?? '' ) . '">' . esc_html__( 'Renew Membership', 'user-registration' ) . '</a>';
 											}
 											?>
 											<?php
-										endif;
-										?>
-										<?php
-
-										if ( $can_renew && $date_to_renew <= date( 'Y-m-d 00:00:00' ) && 'canceled' !== $membership['status'] ) {
-											$buttons[] = '<a class="ur-account-action-link membership-tab-btn renew-membership-button" href="' . esc_url( $redirect_page_url ) . '" data-pg-gateways="' . ( isset( $membership['active_gateways'] ) ? implode( ',', array_keys( $membership['active_gateways'] ) ) : '' ) . '" data-id="' . esc_attr( $membership['post_id'] ?? '' ) . '">' . esc_html__( 'Renew Membership', 'user-registration' ) . '</a>';
-										}
-										?>
-										<?php
-										if ( 'canceled' !== $membership['status'] ) {
-											$buttons[] = '<a class="ur-account-action-link membership-tab-btn cancel-membership-button" data-id="' . esc_attr( $membership['subscription_id'] ?? '' ) . '">' . esc_html__( 'Cancel Membership', 'user-registration' ) . '</a>';
+											if ( 'canceled' !== $membership['status'] ) {
+												$buttons[] = '<a class="ur-account-action-link membership-tab-btn cancel-membership-button" data-id="' . esc_attr( $membership['subscription_id'] ?? '' ) . '">' . esc_html__( 'Cancel Membership', 'user-registration' ) . '</a>';
+											}
 										}
 										?>
 										<div class="btn-div">

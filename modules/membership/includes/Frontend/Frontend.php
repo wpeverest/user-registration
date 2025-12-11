@@ -10,12 +10,8 @@
 
 namespace WPEverest\URMembership\Frontend;
 
-use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
-use WPEverest\URMembership\Admin\Repositories\MembersRepository;
-use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
-use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Services\MembershipService;
-use WPEverest\URMembership\Admin\Services\SubscriptionService;
+use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -41,37 +37,9 @@ class Frontend {
 	 */
 	private function init_hooks() {
 		add_action( 'wp_enqueue_membership_scripts', array( $this, 'load_scripts' ), 10, 2 );
-		add_action( 'wp_loaded', array( $this, 'ur_add_membership_tab_endpoint' ) );
-		add_filter( 'user_registration_account_menu_items', array( $this, 'ur_membership_tab' ), 10, 1 );
-		add_action(
-			'user_registration_account_ur-membership_endpoint',
-			array(
-				$this,
-				'user_registration_membership_tab_endpoint_content',
-			)
-		);
 
 		add_action( 'template_redirect', array( $this, 'set_thank_you_transient' ) );
 		add_action( 'wp_loaded', array( $this, 'clear_upgrade_data' ) );
-	}
-
-	/**
-	 * Add the item to $items array.
-	 *
-	 * @param array $items Items.
-	 */
-	public function ur_membership_tab( $items ) {
-		$current_user_id = get_current_user_id();
-		$user_source     = get_user_meta( $current_user_id, 'ur_registration_source', true );
-
-		if ( 'membership' !== $user_source ) {
-			return $items;
-		}
-		$new_items                  = array();
-		$new_items['ur-membership'] = __( 'Subscriptions', 'user-registration' );
-		$items                      = array_merge( $items, $new_items );
-
-		return $this->delete_account_insert_before_helper( $items, $new_items, 'user-logout' );
 	}
 
 	/**
@@ -97,83 +65,10 @@ class Frontend {
 	/**
 	 * Membership tab content.
 	 */
-	public function user_registration_membership_tab_endpoint_content() {
-		$user_id = get_current_user_id();
-		$this->load_scripts();
-		$membership_repositories         = new MembersRepository();
-		$members_order_repository        = new MembersOrderRepository();
-		$members_subscription_repository = new MembersSubscriptionRepository();
-		$orders_repository               = new OrdersRepository();
-		$membership                      = $membership_repositories->get_member_membership_by_id( $user_id );
-		if ( ! empty( $membership['post_content'] ) ) {
-			$membership['post_content'] = json_decode( $membership['post_content'], true );
-		}
-		$membership_service = new MembershipService();
-		$membership_details = ( is_array( $membership ) && ! empty( $membership['post_id'] ) ) ? $membership_service->get_membership_details( $membership['post_id'] ) : array();
-		$active_gateways    = array();
+	public function user_registration_membership_tab_endpoint_content( $membership_data ) {
 
-		$membership_data = array();
-
-		foreach ( $memberships as $membership ) {
-
-			if ( ! empty( $membership['post_content'] ) ) {
-				$membership['post_content'] = json_decode( $membership['post_content'], true );
-			}
-			$membership_service = new MembershipService();
-			$membership_details = ( is_array( $membership ) && ! empty( $membership['post_id'] ) ) ? $membership_service->get_membership_details( $membership['post_id'] ) : array();
-			$active_gateways    = array();
-
-			if ( ! empty( $membership_details['payment_gateways'] ) ) {
-				$active_gateways = array_filter(
-					$membership_details['payment_gateways'],
-					function ( $item, $key ) {
-						return 'on' == $item['status'] && in_array( $key, array( 'paypal', 'stripe', 'bank' ) );
-					},
-					ARRAY_FILTER_USE_BOTH
-				);
-			}
-
-			$membership['active_gateways'] = $active_gateways;
-			$membership_process            = urm_get_membership_process( $user_id );
-
-			$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $membership['post_id'] ] );
-
-			$membership_process     = urm_get_membership_process( $user_id );
-			$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $membership['post_id'], $membership_process['multiple'] );
-
-			$last_order = $members_order_repository->get_member_orders( $user_id );
-			$bank_data  = array();
-			if ( ! empty( $last_order ) && $last_order['status'] == 'pending' && $last_order['payment_method'] === 'bank' ) {
-				$bank_data = array(
-					'show_bank_notice' => true,
-					'bank_data'        => get_option( 'user_registration_global_bank_details', '' ),
-					'notice_1'         => apply_filters( 'urm_bank_info_notice_1_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your upgraded membership will be activated. Kindly wait for the admin\'s confirmation.', 'user-registration' ) ),
-					'notice_2'         => apply_filters( 'urm_bank_info_notice_2_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Your membership will be renewed once the payment is verified. Kindly wait for the admin\'s confirmation.', 'user-registration' ) ),
-					'notice_3'         => apply_filters( 'urm_bank_info_notice_3_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your new membership will be activated. Kindly wait for the admin\'s confirmation.', 'user-registration' ) ),
-				);
-			}
-			$subscription_data = $members_subscription_repository->get_subscription_data_by_subscription_id( $membership['subscription_id'] );
-
-			$data = array(
-				'membership'             => $membership,
-				'is_upgrading'           => $is_upgrading,
-				'is_purchasing_multiple' => $is_purchasing_multiple,
-				'bank_data'              => $bank_data,
-				'renewal_behaviour'      => get_option( 'user_registration_renewal_behaviour', 'automatic' ),
-				'subscription_data'      => $subscription_data,
-			);
-
-			if ( ! empty( $last_order ) ) {
-				$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
-
-				if ( ! empty( $order_meta ) ) {
-					$data['delayed_until'] = $order_meta['meta_value'];
-				}
-			}
-
-			$data['period'] = 'subscription' === $membership['post_content']['type'] ? $membership['billing_amount'] . ' / ' . $membership['billing_cycle'] : $membership['billing_amount'];
-
-			array_push( $membership_data, $data );
+		if ( ur_check_module_activation( 'membership' ) ) {
+			$this->load_scripts();
 		}
 
 		$current_page = 1;
@@ -208,6 +103,8 @@ class Frontend {
 			<?php
 		}
 
+		$membership_service = new MembershipService();
+
 		ur_get_template(
 			'myaccount/membership.php',
 			array(
@@ -219,23 +116,6 @@ class Frontend {
 				'total_pages'        => ( $per_page > 0 ) ? (int) ceil( $total_count / $per_page ) : 1,
 			)
 		);
-	}
-
-	/**
-	 * Add Membership tab endpoint.
-	 */
-	public function ur_add_membership_tab_endpoint() {
-
-		$current_user_id = get_current_user_id();
-		$user_source     = get_user_meta( $current_user_id, 'ur_registration_source', true );
-
-		if ( 'membership' !== $user_source ) {
-			return;
-		}
-		$mask = Ur()->query->get_endpoints_mask();
-
-		add_rewrite_endpoint( 'ur-membership', $mask );
-		flush_rewrite_rules();
 	}
 
 	/**
