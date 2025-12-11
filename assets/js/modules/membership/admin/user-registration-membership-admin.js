@@ -292,7 +292,6 @@
 			post_meta_data.type = form
 				.find('input[name="ur_membership_type"]:checked')
 				.val();
-
 			post_meta_data.cancel_subscription = form
 				.find('input[name="ur_membership_cancel_on"]:checked')
 				.val();
