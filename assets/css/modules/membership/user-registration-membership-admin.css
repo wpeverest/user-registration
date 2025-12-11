@@ -1553,150 +1553,6 @@
   line-height: 1;
 }
 
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-membership-plans {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 20px 0;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-membership-plans .urmg-plan-card {
-  border: 2px solid #e0e0e0;
-  border-radius: 4px;
-  padding: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: #ffffff;
-  position: relative;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-membership-plans .urmg-plan-card:hover {
-  border-color: #475bb2;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-membership-plans .urmg-plan-card.selected {
-  border-color: #475bb2;
-  background: #f0f8ff;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-membership-plans .urmg-plan-card input[type=radio] {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-membership-plans .urmg-plan-card .urmg-plan-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 10px;
-  padding-left: 28px;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-membership-plans .urmg-plan-card .urmg-plan-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-membership-plans .urmg-plan-card .urmg-plan-price {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-  text-align: right;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-membership-plans .urmg-plan-card .urmg-plan-description {
-  font-size: 14px;
-  color: #383838;
-  margin-top: 8px;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-membership-plans .urmg-plan-card .urmg-plan-radio {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #ccc;
-  border-radius: 50%;
-  background: #ffffff;
-  transition: all 0.3s ease;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-membership-plans .urmg-plan-card.selected .urmg-plan-radio {
-  border-color: #475bb2;
-  background: #475bb2;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-membership-plans .urmg-plan-card.selected .urmg-plan-radio::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #ffffff;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-total-container {
-  border: 2px dashed #ccc;
-  border-radius: 4px;
-  padding: 16px 20px;
-  margin: 20px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f9f9f9;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-total-container .urmg-total-label {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-total-container .urmg-total-amount {
-  font-size: 18px;
-  font-weight: 700;
-  color: #475bb2;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-payment-gateways {
-  margin: 32px 0 20px 0;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-payment-gateways .urmg-payment-gateways-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 16px;
-  display: block;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-payment-gateways .urmg-payment-gateways-label .required {
-  color: #dc3232;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-payment-gateways .urmg-gateway-buttons {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-payment-gateways .urmg-gateway-buttons .urmg-gateway-btn {
-  flex: 1;
-  min-width: 120px;
-  padding: 12px 20px;
-  border: 2px solid #e0e0e0;
-  border-radius: 4px;
-  background: #ffffff;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-  position: relative;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-payment-gateways .urmg-gateway-buttons .urmg-gateway-btn:hover {
-  border-color: #475bb2;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-payment-gateways .urmg-gateway-buttons .urmg-gateway-btn.selected {
-  border-color: #475bb2;
-  background: #f0f8ff;
-  color: #475bb2;
-}
-.ur-admin-template.ur-input-type-select .urmg-container .urmg-payment-gateways .urmg-gateway-buttons .urmg-gateway-btn input[type=radio] {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
 .user-registration-membership_page_user-registration-members {
   background-color: #fafafa;
 }
@@ -1725,7 +1581,8 @@
   margin-top: -30px;
 }
 
-.wp-list-table.memberships tfoot tr th, .wp-list-table.memberships tfoot tr td {
+.wp-list-table.memberships tfoot tr th,
+.wp-list-table.memberships tfoot tr td {
   border-top: none;
 }
 .wp-list-table.users td {
@@ -1763,40 +1620,4 @@
 .user-registration-base-list-table-heading .ur-membership-order-controls {
   display: inline-flex;
   align-items: center;
-}
-.user-registration-base-list-table-heading .ur-membership-order-controls.ur-hidden {
-  display: none;
-}
-.user-registration-base-list-table-heading .ur-membership-order-controls .ur-update-membership-order-btn {
-  margin: 0;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 120px;
-  min-height: 36px;
-  border: 1px solid #475bb2;
-  color: #ffffff;
-  background: #475bb2;
-  padding: 0 14px 0 12px;
-  font-size: 14px;
-  line-height: 20px;
-  border-radius: 4px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.3s ease-in-out;
-  box-sizing: border-box;
-  cursor: pointer;
-}
-.user-registration-base-list-table-heading .ur-membership-order-controls .ur-update-membership-order-btn:hover {
-  background: #475bb2;
-  color: #ffffff;
-  border-color: #475bb2;
-}
-.user-registration-base-list-table-heading .ur-membership-order-controls .ur-update-membership-order-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-.user-registration-base-list-table-heading .ur-membership-order-controls .ur-update-membership-order-btn .ur-update-order-btn-text {
-  display: inline-block;
 }
