@@ -58,12 +58,12 @@ class UR_Blocks {
 			'user-registration-blocks-editor',
 			'_UR_BLOCKS_',
 			array(
-				'logoUrl'              => UR()->plugin_url() . '/assets/images/logo.png',
-				'urRestApiNonce'       => wp_create_nonce( 'wp_rest' ),
-				'restURL'              => rest_url(),
-				'isPro'                => is_plugin_active( 'user-registration-pro/user-registration.php' ),
-				'iscRestrictionActive' => ur_check_module_activation( 'content-restriction' ),
-				'pages'                => array_map(
+				'logoUrl'                     => UR()->plugin_url() . '/assets/images/logo.png',
+				'urRestApiNonce'              => wp_create_nonce( 'wp_rest' ),
+				'restURL'                     => rest_url(),
+				'isPro'                       => is_plugin_active( 'user-registration-pro/user-registration.php' ),
+				'iscRestrictionActive'        => ur_check_module_activation( 'content-restriction' ),
+				'pages'                       => array_map(
 					function ( $page ) {
 						return array(
 							'label' => $page->post_title,
@@ -71,9 +71,10 @@ class UR_Blocks {
 						); },
 					get_pages()
 				),
-				'login_page_id'        => get_option( 'user_registration_login_page_id' ),
-				'urcrConfigurl'        => ur_check_module_activation( 'content-restriction' ) ? admin_url( 'admin.php?page=user-registration-content-restriction' ) : '',
-				'isProActive'          => UR_PRO_ACTIVE,
+				'login_page_id'               => get_option( 'user_registration_login_page_id' ),
+				'urcrConfigurl'               => ur_check_module_activation( 'content-restriction' ) ? admin_url( 'admin.php?page=user-registration-content-restriction' ) : '',
+				'urcrGlobalRestrictionMsgUrl' => ur_check_module_activation( 'content-restriction' ) ? admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) : '',
+				'isProActive'                 => UR_PRO_ACTIVE,
 			)
 		);
 		wp_register_script(

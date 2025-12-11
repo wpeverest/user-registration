@@ -71,9 +71,23 @@ class UR_Block_Content_Restriction_V2 extends UR_Block_Abstract {
 		}
 
 		if ( $show_content ) {
+
 			return $content;
 		} else {
-			return '<p>Restricted</p>';
+
+			$enable_custom_message = isset( $attr['enableCustomRestrictionMessage'] ) ? $attr['enableCustomRestrictionMessage'] : false;
+
+			if ( $enable_custom_message ) {
+
+				$custom_message = isset( $attr['CustomRestrictionMessage'] ) ? $attr['CustomRestrictionMessage'] : '';
+
+				return $custom_message;
+			} else {
+
+				$message = get_option( 'user_registration_content_restriction_message', __( 'This content is restricted!', 'user-registration' ) );
+
+				return $message;
+			}
 		}
 	}
 }

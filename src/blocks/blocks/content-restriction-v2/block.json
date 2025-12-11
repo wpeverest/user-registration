@@ -20,20 +20,12 @@
     "reusable": false
   },
   "attributes": {
-    "content": {
-      "type": "string",
-      "selector": "div"
-    },
-    "message": {
-      "type": "string",
-      "default": ""
-    },
-    "enableContentRestriction": {
-      "type": "boolean",
-      "default": false
-    },
     "contentRule": {
       "type": "number",
+      "default": ""
+    },
+    "CustomRestrictionMessage": {
+      "type": "string",
       "default": ""
     },
     "enableCustomRestrictionMessage": {

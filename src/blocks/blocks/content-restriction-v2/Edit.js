@@ -4,6 +4,7 @@ import apiFetch from "@wordpress/api-fetch";
 import {
 	Box,
 	ChakraProvider,
+	extendTheme,
 	Flex,
 	FormControl,
 	FormLabel
@@ -18,7 +19,7 @@ import Select from "react-select";
 import { Editor } from "@tinymce/tinymce-react";
 
 /* global _UR_BLOCKS_ */
-const { urRestApiNonce, restURL, urcrConfigurl } =
+const { urRestApiNonce, restURL, urcrConfigurl, urcrGlobalRestrictionMsgUrl } =
 	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 const labelStyle = {
@@ -36,7 +37,11 @@ const labelStyle = {
 };
 
 const Edit = ({ attributes, setAttributes }) => {
-	const { message, enableCustomRestrictionMessage, contentRule } = attributes;
+	const {
+		CustomRestrictionMessage,
+		enableCustomRestrictionMessage,
+		contentRule
+	} = attributes;
 
 	// ✅ Block wrapper for InnerBlocks must be a plain div
 	const blockProps = useBlockProps({
@@ -76,7 +81,7 @@ const Edit = ({ attributes, setAttributes }) => {
 	);
 
 	return (
-		<>
+		<ChakraProvider theme={extendTheme()}>
 			<InspectorControls>
 				<PanelBody>
 					<Box>
@@ -86,13 +91,13 @@ const Edit = ({ attributes, setAttributes }) => {
 								"Block Restriction Rules",
 								"user-registration"
 							)}
-							value={contentRule}
+							value={Number(contentRule)}
 							options={[
 								{ label: "Select a content rule", value: "" },
 								...contentRuleOptions
 							]}
 							onChange={(val) =>
-								setAttributes({ contentRule: val })
+								setAttributes({ contentRule: Number(val) })
 							}
 						/>
 
@@ -123,6 +128,21 @@ const Edit = ({ attributes, setAttributes }) => {
 							}
 						/>
 
+						{!enableCustomRestrictionMessage && (
+							<div className="urcr-config-link">
+								<a
+									className="link"
+									href={urcrGlobalRestrictionMsgUrl}
+									target="__blank"
+								>
+									{__(
+										"Setup global restriction message from here",
+										"user-registration"
+									)}
+								</a>
+							</div>
+						)}
+
 						{enableCustomRestrictionMessage && (
 							<FormControl mt={6}>
 								<FormLabel sx={labelStyle}>
@@ -132,9 +152,11 @@ const Edit = ({ attributes, setAttributes }) => {
 									)}
 								</FormLabel>
 								<Editor
-									value={message}
+									value={CustomRestrictionMessage}
 									onEditorChange={(val) =>
-										setAttributes({ message: val })
+										setAttributes({
+											CustomRestrictionMessage: val
+										})
 									}
 									init={{
 										height: 200,
@@ -152,20 +174,26 @@ const Edit = ({ attributes, setAttributes }) => {
 				</PanelBody>
 			</InspectorControls>
 
-			<div {...blockProps}>
-				<Flex className="ur-note">
+			<Box {...blockProps} p={"1px"}>
+				<Flex
+					className="ur-note"
+					bg={"gray.200"}
+					justify="center"
+					align="center"
+					h="40px"
+				>
 					<span className="dashicons dashicons-lock" />
-					<p className="user-registration-content-restriction-block-note-text">
+					<span>
 						{__(
-							"This block has global content restriction settings.",
+							"The contents of this block are protected",
 							"user-registration"
 						)}
-					</p>
+					</span>
 				</Flex>
 
 				<InnerBlocks templateLock={false} />
-			</div>
-		</>
+			</Box>
+		</ChakraProvider>
 	);
 };
 
