@@ -1136,17 +1136,14 @@
 	var $membershipTable = $('#membership-list tbody#the-list');
 
 	if ($membershipTable.length > 0 && $.fn.sortable) {
-		// Get button text
-		var updateOrderButtonText = ur_membership_data.labels && ur_membership_data.labels.i18n_update_order ? ur_membership_data.labels.i18n_update_order : 'Update Order';
 
-		// Add Update Order button container inside the heading div
-		var $updateOrderContainer = $('<div class="ur-membership-order-controls ur-d-none"><button type="button" class="button button-primary ur-update-membership-order-btn">' +
-			'<span class="ur-update-order-btn-text">' + updateOrderButtonText + '</span>' +
-			'</button></div>');
-
+		var updateOrderButtonText = ur_membership_data.labels.i18n_update_order,
+			$updateOrderContainer = $('<div class="ur-membership-order-controls ur-d-none"><button type="button" class="button button-primary ur-update-membership-order-btn">' +
+				'<span class="ur-update-order-btn-text">' + updateOrderButtonText + '</span>' +
+				'</button></div>'),
+			$updateOrderBtn = $updateOrderContainer.find('.ur-update-membership-order-btn'),
+			$spinner = '<span class="ur-spinner"></span>';
 		$('.user-registration-base-list-table-heading').append($updateOrderContainer);
-		var $updateOrderBtn = $updateOrderContainer.find('.ur-update-membership-order-btn');
-		var $spinner = '<span class="ur-spinner"></span>';
 
 		// Initialize jQuery UI Sortable
 		$membershipTable.sortable({
@@ -1155,26 +1152,13 @@
 			cursor: 'move',
 			opacity: 0.8,
 			placeholder: 'ur-sortable-placeholder',
-			helper: function (e, tr) {
-				var $originals = tr.children();
-				var $helper = tr.clone();
-				$helper.children().each(function (index) {
-					$(this).width($originals.eq(index).width());
-				});
-				return $helper;
-			},
-			start: function (e, ui) {
-				ui.placeholder.height(ui.item.height());
-			},
 			stop: function (e, ui) {
-				// Reset button state and show Update Order button when drag ends
 				$updateOrderBtn.prop('disabled', false);
 				$updateOrderContainer.removeClass('ur-d-none');
 				$updateOrderContainer.find('.ur-spinner').remove();
 			}
 		});
 
-		// Handle Update Order button click
 		$updateOrderContainer.on('click', '.ur-update-membership-order-btn', function (e) {
 			e.preventDefault();
 			if ($updateOrderContainer.find('.ur-spinner').length > 0) {
