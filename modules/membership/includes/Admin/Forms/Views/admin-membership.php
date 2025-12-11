@@ -75,12 +75,11 @@ $payment_gateways = get_option( 'ur_membership_payment_gateways', array(
 
 // Map payment gateway keys to their image filenames.
 $gateway_images = array(
-	'paypal'        => 'paypal.png',
-	'stripe'        => 'stripe.png',
-	'bank'          => 'bank.png',
-	'authorize'     => 'authorize-net.png',
-	'authorize_net' => 'authorize-net.png',
-	'mollie'        => 'mollie.png',
+	'paypal'    => 'paypal-logo.png',
+	'stripe'    => 'stripe-logo.png',
+	'bank'      => 'bank-logo.png',
+	'authorize' => 'authorize-net.png',
+	'mollie'    => 'mollie.png',
 );
 
 // Get plugin URL for images.

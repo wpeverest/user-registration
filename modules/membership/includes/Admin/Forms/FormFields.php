@@ -88,11 +88,10 @@ class FormFields {
 
 		// Map payment gateway keys to their image filenames
 		$gateway_images = array(
-			'paypal'        => 'paypal.png',
-			'stripe'        => 'stripe.png',
-			'bank'          => 'bank.png',
+			'paypal'        => 'paypal-logo.png',
+			'stripe'        => 'stripe-logo.png',
+			'bank'          => 'bank-logo.png',
 			'authorize'     => 'authorize-net.png',
-			'authorize_net' => 'authorize-net.png',
 			'mollie'        => 'mollie.png',
 		);
 
@@ -121,6 +120,7 @@ class FormFields {
 		return array(
 			'network_error'          => esc_html__( 'Network error', 'user-registration' ),
 			'i18n_field_is_required' => _x( 'field is required.', 'user registration membership', 'user-registration' ),
+			'i18n_select_payment_gateway'        => __( 'Select Payment Gateway.', 'user-registration' ),
 		);
 	}
 

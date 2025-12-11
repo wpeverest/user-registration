@@ -1142,8 +1142,34 @@
 				'<span class="ur-update-order-btn-text">' + updateOrderButtonText + '</span>' +
 				'</button></div>'),
 			$updateOrderBtn = $updateOrderContainer.find('.ur-update-membership-order-btn'),
-			$spinner = '<span class="ur-spinner"></span>';
+			$spinner = '<span class="ur-spinner"></span>',
+			initialOrder = [];
 		$('.user-registration-base-list-table-heading').append($updateOrderContainer);
+
+		// Helper function to get current order of membership IDs
+		function getCurrentOrder() {
+			var order = [];
+			$membershipTable.find('tr[data-membership-id]').each(function () {
+				var membershipId = $(this).attr('data-membership-id');
+				if (membershipId) {
+					order.push(parseInt(membershipId, 10));
+				}
+			});
+			return order;
+		}
+
+		// Helper function to compare two arrays
+		function arraysEqual(arr1, arr2) {
+			if (arr1.length !== arr2.length) {
+				return false;
+			}
+			for (var i = 0; i < arr1.length; i++) {
+				if (arr1[i] !== arr2[i]) {
+					return false;
+				}
+			}
+			return true;
+		}
 
 		// Initialize jQuery UI Sortable
 		$membershipTable.sortable({
@@ -1152,10 +1178,20 @@
 			cursor: 'move',
 			opacity: 0.8,
 			placeholder: 'ur-sortable-placeholder',
+			start: function (e, ui) {
+				// Store the initial order when dragging starts
+				initialOrder = getCurrentOrder();
+			},
 			stop: function (e, ui) {
-				$updateOrderBtn.prop('disabled', false);
-				$updateOrderContainer.removeClass('ur-d-none');
-				$updateOrderContainer.find('.ur-spinner').remove();
+				// Get the current order after dragging stops
+				var currentOrder = getCurrentOrder();
+				
+				// Only show the update button if the order has actually changed
+				if (!arraysEqual(initialOrder, currentOrder)) {
+					$updateOrderBtn.prop('disabled', false);
+					$updateOrderContainer.removeClass('ur-d-none');
+					$updateOrderContainer.find('.ur-spinner').remove();
+				}
 			}
 		});
 
