@@ -68,7 +68,7 @@ class Frontend {
 			return $items;
 		}
 		$new_items                  = array();
-		$new_items['ur-membership'] = __( 'Membership', 'user-registration' );
+		$new_items['ur-membership'] = __( 'Subscriptions', 'user-registration' );
 		$items                      = array_merge( $items, $new_items );
 
 		return $this->delete_account_insert_before_helper( $items, $new_items, 'user-logout' );
@@ -197,6 +197,16 @@ class Frontend {
 		$per_page    = max( 1, intval( $per_page ) );
 		$offset      = ( $page - 1 ) * $per_page;
 		$items       = array_slice( $membership_data, $offset, $per_page );
+
+		$layout = get_option( 'user_registration_my_account_layout', 'vertical' );
+
+		if ( 'vertical' === $layout && isset( ur_get_account_menu_items()['ur-membership'] ) ) {
+			?>
+			<div class="user-registration-MyAccount-content__header">
+				<h1><?php echo wp_kses_post( ur_get_account_menu_items()['ur-membership'] ); ?></h1>
+			</div>
+			<?php
+		}
 
 		ur_get_template(
 			'myaccount/membership.php',
