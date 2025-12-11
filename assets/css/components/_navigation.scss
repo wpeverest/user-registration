@@ -1,6 +1,7 @@
 .user-registration,
 .user-registration-page,
 .ur-multi-device-form-preview {
+
     .ur-admin-page-topnav,
     #nav-menu-header {
         display: flex;
@@ -58,11 +59,11 @@
                             position: fixed;
                             background: $white;
                             border: $border_width solid $border_color;
-                            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+                            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
                             padding: $spacing_22px;
                             z-index: 99;
                             width: 20rem;
-                            left: -360px;
+                            left: -370px;
                             top: $spacing_30px;
                             height: calc(100vh - 32px);
                             transition: all .5s ease-in-out;
@@ -247,7 +248,7 @@
 
                                     &__items {
                                         list-style: none;
-							            margin: 0;
+                                        margin: 0;
                                         padding: $spacing_8px;
 
                                         li {
@@ -324,7 +325,7 @@
                     }
                 }
 
-                > a {
+                >a {
                     padding: 0 !important;
                     margin: 0 !important;
                     border-right: 0 !important;
@@ -446,25 +447,25 @@
         }
 
         .ur-form-title {
-			font-weight: $medium;
-			font-size: 16px;
-			line-height: 26px;
-			color: $grey-400;
+            font-weight: $medium;
+            font-size: 16px;
+            line-height: 26px;
+            color: $grey-400;
             padding-left: $spacing_24px;
             padding-right: 0;
-		}
+        }
 
         .ur-editing-tag {
-			padding: $spacing_4px $spacing_10px;
-			background: $blue-50;
-			border-radius: $border_radius_50;
-			font-style: italic;
-			font-weight: $regular;
-			font-size: 12px;
-			line-height: 150%;
-			color: $grey-400;
+            padding: $spacing_4px $spacing_10px;
+            background: $blue-50;
+            border-radius: $border_radius_50;
+            font-style: italic;
+            font-weight: $regular;
+            font-size: 12px;
+            line-height: 150%;
+            color: $grey-400;
             margin-left: $spacing_12px;
-		}
+        }
 
         .major-publishing-actions {
             transform: translateX(-1px);
@@ -518,6 +519,7 @@
                 }
 
                 &-secondary {
+
                     .ur-fs-open-label,
                     .ur-fs-close-label {
                         &::before {
@@ -577,46 +579,46 @@
 }
 
 @media (max-width: 1199px) {
-	.ur-page-title__wrapper--left-menu {
-		display: none;
-	}
+    .ur-page-title__wrapper--left-menu {
+        display: none;
+    }
 }
 
 body {
     &.ur-multi-device-form-preview {
         #nav-menu-header {
-			.ur-form-preview-devices {
-				border-radius: $border_radius_8;
-				background: #EDEFF7;
-				padding: $spacing_4px;
-				display: flex;
-				align-items: center;
-				gap: $spacing_2px;
+            .ur-form-preview-devices {
+                border-radius: $border_radius_8;
+                background: #EDEFF7;
+                padding: $spacing_4px;
+                display: flex;
+                align-items: center;
+                gap: $spacing_2px;
 
-				.ur-form-preview-device{
-					&.active{
-						background: #fff;
-						border-radius: 4px;
-					}
-				}
+                .ur-form-preview-device {
+                    &.active {
+                        background: #fff;
+                        border-radius: 4px;
+                    }
+                }
 
-				svg {
-					padding: $spacing_8px;
-					width: auto;
-					height: auto;
-				}
-			}
+                svg {
+                    padding: $spacing_8px;
+                    width: auto;
+                    height: auto;
+                }
+            }
 
-			.major-publishing-actions {
+            .major-publishing-actions {
                 .publishing-action {
-					position: relative;
+                    position: relative;
                     align-items: center;
 
-					input[type="text"] {
-						border: $border_width solid $border_color;
-						text-align: left;
-						border-radius: $border_radius_4;
-						padding: 0 $spacing_12px;
+                    input[type="text"] {
+                        border: $border_width solid $border_color;
+                        text-align: left;
+                        border-radius: $border_radius_4;
+                        padding: 0 $spacing_12px;
                         min-height: 36px;
                         height: 36px;
                         font-size: 13px;
@@ -624,7 +626,7 @@ body {
                         background: #fafafa;
                         width: 280px;
                         font-family: Consolas, Monaco, monospace;
-					}
+                    }
 
                     .ur-copy-shortcode {
                         position: unset;
@@ -637,8 +639,8 @@ body {
                         background: #f4f4f4 !important;
                         border: $border_width solid $border_color !important;
                     }
-				}
-			}
-		}
+                }
+            }
+        }
     }
 }

@@ -103,7 +103,7 @@ const RuleCard = ({
 			<div
 				className={headerClass}
 				onClick={(e) => {
-					if (!e.target.closest('.integration-action') && !e.target.closest('.urcr-status-toggle')) {
+					if (!e.target.closest('.integration-action') && !e.target.closest('.ur-toggle-section')) {
 						onToggleExpand();
 					}
 				}}
@@ -120,16 +120,16 @@ const RuleCard = ({
 					<span className="urcr-status-label">
 						{__("Status", "user-registration")} :
 					</span>
-					<div className="urcr-status-toggle-wrapper">
-						<label className="urcr-status-toggle" onClick={(e) => e.stopPropagation()}>
+					<div className="ur-toggle-section">
+						<span className="user-registration-toggle-form" onClick={(e) => e.stopPropagation()}>
 							<input
 								type="checkbox"
 								checked={rule.enabled}
 								onChange={handleToggleStatus}
 								disabled={isToggling}
 							/>
-							<span className="urcr-slider"></span>
-						</label>
+							<span className="slider round"></span>
+						</span>
 						{isToggling && (
 							<span className="urcr-toggle-loader spinner is-active"></span>
 						)}

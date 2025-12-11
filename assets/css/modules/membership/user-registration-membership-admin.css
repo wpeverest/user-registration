@@ -20,6 +20,17 @@
   transition: all 0.25s ease 0s;
   box-shadow: 0 1px 3px rgba(182.4993283582, 186.8632089552, 206.5006716418, 0.15);
 }
+@media screen and (max-width: 782px) {
+  .user-registration button,
+  .user-registration .button,
+  .ur-form-container button,
+  .ur-form-container .button {
+    line-height: 20px;
+    font-size: 13px;
+    min-height: 30px;
+    margin-bottom: 0;
+  }
+}
 .user-registration button + button,
 .user-registration button + .button,
 .user-registration .button + button,
