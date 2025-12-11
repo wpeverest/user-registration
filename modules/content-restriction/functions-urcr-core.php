@@ -1109,29 +1109,38 @@ function urcr_migrate_global_restriction_settings() {
  * @return array Array of migrated rule IDs and post/page IDs.
  */
 function urcr_migrate_post_page_restrictions() {
-	// Check if migration already done
 	$migration_done = get_option( 'urcr_post_page_restrictions_migrated', false );
 	if ( $migration_done ) {
 		return array(); // Already migrated
 	}
 
-	// Get all posts and pages with urcr_meta_checkbox enabled
-	$args = array(
-		'post_type'      => array( 'post', 'page' ),
-		'post_status'    => 'publish',
-		'posts_per_page' => - 1,
-		'meta_query'     => array(
-			array(
-				'key'   => 'urcr_meta_checkbox',
-				'value' => 'on',
-			),
-		),
+	global $wpdb;
+
+	$query = $wpdb->prepare(
+		"SELECT DISTINCT p.ID, p.post_type
+		FROM {$wpdb->posts} p
+		INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
+		WHERE pm.meta_key = %s
+			AND pm.meta_value = %s
+			AND p.post_type IN ('post', 'page')
+			AND p.post_status = 'publish'",
+		'urcr_meta_checkbox',
+		'on'
 	);
 
-	$posts = get_posts( $args );
+	$results = $wpdb->get_results( $query );
+
+	$posts = array();
+	foreach ( $results as $result ) {
+		$post = new stdClass();
+		$post->ID = (int) $result->ID;
+		$post->post_type = $result->post_type;
+		$posts[] = $post;
+	}
+
+	$total_posts_count = count( $posts );
 
 	if ( empty( $posts ) ) {
-		// No posts to migrate, mark as done
 		update_option( 'urcr_post_page_restrictions_migrated', true );
 		return array();
 	}
@@ -1240,7 +1249,7 @@ function urcr_migrate_post_page_restrictions() {
 		update_option( 'urcr_migrated_post_page_ids', $all_migrated_ids );
 
 		// Mark migration as done only if all posts are migrated
-		if ( count( $all_migrated_ids ) >= count( $posts ) ) {
+		if ( count( $all_migrated_ids ) >= $total_posts_count ) {
 			update_option( 'urcr_post_page_restrictions_migrated', true );
 		}
 
