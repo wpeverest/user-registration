@@ -268,9 +268,7 @@
 			user_data.membership = membership_input.val();
 			user_data.payment_method = "free";
 			if (membership_input.data("urm-pg-type") !== "free") {
-				user_data.payment_method = $(
-					'input[name="urm_payment_method"]:checked:visible'
-				).val();
+				user_data.payment_method = $('input[name="urm_payment_method"]:checked').val();
 			}
 			var date = new Date();
 			user_data.start_date =
@@ -377,6 +375,8 @@
 		 */
 		create_member: function (form_response) {
 			var prepare_members_data = this.prepare_members_data();
+			console.log(prepare_members_data);
+			return;
 			prepare_members_data.username = form_response.data.username;
 
 			this.send_data(
