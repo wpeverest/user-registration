@@ -1261,11 +1261,14 @@
 			}
 
 			&#user-registration-members-list-form {
+				#user-registration-base-list-filters-row {
+					margin-bottom: $spacing_32px;
+				}
 				.tablenav{
 					display: flex;
 					justify-content: flex-end;
 					align-self: center;
-					margin-bottom: $spacing_40px;
+					margin-bottom: $spacing_32px;
 					flex-wrap: wrap;
 					justify-content: space-between;
 

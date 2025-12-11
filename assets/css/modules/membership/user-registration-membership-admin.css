@@ -1278,11 +1278,14 @@
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#membership-list .tablenav.top {
   display: none;
 }
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#user-registration-members-list-form #user-registration-base-list-filters-row {
+  margin-bottom: 32px;
+}
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#user-registration-members-list-form .tablenav {
   display: flex;
   justify-content: flex-end;
   align-self: center;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
   flex-wrap: wrap;
   justify-content: space-between;
 }
