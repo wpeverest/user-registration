@@ -1225,11 +1225,11 @@
 		}
 	});
 
-	let current = 0;
-	const $steps = $(
+	var current = 0;
+	var $steps = $(
 		".ur-page-title__wrapper--steps .ur-page-title__wrapper--steps-btn"
 	);
-	const $forms = $(".user-registration-card--form-step");
+	var $forms = $(".user-registration-card--form-step");
 
 	function showStep(i) {
 		$forms.removeClass("user-registration-card--form-step-active");
