@@ -625,7 +625,7 @@ if ( ! function_exists( 'urm_get_gateway_image_url' ) ) {
 			return '';
 		}
 
-		return esc_url( $plugin_url . '/assets/images/settings-icons/' . $image_file );
+		return esc_url( $plugin_url . '/assets/images/settings-icons/membership-field/' . $image_file );
 	}
 }
 

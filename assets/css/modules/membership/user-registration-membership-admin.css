@@ -1205,6 +1205,9 @@
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#title, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#membership_price, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#membership_type, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#members, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#status {
   width: 20%;
 }
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#draggable {
+  width: 2%;
+}
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr:nth-child(odd) {
   background: #F8F8FA;
 }
@@ -1219,6 +1222,10 @@
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td strong .ur-edit-title a {
   line-height: 24px;
   font-weight: 400;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td.draggable {
+  display: flex;
+  align-items: center;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td.membership_type .user-registration-badge {
   padding: 0;

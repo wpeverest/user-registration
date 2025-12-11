@@ -626,7 +626,7 @@
 
 			if (show_payment_gateways && Object.keys(active_payment_gateways).length > 0) {
 				html += '<div class="urmg-payment-gateways">';
-				html += '<label class="urmg-payment-gateways-label">'+ urmg_data.labels.i18n_prompt_no_membership_selected +'<span class="required">*</span></label>';
+				html += '<label class="urmg-payment-gateways-label">'+ urmg_data.labels.i18n_select_payment_gateway +'<span class="required">*</span></label>';
 				html += '<div class="urmg-gateway-buttons">';
 
 				var gateway_index = 0;
@@ -634,7 +634,7 @@
 					var is_first_gateway = gateway_index === 0,
 						selected_gateway_class = is_first_gateway ? 'selected' : '',
 						image_file = gateway_images[gateway_key] || '',
-						image_url = image_file ? plugin_url + '/assets/images/settings-icons/' + image_file : '';
+						image_url = image_file ? plugin_url + '/assets/images/settings-icons/membership-field/' + image_file : '';
 
 					html += '<label class="urmg-gateway-btn ' + selected_gateway_class + '">';
 					html += '<input type="radio" name="urm_payment_method" value="' + gateway_key + '" ' + (is_first_gateway ? 'checked' : '') + ' disabled/>';

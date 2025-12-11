@@ -5090,6 +5090,85 @@ body.user-registration {
 				}
 			}
 		}
+
+		&--steps{
+			gap: $spacing_14px !important;
+
+			&-wrapper{
+				display: flex;
+				align-items: center;
+				gap: $spacing_8px;
+
+				span{
+					color: $grey-500;
+					font-size: 15px;
+					font-weight: 600;
+				}
+			}
+
+			&-btn{
+				background: transparent;
+				border: none;
+				padding: 0;
+				cursor: pointer;
+				box-shadow: none;
+
+				svg{
+					width: 26px;
+				}
+
+				&-active{
+					svg path{
+						stroke: $primary_color;
+					}
+					span{
+						color: $primary_color;
+					}
+				}
+
+				&:hover{
+					svg path{
+						stroke: $primary_color;
+					}
+				}
+			}
+
+			&-separator{
+				width: 80px;
+				height: 2px;
+				border: 0;
+				background: $grey-50;
+				flex: 0 0 auto !important;
+			}
+		}
+
+		&--actions{
+			display: flex;
+			align-items: center;
+			gap: $spacing_24px;
+
+			&-status{
+				display: flex;
+				align-items: center;
+				gap: $spacing_4px;
+				p{
+					color: $grey-300;
+					font-size: 13px;
+				}
+				.separator{
+					color: $grey-300;
+					margin-left: $spacing_4px;
+					margin-right: $spacing_4px;
+				}
+				.user-registration-toggle-form{
+					input {
+						&:checked + .slider {
+							background-color: $green !important;
+						}
+					}
+				}
+			}
+		}
 	}
 
 	.ur-back-button {
