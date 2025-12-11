@@ -143,7 +143,8 @@ $field_label = esc_html( $this->get_general_setting_data( 'label' ) );
 				<?php
 				// Payment Gateway Selection - only show if there's more than one membership, or if single membership is not free.
 				$memberships_count       = count( $memberships );
-				$active_payment_gateways = urm_get_all_active_payment_gateways( 'paid' );
+				$membership_type = UR_PRO_ACTIVE ? 'subscription' : 'paid';
+				$active_payment_gateways = urm_get_all_active_payment_gateways( $membership_type );
 				$show_payment_gateways   = false;
 
 				if ( $memberships_count > 1 ) {
