@@ -1197,7 +1197,7 @@ function urcr_migrate_post_page_restrictions() {
 
 	if ( ! empty( $posts_by_type['wp_posts'] ) ) {
 		$target_contents[] = array(
-			'id'    => 'x' . $target_id_counter ++,
+			'id'    => 'x' . $target_id_counter++,
 			'type'  => 'wp_posts',
 			'value' => array_map( 'strval', $posts_by_type['wp_posts'] ),
 		);
@@ -1206,7 +1206,7 @@ function urcr_migrate_post_page_restrictions() {
 
 	if ( ! empty( $posts_by_type['wp_pages'] ) ) {
 		$target_contents[] = array(
-			'id'    => 'x' . $target_id_counter ++,
+			'id'    => 'x' . $target_id_counter++,
 			'type'  => 'wp_pages',
 			'value' => array_map( 'strval', $posts_by_type['wp_pages'] ),
 		);
@@ -1266,8 +1266,7 @@ function urcr_logic_map_has_advanced_logic( $logic_map ) {
 		return false;
 	}
 
-
-	if ( isset( $logic_map['type'] )  ) {
+	if ( isset( $logic_map['type'] ) ) {
 		// Check for nested groups in conditions recursively
 		if ( ! empty( $logic_map['conditions'] ) && is_array( $logic_map['conditions'] ) ) {
 			$conditions_count = count( $logic_map['conditions'] );
@@ -1378,7 +1377,7 @@ function urcr_migrate_memberships() {
 	}
 
 	$migrated_rule_ids = array();
-	$base_timestamp = time() * 1000;
+	$base_timestamp    = time() * 1000;
 	$timestamp_counter = 0;
 
 	foreach ( $memberships as $membership ) {
@@ -1397,7 +1396,7 @@ function urcr_migrate_memberships() {
 		}
 
 		$timestamp = $base_timestamp + ( $timestamp_counter * 1000 );
-		$timestamp_counter++;
+		++$timestamp_counter;
 
 		// Build condition for this membership
 		$condition = array(
@@ -1439,7 +1438,7 @@ function urcr_migrate_memberships() {
 		$rule_id = wp_insert_post( $rule_post );
 
 		if ( $rule_id && ! is_wp_error( $rule_id ) ) {
-			$migrated_rule_ids[] = $rule_id;
+			$migrated_rule_ids[]       = $rule_id;
 			$migrated_membership_ids[] = $membership_id;
 		}
 	}
@@ -1505,9 +1504,9 @@ function urcr_has_unmigrated_memberships() {
  */
 function urcr_run_migration() {
 	$results = array(
-		'global_rule_id'    => false,
-		'post_page_rule_id' => false,
-		'migrated_post_ids' => array(),
+		'global_rule_id'      => false,
+		'post_page_rule_id'   => false,
+		'migrated_post_ids'   => array(),
 		'membership_rule_ids' => array(),
 	);
 
@@ -1538,3 +1537,17 @@ function urcr_run_migration() {
 	return $results;
 }
 
+/**
+ * Function get the list of all the rules.
+ *
+ * @return array of rules.
+ */
+function urcr_get_rules() {
+	return get_posts(
+		array(
+			'numberposts' => -1,
+			'post_status' => 'publish',
+			'post_type'   => 'urcr_access_rule',
+		)
+	);
+}
