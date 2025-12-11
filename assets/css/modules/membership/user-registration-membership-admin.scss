@@ -1894,6 +1894,24 @@
 			box-shadow: 0 2px 8px rgba(72, 91, 178, 0.2);
 			background: rgba(72, 91, 178, 0.1);
 			border-color: rgba(72, 91, 178, 0.3);
+			display: table !important;
+			table-layout: fixed;
+			margin: 0 !important;
+			border-collapse: collapse;
+			
+			tr {
+				display: table-row !important;
+				
+				td {
+					vertical-align: middle;
+					
+					// Ensure drag handle column maintains alignment
+					&.draggable {
+						display: flex;
+						align-items: center;
+					}
+				}
+			}
 		}
 
 		.ur-sortable-placeholder {
@@ -1904,7 +1922,20 @@
 		}
 
 		tr.ui-sortable-helper {
-			display: table-row;
+			display: table-row !important;
+			width: 100% !important;
+			margin: 0 !important;
+			padding: 0 !important;
+			
+			td {
+				vertical-align: middle;
+			}
+			
+			// Ensure drag handle column maintains alignment
+			td.draggable {
+				display: flex;
+				align-items: center;
+			}
 		}
 	}
 }
