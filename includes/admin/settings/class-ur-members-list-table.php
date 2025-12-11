@@ -477,7 +477,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 			// Check if the user for this row is editable.
 			if ( current_user_can( 'list_users' ) || current_user_can( 'manage_user_registration' ) ) {
-				$actions['id'] = '<span>ID: ' . $new_user_object->ID . '</span>';
+				$actions['id'] = "ID: $new_user_object->ID";
 
 				// Set up the user editing link.
 				$edit_link       = add_query_arg(
@@ -733,9 +733,6 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 							$row .= sprintf( '<span id="" class="user-subscription-status %s">%s</span>', $status_class, ucfirst( $status ) );
 							break;
-						// case 'actions':
-						// 	$row .= $this->row_actions( $actions, true );
-						// 	break;
 						default:
 							/**
 							 * Filters the display output of custom columns in the Users list table.

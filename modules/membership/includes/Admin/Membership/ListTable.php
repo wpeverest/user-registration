@@ -109,7 +109,7 @@ class ListTable extends \UR_List_Table {
 	public function get_row_actions( $membership ) {
 		$actions = array();
 
-		$actions['id'] = '<span>ID: ' . $membership->ID . '</span>';
+		$actions['id'] = "ID: $membership->ID";
 
 		// Add Edit action
 		$actions['edit'] = sprintf(
