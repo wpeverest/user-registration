@@ -672,7 +672,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$field .= '</div>';
 					} else {
 
-						$disabled = ( ( ( isset( $_REQUEST['page'] ) && isset( $args['field_key'] ) && 'user-registration-users' == $_REQUEST['page'] ) && 'user_email' === $args['field_key'] ) || ( isset( $args['repeater_field'] ) && $args['repeater_field'] ) ) ? ' readonly="readonly"' : '';
+						$disabled = ( ( ( isset( $_REQUEST['page'] ) && isset( $args['field_key'] ) && 'user-registration-members' == $_REQUEST['page'] ) && 'user_email' === $args['field_key'] ) || ( isset( $args['repeater_field'] ) && $args['repeater_field'] ) ) ? ' readonly="readonly"' : '';
 
 						$field .= '<input ' . $disabled . ' data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
 					}
@@ -1905,7 +1905,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 						$field .= '</div>';
 					} else {
 
-						$disabled = ( ( ( isset( $_REQUEST['page'] ) && isset( $args['field_key'] ) && 'user-registration-users' == $_REQUEST['page'] ) && 'user_email' === $args['field_key'] ) || ( isset( $args['repeater_field'] ) && $args['repeater_field'] ) ) ? ' readonly="readonly"' : '';
+						$disabled = ( ( ( isset( $_REQUEST['page'] ) && isset( $args['field_key'] ) && 'user-registration-members' == $_REQUEST['page'] ) && 'user_email' === $args['field_key'] ) || ( isset( $args['repeater_field'] ) && $args['repeater_field'] ) ) ? ' readonly="readonly"' : '';
 
 						$field .= '<input ' . $disabled . ' data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
 					}

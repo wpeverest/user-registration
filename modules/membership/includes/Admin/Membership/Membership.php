@@ -325,16 +325,6 @@ class Membership {
 				17
 			);
 
-			$members = new Members();
-			add_submenu_page(
-				'user-registration',
-				__( 'Membership Members', 'user-registration' ),
-				'↳ ' . __( 'Members', 'user-registration' ),
-				'manage_user_registration',
-				'user-registration-members',
-				array( $members, 'render_members_page'),
-				18
-			);
 		}
 	}
 
@@ -485,7 +475,7 @@ class Membership {
 			)
 		);
 	}
-	
+
 
 	/**
 	 * Get i18 Labels

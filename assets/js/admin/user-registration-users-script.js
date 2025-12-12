@@ -34,6 +34,10 @@ jQuery(function ($) {
 				"click",
 				URUsers.handleSingleUserDelete
 			);
+			$(".user-registration-member-action-delete").on(
+				"click",
+				URUsers.handleSingleUserDelete
+			);
 			$("#doaction.button.action").on("click", URUsers.handleBulkDelete);
 
 			$(".hide-column-tog").on("click", URUsers.handleColumnStateChange);
@@ -233,10 +237,14 @@ jQuery(function ($) {
 			var action = $("#bulk-action-selector-top").val();
 
 			if ("update_role" === action) {
-				$("select#new_role").closest(".alignleft.actions").show();
+				$("select#new_role")
+					.closest(".alignleft.actions")
+					.addClass("show-flex");
 				$("#doaction").hide();
 			} else {
-				$("select#new_role").closest(".alignleft.actions").hide();
+				$("select#new_role")
+					.closest(".alignleft.actions")
+					.removeClass("show-flex");
 				$("#doaction").show();
 			}
 		},
@@ -333,10 +341,7 @@ jQuery(function ($) {
 			e.preventDefault();
 			e.stopPropagation();
 
-			var deleteUrl = $(e.target)
-				.closest("#user-registration-user-action-delete")
-				.find("a")
-				.attr("href");
+			var deleteUrl = $(e.target).attr("href");
 
 			URUsers.handleDeletePrompt(deleteUrl, "single");
 		},
