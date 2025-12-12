@@ -224,10 +224,14 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 				ORDER BY $orderby $order
 			";
 
-			$this->items = $wpdb->get_results( $sql, ARRAY_A );
+			$results = $wpdb->get_results( $sql, ARRAY_A );
+			$user_id_indexed = [];
 
-						error_log( print_r( $this->items, true ) );
+			foreach ($results as $row) {
+				$user_id_indexed[$row['ID']] = $row;
+			}
 
+			$this->items = $user_id_indexed;
 
 			$this->set_pagination_args(
 				array(
