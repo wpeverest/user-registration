@@ -456,7 +456,7 @@ class UR_Frontend {
 
 		$meta_value = get_user_meta( $user_id, 'ur_payment_invoices', true );
 
-		if ( ! empty( $meta_value ) && is_array( $meta_value ) ) {
+		if ( 'membership' !== $user_source && ! empty( $meta_value ) && is_array( $meta_value ) ) {
 			foreach ( $meta_value as $values ) {
 				$total_items[] = array(
 					'user_id'        => $user_id,
@@ -588,7 +588,7 @@ class UR_Frontend {
 			}
 		}
 
-		if ( '' !== $payment_method && ( '' !== $ur_payment_subscription || 'paypal_standard' === $payment_method ) ) {
+		if ( 'membership' !== $user_source && '' !== $payment_method && ( '' !== $ur_payment_subscription || 'paypal_standard' === $payment_method ) ) {
 			$payment_details               = array();
 			$user                          = get_userdata( $user_id );
 			$form_id                       = ur_get_form_id_by_userid( $user_id );
