@@ -530,7 +530,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$all_forms = ur_get_all_user_registration_form();
 				$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';
 
-			if ( ur_check_module_activation( 'multiple-registration' ) ) {
+			if ( count( $all_forms ) > 1 || ur_check_module_activation( 'multiple-registration' ) ) {
 				add_submenu_page(
 					'user-registration',
 					__( 'All Forms', 'user-registration' ),

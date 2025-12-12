@@ -21,7 +21,7 @@
       "name": "User Registration-Multiple Registration",
       "image": "extensions-json/sections/icons/advanced_fields.png",
       "excerpt": "Add customizable fields for collecting complex user data during registration.",
-      "category": "Smart Fields",
+      "category": "Others",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-advanced-fields/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [
         "free"
