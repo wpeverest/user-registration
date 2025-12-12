@@ -418,8 +418,6 @@ class UR_Modules {
 		// Logic to disable Feature.
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
 		$enabled_features = array_values( array_diff( $enabled_features, array( $slug ) ) );
-		update_option( 'user_registration_enabled_features', $enabled_features );
-
 		if ( 'user-registration-multiple-registration' === $slug ) {
 			$all_forms = ur_get_all_user_registration_form();
 
@@ -427,6 +425,7 @@ class UR_Modules {
 				return array( 'success' => false );
 			}
 		}
+		update_option( 'user_registration_enabled_features', $enabled_features );
 
 		return in_array( $slug, $enabled_features, true ) ? array( 'success' => false ) : array( 'success' => true );
 	}
