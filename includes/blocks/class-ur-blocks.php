@@ -147,9 +147,6 @@ class UR_Blocks {
 
 		if ( ur_check_module_activation( 'content-restriction' ) ) {
 			$ur_blocks_classes[] = UR_Block_Content_Restriction::class;
-			if ( UR_PRO_ACTIVE ) {
-				$ur_blocks_classes[] = UR_Block_Content_Restriction_V2::class;
-			}
 		}
 		if ( ur_check_module_activation( 'membership' ) ) {
 			$ur_blocks_classes[] = UR_Block_Membership_Listing::class;

@@ -8,7 +8,6 @@ import * as editProfile from "./edit-profile";
 import * as editPassword from "./edit-password";
 import * as loginLogoutMenu from "./login-logout-menu";
 import * as contentRestrictionEnhanced from "./content-restriction-enhanced";
-import * as contentRestrictionV2 from "./content-restriction-v2";
 import * as membershipListing from "./membership-listing";
 import * as thankYou from "./thank-you";
 
@@ -29,8 +28,6 @@ let blocks = [
 
 if (iscRestrictionActive) {
 	blocks.push(contentRestrictionEnhanced);
-
-	isProActive && blocks.push(contentRestrictionV2);
 }
 
 /**

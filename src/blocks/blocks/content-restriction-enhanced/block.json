@@ -54,6 +54,10 @@
     "enableContentRestriction": {
       "type": "boolean",
       "default": false
+    },
+    "enableCustomRestrictionMessage": {
+      "type": "boolean",
+      "default": true
     }
   },
   "editorScript": "user-registration-blocks-editor",

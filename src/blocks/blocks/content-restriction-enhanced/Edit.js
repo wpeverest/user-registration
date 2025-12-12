@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { __ } from "@wordpress/i18n";
 import apiFetch from "@wordpress/api-fetch";
-import { Box, ChakraProvider, FormControl, FormLabel } from "@chakra-ui/react";
+import {
+	Box,
+	ChakraProvider,
+	Flex,
+	FormControl,
+	FormLabel
+} from "@chakra-ui/react";
 import {
 	SelectControl,
 	PanelBody,
@@ -41,7 +47,9 @@ const Edit = ({ attributes, setAttributes }) => {
 		accessMembershipRoles = [],
 		accessControl,
 		message,
-		enableContentRestriction
+		enableContentRestriction,
+		enableCustomRestrictionMessage,
+		urcrGlobalRestrictionMsgUrl
 	} = attributes;
 	const blockProps = useBlockProps();
 
@@ -253,67 +261,107 @@ const Edit = ({ attributes, setAttributes }) => {
 								</FormControl>
 							)}
 
-							<FormControl mt={6}>
-								<FormLabel sx={labelStyle}>
-									{__(
-										"Restricted Content Message",
-										"user-registration"
-									)}
-								</FormLabel>
-								<Editor
-									value={message}
-									onEditorChange={(val) =>
-										setAttributes({ message: val })
-									}
-									init={{
-										height: 200,
-										menubar: false,
-										plugins: "link lists",
-										toolbar:
-											"undo redo | bold italic | alignleft aligncenter alignright | bullist numlist",
-										content_style:
-											"body { font-family:Arial,sans-serif; font-size:14px }"
-									}}
-								/>
-							</FormControl>
+							<ToggleControl
+								className="urcr-custom-restriction-msg-toggle"
+								label={__(
+									"Custom restriction message",
+									"user-registration"
+								)}
+								checked={enableCustomRestrictionMessage}
+								onChange={(val) =>
+									setAttributes({
+										enableCustomRestrictionMessage: val
+									})
+								}
+							/>
+
+							{!enableCustomRestrictionMessage && (
+								<div className="urcr-config-link">
+									<a
+										className="link"
+										href={urcrGlobalRestrictionMsgUrl}
+										target="__blank"
+									>
+										{__(
+											"Setup global restriction message from here",
+											"user-registration"
+										)}
+									</a>
+								</div>
+							)}
+
+							{enableCustomRestrictionMessage && (
+								<FormControl mt={6}>
+									<FormLabel sx={labelStyle}>
+										{__(
+											"Restricted Content Message",
+											"user-registration"
+										)}
+									</FormLabel>
+									<Editor
+										value={message}
+										onEditorChange={(val) =>
+											setAttributes({
+												message: val
+											})
+										}
+										init={{
+											height: 200,
+											menubar: false,
+											plugins: "link lists",
+											toolbar:
+												"undo redo | bold italic | alignleft aligncenter alignright | bullist numlist",
+											content_style:
+												"body { font-family:Arial,sans-serif; font-size:14px }"
+										}}
+									/>
+								</FormControl>
+							)}
 						</Box>
 					)}
 				</PanelBody>
 			</InspectorControls>
 
-			<>
-				<Box {...blockProps} borderWidth="1px" borderRadius="lg" p={5}>
-					<Box mb={6}>
-						<InnerBlocks templateLock={false} />
-						<div className="user-registration-content-restriction-block-note">
-							<span className="dashicon dashicons dashicons-lock" />
-							<p className="user-registration-content-restriction-block-note-text">
-								{__(
-									"This block has global content restriction settings.",
-									"user-registration"
-								)}
-							</p>
-						</div>
-					</Box>
+			<Box
+				{...blockProps}
+				borderWidth="1px"
+				borderRadius="lg"
+				p={"0.5px"}
+			>
+				<Flex
+					className="ur-note"
+					bg={"gray.200"}
+					justify="center"
+					align="center"
+					h="40px"
+					borderTopRadius="lg"
+				>
+					<span className="dashicons dashicons-lock" />
+					<span>
+						{__(
+							"The contents of this block are protected",
+							"user-registration"
+						)}
+					</span>
+				</Flex>
+				<Box mb={6}>
+					<InnerBlocks templateLock={false} />
+				</Box>
+				{isProActive && (
 					<Notice
 						status="warning"
 						isDismissible={false}
 						className="urcr-dreprecated-msg"
 					>
 						<p>
-							{isProActive
-								? __(
-										"This block will be deprecated soon. We’ve added a new Content Restriction block --- check it from the inserter",
-										"user-registraiton"
-								  )
-								: __(
-										"This block will be deprecated soon.",
-										"user-registration"
-								  )}
+							{__(
+								"This block will be deprecated soon.",
+								"user-registration"
+							)}
 						</p>
 					</Notice>
-				</Box>
-			</>
+				)}
+			</Box>
 		</ChakraProvider>
 	);
 };
