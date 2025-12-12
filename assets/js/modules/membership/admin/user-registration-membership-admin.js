@@ -1249,16 +1249,15 @@
 
 	if ($membershipTable.length > 0 && $.fn.sortable) {
 		var updateOrderButtonText = ur_membership_data.labels.i18n_update_order,
-			$updateOrderContainer = $(
-				'<div class="ur-membership-order-controls ur-d-none"><button type="button" class="button button-primary ur-update-membership-order-btn">' +
-					'<span class="ur-update-order-btn-text">' +
-					updateOrderButtonText +
-					"</span>" +
-					"</button></div>"
-			),
-			$updateOrderBtn = $updateOrderContainer.find(
-				".ur-update-membership-order-btn"
-			),
+			$updateOrderContainer = $('<div class="ur-membership-order-controls ur-d-none"><button type="button" class="button button-primary ur-update-membership-order-btn">' +
+				'<svg xmlns="http://www.w3.org/2000/svg" fill="#000" viewBox="0 0 24 24">' +
+					'<path d="M2 12A10 10 0 0 1 12 2h.004l.519.015a10.75 10.75 0 0 1 6.53 2.655l.394.363 2.26 2.26a1 1 0 1 1-1.414 1.414l-2.248-2.248-.31-.286A8.75 8.75 0 0 0 11.996 4 8 8 0 0 0 4 12a1 1 0 1 1-2 0Z"/>' +
+					'<path d="M20 3a1 1 0 1 1 2 0v5a1 1 0 0 1-1 1h-5a1 1 0 1 1 0-2h4V3Zm0 9a1 1 0 1 1 2 0 10 10 0 0 1-10 10h-.004a10.75 10.75 0 0 1-7.05-2.67l-.393-.363-2.26-2.26a1 1 0 1 1 1.414-1.414l2.248 2.248.31.286A8.749 8.749 0 0 0 12.003 20 7.999 7.999 0 0 0 20 12Z"/>' +
+					'<path d="M2 21v-5a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2H4v4a1 1 0 1 1-2 0Z"/>' +
+					'</svg>' +
+				'<span class="ur-update-order-btn-text">' + updateOrderButtonText + '</span>' +
+				'</button></div>'),
+			$updateOrderBtn = $updateOrderContainer.find('.ur-update-membership-order-btn'),
 			$spinner = '<span class="ur-spinner"></span>',
 			initialOrder = [];
 		$(".user-registration-base-list-table-heading").append(
