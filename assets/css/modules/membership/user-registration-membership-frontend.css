@@ -245,6 +245,7 @@ html {
   width: 14px;
   height: 14px;
   min-height: unset;
+  accent-color: #475bb2;
 }
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label input[type=radio]:checked,
 .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label input[type=radio]:checked,
