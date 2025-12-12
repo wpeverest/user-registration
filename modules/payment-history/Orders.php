@@ -58,18 +58,21 @@ class Orders {
 
 	public function add_orders_menu() {
 
-		$orders_page = add_submenu_page(
-			'user-registration',
-			__( 'Payment History', 'user-registration' ), // page title
-			__( 'Payment History', 'user-registration' ), // menu title
-			'manage_user_registration', // Capability required to access
-			$this->page, // Menu slug
-			array(
-				$this,
-				'render_payment_history_page',
-			)
-		);
-		add_action( 'load-' . $orders_page, array( $this, 'orders_initialization' ) );
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ] ) ) {
+			$orders_page = add_submenu_page(
+				'user-registration',
+				__( 'Payments', 'user-registration' ), // page title
+				'↳ ' . __( 'Payments', 'user-registration' ),
+				'manage_user_registration', // Capability required to access
+				$this->page, // Menu slug
+				array(
+					$this,
+					'render_payment_history_page',
+				),
+				5
+			);
+			add_action( 'load-' . $orders_page, array( $this, 'orders_initialization' ) );
+		}
 	}
 
 
