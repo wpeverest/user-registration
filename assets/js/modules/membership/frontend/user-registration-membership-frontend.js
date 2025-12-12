@@ -472,7 +472,7 @@
 				response.data.is_renewing ||
 				response.data.is_purchasing_multiple
 			) {
-				location.reload();
+				window.location.replace(urmf_data.membership_endpoint_url);
 			} else {
 				var bank_data = {
 					transaction_id: response.data.transaction_id,
@@ -1236,9 +1236,9 @@
 					break;
 				case "authorize":
 				case "free":
-					const cleanUrl =
+					var cleanUrl =
 						window.location.origin + window.location.pathname;
-					window.location.replace(cleanUrl);
+					window.location.replace(response.data.pg_data.payment_url);
 				default:
 					ur_membership_ajax_utils.show_bank_response(
 						response,

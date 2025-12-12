@@ -227,8 +227,9 @@ class Frontend {
 
 		$redirect_page_url = get_permalink( $registration_page_id );
 
-		$thank_you_page  = urm_get_thank_you_page();
-		$stripe_settings = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
+		$thank_you_page          = urm_get_thank_you_page();
+		$stripe_settings         = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
+		$membership_endpoint_url = ur_get_my_account_url() . '/ur-membership';
 
 		wp_localize_script(
 			'user-registration-membership-frontend-script',
@@ -245,6 +246,7 @@ class Frontend {
 				'curreny_pos'                      => isset( $currencies[ $currency ]['symbol_pos'] ) ? $currencies[ $currency ]['symbol_pos'] : 'left',
 				'membership_registration_page_url' => $redirect_page_url,
 				'thank_you_page_url'               => $thank_you_page,
+				'membership_endpoint_url'          => $membership_endpoint_url,
 				'stripe_publishable_key'           => $stripe_settings['publishable_key'],
 				'membership_gateways'              => get_option( 'ur_membership_payment_gateways', array() ),
 				'urm_hide_stripe_card_postal_code' => apply_filters( 'user_registration_membership_disable_stripe_card_postal_code', false ),

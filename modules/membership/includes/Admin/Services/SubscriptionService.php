@@ -301,6 +301,16 @@ class SubscriptionService {
 
 		$selected_membership_details['payment_method'] = $payment_method;
 
+		$membership_process = urm_get_membership_process( $subscription['user_id'] );
+		$is_upgrading       = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $data['current_membership_id'] ] );
+
+		if ( $is_upgrading ) {
+			$response['response']['status']  = false;
+			$response['response']['message'] = __( 'Membership upgrade process already initiated.', 'user-registration' );
+
+			return $response;
+		}
+
 		$upgrade_details = $this->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
 
 		if ( isset( $upgrade_details['status'] ) && ! $upgrade_details['status'] ) {
