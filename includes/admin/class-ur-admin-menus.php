@@ -524,8 +524,61 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 			if ( class_exists( 'WPEverest\URMembership\Admin\Membership\Membership' ) ) {
 				$membership_obj = new WPEverest\URMembership\Admin\Membership\Membership();
-				add_action( 'admin_menu', array( $membership_obj, 'add_urm_menu' ), 15 );
-			}
+
+					$rules_page = add_submenu_page(
+						'user-registration',
+						__( 'Memberships', 'user-registration' ), // page title
+						__( 'Memberships', 'user-registration' ), // menu title
+						'edit_posts', // capability
+						'user-registration-membership', // slug
+						array(
+							$membership_obj,
+							'render_membership_page',
+						),
+						2
+					);
+					add_action( 'load-' . $rules_page, array( $membership_obj, 'membership_initialization' ) );
+
+					if ( isset( $_GET['page'] ) && in_array( $_GET['page'], [ 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ] ) ) {
+
+						// add_submenu_page(
+						// 	'user-registration',
+						// 	__( 'All Plans', 'user-registration' ),
+						// 	'↳ ' . __( 'All Plans', 'user-registration' ),
+						// 	'edit_posts',
+						// 	'user-registration-membership',
+						// 	array(
+						// 		$this,
+						// 		'render_membership_page',
+						// 	),
+						// 	3
+						// );
+
+						add_submenu_page(
+							'user-registration',
+							__( 'Membership Groups', 'user-registration' ),
+							'↳ ' . __( 'Groups', 'user-registration' ),
+							'manage_user_registration',
+							'user-registration-membership&action=list_groups',
+							array(
+								$membership_obj,
+								'render_membership_page',
+							),
+							3
+						);
+
+						$members = new Members();
+						add_submenu_page(
+							'user-registration',
+							__( 'Membership Members', 'user-registration' ),
+							'↳ ' . __( 'Members', 'user-registration' ),
+							'manage_user_registration',
+							'user-registration-members',
+							array( $members, 'render_members_page'),
+							4
+						);
+					}
+				}
 
 				$all_forms = ur_get_all_user_registration_form();
 				$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';
@@ -772,6 +825,23 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'add_registration_page',
 				)
 			);
+
+			/**
+			 * Hides the Add New Button from the submenu
+			 *
+			 * @since xx.xx.xx
+			 */
+			add_action('admin_head', function() {
+				global $submenu;
+				if ( isset( $submenu['user-registration'] ) ) {
+					foreach ( $submenu['user-registration'] as $key => $item ) {
+						if ( isset( $item[2] ) && $item[2] === 'add-new-registration' ) {
+							unset( $submenu['user-registration'][$key] );
+							break;
+						}
+					}
+				}
+			});
 		}
 
 		/**
