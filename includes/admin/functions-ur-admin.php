@@ -946,7 +946,7 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 				),
 				array(
 					'users' => array(
-						'page_slug' => 'user-registration-users',
+						'page_slug' => 'user-registration-members',
 						'label'     => esc_html__( 'Users', 'user-registration' ),
 					),
 				),
@@ -962,10 +962,6 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 							'groups'    => array(
 								'page_slug' => 'user-registration-membership&action=list_groups',
 								'label'     => esc_html__( 'Groups', 'user-registration' ),
-							),
-							'members'   => array(
-								'page_slug' => 'user-registration-members',
-								'label'     => esc_html__( 'Members', 'user-registration' ),
 							),
 						),
 					),
