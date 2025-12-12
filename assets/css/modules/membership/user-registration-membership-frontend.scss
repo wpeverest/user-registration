@@ -220,6 +220,7 @@ html {
 					width: 14px;
 					height: 14px;
 					min-height: unset;
+					accent-color: $primary_color;
 
 					&:checked {
 						border-color: $primary_color;
