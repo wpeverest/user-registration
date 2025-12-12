@@ -5894,7 +5894,7 @@ body.user-registration {
 									.ur-field {
 										.ur-coupon-discount-type {
 											width: 220px;
-											padding: 16px !important;
+											// padding: 16px !important;
 											border-color: #e9e9e9 !important;
 											border-radius: 4px !important;
 											display: flex;
@@ -6145,7 +6145,7 @@ body.user-registration {
 									&#title {
 										width: 220px;
 									}
-									&#code {
+									&#code, &#type {
 										width: 170px;
 									}
 
@@ -6179,7 +6179,7 @@ body.user-registration {
 								}
 							}
 
-							.coupon-active {
+							.coupon-active, .coupon-never {
 								font-weight: $medium;
 								color: #4cc741;
 							}

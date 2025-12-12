@@ -66,7 +66,10 @@ class CouponService {
 			return $this->set_coupon_response( false, 422, 'Coupon is Inactive' );
 		}
 
-		if ( isset( $coupon_details['coupon_end_date'] ) && $coupon_details['coupon_end_date'] < date( 'Y-m-d' ) ) {
+		$current_date	= current_time( 'timestamp' );
+		$end_date     	= ! empty ( $coupon_details['coupon_end_date'] ) ? strtotime( $coupon_details['coupon_end_date'] ) : 'never';
+
+		if ( 'never' !== $end_date && $end_date < $current_date ) {
 			return $this->set_coupon_response( false, 422, 'Coupon expired.' );
 		}
 
@@ -79,7 +82,7 @@ class CouponService {
 			return $this->set_coupon_response( false, 422, 'Coupon cannot be applied for the selected membership.' );
 		}
 
-		if ( $coupon_details['coupon_start_date'] > date( 'Y-m-d' ) ) {
+		if ( strtotime( $coupon_details['coupon_start_date'] ) > $current_date ) {
 			return $this->set_coupon_response( false, 422, 'Coupon is not valid until ' . date_i18n( get_option( 'date_format' ), strtotime( $coupon_details['coupon_start_date'] ) ) . '.', );
 		}
 		$membership_details = $this->membership_repository->get_single_membership_by_ID( $membership_id );

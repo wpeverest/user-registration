@@ -1609,8 +1609,14 @@
 						upgrade_error_container = $(
 							"#upgrade-membership-notice"
 						),
-						urm_default_pg = $(this).data("urm-default-pg");
+						urm_default_pg = $(this).data("urm-default-pg"),
+						hasCouponLink = $( this ).data( "has-coupon-link" );
 
+						if ( 'yes' === hasCouponLink ) {
+							$( document ).find( '#ur_coupon_container' ).show();
+						}else{
+							$( document ).find( '#ur_coupon_container' ).hide();
+						}
 
 					var authorize_container = $(".authorize-net-container");
 					var authorize_error_container = $("#authorize-errors");
