@@ -339,6 +339,25 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 									>
 								</div>
 							</div>
+							<!--								membership payment notice-->
+							<?php if(empty(urm_get_all_active_payment_gateways('paid'))): ?>
+							<div id="ur-membership-payment-settings-notice" class="
+								<?php
+								echo isset( $membership_details['type'] ) && in_array(
+									$membership_details['type'],
+									array(
+										'paid',
+										'subscription',
+									),
+									true
+								) ? '' : 'ur-d-none'
+								?>">
+								<p>
+									The payment setup is not configured yet. Please configure payment settings before proceeding.
+									<a href="<?php echo esc_url(admin_url('admin.php?page=user-registration-settings&tab=payment'))?>" target="_blank">Configure</a>
+								</p>
+							</div>
+							<?php endif; ?>
 						</div>
 					</div>
 				</div>
@@ -578,10 +597,6 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 								</div>
 							</div>
 						</div>
-						<!--								membership all payments-->
-						<?php
-						require __DIR__ . '/./Partials/membership-admin-payments.php'
-						?>
 					</div>
 				</div>
 			</div>

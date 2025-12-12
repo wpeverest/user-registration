@@ -1373,6 +1373,23 @@
 	.ur-membership-error{
 		border-color:$red !important;
 	}
+
+	#ur-membership-payment-settings-notice{
+		border: 1px solid $primary_color;
+		border-radius: $spacing_6px;
+		padding: $spacing_8px;
+		background-color: #f8f9fc;
+
+		p{
+			margin: 0;
+		}
+
+		a{
+			color: $primary_color;
+			font-weight: $semi_bold;
+			text-decoration: underline;
+		}
+	}
 }
 
 #ur-membership-create-form {
@@ -1706,13 +1723,13 @@
 			table-layout: fixed;
 			margin: 0 !important;
 			border-collapse: collapse;
-			
+
 			tr {
 				display: table-row !important;
-				
+
 				td {
 					vertical-align: middle;
-					
+
 					// Ensure drag handle column maintains alignment
 					&.draggable {
 						display: flex;
@@ -1734,11 +1751,11 @@
 			width: 100% !important;
 			margin: 0 !important;
 			padding: 0 !important;
-			
+
 			td {
 				vertical-align: middle;
 			}
-			
+
 			// Ensure drag handle column maintains alignment
 			td.draggable {
 				display: flex;
