@@ -82,9 +82,9 @@ class FormFields {
 				'bank'   => __( 'Bank', 'user-registration' ),
 			)
 		);
-
+		$membership_type = UR_PRO_ACTIVE ? 'subscription' : 'paid';
 		// Get active/configured payment gateways
-		$active_payment_gateways = urm_get_all_active_payment_gateways( 'paid' );
+		$active_payment_gateways = urm_get_all_active_payment_gateways( $membership_type );
 
 		// Map payment gateway keys to their image filenames
 		$gateway_images = array(

@@ -666,13 +666,8 @@ if ( ! function_exists( 'urm_get_all_active_payment_gateways' ) ) {
 	/**
 	 * Get all payment gateways that are configured/setup.
 	 *
-	 * This function retrieves all available payment gateways and checks if they
-	 * have the required settings configured. Only gateways with settings are returned.
-	 *
-	 * @param string $membership_type Optional. The membership type ('paid' or 'subscription').
-	 *                                Used for PayPal check. Default 'paid'.
-	 * @return array Associative array of configured payment gateways where keys are gateway IDs
-	 *               and values are gateway labels.
+	 * @param string $membership_type Optional. The membership type ('paid' or 'subscription')
+	 * @return array
 	 */
 	function urm_get_all_active_payment_gateways( $membership_type = 'paid' ) {
 		// Get all available payment gateways.
