@@ -97,19 +97,22 @@ class URCR_Admin {
 	 * @since 4.0
 	 */
 	public function add_urcr_menus() {
-		$rules_page = add_submenu_page(
-			'user-registration',
-			__( 'Content Restriction - Content Rules', 'user-registration' ),
-			__( 'Content Rules', 'user-registration' ),
-			'edit_posts',
-			'user-registration-content-restriction',
-			array(
-				$this,
-				'render_content_restriction_page',
-			)
-		);
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ] ) ) {
+			$rules_page = add_submenu_page(
+				'user-registration',
+				__( 'Content Restriction - Content Rules', 'user-registration' ),
+				'↳ ' . __( 'Content Rules', 'user-registration' ),
+				'edit_posts',
+				'user-registration-content-restriction',
+				array(
+					$this,
+					'render_content_restriction_page',
+				),
+				5
+			);
 
-		add_action( 'load-' . $rules_page, array( $this, 'content_restriction_initializations' ) );
+			add_action( 'load-' . $rules_page, array( $this, 'content_restriction_initializations' ) );
+		}
 	}
 
 	/**
