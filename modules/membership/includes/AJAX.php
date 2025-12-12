@@ -1539,9 +1539,11 @@ class AJAX {
 				)
 			);
 		}
+
+		$error_message = isset( $response['message'] ) ? $response['message'] : __( 'Something went wrong while upgrading membership.', 'user-registration' );
 		wp_send_json_error(
 			array(
-				'message' => __( 'Something went wrong while upgrading membership.', 'user-registration' ),
+				'message' => $error_message,
 			)
 		);
 	}

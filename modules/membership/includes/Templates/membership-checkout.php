@@ -88,6 +88,8 @@ $payment_gateways = get_option( 'ur_membership_payment_gateways', array() );
 		<div id="upgradable-plans">
 			<?php
 			foreach ( $actionable_membership_details as $membership_details ) {
+				$active_payment_gateways = isset( $membership_details['active_payment_gateways'] ) ? $membership_details['active_payment_gateways'] : '';
+
 				?>
 				<label class="upgrade-membership-label" for="ur-membership-select-membership-23">
 					<input
@@ -98,7 +100,7 @@ $payment_gateways = get_option( 'ur_membership_payment_gateways', array() );
 						data-label="<?php echo esc_attr( $membership_details['title'] ); ?>"
 						required="required"
 						value="<?php echo esc_attr( $membership_details['ID'] ); ?>"
-						data-urm-pg='<?php echo esc_attr( $membership_details['active_payment_gateways'] ); ?>'
+						data-urm-pg='<?php echo esc_attr( $active_payment_gateways ); ?>'
 						data-urm-pg-type="<?php echo esc_attr( $membership_details['type'] ); ?>"
 						data-urm-pg-calculated-amount="<?php echo isset( $membership_details['calculated_amount'] ) ? esc_attr( $membership_details['calculated_amount'] ) : esc_attr( $membership_details['amount'] ); ?>"
 					>
