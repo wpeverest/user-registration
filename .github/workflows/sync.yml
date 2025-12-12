@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-3328-enhance/rearrange-submenus
+      - UR-3330-enhance/multiple-registration-module
     workflow_dispatch:
 jobs:
   sync:
