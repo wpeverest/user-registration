@@ -1063,24 +1063,29 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 					do_action( 'user_registration_user_view_sidebar', $user_id );
 					?>
 				</div>
-				<?php
-				if ( isset( $_GET['tab'] ) && 'user-actions' === $_GET['tab'] ) {
-					?>
-					<div id="user-registration-user-actions" class="user-registration-user-body">
-						<?php $this->render_user_settings_section( $user_id ); ?>
-					</div>
+				<div class="user-registration-user-content">
 					<?php
-				} elseif ( isset( $_GET['action'] ) ) {
+					if ( isset( $_GET['tab'] ) && 'user-actions' === $_GET['tab'] ) {
+						?>
+						<!-- <div id="user-registration-user-actions" class="user-registration-user-body">
+							<?php
+							// $this->render_user_settings_section( $user_id );
+							?>
+						</div> -->
+						<?php
+					} elseif ( isset( $_GET['action'] ) ) {
 
-					if ( 'edit' === $_GET['action'] ) {
-						$this->render_user_edit_form_fields( $user_id, true );
-						$this->render_user_form_fields( $user_id, false );
-					} else {
-						$this->render_user_edit_form_fields( $user_id, false );
-						$this->render_user_form_fields( $user_id, true );
+						if ( 'edit' === $_GET['action'] ) {
+							$this->render_user_edit_form_fields( $user_id, true );
+							$this->render_user_form_fields( $user_id, false );
+						} else {
+							$this->render_user_edit_form_fields( $user_id, false );
+							$this->render_user_form_fields( $user_id, true );
+						}
 					}
-				}
-				?>
+					?>
+					<?php do_action( 'user_registration_single_user_details_content', $user_id, $form_id ); ?>
+				</div>
 			</div>
 			<?php
 		}
@@ -1468,216 +1473,217 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 			$row_ids = ! empty( $row_ids ) ? json_decode( $row_ids ) : array();
 
 			?>
-			<div class="ur-frontend-form login ur-edit-profile urm-admin-view-user <?php echo ! $display ? 'user-registration-hidden' : ''; ?>">
-				<div id="user-registration-edit-user-header" >
-						<h3><?php esc_html_e( 'Personal Information', 'user-registration' ); ?></h3>
-						<a id="user-registration-edit-user-link">
-							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-								<path d="M11.5397 14.6666H3.19301C2.69971 14.6666 2.22661 14.4706 1.87779 14.1218C1.52897 13.773 1.33301 13.2999 1.33301 12.8066V4.45992C1.33301 3.96662 1.52897 3.49352 1.87779 3.1447C2.22661 2.79588 2.69971 2.59992 3.19301 2.59992H7.36634C7.54315 2.59992 7.71272 2.67016 7.83775 2.79518C7.96277 2.9202 8.03301 3.08977 8.03301 3.26659C8.03301 3.4434 7.96277 3.61297 7.83775 3.73799C7.71272 3.86301 7.54315 3.93325 7.36634 3.93325H3.19301C3.05333 3.93325 2.91937 3.98874 2.8206 4.08751C2.72183 4.18628 2.66634 4.32024 2.66634 4.45992V12.8066C2.66634 12.9463 2.72183 13.0802 2.8206 13.179C2.91937 13.2778 3.05333 13.3333 3.19301 13.3333H11.5397C11.6794 13.3333 11.8133 13.2778 11.9121 13.179C12.0109 13.0802 12.0663 12.9463 12.0663 12.8066V8.66659C12.0663 8.48977 12.1366 8.32021 12.2616 8.19518C12.3866 8.07016 12.5562 7.99992 12.733 7.99992C12.9098 7.99992 13.0794 8.07016 13.2044 8.19518C13.3294 8.32021 13.3997 8.48977 13.3997 8.66659V12.8399C13.3909 13.3274 13.1911 13.792 12.8432 14.1336C12.4954 14.4753 12.0273 14.6667 11.5397 14.6666ZM5.73967 11.0666L8.12634 10.4733C8.24044 10.4396 8.34534 10.3803 8.43301 10.2999L14.0997 4.66659C14.2864 4.48875 14.4357 4.27537 14.5387 4.03898C14.6417 3.8026 14.6964 3.54799 14.6995 3.29016C14.7027 3.03232 14.6542 2.77646 14.557 2.53763C14.4598 2.29881 14.3157 2.08184 14.1334 1.89951C13.9511 1.71718 13.7341 1.57316 13.4953 1.47594C13.2565 1.37872 13.0006 1.33025 12.7428 1.3334C12.4849 1.33654 12.2303 1.39123 11.9939 1.49425C11.7576 1.59727 11.5442 1.74653 11.3663 1.93325L5.70634 7.59992C5.62165 7.68548 5.55976 7.79092 5.52634 7.90659L4.93301 10.2599C4.90479 10.3715 4.90592 10.4884 4.93629 10.5994C4.96667 10.7104 5.02525 10.8116 5.10634 10.8933C5.16863 10.955 5.24251 11.0039 5.32374 11.0371C5.40496 11.0703 5.49194 11.0871 5.57967 11.0866C5.63362 11.0864 5.68735 11.0797 5.73967 11.0666ZM12.313 2.83992C12.3973 2.75732 12.504 2.7014 12.6199 2.67916C12.7358 2.65691 12.8557 2.66934 12.9646 2.71488C13.0734 2.76041 13.1664 2.83704 13.232 2.93517C13.2975 3.0333 13.3327 3.14858 13.333 3.26659C13.3335 3.3446 13.3184 3.42193 13.2887 3.49405C13.2589 3.56616 13.215 3.63162 13.1597 3.68659L7.61967 9.21992L6.49301 9.50659L6.77967 8.37992L12.313 2.83992Z" fill="#6B6B6B"/>
-							</svg>
-							<span><?php esc_html_e( 'Edit', 'user-registration' ); ?></span>
-						</a>
-					</div>
-				<div class="user-registration-user-body">
-					<div class="user-registration-user-form-details">
-						<?php if ( ! empty( $form_data_array ) ) : ?>
-							<?php
-							foreach ( $form_data_array as $index => $row_data ) {
-								$row_id = $index;
-								$ignore = false;
-								if ( ! empty( $row_ids ) && isset( $row_ids[ $index ] ) ) {
-									$row_id = absint( $row_ids[ $index ] );
-								}
+			<div class="urm-admin-user-content-container urm-admin-view-user <?php echo ! $display ? 'user-registration-hidden' : ''; ?>">
+				<div id="urm-admin-user-content-header" >
+					<h3><?php esc_html_e( 'Personal Information', 'user-registration' ); ?></h3>
+					<a id="user-registration-edit-user-link">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+							<path d="M11.5397 14.6666H3.19301C2.69971 14.6666 2.22661 14.4706 1.87779 14.1218C1.52897 13.773 1.33301 13.2999 1.33301 12.8066V4.45992C1.33301 3.96662 1.52897 3.49352 1.87779 3.1447C2.22661 2.79588 2.69971 2.59992 3.19301 2.59992H7.36634C7.54315 2.59992 7.71272 2.67016 7.83775 2.79518C7.96277 2.9202 8.03301 3.08977 8.03301 3.26659C8.03301 3.4434 7.96277 3.61297 7.83775 3.73799C7.71272 3.86301 7.54315 3.93325 7.36634 3.93325H3.19301C3.05333 3.93325 2.91937 3.98874 2.8206 4.08751C2.72183 4.18628 2.66634 4.32024 2.66634 4.45992V12.8066C2.66634 12.9463 2.72183 13.0802 2.8206 13.179C2.91937 13.2778 3.05333 13.3333 3.19301 13.3333H11.5397C11.6794 13.3333 11.8133 13.2778 11.9121 13.179C12.0109 13.0802 12.0663 12.9463 12.0663 12.8066V8.66659C12.0663 8.48977 12.1366 8.32021 12.2616 8.19518C12.3866 8.07016 12.5562 7.99992 12.733 7.99992C12.9098 7.99992 13.0794 8.07016 13.2044 8.19518C13.3294 8.32021 13.3997 8.48977 13.3997 8.66659V12.8399C13.3909 13.3274 13.1911 13.792 12.8432 14.1336C12.4954 14.4753 12.0273 14.6667 11.5397 14.6666ZM5.73967 11.0666L8.12634 10.4733C8.24044 10.4396 8.34534 10.3803 8.43301 10.2999L14.0997 4.66659C14.2864 4.48875 14.4357 4.27537 14.5387 4.03898C14.6417 3.8026 14.6964 3.54799 14.6995 3.29016C14.7027 3.03232 14.6542 2.77646 14.557 2.53763C14.4598 2.29881 14.3157 2.08184 14.1334 1.89951C13.9511 1.71718 13.7341 1.57316 13.4953 1.47594C13.2565 1.37872 13.0006 1.33025 12.7428 1.3334C12.4849 1.33654 12.2303 1.39123 11.9939 1.49425C11.7576 1.59727 11.5442 1.74653 11.3663 1.93325L5.70634 7.59992C5.62165 7.68548 5.55976 7.79092 5.52634 7.90659L4.93301 10.2599C4.90479 10.3715 4.90592 10.4884 4.93629 10.5994C4.96667 10.7104 5.02525 10.8116 5.10634 10.8933C5.16863 10.955 5.24251 11.0039 5.32374 11.0371C5.40496 11.0703 5.49194 11.0871 5.57967 11.0866C5.63362 11.0864 5.68735 11.0797 5.73967 11.0666ZM12.313 2.83992C12.3973 2.75732 12.504 2.7014 12.6199 2.67916C12.7358 2.65691 12.8557 2.66934 12.9646 2.71488C13.0734 2.76041 13.1664 2.83704 13.232 2.93517C13.2975 3.0333 13.3327 3.14858 13.333 3.26659C13.3335 3.3446 13.3184 3.42193 13.2887 3.49405C13.2589 3.56616 13.215 3.63162 13.1597 3.68659L7.61967 9.21992L6.49301 9.50659L6.77967 8.37992L12.313 2.83992Z" fill="#6B6B6B"/>
+						</svg>
+						<span><?php esc_html_e( 'Edit', 'user-registration' ); ?></span>
+					</a>
+				</div>
+				<div class="ur-frontend-form login ur-edit-profile">
+					<div class="user-registration-user-body">
+						<div class="user-registration-user-form-details">
+							<?php if ( ! empty( $form_data_array ) ) : ?>
+								<?php
+								foreach ( $form_data_array as $index => $row_data ) {
+									$row_id = $index;
+									$ignore = false;
+									if ( ! empty( $row_ids ) && isset( $row_ids[ $index ] ) ) {
+										$row_id = absint( $row_ids[ $index ] );
+									}
 
-								if ( ! empty( $form_row_data ) ) {
-									foreach ( $form_row_data as $key => $value ) {
-										if ( $value['row_id'] == $row_id && isset( $value['type'] ) && 'repeater' === $value['type'] ) {
-											$ignore = true;
+									if ( ! empty( $form_row_data ) ) {
+										foreach ( $form_row_data as $key => $value ) {
+											if ( $value['row_id'] == $row_id && isset( $value['type'] ) && 'repeater' === $value['type'] ) {
+												$ignore = true;
+											}
 										}
 									}
-								}
 
-								if ( ! $ignore ) {
-									echo '<div class="user-registration-user-row-details">';
+									if ( ! $ignore ) {
+										echo '<div class="user-registration-user-row-details">';
 
-									foreach ( $row_data as $grid_key => $grid_data ) {
-										foreach ( $grid_data as $grid_data_key => $single_item ) {
-											if ( ! isset( $single_item->general_setting->field_name ) ) {
-												continue;
-											}
-
-											$field_name = $single_item->general_setting->field_name;
-											$field_key  = isset( $single_item->field_key ) ? $single_item->field_key : '';
-
-											/**
-											 * Return fields to skip display in User view page.
-											 *
-											 * @since 4.1
-											 */
-											$skip_fields = apply_filters(
-												'user_registration_single_user_view_skip_form_fields',
-												array(
-													'user_confirm_email',
-													'user_pass',
-													'user_confirm_password',
-													'html',
-													'section_title',
-													'billing_address_title',
-													'shipping_address_title',
-													'profile_picture',
-													'captcha',
-													'multiple_choice',
-													'single_item',
-													'quantity_field',
-													'stripe_gateway',
-													'authorize_net_gateway',
-													'total_field',
-													'subscription_plan',
-												)
-											);
-
-											if ( in_array( $field_key, $skip_fields, true ) ) {
-												continue;
-											}
-
-											echo '<div class="single-field">';
-											echo '<h3 class="single-field__label">' . esc_html( $single_item->general_setting->label ) . '</h3>';
-
-											$value = '';
-
-											$user_metadata_details = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
-
-											if ( in_array(
-												$field_key,
-												array(
-													'user_login',
-													'user_email',
-													'display_name',
-													'user_url',
-												),
-												true
-											) ) {
-												$value = $user->$field_key;
-											} elseif ( 'multi_select2' === $field_key ) {
-												$values = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
-
-												if ( ! empty( $values ) ) {
-													$value = implode( ',', $values );
+										foreach ( $row_data as $grid_key => $grid_data ) {
+											foreach ( $grid_data as $grid_data_key => $single_item ) {
+												if ( ! isset( $single_item->general_setting->field_name ) ) {
+													continue;
 												}
-											} elseif ( 'country' === $field_key ) {
-												$value         = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
-												$country_class = ur_load_form_field_class( $field_key );
-												$countries     = $country_class::get_instance()->get_country();
-												$value         = isset( $countries[ $value ] ) ? $countries[ $value ] : $value;
-											} elseif ( 'signature' === $field_key ) {
-												$value = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
-												$value = wp_get_attachment_url( $value );
-											} elseif ( 'membership' === $field_key ) {
-												$membership_id = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
-												$value         = get_the_title( $membership_id );
-											} else {
-												$value = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
 
-												// For Woocommerce fields.
-												$value = empty( $value ) ? get_user_meta( $user->ID, $field_name, true ) : $value;
-											}
+												$field_name = $single_item->general_setting->field_name;
+												$field_key  = isset( $single_item->field_key ) ? $single_item->field_key : '';
 
-											$checkbox_fields = array(
-												'checkbox',
-												'privacy_policy',
-												'mailerlite',
-												'separate_shipping',
-											);
+												/**
+												 * Return fields to skip display in User view page.
+												 *
+												 * @since 4.1
+												 */
+												$skip_fields = apply_filters(
+													'user_registration_single_user_view_skip_form_fields',
+													array(
+														'user_confirm_email',
+														'user_pass',
+														'user_confirm_password',
+														'html',
+														'section_title',
+														'billing_address_title',
+														'shipping_address_title',
+														'profile_picture',
+														'captcha',
+														'multiple_choice',
+														'single_item',
+														'quantity_field',
+														'stripe_gateway',
+														'authorize_net_gateway',
+														'total_field',
+														'subscription_plan',
+													)
+												);
 
-											// Mark checkbox fields as Checked/Unchecked.
-											if ( in_array( $field_key, $checkbox_fields, true ) ) {
-												$value = is_array( $value ) ? implode( ', ', $value ) : esc_attr( $value );
-											}
+												if ( in_array( $field_key, $skip_fields, true ) ) {
+													continue;
+												}
 
-											// Display the default values in user entry page if field visibility is used.
-											if ( ! metadata_exists( 'user', $user_id, 'user_registration_' . $field_name ) && ! in_array( $field_key, $skip_fields ) ) {
-												$profile       = user_registration_form_data( $user_id, $form_id );
-												$profile_index = 'user_registration_' . $field_name;
+												echo '<div class="single-field">';
+												echo '<h3 class="single-field__label">' . esc_html( $single_item->general_setting->label ) . '</h3>';
 
-												if ( isset( $profile[ $profile_index ]['default'] ) ) {
-													$default_value = $profile[ $profile_index ]['default'];
+												$value = '';
 
-													if ( is_array( $default_value ) ) {
-														$value = implode( ', ', $default_value );
-													} else {
-														$value = esc_html( $default_value );
+												$user_metadata_details = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+
+												if ( in_array(
+													$field_key,
+													array(
+														'user_login',
+														'user_email',
+														'display_name',
+														'user_url',
+													),
+													true
+												) ) {
+													$value = $user->$field_key;
+												} elseif ( 'multi_select2' === $field_key ) {
+													$values = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+
+													if ( ! empty( $values ) ) {
+														$value = implode( ',', $values );
 													}
-												} elseif ( metadata_exists( 'user', $user_id, $field_name ) ) {
-													$value = get_user_meta( $user_id, $field_name, true );
-												} else {
-													$value = '';
-												}
-
-												if ( empty( $value ) && isset( $profile[ $profile_index ]['type'] ) && 'date' === $profile[ $profile_index ]['type'] ) {
-													if ( isset( $profile[ $profile_index ]['custom_attributes']['data-default-date'] ) && 1 === absint( $profile[ $profile_index ]['custom_attributes']['data-default-date'] ) ) {
-														$date_format = isset( $profile[ $profile_index ]['custom_attributes']['data-date-format'] ) ? $profile[ $profile_index ]['custom_attributes']['data-date-format'] : 'd/m/Y';
-														$value       = date( $date_format, time() );
-													}
-												}
-											}
-
-											/**
-											 * Modify value for the single field.
-											 *
-											 * @since 4.1
-											 */
-											$value = apply_filters( 'user_registration_single_user_view_field_value', $value, $field_name, $field_key );
-
-											$non_text_fields = apply_filters(
-												'user_registration_single_user_view_non_text_fields',
-												array(
-													'file',
-												)
-											);
-
-											if ( is_string( $value ) && ! in_array( $field_key, $non_text_fields, true ) ) {
-												if ( 'wysiwyg' === $field_key ) {
-													echo wp_kses_post(
-														'<div class="single-field__wysiwyg"> ' . html_entity_decode( $value ) . '</div>'
-													);
+												} elseif ( 'country' === $field_key ) {
+													$value         = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+													$country_class = ur_load_form_field_class( $field_key );
+													$countries     = $country_class::get_instance()->get_country();
+													$value         = isset( $countries[ $value ] ) ? $countries[ $value ] : $value;
 												} elseif ( 'signature' === $field_key ) {
-													echo wp_kses_post(
-														'<div class="single-field__signature"><img src="' . esc_url( $value ) . '" width="100%" /></div>'
-													);
-												} elseif ( 60 > strlen( $value ) ) {
-													printf(
-														'<input type="text" value="%s" disabled>',
-														esc_attr( $value )
-													);
+													$value = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+													$value = wp_get_attachment_url( $value );
+												} elseif ( 'membership' === $field_key ) {
+													$membership_id = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+													$value         = get_the_title( $membership_id );
 												} else {
-													printf(
-														'<textarea rows="6" disabled>%s</textarea>',
-														esc_attr( $value )
-													);
-												}
-											} else {
-												$field_value = get_user_meta( $user_id, 'user_registration_' . $field_key, true );
-												do_action( 'user_registration_single_user_view_output_' . $field_key . '_field', $user_id, $single_item, $field_value );
-											}
-											echo '</div>';
-										}
-									}
-									echo '</div>';
-								}
+													$value = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
 
-								do_action( 'user_registration_single_user_view_row_data', $row_id, $row_data, $form_id, $user_id );
-							}
-							?>
-							<?php
-						else :
-							$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
-							?>
-						<div class="empty-list-table-container">
-							<img src="<?php echo $image_url; ?>" alt="" />
+													// For Woocommerce fields.
+													$value = empty( $value ) ? get_user_meta( $user->ID, $field_name, true ) : $value;
+												}
+
+												$checkbox_fields = array(
+													'checkbox',
+													'privacy_policy',
+													'mailerlite',
+													'separate_shipping',
+												);
+
+												// Mark checkbox fields as Checked/Unchecked.
+												if ( in_array( $field_key, $checkbox_fields, true ) ) {
+													$value = is_array( $value ) ? implode( ', ', $value ) : esc_attr( $value );
+												}
+
+												// Display the default values in user entry page if field visibility is used.
+												if ( ! metadata_exists( 'user', $user_id, 'user_registration_' . $field_name ) && ! in_array( $field_key, $skip_fields ) ) {
+													$profile       = user_registration_form_data( $user_id, $form_id );
+													$profile_index = 'user_registration_' . $field_name;
+
+													if ( isset( $profile[ $profile_index ]['default'] ) ) {
+														$default_value = $profile[ $profile_index ]['default'];
+
+														if ( is_array( $default_value ) ) {
+															$value = implode( ', ', $default_value );
+														} else {
+															$value = esc_html( $default_value );
+														}
+													} elseif ( metadata_exists( 'user', $user_id, $field_name ) ) {
+														$value = get_user_meta( $user_id, $field_name, true );
+													} else {
+														$value = '';
+													}
+
+													if ( empty( $value ) && isset( $profile[ $profile_index ]['type'] ) && 'date' === $profile[ $profile_index ]['type'] ) {
+														if ( isset( $profile[ $profile_index ]['custom_attributes']['data-default-date'] ) && 1 === absint( $profile[ $profile_index ]['custom_attributes']['data-default-date'] ) ) {
+															$date_format = isset( $profile[ $profile_index ]['custom_attributes']['data-date-format'] ) ? $profile[ $profile_index ]['custom_attributes']['data-date-format'] : 'd/m/Y';
+															$value       = date( $date_format, time() );
+														}
+													}
+												}
+
+												/**
+												 * Modify value for the single field.
+												 *
+												 * @since 4.1
+												 */
+												$value = apply_filters( 'user_registration_single_user_view_field_value', $value, $field_name, $field_key );
+
+												$non_text_fields = apply_filters(
+													'user_registration_single_user_view_non_text_fields',
+													array(
+														'file',
+													)
+												);
+
+												if ( is_string( $value ) && ! in_array( $field_key, $non_text_fields, true ) ) {
+													if ( 'wysiwyg' === $field_key ) {
+														echo wp_kses_post(
+															'<div class="single-field__wysiwyg"> ' . html_entity_decode( $value ) . '</div>'
+														);
+													} elseif ( 'signature' === $field_key ) {
+														echo wp_kses_post(
+															'<div class="single-field__signature"><img src="' . esc_url( $value ) . '" width="100%" /></div>'
+														);
+													} elseif ( 60 > strlen( $value ) ) {
+														printf(
+															'<input type="text" value="%s" disabled>',
+															esc_attr( $value )
+														);
+													} else {
+														printf(
+															'<textarea rows="6" disabled>%s</textarea>',
+															esc_attr( $value )
+														);
+													}
+												} else {
+													$field_value = get_user_meta( $user_id, 'user_registration_' . $field_key, true );
+													do_action( 'user_registration_single_user_view_output_' . $field_key . '_field', $user_id, $single_item, $field_value );
+												}
+												echo '</div>';
+											}
+										}
+										echo '</div>';
+									}
+
+									do_action( 'user_registration_single_user_view_row_data', $row_id, $row_data, $form_id, $user_id );
+								}
+								?>
+								<?php
+							else :
+								$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
+								?>
+							<div class="empty-list-table-container">
+								<img src="<?php echo $image_url; ?>" alt="" />
+							</div>
+							<?php endif; ?>
 						</div>
-						<?php endif; ?>
 					</div>
-					<?php do_action( 'user_registration_single_user_details_content', $user_id, $form_id ); ?>
 				</div>
 			</div>
 			<?php
@@ -1724,53 +1730,55 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 			}
 
 			?>
-			<div class="ur-frontend-form login ur-edit-profile urm-admin-edit-user <?php echo ! $display ? 'user-registration-hidden' : ''; ?>" id="ur-frontend-form">
-				<div id="user-registration-edit-user-header" >
+			<div class="urm-admin-user-content-container urm-admin-edit-user <?php echo ! $display ? 'user-registration-hidden' : ''; ?>">
+				<div id="urm-admin-user-content-header" >
 					<h3><?php esc_html_e( 'Personal Information', 'user-registration' ); ?></h3>
 				</div>
-				<?php
-				if ( ! empty( $form_data_array ) ) :
-					?>
-					<div id="user-registration-edit-user-body">
-						<form action="" class="edit-profile user-registration-EditProfileForm" method="post"
-							enctype="multipart/form-data"
-							data-form-id="<?php echo esc_attr( $form_id ); ?>"
-							data-user-id="<?php echo esc_attr__( $user_id ); ?>">
-							<div class="user-registration-edit-user-form-details">
-								<div class="ur-form-grid">
-									<?php
-									foreach ( $form_data_array as $index => $data ) {
-										$row_id = ( ! empty( $form_row_ids_array ) ) ? absint( $form_row_ids_array[ $index ] ) : $index;
-										ob_start();
-										echo '<div class="ur-form-row">';
-										user_registration_edit_profile_row_template( $data, $profile );
-										echo '</div>';
-										$row_template = ob_get_clean();
-										$row_template = apply_filters( 'user_registration_frontend_edit_profile_form_row_template', $row_template, $form_id, $profile, $row_id, $data );
-										echo $row_template; // phpcs:ignore
-									}
-									?>
-									<div class="ur-form-row edit-user-save-btn-container">
-										<button class="button btn-primary save_user_details"
-											type="button"><?php echo __( 'Save Changes' ); ?>
-											<span></span>
-										</button>
-									</div>
+				<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
+					<?php
+					if ( ! empty( $form_data_array ) ) :
+						?>
+						<div id="user-registration-edit-user-body">
+							<form action="" class="edit-profile user-registration-EditProfileForm" method="post"
+								enctype="multipart/form-data"
+								data-form-id="<?php echo esc_attr( $form_id ); ?>"
+								data-user-id="<?php echo esc_attr__( $user_id ); ?>">
+								<div class="user-registration-edit-user-form-details">
+									<div class="ur-form-grid">
+										<?php
+										foreach ( $form_data_array as $index => $data ) {
+											$row_id = ( ! empty( $form_row_ids_array ) ) ? absint( $form_row_ids_array[ $index ] ) : $index;
+											ob_start();
+											echo '<div class="ur-form-row">';
+											user_registration_edit_profile_row_template( $data, $profile );
+											echo '</div>';
+											$row_template = ob_get_clean();
+											$row_template = apply_filters( 'user_registration_frontend_edit_profile_form_row_template', $row_template, $form_id, $profile, $row_id, $data );
+											echo $row_template; // phpcs:ignore
+										}
+										?>
+										<div class="ur-form-row edit-user-save-btn-container">
+											<button class="button btn-primary save_user_details"
+												type="button"><?php echo __( 'Save Changes' ); ?>
+												<span></span>
+											</button>
+										</div>
 
+									</div>
 								</div>
-							</div>
-						</form>
-					</div>
-					<?php
-				else :
-					$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
+							</form>
+						</div>
+						<?php
+					else :
+						$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
+						?>
+						<div class="empty-list-table-container">
+							<img src="<?php echo $image_url; ?>" alt="" />
+						</div>
+						<?php
+					endif;
 					?>
-					<div class="empty-list-table-container">
-						<img src="<?php echo $image_url; ?>" alt="" />
-					</div>
-					<?php
-				endif;
-				?>
+				</div>
 			</div>
 			<?php
 		}

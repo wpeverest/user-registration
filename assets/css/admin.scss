@@ -7557,104 +7557,115 @@ body.user-registration {
 		}
 	}
 
-	.urm-admin-edit-user,
-	.urm-admin-view-user {
+	.user-registration-user-content {
 		display: flex;
 		flex-direction: column;
-		gap: $spacing-24px;
-		padding: $spacing-24px;
-		border-radius: $border_radius_7;
+		gap: $spacing_24px;
 
-		&.user-registration-hidden {
-			display: none;
-		}
-
-		#user-registration-edit-user-header {
+		.urm-admin-user-content-container {
 			display: flex;
-			justify-content: space-between;
-			align-items: center;
+			flex-direction: column;
+			gap: $spacing-24px;
+			border-radius: $border_radius_7;
+			padding: $spacing-24px;
+			height: fit-content;
+			background-color: $grey-0;
 
-			h3 {
-				font-size: 18px;
-				font-weight: 500;
-				color: $grey-500;
+			&.user-registration-hidden {
+				display: none;
 			}
 
-			#user-registration-edit-user-link {
+			#urm-admin-user-content-header {
 				display: flex;
-				gap: $spacing-4px;
-				color: $grey-300;
-				text-decoration: none;
-				font-size: 14px;
-				font-weight: 400;
-			}
-		}
-
-		.user-registration-user-body {
-			flex-grow: 4;
-
-			.user-registration-user-form-details {
-				display: flex;
-				flex-direction: column;
 				justify-content: space-between;
-				flex-wrap: wrap;
-				margin-bottom: 10px;
+				align-items: center;
 
-				@media (max-width: 767px) {
-					flex-direction: column;
+				h3 {
+					font-size: 18px;
+					font-weight: 500;
+					color: $grey-500;
 				}
 
-				.user-registration-user-row-details {
+				#user-registration-edit-user-link {
 					display: flex;
-					flex-direction: row;
+					gap: $spacing-4px;
+					color: $grey-300;
+					text-decoration: none;
+					font-size: 14px;
+					font-weight: 400;
+				}
+			}
+
+			.ur-frontend-form {
+				padding: 0;
+			}
+
+			.user-registration-user-body {
+				flex-grow: 4;
+
+				.user-registration-user-form-details {
+					display: flex;
+					flex-direction: column;
+					justify-content: space-between;
 					flex-wrap: wrap;
+					margin-bottom: 10px;
 
-					.single-field {
-						padding: 10px;
-						width: 50%;
-						box-sizing: border-box;
+					@media (max-width: 767px) {
+						flex-direction: column;
+					}
 
-						@media (max-width: 767px) {
-							width: 100%;
-						}
+					.user-registration-user-row-details {
+						display: flex;
+						flex-direction: row;
+						flex-wrap: wrap;
 
-						.single-field__label {
-							font-size: 14px;
-							color: #222;
-							font-weight: 500;
-							margin-bottom: 10px;
-						}
+						.single-field {
+							padding: 10px;
+							width: 50%;
+							box-sizing: border-box;
 
-						input {
-							width: 100%;
-							min-height: 36px;
-							padding-left: 10px;
-							padding-right: 10px;
-							border-color: #d3d3d3;
+							@media (max-width: 767px) {
+								width: 100%;
+							}
 
-							&:disabled {
+							.single-field__label {
+								font-size: 14px;
+								color: #222;
+								font-weight: 500;
+								margin-bottom: 10px;
+							}
+
+							input {
+								width: 100%;
+								min-height: 36px;
+								padding-left: 10px;
+								padding-right: 10px;
+								border-color: #d3d3d3;
+
+								&:disabled {
+									opacity: 0.5;
+									color: #000000;
+									background: #f4f4f4;
+									cursor: not-allowed;
+								}
+							}
+
+							.urfu-no-files-found-message {
+								margin: 0;
+								padding: 7px $spacing_10px;
 								opacity: 0.5;
-								color: #000000;
 								background: #f4f4f4;
 								cursor: not-allowed;
+								border: $border_width solid #d3d3d3;
+							}
+
+							textarea {
+								width: 100%;
 							}
 						}
-
-						.urfu-no-files-found-message {
-							margin: 0;
-							padding: 7px $spacing_10px;
-							opacity: 0.5;
-							background: #f4f4f4;
-							cursor: not-allowed;
-							border: $border_width solid #d3d3d3;
-						}
-
-						textarea {
-							width: 100%;
-						}
 					}
-				}
 
+				}
 			}
 		}
 	}
@@ -8123,12 +8134,6 @@ $border-top-color_1: #ff4f55;
 	line-height: 1.25;
 	text-transform: none;
 	font-size: 14px;
-}
-#user-registration-pro-single-user-view {
-	.ur-frontend-form {
-		width: 100%;
-		height: fit-content;
-	}
 }
 
 @keyframes toaster {
