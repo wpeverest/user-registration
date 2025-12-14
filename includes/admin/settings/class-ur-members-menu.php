@@ -1049,11 +1049,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 			<div id="user-registration-pro-single-user-view">
 				<div id="user-registration-user-sidebar">
 					<?php $this->render_user_profile( $user_id ); ?>
-					<?php $this->render_user_actions($user_id); //phpcs:ignore
-					?>
-					<?php
-					// $this->render_user_extra_details($user_id);
-					?>
+					<?php $this->render_user_actions($user_id); //phpcs:ignore ?>
 					<?php
 					/**
 					 * Add more sections to the sidebar of user view page.
@@ -1084,6 +1080,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 						}
 					}
 					?>
+					<?php $this->render_user_extra_details( $user_id, true ); ?>
 					<?php do_action( 'user_registration_single_user_details_content', $user_id, $form_id ); ?>
 				</div>
 			</div>
@@ -1384,41 +1381,20 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 
 			$extra_details = array(
 				'user_id'         => array(
-					'title' => __( 'User Id', 'user-registration' ),
 					'value' => $user_id,
-					'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-									<path fill="#000" fill-rule="evenodd" d="M21.707 1.293a1 1 0 0 1 0 1.414L20.414 4l2.293 2.293a1 1 0 0 1 0 1.414l-3.5 3.5a1 1 0 0 1-1.414 0L15.5 8.914l-2.751 2.751a6.5 6.5 0 1 1-1.414-1.414l3.457-3.457v-.001l.002-.001 3.497-3.497.002-.002.002-.002 1.998-1.998a1 1 0 0 1 1.414 0ZM19 5.414 16.914 7.5 18.5 9.086 20.586 7 19 5.414ZM7.5 11a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z" clip-rule="evenodd"/>
-								</svg>',
-				),
-				'user_status'     => array(
-					'title' => __( 'User Status', 'user-registration' ),
-					'value' => $status,
-					'class' => 'user-registration-user-status-' . strtolower( $status_class ),
-					'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-									<path fill="#000" fill-rule="evenodd" d="M4 3a1 1 0 0 0-2 0v18a1 1 0 0 0 1 1h18a1 1 0 1 0 0-2H4V3Zm15.707 5.293a1 1 0 0 0-1.414 0L14 12.586l-3.293-3.293a1 1 0 0 0-1.414 0l-3 3a1 1 0 1 0 1.414 1.414L10 11.414l3.293 3.293a1 1 0 0 0 1.414 0l5-5a1 1 0 0 0 0-1.414Z" clip-rule="evenodd"/>
-								</svg>',
-
 				),
 				'user_role'       => array(
-					'title' => __( 'User Role', 'user-registration' ),
 					'value' => esc_html( ucfirst( implode( ' ', $user->roles ) ) ),
-					'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-									<path fill="#000" fill-rule="evenodd" d="M9 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM4 7a5 5 0 1 1 10 0A5 5 0 0 1 4 7Zm12.969 6.286a1.999 1.999 0 0 0-.883 2.295 1.003 1.003 0 0 1 .2.45 2 2 0 0 0 2.295.883 1.002 1.002 0 0 1 .45-.2 2 2 0 0 0 .883-2.295 1.002 1.002 0 0 1-.2-.45 1.999 1.999 0 0 0-2.294-.883 1 1 0 0 1-.451.2Zm4.186-.745a4.022 4.022 0 0 0-.846-.808l.04-.117a1 1 0 0 0-1.898-.632l-.013.04a4.028 4.028 0 0 0-1.061.024l-.048-.12a1 1 0 0 0-1.857.743l.07.174c-.31.24-.582.526-.808.846l-.118-.04a1 1 0 0 0-.632 1.898l.04.013a4.03 4.03 0 0 0 .024 1.062l-.12.047a1 1 0 1 0 .743 1.857l.174-.069c.24.308.525.58.845.807l-.04.118a1 1 0 0 0 1.898.632l.014-.04a4.07 4.07 0 0 0 1.062-.024l.048.12a1 1 0 0 0 1.857-.743l-.07-.174c.309-.24.58-.526.807-.845l.118.039a1 1 0 0 0 .632-1.898l-.04-.013a4.04 4.04 0 0 0-.024-1.062l.12-.048a1 1 0 0 0-.743-1.857l-.174.07ZM6 14a5 5 0 0 0-5 5v2a1 1 0 1 0 2 0v-2a3 3 0 0 1 3-3h4a1 1 0 1 0 0-2H6Z" clip-rule="evenodd"/>
-								</svg>',
+				),
+				'user_status'     => array(
+					'value' => $status,
+					'class' => 'user-registration-user-status-' . strtolower( $status_class ),
 				),
 				'registered_form' => array(
-					'title' => __( 'Form', 'user-registration' ),
 					'value' => $form_title,
-					'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-									<path fill="#000" fill-rule="evenodd" d="M3.879 1.879A3 3 0 0 1 6 1h8.5a1 1 0 0 1 .707.293l5.5 5.5A1 1 0 0 1 21 7.5V20a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V4a3 3 0 0 1 .879-2.121ZM6 3h7v5a1 1 0 0 0 1 1h5v11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm9 4h3.086L15 3.914V7Zm-7 5a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Zm-1 5a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1Zm1-9a1 1 0 0 0 0 2h2a1 1 0 1 0 0-2H8Z" clip-rule="evenodd"/>
-								</svg>',
 				),
 				'registered_on'   => array(
-					'title' => __( 'Date', 'user-registration' ),
 					'value' => $user->user_registered,
-					'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-									<path fill="#000" fill-rule="evenodd" d="M17 2a1 1 0 1 0-2 0v1H9V2a1 1 0 0 0-2 0v1H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3h-2V2Zm3 7V6a1 1 0 0 0-1-1h-2v1a1 1 0 1 1-2 0V5H9v1a1 1 0 0 1-2 0V5H5a1 1 0 0 0-1 1v3h16ZM4 11h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9Zm3 3a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1Zm5-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Zm3 1a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H16a1 1 0 0 1-1-1Zm-7 3a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H8Zm3 1a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H12a1 1 0 0 1-1-1Zm5-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H16Z" clip-rule="evenodd"/>
-								</svg>',
 				),
 			);
 
@@ -1431,22 +1407,38 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 
 			if ( ! empty( $extra_details ) ) :
 				?>
-				<div class="sidebar-box" id="user-registration-user-view-extra-details">
-					<h2 class="box-title"><?php esc_html_e( 'Extra Details', 'user-registration' ); ?></h2>
-					<ul>
-						<?php
-						foreach ( $extra_details as $id => $data ) {
-							printf(
-								'<li id="%s">%s<p><span>%s:&nbsp;</span><span class="%s">%s</span></p></li>',
-								esc_attr( 'user-registration-user-extra-detail-' . $id ),
-								isset( $data['icon'] ) ? $data['icon'] : '',
-								esc_html( $data['title'] ),
-								isset( $data['class'] ) ? esc_attr( $data['class'] ) : '',
-								esc_html( $data['value'] )
-							);
-						}
-						?>
-					</ul>
+				<div class="urm-admin-user-content-container">
+					<div id="urm-admin-user-content-header" >
+						<h3>
+							<?php
+								esc_html_e( 'Entry Details', 'user-registration' );
+							?>
+						</h3>
+					</div>
+					<div class="user-registration-user-form-details">
+						<table class="wp-list-table widefat fixed striped users">
+							<thead>
+								<tr>
+									<th><?php esc_html_e( 'ID', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Role', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Status', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Form', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Date', 'user-registration' ); ?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<?php
+									foreach ( $extra_details as $id => $data ) {
+										?>
+										<td class="<?php echo isset( $data['class'] ) ? esc_attr( $data['class'] ) : ''; ?>"><?php echo esc_html( $data['value'] ); ?></td>
+										<?php
+									}
+									?>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<?php
 			endif;

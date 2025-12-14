@@ -7329,8 +7329,8 @@ body.user-registration {
 	display: flex;
 	gap: 24px;
 	max-width: 1280px;
-	margin: $spacing_50px auto;
-	padding: $spacing_32px;
+	margin: 0px auto;
+	padding: $spacing_12px;
 
 	#user-registration-user-sidebar {
 		padding: $spacing_24px $spacing_24px $spacing_32px $spacing_24px;
@@ -7342,6 +7342,7 @@ body.user-registration {
 		gap: $spacing_24px;
 		border-radius: $border_radius_7;
 		background-color: $grey-0;
+		height: fit-content;
 
 		@media (max-width: 991px) {
 			min-width: 200px;
@@ -7665,6 +7666,21 @@ body.user-registration {
 						}
 					}
 
+				}
+			}
+
+			.user-registration-user-form-details {
+				.status-active {
+					color: $approve_user;
+				}
+				.status-expired {
+					color: $deny_color;
+				}
+				.status-cancelled {
+					color: $deny_color;
+				}
+				.status-inactive {
+					color: $pending_user;
 				}
 			}
 		}
