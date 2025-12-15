@@ -375,8 +375,6 @@
 		 */
 		create_member: function (form_response) {
 			var prepare_members_data = this.prepare_members_data();
-			console.log(prepare_members_data);
-			return;
 			prepare_members_data.username = form_response.data.username;
 
 			this.send_data(
