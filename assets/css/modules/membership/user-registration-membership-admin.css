@@ -1404,6 +1404,20 @@
 .ur-membership-tab-contents-wrapper .ur-membership-error {
   border-color: #ff4f55 !important;
 }
+.ur-membership-tab-contents-wrapper #ur-membership-payment-settings-notice {
+  border: 1px solid #475bb2;
+  border-radius: 6px;
+  padding: 8px;
+  background-color: #f8f9fc;
+}
+.ur-membership-tab-contents-wrapper #ur-membership-payment-settings-notice p {
+  margin: 0;
+}
+.ur-membership-tab-contents-wrapper #ur-membership-payment-settings-notice a {
+  color: #475bb2;
+  font-weight: 600;
+  text-decoration: underline;
+}
 
 #ur-membership-create-form .user-registration-card #ur-membership-form-container {
   gap: 32px;

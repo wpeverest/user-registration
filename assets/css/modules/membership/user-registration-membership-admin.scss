@@ -1395,6 +1395,23 @@
 	.ur-membership-error {
 		border-color: $red !important;
 	}
+
+	#ur-membership-payment-settings-notice{
+		border: 1px solid $primary_color;
+		border-radius: $spacing_6px;
+		padding: $spacing_8px;
+		background-color: #f8f9fc;
+
+		p{
+			margin: 0;
+		}
+
+		a{
+			color: $primary_color;
+			font-weight: $semi_bold;
+			text-decoration: underline;
+		}
+	}
 }
 
 #ur-membership-create-form {

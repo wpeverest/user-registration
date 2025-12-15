@@ -137,7 +137,7 @@
 					<span
 						class="ur-membership-duration"><?php echo esc_html__( $membership['title'], 'user-registration' ); ?></span>
 					<span
-						class="ur-membership-duration"> - <?php echo esc_html__( $membership['period'], 'user-registration' ); ?></span>
+						class="ur-membership-duration"><?php echo esc_html__( $membership['period'], 'user-registration' ); ?></span>
 				</label>
 			<?php endforeach;
 		else:
@@ -206,6 +206,11 @@
 		</span>
 		<div id="payment-gateway-body" class="ur_membership_frontend_input_container">
 			<?php
+			$width_map = [
+				'paypal'    => '70px',
+				'stripe'    => '50px',
+				'bank'      => '40px'
+			];
 			foreach ( get_option( 'ur_membership_payment_gateways' ) as $g => $gateway ) :
 				?>
 				<label class="ur_membership_input_label ur-label"
@@ -220,7 +225,12 @@
 						<?php echo 0 === $g ? 'checked' : ''; ?>
 					>
 					<span class="ur-membership-duration">
-						<?php echo esc_html( apply_filters( 'user_registration_membership_payment_gateway_selection_labels', __( $gateway, 'user-registration' ), $g ) ); ?>
+						<img
+							src="<?php echo esc_url(  plugins_url( 'assets/images/settings-icons/membership-field/' . strtolower( $g ) . '-logo.png', UR_PLUGIN_FILE ) ); ?>"
+							alt="<?php echo esc_attr( $gateway ); ?>"
+							class="ur-membership-payment-gateway-logo"
+							width="<?php echo isset($width_map[strtolower( $g )]) ? $width_map[strtolower( $g )] : '60px'; ?>"
+						/>
 					</span>
 				</label>
 			<?php endforeach; ?>
