@@ -55,10 +55,11 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
          */
         public function get_settings_callback( $settings ) {
             global $current_section;
-            $paypal_settings = $this->get_paypal_settings();
-            $stripe_settings = $this->get_stripe_settings();
-            $bank_transfer_settings = $this->get_bank_transfer_settings();
             if( 'payment-method' === $current_section ) {
+                $paypal_settings = $this->get_paypal_settings();
+                $stripe_settings = $this->get_stripe_settings();
+                $bank_transfer_settings = $this->get_bank_transfer_settings();
+
                 add_filter( 'user_registration_settings_payment-method_hide_save_button', true );
                 $settings = array(
                     'title' => '',

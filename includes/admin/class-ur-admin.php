@@ -43,6 +43,198 @@ class UR_Admin {
 		add_action( 'user_registration_after_form_settings', array( $this, 'render_integration_List_section' ) );
 		add_action( 'init', array( $this, 'init_users_menu' ) );
 
+		add_filter( 'user_registration_get_settings_payment', array( $this, 'get_payment_retry_settings' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_payment_retry_scripts' ) );
+		add_action( 'wp_ajax_user_registration_save_payment_retry', array( $this, 'ajax_save_payment_retry' ) );
+	}
+
+	/**
+	 * Enqueue payment retry related scripts (adds footer inline JS binding).
+	 */
+	public function enqueue_payment_retry_scripts() {
+		if ( empty( $_GET['tab'] ) || sanitize_title( wp_unslash( $_GET['tab'] ) ) !== 'payment' ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return;
+		}
+		if ( empty( $_REQUEST['section'] ) || sanitize_title( wp_unslash( $_REQUEST['section'] ) ) !== 'payment-retry' ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return;
+		}
+		add_action( 'admin_footer', array( $this, 'print_payment_retry_inline_js' ) );
+	}
+
+	/**
+	 * Print inline JS that handles Save button click and sends AJAX.
+	 */
+	public function print_payment_retry_inline_js() {
+		?>
+		<script type="text/javascript">
+		jQuery( document ).ready( function( $ ) {
+			//show/hide payment retry settings.
+			$(document).on('change', '#user_registration_payment_retry_enabled', function() {
+				if ($(this).is(":checked")) {
+					$("#user_registration_payment_retry_count").closest('.user-registration-global-settings').show();
+					$("#user_registration_payment_retry_interval").closest('.user-registration-global-settings').show();
+					$("#user_registration_payment_retry_user_status").closest('.user-registration-global-settings').show();
+				} else {
+					$("#user_registration_payment_retry_count").closest('.user-registration-global-settings').hide();
+					$("#user_registration_payment_retry_interval").closest('.user-registration-global-settings').hide();
+					$("#user_registration_payment_retry_user_status").closest('.user-registration-global-settings').hide();
+				}
+			});
+			$("#user_registration_payment_retry_enabled").triggerHandler('change', )
+			//save payment settings.
+			$( document ).on( 'click', '.user_registration-save-payment-retry', function( e ) {
+				e.preventDefault();
+				var href = $( this ).attr( 'href' );
+				var nonce = '';
+				if ( href && href.indexOf( 'nonce=' ) !== -1 ) {
+					nonce = href.split( 'nonce=' ).pop();
+				}
+				var data = {
+					action: 'user_registration_save_payment_retry',
+					nonce: nonce,
+					user_registration_payment_retry_enabled: $( '#user_registration_payment_retry_enabled' ).is( ':checked' ) ? 'yes' : 'no',
+					user_registration_payment_retry_count: $( '#user_registration_payment_retry_count' ).val(),
+					user_registration_payment_retry_interval: $( '#user_registration_payment_retry_interval' ).val(),
+					user_registration_payment_retry_user_status: $( '#user_registration_payment_retry_user_status' ).val(),
+				};
+				var $btn = $( this );
+				$.post( ajaxurl, data, function( response ) {
+					if ( response && response.success ) {
+						var msg = ( response && response.data ) ? response.data : '<?php echo esc_js( __( 'Payment retry settings saved.', 'user-registration' ) ); ?>';
+						$( '.user-registration-payment-retry-notice' ).remove();
+						var $card = $btn.closest( '.user-registration-card' );
+						var $body = $card.find( '.user-registration-card__body' ).first();
+						var $notice = $( '<div id="message" class="updated inline user-registration-payment-retry-notice"><p><strong>' + msg + '</strong></p></div>' );
+						if ( $body.length ) {
+							$body.prepend( $notice );
+						} else {
+							$( 'form' ).first().before( $notice );
+						}
+						var originalText = $btn.text();
+						$btn.text( '<?php echo esc_js( __( 'Saved', 'user-registration' ) ); ?>' );
+						setTimeout( function() {
+							$( '.user-registration-payment-retry-notice' ).fadeOut( 300, function() { $( this ).remove(); } );
+							$btn.text( originalText );
+						}, 4000 );
+					} else {
+						var msg = ( response && response.data ) ? response.data : '<?php echo esc_js( __( 'Could not save settings', 'user-registration' ) ); ?>';
+						alert( msg );
+					}
+				} ).fail( function() {
+					alert( '<?php echo esc_js( __( 'Request failed.', 'user-registration' ) ); ?>' );
+				} );
+			} );
+		} );
+		</script>
+		<?php
+	}
+
+	/**
+	 * AJAX handler to save payment retry options.
+	 */
+	public function ajax_save_payment_retry() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( __( 'Insufficient permissions', 'user-registration' ) );
+		}
+
+		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'user_registration_save_payment_retry' ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			wp_send_json_error( __( 'Invalid nonce', 'user-registration' ) );
+		}
+
+		$enabled = ( isset( $_POST['user_registration_payment_retry_enabled'] ) && 'yes' === $_POST['user_registration_payment_retry_enabled'] ) ? 'yes' : 'no';
+		$retry_count = isset( $_POST['user_registration_payment_retry_count'] ) ? absint( wp_unslash( $_POST['user_registration_payment_retry_count'] ) ) : 3; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$retry_interval = isset( $_POST['user_registration_payment_retry_interval'] ) ? absint( wp_unslash( $_POST['user_registration_payment_retry_interval'] ) ) : 3; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$user_status = isset( $_POST['user_registration_payment_retry_user_status'] ) ? sanitize_text_field( wp_unslash( $_POST['user_registration_payment_retry_user_status'] ) ) : 'active'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+		if ( ! in_array( $user_status, array( 'active', 'expired' ), true ) ) {
+			$user_status = 'active';
+		}
+
+		update_option( 'user_registration_payment_retry_enabled', $enabled );
+		if( $enabled ) {
+			update_option( 'user_registration_payment_retry_count', $retry_count );
+			update_option( 'user_registration_payment_retry_interval', $retry_interval );
+			update_option( 'user_registration_payment_retry_user_status', $user_status );
+		}
+		wp_send_json_success( __( 'Payment retry settings saved.', 'user-registration' ) );
+	}
+
+	public function get_payment_retry_settings( $settings ) {
+		global $current_section;
+		if( 'payment-retry' === $current_section ) {
+			$settings = array(
+				'title'    => '',
+				'sections' => array(
+					'payment_retry_settings' => array(
+						'title'    => __( 'Payment Retry Settings', 'user-registration' ),
+						'type'     => 'card',
+						'settings' => array(
+							array(
+								'title'   => __( 'Enable Payment Retry', 'user-registration' ),
+								'desc'    => __( 'Enable automatic retry for failed payments.', 'user-registration' ),
+								'id'      => 'user_registration_payment_retry_enabled',
+								'default' => 'no',
+								'type'    => 'toggle',
+								'desc_tip' => true,
+							),
+							array(
+								'title'   => __( 'Number of Retries', 'user-registration' ),
+								'desc'    => __( 'Number of times to retry a failed payment.', 'user-registration' ),
+								'id'      => 'user_registration_payment_retry_count',
+								'default' => '3',
+								'type'    => 'number',
+								'custom_attributes' => array(
+									'min' => '1',
+									'max' => '10',
+								),
+								'desc_tip' => true,
+							),
+							array(
+								'title'   => __( 'Retry Interval (Days)', 'user-registration' ),
+								'desc'    => __( 'Number of days to wait between retry attempts.', 'user-registration' ),
+								'id'      => 'user_registration_payment_retry_interval',
+								'default' => '3',
+								'type'    => 'number',
+								'custom_attributes' => array(
+									'min' => '1',
+									'max' => '30',
+								),
+								'desc_tip' => true,
+							),
+							array(
+								'title'   => __( 'User Status During Retry', 'user-registration' ),
+								'desc'    => __( 'Select the user status during payment retry period.', 'user-registration' ),
+								'id'      => 'user_registration_payment_retry_user_status',
+								'default' => 'active',
+								'type'    => 'select',
+								'class'   => 'ur-enhanced-select',
+								'options' => array(
+									'active'  => __( 'Active', 'user-registration' ),
+									'expired' => __( 'Expired', 'user-registration' ),
+								),
+								'desc_tip' => true,
+							),
+							array(
+								'type' => 'link',
+								'id'   => 'user_registration_payment_retry_save_link',
+								'css'  => '',
+								'class' => 'ur-align-items-end',
+								'buttons' => array(
+									array(
+										'title' => __( 'Save', 'user-registration' ),
+										'href'  => admin_url( 'admin-ajax.php?action=user_registration_save_payment_retry&nonce=' ) . wp_create_nonce( 'user_registration_save_payment_retry' ),
+										'class' => 'user_registration-save-payment-retry button button-primary',
+									),
+								),
+							)
+						),
+					),
+				),
+			);
+		}
+		//payment retry save changes.
+		$GLOBALS[ 'hide_save_button' ] = false;
+		return $settings;
 	}
 
 	/**
