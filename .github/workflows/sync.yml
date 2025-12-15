@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-3465-updated-membership-field-design-for-form-builder
     workflow_dispatch:
 jobs:
   sync:
