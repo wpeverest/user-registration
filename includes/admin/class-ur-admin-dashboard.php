@@ -19,11 +19,17 @@ class UR_Admin_Dashboard {
 	 * Show the Dashboard Page.
 	 */
 	public static function output() {
-		wp_enqueue_script( 'ur-dashboard-script', UR()->plugin_url() . '/chunks/dashboard.js', array(
-			'wp-element',
-			'wp-blocks',
-			'wp-editor'
-		), UR()->version, true );
+		wp_enqueue_script(
+			'ur-dashboard-script',
+			UR()->plugin_url() . '/chunks/dashboard.js',
+			array(
+				'wp-element',
+				'wp-blocks',
+				'wp-editor',
+			),
+			UR()->version,
+			true
+		);
 
 		if ( ! function_exists( 'get_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -67,6 +73,8 @@ class UR_Admin_Dashboard {
 				'licenseActivationURL' => esc_url_raw( admin_url( '/admin.php?page=user-registration-settings&tab=license' ) ),
 				'utmCampaign'          => UR()->utm_campaign,
 				'upgradeURL'           => esc_url_raw( 'https://wpuserregistration.com/upgrade/?utm_campaign=' . UR()->utm_campaign ),
+				'isMasteriyoActive'    => $ttest = is_plugin_active( 'learning-management-system/lms.php' )
+				|| is_plugin_active( 'learning-management-system-pro/lms.php' ),
 				'plugins'              => array_reduce(
 					$allowed_plugin_slugs,
 					function ( $acc, $curr ) use ( $installed_plugin_slugs ) {
@@ -135,5 +143,4 @@ class UR_Admin_Dashboard {
 		</html>
 		<?php
 	}
-
 }
