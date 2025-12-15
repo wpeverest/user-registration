@@ -593,13 +593,20 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 									</div>
 									<div class="ur-toggle-section m1-auto" style="width: 100%">
 										<span class="user-registration-toggle-form">
+
+										<?php
+											$email_marketing_sync_details = isset( $membership_details[ 'email_marketing_sync'] ) ? $membership_details[ 'email_marketing_sync'] : array();
+											$is_email_marketing_sync      = ur_string_to_bool( isset( $email_marketing_sync_details[ 'is_enable' ] ) ? $email_marketing_sync_details[ 'is_enable' ] : '0' );
+										?>
 											<input
 												data-key-name="Sync Email Marketing Action"
 												id="ur-membership-email-marketing-sync-action" type="checkbox"
 												class="user-registration-switch__control hide-show-check enabled"
 
 												name="ur_membership_email_marketing_sync_action"
-												style="width: 100%; text-align: left">
+												style="width: 100%; text-align: left"
+												<?php echo $is_email_marketing_sync ? esc_attr( 'checked' ) : ''; ?>
+												>
 											<span class="slider round"></span>
 										</span>
 									</div>
