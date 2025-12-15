@@ -578,6 +578,38 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 								</div>
 							</div>
 						</div>
+
+						<?php
+							if ( UR_PRO_ACTIVE ):
+						?>
+							<!-- Sync Membership to email marketing addons. -->
+							<div class="ur-membership-sync-to-email-marketing-addons">
+								<div class="ur-membership-selection-container ur-d-flex ur-mt-2 ur-align-items-center"
+									style="gap:20px;">
+									<div class="ur-label" style="width: 30%">
+										<label class="ur-membership-enable-email-marketing-sync-action"
+												for="ur-membership-email-marketing-sync-action"><?php esc_html_e( 'Enable email marketing sync :', 'user-registration' ); ?>
+										</label>
+									</div>
+									<div class="ur-toggle-section m1-auto" style="width: 100%">
+										<span class="user-registration-toggle-form">
+											<input
+												data-key-name="Sync Email Marketing Action"
+												id="ur-membership-email-marketing-sync-action" type="checkbox"
+												class="user-registration-switch__control hide-show-check enabled"
+
+												name="ur_membership_email_marketing_sync_action"
+												style="width: 100%; text-align: left">
+											<span class="slider round"></span>
+										</span>
+									</div>
+								</div>
+							</div>
+
+							<?php ur_render_email_marketing_sync_settings( $membership_details );
+								endif;
+							?>
+
 						<!--								membership all payments-->
 						<?php
 						require __DIR__ . '/./Partials/membership-admin-payments.php'

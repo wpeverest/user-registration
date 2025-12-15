@@ -295,6 +295,65 @@
 			post_meta_data.cancel_subscription = form
 				.find('input[name="ur_membership_cancel_on"]:checked')
 				.val();
+
+				var syncActionEl = form.find(
+					'input[name="ur_membership_email_marketing_sync_action"]:checked'
+				);
+
+				post_meta_data.email_marketing_sync = {};
+				var email_marketing_sync = {}
+				post_meta_data.email_marketing_sync.is_enable = syncActionEl.val();
+
+				if ( syncActionEl.length && syncActionEl.val() ) {
+
+					var marketingAddonsList = [
+						'activecampaign',
+						'brevo',
+						'convertkit',
+						'klaviyo',
+						'mailchimp',
+						'mailerlite',
+						'mailpoet',
+						'salesforce'
+					];
+					marketingAddonsList.forEach( function ( val ) {
+
+						if ( ! email_marketing_sync[val] ) {
+							email_marketing_sync[val] = {};
+						}
+						var checkbox = form.find(
+							'input[name="sync_membership_plan_with_' + val + '"]'
+						);
+
+						if ( checkbox.length && checkbox.is(':checked') ) {
+							email_marketing_sync[val].email_marketing_sync =
+								checkbox.is(':checked');
+
+							var accountSelect = form.find(
+								'#ur_sync_email_marketing_' + val + '_account'
+							);
+
+							if ( accountSelect.length ) {
+								email_marketing_sync[val].email_marketing_account =
+									accountSelect.val();
+							}
+
+							var listSelect = form.find(
+								'#ur_sync_email_marketing_' + val + '_integration_list_id'
+							);
+
+							if ( listSelect.length ) {
+								email_marketing_sync[val].integration_list_id =
+									listSelect.val();
+							}
+						}
+
+					});
+
+				}
+
+			post_meta_data.email_marketing_sync.addons_sync_details = email_marketing_sync;
+
 			post_meta_data.role = form
 				.find("#ur-input-type-membership-role")
 				.find(":selected")
@@ -1243,4 +1302,25 @@
 	$steps.on("click", function () {
 		showStep($(this).data("step"));
 	});
+
+		$( document ).on( 'change', '#ur-membership-email-marketing-sync-action', function( e ){
+		e.stopPropagation();
+		e.preventDefault();
+		var $el = $( this ),
+			$syncEmailContainer = $( "#ur-sync-to-email-marketing-container" );
+		hideSyncEmailContainer( $el.is( ":checked" ), $syncEmailContainer )
+	});
+
+	function hideSyncEmailContainer( $isChecked, $syncEmailContainer ){
+		if ( $isChecked ) {
+			$syncEmailContainer.show();
+		}else{
+			$syncEmailContainer.hide();
+		}
+	}
+
+	var $initialEl = $( "#ur-membership-email-marketing-sync-action" );
+	var $initialContainer = $( "#ur-sync-to-email-marketing-container" );
+
+	hideSyncEmailContainer( $initialEl.is(":checked"), $initialContainer );
 })(jQuery, window.ur_membership_localized_data);
