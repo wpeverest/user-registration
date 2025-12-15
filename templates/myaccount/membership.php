@@ -66,9 +66,9 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 						$current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' ) ) . 'ur-membership/';
 						?>
 							<tr class="ur-account-table__row">
-								<td class="ur-account-table__cell"><?php echo isset( $membership['post_title'] ) && ! empty( $membership['post_title'] ) ? esc_html( $membership['post_title'] ) : __( 'N/A', 'user-registration' ); ?></td>
-								<td class="ur-account-table__cell"><?php echo esc_html( $data['period'] ?? '-' ); ?></td>
-								<td class="ur-account-table__cell">
+								<td class="ur-account-table__cell ur-account-table__cell--membership-type"><?php echo isset( $membership['post_title'] ) && ! empty( $membership['post_title'] ) ? esc_html( $membership['post_title'] ) : __( 'N/A', 'user-registration' ); ?></td>
+								<td class="ur-account-table__cell ur-account-table__cell--terms"><?php echo esc_html( $data['period'] ?? '-' ); ?></td>
+								<td class="ur-account-table__cell ur-account-table__cell--status">
 									<?php
 									$status = '';
 									if ( isset( $membership['status'] ) && ! empty( $membership ) ) {
@@ -105,8 +105,8 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 									endif;
 									?>
 								</td>
-								<td class="ur-account-table__cell"><?php echo ! empty( $membership['start_date'] ) ? esc_html( date_i18n( get_option( 'date_format' ), strtotime( $membership['start_date'] ) ) ) : __( 'N/A', 'user-registration' ); ?></td>
-								<td class="ur-account-table__cell"><?php echo ! empty( $membership['next_billing_date'] ) && strtotime( $membership['next_billing_date'] ) > 0 ? esc_html( date_i18n( get_option( 'date_format' ), strtotime( $membership['next_billing_date'] ) ) ) : __( 'N/A', 'user-registration' ); ?></td>
+								<td class="ur-account-table__cell ur-account-table__cell--date"><?php echo ! empty( $membership['start_date'] ) ? esc_html( date_i18n( get_option( 'date_format' ), strtotime( $membership['start_date'] ) ) ) : __( 'N/A', 'user-registration' ); ?></td>
+								<td class="ur-account-table__cell ur-account-table__cell--billing-date"><?php echo ! empty( $membership['next_billing_date'] ) && strtotime( $membership['next_billing_date'] ) > 0 ? esc_html( date_i18n( get_option( 'date_format' ), strtotime( $membership['next_billing_date'] ) ) ) : __( 'N/A', 'user-registration' ); ?></td>
 								<td class="ur-account-table__cell ur-account-table__cell--action">
 									<div class="membership-row-btn-container">
 										<?php
@@ -149,7 +149,7 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 											?>
 											<?php
 											if ( 'canceled' !== $membership['status'] ) {
-												$buttons[] = '<a class="ur-account-action-link membership-tab-btn cancel-membership-button" data-id="' . esc_attr( $membership['subscription_id'] ?? '' ) . '">' . esc_html__( 'Cancel Membership', 'user-registration' ) . '</a>';
+												$buttons[] = '<a class="ur-account-action-link membership-tab-btn cancel-membership-button" data-id="' . esc_attr( $membership['subscription_id'] ?? '' ) . '"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>' . esc_html__( 'Cancel', 'user-registration' ) . '</a>';
 											}
 										}
 										?>

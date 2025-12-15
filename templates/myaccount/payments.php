@@ -64,11 +64,11 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 
 						?>
 						<tr class="ur-account-table__row">
-							<td class="ur-account-table__cell"><?php echo esc_html( $user_order['transaction_id'] ?? '-' ); ?></td>
-							<td class="ur-account-table__cell"><?php echo esc_html( $user_order['payment_method'] ?? '-' ); ?></td>
-							<td class="ur-account-table__cell"><?php echo esc_html( $total_amount ); ?></td>
-							<td class="ur-account-table__cell"><span id="ur-membership-status" class="btn-<?php echo esc_attr( $user_order['status'] ?? '-' ); ?>"><?php echo esc_html( $user_order['status'] ?? '-' ); ?></span></td>
-							<td class="ur-account-table__cell">
+							<td class="ur-account-table__cell ur-account-table__cell--transaction-id"><?php echo esc_html( $user_order['transaction_id'] ?? '-' ); ?></td>
+							<td class="ur-account-table__cell ur-account-table__cell--payment"><?php echo esc_html( $user_order['payment_method'] ?? '-' ); ?></td>
+							<td class="ur-account-table__cell ur-account-table__cell--amount"><?php echo esc_html( $total_amount ); ?></td>
+							<td class="ur-account-table__cell ur-account-table__cell--status"><span id="ur-membership-status" class="btn-<?php echo esc_attr( $user_order['status'] ?? '-' ); ?>"><?php echo esc_html( $user_order['status'] ?? '-' ); ?></span></td>
+							<td class="ur-account-table__cell ur-account-table__cell--date">
 								<?php
 								echo ! empty( $user_order['created_at'] )
 									? esc_html( date_i18n( get_option( 'date_format' ), strtotime( $user_order['created_at'] ) ) )
@@ -85,6 +85,11 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 								$download_url  = wp_nonce_url( add_query_arg( $download_args, $current_url ), 'ur_payment_action' );
 								?>
 								<a class="ur-account-action-link" href="<?php echo esc_url( $download_url ); ?>">
+									<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+										<path d="M11 15V3a1 1 0 1 1 2 0v12a1 1 0 1 1-2 0Z"/>
+										<path d="M2 19v-4a1 1 0 1 1 2 0v4l.005.099A1 1 0 0 0 5 20h14a1 1 0 0 0 1-1v-4a1 1 0 1 1 2 0v4a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3Z"/>
+										<path d="M16.293 9.293a1 1 0 1 1 1.414 1.414l-5 5a1 1 0 0 1-1.414 0l-5-5a1 1 0 1 1 1.414-1.414L12 13.586l4.293-4.293Z"/>
+									</svg>
 									<?php esc_html_e( 'Download', 'user-registration' ); ?>
 								</a>
 							</td>
