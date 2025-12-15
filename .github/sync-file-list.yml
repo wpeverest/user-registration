@@ -1,4 +1,4 @@
-wpeverest/user-registration-pro@master:
+wpeverest/user-registration-pro@UR-2527-ability-to-sort-membership-plans-in-membership-field:
   - assets
   - includes
   - modules
@@ -14,3 +14,4 @@ wpeverest/user-registration-pro@master:
   - uninstall.php
   - webpack.config.js
   - wpml-config.xml
+  

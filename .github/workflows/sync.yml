@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-2527-ability-to-sort-membership-plans-in-membership-field
     workflow_dispatch:
 jobs:
   sync:
