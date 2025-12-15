@@ -12,6 +12,7 @@
 use WPEverest\URMembership\Admin\Members\MembersListTable;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URRepeaterFields\Frontend\Frontend;
 
@@ -1081,6 +1082,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 					}
 					?>
 					<?php $this->render_user_extra_details( $user_id, true ); ?>
+					<?php $this->render_user_payment_details( $user_id, true ); ?>
 					<?php do_action( 'user_registration_single_user_details_content', $user_id, $form_id ); ?>
 				</div>
 			</div>
@@ -1814,6 +1816,106 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 			 * @return string The filtered URL of the asset.
 			 */
 			return apply_filters( 'user_registration_get_asset_url', plugins_url( $path, UR_PLUGIN_FILE ), $path );
+		}
+
+		/**
+		 * Render payment information of the user.
+		 *
+		 * @param [int] $user_id User Id.
+		 * @param [int] $form_id Form Id.
+		 *
+		 * @return void
+		 * @since 5.0
+		 */
+		public function render_user_payment_details( $user_id, $form_id ) {
+
+			$payment_method = get_user_meta( $user_id, 'ur_payment_method', true );
+
+			$user_source = get_user_meta( $user_id, 'ur_registration_source', true );
+
+			if ( 'membership' === $user_source || '' !== $payment_method ) {
+				$user_source = get_user_meta( $user_id, 'ur_registration_source', true );
+				$total_items = array();
+
+				if ( 'membership' === $user_source ) {
+					$order_repository = new MembersOrderRepository();
+					$total_items      = $order_repository->get_member_all_orders( $user_id );
+				}
+
+				$meta_value = get_user_meta( $user_id, 'ur_payment_invoices', true );
+
+				if ( 'membership' !== $user_source && ! empty( $meta_value ) && is_array( $meta_value ) ) {
+					foreach ( $meta_value as $values ) {
+						$total_items[] = array(
+							'user_id'        => $user_id,
+							'transaction_id' => $values['invoice_no'] ?? '',
+							'post_title'     => $values['invoice_plan'] ?? '',
+							'status'         => get_user_meta( $user_id, 'ur_payment_status', true ),
+							'created_at'     => $values['invoice_date'] ?? '',
+							'type'           => get_user_meta( $user_id, 'ur_payment_type', true ),
+							'payment_method' => str_replace( '_', ' ', get_user_meta( $user_id, 'ur_payment_method', true ) ),
+							'total_amount'   => ( $values['invoice_amount'] ?? '' ),
+							'currency'       => ( $values['invoice_currency'] ?? '' ),
+						);
+					}
+				}
+
+				if ( empty( $total_items ) ) {
+					return;
+				}
+
+				ob_start();
+				?>
+				<div class="urm-admin-user-content-container">
+					<div id="urm-admin-user-content-header" >
+						<h3>
+							<?php
+							esc_html_e( 'Payments', 'user-registration' );
+							?>
+						</h3>
+					</div>
+					<div class="user-registration-user-form-details">
+						<table class="wp-list-table widefat fixed striped users">
+							<thead>
+								<tr>
+									<th><?php esc_html_e( 'Transaction ID', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Amount', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Gateway', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Status', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Payment Date', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Action', 'user-registration' ); ?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php
+								foreach ( $total_items as $payment ) {
+									$amount     = $payment['total_amount'];
+									$currencies = ur_payment_integration_get_currencies();
+									$currency   = isset( $payment['currency'] ) && '' !== $payment['currency'] ? $payment['currency'] : 'USD';
+
+									$symbol = $currencies[ $currency ]['symbol'];
+									$amount = ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $amount, 2 ) : number_format( $amount, 2 ) . $symbol;
+
+									?>
+									<tr>
+										<td><?php echo esc_html( $payment['transaction_id'] ?? '' ); ?></td>
+										<td><?php echo esc_html( $amount ); ?></td>
+										<td><?php echo esc_html( $payment['payment_method'] ); ?></td>
+										<td class="status-<?php echo esc_attr( $payment['status'] ); ?>"><?php echo esc_html( ucfirst( $payment['status'] ) ); ?></td>
+										<td><?php echo ! empty( $payment['created_at'] ) ? esc_html( date_i18n( 'Y-m-d', strtotime( $payment['created_at'] ) ) ) : __( 'N/A', 'user-registration' ); ?></td>
+										<td><a href="<?php echo esc_url( admin_url( 'admin.php?page=member-payment-history&action=edit&id=' . ( $payment['ID'] ?? 0 ) ) ); ?>"><?php esc_html_e( 'View', 'user-registration' ); ?></a></td>
+									</tr>
+									<?php
+								}
+								?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<?php
+
+				echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
 		}
 	}
 }

@@ -482,6 +482,10 @@ if ( ! class_exists( 'Admin' ) ) :
 			$members_repository = new MembersRepository();
 			$memberships        = $members_repository->get_member_memberships_by_id( $user_id );
 
+			if ( empty( $memberships ) ) {
+				return;
+			}
+
 			ob_start();
 			?>
 			<div class="urm-admin-user-content-container">
@@ -497,60 +501,47 @@ if ( ! class_exists( 'Admin' ) ) :
 					</h3>
 				</div>
 				<div class="user-registration-user-form-details">
-					<?php
-					if ( empty( $memberships ) ) {
-						$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
-						?>
-						<div class="empty-list-table-container">
-							<img src="<?php echo esc_url( $image_url ); ?>" alt="" />
-						</div>
-						<?php
-					} else {
-						?>
-						<table class="wp-list-table widefat fixed striped users">
-							<thead>
-								<tr>
-									<th><?php esc_html_e( 'Plan Type', 'user-registration' ); ?></th>
-									<th><?php esc_html_e( 'Amount', 'user-registration' ); ?></th>
-									<th><?php esc_html_e( 'Status', 'user-registration' ); ?></th>
-									<th><?php esc_html_e( 'Starts On', 'user-registration' ); ?></th>
-									<th><?php esc_html_e( 'Expires On', 'user-registration' ); ?></th>
-									<th><?php esc_html_e( 'Action', 'user-registration' ); ?></th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php
-								foreach ( $memberships as $membership ) {
-									$plan_details = json_decode( $membership['post_content'], true );
-									$amount       = $membership['billing_amount'];
-									$currencies   = ur_payment_integration_get_currencies();
-									$currency     = get_option( 'user_registration_payment_currency', 'USD' );
+					<table class="wp-list-table widefat fixed striped users">
+						<thead>
+							<tr>
+								<th><?php esc_html_e( 'Plan Type', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Amount', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Status', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Starts On', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Expires On', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Action', 'user-registration' ); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							foreach ( $memberships as $membership ) {
+								$plan_details = json_decode( $membership['post_content'], true );
+								$amount       = $membership['billing_amount'];
+								$currencies   = ur_payment_integration_get_currencies();
+								$currency     = get_option( 'user_registration_payment_currency', 'USD' );
 
-									$symbol = $currencies[ $currency ]['symbol'];
-									$amount = ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $amount, 2 ) : number_format( $amount, 2 ) . $symbol;
+								$symbol = $currencies[ $currency ]['symbol'];
+								$amount = ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $amount, 2 ) : number_format( $amount, 2 ) . $symbol;
 
-									if ( isset( $plan_details['type'] ) && 'subscription' === $plan_details['type'] ) {
-										$amount = $amount . ' / ' . $membership['billing_cycle'];
-									}
-									$expiry_date = 'subscription' === $plan_details['type'] && ! empty( $membership['expiry_date'] ) ? date_i18n( 'Y-m-d', strtotime( $membership['expiry_date'] ) ) : __( 'N/A', 'user-registration' );
-
-									?>
-									<tr>
-										<td><?php echo esc_html( $membership['post_title'] ); ?></td>
-										<td><?php echo esc_html( $amount ); ?></td>
-										<td class="status-<?php echo esc_attr( $membership['status'] ); ?>"><?php echo esc_html( ucfirst( $membership['status'] ) ); ?></td>
-										<td><?php echo ! empty( $membership['start_date'] ) ? esc_html( date_i18n( 'Y-m-d', strtotime( $membership['start_date'] ) ) ) : __( 'N/A', 'user-registration' ); ?></td>
-										<td><?php echo esc_html( $expiry_date ); ?></td>
-										<td><a>Edit</a></td>
-									</tr>
-									<?php
+								if ( isset( $plan_details['type'] ) && 'subscription' === $plan_details['type'] ) {
+									$amount = $amount . ' / ' . $membership['billing_cycle'];
 								}
+								$expiry_date = 'subscription' === $plan_details['type'] && ! empty( $membership['expiry_date'] ) ? date_i18n( 'Y-m-d', strtotime( $membership['expiry_date'] ) ) : __( 'N/A', 'user-registration' );
+
 								?>
-							</tbody>
-						</table>
-						<?php
-					}
-					?>
+								<tr>
+									<td><?php echo esc_html( $membership['post_title'] ); ?></td>
+									<td><?php echo esc_html( $amount ); ?></td>
+									<td class="status-<?php echo esc_attr( $membership['status'] ); ?>"><?php echo esc_html( ucfirst( $membership['status'] ) ); ?></td>
+									<td><?php echo ! empty( $membership['start_date'] ) ? esc_html( date_i18n( 'Y-m-d', strtotime( $membership['start_date'] ) ) ) : __( 'N/A', 'user-registration' ); ?></td>
+									<td><?php echo esc_html( $expiry_date ); ?></td>
+									<td><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-subscriptions&action=edit&id=' . ( $membership['subscription_id'] ?? 0 ) ) ); ?>"><?php esc_html_e( 'View', 'user-registration' ); ?></a></td>
+								</tr>
+								<?php
+							}
+							?>
+						</tbody>
+					</table>
 				</div>
 			</div>
 			<?php

@@ -7822,7 +7822,7 @@ body.user-registration {
 			gap: $spacing_8px;
 			text-align: left;
 			font-size: 16px;
-			font-weight: 500;
+			font-weight: 600;
 			line-height: 120%;
 			padding-bottom: $spacing-16px;
 			width: 100%;
@@ -7830,8 +7830,8 @@ body.user-registration {
 			color: $grey-500;
 
 			img {
-				width: 30px;
-				height: 30px;
+				width: 26px !important;
+				height: 26px !important;
 				background: #fff4f4;
 				padding: $spacing_6px;
 				box-sizing: border-box;
@@ -7856,12 +7856,14 @@ body.user-registration {
 					&_1 {
 						margin: 0 0 $spacing_14px;
 						color: $grey-400;
-						font-size: 14px;
+						font-size: 15px;
 						font-weight: 500;
 						line-height: 24px;
 					}
 
 					&_2 {
+						display: flex;
+						gap: $spacing_10px;
 						color: #f25656;
 						border-radius: $border_radius_3;
 						padding: $spacing_10px $spacing_18px $spacing_10px

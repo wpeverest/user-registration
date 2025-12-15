@@ -358,6 +358,9 @@ jQuery(function ($) {
 					? prompt_data.confirm_message_single
 					: prompt_data.confirm_message_bulk;
 
+			var warning =
+				'<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M8.57514 3.21659L1.51681 14.9999C1.37128 15.2519 1.29428 15.5377 1.29346 15.8287C1.29265 16.1197 1.36805 16.4059 1.51216 16.6587C1.65627 16.9115 1.86408 17.1222 2.1149 17.2698C2.36571 17.4174 2.65081 17.4967 2.94181 17.4999H17.0585C17.3495 17.4967 17.6346 17.4174 17.8854 17.2698C18.1362 17.1222 18.344 16.9115 18.4881 16.6587C18.6322 16.4059 18.7076 16.1197 18.7068 15.8287C18.706 15.5377 18.629 15.2519 18.4835 14.9999L11.4251 3.21659C11.2766 2.97168 11.0674 2.76919 10.8178 2.62866C10.5682 2.48813 10.2866 2.41431 10.0001 2.41431C9.71369 2.41431 9.43208 2.48813 9.18248 2.62866C8.93287 2.76919 8.7237 2.97168 8.57514 3.21659Z" stroke="#F25656" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 8.5V11.8333" stroke="#F25656" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 14.1667H10.01" stroke="#F25656" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+			warning += prompt_data.warning_message;
 			Swal.fire({
 				title:
 					"<img src='" +
@@ -369,7 +372,7 @@ jQuery(function ($) {
 					confirm_message +
 					"</p>" +
 					'<p id="html_2">' +
-					prompt_data.warning_message +
+					warning +
 					"</p>",
 				showCancelButton: true,
 				confirmButtonText: prompt_data.delete_label,
