@@ -1310,7 +1310,7 @@
 						initialOrder.push(parseInt(membershipId, 10));
 					}
 				});
-				
+
 				var $originals = tr.children();
 				var $helper = tr.clone();
 				$helper.children().each(function(index) {
@@ -1343,7 +1343,7 @@
 					$updateOrderContainer.removeClass('ur-d-none');
 					$updateOrderContainer.find('.ur-spinner').remove();
 				}
-				
+
 				// Reset initialOrder for next drag
 				initialOrder = [];
 			}
