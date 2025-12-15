@@ -42,7 +42,31 @@
 		.trigger("change");
 
 	// Color picker
-	$(".colorpick, .colorpickpreview")
+	$(".colorpick").each(function () {
+		var $input = $(this);
+		var alphaEnabled = $input.data("alpha") === true || $input.attr("data-alpha") === "true";
+
+		$input.wpColorPicker({
+			change: function (event, ui) {
+				$(this)
+					.parent()
+					.find(".colorpickpreview")
+					.css({ backgroundColor: ui.color.toString() });
+			},
+			clear: function () {
+				$(this)
+					.parent()
+					.find(".colorpickpreview")
+					.css({ backgroundColor: "" });
+			},
+			hide: true,
+			border: true,
+			width: 255,
+			mode: alphaEnabled ? "rgba" : "hex"
+		});
+	});
+
+	$(".colorpickpreview")
 		.iris({
 			change: function (event, ui) {
 				$(this)

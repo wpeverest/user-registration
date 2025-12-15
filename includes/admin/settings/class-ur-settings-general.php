@@ -87,6 +87,17 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							'desc'     => '',
 							'settings' => array(
 								array(
+									'title'    => __( 'Color', 'user-registration' ),
+									'desc'     => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
+									'id'       => 'user_registration_general_setting_disabled_user_rolesa',
+									'default'  => array( 'subscriber' ),
+									'type'     => 'color',
+									'class'    => '',
+									'css'      => '',
+									'desc_tip' => true,
+									'options'  => $all_roles_except_admin,
+								),
+								array(
 									'title'    => __( 'Prevent WP Dashboard Access', 'user-registration' ),
 									'desc'     => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_disabled_user_roles',

@@ -251,7 +251,8 @@ class UR_Admin_Settings {
 				'jquery',
 				'jquery-ui-datepicker',
 				'jquery-ui-sortable',
-				'iris',
+				'wp-color-picker',
+				'wp-color-picker-alpha',
 				'tooltipster',
 				'ur-snackbar',
 			),
@@ -657,6 +658,7 @@ class UR_Admin_Settings {
 											style="' . esc_attr( $value['css'] ) . '"
 											value="' . esc_attr( $option_value ) . '"
 											class="' . esc_attr( $value['class'] ) . 'colorpick"
+											data-alpha="true"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
 											' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>&lrm;' . wp_kses_post( $description );
 									$settings    .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></div>';
