@@ -347,7 +347,7 @@ const Edit = ({ attributes, setAttributes }) => {
 				<Box mb={6}>
 					<InnerBlocks templateLock={false} />
 				</Box>
-				{isProActive && (
+				{!isProActive && (
 					<Notice
 						status="warning"
 						isDismissible={false}
