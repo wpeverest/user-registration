@@ -1006,7 +1006,7 @@
 				payment_notice = $("#ur-membership-payment-settings-notice");
 			var paidConfigured = payment_notice.data("paid-configured") === 1;
 			var subscriptionConfigured =
-				payment_notice.data("paid-configured") === 1;
+				payment_notice.data("subscription-configured") === 1;
 			plan_container.addClass("ur-d-none");
 			pro_rate_settings.addClass("ur-d-none");
 			membership_duration_period.addClass("ur-d-none");
