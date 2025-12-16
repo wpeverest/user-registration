@@ -48,6 +48,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			$sections = array(
 				''                  => __( 'General Options', 'user-registration' ),
 				'frontend-messages' => __( 'Form Messages', 'user-registration' ),
+				'style'             => __( 'Style', 'user-registration' ),
 			);
 
 			/**
@@ -76,7 +77,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			 *
 			 * @param array Options to be enlisted.
 			 */
-			error_log( print_r( get_option( 'button_colors' ), true ) );
 			$settings = apply_filters(
 				'user_registration_general_settings',
 				array(
@@ -87,27 +87,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							'type'     => 'card',
 							'desc'     => '',
 							'settings' => array(
-								array(
-									'id'      => 'button_colors',
-									'type'    => 'color-group',
-									'title'   => 'Button Colors',
-									'states'  => array( 'normalss', 'activess' ),
-									'default' => array(
-										'normalss' => '#0073aa',
-										'activess' => '#005a87',
-										'focus'    => '#005a87',
-									),
-								),
-								array(
-									'title'    => __( 'Color', 'user-registration' ),
-									'desc'     => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
-									'id'       => 'user_registration_general_setting_disabled_user_rolesa',
-									'default'  => '#000000',
-									'type'     => 'color',
-									'class'    => '',
-									'css'      => '',
-									'desc_tip' => true,
-								),
 								array(
 									'title'    => __( 'Prevent WP Dashboard Access', 'user-registration' ),
 									'desc'     => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
@@ -393,6 +372,64 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		}
 
 		/**
+		 * Settings for frontend messages customization.
+		 *
+		 * @return array
+		 */
+		public function get_style() {
+			/**
+			 * Filter to add the frontend messages options settings.
+			 *
+			 * @param array Options to be enlisted.
+			 */
+			$settings = apply_filters(
+				'user_registration_style_settings',
+				array(
+					'title'    => '',
+					'sections' => array(
+						'style_settings' => array(
+							'title'    => __( 'Style', 'user-registration' ),
+							'type'     => 'card',
+							'desc'     => '',
+							'settings' => array(
+								array(
+									'title'    => __( 'Primary Color', 'user-registration' ),
+									'desc'     => __( 'Choose color to match your brand or site', 'user-registration' ),
+									'id'       => 'user_registration_style_setting_primary_color',
+									'default'  => '',
+									'type'     => 'color',
+									'class'    => '',
+									'css'      => '',
+									'desc_tip' => true,
+								),
+								array(
+									'id'       => 'user_registration_style_setting_button_colors',
+									'type'     => 'color-group',
+									'desc'     => __( 'Choose color to match your brand or site', 'user-registration' ),
+									'title'    => __( 'Button Color', 'user-registration' ),
+									'states'   => array( 'normal', 'hover' ),
+									'desc_tip' => true,
+									'default'  => array(
+										'normal' => '#0073aa',
+										'hover'  => '#005a87',
+									),
+								),
+
+							),
+						),
+					),
+				)
+			);
+
+			/**
+			 * Filter to get the settings.
+			 *
+			 * @param array $settings Frontend Message Setting options to be enlisted.
+			 */
+			return apply_filters( 'user_registration_get_style_settings_' . $this->id, $settings );
+		}
+
+		/**
 		 * Output the settings.
 		 */
 		public function output() {
@@ -403,6 +440,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 
 			} elseif ( 'frontend-messages' === $current_section ) {
 				$settings = $this->get_frontend_messages_settings();
+			} elseif ( 'style' === $current_section ) {
+				$settings = $this->get_style();
 			} elseif ( 'login-options' === $current_section ) {
 				$settings        = get_login_options_settings();
 				$captcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha' );
@@ -434,6 +473,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 				$settings = $this->get_settings();
 			} elseif ( 'frontend-messages' === $current_section ) {
 				$settings = $this->get_frontend_messages_settings();
+			} elseif ( 'style' === $current_section ) {
+				$settings = $this->get_style();
 			}
 
 			UR_Admin_Settings::save_fields( $settings );

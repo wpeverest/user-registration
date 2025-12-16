@@ -44,17 +44,28 @@
 	// Color picker
 	$(".colorpick").each(function () {
 		var $input = $(this);
-		var alphaEnabled = $input.data("alpha") === true || $input.attr("data-alpha") === "true";
-		
+		var alphaEnabled =
+			$input.data("alpha") === true ||
+			$input.attr("data-alpha") === "true";
+
 		// Get current value from input (saved value) - read BEFORE any manipulation
 		// Read directly from the DOM element's value attribute first (most reliable)
 		var domElement = $input[0];
-		var currentValue = (domElement && domElement.value) || $input.attr("value") || $input.val() || $input.data("current-value") || $input.attr("data-current-value") || "";
+		var currentValue =
+			(domElement && domElement.value) ||
+			$input.attr("value") ||
+			$input.val() ||
+			$input.data("current-value") ||
+			$input.attr("data-current-value") ||
+			"";
 		// Get default value from data attribute
-		var defaultValue = $input.data("default-value") || $input.attr("data-default-value") || "";
+		var defaultValue =
+			$input.data("default-value") ||
+			$input.attr("data-default-value") ||
+			"";
 		// Use current value if available, otherwise use default
 		var initialValue = currentValue || defaultValue;
-		
+
 		// Trim whitespace and ensure it's a valid color value
 		if (initialValue) {
 			initialValue = initialValue.toString().trim();
@@ -63,12 +74,12 @@
 				initialValue = "";
 			}
 		}
-		
+
 		// Ensure the input has the value set before initializing color picker
 		// Set both val() and attr() to be sure
 		if (initialValue) {
 			$input.val(initialValue);
-			$input.attr('value', initialValue);
+			$input.attr("value", initialValue);
 			if (domElement) {
 				domElement.value = initialValue;
 			}
@@ -93,65 +104,65 @@
 			width: 255,
 			mode: alphaEnabled ? "rgba" : "hex"
 		};
-		
+
 		// Add defaultColor if we have an initial value
 		if (initialValue) {
 			colorPickerOptions.defaultColor = initialValue;
 			colorPickerOptions.color = initialValue;
 		}
-		
+
 		$input.wpColorPicker(colorPickerOptions);
-		
+
 		// After color picker initializes, ensure the color is displayed correctly
 		// Use multiple timeouts to ensure it works even if initialization is delayed
-		var applyColor = function() {
+		var applyColor = function () {
 			if (!initialValue) {
 				$input.css("display", "none");
 				return;
 			}
-			
+
 			var $container = $input.closest(".wp-picker-container");
 			if (!$container.length) {
 				return; // Container not ready yet
 			}
-			
+
 			var $colorResult = $container.find(".wp-color-result");
 			if (!$colorResult.length) {
 				return; // Color result not ready yet
 			}
-			
+
 			// Set the input value first
 			$input.val(initialValue);
-			
+
 			// Update color result button background - this is what users see
-			$colorResult.css('background-color', initialValue);
-			
+			$colorResult.css("background-color", initialValue);
+
 			// Update the color span inside the button (the actual color display)
-			var $colorSpan = $colorResult.find('span');
+			var $colorSpan = $colorResult.find("span");
 			if ($colorSpan.length) {
-				$colorSpan.css('background-color', initialValue);
+				$colorSpan.css("background-color", initialValue);
 			}
-			
+
 			// Try to set iris color
 			try {
-				if ($input.data('wp-wpColorPicker')) {
-					var picker = $input.data('wp-wpColorPicker');
+				if ($input.data("wp-wpColorPicker")) {
+					var picker = $input.data("wp-wpColorPicker");
 					if (picker.iris && picker.iris._color) {
 						picker.iris._color = initialValue;
 					}
 				}
 				// Also try the iris method
-				if (typeof $input.iris === 'function') {
-					$input.iris('color', initialValue);
+				if (typeof $input.iris === "function") {
+					$input.iris("color", initialValue);
 				}
-			} catch(e) {
+			} catch (e) {
 				// Ignore errors, visual update is more important
 			}
-			
+
 			// Hide input field AFTER color picker is initialized and color is set
 			$input.css("display", "none");
 		};
-		
+
 		// Try multiple times with increasing delays
 		setTimeout(applyColor, 50);
 		setTimeout(applyColor, 200);
@@ -164,11 +175,14 @@
 				var $holder = $container.find(".wp-picker-holder");
 				var $inputWrap = $container.find(".wp-picker-input-wrap");
 				// Get default value again in this scope
-				var inputDefaultValue = $input.data("default-value") || $input.attr("data-default-value") || "";
-				
+				var inputDefaultValue =
+					$input.data("default-value") ||
+					$input.attr("data-default-value") ||
+					"";
+
 				// Ensure input field is hidden on load
 				$input.css("display", "none");
-				
+
 				// Ensure input wrap is inside the holder
 				if ($holder.length && $inputWrap.length) {
 					// If input wrap is not inside holder, move it there
@@ -176,7 +190,7 @@
 						$inputWrap.appendTo($holder);
 					}
 				}
-				
+
 				// Ensure holder is positioned absolutely and doesn't take space when hidden
 				if ($holder.length) {
 					$holder.css({
@@ -186,12 +200,14 @@
 						zIndex: "100",
 						marginTop: "2px"
 					});
-					
+
 					// Show/hide iris-picker, iris-border, and input field based on active state
 					var $irisPicker = $container.find(".iris-picker");
 					var $irisBorder = $container.find(".iris-border");
-					var $colorInput = $container.find(".colorpick.wp-color-picker");
-					
+					var $colorInput = $container.find(
+						".colorpick.wp-color-picker"
+					);
+
 					// Function to toggle visibility based on active state
 					function togglePickerVisibility() {
 						setTimeout(function () {
@@ -210,37 +226,48 @@
 							}
 						}, 10);
 					}
-					
+
 					// Watch for active state changes
-					$container.on("click", ".wp-color-result", togglePickerVisibility);
-					
+					$container.on(
+						"click",
+						".wp-color-result",
+						togglePickerVisibility
+					);
+
 					// Also watch for class changes using MutationObserver
-					var observer = new MutationObserver(function(mutations) {
-						mutations.forEach(function(mutation) {
-							if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+					var observer = new MutationObserver(function (mutations) {
+						mutations.forEach(function (mutation) {
+							if (
+								mutation.type === "attributes" &&
+								mutation.attributeName === "class"
+							) {
 								togglePickerVisibility();
 							}
 						});
 					});
-					
+
 					observer.observe($container[0], {
 						attributes: true,
-						attributeFilter: ['class']
+						attributeFilter: ["class"]
 					});
 				}
-				
+
 				// Add border radius to color result button
 				$container.find(".wp-color-result").css({
 					borderRadius: "4px"
 				});
-				
+
 				// Set tooltip for color-group items
-				var $colorGroupItem = $container.closest('.ur-color-group-item');
+				var $colorGroupItem = $container.closest(
+					".user-registration-color-group-item"
+				);
 				if ($colorGroupItem.length) {
-					var $label = $colorGroupItem.find('.ur-color-state-label');
+					var $label = $colorGroupItem.find(".ur-color-state-label");
 					var labelText = $label.text();
 					if (labelText) {
-						$container.find(".wp-color-result").attr('title', labelText);
+						$container
+							.find(".wp-color-result")
+							.attr("title", labelText);
 					}
 				}
 			}
@@ -248,15 +275,19 @@
 	});
 
 	// Color group tooltip functionality (for dynamically added elements)
-	$(document).on('mouseenter', '.ur-color-group-item .wp-color-result', function() {
-		var $item = $(this).closest('.ur-color-group-item');
-		var $label = $item.find('.ur-color-state-label');
-		var labelText = $label.text();
-		
-		if (labelText && !$(this).attr('title')) {
-			$(this).attr('title', labelText);
+	$(document).on(
+		"mouseenter",
+		".user-registration-color-group-item .wp-color-result",
+		function () {
+			var $item = $(this).closest(".user-registration-color-group-item");
+			var $label = $item.find(".ur-color-state-label");
+			var labelText = $label.text();
+
+			if (labelText && !$(this).attr("title")) {
+				$(this).attr("title", labelText);
+			}
 		}
-	});
+	);
 
 	$(".colorpickpreview")
 		.iris({
@@ -1008,8 +1039,9 @@
 				$("body")
 					.removeClass("ur-settings-sidebar-hidden")
 					.addClass("ur-settings-sidebar-show");
-				$(".user-registration-settings-sidebar-container")
-					.removeClass("ur-d-none");
+				$(".user-registration-settings-sidebar-container").removeClass(
+					"ur-d-none"
+				);
 				$(node)
 					.closest(".user-registration-options-header--top__right")
 					.find(".user-registration-toggle-text")
@@ -1174,12 +1206,18 @@
 		});
 	}
 
-	function update_captcha_section_settings(setting_id, section_data, $this, settings_container) {
+	function update_captcha_section_settings(
+		setting_id,
+		section_data,
+		$this,
+		settings_container
+	) {
 		$.ajax({
 			url: user_registration_settings_params.ajax_url,
 			data: {
 				action: "user_registration_save_captcha_settings",
-				security: user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
+				security:
+					user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
 				setting_id: setting_id,
 				section_data: JSON.stringify(section_data)
 			},
@@ -1187,19 +1225,21 @@
 			success: function (response) {
 				if (response.success) {
 					var successMessage = response.data.message;
-					settings_container.find('.integration-status').addClass('ur-integration-account-connected');
-					settings_container.find('.reset-captcha-keys').removeClass('ur-d-none');
-					$this.find('.ur-spinner').remove();
+					settings_container
+						.find(".integration-status")
+						.addClass("ur-integration-account-connected");
+					settings_container
+						.find(".reset-captcha-keys")
+						.removeClass("ur-d-none");
+					$this.find(".ur-spinner").remove();
 					show_success_message(successMessage);
 				} else {
-					$this.find('.ur-spinner').remove();
+					$this.find(".ur-spinner").remove();
 					show_failure_message(response.data.message);
 				}
 			}
 		});
 	}
-
-
 
 	$(document)
 		.find(".wp-list-table")
@@ -1366,40 +1406,52 @@
 	});
 	$("#user_registration_payment_currency").trigger("change");
 
-
-	$(document).on( 'click',".urm_license_setting_notice .install_pro_version_button", function() {
-		$(this)
-			.prop("disabled", true)
-			.text(
-				user_registration_settings_params.i18n
-					.installing_plugin_text
-			)
-			.prepend(
-				'<div class="ur-spinner is-active" style="margin-right: 8px;"></div>'
-			);
-		var data = {
-			action: 'user_registration_install_extension',
-			slug: 'user-registration-pro',
-			_ajax_nonce: user_registration_settings_params.ur_updater_nonce,
-		};
-		$.ajax({
-			type: 'POST',
-			url: user_registration_settings_params.ajax_url,
-			data: data,
-			success: function(response) {
-				if (response.success) {
-					window.location.href = window.location.href + '&download_user_registration_pro=1';
-				} else {
+	$(document).on(
+		"click",
+		".urm_license_setting_notice .install_pro_version_button",
+		function () {
+			$(this)
+				.prop("disabled", true)
+				.text(
+					user_registration_settings_params.i18n
+						.installing_plugin_text
+				)
+				.prepend(
+					'<div class="ur-spinner is-active" style="margin-right: 8px;"></div>'
+				);
+			var data = {
+				action: "user_registration_install_extension",
+				slug: "user-registration-pro",
+				_ajax_nonce: user_registration_settings_params.ur_updater_nonce
+			};
+			$.ajax({
+				type: "POST",
+				url: user_registration_settings_params.ajax_url,
+				data: data,
+				success: function (response) {
+					if (response.success) {
+						window.location.href =
+							window.location.href +
+							"&download_user_registration_pro=1";
+					} else {
+						$(".install_pro_version_button").prop(
+							"disabled",
+							false
+						);
+						$(".install_pro_version_button")
+							.find(".ur-spinner")
+							.remove();
+					}
+				},
+				error: function (response) {
 					$(".install_pro_version_button").prop("disabled", false);
-					$(".install_pro_version_button").find(".ur-spinner").remove();
+					$(".install_pro_version_button")
+						.find(".ur-spinner")
+						.remove();
 				}
-			},
-			error: function(response) {
-				$(".install_pro_version_button").prop("disabled", false);
-				$(".install_pro_version_button").find(".ur-spinner").remove();
-			}
-		});
-	});
+			});
+		}
+	);
 
 	var searchParams = new URLSearchParams(window.location.search);
 
@@ -1519,109 +1571,142 @@
 			container.find(".integration-header-info").trigger("click");
 		}, 400);
 	}
-	$('.captcha-save-btn').on('click', function () {
+	$(".captcha-save-btn").on("click", function () {
 		var $this = $(this),
-			setting_id = $this.data('id'),
-			settings_container = $this.closest('#' + setting_id);
+			setting_id = $this.data("id"),
+			settings_container = $this.closest("#" + setting_id);
 
-		if ($this.find('.ur-spinner').length > 0) {
+		if ($this.find(".ur-spinner").length > 0) {
 			return;
 		}
 		$this.append("<span class='ur-spinner'></span>");
 		var section_data = urm_get_captcha_section_data(settings_container);
-		update_captcha_section_settings(setting_id, section_data, $this, settings_container);
+		update_captcha_section_settings(
+			setting_id,
+			section_data,
+			$this,
+			settings_container
+		);
 	});
-	$('.reset-captcha-keys').on('click', function () {
+	$(".reset-captcha-keys").on("click", function () {
 		var $this = $(this);
 		Swal.fire({
 			title:
 				'<img src="' +
 				user_registration_settings_params.reset_keys_icon +
 				'">' +
-			user_registration_settings_params.i18n.captcha_reset_title,
-			html: '<p id="html_1">' +
+				user_registration_settings_params.i18n.captcha_reset_title,
+			html:
+				'<p id="html_1">' +
 				user_registration_settings_params.i18n.captcha_reset_prompt +
-				'</p>',
+				"</p>",
 			showCancelButton: true,
-			confirmButtonText: user_registration_settings_params.i18n.i18n_prompt_reset,
-			cancelButtonText: user_registration_settings_params.i18n.i18n_prompt_cancel,
+			confirmButtonText:
+				user_registration_settings_params.i18n.i18n_prompt_reset,
+			cancelButtonText:
+				user_registration_settings_params.i18n.i18n_prompt_cancel,
 			allowOutsideClick: false,
 			preConfirm: function () {
-				var btn = $('.swal2-confirm');
-				if (btn.find('.ur-spinner').length > 0) {
+				var btn = $(".swal2-confirm");
+				if (btn.find(".ur-spinner").length > 0) {
 					return;
 				}
 				btn.append('<span class="ur-spinner"></span>');
 				reset_captcha_keys($this, btn);
 				return false;
 			}
-		})
-
+		});
 	});
 
 	function urm_get_captcha_section_data(settings_container) {
 		var section_data = {};
-		settings_container.find('input, select, textarea').each(function (key, item) {
-			var $item = $(item);
-			var name = $item.attr('name');
-			if (!name) return;
+		settings_container
+			.find("input, select, textarea")
+			.each(function (key, item) {
+				var $item = $(item);
+				var name = $item.attr("name");
+				if (!name) return;
 
-			var value;
-			if ($item.attr('type') === 'checkbox') {
-				value = $item.is(":checked");
-			} else if ($item.is('textarea') && typeof tinymce !== 'undefined' && tinymce.get(name)) {
-				value = tinymce.get(name).getContent();
-			} else {
-				value = $item.val();
-			}
-			section_data[name] = value;
-		});
+				var value;
+				if ($item.attr("type") === "checkbox") {
+					value = $item.is(":checked");
+				} else if (
+					$item.is("textarea") &&
+					typeof tinymce !== "undefined" &&
+					tinymce.get(name)
+				) {
+					value = tinymce.get(name).getContent();
+				} else {
+					value = $item.val();
+				}
+				section_data[name] = value;
+			});
 		return section_data;
 	}
 
 	function reset_captcha_keys($this, btn) {
-		var setting_id = $this.data('id'),
-			settings_container = $this.closest('#' + setting_id);
+		var setting_id = $this.data("id"),
+			settings_container = $this.closest("#" + setting_id);
 		$.ajax({
 			url: user_registration_settings_params.ajax_url,
 			data: {
 				action: "user_registration_reset_captcha_keys",
-				security: user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
+				security:
+					user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
 				setting_id: setting_id
 			},
 			type: "POST",
 			success: function (response) {
 				if (response.success) {
-					show_success_message(response.data.message || user_registration_settings_params.i18n.captcha_keys_reset_success);
-					settings_container.find('.integration-status').removeClass('ur-integration-account-connected');
-					settings_container.find('input[type="text"]').val('');
+					show_success_message(
+						response.data.message ||
+							user_registration_settings_params.i18n
+								.captcha_keys_reset_success
+					);
+					settings_container
+						.find(".integration-status")
+						.removeClass("ur-integration-account-connected");
+					settings_container.find('input[type="text"]').val("");
 
 					// Remove captcha node after successful reset
 					var urm_recaptcha_node = $(
 						'.ur-captcha-test-container[data-captcha-type="' +
-						setting_id +
-						'"] .ur-captcha-node'
+							setting_id +
+							'"] .ur-captcha-node'
 					);
 
 					if (urm_recaptcha_node.length !== 0) {
 						// Remove captcha widgets
-						urm_recaptcha_node.find('.g-recaptcha, .g-recaptcha-hcaptcha, .cf-turnstile').remove();
-						urm_recaptcha_node.find('[data-rendered]').removeAttr('data-rendered');
+						urm_recaptcha_node
+							.find(
+								".g-recaptcha, .g-recaptcha-hcaptcha, .cf-turnstile"
+							)
+							.remove();
+						urm_recaptcha_node
+							.find("[data-rendered]")
+							.removeAttr("data-rendered");
 					}
 
 					// Hide reset button after successful reset
-					$this.addClass('ur-d-none');
+					$this.addClass("ur-d-none");
 				} else {
-					show_failure_message(response.data.message || user_registration_settings_params.i18n.captcha_keys_reset_error);
+					show_failure_message(
+						response.data.message ||
+							user_registration_settings_params.i18n
+								.captcha_keys_reset_error
+					);
 				}
 			},
 			error: function (xhr, status, error) {
-				var errorMessage = error || user_registration_settings_params.i18n.captcha_keys_reset_error;
+				var errorMessage =
+					error ||
+					user_registration_settings_params.i18n
+						.captcha_keys_reset_error;
 				show_failure_message(errorMessage);
-				reject({data: {message: errorMessage}});
+				reject({ data: { message: errorMessage } });
 			},
 			complete: function (response) {
-				btn.find('.ur-spinner').remove();
+				btn.find(".ur-spinner").remove();
 				Swal.close();
 			}
 		});
