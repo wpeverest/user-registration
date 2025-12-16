@@ -947,7 +947,7 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 				array(
 					'users' => array(
 						'page_slug' => 'user-registration-members',
-						'label'     => esc_html__( 'Users', 'user-registration' ),
+						'label'     => esc_html__( 'Members', 'user-registration' ),
 					),
 				),
 				ur_check_module_activation( 'membership' ) ? array(

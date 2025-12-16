@@ -1380,7 +1380,23 @@
 					.user-registration-members-filters{
 						display: flex;
 						flex-wrap: wrap;
-						gap: $spacing_16px;
+						gap: $spacing_12px;
+
+						@media (min-width: 1200px) {
+							flex-wrap: nowrap;
+						}
+
+						@media (max-width: 1199px) {
+							select {
+								flex: 1 1 180px;
+							}
+						}
+
+						@media (max-width: 768px) {
+							select{
+								flex: 1 1 100%;
+							}
+						}
 					}
 				}
 

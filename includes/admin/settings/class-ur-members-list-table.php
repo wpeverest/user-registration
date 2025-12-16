@@ -790,6 +790,16 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						?>
 					</select>
 				<?php else:?>
+					<select name="user_status" id="user_registration_pro_users_user_status_filter">
+						<?php
+						$user_status = isset( $_GET['user_status'] ) ? sanitize_text_field( $_GET['user_status'] ) : '';
+						?>
+						<option value="all"><?php echo esc_html__( 'All', 'user-registration' ); ?></option>
+						<option value="approved" <?php echo 'approved' === $user_status ? 'selected=selected' : ''; ?>><?php echo esc_html__( 'Approved', 'user-registration' ); ?></option>
+						<option value="pending" <?php echo 'pending' === $user_status ? 'selected=selected' : ''; ?>><?php echo esc_html__( 'Pending', 'user-registration' ); ?></option>
+						<option value="denied" <?php echo 'denied' === $user_status ? 'selected=selected' : ''; ?>><?php echo esc_html__( 'Denied', 'user-registration' ); ?></option>
+						<option value="pending_email" <?php echo 'pending_email' === $user_status ? 'selected=selected' : ''; ?>><?php echo esc_html__( 'Awaiting Email Confirmation', 'user-registration' ); ?></option>
+					</select>
 					<select name="role" id="user_registration_pro_users_role_filter">
 						<?php
 						foreach ( $this->get_role_filters() as $role_key => $role_label ) {
