@@ -635,7 +635,8 @@
 				&__body {
 					padding: 0;
 
-					#ur-membership-main-fields, #ur-membership-plan-and-price-section {
+					#ur-membership-main-fields,
+					#ur-membership-plan-and-price-section {
 						display: flex;
 						flex-direction: column;
 						gap: 24px;
@@ -1395,17 +1396,17 @@
 		border-color: $red !important;
 	}
 
-	#ur-membership-payment-settings-notice{
+	#ur-membership-payment-settings-notice {
 		border: 1px solid $primary_color;
 		border-radius: $spacing_6px;
 		padding: $spacing_8px;
 		background-color: #f8f9fc;
 
-		p{
+		p {
 			margin: 0;
 		}
 
-		a{
+		a {
 			color: $primary_color;
 			font-weight: $semi_bold;
 			text-decoration: underline;
@@ -1629,7 +1630,8 @@
 	}
 }
 
-#ur-membership-main-fields .upgradable-type, #upgrade-settings-container .upgradable-type {
+#ur-membership-main-fields .upgradable-type,
+#upgrade-settings-container .upgradable-type {
 	position: relative;
 	color: #bababa;
 
@@ -1973,6 +1975,8 @@
 
 .user-registration-base-list-table-heading {
 	.ur-membership-order-controls {
+		position: relative;
+
 		.button-primary {
 			display: flex;
 			align-items: center;
@@ -2002,6 +2006,22 @@
 
 				svg {
 					fill: $primary_color;
+				}
+			}
+		}
+
+		.ur-spinner {
+			margin: 0;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			left: 13px;
+		}
+
+		&:has(.ur-spinner) {
+			.button-primary {
+				svg {
+					opacity: 0;
 				}
 			}
 		}

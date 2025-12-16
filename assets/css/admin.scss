@@ -752,7 +752,7 @@ body {
 			border-left: 1px solid $border_color;
 			background-color: transparent;
 			transition: color 0.1s ease-in-out,
-			background 0.1s ease-in-out;
+				background 0.1s ease-in-out;
 
 			&::before {
 				font: normal 22px/50px "dashicons" !important;
@@ -1468,7 +1468,7 @@ body {
 
 						&:focus {
 							box-shadow: 0 0 0 0px transparent,
-							0 0 0px 0px transparent;
+								0 0 0px 0px transparent;
 						}
 
 						&.active {
@@ -6922,24 +6922,18 @@ body {
 		.ur--loading--animate {
 			margin-bottom: 10px;
 			background: #ececec;
-			background-image: -webkit-linear-gradient(
-					90deg,
+			background-image: -webkit-linear-gradient(90deg,
 					#ddd 0px,
 					#e8e8e8 40px,
-					#ddd 80px
-			);
-			background-image: -o-linear-gradient(
-					90deg,
+					#ddd 80px);
+			background-image: -o-linear-gradient(90deg,
 					#ddd 0px,
 					#e8e8e8 40px,
-					#ddd 80px
-			);
-			background-image: linear-gradient(
-					90deg,
+					#ddd 80px);
+			background-image: linear-gradient(90deg,
 					#ddd 0px,
 					#e8e8e8 40px,
-					#ddd 80px
-			);
+					#ddd 80px);
 			background-size: 250px;
 			border-radius: 10px;
 			-webkit-animation: shine-loading-container-items 0.6s infinite ease-out;
@@ -6957,27 +6951,21 @@ body {
 
 		.ur--loading--animate--long {
 			background: #f4f4f4;
-			background-image: -webkit-linear-gradient(
-					90deg,
+			background-image: -webkit-linear-gradient(90deg,
 					#f4f4f4 0px,
 					#f8f8f8 40px,
 					#f8f8f8 70px,
-					#f4f4f4 80px
-			);
-			background-image: -o-linear-gradient(
-					90deg,
+					#f4f4f4 80px);
+			background-image: -o-linear-gradient(90deg,
 					#f4f4f4 0px,
 					#f8f8f8 40px,
 					#f8f8f8 70px,
-					#f4f4f4 80px
-			);
-			background-image: linear-gradient(
-					90deg,
+					#f4f4f4 80px);
+			background-image: linear-gradient(90deg,
 					#f4f4f4 0px,
 					#f8f8f8 40px,
 					#f8f8f8 70px,
-					#f4f4f4 80px
-			);
+					#f4f4f4 80px);
 			background-size: 1400px;
 			border-radius: 10px;
 			-webkit-animation: shine-loading-container-items-long 1s infinite ease-out;
@@ -7154,10 +7142,7 @@ body {
 		width: 16px;
 	}
 
-	&.tooltipster-base
-	.tooltipster-arrow
-	.tooltipster-arrow-uncropped
-	.tooltipster-arrow-border {
+	&.tooltipster-base .tooltipster-arrow .tooltipster-arrow-uncropped .tooltipster-arrow-border {
 		border-top-color: #fff !important;
 		border-bottom-color: #fff !important;
 	}
@@ -8007,7 +7992,9 @@ $border-top-color_1: #ff4f55;
 	a.active {
 		background: #505bbf;
 
-		p, path, path:hover {
+		p,
+		path,
+		path:hover {
 			color: white;
 			fill: white;
 		}
@@ -8186,14 +8173,17 @@ $border-top-color_1: #ff4f55;
 		transform: translateX(100%);
 		opacity: 0;
 	}
+
 	10% {
 		transform: translateX(-50%);
 		opacity: 1;
 	}
+
 	90% {
 		transform: translateX(-50%);
 		opacity: 1;
 	}
+
 	100% {
 		transform: translateX(100%);
 		opacity: 0;
@@ -8961,7 +8951,7 @@ body.user-registration-page {
 					.urmg-plan {
 						&-card {
 							display: flex;
-							align-items: center;
+							align-items: flex-start;
 							gap: $spacing_8px;
 							padding: $spacing_14px;
 							border-radius: $border_radius_4;
@@ -8981,6 +8971,7 @@ body.user-registration-page {
 
 							input[type="radio"] {
 								margin: 0;
+								margin-top: 1px;
 
 								&::before {
 									width: 8px;
@@ -9004,6 +8995,8 @@ body.user-registration-page {
 						&-header {
 							display: flex;
 							align-items: flex-start;
+							gap: $spacing_16px;
+							justify-content: space-between;
 							width: 100%;
 						}
 
@@ -9022,7 +9015,6 @@ body.user-registration-page {
 							font-size: 15px;
 							font-weight: $semi_bold;
 							line-height: 18px;
-							margin-left: auto;
 						}
 
 						&-description {
