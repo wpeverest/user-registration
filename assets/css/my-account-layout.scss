@@ -19,7 +19,7 @@
 				.user-registration-MyAccount-navigation-link {
 					&.is-active {
 						a {
-							border-color: $primary_color;
+							border-color: var(--ur-primary-color, #475bb2);
 						}
 					}
 				}
@@ -71,7 +71,7 @@
 				.button-group {
 					.button.user_registration_profile_picture_upload {
 						background: #edeff7;
-						color: $primary_color;
+						color: var(--ur-primary-color, #475bb2);
 						border: $border_width solid #edeff7 !important;
 					}
 				}
@@ -133,7 +133,7 @@
 
 			a {
 				font-weight: 500;
-				color: $primary_color;
+				color: var(--ur-primary-color, #475bb2);
 			}
 		}
 
@@ -174,7 +174,7 @@
 						.user-registration-Button.button-primary {
 							border-radius: $border_radius_4;
 							box-shadow: none;
-							border: $border_width solid $primary_color;
+							border: $border_width solid var(--ur-primary-color, #475bb2);
 						}
 					}
 				}
@@ -521,7 +521,7 @@
 								}
 
 								a {
-									background: $primary_color;
+									background: var(--ur-primary-color, #475bb2);
 									color: $grey-0;
 									padding: $spacing_8px $spacing_12px;
 									border-radius: $border_radius_3;
@@ -583,12 +583,14 @@
 						font-size: 14px;
 						line-height: 24px;
 						background: transparent;
+
 						&.reactivate-membership-button {
 							border: 1px solid #0067ab;
 							color: #0067ab;
 							display: flex;
 							align-items: center;
 						}
+
 						&.cancel-membership-button {
 							border: $border_width solid #f25656;
 							color: #f25656;
@@ -598,19 +600,21 @@
 								background: #f25656;
 							}
 						}
+
 						&.renew-membership-button {
 							border: 1px solid #00ab02;
 							color: #00ab02;
 							display: flex;
 							align-items: center;
 						}
+
 						&.change-membership-button {
-							border: $border_width solid $primary_color;
-							color: $primary_color;
+							border: $border_width solid var(--ur-primary-color, #475bb2);
+							color: var(--ur-primary-color, #475bb2);
 
 							&:hover {
 								color: $white;
-								background: $primary_color;
+								background: var(--ur-primary-color, #475bb2);
 							}
 
 							.ur-front-spinner {
@@ -620,7 +624,7 @@
 								height: 16px;
 								margin-left: 7px;
 								float: right;
-								color: $primary_color;
+								color: var(--ur-primary-color, #475bb2);
 								display: none;
 							}
 						}
@@ -631,7 +635,7 @@
 						}
 
 						&.change-membership-button:hover {
-							background: $primary_color;
+							background: var(--ur-primary-color, #475bb2);
 							color: white;
 						}
 
@@ -684,6 +688,7 @@
 						}
 					}
 				}
+
 				#bank-notice {
 					display: flex;
 					font-size: $medium;
@@ -694,12 +699,13 @@
 						display: flex;
 						gap: $spacing_12px;
 						background: #f7fbff;
-						border: $border_width solid $primary_color;
+						border: $border_width solid var(--ur-primary-color, #475bb2);
 						font-style: italic;
 						border-radius: $border_radius_5;
 						padding: $spacing_12px $spacing_16px;
 						align-items: center;
 					}
+
 					.view-bank-data {
 						cursor: pointer;
 						font-style: italic;
@@ -732,7 +738,7 @@
 			cursor: pointer;
 
 			&:checked + .slider {
-				background: $primary_color;
+				background: var(--ur-primary-color, #475bb2);
 			}
 
 			&:focus + .slider {
@@ -884,7 +890,7 @@
 
 						a {
 							font-weight: $medium;
-							color: $primary_color;
+							color: var(--ur-primary-color, #475bb2);
 						}
 					}
 
@@ -924,7 +930,7 @@
 													background: $grey-0;
 
 													&:focus {
-														border-color: $primary_color;
+														border-color: var(--ur-primary-color, #475bb2);
 													}
 												}
 											}
@@ -944,8 +950,8 @@
 										text-align: right;
 
 										.user-registration-Button.button {
-											background: $primary_color;
-											border: $border_width solid $primary_color;
+											background: var(--ur-primary-color, #475bb2);
+											border: $border_width solid var(--ur-primary-color, #475bb2);
 											border-radius: $border_radius_4;
 
 											&:hover {
@@ -1097,14 +1103,14 @@
 												&#ur_download_payment_invoice {
 													padding: 0;
 													background: none;
-													color: $primary_color;
+													color: var(--ur-primary-color, #475bb2);
 													border-radius: 0;
 													position: relative;
 
 													&::after {
 														content: "";
 														background: darken($primary_color, 10%);
-														width: 0px;
+														width: 0;
 														height: 1.5px;
 														position: absolute;
 														bottom: -2px;
@@ -1171,13 +1177,13 @@
 						&:hover {
 							a {
 								background: $blue-50;
-								color: $primary_color;
+								color: var(--ur-primary-color, #475bb2);
 							}
 						}
 
 						&.is-active {
 							a {
-								color: $primary_color;
+								color: var(--ur-primary-color, #475bb2);
 								background: $blue-50;
 							}
 						}
@@ -1221,7 +1227,7 @@
 						transition: all .3s;
 
 						&:hover {
-							color: $primary_color;
+							color: var(--ur-primary-color, #475bb2);
 							background: $blue-50;
 							border-bottom-color: $blue-50;
 						}
@@ -1229,8 +1235,8 @@
 
 					&.is-active {
 						a {
-							border-bottom: 3px solid $primary_color;
-							color: $primary_color;
+							border-bottom: 3px solid var(--ur-primary-color, #475bb2);
+							color: var(--ur-primary-color, #475bb2);
 							background: $blue-50;
 						}
 					}
@@ -1346,6 +1352,7 @@ body {
 		}
 	}
 }
+
 .user-registration-MyAccount-content table.user-registration-email__entries td {
 	text-align: left;
 }
@@ -1356,93 +1363,93 @@ body {
 .rtl .ur-frontend-form .ur-form-row .ur-form-grid legend.ur-label,
 .rtl .user-registration-logout-swal2-container .swal2-header .swal2-title,
 .rtl .user-registration-logout-swal2-container .swal2-header .swal2-content .swal2-content,
-.rtl .user-registration-MyAccount-content table.user-registration-email__entries td
-{
+.rtl .user-registration-MyAccount-content table.user-registration-email__entries td {
 	text-align: right;
 }
+
 .rtl #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row .membership-label {
 	min-width: 0px;
 }
 
 .user-registration-myaccount-notice-box {
-  background-color: #f4f6ff;
-  border: 1px solid #d6e0ff;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 32px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  position: relative;
-  border-left: 4px solid #6669f1;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+	background-color: #f4f6ff;
+	border: 1px solid #d6e0ff;
+	border-radius: 8px;
+	padding: 20px;
+	margin-bottom: 32px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+	position: relative;
+	border-left: 4px solid #6669f1;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
 
-  &--title {
-    display: flex;
-    align-items: center;
+	&--title {
+		display: flex;
+		align-items: center;
 
-    &-icon {
-      margin-right: 0.75rem;
+		&-icon {
+			margin-right: 0.75rem;
 
-      .notice-icon {
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-		color: #6366f1;
-      }
-    }
+			.notice-icon {
+				width: 20px;
+				height: 20px;
+				flex-shrink: 0;
+				color: #6366f1;
+			}
+		}
 
-    &-text {
-      h2 {
-        margin-top: 0;
-        margin-bottom: 0.5rem !important;
-        font-size: 16px !important;
-        font-weight: 600 !important;
-        color: #333 !important;
-      }
-    }
-  }
-
-  p {
-    color: #444;
-    font-size: 15px;
-    line-height: 1.5;
-
-	&.pro-tip,
-	&.existing-users {
-		strong {
-			font-weight: bolder !important;
+		&-text {
+			h2 {
+				margin-top: 0;
+				margin-bottom: 0.5rem !important;
+				font-size: 16px !important;
+				font-weight: 600 !important;
+				color: #333 !important;
+			}
 		}
 	}
 
-    &.pro-tip::before {
-      content: "💡";
-      margin-right: 0.5rem;
-    }
+	p {
+		color: #444;
+		font-size: 15px;
+		line-height: 1.5;
 
-    &.existing-users::before {
-      content: "👤";
-      margin-right: 0.5rem;
-    }
-  }
+		&.pro-tip,
+		&.existing-users {
+			strong {
+				font-weight: bolder !important;
+			}
+		}
 
-  strong,
-  b {
-    font-weight: 600 !important;
-  }
+		&.pro-tip::before {
+			content: "💡";
+			margin-right: 0.5rem;
+		}
 
-  .addon-link {
-    color: #475bb2 !important;
-    font-weight: 600 !important;
-    text-decoration: none !important;
+		&.existing-users::before {
+			content: "👤";
+			margin-right: 0.5rem;
+		}
+	}
 
-    &:hover {
-      text-decoration: underline !important;
-    }
-  }
+	strong,
+	b {
+		font-weight: 600 !important;
+	}
 
-  .highlight {
-    font-weight: bold;
-  }
+	.addon-link {
+		color: #475bb2 !important;
+		font-weight: 600 !important;
+		text-decoration: none !important;
+
+		&:hover {
+			text-decoration: underline !important;
+		}
+	}
+
+	.highlight {
+		font-weight: bold;
+	}
 }
