@@ -2346,8 +2346,22 @@
 	color: #666;
 	margin-bottom: 0;
 	text-transform: capitalize;
+	position: absolute;
+	left: -9999px;
+	opacity: 0;
+	visibility: hidden;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
 }
 
 .user-registration-global-settings.ur-color-group .ur-color-group-item .wp-picker-container {
 	width: fit-content !important;
+}
+
+.user-registration-global-settings .wp-picker-container .iris-picker {
+	border-color: #aaaaaa47;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
 }

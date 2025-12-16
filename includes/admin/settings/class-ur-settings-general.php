@@ -76,6 +76,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			 *
 			 * @param array Options to be enlisted.
 			 */
+			error_log( print_r( get_option( 'button_colors' ), true ) );
 			$settings = apply_filters(
 				'user_registration_general_settings',
 				array(
@@ -90,10 +91,11 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'id'      => 'button_colors',
 									'type'    => 'color-group',
 									'title'   => 'Button Colors',
-									'states'  => array( 'normal', 'active' ),
+									'states'  => array( 'normalss', 'activess' ),
 									'default' => array(
-										'normal' => '#0073aa',
-										'active' => '#005a87',
+										'normalss' => '#0073aa',
+										'activess' => '#005a87',
+										'focus'    => '#005a87',
 									),
 								),
 								array(

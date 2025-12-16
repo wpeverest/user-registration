@@ -681,10 +681,17 @@ class UR_Admin_Settings {
 									$settings .= '<label>' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field ur-color-group-field">';
 
+									// Get saved values as array from base_id option
+									$saved_colors = self::get_option( $base_id, array() );
+									if ( ! is_array( $saved_colors ) ) {
+										$saved_colors = array();
+									}
+
 									foreach ( $color_states as $state => $state_data ) {
 										$state_id      = $base_id . '_' . $state;
-										$option_value  = self::get_option( $state_id, $state_data['default'] );
-										$default_value = $state_data['default'];
+										// Get value from array structure: id['normal'], id['hover'], etc.
+										$option_value  = isset( $saved_colors[ $state ] ) ? $saved_colors[ $state ] : ( isset( $state_data['default'] ) ? $state_data['default'] : '' );
+										$default_value = isset( $state_data['default'] ) ? $state_data['default'] : '';
 
 										$settings .= '<div class="ur-color-group-item">';
 										$settings .= '<span class="ur-color-state-label">' . esc_html( ucfirst( $state ) ) . '</span>';
@@ -699,6 +706,7 @@ class UR_Admin_Settings {
 												data-alpha="true"
 												data-state="' . esc_attr( $state ) . '"
 												data-default-value="' . esc_attr( $default_value ) . '"
+												data-current-value="' . esc_attr( $option_value ) . '"
 												placeholder="' . esc_attr( $value['placeholder'] ) . '"
 												' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>&lrm;';
 										$settings .= '<div id="colorPickerDiv_' . esc_attr( $state_id ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div>';
@@ -1309,6 +1317,25 @@ class UR_Admin_Settings {
 	}
 
 	/**
+	 * Get color-group option value by ID and state.
+	 *
+	 * @param string $option_id Option ID (base ID).
+	 * @param string $state     State name (normal, hover, etc.).
+	 * @param string $default   Default value if not found.
+	 *
+	 * @return string Color value.
+	 */
+	public static function get_color_group_option( $option_id, $state, $default = '' ) {
+		$color_array = self::get_option( $option_id, array() );
+		
+		if ( is_array( $color_array ) && isset( $color_array[ $state ] ) ) {
+			return $color_array[ $state ];
+		}
+		
+		return $default;
+	}
+
+	/**
 	 * Save admin fields.
 	 *
 	 * Loops though the user registration options array and outputs each field.
@@ -1348,6 +1375,62 @@ class UR_Admin_Settings {
 			}
 
 			foreach ( $section['settings'] as $option ) {
+				// Skip color-group type - handled separately below
+				if ( isset( $option['type'] ) && 'color-group' === $option['type'] ) {
+					// Handle color-group fields - save as array structure: id => array('normal' => value, 'hover' => value)
+					if ( ! empty( $option['id'] ) ) {
+						$base_id = $option['id'];
+						
+						// Get states from settings, or use default states (normal and hover)
+						$states_config = isset( $option['states'] ) && is_array( $option['states'] ) ? $option['states'] : array( 'normal', 'hover' );
+						
+						// Extract state keys
+						$state_keys = array();
+						foreach ( $states_config as $state_key => $state ) {
+							if ( is_numeric( $state_key ) && is_string( $state ) ) {
+								$state_keys[] = $state;
+							} elseif ( is_array( $state ) && isset( $state['key'] ) ) {
+								$state_keys[] = $state['key'];
+							} else {
+								$state_keys[] = $state_key;
+							}
+						}
+						
+						// Initialize the color array
+						$color_array = array();
+						
+						// Collect all state values into array structure
+						foreach ( $state_keys as $state ) {
+							$state_id = $base_id . '_' . $state;
+							
+							// Check if the field exists in POST (even if empty)
+							if ( array_key_exists( $state_id, $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+								$state_raw_value = isset( $_POST[ $state_id ] ) ? wp_unslash( $_POST[ $state_id ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+								
+								// Create a temporary option array for sanitization (same as regular color field)
+								$state_option = array_merge( $option, array( 'id' => $state_id, 'type' => 'color' ) );
+								$state_value  = ur_sanitize_value_by_type( $state_option, $state_raw_value );
+								
+								// Apply filters (same as regular color field)
+								$state_value = apply_filters( 'user_registration_admin_settings_sanitize_option', $state_value, $state_option, $state_raw_value );
+								$state_value = apply_filters( "user_registration_admin_settings_sanitize_option_$state_id", $state_value, $state_option, $state_raw_value );
+								
+								// Add to color array
+								if ( ! is_null( $state_value ) ) {
+									$color_array[ $state ] = $state_value;
+								}
+							}
+						}
+						
+						// Save as array structure: id => array('normal' => value, 'hover' => value)
+						// Same pattern as regular color field but as array
+						if ( ! empty( $color_array ) ) {
+							$update_options[ $base_id ] = $color_array;
+						}
+					}
+					continue; // Skip the regular processing for color-group
+				}
+				
 				// Get posted value.
 				if ( null !== $option['id'] ) {
 					if ( strstr( $option['id'], '[' ) ) {
