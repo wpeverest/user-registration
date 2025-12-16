@@ -141,6 +141,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 							<?php
 							foreach ( $tabs as $name => $label ) {
 								?>
+								<div class="ur-nav__tab-item">
 								<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $name ) ); ?>" class="nav-tab ur-nav__link <?php echo ( $current_tab === $name ? 'nav-tab-active is-active' : '' ); ?>">
 									<span class="ur-nav__link-icon">
 										<?php echo ur_file_get_contents( '/assets/images/settings-icons/' . $name . '.svg' ); //phpcs:ignore ?>
@@ -161,6 +162,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 									?>
 								</div>
 								<?php endif; ?>
+								</div>
 								<?php
 							}
 							do_action( 'user_registration_settings_tabs' );
