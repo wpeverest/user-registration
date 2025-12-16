@@ -84,169 +84,113 @@ $payment_gateways = get_option( 'ur_membership_payment_gateways', array() );
 		?>
 	</span>
 	<div class="upgrade-plan-container">
-		<span class="ur-upgrade-label"><?php esc_html_e( 'Select Plan', 'user-registration' ); ?></span>
-		<div id="upgradable-plans">
-			<?php
-			foreach ( $actionable_membership_details as $membership_details ) {
-				$active_payment_gateways = isset( $membership_details['active_payment_gateways'] ) ? $membership_details['active_payment_gateways'] : '';
+		<span class="ur_membership_input_label ur-label"><?php esc_html_e( 'Select Plan', 'user-registration' ); ?></span>
+		<?php
+		foreach ( $actionable_membership_details as $membership_details ) {
+			$active_payment_gateways = isset( $membership_details['active_payment_gateways'] ) ? $membership_details['active_payment_gateways'] : '';
 
-				?>
-				<label class="upgrade-membership-label" for="ur-membership-select-membership-23">
-					<input
-						class="ur_membership_input_class ur_membership_radio_input ur-frontend-field"
-						id="ur-membership-select-membership-<?php echo esc_attr( $membership_details['ID'] ); ?>"
-						type="radio"
-						name="urm_membership"
-						data-label="<?php echo esc_attr( $membership_details['title'] ); ?>"
-						required="required"
-						value="<?php echo esc_attr( $membership_details['ID'] ); ?>"
-						data-urm-pg='<?php echo esc_attr( $active_payment_gateways ); ?>'
-						data-urm-pg-type="<?php echo esc_attr( $membership_details['type'] ); ?>"
-						data-urm-pg-calculated-amount="<?php echo isset( $membership_details['calculated_amount'] ) ? esc_attr( $membership_details['calculated_amount'] ) : esc_attr( $membership_details['amount'] ); ?>"
-					>
-					<span class="ur-membership-duration"><?php echo esc_html( $membership_details['title'] ); ?></span>
-					<span class="ur-membership-duration"> - <?php echo esc_html( $membership_details['period'] ); ?></span>
-				</label>
-				<?php
-			}
 			?>
-
+			<label class="upgrade-membership-label" for="ur-membership-select-membership-<?php echo esc_attr( $membership_details['ID'] ); ?>">
+				<input
+					class="ur_membership_input_class ur_membership_radio_input ur-frontend-field"
+					id="ur-membership-select-membership-<?php echo esc_attr( $membership_details['ID'] ); ?>"
+					type="radio"
+					name="urm_membership"
+					data-label="<?php echo esc_attr( $membership_details['title'] ); ?>"
+					required="required"
+					value="<?php echo esc_attr( $membership_details['ID'] ); ?>"
+					data-urm-pg='<?php echo esc_attr( $active_payment_gateways ); ?>'
+					data-urm-pg-type="<?php echo esc_attr( $membership_details['type'] ); ?>"
+					data-urm-pg-calculated-amount="<?php echo isset( $membership_details['calculated_amount'] ) ? esc_attr( $membership_details['calculated_amount'] ) : esc_attr( $membership_details['amount'] ); ?>"
+				>
+				<span class="ur-membership-duration"><?php echo esc_html( $membership_details['title'] ); ?></span>
+				<span class="ur-membership-duration"> <?php echo esc_html( $membership_details['period'] ); ?></span>
+			</label>
+			<?php
+		}
+		?>
+	</div>
+	<div id="urm-total_container"
+		class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
+		<div class="urm-membership-total-value">
+			<label class="ur_membership_input_label ur-label"
+					for="ur-membership-total"><?php echo esc_html__( 'Total', 'user-registration' ); ?></label>
+			<span class="ur_membership_input_class"
+					id="ur-membership-total"
+					data-key-name="<?php echo esc_html__( 'Total', 'user-registration' ); ?>"
+					disabled
+			>
+				<?php echo ceil( 0 ); ?>
+			</span>
 		</div>
-		<div class="ur_membership_registration_container urm-d-none">
-			<div class="ur_membership_frontend_input_container urm_hidden_payment_container ur_payment_gateway_container urm-d-none">
-				<span class="ur-upgrade-label ur-label required"><?php esc_html_e( 'Select Payment Gateway', 'user-registration' ); ?></span>
+		<span id="total-input-notice">
+		</span>
+	</div>
 
-				<div id="payment-gateway-body" class="ur_membership_frontend_input_container">
-					<?php
-					foreach ( $payment_gateways as $index => $gateway ) {
-						$gateway_value = strtolower( $gateway );
-						$gateway_label = ucfirst( $gateway_value );
-						$checked       = ( $index === 0 && count( $payment_gateways ) === 1 ) ? 'checked' : '';
-						?>
-						<label class="ur_membership_input_label ur-label" for="ur-membership-<?php echo esc_attr( $gateway_value ); ?>">
-							<input
-								class="ur_membership_input_class pg-list"
+	<!--	payment gateway container -->
+	<div
+		class="ur_membership_frontend_input_container urm_hidden_payment_container ur_payment_gateway_container urm-d-none">
+		<hr class="ur_membership_divider">
+		<span
+			class="ur_membership_input_label ur-label required"><?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_title', esc_html__( 'Select Payment Gateway', 'user-registration' ) ); ?>
+		</span>
+		<div id="payment-gateway-body" class="ur_membership_frontend_input_container">
+			<div class="ur-membership-payment-gateway-lists">
+				<?php
+				$width_map = array(
+					'paypal' => '70px',
+					'stripe' => '50px',
+					'bank'   => '40px',
+				);
+				foreach ( get_option( 'ur_membership_payment_gateways' ) as $g => $gateway ) :
+					?>
+					<label class="ur_membership_input_label ur-label"
+							for="ur-membership-<?php echo esc_attr( strtolower( $g ) ); ?>">
+						<input class="ur_membership_input_class pg-list"
 								data-key-name="ur-payment-method"
-								id="ur-membership-<?php echo esc_attr( $gateway_value ); ?>"
+								id="ur-membership-<?php echo esc_attr( strtolower( $g ) ); ?>"
 								type="radio"
 								name="urm_payment_method"
-								value="<?php echo esc_attr( $gateway_value ); ?>"
 								required
-								<?php echo $checked; ?>
-							>
-							<span class="ur-membership-duration"><?php echo esc_html( $gateway_label ); ?></span>
-						</label>
-						<?php
-					}
-					?>
-					<span id="payment-gateway-notice" class="notice_red"></span>
-				</div>
-			</div>
-			<div class="ur_membership_frontend_input_container">
-				<div class="stripe-container urm-d-none">
-					<button type="button" class="stripe-card-indicator ur-stripe-element-selected" id="credit_card">
-						<?php esc_html_e( 'Credit Card', 'user-registration' ); ?>
-					</button>
-					<div class="stripe-input-container">
-						<div id="card-element"></div>
-					</div>
-				</div>
-			</div>
-
-			<div id="authorize-net-container" class="urm-d-none membership-only authorize-net-container">
-				<div
-					data-field-id="authorizenet_gateway"
-					class="ur-field-item field-authorize_net_gateway"
-					data-ref-id="authorizenet_gateway"
-				>
-					<div class="form-row" id="authorizenet_gateway_field">
-						<label class="ur-label" for="Authorize.net">
-							<?php esc_html_e( 'Authorize.net', 'user-registration' ); ?> <abbr class="required" title="required">*</abbr>
-						</label>
-
-						<div
-							id="user_registration_authorize_net_gateway"
-							data-gateway="authorize_net"
-							class="input-text"
+								value="<?php echo esc_attr( strtolower( $g ) ); ?>"
+							<?php echo 0 === $g ? 'checked' : ''; ?>
 						>
-							<div class="ur-field-row">
-								<div class="user-registration-authorize-net-card-number">
-									<input
-										type="text"
-										id="user_registration_authorize_net_card_number"
-										name="user_registration_authorize_net_card_number"
-										maxlength="16"
-										placeholder="411111111111111"
-										class="widefat ur-anet-sub-field user_registration_authorize_net_card_number"
-									>
-									<br>
-									<label class="user-registration-sub-label"><?php esc_html_e( 'Card Number', 'user-registration' ); ?></label>
-								</div>
-							</div>
-
-							<div class="ur-field-row clearfix">
-								<div class="user-registration-authorize-net-expiration user-registration-one-half">
-									<div class="user-registration-authorize-net-expiration-month user-registration-one-half">
-										<select
-											class="widefat ur-anet-sub-field user_registration_authorize_net_expiration_month"
-											id="user_registration_authorize_net_expiration_month"
-											name="user_registration_authorize_net_expiration_month"
-										>
-										<option><?php esc_html_e( 'MM', 'user-registration' ); ?>  </option>
-										<?php
-										$months = range( 01, 12 );
-										foreach ( $months as $month ) {
-											$value = sprintf( '%02d', $month ); // format month with leading zero.
-											?>
-											<option value="<?php echo esc_attr( $value ); ?>"><?php echo esc_html( $value ); ?></option>
-											<?php
-										}
-										?>
-										</select>
-										<label class="user-registration-sub-label"><?php esc_html_e( 'Expiration', 'user-registration' ); ?></label>
-									</div>
-
-									<div class="user-registration-authorize-net-expiration-year user-registration-one-half last">
-										<select
-											class="widefat ur-anet-sub-field user_registration_authorize_net_expiration_year"
-											id="user_registration_authorize_net_expiration_year"
-											name="user_registration_authorize_net_expiration_year"
-										>
-										<option><?php esc_html_e( 'YY', 'user-registration' ); ?> </option>
-										<?php
-										$base = gmdate( 'y' );
-										$end  = gmdate( 'y' ) + 10;
-										for ( $i = $base; $i <= $end; $i++ ) {
-											?>
-											<option value="<?php echo absint( $i ); ?>"><?php echo absint( $i ); ?></option>
-											<?php
-										}
-										?>
-										</select>
-									</div>
-								</div>
-
-								<div class="user-registration-authorize-net-cvc user-registration-one-half last">
-									<input
-										type="text"
-										id="user_registration_authorize_net_card_code"
-										name="user_registration_authorize_net_card_code"
-										placeholder="900"
-										maxlength="4"
-										class="widefat ur-anet-sub-field user_registration_authorize_net_card_code"
-									>
-									<br>
-									<label class="user-registration-sub-label"><?php esc_html_e( 'CVC', 'user-registration' ); ?> </label>
-								</div>
-							</div>
-
-						</div>
-					</div>
+						<span class="ur-membership-duration">
+						<img
+							src="<?php echo esc_url( plugins_url( 'assets/images/settings-icons/membership-field/' . strtolower( $g ) . '-logo.png', UR_PLUGIN_FILE ) ); ?>"
+							alt="<?php echo esc_attr( $gateway ); ?>"
+							class="ur-membership-payment-gateway-logo"
+							width="<?php echo isset( $width_map[ strtolower( $g ) ] ) ? $width_map[ strtolower( $g ) ] : '60px'; ?>"
+						/>
+					</span>
+					</label>
+				<?php endforeach; ?>
+			</div>
+			<span id="payment-gateway-notice" class="notice_red"></span>
+		</div>
+	</div>
+	<div class="ur_membership_frontend_input_container">
+		<div class="stripe-container urm-d-none">
+			<button type="button" class="stripe-card-indicator ur-stripe-element-selected"
+					id="credit_card"><?php echo esc_html__( 'Credit Card', 'user-registration' ); ?></button>
+			<div class="stripe-input-container">
+				<div id="card-element">
 				</div>
 			</div>
 		</div>
-		<span id="upgrade-membership-notice"></span>
+		<?php
+		$user_id = get_current_user_id();
+		$form_id = ur_get_form_id_by_userid( $user_id );
+		/**
+		 * Fires when payment fields is rendered on membership registration form.
+		 *
+		 *  This action allows developers to output payment gateway fields
+		 *  within the registration form.
+		 */
+		do_action( 'user_registration_membership_render_payment_field', $form_id );
+		?>
 	</div>
+	<span id="upgrade-membership-notice"></span>
 	<button type="submit" class="user-registration-Button button urm-update-membership-button">
 		<?php esc_html_e( 'Submit', 'user-registration' ); ?>
 	</button>

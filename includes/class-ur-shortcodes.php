@@ -298,7 +298,7 @@ class UR_Shortcodes {
 				wp_enqueue_style( 'user-registration-membership-frontend-style' );
 				wp_enqueue_style( 'user-registration-general' );
 
-				$url_params = array( 'action', 'urm_uuid', 'thank_you' );
+				$url_params = array( 'action', 'thank_you' );
 
 				$has_all_params = ! array_diff( $url_params, array_keys( $_GET ) );
 

@@ -42,10 +42,15 @@ if ( 'block' === $type ) :
 
 				$user_membership_group_ids = array_values( array_unique( $user_membership_group_ids ) );
 
-				if ( isset( $membership['multiple_membership'] ) && $membership['multiple_membership'] ) {
-					$action_to_take = 'multiple';
-				} elseif ( isset( $current_membership_group['ID'] ) && ! in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
-					$action_to_take = 'multiple';
+				if ( is_user_logged_in() ) {
+
+					if ( isset( $membership['multiple_membership'] ) && $membership['multiple_membership'] ) {
+						$action_to_take = 'multiple';
+					} elseif ( isset( $current_membership_group['ID'] ) && ! in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
+						$action_to_take = 'multiple';
+					}
+				} else {
+					$action_to_take = 'register';
 				}
 
 				?>

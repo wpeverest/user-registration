@@ -158,7 +158,8 @@ html {
 	}
 
 	// Registration Form CSS
-	.ur_membership_registration_container {
+	.ur_membership_registration_container,
+	.membership-upgrade-container {
 		margin: 0 auto;
 		border-radius: 10px;
 
@@ -177,7 +178,8 @@ html {
 			height: 1px;
 		}
 
-		.ur_membership_frontend_input_container {
+		.ur_membership_frontend_input_container,
+		.upgrade-plan-container {
 			display: flex;
 			flex-direction: column;
 
@@ -195,7 +197,8 @@ html {
 				}
 			}
 
-			.ur_membership_input_label {
+			.ur_membership_input_label,
+			.upgrade-membership-label {
 				display: flex;
 				// align-items: center;
 				align-items: flex-start;
@@ -838,22 +841,8 @@ html {
 	}
 
 	.membership-upgrade-container {
-		display: flex;
-		gap: 10px;
-		flex-direction: column;
-
-		.ur_membership_registration_container {
-			.ur_membership_frontend_input_container {
-				margin-bottom: 0;
-			}
-		}
-
-		.ur-upgrade-label {
-			font-weight: 700;
-		}
-
 		.StripeElement {
-			padding: 4px 8px;
+			padding: 0px 8px;
 			border: 1px solid #e1e1e1;
 
 			.__PrivateStripeElement {
@@ -863,10 +852,12 @@ html {
 				min-height: 36px;
 				margin-bottom: 10px;
 				line-height: 1.5;
+				height: 38px;
+
 
 				iframe {
 					position: absolute;
-					top: 50%;
+					top: $spacing_12px;
 				}
 			}
 		}
@@ -874,8 +865,18 @@ html {
 		.authorize-net-container {
 			width: 90%;
 
+			label {
+				margin-top: 0px;
+				margin-bottom: 16px;
+				color: rgb(34, 34, 34);
+				font-size: 15px;
+				font-weight: 500;
+				line-height: 19px;
+			}
+
 			.ur-error {
 				color: #d63638;
+				font-size: 15px;
 			}
 
 			.user-registration-one-half {
@@ -902,14 +903,6 @@ html {
 				clear: both;
 			}
 
-			.user-registration-sub-label {
-				font-size: 10px;
-				font-weight: 400;
-				margin-bottom: 0;
-				color: #494d50;
-				margin-top: -10px;
-			}
-
 			abbr.required {
 				color: red;
 			}
@@ -921,24 +914,11 @@ html {
 			.ur-field-row input,
 			.ur-field-row select {
 				width: 100%;
-				padding: 4px 8px;
+				min-height: 36px;
+				margin-bottom: 10px;
 				line-height: 1.5;
-			}
-		}
-	}
-
-	.upgrade-plan-container {
-
-		#upgradable-plans {
-			display: flex;
-			flex-direction: column;
-			gap: 5px;
-			text-align: left;
-
-			.upgrade-membership-label {
-				display: flex;
-				gap: 5px;
-				align-items: center;
+				padding: 4px 8px;
+				border-radius: 0px;
 			}
 		}
 	}
@@ -962,55 +942,10 @@ html {
 		color: $grey-600;
 	}
 
-	#upgradable-plans {
-		display: grid;
-		gap: 12px;
-		margin-bottom: 20px;
-
-		.upgrade-membership-label {
-			font-size: 14px;
-
-			.ur-membership-duration {
-				font-weight: 500;
-				color: $grey-600;
-			}
-		}
-	}
-
-	.ur_payment_gateway_container {
-		margin-top: 25px;
-
-		#payment-gateway-body {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 12px;
-		}
-	}
-
 	.notice_red,
 	#upgrade-membership-notice {
 		margin-top: 10px;
 		font-size: 14px;
 		color: #ef4444;
-	}
-
-	.urm-update-membership-button {
-		margin-top: 25px;
-		width: 100%;
-		padding: 14px;
-		font-size: 16px;
-		font-weight: 600;
-		background: $primary_color;
-		color: #fff !important;
-		border-radius: 4px;
-		border: none;
-		cursor: pointer;
-		box-shadow: 0 4px 12px rgba($primary_color, 0.25);
-		transition: 0.25s;
-
-		&:hover {
-			background: $primary_color;
-			box-shadow: 0 6px 20px rgba($primary_color, 0.35);
-		}
 	}
 }

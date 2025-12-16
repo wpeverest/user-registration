@@ -208,7 +208,7 @@ if ( 'subscription' == $membership['post_content']['type'] ) {
 					$thank_you_page_id           = get_option( 'user_registration_thank_you_page_id', false );
 					$uuid                        = ur_generate_random_key();
 					$subscription_id             = $membership['subscription_id'];
-					$redirect_page_url           = $redirect_page_url . '?action=upgrade&current="' . $membership['post_id'] . '"&subscription_id="' . $membership['subscription_id'] . '"&urm_uuid="' . $uuid . '"&thank_you="' . $thank_you_page_id . '"';
+					$redirect_page_url           = $redirect_page_url . '?action=upgrade&current="' . $membership['post_id'] . '"&subscription_id="' . $membership['subscription_id'] . '"&thank_you="' . $thank_you_page_id . '"';
 
 					?>
 					<?php if ( 'canceled' !== $membership['status'] ) : ?>
