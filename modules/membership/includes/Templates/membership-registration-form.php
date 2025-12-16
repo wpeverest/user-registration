@@ -184,15 +184,17 @@
 	<!--	total container-->
 	<div id="urm-total_container"
 		class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
-		<label class="ur_membership_input_label ur-label"
-				for="ur-membership-total"><?php echo esc_html__( 'Total', 'user-registration' ); ?></label>
-		<input class="ur_membership_input_class"
-				id="ur-membership-total"
-				data-key-name="<?php echo esc_html__( 'Total', 'user-registration' ); ?>"
-				name="urm_total"
-				value="<?php echo ceil( 0 ); ?>"
-				disabled
-		>
+		<div class="urm-membership-total-value">
+			<label class="ur_membership_input_label ur-label"
+					for="ur-membership-total"><?php echo esc_html__( 'Total', 'user-registration' ); ?></label>
+			<input class="ur_membership_input_class"
+					id="ur-membership-total"
+					data-key-name="<?php echo esc_html__( 'Total', 'user-registration' ); ?>"
+					name="urm_total"
+					value="<?php echo ceil( 0 ); ?>"
+					disabled
+			>			
+		</div>
 		<span id="total-input-notice">
 		</span>
 	</div>
@@ -205,6 +207,7 @@
 			class="ur_membership_input_label ur-label required"><?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_title', esc_html__( 'Select Payment Gateway', 'user-registration' ) ); ?>
 		</span>
 		<div id="payment-gateway-body" class="ur_membership_frontend_input_container">
+			<div class="ur-membership-payment-gateway-lists">
 			<?php
 			$width_map = [
 				'paypal'    => '70px',
@@ -234,6 +237,7 @@
 					</span>
 				</label>
 			<?php endforeach; ?>
+			</div>
 			<span id="payment-gateway-notice" class="notice_red"></span>
 		</div>
 	</div>

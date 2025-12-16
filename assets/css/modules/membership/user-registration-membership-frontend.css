@@ -336,13 +336,8 @@ html {
 .user-registration-page .ur_membership_registration_container #urm-total_container,
 .ur-multi-device-form-preview .ur_membership_registration_container #urm-total_container,
 #pg-container .ur_membership_registration_container #urm-total_container {
-  flex-direction: row;
-  padding: 14px;
-  margin-top: 32px;
-  border-radius: 4px;
-  border: 1px dashed #475bb2;
-  background: #F8F8FA;
   position: relative;
+  margin-top: 32px;
 }
 .user-registration-page .ur_membership_registration_container #urm-total_container::before,
 .ur-multi-device-form-preview .ur_membership_registration_container #urm-total_container::before,
@@ -354,6 +349,18 @@ html {
   height: 1px;
   top: -24px;
   left: 0;
+}
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-total-value,
+.ur-multi-device-form-preview .ur_membership_registration_container #urm-total_container .urm-membership-total-value,
+#pg-container .ur_membership_registration_container #urm-total_container .urm-membership-total-value {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px;
+  border-radius: 4px;
+  border: 1px dashed #475bb2;
+  background: #F8F8FA;
 }
 .user-registration-page .ur_membership_registration_container #urm-total_container .ur_membership_input_label,
 .ur-multi-device-form-preview .ur_membership_registration_container #urm-total_container .ur_membership_input_label,
@@ -379,7 +386,6 @@ html {
   line-height: 24px;
   min-height: unset;
   height: unset;
-  margin-left: auto;
 }
 .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container .ur_membership_divider,
 .ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container .ur_membership_divider,
@@ -393,11 +399,25 @@ html {
   border: 0;
   border-radius: 0;
 }
-.user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body,
-.ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body,
-#pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body {
-  flex-direction: row;
+.user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists,
+#pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists {
+  display: flex;
+  align-items: center;
   gap: 20px;
+}
+@media screen and (max-width: 600px) {
+  .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists,
+  .ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists,
+  #pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists {
+    flex-direction: column;
+    gap: 0;
+  }
+  .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label,
+  .ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label,
+  #pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label {
+    width: 100%;
+  }
 }
 .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label,
 .ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label,
@@ -437,6 +457,17 @@ html {
 .ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration,
 #pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration {
   margin-left: unset;
+}
+.user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration img,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration img,
+#pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration img {
+  width: auto;
+  height: 30px;
+}
+.user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body #payment-gateway-notice:empty,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body #payment-gateway-notice:empty,
+#pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body #payment-gateway-notice:empty {
+  display: none;
 }
 .user-registration-page .ur_membership_registration_container .ur_membership_input_label,
 .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_input_label,
