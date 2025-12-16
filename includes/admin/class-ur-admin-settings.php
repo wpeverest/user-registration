@@ -38,6 +38,150 @@ class UR_Admin_Settings {
 	private static $messages = array();
 
 	/**
+	 * Output messages + errors.
+	 *
+	 * @echo string
+	 */
+	public static function show_messages() {
+		if ( count( self::$errors ) > 0 ) {
+			foreach ( self::$errors as $key => $error ) {
+				echo '<div id="message" class="error inline"><p><strong>' . wp_kses_post( $error ) . '</strong></p></div>';
+			}
+		} elseif ( count( self::$messages ) > 0 ) {
+			foreach ( self::$messages as $message ) {
+				echo '<div id="message" class="updated inline"><p><strong>' . wp_kses_post( $message ) . '</strong></p></div>';
+			}
+		}
+	}
+
+	/**
+	 * Settings page.
+	 *
+	 * Handles the display of the main Social Sharing settings page in admin.
+	 */
+	public static function output() {
+		global $current_section, $current_tab;
+
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+		/**
+		 * Action to output start settings
+		 */
+		do_action( 'user_registration_settings_start' );
+		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
+
+		wp_enqueue_script(
+			'user-registration-settings',
+			UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js',
+			array(
+				'jquery',
+				'jquery-ui-datepicker',
+				'jquery-ui-sortable',
+				'wp-color-picker',
+				'wp-color-picker-alpha',
+				'tooltipster',
+				'ur-snackbar',
+			),
+			UR_VERSION,
+			true
+		);
+		wp_enqueue_script( 'ur-setup' );
+		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
+			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
+		}
+		wp_enqueue_style( 'ur-snackbar' );
+		wp_localize_script(
+			'user-registration-settings',
+			'user_registration_settings_params',
+			array(
+				'ajax_url'                             => admin_url( 'admin-ajax.php' ),
+				'assets_url'                           => UR_ASSETS_URL,
+				'ur_license_nonce'                     => wp_create_nonce( '_ur_license_nonce' ),
+				'ur_updater_nonce'                     => wp_create_nonce( 'updates' ),
+				'user_registration_search_global_settings_nonce' => wp_create_nonce( 'user_registration_search_global_settings' ),
+				'user_registration_captcha_test_nonce' => wp_create_nonce( 'user_registration_captcha_test_nonce' ),
+				'user_registration_my_account_selection_validator_nonce' => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
+				'user_registration_lost_password_selection_validator_nonce' => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
+				'user_registration_membership_pages_selection_validator_nonce' => wp_create_nonce( 'user_registration_validate_page_none' ),
+				'user_registration_membership_payment_settings_nonce' => wp_create_nonce( 'user_registration_validate_payment_settings_none' ),
+				'user_registration_membership_validate_payment_currency_nonce' => wp_create_nonce( 'user_registration_validate_payment_currency' ),
+				'user_registration_membership_captcha_settings_nonce' => wp_create_nonce( 'user_registration_validate_captcha_settings_nonce' ),
+				'i18n_nav_warning'                     => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
+				'i18n'                                 => array(
+					'captcha_success'                    => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
+					'captcha_reset_title'                => esc_html__( 'Reset Keys', 'user-registration' ),
+					'i18n_prompt_reset'                  => esc_html__( 'Reset', 'user-registration' ),
+					'i18n_prompt_cancel'                 => esc_html__( 'Cancel', 'user-registration' ),
+					'captcha_failed'                     => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
+					'captcha_reset_prompt'               => esc_html__( 'Are you sure you want to reset these keys? This action will clear both the Site Key and Secret Key permanently.', 'user-registration' ),
+					'unsaved_changes'                    => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
+					'pro_feature_title'                  => esc_html__( 'is a Pro Feature', 'user-registration' ),
+					'upgrade_message'                    => esc_html__(
+						'We apologize, but %title% is not available with the free version. To access this fantastic features, please consider upgrading to the %plan%.',
+						'user-registration'
+					),
+
+					'license_activated_text'             => esc_html__( 'You\'ve activated your license, great! To get all the Pro Features, we just need to install the URM Pro plugin on your website. Don\'t worry, it\'s quick and safe!', 'user-registration' ),
+					'pro_install_popup_button'           => esc_html__( 'Install Pro Now', 'user-registration' ),
+					'pro_install_popup_title'            => esc_html__( 'Install User Registration & Membership Pro to Unlock All Features', 'user-registration' ),
+					'will_install_and_activate_pro_text' => esc_html__( 'This will automatically install and activate the User Registration & Membership Pro Plugin for you.', 'user-registration' ),
+					'installing_plugin_text'             => esc_html__( 'Installing Plugin', 'user-registration' ),
+					'pro_activated_success_title'        => esc_html__( 'Success!', 'user-registration' ),
+					'pro_activated_success_text'         => esc_html__( 'URM Pro has been successfully installed and activated. You now have access to all premium features!', 'user-registration' ),
+					'continue_to_dashboard_text'         => esc_html__( 'Continue to dashboard', 'user-registration' ),
+
+					'upgrade_plan'                       => esc_html__( 'Upgrade Plan', 'user-registration' ),
+					'upgrade_link'                       => esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
+				),
+				'is_advanced_field_active'             => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
+				'reset_keys_icon'                      => plugins_url( 'assets/images/users/reset-keys-red.svg', UR_PLUGIN_FILE ),
+			)
+		);
+
+		// Include settings pages.
+		self::get_settings_pages();
+
+		// Get current tab/section.
+		$current_tab     = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$current_section = empty( $_REQUEST['section'] ) ? '' : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		/**
+		 * Filter to save settings actions
+		 *
+		 * @param boolean Save Settings or Not.
+		 */
+		$flag = apply_filters( 'user_registration_settings_save_action', true );
+
+		if ( $flag ) {
+			// Save settings if data has been posted.
+			if ( ! empty( $_POST ) && ! empty( $_REQUEST['_wpnonce'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+				self::save();
+			}
+		}
+
+		// Add any posted messages.
+		if ( ! empty( $_GET['ur_error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			self::add_error( wp_unslash( $_GET['ur_error'] ) ); // phpcs:ignore
+		}
+
+		if ( ! empty( $_GET['ur_message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			self::add_message( wp_unslash( $_GET['ur_error'] ) ); // phpcs:ignore
+		}
+
+		/**
+		 * Filter to get tabs for settings page
+		 *
+		 * @param array Array of settings page
+		 */
+		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
+
+		if ( 'import_export' === $current_tab ) {
+			$GLOBALS['hide_save_button'] = true;
+		}
+
+		include __DIR__ . '/views/html-admin-settings.php';
+	}
+
+	/**
 	 * Include the settings page classes.
 	 */
 	public static function get_settings_pages() {
@@ -208,198 +352,6 @@ class UR_Admin_Settings {
 			self::$errors[ $type ] = $text;
 		} else {
 			self::$errors[] = $text;
-		}
-	}
-
-	/**
-	 * Output messages + errors.
-	 *
-	 * @echo string
-	 */
-	public static function show_messages() {
-		if ( count( self::$errors ) > 0 ) {
-			foreach ( self::$errors as $key => $error ) {
-				echo '<div id="message" class="error inline"><p><strong>' . wp_kses_post( $error ) . '</strong></p></div>';
-			}
-		} elseif ( count( self::$messages ) > 0 ) {
-			foreach ( self::$messages as $message ) {
-				echo '<div id="message" class="updated inline"><p><strong>' . wp_kses_post( $message ) . '</strong></p></div>';
-			}
-		}
-	}
-
-	/**
-	 * Settings page.
-	 *
-	 * Handles the display of the main Social Sharing settings page in admin.
-	 */
-	public static function output() {
-		global $current_section, $current_tab;
-
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-		/**
-		 * Action to output start settings
-		 */
-		do_action( 'user_registration_settings_start' );
-		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
-
-		wp_enqueue_script(
-			'user-registration-settings',
-			UR()->plugin_url() . '/assets/js/admin/settings' . $suffix . '.js',
-			array(
-				'jquery',
-				'jquery-ui-datepicker',
-				'jquery-ui-sortable',
-				'wp-color-picker',
-				'wp-color-picker-alpha',
-				'tooltipster',
-				'ur-snackbar',
-			),
-			UR_VERSION,
-			true
-		);
-		wp_enqueue_script( 'ur-setup' );
-		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
-			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
-		}
-		wp_enqueue_style( 'ur-snackbar' );
-		wp_localize_script(
-			'user-registration-settings',
-			'user_registration_settings_params',
-			array(
-				'ajax_url'                             => admin_url( 'admin-ajax.php' ),
-				'assets_url'                           => UR_ASSETS_URL,
-				'ur_license_nonce'                     => wp_create_nonce( '_ur_license_nonce' ),
-				'ur_updater_nonce'                     => wp_create_nonce( 'updates' ),
-				'user_registration_search_global_settings_nonce' => wp_create_nonce( 'user_registration_search_global_settings' ),
-				'user_registration_captcha_test_nonce' => wp_create_nonce( 'user_registration_captcha_test_nonce' ),
-				'user_registration_my_account_selection_validator_nonce' => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
-				'user_registration_lost_password_selection_validator_nonce' => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
-				'user_registration_membership_pages_selection_validator_nonce' => wp_create_nonce( 'user_registration_validate_page_none' ),
-				'user_registration_membership_payment_settings_nonce' => wp_create_nonce( 'user_registration_validate_payment_settings_none' ),
-				'user_registration_membership_validate_payment_currency_nonce' => wp_create_nonce( 'user_registration_validate_payment_currency' ),
-				'user_registration_membership_captcha_settings_nonce' => wp_create_nonce( 'user_registration_validate_captcha_settings_nonce' ),
-				'i18n_nav_warning'                     => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
-				'i18n'                                 => array(
-					'captcha_success'                    => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
-					'captcha_reset_title'                => esc_html__( 'Reset Keys', 'user-registration' ),
-					'i18n_prompt_reset'                  => esc_html__( 'Reset', 'user-registration' ),
-					'i18n_prompt_cancel'                 => esc_html__( 'Cancel', 'user-registration' ),
-					'captcha_failed'                     => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
-					'captcha_reset_prompt'               => esc_html__( 'Are you sure you want to reset these keys? This action will clear both the Site Key and Secret Key permanently.', 'user-registration' ),
-					'unsaved_changes'                    => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
-					'pro_feature_title'                  => esc_html__( 'is a Pro Feature', 'user-registration' ),
-					'upgrade_message'                    => esc_html__(
-						'We apologize, but %title% is not available with the free version. To access this fantastic features, please consider upgrading to the %plan%.',
-						'user-registration'
-					),
-
-					'license_activated_text'             => esc_html__( 'You\'ve activated your license, great! To get all the Pro Features, we just need to install the URM Pro plugin on your website. Don\'t worry, it\'s quick and safe!', 'user-registration' ),
-					'pro_install_popup_button'           => esc_html__( 'Install Pro Now', 'user-registration' ),
-					'pro_install_popup_title'            => esc_html__( 'Install User Registration & Membership Pro to Unlock All Features', 'user-registration' ),
-					'will_install_and_activate_pro_text' => esc_html__( 'This will automatically install and activate the User Registration & Membership Pro Plugin for you.', 'user-registration' ),
-					'installing_plugin_text'             => esc_html__( 'Installing Plugin', 'user-registration' ),
-					'pro_activated_success_title'        => esc_html__( 'Success!', 'user-registration' ),
-					'pro_activated_success_text'         => esc_html__( 'URM Pro has been successfully installed and activated. You now have access to all premium features!', 'user-registration' ),
-					'continue_to_dashboard_text'         => esc_html__( 'Continue to dashboard', 'user-registration' ),
-
-					'upgrade_plan'                       => esc_html__( 'Upgrade Plan', 'user-registration' ),
-					'upgrade_link'                       => esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=integration-settings&utm_medium=premium-addon-popup&utm_campaign=' . urlencode( UR()->utm_campaign ) ),
-				),
-				'is_advanced_field_active'             => is_plugin_active( 'user-registration-advanced-fields/user-registration-advanced-fields.php' ),
-				'reset_keys_icon'                      => plugins_url( 'assets/images/users/reset-keys-red.svg', UR_PLUGIN_FILE ),
-			)
-		);
-
-		// Include settings pages.
-		self::get_settings_pages();
-
-		// Get current tab/section.
-		$current_tab     = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$current_section = empty( $_REQUEST['section'] ) ? '' : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		/**
-		 * Filter to save settings actions
-		 *
-		 * @param boolean Save Settings or Not.
-		 */
-		$flag = apply_filters( 'user_registration_settings_save_action', true );
-
-		if ( $flag ) {
-			// Save settings if data has been posted.
-			if ( ! empty( $_POST ) && ! empty( $_REQUEST['_wpnonce'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				self::save();
-			}
-		}
-
-		// Add any posted messages.
-		if ( ! empty( $_GET['ur_error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			self::add_error( wp_unslash( $_GET['ur_error'] ) ); // phpcs:ignore
-		}
-
-		if ( ! empty( $_GET['ur_message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			self::add_message( wp_unslash( $_GET['ur_error'] ) ); // phpcs:ignore
-		}
-
-		/**
-		 * Filter to get tabs for settings page
-		 *
-		 * @param array Array of settings page
-		 */
-		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
-
-		if ( 'import_export' === $current_tab ) {
-			$GLOBALS['hide_save_button'] = true;
-		}
-
-		include __DIR__ . '/views/html-admin-settings.php';
-	}
-
-	/**
-	 * Get a setting from the settings API.
-	 *
-	 * @param mixed $option_name Option Name.
-	 * @param mixed $default Default.
-	 *
-	 * @return string
-	 */
-	public static function get_option( $option_name, $default = '' ) {
-
-		global $current_section;
-
-		if ( 'add-new-popup' === $current_section ) {
-			return $default;
-		} else {
-			// Array value.
-			if ( null !== $option_name ) {
-				if ( strstr( $option_name, '[' ) ) {
-					parse_str( $option_name, $option_array );
-
-					// Option name is first key.
-					$option_name = current( array_keys( $option_array ) );
-
-					// Get value.
-					$option_values = get_option( $option_name, '' );
-
-					$key = key( $option_array[ $option_name ] );
-
-					if ( isset( $option_values[ $key ] ) ) {
-						$option_value = $option_values[ $key ];
-					} else {
-						$option_value = null;
-					}
-				} else {
-					$option_value = get_option( $option_name, $default );
-				}
-			}
-
-			if ( is_array( $option_value ) ) {
-				$option_value = array_map( 'stripslashes', $option_value );
-			} elseif ( ! is_null( $option_value ) ) {
-				$option_value = stripslashes( $option_value );
-			}
-
-			return null === $option_value ? $default : $option_value;
 		}
 	}
 
@@ -1126,6 +1078,44 @@ class UR_Admin_Settings {
 	}
 
 	/**
+	 * Capitalize Settings Title Phrase.
+	 *
+	 * @param string $text Setting Label.
+	 */
+	public static function capitalize_title( $text = null ) {
+		$prepositions = array( 'at', 'by', 'for', 'in', 'on', 'to', 'or' );
+
+		$words = explode( ' ', $text );
+
+		$capitalized_words = array();
+
+		foreach ( $words as $word ) {
+			$word = trim( $word );
+			if ( ! in_array( $word, $prepositions ) ) {
+
+				// Check if the word is a shash separated terms. Eg: "Hide/Show".
+				if ( strpos( $word, '/' ) ) {
+					$separate_terms    = explode( '/', $word );
+					$capitalized_terms = array();
+
+					foreach ( $separate_terms as $term ) {
+						$capitalized_terms[] = ucfirst( $term );
+					}
+
+					$word = implode( '/', $capitalized_terms );
+				} elseif ( strpos( $word, 'CAPTCHA' ) ) {
+					$word = $word;
+				} else {
+					$word = ucfirst( $word );
+				}
+			}
+			$capitalized_words[] = $word;
+		}
+
+		return implode( ' ', $capitalized_words );
+	}
+
+	/**
 	 * Helper function to get the formated description and tip HTML for a
 	 * given form field. Plugins can call this when implementing their own custom
 	 * settings types.
@@ -1175,6 +1165,54 @@ class UR_Admin_Settings {
 			'desc_field'   => $desc_field,
 			'tooltip_html' => $tooltip_html,
 		);
+	}
+
+	/**
+	 * Get a setting from the settings API.
+	 *
+	 * @param mixed $option_name Option Name.
+	 * @param mixed $default Default.
+	 *
+	 * @return string
+	 */
+	public static function get_option( $option_name, $default = '' ) {
+
+		global $current_section;
+
+		if ( 'add-new-popup' === $current_section ) {
+			return $default;
+		} else {
+			// Array value.
+			if ( null !== $option_name ) {
+				if ( strstr( $option_name, '[' ) ) {
+					parse_str( $option_name, $option_array );
+
+					// Option name is first key.
+					$option_name = current( array_keys( $option_array ) );
+
+					// Get value.
+					$option_values = get_option( $option_name, '' );
+
+					$key = key( $option_array[ $option_name ] );
+
+					if ( isset( $option_values[ $key ] ) ) {
+						$option_value = $option_values[ $key ];
+					} else {
+						$option_value = null;
+					}
+				} else {
+					$option_value = get_option( $option_name, $default );
+				}
+			}
+
+			if ( is_array( $option_value ) ) {
+				$option_value = array_map( 'stripslashes', $option_value );
+			} elseif ( ! is_null( $option_value ) ) {
+				$option_value = stripslashes( $option_value );
+			}
+
+			return null === $option_value ? $default : $option_value;
+		}
 	}
 
 	/**
@@ -1280,44 +1318,6 @@ class UR_Admin_Settings {
 	}
 
 	/**
-	 * Capitalize Settings Title Phrase.
-	 *
-	 * @param string $text Setting Label.
-	 */
-	public static function capitalize_title( $text = null ) {
-		$prepositions = array( 'at', 'by', 'for', 'in', 'on', 'to', 'or' );
-
-		$words = explode( ' ', $text );
-
-		$capitalized_words = array();
-
-		foreach ( $words as $word ) {
-			$word = trim( $word );
-			if ( ! in_array( $word, $prepositions ) ) {
-
-				// Check if the word is a shash separated terms. Eg: "Hide/Show".
-				if ( strpos( $word, '/' ) ) {
-					$separate_terms    = explode( '/', $word );
-					$capitalized_terms = array();
-
-					foreach ( $separate_terms as $term ) {
-						$capitalized_terms[] = ucfirst( $term );
-					}
-
-					$word = implode( '/', $capitalized_terms );
-				} elseif ( strpos( $word, 'CAPTCHA' ) ) {
-					$word = $word;
-				} else {
-					$word = ucfirst( $word );
-				}
-			}
-			$capitalized_words[] = $word;
-		}
-
-		return implode( ' ', $capitalized_words );
-	}
-
-	/**
 	 * Search GLobal Settings.
 	 */
 	public static function search_settings() {
@@ -1417,6 +1417,42 @@ class UR_Admin_Settings {
 	}
 
 	/**
+	 * Return Non Nested Array from Nested Settings Array
+	 *
+	 * @param array $nested_array Nested Settings Array.
+	 *
+	 * @return array
+	 */
+	public static function flatten_array( $nested_array ) {
+
+		$settings_array = array();  // create an empty array to store the list of settings.
+		if ( isset( $nested_array['sections'] ) ) {
+			// loop through each section in the array.
+			foreach ( $nested_array['sections'] as $section ) {
+
+				if ( isset( $section['settings'] ) ) {
+
+					if ( is_string( $section['settings'] ) ) {
+						continue;
+					}
+
+					// loop through each setting in the section and add it to the $settings_array.
+					foreach ( $section['settings'] as $setting ) {
+						$settings_array[] = $setting;
+					}
+				} else {
+					$inner_settings = self::flatten_array( $section );
+					if ( ! empty( $inner_settings ) ) {
+						$settings_array[] = $inner_settings;
+					}
+				}
+			}
+		}
+
+		return $settings_array;
+	}
+
+	/**
 	 * Search String in Array.
 	 *
 	 * @param string $string_to_search String to Search.
@@ -1451,42 +1487,6 @@ class UR_Admin_Settings {
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Return Non Nested Array from Nested Settings Array
-	 *
-	 * @param array $nested_array Nested Settings Array.
-	 *
-	 * @return array
-	 */
-	public static function flatten_array( $nested_array ) {
-
-		$settings_array = array();  // create an empty array to store the list of settings.
-		if ( isset( $nested_array['sections'] ) ) {
-			// loop through each section in the array.
-			foreach ( $nested_array['sections'] as $section ) {
-
-				if ( isset( $section['settings'] ) ) {
-
-					if ( is_string( $section['settings'] ) ) {
-						continue;
-					}
-
-					// loop through each setting in the section and add it to the $settings_array.
-					foreach ( $section['settings'] as $setting ) {
-						$settings_array[] = $setting;
-					}
-				} else {
-					$inner_settings = self::flatten_array( $section );
-					if ( ! empty( $inner_settings ) ) {
-						$settings_array[] = $inner_settings;
-					}
-				}
-			}
-		}
-
-		return $settings_array;
 	}
 
 	/**

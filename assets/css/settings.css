@@ -1954,7 +1954,28 @@
   margin-top: 2px;
 }
 
-/* Show picker when container is active */
+/* Hide input field on page load/reload */
+.user-registration-global-settings--field input.colorpick,
+.user-registration-global-settings--field input.colorpick.wp-color-picker,
+.user-registration-global-settings--field .colorpick.wp-color-picker {
+  display: none !important;
+}
+
+/* Hide iris-picker, iris-border, and input field by default */
+.user-registration-global-settings--field .wp-picker-container .iris-picker,
+.user-registration-global-settings--field .wp-picker-container .iris-border,
+.user-registration-global-settings--field .wp-picker-container .colorpick.wp-color-picker {
+  display: none !important;
+}
+
+/* Show iris-picker, iris-border, and input field when container is active */
+.user-registration-global-settings--field .wp-picker-container.wp-picker-active .iris-picker,
+.user-registration-global-settings--field .wp-picker-container.wp-picker-active .iris-border,
+.user-registration-global-settings--field .wp-picker-container.wp-picker-active .colorpick.wp-color-picker {
+  display: block !important;
+}
+
+/* Show picker holder when container is active */
 .user-registration-global-settings--field .wp-picker-container.wp-picker-active .wp-picker-holder {
   display: block !important;
 }
@@ -1964,5 +1985,13 @@
 }
 
 .wp-picker-input-wrap .wp-color-picker {
-  width: 209px !important;
+  width: 207px !important;
+}
+
+.user-registration-global-settings--field .wp-picker-container {
+ width: fit-content !important;
+}
+
+.user-registration-global-settings--field .wp-picker-container .wp-color-result.button {
+  margin: 0 !important;
 }

@@ -45,6 +45,9 @@
 	$(".colorpick").each(function () {
 		var $input = $(this);
 		var alphaEnabled = $input.data("alpha") === true || $input.attr("data-alpha") === "true";
+		
+		// Hide input field on page load/reload
+		$input.css("display", "none");
 
 		$input.wpColorPicker({
 			change: function (event, ui) {
@@ -72,6 +75,9 @@
 				var $holder = $container.find(".wp-picker-holder");
 				var $inputWrap = $container.find(".wp-picker-input-wrap");
 				
+				// Ensure input field is hidden on load
+				$input.css("display", "none");
+				
 				// Ensure input wrap is inside the holder
 				if ($holder.length && $inputWrap.length) {
 					// If input wrap is not inside holder, move it there
@@ -90,15 +96,45 @@
 						marginTop: "2px"
 					});
 					
-					// Ensure holder is visible when container is active
-					$container.on("click", ".wp-color-result", function (e) {
+					// Show/hide iris-picker, iris-border, and input field based on active state
+					var $irisPicker = $container.find(".iris-picker");
+					var $irisBorder = $container.find(".iris-border");
+					var $colorInput = $container.find(".colorpick.wp-color-picker");
+					
+					// Function to toggle visibility based on active state
+					function togglePickerVisibility() {
 						setTimeout(function () {
 							if ($container.hasClass("wp-picker-active")) {
 								$holder.show();
+								$irisPicker.show();
+								$irisBorder.show();
+								$colorInput.show();
+								$inputWrap.show();
 							} else {
 								$holder.hide();
+								$irisPicker.hide();
+								$irisBorder.hide();
+								$colorInput.hide();
+								$inputWrap.hide();
 							}
 						}, 10);
+					}
+					
+					// Watch for active state changes
+					$container.on("click", ".wp-color-result", togglePickerVisibility);
+					
+					// Also watch for class changes using MutationObserver
+					var observer = new MutationObserver(function(mutations) {
+						mutations.forEach(function(mutation) {
+							if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+								togglePickerVisibility();
+							}
+						});
+					});
+					
+					observer.observe($container[0], {
+						attributes: true,
+						attributeFilter: ['class']
 					});
 				}
 				
