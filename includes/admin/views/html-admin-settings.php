@@ -113,6 +113,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 		}
 	}
 </style>
+
 <hr class="wp-header-end">
 <?php echo user_registration_plugin_main_header(); ?>
 <div class="wrap user-registration">
@@ -230,7 +231,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 					<p class="submit">
 						<?php
 						$hide_save_button = apply_filters( 'user_registration_settings_hide_save_button', $GLOBALS['hide_save_button'] );
-						if ( ! isset( $hide_save_button ) ) :
+						if ( ! ur_string_to_bool( $hide_save_button ) ) :
 							/**
 							 * Filter to save the setting label.
 							 *
