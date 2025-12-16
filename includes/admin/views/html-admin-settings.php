@@ -24,6 +24,10 @@ $is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string
 $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
 ?>
 <style>
+	.ur-nav__tab-item {
+		display: flex;
+		flex-direction: column;
+	}
 	.ur-scroll-ui__items {
 		position: relative;
 		overflow: visible;
