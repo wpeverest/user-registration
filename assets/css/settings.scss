@@ -2193,6 +2193,12 @@ body {
 
 /* Color Group Styles */
 .user-registration-global-settings {
+	&.user-registration-color-picker {
+		.user-registration-global-settings--field {
+			flex-direction: row !important;
+		}
+	}
+
 	&.user-registration-color-group {
 		.user-registration-color-group-field {
 			display: flex;
