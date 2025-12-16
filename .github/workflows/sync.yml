@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-3342-enhance/integrating-all-existing-email-marketing-addons-to-membership-plans
+      - master
     workflow_dispatch:
 jobs:
   sync:

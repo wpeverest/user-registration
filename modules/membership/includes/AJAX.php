@@ -75,6 +75,7 @@ class AJAX {
 			'validate_pg'                  => false,
 			'upgrade_membership'           => false,
 			'get_membership_details'	   => false,
+			'addons_get_lists'			   => false,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -1615,5 +1616,41 @@ class AJAX {
 		wp_send_json_success( array(
 			'membership_detail' => $membership_detail
 		) );
+	}
+
+	/**
+	 * Get addons list.
+	 */
+	public static function addons_get_lists(){
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to change membership details.', 'user-registration' ) ) );
+		}
+
+		if ( 'user_registration_membership_addons_get_lists' != sanitize_text_field( wp_unslash( $_POST[ 'action'] ) ) )  {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to change membership details.', 'user-registration' ) ) );
+		}
+
+		$addon_name = ! empty( $_POST['addon'] ) ? sanitize_text_field( wp_unslash( $_POST['addon'] ) ) : '';
+		$api_key    = ! empty( $_POST['api_key'] ) ? sanitize_text_field( wp_unslash( $_POST['api_key'] ) ) : '';
+
+		$function_name = 'ur_' . $addon_name . '_get_lists';
+		$lists = $function_name( $api_key );
+
+		if ( is_wp_error( $lists ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'API list not found' )
+				)
+			);
+		}
+
+		$render_function = 'ur_' . $addon_name . '_render_list';
+		$html 			 = $render_function( $api_key );
+
+		wp_send_json_success(
+			array(
+				'html' => $html
+			)
+		);
 	}
 }
