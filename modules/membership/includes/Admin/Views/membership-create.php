@@ -596,6 +596,10 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 								</div>
 							</div>
 						</div>
+						<!--								membership all payments-->
+						<?php
+						require __DIR__ . '/./Partials/membership-admin-payments.php'
+						?>
 					</div>
 				</div>
 			</div>

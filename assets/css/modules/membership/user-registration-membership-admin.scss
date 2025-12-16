@@ -635,8 +635,7 @@
 				&__body {
 					padding: 0;
 
-					#ur-membership-main-fields,
-					#ur-membership-plan-and-price-section {
+					#ur-membership-main-fields, #ur-membership-plan-and-price-section {
 						display: flex;
 						flex-direction: column;
 						gap: 24px;
@@ -1630,8 +1629,7 @@
 	}
 }
 
-#ur-membership-main-fields .upgradable-type,
-#upgrade-settings-container .upgradable-type {
+#ur-membership-main-fields .upgradable-type, #upgrade-settings-container .upgradable-type {
 	position: relative;
 	color: #bababa;
 
