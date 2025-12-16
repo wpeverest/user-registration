@@ -599,6 +599,7 @@ class UR_Admin_Settings {
 								// Color picker.
 								case 'color':
 									$option_value = self::get_option( $value['id'], $value['default'] );
+									$default_value = isset( $value['default'] ) ? $value['default'] : '';
 									$settings    .= '<div class="user-registration-global-settings">';
 									$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings    .= '<div class="user-registration-global-settings--field">';
@@ -611,6 +612,7 @@ class UR_Admin_Settings {
 											value="' . esc_attr( $option_value ) . '"
 											class="' . esc_attr( $value['class'] ) . 'colorpick"
 											data-alpha="true"
+											data-default-value="' . esc_attr( $default_value ) . '"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
 											' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>&lrm;' . wp_kses_post( $description );
 									$settings    .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></div>';

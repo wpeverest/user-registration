@@ -49,6 +49,9 @@
 		// Hide input field on page load/reload
 		$input.css("display", "none");
 
+		// Get default value from data attribute
+		var defaultValue = $input.data("default-value") || $input.attr("data-default-value") || "";
+
 		$input.wpColorPicker({
 			change: function (event, ui) {
 				$(this)
@@ -74,6 +77,8 @@
 			if ($container.length) {
 				var $holder = $container.find(".wp-picker-holder");
 				var $inputWrap = $container.find(".wp-picker-input-wrap");
+				// Get default value again in this scope
+				var inputDefaultValue = $input.data("default-value") || $input.attr("data-default-value") || "";
 				
 				// Ensure input field is hidden on load
 				$input.css("display", "none");
