@@ -996,6 +996,17 @@ class StripeService {
 	}
 
 	public function handle_webhook( $event, $subscription_id ) {
+        // Verify that the event was sent by Stripe
+		if( isset( $event[ 'id' ] ) ) {
+            try {
+				$event_id = sanitize_text_field( $event[ 'id' ] );
+                $event = (array)\Stripe\Event::retrieve( $event_id );
+            } catch( \Exception $e ) {
+				die();
+            }
+        } else {
+			die();
+		}
 		switch ( $event['type'] ) {
 			case 'invoice.payment_succeeded':
 				$this->handle_succeeded_invoice( $event, $subscription_id );

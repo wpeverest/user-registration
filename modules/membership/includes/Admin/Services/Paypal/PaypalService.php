@@ -83,8 +83,10 @@ class PaypalService {
 		} else {
 			$transaction = '_xclick';
 		}
-		$query_args = 'membership=' . absint( $membership ) . '&member_id=' . absint( $member_id ) . '&current_membership_id=' . absint( $data['current_membership_id'] ) . '&hash=' . wp_hash( $membership . ',' . $member_id );
 
+		$paypal_verification_token = wp_generate_uuid4();
+		update_user_meta( $member_id, 'urm_paypal_verification_token', $paypal_verification_token );
+		$query_args   = 'membership=' . absint( $membership ) . '&member_id=' . absint( $member_id ) . '&current_membership_id=' . absint( $data['current_membership_id'] ) . '&hash=' . wp_hash( $membership . ',' . $member_id . ',' . $paypal_verification_token );
 		$return_url   = $paypal_options['return_url'] ?? wp_login_url();
 		$return_url   = esc_url_raw(
 			add_query_arg(
@@ -194,13 +196,23 @@ class PaypalService {
 	public function handle_paypal_redirect_response( $params, $payer_id ) {
 		parse_str( $params, $url_params );
 
-		$membership_id                  = $url_params['membership'];
-		$member_id                      = $url_params['member_id'];
+		$membership_id = $url_params['membership'];
+		$member_id     = $url_params['member_id'];
+
+		$supplied_hash             = $url_params['hash'];
+		$paypal_verification_token = get_user_meta( $member_id, 'urm_paypal_verification_token', true );
+		$expected_hash             = wp_hash( $membership_id . ',' . $member_id . ',' . $paypal_verification_token );
+
+		if ( ! hash_equals( $supplied_hash, $expected_hash ) ) {
+			return;
+		}
+		delete_user_meta( $member_id, 'urm_paypal_verification_token' );
 		$member_order                   = $this->members_orders_repository->get_member_orders( $member_id );
 		$membership                     = $this->membership_repository->get_single_membership_by_ID( $membership_id );
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_metas['post_title'] = $membership['post_title'];
 		$membership_type                = $membership_metas['type'] ?? 'unknown'; // free, paid, or subscription
+		$membership_process             = urm_get_membership_process( $member_id );
 
 		PaymentGatewayLogging::log_webhook_received(
 			'paypal',
@@ -220,8 +232,7 @@ class PaypalService {
 			ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 		}
 
-		// $is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array( 'status' => 'completed' ) );
-		$is_order_updated = true;
+		$is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array( 'status' => 'completed' ) );
 
 		if ( $is_order_updated && ( 'paid' === $member_order['order_type'] || 'subscription' === $member_order['order_type'] ) ) {
 			$member_subscription = $this->members_subscription_repository->get_subscription_data_by_member_and_membership_id( $member_id, $member_order['item_id'] );
@@ -300,8 +311,7 @@ class PaypalService {
 			);
 		}
 
-		$membership_process = urm_get_membership_process( $member_id );
-		$is_upgrading       = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $url_params['current_membership_id'] ] );
+		$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $url_params['current_membership_id'] ] );
 
 		if ( $is_upgrading ) {
 			PaymentGatewayLogging::log_general(

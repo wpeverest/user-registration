@@ -285,6 +285,14 @@ class MembershipService {
 			return $result;
 		}
 
+		// payment gateway configuration validation
+		$is_no_pg_configured = empty( urm_get_all_active_payment_gateways( $data['post_meta_data']['type'] ) );
+		if ( isset( $data['post_meta_data']['type'] ) && in_array( $data['post_meta_data']['type'], array( 'paid', 'subscription' ) ) && $is_no_pg_configured ) {
+			$result['status']  = false;
+			$result['message'] = esc_html__( 'Incomplete payment gateway setup, please update payment settings before continuing.', 'user-registration' );
+			return $result;
+		}
+
 		// payment gateway validation:stripe
 		if ( isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && 'on' === $data['post_meta_data']['payment_gateways']['stripe']['status'] ) {
 			$mode            = get_option( 'user_registration_stripe_test_mode', false ) ? 'test' : 'live';
