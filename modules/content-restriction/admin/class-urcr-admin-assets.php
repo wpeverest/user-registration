@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class URCR_Admin_Assets {
 	public $current_page = '';
-	public $action = '';
+	public $action       = '';
 
 	/**
 	 * Constructor.
@@ -42,7 +42,7 @@ class URCR_Admin_Assets {
 			'urcr-content-access-rule-creator',
 			UR()->plugin_url() . '/assets/js/modules/content-restriction/admin/urcr-content-access-rule-creator' . $suffix . '.js',
 			array(
-				'jquery'
+				'jquery',
 			),
 			'1.0.0',
 			true
@@ -121,7 +121,6 @@ class URCR_Admin_Assets {
 			$ur_forms[ $form_id ] = $form_fields;
 		}
 
-
 		// Prepare list of posttypes.
 
 		$post_types = get_post_types(
@@ -131,7 +130,6 @@ class URCR_Admin_Assets {
 			'objects'
 		);
 		$post_types = wp_list_pluck( $post_types, 'label', 'name' );
-
 
 		// Prepare list of taxonomy.
 
@@ -143,7 +141,6 @@ class URCR_Admin_Assets {
 		);
 
 		$taxonomies = wp_list_pluck( $taxonomies, 'label', 'name' );
-
 
 		// Prepare terms of taxonomy.
 
@@ -165,7 +162,6 @@ class URCR_Admin_Assets {
 			}
 		}
 
-
 		// Prepare list of posts.
 
 		$posts = get_posts(
@@ -175,7 +171,6 @@ class URCR_Admin_Assets {
 			)
 		);
 		$posts = wp_list_pluck( $posts, 'post_title', 'ID' );
-
 
 		// Prepare list of pages.
 
@@ -342,6 +337,7 @@ class URCR_Admin_Assets {
 			'is_pro'                    => UR_PRO_ACTIVE,
 			'content_type_options'      => $content_type_options,
 			'condition_options'         => $condition_options,
+			'masteriyo_courses'         => class_exists( 'WPEverest\URM\Masteriyo\Helper' ) ? WPEverest\URM\Masteriyo\Helper::get_courses( array(), '', 'free' ) : array(),
 		);
 
 		/**
@@ -368,4 +364,3 @@ class URCR_Admin_Assets {
 }
 
 return new URCR_Admin_Assets();
-

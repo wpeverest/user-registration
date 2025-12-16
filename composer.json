@@ -13,7 +13,8 @@
     "psr-4": {
       "WPEverest\\URMembership\\": "modules/membership/includes/",
       "WPEverest\\URMembership\\Payment\\": "modules/payment-history/",
-      "WPEverest\\URM\\DiviBuilder\\": "includes/3rd-party/DiviBuilder"
+      "WPEverest\\URM\\DiviBuilder\\": "includes/3rd-party/DiviBuilder",
+      "WPEverest\\URM\\Masteriyo\\": "modules/masteriyo/includes/"
     }
   },
   "authors": [

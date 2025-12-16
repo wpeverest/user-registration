@@ -73,7 +73,7 @@ class UR_Admin_Dashboard {
 				'licenseActivationURL' => esc_url_raw( admin_url( '/admin.php?page=user-registration-settings&tab=license' ) ),
 				'utmCampaign'          => UR()->utm_campaign,
 				'upgradeURL'           => esc_url_raw( 'https://wpuserregistration.com/upgrade/?utm_campaign=' . UR()->utm_campaign ),
-				'isMasteriyoActive'    => $ttest = is_plugin_active( 'learning-management-system/lms.php' )
+				'isMasteriyoActive'    => is_plugin_active( 'learning-management-system/lms.php' )
 				|| is_plugin_active( 'learning-management-system-pro/lms.php' ),
 				'plugins'              => array_reduce(
 					$allowed_plugin_slugs,

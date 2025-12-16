@@ -12,6 +12,7 @@ const AccessControlSection = ({
 	onAccessControlChange,
 	contentTargets = [],
 	onContentTargetsChange,
+	conditions
 }) => {
 	const [contentDropdownOpen, setContentDropdownOpen] = useState(false);
 	const contentDropdownWrapperRef = useRef(null);
@@ -20,7 +21,10 @@ const AccessControlSection = ({
 	// Close content dropdown when clicking outside
 	useEffect(() => {
 		const handleClickOutside = (event) => {
-			if (contentDropdownWrapperRef.current && !contentDropdownWrapperRef.current.contains(event.target)) {
+			if (
+				contentDropdownWrapperRef.current &&
+				!contentDropdownWrapperRef.current.contains(event.target)
+			) {
 				setContentDropdownOpen(false);
 			}
 		};
@@ -46,7 +50,7 @@ const AccessControlSection = ({
 			type: option.value,
 			label: option.label,
 			value: option.value === "whole_site" ? "whole_site" : [], // Will be populated based on type
-			taxonomy: option.value === "taxonomy" ? "" : undefined, // For taxonomy type
+			taxonomy: option.value === "taxonomy" ? "" : undefined // For taxonomy type
 		};
 		onContentTargetsChange([...contentTargets, newContentTarget]);
 		setContentDropdownOpen(false);
@@ -60,7 +64,9 @@ const AccessControlSection = ({
 	};
 
 	const handleContentTargetRemove = (targetId) => {
-		const updatedTargets = contentTargets.filter((target) => target.id !== targetId);
+		const updatedTargets = contentTargets.filter(
+			(target) => target.id !== targetId
+		);
 		onContentTargetsChange(updatedTargets);
 	};
 
@@ -76,11 +82,19 @@ const AccessControlSection = ({
 	useEffect(() => {
 		if (conditionValueInputWrapperRef.current) {
 			if (accessControl === "access") {
-				conditionValueInputWrapperRef.current.classList.add("urcr-access-content");
-				conditionValueInputWrapperRef.current.classList.remove("urcr-restrict-content");
+				conditionValueInputWrapperRef.current.classList.add(
+					"urcr-access-content"
+				);
+				conditionValueInputWrapperRef.current.classList.remove(
+					"urcr-restrict-content"
+				);
 			} else {
-				conditionValueInputWrapperRef.current.classList.add("urcr-restrict-content");
-				conditionValueInputWrapperRef.current.classList.remove("urcr-access-content");
+				conditionValueInputWrapperRef.current.classList.add(
+					"urcr-restrict-content"
+				);
+				conditionValueInputWrapperRef.current.classList.remove(
+					"urcr-access-content"
+				);
 			}
 		}
 	}, [accessControl]);
@@ -91,35 +105,49 @@ const AccessControlSection = ({
 		if (!isProAccess() && newValue === "access") {
 			return;
 		}
-		
+
 		// Add or remove classes based on value
 		if (conditionValueInputWrapperRef.current) {
 			if (newValue === "access") {
-				conditionValueInputWrapperRef.current.classList.add("urcr-access-content");
-				conditionValueInputWrapperRef.current.classList.remove("urcr-restrict-content");
+				conditionValueInputWrapperRef.current.classList.add(
+					"urcr-access-content"
+				);
+				conditionValueInputWrapperRef.current.classList.remove(
+					"urcr-restrict-content"
+				);
 			} else {
-				conditionValueInputWrapperRef.current.classList.add("urcr-restrict-content");
-				conditionValueInputWrapperRef.current.classList.remove("urcr-access-content");
+				conditionValueInputWrapperRef.current.classList.add(
+					"urcr-restrict-content"
+				);
+				conditionValueInputWrapperRef.current.classList.remove(
+					"urcr-access-content"
+				);
 			}
 		}
-		
+
 		onAccessControlChange(newValue);
 	};
 
 	return (
 		<div className="urcr-target-selection-section ur-d-flex ur-align-items-start">
 			{/* Access/Restrict Section */}
-			<div className="urcr-condition-value-input-wrapper" ref={conditionValueInputWrapperRef}>
+			<div
+				className="urcr-condition-value-input-wrapper"
+				ref={conditionValueInputWrapperRef}
+			>
 				<select
 					className="urcr-access-select urcr-condition-value-input"
 					value={accessControl}
 					onChange={handleAccessControlChange}
 				>
 					{isProAccess() && (
-						<option value="restrict">{__("Restrict", "user-registration")}</option>
+						<option value="restrict">
+							{__("Restrict", "user-registration")}
+						</option>
 					)}
-					<option value="access">{__("Access", "user-registration")}</option>
-
+					<option value="access">
+						{__("Access", "user-registration")}
+					</option>
 				</select>
 			</div>
 
@@ -129,17 +157,29 @@ const AccessControlSection = ({
 					<div className="urcr-target-type-group">
 						{contentTargets.map((target) => (
 							<div key={target.id} className="urcr-target-item">
-								<span className="urcr-target-type-label">{target.label}:</span>
+								<span className="urcr-target-type-label">
+									{target.label}:
+								</span>
 								<ContentValueInput
 									contentType={target.type}
 									value={target.value}
-									onChange={(newValue) => handleContentTargetUpdate(target.id, newValue)}
+									onChange={(newValue) =>
+										handleContentTargetUpdate(
+											target.id,
+											newValue
+										)
+									}
 								/>
 								<button
 									type="button"
 									className="button-link urcr-target-remove"
-									onClick={() => handleContentTargetRemove(target.id)}
-									aria-label={__("Remove", "user-registration")}
+									onClick={() =>
+										handleContentTargetRemove(target.id)
+									}
+									aria-label={__(
+										"Remove",
+										"user-registration"
+									)}
 								>
 									<span className="dashicons dashicons-no-alt"></span>
 								</button>
@@ -149,7 +189,10 @@ const AccessControlSection = ({
 				)}
 
 				{/* Always show + Content button */}
-				<div className="urcr-content-dropdown-wrapper" ref={contentDropdownWrapperRef}>
+				<div
+					className="urcr-content-dropdown-wrapper"
+					ref={contentDropdownWrapperRef}
+				>
 					<button
 						type="button"
 						className="button urcr-add-content-button"
@@ -162,6 +205,8 @@ const AccessControlSection = ({
 						<ContentTypeDropdown
 							onSelect={handleAfterContentTypeSelection}
 							existingContentTypes={contentTargets}
+							conditions={conditions}
+							accessControl={accessControl}
 						/>
 					)}
 				</div>
@@ -171,6 +216,3 @@ const AccessControlSection = ({
 };
 
 export default AccessControlSection;
-
-
-

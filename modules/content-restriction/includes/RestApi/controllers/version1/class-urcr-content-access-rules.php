@@ -662,4 +662,3 @@ class URCR_Content_Access_Rules {
 		}
 	}
 }
-

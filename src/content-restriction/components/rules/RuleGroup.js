@@ -1,13 +1,13 @@
 /**
  * External Dependencies
  */
-import React, {useState, useRef, useEffect} from "react";
-import {__} from "@wordpress/i18n";
+import React, { useState, useRef, useEffect } from "react";
+import { __ } from "@wordpress/i18n";
 import ConditionFieldDropdown from "../dropdowns/ConditionFieldDropdown";
 import ConditionRow from "./ConditionRow";
 import AdvancedLogicGates from "./AdvancedLogicGates";
 import AccessControlSection from "./AccessControlSection";
-import {getURCRData, isProAccess} from "../../utils/localized-data";
+import { getURCRData, isProAccess } from "../../utils/localized-data";
 
 // Helper function to determine condition input type
 const getConditionType = (conditionType) => {
@@ -22,7 +22,7 @@ const getConditionType = (conditionType) => {
 		user_registered_date: "date",
 		access_period: "period",
 		email_domain: "text",
-		post_count: "number",
+		post_count: "number"
 	};
 	return typeMap[conditionType] || "text";
 };
@@ -37,13 +37,15 @@ const RuleGroup = ({
 	onAccessControlChange,
 	contentTargets,
 	onContentTargetsChange,
-	isMigrated = false,
+	isMigrated = false
 }) => {
 	const [conditions, setConditions] = useState([]);
 	const [logicGate, setLogicGate] = useState(group.logic_gate || "AND");
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const dropdownWrapperRef = useRef(null);
-	const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
+	const isAdvancedLogicEnabled = Boolean(
+		getURCRData("is_advanced_logic_enabled", false)
+	);
 
 	// Initialize conditions from group data
 	useEffect(() => {
@@ -54,7 +56,7 @@ const RuleGroup = ({
 					return {
 						type: "group",
 						id: cond.id,
-						group: cond,
+						group: cond
 					};
 				} else {
 					// Regular condition
@@ -71,7 +73,8 @@ const RuleGroup = ({
 							conditionValue = "logged-out";
 						}
 					} else if (!conditionValue) {
-						conditionValue = conditionType === "multiselect" ? [] : "";
+						conditionValue =
+							conditionType === "multiselect" ? [] : "";
 					}
 
 					return {
@@ -81,7 +84,7 @@ const RuleGroup = ({
 						label: cond.type,
 						inputType: conditionType,
 						operator: "is",
-						conditionValue: conditionValue,
+						conditionValue: conditionValue
 					};
 				}
 			});
@@ -108,7 +111,10 @@ const RuleGroup = ({
 	// Close dropdown when clicking outside
 	useEffect(() => {
 		const handleClickOutside = (event) => {
-			if (dropdownWrapperRef.current && !dropdownWrapperRef.current.contains(event.target)) {
+			if (
+				dropdownWrapperRef.current &&
+				!dropdownWrapperRef.current.contains(event.target)
+			) {
 				setDropdownOpen(false);
 			}
 		};
@@ -131,7 +137,10 @@ const RuleGroup = ({
 		let initialValue = "";
 		if (option.type === "multiselect") {
 			initialValue = [];
-		} else if (option.type === "checkbox" && option.value !== "user_state") {
+		} else if (
+			option.type === "checkbox" &&
+			option.value !== "user_state"
+		) {
 			initialValue = [];
 		}
 
@@ -142,7 +151,7 @@ const RuleGroup = ({
 			label: option.label,
 			inputType: option.type,
 			operator: "is",
-			conditionValue: initialValue,
+			conditionValue: initialValue
 		};
 		setConditions([...conditions, newCondition]);
 		setDropdownOpen(false);
@@ -169,8 +178,8 @@ const RuleGroup = ({
 				id: groupId,
 				type: "group",
 				logic_gate: "AND",
-				conditions: [],
-			},
+				conditions: []
+			}
 		};
 		setConditions([...conditions, newGroup]);
 	};
@@ -196,27 +205,42 @@ const RuleGroup = ({
 				return cond.group;
 			} else {
 				let conditionValue = cond.conditionValue;
-				if (cond.inputType === "ur_form_field" && typeof conditionValue === "object") {
+				if (
+					cond.inputType === "ur_form_field" &&
+					typeof conditionValue === "object"
+				) {
 					if (conditionValue.form_id && conditionValue.field_name) {
 						conditionValue = {
 							form_id: conditionValue.form_id,
-							form_fields: [conditionValue.field_name],
+							form_fields: [conditionValue.field_name]
 						};
 					} else {
-						conditionValue = {form_id: "", form_fields: []};
+						conditionValue = { form_id: "", form_fields: [] };
 					}
 				} else if (cond.value === "user_state") {
-					conditionValue = Array.isArray(conditionValue) ? (conditionValue[0] || "") : (conditionValue || "");
-				} else if (cond.inputType === "multiselect" || cond.inputType === "checkbox") {
-					conditionValue = Array.isArray(conditionValue) ? conditionValue : (conditionValue ? [conditionValue] : []);
-				} else if (cond.operator === "empty" || cond.operator === "not empty") {
+					conditionValue = Array.isArray(conditionValue)
+						? conditionValue[0] || ""
+						: conditionValue || "";
+				} else if (
+					cond.inputType === "multiselect" ||
+					cond.inputType === "checkbox"
+				) {
+					conditionValue = Array.isArray(conditionValue)
+						? conditionValue
+						: conditionValue
+						? [conditionValue]
+						: [];
+				} else if (
+					cond.operator === "empty" ||
+					cond.operator === "not empty"
+				) {
 					conditionValue = null;
 				}
 
 				return {
 					type: cond.value,
 					id: cond.id,
-					value: conditionValue,
+					value: conditionValue
 				};
 			}
 		});
@@ -225,12 +249,17 @@ const RuleGroup = ({
 			id: group.id,
 			type: "group",
 			logic_gate: isAdvancedLogicEnabled ? logicGate : "AND", // Force AND when advanced logic is disabled (UI only, backend will flatten)
-			conditions: conditionsToSerialize,
+			conditions: conditionsToSerialize
 		};
 		onGroupUpdate(updatedGroup);
 	}, [conditions, logicGate, group.id, isAdvancedLogicEnabled]);
+
 	return (
-		<div className={`urcr-content-group ${isNested ? "urcr-nested-group" : ""}`}>
+		<div
+			className={`urcr-content-group ${
+				isNested ? "urcr-nested-group" : ""
+			}`}
+		>
 			{isAdvancedLogicEnabled && (
 				<AdvancedLogicGates
 					logicGate={logicGate}
@@ -241,10 +270,20 @@ const RuleGroup = ({
 				<div className="urcr-condition-row-parent">
 					{conditions.length > 0 && (
 						<div
-							className={`urcr-conditions-list ${isAdvancedLogicEnabled ? "urcr-conditional-logic-definitions" : ""}`}
+							className={`urcr-conditions-list ${
+								isAdvancedLogicEnabled
+									? "urcr-conditional-logic-definitions"
+									: ""
+							}`}
 						>
 							{isAdvancedLogicEnabled && (
-								<div className={`urcr-condition-logic-gate-wrapper urcr-logic-group-rule-${logicGate} ${conditions.length === 1 ? "urcr-single-condition" : ""}`}>
+								<div
+									className={`urcr-condition-logic-gate-wrapper urcr-logic-group-rule-${logicGate} ${
+										conditions.length === 1
+											? "urcr-single-condition"
+											: ""
+									}`}
+								>
 									<div
 										className={`urcr-condition-logic-gate-button urcr-sub-logic-group-rule-${logicGate}`}
 									>
@@ -259,19 +298,38 @@ const RuleGroup = ({
 										return null;
 									}
 									return (
-										<div key={condition.id} className="urcr-condition-wrapper">
+										<div
+											key={condition.id}
+											className="urcr-condition-wrapper"
+										>
 											<RuleGroup
 												group={condition.group}
-												onGroupUpdate={(updatedGroup) => handleGroupUpdate(condition.id, updatedGroup)}
-												onGroupRemove={() => handleGroupRemove(condition.id)}
+												onGroupUpdate={(updatedGroup) =>
+													handleGroupUpdate(
+														condition.id,
+														updatedGroup
+													)
+												}
+												onGroupRemove={() =>
+													handleGroupRemove(
+														condition.id
+													)
+												}
 												isNested={true}
 												isMigrated={isMigrated}
 											/>
 											<button
 												type="button"
 												className="button button-link-delete"
-												onClick={() => handleGroupRemove(condition.id)}
-												aria-label={__("Remove group", "user-registration")}
+												onClick={() =>
+													handleGroupRemove(
+														condition.id
+													)
+												}
+												aria-label={__(
+													"Remove group",
+													"user-registration"
+												)}
 											>
 												<span className="dashicons dashicons-no-alt"></span>
 											</button>
@@ -279,7 +337,10 @@ const RuleGroup = ({
 									);
 								} else {
 									return (
-										<div key={condition.id} className="urcr-condition-wrapper">
+										<div
+											key={condition.id}
+											className="urcr-condition-wrapper"
+										>
 											<ConditionRow
 												condition={condition}
 												onUpdate={handleConditionUpdate}
@@ -288,8 +349,15 @@ const RuleGroup = ({
 											<button
 												type="button"
 												className="button button-link-delete"
-												onClick={() => handleConditionRemove(condition.id)}
-												aria-label={__("Remove condition", "user-registration")}
+												onClick={() =>
+													handleConditionRemove(
+														condition.id
+													)
+												}
+												aria-label={__(
+													"Remove condition",
+													"user-registration"
+												)}
 											>
 												<span className="dashicons dashicons-no-alt"></span>
 											</button>
@@ -307,12 +375,19 @@ const RuleGroup = ({
 							onAccessControlChange={onAccessControlChange}
 							contentTargets={contentTargets}
 							onContentTargetsChange={onContentTargetsChange}
+							conditions={conditions}
 						/>
 					)}
 				</div>
 
-				<div className="urcr-buttons-wrapper" style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-					<div className="urcr-condition-dropdown-wrapper" ref={dropdownWrapperRef}>
+				<div
+					className="urcr-buttons-wrapper"
+					style={{ display: "flex", gap: "10px", marginTop: "10px" }}
+				>
+					<div
+						className="urcr-condition-dropdown-wrapper"
+						ref={dropdownWrapperRef}
+					>
 						<button
 							type="button"
 							className="button urcr-add-condition-button"
@@ -346,4 +421,3 @@ const RuleGroup = ({
 };
 
 export default RuleGroup;
-

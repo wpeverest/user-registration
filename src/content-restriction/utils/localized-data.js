@@ -80,4 +80,3 @@ export const isProAccess = () => {
 	const isPro = getURCRData("is_pro", false);
 	return isPro === true || isPro === "1" || isPro === 1;
 };
-
