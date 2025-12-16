@@ -59,7 +59,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
             $stripe_settings = $this->get_stripe_settings();
             $bank_transfer_settings = $this->get_bank_transfer_settings();
             if( 'payment-method' === $current_section ) {
-                add_filter( 'user_registration_settings_payment-method_hide_save_button', true );
+                add_filter( 'user_registration_settings_hide_save_button', true );
                 $settings = array(
                     'title' => '',
                     'sections' => array(
