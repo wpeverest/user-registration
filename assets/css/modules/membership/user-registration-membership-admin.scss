@@ -166,7 +166,7 @@
 		border-bottom-right-radius: 0 !important;
 	}
 
-	.ur-currency{
+	.ur-currency {
 		border: 1px solid $border-color;
 		border-top-right-radius: 4px;
 		border-bottom-right-radius: 4px;
@@ -754,10 +754,10 @@
 							align-items: center;
 							padding: 0 !important;
 
-							.ur-label{
+							.ur-label {
 								margin-bottom: 0;
 
-								label{
+								label {
 									margin-bottom: 0;
 								}
 							}
@@ -776,7 +776,7 @@
 										padding: 12px 14px;
 										cursor: pointer;
 
-										.ur-membership-type-title{
+										.ur-membership-type-title {
 											margin-bottom: 0 !important;
 										}
 
@@ -994,6 +994,7 @@
 									}
 								}
 							}
+
 							.user-registration-switch {
 								@include form-toggle;
 							}
@@ -1011,6 +1012,7 @@
 						border-color: $primary_color;
 
 					}
+
 					#paid-plan-container {
 						display: flex;
 						flex-direction: column;
@@ -1177,6 +1179,7 @@
 													color: $grey-400;
 												}
 											}
+
 											.user-registration-switch {
 												@include form-toggle;
 											}
@@ -1200,9 +1203,10 @@
 					@include form-footer-button;
 				}
 
-				&--form-step{
+				&--form-step {
 					display: none;
-					&-active{
+
+					&-active {
 						display: block;
 					}
 				}
@@ -1265,8 +1269,8 @@
 								}
 							}
 
-							&.status{
-								.ur-toggle-section{
+							&.status {
+								.ur-toggle-section {
 									.user-registration-toggle-form {
 
 										input {
@@ -1359,8 +1363,8 @@
 		}
 	}
 
-	.ur-membership-error{
-		border-color:$red !important;
+	.ur-membership-error {
+		border-color: $red !important;
 	}
 }
 
@@ -1421,6 +1425,7 @@
 					gap: $spacing_32px;
 					display: flex;
 					flex-direction: column;
+
 					.right-container {
 						border-radius: $border_radius_7;
 						height: fit-content;
@@ -1433,6 +1438,7 @@
 
 						&#plan-detail-container {
 							position: relative;
+
 							.form-row {
 								display: flex;
 								align-items: flex-end;
@@ -1443,14 +1449,17 @@
 									flex: 1;
 									margin: 0;
 								}
+
 								span {
 									flex: 1;
+
 									&.user-registration-badge {
 										font-size: 13px;
 										line-height: 18px;
 										border-radius: 30px;
 										padding: 4px 12px;
 									}
+
 									&.user-registration-badge {
 										&--active {
 											color: #3aa530;
@@ -1486,8 +1495,8 @@
 								}
 							}
 
-							.urm-membership-plan-spinner-container{
-								&.is_loading{
+							.urm-membership-plan-spinner-container {
+								&.is_loading {
 									position: absolute;
 									top: 0;
 									left: 0;
@@ -1503,6 +1512,7 @@
 								}
 							}
 						}
+
 						.right-title {
 							padding-bottom: $spacing_16px;
 							margin-bottom: $spacing_24px;
@@ -1574,7 +1584,7 @@
 	}
 }
 
-#ur-membership-main-fields .upgradable-type, #upgrade-settings-container .upgradable-type  {
+#ur-membership-main-fields .upgradable-type, #upgrade-settings-container .upgradable-type {
 	position: relative;
 	color: #bababa;
 
@@ -1645,6 +1655,7 @@
 		}
 	}
 }
+
 .tooltipster-base.tooltipster-bottom {
 	margin-top: -30px /* Adjust gap for bottom-positioned tooltips */
 }
@@ -1660,7 +1671,7 @@
 		}
 	}
 
-	&.users{
+	&.users {
 		td {
 			vertical-align: middle;
 
