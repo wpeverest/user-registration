@@ -78,8 +78,8 @@ $gateway_images = array(
 	'paypal'    => 'paypal-logo.png',
 	'stripe'    => 'stripe-logo.png',
 	'bank'      => 'bank-logo.png',
-	'authorize' => 'authorize-net.png',
-	'mollie'    => 'mollie.png',
+	'authorize' => 'authorize-logo.png',
+	'mollie'    => 'mollie-logo.png',
 );
 
 // Get plugin URL for images.
