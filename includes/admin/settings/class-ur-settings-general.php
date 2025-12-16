@@ -87,6 +87,16 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							'desc'     => '',
 							'settings' => array(
 								array(
+									'id'      => 'button_colors',
+									'type'    => 'color-group',
+									'title'   => 'Button Colors',
+									'states'  => array( 'normal', 'active' ),
+									'default' => array(
+										'normal' => '#0073aa',
+										'active' => '#005a87',
+									),
+								),
+								array(
 									'title'    => __( 'Color', 'user-registration' ),
 									'desc'     => __( 'Selected user roles will not be able to view and access the WP Dashboard area.', 'user-registration' ),
 									'id'       => 'user_registration_general_setting_disabled_user_rolesa',

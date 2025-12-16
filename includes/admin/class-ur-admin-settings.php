@@ -598,12 +598,12 @@ class UR_Admin_Settings {
 
 								// Color picker.
 								case 'color':
-									$option_value = self::get_option( $value['id'], $value['default'] );
+									$option_value  = self::get_option( $value['id'], $value['default'] );
 									$default_value = isset( $value['default'] ) ? $value['default'] : '';
-									$settings    .= '<div class="user-registration-global-settings">';
-									$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
-									$settings    .= '<div class="user-registration-global-settings--field">';
-									$settings    .= '<input
+									$settings     .= '<div class="user-registration-global-settings">';
+									$settings     .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+									$settings     .= '<div class="user-registration-global-settings--field">';
+									$settings     .= '<input
 											name="' . esc_attr( $value['id'] ) . '"
 											id="' . esc_attr( $value['id'] ) . '"
 											type="text"
@@ -615,8 +615,99 @@ class UR_Admin_Settings {
 											data-default-value="' . esc_attr( $default_value ) . '"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
 											' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>&lrm;' . wp_kses_post( $description );
-									$settings    .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></div>';
-									$settings    .= '</div>';
+									$settings     .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></div>';
+									$settings     .= '</div>';
+									break;
+
+								// Color group picker (normal, active, hover, focus).
+								case 'color-group':
+									$base_id = $value['id'];
+
+									// Get states from settings, or use default states (normal and hover)
+									$states_config = isset( $value['states'] ) && is_array( $value['states'] ) ? $value['states'] : array( 'normal', 'hover' );
+
+									// Default labels mapping
+									$default_labels = array(
+										'normal' => __( 'Normal', 'user-registration' ),
+										'active' => __( 'Active', 'user-registration' ),
+										'hover'  => __( 'Hover', 'user-registration' ),
+										'focus'  => __( 'Focus', 'user-registration' ),
+									);
+
+									// Build color states array dynamically
+									$color_states = array();
+									foreach ( $states_config as $state_key => $state ) {
+										// Handle different input formats
+										if ( is_numeric( $state_key ) && is_string( $state ) ) {
+											// Simple array format: array('normal', 'active')
+											$state_key = $state;
+											$state     = array();
+										} elseif ( is_array( $state ) && isset( $state['key'] ) ) {
+											// Structured format: array('key' => 'normal', 'label' => 'Normal')
+											$state_key = $state['key'];
+										} elseif ( is_string( $state ) ) {
+											// Associative array format: array('normal' => 'Normal Label')
+											$state = array( 'label' => $state );
+										}
+
+										$state_label   = '';
+										$state_default = '';
+
+										// Get label
+										if ( is_array( $state ) && isset( $state['label'] ) ) {
+											$state_label = $state['label'];
+										} elseif ( isset( $value['labels'][ $state_key ] ) ) {
+											$state_label = $value['labels'][ $state_key ];
+										} else {
+											$state_label = isset( $default_labels[ $state_key ] ) ? $default_labels[ $state_key ] : ucfirst( $state_key );
+										}
+
+										// Get default value
+										if ( is_array( $state ) && isset( $state['default'] ) ) {
+											$state_default = $state['default'];
+										} elseif ( isset( $value['default'][ $state_key ] ) ) {
+											$state_default = $value['default'][ $state_key ];
+										} else {
+											$state_default = '';
+										}
+
+										$color_states[ $state_key ] = array(
+											'label'   => $state_label,
+											'default' => $state_default,
+										);
+									}
+
+									$settings .= '<div class="user-registration-global-settings ur-color-group">';
+									$settings .= '<label>' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+									$settings .= '<div class="user-registration-global-settings--field ur-color-group-field">';
+
+									foreach ( $color_states as $state => $state_data ) {
+										$state_id      = $base_id . '_' . $state;
+										$option_value  = self::get_option( $state_id, $state_data['default'] );
+										$default_value = $state_data['default'];
+
+										$settings .= '<div class="ur-color-group-item">';
+										$settings .= '<span class="ur-color-state-label">' . esc_html( ucfirst( $state ) ) . '</span>';
+										$settings .= '<input
+												name="' . esc_attr( $state_id ) . '"
+												id="' . esc_attr( $state_id ) . '"
+												type="text"
+												dir="ltr"
+												style="' . esc_attr( $value['css'] ) . '"
+												value="' . esc_attr( $option_value ) . '"
+												class="' . esc_attr( $value['class'] ) . ' colorpick"
+												data-alpha="true"
+												data-state="' . esc_attr( $state ) . '"
+												data-default-value="' . esc_attr( $default_value ) . '"
+												placeholder="' . esc_attr( $value['placeholder'] ) . '"
+												' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>&lrm;';
+										$settings .= '<div id="colorPickerDiv_' . esc_attr( $state_id ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div>';
+										$settings .= '</div>';
+									}
+
+									$settings .= wp_kses_post( $description );
+									$settings .= '</div>';
+									$settings .= '</div>';
 									break;
 
 								// Textarea.
