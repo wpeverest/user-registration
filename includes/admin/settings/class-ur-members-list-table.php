@@ -490,7 +490,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						'user_id'  => $new_user_object->ID,
 						'_wpnonce' => wp_create_nonce( 'bulk-users' ),
 					),
-					admin_url( 'admin.php?page=user-registration-members&view_user' ),
+					admin_url( 'admin.php?page=user-registration-users&view_user' ),
 				);
 
 				// Add a link to the user's author archive, if not empty.
@@ -501,7 +501,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						'user_id'  => $new_user_object->ID,
 						'_wpnonce' => wp_create_nonce( 'bulk-users' ),
 					),
-					admin_url( 'admin.php?page=user-registration-members&view_user' ),
+					admin_url( 'admin.php?page=user-registration-users&view_user' ),
 				);
 
 				$delete_link = add_query_arg(
@@ -510,7 +510,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						'user_id'  => $user_id,
 						'_wpnonce' => wp_create_nonce('bulk-users'),
 					),
-					admin_url('admin.php?page=user-registration-members'),
+					admin_url('admin.php?page=user-registration-users'),
 				);
 
 				$wp_delete_url = add_query_arg(
@@ -551,7 +551,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 								'user_id'  => $user_id,
 								'_wpnonce' => wp_create_nonce( 'bulk-users' ),
 							),
-							admin_url( 'admin.php?page=user-registration-members' ),
+							admin_url( 'admin.php?page=user-registration-users' ),
 						);
 						$actions['disable_user'] = sprintf(
 							'<a href="%s" class="ur-row-actions">%s </a>',
@@ -1152,7 +1152,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 		public function urm_search_user_on_name( $query ) {
 			global $wpdb;
 
-			if ( isset( $_REQUEST['s'], $_REQUEST['page'] ) && ! empty( $_REQUEST['s'] ) && 'user-registration-members' === $_REQUEST['page'] ) {
+			if ( isset( $_REQUEST['s'], $_REQUEST['page'] ) && ! empty( $_REQUEST['s'] ) && 'user-registration-users' === $_REQUEST['page'] ) {
 				$usersearch = sanitize_text_field( $_REQUEST['s'] );
 
 				$user_extract = explode( ' ', $usersearch );
@@ -1160,23 +1160,23 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 				$search_like = '%' . $wpdb->esc_like( $usersearch ) . '%';
 
-				$query->query_where .= " OR (
+				$query->query_where .= " AND (
 					{$wpdb->users}.user_login LIKE '{$search_like}'
 					OR {$wpdb->users}.user_email LIKE '{$search_like}'
 					OR {$wpdb->users}.display_name LIKE '{$search_like}'
 					OR {$wpdb->users}.user_nicename LIKE '{$search_like}'
-				)";
-
-				$query->query_where .= " OR EXISTS (
-					SELECT *
-					FROM {$wpdb->usermeta} um
-					WHERE um.user_id = {$wpdb->users}.ID
-					AND (
-						(um.meta_key IN ('first_name','last_name') AND um.meta_value LIKE '{$search_like}')
-						OR (um.meta_key LIKE 'user_registration\_%' AND um.meta_value LIKE '{$search_like}')
-						OR (um.meta_key LIKE 'display_name\_%' AND um.meta_value LIKE '{$search_like}')
+					OR EXISTS (
+						SELECT *
+						FROM {$wpdb->usermeta} um
+						WHERE um.user_id = {$wpdb->users}.ID
+						AND (
+							(um.meta_key IN ('first_name','last_name') AND um.meta_value LIKE '{$search_like}')
+							OR (um.meta_key LIKE 'user_registration\_%' AND um.meta_value LIKE '{$search_like}')
+							OR (um.meta_key LIKE 'display_name\_%' AND um.meta_value LIKE '{$search_like}')
+						)
 					)
 				)";
+
 			}
 
 			remove_action( 'pre_user_query', $this );

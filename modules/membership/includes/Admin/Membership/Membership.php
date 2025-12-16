@@ -297,7 +297,7 @@ class Membership {
 		);
 		add_action( 'load-' . $rules_page, array( $this, 'membership_initialization' ) );
 
-		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-membership', 'user-registration-membership-groups', 'user-registration-members'] ) ) {
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-membership', 'user-registration-membership-groups'] ) ) {
 
 			add_submenu_page(
 				'user-registration',

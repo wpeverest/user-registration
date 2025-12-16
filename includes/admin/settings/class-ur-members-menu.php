@@ -44,7 +44,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 		 */
 		public function __construct()
 		{
-			$this->page = 'user-registration-members';
+			$this->page = 'user-registration-users';
 			add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 			add_action('admin_init', array($this, 'include_files'));
 			add_action('admin_menu', array($this, 'add_members_menu_tab'), 60);
@@ -52,14 +52,14 @@ if (! class_exists('User_Registration_Members_Menu')) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_filter(
-				'manage_user-registration-membership_page_user-registration-members_columns',
+				'manage_user-registration-membership_page_user-registration-users_columns',
 				array(
 					$this,
 					'get_column_headers',
 				)
 			);
 			add_filter(
-				'bulk_actions-user-registration-membership_page_user-registration-members',
+				'bulk_actions-user-registration-membership_page_user-registration-users',
 				array(
 					$this,
 					'manage_bulk_action_items',
@@ -93,7 +93,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 			global $wp_filter;
 
 			// Return on other than access rule creator page.
-			if ( empty( $_REQUEST['page'] ) || 'user-registration-members' !== $_REQUEST['page'] ) {
+			if ( empty( $_REQUEST['page'] ) || 'user-registration-users' !== $_REQUEST['page'] ) {
 				return;
 			}
 
@@ -117,7 +117,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 		 * @since 1.0.0
 		 */
 		public function enqueue_styles() {
-			if ( empty( $_GET['page'] ) || 'user-registration-members' !== $_GET['page'] ) {
+			if ( empty( $_GET['page'] ) || 'user-registration-users' !== $_GET['page'] ) {
 				return;
 			}
 			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
@@ -137,7 +137,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 		 * @since 1.0.0
 		 */
 		public function enqueue_scripts() {
-			if ( empty( $_GET['page'] ) || 'user-registration-members' !== $_GET['page'] ) {
+			if ( empty( $_GET['page'] ) || 'user-registration-users' !== $_GET['page'] ) {
 				return;
 			}
 			$suffix = defined( 'SCRIPT_DEBUG' ) ? '' : '.min';
@@ -148,7 +148,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 				'user-registration-admin'
 			), '1.0.0', true );
 			wp_enqueue_script( 'ur-snackbar' );
-			wp_enqueue_script( 'user-registration-members' );
+			wp_enqueue_script( 'user-registration-users' );
 			wp_enqueue_script( 'sweetalert2' );
 			wp_register_script( 'selectWoo', UR()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), '5.0.0', false );
 			wp_enqueue_script( 'selectWoo' );
@@ -178,7 +178,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 					'ajax_url'           => admin_url( 'admin-ajax.php' ),
 					'wp_roles'           => ur_membership_get_all_roles(),
 					'labels'             => $this->get_i18_labels(),
-					'members_page_url'   => admin_url( 'admin.php?page=user-registration-members' ),
+					'members_page_url'   => admin_url( 'admin.php?page=user-registration-users' ),
 					'delete_icon'        => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
 					'ur_membership_edit_nonce' => wp_create_nonce( 'ur_membership_edit_nonce' ),
 				)
@@ -197,7 +197,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 			$screen_id = $screen ? $screen->id : '';
 			$suffix    = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
-			if (isset($_GET['page']) && 'user-registration-members' === $_GET['page'] && in_array($screen_id, ur_get_screen_ids(), true)) {
+			if (isset($_GET['page']) && 'user-registration-users' === $_GET['page'] && in_array($screen_id, ur_get_screen_ids(), true)) {
 				wp_enqueue_style('user-registration-pro-admin-style');
 				wp_enqueue_script(
 					'user-registration-pro-users',
@@ -329,7 +329,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 					'disable_user_error_message_title' => __( 'User cannot be disabled.', 'user-registration' ),
 					'disable_user_error_message'       => __( 'There was an error disabling the user.', 'user-registration' ),
 					'disable_user_popup_content'       => __( 'Please specify the timeframe to disable this user', 'user-registration' ),
-					'after_disable_redirect_url'       => admin_url( 'admin.php?page=user-registration-members' ),
+					'after_disable_redirect_url'       => admin_url( 'admin.php?page=user-registration-users' ),
 				)
 			);
 		}
@@ -366,7 +366,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 		{
 			global $wpdb;
 
-			if (! ((isset($_GET['page']) && 'user-registration-members' === $_GET['page']))) {
+			if (! ((isset($_GET['page']) && 'user-registration-users' === $_GET['page']))) {
 				return;
 			}
 
@@ -454,7 +454,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 							if ($delete_count) {
 
 								if (isset($_GET['view_user'])) {
-									$redirect = admin_url('admin.php?page=user-registration-members');
+									$redirect = admin_url('admin.php?page=user-registration-users');
 									$redirect = add_query_arg('delete_count', 1, $redirect);
 
 									wp_safe_redirect($redirect);
@@ -466,7 +466,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 											'_wpnonce'     => wp_create_nonce('count-nonce'),
 											'count_type'   => 'delete',
 										),
-										admin_url('admin.php?page=user-registration-members')
+										admin_url('admin.php?page=user-registration-users')
 									);
 
 									wp_safe_redirect(esc_url_raw($redirect_url));
@@ -498,7 +498,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 										'_wpnonce'    => wp_create_nonce('count-nonce'),
 										'count_type'  => 'reset',
 									),
-									admin_url('admin.php?page=user-registration-members')
+									admin_url('admin.php?page=user-registration-users')
 								);
 
 								wp_safe_redirect(esc_url_raw($redirect_url));
@@ -558,7 +558,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 										'_wpnonce'   => wp_create_nonce('count-nonce'),
 										'count_type' => 'role_change',
 									),
-									admin_url('admin.php?page=user-registration-members')
+									admin_url('admin.php?page=user-registration-users')
 								);
 
 								wp_safe_redirect(esc_url_raw($redirect_url));
@@ -604,7 +604,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 										'_wpnonce'       => wp_create_nonce('count-nonce'),
 										'count_type'     => 'approval',
 									),
-									admin_url('admin.php?page=user-registration-members')
+									admin_url('admin.php?page=user-registration-users')
 								);
 
 								wp_safe_redirect(esc_url_raw($redirect_url));
@@ -692,7 +692,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 										'_wpnonce'    => wp_create_nonce('count-nonce'),
 										'count_type'  => 'await',
 									),
-									admin_url('admin.php?page=user-registration-members')
+									admin_url('admin.php?page=user-registration-users')
 								);
 
 								wp_safe_redirect(esc_url_raw($redirect_url));
@@ -741,7 +741,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 										'_wpnonce'     => wp_create_nonce('count-nonce'),
 										'count_type'   => 'denial',
 									),
-									admin_url('admin.php?page=user-registration-members')
+									admin_url('admin.php?page=user-registration-users')
 								);
 
 								wp_safe_redirect(esc_url_raw($redirect_url));
@@ -860,7 +860,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 				__('User Registration Members', 'user-registration'),
 				__('Members', 'user-registration'),
 				'manage_user_registration',
-				'user-registration-members',
+				'user-registration-users',
 				array( $this, 'render_members_page'),
 			);
 		}
@@ -1013,7 +1013,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 			$user    = get_userdata($user_id);
 
 			if (! $user) {
-				$redirect = admin_url('admin.php?page=user-registration-members');
+				$redirect = admin_url('admin.php?page=user-registration-users');
 				wp_safe_redirect($redirect);
 				exit;
 			}
@@ -1030,7 +1030,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 			$form_field_data_array = user_registration_profile_details_form_fields($form_id);
 			$user_data_to_show     = user_registration_profile_details_form_field_datas($form_id, $user_data, $form_field_data_array);
 			$show_profile_picture  = get_option('user_registration_disable_profile_picture', true);
-			$back_url = admin_url( 'admin.php?page=user-registration-members');
+			$back_url = admin_url( 'admin.php?page=user-registration-users');
 			?>
 			<div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
 				<div class="ur-page-title__wrapper">
@@ -1127,7 +1127,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 						'user_id'  => $user_id,
 						'_wpnonce' => wp_create_nonce('bulk-users'),
 					),
-					admin_url('admin.php?page=user-registration-members&view_user&action=edit'),
+					admin_url('admin.php?page=user-registration-users&view_user&action=edit'),
 				);
 				$active_class = '';
 				if (isset($_GET['action']) && 'edit' == $_GET['action']) {
@@ -1157,7 +1157,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 						'user_id'  => $user_id,
 						'_wpnonce' => wp_create_nonce('bulk-users'),
 					),
-					admin_url('admin.php?page=user-registration-members&view_user'),
+					admin_url('admin.php?page=user-registration-users&view_user'),
 				);
 
 				$deny_link = add_query_arg(
@@ -1166,7 +1166,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 						'user_id'  => $user_id,
 						'_wpnonce' => wp_create_nonce('bulk-users'),
 					),
-					admin_url('admin.php?page=user-registration-members&view_user'),
+					admin_url('admin.php?page=user-registration-users&view_user'),
 				);
 
 				if ('Pending' === $user_status || 'Denied' === $user_status) {
@@ -1200,7 +1200,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 						'user_id'  => $user_id,
 						'_wpnonce' => wp_create_nonce('bulk-users'),
 					),
-					admin_url('admin.php?page=user-registration-members&view_user'),
+					admin_url('admin.php?page=user-registration-users&view_user'),
 				);
 
 				$actions['request_password_reset'] = sprintf(
@@ -1226,7 +1226,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 							'user_id'  => $user_id,
 							'_wpnonce' => wp_create_nonce('bulk-users'),
 						),
-						admin_url('admin.php?page=user-registration-members&view_user'),
+						admin_url('admin.php?page=user-registration-users&view_user'),
 					);
 					$actions['disable_user'] = sprintf(
 						'<a href="%s" >%s <p>%s</p></a>',
@@ -1246,7 +1246,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 							'user_id'  => $user_id,
 							'_wpnonce' => wp_create_nonce('bulk-users'),
 						),
-						admin_url('admin.php?page=user-registration-members&view_user'),
+						admin_url('admin.php?page=user-registration-users&view_user'),
 					);
 
 					$actions['disable_user'] = sprintf(
@@ -1271,7 +1271,7 @@ if (! class_exists('User_Registration_Members_Menu')) {
 						'user_id'  => $user_id,
 						'_wpnonce' => wp_create_nonce('bulk-users'),
 					),
-					admin_url('admin.php?page=user-registration-members&view_user'),
+					admin_url('admin.php?page=user-registration-users&view_user'),
 				);
 
 				$wp_delete_url = add_query_arg(
