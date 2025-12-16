@@ -59,7 +59,7 @@ class URCR_Frontend {
 	 */
 	public function include_run_content_restrictions( $template ) {
 
-		if ( is_embed() ) {
+		if ( is_embed() || current_user_can('manage_options') ) {
 			return $template;
 		}
 		$content_restriction_enabled = ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) );
@@ -931,7 +931,6 @@ class URCR_Frontend {
 	 * Perform basic restriction task for blogs.
 	 */
 	public function basic_restrictions_templates( $template, $post ) {
-
 		if ( is_object( $post ) ) {
 			$post_id = absint( $post->ID );
 		} elseif ( is_array( $post ) && isset( $post['ID'] ) ) {
@@ -1017,7 +1016,6 @@ class URCR_Frontend {
 		} elseif ( $get_meta_data_checkbox ) {
 			$this->basic_restrictions();
 		}
-
 		return $template;
 	}
 
