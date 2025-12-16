@@ -1323,4 +1323,93 @@
 	var $initialContainer = $( "#ur-sync-to-email-marketing-container" );
 
 	hideSyncEmailContainer( $initialEl.is(":checked"), $initialContainer );
+	toggleEmailMarketingFields();
+
+	function toggleEmailMarketingFields() {
+		$( '.ur-sync-to-email-marketing-addon-sync-container' ).each( function () {
+
+			var $container = $(this);
+			var $checkbox = $container.find(
+				'.ur-sync-to-email-marketing-addon-sync-toggle-container input[type="checkbox"]'
+			);
+			var $fields = $container.find(
+				'.ur-sync-to-email-marketing-addon-sync-toggle-label-container .form-row, ' +
+				'.urmc-sync-email-marketing-mailchimp-list-wrap, ' +
+				'.urmc-sync-email-marketing-brevo-list-wrap, ' +
+				'[class*="urmc-sync-email-marketing-"][class$="-list-wrap"]'
+			);
+
+			if ($checkbox.is(':checked')) {
+				$fields.show();
+			} else {
+				$fields.hide();
+			}
+		});
+	}
+
+	$( document ).on(
+		'change',
+		'.ur-sync-to-email-marketing-addon-sync-toggle-container input[type="checkbox"]',
+		function () {
+			toggleEmailMarketingFields();
+		}
+	);
+
+	$( document ).on(
+		'change',
+		'.ur_sync_email_marketing_addon_account',
+		function( e ){
+			e.stopPropagation();
+			e.preventDefault();
+
+			var $el = $( this ),
+				addon = $el.data( 'addon_name' ),
+				apiKey = $el.val();
+
+
+			var	data  = {
+					action : 'user_registration_membership_addons_get_lists',
+					addon : addon,
+					api_key: apiKey
+				}
+
+			$.ajax({
+				type: "post",
+				url: ur_membership_data.ajax_url,
+				data: data,
+				beforeSend: function(){
+				   var $listWrap = $(document).find(
+						'.urmc-sync-email-marketing-' + addon + '-list-wrap'
+						);
+
+						ur_membership_utils.append_spinner($listWrap);
+
+						$listWrap.find( 'select' ).prop( 'disabled', true );
+
+						 $listWrap
+							.closest('.ur-sync-to-email-marketing-addon-sync-container')
+							.find('select')
+							.prop('disabled', true);
+				},
+				success: function( response ){
+					var $listContainer = $(
+						'.urmc-sync-email-marketing-' + addon + '-list-wrap'
+						);
+
+						$listContainer.find('.ur-spinner').remove();
+
+						if ( response.success ) {
+							$listContainer.find( 'select' ).remove();
+
+							$listContainer.append( response.data.html );
+						}
+
+						$listContainer
+						.closest('.ur-sync-to-email-marketing-addon-sync-container')
+						.find('select')
+						.prop('disabled', false);
+				}
+			})
+		}
+	)
 })(jQuery, window.ur_membership_localized_data);

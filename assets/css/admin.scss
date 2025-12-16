@@ -8625,3 +8625,133 @@ body.user-registration-page {
 		}
 	}
 }
+
+/* =========================================
+   Email Marketing Sync Settings
+   ========================================= */
+
+#ur-sync-to-email-marketing-container {
+  width: 100%;
+
+  .ur-sync-to-email-marketing-container-wrapper {
+    width: 100%;
+  }
+
+  /* =========================================
+     Addon Title Section
+     ========================================= */
+
+  .ur-sync-to-email-marketing-addon-title-container {
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f1f1;
+
+    &-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+  }
+
+  .ur-sync-to-email-marketing-addon-logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background-color: #f3f4f6;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ur-sync-to-email-marketing-addon-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+  }
+
+  /* =========================================
+     Sync Container
+     ========================================= */
+
+  .ur-sync-to-email-marketing-addon-sync-container {
+    padding-left: 40px;
+  }
+
+  .ur-sync-to-email-marketing-addon-sync-container-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* =========================================
+     Checkbox
+     ========================================= */
+
+  .ur-sync-to-email-marketing-addon-sync-toggle-container {
+    padding-top: 3px;
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+  }
+
+  /* =========================================
+     Label + Fields
+     ========================================= */
+
+  .ur-sync-to-email-marketing-addon-sync-toggle-label-container {
+    font-size: 14px;
+    color: #374151;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    /* Select Wrapper */
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-width: 320px;
+
+      label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #6b7280;
+      }
+
+      select {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+        background-color: #ffffff;
+        font-size: 14px;
+        color: #111827;
+        cursor: pointer;
+
+        &:focus {
+          outline: none;
+          border-color: #2563eb;
+          box-shadow: 0 0 0 1px #2563eb;
+        }
+      }
+    }
+  }
+
+  /* =========================================
+     List Wrapper (Mailchimp, Brevo etc.)
+     ========================================= */
+
+  .urmc-sync-email-marketing-mailchimp-list-wrap,
+  .urmc-sync-email-marketing-brevo-list-wrap,
+  .urmc-sync-email-marketing-convertkit-list-wrap,
+  .urmc-sync-email-marketing-klaviyo-list-wrap,
+  .urmc-sync-email-marketing-mailerlite-list-wrap,
+  .urmc-sync-email-marketing-mailpoet-list-wrap {
+    margin-top: 10px;
+    max-width: 320px;
+  }
+}
