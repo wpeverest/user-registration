@@ -64,6 +64,50 @@
 			width: 255,
 			mode: alphaEnabled ? "rgba" : "hex"
 		});
+
+		// Ensure input wrap stays inside holder, fix positioning, and add border radius
+		setTimeout(function () {
+			var $container = $input.closest(".wp-picker-container");
+			if ($container.length) {
+				var $holder = $container.find(".wp-picker-holder");
+				var $inputWrap = $container.find(".wp-picker-input-wrap");
+				
+				// Ensure input wrap is inside the holder
+				if ($holder.length && $inputWrap.length) {
+					// If input wrap is not inside holder, move it there
+					if (!$holder.find($inputWrap).length) {
+						$inputWrap.appendTo($holder);
+					}
+				}
+				
+				// Ensure holder is positioned absolutely and doesn't take space when hidden
+				if ($holder.length) {
+					$holder.css({
+						position: "absolute",
+						top: "100%",
+						left: "0",
+						zIndex: "100",
+						marginTop: "2px"
+					});
+					
+					// Ensure holder is visible when container is active
+					$container.on("click", ".wp-color-result", function (e) {
+						setTimeout(function () {
+							if ($container.hasClass("wp-picker-active")) {
+								$holder.show();
+							} else {
+								$holder.hide();
+							}
+						}, 10);
+					});
+				}
+				
+				// Add border radius to color result button
+				$container.find(".wp-color-result").css({
+					borderRadius: "4px"
+				});
+			}
+		}, 50);
 	});
 
 	$(".colorpickpreview")

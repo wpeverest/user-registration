@@ -1935,3 +1935,34 @@
 .user-registration-swal2-modal--install-urm-pro .swal2-content {
   margin-bottom: 24px;
 }
+
+/* Color picker styling */
+.user-registration-global-settings--field .wp-picker-container {
+  position: relative;
+  display: inline-block;
+}
+
+.user-registration-global-settings--field .wp-picker-container .wp-color-result {
+  border-radius: 4px;
+}
+
+.user-registration-global-settings--field .wp-picker-container .wp-picker-holder {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  margin-top: 2px;
+}
+
+/* Show picker when container is active */
+.user-registration-global-settings--field .wp-picker-container.wp-picker-active .wp-picker-holder {
+  display: block !important;
+}
+
+.user-registration-global-settings--field .wp-color-result {
+  border-radius: 100px !important;
+}
+
+.wp-picker-input-wrap .wp-color-picker {
+  width: 209px !important;
+}
