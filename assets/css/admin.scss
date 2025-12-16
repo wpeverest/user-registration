@@ -8683,9 +8683,10 @@ body.user-registration-page {
   }
 
   .ur-sync-to-email-marketing-addon-sync-container-inner {
-    display: flex;
+    // display: flex;
     align-items: flex-start;
     gap: 12px;
+	flex-direction: column;
   }
 
   /* =========================================
@@ -8694,12 +8695,20 @@ body.user-registration-page {
 
   .ur-sync-to-email-marketing-addon-sync-toggle-container {
     padding-top: 3px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
 
     input[type="checkbox"] {
       width: 16px;
       height: 16px;
       cursor: pointer;
     }
+
+	span{
+		transform: translateY(-3px);
+	}
   }
 
   /* =========================================
@@ -8743,12 +8752,12 @@ body.user-registration-page {
           box-shadow: 0 0 0 1px #2563eb;
         }
       }
+
+	  .ur_sync_email_marketing_addon_account{
+		// height: 38px;
+	  }
     }
   }
-
-  /* =========================================
-     List Wrapper (Mailchimp, Brevo etc.)
-     ========================================= */
 
   .urmc-sync-email-marketing-mailchimp-list-wrap,
   .urmc-sync-email-marketing-brevo-list-wrap,
