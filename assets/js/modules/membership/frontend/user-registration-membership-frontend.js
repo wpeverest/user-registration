@@ -628,9 +628,9 @@
 						: urm_calculated_total;
 			total = parseFloat(total).toFixed(2);
 			if ("left" === urmf_data.curreny_pos) {
-				total_input.val(urmf_data.currency_symbol + total);
+				total_input.text(urmf_data.currency_symbol + total);
 			} else {
-				total_input.val(total + urmf_data.currency_symbol);
+				total_input.text(total + urmf_data.currency_symbol);
 			}
 		},
 		upgrade_membership: function (

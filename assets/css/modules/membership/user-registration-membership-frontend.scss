@@ -179,6 +179,10 @@ html {
 			display: flex;
 			flex-direction: column;
 
+			.description {
+				margin-bottom: 10px;
+			}
+
 			&:last-child {
 				margin-bottom: 0;
 			}

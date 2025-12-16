@@ -198,6 +198,11 @@ html {
   display: flex;
   flex-direction: column;
 }
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .description,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .description,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .description {
+  margin-bottom: 10px;
+}
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container:last-child,
 .ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container:last-child,
 #pg-container .ur_membership_registration_container .ur_membership_frontend_input_container:last-child {
