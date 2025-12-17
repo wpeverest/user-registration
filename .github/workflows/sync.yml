@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - v5.0.0
+      - UR-2670-payment-retry-settings
     workflow_dispatch:
 jobs:
   sync:
