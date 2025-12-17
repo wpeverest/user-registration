@@ -1528,7 +1528,7 @@ span.ur-shortcode-form-embed-dot {
 	justify-content: space-between;
 
 	.user-registration-LostPassword {
-		color: $primary_color;
+		color: var(--ur-primary-color, $primary_color);
 	}
 }
 
@@ -1613,7 +1613,8 @@ span.ur-shortcode-form-embed-dot {
 }
 
 // Revamp error design for registration and login form
-.ur-field-item, .ur-form-grid {
+.ur-field-item,
+.ur-form-grid {
 	input {
 		border-radius: 4px !important;
 	}
@@ -2392,7 +2393,7 @@ body {
 						.ur-field-item {
 							label:not(.user-registration-error) {
 								margin-top: 0;
-								margin-bottom: 12px;
+								margin-bottom: 16px;
 								color: #222;
 								font-size: 15px;
 								font-weight: 500;
@@ -2429,7 +2430,7 @@ body {
 					display: flex !important;
 					align-items: center;
 					gap: $spacing_4px;
-					margin-top: 32px;
+					margin-top: $spacing_32px;
 					padding: 0 10px;
 
 					.ur-submit-button {
