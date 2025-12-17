@@ -47,7 +47,7 @@ class UR_Frontend_Scripts {
 		add_action( 'wp_print_scripts', array( __CLASS__, 'localize_printed_scripts' ), 5 );
 		add_action( 'wp_print_footer_scripts', array( __CLASS__, 'localize_printed_scripts' ), 5 );
 		add_action( 'user_registration_enqueue_scripts', array( __CLASS__, 'localize_scripts_with_form_id' ), 10, 2 );
-		add_action( 'wp_head', array( __CLASS__, 'output_dynamic_primary_color' ), 100 );
+		add_action( 'wp_head', array( __CLASS__, 'output_dynamic_color_style' ), 100 );
 	}
 
 	/**
@@ -627,7 +627,7 @@ class UR_Frontend_Scripts {
 
 
 
-	public static function output_dynamic_primary_color() {
+	public static function output_dynamic_color_style() {
 		$primary_color           = get_option( 'user_registration_style_setting_primary_color', '#475bb2' );
 		$button_text_color       = get_option(
 			'user_registration_style_setting_button_text_colors',
@@ -646,7 +646,7 @@ class UR_Frontend_Scripts {
 
 		$css_props = array();
 
-		// Primary color + variants.
+		// Primary color & variants.
 		if ( ! empty( $primary_color ) ) {
 			$primary_dark  = self::adjust_brightness( $primary_color, -10 );
 			$primary_light = self::adjust_brightness( $primary_color, 40 );
