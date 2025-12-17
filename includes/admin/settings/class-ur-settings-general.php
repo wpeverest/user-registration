@@ -376,7 +376,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		 *
 		 * @return array
 		 */
-		public function get_style() {
+		public function get_color_style() {
 			/**
 			 * Filter to add the frontend messages options settings.
 			 *
@@ -438,7 +438,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			 *
 			 * @param array $settings Frontend Message Setting options to be enlisted.
 			 */
-			return apply_filters( 'user_registration_get_style_settings_' . $this->id, $settings );
+			return apply_filters( 'user_registration_get_color_style_settings_' . $this->id, $settings );
 		}
 
 		/**
@@ -453,7 +453,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			} elseif ( 'frontend-messages' === $current_section ) {
 				$settings = $this->get_frontend_messages_settings();
 			} elseif ( 'style' === $current_section ) {
-				$settings = $this->get_style();
+				$settings = $this->get_color_style();
 			} elseif ( 'login-options' === $current_section ) {
 				$settings        = get_login_options_settings();
 				$captcha_enabled = get_option( 'user_registration_login_options_enable_recaptcha' );
@@ -486,7 +486,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			} elseif ( 'frontend-messages' === $current_section ) {
 				$settings = $this->get_frontend_messages_settings();
 			} elseif ( 'style' === $current_section ) {
-				$settings = $this->get_style();
+				$settings = $this->get_color_style();
 			}
 
 			UR_Admin_Settings::save_fields( $settings );
