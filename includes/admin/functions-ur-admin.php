@@ -1063,7 +1063,7 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 					if ( ! UR_PRO_ACTIVE ) {
 						?>
 							<div class="ur-version-tag-separator" bis_skin_checked="1"><hr></div>
-							<a target="_blank" rel="noopener" class="" href="https://wpuserregistration.com/upgrade/?utm_campaign=lite-version&utm_source=header&utm_medium=top-menu-link">
+							<a target="_blank" rel="noopener" class="ur-upgrade--link" href="https://wpuserregistration.com/upgrade/?utm_campaign=lite-version&utm_source=header&utm_medium=top-menu-link">
 								<?php esc_html_e( 'Upgrade To Pro', 'user-registration' ); ?>
 							</a>
 						<?php
