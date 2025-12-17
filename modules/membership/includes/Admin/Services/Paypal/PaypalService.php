@@ -859,17 +859,17 @@ class PaypalService {
 			) );
 			$this->members_orders_repository->update( $latest_order['ID'], array( 'status' => 'failed' ) );
 
-
-		    // Send a retry-failed notification to the user when IPN reports failure
-		    $email_service = new EmailService();
-		    $email_data = array(
-			'subscription'     => $subscription,
-			'order'            => $latest_order,
-			'membership_metas' => $membership_metas,
-			'member_id'        => $member_id,
-		    );
-		    $email_service->send_email( $email_data, 'payment_retry_failed' );
-
+			//only send email if IPN is received for failed attempt.
+			if( 1 === intval( get_user_meta( $member_id, 'urm_is_payment_retrying', true ) ) ) {
+				$email_service = new EmailService();
+				$email_data = array(
+				'subscription'     => $subscription,
+				'order'            => $latest_order,
+				'membership_metas' => $membership_metas,
+				'member_id'        => $member_id,
+				);
+				$email_service->send_email( $email_data, 'payment_retry_failed' );
+			}
 		    return;
 		}
 

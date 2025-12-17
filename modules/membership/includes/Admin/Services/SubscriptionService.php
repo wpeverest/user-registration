@@ -824,7 +824,9 @@ class SubscriptionService {
 		}
 	}
 	public function failed_payment_retry_callback( $subscription ) {
-
+		//update the counter for failed payment retry.
+		$retry_count = (int)get_user_meta( $subscription[ 'user_id' ], 'urm_is_payment_retrying', true );
+		update_user_meta( $subscription[ 'user_id' ], 'urm_is_payment_retrying', $retry_count + 1 );
 		switch( $subscription[ 'payment_method' ] ) {
 			case 'paypal':
 				$paypal_service = new PaypalService();
@@ -833,9 +835,6 @@ class SubscriptionService {
 			case 'stripe':
 				$stripe_service = new StripeService();
 				$stripe_service->retry_subscription( $subscription );
-				break;
-			case 'bank':
-				// how to handle bank related payment if automatic retry is enabled????
 				break;
 			default:
 				do_action( 'urm_handle_failed_payment_retry', $subscription );

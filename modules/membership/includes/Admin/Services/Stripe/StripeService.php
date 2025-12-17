@@ -42,7 +42,7 @@ class StripeService {
 			'message' => '',
 		);
 
-		if ( empty( $subscription['subscription_id'] ) ) {
+		if ( empty( $subscription['sub_id'] ) ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
 				'Stripe subscription ID not found for retry',
@@ -88,7 +88,7 @@ class StripeService {
 			if ( in_array( $stripe_subscription->status, array( 'past_due', 'unpaid' ) ) ) {
 				// Update subscription to retry payment
 				$updated_subscription = \Stripe\Subscription::update(
-					$subscription['subscription_id'],
+					$subscription['sub_id'],
 					array(
 						'default_payment_method' => $stripe_subscription->default_payment_method,
 						'off_session'            => true,
@@ -99,7 +99,7 @@ class StripeService {
 					'stripe',
 					'Stripe subscription updated for retry',
 					array(
-						'subscription_id' => $subscription['subscription_id'],
+						'subscription_id' => $subscription['sub_id'],
 						'old_status'      => $stripe_subscription->status,
 						'new_status'      => $updated_subscription->status,
 					)
@@ -110,7 +110,7 @@ class StripeService {
 						'stripe',
 						'Subscription payment retry successful',
 						array(
-							'subscription_id' => $subscription['subscription_id'],
+							'subscription_id' => $subscription['sub_id'],
 							'user_id'         => $subscription['user_id'] ?? 'unknown',
 							'status'          => $updated_subscription->status,
 						)
@@ -123,12 +123,32 @@ class StripeService {
 						'stripe',
 						'Subscription payment retry - Unexpected status',
 						array(
-							'subscription_id' => $subscription['subscription_id'],
+							'subscription_id' => $subscription['sub_id'],
 							'status'          => $updated_subscription->status,
 						)
 					);
+					
 
-					$response['message'] = __( 'Subscription retry did not resolve the issue', 'user-registration' );
+					// Notify user via email about a failed retry attempt
+					$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $subscription[ 'sub_id' ], true );
+					if ( ! empty( $current_subscription ) ) {
+						$member_id   = $current_subscription['user_id'];
+
+						if( 1 === intval( get_user_meta( $member_id, 'urm_is_payment_retrying', true ) ) ) {							
+							$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
+							$membership  = $this->membership_repository->get_single_membership_by_ID( $current_subscription['item_id'] );
+							$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
+							$email_service = new EmailService();
+							$email_data = array(
+								'subscription' => $current_subscription,
+								'order' => $latest_order,
+								'membership_metas' => $membership_metas,
+								'member_id' => $member_id,
+							);
+							$email_service->send_email( $email_data, 'payment_retry_failed' );
+						}
+						$response['message'] = __( 'Subscription retry did not resolve the issue', 'user-registration' );
+					}
 				}
 			} elseif ( 'active' === $stripe_subscription->status || 'trialing' === $stripe_subscription->status ) {
 				//Scenario: if automatic retry is enabled in stripe dashboard, it might be already active via smart retry.
@@ -1127,42 +1147,6 @@ class StripeService {
 		switch ( $event['type'] ) {
 			case 'invoice.payment_succeeded':
 				$this->handle_succeeded_invoice( $event, $subscription_id );
-				break;
-			case 'invoice.payment_failed':
-				// Notify user about a failed retry attempt
-				$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $subscription_id, true );
-				if ( ! empty( $current_subscription ) ) {
-					$member_id   = $current_subscription['user_id'];
-					$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
-					$membership  = $this->membership_repository->get_single_membership_by_ID( $current_subscription['item_id'] );
-					$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
-					$email_service = new EmailService();
-					$email_data = array(
-						'subscription' => $current_subscription,
-						'order' => $latest_order,
-						'membership_metas' => $membership_metas,
-						'member_id' => $member_id,
-					);
-					$email_service->send_email( $email_data, 'payment_retry_failed' );
-				}
-				break;
-			case 'customer.subscription.deleted':
-				// When subscription is deleted/cancelled in Stripe, send final cancellation email
-				$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $subscription_id, true );
-				if ( ! empty( $current_subscription ) ) {
-					$member_id   = $current_subscription['user_id'];
-					$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
-					$membership  = $this->membership_repository->get_single_membership_by_ID( $current_subscription['item_id'] );
-					$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
-					$email_service = new EmailService();
-					$email_data = array(
-						'subscription' => $current_subscription,
-						'order' => $latest_order,
-						'membership_metas' => $membership_metas,
-						'member_id' => $member_id,
-					);
-					$email_service->send_email( $email_data, 'payment_retry_cancel' );
-				}
 				break;
 			default:
 				break;
