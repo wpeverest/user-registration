@@ -252,7 +252,7 @@ class EmailService
 		$subject = \UR_Emailer::parse_smart_tags( $subject, $values );
 		$headers = \UR_Emailer::ur_get_header();
 
-		return \UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), $template_id = 0 );
+		return \UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), 0 );
 	}
 
 	/**
@@ -282,7 +282,7 @@ class EmailService
 		$subject = \UR_Emailer::parse_smart_tags( $subject, $values );
 		$headers = \UR_Emailer::ur_get_header();
 
-		return \UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), $template_id = 0 );
+		return \UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), 0 );
 	}
 //	/**
 //	 * Send payment successful email

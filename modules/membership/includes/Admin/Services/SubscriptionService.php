@@ -810,9 +810,6 @@ class SubscriptionService {
 		$expired_count = 0;
 		$expired_users = array();
 		foreach ( $subscriptions as $subscription ) {
-			$subscription_id = $subscription['subscription_id'];
-			$user_id = $subscription['member_id'];
-
 			//only handle the subscription case.
 			if( $subscription['order_type'] !== 'subscription' ) {
 				continue;
@@ -822,11 +819,11 @@ class SubscriptionService {
 			// $update_result = $this->members_subscription_repository->update( $subscription_id, array( 'status' => 'expired' ) );
 			$this->failed_payment_retry_callback( $subscription );
 		}
-	}
+}
 	public function failed_payment_retry_callback( $subscription ) {
 		//update the counter for failed payment retry.
-		$retry_count = (int)get_user_meta( $subscription[ 'user_id' ], 'urm_is_payment_retrying', true );
-		update_user_meta( $subscription[ 'user_id' ], 'urm_is_payment_retrying', $retry_count + 1 );
+		$retry_count = (int)get_user_meta( $subscription[ 'member_id' ], 'urm_is_payment_retrying', true );
+		update_user_meta( $subscription[ 'member_id' ], 'urm_is_payment_retrying', $retry_count + 1 );
 		switch( $subscription[ 'payment_method' ] ) {
 			case 'paypal':
 				$paypal_service = new PaypalService();
