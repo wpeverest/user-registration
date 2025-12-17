@@ -1128,6 +1128,42 @@ class StripeService {
 			case 'invoice.payment_succeeded':
 				$this->handle_succeeded_invoice( $event, $subscription_id );
 				break;
+			case 'invoice.payment_failed':
+				// Notify user about a failed retry attempt
+				$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $subscription_id, true );
+				if ( ! empty( $current_subscription ) ) {
+					$member_id   = $current_subscription['user_id'];
+					$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
+					$membership  = $this->membership_repository->get_single_membership_by_ID( $current_subscription['item_id'] );
+					$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
+					$email_service = new EmailService();
+					$email_data = array(
+						'subscription' => $current_subscription,
+						'order' => $latest_order,
+						'membership_metas' => $membership_metas,
+						'member_id' => $member_id,
+					);
+					$email_service->send_email( $email_data, 'payment_retry_failed' );
+				}
+				break;
+			case 'customer.subscription.deleted':
+				// When subscription is deleted/cancelled in Stripe, send final cancellation email
+				$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $subscription_id, true );
+				if ( ! empty( $current_subscription ) ) {
+					$member_id   = $current_subscription['user_id'];
+					$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
+					$membership  = $this->membership_repository->get_single_membership_by_ID( $current_subscription['item_id'] );
+					$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
+					$email_service = new EmailService();
+					$email_data = array(
+						'subscription' => $current_subscription,
+						'order' => $latest_order,
+						'membership_metas' => $membership_metas,
+						'member_id' => $member_id,
+					);
+					$email_service->send_email( $email_data, 'payment_retry_cancel' );
+				}
+				break;
 			default:
 				break;
 		}

@@ -50,6 +50,10 @@ class EmailService
 				return $this->send_user_register_admin_email( $data );
 			case 'payment_successful': // payment successful message to member.
 				return self::send_payment_successful_email( $data );
+			case 'payment_retry_failed': // payment retry failed (single retry attempt failed)
+				return self::send_payment_retry_failed_email( $data );
+			case 'payment_retry_cancel': // payment retry exhausted -> final cancellation
+				return self::send_payment_retry_cancel_email( $data );
 			case 'payment_approval': // payment approval message to member.
 				return self::send_payment_approval_email( $data );
 			case 'membership_cancellation_email_user': // membership cancellation email to member.
@@ -219,6 +223,66 @@ class EmailService
 		if ( ur_string_to_bool( get_option( 'user_registration_enable_payment_success_email', true ) ) ) {
 			\UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), $template_id );
 		}
+	}
+
+	/**
+	 * Send payment retry failed email (single retry attempt failed)
+	 *
+	 * @param $data
+	 * @return mixed|void
+	 */
+	public static function send_payment_retry_failed_email( $data ) {
+		$user_id              = absint( $data['member_id'] );
+		$user                 = get_user_by( 'ID', $user_id );
+		$email                = $user->data->user_email;
+		$form_id              = ur_get_form_id_by_userid( $user_id );
+		$data['username']     = $user->user_login;
+		$data['user_email']   = $user->user_email;
+		$subscription_service = new SubscriptionService();
+		$values               = array(
+			'membership_tags' => $subscription_service->get_membership_plan_details( $data )
+		);
+		$values = $data + $values;
+
+		$subject = __( 'Payment Attempt Failed – Action Required on {{blog_info}}', 'user-registration' );
+		$settings = new \UR_Settings_Payment_Retry_Failed_Email();
+		$message  = $settings->ur_get_payment_retry_failed_email();
+		$message  = get_option( 'user_registration_payment_retry_failed_email', $message );
+		$message = \UR_Emailer::parse_smart_tags( $message, $values );
+		$subject = \UR_Emailer::parse_smart_tags( $subject, $values );
+		$headers = \UR_Emailer::ur_get_header();
+
+		return \UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), $template_id = 0 );
+	}
+
+	/**
+	 * Send payment retry cancel email (final cancellation after retries exhausted)
+	 *
+	 * @param $data
+	 * @return mixed|void
+	 */
+	public static function send_payment_retry_cancel_email( $data ) {
+		$user_id              = absint( $data['member_id'] );
+		$user                 = get_user_by( 'ID', $user_id );
+		$email                = $user->data->user_email;
+		$form_id              = ur_get_form_id_by_userid( $user_id );
+		$data['username']     = $user->user_login;
+		$data['user_email']   = $user->user_email;
+		$subscription_service = new SubscriptionService();
+		$values               = array(
+			'membership_tags' => $subscription_service->get_membership_plan_details( $data )
+		);
+		$values = $data + $values;
+
+		$subject = __( 'Payment Cancelled – Registration Cancelled on {{blog_info}}', 'user-registration' );
+		$settings = new \UR_Settings_Payment_Retry_Cancel_Email();
+		$message  = $settings->ur_get_payment_retry_cancel_email();
+		$message  = get_option( 'user_registration_payment_retry_cancel_email', $message );
+		$message = \UR_Emailer::parse_smart_tags( $message, $values );
+		$subject = \UR_Emailer::parse_smart_tags( $subject, $values );
+		$headers = \UR_Emailer::ur_get_header();
+
+		return \UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), $template_id = 0 );
 	}
 //	/**
 //	 * Send payment successful email

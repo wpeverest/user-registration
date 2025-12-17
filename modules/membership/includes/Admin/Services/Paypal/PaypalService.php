@@ -747,6 +747,16 @@ class PaypalService {
 				) );
 			}
 
+			// Send final cancellation email to user
+			$email_service = new EmailService();
+			$email_data = array(
+				'subscription'     => $subscription,
+				'order'            => $latest_order,
+				'membership_metas' => $membership_metas,
+				'member_id'        => $member_id,
+			);
+			$email_service->send_email( $email_data, 'payment_retry_cancel' );
+
 			return;
 		}
 		// return if first ipn received, change the status of order and subscription to complete and active respectively.
@@ -842,14 +852,25 @@ class PaypalService {
 			$error = esc_html__( 'Payment failed: payment amounts do not match ', 'user-registration' );
 		}
 
-		if ( ! empty( $error ) ) {
+        if ( ! empty( $error ) ) {
 			PaymentGatewayLogging::log_transaction_failure( 'paypal', $error, array(
 				'subscription_id' => $subscription_id,
 				'member_id' => $member_id
 			) );
 			$this->members_orders_repository->update( $latest_order['ID'], array( 'status' => 'failed' ) );
 
-			return;
+
+		    // Send a retry-failed notification to the user when IPN reports failure
+		    $email_service = new EmailService();
+		    $email_data = array(
+			'subscription'     => $subscription,
+			'order'            => $latest_order,
+			'membership_metas' => $membership_metas,
+			'member_id'        => $member_id,
+		    );
+		    $email_service->send_email( $email_data, 'payment_retry_failed' );
+
+		    return;
 		}
 
 		if ( 'subscr_payment' == $txn_type && $payment_date > date( 'Y-m-d' ) ) { // only create new order if ipn comes after the payment date since min subscription period is of a day.
