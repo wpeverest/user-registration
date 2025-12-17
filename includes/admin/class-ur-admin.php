@@ -42,10 +42,6 @@ class UR_Admin {
 		add_action( 'user_registration_after_form_settings', array( $this, 'render_integration_section' ) );
 		add_action( 'user_registration_after_form_settings', array( $this, 'render_integration_List_section' ) );
 		add_action( 'init', array( $this, 'init_users_menu' ) );
-
-		add_filter( 'user_registration_get_settings_payment', array( $this, 'get_payment_retry_settings' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_payment_retry_scripts' ) );
-		add_action( 'wp_ajax_user_registration_save_payment_retry', array( $this, 'ajax_save_payment_retry' ) );
 	}
 
 
