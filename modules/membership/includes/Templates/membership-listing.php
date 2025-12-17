@@ -19,7 +19,7 @@ if ( 'block' === $type ) :
 		<!--				</p>-->
 		<!--			</div>-->
 		<!--		</div>-->
-		<form id="membership-old-selection-form" class="ur-membership-container"
+		<form id="membership-old-selection-form" class="membership-selection-form ur-membership-container"
 				method="GET">
 			<?php
 			foreach ( $memberships as $k => $membership ) :
@@ -32,6 +32,7 @@ if ( 'block' === $type ) :
 				}
 
 				$membership_group_repository = new WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository();
+				$membership_group_service    = new WPEverest\URMembership\Admin\Services\MembershipGroupService();
 				$current_membership_group    = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
 				$user_membership_group_ids   = array();
 
@@ -42,15 +43,22 @@ if ( 'block' === $type ) :
 
 				$user_membership_group_ids = array_values( array_unique( $user_membership_group_ids ) );
 
+				$intended_action = $action_to_take;
+
 				if ( is_user_logged_in() ) {
 
 					if ( isset( $membership['multiple_membership'] ) && $membership['multiple_membership'] ) {
-						$action_to_take = 'multiple';
+						$intended_action = 'multiple';
 					} elseif ( isset( $current_membership_group['ID'] ) && ! in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
-						$action_to_take = 'multiple';
+						$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group_id['ID'] );
+						if ( $multiple_memberships_allowed ) {
+							$intended_action = 'multiple';
+						} else {
+							$intended_action = 'upgrade';
+						}
 					}
 				} else {
-					$action_to_take = 'register';
+					$intended_action = 'register';
 				}
 
 				?>
@@ -65,7 +73,7 @@ if ( 'block' === $type ) :
 					</div>
 					<div class="membership-footer">
 						<input type="hidden" name="membership_id" value="<?php echo esc_html( $membership['ID'] ); ?>">
-						<input type="hidden" name="action" value="<?php echo esc_html( $action_to_take ); ?>">
+						<input type="hidden" name="action" value="<?php echo esc_html( $intended_action ); ?>">
 						<input type="hidden" name="redirection_url"
 								value="<?php echo esc_url( $redirect_page_url ); ?>">
 						<input type="hidden" name="urm_uuid" value="<?php echo esc_attr( $uuid ); ?>">
@@ -85,14 +93,46 @@ if ( 'block' === $type ) :
 	<?php
 elseif ( 'list' === $type ) :
 	?>
-	<form id="membership-selection-form-<?php echo esc_attr( $uuid ); ?>" class="ur-membership-container" method="GET"
-			action="<?php echo $redirect_page_url; ?>">
-		<input type="hidden" name="urm_uuid" value="<?php echo esc_attr( $uuid ); ?>">
-		<input type="hidden" name="thank_you" value="<?php echo $thank_you_page_id; ?>">
+	<form id="membership-selection-form-<?php echo esc_attr( $uuid ); ?>" class="membership-selection-form ur-membership-container" method="GET" >
 		<div class="ur_membership_frontend_input_container radio">
 			<?php
 			if ( ! empty( $memberships ) ) :
 				foreach ( $memberships as $m => $membership ) :
+					$current_plan = false;
+
+					if ( in_array( $membership['ID'], $user_membership_ids ) ) {
+						unset( $memberships[ $m ] );
+						continue;
+					}
+
+					$membership_group_repository = new WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository();
+					$membership_group_service    = new WPEverest\URMembership\Admin\Services\MembershipGroupService();
+					$current_membership_group    = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
+					$user_membership_group_ids   = array();
+
+					foreach ( $user_membership_ids as $user_membership_id ) {
+						$user_membership_group_id    = $membership_group_repository->get_membership_group_by_membership_id( $user_membership_id );
+						$user_membership_group_ids[] = $user_membership_group_id['ID'];
+					}
+
+					$user_membership_group_ids = array_values( array_unique( $user_membership_group_ids ) );
+					$intended_action           = $action_to_take;
+
+					if ( is_user_logged_in() ) {
+
+						if ( isset( $membership['multiple_membership'] ) && $membership['multiple_membership'] ) {
+							$intended_action = 'multiple';
+						} elseif ( isset( $current_membership_group['ID'] ) && ! in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
+							$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group_id['ID'] );
+							if ( $multiple_memberships_allowed ) {
+								$intended_action = 'multiple';
+							} else {
+								$intended_action = 'upgrade';
+							}
+						}
+					} else {
+						$intended_action = 'register';
+					}
 					?>
 					<div class="membership-block">
 						<label class="ur_membership_input_label ur-label"
@@ -102,6 +142,9 @@ elseif ( 'list' === $type ) :
 									type="radio"
 									name="membership_id"
 									value="<?php echo esc_attr( $membership['ID'] ); ?>"
+									data-action="<?php echo esc_attr( $intended_action ); ?>"
+									data-redirect="<?php echo esc_url( $redirect_page_url ); ?>"
+									data-thankyou="<?php echo esc_attr( $thank_you_page_id ); ?>"
 							>
 							<span
 								class="ur-membership-duration"><?php echo esc_html__( $membership['title'], 'user-registration' ); ?></span>

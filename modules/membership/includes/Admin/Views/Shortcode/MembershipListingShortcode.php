@@ -42,6 +42,7 @@ class MembershipListingShortcode {
 
 		$membership_repository      = new MembersRepository();
 		$membershp_group_repository = new MembershipGroupRepository();
+		$membership_group_service   = new MembershipGroupService();
 
 		$type = 'user_registration_groups' === $shortcode ? 'list' : '';
 
@@ -52,9 +53,8 @@ class MembershipListingShortcode {
 		$group_id = ! empty( $attributes['group_id'] ) ? $attributes['group_id'] : ( ! empty( $attributes['id'] ) ? $attributes['id'] : 0 );
 
 		if ( $group_id ) {
-			$group_id                 = absint( $group_id );
-			$membership_group_service = new MembershipGroupService();
-			$memberships              = $membership_group_service->get_group_memberships( $group_id );
+			$group_id    = absint( $group_id );
+			$memberships = $membership_group_service->get_group_memberships( $group_id );
 
 			$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $group_id );
 
@@ -67,6 +67,19 @@ class MembershipListingShortcode {
 					$memberships
 				);
 			}
+		} else {
+			$memberships = array_map(
+				function ( $membership ) use ( $membershp_group_repository, $membership_group_service ) {
+					$membership_group_id          = $membershp_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
+					$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group_id['ID'] );
+
+					if ( $multiple_memberships_allowed ) {
+						$membership['multiple_membership'] = true;
+					}
+					return $membership;
+				},
+				$memberships
+			);
 		}
 
 		$sign_up_text   = ! empty( $attributes['button_text'] ) ? esc_html__( sanitize_text_field( $attributes['button_text'] ), 'user-registration' ) : __( 'Sign Up', 'user-registration' );

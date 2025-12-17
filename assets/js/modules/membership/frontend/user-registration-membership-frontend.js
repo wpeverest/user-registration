@@ -2116,8 +2116,9 @@
 			//redirect to membership member registration form
 			$(document).on(
 				"click",
-				"#membership-old-selection-form .membership-signup-button",
-				function () {
+				".membership-selection-form .membership-signup-button",
+				function (e) {
+					e.preventDefault();
 					var $this = $(this),
 						membership_id = $this
 							.siblings('input[name="membership_id"]')
@@ -2129,17 +2130,37 @@
 							.siblings('input[name="thank_you_page_id"]')
 							.val(),
 						uuid = $this.siblings('input[name="urm_uuid"]').val(),
-						action = $this.siblings('input[name="action"]').val(),
-						url =
-							redirection_url +
-							"?membership_id=" +
-							membership_id +
-							"&action=" +
-							action +
-							"&urm_uuid=" +
-							uuid +
-							"&thank_you=" +
-							thank_you_page_id;
+						action = $this.siblings('input[name="action"]').val();
+
+					if (
+						$this
+							.closest(".membership-selection-form")
+							.find(".ur_membership_frontend_input_container")
+							.hasClass("radio")
+					) {
+						var selected = $('input[name="membership_id"]:checked');
+
+						if (selected.length > 0) {
+							membership_id = selected.val();
+							redirection_url = selected.data("redirect");
+							thank_you_page_id = selected.data("thankyou");
+							uuid = selected.data("urm-uuid");
+							action = selected.data("action");
+						}
+					}
+
+					var url =
+						redirection_url +
+						"?membership_id=" +
+						membership_id +
+						"&action=" +
+						action +
+						"&thank_you=" +
+						thank_you_page_id;
+
+					if (action === "register") {
+						url += "&uuid=" + uuid;
+					}
 					window.location.replace(url);
 				}
 			);
