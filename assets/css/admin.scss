@@ -7714,115 +7714,115 @@ body.user-registration {
 		}
 	}
 
-	.swal2 {
-		&-popup {
-			padding: 0;
-		}
+	// .swal2 {
+	// 	&-popup {
+	// 		padding: 0;
+	// 	}
 
-		&-header {
-			padding: $spacing_20px $spacing_20px 0;
-			border-bottom: 0;
-			margin-bottom: $spacing_16px;
-		}
+	// 	&-header {
+	// 		padding: $spacing_20px $spacing_20px 0;
+	// 		border-bottom: 0;
+	// 		margin-bottom: $spacing_16px;
+	// 	}
 
-		&-title {
-			display: flex !important;
-			align-items: center;
-			gap: $spacing_8px;
-			text-align: left;
-			font-size: 16px;
-			font-weight: 500;
-			line-height: 120%;
-			padding-bottom: $spacing-16px;
-			width: 100%;
-			margin-bottom: 0;
-			color: $grey-500;
+	// 	&-title {
+	// 		display: flex !important;
+	// 		align-items: center;
+	// 		gap: $spacing_8px;
+	// 		text-align: left;
+	// 		font-size: 16px;
+	// 		font-weight: 500;
+	// 		line-height: 120%;
+	// 		padding-bottom: $spacing-16px;
+	// 		width: 100%;
+	// 		margin-bottom: 0;
+	// 		color: $grey-500;
 
-			img {
-				width: 30px;
-				height: 30px;
-				background: #fff4f4;
-				padding: $spacing_6px;
-				box-sizing: border-box;
-				border-radius: 50%;
-			}
-		}
+	// 		img {
+	// 			width: 30px;
+	// 			height: 30px;
+	// 			background: #fff4f4;
+	// 			padding: $spacing_6px;
+	// 			box-sizing: border-box;
+	// 			border-radius: 50%;
+	// 		}
+	// 	}
 
-		&-content {
-			padding-left: $spacing_20px;
-			padding-right: $spacing_20px;
-			text-align: center;
-			margin-bottom: $spacing_20px;
+	// 	&-content {
+	// 		padding-left: $spacing_20px;
+	// 		padding-right: $spacing_20px;
+	// 		text-align: center;
+	// 		margin-bottom: $spacing_20px;
 
-			form {
-				margin-top: 20px;
-			}
+	// 		form {
+	// 			margin-top: 20px;
+	// 		}
 
-			p {
-				margin: 0;
+	// 		p {
+	// 			margin: 0;
 
-				&#html {
-					&_1 {
-						margin: 0 0 $spacing_14px;
-						color: $grey-400;
-						font-size: 14px;
-						font-weight: 500;
-						line-height: 24px;
-					}
+	// 			&#html {
+	// 				&_1 {
+	// 					margin: 0 0 $spacing_14px;
+	// 					color: $grey-400;
+	// 					font-size: 14px;
+	// 					font-weight: 500;
+	// 					line-height: 24px;
+	// 				}
 
-					&_2 {
-						color: #f25656;
-						border-radius: $border_radius_3;
-						padding: $spacing_10px $spacing_18px $spacing_10px
-							$spacing_14px;
-						background: #fff4f4;
-						font-size: 13px;
-						font-weight: 400;
-						line-height: 23px;
-					}
-				}
-			}
+	// 				&_2 {
+	// 					color: #f25656;
+	// 					border-radius: $border_radius_3;
+	// 					padding: $spacing_10px $spacing_18px $spacing_10px
+	// 						$spacing_14px;
+	// 					background: #fff4f4;
+	// 					font-size: 13px;
+	// 					font-weight: 400;
+	// 					line-height: 23px;
+	// 				}
+	// 			}
+	// 		}
 
-			a {
-				font-size: 12px;
-			}
-		}
+	// 		a {
+	// 			font-size: 12px;
+	// 		}
+	// 	}
 
-		&-actions {
-			border-radius: 0 0 $border_radius_5 $border_radius_5;
-			border-top: 0.5px solid $border-color;
-			background: $grey-15;
-			padding: $spacing_18px $spacing_20px;
-			justify-content: flex-start;
-			flex-direction: row-reverse;
-			gap: $spacing_12px;
-			margin-top: 0;
+	// 	&-actions {
+	// 		border-radius: 0 0 $border_radius_5 $border_radius_5;
+	// 		border-top: 0.5px solid $border-color;
+	// 		background: $grey-15;
+	// 		padding: $spacing_18px $spacing_20px;
+	// 		justify-content: flex-start;
+	// 		flex-direction: row-reverse;
+	// 		gap: $spacing_12px;
+	// 		margin-top: 0;
 
-			button {
-				transition: all 0.3s ease-in-out;
+	// 		button {
+	// 			transition: all 0.3s ease-in-out;
 
-				&:focus {
-					box-shadow: none;
-				}
+	// 			&:focus {
+	// 				box-shadow: none;
+	// 			}
 
-				&.swal2-confirm {
-					border-radius: $border_radius_3;
-					background: $primary_color;
-					padding: $spacing_10px $spacing-16px;
-					color: $grey-0;
-					margin: 0;
-				}
+	// 			&.swal2-confirm {
+	// 				border-radius: $border_radius_3;
+	// 				background: $primary_color;
+	// 				padding: $spacing_10px $spacing-16px;
+	// 				color: $grey-0;
+	// 				margin: 0;
+	// 			}
 
-				&.swal2-cancel {
-					border-radius: $border_radius_3;
-					background: $grey-50;
-					padding: $spacing_10px $spacing-16px;
-					color: $grey-300;
-					margin: 0;
-				}
-			}
-		}
-	}
+	// 			&.swal2-cancel {
+	// 				border-radius: $border_radius_3;
+	// 				background: $grey-50;
+	// 				padding: $spacing_10px $spacing-16px;
+	// 				color: $grey-300;
+	// 				margin: 0;
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	#show-settings-link {
 		display: none;

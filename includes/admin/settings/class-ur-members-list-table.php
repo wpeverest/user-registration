@@ -507,15 +507,15 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 				$delete_link = add_query_arg(
 					array(
 						'action'   => 'delete',
-						'user_id'  => $user_id,
+						'user_id'  => $new_user_object->ID,
 						'_wpnonce' => wp_create_nonce('bulk-users'),
 					),
-					admin_url('admin.php?page=user-registration-users'),
+					admin_url('admin.php?page=user-registration-users&view_user'),
 				);
 
 				$wp_delete_url = add_query_arg(
 					array(
-						'user'     => $user_id,
+						'user'     => $new_user_object->ID,
 						'_wpnonce' => wp_create_nonce('bulk_users'),
 					),
 					admin_url('users.php?action=delete')

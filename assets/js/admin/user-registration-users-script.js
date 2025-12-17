@@ -318,7 +318,7 @@ jQuery(function ($) {
 				e.stopPropagation();
 
 				var form = document.getElementById(
-					"user-registration-users-action-form"
+					"user-registration-members-list-form"
 				);
 
 				var formData = new FormData(form);
@@ -357,20 +357,18 @@ jQuery(function ($) {
 				"single" == deleteType
 					? prompt_data.confirm_message_single
 					: prompt_data.confirm_message_bulk;
+			var title =
+				"single" == deleteType
+					? prompt_data.title
+					: prompt_data.bulk_title;
 
 			Swal.fire({
 				title:
 					"<img src='" +
 					prompt_data.icon +
 					"' id='delete-user-icon'>" +
-					prompt_data.title,
-				html:
-					'<p id="html_1">' +
-					confirm_message +
-					"</p>" +
-					'<p id="html_2">' +
-					prompt_data.warning_message +
-					"</p>",
+					title,
+				html: '<p id="html_1">' + confirm_message + "</p>",
 				showCancelButton: true,
 				confirmButtonText: prompt_data.delete_label,
 				cancelButtonText: prompt_data.cancel_label
