@@ -100,6 +100,8 @@ if ( ! class_exists( 'Main' ) ) :
 			if ( is_admin() ) {
 				Admin::init();
 			}
+
+			Hooks::init();
 		}
 	}
 endif;
