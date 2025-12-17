@@ -621,12 +621,8 @@ class UR_Frontend_Scripts {
 	}
 
 	/**
-	 * Output dynamic primary color CSS variable from settings.
-	 * Sets the --ur-primary-color CSS custom property used by the SCSS $primary_color variable.
+	 * Output dynamic color styles in the head.
 	 */
-
-
-
 	public static function output_dynamic_color_style() {
 		$primary_color           = get_option( 'user_registration_style_setting_primary_color', '#475bb2' );
 		$button_text_color       = get_option(

@@ -372,13 +372,13 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 		}
 
 		/**
-		 * Settings for frontend messages customization.
+		 * Settings for color style customization.
 		 *
 		 * @return array
 		 */
 		public function get_color_style() {
 			/**
-			 * Filter to add the frontend messages options settings.
+			 * Filter to add the color style options settings.
 			 *
 			 * @param array Options to be enlisted.
 			 */
@@ -436,7 +436,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 			/**
 			 * Filter to get the settings.
 			 *
-			 * @param array $settings Frontend Message Setting options to be enlisted.
+			 * @param array $settings Style Setting options to be enlisted.
 			 */
 			return apply_filters( 'user_registration_get_color_style_settings_' . $this->id, $settings );
 		}
