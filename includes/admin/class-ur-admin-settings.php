@@ -619,14 +619,12 @@ class UR_Admin_Settings {
 									$settings     .= '</div>';
 									break;
 
-								// Color group picker (normal, active, hover, focus).
+								// Color group picker.
 								case 'color-group':
 									$base_id = $value['id'];
 
-									// Get states from settings, or use default states (normal and hover)
 									$states_config = isset( $value['states'] ) && is_array( $value['states'] ) ? $value['states'] : array( 'normal', 'hover' );
 
-									// Default labels mapping
 									$default_labels = array(
 										'normal' => __( 'Normal', 'user-registration' ),
 										'active' => __( 'Active', 'user-registration' ),
@@ -643,15 +641,11 @@ class UR_Admin_Settings {
 											$state_key = $state;
 											$state     = array();
 										} elseif ( is_array( $state ) && isset( $state['key'] ) ) {
-											// Structured format: array('key' => 'normal', 'label' => 'Normal')
 											$state_key = $state['key'];
 										} elseif ( is_string( $state ) ) {
 											// Associative array format: array('normal' => 'Normal Label')
 											$state = array( 'label' => $state );
 										}
-
-										$state_label   = '';
-										$state_default = '';
 
 										// Get label
 										if ( is_array( $state ) && isset( $state['label'] ) ) {
