@@ -55,7 +55,7 @@
 	}
 
 	.button-primary {
-		background: $primary_color;
+		background: var(--ur-button-background-normal-color, $primary_color);
 		border-color: $primary_color;
 		box-shadow: 0 1px 0 $primary_color;
 		text-shadow: none;
@@ -63,7 +63,7 @@
 		&:hover,
 		&:active,
 		&:focus {
-			background: $primary_dark;
+			background: var(--ur-button-background-hover-color, $primary_color);
 			border-color: $primary_dark;
 			box-shadow: 0 1px 0 $primary_dark;
 		}
@@ -113,9 +113,9 @@
 		&:active,
 		&:focus {
 			color: $white;
-			background: adjust-color($red, $saturation: -15%, $lightness: -8% );
-			border-color: adjust-color($red, $saturation: -15%, $lightness: -8% );
-			box-shadow: 0 1px 0 adjust-color($red, $saturation: -15%, $lightness: -8% );
+			background: adjust-color($red, $saturation: -15%, $lightness: -8%);
+			border-color: adjust-color($red, $saturation: -15%, $lightness: -8%);
+			box-shadow: 0 1px 0 adjust-color($red, $saturation: -15%, $lightness: -8%);
 		}
 	}
 

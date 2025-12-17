@@ -393,7 +393,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 							'desc'     => '',
 							'settings' => array(
 								array(
-									'title'    => __( 'Primary Color', 'user-registration' ),
+									'title'    => __( 'Primary', 'user-registration' ),
 									'desc'     => __( 'Choose color to match your brand or site', 'user-registration' ),
 									'id'       => 'user_registration_style_setting_primary_color',
 									'default'  => '',
@@ -403,15 +403,27 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'desc_tip' => true,
 								),
 								array(
-									'id'       => 'user_registration_style_setting_button_colors',
+									'id'       => 'user_registration_style_setting_button_text_colors',
 									'type'     => 'color-group',
 									'desc'     => __( 'Choose color to match your brand or site', 'user-registration' ),
-									'title'    => __( 'Button Color', 'user-registration' ),
+									'title'    => __( 'Button Text', 'user-registration' ),
 									'states'   => array( 'normal', 'hover' ),
 									'desc_tip' => true,
 									'default'  => array(
-										'normal' => '#0073aa',
-										'hover'  => '#005a87',
+										'normal' => '#FFFFFF',
+										'hover'  => '#FFFFFF',
+									),
+								),
+								array(
+									'id'       => 'user_registration_style_setting_button_background_colors',
+									'type'     => 'color-group',
+									'desc'     => __( 'Choose color to match your brand or site', 'user-registration' ),
+									'title'    => __( 'Button Background', 'user-registration' ),
+									'states'   => array( 'normal', 'hover' ),
+									'desc_tip' => true,
+									'default'  => array(
+										'normal' => '#475bb2',
+										'hover'  => '#38488e',
 									),
 								),
 

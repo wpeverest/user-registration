@@ -99,9 +99,9 @@
 	display: block;
 	margin: 0 0 10px;
 	padding: 10px 15px;
-	background-color: lighten($primary_color, 47%);
+	background-color: var(--ur-primary-light, lighten($primary_color, 47%));
 	color: $color_gray_one;
-	border-top: 3px solid $primary_color;
+	border-top: 3px solid var(--ur-primary-color, $primary_color);
 	list-style: none outside;
 	@include clearfix();
 	width: auto;
@@ -269,16 +269,15 @@ textarea.ur-input-border-red {
 		}
 
 		.ur-reset-password-btn {
-			border: 1px solid $primary_color;
-			background: $primary_color;
+			border: 1px solid var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
+			background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
 			width: 100%;
 			color: $white;
 			letter-spacing: 0.15px;
-			border: 0;
 
 			&:hover {
-				background: #38488e;
-				border-color: #38488e;
+				background: var(--ur-button-background-hover-color, #38488e);
+				border-color: var(--ur-button-background-hover-color, #38488e);
 			}
 		}
 
@@ -290,8 +289,8 @@ textarea.ur-input-border-red {
 			.ur-form-row.edit-user-save-btn-container {
 				.btn-primary {
 					min-height: 34px;
-					background: $primary_color;
-					border: $border_width solid $primary_color;
+					background: var(--ur-primary-color, $primary_color);
+					border: $border_width solid var(--ur-primary-color, $primary_color);
 					color: $white;
 					border-radius: $border_radius_4;
 					font-size: 14px;
@@ -449,7 +448,7 @@ textarea.ur-input-border-red {
 						line-height: 20px;
 						font-weight: $medium;
 						background: #ebedf7;
-						color: $primary_color;
+						color: var(--ur-primary-color, $primary_color);
 						border-radius: $border_radius_4 $border_radius_4 0 0;
 						pointer-events: none;
 						padding: $spacing_8px $spacing_16px;
@@ -465,7 +464,7 @@ textarea.ur-input-border-red {
 							border-radius: 0 $border_radius_4 $border_radius_4 $border_radius_4;
 
 							&--focus {
-								border-color: $primary_color;
+								border-color: var(--ur-primary-color, $primary_color);
 								border-radius: $border_radius_4;
 							}
 
@@ -594,7 +593,7 @@ textarea.ur-input-border-red {
 				padding: 5px 20px;
 
 				&:focus {
-					border-color: $primary_color !important;
+					border-color: var(--ur-primary-color, $primary_color) !important;
 				}
 			}
 
@@ -1244,7 +1243,7 @@ span.ur-shortcode-form-embed-dot {
 	padding: 0 !important;
 	border: 0 !important;
 	border-radius: 50%;
-	background-color: #475bb2;
+	background-color: $primary_color;
 	animation: user-registration-heartbeat 1.5s infinite !important;
 	margin: 3px 10px;
 }
@@ -1338,7 +1337,7 @@ span.ur-shortcode-form-embed-dot {
 			letter-spacing: 0px;
 			padding: 7px 18px;
 			border: none;
-			background-color: #475bb2;
+			background-color: $primary_color;
 			color: #ffffff;
 			display: block;
 			margin: 15px auto 0;
@@ -1348,7 +1347,7 @@ span.ur-shortcode-form-embed-dot {
 				opacity: 0.5;
 
 				&:hover {
-					background-color: #475bb2;
+					background-color: $primary_color;
 				}
 			}
 		}
@@ -1379,7 +1378,7 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page {
 	.edit-post-layout {
-		.components-notice-list>div {
+		.components-notice-list > div {
 			padding-left: 50px;
 		}
 	}
@@ -1416,7 +1415,7 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page.is-fullscreen-mode {
 	.edit-post-layout {
-		.components-notice-list>div {
+		.components-notice-list > div {
 			padding-left: 125px;
 		}
 	}
@@ -1483,9 +1482,8 @@ span.ur-shortcode-form-embed-dot {
 //Revamp design for message and error
 .ur-message-container {
 	border-radius: 8px;
-	box-shadow:
-		0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+	0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 	padding: 60px;
 
 	.user-registration-message {
@@ -1529,7 +1527,7 @@ span.ur-shortcode-form-embed-dot {
 	justify-content: space-between;
 
 	.user-registration-LostPassword {
-		color: #475bb2;
+		color: $primary_color;
 	}
 }
 
@@ -1537,9 +1535,9 @@ span.ur-shortcode-form-embed-dot {
 .user-registration-Button,
 .ur-submit-button {
 	width: 100%;
-	background: $primary_color;
+	background: var(--ur-primary-color, $primary_color);
 	border-radius: $border_radius_4;
-	border: 1px solid $primary_color;
+	border: 1px solid var(--ur-primary-color, $primary_color);
 	color: $white;
 
 	&:hover {
@@ -1583,9 +1581,8 @@ span.ur-shortcode-form-embed-dot {
 			border-radius: 8px 0 0 0;
 			border-top: 1px solid #f1f1f1;
 			background: #f9f9f9;
-			box-shadow:
-				0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-				0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+			box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+			0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 			clip-path: inset(0px -1px -1px -1px);
 
 			&:first-child {
@@ -1637,9 +1634,8 @@ span.ur-shortcode-form-embed-dot {
 .user-registration.ur-frontend-form {
 	background: $white;
 	border-radius: $border_radius_8;
-	box-shadow:
-		0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+	0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 	padding: $spacing_60px;
 
 	@media screen and (max-width: 600px) {
@@ -1718,7 +1714,7 @@ body {
 				margin-bottom: 0 !important;
 				padding: 6px 8px !important;
 
-				&-grp>div {
+				&-grp > div {
 					padding: 0;
 				}
 
@@ -1986,7 +1982,7 @@ body {
 				display: block;
 			}
 
-			>ul {
+			> ul {
 				padding-left: 0;
 				margin: 0;
 				list-style: none;
@@ -1995,7 +1991,7 @@ body {
 	}
 
 	.user-registration-error {
-		>svg {
+		> svg {
 			display: none;
 		}
 	}
@@ -2225,7 +2221,7 @@ body {
 									}
 
 									.ur-submit-button {
-										background: $primary_color;
+										background: var(--ur-primary-color, $primary_color);
 										border-radius: 4px;
 									}
 								}
@@ -2387,7 +2383,7 @@ body {
 								padding: 0 14px 0 36px;
 
 								&:focus {
-									border-color: $primary_color;
+									border-color: var(--ur-primary-color, $primary_color);
 								}
 							}
 						}
@@ -2416,7 +2412,7 @@ body {
 									color: #383838;
 
 									&:focus {
-										border-color: $primary_color;
+										border-color: var(--ur-primary-color, $primary_color);
 									}
 
 									&::placeholder {
@@ -2444,23 +2440,24 @@ body {
 						font-weight: $medium;
 						line-height: 24px;
 						letter-spacing: 0.15px;
-						border: $border_width solid $primary_color;
+						border: $border_width solid var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
 						margin-right: 0;
-						background: $primary_color;
+						background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
 
 						&:hover {
-							border-color: #38488e;
+							background: var(--ur-button-background-hover-color, #38488e);
+							border-color: var(--ur-button-background-hover-color, #38488e);
 						}
 					}
 
 					.user-registration-save-and-continue-button {
 						margin-left: 0;
 						background: transparent;
-						color: $primary_color;
-						border: $border_width solid $primary_color;
+						color: var(--ur-primary-color, $primary_color);
+						border: $border_width solid var(--ur-primary-color, $primary_color);
 
 						&:hover {
-							background: $primary_color;
+							background: var(--ur-primary-color, $primary_color);
 							color: $white;
 						}
 					}
@@ -2491,7 +2488,7 @@ body {
 									}
 								}
 
-								>div {
+								> div {
 									display: block;
 									float: unset !important;
 									flex-direction: row-reverse;
@@ -2504,8 +2501,8 @@ body {
 										font-weight: 400;
 										line-height: 24px;
 										letter-spacing: 0.15px;
-										background: #475bb2;
-										border: 1px solid #475bb2;
+										background: $primary_color;
+										border: 1px solid $primary_color;
 
 										&:hover {
 											background: #38488e;
@@ -2517,7 +2514,7 @@ body {
 										padding: 10px 24px;
 										font-size: 15px;
 										line-height: 25px;
-										background: $primary_color;
+										background: var(--ur-primary-color, $primary_color);
 
 										&.ur-disabled-btn {
 											cursor: not-allowed;
@@ -2559,8 +2556,8 @@ body {
 											transition: all 0.3s;
 
 											&:hover {
-												background: #475bb2;
-												border-color: #475bb2;
+												background: $primary_color;
+												border-color: $primary_color;
 												color: #ffffff;
 											}
 										}
@@ -2597,7 +2594,7 @@ body {
 
 										a {
 											text-underline-offset: 4px;
-											color: $primary_color;
+											color: var(--ur-primary-color, $primary_color);
 										}
 									}
 								}
@@ -2611,7 +2608,7 @@ body {
 
 									a {
 										text-underline-offset: 4px;
-										color: $primary_color;
+										color: var(--ur-primary-color, $primary_color);
 									}
 								}
 
@@ -2873,13 +2870,13 @@ body {
 										padding: $spacing_10px $spacing_24px;
 										border: none;
 										background: #edeff7;
-										color: $primary_color;
+										color: var(--ur-primary-color, $primary_color);
 										display: block;
 										margin: $spacing_32px 0 0;
 										transition: all .3s ease-in-out;
 
 										&:hover {
-											background: $primary_color;
+											background: var(--ur-primary-color, $primary_color);
 											color: $white;
 										}
 									}
@@ -2889,7 +2886,7 @@ body {
 										opacity: 0.5;
 
 										&:hover {
-											background-color: #475bb2;
+											background-color: $primary_color;
 										}
 									}
 								}
@@ -3010,7 +3007,7 @@ body.user-registration-page {
 		.et-l {
 			.et-fb-modules-list {
 				ul {
-					>li {
+					> li {
 						position: relative;
 
 						// Registration Form Icon
@@ -3193,6 +3190,7 @@ body.user-registration-page {
 		}
 	}
 }
+
 .user-registration-login-form-container {
 	.ur-login-form-settings {
 		.user-registration-login-form-global-settings {
@@ -3200,11 +3198,13 @@ body.user-registration-page {
 				display: flex;
 				align-items: center;
 			}
+
 			&:has(.error) {
 				.select2-selection {
-					border-color: #f34c4c!important;
+					border-color: #f34c4c !important;
 				}
 			}
+
 			.error {
 				&.inline {
 					box-shadow: none;
@@ -3233,20 +3233,24 @@ body.user-registration-page {
 			}
 		}
 	}
+
 	.ur-builder-wrapper {
 		.user-registration-login-form-global-settings {
 			&--field {
 				display: flex;
 				align-items: center;
+
 				.select2-selection {
 					position: relative;
 				}
 			}
+
 			&:has(.error) {
 				.select2-selection {
-					border-color: #f34c4c!important;
+					border-color: #f34c4c !important;
 				}
 			}
+
 			.error {
 				&.inline {
 					box-shadow: none;
@@ -3322,14 +3326,16 @@ body.user-registration-page {
 			padding: 0;
 			margin: 0;
 		}
+
 		p > input.user-registration-Button.button {
-			background: $primary_color;
-			border: $border_width $primary_color;
+			background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
+			border: $border_width var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
 			border-radius: $border_radius_4;
 			border-style: inherit;
+
 			&:hover {
-				background: #38488e;
-				border-color: #38488e;
+				background: var(--ur-button-background-hover-color, #38488e);
+				border-color: var(--ur-button-background-hover-color, #38488e);
 			}
 		}
 	}

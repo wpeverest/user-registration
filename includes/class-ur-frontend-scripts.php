@@ -624,25 +624,85 @@ class UR_Frontend_Scripts {
 	 * Output dynamic primary color CSS variable from settings.
 	 * Sets the --ur-primary-color CSS custom property used by the SCSS $primary_color variable.
 	 */
-	public static function output_dynamic_primary_color() {
-		$primary_color = get_option( 'user_registration_style_setting_primary_color', '' );
 
+
+
+	public static function output_dynamic_primary_color() {
+		$primary_color           = get_option( 'user_registration_style_setting_primary_color', '#475bb2' );
+		$button_text_color       = get_option(
+			'user_registration_style_setting_button_text_colors',
+			array(
+				'normal' => '#FFFFFF',
+				'hover'  => '#FFFFFF',
+			)
+		);
+		$button_background_color = get_option(
+			'user_registration_style_setting_button_background_colors',
+			array(
+				'normal' => '#475bb2',
+				'hover'  => '#38488e',
+			)
+		);
+
+		$css_props = array();
+
+		// Primary color + variants.
 		if ( ! empty( $primary_color ) ) {
-			// Calculate darker and lighter variants
 			$primary_dark  = self::adjust_brightness( $primary_color, -10 );
 			$primary_light = self::adjust_brightness( $primary_color, 40 );
 
-			$css = sprintf(
-				':root {
-					--ur-primary-color: %s;
-					--ur-primary-dark: %s;
-					--ur-primary-light: %s;
-				}',
-				esc_attr( $primary_color ),
-				esc_attr( $primary_dark ),
-				esc_attr( $primary_light )
-			);
-			echo '<style id="ur-dynamic-primary-color">' . $css . '</style>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$css_props[] = sprintf( '--ur-primary-color: %s;', esc_attr( $primary_color ) );
+			$css_props[] = sprintf( '--ur-primary-dark: %s;', esc_attr( $primary_dark ) );
+			$css_props[] = sprintf( '--ur-primary-light: %s;', esc_attr( $primary_light ) );
+		}
+
+		// Button text colors: accept array or serialized/string value.
+		if ( ! empty( $button_text_color ) ) {
+			if ( ! is_array( $button_text_color ) ) {
+				$maybe_unserialized = maybe_unserialize( $button_text_color );
+				if ( is_array( $maybe_unserialized ) ) {
+					$button_text_color = $maybe_unserialized;
+				}
+			}
+
+			if ( is_array( $button_text_color ) ) {
+				$normal = isset( $button_text_color['normal'] ) ? $button_text_color['normal'] : '';
+				$hover  = isset( $button_text_color['hover'] ) ? $button_text_color['hover'] : '';
+
+				if ( '' !== $normal ) {
+					$css_props[] = sprintf( '--ur-button-text-normal-color: %s;', esc_attr( $normal ) );
+				}
+				if ( '' !== $hover ) {
+					$css_props[] = sprintf( '--ur-button-text-hover-color: %s;', esc_attr( $hover ) );
+				}
+			}
+		}
+
+		if ( ! empty( $button_background_color ) ) {
+			if ( ! is_array( $button_background_color ) ) {
+				$maybe_unserialized = maybe_unserialize( $button_background_color );
+				if ( is_array( $maybe_unserialized ) ) {
+					$button_background_color = $maybe_unserialized;
+				}
+			}
+
+			if ( is_array( $button_background_color ) ) {
+				$bg_normal = isset( $button_background_color['normal'] ) ? $button_background_color['normal'] : '';
+				$bg_hover  = isset( $button_background_color['hover'] ) ? $button_background_color['hover'] : '';
+
+				if ( '' !== $bg_normal ) {
+					$css_props[] = sprintf( '--ur-button-background-normal-color: %s;', esc_attr( $bg_normal ) );
+				}
+				if ( '' !== $bg_hover ) {
+					$css_props[] = sprintf( '--ur-button-background-hover-color: %s;', esc_attr( $bg_hover ) );
+				}
+			}
+		}
+
+		// Output single style block if any properties were added.
+		if ( ! empty( $css_props ) ) {
+			$css = ":root {\n\t" . implode( "\n\t", $css_props ) . "\n}";
+			echo '<style id="ur-dynamic-colors">' . $css . '</style>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 

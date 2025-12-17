@@ -93,7 +93,7 @@
 }
 .user-registration .button-primary,
 .ur-form-container .button-primary {
-  background: #475bb2;
+  background: var(--ur-button-background-normal-color, #475bb2);
   border-color: #475bb2;
   box-shadow: 0 1px 0 #475bb2;
   text-shadow: none;
@@ -102,7 +102,7 @@
 .ur-form-container .button-primary:hover,
 .ur-form-container .button-primary:active,
 .ur-form-container .button-primary:focus {
-  background: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+  background: var(--ur-button-background-hover-color, #475bb2);
   border-color: rgb(56.4578313253, 72.3614457831, 141.5421686747);
   box-shadow: 0 1px 0 rgb(56.4578313253, 72.3614457831, 141.5421686747);
 }
