@@ -1536,15 +1536,15 @@ span.ur-shortcode-form-embed-dot {
 .user-registration-Button,
 .ur-submit-button {
 	width: 100%;
-	background: var(--ur-primary-color, $primary_color);
+	background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
 	border-radius: $border_radius_4;
-	border: 1px solid var(--ur-primary-color, $primary_color);
-	color: $white;
+	border: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
+	color: var(--ur-button-text-normal-color, $white);;
 
 	&:hover {
-		background: #38488e;
-		border-color: #38488e;
-		color: $white;
+		background: var(--ur-button-background-hover-color, #38488e);
+		border-color: var(--ur-button-background-hover-color, #38488e);
+		color: var(--ur-button-text-hover-color, $white);;
 	}
 
 	.ur-spinner {
@@ -2517,7 +2517,8 @@ body {
 										padding: 10px 24px;
 										font-size: 15px;
 										line-height: 25px;
-										background: var(--ur-primary-color, $primary_color);
+										background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
+										color: var(--ur-button-text-normal-color, $white);
 
 										&.ur-disabled-btn {
 											cursor: not-allowed;
@@ -2529,9 +2530,9 @@ body {
 										}
 
 										&:hover {
-											background: #38488e;
-											border-color: #38488e;
-											color: $white;
+											background: var(--ur-button-background-hover-color, #38488e);
+											//border-color: #38488e;
+											color: var(--ur-button-text-hover-color, $white);
 										}
 									}
 

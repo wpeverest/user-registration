@@ -483,7 +483,7 @@ html {
 				}
 			}
 
-			>p {
+			> p {
 				margin-bottom: 0;
 			}
 
@@ -661,8 +661,7 @@ html {
 		position: fixed;
 		top: 50px;
 		right: -700px;
-		z-index: 9999;
-		;
+		z-index: 9999;;
 		transition: right 0.5s ease;
 	}
 
@@ -837,16 +836,16 @@ html {
 		display: none;
 	}
 
-.membership-upgrade-container {
-	display: flex;
-	gap: 10px;
-	flex-direction: column;
+	.membership-upgrade-container {
+		display: flex;
+		gap: 10px;
+		flex-direction: column;
 
-	.ur_membership_registration_container {
-		.ur_membership_frontend_input_container {
-			margin-bottom: 0;
+		.ur_membership_registration_container {
+			.ur_membership_frontend_input_container {
+				margin-bottom: 0;
+			}
 		}
-	}
 
 		.ur-upgrade-label {
 			font-weight: 700;
@@ -856,27 +855,27 @@ html {
 			padding: 4px 8px;
 			border: 1px solid #e1e1e1;
 
-		.__PrivateStripeElement {
-			width: 100%;
-			padding: 4px 8px;
-			border-radius: 0;
-			min-height: 36px;
-			margin-bottom: 10px;
-			line-height: 1.5;
+			.__PrivateStripeElement {
+				width: 100%;
+				padding: 4px 8px;
+				border-radius: 0;
+				min-height: 36px;
+				margin-bottom: 10px;
+				line-height: 1.5;
 
-			iframe {
-				position: absolute;
-				top: 50%;
+				iframe {
+					position: absolute;
+					top: 50%;
+				}
 			}
 		}
-	}
 
-	.authorize-net-container {
-		width: 90%;
+		.authorize-net-container {
+			width: 90%;
 
-		.ur-error {
-			color: #d63638;
-		}
+			.ur-error {
+				color: #d63638;
+			}
 
 			.user-registration-one-half {
 				float: left;
@@ -884,40 +883,42 @@ html {
 				margin-right: 2%;
 			}
 
-		.user-registration-one-half:nth-child(2) {
-			margin-right: 0;
-		}
+			.user-registration-one-half:nth-child(2) {
+				margin-right: 0;
+			}
 
-		.user-registration-membership_page_user-registration-frontend-list .shortcode .widefat {
-			width: calc(100% - 40px);
-		}
+			.user-registration-membership_page_user-registration-frontend-list .shortcode .widefat {
+				width: calc(100% - 40px);
+			}
 
-		.clearfix::before,
-		.clearfix::after {
-			content: ' ';
-			display: table;
-		}
+			.clearfix::before,
+			.clearfix::after {
+				content: ' ';
+				display: table;
+			}
 
 			.clearfix::after {
 				clear: both;
 			}
 
 
-		.user-registration-sub-label {
-			font-size: 10px;
-			font-weight: 400;
-			margin-bottom: 0;
-			color: #494d50;
-			margin-top: -10px;}
+			.user-registration-sub-label {
+				font-size: 10px;
+				font-weight: 400;
+				margin-bottom: 0;
+				color: #494d50;
+				margin-top: -10px;
+			}
 
 
-		abbr.required {
-			color: red;}
+			abbr.required {
+				color: red;
+			}
 
 
-		abbr[title] {
-			text-decoration: none;
-		}
+			abbr[title] {
+				text-decoration: none;
+			}
 
 			.ur-field-row input,
 			.ur-field-row select {
