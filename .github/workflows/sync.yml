@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - master
+      - UR-3423-rearrange-settings-order
     workflow_dispatch:
 jobs:
   sync:
