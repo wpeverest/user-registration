@@ -89,9 +89,9 @@ html {
   min-height: 40px;
   padding: 0 12px;
   border-radius: 4px;
-  border: 1px solid #475bb2;
-  background: #475bb2;
-  color: white;
+  border: 1px solid var(--ur-button-background-normal-color, var(--ur-primary-color, #475bb2));
+  background: var(--ur-button-background-normal-color, var(--ur-primary-color, #475bb2));
+  color: var(--ur-button-text-normal-color, white);
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
@@ -100,7 +100,9 @@ html {
   transition: all 0.3s ease-in-out;
 }
 .user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover, #pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover {
-  background: #38488e;
+  color: var(--ur-button-text-hover-color, white);
+  background: var(--ur-button-background-hover-color, #38488e);
+  border-color: var(--ur-button-background-hover-color, #38488e);
 }
 .user-registration-page .ur-membership-list-container .ur-membership-container .ur_membership_frontend_input_container.radio .membership-block, .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .ur_membership_frontend_input_container.radio .membership-block, #pg-container .ur-membership-list-container .ur-membership-container .ur_membership_frontend_input_container.radio .membership-block {
   width: 100%;
@@ -255,8 +257,8 @@ html {
   width: 200px;
   cursor: pointer;
   font-size: 14px;
-  background: #475bb2;
-  color: white;
+  background: var(--ur-button-background-normal-color, var(--ur-primary-color, #475bb2));
+  color: var(--ur-button-text-normal-color, white);
   padding: 10px 0;
   border-radius: 5px;
   border: none;

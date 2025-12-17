@@ -954,6 +954,7 @@
 										text-align: right;
 
 										.user-registration-Button.button {
+											color: var(--ur-button-text-normal-color, $white);
 											background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
 											border: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
 											border-radius: $border_radius_4;
@@ -961,6 +962,7 @@
 											&:hover {
 												background: var(--ur-button-background-hover-color, #38488e);
 												border-color: var(--ur-button-background-hover-color, #38488e);
+												color: var(--ur-button-text-hover-color, $white);
 											}
 										}
 									}

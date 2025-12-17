@@ -121,9 +121,9 @@ html {
 							min-height: 40px;
 							padding: 0 12px;
 							border-radius: 4px;
-							border: 1px solid $color_1;
-							background: $color_1;
-							color: $color_2;
+							border: 1px solid var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
+							background: var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
+							color: var(--ur-button-text-normal-color, $color_2);;
 							font-size: 14px;
 							font-weight: 500;
 							line-height: 24px;
@@ -132,7 +132,9 @@ html {
 							transition: all .3s ease-in-out;
 
 							&:hover {
-								background: #38488e;
+								color: var(--ur-button-text-hover-color, $color_2);
+								background: var(--ur-button-background-hover-color, #38488e);
+								border-color: var(--ur-button-background-hover-color, #38488e);
 							}
 						}
 					}
@@ -267,6 +269,7 @@ html {
 
 		.message-section {
 			display: block;
+
 			p {
 				margin-bottom: 0;
 				margin-top: 0;
@@ -331,8 +334,8 @@ html {
 		width: 200px;
 		cursor: pointer;
 		font-size: 14px;
-		background: #475bb2;
-		color: $color_2;
+		background: var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
+		color: var(--ur-button-text-normal-color, $color_2);
 		padding: 10px 0;
 		border-radius: 5px;
 		border: none;
@@ -639,11 +642,13 @@ label {
 	display: flex;
 	gap: 10px;
 	flex-direction: column;
-	.ur_membership_registration_container{
+
+	.ur_membership_registration_container {
 		.ur_membership_frontend_input_container {
-				margin-bottom: 0;
-			}
+			margin-bottom: 0;
+		}
 	}
+
 	.ur-upgrade-label {
 		font-weight: 700;
 	}
@@ -659,6 +664,7 @@ label {
 			min-height: 36px;
 			margin-bottom: 10px;
 			line-height: 1.5;
+
 			iframe {
 				position: absolute;
 				top: 50%;
@@ -668,9 +674,11 @@ label {
 
 	.authorize-net-container {
 		width: 90%;
+
 		.ur-error {
-		color: #d63638;
+			color: #d63638;
 		}
+
 		.user-registration-one-half {
 			float: left;
 			width: 49%;
@@ -680,17 +688,21 @@ label {
 		.user-registration-one-half:nth-child(2) {
 			margin-right: 0;
 		}
+
 		.user-registration-membership_page_user-registration-frontend-list .shortcode .widefat {
 			width: calc(100% - 40px);
 		}
+
 		.clearfix::before,
 		.clearfix::after {
 			content: ' ';
 			display: table;
 		}
+
 		.clearfix::after {
 			clear: both;
 		}
+
 		.user-registration-sub-label {
 			font-size: 10px;
 			font-weight: 400;
@@ -698,12 +710,15 @@ label {
 			color: #494d50;
 			margin-top: -10px;
 		}
+
 		abbr.required {
 			color: red;
 		}
+
 		abbr[title] {
 			text-decoration: none;
 		}
+
 		.ur-field-row input, .ur-field-row select {
 			width: 100%;
 			padding: 4px 8px;

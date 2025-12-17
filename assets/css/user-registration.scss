@@ -272,10 +272,11 @@ textarea.ur-input-border-red {
 			border: 1px solid var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
 			background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
 			width: 100%;
-			color: $white;
+			color: var(--ur-button-text-normal-color, $white);
 			letter-spacing: 0.15px;
 
 			&:hover {
+				color: var(--ur-button-text-hover-color, $white);
 				background: var(--ur-button-background-hover-color, #38488e);
 				border-color: var(--ur-button-background-hover-color, #38488e);
 			}
@@ -2435,7 +2436,7 @@ body {
 						width: max-content;
 						border: 0;
 						padding: 10px 24px;
-						color: #ffffff;
+						color: var(--ur-button-text-normal-color, $white);
 						font-size: 15px;
 						font-weight: $medium;
 						line-height: 24px;
@@ -2445,6 +2446,7 @@ body {
 						background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
 
 						&:hover {
+							color: var(--ur-button-text-hover-color, $white);
 							background: var(--ur-button-background-hover-color, #38488e);
 							border-color: var(--ur-button-background-hover-color, #38488e);
 						}
@@ -3328,12 +3330,14 @@ body.user-registration-page {
 		}
 
 		p > input.user-registration-Button.button {
+			color: var(--ur-button-text-normal-color, $white);
 			background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
 			border: $border_width var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
 			border-radius: $border_radius_4;
 			border-style: inherit;
 
 			&:hover {
+				color: var(--ur-button-text-hover-color, $white);
 				background: var(--ur-button-background-hover-color, #38488e);
 				border-color: var(--ur-button-background-hover-color, #38488e);
 			}
