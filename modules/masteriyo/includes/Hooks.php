@@ -69,9 +69,15 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 			add_filter( 'masteriyo_course_filter_ajax_prepare_query_args', array( $this, 'filter_ajax_prepare_query_args' ), );
 
+			add_action( 'masteriyo_single_course_sidebar_content', array( $this, 'add_single_course_sidebar_content' ), 10 );
+			add_action( 'masteriyo_single_course_sidebar_content_after_progress', array( $this, 'add_single_course_sidebar_content' ), 10 );
 			if ( masteriyo_string_to_bool( masteriyo_get_setting( 'course_archive.filters_and_sorting.enable_price_filter' ) ) ) {
 				masteriyo_set_setting( 'course_archive.filters_and_sorting.enable_price_filter', false );
 			}
+		}
+
+		public function add_single_course_sidebar_content() {
+			echo '<div class="masteriyo-single-course-stats urm-masteriyo-membership-list"> Default Membership</div>';
 		}
 
 		public function filter_ajax_prepare_query_args( $args ) {
