@@ -319,15 +319,78 @@ class UR_Shortcodes {
 
 				} else {
 
-					ob_start();
-					echo '<div class="user-registration ur-frontend-form">';
-					$template_file = locate_template( 'membership-checkout.php' );
+					// ob_start();
+					// echo '<div class="user-registration ur-frontend-form">';
+					// $template_file = locate_template( 'membership-checkout.php' );
 
-					if ( ! $template_file ) {
-						$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/membership-checkout.php';
+					// if ( ! $template_file ) {
+					// $template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/membership-checkout.php';
+					// }
+					// include_once $template_file;
+					// echo '</div>';
+					// return ob_get_clean();
+					$user_id = get_current_user_id();
+					$form_id = get_user_meta( $user_id, 'ur_form_id', true );
+
+					$form_fields = ur_get_form_fields( $form_id );
+
+					foreach ( $form_fields as $field ) {
+						add_filter(
+							'user_registration_' . $field->field_key . '_frontend_form_data',
+							function ( $default_data ) use ( $user_id, $field ) {
+								if ( 'membership' !== $field->field_key && isset( $field->general_setting->field_name ) ) {
+									$default_fields      = ur_get_user_table_fields();
+									$default_meta_fields = ur_get_registered_user_meta_fields();
+
+									$user_data = get_userdata( $user_id );
+
+									if ( in_array( $field->field_key, $default_fields, true ) ) {
+										$user_submitted_value = isset( $user_data->data->{ $field->field_key } ) ? $user_data->data->{ $field->field_key } : '';
+									} elseif ( in_array( $field->field_key, $default_meta_fields, true ) ) {
+										$user_submitted_value = get_user_meta( $user_id, $field->field_key, true );
+									} else {
+										$user_submitted_value = get_user_meta( $user_id, 'user_registration_' . $field->general_setting->field_name, true );
+									}
+
+									if ( 'user_pass' === $field->field_key || 'user_confirm_password' === $field->field_key || 'user_confirm_email' === $field->field_key ) {
+										$default_data['form_data']['is_checkout'] = true;
+									}
+
+									$default_data['form_data']['default'] = $user_submitted_value;
+
+									// if( !empty( $user_submitted_value ) ) {
+
+									// }
+									return $default_data;
+								}
+							}
+						);
 					}
-					include_once $template_file;
-					echo '</div>';
+
+					add_filter(
+						'user_registration_handle_form_fields',
+						function ( $grid_data ) use ( $user_id, $field ) {
+
+							foreach ( $grid_data as $key => $data ) {
+								if ( $data->field_key === 'user_pass' ) {
+									unset( $grid_data[ $key ] );
+								}
+							}
+							return $grid_data;
+						}
+					);
+
+					add_filter(
+						'user_registration_parts_data',
+						function () {
+							return false;
+						},
+						9999
+					);
+
+					ob_start();
+					self::render_form( $form_id );
+
 					return ob_get_clean();
 				}
 			} else {
