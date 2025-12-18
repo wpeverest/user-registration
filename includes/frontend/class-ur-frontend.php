@@ -520,7 +520,7 @@ class UR_Frontend {
 			$members_order_repository        = new MembersOrderRepository();
 			$members_subscription_repository = new MembersSubscriptionRepository();
 			$orders_repository               = new OrdersRepository();
-			$memberships                     = $membership_repositories->get_member_membership_by_id( $user_id );
+			$memberships                     = $membership_repositories->get_member_memberships_by_id( $user_id );
 
 			if ( ! empty( $memberships ) ) {
 
@@ -544,15 +544,9 @@ class UR_Frontend {
 					}
 
 					$membership['active_gateways'] = $active_gateways;
-					$membership_process            = urm_get_membership_process( $user_id );
-
-					$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $membership['post_id'] ] );
-
-					$membership_process     = urm_get_membership_process( $user_id );
-					$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $membership['post_id'], $membership_process['multiple'] );
-
-					$last_order = $members_order_repository->get_member_orders( $user_id );
-					$bank_data  = array();
+					$is_upgrading                  = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
+					$last_order                    = $members_order_repository->get_member_orders( $user_id );
+					$bank_data                     = array();
 					if ( ! empty( $last_order ) && $last_order['status'] == 'pending' && $last_order['payment_method'] === 'bank' ) {
 						$bank_data = array(
 							'show_bank_notice' => true,
@@ -565,12 +559,11 @@ class UR_Frontend {
 					$subscription_data = $members_subscription_repository->get_subscription_data_by_subscription_id( $membership['subscription_id'] );
 
 					$data = array(
-						'membership'             => $membership,
-						'is_upgrading'           => $is_upgrading,
-						'is_purchasing_multiple' => $is_purchasing_multiple,
-						'bank_data'              => $bank_data,
-						'renewal_behaviour'      => get_option( 'user_registration_renewal_behaviour', 'automatic' ),
-						'subscription_data'      => $subscription_data,
+						'membership'        => $membership,
+						'is_upgrading'      => $is_upgrading,
+						'bank_data'         => $bank_data,
+						'renewal_behaviour' => get_option( 'user_registration_renewal_behaviour', 'automatic' ),
+						'subscription_data' => $subscription_data,
 					);
 
 					if ( ! empty( $last_order ) ) {

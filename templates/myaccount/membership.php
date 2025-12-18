@@ -46,13 +46,13 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 				<tbody class="ur-account-table__body">
 					<?php
 					foreach ( $membership_data as $data ) :
-						$membership         = isset( $data['membership'] ) ? $data['membership'] : array();
-						$is_upgraded        = ! empty( $_GET['is_upgraded'] ) ? absint( ur_string_to_bool( $_GET['is_upgraded'] ) ) : false;
-						$message            = ! empty( $_GET['message'] ) ? esc_html( $_GET['message'] ) : '';
-						$membership_info    = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post_deep( $_GET['info'] ) : ( ! empty( $data['bank_data']['bank_data'] ) ? wp_kses_post_deep( $data['bank_data']['bank_data'] ) : '' );
-						$is_delayed         = ! empty( $data['delayed_until'] );
-						$membership_process = urm_get_membership_process( $membership['user_id'] );
-						$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $membership['post_id'], $membership_process['renew'] );
+						$membership      = isset( $data['membership'] ) ? $data['membership'] : array();
+						$is_upgraded     = ! empty( $_GET['is_upgraded'] ) ? absint( ur_string_to_bool( $_GET['is_upgraded'] ) ) : false;
+						$message         = ! empty( $_GET['message'] ) ? esc_html( $_GET['message'] ) : '';
+						$membership_info = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post_deep( $_GET['info'] ) : ( ! empty( $data['bank_data']['bank_data'] ) ? wp_kses_post_deep( $data['bank_data']['bank_data'] ) : '' );
+						$is_delayed      = ! empty( $data['delayed_until'] );
+						$user_id         = get_current_user_id();
+						$is_renewing     = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_member_renewing', true ) );
 
 						$can_renew     = ! $is_renewing && isset( $membership['post_content']['type'] ) && 'automatic' !== $data['renewal_behaviour'] && 'subscription' == $membership['post_content']['type'];
 						$date_to_renew = '';
