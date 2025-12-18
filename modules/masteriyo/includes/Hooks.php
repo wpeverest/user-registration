@@ -64,6 +64,21 @@ if ( ! class_exists( 'Hooks' ) ) :
 			add_action( 'masteriyo_single_course_sidebar_content', array( $this, 'modify_single_side_content' ), 90 );
 
 			add_filter( 'masteriyo_price', array( $this, 'price_html' ), 10, 5 );
+
+			add_filter( 'masteriyo_get_related_courses', array( $this, 'get_related_courses' ), 10, 3 );
+		}
+
+		public function get_related_courses( $related_courses, $query, $course ) {
+
+			$related_courses = array_filter(
+				$related_courses,
+				function ( $cr ) {
+					$mode = $cr->get_access_mode();
+					return CourseAccessMode::NEED_REGISTRATION === $mode || CourseAccessMode::OPEN === $mode;
+				}
+			);
+
+			return $related_courses;
 		}
 
 		public function price_html( $html, $price, $args, $unformatted_price, $course ) {
