@@ -2089,12 +2089,6 @@
 				}
 			);
 
-			$(document).on("click", ".change-membership-button", function (e) {
-				e.preventDefault();
-
-				window.location.href = $(this).attr("data-redirect-url");
-			});
-
 			$(document).on("click", ".renew-membership-button", function () {
 				var $this = $(this),
 					has_error = false,
