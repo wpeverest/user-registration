@@ -102,6 +102,8 @@ if ( ! class_exists( 'Main' ) ) :
 			}
 
 			Hooks::init();
+
+			new Frontend();
 		}
 	}
 endif;
