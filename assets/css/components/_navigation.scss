@@ -65,7 +65,9 @@
                             width: 20rem;
                             left: -360px;
                             top: $spacing_30px;
-                            height: calc(100vh - 32px);
+                            // height: calc(100vh - 32px);
+                            height: 100%;
+                            bottom: 0;
                             transition: all .5s ease-in-out;
 
                             @media screen and (max-width: 782px) {
@@ -558,6 +560,17 @@
         display: none;
     }
 }
+
+.ur-admin-page-topnav {
+    @media screen and (max-width: 1140px) {
+        position: sticky !important;
+        position: -webkit-sticky;
+        top: 46px;
+        background: $white !important;
+        z-index: 2;
+    }
+}
+
 
 body {
     &.ur-multi-device-form-preview {

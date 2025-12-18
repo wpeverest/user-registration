@@ -234,8 +234,7 @@ body {
 					&:has(.is-active) {
 						.ur-scroll-ui {
 							position: relative;
-							overflow-x: auto;
-							overflow-y: hidden;
+							overflow: unset;
 							display: flex;
 							gap: $spacing_20px;
 							border-left: 4px solid $primary_color;
@@ -245,6 +244,19 @@ body {
 								margin: 0;
 								gap: $spacing_4px;
 								background: #f4f4f4;
+								position: relative;
+
+								&::after {
+									content: "";
+									background: #f4f4f4;
+									width: 8px;
+									height: 100%;
+									position: absolute;
+									top: 0;
+									right: -$spacing_4px;
+									opacity: 1;
+									transition: all .3s ease-in-out;
+								}
 
 								&.ur-scroll-ui__items {
 									&::before {
@@ -339,18 +351,6 @@ body {
 						position: absolute;
 						top: 0;
 						left: 0;
-						opacity: 0;
-						transition: all .3s ease-in-out;
-					}
-
-					&:not(#ur-settings-collapse)::after {
-						content: "";
-						background: $grey-0;
-						width: 8px;
-						height: 100%;
-						position: absolute;
-						top: 0;
-						right: -$spacing_4px;
 						opacity: 0;
 						transition: all .3s ease-in-out;
 					}
@@ -2188,9 +2188,19 @@ body {
 @media screen and (max-width: 1140px) {
 	.user-registration-header {
 		position: fixed;
-		height: 100vh;
+		// height: 100vh;
+		height: 100%;
 		transition: transform 0.4s ease-in-out;
 		transform: translateX(-200%);
+		z-index: 2;
+		top: 106px;
+		bottom: 0;
+
+		&--nav {
+			// max-height: calc(100vh - 194px);
+			overflow-x: hidden;
+			overflow-y: scroll;
+		}
 	}
 
 	.user-registration-settings-container--dimmed {
