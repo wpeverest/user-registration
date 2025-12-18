@@ -1524,9 +1524,6 @@
 											ajax_response.responseText
 										);
 
-<<<<<<< Updated upstream
-										var timeout = response.data.redirect_timeout ?? 2000;
-=======
 									var timeout = (
 										response &&
 										response.data &&
@@ -1536,7 +1533,6 @@
 											)
 												? response.data.redirect_timeout
 												: 2000;
->>>>>>> Stashed changes
 
 										if (
 											typeof response.success !==
