@@ -1147,6 +1147,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', ucwords( str_replace( '_', ' ', get_option( 'user_registration_form_template', 'default' ) ) ) ),
 				'tip'               => __( 'Choose how your registration form looks.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'toggle',
@@ -1250,10 +1251,11 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
-				'type'  => 'section',
-				'title' => __( 'Advanced', 'user-registration' ),
-				'id'    => 'user_registration_form_setting_general_advanced',
-				'class' => array( 'ur-form-settings-section' ),
+				'type'              => 'section',
+				'title'             => __( 'Advanced', 'user-registration' ),
+				'id'                => 'user_registration_form_setting_general_advanced',
+				'class'				=> array( 'ur-form-settings-section'),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'toggle',
@@ -1390,6 +1392,8 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Submit' ),
 				'tip'               => __( 'The label shown on the form’s submit button.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
+
 			),
 			array(
 				'type'              => 'text',
@@ -3430,16 +3434,10 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 				'content'             => '[user_registration_login]',
 				'requires_membership' => false,
 			),
-			'user_registration_lost_password_page_id'      => array(
-				'name'                => 'lost-password',
-				'title'               => __( 'Lost Password', 'user-registration' ),
-				'content'             => '[user_registration_reset_password_form]',
-				'requires_membership' => false,
-			),
-			'user_registration_reset_password_page_id'     => array(
-				'name'                => 'reset-password',
-				'title'               => __( 'Reset Password', 'user-registration' ),
-				'content'             => '[user_registration_reset_password_form]',
+			'user_registration_lost_password_page_id' => array(
+				'name' => 'lost-password',
+				'title' => __( 'Lost Password', 'user-registration' ),
+				'content' => '[user_registration_lost_password]',
 				'requires_membership' => false,
 			),
 			'user_registration_member_registration_page_id' => array(
@@ -6482,13 +6480,10 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	function ur_check_is_inactive() {
 		if ( ! ur_check_module_activation( 'membership' ) ||
 			current_user_can( 'manage_options' ) ||
-			( ! empty( $_POST['action'] ) && in_array(
-				$_POST['action'],
-				array(
-					'user_registration_membership_confirm_payment',
-					'user_registration_membership_create_stripe_subscription',
-				)
-			) )
+			 ( ! empty( $_POST['action'] ) && in_array( $_POST['action'], array(
+					"user_registration_membership_confirm_payment",
+					"user_registration_membership_create_stripe_subscription"
+				) ) )
 		) {
 			return;
 		}
@@ -6788,14 +6783,11 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 	}
 }
 
-add_filter(
-	'body_class',
-	function ( $classes ) {
-		$is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string_to_bool( sanitize_text_field( wp_unslash( $_COOKIE['isSidebarEnabled'] ) ) ) : true;
-		$body_class                  = ! $is_settings_sidebar_enabled ? 'ur-settings-sidebar-hidden' : 'ur-settings-sidebar-show';
-		return array_merge( $classes, array( $body_class ) );
-	}
-);
+add_filter( 'body_class', function( $classes ) {
+	$is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string_to_bool( sanitize_text_field( wp_unslash( $_COOKIE['isSidebarEnabled'] ) ) ) : true;
+	$body_class = !$is_settings_sidebar_enabled ? 'ur-settings-sidebar-hidden': 'ur-settings-sidebar-show';
+	return array_merge( $classes, array ( $body_class ) );
+});
 
 if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 
@@ -8109,22 +8101,22 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'css'      => '',
 								'default'  => 'no',
 							),
-							//                          array(
-							//                              'title'    => __( 'Hide Field Labels', 'user-registration' ),
-							//                              'id'       => 'user_registration_login_options_hide_labels',
-							//                              'type'     => 'toggle',
-							//                              'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
-							//                              'css'      => '',
-							//                              'default'  => 'no',
-							//                          ),
-								array(
-									'title'    => __( 'Enable Captcha', 'user-registration' ),
-									'id'       => 'user_registration_login_options_enable_recaptcha',
-									'type'     => 'toggle',
-									'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" rel="noreferrer noopener" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ), //phpcs:ignore
-									'css'      => '',
-									'default'  => 'no',
-								),
+//							array(
+//								'title'    => __( 'Hide Field Labels', 'user-registration' ),
+//								'id'       => 'user_registration_login_options_hide_labels',
+//								'type'     => 'toggle',
+//								'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
+//								'css'      => '',
+//								'default'  => 'no',
+//							),
+							array(
+								'title'    => __( 'Enable Captcha', 'user-registration' ),
+								'id'       => 'user_registration_login_options_enable_recaptcha',
+								'type'     => 'toggle',
+								'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" rel="noreferrer noopener" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ), //phpcs:ignore
+								'css'      => '',
+								'default'  => 'no',
+							),
 							array(
 								'title'    => __( 'Select Captcha Type', 'user-registration' ),
 								'desc'     => __( 'Choose which Captcha type to show on the login form.', 'user-registration' ),
@@ -8289,27 +8281,21 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 if ( ! function_exists( 'render_login_option_settings' ) ) {
 
 	function render_login_option_settings( $section ) {
-		$settings                = '';
-		$section_settings        = $section['settings'];
-		$repositionable_settings = array_filter(
-			$section_settings,
-			function ( $setting ) {
-				return isset( $setting['item_position'] );
-			}
-		);
-		$section_settings        = array_filter(
-			$section_settings,
-			function ( $setting ) {
-				return ! isset( $setting['item_position'] );
-			}
-		);
-		foreach ( $repositionable_settings as $setting ) {
-			[ $position, $setting_id ] = $setting['item_position'];
-			$offset                    = array_search( $setting_id, array_column( $section_settings, 'id' ) );
-			if ( 'before' === $position ) {
+		$settings = '';
+		$section_settings = $section[ 'settings' ];
+		$repositionable_settings = array_filter( $section_settings, function( $setting ) {
+			return isset( $setting[ 'item_position' ] );
+		});
+		$section_settings = array_filter( $section_settings, function( $setting ) {
+			return ! isset( $setting[ 'item_position' ] );
+		});
+		foreach( $repositionable_settings as $setting ) {
+			[ $position, $setting_id ] = $setting[ 'item_position' ];
+			$offset = array_search( $setting_id, array_column( $section_settings, 'id' ) );
+			if( 'before' === $position ) {
 				array_splice( $section_settings, $offset, 0, array( $setting ) );
 			}
-			if ( 'after' === $position ) {
+			if( 'after' === $position ) {
 				array_splice( $section_settings, $offset + 1, 0, array( $setting ) );
 			}
 		}
