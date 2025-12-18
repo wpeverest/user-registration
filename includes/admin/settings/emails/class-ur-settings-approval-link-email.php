@@ -139,21 +139,26 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 		 * @return string $approval_msg Message content for approval link in email.
 		 */
 		public function ur_get_approval_link_email() {
-			$approval_msg = sprintf(
-				__(
-					'Hi Admin, <br/><br/>
-
-					A new user {{username}} - {{email}} has successfully registered to your site {{blog_info}}. <br/><br/>
-
-					Please review their details and assigned role in the \'<b>Users</b>\' menu of your WordPress dashboard.  <br/><br/>
-
-					[Approve User: {{approval_link}}] - Link <br/>
-					[Deny User: {{denial_link}}] - Link <br/><br/>
-
-					Thank You!',
-					'user-registration'
-				)
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi Admin,
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					A new user {{username}} - {{email}} has successfully registered to your site {{blog_info}}.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Please review their details and assigned role in the <strong>Users</strong> menu of your WordPress dashboard.
+				</p>
+				<p style="margin: 0 0 10px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					<strong>Approve User:</strong> {{approval_link}}
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					<strong>Deny User:</strong> {{denial_link}}
+				</p>',
+				'user-registration'
 			);
+
+			$approval_msg = ur_get_email_template_wrapper( $body_content );
 
 			/**
 			 * Filter to modify the approval email message email content.

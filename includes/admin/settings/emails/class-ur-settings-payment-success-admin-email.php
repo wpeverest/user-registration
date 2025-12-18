@@ -131,17 +131,22 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Admin_Email', false ) ) :
 		 */
 		public static function ur_get_payment_success_admin_email() {
 
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi Admin,
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					You have successfully received a payment from {{username}}.
+				</p>
+				<p style="margin: 0 0 20px 0;">
+					<a href="{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}" rel="noreferrer noopener" target="_blank" style="color: #4A90E2; text-decoration: none; font-weight: 600;">Click Here to view payment details</a>
+				</p>',
+				'user-registration'
+			);
+
 			$message = apply_filters(
 				'user_registration_payment_admin_email_message',
-				sprintf(
-					__(
-						'Hi Admin, <br/><br/>
-						You have successfully received a payment from {{username}}. <br/><br/>
-						<a href="{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}">Click Here to view payment details</a> .<br/><br/>
-						Thank You!',
-						'user-registration'
-					)
-				)
+				ur_get_email_template_wrapper( $body_content )
 			);
 
 			return $message;

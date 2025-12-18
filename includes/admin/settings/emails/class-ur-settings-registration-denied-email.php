@@ -136,19 +136,22 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 			 *
 			 * @param string Message content for registration denied email to be overridden.
 			 */
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi {{username}},
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					We regret to inform you that your registration on {{blog_info}} has been denied.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					We apologize for any inconvenience caused.
+				</p>',
+				'user-registration'
+			);
+
 			$message = apply_filters(
 				'user_registration_get_registration_denied_email',
-				sprintf(
-					__(
-						'Hi {{username}}, <br/><br/>
-We regret to inform you that your registration on {{blog_info}} has been denied. <br/><br/>
-
-We apologize for any inconvenience caused. <br/><br/>
-
-Thank you for your understanding.',
-						'user-registration'
-					)
-				)
+				ur_get_email_template_wrapper( $body_content )
 			);
 
 			return $message;

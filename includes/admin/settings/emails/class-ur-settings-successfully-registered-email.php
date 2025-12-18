@@ -136,22 +136,25 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 			 *
 			 * @param string Message content for successfully registered email to be overridden.
 			 */
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi {{username}},
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Congratulations! You have successfully completed your registration on {{blog_info}}.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					{{membership_plan_details}}
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Please visit \'My Account\' page to update your account details and create your user profile.
+				</p>',
+				'user-registration'
+			);
+
 			$message = apply_filters(
 				'user_registration_get_successfully_registered_email',
-				sprintf(
-					__(
-						'Hi {{username}}, <br/><br/>
-
-						Congratulations! You have successfully completed your registration on {{blog_info}}. <br/><br/>
-
-						{{membership_plan_details}}
-
-						Please visit \'My Account\' page to update your account details and create your user profile. <br/><br/>
-
-						Thank You!',
-						'user-registration'
-					)
-				)
+				ur_get_email_template_wrapper( $body_content )
 			);
 
 			return $message;

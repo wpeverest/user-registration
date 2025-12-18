@@ -135,16 +135,19 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 			 *
 			 * @return string $message Message content for profile details updated email to be overridden.
 			 */
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi {{username}},
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Your profile details have been successfully updated on {{blog_info}}.
+				</p>',
+				'user-registration'
+			);
+
 			$message = apply_filters(
 				'user_registration_profile_details_updated_email_message',
-				sprintf(
-					__(
-						'Hi {{username}},<br/><br/>
-					Your profile details have been successfully updated on {{blog_info}}.<br/><br/>
-					Thank You!',
-						'user-registration'
-					)
-				)
+				ur_get_email_template_wrapper( $body_content )
 			);
 
 			return $message;

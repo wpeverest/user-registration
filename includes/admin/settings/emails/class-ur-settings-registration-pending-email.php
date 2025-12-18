@@ -138,20 +138,22 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 			 *
 			 * @param string Message content for registration pending email to be overridden.
 			 */
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi {{username}},
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Your registration on {{blog_info}} is now marked as pending.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					We apologize for the inconvenience. You will be notified once your registration has been approved.
+				</p>',
+				'user-registration'
+			);
+
 			$message = apply_filters(
 				'user_registration_get_registration_pending_email',
-				sprintf(
-					__(
-						'Hi {{username}}, <br/><br/>
-
-Your registration on {{blog_info}} is now marked as pending. <br/><br/>
-
-We apologize for the inconvenience. You will be notified once your registration has been approved. <br/><br/>
-
-Thank you for your patience!',
-						'user-registration'
-					)
-				)
+				ur_get_email_template_wrapper( $body_content )
 			);
 
 			return $message;

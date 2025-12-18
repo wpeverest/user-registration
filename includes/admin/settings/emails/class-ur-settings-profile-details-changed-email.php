@@ -146,19 +146,25 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 			 *
 			 * @return string $message Message content for profile details changed email to be overridden.
 			 */
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi Admin,
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					A user has updated their profile information for the following account:
+				</p>
+				<p style="margin: 0 0 10px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					<strong>SiteName:</strong> {{blog_info}}
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					<strong>Username:</strong> {{username}}
+				</p>',
+				'user-registration'
+			);
+
 			$message = apply_filters(
 				'user_registration_profile_details_changed_email_message',
-				sprintf(
-					__(
-						'
-						Hi Admin,<br/><br/>
-						A user has updated their profile information for the following account:<br/><br/>
-						SiteName: {{blog_info}} <br/><br/>
-						Username: {{username}} <br/><br/>
-						Thank You!',
-						'user-registration'
-					)
-				)
+				ur_get_email_template_wrapper( $body_content )
 			);
 
 			return $message;

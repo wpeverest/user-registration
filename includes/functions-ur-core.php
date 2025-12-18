@@ -1251,11 +1251,11 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
-				'type'              => 'section',
-				'title'             => __( 'Advanced', 'user-registration' ),
-				'id'                => 'user_registration_form_setting_general_advanced',
-				'class'				=> array( 'ur-form-settings-section'),
-				'product'           => 'user-registration/user-registration.php',
+				'type'    => 'section',
+				'title'   => __( 'Advanced', 'user-registration' ),
+				'id'      => 'user_registration_form_setting_general_advanced',
+				'class'   => array( 'ur-form-settings-section' ),
+				'product' => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'toggle',
@@ -3434,10 +3434,10 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 				'content'             => '[user_registration_login]',
 				'requires_membership' => false,
 			),
-			'user_registration_lost_password_page_id' => array(
-				'name' => 'lost-password',
-				'title' => __( 'Lost Password', 'user-registration' ),
-				'content' => '[user_registration_lost_password]',
+			'user_registration_lost_password_page_id'      => array(
+				'name'                => 'lost-password',
+				'title'               => __( 'Lost Password', 'user-registration' ),
+				'content'             => '[user_registration_lost_password]',
 				'requires_membership' => false,
 			),
 			'user_registration_member_registration_page_id' => array(
@@ -5153,6 +5153,49 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_get_email_template_wrapper' ) ) {
+	/**
+	 * Wraps email body content with styled header and footer.
+	 *
+	 * @param string $body_content Email body content to wrap.
+	 * @return string Wrapped email content with header and footer.
+	 */
+	function ur_get_email_template_wrapper( $body_content ) {
+		$header = '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden;">
+			<!-- Header -->
+			<div style="background-color: #475bb20a; padding: 40px 30px; position: relative; overflow: hidden;">
+				<!-- Decorative Circles -->
+				<div style="position: absolute; top: -20px; right: 20px; width: 80px; height: 80px; background-color: rgba(232, 213, 255, 0.6); border-radius: 50%;"></div>
+				<div style="position: absolute; top: 10px; right: 100px; width: 50px; height: 50px; background-color: rgba(232, 213, 255, 0.5); border-radius: 50%;"></div>
+				<div style="position: absolute; top: 30px; right: 60px; width: 30px; height: 30px; background-color: rgba(232, 213, 255, 0.4); border-radius: 50%;"></div>
+				<!-- Logo -->
+				<div style="position: relative; z-index: 1;">
+					<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+							<path d="M29.2401 2.25439C27.1109 3.50683 25.107 5.13503 23.3536 6.88846C21.6002 8.64188 19.972 10.6458 18.7195 12.6497C19.5962 14.4031 20.3477 16.1566 20.9739 18.0352C22.1011 15.6556 23.4788 13.5264 25.2323 11.6477V18.4109C25.2323 22.544 22.4769 26.1761 18.4691 27.3033H18.2185C17.9681 24.047 17.2166 20.9158 16.0894 17.91C14.4612 13.7769 11.9563 10.0196 8.69995 6.88846C6.94652 5.13503 4.94263 3.63208 2.81347 2.25439L2.3125 2.00388V18.2857C2.3125 24.9237 7.07177 30.6849 13.7097 31.8121H13.835C15.3379 32.0626 16.8409 32.0626 18.2185 31.8121H18.3438C24.9818 30.6849 29.7411 24.9237 29.7411 18.2857V2.00388L29.2401 2.25439ZM6.82128 18.2857V11.6477C10.7039 16.0313 13.0835 21.4168 13.5845 27.1781C9.57669 26.0509 6.82128 22.4188 6.82128 18.2857ZM15.9642 0C14.0855 0 12.5825 1.50291 12.5825 3.38158C12.5825 5.26025 14.0855 6.7632 15.9642 6.7632C17.8428 6.7632 19.3457 5.26025 19.3457 3.38158C19.3457 1.50291 17.8428 0 15.9642 0Z" fill="#475BB2"></path>
+						</svg>
+				</div>
+			</div>
+
+			<!-- Body Content -->
+			<div style="padding: 40px 30px; background-color: #ffffff;">';
+
+		$footer = '</div>
+
+			<!-- Footer -->
+			<div style="padding: 30px; background-color: #ffffff; border-top: 1px solid #e0e0e0;">
+				<p style="margin: 0 0 10px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thank You!
+				</p>
+				<p style="margin: 0; color: #000000; font-size: 16px; line-height: 1.6; font-weight: 600;">
+					{{blog_info}} Team
+				</p>
+			</div>
+		</div>';
+
+		return $header . $body_content . $footer;
+	}
+}
+
 if ( ! function_exists( 'ur_email_preview_link' ) ) {
 
 	/**
@@ -6480,10 +6523,13 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	function ur_check_is_inactive() {
 		if ( ! ur_check_module_activation( 'membership' ) ||
 			current_user_can( 'manage_options' ) ||
-			 ( ! empty( $_POST['action'] ) && in_array( $_POST['action'], array(
-					"user_registration_membership_confirm_payment",
-					"user_registration_membership_create_stripe_subscription"
-				) ) )
+			( ! empty( $_POST['action'] ) && in_array(
+				$_POST['action'],
+				array(
+					'user_registration_membership_confirm_payment',
+					'user_registration_membership_create_stripe_subscription',
+				)
+			) )
 		) {
 			return;
 		}
@@ -6783,11 +6829,14 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 	}
 }
 
-add_filter( 'body_class', function( $classes ) {
-	$is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string_to_bool( sanitize_text_field( wp_unslash( $_COOKIE['isSidebarEnabled'] ) ) ) : true;
-	$body_class = !$is_settings_sidebar_enabled ? 'ur-settings-sidebar-hidden': 'ur-settings-sidebar-show';
-	return array_merge( $classes, array ( $body_class ) );
-});
+add_filter(
+	'body_class',
+	function ( $classes ) {
+		$is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string_to_bool( sanitize_text_field( wp_unslash( $_COOKIE['isSidebarEnabled'] ) ) ) : true;
+		$body_class                  = ! $is_settings_sidebar_enabled ? 'ur-settings-sidebar-hidden' : 'ur-settings-sidebar-show';
+		return array_merge( $classes, array( $body_class ) );
+	}
+);
 
 if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 
@@ -8101,22 +8150,22 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'css'      => '',
 								'default'  => 'no',
 							),
-//							array(
-//								'title'    => __( 'Hide Field Labels', 'user-registration' ),
-//								'id'       => 'user_registration_login_options_hide_labels',
-//								'type'     => 'toggle',
-//								'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
-//								'css'      => '',
-//								'default'  => 'no',
-//							),
-							array(
-								'title'    => __( 'Enable Captcha', 'user-registration' ),
-								'id'       => 'user_registration_login_options_enable_recaptcha',
-								'type'     => 'toggle',
-								'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" rel="noreferrer noopener" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ), //phpcs:ignore
-								'css'      => '',
-								'default'  => 'no',
-							),
+							//                          array(
+							//                              'title'    => __( 'Hide Field Labels', 'user-registration' ),
+							//                              'id'       => 'user_registration_login_options_hide_labels',
+							//                              'type'     => 'toggle',
+							//                              'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
+							//                              'css'      => '',
+							//                              'default'  => 'no',
+							//                          ),
+								array(
+									'title'    => __( 'Enable Captcha', 'user-registration' ),
+									'id'       => 'user_registration_login_options_enable_recaptcha',
+									'type'     => 'toggle',
+									'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" rel="noreferrer noopener" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ), //phpcs:ignore
+									'css'      => '',
+									'default'  => 'no',
+								),
 							array(
 								'title'    => __( 'Select Captcha Type', 'user-registration' ),
 								'desc'     => __( 'Choose which Captcha type to show on the login form.', 'user-registration' ),
@@ -8281,21 +8330,27 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 if ( ! function_exists( 'render_login_option_settings' ) ) {
 
 	function render_login_option_settings( $section ) {
-		$settings = '';
-		$section_settings = $section[ 'settings' ];
-		$repositionable_settings = array_filter( $section_settings, function( $setting ) {
-			return isset( $setting[ 'item_position' ] );
-		});
-		$section_settings = array_filter( $section_settings, function( $setting ) {
-			return ! isset( $setting[ 'item_position' ] );
-		});
-		foreach( $repositionable_settings as $setting ) {
-			[ $position, $setting_id ] = $setting[ 'item_position' ];
-			$offset = array_search( $setting_id, array_column( $section_settings, 'id' ) );
-			if( 'before' === $position ) {
+		$settings                = '';
+		$section_settings        = $section['settings'];
+		$repositionable_settings = array_filter(
+			$section_settings,
+			function ( $setting ) {
+				return isset( $setting['item_position'] );
+			}
+		);
+		$section_settings        = array_filter(
+			$section_settings,
+			function ( $setting ) {
+				return ! isset( $setting['item_position'] );
+			}
+		);
+		foreach ( $repositionable_settings as $setting ) {
+			[ $position, $setting_id ] = $setting['item_position'];
+			$offset                    = array_search( $setting_id, array_column( $section_settings, 'id' ) );
+			if ( 'before' === $position ) {
 				array_splice( $section_settings, $offset, 0, array( $setting ) );
 			}
-			if( 'after' === $position ) {
+			if ( 'after' === $position ) {
 				array_splice( $section_settings, $offset + 1, 0, array( $setting ) );
 			}
 		}
