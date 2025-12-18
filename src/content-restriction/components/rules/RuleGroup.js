@@ -7,6 +7,7 @@ import ConditionFieldDropdown from "../dropdowns/ConditionFieldDropdown";
 import ConditionRow from "./ConditionRow";
 import AdvancedLogicGates from "./AdvancedLogicGates";
 import AccessControlSection from "./AccessControlSection";
+import DropdownButton from "../dropdowns/DropdownButton";
 import {getURCRData, isProAccess} from "../../utils/localized-data";
 
 // Helper function to determine condition input type
@@ -41,8 +42,6 @@ const RuleGroup = ({
 }) => {
 	const [conditions, setConditions] = useState([]);
 	const [logicGate, setLogicGate] = useState(group.logic_gate || "AND");
-	const [dropdownOpen, setDropdownOpen] = useState(false);
-	const dropdownWrapperRef = useRef(null);
 	const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
 
 	// Initialize conditions from group data
@@ -105,28 +104,6 @@ const RuleGroup = ({
 		}
 	}, [isAdvancedLogicEnabled, logicGate]);
 
-	// Close dropdown when clicking outside
-	useEffect(() => {
-		const handleClickOutside = (event) => {
-			if (dropdownWrapperRef.current && !dropdownWrapperRef.current.contains(event.target)) {
-				setDropdownOpen(false);
-			}
-		};
-
-		if (dropdownOpen) {
-			document.addEventListener("mousedown", handleClickOutside);
-		}
-
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [dropdownOpen]);
-
-	const handleConditionButtonClick = (e) => {
-		e.stopPropagation();
-		setDropdownOpen(!dropdownOpen);
-	};
-
 	const handleAfterConditionSelection = (option) => {
 		let initialValue = "";
 		if (option.type === "multiselect") {
@@ -145,7 +122,6 @@ const RuleGroup = ({
 			conditionValue: initialValue,
 		};
 		setConditions([...conditions, newCondition]);
-		setDropdownOpen(false);
 	};
 
 	const handleConditionUpdate = (updatedCondition) => {
@@ -312,22 +288,24 @@ const RuleGroup = ({
 				</div>
 
 				<div className="urcr-buttons-wrapper" style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-					<div className="urcr-condition-dropdown-wrapper" ref={dropdownWrapperRef}>
-						<button
-							type="button"
-							className="button urcr-add-condition-button"
-							onClick={handleConditionButtonClick}
-						>
-							<span className="dashicons dashicons-plus-alt2"></span>
-							{__("Condition", "user-registration")}
-						</button>
-						{dropdownOpen && (
+					<DropdownButton
+						buttonContent={
+							<>
+								<span className="dashicons dashicons-plus-alt2"></span>
+								{__("Condition", "user-registration")}
+							</>
+						}
+						options={[]}
+						onSelect={handleAfterConditionSelection}
+						buttonClassName="button urcr-add-condition-button"
+						wrapperClassName="urcr-condition-dropdown-wrapper"
+						renderDropdown={() => (
 							<ConditionFieldDropdown
 								onSelect={handleAfterConditionSelection}
 								isMigrated={isMigrated}
 							/>
 						)}
-					</div>
+					/>
 
 					{isProAccess() && isAdvancedLogicEnabled && (
 						<button
