@@ -5165,7 +5165,7 @@ if ( ! function_exists( 'ur_get_email_template_wrapper' ) ) {
 
 		$header = '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
 			<!-- Header -->
-			<div style="background-color: #5B3D9D; padding: 40px 30px; position: relative; overflow: hidden; border-radius: 12px 12px 0 0;">
+			<div style="background-color: #5C70C8; padding: 40px 30px; position: relative; overflow: hidden; border-radius: 12px 12px 0 0;">
 				<!-- Decorative Circles -->
 				<div style="position: absolute; top: -30px; right: 20px; width: 100px; height: 100px; background-color: rgba(180, 190, 220, 0.4); border-radius: 50%;"></div>
 				<div style="position: absolute; top: 10px; right: 100px; width: 70px; height: 70px; background-color: rgba(180, 190, 220, 0.5); border-radius: 50%;"></div>
