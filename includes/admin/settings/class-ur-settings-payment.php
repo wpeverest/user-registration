@@ -55,6 +55,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
          */
         public function get_settings_callback( $settings ) {
             global $current_section;
+            $general_settings = $this->get_general_settings();
             $paypal_settings = $this->get_paypal_settings();
             $stripe_settings = $this->get_stripe_settings();
             $bank_transfer_settings = $this->get_bank_transfer_settings();
@@ -63,6 +64,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                 $settings = array(
                     'title' => '',
                     'sections' => array(
+                        'general_options' => $general_settings,
                         'paypal_options' => $paypal_settings,
                         'stripe_options' => $stripe_settings,
                         'bank_transfer_options' => $bank_transfer_settings,
@@ -73,6 +75,54 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
             }
             return $settings;
         }
+        /**
+		 * Function to get general Settings
+		 */
+		public function get_general_settings() {
+			$currencies      = ur_payment_integration_get_currencies();
+			$currencies_list = array();
+
+			// Break and concatenate the currency symbol and code.
+			foreach ( $currencies as $code => $currency ) {
+				$currencies_list[ $code ] = $currency['name'] . ' ( ' . $code . ' ' . $currency['symbol'] . ' )';
+			}
+
+			$settings = array(
+				'title'    => __( 'Payments', 'user-registration' ),
+				'sections' => array(
+					'payment_settings' => array(
+						'id'          => 'payment-settings',
+						'title'       => esc_html__( 'Payment Settings', 'user-registration' ),
+						'type'        => 'card',
+						'desc'        => '',
+						'show_status' => false,
+						'show_logo'   => false,
+						'settings'    => array(
+							array(
+								'title'    => __( 'Currency', 'user-registration' ),
+								'desc'     => __( 'This option lets you choose currency for payments.', 'user-registration' ),
+								'id'       => 'user_registration_payment_currency',
+								'default'  => 'USD',
+								'type'     => 'select',
+								'class'    => 'ur-enhanced-select',
+								'css'      => '',
+								'desc_tip' => true,
+								'options'  => $currencies_list,
+							),
+							array(
+								'title' => __( 'Save', 'user-registration' ),
+								'id'    => 'user_registration_payment_save_settings',
+								'type'  => 'button',
+								'class' => 'payment-settings-btn'
+							),
+						),
+					),
+				),
+			);
+
+			return apply_filters( 'user_registration_payment_settings', $settings );
+		}
+
         public function get_paypal_settings() {
             return array(
                 'title'        => __( 'Paypal Settings', 'user-registration' ),
