@@ -73,5 +73,13 @@ if ( ! class_exists( 'Helper' ) ) :
 
 			return $items;
 		}
+
+		public static function get_checkout_page_url() {
+			$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
+
+			$url = get_permalink( $registration_page_id );
+
+			return $url;
+		}
 	}
 endif;

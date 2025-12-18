@@ -158,7 +158,7 @@ const AccessControlSection = ({
 						{contentTargets.map((target) => (
 							<div key={target.id} className="urcr-target-item">
 								<span className="urcr-target-type-label">
-									{target.label}:
+									{target.label.replace(/_/g, " ")}:
 								</span>
 								<ContentValueInput
 									contentType={target.type}

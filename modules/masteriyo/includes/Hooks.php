@@ -60,9 +60,38 @@ if ( ! class_exists( 'Hooks' ) ) :
 			add_filter( 'masteriyo_can_start_course', array( $this, 'can_start_course' ), 10, 3 );
 
 			add_filter( 'masteriyo_course_add_to_cart_url', array( $this, 'modify_url' ), 10, 2 );
+
+			add_action( 'masteriyo_single_course_sidebar_content', array( $this, 'modify_single_side_content' ), 90 );
+
+			add_filter( 'masteriyo_price', array( $this, 'price_html' ), 10, 5 );
+		}
+
+		public function price_html( $html, $price, $args, $unformatted_price, $course ) {
+
+			if ( CourseAccessMode::NEED_REGISTRATION === $course->get_access_mode() ) {
+				$html = '';
+			}
+
+			return $html;
+		}
+
+		public function modify_single_side_content( $course ) {
+			if ( ! is_user_logged_in() ) {
+				return '<button>Buy Now</button>';
+			}
 		}
 
 		public function modify_url( $url, $course ) {
+
+			if ( is_user_logged_in() && current_user_can( 'manage_options' ) ) {
+				$url = $course->get_permalink();
+
+				if ( masteriyo_is_single_course_page() && ! $this->check_course_access( $course ) ) {
+						$url = Helper::get_checkout_page_url();
+				}
+
+				return $url;
+			}
 
 			if ( is_user_logged_in() && CourseAccessMode::NEED_REGISTRATION === $course->get_access_mode() ) {
 				$user_obj = masteriyo( 'user' );
@@ -79,13 +108,22 @@ if ( ! class_exists( 'Hooks' ) ) :
 				$user_registration_source = get_user_meta( $id, 'ur_registration_source', true );
 
 				if ( 'membership' !== $user_registration_source ) {
-					$url = '#';
+
+					if ( masteriyo_is_single_course_page() ) {
+						$url = Helper::get_checkout_page_url();
+					} else {
+						$url = $course->get_permalink();
+					}
 				} else {
 					$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
 					$membership         = $members_repository->get_member_membership_by_id( $id );
 
 					if ( empty( $membership ) || empty( $membership['status'] ) || 'active' !== $membership['status'] ) {
-						$url = '#';
+						if ( masteriyo_is_single_course_page() ) {
+							$url = Helper::get_checkout_page_url();
+						} else {
+							$url = $course->get_permalink();
+						}
 					} else {
 						$access_course = array( 177 );
 
@@ -97,11 +135,13 @@ if ( ! class_exists( 'Hooks' ) ) :
 							$course_id = absint( $course );
 						}
 
-						$url = in_array( $course_id, $access_course, true ) ? $url : '#';
+						$url = in_array( $course_id, $access_course, true ) ? $url : ( masteriyo_is_single_course_page() ? Helper::get_checkout_page_url()
+						: $course->get_permalink() );
 					}
 				}
-			} else {
-				$url = $course->get_permalink();
+			} elseif ( ! masteriyo_is_single_course_page() ) {
+
+					$url = $course->get_permalink();
 			}
 
 			return $url;
@@ -156,6 +196,14 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 			if ( CourseAccessMode::NEED_REGISTRATION === $course_obj->get_access_mode() ) {
 				$text = __( 'Join Now', 'learning-management-system' );
+
+				if ( ! is_user_logged_in() && masteriyo_is_single_course_page() ) {
+					$text = __( 'Buy Now', 'learning-management-system' );
+				}
+
+				if ( ! $this->check_course_access( $course_obj ) ) {
+					$text = __( 'Upgrade Now', 'learning-management-system' );
+				}
 			}
 
 			return $text;
@@ -186,6 +234,51 @@ if ( ! class_exists( 'Hooks' ) ) :
 				$default_args              = array_merge( $default_args, $GLOBALS['masteriyo_loop'] );
 				$GLOBALS['masteriyo_loop'] = wp_parse_args( $args, $default_args );
 			}
+		}
+
+
+		public function check_course_access( $course ) {
+			$can_strat_course = false;
+
+			if ( is_user_logged_in() && CourseAccessMode::NEED_REGISTRATION === $course->get_access_mode() ) {
+
+					$user = masteriyo( 'user' );
+
+				if ( is_a( $user, 'Masteriyo\Database\Model' ) ) {
+					$id = $user->get_id();
+				} elseif ( is_a( $user, 'WP_User' ) ) {
+					$id = $user->ID;
+				} else {
+					$id = $user;
+				}
+
+					$user_registration_source = get_user_meta( $id, 'ur_registration_source', true );
+
+				if ( 'membership' !== $user_registration_source ) {
+					$can_start_course = false;
+				} else {
+					$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
+					$membership         = $members_repository->get_member_membership_by_id( $id );
+
+					if ( empty( $membership ) || empty( $membership['status'] ) || 'active' !== $membership['status'] ) {
+						$can_start_course = false;
+					} else {
+						$access_course = array( 177 );
+
+						if ( is_a( $course, 'Masteriyo\Models\Course' ) ) {
+							$course_id = $course->get_id();
+						} elseif ( is_a( $course, 'WP_Post' ) ) {
+							$course_id = $course->ID;
+						} else {
+							$course_id = absint( $course );
+						}
+
+						$can_start_course = in_array( $course_id, $access_course, true );
+					}
+				}
+			}
+
+			return $can_strat_course;
 		}
 	}
 endif;
