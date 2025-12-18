@@ -724,8 +724,8 @@ $border-left-color_3: #0073aa;
 	box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
 	transition: all .15s ease;
 	z-index: 999;
-	min-width: 400px;
-	max-height: 500px;
+	min-width: 260px;
+	max-height: 300px;
 	box-sizing: border-box;
 	overflow-y: auto;
 	animation: urcr-dropdown-fade-in .15s ease-out;
@@ -1480,19 +1480,10 @@ $not-tag: #fcdddd;
 			&:has(.urcr-logic-group-rule-OR),
 			&:has(.urcr-logic-group-rule-AND),
 			&:has(.urcr-logic-group-rule-NOT) {
-				// .urcr-condition-wrapper {
-				// 	padding-left: 50px;
-				// }
-
-				// padding-left: 42px;
 				padding-left: 50px;
 			}
 
 			&:has(> .urcr-single-condition) {
-				// .urcr-condition-wrapper {
-				// 	padding-left: 0;
-				// }
-
 				padding-left: 0;
 			}
 		}
