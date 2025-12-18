@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-3432-new-styles-colors-support-to-support-site-brand
+      - v5.0.0
     workflow_dispatch:
 jobs:
   sync:
