@@ -88,9 +88,6 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 			}
 
 			$settings = array(
-				'title'    => __( 'Payments', 'user-registration' ),
-				'sections' => array(
-					'payment_settings' => array(
 						'id'          => 'payment-settings',
 						'title'       => esc_html__( 'Payment Settings', 'user-registration' ),
 						'type'        => 'card',
@@ -115,12 +112,9 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 								'type'  => 'button',
 								'class' => 'payment-settings-btn'
 							),
-						),
-					),
-				),
-			);
-
-			return apply_filters( 'user_registration_payment_settings', $settings );
+						)
+			    );
+            return $settings;
 		}
 
         public function get_paypal_settings() {
