@@ -66,6 +66,63 @@ if ( ! class_exists( 'Hooks' ) ) :
 			add_filter( 'masteriyo_price', array( $this, 'price_html' ), 10, 5 );
 
 			add_filter( 'masteriyo_get_related_courses', array( $this, 'get_related_courses' ), 10, 3 );
+
+			add_filter( 'masteriyo_course_filter_ajax_prepare_query_args', array( $this, 'filter_ajax_prepare_query_args' ), );
+
+			if ( masteriyo_string_to_bool( masteriyo_get_setting( 'course_archive.filters_and_sorting.enable_price_filter' ) ) ) {
+				masteriyo_set_setting( 'course_archive.filters_and_sorting.enable_price_filter', false );
+			}
+		}
+
+		public function filter_ajax_prepare_query_args( $args ) {
+
+			$price_type = isset( $_POST['price-type'] ) ? sanitize_text_field( $_POST['price-type'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+			if ( empty( $price_type ) || 'all' === $price_type ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+				$args['meta_query'][] = array(
+					'relation' => 'OR',
+					array(
+						'key'     => '_access_mode',
+						'value'   => 'need_registration',
+						'compare' => '=',
+					),
+					array(
+						'key'     => '_access_mode',
+						'value'   => 'open',
+						'compare' => '=',
+					),
+				);
+			}
+
+			if ( ! empty( $price_type ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+				if ( 'free' === $price_type ) {
+
+					$args['meta_query'][] = array(
+						'relation' => 'OR',
+						array(
+							'key'     => '_access_mode',
+							'value'   => 'open',
+							'compare' => '=',
+						),
+					);
+				}
+				if ( 'paid' === $price_type ) {
+					$args['meta_query'][] = array(
+						'relation' => 'OR',
+						array(
+							'key'     => '_access_mode',
+							'value'   => 'need_registration',
+							'compare' => '=',
+						),
+					);
+				}
+			}
+
+			unset( $args['tax_query'] );
+
+			return $args;
 		}
 
 		public function get_related_courses( $related_courses, $query, $course ) {
@@ -216,7 +273,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 					$text = __( 'Buy Now', 'learning-management-system' );
 				}
 
-				if ( ! $this->check_course_access( $course_obj ) ) {
+				if ( ! $this->check_course_access( $course_obj ) && masteriyo_is_single_course_page() ) {
 					$text = __( 'Upgrade Now', 'learning-management-system' );
 				}
 			}
