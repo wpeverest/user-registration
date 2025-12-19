@@ -91,11 +91,10 @@ class UR_Form_Handler {
 
 			$user = wp_get_current_user();
 
-
 			// upload the profile picture if it is set.
-			$profile_pic_url = isset( $_POST['profile-pic-url'] ) ? sanitize_text_field( wp_unslash( $_POST['profile-pic-url'] ) ) : '';
-			$valid_form_data = array();
-			$valid_form_data['profile_pic_url'] = new stdClass();
+			$profile_pic_url                           = isset( $_POST['profile-pic-url'] ) ? sanitize_text_field( wp_unslash( $_POST['profile-pic-url'] ) ) : '';
+			$valid_form_data                           = array();
+			$valid_form_data['profile_pic_url']        = new stdClass();
 			$valid_form_data['profile_pic_url']->value = $profile_pic_url;
 
 			ur_upload_profile_pic( $valid_form_data, $user_id );
@@ -105,17 +104,20 @@ class UR_Form_Handler {
 				'last_name',
 			);
 
-			$userdata = array_combine( $fields_to_update, array_map(
-				function( $field ) {
-					return sanitize_text_field( $_POST[ 'user_registration_' . $field ] );
-				},
-				$fields_to_update
-			) );
+			$userdata = array_combine(
+				$fields_to_update,
+				array_map(
+					function ( $field ) {
+						return sanitize_text_field( $_POST[ 'user_registration_' . $field ] );
+					},
+					$fields_to_update
+				)
+			);
 
 			wp_update_user( array_merge( array( 'ID' => $user->ID ), $userdata ) );
 
-			$new_email = sanitize_email( $_POST[ 'user_registration_user_email' ] );
-			if( $user->user_email !== $new_email ) {
+			$new_email = sanitize_email( $_POST['user_registration_user_email'] );
+			if ( $user->user_email !== $new_email ) {
 				update_user_meta( $user->ID, '__pending_email', $new_email );
 				$email_updated = true;
 			}
@@ -137,7 +139,7 @@ class UR_Form_Handler {
 			wp_safe_redirect( ur_get_account_endpoint_url( $profile_endpoint ) );
 			exit;
 		} else {
-			$profile = user_registration_form_data( $user_id, $form_id );
+			$profile         = user_registration_form_data( $user_id, $form_id );
 			$form_field_data = ur_get_form_field_data( $form_id );
 			$fields          = array();
 
@@ -544,7 +546,7 @@ class UR_Form_Handler {
 			 */
 			if ( $force_logout ) {
 				do_action( 'user_registration_force_logout_all_devices', $user->ID );
-			}else{
+			} else {
 				ur_add_notice( __( 'Password changed successfully.', 'user-registration' ) );
 				do_action( 'user_registration_save_account_details', $user->ID );
 				wp_safe_redirect( ur_get_page_permalink( 'myaccount' ) );
@@ -577,7 +579,7 @@ class UR_Form_Handler {
 		$nonce_value = isset( $_POST['ur_frontend_form_nonce'] ) ? sanitize_key( $_POST['ur_frontend_form_nonce'] ) : $nonce_value;
 
 		if ( ! empty( $_POST['ur_fallback_submit'] ) ) {
-			$_POST['form_data'] = urldecode($_POST['form_data']);
+			$_POST['form_data'] = urldecode( $_POST['form_data'] );
 			ur_process_registration( $nonce_value );
 		}
 	}
@@ -1066,10 +1068,13 @@ class UR_Form_Handler {
 			$session_tokens = WP_Session_Tokens::get_instance( $user_id );
 			$session_tokens->destroy_all();
 			$url = ur_get_page_permalink( 'myaccount' );
-			$url = add_query_arg( array(
-				'force-logout' => 'true',
+			$url = add_query_arg(
+				array(
+					'force-logout' => 'true',
 
-			), $url );
+				),
+				$url
+			);
 			wp_safe_redirect( esc_url( $url ) );
 
 		}

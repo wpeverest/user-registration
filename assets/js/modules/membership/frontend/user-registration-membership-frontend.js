@@ -641,6 +641,7 @@
 			}
 		},
 		upgrade_membership: function (
+			data,
 			current_plan,
 			selected_membership_id,
 			current_subscription_id,
@@ -651,6 +652,7 @@
 			//gets the nonce token from ANET and send it via the AJAX request.
 			if ("authorize" === selected_pg) {
 				this.handle_authorize_upgrade(
+					form_data,
 					current_plan,
 					selected_membership_id,
 					current_subscription_id,
@@ -662,6 +664,8 @@
 					{
 						_wpnonce: urmf_data.upgrade_membership_nonce,
 						action: "user_registration_membership_upgrade_membership",
+						form_data: data.form_data,
+						form_id: data.form_id,
 						current_membership_id: current_plan,
 						selected_membership_id: selected_membership_id,
 						current_subscription_id: current_subscription_id,
@@ -690,7 +694,7 @@
 						},
 						failure: function (xhr, statusText) {
 							ur_membership_frontend_utils.show_failure_message(
-								user_registration_pro_frontend_data.network_error +
+								user_registration_params.network_error +
 									"(" +
 									statusText +
 									")"
@@ -741,7 +745,7 @@
 					},
 					failure: function (xhr, statusText) {
 						ur_membership_frontend_utils.show_failure_message(
-							user_registration_pro_frontend_data.network_error +
+							user_registration_params.network_error +
 								"(" +
 								statusText +
 								")"
@@ -812,7 +816,7 @@
 							},
 							failure: function (xhr, statusText) {
 								ur_membership_frontend_utils.show_failure_message(
-									user_registration_pro_frontend_data.network_error +
+									user_registration_params.network_error +
 										"(" +
 										statusText +
 										")"
@@ -1705,10 +1709,10 @@
 				visible_memberships = $('input[name="urm_membership"]');
 
 			$(document).on(
-				"click",
-				".urm-update-membership-button",
-				function (e) {
+				"user_registration_membership_update_before_form_submit",
+				function (e, data) {
 					e.preventDefault();
+
 					var has_error = false,
 						selected_pg = "free",
 						selected_plan = "";
@@ -1716,10 +1720,6 @@
 							'input[name="urm_membership"]:checked'
 						).data("urm-pg-type"),
 						btn = $(this);
-
-					//append spinner
-					ur_membership_frontend_utils.append_spinner($(this));
-
 					//validation before request start
 					selected_plan = $(
 						'input[name="urm_membership"]:checked'
@@ -1732,41 +1732,10 @@
 									'input[name="urm_payment_method"]:checked'
 							  ).val();
 
-					if ("free" !== pg_type) {
-						if (selected_plan === undefined) {
-							has_error = true;
-							ur_membership_frontend_utils.show_failure_message(
-								urmf_data.labels.i18n_change_plan_required
-							);
-							ur_membership_frontend_utils.remove_spinner(btn);
-							return false;
-						}
-
-						if (
-							selected_pg === undefined ||
-							selected_pg === "free"
-						) {
-							has_error = true;
-							ur_membership_frontend_utils.show_failure_message(
-								urmf_data.labels
-									.i18n_field_payment_gateway_field_validation
-							);
-							ur_membership_frontend_utils.remove_spinner(btn);
-							return false;
-						}
-					}
-
-					if (
-						!ur_membership_ajax_utils.validate_membership_form(true)
-					) {
-						ur_membership_frontend_utils.remove_spinner(btn);
-						return false;
-					}
 					//validation end
 					var action = searchParams.get("action"),
 						current_membership_id = searchParams.get("current"),
 						subscription_id = searchParams.get("subscription_id");
-
 					if (action == "multiple") {
 						ur_membership_ajax_utils.add_multiple_membership(
 							selected_plan,
@@ -1775,6 +1744,7 @@
 						);
 					} else if (action == "upgrade") {
 						ur_membership_ajax_utils.upgrade_membership(
+							data,
 							current_membership_id,
 							selected_plan,
 							subscription_id,

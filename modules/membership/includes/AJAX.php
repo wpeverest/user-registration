@@ -1445,6 +1445,29 @@ class AJAX {
 				)
 			);
 		}
+
+		if ( isset( $_POST['form_data'] ) && ! empty( $_POST['form_data'] ) ) {
+			$single_field = array();
+			$form_data    = json_decode( wp_unslash( $_POST['form_data'] ) );
+			$form_id      = absint( $_POST['form_id'] );
+			$user_id      = get_current_user_id();
+			$profile      = user_registration_form_data( $user_id, $form_id );
+
+			foreach ( $form_data as $data ) {
+				$single_field[ 'user_registration_' . $data->field_name ] = isset( $data->value ) ? $data->value : '';
+			}
+
+			list( $profile, $single_field ) = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, false );
+			$user                           = get_userdata( $user_id );
+			urm_update_user_profile_data( $user, $profile, $single_field, $form_id );
+
+			$logger = ur_get_logger();
+			$logger->info(
+				__( 'User details added while upgrading.', 'user-registration' ),
+				array( 'source' => 'form-save' )
+			);
+		}
+
 		$ur_authorize_data = isset( $_POST['ur_authorize_data'] ) ? $_POST['ur_authorize_data'] : array();
 		$data              = array(
 			'current_subscription_id' => absint( $_POST['current_subscription_id'] ),

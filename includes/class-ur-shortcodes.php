@@ -389,6 +389,14 @@ class UR_Shortcodes {
 						9999
 					);
 
+					add_filter(
+						'user_registration_form_submit_btn_class',
+						function ( $classes ) {
+							$classes[] = 'urm-update-membership-button';
+							return $classes;
+						}
+					);
+
 					ob_start();
 					self::render_form( $form_id );
 
