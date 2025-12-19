@@ -358,9 +358,10 @@ class UR_Shortcodes {
 
 									$default_data['form_data']['default'] = $user_submitted_value;
 
-									// if( !empty( $user_submitted_value ) ) {
-
-									// }
+									if ( ! empty( $user_submitted_value ) ) {
+										$default_data['form_data']['custom_attributes']['disabled'] = 'disabled';
+										$default_data['form_data']['custom_attributes']['readonly'] = 'readonly';
+									}
 									return $default_data;
 								}
 							}
@@ -372,7 +373,7 @@ class UR_Shortcodes {
 						function ( $grid_data ) use ( $user_id, $field ) {
 
 							foreach ( $grid_data as $key => $data ) {
-								if ( $data->field_key === 'user_pass' ) {
+								if ( 'user_pass' === $data->field_key || 'user_confirm_password' === $data->field_key || 'user_confirm_email' === $data->field_key ) {
 									unset( $grid_data[ $key ] );
 								}
 							}
