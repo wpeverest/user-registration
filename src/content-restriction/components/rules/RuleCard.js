@@ -165,28 +165,32 @@ const RuleCard = ({
 						</button>
 						{menuOpen && (
 							<div className="urcr-menu-dropdown">
-								<button
-									className="urcr-menu-item urcr-menu-trash"
-									type="button"
-									onClick={(e) => {
-										e.stopPropagation();
-										handleDeleteClick();
-									}}
-								>
-									<span className="dashicons dashicons-trash"></span>
-									{__("Trash", "user-registration")}
-								</button>
-								<button
-									className="urcr-menu-item urcr-menu-duplicate"
-									type="button"
-									onClick={(e) => {
-										e.stopPropagation();
-										handleDuplicateClick();
-									}}
-								>
-									<span className="dashicons dashicons-admin-page"></span>
-									{__("Duplicate", "user-registration")}
-								</button>
+								{rule.rule_type !== "membership" && (
+									<button
+										className="urcr-menu-item urcr-menu-trash"
+										type="button"
+										onClick={(e) => {
+											e.stopPropagation();
+											handleDeleteClick();
+										}}
+									>
+										<span className="dashicons dashicons-trash"></span>
+										{__("Trash", "user-registration")}
+									</button>
+								)}
+								{rule.rule_type !== "membership" && (
+									<button
+										className="urcr-menu-item urcr-menu-duplicate"
+										type="button"
+										onClick={(e) => {
+											e.stopPropagation();
+											handleDuplicateClick();
+										}}
+									>
+										<span className="dashicons dashicons-admin-page"></span>
+										{__("Duplicate", "user-registration")}
+									</button>
+								)}
 							</div>
 						)}
 					</div>

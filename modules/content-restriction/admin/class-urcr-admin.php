@@ -48,6 +48,11 @@ class URCR_Admin {
 		 * Run migration on admin init (only once)
 		 */
 		add_action( 'admin_init', array( $this, 'run_migration' ), 5 );
+
+		/**
+		 * Create content access rule when a new membership is created
+		 */
+		add_filter( 'ur_membership_before_create_membership_response', array( $this, 'create_rule_for_new_membership' ), 10, 1 );
 	}
 
 	/**
@@ -102,10 +107,33 @@ class URCR_Admin {
 	 *
 	 */
 	public function add_urcr_menus() {
+		// Check if content restriction module is enabled
+		if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'content-restriction' ) ) {
+			return;
+		}
+
+		// Check if membership module is enabled and count memberships
+		$membership_count = 0;
+		$has_multiple_memberships = false;
+		
+		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'membership' ) ) {
+			if ( class_exists( '\WPEverest\URMembership\Admin\Services\MembershipService' ) ) {
+				$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
+				$memberships = $membership_service->list_active_memberships();
+				$membership_count = is_array( $memberships ) ? count( $memberships ) : 0;
+				$has_multiple_memberships = $membership_count > 1;
+			}
+		}
+
+		// Determine menu title based on membership count
+		$menu_title = $has_multiple_memberships 
+			? __( 'Content Rules', 'user-registration' )
+			: __( 'Content Rules', 'user-registration' );
+
 		$rules_page = add_submenu_page(
 			'user-registration',
 			__( 'Content Restriction - Content Rules', 'user-registration' ),
-			__( 'Content Rules', 'user-registration' ),
+			$menu_title,
 			'edit_posts',
 			'user-registration-content-restriction',
 			array(
@@ -177,6 +205,31 @@ class URCR_Admin {
 		}
 
 		return $settings;
+	}
+
+	/**
+	 * Create content access rule when a new membership is created.
+	 *
+	 * @param array $response The response array containing membership_id.
+	 */
+	public function create_rule_for_new_membership( $response ) {
+		if ( ! isset( $response['membership_id'] ) || empty( $response['membership_id'] ) ) {
+			return $response;
+		}
+
+		$membership_id = absint( $response['membership_id'] );
+
+		// Check if content restriction module is active
+		if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'content-restriction' ) ) {
+			return $response;
+		}
+
+		// Create rule for the new membership
+		if ( function_exists( 'urcr_create_membership_rule' ) ) {
+			urcr_create_membership_rule( $membership_id );
+		}
+
+		return $response;
 	}
 
 	/**

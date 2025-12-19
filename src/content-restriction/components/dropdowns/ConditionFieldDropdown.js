@@ -36,13 +36,14 @@ const groupOptions = (options) => {
 		}));
 };
 
-const ConditionFieldDropdown = ({ onSelect, isMigrated = false }) => {
+const ConditionFieldDropdown = ({ onSelect, isMigrated = false, ruleType = null }) => {
 	// Get condition options from localized data
 	const allConditionOptions = getURCRData("condition_options", []);
 	
 	// Filter options based on pro access and migration status
 	const isMigratedBool = Boolean(isMigrated);
 	const isPro = isProAccess();
+	const isMembershipRule = ruleType === "membership";
 	
 	let filteredOptions;
 	
@@ -62,6 +63,9 @@ const ConditionFieldDropdown = ({ onSelect, isMigrated = false }) => {
 	else {
 		filteredOptions = allConditionOptions.filter(option => option.value === "membership");
 	}
+
+	// Always exclude the membership condition option for all rules (both custom and membership rules)
+	filteredOptions = filteredOptions.filter(option => option.value !== "membership");
 
 	const options = groupOptions(filteredOptions);
 

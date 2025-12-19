@@ -316,6 +316,21 @@ class URCR_Admin_Assets {
 		 */
 		$condition_options = apply_filters( 'urcr_condition_options', $condition_options );
 
+		// Check membership module status and count
+		$membership_count = 0;
+		$is_membership_module_enabled = false;
+		$has_multiple_memberships = false;
+		
+		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'membership' ) ) {
+			$is_membership_module_enabled = true;
+			if ( class_exists( '\WPEverest\URMembership\Admin\Services\MembershipService' ) ) {
+				$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
+				$memberships = $membership_service->list_active_memberships();
+				$membership_count = is_array( $memberships ) ? count( $memberships ) : 0;
+				$has_multiple_memberships = $membership_count > 1;
+			}
+		}
+
 		$localized_data = array(
 			'URCR_DEBUG'                => apply_filters( 'urcr_debug_mode', true ),
 			'_nonce'                    => wp_create_nonce( 'urcr_manage_content_access_rule' ),
@@ -342,6 +357,9 @@ class URCR_Admin_Assets {
 			'is_pro'                    => UR_PRO_ACTIVE,
 			'content_type_options'      => $content_type_options,
 			'condition_options'         => $condition_options,
+			'is_membership_module_enabled' => $is_membership_module_enabled,
+			'membership_count'          => $membership_count,
+			'has_multiple_memberships'  => $has_multiple_memberships,
 		);
 
 		/**

@@ -49,6 +49,7 @@ const ConditionRow = ({
 						  condition,
 						  onUpdate,
 						  isMigrated = false,
+						  isLocked = false,
 					  }) => {
 	const [operator] = useState(condition.operator || "is");
 	const [value, setValue] = useState(condition.conditionValue || "");
@@ -108,6 +109,7 @@ const ConditionRow = ({
 							className="components-select-control__input urcr-condition-value-input"
 							value={condition.value || ""}
 							onChange={handleFieldChange}
+							disabled={isLocked}
 						>
 							{getAllConditionOptions(isMigrated).map((option) => (
 								<option key={option.value} value={option.value}>
@@ -131,6 +133,7 @@ const ConditionRow = ({
 							operator={operator}
 							onChange={handleValueChange}
 							uniqueId={condition.id}
+							disabled={isLocked}
 						/>
 					</div>
 				</div>
