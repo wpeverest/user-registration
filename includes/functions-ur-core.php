@@ -5163,7 +5163,9 @@ if ( ! function_exists( 'ur_get_email_template_wrapper' ) ) {
 	function ur_get_email_template_wrapper( $body_content ) {
 		$current_year = date( 'Y' );
 
-		$header = '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+		$header = apply_filters(
+			'user_registration_email_template_header',
+			'<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
 			<!-- Header -->
 			<div style="background-color: #5C70C8; padding: 40px 30px; position: relative; overflow: hidden; border-radius: 12px 12px 0 0;">
 				<!-- Decorative Circles -->
@@ -5181,23 +5183,27 @@ if ( ! function_exists( 'ur_get_email_template_wrapper' ) ) {
 			</div>
 
 			<!-- Body Content -->
-			<div style="padding: 40px 30px; background-color: #ffffff;">';
+			<div style="padding: 40px 30px; background-color: #ffffff;">'
+		);
 
-		$footer = '</div>
+		$footer = apply_filters(
+			'user_registration_email_template_footer',
+			'</div>
 
 			<!-- Footer -->
 			<div style="padding: 30px; background-color: #ffffff; border-top: 1px solid #e0e0e0; text-align: center;">
 				<p style="margin: 0 0 8px 0; color: #6c757d; font-size: 13px; line-height: 1.5;">
-					Have questions or need assistance? Our support team is always happy to help.
+						 Have questions or need assistance? Our support team is always happy to help.
 				</p>
 				<p style="margin: 0 0 12px 0; color: #6c757d; font-size: 13px; line-height: 1.5;">
-					© ' . esc_html( $current_year ) . ' {{blog_info}}. All rights reserved.
+						 © ' . esc_html( $current_year ) . ' {{blog_info}}. All rights reserved.
 				</p>
 				<p style="margin: 0; font-size: 14px; line-height: 1.6;">
 					<a href="{{home_url}}" style="color: #4A90E2; text-decoration: none; font-weight: 500;">{{blog_info}} Team</a>
 				</p>
 			</div>
-		</div>';
+		</div>'
+		);
 
 		return $header . $body_content . $footer;
 	}
