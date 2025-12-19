@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - v5.0.0
+      - UR-3484-add-logo-footer-needed-option-basic-clean-design-all-emails-content-revision
     workflow_dispatch:
 jobs:
   sync:

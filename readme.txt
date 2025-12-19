@@ -10,7 +10,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Easily create membership sites, custom user registration form, custom login form & beautiful user profile page. Restrict content based on login status & user roles.
 
-== Description ==
+== Description == 
 
 **Easily create membership sites, custom user registration form, custom login form & beautiful user profile page. Restrict content based on login status & user roles.**
 
