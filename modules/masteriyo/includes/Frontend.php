@@ -10,6 +10,8 @@
 
 namespace WPEverest\URM\Masteriyo;
 
+use Masteriyo\Constants;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -33,7 +35,7 @@ class Frontend {
 	 * @since 1.0.0
 	 */
 	private function init_hooks() {
-		// add_action( 'wp_enqueue_membership_scripts', array( $this, 'load_scripts' ), 10, 2 );
+		add_action( 'wp_enqueue_membership_scripts', array( $this, 'load_scripts' ), 10, 2 );
 		add_action( 'wp_loaded', array( $this, 'add_masteriyo_course_tab_endpoint' ) );
 		add_filter( 'user_registration_account_menu_items', array( $this, 'membership_tab' ), 10, 1 );
 		add_action(
@@ -44,10 +46,14 @@ class Frontend {
 			)
 		);
 
+				// add_action( 'template_redirect', array( $this, 'redirect_urm_course_portal' ) );
+
 		// add_action( 'template_redirect', array( $this, 'set_thank_you_transient' ) );
 		// add_action( 'wp_loaded', array( $this, 'clear_upgrade_data' ) );
 	}
 
+	public function redirect_urm_course_portal() {
+	}
 	/**
 	 * Add the item to $items array.
 	 *
@@ -93,9 +99,16 @@ class Frontend {
 	public function tab_endpoint_content() {
 		$user_id = get_current_user_id();
 
+		$my_course = array( 177 );
+		$courses   = array();
+
+		foreach ( $my_course as $course_id ) {
+			$courses[] = masteriyo_get_course( $course_id );
+		}
+		wp_enqueue_style( 'urm_masteriyo_pulic_style', plugins_url( '/assets/css/public.css', Constants::get( 'MASTERIYO_PLUGIN_FILE' ) ), array(), URM_MASTERIYO_VERSION );
 		ur_get_template(
 			'myaccount/courses.php',
-			$membership_data
+			array( 'courses' => $courses )
 		);
 	}
 
@@ -113,6 +126,7 @@ class Frontend {
 		$mask = Ur()->query->get_endpoints_mask();
 
 		add_rewrite_endpoint( 'urm-courses', $mask );
+		add_rewrite_endpoint( 'urm-course-portal', $mask );
 		flush_rewrite_rules();
 	}
 

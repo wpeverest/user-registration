@@ -22,7 +22,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<div class="user-registration-membership-content"
+<div class="masteriyo-courses-wrapper masteriyo-course columns-3 list-view"
 	style="">
-	<p>Course</p>
+	<?php
+	foreach ( $courses as $cr ) {
+		$GLOBALS['course'] = $cr;
+		\masteriyo_get_template_part( 'content', 'course' );
+	}
+	?>
+</div>
+
+<div class="urm-masteriyo-course-portal">
+<p><?php echo esc_html__( 'For more course details like quiz attempts, assignments and more, visit: ', 'user-registration' ); ?><a target="_blank" href="<?php echo esc_url( masteriyo_get_account_url() ); ?>"><span><?php echo esc_html__( 'Course Portal', 'user-registration' ); ?></span></a></p>
 </div>

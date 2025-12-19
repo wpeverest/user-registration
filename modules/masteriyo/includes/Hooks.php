@@ -10,6 +10,8 @@ namespace WPEverest\URM\Masteriyo;
 
 use Masteriyo\Taxonomy\Taxonomy;
 use Masteriyo\Enums\CourseAccessMode;
+use Masteriyo\Enums\PostStatus;
+use Masteriyo\PostType\PostType;
 
 
 
@@ -47,7 +49,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 		}
 
 		public function __construct() {
-			add_filter( 'masteriyo_course_object_query_args', array( $this, 'filter_the_get_course_args' ) );
+			// add_filter( 'masteriyo_course_object_query_args', array( $this, 'filter_the_get_course_args' ) );
 			// add_filter( 'masteriyo_get_course', array( $this, 'get_masteriyo_course' ), 10, 2 );
 
 			// add_filter( 'masteriyo_setup_course_data', array( $this, 'check_course_data' ) );
@@ -61,7 +63,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 			add_filter( 'masteriyo_course_add_to_cart_url', array( $this, 'modify_url' ), 10, 2 );
 
-			add_action( 'masteriyo_single_course_sidebar_content', array( $this, 'modify_single_side_content' ), 90 );
+			// add_action( 'masteriyo_single_course_sidebar_content', array( $this, 'modify_single_side_content' ), 90 );
 
 			add_filter( 'masteriyo_price', array( $this, 'price_html' ), 10, 5 );
 
@@ -74,7 +76,93 @@ if ( ! class_exists( 'Hooks' ) ) :
 			if ( masteriyo_string_to_bool( masteriyo_get_setting( 'course_archive.filters_and_sorting.enable_price_filter' ) ) ) {
 				masteriyo_set_setting( 'course_archive.filters_and_sorting.enable_price_filter', false );
 			}
+
+			// add_filter( 'masteriyo_get_account_url', array( $this, 'get_my_account_url' ) );
+
+			add_filter( 'masteriyo_rest_response_user_course_data', array( $this, 'filter_user_courses' ), 10, 4 );
+			// add_filter( 'masteriyo_after_process_objects_collection', array( $this, 'filter_process' ), 10, 3 );
+
+			add_filter( 'masteriyo_is_account_page', array( $this, 'override_account_page' ), 10, 3 );
 		}
+
+		public function override_account_page(
+			$is_account_page,
+			$page_id,
+			$account_page_id
+		) {
+
+			global $wp;
+
+			if ( array_key_exists( 'urm-course-portal', $wp->query_vars ) ) {
+					return true;
+			}
+
+			return $is_account_page;
+		}
+
+		// public function filter_process( $objects, $query_args, $query_results ) {
+		//  if ( isset( $objects['courses_stat'] ) ) {
+		//      error_log( print_r( $objects, true ) );
+		//  }
+
+		//  return $objects;
+		// }
+
+		// public function get_user_enrolled_courses_count( $user = null ) {
+		//  $user_id = is_a( $user, 'Masteriyo\Models\User' ) ? $user->get_id() : absint( $user ) ?? get_current_user_id();
+
+		//  if ( ! $user_id ) {
+		//      return 0;
+		//  }
+
+		//  $args = array(
+		//      'post_type'   => PostType::COURSE,
+		//      'post_status' => PostStatus::PUBLISH,
+		//      'paged'       => 1,
+		//      'order'       => 'DESC',
+		//      'orderby'     => 'date',
+		//      'tax_query'   => array(
+		//          'relation' => 'AND',
+		//      ),
+		//      'meta_query'  => array(
+		//          'relation' => 'AND',
+		//      ),
+		//  );
+
+		//  $args['meta_query'][] = array(
+		//      'relation' => 'OR',
+		//      array(
+		//          'key'     => '_access_mode',
+		//          'value'   => 'open',
+		//          'compare' => '=',
+		//      ),
+		//  );
+
+		//  return $courses_count ? absint( $courses_count ) : 0;
+		// }
+
+		public function filter_user_courses( $data, $user_course, $context, $obj ) {
+
+			$access = array( 177 );
+
+			$course_id   = $data['course']['id'];
+			$access_mode = get_post_meta( $course_id, '_access_mode', true );
+			if ( CourseAccessMode::OPEN === $access_mode ) {
+				return $data;
+			}
+
+			if ( CourseAccessMode::NEED_REGISTRATION === $access_mode && in_array( $course_id, $access, true ) ) {
+				return $data;
+			}
+
+			return array();
+		}
+
+		// public function get_my_account_url( $url ) {
+		//  // error_log( print_r( 'error', true ) );
+		//  // error_log( print_r( $url, true ) );
+		//  return $url;
+		// }
 
 		public function add_single_course_sidebar_content() {
 			echo '<div class="masteriyo-single-course-stats urm-masteriyo-membership-list"> Default Membership</div>';
@@ -133,6 +221,10 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 		public function get_related_courses( $related_courses, $query, $course ) {
 
+			if ( is_null( $course ) ) {
+				return $html;
+			}
+
 			$related_courses = array_filter(
 				$related_courses,
 				function ( $cr ) {
@@ -146,6 +238,10 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 		public function price_html( $html, $price, $args, $unformatted_price, $course ) {
 
+			if ( is_null( $course ) ) {
+				return $html;
+			}
+
 			if ( CourseAccessMode::NEED_REGISTRATION === $course->get_access_mode() ) {
 				$html = '';
 			}
@@ -153,11 +249,12 @@ if ( ! class_exists( 'Hooks' ) ) :
 			return $html;
 		}
 
-		public function modify_single_side_content( $course ) {
-			if ( ! is_user_logged_in() ) {
-				return '<button>Buy Now</button>';
-			}
-		}
+		// public function modify_single_side_content( $course ) {
+
+		//  if ( ! is_user_logged_in() ) {
+		//      return '<button>Buy Now</button>';
+		//  }
+		// }
 
 		public function modify_url( $url, $course ) {
 
@@ -165,7 +262,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 				$url = $course->get_permalink();
 
 				if ( masteriyo_is_single_course_page() && ! $this->check_course_access( $course ) ) {
-						$url = Helper::get_checkout_page_url();
+					$url = Helper::get_checkout_page_url();
 				}
 
 				return $url;
@@ -219,7 +316,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 				}
 			} elseif ( ! masteriyo_is_single_course_page() ) {
 
-					$url = $course->get_permalink();
+				$url = $course->get_permalink();
 			}
 
 			return $url;
@@ -314,13 +411,12 @@ if ( ! class_exists( 'Hooks' ) ) :
 			}
 		}
 
-
 		public function check_course_access( $course ) {
 			$can_strat_course = false;
 
 			if ( is_user_logged_in() && CourseAccessMode::NEED_REGISTRATION === $course->get_access_mode() ) {
 
-					$user = masteriyo( 'user' );
+				$user = masteriyo( 'user' );
 
 				if ( is_a( $user, 'Masteriyo\Database\Model' ) ) {
 					$id = $user->get_id();
@@ -330,7 +426,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 					$id = $user;
 				}
 
-					$user_registration_source = get_user_meta( $id, 'ur_registration_source', true );
+				$user_registration_source = get_user_meta( $id, 'ur_registration_source', true );
 
 				if ( 'membership' !== $user_registration_source ) {
 					$can_start_course = false;
