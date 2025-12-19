@@ -33,5 +33,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 </div>
 
 <div class="urm-masteriyo-course-portal">
-<p><?php echo esc_html__( 'For more course details like quiz attempts, assignments and more, visit: ', 'user-registration' ); ?><a target="_blank" href="<?php echo esc_url( masteriyo_get_account_url() ); ?>"><span><?php echo esc_html__( 'Course Portal', 'user-registration' ); ?></span></a></p>
+<p><?php echo esc_html__( 'For more course details like quiz attempts, assignments and more, visit: ', 'user-registration' ); ?><a target="_blank" href="<?php echo esc_url( get_permalink( get_option( 'user_registration_myaccount_page_id' ) ) . 'urm-course-portal' ); ?>"><span><?php echo esc_html__( 'Course Portal', 'user-registration' ); ?></span></a></p>
 </div>
