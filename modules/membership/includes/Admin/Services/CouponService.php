@@ -25,7 +25,7 @@ class CouponService {
 	 * @param $status
 	 * @param $code
 	 * @param $message
-	 * @param array   $data
+	 * @param array $data
 	 *
 	 * @return array
 	 */
@@ -91,6 +91,10 @@ class CouponService {
 
 		$membership_amount = $membership_meta['amount'];
 
+		if ( ! empty( $data['upgrade_amount'] ) ) {
+			$membership_amount = $data['upgrade_amount'];
+		}
+
 		$discount_amount = ( $coupon_details['coupon_discount_type'] === 'fixed' ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
 
 		if ( $discount_amount > $membership_amount ) {
@@ -113,6 +117,5 @@ class CouponService {
 		}
 
 		return $this->set_coupon_response( true, 200, array(), array() );
-
 	}
 }

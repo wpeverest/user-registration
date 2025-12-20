@@ -539,6 +539,7 @@ class StripeService {
 
 			// handle coupon section
 			$order_detail = $this->orders_repository->get_order_detail( $member_order['ID'] );
+
 			if ( ! empty( $order_detail['coupon'] ) ) {
 				$coupon_details = ur_get_coupon_details( $order_detail['coupon'] );
 				if ( ! empty( $coupon_details['stripe_coupon_id'] ) ) {
@@ -572,9 +573,16 @@ class StripeService {
 							$first_month_price = $new_price - $current_price;
 
 							if ( $new_price > $current_price ) {
-								$discount_amount = $new_price - $first_month_price;
-								$currency        = get_option( 'user_registration_payment_currency', 'USD' );
-								$amount          = ( 'JPY' === $currency ) ? $discount_amount : $discount_amount * 100;
+								if ( isset( $order_detail['coupon'] ) && ! empty( $order_detail['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
+									$coupon_details  = ur_get_coupon_details( $order_detail['coupon'] );
+									$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $first_month_price * $coupon_details['coupon_discount'] / 100;
+									$amount          = $new_price - $discount_amount;
+								} else {
+									$amount = $new_price - $first_month_price;
+								}
+
+								$currency = get_option( 'user_registration_payment_currency', 'USD' );
+								$amount   = ( 'JPY' === $currency ) ? $amount : $amount * 100;
 
 								PaymentGatewayLogging::log_general(
 									'stripe',
@@ -981,15 +989,15 @@ class StripeService {
 	}
 
 	public function handle_webhook( $event, $subscription_id ) {
-        // Verify that the event was sent by Stripe
-		if( isset( $event[ 'id' ] ) ) {
-            try {
-				$event_id = sanitize_text_field( $event[ 'id' ] );
-                $event = (array)\Stripe\Event::retrieve( $event_id );
-            } catch( \Exception $e ) {
+		// Verify that the event was sent by Stripe
+		if ( isset( $event['id'] ) ) {
+			try {
+				$event_id = sanitize_text_field( $event['id'] );
+				$event    = (array) \Stripe\Event::retrieve( $event_id );
+			} catch ( \Exception $e ) {
 				die();
-            }
-        } else {
+			}
+		} else {
 			die();
 		}
 		switch ( $event['type'] ) {

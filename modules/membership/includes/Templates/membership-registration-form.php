@@ -142,6 +142,31 @@
 					if ( empty( $memberships ) ) {
 						return esc_html_e( 'No upgradable Memberships.', 'user-registration' );
 					}
+
+					$subscription_service       = new WPEverest\URMembership\Admin\Services\SubscriptionService();
+					$subscription_repository    = new WPEverest\URMembership\Admin\Repositories\SubscriptionRepository();
+					$upgrade_service            = new WPEverest\URMembership\Admin\Services\UpgradeMembershipService();
+					$current_membership_details = $membership_service->get_membership_details( $current_membership_id );
+					$subscription               = $subscription_repository->retrieve( $_GET['subscription_id'] );
+
+					foreach ( $memberships as &$membership ) {
+						$selected_membership_details = $membership_service->get_membership_details( $membership['ID'] );
+						$upgrade_details             = $subscription_service->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
+
+						$selected_membership_amount   = $selected_membership_details['amount'];
+						$current_membership_amount    = $current_membership_details['amount'];
+						$upgrade_type                 = $current_membership_details['upgrade_settings']['upgrade_type'];
+						$remaining_subscription_value = $selected_membership_details['subscription']['value'];
+						$delayed_until                = '';
+
+						$chargeable_amount    = $upgrade_service->calculate_chargeable_amount(
+							$selected_membership_amount,
+							$current_membership_amount,
+							$upgrade_type
+						);
+						$membership['amount'] = $chargeable_amount;
+					}
+					unset( $membership );
 				} else {
 					return esc_html_e( 'You donot have permission to purchase the selected membership. Please go through upgrade process from my account.', 'user-registration' );
 				}
@@ -167,6 +192,9 @@
 							data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
 							data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
 							data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['amount'] ); ?>"
+							<?php
+							echo isset( $_GET['action'] ) && 'upgrade' === $_GET['action'] && $membership['amount'] < $membership['calculated_amount'] ? 'data-urm-upgrade-type="' . esc_attr__( 'Prorated', 'user-registration' ) . '"' : '';
+							?>
 							data-urm-default-pg="<?php echo $urm_default_pg; ?>"
 						<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
 					>

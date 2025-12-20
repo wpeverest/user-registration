@@ -1477,6 +1477,10 @@ class AJAX {
 			'ur_authorize_net'        => $ur_authorize_data,
 		);
 
+		if ( ! empty( $_POST['coupon'] ) ) {
+			$data['coupon'] = sanitize_text_field( $_POST['coupon'] );
+		}
+
 		$subscription_service = new SubscriptionService();
 		$status               = $subscription_service->can_upgrade( $data );
 
