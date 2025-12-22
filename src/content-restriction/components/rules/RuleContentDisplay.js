@@ -239,22 +239,21 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 				contentTargets={contentTargets}
 				onContentTargetsChange={setContentTargets}
 				isMigrated={Boolean(rule.is_migrated)}
+				ruleType={rule.rule_type}
 			/>
 
 				{/* Save Button */}
-
-
-			<div className="urcr-rule-actions">
-				<button
-					className="urcr-save-rule-btn button button-primary"
-					type="button"
-					onClick={handleSave}
-					disabled={isSaving}
-					data-rule-id={rule.id}
-				>
-					{isSaving ? __("Saving...", "user-registration") : __("Save", "user-registration")}
-				</button>
-			</div>
+				<div className="urcr-rule-actions">
+					<button
+						className="urcr-save-rule-btn button button-primary"
+						type="button"
+						onClick={handleSave}
+						disabled={isSaving}
+						data-rule-id={rule.id}
+					>
+						{isSaving ? __("Saving...", "user-registration") : __("Save", "user-registration")}
+					</button>
+				</div>
 		</div>
 	);
 };

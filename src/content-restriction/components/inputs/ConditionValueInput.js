@@ -7,7 +7,7 @@ import { getURCRLocalizedData, getURCRData } from "../../utils/localized-data";
 import CheckboxRadioInput from "./CheckboxRadioInput";
 import PeriodInput from "./PeriodInput";
 
-const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId }) => {
+const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId, disabled = false }) => {
 	const urcrData = getURCRLocalizedData();
 	
 	// Normalize initial value: for checkbox, ensure it's a scalar; for multiselect, ensure it's an array
@@ -64,6 +64,7 @@ const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId 
 			$select
 				.select2({
 					containerCssClass: $select.data("select2_class"),
+					disabled: disabled,
 				})
 				.on("select2:selecting", function () {
 					select2_changed_flag_up = true;
@@ -88,6 +89,13 @@ const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId 
 				$select.val(inputValue).trigger("change");
 			}
 
+			// Update disabled state
+			if (disabled) {
+				$select.prop("disabled", true);
+			} else {
+				$select.prop("disabled", false);
+			}
+
 			// Cleanup on unmount
 			return () => {
 				if ($select && $select.hasClass("select2-hidden-accessible")) {
@@ -96,7 +104,7 @@ const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId 
 				}
 			};
 		}
-	}, [type, field]); // Initialize when type or field changes
+	}, [type, field, disabled]); // Initialize when type, field, or disabled state changes
 
 	// Sync select2 value when inputValue changes externally (from props)
 	useEffect(() => {
@@ -113,6 +121,20 @@ const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId 
 			}
 		}
 	}, [inputValue, type]);
+
+	// Sync select2 disabled state when disabled prop changes
+	useEffect(() => {
+		if (type === "multiselect" && selectRef.current) {
+			const $select = window.jQuery(selectRef.current);
+			if ($select.hasClass("select2-hidden-accessible")) {
+				if (disabled) {
+					$select.prop("disabled", true);
+				} else {
+					$select.prop("disabled", false);
+				}
+			}
+		}
+	}, [disabled, type]);
 
 	// Hide input if operator is "empty" or "not empty"
 	if (operator === "empty" || operator === "not empty") {
@@ -205,6 +227,7 @@ const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId 
 					value={inputValue}
 					onChange={handleChange}
 					uniqueId={uniqueId}
+					disabled={disabled}
 				/>
 			);
 
@@ -227,6 +250,7 @@ const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId 
 					value={selectedValues}
 					onChange={handleMultiSelectChange}
 					multiple={true}
+					disabled={disabled}
 				>
 					{options.length === 0 ? (
 						<option value="" disabled>
@@ -260,6 +284,7 @@ const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId 
 				<PeriodInput
 					value={inputValue}
 					onChange={handleChange}
+					disabled={disabled}
 				/>
 			);
 
@@ -282,6 +307,7 @@ const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId 
 					value={inputValue}
 					onChange={(e) => handleChange(e.target.value)}
 					placeholder={__("Enter value", "user-registration")}
+					disabled={disabled}
 				/>
 			);
 	}

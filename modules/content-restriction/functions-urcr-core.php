@@ -1349,6 +1349,117 @@ function urcr_has_rules_with_advanced_logic() {
 }
 
 /**
+ * Create a content access rule for a single membership.
+ *
+ * @param int $membership_id The membership ID.
+ * @param string $membership_title The membership title (optional, will be fetched if not provided).
+ * @return int|false The rule ID on success, false on failure.
+ */
+function urcr_create_membership_rule( $membership_id, $membership_title = '' ) {
+	// Check if content restriction module is active
+	if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'content-restriction' ) ) {
+		return false;
+	}
+
+	// Check if membership module is active
+	if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'membership' ) ) {
+		return false;
+	}
+
+	// Check if rule already exists for this membership
+	$existing_rules = get_posts( array(
+		'post_type'      => 'urcr_access_rule',
+		'post_status'    => 'any',
+		'posts_per_page' => 1,
+		'meta_query'     => array(
+			array(
+				'key'   => 'urcr_membership_id',
+				'value' => $membership_id,
+			),
+		),
+	) );
+
+	if ( ! empty( $existing_rules ) ) {
+		// Rule already exists for this membership
+		return false;
+	}
+
+	// Get membership title if not provided
+	if ( empty( $membership_title ) ) {
+		$membership_post = get_post( $membership_id );
+		if ( ! $membership_post || 'ur_membership' !== $membership_post->post_type ) {
+			return false;
+		}
+		$membership_title = $membership_post->post_title;
+	}
+
+	if ( empty( $membership_title ) ) {
+		return false;
+	}
+
+	$timestamp = time() * 1000;
+
+	// Build condition for this membership
+	$condition = array(
+		'type'  => 'membership',
+		'id'    => 'x' . $timestamp,
+		'value' => array( strval( $membership_id ) ),
+	);
+
+	// Build logic_map
+	$logic_map = array(
+		'type'       => 'group',
+		'id'         => 'x' . ( $timestamp + 1 ),
+		'conditions' => array( $condition ),
+		'logic_gate' => 'AND',
+	);
+
+	// Build target_contents - empty for membership rules
+	$target_contents = array();
+
+	// Build rule data
+	$rule_data = array(
+		'enabled'         => true,
+		'access_control'  => 'access',
+		'logic_map'       => $logic_map,
+		'target_contents' => $target_contents,
+		'actions'         => urcr_build_migration_actions(),
+	);
+
+	$rule_title = sprintf( __( '%s Rule', 'user-registration' ), $membership_title );
+
+	// Create the rule post
+	$rule_post = array(
+		'post_title'   => $rule_title,
+		'post_content' => wp_json_encode( $rule_data ),
+		'post_type'    => 'urcr_access_rule',
+		'post_status'  => 'publish',
+	);
+
+	$rule_id = wp_insert_post( $rule_post );
+
+	if ( $rule_id && ! is_wp_error( $rule_id ) ) {
+		// Set post meta to identify this as a membership rule
+		update_post_meta( $rule_id, 'urcr_rule_type', 'membership' );
+		update_post_meta( $rule_id, 'urcr_membership_id', $membership_id );
+
+		// Update migrated membership IDs list
+		$migrated_membership_ids = get_option( 'urcr_migrated_membership_ids', array() );
+		if ( ! is_array( $migrated_membership_ids ) ) {
+			$migrated_membership_ids = array();
+		}
+		if ( ! in_array( $membership_id, $migrated_membership_ids, true ) ) {
+			$migrated_membership_ids[] = $membership_id;
+			update_option( 'urcr_migrated_membership_ids', $migrated_membership_ids );
+		}
+
+		return $rule_id;
+	}
+
+	return false;
+}
+
+/**
  * Migrate memberships to individual content access rules.
  * Creates one rule per active membership.
  *
@@ -1405,49 +1516,10 @@ function urcr_migrate_memberships() {
 			continue;
 		}
 
-		$timestamp = $base_timestamp + ( $timestamp_counter * 1000 );
-		$timestamp_counter++;
+		// Use the reusable function to create the rule
+		$rule_id = urcr_create_membership_rule( $membership_id, $membership_title );
 
-		// Build condition for this membership
-		$condition = array(
-			'type'  => 'membership',
-			'id'    => 'x' . $timestamp,
-			'value' => array( strval( $membership_id ) ),
-		);
-
-		// Build logic_map
-		$logic_map = array(
-			'type'       => 'group',
-			'id'         => 'x' . ( $timestamp + 1 ),
-			'conditions' => array( $condition ),
-			'logic_gate' => 'AND',
-		);
-
-		// Build target_contents - empty for membership rules
-		$target_contents = array();
-
-		// Build rule data
-		$rule_data = array(
-			'enabled'         => true,
-			'access_control'  => 'access',
-			'logic_map'       => $logic_map,
-			'target_contents' => $target_contents,
-			'actions'         => urcr_build_migration_actions(),
-		);
-
-		$rule_title = sprintf( __( '%s Rule', 'user-registration' ), $membership_title );
-
-		// Create the rule post (without migrated meta)
-		$rule_post = array(
-			'post_title'   => $rule_title,
-			'post_content' => wp_json_encode( $rule_data ),
-			'post_type'    => 'urcr_access_rule',
-			'post_status'  => 'publish',
-		);
-
-		$rule_id = wp_insert_post( $rule_post );
-
-		if ( $rule_id && ! is_wp_error( $rule_id ) ) {
+		if ( $rule_id ) {
 			$migrated_rule_ids[] = $rule_id;
 			$migrated_membership_ids[] = $membership_id;
 		}

@@ -5,7 +5,7 @@ import React from "react";
 import { __ } from "@wordpress/i18n";
 import { getURCRData } from "../../utils/localized-data";
 
-const CheckboxRadioInput = ({ field, value, onChange, uniqueId }) => {
+const CheckboxRadioInput = ({ field, value, onChange, uniqueId, disabled = false }) => {
 	const labels = getURCRData("labels", {});
 	
 	// Get options based on field
@@ -62,6 +62,7 @@ const CheckboxRadioInput = ({ field, value, onChange, uniqueId }) => {
 							checked={isChecked}
 							onChange={(e) => handleChange(e.target.value)}
 							className="urcr-checkbox-radio-input"
+							disabled={disabled}
 						/>
 						<span className="urcr-checkbox-radio-label">{option.label}</span>
 					</label>
