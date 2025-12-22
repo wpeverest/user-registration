@@ -1449,8 +1449,8 @@ class AJAX {
 		if ( isset( $_POST['form_data'] ) && ! empty( $_POST['form_data'] ) ) {
 			$single_field = array();
 			$form_data    = json_decode( wp_unslash( $_POST['form_data'] ) );
-			$form_id      = absint( $_POST['form_id'] );
 			$user_id      = get_current_user_id();
+			$form_id      = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : ur_get_form_id_by_userid( $user_id );
 			$profile      = user_registration_form_data( $user_id, $form_id );
 
 			foreach ( $form_data as $data ) {

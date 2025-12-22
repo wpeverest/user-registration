@@ -388,8 +388,7 @@ class SubscriptionService {
 			$data['coupon'] = $coupon;
 		}
 
-		$data = $data + $upgrade_details;
-
+		$data               = $data + $upgrade_details;
 		$response           = $payment_service->build_response( $data );
 		$response['status'] = false;
 

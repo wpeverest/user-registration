@@ -145,7 +145,10 @@ class StripeService {
 			'type' => $payment_data['type'],
 		);
 
-		if ( isset( $payment_data['coupon'] ) && ! empty( $payment_data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
+		if ( isset( $payment_data['upgrade'] ) && $payment_data['upgrade'] ) {
+			$amount = $payment_data['amount'];
+
+		} elseif ( isset( $payment_data['coupon'] ) && ! empty( $payment_data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details  = ur_get_coupon_details( $payment_data['coupon'] );
 			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $amount * $coupon_details['coupon_discount'] / 100;
 			$amount          = $amount - $discount_amount;

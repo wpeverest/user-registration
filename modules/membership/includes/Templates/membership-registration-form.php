@@ -156,7 +156,7 @@
 						$selected_membership_amount   = $selected_membership_details['amount'];
 						$current_membership_amount    = $current_membership_details['amount'];
 						$upgrade_type                 = $current_membership_details['upgrade_settings']['upgrade_type'];
-						$remaining_subscription_value = $selected_membership_details['subscription']['value'];
+						$remaining_subscription_value = isset( $selected_membership_details['subscription']['value'] ) ? $selected_membership_details['subscription']['value'] : '';
 						$delayed_until                = '';
 
 						$chargeable_amount    = $upgrade_service->calculate_chargeable_amount(

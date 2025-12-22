@@ -817,7 +817,9 @@
 							current_subscription_id:
 								data.current_subscription_id,
 							selected_pg: data.selected_pg,
-							ur_authorize_data: data.ur_authorize_data
+							ur_authorize_data: data.ur_authorize_data,
+							form_data: submittedData.form_data,
+							coupon: submittedData.coupon
 						},
 						{
 							success: function (response) {
@@ -1055,9 +1057,12 @@
 					window.location.replace(response.data.pg_data.payment_url);
 					break;
 				case "authorize":
+					window.location.replace(response.data.redirect);
+					break;
 				case "free":
 					var cleanUrl =
 						window.location.origin + window.location.pathname;
+
 					window.location.replace(response.data.pg_data.payment_url);
 				default:
 					ur_membership_ajax_utils.show_bank_response(
