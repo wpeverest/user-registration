@@ -372,4 +372,50 @@ jQuery(function ($) {
 					});
 			});
 		});
+
+	const editBtn = $(document).find(
+		".user_registration_profile_picture_upload"
+	);
+	const fileInput = document.getElementById("ur-profile-pic");
+
+	if (!editBtn || !fileInput) return;
+
+	editBtn
+		.closest(".button-group")
+		.find(".uraf-profile-picture-upload")
+		.hide();
+	editBtn.on("click", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+
+		if (
+			editBtn
+				.closest(".button-group")
+				.find(".uraf-profile-picture-upload").length > 0
+		) {
+			editBtn
+				.closest(".button-group")
+				.find(".uraf-profile-picture-upload")
+				.toggle();
+		} else {
+			fileInput.click();
+			return;
+		}
+	});
+
+	$(document).on("click", function (e) {
+		var clickedInsideMenu =
+			$(e.target).closest(".uraf-profile-picture-upload").length > 0;
+		var clickedEditBtn =
+				$(e.target).closest(".user_registration_profile_picture_upload")
+					.length > 0,
+			menu = $(document)
+				.find(".user_registration_profile_picture_upload")
+				.closest(".button-group")
+				.find(".uraf-profile-picture-upload");
+
+		if (!clickedInsideMenu || !clickedEditBtn) {
+			menu.hide();
+		}
+	});
 });
