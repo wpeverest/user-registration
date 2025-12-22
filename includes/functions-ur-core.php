@@ -9779,3 +9779,54 @@ if ( ! function_exists( 'ur_pro_get_excluded_fields' ) ) {
 		return apply_filters( 'user_registration_pro_excluded_fields', $excluded_fields );
 	}
 }
+
+/**
+ * Get the count of membership rules.
+ * This function checks for content access rules with rule_type = 'membership'.
+ *
+ * @return int The count of membership rules.
+ * @since 4.4.8
+ */
+if ( ! function_exists( 'ur_get_membership_rules_count' ) ) {
+	function ur_get_membership_rules_count() {
+		// Check if membership module is active
+		if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'membership' ) ) {
+			return 0;
+		}
+
+		// Check if post type exists, if not query directly from database
+		if ( post_type_exists( 'urcr_access_rule' ) ) {
+			$membership_rules = get_posts(
+				array(
+					'post_type'      => 'urcr_access_rule',
+					'post_status'    => 'any',
+					'posts_per_page' => -1,
+					'meta_query'     => array(
+						array(
+							'key'   => 'urcr_rule_type',
+							'value' => 'membership',
+						),
+					),
+				)
+			);
+			return is_array( $membership_rules ) ? count( $membership_rules ) : 0;
+		} else {
+			// Post type not registered yet, query directly from database
+			global $wpdb;
+			$count = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(DISTINCT p.ID)
+					FROM {$wpdb->posts} p
+					INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
+					WHERE p.post_type = %s
+					AND pm.meta_key = %s
+					AND pm.meta_value = %s",
+					'urcr_access_rule',
+					'urcr_rule_type',
+					'membership'
+				)
+			);
+			return absint( $count );
+		}
+	}
+}

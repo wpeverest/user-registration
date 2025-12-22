@@ -24,6 +24,7 @@ const ContentAccessRules = () => {
 	// Access urcr_localized_data
 	const urcrData = getURCRLocalizedData();
 	const hasMultipleMemberships = getURCRData("has_multiple_memberships", false);
+	const isContentRestrictionEnabled = getURCRData("is_content_restriction_enabled", false);
 
 	const fetchRules = useCallback(() => {
 		setIsLoading(true);
@@ -55,27 +56,40 @@ const ContentAccessRules = () => {
 	// Filter rules by type
 	const membershipRules = rules.filter((rule) => rule.rule_type === "membership");
 	const customRules = rules.filter((rule) => rule.rule_type !== "membership" || !rule.rule_type);
-
 	// Show membership rules tab only if there are multiple memberships AND more than 1 membership rule
 	const shouldShowMembershipTab = hasMultipleMemberships && membershipRules.length > 1;
+	// Show custom rules tab only if content restriction addon is enabled AND there are custom rules
+	const shouldShowCustomTab = isContentRestrictionEnabled;
+
+	// Show tab switcher only when content restriction is enabled AND there are more than 1 membership rules
+	const shouldShowTabSwitcher = isContentRestrictionEnabled && shouldShowMembershipTab;
 
 	// Get rules for current tab
-	const currentRules = activeTab === "membership" ? membershipRules : customRules;
+	// When content restriction is disabled, always show membership rules
+	const currentRules = (!isContentRestrictionEnabled) ? membershipRules : (activeTab === "membership" ? membershipRules : customRules);
 
 	// Set default tab based on membership count (only once when rules are loaded)
 	const [hasSetDefaultTab, setHasSetDefaultTab] = useState(false);
 	useEffect(() => {
-		if (!hasSetDefaultTab && !isLoading && shouldShowMembershipTab && membershipRules.length > 0) {
-			// If we have multiple memberships and membership rules, default to membership tab
-			setActiveTab("membership");
-			setHasSetDefaultTab(true);
-		} else if (!hasSetDefaultTab && !isLoading && !shouldShowMembershipTab) {
-			// If we shouldn't show membership tab, ensure we're on custom tab
-			setActiveTab("custom");
-			setHasSetDefaultTab(true);
+		if (!hasSetDefaultTab && !isLoading) {
+			// When content restriction is disabled, always show membership rules (no tabs)
+			if (!isContentRestrictionEnabled) {
+				setActiveTab("membership");
+				setHasSetDefaultTab(true);
+			}
+			// When content restriction is enabled and we have membership tab, default to membership tab
+			else if (shouldShowMembershipTab && membershipRules.length > 0) {
+				setActiveTab("membership");
+				setHasSetDefaultTab(true);
+			}
+			// Otherwise, default to custom tab
+			else if (!shouldShowMembershipTab) {
+				setActiveTab("custom");
+				setHasSetDefaultTab(true);
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [rules, isLoading, hasMultipleMemberships]);
+	}, [rules, isLoading, hasMultipleMemberships, isContentRestrictionEnabled]);
 
 
 
@@ -190,7 +204,7 @@ const ContentAccessRules = () => {
 			<div className="urcr-viewer-container">
 				<div className="urcr-header">
 					<h1>{__("Content Rules", "user-registration")}</h1>
-					{isProAccess() && activeTab === "custom" && (
+					{isProAccess() && isContentRestrictionEnabled && activeTab === "custom" && (
 						<button type="button" className="urcr-add-new-button" onClick={handleOpenModal}>
 							<span className="dashicons dashicons-plus-alt2"></span>
 							{__("Add New", "user-registration")}
@@ -198,8 +212,8 @@ const ContentAccessRules = () => {
 					)}
 				</div>
 
-				{/* Tabs */}
-				{shouldShowMembershipTab && (
+				{/* Tabs - Show only when content restriction is enabled AND there are more than 1 membership rules */}
+				{shouldShowTabSwitcher && (
 					<div className="urcr-tabs">
 						<button
 							type="button"
@@ -208,13 +222,15 @@ const ContentAccessRules = () => {
 						>
 							{__("Membership Rules", "user-registration")}
 						</button>
-						<button
-							type="button"
-							className={`urcr-tab ${activeTab === "custom" ? "urcr-tab-active" : ""}`}
-							onClick={() => setActiveTab("custom")}
-						>
-							{__("Custom Rules", "user-registration")}
-						</button>
+						{shouldShowCustomTab && (
+							<button
+								type="button"
+								className={`urcr-tab ${activeTab === "custom" ? "urcr-tab-active" : ""}`}
+								onClick={() => setActiveTab("custom")}
+							>
+								{__("Custom Rules", "user-registration")}
+							</button>
+						)}
 					</div>
 				)}
 

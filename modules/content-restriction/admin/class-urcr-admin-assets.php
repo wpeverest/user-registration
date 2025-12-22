@@ -353,7 +353,7 @@ class URCR_Admin_Assets {
 		$membership_count = 0;
 		$is_membership_module_enabled = false;
 		$has_multiple_memberships = false;
-		
+
 		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'membership' ) ) {
 			$is_membership_module_enabled = true;
 			if ( class_exists( '\WPEverest\URMembership\Admin\Services\MembershipService' ) ) {
@@ -394,6 +394,7 @@ class URCR_Admin_Assets {
 			'is_membership_module_enabled' => $is_membership_module_enabled,
 			'membership_count'          => $membership_count,
 			'has_multiple_memberships'  => $has_multiple_memberships,
+			'is_content_restriction_enabled' => ur_check_module_activation( 'content-restriction' ),
 			'action_type_options'       => $action_type_options,
 			'labels'                    => array(
 				'pages'                    => __( 'Pages', 'user-registration' ),
