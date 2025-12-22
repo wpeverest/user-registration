@@ -9004,31 +9004,31 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
 	 */
 	function ur_setting_keys() {
 		return array(
-			'user-registration/user-registration.php'     => array(
-				array( 'user_registration_general_setting_disabled_user_roles', '["subscriber"]' ),
-				array( 'user_registration_login_option_hide_show_password', false ),
-				array( 'user_registration_myaccount_page_id', '' ),
-				array( 'user_registration_my_account_layout', 'horizontal' ),
-				array( 'user_registration_ajax_form_submission_on_edit_profile', false ),
-				array( 'user_registration_disable_profile_picture', false ),
-				array( 'user_registration_disable_logout_confirmation', apply_filters( 'user_registration_disable_logout_confirmation_status', true ) ),
-				array( 'user_registration_login_options_form_template', 'default' ),
-				array( 'user_registration_general_setting_login_options_with', 'default' ),
-				array( 'user_registration_login_title', false ),
-				array( 'ur_login_ajax_submission', false ),
-				array( 'user_registration_login_options_remember_me', true ),
-				array( 'user_registration_login_options_lost_password', true ),
-				array( 'user_registration_login_options_hide_labels', false ),
-				array( 'user_registration_login_options_enable_recaptcha', false ),
-				array( 'user_registration_general_setting_registration_url_options', '' ),
-				array( 'user_registration_login_options_prevent_core_login', false ),
-				array( 'user_registration_login_options_login_redirect_url', '' ),
-				array( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
-				array( 'user_registration_login_options_configured_captcha_type', 'v2' ),
-				array( 'user_registration_general_setting_uninstall_option', false ),
-				array( 'user_registration_allow_usage_tracking', false ),
-				array( 'user_registration_hide_label_password', false ),
-				array( 'user_registration_hide_label_username_or_email', false ),
+            'user-registration/user-registration.php' => array(
+                array( 'user_registration_general_setting_disabled_user_roles', '["subscriber"]' ),
+                array( 'user_registration_login_option_hide_show_password', false ),
+                array( 'user_registration_myaccount_page_id', '' ),
+                array( 'user_registration_my_account_layout', 'vertical' ),
+                array( 'user_registration_ajax_form_submission_on_edit_profile', false ),
+                array( 'user_registration_disable_profile_picture', false ),
+                array( 'user_registration_disable_logout_confirmation', apply_filters('user_registration_disable_logout_confirmation_status', true) ),
+                array( 'user_registration_login_options_form_template', 'default' ),
+                array( 'user_registration_general_setting_login_options_with', 'default' ),
+                array( 'user_registration_login_title', false ),
+                array( 'ur_login_ajax_submission', false ),
+                array( 'user_registration_login_options_remember_me', true ),
+                array( 'user_registration_login_options_lost_password', true ),
+                array( 'user_registration_login_options_hide_labels', false ),
+                array( 'user_registration_login_options_enable_recaptcha', false ),
+                array( 'user_registration_general_setting_registration_url_options', '' ),
+                array( 'user_registration_login_options_prevent_core_login', false ),
+                array( 'user_registration_login_options_login_redirect_url', '' ),
+                array( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
+                array( 'user_registration_login_options_configured_captcha_type', 'v2' ),
+                array( 'user_registration_general_setting_uninstall_option', false ),
+                array( 'user_registration_allow_usage_tracking', false ),
+                array( 'user_registration_hide_label_password', false ),
+                array( 'user_registration_hide_label_username_or_email', false ),
 			),
 			'user-registration-pro/user-registration.php' => array(
 				array( 'user_registration_pro_general_setting_delete_account', 'disable' ),
@@ -9612,5 +9612,161 @@ if ( ! function_exists( 'ur_get_membership_details' ) ) {
 		$memberships        = $membership_service->list_active_memberships();
 
 		return $memberships;
+	}
 }
+
+if ( ! function_exists( 'urm_process_profile_fields' ) ) {
+	/**
+	 * Helper function for profile fields processing.
+	 *
+	 * @param array $profile User profile data.
+	 * @param array $single_field Single field data.
+	 * @param array $form_data The form data.
+	 * @param int   $form_id The form ID.
+	 * @param int   $user_id The user id.
+	 * @param bool  $is_admin_user Whether the user is an admin.
+	 */
+	function urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, $is_admin_user = false ) {
+
+		foreach ( $profile as $key => $field ) {
+
+			if ( ! isset( $field['type'] ) ) {
+				$field['type'] = 'text';
+			}
+			// Unset hidden field value.
+			if ( ( isset( $field['field_key'] ) && 'hidden' === $field['field_key'] ) || ( 'range' === $field['type'] && ur_string_to_bool( $field['enable_payment_slider'] ) ) ) {
+				$key = array_search( $field, $profile, true );
+
+				if ( false !== ( $key ) ) {
+					unset( $profile[ $key ] );
+				}
+			}
+			if ( ! $is_admin_user && 'hidden' === $field['type'] ) {
+				$key = array_search( $field, $profile, true );
+
+				if ( false !== ( $key ) ) {
+					unset( $profile[ $key ] );
+				}
+			}
+			// Get Value.
+			switch ( $field['type'] ) {
+				case 'checkbox':
+					if ( isset( $single_field[ $key ] ) ) {
+						// Serialize values fo checkbox field.
+						$single_field[ $key ] = ( json_decode( $single_field[ $key ] ) !== null ) ? json_decode( $single_field[ $key ] ) : sanitize_text_field( $single_field[ $key ] );
+					}
+					break;
+				case 'wysiwyg':
+					if ( isset( $single_field[ $key ] ) ) {
+						$single_field[ $key ] = sanitize_text_field( htmlentities( $single_field[ $key ] ) );
+					} else {
+						$single_field[ $key ] = '';
+					}
+					break;
+				case 'signature':
+					if ( isset( $single_field[ $key ] ) ) {
+						$single_field[ $key ] = apply_filters( 'user_registration_process_signature_field_data', $single_field[ $key ] );
+					} else {
+						$single_field[ $key ] = $field['default'];
+					}
+					break;
+				default:
+					if ( 'repeater' !== $field['type'] ) {
+						$single_field[ $key ] = isset( $single_field[ $key ] ) ? $single_field[ $key ] : '';
+					}
+					break;
+			}
+		}
+
+		/**
+		 * Action hook to perform validation of edit profile form.
+		 *
+		 * @param array $profile User profile data.
+		 * @param array $form_data The form data.
+		 * @param int $form_id The form ID.
+		 * @param int $user_id The user id.
+		 */
+		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id, $user_id );
+		/**
+		 * Action after the save profile validation.
+		 *
+		 * @param int The user ID.
+		 * @param array The profile data.
+		 */
+		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
+
+		return array( $profile, $single_field );
+	}
+}
+
+
+if ( ! function_exists( 'urm_update_user_profile_data' ) ) {
+	/**
+	 * Helper function to update user profile data.
+	 *
+	 * @param object $user The user object.
+	 * @param array  $profile User profile data.
+	 * @param array  $single_field Single field data.
+	 * @param int    $form_id The form ID.
+	 */
+	function urm_update_user_profile_data( $user, $profile, $single_field, $form_id ) {
+
+		$user_data = array();
+		/**
+		 * Filter to modify the email change confirmation.
+		 * Default vallue is 'true'.
+		 */
+		$is_email_change_confirmation = (bool) apply_filters( 'user_registration_email_change_confirmation', true );
+		$email_updated                = false;
+		$pending_email                = '';
+		$user_id                      = $user->ID;
+		/**
+		 * Filter to modify the field settings.
+		 *
+		 * The dynamic portion of the hook name, $value->field_key.
+		 *
+		 * @param array $value The field value.
+		 */
+		$profile = apply_filters( 'user_registration_before_save_profile_details', $profile, $user_id, $form_id );
+
+		foreach ( $profile as $key => $field ) {
+			$new_key = str_replace( 'user_registration_', '', $key );
+
+			if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
+				if ( $user ) {
+					if ( sanitize_email( wp_unslash( $single_field[ $key ] ) ) !== $user->user_email ) {
+						$email_updated = true;
+						$pending_email = sanitize_email( wp_unslash( $single_field[ $key ] ) );
+					}
+					continue;
+				}
+			}
+
+			if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
+				if ( 'display_name' === $new_key ) {
+					$user_data['display_name'] = sanitize_text_field( ( $single_field[ $key ] ) );
+				} else {
+					$user_data[ $new_key ] = sanitize_text_field( $single_field[ $key ] );
+				}
+			} else {
+				$update_key = $key;
+
+				if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
+					$update_key = str_replace( 'user_', '', $new_key );
+				}
+				$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
+
+				if ( 'disabled' !== $disabled ) {
+					update_user_meta( $user_id, $update_key, $single_field[ $key ] );
+				}
+			}
+		}
+
+		if ( count( $user_data ) > 0 ) {
+			$user_data['ID'] = $user_id;
+			wp_update_user( $user_data );
+		}
+
+		return array( $email_updated, $pending_email );
+	}
 }

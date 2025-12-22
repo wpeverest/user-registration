@@ -50,7 +50,7 @@ if ( 'block' === $type ) :
 					if ( isset( $membership['multiple_membership'] ) && $membership['multiple_membership'] ) {
 						$intended_action = 'multiple';
 					} elseif ( isset( $current_membership_group['ID'] ) && ! in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
-						$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group_id['ID'] );
+						$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group_id['ID'] ?? 0 );
 						if ( $multiple_memberships_allowed ) {
 							$intended_action = 'multiple';
 						} else {
@@ -123,7 +123,7 @@ elseif ( 'list' === $type ) :
 						if ( isset( $membership['multiple_membership'] ) && $membership['multiple_membership'] ) {
 							$intended_action = 'multiple';
 						} elseif ( isset( $current_membership_group['ID'] ) && ! in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
-							$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group_id['ID'] );
+							$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $current_membership_group['ID'] );
 							if ( $multiple_memberships_allowed ) {
 								$intended_action = 'multiple';
 							} else {

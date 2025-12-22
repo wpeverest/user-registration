@@ -52,33 +52,32 @@ class AJAX {
 	public static function add_ajax_events() {
 
 		$ajax_events = array(
-			'create_membership'                 => false,
-			'update_membership'                 => false,
-			'delete_memberships'                => false,
-			'delete_membership'                 => false,
-			'update_membership_status'          => false,
-			'create_member'                     => false,
-			'edit_member'                       => false,
-			'delete_members'                    => false,
-			'confirm_payment'                   => true,
-			'create_stripe_subscription'        => true,
-			'register_member'                   => true,
-			'validate_coupon'                   => true,
-			'cancel_subscription'               => false,
-			'reactivate_membership'             => false,
-			'renew_membership'                  => false,
-			'cancel_upcoming_subscription'      => false,
-			'fetch_upgradable_memberships'      => false,
-			'fetch_intended_membership_details' => false,
-			'get_group_memberships'             => false,
-			'create_membership_group'           => false,
-			'delete_membership_groups'          => false,
-			'verify_pages'                      => false,
-			'validate_pg'                       => false,
-			'upgrade_membership'                => false,
-			'add_multiple_membership'           => false,
-			'get_membership_details'            => false,
-			'update_membership_order'           => false,
+			'create_membership'            => false,
+			'update_membership'            => false,
+			'delete_memberships'           => false,
+			'delete_membership'            => false,
+			'update_membership_status'     => false,
+			'create_member'                => false,
+			'edit_member'                  => false,
+			'delete_members'               => false,
+			'confirm_payment'              => true,
+			'create_stripe_subscription'   => true,
+			'register_member'              => true,
+			'validate_coupon'              => true,
+			'cancel_subscription'          => false,
+			'reactivate_membership'        => false,
+			'renew_membership'             => false,
+			'cancel_upcoming_subscription' => false,
+			'fetch_upgradable_memberships' => false,
+			'get_group_memberships'        => false,
+			'create_membership_group'      => false,
+			'delete_membership_groups'     => false,
+			'verify_pages'                 => false,
+			'validate_pg'                  => false,
+			'upgrade_membership'           => false,
+			'add_multiple_membership'      => false,
+			'get_membership_details'       => false,
+			'update_membership_order'      => false,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -1403,47 +1402,6 @@ class AJAX {
 	}
 
 	/**
-	 * Fetch intended membership details.
-	 *
-	 * @return void
-	 */
-	public static function fetch_intended_membership_details() {
-
-		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
-		if ( '' === $security || ! wp_verify_nonce( $security, 'ur_members_frontend' ) ) {
-			wp_send_json_error( 'Nonce verification failed' );
-		}
-		if ( ! isset( $_POST['membership_id'] ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Membership does not exist', 'user-registration' ),
-				)
-			);
-		}
-		$membership_id            = absint( $_POST['membership_id'] );
-		$member_id                = get_current_user_id();
-		$members_order_repository = new MembersOrderRepository();
-
-		$membership_repository       = new MembershipRepository();
-		$intended_membership_details = $membership_repository->get_single_membership_by_ID( $membership_id );
-		$membership_service          = new MembershipService();
-		$intended_membership_details = $membership_service->prepare_single_membership_data( $intended_membership_details );
-		$intended_membership_details = apply_filters( 'build_membership_list_frontend', array( (array) $intended_membership_details ) )[0];
-
-		if ( empty( $intended_membership_details ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Selected membership details not found.', 'user-registration' ),
-				),
-				404
-			);
-		}
-		wp_send_json_success(
-			$intended_membership_details
-		);
-	}
-
-	/**
 	 * Upgrade membership ajax request
 	 *
 	 * @return void
@@ -1466,6 +1424,29 @@ class AJAX {
 				)
 			);
 		}
+
+		if ( isset( $_POST['form_data'] ) && ! empty( $_POST['form_data'] ) ) {
+			$single_field = array();
+			$form_data    = json_decode( wp_unslash( $_POST['form_data'] ) );
+			$user_id      = get_current_user_id();
+			$form_id      = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : ur_get_form_id_by_userid( $user_id );
+			$profile      = user_registration_form_data( $user_id, $form_id );
+
+			foreach ( $form_data as $data ) {
+				$single_field[ 'user_registration_' . $data->field_name ] = isset( $data->value ) ? $data->value : '';
+			}
+
+			list( $profile, $single_field ) = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, false );
+			$user                           = get_userdata( $user_id );
+			urm_update_user_profile_data( $user, $profile, $single_field, $form_id );
+
+			$logger = ur_get_logger();
+			$logger->info(
+				__( 'User details added while upgrading.', 'user-registration' ),
+				array( 'source' => 'form-save' )
+			);
+		}
+
 		$ur_authorize_data = isset( $_POST['ur_authorize_data'] ) ? $_POST['ur_authorize_data'] : array();
 		$data              = array(
 			'current_subscription_id' => absint( $_POST['current_subscription_id'] ),
@@ -1474,6 +1455,10 @@ class AJAX {
 			'selected_pg'             => sanitize_text_field( $_POST['selected_pg'] ),
 			'ur_authorize_net'        => $ur_authorize_data,
 		);
+
+		if ( ! empty( $_POST['coupon'] ) ) {
+			$data['coupon'] = sanitize_text_field( $_POST['coupon'] );
+		}
 
 		$subscription_service = new SubscriptionService();
 		$status               = $subscription_service->can_upgrade( $data );
@@ -1602,6 +1587,28 @@ class AJAX {
 			);
 		}
 
+		if ( isset( $_POST['form_data'] ) && ! empty( $_POST['form_data'] ) ) {
+			$single_field = array();
+			$form_data    = json_decode( wp_unslash( $_POST['form_data'] ) );
+			$user_id      = get_current_user_id();
+			$form_id      = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : ur_get_form_id_by_userid( $user_id );
+			$profile      = user_registration_form_data( $user_id, $form_id );
+
+			foreach ( $form_data as $data ) {
+				$single_field[ 'user_registration_' . $data->field_name ] = isset( $data->value ) ? $data->value : '';
+			}
+
+			list( $profile, $single_field ) = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, false );
+			$user                           = get_userdata( $user_id );
+			urm_update_user_profile_data( $user, $profile, $single_field, $form_id );
+
+			$logger = ur_get_logger();
+			$logger->info(
+				__( 'User details added while purchasing membership.', 'user-registration' ),
+				array( 'source' => 'form-save' )
+			);
+		}
+
 		$current_user_id     = get_current_user_id();
 		$user_membership_ids = array();
 		$members_repository  = new MembersRepository();
@@ -1625,6 +1632,10 @@ class AJAX {
 			'payment_method'         => sanitize_text_field( $_POST['selected_pg'] ),
 			'ur_authorize_net'       => $ur_authorize_data,
 		);
+
+		if ( ! empty( $_POST['coupon'] ) ) {
+			$data['coupon'] = sanitize_text_field( $_POST['coupon'] );
+		}
 
 		$subscription_service = new SubscriptionService();
 		$status               = $subscription_service->can_purchase_multiple( $data );

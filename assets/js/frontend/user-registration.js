@@ -199,9 +199,7 @@
 										);
 
 									var invite_code =
-										document.querySelector(
-											"#invite_code"
-										);
+										document.querySelector("#invite_code");
 
 									if (
 										"invite_code" === single_data.field_name
@@ -987,8 +985,8 @@
 												$this
 													.find("#user_pass-error")
 													.remove();
-													console.log("hello");
-													
+												console.log("hello");
+
 												var error_msg_dom =
 													'<label id="user_pass-error" class="user-registration-error" for="user_pass">' +
 													ursL10n.password_strength_error +
@@ -1269,29 +1267,46 @@
 										.find("span")
 										.addClass("ur-front-spinner");
 
-									var hit_third_party_api =
-										events.wait_third_party_api($this);
-									if (hit_third_party_api) {
-										var thirdPartyHandlerPromise =
-											new Promise(function (
-												resolve,
-												reject
-											) {
-												$(document).trigger(
-													"user_registration_third_party_api_before_form_submit",
-													[
-														data,
-														$this,
-														$error_message,
-														resolve,
-														reject
-													]
-												);
-											}).then(function (val) {
-												events.ajax_form_submit(val);
-											});
+									if (
+										$registration_form
+											.find(
+												"form.register button.ur-submit-button"
+											)
+											.hasClass(
+												"urm-update-membership-button"
+											)
+									) {
+										$(document).trigger(
+											"user_registration_membership_update_before_form_submit",
+											[data, $this, $error_message]
+										);
 									} else {
-										events.ajax_form_submit(data);
+										var hit_third_party_api =
+											events.wait_third_party_api($this);
+										if (hit_third_party_api) {
+											var thirdPartyHandlerPromise =
+												new Promise(function (
+													resolve,
+													reject
+												) {
+													$(document).trigger(
+														"user_registration_third_party_api_before_form_submit",
+														[
+															data,
+															$this,
+															$error_message,
+															resolve,
+															reject
+														]
+													);
+												}).then(function (val) {
+													events.ajax_form_submit(
+														val
+													);
+												});
+										} else {
+											events.ajax_form_submit(data);
+										}
 									}
 								});
 						});
@@ -1599,9 +1614,10 @@
 														"</li>"
 												);
 											} else if (
-												response.data.form_login_option == "payment" &&
-												typeof response.data
-														.message !==
+												response.data
+													.form_login_option ==
+													"payment" &&
+												typeof response.data.message !==
 													"undefined"
 											) {
 												message.append(

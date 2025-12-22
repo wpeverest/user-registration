@@ -4,9 +4,14 @@
 #user-registration {
 	&.vertical {
 		display: flex;
-		flex-wrap: wrap;
+		// flex-wrap: wrap;
 
-		.user-registration-error, .user-registration-message {
+		@media screen and (max-width: 992px) {
+			flex-direction: column;
+		}
+
+		.user-registration-error,
+		.user-registration-message {
 			float: none;
 			width: 100%;
 		}
@@ -28,6 +33,17 @@
 
 		.user-registration-MyAccount-content {
 			flex: 1;
+
+			@media screen and (max-width: 1199px) {
+				flex: unset;
+				max-width: 76%;
+				width: 100%;
+			}
+
+			@media screen and (max-width: 992px) {
+				padding: $spacing_24px;
+				max-width: 100%;
+			}
 		}
 	}
 
@@ -42,7 +58,7 @@
 		}
 
 		.user-registration-MyAccount-navigation {
-			border-bottom: 1px solid $border_color;
+			// border-bottom: 1px solid $border_color;
 
 			ul {
 				justify-content: center;
@@ -56,7 +72,7 @@
 
 					&.is-active {
 						a {
-							background-color: $color_gray_four;
+							// background-color: $color_gray_four;
 						}
 					}
 				}
@@ -96,15 +112,14 @@
 			}
 
 			.edit-profile {
+
 				.user-registration-profile-header,
 				h2 {
 					text-align: center;
 				}
 			}
 
-			.user-registration-profile-fields {
-
-			}
+			.user-registration-profile-fields {}
 		}
 	}
 
@@ -113,7 +128,7 @@
 			padding: 36px 30px;
 		}
 
-		> h2 {
+		>h2 {
 			margin-bottom: $spacing_24px;
 		}
 
@@ -128,7 +143,7 @@
 			}
 		}
 
-		> p {
+		>p {
 			margin-bottom: $spacing_8px;
 
 			a {
@@ -156,7 +171,7 @@
 
 			.user-registration-EditAccountForm {
 				.ur-form-grid {
-					> p {
+					>p {
 						float: right;
 						margin-bottom: 0;
 					}
@@ -166,7 +181,7 @@
 
 			.user-registration-EditProfileForm {
 				.user-registration-profile-fields {
-					> p {
+					>p {
 						float: right;
 						margin-top: $spacing_24px;
 						margin-bottom: 0;
@@ -286,7 +301,7 @@
 									appearance: none;
 									margin-right: 0;
 
-									&:checked + label {
+									&:checked+label {
 										color: #475BB2;
 										background: #EDEFF7;
 										border-color: #475BB2;
@@ -590,12 +605,14 @@
 						font-size: 14px;
 						line-height: 24px;
 						background: transparent;
+
 						&.reactivate-membership-button {
 							border: 1px solid #0067ab;
 							color: #0067ab;
 							display: flex;
 							align-items: center;
 						}
+
 						&.cancel-membership-button {
 							border: $border_width solid #f25656;
 							color: #f25656;
@@ -605,12 +622,14 @@
 								background: #f25656;
 							}
 						}
+
 						&.renew-membership-button {
 							border: 1px solid #00ab02;
 							color: #00ab02;
 							display: flex;
 							align-items: center;
 						}
+
 						&.change-membership-button {
 							border: $border_width solid $primary_color;
 							color: $primary_color;
@@ -652,7 +671,10 @@
 							color: white;
 						}
 
-						&.cancel-membership-button:focus, &.change-membership-button:focus, &.renew-membership-button:focus, &.reactivate-membership-button:focus {
+						&.cancel-membership-button:focus,
+						&.change-membership-button:focus,
+						&.renew-membership-button:focus,
+						&.reactivate-membership-button:focus {
 							outline-style: none;
 						}
 					}
@@ -691,6 +713,7 @@
 						}
 					}
 				}
+
 				#bank-notice {
 					display: flex;
 					font-size: $medium;
@@ -707,6 +730,7 @@
 						padding: $spacing_12px $spacing_16px;
 						align-items: center;
 					}
+
 					.view-bank-data {
 						cursor: pointer;
 						font-style: italic;
@@ -738,15 +762,15 @@
 			width: 30px;
 			cursor: pointer;
 
-			&:checked + .slider {
+			&:checked+.slider {
 				background: $primary_color;
 			}
 
-			&:focus + .slider {
+			&:focus+.slider {
 				box-shadow: 0 0 1px #2196F3;
 			}
 
-			&:checked + .slider::before {
+			&:checked+.slider::before {
 				transform: translateX(14px);
 			}
 		}
@@ -782,19 +806,19 @@
 }
 
 
-@media screen and (max-width: 980px) {
-	#user-registration {
-		&.vertical {
-			.user-registration-MyAccount-navigation {
-				width: 30%;
-			}
+// @media screen and (max-width: 980px) {
+// 	#user-registration {
+// 		&.vertical {
+// 			.user-registration-MyAccount-navigation {
+// 				width: 30%;
+// 			}
 
-			.user-registration-MyAccount-content {
-				width: 70%;
-			}
-		}
-	}
-}
+// 			.user-registration-MyAccount-content {
+// 				width: 70%;
+// 			}
+// 		}
+// 	}
+// }
 
 @media screen and (max-width: 600px) {
 	#user-registration {
@@ -834,6 +858,7 @@
 
 // My Account Page Design Revamp CSS
 #user-registration {
+
 	&.vertical,
 	&.horizontal {
 		border-radius: $border_radius_16;
@@ -849,7 +874,7 @@
 						border: 0 !important;
 					}
 
-					> a {
+					>a {
 						display: flex;
 						gap: $spacing_8px;
 
@@ -945,7 +970,7 @@
 									}
 
 									// Save Changes Button CSS
-									> p {
+									>p {
 										float: unset;
 										margin-top: $spacing_32px;
 										text-align: right;
@@ -1141,6 +1166,318 @@
 							}
 						}
 					}
+
+					.ur-account-table-container {
+						margin-top: 0;
+
+						.ur-pagination {
+							display: flex;
+							gap: 8px;
+							justify-content: center;
+							margin-top: 25px;
+
+							a,
+							span {
+								padding: 8px 14px;
+								border: 1px solid #ddd;
+								border-radius: 6px;
+								font-size: 14px;
+								color: #333;
+								text-decoration: none;
+								transition: all 0.2s ease;
+								background: #fff;
+
+								&:hover {
+									background: #f5f5f5;
+									border-color: #ccc;
+								}
+							}
+
+							.current {
+								background: #0073aa;
+								color: #fff;
+								border-color: #0073aa;
+								cursor: default;
+
+								&:hover {
+									background: #0073aa;
+									border-color: #0073aa;
+								}
+							}
+
+							.prev,
+							.next {
+								font-weight: 600;
+
+								&:hover {
+									background: #eef7ff;
+									border-color: #0073aa;
+									color: #0073aa;
+								}
+							}
+
+							.disabled {
+								opacity: 0.4;
+								cursor: not-allowed;
+
+								&:hover {
+									background: #fff;
+									border-color: #ddd;
+									color: #333;
+								}
+							}
+
+							.page-numbers {
+								display: flex;
+								gap: 10px;
+								list-style: none;
+
+								li {
+									&::marker {
+										content: "";
+									}
+								}
+							}
+						}
+					}
+
+					.ur-account-table {
+						margin-bottom: 0;
+						min-width: 800px;
+						width: 100%;
+						// border-collapse: separate;
+						border-collapse: collapse;
+						border-spacing: 0;
+						// background: $white;
+						// border-radius: 8px;
+						border-radius: 0;
+						overflow: hidden;
+						border: 0;
+						// box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+						&-wrapper {
+							border: $border_width solid #f4f4f4;
+							border-radius: 7px;
+							overflow-x: auto;
+							-webkit-overflow-scrolling: touch;
+							width: 100%;
+							// padding: $spacing_4px;
+						}
+
+						&__header {
+							border-radius: 7px;
+							// background: #f7f7f7;
+							background: #f8f8fa;
+
+							&-cell {
+								border: 0;
+								color: #626262;
+								font-size: 14px;
+								line-height: 24px;
+								font-weight: 500;
+								text-align: left;
+								padding: $spacing_16px $spacing_20px;
+								border-bottom: $border_width solid #f4f4f4;
+
+								&:first-child {
+									border-radius: 7px 0 0 0;
+								}
+
+								&:last-child {
+									border-radius: 0 7px 0 0;
+								}
+							}
+						}
+
+						&__body {
+							.ur-account-table__row {
+								// border-bottom: 1px solid #f0f2f5;
+								border: 0;
+
+								.ur-account-table__cell {
+									padding: $spacing_14px $spacing_20px;
+									font-size: 14px;
+									color: #50565f;
+									vertical-align: middle;
+									background: transparent;
+									text-align: left;
+									border: 0;
+									border-bottom: $border_width solid #f4f4f4;
+
+									&--transaction-id {
+										font-family: 'Courier New', monospace;
+									}
+
+									&--amount {
+										font-weight: 600;
+									}
+
+									&--status {
+										span {
+											display: inline-block !important;
+											padding: 6px 12px !important;
+											border-radius: 4px !important;
+											font-weight: 500;
+
+											&.btn-active,
+											&.btn-completed {
+												color: #3aa530;
+												background: #def8db;
+											}
+										}
+									}
+
+									&--action {
+										.ur-account-action-link {
+											display: inline-flex;
+											align-items: center;
+											justify-content: center;
+											text-decoration: none;
+											gap: $spacing_6px;
+											padding: 0 $spacing_16px 0 $spacing_14px;
+											background: $white;
+											border: 1.5px solid #dee2e6;
+											border-radius: $border_radius_4;
+											color: #4e4e4e;
+											font-size: 14px;
+											line-height: 20px;
+											font-weight: $medium;
+											cursor: pointer;
+											min-height: 34px;
+											transition: all .3s;
+
+											&:hover {
+												background: #1a1a1a;
+												background: #f8f9fa;
+												border-color: #adb5bd;
+												color: #1a1a1a;
+											}
+
+											// &:after {
+											// 	content: none;
+											// }
+
+											svg {
+												width: 14px;
+												height: 14px;
+												fill: #4e4e4e;
+											}
+										}
+									}
+								}
+
+								&:last-child {
+									.ur-account-table__cell {
+										border-bottom: 0;
+									}
+								}
+							}
+						}
+
+						thead {
+							// background: #f4f6fa;
+
+							.ur-account-table__header-cell {
+								// padding: 14px 20px;
+								// font-size: 14px;
+								// font-weight: 600;
+								// color: #3c434a;
+								// text-align: left;
+								// border-bottom: 1px solid #e0e4ea;
+
+								// &:first-child {
+								// 	border-top-left-radius: 8px;
+								// }
+
+								// &:last-child {
+								// 	border-top-right-radius: 8px;
+								// }
+							}
+						}
+
+						tbody {
+
+							// .ur-account-table__row {
+							// 	border-bottom: 1px solid #f0f2f5;
+
+							// 	&:nth-child(odd) {
+							// 		.ur-account-table__cell {
+							// 			background: #fafbfc;
+							// 		}
+							// 	}
+							// }
+
+							.ur-account-table__cell {
+								// padding: 14px 20px;
+								// font-size: 14px;
+								// color: #50565f;
+								// vertical-align: middle;
+							}
+
+							// tr:last-child {
+							// 	.ur-account-table__cell:first-child {
+							// 		border-bottom-left-radius: 8px;
+							// 	}
+
+							// 	.ur-account-table__cell:last-child {
+							// 		border-bottom-right-radius: 8px;
+							// 	}
+							// }
+						}
+					}
+
+					.ur-account-status-badge {
+						display: inline-block;
+						padding: 4px 10px;
+						border-radius: 20px;
+						font-size: 12px;
+						font-weight: 500;
+
+						&.is-success,
+						&.completed,
+						&.active {
+							background: #e4f7e8;
+							color: #289b43;
+						}
+
+						&.is-warning,
+						&.pending {
+							background: #fff7d9;
+							color: #d1a200;
+						}
+
+						&.is-error,
+						&.failed {
+							background: #ffe6e6;
+							color: #d33;
+						}
+					}
+
+					// .ur-account-action-link {
+					// 	color: $primary_color;
+					// 	font-weight: 500;
+					// 	position: relative;
+					// 	text-decoration: none;
+
+					// 	&::after {
+					// 		content: "";
+					// 		width: 0;
+					// 		height: 2px;
+					// 		background: darken($primary_color, 10%);
+					// 		position: absolute;
+					// 		left: 0;
+					// 		bottom: -2px;
+					// 		transition: width .2s ease-in-out;
+					// 	}
+
+					// 	&:hover {
+					// 		color: darken($primary_color, 10%);
+
+					// 		&::after {
+					// 			width: 100%;
+					// 		}
+					// 	}
+					// }
 				}
 			}
 		}
@@ -1152,40 +1489,86 @@
 
 		.user-registration-MyAccount {
 			&-navigation {
-				border-radius: $border_radius_10;
-				background: #F8F8FA;
-				max-width: 260px;
-				width: 100%;
-				padding: $spacing_26px $spacing_20px $spacing_16px;
-				border: 0;
+				&--wrapper {
+					border-radius: $border_radius_10;
+					background: #F8F8FA;
+					max-width: 260px;
+					width: 100%;
+					padding: $spacing_26px $spacing_20px $spacing_16px;
+					border: 0;
 
-				ul {
-					gap: $spacing_4px;
+					@media screen and (max-width: 1199px) {
+						max-width: 24%;
+					}
 
-					.user-registration-MyAccount-navigation-link {
-						transition: all .3s;
+					@media screen and (max-width: 992px) {
+						max-width: 100%;
+					}
 
-						a {
-							padding: $spacing_12px $spacing_12px $spacing_12px $spacing_24px;
-							border-radius: $border_radius_4;
-							border-left: 3px solid transparent;
-							color: #4E4E4E;
-							font-size: 14px;
-							font-weight: 500;
-							line-height: 22px;
-						}
+					.user-registration-profile-header {
+						display: flex;
+						gap: $spacing_12px;
+						align-items: center;
+						margin-bottom: $spacing_24px;
+						padding-bottom: $spacing_24px;
+						border-bottom: $border_width solid #E2E8F0;
 
-						&:hover {
-							a {
-								background: $blue-50;
-								color: $primary_color;
+						.user-registration-img-container {
+							img {
+								width: 42px;
+								height: 42px;
+								border-radius: 50%;
+								border: 2px solid $white;
 							}
 						}
 
-						&.is-active {
+						header {
+							>h3 {
+								margin-bottom: 0;
+								font-size: 16px;
+								line-height: 24px;
+								color: #383838;
+							}
+						}
+
+						.user-registration-MyAccount-header {
+							.user-registration-MyAccount-username {
+								font-size: 20px;
+								line-height: 28px;
+								margin-bottom: 0;
+								color: #383838;
+							}
+						}
+					}
+
+					ul {
+						gap: 2px;
+
+						.user-registration-MyAccount-navigation-link {
+							transition: all .3s;
+
 							a {
-								color: $primary_color;
-								background: $blue-50;
+								padding: $spacing_12px $spacing_12px $spacing_12px $spacing_20px;
+								border-radius: $border_radius_4;
+								border-left: 3px solid transparent;
+								color: #4E4E4E;
+								font-size: 14px;
+								font-weight: $medium;
+								line-height: 22px;
+							}
+
+							&:hover {
+								a {
+									background: #f0f0f0;
+									color: $primary_color;
+								}
+							}
+
+							&.is-active {
+								a {
+									color: $primary_color;
+									background: $blue-50;
+								}
 							}
 						}
 					}
@@ -1216,6 +1599,8 @@
 	&.horizontal {
 		.user-registration-MyAccount {
 			&-navigation {
+				border-bottom: 1px solid $border_color;
+
 				&-link {
 					a {
 						border-left: 0 !important;
@@ -1353,6 +1738,7 @@ body {
 		}
 	}
 }
+
 .user-registration-MyAccount-content table.user-registration-email__entries td {
 	text-align: left;
 }
@@ -1363,93 +1749,93 @@ body {
 .rtl .ur-frontend-form .ur-form-row .ur-form-grid legend.ur-label,
 .rtl .user-registration-logout-swal2-container .swal2-header .swal2-title,
 .rtl .user-registration-logout-swal2-container .swal2-header .swal2-content .swal2-content,
-.rtl .user-registration-MyAccount-content table.user-registration-email__entries td
-{
+.rtl .user-registration-MyAccount-content table.user-registration-email__entries td {
 	text-align: right;
 }
+
 .rtl #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row .membership-label {
 	min-width: 0px;
 }
 
 .user-registration-myaccount-notice-box {
-  background-color: #f4f6ff;
-  border: 1px solid #d6e0ff;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 32px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  position: relative;
-  border-left: 4px solid #6669f1;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+	background-color: #f4f6ff;
+	border: 1px solid #d6e0ff;
+	border-radius: 8px;
+	padding: 20px;
+	margin-bottom: 32px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+	position: relative;
+	border-left: 4px solid #6669f1;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
 
-  &--title {
-    display: flex;
-    align-items: center;
+	&--title {
+		display: flex;
+		align-items: center;
 
-    &-icon {
-      margin-right: 0.75rem;
+		&-icon {
+			margin-right: 0.75rem;
 
-      .notice-icon {
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-		color: #6366f1;
-      }
-    }
+			.notice-icon {
+				width: 20px;
+				height: 20px;
+				flex-shrink: 0;
+				color: #6366f1;
+			}
+		}
 
-    &-text {
-      h2 {
-        margin-top: 0;
-        margin-bottom: 0.5rem !important;
-        font-size: 16px !important;
-        font-weight: 600 !important;
-        color: #333 !important;
-      }
-    }
-  }
-
-  p {
-    color: #444;
-    font-size: 15px;
-    line-height: 1.5;
-
-	&.pro-tip,
-	&.existing-users {
-		strong {
-			font-weight: bolder !important;
+		&-text {
+			h2 {
+				margin-top: 0;
+				margin-bottom: 0.5rem !important;
+				font-size: 16px !important;
+				font-weight: 600 !important;
+				color: #333 !important;
+			}
 		}
 	}
 
-    &.pro-tip::before {
-      content: "💡";
-      margin-right: 0.5rem;
-    }
+	p {
+		color: #444;
+		font-size: 15px;
+		line-height: 1.5;
 
-    &.existing-users::before {
-      content: "👤";
-      margin-right: 0.5rem;
-    }
-  }
+		&.pro-tip,
+		&.existing-users {
+			strong {
+				font-weight: bolder !important;
+			}
+		}
 
-  strong,
-  b {
-    font-weight: 600 !important;
-  }
+		&.pro-tip::before {
+			content: "💡";
+			margin-right: 0.5rem;
+		}
 
-  .addon-link {
-    color: #475bb2 !important;
-    font-weight: 600 !important;
-    text-decoration: none !important;
+		&.existing-users::before {
+			content: "👤";
+			margin-right: 0.5rem;
+		}
+	}
 
-    &:hover {
-      text-decoration: underline !important;
-    }
-  }
+	strong,
+	b {
+		font-weight: 600 !important;
+	}
 
-  .highlight {
-    font-weight: bold;
-  }
+	.addon-link {
+		color: #475bb2 !important;
+		font-weight: 600 !important;
+		text-decoration: none !important;
+
+		&:hover {
+			text-decoration: underline !important;
+		}
+	}
+
+	.highlight {
+		font-weight: bold;
+	}
 }

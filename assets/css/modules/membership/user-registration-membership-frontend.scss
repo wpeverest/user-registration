@@ -344,6 +344,17 @@ html {
 				font-size: 16px;
 				font-weight: 600;
 				line-height: 24px;
+
+				.user-registration-badge {
+					background: #def8db;
+					text-transform: capitalize;
+					font-size: 13px;
+					font-weight: 500;
+					line-height: 18px;
+					border-radius: 30px;
+					padding: 4px 12px;
+					color: #3aa530;
+				}
 			}
 
 			.ur_membership_input_class {
@@ -378,11 +389,12 @@ html {
 					display: flex;
 					align-items: center;
 					gap: $spacing_20px;
+					flex-wrap: wrap;
 
 					@media screen and (max-width: 600px) {
 						flex-direction: column;
 						gap: 0;
-
+l
 						.ur_membership_input_label {
 							width: 100%;
 						}

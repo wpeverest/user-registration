@@ -127,6 +127,7 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 		);
 		$order_by        = ! empty( $args['orderby'] ) && in_array( $args['orderby'], $allowed_orderby ) ? $args['orderby'] : 'user_registered';
 
+		// Only allow ASC or DESC for order
 		$order = ( ! empty( $args['order'] ) && strtoupper( $args['order'] ) === 'ASC' ) ? 'ASC' : 'DESC';
 
 		$sql = "
@@ -159,10 +160,12 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 		if ( ! empty( $include ) ) {
 			$in_ids = implode( ',', $include );
 			$sql   .= " AND wpu.ID IN ($in_ids)";
+			// $include is already sanitized to integers
 		}
 
 		$sql .= " ORDER BY $order_by $order";
 
+		// Prepare only if there are arguments to bind
 		if ( ! empty( $prepare_args ) ) {
 			$sql = $wpdb->prepare( $sql, $prepare_args );
 		}
@@ -204,5 +207,40 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 		}
 
 		return array_values( $final );
+	}
+
+	// TODO - Handle Multiple ( Remove after multiple memberships merge )
+	/**
+	 * Get Member by their membership id.
+	 *
+	 * @param $id
+	 *
+	 * @return array|object|\stdClass|void|null
+	 */
+	public function get_member_memberships_by_id( $id ) {
+		return $this->wpdb()->get_results(
+			$this->wpdb()->prepare(
+				"SELECT wp.ID as post_id,
+                    urs.ID as subscription_id,
+                    urs.user_id,
+                    urs.cancel_sub,
+                    wp.post_title,
+                    wp.post_content,
+                    urs.status,
+                    urs.trial_start_date,
+                    urs.trial_end_date,
+                    urs.billing_amount,
+                    urs.expiry_date,
+                    urs.start_date,
+                    urs.next_billing_date,
+                    urs.billing_cycle
+            FROM $this->subscription_table urs
+            JOIN $this->posts_table wp ON wp.ID = urs.item_id
+            WHERE urs.user_id = %d
+              AND wp.post_type = 'ur_membership'",
+				$id
+			),
+			ARRAY_A
+		);
 	}
 }

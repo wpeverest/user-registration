@@ -14,6 +14,7 @@ use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\Paypal\PaypalService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URMembership\Admin\Services\MembersService;
+use WPEverest\URMembership\Admin\Services\CouponService;
 
 class SubscriptionService {
 
@@ -300,6 +301,14 @@ class SubscriptionService {
 		$selected_membership_details['membership'] = $data['selected_membership_id'];
 
 		$selected_membership_details['payment_method'] = $payment_method;
+		$is_upgrading                                  = ur_string_to_bool( get_user_meta( $user->ID, 'urm_is_upgrading', true ) );
+
+		if ( $is_upgrading ) {
+			$response['response']['status']  = false;
+			$response['response']['message'] = __( 'Membership upgrade process already initiated.', 'user-registration' );
+
+			return $response;
+		}
 
 		$membership_process = urm_get_membership_process( $subscription['user_id'] );
 		$is_upgrading       = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $data['current_membership_id'] ] );
@@ -313,6 +322,9 @@ class SubscriptionService {
 
 		$upgrade_details = $this->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
 
+		error_log( print_r( $data, true ) );
+		error_log( print_r( $upgrade_details, true ) );
+
 		if ( isset( $upgrade_details['status'] ) && ! $upgrade_details['status'] ) {
 			return array(
 				'response' => $upgrade_details,
@@ -322,6 +334,23 @@ class SubscriptionService {
 		$members_data = array(
 			'membership_data' => $selected_membership_details,
 		);
+
+		if ( ! empty( $data['coupon'] ) ) {
+			$members_data['coupon'] = $data['coupon'];
+			$coupon_service         = new CouponService();
+			$coupon_data            = array(
+				'coupon'         => $data['coupon'],
+				'membership_id'  => $data['selected_membership_id'],
+				'upgrade_amount' => $upgrade_details['chargeable_amount'],
+			);
+
+			$response = $coupon_service->validate( $coupon_data );
+
+			if ( $response['status'] ) {
+				$response                             = json_decode( $response['data'], true );
+				$upgrade_details['chargeable_amount'] = $response['discounted_amount'];
+			}
+		}
 
 		$membership_details = ! empty( $data['selected_membership_id'] ) ? json_decode( get_post_meta( $data['selected_membership_id'], 'ur_membership', true ), true ) : array();
 
@@ -355,7 +384,9 @@ class SubscriptionService {
 
 		$payment_service       = new PaymentService( $payment_method, $data['selected_membership_id'], $user->data->user_email );
 		$ur_authorize_net_data = isset( $data['ur_authorize_net'] ) ? $data['ur_authorize_net'] : array();
-		$data                  = array(
+		$coupon                = isset( $data['coupon'] ) ? $data['coupon'] : '';
+
+		$data = array(
 			'membership'             => $data['selected_membership_id'],
 			'subscription_id'        => $subscription['ID'],
 			'member_id'              => $user->ID,
@@ -367,10 +398,13 @@ class SubscriptionService {
 			'selected_membership_id' => $data['selected_membership_id'],
 			'current_membership_id'  => $data['current_membership_id'],
 		);
-		$data                  = $data + $upgrade_details;
 
-		$response = $payment_service->build_response( $data );
+		if ( ! empty( $coupon ) ) {
+			$data['coupon'] = $coupon;
+		}
 
+		$data               = $data + $upgrade_details;
+		$response           = $payment_service->build_response( $data );
 		$response['status'] = false;
 
 		if ( isset( $response['payment_url'] ) || isset( $response['data'] ) || 'stripe' === $payment_method || 'free' === $payment_method ) {
@@ -492,6 +526,10 @@ class SubscriptionService {
 			'status'            => 'free' === $membership_meta['type'] ? 'active' : 'pending',
 			'billing_cycle'     => $billing_cycle,
 		);
+
+		if ( isset( $extra_data['coupon'] ) && ! empty( $extra_data['coupon'] ) ) {
+			$subscription_data['coupon'] = $extra_data['coupon'];
+		}
 
 		if ( isset( $membership_meta['trial_status'] ) && 'on' === $membership_meta['trial_status'] ) {
 			$remaining_trial_days          = $membership_meta['trial_data']['value'];

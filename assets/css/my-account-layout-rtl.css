@@ -445,9 +445,14 @@
 
 #user-registration.vertical {
   display: flex;
-  flex-wrap: wrap;
 }
-#user-registration.vertical .user-registration-error, #user-registration.vertical .user-registration-message {
+@media screen and (max-width: 992px) {
+  #user-registration.vertical {
+    flex-direction: column;
+  }
+}
+#user-registration.vertical .user-registration-error,
+#user-registration.vertical .user-registration-message {
   float: none;
   width: 100%;
 }
@@ -461,6 +466,19 @@
 #user-registration.vertical .user-registration-MyAccount-content {
   flex: 1;
 }
+@media screen and (max-width: 1199px) {
+  #user-registration.vertical .user-registration-MyAccount-content {
+    flex: unset;
+    max-width: 76%;
+    width: 100%;
+  }
+}
+@media screen and (max-width: 992px) {
+  #user-registration.vertical .user-registration-MyAccount-content {
+    padding: 24px;
+    max-width: 100%;
+  }
+}
 #user-registration.horizontal, #user-registration {
   box-shadow: 0 2px 20px rgba(45, 53, 89, 0.1);
 }
@@ -471,9 +489,6 @@
 #user-registration .user-registration-info {
   margin-bottom: 0;
 }
-#user-registration.horizontal .user-registration-MyAccount-navigation, #user-registration .user-registration-MyAccount-navigation {
-  border-bottom: 1px solid #e1e1e1;
-}
 #user-registration.horizontal .user-registration-MyAccount-navigation ul, #user-registration .user-registration-MyAccount-navigation ul {
   justify-content: center;
 }
@@ -481,9 +496,6 @@
   padding: 15px 20px;
   font-family: inherit;
   font-weight: 500;
-}
-#user-registration.horizontal .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a, #user-registration .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a {
-  background-color: rgb(222.4984029851, 224.3717109905, 232.8015970149);
 }
 #user-registration.horizontal .user-registration-MyAccount-content,
 #user-registration.horizontal .ur-edit-profile, #user-registration .user-registration-MyAccount-content,
@@ -1071,14 +1083,6 @@
   border-radius: 100%;
 }
 
-@media screen and (max-width: 980px) {
-  #user-registration.vertical .user-registration-MyAccount-navigation {
-    width: 30%;
-  }
-  #user-registration.vertical .user-registration-MyAccount-content {
-    width: 70%;
-  }
-}
 @media screen and (max-width: 600px) {
   #user-registration.vertical .user-registration-MyAccount-navigation {
     width: 100%;
@@ -1322,11 +1326,194 @@
 #user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr:nth-child(odd) td, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr:nth-child(odd) td {
   background: #f8f8fa !important;
 }
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container {
+  margin-top: 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 25px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination a,
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination span, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination a,
+#user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination span {
+  padding: 8px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  background: #fff;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination a:hover,
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination span:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination a:hover,
+#user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination span:hover {
+  background: #f5f5f5;
+  border-color: #ccc;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .current, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .current {
+  background: #0073aa;
+  color: #fff;
+  border-color: #0073aa;
+  cursor: default;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .current:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .current:hover {
+  background: #0073aa;
+  border-color: #0073aa;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .prev,
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .next, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .prev,
+#user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .next {
+  font-weight: 600;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .prev:hover,
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .next:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .prev:hover,
+#user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .next:hover {
+  background: #eef7ff;
+  border-color: #0073aa;
+  color: #0073aa;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .disabled, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .disabled:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .disabled:hover {
+  background: #fff;
+  border-color: #ddd;
+  color: #333;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .page-numbers, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .page-numbers {
+  display: flex;
+  gap: 10px;
+  list-style: none;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .page-numbers li::marker, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .page-numbers li::marker {
+  content: "";
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table {
+  margin-bottom: 0;
+  min-width: 800px;
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-radius: 0;
+  overflow: hidden;
+  border: 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-wrapper, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-wrapper {
+  border: 1px solid #f4f4f4;
+  border-radius: 7px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__header, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__header {
+  border-radius: 7px;
+  background: #f8f8fa;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__header-cell, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__header-cell {
+  border: 0;
+  color: #626262;
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 500;
+  text-align: right;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f4f4f4;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__header-cell:first-child, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__header-cell:first-child {
+  border-radius: 0 7px 0 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__header-cell:last-child, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__header-cell:last-child {
+  border-radius: 7px 0 0 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row {
+  border: 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell {
+  padding: 14px 20px;
+  font-size: 14px;
+  color: #50565f;
+  vertical-align: middle;
+  background: transparent;
+  text-align: right;
+  border: 0;
+  border-bottom: 1px solid #f4f4f4;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--transaction-id, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--transaction-id {
+  font-family: "Courier New", monospace;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--amount, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--amount {
+  font-weight: 600;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--status span, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--status span {
+  display: inline-block !important;
+  padding: 6px 12px !important;
+  border-radius: 4px !important;
+  font-weight: 500;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--status span.btn-active, #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--status span.btn-completed, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--status span.btn-active, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--status span.btn-completed {
+  color: #3aa530;
+  background: #def8db;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .ur-account-action-link, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .ur-account-action-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  gap: 6px;
+  padding: 0 14px 0 16px;
+  background: #ffffff;
+  border: 1.5px solid #dee2e6;
+  border-radius: 4px;
+  color: #4e4e4e;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  min-height: 34px;
+  transition: all 0.3s;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .ur-account-action-link:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .ur-account-action-link:hover {
+  background: #1a1a1a;
+  background: #f8f9fa;
+  border-color: #adb5bd;
+  color: #1a1a1a;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .ur-account-action-link svg, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .ur-account-action-link svg {
+  width: 14px;
+  height: 14px;
+  fill: #4e4e4e;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row:last-child .ur-account-table__cell, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row:last-child .ur-account-table__cell {
+  border-bottom: 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-status-badge, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-status-badge.is-success, #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-status-badge.completed, #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-status-badge.active, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-status-badge.is-success, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-status-badge.completed, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-status-badge.active {
+  background: #e4f7e8;
+  color: #289b43;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-status-badge.is-warning, #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-status-badge.pending, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-status-badge.is-warning, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-status-badge.pending {
+  background: #fff7d9;
+  color: #d1a200;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-status-badge.is-error, #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-status-badge.failed, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-status-badge.is-error, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-status-badge.failed {
+  background: #ffe6e6;
+  color: #d33;
+}
 #user-registration.vertical {
   padding: 12px;
   border-radius: 16px;
 }
-#user-registration.vertical .user-registration-MyAccount-navigation {
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper {
   border-radius: 10px;
   background: #F8F8FA;
   max-width: 260px;
@@ -1334,14 +1521,50 @@
   padding: 26px 20px 16px;
   border: 0;
 }
-#user-registration.vertical .user-registration-MyAccount-navigation ul {
-  gap: 4px;
+@media screen and (max-width: 1199px) {
+  #user-registration.vertical .user-registration-MyAccount-navigation--wrapper {
+    max-width: 24%;
+  }
 }
-#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link {
+@media screen and (max-width: 992px) {
+  #user-registration.vertical .user-registration-MyAccount-navigation--wrapper {
+    max-width: 100%;
+  }
+}
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #E2E8F0;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header .user-registration-img-container img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header header > h3 {
+  margin-bottom: 0;
+  font-size: 16px;
+  line-height: 24px;
+  color: #383838;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header .user-registration-MyAccount-header .user-registration-MyAccount-username {
+  font-size: 20px;
+  line-height: 28px;
+  margin-bottom: 0;
+  color: #383838;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper ul {
+  gap: 2px;
+}
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper ul .user-registration-MyAccount-navigation-link {
   transition: all 0.3s;
 }
-#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link a {
-  padding: 12px 24px 12px 12px;
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper ul .user-registration-MyAccount-navigation-link a {
+  padding: 12px 20px 12px 12px;
   border-radius: 4px;
   border-right: 3px solid transparent;
   color: #4E4E4E;
@@ -1349,11 +1572,11 @@
   font-weight: 500;
   line-height: 22px;
 }
-#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link:hover a {
-  background: #edeff7;
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper ul .user-registration-MyAccount-navigation-link:hover a {
+  background: #f0f0f0;
   color: #475bb2;
 }
-#user-registration.vertical .user-registration-MyAccount-navigation ul .user-registration-MyAccount-navigation-link.is-active a {
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper ul .user-registration-MyAccount-navigation-link.is-active a {
   color: #475bb2;
   background: #edeff7;
 }
@@ -1372,6 +1595,9 @@
   font-size: 24px;
   font-weight: 500;
   line-height: 36px;
+}
+#user-registration.horizontal .user-registration-MyAccount-navigation {
+  border-bottom: 1px solid #e1e1e1;
 }
 #user-registration.horizontal .user-registration-MyAccount-navigation-link a {
   border-right: 0 !important;
