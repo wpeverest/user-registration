@@ -154,8 +154,8 @@ const ContentAccessRules = () => {
 	};
 
 	const handleRuleCreated = (newRule) => {
-		// Add the new rule to the list
-		setRules((prevRules) => [...prevRules, newRule]);
+		// Add the new rule to the top of the list
+		setRules((prevRules) => [newRule, ...prevRules]);
 		// Auto-expand the new rule
 		setExpandedRules((prev) => new Set([...prev, newRule.id]));
 		// Switch to custom tab if not already there

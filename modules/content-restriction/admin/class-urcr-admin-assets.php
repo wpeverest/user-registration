@@ -360,6 +360,18 @@ class URCR_Admin_Assets {
 			'is_membership_module_enabled' => $is_membership_module_enabled,
 			'membership_count'          => $membership_count,
 			'has_multiple_memberships'  => $has_multiple_memberships,
+			'labels'                    => array(
+				'pages'                    => __( 'Pages', 'user-registration' ),
+				'posts'                    => __( 'Posts', 'user-registration' ),
+				'post_types'               => __( 'Post Types', 'user-registration' ),
+				'taxonomy'                 => __( 'Taxonomy', 'user-registration' ),
+				'whole_site'               => __( 'Whole Site', 'user-registration' ),
+				'logged_in'                => __( 'Logged In', 'user-registration' ),
+				'logged_out'               => __( 'Logged Out', 'user-registration' ),
+				'membership'               => __( 'Membership', 'user-registration' ),
+				'membership_rule_title'    => __( 'Membership Access Rule', 'user-registration' ),
+				'all_content_types_added'  => __( 'All content types have been added', 'user-registration' ),
+			),
 		);
 
 		/**

@@ -290,6 +290,17 @@ class AJAX {
 		ur_membership_verify_nonce( 'ur_membership' );
 		$membership        = new MembershipService();
 		$data              = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
+
+		// Get rule data from POST if available (check both in POST directly and in membership_data)
+		$rule_data = null;
+		if ( isset( $_POST['urcr_membership_access_rule_data'] ) && ! empty( $_POST['urcr_membership_access_rule_data'] ) ) {
+			$rule_data_raw = wp_unslash( $_POST['urcr_membership_access_rule_data'] );
+			$rule_data = json_decode( $rule_data_raw, true );
+		} elseif ( isset( $data['urcr_membership_access_rule_data'] ) && ! empty( $data['urcr_membership_access_rule_data'] ) ) {
+			$rule_data = is_array( $data['urcr_membership_access_rule_data'] ) ? $data['urcr_membership_access_rule_data'] : json_decode( $data['urcr_membership_access_rule_data'], true );
+		}
+
+
 		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && "on" === $data['post_meta_data']['payment_gateways']['stripe']["status"];
 		$data              = $membership->prepare_membership_post_data( $data );
 
@@ -323,6 +334,12 @@ class AJAX {
 					$meta_data["payment_gateways"]["stripe"]["price_id"]   = $stripe_price_and_product['price']->id;
 					update_post_meta( $new_membership_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
 				}
+			}
+
+			// Create or update content access rule if rule data provided
+			if ( $rule_data && function_exists( 'urcr_create_or_update_membership_rule' ) ) {
+				$_POST['urcr_membership_access_rule_data'] = wp_unslash( json_encode( $rule_data ) );
+				urcr_create_or_update_membership_rule( $new_membership_ID, $rule_data );
 			}
 
 			$response = array(
@@ -365,6 +382,13 @@ class AJAX {
 
 		$membership        = new MembershipService();
 		$data              = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
+		// Get rule data from POST if available (check both in POST directly and in membership_data)
+		$rule_data = null;
+		if ( isset( $_POST['urcr_membership_access_rule_data'] ) && ! empty( $_POST['urcr_membership_access_rule_data'] ) ) {
+			$rule_data_raw = wp_unslash( $_POST['urcr_membership_access_rule_data'] );
+			$rule_data = json_decode( $rule_data_raw, true );
+		}
+
 		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && "on" === $data['post_meta_data']['payment_gateways']['stripe']["status"];
 		$is_mollie_enabled = isset( $data['post_meta_data']['payment_gateways']['mollie'] ) && "on" === $data['post_meta_data']['payment_gateways']['mollie']['status'];
 
@@ -477,6 +501,12 @@ class AJAX {
 					}
 				}
 			}
+
+			// Create or update content access rule if rule data provided
+			if ( $rule_data && function_exists( 'urcr_create_or_update_membership_rule' ) ) {
+				urcr_create_or_update_membership_rule( $updated_ID, $rule_data );
+			}
+
 			$response = array(
 				'membership_id' => $updated_ID,
 				'message'       => esc_html__( 'Successfully updated the membership data.', 'user-registration' ),
