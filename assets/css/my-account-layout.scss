@@ -1575,14 +1575,46 @@
 					border-bottom: $border_width solid #F4F4F4;
 					padding-bottom: $spacing_16px;
 					margin-bottom: $spacing_32px;
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
 
-					h1 {
-						margin-bottom: 0;
-						text-align: left;
-						color: $grey-500;
-						font-size: 24px;
-						font-weight: 500;
-						line-height: 36px;
+					&-content {
+						display: flex;
+						gap: 10px;
+
+						h1 {
+							margin: 0;
+							text-align: left;
+							color: #16181A;
+							font-size: 20px;
+							font-weight: 500;
+							line-height: 30px;
+						}
+					}
+
+					.user-registration-Button {
+						flex: 0 0 20%;
+
+						&.button-secondary {
+							color: #4584FF;
+							border-color: #4584FF;
+							border-radius: $spacing_4px;
+							padding: 8px 20px 8px 16px;
+							background-color: #fff;
+							font-size: 14px;
+							line-height: 150%;
+							font-weight: 500;
+							text-decoration: none;
+
+							&:hover,
+							&:active,
+							&:focus {
+								color: $gray_base;
+								background: $color_gray_three;
+								border-color: $color_gray_three;
+							}
+						}
 					}
 				}
 			}
@@ -1830,5 +1862,107 @@ body {
 
 	.highlight {
 		font-weight: bold;
+	}
+}
+
+.user-registration-profile-fields {
+	.user-registration-profile-header {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.user-registration-img-container {
+			position: relative;
+			width: 120px !important;
+			height: 120px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			.profile-preview {
+				width: 100% !important;
+				height: 100% !important;
+				max-width: none !important;
+				max-height: none !important;
+				border-radius: 50%;
+				object-fit: cover;
+				display: block;
+			}
+
+			.user-registration-tips {
+				display: none !important;
+			}
+		}
+
+		header {
+			position: relative;
+			inset: 0;
+			pointer-events: none;
+
+			p,
+			span,
+			.ur-new-profile-image-message,
+			.ur-profile-image-updated-message {
+				display: none !important;
+			}
+
+			.button-group {
+				position: absolute;
+				left: 30px;
+				bottom: 6px;
+				pointer-events: auto;
+
+				.user_registration_profile_picture_upload {
+					position: relative;
+					width: 32px;
+					height: 32px;
+					padding: 0;
+					margin: 0;
+					border-radius: 999px;
+					border: 3px solid #fff;
+					background: #fff;
+					box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+					cursor: pointer;
+
+					// hide text
+					font-size: 0;
+					line-height: 0;
+					color: transparent;
+
+					&:hover {
+						transform: translateY(-1px);
+					}
+				}
+			}
+		}
+	}
+}
+
+.user-registration-profile-fields__field-wrapper {
+	.ur-form-grid {
+		width: 100% !important;
+		display: flex !important;
+		flex-wrap: wrap;
+		gap: 16px;
+
+		.ur-field-item {
+			flex: 0 0 calc(50% - 8px);
+			min-width: 0;
+		}
+
+		.ur-field-item:empty {
+			display: none;
+		}
+
+		@media (max-width: 768px) {
+			.ur-field-item {
+				flex-basis: 100%;
+			}
+		}
+
+		.field-user_pass {
+			display: none;
+		}
 	}
 }

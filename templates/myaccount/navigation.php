@@ -64,6 +64,9 @@ if ( 'vertical' === $layout ) {
 			<?php
 			$actual_endpoint = $endpoint;
 
+			if ( 'edit-password' === $actual_endpoint ) {
+				continue;
+			}
 			?>
 			<li class="<?php echo esc_attr( ur_get_account_menu_item_classes( $endpoint ) ); ?>">
 				<a href="<?php echo esc_url( ur_get_account_endpoint_url( $endpoint ) ); ?>" <?php echo 'user-logout' === $actual_endpoint && ! $logout_confirmation ? esc_attr( 'class=ur-logout' ) : ''; ?> ><?php echo esc_html( $label ); ?></a>
