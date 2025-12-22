@@ -4,6 +4,8 @@
  *
  * @var string $return_url Return URL
  * @var array  $membership_content Membership content data
+ * @var object $this Membership class instance
+ * @var array  $membership_tabs Array of tab configurations
  */
 ?>
 <div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
@@ -14,26 +16,28 @@
 			</a>
 			<div class="ur-page-title__wrapper--left-menu">
 				<div class="ur-page-title__wrapper--left-menu__items ur-page-title__wrapper--steps">
-					<button class="ur-page-title__wrapper--steps-btn ur-page-title__wrapper--steps-btn-active" data-step="0" id="ur-basic-tab">
-						<div class="ur-page-title__wrapper--steps-wrapper">
-							<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32"><path stroke="#e9e9e9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 3.667c6.811 0 12.334 5.521 12.334 12.333 0 6.811-5.523 12.334-12.334 12.334S3.667 22.81 3.667 16C3.667 9.188 9.189 3.667 16 3.667"/><g clip-path="url(#a)"><path stroke="#222" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M15.997 10.802a.65.65 0 0 1 .36.11l.097.08 4.554 4.553a.65.65 0 0 1 .08.817l-.08.098-4.554 4.553a.65.65 0 0 1-.816.08l-.098-.08-4.554-4.554a.65.65 0 0 1-.19-.457l.014-.125a.6.6 0 0 1 .096-.234l.08-.098 4.554-4.553a.65.65 0 0 1 .457-.19"/></g><defs><clipPath id="a"><path fill="#fff" d="M10 9.5h12v13H10z"/></clipPath></defs></svg>
-							<span><?php esc_html_e('Basics','user-registration');?></span>
-						</div>
-					</button>
-					<hr class="ur-page-title__wrapper--steps-separator" />
-					<button class="ur-page-title__wrapper--steps-btn" data-step="1" id="ur-access-tab">
-						<div class="ur-page-title__wrapper--steps-wrapper">
-							<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32"><path stroke="#e9e9e9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 29.333c7.364 0 13.334-5.97 13.334-13.333S23.364 2.667 16 2.667 2.667 8.637 2.667 16 8.637 29.333 16 29.333"/><g stroke="#222" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.569" clip-path="url(#a)"><path d="M17.199 19h-5.4M20.199 13h-5.4M19.001 20.8a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6M13.001 14.8a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6"/></g><defs><clipPath id="a"><path fill="#fff" d="M10 10h12v12H10z"/></clipPath></defs></svg>
-							<span><?php esc_html_e('Access','user-registration');?></span>
-						</div>
-					</button>
-					<hr class="ur-page-title__wrapper--steps-separator" />
-					<button class="ur-page-title__wrapper--steps-btn" data-step="2" id="ur-advanced-tab">
-						<div class="ur-page-title__wrapper--steps-wrapper">
-							<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32"><path stroke="#e9e9e9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 29.333c7.364 0 13.334-5.97 13.334-13.333S23.364 2.667 16 2.667 2.667 8.637 2.667 16 8.637 29.333 16 29.333"/><g stroke="#222" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.569" clip-path="url(#a)"><path d="M17.199 19h-5.4M20.199 13h-5.4M19.001 20.8a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6M13.001 14.8a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6"/></g><defs><clipPath id="a"><path fill="#fff" d="M10 10h12v12H10z"/></clipPath></defs></svg>
-							<span><?php esc_html_e('Advanced','user-registration');?></span>
-						</div>
-					</button>
+					<?php
+					// Get tabs configuration
+
+					$tab_count = count( $membership_tabs );
+
+					foreach ( $membership_tabs as $index => $tab ) :
+						$is_first = ( $index === 0 );
+						$is_last = ( $index === $tab_count - 1 );
+						$active_class = $is_first ? 'ur-page-title__wrapper--steps-btn-active' : '';
+						?>
+						<button class="ur-page-title__wrapper--steps-btn <?php echo esc_attr( $active_class ); ?>"
+								data-step="<?php echo esc_attr( $tab['step'] ); ?>"
+								id="<?php echo esc_attr( $tab['id'] ); ?>">
+							<div class="ur-page-title__wrapper--steps-wrapper">
+								<?php echo $tab['icon_svg']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+								<span><?php echo esc_html( $tab['label'] ); ?></span>
+							</div>
+						</button>
+						<?php if ( ! $is_last ) : ?>
+							<hr class="ur-page-title__wrapper--steps-separator" />
+						<?php endif; ?>
+					<?php endforeach; ?>
 				</div>
 			</div>
 		</div>

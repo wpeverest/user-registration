@@ -8,7 +8,6 @@
  * @var bool   $is_editing Whether editing existing membership
  */
 ?>
-<div class="user-registration-card user-registration-card--form-step">
 	<div class="user-registration-card__body">
 		<div id="ur-membership-plan-and-price-section">
 			<!-- Membership Role -->
@@ -174,5 +173,4 @@
 			</div>
 		</div>
 	</div>
-</div>
 

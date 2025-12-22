@@ -5,7 +5,7 @@ import React from "react";
 
 /**
  * Reusable Dropdown Menu Component
- * 
+ *
  * @param {Object} props
  * @param {Array} props.options - Array of option objects with {value, label, disabled?}
  * @param {string|number} props.selectedValue - Currently selected value
@@ -14,10 +14,10 @@ import React from "react";
  * @param {boolean} props.grouped - Whether options are grouped
  * @param {Function} props.renderOption - Custom render function for options
  */
-const DropdownMenu = ({ 
-	options = [], 
-	selectedValue, 
-	onSelect, 
+const DropdownMenu = ({
+	options = [],
+	selectedValue,
+	onSelect,
 	className = "",
 	grouped = false,
 	renderOption
@@ -84,7 +84,6 @@ const DropdownMenu = ({
 			</div>
 		);
 	}
-
 	// Flat options array
 	return (
 		<div className={`urcr-dropdown-menu ${className}`}>

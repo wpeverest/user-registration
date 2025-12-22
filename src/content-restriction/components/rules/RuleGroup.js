@@ -8,7 +8,7 @@ import ConditionRow from "./ConditionRow";
 import AdvancedLogicGates from "./AdvancedLogicGates";
 import AccessControlSection from "./AccessControlSection";
 import DropdownButton from "../dropdowns/DropdownButton";
-import {getURCRData, isProAccess} from "../../utils/localized-data";
+import {getURCRData, isProAccess, isURDev} from "../../utils/localized-data";
 
 // Helper function to determine condition input type
 const getConditionType = (conditionType) => {
@@ -261,8 +261,8 @@ const RuleGroup = ({
 								} else {
 									// Check if this is the first condition in a membership rule
 									const isFirstCondition = isMembershipRule && index === 0;
-									// For membership rules, only hide remove button for first condition
-									const shouldShowRemoveButton = !isMembershipRule || !isFirstCondition;
+									// For membership rules, only hide remove button for first condition (unless UR_DEV is enabled)
+									const shouldShowRemoveButton = !isMembershipRule || !isFirstCondition || isURDev();
 									return (
 										<div key={condition.id} className="urcr-condition-wrapper">
 											<ConditionRow
@@ -270,6 +270,8 @@ const RuleGroup = ({
 												onUpdate={handleConditionUpdate}
 												isMigrated={isMigrated}
 												isLocked={isFirstCondition}
+												ruleType={ruleType}
+												isFirstCondition={isFirstCondition}
 											/>
 											{shouldShowRemoveButton && (
 												<button
@@ -316,6 +318,7 @@ const RuleGroup = ({
 								onSelect={handleAfterConditionSelection}
 								isMigrated={isMigrated}
 								ruleType={ruleType}
+								isFirstCondition={isMembershipRule && conditions.length === 0}
 							/>
 						)}
 					/>

@@ -316,6 +316,39 @@ class URCR_Admin_Assets {
 		 */
 		$condition_options = apply_filters( 'urcr_condition_options', $condition_options );
 
+		// Prepare action type options.
+		$action_type_options = array(
+			array(
+				'value' => 'message',
+				'label' => esc_html__( 'Show Message', 'user-registration' ),
+			),
+			array(
+				'value' => 'redirect',
+				'label' => esc_html__( 'Redirect', 'user-registration' ),
+			),
+			array(
+				'value' => 'local_page',
+				'label' => esc_html__( 'Redirect to a Local Page', 'user-registration' ),
+			),
+			array(
+				'value' => 'ur-form',
+				'label' => esc_html__( 'Show UR Form', 'user-registration' ),
+			),
+			array(
+				'value' => 'shortcode',
+				'label' => esc_html__( 'Render Shortcode', 'user-registration' ),
+			),
+		);
+
+		/**
+		 * Filter action type options for the action dropdown.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $action_type_options Array of action type options with 'value' and 'label' keys.
+		 */
+		$action_type_options = apply_filters( 'urcr_action_type_options', $action_type_options );
+
 		// Check membership module status and count
 		$membership_count = 0;
 		$is_membership_module_enabled = false;
@@ -333,6 +366,7 @@ class URCR_Admin_Assets {
 
 		$localized_data = array(
 			'URCR_DEBUG'                => apply_filters( 'urcr_debug_mode', true ),
+			'UR_DEV'                    => defined( 'UR_DEV' ) && UR_DEV,
 			'_nonce'                    => wp_create_nonce( 'urcr_manage_content_access_rule' ),
 			'ajax_url'                  => admin_url( 'admin-ajax.php' ),
 			'wp_roles'                  => ur_get_all_roles(),
@@ -360,9 +394,10 @@ class URCR_Admin_Assets {
 			'is_membership_module_enabled' => $is_membership_module_enabled,
 			'membership_count'          => $membership_count,
 			'has_multiple_memberships'  => $has_multiple_memberships,
+			'action_type_options'       => $action_type_options,
 			'labels'                    => array(
 				'pages'                    => __( 'Pages', 'user-registration' ),
-				'posts'                    => __( 'Posts', 'user-registration' ),
+				'posts'                    => __( 'Posts',  'user-registration' ),
 				'post_types'               => __( 'Post Types', 'user-registration' ),
 				'taxonomy'                 => __( 'Taxonomy', 'user-registration' ),
 				'whole_site'               => __( 'Whole Site', 'user-registration' ),

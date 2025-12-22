@@ -1776,8 +1776,7 @@ function urcr_get_membership_rule_data( $membership_id ) {
 	// Add rule ID and other metadata
 	$rule_content['id'] = $rule_post->ID;
 	$rule_content['title'] = $rule_post->post_title;
-	
-	// Get enabled status from rule content (stored in post_content JSON)
+
 	// Default to true if not set (matches default for new rules)
 	if ( ! isset( $rule_content['enabled'] ) ) {
 		$rule_content['enabled'] = true;
