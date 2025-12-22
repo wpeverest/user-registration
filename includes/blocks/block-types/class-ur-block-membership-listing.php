@@ -41,8 +41,6 @@ class UR_Block_Membership_Listing extends UR_Block_Abstract {
 		$type                = isset( $attr['type'] ) ? sanitize_text_field( $attr['type'] ) : 'list';
 		$column_number       = isset( $attr['columnNumber'] ) ? absint( $attr['columnNumber'] ) : 0;
 
-		// error_log( print_r( $attr, true ) );
-
 		$open_in_new_tab  = isset( $attr['openInNewTab'] ) ? $attr['openInNewTab'] : false;
 		$show_description = isset( $attr['showDescription'] ) ? $attr['showDescription'] : false;
 
