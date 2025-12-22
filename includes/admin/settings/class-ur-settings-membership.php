@@ -69,6 +69,10 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
                                 'title'    => __( 'Membership', 'user-registration' ),
                                 'type'     => 'card',
                                 'desc'     => '',
+								'before_desc'     => sprintf( 
+									__( '<strong>Membership page setting has moved.</strong> Configure your membership page <a href="%s">here</a>.', 'user-registration' ),
+									admin_url( 'admin.php?page=user-registration-settings&tab=general&section=pages' )
+								),
                                 'settings' => array(
                                     array(
                                         'title'    => __( 'Renewal Behaviour', 'user-registration' ),
