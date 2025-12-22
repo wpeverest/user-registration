@@ -131,8 +131,8 @@ class URCR_Content_Access_Rules {
 			'numberposts' => - 1,
 			'post_status' => 'publish',
 			'post_type'   => 'urcr_access_rule',
-			'orderby'     => 'ID',
-			'order'       => 'ASC',
+			'orderby'     => 'date',
+			'order'       => 'DESC',
 		);
 
 		/**
@@ -152,14 +152,14 @@ class URCR_Content_Access_Rules {
 
 			// Check if rule is migrated
 			$is_migrated = get_post_meta( $rule_post->ID, 'urcr_is_migrated', true );
-			
+
 			// Get rule type (membership or custom)
 			$rule_type = get_post_meta( $rule_post->ID, 'urcr_rule_type', true );
 			if ( empty( $rule_type ) ) {
 				// Default to 'custom' for backwards compatibility
 				$rule_type = 'custom';
 			}
-			
+
 			// Get membership ID if this is a membership rule
 			$membership_id = '';
 			if ( 'membership' === $rule_type ) {
@@ -180,6 +180,7 @@ class URCR_Content_Access_Rules {
 				'is_migrated'     => ! empty( $is_migrated ),
 				'rule_type'       => $rule_type,
 				'membership_id'   => $membership_id,
+				'created_at'      => $rule_post->post_date,
 			);
 
 			/**
@@ -271,7 +272,7 @@ class URCR_Content_Access_Rules {
 		if ( $rule_id ) {
 			// Set rule type to 'custom' for newly created rules
 			update_post_meta( $rule_id, 'urcr_rule_type', 'custom' );
-			
+
 			// Fire post-create action
 			do_action( 'urcr_post_create_content_access_rule', $access_rule_post, $rule_id );
 
@@ -613,7 +614,7 @@ class URCR_Content_Access_Rules {
 		if ( $new_rule_id ) {
 			// Set rule type to 'custom' for duplicated rules (duplicated rules are always custom)
 			update_post_meta( $new_rule_id, 'urcr_rule_type', 'custom' );
-			
+
 			return new \WP_REST_Response(
 				array(
 					'success' => true,
@@ -660,7 +661,7 @@ class URCR_Content_Access_Rules {
 
 		// Prevent deletion of membership rules
 		$rule_type = get_post_meta( $rule_id, 'urcr_rule_type', true );
-		if ( 'membership' === $rule_type ) {
+		if ( 'membership' === $rule_type && !UR_DEV) {
 			return new \WP_REST_Response(
 				array(
 					'success' => false,

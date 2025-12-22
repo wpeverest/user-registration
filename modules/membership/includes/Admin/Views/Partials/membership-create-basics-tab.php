@@ -7,7 +7,6 @@
  * @var array  $membership_details Membership details data
  */
 ?>
-<div class="user-registration-card user-registration-card--form-step user-registration-card--form-step-active">
 	<div class="user-registration-card__body">
 		<div id="ur-membership-main-fields">
 			<!-- Membership Name -->
@@ -201,5 +200,4 @@
 			</div>
 		</div>
 	</div>
-</div>
 

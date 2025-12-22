@@ -3,7 +3,7 @@
  */
 import React from "react";
 import { __ } from "@wordpress/i18n";
-import { getURCRData, isProAccess } from "../../utils/localized-data";
+import { getFilteredConditionOptions } from "../../utils/condition-options";
 import DropdownMenu from "./DropdownMenu";
 
 // Group options by category
@@ -36,30 +36,9 @@ const groupOptions = (options) => {
 		}));
 };
 
-const ConditionFieldDropdown = ({ onSelect, isMigrated = false, ruleType = null }) => {
-	const allConditionOptions = getURCRData("condition_options", []);
-	
-	// Filter options based on pro access and migration status
-	const isMigratedBool = Boolean(isMigrated);
-	const isPro = isProAccess();
-	const isMembershipRule = ruleType === "membership";
-	
-	let filteredOptions;
-	
-	// Pro users: show all conditions
-	if (isPro) {
-		filteredOptions = allConditionOptions;
-	}
-	// Free users: show user_state and roles for both membership and custom rules
-	else {
-		filteredOptions = allConditionOptions.filter(option => 
-			option.value === "roles" || 
-			option.value === "user_state"
-		);
-	}
-
-	// Always exclude the membership condition option for all rules (both custom and membership rules)
-	filteredOptions = filteredOptions.filter(option => option.value !== "membership");
+const ConditionFieldDropdown = ({ onSelect, isMigrated = false, ruleType = null, isFirstCondition = false }) => {
+	// Use shared utility function to get filtered condition options
+	const filteredOptions = getFilteredConditionOptions(isMigrated, ruleType, isFirstCondition);
 	const options = groupOptions(filteredOptions);
 	return (
 		<DropdownMenu

@@ -67,6 +67,11 @@
 			// Initialize select2 for access control (not needed, but keeping for consistency)
 			self.initSelect2();
 
+			// Initialize action section - use setTimeout to ensure DOM is ready
+
+			self.initActionSection();
+
+
 			self.initialized = true;
 		},
 
@@ -177,7 +182,7 @@
 							terms = [];
 						}
 					}
-					value = { taxonomy: taxonomy, terms: terms };
+					value = { taxonomy: taxonomy, value: terms };
 				} else {
 					var $contentSelect = $target.find('.urcr-content-target-input');
 					var contentData = $contentSelect.attr('data-value');
@@ -320,6 +325,15 @@
 				self.addCondition('roles', false, '');
 			});
 
+			// Add condition button keyboard support
+			$(document).on('keydown', '.urcr-add-condition-button', function (e) {
+				if (e.key === 'Enter' || e.key === ' ') {
+					e.preventDefault();
+					// Add a new visible condition (not membership - that's hidden)
+					self.addCondition('roles', false, '');
+				}
+			});
+
 			// Remove condition button
 			$(document).on('click', '.urcr-condition-remove', function (e) {
 				e.preventDefault();
@@ -375,6 +389,8 @@
 				self.showContentTypeDropdown($(this));
 			});
 
+
+
 			// Remove content target
 			$(document).on('click', '.urcr-target-remove', function (e) {
 				e.preventDefault();
@@ -388,15 +404,31 @@
 				e.preventDefault();
 				var contentType = $(this).data('content-type');
 				self.addContentTarget(contentType);
-				$('.urcr-content-type-dropdown-menu').hide();
+				$('.urcr-content-type-dropdown-menu').removeClass('ur-d-flex').addClass('ur-d-none');
+			});
+
+			// Content type selection keyboard support
+			$(document).on('keydown', '.urcr-content-type-option', function (e) {
+				if (e.key === 'Enter' || e.key === ' ') {
+					e.preventDefault();
+					var contentType = $(this).data('content-type');
+					self.addContentTarget(contentType);
+					$('.urcr-content-type-dropdown-menu').removeClass('ur-d-flex').addClass('ur-d-none');
+				}
 			});
 
 			// Click outside to close dropdowns
 			$(document).on('click', function (e) {
 				if (!$(e.target).closest('.urcr-content-dropdown-wrapper').length &&
 					!$(e.target).closest('.urcr-add-content-button').length) {
-					$('.urcr-content-type-dropdown-menu').hide();
+					$('.urcr-content-type-dropdown-menu').removeClass('ur-d-flex').addClass('ur-d-none');
 				}
+			});
+
+			// Action type change
+			$(document).on('change', '.urcr-action-type-select', function () {
+				var actionType = $(this).val() || 'message';
+				self.handleActionTypeChange(actionType);
 			});
 		},
 
@@ -721,10 +753,12 @@
 			} else if (type === 'pages' || type === 'posts') {
 				inputHtml = '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' + id + '" data-content-type="' + type + '"></select>';
 			} else if (type === 'taxonomy') {
-				inputHtml = '<select class="urcr-taxonomy-select" data-target-id="' + id + '">' +
+				inputHtml = '<div class="urcr-taxonomy-select-group" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">' +
+					'<select class="urcr-taxonomy-select" data-target-id="' + id + '">' +
 					'<option value="">Select Taxonomy</option>' +
 					'</select>' +
-					'<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' + id + '" data-content-type="taxonomy" style="margin-top: 8px;"></select>';
+					'<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' + id + '" data-content-type="taxonomy"></select>' +
+					'</div>';
 			} else {
 				inputHtml = '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' + id + '" data-content-type="' + type + '"></select>';
 			}
@@ -781,20 +815,53 @@
 		initTaxonomySelect: function (targetId, value) {
 			var self = this;
 			var $taxonomySelect = $('.urcr-target-item[data-target-id="' + targetId + '"] .urcr-taxonomy-select');
+			var $termSelect = $('.urcr-target-item[data-target-id="' + targetId + '"] .urcr-content-target-input');
 
 			if ($taxonomySelect.length && urcr_membership_access_data.taxonomies) {
-				Object.keys(urcr_membership_access_data.taxonomies).forEach(function (taxKey) {
-					$taxonomySelect.append('<option value="' + taxKey + '">' + urcr_membership_access_data.taxonomies[taxKey] + '</option>');
-				});
-
-				if (value && value.taxonomy) {
-					$taxonomySelect.val(value.taxonomy).trigger('change');
-					self.updateTaxonomyTerms(targetId, value.taxonomy, value.value);
+				// Only append options if select is empty (not already rendered from PHP)
+				if ($taxonomySelect.find('option').length <= 1) {
+					Object.keys(urcr_membership_access_data.taxonomies).forEach(function (taxKey) {
+						$taxonomySelect.append('<option value="' + taxKey + '">' + urcr_membership_access_data.taxonomies[taxKey] + '</option>');
+					});
 				}
 
-				$taxonomySelect.on('change', function () {
-					var taxonomy = $(this).val();
-					self.updateTaxonomyTerms(targetId, taxonomy, []);
+				// Get taxonomy from value parameter, or from already selected option (PHP rendered), or from select value
+				var taxonomy = null;
+				var terms = [];
+
+				if (value && value.taxonomy) {
+					// Value passed as parameter
+					taxonomy = value.taxonomy;
+					terms = value.value || [];
+				} else {
+					// Check if taxonomy is already selected (from PHP rendering)
+					taxonomy = $taxonomySelect.val();
+					
+					// Get terms from data-value attribute (from PHP rendering)
+					var termsData = $termSelect.attr('data-value');
+					if (termsData) {
+						try {
+							terms = JSON.parse(termsData);
+						} catch (e) {
+							terms = [];
+						}
+					}
+				}
+
+				if (taxonomy) {
+					// Set the taxonomy value if not already set
+					if ($taxonomySelect.val() !== taxonomy) {
+						$taxonomySelect.val(taxonomy);
+					}
+					
+					// Initialize terms with selected values
+					self.updateTaxonomyTerms(targetId, taxonomy, terms);
+				}
+
+				// Handle taxonomy change
+				$taxonomySelect.off('change').on('change', function () {
+					var selectedTaxonomy = $(this).val();
+					self.updateTaxonomyTerms(targetId, selectedTaxonomy, []);
 				});
 			}
 		},
@@ -803,11 +870,16 @@
 			var self = this;
 			var $termSelect = $('.urcr-target-item[data-target-id="' + targetId + '"] .urcr-content-target-input');
 
-			if ($termSelect.length && urcr_membership_access_data.terms_list && urcr_membership_access_data.terms_list[taxonomy]) {
+			if ($termSelect.length && taxonomy && urcr_membership_access_data.terms_list && urcr_membership_access_data.terms_list[taxonomy]) {
 				var terms = urcr_membership_access_data.terms_list[taxonomy];
 				var options = Object.keys(terms).map(function (termId) {
 					return { id: termId, text: terms[termId] };
 				});
+
+				// Destroy existing select2 if any
+				if ($termSelect.hasClass('select2-hidden-accessible')) {
+					$termSelect.select2('destroy');
+				}
 
 				$termSelect.empty().select2({
 					data: options,
@@ -815,8 +887,15 @@
 					width: '100%'
 				});
 
+				// Set selected terms after select2 is initialized
 				if (selectedTerms && selectedTerms.length > 0) {
-					$termSelect.val(selectedTerms).trigger('change');
+					setTimeout(function () {
+						// Convert to strings if needed (select2 uses string IDs)
+						var termIds = selectedTerms.map(function (term) {
+							return String(term);
+						});
+						$termSelect.val(termIds).trigger('change');
+					}, 50);
 				}
 			}
 		},
@@ -833,6 +912,10 @@
 				options = Object.keys(urcr_membership_access_data.posts).map(function (key) {
 					return { id: key, text: urcr_membership_access_data.posts[key] };
 				});
+			} else if (type === 'post_types' && urcr_membership_access_data.post_types) {
+				options = Object.keys(urcr_membership_access_data.post_types).map(function (key) {
+					return { id: key, text: urcr_membership_access_data.post_types[key] };
+				});
 			}
 
 			return options;
@@ -840,7 +923,12 @@
 
 		removeContentTarget: function (targetId) {
 			var self = this;
-			$('.urcr-target-item[data-target-id="' + targetId + '"]').remove();
+			var $target = $('.urcr-target-item[data-target-id="' + targetId + '"]');
+			if ($target.length) {
+				// Hide with ur-d-none utility class before removing
+				$target.removeClass('ur-d-flex').addClass('ur-d-none');
+				$target.remove();
+			}
 			self.contentTargets = self.contentTargets.filter(function (target) {
 				return target.id !== targetId;
 			});
@@ -864,16 +952,22 @@
 			});
 
 			// Find or create dropdown wrapper
-			var $wrapper = $button.closest('.ur-d-flex').find('.urcr-content-dropdown-wrapper');
+			var $wrapper = $button.closest('.urcr-content-dropdown-wrapper');
 
 			if ($wrapper.length === 0) {
 				$wrapper = $button.closest('.urcr-target-selection-section').find('.urcr-content-dropdown-wrapper');
 			}
+
+			if ($wrapper.length === 0) {
+				$wrapper = $button.closest('.urcr-target-selection-wrapper').find('.urcr-content-dropdown-wrapper');
+			}
+
 			if ($wrapper.length === 0) {
 				return;
 			}
 
 			var $dropdown = $wrapper.find('.urcr-content-type-dropdown-menu');
+
 			if ($dropdown.length === 0) {
 				$dropdown = $('<div class="urcr-content-type-dropdown-menu urcr-dropdown-menu"></div>');
 				$wrapper.append($dropdown);
@@ -881,14 +975,14 @@
 
 			$dropdown.empty();
 			availableTypes.forEach(function (ct) {
-				$dropdown.append('<button type="button" class="urcr-dropdown-option urcr-content-type-option" data-content-type="' + ct.value + '">' + ct.label + '</button>');
+				$dropdown.append('<span role="button" tabindex="0" class="urcr-dropdown-option urcr-content-type-option" data-content-type="' + ct.value + '">' + ct.label + '</span>');
 			});
 
-			// Toggle dropdown
-			if ($dropdown.is(':visible')) {
-				$dropdown.hide();
+			// Toggle dropdown using utility classes
+			if ($dropdown.hasClass('ur-d-none')) {
+				$dropdown.removeClass('ur-d-none').addClass('ur-d-flex');
 			} else {
-				$dropdown.show();
+				$dropdown.removeClass('ur-d-flex').addClass('ur-d-none');
 			}
 
 		},
@@ -1140,6 +1234,9 @@
 				});
 			});
 
+			// Build actions array from form
+			var actions = self.getActionsFromForm();
+
 			// Build rule data - structure must match what backend expects
 			// Title will be set by PHP based on membership name
 			var ruleData = {
@@ -1154,12 +1251,12 @@
 						logic_gate: 'AND'
 					},
 					target_contents: targetContents,
-					actions: self.getDefaultActions()
+					actions: actions
 				},
 				rule_type: 'membership',
 				membership_id: self.membershipId
 			};
-
+			console.log(actions)
 
 			// Store in hidden input
 			$('#urcr-membership-access-rule-data').val(JSON.stringify(ruleData));
@@ -1168,6 +1265,141 @@
 			window.urcrMembershipAccessRuleData = ruleData;
 
 			return ruleData;
+		},
+
+		initActionSection: function () {
+			var self = this;
+			var $actionTypeSelect = $('#urcr-membership-action-type');
+
+			// Force hide all action containers using utility classes
+			$('.urcr-action-input-container').removeClass('ur-d-flex').addClass('ur-d-none');
+
+			if ($actionTypeSelect.length) {
+				// Initialize select2 for action inputs if needed
+				$('.urcr-action-local-page, .urcr-action-ur-form, .urcr-action-shortcode-tag').each(function () {
+					if (!$(this).hasClass('select2-hidden-accessible')) {
+						$(this).select2({
+							width: '100%'
+						});
+					}
+				});
+
+				// Show/hide appropriate inputs based on current selection
+				var currentType = $actionTypeSelect.val() || 'message';
+				self.handleActionTypeChange(currentType);
+			}
+		},
+
+		handleActionTypeChange: function (actionType) {
+			// Hide all action input containers first using utility classes
+			$('.urcr-action-input-container').removeClass('ur-d-flex').addClass('ur-d-none');
+
+			// Default to message if actionType is not provided or invalid
+			if (!actionType) {
+				actionType = 'message';
+			}
+			// Show the appropriate container based on action type
+			var $container = null;
+			switch (actionType) {
+				case 'message':
+					$container = $('.urcrra-message-input-container');
+					break;
+				case 'redirect':
+					$container = $('.urcrra-redirect-input-container');
+					break;
+				case 'local_page':
+					$container = $('.urcrra-redirect-to-local-page-input-container');
+					break;
+				case 'ur-form':
+					$container = $('.urcrra-ur-form-input-container');
+					break;
+				case 'shortcode':
+					$container = $('.urcrra-shortcode-input-container');
+					break;
+				default:
+					// Default to message if unknown type
+					$container = $('.urcrra-message-input-container');
+					break;
+			}
+
+			// Show the selected container using utility classes
+			if ($container && $container.length) {
+				$container.removeClass('ur-d-none').addClass('ur-d-flex');
+			}
+		},
+
+		getActionsFromForm: function () {
+			var self = this;
+			var $actionTypeSelect = $('#urcr-membership-action-type');
+
+			if (!$actionTypeSelect.length) {
+				return self.getDefaultActions();
+			}
+
+			var actionType = $actionTypeSelect.val() || 'message';
+			var actionId = 'x' + Date.now();
+			var actionData = {
+				id: actionId,
+				type: actionType,
+				access_control: self.accessControl || 'access',
+			};
+
+			switch (actionType) {
+				case 'message':
+					actionData.label = 'Show Message';
+					// Get content from TinyMCE editor if available
+					var message = '';
+					if (typeof wp !== 'undefined' && wp.editor && $('#urcr-membership-action-message').length) {
+						message = wp.editor.getContent('urcr-membership-action-message');
+					} else {
+						message = $('#urcr-membership-action-message').val() || '';
+					}
+					actionData.message = message || '<p>You do not have sufficient permission to access this content.</p>';
+					actionData.redirect_url = '';
+					actionData.local_page = '';
+					actionData.ur_form = '';
+					actionData.shortcode = { tag: '', args: '' };
+					break;
+				case 'redirect':
+					actionData.label = 'Redirect';
+					actionData.message = '';
+					actionData.redirect_url = $('.urcr-action-redirect-url').val() || '';
+					actionData.local_page = '';
+					actionData.ur_form = '';
+					actionData.shortcode = { tag: '', args: '' };
+					break;
+				case 'local_page':
+					actionData.type = 'redirect_to_local_page'; // Map to backend type
+					actionData.label = 'Redirect to a Local Page';
+					actionData.message = '';
+					actionData.redirect_url = '';
+					actionData.local_page = $('.urcr-action-local-page').val() || '';
+					actionData.ur_form = '';
+					actionData.shortcode = { tag: '', args: '' };
+					break;
+				case 'ur-form':
+					actionData.type = 'ur-form'; // Always use hyphen format
+					actionData.label = 'Show UR Form';
+					actionData.message = '';
+					actionData.redirect_url = '';
+					actionData.local_page = '';
+					actionData.ur_form = $('.urcr-action-ur-form').val() || '';
+					actionData.shortcode = { tag: '', args: '' };
+					break;
+				case 'shortcode':
+					actionData.label = 'Render Shortcode';
+					actionData.message = '';
+					actionData.redirect_url = '';
+					actionData.local_page = '';
+					actionData.ur_form = '';
+					actionData.shortcode = {
+						tag: $('.urcr-action-shortcode-tag').val() || '',
+						args: $('.urcr-action-shortcode-args').val() || ''
+					};
+					break;
+			}
+
+			return [actionData];
 		},
 
 		getDefaultActions: function () {
