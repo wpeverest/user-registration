@@ -131,24 +131,41 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 		public function ur_get_reset_password_email() {
 
 			/**
+			 * Filter to overwrite the reset password email.
+			 *
+			 * @param string Message content to overwrite the existing email content.
+			 */
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi {{username}},
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					We received a request to reset the password for your account on <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					If this was a mistake, simply ignore this email, and no changes will be made to your account.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					To reset your password, please click the link below:
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					<a href="{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}" style="color: #4A90E2; text-decoration: none;" rel="noreferrer noopener" target="_blank">Click Here</a>
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thank You!
+				</p>',
+				'user-registration'
+			);
+			if ( UR_PRO_ACTIVE ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
+
+			/**
 			 * Filter to modify the message content for reset password email.
 			 *
-			 * @param string Message content for reset password email to be overridden.
+			 * @param string $body_content Message content for reset password email to be overridden.
 			 */
-			$message = apply_filters(
-				'user_registration_reset_password_email_message',
-				sprintf(
-					__(
-						'Hi {{username}},<br/><br/>
-						We received a request to reset the password for your account on {{blog_info}}.<br/><br/>
-						If this was a mistake, simply ignore this email, and no changes will be made to your account. <br/><br/>
-						To reset your password, please click the link below: <br/>
-						<a href="{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}" rel="noreferrer noopener" target="_blank">Click Here: </a><br/><br/>
-						Thank You!',
-						'user-registration'
-					)
-				)
-			);
+			$message = apply_filters( 'user_registration_reset_password_email_message', $body_content );
 
 			return $message;
 		}

@@ -142,24 +142,38 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 		public function ur_get_profile_details_changed_email() {
 
 			/**
+			 * Filter to overwrite the profile details changed email.
+			 *
+			 * @param string Message content to overwrite the existing email content.
+			 */
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi Admin,
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					A user has updated their profile information for the following account:
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					SiteName: <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Username: {{username}}
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thank You!
+				</p>',
+				'user-registration'
+			);
+			if ( UR_PRO_ACTIVE ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
+
+			/**
 			 * Filter to modify the message content for profile details changed.
 			 *
-			 * @return string $message Message content for profile details changed email to be overridden.
+			 * @param string $body_content Message content for profile details changed email to be overridden.
 			 */
-			$message = apply_filters(
-				'user_registration_profile_details_changed_email_message',
-				sprintf(
-					__(
-						'
-						Hi Admin,<br/><br/>
-						A user has updated their profile information for the following account:<br/><br/>
-						SiteName: {{blog_info}} <br/><br/>
-						Username: {{username}} <br/><br/>
-						Thank You!',
-						'user-registration'
-					)
-				)
-			);
+			$message = apply_filters( 'user_registration_profile_details_changed_email_message', $body_content );
 
 			return $message;
 		}

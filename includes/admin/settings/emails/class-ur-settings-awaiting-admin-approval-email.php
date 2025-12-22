@@ -97,18 +97,18 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 									'css'      => '',
 									'desc_tip' => true,
 								),
-							array(
-								'title'    => __( 'Email Content', 'user-registration' ),
-								'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
-								'id'       => 'user_registration_awaiting_admin_approval_email',
-								'type'     => 'tinymce',
-								'default'  => $this->ur_get_awaiting_admin_approval_email(),
-								'css'      => '',
-								'desc_tip' => true,
-								'show-ur-registration-form-button' => false,
-								'show-smart-tags-button' => true,
-								'show-reset-content-button' => true,
-							),
+								array(
+									'title'    => __( 'Email Content', 'user-registration' ),
+									'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_awaiting_admin_approval_email',
+									'type'     => 'tinymce',
+									'default'  => $this->ur_get_awaiting_admin_approval_email(),
+									'css'      => '',
+									'desc_tip' => true,
+									'show-ur-registration-form-button' => false,
+									'show-smart-tags-button' => true,
+									'show-reset-content-button' => true,
+								),
 							),
 						),
 					),
@@ -135,21 +135,28 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 			 *
 			 * @param string Message content to overwrite the existing email content.
 			 */
-			$message = apply_filters(
-				'user_registration_get_awaiting_admin_approval_email',
-				sprintf(
-					__(
-						'Hi {{username}}, <br/><br/>
-
-						Thank you for registering on <a href="{{home_url}}">{{blog_info}}</a>!. <br/><br/>
-
-						Your registration is currently awaiting approval from the site admin. You will receive a notification once your account has been approved. <br/><br/>
-
-						Thank You!',
-						'user-registration'
-					)
-				)
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi {{username}},
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thank you for registering on <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>!
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Your registration is currently awaiting approval from the site admin. You will receive a notification once your account has been approved.
+				</p>',
+				'user-registration'
 			);
+			if ( UR_PRO_ACTIVE ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
+
+			/**
+			 * Filter to modify the approval email message email content.
+			 *
+			 * @param string $body_content Message content to be overridden for admin approval email.
+			 */
+			$message = apply_filters( 'user_registration_get_awaiting_admin_approval_email', $body_content );
 
 			return $message;
 		}

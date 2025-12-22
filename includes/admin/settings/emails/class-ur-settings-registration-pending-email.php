@@ -134,25 +134,35 @@ if ( ! class_exists( 'UR_Settings_Registration_Pending_Email', false ) ) :
 		public function ur_get_registration_pending_email() {
 
 			/**
+			 * Filter to overwrite the registration pending email.
+			 *
+			 * @param string Message content to overwrite the existing email content.
+			 */
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi {{username}},
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Your registration on <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a> is now marked as pending.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					We apologize for the inconvenience. You will be notified once your registration has been approved.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thank you for your patience!
+				</p>',
+				'user-registration'
+			);
+			if ( UR_PRO_ACTIVE ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
+
+			/**
 			 * Filter to modify the message content for registration pending email.
 			 *
-			 * @param string Message content for registration pending email to be overridden.
+			 * @param string $body_content Message content for registration pending email to be overridden.
 			 */
-			$message = apply_filters(
-				'user_registration_get_registration_pending_email',
-				sprintf(
-					__(
-						'Hi {{username}}, <br/><br/>
-
-Your registration on {{blog_info}} is now marked as pending. <br/><br/>
-
-We apologize for the inconvenience. You will be notified once your registration has been approved. <br/><br/>
-
-Thank you for your patience!',
-						'user-registration'
-					)
-				)
-			);
+			$message = apply_filters( 'user_registration_get_registration_pending_email', $body_content );
 
 			return $message;
 		}

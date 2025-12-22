@@ -129,19 +129,29 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 			 *
 			 * @param string Message content for email confirmation to be overwritten.
 			 */
-			$message = apply_filters(
-				'user_registration_get_email_confirmation',
-				sprintf(
-					__(
-						'Hi {{username}}, <br/><br/>
-						Thank you for registering on {{blog_info}}!<br/><br/>
-						Please click on the link below to confirm your registration: <br/><br/>
-						Click here to confirm your registration: <a href="{{home_url}}/{{ur_login}}?ur_token={{email_token}}">Click Here</a><br/><br/>
-						Thank You!',
-						'user-registration'
-					)
-				)
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi {{username}},
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thank you for registering on <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>!
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Please click on the link below to confirm your registration:
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Click here to confirm your registration: <a href="{{home_url}}/{{ur_login}}?ur_token={{email_token}}" style="color: #4A90E2; text-decoration: none;">Click Here</a>
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thank You!
+				</p>',
+				'user-registration'
 			);
+			if ( UR_PRO_ACTIVE ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
+
+			$message = apply_filters( 'user_registration_get_email_confirmation', $body_content );
 			return $message;
 		}
 	}

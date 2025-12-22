@@ -140,23 +140,32 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 		 */
 		public function ur_get_admin_email() {
 
-			$general_msg = sprintf(
-				__(
-					'Hi Admin, <br/><br/>
-					A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
-					{{membership_plan_details}} <br/>
-					You can review their details and manage their role from the \'<b>Users</b>\' section in your WordPress dashboard.<br/><br />
-					Thank You!',
-					'user-registration'
-				)
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi Admin,
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					{{membership_plan_details}}
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					You can review their details and manage their role from the <strong>Users</strong> section in your WordPress dashboard.
+				</p>',
+				'user-registration'
 			);
+
+			if ( UR_PRO_ACTIVE ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
 
 			/**
 			 * Filter to modify the admin email message content.
 			 *
 			 * @param string $general_msg Message to be overridden for admin email.
 			 */
-			$message = apply_filters( 'user_registration_admin_email_message', $general_msg );
+			$message = apply_filters( 'user_registration_admin_email_message', $body_content );
 
 			return $message;
 		}

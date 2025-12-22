@@ -121,20 +121,39 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Email', false ) ) :
 		 */
 		public static function ur_get_payment_success_email() {
 
-			$message = apply_filters(
-				'user_registration_payment_email_message',
-				sprintf(
-					__(
-						'Hi {{username}}, <br/><br/>
-						Congratulations! Your payment for registration on {{blog_info}} has been successfully completed. <br/><br/>
-						
-						You can view your payment invoice here:<br/><br/>
-						{{payment_invoice}}<br/><br/>
-						Thank You!',
-						'user-registration'
-					)
-				)
+			/**
+			 * Filter to overwrite the payment success email.
+			 *
+			 * @param string Message content to overwrite the existing email content.
+			 */
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi {{username}},
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Congratulations! Your payment for registration on <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a> has been successfully completed.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					You can view your payment invoice here:
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					{{payment_invoice}}
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thank You!
+				</p>',
+				'user-registration'
 			);
+			if ( UR_PRO_ACTIVE ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
+
+			/**
+			 * Filter to modify the payment success email message content.
+			 *
+			 * @param string $body_content Message content for payment success email to be overridden.
+			 */
+			$message = apply_filters( 'user_registration_payment_email_message', $body_content );
 
 			return $message;
 		}

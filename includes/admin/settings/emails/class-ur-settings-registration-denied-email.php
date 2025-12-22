@@ -132,24 +132,35 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 		public function ur_get_registration_denied_email() {
 
 			/**
+			 * Filter to overwrite the registration denied email.
+			 *
+			 * @param string Message content to overwrite the existing email content.
+			 */
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi {{username}},
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					We regret to inform you that your registration on <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a> has been denied.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					We apologize for any inconvenience caused.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thank you for your understanding.
+				</p>',
+				'user-registration'
+			);
+			if ( UR_PRO_ACTIVE ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
+
+			/**
 			 * Filter to modify the message content for registration denied email.
 			 *
-			 * @param string Message content for registration denied email to be overridden.
+			 * @param string $body_content Message content for registration denied email to be overridden.
 			 */
-			$message = apply_filters(
-				'user_registration_get_registration_denied_email',
-				sprintf(
-					__(
-						'Hi {{username}}, <br/><br/>
-We regret to inform you that your registration on {{blog_info}} has been denied. <br/><br/>
-
-We apologize for any inconvenience caused. <br/><br/>
-
-Thank you for your understanding.',
-						'user-registration'
-					)
-				)
-			);
+			$message = apply_filters( 'user_registration_get_registration_denied_email', $body_content );
 
 			return $message;
 		}

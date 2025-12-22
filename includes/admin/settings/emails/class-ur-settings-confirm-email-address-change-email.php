@@ -119,22 +119,40 @@ if ( ! class_exists( 'UR_Settings_Confirm_Email_Address_Change_Email', false ) )
 		 */
 		public function ur_get_confirm_email_address_change_email() {
 
-			$message = apply_filters(
-				'user_registration_get_confirm_email_address_email',
-				sprintf(
-					wp_kses_post(
-						__(
-							'Hi {{display_name}},<br/><br/>
-							You recently requested to change the email address associated with your account to {{updated_new_user_email}} .<br/><br/>
-							To confirm this change, please click on the following link: {{email_change_confirmation_link}}<br/><br/>
-							This link will remain active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.<br/><br/>
-							Best regards,<br/>
-				 			{{blog_info}}',
-							'user-registration'
-						)
-					)
-				)
+			/**
+			 * Filter to overwrite the confirm email address change email.
+			 *
+			 * @param string Message content to overwrite the existing email content.
+			 */
+			$body_content = __(
+				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi {{display_name}},
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					You recently requested to change the email address associated with your account to {{updated_new_user_email}}.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					To confirm this change, please click on the following link: {{email_change_confirmation_link}}
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					This link will remain active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Best regards,<br/>
+					{{blog_info}}
+				</p>',
+				'user-registration'
 			);
+			if ( UR_PRO_ACTIVE ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
+
+			/**
+			 * Filter to modify the confirm email address change email message content.
+			 *
+			 * @param string $body_content Message content for confirm email address change email to be overridden.
+			 */
+			$message = apply_filters( 'user_registration_get_confirm_email_address_email', $body_content );
 
 			return $message;
 		}
