@@ -30,7 +30,9 @@
 								data-step="<?php echo esc_attr( $tab['step'] ); ?>"
 								id="<?php echo esc_attr( $tab['id'] ); ?>">
 							<div class="ur-page-title__wrapper--steps-wrapper">
+								<div class="urm-membership--stepper-icon">
 								<?php echo $tab['icon_svg']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+								</div>
 								<span><?php echo esc_html( $tab['label'] ); ?></span>
 							</div>
 						</button>
@@ -48,7 +50,7 @@
 						<div class="ur-page-title__wrapper--actions-status">
 							<p>Status</p>
 							<span class="separator">|</span>
-							<div class="ur-d-flex ur-align-items-center visible" style="gap: 5px">
+							<div class="visible ur-d-flex ur-align-items-center" style="gap: 5px">
 								<div class="ur-toggle-section">
 									<span class="user-registration-toggle-form">
 										<input

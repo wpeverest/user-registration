@@ -753,7 +753,7 @@
 			} else if (type === 'pages' || type === 'posts') {
 				inputHtml = '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' + id + '" data-content-type="' + type + '"></select>';
 			} else if (type === 'taxonomy') {
-				inputHtml = '<div class="urcr-taxonomy-select-group" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">' +
+				inputHtml = '<div class="urcr-taxonomy-select-group">' +
 					'<select class="urcr-taxonomy-select" data-target-id="' + id + '">' +
 					'<option value="">Select Taxonomy</option>' +
 					'</select>' +

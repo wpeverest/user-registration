@@ -907,9 +907,14 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title label,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title label {
   padding: 0 !important;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 500;
   cursor: pointer;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title label b,
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title label b {
+  font-weight: inherit;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio]:checked::before,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio]:checked::before {
@@ -1099,9 +1104,6 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 16px;
-}
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #paid-plan-container .ur-membership-selection-container .ur-field input[type=number] {
-  padding-left: 24px !important;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body .ur-membership-subscription-field-container .ur-membership-selection-container .ur-field {
   gap: 12px;
