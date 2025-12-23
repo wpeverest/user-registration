@@ -671,6 +671,11 @@ class URCR_Content_Access_Rules {
 			);
 		}
 
+		// Clear rule meta before deletion
+		delete_post_meta( $rule_id, 'urcr_rule_type' );
+		delete_post_meta( $rule_id, 'urcr_membership_id' );
+		delete_post_meta( $rule_id, 'urcr_is_migrated' );
+
 		if ( $force ) {
 			$result = wp_delete_post( $rule_id, true );
 		} else {

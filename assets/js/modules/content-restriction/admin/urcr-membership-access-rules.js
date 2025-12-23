@@ -233,7 +233,7 @@
 				self.updateAccessControlClass();
 			}
 
-			// Populate conditions (skip first membership condition - it's hidden in PHP)
+			// Populate conditions
 			if (ruleData.logic_map && ruleData.logic_map.conditions && ruleData.logic_map.conditions.length > 0) {
 				var conditions = ruleData.logic_map.conditions;
 
@@ -244,17 +244,12 @@
 					return 0;
 				});
 
-				// Skip the first condition if it's membership (it's hidden in PHP)
-				var firstCondition = conditions[0];
-				var startIndex = (firstCondition && firstCondition.type === 'membership') ? 1 : 0;
-
+				// Render all conditions including the first membership condition
 				conditions.forEach(function (condition, index) {
-					// Skip the first condition if it's membership (it's hidden)
-					if (index < startIndex) {
-						return;
-					}
-
-					var isLocked = false;
+					// First condition (membership) should be non-editable
+					var firstCondition = conditions[0];
+					var isFirstMembership = firstCondition && firstCondition.type === 'membership' && index === 0;
+					var isLocked = isFirstMembership;
 					var value = condition.value;
 
 					// Handle different value formats
@@ -270,9 +265,9 @@
 					self.addCondition(condition.type, isLocked, value, condition.id);
 				});
 			} else {
-				// If no conditions, add membership condition if membership ID exists (editable and deletable)
+				// If no conditions, add membership condition if membership ID exists (non-editable for first condition)
 				if (self.membershipId > 0) {
-					self.addCondition('membership', false, [self.membershipId.toString()]);
+					self.addCondition('membership', true, [self.membershipId.toString()]);
 				}
 			}
 
@@ -492,13 +487,16 @@
 			var conditionOptions = self.getConditionOptions();
 			var removeButton = '';
 
-			// All conditions are deletable in membership create page
-			removeButton = '<button type="button" class="button button-link-delete urcr-condition-remove" aria-label="Remove condition">' +
-				'<span class="dashicons dashicons-no-alt"></span>' +
-				'</button>';
+			// Hide remove button if condition is locked
+			if (!isLocked) {
+				removeButton = '<button type="button" class="button button-link-delete urcr-condition-remove" aria-label="Remove condition">' +
+					'<span class="dashicons dashicons-no-alt"></span>' +
+					'</button>';
+			}
 
-			// All conditions are editable in membership create page
-			var fieldSelect = '<select class="urcr-condition-field-select urcr-condition-value-input">';
+			// Add disabled attribute if condition is locked
+			var disabledAttr = isLocked ? ' disabled' : '';
+			var fieldSelect = '<select class="urcr-condition-field-select urcr-condition-value-input"' + disabledAttr + '>';
 			conditionOptions.forEach(function (option) {
 				var selected = option.value === type ? 'selected' : '';
 				fieldSelect += '<option value="' + option.value + '" ' + selected + '>' + option.label + '</option>';
@@ -524,8 +522,8 @@
 		getConditionValueInputHtml: function (id, inputType, fieldType, value, isLocked) {
 			var self = this;
 			var html = '';
-			// All conditions are editable in membership create page
-			var disabledAttr = '';
+			// Add disabled attribute if condition is locked
+			var disabledAttr = isLocked ? ' disabled' : '';
 
 			if (inputType === 'multiselect') {
 				html = '<select class="urcr-enhanced-select2 urcr-condition-value-input" multiple data-condition-id="' + id + '" data-field-type="' + fieldType + '" ' + disabledAttr + '></select>';
@@ -1005,14 +1003,16 @@
 			var allOptions = urcr_membership_access_data.condition_options || [];
 			var isPro = urcr_membership_access_data.is_pro || false;
 
-			// Filter for free users - only show roles and user_state
+			// Filter for free users - show membership, roles, and user_state
+			// For pro users, show all conditions
 			if (!isPro) {
 				allOptions = allOptions.filter(function (opt) {
-					return opt.value === 'roles' || opt.value === 'user_state';
+					return opt.value === 'membership' || opt.value === 'roles' || opt.value === 'user_state';
 				});
 			}
 
-			// Always exclude membership from condition options
+			// Always exclude membership from condition options dropdown
+			// (membership is handled separately as the first locked condition)
 			allOptions = allOptions.filter(function (opt) {
 				return opt.value !== 'membership';
 			});

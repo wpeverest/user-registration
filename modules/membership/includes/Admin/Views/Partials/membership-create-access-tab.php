@@ -7,8 +7,6 @@
  * @var array  $membership_condition_options Condition options
  * @var array  $membership_localized_data Localized data
  */
-$conditions = $membership_rule_data['logic_map']['conditions'];
-
 
 ?>
 	<div class="user-registration-card__body">
@@ -21,7 +19,6 @@ $conditions = $membership_rule_data['logic_map']['conditions'];
 							<div class="urcr-conditions-list">
 								<?php
 								// Render conditions from PHP if rule data exists
-								// Note: First membership condition is hidden but always present in data
 								if ( isset( $membership_rule_data ) && $membership_rule_data &&
 									 isset( $membership_rule_data['logic_map'] ) &&
 									 isset( $membership_rule_data['logic_map']['conditions'] ) ) {
@@ -34,19 +31,15 @@ $conditions = $membership_rule_data['logic_map']['conditions'];
 										return 0;
 									} );
 
-									// Skip the first condition if it's a membership condition (it's hidden)
-									$first_condition = ! empty( $conditions ) ? $conditions[0] : null;
-									$is_first_membership = isset( $first_condition['type'] ) && $first_condition['type'] === 'membership';
-
+									// Render all conditions including the first membership condition
+									// First condition (membership) should be non-editable
 									foreach ( $conditions as $index => $condition ) {
-										// Skip rendering the first membership condition (it's hidden)
-										if ( $index === 0 && $is_first_membership ) {
-											continue;
-										}
-										echo $this->render_condition_row( $condition, $membership_condition_options, $membership_localized_data );
+										$first_condition = ! empty( $conditions ) ? $conditions[0] : null;
+										$is_first_membership = isset( $first_condition['type'] ) && $first_condition['type'] === 'membership' && $index === 0;
+										$is_locked = $is_first_membership;
+										echo $this->render_condition_row( $condition, $membership_condition_options, $membership_localized_data, $is_locked );
 									}
 								}
-								// Note: For new memberships, the membership condition is added in JavaScript but hidden
 								?>
 							</div>
 
@@ -79,12 +72,14 @@ $conditions = $membership_rule_data['logic_map']['conditions'];
 							</div>
 						</div>
 						<!-- Add Condition Button -->
+						<?php if ( UR_PRO_ACTIVE ) : ?>
 						<div class="urcr-buttons-wrapper">
 							<span role="button" tabindex="0" class="button urcr-add-condition-button">
 								<span class="dashicons dashicons-plus-alt2"></span>
 								<?php esc_html_e( 'Add Condition', 'user-registration' ); ?>
 							</span>
 						</div>
+						<?php endif; ?>
 						<!-- Action Section -->
 						<div class="urcr-action-section">
 							<div class="urcr-label-input-pair urcr-rule-action urcr-align-items-center ">

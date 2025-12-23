@@ -302,26 +302,28 @@ const RuleGroup = ({
 				</div>
 
 				<div className="urcr-buttons-wrapper" style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-					<DropdownButton
-						buttonContent={
-							<>
-								<span className="dashicons dashicons-plus-alt2"></span>
-								{__("Condition", "user-registration")}
-							</>
-						}
-						options={[]}
-						onSelect={handleAfterConditionSelection}
-						buttonClassName="button urcr-add-condition-button"
-						wrapperClassName="urcr-condition-dropdown-wrapper"
-						renderDropdown={() => (
-							<ConditionFieldDropdown
-								onSelect={handleAfterConditionSelection}
-								isMigrated={isMigrated}
-								ruleType={ruleType}
-								isFirstCondition={isMembershipRule && conditions.length === 0}
-							/>
-						)}
-					/>
+					{isProAccess() && (
+						<DropdownButton
+							buttonContent={
+								<>
+									<span className="dashicons dashicons-plus-alt2"></span>
+									{__("Condition", "user-registration")}
+								</>
+							}
+							options={[]}
+							onSelect={handleAfterConditionSelection}
+							buttonClassName="button urcr-add-condition-button"
+							wrapperClassName="urcr-condition-dropdown-wrapper"
+							renderDropdown={() => (
+								<ConditionFieldDropdown
+									onSelect={handleAfterConditionSelection}
+									isMigrated={isMigrated}
+									ruleType={ruleType}
+									isFirstCondition={isMembershipRule && conditions.length === 0}
+								/>
+							)}
+						/>
+					)}
 
 					{isProAccess() && isAdvancedLogicEnabled && !isMembershipRule && (
 						<button

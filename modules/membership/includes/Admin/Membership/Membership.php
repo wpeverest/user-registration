@@ -512,15 +512,11 @@ class Membership {
 				$membership_localized_data    = \URCR_Admin_Assets::get_localized_data();
 				$membership_condition_options = isset( $membership_localized_data['condition_options'] ) ? $membership_localized_data['condition_options'] : array();
 
-				// Filter out membership from condition options
-				$membership_condition_options = array_filter( $membership_condition_options, function ( $option ) {
-					return isset( $option['value'] ) && $option['value'] !== 'membership';
-				} );
-
-				// Filter for free users - only show roles and user_state
+				// Filter for free users - show membership, roles, and user_state
+				// For pro users, show all conditions
 				if ( ! isset( $membership_localized_data['is_pro'] ) || ! $membership_localized_data['is_pro'] ) {
 					$membership_condition_options = array_filter( $membership_condition_options, function ( $option ) {
-						return isset( $option['value'] ) && ( $option['value'] === 'roles' || $option['value'] === 'user_state' );
+						return isset( $option['value'] ) && ( $option['value'] === 'membership' || $option['value'] === 'roles' || $option['value'] === 'user_state' );
 					} );
 				}
 			}
@@ -596,10 +592,11 @@ class Membership {
 	 * @param array $condition Condition data.
 	 * @param array $condition_options Available condition options.
 	 * @param array $localized_data Localized data for labels and options.
+	 * @param bool  $is_locked Whether the condition is locked (non-editable).
 	 *
 	 * @return string HTML for condition row.
 	 */
-	private function render_condition_row( $condition, $condition_options, $localized_data ) {
+	private function render_condition_row( $condition, $condition_options, $localized_data, $is_locked = false ) {
 		$condition_id = isset( $condition['id'] ) ? esc_attr( $condition['id'] ) : 'x' . time() . '_' . wp_rand();
 		$type         = isset( $condition['type'] ) ? sanitize_text_field( $condition['type'] ) : 'roles';
 		$value        = isset( $condition['value'] ) ? $condition['value'] : '';
@@ -622,7 +619,8 @@ class Membership {
 		$label      = isset( $selected_option['label'] ) ? $selected_option['label'] : $type;
 
 		// Build condition field select
-		$field_select = '<select class="urcr-condition-field-select urcr-condition-value-input">';
+		$disabled_attr = $is_locked ? ' disabled' : '';
+		$field_select = '<select class="urcr-condition-field-select urcr-condition-value-input"' . $disabled_attr . '>';
 		foreach ( $condition_options as $option ) {
 			$selected     = ( $option['value'] === $type ) ? 'selected' : '';
 			$field_select .= '<option value="' . esc_attr( $option['value'] ) . '" ' . $selected . '>' . esc_html( $option['label'] ) . '</option>';
@@ -630,12 +628,15 @@ class Membership {
 		$field_select .= '</select>';
 
 		// Build value input
-		$value_input = $this->render_condition_value_input( $condition_id, $input_type, $type, $value, $localized_data );
+		$value_input = $this->render_condition_value_input( $condition_id, $input_type, $type, $value, $localized_data, $is_locked );
 
-		// Remove button
-		$remove_button = '<button type="button" class="button button-link-delete urcr-condition-remove" aria-label="' . esc_attr__( 'Remove condition', 'user-registration' ) . '">' .
-		                 '<span class="dashicons dashicons-no-alt"></span>' .
-		                 '</button>';
+		// Remove button - hide if locked
+		$remove_button = '';
+		if ( ! $is_locked ) {
+			$remove_button = '<button type="button" class="button button-link-delete urcr-condition-remove" aria-label="' . esc_attr__( 'Remove condition', 'user-registration' ) . '">' .
+			                 '<span class="dashicons dashicons-no-alt"></span>' .
+			                 '</button>';
+		}
 
 		$operator_text = esc_html__( 'is', 'user-registration' );
 
@@ -661,11 +662,14 @@ class Membership {
 	 * @param string $field_type Field type.
 	 * @param mixed $value Current value.
 	 * @param array $localized_data Localized data.
+	 * @param bool  $is_locked Whether the input is locked (non-editable).
 	 *
 	 * @return string HTML for value input.
 	 */
-	private function render_condition_value_input( $condition_id, $input_type, $field_type, $value, $localized_data ) {
+	private function render_condition_value_input( $condition_id, $input_type, $field_type, $value, $localized_data, $is_locked = false ) {
 		$html = '';
+
+		$disabled_attr = $is_locked ? ' disabled' : '';
 
 		if ( $input_type === 'multiselect' ) {
 			// Add data attribute for values to be set by JavaScript
@@ -675,7 +679,7 @@ class Membership {
 			} elseif ( ! empty( $value ) ) {
 				$value_attr = ' data-value="' . esc_attr( wp_json_encode( array( $value ) ) ) . '"';
 			}
-			$html = '<select class="urcr-enhanced-select2 urcr-condition-value-input" multiple data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '"' . $value_attr . '></select>';
+			$html = '<select class="urcr-enhanced-select2 urcr-condition-value-input" multiple data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '"' . $value_attr . $disabled_attr . '></select>';
 		} elseif ( $input_type === 'checkbox' ) {
 			// User state - radio buttons
 			$checked_logged_in  = ( $value === 'logged-in' || $value === 'logged_in' || $value === '' ) ? 'checked' : '';
@@ -684,11 +688,11 @@ class Membership {
 			$logged_out_label   = isset( $localized_data['labels']['logged_out'] ) ? $localized_data['labels']['logged_out'] : __( 'Logged Out', 'user-registration' );
 
 			$html = '<div class="urcr-checkbox-radio-input">' .
-			        '<label><input type="radio" name="condition_' . esc_attr( $condition_id ) . '_user_state" value="logged-in" ' . $checked_logged_in . '> ' . esc_html( $logged_in_label ) . '</label>' .
-			        '<label><input type="radio" name="condition_' . esc_attr( $condition_id ) . '_user_state" value="logged-out" ' . $checked_logged_out . '> ' . esc_html( $logged_out_label ) . '</label>' .
+			        '<label><input type="radio" name="condition_' . esc_attr( $condition_id ) . '_user_state" value="logged-in" ' . $checked_logged_in . $disabled_attr . '> ' . esc_html( $logged_in_label ) . '</label>' .
+			        '<label><input type="radio" name="condition_' . esc_attr( $condition_id ) . '_user_state" value="logged-out" ' . $checked_logged_out . $disabled_attr . '> ' . esc_html( $logged_out_label ) . '</label>' .
 			        '</div>';
 		} elseif ( $input_type === 'date' ) {
-			$html = '<input type="date" class="urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" value="' . esc_attr( $value ) . '">';
+			$html = '<input type="date" class="urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" value="' . esc_attr( $value ) . '"' . $disabled_attr . '>';
 		} elseif ( $input_type === 'period' ) {
 			$period_select = 'During';
 			$period_input  = '';
@@ -702,16 +706,16 @@ class Membership {
 			$days_placeholder = esc_attr__( 'Days', 'user-registration' );
 
 			$html = '<div class="urcr-period-input-group ur-d-flex ur-align-items-center" style="gap: 8px;">' .
-			        '<select class="urcr-period-select urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" data-period-part="select">' .
+			        '<select class="urcr-period-select urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" data-period-part="select"' . $disabled_attr . '>' .
 			        '<option value="During" ' . ( $period_select === 'During' ? 'selected' : '' ) . '>' . $during_text . '</option>' .
 			        '<option value="After" ' . ( $period_select === 'After' ? 'selected' : '' ) . '>' . $after_text . '</option>' .
 			        '</select>' .
-			        '<input type="number" class="urcr-period-number urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" data-period-part="input" value="' . esc_attr( $period_input ) . '" min="0" placeholder="' . $days_placeholder . '">' .
+			        '<input type="number" class="urcr-period-number urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" data-period-part="input" value="' . esc_attr( $period_input ) . '" min="0" placeholder="' . $days_placeholder . '"' . $disabled_attr . '>' .
 			        '</div>';
 		} elseif ( $input_type === 'number' ) {
-			$html = '<input type="number" class="urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" value="' . esc_attr( $value ) . '">';
+			$html = '<input type="number" class="urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" value="' . esc_attr( $value ) . '"' . $disabled_attr . '>';
 		} else {
-			$html = '<input type="text" class="urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" value="' . esc_attr( $value ) . '">';
+			$html = '<input type="text" class="urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" value="' . esc_attr( $value ) . '"' . $disabled_attr . '>';
 		}
 
 		return $html;

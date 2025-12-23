@@ -36,6 +36,9 @@ export const getFilteredConditionOptions = (
 	const isPro = isProAccess();
 	const isMembershipRule = ruleType === "membership";
 	
+	// Show membership option only for the first condition of membership rules, hide it for all other cases
+	const shouldShowMembership = isMembershipRule && isFirstCondition;
+	
 	let filteredOptions;
 	
 	// Pro users: show all conditions
@@ -43,15 +46,16 @@ export const getFilteredConditionOptions = (
 		filteredOptions = allOptions;
 	}
 	// Free users: show user_state and roles for both membership and custom rules
+	// For membership rules, also show membership option if it's the first condition
 	else {
 		filteredOptions = allOptions.filter(option => 
 			option.value === "roles" || 
-			option.value === "user_state"
+			option.value === "user_state" ||
+			(shouldShowMembership && option.value === "membership")
 		);
 	}
 
-	// Show membership option only for the first condition of membership rules, hide it for all other cases
-	const shouldShowMembership = isMembershipRule && isFirstCondition;
+	// Hide membership option if it shouldn't be shown
 	if (!shouldShowMembership) {
 		filteredOptions = filteredOptions.filter(option => option.value !== "membership");
 	}
