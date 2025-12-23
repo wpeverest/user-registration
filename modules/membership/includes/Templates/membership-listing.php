@@ -93,7 +93,6 @@ if ( 'block' === $type ) :
 					</div>
 					<?php if ( $show_description ) { ?>
 					<div class="membership-footer">
-						<span><?php echo esc_html__( 'Benefits', 'user-registration' ); ?></span>
 						<div class="membership-description">
 							<?php echo $membership['description']; ?>
 						</div>
@@ -142,7 +141,7 @@ if ( 'block' === $type ) :
 						<input type="hidden" name="thank_you_page_id" value="<?php echo absint( $thank_you_page_id ); ?>">
 						<div class="ur-membership-amount-wrapper">
 						<?php if ( 'free' !== $membership['type'] ) { ?>
-						<span
+							<span
 							class="membership-amount"><?php echo esc_html( $symbol ); ?>
 								<?php
 								echo esc_html( sprintf( '%.2f', $membership['amount'] ) );
@@ -196,11 +195,13 @@ elseif ( 'list' === $type ) :
 									name="membership_id"
 									value="<?php echo esc_attr( $membership['ID'] ); ?>"
 							>
+							<div class="ur-membership-title-wrapper">
 							<span
-								class="ur-membership-duration"><?php echo esc_html__( $membership['title'], 'user-registration' ); ?></span>
+							class="ur-membership-title"><?php echo esc_html__( $membership['title'], 'user-registration' ); ?></span>
 							<?php if ( 'free' !== $membership['type'] ) { ?>
-						<span
-							class="membership-amount"><?php echo esc_html( $symbol ); ?>
+								<div class="ur-membership-amount-wrapper">
+							<span
+								class="membership-amount"><?php echo esc_html( $symbol ); ?>
 								<?php
 								echo esc_html( sprintf( '%.2f', $membership['amount'] ) );
 								?>
@@ -211,6 +212,8 @@ elseif ( 'list' === $type ) :
 									echo ' / ' . esc_html( $time ); }
 								?>
 							</span>
+								</div>
+								</div>
 							<?php } else { ?>
 								<span
 							class="membership-amount"><?php echo esc_html__( 'Free', 'user-registration' ); ?></span>
