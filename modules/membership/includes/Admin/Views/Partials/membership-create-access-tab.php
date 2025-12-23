@@ -44,7 +44,7 @@
 							</div>
 
 							<!-- Access Control Section -->
-							<div class="urcr-target-selection-section ur-mt-3">
+							<div class="urcr-target-selection-section">
 								<span class="urcr-arrow-icon" aria-hidden="true"></span>
 
 								<div class="urcr-target-selection-wrapper">
@@ -81,7 +81,7 @@
 						</div>
 						<?php endif; ?>
 						<!-- Action Section -->
-						<div class="urcr-action-section ur-mt-3">
+						<div class="urcr-action-section">
 							<div class="urcr-label-input-pair urcr-rule-action urcr-align-items-center ">
 								<label class="urcr-label-container">
 									<span class="urcr-target-content-label"><?php esc_html_e( 'Action', 'user-registration' ); ?></span>

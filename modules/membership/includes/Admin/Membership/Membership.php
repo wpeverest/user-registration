@@ -780,7 +780,7 @@ class Membership {
 			}
 
 			// Wrap taxonomy selects in a container for proper layout
-			$html .= '<div class="urcr-taxonomy-select-group" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">';
+			$html .= '<div class="urcr-taxonomy-select-group">';
 			$html .= '<select class="urcr-taxonomy-select">';
 			if ( isset( $localized_data['taxonomies'] ) && is_array( $localized_data['taxonomies'] ) ) {
 				foreach ( $localized_data['taxonomies'] as $tax_key => $tax_label ) {

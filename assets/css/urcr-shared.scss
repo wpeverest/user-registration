@@ -42,6 +42,7 @@ $border-color_6: #475bb2;
 		opacity: 0;
 		transform: translateY(-4px);
 	}
+
 	to {
 		opacity: 1;
 		transform: translateY(0);
@@ -95,6 +96,18 @@ $border-color_6: #475bb2;
 			color: $color_12;
 		}
 	}
+
+	&.urcr-dropdown-option-disabled {
+		opacity: .5;
+		cursor: not-allowed;
+		color: $color_12;
+		pointer-events: none;
+
+		&:hover {
+			background-color: $background-color_5;
+			color: $color_12;
+		}
+	}
 }
 
 .urcr-dropdown-button {
@@ -114,20 +127,21 @@ $border-color_6: #475bb2;
 	}
 
 	.urcr-dropdown-button-text {
-		flex: 1;
+		display: block;
+		width: 50px;
 	}
 
 	.urcr-dropdown-button-arrow {
 		font-size: 16px;
 		width: 16px;
 		height: 16px;
-		margin-left: 8px;
+		// margin-left: 8px;
 		transition: transform .15s ease;
 	}
 
-	&:hover .urcr-dropdown-button-arrow {
-		transform: translateY(1px);
-	}
+	// &:hover .urcr-dropdown-button-arrow {
+	// 	transform: translateY(1px);
+	// }
 }
 
 // Dropdown Groups
@@ -174,9 +188,9 @@ $border-color_6: #475bb2;
 	font-size: 14px;
 	font-weight: 400;
 
-	.urcr-access-control-button-text {
-		@extend .urcr-dropdown-button-text;
-	}
+	// .urcr-access-control-button-text {
+	// 	@extend .urcr-dropdown-button-text;
+	// }
 
 	.urcr-access-control-button-arrow {
 		@extend .urcr-dropdown-button-arrow;
@@ -230,26 +244,33 @@ $border-color_6: #475bb2;
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	gap: 12px;
+
+	.urcr-target-type-group {
+		.urcr-target-item {
+			&:last-child {
+				margin-bottom: 20px;
+			}
+		}
+	}
 }
 
 .urcr-condition-value-input-wrapper {
 	position: relative;
 	flex-shrink: 0;
 
-	&.urcr-access-content {
-		.urcr-access-control-button {
-			background-color: #e5f5fa;
-			color: #0073aa;
-		}
-	}
+	// &.urcr-access-content {
+	// 	.urcr-access-control-button {
+	// 		background-color: #e5f5fa;
+	// 		color: #0073aa;
+	// 	}
+	// }
 
-	&.urcr-restrict-content {
-		.urcr-access-control-button {
-			background-color: #fcf0f1;
-			color: #dc3232;
-		}
-	}
+	// &.urcr-restrict-content {
+	// 	.urcr-access-control-button {
+	// 		background-color: #fcf0f1;
+	// 		color: #dc3232;
+	// 	}
+	// }
 }
 
 .urcr-arrow-icon {
@@ -272,20 +293,20 @@ $border-color_6: #475bb2;
 	flex: 1;
 }
 
-.urcr-target-item {
-	display: flex;
-	align-items: flex-start;
-	gap: 12px;
-	padding: 8px 12px;
-	background: #f6f7f7;
-	border-radius: 4px;
-	border: 1px solid #e0e0e0;
-	flex-wrap: wrap;
+// .urcr-target-item {
+// 	display: flex;
+// 	align-items: flex-start;
+// 	gap: 12px;
+// 	padding: 8px 12px;
+// 	background: #f6f7f7;
+// 	border-radius: 4px;
+// 	border: 1px solid #e0e0e0;
+// 	flex-wrap: wrap;
 
-	&.urcr-taxonomy-item {
-		align-items: flex-start;
-	}
-}
+// 	&.urcr-taxonomy-item {
+// 		align-items: flex-start;
+// 	}
+// }
 
 .urcr-target-type-label {
 	font-weight: 500;
@@ -296,16 +317,23 @@ $border-color_6: #475bb2;
 
 .urcr-taxonomy-select-group {
 	display: flex;
-	flex-direction: column;
 	gap: 8px;
-	flex: 1;
+	// flex: 1;
+	min-width: unset !important;
+	max-width: unset !important;
+
+	@media screen and (max-width: 768px) {
+		flex-direction: column;
+	}
 
 	.urcr-taxonomy-select {
 		width: 100%;
-		padding: 6px 8px;
-		border: 1px solid #8c8f94;
+		flex: 1;
+		padding: 0 12px;
+		border: 1px solid #e1e1e1;
 		border-radius: 3px;
 		font-size: 13px;
+		min-height: 38px;
 	}
 
 	.select2-container {
@@ -381,16 +409,16 @@ $border-color_6: #475bb2;
 	gap: 12px;
 }
 
-.urcr-condition-row {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	flex-wrap: wrap;
-	padding: 12px;
-	background: #fff;
-	border: 1px solid #e0e0e0;
-	border-radius: 4px;
-}
+// .urcr-condition-row {
+// 	display: flex;
+// 	align-items: center;
+// 	gap: 12px;
+// 	flex-wrap: wrap;
+// 	padding: 12px;
+// 	background: #fff;
+// 	border: 1px solid #e0e0e0;
+// 	border-radius: 4px;
+// }
 
 .urcr-add-condition-button,
 .urcr-add-group-button {
@@ -637,4 +665,56 @@ $border-color_6: #475bb2;
 	display: flex;
 	gap: 10px;
 	margin-top: 16px;
+}
+
+.urcr-action-section {
+	border-top: 1px solid #e1e1e1;
+	margin-top: 30px;
+	padding-top: 28px;
+}
+
+.urcr-buttons-wrapper,
+.urcr-content-dropdown-wrapper {
+	.button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		width: max-content;
+		background: 0 0;
+		border: 1px solid transparent;
+		border-radius: 4px;
+		font-size: 13px;
+		color: #383838;
+		font-weight: 600;
+		line-height: 20px;
+		box-shadow: none;
+		outline: 0;
+		min-height: 30px;
+		border-color: #f8f8fa;
+		background: #edeff7;
+		color: #475bb2;
+
+		&:hover {
+			border-color: #f8f8fa;
+			background: #edeff7;
+			color: #475bb2;
+		}
+
+		&:focus {
+			outline: none;
+			box-shadow: none;
+			border-color: transparent;
+		}
+
+		.dashicons {
+			display: flex;
+			width: 14px;
+			height: 14px;
+
+			&::before {
+				font-size: 14px;
+			}
+		}
+	}
 }
