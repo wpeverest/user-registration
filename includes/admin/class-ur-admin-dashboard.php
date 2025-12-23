@@ -93,6 +93,7 @@ class UR_Admin_Dashboard {
 					in_array( 'colormag', $installed_theme_slugs, true ) || in_array( 'colormag-pro', $installed_theme_slugs, true ) ? 'inactive' : 'not-installed'
 					),
 				),
+				'urm_version'          => get_option( 'urm_is_new_installation', true ),
 			)
 		);
 

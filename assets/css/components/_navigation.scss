@@ -557,6 +557,72 @@
         }
     }
 
+    .ur-admin-page-topnav {
+        .ur-page-title {
+            &__wrapper {
+                &--left {
+                    &-menu {
+                        &__items {
+                            .ur-page-title__wrapper--steps-btn {
+                                .urm-membership--stepper-icon {
+                                    border: 1.5px solid $border-color;
+                                    border-radius: 50%;
+                                    width: 30px;
+                                    height: 30px;
+                                    box-sizing: border-box;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    transition: all .3s;
+
+                                    svg {
+                                        width: 16px;
+                                        height: 16px;
+
+                                        path {
+                                            stroke: none;
+                                        }
+                                    }
+                                }
+
+                                span {
+                                    font-size: 14px;
+                                    line-height: 24px;
+                                    font-weight: $medium;
+                                    color: #383838;
+                                }
+
+                                &:hover {
+                                    .urm-membership--stepper-icon {
+                                        border-color: $primary_color;
+                                    }
+
+                                    span {
+                                        color: $primary_color;
+                                    }
+                                }
+
+                                &-active {
+                                    .urm-membership--stepper-icon {
+                                        border-color: $primary_color;
+
+                                        svg {
+                                            fill: $primary_color;
+                                        }
+                                    }
+
+                                    span {
+                                        color: $primary_color;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     #nav-menu-header {
         margin-bottom: 0;
     }

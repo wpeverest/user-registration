@@ -792,9 +792,14 @@
 
 												label {
 													padding: 0 !important;
-													font-size: 16px;
-													line-height: 24px;
+													font-size: 15px;
+													line-height: 20px;
+													font-weight: 500;
 													cursor: pointer;
+
+													b {
+														font-weight: inherit;
+													}
 												}
 
 												input[type="radio"] {
@@ -1039,9 +1044,9 @@
 									font-size: 16px;
 								}
 
-								input[type="number"] {
-									padding-left: $spacing_24px !important;
-								}
+								// input[type="number"] {
+								// 	padding-left: $spacing_24px !important;
+								// }
 							}
 						}
 					}

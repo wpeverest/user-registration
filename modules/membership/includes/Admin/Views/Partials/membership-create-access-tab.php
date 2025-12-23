@@ -18,10 +18,14 @@
 						<div class="urcr-condition-row-parent">
 							<div class="urcr-conditions-list">
 								<?php
+								// Get membership ID
+								$membership_id = isset( $membership ) && isset( $membership->ID ) ? $membership->ID : 0;
+								
 								// Render conditions from PHP if rule data exists
 								if ( isset( $membership_rule_data ) && $membership_rule_data &&
 									 isset( $membership_rule_data['logic_map'] ) &&
-									 isset( $membership_rule_data['logic_map']['conditions'] ) ) {
+									 isset( $membership_rule_data['logic_map']['conditions'] ) &&
+									 ! empty( $membership_rule_data['logic_map']['conditions'] ) ) {
 									$conditions = $membership_rule_data['logic_map']['conditions'];
 
 									// Sort conditions to ensure membership is first
@@ -39,12 +43,21 @@
 										$is_locked = $is_first_membership;
 										echo $this->render_condition_row( $condition, $membership_condition_options, $membership_localized_data, $is_locked );
 									}
+								} elseif ( $membership_id > 0 ) {
+									// If no conditions exist, show membership condition for the current membership
+									// This applies to both free and pro users
+									$membership_condition = array(
+										'id'    => 'x' . time() . '_' . wp_rand(),
+										'type'  => 'membership',
+										'value' => array( $membership_id ),
+									);
+									echo $this->render_condition_row( $membership_condition, $membership_condition_options, $membership_localized_data, true );
 								}
 								?>
 							</div>
 
 							<!-- Access Control Section -->
-							<div class="urcr-target-selection-section ur-mt-3">
+							<div class="urcr-target-selection-section">
 								<span class="urcr-arrow-icon" aria-hidden="true"></span>
 
 								<div class="urcr-target-selection-wrapper">
@@ -81,7 +94,7 @@
 						</div>
 						<?php endif; ?>
 						<!-- Action Section -->
-						<div class="urcr-action-section ur-mt-3">
+						<div class="urcr-action-section">
 							<div class="urcr-label-input-pair urcr-rule-action urcr-align-items-center ">
 								<label class="urcr-label-container">
 									<span class="urcr-target-content-label"><?php esc_html_e( 'Action', 'user-registration' ); ?></span>

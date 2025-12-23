@@ -120,6 +120,22 @@ const AddonCard = ({ addon, showToast }) => {
 		return "gray";
 	};
 
+	// Check if this addon should be hidden based on membership-specific rules
+	/* global _UR_DASHBOARD_ */
+	const { urm_is_new_installation } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_ ? _UR_DASHBOARD_ : {};
+
+	if (addon.slug === "user-registration-membership") {
+		// If urm_is_new_installation is set (user is not new), hide the addon
+		if (urm_is_new_installation) {
+			return null;
+		}
+		// If urm_is_new_installation is empty (new user) and addon is already active, hide it
+		// Check both the state and the initial prop to handle both initial render and after activation
+		if (isActive || addon.status === "active") {
+			return null;
+		}
+		// If urm_is_new_installation is empty (new user) and addon is not active, show it
+	}
 
 	return (
 		<Box
@@ -240,9 +256,9 @@ const AddonCard = ({ addon, showToast }) => {
 					</HStack>
 
 					{/* Description */}
-					<Tooltip 
-						label={addon.excerpt} 
-						placement="top" 
+					<Tooltip
+						label={addon.excerpt}
+						placement="top"
 						hasArrow
 						isDisabled={addon.excerpt.length <= 120}
 						backgroundColor="white"
@@ -251,14 +267,14 @@ const AddonCard = ({ addon, showToast }) => {
 						p="5"
 						cursor="default"
 					>
-					<Text 
-						fontSize="13px !important" 
-						color="gray.500 !important" 
-						lineHeight="1.5" 
+					<Text
+						fontSize="13px !important"
+						color="gray.500 !important"
+						lineHeight="1.5"
 						flex="1"
 						noOfLines={2}
 						cursor={"text"}
-						sx={{ 
+						sx={{
 							color: "gray.500 !important",
 							fontSize: "13px !important"
 						}}

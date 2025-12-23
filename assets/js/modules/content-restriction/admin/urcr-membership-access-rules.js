@@ -77,8 +77,11 @@
 
 		initializeEmptyRule: function () {
 			var self = this;
-			// For new memberships, membership condition will be added when saving
-			// No need to add it here since it's not visible
+			// For new memberships, always show membership condition when conditions are empty
+			// This applies to both free and pro users
+			if (self.membershipId > 0) {
+				self.addCondition('membership', true, [self.membershipId.toString()]);
+			}
 		},
 
 		syncFromExistingHTML: function () {
@@ -397,6 +400,10 @@
 			// Content type selection
 			$(document).on('click', '.urcr-content-type-option', function (e) {
 				e.preventDefault();
+				// Don't allow selection if option is disabled
+				if ($(this).hasClass('urcr-dropdown-option-disabled') || $(this).attr('aria-disabled') === 'true') {
+					return;
+				}
 				var contentType = $(this).data('content-type');
 				self.addContentTarget(contentType);
 				$('.urcr-content-type-dropdown-menu').removeClass('ur-d-flex').addClass('ur-d-none');
@@ -404,6 +411,10 @@
 
 			// Content type selection keyboard support
 			$(document).on('keydown', '.urcr-content-type-option', function (e) {
+				// Don't allow selection if option is disabled
+				if ($(this).hasClass('urcr-dropdown-option-disabled') || $(this).attr('aria-disabled') === 'true') {
+					return;
+				}
 				if (e.key === 'Enter' || e.key === ' ') {
 					e.preventDefault();
 					var contentType = $(this).data('content-type');
@@ -751,7 +762,7 @@
 			} else if (type === 'pages' || type === 'posts') {
 				inputHtml = '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' + id + '" data-content-type="' + type + '"></select>';
 			} else if (type === 'taxonomy') {
-				inputHtml = '<div class="urcr-taxonomy-select-group" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">' +
+				inputHtml = '<div class="urcr-taxonomy-select-group">' +
 					'<select class="urcr-taxonomy-select" data-target-id="' + id + '">' +
 					'<option value="">Select Taxonomy</option>' +
 					'</select>' +
@@ -945,9 +956,8 @@
 				return ct.value === 'posts' || ct.value === 'pages';
 			});
 
-			var availableTypes = contentTypes.filter(function (ct) {
-				return existingTypes.indexOf(ct.value) === -1;
-			});
+			// Show all content types, but disable ones that are already selected
+			// No longer filtering out existing types
 
 			// Find or create dropdown wrapper
 			var $wrapper = $button.closest('.urcr-content-dropdown-wrapper');
@@ -972,8 +982,12 @@
 			}
 
 			$dropdown.empty();
-			availableTypes.forEach(function (ct) {
-				$dropdown.append('<span role="button" tabindex="0" class="urcr-dropdown-option urcr-content-type-option" data-content-type="' + ct.value + '">' + ct.label + '</span>');
+			contentTypes.forEach(function (ct) {
+				var isDisabled = existingTypes.indexOf(ct.value) !== -1;
+				var disabledClass = isDisabled ? 'urcr-dropdown-option-disabled' : '';
+				var disabledAttr = isDisabled ? 'aria-disabled="true"' : '';
+				var tabIndex = isDisabled ? '-1' : '0';
+				$dropdown.append('<span role="button" tabindex="' + tabIndex + '" class="urcr-dropdown-option urcr-content-type-option ' + disabledClass + '" data-content-type="' + ct.value + '" ' + disabledAttr + '>' + ct.label + '</span>');
 			});
 
 			// Toggle dropdown using utility classes
