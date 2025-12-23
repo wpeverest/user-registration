@@ -65,8 +65,10 @@ const ContentAccessRules = () => {
 	const shouldShowTabSwitcher = isContentRestrictionEnabled && shouldShowMembershipTab;
 
 	// Get rules for current tab
-	// When content restriction is disabled, always show membership rules
-	const currentRules = (!isContentRestrictionEnabled) ? membershipRules : (activeTab === "membership" ? membershipRules : customRules);
+	// When content restriction is disabled, only show membership rules if there are multiple memberships AND more than 1 membership rule
+	const currentRules = (!isContentRestrictionEnabled) 
+		? (shouldShowMembershipTab ? membershipRules : [])
+		: (activeTab === "membership" ? membershipRules : customRules);
 
 	// Set default tab based on membership count (only once when rules are loaded)
 	const [hasSetDefaultTab, setHasSetDefaultTab] = useState(false);

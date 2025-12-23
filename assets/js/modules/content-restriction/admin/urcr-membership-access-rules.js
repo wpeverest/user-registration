@@ -77,8 +77,11 @@
 
 		initializeEmptyRule: function () {
 			var self = this;
-			// For new memberships, membership condition will be added when saving
-			// No need to add it here since it's not visible
+			// For new memberships, always show membership condition when conditions are empty
+			// This applies to both free and pro users
+			if (self.membershipId > 0) {
+				self.addCondition('membership', true, [self.membershipId.toString()]);
+			}
 		},
 
 		syncFromExistingHTML: function () {

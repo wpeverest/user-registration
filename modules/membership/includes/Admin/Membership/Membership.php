@@ -90,42 +90,37 @@ class Membership {
 		wp_enqueue_script( 'user-registration-membership' );
 
 		// Enqueue membership access rules script if content restriction module is enabled
-		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'content-restriction' ) ) {
-			$membership_id = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : 0;
+		$membership_id = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : 0;
 
-			// Enqueue jQuery UI for sortable if needed
-			wp_enqueue_script( 'jquery-ui-sortable' );
+		// Enqueue jQuery UI for sortable if needed
+		wp_enqueue_script( 'jquery-ui-sortable' );
 
-			// Enqueue select2 for enhanced dropdowns
-			wp_enqueue_script( 'select2' );
-			wp_enqueue_style( 'select2' );
+		// Enqueue membership access rules script (always use non-minified for now)
+		$script_path = UR()->plugin_url() . '/assets/js/modules/content-restriction/admin/urcr-membership-access-rules.js';
 
-			// Enqueue membership access rules script (always use non-minified for now)
-			$script_path = UR()->plugin_url() . '/assets/js/modules/content-restriction/admin/urcr-membership-access-rules.js';
+		wp_enqueue_script(
+			'urcr-membership-access-rules',
+			$script_path,
+			array( 'jquery', 'user-registration-membership' ),
+			UR()->version,
+			true
+		);
 
-			wp_enqueue_script(
-				'urcr-membership-access-rules',
-				$script_path,
-				array( 'jquery', 'user-registration-membership' ),
-				UR()->version,
-				true
-			);
-
-			// Localize script with necessary data
-			$localized_data = array();
-			if ( class_exists( '\URCR_Admin_Assets' ) ) {
-				$localized_data = \URCR_Admin_Assets::get_localized_data();
-			}
-			$localized_data['membership_id'] = $membership_id;
-			$localized_data['ajax_url']      = admin_url( 'admin-ajax.php' );
-			$localized_data['nonce']         = wp_create_nonce( 'urcr_manage_content_access_rule' );
-
-			wp_localize_script(
-				'urcr-membership-access-rules',
-				'urcr_membership_access_data',
-				$localized_data
-			);
+		// Localize script with necessary data
+		$localized_data = array();
+		if ( class_exists( '\URCR_Admin_Assets' ) ) {
+			$localized_data = \URCR_Admin_Assets::get_localized_data();
 		}
+		$localized_data['membership_id'] = $membership_id;
+		$localized_data['ajax_url']      = admin_url( 'admin-ajax.php' );
+		$localized_data['nonce']         = wp_create_nonce( 'urcr_manage_content_access_rule' );
+
+		wp_localize_script(
+			'urcr-membership-access-rules',
+			'urcr_membership_access_data',
+			$localized_data
+		);
+
 
 		$this->localize_scripts();
 
@@ -151,23 +146,22 @@ class Membership {
 		wp_enqueue_style( 'ur-membership-admin-style' );
 
 		// Enqueue shared content restriction styles if content restriction module is enabled
-		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'content-restriction' ) ) {
-			wp_register_style(
-				'urcr-shared',
-				UR()->plugin_url() . '/assets/css/urcr-shared.css',
-				array(),
-				UR()->version
-			);
-			wp_enqueue_style( 'urcr-shared' );
+		wp_register_style(
+			'urcr-shared',
+			UR()->plugin_url() . '/assets/css/urcr-shared.css',
+			array(),
+			UR()->version
+		);
+		wp_enqueue_style( 'urcr-shared' );
 
-			wp_register_style(
-				'urcr-content-access-restriction',
-				UR()->plugin_url() . '/assets/css/urcr-content-access-restriction.css',
-				array( 'urcr-shared' ),
-				UR()->version
-			);
-			wp_enqueue_style( 'urcr-content-access-restriction' );
-		}
+		wp_register_style(
+			'urcr-content-access-restriction',
+			UR()->plugin_url() . '/assets/css/urcr-content-access-restriction.css',
+			array( 'urcr-shared' ),
+			UR()->version
+		);
+		wp_enqueue_style( 'urcr-content-access-restriction' );
+
 	}
 
 	/**
@@ -506,21 +500,20 @@ class Membership {
 		$membership_condition_options = array();
 		$membership_localized_data    = array();
 
-		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'content-restriction' ) ) {
-			// Get condition options and localized data
-			if ( class_exists( '\URCR_Admin_Assets' ) ) {
-				$membership_localized_data    = \URCR_Admin_Assets::get_localized_data();
-				$membership_condition_options = isset( $membership_localized_data['condition_options'] ) ? $membership_localized_data['condition_options'] : array();
+		// Get condition options and localized data
+		if ( class_exists( '\URCR_Admin_Assets' ) ) {
+			$membership_localized_data    = \URCR_Admin_Assets::get_localized_data();
+			$membership_condition_options = isset( $membership_localized_data['condition_options'] ) ? $membership_localized_data['condition_options'] : array();
 
-				// Filter for free users - show membership, roles, and user_state
-				// For pro users, show all conditions
-				if ( ! isset( $membership_localized_data['is_pro'] ) || ! $membership_localized_data['is_pro'] ) {
-					$membership_condition_options = array_filter( $membership_condition_options, function ( $option ) {
-						return isset( $option['value'] ) && ( $option['value'] === 'membership' || $option['value'] === 'roles' || $option['value'] === 'user_state' );
-					} );
-				}
+			// Filter for free users - show membership, roles, and user_state
+			// For pro users, show all conditions
+			if ( ! isset( $membership_localized_data['is_pro'] ) || ! $membership_localized_data['is_pro'] ) {
+				$membership_condition_options = array_filter( $membership_condition_options, function ( $option ) {
+					return isset( $option['value'] ) && ( $option['value'] === 'membership' || $option['value'] === 'roles' || $option['value'] === 'user_state' );
+				} );
 			}
 		}
+
 
 		if ( $membership && isset( $membership->ID ) ) {
 			$membership_id = $membership->ID;
@@ -542,13 +535,14 @@ class Membership {
 	 */
 	public function get_membership_create_tabs() {
 		// Helper function to load SVG icon from file
-		$load_svg_icon = function( $icon_name ) {
+		$load_svg_icon = function ( $icon_name ) {
 			if ( function_exists( 'UR' ) && method_exists( UR(), 'plugin_path' ) ) {
 				$icon_path = UR()->plugin_path() . '/assets/images/icons/' . $icon_name . '.svg';
 				if ( file_exists( $icon_path ) ) {
 					return file_get_contents( $icon_path );
 				}
 			}
+
 			return '';
 		};
 
@@ -592,7 +586,7 @@ class Membership {
 	 * @param array $condition Condition data.
 	 * @param array $condition_options Available condition options.
 	 * @param array $localized_data Localized data for labels and options.
-	 * @param bool  $is_locked Whether the condition is locked (non-editable).
+	 * @param bool $is_locked Whether the condition is locked (non-editable).
 	 *
 	 * @return string HTML for condition row.
 	 */
@@ -620,7 +614,7 @@ class Membership {
 
 		// Build condition field select
 		$disabled_attr = $is_locked ? ' disabled' : '';
-		$field_select = '<select class="urcr-condition-field-select urcr-condition-value-input"' . $disabled_attr . '>';
+		$field_select  = '<select class="urcr-condition-field-select urcr-condition-value-input"' . $disabled_attr . '>';
 		foreach ( $condition_options as $option ) {
 			$selected     = ( $option['value'] === $type ) ? 'selected' : '';
 			$field_select .= '<option value="' . esc_attr( $option['value'] ) . '" ' . $selected . '>' . esc_html( $option['label'] ) . '</option>';
@@ -662,7 +656,7 @@ class Membership {
 	 * @param string $field_type Field type.
 	 * @param mixed $value Current value.
 	 * @param array $localized_data Localized data.
-	 * @param bool  $is_locked Whether the input is locked (non-editable).
+	 * @param bool $is_locked Whether the input is locked (non-editable).
 	 *
 	 * @return string HTML for value input.
 	 */
@@ -701,8 +695,8 @@ class Membership {
 				$period_input  = isset( $value['input'] ) ? absint( $value['input'] ) : '';
 			}
 
-			$during_text = esc_html__( 'During', 'user-registration' );
-			$after_text  = esc_html__( 'After', 'user-registration' );
+			$during_text      = esc_html__( 'During', 'user-registration' );
+			$after_text       = esc_html__( 'After', 'user-registration' );
 			$days_placeholder = esc_attr__( 'Days', 'user-registration' );
 
 			$html = '<div class="urcr-period-input-group ur-d-flex ur-align-items-center" style="gap: 8px;">' .
