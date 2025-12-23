@@ -659,6 +659,44 @@ $border-color_6: #475bb2;
 	border-top: 1px solid #e1e1e1;
 	margin-top: 30px;
 	padding-top: 28px;
+
+	.urcr-body {
+		.wp-editor-wrap {
+			.wp-media-buttons {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin-bottom: 12px;
+
+				.button {
+					&[data-editor="urcr-membership-action-message"] {
+						display: flex;
+						align-items: center;
+						gap: 4px;
+						border-color: #475bb2;
+						color: #475bb2;
+						margin: 0;
+
+						&:focus {
+							outline: none;
+							box-shadow: none;
+							border-color: #475bb2;
+						}
+
+						.dashicons {
+							&::before {
+								line-height: 22px;
+							}
+						}
+					}
+				}
+
+				#ur-smart-tags-selector {
+					margin-left: auto;
+				}
+			}
+		}
+	}
 }
 
 .urcr-buttons-wrapper,
@@ -692,7 +730,9 @@ $border-color_6: #475bb2;
 		&:focus {
 			outline: none;
 			box-shadow: none;
-			border-color: transparent;
+			border-color: #f8f8fa;
+			background: #edeff7;
+			color: #475bb2;
 		}
 
 		.dashicons {

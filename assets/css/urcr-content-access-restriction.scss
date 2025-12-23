@@ -109,7 +109,7 @@ $border-left-color_3: #0073aa;
 			padding-bottom: 0;
 
 			.urcr-tab {
-				padding: 12px 16px;
+				padding: 12px 10px 16px;
 				font-size: 14px;
 				font-weight: 500;
 				color: #666;
@@ -779,6 +779,8 @@ $border-left-color_3: #0073aa;
 .urcr-access-control-dropdown-wrapper {
 	@extend .urcr-dropdown-wrapper;
 	width: 100%;
+	display: block;
+	padding: 4px;
 }
 
 .urcr-access-control-button {
@@ -1786,17 +1788,15 @@ $not-tag: #fcdddd;
 
 	select {
 		width: 100%;
-		padding: 6px 8px;
-		border: 1px solid #ddd;
 		border-radius: 4px;
 		font-size: 14px;
-		line-height: 1.5;
+		line-height: 20px;
 		background-color: $background-color_2;
 		cursor: pointer;
 
 		&:focus {
-			border-color: $border-color_6;
-			box-shadow: 0 0 0 1px #475bb2;
+			border-color: #475bb2;
+			box-shadow: none;
 			outline: 0;
 		}
 	}
@@ -1806,12 +1806,6 @@ $not-tag: #fcdddd;
 		cursor: not-allowed;
 	}
 }
-
-// .urcr-condition-operator {
-// 	padding: 6px 0;
-// 	font-size: 14px;
-// 	color: $color_14;
-// }
 
 .urcr-condition-value {
 	flex: 1;
@@ -2281,16 +2275,19 @@ $not-tag: #fcdddd;
 
 		.urcr-access-control-button {
 			display: flex;
-			justify-content: flex-start;
+			justify-content: center;
 			align-items: center;
 			gap: 8px;
 			border: 0;
-			padding: 0;
-			border-radius: 0px;
-			padding: 12px 24px;
-			width: 100%;
-			border-radius: 5px 5px 0 0;
-			background-color: transparent;
+			width: max-content;
+			padding: 8px 14px 8px 16px;
+			border-radius: 4px;
+			box-shadow: none;
+			background: none;
+
+			&:hover {
+				background: #ffffff;
+			}
 		}
 
 		.urcr-arrow-icon {
