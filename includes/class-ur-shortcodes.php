@@ -373,7 +373,21 @@ class UR_Shortcodes {
 						function ( $grid_data ) use ( $user_id, $field ) {
 
 							foreach ( $grid_data as $key => $data ) {
-								if ( 'user_pass' === $data->field_key || 'user_confirm_password' === $data->field_key || 'user_confirm_email' === $data->field_key ) {
+								$ignore_checkout = apply_filters(
+									'user_registration_ignorable_checkout_fields',
+									array(
+										'user_pass',
+										'user_confirm_password',
+										'user_confirm_email',
+										'profile_picture',
+										'wysiwyg',
+										'select2',
+										'multi_select2',
+										'range',
+										'file',
+									)
+								);
+								if ( in_array( $data->field_key, $ignore_checkout ) ) {
 									unset( $grid_data[ $key ] );
 								}
 							}
