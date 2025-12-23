@@ -38,13 +38,12 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 	 */
 	protected function build_html( $content ) {
 
-		$attr = $this->attributes;
+		$block_id = isset( $this->attributes['clientId'] ) ? $this->attributes['clientId'] : '';
+		$attr     = $this->attributes;
 
-		if ( empty( $attr['pageID'] ) ) {
-			return '';
-		}
+		$page_id = get_option( 'user_registration_member_registration_page_id' );
 
-		$page_url = get_permalink( absint( $attr['pageID'] ) );
+		$page_url = get_permalink( absint( $page_id ) );
 
 		$is_editor = false;
 
@@ -173,7 +172,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 
 		$wrapper_attributes = get_block_wrapper_attributes(
 			array(
-				'class' => 'wp-block-buttons',
+				'class' => 'wp-block-buttons ' . $block_id,
 				'style' => 'display:flex;flex-direction:row;justify-content:' . esc_attr( $justify ) . ';',
 			)
 		);
@@ -187,10 +186,10 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 		// Build inline hover styles
 		$inline_hover_styles = '';
 		if ( $text_hover_color ) {
-			$inline_hover_styles .= '.wp-block-user-registration-membership-buy-now .urm-buy-now-btn1:hover{color:' . esc_attr( $text_hover_color ) . ' !important;}';
+			$inline_hover_styles .= '.' . $block_id . '.wp-block-user-registration-membership-buy-now .urm-buy-now-btn1:hover{color:' . esc_attr( $text_hover_color ) . ' !important;}';
 		}
 		if ( $text_hover_bg_color ) {
-			$inline_hover_styles .= '.wp-block-user-registration-membership-buy-now .urm-buy-now-btn1:hover{background-color:' . esc_attr( $text_hover_bg_color ) . ' !important;}';
+			$inline_hover_styles .= '.' . $block_id . '.wp-block-user-registration-membership-buy-now .urm-buy-now-btn1:hover{background-color:' . esc_attr( $text_hover_bg_color ) . ' !important;}';
 		}
 
 		// FINAL HTML

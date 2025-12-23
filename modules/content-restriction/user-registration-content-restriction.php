@@ -73,9 +73,8 @@ class User_Registration_Content_Restriction {
 
 			if ( UR_PRO_ACTIVE ) {
 				include_once UR_ABSPATH . 'includes/pro/addons/content-restriction/admin/class-urcr-admin-assets.php';
+				include_once __DIR__ . '/admin/class-urcr-admin.php';
 			}
-
-			include_once __DIR__ . '/admin/class-urcr-admin.php';
 		}
 
 		if ( $this->is_request( 'frontend' ) ) {

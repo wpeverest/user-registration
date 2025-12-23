@@ -3,6 +3,7 @@ import metadata from "./block.json";
 import { LoginForm } from "./../../components/Icon";
 import Edit from "./Edit";
 import "./editor.scss";
+import "./style.scss";
 
 export const name = metadata.name;
 export const settings = {

@@ -88,7 +88,7 @@
     "__experimentalSelector": ".urm-buy-now-btn"
   },
   "attributes": {
-    "pageID": {
+    "clientId": {
       "type": "string"
     },
     "membershipType": {

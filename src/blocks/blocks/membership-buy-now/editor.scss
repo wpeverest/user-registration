@@ -1,7 +1,5 @@
-.urm-buy-now-tabs {
-	.components-input-control__label {
-		text-transform: capitalize;
-	}
+.components-input-control__label {
+	text-transform: capitalize;
 }
 
 /* In your editor.css */
@@ -46,4 +44,8 @@
 	&:first-child {
 		margin-top: 0;
 	}
+}
+
+.urm-buynow-open-new-tab {
+	margin: 12px 0px 12px 0px !important;
 }

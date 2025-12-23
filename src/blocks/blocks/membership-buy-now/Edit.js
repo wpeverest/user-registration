@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { __ } from "@wordpress/i18n";
 import metadata from "./block.json";
 
@@ -6,7 +6,6 @@ import {
 	TextControl,
 	SelectControl,
 	PanelBody,
-	TabPanel,
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 	ColorPalette,
@@ -24,37 +23,40 @@ import {
 } from "@wordpress/block-editor";
 import apiFetch from "@wordpress/api-fetch";
 import JustifyControl from "./components/JustifyContentControl";
+import "./editor.scss";
 
 const ServerSideRender = wp.serverSideRender
 	? wp.serverSideRender
 	: wp.components.ServerSideRender;
 
-const { urRestApiNonce, restURL, pages } =
+const { urRestApiNonce, restURL } =
 	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 const Edit = (props) => {
 	const blockName = metadata.name;
 
-	const { attributes, setAttributes } = props;
+	const { attributes, setAttributes, clientId } = props;
 
 	const {
 		membershipType,
 		text,
-		pageID,
 		width,
 		hoverTextColor,
 		hoverBgColor,
 		openInNewTab
 	} = attributes;
 
-	const [membsershipList, setMembershipList] = useState("");
-	const useProps = useBlockProps();
+	const [membershipList, setMembershipList] = useState(null);
+
+	const blockProps = useBlockProps();
 
 	// Get colors from settings
 	const [themeColors] = useSettings("color.palette.theme");
-	const [defaultColors] = useSettings("color.palette.default");
-	const [customColors] = useSettings("color.palette.custom");
-	// Fetch data for pages and groups
+	// (defaultColors/customColors are unused right now, remove or use them)
+	// const [defaultColors] = useSettings("color.palette.default");
+	// const [customColors] = useSettings("color.palette.custom");
+
+	// Fetch membership list
 	const fetchData = async () => {
 		try {
 			const res = await apiFetch({
@@ -62,34 +64,35 @@ const Edit = (props) => {
 				method: "GET",
 				headers: { "X-WP-Nonce": urRestApiNonce }
 			});
-			if (res.success) {
-				setMembershipList(res.membership_list);
+
+			if (res?.success) {
+				setMembershipList(res.membership_list || {});
+			} else {
+				setMembershipList({});
 			}
 		} catch (error) {
 			console.error("Error fetching data:", error);
+			setMembershipList({});
 		}
 	};
 
 	useEffect(() => {
-		if (!membsershipList) {
-			fetchData();
+		fetchData();
+	}, []);
+
+	useEffect(() => {
+		if (!attributes.clientId && clientId) {
+			setAttributes({ clientId });
 		}
-	}, [membsershipList]);
+	}, [clientId]);
 
-	const setMembershipType = (type) => {
-		setAttributes({ membershipType: type });
-	};
-
-	if (!membsershipList) {
-		return;
-	}
-
-	const membershipOptions = Object.values(membsershipList).map(
-		(member, index) => ({
+	const membershipOptions = useMemo(() => {
+		if (!membershipList) return [];
+		return Object.values(membershipList).map((member, index) => ({
 			value: index,
 			label: member.title
-		})
-	);
+		}));
+	}, [membershipList]);
 
 	const HoverColorControl = ({ label, colorValue, onChange }) => (
 		<div
@@ -134,7 +137,7 @@ const Edit = (props) => {
 						</Flex>
 					</Button>
 				)}
-				renderContent={({ onClose }) => (
+				renderContent={() => (
 					<div
 						style={{ padding: "16px", width: "240px" }}
 						onClick={(e) => e.stopPropagation()}
@@ -149,7 +152,7 @@ const Edit = (props) => {
 							enableAlpha={true}
 							__experimentalIsRenderedInSidebar={true}
 						/>
-						{themeColors && themeColors.length > 0 && (
+						{themeColors?.length > 0 && (
 							<>
 								<span className="ur-hover-color-picker__title">
 									{__("Theme", "user-registration")}
@@ -169,123 +172,72 @@ const Edit = (props) => {
 		</div>
 	);
 
+	if (!membershipList) {
+		return (
+			<div {...blockProps}>
+				{__("Loading memberships…", "user-registration")}
+			</div>
+		);
+	}
+
 	return (
 		<>
 			<InspectorControls>
-				<TabPanel
-					className="urm-buy-now-tabs"
-					activeClass="active-tab"
-					tabs={[{ name: "general", title: "General" }]}
-				>
-					{(tab) => (
-						<>
-							{tab.name === "general" && (
-								<PanelBody title="" initialOpen={true}>
-									<SelectControl
-										key="urm-select-page"
-										label={__(
-											"Success Page (after purchase)",
-											"user-registration"
-										)}
-										value={pageID}
-										options={[
-											{
-												label: __(
-													"Select a page...",
-													"user-registration"
-												),
-												value: ""
-											},
-											...pages
-										]}
-										onChange={(page) =>
-											setAttributes({
-												pageID: page
-											})
-										}
-									/>
-									<SelectControl
-										key="urm-select-membership-type"
-										label={__(
-											"Membership Plan",
-											"user-registration"
-										)}
-										value={membershipType}
-										options={[
-											{
-												label: __(
-													"Select a membership...",
-													"user-registration"
-												),
-												value: ""
-											},
-											...membershipOptions
-										]}
-										onChange={setMembershipType}
-									/>
-									<ToggleControl
-										__nextHasNoMarginBottom
-										label={__(
-											"Open in a new tab",
-											"user-registration"
-										)}
-										checked={openInNewTab}
-										onChange={(value) => {
-											setAttributes({
-												openInNewTab: value
-											});
-										}}
-									/>
-									<TextControl
-										label={__(
-											"Button Text",
-											"user-registration"
-										)}
-										value={text}
-										onChange={(value) =>
-											setAttributes({ text: value })
-										}
-									/>
+				<PanelBody title="" initialOpen={true}>
+					<SelectControl
+						key="urm-select-membership-type"
+						label={__("Membership Plan", "user-registration")}
+						value={membershipType}
+						options={[
+							{
+								label: __(
+									"Select a membership...",
+									"user-registration"
+								),
+								value: ""
+							},
+							...membershipOptions
+						]}
+						onChange={(type) =>
+							setAttributes({ membershipType: type })
+						}
+					/>
 
-									<ToggleGroupControl
-										label="Width"
-										value={width}
-										onChange={(value) =>
-											setAttributes({ width: value })
-										}
-										isBlock
-									>
-										<ToggleGroupControlOption
-											value="25%"
-											label="25%"
-										/>
-										<ToggleGroupControlOption
-											value="50%"
-											label="50%"
-										/>
-										<ToggleGroupControlOption
-											value="75%"
-											label="75%"
-										/>
-										<ToggleGroupControlOption
-											value="100%"
-											label="100%"
-										/>
-									</ToggleGroupControl>
+					<ToggleControl
+						className="urm-buynow-open-new-tab"
+						__nextHasNoMarginBottom
+						label={__("Open in a new tab", "user-registration")}
+						checked={openInNewTab}
+						onChange={(value) =>
+							setAttributes({ openInNewTab: value })
+						}
+					/>
 
-									<JustifyControl
-										value={attributes.justifyContent}
-										onChange={(val) =>
-											setAttributes({
-												justifyContent: val
-											})
-										}
-									/>
-								</PanelBody>
-							)}
-						</>
-					)}
-				</TabPanel>
+					<TextControl
+						label={__("Button Text", "user-registration")}
+						value={text}
+						onChange={(value) => setAttributes({ text: value })}
+					/>
+
+					<ToggleGroupControl
+						label="Width"
+						value={width}
+						onChange={(value) => setAttributes({ width: value })}
+						isBlock
+					>
+						<ToggleGroupControlOption value="25%" label="25%" />
+						<ToggleGroupControlOption value="50%" label="50%" />
+						<ToggleGroupControlOption value="75%" label="75%" />
+						<ToggleGroupControlOption value="100%" label="100%" />
+					</ToggleGroupControl>
+
+					<JustifyControl
+						value={attributes.justifyContent}
+						onChange={(val) =>
+							setAttributes({ justifyContent: val })
+						}
+					/>
+				</PanelBody>
 			</InspectorControls>
 
 			<InspectorControls group="color">
@@ -307,11 +259,14 @@ const Edit = (props) => {
 				</>
 			</InspectorControls>
 
-			<div {...useProps}>
+			<div {...blockProps}>
 				<ServerSideRender
 					key="ur-gutenberg-membership-buy-now-form-server-side-renderer"
 					block={blockName}
-					attributes={attributes}
+					attributes={{
+						...attributes,
+						clientId: attributes.clientId || clientId
+					}}
 				/>
 			</div>
 		</>

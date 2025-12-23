@@ -17,7 +17,7 @@ export default function JustifyControl({ value, onChange }) {
 	return (
 		<div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
 			<div
-				style={{ fontWeight: 500, fontSize: "13px" }}
+				style={{ fontWeight: 500, fontSize: "11px" }}
 				className="components-input-control__label"
 			>
 				{__("JUSTIFICATION", "user-registration")}
