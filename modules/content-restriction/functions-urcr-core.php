@@ -1348,7 +1348,13 @@ function urcr_has_rules_with_advanced_logic() {
 	return false;
 }
 
-
+/**
+ * Create a content access rule for a single membership.
+ *
+ * @param int $membership_id The membership ID.
+ * @param string $membership_title The membership title (optional, will be fetched if not provided).
+ * @return int|false The rule ID on success, false on failure.
+ */
 /**
  * Create or update membership rule with data from UI.
  *
@@ -1359,7 +1365,7 @@ function urcr_has_rules_with_advanced_logic() {
 function urcr_create_or_update_membership_rule( $membership_id, $rule_data = null ) {
 
 	// Check if content restriction module is active
-	if (  ! ur_check_module_activation( 'membership' ) ) {
+	if (  ! ur_check_module_activation( 'content-restriction' ) || ! ur_check_module_activation( 'membership' ) ) {
 		return false;
 	}
 
@@ -1778,4 +1784,3 @@ function urcr_get_membership_rule_data( $membership_id ) {
 
 	return $rule_content;
 }
-
