@@ -1779,3 +1779,88 @@ function urcr_get_membership_rule_data( $membership_id ) {
 	return $rule_content;
 }
 
+/**
+ * Get count of content restriction rules.
+ *
+ * @param array|string $types Rule types to count. Options: 'custom', 'membership', 'migrated'. Can be array of types or single string. Empty array/string counts all rules.
+ * @return int Count of rules.
+ * @since 1.0.0
+ */
+function urcr_get_custom_rules_count( $types = array() ) {
+	// Check if content restriction post type exists
+	if ( ! post_type_exists( 'urcr_access_rule' ) ) {
+		return 0;
+	}
+
+	// Get all content access rules
+	$all_rules = get_posts( array(
+		'post_type'      => 'urcr_access_rule',
+		'post_status'    => 'any',
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+	) );
+
+	if ( empty( $all_rules ) ) {
+		return 0;
+	}
+
+	// Convert string to array for backward compatibility
+	if ( is_string( $types ) ) {
+		$types = empty( $types ) ? array() : array( $types );
+	}
+
+	// Ensure $types is an array
+	if ( ! is_array( $types ) ) {
+		$types = array();
+	}
+
+	// If types array is empty, return count of all rules
+	if ( empty( $types ) ) {
+		return count( $all_rules );
+	}
+
+	// Count rules based on types (rules matching any of the provided types)
+	$rules_count = 0;
+	foreach ( $all_rules as $rule_id ) {
+		$rule_type = get_post_meta( $rule_id, 'urcr_rule_type', true );
+		$membership_id = get_post_meta( $rule_id, 'urcr_membership_id', true );
+		$is_migrated = get_post_meta( $rule_id, 'urcr_is_migrated', true );
+
+		$matches = false;
+
+		foreach ( $types as $type ) {
+			switch ( $type ) {
+				case 'custom':
+					// Count rules that are NOT membership rules
+					if ( 'membership' !== $rule_type && empty( $membership_id ) ) {
+						$matches = true;
+						break 2; // Break out of switch and foreach
+					}
+					break;
+
+				case 'membership':
+					// Count rules that ARE membership rules
+					if ( 'membership' === $rule_type || ! empty( $membership_id ) ) {
+						$matches = true;
+						break 2; // Break out of switch and foreach
+					}
+					break;
+
+				case 'migrated':
+					// Count rules that are migrated
+					if ( ! empty( $is_migrated ) ) {
+						$matches = true;
+						break 2; // Break out of switch and foreach
+					}
+					break;
+			}
+		}
+
+		if ( $matches ) {
+			$rules_count++;
+		}
+	}
+
+	return $rules_count;
+}
+

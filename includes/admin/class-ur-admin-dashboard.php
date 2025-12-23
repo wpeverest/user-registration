@@ -45,6 +45,9 @@ class UR_Admin_Dashboard {
 		// Get site assistant data from core function
 		$site_assistant_data = ur_get_site_assistant_data();
 
+		// Count custom content restriction rules (excluding membership rules)
+		$custom_rules_count = urcr_get_custom_rules_count( array( 'custom', 'is_migrated' ) );
+		
 		wp_localize_script(
 			'ur-dashboard-script',
 			'_UR_DASHBOARD_',
@@ -93,7 +96,8 @@ class UR_Admin_Dashboard {
 					in_array( 'colormag', $installed_theme_slugs, true ) || in_array( 'colormag-pro', $installed_theme_slugs, true ) ? 'inactive' : 'not-installed'
 					),
 				),
-				'urm_version'          => get_option( 'urm_is_new_installation', true ),
+				'urm_is_new_installation'          => get_option( 'urm_is_new_installation', '' ),
+				'urcr_custom_rules_count'          => $custom_rules_count,
 			)
 		);
 
