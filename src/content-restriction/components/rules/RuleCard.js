@@ -166,32 +166,44 @@ const RuleCard = ({
 						</button>
 						{menuOpen && (
 							<div className="urcr-menu-dropdown">
-								{(rule.rule_type !== "membership" || isURDev()) && (
-									<button
-										className="urcr-menu-item urcr-menu-trash"
-										type="button"
-										onClick={(e) => {
-											e.stopPropagation();
+								{/* Delete button - disabled for membership rules or migrated custom rules */}
+								<button
+									className="urcr-menu-item urcr-menu-trash"
+									type="button"
+									disabled={rule.rule_type === "membership" || Boolean(rule.is_migrated)}
+									onClick={(e) => {
+										e.stopPropagation();
+										if (!(rule.rule_type === "membership" || Boolean(rule.is_migrated))) {
 											handleDeleteClick();
-										}}
-									>
-										<span className="dashicons dashicons-trash"></span>
-										{__("Trash", "user-registration")}
-									</button>
-								)}
-								{(rule.rule_type !== "membership" || isURDev()) && (
-									<button
-										className="urcr-menu-item urcr-menu-duplicate"
-										type="button"
-										onClick={(e) => {
-											e.stopPropagation();
+										}
+									}}
+									style={{
+										opacity: (rule.rule_type === "membership" || Boolean(rule.is_migrated)) ? 0.5 : 1,
+										cursor: (rule.rule_type === "membership" || Boolean(rule.is_migrated)) ? "not-allowed" : "pointer"
+									}}
+								>
+									<span className="dashicons dashicons-trash"></span>
+									{__("Trash", "user-registration")}
+								</button>
+								{/* Duplicate button - disabled for membership rules */}
+								<button
+									className="urcr-menu-item urcr-menu-duplicate"
+									type="button"
+									disabled={rule.rule_type === "membership"}
+									onClick={(e) => {
+										e.stopPropagation();
+										if (rule.rule_type !== "membership") {
 											handleDuplicateClick();
-										}}
-									>
-										<span className="dashicons dashicons-admin-page"></span>
-										{__("Duplicate", "user-registration")}
-									</button>
-								)}
+										}
+									}}
+									style={{
+										opacity: rule.rule_type === "membership" ? 0.5 : 1,
+										cursor: rule.rule_type === "membership" ? "not-allowed" : "pointer"
+									}}
+								>
+									<span className="dashicons dashicons-admin-page"></span>
+									{__("Duplicate", "user-registration")}
+								</button>
 							</div>
 						)}
 					</div>

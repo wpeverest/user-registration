@@ -125,15 +125,11 @@ class URCR_Admin {
 	 *
 	 */
 	public function add_urcr_menus() {
-		// Check if content restriction module is enabled
-		if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'content-restriction' ) ) {
-			return;
-		}
 
 		// Check if membership module is enabled and count memberships
 		$membership_count = 0;
 		$has_multiple_memberships = false;
-		
+
 		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'membership' ) ) {
 			if ( class_exists( '\WPEverest\URMembership\Admin\Services\MembershipService' ) ) {
 				$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
@@ -144,7 +140,7 @@ class URCR_Admin {
 		}
 
 		// Determine menu title based on membership count
-		$menu_title = $has_multiple_memberships 
+		$menu_title = $has_multiple_memberships
 			? __( 'Content Rules', 'user-registration' )
 			: __( 'Content Rules', 'user-registration' );
 
@@ -243,8 +239,8 @@ class URCR_Admin {
 		}
 
 		// Check if rule data was provided from the UI
-		$rule_data = isset( $_POST['urcr_membership_access_rule_data'] ) 
-			? json_decode( wp_unslash( $_POST['urcr_membership_access_rule_data'] ), true ) 
+		$rule_data = isset( $_POST['urcr_membership_access_rule_data'] )
+			? json_decode( wp_unslash( $_POST['urcr_membership_access_rule_data'] ), true )
 			: null;
 
 		// Create or update rule for the new membership
@@ -292,6 +288,11 @@ class URCR_Admin {
 
 		// Delete all associated rules
 		foreach ( $existing_rules as $rule ) {
+			// Clear rule meta before deletion
+			delete_post_meta( $rule->ID, 'urcr_rule_type' );
+			delete_post_meta( $rule->ID, 'urcr_membership_id' );
+			delete_post_meta( $rule->ID, 'urcr_is_migrated' );
+			
 			wp_delete_post( $rule->ID, true ); // true = force delete (skip trash)
 		}
 	}
@@ -384,7 +385,7 @@ class URCR_Admin {
 		// Add rule ID and other metadata
 		$rule_content['id'] = $rule_post->ID;
 		$rule_content['title'] = $rule_post->post_title;
-		
+
 		// Get enabled status from rule content (stored in post_content JSON)
 		// Default to true if not set (matches default for new rules)
 		if ( ! isset( $rule_content['enabled'] ) ) {

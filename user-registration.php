@@ -169,7 +169,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_TEMPLATE_DEBUG_MODE', false );
 			$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
 			$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
-			$this->define( 'UR_PRO_ACTIVE', true );
+			$this->define( 'UR_PRO_ACTIVE', false );
 			$this->define( 'UR_DEV', false );
 		}
 
@@ -286,10 +286,17 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 				include_once UR_ABSPATH . 'modules/payment-history/Orders.php';
 			}
 
-			if ( ur_check_module_activation( 'content-restriction' ) ) {
-				include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
-				include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
-			}
+		// Check if there are membership rules (>= 2)
+		$membership_rules_count = 0;
+		if ( function_exists( 'ur_get_membership_rules_count' ) ) {
+			$membership_rules_count = ur_get_membership_rules_count();
+		}
+
+		if ( ur_check_module_activation( 'content-restriction' ) || $membership_rules_count >= 2 ) {
+
+			include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
+		}
 
 			/**
 			 * Elementor classes.
