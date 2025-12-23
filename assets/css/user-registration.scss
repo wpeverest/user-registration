@@ -485,28 +485,28 @@ textarea.ur-input-border-red {
 				border-style: solid;
 			}
 
-			input[type="text"],
-			input[type="email"],
-			input[type="url"],
-			input[type="password"],
-			input[type="date"],
-			input[type="number"],
-			input[type="timepicker"],
-			input[type="phone"],
-			textarea,
-			select,
-			.__PrivateStripeElement {
-				width: 100%;
-				padding: 4px 8px;
-				border-radius: 0;
-				min-height: 36px;
-				margin-bottom: 10px;
-				line-height: 1.5;
+			// input[type="text"],
+			// input[type="email"],
+			// input[type="url"],
+			// input[type="password"],
+			// input[type="date"],
+			// input[type="number"],
+			// input[type="timepicker"],
+			// input[type="phone"],
+			// textarea,
+			// select,
+			// .__PrivateStripeElement {
+			// 	width: 100%;
+			// 	padding: 4px 8px;
+			// 	border-radius: 0;
+			// 	min-height: 36px;
+			// 	margin-bottom: 10px;
+			// 	line-height: 1.5;
 
-				&::placeholder {
-					color: #ddd;
-				}
-			}
+			// 	&::placeholder {
+			// 		color: #ddd;
+			// 	}
+			// }
 
 			.ur-range-input {
 				margin-bottom: 0px !important;
