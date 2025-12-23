@@ -48,6 +48,29 @@ class URCR_Admin {
 		 * Run migration on admin init (only once)
 		 */
 		add_action( 'admin_init', array( $this, 'run_migration' ), 5 );
+
+		/**
+		 * Create content access rule when a new membership is created
+		 */
+		add_filter( 'ur_membership_before_create_membership_response', array( $this, 'create_rule_for_new_membership' ), 10, 1 );
+
+		/**
+		 * Delete content access rule when a membership is deleted
+		 */
+		add_action( 'before_delete_post', array( $this, 'delete_rule_for_membership' ), 10, 1 );
+
+		/**
+		 * Delete content access rule when a membership is deleted via AJAX (repository delete)
+		 * Hook into the AJAX action to delete rules before membership is deleted
+		 * Priority 5 ensures this runs before the actual AJAX handler
+		 */
+		add_action( 'wp_ajax_user_registration_membership_delete_membership', array( $this, 'delete_rule_before_ajax_membership_delete' ), 5 );
+		add_action( 'wp_ajax_user_registration_membership_delete_memberships', array( $this, 'delete_rules_before_ajax_bulk_delete' ), 5 );
+
+		/**
+		 * AJAX handler to get membership rule data
+		 */
+		add_action( 'wp_ajax_urcr_get_membership_rule', array( $this, 'ajax_get_membership_rule' ) );
 	}
 
 	/**
@@ -102,10 +125,29 @@ class URCR_Admin {
 	 *
 	 */
 	public function add_urcr_menus() {
+
+		// Check if membership module is enabled and count memberships
+		$membership_count = 0;
+		$has_multiple_memberships = false;
+
+		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'membership' ) ) {
+			if ( class_exists( '\WPEverest\URMembership\Admin\Services\MembershipService' ) ) {
+				$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
+				$memberships = $membership_service->list_active_memberships();
+				$membership_count = is_array( $memberships ) ? count( $memberships ) : 0;
+				$has_multiple_memberships = $membership_count > 1;
+			}
+		}
+
+		// Determine menu title based on membership count
+		$menu_title = $has_multiple_memberships
+			? __( 'Content Rules', 'user-registration' )
+			: __( 'Content Rules', 'user-registration' );
+
 		$rules_page = add_submenu_page(
 			'user-registration',
 			__( 'Content Restriction - Content Rules', 'user-registration' ),
-			__( 'Content Rules', 'user-registration' ),
+			$menu_title,
 			'edit_posts',
 			'user-registration-content-restriction',
 			array(
@@ -177,6 +219,180 @@ class URCR_Admin {
 		}
 
 		return $settings;
+	}
+
+	/**
+	 * Create content access rule when a new membership is created.
+	 *
+	 * @param array $response The response array containing membership_id.
+	 */
+	public function create_rule_for_new_membership( $response ) {
+		if ( ! isset( $response['membership_id'] ) || empty( $response['membership_id'] ) ) {
+			return $response;
+		}
+
+		$membership_id = absint( $response['membership_id'] );
+
+		// Check if content restriction module is active
+		if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'content-restriction' ) ) {
+			return $response;
+		}
+
+		// Check if rule data was provided from the UI
+		$rule_data = isset( $_POST['urcr_membership_access_rule_data'] )
+			? json_decode( wp_unslash( $_POST['urcr_membership_access_rule_data'] ), true )
+			: null;
+
+		// Create or update rule for the new membership
+		if ( function_exists( 'urcr_create_or_update_membership_rule' ) ) {
+			urcr_create_or_update_membership_rule( $membership_id, $rule_data );
+		} elseif ( function_exists( 'urcr_create_membership_rule' ) ) {
+			urcr_create_membership_rule( $membership_id );
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Delete content access rules associated with a membership.
+	 * Helper method used by all deletion hooks.
+	 *
+	 * @param int $membership_id The membership ID.
+	 */
+	private function delete_rules_for_membership( $membership_id ) {
+		// Check if content restriction module is active
+		if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'content-restriction' ) ) {
+			return;
+		}
+
+		$membership_id = absint( $membership_id );
+
+		// Verify this is actually a membership post
+		$post = get_post( $membership_id );
+		if ( ! $post || 'ur_membership' !== $post->post_type ) {
+			return;
+		}
+
+		// Find and delete the associated content access rules
+		$existing_rules = get_posts( array(
+			'post_type'      => 'urcr_access_rule',
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+			'meta_query'     => array(
+				array(
+					'key'   => 'urcr_membership_id',
+					'value' => $membership_id,
+				),
+			),
+		) );
+
+		// Delete all associated rules
+		foreach ( $existing_rules as $rule ) {
+			// Clear rule meta before deletion
+			delete_post_meta( $rule->ID, 'urcr_rule_type' );
+			delete_post_meta( $rule->ID, 'urcr_membership_id' );
+			delete_post_meta( $rule->ID, 'urcr_is_migrated' );
+			
+			wp_delete_post( $rule->ID, true ); // true = force delete (skip trash)
+		}
+	}
+
+	/**
+	 * Delete content access rule when a membership is deleted.
+	 *
+	 * @param int $post_id The post ID being deleted.
+	 */
+	public function delete_rule_for_membership( $post_id ) {
+		$this->delete_rules_for_membership( $post_id );
+	}
+
+	/**
+	 * Delete content access rule when a membership is deleted via AJAX (single delete).
+	 * This hooks into the AJAX action before the membership is deleted.
+	 * Priority 5 ensures this runs before the actual AJAX handler processes the deletion.
+	 */
+	public function delete_rule_before_ajax_membership_delete() {
+		if ( empty( $_POST['membership_id'] ) ) {
+			return;
+		}
+
+		$this->delete_rules_for_membership( absint( $_POST['membership_id'] ) );
+	}
+
+	/**
+	 * Delete content access rules when memberships are deleted via AJAX (bulk delete).
+	 * This hooks into the AJAX action before the memberships are deleted.
+	 * Priority 5 ensures this runs before the actual AJAX handler processes the deletion.
+	 */
+	public function delete_rules_before_ajax_bulk_delete() {
+		if ( empty( $_POST['membership_ids'] ) ) {
+			return;
+		}
+
+		$membership_ids = wp_unslash( $_POST['membership_ids'] );
+		$membership_ids = json_decode( $membership_ids, true );
+
+		if ( ! is_array( $membership_ids ) || empty( $membership_ids ) ) {
+			return;
+		}
+
+		// Delete rules for each membership
+		foreach ( $membership_ids as $membership_id ) {
+			$this->delete_rules_for_membership( absint( $membership_id ) );
+		}
+	}
+
+	/**
+	 * AJAX handler to get membership rule data.
+	 */
+	public function ajax_get_membership_rule() {
+		check_ajax_referer( 'urcr_manage_content_access_rule', 'nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'user-registration' ) ) );
+		}
+
+		$membership_id = isset( $_POST['membership_id'] ) ? absint( $_POST['membership_id'] ) : 0;
+
+		if ( ! $membership_id ) {
+			wp_send_json_error( array( 'message' => __( 'Membership ID is required', 'user-registration' ) ) );
+		}
+
+		// Find existing rule for this membership
+		$existing_rules = get_posts( array(
+			'post_type'      => 'urcr_access_rule',
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'meta_query'     => array(
+				array(
+					'key'   => 'urcr_membership_id',
+					'value' => $membership_id,
+				),
+			),
+		) );
+
+		if ( empty( $existing_rules ) ) {
+			wp_send_json_success( array( 'data' => null ) );
+		}
+
+		$rule_post = $existing_rules[0];
+		$rule_content = json_decode( $rule_post->post_content, true );
+
+		if ( ! $rule_content ) {
+			wp_send_json_success( array( 'data' => null ) );
+		}
+
+		// Add rule ID and other metadata
+		$rule_content['id'] = $rule_post->ID;
+		$rule_content['title'] = $rule_post->post_title;
+
+		// Get enabled status from rule content (stored in post_content JSON)
+		// Default to true if not set (matches default for new rules)
+		if ( ! isset( $rule_content['enabled'] ) ) {
+			$rule_content['enabled'] = true;
+		}
+
+		wp_send_json_success( array( 'data' => $rule_content ) );
 	}
 
 	/**

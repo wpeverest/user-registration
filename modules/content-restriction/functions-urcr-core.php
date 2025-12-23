@@ -1349,6 +1349,228 @@ function urcr_has_rules_with_advanced_logic() {
 }
 
 /**
+ * Create a content access rule for a single membership.
+ *
+ * @param int $membership_id The membership ID.
+ * @param string $membership_title The membership title (optional, will be fetched if not provided).
+ * @return int|false The rule ID on success, false on failure.
+ */
+/**
+ * Create or update membership rule with data from UI.
+ *
+ * @param int   $membership_id The membership ID.
+ * @param array $rule_data Optional rule data from UI (access_rule_data structure).
+ * @return int|false Rule ID on success, false on failure.
+ */
+function urcr_create_or_update_membership_rule( $membership_id, $rule_data = null ) {
+
+	// Check if content restriction module is active
+	if (  ! ur_check_module_activation( 'content-restriction' ) || ! ur_check_module_activation( 'membership' ) ) {
+		return false;
+	}
+
+
+	// Check if rule already exists for this membership
+	$existing_rules = get_posts( array(
+		'post_type'      => 'urcr_access_rule',
+		'post_status'    => 'any',
+		'posts_per_page' => 1,
+		'meta_query'     => array(
+			array(
+				'key'   => 'urcr_membership_id',
+				'value' => $membership_id,
+			),
+		),
+	) );
+
+	$existing_rule = ! empty( $existing_rules ) ? $existing_rules[0] : null;
+
+	// If rule data provided from UI, use it; otherwise create default
+	if ( $rule_data && isset( $rule_data['access_rule_data'] ) ) {
+		$access_rule_data = $rule_data['access_rule_data'];
+
+		// Ensure membership condition is included
+		$membership_condition = array(
+			'type'  => 'membership',
+			'id'    => 'x' . ( time() * 1000 ),
+			'value' => array( strval( $membership_id ) ),
+		);
+
+		// Get existing conditions from logic_map
+		$existing_conditions = array();
+		if ( isset( $access_rule_data['logic_map']['conditions'] ) && is_array( $access_rule_data['logic_map']['conditions'] ) ) {
+			$existing_conditions = $access_rule_data['logic_map']['conditions'];
+		}
+
+		// Check if membership condition already exists and update it
+		$has_membership_condition = false;
+		foreach ( $existing_conditions as $key => $condition ) {
+			if ( isset( $condition['type'] ) && $condition['type'] === 'membership' ) {
+				$has_membership_condition = true;
+				// Update the value to ensure it matches current membership
+				$existing_conditions[ $key ]['value'] = array( strval( $membership_id ) );
+				break;
+			}
+		}
+
+		// Add membership condition if not present (always as first condition)
+		if ( ! $has_membership_condition ) {
+			array_unshift( $existing_conditions, $membership_condition );
+		}
+
+		// Update logic_map with merged conditions
+		$access_rule_data['logic_map']['conditions'] = $existing_conditions;
+
+		// Always generate rule title from membership name (PHP side)
+		$membership_post = get_post( $membership_id );
+		$membership_title = $membership_post ? $membership_post->post_title : '';
+		if ( ! empty( $membership_title ) ) {
+			$rule_title = sprintf( __( '%s Rule', 'user-registration' ), $membership_title );
+		} else {
+			// Fallback if membership title not found
+			$rule_title = isset( $rule_data['title'] ) && ! empty( $rule_data['title'] ) ? $rule_data['title'] : __( 'Membership Access Rule', 'user-registration' );
+		}
+		$rule_content = wp_json_encode( $access_rule_data );
+	} else {
+		// Create default rule (fallback)
+		return urcr_create_membership_rule( $membership_id );
+	}
+
+	// Create or update the rule post
+	if ( $existing_rule ) {
+		// Update existing rule
+		$rule_post = array(
+			'ID'           => $existing_rule->ID,
+			'post_title'   => $rule_title,
+			'post_content' => $rule_content,
+		);
+		$rule_id = wp_update_post( $rule_post );
+	} else {
+		// Create new rule
+		$rule_post = array(
+			'post_title'   => $rule_title,
+			'post_content' => $rule_content,
+			'post_type'    => 'urcr_access_rule',
+			'post_status'  => 'publish',
+		);
+		$rule_id = wp_insert_post( $rule_post );
+	}
+
+	if ( $rule_id && ! is_wp_error( $rule_id ) ) {
+		// Set post meta to identify this as a membership rule
+		update_post_meta( $rule_id, 'urcr_rule_type', 'membership' );
+		update_post_meta( $rule_id, 'urcr_membership_id', $membership_id );
+		return $rule_id;
+	}
+
+	return false;
+}
+
+function urcr_create_membership_rule( $membership_id, $membership_title = '' ) {
+	// Check if content restriction module is active
+	if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'content-restriction' ) ) {
+		return false;
+	}
+
+	// Check if membership module is active
+	if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'membership' ) ) {
+		return false;
+	}
+
+	// Check if rule already exists for this membership
+	$existing_rules = get_posts( array(
+		'post_type'      => 'urcr_access_rule',
+		'post_status'    => 'any',
+		'posts_per_page' => 1,
+		'meta_query'     => array(
+			array(
+				'key'   => 'urcr_membership_id',
+				'value' => $membership_id,
+			),
+		),
+	) );
+
+	if ( ! empty( $existing_rules ) ) {
+		// Rule already exists for this membership
+		return false;
+	}
+
+	// Get membership title if not provided
+	if ( empty( $membership_title ) ) {
+		$membership_post = get_post( $membership_id );
+		if ( ! $membership_post || 'ur_membership' !== $membership_post->post_type ) {
+			return false;
+		}
+		$membership_title = $membership_post->post_title;
+	}
+
+	if ( empty( $membership_title ) ) {
+		return false;
+	}
+
+	$timestamp = time() * 1000;
+
+	// Build condition for this membership
+	$condition = array(
+		'type'  => 'membership',
+		'id'    => 'x' . $timestamp,
+		'value' => array( strval( $membership_id ) ),
+	);
+
+	// Build logic_map
+	$logic_map = array(
+		'type'       => 'group',
+		'id'         => 'x' . ( $timestamp + 1 ),
+		'conditions' => array( $condition ),
+		'logic_gate' => 'AND',
+	);
+
+	// Build target_contents - empty for membership rules
+	$target_contents = array();
+
+	// Build rule data
+	$rule_data = array(
+		'enabled'         => true,
+		'access_control'  => 'access',
+		'logic_map'       => $logic_map,
+		'target_contents' => $target_contents,
+		'actions'         => urcr_build_migration_actions(),
+	);
+
+	$rule_title = sprintf( __( '%s Rule', 'user-registration' ), $membership_title );
+
+	// Create the rule post
+	$rule_post = array(
+		'post_title'   => $rule_title,
+		'post_content' => wp_json_encode( $rule_data ),
+		'post_type'    => 'urcr_access_rule',
+		'post_status'  => 'publish',
+	);
+
+	$rule_id = wp_insert_post( $rule_post );
+
+	if ( $rule_id && ! is_wp_error( $rule_id ) ) {
+		// Set post meta to identify this as a membership rule
+		update_post_meta( $rule_id, 'urcr_rule_type', 'membership' );
+		update_post_meta( $rule_id, 'urcr_membership_id', $membership_id );
+
+		// Update migrated membership IDs list
+		$migrated_membership_ids = get_option( 'urcr_migrated_membership_ids', array() );
+		if ( ! is_array( $migrated_membership_ids ) ) {
+			$migrated_membership_ids = array();
+		}
+		if ( ! in_array( $membership_id, $migrated_membership_ids, true ) ) {
+			$migrated_membership_ids[] = $membership_id;
+			update_option( 'urcr_migrated_membership_ids', $migrated_membership_ids );
+		}
+
+		return $rule_id;
+	}
+
+	return false;
+}
+
+/**
  * Migrate memberships to individual content access rules.
  * Creates one rule per active membership.
  *
@@ -1405,49 +1627,10 @@ function urcr_migrate_memberships() {
 			continue;
 		}
 
-		$timestamp = $base_timestamp + ( $timestamp_counter * 1000 );
-		$timestamp_counter++;
+		// Use the reusable function to create the rule
+		$rule_id = urcr_create_membership_rule( $membership_id, $membership_title );
 
-		// Build condition for this membership
-		$condition = array(
-			'type'  => 'membership',
-			'id'    => 'x' . $timestamp,
-			'value' => array( strval( $membership_id ) ),
-		);
-
-		// Build logic_map
-		$logic_map = array(
-			'type'       => 'group',
-			'id'         => 'x' . ( $timestamp + 1 ),
-			'conditions' => array( $condition ),
-			'logic_gate' => 'AND',
-		);
-
-		// Build target_contents - empty for membership rules
-		$target_contents = array();
-
-		// Build rule data
-		$rule_data = array(
-			'enabled'         => true,
-			'access_control'  => 'access',
-			'logic_map'       => $logic_map,
-			'target_contents' => $target_contents,
-			'actions'         => urcr_build_migration_actions(),
-		);
-
-		$rule_title = sprintf( __( '%s Rule', 'user-registration' ), $membership_title );
-
-		// Create the rule post (without migrated meta)
-		$rule_post = array(
-			'post_title'   => $rule_title,
-			'post_content' => wp_json_encode( $rule_data ),
-			'post_type'    => 'urcr_access_rule',
-			'post_status'  => 'publish',
-		);
-
-		$rule_id = wp_insert_post( $rule_post );
-
-		if ( $rule_id && ! is_wp_error( $rule_id ) ) {
+		if ( $rule_id ) {
 			$migrated_rule_ids[] = $rule_id;
 			$migrated_membership_ids[] = $membership_id;
 		}
@@ -1545,5 +1728,60 @@ function urcr_run_migration() {
 	update_option( 'urcr_is_advanced_logic_enabled', $has_advanced_logic ? 'yes' : 'no' );
 
 	return $results;
+}
+
+/**
+ * Get membership rule data for a given membership ID.
+ *
+ * @param int $membership_id The membership ID.
+ * @return array|null Rule data array with id, title, enabled, and content, or null if not found.
+ * @since 1.0.0
+ */
+function urcr_get_membership_rule_data( $membership_id ) {
+	if ( ! $membership_id || ! is_numeric( $membership_id ) ) {
+		return null;
+	}
+
+	// Check if content restriction module is active
+	if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'content-restriction' ) ) {
+		return null;
+	}
+
+	// Find existing rule for this membership
+	$existing_rules = get_posts(
+		array(
+			'post_type'      => 'urcr_access_rule',
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'meta_query'     => array(
+				array(
+					'key'   => 'urcr_membership_id',
+					'value' => $membership_id,
+				),
+			),
+		)
+	);
+
+	if ( empty( $existing_rules ) ) {
+		return null;
+	}
+
+	$rule_post = $existing_rules[0];
+	$rule_content = json_decode( $rule_post->post_content, true );
+
+	if ( ! $rule_content ) {
+		return null;
+	}
+
+	// Add rule ID and other metadata
+	$rule_content['id'] = $rule_post->ID;
+	$rule_content['title'] = $rule_post->post_title;
+
+	// Default to true if not set (matches default for new rules)
+	if ( ! isset( $rule_content['enabled'] ) ) {
+		$rule_content['enabled'] = true;
+	}
+
+	return $rule_content;
 }
 

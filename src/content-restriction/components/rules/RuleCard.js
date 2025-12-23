@@ -9,6 +9,7 @@ import RuleContentDisplay from "./RuleContentDisplay";
 import DeleteRuleModal from "../modals/DeleteRuleModal";
 import DuplicateRuleModal from "../modals/DuplicateRuleModal";
 import {showSuccess, showError} from "../../utils/notifications";
+import {isURDev} from "../../utils/localized-data";
 
 /* global _UR_DASHBOARD_ */
 const {adminURL} = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
@@ -165,28 +166,32 @@ const RuleCard = ({
 						</button>
 						{menuOpen && (
 							<div className="urcr-menu-dropdown">
-								<button
-									className="urcr-menu-item urcr-menu-trash"
-									type="button"
-									onClick={(e) => {
-										e.stopPropagation();
-										handleDeleteClick();
-									}}
-								>
-									<span className="dashicons dashicons-trash"></span>
-									{__("Trash", "user-registration")}
-								</button>
-								<button
-									className="urcr-menu-item urcr-menu-duplicate"
-									type="button"
-									onClick={(e) => {
-										e.stopPropagation();
-										handleDuplicateClick();
-									}}
-								>
-									<span className="dashicons dashicons-admin-page"></span>
-									{__("Duplicate", "user-registration")}
-								</button>
+								{(rule.rule_type !== "membership" || isURDev()) && (
+									<button
+										className="urcr-menu-item urcr-menu-trash"
+										type="button"
+										onClick={(e) => {
+											e.stopPropagation();
+											handleDeleteClick();
+										}}
+									>
+										<span className="dashicons dashicons-trash"></span>
+										{__("Trash", "user-registration")}
+									</button>
+								)}
+								{(rule.rule_type !== "membership" || isURDev()) && (
+									<button
+										className="urcr-menu-item urcr-menu-duplicate"
+										type="button"
+										onClick={(e) => {
+											e.stopPropagation();
+											handleDuplicateClick();
+										}}
+									>
+										<span className="dashicons dashicons-admin-page"></span>
+										{__("Duplicate", "user-registration")}
+									</button>
+								)}
 							</div>
 						)}
 					</div>

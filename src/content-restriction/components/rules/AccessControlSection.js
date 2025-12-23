@@ -1,10 +1,11 @@
 /**
  * External Dependencies
  */
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { __ } from "@wordpress/i18n";
 import ContentTypeDropdown from "../dropdowns/ContentTypeDropdown";
 import ContentValueInput from "../inputs/ContentValueInput";
+import DropdownButton from "../dropdowns/DropdownButton";
 import { isProAccess } from "../../utils/localized-data";
 
 const AccessControlSection = ({
@@ -14,34 +15,7 @@ const AccessControlSection = ({
 	onContentTargetsChange,
 	conditions
 }) => {
-	const [contentDropdownOpen, setContentDropdownOpen] = useState(false);
-	const contentDropdownWrapperRef = useRef(null);
 	const conditionValueInputWrapperRef = useRef(null);
-
-	// Close content dropdown when clicking outside
-	useEffect(() => {
-		const handleClickOutside = (event) => {
-			if (
-				contentDropdownWrapperRef.current &&
-				!contentDropdownWrapperRef.current.contains(event.target)
-			) {
-				setContentDropdownOpen(false);
-			}
-		};
-
-		if (contentDropdownOpen) {
-			document.addEventListener("mousedown", handleClickOutside);
-		}
-
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [contentDropdownOpen]);
-
-	const handleContentButtonClick = (e) => {
-		e.stopPropagation();
-		setContentDropdownOpen(!contentDropdownOpen);
-	};
 
 	const handleAfterContentTypeSelection = (option) => {
 		// Add new content target
@@ -53,7 +27,6 @@ const AccessControlSection = ({
 			taxonomy: option.value === "taxonomy" ? "" : undefined // For taxonomy type
 		};
 		onContentTargetsChange([...contentTargets, newContentTarget]);
-		setContentDropdownOpen(false);
 	};
 
 	const handleContentTargetUpdate = (targetId, newValue) => {
@@ -99,10 +72,10 @@ const AccessControlSection = ({
 		}
 	}, [accessControl]);
 
-	const handleAccessControlChange = (e) => {
-		const newValue = e.target.value;
-		// Prevent free users from selecting "access"
-		if (!isProAccess() && newValue === "access") {
+	const handleAccessControlChange = (option) => {
+		const newValue = option.value;
+		// Prevent free users from selecting "restrict"
+		if (!isProAccess() && newValue === "restrict") {
 			return;
 		}
 
@@ -128,6 +101,30 @@ const AccessControlSection = ({
 		onAccessControlChange(newValue);
 	};
 
+	const getAccessControlLabel = () => {
+		if (accessControl === "restrict") {
+			return __("Restrict", "user-registration");
+		}
+		return __("Access", "user-registration");
+	};
+
+	const getAccessControlOptions = () => {
+		return [
+			...(isProAccess()
+				? [
+						{
+							value: "restrict",
+							label: __("Restrict", "user-registration")
+						}
+				  ]
+				: []),
+			{ value: "access", label: __("Access", "user-registration") }
+		].map((option) => ({
+			...option,
+			disabled: !isProAccess() && option.value === "restrict"
+		}));
+	};
+
 	return (
 		<div className="urcr-target-selection-section ur-d-flex ur-align-items-start">
 			{/* Access/Restrict Section */}
@@ -135,20 +132,21 @@ const AccessControlSection = ({
 				className="urcr-condition-value-input-wrapper"
 				ref={conditionValueInputWrapperRef}
 			>
-				<select
-					className="urcr-access-select urcr-condition-value-input"
+				<DropdownButton
+					buttonContent={
+						<>
+							<span className="urcr-dropdown-button-text">
+								{getAccessControlLabel()}
+							</span>
+							<span className="urcr-dropdown-button-arrow dashicons dashicons-arrow-down-alt2"></span>
+						</>
+					}
+					options={getAccessControlOptions()}
 					value={accessControl}
-					onChange={handleAccessControlChange}
-				>
-					{isProAccess() && (
-						<option value="restrict">
-							{__("Restrict", "user-registration")}
-						</option>
-					)}
-					<option value="access">
-						{__("Access", "user-registration")}
-					</option>
-				</select>
+					onSelect={handleAccessControlChange}
+					buttonClassName="urcr-access-control-button urcr-condition-value-input"
+					wrapperClassName="urcr-access-control-dropdown-wrapper"
+				/>
 			</div>
 
 			<span className="urcr-arrow-icon" aria-hidden="true"></span>
@@ -189,19 +187,18 @@ const AccessControlSection = ({
 				)}
 
 				{/* Always show + Content button */}
-				<div
-					className="urcr-content-dropdown-wrapper"
-					ref={contentDropdownWrapperRef}
-				>
-					<button
-						type="button"
-						className="button urcr-add-content-button"
-						onClick={handleContentButtonClick}
-					>
-						<span className="dashicons dashicons-plus-alt2"></span>
-						{__("Content", "user-registration")}
-					</button>
-					{contentDropdownOpen && (
+				<DropdownButton
+					buttonContent={
+						<>
+							<span className="dashicons dashicons-plus-alt2"></span>
+							{__("Content", "user-registration")}
+						</>
+					}
+					options={[]}
+					onSelect={handleAfterContentTypeSelection}
+					buttonClassName="button urcr-add-content-button"
+					wrapperClassName="urcr-content-dropdown-wrapper"
+					renderDropdown={() => (
 						<ContentTypeDropdown
 							onSelect={handleAfterContentTypeSelection}
 							existingContentTypes={contentTargets}
@@ -209,7 +206,7 @@ const AccessControlSection = ({
 							accessControl={accessControl}
 						/>
 					)}
-				</div>
+				/>
 			</div>
 		</div>
 	);

@@ -1,9 +1,10 @@
 /**
  * External Dependencies
  */
-import React, { useState } from "react";
+import React from "react";
 import { __ } from "@wordpress/i18n";
 import { isProAccess, getURCRData } from "../../utils/localized-data";
+import DropdownMenu from "./DropdownMenu";
 
 const ContentTypeDropdown = ({
 	onSelect,
@@ -11,9 +12,6 @@ const ContentTypeDropdown = ({
 	conditions,
 	accessControl
 }) => {
-	const [selectedValue, setSelectedValue] = useState("");
-	console.log("conditions", conditions);
-
 	// Get content type options from localized data
 	const allOptions = getURCRData("content_type_options", [
 		{ value: "pages", label: __("Pages", "user-registration") },
@@ -26,18 +24,21 @@ const ContentTypeDropdown = ({
 			label: __("Courses", "user-registration")
 		}
 	]);
+
 	// Filter options based on pro access
 	// For free users, only show posts and pages
-	let options = isProAccess()
+	let filteredOptions = isProAccess()
 		? allOptions
 		: allOptions.filter(
 				(option) => option.value === "posts" || option.value === "pages"
 		  );
 
-	options =
+	filteredOptions =
 		"membership" === conditions[0]?.value && "access" === accessControl
-			? options
-			: options.filter((option) => option.value !== "masteriyo_courses");
+			? filteredOptions
+			: filteredOptions.filter(
+					(option) => option.value !== "masteriyo_courses"
+			  );
 
 	// Check if a content type already exists
 	const isContentTypeExists = (contentType) => {
@@ -46,52 +47,13 @@ const ContentTypeDropdown = ({
 		);
 	};
 
-	const handleOptionClick = (option) => {
-		// Don't allow selection if already exists
-		if (isContentTypeExists(option.value)) {
-			return;
-		}
-		setSelectedValue(option.value);
-		if (onSelect) {
-			onSelect(option);
-		}
-	};
+	// Map options with disabled state
+	const options = filteredOptions.map((option) => ({
+		...option,
+		disabled: isContentTypeExists(option.value)
+	}));
 
-	return (
-		<div className="urcr-content-type-dropdown-menu">
-			{options.map((option) => {
-				const isDisabled = isContentTypeExists(option.value);
-				return (
-					<span
-						key={option.value}
-						role="button"
-						tabIndex={isDisabled ? -1 : 0}
-						className={`urcr-content-type-dropdown-option ${
-							selectedValue === option.value ? "is-selected" : ""
-						} ${isDisabled ? "is-disabled" : ""}`}
-						onClick={(e) => {
-							e.stopPropagation();
-							if (!isDisabled) {
-								handleOptionClick(option);
-							}
-						}}
-						onKeyDown={(e) => {
-							if (
-								!isDisabled &&
-								(e.key === "Enter" || e.key === " ")
-							) {
-								e.preventDefault();
-								e.stopPropagation();
-								handleOptionClick(option);
-							}
-						}}
-					>
-						{option.label}
-					</span>
-				);
-			})}
-		</div>
-	);
+	return <DropdownMenu options={options} onSelect={onSelect} />;
 };
 
 export default ContentTypeDropdown;

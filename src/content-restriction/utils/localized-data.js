@@ -80,3 +80,18 @@ export const isProAccess = () => {
 	const isPro = getURCRData("is_pro", false);
 	return isPro === true || isPro === "1" || isPro === 1;
 };
+
+/**
+ * Check if UR_DEV is enabled
+ *
+ * @returns {boolean} True if UR_DEV is enabled, false otherwise
+ *
+ * @example
+ * if (isURDev()) {
+ *   // Show dev features
+ * }
+ */
+export const isURDev = () => {
+	const urDev = getURCRData("UR_DEV", false);
+	return urDev === true || urDev === "1" || urDev === 1;
+};

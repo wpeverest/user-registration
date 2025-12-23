@@ -7,7 +7,8 @@ import ConditionFieldDropdown from "../dropdowns/ConditionFieldDropdown";
 import ConditionRow from "./ConditionRow";
 import AdvancedLogicGates from "./AdvancedLogicGates";
 import AccessControlSection from "./AccessControlSection";
-import { getURCRData, isProAccess } from "../../utils/localized-data";
+import DropdownButton from "../dropdowns/DropdownButton";
+import { getURCRData, isProAccess, isURDev } from "../../utils/localized-data";
 
 // Helper function to determine condition input type
 const getConditionType = (conditionType) => {
@@ -37,15 +38,15 @@ const RuleGroup = ({
 	onAccessControlChange,
 	contentTargets,
 	onContentTargetsChange,
-	isMigrated = false
+	isMigrated = false,
+	ruleType = null
 }) => {
 	const [conditions, setConditions] = useState([]);
 	const [logicGate, setLogicGate] = useState(group.logic_gate || "AND");
-	const [dropdownOpen, setDropdownOpen] = useState(false);
-	const dropdownWrapperRef = useRef(null);
 	const isAdvancedLogicEnabled = Boolean(
 		getURCRData("is_advanced_logic_enabled", false)
 	);
+	const isMembershipRule = ruleType === "membership";
 
 	// Initialize conditions from group data
 	useEffect(() => {
@@ -93,13 +94,13 @@ const RuleGroup = ({
 			setConditions([]);
 		}
 
-		// Force logic gate to AND when advanced logic is disabled
-		if (!isAdvancedLogicEnabled) {
+		// Force logic gate to AND when advanced logic is disabled or for membership rules
+		if (!isAdvancedLogicEnabled || isMembershipRule) {
 			setLogicGate("AND");
 		} else if (group.logic_gate) {
 			setLogicGate(group.logic_gate);
 		}
-	}, [group.id, isAdvancedLogicEnabled]);
+	}, [group.id, isAdvancedLogicEnabled, isMembershipRule]);
 
 	// Force logic gate to AND when advanced logic is disabled (in case it changes dynamically)
 	useEffect(() => {
@@ -107,31 +108,6 @@ const RuleGroup = ({
 			setLogicGate("AND");
 		}
 	}, [isAdvancedLogicEnabled, logicGate]);
-
-	// Close dropdown when clicking outside
-	useEffect(() => {
-		const handleClickOutside = (event) => {
-			if (
-				dropdownWrapperRef.current &&
-				!dropdownWrapperRef.current.contains(event.target)
-			) {
-				setDropdownOpen(false);
-			}
-		};
-
-		if (dropdownOpen) {
-			document.addEventListener("mousedown", handleClickOutside);
-		}
-
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, [dropdownOpen]);
-
-	const handleConditionButtonClick = (e) => {
-		e.stopPropagation();
-		setDropdownOpen(!dropdownOpen);
-	};
 
 	const handleAfterConditionSelection = (option) => {
 		let initialValue = "";
@@ -154,7 +130,6 @@ const RuleGroup = ({
 			conditionValue: initialValue
 		};
 		setConditions([...conditions, newCondition]);
-		setDropdownOpen(false);
 	};
 
 	const handleConditionUpdate = (updatedCondition) => {
@@ -248,19 +223,25 @@ const RuleGroup = ({
 		const updatedGroup = {
 			id: group.id,
 			type: "group",
-			logic_gate: isAdvancedLogicEnabled ? logicGate : "AND", // Force AND when advanced logic is disabled (UI only, backend will flatten)
+			logic_gate:
+				isAdvancedLogicEnabled && !isMembershipRule ? logicGate : "AND", // Force AND when advanced logic is disabled or for membership rules
 			conditions: conditionsToSerialize
 		};
 		onGroupUpdate(updatedGroup);
-	}, [conditions, logicGate, group.id, isAdvancedLogicEnabled]);
-
+	}, [
+		conditions,
+		logicGate,
+		group.id,
+		isAdvancedLogicEnabled,
+		isMembershipRule
+	]);
 	return (
 		<div
 			className={`urcr-content-group ${
 				isNested ? "urcr-nested-group" : ""
 			}`}
 		>
-			{isAdvancedLogicEnabled && (
+			{isAdvancedLogicEnabled && !isMembershipRule && (
 				<AdvancedLogicGates
 					logicGate={logicGate}
 					onLogicGateChange={setLogicGate}
@@ -271,12 +252,12 @@ const RuleGroup = ({
 					{conditions.length > 0 && (
 						<div
 							className={`urcr-conditions-list ${
-								isAdvancedLogicEnabled
+								isAdvancedLogicEnabled && !isMembershipRule
 									? "urcr-conditional-logic-definitions"
 									: ""
 							}`}
 						>
-							{isAdvancedLogicEnabled && (
+							{isAdvancedLogicEnabled && !isMembershipRule && (
 								<div
 									className={`urcr-condition-logic-gate-wrapper urcr-logic-group-rule-${logicGate} ${
 										conditions.length === 1
@@ -291,7 +272,7 @@ const RuleGroup = ({
 									</div>
 								</div>
 							)}
-							{conditions.map((condition) => {
+							{conditions.map((condition, index) => {
 								if (condition.type === "group") {
 									// Only show nested groups when advanced logic is enabled
 									if (!isAdvancedLogicEnabled) {
@@ -317,25 +298,36 @@ const RuleGroup = ({
 												}
 												isNested={true}
 												isMigrated={isMigrated}
+												ruleType={ruleType}
 											/>
-											<button
-												type="button"
-												className="button button-link-delete"
-												onClick={() =>
-													handleGroupRemove(
-														condition.id
-													)
-												}
-												aria-label={__(
-													"Remove group",
-													"user-registration"
-												)}
-											>
-												<span className="dashicons dashicons-no-alt"></span>
-											</button>
+											{!isMembershipRule && (
+												<button
+													type="button"
+													className="button button-link-delete"
+													onClick={() =>
+														handleGroupRemove(
+															condition.id
+														)
+													}
+													aria-label={__(
+														"Remove group",
+														"user-registration"
+													)}
+												>
+													<span className="dashicons dashicons-no-alt"></span>
+												</button>
+											)}
 										</div>
 									);
 								} else {
+									// Check if this is the first condition in a membership rule
+									const isFirstCondition =
+										isMembershipRule && index === 0;
+									// For membership rules, only hide remove button for first condition (unless UR_DEV is enabled)
+									const shouldShowRemoveButton =
+										!isMembershipRule ||
+										!isFirstCondition ||
+										isURDev();
 									return (
 										<div
 											key={condition.id}
@@ -345,22 +337,29 @@ const RuleGroup = ({
 												condition={condition}
 												onUpdate={handleConditionUpdate}
 												isMigrated={isMigrated}
-											/>
-											<button
-												type="button"
-												className="button button-link-delete"
-												onClick={() =>
-													handleConditionRemove(
-														condition.id
-													)
+												isLocked={isFirstCondition}
+												ruleType={ruleType}
+												isFirstCondition={
+													isFirstCondition
 												}
-												aria-label={__(
-													"Remove condition",
-													"user-registration"
-												)}
-											>
-												<span className="dashicons dashicons-no-alt"></span>
-											</button>
+											/>
+											{shouldShowRemoveButton && (
+												<button
+													type="button"
+													className="button button-link-delete"
+													onClick={() =>
+														handleConditionRemove(
+															condition.id
+														)
+													}
+													aria-label={__(
+														"Remove condition",
+														"user-registration"
+													)}
+												>
+													<span className="dashicons dashicons-no-alt"></span>
+												</button>
+											)}
 										</div>
 									);
 								}
@@ -384,36 +383,44 @@ const RuleGroup = ({
 					className="urcr-buttons-wrapper"
 					style={{ display: "flex", gap: "10px", marginTop: "10px" }}
 				>
-					<div
-						className="urcr-condition-dropdown-wrapper"
-						ref={dropdownWrapperRef}
-					>
-						<button
-							type="button"
-							className="button urcr-add-condition-button"
-							onClick={handleConditionButtonClick}
-						>
-							<span className="dashicons dashicons-plus-alt2"></span>
-							{__("Condition", "user-registration")}
-						</button>
-						{dropdownOpen && (
-							<ConditionFieldDropdown
-								onSelect={handleAfterConditionSelection}
-								isMigrated={isMigrated}
-							/>
-						)}
-					</div>
-
-					{isProAccess() && isAdvancedLogicEnabled && (
-						<button
-							type="button"
-							className="button urcr-add-group-button"
-							onClick={handleAddGroup}
-						>
-							<span className="dashicons dashicons-plus-alt2"></span>
-							{__("Group", "user-registration")}
-						</button>
+					{isProAccess() && (
+						<DropdownButton
+							buttonContent={
+								<>
+									<span className="dashicons dashicons-plus-alt2"></span>
+									{__("Condition", "user-registration")}
+								</>
+							}
+							options={[]}
+							onSelect={handleAfterConditionSelection}
+							buttonClassName="button urcr-add-condition-button"
+							wrapperClassName="urcr-condition-dropdown-wrapper"
+							renderDropdown={() => (
+								<ConditionFieldDropdown
+									onSelect={handleAfterConditionSelection}
+									isMigrated={isMigrated}
+									ruleType={ruleType}
+									isFirstCondition={
+										isMembershipRule &&
+										conditions.length === 0
+									}
+								/>
+							)}
+						/>
 					)}
+
+					{isProAccess() &&
+						isAdvancedLogicEnabled &&
+						!isMembershipRule && (
+							<button
+								type="button"
+								className="button urcr-add-group-button"
+								onClick={handleAddGroup}
+							>
+								<span className="dashicons dashicons-plus-alt2"></span>
+								{__("Group", "user-registration")}
+							</button>
+						)}
 				</div>
 			</div>
 		</div>
