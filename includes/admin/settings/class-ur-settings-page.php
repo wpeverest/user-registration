@@ -105,7 +105,12 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			 *
 			 * @param array Array of settings to be retrieved.
 			 */
-			return apply_filters( 'user_registration_get_settings_' . $this->id, array() );
+			$settings = apply_filters( 'user_registration_get_settings_' . $this->id, array() );
+			/**
+			 * Backward compatibility: previous settings section.
+			 */
+			$settings = apply_filters( 'user_registration_' . $this->id . '_settings', $settings );
+			return $settings;
 		}
 
 		/**
