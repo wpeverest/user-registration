@@ -16,6 +16,7 @@ if ( ! class_exists( 'UR_Settings_Integration' ) ) {
 	 */
 	class UR_Settings_Integration extends UR_Settings_Page {
         private static $_instance = null;
+        public $integrations;
 		/**
 		 * Constructor.
 		 */
@@ -37,8 +38,13 @@ if ( ! class_exists( 'UR_Settings_Integration' ) ) {
          */
         public function handle_hooks() {
             add_filter( "user_registration_get_sections_{$this->id}",  array( $this, 'get_sections_callback' ), 1, 1 );
-            add_filter( "user_registration_get_settings_{$this->id}", array( $this, 'get_settings_callback' ), 1, 1 );
+            if ( ! empty( $this->integrations ) ) {
+                add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
+                add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
+                add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
+            }
         }
+
         /**
          * Filter to provide sections submenu for integration settings.
          */
@@ -59,6 +65,29 @@ if ( ! class_exists( 'UR_Settings_Integration' ) ) {
             global $current_section;
             return $this->upgrade_to_pro_setting();
             return $settings;
+        }
+        public function get_settings() {
+            $integrations = $this->get_integrations();
+            $settings = apply_filters(
+                'user_registration_integration_settings',
+                array(
+                    'title' => '',
+                    'sections' => $integrations
+                )
+                );
+            return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
+        }
+        public function get_integrations() {
+            return $this->integrations;
+        }
+        public function save() {
+            $settings = $this->get_settings();
+            UR_Admin_Settings::save_fields( $settings );
+        }
+        public function output() {
+            $settings = $this->get_settings();
+            add_filter( 'user_registration_settings_hide_save_button', '__return_true' );
+            UR_Admin_Settings::output_fields( $settings );
         }
     }
 }

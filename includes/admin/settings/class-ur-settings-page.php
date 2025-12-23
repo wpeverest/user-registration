@@ -159,7 +159,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			add_filter( 'user_registration_settings_hide_save_button', '__return_true' );
 			$title = ucwords( str_replace( '-', ' ', $current_section ) );
 			$setting = ucwords( str_replace( '_', ' ', $current_tab ) );
-			return array(
+			return apply_filters( 'user_registration_upgrade_to_pro_setting', array(
 				'title' => '',
 				'sections' => array(
 					'premium_setting_section' => array(
@@ -176,6 +176,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 						),
 					),
 				),
+			)
 			);
 		}
 		/**

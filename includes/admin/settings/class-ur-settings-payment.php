@@ -114,7 +114,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 							),
 						)
 			    );
-            return $settings;
+            return apply_filters( 'user_registration_payment_settings', $settings );
 		}
 
         public function get_paypal_settings() {
