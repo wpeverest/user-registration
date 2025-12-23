@@ -68,13 +68,12 @@ if ( 'vertical' === $layout ) {
 			?>
 		</div>
 		<?php
-		if ( $is_edit_action ) {
+		if ( ! $is_edit_action ) {
 			?>
-			<a href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-password' ) ); ?>" class="user-registration-Button button-secondary urm-profile-change-password-btn"><?php esc_html_e( 'Change Password', 'user-registration' ); ?></a>
-			<?php
-		} else {
-			?>
-			<a href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-profile' ) . '?action="edit"' ); ?>" class="user-registration-Button button-secondary urm-profile-action-toggle"><?php esc_html_e( 'Edit Profile', 'user-registration' ); ?></a>
+			<div class="user-registration-MyAccount-content__header-buttons">
+				<a href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-profile' ) . '?action="edit"' ); ?>" class="user-registration-Button button-secondary urm-profile-action-toggle"><?php esc_html_e( 'Edit Profile', 'user-registration' ); ?></a>
+				<a href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-password' ) ); ?>" class="user-registration-Button button-secondary urm-profile-change-password-btn"><?php esc_html_e( 'Change Password', 'user-registration' ); ?></a>
+			</div>
 			<?php
 		}
 		?>
@@ -212,11 +211,6 @@ if ( 'vertical' === $layout ) {
 												?>
 
 											</div>
-											<?php
-											if ( ! $profile_picture_url ) {
-												?>
-												<span><i><?php echo esc_html__( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php esc_html_e( 'Gravatar', 'user-registration' ); ?></a></i></span>
-											<?php } ?>
 										</header>
 									</div>
 								<?php } ?>

@@ -671,8 +671,6 @@
 							outline-style: none;
 						}
 					}
-
-
 				}
 
 				#membership-error-div {
@@ -1356,6 +1354,49 @@
 												fill: #4e4e4e;
 											}
 										}
+										.action-menu {
+											position: relative;
+											display: inline-block;
+
+											.menu-trigger {
+												background: none;
+												border: none;
+												font-size: 22px;
+												cursor: pointer;
+												padding: 5px;
+											}
+
+											.dropdown {
+												position: absolute;
+												right: 0;
+												top: 28px;
+												background: #fff;
+												border: 1px solid #ccc;
+												border-radius: 6px;
+												display: flex;
+												flex-direction: column;
+												min-width: 140px;
+												box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+												z-index: 50;
+
+												&.hidden {
+													display: none;
+												}
+
+												a {
+													padding: 10px;
+													text-decoration: none;
+													color: #333;
+													display: flex;
+													align-items: center;
+													gap: 6px;
+
+													&:hover {
+														background: #f3f3f3;
+													}
+												}
+											}
+										}
 									}
 								}
 
@@ -1594,8 +1635,6 @@
 					}
 
 					.user-registration-Button {
-						flex: 0 0 20%;
-
 						&.button-secondary {
 							color: #4584FF;
 							border-color: #4584FF;
@@ -1957,5 +1996,23 @@ body {
 		.field-user_pass {
 			display: none;
 		}
+	}
+}
+
+
+.user-registration-MyAccount-content__header {
+	h1 {
+		margin: 0;
+		text-align: left;
+		color: #16181A;
+		font-size: 20px;
+		font-weight: 500;
+		line-height: 30px;
+	}
+
+	&-buttons {
+		display: flex;
+		gap: 10px;
+		flex: 0 0 40%;
 	}
 }

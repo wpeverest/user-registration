@@ -154,8 +154,25 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 										}
 										?>
 										<div class="btn-div">
-											<?php echo implode( ' | ', $buttons ); ?>
-										<!--
+											<?php
+											if ( ! empty( $buttons ) ) {
+												if ( count( $buttons ) > 0 ) {
+													?>
+													<div class="action-menu">
+														<button class="menu-trigger" type="button">⋮</button>
+														<div class="dropdown hidden">
+															<?php foreach ( $buttons as $button ) : ?>
+																<?php echo $button; ?>
+															<?php endforeach; ?>
+														</div>
+													</div>
+													<?php
+												} else {
+													echo implode( ' | ', $buttons );
+												}
+											}
+											?>
+											<!--
 										<?php
 
 										if ( ( isset( $data['is_upgrading'] ) && $data['is_upgrading'] ) || $is_renewing || ( isset( $data['is_purchasing_multiple'] ) && $data['is_purchasing_multiple'] ) ) :

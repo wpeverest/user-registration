@@ -64,7 +64,8 @@ if ( 'vertical' === $layout ) {
 			<?php
 			$actual_endpoint = $endpoint;
 
-			if ( 'edit-password' === $actual_endpoint ) {
+			$option = get_option( 'urm_is_new_installation' );
+			if ( 'edit-password' === $actual_endpoint || ( $option && 'dashboard' === $actual_endpoint ) ) {
 				continue;
 			}
 			?>

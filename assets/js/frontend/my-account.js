@@ -373,10 +373,8 @@ jQuery(function ($) {
 			});
 		});
 
-	const editBtn = $(document).find(
-		".user_registration_profile_picture_upload"
-	);
-	const fileInput = document.getElementById("ur-profile-pic");
+	var editBtn = $(document).find(".user_registration_profile_picture_upload");
+	var fileInput = document.getElementById("ur-profile-pic");
 
 	if (!editBtn || !fileInput) return;
 
@@ -417,5 +415,26 @@ jQuery(function ($) {
 		if (!clickedInsideMenu || !clickedEditBtn) {
 			menu.hide();
 		}
+	});
+});
+
+jQuery(function ($) {
+	$(document)
+		.find(".membership-row-btn-container")
+		.on("click", ".menu-trigger", function (e) {
+			e.stopPropagation();
+
+			var $container = $(this).closest(".action-menu");
+			var $dropdown = $container.find(".dropdown");
+
+			$(".action-menu .dropdown").not($dropdown).addClass("hidden");
+
+			$dropdown.toggleClass("hidden");
+
+			console.log("menu-trigger clicked");
+		});
+
+	$(document).on("click", function () {
+		$(".membership-row-btn-container").find(".dropdown").addClass("hidden");
 	});
 });
