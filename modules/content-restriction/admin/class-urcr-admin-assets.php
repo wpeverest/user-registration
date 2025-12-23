@@ -403,6 +403,7 @@ class URCR_Admin_Assets {
 				'membership'              => __( 'Membership', 'user-registration' ),
 				'membership_rule_title'   => __( 'Membership Access Rule', 'user-registration' ),
 				'all_content_types_added' => __( 'All content types have been added', 'user-registration' ),
+				'masteriyo_courses'       => __( 'Masteriyo Courses', 'user-registration' ),
 			),
 		);
 
