@@ -120,6 +120,22 @@ const AddonCard = ({ addon, showToast }) => {
 		return "gray";
 	};
 
+	// Check if this addon should be hidden based on membership-specific rules
+	/* global _UR_DASHBOARD_ */
+	const { urm_version } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_ ? _UR_DASHBOARD_ : {};
+	
+	if (addon.slug === "user-registration-membership") {
+		// If urm_version is set (user is not new), hide the addon
+		if (urm_version && urm_version !== "") {
+			return null;
+		}
+		// If urm_version is empty (new user) and addon is already active, hide it
+		// Check both the state and the initial prop to handle both initial render and after activation
+		if (isActive || addon.status === "active") {
+			return null;
+		}
+		// If urm_version is empty (new user) and addon is not active, show it
+	}
 
 	return (
 		<Box

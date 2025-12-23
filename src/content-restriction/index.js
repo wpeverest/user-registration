@@ -18,3 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 });
 
+// Export for use in other modules (e.g., dashboard screens)
+export default ContentAccessRules;
+
