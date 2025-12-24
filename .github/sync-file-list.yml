@@ -1,16 +1,16 @@
-wpeverest/user-registration-pro@master:
-  - assets
-  - includes
-  - modules
-  - src
-  - templates
-  - .babelrc
-  - .editorconfig
-  - .gitattributes
-  - .gitignore
-  - .jshintrc
-  - license.txt
-  - phpcs.xml
-  - uninstall.php
-  - webpack.config.js
-  - wpml-config.xml
+wpeverest/user-registration-pro@UR-3327-enhance/my-account-ui-clean:
+    - assets
+    - includes
+    - modules
+    - src
+    - templates
+    - .babelrc
+    - .editorconfig
+    - .gitattributes
+    - .gitignore
+    - .jshintrc
+    - license.txt
+    - phpcs.xml
+    - uninstall.php
+    - webpack.config.js
+    - wpml-config.xml
