@@ -174,11 +174,11 @@ class UR_Admin_Settings {
 	public static function show_messages() {
 		if ( count( self::$errors ) > 0 ) {
 			foreach ( self::$errors as $key => $error ) {
-				echo '<div id="message" class="error inline"><p><strong>' . wp_kses_post( $error ) . '</strong></p></div>';
+				echo '<div id="message" class="inline error"><p><strong>' . wp_kses_post( $error ) . '</strong></p></div>';
 			}
 		} elseif ( count( self::$messages ) > 0 ) {
 			foreach ( self::$messages as $message ) {
-				echo '<div id="message" class="updated inline"><p><strong>' . wp_kses_post( $message ) . '</strong></p></div>';
+				echo '<div id="message" class="inline updated"><p><strong>' . wp_kses_post( $message ) . '</strong></p></div>';
 			}
 		}
 	}
@@ -423,7 +423,7 @@ class UR_Admin_Settings {
 
 							if ( ! empty( $section['button'] ) ) {
 								if( isset( $section[ 'button'][ 'button_type'] ) && 'upgrade_link' === $section[ 'button' ][ 'button_type' ] ) {
-									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="ur-upgrade--link" style="min-width:90px;" target="_blank">' . '<span>' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span></a>';
+									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="ur-upgrade--link" target="_blank">' . '<span>' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span></a>';
 								} else {
 									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="user_registration_smart_tags_used" style="min-width:90px;" target="_blank">' . '<span style="text-decoration: underline;">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span>' . '<span class="dashicons dashicons-external"></span>' . '</a>';
 								}
@@ -444,7 +444,7 @@ class UR_Admin_Settings {
 						if ( ! empty( $section['desc'] ) ) {
 							$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $section['desc'] ) ) . '</p>';
 						}
-						$settings .= '<div class="user-registration-card__body pt-0 pb-0">';
+						$settings .= '<div class="pt-0 pb-0 user-registration-card__body">';
 
 						if ( ! empty( $id ) ) {
 							/**
@@ -944,7 +944,7 @@ class UR_Admin_Settings {
 										$settings .= '<ul class="ur-radio-group-list">';
 										foreach ( $options as $option_index => $option_text ) {
 											$class     = str_replace( ' ', '-', strtolower( $option_text ) );
-											$settings .= '<li class="ur-radio-group-list--item  ' . $class . ( trim( $option_index ) === $option_value ? ' active' : '' ) . '">';
+											$settings .= '<li class="ur-radio-group-list--item ' . $class . ( trim( $option_index ) === $option_value ? ' active' : '' ) . '">';
 
 											$checked = '';
 
