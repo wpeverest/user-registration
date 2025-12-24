@@ -81,5 +81,21 @@ if ( ! class_exists( 'Helper' ) ) :
 
 			return $url;
 		}
+
+		public static function get_courses_based_on_membership( $membership_id ) {
+			$content_rules = $membership_id ? urcr_get_membership_rule_data( $membership_id ) : array();
+
+			$user_courses = array();
+
+			if ( $content_rules['enabled'] && ! empty( $content_rules['access_control'] ) && 'access' === $content_rules['access_control'] ) {
+				foreach ( $content_rules['target_contents'] as $content ) {
+					if ( 'masteriyo_courses' === $content['type'] ) {
+						$user_courses = $content['value'];
+					}
+				}
+			}
+
+			return $user_courses;
+		}
 	}
 endif;

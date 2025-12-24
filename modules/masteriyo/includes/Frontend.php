@@ -91,13 +91,18 @@ class Frontend {
 	 * Membership tab content.
 	 */
 	public function tab_endpoint_content() {
-		$user_id = get_current_user_id();
+		$user_id            = get_current_user_id();
+		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
+		$membership         = $members_repository->get_member_membership_by_id( $user_id );
 
-		$my_course = array( 177 );
-		$courses   = array();
+		$user_courses = Helper::get_courses_based_on_membership( $membership['post_id'] );
 
-		foreach ( $my_course as $course_id ) {
-			$courses[] = masteriyo_get_course( $course_id );
+		$courses = array();
+
+		if ( ! empty( $user_courses ) ) {
+			foreach ( $user_courses as $course_id ) {
+				$courses[] = masteriyo_get_course( $course_id );
+			}
 		}
 		wp_enqueue_style( 'urm_masteriyo_pulic_style', plugins_url( '/assets/css/public.css', Constants::get( 'MASTERIYO_PLUGIN_FILE' ) ), array(), URM_MASTERIYO_VERSION );
 		ur_get_template(
