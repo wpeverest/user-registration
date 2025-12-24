@@ -1,7 +1,6 @@
-import { MembershipSetupType } from "../context/Gettingstartedcontext";
+import { MembershipSetupType, PaymentSettings } from "../context/Gettingstartedcontext";
 
-export const API_BASE =
-	"/wp-json/user-registration/v1/getting-started";
+export const API_BASE = "/wp-json/user-registration/v1/getting-started";
 
 const getHeaders = () => {
 	const nonce =
@@ -27,10 +26,7 @@ export const apiGet = async <T = any>(path: string): Promise<T> => {
 	return json.data ?? json;
 };
 
-export const apiPost = async <T = any>(
-	path: string,
-	body?: any
-): Promise<T> => {
+export const apiPost = async <T = any>(path: string, body?: any): Promise<T> => {
 	const res = await fetch(`${API_BASE}${path}`, {
 		method: "POST",
 		headers: getHeaders(),
@@ -44,9 +40,7 @@ export const apiPost = async <T = any>(
 	return json.data ?? json;
 };
 
-export const mapSetupToApiType = (
-	type: MembershipSetupType
-): string => {
+export const mapSetupToApiType = (type: MembershipSetupType): string => {
 	switch (type) {
 		case "paid":
 			return "paid_membership";
@@ -57,9 +51,7 @@ export const mapSetupToApiType = (
 	}
 };
 
-export const mapApiToSetupType = (
-	apiType: string
-): MembershipSetupType => {
+export const mapApiToSetupType = (apiType: string): MembershipSetupType => {
 	switch (apiType) {
 		case "paid_membership":
 			return "paid";
@@ -68,4 +60,40 @@ export const mapApiToSetupType = (
 		default:
 			return "other";
 	}
+};
+
+/**
+ * Maps the frontend PaymentSettings to the API format
+ */
+export const mapPaymentSettingsToApi = (settings: PaymentSettings) => {
+	return {
+		offline_payment: settings.offlinePayment,
+		bank_details: settings.bankDetails,
+		paypal: settings.paypal,
+		paypal_email: settings.paypalEmail,
+		stripe: settings.stripe,
+		stripe_test_mode: settings.stripeTestMode,
+		stripe_test_publishable_key: settings.stripeTestPublishableKey,
+		stripe_test_secret_key: settings.stripeTestSecretKey,
+		stripe_live_publishable_key: settings.stripeLivePublishableKey,
+		stripe_live_secret_key: settings.stripeLiveSecretKey,
+	};
+};
+
+/**
+ * Maps API payment settings response to frontend format
+ */
+export const mapApiToPaymentSettings = (apiData: any): Partial<PaymentSettings> => {
+	return {
+		offlinePayment: apiData.offline_payment ?? false,
+		bankDetails: apiData.bank_details ?? "",
+		paypal: apiData.paypal ?? false,
+		paypalEmail: apiData.paypal_email ?? "",
+		stripe: apiData.stripe ?? false,
+		stripeTestMode: apiData.stripe_test_mode ?? false,
+		stripeTestPublishableKey: apiData.stripe_test_publishable_key ?? "",
+		stripeTestSecretKey: apiData.stripe_test_secret_key ?? "",
+		stripeLivePublishableKey: apiData.stripe_live_publishable_key ?? "",
+		stripeLiveSecretKey: apiData.stripe_live_secret_key ?? "",
+	};
 };

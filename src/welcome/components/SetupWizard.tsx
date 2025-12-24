@@ -7,7 +7,7 @@ import {
 	Text,
 	Link,
 	useColorModeValue,
-	Spinner
+	Spinner,
 } from "@chakra-ui/react";
 import { useStateValue } from "../context/StateProvider";
 import { MembershipPlan } from "../context/Gettingstartedcontext";
@@ -15,7 +15,8 @@ import {
 	apiGet,
 	apiPost,
 	mapApiToSetupType,
-	mapSetupToApiType
+	mapSetupToApiType,
+	mapPaymentSettingsToApi,
 } from "../api/gettingStartedApi";
 import WelcomeStep from "./steps/WelcomeStep";
 import MembershipStep from "./steps/MembershipStep";
@@ -50,16 +51,13 @@ const SetupWizard: React.FC = () => {
 								? welcome.allow_usage_tracking
 								: state.allowTracking,
 						adminEmail:
-							typeof welcome?.admin_email === "string" &&
-							welcome.admin_email
+							typeof welcome?.admin_email === "string" && welcome.admin_email
 								? welcome.admin_email
 								: state.adminEmail,
-						membershipOptions: Array.isArray(
-							welcome?.membership_options
-						)
+						membershipOptions: Array.isArray(welcome?.membership_options)
 							? welcome.membership_options
-							: state.membershipOptions
-					}
+							: state.membershipOptions,
+					},
 				});
 			} catch (e) {
 				console.error(e);
@@ -82,8 +80,8 @@ const SetupWizard: React.FC = () => {
 			billing_period: plan.billingPeriod,
 			access: plan.contentAccess.map((a) => ({
 				type: a.type,
-				value: a.value
-			}))
+				value: a.value,
+			})),
 		};
 	};
 
@@ -93,23 +91,18 @@ const SetupWizard: React.FC = () => {
 
 			if (currentStep === 1) {
 				await apiPost("/welcome", {
-					membership_type: mapSetupToApiType(
-						state.membershipSetupType
-					),
+					membership_type: mapSetupToApiType(state.membershipSetupType),
 					allow_usage_tracking: state.allowTracking,
 					allow_email_updates: state.allowTracking,
-					admin_email: state.adminEmail
+					admin_email: state.adminEmail,
 				});
 			} else if (currentStep === 2) {
 				await apiPost("/memberships", {
-					memberships: state.membershipPlans.map(mapPlanToApi)
+					memberships: state.membershipPlans.map(mapPlanToApi),
 				});
 			} else if (currentStep === 3) {
-				await apiPost("/payments", {
-					offline_payment: state.paymentSettings.offlinePayment,
-					paypal: state.paymentSettings.paypal,
-					stripe: state.paymentSettings.stripe
-				});
+				// Use the new mapping function for payment settings
+				await apiPost("/payments", mapPaymentSettingsToApi(state.paymentSettings));
 			}
 
 			dispatch({ type: "NEXT_STEP" });

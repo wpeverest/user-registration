@@ -1,30 +1,23 @@
-import React, {
-	createContext,
-	useContext,
-	useReducer,
-	ReactNode,
-	Reducer,
-	Dispatch
-} from "react";
-
-interface StateProviderProps {
-	initialState: any;
-	reducer: Reducer<any, any>;
-	children: ReactNode;
-}
+import React, { createContext, useContext, useReducer, ReactNode } from "react";
+import {
+	GettingStartedState,
+	Action,
+	initialState,
+	reducer
+} from "./Gettingstartedcontext";
 
 interface StateContextType {
-	state: any;
-	dispatch: Dispatch<any>;
+	state: GettingStartedState;
+	dispatch: React.Dispatch<Action>;
 }
 
 const StateContext = createContext<StateContextType | undefined>(undefined);
 
-export const StateProvider: React.FC<StateProviderProps> = ({
-	initialState,
-	reducer,
-	children
-}) => {
+interface StateProviderProps {
+	children: ReactNode;
+}
+
+export const StateProvider: React.FC<StateProviderProps> = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
 	return (

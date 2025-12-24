@@ -1,227 +1,188 @@
 export type MembershipSetupType = "paid" | "free" | "other";
-export type MembershipPlanType = "free" | "paid";
-export type BillingPeriod = "weekly" | "monthly" | "yearly" | "one-time";
-export type ContentAccessType =
-	| "pages"
-	| "posts"
 
-export interface MembershipOptionFromApi {
-	value: string;
-	label: string;
-	description: string;
-}
-
-export interface GettingStartedState {
-	currentStep: number;
-	membershipSetupType: MembershipSetupType;
-	allowTracking: boolean;
-	membershipPlans: MembershipPlan[];
-	paymentSettings: PaymentSettings;
-	isLoading: boolean;
-	adminEmail: string;
-	membershipOptions: MembershipOptionFromApi[];
-}
-
-export interface ContentAccess {
-	id: string;
-	type: ContentAccessType;
+export interface ContentAccessRule {
+	type: "posts" | "pages";
 	value: number[];
 }
 
 export interface MembershipPlan {
 	id: string;
 	name: string;
-	type: MembershipPlanType;
-	price: string;
+	type: "free" | "paid";
+	price: number;
 	currency: string;
-	billingPeriod: BillingPeriod;
-	contentAccess: ContentAccess[];
+	billingPeriod: "weekly" | "monthly" | "yearly";
+	contentAccess: ContentAccessRule[];
 }
 
 export interface PaymentSettings {
 	offlinePayment: boolean;
+	bankDetails: string;
 	paypal: boolean;
+	paypalEmail: string;
 	stripe: boolean;
+	stripeTestMode: boolean;
+	stripeTestPublishableKey: string;
+	stripeTestSecretKey: string;
+	stripeLivePublishableKey: string;
+	stripeLiveSecretKey: string;
 }
 
 export interface GettingStartedState {
 	currentStep: number;
+	isLoading: boolean;
 	membershipSetupType: MembershipSetupType;
 	allowTracking: boolean;
+	adminEmail: string;
+	membershipOptions: {
+		value: string;
+		label: string;
+		description: string;
+	}[];
 	membershipPlans: MembershipPlan[];
 	paymentSettings: PaymentSettings;
-	isLoading: boolean;
-	adminEmail: string;
 }
-
-export type GettingStartedAction =
-	| { type: "SET_STEP"; payload: number }
-	| { type: "NEXT_STEP" }
-	| { type: "PREV_STEP" }
-	| { type: "SET_MEMBERSHIP_SETUP_TYPE"; payload: MembershipSetupType }
-	| { type: "SET_ALLOW_TRACKING"; payload: boolean }
-	| { type: "ADD_MEMBERSHIP_PLAN" }
-	| {
-			type: "UPDATE_MEMBERSHIP_PLAN";
-			payload: { id: string; updates: Partial<MembershipPlan> };
-	  }
-	| { type: "REMOVE_MEMBERSHIP_PLAN"; payload: string }
-	| {
-			type: "ADD_CONTENT_ACCESS";
-			payload: { planId: string; access: ContentAccess };
-	  }
-	| {
-			type: "REMOVE_CONTENT_ACCESS";
-			payload: { planId: string; accessId: string };
-	  }
-	| {
-			type: "SET_PAYMENT_SETTING";
-			payload: { key: keyof PaymentSettings; value: boolean };
-	  }
-	| { type: "SET_LOADING"; payload: boolean }
-	| { type: "RESET" }
-	| { type: "HYDRATE_FROM_API"; payload: Partial<GettingStartedState> }
-	| { type: "SET_ADMIN_EMAIL"; payload: string };
-
-const generateId = (): string => Math.random().toString(36).substring(2, 9);
-
-const createDefaultPlan = (
-	name: string = "",
-	type: MembershipPlanType = "free"
-): MembershipPlan => ({
-	id: generateId(),
-	name,
-	type,
-	price: "10.00",
-	currency: "USD",
-	billingPeriod: "yearly",
-	contentAccess: [],
-});
 
 export const initialState: GettingStartedState = {
 	currentStep: 1,
+	isLoading: false,
 	membershipSetupType: "paid",
-	allowTracking: true,
-	membershipPlans: [
-		createDefaultPlan("Silver", "free"),
-		createDefaultPlan("Gold", "paid"),
+	allowTracking: false,
+	adminEmail: "",
+	membershipOptions: [
+		{
+			value: "paid_membership",
+			label: "Paid Membership",
+			description:
+				"Paid members can access protected content. Choose this even if you have combination of both free and paid."
+		},
+		{
+			value: "free_membership",
+			label: "Free Membership",
+			description: "Registered users can access protected content."
+		},
+		{
+			value: "normal",
+			label: "Other URM Features (no membership now)",
+			description:
+				"I want registration and other features without membership."
+		}
 	],
+	membershipPlans: [],
 	paymentSettings: {
 		offlinePayment: false,
+		bankDetails: "",
 		paypal: false,
+		paypalEmail: "",
 		stripe: false,
-	},
-	isLoading: false,
-	adminEmail: "",
-	membershipOptions: [],
+		stripeTestMode: false,
+		stripeTestPublishableKey: "",
+		stripeTestSecretKey: "",
+		stripeLivePublishableKey: "",
+		stripeLiveSecretKey: ""
+	}
 };
 
+export type Action =
+	| { type: "SET_LOADING"; payload: boolean }
+	| { type: "NEXT_STEP" }
+	| { type: "PREV_STEP" }
+	| { type: "SET_STEP"; payload: number }
+	| { type: "SET_MEMBERSHIP_SETUP_TYPE"; payload: MembershipSetupType }
+	| { type: "SET_ALLOW_TRACKING"; payload: boolean }
+	| { type: "SET_ADMIN_EMAIL"; payload: string }
+	| { type: "ADD_MEMBERSHIP_PLAN"; payload: MembershipPlan }
+	| { type: "UPDATE_MEMBERSHIP_PLAN"; payload: MembershipPlan }
+	| { type: "REMOVE_MEMBERSHIP_PLAN"; payload: string }
+	| {
+			type: "SET_PAYMENT_SETTING";
+			payload: { key: keyof PaymentSettings; value: boolean | string };
+	  }
+	| {
+			type: "HYDRATE_FROM_API";
+			payload: Partial<GettingStartedState>;
+	  }
+	| {
+			type: "HYDRATE_PAYMENT_SETTINGS";
+			payload: Partial<PaymentSettings>;
+	  };
 
-const reducer = (
+export const reducer = (
 	state: GettingStartedState,
-	action: GettingStartedAction
+	action: Action
 ): GettingStartedState => {
 	switch (action.type) {
-		case "SET_STEP":
-			return {
-				...state,
-				currentStep: action.payload,
-			};
+		case "SET_LOADING":
+			return { ...state, isLoading: action.payload };
+
 		case "NEXT_STEP":
 			return {
 				...state,
-				currentStep: Math.min(state.currentStep + 1, 4),
+				currentStep: Math.min(state.currentStep + 1, 4)
 			};
+
 		case "PREV_STEP":
 			return {
 				...state,
-				currentStep: Math.max(state.currentStep - 1, 1),
+				currentStep: Math.max(state.currentStep - 1, 1)
 			};
+
+		case "SET_STEP":
+			return { ...state, currentStep: action.payload };
+
 		case "SET_MEMBERSHIP_SETUP_TYPE":
-			return {
-				...state,
-				membershipSetupType: action.payload,
-			};
+			return { ...state, membershipSetupType: action.payload };
+
 		case "SET_ALLOW_TRACKING":
-			return {
-				...state,
-				allowTracking: action.payload,
-			};
+			return { ...state, allowTracking: action.payload };
+
+		case "SET_ADMIN_EMAIL":
+			return { ...state, adminEmail: action.payload };
+
 		case "ADD_MEMBERSHIP_PLAN":
 			return {
 				...state,
-				membershipPlans: [...state.membershipPlans, createDefaultPlan()],
+				membershipPlans: [...state.membershipPlans, action.payload]
 			};
+
 		case "UPDATE_MEMBERSHIP_PLAN":
 			return {
 				...state,
 				membershipPlans: state.membershipPlans.map((plan) =>
-					plan.id === action.payload.id
-						? { ...plan, ...action.payload.updates }
-						: plan
-				),
+					plan.id === action.payload.id ? action.payload : plan
+				)
 			};
+
 		case "REMOVE_MEMBERSHIP_PLAN":
 			return {
 				...state,
 				membershipPlans: state.membershipPlans.filter(
 					(plan) => plan.id !== action.payload
-				),
+				)
 			};
-		case "ADD_CONTENT_ACCESS":
-			return {
-				...state,
-				membershipPlans: state.membershipPlans.map((plan) =>
-					plan.id === action.payload.planId
-						? {
-								...plan,
-								contentAccess: [...plan.contentAccess, action.payload.access],
-						  }
-						: plan
-				),
-			};
-		case "REMOVE_CONTENT_ACCESS":
-			return {
-				...state,
-				membershipPlans: state.membershipPlans.map((plan) =>
-					plan.id === action.payload.planId
-						? {
-								...plan,
-								contentAccess: plan.contentAccess.filter(
-									(access) => access.id !== action.payload.accessId
-								),
-						  }
-						: plan
-				),
-			};
+
 		case "SET_PAYMENT_SETTING":
 			return {
 				...state,
 				paymentSettings: {
 					...state.paymentSettings,
-					[action.payload.key]: action.payload.value,
-				},
+					[action.payload.key]: action.payload.value
+				}
 			};
-		case "SET_LOADING":
-			return {
-				...state,
-				isLoading: action.payload,
-			};
-		case "RESET":
-			return initialState;
+
 		case "HYDRATE_FROM_API":
+			return { ...state, ...action.payload };
+
+		case "HYDRATE_PAYMENT_SETTINGS":
 			return {
 				...state,
-				...action.payload,
+				paymentSettings: {
+					...state.paymentSettings,
+					...action.payload
+				}
 			};
-		case "SET_ADMIN_EMAIL":
-			return {
-				...state,
-				adminEmail: action.payload,
-			};
+
 		default:
 			return state;
 	}
 };
-
-export default reducer;
