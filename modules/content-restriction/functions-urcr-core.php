@@ -192,6 +192,22 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 	if ( is_array( $targets ) ) {
 		foreach ( $targets as $target ) {
 			if ( isset( $target['type'] ) && ! empty( $target['value'] ) ) {
+
+				$result = apply_filters(
+					'urcr_match_target_type',
+					null,
+					$target,
+					$target_post
+				);
+
+				if ( true === $result ) {
+					return true;
+				}
+
+				if ( false === $result ) {
+					continue;
+				}
+
 				switch ( $target['type'] ) {
 					case 'wp_posts':
 						$post_id         = ( 'object' === gettype( $target_post ) && $target_post->ID ) ? strval( $target_post->ID ) : '0';
@@ -1132,10 +1148,10 @@ function urcr_migrate_post_page_restrictions() {
 
 	$posts = array();
 	foreach ( $results as $result ) {
-		$post = new stdClass();
-		$post->ID = (int) $result->ID;
+		$post            = new stdClass();
+		$post->ID        = (int) $result->ID;
 		$post->post_type = $result->post_type;
-		$posts[] = $post;
+		$posts[]         = $post;
 	}
 
 	$total_posts_count = count( $posts );
@@ -1206,7 +1222,7 @@ function urcr_migrate_post_page_restrictions() {
 
 	if ( ! empty( $posts_by_type['wp_posts'] ) ) {
 		$target_contents[] = array(
-			'id'    => 'x' . $target_id_counter ++,
+			'id'    => 'x' . $target_id_counter++,
 			'type'  => 'wp_posts',
 			'value' => array_map( 'strval', $posts_by_type['wp_posts'] ),
 		);
@@ -1215,7 +1231,7 @@ function urcr_migrate_post_page_restrictions() {
 
 	if ( ! empty( $posts_by_type['wp_pages'] ) ) {
 		$target_contents[] = array(
-			'id'    => 'x' . $target_id_counter ++,
+			'id'    => 'x' . $target_id_counter++,
 			'type'  => 'wp_pages',
 			'value' => array_map( 'strval', $posts_by_type['wp_pages'] ),
 		);
@@ -1275,8 +1291,7 @@ function urcr_logic_map_has_advanced_logic( $logic_map ) {
 		return false;
 	}
 
-
-	if ( isset( $logic_map['type'] )  ) {
+	if ( isset( $logic_map['type'] ) ) {
 		// Check for nested groups in conditions recursively
 		if ( ! empty( $logic_map['conditions'] ) && is_array( $logic_map['conditions'] ) ) {
 			$conditions_count = count( $logic_map['conditions'] );
@@ -1359,23 +1374,24 @@ function urcr_has_rules_with_advanced_logic() {
 function urcr_create_or_update_membership_rule( $membership_id, $rule_data = null ) {
 
 	// Check if content restriction module is active
-	if (  ! ur_check_module_activation( 'membership' ) ) {
+	if ( ! ur_check_module_activation( 'membership' ) ) {
 		return false;
 	}
 
-
 	// Check if rule already exists for this membership
-	$existing_rules = get_posts( array(
-		'post_type'      => 'urcr_access_rule',
-		'post_status'    => 'any',
-		'posts_per_page' => 1,
-		'meta_query'     => array(
-			array(
-				'key'   => 'urcr_membership_id',
-				'value' => $membership_id,
+	$existing_rules = get_posts(
+		array(
+			'post_type'      => 'urcr_access_rule',
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'meta_query'     => array(
+				array(
+					'key'   => 'urcr_membership_id',
+					'value' => $membership_id,
+				),
 			),
-		),
-	) );
+		)
+	);
 
 	$existing_rule = ! empty( $existing_rules ) ? $existing_rules[0] : null;
 
@@ -1416,7 +1432,7 @@ function urcr_create_or_update_membership_rule( $membership_id, $rule_data = nul
 		$access_rule_data['logic_map']['conditions'] = $existing_conditions;
 
 		// Always generate rule title from membership name (PHP side)
-		$membership_post = get_post( $membership_id );
+		$membership_post  = get_post( $membership_id );
 		$membership_title = $membership_post ? $membership_post->post_title : '';
 		if ( ! empty( $membership_title ) ) {
 			$rule_title = sprintf( __( '%s Rule', 'user-registration' ), $membership_title );
@@ -1426,7 +1442,7 @@ function urcr_create_or_update_membership_rule( $membership_id, $rule_data = nul
 		}
 		// Unslash data before encoding to prevent double-escaping issues with quotes in HTML content
 		$access_rule_data = wp_unslash( $access_rule_data );
-		$rule_content = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		$rule_content     = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 		// Slash the JSON string so wp_insert_post() unslashing doesn't corrupt the JSON
 		$rule_content = wp_slash( $rule_content );
 	} else {
@@ -1442,7 +1458,7 @@ function urcr_create_or_update_membership_rule( $membership_id, $rule_data = nul
 			'post_title'   => $rule_title,
 			'post_content' => $rule_content,
 		);
-		$rule_id = wp_update_post( $rule_post );
+		$rule_id   = wp_update_post( $rule_post );
 	} else {
 		// Create new rule
 		$rule_post = array(
@@ -1451,7 +1467,7 @@ function urcr_create_or_update_membership_rule( $membership_id, $rule_data = nul
 			'post_type'    => 'urcr_access_rule',
 			'post_status'  => 'publish',
 		);
-		$rule_id = wp_insert_post( $rule_post );
+		$rule_id   = wp_insert_post( $rule_post );
 	}
 
 	if ( $rule_id && ! is_wp_error( $rule_id ) ) {
@@ -1476,17 +1492,19 @@ function urcr_create_membership_rule( $membership_id, $membership_title = '' ) {
 	}
 
 	// Check if rule already exists for this membership
-	$existing_rules = get_posts( array(
-		'post_type'      => 'urcr_access_rule',
-		'post_status'    => 'any',
-		'posts_per_page' => 1,
-		'meta_query'     => array(
-			array(
-				'key'   => 'urcr_membership_id',
-				'value' => $membership_id,
+	$existing_rules = get_posts(
+		array(
+			'post_type'      => 'urcr_access_rule',
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'meta_query'     => array(
+				array(
+					'key'   => 'urcr_membership_id',
+					'value' => $membership_id,
+				),
 			),
-		),
-	) );
+		)
+	);
 
 	if ( ! empty( $existing_rules ) ) {
 		// Rule already exists for this membership
@@ -1607,7 +1625,7 @@ function urcr_migrate_memberships() {
 	}
 
 	$migrated_rule_ids = array();
-	$base_timestamp = time() * 1000;
+	$base_timestamp    = time() * 1000;
 	$timestamp_counter = 0;
 
 	foreach ( $memberships as $membership ) {
@@ -1629,7 +1647,7 @@ function urcr_migrate_memberships() {
 		$rule_id = urcr_create_membership_rule( $membership_id, $membership_title );
 
 		if ( $rule_id ) {
-			$migrated_rule_ids[] = $rule_id;
+			$migrated_rule_ids[]       = $rule_id;
 			$migrated_membership_ids[] = $membership_id;
 		}
 	}
@@ -1695,9 +1713,9 @@ function urcr_has_unmigrated_memberships() {
  */
 function urcr_run_migration() {
 	$results = array(
-		'global_rule_id'    => false,
-		'post_page_rule_id' => false,
-		'migrated_post_ids' => array(),
+		'global_rule_id'      => false,
+		'post_page_rule_id'   => false,
+		'migrated_post_ids'   => array(),
 		'membership_rule_ids' => array(),
 	);
 
@@ -1764,7 +1782,7 @@ function urcr_get_membership_rule_data( $membership_id ) {
 		return null;
 	}
 
-	$rule_post = $existing_rules[0];
+	$rule_post    = $existing_rules[0];
 	$rule_content = json_decode( $rule_post->post_content, true );
 
 	if ( ! $rule_content ) {
@@ -1772,7 +1790,7 @@ function urcr_get_membership_rule_data( $membership_id ) {
 	}
 
 	// Add rule ID and other metadata
-	$rule_content['id'] = $rule_post->ID;
+	$rule_content['id']    = $rule_post->ID;
 	$rule_content['title'] = $rule_post->post_title;
 
 	// Default to true if not set (matches default for new rules)
@@ -1797,12 +1815,14 @@ function urcr_get_custom_rules_count( $types = array() ) {
 	}
 
 	// Get all content access rules
-	$all_rules = get_posts( array(
-		'post_type'      => 'urcr_access_rule',
-		'post_status'    => 'any',
-		'posts_per_page' => -1,
-		'fields'         => 'ids',
-	) );
+	$all_rules = get_posts(
+		array(
+			'post_type'      => 'urcr_access_rule',
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		)
+	);
 
 	if ( empty( $all_rules ) ) {
 		return 0;
@@ -1826,9 +1846,9 @@ function urcr_get_custom_rules_count( $types = array() ) {
 	// Count rules based on types (rules matching any of the provided types)
 	$rules_count = 0;
 	foreach ( $all_rules as $rule_id ) {
-		$rule_type = get_post_meta( $rule_id, 'urcr_rule_type', true );
+		$rule_type     = get_post_meta( $rule_id, 'urcr_rule_type', true );
 		$membership_id = get_post_meta( $rule_id, 'urcr_membership_id', true );
-		$is_migrated = get_post_meta( $rule_id, 'urcr_is_migrated', true );
+		$is_migrated   = get_post_meta( $rule_id, 'urcr_is_migrated', true );
 
 		$matches = false;
 
@@ -1861,10 +1881,9 @@ function urcr_get_custom_rules_count( $types = array() ) {
 		}
 
 		if ( $matches ) {
-			$rules_count++;
+			++$rules_count;
 		}
 	}
 
 	return $rules_count;
 }
-
