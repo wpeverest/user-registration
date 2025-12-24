@@ -1498,6 +1498,73 @@
 									}
 
 									&--action {
+										.membership-row-btn-container {
+											.btn-div {
+												.action-menu {
+													position: relative;
+
+													.menu-trigger {
+														padding: 0;
+														border: $border_width solid transparent;
+														border-radius: 3px;
+														background: transparent;
+														width: 24px;
+														height: 28px;
+														box-shadow: none;
+														display: flex;
+														align-items: center;
+														justify-content: center;
+
+														svg {
+															width: 18px;
+															height: 18px;
+															fill: #4e4e4e;
+															transition: all .3s ease;
+														}
+
+														&:hover {
+															border-color: $border-color;
+
+															svg {
+																fill: $primary_color;
+															}
+														}
+													}
+
+													.dropdown {
+														position: absolute;
+														right: 0;
+														top: 28px;
+														background: #fff;
+														border: 1px solid #ccc;
+														border-radius: 6px;
+														display: flex;
+														flex-direction: column;
+														min-width: 140px;
+														box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+														z-index: 50;
+
+														&.hidden {
+															display: none;
+														}
+
+														a {
+															padding: 10px;
+															text-decoration: none;
+															color: #333;
+															display: flex;
+															align-items: center;
+															gap: 6px;
+
+															&:hover {
+																background: #f3f3f3;
+															}
+														}
+													}
+												}
+											}
+										}
+
 										.ur-account-action-link {
 											display: inline-flex;
 											align-items: center;
@@ -1531,50 +1598,6 @@
 												width: 14px;
 												height: 14px;
 												fill: #4e4e4e;
-											}
-										}
-
-										.action-menu {
-											position: relative;
-											display: inline-block;
-
-											.menu-trigger {
-												background: none;
-												border: none;
-												font-size: 22px;
-												cursor: pointer;
-												padding: 5px;
-											}
-
-											.dropdown {
-												position: absolute;
-												right: 0;
-												top: 28px;
-												background: #fff;
-												border: 1px solid #ccc;
-												border-radius: 6px;
-												display: flex;
-												flex-direction: column;
-												min-width: 140px;
-												box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-												z-index: 50;
-
-												&.hidden {
-													display: none;
-												}
-
-												a {
-													padding: 10px;
-													text-decoration: none;
-													color: #333;
-													display: flex;
-													align-items: center;
-													gap: 6px;
-
-													&:hover {
-														background: #f3f3f3;
-													}
-												}
 											}
 										}
 									}

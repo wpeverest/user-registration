@@ -159,8 +159,12 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 												if ( count( $buttons ) > 0 ) {
 													?>
 													<div class="action-menu">
-														<button class="menu-trigger" type="button">⋮</button>
-														<div class="dropdown hidden">
+														<button class="menu-trigger" type="button">
+															<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+																<path d="M10 12a2.222 2.222 0 1 1 4.444 0A2.222 2.222 0 0 1 10 12Zm0-7.778a2.222 2.222 0 1 1 4.444 0 2.222 2.222 0 0 1-4.444 0Zm0 15.556a2.222 2.222 0 1 1 4.444 0 2.222 2.222 0 0 1-4.444 0Z"/>
+															</svg>
+														</button>
+														<div class="hidden dropdown">
 															<?php foreach ( $buttons as $button ) : ?>
 																<?php echo $button; ?>
 															<?php endforeach; ?>
