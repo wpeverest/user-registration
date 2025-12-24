@@ -200,24 +200,27 @@ elseif ( 'list' === $type ) :
 							class="ur-membership-title"><?php echo esc_html__( $membership['title'], 'user-registration' ); ?></span>
 							<?php if ( 'free' !== $membership['type'] ) { ?>
 								<div class="ur-membership-amount-wrapper">
-							<span
-								class="membership-amount"><?php echo esc_html( $symbol ); ?>
-								<?php
-								echo esc_html( sprintf( '%.2f', $membership['amount'] ) );
-								?>
-							</span>
-							<span class="ur-membership-duration">
-								<?php
-								if ( $time ) {
-									echo ' / ' . esc_html( $time ); }
-								?>
-							</span>
-								</div>
+									<span
+										class="membership-amount">
+										<?php echo esc_html( sprintf( '%s%.2f', $symbol, $membership['amount'] ) ); ?>
+									</span>
+									<span class="ur-membership-duration">
+										<?php
+										if ( $time ) {
+											echo ' / ' . esc_html( $time ); }
+										?>
+									</span>
 								</div>
 							<?php } else { ?>
-								<span
-							class="membership-amount"><?php echo esc_html__( 'Free', 'user-registration' ); ?></span>
+								<div class="ur-membership-amount-wrapper">
+
+									<span
+									class="membership-amount">
+										<?php echo esc_html__( 'Free', 'user-registration' ); ?>
+									</span>
+								</div>
 								<?php } ?>
+							</div>
 						</label>
 					</div>
 
