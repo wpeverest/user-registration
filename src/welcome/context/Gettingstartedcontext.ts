@@ -1,6 +1,9 @@
 export type MembershipSetupType = "paid" | "free" | "other";
+export type MembershipPlanType = "free" | "paid";
+export type BillingPeriod = "weekly" | "monthly" | "yearly" | "one-time";
 
-export interface ContentAccessRule {
+export interface ContentAccess {
+	id: string;
 	type: "posts" | "pages";
 	value: number[];
 }
@@ -8,11 +11,11 @@ export interface ContentAccessRule {
 export interface MembershipPlan {
 	id: string;
 	name: string;
-	type: "free" | "paid";
-	price: number;
+	type: MembershipPlanType;
+	price: string;
 	currency: string;
-	billingPeriod: "weekly" | "monthly" | "yearly";
-	contentAccess: ContentAccessRule[];
+	billingPeriod: BillingPeriod;
+	contentAccess: ContentAccess[];
 }
 
 export interface PaymentSettings {
@@ -32,6 +35,7 @@ export interface PaymentSettings {
 
 export interface GettingStartedState {
 	currentStep: number;
+	maxCompletedStep: number;
 	isLoading: boolean;
 	membershipSetupType: MembershipSetupType;
 	allowTracking: boolean;
@@ -45,8 +49,23 @@ export interface GettingStartedState {
 	paymentSettings: PaymentSettings;
 }
 
+// Helper to generate unique IDs
+const generateId = () => Math.random().toString(36).substring(2, 9);
+
+// Create a default membership plan
+const createDefaultPlan = (): MembershipPlan => ({
+	id: generateId(),
+	name: "",
+	type: "free",
+	price: "",
+	currency: "USD",
+	billingPeriod: "monthly",
+	contentAccess: []
+});
+
 export const initialState: GettingStartedState = {
 	currentStep: 1,
+	maxCompletedStep: 1,
 	isLoading: false,
 	membershipSetupType: "paid",
 	allowTracking: false,
@@ -70,7 +89,7 @@ export const initialState: GettingStartedState = {
 				"I want registration and other features without membership."
 		}
 	],
-	membershipPlans: [],
+	membershipPlans: [createDefaultPlan()], // Start with one default plan
 	paymentSettings: {
 		offlinePayment: false,
 		bankDetails: "",
@@ -95,9 +114,10 @@ export type Action =
 	| { type: "SET_MEMBERSHIP_SETUP_TYPE"; payload: MembershipSetupType }
 	| { type: "SET_ALLOW_TRACKING"; payload: boolean }
 	| { type: "SET_ADMIN_EMAIL"; payload: string }
-	| { type: "ADD_MEMBERSHIP_PLAN"; payload: MembershipPlan }
-	| { type: "UPDATE_MEMBERSHIP_PLAN"; payload: MembershipPlan }
+	| { type: "ADD_MEMBERSHIP_PLAN"; payload?: MembershipPlan }
+	| { type: "UPDATE_MEMBERSHIP_PLAN"; payload: { id: string; updates: Partial<MembershipPlan> } }
 	| { type: "REMOVE_MEMBERSHIP_PLAN"; payload: string }
+	| { type: "ADD_CONTENT_ACCESS"; payload: { planId: string; access: ContentAccess } }
 	| {
 			type: "SET_PAYMENT_SETTING";
 			payload: { key: keyof PaymentSettings; value: boolean | string };
@@ -120,9 +140,11 @@ export const reducer = (
 			return { ...state, isLoading: action.payload };
 
 		case "NEXT_STEP":
+			const nextStep = Math.min(state.currentStep + 1, 4);
 			return {
 				...state,
-				currentStep: Math.min(state.currentStep + 1, 4)
+				currentStep: nextStep,
+				maxCompletedStep: Math.max(state.maxCompletedStep, nextStep)
 			};
 
 		case "PREV_STEP":
@@ -144,16 +166,20 @@ export const reducer = (
 			return { ...state, adminEmail: action.payload };
 
 		case "ADD_MEMBERSHIP_PLAN":
+			// If payload provided, use it; otherwise create a default plan
+			const newPlan = action.payload || createDefaultPlan();
 			return {
 				...state,
-				membershipPlans: [...state.membershipPlans, action.payload]
+				membershipPlans: [...state.membershipPlans, newPlan]
 			};
 
 		case "UPDATE_MEMBERSHIP_PLAN":
 			return {
 				...state,
 				membershipPlans: state.membershipPlans.map((plan) =>
-					plan.id === action.payload.id ? action.payload : plan
+					plan.id === action.payload.id
+						? { ...plan, ...action.payload.updates }
+						: plan
 				)
 			};
 
@@ -162,6 +188,19 @@ export const reducer = (
 				...state,
 				membershipPlans: state.membershipPlans.filter(
 					(plan) => plan.id !== action.payload
+				)
+			};
+
+		case "ADD_CONTENT_ACCESS":
+			return {
+				...state,
+				membershipPlans: state.membershipPlans.map((plan) =>
+					plan.id === action.payload.planId
+						? {
+								...plan,
+								contentAccess: [...plan.contentAccess, action.payload.access]
+						  }
+						: plan
 				)
 			};
 
@@ -175,7 +214,16 @@ export const reducer = (
 			};
 
 		case "HYDRATE_FROM_API":
-			return { ...state, ...action.payload };
+			const hydratedStep = action.payload.currentStep || state.currentStep;
+			return {
+				...state,
+				...action.payload,
+				maxCompletedStep: Math.max(
+					state.maxCompletedStep,
+					hydratedStep,
+					action.payload.maxCompletedStep || 1
+				)
+			};
 
 		case "HYDRATE_PAYMENT_SETTINGS":
 			return {

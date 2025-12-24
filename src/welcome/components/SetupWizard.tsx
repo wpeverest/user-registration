@@ -1,14 +1,6 @@
 import React, { useEffect } from "react";
-import {
-	Box,
-	Button,
-	Flex,
-	Heading,
-	Text,
-	Link,
-	useColorModeValue,
-	Spinner,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Link, useColorModeValue } from "@chakra-ui/react";
+import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { useStateValue } from "../context/StateProvider";
 import { MembershipPlan } from "../context/Gettingstartedcontext";
 import {
@@ -16,21 +8,32 @@ import {
 	apiPost,
 	mapApiToSetupType,
 	mapSetupToApiType,
-	mapPaymentSettingsToApi,
+	mapPaymentSettingsToApi
 } from "../api/gettingStartedApi";
+import Stepper from "./Stepper";
 import WelcomeStep from "./steps/WelcomeStep";
 import MembershipStep from "./steps/MembershipStep";
 import PaymentStep from "./steps/PaymentStep";
 import FinishStep from "./steps/FinishStep";
 
+const WIZARD_STEPS = [
+	{ id: "welcome", label: "Welcome", stepNumber: 1 },
+	{ id: "membership", label: "Membership", stepNumber: 2 },
+	{ id: "payment", label: "Payment", stepNumber: 3 },
+	{ id: "finish", label: "Finish", stepNumber: 4 }
+];
+
+const HEADER_HEIGHT = "70px";
+
 const SetupWizard: React.FC = () => {
 	const { state, dispatch } = useStateValue();
-	const { currentStep, isLoading } = state;
+	const { currentStep, maxCompletedStep, isLoading } = state;
 
 	const cardBg = useColorModeValue("white", "gray.800");
 	const borderColor = useColorModeValue("gray.200", "gray.700");
 	const textColor = useColorModeValue("gray.800", "white");
 	const mutedColor = useColorModeValue("gray.600", "gray.400");
+	const pageBg = useColorModeValue("gray.50", "gray.900");
 
 	useEffect(() => {
 		const loadInitial = async () => {
@@ -51,13 +54,16 @@ const SetupWizard: React.FC = () => {
 								? welcome.allow_usage_tracking
 								: state.allowTracking,
 						adminEmail:
-							typeof welcome?.admin_email === "string" && welcome.admin_email
+							typeof welcome?.admin_email === "string" &&
+							welcome.admin_email
 								? welcome.admin_email
 								: state.adminEmail,
-						membershipOptions: Array.isArray(welcome?.membership_options)
+						membershipOptions: Array.isArray(
+							welcome?.membership_options
+						)
 							? welcome.membership_options
-							: state.membershipOptions,
-					},
+							: state.membershipOptions
+					}
 				});
 			} catch (e) {
 				console.error(e);
@@ -80,8 +86,8 @@ const SetupWizard: React.FC = () => {
 			billing_period: plan.billingPeriod,
 			access: plan.contentAccess.map((a) => ({
 				type: a.type,
-				value: a.value,
-			})),
+				value: a.value
+			}))
 		};
 	};
 
@@ -91,18 +97,22 @@ const SetupWizard: React.FC = () => {
 
 			if (currentStep === 1) {
 				await apiPost("/welcome", {
-					membership_type: mapSetupToApiType(state.membershipSetupType),
+					membership_type: mapSetupToApiType(
+						state.membershipSetupType
+					),
 					allow_usage_tracking: state.allowTracking,
 					allow_email_updates: state.allowTracking,
-					admin_email: state.adminEmail,
+					admin_email: state.adminEmail
 				});
 			} else if (currentStep === 2) {
 				await apiPost("/memberships", {
-					memberships: state.membershipPlans.map(mapPlanToApi),
+					memberships: state.membershipPlans.map(mapPlanToApi)
 				});
 			} else if (currentStep === 3) {
-				// Use the new mapping function for payment settings
-				await apiPost("/payments", mapPaymentSettingsToApi(state.paymentSettings));
+				await apiPost(
+					"/payments",
+					mapPaymentSettingsToApi(state.paymentSettings)
+				);
 			}
 
 			dispatch({ type: "NEXT_STEP" });
@@ -135,6 +145,19 @@ const SetupWizard: React.FC = () => {
 		}
 	};
 
+	const handleStepClick = (stepNumber: number) => {
+		if (stepNumber <= maxCompletedStep && stepNumber !== currentStep) {
+			dispatch({ type: "SET_STEP", payload: stepNumber });
+		}
+	};
+
+	const handleClose = () => {
+		const dashboardUrl =
+			(window as any).urmSetupWizard?.dashboardUrl ||
+			"/wp-admin/admin.php?page=user-registration";
+		window.location.href = dashboardUrl;
+	};
+
 	const renderStep = () => {
 		if (currentStep === 1) return <WelcomeStep />;
 		if (currentStep === 2) return <MembershipStep />;
@@ -142,59 +165,95 @@ const SetupWizard: React.FC = () => {
 		return <FinishStep />;
 	};
 
+	const isFinishStep = currentStep === 4;
+
 	return (
-		<Flex justify="center" align="center" minH="100vh" px={4}>
-			<Box
-				w="100%"
-				maxW="800px"
-				bg={cardBg}
-				borderWidth="1px"
-				borderColor={borderColor}
-				borderRadius="xl"
-				p={8}
-				boxShadow="sm"
-			>
-				<Flex justify="space-between" align="center" mb={6}>
-					<Heading size="md" color={textColor}>
-						User Registration Setup Wizard
-					</Heading>
-					<Text fontSize="sm" color={mutedColor}>
-						Step {currentStep} of 4
-					</Text>
-				</Flex>
+		<Box minH="100vh" bg={pageBg}>
+			{/* Fixed Full-width Stepper Header */}
+			<Stepper
+				steps={WIZARD_STEPS}
+				currentStep={currentStep}
+				maxCompletedStep={maxCompletedStep}
+				onStepClick={handleStepClick}
+				onClose={handleClose}
+			/>
 
-				<Box mb={8}>{renderStep()}</Box>
-
-				<Flex justify="space-between" align="center">
-					<Link
-						fontSize="sm"
-						color={mutedColor}
-						_hover={{ color: textColor }}
-						cursor="pointer"
-						onClick={handleSkip}
+			{/* Content Area - with top padding for fixed header */}
+			<Box pt={HEADER_HEIGHT}>
+				<Flex justify="center" align="flex-start" px={4} py={10}>
+					<Box
+						w="100%"
+						maxW="800px"
+						bg={cardBg}
+						borderWidth="1px"
+						borderColor={borderColor}
+						borderRadius="xl"
+						p={8}
+						boxShadow="sm"
 					>
-						Skip this step
-					</Link>
-					<Flex gap={3} align="center">
-						<Button
-							variant="outline"
-							onClick={handleBack}
-							isDisabled={currentStep === 1 || isLoading}
-						>
-							Back
-						</Button>
-						<Button
-							colorScheme="brand"
-							onClick={handleNext}
-							isLoading={isLoading}
-						>
-							{currentStep === 4 ? "Finish" : "Next"}
-						</Button>
-						{isLoading && <Spinner size="sm" ml={2} />}
-					</Flex>
+						{/* Step Content */}
+						<Box mb={isFinishStep ? 0 : 8}>{renderStep()}</Box>
+
+						{/* Footer Navigation - only show on non-finish steps */}
+						{!isFinishStep && (
+							<Flex justify="space-between" align="center">
+								{/* Back Link */}
+								<Link
+									display="flex"
+									alignItems="center"
+									fontSize="sm"
+									color={mutedColor}
+									_hover={{
+										color: textColor,
+										textDecoration: "none"
+									}}
+									cursor={
+										currentStep === 1
+											? "not-allowed"
+											: "pointer"
+									}
+									onClick={
+										currentStep > 1 ? handleBack : undefined
+									}
+									opacity={currentStep === 1 ? 0.5 : 1}
+								>
+									<ArrowBackIcon mr={1} />
+									Back
+								</Link>
+
+								{/* Right Side Actions */}
+								<Flex gap={4} align="center">
+									<Link
+										fontSize="sm"
+										color={mutedColor}
+										_hover={{
+											color: textColor,
+											textDecoration: "none"
+										}}
+										cursor="pointer"
+										onClick={handleSkip}
+									>
+										Skip this step
+									</Link>
+									<Button
+										bg="#475BD8"
+										color="white"
+										rightIcon={<ArrowForwardIcon />}
+										_hover={{ bg: "#3a4bc2" }}
+										_active={{ bg: "#2f3da6" }}
+										onClick={handleNext}
+										isLoading={isLoading}
+										px={6}
+									>
+										Next
+									</Button>
+								</Flex>
+							</Flex>
+						)}
+					</Box>
 				</Flex>
 			</Box>
-		</Flex>
+		</Box>
 	);
 };
 
