@@ -368,7 +368,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 								$course_id = absint( $course );
 							}
 
-							$can_start_course = in_array( $course_id, $membership_courses, true );
+							$can_start_course = in_array( (string) $course_id, $membership_courses, true );
 						}
 					}
 				}
