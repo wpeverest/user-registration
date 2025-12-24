@@ -191,7 +191,8 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 
 	if ( is_array( $targets ) ) {
 		foreach ( $targets as $target ) {
-			if ( isset( $target['type'] ) && ! empty( $target['value'] ) ) {
+
+			if ( isset( $target['type'] )  ) {
 				switch ( $target['type'] ) {
 					case 'wp_posts':
 						$post_id         = ( 'object' === gettype( $target_post ) && $target_post->ID ) ? strval( $target_post->ID ) : '0';
@@ -265,6 +266,7 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 						}
 						break;
 					case 'whole_site':
+
 						return true;
 						break;
 
@@ -598,19 +600,87 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 
 	if ( isset( $target_post->ID ) && $target_post->ID && ! empty( $action['type'] ) ) {
 		if ( 'message' === $action['type'] ) {
+			// Process message
 			$message = ! empty( $action['message'] ) ? urldecode( $action['message'] ) : '';
 			$message = apply_filters( 'user_registration_process_smart_tags', $message );
+			if ( function_exists( 'apply_shortcodes' ) ) {
+				$message = apply_shortcodes( $message );
+			} else {
+				$message = do_shortcode( $message );
+			}
 
-			$target_post->post_content = $message;
+			// Get URLs
+			$login_page_id = get_option( 'user_registration_login_page_id' );
+			$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
+
+			$login_url = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
+			$signup_url = $registration_page_id ? get_permalink( $registration_page_id ) : ( $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url() );
+
+			if ( ! $registration_page_id ) {
+				$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
+				if ( $default_form_page_id ) {
+					$signup_url = get_permalink( $default_form_page_id );
+				}
+			}
+
+			// Check if this is a whole site restriction
+			$is_whole_site_restriction = false;
+			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
+
+			if ( $whole_site_access_restricted ) {
+				$is_whole_site_restriction = true;
+			} else {
+				// Check access rules for whole site restriction
+				$access_rule_posts = get_posts(
+					array(
+						'numberposts' => -1,
+						'post_status' => 'publish',
+						'post_type'   => 'urcr_access_rule',
+					)
+				);
+
+				foreach ( $access_rule_posts as $access_rule_post ) {
+					$access_rule = json_decode( $access_rule_post->post_content, true );
+					if ( ! empty( $access_rule['target_contents'] ) && is_array( $access_rule['target_contents'] ) ) {
+						$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
+						if ( in_array( 'whole_site', $types, true ) ) {
+							$is_whole_site_restriction = true;
+							break;
+						}
+					}
+				}
+			}
+
+			// Add CSS to hide page title for whole site restrictions
+			if ( $is_whole_site_restriction ) {
+				add_filter( 'body_class', function( $classes ) {
+					$classes[] = 'urcr-hide-page-title';
+					return $classes;
+				});
+			}
+
+			// Use base template to generate styled content
+			ob_start();
+			urcr_get_template(
+				'base-restriction-template.php',
+				array(
+					'message'    => $message,
+					'login_url'  => $login_url,
+					'signup_url' => $signup_url,
+				)
+			);
+			$styled_content = ob_get_clean();
+
+			$target_post->post_content = $styled_content;
 
 			// Add filter for elementor content.
 			add_filter(
 				'elementor/frontend/the_content',
-				function () use ( $message ) {
+				function () use ( $styled_content ) {
 					if ( ! urcr_is_elementor_content_restricted() ) {
 						urcr_set_elementor_content_restricted();
 
-						return $message;
+						return $styled_content;
 					}
 
 					return '';
