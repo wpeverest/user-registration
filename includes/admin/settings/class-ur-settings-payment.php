@@ -38,7 +38,34 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
         public function handle_hooks() {
             add_filter( "user_registration_get_sections_{$this->id}",  array( $this, 'get_sections_callback' ), 1, 1 );
             add_filter( "user_registration_get_settings_{$this->id}", array( $this, 'get_settings_callback' ), 1, 1 );
+            
+			add_filter( 'urm_validate_bank_payment_section_before_update', array(
+				$this,
+				'validate_bank_section'
+			) );
+            
+			add_action( 'urm_save_bank_payment_section', array( $this, 'save_section_settings' ), 10, 1 );
         }
+        		
+		public function validate_bank_section( $form_data ) {
+			$response = array(
+				'status' => true,
+			);
+
+			if ( empty( $form_data['user_registration_global_bank_details'] ) ) {
+				$response['status']  = false;
+				$response['message'] = 'Bank details cannot be empty';
+				return $response;
+			}
+
+			return $response;
+		}
+		
+		public function save_section_settings( $form_data ) {
+			$section = $this->get_bank_transfer_settings();
+			ur_save_settings_options( $section, $form_data );
+		}
+
         /**
          * Filter to provide sections submenu for payment settings.
          */

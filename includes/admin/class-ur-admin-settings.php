@@ -1455,6 +1455,9 @@ class UR_Admin_Settings {
 	public static function load_payment_modules() {
 		$modules = array();
 		include_once __DIR__ . '/settings/class-ur-settings-page.php';
+		//Always available.
+		include_once __DIR__ . '/settings/class-ur-settings-payment.php';
+		include_once __DIR__ . '/settings/class-ur-settings-membership.php';
 
 		if ( UR_PRO_ACTIVE ) {
 			if ( ur_check_module_activation( 'membership' ) ) {
