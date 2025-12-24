@@ -104,22 +104,22 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_profile_details_changed_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Profile Updated – Changes Made to User Account', 'user-registration' ),
+									'default'  => __( 'Profile Updated: {{username}}', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
-							array(
-								'title'    => __( 'Email Content', 'user-registration' ),
-								'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
-								'id'       => 'user_registration_profile_details_changed_email',
-								'type'     => 'tinymce',
-								'default'  => $this->ur_get_profile_details_changed_email(),
-								'css'      => '',
-								'desc_tip' => true,
-								'show-ur-registration-form-button' => false,
-								'show-smart-tags-button' => true,
-								'show-reset-content-button' => true,
-							),
+								array(
+									'title'    => __( 'Email Content', 'user-registration' ),
+									'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_profile_details_changed_email',
+									'type'     => 'tinymce',
+									'default'  => $this->ur_get_profile_details_changed_email(),
+									'css'      => '',
+									'desc_tip' => true,
+									'show-ur-registration-form-button' => false,
+									'show-smart-tags-button' => true,
+									'show-reset-content-button' => true,
+								),
 							),
 						),
 					),
@@ -151,7 +151,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 					Hi Admin,
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					A user has updated their profile information for the following account:
+				A member has updated their profile information.
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					SiteName: <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>
@@ -160,7 +160,7 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 					Username: {{username}}
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Thank You!
+					View profile details in your WordPress dashboard under Users.
 				</p>',
 				'user-registration'
 			);

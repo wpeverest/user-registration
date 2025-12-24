@@ -86,7 +86,7 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_email_confirmation_subject',
 									'type'     => 'text',
-									'default'  => __( 'Email Address Confirmation – Verify Your Registration on {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Confirm Your Email Address', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
@@ -134,16 +134,16 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 					Hi {{username}},
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Thank you for registering on <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>!
+					Thank you for registering at <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>!
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Please click on the link below to confirm your registration:
+					To complete your registration, please confirm your email address by clicking the link below:
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Click here to confirm your registration: <a href="{{home_url}}/{{ur_login}}?ur_token={{email_token}}" style="color: #4A90E2; text-decoration: none;">Click Here</a>
+					<a href="{{home_url}}/{{ur_login}}?ur_token={{email_token}}" style="color: #4A90E2; text-decoration: none;">Click Here</a>
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Thank You!
+				This verification link is valid for 24 hours.
 				</p>',
 				'user-registration'
 			);

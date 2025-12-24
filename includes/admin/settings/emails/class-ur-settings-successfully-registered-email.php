@@ -94,7 +94,7 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_successfully_registered_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Registration Successful – Welcome to {{blog_info}}!', 'user-registration' ),
+									'default'  => __( 'Welcome to {{blog_info}}!', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
@@ -141,17 +141,18 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 					Hi {{username}},
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Congratulations! You have successfully completed your registration on <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>.
+				Welcome to <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>! Your registration is complete.
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					{{membership_plan_details}}
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Please visit \'My Account\' page to update your account details and create your user profile.
+				Get started by visiting your account dashboard:
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Thank You!
-				</p>',
+				Please go to the My Account page to update your details and set up your user profile.
+				</p>
+				',
 				'user-registration'
 			);
 			if ( UR_PRO_ACTIVE ) {

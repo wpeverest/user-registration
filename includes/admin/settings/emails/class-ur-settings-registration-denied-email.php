@@ -94,22 +94,22 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_registration_denied_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Registration Denied – {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Registration Status Update', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
-							array(
-								'title'    => __( 'Email Content', 'user-registration' ),
-								'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
-								'id'       => 'user_registration_registration_denied_email',
-								'type'     => 'tinymce',
-								'default'  => $this->ur_get_registration_denied_email(),
-								'css'      => '',
-								'desc_tip' => true,
-								'show-ur-registration-form-button' => false,
-								'show-smart-tags-button' => true,
-								'show-reset-content-button' => true,
-							),
+								array(
+									'title'    => __( 'Email Content', 'user-registration' ),
+									'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_registration_denied_email',
+									'type'     => 'tinymce',
+									'default'  => $this->ur_get_registration_denied_email(),
+									'css'      => '',
+									'desc_tip' => true,
+									'show-ur-registration-form-button' => false,
+									'show-smart-tags-button' => true,
+									'show-reset-content-button' => true,
+								),
 							),
 						),
 					),
@@ -141,14 +141,12 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 					Hi {{username}},
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					We regret to inform you that your registration on <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a> has been denied.
+				We are unable to approve your registration at <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a> at this time.
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					We apologize for any inconvenience caused.
+					If you believe this is an error or have questions, please contact us at {{admin_email}}.
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Thank you for your understanding.
-				</p>',
+			',
 				'user-registration'
 			);
 			if ( UR_PRO_ACTIVE ) {

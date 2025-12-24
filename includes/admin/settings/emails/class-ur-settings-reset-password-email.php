@@ -93,7 +93,7 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_reset_password_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Password Reset Request – Reset Your Password for {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Password Reset Request', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
@@ -140,19 +140,19 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 					Hi {{username}},
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					We received a request to reset the password for your account on <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>.
+				We received a password reset request for your account at <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					If this was a mistake, simply ignore this email, and no changes will be made to your account.
+					If you did not request this, you can safely ignore this email.
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					To reset your password, please click the link below:
+					If you like to proceed, click the link below to reset your password:
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					<a href="{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}" style="color: #4A90E2; text-decoration: none;" rel="noreferrer noopener" target="_blank">Click Here</a>
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Thank You!
+					 This link is valid for 24 hours.
 				</p>',
 				'user-registration'
 			);

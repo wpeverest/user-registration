@@ -103,7 +103,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 									'desc'     => __( 'A New Member Registered.', 'user-registration' ),
 									'id'       => 'user_registration_admin_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'A New User Registered', 'user-registration' ),
+									'default'  => __( 'A New User Registered: {{username}}', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
@@ -145,13 +145,11 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 					Hi Admin,
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>.
+					A new member has been registered.
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					{{membership_plan_details}}
-				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					You can review their details and manage their role from the <strong>Users</strong> section in your WordPress dashboard.
+					View and manage this member in your WordPress dashboard under <strong>Users.</strong>
 				</p>',
 				'user-registration'
 			);

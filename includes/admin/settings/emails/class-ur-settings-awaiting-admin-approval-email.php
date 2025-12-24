@@ -93,7 +93,7 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_awaiting_admin_approval_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Awaiting Admin Approval – Registration Pending on {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Your Registration is Pending Approval', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
@@ -140,10 +140,10 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 					Hi {{username}},
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Thank you for registering on <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>!
+					Thank you for registering at <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>!
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Your registration is currently awaiting approval from the site admin. You will receive a notification once your account has been approved.
+					Your registration is currently awaiting approval from our team. We will send you an email as soon as your account is approved.
 				</p>',
 				'user-registration'
 			);

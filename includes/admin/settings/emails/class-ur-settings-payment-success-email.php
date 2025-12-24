@@ -91,22 +91,22 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_payment_success_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Payment Success – Registration Payment Complete on {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Payment Confirmed', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
-							array(
-								'title'    => __( 'Email Content', 'user-registration' ),
-								'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
-								'id'       => 'user_registration_payment_success_email',
-								'type'     => 'tinymce',
-								'default'  => $this->ur_get_payment_success_email(),
-								'css'      => '',
-								'desc_tip' => true,
-								'show-ur-registration-form-button' => false,
-								'show-smart-tags-button' => true,
-								'show-reset-content-button' => true,
-							),
+								array(
+									'title'    => __( 'Email Content', 'user-registration' ),
+									'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_payment_success_email',
+									'type'     => 'tinymce',
+									'default'  => $this->ur_get_payment_success_email(),
+									'css'      => '',
+									'desc_tip' => true,
+									'show-ur-registration-form-button' => false,
+									'show-smart-tags-button' => true,
+									'show-reset-content-button' => true,
+								),
 							),
 						),
 					),
@@ -131,17 +131,15 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Email', false ) ) :
 					Hi {{username}},
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Congratulations! Your payment for registration on <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a> has been successfully completed.
+					Your payment for {{membership_plan_name}} at <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a> is complete!
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					You can view your payment invoice here:
+					View your payment receipt:
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					{{payment_invoice}}
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Thank You!
-				</p>',
+				',
 				'user-registration'
 			);
 			if ( UR_PRO_ACTIVE ) {

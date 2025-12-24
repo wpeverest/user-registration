@@ -53,34 +53,6 @@ class UR_Smart_Tags {
 	}
 
 	/**
-	 * List of smart tags which can only be parsed when user is logged in.
-	 *
-	 * @return array array of smart tags.
-	 */
-	public static function ur_authenticated_parsable_smart_tags_list() {
-		$smart_tags = array(
-			'{{user_id}}'      => esc_html__( 'User ID', 'user-registration' ),
-			'{{username}}'     => esc_html__( 'User Name', 'user-registration' ),
-			'{{email}}'        => esc_html__( 'Email', 'user-registration' ),
-			'{{ur_login}}'     => esc_html__( 'UR Login', 'user-registration' ),
-			'{{all_fields}}'   => esc_html__( 'All Fields', 'user-registration' ),
-			'{{auto_pass}}'    => esc_html__( 'Auto Pass', 'user-registration' ),
-			'{{user_roles}}'   => esc_html__( 'User Roles', 'user-registration' ),
-			'{{first_name}}'   => esc_html__( 'First Name', 'user-registration' ),
-			'{{last_name}}'    => esc_html__( 'Last Name', 'user-registration' ),
-			'{{display_name}}' => esc_html__( 'User Display Name', 'user-registration' ),
-		);
-
-		/**
-		 * The 'user_registration_authenticated_smart_tags' filter allows developers to modify
-		 * the list of smart tags available for authenticated users in User Registration.
-		 *
-		 * @param array $smart_tags Default list of authenticated smart tags.
-		 */
-		return apply_filters( 'user_registration_authenticated_smart_tags', $smart_tags );
-	}
-
-	/**
 	 * List of smart tags which can be parsed before user is logged in.
 	 *
 	 * @return array array of smart tags.
@@ -119,6 +91,34 @@ class UR_Smart_Tags {
 		 * @param array $smart_tags Default list of unauthenticated smart tags.
 		 */
 		return apply_filters( 'user_registration_unauthenticated_smart_tags', $smart_tags );
+	}
+
+	/**
+	 * List of smart tags which can only be parsed when user is logged in.
+	 *
+	 * @return array array of smart tags.
+	 */
+	public static function ur_authenticated_parsable_smart_tags_list() {
+		$smart_tags = array(
+			'{{user_id}}'      => esc_html__( 'User ID', 'user-registration' ),
+			'{{username}}'     => esc_html__( 'User Name', 'user-registration' ),
+			'{{email}}'        => esc_html__( 'Email', 'user-registration' ),
+			'{{ur_login}}'     => esc_html__( 'UR Login', 'user-registration' ),
+			'{{all_fields}}'   => esc_html__( 'All Fields', 'user-registration' ),
+			'{{auto_pass}}'    => esc_html__( 'Auto Pass', 'user-registration' ),
+			'{{user_roles}}'   => esc_html__( 'User Roles', 'user-registration' ),
+			'{{first_name}}'   => esc_html__( 'First Name', 'user-registration' ),
+			'{{last_name}}'    => esc_html__( 'Last Name', 'user-registration' ),
+			'{{display_name}}' => esc_html__( 'User Display Name', 'user-registration' ),
+		);
+
+		/**
+		 * The 'user_registration_authenticated_smart_tags' filter allows developers to modify
+		 * the list of smart tags available for authenticated users in User Registration.
+		 *
+		 * @param array $smart_tags Default list of authenticated smart tags.
+		 */
+		return apply_filters( 'user_registration_authenticated_smart_tags', $smart_tags );
 	}
 
 	/**
@@ -487,7 +487,7 @@ class UR_Smart_Tags {
 							// If enabled approval via email setting.
 							if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 								$approval_token = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
-								$approval_link  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $approval_token . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
+								$approval_link  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $approval_token . '">' . esc_html__( 'Approve User', 'user-registration' ) . '</a><br />';
 								$content        = str_replace( '{{' . $tag . '}}', $approval_link, $content );
 							}
 						}
@@ -519,7 +519,7 @@ class UR_Smart_Tags {
 							// If enabled approval via email setting.
 							if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
 								$denial_token = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
-								$denial_link  = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $denial_token . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
+								$denial_link  = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $denial_token . '">' . esc_html__( 'Deny User', 'user-registration' ) . '</a><br />';
 								$content      = str_replace( '{{' . $tag . '}}', $denial_link, $content );
 							}
 						}
@@ -644,6 +644,8 @@ class UR_Smart_Tags {
 						$new_content = '';
 						if ( ! empty( $values['membership_tags'] ) ) {
 							$membership_tags                  = $values['membership_tags'];
+							$username                         = $values['username'];
+							$email                            = $values['email'];
 							$membership_plan_types            = array(
 								'One-Time Payment' => __( 'One-Time Payment', 'user-registration' ),
 								'Free'             => __( 'Free', 'user-registration' ),
@@ -667,6 +669,8 @@ class UR_Smart_Tags {
 								'Expired' => __( 'Expired', 'user-registration' ),
 							);
 							$details                          = array(
+								'Name'              => $username ?? '',
+								'Email'             => $email ?? '',
 								'Plan Name'         => $membership_tags['membership_plan_name'] ?? '',
 								'Membership Type'   => $membership_plan_types[ $membership_tags['membership_plan_type'] ] ?? '',
 								'Payment Details'   => array(
@@ -682,13 +686,13 @@ class UR_Smart_Tags {
 							$new_content = '<ul>';
 							foreach ( $details as $k => $value ) {
 								if ( is_array( $value ) ) {
-									$new_content .= sprintf( '<li><b>%s</b>:<ul>', esc_html__( $k, 'user-registration' ) );
+									$new_content .= sprintf( '<li style="margin-top: 10px;"><b>%s</b>:<ul>', esc_html__( $k, 'user-registration' ) );
 									foreach ( $value as $sub_key => $sub_value ) {
-										$new_content .= sprintf( '<li><b>%s</b> - %s</li>', esc_html__( $sub_key, 'user-registration' ), esc_html( $sub_value ) );
+										$new_content .= sprintf( '<li style="margin-top: 10px;"><b>%s</b> - %s</li>', esc_html__( $sub_key, 'user-registration' ), esc_html( $sub_value ) );
 									}
 									$new_content .= '</ul></li>';
 								} else {
-									$new_content .= sprintf( '<li><b>%s</b> - %s</li>', esc_html__( $k, 'user-registration' ), esc_html( $value ) );
+									$new_content .= sprintf( '<li style="margin-top: 10px;"><b>%s</b> - %s</li>', esc_html__( $k, 'user-registration' ), esc_html( $value ) );
 								}
 							}
 							$new_content .= '</ul>';
@@ -772,6 +776,24 @@ class UR_Smart_Tags {
 	}
 
 	/**
+	 * Smart tag list button in general setting and advanced settin of field.
+	 *
+	 * @param string $pattern_lists Pattern Lists.
+	 */
+	public function select_pattern_validation( $pattern_lists ) {
+		$pattern_validation_list = self::ur_pattern_validation_lists();
+		$pattern_lists          .= '<a href="#" class="button ur-smart-tags-list-button"><span class="dashicons dashicons-editor-code"></span></a>';
+		$pattern_lists          .= '<div class="ur-smart-tags-list" style="display: none">';
+		$pattern_lists          .= '<div class="smart-tag-title ur-smart-tag-title">Regular Expression</div><ul class="ur-smart-tags">';
+		foreach ( $pattern_validation_list as $key => $value ) {
+			$pattern_lists .= '<li class="ur-select-smart-tag" data-key = "' . esc_attr( $key ) . '">' . esc_html( $value ) . '</li>';
+		}
+		$pattern_lists .= '</ul></div>';
+
+		return $pattern_lists;
+	}
+
+	/**
 	 * List of Pattern which can checked against.
 	 *
 	 * @return array array of pattern lists.
@@ -821,24 +843,6 @@ class UR_Smart_Tags {
 				'^\d{5}(-\d{4})?$'                        => __( 'Zip Code', 'user-registration' ),
 			)
 		);
-
-		return $pattern_lists;
-	}
-
-	/**
-	 * Smart tag list button in general setting and advanced settin of field.
-	 *
-	 * @param string $pattern_lists Pattern Lists.
-	 */
-	public function select_pattern_validation( $pattern_lists ) {
-		$pattern_validation_list = self::ur_pattern_validation_lists();
-		$pattern_lists          .= '<a href="#" class="button ur-smart-tags-list-button"><span class="dashicons dashicons-editor-code"></span></a>';
-		$pattern_lists          .= '<div class="ur-smart-tags-list" style="display: none">';
-		$pattern_lists          .= '<div class="smart-tag-title ur-smart-tag-title">Regular Expression</div><ul class="ur-smart-tags">';
-		foreach ( $pattern_validation_list as $key => $value ) {
-			$pattern_lists .= '<li class="ur-select-smart-tag" data-key = "' . esc_attr( $key ) . '">' . esc_html( $value ) . '</li>';
-		}
-		$pattern_lists .= '</ul></div>';
 
 		return $pattern_lists;
 	}

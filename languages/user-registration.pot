@@ -10348,7 +10348,7 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:329
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Cancellation_User_Email.php:88
-msgid "Membership Cancellation Confirmed – {{membership_plan_name}}"
+msgid "Membership Cancelled"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:356
@@ -10364,12 +10364,12 @@ msgstr ""
 #: modules/membership/includes/Admin/Services/EmailService.php:393
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Expiring_Soon_User_Email.php:64
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Expiring_Soon_User_Email.php:119
-msgid "Membership Will Expire Soon – Renew Now"
+msgid "Your Membership Expires on {{membership_end_date}}"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:413
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Ended_User_Email.php:88
-msgid "Your Membership Has Ended – Rejoin to Regain Access "
+msgid "Your Membership Has Expired"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/MembershipService.php:282

@@ -89,22 +89,22 @@ if ( ! class_exists( 'UR_Settings_Confirm_Email_Address_Change_Email', false ) )
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_confirm_email_address_change_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Action Required: Verify Your New Email Address on {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Confirm Your New Email Address', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
-							array(
-								'title'    => __( 'Email Content', 'user-registration' ),
-								'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
-								'id'       => 'user_registration_confirm_email_address_change_email',
-								'type'     => 'tinymce',
-								'default'  => $this->ur_get_confirm_email_address_change_email(),
-								'css'      => '',
-								'desc_tip' => true,
-								'show-ur-registration-form-button' => false,
-								'show-smart-tags-button' => true,
-								'show-reset-content-button' => true,
-							),
+								array(
+									'title'    => __( 'Email Content', 'user-registration' ),
+									'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_confirm_email_address_change_email',
+									'type'     => 'tinymce',
+									'default'  => $this->ur_get_confirm_email_address_change_email(),
+									'css'      => '',
+									'desc_tip' => true,
+									'show-ur-registration-form-button' => false,
+									'show-smart-tags-button' => true,
+									'show-reset-content-button' => true,
+								),
 							),
 						),
 					),
@@ -129,18 +129,15 @@ if ( ! class_exists( 'UR_Settings_Confirm_Email_Address_Change_Email', false ) )
 					Hi {{display_name}},
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					You recently requested to change the email address associated with your account to {{updated_new_user_email}}.
+					You recently requested to change the email associated with your account from {{email}} to {{updated_new_user_email}}.
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					To confirm this change, please click on the following link: {{email_change_confirmation_link}}
+					To confirm this change, please click the link below: {{email_change_confirmation_link}}
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					This link will remain active for 24 hours. If you did not request this change, please ignore this email or contact us for assistance.
+					This link will remain active for 24 hours. If you did not request this change, please contact us immediately at {{admin_email}}.
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Best regards,<br/>
-					{{blog_info}}
-				</p>',
+			',
 				'user-registration'
 			);
 			if ( UR_PRO_ACTIVE ) {

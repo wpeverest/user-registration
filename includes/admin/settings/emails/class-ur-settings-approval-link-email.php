@@ -103,7 +103,7 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_approval_link_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Action Required: Review & Approve New User Registration', 'user-registration' ),
+									'default'  => __( 'Approval Needed: New Member Registration', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
@@ -144,16 +144,27 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 					Hi Admin,
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					A new user {{username}} - {{email}} has successfully registered to your site {{blog_info}}.
+					A new user has registered and requires your approval.
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Please review their details and assigned role in the <strong>Users</strong> menu of your WordPress dashboard.
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; font-weight:600; line-height: 1.6;">
+					Member Details:
+				</p>
+				<ul>
+					<li style="margin: 0 0 10px 20px; font-weight:500; color: #000000; font-size: 15px; line-height: 1.6;">
+						<strong>Username:</strong> {{username}}
+					</li>
+					<li style="margin: 0 0 10px 20px; font-weight:500; color: #000000; font-size: 15px; line-height: 1.6;">
+						<strong>Email:</strong> {{email}}
+					</li>
+				</ul>
+					<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Please review and approve or deny this registration:
 				</p>
 				<p style="margin: 0 0 10px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					<strong>Approve User:</strong> {{approval_link}}
+					{{approval_link}}
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					<strong>Deny User:</strong> {{denial_link}}
+					{{denial_link}}
 				</p>',
 				'user-registration'
 			);
