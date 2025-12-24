@@ -35,6 +35,9 @@ class Frontend {
 	 * @since 1.0.0
 	 */
 	private function init_hooks() {
+		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ), 10, 2 );
+
+		add_action( 'init', array( $this, 'urm_create_course_portal_page' ) );
 		add_action( 'wp_loaded', array( $this, 'add_masteriyo_course_tab_endpoint' ) );
 		add_filter( 'user_registration_account_menu_items', array( $this, 'membership_tab' ), 10, 1 );
 		add_action(
@@ -44,6 +47,51 @@ class Frontend {
 				'tab_endpoint_content',
 			)
 		);
+	}
+
+	public function load_scripts() {
+
+		global $post;
+		// Enqueue frontend styles here.
+		wp_register_style( 'urm-masteriyo-frontend-style', URM_MASTERIYO_CSS_ASSETS_URL . '/urm-course-portal.css', array(), URM_MASTERIYO_VERSION );
+
+		$page = get_page_by_path( 'course-portal' );
+
+		if ( $page && $page->ID === $post->ID ) {
+			wp_enqueue_style( 'urm-masteriyo-frontend-style' );
+			return;
+		}
+	}
+
+
+	public function urm_create_course_portal_page() {
+
+		$page_title = 'Course Portal';
+		$page_slug  = 'course-portal';
+
+		$page = get_page_by_path( $page_slug );
+
+		if ( ! $page ) {
+			$page = wp_insert_post(
+				array(
+					'post_title'     => $page_title,
+					'post_name'      => $page_slug,
+					'post_content'   => '[masteriyo_account]',
+					'post_status'    => 'publish',
+					'post_type'      => 'page',
+					'comment_status' => 'closed',
+					'ping_status'    => 'closed',
+				)
+			);
+		}
+
+		$account_page_id = masteriyo_get_setting( 'general.pages.account_page_id' );
+
+		if ( $account_page_id === $page->ID ) {
+			return;
+		}
+
+		masteriyo_set_setting( 'general.pages.account_page_id', $page->ID );
 	}
 
 	public function redirect_urm_course_portal() {

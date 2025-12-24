@@ -49,12 +49,6 @@ if ( ! class_exists( 'Hooks' ) ) :
 		}
 
 		public function __construct() {
-			// add_filter( 'masteriyo_course_object_query_args', array( $this, 'filter_the_get_course_args' ) );
-			// add_filter( 'masteriyo_get_course', array( $this, 'get_masteriyo_course' ), 10, 2 );
-
-			// add_filter( 'masteriyo_setup_course_data', array( $this, 'check_course_data' ) );
-
-			// add_action( 'masteriyo_before_courses_loop', array( $this, 'add_args' ) );
 
 			add_filter( 'masteriyo_course_query_tax_query', array( $this, 'add_tax_query' ) ); //working
 			add_filter( 'masteriyo_course_add_to_cart_text', array( $this, 'add_join_now_text' ), 10, 2 );
@@ -62,8 +56,6 @@ if ( ! class_exists( 'Hooks' ) ) :
 			add_filter( 'masteriyo_can_start_course', array( $this, 'can_start_course' ), 10, 3 );
 
 			add_filter( 'masteriyo_course_add_to_cart_url', array( $this, 'modify_url' ), 10, 2 );
-
-			// add_action( 'masteriyo_single_course_sidebar_content', array( $this, 'modify_single_side_content' ), 90 );
 
 			add_filter( 'masteriyo_price', array( $this, 'price_html' ), 10, 5 );
 
@@ -77,10 +69,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 				masteriyo_set_setting( 'course_archive.filters_and_sorting.enable_price_filter', false );
 			}
 
-			// add_filter( 'masteriyo_get_account_url', array( $this, 'get_my_account_url' ) );
-
 			add_filter( 'masteriyo_rest_response_user_course_data', array( $this, 'filter_user_courses' ), 10, 4 );
-			// add_filter( 'masteriyo_after_process_objects_collection', array( $this, 'filter_process' ), 10, 3 );
 
 			add_filter( 'masteriyo_is_account_page', array( $this, 'override_account_page' ), 10, 3 );
 		}
@@ -91,58 +80,18 @@ if ( ! class_exists( 'Hooks' ) ) :
 			$account_page_id
 		) {
 
-			global $wp;
+			global $post;
 
-			if ( array_key_exists( 'urm-course-portal', $wp->query_vars ) ) {
-					return true;
-			}
+			$page = get_page_by_path( 'course-portal' );
 
-			return $is_account_page;
+			$account_page_id = $page && $page->ID === $post->ID;
+
+			return $account_page_id;
 		}
-
-		// public function filter_process( $objects, $query_args, $query_results ) {
-		//  if ( isset( $objects['courses_stat'] ) ) {
-		//      error_log( print_r( $objects, true ) );
-		//  }
-
-		//  return $objects;
-		// }
-
-		// public function get_user_enrolled_courses_count( $user = null ) {
-		//  $user_id = is_a( $user, 'Masteriyo\Models\User' ) ? $user->get_id() : absint( $user ) ?? get_current_user_id();
-
-		//  if ( ! $user_id ) {
-		//      return 0;
-		//  }
-
-		//  $args = array(
-		//      'post_type'   => PostType::COURSE,
-		//      'post_status' => PostStatus::PUBLISH,
-		//      'paged'       => 1,
-		//      'order'       => 'DESC',
-		//      'orderby'     => 'date',
-		//      'tax_query'   => array(
-		//          'relation' => 'AND',
-		//      ),
-		//      'meta_query'  => array(
-		//          'relation' => 'AND',
-		//      ),
-		//  );
-
-		//  $args['meta_query'][] = array(
-		//      'relation' => 'OR',
-		//      array(
-		//          'key'     => '_access_mode',
-		//          'value'   => 'open',
-		//          'compare' => '=',
-		//      ),
-		//  );
-
-		//  return $courses_count ? absint( $courses_count ) : 0;
-		// }
 
 		public function filter_user_courses( $data, $user_course, $context, $obj ) {
 			$access_courses = array();
+
 			if ( is_user_logged_in() ) {
 				$user_obj = masteriyo( 'user' );
 				$user     = masteriyo_get_current_user();
@@ -258,13 +207,6 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 			return $html;
 		}
-
-		// public function modify_single_side_content( $course ) {
-
-		//  if ( ! is_user_logged_in() ) {
-		//      return '<button>Buy Now</button>';
-		//  }
-		// }
 
 		public function modify_url( $url, $course ) {
 

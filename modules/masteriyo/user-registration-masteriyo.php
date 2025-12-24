@@ -27,6 +27,12 @@ if ( ! defined( 'URM_MASTERIYO_DIR' ) ) {
 	define( 'URM_MASTERIYO_DIR', plugin_dir_path( __FILE__ ) );
 }
 
+// Define URM_MASTERIYO_CSS_ASSETS_URL.
+if ( ! defined( 'URM_MASTERIYO_CSS_ASSETS_URL' ) ) {
+	define( 'URM_MASTERIYO_CSS_ASSETS_URL', UR()->plugin_url() . '/assets/css/modules/masteriyo' );
+}
+
+
 if ( ! function_exists( 'urm_masteriyo_init' ) ) {
 	/**
 	 * Initialization of Membership instance.

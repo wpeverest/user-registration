@@ -1,0 +1,12 @@
+#masteriyo-account-page {
+	li:last-child {
+		display: none;
+	}
+
+	li {
+		a[href="#/order-history"],
+		a[href="#/user/profile"] {
+			display: none;
+		}
+	}
+}
