@@ -20,6 +20,8 @@ export interface PaymentSettings {
 	bankDetails: string;
 	paypal: boolean;
 	paypalEmail: string;
+	paypalClientId: string;
+	paypalClientSecret: string;
 	stripe: boolean;
 	stripeTestMode: boolean;
 	stripeTestPublishableKey: string;
@@ -74,6 +76,8 @@ export const initialState: GettingStartedState = {
 		bankDetails: "",
 		paypal: false,
 		paypalEmail: "",
+		paypalClientId: "",
+		paypalClientSecret: "",
 		stripe: false,
 		stripeTestMode: false,
 		stripeTestPublishableKey: "",

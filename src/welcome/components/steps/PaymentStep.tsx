@@ -29,6 +29,8 @@ interface PaymentGatewayData {
 	configured: boolean;
 	settings_url: string;
 	paypal_email?: string;
+	paypal_client_id?: string;
+	paypal_client_secret?: string;
 	bank_details?: string;
 	stripe_test_mode?: boolean;
 	stripe_test_publishable_key?: string;
@@ -153,6 +155,25 @@ const PaymentStep: React.FC = () => {
 									payload: {
 										key: "paypalEmail",
 										value: gateway.paypal_email
+									}
+								});
+							}
+							if (gateway.paypal_client_id) {
+								dispatch({
+									type: "SET_PAYMENT_SETTING",
+									payload: {
+										key: "paypalClientId",
+										value: gateway.paypal_client_id
+									}
+								});
+							}
+
+							if (gateway.paypal_client_id) {
+								dispatch({
+									type: "SET_PAYMENT_SETTING",
+									payload: {
+										key: "paypalClientSecret",
+										value: gateway.paypal_client_secret
 									}
 								});
 							}
@@ -290,6 +311,7 @@ const PaymentStep: React.FC = () => {
 				</PaymentOption>
 
 				{/* PayPal */}
+
 				<PaymentOption
 					label="Paypal"
 					isChecked={paymentSettings.paypal}
@@ -297,43 +319,121 @@ const PaymentStep: React.FC = () => {
 						handlePaymentSettingChange("paypal", checked)
 					}
 				>
-					<FormControl>
-						<FormLabel
-							fontSize="sm"
-							color={mutedColor}
-							display="flex"
-							alignItems="center"
-							gap={2}
-						>
-							PayPal Email
-							<Tooltip
-								label="Enter the email address associated with your PayPal account"
-								hasArrow
+					<VStack spacing={4} align="stretch">
+						<FormControl>
+							<FormLabel
+								fontSize="sm"
+								color={mutedColor}
+								display="flex"
+								alignItems="center"
+								gap={2}
 							>
-								<span>
-									<InfoIcon />
-								</span>
-							</Tooltip>
-						</FormLabel>
-						<Input
-							type="email"
-							placeholder="your-email@example.com"
-							value={paymentSettings.paypalEmail || ""}
-							onChange={(e) =>
-								handlePaymentSettingChange(
-									"paypalEmail",
-									e.target.value
-								)
-							}
-							bg={inputBg}
-							borderColor={inputBorder}
-							fontSize="sm"
-							_focus={{
-								borderColor: "#475BD8",
-								boxShadow: "0 0 0 1px #475BD8"
-							}}
-						/>
-					</FormControl>
+								PayPal Email
+								<Tooltip
+									label="Enter the email address associated with your PayPal account"
+									hasArrow
+								>
+									<span>
+										<InfoIcon />
+									</span>
+								</Tooltip>
+							</FormLabel>
+							<Input
+								type="email"
+								placeholder="your-email@example.com"
+								value={paymentSettings.paypalEmail || ""}
+								onChange={(e) =>
+									handlePaymentSettingChange(
+										"paypalEmail",
+										e.target.value
+									)
+								}
+								bg={inputBg}
+								borderColor={inputBorder}
+								fontSize="sm"
+								_focus={{
+									borderColor: "#475BD8",
+									boxShadow: "0 0 0 1px #475BD8"
+								}}
+							/>
+						</FormControl>
+
+						<FormControl>
+							<FormLabel
+								fontSize="sm"
+								color={mutedColor}
+								display="flex"
+								alignItems="center"
+								gap={2}
+							>
+								Client ID
+								<Tooltip
+									label="Your client_id, Required for subscription related operations."
+									hasArrow
+								>
+									<span>
+										<InfoIcon />
+									</span>
+								</Tooltip>
+							</FormLabel>
+							<Input
+								type="text"
+								placeholder=""
+								value={paymentSettings.paypalClientId || ""}
+								onChange={(e) =>
+									handlePaymentSettingChange(
+										"paypalClientId",
+										e.target.value
+									)
+								}
+								bg={inputBg}
+								borderColor={inputBorder}
+								fontSize="sm"
+								_focus={{
+									borderColor: "#475BD8",
+									boxShadow: "0 0 0 1px #475BD8"
+								}}
+							/>
+						</FormControl>
+
+						<FormControl>
+							<FormLabel
+								fontSize="sm"
+								color={mutedColor}
+								display="flex"
+								alignItems="center"
+								gap={2}
+							>
+								Client Secret
+								<Tooltip
+									label="Your client_secret, Required for subscription related operations"
+									hasArrow
+								>
+									<span>
+										<InfoIcon />
+									</span>
+								</Tooltip>
+							</FormLabel>
+							<Input
+								type="password"
+								placeholder=""
+								value={paymentSettings.paypalClientSecret || ""}
+								onChange={(e) =>
+									handlePaymentSettingChange(
+										"paypalClientSecret",
+										e.target.value
+									)
+								}
+								bg={inputBg}
+								borderColor={inputBorder}
+								fontSize="sm"
+								_focus={{
+									borderColor: "#475BD8",
+									boxShadow: "0 0 0 1px #475BD8"
+								}}
+							/>
+						</FormControl>
+					</VStack>
 				</PaymentOption>
 
 				{/* Stripe */}

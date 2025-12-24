@@ -71,29 +71,35 @@ export const mapPaymentSettingsToApi = (settings: PaymentSettings) => {
 		bank_details: settings.bankDetails,
 		paypal: settings.paypal,
 		paypal_email: settings.paypalEmail,
+		paypal_client_id: settings.paypalClientId,
+		paypal_client_secret: settings.paypalClientSecret,
 		stripe: settings.stripe,
 		stripe_test_mode: settings.stripeTestMode,
 		stripe_test_publishable_key: settings.stripeTestPublishableKey,
 		stripe_test_secret_key: settings.stripeTestSecretKey,
 		stripe_live_publishable_key: settings.stripeLivePublishableKey,
-		stripe_live_secret_key: settings.stripeLiveSecretKey,
+		stripe_live_secret_key: settings.stripeLiveSecretKey
 	};
 };
 
 /**
  * Maps API payment settings response to frontend format
  */
-export const mapApiToPaymentSettings = (apiData: any): Partial<PaymentSettings> => {
+export const mapApiToPaymentSettings = (
+	apiData: any
+): Partial<PaymentSettings> => {
 	return {
 		offlinePayment: apiData.offline_payment ?? false,
 		bankDetails: apiData.bank_details ?? "",
 		paypal: apiData.paypal ?? false,
 		paypalEmail: apiData.paypal_email ?? "",
+		paypalClientId: apiData.paypalClientId ?? "",
+		paypalClientSecret: apiData.paypalClientSecret ?? "",
 		stripe: apiData.stripe ?? false,
 		stripeTestMode: apiData.stripe_test_mode ?? false,
 		stripeTestPublishableKey: apiData.stripe_test_publishable_key ?? "",
 		stripeTestSecretKey: apiData.stripe_test_secret_key ?? "",
 		stripeLivePublishableKey: apiData.stripe_live_publishable_key ?? "",
-		stripeLiveSecretKey: apiData.stripe_live_secret_key ?? "",
+		stripeLiveSecretKey: apiData.stripe_live_secret_key ?? ""
 	};
 };
