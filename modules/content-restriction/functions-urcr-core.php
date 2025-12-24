@@ -1424,7 +1424,11 @@ function urcr_create_or_update_membership_rule( $membership_id, $rule_data = nul
 			// Fallback if membership title not found
 			$rule_title = isset( $rule_data['title'] ) && ! empty( $rule_data['title'] ) ? $rule_data['title'] : __( 'Membership Access Rule', 'user-registration' );
 		}
-		$rule_content = wp_json_encode( $access_rule_data );
+		// Unslash data before encoding to prevent double-escaping issues with quotes in HTML content
+		$access_rule_data = wp_unslash( $access_rule_data );
+		$rule_content = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		// Slash the JSON string so wp_insert_post() unslashing doesn't corrupt the JSON
+		$rule_content = wp_slash( $rule_content );
 	} else {
 		// Create default rule (fallback)
 		return urcr_create_membership_rule( $membership_id );

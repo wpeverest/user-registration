@@ -10,7 +10,6 @@ import AccessControlSection from "./AccessControlSection";
 import DropdownButton from "../dropdowns/DropdownButton";
 import {getURCRData, isProAccess, isURDev} from "../../utils/localized-data";
 
-// Helper function to determine condition input type
 const getConditionType = (conditionType) => {
 	const typeMap = {
 		roles: "multiselect",
@@ -28,7 +27,6 @@ const getConditionType = (conditionType) => {
 	return typeMap[conditionType] || "text";
 };
 
-// RuleGroup Component - Reusable nested group component
 const RuleGroup = ({
 	group,
 	onGroupUpdate,
@@ -46,19 +44,16 @@ const RuleGroup = ({
 	const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
 	const isMembershipRule = ruleType === "membership";
 
-	// Initialize conditions from group data
 	useEffect(() => {
 		if (group.conditions && group.conditions.length > 0) {
 			const initialConditions = group.conditions.map((cond) => {
 				if (cond.type === "group") {
-					// This is a nested group (only if advanced logic is enabled)
 					return {
 						type: "group",
 						id: cond.id,
 						group: cond,
 					};
 				} else {
-					// Regular condition
 					let conditionValue = cond.value;
 					const conditionType = getConditionType(cond.type);
 
@@ -91,7 +86,6 @@ const RuleGroup = ({
 			setConditions([]);
 		}
 
-		// Force logic gate to AND when advanced logic is disabled or for membership rules
 		if (!isAdvancedLogicEnabled || isMembershipRule) {
 			setLogicGate("AND");
 		} else if (group.logic_gate) {

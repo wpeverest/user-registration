@@ -22,7 +22,7 @@ class URCR_Frontend {
 	public function __construct() {
 
 		add_action( 'template_redirect', array( $this, 'run_content_restrictions' ) );
-		add_filter( 'template_include', array( $this, 'include_run_content_restrictions' ), PHP_INT_MAX );
+//		add_filter( 'template_include', array( $this, 'include_run_content_restrictions' ), PHP_INT_MAX );
 		add_filter( 'template_include', array( $this, 'restrict_whole_site' ), PHP_INT_MAX );
 		add_filter( 'template_include', array( $this, 'restrict_blog_page' ), PHP_INT_MAX );
 		add_filter( 'template_include', array( $this, 'restrict_wc_shop_page' ), PHP_INT_MAX );
@@ -802,7 +802,7 @@ class URCR_Frontend {
 						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
 
 						if ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
-							$is_applied = urcr_apply_content_restriction( $access_rule['actions'], $product_id );
+//							$is_applied = urcr_apply_content_restriction( $access_rule['actions'], $product_id );
 							if ( true === $is_applied ) {
 								$restricted = false;
 							}
@@ -1153,6 +1153,7 @@ class URCR_Frontend {
 	 * @param  mixed $post Post. d
 	 */
 	public function urcr_restrict_contents_template( $template, $post ) {
+
 		$template = ur_get_template(
 			'modules/content-restriction/urcr-target-basic-template.php',
 			array(

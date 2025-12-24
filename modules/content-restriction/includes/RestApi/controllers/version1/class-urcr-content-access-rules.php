@@ -248,13 +248,19 @@ class URCR_Content_Access_Rules {
 		 */
 		$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'create' );
 
+		// Unslash data before encoding to prevent double-escaping issues with quotes in HTML content
+		$access_rule_data = wp_unslash( $access_rule_data );
+		$access_rule_data_json = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		// Slash the JSON string so wp_insert_post() unslashing doesn't corrupt the JSON
+		$access_rule_data_json = wp_slash( $access_rule_data_json );
+
 		// Prepare the post data similar to prepare_access_rule_as_wp_post
 		$access_rule_post = apply_filters(
 			'urcr_prepared_access_rule_as_wp_post',
 			array(
 				'ID'             => '',
 				'post_title'     => $title,
-				'post_content'   => wp_json_encode( $access_rule_data ),
+				'post_content'   => $access_rule_data_json,
 				'post_type'      => 'urcr_access_rule',
 				'post_status'    => 'publish',
 				'comment_status' => 'closed',
@@ -479,8 +485,11 @@ class URCR_Content_Access_Rules {
 			 */
 			$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'update' );
 
-			// Use the same logic as prepare_access_rule_as_wp_post
-			$access_rule_data_json = wp_json_encode( $access_rule_data );
+			// Unslash data before encoding to prevent double-escaping issues with quotes in HTML content
+			$access_rule_data = wp_unslash( $access_rule_data );
+			$access_rule_data_json = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+			// Slash the JSON string so wp_insert_post() unslashing doesn't corrupt the JSON
+			$access_rule_data_json = wp_slash( $access_rule_data_json );
 
 			$access_rule_post = apply_filters(
 				'urcr_prepared_access_rule_as_wp_post',
