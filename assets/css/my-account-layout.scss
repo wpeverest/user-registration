@@ -84,13 +84,13 @@
 			text-align: center;
 
 			.user-registration-profile-header {
-				.button-group {
-					.button.user_registration_profile_picture_upload {
-						background: #edeff7;
-						color: $primary_color;
-						border: $border_width solid #edeff7 !important;
-					}
-				}
+				// .button-group {
+				// 	.button.user_registration_profile_picture_upload {
+				// 		background: #edeff7;
+				// 		color: $primary_color;
+				// 		border: $border_width solid #edeff7 !important;
+				// 	}
+				// }
 
 				.user-registration-img-container {
 					margin: 0 auto;
@@ -1034,17 +1034,51 @@
 						}
 
 						&[data-action="edit"] {
+							select {
+								min-height: 38px;
+								height: 38px;
+								width: 100%;
+								padding: 0 $spacing_12px;
+								border-color: $border-color;
+								border-radius: $border_radius_4;
+								font-size: 14px;
+								line-height: 24px;
+								color: #383838;
+								font-weight: 400;
+								margin: 0;
+								box-shadow: none;
+								background: transparent;
+								background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M19.561 7.403a1.468 1.468 0 0 1 2.02 0 1.339 1.339 0 0 1 0 1.944l-8.57 8.25a1.468 1.468 0 0 1-2.021 0l-8.572-8.25a1.339 1.339 0 0 1 0-1.944 1.468 1.468 0 0 1 2.02 0L12 14.68l7.561-7.278Z'/%3E%3C/svg%3E");
+								background-repeat: no-repeat;
+								background-position: right 12px center;
+								background-size: 14px 14px;
+								cursor: pointer;
+
+								&:focus {
+									outline: none;
+									box-shadow: none;
+									border-color: $primary_color;
+								}
+							}
+
 							.user-registration-profile-header {
 								.user-registration-img-container {
 									.profile-preview {
-										border: 4px solid #f9f9f9;
-										// box-shadow: 0 4px 24px 0 rgba(10, 10, 10, 6%);
+										border: 4px solid #edeff7;
 									}
 								}
 
 								.button-group {
 									margin-bottom: 0;
 									bottom: $spacing_20px;
+
+									.button {
+										svg {
+											width: 18px;
+											height: 18px;
+											fill: $primary_color;
+										}
+									}
 								}
 							}
 						}
@@ -1710,7 +1744,7 @@
 
 						header {
 							>h3 {
-								margin-bottom: 0;
+								margin: 0;
 								font-size: 16px;
 								line-height: 24px;
 								color: #383838;
@@ -2089,13 +2123,12 @@ body {
 					height: 32px;
 					padding: 0;
 					margin: 0;
-					border-radius: 999px;
-					border: 3px solid #fff;
-					background: #fff;
-					box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+					border-radius: 50%;
+					border: $border_width solid #edeff7;
+					background: #edeff7;
+					// box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+					box-shadow: none;
 					cursor: pointer;
-
-					// hide text
 					font-size: 0;
 					line-height: 0;
 					color: transparent;
