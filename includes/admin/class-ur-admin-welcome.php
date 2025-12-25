@@ -63,11 +63,13 @@ class UR_Admin_Welcome {
 		wp_enqueue_script( $handle );
 
 		wp_enqueue_style(
-			'ur-welcome-style',
-			UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css',
+			'ur-inter-font',
+			'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
 			array(),
-			UR()->version
+			null
 		);
+
+
 
 		/**
 		 * Localized variables available inside React via window._UR_WIZARD_

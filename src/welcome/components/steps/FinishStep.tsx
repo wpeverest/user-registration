@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
 	Heading,
 	Button,
-	Link,
 	Flex,
 	useColorModeValue,
 	FormControl,
@@ -12,10 +11,11 @@ import {
 	Icon,
 	Box,
 	Skeleton,
-	Text,
-	VStack
+	HStack,
+	Text
 } from "@chakra-ui/react";
-import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { __ } from "@wordpress/i18n";
 import { useStateValue } from "../../context/StateProvider";
 import { apiGet, apiPost } from "../../api/gettingStartedApi";
 
@@ -34,7 +34,7 @@ const InfoIcon: React.FC = () => (
 );
 
 const FinishStep: React.FC = () => {
-	const { state, dispatch } = useStateValue();
+	const { state } = useStateValue();
 	const { membershipSetupType } = state;
 
 	const [roles, setRoles] = useState<RoleOption[]>([]);
@@ -43,13 +43,13 @@ const FinishStep: React.FC = () => {
 	const [isSaving, setIsSaving] = useState(false);
 
 	const textColor = useColorModeValue("gray.800", "white");
-	const mutedColor = useColorModeValue("gray.600", "gray.400");
 	const inputBg = useColorModeValue("white", "gray.700");
 	const inputBorder = useColorModeValue("gray.300", "gray.600");
 
 	const isOtherType = membershipSetupType === "other";
+	const isMembershipType =
+		membershipSetupType === "paid" || membershipSetupType === "free";
 
-	// Load roles when component mounts and type is "other"
 	useEffect(() => {
 		const loadRoles = async () => {
 			if (!isOtherType) return;
@@ -79,26 +79,32 @@ const FinishStep: React.FC = () => {
 		setSelectedRole(e.target.value);
 	};
 
-	const handleViewRegistration = () => {
-		const registrationUrl =
-			(window as any).urmSetupWizard?.registrationPageUrl ||
-			"/registration";
-		window.location.href = registrationUrl;
+	const handleGoToDashboard = () => {
+		const dashboardUrl =
+			(window as any).urmSetupWizard?.dashboardUrl ||
+			"/wp-admin/admin.php?page=user-registration-dashboard";
+		window.location.href = dashboardUrl;
 	};
 
-	const handleVisitDashboard = async () => {
+	const handleCreateMembership = () => {
+		const membershipUrl =
+			(window as any).urmSetupWizard?.createMembershipUrl ||
+			"/wp-admin/admin.php?page=user-registration&tab=membership&action=add";
+		window.location.href = membershipUrl;
+	};
+
+	const handleVisitRegistration = async () => {
 		try {
 			setIsSaving(true);
 
-			// If "other" type, save the selected role
 			if (isOtherType && selectedRole) {
 				await apiPost("/finish", { default_user_role: selectedRole });
 			}
 
-			const dashboardUrl =
-				(window as any).urmSetupWizard?.dashboardUrl ||
+			const registrationUrl =
+				(window as any).urmSetupWizard?.registrationPageUrl ||
 				"/wp-admin/admin.php?page=user-registration";
-			window.location.href = dashboardUrl;
+			window.location.href = registrationUrl;
 		} catch (e) {
 			console.error("Failed to save settings:", e);
 		} finally {
@@ -108,82 +114,130 @@ const FinishStep: React.FC = () => {
 
 	return (
 		<>
-			<Heading size="lg" color={textColor} mb={isOtherType ? 6 : 10}>
-				Success! You're all set!
+			<Heading
+				size="lg"
+				fontFamily="Inter"
+				fontWeight={600}
+				fontSize="21px"
+				lineHeight="34px"
+				letterSpacing="-0.01em"
+				color={textColor}
+				mb={isOtherType ? 6 : 10}
+			>
+				{__("Congratulations 🎉", "user-registration")}
 			</Heading>
 
+			{/* Role selection for "other" type - side by side layout */}
 			{isOtherType && (
 				<Box mb={10}>
 					<FormControl>
-						<FormLabel
-							fontSize="sm"
-							fontWeight="600"
-							color={textColor}
-							display="flex"
-							alignItems="center"
-							gap={2}
-						>
-							Assign Default User Role
-							<Tooltip
-								label="Select the default role assigned to new users upon registration"
-								hasArrow
-							>
-								<span>
-									<InfoIcon />
-								</span>
-							</Tooltip>
-						</FormLabel>
-						{isLoadingRoles ? (
-							<Skeleton height="40px" borderRadius="md" />
-						) : (
-							<Select
-								value={selectedRole}
-								onChange={handleRoleChange}
-								bg={inputBg}
-								borderColor={inputBorder}
+						<Flex align="center" gap={4}>
+							<FormLabel
 								fontSize="sm"
-								_focus={{
-									borderColor: "#475BD8",
-									boxShadow: "0 0 0 1px #475BD8"
-								}}
+								fontWeight="600"
+								color={textColor}
+								display="flex"
+								alignItems="center"
+								gap={2}
+								mb={0}
+								whiteSpace="nowrap"
 							>
-								{roles.map((role) => (
-									<option key={role.value} value={role.value}>
-										{role.label}
-									</option>
-								))}
-							</Select>
-						)}
+								{__(
+									"Assign Default User Role",
+									"user-registration"
+								)}
+								<Tooltip
+									label={__(
+										"Select the default role assigned to new users upon registration",
+										"user-registration"
+									)}
+									hasArrow
+								>
+									<span>
+										<InfoIcon />
+									</span>
+								</Tooltip>
+							</FormLabel>
+							{isLoadingRoles ? (
+								<Skeleton
+									height="40px"
+									width="200px"
+									borderRadius="md"
+								/>
+							) : (
+								<Select
+									value={selectedRole}
+									onChange={handleRoleChange}
+									bg={inputBg}
+									borderColor={inputBorder}
+									fontSize="sm"
+									maxW="200px"
+									_focus={{
+										borderColor: "#475BD8",
+										boxShadow: "0 0 0 1px #475BD8"
+									}}
+								>
+									{roles.map((role) => (
+										<option
+											key={role.value}
+											value={role.value}
+										>
+											{role.label}
+										</option>
+									))}
+								</Select>
+							)}
+						</Flex>
 					</FormControl>
 				</Box>
 			)}
 
-			<Flex justify="space-between" align="center">
-				<Link
-					display="flex"
-					alignItems="center"
-					color={mutedColor}
-					fontSize="sm"
-					_hover={{ color: textColor, textDecoration: "none" }}
-					cursor="pointer"
-					onClick={handleViewRegistration}
-				>
-					<ArrowBackIcon mr={2} />
-					View Registration Page
-				</Link>
+			{/* Buttons Section */}
+			<Flex
+				justify={isMembershipType ? "space-between" : "flex-end"}
+				align="center"
+			>
+				{/* For membership flow: Go to dashboard on left */}
+				{isMembershipType && (
+					<Button
+						variant="outline"
+						borderColor="#475BD8"
+						color="#475BD8"
+						_hover={{ bg: "blue.50" }}
+						px={6}
+						onClick={handleGoToDashboard}
+					>
+						{__("Go to dashboard", "user-registration")}
+					</Button>
+				)}
 
-				<Button
-					bg="#475BD8"
-					color="white"
-					rightIcon={<ArrowForwardIcon />}
-					_hover={{ bg: "#3a4bc2" }}
-					_active={{ bg: "#2f3da6" }}
-					px={6}
-					onClick={handleVisitDashboard}
-					isLoading={isSaving}
-				>
-					Visit Dashboard
-				</Button>
+				{/* Right side buttons */}
+				{isMembershipType ? (
+					<Button
+						bg="#475BD8"
+						color="white"
+						rightIcon={<ArrowForwardIcon />}
+						_hover={{ bg: "#3a4bc2" }}
+						_active={{ bg: "#2f3da6" }}
+						px={6}
+						onClick={handleCreateMembership}
+					>
+						{__("Create Membership", "user-registration")}
+					</Button>
+				) : (
+					<Button
+						bg="#475BD8"
+						color="white"
+						rightIcon={<ArrowForwardIcon />}
+						_hover={{ bg: "#3a4bc2" }}
+						_active={{ bg: "#2f3da6" }}
+						px={6}
+						onClick={handleVisitRegistration}
+						isLoading={isSaving}
+					>
+						{__("Visit Registration", "user-registration")}
+					</Button>
+				)}
 			</Flex>
 		</>
 	);

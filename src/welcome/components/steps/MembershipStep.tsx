@@ -41,6 +41,7 @@ import {
 	ContentAccess
 } from "../../context/Gettingstartedcontext";
 import { apiGet } from "../../api/gettingStartedApi";
+import { __ } from "@wordpress/i18n";
 
 interface ContentOption {
 	value: number;
@@ -324,15 +325,17 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 			borderColor={borderColor}
 			borderRadius="lg"
 			mb={4}
+			boxShadow="none"
 		>
 			<CardBody p={6}>
 				<VStack spacing={5} align="stretch">
 					{/* Name row with cancel button inline */}
 					<Flex align="center">
-						<Text w="120px" fontWeight="500" color={labelColor}>
+						<Text minW="100px" fontWeight="500" color={labelColor} flexShrink={0}>
 							Name :
 						</Text>
 						<Input
+							flex={1}
 							value={plan.name}
 							onChange={handleNameChange}
 							placeholder="Enter plan name"
@@ -359,7 +362,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 					</Flex>
 
 					<Flex align="center">
-						<Text w="120px" fontWeight="500" color={labelColor}>
+						<Text minW="100px" fontWeight="500" color={labelColor} flexShrink={0}>
 							Type :
 						</Text>
 						<ButtonGroup size="sm" isAttached variant="outline">
@@ -410,7 +413,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 
 					{plan.type === "paid" && (
 						<Flex align="center">
-							<Text w="120px" fontWeight="500" color={labelColor}>
+							<Text minW="100px" fontWeight="500" color={labelColor} flexShrink={0}>
 								Price
 							</Text>
 							<HStack spacing={3} flex={1}>
@@ -488,10 +491,11 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 											p={3}
 										>
 											<Text
-												w="80px"
+												minW="70px"
 												fontWeight="500"
 												color={labelColor}
 												fontSize="sm"
+												flexShrink={0}
 											>
 												{labelForAccess(access)}
 											</Text>
@@ -607,8 +611,17 @@ const MembershipStep: React.FC = () => {
 
 	return (
 		<>
-			<Heading size="lg" color={textColor} mb={8}>
-				Create Membership
+			<Heading
+				size="lg"
+				fontFamily="Inter"
+				fontWeight={600}
+				fontSize="21px"
+				lineHeight="34px"
+				letterSpacing="-0.01em"
+				color={textColor}
+				mb={8}
+			>
+				{__("Create Membership", "user-registration")}
 			</Heading>
 
 			<VStack spacing={4} align="stretch" mb={6}>

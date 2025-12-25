@@ -7,8 +7,8 @@ import reducer, { initialState } from "../context/Gettingstartedcontext";
 const theme = extendTheme({
 	fonts: {
 		heading:
-			"'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
-		body: "'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+			"'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
+		body: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
 	},
 	colors: {
 		brand: {

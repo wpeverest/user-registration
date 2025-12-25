@@ -11,6 +11,7 @@ import {
 	Link,
 	useColorModeValue,
 } from "@chakra-ui/react";
+import { __, sprintf } from "@wordpress/i18n";
 import { useStateValue } from "../../context/StateProvider";
 import { MembershipSetupType } from "../../context/Gettingstartedcontext";
 
@@ -111,42 +112,57 @@ const WelcomeStep: React.FC = () => {
 			: [
 					{
 						value: "paid" as MembershipSetupType,
-						title: "Paid Membership",
-						description:
+						title: __("Paid Membership", "urm"),
+						description: __(
 							"Paid members can access protected content. Choose this even if you have combination of both free and paid.",
+							"urm"
+						),
 					},
 					{
 						value: "free" as MembershipSetupType,
-						title: "Free Membership",
-						description:
+						title: __("Free Membership", "urm"),
+						description: __(
 							"Registered users can access protected content.",
+							"urm"
+						),
 					},
 					{
 						value: "other" as MembershipSetupType,
-						title: "Other URM Features (no membership now)",
-						description:
+						title: __("Other URM Features (no membership now)", "urm"),
+						description: __(
 							"I want registration and other features without membership.",
+							"urm"
+						),
 					},
 			  ];
 
 	return (
 		<>
 			<VStack align="flex-start" spacing={2} mb={8}>
-				<Heading size="lg" color={textColor}>
-					Welcome 🙂
+				<Heading
+					fontFamily="Inter"
+					fontWeight={600}
+					fontSize="21px"
+					lineHeight="34px"
+					letterSpacing="-0.01em"
+					color={textColor}
+				>
+					{__("Welcome 🙂", "urm")}
 				</Heading>
 				<Text color={textColor} fontWeight="500">
-					Thanks for choosing URM!
+					{__("Thanks for choosing URM!", "urm")}
 				</Text>
 				<Text color={mutedColor} fontSize="sm">
-					Select what applies to your site. We'll create the pages and features
-					you need. You can always change this later.
+					{__(
+						"Select what applies to your site. We'll create the pages and features you need. You can always change this later.",
+						"urm"
+					)}
 				</Text>
 			</VStack>
 
-			<Box mb={8}>
+			<Box mb={10}>
 				<Text fontWeight="600" color={textColor} mb={4}>
-					I want to setup
+					{__("I want to setup", "urm")}
 				</Text>
 				<RadioGroup
 					value={membershipSetupType}
@@ -179,9 +195,10 @@ const WelcomeStep: React.FC = () => {
 					}}
 				>
 					<Text fontSize="sm" color={mutedColor}>
-						Allow usage tracking and subscribe to updates (security updates, new
-						features, and occasional offers). We will use your email if
-						provided.{" "}
+						{__(
+							"Allow usage tracking and subscribe to updates (security updates, new features, and occasional offers). We will use your email if provided.",
+							"urm"
+						)}{" "}
 						<Link color={linkColor} href={`mailto:${emailForDisplay}`}>
 							{emailForDisplay}
 						</Link>

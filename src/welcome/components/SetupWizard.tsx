@@ -32,7 +32,6 @@ const ALL_STEPS: StepConfig[] = [
 	{ id: "finish", label: "Finish", stepNumber: 4 }
 ];
 
-// Get visible steps based on membership type and plan types
 const getVisibleSteps = (
 	membershipType: MembershipSetupType,
 	hasPaidPlan: boolean
@@ -41,12 +40,8 @@ const getVisibleSteps = (
 
 	switch (membershipType) {
 		case "paid":
-			// Show all steps: Welcome, Membership, Payment, Finish
-			filteredSteps = ALL_STEPS;
-			break;
 		case "free":
-			// Hide Payment: Welcome, Membership, Finish
-			// But if user adds a paid plan in membership step, show Payment
+			// Show Payment step only if there's at least one paid membership plan
 			if (hasPaidPlan) {
 				filteredSteps = ALL_STEPS;
 			} else {
@@ -56,7 +51,7 @@ const getVisibleSteps = (
 			}
 			break;
 		case "other":
-			// Hide Membership and Payment: Welcome, Finish
+			// No membership at all - skip both Membership and Payment
 			filteredSteps = ALL_STEPS.filter(
 				(step) => step.id !== "membership" && step.id !== "payment"
 			);
@@ -65,14 +60,12 @@ const getVisibleSteps = (
 			filteredSteps = ALL_STEPS;
 	}
 
-	// Renumber steps sequentially (1, 2, 3, ...)
 	return filteredSteps.map((step, index) => ({
 		...step,
 		stepNumber: index + 1
 	}));
 };
 
-// Get the step ID for a given display step number
 const getStepIdByDisplayNumber = (
 	displayNumber: number,
 	visibleSteps: StepConfig[]
@@ -81,22 +74,12 @@ const getStepIdByDisplayNumber = (
 	return step ? step.id : "welcome";
 };
 
-// Get the display step number for a given step ID
-const getDisplayNumberByStepId = (
-	stepId: string,
-	visibleSteps: StepConfig[]
-): number => {
-	const step = visibleSteps.find((s) => s.id === stepId);
-	return step ? step.stepNumber : 1;
-};
-
-const HEADER_HEIGHT = "70px";
+const HEADER_HEIGHT = "73px";
 
 const SetupWizard: React.FC = () => {
 	const { state, dispatch } = useStateValue();
 	const {
 		currentStep,
-		maxCompletedStep,
 		isLoading,
 		membershipSetupType,
 		membershipPlans
@@ -108,10 +91,8 @@ const SetupWizard: React.FC = () => {
 	const mutedColor = useColorModeValue("gray.600", "gray.400");
 	const pageBg = useColorModeValue("gray.50", "gray.900");
 
-	// Check if any membership plan is paid
 	const hasPaidPlan = membershipPlans.some((plan) => plan.type === "paid");
 
-	// Get visible steps based on membership type and paid plans
 	const visibleSteps = useMemo(
 		() => getVisibleSteps(membershipSetupType, hasPaidPlan),
 		[membershipSetupType, hasPaidPlan]
@@ -119,10 +100,15 @@ const SetupWizard: React.FC = () => {
 
 	const totalSteps = visibleSteps.length;
 
-	// Get current step ID based on current step number
+	// If current step is beyond total steps (e.g., Payment was removed), go to last valid step
+	useEffect(() => {
+		if (currentStep > totalSteps) {
+			dispatch({ type: "SET_STEP", payload: totalSteps });
+		}
+	}, [currentStep, totalSteps, dispatch]);
+
 	const currentStepId = getStepIdByDisplayNumber(currentStep, visibleSteps);
 
-	// Check if current step is the finish step
 	const isFinishStep = currentStepId === "finish";
 
 	useEffect(() => {
@@ -195,7 +181,6 @@ const SetupWizard: React.FC = () => {
 					admin_email: state.adminEmail
 				});
 
-				// If "Other URM Features" is selected, finish is next step (step 2)
 				if (membershipSetupType === "other") {
 					await apiPost("/finish");
 				}
@@ -204,7 +189,6 @@ const SetupWizard: React.FC = () => {
 					memberships: state.membershipPlans.map(mapPlanToApi)
 				});
 
-				// If no paid plans, finish is next (skip payment)
 				if (!hasPaidPlan) {
 					await apiPost("/finish");
 				}
@@ -216,7 +200,6 @@ const SetupWizard: React.FC = () => {
 				await apiPost("/finish");
 			}
 
-			// Move to next step (will be capped at totalSteps in reducer)
 			if (currentStep < totalSteps) {
 				dispatch({ type: "SET_STEP", payload: currentStep + 1 });
 			}
@@ -238,7 +221,6 @@ const SetupWizard: React.FC = () => {
 			dispatch({ type: "SET_LOADING", payload: true });
 			await apiPost("/skip", { step: currentStep });
 
-			// Move to next step
 			if (currentStep < totalSteps) {
 				dispatch({ type: "SET_STEP", payload: currentStep + 1 });
 			}
@@ -249,10 +231,24 @@ const SetupWizard: React.FC = () => {
 		}
 	};
 
-	const handleStepClick = (stepNumber: number) => {
-		if (stepNumber <= maxCompletedStep && stepNumber !== currentStep) {
-			dispatch({ type: "SET_STEP", payload: stepNumber });
+	const handleStepClick = async (stepNumber: number) => {
+		// Don't do anything if clicking current step
+		if (stepNumber === currentStep) {
+			return;
 		}
+
+		if (stepNumber < currentStep) {
+			dispatch({ type: "SET_STEP", payload: stepNumber });
+			return;
+		}
+
+
+		if (stepNumber === currentStep + 1) {
+			await handleSkip();
+			return;
+		}
+
+
 	};
 
 	const handleClose = () => {
@@ -282,7 +278,6 @@ const SetupWizard: React.FC = () => {
 			<Stepper
 				steps={visibleSteps}
 				currentStep={currentStep}
-				maxCompletedStep={maxCompletedStep}
 				onStepClick={handleStepClick}
 				onClose={handleClose}
 			/>
@@ -291,7 +286,7 @@ const SetupWizard: React.FC = () => {
 				<Flex justify="center" align="flex-start" px={4} py={10}>
 					<Box
 						w="100%"
-						maxW="800px"
+						maxW="920px"
 						bg={cardBg}
 						borderWidth="1px"
 						borderColor={borderColor}

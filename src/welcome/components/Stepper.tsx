@@ -1,6 +1,5 @@
 import React from "react";
 import {
-	HStack,
 	Box,
 	Text,
 	Circle,
@@ -20,7 +19,7 @@ interface Step {
 interface StepperProps {
 	steps: Step[];
 	currentStep: number;
-	maxCompletedStep: number;
+	maxCompletedStep?: number; // Optional - kept for backward compatibility
 	onStepClick: (stepNumber: number) => void;
 	onClose?: () => void;
 }
@@ -45,7 +44,6 @@ const CloseXIcon: React.FC = () => (
 const Stepper: React.FC<StepperProps> = ({
 	steps,
 	currentStep,
-	maxCompletedStep,
 	onStepClick,
 	onClose
 }) => {
@@ -59,10 +57,14 @@ const Stepper: React.FC<StepperProps> = ({
 
 	const isStepCompleted = (stepNumber: number) => stepNumber < currentStep;
 	const isStepCurrent = (stepNumber: number) => stepNumber === currentStep;
+
+	// User can click:
+	// 1. Any previous step (go back)
+	// 2. Current step (already there)
+	// 3. Next step only (skip current step) - cannot jump multiple steps
+	// 4. Cannot go beyond the last step
 	const isStepClickable = (stepNumber: number) =>
-		stepNumber <= maxCompletedStep;
-	const isStepVisited = (stepNumber: number) =>
-		stepNumber <= maxCompletedStep && stepNumber > currentStep;
+		stepNumber <= currentStep + 1 && stepNumber <= steps.length;
 
 	return (
 		<Box
@@ -77,139 +79,149 @@ const Stepper: React.FC<StepperProps> = ({
 			px={{ base: 4, md: 6, lg: 10 }}
 			zIndex={1000}
 		>
+			{/* Outer container for logo and close button at edges */}
 			<Flex
 				justify="space-between"
 				align="center"
-				maxW="1400px"
-				mx="auto"
 				width="100%"
+				position="relative"
 			>
-				<Flex align="center" flexShrink={0} mr={{ base: 2, md: 6 }}>
+				{/* Logo - Far Left */}
+				<Flex align="center" flexShrink={0} zIndex={2}>
 					<URMLogo h="40px" />
 				</Flex>
 
-				<HStack
-					spacing={0}
+				{/* Steps Container - Centered with max-width to match card below */}
+				<Flex
+					position="absolute"
+					left="0"
+					right="0"
 					justify="center"
-					flex={1}
-					mx={{ base: 2, md: 6 }}
-					overflowX="auto"
-					css={{
-						"&::-webkit-scrollbar": {
-							display: "none"
-						},
-						scrollbarWidth: "none"
-					}}
+					align="center"
+					pointerEvents="none"
+					px={{ base: 4, md: 6, lg: 10 }}
 				>
-					{steps.map((step, index) => (
-						<React.Fragment key={step.id}>
-							<Flex
-								align="center"
-								cursor={
-									isStepClickable(step.stepNumber)
-										? "pointer"
-										: "default"
-								}
-								onClick={() => {
-									if (isStepClickable(step.stepNumber)) {
-										onStepClick(step.stepNumber);
+					<Flex
+						align="center"
+						justify="space-between"
+						w="100%"
+						maxW="750px"
+						pointerEvents="auto"
+					>
+						{steps.map((step, index) => (
+							<React.Fragment key={step.id}>
+								{/* Step Item */}
+								<Flex
+									align="center"
+									cursor={
+										isStepClickable(step.stepNumber)
+											? "pointer"
+											: "default"
 									}
-								}}
-								opacity={
-									isStepClickable(step.stepNumber) ? 1 : 0.6
-								}
-								_hover={
-									isStepClickable(step.stepNumber)
-										? { opacity: 0.8 }
-										: undefined
-								}
-								role="button"
-								aria-label={`Go to ${step.label}`}
-								tabIndex={
-									isStepClickable(step.stepNumber) ? 0 : -1
-								}
-								flexShrink={0}
-							>
-								<Circle
-									size="26px"
-									bg={
-										isStepCompleted(step.stepNumber) ||
-										isStepVisited(step.stepNumber)
-											? activeColor
-											: "white"
+									onClick={() => {
+										if (isStepClickable(step.stepNumber)) {
+											onStepClick(step.stepNumber);
+										}
+									}}
+									opacity={
+										isStepClickable(step.stepNumber)
+											? 1
+											: 0.6
 									}
-									borderWidth="2px"
-									borderColor={
-										isStepCompleted(step.stepNumber) ||
-										isStepCurrent(step.stepNumber) ||
-										isStepVisited(step.stepNumber)
-											? activeColor
-											: mutedColor
+									_hover={
+										isStepClickable(step.stepNumber)
+											? { opacity: 0.8 }
+											: undefined
 									}
-									color={
-										isStepCompleted(step.stepNumber) ||
-										isStepVisited(step.stepNumber)
-											? "white"
-											: isStepCurrent(step.stepNumber)
-											? activeColor
-											: mutedColor
+									role="button"
+									aria-label={`Go to ${step.label}`}
+									tabIndex={
+										isStepClickable(step.stepNumber)
+											? 0
+											: -1
 									}
-								>
-									{isStepCompleted(step.stepNumber) ||
-									isStepVisited(step.stepNumber) ? (
-										<Icon as={CheckIcon} boxSize={3} />
-									) : (
-										<Text fontSize="xs" fontWeight="600">
-											{step.stepNumber}
-										</Text>
-									)}
-								</Circle>
-
-								<Text
-									ml={2}
-									fontSize="sm"
-									fontWeight={
-										isStepCurrent(step.stepNumber) ||
-										isStepCompleted(step.stepNumber) ||
-										isStepVisited(step.stepNumber)
-											? "600"
-											: "400"
-									}
-									color={
-										isStepCurrent(step.stepNumber) ||
-										isStepCompleted(step.stepNumber) ||
-										isStepVisited(step.stepNumber)
-											? textColor
-											: mutedColor
-									}
-									whiteSpace="nowrap"
-								>
-									{step.label}
-								</Text>
-							</Flex>
-
-							{/* Connector Line */}
-							{index < steps.length - 1 && (
-								<Box
-									h="2px"
-									w={{ base: "30px", md: "50px", lg: "70px" }}
-									mx={{ base: 2, md: 3 }}
-									bg={
-										steps[index + 1].stepNumber <=
-										maxCompletedStep
-											? activeColor
-											: lineColor
-									}
-									borderRadius="full"
 									flexShrink={0}
-								/>
-							)}
-						</React.Fragment>
-					))}
-				</HStack>
+								>
+									{/* Step Circle */}
+									<Circle
+										size="28px"
+										bg={
+											isStepCompleted(step.stepNumber)
+												? activeColor
+												: "white"
+										}
+										borderWidth="2px"
+										borderColor={
+											isStepCompleted(step.stepNumber) ||
+											isStepCurrent(step.stepNumber)
+												? activeColor
+												: mutedColor
+										}
+										color={
+											isStepCompleted(step.stepNumber)
+												? "white"
+												: isStepCurrent(step.stepNumber)
+												? activeColor
+												: mutedColor
+										}
+										flexShrink={0}
+									>
+										{isStepCompleted(step.stepNumber) ? (
+											<Icon as={CheckIcon} boxSize={3} />
+										) : (
+											<Text
+												fontSize="xs"
+												fontWeight="600"
+											>
+												{step.stepNumber}
+											</Text>
+										)}
+									</Circle>
 
-				{/* Close Button - Right */}
-				<Box flexShrink={0}>
+									{/* Step Label - Beside Circle */}
+									<Text
+										ml={2}
+										fontSize="sm"
+										fontWeight={
+											isStepCurrent(step.stepNumber) ||
+											isStepCompleted(step.stepNumber)
+												? "600"
+												: "400"
+										}
+										color={
+											isStepCurrent(step.stepNumber) ||
+											isStepCompleted(step.stepNumber)
+												? textColor
+												: mutedColor
+										}
+										whiteSpace="nowrap"
+									>
+										{step.label}
+									</Text>
+								</Flex>
+
+								{/* Connecting Line (except after last step) */}
+								{index < steps.length - 1 && (
+									<Box
+										flex={1}
+										h="2px"
+										mx={{ base: 2, md: 4 }}
+										minW="20px"
+										bg={
+											step.stepNumber < currentStep
+												? activeColor
+												: lineColor
+										}
+										transition="background-color 0.3s ease"
+									/>
+								)}
+							</React.Fragment>
+						))}
+					</Flex>
+				</Flex>
+
+				{/* Close Button - Far Right */}
+				<Box flexShrink={0} zIndex={2}>
 					{onClose && (
 						<Box
 							as="button"
