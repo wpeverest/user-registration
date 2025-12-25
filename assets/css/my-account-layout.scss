@@ -2210,3 +2210,47 @@ body {
 		flex: 0 0 40%;
 	}
 }
+
+.membership-row-btn-container {
+	.dropdown {
+		position: absolute;
+		right: 0;
+		top: 28px;
+		background: #fff;
+		border: 1px solid #ccc;
+		border-radius: 6px;
+		display: flex;
+		flex-direction: column;
+		min-width: 140px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		z-index: 50;
+
+		&.hidden {
+			display: none;
+		}
+
+		a {
+			padding: 10px;
+			text-decoration: none;
+			color: #333;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+
+			&:hover {
+				background: #f3f3f3;
+			}
+		}
+	}
+}
+
+.dropdown {
+	background: #fff;
+	border-radius: 6px;
+	box-shadow: 0 6px 20px rgba(0,0,0,.15);
+	min-width: 180px;
+}
+
+.hidden {
+	display: none !important;
+}

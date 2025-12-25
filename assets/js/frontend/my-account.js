@@ -382,7 +382,7 @@ jQuery(function ($) {
 		.closest(".button-group")
 		.find(".uraf-profile-picture-upload")
 		.hide();
-	editBtn.on("click", function (e) {
+	editBtn.off("click").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 
@@ -412,29 +412,53 @@ jQuery(function ($) {
 				.closest(".button-group")
 				.find(".uraf-profile-picture-upload");
 
-		if (!clickedInsideMenu || !clickedEditBtn) {
+		if (!clickedInsideMenu && !clickedEditBtn) {
 			menu.hide();
 		}
 	});
 });
 
 jQuery(function ($) {
-	$(document)
-		.find(".membership-row-btn-container")
-		.on("click", ".menu-trigger", function (e) {
-			e.stopPropagation();
+	let $activeDropdown = null;
 
-			var $container = $(this).closest(".action-menu");
-			var $dropdown = $container.find(".dropdown");
+	$(document).on("click", ".menu-trigger", function (e) {
+		e.preventDefault();
+		e.stopPropagation();
 
-			$(".action-menu .dropdown").not($dropdown).addClass("hidden");
+		var $trigger = $(this);
+		var $menu = $trigger.closest(".action-menu");
+		let $dropdown = $menu.find(".dropdown");
 
-			$dropdown.toggleClass("hidden");
+		if ($activeDropdown && !$dropdown.is($activeDropdown)) {
+			$activeDropdown.addClass("hidden");
+		}
 
-			console.log("menu-trigger clicked");
+		var rect = this.getBoundingClientRect();
+
+		$dropdown.css({
+			position: "fixed",
+			top: rect.bottom + 6,
+			left: rect.left,
+			zIndex: 100000,
+			width: "0px"
 		});
 
-	$(document).on("click", function () {
-		$(".membership-row-btn-container").find(".dropdown").addClass("hidden");
+		if ($dropdown.hasClass("hidden")) {
+			$dropdown.removeClass("hidden");
+		} else {
+			$dropdown.addClass("hidden");
+		}
+
+		$activeDropdown = $dropdown.hasClass("hidden") ? null : $dropdown;
+	});
+
+	$(document).on("click", function (e) {
+		if (
+			!$(e.target).closest(".dropdown").length &&
+			!$(e.target).closest(".menu-trigger").length
+		) {
+			$(".dropdown").addClass("hidden");
+			$activeDropdown = null;
+		}
 	});
 });

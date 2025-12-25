@@ -156,7 +156,7 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 										<div class="btn-div">
 											<?php
 											if ( ! empty( $buttons ) ) {
-												if ( count( $buttons ) > 0 ) {
+												if ( count( $buttons ) > 2 ) {
 													?>
 													<div class="action-menu">
 														<button class="menu-trigger" type="button">
