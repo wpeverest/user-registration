@@ -32,6 +32,11 @@ if ( ! defined( 'URM_MASTERIYO_CSS_ASSETS_URL' ) ) {
 	define( 'URM_MASTERIYO_CSS_ASSETS_URL', UR()->plugin_url() . '/assets/css/modules/masteriyo' );
 }
 
+// Define URM_MASTERIYO_JS_ASSETS_URL.
+if ( ! defined( 'URM_MASTERIYO_JS_ASSETS_URL' ) ) {
+	define( 'URM_MASTERIYO_JS_ASSETS_URL', UR()->plugin_url() . '/assets/js/modules/masteriyo' );
+}
+
 
 if ( ! function_exists( 'urm_masteriyo_init' ) ) {
 	/**
