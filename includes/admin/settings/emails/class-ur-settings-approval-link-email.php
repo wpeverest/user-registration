@@ -140,35 +140,36 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 		 */
 		public function ur_get_approval_link_email() {
 			$body_content = __(
-				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					Hi Admin,
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					A new user has registered and requires your approval.
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; font-weight:600; line-height: 1.6;">
-					Member Details:
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; font-weight:600; line-height: 1.6;">
+					<b>Member Details:</b>
 				</p>
 				<ul>
 					<li style="margin: 0 0 10px 20px; font-weight:500; color: #000000; font-size: 15px; line-height: 1.6;">
-						<strong>Username:</strong> {{username}}
+						<b>Name:</b> {{username}}
 					</li>
 					<li style="margin: 0 0 10px 20px; font-weight:500; color: #000000; font-size: 15px; line-height: 1.6;">
-						<strong>Email:</strong> {{email}}
-					</li>
-					<li style="margin: 0 0 10px 20px; font-weight:500; color: #000000; font-size: 15px; line-height: 1.6;">
-						<strong>Registration Date:</strong> {{registration_date}}
+						<b>Email:</b> {{email}}
 					</li>
 				</ul>
-					<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					Please review and approve or deny this registration:
 				</p>
 				<p style="margin: 0 0 10px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					{{approval_link}}
+					Approve User: {{approval_link}}
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					{{denial_link}}
-				</p>',
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Deny User: {{denial_link}}
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thanks
+				</p>
+				',
 				'user-registration'
 			);
 

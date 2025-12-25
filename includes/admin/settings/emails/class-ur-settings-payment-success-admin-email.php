@@ -141,19 +141,19 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Admin_Email', false ) ) :
 					Hi Admin,
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					You have received a payment from {{username}}.
+					You have received a payment.
 				</p>
 				<p>
-					<strong>Payment Details:</strong>
+					<b>Payment Details:</b>
 					<ul>
 					<li style="margin-bottom:10px;">
-						Amount: {{membership_plan_payment_amount}}
+						<b>Member:</b> {{username}}
 					</li>
 					<li style="margin-bottom:10px;">
-						Payment Date: {{payment_date}}
+						<b>Amount:</b> {{payment_amount}}
 					</li>
 					<li style="margin-bottom:10px;">
-						Membership Plan: {{membership_plan_name}}
+						<b>Payment Date:</b> {{payment_date}}
 					</li>
 					</ul>
 					</p>
@@ -161,6 +161,9 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Admin_Email', false ) ) :
 					View full payment details: <br>
 					<a href="{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}" style="color: #4A90E2; text-decoration: none;">Click Here</a>
 				</p>
+				<p>
+				Thanks
+</p>
 				',
 				'user-registration'
 			);

@@ -103,7 +103,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 									'desc'     => __( 'A New Member Registered.', 'user-registration' ),
 									'id'       => 'user_registration_admin_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'A New User Registered: {{username}}', 'user-registration' ),
+									'default'  => __( 'A Member registration: {{username}}', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
@@ -147,11 +147,30 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					A new member has been registered.
 				</p>
-					<strong>Registration Details:</strong>
+				<p>
+					<strong>Member Details:</strong>
+					<ul>
+					<li style="margin-bottom:10px;">
+						<b>Name</b>: {{username}}
+					</li>
+					<li style="margin-bottom:10px;">
+						<b>Email</b>: {{email}}
+					</li>
+					<li style="margin-bottom:10px;">
+						<b>Registration Date</b>: {{registration_date}}
+					</li>
+					</ul>
+					</p>
+					<p>
 					{{membership_plan_details}}
+					</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					View and manage this member in your WordPress dashboard under <strong>Users.</strong>
-				</p>',
+					View and manage this member in your <b>User Registration and Membership</b> dashboard under <b>Members</b>.
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				Thanks
+				</p>
+				',
 				'user-registration'
 			);
 

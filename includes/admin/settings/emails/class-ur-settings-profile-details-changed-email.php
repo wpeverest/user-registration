@@ -147,24 +147,27 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 			 * @param string Message content to overwrite the existing email content.
 			 */
 			$body_content = __(
-				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					Hi Admin,
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 				A member has updated their profile information.
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					SiteName: <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>
+				<ul>
+					<li style="margin-bottom:10px">
+					<b>Member</b>: {{username}}
+					</li>
+					<li style="margin-bottom:10px">
+					<b>Updated</b>: {{update_date}}
+					</li>
+					</ul>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				View and manage this member in your <b>User Registration and Membership</b> dashboard under <b>Members</b>.
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Member: {{username}}
+				<p>
+				Thanks
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Updated: {{update_date}}
-				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					View profile details in your WordPress dashboard under Users.
-				</p>',
+				',
 				'user-registration'
 			);
 			if ( UR_PRO_ACTIVE ) {

@@ -30,6 +30,7 @@ class UR_Smart_Tags {
 		add_action( 'user_registration_save_profile_details', array( $this, 'track_profile_update_date' ), 10, 2 );
 		add_action( 'user_registration_pro_before_delete_account', array( $this, 'track_account_deletion_date' ), 10, 1 );
 		add_filter( 'user_registration_membership_cancel_subscription', array( $this, 'track_membership_cancellation_on_cancel' ), 10, 3 );
+		add_action( 'user_registration_after_register_user_action', array( $this, 'track_single_item_payment_date' ), 10, 3 );
 	}
 
 	/**
@@ -123,6 +124,7 @@ class UR_Smart_Tags {
 			'{{renewal_amount}}'         => esc_html__( 'Renewal Amount', 'user-registration' ),
 			'{{payment_method_last}}'    => esc_html__( 'Last Payment Method', 'user-registration' ),
 			'{{manage_membership_link}}' => esc_html__( 'Manage Membership Link', 'user-registration' ),
+			'{{payment_amount}}'         => esc_html__( 'Payment Amount', 'user-registration' ),
 		);
 
 		/**
@@ -671,8 +673,6 @@ class UR_Smart_Tags {
 						$new_content = '';
 						if ( ! empty( $values['membership_tags'] ) ) {
 							$membership_tags                  = $values['membership_tags'];
-							$username                         = $values['username'];
-							$email                            = $values['email'];
 							$membership_plan_types            = array(
 								'One-Time Payment' => __( 'One-Time Payment', 'user-registration' ),
 								'Free'             => __( 'Free', 'user-registration' ),
@@ -696,8 +696,6 @@ class UR_Smart_Tags {
 								'Expired' => __( 'Expired', 'user-registration' ),
 							);
 							$details                          = array(
-								'Name'              => $username ?? '',
-								'Email'             => $email ?? '',
 								'Plan Name'         => $membership_tags['membership_plan_name'] ?? '',
 								'Membership Type'   => $membership_plan_types[ $membership_tags['membership_plan_type'] ] ?? '',
 								'Payment Details'   => array(
@@ -791,31 +789,61 @@ class UR_Smart_Tags {
 
 					case 'payment_date':
 						$payment_date = '';
+						$user_id      = ! empty( $values['user_id'] ) ? $values['user_id'] : ( ! empty( $values['member_id'] ) ? $values['member_id'] : get_current_user_id() );
+
 						// Check if payment_date is in values or membership_tags.
 						if ( isset( $values['payment_date'] ) ) {
 							$payment_date = $values['payment_date'];
 						} elseif ( isset( $values['membership_tags']['payment_date'] ) ) {
+							// User is a member, use membership payment date.
 							$payment_date = $values['membership_tags']['payment_date'];
-						} else {
-							// Try to get from latest order if membership module is available.
-							$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : ( ! empty( $values['member_id'] ) ? $values['member_id'] : get_current_user_id() );
-							if ( $user_id && class_exists( '\WPEverest\URMembership\Admin\Repositories\MembersOrderRepository' ) ) {
-								$members_order_repository = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
-								$latest_order             = $members_order_repository->get_member_orders( $user_id );
-								if ( ! empty( $latest_order ) && isset( $latest_order['ID'] ) ) {
-									$orders_repository = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
-									$order_detail      = $orders_repository->get_order_detail( $latest_order['ID'] );
-									if ( ! empty( $order_detail ) ) {
-										// Check order meta for payment_date.
-										if ( isset( $order_detail['meta']['payment_date'] ) ) {
-											$payment_date = $order_detail['meta']['payment_date'];
-										} elseif ( isset( $order_detail['created_at'] ) ) {
-											$payment_date = $order_detail['created_at'];
+						} elseif ( $user_id ) {
+							// Check if user has single_item payment (non-member).
+							$has_single_item = false;
+							foreach ( $values as $key => $value ) {
+								if ( strpos( $key, 'single_item' ) === 0 ) {
+									$has_single_item = true;
+									break;
+								}
+							}
+
+							if ( $has_single_item ) {
+								// First check if payment date was saved in user meta.
+								$saved_payment_date = get_user_meta( $user_id, 'user_registration_single_item_payment_date', true );
+								if ( ! empty( $saved_payment_date ) ) {
+									$payment_date = $saved_payment_date;
+								} else {
+									// Try to get payment date from payment invoices.
+									$payment_invoices = get_user_meta( $user_id, 'ur_payment_invoices', true );
+									if ( ! empty( $payment_invoices ) && is_array( $payment_invoices ) ) {
+										// Get the latest invoice date.
+										$latest_invoice = end( $payment_invoices );
+										if ( isset( $latest_invoice['invoice_date'] ) ) {
+											$payment_date = $latest_invoice['invoice_date'];
+										}
+									}
+								}
+							} else {
+								// Try to get from latest order if membership module is available.
+								if ( class_exists( '\WPEverest\URMembership\Admin\Repositories\MembersOrderRepository' ) ) {
+									$members_order_repository = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
+									$latest_order             = $members_order_repository->get_member_orders( $user_id );
+									if ( ! empty( $latest_order ) && isset( $latest_order['ID'] ) ) {
+										$orders_repository = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
+										$order_detail      = $orders_repository->get_order_detail( $latest_order['ID'] );
+										if ( ! empty( $order_detail ) ) {
+											// Check order meta for payment_date.
+											if ( isset( $order_detail['meta']['payment_date'] ) ) {
+												$payment_date = $order_detail['meta']['payment_date'];
+											} elseif ( isset( $order_detail['created_at'] ) ) {
+												$payment_date = $order_detail['created_at'];
+											}
 										}
 									}
 								}
 							}
 						}
+
 						if ( ! empty( $payment_date ) ) {
 							$payment_date = date_i18n( get_option( 'date_format' ), strtotime( $payment_date ) );
 						} else {
@@ -982,6 +1010,25 @@ class UR_Smart_Tags {
 						}
 						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $payment_method ), $content );
 						break;
+
+					case 'payment_amount':
+						$payment_amount = '';
+						// Check if user is a member by checking if membership_tags exists and has payment amount.
+						if ( ! empty( $values['membership_tags'] ) && isset( $values['membership_tags']['membership_plan_payment_amount'] ) ) {
+							// User is a member, use membership payment amount.
+							$payment_amount = $values['membership_tags']['membership_plan_payment_amount'];
+						} else {
+							// User is not a member, find single_item field value.
+							// Look for any key in $values that starts with 'single_item'.
+							foreach ( $values as $key => $value ) {
+								if ( strpos( $key, 'single_item' ) === 0 ) {
+									$payment_amount = '$' . $value;
+									break;
+								}
+							}
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $payment_amount ), $content );
+						break;
 				}
 			}
 		}
@@ -1146,6 +1193,36 @@ class UR_Smart_Tags {
 		if ( $user_id ) {
 			$cancellation_date = current_time( 'mysql' );
 			update_user_meta( $user_id, 'user_registration_membership_cancellation_date', $cancellation_date );
+		}
+	}
+
+	/**
+	 * Track payment date when form with single_item is submitted.
+	 *
+	 * @param array $valid_form_data Form data.
+	 * @param int   $form_id Form ID.
+	 * @param int   $user_id User ID.
+	 */
+	public function track_single_item_payment_date( $valid_form_data, $form_id, $user_id ) {
+		if ( ! $user_id ) {
+			return;
+		}
+
+		// Check if form has single_item field.
+		$has_single_item = false;
+		if ( is_array( $valid_form_data ) ) {
+			foreach ( $valid_form_data as $form_data ) {
+				if ( isset( $form_data->extra_params['field_key'] ) && 'single_item' === $form_data->extra_params['field_key'] ) {
+					$has_single_item = true;
+					break;
+				}
+			}
+		}
+
+		// If single_item exists, save payment date.
+		if ( $has_single_item ) {
+			$payment_date = current_time( 'mysql' );
+			update_user_meta( $user_id, 'user_registration_single_item_payment_date', $payment_date );
 		}
 	}
 }
