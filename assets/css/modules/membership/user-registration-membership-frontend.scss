@@ -356,6 +356,9 @@ html {
 		border-radius: 5px;
 		border: none;
 		font-family: inherit;
+		&:hover {
+			background: #38488e;
+		}
 	}
 }
 
@@ -987,6 +990,10 @@ label {
 						border-radius: 5px;
 						border: none;
 						font-family: inherit;
+
+						&:hover {
+							background: #38488e;
+						}
 					}
 
 					.left-container {

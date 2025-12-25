@@ -70,18 +70,18 @@ if ( 'block' === $type ) :
 						<input type="hidden" name="thank_you_page_id" value="<?php echo absint( $thank_you_page_id ); ?>">
 						<div class="ur-membership-amount-wrapper">
 						<?php if ( 'free' !== $membership['type'] ) { ?>
-						<span
-							class="membership-amount"><?php echo esc_html( $symbol ); ?>
-							<?php
-							echo esc_html( sprintf( '%.2f', $membership['amount'] ) );
-							?>
-							</span>
-							<span class="ur-membership-duration">
-								<?php
-								if ( $time ) {
-									echo ' / ' . esc_html( $time ); }
-								?>
-							</span>
+							<div class="ur-membership-amount-wrapper">
+									<span
+										class="membership-amount">
+										<?php echo esc_html( sprintf( '%s%.2f', $symbol, $membership['amount'] ) ); ?>
+									</span>
+									<span class="ur-membership-duration">
+										<?php
+										if ( $time || isset( $membership['period'] ) ) {
+											echo ' / ' . ( 'subscription' === $membership['type'] ? esc_html( trim( strtolower( explode( '/', $membership['period'] )[1] ) ) ) : esc_html( $time ) ); }
+										?>
+									</span>
+								</div>
 						<?php } else { ?>
 							<span
 						class="membership-amount"><?php echo esc_html__( 'Free', 'user-registration' ); ?></span>
@@ -141,18 +141,18 @@ if ( 'block' === $type ) :
 						<input type="hidden" name="thank_you_page_id" value="<?php echo absint( $thank_you_page_id ); ?>">
 						<div class="ur-membership-amount-wrapper">
 						<?php if ( 'free' !== $membership['type'] ) { ?>
-							<span
-							class="membership-amount"><?php echo esc_html( $symbol ); ?>
-								<?php
-								echo esc_html( sprintf( '%.2f', $membership['amount'] ) );
-								?>
-							</span>
-							<span class="ur-membership-duration">
-								<?php
-								if ( $time ) {
-									echo ' / ' . esc_html( $time ); }
-								?>
-							</span>
+							<div class="ur-membership-amount-wrapper">
+									<span
+										class="membership-amount">
+										<?php echo esc_html( sprintf( '%s%.2f', $symbol, $membership['amount'] ) ); ?>
+									</span>
+									<span class="ur-membership-duration">
+										<?php
+										if ( $time || isset( $membership['period'] ) ) {
+											echo ' / ' . ( 'subscription' === $membership['type'] ? esc_html( trim( strtolower( explode( '/', $membership['period'] )[1] ) ) ) : esc_html( $time ) ); }
+										?>
+									</span>
+							</div>
 							<?php } else { ?>
 								<span
 							class="membership-amount"><?php echo esc_html__( 'Free', 'user-registration' ); ?></span>
@@ -206,8 +206,8 @@ elseif ( 'list' === $type ) :
 									</span>
 									<span class="ur-membership-duration">
 										<?php
-										if ( $time ) {
-											echo ' / ' . esc_html( $time ); }
+										if ( $time || isset( $membership['period'] ) ) {
+											echo ' / ' . ( 'subscription' === $membership['type'] ? esc_html( trim( strtolower( explode( '/', $membership['period'] )[1] ) ) ) : esc_html( $time ) ); }
 										?>
 									</span>
 								</div>
