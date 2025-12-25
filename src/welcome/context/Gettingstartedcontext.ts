@@ -64,6 +64,20 @@ const createDefaultPlan = (): MembershipPlan => ({
 	isNew: false
 });
 
+// Helper to get total steps for a membership type
+export const getTotalStepsForType = (membershipType: MembershipSetupType): number => {
+	switch (membershipType) {
+		case "paid":
+			return 4; // Welcome, Membership, Payment, Finish
+		case "free":
+			return 3; // Welcome, Membership, Finish
+		case "other":
+			return 2; // Welcome, Finish
+		default:
+			return 4;
+	}
+};
+
 export const initialState: GettingStartedState = {
 	currentStep: 1,
 	maxCompletedStep: 1,
@@ -117,15 +131,9 @@ export type Action =
 	| { type: "SET_ALLOW_TRACKING"; payload: boolean }
 	| { type: "SET_ADMIN_EMAIL"; payload: string }
 	| { type: "ADD_MEMBERSHIP_PLAN"; payload?: MembershipPlan }
-	| {
-			type: "UPDATE_MEMBERSHIP_PLAN";
-			payload: { id: string; updates: Partial<MembershipPlan> };
-	  }
+	| { type: "UPDATE_MEMBERSHIP_PLAN"; payload: { id: string; updates: Partial<MembershipPlan> } }
 	| { type: "REMOVE_MEMBERSHIP_PLAN"; payload: string }
-	| {
-			type: "ADD_CONTENT_ACCESS";
-			payload: { planId: string; access: ContentAccess };
-	  }
+	| { type: "ADD_CONTENT_ACCESS"; payload: { planId: string; access: ContentAccess } }
 	| {
 			type: "SET_PAYMENT_SETTING";
 			payload: { key: keyof PaymentSettings; value: boolean | string };
@@ -148,7 +156,8 @@ export const reducer = (
 			return { ...state, isLoading: action.payload };
 
 		case "NEXT_STEP":
-			const nextStep = Math.min(state.currentStep + 1, 4);
+			const totalSteps = getTotalStepsForType(state.membershipSetupType);
+			const nextStep = Math.min(state.currentStep + 1, totalSteps);
 			return {
 				...state,
 				currentStep: nextStep,
@@ -208,10 +217,7 @@ export const reducer = (
 					plan.id === action.payload.planId
 						? {
 								...plan,
-								contentAccess: [
-									...plan.contentAccess,
-									action.payload.access
-								]
+								contentAccess: [...plan.contentAccess, action.payload.access]
 						  }
 						: plan
 				)
@@ -227,8 +233,7 @@ export const reducer = (
 			};
 
 		case "HYDRATE_FROM_API":
-			const hydratedStep =
-				action.payload.currentStep || state.currentStep;
+			const hydratedStep = action.payload.currentStep || state.currentStep;
 			return {
 				...state,
 				...action.payload,

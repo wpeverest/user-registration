@@ -207,6 +207,7 @@ class UR_Getting_Started {
 	 * @return \WP_REST_Response
 	 */
 	public static function get_wizard_state( $request ) {
+		update_option('urcr_create_or_update_membership_rule', UR_VERSION);
 		$current_step    = self::get_current_step();
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
 		$is_completed    = ! get_option( 'user_registration_first_time_activation_flag', true );
@@ -1405,11 +1406,29 @@ class UR_Getting_Started {
 			'url'   => self::get_page_url( 'user_registration_myaccount_page_id' ),
 		);
 
+		$roles = array();
+		$default_role = get_option( 'user_registration_default_user_role', 'subscriber' );
+
+		if ( 'normal' === $membership_type ) {
+			$available_roles = ur_get_default_admin_roles();
+
+			if ( is_array( $available_roles ) ) {
+				foreach ( $available_roles as $role_key => $role_name ) {
+					$roles[] = array(
+						'value' => $role_key,
+						'label' => $role_name,
+					);
+				}
+			}
+		}
+
 		$summary = array(
 			'membership_type'     => $membership_type,
 			'memberships_created' => count( $membership_ids ),
 			'enabled_gateways'    => $enabled_gateways,
 			'pages'               => $pages,
+			'roles'               => $roles,
+			'default_role'        => $default_role,
 			'links'               => array(
 				'registration_page' => self::get_registration_page_url(),
 				'dashboard'         => admin_url( 'admin.php?page=user-registration' ),
@@ -1437,6 +1456,28 @@ class UR_Getting_Started {
 	 * @return \WP_REST_Response
 	 */
 	public static function complete_wizard( $request ) {
+
+		$default_user_role = isset( $request['default_user_role'] ) ? sanitize_text_field( $request['default_user_role'] ) : '';
+		if ( ! empty( $default_user_role ) ) {
+			$available_roles = ur_get_default_admin_roles();
+
+			if ( is_array( $available_roles ) && array_key_exists( $default_user_role, $available_roles ) ) {
+				update_option( 'user_registration_default_user_role', $default_user_role );
+				$default_form_id = get_option( 'user_registration_default_form_page_id', 0 );
+
+				if ( $default_form_id ) {
+					$form_settings = get_post_meta( $default_form_id, 'user_registration_form_setting', true );
+
+					if ( ! is_array( $form_settings ) ) {
+						$form_settings = array();
+					}
+
+					$form_settings['user_registration_form_setting_default_user_role'] = $default_user_role;
+					update_post_meta( $default_form_id, 'user_registration_form_setting', $form_settings );
+				}
+			}
+		}
+
 		update_option( 'user_registration_first_time_activation_flag', false );
 		update_option( 'user_registration_onboarding_skipped', false );
 		delete_option( 'user_registration_onboarding_skipped_step' );
