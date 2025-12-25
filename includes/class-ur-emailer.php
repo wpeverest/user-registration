@@ -266,9 +266,10 @@ class UR_Emailer {
 				}
 
 				if ( 'country' === $form_data['field_key'] && '' !== $value ) {
-					$country_class = ur_load_form_field_class( $form_data['field_key'] );
-					$countries     = $country_class::get_instance()->get_country();
-					$value         = isset( $countries[ $value ] ) ? $countries[ $value ] : $value;
+					$country_code = sanitize_text_field( $single_field[ $key ] );
+					$state_code   = sanitize_text_field( isset( $single_field[ $key . '_state' ] ) ? $single_field[ $key . '_state' ] : '' );
+
+					$value = ur_format_country_field_data( $country_code, $state_code );
 				}
 				// @codingStandardsIgnoreEnd
 

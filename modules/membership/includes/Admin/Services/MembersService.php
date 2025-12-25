@@ -108,6 +108,22 @@ class MembersService {
 		$membership_meta    = json_decode( $membership_details['meta_value'], true );
 		$role               = isset( $membership_meta['role'] ) ? $membership_meta['role'] : 'subscriber';
 
+		$tax_details = array();
+		if ( isset( $data['tax_rate'] ) && ! empty( $data['tax_rate'] ) ) {
+			$tax_details = array(
+				'tax_rate'       		 => floatval( $data['tax_rate'] ),
+				'tax_calculation_method' => sanitize_text_field( $data['tax_calculation_method'] ),
+			);
+		}
+		$local_currency_details = array();
+
+		error_log( print_r( $data, true ) );
+		if ( isset( $data['switched_currency'] ) && ! empty( $data[ 'switched_currency'] ) ) {
+			$local_currency_details = array(
+				'switched_currency' => sanitize_text_field( $data[ 'switched_currency' ] ),
+				'urm_zone_id'		=> ! empty( $data[ 'urm_zone_id' ] ) ? $data[ 'urm_zone_id' ] : '',
+			);
+		}
 
 		$coupon_details = array();
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
@@ -132,10 +148,12 @@ class MembersService {
 		);
 
 		return array(
-			'role'            => sanitize_text_field( $role ),
-			'membership_data' => $membership_data,
-			'coupon_data'     => $coupon_details,
-			'user_data'       => $user_data
+			'role'            		 => sanitize_text_field( $role ),
+			'membership_data' 		 => $membership_data,
+			'coupon_data'     		 => $coupon_details,
+			'user_data'       		 => $user_data,
+			'tax_data'        		 => $tax_details,
+			'local_currency_details' => $local_currency_details,
 		);
 	}
 

@@ -35,6 +35,7 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'urm_save_payment-settings_payment_section', array( $this, 'save_section_settings' ), 10, 1 );
+			add_action( 'user_registration_sections_' . $this->id, array( $this, 'output_sections' ) );
 		}
 
 		/**
@@ -101,8 +102,14 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 			// 	echo '<div id="ur-currency-error" class="notice notice-warning is-dismissible"><p><strong>' . esc_html__( 'CURRENCY_NOT_SUPPORTED Currency Code :', 'user-registration' ) . '</strong> ' . esc_html( $saved_currency ) . esc_html__( ' is not currently supported by Paypal. Please Refer', 'user-registration' ) . ' <a href="' . esc_url( $currency_url ) . '" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Paypal supported currencies', 'user-registration' ) . '</a></p></div>';
 			// }
 
+			if ( '' === $current_section ) {
+				$settings = $this->get_settings();
+				$GLOBALS['hide_save_button'] = true;
+			} else{
+				$settings = array();
+			}
+
 			UR_Admin_Settings::output_fields( $settings );
-			$GLOBALS['hide_save_button'] = true;
 		}
 
 		/**
@@ -115,6 +122,25 @@ if ( ! class_exists( 'UR_Payment_Setting' ) ) :
 		public function save_section_settings( $form_data ) {
 			$settings = $this->get_settings();
 			ur_save_settings_options( $settings['sections']['payment_settings'], $form_data );
+		}
+
+		/**
+		 * Get sections.
+		 *
+		 * @return array
+		 */
+		public function get_sections() {
+			$sections = array(
+				''                  => __( 'Payments', 'user-registration' ),
+				'tax-settings' 		=> __( 'Tax Settings', 'user-registration' ),
+			);
+
+			/**
+			 * Filter to get the settings.
+			 *
+			 * @param array $settings Setting options to be enlisted.
+			 */
+			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
 		}
 	}
 

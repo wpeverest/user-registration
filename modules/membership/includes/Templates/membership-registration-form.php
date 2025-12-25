@@ -7,6 +7,11 @@
 <!--user registration section-->
 <div id="ur-membership-registration" class="ur_membership_registration_container ur-form-container">
 	<?php
+
+use GeoIp2\WebService\Client;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
+use WPEverest\URMembership\Local_Currency\Admin\Api;
+
 	if ( false ):
 		?>
 		<h3 class="ur_membership_title"><?php echo esc_html__( 'Sign Up', 'user-registration' ); ?></h3>
@@ -117,9 +122,117 @@
 			?>
 		</span>
 		<?php
+			$pricing_zone = CoreFunctions::ur_get_all_pricing_zone_data();
+			$switch_currency     = ur_string_to_bool( get_option( 'user_registration_switch_local_currency_option', 0 ) );
+			$enable_geolocation  = ur_string_to_bool( get_option( 'user_registration_local_currency_by_geolocation', '0') );
+			$base_currency 		 = get_option( 'user_registration_payment_currency', 'USD' );
+
+			$currency_data = Api::ur_get_local_currency_by_geolocation( $enable_geolocation );
+
+			$local_currency_by_country = $currency_data['local_currency'];
+			$pricing_zone_by_country   = $currency_data['pricing_zone'];
+			$country_code              = $currency_data['country_code'];
+
+			if ( $switch_currency ):
+			?>
+			<label
+				class="ur-label ur_membership_local_currency"><?php echo __( 'Switch Currency', 'user-registration' ); ?></label>
+				<select id="ur-local-currency-switch-currency" name="ur_local_currency_switch_currency">
+					<?php
+					foreach ( $pricing_zone as $key => $zone ) {
+						if ( empty( $zone['meta']['ur_local_currency'] ) ) {
+							continue;
+						}
+
+						$currency_code = $zone['meta']['ur_local_currency'][0];
+
+						echo '<option value="' . esc_attr( $currency_code ) . '" ' .
+							selected( $local_currency_by_country, $currency_code, false ) . '>' .
+							esc_html( ur_get_currency_name_by_key( $currency_code ) ) .
+						'</option>';
+					}
+					?>
+				</select>
+			<?php
+			endif;
 		if ( ! empty( $memberships ) ) :
 			$memberships = apply_filters( 'user_registration_membership_lists', $memberships );
 			foreach ( $memberships as $m => $membership ) :
+				$local_currency_details = array();
+				$enabled_zones			= array();
+				if (
+					class_exists( '\WPEverest\URMembership\Local_Currency\Admin\CoreFunctions' ) &&
+					method_exists( '\WPEverest\URMembership\Local_Currency\Admin\CoreFunctions', 'ur_get_local_currency_details_for_membership' )
+				) {
+					$local_currency_details = CoreFunctions::ur_get_local_currency_details_for_membership( $membership['ID'] );
+
+					if ( ! empty( $local_currency_details['zones'] ) && is_object( $local_currency_details['zones'] ) ) {
+						foreach ( $local_currency_details['zones'] as $zone_id => $zone ) {
+
+							if ( isset( $zone->enable ) && (int) $zone->enable === 1 ) {
+								$ur_local_currency = get_post_meta( $zone_id, 'ur_local_currency', true );
+								$ur_local_currencies_conversion_type = ! empty( $pricing_zone[ $zone_id ][ 'meta' ][ 'ur_local_currencies_conversion_type' ] ) ? $pricing_zone[ $zone_id ][ 'meta' ][ 'ur_local_currencies_conversion_type' ] : 'manual';
+
+								$exchange_rates = array();
+
+								if ( 'automatic' == $ur_local_currencies_conversion_type ) {
+									$all_exchange_rates = Api::ur_get_exchange_rate();
+
+									if ( $base_currency == $all_exchange_rates[ 'base']
+									) {
+										$exchange_rates = $all_exchange_rates['rates'];
+									}
+								}
+
+								$rate = '';
+
+								if ( 'exchange' == $zone->pricing_method ) {
+									$rate = ( ! empty( $pricing_zone[ $zone_id ][ 'meta' ][ 'ur_local_currencies_exchange_rate' ] )
+										? $pricing_zone[ $zone_id][ 'meta' ][ 'ur_local_currencies_exchange_rate' ]
+										: ''
+									);
+
+									if ( 'automatic' == $ur_local_currencies_conversion_type ) {
+										$rate = $exchange_rates[ $pricing_zone[ $zone_id ][ 'meta' ]['ur_local_currency'][0] ];
+										error_log( print_r( 'automatixc', true ) );
+										error_log( print_r( $rate, true ) );
+										error_log( print_r($pricing_zone[ $zone_id ][ 'meta' ]['ur_local_currency'], true ) );
+									}
+								}
+
+								$enabled_zones[ $ur_local_currency[0] ] = array(
+									'pricing_method' => ! empty( $zone->pricing_method ) ? $zone->pricing_method : '',
+									'rate'   => isset( $zone->manual_price ) && '' !== $zone->manual_price
+										? number_format( (float) $zone->manual_price, 2, '.', '' )
+										: $rate,
+									'ID'     => absint( $zone_id ),
+								);
+							}
+						}
+					}
+				}
+
+				$converted_amount = 0;
+				$final_period     = 0;
+
+				if ( isset( $enabled_zones[ $local_currency_by_country ] ) ) {
+					if ( ! empty( $enabled_zones[ $local_currency_by_country ]['pricing_method'] ) && 'manual' == $enabled_zones[ $local_currency_by_country ]['pricing_method'] ) {
+						$converted_amount = $enabled_zones[ $local_currency_by_country ]['rate'];
+					}else{
+						$converted_amount = $membership[ 'amount' ] * $enabled_zones[ $local_currency_by_country ]['rate'];
+					}
+
+					$converted_amount = number_format( $converted_amount, 2 );
+
+					$period_text = html_entity_decode( $membership['period'] );
+					$parts       = explode( '/', $period_text );
+					$duration    = isset( $parts[1] ) ? '/ ' . trim( $parts[1] ) : '';
+
+					$currency_symbol = ur_get_currency_symbol( $local_currency_by_country );
+
+					$final_period = $currency_symbol . $converted_amount . ' ' . $duration;
+				}
+
 				$urm_default_pg = apply_filters( 'user_registration_membership_default_payment_gateway', '' );
 				?>
 				<label class="ur_membership_input_label ur-label"
@@ -137,12 +250,28 @@
 						   data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
 						   data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['amount'] ); ?>"
 						   data-urm-default-pg="<?php echo $urm_default_pg; ?>"
+						   data-urm-local-currency-details = "<?php echo esc_attr( json_encode( $enabled_zones ) ); ?>"
+						   data-urm-converted-amount = "<?php echo esc_attr( $converted_amount ); ?>",
 						<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
+						   data-local-currency="<?php
+						    echo esc_attr(
+								( ! empty( $final_period ) && ! $switch_currency
+									? $local_currency_by_country
+									: 'USD'
+								)
+							); ?>"
+							data-zone-id="<?php
+								echo esc_attr(
+									( ! empty( $final_period ) && ! $switch_currency
+										? $enabled_zones[ $local_currency_by_country ][ 'ID' ]
+										: ''
+									)
+								); ?>"
 					>
 					<span
 						class="ur-membership-duration"><?php echo esc_html__( $membership['title'], 'user-registration' ); ?></span>
 					<span
-						class="ur-membership-duration"><?php echo esc_html__( $membership['period'], 'user-registration' ); ?></span>
+						class="ur-membership-duration ur-membership-period-span"><?php echo esc_html__( ( ! empty( $final_period ) ? $final_period : $membership['period'] ), 'user-registration' ); ?></span>
 				</label>
 			<?php endforeach;
 		else:

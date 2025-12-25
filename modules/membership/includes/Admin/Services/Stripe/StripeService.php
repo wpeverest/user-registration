@@ -11,6 +11,7 @@ use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Admin\Services\OrderService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 use WPEverest\URMembership\Admin\Services\PaymentGatewayLogging;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 
 class StripeService {
 	protected $members_orders_repository, $members_subscription_repository, $membership_repository, $orders_repository;
@@ -123,11 +124,34 @@ class StripeService {
 
 	public function process_stripe_payment( $payment_data, $response_data ) {
 		$currency        = get_option( 'user_registration_payment_currency', 'USD' );
+
+		if ( ! empty( $response_data['tax_rate' ] ) && ! empty( $response_data['tax_calculation_method'] ) && 'calculate_tax' === $response_data['tax_calculation_method'] ) {
+			$tax_rate           	= floatval( $response_data['tax_rate'] );
+			$tax_amount 			= $payment_data['amount'] * $tax_rate / 100;
+			$payment_data['amount'] = $payment_data['amount'] + $tax_amount;
+		}
+
 		$amount          = $payment_data['amount'];
 		$user_email      = $response_data['email'];
 		$member_id       = $response_data['member_id'];
 		$username        = ! empty( $response_data['username'] ) ? $response_data['username'] : '';
 		$membership_type = $payment_data['type'] ?? 'unknown';
+		$local_currency  = ! empty( $response_data['switched_currency' ] ) ? $response_data['switched_currency' ] : '';
+		$ur_zone_id 	 = ! empty( $response_data['urm_zone_id' ] ) ? $response_data['urm_zone_id' ] : '';
+
+		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && (
+				class_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions' ) &&
+				method_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions', 'ur_get_pricing_zone_by_id' )
+			)
+		 ) {
+			$currency = $local_currency;
+			$pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
+			$local_currency_data = ! empty( $payment_data['local_currency'] ) ? $payment_data['local_currency'] : array();
+
+			if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data[ 'is_enable'] ) ) {
+				$amount = CoreFunctions::ur_get_amount_after_conversion( $amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+			}
+		}
 
 		PaymentGatewayLogging::log_transaction_start(
 			'stripe',

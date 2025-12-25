@@ -76,10 +76,10 @@ class Membership {
 		if ( empty( $_GET['page'] ) || 'user-registration-membership' !== $_GET['page'] ) {
 			return;
 		}
-		
+
 		// Enqueue jQuery UI Sortable for drag-and-drop functionality
 		wp_enqueue_script( 'jquery-ui-sortable' );
-		
+
 		wp_register_script( 'user-registration-membership', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/user-registration-membership-admin' . $suffix . '.js', array( 'jquery', 'jquery-ui-sortable' ), '1.0.0', true );
 		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
 		wp_enqueue_script( 'ur-snackbar' );
@@ -477,21 +477,22 @@ class Membership {
 			'user-registration-membership',
 			'ur_membership_localized_data',
 			array(
-				'_nonce'              => wp_create_nonce( 'ur_membership' ),
-				'membership_id'       => $membership_id,
-				'membership_content'  => $membership_content,
-				'ajax_url'            => admin_url( 'admin-ajax.php' ),
-				'wp_roles'            => ur_membership_get_all_roles(),
-				'posts'               => $posts,
-				'labels'              => $this->get_i18_labels(),
-				'membership_page_url' => admin_url( 'admin.php?page=user-registration-membership' ),
-				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
-				'update_order_nonce'  => wp_create_nonce( 'ur_membership_update_order' ),
-				'update_order_action' => 'user_registration_membership_update_membership_order'
+				'_nonce'              			  => wp_create_nonce( 'ur_membership' ),
+				'membership_id'       			  => $membership_id,
+				'membership_content'  			  => $membership_content,
+				'ajax_url'            			  => admin_url( 'admin-ajax.php' ),
+				'wp_roles'            			  => ur_membership_get_all_roles(),
+				'posts'               			  => $posts,
+				'labels'              			  => $this->get_i18_labels(),
+				'membership_page_url' 			  => admin_url( 'admin.php?page=user-registration-membership' ),
+				'delete_icon'         			  => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
+				'update_order_nonce'  			  => wp_create_nonce( 'ur_membership_update_order' ),
+				'update_order_action' 			  => 'user_registration_membership_update_membership_order',
+				'validate_payment_currency_nonce' => wp_create_nonce( 'validate_local_payment_currency' ),
 			)
 		);
 	}
-	
+
 
 	/**
 	 * Get i18 Labels

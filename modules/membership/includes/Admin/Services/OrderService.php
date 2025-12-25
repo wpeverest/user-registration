@@ -40,6 +40,18 @@ class OrderService {
 				$total           = $total - $discount_amount;
 			}
 		}
+
+		$tax_details = isset( $data['tax_data'] ) ? $data['tax_data'] : array();
+
+		if ( ! empty( $data['tax_data']['tax_rate'] ) ) {
+			$tax_rate  = floatval( $data['tax_data']['tax_rate'] );
+			$tax_amount  = $total * $tax_rate / 100;
+			$total     = $total + $tax_amount;
+
+			$tax_details['tax_amount']     = number_format( $tax_amount, 2, '.', '' );
+			$tax_details['total_with_tax'] = number_format( $total, 2, '.', '' );
+		}
+
 		$creator = $is_admin ? 'admin' : 'member';
 		$type = $is_renewal ? 'Renewal' : (!empty($upgrade_details) ? 'Upgrade' : '');
 		if ( ! empty( $type ) ) {
@@ -66,7 +78,11 @@ class OrderService {
 			array(
 				'meta_key'   => 'is_admin_created',
 				'meta_value' => $is_admin,
-			)
+			),
+			array(
+				'meta_key'   => 'tax_data',
+				'meta_value' => json_encode( $tax_details ),
+			),
 		);
 		if ( ! empty( $upgrade_details ) && ! empty( $upgrade_details['delayed_until'] ) ) {
 			$orders_meta[] = [

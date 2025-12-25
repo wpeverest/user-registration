@@ -7,6 +7,8 @@
  * @package  UserRegistration/Admin
  */
 
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -53,59 +55,14 @@ class UR_Admin_Settings {
 			}
 
 			$settings[] = include 'settings/class-ur-settings-general.php';
-			$settings[] = include 'settings/class-ur-settings-captcha.php';
+			$settings[] = include 'settings/class-ur-settings-membership.php';
+			$settings[] = include 'settings/class-ur-settings-payment.php';
 			$settings[] = include 'settings/class-ur-settings-email.php';
-			$settings[] = include 'settings/class-ur-settings-import-export.php';
-			$settings[] = include 'settings/class-ur-settings-misc.php';
-
-			if ( UR_PRO_ACTIVE ) {
-				$settings[] = include 'settings/class-ur-settings-integration.php';
-			}
-
-			$modules = array();
-
-			if ( UR_PRO_ACTIVE ) {
-				if ( ur_check_module_activation( 'membership' ) ) {
-					$modules = array(
-						'class-ur-payment-settings.php',
-						'stripe/class-ur-stripe-module.php',
-						'paypal/class-ur-paypal-module.php',
-					);
-				} else {
-					if ( ur_check_module_activation( 'payments' ) ) {
-						$modules[] = 'class-ur-payment-settings.php';
-						$modules[] = 'paypal/class-ur-paypal-module.php';
-					}
-					if ( is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
-						$modules[] = 'class-ur-payment-settings.php';
-						$modules[] = 'stripe/class-ur-stripe-module.php';
-					}
-					if ( is_plugin_active( 'user-registration-authorize-net/user-registration-authorize-net.php' ) ) {
-						$modules[] = 'class-ur-payment-settings.php';
-					}
-					if ( is_plugin_active( 'user-registration-mollie/user-registration-mollie.php' ) ) {
-						$modules[] = 'class-ur-payment-settings.php';
-					}
-				}
-			} elseif ( ur_check_module_activation( 'membership' ) ) {
-				$modules = array(
-					'class-ur-payment-settings.php',
-					'stripe/class-ur-stripe-module.php',
-					'paypal/class-ur-paypal-module.php',
-				);
-			}
-
-			foreach ( $modules as $module ) {
-				include_once UR_ABSPATH . 'modules/' . $module;
-			}
-
-			if ( ! function_exists( 'is_plugin_active' ) ) {
-				include_once ABSPATH . 'wp-admin/includes/plugin.php';
-			}
-
-			// if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
-				$settings[] = include 'settings/class-ur-settings-license.php';
-			// }
+			$settings[] = include 'settings/class-ur-settings-registration-login.php';
+			$settings[] = include 'settings/class-ur-settings-my-account.php';
+			$settings[] = include 'settings/class-ur-settings-integration.php';
+			$settings[] = include 'settings/class-ur-settings-security.php';
+			$settings[] = include 'settings/class-ur-settings-advanced.php';
 
 			/**
 			 * Filter to retrieve settings pages
@@ -316,7 +273,7 @@ class UR_Admin_Settings {
 
 		// Get current tab/section.
 		$current_tab     = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$current_section = empty( $_REQUEST['section'] ) ? '' : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$current_section = empty( $_REQUEST['section'] ) ? apply_filters( 'user_registration_settings_' . $current_tab . '_default_section', 'general' ) : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		/**
 		 * Filter to save settings actions
 		 *
@@ -347,6 +304,7 @@ class UR_Admin_Settings {
 		 */
 		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
 
+		$GLOBALS[ 'hide_save_button' ] = false;
 		if ( 'import_export' === $current_tab ) {
 			$GLOBALS['hide_save_button'] = true;
 		}
@@ -459,7 +417,9 @@ class UR_Admin_Settings {
 								$settings .= $section['back_link']; // removed kses since the inputs are sanitized in the function ur_back_link itself
 							}
 							$settings .= '<h3 class="user-registration-card__title">';
-
+							if ( isset( $section[ 'is_premium' ] ) && $section[ 'is_premium' ] ) {
+								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png'. '" /></div>';
+							}
 							$settings .= esc_html( strtoupper( $section['title'] ) );
 							$settings .= '</h3>';
 
@@ -1084,6 +1044,17 @@ class UR_Admin_Settings {
 									}
 									$settings .= '</div>';
 									break;
+
+								case 'local_currency':
+									ob_start();
+									CoreFunctions::render_local_currencies_table();
+									$settings .= ob_get_clean();
+								break;
+
+								case 'tax_table':
+									$settings .= ur_render_tax_table( $value );
+									break;
+
 								// Default: run an action.
 								default:
 									/**
@@ -1332,7 +1303,7 @@ class UR_Admin_Settings {
 		if ( ! empty( $settings ) ) {
 
 			foreach ( $settings as $key => $section ) {
-				if ( is_bool( $section ) || ! method_exists( $section, 'get_settings' ) ) {
+				if ( is_bool( $section ) || ( is_object( $section ) && ! method_exists( $section, 'get_settings' ) ) ) {
 					unset( $settings[ $key ] );
 					continue;
 				}

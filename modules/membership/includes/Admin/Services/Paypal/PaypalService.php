@@ -14,6 +14,7 @@ use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\OrderService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 use WPEverest\URMembership\Admin\Services\PaymentGatewayLogging;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 
 class PaypalService {
 	/**
@@ -43,7 +44,7 @@ class PaypalService {
 	 *
 	 * @return array|string|string[]
 	 */
-	public function build_url( $data, $membership, $member_email, $subscription_id, $member_id ) {
+	public function build_url( $data, $membership, $member_email, $subscription_id, $member_id, $response_data = array() ) {
 
 		$is_upgrading                 = ! empty( $data['upgrade'] ) ? $data['upgrade'] : false;
 		$paypal_options               = $data['payment_gateways']['paypal'];
@@ -69,6 +70,24 @@ class PaypalService {
 		$discount_amount              = 0;
 		$is_renewing                    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 
+		$local_currency  = ! empty( $response_data['switched_currency' ] ) ? $response_data['switched_currency' ] : '';
+		$ur_zone_id 	 = ! empty( $response_data['urm_zone_id' ] ) ? $response_data['urm_zone_id' ] : '';
+		$currency 		 = get_option( 'user_registration_payment_currency', 'USD' );
+
+		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && (
+				class_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions' ) &&
+				method_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions', 'ur_get_pricing_zone_by_id' )
+			)
+		 ) {
+			$currency = $local_currency;
+			$pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
+			$local_currency_data = ! empty( $data['local_currency'] ) ? $data['local_currency'] : array();
+
+			if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data[ 'is_enable'] ) ) {
+				$membership_amount = CoreFunctions::ur_get_amount_after_conversion( $membership_amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+			}
+		}
+
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details  = ur_get_coupon_details( $data['coupon'] );
 			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
@@ -93,6 +112,12 @@ class PaypalService {
 		);
 		$final_amount = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 
+		if ( ! empty( $response_data['tax_rate' ] ) && ! empty( $response_data['tax_calculation_method'] ) && 'calculate_tax' === $response_data['tax_calculation_method'] ) {
+			$tax_rate           	= floatval( $response_data['tax_rate'] );
+			$tax_amount 			= $final_amount * $tax_rate / 100;
+			$final_amount = $final_amount + $tax_amount;
+		}
+
 		// Build item name with pricing information
 		$item_name = $membership_data['post_title'];
 		if ( ! empty( $data['subscription'] ) ) {
@@ -109,7 +134,7 @@ class PaypalService {
 			'cbt'           => $membership_data['post_title'],
 			'charset'       => get_bloginfo( 'charset' ),
 			'cmd'           => $transaction,
-			'currency_code' => get_option( 'user_registration_payment_currency', 'USD' ),
+			'currency_code' => $currency,
 			'custom'        => $membership . '-' . $member_id . '-' . $subscription_id,
 			'return'        => $return_url,
 			'rm'            => '2',
@@ -167,7 +192,7 @@ class PaypalService {
 			'final_amount' => $final_amount,
 			'transaction_type' => $transaction,
 			'item_name' => $item_name,
-			'currency' => get_option( 'user_registration_payment_currency', 'USD' ),
+			'currency' => $currency,
 			'member_id' => $member_id,
 			'membership_id' => $membership,
 			'subscription_id' => $subscription_id,

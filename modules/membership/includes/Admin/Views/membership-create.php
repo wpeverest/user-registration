@@ -596,6 +596,18 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 								</div>
 							</div>
 						</div>
+
+						<?php
+							if ( UR_PRO_ACTIVE && class_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions' ) ):
+						?>
+						<?php
+							WPEverest\URMembership\Local_Currency\Admin\CoreFunctions::ur_render_local_currency_settings( $membership_details );
+							endif;
+						?>
+						<!--								membership all payments-->
+						<?php
+						require __DIR__ . '/./Partials/membership-admin-payments.php'
+						?>
 					</div>
 				</div>
 			</div>

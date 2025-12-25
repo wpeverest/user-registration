@@ -209,11 +209,28 @@ class Frontend {
 		$symbol               = $currencies[ $currency ]['symbol'];
 		$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
 
+		$regions 				= get_option( 'user_registration_tax_price_display_option', array() );
+		$tax_calculation_method = get_option( 'user_registration_tax_calculation_method', 'price_include' );
+
 		$redirect_page_url = get_permalink( $registration_page_id );
 
 		$thank_you_page  = urm_get_thank_you_page();
 		$stripe_settings = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
 
+		$urm_authorize_net_supported_currencies = function_exists( 'urm_authorize_net_supported_currencies' ) ? urm_authorize_net_supported_currencies() : array();
+		$paypal_supported_currencies_list = function_exists( 'paypal_supported_currencies_list' ) ? paypal_supported_currencies_list() : array();
+		$mollie_supported_currencies_list = (
+				class_exists( '\WPEverest\URM\Mollie\Functions\CoreFunctions' ) &&
+				method_exists( '\WPEverest\URM\Mollie\Functions\CoreFunctions', 'mollie_supported_currencies_list' )
+			)
+				? \WPEverest\URM\Mollie\Functions\CoreFunctions::mollie_supported_currencies_list()
+				: array();
+
+		$supported_currencies = array(
+			'authorize' => $urm_authorize_net_supported_currencies,
+			'paypal'    => $paypal_supported_currencies_list,
+			'mollie'	=> $mollie_supported_currencies_list
+		);
 
 		wp_localize_script(
 			'user-registration-membership-frontend-script',
@@ -233,7 +250,12 @@ class Frontend {
 				'stripe_publishable_key'           => $stripe_settings['publishable_key'],
 				'membership_gateways'              => get_option( 'ur_membership_payment_gateways', array() ),
 				'urm_hide_stripe_card_postal_code' => apply_filters( 'user_registration_membership_disable_stripe_card_postal_code', false ),
+				'tax_calculation_method'           => $tax_calculation_method,
+				'regions_list'                     => $regions,
 				'gateways_configured'              => urm_get_all_active_payment_gateways('paid'),
+				'local_currencies'				   => ur_get_currencies(),
+				'local_currencies_symbol' 		   => ur_get_currency_symbols(),
+				'supported_currencies'			   => $supported_currencies
 			)
 		);
 	}

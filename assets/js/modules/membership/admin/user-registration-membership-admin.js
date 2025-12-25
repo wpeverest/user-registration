@@ -412,6 +412,49 @@
 				}
 			}
 
+			/**
+			 * Save local currency details.
+			 *
+			 * @since 5.0.0
+			 */
+			var localCurrencyEl = form.find(
+					'input[name="ur_membership_local_currency"]:checked'
+				);
+			post_meta_data.local_currency = {};
+			post_meta_data.local_currency.is_enable = localCurrencyEl.val();
+
+			if (localCurrencyEl.length && localCurrencyEl.val()) {
+
+				post_meta_data.local_currency.zones = {};
+
+				form.find('.ur-local-currency-card').each(function () {
+					var $card = $(this);
+					var zoneId = $card.data('zone-id');
+
+					var isEnabled = $card
+						.find('.ur-local-currency-toggle-input')
+						.is(':checked') ? 1 : 0;
+
+					var pricingMethod = $card
+						.find('.ur-local-currency-radio-group input[type="radio"]:checked')
+						.val();
+
+					var manualPrice = '';
+
+					if (pricingMethod === 'manual') {
+						manualPrice = $card
+							.find('.local-currency-manual-local-price')
+							.val();
+					}
+
+					post_meta_data.local_currency.zones[zoneId] = {
+						enable: isEnabled,
+						pricing_method: pricingMethod,
+						manual_price: manualPrice
+					};
+				});
+			}
+
 			//upgrade settings
 
 			post_meta_data.upgrade_settings = {
@@ -1433,4 +1476,104 @@
 			}
 		);
 	}
+
+	$( document ).on( 'change', '.ur-local-currency-toggle-input', function () {
+		var $el = $( this );
+		var $card = $el.closest( '.ur-local-currency-card' );
+		var $content = $card.find('.ur-local-currency-content');
+		var $collapseBtn = $card.find('.ur-local-currency-collapse-btn');
+		var zone_id =  $el.data( 'zone-id' );
+
+		if ( $( this ).is( ':checked' ) ) {
+			$content.removeClass('hidden');
+			$collapseBtn.addClass('collapsed');
+
+			data = {
+				'action' : 'user_registration_membership_validate_payment_currency',
+				'zone_id' : zone_id,
+				'security' : ur_membership_data.validate_payment_currency_nonce
+			}
+
+		$.ajax({
+				type: "post",
+				url: ur_membership_data.ajax_url,
+				data: data,
+				beforeSend: function( ){
+					var spinner = '<span class="ur-spinner is-active"></span>';
+
+					$el.closest( '.ur-local-currency-controls' ).append( spinner )
+				},
+				success: function( response ){
+					$el.closest( '.ur-local-currency-controls' ).find( '.ur-spinner' ).remove();
+
+					if ( ! response.success ) {
+						$( document ).find( '.ur-local-currency-' + zone_id + '-message' ).removeClass( 'hidden' );
+						$( document ).find( '.ur-local-currency-' + zone_id + '-message' ).html( response.data.message );
+					}
+				}
+			});
+
+		} else {
+			$content.addClass('hidden');
+			$collapseBtn.removeClass('collapsed');
+			$( document ).find( '.ur-local-currency-' + zone_id + '-message' ).addClass( 'hidden' );
+			$( document ).find( '.ur-local-currency-' + zone_id + '-message' ).empty();
+		}
+	});
+
+	 $( '.ur-local-currency-toggle-input:checked' ).each( function () {
+        $( this ).trigger( 'change' );
+    });
+
+	$( document ).on('click', '.ur-local-currency-collapse-btn', function ( e ) {
+		e.preventDefault();
+		var $card = $( this ).closest('.ur-local-currency-card');
+		var $content = $card.find('.ur-local-currency-content');
+		var $toggle = $card.find('.ur-local-currency-toggle-input');
+
+		if ( !$toggle.is(':checked') ) {
+			return;
+		}
+
+		$content.toggleClass( 'hidden' );
+		$(this).toggleClass( 'collapsed' );
+	});
+
+	function urHandleLocalCurrencyPricingMethod($card) {
+		var $checkedRadio = $card.find('.ur-local-currency-radio-group input[type="radio"]:checked');
+		var $manualInput = $card.find('.local-currency-manual-local-price');
+
+		if ($checkedRadio.val() === 'manual') {
+			$manualInput.removeClass('hidden').show();
+		} else {
+			$manualInput.addClass('hidden').hide();
+		}
+	}
+
+	$(document).on('change', '.ur-local-currency-radio-group input[type="radio"]', function () {
+		var $card = $(this).closest('.ur-local-currency-card');
+		urHandleLocalCurrencyPricingMethod($card);
+	});
+
+	$('.ur-local-currency-card').each(function () {
+		urHandleLocalCurrencyPricingMethod($(this));
+	});
+
+	function urToggleLocalCurrencyCards() {
+		var $toggle = $('#ur-membership-local-currency-action');
+		var $cards  = $('.ur-local-currency-card');
+
+		if ($toggle.is(':checked')) {
+			$cards.show();
+		} else {
+			$cards.hide();
+		}
+	}
+
+	$(document).on('change', '#ur-membership-local-currency-action', function () {
+		urToggleLocalCurrencyCards();
+	});
+
+	urToggleLocalCurrencyCards();
+
 })(jQuery, window.ur_membership_localized_data);
