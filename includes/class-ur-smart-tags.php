@@ -125,6 +125,7 @@ class UR_Smart_Tags {
 			'{{payment_method_last}}'    => esc_html__( 'Last Payment Method', 'user-registration' ),
 			'{{manage_membership_link}}' => esc_html__( 'Manage Membership Link', 'user-registration' ),
 			'{{payment_amount}}'         => esc_html__( 'Payment Amount', 'user-registration' ),
+			'{{reactivation_link}}'      => esc_html__( 'Membership Reactivation Link', 'user-registration' ),
 		);
 
 		/**
@@ -598,6 +599,12 @@ class UR_Smart_Tags {
 						$endpoint               = 'ur-membership';
 						$manage_membership_link = '<a href="' . esc_url( ur_get_endpoint_url( $endpoint ) ) . '">' . esc_html__( 'Manage Membership', 'user-registration' ) . '</a>';
 						$content                = str_replace( '{{' . $tag . '}}', wp_kses_post( $manage_membership_link ), $content );
+						break;
+					case 'reactivation_link':
+						$endpoint           = 'ur-membership';
+						$membership_tab_url = esc_url( ur_get_endpoint_url( $endpoint ) );
+						$reactivation_link  = '<a href="' . $membership_tab_url . '">' . esc_html__( 'Reactivate Membership', 'user-registration' ) . '</a>';
+						$content            = str_replace( '{{' . $tag . '}}', wp_kses_post( $reactivation_link ), $content );
 						break;
 					case 'passwordless_login_link':
 						$passwordless_login_link = isset( $values['passwordless_login_link'] ) ? esc_url( $values['passwordless_login_link'] ) : '';

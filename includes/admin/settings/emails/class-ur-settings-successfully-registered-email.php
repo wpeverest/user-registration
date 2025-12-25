@@ -152,6 +152,9 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 				{{my_account_link}}
 				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				Thanks
+				</p>
 				',
 				'user-registration'
 			);

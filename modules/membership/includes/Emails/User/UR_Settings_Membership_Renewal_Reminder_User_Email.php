@@ -160,10 +160,14 @@ class UR_Settings_Membership_Renewal_Reminder_User_Email {
 		</p>
 		<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 		<strong>Note:</strong> Automatic renewal does not apply to bank transfer payments. In such cases, manual renewal is required.
-</p>
+		</p>
 		<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">To update your payment method or manage your membership:<br>
 		{{manage_membership_link}}
-		</p>',
+		</p>
+		<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+		Thanks
+		</p>
+		',
 			'user-registration'
 		);
 

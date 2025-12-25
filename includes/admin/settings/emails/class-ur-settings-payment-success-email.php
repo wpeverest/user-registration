@@ -137,9 +137,11 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Email', false ) ) :
 					View your payment receipt: <br>
 					{{payment_invoice}}
 				</p>
-				<p>
-				Access your member dashboard: <br>
-				 {{my_account_link}}
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				Access your member dashboard: {{my_account_link}}
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thanks
 				</p>
 				',
 				'user-registration'

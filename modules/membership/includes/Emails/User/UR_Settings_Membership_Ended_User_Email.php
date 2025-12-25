@@ -118,7 +118,11 @@ class UR_Settings_Membership_Ended_User_Email {
 			'<p style="margin:0 0 20px 0; color:#000000; font-size:16px; line-height:1.6;">Hi {{username}},</p>
 			<p style="margin:0 0 20px 0; color:#000000; font-size:16px; line-height:1.6;">Your {{membership_plan_name}} membership expired on <strong>{{membership_end_date}}</strong>.</p>
 			<p style="margin:0 0 20px 0; color:#000000; font-size:16px; line-height:1.6;">To restore your access and continue enjoying your member benefits, renew your membership: <br>{{membership_renewal_link}}</p>
-			<p style="margin:0 0 20px 0; color:#000000; font-size:16px; line-height:1.6;">If you have questions or need assistance, please let us know.</p>',
+			<p style="margin:0 0 20px 0; color:#000000; font-size:16px; line-height:1.6;">If you have questions or need assistance, please let us know.</p>
+			<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thanks
+				</p>
+			',
 			'user-registration'
 		);
 

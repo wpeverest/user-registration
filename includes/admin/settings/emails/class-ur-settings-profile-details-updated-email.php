@@ -144,7 +144,11 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 				</p>
 				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					If you did not make these changes, please contact us immediately at {{admin_email}}.
-				</p>',
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thanks
+				</p>
+				',
 				'user-registration'
 			);
 			if ( UR_PRO_ACTIVE ) {

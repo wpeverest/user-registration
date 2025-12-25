@@ -145,9 +145,10 @@ if ( ! class_exists( 'UR_Settings_Awaiting_Admin_Approval_Email', false ) ) :
 				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					Your registration is currently awaiting approval from our team. We will send you an email as soon as your account is approved.
 				</p>
-				<p>
-				If you have questions, feel free to reach out.
-</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				If you have questions, feel free to reach out.</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				Thanks</p>
 				',
 				'user-registration'
 			);

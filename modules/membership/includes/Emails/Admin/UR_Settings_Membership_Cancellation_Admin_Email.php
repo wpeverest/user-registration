@@ -141,7 +141,7 @@ class UR_Settings_Membership_Cancellation_Admin_Email {
 				</li>
 				</ul>
 			</p>
-			<p>
+			<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 			Thanks
 			</p>
 			',

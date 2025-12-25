@@ -137,6 +137,9 @@ if ( ! class_exists( 'UR_Settings_Confirm_Email_Address_Change_Email', false ) )
 				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					This link will remain active for 24 hours. If you did not request this change, please contact us immediately at {{admin_email}}.
 				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thanks
+				</p>
 			',
 				'user-registration'
 			);
