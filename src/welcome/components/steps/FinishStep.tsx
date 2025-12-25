@@ -10,9 +10,7 @@ import {
 	Tooltip,
 	Icon,
 	Box,
-	Skeleton,
-	HStack,
-	Text
+	Skeleton
 } from "@chakra-ui/react";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { __ } from "@wordpress/i18n";
@@ -22,6 +20,14 @@ import { apiGet, apiPost } from "../../api/gettingStartedApi";
 interface RoleOption {
 	value: string;
 	label: string;
+}
+
+interface FinishLinks {
+	registration_page?: string;
+	dashboard?: string;
+	settings?: string;
+	memberships?: string;
+	forms?: string;
 }
 
 const InfoIcon: React.FC = () => (
@@ -39,8 +45,9 @@ const FinishStep: React.FC = () => {
 
 	const [roles, setRoles] = useState<RoleOption[]>([]);
 	const [selectedRole, setSelectedRole] = useState<string>("subscriber");
-	const [isLoadingRoles, setIsLoadingRoles] = useState(false);
+	const [isLoadingData, setIsLoadingData] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
+	const [links, setLinks] = useState<FinishLinks>({});
 
 	const textColor = useColorModeValue("gray.800", "white");
 	const inputBg = useColorModeValue("white", "gray.700");
@@ -51,11 +58,9 @@ const FinishStep: React.FC = () => {
 		membershipSetupType === "paid" || membershipSetupType === "free";
 
 	useEffect(() => {
-		const loadRoles = async () => {
-			if (!isOtherType) return;
-
+		const loadFinishData = async () => {
 			try {
-				setIsLoadingRoles(true);
+				setIsLoadingData(true);
 				const response = await apiGet("/finish");
 
 				if (response.roles) {
@@ -65,15 +70,19 @@ const FinishStep: React.FC = () => {
 				if (response.default_role) {
 					setSelectedRole(response.default_role);
 				}
+
+				if (response.links) {
+					setLinks(response.links);
+				}
 			} catch (e) {
-				console.error("Failed to load roles:", e);
+				console.error("Failed to load finish data:", e);
 			} finally {
-				setIsLoadingRoles(false);
+				setIsLoadingData(false);
 			}
 		};
 
-		loadRoles();
-	}, [isOtherType]);
+		loadFinishData();
+	}, []);
 
 	const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		setSelectedRole(e.target.value);
@@ -81,6 +90,7 @@ const FinishStep: React.FC = () => {
 
 	const handleGoToDashboard = () => {
 		const dashboardUrl =
+			links.dashboard ||
 			(window as any).urmSetupWizard?.dashboardUrl ||
 			"/wp-admin/admin.php?page=user-registration-dashboard";
 		window.location.href = dashboardUrl;
@@ -88,8 +98,9 @@ const FinishStep: React.FC = () => {
 
 	const handleCreateMembership = () => {
 		const membershipUrl =
+			links.memberships ||
 			(window as any).urmSetupWizard?.createMembershipUrl ||
-			"/wp-admin/admin.php?page=user-registration&tab=membership&action=add";
+			"/wp-admin/admin.php?page=user-registration-membership";
 		window.location.href = membershipUrl;
 	};
 
@@ -102,6 +113,7 @@ const FinishStep: React.FC = () => {
 			}
 
 			const registrationUrl =
+				links.registration_page ||
 				(window as any).urmSetupWizard?.registrationPageUrl ||
 				"/wp-admin/admin.php?page=user-registration";
 			window.location.href = registrationUrl;
@@ -158,7 +170,7 @@ const FinishStep: React.FC = () => {
 									</span>
 								</Tooltip>
 							</FormLabel>
-							{isLoadingRoles ? (
+							{isLoadingData ? (
 								<Skeleton
 									height="40px"
 									width="200px"
