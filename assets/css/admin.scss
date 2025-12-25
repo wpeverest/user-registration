@@ -8103,7 +8103,7 @@ $border-top-color_1: #ff4f55;
 	}
 	.ur-form-grid {
 		width: 100% !important;
-		display: flex !important;
+		display: flex;
 		flex-wrap: wrap;
 		gap: 16px;
 
@@ -8127,6 +8127,13 @@ $border-top-color_1: #ff4f55;
 			}
 		}
 	}
+
+	.user-registration-edit-user-form-details {
+        .ur-form-grid {
+            display: block;
+        }
+    }
+
 	.hide-show-password {
 		position: absolute;
 		top: 0;

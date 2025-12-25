@@ -68,102 +68,125 @@ jQuery(function ($) {
 			});
 
 			//disable users.
-			$("body").on("click", ".disable-user-link", function () {
-				var $user_id = $(this).attr("id").split("-").pop();
-				var nonce = $(this).data("nonce");
-				var icon = '<i class="dashicons dashicons-warning"></i>';
+			$("body").on(
+				"click",
+				"#user-registration-user-action-disable_user",
+				function (e) {
+					e.preventDefault();
 
-				var disable_user_content =
-					"<span>" +
-					user_registration_pro_admin_script_data.disable_user_popup_content +
-					"</span>";
-				disable_user_content +=
-					'<form id="disable-user-form-' +
-					$user_id +
-					'" class="disable-users-form" style="text-align:center">';
-				disable_user_content +=
-					'<input type="hidden" name="action" value="user_registration_disable_user">';
-				disable_user_content +=
-					'<input type="hidden" name="user_id" value="' +
-					$user_id +
-					'">';
-				disable_user_content +=
-					'<input type="hidden" name="_wpnonce" value="' +
-					nonce +
-					'">';
-				disable_user_content +=
-					'<input type="number" name="duration_value" min="1" placeholder="' +
-					user_registration_pro_admin_script_data.disable_user_placeholder +
-					'" style="margin-right:10px;">';
-				disable_user_content +=
-					'<select name="duration_unit" style="margin-right:10px;"><option value="days">Day(s)</option><option value="weeks">Week(s)</option><option value="months">Month(s)</option><option value="years">Year(s)</option></select>';
-				disable_user_content += "</form>";
+					var $user_id = $(this).attr("id").split("-").pop();
+					var nonce = $(this).data("nonce");
+					var icon = '<i class="dashicons dashicons-warning"></i>';
 
-				swal.fire({
-					title:
-						icon +
-						'<span class="user-registration-swal2-modal__title" >' +
-						user_registration_pro_admin_script_data.disable_user_title +
-						"</span>",
-					html: disable_user_content,
-					confirmButtonText:
-						user_registration_pro_admin_script_data.disable,
-					confirmButtonColor: "#3085d6",
-					showConfirmButton: true,
-					showCancelButton: true,
-					cancelButtonText:
-						user_registration_pro_admin_script_data.cancel,
-					customClass: {
-						container: "user-registration-swal2-container"
-					},
-					customClass:
-						"user-registration-swal2-modal user-registration-swal2-modal--centered",
-					focusConfirm: false,
-					showLoaderOnConfirm: true,
-					preConfirm: function () {
-						return new Promise(function (resolve) {
-							var duration_value = Swal.getPopup().querySelector(
-								'input[name="duration_value"]'
-							).value;
-							var duration_unit = Swal.getPopup().querySelector(
-								'select[name="duration_unit"]'
-							).value;
+					var disable_user_content =
+						"<span>" +
+						user_registration_pro_admin_script_data.disable_user_popup_content +
+						"</span>";
+					disable_user_content +=
+						'<form id="disable-user-form-' +
+						$user_id +
+						'" class="disable-users-form" style="text-align:center">';
+					disable_user_content +=
+						'<input type="hidden" name="action" value="user_registration_disable_user">';
+					disable_user_content +=
+						'<input type="hidden" name="user_id" value="' +
+						$user_id +
+						'">';
+					disable_user_content +=
+						'<input type="hidden" name="_wpnonce" value="' +
+						nonce +
+						'">';
+					disable_user_content +=
+						'<input type="number" name="duration_value" min="1" placeholder="' +
+						user_registration_pro_admin_script_data.disable_user_placeholder +
+						'" style="margin-right:10px;">';
+					disable_user_content +=
+						'<select name="duration_unit" style="margin-right:10px;"><option value="days">Day(s)</option><option value="weeks">Week(s)</option><option value="months">Month(s)</option><option value="years">Year(s)</option></select>';
+					disable_user_content += "</form>";
 
-							if (!duration_value || !duration_unit) {
-								Swal.showValidationMessage(
-									"Please enter duration value and unit."
-								);
-								Swal.hideLoading();
-								$(".swal2-actions")
-									.find("button")
-									.prop("disabled", false);
-							} else {
-								$.ajax({
-									type: "get",
-									url: user_registration_pro_admin_script_data.ajax_url,
-									data: {
-										action: "user_registration_disable_user",
-										user_id: $user_id,
-										nonce: nonce,
-										duration_value: duration_value,
-										duration_unit: duration_unit
-									},
-									success: function (response) {
-										if (response.success) {
-											Swal.fire({
-												icon: "success",
-												title:
-													'<span class="user-registration-swal2-modal__title" >' +
-													user_registration_pro_admin_script_data.disable_user_success_message_title +
-													"</span>",
-												customClass:
-													"user-registration-swal2-modal user-registration-swal2-modal--centered",
-												html: user_registration_pro_admin_script_data.disable_user_success_message
-											}).then(function () {
-												window.location.href =
-													user_registration_pro_admin_script_data.after_disable_redirect_url;
-											});
-										} else {
+					swal.fire({
+						title:
+							icon +
+							'<span class="user-registration-swal2-modal__title" >' +
+							user_registration_pro_admin_script_data.disable_user_title +
+							"</span>",
+						html: disable_user_content,
+						confirmButtonText:
+							user_registration_pro_admin_script_data.disable,
+						confirmButtonColor: "#3085d6",
+						showConfirmButton: true,
+						showCancelButton: true,
+						cancelButtonText:
+							user_registration_pro_admin_script_data.cancel,
+						customClass: {
+							container: "user-registration-swal2-container"
+						},
+						customClass:
+							"user-registration-swal2-modal user-registration-swal2-modal--centered",
+						focusConfirm: false,
+						showLoaderOnConfirm: true,
+						preConfirm: function () {
+							return new Promise(function (resolve) {
+								var duration_value =
+									Swal.getPopup().querySelector(
+										'input[name="duration_value"]'
+									).value;
+								var duration_unit =
+									Swal.getPopup().querySelector(
+										'select[name="duration_unit"]'
+									).value;
+
+								if (!duration_value || !duration_unit) {
+									Swal.showValidationMessage(
+										"Please enter duration value and unit."
+									);
+									Swal.hideLoading();
+									$(".swal2-actions")
+										.find("button")
+										.prop("disabled", false);
+								} else {
+									$.ajax({
+										type: "get",
+										url: user_registration_pro_admin_script_data.ajax_url,
+										data: {
+											action: "user_registration_disable_user",
+											user_id: $user_id,
+											nonce: nonce,
+											duration_value: duration_value,
+											duration_unit: duration_unit
+										},
+										success: function (response) {
+											if (response.success) {
+												Swal.fire({
+													icon: "success",
+													title:
+														'<span class="user-registration-swal2-modal__title" >' +
+														user_registration_pro_admin_script_data.disable_user_success_message_title +
+														"</span>",
+													customClass:
+														"user-registration-swal2-modal user-registration-swal2-modal--centered",
+													html: user_registration_pro_admin_script_data.disable_user_success_message
+												}).then(function () {
+													window.location.href =
+														user_registration_pro_admin_script_data.after_disable_redirect_url;
+												});
+											} else {
+												Swal.fire({
+													icon: "error",
+													title:
+														'<span class="user-registration-swal2-modal__title" >' +
+														user_registration_pro_admin_script_data.disable_user_error_message_title +
+														"</span>",
+													customClass:
+														"user-registration-swal2-modal user-registration-swal2-modal--centered",
+													html:
+														response.data.message +
+														" " +
+														user_registration_pro_admin_script_data.disable_user_error_message
+												});
+											}
+										},
+										error: function (response) {
 											Swal.fire({
 												icon: "error",
 												title:
@@ -178,29 +201,14 @@ jQuery(function ($) {
 													user_registration_pro_admin_script_data.disable_user_error_message
 											});
 										}
-									},
-									error: function (response) {
-										Swal.fire({
-											icon: "error",
-											title:
-												'<span class="user-registration-swal2-modal__title" >' +
-												user_registration_pro_admin_script_data.disable_user_error_message_title +
-												"</span>",
-											customClass:
-												"user-registration-swal2-modal user-registration-swal2-modal--centered",
-											html:
-												response.data.message +
-												" " +
-												user_registration_pro_admin_script_data.disable_user_error_message
-										});
-									}
-								});
-								Swal.close();
-							}
-						});
-					}
-				});
-			});
+									});
+									Swal.close();
+								}
+							});
+						}
+					});
+				}
+			);
 		},
 
 		/**
