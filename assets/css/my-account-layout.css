@@ -1741,7 +1741,7 @@
     max-width: 100%;
   }
 }
-#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header {
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header-nav {
   display: flex;
   gap: 12px;
   align-items: center;
@@ -1749,19 +1749,19 @@
   padding-bottom: 24px;
   border-bottom: 1px solid #E2E8F0;
 }
-#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header .user-registration-img-container img {
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header-nav .user-registration-img-container img {
   width: 42px;
   height: 42px;
   border-radius: 50%;
   border: 2px solid #ffffff;
 }
-#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header header > h3 {
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header-nav header > h3 {
   margin: 0;
   font-size: 16px;
   line-height: 24px;
   color: #383838;
 }
-#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header .user-registration-MyAccount-header .user-registration-MyAccount-username {
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header-nav .user-registration-MyAccount-header .user-registration-MyAccount-username {
   font-size: 20px;
   line-height: 28px;
   margin-bottom: 0;
