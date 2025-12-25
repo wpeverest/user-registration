@@ -109,7 +109,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			/**
 			 * Backward compatibility: previous settings section.
 			 */
-			$settings = apply_filters( 'user_registration_' . $this->id . '_settings', $settings );
+			// $settings = apply_filters( 'user_registration_' . $this->id . '_settings', $settings );
 			return $settings;
 		}
 
@@ -158,32 +158,35 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 
 			UR_Admin_Settings::output_fields( $settings );
 		}
+
 		public function upgrade_to_pro_setting() {
 			global $current_section;
 			global $current_tab;
 			add_filter( 'user_registration_settings_hide_save_button', '__return_true' );
 			$title = ucwords( str_replace( '-', ' ', $current_section ) );
 			$setting = ucwords( str_replace( '_', ' ', $current_tab ) );
-			return apply_filters( 'user_registration_upgrade_to_pro_setting', array(
-				'title' => '',
-				'sections' => array(
-					'premium_setting_section' => array(
-						'type' => 'card',
-						'is_premium' => true,
-						'title' => $title,
-						'before_desc' => "$setting > $title is only available in User Registration & Membership Pro.",
-						'desc' => 'To unlock this setting, consider upgrading to <a href="https://wpuserregistration.com/upgrade/?utm_source=ur-settings-desc&utm_medium=upgrade-link&utm-campaign=lite-version">Pro</a>.',
-						'class' => 'ur-upgrade--link',
-						'button' => array(
-							'button_type' => 'upgrade_link',
-							'button_text' => 'Upgrade to Pro',
-							'button_link' => 'https://wpuserregistration.com/upgrade/?utm_source=ur-settings-' . $current_section . '&utm_medium=upgrade-link&utm_campaign=lite-version',
+			return apply_filters( 'user_registration_upgrade_to_pro_setting',
+				array(
+					'title' => '',
+					'sections' => array(
+						'premium_setting_section' => array(
+							'type' => 'card',
+							'is_premium' => true,
+							'title' => $title,
+							'before_desc' => "$setting > $title is only available in User Registration & Membership Pro.",
+							'desc' => 'To unlock this setting, consider upgrading to <a href="https://wpuserregistration.com/upgrade/?utm_source=ur-settings-desc&utm_medium=upgrade-link&utm-campaign=lite-version">Pro</a>.',
+							'class' => 'ur-upgrade--link',
+							'button' => array(
+								'button_type' => 'upgrade_link',
+								'button_text' => 'Upgrade to Pro',
+								'button_link' => 'https://wpuserregistration.com/upgrade/?utm_source=ur-settings-' . $current_section . '&utm_medium=upgrade-link&utm_campaign=lite-version',
+							),
 						),
 					),
-				),
-			)
+				)
 			);
 		}
+
 		/**
 		 * Save settings.
 		 */
