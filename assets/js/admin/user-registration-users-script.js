@@ -72,10 +72,13 @@ jQuery(function ($) {
 				"click",
 				"#user-registration-user-action-disable_user",
 				function (e) {
-					e.preventDefault();
+					if ($(this).find(".urm-deny").length) {
+						e.preventDefault();
+					}
 
-					var $user_id = $(this).attr("id").split("-").pop();
-					var nonce = $(this).data("nonce");
+					var $selector = $(this).find(".disable-user-link");
+					var $user_id = $selector.attr("id").split("-").pop();
+					var nonce = $selector.data("nonce");
 					var icon = '<i class="dashicons dashicons-warning"></i>';
 
 					var disable_user_content =
