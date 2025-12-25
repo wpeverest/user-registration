@@ -137,19 +137,19 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 			 * @param string Message content to overwrite the existing email content.
 			 */
 			$body_content = __(
-				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					Hi {{username}},
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 				Welcome to <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>! Your registration is complete.
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					{{membership_plan_details}}
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 				Get started by visiting your account dashboard:
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 				{{my_account_link}}
 				</p>
 				',

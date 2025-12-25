@@ -125,16 +125,16 @@ if ( ! class_exists( 'UR_Settings_Confirm_Email_Address_Change_Email', false ) )
 			 * @param string Message content to overwrite the existing email content.
 			 */
 			$body_content = __(
-				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					Hi {{display_name}},
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					You recently requested to change the email associated with your account from {{email}} to {{updated_new_user_email}}.
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					To confirm this change, please click the link below: {{email_change_confirmation_link}}
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					This link will remain active for 24 hours. If you did not request this change, please contact us immediately at {{admin_email}}.
 				</p>
 			',

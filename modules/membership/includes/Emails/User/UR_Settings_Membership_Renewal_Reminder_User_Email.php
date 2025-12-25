@@ -146,9 +146,9 @@ class UR_Settings_Membership_Renewal_Reminder_User_Email {
 	 */
 	public function user_registration_get_membership_renewal_reminder_user_email() {
 		$body_content = __(
-			'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">Hi {{username}},</p>
-		<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">Your {{membership_plan_name}} membership will renew automatically on {{renewal_date}}.</p>
-		<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;"><strong>Renewal Details:</strong>
+			'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">Hi {{username}},</p>
+		<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">Your {{membership_plan_name}} membership will renew automatically on {{renewal_date}}.</p>
+		<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;"><strong>Renewal Details:</strong>
 		<ul>
 		<li style="margin-bottom: 10px;">
 		<strong>Amount</strong>: {{renewal_amount}}
@@ -158,10 +158,10 @@ class UR_Settings_Membership_Renewal_Reminder_User_Email {
 		</li>
 		</ul>
 		</p>
-		<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+		<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 		<strong>Note:</strong> Automatic renewal does not apply to bank transfer payments. In such cases, manual renewal is required.
 </p>
-		<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">To update your payment method or manage your membership:<br>
+		<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">To update your payment method or manage your membership:<br>
 		{{manage_membership_link}}
 		</p>',
 			'user-registration'

@@ -137,10 +137,10 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Admin_Email', false ) ) :
 			 * @param string Message content to overwrite the existing email content.
 			 */
 			$body_content = __(
-				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					Hi Admin,
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					You have received a payment.
 				</p>
 				<p>
@@ -157,7 +157,7 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Admin_Email', false ) ) :
 					</li>
 					</ul>
 					</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					View full payment details: <br>
 					<a href="{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}" style="color: #4A90E2; text-decoration: none;">Click Here</a>
 				</p>

@@ -137,13 +137,13 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 			 * @param string Message content to overwrite the existing email content.
 			 */
 			$body_content = __(
-				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					Hi {{username}},
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 				We are unable to approve your registration at <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a> at this time.
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					If you believe this is an error or have questions, please contact us at {{admin_email}}.
 				</p>
 			',

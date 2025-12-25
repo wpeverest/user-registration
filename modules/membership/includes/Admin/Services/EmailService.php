@@ -320,14 +320,26 @@ class EmailService {
 		if ( ! $this->validate_email_fields( $data ) || ! self::is_membership_email_enabled( 'user_registration_enable_membership_cancellation_user_email' ) ) {
 			return false;
 		}
-		$subject  = get_option( 'user_registration_membership_cancellation_user_email_subject', esc_html__( 'Membership Cancelled', 'user-registration' ) );
-		$user     = get_userdata( $data['member_id'] );
-		$form_id  = ur_get_form_id_by_userid( $data['member_id'] );
-		$settings = new UR_Settings_Membership_Cancellation_User_Email();
-		$values   = array(
-			'membership_plan_name' => esc_html__( $data['membership_metas']['title'] ),
+		$subject              = get_option( 'user_registration_membership_cancellation_user_email_subject', esc_html__( 'Membership Cancelled', 'user-registration' ) );
+		$user                 = get_userdata( $data['member_id'] );
+		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
+		$settings             = new UR_Settings_Membership_Cancellation_User_Email();
+		$subscription_service = new SubscriptionService();
+		$membership_tags      = $subscription_service->get_membership_plan_details( $data );
+
+		// Add cancellation date to membership_tags.
+		$cancellation_date = get_user_meta( $data['member_id'], 'user_registration_membership_cancellation_date', true );
+		if ( ! empty( $cancellation_date ) ) {
+			$membership_tags['membership_cancellation_date'] = date( 'Y, F d', strtotime( $cancellation_date ) );
+		} else {
+			$membership_tags['membership_cancellation_date'] = date( 'Y, F d', strtotime( current_time( 'mysql' ) ) );
+		}
+
+		$values  = array(
+			'membership_tags' => $membership_tags,
 		);
-		$message  = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_cancellation_user_email() ), $values, $form_id );
+		$values  = $data + $values;
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_cancellation_user_email() ), $values, $form_id );
 
 		$message     = apply_filters( 'ur_membership_membership_cancellation_email_custom_template', $message, $subject );
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
@@ -362,18 +374,32 @@ class EmailService {
 		if ( ! $this->validate_email_fields( $data ) || ! self::is_membership_email_enabled( 'user_registration_enable_membership_cancellation_admin_email' ) ) {
 			return false;
 		}
-		$subject = get_option( 'user_registration_membership_cancellation_admin_email_subject', esc_html__( 'Membership Cancelled: {{username}}', 'user-registration' ) );
-		$user    = get_userdata( $data['member_id'] );
+		$subject              = get_option( 'user_registration_membership_cancellation_admin_email_subject', esc_html__( 'Membership Cancelled: {{username}}', 'user-registration' ) );
+		$user                 = get_userdata( $data['member_id'] );
+		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
+		$settings             = new UR_Settings_Membership_Cancellation_Admin_Email();
+		$subscription_service = new SubscriptionService();
+		$membership_tags      = $subscription_service->get_membership_plan_details( $data );
 
-		$form_id  = ur_get_form_id_by_userid( $data['member_id'] );
-		$settings = new UR_Settings_Membership_Cancellation_Admin_Email();
+		// Add cancellation date to membership_tags.
+		$cancellation_date = get_user_meta( $data['member_id'], 'user_registration_membership_cancellation_date', true );
+		if ( ! empty( $cancellation_date ) ) {
+			$membership_tags['membership_cancellation_date'] = date( 'Y, F d', strtotime( $cancellation_date ) );
+		} else {
+			$membership_tags['membership_cancellation_date'] = date( 'Y, F d', strtotime( current_time( 'mysql' ) ) );
+		}
 
-		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_cancellation_admin_email() ), $data, $form_id );
+		$values = array(
+			'membership_tags' => $membership_tags,
+		);
+		$values = $data + $values;
+
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_cancellation_admin_email() ), $values, $form_id );
 
 		$message     = apply_filters( 'ur_membership_membership_cancellation_email_custom_template', $message, $subject );
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
-
-		$headers = \UR_Emailer::ur_get_header();
+		$subject     = \UR_Emailer::parse_smart_tags( $subject, $values );
+		$headers     = \UR_Emailer::ur_get_header();
 
 		return \UR_Emailer::user_registration_process_and_send_email( get_option( 'admin_email' ), $subject, $message, $headers, array(), $template_id );
 	}

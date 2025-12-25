@@ -130,19 +130,19 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 			 * @param string Message content for email confirmation to be overwritten.
 			 */
 			$body_content = __(
-				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					Hi {{username}},
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					Thank you for registering at <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>!
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					To complete your registration, please confirm your email address by clicking the link below:
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					<a href="{{home_url}}/{{ur_login}}?ur_token={{email_token}}" style="color: #4A90E2; text-decoration: none;">Click Here</a>
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 				his verification link is valid for 24 hours. If you need assistance, we\'re here to help.
 				</p>',
 				'user-registration'

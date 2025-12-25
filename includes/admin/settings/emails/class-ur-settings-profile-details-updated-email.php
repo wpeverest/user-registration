@@ -136,13 +136,13 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 			 * @param string Message content to overwrite the existing email content.
 			 */
 			$body_content = __(
-				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					Hi {{username}},
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					Your profile has been updated at <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>.
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					If you did not make these changes, please contact us immediately at {{admin_email}}.
 				</p>',
 				'user-registration'

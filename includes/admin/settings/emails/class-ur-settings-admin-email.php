@@ -141,10 +141,10 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 		public function ur_get_admin_email() {
 
 			$body_content = __(
-				'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					Hi Admin,
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					A new member has been registered.
 				</p>
 				<p>
@@ -156,18 +156,15 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 					<li style="margin-bottom:10px;">
 						<b>Email</b>: {{email}}
 					</li>
-					<li style="margin-bottom:10px;">
-						<b>Registration Date</b>: {{registration_date}}
-					</li>
 					</ul>
 					</p>
 					<p>
 					{{membership_plan_details}}
 					</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					View and manage this member in your <b>User Registration and Membership</b> dashboard under <b>Members</b>.
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 				Thanks
 				</p>
 				',

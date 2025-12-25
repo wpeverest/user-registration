@@ -146,13 +146,13 @@ class UR_Settings_Membership_Expiring_Soon_User_Email {
 	 */
 	public function user_registration_get_membership_expiring_soon_user_email() {
 		$body_content = __(
-			'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">Hi {{username}},</p>
-			<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">Your {{membership_plan_name}} membership expires on <strong>{{membership_end_date}}</strong>. </p>
-			<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">To continue accessing your member benefits, renew your membership:
+			'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">Hi {{username}},</p>
+			<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">Your {{membership_plan_name}} membership expires on <strong>{{membership_end_date}}</strong>. </p>
+			<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">To continue accessing your member benefits, renew your membership:
 			<br>
 			<a href="{{renewal_link}}" rel="noreferrer noopener" target="_blank" style="color: #4A90E2; text-decoration: none; font-size: 16px;">Renew Now</a>
 			</p>
-			<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">If you have questions about renewal, we\'re here to help. </p>
+			<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">If you have questions about renewal, we\'re here to help. </p>
 			',
 			'user-registration'
 		);

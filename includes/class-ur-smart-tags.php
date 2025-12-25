@@ -144,6 +144,7 @@ class UR_Smart_Tags {
 	 * @param array  $name_value Extra values.
 	 */
 	public function process( $content = '', $values = array(), $name_value = array() ) {
+		error_log( print_r( $values, true ) );
 		if ( ! empty( $values['email'] ) ) {
 			$process_type   = isset( $values['process_type'] ) && 'ur_parse_after_meta_update' === $values['process_type'] ? true : false;
 			$default_values = array();
@@ -660,6 +661,7 @@ class UR_Smart_Tags {
 					case 'membership_plan_expiry_date':
 					case 'membership_plan_status':
 					case 'membership_renewal_link':
+					case 'membership_cancellation_date':
 						if ( isset( $values[ $other_tag ] ) ) {
 							$value = $values[ $other_tag ];
 						} elseif ( isset( $values['membership_tags'][ $other_tag ] ) ) {

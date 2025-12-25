@@ -115,13 +115,13 @@ class UR_Settings_Membership_Cancellation_Admin_Email {
 	 */
 	public function user_registration_get_membership_cancellation_admin_email() {
 		$body_content = __(
-			'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+			'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 				Hi Admin,
 			</p>
-			<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+			<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 				A member has cancelled their membership.
 			</p>
-			<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+			<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 				<strong>Member Details:</strong>
 				<ul>
 				<li style="margin-bottom: 10px;">
@@ -134,10 +134,17 @@ class UR_Settings_Membership_Cancellation_Admin_Email {
 					<strong>Membership Plan</strong>: {{membership_plan_name}}
 				</li>
 				<li style="margin-bottom: 10px;">
-					<strong>Cancellation Date</strong>: {{cancellation_date}}
+					<strong>Cancellation Date</strong>: {{membership_cancellation_date}}
+				</li>
+				<li style="margin-bottom: 10px;">
+					<strong>Access Expires</strong>: {{membership_plan_trial_end_date}}
 				</li>
 				</ul>
-			</p>',
+			</p>
+			<p>
+			Thanks
+			</p>
+			',
 			'user-registration'
 		);
 
