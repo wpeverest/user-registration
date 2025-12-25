@@ -3688,7 +3688,7 @@ msgid "Enable this email sent to user notifying the registration is awaiting adm
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:96
-msgid "Awaiting Admin Approval – Registration Pending on {{blog_info}}"
+msgid "Your Registration is Pending Approval"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:141
@@ -3745,7 +3745,7 @@ msgid "Email Address Confirmation Email"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:89
-msgid "Email Address Confirmation – Verify Your Registration on {{blog_info}}"
+msgid "Confirm Your Email Address"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:135
@@ -3799,7 +3799,7 @@ msgid "Enable this email sent to the user after succesful payment."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-payment-success-email.php:94
-msgid "Payment Success – Registration Payment Complete on {{blog_info}}"
+msgid "Payment Confirmed"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-payment-success-email.php:127
@@ -3965,7 +3965,7 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:97
 #: modules/membership/includes/Admin/Services/EmailService.php:109
-msgid "Registration Successful – Welcome to {{blog_info}}!"
+msgid "Welcome to {{blog_info}}!"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:142
@@ -10358,7 +10358,7 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:374
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Renewal_Reminder_User_Email.php:119
-msgid "Reminder: Automatic Renewal for Your Membership is Coming Up"
+msgid "Your Membership Renews Soon"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:393

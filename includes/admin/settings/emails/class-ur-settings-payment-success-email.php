@@ -134,10 +134,12 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Email', false ) ) :
 					Your payment for {{membership_plan_name}} at <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a> is complete!
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					View your payment receipt:
-				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					View your payment receipt: <br>
 					{{payment_invoice}}
+				</p>
+				<p>
+				Access your member dashboard: <br>
+				 {{my_account_link}}
 				</p>
 				',
 				'user-registration'

@@ -116,18 +116,18 @@ class UR_Settings_Membership_Renewal_Reminder_User_Email {
 								'desc'     => __( 'Customize the email subject.', 'user-registration' ),
 								'id'       => 'user_registration_membership_renewal_reminder_user_email_subject',
 								'type'     => 'text',
-								'default'  => __( 'Reminder: Automatic Renewal for Your Membership is Coming Up', 'user-registration' ),
+								'default'  => __( 'Your Membership Renews Soon', 'user-registration' ),
 								'css'      => '',
 								'desc_tip' => true,
 							),
 							array(
-								'title'    => __( 'Email Content', 'user-registration' ),
-								'desc'     => __( 'Customize the content of the membership cancellation email to admin.', 'user-registration' ),
-								'id'       => 'user_registration_membership_renewal_reminder_user_email_message',
-								'type'     => 'tinymce',
-								'default'  => $this->user_registration_get_membership_renewal_reminder_user_email(),
-								'css'      => '',
-								'desc_tip' => true,
+								'title'                  => __( 'Email Content', 'user-registration' ),
+								'desc'                   => __( 'Customize the content of the membership cancellation email to admin.', 'user-registration' ),
+								'id'                     => 'user_registration_membership_renewal_reminder_user_email_message',
+								'type'                   => 'tinymce',
+								'default'                => $this->user_registration_get_membership_renewal_reminder_user_email(),
+								'css'                    => '',
+								'desc_tip'               => true,
 								'show-ur-registration-form-button' => false,
 								'show-smart-tags-button' => true,
 								'show-reset-content-button' => true,
@@ -145,22 +145,29 @@ class UR_Settings_Membership_Renewal_Reminder_User_Email {
 	 * Notification sent to admin when member cancel their membership.
 	 */
 	public function user_registration_get_membership_renewal_reminder_user_email() {
-		$message = apply_filters(
-			'user_registration_membership_renewal_reminder_user_email_message',
-			sprintf(
-				__(
-					'
-					Hi {{username}}, <br><br>
-					This is a friendly reminder that your {{membership_plan_name}} membership on {{blog_info}} is due for renewal soon. <br><br>
-					Don\'t worry – your membership will be automatically renewed, and the payment will be processed shortly. <br><br>
-					If you need to update your payment details or have any questions, feel free to reach out to us.<br><br>
-					Thank you for being a valued member!<br><br>
-					Best regards,<br>
-					{{blog_info}}',
-					'user-registration'
-				)
-			)
+		$body_content = __(
+			'<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">Hi {{username}},</p>
+		<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">Your {{membership_plan_name}} membership will renew automatically on {{renewal_date}}.</p>
+		<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;"><strong>Renewal Details:</strong>
+		<ul>
+		<li style="margin-bottom: 10px;">
+		<strong>Amount</strong>: {{renewal_amount}}
+		</li>
+		<li style="margin-bottom: 10px;">
+		<strong>Payment Method</strong>: {{payment_method_last}}
+		</li>
+		</ul>
+		</p>
+		<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+		<strong>Note:</strong> Automatic renewal does not apply to bank transfer payments. In such cases, manual renewal is required.
+</p>
+		<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">To update your payment method or manage your membership:<br>
+		{{manage_membership_link}}
+		</p>',
+			'user-registration'
 		);
+
+		$message = apply_filters( 'user_registration_membership_renewal_reminder_user_email_message', $body_content );
 
 		return $message;
 	}

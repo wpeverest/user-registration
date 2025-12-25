@@ -150,7 +150,7 @@ if ( ! class_exists( 'UR_Settings_Successfully_Registered_Email', false ) ) :
 				Get started by visiting your account dashboard:
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-				Please go to the My Account page to update your details and set up your user profile.
+				{{my_account_link}}
 				</p>
 				',
 				'user-registration'

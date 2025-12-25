@@ -379,7 +379,7 @@ class EmailService {
 	}
 
 	public function send_membership_renewal_email( $data ) {
-		$subject = get_option( 'user_registration_membership_renewal_reminder_user_email_subject', esc_html__( 'Reminder: Automatic Renewal for Your Membership is Coming Up', 'user-registration' ) );
+		$subject = get_option( 'user_registration_membership_renewal_reminder_user_email_subject', esc_html__( 'Your Membership Renews Soon', 'user-registration' ) );
 		$user    = get_userdata( $data['member_id'] );
 
 		$form_id  = ur_get_form_id_by_userid( $data['member_id'] );

@@ -143,7 +143,7 @@ if ( ! class_exists( 'UR_Settings_Email_Confirmation', false ) ) :
 					<a href="{{home_url}}/{{ur_login}}?ur_token={{email_token}}" style="color: #4A90E2; text-decoration: none;">Click Here</a>
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-				This verification link is valid for 24 hours.
+				his verification link is valid for 24 hours. If you need assistance, we\'re here to help.
 				</p>',
 				'user-registration'
 			);

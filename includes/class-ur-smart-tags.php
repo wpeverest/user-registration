@@ -103,21 +103,26 @@ class UR_Smart_Tags {
 	 */
 	public static function ur_authenticated_parsable_smart_tags_list() {
 		$smart_tags = array(
-			'{{user_id}}'           => esc_html__( 'User ID', 'user-registration' ),
-			'{{username}}'          => esc_html__( 'User Name', 'user-registration' ),
-			'{{email}}'             => esc_html__( 'Email', 'user-registration' ),
-			'{{ur_login}}'          => esc_html__( 'UR Login', 'user-registration' ),
-			'{{all_fields}}'        => esc_html__( 'All Fields', 'user-registration' ),
-			'{{auto_pass}}'         => esc_html__( 'Auto Pass', 'user-registration' ),
-			'{{user_roles}}'        => esc_html__( 'User Roles', 'user-registration' ),
-			'{{first_name}}'        => esc_html__( 'First Name', 'user-registration' ),
-			'{{last_name}}'         => esc_html__( 'Last Name', 'user-registration' ),
-			'{{display_name}}'      => esc_html__( 'User Display Name', 'user-registration' ),
-			'{{registration_date}}' => esc_html__( 'Registration Date', 'user-registration' ),
-			'{{update_date}}'       => esc_html__( 'Profile Update Date', 'user-registration' ),
-			'{{payment_date}}'      => esc_html__( 'Payment Date', 'user-registration' ),
-			'{{deletion_date}}'     => esc_html__( 'Account Deletion Date', 'user-registration' ),
-			'{{cancellation_date}}' => esc_html__( 'Membership Cancellation Date', 'user-registration' ),
+			'{{user_id}}'                => esc_html__( 'User ID', 'user-registration' ),
+			'{{username}}'               => esc_html__( 'User Name', 'user-registration' ),
+			'{{email}}'                  => esc_html__( 'Email', 'user-registration' ),
+			'{{ur_login}}'               => esc_html__( 'UR Login', 'user-registration' ),
+			'{{all_fields}}'             => esc_html__( 'All Fields', 'user-registration' ),
+			'{{auto_pass}}'              => esc_html__( 'Auto Pass', 'user-registration' ),
+			'{{user_roles}}'             => esc_html__( 'User Roles', 'user-registration' ),
+			'{{first_name}}'             => esc_html__( 'First Name', 'user-registration' ),
+			'{{last_name}}'              => esc_html__( 'Last Name', 'user-registration' ),
+			'{{display_name}}'           => esc_html__( 'User Display Name', 'user-registration' ),
+			'{{registration_date}}'      => esc_html__( 'Registration Date', 'user-registration' ),
+			'{{update_date}}'            => esc_html__( 'Profile Update Date', 'user-registration' ),
+			'{{payment_date}}'           => esc_html__( 'Payment Date', 'user-registration' ),
+			'{{deletion_date}}'          => esc_html__( 'Account Deletion Date', 'user-registration' ),
+			'{{cancellation_date}}'      => esc_html__( 'Membership Cancellation Date', 'user-registration' ),
+			'{{my_account_link}}'        => esc_html__( 'My Account Link', 'user-registration' ),
+			'{{renewal_date}}'           => esc_html__( 'Membership Renewal Date', 'user-registration' ),
+			'{{renewal_amount}}'         => esc_html__( 'Renewal Amount', 'user-registration' ),
+			'{{payment_method_last}}'    => esc_html__( 'Last Payment Method', 'user-registration' ),
+			'{{manage_membership_link}}' => esc_html__( 'Manage Membership Link', 'user-registration' ),
 		);
 
 		/**
@@ -577,6 +582,20 @@ class UR_Smart_Tags {
 						$sign_out_link       = '<a href="' . esc_url( ur_logout_url( ur_get_page_permalink( 'myaccount' ) ) ) . '" ' . ( ! $logout_confirmation ? 'class="ur-logout"' : '' ) . '>' . esc_html__( 'Sign out', 'user-registration' ) . '</a>';
 						$content             = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_out_link ), $content );
 						break;
+					case 'my_account_link':
+						$ur_account_page_exists = ur_get_page_id( 'myaccount' ) > 0;
+						$ur_account_page_url    = ur_get_page_permalink( 'myaccount' );
+						if ( ! $ur_account_page_exists ) {
+							$ur_account_page_url = ur_get_page_permalink( 'login' );
+						}
+						$my_account_link = '<a href="' . esc_url( $ur_account_page_url ) . '">' . esc_html__( 'My Account', 'user-registration' ) . '</a>';
+						$content         = str_replace( '{{' . $tag . '}}', wp_kses_post( $my_account_link ), $content );
+						break;
+					case 'manage_membership_link':
+						$endpoint               = 'ur-membership';
+						$manage_membership_link = '<a href="' . esc_url( ur_get_endpoint_url( $endpoint ) ) . '">' . esc_html__( 'Manage Membership', 'user-registration' ) . '</a>';
+						$content                = str_replace( '{{' . $tag . '}}', wp_kses_post( $manage_membership_link ), $content );
+						break;
 					case 'passwordless_login_link':
 						$passwordless_login_link = isset( $values['passwordless_login_link'] ) ? esc_url( $values['passwordless_login_link'] ) : '';
 						$content                 = str_replace( '{{' . $tag . '}}', wp_kses_post( $passwordless_login_link ), $content );
@@ -861,6 +880,107 @@ class UR_Smart_Tags {
 							$cancellation_date = '';
 						}
 						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $cancellation_date ), $content );
+						break;
+
+					case 'renewal_date':
+						$renewal_date = '';
+						// Check if renewal_date is in values or membership_tags.
+						if ( isset( $values['renewal_date'] ) ) {
+							$renewal_date = $values['renewal_date'];
+						} elseif ( isset( $values['membership_tags']['renewal_date'] ) ) {
+							$renewal_date = $values['membership_tags']['renewal_date'];
+						} elseif ( isset( $values['membership_tags']['membership_plan_next_billing_date'] ) ) {
+							$renewal_date = $values['membership_tags']['membership_plan_next_billing_date'];
+						} else {
+							// Try to get from subscription if membership module is available.
+							$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : ( ! empty( $values['member_id'] ) ? $values['member_id'] : get_current_user_id() );
+							if ( $user_id && class_exists( '\WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository' ) ) {
+								$members_subscription_repository = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
+								$subscription                    = $members_subscription_repository->get_member_subscription( $user_id );
+								if ( ! empty( $subscription ) && isset( $subscription['next_billing_date'] ) ) {
+									$renewal_date = $subscription['next_billing_date'];
+								}
+							}
+						}
+						if ( ! empty( $renewal_date ) ) {
+							$renewal_date = date_i18n( get_option( 'date_format' ), strtotime( $renewal_date ) );
+						} else {
+							$renewal_date = '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $renewal_date ), $content );
+						break;
+
+					case 'renewal_amount':
+						$renewal_amount = '';
+						// Check if renewal_amount is in values or membership_tags.
+						if ( isset( $values['renewal_amount'] ) ) {
+							$renewal_amount = $values['renewal_amount'];
+						} elseif ( isset( $values['membership_tags']['renewal_amount'] ) ) {
+							$renewal_amount = $values['membership_tags']['renewal_amount'];
+						} elseif ( isset( $values['membership_tags']['membership_plan_payment_amount'] ) ) {
+							$renewal_amount = $values['membership_tags']['membership_plan_payment_amount'];
+						} else {
+							// Try to get from latest order if membership module is available.
+							$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : ( ! empty( $values['member_id'] ) ? $values['member_id'] : get_current_user_id() );
+							if ( $user_id && class_exists( '\WPEverest\URMembership\Admin\Repositories\MembersOrderRepository' ) ) {
+								$members_order_repository = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
+								$latest_order             = $members_order_repository->get_member_orders( $user_id );
+								if ( ! empty( $latest_order ) && isset( $latest_order['ID'] ) ) {
+									$orders_repository = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
+									$order_detail      = $orders_repository->get_order_detail( $latest_order['ID'] );
+									if ( ! empty( $order_detail ) && isset( $order_detail['total_amount'] ) ) {
+										$renewal_amount = $order_detail['total_amount'];
+									}
+								}
+							}
+						}
+						if ( ! empty( $renewal_amount ) ) {
+							// Format amount with currency if available.
+							$currency = get_option( 'user_registration_payment_currency', 'USD' );
+							if ( function_exists( 'ur_payment_integration_get_currencies' ) ) {
+								$currencies     = ur_payment_integration_get_currencies();
+								$symbol         = isset( $currencies[ $currency ]['symbol'] ) ? $currencies[ $currency ]['symbol'] : $currency;
+								$renewal_amount = $symbol . number_format( floatval( $renewal_amount ), 2 );
+							} else {
+								$renewal_amount = number_format( floatval( $renewal_amount ), 2 );
+							}
+						} else {
+							$renewal_amount = '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $renewal_amount ), $content );
+						break;
+
+					case 'payment_method_last':
+						$payment_method = '';
+						// Check if payment_method_last is in values or membership_tags.
+						if ( isset( $values['payment_method_last'] ) ) {
+							$payment_method = $values['payment_method_last'];
+						} elseif ( isset( $values['membership_tags']['payment_method_last'] ) ) {
+							$payment_method = $values['membership_tags']['payment_method_last'];
+						} elseif ( isset( $values['membership_tags']['membership_plan_payment_method'] ) ) {
+							$payment_method = $values['membership_tags']['membership_plan_payment_method'];
+						} else {
+							// Try to get from latest order if membership module is available.
+							$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : ( ! empty( $values['member_id'] ) ? $values['member_id'] : get_current_user_id() );
+							if ( $user_id && class_exists( '\WPEverest\URMembership\Admin\Repositories\MembersOrderRepository' ) ) {
+								$members_order_repository = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
+								$latest_order             = $members_order_repository->get_member_orders( $user_id );
+								if ( ! empty( $latest_order ) && isset( $latest_order['ID'] ) ) {
+									$orders_repository = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
+									$order_detail      = $orders_repository->get_order_detail( $latest_order['ID'] );
+									if ( ! empty( $order_detail ) && isset( $order_detail['payment_method'] ) ) {
+										$payment_method = $order_detail['payment_method'];
+									}
+								}
+							}
+						}
+						if ( ! empty( $payment_method ) ) {
+							// Format payment method name (capitalize first letter of each word).
+							$payment_method = ucwords( str_replace( '_', ' ', $payment_method ) );
+						} else {
+							$payment_method = '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $payment_method ), $content );
 						break;
 				}
 			}
