@@ -1462,15 +1462,50 @@ span.ur-shortcode-form-embed-dot {
 }
 
 #user-registration-pro-single-user-view {
-	.user-registration-user-form-details {
-		.empty-list-table-container {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			padding: 50px;
-		}
-	}
+  .user-registration-user-form-details {
+
+    .empty-list-table-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 50px;
+    }
+
+    .wp-list-table {
+      width: 100%;
+      background: #fff;
+      border: 1px solid #E1E1E1;
+      border-radius: 4px;
+
+      thead {
+        background: none;
+
+        th {
+          padding: 12px 14px;
+          font-size: 14px;
+          font-weight: 600;
+          border-color: #E1E1E1;
+          color: #383838;
+          text-align: left;
+        }
+      }
+
+      tbody {
+        tr {
+          background: #F8F8FA;
+
+          td {
+            padding: 12px 14px;
+            font-size: 13px;
+            color: #383838;
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+  }
 }
+
 
 //Individual oxygen widgets styles.
 .oxygen-add-section-accordion-contents[ng-if*="user-registration"] {
