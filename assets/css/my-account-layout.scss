@@ -883,6 +883,9 @@
 
 			&-content {
 				&__header {
+					display: flex;
+					justify-content: space-between;
+
 					&-content {
 						display: flex;
 						gap: $spacing_16px;

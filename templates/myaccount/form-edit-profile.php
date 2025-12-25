@@ -48,39 +48,35 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 	$is_edit_action = true;
 }
 
-if ( 'vertical' === $layout ) {
-	?>
-	<div class="user-registration-MyAccount-content__header">
-		<div class="user-registration-MyAccount-content__header-content">
-			<?php
-			if ( $is_edit_action ) {
-				?>
-				<a class="urm-back-button" href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-profile' ) ); ?>">
-					<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-				</a>
-				<h1><?php echo esc_html__( 'Edit Profile', 'user-registration' ); ?></h1>
-				<?php
-			} else {
-				?>
-				<h1><?php echo wp_kses_post( $endpoint_label ); ?></h1>
-				<?php
-			}
-			?>
-		</div>
+?>
+<div class="user-registration-MyAccount-content__header">
+	<div class="user-registration-MyAccount-content__header-content">
 		<?php
-		if ( ! $is_edit_action ) {
+		if ( $is_edit_action ) {
 			?>
-			<div class="user-registration-MyAccount-content__header-buttons">
-				<a href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-profile' ) . '?action="edit"' ); ?>" class="user-registration-Button button-secondary urm-profile-action-toggle"><?php esc_html_e( 'Edit Profile', 'user-registration' ); ?></a>
-				<a href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-password' ) ); ?>" class="user-registration-Button button-secondary urm-profile-change-password-btn"><?php esc_html_e( 'Change Password', 'user-registration' ); ?></a>
-			</div>
+			<a class="urm-back-button" href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-profile' ) ); ?>">
+				<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+			</a>
+			<h1><?php echo esc_html__( 'Edit Profile', 'user-registration' ); ?></h1>
+			<?php
+		} else {
+			?>
+			<h1><?php echo wp_kses_post( $endpoint_label ); ?></h1>
 			<?php
 		}
 		?>
 	</div>
 	<?php
-}
-?>
+	if ( ! $is_edit_action ) {
+		?>
+		<div class="user-registration-MyAccount-content__header-buttons">
+			<a href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-profile' ) . '?action="edit"' ); ?>" class="user-registration-Button button-secondary urm-profile-action-toggle"><?php esc_html_e( 'Edit Profile', 'user-registration' ); ?></a>
+			<a href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-password' ) ); ?>" class="user-registration-Button button-secondary urm-profile-change-password-btn"><?php esc_html_e( 'Change Password', 'user-registration' ); ?></a>
+		</div>
+		<?php
+	}
+	?>
+</div>
 <div class="user-registration-MyAccount-content__body">
 	<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
 		<form class="user-registration-EditProfileForm edit-profile" action="" method="post" enctype="multipart/form-data" data-form-id="<?php echo esc_attr( $form_id ); ?>">
@@ -312,16 +308,6 @@ if ( 'vertical' === $layout ) {
 							<?php
 							$urm_my_account_layout = get_option( 'user_registration_my_account_layout', 'vertical' );
 
-							if ( 'horizontal' === $urm_my_account_layout ) {
-								esc_html_e(
-									/**
-									 * Filter to modify the profile detail title.
-									 *
-									 * @param string Profile detail title content.
-									 * @return string modified profile detail title.
-									 */
-									apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore
-							}
 							?>
 							</h2>
 							<div class="user-registration-profile-header">

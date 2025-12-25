@@ -1121,6 +1121,10 @@
   justify-content: center;
   margin-left: 0 !important;
 }
+#user-registration.vertical .user-registration-MyAccount-content__header, #user-registration.horizontal .user-registration-MyAccount-content__header {
+  display: flex;
+  justify-content: space-between;
+}
 #user-registration.vertical .user-registration-MyAccount-content__header-content, #user-registration.horizontal .user-registration-MyAccount-content__header-content {
   display: flex;
   gap: 16px;
