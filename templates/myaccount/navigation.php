@@ -30,7 +30,7 @@ $layout = get_option( 'user_registration_my_account_layout', 'vertical' );
 if ( 'vertical' === $layout ) {
 	?>
 	<div class="user-registration-MyAccount-navigation--wrapper">
-		<div class='user-registration-profile-header'>
+		<div class='user-registration-profile-header-nav'>
 			<div class='user-registration-img-container'>
 				<?php
 				$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
