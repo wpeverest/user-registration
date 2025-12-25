@@ -312,9 +312,10 @@ class UR_Getting_Started {
 	 * @return \WP_REST_Response
 	 */
 	public static function get_welcome_data( $request ) {
+
 		$data = array(
 			'membership_type'      => get_option( 'urm_onboarding_membership_type', '' ),
-			'allow_usage_tracking' => get_option( 'user_registration_allow_usage_tracking', false ),
+			'allow_usage_tracking' => get_option( 'user_registration_allow_usage_tracking', true ),
 			'allow_email_updates'  => get_option( 'user_registration_allow_email_updates', true ),
 			'admin_email'          => get_option( 'user_registration_updates_admin_email', get_option( 'admin_email' ) ),
 			'membership_options'   => array(
@@ -1127,6 +1128,14 @@ class UR_Getting_Started {
 	 * @param \WP_REST_Request $request Request instance.
 	 * @return \WP_REST_Response
 	 */
+	/**
+	 * Get payment settings for step 3.
+	 *
+	 * @since x.x.x
+	 *
+	 * @param \WP_REST_Request $request Request instance.
+	 * @return \WP_REST_Response
+	 */
 	public static function get_payment_settings( $request ) {
 		$gateways = array(
 			array(
@@ -1164,10 +1173,29 @@ class UR_Getting_Started {
 			),
 		);
 
+		$currencies_raw = array();
+		if ( function_exists( 'ur_payment_integration_get_currencies' ) ) {
+			$currencies_raw = ur_payment_integration_get_currencies();
+		}
+
+		$currencies = array();
+		foreach ( $currencies_raw as $code => $currency_data ) {
+			$currencies[] = array(
+				'code'   => $code,
+				'name'   => $currency_data['name'],
+				'symbol' => html_entity_decode( $currency_data['symbol'], ENT_QUOTES, 'UTF-8' ),
+			);
+		}
+
+		// Get selected currency
+		$selected_currency = get_option( 'user_registration_payment_currency', 'USD' );
+
 		return new \WP_REST_Response(
 			array(
 				'success'          => true,
 				'payment_gateways' => $gateways,
+				'currencies'       => $currencies,
+				'currency'         => $selected_currency,
 			),
 			200
 		);
@@ -1186,16 +1214,19 @@ class UR_Getting_Started {
 		$paypal          = isset( $request['paypal'] ) ? (bool) $request['paypal'] : false;
 		$stripe          = isset( $request['stripe'] ) ? (bool) $request['stripe'] : false;
 
+		$currency                     = isset( $request['currency'] ) ? sanitize_text_field( $request['currency'] ) : 'USD';
 		$bank_details                 = isset( $request['bank_details'] ) ? sanitize_textarea_field( $request['bank_details'] ) : '';
 		$paypal_email                 = isset( $request['paypal_email'] ) ? sanitize_email( $request['paypal_email'] ) : '';
-		$paypal_client_id                = isset( $request['paypal_client_id'] ) ? sanitize_text_field( $request['paypal_client_id'] ) : '';
-		$paypal_client_secret               = isset( $request['paypal_client_secret'] ) ? sanitize_text_field( $request['paypal_client_secret'] ) : '';
+		$paypal_client_id             = isset( $request['paypal_client_id'] ) ? sanitize_text_field( $request['paypal_client_id'] ) : '';
+		$paypal_client_secret         = isset( $request['paypal_client_secret'] ) ? sanitize_text_field( $request['paypal_client_secret'] ) : '';
 		$stripe_test_mode             = isset( $request['stripe_test_mode'] ) ? (bool) $request['stripe_test_mode'] : false;
 		$stripe_test_publishable_key  = isset( $request['stripe_test_publishable_key'] ) ? sanitize_text_field( $request['stripe_test_publishable_key'] ) : '';
 		$stripe_test_secret_key       = isset( $request['stripe_test_secret_key'] ) ? sanitize_text_field( $request['stripe_test_secret_key'] ) : '';
 		$stripe_live_publishable_key  = isset( $request['stripe_live_publishable_key'] ) ? sanitize_text_field( $request['stripe_live_publishable_key'] ) : '';
 		$stripe_live_secret_key       = isset( $request['stripe_live_secret_key'] ) ? sanitize_text_field( $request['stripe_live_secret_key'] ) : '';
 
+		// Save currency
+		update_option( 'user_registration_payment_currency', $currency );
 
 		update_option( 'urm_bank_connection_status', $offline_payment );
 		update_option( 'urm_paypal_connection_status', $paypal );

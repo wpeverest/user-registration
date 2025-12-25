@@ -15,11 +15,13 @@ import {
 	Icon,
 	Tooltip,
 	Alert,
-	AlertIcon
+	AlertIcon,
+	Select,
+	Skeleton
 } from "@chakra-ui/react";
 import { useStateValue } from "../../context/StateProvider";
 import { PaymentSettings } from "../../context/Gettingstartedcontext";
-import { apiGet } from "../../api/gettingStartedApi";
+import { apiGet, CurrencyData, PaymentSettingsResponse } from "../../api/gettingStartedApi";
 
 interface PaymentGatewayData {
 	id: string;
@@ -105,6 +107,7 @@ const PaymentStep: React.FC = () => {
 	const { state, dispatch } = useStateValue();
 	const { paymentSettings } = state;
 	const [isLoadingSettings, setIsLoadingSettings] = useState(false);
+	const [currencies, setCurrencies] = useState<CurrencyData[]>([]);
 
 	const textColor = useColorModeValue("gray.800", "white");
 	const mutedColor = useColorModeValue("gray.600", "gray.400");
@@ -117,11 +120,26 @@ const PaymentStep: React.FC = () => {
 		const loadPaymentSettings = async () => {
 			try {
 				setIsLoadingSettings(true);
-				const response = await apiGet("/payments");
+				const response = await apiGet<PaymentSettingsResponse>("/payments");
+
+				// Load currencies from API
+				if (response.currencies) {
+					setCurrencies(response.currencies);
+				}
+
+				// Load selected currency if available
+				if (response.currency) {
+					dispatch({
+						type: "SET_PAYMENT_SETTING",
+						payload: {
+							key: "currency",
+							value: response.currency
+						}
+					});
+				}
 
 				if (response.payment_gateways) {
-					const gateways =
-						response.payment_gateways as PaymentGatewayData[];
+					const gateways = response.payment_gateways as PaymentGatewayData[];
 
 					gateways.forEach((gateway) => {
 						if (gateway.id === "offline_payment") {
@@ -168,7 +186,7 @@ const PaymentStep: React.FC = () => {
 								});
 							}
 
-							if (gateway.paypal_client_id) {
+							if (gateway.paypal_client_secret) {
 								dispatch({
 									type: "SET_PAYMENT_SETTING",
 									payload: {
@@ -261,6 +279,52 @@ const PaymentStep: React.FC = () => {
 			<Text color={mutedColor} mb={6} fontSize="sm">
 				Configure your payment gateways to accept payments from members.
 			</Text>
+
+			{/* Currency Selection */}
+			<FormControl mb={6}>
+				<FormLabel
+					fontSize="sm"
+					fontWeight="500"
+					color={textColor}
+					display="flex"
+					alignItems="center"
+					gap={2}
+				>
+					Currency
+					<Tooltip
+						label="Select the currency for all transactions"
+						hasArrow
+					>
+						<span>
+							<InfoIcon />
+						</span>
+					</Tooltip>
+				</FormLabel>
+				{isLoadingSettings ? (
+					<Skeleton height="40px" borderRadius="md" />
+				) : (
+					<Select
+						value={paymentSettings.currency || ""}
+						onChange={(e) =>
+							handlePaymentSettingChange("currency", e.target.value)
+						}
+						bg={inputBg}
+						borderColor={inputBorder}
+						fontSize="sm"
+						placeholder="Select currency"
+						_focus={{
+							borderColor: "#475BD8",
+							boxShadow: "0 0 0 1px #475BD8"
+						}}
+					>
+						{currencies.map((currency) => (
+							<option key={currency.code} value={currency.code}>
+								{currency.code} - {currency.name} ({currency.symbol})
+							</option>
+						))}
+					</Select>
+				)}
+			</FormControl>
 
 			<VStack spacing={0} align="stretch">
 				{/* Offline Payment */}

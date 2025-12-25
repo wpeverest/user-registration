@@ -27,13 +27,18 @@ const HEADER_HEIGHT = "70px";
 
 const SetupWizard: React.FC = () => {
 	const { state, dispatch } = useStateValue();
-	const { currentStep, maxCompletedStep, isLoading } = state;
+	const { currentStep, maxCompletedStep, isLoading, membershipSetupType, membershipPlans } = state;
 
 	const cardBg = useColorModeValue("white", "gray.800");
 	const borderColor = useColorModeValue("gray.200", "gray.700");
 	const textColor = useColorModeValue("gray.800", "white");
 	const mutedColor = useColorModeValue("gray.600", "gray.400");
 	const pageBg = useColorModeValue("gray.50", "gray.900");
+
+
+	const hasPaidPlan = membershipPlans.some((plan) => plan.type === "paid");
+
+	const shouldSkipPayment = !hasPaidPlan;
 
 	useEffect(() => {
 		const loadInitial = async () => {
@@ -104,22 +109,34 @@ const SetupWizard: React.FC = () => {
 					allow_email_updates: state.allowTracking,
 					admin_email: state.adminEmail
 				});
+
+				// If "Other URM Features" is selected, skip to Finish step
+				if (membershipSetupType === "other") {
+					await apiPost("/finish");
+					dispatch({ type: "SET_STEP", payload: 4 });
+					dispatch({ type: "SET_LOADING", payload: false });
+					return;
+				}
 			} else if (currentStep === 2) {
 				await apiPost("/memberships", {
 					memberships: state.membershipPlans.map(mapPlanToApi)
 				});
+
+				if (shouldSkipPayment) {
+					await apiPost("/finish");
+					dispatch({ type: "SET_STEP", payload: 4 });
+					dispatch({ type: "SET_LOADING", payload: false });
+					return;
+				}
 			} else if (currentStep === 3) {
 				await apiPost(
 					"/payments",
 					mapPaymentSettingsToApi(state.paymentSettings)
 				);
+				await apiPost("/finish");
 			}
 
 			dispatch({ type: "NEXT_STEP" });
-
-			if (currentStep === 3) {
-				await apiPost("/finish");
-			}
 		} catch (e) {
 			console.error(e);
 		} finally {
@@ -129,7 +146,16 @@ const SetupWizard: React.FC = () => {
 
 	const handleBack = () => {
 		if (currentStep > 1) {
-			dispatch({ type: "PREV_STEP" });
+			if (currentStep === 4 && membershipSetupType === "other") {
+				dispatch({ type: "SET_STEP", payload: 1 });
+			}
+
+			else if (currentStep === 4 && shouldSkipPayment) {
+				dispatch({ type: "SET_STEP", payload: 2 });
+			}
+			else {
+				dispatch({ type: "PREV_STEP" });
+			}
 		}
 	};
 
@@ -137,7 +163,18 @@ const SetupWizard: React.FC = () => {
 		try {
 			dispatch({ type: "SET_LOADING", payload: true });
 			await apiPost("/skip", { step: currentStep });
-			dispatch({ type: "NEXT_STEP" });
+
+			// If on step 1 and "Other URM Features" is selected, skip to Finish
+			if (currentStep === 1 && membershipSetupType === "other") {
+				dispatch({ type: "SET_STEP", payload: 4 });
+			}
+			// If on step 2 and no paid plans, skip to Finish
+			else if (currentStep === 2 && shouldSkipPayment) {
+				dispatch({ type: "SET_STEP", payload: 4 });
+			}
+			else {
+				dispatch({ type: "NEXT_STEP" });
+			}
 		} catch (e) {
 			console.error(e);
 		} finally {
@@ -146,6 +183,19 @@ const SetupWizard: React.FC = () => {
 	};
 
 	const handleStepClick = (stepNumber: number) => {
+		// If "Other URM Features" is selected, only allow step 1 and 4
+		if (membershipSetupType === "other") {
+			if ((stepNumber === 1 || stepNumber === 4) && stepNumber !== currentStep) {
+				dispatch({ type: "SET_STEP", payload: stepNumber });
+			}
+			return;
+		}
+
+	
+		if (shouldSkipPayment && stepNumber === 3) {
+			return;
+		}
+
 		if (stepNumber <= maxCompletedStep && stepNumber !== currentStep) {
 			dispatch({ type: "SET_STEP", payload: stepNumber });
 		}
@@ -169,7 +219,6 @@ const SetupWizard: React.FC = () => {
 
 	return (
 		<Box minH="100vh" bg={pageBg}>
-			{/* Fixed Full-width Stepper Header */}
 			<Stepper
 				steps={WIZARD_STEPS}
 				currentStep={currentStep}
@@ -178,7 +227,6 @@ const SetupWizard: React.FC = () => {
 				onClose={handleClose}
 			/>
 
-			{/* Content Area - with top padding for fixed header */}
 			<Box pt={HEADER_HEIGHT}>
 				<Flex justify="center" align="flex-start" px={4} py={10}>
 					<Box
@@ -191,10 +239,7 @@ const SetupWizard: React.FC = () => {
 						p={8}
 						boxShadow="sm"
 					>
-						{/* Step Content */}
 						<Box mb={isFinishStep ? 0 : 8}>{renderStep()}</Box>
-
-						{/* Footer Navigation - only show on non-finish steps */}
 						{!isFinishStep && (
 							<Flex justify="space-between" align="center">
 								{/* Back Link */}
@@ -221,7 +266,6 @@ const SetupWizard: React.FC = () => {
 									Back
 								</Link>
 
-								{/* Right Side Actions */}
 								<Flex gap={4} align="center">
 									<Link
 										fontSize="sm"

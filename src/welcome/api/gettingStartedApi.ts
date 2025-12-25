@@ -2,6 +2,18 @@ import { MembershipSetupType, PaymentSettings } from "../context/Gettingstartedc
 
 export const API_BASE = "/wp-json/user-registration/v1/getting-started";
 
+export interface CurrencyData {
+	code: string;
+	name: string;
+	symbol: string;
+}
+
+export interface PaymentSettingsResponse {
+	payment_gateways: any[];
+	currencies: CurrencyData[];
+	currency: string;
+}
+
 const getHeaders = () => {
 	const nonce =
 		(window as any).urmSetupWizard?.nonce ||
@@ -67,6 +79,7 @@ export const mapApiToSetupType = (apiType: string): MembershipSetupType => {
  */
 export const mapPaymentSettingsToApi = (settings: PaymentSettings) => {
 	return {
+		currency: settings.currency,
 		offline_payment: settings.offlinePayment,
 		bank_details: settings.bankDetails,
 		paypal: settings.paypal,
@@ -89,12 +102,13 @@ export const mapApiToPaymentSettings = (
 	apiData: any
 ): Partial<PaymentSettings> => {
 	return {
+		currency: apiData.currency ?? "USD",
 		offlinePayment: apiData.offline_payment ?? false,
 		bankDetails: apiData.bank_details ?? "",
 		paypal: apiData.paypal ?? false,
 		paypalEmail: apiData.paypal_email ?? "",
-		paypalClientId: apiData.paypalClientId ?? "",
-		paypalClientSecret: apiData.paypalClientSecret ?? "",
+		paypalClientId: apiData.paypal_client_id ?? "",
+		paypalClientSecret: apiData.paypal_client_secret ?? "",
 		stripe: apiData.stripe ?? false,
 		stripeTestMode: apiData.stripe_test_mode ?? false,
 		stripeTestPublishableKey: apiData.stripe_test_publishable_key ?? "",

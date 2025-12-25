@@ -16,9 +16,11 @@ export interface MembershipPlan {
 	currency: string;
 	billingPeriod: BillingPeriod;
 	contentAccess: ContentAccess[];
+	isNew?: boolean;
 }
 
 export interface PaymentSettings {
+	currency: string;
 	offlinePayment: boolean;
 	bankDetails: string;
 	paypal: boolean;
@@ -49,10 +51,8 @@ export interface GettingStartedState {
 	paymentSettings: PaymentSettings;
 }
 
-// Helper to generate unique IDs
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
-// Create a default membership plan
 const createDefaultPlan = (): MembershipPlan => ({
 	id: generateId(),
 	name: "",
@@ -60,7 +60,8 @@ const createDefaultPlan = (): MembershipPlan => ({
 	price: "",
 	currency: "USD",
 	billingPeriod: "monthly",
-	contentAccess: []
+	contentAccess: [],
+	isNew: false
 });
 
 export const initialState: GettingStartedState = {
@@ -68,7 +69,7 @@ export const initialState: GettingStartedState = {
 	maxCompletedStep: 1,
 	isLoading: false,
 	membershipSetupType: "paid",
-	allowTracking: false,
+	allowTracking: true,
 	adminEmail: "",
 	membershipOptions: [
 		{
@@ -89,8 +90,9 @@ export const initialState: GettingStartedState = {
 				"I want registration and other features without membership."
 		}
 	],
-	membershipPlans: [createDefaultPlan()], // Start with one default plan
+	membershipPlans: [createDefaultPlan()],
 	paymentSettings: {
+		currency: "USD",
 		offlinePayment: false,
 		bankDetails: "",
 		paypal: false,
@@ -115,9 +117,15 @@ export type Action =
 	| { type: "SET_ALLOW_TRACKING"; payload: boolean }
 	| { type: "SET_ADMIN_EMAIL"; payload: string }
 	| { type: "ADD_MEMBERSHIP_PLAN"; payload?: MembershipPlan }
-	| { type: "UPDATE_MEMBERSHIP_PLAN"; payload: { id: string; updates: Partial<MembershipPlan> } }
+	| {
+			type: "UPDATE_MEMBERSHIP_PLAN";
+			payload: { id: string; updates: Partial<MembershipPlan> };
+	  }
 	| { type: "REMOVE_MEMBERSHIP_PLAN"; payload: string }
-	| { type: "ADD_CONTENT_ACCESS"; payload: { planId: string; access: ContentAccess } }
+	| {
+			type: "ADD_CONTENT_ACCESS";
+			payload: { planId: string; access: ContentAccess };
+	  }
 	| {
 			type: "SET_PAYMENT_SETTING";
 			payload: { key: keyof PaymentSettings; value: boolean | string };
@@ -166,8 +174,10 @@ export const reducer = (
 			return { ...state, adminEmail: action.payload };
 
 		case "ADD_MEMBERSHIP_PLAN":
-			// If payload provided, use it; otherwise create a default plan
-			const newPlan = action.payload || createDefaultPlan();
+			const newPlan = action.payload || {
+				...createDefaultPlan(),
+				isNew: true
+			};
 			return {
 				...state,
 				membershipPlans: [...state.membershipPlans, newPlan]
@@ -198,7 +208,10 @@ export const reducer = (
 					plan.id === action.payload.planId
 						? {
 								...plan,
-								contentAccess: [...plan.contentAccess, action.payload.access]
+								contentAccess: [
+									...plan.contentAccess,
+									action.payload.access
+								]
 						  }
 						: plan
 				)
@@ -214,7 +227,8 @@ export const reducer = (
 			};
 
 		case "HYDRATE_FROM_API":
-			const hydratedStep = action.payload.currentStep || state.currentStep;
+			const hydratedStep =
+				action.payload.currentStep || state.currentStep;
 			return {
 				...state,
 				...action.payload,

@@ -128,7 +128,10 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 												</TagLabel>
 												<TagCloseButton
 													onClick={(e) =>
-														handleRemove(opt.value, e)
+														handleRemove(
+															opt.value,
+															e
+														)
 													}
 												/>
 											</Tag>
@@ -169,9 +172,7 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 								>
 									<Checkbox
 										isChecked={value.includes(opt.value)}
-										onChange={() =>
-											handleToggle(opt.value)
-										}
+										onChange={() => handleToggle(opt.value)}
 										mr={2}
 										colorScheme="blue"
 									/>
@@ -209,6 +210,13 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	const inputBg = useColorModeValue("white", "gray.700");
 	const accessBg = useColorModeValue("green.50", "green.900");
 	const accessBorderColor = useColorModeValue("green.200", "green.700");
+
+	const handleCancelPlan = () => {
+		dispatch({
+			type: "REMOVE_MEMBERSHIP_PLAN",
+			payload: plan.id
+		});
+	};
 
 	const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		dispatch({
@@ -304,7 +312,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	};
 
 	const labelForAccess = (access: ContentAccess) => {
-		if (access.type === "pages") return "pages:";
+		if (access.type === "pages") return "Pages:";
 		if (access.type === "posts") return "Posts:";
 		return access.type + ":";
 	};
@@ -319,6 +327,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 		>
 			<CardBody p={6}>
 				<VStack spacing={5} align="stretch">
+					{/* Name row with cancel button inline */}
 					<Flex align="center">
 						<Text w="120px" fontWeight="500" color={labelColor}>
 							Name :
@@ -335,6 +344,18 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 								boxShadow: "0 0 0 1px #475BD8"
 							}}
 						/>
+						{/* Cancel button - inline with Name row */}
+						{plan.isNew && (
+							<IconButton
+								aria-label="Cancel new plan"
+								icon={<CloseIcon boxSize={2.5} />}
+								size="sm"
+								variant="ghost"
+								colorScheme="red"
+								ml={3}
+								onClick={handleCancelPlan}
+							/>
+						)}
 					</Flex>
 
 					<Flex align="center">
@@ -530,7 +551,9 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 									}
 									isDisabled={hasPages}
 									opacity={hasPages ? 0.5 : 1}
-									cursor={hasPages ? "not-allowed" : "pointer"}
+									cursor={
+										hasPages ? "not-allowed" : "pointer"
+									}
 								>
 									Pages
 								</MenuItem>
@@ -540,7 +563,9 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 									}
 									isDisabled={hasPosts}
 									opacity={hasPosts ? 0.5 : 1}
-									cursor={hasPosts ? "not-allowed" : "pointer"}
+									cursor={
+										hasPosts ? "not-allowed" : "pointer"
+									}
 								>
 									Posts
 								</MenuItem>
