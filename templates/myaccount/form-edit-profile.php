@@ -77,6 +77,11 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 	}
 	?>
 </div>
+<div class="user-registration-message-container">
+	<?php
+	ur_print_notices();
+	?>
+</div>
 <div class="user-registration-MyAccount-content__body">
 	<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
 		<form class="user-registration-EditProfileForm edit-profile" action="" method="post" enctype="multipart/form-data" data-form-id="<?php echo esc_attr( $form_id ); ?>">

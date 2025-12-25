@@ -456,6 +456,7 @@
 #user-registration.vertical .user-registration-message {
   float: none;
   width: 100%;
+  margin-top: 10px;
 }
 #user-registration.vertical .user-registration-MyAccount-navigation ul {
   flex-direction: column;
@@ -489,6 +490,7 @@
 #user-registration .user-registration-error,
 #user-registration .user-registration-info {
   margin-bottom: 0;
+  margin-top: 10px;
 }
 #user-registration.horizontal .user-registration-MyAccount-navigation ul, #user-registration .user-registration-MyAccount-navigation ul {
   justify-content: center;
