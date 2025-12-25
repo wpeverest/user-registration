@@ -7458,13 +7458,28 @@ body.user-registration {
 							&.urm-deny {
 								color: $deny_color;
 
+								div:not(.disable-user-link) {
+									svg {
+										path {
+											fill: currentColor;
+										}
+									}
+
+									&:hover {
+										svg {
+											path {
+												fill: currentColor;
+											}
+										}
+									}
+								}
+
 								&:hover {
 									background-color: $redLight;
 
-									svg {
-										path {
-											fill: none;
-										}
+									&::before{
+										background:  $redLight;
+										opacity: 1;
 									}
 
 									p {
@@ -7493,21 +7508,23 @@ body.user-registration {
 								outline: none;
 							}
 
-							&:hover {
-								background: $blue-25;
+							&:not(.urm-deny) {
+								&:hover {
+									background: $blue-25;
 
-								&::before {
-									opacity: 1;
-								}
-
-								svg {
-									path {
-										fill: #475bb2;
+									&::before {
+										opacity: 1;
 									}
-								}
 
-								p {
-									color: #475bb2;
+									svg {
+										path {
+											fill: #475bb2;
+										}
+									}
+
+									p {
+										color: #475bb2;
+									}
 								}
 							}
 						}
@@ -7594,6 +7611,7 @@ body.user-registration {
 					text-decoration: none;
 					font-size: 14px;
 					font-weight: 400;
+					cursor: pointer;
 				}
 			}
 
