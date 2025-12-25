@@ -362,7 +362,7 @@ class EmailService {
 		if ( ! $this->validate_email_fields( $data ) || ! self::is_membership_email_enabled( 'user_registration_enable_membership_cancellation_admin_email' ) ) {
 			return false;
 		}
-		$subject = get_option( 'user_registration_membership_cancellation_admin_email_subject', esc_html__( 'Membership Cancelled!', 'user-registration' ) );
+		$subject = get_option( 'user_registration_membership_cancellation_admin_email_subject', esc_html__( 'Membership Cancelled: {{username}}', 'user-registration' ) );
 		$user    = get_userdata( $data['member_id'] );
 
 		$form_id  = ur_get_form_id_by_userid( $data['member_id'] );

@@ -147,6 +147,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					A new member has been registered.
 				</p>
+					<strong>Registration Details:</strong>
 					{{membership_plan_details}}
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					View and manage this member in your WordPress dashboard under <strong>Users.</strong>

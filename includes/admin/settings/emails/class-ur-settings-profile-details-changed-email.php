@@ -157,7 +157,10 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 					SiteName: <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Username: {{username}}
+					Member: {{username}}
+				</p>
+				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Updated: {{update_date}}
 				</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					View profile details in your WordPress dashboard under Users.

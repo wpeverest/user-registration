@@ -125,13 +125,16 @@ class UR_Settings_Membership_Cancellation_Admin_Email {
 				<strong>Member Details:</strong>
 				<ul>
 				<li style="margin-bottom: 10px;">
-					<strong>Name:</strong> {{username}}
+					<strong>Name</strong>: {{username}}
 				</li>
 				<li style="margin-bottom: 10px;">
-					<strong>Email:</strong> {{email}}
+					<strong>Email</strong>: {{email}}
 				</li>
 				<li style="margin-bottom: 10px;">
-					<strong>Site:</strong> {{blog_info}}
+					<strong>Membership Plan</strong>: {{membership_plan_name}}
+				</li>
+				<li style="margin-bottom: 10px;">
+					<strong>Cancellation Date</strong>: {{cancellation_date}}
 				</li>
 				</ul>
 			</p>',

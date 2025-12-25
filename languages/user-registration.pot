@@ -3567,7 +3567,7 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:106
 #: includes/class-ur-emailer.php:477
-msgid "A New User Registered"
+msgid "A Member registration: {{username}} "
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:111
@@ -3827,7 +3827,7 @@ msgid "Enable this email sent to the admin when a user changed profile informati
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:107
-msgid "Profile Updated – Changes Made to User Account"
+msgid "Profile Updated: {{username}}"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:152
@@ -10353,7 +10353,7 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:356
 #: modules/membership/includes/Emails/Admin/UR_Settings_Membership_Cancellation_Admin_Email.php:88
-msgid "Membership Cancelled!"
+msgid "Membership Cancelled: {{username}}"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:374

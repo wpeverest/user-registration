@@ -27,6 +27,9 @@ class UR_Smart_Tags {
 			10,
 			1
 		);
+		add_action( 'user_registration_save_profile_details', array( $this, 'track_profile_update_date' ), 10, 2 );
+		add_action( 'user_registration_pro_before_delete_account', array( $this, 'track_account_deletion_date' ), 10, 1 );
+		add_filter( 'user_registration_membership_cancel_subscription', array( $this, 'track_membership_cancellation_on_cancel' ), 10, 3 );
 	}
 
 	/**
@@ -100,16 +103,21 @@ class UR_Smart_Tags {
 	 */
 	public static function ur_authenticated_parsable_smart_tags_list() {
 		$smart_tags = array(
-			'{{user_id}}'      => esc_html__( 'User ID', 'user-registration' ),
-			'{{username}}'     => esc_html__( 'User Name', 'user-registration' ),
-			'{{email}}'        => esc_html__( 'Email', 'user-registration' ),
-			'{{ur_login}}'     => esc_html__( 'UR Login', 'user-registration' ),
-			'{{all_fields}}'   => esc_html__( 'All Fields', 'user-registration' ),
-			'{{auto_pass}}'    => esc_html__( 'Auto Pass', 'user-registration' ),
-			'{{user_roles}}'   => esc_html__( 'User Roles', 'user-registration' ),
-			'{{first_name}}'   => esc_html__( 'First Name', 'user-registration' ),
-			'{{last_name}}'    => esc_html__( 'Last Name', 'user-registration' ),
-			'{{display_name}}' => esc_html__( 'User Display Name', 'user-registration' ),
+			'{{user_id}}'           => esc_html__( 'User ID', 'user-registration' ),
+			'{{username}}'          => esc_html__( 'User Name', 'user-registration' ),
+			'{{email}}'             => esc_html__( 'Email', 'user-registration' ),
+			'{{ur_login}}'          => esc_html__( 'UR Login', 'user-registration' ),
+			'{{all_fields}}'        => esc_html__( 'All Fields', 'user-registration' ),
+			'{{auto_pass}}'         => esc_html__( 'Auto Pass', 'user-registration' ),
+			'{{user_roles}}'        => esc_html__( 'User Roles', 'user-registration' ),
+			'{{first_name}}'        => esc_html__( 'First Name', 'user-registration' ),
+			'{{last_name}}'         => esc_html__( 'Last Name', 'user-registration' ),
+			'{{display_name}}'      => esc_html__( 'User Display Name', 'user-registration' ),
+			'{{registration_date}}' => esc_html__( 'Registration Date', 'user-registration' ),
+			'{{update_date}}'       => esc_html__( 'Profile Update Date', 'user-registration' ),
+			'{{payment_date}}'      => esc_html__( 'Payment Date', 'user-registration' ),
+			'{{deletion_date}}'     => esc_html__( 'Account Deletion Date', 'user-registration' ),
+			'{{cancellation_date}}' => esc_html__( 'Membership Cancellation Date', 'user-registration' ),
 		);
 
 		/**
@@ -731,6 +739,129 @@ class UR_Smart_Tags {
 						$membership_end_date = ( isset( $values['membership_tags'] ) && isset( $values['membership_tags']['membership_plan_expiry_date'] ) ) ? $values['membership_tags']['membership_plan_expiry_date'] : '';
 						$content             = str_replace( '{{' . $tag . '}}', $membership_end_date, $content );
 						break;
+
+					case 'registration_date':
+						$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : ( ! empty( $values['member_id'] ) ? $values['member_id'] : get_current_user_id() );
+						if ( $user_id ) {
+							$user_data = get_userdata( $user_id );
+							if ( $user_data && isset( $user_data->user_registered ) ) {
+								$registration_date = date_i18n( get_option( 'date_format' ), strtotime( $user_data->user_registered ) );
+							} else {
+								$registration_date = '';
+							}
+						} else {
+							$registration_date = '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $registration_date ), $content );
+						break;
+
+					case 'update_date':
+						$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : ( ! empty( $values['member_id'] ) ? $values['member_id'] : get_current_user_id() );
+						if ( $user_id ) {
+							$profile_updated_date = get_user_meta( $user_id, 'user_registration_profile_updated_date', true );
+							if ( ! empty( $profile_updated_date ) ) {
+								$update_date = date_i18n( get_option( 'date_format' ), strtotime( $profile_updated_date ) );
+							} else {
+								$update_date = '';
+							}
+						} else {
+							$update_date = '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $update_date ), $content );
+						break;
+
+					case 'payment_date':
+						$payment_date = '';
+						// Check if payment_date is in values or membership_tags.
+						if ( isset( $values['payment_date'] ) ) {
+							$payment_date = $values['payment_date'];
+						} elseif ( isset( $values['membership_tags']['payment_date'] ) ) {
+							$payment_date = $values['membership_tags']['payment_date'];
+						} else {
+							// Try to get from latest order if membership module is available.
+							$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : ( ! empty( $values['member_id'] ) ? $values['member_id'] : get_current_user_id() );
+							if ( $user_id && class_exists( '\WPEverest\URMembership\Admin\Repositories\MembersOrderRepository' ) ) {
+								$members_order_repository = new \WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
+								$latest_order             = $members_order_repository->get_member_orders( $user_id );
+								if ( ! empty( $latest_order ) && isset( $latest_order['ID'] ) ) {
+									$orders_repository = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
+									$order_detail      = $orders_repository->get_order_detail( $latest_order['ID'] );
+									if ( ! empty( $order_detail ) ) {
+										// Check order meta for payment_date.
+										if ( isset( $order_detail['meta']['payment_date'] ) ) {
+											$payment_date = $order_detail['meta']['payment_date'];
+										} elseif ( isset( $order_detail['created_at'] ) ) {
+											$payment_date = $order_detail['created_at'];
+										}
+									}
+								}
+							}
+						}
+						if ( ! empty( $payment_date ) ) {
+							$payment_date = date_i18n( get_option( 'date_format' ), strtotime( $payment_date ) );
+						} else {
+							$payment_date = '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $payment_date ), $content );
+						break;
+
+					case 'deletion_date':
+						$deletion_date = '';
+						// Check if deletion_date is in values.
+						if ( isset( $values['deletion_date'] ) ) {
+							$deletion_date = $values['deletion_date'];
+						} else {
+							// Try to get from user meta.
+							$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : ( ! empty( $values['member_id'] ) ? $values['member_id'] : get_current_user_id() );
+							if ( $user_id ) {
+								$deletion_date = get_user_meta( $user_id, 'user_registration_account_deletion_date', true );
+							}
+						}
+						if ( ! empty( $deletion_date ) ) {
+							$deletion_date = date_i18n( get_option( 'date_format' ), strtotime( $deletion_date ) );
+						} else {
+							$deletion_date = '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $deletion_date ), $content );
+						break;
+
+					case 'cancellation_date':
+						$cancellation_date = '';
+						// Check if cancellation_date is in values or membership_tags.
+						if ( isset( $values['cancellation_date'] ) ) {
+							$cancellation_date = $values['cancellation_date'];
+						} elseif ( isset( $values['membership_tags']['cancellation_date'] ) ) {
+							$cancellation_date = $values['membership_tags']['cancellation_date'];
+						} else {
+							// Try to get from user meta or subscription data.
+							$user_id = ! empty( $values['user_id'] ) ? $values['user_id'] : ( ! empty( $values['member_id'] ) ? $values['member_id'] : get_current_user_id() );
+							if ( $user_id ) {
+								// Check user meta first.
+								$cancellation_date = get_user_meta( $user_id, 'user_registration_membership_cancellation_date', true );
+								// If not found, try to get from subscription if membership module is available.
+								if ( empty( $cancellation_date ) && class_exists( '\WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository' ) ) {
+									$members_subscription_repository = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
+									$subscription                    = $members_subscription_repository->get_member_subscription( $user_id );
+									if ( ! empty( $subscription ) && isset( $subscription['subscription_id'] ) ) {
+										$subscription_repository = new \WPEverest\URMembership\Admin\Repositories\SubscriptionRepository();
+										$subscription_detail     = $subscription_repository->retrieve( $subscription['subscription_id'] );
+										if ( ! empty( $subscription_detail ) && isset( $subscription_detail['cancellation_date'] ) ) {
+											$cancellation_date = $subscription_detail['cancellation_date'];
+										} elseif ( ! empty( $subscription_detail ) && 'canceled' === $subscription_detail['status'] && isset( $subscription_detail['updated_at'] ) ) {
+											// Use updated_at as cancellation date if status is canceled.
+											$cancellation_date = $subscription_detail['updated_at'];
+										}
+									}
+								}
+							}
+						}
+						if ( ! empty( $cancellation_date ) ) {
+							$cancellation_date = date_i18n( get_option( 'date_format' ), strtotime( $cancellation_date ) );
+						} else {
+							$cancellation_date = '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $cancellation_date ), $content );
+						break;
 				}
 			}
 		}
@@ -845,6 +976,57 @@ class UR_Smart_Tags {
 		);
 
 		return $pattern_lists;
+	}
+
+	/**
+	 * Track profile update date when profile is saved.
+	 *
+	 * @param int $user_id User ID.
+	 * @param int $form_id Form ID.
+	 */
+	public function track_profile_update_date( $user_id, $form_id ) {
+		if ( $user_id ) {
+			update_user_meta( $user_id, 'user_registration_profile_updated_date', current_time( 'mysql' ) );
+		}
+	}
+
+	/**
+	 * Track account deletion date before account is deleted.
+	 *
+	 * @param WP_User $user User object.
+	 */
+	public function track_account_deletion_date( $user ) {
+		if ( $user && isset( $user->ID ) ) {
+			update_user_meta( $user->ID, 'user_registration_account_deletion_date', current_time( 'mysql' ) );
+		}
+	}
+
+	/**
+	 * Track membership cancellation date via filter hook.
+	 *
+	 * @param array $result Cancellation result.
+	 * @param array $order Order data.
+	 * @param array $subscription Subscription data.
+	 * @return array Cancellation result.
+	 */
+	public function track_membership_cancellation_on_cancel( $result, $order, $subscription ) {
+		if ( isset( $subscription['user_id'] ) && $subscription['user_id'] ) {
+			$this->track_membership_cancellation_date( $subscription['user_id'], isset( $subscription['subscription_id'] ) ? $subscription['subscription_id'] : null );
+		}
+		return $result;
+	}
+
+	/**
+	 * Track membership cancellation date when subscription is cancelled.
+	 *
+	 * @param int $user_id User ID.
+	 * @param int $subscription_id Subscription ID (optional).
+	 */
+	public function track_membership_cancellation_date( $user_id, $subscription_id = null ) {
+		if ( $user_id ) {
+			$cancellation_date = current_time( 'mysql' );
+			update_user_meta( $user_id, 'user_registration_membership_cancellation_date', $cancellation_date );
+		}
 	}
 }
 

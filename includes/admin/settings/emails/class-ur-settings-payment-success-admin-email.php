@@ -143,12 +143,25 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Admin_Email', false ) ) :
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					You have received a payment from {{username}}.
 				</p>
+				<p>
+					<strong>Payment Details:</strong>
+					<ul>
+					<li style="margin-bottom:10px;">
+						Amount: {{membership_plan_payment_amount}}
+					</li>
+					<li style="margin-bottom:10px;">
+						Payment Date: {{payment_date}}
+					</li>
+					<li style="margin-bottom:10px;">
+						Membership Plan: {{membership_plan_name}}
+					</li>
+					</ul>
+					</p>
 				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					<a href="{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}" style="color: #4A90E2; text-decoration: none;">Click Here to view payment details</a>.
+					View full payment details: <br>
+					<a href="{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}" style="color: #4A90E2; text-decoration: none;">Click Here</a>
 				</p>
-				<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-					Thank You!
-				</p>',
+				',
 				'user-registration'
 			);
 			if ( UR_PRO_ACTIVE ) {

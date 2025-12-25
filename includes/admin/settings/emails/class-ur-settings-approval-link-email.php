@@ -156,6 +156,9 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 					<li style="margin: 0 0 10px 20px; font-weight:500; color: #000000; font-size: 15px; line-height: 1.6;">
 						<strong>Email:</strong> {{email}}
 					</li>
+					<li style="margin: 0 0 10px 20px; font-weight:500; color: #000000; font-size: 15px; line-height: 1.6;">
+						<strong>Registration Date:</strong> {{registration_date}}
+					</li>
 				</ul>
 					<p style="margin: 0 0 20px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 					Please review and approve or deny this registration:
