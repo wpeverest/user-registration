@@ -43,7 +43,7 @@ class UR_Block_Thank_You extends UR_Block_Abstract {
 		$show_heading_icon = isset( $attr['show_heading_icon'] ) ? $attr['show_heading_icon'] : false;
 		$show_headline     = isset( $attr['show_headline'] ) ? $attr['show_headline'] : false;
 		$headline_text     = isset( $attr['headline_text'] ) ? sanitize_text_field( $attr['headline_text'] ) : '';
-		$show_redirect_btn = isset( $attr['show_redirect_btn'] ) ? $attr['show_headline'] : false;
+		$show_redirect_btn = isset( $attr['show_redirect_btn'] ) ? $attr['show_redirect_btn'] : false;
 
 		return ShortCodes::thank_you(
 			array(

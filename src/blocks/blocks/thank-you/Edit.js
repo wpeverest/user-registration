@@ -25,6 +25,10 @@ const Edit = (props) => {
 	const defaultNoticeOne = metadata.attributes.notice_message.default;
 	const defaultNoticeTwo = metadata.attributes.transaction_info.default;
 
+	const SMART_TAGS = [
+		{ text: 'Membership Plan Details', value: '{membership_plan_details}' }
+	];
+
 	// Render the component
 	return (
 		<>
@@ -54,7 +58,7 @@ const Edit = (props) => {
 								<TextControl
 									key="ur-gutenberg-notice-text"
 									placeholder={__('Thank you for registering.', "user-registration")}
-									value={__(headline_text, 'user-registration')}
+									value={ headline_text }
 									onChange={(value) => setAttributes({headline_text: value})}
 									width={'100%'}
 								/>
@@ -73,7 +77,7 @@ const Edit = (props) => {
 								menubar: false,
 								plugins: "link lists textcolor colorpicker hr",
 								toolbar: `
-										  undo redo |
+										  undo redo | smarttags |
 										  styleselect | fontselect fontsizeselect |
 										  bold italic underline strikethrough |
 										  forecolor backcolor |
@@ -83,6 +87,20 @@ const Edit = (props) => {
 										  link image emoticons charmap |
 										  removeformat
 										`,
+										setup: function (editor) {
+											editor.addButton('smarttags', {
+												type: 'menubutton',
+												text: 'Smart Tags',
+												icon: false,
+												menu: SMART_TAGS.map((tag) => ({
+													text: tag.text,
+													onclick: function () {
+														editor.insertContent(tag.value);
+													},
+												})),
+											});
+										},
+
 								content_style:
 									"body { font-family:Arial,sans-serif; font-size:14px }"
 							}}
