@@ -1,7 +1,7 @@
 import React, {useRef, useState} from 'react';
-import {Box, Flex, Tooltip} from '@chakra-ui/react';
+import {Box, Flex, Tooltip, Heading, Text, Switch } from '@chakra-ui/react';
 import {InspectorControls, useBlockProps} from '@wordpress/block-editor';
-import {PanelBody, TextControl, CheckboxControl, Disabled, PanelRow} from '@wordpress/components';
+import {PanelBody, TextControl, CheckboxControl, Disabled, PanelRow, ToggleControl} from '@wordpress/components';
 import {__} from '@wordpress/i18n';
 import metadata from "../thank-you/block.json";
 import {Editor} from '@tinymce/tinymce-react';
@@ -16,7 +16,7 @@ import ServerSideRender from '@wordpress/server-side-render';
  */
 const Edit = (props) => {
 	const {
-		attributes: {header, footer, notice_message, transaction_info, show_notice_1, show_notice_2},
+		attributes: {header, footer, notice_message, transaction_info, show_notice_1, show_notice_2, show_bank_details, show_heading_icon, show_headline, headline_text, show_redirect_btn },
 		setAttributes,
 	} = props;
 	const useProps = useBlockProps();
@@ -30,7 +30,40 @@ const Edit = (props) => {
 		<>
 			<Box {...useProps}>
 				<InspectorControls key="ur-gutenberg-thank-you-inspector-controls">
-					<PanelBody initialOpen={false} title={__('Header Content', 'user-registration')}>
+					<PanelBody initialOpen={true} title={__('Content Settings', 'user-registration')}>
+
+						<PanelRow>
+							<ToggleControl
+									label={ __( 'Show icon', 'user-registration' ) }
+									checked={ show_heading_icon }
+									onChange={ ( value ) =>
+										setAttributes({ show_heading_icon: value })
+									}
+								/>
+						</PanelRow>
+
+						<PanelRow>
+							<Box>
+								<ToggleControl
+									label={ __( 'Headline', 'user-registration' ) }
+									checked={ show_headline }
+									onChange={ ( value ) =>
+										setAttributes({ show_headline: value })
+									}
+								/>
+								<TextControl
+									key="ur-gutenberg-notice-text"
+									placeholder={__('Thank you for registering.', "user-registration")}
+									value={__(headline_text, 'user-registration')}
+									onChange={(value) => setAttributes({headline_text: value})}
+									width={'100%'}
+								/>
+							</Box>
+						</PanelRow>
+
+						 <Heading as='h4' size='sm' marginBottom={ '4px'}>
+							{__('Main Content', 'user-registration')}
+						</Heading>
 						<Editor
 							value={header}
 							onEditorChange={(value) => setAttributes({header: value})}
@@ -55,57 +88,27 @@ const Edit = (props) => {
 							}}
 						/>
 
-
-					</PanelBody>
-					<PanelBody initialOpen={false} title={__('Payment Information', 'user-registration')}>
-						<p style={{marginBottom: '8px', fontSize: '13px', color: '#555'}}>
-							{__("This information is shown only when a payment is processed during registration.", "user-registration")}
-						</p>
 						<PanelRow>
-							<Flex align="center" gap="3" width="100%">
-								<Box>
-									<CheckboxControl
-										key="ur-gutenberg-notice-1"
-										checked={show_notice_1}
-										onChange={(value) => setAttributes({show_notice_1: value})}
-										__nextHasNoMarginBottom
+							<ToggleControl
+										label={ __( 'Show bank details', 'user-registration' ) }
+										checked={ show_bank_details }
+										onChange={ ( value ) =>
+											setAttributes({ show_bank_details: value })
+										}
 									/>
-								</Box>
-
-								<Box flex="1">
-									<TextControl
-										key="ur-gutenberg-notice-text"
-										placeholder={__(defaultNoticeOne, "user-registration")}
-										value={__(notice_message, 'user-registration')}
-										onChange={(value) => setAttributes({notice_message: value})}
-									/>
-								</Box>
-							</Flex>
-						</PanelRow>
-						<PanelRow>
-							<Flex align="center" gap="3" width="100%">
-								<Box>
-									<CheckboxControl
-										key="ur-gutenberg-notice-2"
-										checked={show_notice_2}
-										onChange={(value) => setAttributes({show_notice_2: value})}
-										__nextHasNoMarginBottom
-									/>
-								</Box>
-
-								<Box flex="1">
-									<TextControl
-										placeholder={__(defaultNoticeTwo, 'user-registration')}
-										key="ur-gutenberg-transaction-info-text"
-										value={__(transaction_info, 'user-registration')}
-										onChange={(value) => setAttributes({transaction_info: value})}
-									/>
-								</Box>
-							</Flex>
 						</PanelRow>
 
-
+						<PanelRow>
+							<ToggleControl
+								label={ __( 'Redirect Button', 'user-registration' ) }
+								checked={ show_redirect_btn }
+								onChange={ ( value ) =>
+									setAttributes({ show_redirect_btn: value } )
+								}
+							/>
+						</PanelRow>
 					</PanelBody>
+
 					<PanelBody initialOpen={false} title={__('Footer Content', 'user-registration')}>
 						<Editor
 							value={footer}

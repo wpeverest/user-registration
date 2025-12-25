@@ -52,6 +52,18 @@
     "show_notice_2": {
       "type": "boolean",
       "default": true
+    },
+    "show_bank_details": {
+      "type": "boolean",
+      "default": true
+    },
+    "show_heading_icon": {
+      "type": "boolean",
+      "default": true
+    },
+    "show_headline": {
+      "type": "boolean",
+      "default": true
     }
   },
   "editorScript": "user-registration-blocks-editor",
