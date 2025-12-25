@@ -419,7 +419,7 @@ jQuery(function ($) {
 });
 
 jQuery(function ($) {
-	let $activeDropdown = null;
+	var $activeDropdown = null;
 
 	$(document).on("click", ".menu-trigger", function (e) {
 		e.preventDefault();
@@ -427,7 +427,7 @@ jQuery(function ($) {
 
 		var $trigger = $(this);
 		var $menu = $trigger.closest(".action-menu");
-		let $dropdown = $menu.find(".dropdown");
+		var $dropdown = $menu.find(".dropdown");
 
 		if ($activeDropdown && !$dropdown.is($activeDropdown)) {
 			$activeDropdown.addClass("hidden");
