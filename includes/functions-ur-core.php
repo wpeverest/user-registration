@@ -1251,11 +1251,11 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
-				'type'              => 'section',
-				'title'             => __( 'Advanced', 'user-registration' ),
-				'id'                => 'user_registration_form_setting_general_advanced',
-				'class'				=> array( 'ur-form-settings-section'),
-				'product'           => 'user-registration/user-registration.php',
+				'type'    => 'section',
+				'title'   => __( 'Advanced', 'user-registration' ),
+				'id'      => 'user_registration_form_setting_general_advanced',
+				'class'   => array( 'ur-form-settings-section' ),
+				'product' => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'toggle',
@@ -1935,7 +1935,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 	} elseif ( 'test_captcha' === $context && false !== $recaptcha_enabled ) {
 		$recaptcha_type = $recaptcha_enabled;
 	} elseif ( 'lost_password' === $context ) {
-		//Same recaptcha type as login.
+		// Same recaptcha type as login.
 		$recaptcha_type = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
 		$recaptcha_type = apply_filters( 'user_registration_lost_password_captcha_type', $recaptcha_type );
 
@@ -1969,7 +1969,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 		$empty_credentials = true;
 	}
 
-	//Exit early if recaptcha is not enabled in global settings or has messing credentials.
+	// Exit early if recaptcha is not enabled in global settings or has messing credentials.
 	if ( $empty_credentials ) {
 		return '';
 	}
@@ -2164,7 +2164,7 @@ function ur_get_user_extra_fields( $user_id, $action = '' ) {
 	$form_fields   = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array(); //phpcs:ignore.
 	if ( ! empty( $form_fields ) ) {
 		foreach ( $form_fields as $field_key => $field_data ) {
-			//For repeator export
+			// For repeator export
 			if ( 'export_users' === $action ) {
 				$value = isset( $all_meta_for_user[ $field_key ] ) ? $all_meta_for_user[ $field_key ] : get_user_meta( $user_id, $field_key, true );
 			} else {
@@ -2555,12 +2555,11 @@ function ur_falls_in_date_range( $target_date, $start_date = null, $end_date = n
 /**
  * Get Post Content By Form ID.
  *
- * @param int $form_id Form Id.
+ * @param int    $form_id Form Id.
  * @param string $form_status The form status.
  *
  * @return array|mixed|null|object
  */
-
 function ur_get_post_content( $form_id, $form_status = 'publish' ) {
 	$args      = array(
 		'post_type'   => 'user_registration',
@@ -2666,7 +2665,6 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 						$seperator = 0 < $key ? ',' : '';
 
 						if ( wp_http_validate_url( $file ) ) {
-
 							$attachment_ids = $attachment_ids . '' . $seperator . '' . attachment_url_to_postid( $file );
 						}
 					}
@@ -3434,10 +3432,10 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 				'content'             => '[user_registration_login]',
 				'requires_membership' => false,
 			),
-			'user_registration_lost_password_page_id' => array(
-				'name' => 'lost-password',
-				'title' => __( 'Lost Password', 'user-registration' ),
-				'content' => '[user_registration_lost_password]',
+			'user_registration_lost_password_page_id'      => array(
+				'name'                => 'lost-password',
+				'title'               => __( 'Lost Password', 'user-registration' ),
+				'content'             => '[user_registration_lost_password]',
 				'requires_membership' => false,
 			),
 			'user_registration_member_registration_page_id' => array(
@@ -6480,10 +6478,13 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	function ur_check_is_inactive() {
 		if ( ! ur_check_module_activation( 'membership' ) ||
 			current_user_can( 'manage_options' ) ||
-			 ( ! empty( $_POST['action'] ) && in_array( $_POST['action'], array(
-					"user_registration_membership_confirm_payment",
-					"user_registration_membership_create_stripe_subscription"
-				) ) )
+			( ! empty( $_POST['action'] ) && in_array(
+				$_POST['action'],
+				array(
+					'user_registration_membership_confirm_payment',
+					'user_registration_membership_create_stripe_subscription',
+				)
+			) )
 		) {
 			return;
 		}
@@ -6783,11 +6784,14 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 	}
 }
 
-add_filter( 'body_class', function( $classes ) {
-	$is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string_to_bool( sanitize_text_field( wp_unslash( $_COOKIE['isSidebarEnabled'] ) ) ) : true;
-	$body_class = !$is_settings_sidebar_enabled ? 'ur-settings-sidebar-hidden': 'ur-settings-sidebar-show';
-	return array_merge( $classes, array ( $body_class ) );
-});
+add_filter(
+	'body_class',
+	function ( $classes ) {
+		$is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string_to_bool( sanitize_text_field( wp_unslash( $_COOKIE['isSidebarEnabled'] ) ) ) : true;
+		$body_class                  = ! $is_settings_sidebar_enabled ? 'ur-settings-sidebar-hidden' : 'ur-settings-sidebar-show';
+		return array_merge( $classes, array( $body_class ) );
+	}
+);
 
 if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
 
@@ -7677,39 +7681,60 @@ if ( ! function_exists( 'ur_get_exclude_text_format_settings' ) ) {
 if ( ! function_exists( 'ur_check_url_is_image' ) ) {
 
 	/**
-	 * ur_check_is_image
+	 * Check if a URL points to a valid image.
 	 *
-	 * @param string $url
+	 * This function first checks if the URL belongs to a local WordPress attachment
+	 * to avoid self-referential HTTP requests which can cause heavy server load.
+	 * Only falls back to cURL for truly remote URLs (e.g., social login profile pictures).
 	 *
-	 * @return bool
+	 * @since x.x.x (updated)
+	 *
+	 * @param string $url The URL to check.
+	 *
+	 * @return bool True if the URL points to a valid image, false otherwise.
 	 */
 	function ur_check_url_is_image( $url ) {
-		$ch      = curl_init();
-		$headers = array(
-			'Accept: application/json',
-			'Content-Type: application/json',
-
-		);
-		curl_setopt( $ch, CURLOPT_URL, $url );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false ); //used for sites that have ssl disabled
-
-		curl_setopt( $ch, CURLOPT_NOBODY, true );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		curl_setopt( $ch, CURLOPT_HEADER, true );
-		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
-
-		curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
-		curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'GET' );
-
-		$response = curl_exec( $ch );
-
-		if ( false === $response ) {
-			curl_close( $ch );
+		if ( empty( $url ) || ! is_string( $url ) ) {
 			return false;
 		}
 
-		$contentType = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
-		return str_contains( $contentType, 'image/' );
+		$attachment_id = attachment_url_to_postid( $url );
+		if ( $attachment_id > 0 ) {
+			return wp_attachment_is_image( $attachment_id );
+		}
+
+		$site_url = get_site_url();
+		if ( strpos( $url, $site_url ) === 0 ) {
+			$allowed_image_extensions = array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'ico', 'svg' );
+			$parsed_url               = wp_parse_url( $url );
+			if ( ! empty( $parsed_url['path'] ) ) {
+				$extension = strtolower( pathinfo( $parsed_url['path'], PATHINFO_EXTENSION ) );
+				if ( in_array( $extension, $allowed_image_extensions, true ) ) {
+					$upload_dir = wp_upload_dir();
+					if ( strpos( $url, $upload_dir['baseurl'] ) === 0 ) {
+						$file_path = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $url );
+						return file_exists( $file_path );
+					}
+					return true;
+				}
+			}
+			return false;
+		}
+
+		$response = wp_remote_head(
+			$url,
+			array(
+				'timeout'   => 5,
+				'sslverify' => false,
+			)
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return false;
+		}
+
+		$content_type = wp_remote_retrieve_header( $response, 'content-type' );
+		return ! empty( $content_type ) && strpos( $content_type, 'image/' ) !== false;
 	}
 
 
@@ -8101,22 +8126,22 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'css'      => '',
 								'default'  => 'no',
 							),
-//							array(
-//								'title'    => __( 'Hide Field Labels', 'user-registration' ),
-//								'id'       => 'user_registration_login_options_hide_labels',
-//								'type'     => 'toggle',
-//								'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
-//								'css'      => '',
-//								'default'  => 'no',
-//							),
-							array(
-								'title'    => __( 'Enable Captcha', 'user-registration' ),
-								'id'       => 'user_registration_login_options_enable_recaptcha',
-								'type'     => 'toggle',
-								'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" rel="noreferrer noopener" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ), //phpcs:ignore
-								'css'      => '',
-								'default'  => 'no',
-							),
+							// array(
+							// 'title'    => __( 'Hide Field Labels', 'user-registration' ),
+							// 'id'       => 'user_registration_login_options_hide_labels',
+							// 'type'     => 'toggle',
+							// 'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
+							// 'css'      => '',
+							// 'default'  => 'no',
+							// ),
+								array(
+									'title'    => __( 'Enable Captcha', 'user-registration' ),
+									'id'       => 'user_registration_login_options_enable_recaptcha',
+									'type'     => 'toggle',
+									'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" rel="noreferrer noopener" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ), //phpcs:ignore
+									'css'      => '',
+									'default'  => 'no',
+								),
 							array(
 								'title'    => __( 'Select Captcha Type', 'user-registration' ),
 								'desc'     => __( 'Choose which Captcha type to show on the login form.', 'user-registration' ),
@@ -8281,21 +8306,27 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 if ( ! function_exists( 'render_login_option_settings' ) ) {
 
 	function render_login_option_settings( $section ) {
-		$settings = '';
-		$section_settings = $section[ 'settings' ];
-		$repositionable_settings = array_filter( $section_settings, function( $setting ) {
-			return isset( $setting[ 'item_position' ] );
-		});
-		$section_settings = array_filter( $section_settings, function( $setting ) {
-			return ! isset( $setting[ 'item_position' ] );
-		});
-		foreach( $repositionable_settings as $setting ) {
-			[ $position, $setting_id ] = $setting[ 'item_position' ];
-			$offset = array_search( $setting_id, array_column( $section_settings, 'id' ) );
-			if( 'before' === $position ) {
+		$settings                = '';
+		$section_settings        = $section['settings'];
+		$repositionable_settings = array_filter(
+			$section_settings,
+			function ( $setting ) {
+				return isset( $setting['item_position'] );
+			}
+		);
+		$section_settings        = array_filter(
+			$section_settings,
+			function ( $setting ) {
+				return ! isset( $setting['item_position'] );
+			}
+		);
+		foreach ( $repositionable_settings as $setting ) {
+			[ $position, $setting_id ] = $setting['item_position'];
+			$offset                    = array_search( $setting_id, array_column( $section_settings, 'id' ) );
+			if ( 'before' === $position ) {
 				array_splice( $section_settings, $offset, 0, array( $setting ) );
 			}
-			if( 'after' === $position ) {
+			if ( 'after' === $position ) {
 				array_splice( $section_settings, $offset + 1, 0, array( $setting ) );
 			}
 		}
@@ -8855,7 +8886,6 @@ if ( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 	 * and localization of URLs. It removes the filter temporarily to avoid infinite loops,
 	 * translates the endpoint, converts the URL using WPML's convert_url method, and then
 	 * re-adds the filter.
- *
 	 *
 	 * @param string $url       The endpoint URL.
 	 * @param string $endpoint  The endpoint slug.
@@ -8864,9 +8894,8 @@ if ( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 	 *
 	 * @return string Modified URL if WPML is active, original urk if WPML is not active.
 	 */
-
 	function ur_filter_get_endpoint_url( $url, $endpoint, $value, $permalink ) {
-		//Return early WPML is not active
+		// Return early WPML is not active
 		if ( ! class_exists( 'SitePress' ) ) {
 			return $url;
 		}
@@ -9430,6 +9459,7 @@ if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 if ( ! function_exists( 'ur_get_login_page_url' ) ) {
 	/**
 	 * Get the appropriate login page URL based on User Registration settings.
+	 *
 	 * @return string|false The login page URL or false if none found
 	 */
 	function ur_get_login_page_url() {
