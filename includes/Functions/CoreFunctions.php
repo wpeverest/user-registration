@@ -738,11 +738,12 @@ if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
 				$secret_key      = get_option( sprintf( 'user_registration_stripe_%s_secret_key', $mode ) );
 				$is_configured   = ! empty( $publishable_key ) && ! empty( $secret_key );
 				break;
-
-			default:
+			case 'bank':
 				// For bank and other gateways, check if bank details are configured.
 				$bank_details = get_option( 'user_registration_global_bank_details' );
 				$is_configured = ! empty( $bank_details );
+				break;
+			case 'default':
 				break;
 		}
 
