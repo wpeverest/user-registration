@@ -5,6 +5,8 @@
  * @package  UserRegistration/Classes
  */
 
+use WPEverest\URMembership\Admin\Services\SubscriptionService;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -145,6 +147,16 @@ class UR_Smart_Tags {
 
 			$values    = wp_parse_args( $values, $default_values );
 			$user_data = UR_Emailer::user_data_smart_tags( $values['email'] );
+
+			if ( ! empty( $values['context'] ) && 'thank_you_page' == isset( $values['context'] ) ) {
+				$subscription_service = new SubscriptionService();
+				$user_data['member_id'] = $values['member_id'];
+				$values      = array(
+					'membership_tags' => $subscription_service->get_membership_plan_details( $user_data )
+				);
+				error_log( print_r( $values, true ) );
+			}
+
 			if ( is_array( $name_value ) && ! empty( $name_value ) ) {
 				$user_data = array_merge( $user_data, $name_value );
 			}

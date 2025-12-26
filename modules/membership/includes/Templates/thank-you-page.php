@@ -40,7 +40,12 @@ $redirect_btn_url   = ! empty( $attributes['redirect_btn_url'] ) ? esc_url( $att
 
 		<div class="ur-message">
 			<p><?php
-				$main_content = apply_filters( 'user_registration_process_smart_tags', $header );
+				$username = isset( $_GET['username'] ) ? $_GET['username'] : '';
+				$user = get_user_by( 'login', sanitize_text_field( $username ) );
+				$values['member_id'] = $user->ID;
+				$values['email'] = $user->user_email;
+				$values['context'] = 'thank_you_page';
+				$main_content = apply_filters( 'user_registration_process_smart_tags', $header, $values );
 				echo $main_content;
 				?>
 			</p>
@@ -60,15 +65,6 @@ $redirect_btn_url   = ! empty( $attributes['redirect_btn_url'] ) ? esc_url( $att
 		<?php if ( $show_bank_details && ! empty( $bank_data ) ) : ?>
 			<div class="ur-bank-details">
 				<?php echo $bank_data; ?>
-			</div>
-		<?php endif; ?>
-
-		<?php if ( ! empty( $transaction_id ) ) : ?>
-			<div class="ur-transaction-info">
-				<p>
-					<?php echo __( 'Transaction ID: ', 'user-registration' ); ?>
-					<strong><?php echo $transaction_id; ?></strong>
-				</p>
 			</div>
 		<?php endif; ?>
 
