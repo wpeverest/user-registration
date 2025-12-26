@@ -1776,6 +1776,9 @@ class UR_AJAX {
 				$button = '<div class="action-buttons"><a class="button upgrade-now" href="https://wpuserregistration.com/upgrade/?utm_source=builder-fields&utm_medium=premium-field-popup&utm_campaign=' . UR()->utm_campaign . '" rel="noreferrer noopener" target="_blank">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a></div>';
 				wp_send_json_success( array( 'action_button' => $button ) );
 			}
+		} elseif ( 'valid' !== $license_data->license ) {
+			$button = '<div class="action-buttons"><a class="renew-license button" href="' . esc_url( 'https://wpeverest.com/checkout/?edd_license_key=' . get_option( 'registration_license_key' ) . '&utm_campaign=admin&utm_source=licenses&utm_medium=' . $license_data->lisence . '' ) . '">' . __( 'Renew License', 'user-registration' ) . '</a></div>';
+			wp_send_json_success( array( 'action_button' => $button ) );
 		}
 		$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
 

@@ -169,6 +169,8 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 	 */
 	public function display_page() {
 		$this->prepare_items();
+		$license_validity = urm_check_license_validity();
+
 		?>
 				<hr class="wp-header-end">
 				<?php echo user_registration_plugin_main_header(); ?>
@@ -176,7 +178,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 					<div id="user-registration-list-table-page">
 						<div class="user-registration-list-table-header">
 							<h2><?php esc_html_e( 'All Registration Forms', 'user-registration' ); ?></h2>
-							<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action <?php echo ( ! $license_validity ? 'ur-required-license-activation' : ( $license_validity['renew'] ? 'ur-required-renewable' : '' ) ); ?>"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
 						</div>
 						<div class="user-registration-list-table-page__body">
 							<form id="registration-list" class="user-registration-list-table-action-form" method="get" >
