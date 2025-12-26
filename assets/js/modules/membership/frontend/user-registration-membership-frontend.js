@@ -1791,6 +1791,11 @@
 				"click",
 				"#membership-old-selection-form .membership-signup-button",
 				function () {
+					if (urmf_data.isEditor) {
+						e.preventDefault();
+						return;
+					}
+
 					var $this = $(this),
 						membership_id = $this
 							.siblings('input[name="membership_id"]')
