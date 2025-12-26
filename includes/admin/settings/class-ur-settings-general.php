@@ -125,26 +125,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) {
 									'desc_tip' => true,
 								),
 								array(
-									'title' => __( 'Registration Page', 'user-registration' ),
-									'desc' => sprintf( __( 'Select the page which contains your registration form: [%s]', 'user-registration' ), apply_filters( 'user_registration_registration_shortcode_tag', 'user_registration_form' ) ), //phpcs:ignore
-									'id' => 'user_registration_registration_page_id',
-									'type' => 'single_select_page',
-									'default' => '',
-									'class' => 'ur-enhanced-select-nostd',
-									'css' => '',
-									'desc_tip' => true,
-								),
-								array(
-									'title' => __( 'Login Page', 'user-registration' ),
-									'desc'     => __( 'Select the page which contains your login form: [user_registration_login]', 'user-registration' ), //phpcs:ignore
-									'id' => 'user_registration_login_page_id',
-									'type' => 'single_select_page',
-									'default' => '',
-									'class' => 'ur-enhanced-select-nostd',
-									'css' => '',
-									'desc_tip' => true,
-								),
-								array(
 								'title'     => __( 'Lost Password Page', 'user-registration' ),
 								'desc'      => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
 								'id'        => 'user_registration_lost_password_page_id',
