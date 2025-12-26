@@ -38,6 +38,7 @@ if ( ! class_exists( 'UR_Settings_Integration' ) ) {
          */
         public function handle_hooks() {
             add_filter( "user_registration_get_sections_{$this->id}",  array( $this, 'get_sections_callback' ), 1, 1 );
+            add_filter( "user_registration_get_settings_{$this->id}", array( $this, 'get_settings_callback' ), 1, 1 );
             if ( ! empty( $this->integrations ) ) {
                 add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
                 add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
