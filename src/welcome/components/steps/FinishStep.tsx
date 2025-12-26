@@ -23,6 +23,8 @@ interface RoleOption {
 }
 
 interface FinishLinks {
+	primary_action?: string;
+	primary_action_label?: string;
 	registration_page?: string;
 	dashboard?: string;
 	settings?: string;
@@ -45,7 +47,7 @@ const FinishStep: React.FC = () => {
 
 	const [roles, setRoles] = useState<RoleOption[]>([]);
 	const [selectedRole, setSelectedRole] = useState<string>("subscriber");
-	const [isLoadingData, setIsLoadingData] = useState(false);
+	const [isLoadingData, setIsLoadingData] = useState(true);
 	const [isSaving, setIsSaving] = useState(false);
 	const [links, setLinks] = useState<FinishLinks>({});
 
@@ -89,40 +91,33 @@ const FinishStep: React.FC = () => {
 	};
 
 	const handleGoToDashboard = () => {
-		const dashboardUrl =
-			links.dashboard ||
-			(window as any).urmSetupWizard?.dashboardUrl ||
-			"/wp-admin/admin.php?page=user-registration-dashboard";
-		window.location.href = dashboardUrl;
+		if (links.dashboard) {
+			window.location.href = links.dashboard;
+		}
 	};
 
-	const handleCreateMembership = () => {
-		const membershipUrl =
-			links.memberships ||
-			(window as any).urmSetupWizard?.createMembershipUrl ||
-			"/wp-admin/admin.php?page=user-registration-membership";
-		window.location.href = membershipUrl;
-	};
-
-	const handleVisitRegistration = async () => {
+	const handlePrimaryAction = async () => {
 		try {
 			setIsSaving(true);
 
+			
 			if (isOtherType && selectedRole) {
 				await apiPost("/finish", { default_user_role: selectedRole });
 			}
 
-			const registrationUrl =
-				links.registration_page ||
-				(window as any).urmSetupWizard?.registrationPageUrl ||
-				"/wp-admin/admin.php?page=user-registration";
-			window.location.href = registrationUrl;
+			if (links.primary_action) {
+				window.location.href = links.primary_action;
+			}
 		} catch (e) {
-			console.error("Failed to save settings:", e);
+			console.error("Failed to complete action:", e);
 		} finally {
 			setIsSaving(false);
 		}
 	};
+
+
+	const primaryActionLabel = links.primary_action_label ||
+		(isMembershipType ? __("Create Membership", "user-registration") : __("Visit Registration", "user-registration"));
 
 	return (
 		<>
@@ -139,7 +134,7 @@ const FinishStep: React.FC = () => {
 				{__("Congratulations 🎉", "user-registration")}
 			</Heading>
 
-			{/* Role selection for "other" type - side by side layout */}
+
 			{isOtherType && (
 				<Box mb={10}>
 					<FormControl>
@@ -204,12 +199,11 @@ const FinishStep: React.FC = () => {
 				</Box>
 			)}
 
-			{/* Buttons Section */}
 			<Flex
 				justify={isMembershipType ? "space-between" : "flex-end"}
 				align="center"
 			>
-				{/* For membership flow: Go to dashboard on left */}
+
 				{isMembershipType && (
 					<Button
 						variant="outline"
@@ -218,38 +212,26 @@ const FinishStep: React.FC = () => {
 						_hover={{ bg: "blue.50" }}
 						px={6}
 						onClick={handleGoToDashboard}
+						isDisabled={isLoadingData || !links.dashboard}
 					>
 						{__("Go to dashboard", "user-registration")}
 					</Button>
 				)}
 
-				{/* Right side buttons */}
-				{isMembershipType ? (
-					<Button
-						bg="#475BD8"
-						color="white"
-						rightIcon={<ArrowForwardIcon />}
-						_hover={{ bg: "#3a4bc2" }}
-						_active={{ bg: "#2f3da6" }}
-						px={6}
-						onClick={handleCreateMembership}
-					>
-						{__("Create Membership", "user-registration")}
-					</Button>
-				) : (
-					<Button
-						bg="#475BD8"
-						color="white"
-						rightIcon={<ArrowForwardIcon />}
-						_hover={{ bg: "#3a4bc2" }}
-						_active={{ bg: "#2f3da6" }}
-						px={6}
-						onClick={handleVisitRegistration}
-						isLoading={isSaving}
-					>
-						{__("Visit Registration", "user-registration")}
-					</Button>
-				)}
+
+				<Button
+					bg="#475BD8"
+					color="white"
+					rightIcon={<ArrowForwardIcon />}
+					_hover={{ bg: "#3a4bc2" }}
+					_active={{ bg: "#2f3da6" }}
+					px={6}
+					onClick={handlePrimaryAction}
+					isLoading={isSaving}
+					isDisabled={isLoadingData || !links.primary_action}
+				>
+					{primaryActionLabel}
+				</Button>
 			</Flex>
 		</>
 	);

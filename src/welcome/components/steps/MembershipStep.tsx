@@ -183,7 +183,7 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 							))
 						) : (
 							<Text px={3} py={2} color="gray.500" fontSize="sm">
-								{__('No options available','user-registration')}
+								No options available
 							</Text>
 						)}
 					</PopoverBody>
@@ -217,6 +217,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	const accessBg = useColorModeValue("green.50", "green.900");
 	const accessBorderColor = useColorModeValue("green.200", "green.700");
 
+	// Reset billing period to "one-time" for non-Pro users if they have a subscription billing period
 	useEffect(() => {
 		if (!isPro && plan.billingPeriod !== "one-time") {
 			dispatch({
@@ -244,7 +245,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	};
 
 	const handleTypeChange = (type: MembershipPlanType) => {
-		
+		// Only allow changing to paid if canCreatePaid is true
 		if (type === "paid" && !canCreatePaid) {
 			return;
 		}
@@ -626,8 +627,7 @@ const MembershipStep: React.FC = () => {
 		membershipSetupType === "paid"
 	);
 
-	const isPro = (window as any)._UR_WIZARD_?.isPro || false;
-	console.log(isPro, "true");
+	const isPro = (window as any).urmSetupWizard?.isPro || false;
 
 	useEffect(() => {
 		const loadMembershipsData = async () => {
@@ -638,7 +638,9 @@ const MembershipStep: React.FC = () => {
 				const content = res.content || {};
 				setPages(content.pages || []);
 				setPosts(content.posts || []);
+
 				setCanCreatePaid(res.can_create_paid || false);
+
 				if (
 					res.memberships &&
 					Array.isArray(res.memberships) &&
