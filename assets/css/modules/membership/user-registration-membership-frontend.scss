@@ -1146,6 +1146,7 @@ html {
 	.ur-membership-list-container {
 		.ur-membership-container {
 			&.layout-row {
+				align-items: center;
 				.membership-block {
 					flex-direction: row;
 					padding: 0;
