@@ -14,6 +14,11 @@ import ServerSideRender from '@wordpress/server-side-render';
  * @param {Object} props The props received from the parent component.
  * @return {JSX.Element} The Edit component.
  */
+
+/* global _UR_BLOCKS_ */
+const { smart_tags } =
+	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
+
 const Edit = (props) => {
 	const {
 		attributes: {header, footer, notice_message, transaction_info, show_notice_1, show_notice_2, show_bank_details, show_heading_icon, show_headline, headline_text, show_redirect_btn },
@@ -24,10 +29,6 @@ const Edit = (props) => {
 	const blockName = metadata.name;
 	const defaultNoticeOne = metadata.attributes.notice_message.default;
 	const defaultNoticeTwo = metadata.attributes.transaction_info.default;
-
-	const SMART_TAGS = [
-		{ text: 'Membership Plan Details', value: '{membership_plan_details}' }
-	];
 
 	// Render the component
 	return (
@@ -92,7 +93,7 @@ const Edit = (props) => {
 												type: 'menubutton',
 												text: 'Smart Tags',
 												icon: false,
-												menu: SMART_TAGS.map((tag) => ({
+												menu: smart_tags.map((tag) => ({
 													text: tag.text,
 													onclick: function () {
 														editor.insertContent(tag.value);

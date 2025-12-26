@@ -54,6 +54,23 @@ class UR_Blocks {
 			$enqueue_script,
 			UR_VERSION
 		);
+
+		$authenticate_smart_tag = \UR_Smart_Tags::ur_authenticated_parsable_smart_tags_list();
+
+		$smart_tag = array();
+
+		$smart_tag[] = array(
+			'text'  => esc_html__( 'Membership Plan Details', 'user-registration' ),
+			'value' => '{membership_plan_details}',
+		);
+
+		foreach ( $authenticate_smart_tag as $value => $text ) {
+			$smart_tag[] = array(
+				'text'  => $text,
+				'value' => $value,
+			);
+		}
+		
 		wp_localize_script(
 			'user-registration-blocks-editor',
 			'_UR_BLOCKS_',
@@ -64,7 +81,8 @@ class UR_Blocks {
 				'isPro'                => is_plugin_active( 'user-registration-pro/user-registration.php' ),
 				'iscRestrictionActive' => ur_check_module_activation( 'content-restriction' ),
 				'pages' 			   => array_map( function( $page ) { return [ 'label' => $page->post_title, 'value' => $page->ID ]; }, get_pages() ),
-				'login_page_id'		   => get_option('user_registration_login_page_id')
+				'login_page_id'		   => get_option('user_registration_login_page_id'),
+				'smart_tags'		   => $smart_tag,
 			)
 		);
 		wp_register_script(
