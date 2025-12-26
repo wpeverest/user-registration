@@ -27,7 +27,7 @@ class UR_Smart_Tags {
 			10,
 			1
 		);
-		add_action( 'user_registration_save_profile_details', array( $this, 'track_profile_update_date' ), 10, 2 );
+		add_action( 'user_registration_after_save_profile_validation', array( $this, 'track_profile_update_date_early' ), 5, 2 );
 		add_action( 'user_registration_pro_before_delete_account', array( $this, 'track_account_deletion_date' ), 10, 1 );
 		add_filter( 'user_registration_membership_cancel_subscription', array( $this, 'track_membership_cancellation_on_cancel' ), 10, 3 );
 		add_action( 'user_registration_after_register_user_action', array( $this, 'track_single_item_payment_date' ), 10, 3 );
@@ -145,7 +145,6 @@ class UR_Smart_Tags {
 	 * @param array  $name_value Extra values.
 	 */
 	public function process( $content = '', $values = array(), $name_value = array() ) {
-		error_log( print_r( $values, true ) );
 		if ( ! empty( $values['email'] ) ) {
 			$process_type   = isset( $values['process_type'] ) && 'ur_parse_after_meta_update' === $values['process_type'] ? true : false;
 			$default_values = array();
@@ -193,6 +192,19 @@ class UR_Smart_Tags {
 			 * @param array $values Default smart tag values.
 			 */
 			$values = apply_filters( 'user_registration_smart_tag_values', $values );
+
+			// Ensure username is set.
+			$name = '';
+			if ( ! empty( $values['username'] ) ) {
+				$name = $values['username'];
+			} elseif ( ! empty( $values['email'] ) ) {
+				// If username is empty, try to get it from email.
+				$user = get_user_by( 'email', $values['email'] );
+				if ( $user && isset( $user->user_login ) ) {
+					$name = sanitize_text_field( $user->user_login );
+				}
+			}
+			$values['username'] = $name;
 
 			foreach ( $values as $key => $value ) {
 				$value = ur_format_field_values( $key, $value );
@@ -1155,12 +1167,13 @@ class UR_Smart_Tags {
 	}
 
 	/**
-	 * Track profile update date when profile is saved.
+	 * Track profile update date early in the process (before emails are sent).
+	 * This ensures the update_date smart tag is available when processing emails.
 	 *
-	 * @param int $user_id User ID.
-	 * @param int $form_id Form ID.
+	 * @param int   $user_id User ID.
+	 * @param array $profile Profile data.
 	 */
-	public function track_profile_update_date( $user_id, $form_id ) {
+	public function track_profile_update_date_early( $user_id, $profile ) {
 		if ( $user_id ) {
 			update_user_meta( $user_id, 'user_registration_profile_updated_date', current_time( 'mysql' ) );
 		}

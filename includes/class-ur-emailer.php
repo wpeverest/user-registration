@@ -189,7 +189,7 @@ class UR_Emailer {
 		$is_membership_form = check_membership_field_in_form( $form_id );
 
 		if ( '0' === $email_status ) {
-			$subject  = get_option( 'user_registration_email_confirmation_subject', __( 'Please confirm your registration on {{blog_info}}', 'user-registration' ) );
+			$subject  = get_option( 'user_registration_email_confirmation_subject', __( 'Confirm Your Email Address', 'user-registration' ) );
 			$settings = new UR_Settings_Email_Confirmation();
 			$message  = $settings->ur_get_email_confirmation();
 			$message  = get_option( 'user_registration_email_confirmation', $message );
@@ -205,7 +205,7 @@ class UR_Emailer {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
 		} elseif ( 0 === intval( $status ) || ( '1' === $email_status && isset( $user_status ) && ! ur_string_to_bool( $user_status ) ) ) {
-			$subject                   = get_option( 'user_registration_awaiting_admin_approval_email_subject', __( 'Thank you for registration on {{blog_info}}', 'user-registration' ) );
+			$subject                   = get_option( 'user_registration_awaiting_admin_approval_email_subject', __( 'Your Registration is Pending Approval', 'user-registration' ) );
 			$settings                  = new UR_Settings_Awaiting_Admin_Approval_Email();
 			$message                   = $settings->ur_get_awaiting_admin_approval_email();
 			$message                   = get_option( 'user_registration_awaiting_admin_approval_email', $message );
@@ -220,7 +220,7 @@ class UR_Emailer {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
 		} elseif ( -1 === intval( $status ) ) {
-			$subject                   = get_option( 'user_registration_registration_denied_email_subject', __( 'Sorry! Registration denied on {{blog_info}}', 'user-registration' ) );
+			$subject                   = get_option( 'user_registration_registration_denied_email_subject', __( 'Registration Status Update', 'user-registration' ) );
 			$settings                  = new UR_Settings_Registration_Denied_Email();
 			$message                   = $settings->ur_get_registration_denied_email();
 			$message                   = get_option( 'user_registration_registration_denied_email', $message );
@@ -235,7 +235,7 @@ class UR_Emailer {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
 		} elseif ( ( 'default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status ) ) && ! $is_membership_form ) {
-			$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Congratulations! Registration Complete on {{blog_info}}', 'user-registration' ) );
+			$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Welcome to {{blog_info}}!', 'user-registration' ) );
 			$settings = new UR_Settings_Successfully_Registered_Email();
 			$message  = $settings->ur_get_successfully_registered_email();
 
@@ -397,7 +397,7 @@ class UR_Emailer {
 		$admin_email = explode( ',', $admin_email );
 		$admin_email = array_map( 'trim', $admin_email );
 
-		$subject  = get_option( 'user_registration_approval_link_email_subject', __( 'Approval Link For New User Registration & Membership', 'user-registration' ) );
+		$subject  = get_option( 'user_registration_approval_link_email_subject', __( 'Approval Needed: New Member Registration', 'user-registration' ) );
 		$settings = new UR_Settings_Approval_Link_Email();
 
 		$form_id = ur_get_form_id_by_userid( $user_id );
@@ -747,7 +747,7 @@ class UR_Emailer {
 		);
 
 		$attachment = isset( $attachments['user'] ) ? $attachments['user'] : '';
-		$subject    = get_option( 'user_registration_profile_details_updated_email_subject', esc_html__( 'Profile Details Updated Email: {{blog_info}}', 'user-registration' ) );
+		$subject    = get_option( 'user_registration_profile_details_updated_email_subject', esc_html__( 'Profile Updated Successfully', 'user-registration' ) );
 		$settings   = new UR_Settings_Profile_Details_Updated_Email();
 		$message    = $settings->ur_get_profile_details_updated_email();
 		$message    = get_option( 'user_registration_profile_details_Updated_email', $message );
@@ -830,7 +830,7 @@ class UR_Emailer {
 			}
 		} elseif ( -1 === intval( $status ) ) {
 
-			$subject                   = get_option( 'user_registration_registration_denied_email_subject', __( 'Sorry! Registration denied on {{blog_info}}', 'user-registration' ) );
+			$subject                   = get_option( 'user_registration_registration_denied_email_subject', __( 'Registration Status Update', 'user-registration' ) );
 			$settings                  = new UR_Settings_Registration_Denied_Email();
 			$message                   = $settings->ur_get_registration_denied_email();
 			$message                   = get_option( 'user_registration_registration_denied_email', $message );
@@ -845,7 +845,7 @@ class UR_Emailer {
 			}
 		} else {
 
-			$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Congratulations! Registration Complete on {{blog_info}}', 'user-registration' ) );
+			$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Welcome to {{blog_info}}!', 'user-registration' ) );
 			$settings = new UR_Settings_Successfully_Registered_Email();
 			$message  = $settings->ur_get_successfully_registered_email();
 
@@ -924,7 +924,7 @@ class UR_Emailer {
 			$current_language = ur_get_current_language();
 		}
 
-		$subject  = get_option( 'user_registration_reset_password_email_subject', __( 'Password Reset Email: {{blog_info}}', 'user-registration' ) );
+		$subject  = get_option( 'user_registration_reset_password_email_subject', __( 'Password Reset Request', 'user-registration' ) );
 		$settings = new UR_Settings_Reset_Password_Email();
 		$message  = $settings->ur_get_reset_password_email();
 		$message  = get_option( 'user_registration_reset_password_email', $message );
@@ -1020,7 +1020,7 @@ class UR_Emailer {
 			return false;
 		}
 
-		$subject  = get_option( 'user_registration_reset_password_email_subject', __( 'Password Reset Email: {{blog_info}}', 'user-registration' ) );
+		$subject  = get_option( 'user_registration_reset_password_email_subject', __( 'Password Reset Request', 'user-registration' ) );
 		$settings = new UR_Settings_Reset_Password_Email();
 
 		$values = array(

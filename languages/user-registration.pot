@@ -3654,7 +3654,7 @@ msgid "The email subject you want to customize."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-approval-link-email.php:106
-msgid "Action Required: Review & Approve New User Registration"
+msgid "Approval Needed: New Member Registration"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-approval-link-email.php:143
@@ -5186,12 +5186,12 @@ msgstr ""
 
 #: includes/class-ur-emailer.php:410
 #: includes/class-ur-emailer.php:657
-msgid "Sorry! Registration denied on {{blog_info}}"
+msgid "Registration Status Update"
 msgstr ""
 
 #: includes/class-ur-emailer.php:425
 #: includes/class-ur-emailer.php:672
-msgid "Congratulations! Registration Complete on {{blog_info}}"
+msgid "Welcome to {{blog_info}}!"
 msgstr ""
 
 #: includes/class-ur-emailer.php:504
@@ -5216,7 +5216,7 @@ msgstr ""
 
 #: includes/class-ur-emailer.php:715
 #: includes/class-ur-emailer.php:811
-msgid "Password Reset Email: {{blog_info}}"
+msgid "Password Reset Request"
 msgstr ""
 
 #: includes/class-ur-emailer.php:860
@@ -5224,7 +5224,7 @@ msgid "Profile Details Changed Email: {{blog_info}}"
 msgstr ""
 
 #: includes/class-ur-emailer.php:912
-msgid "Profile Details Updated Email: {{blog_info}}"
+msgid "Profile Updated Successfully"
 msgstr ""
 
 #: includes/class-ur-emailer.php:963
@@ -5252,7 +5252,7 @@ msgid "The user registration form selector block has been deprecated. Please use
 msgstr ""
 
 #: includes/class-ur-form-handler.php:384
-msgid "Confirm Your Email Address Change"
+msgid "Confirm Your New Email Address"
 msgstr ""
 
 #: includes/class-ur-form-handler.php:492
@@ -10335,7 +10335,7 @@ msgid "A New Member Registered"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:204
-msgid "Congratulations! Payment Complete on {{blog_info}}"
+msgid "Payment Confirmed"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:294

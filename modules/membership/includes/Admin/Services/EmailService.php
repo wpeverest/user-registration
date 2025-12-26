@@ -117,7 +117,7 @@ class EmailService {
 			return;
 		}
 		$user_id = absint( $data['member_id'] );
-		$subject = get_option( 'user_registration_admin_email_subject', __( 'A New Member Registered', 'user-registration' ) );
+		$subject = get_option( 'user_registration_admin_email_subject', __( 'A Member registration: {{username}}', 'user-registration' ) );
 		$form_id = ur_get_form_id_by_userid( $user_id );
 
 		$settings         = new UR_Settings_Admin_Email();
@@ -169,7 +169,7 @@ class EmailService {
 		);
 		$values               = $data + $values;
 
-		$subject = get_option( 'user_registration_payment_success_email_subject', __( 'Congratulations! Payment Complete on {{blog_info}}', 'user-registration' ) );
+		$subject = get_option( 'user_registration_payment_success_email_subject', __( 'Payment Confirmed', 'user-registration' ) );
 
 		$settings                  = new \UR_Settings_Payment_Success_Email();
 		$message                   = $settings->ur_get_payment_success_email();
