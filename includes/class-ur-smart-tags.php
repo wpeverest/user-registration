@@ -155,7 +155,6 @@ class UR_Smart_Tags {
 				$values      = array(
 					'membership_tags' => $subscription_service->get_membership_plan_details( $user_data )
 				);
-				error_log( print_r( $values, true ) );
 			}
 
 			if ( is_array( $name_value ) && ! empty( $name_value ) ) {

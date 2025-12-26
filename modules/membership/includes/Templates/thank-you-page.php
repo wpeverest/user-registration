@@ -3,7 +3,7 @@
 $bank_data        = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post_deep( $_GET['info'] ) : '';
 $transaction_id   = ( isset( $_GET['transaction_id'] ) && ! empty( $_GET['transaction_id'] ) ) ? wp_kses_post( $_GET['transaction_id'] ) : '';
 $username         = ( isset( $_GET['username'] ) && ! empty( $_GET['username'] ) ) ? wp_kses_post( $_GET['username'] ) : '';
-$header            = ! empty( $attributes['header'] ) ? wp_kses_post( $attributes['header'] ) : sprintf(
+$main_content     = ! empty( $attributes['header'] ) ? wp_kses_post( $attributes['header'] ) : sprintf(
 	__( 'Thank You! Your registration was completed successfully.', 'user-registration' ),
 	esc_html( $username )
 );
@@ -40,12 +40,18 @@ $redirect_btn_url   = ! empty( $attributes['redirect_btn_url'] ) ? esc_url( $att
 
 		<div class="ur-message">
 			<p><?php
-				$username = isset( $_GET['username'] ) ? $_GET['username'] : '';
-				$user = get_user_by( 'login', sanitize_text_field( $username ) );
-				$values['member_id'] = $user->ID;
-				$values['email'] = $user->user_email;
-				$values['context'] = 'thank_you_page';
-				$main_content = apply_filters( 'user_registration_process_smart_tags', $header, $values );
+				$username = isset( $_GET['username'] ) ? $_GET['username'] : '' ;
+
+				$values = array();
+
+				if ( ! empty( $username ) ) {
+					$user = get_user_by( 'login', sanitize_text_field( $username ) );
+					$values['member_id'] = $user->ID;
+					$values['email'] 	 = $user->user_email;
+					$values['context'] 	 = 'thank_you_page';
+
+					$main_content = apply_filters( 'user_registration_process_smart_tags', $main_content, $values );
+				}
 				echo $main_content;
 				?>
 			</p>

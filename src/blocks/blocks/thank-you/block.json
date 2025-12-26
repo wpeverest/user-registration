@@ -69,6 +69,10 @@
       "type": "string",
       "default": "Thank you for registering!"
     },
+    "redirect_btn_text": {
+      "type": "string",
+      "default": "Go to my Account"
+    },
      "show_redirect_btn": {
       "type": "boolean",
       "default": true

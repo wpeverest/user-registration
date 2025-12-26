@@ -44,6 +44,7 @@ class UR_Block_Thank_You extends UR_Block_Abstract {
 		$show_headline     = isset( $attr['show_headline'] ) ? $attr['show_headline'] : false;
 		$headline_text     = isset( $attr['headline_text'] ) ? sanitize_text_field( $attr['headline_text'] ) : '';
 		$show_redirect_btn = isset( $attr['show_redirect_btn'] ) ? $attr['show_redirect_btn'] : false;
+		$redirect_btn_text = isset( $attr['redirect_btn_text'] ) ? sanitize_text_field( $attr['redirect_btn_text'] ) : '';
 
 		return ShortCodes::thank_you(
 			array(
@@ -60,6 +61,7 @@ class UR_Block_Thank_You extends UR_Block_Abstract {
 				'show_redirect_btn' => $show_redirect_btn,
 				'show_headline' 	=> $show_headline,
 				'headline_text' 	=> $headline_text,
+				'redirect_btn_text' => $redirect_btn_text,
 			),
 			'user_registration_membership_thank_you'
 		);

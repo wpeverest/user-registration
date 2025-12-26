@@ -21,7 +21,7 @@ const { smart_tags } =
 
 const Edit = (props) => {
 	const {
-		attributes: {header, footer, notice_message, transaction_info, show_notice_1, show_notice_2, show_bank_details, show_heading_icon, show_headline, headline_text, show_redirect_btn },
+		attributes: {header, footer, notice_message, transaction_info, show_notice_1, show_notice_2, show_bank_details, show_heading_icon, show_headline, headline_text, show_redirect_btn, redirect_btn_text },
 		setAttributes,
 	} = props;
 	const useProps = useBlockProps();
@@ -47,7 +47,6 @@ const Edit = (props) => {
 								/>
 						</PanelRow>
 
-						<PanelRow>
 							<Box>
 								<ToggleControl
 									label={ __( 'Headline', 'user-registration' ) }
@@ -64,7 +63,6 @@ const Edit = (props) => {
 									width={'100%'}
 								/>
 							</Box>
-						</PanelRow>
 
 						 <Heading as='h4' size='sm' marginBottom={ '4px'}>
 							{__('Main Content', 'user-registration')}
@@ -117,7 +115,7 @@ const Edit = (props) => {
 									/>
 						</PanelRow>
 
-						<PanelRow>
+						<Box>
 							<ToggleControl
 								label={ __( 'Redirect Button', 'user-registration' ) }
 								checked={ show_redirect_btn }
@@ -125,7 +123,14 @@ const Edit = (props) => {
 									setAttributes({ show_redirect_btn: value } )
 								}
 							/>
-						</PanelRow>
+							<TextControl
+									key="ur-gutenberg-notice-text"
+									placeholder={__('Go To My Account', "user-registration")}
+									value={ redirect_btn_text }
+									onChange={(value) => setAttributes({redirect_btn_text: value})}
+									width={'100%'}
+								/>
+						</Box>
 					</PanelBody>
 
 					<PanelBody initialOpen={false} title={__('Footer Content', 'user-registration')}>
