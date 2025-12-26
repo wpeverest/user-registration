@@ -829,7 +829,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			/**
 			 * Hides the Add New Button from the submenu
 			 *
-			 * @since xx.xx.xx
+			 * @since 5.0.0
 			 */
 			add_action('admin_head', function() {
 				global $submenu;
@@ -997,7 +997,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$login_page_url = $login_page_id ? get_permalink( $login_page_id ) : '';
 				$login_page_title = $login_page_id ? get_the_title( $login_page_id ) : '';
 				include_once __DIR__ . '/views/html-login-page-forms.php';
-			}elseif ( count( $all_forms ) <= 1 && isset( $all_forms ) && ! empty( $all_forms ) && ! ur_check_module_activation( 'multiple-registration' ) )  {
+			}elseif ( count( $all_forms ) <= 1 && ! empty( $all_forms ) && ! ur_check_module_activation( 'multiple-registration' ) )  {
 				$form_id = key( $all_forms );
 
 				if ( ! isset( $_GET['edit-registration'] ) ) {
@@ -1104,6 +1104,19 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'reload_text'                  => esc_html__( 'Just Reload', 'user-registration' ),
 				)
 			);
+
+			$all_forms = ur_get_all_user_registration_form();
+
+			if ( ( count( $all_forms ) <= 1 && ! empty( $all_forms ) && ! ur_check_module_activation( 'multiple-registration' ) ) ) {
+				$form_id = key( $all_forms );
+				$form_id_from_url = isset(  $_GET['edit-registration']  ) ?  absint( $_GET['edit-registration'] ) : '';
+
+				if ( ! isset( $_GET['edit-registration'] ) || $form_id_from_url != $form_id ) {
+					wp_redirect( admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $form_id ) );
+					exit;
+				}
+			}
+
 			if ( isset( $_GET['edit-registration'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				// Forms view.
 				include_once __DIR__ . '/views/html-admin-page-forms.php';
