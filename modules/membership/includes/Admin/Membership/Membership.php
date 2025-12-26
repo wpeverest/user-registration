@@ -665,7 +665,32 @@ class Membership {
 
 		$disabled_attr = $is_locked ? ' disabled' : '';
 
-		if ( $input_type === 'multiselect' ) {
+		if ( $field_type === 'ur_form_field' ) {
+			$form_id = '';
+			$form_fields = array();
+			if ( is_array( $value ) && isset( $value['form_id'] ) ) {
+				$form_id = sanitize_text_field( $value['form_id'] );
+			}
+			if ( is_array( $value ) && isset( $value['form_fields'] ) && is_array( $value['form_fields'] ) ) {
+				$form_fields = $value['form_fields'];
+			}
+			$value_attr = ' data-value="' . esc_attr( wp_json_encode( $value ) ) . '"';
+			
+			$ur_forms = isset( $localized_data['ur_forms'] ) ? $localized_data['ur_forms'] : array();
+			
+			$html = '<div class="urcr-ur-form-field-condition" data-condition-id="' . esc_attr( $condition_id ) . '"' . $value_attr . '>';
+			$html .= '<div class="urcr-form-selection ur-d-flex ur-align-items-center ur-g-4 ur-mb-2">';
+			$html .= '<select class="urcr-form-select components-select-control__input urcr-condition-value-input"' . $disabled_attr . '>';
+			$html .= '<option value="">' . esc_html__( 'Select a form', 'user-registration' ) . '</option>';
+			foreach ( $ur_forms as $id => $title ) {
+				$selected = ( (string) $id === (string) $form_id ) ? 'selected' : '';
+				$html .= '<option value="' . esc_attr( $id ) . '" ' . $selected . '>' . esc_html( $title ) . '</option>';
+			}
+			$html .= '</select>';
+			$html .= '</div>';
+			$html .= '<div class="urcr-form-fields-list"></div>';
+			$html .= '</div>';
+		} elseif ( $input_type === 'multiselect' ) {
 			// Add data attribute for values to be set by JavaScript
 			$value_attr = '';
 			if ( is_array( $value ) && ! empty( $value ) ) {

@@ -611,6 +611,18 @@ class URCR_Content_Access_Rules {
 			);
 		}
 
+		// Prevent duplication of membership rules unless UR_DEV is enabled
+		$rule_type = get_post_meta( $rule_id, 'urcr_rule_type', true );
+		if ( 'membership' === $rule_type && ! ( defined( 'UR_DEV' ) && UR_DEV ) ) {
+			return new \WP_REST_Response(
+				array(
+					'success' => false,
+					'message' => esc_html__( 'Membership rules cannot be duplicated.', 'user-registration' ),
+				),
+				403
+			);
+		}
+
 		$new_post = array(
 			'post_title'   => $rule_post->post_title . ' (Copy)',
 			'post_content' => $rule_post->post_content,
@@ -668,9 +680,9 @@ class URCR_Content_Access_Rules {
 			);
 		}
 
-		// Prevent deletion of membership rules
+		// Prevent deletion of membership rules unless UR_DEV is enabled
 		$rule_type = get_post_meta( $rule_id, 'urcr_rule_type', true );
-		if ( 'membership' === $rule_type && !UR_DEV) {
+		if ( 'membership' === $rule_type && ! ( defined( 'UR_DEV' ) && UR_DEV ) ) {
 			return new \WP_REST_Response(
 				array(
 					'success' => false,

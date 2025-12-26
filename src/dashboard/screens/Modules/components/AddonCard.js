@@ -141,12 +141,40 @@ const AddonCard = ({addon, showToast}) => {
 	};
 
 	const handleToggle = async () => {
+		// Skip warning modal if isPro is true and slug is user-registration-content-restriction
+		// Check if isPro is truthy (handle boolean, string, number formats)
+		const isProUser = isPro === true || String(isPro).toLowerCase() === "true";
+		console.log(isPro);
+		// If it's content-restriction addon, isActive, and isPro, skip modal and deactivate directly
+		if (
+			addon.slug === "user-registration-content-restriction" &&
+			isActive &&
+			isProUser
+		) {
+			// Pro users can disable without warning modal - proceed directly to deactivation
+			setIsLoading(true);
+			try {
+				const response = await deactivateModule(addon.slug, addon.type);
+				if (response.success) {
+					setIsActive(false);
+					showToast(response.message || "Module deactivated successfully", "success");
+				} else {
+					showToast(response.message || "Failed to deactivate module", "error");
+				}
+			} catch (error) {
+				showToast(error.message || "An error occurred", "error");
+			}
+			setIsLoading(false);
+			return;
+		}
+
 		// Check if we need to show confirmation modal for content-restriction addon when disabling
+		// Only show modal if NOT a pro user (and other conditions are met)
 		if (
 			addon.slug === "user-registration-content-restriction" &&
 			isActive &&
 			!urm_is_new_installation &&
-			!isPro &&
+			!isProUser &&
 			urcr_custom_rules_count >= 1
 		) {
 			onConfirmOpen();

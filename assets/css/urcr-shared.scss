@@ -718,3 +718,35 @@ $border-color_6: #475bb2;
 		}
 	}
 }
+
+.urcr-ur-form-field-condition {
+	.urcr-form-field-row {
+		gap: 12px;
+	}
+
+	.urcr-form-field-name {
+		flex: 1 1 auto;
+		min-width: 150px;
+
+		select {
+			width: 100%;
+		}
+	}
+
+	.urcr-form-field-operator {
+		flex: 0 0 auto;
+		min-width: 110px;
+
+		select {
+			width: 100%;
+		}
+	}
+
+	.urcr-add-field-button,
+	.urcr-remove-field-button {
+		width: 32px;
+		min-width: 32px;
+		padding: 0;
+		flex-shrink: 0;
+	}
+}

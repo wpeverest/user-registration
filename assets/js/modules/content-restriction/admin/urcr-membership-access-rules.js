@@ -536,7 +536,32 @@
 			// Add disabled attribute if condition is locked
 			var disabledAttr = isLocked ? ' disabled' : '';
 
-			if (inputType === 'multiselect') {
+			if (fieldType === 'ur_form_field') {
+				var formId = '';
+				var formFields = [];
+				if (value && typeof value === 'object') {
+					formId = value.form_id || '';
+					formFields = value.form_fields || [];
+				}
+				var valueJson = value ? JSON.stringify(value) : '{"form_id":"","form_fields":[]}';
+				var valueAttr = ' data-value="' + $('<div>').text(valueJson).html() + '"';
+				var urForms = urcr_membership_access_data.ur_forms || {};
+				
+				html = '<div class="urcr-ur-form-field-condition" data-condition-id="' + id + '"' + valueAttr + '>';
+				html += '<div class="urcr-form-selection ur-d-flex ur-align-items-center ur-g-4 ur-mb-2">';
+				html += '<select class="urcr-form-select components-select-control__input urcr-condition-value-input"' + disabledAttr + '>';
+				html += '<option value="">Select a form</option>';
+				for (var formIdKey in urForms) {
+					if (urForms.hasOwnProperty(formIdKey)) {
+						var selected = (formIdKey === formId) ? 'selected' : '';
+						html += '<option value="' + formIdKey + '" ' + selected + '>' + urForms[formIdKey] + '</option>';
+					}
+				}
+				html += '</select>';
+				html += '</div>';
+				html += '<div class="urcr-form-fields-list"></div>';
+				html += '</div>';
+			} else if (inputType === 'multiselect') {
 				html = '<select class="urcr-enhanced-select2 urcr-condition-value-input" multiple data-condition-id="' + id + '" data-field-type="' + fieldType + '" ' + disabledAttr + '></select>';
 			} else if (inputType === 'checkbox') {
 				// User state - radio buttons
@@ -582,6 +607,11 @@
 			var self = this;
 			var $select = $('.urcr-condition-wrapper[data-condition-id="' + conditionId + '"] .urcr-enhanced-select2');
 
+			if (inputType === 'ur_form_field' || $('.urcr-condition-wrapper[data-condition-id="' + conditionId + '"] .urcr-ur-form-field-condition').length) {
+				self.initURFormFieldCondition(conditionId, value);
+				return;
+			}
+
 			if ($select.length && inputType === 'multiselect') {
 				var fieldType = $select.data('field-type');
 				var options = self.getSelect2Options(fieldType);
@@ -617,6 +647,201 @@
 						$select.val([valueToSet]).trigger('change');
 					}
 				}, 100);
+			}
+		},
+
+		initURFormFieldCondition: function (conditionId, value) {
+			var self = this;
+			var $container = $('.urcr-condition-wrapper[data-condition-id="' + conditionId + '"] .urcr-ur-form-field-condition');
+			if (!$container.length) return;
+
+			var formId = '';
+			var formFields = [];
+			var valueData = $container.attr('data-value');
+			if (valueData) {
+				try {
+					var parsed = JSON.parse(valueData);
+					formId = parsed.form_id || '';
+					formFields = parsed.form_fields || [];
+				} catch (e) {
+					if (value && typeof value === 'object') {
+						formId = value.form_id || '';
+						formFields = value.form_fields || [];
+					}
+				}
+			} else if (value && typeof value === 'object') {
+				formId = value.form_id || '';
+				formFields = value.form_fields || [];
+			}
+
+			var $formSelect = $container.find('.urcr-form-select');
+			var $fieldsList = $container.find('.urcr-form-fields-list');
+
+			if (formId) {
+				$formSelect.val(formId);
+				self.renderFormFields($fieldsList, formId, formFields, conditionId);
+			}
+
+			$formSelect.off('change').on('change', function() {
+				var selectedFormId = $(this).val();
+				if (selectedFormId) {
+					self.renderFormFields($fieldsList, selectedFormId, [{ field_name: '', operator: 'is', value: '' }], conditionId);
+					self.updateURFormFieldValue(conditionId);
+				} else {
+					$fieldsList.empty();
+					self.updateURFormFieldValue(conditionId);
+				}
+			});
+		},
+
+		renderFormFields: function ($container, formId, formFields, conditionId) {
+			var self = this;
+			$container.empty();
+
+			if (!formId || !urcr_membership_access_data.ur_form_data || !urcr_membership_access_data.ur_form_data[formId]) {
+				return;
+			}
+
+			var formFieldData = urcr_membership_access_data.ur_form_data[formId];
+			var fieldOptions = [];
+			for (var fieldName in formFieldData) {
+				if (formFieldData.hasOwnProperty(fieldName)) {
+					fieldOptions.push({
+						value: fieldName,
+						label: formFieldData[fieldName] || fieldName
+					});
+				}
+			}
+
+			if (formFields.length === 0) {
+				formFields = [{ field_name: '', operator: 'is', value: '' }];
+			}
+
+			formFields.forEach(function(field, index) {
+				self.renderFormFieldRow($container, field, index, fieldOptions, conditionId);
+			});
+		},
+
+		renderFormFieldRow: function ($container, field, index, fieldOptions, conditionId) {
+			var self = this;
+			var fieldName = field.field_name || '';
+			var operator = field.operator || 'is';
+			var fieldValue = field.value || '';
+
+			var rowHtml = '<div class="urcr-form-field-row ur-d-flex ur-align-items-center ur-mb-2">' +
+				'<div class="urcr-form-field-name">' +
+				'<select class="components-select-control__input urcr-condition-value-input urcr-form-field-select">' +
+				'<option value="">Select field</option>';
+			fieldOptions.forEach(function(opt) {
+				var selected = opt.value === fieldName ? 'selected' : '';
+				rowHtml += '<option value="' + opt.value + '" ' + selected + '>' + opt.label + '</option>';
+			});
+			rowHtml += '</select></div>' +
+				'<div class="urcr-form-field-operator">' +
+				'<select class="components-select-control__input urcr-condition-value-input urcr-form-field-operator-select">' +
+				'<option value="is"' + (operator === 'is' ? ' selected' : '') + '>is</option>' +
+				'<option value="is not"' + (operator === 'is not' ? ' selected' : '') + '>is not</option>' +
+				'<option value="empty"' + (operator === 'empty' ? ' selected' : '') + '>empty</option>' +
+				'<option value="not empty"' + (operator === 'not empty' ? ' selected' : '') + '>not empty</option>' +
+				'</select></div>';
+
+			if (operator !== 'empty' && operator !== 'not empty') {
+				rowHtml += '<div class="urcr-form-field-value ur-flex-1">' +
+					'<input type="text" class="components-text-control__input urcr-condition-value-input urcr-condition-value-text urcr-form-field-value-input" value="' + (fieldValue || '') + '" placeholder="Enter value">' +
+					'</div>';
+			}
+
+			rowHtml += '<button type="button" class="button urcr-add-field-button" aria-label="Add field">' +
+				'<span class="dashicons dashicons-plus-alt2"></span></button>' +
+				'<button type="button" class="button urcr-remove-field-button" aria-label="Remove field">' +
+				'<span class="dashicons dashicons-minus"></span></button>' +
+				'</div>';
+
+			$container.append(rowHtml);
+
+			var $row = $container.find('.urcr-form-field-row').last();
+			$row.find('.urcr-form-field-select, .urcr-form-field-operator-select, .urcr-form-field-value-input').off('change input').on('change input', function() {
+				self.updateURFormFieldValue(conditionId);
+			});
+
+			$row.find('.urcr-form-field-operator-select').off('change').on('change', function() {
+				var op = $(this).val();
+				var $valueContainer = $row.find('.urcr-form-field-value');
+				if (op === 'empty' || op === 'not empty') {
+					$valueContainer.remove();
+				} else if (!$valueContainer.length) {
+					$row.find('.urcr-form-field-operator').after(
+						'<div class="urcr-form-field-value ur-flex-1">' +
+						'<input type="text" class="components-text-control__input urcr-condition-value-input urcr-condition-value-text urcr-form-field-value-input" placeholder="Enter value">' +
+						'</div>'
+					);
+					$row.find('.urcr-form-field-value-input').off('input').on('input', function() {
+						self.updateURFormFieldValue(conditionId);
+					});
+				}
+				self.updateURFormFieldValue(conditionId);
+			});
+
+			$row.find('.urcr-add-field-button').off('click').on('click', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				var newField = { field_name: '', operator: 'is', value: '' };
+				var newIndex = $container.find('.urcr-form-field-row').length;
+				self.renderFormFieldRow($container, newField, newIndex, fieldOptions, conditionId);
+				self.updateURFormFieldValue(conditionId);
+			});
+
+			$row.find('.urcr-remove-field-button').off('click').on('click', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				var $allRows = $container.find('.urcr-form-field-row');
+				var currentCount = $allRows.length;
+				if (currentCount > 1 && !$(this).prop('disabled')) {
+					$row.remove();
+					var remainingRows = $container.find('.urcr-form-field-row').length;
+					$container.find('.urcr-remove-field-button').prop('disabled', remainingRows <= 1);
+					self.updateURFormFieldValue(conditionId);
+				}
+			});
+
+			var $allRowsAfter = $container.find('.urcr-form-field-row');
+			var shouldDisable = $allRowsAfter.length <= 1;
+			$container.find('.urcr-remove-field-button').prop('disabled', shouldDisable);
+		},
+
+		updateURFormFieldValue: function (conditionId) {
+			var self = this;
+			var $container = $('.urcr-condition-wrapper[data-condition-id="' + conditionId + '"] .urcr-ur-form-field-condition');
+			if (!$container.length) return;
+
+			var formId = $container.find('.urcr-form-select').val() || '';
+			var formFields = [];
+
+			$container.find('.urcr-form-field-row').each(function() {
+				var fieldName = $(this).find('.urcr-form-field-select').val() || '';
+				var operator = $(this).find('.urcr-form-field-operator-select').val() || 'is';
+				var $valueInput = $(this).find('.urcr-form-field-value-input');
+				var value = ($valueInput.length && operator !== 'empty' && operator !== 'not empty') ? $valueInput.val() : '';
+
+				if (fieldName) {
+					formFields.push({
+						field_name: fieldName,
+						operator: operator,
+						value: value
+					});
+				}
+			});
+
+			var conditionValue = {
+				form_id: formId,
+				form_fields: formFields
+			};
+
+			var condition = self.conditions.find(function (c) {
+				return c.id === conditionId;
+			});
+			if (condition) {
+				condition.value = conditionValue;
 			}
 		},
 
@@ -706,6 +931,12 @@
 		updateConditionValue: function (conditionId, $input) {
 			var self = this;
 			var value = '';
+
+			var $container = $('.urcr-condition-wrapper[data-condition-id="' + conditionId + '"] .urcr-ur-form-field-condition');
+			if ($container.length) {
+				self.updateURFormFieldValue(conditionId);
+				return;
+			}
 
 			if ($input.is('select')) {
 				if ($input.is('[multiple]')) {
@@ -1084,33 +1315,57 @@
 				var type = $wrapper.find('.urcr-condition-field-select').val();
 				var value = '';
 
-				// Get value based on input type
-				// Get value based on input type - check for select2 first
-				var $select2 = $wrapper.find('.select2-hidden-accessible');
-				if ($select2.length) {
-					// This is a select2 multiselect
-					value = $select2.val() || [];
-					if (!Array.isArray(value)) {
-						value = value ? [value] : [];
+				if (type === 'ur_form_field') {
+					var condition = self.conditions.find(function (c) {
+						return c.id === conditionId;
+					});
+					if (condition && condition.value && typeof condition.value === 'object') {
+						value = condition.value;
+					} else {
+						var $container = $wrapper.find('.urcr-ur-form-field-condition');
+						if ($container.length) {
+							self.updateURFormFieldValue(conditionId);
+							var updatedCondition = self.conditions.find(function (c) {
+								return c.id === conditionId;
+							});
+							if (updatedCondition && updatedCondition.value) {
+								value = updatedCondition.value;
+							} else {
+								value = { form_id: '', form_fields: [] };
+							}
+						} else {
+							value = { form_id: '', form_fields: [] };
+						}
 					}
 				} else {
-					var $valueInput = $wrapper.find('.urcr-condition-value-input');
-					if ($valueInput.is('select[multiple]')) {
-						var selectedValues = $valueInput.val();
-						value = Array.isArray(selectedValues) ? selectedValues : (selectedValues ? [selectedValues] : []);
-					} else if ($valueInput.is('input[type="radio"]')) {
-						value = $wrapper.find('input[type="radio"]:checked').val() || '';
-					} else if ($wrapper.find('.urcr-period-input-group').length) {
-						// Handle period input
-						var $periodContainer = $wrapper.find('.urcr-period-input-group');
-						var periodSelect = $periodContainer.find('[data-period-part="select"]').val();
-						var periodInput = $periodContainer.find('[data-period-part="input"]').val();
-						value = {
-							select: periodSelect || 'During',
-							input: periodInput || ''
-						};
+					// Get value based on input type
+					// Get value based on input type - check for select2 first
+					var $select2 = $wrapper.find('.select2-hidden-accessible');
+					if ($select2.length) {
+						// This is a select2 multiselect
+						value = $select2.val() || [];
+						if (!Array.isArray(value)) {
+							value = value ? [value] : [];
+						}
 					} else {
-						value = $valueInput.val() || '';
+						var $valueInput = $wrapper.find('.urcr-condition-value-input');
+						if ($valueInput.is('select[multiple]')) {
+							var selectedValues = $valueInput.val();
+							value = Array.isArray(selectedValues) ? selectedValues : (selectedValues ? [selectedValues] : []);
+						} else if ($valueInput.is('input[type="radio"]')) {
+							value = $wrapper.find('input[type="radio"]:checked').val() || '';
+						} else if ($wrapper.find('.urcr-period-input-group').length) {
+							// Handle period input
+							var $periodContainer = $wrapper.find('.urcr-period-input-group');
+							var periodSelect = $periodContainer.find('[data-period-part="select"]').val();
+							var periodInput = $periodContainer.find('[data-period-part="input"]').val();
+							value = {
+								select: periodSelect || 'During',
+								input: periodInput || ''
+							};
+						} else {
+							value = $valueInput.val() || '';
+						}
 					}
 				}
 

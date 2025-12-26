@@ -166,16 +166,16 @@ const RuleCard = ({
 								<button
 									className="urcr-menu-item urcr-menu-trash"
 									type="button"
-									disabled={rule.rule_type === "membership" || Boolean(rule.is_migrated)}
+									disabled={(!isURDev() && rule.rule_type === "membership") || Boolean(rule.is_migrated)}
 									onClick={(e) => {
 										e.stopPropagation();
-										if (!(rule.rule_type === "membership" || Boolean(rule.is_migrated))) {
+										if (!((!isURDev() && rule.rule_type === "membership") || Boolean(rule.is_migrated))) {
 											handleDeleteClick();
 										}
 									}}
 									style={{
-										opacity: (rule.rule_type === "membership" || Boolean(rule.is_migrated)) ? 0.5 : 1,
-										cursor: (rule.rule_type === "membership" || Boolean(rule.is_migrated)) ? "not-allowed" : "pointer"
+										opacity: ((!isURDev() && rule.rule_type === "membership") || Boolean(rule.is_migrated)) ? 0.5 : 1,
+										cursor: ((!isURDev() && rule.rule_type === "membership") || Boolean(rule.is_migrated)) ? "not-allowed" : "pointer"
 									}}
 								>
 									<span className="dashicons dashicons-trash"></span>
@@ -184,16 +184,16 @@ const RuleCard = ({
 								<button
 									className="urcr-menu-item urcr-menu-duplicate"
 									type="button"
-									disabled={rule.rule_type === "membership"}
+									disabled={!isURDev() && rule.rule_type === "membership"}
 									onClick={(e) => {
 										e.stopPropagation();
-										if (rule.rule_type !== "membership") {
+										if (isURDev() || rule.rule_type !== "membership") {
 											handleDuplicateClick();
 										}
 									}}
 									style={{
-										opacity: rule.rule_type === "membership" ? 0.5 : 1,
-										cursor: rule.rule_type === "membership" ? "not-allowed" : "pointer"
+										opacity: (!isURDev() && rule.rule_type === "membership") ? 0.5 : 1,
+										cursor: (!isURDev() && rule.rule_type === "membership") ? "not-allowed" : "pointer"
 									}}
 								>
 									<span className="dashicons dashicons-admin-page"></span>
