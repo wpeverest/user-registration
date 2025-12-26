@@ -8,6 +8,11 @@ $infoColor: #17a2b8;
 $grey-400: #383838;
 $grey-0: #ffffff;
 
+@import "../../variables/colors";
+@import "../../variables/structure";
+@import "../../variables/variables";
+@import "../../variables/grids";
+
 html {
 	scroll-behavior: smooth;
 }
@@ -16,6 +21,7 @@ html {
 	0% {
 		transform: rotate(0deg);
 	}
+
 	100% {
 		transform: rotate(360deg);
 	}
@@ -181,8 +187,8 @@ html {
 		}
 
 		.ur_membership_divider {
-			margin: 16px 0 24px;
-			background-color: #e1e1e1;
+			margin: $spacing_16px 0 $spacing_24px;
+			background: $border-color;
 			border: 0;
 			height: 1px;
 		}
@@ -190,30 +196,94 @@ html {
 		.ur_membership_frontend_input_container {
 			display: flex;
 			flex-direction: column;
-			margin-bottom: 12px;
-			gap: 5px;
+
+			.description {
+				margin-bottom: 10px;
+			}
 
 			&:last-child {
 				margin-bottom: 0;
 			}
 
+			.stripe-container {
+				button {
+					display: none;
+				}
+			}
+
 			.ur_membership_input_label {
 				display: flex;
-				align-items: center;
-				color: #383838;
-				font-size: 14px;
-				font-weight: 700;
-				line-height: 25px;
-				margin-bottom: 0;
+				// align-items: center;
+				align-items: flex-start;
 				margin-top: 0;
+				margin-bottom: $spacing_16px;
+				border-radius: $border_radius_4;
+				border: $border_width solid $border-color;
+				padding: $spacing_14px;
+				gap: $spacing_8px;
+				margin-bottom: $spacing_12px;
+				color: #222222;
+				font-size: 15px;
+				font-weight: 500;
+				line-height: 19px;
+
+				&:first-child {
+					padding: 0;
+					border-radius: 0px;
+					border: 0;
+					margin-bottom: $spacing_8px;
+				}
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+
+				input[type="radio"] {
+					margin: 0;
+					margin-top: $spacing_2px;
+					width: 14px;
+					height: 14px;
+					min-height: unset;
+					accent-color: $primary_color;
+
+					&:checked {
+						border-color: $primary_color;
+						background: $primary_color;
+					}
+				}
+
+				&:has(input[type="radio"]:checked) {
+					border-color: $primary_color;
+				}
+
+				.ur-membership-duration {
+					margin: 0;
+					color: #1f1f1f;
+					font-family: inherit;
+					font-size: 14px;
+					font-weight: 500;
+					line-height: 18px;
+					text-transform: capitalize;
+					flex: 1;
+
+					&:last-child {
+						color: #1f1f1f;
+						font-size: 15px;
+						font-weight: 600;
+						line-height: 18px;
+						margin-left: auto;
+						flex: unset;
+						margin-left: 8px;
+					}
+				}
 			}
 
 			.ur_membership_input_class {
 				&:not(.ur_membership_radio_input, .pg-list) {
 					height: 38px;
-					padding: 0 14px;
-					border-radius: 4px;
-					border: 1px solid #e9e9e9;
+					padding: 0 $spacing_14px;
+					border-radius: $border_radius_4;
+					border: $border_width solid $border-color;
 					background: $color_2;
 					color: #383838;
 					margin-bottom: 0;
@@ -253,499 +323,633 @@ html {
 				}
 			}
 		}
-	}
 
-	// Frontend Registration CSS
-	.ur_membership_input_label {
-		display: flex;
-		align-items: center;
+		#urm-total_container {
+			position: relative;
+			margin-top: $spacing_32px;
 
-		input[type="radio"] {
-			margin-right: 8px;
-		}
-
-		.ur-membership-duration {
-			margin-top: 0;
-			margin-right: 6px;
-
-			&:last-child {
-				margin-right: 0;
-			}
-		}
-	}
-
-	// Thankyou Page CSS
-	.thank-you-page-container {
-		display: flex;
-		flex-direction: column;
-		margin: 32px auto;
-		padding: 40px;
-		border-radius: 12px;
-		background: var(--Grey-grey-0, #fff);
-		box-shadow: 0px 6px 25px 0px rgba(10, 10, 10, 0.08);
-		gap: 20px;
-
-		.message-section {
-			display: block;
-			p {
-				margin-bottom: 0;
-				margin-top: 0;
+			&::before {
+				content: "";
+				position: absolute;
+				background: $border-color;
+				width: 100%;
+				height: 1px;
+				top: -$spacing_24px;
+				left: 0;
 			}
 
-			.header-section {
-				text-align: center;
-				font-weight: 600;
-				font-size: 20px;
-				margin-bottom: 30px;
-				padding-right: 40px;
-				padding-left: 40px;
-				line-height: 30px;
-			}
-		}
-
-		> p {
-			margin-bottom: 0;
-		}
-
-		.thank-you-notice {
-			padding: 1em;
-			font-size: small;
-			font-style: italic;
-
-			&.info {
-				background-color: #f7fbff;
-				border: 1px solid #475bb2;
-				padding: 12px 16px;
-				border-radius: 4px;
-				font-size: 14px;
-				line-height: 150%;
+			.urm-membership-total-value {
 				display: flex;
-				flex-direction: row;
-				gap: 12px;
-				align-items: start;
+				align-items: center;
+				justify-content: space-between;
+				gap: $spacing_20px;
+				padding: $spacing_14px;
+				border-radius: $border_radius_4;
+				border: $border_width dashed $primary_color;
+				background: #f8f8fa;
+			}
 
-				svg {
-					flex: 0 0 5%;
+			.ur_membership_input_label {
+				margin-bottom: 0;
+				color: #383838;
+				font-size: 16px;
+				font-weight: 600;
+				line-height: 24px;
+			}
+
+			.ur_membership_input_class {
+				padding: 0;
+				border: 0;
+				border-radius: 0;
+				background: transparent;
+				border-radius: 0;
+				text-align: right;
+				color: #383838;
+				font-size: 18px;
+				font-weight: 700;
+				line-height: 24px;
+				min-height: unset;
+				height: unset;
+			}
+		}
+
+		.ur_payment_gateway_container {
+			.ur_membership_divider {
+				margin: $spacing_24px 0 $spacing_16px;
+			}
+
+			.ur_membership_input_label {
+				padding: 0;
+				border: 0;
+				border-radius: 0;
+			}
+
+			#payment-gateway-body {
+				.ur-membership-payment-gateway-lists {
+					display: flex;
+					align-items: center;
+					gap: $spacing_20px;
+
+					@media screen and (max-width: 600px) {
+						flex-direction: column;
+						gap: 0;
+
+						.ur_membership_input_label {
+							width: 100%;
+						}
+					}
+				}
+
+				.ur_membership_input_label {
+					border-radius: $border_radius_4;
+					border: $border_width solid $border-color;
+					padding: $spacing_14px;
+					min-height: 48px;
+					margin-bottom: $spacing_20px;
+					justify-content: center;
+					flex: 1;
+					align-items: center;
+					transition: all 0.3s ease;
+
+					&:hover {
+						border-color: $primary_color;
+					}
+
+					&[for="ur-membership-stripe"] {
+						.ur-membership-duration {
+							color: #635bff;
+						}
+					}
+
+					input[type="radio"] {
+						display: none;
+					}
+
+					&:has(input[type="radio"]:checked) {
+						background: lighten($primary_color, 50%);
+						border-color: $primary_color;
+					}
+
+					.ur-membership-duration {
+						margin-left: unset;
+
+						img {
+							width: auto;
+							height: 30px;
+						}
+					}
+				}
+
+				#payment-gateway-notice {
+					&:empty {
+						display: none;
+					}
 				}
 			}
 		}
 
-		.footer-section {
-			margin-bottom: 20px;
+		// Frontend Registration CSS
+		.ur_membership_input_label {
+			display: flex;
+			align-items: center;
+
+			input[type="radio"] {
+				margin-right: $spacing_8px;
+			}
+
+			.ur-membership-duration {
+				margin-top: 0;
+				margin-right: $spacing_6px;
+
+				&:last-child {
+					margin-right: 0;
+				}
+			}
+		}
+
+		// Thankyou Page CSS
+		.thank-you-page-container {
+			display: flex;
+			flex-direction: column;
+			margin: $spacing_32px auto;
+			padding: $spacing_40px;
+			border-radius: 12px;
+			background: $white;
+			box-shadow: 0px 6px 25px 0px rgba(10, 10, 10, 0.08);
+			gap: $spacing_20px;
+
+			.message-section {
+				display: block;
+
+				p {
+					margin-bottom: 0;
+					margin-top: 0;
+				}
+
+				.header-section {
+					text-align: center;
+					font-weight: 600;
+					font-size: 20px;
+					margin-bottom: 30px;
+					padding-right: 40px;
+					padding-left: 40px;
+					line-height: 30px;
+				}
+			}
+
+			> p {
+				margin-bottom: 0;
+			}
+
+			.thank-you-notice {
+				padding: 1em;
+				font-size: small;
+				font-style: italic;
+
+				&.info {
+					background-color: #f7fbff;
+					border: 1px solid #475bb2;
+					padding: 12px 16px;
+					border-radius: 4px;
+					font-size: 14px;
+					line-height: 150%;
+					display: flex;
+					flex-direction: row;
+					gap: 12px;
+					align-items: start;
+
+					svg {
+						flex: 0 0 5%;
+					}
+				}
+			}
+
+			.footer-section {
+				margin-bottom: 20px;
+			}
 		}
 	}
-}
 
-.membership-footer {
-	padding: 20px;
-}
+	.membership-body {
+		padding: 20px;
+	}
 
-.membership-body {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-	padding: 20px 0;
+	.membership-footer {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		padding: 20px 0;
 
-	.membership-signup-button {
-		width: 200px;
+		.membership-signup-button {
+			width: 200px;
+			cursor: pointer;
+			font-size: 14px;
+			background: #475bb2;
+			color: $color_2;
+			padding: 10px 0;
+			border-radius: 5px;
+			border: none;
+			font-family: inherit;
+		}
+	}
+
+	.membership-amount {
+		color: $color_1;
+		font-weight: bold;
+		font-size: x-large;
+	}
+
+	.membership-title {
+		font-weight: bold;
+		font-size: x-large;
+		padding: 20px 0 0 0;
+	}
+
+	.ur-membership-duration {
+		font-weight: normal;
+		color: $color_4;
+		display: inline-block;
+		vertical-align: middle;
+		margin-top: 2px;
+	}
+
+	.membership-primary-btn {
+		position: relative;
+		width: max-content;
 		cursor: pointer;
 		font-size: 14px;
-		background: #475bb2;
+		background: $color_1;
 		color: $color_2;
 		padding: 10px 0;
-		border-radius: 5px;
+		border-radius: 4px;
 		border: none;
-		font-family: inherit;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+		padding: 8px 16px;
+		font-size: 15px;
+		font-weight: 500;
+		line-height: 25px;
+		transition: all 0.3s;
+
 		&:hover {
+			color: $color_2;
 			background: #38488e;
 		}
-	}
-}
 
-.membership-amount {
-	color: $color_1;
-	font-weight: bold;
-	font-size: x-large;
-}
-
-.membership-title {
-	font-weight: bold;
-	font-size: x-large;
-	padding: 20px 0 0 0;
-}
-
-.ur-membership-duration {
-	font-weight: normal;
-	color: $color_4;
-	display: inline-block;
-	vertical-align: middle;
-	margin-top: 2px;
-}
-
-.membership-primary-btn {
-	position: relative;
-	width: max-content;
-	cursor: pointer;
-	font-size: 14px;
-	background: $color_1;
-	color: $color_2;
-	padding: 10px 0;
-	border-radius: 4px;
-	border: none;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 10px;
-	padding: 8px 16px;
-	font-size: 15px;
-	font-weight: 500;
-	line-height: 25px;
-	transition: all 0.3s;
-
-	&:hover {
-		color: $color_2;
-		background: #38488e;
+		&:disabled {
+			background: #818286;
+			color: $color_2;
+			cursor: not-allowed;
+		}
 	}
 
-	&:disabled {
-		background: #818286;
-		color: $color_2;
-		cursor: not-allowed;
-	}
-}
-
-.urm-spinner {
-	display: inline-block;
-	width: 10px;
-	height: 10px;
-	border: 3px solid rgba(0, 0, 0, 0.14);
-	border-radius: 50%;
-	border-top-color: $border-top-color_1;
-	animation: spin 1s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
-}
-
-.user-registration-membership-content {
 	.urm-spinner {
-		width: 15px;
-		height: 15px;
+		display: inline-block;
+		width: 10px;
+		height: 10px;
+		border: 3px solid rgba(0, 0, 0, 0.14);
 		border-radius: 50%;
-		margin-left: 5px;
+		border-top-color: $border-top-color_1;
+		animation: spin 1s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
 	}
 
-	span.urm-help-tip::before {
-		content: "";
-		background-image: url(../../../images/settings-icons/information.svg) !important;
-		background-repeat: no-repeat !important;
-		background-size: 100% !important;
-		display: block;
-		width: 12px;
-		height: 12px;
-		cursor: pointer;
-		padding: 4px;
-		background: 0 0;
-		border-radius: 3px;
-		transform: rotate(26deg);
-	}
-}
+	.user-registration-membership-content {
+		.urm-spinner {
+			width: 15px;
+			height: 15px;
+			border-radius: 50%;
+			margin-left: 5px;
+		}
 
-.notice-container {
-	.notice {
-		&_red,
-		&_blue {
-			&:empty {
-				padding: 0;
+		span.urm-help-tip::before {
+			content: "";
+			background-image: url(../../../images/settings-icons/information.svg) !important;
+			background-repeat: no-repeat !important;
+			background-size: 100% !important;
+			display: block;
+			width: 12px;
+			height: 12px;
+			cursor: pointer;
+			padding: 4px;
+			background: 0 0;
+			border-radius: 3px;
+			transform: rotate(26deg);
+		}
+	}
+
+	.notice-container {
+		.notice {
+			&_red,
+			&_blue {
+				&:empty {
+					padding: 0;
+				}
+
+				padding: 10px 12px;
+				font-size: 14px;
+				line-height: 22px;
 			}
 
-			padding: 10px 12px;
-			font-size: 14px;
-			line-height: 22px;
+			&_red {
+				background: #fdd9d9;
+				border-left: 3px solid #dc3545;
+				word-wrap: break-word;
+			}
+
+			&_red::before {
+				content: "\f534";
+			}
+
+			&_blue {
+				border-left: 3px solid #007bff;
+				background: #e2e2fd;
+				word-wrap: break-word;
+			}
 		}
 
-		&_red {
-			background: #fdd9d9;
-			border-left: 3px solid #dc3545;
-			word-wrap: break-word;
-		}
-
-		&_red::before {
-			content: "\f534";
-		}
-
-		&_blue {
-			border-left: 3px solid #007bff;
-			background: #e2e2fd;
-			word-wrap: break-word;
-		}
+		position: fixed;
+		top: 50px;
+		right: -700px;
+		z-index: 9999;
+		transition: right 0.5s ease;
 	}
 
-	position: fixed;
-	top: 50px;
-	right: -700px;
-	z-index: 9999;
-	transition: right 0.5s ease;
-}
-
-.close_notice {
-	color: $color_3;
-	cursor: pointer;
-	font-weight: bold;
-}
-
-.notice-container.active {
-	right: 20px;
-}
-
-.urm-d-none {
-	display: none !important;
-}
-
-#ur-payment-gateway-body {
-	display: flex;
-	flex-direction: column;
-
-	input {
+	.close_notice {
+		color: $color_3;
 		cursor: pointer;
+		font-weight: bold;
 	}
-}
 
-label {
-	cursor: pointer;
-}
+	.notice-container.active {
+		right: 20px;
+	}
 
-.message-section {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-}
+	.urm-d-none {
+		display: none !important;
+	}
 
-.coupon-input-area {
-	display: flex;
-	justify-content: space-between;
-	gap: 20px;
-
-	.input_with_clear_btn {
+	#ur-payment-gateway-body {
 		display: flex;
-		position: relative;
-		justify-content: center;
-		align-items: center;
-		width: 100%;
+		flex-direction: column;
 
 		input {
-			width: 100%;
-			padding: 10px 30px 10px 10px;
+			cursor: pointer;
 		}
 	}
 
-	button {
-		width: 50%;
-	}
-
-	span {
-		position: absolute;
-		right: 10px;
+	label {
 		cursor: pointer;
-		font-weight: 600;
 	}
-}
 
-#total-input-notice {
-	font-style: italic;
-	font-size: x-small;
-}
+	.message-section {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
 
-.stripe-input-container {
-	border: 1px solid #e9e9e9;
-}
+	.coupon-input-area {
+		display: flex;
+		justify-content: space-between;
+		gap: 20px;
 
-.stripe-card-indicator {
-	background: #475bb2;
-	color: #fff;
-	border-radius: 4px 4px 0 0;
-	border: none;
-	padding: 8px 16px;
-	font-size: 15px;
-	font-weight: 500;
-}
-
-.user-registration-upgrade-membership-swal2-container {
-	&.swal2-modal {
-		padding: 0px !important;
-		font-size: large;
-
-		.swal2-header {
-			padding: 20px;
-			align-items: baseline;
-
-			h2 {
-				border-bottom: 1px solid #d3d3d3;
-				padding-bottom: 16px;
-				width: 100%;
-				text-align: left;
-				margin-bottom: 0;
-				color: #3d3d3d;
-				font-size: 20px;
-				font-weight: 600;
-				line-height: 24px;
-				font-family: inherit;
-			}
-		}
-
-		.swal2-content {
-			text-align: left;
-			color: $grey-400;
-			font-size: 14px;
-			font-weight: 400;
-			line-height: 24px;
-
-			.ur_membership_registration_container {
-				margin: 0;
-			}
-		}
-
-		.swal2-actions {
+		.input_with_clear_btn {
 			display: flex;
-			flex-direction: row-reverse;
-			justify-content: end;
-			padding: 18px 20px;
-			gap: 10px;
-			margin-top: 10px;
-			border-radius: 0 0 5px 5px;
+			position: relative;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
 
-			button {
-				width: 30%;
+			input {
+				width: 100%;
+				padding: 10px 30px 10px 10px;
+			}
+		}
+
+		button {
+			width: 50%;
+		}
+
+		span {
+			position: absolute;
+			right: 10px;
+			cursor: pointer;
+			font-weight: 600;
+		}
+	}
+
+	#total-input-notice {
+		font-style: italic;
+		font-size: x-small;
+	}
+
+	.stripe-input-container {
+		border: 1px solid #e9e9e9;
+	}
+
+	.stripe-card-indicator {
+		background: #475bb2;
+		color: #fff;
+		border-radius: 4px 4px 0 0;
+		border: none;
+		padding: 8px 16px;
+		font-size: 15px;
+		font-weight: 500;
+	}
+
+	.user-registration-upgrade-membership-swal2-container {
+		&.swal2-modal {
+			padding: 0px !important;
+			font-size: large;
+
+			.swal2-header {
+				padding: 20px;
+				align-items: baseline;
+
+				h2 {
+					border-bottom: 1px solid #d3d3d3;
+					padding-bottom: 16px;
+					width: 100%;
+					text-align: left;
+					margin-bottom: 0;
+					color: #3d3d3d;
+					font-size: 20px;
+					font-weight: 600;
+					line-height: 24px;
+					font-family: inherit;
+				}
+			}
+
+			.swal2-content {
+				text-align: left;
 				color: $grey-400;
 				font-size: 14px;
 				font-weight: 400;
 				line-height: 24px;
-				margin: 0;
-				padding: 6px 12px;
-				box-shadow: 0 1px 2px 0 #00000029;
 
-				&:focus {
-					border: 0;
-					outline: none;
-					box-shadow: none;
+				.ur_membership_registration_container {
+					margin: 0;
 				}
+			}
 
-				&.swal2-confirm {
-					color: $grey-0;
-					display: flex !important;
-					align-items: center;
-					gap: 5px;
-					justify-content: center;
-				}
+			.swal2-actions {
+				display: flex;
+				flex-direction: row-reverse;
+				justify-content: end;
+				padding: 18px 20px;
+				gap: 10px;
+				margin-top: 10px;
+				border-radius: 0 0 5px 5px;
 
-				&.swal2-cancel {
+				button {
+					width: 30%;
 					color: $grey-400;
-					background: $grey-0 !important;
+					font-size: 14px;
+					font-weight: 400;
+					line-height: 24px;
+					margin: 0;
+					padding: 6px 12px;
+					box-shadow: 0 1px 2px 0 #00000029;
+
+					&:focus {
+						border: 0;
+						outline: none;
+						box-shadow: none;
+					}
+
+					&.swal2-confirm {
+						color: $grey-0;
+						display: flex !important;
+						align-items: center;
+						gap: 5px;
+						justify-content: center;
+					}
+
+					&.swal2-cancel {
+						color: $grey-400;
+						background: $grey-0 !important;
+					}
+				}
+			}
+
+			.swal2-actions.swal2-loading {
+				display: flex;
+				justify-content: center;
+				margin-top: 0;
+			}
+		}
+	}
+
+	#pg-container {
+		display: none;
+	}
+
+	.membership-upgrade-container {
+		display: flex;
+		gap: 10px;
+		flex-direction: column;
+
+		.ur_membership_registration_container {
+			.ur_membership_frontend_input_container {
+				margin-bottom: 0;
+			}
+		}
+
+		.ur-upgrade-label {
+			font-weight: 700;
+		}
+
+		.StripeElement {
+			padding: 4px 8px;
+			border: 1px solid #e1e1e1;
+
+			.__PrivateStripeElement {
+				width: 100%;
+				padding: 4px 8px;
+				border-radius: 0;
+				min-height: 36px;
+				margin-bottom: 10px;
+				line-height: 1.5;
+
+				iframe {
+					position: absolute;
+					top: 50%;
 				}
 			}
 		}
 
-		.swal2-actions.swal2-loading {
-			display: flex;
-			justify-content: center;
-			margin-top: 0;
-		}
-	}
-}
+		.authorize-net-container {
+			width: 90%;
 
-#pg-container {
-	display: none;
-}
+			.ur-error {
+				color: #d63638;
+			}
 
-.membership-upgrade-container {
-	display: flex;
-	gap: 10px;
-	flex-direction: column;
-	.ur_membership_registration_container {
-		.ur_membership_frontend_input_container {
-			margin-bottom: 0;
-		}
-	}
-	.ur-upgrade-label {
-		font-weight: 700;
-	}
+			.user-registration-one-half {
+				float: left;
+				width: 49%;
+				margin-right: 2%;
+			}
 
-	.StripeElement {
-		padding: 4px 8px;
-		border: 1px solid #e1e1e1;
+			.user-registration-one-half:nth-child(2) {
+				margin-right: 0;
+			}
 
-		.__PrivateStripeElement {
-			width: 100%;
-			padding: 4px 8px;
-			border-radius: 0;
-			min-height: 36px;
-			margin-bottom: 10px;
-			line-height: 1.5;
-			iframe {
-				position: absolute;
-				top: 50%;
+			.user-registration-membership_page_user-registration-frontend-list
+				.shortcode
+				.widefat {
+				width: calc(100% - 40px);
+			}
+
+			.clearfix::before,
+			.clearfix::after {
+				content: " ";
+				display: table;
+			}
+
+			.clearfix::after {
+				clear: both;
+			}
+
+			.user-registration-sub-label {
+				font-size: 10px;
+				font-weight: 400;
+				margin-bottom: 0;
+				color: #494d50;
+				margin-top: -10px;
+			}
+
+			abbr.required {
+				color: red;
+			}
+
+			abbr[title] {
+				text-decoration: none;
+			}
+
+			.ur-field-row input,
+			.ur-field-row select {
+				width: 100%;
+				padding: 4px 8px;
+				line-height: 1.5;
 			}
 		}
 	}
 
-	.authorize-net-container {
-		width: 90%;
-		.ur-error {
-			color: #d63638;
-		}
-		.user-registration-one-half {
-			float: left;
-			width: 49%;
-			margin-right: 2%;
-		}
-
-		.user-registration-one-half:nth-child(2) {
-			margin-right: 0;
-		}
-		.user-registration-membership_page_user-registration-frontend-list
-			.shortcode
-			.widefat {
-			width: calc(100% - 40px);
-		}
-		.clearfix::before,
-		.clearfix::after {
-			content: " ";
-			display: table;
-		}
-		.clearfix::after {
-			clear: both;
-		}
-		.user-registration-sub-label {
-			font-size: 10px;
-			font-weight: 400;
-			margin-bottom: 0;
-			color: #494d50;
-			margin-top: -10px;
-		}
-		abbr.required {
-			color: red;
-		}
-		abbr[title] {
-			text-decoration: none;
-		}
-		.ur-field-row input,
-		.ur-field-row select {
-			width: 100%;
-			padding: 4px 8px;
-			line-height: 1.5;
-		}
-	}
-}
-
-.upgrade-plan-container {
-	#upgradable-plans {
-		display: flex;
-		flex-direction: column;
-		gap: 5px;
-		text-align: left;
-
-		.upgrade-membership-label {
+	.upgrade-plan-container {
+		#upgradable-plans {
 			display: flex;
+			flex-direction: column;
 			gap: 5px;
-			align-items: center;
+			text-align: left;
+
+			.upgrade-membership-label {
+				display: flex;
+				gap: 5px;
+				align-items: center;
+			}
 		}
 	}
 }
