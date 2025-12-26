@@ -207,7 +207,7 @@ class UR_Getting_Started {
 	 * @return \WP_REST_Response
 	 */
 	public static function get_wizard_state( $request ) {
-		update_option('urcr_create_or_update_membership_rule', UR_VERSION);
+		update_option('urm_is_new_installation', true);
 		$current_step    = self::get_current_step();
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
 		$is_completed    = ! get_option( 'user_registration_first_time_activation_flag', true );
