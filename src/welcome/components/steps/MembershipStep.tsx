@@ -30,7 +30,8 @@ import {
 	PopoverContent,
 	PopoverBody,
 	Checkbox,
-	useDisclosure
+	useDisclosure,
+	Spinner
 } from "@chakra-ui/react";
 import { AddIcon, CloseIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { useStateValue } from "../../context/StateProvider";
@@ -182,7 +183,7 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 							))
 						) : (
 							<Text px={3} py={2} color="gray.500" fontSize="sm">
-								No options available
+								{__('No options available','user-registration')}
 							</Text>
 						)}
 					</PopoverBody>
@@ -196,12 +197,16 @@ interface MembershipCardProps {
 	plan: MembershipPlan;
 	pages: ContentOption[];
 	posts: ContentOption[];
+	canCreatePaid: boolean;
+	isPro: boolean;
 }
 
 const MembershipCard: React.FC<MembershipCardProps> = ({
 	plan,
 	pages,
-	posts
+	posts,
+	canCreatePaid,
+	isPro
 }) => {
 	const { dispatch } = useStateValue();
 
@@ -211,6 +216,18 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	const inputBg = useColorModeValue("white", "gray.700");
 	const accessBg = useColorModeValue("green.50", "green.900");
 	const accessBorderColor = useColorModeValue("green.200", "green.700");
+
+	useEffect(() => {
+		if (!isPro && plan.billingPeriod !== "one-time") {
+			dispatch({
+				type: "UPDATE_MEMBERSHIP_PLAN",
+				payload: {
+					id: plan.id,
+					updates: { billingPeriod: "one-time" }
+				}
+			});
+		}
+	}, [isPro, plan.id, plan.billingPeriod, dispatch]);
 
 	const handleCancelPlan = () => {
 		dispatch({
@@ -227,6 +244,10 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	};
 
 	const handleTypeChange = (type: MembershipPlanType) => {
+		
+		if (type === "paid" && !canCreatePaid) {
+			return;
+		}
 		dispatch({
 			type: "UPDATE_MEMBERSHIP_PLAN",
 			payload: { id: plan.id, updates: { type } }
@@ -407,6 +428,16 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 								}}
 								onClick={() => handleTypeChange("paid")}
 								px={6}
+								isDisabled={!canCreatePaid}
+								opacity={canCreatePaid ? 1 : 0.5}
+								cursor={
+									canCreatePaid ? "pointer" : "not-allowed"
+								}
+								title={
+									!canCreatePaid
+										? "Paid memberships require 'Paid Membership' selection in Welcome step"
+										: ""
+								}
 							>
 								Paid
 							</Button>
@@ -433,18 +464,30 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 										borderColor={borderColor}
 									/>
 								</InputGroup>
-								<Select
-									value={plan.billingPeriod}
-									onChange={handleBillingPeriodChange}
-									maxW="130px"
-									bg={inputBg}
-									borderColor={borderColor}
-								>
-									<option value="weekly">Weekly</option>
-									<option value="monthly">Monthly</option>
-									<option value="yearly">Yearly</option>
-									<option value="one-time">One-Time</option>
-								</Select>
+								{isPro && (
+									<Select
+										value={plan.billingPeriod}
+										onChange={handleBillingPeriodChange}
+										maxW="130px"
+										bg={inputBg}
+										borderColor={borderColor}
+									>
+										<>
+											<option value="weekly">
+												Weekly
+											</option>
+											<option value="monthly">
+												Monthly
+											</option>
+											<option value="yearly">
+												Yearly
+											</option>
+											<option value="one-time">
+												One-Time
+											</option>
+										</>
+									</Select>
+								)}
 							</HStack>
 						</Flex>
 					)}
@@ -572,30 +615,79 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 
 const MembershipStep: React.FC = () => {
 	const { state, dispatch } = useStateValue();
-	const { membershipPlans } = state;
+	const { membershipPlans, membershipSetupType } = state;
 
 	const textColor = useColorModeValue("gray.800", "white");
 
 	const [pages, setPages] = useState<ContentOption[]>([]);
 	const [posts, setPosts] = useState<ContentOption[]>([]);
+	const [isLoadingData, setIsLoadingData] = useState(true);
+	const [canCreatePaid, setCanCreatePaid] = useState(
+		membershipSetupType === "paid"
+	);
+
+	const isPro = (window as any)._UR_WIZARD_?.isPro || false;
+	console.log(isPro, "true");
 
 	useEffect(() => {
-		const loadContent = async () => {
+		const loadMembershipsData = async () => {
 			try {
-				const res: any = await apiGet("/content");
-				const content = res.content || res;
+				setIsLoadingData(true);
+				const res: any = await apiGet("/memberships");
+
+				const content = res.content || {};
 				setPages(content.pages || []);
 				setPosts(content.posts || []);
+				setCanCreatePaid(res.can_create_paid || false);
+				if (
+					res.memberships &&
+					Array.isArray(res.memberships) &&
+					res.memberships.length > 0
+				) {
+					const hydratedPlans: MembershipPlan[] = res.memberships.map(
+						(m: any) => ({
+							id: String(m.id),
+							name: m.name || "",
+							type: m.type || "free",
+							price: m.price || "",
+							billingPeriod: m.billingPeriod || "monthly",
+							contentAccess: m.contentAccess || [],
+							isNew: false
+						})
+					);
+
+					dispatch({
+						type: "HYDRATE_FROM_API",
+						payload: {
+							membershipPlans: hydratedPlans
+						}
+					});
+				}
 			} catch (e) {
-				console.error(e);
+				console.error("Failed to load memberships data:", e);
+			} finally {
+				setIsLoadingData(false);
 			}
 		};
-		loadContent();
-	}, []);
+
+		loadMembershipsData();
+	}, [dispatch]);
+
+	useEffect(() => {
+		setCanCreatePaid(membershipSetupType === "paid");
+	}, [membershipSetupType]);
 
 	const handleAddPlan = () => {
 		dispatch({ type: "ADD_MEMBERSHIP_PLAN" });
 	};
+
+	if (isLoadingData) {
+		return (
+			<Flex justify="center" align="center" minH="200px">
+				<Spinner size="lg" color="#475BD8" />
+			</Flex>
+		);
+	}
 
 	return (
 		<>
@@ -619,6 +711,8 @@ const MembershipStep: React.FC = () => {
 						plan={plan}
 						pages={pages}
 						posts={posts}
+						canCreatePaid={canCreatePaid}
+						isPro={isPro}
 					/>
 				))}
 			</VStack>
@@ -633,7 +727,7 @@ const MembershipStep: React.FC = () => {
 					_hover={{ bg: "blue.50" }}
 					onClick={handleAddPlan}
 				>
-					Add More
+					{__("Add More", "user-registration")}
 				</Button>
 			</Flex>
 		</>
