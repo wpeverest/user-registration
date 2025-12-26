@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { __ } from "@wordpress/i18n";
 
-const PeriodInput = ({ value, onChange }) => {
+const PeriodInput = ({ value, onChange, disabled = false }) => {
 	// Value structure: { select: "During" | "After", input: "number" }
 	const [periodValue, setPeriodValue] = useState(
 		value && typeof value === "object"
@@ -47,6 +47,7 @@ const PeriodInput = ({ value, onChange }) => {
 				className="urcr-period-select urcr-condition-value-select"
 				value={periodValue.select}
 				onChange={handleSelectChange}
+				disabled={disabled}
 			>
 				<option value="During">{__("During", "user-registration")}</option>
 				<option value="After">{__("After", "user-registration")}</option>
@@ -58,6 +59,7 @@ const PeriodInput = ({ value, onChange }) => {
 				onChange={handleInputChange}
 				min="0"
 				placeholder={__("Days", "user-registration")}
+				disabled={disabled}
 			/>
 		</div>
 	);

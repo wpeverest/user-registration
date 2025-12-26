@@ -9,6 +9,7 @@ import RuleContentDisplay from "./RuleContentDisplay";
 import DeleteRuleModal from "../modals/DeleteRuleModal";
 import DuplicateRuleModal from "../modals/DuplicateRuleModal";
 import {showSuccess, showError} from "../../utils/notifications";
+import {isURDev} from "../../utils/localized-data";
 
 /* global _UR_DASHBOARD_ */
 const {adminURL} = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
@@ -34,7 +35,6 @@ const RuleCard = ({
 		? `${adminURL}admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule&post-id=${rule.id}`
 		: "#";
 
-	// Close menu when clicking outside
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (menuWrapperRef.current && !menuWrapperRef.current.contains(event.target)) {
@@ -57,7 +57,6 @@ const RuleCard = ({
 		try {
 			const response = await toggleRuleStatus(rule.id, newStatus);
 			if (response.success) {
-				// Update local state instead of reloading all rules
 				if (onRuleStatusUpdate) {
 					onRuleStatusUpdate(rule.id, newStatus);
 				}
@@ -99,11 +98,10 @@ const RuleCard = ({
 
 	return (
 		<div className="user-registration-card ur-mb-2 urcr-rule-card ">
-			{/* Header */}
 			<div
 				className={headerClass}
 				onClick={(e) => {
-					if (!e.target.closest('.integration-action') && !e.target.closest('.urcr-status-toggle')) {
+					if (!e.target.closest('.integration-action') && !e.target.closest('.ur-toggle-section')) {
 						onToggleExpand();
 					}
 				}}
@@ -120,16 +118,16 @@ const RuleCard = ({
 					<span className="urcr-status-label">
 						{__("Status", "user-registration")} :
 					</span>
-					<div className="urcr-status-toggle-wrapper">
-						<label className="urcr-status-toggle" onClick={(e) => e.stopPropagation()}>
+					<div className="ur-toggle-section">
+						<span className="user-registration-toggle-form" onClick={(e) => e.stopPropagation()}>
 							<input
 								type="checkbox"
 								checked={rule.enabled}
 								onChange={handleToggleStatus}
 								disabled={isToggling}
 							/>
-							<span className="urcr-slider"></span>
-						</label>
+							<span className="slider round"></span>
+						</span>
 						{isToggling && (
 							<span className="urcr-toggle-loader spinner is-active"></span>
 						)}
@@ -168,9 +166,16 @@ const RuleCard = ({
 								<button
 									className="urcr-menu-item urcr-menu-trash"
 									type="button"
+									disabled={rule.rule_type === "membership" || Boolean(rule.is_migrated)}
 									onClick={(e) => {
 										e.stopPropagation();
-										handleDeleteClick();
+										if (!(rule.rule_type === "membership" || Boolean(rule.is_migrated))) {
+											handleDeleteClick();
+										}
+									}}
+									style={{
+										opacity: (rule.rule_type === "membership" || Boolean(rule.is_migrated)) ? 0.5 : 1,
+										cursor: (rule.rule_type === "membership" || Boolean(rule.is_migrated)) ? "not-allowed" : "pointer"
 									}}
 								>
 									<span className="dashicons dashicons-trash"></span>
@@ -179,9 +184,16 @@ const RuleCard = ({
 								<button
 									className="urcr-menu-item urcr-menu-duplicate"
 									type="button"
+									disabled={rule.rule_type === "membership"}
 									onClick={(e) => {
 										e.stopPropagation();
-										handleDuplicateClick();
+										if (rule.rule_type !== "membership") {
+											handleDuplicateClick();
+										}
+									}}
+									style={{
+										opacity: rule.rule_type === "membership" ? 0.5 : 1,
+										cursor: rule.rule_type === "membership" ? "not-allowed" : "pointer"
 									}}
 								>
 									<span className="dashicons dashicons-admin-page"></span>
@@ -215,7 +227,6 @@ const RuleCard = ({
 				</div>
 			</div>
 
-			{/* Body */}
 			<div
 				className="user-registration-card__body ur-p-3 integration-body-info"
 				style={{display: isExpanded ? "block" : "none"}}
@@ -235,7 +246,6 @@ const RuleCard = ({
 				</div>
 			</div>
 
-			{/* Delete Modal */}
 			<DeleteRuleModal
 				isOpen={isDeleteModalOpen}
 				onClose={() => setIsDeleteModalOpen(false)}
@@ -243,7 +253,6 @@ const RuleCard = ({
 				onDeleteSuccess={handleDeleteSuccess}
 			/>
 
-			{/* Duplicate Modal */}
 			<DuplicateRuleModal
 				isOpen={isDuplicateModalOpen}
 				onClose={() => setIsDuplicateModalOpen(false)}

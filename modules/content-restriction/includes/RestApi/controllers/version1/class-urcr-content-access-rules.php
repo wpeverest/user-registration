@@ -131,8 +131,8 @@ class URCR_Content_Access_Rules {
 			'numberposts' => - 1,
 			'post_status' => 'publish',
 			'post_type'   => 'urcr_access_rule',
-			'orderby'     => 'ID',
-			'order'       => 'ASC',
+			'orderby'     => 'date',
+			'order'       => 'DESC',
 		);
 
 		/**
@@ -153,6 +153,19 @@ class URCR_Content_Access_Rules {
 			// Check if rule is migrated
 			$is_migrated = get_post_meta( $rule_post->ID, 'urcr_is_migrated', true );
 
+			// Get rule type (membership or custom)
+			$rule_type = get_post_meta( $rule_post->ID, 'urcr_rule_type', true );
+			if ( empty( $rule_type ) ) {
+				// Default to 'custom' for backwards compatibility
+				$rule_type = 'custom';
+			}
+
+			// Get membership ID if this is a membership rule
+			$membership_id = '';
+			if ( 'membership' === $rule_type ) {
+				$membership_id = get_post_meta( $rule_post->ID, 'urcr_membership_id', true );
+			}
+
 			$rule_data = array(
 				'id'              => $rule_post->ID,
 				'title'           => $rule_post->post_title,
@@ -165,6 +178,9 @@ class URCR_Content_Access_Rules {
 				'logic_map'       => $logic_map,
 				'target_contents' => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
 				'is_migrated'     => ! empty( $is_migrated ),
+				'rule_type'       => $rule_type,
+				'membership_id'   => $membership_id,
+				'created_at'      => $rule_post->post_date,
 			);
 
 			/**
@@ -232,13 +248,19 @@ class URCR_Content_Access_Rules {
 		 */
 		$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'create' );
 
+		// Unslash data before encoding to prevent double-escaping issues with quotes in HTML content
+		$access_rule_data = wp_unslash( $access_rule_data );
+		$access_rule_data_json = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		// Slash the JSON string so wp_insert_post() unslashing doesn't corrupt the JSON
+		$access_rule_data_json = wp_slash( $access_rule_data_json );
+
 		// Prepare the post data similar to prepare_access_rule_as_wp_post
 		$access_rule_post = apply_filters(
 			'urcr_prepared_access_rule_as_wp_post',
 			array(
 				'ID'             => '',
 				'post_title'     => $title,
-				'post_content'   => wp_json_encode( $access_rule_data ),
+				'post_content'   => $access_rule_data_json,
 				'post_type'      => 'urcr_access_rule',
 				'post_status'    => 'publish',
 				'comment_status' => 'closed',
@@ -254,6 +276,9 @@ class URCR_Content_Access_Rules {
 		$rule_id = wp_insert_post( $access_rule_post );
 
 		if ( $rule_id ) {
+			// Set rule type to 'custom' for newly created rules
+			update_post_meta( $rule_id, 'urcr_rule_type', 'custom' );
+
 			// Fire post-create action
 			do_action( 'urcr_post_create_content_access_rule', $access_rule_post, $rule_id );
 
@@ -460,8 +485,11 @@ class URCR_Content_Access_Rules {
 			 */
 			$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'update' );
 
-			// Use the same logic as prepare_access_rule_as_wp_post
-			$access_rule_data_json = wp_json_encode( $access_rule_data );
+			// Unslash data before encoding to prevent double-escaping issues with quotes in HTML content
+			$access_rule_data = wp_unslash( $access_rule_data );
+			$access_rule_data_json = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+			// Slash the JSON string so wp_insert_post() unslashing doesn't corrupt the JSON
+			$access_rule_data_json = wp_slash( $access_rule_data_json );
 
 			$access_rule_post = apply_filters(
 				'urcr_prepared_access_rule_as_wp_post',
@@ -593,6 +621,9 @@ class URCR_Content_Access_Rules {
 		$new_rule_id = wp_insert_post( $new_post );
 
 		if ( $new_rule_id ) {
+			// Set rule type to 'custom' for duplicated rules (duplicated rules are always custom)
+			update_post_meta( $new_rule_id, 'urcr_rule_type', 'custom' );
+
 			return new \WP_REST_Response(
 				array(
 					'success' => true,
@@ -636,6 +667,23 @@ class URCR_Content_Access_Rules {
 				404
 			);
 		}
+
+		// Prevent deletion of membership rules
+		$rule_type = get_post_meta( $rule_id, 'urcr_rule_type', true );
+		if ( 'membership' === $rule_type && !UR_DEV) {
+			return new \WP_REST_Response(
+				array(
+					'success' => false,
+					'message' => esc_html__( 'Membership rules cannot be deleted.', 'user-registration' ),
+				),
+				403
+			);
+		}
+
+		// Clear rule meta before deletion
+		delete_post_meta( $rule_id, 'urcr_rule_type' );
+		delete_post_meta( $rule_id, 'urcr_membership_id' );
+		delete_post_meta( $rule_id, 'urcr_is_migrated' );
 
 		if ( $force ) {
 			$result = wp_delete_post( $rule_id, true );

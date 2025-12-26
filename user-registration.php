@@ -3,7 +3,7 @@
  * Plugin Name: User Registration & Membership
  * Plugin URI: https://wpuserregistration.com/
  * Description: The most flexible User Registration and Membership plugin for WordPress.
- * Version: 4.4.6
+ * Version: 4.4.8
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -35,7 +35,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '4.4.6';
+		public $version = '4.4.8';
 
 		/**
 		 * Session instance.
@@ -286,10 +286,17 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 				include_once UR_ABSPATH . 'modules/payment-history/Orders.php';
 			}
 
-			if ( ur_check_module_activation( 'content-restriction' ) ) {
-				include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
-				include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
-			}
+		// Check if there are membership rules (>= 2)
+		$membership_rules_count = 0;
+		if ( function_exists( 'ur_get_membership_rules_count' ) ) {
+			$membership_rules_count = ur_get_membership_rules_count();
+		}
+
+		if ( ur_check_module_activation( 'content-restriction' ) || $membership_rules_count >= 2 ) {
+
+			include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
+		}
 
 			/**
 			 * Elementor classes.

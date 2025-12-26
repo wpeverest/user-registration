@@ -1,9 +1,10 @@
 /**
  * External Dependencies
  */
-import React, {useState} from "react";
-import {__} from "@wordpress/i18n";
-import {getURCRData, isProAccess} from "../../utils/localized-data";
+import React from "react";
+import { __ } from "@wordpress/i18n";
+import { getFilteredConditionOptions } from "../../utils/condition-options";
+import DropdownMenu from "./DropdownMenu";
 
 // Group options by category
 const groupOptions = (options) => {
@@ -35,77 +36,17 @@ const groupOptions = (options) => {
 		}));
 };
 
-const ConditionFieldDropdown = ({onSelect, isMigrated = false}) => {
-	const [selectedValue, setSelectedValue] = useState("");
-
-	// Get condition options from localized data
-	const allConditionOptions = getURCRData("condition_options", []);
-	
-	// Filter options based on pro access and migration status
-	const isMigratedBool = Boolean(isMigrated);
-	const isPro = isProAccess();
-	
-	let filteredOptions;
-	
-	// Pro users: show all conditions
-	if (isPro) {
-		filteredOptions = allConditionOptions;
-	}
-	// Free users with migrated rules: show only user_state, roles, and membership
-	else if (isMigratedBool) {
-		filteredOptions = allConditionOptions.filter(option => 
-			option.value === "membership" || 
-			option.value === "roles" || 
-			option.value === "user_state"
-		);
-	}
-	// Free users with non-migrated rules: only show membership
-	else {
-		filteredOptions = allConditionOptions.filter(option => option.value === "membership");
-	}
-
+const ConditionFieldDropdown = ({ onSelect, isMigrated = false, ruleType = null, isFirstCondition = false }) => {
+	// Use shared utility function to get filtered condition options
+	const filteredOptions = getFilteredConditionOptions(isMigrated, ruleType, isFirstCondition);
 	const options = groupOptions(filteredOptions);
-
-	const handleOptionClick = (option) => {
-		setSelectedValue(option.value);
-		if (onSelect) {
-			onSelect(option);
-		}
-	};
-
 	return (
-		<div className="urcr-condition-field-dropdown-menu">
-			{options.map((group, groupIndex) => (
-				<div key={groupIndex} className="urcr-condition-field-dropdown-group">
-					<div className="urcr-condition-field-dropdown-group-label">{group.group}</div>
-					{group.options.map((option) => (
-						<span
-							key={option.value}
-							role="button"
-							tabIndex={0}
-							className={`urcr-condition-field-dropdown-option ${
-								selectedValue === option.value ? "is-selected" : ""
-							}`}
-							onClick={(e) => {
-								e.stopPropagation();
-								handleOptionClick(option);
-							}}
-							onKeyDown={(e) => {
-								if (e.key === 'Enter' || e.key === ' ') {
-									e.preventDefault();
-									e.stopPropagation();
-									handleOptionClick(option);
-								}
-							}}
-						>
-							{option.label}
-						</span>
-					))}
-				</div>
-			))}
-		</div>
+		<DropdownMenu
+			options={options}
+			onSelect={onSelect}
+			grouped={true}
+		/>
 	);
 };
 
 export default ConditionFieldDropdown;
-

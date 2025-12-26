@@ -4,51 +4,15 @@
 import React, {useState, useEffect} from "react";
 import {__} from "@wordpress/i18n";
 import ConditionValueInput from "../inputs/ConditionValueInput";
-import {getURCRLocalizedData, getURCRData, isProAccess} from "../../utils/localized-data";
-
-// Get all condition options as a flat array for select dropdown
-const getAllConditionOptions = (isMigrated = false) => {
-	// Get condition options from localized data
-	const allOptions = getURCRData("condition_options", [
-		{value: "membership", label: __("Membership", "user-registration"), type: "multiselect"},
-		{value: "roles", label: __("Roles", "user-registration"), type: "multiselect"},
-		{value: "user_registered_date", label: __("User Registered Date", "user-registration"), type: "date"},
-		{value: "access_period", label: __("Period after Registration", "user-registration"), type: "period"},
-		{value: "user_state", label: __("User State", "user-registration"), type: "checkbox"},
-		{value: "email_domain", label: __("Email Domain", "user-registration"), type: "text"},
-		{value: "post_count", label: __("Minimum Public Posts Count", "user-registration"), type: "number"},
-		{value: "capabilities", label: __("Capabilities", "user-registration"), type: "multiselect"},
-		{value: "registration_source", label: __("User Registration Source", "user-registration"), type: "multiselect"},
-		{value: "ur_form_field", label: __("UR Form Field", "user-registration"), type: "multiselect"},
-		{value: "payment_status", label: __("Payment Status", "user-registration"), type: "multiselect"},
-	]);
-
-	// Filter options based on pro access and migration status
-	const isMigratedBool = Boolean(isMigrated);
-	const isPro = isProAccess();
-	
-	// Pro users: show all conditions
-	if (isPro) {
-		return allOptions;
-	}
-	
-	// Free users with migrated rules: show only user_state, roles, and membership
-	if (isMigratedBool) {
-		return allOptions.filter(option => 
-			option.value === "membership" || 
-			option.value === "roles" || 
-			option.value === "user_state"
-		);
-	}
-	
-	// Free users with non-migrated rules: only show membership
-	return allOptions.filter(option => option.value === "membership");
-};
+import {getFilteredConditionOptions} from "../../utils/condition-options";
 
 const ConditionRow = ({
 						  condition,
 						  onUpdate,
 						  isMigrated = false,
+						  isLocked = false,
+						  ruleType = null,
+						  isFirstCondition = false,
 					  }) => {
 	const [operator] = useState(condition.operator || "is");
 	const [value, setValue] = useState(condition.conditionValue || "");
@@ -61,7 +25,6 @@ const ConditionRow = ({
 		});
 	}, [operator, value]);
 
-	// Sync value when condition type or field changes
 	useEffect(() => {
 		if (condition.conditionValue !== undefined) {
 			setValue(condition.conditionValue);
@@ -78,21 +41,19 @@ const ConditionRow = ({
 
 	const handleFieldChange = (e) => {
 		const selectedValue = e.target.value;
-		const allOptions = getAllConditionOptions(isMigrated);
+		const allOptions = getFilteredConditionOptions(isMigrated, ruleType, isFirstCondition);
 		const selectedOption = allOptions.find(opt => opt.value === selectedValue);
 
 		if (selectedOption) {
-			// Update the condition with new field, label, and inputType
-			// Reset the value since the field type changed
 			const updatedCondition = {
 				...condition,
 				value: selectedOption.value,
 				label: selectedOption.label,
 				inputType: selectedOption.type,
-				type: condition.type || "condition", // Preserve type to distinguish from groups
-				conditionValue: "", // Reset value when field changes
+				type: condition.type || "condition",
+				conditionValue: "",
 			};
-			setValue(""); // Reset local value
+			setValue("");
 			onUpdate(updatedCondition);
 		}
 	};
@@ -102,14 +63,14 @@ const ConditionRow = ({
 		<div className="urcr-condition-row ur-d-flex ur-mt-2 ur-align-items-start">
 			<div className="urcr-condition-only ur-d-flex ur-align-items-start">
 				<div className="urcr-condition-selection-section ur-d-flex ur-align-items-center ur-g-4">
-					{/* Field Name (Select Dropdown) */}
 					<div className="urcr-condition-field-name">
 						<select
 							className="components-select-control__input urcr-condition-value-input"
 							value={condition.value || ""}
 							onChange={handleFieldChange}
+							disabled={isLocked}
 						>
-							{getAllConditionOptions(isMigrated).map((option) => (
+							{getFilteredConditionOptions(isMigrated, ruleType, isFirstCondition).map((option) => (
 								<option key={option.value} value={option.value}>
 									{option.label}
 								</option>
@@ -117,12 +78,10 @@ const ConditionRow = ({
 						</select>
 					</div>
 
-					{/* Operator  */}
 					<div className="urcr-condition-operator">
 						<span>{operator}</span>
 					</div>
 
-					{/* Value Input */}
 					<div className="urcr-condition-value">
 						<ConditionValueInput
 							type={condition.inputType || condition.type}
@@ -131,6 +90,7 @@ const ConditionRow = ({
 							operator={operator}
 							onChange={handleValueChange}
 							uniqueId={condition.id}
+							disabled={isLocked}
 						/>
 					</div>
 				</div>
