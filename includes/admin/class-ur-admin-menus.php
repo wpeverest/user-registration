@@ -997,7 +997,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$login_page_url = $login_page_id ? get_permalink( $login_page_id ) : '';
 				$login_page_title = $login_page_id ? get_the_title( $login_page_id ) : '';
 				include_once __DIR__ . '/views/html-login-page-forms.php';
-			}elseif ( count( $all_forms ) <= 1 && ! empty( $all_forms ) && ! ur_check_module_activation( 'multiple-registration' ) )  {
+			}elseif ( ! empty( $all_forms ) && count( $all_forms ) <= 1 && ! ur_check_module_activation( 'multiple-registration' ) )  {
 				$form_id = key( $all_forms );
 
 				if ( ! isset( $_GET['edit-registration'] ) ) {
@@ -1107,7 +1107,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 			$all_forms = ur_get_all_user_registration_form();
 
-			if ( ( count( $all_forms ) <= 1 && ! empty( $all_forms ) && ! ur_check_module_activation( 'multiple-registration' ) ) ) {
+			if ( ( ! empty( $all_forms ) && count( $all_forms ) <= 1 && ! ur_check_module_activation( 'multiple-registration' ) ) ) {
 				$form_id = key( $all_forms );
 				$form_id_from_url = isset(  $_GET['edit-registration']  ) ?  absint( $_GET['edit-registration'] ) : '';
 
