@@ -240,13 +240,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 		});
 	};
 
-	const handleCurrencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		dispatch({
-			type: "UPDATE_MEMBERSHIP_PLAN",
-			payload: { id: plan.id, updates: { currency: e.target.value } }
-		});
-	};
-
 	const handleBillingPeriodChange = (
 		e: React.ChangeEvent<HTMLSelectElement>
 	) => {
@@ -329,9 +322,13 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 		>
 			<CardBody p={6}>
 				<VStack spacing={5} align="stretch">
-					{/* Name row with cancel button inline */}
 					<Flex align="center">
-						<Text minW="100px" fontWeight="500" color={labelColor} flexShrink={0}>
+						<Text
+							minW="100px"
+							fontWeight="500"
+							color={labelColor}
+							flexShrink={0}
+						>
 							Name :
 						</Text>
 						<Input
@@ -347,7 +344,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 								boxShadow: "0 0 0 1px #475BD8"
 							}}
 						/>
-						{/* Cancel button - inline with Name row */}
+
 						{plan.isNew && (
 							<IconButton
 								aria-label="Cancel new plan"
@@ -362,7 +359,12 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 					</Flex>
 
 					<Flex align="center">
-						<Text minW="100px" fontWeight="500" color={labelColor} flexShrink={0}>
+						<Text
+							minW="100px"
+							fontWeight="500"
+							color={labelColor}
+							flexShrink={0}
+						>
 							Type :
 						</Text>
 						<ButtonGroup size="sm" isAttached variant="outline">
@@ -413,17 +415,16 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 
 					{plan.type === "paid" && (
 						<Flex align="center">
-							<Text minW="100px" fontWeight="500" color={labelColor} flexShrink={0}>
-								Price
+							<Text
+								minW="100px"
+								fontWeight="500"
+								color={labelColor}
+								flexShrink={0}
+							>
+								{__("Price", "user-registration")}
 							</Text>
 							<HStack spacing={3} flex={1}>
 								<InputGroup maxW="150px">
-									<InputLeftElement
-										pointerEvents="none"
-										color="gray.500"
-									>
-										$
-									</InputLeftElement>
 									<Input
 										value={plan.price}
 										onChange={handlePriceChange}
@@ -432,18 +433,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 										borderColor={borderColor}
 									/>
 								</InputGroup>
-								<Select
-									value={plan.currency}
-									onChange={handleCurrencyChange}
-									maxW="100px"
-									bg={inputBg}
-									borderColor={borderColor}
-								>
-									<option value="USD">USD</option>
-									<option value="EUR">EUR</option>
-									<option value="GBP">GBP</option>
-									<option value="INR">INR</option>
-								</Select>
 								<Select
 									value={plan.billingPeriod}
 									onChange={handleBillingPeriodChange}
@@ -460,7 +449,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 						</Flex>
 					)}
 
-					{/* Access Section */}
 					{plan.contentAccess.length > 0 && (
 						<Box
 							bg={accessBg}

@@ -4,7 +4,7 @@
  *
  * Handles the setup wizard endpoints for User Registration & Membership plugin.
  *
- * @since 4.0
+ * @since x.x.x
  *
  * @package UserRegistration/Classes
  */
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class UR_Getting_Started
  *
- * @since 4.0
+ * @since x.x.x
  */
 class UR_Getting_Started {
 
@@ -602,11 +602,11 @@ class UR_Getting_Started {
 	}
 
 	/**
-	 * Step 2 (POST): Save memberships.
+	 * Save memberships from step 2.
 	 *
 	 * @since x.x.x
 	 *
-	 * @param \WP_REST_Request $request Request.
+	 * @param \WP_REST_Request $request Request instance.
 	 * @return \WP_REST_Response
 	 */
 	public static function save_memberships( $request ) {
@@ -628,7 +628,7 @@ class UR_Getting_Started {
 			);
 		}
 
-		$allowed_type = 'paid_membership' === $membership_type ? array( 'free', 'paid' ) : array( 'free' );
+		$allowed_type = ( 'paid_membership' === $membership_type ) ? array( 'free', 'paid' ) : array( 'free' );
 
 		$results = array(
 			'created' => array(),
@@ -652,6 +652,8 @@ class UR_Getting_Started {
 				continue;
 			}
 
+			$is_update = ( ! empty( $membership['id'] ) && is_numeric( $membership['id'] ) );
+
 			$result = self::save_single_membership( $membership );
 
 			if ( is_wp_error( $result ) ) {
@@ -660,7 +662,10 @@ class UR_Getting_Started {
 					'name'    => isset( $membership['name'] ) ? $membership['name'] : '',
 					'message' => $result->get_error_message(),
 				);
-			} elseif ( ! empty( $membership['id'] ) ) {
+				continue;
+			}
+
+			if ( $is_update ) {
 				$results['updated'][] = $result;
 			} else {
 				$results['created'][] = $result;
@@ -694,19 +699,17 @@ class UR_Getting_Started {
 		);
 	}
 
-	/**
-	 * Save a single membership from the setup wizard.
+
+/**
+	 * Save a single membership (insert/update) and sync access rules.
 	 *
-	 * Accepts the simplified wizard payload and converts it to the
-	 * standard membership structure used by the Membership module.
-	 *
-	 * @since 4.5.0
+	 * @since x.x.x
 	 *
 	 * @param array $membership Membership data.
-	 * @return int|\WP_Error Membership post ID on success, WP_Error on failure.
+	 * @return int|\WP_Error
 	 */
 	protected static function save_single_membership( $membership ) {
-		$membership_id = ! empty( $membership['id'] ) ? absint( $membership['id'] ) : 0;
+		$membership_id = ( ! empty( $membership['id'] ) && is_numeric( $membership['id'] ) ) ? absint( $membership['id'] ) : 0;
 
 		if ( empty( $membership['name'] ) ) {
 			return new \WP_Error(
@@ -715,33 +718,36 @@ class UR_Getting_Started {
 			);
 		}
 
-		$type     = ! empty( $membership['type'] ) ? sanitize_text_field( $membership['type'] ) : 'free';
-		$amount   = isset( $membership['price'] ) ? floatval( $membership['price'] ) : 0;
-		$currency = ! empty( $membership['currency'] ) ? sanitize_text_field( $membership['currency'] ) : 'USD';
-		$billing  = ! empty( $membership['billing_period'] ) ? sanitize_text_field( $membership['billing_period'] ) : 'yearly';
+		$type_input = ! empty( $membership['type'] ) ? sanitize_text_field( $membership['type'] ) : 'free';
+		$billing    = ! empty( $membership['billing_period'] ) ? sanitize_text_field( $membership['billing_period'] ) : '';
+		$amount     = isset( $membership['price'] ) ? floatval( $membership['price'] ) : 0;
 
 		$meta = array(
-			'type'             => $type,
-			'amount'           => $amount,
-			'currency'         => $currency,
 			'payment_gateways' => array(),
+			'amount'           => $amount,
 		);
 
-		if ( 'weekly' === $billing ) {
-			$meta['subscription'] = array(
-				'value'    => 1,
-				'duration' => 'week',
-			);
-		} elseif ( 'monthly' === $billing ) {
-			$meta['subscription'] = array(
-				'value'    => 1,
-				'duration' => 'month',
-			);
-		} elseif ( 'yearly' === $billing ) {
-			$meta['subscription'] = array(
-				'value'    => 1,
-				'duration' => 'year',
-			);
+		if ( 'free' === $type_input ) {
+			$meta['type'] = 'free';
+		} elseif ( 'paid' === $type_input ) {
+			if ( in_array( $billing, array( 'weekly', 'monthly', 'yearly' ), true ) ) {
+				$meta['type'] = 'subscription';
+
+				$duration_map = array(
+					'weekly'  => 'week',
+					'monthly' => 'month',
+					'yearly'  => 'year',
+				);
+
+				$meta['subscription'] = array(
+					'value'    => 1,
+					'duration' => $duration_map[ $billing ],
+				);
+			} else {
+				$meta['type'] = 'paid';
+			}
+		} else {
+			$meta['type'] = 'free';
 		}
 
 		$data = array(
@@ -749,7 +755,7 @@ class UR_Getting_Started {
 				'ID'          => $membership_id,
 				'name'        => $membership['name'],
 				'status'      => true,
-				'description' => '',
+				'description' => ! empty( $membership['description'] ) ? wp_kses_post( $membership['description'] ) : '',
 			),
 			'post_meta_data' => $meta,
 		);
@@ -759,7 +765,6 @@ class UR_Getting_Started {
 
 		if ( isset( $prepared['status'] ) && ! $prepared['status'] ) {
 			$message = ! empty( $prepared['message'] ) ? $prepared['message'] : __( 'Invalid membership data.', 'user-registration' );
-
 			return new \WP_Error( 'invalid_membership', $message );
 		}
 
@@ -818,9 +823,19 @@ class UR_Getting_Started {
 				continue;
 			}
 
+			$values = array_values(
+				array_filter(
+					array_map( 'absint', (array) $rule['value'] )
+				)
+			);
+
+			if ( empty( $values ) ) {
+				continue;
+			}
+
 			$formatted_rules[] = array(
 				'type'  => sanitize_text_field( $rule['type'] ),
-				'value' => array_map( 'sanitize_text_field', (array) $rule['value'] ),
+				'value' => $values,
 			);
 		}
 
@@ -828,6 +843,7 @@ class UR_Getting_Started {
 
 		return true;
 	}
+
 
 	/**
 	 * Sync membership access rules with Content Restriction engine.
@@ -857,18 +873,13 @@ class UR_Getting_Started {
 			'user-registration-content-restriction',
 		);
 
-		$features_changed = false;
-
 		foreach ( $required_features as $feature ) {
 			if ( ! in_array( $feature, $enabled_features, true ) ) {
 				$enabled_features[] = $feature;
-				$features_changed   = true;
 			}
 		}
 
-		if ( $features_changed ) {
-			update_option( 'user_registration_enabled_features', $enabled_features );
-		}
+		update_option( 'user_registration_enabled_features', $enabled_features );
 
 		$normalized = array(
 			'pages' => array(),
@@ -880,26 +891,40 @@ class UR_Getting_Started {
 				continue;
 			}
 
-			$type = $rule['type'];
+			$type = sanitize_text_field( $rule['type'] );
 
-			if ( isset( $normalized[ $type ] ) ) {
-				$normalized[ $type ] = array_map( 'intval', (array) $rule['value'] );
+			if ( ! isset( $normalized[ $type ] ) ) {
+				continue;
 			}
+
+			$normalized[ $type ] = array_values(
+				array_unique(
+					array_filter(
+						array_map( 'absint', (array) $rule['value'] )
+					)
+				)
+			);
 		}
 
+		$uuid = function_exists( 'wp_generate_uuid4' ) ? wp_generate_uuid4() : uniqid( '', true );
+
+		$mkid = static function ( $suffix ) use ( $uuid ) {
+			return 'x' . str_replace( '-', '', $uuid ) . '_' . $suffix;
+		};
+
 		$access_rule_data = array(
-			'enabled'        => 1,
+			'enabled'        => true,
 			'access_control' => 'access',
 			'logic_map'      => array(
 				'type'       => 'group',
-				'id'         => 'x' . ( time() * 1000 ),
+				'id'         => $mkid( 'logic' ),
 				'conditions' => array(),
 				'logic_gate' => 'AND',
 			),
 			'target_contents' => array(),
 			'actions'         => array(
 				array(
-					'id'             => 'x' . ( time() * 1000 ),
+					'id'             => $mkid( 'action' ),
 					'type'           => 'message',
 					'access_control' => 'access',
 					'label'          => __( 'Show Message', 'user-registration' ),
@@ -916,6 +941,10 @@ class UR_Getting_Started {
 		);
 
 		foreach ( $normalized as $type => $values ) {
+			if ( empty( $values ) ) {
+				continue;
+			}
+
 			$cr_type = '';
 
 			if ( 'pages' === $type ) {
@@ -929,17 +958,17 @@ class UR_Getting_Started {
 			}
 
 			$access_rule_data['target_contents'][] = array(
-				'id'    => 'x' . ( time() * 1000 ) . '_' . $type,
+				'id'    => $mkid( 'target_' . $type ),
 				'type'  => $cr_type,
 				'value' => $values,
 			);
 		}
 
 		$rule_data = array(
-			'title'            => '',
+			'title'            => get_the_title( $membership_id ) . ' Rule',
 			'access_rule_data' => $access_rule_data,
 			'rule_type'        => 'membership',
-			'membership_id'    => $membership_id,
+			'membership_id'    => absint( $membership_id ),
 		);
 
 		urcr_create_or_update_membership_rule( $membership_id, $rule_data );

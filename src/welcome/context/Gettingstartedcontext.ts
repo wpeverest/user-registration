@@ -13,7 +13,6 @@ export interface MembershipPlan {
 	name: string;
 	type: MembershipPlanType;
 	price: string;
-	currency: string;
 	billingPeriod: BillingPeriod;
 	contentAccess: ContentAccess[];
 	isNew?: boolean;
@@ -58,21 +57,20 @@ const createDefaultPlan = (): MembershipPlan => ({
 	name: "",
 	type: "free",
 	price: "",
-	currency: "USD",
 	billingPeriod: "monthly",
 	contentAccess: [],
 	isNew: false
 });
 
-// Helper to get total steps for a membership type
+
 export const getTotalStepsForType = (membershipType: MembershipSetupType): number => {
 	switch (membershipType) {
 		case "paid":
-			return 4; // Welcome, Membership, Payment, Finish
+			return 4;
 		case "free":
-			return 3; // Welcome, Membership, Finish
+			return 3;
 		case "other":
-			return 2; // Welcome, Finish
+			return 2;
 		default:
 			return 4;
 	}
