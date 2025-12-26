@@ -1147,6 +1147,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', ucwords( str_replace( '_', ' ', get_option( 'user_registration_form_template', 'default' ) ) ) ),
 				'tip'               => __( 'Choose how your registration form looks.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'toggle',
@@ -1250,10 +1251,12 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
-				'type'  => 'section',
-				'title' => __( 'Advanced', 'user-registration' ),
-				'id'    => 'user_registration_form_setting_general_advanced',
-				'class' => array( 'ur-form-settings-section' ),
+
+				'type'    => 'section',
+				'title'   => __( 'Advanced', 'user-registration' ),
+				'id'      => 'user_registration_form_setting_general_advanced',
+				'class'   => array( 'ur-form-settings-section' ),
+				'product' => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'toggle',
@@ -1390,6 +1393,8 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Submit' ),
 				'tip'               => __( 'The label shown on the form’s submit button.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
+
 			),
 			array(
 				'type'              => 'text',
@@ -2104,15 +2109,69 @@ function ur_get_meta_key_label( $form_id ) {
  * @since  1.5.0
  * @return array
  */
-function ur_get_user_extra_fields( $user_id ) {
+function ur_get_user_extra_fields( $user_id, $action = '' ) {
 	$name_value = array();
 
 	$admin_profile = new UR_Admin_Profile();
 	$extra_data    = $admin_profile->get_user_meta_by_form_fields( $user_id );
+	$form_id       = ur_get_form_id_by_userid( $user_id );
+
+	if ( 'export_users' === $action ) {
+
+		$all_meta_for_user = $admin_profile->get_user_meta_by_prefix( $user_id, 'user_registration_' );
+		$form_row_data     = get_post_meta( $form_id, 'user_registration_form_row_data', true );
+		$row_datas         = ! empty( $form_row_data ) ? json_decode( $form_row_data ) : array();
+
+		$repeaters = array();
+		if ( ! empty( $row_datas ) ) {
+			foreach ( $row_datas as $row_data ) {
+				if ( isset( $row_data->type ) && 'repeater' === $row_data->type ) {
+
+					if ( array_key_exists( 'user_registration_' . $row_data->field_name, $all_meta_for_user ) ) {
+						$repeater_rows = maybe_unserialize(
+							$all_meta_for_user[ 'user_registration_' .
+							$row_data->field_name ]
+						);
+
+						if ( ! empty( $repeater_rows ) ) {
+							foreach ( $repeater_rows as $fields ) {
+								foreach ( $fields as $field ) {
+									$field_value = $field->value;
+									$field_type  = isset( $field->field_type ) ? $field->field_type : '';
+
+									if ( in_array( $field_type, array( 'checkbox', 'multi-select' ), true ) ) {
+										$field_value = json_decode( $field_value, true );
+									}
+
+									$field_name  = $field->field_name;
+									$field_value = is_array( $field_value ) ? array( implode( ', ', $field_value ) ) : $field_value;
+
+									$field_key = 'user_registration_' . $field_name;
+
+									if ( array_key_exists( $field_key, $all_meta_for_user ) ) {
+										$all_meta_for_user[ $field_key ] = is_array( $all_meta_for_user[ $field_key ] ) ? array_merge( $all_meta_for_user[ $field_key ], $field_value ) : ( $all_meta_for_user[ $field_key ] . ' - ' . $field_value );
+									} else {
+										$all_meta_for_user[ $field_key ] = $field_value;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	$form_fields   = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array(); //phpcs:ignore.
 	if ( ! empty( $form_fields ) ) {
 		foreach ( $form_fields as $field_key => $field_data ) {
-			$value     = get_user_meta( $user_id, $field_key, true );
+			//For repeator export
+			if ( 'export_users' === $action ) {
+				$value = isset( $all_meta_for_user[ $field_key ] ) ? $all_meta_for_user[ $field_key ] : get_user_meta( $user_id, $field_key, true );
+			} else {
+				$value = get_user_meta( $user_id, $field_key, true );
+			}
+
 			$field_key = str_replace( 'user_registration_', '', $field_key );
 
 			if ( is_serialized( $value ) ) {
@@ -3382,16 +3441,9 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 				'content'             => '[user_registration_reset_password_form]',
 				'requires_membership' => false,
 			),
-			'user_registration_reset_password_page_id'     => array(
-				'name'                => 'reset-password',
-				'title'               => __( 'Reset Password', 'user-registration' ),
-				'content'             => '[user_registration_reset_password_form]',
-				'requires_membership' => false,
-			),
 			'user_registration_member_registration_page_id' => array(
 				'name'                => 'membership-registration',
 				'title'               => __( 'Membership Registration', 'user-registration' ),
-				'content'             => '[user_registration_form id="' . get_option( 'user_registration_default_form_page_id', 0 ) . '"]',
 				'requires_membership' => true,
 			),
 			'user_registration_thank_you_page_id'          => array(

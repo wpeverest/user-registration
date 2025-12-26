@@ -7,11 +7,15 @@
 
 namespace WPEverest\URMembership\Admin\Membership;
 
+use UR_Base_Layout;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\TableList;
 
 if ( ! class_exists( 'UR_List_Table' ) ) {
 	include_once dirname( UR_PLUGIN_FILE ) . '/includes/abstracts/abstract-ur-list-table.php';
+}
+if ( ! class_exists( 'UR_Base_Layout' ) ) {
+	include_once dirname( UR_PLUGIN_FILE ) . '/includes/admin/class-ur-admin-base-layout.php';
 }
 
 /**
@@ -62,12 +66,12 @@ class ListTable extends \UR_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'title'            => __( 'Membership Name', 'user-registration' ),
-			'membership_price' => __( 'Membership Price', 'user-registration' ),
-			'membership_type'  => __( 'Membership Plan Type', 'user-registration' ),
-			'members'          => __( 'Members', 'user-registration' ),
+			'draggable'        => __( '', 'user-registration' ),
+			'title'            => __( 'Name', 'user-registration' ),
+			'membership_price' => __( 'Price', 'user-registration' ),
+			'membership_type'  => __( 'Plan', 'user-registration' ),
 			'status'           => __( 'Status', 'user-registration' ),
-			'action'           => __( 'Action', 'user-registration' ),
+			'members'          => __( 'Members', 'user-registration' ),
 		);
 	}
 
@@ -104,8 +108,25 @@ class ListTable extends \UR_List_Table {
 	 * @return array
 	 */
 	public function get_row_actions( $membership ) {
+		$actions = array();
 
-		return array();
+		$actions['id'] = '<span>ID: ' . $membership->ID . '</span>';
+
+		// Add Edit action
+		$actions['edit'] = sprintf(
+			'<a href="%s" class="ur-row-actions">%s</a>',
+			esc_url( $this->get_edit_links( $membership ) ),
+			__( 'Edit', 'user-registration' )
+		);
+
+		// Add Delete action
+		$actions['delete'] = sprintf(
+			'<a href="%s" class="delete-membership ur-row-actions" data-membership-id="' . esc_attr( $membership->ID ) . '" aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '">%s</a>',
+			esc_url( wp_nonce_url( $this->get_delete_links( $membership ), 'urm_delete_nonce' ) ),
+			__( 'Delete', 'user-registration' )
+		);
+
+		return $actions;
 	}
 	/**
 	 * @param $membership
@@ -119,6 +140,12 @@ class ListTable extends \UR_List_Table {
 		}
 		return $post_title;
 	}
+	public function column_draggable() {
+		return '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+			<path d="M7 12c0-1.227.985-2.222 2.2-2.222 1.215 0 2.2.995 2.2 2.222a2.211 2.211 0 0 1-2.2 2.222C7.985 14.222 7 13.227 7 12Zm0-7.778C7 2.995 7.985 2 9.2 2c1.215 0 2.2.995 2.2 2.222a2.211 2.211 0 0 1-2.2 2.222A2.21 2.21 0 0 1 7 4.222Zm0 15.556c0-1.227.985-2.222 2.2-2.222 1.215 0 2.2.994 2.2 2.222A2.211 2.211 0 0 1 9.2 22C7.985 22 7 21.005 7 19.778ZM13.6 12c0-1.227.985-2.222 2.2-2.222 1.215 0 2.2.995 2.2 2.222a2.211 2.211 0 0 1-2.2 2.222c-1.215 0-2.2-.995-2.2-2.222Zm0-7.778C13.6 2.995 14.585 2 15.8 2c1.215 0 2.2.995 2.2 2.222a2.211 2.211 0 0 1-2.2 2.222 2.21 2.21 0 0 1-2.2-2.222Zm0 15.556c0-1.227.985-2.222 2.2-2.222 1.215 0 2.2.994 2.2 2.222A2.211 2.211 0 0 1 15.8 22c-1.215 0-2.2-.995-2.2-2.222Z"/>
+		</svg>';
+	}
+
 	/**
 	 * @param $membership
 	 *
@@ -134,8 +161,10 @@ class ListTable extends \UR_List_Table {
 		if ( ! empty( $membership ) ) {
 			$price = $membership[0]['period'];
 		}
+
 		return $price;
 	}
+
 	/**
 	 * @param $membership
 	 *
@@ -144,10 +173,22 @@ class ListTable extends \UR_List_Table {
 	public function column_status( $membership ) {
 		$membership_content = json_decode( $membership->post_content, true );
 		$enabled            = $membership_content['status'] == 'true';
-		$status_class       = $enabled ? 'user-registration-badge user-registration-badge--success-subtle' : 'user-registration-badge user-registration-badge--secondary-subtle';
-		$status_label       = $enabled ? esc_html__( 'Active', 'user-registration-content-restriction' ) : esc_html__( 'Inactive', 'user-registration-content-restriction' );
+		$actions            = '<div class="ur-status-toggle ur-d-flex ur-align-items-center visible" style="gap: 5px">';
+		$actions           .= '<div class="ur-toggle-section">';
+		$actions           .= '<span class="user-registration-toggle-form">';
+		$actions           .= '<input
+						id="ur-membership-change-status"
+						class="ur-membership-change-status user-registration-switch__control hide-show-check enabled"
+						type="checkbox"
+						value="1"
+						' . esc_attr( checked( true, ur_string_to_bool( $enabled ), false ) ) . '
+						data-ur-membership-id="' . esc_attr( $membership->ID ) . '">';
+		$actions           .= '<span class="slider round"></span>';
+		$actions           .= '</span>';
+		$actions           .= '</div>';
+		$actions           .= '</div>';
 
-		return sprintf( '<span id="ur-membership-list-status-' . $membership->ID . '" class="%s">%s</span>', $status_class, $status_label );
+		return $actions;
 	}
 
 	/**
@@ -228,43 +269,21 @@ class ListTable extends \UR_List_Table {
 		return $actions;
 	}
 
-
 	/**
 	 * Render the list table page, including header, notices, status filters and table.
 	 */
 	public function display_page() {
-		$this->prepare_items();
-		if ( ! isset( $_GET['add-new-membership'] ) ) { // phpcs:ignore Standard.Category.SniffName.ErrorCode: input var okay, CSRF ok.
-			$license_validity = urm_check_license_validity();
-			?>
-			<div id="user-registration-list-table-page">
-				<div class="user-registration-list-table-heading">
-					<h1>
-						<?php esc_html_e( 'All Membership', 'user-registration' ); ?>
-					</h1>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_new_membership' ) ); ?>"
-						class="page-title-action <?php echo ( UR_PRO_ACTIVE ? ( ! $license_validity ? 'ur-required-license-activation' : ( $license_validity['renew'] ? 'ur-required-renewable' : '' ) ) : '' ); ?>">
-						<?php echo __( 'Add New', 'user-registration' ); ?>
-					</a>
-				</div>
-				<div id="user-registration-list-filters-row">
-
-					<?php
-					$this->display_search_box( 'membership-list-search-input' );
-					?>
-				</div>
-				<hr>
-				<form id="membership-list" method="get">
-					<input type="hidden" name="page" value="<?php echo $this->page; ?>"/>
-					<?php
-					$this->screen->render_screen_reader_content( 'heading_list' );
-
-					$this->display();
-					?>
-				</form>
-			</div>
-			<?php
-		}
+		UR_Base_Layout::render_layout(
+			$this,
+			array(
+				'page'           => $this->page,
+				'title'          => esc_html__( 'All Membership', 'user-registration' ),
+				'add_new_action' => 'add_new_membership',
+				'search_id'      => 'membership-list-search-input',
+				'skip_query_key' => 'add-new-membership',
+				'form_id'        => 'membership-list',
+			)
+		);
 	}
 
 	/**
@@ -281,20 +300,12 @@ class ListTable extends \UR_List_Table {
 			<p class="search-box">
 			</p>
 			<div>
-				<input type="search" id="<?php echo $search_id; ?>" name="s"
-						value="<?php echo esc_attr( $_GET['s'] ?? '' ); ?>"
-						placeholder="<?php echo esc_attr( 'Search Membership', ' user-registration' ); ?> ..."
-						autocomplete="off">
-				<button type="submit" id="search-submit">
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-						<path fill="#000" fill-rule="evenodd"
-								d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z"
-								clip-rule="evenodd"></path>
-					</svg>
-				</button>
+				<?php
+				$placeholder = __( 'Search Membership', 'user-registration' );
+				UR_Base_Layout::display_search_field( $search_id, $placeholder );
+				?>
 			</div>
 			<p></p>
-
 		</form>
 		<?php
 	}
@@ -305,10 +316,90 @@ class ListTable extends \UR_List_Table {
 	 *
 	 */
 	protected function get_bulk_actions() {
-		$actions = array(
-		//          'delete' => __( 'Delete permanently' )
+		$actions = array(//         'delete' => __( 'Delete permanently' )
 		);
 
 		return $actions;
+	}
+
+	/**
+	 * Override prepare_items to use saved membership order.
+	 *
+	 * @return void
+	 */
+	public function prepare_items() {
+		$this->prepare_column_headers();
+		$per_page     = $this->get_items_per_page( $this->per_page_option );
+		$current_page = $this->get_pagenum();
+
+		// Query args.
+		$args = array(
+			'post_type'           => $this->post_type,
+			'posts_per_page'      => $per_page,
+			'ignore_sticky_posts' => true,
+			'paged'               => $current_page,
+		);
+
+		// Handle the status query.
+		if ( ! empty( $_REQUEST['status'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$args['post_status'] = sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
+		// Handle the search query.
+		if ( ! empty( $_REQUEST['s'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$args['s'] = trim( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
+		// Check for saved membership order (only if not searching and no status filter)
+		$saved_order = get_option( 'ur_membership_order', array() );
+		if ( ! empty( $saved_order ) && empty( $_REQUEST['s'] ) && empty( $_REQUEST['status'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			// Get all membership IDs to find any new ones not in saved order
+			$all_memberships_query = new \WP_Query(
+				array(
+					'post_type'      => $this->post_type,
+					'posts_per_page' => - 1,
+					'fields'         => 'ids',
+					'post_status'    => ! empty( $args['post_status'] ) ? $args['post_status'] : 'any',
+				)
+			);
+			$all_membership_ids    = $all_memberships_query->posts;
+
+			// Merge saved order with any new memberships not in the saved order
+			$new_memberships = array_diff( $all_membership_ids, $saved_order );
+			$final_order     = array_merge( $saved_order, $new_memberships );
+
+			// Use saved order with new memberships appended
+			$args['post__in'] = $final_order;
+			$args['orderby']  = 'post__in';
+			$args['order']    = 'ASC';
+		} else {
+			// Use default ordering
+			$args['orderby'] = isset( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) ) : 'date_created'; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$args['order']   = isset( $_REQUEST['order'] ) && 'ASC' === strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) ) ? 'ASC' : 'DESC'; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+
+		// Get the memberships.
+		$query_posts = new \WP_Query( $args );
+		$this->items = $query_posts->posts;
+
+		// Set the pagination.
+		$this->set_pagination_args(
+			array(
+				'total_items' => $query_posts->found_posts,
+				'per_page'    => $per_page,
+				'total_pages' => $query_posts->max_num_pages,
+			)
+		);
+	}
+
+	/**
+	 * Override single_row to add data-membership-id attribute.
+	 *
+	 * @param object $item The current item.
+	 */
+	public function single_row( $item ) {
+		echo '<tr id="membership-' . esc_attr( $item->ID ) . '" data-membership-id="' . esc_attr( $item->ID ) . '" class="ur-membership-sortable-row">';
+		$this->single_row_columns( $item );
+		echo '</tr>';
 	}
 }
