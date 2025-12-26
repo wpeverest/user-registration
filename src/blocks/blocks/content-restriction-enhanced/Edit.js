@@ -23,7 +23,7 @@ import Select from "react-select";
 import { Editor } from "@tinymce/tinymce-react";
 
 /* global _UR_BLOCKS_ */
-const { urRestApiNonce, restURL, isProActive } =
+const { urRestApiNonce, restURL } =
 	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 const labelStyle = {
@@ -347,20 +347,6 @@ const Edit = ({ attributes, setAttributes }) => {
 				<Box mb={6}>
 					<InnerBlocks templateLock={false} />
 				</Box>
-				{!isProActive && (
-					<Notice
-						status="warning"
-						isDismissible={false}
-						className="urcr-dreprecated-msg"
-					>
-						<p>
-							{__(
-								"This block will be deprecated soon.",
-								"user-registration"
-							)}
-						</p>
-					</Notice>
-				)}
 			</Box>
 		</ChakraProvider>
 	);

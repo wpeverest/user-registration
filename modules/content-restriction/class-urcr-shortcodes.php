@@ -150,10 +150,14 @@ class URCR_Shortcodes {
 
 			$message = get_option( 'user_registration_content_restriction_message', '' );
 
-			if ( $override_global_settings === 'on' ) {
+			if ( 'on' === $override_global_settings ) {
 				$message = ! empty( get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) ) ? get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) : '';
-			} elseif ( isset( $atts['enable_content_restriction'] ) && $atts['enable_content_restriction'] === 'true' && isset( $atts['enable_custom_restriction_msg'] ) && $atts['enable_custom_restriction_msg'] ) {
-				$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : get_option( 'user_registration_content_restriction_message' );
+			} elseif ( isset( $atts['enable_content_restriction'] ) && 'true' === $atts['enable_content_restriction'] ) {
+				if ( ! isset( $atts['enable_custom_restriction_msg'] ) ) {
+					$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : get_option( 'user_registration_content_restriction_message' );
+				} elseif ( 'true' === $atts['enable_custom_restriction_msg'] ) {
+					$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : '';
+				}
 			}
 
 			$message = empty( $message ) ? __( 'This content is restricted!', 'user-registration' ) : $message;

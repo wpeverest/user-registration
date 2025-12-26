@@ -52,11 +52,11 @@ const Save = ({ attributes }) => {
 		)}"`;
 	}
 
-	if (enableCustomRestrictionMessage) {
-		params += ` enable_custom_restriction_msg="${escapeAttribute(
-			enableCustomRestrictionMessage
-		)}"`;
-	}
+	// if (enableCustomRestrictionMessage) {
+	params += ` enable_custom_restriction_msg="${escapeAttribute(
+		enableCustomRestrictionMessage
+	)}"`;
+	// }
 
 	if (message) {
 		params += ` message="${escapeAttribute(message)}"`;
