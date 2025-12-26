@@ -72,6 +72,10 @@
       "redirect_page_id": {
       "type": "number",
       "default": 0
+    },
+     "headline_text": {
+      "type": "string",
+      "default": "Thank you for registering."
     }
   },
   "editorScript": "user-registration-blocks-editor",
