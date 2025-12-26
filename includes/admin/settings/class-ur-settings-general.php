@@ -136,7 +136,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) {
 								'field-key' => 'lost-password',
 								),
 								array(
-									'title'    => __( 'Member Registration Form Page', 'user-registration' ),
+									'title'    => __( 'Checkout Page', 'user-registration' ),
 									'desc'     => sprintf( __( 'Select the page which contains membership registration shortcode: [%s]', 'user-registration' ), apply_filters( 'user_registration_registration_shortcode_tag', 'user_registration_form' ) ),
 									//phpcs:ignore
 									'id'       => 'user_registration_member_registration_page_id',
