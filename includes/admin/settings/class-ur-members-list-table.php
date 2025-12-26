@@ -22,7 +22,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 	class User_Registration_Members_List_Table extends WP_Users_List_Table {
 
 
-		function __construct() {
+		public function __construct() {
 			parent::__construct();
 
 			add_filter( 'ur_manage_users_custom_column', array( $this, 'output_custom_column_data' ), 10, 3 );
@@ -42,7 +42,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 			$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : '';
 
-			$role = isset( $_REQUEST['role'] ) ? sanitize_text_field($_REQUEST['role']) : '';
+			$role = isset( $_REQUEST['role'] ) ? sanitize_text_field( $_REQUEST['role'] ) : '';
 
 			$users_per_page = $this->get_items_per_page( 'user_registration-membership_page_user_registration_users_per_page' );
 
@@ -51,18 +51,18 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			$args = array(
 				'number' => $users_per_page,
 				'offset' => ( $paged - 1 ) * $users_per_page,
-				'search'  => $usersearch ? '*' . $usersearch . '*' : '',
+				'search' => $usersearch ? '*' . $usersearch . '*' : '',
 				'fields' => 'all_with_meta',
 			);
 
-			if ($role !== 'all') {
+			if ( $role !== 'all' ) {
 				$args['role'] = $role;
 			}
 
-    		if (!empty($_REQUEST['form_filter'])) {
+			if ( ! empty( $_REQUEST['form_filter'] ) ) {
 				$form_filter = sanitize_text_field( wp_unslash( $_REQUEST['form_filter'] ) );
 
-        		if (array_key_exists($form_filter, $this->get_all_registration_forms())) {
+				if ( array_key_exists( $form_filter, $this->get_all_registration_forms() ) ) {
 					$args['meta_query'] = array(
 						array(
 							'key'     => 'ur_form_id',
@@ -73,7 +73,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 				}
 			}
 
-			if (!empty($_REQUEST['user_status'])) {
+			if ( ! empty( $_REQUEST['user_status'] ) ) {
 				$status_filter = sanitize_text_field( wp_unslash( $_REQUEST['user_status'] ) );
 
 				if ( in_array( $status_filter, array( 'approved', 'pending', 'denied', 'pending_email' ) ) ) {
@@ -91,7 +91,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 				switch ( $date_range ) {
 					case 'day':
-						$start_date = strtotime(date( 'm/d/Y' ) . '00:00:00' );
+						$start_date = strtotime( date( 'm/d/Y' ) . '00:00:00' );
 						$start_date = date( 'Y-m-d H:i:s', $start_date );
 						break;
 
@@ -132,20 +132,31 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 			// Date Range Filter End.
 
-			if ( !empty($args['meta_query']) && 1 < count( $args['meta_query'] ) ) {
+			if ( ! empty( $args['meta_query'] ) && 1 < count( $args['meta_query'] ) ) {
 				$args['meta_query']['relation'] = 'AND';
 			}
 
 			if ( $this->is_site_users ) {
 				$args['blog_id'] = $this->site_id;
 			}
+
+			$args['orderby'] = 'user_registered';
+			if ( isset( $_REQUEST['orderby'] ) ) {
+				$args['orderby'] = $_REQUEST['orderby'];
+			}
+
+			$args['order'] = 'desc';
+			if ( isset( $_REQUEST['order'] ) ) {
+				$args['order'] = $_REQUEST['order'];
+			}
+
 			$subscription_table = $wpdb->prefix . 'ur_membership_subscriptions';
 
-    		if (!empty($_REQUEST['membership_id'])) {
-				$membership_id = intval( $_REQUEST['membership_id'] );
+			if ( ! empty( $_REQUEST['membership_id'] ) ) {
+				$membership_id   = intval( $_REQUEST['membership_id'] );
 				$all_memberships = $this->get_all_memberships();
 
-        		if (array_key_exists($membership_id, $all_memberships)) {
+				if ( array_key_exists( $membership_id, $all_memberships ) ) {
 					$valid_users     = $wpdb->get_col(
 						$wpdb->prepare(
 							"SELECT user_id FROM $subscription_table WHERE item_id = %d",
@@ -171,32 +182,23 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 			$this->items = $wp_user_search->get_results();
 
-			if (empty($this->items)) {
+			if ( empty( $this->items ) ) {
 				$this->items = array();
-				$this->set_pagination_args(array(
-					'total_items' => 0,
-					'per_page'    => $users_per_page,
-				));
+				$this->set_pagination_args(
+					array(
+						'total_items' => 0,
+						'per_page'    => $users_per_page,
+					)
+				);
 				return;
 			}
 
-			$user_ids = wp_list_pluck( $this->items, 'ID' );
-			$user_ids_in = implode( ',', array_map( 'intval', $user_ids ) );
-			$orderby_map = array(
-				'membership_title' => 'wpp.post_title',
-				'user_login'       => 'wpu.user_login',
-				'user_email'       => 'wpu.user_email',
-				'status'           => 'wums.status',
-				'ID'               => 'wpu.ID',
-				'user_registered'  => 'wpu.user_registered',
-			);
+			$total_users = $wp_user_search->total_users;
 
-    		$orderby = isset($_REQUEST['orderby'], $orderby_map[$_REQUEST['orderby']])
-				? $orderby_map[$_REQUEST['orderby']]
-				: 'wpu.user_registered';
-			$order = (isset($_REQUEST['order']) && strtoupper($_REQUEST['order']) === 'ASC') ? 'ASC' : 'DESC';
-			$orders_table       = $wpdb->prefix . 'ur_membership_orders';
-			$posts_table        = $wpdb->posts;
+			$user_ids     = wp_list_pluck( $this->items, 'ID' );
+			$user_ids_in  = implode( ',', array_map( 'intval', $user_ids ) );
+			$orders_table = $wpdb->prefix . 'ur_membership_orders';
+			$posts_table  = $wpdb->posts;
 
 			$sql = "
 				SELECT wpu.ID,
@@ -221,21 +223,21 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					)
 				LEFT JOIN {$posts_table} wpp ON wums.item_id = wpp.ID  AND wpp.post_status = 'publish'
 				WHERE wpu.ID IN ($user_ids_in)
-				ORDER BY $orderby $order
+				ORDER BY FIELD(wpu.ID, $user_ids_in)
 			";
 
-			$results = $wpdb->get_results( $sql, ARRAY_A );
+			$results         = $wpdb->get_results( $sql, ARRAY_A );
 			$user_id_indexed = [];
 
-			foreach ($results as $row) {
-				$user_id_indexed[$row['ID']] = $row;
+			foreach ( $results as $row ) {
+				$user_id_indexed[ $row['ID'] ] = $row;
 			}
 
 			$this->items = $user_id_indexed;
 
 			$this->set_pagination_args(
 				array(
-					'total_items' => count( $this->items ),
+					'total_items' => $total_users,
 					'per_page'    => $users_per_page,
 				)
 			);
@@ -447,16 +449,16 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 		 */
 		public function single_row( $user_object, $style = '', $role = '', $numposts = 0 ) {
 			if ( ! ( $user_object instanceof WP_User ) ) {
-				$user_id = $user_object['ID'];
+				$user_id         = $user_object['ID'];
 				$new_user_object = get_userdata( (int) $user_id );
 			}
-			$new_user_object->filter = 'display';
-			$email               = $new_user_object->user_email;
-			$new_user_object->subscription_id = $user_object['subscription_id'] ?? '';
+			$new_user_object->filter           = 'display';
+			$email                             = $new_user_object->user_email;
+			$new_user_object->subscription_id  = $user_object['subscription_id'] ?? '';
 			$new_user_object->membership_title = $user_object['membership_title'] ?? '';
-			$new_user_object->status = $user_object['status'] ?? '';
-			$new_user_object->expiry_date = $user_object['expiry_date'] ?? '';
-			$new_user_object->payment_method = $user_object['payment_method'] ?? '';
+			$new_user_object->status           = $user_object['status'] ?? '';
+			$new_user_object->expiry_date      = $user_object['expiry_date'] ?? '';
+			$new_user_object->payment_method   = $user_object['payment_method'] ?? '';
 
 			$user_manager = new UR_Admin_User_Manager( $new_user_object );
 
@@ -484,7 +486,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 				$actions['id'] = "ID: $new_user_object->ID";
 
 				// Set up the user editing link.
-				$edit_link       = add_query_arg(
+				$edit_link = add_query_arg(
 					array(
 						'action'   => 'edit',
 						'user_id'  => $new_user_object->ID,
@@ -495,7 +497,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 				// Add a link to the user's author archive, if not empty.
 
-				$view_link       = add_query_arg(
+				$view_link = add_query_arg(
 					array(
 						'action'   => 'view',
 						'user_id'  => $new_user_object->ID,
@@ -508,22 +510,22 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					array(
 						'action'   => 'delete',
 						'user_id'  => $new_user_object->ID,
-						'_wpnonce' => wp_create_nonce('bulk-users'),
+						'_wpnonce' => wp_create_nonce( 'bulk-users' ),
 					),
-					admin_url('admin.php?page=user-registration-users&view_user'),
+					admin_url( 'admin.php?page=user-registration-users' ),
 				);
 
 				$wp_delete_url = add_query_arg(
 					array(
 						'user'     => $new_user_object->ID,
-						'_wpnonce' => wp_create_nonce('bulk_users'),
+						'_wpnonce' => wp_create_nonce( 'bulk_users' ),
 					),
-					admin_url('users.php?action=delete')
+					admin_url( 'users.php?action=delete' )
 				);
 
 				$actions['view'] = sprintf(
 					'<a href="%s" rel="noreferrer noopener" target="_blank" aria-label="%s" class="ur-row-actions">%s</a>',
-					esc_url( $view_link),
+					esc_url( $view_link ),
 					/* translators: %s: Author's display name. */
 					esc_attr( sprintf( __( 'View details for %s' ), $new_user_object->display_name ) ),
 					__( 'View', 'user-registration' )
@@ -534,11 +536,11 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 				}
 				if ( current_user_can( 'delete_users', $new_user_object->ID ) ) {
 					$actions['delete'] = sprintf(
-					'<a href="%s" data-wp-delete-url="%s" class="user-registration-member-action-delete">%s</a>',
-					$delete_link,
-					esc_url_raw($wp_delete_url),
-					__('Delete', 'user-registration')
-				);				}
+						'<a href="%s" data-wp-delete-url="%s" class="user-registration-member-action-delete">%s</a>',
+						$delete_link,
+						esc_url_raw( $wp_delete_url ),
+						__( 'Delete', 'user-registration' )
+					);              }
 				if ( current_user_can( 'edit_user', $new_user_object->ID ) ) {
 					$user_id = $new_user_object->ID;
 					ur_check_is_auto_enable_user( $user_id );
@@ -558,9 +560,8 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 							$enable_link,
 							__( 'Enable', 'user-registration' )
 						);
-					} else {
+					} elseif ( $user_id !== get_current_user_id() ) {
 
-						if ( $user_id !== get_current_user_id() ) {
 							$actions['disable_user'] = sprintf(
 								'<a class="ur-row-actions">
 									<span style="cursor:pointer;" id="disable-user-link-%d" class="disable-user-link" data-nonce="%s">
@@ -572,7 +573,6 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 								__( 'Disable', 'user-registration' ),
 							);
 					}
-				}
 				}
 
 				/**
@@ -636,7 +636,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					$row .= "<td $attributes>";
 					switch ( $column_name ) {
 						case 'username':
-							$row .= "$avatar <a href='" .  $edit_link . "'>$new_user_object->user_login</a>";
+							$row .= "$avatar <a href='" . $edit_link . "'>$new_user_object->user_login</a>";
 							if ( ! empty( $actions ) ) {
 								$row .= $this->row_actions( $actions );
 							}
@@ -690,11 +690,11 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 								$user_source = get_user_meta( $user_id, 'ur_registration_source', true );
 
-								if( $user_source === 'membership' && 'approved' === strtolower($status_label) ) {
+								if ( $user_source === 'membership' && 'approved' === strtolower( $status_label ) ) {
 
 									$order_status = apply_filters( 'user_registration_check_user_order_status', $user_id );
 									if ( ! empty( $order_status ) && 'pending' === $order_status ) {
-										$status_label = __('Payment Pending', "user-registration");
+										$status_label = __( 'Payment Pending', 'user-registration' );
 										$status_class = 'pending';
 									}
 								}
@@ -710,30 +710,29 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 							$row .= $new_user_object->user_registered;
 							break;
 						case 'membership':
-							$row .= (!empty($new_user_object->membership_title) ? $new_user_object->membership_title : '-');
+							$row .= ( ! empty( $new_user_object->membership_title ) ? $new_user_object->membership_title : '-' );
 							break;
 						case 'subscription_status':
-							$status       = $new_user_object->status ?? '';
-							if( empty($status) ) {
+							$status = $new_user_object->status ?? '';
+							if ( empty( $status ) ) {
 								$row .= '<span>-</span>';
 								break;
 							}
 
 							$expiry_date = new \DateTime( $new_user_object->expiry_date );
 
-							if ( ! empty( $new_user_object->payment_method) && ( 'subscription' == $new_user_object->payment_method) && date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
+							if ( ! empty( $new_user_object->payment_method ) && ( 'subscription' == $new_user_object->payment_method ) && date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
 								$status = 'expired';
 							}
 
 							$status_class = 'user-subscription-secondary';
 							if ( $status == 'active' ) {
 								$status_class = 'user-subscription-active';
-							} else if ( $status == 'pending' ) {
+							} elseif ( $status == 'pending' ) {
 								$status_class = 'user-subscription-pending';
-							}else{
+							} else {
 								$status_class = 'user-subscription-expired';
 							}
-
 
 							$row .= sprintf( '<span id="" class="user-subscription-status %s">%s</span>', $status_class, ucfirst( $status ) );
 							break;
@@ -777,7 +776,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					?>
 				</select>
 
-				<?php if(ur_check_module_activation('membership')) : ?>
+				<?php if ( ur_check_module_activation( 'membership' ) ) : ?>
 					<select name="membership_id" id="user_registration_pro_users_membership_filter">
 						<option value=''><?php esc_html_e( 'All Memberships', 'user-registration' ); ?></option>
 						<?php
@@ -789,7 +788,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						}
 						?>
 					</select>
-				<?php else:?>
+				<?php else : ?>
 					<select name="user_status" id="user_registration_pro_users_user_status_filter">
 						<?php
 						$user_status = isset( $_GET['user_status'] ) ? sanitize_text_field( $_GET['user_status'] ) : '';
@@ -1024,10 +1023,10 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			return apply_filters(
 				'user_registration_pro_users_table_sortable_columns',
 				array(
-					'username'        => 'user_login',
-					'email'           => 'user_email',
-					'user_registered' => 'user_registered',
-					'membership' => 'membership_title',
+					'username'            => 'user_login',
+					'email'               => 'user_email',
+					'user_registered'     => 'user_registered',
+					'membership'          => 'membership_title',
 					'subscription_status' => 'status',
 				)
 			);
@@ -1085,25 +1084,26 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 							<div class="alignleft actions bulkactions">
 								<?php $this->bulk_actions( $which ); ?>
 							</div>
-							<?php $this->extra_tablenav( $which );?>
+							<?php $this->extra_tablenav( $which ); ?>
 						</div>
-					<?php
+						<?php
 					endif;
-					if ( 'top' === $which ) :?>
+					if ( 'top' === $which ) :
+						?>
 					<div class="user-registration-members-filters">
-						<?php $this->display_filters();?>
+						<?php $this->display_filters(); ?>
 					</div>
-					<?php
+						<?php
 					endif;
-				if ( 'bottom' === $which ) :
-					?>
+					if ( 'bottom' === $which ) :
+						?>
 					<div class="alignleft">
 						<?php $this->footer_text(); ?>
 					</div>
-					<?php
-					$this->pagination( $which );
+						<?php
+						$this->pagination( $which );
 				endif;
-				?>
+					?>
 			</div>
 			<?php
 		}
