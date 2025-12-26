@@ -39,7 +39,11 @@ $redirect_btn_url   = ! empty( $attributes['redirect_btn_url'] ) ? esc_url( $att
 		<?php endif; ?>
 
 		<div class="ur-message">
-			<p><?php echo $header; ?></p>
+			<p><?php
+				$main_content = apply_filters( 'user_registration_process_smart_tags', $header );
+				echo $main_content;
+				?>
+			</p>
 		</div>
 
 		<?php if ( $show_redirect_btn ) : ?>

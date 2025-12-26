@@ -61,7 +61,7 @@ class UR_Blocks {
 
 		$smart_tag[] = array(
 			'text'  => esc_html__( 'Membership Plan Details', 'user-registration' ),
-			'value' => '{membership_plan_details}',
+			'value' => '{{membership_plan_details}}',
 		);
 
 		foreach ( $authenticate_smart_tag as $value => $text ) {
@@ -70,7 +70,7 @@ class UR_Blocks {
 				'value' => $value,
 			);
 		}
-		
+
 		wp_localize_script(
 			'user-registration-blocks-editor',
 			'_UR_BLOCKS_',
