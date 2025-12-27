@@ -540,17 +540,6 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 													if ( isset( $_GET['post_id'] ) && $_GET['post_id'] == $m['ID'] ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 														continue;
 													}
-													$membership_group_repository = new WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository();
-													$membership_group_service    = new WPEverest\URMembership\Admin\Services\MembershipGroupService();
-													$membership_group_id         = $membership_group_repository->get_membership_group_by_membership_id( $m['ID'] );
-
-													if ( isset( $membership_group_id['ID'] ) ) {
-														$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group_id['ID'] );
-
-														if ( $multiple_memberships_allowed ) {
-															continue;
-														}
-													}
 
 													$selected = ( $upgrade_path ) && in_array( $m['ID'], $upgrade_path, true ) ? 'selected="selected"' : '';
 													?>

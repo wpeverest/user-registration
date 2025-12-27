@@ -21,24 +21,11 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 	 */
 	public function get_all_membership_groups() {
 
-		$sql = "
-		SELECT
-			wpp.ID,
-			wpp.post_title,
-			wpp.post_content,
-			wpp.post_status,
-			wpp.post_type,
-			wpm.meta_value AS memberships
-		FROM {$this->table} wpp
-		JOIN {$this->posts_meta_table} wpm
-			ON wpm.post_id = wpp.ID
-			AND wpm.meta_key = 'urmg_memberships'
-		WHERE wpp.post_type = 'ur_membership_groups'
-		  AND wpp.post_status = 'publish'
-		ORDER BY wpp.ID DESC
-	";
+		// TODO : maybe change this raw queries to wp_Query
 
-		return $this->wpdb()->get_results( $sql, ARRAY_A );
+		$sql               = " SELECT wpp.ID, wpp.post_title, wpp.post_content, wpp.post_status, wpp.post_type, wpm.meta_value FROM $this->table wpp JOIN $this->posts_meta_table wpm on wpm.post_id = wpp.ID WHERE wpm.meta_key = 'urmg_memberships' AND wpp.post_type = 'ur_membership_groups' AND wpp.post_status = 'publish' ORDER BY 1 DESC ";
+		$membership_groups = $this->wpdb()->get_results( $sql, ARRAY_A );
+		return $membership_groups;
 	}
 
 
@@ -185,20 +172,39 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 
 		return $this->wpdb()->get_row(
 			$this->wpdb()->prepare(
-				"SELECT wpp.ID,
-                wpp.post_title,
-                wpp.post_content,
-                wpp.post_status,
-                wpp.post_type,
-                wpm.meta_value as memberships
-				FROM $this->table wpp
-				JOIN $this->posts_meta_table wpm
-					ON wpm.post_id = wpp.ID
-				WHERE wpm.meta_key = 'urmg_memberships'
-				AND wpp.post_type = 'ur_membership_groups'
-				AND wpm.meta_value LIKE %s
-				ORDER BY wpp.ID DESC",
-				'%"' . $membership_id . '"%'
+				"
+			SELECT
+				wpp.ID,
+				wpp.post_title,
+				wpm.meta_value   AS memberships,
+				wpup.meta_value  AS upgrade_path,
+				wpmode.meta_value AS mode,
+				wput.meta_value  AS upgrade_type
+			FROM {$this->table} wpp
+
+			JOIN {$this->posts_meta_table} wpm
+				ON wpm.post_id = wpp.ID
+				AND wpm.meta_key = 'urmg_memberships'
+
+			LEFT JOIN {$this->posts_meta_table} wpmode
+				ON wpmode.post_id = wpp.ID
+				AND wpmode.meta_key = 'urmg_mode'
+
+			LEFT JOIN {$this->posts_meta_table} wput
+				ON wput.post_id = wpp.ID
+				AND wput.meta_key = 'urmg_upgrade_type'
+
+			LEFT JOIN {$this->posts_meta_table} wpup
+				ON wpup.post_id = wpp.ID
+				AND wpup.meta_key = 'urmg_upgrade_path'
+
+			WHERE wpp.post_type = 'ur_membership_groups'
+			  AND wpp.post_status = 'publish'
+			  AND wpm.meta_value LIKE %s
+
+			LIMIT 1
+			",
+				'%' . $membership_id . '%'
 			),
 			ARRAY_A
 		);

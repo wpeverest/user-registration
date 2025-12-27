@@ -223,9 +223,7 @@ class MembershipGroupService {
 		$post_data = json_decode( wp_unslash( $post_data ), true );
 		$data      = $this->validate_membership_group_data( $post_data );
 		if ( $data['status'] ) {
-			$data = $this->prepare_membership_group_data( $post_data );
-			error_log( print_r( $data, true ) );
-
+			$data                = $this->prepare_membership_group_data( $post_data );
 			$data                = apply_filters( 'ur_membership_after_create_membership_groups_data_before_save', $data );
 			$membership_group_id = wp_insert_post( $data['post_data'] );
 
@@ -277,8 +275,14 @@ class MembershipGroupService {
 	}
 
 	public function check_if_multiple_memberships_allowed( $group_id ) {
-		$multiple_memberships = get_post_meta( $group_id, 'urmg_multiple_memberships', true );
+		$group_mode = get_post_meta( $group_id, 'urmg_mode', true );
 
-		return ur_string_to_bool( $multiple_memberships );
+		return ur_string_to_bool( 'multiple' === $group_mode );
+	}
+
+	public function check_if_upgrade_allowed( $group_id ) {
+		$group_mode = get_post_meta( $group_id, 'urmg_mode', true );
+
+		return ur_string_to_bool( 'upgrade' === $group_mode );
 	}
 }

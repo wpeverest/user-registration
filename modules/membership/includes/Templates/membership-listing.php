@@ -42,20 +42,30 @@ if ( 'block' === $type ) :
 				}
 
 				$user_membership_group_ids = array_values( array_unique( $user_membership_group_ids ) );
-
-				$intended_action = $action_to_take;
+				$intended_action           = $action_to_take;
 
 				if ( is_user_logged_in() ) {
 
-					if ( isset( $membership['multiple_membership'] ) && $membership['multiple_membership'] ) {
-						$intended_action = 'multiple';
-					} elseif ( isset( $current_membership_group['ID'] ) && ! in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
-						$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group_id['ID'] ?? 0 );
-						if ( $multiple_memberships_allowed ) {
-							$intended_action = 'multiple';
+					if ( ! empty( $current_membership_group ) ) {
+
+						if ( in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
+							foreach ( $user_membership_group_ids as $group_id ) {
+								if ( $current_membership_group['ID'] === $group_id ) {
+									$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $current_membership_group['ID'] );
+									$upgrade_allowed              = $membership_group_service->check_if_upgrade_allowed( $current_membership_group['ID'] );
+
+									if ( $multiple_memberships_allowed ) {
+										$intended_action = 'multiple';
+									} elseif ( $upgrade_allowed ) {
+										$intended_action = 'upgrade';
+									}
+								}
+							}
 						} else {
-							$intended_action = 'upgrade';
+							$intended_action = 'multiple';
 						}
+					} else {
+						$intended_action = 'upgrade';
 					}
 				} else {
 					$intended_action = 'register';
@@ -120,15 +130,26 @@ elseif ( 'list' === $type ) :
 
 					if ( is_user_logged_in() ) {
 
-						if ( isset( $membership['multiple_membership'] ) && $membership['multiple_membership'] ) {
-							$intended_action = 'multiple';
-						} elseif ( isset( $current_membership_group['ID'] ) && ! in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
-							$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $current_membership_group['ID'] );
-							if ( $multiple_memberships_allowed ) {
-								$intended_action = 'multiple';
+						if ( ! empty( $current_membership_group ) ) {
+
+							if ( in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
+								foreach ( $user_membership_group_ids as $group_id ) {
+									if ( $current_membership_group['ID'] === $group_id ) {
+										$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $current_membership_group['ID'] );
+										$upgrade_allowed              = $membership_group_service->check_if_upgrade_allowed( $current_membership_group['ID'] );
+
+										if ( $multiple_memberships_allowed ) {
+											$intended_action = 'multiple';
+										} elseif ( $upgrade_allowed ) {
+											$intended_action = 'upgrade';
+										}
+									}
+								}
 							} else {
-								$intended_action = 'upgrade';
+								$intended_action = 'multiple';
 							}
+						} else {
+							$intended_action = 'upgrade';
 						}
 					} else {
 						$intended_action = 'register';

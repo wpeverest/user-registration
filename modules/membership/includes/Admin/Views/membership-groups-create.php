@@ -145,27 +145,6 @@ if ( isset( $membership_group['upgrade_path'] ) ) {
 								</div>
 							</div>
 						</div>
-						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px">
-							<div class="ur-label" style="width: 30%">
-								<label class="ur-membership-group-enable-status"
-										for="ur-membership-group-status"><?php esc_html_e( 'Multiple Membership Selections', 'user-registration' ); ?>
-									<span class="user-registration-help-tip tooltipstered"
-											data-tip="<?php echo esc_attr__( 'Users can buy more than one membership plan from this group', 'user-registration' ); ?>"></span>
-								</label>
-							</div>
-							<div class="ur-toggle-section m1-auto" style="width:100%">
-								<span class="user-registration-toggle-form">
-									<input
-										data-key-name="Allow Multiple Memberships Selections"
-										id="ur-membership-group-multiple-membership" type="checkbox"
-										class="user-registration-switch__control hide-show-check enabled urmg-input"
-										<?php echo isset( $membership_group['multiple_memberships'] ) && $membership_group['multiple_memberships'] ? 'checked' : ''; ?>
-										name="ur_membership_group_multiple_membership"
-										style="width: 100%; text-align: left">
-									<span class="slider round"></span>
-								</span>
-							</div>
-						</div>
 						<div class="ur-membership-selection-container ur-d-flex ur-p-1" style="gap:20px;" bis_skin_checked="1">
 							<div class="ur-label" style="width: 30%" bis_skin_checked="1">
 								<label for="ur-membership-management-mode"><?php esc_html_e( 'Membership Management Mode', 'user-registration' ); ?></label>
