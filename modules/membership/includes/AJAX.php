@@ -29,6 +29,7 @@ use WPEverest\URMembership\Admin\Services\PaymentService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 use WPEverest\URMembership\Admin\Services\OrderService;
+use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -78,6 +79,7 @@ class AJAX {
 			'add_multiple_membership'      => false,
 			'get_membership_details'       => false,
 			'update_membership_order'      => false,
+			'fetch_upgrade_path'           => false,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -1981,6 +1983,53 @@ class AJAX {
 		wp_send_json_success(
 			array(
 				'membership_detail' => $membership_detail,
+			)
+		);
+	}
+
+	/**
+	 * Fetch upgrade path for selected memberships in the group.
+	 */
+	public static function fetch_upgrade_path() {
+		if ( empty( $_POST['membership_ids'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Please select memberships.', 'user-registration' ),
+				)
+			);
+		}
+		$membership_upgrade_service = new UpgradeMembershipService();
+		$memberships                = isset( $_POST['membership_ids'] ) ? $_POST['membership_ids'] : '';
+
+		if ( empty( $memberships ) ) {
+			return wp_send_json_error(
+				array(
+					'message' => __( 'Please select memberships.', 'user-registration' ),
+				)
+			);
+
+		}
+		$memberships           = implode( ',', $memberships );
+		$membership_repository = new MembershipRepository();
+
+		$memberships = $membership_repository->get_multiple_membership_by_ID( $memberships );
+
+		$upgrade_paths = $membership_upgrade_service->fetch_upgrade_paths( $memberships );
+
+		if ( ! empty( $upgrade_paths ) ) {
+			$upgrade_paths_div = $membership_upgrade_service->build_upgrade_paths( $upgrade_paths );
+
+			wp_send_json_success(
+				array(
+					'upgrade_paths'     => $upgrade_paths,
+					'upgrade_paths_div' => $upgrade_paths_div,
+				)
+			);
+		}
+
+		wp_send_json_error(
+			array(
+				'message' => __( 'Something went wrong. Please refresh the page and try again.', 'user-registration' ),
 			)
 		);
 	}

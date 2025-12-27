@@ -20,29 +20,27 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 	 * @return array
 	 */
 	public function get_all_membership_groups() {
-		// TODO : maybe change this raw queries to wp_Query
+
 		$sql = "
-				SELECT wpp.ID,
-				       wpp.post_title,
-				       wpp.post_content,
-				       wpp.post_status,
-				       wpp.post_type,
-				       wpm.meta_value
-				FROM $this->table wpp
-				         JOIN $this->posts_meta_table wpm on wpm.post_id = wpp.ID
-				WHERE wpm.meta_key = 'urmg_memberships'
-				  AND wpp.post_type = 'ur_membership_groups'
-				  AND wpp.post_status = 'publish'
-				ORDER BY 1 DESC
-		";
+		SELECT
+			wpp.ID,
+			wpp.post_title,
+			wpp.post_content,
+			wpp.post_status,
+			wpp.post_type,
+			wpm.meta_value AS memberships
+		FROM {$this->table} wpp
+		JOIN {$this->posts_meta_table} wpm
+			ON wpm.post_id = wpp.ID
+			AND wpm.meta_key = 'urmg_memberships'
+		WHERE wpp.post_type = 'ur_membership_groups'
+		  AND wpp.post_status = 'publish'
+		ORDER BY wpp.ID DESC
+	";
 
-		$membership_groups = $this->wpdb()->get_results(
-			$sql,
-			ARRAY_A
-		);
-
-		return $membership_groups;
+		return $this->wpdb()->get_results( $sql, ARRAY_A );
 	}
+
 
 	/**
 	 * get_single_membership_by_ID
@@ -52,31 +50,52 @@ class MembershipGroupRepository extends BaseRepository implements MembershipGrou
 	 * @return array|object|\stdClass|void|null
 	 */
 	public function get_single_membership_group_by_ID( $id ) {
-		// TODO : maybe change this raw queries to wp_Query
 
 		return $this->wpdb()->get_row(
 			$this->wpdb()->prepare(
-				"SELECT wpp.ID,
-				       wpp.post_title,
-				       wpp.post_content,
-				       wpp.post_status,
-				       wpp.post_type,
-				       wpm.meta_value as memberships,
-				       wpmm.meta_value as multiple_memberships
-				FROM $this->table wpp
-				LEFT JOIN $this->posts_meta_table wpm
-						ON wpm.post_id = wpp.ID AND wpm.meta_key = 'urmg_memberships'
-				LEFT JOIN $this->posts_meta_table wpmm
-						ON wpmm.post_id = wpp.ID AND wpmm.meta_key = 'urmg_multiple_memberships'
-				WHERE wpp.post_type = 'ur_membership_groups'
-				AND wpp.post_status = 'publish'
-				AND wpp.ID = %d
-				ORDER BY wpp.ID DESC",
-				$id
+				"
+			SELECT
+				wpp.ID,
+				wpp.post_title,
+				wpp.post_content,
+				wpp.post_status,
+				wpp.post_type,
+
+				wpm.meta_value    AS memberships,
+				wpmode.meta_value AS mode,
+				wput.meta_value   AS upgrade_type,
+				wpup.meta_value   AS upgrade_path
+
+			FROM {$this->table} wpp
+
+			LEFT JOIN {$this->posts_meta_table} wpm
+				ON wpm.post_id = wpp.ID
+				AND wpm.meta_key = 'urmg_memberships'
+
+			LEFT JOIN {$this->posts_meta_table} wpmode
+				ON wpmode.post_id = wpp.ID
+				AND wpmode.meta_key = 'urmg_mode'
+
+			LEFT JOIN {$this->posts_meta_table} wput
+				ON wput.post_id = wpp.ID
+				AND wput.meta_key = 'urmg_upgrade_type'
+
+			LEFT JOIN {$this->posts_meta_table} wpup
+				ON wpup.post_id = wpp.ID
+				AND wpup.meta_key = 'urmg_upgrade_path'
+
+			WHERE wpp.post_type = 'ur_membership_groups'
+			  AND wpp.post_status = 'publish'
+			  AND wpp.ID = %d
+
+			LIMIT 1
+			",
+				absint( $id )
 			),
 			ARRAY_A
 		);
 	}
+
 
 	/**
 	 * get_group_memberships_by_id

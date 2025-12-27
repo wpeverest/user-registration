@@ -120,9 +120,19 @@
 			post_meta_data.memberships = form
 				.find("#ur-input-type-membership-group-memberships")
 				.select2("val");
-			post_meta_data.multiple_memberships = form
-				.find("#ur-membership-group-multiple-membership")
-				.prop("checked");
+
+			post_meta_data.mode = $(
+				'input[name="ur_membership_management_mode"]:checked'
+			).val();
+
+			if ("upgrade" === post_meta_data.mode) {
+				post_meta_data.upgrade_type = $(
+					'input[name="ur_membership_upgrade_type"]:checked'
+				).val();
+				post_meta_data.upgrade_path = $(
+					'input[name="ur_membership_upgrade_path"]'
+				).val();
+			}
 
 			return {
 				post_data: post_data,
@@ -499,6 +509,22 @@
 					$(".ur-general-setting-membership_listing_option").remove();
 				}
 			});
+
+			$(document)
+				.find("#ur-input-type-membership-group-memberships")
+				.on("change", function (event) {
+					var membership_ids = $(this).val();
+					membership_group_object.build_upgrade_paths(membership_ids);
+				});
+
+			$(document)
+				.find("input[name='ur_membership_management_mode']")
+				.on("change", function (event) {
+					var membership_ids = $(
+						"#ur-input-type-membership-group-memberships"
+					).val();
+					membership_group_object.build_upgrade_paths(membership_ids);
+				});
 		},
 		delete_single_membership_group: function ($this) {
 			var urlParams = new URLSearchParams($this.attr("href"));
@@ -893,6 +919,53 @@
 				error: failure_callback,
 				complete: complete_callback
 			});
+		},
+		/**
+		 * Build upgrade paths html.
+		 *
+		 * @param {string} membership_ids Membership Ids in the group.
+		 */
+		build_upgrade_paths: function (membership_ids) {
+			var membership_mode = $(
+				'input[name="ur_membership_management_mode"]:checked'
+			).val();
+
+			if ("upgrade" === membership_mode) {
+				$.ajax({
+					type: "post",
+					dataType: "json",
+					url: urmg_data.ajax_url,
+					data: {
+						action: "user_registration_membership_fetch_upgrade_path",
+						membership_ids: membership_ids
+					},
+					success: function (response) {
+						if (response.success) {
+							var upgrade_paths = response.data.upgrade_paths,
+								upgrade_paths_div =
+									response.data.upgrade_paths_div;
+
+							$('input[name="ur_membership_upgrade_path"]').val(
+								JSON.stringify(upgrade_paths)
+							);
+							$(".ur-membership-upgrade-paths-info").html(
+								upgrade_paths_div
+							);
+						} else {
+							$(".ur-membership-upgrade-paths-info").html("");
+							$('input[name="ur_membership_upgrade_path"]').val(
+								""
+							);
+						}
+
+						$(document)
+							.find(".ur-membership-upgrade-container")
+							.show();
+					}
+				});
+			} else {
+				$(document).find(".ur-membership-upgrade-container").hide();
+			}
 		}
 	};
 

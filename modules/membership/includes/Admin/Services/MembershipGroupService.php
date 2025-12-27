@@ -110,36 +110,107 @@ class MembershipGroupService {
 	}
 
 	public function prepare_membership_group_data( $post_data ) {
-		$membership_group_id = ! empty( $post_data['post_data']['ID'] ) ? absint( $post_data['post_data']['ID'] ) : '';
-		$post_meta_data      = array_map( 'sanitize_text_field', $post_data['post_meta_data']['memberships'] );
+
+		$membership_group_id = ! empty( $post_data['post_data']['ID'] )
+		? absint( $post_data['post_data']['ID'] )
+		: 0;
+
+		$post_meta_data   = $post_data['post_meta_data'];
+		$urmg_memberships = array_map( 'absint', $post_meta_data['memberships'] ?? array() );
+		$membership_mode  = sanitize_text_field( $post_meta_data['mode'] ?? '' );
+
+		$updated_post_meta_data = array(
+			array(
+				'meta_key'   => 'urmg_memberships',
+				'meta_value' => wp_json_encode( $urmg_memberships ),
+			),
+			array(
+				'meta_key'   => 'urmg_mode',
+				'meta_value' => $membership_mode,
+			),
+		);
+
+		if ( 'upgrade' === $membership_mode ) {
+
+			$sanitized_upgrade_path = $this->sanitize_upgrade_paths(
+				$post_meta_data['upgrade_path'] ?? ''
+			);
+
+			$updated_post_meta_data = array_merge(
+				$updated_post_meta_data,
+				array(
+					array(
+						'meta_key'   => 'urmg_upgrade_type',
+						'meta_value' => sanitize_text_field( $post_meta_data['upgrade_type'] ?? '' ),
+					),
+					array(
+						'meta_key'   => 'urmg_upgrade_path',
+						'meta_value' => wp_json_encode( $sanitized_upgrade_path ),
+					),
+				)
+			);
+		}
 
 		return array(
 			'post_data'      => array(
-				'ID'             => $membership_group_id,
-				'post_title'     => sanitize_text_field( $post_data['post_data']['name'] ),
-				'post_content'   => wp_json_encode(
+				'ID'           => $membership_group_id,
+				'post_title'   => sanitize_text_field( $post_data['post_data']['name'] ),
+				'post_content' => wp_json_encode(
 					array(
 						'description' => sanitize_text_field( $post_data['post_data']['description'] ),
 						'status'      => ur_string_to_bool( $post_data['post_data']['status'] ),
 					)
 				),
-				'post_type'      => 'ur_membership_groups',
-				'post_status'    => 'publish',
-				'comment_status' => 'closed',
-				'ping_status'    => 'closed',
+				'post_type'    => 'ur_membership_groups',
+				'post_status'  => 'publish',
 			),
-			'post_meta_data' => array(
-				array(
-					'meta_key'   => 'urmg_memberships',
-					'meta_value' => wp_json_encode( $post_meta_data ),
-				),
-				array(
-					'meta_key'   => 'urmg_multiple_memberships',
-					'meta_value' => ur_string_to_bool( $post_data['post_meta_data']['multiple_memberships'] ),
-				),
-			),
+			'post_meta_data' => $updated_post_meta_data,
 		);
 	}
+
+	/**
+	 * Sanitize upgrade paths array.
+	 *
+	 * @param [type] $upgrade_path Upgrade Path.
+	 */
+	private function sanitize_upgrade_paths( $upgrade_path ) {
+
+		if ( empty( $upgrade_path ) ) {
+			return array();
+		}
+
+		if ( is_string( $upgrade_path ) ) {
+			$upgrade_path = json_decode( wp_unslash( $upgrade_path ), true );
+		}
+
+		if ( ! is_array( $upgrade_path ) ) {
+			return array();
+		}
+
+		$sanitized = array();
+
+		foreach ( $upgrade_path as $from_membership_id => $paths ) {
+			$from_id = absint( $from_membership_id );
+
+			if ( empty( $paths ) || ! is_array( $paths ) ) {
+				$sanitized[ $from_id ] = array();
+				continue;
+			}
+
+			foreach ( $paths as $path ) {
+				$sanitized[ $from_id ][] = array(
+					'membership_id'     => absint( $path['membership_id'] ?? 0 ),
+					'label'             => sanitize_text_field( $path['label'] ?? '' ),
+					'chargeable_amount' => floatval( $path['chargeable_amount'] ?? 0 ),
+					'target_amount'     => floatval( $path['target_amount'] ?? 0 ),
+					'current_amount'    => floatval( $path['current_amount'] ?? 0 ),
+				);
+			}
+		}
+
+		return $sanitized;
+	}
+
 
 	/**
 	 * create_membership_groups
@@ -152,7 +223,9 @@ class MembershipGroupService {
 		$post_data = json_decode( wp_unslash( $post_data ), true );
 		$data      = $this->validate_membership_group_data( $post_data );
 		if ( $data['status'] ) {
-			$data                = $this->prepare_membership_group_data( $post_data );
+			$data = $this->prepare_membership_group_data( $post_data );
+			error_log( print_r( $data, true ) );
+
 			$data                = apply_filters( 'ur_membership_after_create_membership_groups_data_before_save', $data );
 			$membership_group_id = wp_insert_post( $data['post_data'] );
 
