@@ -118,57 +118,12 @@
 		</span>
 		<?php
 		if ( ! empty( $memberships ) ) :
-			if ( is_user_logged_in() && 'upgrade' === $_GET['action'] ) {
-				// Checkout page for logged in user to upgrade membership.
-				if ( isset( $_GET['current'] ) && '' !== $_GET['current'] ) {
-					$current_membership_id = absint( $_GET['current'] );
+			if ( is_user_logged_in() ) {
+				$membership_service = new WPEverest\URMembership\Admin\Services\MembershipService();
+				$fetched_data       = $membership_service->fetch_membership_details_from_intended_actions( $_GET );
 
-					$members_order_repository = new WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
-					$orders_repository        = new WPEverest\URMembership\Admin\Repositories\OrdersRepository();
-					$member_id                = get_current_user_id();
-					$last_order               = $members_order_repository->get_member_orders( $member_id );
-
-					if ( ! empty( $last_order ) ) {
-						$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
-						if ( ! empty( $order_meta ) ) {
-							$upcoming_subscription = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
-							$membership            = get_post( $upcoming_subscription['membership'] );
-							return apply_filters( 'urm_delayed_plan_exist_notice', __( sprintf( 'You already have a scheduled upgrade to the <b>%s</b> plan at the end of your current subscription cycle (<i><b>%s</b></i>) <br> If you\'d like to cancel this upcoming change, click the <b>Cancel Membership</b> button to proceed.', $membership->post_title, date( 'M d, Y', strtotime( $order_meta['meta_value'] ) ) ), 'user-registration' ), $membership->post_title, $order_meta['meta_value'] );
-						}
-					}
-					$membership_service = new WPEverest\URMembership\Admin\Services\MembershipService();
-					$memberships        = $membership_service->get_upgradable_membership( $current_membership_id );
-
-					if ( empty( $memberships ) ) {
-						return esc_html_e( 'No upgradable Memberships.', 'user-registration' );
-					}
-
-					$subscription_service       = new WPEverest\URMembership\Admin\Services\SubscriptionService();
-					$subscription_repository    = new WPEverest\URMembership\Admin\Repositories\SubscriptionRepository();
-					$upgrade_service            = new WPEverest\URMembership\Admin\Services\UpgradeMembershipService();
-					$current_membership_details = $membership_service->get_membership_details( $current_membership_id );
-					$subscription               = $subscription_repository->retrieve( $_GET['subscription_id'] );
-
-					foreach ( $memberships as &$membership ) {
-						$selected_membership_details = $membership_service->get_membership_details( $membership['ID'] );
-						$upgrade_details             = $subscription_service->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
-
-						$selected_membership_amount   = $selected_membership_details['amount'];
-						$current_membership_amount    = $current_membership_details['amount'];
-						$upgrade_type                 = $current_membership_details['upgrade_settings']['upgrade_type'];
-						$remaining_subscription_value = isset( $selected_membership_details['subscription']['value'] ) ? $selected_membership_details['subscription']['value'] : '';
-						$delayed_until                = '';
-
-						$chargeable_amount    = $upgrade_service->calculate_chargeable_amount(
-							$selected_membership_amount,
-							$current_membership_amount,
-							$upgrade_type
-						);
-						$membership['amount'] = $chargeable_amount;
-					}
-					unset( $membership );
-				} else {
-					return esc_html_e( 'You donot have permission to purchase the selected membership. Please go through upgrade process from my account.', 'user-registration' );
+				if ( isset( $fetched_data['status'] ) && $fetched_data['status'] ) {
+					$memberships = $fetched_data['memberships'] ?? array();
 				}
 			} else {
 				// Checkout page for user registering into the site.

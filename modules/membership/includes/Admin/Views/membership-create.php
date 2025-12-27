@@ -16,14 +16,14 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 					<button class="ur-page-title__wrapper--steps-btn ur-page-title__wrapper--steps-btn-active" data-step="0" id="ur-basic-tab">
 						<div class="ur-page-title__wrapper--steps-wrapper">
 							<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32"><path stroke="#e9e9e9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 3.667c6.811 0 12.334 5.521 12.334 12.333 0 6.811-5.523 12.334-12.334 12.334S3.667 22.81 3.667 16C3.667 9.188 9.189 3.667 16 3.667"/><g clip-path="url(#a)"><path stroke="#222" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M15.997 10.802a.65.65 0 0 1 .36.11l.097.08 4.554 4.553a.65.65 0 0 1 .08.817l-.08.098-4.554 4.553a.65.65 0 0 1-.816.08l-.098-.08-4.554-4.554a.65.65 0 0 1-.19-.457l.014-.125a.6.6 0 0 1 .096-.234l.08-.098 4.554-4.553a.65.65 0 0 1 .457-.19"/></g><defs><clipPath id="a"><path fill="#fff" d="M10 9.5h12v13H10z"/></clipPath></defs></svg>
-							<span><?php esc_html_e('Basics','user-registration');?></span>
+							<span><?php esc_html_e( 'Basics', 'user-registration' ); ?></span>
 						</div>
 					</button>
 					<hr class="ur-page-title__wrapper--steps-separator" />
 					<button class="ur-page-title__wrapper--steps-btn" data-step="1" id="ur-advanced-tab">
 						<div class="ur-page-title__wrapper--steps-wrapper">
 							<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32"><path stroke="#e9e9e9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 29.333c7.364 0 13.334-5.97 13.334-13.333S23.364 2.667 16 2.667 2.667 8.637 2.667 16 8.637 29.333 16 29.333"/><g stroke="#222" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.569" clip-path="url(#a)"><path d="M17.199 19h-5.4M20.199 13h-5.4M19.001 20.8a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6M13.001 14.8a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6"/></g><defs><clipPath id="a"><path fill="#fff" d="M10 10h12v12H10z"/></clipPath></defs></svg>
-							<span><?php esc_html_e('Advanced','user-registration');?></span>
+							<span><?php esc_html_e( 'Advanced', 'user-registration' ); ?></span>
 						</div>
 					</button>
 				</div>
@@ -181,7 +181,7 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 									</label>
 									<!--											subscription type-->
 									<label
-										class="ur-membership-types <?php echo !UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>"
+										class="ur-membership-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>"
 										for="ur-membership-subscription-type">
 										<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
 											<input
@@ -192,7 +192,7 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 												name="ur_membership_type"
 												class="ur_membership_paid_type"
 												<?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'subscription' ? 'checked' : ''; ?>
-												<?php echo !UR_PRO_ACTIVE ? 'disabled' : ''; ?>
+												<?php echo ! UR_PRO_ACTIVE ? 'disabled' : ''; ?>
 											>
 											<label class="ur-p-2" for="ur-membership-subscription-type">
 												<b
@@ -349,12 +349,13 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 										'subscription',
 									),
 									true
-								) && empty(urm_get_all_active_payment_gateways($membership_details['type'])) ? '' : 'ur-d-none'
-								?>" data-paid-configured="<?php echo empty( urm_get_all_active_payment_gateways( 'paid' ) ) ? '0' : '1'; ?>"
+								) && empty( urm_get_all_active_payment_gateways( $membership_details['type'] ) ) ? '' : 'ur-d-none'
+								?>
+								" data-paid-configured="<?php echo empty( urm_get_all_active_payment_gateways( 'paid' ) ) ? '0' : '1'; ?>"
 								data-subscription-configured="<?php echo empty( urm_get_all_active_payment_gateways( 'subscription' ) ) ? '0' : '1'; ?>">
 								<p>
-									<?php esc_html_e('The payment setup is not configured yet. Please configure payment settings before proceeding.','user-registration')?>
-									<a href="<?php echo esc_url(admin_url('admin.php?page=user-registration-settings&tab=payment'))?>" target="_blank"><?php esc_html_e('Configure','user-registration'); ?></a>
+									<?php esc_html_e( 'The payment setup is not configured yet. Please configure payment settings before proceeding.', 'user-registration' ); ?>
+									<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=payment' ) ); ?>" target="_blank"><?php esc_html_e( 'Configure', 'user-registration' ); ?></a>
 								</p>
 							</div>
 						</div>
@@ -371,7 +372,7 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 									for="ur-input-type-membership-role"><?php esc_html_e( 'Membership Role :', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 									<span class="user-registration-help-tip tooltipstered"
-											data-tip="<?php esc_attr_e('Assign members to the selected role upon registration.(Overrides role set through form)','user-registration');?>"></span>
+											data-tip="<?php esc_attr_e( 'Assign members to the selected role upon registration.(Overrides role set through form)', 'user-registration' ); ?>"></span>
 								</label>
 							</div>
 							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
@@ -473,131 +474,161 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 						<!--						Membership Upgrade Action toggle-->
 						<?php
 						$is_upgrade_enabled = isset( $membership_details['upgrade_settings']['upgrade_action'] ) && true == $membership_details['upgrade_settings']['upgrade_action'];
-						?>
-						<div class="ur-membership-selection-container ur-d-flex ur-mt-2 ur-align-items-center"
-							style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
-								<label class="ur-membership-enable-upgrade-action"
-										for="ur-membership-upgrade-action"><?php esc_html_e( 'Upgrade Action :', 'user-registration' ); ?>
-								</label>
-							</div>
-							<div class="ur-toggle-section m1-auto" style="width: 100%">
-								<span class="user-registration-toggle-form">
-									<input
-										data-key-name="Upgrade Action"
-										id="ur-membership-upgrade-action" type="checkbox"
-										class="user-registration-switch__control hide-show-check enabled"
-										<?php echo $is_upgrade_enabled ? 'checked' : ''; ?>
-										name="ur_membership_upgrade_action"
-										style="width: 100%; text-align: left">
-									<span class="slider round"></span>
-								</span>
-							</div>
-						</div>
-						<div id="upgrade-settings-container" class="ur-membership-selection-container"
-							style="<?php echo true === $is_upgrade_enabled ? '' : 'display: none'; ?>"
-						>
-							<!--						Membership Upgrade Path field-->
-							<div class="ur-membership-input-container ur-d-flex ur-align-items-center"
-								style="gap:20px;">
-								<div class="ur-label" style="width: 30%; margin-bottom: 0;">
-									<label
-										for="ur-input-type-membership-upgrade-path"><?php esc_html_e( 'Upgrade Path', 'user-registration' ); ?>
-										<span style="color:red">*</span> :
-									</label>
-								</div>
-								<div class="ur-input-type-membership-upgrade-path ur-admin-template"
-									style="width: 100%">
-									<div class="ur-field" data-field-key="membership_upgrade_path"
-										style="width: 100%">
-										<select
-											multiple
-											data-key-name="<?php echo esc_html__( 'Upgrade Path', 'user-registration' ); ?>"
-											id="ur-input-type-membership-upgrade-path"
-											class="user-membership-enhanced-select2">
-											<?php
-											$upgrade_path = isset( $membership_details['upgrade_settings']['upgrade_path'] ) ? explode( ',', $membership_details['upgrade_settings']['upgrade_path'] ) : array();
+						$is_upgrade_allowed = true;
 
-											foreach ( $memberships as $k => $m ) :
-												if ( isset( $_GET['post_id'] ) && $_GET['post_id'] == $m['ID'] ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
-													continue;
-												}
-												$selected = ( $upgrade_path ) && in_array( $m['ID'], $upgrade_path, true ) ? 'selected="selected"' : '';
-												?>
-												<option
-													<?php echo $selected; ?>
-													value="<?php echo esc_attr( $m['ID'] ); ?>"><?php echo esc_html( $m['title'] ); ?></option>
-												<?php
-											endforeach;
-											?>
-										</select>
-									</div>
-								</div>
-							</div>
-							<!--						Membership Upgrade Path Type-->
-							<div
-								class="urm-upgrade-path-type-container ur-d-flex ur-mt-6 ur-align-items-center"
-								data-key-name="<?php echo __( 'Upgrade Type', 'user-registration' ); ?>"
+						if ( isset( $_GET['post_id'] ) ) {
+							$membership_group_repository = new WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository();
+							$membership_group_service    = new WPEverest\URMembership\Admin\Services\MembershipGroupService();
+							$membership_group_id         = $membership_group_repository->get_membership_group_by_membership_id( absint( $_GET['post_id'] ?? 0 ) );
+
+							if ( isset( $membership_group_id['ID'] ) ) {
+								$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group_id['ID'] );
+
+								if ( $multiple_memberships_allowed ) {
+									$is_upgrade_allowed = false;
+								}
+							}
+						}
+
+						if ( $is_upgrade_allowed ) {
+							?>
+							<div class="ur-membership-selection-container ur-d-flex ur-mt-2 ur-align-items-center"
 								style="gap:20px;">
 								<div class="ur-label" style="width: 30%">
-									<label
-										for="ur-membership-upgrade-type-full">
-										<?php echo __( 'Upgrade Type', 'user-registration' ); ?>
-										<span style="color:red">*</span> :
+									<label class="ur-membership-enable-upgrade-action"
+											for="ur-membership-upgrade-action"><?php esc_html_e( 'Upgrade Action :', 'user-registration' ); ?>
 									</label>
-
 								</div>
-								<div class="ur-input-type-select ur-admin-template" style="width: 100%">
-									<div class="ur-field ur-d-flex"
-										data-field-key="radio">
-										<label class="ur-membership-upgrade-types"
-												for="ur-membership-upgrade-type-full">
-											<div
-												class="ur-membership-type-title ur-d-flex ur-align-items-center ">
-												<input
-													data-key-name="<?php echo __( 'Upgrade Type', 'user-registration' ); ?>"
-													id="ur-membership-upgrade-type-full"
-													type="radio" value="full"
-													name="ur_membership_upgrade_type"
-													style="margin: 0"
-													<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && $membership_details['upgrade_settings']['upgrade_type'] == 'full' ) ) ? 'checked' : ( ! $is_editing ? 'checked' : '' ); ?>
-													required>
-												<label class="ur-membership-upgrade-type-full--label" for="ur-membership-upgrade-type-full">
-													<b
-														class="user-registration-image-label "><?php esc_html_e( 'Full Amount Upgrade', 'user-registration' ); ?>
-													</b>
-												</label>
-											</div>
-										</label>
-										<!--								Pro rata type-->
+								<div class="ur-toggle-section m1-auto" style="width: 100%">
+									<span class="user-registration-toggle-form">
+										<input
+											data-key-name="Upgrade Action"
+											id="ur-membership-upgrade-action" type="checkbox"
+											class="user-registration-switch__control hide-show-check enabled"
+											<?php echo $is_upgrade_enabled ? 'checked' : ''; ?>
+											name="ur_membership_upgrade_action"
+											style="width: 100%; text-align: left">
+										<span class="slider round"></span>
+									</span>
+								</div>
+							</div>
+							<div id="upgrade-settings-container" class="ur-membership-selection-container"
+								style="<?php echo true === $is_upgrade_enabled ? '' : 'display: none'; ?>"
+							>
+								<!--						Membership Upgrade Path field-->
+								<div class="ur-membership-input-container ur-d-flex ur-align-items-center"
+									style="gap:20px;">
+									<div class="ur-label" style="width: 30%; margin-bottom: 0;">
 										<label
-											class="ur-membership-upgrade-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>  <?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'free' ? 'ur-d-none' : ''; ?>"
-											for="ur-membership-upgrade-type-pro-rata">
-											<div
-												class="ur-membership-type-title ur-d-flex ur-align-items-center">
-												<input
-													data-key-name="Upgrade Type"
-													id="ur-membership-upgrade-type-pro-rata"
-													type="radio"
-													value="pro-rata"
-													name="ur_membership_upgrade_type"
-													style="margin: 0"
-													<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && $membership_details['upgrade_settings']['upgrade_type'] == 'pro-rata' ) ) ? 'checked' : ''; ?>
-													<?php echo ! UR_PRO_ACTIVE ? 'disabled' : ''; ?>
-													required>
-												<label class="ur-membership-upgrade-type-full--label" for="ur-membership-upgrade-type-pro-rata">
-													<b
-														class="user-registration-image-label "><?php esc_html_e( 'Proration Upgrade', 'user-registration' ); ?>
-													</b>
-												</label>
-											</div>
+											for="ur-input-type-membership-upgrade-path"><?php esc_html_e( 'Upgrade Path', 'user-registration' ); ?>
+											<span style="color:red">*</span> :
 										</label>
+									</div>
+									<div class="ur-input-type-membership-upgrade-path ur-admin-template"
+										style="width: 100%">
+										<div class="ur-field" data-field-key="membership_upgrade_path"
+											style="width: 100%">
+											<select
+												multiple
+												data-key-name="<?php echo esc_html__( 'Upgrade Path', 'user-registration' ); ?>"
+												id="ur-input-type-membership-upgrade-path"
+												class="user-membership-enhanced-select2">
+												<?php
+												$upgrade_path = isset( $membership_details['upgrade_settings']['upgrade_path'] ) ? explode( ',', $membership_details['upgrade_settings']['upgrade_path'] ) : array();
+
+												foreach ( $memberships as $k => $m ) :
+													if ( isset( $_GET['post_id'] ) && $_GET['post_id'] == $m['ID'] ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+														continue;
+													}
+													$membership_group_repository = new WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository();
+													$membership_group_service    = new WPEverest\URMembership\Admin\Services\MembershipGroupService();
+													$membership_group_id         = $membership_group_repository->get_membership_group_by_membership_id( $m['ID'] );
+
+													if ( isset( $membership_group_id['ID'] ) ) {
+														$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group_id['ID'] );
+
+														if ( $multiple_memberships_allowed ) {
+															continue;
+														}
+													}
+
+													$selected = ( $upgrade_path ) && in_array( $m['ID'], $upgrade_path, true ) ? 'selected="selected"' : '';
+													?>
+													<option
+														<?php echo $selected; ?>
+														value="<?php echo esc_attr( $m['ID'] ); ?>"><?php echo esc_html( $m['title'] ); ?></option>
+													<?php
+												endforeach;
+												?>
+											</select>
+										</div>
+									</div>
+								</div>
+								<!--						Membership Upgrade Path Type-->
+								<div
+									class="urm-upgrade-path-type-container ur-d-flex ur-mt-6 ur-align-items-center"
+									data-key-name="<?php echo __( 'Upgrade Type', 'user-registration' ); ?>"
+									style="gap:20px;">
+									<div class="ur-label" style="width: 30%">
+										<label
+											for="ur-membership-upgrade-type-full">
+											<?php echo __( 'Upgrade Type', 'user-registration' ); ?>
+											<span style="color:red">*</span> :
+										</label>
+
+									</div>
+									<div class="ur-input-type-select ur-admin-template" style="width: 100%">
+										<div class="ur-field ur-d-flex"
+											data-field-key="radio">
+											<label class="ur-membership-upgrade-types"
+													for="ur-membership-upgrade-type-full">
+												<div
+													class="ur-membership-type-title ur-d-flex ur-align-items-center ">
+													<input
+														data-key-name="<?php echo __( 'Upgrade Type', 'user-registration' ); ?>"
+														id="ur-membership-upgrade-type-full"
+														type="radio" value="full"
+														name="ur_membership_upgrade_type"
+														style="margin: 0"
+														<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && $membership_details['upgrade_settings']['upgrade_type'] == 'full' ) ) ? 'checked' : ( ! $is_editing ? 'checked' : '' ); ?>
+														required>
+													<label class="ur-membership-upgrade-type-full--label" for="ur-membership-upgrade-type-full">
+														<b
+															class="user-registration-image-label "><?php esc_html_e( 'Full Amount Upgrade', 'user-registration' ); ?>
+														</b>
+													</label>
+												</div>
+											</label>
+											<!--								Pro rata type-->
+											<label
+												class="ur-membership-upgrade-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>  <?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'free' ? 'ur-d-none' : ''; ?>"
+												for="ur-membership-upgrade-type-pro-rata">
+												<div
+													class="ur-membership-type-title ur-d-flex ur-align-items-center">
+													<input
+														data-key-name="Upgrade Type"
+														id="ur-membership-upgrade-type-pro-rata"
+														type="radio"
+														value="pro-rata"
+														name="ur_membership_upgrade_type"
+														style="margin: 0"
+														<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && $membership_details['upgrade_settings']['upgrade_type'] == 'pro-rata' ) ) ? 'checked' : ''; ?>
+														<?php echo ! UR_PRO_ACTIVE ? 'disabled' : ''; ?>
+														required>
+													<label class="ur-membership-upgrade-type-full--label" for="ur-membership-upgrade-type-pro-rata">
+														<b
+															class="user-registration-image-label "><?php esc_html_e( 'Proration Upgrade', 'user-registration' ); ?>
+														</b>
+													</label>
+												</div>
+											</label>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-						<!--								membership all payments-->
-						<?php
+							<!--								membership all payments-->
+							<?php
+						}
 						require __DIR__ . '/./Partials/membership-admin-payments.php'
 						?>
 					</div>

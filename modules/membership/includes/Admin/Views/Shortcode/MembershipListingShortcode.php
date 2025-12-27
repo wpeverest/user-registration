@@ -70,11 +70,14 @@ class MembershipListingShortcode {
 		} else {
 			$memberships = array_map(
 				function ( $membership ) use ( $membershp_group_repository, $membership_group_service ) {
-					$membership_group_id          = $membershp_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
-					$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group_id['ID'] );
+					$membership_group_id = $membershp_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
 
-					if ( $multiple_memberships_allowed ) {
-						$membership['multiple_membership'] = true;
+					if ( isset( $membership_group_id['ID'] ) ) {
+						$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group_id['ID'] );
+
+						if ( $multiple_memberships_allowed ) {
+							$membership['multiple_membership'] = true;
+						}
 					}
 					return $membership;
 				},

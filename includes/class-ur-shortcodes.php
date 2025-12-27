@@ -329,78 +329,87 @@ class UR_Shortcodes {
 					// include_once $template_file;
 					// echo '</div>';
 					// return ob_get_clean();
-					$user_id = get_current_user_id();
-					$form_id = get_user_meta( $user_id, 'ur_form_id', true );
+					$membership_service = new WPEverest\URMembership\Admin\Services\MembershipService();
 
-					$form_fields = ur_get_form_fields( $form_id );
+					$fetched_data = $membership_service->fetch_membership_details_from_intended_actions( $_GET );
+					if ( isset( $fetched_data['status'] ) && $fetched_data['status'] ) {
+						$user_id = get_current_user_id();
+						$form_id = get_user_meta( $user_id, 'ur_form_id', true );
 
-					foreach ( $form_fields as $field ) {
-						add_filter(
-							'user_registration_' . $field->field_key . '_frontend_form_data',
-							function ( $default_data ) use ( $user_id, $field ) {
-								if ( 'membership' !== $field->field_key && isset( $field->general_setting->field_name ) ) {
-									$default_fields      = ur_get_user_table_fields();
-									$default_meta_fields = ur_get_registered_user_meta_fields();
+						$form_fields = ur_get_form_fields( $form_id );
 
-									$user_data = get_userdata( $user_id );
+						foreach ( $form_fields as $field ) {
+							add_filter(
+								'user_registration_' . $field->field_key . '_frontend_form_data',
+								function ( $default_data ) use ( $user_id, $field ) {
+									if ( 'membership' !== $field->field_key && isset( $field->general_setting->field_name ) ) {
+										$default_fields      = ur_get_user_table_fields();
+										$default_meta_fields = ur_get_registered_user_meta_fields();
 
-									if ( in_array( $field->field_key, $default_fields, true ) ) {
-										$user_submitted_value = isset( $user_data->data->{ $field->field_key } ) ? $user_data->data->{ $field->field_key } : '';
-									} elseif ( in_array( $field->field_key, $default_meta_fields, true ) ) {
-										$user_submitted_value = get_user_meta( $user_id, $field->field_key, true );
-									} else {
-										$user_submitted_value = get_user_meta( $user_id, 'user_registration_' . $field->general_setting->field_name, true );
+										$user_data = get_userdata( $user_id );
+
+										if ( in_array( $field->field_key, $default_fields, true ) ) {
+											$user_submitted_value = isset( $user_data->data->{ $field->field_key } ) ? $user_data->data->{ $field->field_key } : '';
+										} elseif ( in_array( $field->field_key, $default_meta_fields, true ) ) {
+											$user_submitted_value = get_user_meta( $user_id, $field->field_key, true );
+										} else {
+											$user_submitted_value = get_user_meta( $user_id, 'user_registration_' . $field->general_setting->field_name, true );
+										}
+
+										if ( 'user_pass' === $field->field_key || 'user_confirm_password' === $field->field_key || 'user_confirm_email' === $field->field_key ) {
+											$default_data['form_data']['is_checkout'] = true;
+										}
+
+										$default_data['form_data']['default'] = $user_submitted_value;
+
+										if ( ! empty( $user_submitted_value ) ) {
+											$default_data['form_data']['custom_attributes']['disabled'] = 'disabled';
+											$default_data['form_data']['custom_attributes']['readonly'] = 'readonly';
+										}
+										return $default_data;
 									}
-
-									if ( 'user_pass' === $field->field_key || 'user_confirm_password' === $field->field_key || 'user_confirm_email' === $field->field_key ) {
-										$default_data['form_data']['is_checkout'] = true;
-									}
-
-									$default_data['form_data']['default'] = $user_submitted_value;
-
-									if ( ! empty( $user_submitted_value ) ) {
-										$default_data['form_data']['custom_attributes']['disabled'] = 'disabled';
-										$default_data['form_data']['custom_attributes']['readonly'] = 'readonly';
-									}
-									return $default_data;
 								}
+							);
+						}
+
+						add_filter(
+							'user_registration_handle_form_fields',
+							function ( $grid_data ) use ( $user_id, $field ) {
+
+								foreach ( $grid_data as $key => $data ) {
+									if ( 'user_pass' === $data->field_key || 'user_confirm_password' === $data->field_key || 'user_confirm_email' === $data->field_key ) {
+										unset( $grid_data[ $key ] );
+									}
+								}
+								return $grid_data;
 							}
 						);
-					}
 
-					add_filter(
-						'user_registration_handle_form_fields',
-						function ( $grid_data ) use ( $user_id, $field ) {
+						add_filter(
+							'user_registration_parts_data',
+							function () {
+								return false;
+							},
+							9999
+						);
 
-							foreach ( $grid_data as $key => $data ) {
-								if ( 'user_pass' === $data->field_key || 'user_confirm_password' === $data->field_key || 'user_confirm_email' === $data->field_key ) {
-									unset( $grid_data[ $key ] );
-								}
+						add_filter(
+							'user_registration_form_submit_btn_class',
+							function ( $classes ) {
+								$classes[] = 'urm-update-membership-button';
+								return $classes;
 							}
-							return $grid_data;
-						}
-					);
+						);
 
-					add_filter(
-						'user_registration_parts_data',
-						function () {
-							return false;
-						},
-						9999
-					);
+						ob_start();
+						self::render_form( $form_id );
 
-					add_filter(
-						'user_registration_form_submit_btn_class',
-						function ( $classes ) {
-							$classes[] = 'urm-update-membership-button';
-							return $classes;
-						}
-					);
+						return ob_get_clean();
+					} else {
+						$message = isset( $fetched_data['message'] ) ? $fetched_data['message'] : esc_html__( 'Cannot fetch membership details. Please contact your site administrator.', 'user-registration' );
 
-					ob_start();
-					self::render_form( $form_id );
-
-					return ob_get_clean();
+						return '<p class="alert" id="ur_register_pre_form_message">' . $message . '</p>';
+					}
 				}
 			} else {
 				/**
