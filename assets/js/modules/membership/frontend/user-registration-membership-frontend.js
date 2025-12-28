@@ -104,7 +104,6 @@
 			this.toggleNotice();
 		},
 		show_form_success_message: function (form_response, thank_you_data) {
-
 			var response_data = form_response.data,
 				ursL10n = user_registration_params.ursL10n,
 				$registration_form = $(
@@ -116,53 +115,38 @@
 				redirect_url = $registration_form
 					.find('input[name="ur-redirect-url"]')
 					.val(),
-				timeout = form_response.data
-					.redirect_timeout
+				timeout = form_response.data.redirect_timeout
 					? form_response.data.redirect_timeout
 					: 2000;
-
-
 
 			if ("undefined" !== typeof response_data.role_based_redirect_url) {
 				redirect_url = response_data.role_based_redirect_url;
 			}
 			if (
-				typeof form_response.data
-					.form_login_option !==
-				"undefined" &&
-				form_response.data
-					.form_login_option ===
-				"sms_verification"
+				typeof form_response.data.form_login_option !== "undefined" &&
+				form_response.data.form_login_option === "sms_verification"
 			) {
 				window.setTimeout(function () {
 					if (
-						typeof form_response.data
-							.redirect_url !==
-						"undefined" &&
-						form_response.data
-							.redirect_url
+						typeof form_response.data.redirect_url !==
+							"undefined" &&
+						form_response.data.redirect_url
 					) {
-						window.location =
-							form_response.data.redirect_url;
+						window.location = form_response.data.redirect_url;
 					}
 				}, timeout);
 			}
-			if (
-				"undefined" !==
-				typeof redirect_url &&
-				redirect_url !== ""
-			) {
+			if ("undefined" !== typeof redirect_url && redirect_url !== "") {
 				$(document).trigger(
 					"user_registration_frontend_before_redirect_url",
 					[redirect_url]
 				);
 
 				window.setTimeout(function () {
-					window.location =
-						redirect_url;
+					window.location = redirect_url;
 				}, timeout);
 			} else {
-				redirect_url = urmf_data.thank_you_page_url
+				redirect_url = urmf_data.thank_you_page_url;
 			}
 			/**
 			 * Remove Spinner.
@@ -180,7 +164,7 @@
 			} else if (
 				response_data.form_login_option === "email_confirmation" ||
 				response_data.form_login_option ===
-				"admin_approval_after_email_confirmation"
+					"admin_approval_after_email_confirmation"
 			) {
 				message.append("<li>" + ursL10n.user_email_pending + "</li>");
 			} else {
@@ -269,7 +253,7 @@
 			user_data.payment_method = "free";
 			if (membership_input.data("urm-pg-type") !== "free") {
 				user_data.payment_method = $(
-					'input[name="urm_payment_method"]:checked:visible'
+					'input[name="urm_payment_method"]:checked'
 				).val();
 			}
 			var date = new Date();
@@ -305,18 +289,18 @@
 					if ($(this).val() === "stripe" && $(this).is(":checked")) {
 						var is_empty = is_upgrade
 							? $(".membership-upgrade-container").find(
-								".stripe-input-container .StripeElement--empty"
-							).length
+									".stripe-input-container .StripeElement--empty"
+							  ).length
 							: $(".ur-frontend-form").find(
-								".stripe-input-container .StripeElement--empty"
-							).length;
+									".stripe-input-container .StripeElement--empty"
+							  ).length;
 
 						if (is_empty) {
 							no_errors = false;
 							var event = {
 								error: {
 									message:
-									urmf_data.labels.i18n_empty_card_details
+										urmf_data.labels.i18n_empty_card_details
 								}
 							};
 
@@ -342,8 +326,8 @@
 				ur_membership_frontend_utils.show_validation_error(
 					error_div,
 					urmf_data.labels.i18n_error +
-					"! " +
-					urmf_data.labels.i18n_coupon_empty_error
+						"! " +
+						urmf_data.labels.i18n_coupon_empty_error
 				);
 				return no_error;
 			}
@@ -353,8 +337,8 @@
 				ur_membership_frontend_utils.show_validation_error(
 					error_div,
 					urmf_data.labels.i18n_error +
-					"! " +
-					urmf_data.labels.i18n_membership_required
+						"! " +
+						urmf_data.labels.i18n_membership_required
 				);
 				return no_error;
 			}
@@ -364,8 +348,8 @@
 				ur_membership_frontend_utils.show_validation_error(
 					error_div,
 					urmf_data.labels.i18n_error +
-					"! " +
-					urmf_data.labels.i18n_coupon_free_membership_error
+						"! " +
+						urmf_data.labels.i18n_coupon_free_membership_error
 				);
 				return no_error;
 			}
@@ -405,9 +389,9 @@
 					failure: function (xhr, statusText) {
 						ur_membership_frontend_utils.show_failure_message(
 							urmf_data.labels.network_error +
-							"(" +
-							statusText +
-							")"
+								"(" +
+								statusText +
+								")"
 						);
 					},
 					complete: function () {
@@ -535,16 +519,16 @@
 							if (xhr.status === 500) {
 								ur_membership_frontend_utils.show_failure_message(
 									urmf_data.labels.network_error +
-									"(" +
-									statusText +
-									")"
+										"(" +
+										statusText +
+										")"
 								);
 							} else {
 								ur_membership_frontend_utils.show_validation_error(
 									$("#coupon-validation-error"),
 									urmf_data.labels.i18n_error +
-									"! " +
-									xhr.responseJSON.data.message
+										"! " +
+										xhr.responseJSON.data.message
 								);
 							}
 						},
@@ -586,8 +570,8 @@
 			prefix =
 				response.coupon_details.coupon_discount_type === "fixed"
 					? urmf_data.currency_symbol +
-					"" +
-					response.coupon_details.coupon_discount
+					  "" +
+					  response.coupon_details.coupon_discount
 					: response.coupon_details.coupon_discount + "%";
 			// show notice below total
 			$("#total-input-notice").text(
@@ -604,23 +588,19 @@
 			var success_callback =
 					"function" === typeof callbacks.success
 						? callbacks.success
-						: function () {
-						},
+						: function () {},
 				failure_callback =
 					"function" === typeof callbacks.failure
 						? callbacks.failure
-						: function () {
-						},
+						: function () {},
 				beforeSend_callback =
 					"function" === typeof callbacks.beforeSend
 						? callbacks.beforeSend
-						: function () {
-						},
+						: function () {},
 				complete_callback =
 					"function" === typeof callbacks.complete
 						? callbacks.complete
-						: function () {
-						};
+						: function () {};
 
 			// Inject default data.
 			if (!data._wpnonce && urmf_data) {
@@ -647,10 +627,10 @@
 						? urm_calculated_total - discount_amount
 						: urm_calculated_total;
 			total = parseFloat(total).toFixed(2);
-			if( 'left' === urmf_data.curreny_pos ) {
-				total_input.val(urmf_data.currency_symbol + total);
+			if ("left" === urmf_data.curreny_pos) {
+				total_input.text(urmf_data.currency_symbol + total);
 			} else {
-				total_input.val( total + urmf_data.currency_symbol );
+				total_input.text(total + urmf_data.currency_symbol);
 			}
 		},
 		upgrade_membership: function (
@@ -704,9 +684,9 @@
 						failure: function (xhr, statusText) {
 							ur_membership_frontend_utils.show_failure_message(
 								user_registration_pro_frontend_data.network_error +
-								"(" +
-								statusText +
-								")"
+									"(" +
+									statusText +
+									")"
 							);
 						},
 						complete: function () {
@@ -755,9 +735,9 @@
 					failure: function (xhr, statusText) {
 						ur_membership_frontend_utils.show_failure_message(
 							user_registration_pro_frontend_data.network_error +
-							"(" +
-							statusText +
-							")"
+								"(" +
+								statusText +
+								")"
 						);
 					},
 					complete: function () {
@@ -794,7 +774,7 @@
 							current_membership_id: data.current_plan,
 							selected_membership_id: data.selected_membership_id,
 							current_subscription_id:
-							data.current_subscription_id,
+								data.current_subscription_id,
 							selected_pg: data.selected_pg,
 							ur_authorize_data: data.ur_authorize_data
 						},
@@ -826,9 +806,9 @@
 							failure: function (xhr, statusText) {
 								ur_membership_frontend_utils.show_failure_message(
 									user_registration_pro_frontend_data.network_error +
-									"(" +
-									statusText +
-									")"
+										"(" +
+										statusText +
+										")"
 								);
 								$(document)
 									.find(".swal2-confirm")
@@ -1024,7 +1004,7 @@
 					stripe_settings.handle_stripe_response(
 						response,
 						prepare_members_data,
-						{data: {}}
+						{ data: {} }
 					);
 					break;
 				case "mollie":
@@ -1063,7 +1043,7 @@
 					stripe_settings.handle_stripe_response(
 						response,
 						prepare_members_data,
-						{data: {}}
+						{ data: {} }
 					);
 					break;
 				default:
@@ -1105,9 +1085,9 @@
 					failure: function (xhr, statusText) {
 						ur_membership_frontend_utils.show_failure_message(
 							urmf_data.labels.network_error +
-							" (" +
-							xhr.statusText +
-							")"
+								" (" +
+								xhr.statusText +
+								")"
 						);
 					},
 					complete: function () {
@@ -1199,9 +1179,12 @@
 
 			var card = elements.create("card", {
 				style: style,
-				hidePostalCode: urmf_data.urm_hide_stripe_card_postal_code == '1' ? true : false,
+				hidePostalCode:
+					urmf_data.urm_hide_stripe_card_postal_code == "1"
+						? true
+						: false
 			});
-			var idealBank = elements.create("idealBank", {style: style});
+			var idealBank = elements.create("idealBank", { style: style });
 
 			card.mount("#card-element");
 			return {
@@ -1318,9 +1301,9 @@
 					failure: function (xhr, statusText) {
 						ur_membership_frontend_utils.show_failure_message(
 							urmf_data.labels.i18n_error +
-							"(" +
-							xhr.responseJSON.data.message +
-							")"
+								"(" +
+								xhr.responseJSON.data.message +
+								")"
 						);
 					},
 					complete: function () {
@@ -1347,7 +1330,7 @@
 				.then(stripe_settings.handleOnComplete)
 				.catch(function (message, error) {
 					stripe_settings.update_order_status(
-						{error: {}},
+						{ error: {} },
 						response,
 						data.prepare_members_data,
 						data.form_response
@@ -1423,7 +1406,7 @@
 									if (
 										paymentIntent &&
 										"requires_payment_method" ===
-										paymentIntent.status
+											paymentIntent.status
 									) {
 										var message = "Your card was declined";
 										reject(response, message);
@@ -1433,7 +1416,7 @@
 								resolve(
 									$.extend({}, data, {
 										subscription:
-										response.data.subscription,
+											response.data.subscription,
 										message: response.data.message
 									})
 								);
@@ -1445,9 +1428,9 @@
 						failure: function (xhr, statusText) {
 							ur_membership_frontend_utils.show_failure_message(
 								urmf_data.labels.network_error +
-								"(" +
-								statusText +
-								")"
+									"(" +
+									statusText +
+									")"
 							);
 						}
 					}
@@ -1593,7 +1576,9 @@
 				"change",
 				'input[name="urm_membership"]',
 				function () {
-					$('.ur_membership_registration_container').removeClass('urm-d-none');
+					$(".ur_membership_registration_container").removeClass(
+						"urm-d-none"
+					);
 					// clear coupon total notice
 					$("#total-input-notice").text("");
 
@@ -1610,13 +1595,13 @@
 							"#upgrade-membership-notice"
 						),
 						urm_default_pg = $(this).data("urm-default-pg"),
-						hasCouponLink = $( this ).data( "has-coupon-link" );
+						hasCouponLink = $(this).data("has-coupon-link");
 
-						if ( 'yes' === hasCouponLink ) {
-							$( document ).find( '#ur_coupon_container' ).show();
-						}else{
-							$( document ).find( '#ur_coupon_container' ).hide();
-						}
+					if ("yes" === hasCouponLink) {
+						$(document).find("#ur_coupon_container").show();
+					} else {
+						$(document).find("#ur_coupon_container").hide();
+					}
 
 					var authorize_container = $(".authorize-net-container");
 					var authorize_error_container = $("#authorize-errors");
@@ -1627,14 +1612,21 @@
 					upgrade_error_container.text("");
 
 					//Selects a default payment gateway. Needs to be updated for translation.
-					if ( urm_default_pg && urm_default_pg.toLowerCase() === urm_default_pg ) {
-						$(this).closest('#ur-membership-registration').find('#ur-membership-'+urm_default_pg).prop('checked', true).trigger('change');
+					if (
+						urm_default_pg &&
+						urm_default_pg.toLowerCase() === urm_default_pg
+					) {
+						$(this)
+							.closest("#ur-membership-registration")
+							.find("#ur-membership-" + urm_default_pg)
+							.prop("checked", true)
+							.trigger("change");
 
-						if(urm_default_pg.toLowerCase() === 'stripe'){
+						if (urm_default_pg.toLowerCase() === "stripe") {
 							stripe_settings.init();
 						}
 
-						if(urm_default_pg.toLowerCase() !== 'authorize'){
+						if (urm_default_pg.toLowerCase() !== "authorize") {
 							authorize_container.addClass("urm-d-none");
 						}
 					} else {
@@ -1649,24 +1641,49 @@
 
 					$(".urm_apply_coupon").show();
 					if (urm_payment_type !== "free") {
-						urm_hidden_pg_containers.removeClass("urm-d-none");
+						if (
+							urmf_data.gateways_configured &&
+							Object.keys(urmf_data.gateways_configured).length >
+								0
+						) {
+							urm_hidden_pg_containers.removeClass("urm-d-none");
 
-						urm_pg_inputs.each(function (key, item) {
-							var current_gateway = $(item).val(),
-								input_container = $(
-									'label[for="ur-membership-' +
-									current_gateway +
-									'"]'
-								);
-							input_container.removeClass("urm-d-none");
-							if (
-								!urm_payment_gateways.hasOwnProperty(
-									current_gateway
-								)
-							) {
-								input_container.addClass("urm-d-none");
-							}
-						});
+							urm_pg_inputs.each(function (key, item) {
+								var current_gateway = $(item).val(),
+									input_container = $(
+										'label[for="ur-membership-' +
+											current_gateway +
+											'"]'
+									);
+								input_container.removeClass("urm-d-none");
+
+								if (
+									!(
+										current_gateway in
+										urmf_data.gateways_configured
+									)
+								) {
+									input_container.addClass("urm-d-none");
+								}
+							});
+						}
+						// urm_pg_inputs.each(function (key, item) {
+						// 	var current_gateway = $(item).val(),
+						// 		input_container = $(
+						// 			'label[for="ur-membership-' +
+						// 				current_gateway +
+						// 				'"]'
+						// 		);
+						// 	if (urmf_data.gateways_configured) {
+						// 	}
+						// 	if (
+						// 		!urm_payment_gateways.hasOwnProperty(
+						// 			current_gateway
+						// 		)
+						// 	) {
+						// 		input_container.addClass("urm-d-none");
+						// 	}
+						// });
 
 						if (
 							urm_pg_container.find("input:visible").length === 1
@@ -1839,7 +1856,7 @@
 
 					if (
 						typeof response.data.registration_type !==
-						"undefined" &&
+							"undefined" &&
 						response.data.registration_type === "membership"
 					) {
 						flag = false;
@@ -2046,8 +2063,8 @@
 										).val() === undefined
 											? selected_pg
 											: $(
-												'input[name="urm_payment_method"]:checked'
-											).val();
+													'input[name="urm_payment_method"]:checked'
+											  ).val();
 
 									if ("free" !== pg_type) {
 										if (selected_plan === undefined) {
@@ -2109,8 +2126,8 @@
 								showCancelButton: true,
 								confirmButtonColor: "red",
 								confirmButtonText:
-								urmf_data.labels
-									.i18n_cancel_membership_text,
+									urmf_data.labels
+										.i18n_cancel_membership_text,
 								cancelButtonText: urmf_data.labels.i18n_close,
 								preConfirm: function () {
 									var confirmBtn = Swal.getConfirmButton();
@@ -2157,7 +2174,8 @@
 						"user-registration-upgrade-membership-swal2-container",
 					showConfirmButton: true,
 					showCancelButton: true,
-					confirmButtonText: user_registration_params.user_registration_membership_renew_plan_button_text,
+					confirmButtonText:
+						user_registration_params.user_registration_membership_renew_plan_button_text,
 					confirmButtonColor: "#475BB2",
 					didOpen: function () {
 						$(
@@ -2183,8 +2201,8 @@
 							).val() === undefined
 								? selected_pg
 								: $(
-									'input[name="urm_payment_method"]:checked'
-								).val();
+										'input[name="urm_payment_method"]:checked'
+								  ).val();
 
 						//validation end
 						ur_membership_ajax_utils.renew_membership(

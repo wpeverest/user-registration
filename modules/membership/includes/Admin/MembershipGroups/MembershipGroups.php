@@ -17,13 +17,14 @@ class MembershipGroups {
 	}
 
 	public function init() {
-		add_filter( 'update_group_ids_before_deleting', array( $this, 'remove_group_ids_having_form' ) , 10 , 1 );
+		add_filter( 'update_group_ids_before_deleting', array( $this, 'remove_group_ids_having_form' ), 10, 1 );
 		$this->enqueue_scripts();
 	}
 
-	public function remove_group_ids_having_form( $ids  ) {
+	public function remove_group_ids_having_form( $ids ) {
 
 	}
+
 	public function enqueue_scripts() {
 		if ( empty( $_GET['page'] ) || 'user-registration-membership' !== $_GET['page'] && ! in_array( $_GET['page'], array(
 				'add_groups',
@@ -45,12 +46,12 @@ class MembershipGroups {
 			'user-registration-membership-groups',
 			'urmg_localized_data',
 			array(
-				'_nonce'              => wp_create_nonce( 'ur_membership_group' ),
-				'ajax_url'            => admin_url( 'admin-ajax.php' ),
-				'membership_group_id' => $membership_group_id,
-				'labels'              => $this->get_i18_labels(),
+				'_nonce'               => wp_create_nonce( 'ur_membership_group' ),
+				'ajax_url'             => admin_url( 'admin-ajax.php' ),
+				'membership_group_id'  => $membership_group_id,
+				'labels'               => $this->get_i18_labels(),
 				'membership_group_url' => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
-				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE )
+				'delete_icon'          => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
 			)
 		);
 	}
@@ -67,7 +68,9 @@ class MembershipGroups {
 			'i18n_prompt_delete'                 => __( 'Delete', 'user-registration' ),
 			'i18n_prompt_cannot_delete'          => __( 'Sorry, this group is currently being used in a form. To delete this group please remove this group from form ', 'user-registration' ),
 			'i18n_prompt_cancel'                 => __( 'Cancel', 'user-registration' ),
-			'i18n_prompt_no_membership_selected' => __( 'Please select at least one group.', 'user-registration' )
+			'i18n_prompt_no_membership_selected' => __( 'Please select at least one group.', 'user-registration' ),
+			'i18n_select_payment_gateway'        => __( 'Select Payment Gateway.', 'user-registration' ),
+
 		);
 	}
 

@@ -7,11 +7,11 @@
 <!--user registration section-->
 <div id="ur-membership-registration" class="ur_membership_registration_container ur-form-container">
 	<?php
-		$is_coupon_addon_activated = ur_check_module_activation('coupon');
-		if ( $is_coupon_addon_activated ) :
-			$membership_ids_link_with_coupons = ur_get_membership_ids_link_with_coupons();
+		$is_coupon_addon_activated = ur_check_module_activation( 'coupon' );
+	if ( $is_coupon_addon_activated && function_exists( 'ur_get_membership_ids_link_with_coupons' ) ) :
+		$membership_ids_link_with_coupons = ur_get_membership_ids_link_with_coupons();
 		endif;
-	if ( false ):
+	if ( false ) :
 		?>
 		<h3 class="ur_membership_title"><?php echo esc_html__( 'Sign Up', 'user-registration' ); ?></h3>
 		<hr class="ur_membership_divider">
@@ -115,6 +115,11 @@
 			class="ur-label ur_membership_input_label required"><?php echo esc_html( $attributes['label'] ); ?>
 			<abbr class="required" title="required">*</abbr>
 		</label>
+		<span class="description">
+			<?php
+			echo esc_html( $attributes['description'] );
+			?>
+		</span>
 		<?php
 		if ( ! empty( $memberships ) ) :
 			$memberships = apply_filters( 'user_registration_membership_lists', $memberships );
@@ -142,10 +147,11 @@
 					<span
 						class="ur-membership-duration"><?php echo esc_html__( $membership['title'], 'user-registration' ); ?></span>
 					<span
-						class="ur-membership-duration"> - <?php echo esc_html__( $membership['period'], 'user-registration' ); ?></span>
+						class="ur-membership-duration"><?php echo esc_html__( $membership['period'], 'user-registration' ); ?></span>
 				</label>
-			<?php endforeach;
-		else:
+				<?php
+			endforeach;
+		else :
 			$message = wp_kses_post( apply_filters( 'user_registration_membership_no_membership_message', __( 'No membership\'s group selected.', 'user-registration' ) ) );
 			echo '<label data-form-id="' . absint( $form_id ) . '"  class="user-registration-error no-membership">' . $message . '</label>';
 		endif;
@@ -155,16 +161,20 @@
 	</div>
 	<!--	coupon container-->
 	<?php
+	<< << <<< HEAD
+	=======
+	$is_coupon_addon_activated = ur_check_module_activation( 'coupon' );
+	>>>>>>> v5.0.0
 
 	if ( $is_coupon_addon_activated ) :
-		?>
-		<div class="ur_membership_frontend_input_container urm_hidden_payment_container urm-d-none"
-			id="ur_coupon_container">
+	?>
+	<div class="ur_membership_frontend_input_container urm_hidden_payment_container urm-d-none"
+	id="ur_coupon_container">
 
-			<label class="ur_membership_input_label ur-label" for="ur-membership-coupon">
+	<label class="ur_membership_input_label ur-label" for="ur-membership-coupon">
 				<?php echo esc_html__( 'Coupon', 'user-registration' ); ?>
-			</label>
-			<div class="coupon-input-area">
+	</label>
+	<div class="coupon-input-area">
 				<div class="input_with_clear_btn">
 					<input class="ur_membership_input_class"
 							data-key-name="<?php echo esc_html__( 'coupon', 'user-registration' ); ?>"
@@ -178,84 +188,93 @@
 
 				<button type="button"
 						class="urm_apply_coupon membership-primary-btn"><?php echo esc_html__( 'Apply Coupon', 'user-registration' ); ?></button>
-			</div>
-			<span id="coupon-validation-error" class="notice_red"></span>
-		</div>
-		<?php
+	</div>
+	<span id="coupon-validation-error" class="notice_red"></span>
+	</div>
+	<?php
 	endif;
 	?>
 
 	<!--	total container-->
 	<div id="urm-total_container"
-		class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
-		<label class="ur_membership_input_label ur-label"
-				for="ur-membership-total"><?php echo esc_html__( 'Total', 'user-registration' ); ?></label>
-		<input class="ur_membership_input_class"
-				id="ur-membership-total"
-				data-key-name="<?php echo esc_html__( 'Total', 'user-registration' ); ?>"
-				name="urm_total"
-				value="<?php echo ceil( 0 ); ?>"
-				disabled
-		>
-		<span id="total-input-notice">
-		</span>
+	class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
+	<div class="urm-membership-total-value">
+	<label class="ur_membership_input_label ur-label"
+					for="ur-membership-total"><?php echo esc_html__( 'Total', 'user-registration' ); ?></label>
+	<span class="ur_membership_input_class"
+					id="ur-membership-total"
+					data-key-name="<?php echo esc_html__( 'Total', 'user-registration' ); ?>"
+					disabled
+	>
+				<?php echo ceil( 0 ); ?>
+	</span>
+	</div>
+	<span id="total-input-notice">
+	</span>
 	</div>
 
 	<!--	payment gateway container -->
 	<div
-		class="ur_membership_frontend_input_container urm_hidden_payment_container ur_payment_gateway_container urm-d-none">
-		<hr class="ur_membership_divider">
-		<span
-			class="ur_membership_input_label ur-label required"><?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_title', esc_html__( 'Select Payment Gateway', 'user-registration' ) ); ?>
-		</span>
-		<div id="payment-gateway-body" class="ur_membership_frontend_input_container">
-			<?php
-			foreach ( get_option( 'ur_membership_payment_gateways' ) as $g => $gateway ) :
-				?>
-				<label class="ur_membership_input_label ur-label"
-						for="ur-membership-<?php echo esc_attr( strtolower( $g ) ); ?>">
-					<input class="ur_membership_input_class pg-list"
-							data-key-name="ur-payment-method"
-							id="ur-membership-<?php echo esc_attr( strtolower( $g ) ); ?>"
-							type="radio"
-							name="urm_payment_method"
-							required
-							value="<?php echo esc_attr( strtolower( $g ) ); ?>"
-						<?php echo 0 === $g ? 'checked' : ''; ?>
-					>
-					<span class="ur-membership-duration">
-						<?php echo esc_html( apply_filters( 'user_registration_membership_payment_gateway_selection_labels', __( $gateway, 'user-registration' ), $g ) ); ?>
+	class="ur_membership_frontend_input_container urm_hidden_payment_container ur_payment_gateway_container urm-d-none">
+	<hr class="ur_membership_divider">
+	<span
+	class="ur_membership_input_label ur-label required"><?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_title', esc_html__( 'Select Payment Gateway', 'user-registration' ) ); ?>
+	</span>
+	<div id="payment-gateway-body" class="ur_membership_frontend_input_container">
+	<div class="ur-membership-payment-gateway-lists">
+				<?php
+				$width_map = array(
+					'paypal' => '70px',
+					'stripe' => '50px',
+					'bank'   => '40px',
+				);
+				foreach ( get_option( 'ur_membership_payment_gateways' ) as $g => $gateway ) :
+					?>
+					<label class="ur_membership_input_label ur-label"
+							for="ur-membership-<?php echo esc_attr( strtolower( $g ) ); ?>">
+						<input class="ur_membership_input_class pg-list"
+								data-key-name="ur-payment-method"
+								id="ur-membership-<?php echo esc_attr( strtolower( $g ) ); ?>"
+								type="radio"
+								name="urm_payment_method"
+								required
+								value="<?php echo esc_attr( strtolower( $g ) ); ?>"
+							<?php echo 0 === $g ? 'checked' : ''; ?>
+						>
+						<span class="ur-membership-duration">
+						<img
+							src="<?php echo esc_url( plugins_url( 'assets/images/settings-icons/membership-field/' . strtolower( $g ) . '-logo.png', UR_PLUGIN_FILE ) ); ?>"
+							alt="<?php echo esc_attr( $gateway ); ?>"
+							class="ur-membership-payment-gateway-logo"
+							width="<?php echo isset( $width_map[ strtolower( $g ) ] ) ? $width_map[ strtolower( $g ) ] : '60px'; ?>"
+						/>
 					</span>
-				</label>
-			<?php endforeach; ?>
-			<span id="payment-gateway-notice" class="notice_red"></span>
-		</div>
+					</label>
+				<?php endforeach; ?>
+	</div>
+	<span id="payment-gateway-notice" class="notice_red"></span>
+	</div>
 	</div>
 	<div class="ur_membership_frontend_input_container">
-		<div class="stripe-container urm-d-none">
-			<button type="button" class="stripe-card-indicator ur-stripe-element-selected"
-					id="credit_card"><?php echo esc_html__( "Credit Card", "user-registration" ) ?></button>
-			<div class="stripe-input-container">
+	<div class="stripe-container urm-d-none">
+	<button type="button" class="stripe-card-indicator ur-stripe-element-selected"
+					id="credit_card"><?php echo esc_html__( 'Credit Card', 'user-registration' ); ?></button>
+	<div class="stripe-input-container">
 				<div id="card-element">
 				</div>
-			</div>
-		</div>
-		<?php
-		/**
-		 * Fires when payment fields is rendered on membership registration form.
-		 *
-		 *  This action allows developers to output payment gateway fields
-		 *  within the registration form.
-		 */
-		do_action( 'user_registration_membership_render_payment_field', $form_id );
-		?>
+	</div>
+	</div>
+	<?php
+	/**
+	* Fires when payment fields is rendered on membership registration form.
+	*
+	*  This action allows developers to output payment gateway fields
+	*  within the registration form.
+	*/
+	do_action( 'user_registration_membership_render_payment_field', $form_id );
+	?>
 	</div>
 
-	<span class="description">
-		<?php
-		echo esc_html( $attributes['description'] );
-		?>
-	</span>
 
-</div>
-<!--user order successful section-->
+	</div>
+	<!--user order successful section-->
