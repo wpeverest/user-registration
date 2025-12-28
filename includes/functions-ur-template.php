@@ -457,7 +457,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 						$value = '';
 						if ( '' !== $default ) {
-							if ( is_array( $default ) && in_array( ur_sanitize_tooltip( trim( $choice_index ) ), $default ) ) {
+							if ( is_array( $default ) && in_array( html_entity_decode ( ur_sanitize_tooltip ( trim( $choice_index ) ) ) , $default ) ) {
 								$value = 'checked="checked"';
 							} elseif ( $default === $choice_index ) {
 								$value = 'checked="checked"';
