@@ -171,10 +171,11 @@ if ( 'block' === $type ) :
 		<?php
 elseif ( 'list' === $type ) :
 	?>
-	<form id="membership-selection-form-<?php echo esc_html( $uuid ); ?>" class="ur-membership-container layout-list" method="GET"
-			action="<?php echo esc_url( $redirect_page_url ); ?>">
+	<form id="membership-old-selection-form" class="ur-membership-container layout-list" method="GET">
 		<input type="hidden" name="urm_uuid" value="<?php echo esc_html( $uuid ); ?>">
-		<input type="hidden" name="thank_you" value="<?php echo absint( $thank_you_page_id ); ?>">
+		<input type="hidden" name="thank_you_page_id" value="<?php echo absint( $thank_you_page_id ); ?>">
+		<input type="hidden" name="redirection_url"
+								value="<?php echo esc_url( $redirect_page_url ); ?>">
 		<div class="ur_membership_frontend_input_container radio">
 			<?php
 			if ( ! empty( $memberships ) ) :
@@ -229,7 +230,7 @@ elseif ( 'list' === $type ) :
 			endif;
 			?>
 			<div class="membership-footer">
-				<button type="submit"
+				<button type="button"
 						class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>"  ><?php echo esc_html( $sign_up_text ); ?></button>
 			</div>
 		</div>

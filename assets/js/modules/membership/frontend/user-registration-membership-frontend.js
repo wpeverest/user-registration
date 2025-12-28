@@ -1796,17 +1796,17 @@
 						return;
 					}
 
-					var $this = $(this),
+					var $this = $(this).closest("form"),
 						membership_id = $this
-							.siblings('input[name="membership_id"]')
+							.find('input[name="membership_id"]:checked')
 							.val(),
 						redirection_url = $this
-							.siblings('input[name="redirection_url"]')
+							.find('input[name="redirection_url"]')
 							.val(),
 						thank_you_page_id = $this
-							.siblings('input[name="thank_you_page_id"]')
+							.find('input[name="thank_you_page_id"]')
 							.val(),
-						uuid = $this.siblings('input[name="urm_uuid"]').val(),
+						uuid = $this.find('input[name="urm_uuid"]').val(),
 						url =
 							redirection_url +
 							"?membership_id=" +
