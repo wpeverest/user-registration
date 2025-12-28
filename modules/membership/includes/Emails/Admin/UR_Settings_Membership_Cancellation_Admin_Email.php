@@ -137,7 +137,7 @@ class UR_Settings_Membership_Cancellation_Admin_Email {
 					<strong>Cancellation Date</strong>: {{membership_cancellation_date}}
 				</li>
 				<li style="margin-bottom: 10px;">
-					<strong>Access Expires</strong>: {{membership_plan_trial_end_date}}
+					<strong>Access Expires</strong>: {{membership_end_date}}
 				</li>
 				</ul>
 			</p>
