@@ -1373,6 +1373,118 @@
 					}
 				}
 			}
+
+			&#membership-list {
+				.tablenav.top{
+					display: none;
+				}
+			}
+
+			&#user-registration-members-list-form {
+				#user-registration-base-list-filters-row {
+					margin-bottom: $spacing_32px;
+				}
+				.tablenav{
+					display: flex;
+					justify-content: flex-end;
+					align-self: center;
+					margin-bottom: $spacing_32px;
+					flex-wrap: wrap;
+					justify-content: space-between;
+
+					&.top{
+						justify-content: flex-end;
+						padding-top: 40px;
+						row-gap: $spacing_16px;
+					}
+
+					.bulkactions{
+						input[type="submit"]{
+							padding: 8px 14px;
+							font-size: 14px;
+							line-height: 20px;
+							color: #475BB2;
+							border-color: #475BB2;
+							background: #F6F7F7;
+							font-weight: 500;
+						}
+					}
+
+					.user-registration-members-filters{
+						display: flex;
+						flex-wrap: wrap;
+						gap: $spacing_12px;
+
+						@media (min-width: 1200px) {
+							flex-wrap: nowrap;
+						}
+
+						@media (max-width: 1199px) {
+							select {
+								flex: 1 1 180px;
+							}
+						}
+
+						@media (max-width: 768px) {
+							select{
+								flex: 1 1 100%;
+							}
+						}
+					}
+				}
+
+				.tablenav.top:has(.bulkactions){
+					justify-content: space-between;
+					padding-top: 0;
+				}
+
+				.wp-list-table.users {
+					tbody {
+						tr {
+							&.no-items {
+								background: #ffffff;
+
+								td {
+									padding: 0;
+
+									.empty-list-table-container {
+										text-align: center;
+										margin-top: 30px;
+										margin-bottom: 30px;
+
+										img {
+											width: 300px;
+										}
+
+										h3 {
+											margin-top: 16px;
+											margin-bottom: 8px;
+											color: #222222;
+											font-size: 22px;
+											font-weight: 600;
+											line-height: 32px;
+										}
+
+										p {
+											color: #6B6B6B;
+											font-size: 14px;
+											font-weight: 400;
+											line-height: 24px;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				@media (max-width: 767px) {
+					#user-registration-base-list-filters-row{
+						display: block;
+    					margin-top: 50px;
+					}
+				}
+			}
 		}
 	}
 }

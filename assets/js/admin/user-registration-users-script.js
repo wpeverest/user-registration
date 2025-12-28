@@ -34,6 +34,10 @@ jQuery(function ($) {
 				"click",
 				URUsers.handleSingleUserDelete
 			);
+			$(".user-registration-member-action-delete").on(
+				"click",
+				URUsers.handleSingleUserDelete
+			);
 			$("#doaction.button.action").on("click", URUsers.handleBulkDelete);
 
 			$(".hide-column-tog").on("click", URUsers.handleColumnStateChange);
@@ -233,10 +237,14 @@ jQuery(function ($) {
 			var action = $("#bulk-action-selector-top").val();
 
 			if ("update_role" === action) {
-				$("select#new_role").closest(".alignleft.actions").show();
+				$("select#new_role")
+					.closest(".alignleft.actions")
+					.addClass("show-flex");
 				$("#doaction").hide();
 			} else {
-				$("select#new_role").closest(".alignleft.actions").hide();
+				$("select#new_role")
+					.closest(".alignleft.actions")
+					.removeClass("show-flex");
 				$("#doaction").show();
 			}
 		},
@@ -310,7 +318,7 @@ jQuery(function ($) {
 				e.stopPropagation();
 
 				var form = document.getElementById(
-					"user-registration-users-action-form"
+					"user-registration-members-list-form"
 				);
 
 				var formData = new FormData(form);
@@ -333,10 +341,7 @@ jQuery(function ($) {
 			e.preventDefault();
 			e.stopPropagation();
 
-			var deleteUrl = $(e.target)
-				.closest("#user-registration-user-action-delete")
-				.find("a")
-				.attr("href");
+			var deleteUrl = $(e.target).attr("href");
 
 			URUsers.handleDeletePrompt(deleteUrl, "single");
 		},
@@ -352,20 +357,18 @@ jQuery(function ($) {
 				"single" == deleteType
 					? prompt_data.confirm_message_single
 					: prompt_data.confirm_message_bulk;
+			var title =
+				"single" == deleteType
+					? prompt_data.title
+					: prompt_data.bulk_title;
 
 			Swal.fire({
 				title:
 					"<img src='" +
 					prompt_data.icon +
 					"' id='delete-user-icon'>" +
-					prompt_data.title,
-				html:
-					'<p id="html_1">' +
-					confirm_message +
-					"</p>" +
-					'<p id="html_2">' +
-					prompt_data.warning_message +
-					"</p>",
+					title,
+				html: '<p id="html_1">' + confirm_message + "</p>",
 				showCancelButton: true,
 				confirmButtonText: prompt_data.delete_label,
 				cancelButtonText: prompt_data.cancel_label

@@ -230,7 +230,7 @@ if ( ! class_exists( 'Admin' ) ) :
 			$this->ajax = new AJAX();
 			if ( $this->is_admin() ) {
 				$this->admin   = new Membership();
-				$this->members = new Members();
+				// $this->members = new Members();
 			} else {
 				// require file.
 				$this->frontend = new Frontend();
