@@ -32,7 +32,6 @@ class Membership {
 	public function __construct() {
 
 		$this->init_hooks();
-
 	}
 
 	/**
@@ -45,7 +44,7 @@ class Membership {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_filter( 'user_registration_screen_ids', array( $this, 'ur_membership_add_screen_id' ) );
-		add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 15 );
+		// add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 15 );
 		add_action( 'admin_init', array( $this, 'actions' ) );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_filter( 'user_registration_login_options', array( $this, 'add_payment_login_option' ) );
@@ -76,17 +75,16 @@ class Membership {
 		if ( empty( $_GET['page'] ) || 'user-registration-membership' !== $_GET['page'] ) {
 			return;
 		}
-		
+
 		// Enqueue jQuery UI Sortable for drag-and-drop functionality
 		wp_enqueue_script( 'jquery-ui-sortable' );
-		
+
 		wp_register_script( 'user-registration-membership', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/user-registration-membership-admin' . $suffix . '.js', array( 'jquery', 'jquery-ui-sortable' ), '1.0.0', true );
 		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
 		wp_enqueue_script( 'ur-snackbar' );
 		wp_enqueue_script( 'sweetalert2' );
 		wp_enqueue_script( 'user-registration-membership' );
 		$this->localize_scripts();
-
 	}
 
 	/**
@@ -127,7 +125,7 @@ class Membership {
 		}
 	}
 
-	//todo might need to remove later if none of the bulk actions are used
+	// todo might need to remove later if none of the bulk actions are used
 
 	/**
 	 * Bulk actions.
@@ -150,13 +148,13 @@ class Membership {
 
 		switch ( $action ) {
 			case 'trash':
-//				$this->bulk_trash( $delete_list );
+				// $this->bulk_trash( $delete_list );
 				break;
 			case 'untrash':
-//				$this->bulk_untrash( $membership_list );
+				// $this->bulk_untrash( $membership_list );
 				break;
 			case 'delete':
-//				$this->bulk_trash( $delete_list, true, $delete_membership );
+				// $this->bulk_trash( $delete_list, true, $delete_membership );
 				break;
 			default:
 				break;
@@ -167,14 +165,14 @@ class Membership {
 	 * Bulk trash/delete.
 	 *
 	 * @param array $membership_lists Membership List post id.
-	 * @param bool $delete Delete action.
+	 * @param bool  $delete Delete action.
 	 */
 	private function bulk_trash( $membership_lists, $delete = false, $is_membership = true ) {
 		$membership_group_service = new MembershipGroupService();
 		foreach ( $membership_lists as $membership_id ) {
 			$form_id = $membership_group_service->get_group_form_id( $membership_id );
 			if ( $delete ) {
-				if ( ! $is_membership && ( "" != $form_id ) ) {
+				if ( ! $is_membership && ( '' != $form_id ) ) {
 					break;
 				}
 				wp_delete_post( $membership_id, true );
@@ -290,31 +288,32 @@ class Membership {
 	public function add_urm_menu() {
 		$rules_page = add_submenu_page(
 			'user-registration',
-			__( 'Membership', 'user-registration' ), // page title
-			__( 'Membership', 'user-registration' ), // menu title
+			__( 'Memberships', 'user-registration' ), // page title
+			__( 'Memberships', 'user-registration' ), // menu title
 			'edit_posts', // capability
 			'user-registration-membership', // slug
 			array(
 				$this,
 				'render_membership_page',
-			)
+			),
+			2
 		);
 		add_action( 'load-' . $rules_page, array( $this, 'membership_initialization' ) );
 
-		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-membership', 'user-registration-membership-groups'] ) ) {
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
 
-			add_submenu_page(
-				'user-registration',
-				__( 'All Plans', 'user-registration' ),
-				'↳ ' . __( 'All Plans', 'user-registration' ),
-				'edit_posts',
-				'user-registration-membership',
-				array(
-					$this,
-					'render_membership_page',
-				),
-				16
-			);
+			// add_submenu_page(
+			// 'user-registration',
+			// __( 'All Plans', 'user-registration' ),
+			// '↳ ' . __( 'All Plans', 'user-registration' ),
+			// 'edit_posts',
+			// 'user-registration-membership',
+			// array(
+			// $this,
+			// 'render_membership_page',
+			// ),
+			// 3
+			// );
 
 			add_submenu_page(
 				'user-registration',
@@ -326,7 +325,7 @@ class Membership {
 					$this,
 					'render_membership_page',
 				),
-				17
+				3
 			);
 
 		}
@@ -424,10 +423,9 @@ class Membership {
 		$enable_membership_button = false;
 		$roles                    = wp_roles()->role_names;
 		$membership_service       = new MembershipService();
-		$memberships = $membership_service->list_active_memberships();
+		$memberships              = $membership_service->list_active_memberships();
 
 		include __DIR__ . '/../Views/membership-create.php';
-
 	}
 
 	/**
@@ -477,7 +475,7 @@ class Membership {
 				'membership_page_url' => admin_url( 'admin.php?page=user-registration-membership' ),
 				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
 				'update_order_nonce'  => wp_create_nonce( 'ur_membership_update_order' ),
-				'update_order_action' => 'user_registration_membership_update_membership_order'
+				'update_order_action' => 'user_registration_membership_update_membership_order',
 			)
 		);
 	}
