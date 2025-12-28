@@ -9604,3 +9604,52 @@ if ( ! function_exists( 'ur_get_membership_details' ) ) {
 		return $memberships;
 }
 }
+
+if( ! function_exists( 'ur_get_coupon_meta_by_code' ) ){
+
+	/**
+	 * Fetch coupon meta using coupon code stored in post_content
+	 *
+	 * @param string $coupon_code
+	 * @return array|bool
+	 *
+	 * @since xx.xx.xx
+	 */
+	function ur_get_coupon_meta_by_code( $coupon_code ) {
+		global $wpdb;
+
+		$post_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT ID
+				FROM {$wpdb->posts}
+				WHERE post_type = %s
+				AND post_content = %s
+				LIMIT 1",
+				'ur_coupons',
+				$coupon_code
+			)
+		);
+
+		if ( empty( $post_id ) ) {
+			return false;
+		}
+
+		$coupon_meta = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT meta_value
+				FROM {$wpdb->postmeta}
+				WHERE post_id = %d
+				AND meta_key = %s
+				LIMIT 1",
+				$post_id,
+				'ur_coupon_meta'
+			)
+		);
+
+		if ( empty( $coupon_meta ) ) {
+			return false;
+		}
+
+		return json_decode( ur_maybe_unserialize( $coupon_meta ) );
+	}
+}

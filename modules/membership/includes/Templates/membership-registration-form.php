@@ -161,17 +161,20 @@
 	</div>
 	<!--	coupon container-->
 	<?php
+	<< << <<< HEAD
+	=======
 	$is_coupon_addon_activated = ur_check_module_activation( 'coupon' );
+	>>>>>>> v5.0.0
 
 	if ( $is_coupon_addon_activated ) :
-		?>
-		<div class="ur_membership_frontend_input_container urm_hidden_payment_container urm-d-none"
-			id="ur_coupon_container">
+	?>
+	<div class="ur_membership_frontend_input_container urm_hidden_payment_container urm-d-none"
+	id="ur_coupon_container">
 
-			<label class="ur_membership_input_label ur-label" for="ur-membership-coupon">
+	<label class="ur_membership_input_label ur-label" for="ur-membership-coupon">
 				<?php echo esc_html__( 'Coupon', 'user-registration' ); ?>
-			</label>
-			<div class="coupon-input-area">
+	</label>
+	<div class="coupon-input-area">
 				<div class="input_with_clear_btn">
 					<input class="ur_membership_input_class"
 							data-key-name="<?php echo esc_html__( 'coupon', 'user-registration' ); ?>"
@@ -185,40 +188,40 @@
 
 				<button type="button"
 						class="urm_apply_coupon membership-primary-btn"><?php echo esc_html__( 'Apply Coupon', 'user-registration' ); ?></button>
-			</div>
-			<span id="coupon-validation-error" class="notice_red"></span>
-		</div>
-		<?php
+	</div>
+	<span id="coupon-validation-error" class="notice_red"></span>
+	</div>
+	<?php
 	endif;
 	?>
 
 	<!--	total container-->
 	<div id="urm-total_container"
-		class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
-		<div class="urm-membership-total-value">
-			<label class="ur_membership_input_label ur-label"
+	class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
+	<div class="urm-membership-total-value">
+	<label class="ur_membership_input_label ur-label"
 					for="ur-membership-total"><?php echo esc_html__( 'Total', 'user-registration' ); ?></label>
-			<span class="ur_membership_input_class"
+	<span class="ur_membership_input_class"
 					id="ur-membership-total"
 					data-key-name="<?php echo esc_html__( 'Total', 'user-registration' ); ?>"
 					disabled
-			>
+	>
 				<?php echo ceil( 0 ); ?>
-			</span>
-		</div>
-		<span id="total-input-notice">
-		</span>
+	</span>
+	</div>
+	<span id="total-input-notice">
+	</span>
 	</div>
 
 	<!--	payment gateway container -->
 	<div
-		class="ur_membership_frontend_input_container urm_hidden_payment_container ur_payment_gateway_container urm-d-none">
-		<hr class="ur_membership_divider">
-		<span
-			class="ur_membership_input_label ur-label required"><?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_title', esc_html__( 'Select Payment Gateway', 'user-registration' ) ); ?>
-		</span>
-		<div id="payment-gateway-body" class="ur_membership_frontend_input_container">
-			<div class="ur-membership-payment-gateway-lists">
+	class="ur_membership_frontend_input_container urm_hidden_payment_container ur_payment_gateway_container urm-d-none">
+	<hr class="ur_membership_divider">
+	<span
+	class="ur_membership_input_label ur-label required"><?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_title', esc_html__( 'Select Payment Gateway', 'user-registration' ) ); ?>
+	</span>
+	<div id="payment-gateway-body" class="ur_membership_frontend_input_container">
+	<div class="ur-membership-payment-gateway-lists">
 				<?php
 				$width_map = array(
 					'paypal' => '70px',
@@ -248,30 +251,30 @@
 					</span>
 					</label>
 				<?php endforeach; ?>
-			</div>
-			<span id="payment-gateway-notice" class="notice_red"></span>
-		</div>
+	</div>
+	<span id="payment-gateway-notice" class="notice_red"></span>
+	</div>
 	</div>
 	<div class="ur_membership_frontend_input_container">
-		<div class="stripe-container urm-d-none">
-			<button type="button" class="stripe-card-indicator ur-stripe-element-selected"
+	<div class="stripe-container urm-d-none">
+	<button type="button" class="stripe-card-indicator ur-stripe-element-selected"
 					id="credit_card"><?php echo esc_html__( 'Credit Card', 'user-registration' ); ?></button>
-			<div class="stripe-input-container">
+	<div class="stripe-input-container">
 				<div id="card-element">
 				</div>
-			</div>
-		</div>
-		<?php
-		/**
-		 * Fires when payment fields is rendered on membership registration form.
-		 *
-		 *  This action allows developers to output payment gateway fields
-		 *  within the registration form.
-		 */
-		do_action( 'user_registration_membership_render_payment_field', $form_id );
-		?>
+	</div>
+	</div>
+	<?php
+	/**
+	* Fires when payment fields is rendered on membership registration form.
+	*
+	*  This action allows developers to output payment gateway fields
+	*  within the registration form.
+	*/
+	do_action( 'user_registration_membership_render_payment_field', $form_id );
+	?>
 	</div>
 
 
-</div>
-<!--user order successful section-->
+	</div>
+	<!--user order successful section-->
