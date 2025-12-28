@@ -152,6 +152,8 @@ if ( ! class_exists( 'UR_Settings_Registration_Denied_Email', false ) ) :
 			',
 				'user-registration'
 			);
+			$body_content = ur_wrap_email_body_content( $body_content );
+
 			if ( UR_PRO_ACTIVE ) {
 				$body_content = ur_get_email_template_wrapper( $body_content, false );
 			}
