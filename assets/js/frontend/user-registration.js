@@ -3205,11 +3205,7 @@ function customPasswordChecks(password) {
 jQuery(document).ready(function ($) {
 	var urcrContentRestrictMsg = $(document).find(".urcr-restrict-msg");
 	if (urcrContentRestrictMsg.length > 1) {
-		$(".urcr-restrict-msg").each(function () {
-			$(this).hide();
-		});
-
-		$(".urcr-restrict-msg").first().show();
+		urcrContentRestrictMsg.hide().first().show();
 	}
 });
 
