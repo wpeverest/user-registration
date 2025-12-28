@@ -726,16 +726,16 @@ const Edit = (props) => {
 					resetAll={() => {
 						setAttributes({
 							buttonPadding: {
-								top: undefined,
-								right: undefined,
-								bottom: undefined,
-								left: undefined
+								top: 0,
+								right: 0,
+								bottom: 0,
+								left: 0
 							},
 							buttonMargin: {
-								top: undefined,
-								right: undefined,
-								bottom: undefined,
-								left: undefined
+								top: 0,
+								right: 0,
+								bottom: 0,
+								left: 0
 							}
 						});
 					}}
@@ -745,18 +745,17 @@ const Edit = (props) => {
 					<ToolsPanelItem
 						label={__("Padding", "user-registration")}
 						hasValue={() =>
-							buttonPadding?.top ||
-							buttonPadding?.right ||
-							buttonPadding?.bottom ||
-							buttonPadding?.left
+							Object.values(buttonPadding || {}).some(
+								(value) => value !== 0
+							)
 						}
 						onDeselect={() =>
 							setAttributes({
 								buttonPadding: {
-									top: undefined,
-									right: undefined,
-									bottom: undefined,
-									left: undefined
+									top: 0,
+									right: 0,
+									bottom: 0,
+									left: 0
 								}
 							})
 						}
@@ -783,18 +782,17 @@ const Edit = (props) => {
 					<ToolsPanelItem
 						label={__("Margin", "user-registration")}
 						hasValue={() =>
-							buttonMargin?.top ||
-							buttonMargin?.right ||
-							buttonMargin?.bottom ||
-							buttonMargin?.left
+							Object.values(buttonMargin || {}).some(
+								(value) => value !== 0
+							)
 						}
 						onDeselect={() =>
 							setAttributes({
 								buttonMargin: {
-									top: undefined,
-									right: undefined,
-									bottom: undefined,
-									left: undefined
+									top: 0,
+									right: 0,
+									bottom: 0,
+									left: 0
 								}
 							})
 						}
