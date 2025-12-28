@@ -1,6 +1,3 @@
-/**
- * Membership Access Rules - Plain jQuery Implementation
- */
 (function ($) {
 	'use strict';
 
@@ -17,24 +14,19 @@
 		init: function () {
 			var self = this;
 
-			// Check if required data is available
 			if (typeof urcr_membership_access_data === 'undefined') {
 				return;
 			}
 
-			// Get membership ID from localized data
 			if (urcr_membership_access_data.membership_id) {
 				self.membershipId = parseInt(urcr_membership_access_data.membership_id, 10);
 			}
 
-			// Load existing rule data from PHP (if available)
 			var ruleData = null;
 
-			// Try to get from window variable first
 			if (typeof window.urcrMembershipRuleData !== 'undefined' && window.urcrMembershipRuleData) {
 				ruleData = window.urcrMembershipRuleData;
 			} else {
-				// Fallback to data attribute
 				var $section = $('#ur-membership-access-section');
 				if ($section.length) {
 					var dataAttr = $section.attr('data-rule-data');
@@ -44,41 +36,29 @@
 				}
 			}
 
-			// Check if conditions and targets are already rendered in PHP
 			var $conditionsList = $('.urcr-conditions-list');
 			var $targetsList = $('.urcr-target-type-group');
 			var hasExistingConditions = $conditionsList.find('.urcr-condition-wrapper').length > 0;
 			var hasExistingTargets = $targetsList.find('.urcr-target-item').length > 0;
 
 			if (hasExistingConditions || hasExistingTargets) {
-				// Data is already rendered in PHP, just initialize select2 and sync data
 				self.syncFromExistingHTML();
 			} else if (ruleData) {
 				self.ruleData = ruleData;
 				self.populateRuleData(ruleData);
 			} else {
-				// Initialize with membership condition for new membership
 				self.initializeEmptyRule();
 			}
 
-			// Bind events
 			self.bindEvents();
-
-			// Initialize select2 for access control (not needed, but keeping for consistency)
 			self.initSelect2();
-
-			// Initialize action section - use setTimeout to ensure DOM is ready
-
 			self.initActionSection();
-
 
 			self.initialized = true;
 		},
 
 		initializeEmptyRule: function () {
 			var self = this;
-			// For new memberships, always show membership condition when conditions are empty
-			// This applies to both free and pro users
 			if (self.membershipId > 0) {
 				self.addCondition('membership', true, [self.membershipId.toString()]);
 			}
@@ -87,7 +67,6 @@
 		syncFromExistingHTML: function () {
 			var self = this;
 
-			// Sync visible conditions from existing HTML
 			$('.urcr-condition-wrapper').each(function () {
 				var $wrapper = $(this);
 				var conditionId = $wrapper.data('condition-id');
@@ -97,7 +76,6 @@
 
 				var inputType = 'multiselect';
 
-				// Determine input type from field type
 				var conditionOptions = self.getConditionOptions();
 				var selectedOption = conditionOptions.find(function (opt) {
 					return opt.value === type;
@@ -106,10 +84,8 @@
 					inputType = selectedOption.type || 'multiselect';
 				}
 
-				// Get value
 				var value = '';
 				if (inputType === 'multiselect') {
-					// Get value from data attribute if available
 					var valueData = $valueInput.attr('data-value');
 					if (valueData) {
 						try {
@@ -130,7 +106,6 @@
 					value = { select: select, input: input };
 				}
 
-				// Store condition
 				self.conditions.push({
 					id: conditionId,
 					type: type,
@@ -138,20 +113,17 @@
 					isLocked: false
 				});
 
-				// Initialize select2 for multiselect
 				if (inputType === 'multiselect') {
 					self.initConditionSelect2(conditionId, inputType, value);
 				}
 			});
 
-			// Sync content targets from existing HTML
 			$('.urcr-target-item').each(function () {
 				var $target = $(this);
 				var targetId = $target.data('target-id');
 				var $label = $target.find('.urcr-target-type-label');
 				var type = '';
 
-				// Determine type from label or data
 				var labelText = $label.length ? $label.text().toLowerCase() : '';
 				if (labelText.indexOf('pages') !== -1) type = 'pages';
 				else if (labelText.indexOf('posts') !== -1) type = 'posts';
@@ -159,12 +131,10 @@
 				else if (labelText.indexOf('taxonomy') !== -1) type = 'taxonomy';
 				else if (labelText.indexOf('whole site') !== -1) type = 'whole_site';
 				else {
-					// Fallback: check data-content-type attribute
 					var $contentInput = $target.find('.urcr-content-target-input');
 					if ($contentInput.length) {
 						type = $contentInput.data('content-type') || $contentInput.data('field-type') || '';
 					}
-					// Check if it's whole_site by looking for text content
 					if (!type && $target.find('span').length && $target.text().indexOf('Whole Site') !== -1) {
 						type = 'whole_site';
 					}
@@ -200,14 +170,12 @@
 					}
 				}
 
-				// Store target
 				self.contentTargets.push({
 					id: targetId,
 					type: type,
 					value: value
 				});
 
-				// Initialize select2 for content targets
 				if (type !== 'whole_site') {
 					setTimeout(function () {
 						self.initContentTargetSelect2(targetId, type, value);
@@ -220,14 +188,11 @@
 		populateRuleData: function (ruleData) {
 			var self = this;
 
-
-			// Clear existing conditions and targets first
 			$('.urcr-conditions-list').empty();
 			$('.urcr-target-type-group').empty();
 			self.conditions = [];
 			self.contentTargets = [];
 
-			// Set access control
 			if (ruleData.access_control) {
 				self.accessControl = ruleData.access_control;
 				self.updateAccessControlClass();
@@ -236,30 +201,24 @@
 				self.updateAccessControlClass();
 			}
 
-			// Populate conditions
 			if (ruleData.logic_map && ruleData.logic_map.conditions && ruleData.logic_map.conditions.length > 0) {
 				var conditions = ruleData.logic_map.conditions;
 
-				// Sort conditions to ensure membership is first
 				conditions.sort(function (a, b) {
 					if (a.type === 'membership') return -1;
 					if (b.type === 'membership') return 1;
 					return 0;
 				});
 
-				// Render all conditions including the first membership condition
 				conditions.forEach(function (condition, index) {
-					// First condition (membership) should be non-editable
 					var firstCondition = conditions[0];
 					var isFirstMembership = firstCondition && firstCondition.type === 'membership' && index === 0;
 					var isLocked = isFirstMembership;
 					var value = condition.value;
 
-					// Handle different value formats
 					if (Array.isArray(value)) {
 						value = value;
 					} else if (typeof value === 'object' && value !== null) {
-						// Keep object as is (for period input, etc.)
 						value = value;
 					} else {
 						value = value || '';
@@ -268,13 +227,11 @@
 					self.addCondition(condition.type, isLocked, value, condition.id);
 				});
 			} else {
-				// If no conditions, add membership condition if membership ID exists (non-editable for first condition)
 				if (self.membershipId > 0) {
 					self.addCondition('membership', true, [self.membershipId.toString()]);
 				}
 			}
 
-			// Populate content targets
 			if (ruleData.target_contents && ruleData.target_contents.length > 0) {
 				ruleData.target_contents.forEach(function (target) {
 					var type = target.type;
@@ -283,16 +240,13 @@
 
 					var value = target.value || (type === 'whole_site' ? 'whole_site' : []);
 
-					// Handle taxonomy format
 					if (type === 'taxonomy') {
 						if (target.taxonomy) {
-							// Old format: { taxonomy: 'category', value: [] }
 							value = {
 								taxonomy: target.taxonomy,
 								value: Array.isArray(target.value) ? target.value : []
 							};
 						} else if (typeof target.value === 'object' && target.value !== null && !Array.isArray(target.value)) {
-							// New format: { taxonomy: 'category', value: [] }
 							if (target.value.taxonomy) {
 								value = {
 									taxonomy: target.value.taxonomy,
@@ -301,7 +255,6 @@
 							}
 						}
 					} else if (type !== 'whole_site') {
-						// Ensure value is an array for pages/posts
 						if (!Array.isArray(value)) {
 							value = value ? [value] : [];
 						}
@@ -316,23 +269,18 @@
 		bindEvents: function () {
 			var self = this;
 
-			// Add condition button
 			$(document).on('click', '.urcr-add-condition-button', function (e) {
 				e.preventDefault();
-				// Add a new visible condition (not membership - that's hidden)
 				self.addCondition('roles', false, '');
 			});
 
-			// Add condition button keyboard support
 			$(document).on('keydown', '.urcr-add-condition-button', function (e) {
 				if (e.key === 'Enter' || e.key === ' ') {
 					e.preventDefault();
-					// Add a new visible condition (not membership - that's hidden)
 					self.addCondition('roles', false, '');
 				}
 			});
 
-			// Remove condition button
 			$(document).on('click', '.urcr-condition-remove', function (e) {
 				e.preventDefault();
 				var $wrapper = $(this).closest('.urcr-condition-wrapper');
@@ -340,7 +288,6 @@
 				self.removeCondition(conditionId);
 			});
 
-			// Condition field change
 			$(document).on('change', '.urcr-condition-field-select', function () {
 				var $wrapper = $(this).closest('.urcr-condition-wrapper');
 				var conditionId = $wrapper.data('condition-id');
@@ -348,7 +295,6 @@
 				self.updateConditionType(conditionId, newType);
 			});
 
-			// Condition value change
 			$(document).on('change', '.urcr-condition-value-input', function () {
 				var $wrapper = $(this).closest('.urcr-condition-wrapper');
 				if ($wrapper.length) {
@@ -357,7 +303,6 @@
 				}
 			});
 
-			// Handle period input changes
 			$(document).on('change', '.urcr-period-input-group input, .urcr-period-input-group select', function () {
 				var $wrapper = $(this).closest('.urcr-condition-wrapper');
 				if ($wrapper.length) {
@@ -379,17 +324,11 @@
 				}
 			});
 
-			// Access control is always 'access' - no dropdown needed
-
-			// Add content button
 			$(document).on('click', '.urcr-add-content-button', function (e) {
 				e.preventDefault();
 				self.showContentTypeDropdown($(this));
 			});
 
-
-
-			// Remove content target
 			$(document).on('click', '.urcr-target-remove', function (e) {
 				e.preventDefault();
 				var $target = $(this).closest('.urcr-target-item');
@@ -397,10 +336,8 @@
 				self.removeContentTarget(targetId);
 			});
 
-			// Content type selection
 			$(document).on('click', '.urcr-content-type-option', function (e) {
 				e.preventDefault();
-				// Don't allow selection if option is disabled
 				if ($(this).hasClass('urcr-dropdown-option-disabled') || $(this).attr('aria-disabled') === 'true') {
 					return;
 				}
@@ -409,9 +346,7 @@
 				$('.urcr-content-type-dropdown-menu').removeClass('ur-d-flex').addClass('ur-d-none');
 			});
 
-			// Content type selection keyboard support
 			$(document).on('keydown', '.urcr-content-type-option', function (e) {
-				// Don't allow selection if option is disabled
 				if ($(this).hasClass('urcr-dropdown-option-disabled') || $(this).attr('aria-disabled') === 'true') {
 					return;
 				}
@@ -423,7 +358,6 @@
 				}
 			});
 
-			// Click outside to close dropdowns
 			$(document).on('click', function (e) {
 				if (!$(e.target).closest('.urcr-content-dropdown-wrapper').length &&
 					!$(e.target).closest('.urcr-add-content-button').length) {
@@ -431,7 +365,6 @@
 				}
 			});
 
-			// Action type change
 			$(document).on('change', '.urcr-action-type-select', function () {
 				var actionType = $(this).val() || 'message';
 				self.handleActionTypeChange(actionType);
@@ -442,10 +375,9 @@
 			var self = this;
 
 			if (!type) {
-				type = 'roles'; // Default for new conditions
+				type = 'roles';
 			}
 
-			// Prevent adding membership conditions (they're hidden and handled separately)
 			if (type === 'membership') {
 				return;
 			}
@@ -469,7 +401,6 @@
 			}
 
 			var inputType = selectedOption.type || 'multiselect';
-			// In membership create, all conditions are editable and deletable
 			var shouldLock = false;
 
 			var conditionHtml = self.getConditionRowHtml(conditionId, type, selectedOption.label, inputType, value || '', shouldLock);
@@ -481,10 +412,8 @@
 
 			$conditionsList.append(conditionHtml);
 
-			// Initialize select2 if needed
 			self.initConditionSelect2(conditionId, inputType, value);
 
-			// Store condition
 			self.conditions.push({
 				id: conditionId,
 				type: type,
@@ -498,14 +427,12 @@
 			var conditionOptions = self.getConditionOptions();
 			var removeButton = '';
 
-			// Hide remove button if condition is locked
 			if (!isLocked) {
 				removeButton = '<button type="button" class="button button-link-delete urcr-condition-remove" aria-label="Remove condition">' +
 					'<span class="dashicons dashicons-no-alt"></span>' +
 					'</button>';
 			}
 
-			// Add disabled attribute if condition is locked
 			var disabledAttr = isLocked ? ' disabled' : '';
 			var fieldSelect = '<select class="urcr-condition-field-select urcr-condition-value-input"' + disabledAttr + '>';
 			conditionOptions.forEach(function (option) {
@@ -533,7 +460,6 @@
 		getConditionValueInputHtml: function (id, inputType, fieldType, value, isLocked) {
 			var self = this;
 			var html = '';
-			// Add disabled attribute if condition is locked
 			var disabledAttr = isLocked ? ' disabled' : '';
 
 			if (fieldType === 'ur_form_field') {
@@ -564,7 +490,6 @@
 			} else if (inputType === 'multiselect') {
 				html = '<select class="urcr-enhanced-select2 urcr-condition-value-input" multiple data-condition-id="' + id + '" data-field-type="' + fieldType + '" ' + disabledAttr + '></select>';
 			} else if (inputType === 'checkbox') {
-				// User state - radio buttons
 				var checkedLoggedIn = (value === 'logged-in' || value === 'logged_in' || value === '') ? 'checked' : '';
 				var checkedLoggedOut = (value === 'logged-out' || value === 'logged_out') ? 'checked' : '';
 				html = '<div class="urcr-checkbox-radio-input">' +
@@ -574,14 +499,12 @@
 			} else if (inputType === 'date') {
 				html = '<input type="date" class="urcr-condition-value-input" data-condition-id="' + id + '" data-field-type="' + fieldType + '" value="' + (value || '') + '" ' + disabledAttr + '>';
 			} else if (inputType === 'period') {
-				// Period input - select (During/After) and input (number)
 				var periodSelect = 'During';
 				var periodInput = '';
 				if (value && typeof value === 'object') {
 					periodSelect = value.select || 'During';
 					periodInput = value.input || '';
 				} else if (value && typeof value === 'object' && value.value) {
-					// Handle old format with value/duration
 					periodInput = value.value || '';
 					periodSelect = 'During';
 				}
@@ -616,12 +539,10 @@
 				var fieldType = $select.data('field-type');
 				var options = self.getSelect2Options(fieldType);
 
-				// Destroy existing select2 if any
 				if ($select.hasClass('select2-hidden-accessible')) {
 					$select.select2('destroy');
 				}
 
-				// Wait a bit for DOM to be ready
 				setTimeout(function () {
 					$select.select2({
 						data: options,
@@ -629,7 +550,6 @@
 						width: '100%'
 					});
 
-					// Set selected values - check data attribute first (from PHP), then use passed value
 					var valueToSet = value;
 					var valueData = $select.attr('data-value');
 					if (valueData) {
@@ -643,7 +563,6 @@
 					if (valueToSet && Array.isArray(valueToSet) && valueToSet.length > 0) {
 						$select.val(valueToSet).trigger('change');
 					} else if (valueToSet && !Array.isArray(valueToSet)) {
-						// Convert single value to array
 						$select.val([valueToSet]).trigger('change');
 					}
 				}, 100);
@@ -856,7 +775,6 @@
 					});
 				}
 			} else if (fieldType === 'membership') {
-				// For membership condition, only show current membership
 				if (self.membershipId > 0) {
 					var membershipTitle = '';
 					if (urcr_membership_access_data.memberships && urcr_membership_access_data.memberships[self.membershipId]) {
@@ -881,7 +799,6 @@
 					});
 				}
 			} else if (fieldType === 'ur_form_field') {
-				// Handle UR form fields - would need form ID context
 				options = [];
 			} else if (fieldType === 'payment_status') {
 				if (urcr_membership_access_data.payment_status) {
@@ -917,7 +834,6 @@
 				$valueContainer.html(newInputHtml);
 				self.initConditionSelect2(conditionId, selectedOption.type, '');
 
-				// Update stored condition
 				var condition = self.conditions.find(function (c) {
 					return c.id === conditionId;
 				});
@@ -973,10 +889,8 @@
 
 			$('.urcr-target-type-group').append(targetHtml);
 
-			// Initialize select2 if needed
 			self.initContentTargetSelect2(targetId, type, value);
 
-			// Store target
 			self.contentTargets.push({
 				id: targetId,
 				type: type,
@@ -1019,7 +933,6 @@
 			if ($select.length && type !== 'whole_site') {
 				var options = self.getContentTargetOptions(type);
 
-				// Destroy existing select2 if any
 				if ($select.hasClass('select2-hidden-accessible')) {
 					$select.select2('destroy');
 				}
@@ -1030,23 +943,19 @@
 					width: '100%'
 				});
 
-				// Set selected values after select2 is initialized
 				setTimeout(function () {
 					if (value && Array.isArray(value) && value.length > 0) {
 						$select.val(value).trigger('change');
 					} else if (value && !Array.isArray(value) && typeof value === 'object' && value.value) {
-						// Handle taxonomy format
 						if (Array.isArray(value.value) && value.value.length > 0) {
 							$select.val(value.value).trigger('change');
 						}
 					} else if (value && !Array.isArray(value)) {
-						// Convert single value to array
 						$select.val([value]).trigger('change');
 					}
 				}, 50);
 			}
 
-			// Handle taxonomy type
 			if (type === 'taxonomy') {
 				self.initTaxonomySelect(targetId, value);
 			}
@@ -1058,26 +967,21 @@
 			var $termSelect = $('.urcr-target-item[data-target-id="' + targetId + '"] .urcr-content-target-input');
 
 			if ($taxonomySelect.length && urcr_membership_access_data.taxonomies) {
-				// Only append options if select is empty (not already rendered from PHP)
 				if ($taxonomySelect.find('option').length <= 1) {
 					Object.keys(urcr_membership_access_data.taxonomies).forEach(function (taxKey) {
 						$taxonomySelect.append('<option value="' + taxKey + '">' + urcr_membership_access_data.taxonomies[taxKey] + '</option>');
 					});
 				}
 
-				// Get taxonomy from value parameter, or from already selected option (PHP rendered), or from select value
 				var taxonomy = null;
 				var terms = [];
 
 				if (value && value.taxonomy) {
-					// Value passed as parameter
 					taxonomy = value.taxonomy;
 					terms = value.value || [];
 				} else {
-					// Check if taxonomy is already selected (from PHP rendering)
 					taxonomy = $taxonomySelect.val();
 					
-					// Get terms from data-value attribute (from PHP rendering)
 					var termsData = $termSelect.attr('data-value');
 					if (termsData) {
 						try {
@@ -1089,16 +993,13 @@
 				}
 
 				if (taxonomy) {
-					// Set the taxonomy value if not already set
 					if ($taxonomySelect.val() !== taxonomy) {
 						$taxonomySelect.val(taxonomy);
 					}
 					
-					// Initialize terms with selected values
 					self.updateTaxonomyTerms(targetId, taxonomy, terms);
 				}
 
-				// Handle taxonomy change
 				$taxonomySelect.off('change').on('change', function () {
 					var selectedTaxonomy = $(this).val();
 					self.updateTaxonomyTerms(targetId, selectedTaxonomy, []);
@@ -1116,7 +1017,6 @@
 					return { id: termId, text: terms[termId] };
 				});
 
-				// Destroy existing select2 if any
 				if ($termSelect.hasClass('select2-hidden-accessible')) {
 					$termSelect.select2('destroy');
 				}
@@ -1127,10 +1027,8 @@
 					width: '100%'
 				});
 
-				// Set selected terms after select2 is initialized
 				if (selectedTerms && selectedTerms.length > 0) {
 					setTimeout(function () {
-						// Convert to strings if needed (select2 uses string IDs)
 						var termIds = selectedTerms.map(function (term) {
 							return String(term);
 						});
@@ -1165,7 +1063,6 @@
 			var self = this;
 			var $target = $('.urcr-target-item[data-target-id="' + targetId + '"]');
 			if ($target.length) {
-				// Hide with ur-d-none utility class before removing
 				$target.removeClass('ur-d-flex').addClass('ur-d-none');
 				$target.remove();
 			}
@@ -1182,15 +1079,10 @@
 			var isPro = urcr_membership_access_data.is_pro || false;
 			var allContentTypes = urcr_membership_access_data.content_type_options;
 
-			// Filter for free users - only show posts and pages
 			var contentTypes = isPro ? allContentTypes : allContentTypes.filter(function (ct) {
 				return ct.value === 'posts' || ct.value === 'pages';
 			});
 
-			// Show all content types, but disable ones that are already selected
-			// No longer filtering out existing types
-
-			// Find or create dropdown wrapper
 			var $wrapper = $button.closest('.urcr-content-dropdown-wrapper');
 
 			if ($wrapper.length === 0) {
@@ -1221,7 +1113,6 @@
 				$dropdown.append('<span role="button" tabindex="' + tabIndex + '" class="urcr-dropdown-option urcr-content-type-option ' + disabledClass + '" data-content-type="' + ct.value + '" ' + disabledAttr + '>' + ct.label + '</span>');
 			});
 
-			// Toggle dropdown using utility classes
 			if ($dropdown.hasClass('ur-d-none')) {
 				$dropdown.removeClass('ur-d-none').addClass('ur-d-flex');
 			} else {
@@ -1232,7 +1123,6 @@
 
 		updateAccessControlClass: function () {
 			var self = this;
-			// Access control is always 'access', so always add the access class
 			var $wrapper = $('.urcr-condition-value-input-wrapper');
 			$wrapper.removeClass('urcr-restrict-content');
 			$wrapper.addClass('urcr-access-content');
@@ -1240,7 +1130,6 @@
 
 		initSelect2: function () {
 			var self = this;
-			// No need to initialize select2 for access control - it's always 'access'
 		},
 
 		getConditionOptions: function () {
@@ -1248,16 +1137,12 @@
 			var allOptions = urcr_membership_access_data.condition_options || [];
 			var isPro = urcr_membership_access_data.is_pro || false;
 
-			// Filter for free users - show membership, roles, and user_state
-			// For pro users, show all conditions
 			if (!isPro) {
 				allOptions = allOptions.filter(function (opt) {
 					return opt.value === 'membership' || opt.value === 'roles' || opt.value === 'user_state';
 				});
 			}
 
-			// Always exclude membership from condition options dropdown
-			// (membership is handled separately as the first locked condition)
 			allOptions = allOptions.filter(function (opt) {
 				return opt.value !== 'membership';
 			});
@@ -1268,27 +1153,23 @@
 		getContentTypeLabel: function (type) {
 			var contentTypeOptions = urcr_membership_access_data.content_type_options || [];
 
-			// Find the matching option by value
 			for (var i = 0; i < contentTypeOptions.length; i++) {
 				if (contentTypeOptions[i].value === type) {
 					return contentTypeOptions[i].label || type;
 				}
 			}
 
-			// Fallback to type if not found
 			return type;
 		},
 
 		prepareRuleData: function () {
 			var self = this;
 
-			// Update membership ID from form if available (for new memberships)
 			var $membershipIdInput = $('#ur-input-type-membership-name').closest('form').find('input[name="membership_id"]');
 			if ($membershipIdInput.length && $membershipIdInput.val()) {
 				self.membershipId = parseInt($membershipIdInput.val(), 10);
 			}
 
-			// Also check if membership ID is in the URL
 			if (!self.membershipId && window.location.search) {
 				var urlParams = new URLSearchParams(window.location.search);
 				var postId = urlParams.get('post_id');
@@ -1297,17 +1178,15 @@
 				}
 			}
 
-			// Ensure membership condition is included if membership ID exists
 			var hasMembershipCondition = false;
 			$('.urcr-condition-wrapper').each(function () {
 				var type = $(this).find('.urcr-condition-field-select').val();
 				if (type === 'membership') {
 					hasMembershipCondition = true;
-					return false; // break
+					return false;
 				}
 			});
 
-			// Build conditions array
 			var conditions = [];
 			$('.urcr-condition-wrapper').each(function () {
 				var $wrapper = $(this);
@@ -1338,11 +1217,8 @@
 						}
 					}
 				} else {
-					// Get value based on input type
-					// Get value based on input type - check for select2 first
 					var $select2 = $wrapper.find('.select2-hidden-accessible');
 					if ($select2.length) {
-						// This is a select2 multiselect
 						value = $select2.val() || [];
 						if (!Array.isArray(value)) {
 							value = value ? [value] : [];
@@ -1355,7 +1231,6 @@
 						} else if ($valueInput.is('input[type="radio"]')) {
 							value = $wrapper.find('input[type="radio"]:checked').val() || '';
 						} else if ($wrapper.find('.urcr-period-input-group').length) {
-							// Handle period input
 							var $periodContainer = $wrapper.find('.urcr-period-input-group');
 							var periodSelect = $periodContainer.find('[data-period-part="select"]').val();
 							var periodInput = $periodContainer.find('[data-period-part="input"]').val();
@@ -1369,7 +1244,6 @@
 					}
 				}
 
-				// Update membership condition value if it's a membership condition
 				if (type === 'membership' && self.membershipId > 0) {
 					value = [self.membershipId.toString()];
 				}
@@ -1381,8 +1255,6 @@
 				});
 			});
 
-
-			// Add membership condition if not present and membership ID exists
 			if (!hasMembershipCondition && self.membershipId > 0) {
 				conditions.unshift({
 					id: 'x' + Date.now(),
@@ -1391,20 +1263,17 @@
 				});
 			}
 
-			// Build content targets array
 			var targetContents = [];
 			$('.urcr-target-item').each(function () {
 				var $target = $(this);
 				var targetId = $target.data('target-id');
 
-				// Determine type
 				var type = '';
 				if ($target.find('.urcr-taxonomy-select').length) {
 					type = 'taxonomy';
 				} else if ($target.find('.urcr-content-target-input').length) {
 					type = $target.find('.urcr-content-target-input').data('content-type') || '';
 				} else {
-					// Check if it's whole_site by looking for text content
 					var $label = $target.find('.urcr-target-type-label');
 					if ($label.length && $label.text().indexOf('Whole Site') !== -1) {
 						type = 'whole_site';
@@ -1420,7 +1289,6 @@
 						var $termSelect = $target.find('.urcr-content-target-input');
 						var terms = [];
 
-						// First check data-value attribute (from PHP rendering)
 						var termsData = $termSelect.attr('data-value');
 						if (termsData) {
 							try {
@@ -1429,7 +1297,6 @@
 								terms = [];
 							}
 						} else {
-							// Fallback to select2 value
 							terms = $termSelect.val() || [];
 						}
 
@@ -1446,7 +1313,6 @@
 						var $contentSelect = $target.find('.urcr-content-target-input');
 						var selectedValues = [];
 
-						// First check data-value attribute (from PHP rendering)
 						var contentData = $contentSelect.attr('data-value');
 						if (contentData) {
 							try {
@@ -1455,7 +1321,6 @@
 								selectedValues = [];
 							}
 						} else {
-							// Fallback to select2 value
 							selectedValues = $contentSelect.val() || [];
 						}
 
@@ -1465,7 +1330,6 @@
 						var $contentSelect = $target.find('.urcr-content-target-input');
 						var defaultValue = [];
 
-						// First check data-value attribute (from PHP rendering)
 						var defaultData = $contentSelect.attr('data-value');
 						if (defaultData) {
 							try {
@@ -1474,7 +1338,6 @@
 								defaultValue = [];
 							}
 						} else {
-							// Fallback to select2 value
 							defaultValue = $contentSelect.val() || [];
 						}
 
@@ -1486,7 +1349,6 @@
 						break;
 				}
 
-				// Convert type names back to old format for backend
 				switch (type) {
 					case 'pages':
 						type = 'wp_pages';
@@ -1503,11 +1365,8 @@
 				});
 			});
 
-			// Build actions array from form
 			var actions = self.getActionsFromForm();
 
-			// Build rule data - structure must match what backend expects
-			// Title will be set by PHP based on membership name
 			var ruleData = {
 				title: '',
 				access_rule_data: {
@@ -1527,10 +1386,8 @@
 			};
 			console.log(actions)
 
-			// Store in hidden input
 			$('#urcr-membership-access-rule-data').val(JSON.stringify(ruleData));
 
-			// Also store globally for integration script
 			window.urcrMembershipAccessRuleData = ruleData;
 
 			return ruleData;
@@ -1540,11 +1397,9 @@
 			var self = this;
 			var $actionTypeSelect = $('#urcr-membership-action-type');
 
-			// Force hide all action containers using utility classes
 			$('.urcr-action-input-container').removeClass('ur-d-flex').addClass('ur-d-none');
 
 			if ($actionTypeSelect.length) {
-				// Initialize select2 for action inputs if needed
 				$('.urcr-action-local-page, .urcr-action-ur-form, .urcr-action-shortcode-tag').each(function () {
 					if (!$(this).hasClass('select2-hidden-accessible')) {
 						$(this).select2({
@@ -1553,21 +1408,17 @@
 					}
 				});
 
-				// Show/hide appropriate inputs based on current selection
 				var currentType = $actionTypeSelect.val() || 'message';
 				self.handleActionTypeChange(currentType);
 			}
 		},
 
 		handleActionTypeChange: function (actionType) {
-			// Hide all action input containers first using utility classes
 			$('.urcr-action-input-container').removeClass('ur-d-flex').addClass('ur-d-none');
 
-			// Default to message if actionType is not provided or invalid
 			if (!actionType) {
 				actionType = 'message';
 			}
-			// Show the appropriate container based on action type
 			var $container = null;
 			switch (actionType) {
 				case 'message':
@@ -1586,12 +1437,10 @@
 					$container = $('.urcrra-shortcode-input-container');
 					break;
 				default:
-					// Default to message if unknown type
 					$container = $('.urcrra-message-input-container');
 					break;
 			}
 
-			// Show the selected container using utility classes
 			if ($container && $container.length) {
 				$container.removeClass('ur-d-none').addClass('ur-d-flex');
 			}
@@ -1616,7 +1465,6 @@
 			switch (actionType) {
 				case 'message':
 					actionData.label = 'Show Message';
-					// Get content from TinyMCE editor if available
 					var message = '';
 					if (typeof wp !== 'undefined' && wp.editor && $('#urcr-membership-action-message').length) {
 						message = wp.editor.getContent('urcr-membership-action-message');
@@ -1638,7 +1486,7 @@
 					actionData.shortcode = { tag: '', args: '' };
 					break;
 				case 'local_page':
-					actionData.type = 'redirect_to_local_page'; // Map to backend type
+					actionData.type = 'redirect_to_local_page';
 					actionData.label = 'Redirect to a Local Page';
 					actionData.message = '';
 					actionData.redirect_url = '';
@@ -1647,7 +1495,7 @@
 					actionData.shortcode = { tag: '', args: '' };
 					break;
 				case 'ur-form':
-					actionData.type = 'ur-form'; // Always use hyphen format
+					actionData.type = 'ur-form';
 					actionData.label = 'Show UR Form';
 					actionData.message = '';
 					actionData.redirect_url = '';
@@ -1689,12 +1537,8 @@
 		}
 	};
 
-	// Initialize on document ready
 	$(document).ready(function () {
-
-		// Check if the container exists
 		if ($('#ur-membership-access-section').length === 0) {
-			// Try again after a short delay
 			setTimeout(function () {
 				if ($('#ur-membership-access-section').length > 0) {
 					URCRMembershipAccess.init();
@@ -1705,8 +1549,6 @@
 		}
 	});
 
-
-	// Expose globally for integration
 	window.URCRMembershipAccess = URCRMembershipAccess;
 
 })(jQuery);
