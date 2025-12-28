@@ -110,7 +110,7 @@ class ListTable extends \UR_List_Table {
 	public function get_row_actions( $membership ) {
 		$actions = array();
 
-		$actions['id'] = '<span>ID: ' . $membership->ID . '</span>';
+		$actions['id'] = "ID: $membership->ID";
 
 		// Add Edit action
 		$actions['edit'] = sprintf(
@@ -237,18 +237,16 @@ class ListTable extends \UR_List_Table {
 	 */
 	public function display_search_box( $search_id ) {
 		?>
-		<form method="get" id="user-registration-list-search-form">
 			<input type="hidden" name="page" value="user-registration-membership">
 			<p class="search-box">
 			</p>
-			<div>
+			<div id="user-registration-list-search-form">
 				<?php
 				$placeholder = __( 'Search Membership', 'user-registration' );
 				UR_Base_Layout::display_search_field( $search_id, $placeholder );
 				?>
 			</div>
 			<p></p>
-		</form>
 		<?php
 
 	}

@@ -14309,20 +14309,22 @@ body.user-registration #log-viewer pre {
 
 #user-registration-pro-single-user-view {
   display: flex;
+  gap: 24px;
   max-width: 1280px;
-  margin: 50px auto;
-  padding: 24px;
-  border-radius: 7px;
-  background: #ffffff;
+  margin: 0px auto;
+  padding: 12px;
 }
 #user-registration-pro-single-user-view #user-registration-user-sidebar {
-  padding: 0 30px 0 0;
+  padding: 24px 24px 32px 24px;
   max-width: 250px;
   min-width: 250px;
   display: flex;
   align-items: center;
   flex-direction: column;
   gap: 24px;
+  border-radius: 7px;
+  background-color: #ffffff;
+  height: fit-content;
 }
 @media (max-width: 991px) {
   #user-registration-pro-single-user-view #user-registration-user-sidebar {
@@ -14342,9 +14344,13 @@ body.user-registration #log-viewer pre {
   font-weight: 600;
   line-height: 130%;
 }
+#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box .user-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 #user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box .user-profile .user-avatar {
   text-align: center;
-  margin-bottom: 12px;
 }
 #user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box .user-profile .user-avatar img {
   width: 120px;
@@ -14353,11 +14359,21 @@ body.user-registration #log-viewer pre {
   margin: 0 auto;
 }
 #user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box .user-profile .user-login {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #383838;
+  line-height: normal;
+  font-weight: 400;
+  font-size: 14px;
+}
+#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box .user-profile .user-login p {
+  margin: 0;
+}
+#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box .user-profile .user-login .user-display-name {
   color: #222222;
   font-size: 18px;
   font-weight: 600;
-  line-height: normal;
-  margin: 0;
 }
 #user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul {
   margin: 0;
@@ -14368,14 +14384,13 @@ body.user-registration #log-viewer pre {
   display: flex;
   align-items: flex-start;
   gap: 8px;
+  font-size: 13px;
+  font-size: 400;
 }
 #user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li svg {
   width: 18px;
   height: 18px;
   padding-top: 1px;
-}
-#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li svg path {
-  fill: #383838;
 }
 #user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li p {
   margin: 0;
@@ -14410,9 +14425,28 @@ body.user-registration #log-viewer pre {
   width: 100%;
   border-radius: 3px;
 }
+#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a.urm-deny {
+  color: #F25656;
+}
+#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a.urm-deny div:not(.disable-user-link) svg path {
+  fill: currentColor;
+}
+#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a.urm-deny div:not(.disable-user-link):hover svg path {
+  fill: currentColor;
+}
+#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a.urm-deny:hover {
+  background-color: #fff4f4;
+}
+#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a.urm-deny:hover::before {
+  background: #fff4f4;
+  opacity: 1;
+}
+#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a.urm-deny:hover p {
+  color: #F25656;
+}
 #user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a::before {
   content: "";
-  background: #edeff7;
+  background: #f8f8fa;
   position: absolute;
   width: 24px;
   height: 100%;
@@ -14427,16 +14461,16 @@ body.user-registration #log-viewer pre {
   box-shadow: none;
   outline: none;
 }
-#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a:hover {
-  background: #edeff7;
+#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a:not(.urm-deny):hover {
+  background: #f8f8fa;
 }
-#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a:hover::before {
+#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a:not(.urm-deny):hover::before {
   opacity: 1;
 }
-#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a:hover svg path {
+#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a:not(.urm-deny):hover svg path {
   fill: #475bb2;
 }
-#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a:hover p {
+#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) a:not(.urm-deny):hover p {
   color: #475bb2;
 }
 #user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box .user-login {
@@ -14462,58 +14496,67 @@ body.user-registration #log-viewer pre {
 #user-registration-pro-single-user-view #user-registration-user-sidebar table #user-registration-user-extra-detail-user_status span {
   font-weight: 600;
 }
-#user-registration-pro-single-user-view .user-registration-user-body {
-  flex-grow: 4;
-  padding-left: 25px;
-  border-left: 1px solid #e1e1e1;
-}
-#user-registration-pro-single-user-view .user-registration-user-body .user-registration-user-form-details {
+#user-registration-pro-single-user-view .user-registration-user-content {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
+  gap: 24px;
 }
-@media (max-width: 767px) {
-  #user-registration-pro-single-user-view .user-registration-user-body .user-registration-user-form-details {
-    flex-direction: column;
-  }
-}
-#user-registration-pro-single-user-view .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details {
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 24px;
+  border-radius: 7px;
+  padding: 24px;
+  height: fit-content;
+  background-color: #ffffff;
 }
-#user-registration-pro-single-user-view .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details .single-field {
-  padding: 10px;
-  width: 50%;
-  box-sizing: border-box;
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container.user-registration-hidden {
+  display: none;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container #urm-admin-user-content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container #urm-admin-user-content-header h3 {
+  font-size: 18px;
+  font-weight: 500;
+  color: #222222;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container #urm-admin-user-content-header #user-registration-edit-user-link {
+  display: flex;
+  gap: 4px;
+  color: #6b6b6b;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
 }
 @media (max-width: 767px) {
-  #user-registration-pro-single-user-view .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details .single-field {
+  #user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container #urm-admin-user-content-header #user-registration-edit-user-link {
     width: 100%;
   }
 }
-#user-registration-pro-single-user-view .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details .single-field .single-field__label {
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container #urm-admin-user-content-header #user-registration-edit-user-link .single-field__label {
   font-size: 14px;
   color: #222;
   font-weight: 500;
   margin-bottom: 10px;
 }
-#user-registration-pro-single-user-view .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details .single-field input {
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container #urm-admin-user-content-header #user-registration-edit-user-link input {
   width: 100%;
   min-height: 36px;
   padding-left: 10px;
   padding-right: 10px;
   border-color: #d3d3d3;
 }
-#user-registration-pro-single-user-view .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details .single-field input:disabled {
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container #urm-admin-user-content-header #user-registration-edit-user-link input:disabled {
   opacity: 0.5;
   color: #000000;
   background: #f4f4f4;
   cursor: not-allowed;
 }
-#user-registration-pro-single-user-view .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details .single-field .urfu-no-files-found-message {
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container #urm-admin-user-content-header #user-registration-edit-user-link .urfu-no-files-found-message {
   margin: 0;
   padding: 7px 10px;
   opacity: 0.5;
@@ -14521,8 +14564,83 @@ body.user-registration #log-viewer pre {
   cursor: not-allowed;
   border: 1px solid #d3d3d3;
 }
-#user-registration-pro-single-user-view .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details .single-field textarea {
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container #urm-admin-user-content-header #user-registration-edit-user-link textarea {
   width: 100%;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .ur-frontend-form {
+  padding: 0;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-body {
+  flex-grow: 4;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-body .user-registration-user-form-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+@media (max-width: 767px) {
+  #user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-body .user-registration-user-form-details {
+    flex-direction: column;
+  }
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details .single-field {
+  padding: 10px;
+  width: 50%;
+  box-sizing: border-box;
+}
+@media (max-width: 767px) {
+  #user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details .single-field {
+    width: 100%;
+  }
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details .single-field .single-field__label {
+  font-size: 14px;
+  color: #222;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details .single-field input {
+  width: 100%;
+  min-height: 36px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-color: #d3d3d3;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details .single-field input:disabled {
+  opacity: 0.5;
+  color: #000000;
+  background: #f4f4f4;
+  cursor: not-allowed;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details .single-field .urfu-no-files-found-message {
+  margin: 0;
+  padding: 7px 10px;
+  opacity: 0.5;
+  background: #f4f4f4;
+  cursor: not-allowed;
+  border: 1px solid #d3d3d3;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-body .user-registration-user-form-details .user-registration-user-row-details .single-field textarea {
+  width: 100%;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-form-details .status-active {
+  color: #4CC741;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-form-details .status-expired {
+  color: #F25656;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-form-details .status-cancelled {
+  color: #F25656;
+}
+#user-registration-pro-single-user-view .user-registration-user-content .urm-admin-user-content-container .user-registration-user-form-details .status-inactive {
+  color: #EE9936;
 }
 #user-registration-pro-single-user-view #user-registration-user-details {
   border-left: 1px solid #cccccc;
@@ -14539,10 +14657,10 @@ body.user-registration #log-viewer pre {
   text-align: left;
 }
 
-.user-registration-membership_page_user-registration-users #wpbody-content #message {
+.user-registration-membership_page_user-registration-users #wpbody-content #message, .user-registration-membership_page_user-registration-members #wpbody-content #message {
   display: none !important;
 }
-.user-registration-membership_page_user-registration-users #wpbody-content .notice:not(.ur-users-notice) {
+.user-registration-membership_page_user-registration-users #wpbody-content .notice:not(.ur-users-notice), .user-registration-membership_page_user-registration-members #wpbody-content .notice:not(.ur-users-notice) {
   display: none !important;
   visibility: hidden;
 }
@@ -14563,24 +14681,20 @@ body.user-registration #log-viewer pre {
   color: #ee9936 !important;
 }
 
-.user-registration-membership_page_user-registration-users #wpcontent {
-  margin-right: 20px;
-}
 @media (max-width: 782px) {
-  .user-registration-membership_page_user-registration-users #wpcontent {
+  .user-registration-membership_page_user-registration-users #wpcontent, .user-registration-membership_page_user-registration-members #wpcontent {
     padding-left: 15px;
-    margin-right: 15px;
   }
 }
-.user-registration-membership_page_user-registration-users #wpbody-content {
+.user-registration-membership_page_user-registration-users #wpbody-content, .user-registration-membership_page_user-registration-members #wpbody-content {
   position: relative;
 }
 @media (max-width: 782px) {
-  .user-registration-membership_page_user-registration-users #wpbody-content #screen-meta-links {
+  .user-registration-membership_page_user-registration-users #wpbody-content #screen-meta-links, .user-registration-membership_page_user-registration-members #wpbody-content #screen-meta-links {
     margin-bottom: 0;
   }
 }
-.user-registration-membership_page_user-registration-users #wpbody-content .notice {
+.user-registration-membership_page_user-registration-users #wpbody-content .notice, .user-registration-membership_page_user-registration-members #wpbody-content .notice {
   position: fixed;
   bottom: 20px;
   left: 50%;
@@ -14594,119 +14708,29 @@ body.user-registration #log-viewer pre {
   z-index: 9999;
   animation: toaster 5s ease-in-out forwards;
 }
-.user-registration-membership_page_user-registration-users #wpbody-content .notice p {
+.user-registration-membership_page_user-registration-users #wpbody-content .notice p, .user-registration-membership_page_user-registration-members #wpbody-content .notice p {
   margin: 0;
   color: #ffffff;
   font-size: 14px;
   font-weight: 400;
   line-height: 24px;
 }
-.user-registration-membership_page_user-registration-users #wpbody-content .notice-dismiss {
+.user-registration-membership_page_user-registration-users #wpbody-content .notice-dismiss, .user-registration-membership_page_user-registration-members #wpbody-content .notice-dismiss {
   position: unset;
   padding: 0;
 }
-.user-registration-membership_page_user-registration-users #wpbody-content .notice-dismiss:focus {
+.user-registration-membership_page_user-registration-users #wpbody-content .notice-dismiss:focus, .user-registration-membership_page_user-registration-members #wpbody-content .notice-dismiss:focus {
   box-shadow: none;
 }
-.user-registration-membership_page_user-registration-users #wpbody-content .notice-dismiss::before {
+.user-registration-membership_page_user-registration-users #wpbody-content .notice-dismiss::before, .user-registration-membership_page_user-registration-members #wpbody-content .notice-dismiss::before {
   color: #ffffff;
   font-size: 18px;
   transition: all 0.3s ease-in-out;
 }
-.user-registration-membership_page_user-registration-users #wpbody-content .notice-dismiss:hover::before {
+.user-registration-membership_page_user-registration-users #wpbody-content .notice-dismiss:hover::before, .user-registration-membership_page_user-registration-members #wpbody-content .notice-dismiss:hover::before {
   color: #e5e5e5;
 }
-.user-registration-membership_page_user-registration-users .swal2-popup {
-  padding: 0;
-}
-.user-registration-membership_page_user-registration-users .swal2-header {
-  padding: 20px 20px 0;
-  border-bottom: 0;
-  margin-bottom: 16px;
-}
-.user-registration-membership_page_user-registration-users .swal2-title {
-  display: flex !important;
-  align-items: center;
-  gap: 8px;
-  text-align: left;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 120%;
-  padding-bottom: 16px;
-  width: 100%;
-  margin-bottom: 0;
-  color: #222222;
-}
-.user-registration-membership_page_user-registration-users .swal2-title img {
-  width: 30px;
-  height: 30px;
-  background: #fff4f4;
-  padding: 6px;
-  box-sizing: border-box;
-  border-radius: 50%;
-}
-.user-registration-membership_page_user-registration-users .swal2-content {
-  padding-left: 20px;
-  padding-right: 20px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-.user-registration-membership_page_user-registration-users .swal2-content form {
-  margin-top: 20px;
-}
-.user-registration-membership_page_user-registration-users .swal2-content p {
-  margin: 0;
-}
-.user-registration-membership_page_user-registration-users .swal2-content p#html_1 {
-  margin: 0 0 14px;
-  color: #383838;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 24px;
-}
-.user-registration-membership_page_user-registration-users .swal2-content p#html_2 {
-  color: #f25656;
-  border-radius: 3px;
-  padding: 10px 18px 10px 14px;
-  background: #fff4f4;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 23px;
-}
-.user-registration-membership_page_user-registration-users .swal2-content a {
-  font-size: 12px;
-}
-.user-registration-membership_page_user-registration-users .swal2-actions {
-  border-radius: 0 0 5px 5px;
-  border-top: 0.5px solid #e1e1e1;
-  background: #fdfdfd;
-  padding: 18px 20px;
-  justify-content: flex-start;
-  flex-direction: row-reverse;
-  gap: 12px;
-  margin-top: 0;
-}
-.user-registration-membership_page_user-registration-users .swal2-actions button {
-  transition: all 0.3s ease-in-out;
-}
-.user-registration-membership_page_user-registration-users .swal2-actions button:focus {
-  box-shadow: none;
-}
-.user-registration-membership_page_user-registration-users .swal2-actions button.swal2-confirm {
-  border-radius: 3px;
-  background: #475bb2;
-  padding: 10px 16px;
-  color: #ffffff;
-  margin: 0;
-}
-.user-registration-membership_page_user-registration-users .swal2-actions button.swal2-cancel {
-  border-radius: 3px;
-  background: #e9e9e9;
-  padding: 10px 16px;
-  color: #6b6b6b;
-  margin: 0;
-}
-.user-registration-membership_page_user-registration-users #show-settings-link {
+.user-registration-membership_page_user-registration-users #show-settings-link, .user-registration-membership_page_user-registration-members #show-settings-link {
   display: none;
 }
 
@@ -14824,6 +14848,16 @@ body.user-registration #log-viewer pre {
   text-transform: none;
   font-size: 14px;
 }
+#user-registration-edit-user-body .ur-form-grid {
+  width: 100% !important;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+#user-registration-edit-user-body .ur-form-grid .ur-field-item {
+  flex: 0 0 calc(50% - 8px);
+  min-width: 0;
+}
 #user-registration-edit-user-body .ur-form-grid .ur-field-item.field-section_title h3 {
   font-size: x-large;
   margin-bottom: 51px;
@@ -14835,6 +14869,9 @@ body.user-registration #log-viewer pre {
 }
 #user-registration-edit-user-body .ur-form-grid .ur-field-item label .required {
   text-decoration: none;
+}
+#user-registration-edit-user-body .user-registration-edit-user-form-details .ur-form-grid {
+  display: block;
 }
 #user-registration-edit-user-body .hide-show-password {
   position: absolute;
@@ -14883,10 +14920,6 @@ body.user-registration #log-viewer pre {
   line-height: 1.25;
   text-transform: none;
   font-size: 14px;
-}
-
-#user-registration-pro-single-user-view .ur-frontend-form {
-  width: 100%;
 }
 
 @keyframes toaster {
@@ -15056,31 +15089,27 @@ body.user-registration-page #profile-page #your-profile #application-passwords-s
   background: #ffffff;
   border: 1px solid #e1e1e1;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 40px;
-}
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper .user-registration-base-list-table-heading {
-  display: flex;
+#user-registration-base-list-table-page .user-registration-base-list-table-heading {
+  position: absolute;
+  display: inline-flex;
   align-items: center;
   gap: 16px;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper .user-registration-base-list-table-heading h1 {
+#user-registration-base-list-table-page .user-registration-base-list-table-heading h1 {
   margin: 0;
   color: #222222;
   font-size: 22px;
   font-weight: 600;
   line-height: 32px;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper .user-registration-base-list-table-heading h2 {
+#user-registration-base-list-table-page .user-registration-base-list-table-heading h2 {
   margin: 0;
   color: #222222;
   font-size: 22px;
   font-weight: 600;
   line-height: 32px;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper .user-registration-base-list-table-heading .page-title-action {
+#user-registration-base-list-table-page .user-registration-base-list-table-heading .page-title-action {
   min-height: 36px;
   border: 1px solid #475bb2;
   color: #ffffff;
@@ -15097,12 +15126,12 @@ body.user-registration-page #profile-page #your-profile #application-passwords-s
   align-items: center;
   gap: 6px;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper .user-registration-base-list-table-heading .page-title-action:hover {
+#user-registration-base-list-table-page .user-registration-base-list-table-heading .page-title-action:hover {
   background: #475bb2;
   color: #ffffff;
   border-color: #475bb2;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper .user-registration-base-list-table-heading .page-title-action::before {
+#user-registration-base-list-table-page .user-registration-base-list-table-heading .page-title-action::before {
   content: "";
   width: 14px;
   height: 14px;
@@ -15112,31 +15141,32 @@ body.user-registration-page #profile-page #your-profile #application-passwords-s
   background-position: center;
   background-size: 100%;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   gap: 20px;
+  margin-bottom: 40px;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row:has(.subsubsub) {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row:has(.subsubsub) {
   flex-direction: row-reverse;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row ul.subsubsub {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row ul.subsubsub {
   font-size: 15px;
   margin-top: 0;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row ul.subsubsub li a {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row ul.subsubsub li a {
   font-size: 14px;
   line-height: 24px;
   font-weight: 400;
   color: #383838;
   text-decoration: none;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row ul.subsubsub li a.current {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row ul.subsubsub li a.current {
   color: #475bb2;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row #user-registration-pro-users-filters {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -15144,67 +15174,21 @@ body.user-registration-page #profile-page #your-profile #application-passwords-s
   padding: 0;
   margin-top: 0;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters li div p {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row #user-registration-pro-users-filters li div p {
   display: none;
   margin: 0;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row #search-submit {
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type=submit] {
-  padding: 6px 14px;
-  border-radius: 4px;
-  border: 1px solid #475bb2;
-  background: #F6F7F7;
-  color: #475bb2;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 150%;
-  letter-spacing: 0.3px;
-}
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type=submit]:hover {
-  background: rgb(56.4578313253, 72.3614457831, 141.5421686747);
-  border-color: rgb(56.4578313253, 72.3614457831, 141.5421686747);
-}
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type=reset], #user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type=button] {
-  border-radius: 3px;
-  border: 1px solid #6b6b6b;
-  background: #f6f7f7;
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease-in-out;
-}
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type=reset] svg, #user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type=button] svg {
-  width: 16px;
-  height: 16px;
-}
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type=reset] svg path, #user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type=button] svg path {
-  fill: #383838;
-}
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type=reset]:hover, #user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type=button]:hover {
-  background: #f2f2f2;
-  border-color: #475bb2;
-}
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type=reset]:hover svg path, #user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-pro-users-filters .user-registration-users-filter-btns button[type=button]:hover svg path {
-  fill: #475bb2;
-}
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #search-submit img {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row #search-submit img {
   width: 18px;
   height: 18px;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row form {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row form {
   position: relative;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-users-advanced-filters {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row #user-registration-users-advanced-filters {
   display: block;
   position: absolute;
   border-radius: 4px;
@@ -15216,13 +15200,13 @@ body.user-registration-page #profile-page #your-profile #application-passwords-s
   z-index: 2;
   width: 360px;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-users-advanced-filters ul {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row #user-registration-users-advanced-filters ul {
   margin: 0;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-users-advanced-filters ul li {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row #user-registration-users-advanced-filters ul li {
   margin: 0;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-users-advanced-filters ul li p {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row #user-registration-users-advanced-filters ul li p {
   margin-top: 0;
   margin-bottom: 14px;
   color: #222222;
@@ -15230,24 +15214,24 @@ body.user-registration-page #profile-page #your-profile #application-passwords-s
   font-weight: 600;
   line-height: 150%;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-users-advanced-filters ul li input[type=date] {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row #user-registration-users-advanced-filters ul li input[type=date] {
   width: 47%;
   border-radius: 4px;
   border-color: #bababa;
   background: #ffffff;
   height: 36px;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-list-search-form {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row #user-registration-list-search-form {
   width: 275px;
   position: relative;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-list-search-form > p {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row #user-registration-list-search-form > p {
   display: none;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-list-search-form #user-registration-users-search-input {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row #user-registration-list-search-form #user-registration-users-search-input {
   width: 100%;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-list-search-form button#search-submit {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row #user-registration-list-search-form button#search-submit {
   position: absolute;
   border: 0;
   background: transparent;
@@ -15261,14 +15245,11 @@ body.user-registration-page #profile-page #your-profile #application-passwords-s
   right: 12px;
   transform: translateY(-50%);
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row #user-registration-list-search-form button#search-submit svg path {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row #user-registration-list-search-form button#search-submit svg path {
   fill: #a1a4b9;
 }
-#user-registration-base-list-table-page .user-registration-base-list-top-wrapper #user-registration-base-list-filters-row form {
+#user-registration-base-list-table-page #user-registration-base-list-filters-row form {
   position: relative;
-}
-#user-registration-base-list-table-page .tablenav.top {
-  display: none;
 }
 #user-registration-base-list-table-page table.wp-list-table {
   border-color: #e1e1e1;
@@ -15332,173 +15313,212 @@ body.user-registration-page #profile-page #your-profile #application-passwords-s
 }
 #user-registration-base-list-table-page table.wp-list-table tbody tr td {
   height: 38px;
-  padding: 14px 16px;
 }
 #user-registration-base-list-table-page table.wp-list-table tbody tr td .row-actions {
   color: #6b6b6b;
 }
 #user-registration-base-list-table-page table.wp-list-table tbody tr td .row-actions .id {
   font-size: 12px;
-  line-height: normal;
 }
 #user-registration-base-list-table-page table.wp-list-table tbody tr td .row-actions .ur-row-actions {
   font-size: 12px;
   line-height: normal;
   color: #383838;
 }
+#user-registration-base-list-table-page table.wp-list-table tbody tr td.username img {
+  border-radius: 50px;
+  margin-top: 2px;
+}
+#user-registration-base-list-table-page table.wp-list-table tbody tr td.user_status span {
+  font-weight: 500;
+}
+#user-registration-base-list-table-page table.wp-list-table tbody tr td.user_status span.user-status-approved {
+  color: #4CC741;
+}
+#user-registration-base-list-table-page table.wp-list-table tbody tr td.user_status span.user-status-pending {
+  color: #EE9936;
+}
+#user-registration-base-list-table-page table.wp-list-table tbody tr td.user_status span.user-status-denied {
+  color: #F25656;
+}
+@media screen and (min-width: 783px) {
+  #user-registration-base-list-table-page table.wp-list-table tbody tr td {
+    padding: 14px 16px;
+  }
+}
 #user-registration-base-list-table-page table.wp-list-table tfoot tr td,
 #user-registration-base-list-table-page table.wp-list-table tfoot tr th {
   border-top-color: #e1e1e1;
 }
-
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-membership-plans {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin: 12px 0 24px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid #e1e1e1;
+#user-registration-base-list-table-page .user-registration-base-list-table-form .tablenav .actions:has(#new_role) {
+  display: none;
 }
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-membership-plans .urmg-plan-card {
+#user-registration-base-list-table-page .user-registration-base-list-table-form .tablenav .actions.show-flex {
+  display: flex !important;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .tablenav .actions {
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 14px;
-  border-radius: 4px;
-  border: 1px solid #e1e1e1;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: #ffffff;
+  align-items: center;
+  gap: 12px;
+  padding-right: 12px;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .tablenav .actions select {
+  height: 36px;
+  margin: 0;
+  border-color: #bababa;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .tablenav .actions select:hover {
+  color: #475bb2;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .tablenav .actions select:focus {
+  box-shadow: none;
+  border: 1px solid #475bb2;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .tablenav .actions input[type=submit] {
+  padding: 6px 14px;
+  border-radius: 3px;
+  border: 1px solid #475bb2;
+  background: #f6f7f7;
+  color: #475bb2;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 150%;
+  transition: all 0.3s ease-in-out;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .tablenav .actions input[type=submit]:hover {
+  background: #f2f2f2;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters {
   position: relative;
 }
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-membership-plans .urmg-plan-card:hover {
-  border-color: #475bb2;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-membership-plans .urmg-plan-card.selected {
-  border-color: #475bb2;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-membership-plans .urmg-plan-card input[type=radio] {
-  margin: 0;
-  margin-top: 1px;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-membership-plans .urmg-plan-card input[type=radio]::before {
-  width: 8px;
-  height: 8px;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-membership-plans .urmg-plan-card input[type=radio]:checked {
-  border-color: #475bb2;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-membership-plans .urmg-plan-card input[type=radio]:checked::before {
-  width: 8px;
-  height: 8px;
-  margin: 3.2px;
-  background: #475bb2;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-membership-plans .urmg-plan-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  justify-content: space-between;
-  width: 100%;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-membership-plans .urmg-plan-title {
-  margin: 0;
-  color: #1f1f1f;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 18px;
-  text-transform: capitalize;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-membership-plans .urmg-plan-price {
-  color: #1F1F1F;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 18px;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-membership-plans .urmg-plan-description {
-  font-size: 14px;
-  color: #383838;
-  margin-top: 8px;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-total-container {
-  border: 1px dashed #ccc;
-  border-radius: 4px;
-  padding: 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f9f9f9;
-  opacity: 0.5;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-total-label {
-  color: #383838;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 20px;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-total-amount {
-  color: #383838;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 20px;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-payment-gateways {
-  margin: 24px 0 0;
-  padding-top: 16px;
-  border-top: 1px solid #e1e1e1;
-  opacity: 0.5;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-payment-gateways-label {
-  color: #222222;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 22px;
-  margin-bottom: 8px;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-payment-gateways-label .required {
-  color: #dc3232;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-payment-gateways .urmg-gateway-buttons {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-payment-gateways .urmg-gateway-buttons .urmg-gateway-btn {
-  flex: 1;
-  min-width: 120px;
-  padding: 0 20px;
-  border: 1px solid #e0e0e0;
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters #user-registration-users-advanced-filters {
+  display: block;
+  position: absolute;
   border-radius: 4px;
   background: #ffffff;
+  box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.13);
+  padding: 20px 18px;
+  right: 0;
+  top: 38px;
+  z-index: 2;
+  width: 360px;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters #user-registration-users-advanced-filters ul {
+  margin: 0;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters #user-registration-users-advanced-filters ul li {
+  margin: 0;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters #user-registration-users-advanced-filters ul li p {
+  margin-top: 0;
+  margin-bottom: 14px;
+  color: #222222;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 150%;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters #user-registration-users-advanced-filters ul li input[type=date] {
+  width: 47%;
+  border-radius: 4px;
+  border-color: #bababa;
+  background: #ffffff;
+  height: 36px;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters select {
+  width: auto !important;
+  max-width: max-content !important;
+  min-width: auto !important;
+  flex: 0 0 auto !important;
+  display: inline-block !important;
+  padding-right: 32px !important;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters .user-registration-users-filter-btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters .user-registration-users-filter-btns button {
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in-out;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters .user-registration-users-filter-btns button[type=submit] {
+  padding: 6px 14px;
+  border-radius: 4px;
+  border: 1px solid #475bb2;
+  background: #F6F7F7;
+  color: #475bb2;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 150%;
+  letter-spacing: 0.3px;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters .user-registration-users-filter-btns button[type=submit]:hover {
+  background: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+  border-color: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters .user-registration-users-filter-btns button[type=reset], #user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters .user-registration-users-filter-btns button[type=button] {
+  border-radius: 3px;
+  border: 1px solid #6b6b6b;
+  background: #f6f7f7;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333333;
-  position: relative;
-  margin: 0;
-  min-height: 48px;
+  transition: all 0.3s ease-in-out;
+  margin-left: 0;
 }
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-payment-gateways .urmg-gateway-buttons .urmg-gateway-btn:hover {
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters .user-registration-users-filter-btns button[type=reset] svg, #user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters .user-registration-users-filter-btns button[type=button] svg {
+  width: 16px;
+  height: 16px;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters .user-registration-users-filter-btns button[type=reset] svg path, #user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters .user-registration-users-filter-btns button[type=button] svg path {
+  fill: #383838;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters .user-registration-users-filter-btns button[type=reset]:hover, #user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters .user-registration-users-filter-btns button[type=button]:hover {
+  background: #f2f2f2;
   border-color: #475bb2;
 }
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-payment-gateways .urmg-gateway-buttons .urmg-gateway-btn.selected {
-  border-color: #cccccc;
-  background: #f9f9f9;
-  color: #475bb2;
+#user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters .user-registration-users-filter-btns button[type=reset]:hover svg path, #user-registration-base-list-table-page .user-registration-base-list-table-form .user-registration-members-filters .user-registration-users-filter-btns button[type=button]:hover svg path {
+  fill: #475bb2;
 }
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-payment-gateways .urmg-gateway-buttons .urmg-gateway-btn input[type=radio] {
-  display: none;
+
+.user-subscription-status {
+  font-weight: 500;
 }
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-payment-gateways .urmg-gateway-buttons .urmg-gateway-btn .urmg-gateway-icon {
-  width: auto;
-  height: 24px;
+
+.user-subscription-secondary {
+  color: #8e98a2;
 }
-.ur-admin-template .ur-field[data-field-key=membership] .urmg-container .urmg-payment-gateways .urmg-gateway-buttons .urmg-gateway-btn .urmg-gateway-label {
-  display: none;
+
+.user-subscription-active {
+  color: #4CC741;
+}
+
+.user-subscription-pending {
+  color: #EE9936;
+}
+
+.user-subscription-expired {
+  color: #F25656;
+}
+
+.user-subscription-status {
+  font-weight: 500;
+}
+
+.user-subscription-secondary {
+  color: #8e98a2;
+}
+
+.user-subscription-active {
+  color: #4CC741;
+}
+
+.user-subscription-pending {
+  color: #EE9936;
+}
+
+.user-subscription-expired {
+  color: #F25656;
 }
