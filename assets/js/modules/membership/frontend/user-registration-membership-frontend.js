@@ -253,7 +253,7 @@
 			user_data.payment_method = "free";
 			if (membership_input.data("urm-pg-type") !== "free") {
 				user_data.payment_method = $(
-					'input[name="urm_payment_method"]:checked:visible'
+					'input[name="urm_payment_method"]:checked'
 				).val();
 			}
 			var date = new Date();
@@ -628,9 +628,9 @@
 						: urm_calculated_total;
 			total = parseFloat(total).toFixed(2);
 			if ("left" === urmf_data.curreny_pos) {
-				total_input.val(urmf_data.currency_symbol + total);
+				total_input.text(urmf_data.currency_symbol + total);
 			} else {
-				total_input.val(total + urmf_data.currency_symbol);
+				total_input.text(total + urmf_data.currency_symbol);
 			}
 		},
 		upgrade_membership: function (
@@ -1634,24 +1634,49 @@
 
 					$(".urm_apply_coupon").show();
 					if (urm_payment_type !== "free") {
-						urm_hidden_pg_containers.removeClass("urm-d-none");
+						if (
+							urmf_data.gateways_configured &&
+							Object.keys(urmf_data.gateways_configured).length >
+								0
+						) {
+							urm_hidden_pg_containers.removeClass("urm-d-none");
 
-						urm_pg_inputs.each(function (key, item) {
-							var current_gateway = $(item).val(),
-								input_container = $(
-									'label[for="ur-membership-' +
-										current_gateway +
-										'"]'
-								);
-							input_container.removeClass("urm-d-none");
-							if (
-								!urm_payment_gateways.hasOwnProperty(
-									current_gateway
-								)
-							) {
-								input_container.addClass("urm-d-none");
-							}
-						});
+							urm_pg_inputs.each(function (key, item) {
+								var current_gateway = $(item).val(),
+									input_container = $(
+										'label[for="ur-membership-' +
+											current_gateway +
+											'"]'
+									);
+								input_container.removeClass("urm-d-none");
+
+								if (
+									!(
+										current_gateway in
+										urmf_data.gateways_configured
+									)
+								) {
+									input_container.addClass("urm-d-none");
+								}
+							});
+						}
+						// urm_pg_inputs.each(function (key, item) {
+						// 	var current_gateway = $(item).val(),
+						// 		input_container = $(
+						// 			'label[for="ur-membership-' +
+						// 				current_gateway +
+						// 				'"]'
+						// 		);
+						// 	if (urmf_data.gateways_configured) {
+						// 	}
+						// 	if (
+						// 		!urm_payment_gateways.hasOwnProperty(
+						// 			current_gateway
+						// 		)
+						// 	) {
+						// 		input_container.addClass("urm-d-none");
+						// 	}
+						// });
 
 						if (
 							urm_pg_container.find("input:visible").length === 1

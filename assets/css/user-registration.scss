@@ -1650,7 +1650,8 @@ span.ur-shortcode-form-embed-dot {
 }
 
 // Revamp error design for registration and login form
-.ur-field-item, .ur-form-grid {
+.ur-field-item,
+.ur-form-grid {
 	input {
 		border-radius: 4px !important;
 	}
@@ -2430,7 +2431,7 @@ body {
 						.ur-field-item {
 							label:not(.user-registration-error) {
 								margin-top: 0;
-								margin-bottom: 12px;
+								margin-bottom: 16px;
 								color: #222;
 								font-size: 15px;
 								font-weight: 500;
@@ -2467,7 +2468,7 @@ body {
 					display: flex !important;
 					align-items: center;
 					gap: $spacing_4px;
-					margin-top: 32px;
+					margin-top: $spacing_32px;
 					padding: 0 10px;
 
 					.ur-submit-button {
@@ -3228,6 +3229,7 @@ body.user-registration-page {
 		}
 	}
 }
+
 .user-registration-login-form-container {
 	.ur-login-form-settings {
 		.user-registration-login-form-global-settings {
@@ -3235,11 +3237,13 @@ body.user-registration-page {
 				display: flex;
 				align-items: center;
 			}
+
 			&:has(.error) {
 				.select2-selection {
-					border-color: #f34c4c!important;
+					border-color: #f34c4c !important;
 				}
 			}
+
 			.error {
 				&.inline {
 					box-shadow: none;
@@ -3268,20 +3272,24 @@ body.user-registration-page {
 			}
 		}
 	}
+
 	.ur-builder-wrapper {
 		.user-registration-login-form-global-settings {
 			&--field {
 				display: flex;
 				align-items: center;
+
 				.select2-selection {
 					position: relative;
 				}
 			}
+
 			&:has(.error) {
 				.select2-selection {
-					border-color: #f34c4c!important;
+					border-color: #f34c4c !important;
 				}
 			}
+
 			.error {
 				&.inline {
 					box-shadow: none;
@@ -3357,11 +3365,13 @@ body.user-registration-page {
 			padding: 0;
 			margin: 0;
 		}
-		p > input.user-registration-Button.button {
+
+		p>input.user-registration-Button.button {
 			background: $primary_color;
 			border: $border_width $primary_color;
 			border-radius: $border_radius_4;
 			border-style: inherit;
+
 			&:hover {
 				background: #38488e;
 				border-color: #38488e;

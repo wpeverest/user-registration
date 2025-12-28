@@ -22,7 +22,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 	class User_Registration_Members_List_Table extends WP_Users_List_Table {
 
 
-		function __construct() {
+		public function __construct() {
 			parent::__construct();
 
 			add_filter( 'ur_manage_users_custom_column', array( $this, 'output_custom_column_data' ), 10, 3 );
@@ -139,6 +139,17 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			if ( $this->is_site_users ) {
 				$args['blog_id'] = $this->site_id;
 			}
+
+			$args['orderby'] = 'user_registered';
+			if ( isset( $_REQUEST['orderby'] ) ) {
+				$args['orderby'] = $_REQUEST['orderby'];
+			}
+
+			$args['order'] = 'desc';
+			if ( isset( $_REQUEST['order'] ) ) {
+				$args['order'] = $_REQUEST['order'];
+			}
+
 			$subscription_table = $wpdb->prefix . 'ur_membership_subscriptions';
 
 			if ( ! empty( $_REQUEST['membership_id'] ) ) {
@@ -182,21 +193,10 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 				return;
 			}
 
-			$user_ids    = wp_list_pluck( $this->items, 'ID' );
-			$user_ids_in = implode( ',', array_map( 'intval', $user_ids ) );
-			$orderby_map = array(
-				'membership_title' => 'wpp.post_title',
-				'user_login'       => 'wpu.user_login',
-				'user_email'       => 'wpu.user_email',
-				'status'           => 'wums.status',
-				'ID'               => 'wpu.ID',
-				'user_registered'  => 'wpu.user_registered',
-			);
+			$total_users = $wp_user_search->total_users;
 
-			$orderby      = isset( $_REQUEST['orderby'], $orderby_map[ $_REQUEST['orderby'] ] )
-				? $orderby_map[ $_REQUEST['orderby'] ]
-				: 'wpu.user_registered';
-			$order        = ( isset( $_REQUEST['order'] ) && strtoupper( $_REQUEST['order'] ) === 'ASC' ) ? 'ASC' : 'DESC';
+			$user_ids     = wp_list_pluck( $this->items, 'ID' );
+			$user_ids_in  = implode( ',', array_map( 'intval', $user_ids ) );
 			$orders_table = $wpdb->prefix . 'ur_membership_orders';
 			$posts_table  = $wpdb->posts;
 
@@ -223,14 +223,21 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					)
 				LEFT JOIN {$posts_table} wpp ON wums.item_id = wpp.ID  AND wpp.post_status = 'publish'
 				WHERE wpu.ID IN ($user_ids_in)
-				ORDER BY $orderby $order
+				ORDER BY FIELD(wpu.ID, $user_ids_in)
 			";
 
-			$this->items = $wpdb->get_results( $sql, ARRAY_A );
+			$results         = $wpdb->get_results( $sql, ARRAY_A );
+			$user_id_indexed = array();
+
+			foreach ( $results as $row ) {
+				$user_id_indexed[ $row['ID'] ] = $row;
+			}
+
+			$this->items = $user_id_indexed;
 
 			$this->set_pagination_args(
 				array(
-					'total_items' => count( $this->items ),
+					'total_items' => $total_users,
 					'per_page'    => $users_per_page,
 				)
 			);
@@ -485,7 +492,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						'user_id'  => $new_user_object->ID,
 						'_wpnonce' => wp_create_nonce( 'bulk-users' ),
 					),
-					admin_url( 'admin.php?page=user-registration-members&view_user' ),
+					admin_url( 'admin.php?page=user-registration-users&view_user' ),
 				);
 
 				// Add a link to the user's author archive, if not empty.
@@ -496,21 +503,21 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						'user_id'  => $new_user_object->ID,
 						'_wpnonce' => wp_create_nonce( 'bulk-users' ),
 					),
-					admin_url( 'admin.php?page=user-registration-members&view_user' ),
+					admin_url( 'admin.php?page=user-registration-users&view_user' ),
 				);
 
 				$delete_link = add_query_arg(
 					array(
 						'action'   => 'delete',
-						'user_id'  => $user_id,
+						'user_id'  => $new_user_object->ID,
 						'_wpnonce' => wp_create_nonce( 'bulk-users' ),
 					),
-					admin_url( 'admin.php?page=user-registration-members' ),
+					admin_url( 'admin.php?page=user-registration-users' ),
 				);
 
 				$wp_delete_url = add_query_arg(
 					array(
-						'user'     => $user_id,
+						'user'     => $new_user_object->ID,
 						'_wpnonce' => wp_create_nonce( 'bulk_users' ),
 					),
 					admin_url( 'users.php?action=delete' )
@@ -546,7 +553,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 								'user_id'  => $user_id,
 								'_wpnonce' => wp_create_nonce( 'bulk-users' ),
 							),
-							admin_url( 'admin.php?page=user-registration-members' ),
+							admin_url( 'admin.php?page=user-registration-users' ),
 						);
 						$actions['disable_user'] = sprintf(
 							'<a href="%s" class="ur-row-actions">%s </a>',
@@ -782,6 +789,16 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						?>
 					</select>
 				<?php else : ?>
+					<select name="user_status" id="user_registration_pro_users_user_status_filter">
+						<?php
+						$user_status = isset( $_GET['user_status'] ) ? sanitize_text_field( $_GET['user_status'] ) : '';
+						?>
+						<option value="all"><?php echo esc_html__( 'All', 'user-registration' ); ?></option>
+						<option value="approved" <?php echo 'approved' === $user_status ? 'selected=selected' : ''; ?>><?php echo esc_html__( 'Approved', 'user-registration' ); ?></option>
+						<option value="pending" <?php echo 'pending' === $user_status ? 'selected=selected' : ''; ?>><?php echo esc_html__( 'Pending', 'user-registration' ); ?></option>
+						<option value="denied" <?php echo 'denied' === $user_status ? 'selected=selected' : ''; ?>><?php echo esc_html__( 'Denied', 'user-registration' ); ?></option>
+						<option value="pending_email" <?php echo 'pending_email' === $user_status ? 'selected=selected' : ''; ?>><?php echo esc_html__( 'Awaiting Email Confirmation', 'user-registration' ); ?></option>
+					</select>
 					<select name="role" id="user_registration_pro_users_role_filter">
 						<?php
 						foreach ( $this->get_role_filters() as $role_key => $role_label ) {
@@ -1135,7 +1152,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 		public function urm_search_user_on_name( $query ) {
 			global $wpdb;
 
-			if ( isset( $_REQUEST['s'], $_REQUEST['page'] ) && ! empty( $_REQUEST['s'] ) && 'user-registration-members' === $_REQUEST['page'] ) {
+			if ( isset( $_REQUEST['s'], $_REQUEST['page'] ) && ! empty( $_REQUEST['s'] ) && 'user-registration-users' === $_REQUEST['page'] ) {
 				$usersearch = sanitize_text_field( $_REQUEST['s'] );
 
 				$user_extract = explode( ' ', $usersearch );
@@ -1143,23 +1160,23 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 				$search_like = '%' . $wpdb->esc_like( $usersearch ) . '%';
 
-				$query->query_where .= " OR (
+				$query->query_where .= " AND (
 					{$wpdb->users}.user_login LIKE '{$search_like}'
 					OR {$wpdb->users}.user_email LIKE '{$search_like}'
 					OR {$wpdb->users}.display_name LIKE '{$search_like}'
 					OR {$wpdb->users}.user_nicename LIKE '{$search_like}'
-				)";
-
-				$query->query_where .= " OR EXISTS (
-					SELECT *
-					FROM {$wpdb->usermeta} um
-					WHERE um.user_id = {$wpdb->users}.ID
-					AND (
-						(um.meta_key IN ('first_name','last_name') AND um.meta_value LIKE '{$search_like}')
-						OR (um.meta_key LIKE 'user_registration\_%' AND um.meta_value LIKE '{$search_like}')
-						OR (um.meta_key LIKE 'display_name\_%' AND um.meta_value LIKE '{$search_like}')
+					OR EXISTS (
+						SELECT *
+						FROM {$wpdb->usermeta} um
+						WHERE um.user_id = {$wpdb->users}.ID
+						AND (
+							(um.meta_key IN ('first_name','last_name') AND um.meta_value LIKE '{$search_like}')
+							OR (um.meta_key LIKE 'user_registration\_%' AND um.meta_value LIKE '{$search_like}')
+							OR (um.meta_key LIKE 'display_name\_%' AND um.meta_value LIKE '{$search_like}')
+						)
 					)
 				)";
+
 			}
 
 			remove_action( 'pre_user_query', $this );

@@ -76,7 +76,11 @@ class Membership {
 		if ( empty( $_GET['page'] ) || 'user-registration-membership' !== $_GET['page'] ) {
 			return;
 		}
-		wp_register_script( 'user-registration-membership', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/user-registration-membership-admin' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
+		
+		// Enqueue jQuery UI Sortable for drag-and-drop functionality
+		wp_enqueue_script( 'jquery-ui-sortable' );
+		
+		wp_register_script( 'user-registration-membership', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/user-registration-membership-admin' . $suffix . '.js', array( 'jquery', 'jquery-ui-sortable' ), '1.0.0', true );
 		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
 		wp_enqueue_script( 'ur-snackbar' );
 		wp_enqueue_script( 'sweetalert2' );
@@ -297,7 +301,7 @@ class Membership {
 		);
 		add_action( 'load-' . $rules_page, array( $this, 'membership_initialization' ) );
 
-		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-membership', 'user-registration-membership-groups', 'user-registration-members'] ) ) {
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-membership', 'user-registration-membership-groups'] ) ) {
 
 			add_submenu_page(
 				'user-registration',
@@ -471,7 +475,9 @@ class Membership {
 				'posts'               => $posts,
 				'labels'              => $this->get_i18_labels(),
 				'membership_page_url' => admin_url( 'admin.php?page=user-registration-membership' ),
-				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE )
+				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
+				'update_order_nonce'  => wp_create_nonce( 'ur_membership_update_order' ),
+				'update_order_action' => 'user_registration_membership_update_membership_order'
 			)
 		);
 	}
@@ -508,6 +514,7 @@ class Membership {
 			'i18n_bank_setup_error'                        => __( 'Incomplete Bank Transfer setup please update bank transfer payment settings before continuing.', 'user-registration' ),
 			'i18n_paypal_client_secret_id_error'           => __( 'Settings for client_id and client_secret is incomplete.', 'user-registration' ),
 			'i18n_previous_save_action_ongoing'            => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
+			'i18n_update_order'                            => __( 'Update Order', 'user-registration' ),
 		);
 	}
 
