@@ -7,7 +7,8 @@
 <!--user registration section-->
 <div id="ur-membership-registration" class="ur_membership_registration_container ur-form-container">
 	<?php
-		$is_coupon_addon_activated = ur_check_module_activation( 'coupon' );
+		$is_coupon_addon_activated        = ur_check_module_activation( 'coupon' );
+		$membership_ids_link_with_coupons = array();
 	if ( $is_coupon_addon_activated && function_exists( 'ur_get_membership_ids_link_with_coupons' ) ) :
 		$membership_ids_link_with_coupons = ur_get_membership_ids_link_with_coupons();
 		endif;
@@ -161,13 +162,9 @@
 	</div>
 	<!--	coupon container-->
 	<?php
-	<< << <<< HEAD
-	=======
 	$is_coupon_addon_activated = ur_check_module_activation( 'coupon' );
-	>>>>>>> v5.0.0
-
 	if ( $is_coupon_addon_activated ) :
-	?>
+		?>
 	<div class="ur_membership_frontend_input_container urm_hidden_payment_container urm-d-none"
 	id="ur_coupon_container">
 
@@ -191,7 +188,7 @@
 	</div>
 	<span id="coupon-validation-error" class="notice_red"></span>
 	</div>
-	<?php
+		<?php
 	endif;
 	?>
 
@@ -266,11 +263,11 @@
 	</div>
 	<?php
 	/**
-	* Fires when payment fields is rendered on membership registration form.
-	*
-	*  This action allows developers to output payment gateway fields
-	*  within the registration form.
-	*/
+	 * Fires when payment fields is rendered on membership registration form.
+	 *
+	 *  This action allows developers to output payment gateway fields
+	 *  within the registration form.
+	 */
 	do_action( 'user_registration_membership_render_payment_field', $form_id );
 	?>
 	</div>
