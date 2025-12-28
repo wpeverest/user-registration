@@ -146,9 +146,12 @@ class StripeService {
 		);
 
 		if ( isset( $payment_data['coupon'] ) && ! empty( $payment_data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
-			$coupon_details  = ur_get_coupon_details( $payment_data['coupon'] );
-			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $amount * $coupon_details['coupon_discount'] / 100;
-			$amount          = $amount - $discount_amount;
+			$coupon_details = ur_get_coupon_details( $payment_data['coupon'] );
+
+			if ( isset( $coupon_details['coupon_discount_type'] ) && isset( $coupon_details['coupon_discount'] ) ) {
+				$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $amount * $coupon_details['coupon_discount'] / 100;
+				$amount          = $amount - $discount_amount;
+			}
 		}
 
 		if ( 'JPY' === $currency ) {
@@ -981,15 +984,15 @@ class StripeService {
 	}
 
 	public function handle_webhook( $event, $subscription_id ) {
-        // Verify that the event was sent by Stripe
-		if( isset( $event[ 'id' ] ) ) {
-            try {
-				$event_id = sanitize_text_field( $event[ 'id' ] );
-                $event = (array)\Stripe\Event::retrieve( $event_id );
-            } catch( \Exception $e ) {
+		// Verify that the event was sent by Stripe
+		if ( isset( $event['id'] ) ) {
+			try {
+				$event_id = sanitize_text_field( $event['id'] );
+				$event    = (array) \Stripe\Event::retrieve( $event_id );
+			} catch ( \Exception $e ) {
 				die();
-            }
-        } else {
+			}
+		} else {
 			die();
 		}
 		switch ( $event['type'] ) {
