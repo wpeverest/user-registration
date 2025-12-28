@@ -680,58 +680,66 @@ class MembershipService {
 			}
 			unset( $membership );
 		} elseif ( isset( $data['action'] ) && 'multiple' === $data['action'] ) {
-			$membership_id    = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
-			$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
+			if ( UR_PRO_ACTIVE && ur_check_module_activation( 'multi-membership' ) ) {
+				$membership_id    = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
+				$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
 
-			// If current membership is associated with a group then check if multiple can be purchased.
-			if ( ! empty( $membership_group ) ) {
+				// If current membership is associated with a group then check if multiple can be purchased.
+				if ( ! empty( $membership_group ) ) {
 
-				$current_user_id     = get_current_user_id();
-				$user_membership_ids = array();
-				$multiple_allowed    = false;
+					$current_user_id     = get_current_user_id();
+					$user_membership_ids = array();
+					$multiple_allowed    = false;
 
-				if ( $current_user_id ) {
-					$user_memberships    = $members_repository->get_member_membership_by_id( $current_user_id );
-					$user_membership_ids = array_filter(
-						array_map(
-							function ( $user_memberships ) {
-								return $user_memberships['post_id'];
-							},
-							$user_memberships
-						)
-					);
-
-					if ( in_array( $membership_id, $user_membership_ids ) ) {
-						return array(
-							'status'  => false,
-							'message' => esc_html__( 'You already have purchased this membership plan.', 'user-registration' ),
+					if ( $current_user_id ) {
+						$user_memberships    = $members_repository->get_member_membership_by_id( $current_user_id );
+						$user_membership_ids = array_filter(
+							array_map(
+								function ( $user_memberships ) {
+									return $user_memberships['post_id'];
+								},
+								$user_memberships
+							)
 						);
-					} else {
 
-						$group_diff = array_diff( $user_membership_ids, json_decode( $membership_group['memberships'] ) );
-
-						// Check if current user membership
-						if ( count( $group_diff ) < $user_membership_ids ) {
-							$multiple_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group['ID'] );
+						if ( in_array( $membership_id, $user_membership_ids ) ) {
+							return array(
+								'status'  => false,
+								'message' => esc_html__( 'You already have purchased this membership plan.', 'user-registration' ),
+							);
 						} else {
-							$multiple_allowed = true;
+
+							$group_diff = array_diff( $user_membership_ids, json_decode( $membership_group['memberships'] ) );
+
+							// Check if current user membership
+							if ( count( $group_diff ) < $user_membership_ids ) {
+								$multiple_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group['ID'] );
+							} else {
+								$multiple_allowed = true;
+							}
 						}
 					}
-				}
 
-				if ( $multiple_allowed ) {
-					$memberships = $membership_repository->get_single_membership_by_ID( $membership_id );
-					$memberships = $this->prepare_single_membership_data( $memberships );
-					$memberships = apply_filters( 'build_membership_list_frontend', array( (array) $memberships ) )[0];
-					$memberships = array( $memberships );
+					if ( $multiple_allowed ) {
+						$memberships = $membership_repository->get_single_membership_by_ID( $membership_id );
+						$memberships = $this->prepare_single_membership_data( $memberships );
+						$memberships = apply_filters( 'build_membership_list_frontend', array( (array) $memberships ) )[0];
+						$memberships = array( $memberships );
+					} else {
+						return array(
+							'status'  => false,
+							'message' => esc_html__( 'You cannot purchase this membership.', 'user-registration' ),
+						);
+					}
 				} else {
+					// If current membership is not associated with any group then users are not allowed to buy membership.
 					return array(
 						'status'  => false,
 						'message' => esc_html__( 'You cannot purchase this membership.', 'user-registration' ),
 					);
 				}
 			} else {
-				// If current membership is not associated with any group then users are not allowed to buy membership.
+				// If pro version and multiple membership module is not active then users are not allowed to buy membership.
 				return array(
 					'status'  => false,
 					'message' => esc_html__( 'You cannot purchase this membership.', 'user-registration' ),

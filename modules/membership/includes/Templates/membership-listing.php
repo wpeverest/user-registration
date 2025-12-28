@@ -61,8 +61,8 @@ if ( 'block' === $type ) :
 									}
 								}
 							}
-						} else {
-							$intended_action = 'multiple';
+						} elseif ( UR_PRO_ACTIVE && ur_check_module_activation( 'multi-membership' ) ) {
+								$intended_action = 'multiple';
 						}
 					} else {
 						$intended_action = 'upgrade';

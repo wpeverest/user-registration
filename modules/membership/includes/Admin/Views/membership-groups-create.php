@@ -164,19 +164,25 @@ if ( isset( $membership_group['upgrade_path'] ) ) {
 											</label>
 										</div>
 									</label>
-									<label class="ur-membership-types ur-membership-management-mode" for="ur-membership-multiple-management-mode">
-										<div class="ur-membership-management-mode-title ur-d-flex ur-align-items-center" bis_skin_checked="1">
-											<input data-key-name="Management Mode" id="ur-membership-multiple-management-mode"
-													type="radio" value="multiple"
-													name="ur_membership_management_mode"
-													style="margin: 0"
-												<?php echo isset( $membership_group['mode'] ) && 'multiple' === $membership_group['mode'] ? 'checked' : ''; ?>
-													required>
-											<label class="ur-p-2" for="ur-membership-multiple-management-mode">
-												<b class="user-registration-image-label"><?php esc_html_e( 'Multiple Membership', 'user-registration' ); ?></b>
-											</label>
-										</div>
-									</label>
+									<?php
+									if ( UR_PRO_ACTIVE && ur_check_module_activation( 'multi-membership' ) ) {
+										?>
+										<label class="ur-membership-types ur-membership-management-mode" for="ur-membership-multiple-management-mode">
+											<div class="ur-membership-management-mode-title ur-d-flex ur-align-items-center" bis_skin_checked="1">
+												<input data-key-name="Management Mode" id="ur-membership-multiple-management-mode"
+														type="radio" value="multiple"
+														name="ur_membership_management_mode"
+														style="margin: 0"
+													<?php echo isset( $membership_group['mode'] ) && 'multiple' === $membership_group['mode'] ? 'checked' : ''; ?>
+														required>
+												<label class="ur-p-2" for="ur-membership-multiple-management-mode">
+													<b class="user-registration-image-label"><?php esc_html_e( 'Multiple Membership', 'user-registration' ); ?></b>
+												</label>
+											</div>
+										</label>
+										<?php
+									}
+									?>
 								</div>
 							</div>
 						</div>

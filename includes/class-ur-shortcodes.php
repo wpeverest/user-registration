@@ -408,7 +408,7 @@ class UR_Shortcodes {
 					} else {
 						$message = isset( $fetched_data['message'] ) ? $fetched_data['message'] : esc_html__( 'Cannot fetch membership details. Please contact your site administrator.', 'user-registration' );
 
-						return '<p class="alert" id="ur_register_pre_form_message">' . $message . '</p>';
+						return '<div id="user-registration" class="user-registration">' . $message . '</div>';
 					}
 				}
 			} else {

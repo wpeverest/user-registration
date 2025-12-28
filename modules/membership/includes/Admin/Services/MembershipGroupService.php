@@ -275,9 +275,14 @@ class MembershipGroupService {
 	}
 
 	public function check_if_multiple_memberships_allowed( $group_id ) {
-		$group_mode = get_post_meta( $group_id, 'urmg_mode', true );
 
-		return ur_string_to_bool( 'multiple' === $group_mode );
+		if ( UR_PRO_ACTIVE && ur_check_module_activation( 'multi-membership' ) ) {
+			$group_mode = get_post_meta( $group_id, 'urmg_mode', true );
+
+			return ur_string_to_bool( 'multiple' === $group_mode );
+		}
+
+		return false;
 	}
 
 	public function check_if_upgrade_allowed( $group_id ) {

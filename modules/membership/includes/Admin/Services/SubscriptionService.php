@@ -322,9 +322,6 @@ class SubscriptionService {
 
 		$upgrade_details = $this->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
 
-		error_log( print_r( $data, true ) );
-		error_log( print_r( $upgrade_details, true ) );
-
 		if ( isset( $upgrade_details['status'] ) && ! $upgrade_details['status'] ) {
 			return array(
 				'response' => $upgrade_details,
@@ -606,35 +603,38 @@ class SubscriptionService {
 		$multiple_purchasable_with_current = array();
 		$multiple_allowed                  = false;
 
-		if ( isset( $data['selected_membership_id'] ) && ! empty( $data['selected_membership_id'] ) ) {
-			$membership_id    = absint( $data['selected_membership_id'] );
-			$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
+		if ( UR_PRO_ACTIVE && ur_check_module_activation( 'multi-membership' ) ) {
 
-			if ( ! empty( $membership_group ) && isset( $membership_group['ID'] ) ) {
-				$multiple_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group['ID'] );
-			}
+			if ( isset( $data['selected_membership_id'] ) && ! empty( $data['selected_membership_id'] ) ) {
+				$membership_id    = absint( $data['selected_membership_id'] );
+				$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
 
-			$user_membership_group_ids = array();
-			$current_user_id           = get_current_user_id();
+				if ( ! empty( $membership_group ) && isset( $membership_group['ID'] ) ) {
+					$multiple_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group['ID'] );
+				}
 
-			if ( $current_user_id ) {
-				$user_memberships          = $members_repository->get_member_membership_by_id( $current_user_id );
-				$user_membership_group_ids = array_filter(
-					array_map(
-						function ( $user_memberships ) use ( $membership_group_repository ) {
-							$group = $membership_group_repository->get_membership_group_by_membership_id( $user_memberships['post_id'] );
-							if ( isset( $group['ID'] ) ) {
-								return $group['ID'];
-							}
-						},
-						$user_memberships
-					)
-				);
+				$user_membership_group_ids = array();
+				$current_user_id           = get_current_user_id();
 
-				$user_membership_group_ids = array_values( array_unique( $user_membership_group_ids ) );
+				if ( $current_user_id ) {
+					$user_memberships          = $members_repository->get_member_membership_by_id( $current_user_id );
+					$user_membership_group_ids = array_filter(
+						array_map(
+							function ( $user_memberships ) use ( $membership_group_repository ) {
+								$group = $membership_group_repository->get_membership_group_by_membership_id( $user_memberships['post_id'] );
+								if ( isset( $group['ID'] ) ) {
+									return $group['ID'];
+								}
+							},
+							$user_memberships
+						)
+					);
 
-				if ( ! in_array( $membership_group, $user_membership_group_ids ) ) {
-					$multiple_allowed = true;
+					$user_membership_group_ids = array_values( array_unique( $user_membership_group_ids ) );
+
+					if ( ! in_array( $membership_group, $user_membership_group_ids ) ) {
+						$multiple_allowed = true;
+					}
 				}
 			}
 		}
