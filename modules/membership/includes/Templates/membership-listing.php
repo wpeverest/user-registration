@@ -88,7 +88,7 @@ if ( 'block' === $type ) :
 							<?php } ?>
 							</div>
 						<button type="button"
-								class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>" ><?php echo esc_html( $sign_up_text ); ?>
+								class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>" <?php echo $open_in_new_tab ? "target = '_blank'" : ''; ?>	><?php echo esc_html( $sign_up_text ); ?>
 						</button>
 					</div>
 					<?php if ( $show_description ) { ?>
@@ -159,7 +159,7 @@ if ( 'block' === $type ) :
 								<?php } ?>
 						</div>
 						<button type="button"
-								class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) || $is_editor ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>" ><?php echo esc_html( $sign_up_text ); ?></button>
+								class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) || $is_editor ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>" <?php echo $open_in_new_tab ? "target = '_blank'" : ''; ?> ><?php echo esc_html( $sign_up_text ); ?></button>
 					</div>
 				</div>
 				<?php
@@ -231,7 +231,7 @@ elseif ( 'list' === $type ) :
 			?>
 			<div class="membership-footer">
 				<button type="button"
-						class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>"  ><?php echo esc_html( $sign_up_text ); ?></button>
+						class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>" <?php echo $open_in_new_tab ? "target = '_blank'" : ''; ?> ><?php echo esc_html( $sign_up_text ); ?></button>
 			</div>
 		</div>
 	</form>
