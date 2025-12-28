@@ -148,6 +148,8 @@ class UR_Settings_Membership_Cancellation_Admin_Email {
 			'user-registration'
 		);
 
+		$body_content = ur_wrap_email_body_content( $body_content );
+
 		// Wrap with the pro email template if UR Pro is active.
 		if ( UR_PRO_ACTIVE ) {
 			$body_content = ur_get_email_template_wrapper( $body_content, false );

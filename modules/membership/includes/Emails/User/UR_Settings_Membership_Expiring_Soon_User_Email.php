@@ -160,6 +160,13 @@ class UR_Settings_Membership_Expiring_Soon_User_Email {
 			'user-registration'
 		);
 
+		$body_content = ur_wrap_email_body_content( $body_content );
+
+		// Wrap with the pro email template if UR Pro is active.
+		if ( UR_PRO_ACTIVE ) {
+			$body_content = ur_get_email_template_wrapper( $body_content, false );
+		}
+
 		// Allow filtering so other code can modify the HTML body for this email.
 		$message = apply_filters( 'user_registration_membership_expiring_soon_user_email_message', $body_content );
 

@@ -171,6 +171,13 @@ class UR_Settings_Membership_Renewal_Reminder_User_Email {
 			'user-registration'
 		);
 
+		$body_content = ur_wrap_email_body_content( $body_content );
+
+		// Wrap with the pro email template if UR Pro is active.
+		if ( UR_PRO_ACTIVE ) {
+			$body_content = ur_get_email_template_wrapper( $body_content, false );
+		}
+
 		$message = apply_filters( 'user_registration_membership_renewal_reminder_user_email_message', $body_content );
 
 		return $message;
