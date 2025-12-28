@@ -13213,7 +13213,6 @@ body.user-registration #wpbody-content #screen-meta-links {
 }
 .user-registration .ur-coupon-tab-contents-wrapper form .user-registration-card #ur-coupon-form-container #left-body .ur-coupon-input-container .ur-admin-template .ur-field .ur-coupon-discount-type {
   width: 220px;
-  padding: 16px !important;
   border-color: #e9e9e9 !important;
   border-radius: 4px !important;
   display: flex;
@@ -13396,8 +13395,9 @@ body.user-registration #wpbody-content #screen-meta-links {
 .user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons thead tr th#title {
   width: 220px;
 }
-.user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#code,
-.user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons thead tr th#code {
+.user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#code, .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#type,
+.user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons thead tr th#code,
+.user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons thead tr th#type {
   width: 170px;
 }
 .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#amount, .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons thead tr th#expires,
@@ -13424,8 +13424,9 @@ body.user-registration #wpbody-content #screen-meta-links {
   color: #383838;
   vertical-align: middle;
 }
-.user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons tbody .coupon-active,
-.user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons tbody .coupon-active {
+.user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons tbody .coupon-active, .user-registration #user-registration-list-table-page #ur-coupon-list-form .wrap .wp-list-table.coupons tbody .coupon-never,
+.user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons tbody .coupon-active,
+.user-registration #user-registration-list-table-page #ur-membership-payment-history-form .wrap .wp-list-table.coupons tbody .coupon-never {
   font-weight: 500;
   color: #4cc741;
 }

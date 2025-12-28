@@ -126,6 +126,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
 			add_action( 'init', array( $this, 'init' ), 0 );
 			add_action( 'init', array( 'UR_Shortcodes', 'init' ) );
+			add_action( 'init', array( $this, 'enable_multiple_registration_forms' ) );
 
 			add_filter( 'plugin_action_links_' . UR_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
 			add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
@@ -544,6 +545,27 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 				}
 			}
 			return wp_kses_post( $upgrade_notice );
+		}
+
+		/**
+		 * Enable multiple registration module for old user.
+		 *
+		 * @since 5.0.0
+		 */
+		public function enable_multiple_registration_forms(){
+			$is_migrated = get_option( 'user_registration_multiple_registration_migration', false );
+
+			if ( ! $is_migrated ) {
+				$all_forms = ur_get_all_user_registration_form();
+				if ( count( $all_forms ) > 1) {
+					$enabled_features = get_option( 'user_registration_enabled_features', array() );
+					if ( ! isset( $enabled_features[ 'user-registration-multiple-registration' ] ) ) {
+						$enabled_features[] = 'user-registration-multiple-registration';
+						update_option( 'user_registration_enabled_features', $enabled_features );
+					}
+				}
+				update_option( 'user_registration_multiple_registration_migration', true );
+			}
 		}
 	}
 

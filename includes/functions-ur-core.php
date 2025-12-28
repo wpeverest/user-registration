@@ -9594,7 +9594,7 @@ if ( ! function_exists( 'ur_get_membership_details' ) ) {
 	/**
 	 * Get membership details.
 	 *
-	 * @since xx.xx.xx
+	 * @since 5.0.0
 	 *
 	 * @return array
 	 */ function ur_get_membership_details() {
