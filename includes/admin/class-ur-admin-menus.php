@@ -31,6 +31,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
 			add_action( 'admin_menu', array( $this, 'status_menu' ), 75 );
 			add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 3 );
+			// add_action('admin_head', array($this, 'remove_duplicate_menu_items'));
 
 			if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) && empty( get_option( 'user-registration_license_key', '' ) ) ) {
 				add_action( 'admin_menu', array( $this, 'activate_license_menu' ), 100 );
@@ -571,21 +572,21 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						3
 					);
 
-					$members = new Members();
-					add_submenu_page(
-						'user-registration',
-						__( 'Membership Members', 'user-registration' ),
-						'↳ ' . __( 'Members', 'user-registration' ),
-						'manage_user_registration',
-						'user-registration-members',
-						array( $members, 'render_members_page' ),
-						4
-					);
+					// $members = new Members();
+					// add_submenu_page(
+					// 'user-registration',
+					// __( 'Membership Members', 'user-registration' ),
+					// '↳ ' . __( 'Members', 'user-registration' ),
+					// 'manage_user_registration',
+					// 'user-registration-members',
+					// array( $members, 'render_members_page'),
+					// 4
+					// );
 				}
 			}
 
-				$all_forms = ur_get_all_user_registration_form();
-				$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';
+			$all_forms = ur_get_all_user_registration_form();
+			$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';
 
 			if ( count( $all_forms ) > 1 || ur_check_module_activation( 'multiple-registration' ) ) {
 				add_submenu_page(
@@ -644,7 +645,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						$this,
 						'registration_page',
 					),
-					10
 				);
 				add_submenu_page(
 					'user-registration',
@@ -682,19 +682,18 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 
 			$all_forms = ur_get_all_user_registration_form();
-			if ( ! empty( $all_forms ) && count( $all_forms ) <= 1 && ! ur_check_module_activation( 'multiple-registration' ) ) {
-				$form_id = key( $all_forms );
 
-				if ( ! isset( $_GET['edit-registration'] ) ) {
+			if ( ( ! empty( $all_forms ) && count( $all_forms ) <= 1 && ! ur_check_module_activation( 'multiple-registration' ) ) ) {
+				$form_id          = key( $all_forms );
+				$form_id_from_url = isset( $_GET['edit-registration'] ) ? absint( $_GET['edit-registration'] ) : '';
+
+				if ( ! isset( $_GET['edit-registration'] ) || $form_id_from_url != $form_id ) {
 					wp_redirect( admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $form_id ) );
 					exit;
 				}
 			}
 		}
 
-		/**
-		 * Add settings menu item.
-		 */
 		public function settings_menu() {
 			add_submenu_page(
 				'user-registration',
