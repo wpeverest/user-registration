@@ -7,6 +7,8 @@
  * @package  UserRegistration/Admin
  */
 
+use WPEverest\URMembership\Admin\Members\Members;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -26,9 +28,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			// Add menus.
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 1 );
 			add_action( 'admin_menu', array( $this, 'settings_menu' ), 20 );
-			add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
+			// add_action( 'admin_menu', array( $this, 'add_registration_menu' ), 8 );
 			add_action( 'admin_menu', array( $this, 'status_menu' ), 75 );
 			add_action( 'admin_menu', array( $this, 'dashboard_menu' ), 3 );
+			// add_action('admin_head', array($this, 'remove_duplicate_menu_items'));
 
 			if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) && empty( get_option( 'user-registration_license_key', '' ) ) ) {
 				add_action( 'admin_menu', array( $this, 'activate_license_menu' ), 100 );
@@ -506,6 +509,82 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			);
 
 			add_action( 'load-' . $registration_page, array( $this, 'registration_page_init' ) );
+
+			add_action(
+				'admin_menu',
+				function () {
+					global $submenu;
+
+					if ( isset( $submenu['user-registration'] ) ) {
+						foreach ( $submenu['user-registration'] as $key => $item ) {
+							if ( $item[0] === 'User Registration & Membership' ) {
+								unset( $submenu['user-registration'][ $key ] );
+								break;
+							}
+						}
+					}
+				},
+				999
+			);
+
+			if ( class_exists( 'WPEverest\URMembership\Admin\Membership\Membership' ) ) {
+				$membership_obj = new WPEverest\URMembership\Admin\Membership\Membership();
+
+					$rules_page = add_submenu_page(
+						'user-registration',
+						__( 'Memberships', 'user-registration' ), // page title
+						__( 'Memberships', 'user-registration' ), // menu title
+						'edit_posts', // capability
+						'user-registration-membership', // slug
+						array(
+							$membership_obj,
+							'render_membership_page',
+						),
+						2
+					);
+					add_action( 'load-' . $rules_page, array( $membership_obj, 'membership_initialization' ) );
+
+				if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
+
+					// add_submenu_page(
+					// 'user-registration',
+					// __( 'All Plans', 'user-registration' ),
+					// '↳ ' . __( 'All Plans', 'user-registration' ),
+					// 'edit_posts',
+					// 'user-registration-membership',
+					// array(
+					// $this,
+					// 'render_membership_page',
+					// ),
+					// 3
+					// );
+
+					add_submenu_page(
+						'user-registration',
+						__( 'Membership Groups', 'user-registration' ),
+						'↳ ' . __( 'Groups', 'user-registration' ),
+						'manage_user_registration',
+						'user-registration-membership&action=list_groups',
+						array(
+							$membership_obj,
+							'render_membership_page',
+						),
+						3
+					);
+
+					// $members = new Members();
+					// add_submenu_page(
+					// 'user-registration',
+					// __( 'Membership Members', 'user-registration' ),
+					// '↳ ' . __( 'Members', 'user-registration' ),
+					// 'manage_user_registration',
+					// 'user-registration-members',
+					// array( $members, 'render_members_page'),
+					// 4
+					// );
+				}
+			}
+
 			add_submenu_page(
 				'user-registration',
 				__( 'All Forms', 'user-registration' ),
@@ -516,7 +595,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					$this,
 					'registration_page',
 				),
-				5
+				9
 			);
 
 			if ( isset( $_GET['page'] ) && in_array(
@@ -539,7 +618,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						$this,
 						'registration_page',
 					),
-					6
+					10
 				);
 				add_submenu_page(
 					'user-registration',
@@ -551,7 +630,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						$this,
 						'registration_page',
 					),
-					7
+					11
 				);
 			}
 		}
@@ -820,15 +899,21 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 			if ( isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
-				wp_enqueue_script( 'user-registration-login-settings', UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js', array(
-					'jquery',
-					'jquery-ui-datepicker',
-					'jquery-ui-sortable',
-					'iris',
-					'tooltipster',
-					'jquery-ui-tabs',
-					'sweetalert2',
-				), UR_VERSION, true );
+				wp_enqueue_script(
+					'user-registration-login-settings',
+					UR()->plugin_url() . '/assets/js/admin/login-settings' . $suffix . '.js',
+					array(
+						'jquery',
+						'jquery-ui-datepicker',
+						'jquery-ui-sortable',
+						'iris',
+						'tooltipster',
+						'jquery-ui-tabs',
+						'sweetalert2',
+					),
+					UR_VERSION,
+					true
+				);
 				wp_enqueue_style( 'user-registration-css', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR_VERSION );
 				$login_settings      = array_merge( get_login_form_settings()['sections']['login_options_settings']['settings'], get_login_field_settings()['sections']['login_options_settings']['settings'], get_login_form_settings()['sections']['login_options_settings_advanced']['settings'] );
 				$ur_enabled_captchas = array();
@@ -846,16 +931,16 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) )
 				);
 				$ur_login_form_params = array(
-					'ajax_url'                                                   => admin_url( 'admin-ajax.php' ),
-					'ur_login_settings_save'                                     => wp_create_nonce( 'ur_login_settings_save_nonce' ),
-					'login_settings'                                             => $login_settings,
-					'is_login_settings_page'                                     => isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ? true : false,
-					'i18n_admin'                                                 => self::get_i18n_admin_data(),
-					'user_registration_lost_password_selection_validator_nonce'  => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
+					'ajax_url'                    => admin_url( 'admin-ajax.php' ),
+					'ur_login_settings_save'      => wp_create_nonce( 'ur_login_settings_save_nonce' ),
+					'login_settings'              => $login_settings,
+					'is_login_settings_page'      => isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ? true : false,
+					'i18n_admin'                  => self::get_i18n_admin_data(),
+					'user_registration_lost_password_selection_validator_nonce' => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
 					'user_registration_membership_redirect_default_page_message' => esc_html__( 'Please select a page for redirection', 'user-registration' ),
 					'email_confirmation_disabled' => ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', true ) ) ? 'no' : 'yes',
-					'ur_embed_page_list' => wp_create_nonce( 'ur_embed_page_list_nonce' ),
-					'ur_embed_action'    => wp_create_nonce( 'ur_embed_action_nonce' ),
+					'ur_embed_page_list'          => wp_create_nonce( 'ur_embed_page_list_nonce' ),
+					'ur_embed_action'             => wp_create_nonce( 'ur_embed_action_nonce' ),
 
 				);
 				wp_localize_script(
@@ -872,9 +957,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				);
 				$login_option_settings = get_login_field_settings();
 				$login_form_settings   = get_login_form_settings();
-				$login_page_id = get_option( 'user_registration_login_page_id', 0 ); 
-				$login_page_url = $login_page_id ? get_permalink( $login_page_id ) : '';
-				$login_page_title = $login_page_id ? get_the_title( $login_page_id ) : '';
+				$login_page_id         = get_option( 'user_registration_login_page_id', 0 );
+				$login_page_url        = $login_page_id ? get_permalink( $login_page_id ) : '';
+				$login_page_title      = $login_page_id ? get_the_title( $login_page_id ) : '';
 				include_once __DIR__ . '/views/html-login-page-forms.php';
 			} else {
 				$registration_table_list->display_page();
@@ -890,23 +975,23 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$max_upload_size_ini = wp_max_upload_size() / 1024;
 
 			$i18n = array(
-				'i18n_choice_delete'                          => esc_html__( 'Delete', 'user-registration' ),
-				'i18n_choice_cancel'                          => esc_html__( 'Cancel', 'user-registration' ),
-				'i18n_success'                                => _x( 'Success', 'user registration admin', 'user-registration' ),
-				'i18n_error'                                  => _x( 'Error', 'user registration admin', 'user-registration' ),
-				'i18n_msg_delete'                             => esc_html__( 'Confirm Deletion', 'user-registration' ),
-				'i18n_embed_form_title'                       => esc_html__( 'Embed in Page', 'user-registration' ),
-				'i18n_embed_description'                      => esc_html__( 'We can help embed your form with just a few clicks!', 'user-registration' ),
-				'i18n_embed_to_existing_page'                 => esc_html__( 'Select Existing Page', 'user-registration' ),
-				'i18n_embed_to_new_page'                      => esc_html__( 'Create New Page', 'user-registration' ),
-				'i18n_embed_existing_page_description'        => esc_html__( 'Select the page to embed your form in.', 'user-registration' ),
-				'i18n_embed_go_back_btn'                      => esc_html__( 'Go Back', 'user-registration' ),
-				'i18n_embed_lets_go_btn'                      => esc_html__( "Let's Go!", 'user-registration' ),
-				'i18n_embed_new_page_description'             => esc_html__( 'What would you like to call the new page?', 'user-registration' ),
+				'i18n_choice_delete'                   => esc_html__( 'Delete', 'user-registration' ),
+				'i18n_choice_cancel'                   => esc_html__( 'Cancel', 'user-registration' ),
+				'i18n_success'                         => _x( 'Success', 'user registration admin', 'user-registration' ),
+				'i18n_error'                           => _x( 'Error', 'user registration admin', 'user-registration' ),
+				'i18n_msg_delete'                      => esc_html__( 'Confirm Deletion', 'user-registration' ),
+				'i18n_embed_form_title'                => esc_html__( 'Embed in Page', 'user-registration' ),
+				'i18n_embed_description'               => esc_html__( 'We can help embed your form with just a few clicks!', 'user-registration' ),
+				'i18n_embed_to_existing_page'          => esc_html__( 'Select Existing Page', 'user-registration' ),
+				'i18n_embed_to_new_page'               => esc_html__( 'Create New Page', 'user-registration' ),
+				'i18n_embed_existing_page_description' => esc_html__( 'Select the page to embed your form in.', 'user-registration' ),
+				'i18n_embed_go_back_btn'               => esc_html__( 'Go Back', 'user-registration' ),
+				'i18n_embed_lets_go_btn'               => esc_html__( "Let's Go!", 'user-registration' ),
+				'i18n_embed_new_page_description'      => esc_html__( 'What would you like to call the new page?', 'user-registration' ),
 
-				'i18n_settings_successfully_saved' => _x( 'Settings successfully saved.', 'user registration admin', 'user-registration' ),
-				'i18n_success'                     => _x( 'Success', 'user registration admin', 'user-registration' ),
-				'i18n_error'                       => _x( 'Error', 'user registration admin', 'user-registration' ),
+				'i18n_settings_successfully_saved'     => _x( 'Settings successfully saved.', 'user registration admin', 'user-registration' ),
+				'i18n_success'                         => _x( 'Success', 'user registration admin', 'user-registration' ),
+				'i18n_error'                           => _x( 'Error', 'user registration admin', 'user-registration' ),
 
 			);
 
