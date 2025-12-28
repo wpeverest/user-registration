@@ -124,7 +124,7 @@ class UR_Settings_Membership_Cancellation_User_Email {
 				You\'ll continue to have access to your member benefits until {{membership_end_date}}.
 				</p>
 				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
-				If you change your mind, you can reactivate your membership anytime: {{reactivation_link}}
+				If you change your mind, you can reactivate your membership anytime from your user dashboard.
 				</p>
 				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
 				We\'re sorry to see you go, but you\'re always welcome back.
