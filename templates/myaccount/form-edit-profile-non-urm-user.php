@@ -112,7 +112,7 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 								?>
 									<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
 
-									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size ) ); ?></p>
+									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( apply_filters ('user_registration_profile_picture_max_upload_size', size_format( $max_upload_size ) ) ); ?></p>
 									</div>
 									<header>
 										<p><strong>
