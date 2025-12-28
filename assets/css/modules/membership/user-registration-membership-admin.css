@@ -1419,7 +1419,7 @@
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#user-registration-members-list-form .tablenav .user-registration-members-filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px;
 }
 @media (min-width: 1200px) {
   .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#user-registration-members-list-form .tablenav .user-registration-members-filters {
@@ -1510,7 +1510,7 @@
   padding-bottom: 32px;
 }
 #ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-left {
-  width: 70%;
+  width: 100%;
 }
 #ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-left #left-title {
   padding-bottom: 20px;

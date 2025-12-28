@@ -5935,7 +5935,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 		$user_id = ! empty( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : get_current_user_id();
 		$form_id = ur_get_form_id_by_userid( $user_id );
 		$width   = floor( 100 / count( $data ) ) - count( $data );
-		$is_edit = isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'edit' && $user_id !== get_current_user_id();
+		$is_edit = isset( $_REQUEST['action'] ) && ( $_REQUEST['action'] === 'edit' || $_REQUEST['action'] === 'view' ) && $user_id !== get_current_user_id();
 
 		foreach ( $data as $grid_key => $grid_data ) {
 			$found_field = false;
@@ -6020,6 +6020,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					if ( $is_edit ) {
 						unset( $readonly_fields['user_pass'] );
 					}
+
 					if ( isset( $field['field_key'] ) && array_key_exists( $field['field_key'], $readonly_fields ) ) {
 						$field['custom_attributes']['readonly'] = 'readonly';
 						if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {

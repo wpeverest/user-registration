@@ -227,7 +227,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			";
 
 			$results         = $wpdb->get_results( $sql, ARRAY_A );
-			$user_id_indexed = [];
+			$user_id_indexed = array();
 
 			foreach ( $results as $row ) {
 				$user_id_indexed[ $row['ID'] ] = $row;

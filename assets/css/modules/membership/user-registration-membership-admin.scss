@@ -1413,7 +1413,7 @@
 					.user-registration-members-filters{
 						display: flex;
 						flex-wrap: wrap;
-						gap: $spacing_12px;
+						gap: $spacing_16px;
 
 						@media (min-width: 1200px) {
 							flex-wrap: nowrap;
@@ -1534,7 +1534,7 @@
 
 			#ur-member-form {
 				&-left {
-					width: 70%;
+					width: 100%;
 
 					#left-title {
 						padding-bottom: $spacing_20px;

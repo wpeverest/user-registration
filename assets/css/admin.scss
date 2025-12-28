@@ -7401,20 +7401,22 @@ body.user-registration {
 
 #user-registration-pro-single-user-view {
 	display: flex;
+	gap: 24px;
 	max-width: 1280px;
-	margin: $spacing_50px auto;
-	padding: $spacing_24px;
-	border-radius: $border_radius_7;
-	background: $grey-0;
+	margin: 0px auto;
+	padding: $spacing_12px;
 
 	#user-registration-user-sidebar {
-		padding: 0 $spacing_30px 0 0;
+		padding: $spacing_24px $spacing_24px $spacing_32px $spacing_24px;
 		max-width: 250px;
 		min-width: 250px;
 		display: flex;
 		align-items: center;
 		flex-direction: column;
 		gap: $spacing_24px;
+		border-radius: $border_radius_7;
+		background-color: $grey-0;
+		height: fit-content;
 
 		@media (max-width: 991px) {
 			min-width: 200px;
@@ -7435,9 +7437,12 @@ body.user-registration {
 			}
 
 			.user-profile {
+				display: flex;
+				flex-direction: column;
+				gap: $spacing_20px;
+
 				.user-avatar {
 					text-align: center;
-					margin-bottom: $spacing_12px;
 
 					img {
 						width: 120px;
@@ -7448,11 +7453,23 @@ body.user-registration {
 				}
 
 				.user-login {
-					color: $grey-500;
-					font-size: 18px;
-					font-weight: $semi_bold;
+					display: flex;
+					flex-direction: column;
+					gap: $spacing_10px;
+					color: $grey-400;
 					line-height: normal;
-					margin: 0;
+					font-weight: 400;
+					font-size: 14px;
+
+					p {
+						margin: 0;
+					}
+
+					.user-display-name {
+						color: $grey-500;
+						font-size: 18px;
+						font-weight: 600;
+					}
 				}
 			}
 
@@ -7465,15 +7482,13 @@ body.user-registration {
 					display: flex;
 					align-items: flex-start;
 					gap: $spacing_8px;
+					font-size: 13px;
+					font-size: 400;
 
 					svg {
 						width: 18px;
 						height: 18px;
 						padding-top: 1px;
-
-						path {
-							fill: #383838;
-						}
 					}
 
 					p {
@@ -7514,9 +7529,42 @@ body.user-registration {
 							width: 100%;
 							border-radius: $border_radius_3;
 
+							&.urm-deny {
+								color: $deny_color;
+
+								div:not(.disable-user-link) {
+									svg {
+										path {
+											fill: currentColor;
+										}
+									}
+
+									&:hover {
+										svg {
+											path {
+												fill: currentColor;
+											}
+										}
+									}
+								}
+
+								&:hover {
+									background-color: $redLight;
+
+									&::before{
+										background:  $redLight;
+										opacity: 1;
+									}
+
+									p {
+										color: $deny_color;
+									}
+								}
+							}
+
 							&::before {
 								content: "";
-								background: #edeff7;
+								background:  $blue-25;
 								position: absolute;
 								width: 24px;
 								height: 100%;
@@ -7533,21 +7581,23 @@ body.user-registration {
 								outline: none;
 							}
 
-							&:hover {
-								background: #edeff7;
+							&:not(.urm-deny) {
+								&:hover {
+									background: $blue-25;
 
-								&::before {
-									opacity: 1;
-								}
-
-								svg {
-									path {
-										fill: #475bb2;
+									&::before {
+										opacity: 1;
 									}
-								}
 
-								p {
-									color: #475bb2;
+									svg {
+										path {
+											fill: #475bb2;
+										}
+									}
+
+									p {
+										color: #475bb2;
+									}
 								}
 							}
 						}
@@ -7598,31 +7648,43 @@ body.user-registration {
 		}
 	}
 
-	.user-registration-user-body {
-		flex-grow: 4;
-		padding-left: 25px;
-		border-left: 1px solid #e1e1e1;
+	.user-registration-user-content {
+		display: flex;
+		flex-direction: column;
+		gap: $spacing_24px;
 
-		.user-registration-user-form-details {
+		.urm-admin-user-content-container {
 			display: flex;
 			flex-direction: column;
-			justify-content: space-between;
-			flex-wrap: wrap;
-			margin-bottom: 10px;
+			gap: $spacing-24px;
+			border-radius: $border_radius_7;
+			padding: $spacing-24px;
+			height: fit-content;
+			background-color: $grey-0;
 
-			@media (max-width: 767px) {
-				flex-direction: column;
+			&.user-registration-hidden {
+				display: none;
 			}
 
-			.user-registration-user-row-details {
+			#urm-admin-user-content-header {
 				display: flex;
-				flex-direction: row;
-				flex-wrap: wrap;
+				justify-content: space-between;
+				align-items: center;
 
-				.single-field {
-					padding: 10px;
-					width: 50%;
-					box-sizing: border-box;
+				h3 {
+					font-size: 18px;
+					font-weight: 500;
+					color: $grey-500;
+				}
+
+				#user-registration-edit-user-link {
+					display: flex;
+					gap: $spacing-4px;
+					color: $grey-300;
+					text-decoration: none;
+					font-size: 14px;
+					font-weight: 400;
+					cursor: pointer;
 
 					@media (max-width: 767px) {
 						width: 100%;
@@ -7665,6 +7727,92 @@ body.user-registration {
 				}
 			}
 
+			.ur-frontend-form {
+				padding: 0;
+			}
+
+			.user-registration-user-body {
+				flex-grow: 4;
+
+				.user-registration-user-form-details {
+					display: flex;
+					flex-direction: column;
+					justify-content: space-between;
+					flex-wrap: wrap;
+					margin-bottom: 10px;
+
+					@media (max-width: 767px) {
+						flex-direction: column;
+					}
+
+					.user-registration-user-row-details {
+						display: flex;
+						flex-direction: row;
+						flex-wrap: wrap;
+
+						.single-field {
+							padding: 10px;
+							width: 50%;
+							box-sizing: border-box;
+
+							@media (max-width: 767px) {
+								width: 100%;
+							}
+
+							.single-field__label {
+								font-size: 14px;
+								color: #222;
+								font-weight: 500;
+								margin-bottom: 10px;
+							}
+
+							input {
+								width: 100%;
+								min-height: 36px;
+								padding-left: 10px;
+								padding-right: 10px;
+								border-color: #d3d3d3;
+
+								&:disabled {
+									opacity: 0.5;
+									color: #000000;
+									background: #f4f4f4;
+									cursor: not-allowed;
+								}
+							}
+
+							.urfu-no-files-found-message {
+								margin: 0;
+								padding: 7px $spacing_10px;
+								opacity: 0.5;
+								background: #f4f4f4;
+								cursor: not-allowed;
+								border: $border_width solid #d3d3d3;
+							}
+
+							textarea {
+								width: 100%;
+							}
+						}
+					}
+
+				}
+			}
+
+			.user-registration-user-form-details {
+				.status-active {
+					color: $approve_user;
+				}
+				.status-expired {
+					color: $deny_color;
+				}
+				.status-cancelled {
+					color: $deny_color;
+				}
+				.status-inactive {
+					color: $pending_user;
+				}
+			}
 		}
 	}
 
@@ -7800,28 +7948,28 @@ body.user-registration {
 	// 		margin-bottom: $spacing_16px;
 	// 	}
 
-	// 	&-title {
-	// 		display: flex !important;
-	// 		align-items: center;
-	// 		gap: $spacing_8px;
-	// 		text-align: left;
-	// 		font-size: 16px;
-	// 		font-weight: 500;
-	// 		line-height: 120%;
-	// 		padding-bottom: $spacing-16px;
-	// 		width: 100%;
-	// 		margin-bottom: 0;
-	// 		color: $grey-500;
+		// &-title {
+		// 	display: flex !important;
+		// 	align-items: center;
+		// 	gap: $spacing_8px;
+		// 	text-align: left;
+		// 	font-size: 16px;
+		// 	font-weight: 600;
+		// 	line-height: 120%;
+		// 	padding-bottom: $spacing-16px;
+		// 	width: 100%;
+		// 	margin-bottom: 0;
+		// 	color: $grey-500;
 
-	// 		img {
-	// 			width: 30px;
-	// 			height: 30px;
-	// 			background: #fff4f4;
-	// 			padding: $spacing_6px;
-	// 			box-sizing: border-box;
-	// 			border-radius: 50%;
-	// 		}
-	// 	}
+		// 	img {
+		// 		width: 26px !important;
+		// 		height: 26px !important;
+		// 		background: #fff4f4;
+		// 		padding: $spacing_6px;
+		// 		box-sizing: border-box;
+		// 		border-radius: 50%;
+		// 	}
+		// }
 
 	// 	&-content {
 	// 		padding-left: $spacing_20px;
@@ -7836,27 +7984,29 @@ body.user-registration {
 	// 		p {
 	// 			margin: 0;
 
-	// 			&#html {
-	// 				&_1 {
-	// 					margin: 0 0 $spacing_14px;
-	// 					color: $grey-400;
-	// 					font-size: 14px;
-	// 					font-weight: 500;
-	// 					line-height: 24px;
-	// 				}
+			// 	&#html {
+			// 		&_1 {
+			// 			margin: 0 0 $spacing_14px;
+			// 			color: $grey-400;
+			// 			font-size: 15px;
+			// 			font-weight: 500;
+			// 			line-height: 24px;
+			// 		}
 
-	// 				&_2 {
-	// 					color: #f25656;
-	// 					border-radius: $border_radius_3;
-	// 					padding: $spacing_10px $spacing_18px $spacing_10px
-	// 						$spacing_14px;
-	// 					background: #fff4f4;
-	// 					font-size: 13px;
-	// 					font-weight: 400;
-	// 					line-height: 23px;
-	// 				}
-	// 			}
-	// 		}
+			// 		&_2 {
+			// 			display: flex;
+			// 			gap: $spacing_10px;
+			// 			color: #f25656;
+			// 			border-radius: $border_radius_3;
+			// 			padding: $spacing_10px $spacing_18px $spacing_10px
+			// 				$spacing_14px;
+			// 			background: #fff4f4;
+			// 			font-size: 13px;
+			// 			font-weight: 400;
+			// 			line-height: 23px;
+			// 		}
+			// 	}
+			// }
 
 	// 		a {
 	// 			font-size: 12px;
@@ -8084,7 +8234,15 @@ $border-top-color_1: #ff4f55;
 	}
 
 	.ur-form-grid {
+		width: 100% !important;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px;
+
 		.ur-field-item {
+			flex: 0 0 calc(50% - 8px);
+			min-width: 0;
+
 			&.field-section_title {
 				h3 {
 					font-size: x-large;
@@ -8103,6 +8261,12 @@ $border-top-color_1: #ff4f55;
 			}
 		}
 	}
+
+	.user-registration-edit-user-form-details {
+        .ur-form-grid {
+            display: block;
+        }
+    }
 
 	.hide-show-password {
 		position: absolute;
@@ -8159,12 +8323,6 @@ $border-top-color_1: #ff4f55;
 	line-height: 1.25;
 	text-transform: none;
 	font-size: 14px;
-}
-
-#user-registration-pro-single-user-view {
-	.ur-frontend-form {
-		width: 100%;
-	}
 }
 
 @keyframes toaster {
@@ -8889,3 +9047,21 @@ body.user-registration-page {
 	color: $deny_color;
 }
 
+.user-subscription-status{
+	font-weight: 500;
+}
+.user-subscription-secondary{
+	color: $color_gray-light;
+}
+
+.user-subscription-active{
+	color: $approve_user;
+}
+
+.user-subscription-pending{
+	color: $pending_user;
+}
+
+.user-subscription-expired{
+	color: $deny_color;
+}

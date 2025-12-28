@@ -12,6 +12,7 @@
 use WPEverest\URMembership\Admin\Members\MembersListTable;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URRepeaterFields\Frontend\Frontend;
 
@@ -311,6 +312,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 					'is_payment_compatible'             => true,
 					'delete_prompt'                     => array(
 						'icon'                   => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
+						'warning_message'        => __( 'All the member data and files will be permanently deleted.', 'user-registration' ),
 						'title'                  => __( 'Delete Member', 'user-registration' ),
 						'bulk_title'             => __( 'Delete Members', 'user-registration' ),
 						'confirm_message_single' => __( 'Are you sure you want to delete this member permanently?', 'user-registration' ),
@@ -1048,9 +1050,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 			<div id="user-registration-pro-single-user-view">
 				<div id="user-registration-user-sidebar">
 					<?php $this->render_user_profile( $user_id ); ?>
-					<?php $this->render_user_actions($user_id); //phpcs:ignore
-					?>
-					<?php $this->render_user_extra_details( $user_id ); ?>
+					<?php $this->render_user_actions($user_id); //phpcs:ignore ?>
 					<?php
 					/**
 					 * Add more sections to the sidebar of user view page.
@@ -1060,19 +1060,31 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 					do_action( 'user_registration_user_view_sidebar', $user_id );
 					?>
 				</div>
-				<?php
-				if ( isset( $_GET['tab'] ) && 'user-actions' === $_GET['tab'] ) {
-					?>
-					<div id="user-registration-user-actions" class="user-registration-user-body">
-						<?php $this->render_user_settings_section( $user_id ); ?>
-					</div>
+				<div class="user-registration-user-content">
 					<?php
-				} elseif ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
-					$this->render_user_edit_form_fields( $user_id );
-				} else {
-					$this->render_user_form_fields( $user_id );
-				}
-				?>
+					if ( isset( $_GET['tab'] ) && 'user-actions' === $_GET['tab'] ) {
+						?>
+						<!-- <div id="user-registration-user-actions" class="user-registration-user-body">
+							<?php
+							// $this->render_user_settings_section( $user_id );
+							?>
+						</div> -->
+						<?php
+					} elseif ( isset( $_GET['action'] ) ) {
+
+						if ( 'edit' === $_GET['action'] ) {
+							$this->render_user_edit_form_fields( $user_id, true );
+							$this->render_user_form_fields( $user_id, false );
+						} else {
+							$this->render_user_edit_form_fields( $user_id, false );
+							$this->render_user_form_fields( $user_id, true );
+						}
+					}
+					?>
+					<?php $this->render_user_extra_details( $user_id, true ); ?>
+					<?php $this->render_user_payment_details( $user_id, true ); ?>
+					<?php do_action( 'user_registration_single_user_details_content', $user_id, $form_id ); ?>
+				</div>
 			</div>
 			<?php
 		}
@@ -1085,8 +1097,19 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 		 * @return void
 		 */
 		public function render_user_profile( $user_id ) {
-			$user   = get_userdata( $user_id );
-			$avatar = get_avatar( $user_id, 900 );
+			$user         = get_userdata( $user_id );
+			$avatar       = get_avatar( $user_id, 900 );
+			$first_name   = get_user_meta( $user_id, 'first_name', true );
+			$last_name    = get_user_meta( $user_id, 'last_name', true );
+			$display_name = '';
+
+			if ( '' !== $first_name && '' !== $last_name ) {
+				$display_name = $first_name . ' ' . $last_name;
+			}
+
+			if ( '' === $display_name ) {
+				$display_name = $user->user_login;
+			}
 
 			?>
 			<div class="sidebar-box">
@@ -1094,7 +1117,10 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 					<div class="user-avatar">
 						<?php echo $avatar; ?>
 					</div>
-					<p class="user-login">@<?php echo esc_html( $user->user_login ); ?> </p>
+					<div class="user-login">
+						<p  class="user-display-name"><?php echo esc_html( $display_name ); ?> </p>
+						<p  class="user-display-email"><?php echo esc_html( $user->user_email ); ?> </p>
+					</div>
 				</div>
 			</div>
 			<?php
@@ -1128,15 +1154,15 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 				if ( isset( $_GET['action'] ) && 'edit' == $_GET['action'] ) {
 					$active_class = 'active';
 				}
-				$actions['edit'] = sprintf(
-					'<a href="%s" rel="noreferrer noopener" class="%s" target="_self">%s <p>%s</p></a>',
-					esc_url( $edit_link ),
-					$active_class,
-					'<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-						<path fill="#000" fill-rule="evenodd" d="M19.207 3.207a1.121 1.121 0 0 1 1.586 1.586l-9.304 9.304-2.115.529.529-2.114 9.304-9.305ZM20 .88c-.828 0-1.622.329-2.207.914l-9.5 9.5a1 1 0 0 0-.263.465l-1 4a1 1 0 0 0 1.213 1.212l4-1a1 1 0 0 0 .464-.263l9.5-9.5A3.121 3.121 0 0 0 20 .88ZM4 3a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-7a1 1 0 1 0-2 0v7a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h7a1 1 0 1 0 0-2H4Z" clip-rule="evenodd"/>
-					</svg>',
-					__( 'Edit User', 'user-registration' ),
-				);
+				// $actions['edit'] = sprintf(
+				// '<a href="%s" rel="noreferrer noopener" class="%s" target="_self">%s <p>%s</p></a>',
+				// esc_url( $edit_link ),
+				// $active_class,
+				// '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+				// <path fill="#000" fill-rule="evenodd" d="M19.207 3.207a1.121 1.121 0 0 1 1.586 1.586l-9.304 9.304-2.115.529.529-2.114 9.304-9.305ZM20 .88c-.828 0-1.622.329-2.207.914l-9.5 9.5a1 1 0 0 0-.263.465l-1 4a1 1 0 0 0 1.213 1.212l4-1a1 1 0 0 0 .464-.263l9.5-9.5A3.121 3.121 0 0 0 20 .88ZM4 3a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-7a1 1 0 1 0-2 0v7a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h7a1 1 0 1 0 0-2H4Z" clip-rule="evenodd"/>
+				// </svg>',
+				// __( 'Edit User', 'user-registration' ),
+				// );
 
 				// 2. Approve/Deny User
 				$user_manager = new UR_Admin_User_Manager( $user );
@@ -1179,10 +1205,10 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 				if ( 'Pending' === $user_status || 'Approved' === $user_status ) {
 
 					$actions['deny'] = sprintf(
-						'<a href="%s">%s <p>%s</p></a>',
+						'<a href="%s" class="urm-deny">%s <span>%s</span></a>',
 						$deny_link,
 						'<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-							<path fill="#000" fill-rule="evenodd" d="M6 7a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm3-5a5 5 0 1 0 0 10A5 5 0 0 0 9 2ZM6 14a5 5 0 0 0-5 5v2a1 1 0 1 0 2 0v-2a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v2a1 1 0 1 0 2 0v-2a5 5 0 0 0-5-5H6Zm10.293-6.707a1 1 0 0 1 1.414 0L19.5 9.086l1.793-1.793a1 1 0 1 1 1.414 1.414L20.914 10.5l1.793 1.793a1 1 0 0 1-1.414 1.414L19.5 11.914l-1.793 1.793a1 1 0 0 1-1.414-1.414l1.793-1.793-1.793-1.793a1 1 0 0 1 0-1.414Z" clip-rule="evenodd"/>
+							<path fill="#F25656" fill-rule="evenodd" d="M6 7a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm3-5a5 5 0 1 0 0 10A5 5 0 0 0 9 2ZM6 14a5 5 0 0 0-5 5v2a1 1 0 1 0 2 0v-2a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v2a1 1 0 1 0 2 0v-2a5 5 0 0 0-5-5H6Zm10.293-6.707a1 1 0 0 1 1.414 0L19.5 9.086l1.793-1.793a1 1 0 1 1 1.414 1.414L20.914 10.5l1.793 1.793a1 1 0 0 1-1.414 1.414L19.5 11.914l-1.793 1.793a1 1 0 0 1-1.414-1.414l1.793-1.793-1.793-1.793a1 1 0 0 1 0-1.414Z" clip-rule="evenodd"/>
 						</svg>',
 						__( 'Deny User', 'user-registration' )
 					);
@@ -1245,13 +1271,22 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 					);
 
 					$actions['disable_user'] = sprintf(
-						'<a>
+						'<a class="urm-deny" href="#">
 							<div style=" cursor:pointer; display:flex" id="disable-user-link-%d" class="disable-user-link" data-nonce="%s">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="margin-right: 8px;">
-									<path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.707 13.707a1 1 0 0 1-1.414 0L12 13.414l-3.293 3.293a1 1 0 1 1-1.414-1.414L10.586 12 7.293 8.707a1 1 0 1 1 1.414-1.414L12 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414L13.414 12l3.293 3.293a1 1 0 0 1 0 1.414z" fill="#ff0000"/>
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+									<g clip-path="url(#clip0_3735_366)">
+										<path d="M9 16.5C13.1421 16.5 16.5 13.1421 16.5 9C16.5 4.85786 13.1421 1.5 9 1.5C4.85786 1.5 1.5 4.85786 1.5 9C1.5 13.1421 4.85786 16.5 9 16.5Z" stroke="#F25656" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+										<path d="M11.25 6.75L6.75 11.25" stroke="#F25656" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+										<path d="M6.75 6.75L11.25 11.25" stroke="#F25656" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+									</g>
+									<defs>
+										<clipPath id="clip0_3735_366">
+											<rect width="18" height="18" fill="white"/>
+										</clipPath>
+									</defs>
 								</svg>
-								<span>%s</span>
 							</div>
+							<span>%s</span>
 						</a>',
 						$user_id,
 						wp_create_nonce( 'bulk-users' ),
@@ -1278,11 +1313,18 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 				);
 
 				$actions['delete'] = sprintf(
-					'<a href="%s" rel="noreferrer noopener" target="_blank" data-wp-delete-url="%s">%s <p>%s</p></a>',
+					'<a class="urm-deny" href="%s" rel="noreferrer noopener" target="_blank" data-wp-delete-url="%s">%s<span>%s</span></a>',
 					$delete_link,
 					esc_url_raw( $wp_delete_url ),
-					'<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-						<path fill="#000" fill-rule="evenodd" d="M9.293 3.293A1 1 0 0 1 10 3h4a1 1 0 0 1 1 1v1H9V4a1 1 0 0 1 .293-.707ZM7 5V4a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1h4a1 1 0 1 1 0 2h-1v13a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7H3a1 1 0 0 1 0-2h4Zm1 2h10v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7h2Zm2 3a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0v-6a1 1 0 0 1 1-1Zm5 7v-6a1 1 0 1 0-2 0v6a1 1 0 1 0 2 0Z" clip-rule="evenodd"/>
+					'<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+						<g clip-path="url(#clip0_3735_144)">
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M6.96967 1.46967C7.11032 1.32902 7.30109 1.25 7.5 1.25H10.5C10.6989 1.25 10.8897 1.32902 11.0303 1.46967C11.171 1.61032 11.25 1.80109 11.25 2V2.75H6.75V2C6.75 1.80109 6.82902 1.61032 6.96967 1.46967ZM5.25 2.75V2C5.25 1.40326 5.48705 0.830966 5.90901 0.40901C6.33097 -0.0129471 6.90326 -0.25 7.5 -0.25H10.5C11.0967 -0.25 11.669 -0.0129471 12.091 0.40901C12.5129 0.830966 12.75 1.40326 12.75 2V2.75H14.25H15.75C16.1642 2.75 16.5 3.08579 16.5 3.5C16.5 3.91421 16.1642 4.25 15.75 4.25H15V14C15 14.5967 14.7629 15.169 14.341 15.591C13.919 16.0129 13.3467 16.25 12.75 16.25H5.25C4.65326 16.25 4.08097 16.0129 3.65901 15.591C3.23705 15.169 3 14.5967 3 14V4.25H2.25C1.83579 4.25 1.5 3.91421 1.5 3.5C1.5 3.08579 1.83579 2.75 2.25 2.75H3.75H5.25ZM6 4.25H12H13.5V14C13.5 14.1989 13.421 14.3897 13.2803 14.5303C13.1397 14.671 12.9489 14.75 12.75 14.75H5.25C5.05109 14.75 4.86032 14.671 4.71967 14.5303C4.57902 14.3897 4.5 14.1989 4.5 14V4.25H6ZM7.5 6.5C7.91421 6.5 8.25 6.83579 8.25 7.25V11.75C8.25 12.1642 7.91421 12.5 7.5 12.5C7.08579 12.5 6.75 12.1642 6.75 11.75V7.25C6.75 6.83579 7.08579 6.5 7.5 6.5ZM11.25 11.75V7.25C11.25 6.83579 10.9142 6.5 10.5 6.5C10.0858 6.5 9.75 6.83579 9.75 7.25V11.75C9.75 12.1642 10.0858 12.5 10.5 12.5C10.9142 12.5 11.25 12.1642 11.25 11.75Z" fill="#F25656"/>
+						</g>
+						<defs>
+							<clipPath id="clip0_3735_144">
+								<rect width="18" height="18" fill="white"/>
+							</clipPath>
+						</defs>
 					</svg>',
 					__( 'Delete User', 'user-registration' )
 				);
@@ -1293,7 +1335,6 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 			if ( ! empty( $actions ) ) {
 				?>
 				<div class="sidebar-box" id="user-registration-user-view-user-actions">
-					<h2 class="box-title">User Actions</h2>
 					<ul>
 						<?php
 						foreach ( $actions as $key => $action_link ) {
@@ -1342,41 +1383,20 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 
 			$extra_details = array(
 				'user_id'         => array(
-					'title' => __( 'User Id', 'user-registration' ),
 					'value' => $user_id,
-					'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-									<path fill="#000" fill-rule="evenodd" d="M21.707 1.293a1 1 0 0 1 0 1.414L20.414 4l2.293 2.293a1 1 0 0 1 0 1.414l-3.5 3.5a1 1 0 0 1-1.414 0L15.5 8.914l-2.751 2.751a6.5 6.5 0 1 1-1.414-1.414l3.457-3.457v-.001l.002-.001 3.497-3.497.002-.002.002-.002 1.998-1.998a1 1 0 0 1 1.414 0ZM19 5.414 16.914 7.5 18.5 9.086 20.586 7 19 5.414ZM7.5 11a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z" clip-rule="evenodd"/>
-								</svg>',
-				),
-				'user_status'     => array(
-					'title' => __( 'User Status', 'user-registration' ),
-					'value' => $status,
-					'class' => 'user-registration-user-status-' . strtolower( $status_class ),
-					'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-									<path fill="#000" fill-rule="evenodd" d="M4 3a1 1 0 0 0-2 0v18a1 1 0 0 0 1 1h18a1 1 0 1 0 0-2H4V3Zm15.707 5.293a1 1 0 0 0-1.414 0L14 12.586l-3.293-3.293a1 1 0 0 0-1.414 0l-3 3a1 1 0 1 0 1.414 1.414L10 11.414l3.293 3.293a1 1 0 0 0 1.414 0l5-5a1 1 0 0 0 0-1.414Z" clip-rule="evenodd"/>
-								</svg>',
-
 				),
 				'user_role'       => array(
-					'title' => __( 'User Role', 'user-registration' ),
 					'value' => esc_html( ucfirst( implode( ' ', $user->roles ) ) ),
-					'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-									<path fill="#000" fill-rule="evenodd" d="M9 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM4 7a5 5 0 1 1 10 0A5 5 0 0 1 4 7Zm12.969 6.286a1.999 1.999 0 0 0-.883 2.295 1.003 1.003 0 0 1 .2.45 2 2 0 0 0 2.295.883 1.002 1.002 0 0 1 .45-.2 2 2 0 0 0 .883-2.295 1.002 1.002 0 0 1-.2-.45 1.999 1.999 0 0 0-2.294-.883 1 1 0 0 1-.451.2Zm4.186-.745a4.022 4.022 0 0 0-.846-.808l.04-.117a1 1 0 0 0-1.898-.632l-.013.04a4.028 4.028 0 0 0-1.061.024l-.048-.12a1 1 0 0 0-1.857.743l.07.174c-.31.24-.582.526-.808.846l-.118-.04a1 1 0 0 0-.632 1.898l.04.013a4.03 4.03 0 0 0 .024 1.062l-.12.047a1 1 0 1 0 .743 1.857l.174-.069c.24.308.525.58.845.807l-.04.118a1 1 0 0 0 1.898.632l.014-.04a4.07 4.07 0 0 0 1.062-.024l.048.12a1 1 0 0 0 1.857-.743l-.07-.174c.309-.24.58-.526.807-.845l.118.039a1 1 0 0 0 .632-1.898l-.04-.013a4.04 4.04 0 0 0-.024-1.062l.12-.048a1 1 0 0 0-.743-1.857l-.174.07ZM6 14a5 5 0 0 0-5 5v2a1 1 0 1 0 2 0v-2a3 3 0 0 1 3-3h4a1 1 0 1 0 0-2H6Z" clip-rule="evenodd"/>
-								</svg>',
+				),
+				'user_status'     => array(
+					'value' => $status,
+					'class' => 'user-registration-user-status-' . strtolower( $status_class ),
 				),
 				'registered_form' => array(
-					'title' => __( 'Form', 'user-registration' ),
 					'value' => $form_title,
-					'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-									<path fill="#000" fill-rule="evenodd" d="M3.879 1.879A3 3 0 0 1 6 1h8.5a1 1 0 0 1 .707.293l5.5 5.5A1 1 0 0 1 21 7.5V20a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V4a3 3 0 0 1 .879-2.121ZM6 3h7v5a1 1 0 0 0 1 1h5v11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm9 4h3.086L15 3.914V7Zm-7 5a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Zm-1 5a1 1 0 0 1 1-1h8a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1Zm1-9a1 1 0 0 0 0 2h2a1 1 0 1 0 0-2H8Z" clip-rule="evenodd"/>
-								</svg>',
 				),
 				'registered_on'   => array(
-					'title' => __( 'Date', 'user-registration' ),
 					'value' => $user->user_registered,
-					'icon'  => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-									<path fill="#000" fill-rule="evenodd" d="M17 2a1 1 0 1 0-2 0v1H9V2a1 1 0 0 0-2 0v1H5a3 3 0 0 0-3 3v14a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3h-2V2Zm3 7V6a1 1 0 0 0-1-1h-2v1a1 1 0 1 1-2 0V5H9v1a1 1 0 0 1-2 0V5H5a1 1 0 0 0-1 1v3h16ZM4 11h16v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9Zm3 3a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1Zm5-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Zm3 1a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H16a1 1 0 0 1-1-1Zm-7 3a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H8Zm3 1a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H12a1 1 0 0 1-1-1Zm5-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H16Z" clip-rule="evenodd"/>
-								</svg>',
 				),
 			);
 
@@ -1389,22 +1409,38 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 
 			if ( ! empty( $extra_details ) ) :
 				?>
-				<div class="sidebar-box" id="user-registration-user-view-extra-details">
-					<h2 class="box-title"><?php esc_html_e( 'Extra Details', 'user-registration' ); ?></h2>
-					<ul>
-						<?php
-						foreach ( $extra_details as $id => $data ) {
-							printf(
-								'<li id="%s">%s<p><span>%s:&nbsp;</span><span class="%s">%s</span></p></li>',
-								esc_attr( 'user-registration-user-extra-detail-' . $id ),
-								isset( $data['icon'] ) ? $data['icon'] : '',
-								esc_html( $data['title'] ),
-								isset( $data['class'] ) ? esc_attr( $data['class'] ) : '',
-								esc_html( $data['value'] )
-							);
-						}
-						?>
-					</ul>
+				<div class="urm-admin-user-content-container">
+					<div id="urm-admin-user-content-header" >
+						<h3>
+							<?php
+								esc_html_e( 'Entry Details', 'user-registration' );
+							?>
+						</h3>
+					</div>
+					<div class="user-registration-user-form-details">
+						<table class="wp-list-table widefat fixed striped users">
+							<thead>
+								<tr>
+									<th><?php esc_html_e( 'ID', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Role', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Status', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Form', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Date', 'user-registration' ); ?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<?php
+									foreach ( $extra_details as $id => $data ) {
+										?>
+										<td class="<?php echo isset( $data['class'] ) ? esc_attr( $data['class'] ) : ''; ?>"><?php echo esc_html( $data['value'] ); ?></td>
+										<?php
+									}
+									?>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<?php
 			endif;
@@ -1413,11 +1449,12 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 		/**
 		 * Render user form fields and their values.
 		 *
-		 * @param [int] $user_id User Id.
+		 * @param [int]  $user_id User Id.
+		 * @param [bool] $display Either display the form or not.
 		 *
 		 * @return void
 		 */
-		private function render_user_form_fields( $user_id ) {
+		private function render_user_form_fields( $user_id, $display ) {
 			$user            = get_userdata( $user_id );
 			$form_id         = ur_get_form_id_by_userid( $user_id );
 			$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
@@ -1430,206 +1467,224 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 			$row_ids = ! empty( $row_ids ) ? json_decode( $row_ids ) : array();
 
 			?>
-			<div class="user-registration-user-body">
-				<div class="user-registration-user-form-details">
-					<?php if ( ! empty( $form_data_array ) ) : ?>
+			<div class="urm-admin-user-content-container urm-admin-view-user <?php echo ! $display ? 'user-registration-hidden' : ''; ?>">
+				<div id="urm-admin-user-content-header" >
+					<h3><?php esc_html_e( 'Personal Information', 'user-registration' ); ?></h3>
+					<?php
+					if ( $form_id ) {
+						?>
+						<a id="user-registration-edit-user-link">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+								<path d="M11.5397 14.6666H3.19301C2.69971 14.6666 2.22661 14.4706 1.87779 14.1218C1.52897 13.773 1.33301 13.2999 1.33301 12.8066V4.45992C1.33301 3.96662 1.52897 3.49352 1.87779 3.1447C2.22661 2.79588 2.69971 2.59992 3.19301 2.59992H7.36634C7.54315 2.59992 7.71272 2.67016 7.83775 2.79518C7.96277 2.9202 8.03301 3.08977 8.03301 3.26659C8.03301 3.4434 7.96277 3.61297 7.83775 3.73799C7.71272 3.86301 7.54315 3.93325 7.36634 3.93325H3.19301C3.05333 3.93325 2.91937 3.98874 2.8206 4.08751C2.72183 4.18628 2.66634 4.32024 2.66634 4.45992V12.8066C2.66634 12.9463 2.72183 13.0802 2.8206 13.179C2.91937 13.2778 3.05333 13.3333 3.19301 13.3333H11.5397C11.6794 13.3333 11.8133 13.2778 11.9121 13.179C12.0109 13.0802 12.0663 12.9463 12.0663 12.8066V8.66659C12.0663 8.48977 12.1366 8.32021 12.2616 8.19518C12.3866 8.07016 12.5562 7.99992 12.733 7.99992C12.9098 7.99992 13.0794 8.07016 13.2044 8.19518C13.3294 8.32021 13.3997 8.48977 13.3997 8.66659V12.8399C13.3909 13.3274 13.1911 13.792 12.8432 14.1336C12.4954 14.4753 12.0273 14.6667 11.5397 14.6666ZM5.73967 11.0666L8.12634 10.4733C8.24044 10.4396 8.34534 10.3803 8.43301 10.2999L14.0997 4.66659C14.2864 4.48875 14.4357 4.27537 14.5387 4.03898C14.6417 3.8026 14.6964 3.54799 14.6995 3.29016C14.7027 3.03232 14.6542 2.77646 14.557 2.53763C14.4598 2.29881 14.3157 2.08184 14.1334 1.89951C13.9511 1.71718 13.7341 1.57316 13.4953 1.47594C13.2565 1.37872 13.0006 1.33025 12.7428 1.3334C12.4849 1.33654 12.2303 1.39123 11.9939 1.49425C11.7576 1.59727 11.5442 1.74653 11.3663 1.93325L5.70634 7.59992C5.62165 7.68548 5.55976 7.79092 5.52634 7.90659L4.93301 10.2599C4.90479 10.3715 4.90592 10.4884 4.93629 10.5994C4.96667 10.7104 5.02525 10.8116 5.10634 10.8933C5.16863 10.955 5.24251 11.0039 5.32374 11.0371C5.40496 11.0703 5.49194 11.0871 5.57967 11.0866C5.63362 11.0864 5.68735 11.0797 5.73967 11.0666ZM12.313 2.83992C12.3973 2.75732 12.504 2.7014 12.6199 2.67916C12.7358 2.65691 12.8557 2.66934 12.9646 2.71488C13.0734 2.76041 13.1664 2.83704 13.232 2.93517C13.2975 3.0333 13.3327 3.14858 13.333 3.26659C13.3335 3.3446 13.3184 3.42193 13.2887 3.49405C13.2589 3.56616 13.215 3.63162 13.1597 3.68659L7.61967 9.21992L6.49301 9.50659L6.77967 8.37992L12.313 2.83992Z" fill="#6B6B6B"/>
+							</svg>
+							<span><?php esc_html_e( 'Edit', 'user-registration' ); ?></span>
+						</a>
 						<?php
-						foreach ( $form_data_array as $index => $row_data ) {
-							$row_id = $index;
-							$ignore = false;
-							if ( ! empty( $row_ids ) && isset( $row_ids[ $index ] ) ) {
-								$row_id = absint( $row_ids[ $index ] );
-							}
-
-							if ( ! empty( $form_row_data ) ) {
-								foreach ( $form_row_data as $key => $value ) {
-									if ( $value['row_id'] == $row_id && isset( $value['type'] ) && 'repeater' === $value['type'] ) {
-										$ignore = true;
+					}
+					?>
+				</div>
+				<div class="ur-frontend-form login ur-edit-profile">
+					<div class="user-registration-user-body">
+						<div class="user-registration-user-form-details">
+							<?php if ( ! empty( $form_data_array ) ) : ?>
+								<?php
+								foreach ( $form_data_array as $index => $row_data ) {
+									$row_id = $index;
+									$ignore = false;
+									if ( ! empty( $row_ids ) && isset( $row_ids[ $index ] ) ) {
+										$row_id = absint( $row_ids[ $index ] );
 									}
-								}
-							}
 
-							if ( ! $ignore ) {
-								echo '<div class="user-registration-user-row-details">';
-
-								foreach ( $row_data as $grid_key => $grid_data ) {
-									foreach ( $grid_data as $grid_data_key => $single_item ) {
-										if ( ! isset( $single_item->general_setting->field_name ) ) {
-											continue;
-										}
-
-										$field_name = $single_item->general_setting->field_name;
-										$field_key  = isset( $single_item->field_key ) ? $single_item->field_key : '';
-
-										/**
-										 * Return fields to skip display in User view page.
-										 *
-										 * @since 4.1
-										 */
-										$skip_fields = apply_filters(
-											'user_registration_single_user_view_skip_form_fields',
-											array(
-												'user_confirm_email',
-												'user_pass',
-												'user_confirm_password',
-												'html',
-												'section_title',
-												'billing_address_title',
-												'shipping_address_title',
-												'profile_picture',
-												'captcha',
-												'multiple_choice',
-												'single_item',
-												'quantity_field',
-												'stripe_gateway',
-												'authorize_net_gateway',
-												'total_field',
-												'subscription_plan',
-											)
-										);
-
-										if ( in_array( $field_key, $skip_fields, true ) ) {
-											continue;
-										}
-
-										echo '<div class="single-field">';
-										echo '<h3 class="single-field__label">' . esc_html( $single_item->general_setting->label ) . '</h3>';
-
-										$value = '';
-
-										$user_metadata_details = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
-
-										if ( in_array(
-											$field_key,
-											array(
-												'user_login',
-												'user_email',
-												'display_name',
-												'user_url',
-											),
-											true
-										) ) {
-											$value = $user->$field_key;
-										} elseif ( 'multi_select2' === $field_key ) {
-											$values = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
-
-											if ( ! empty( $values ) ) {
-												$value = implode( ',', $values );
+									if ( ! empty( $form_row_data ) ) {
+										foreach ( $form_row_data as $key => $value ) {
+											if ( $value['row_id'] == $row_id && isset( $value['type'] ) && 'repeater' === $value['type'] ) {
+												$ignore = true;
 											}
-										} elseif ( 'country' === $field_key ) {
-											$value         = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
-											$country_class = ur_load_form_field_class( $field_key );
-											$countries     = $country_class::get_instance()->get_country();
-											$value         = isset( $countries[ $value ] ) ? $countries[ $value ] : $value;
-										} elseif ( 'signature' === $field_key ) {
-											$value = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
-											$value = wp_get_attachment_url( $value );
-										} elseif ( 'membership' === $field_key ) {
-											$membership_id = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
-											$value         = get_the_title( $membership_id );
-										} else {
-											$value = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
-
-											// For Woocommerce fields.
-											$value = empty( $value ) ? get_user_meta( $user->ID, $field_name, true ) : $value;
 										}
+									}
 
-										$checkbox_fields = array(
-											'checkbox',
-											'privacy_policy',
-											'mailerlite',
-											'separate_shipping',
-										);
+									if ( ! $ignore ) {
+										echo '<div class="user-registration-user-row-details">';
 
-										// Mark checkbox fields as Checked/Unchecked.
-										if ( in_array( $field_key, $checkbox_fields, true ) ) {
-											$value = is_array( $value ) ? implode( ', ', $value ) : esc_attr( $value );
-										}
-
-										//  Display the default values in user entry page if field visibility is used.
-										if ( ! metadata_exists( 'user', $user_id, 'user_registration_' . $field_name ) && ! in_array( $field_key, $skip_fields ) ) {
-											$profile       = user_registration_form_data( $user_id, $form_id );
-											$profile_index = 'user_registration_' . $field_name;
-
-											if ( isset( $profile[ $profile_index ]['default'] ) ) {
-												$default_value = $profile[ $profile_index ]['default'];
-
-												if ( is_array( $default_value ) ) {
-													$value = implode( ', ', $default_value );
-												} else {
-													$value = esc_html( $default_value );
+										foreach ( $row_data as $grid_key => $grid_data ) {
+											foreach ( $grid_data as $grid_data_key => $single_item ) {
+												if ( ! isset( $single_item->general_setting->field_name ) ) {
+													continue;
 												}
-											} elseif ( metadata_exists( 'user', $user_id, $field_name ) ) {
-												$value = get_user_meta( $user_id, $field_name, true );
-											} else {
+
+												$field_name = $single_item->general_setting->field_name;
+												$field_key  = isset( $single_item->field_key ) ? $single_item->field_key : '';
+
+												/**
+												 * Return fields to skip display in User view page.
+												 *
+												 * @since 4.1
+												 */
+												$skip_fields = apply_filters(
+													'user_registration_single_user_view_skip_form_fields',
+													array(
+														'user_confirm_email',
+														'user_pass',
+														'user_confirm_password',
+														'html',
+														'section_title',
+														'billing_address_title',
+														'shipping_address_title',
+														'profile_picture',
+														'captcha',
+														'multiple_choice',
+														'single_item',
+														'quantity_field',
+														'stripe_gateway',
+														'authorize_net_gateway',
+														'total_field',
+														'subscription_plan',
+													)
+												);
+
+												if ( in_array( $field_key, $skip_fields, true ) ) {
+													continue;
+												}
+
+												echo '<div class="single-field">';
+												echo '<h3 class="single-field__label">' . esc_html( $single_item->general_setting->label ) . '</h3>';
+
 												$value = '';
-											}
 
-											if ( empty( $value ) && isset( $profile[ $profile_index ]['type'] ) && 'date' === $profile[ $profile_index ]['type'] ) {
-												if ( isset( $profile[ $profile_index ]['custom_attributes']['data-default-date'] ) && 1 === absint( $profile[ $profile_index ]['custom_attributes']['data-default-date'] ) ) {
-													$date_format = isset( $profile[ $profile_index ]['custom_attributes']['data-date-format'] ) ? $profile[ $profile_index ]['custom_attributes']['data-date-format'] : 'd/m/Y';
-													$value       = date( $date_format, time() );
+												$user_metadata_details = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+
+												if ( in_array(
+													$field_key,
+													array(
+														'user_login',
+														'user_email',
+														'display_name',
+														'user_url',
+													),
+													true
+												) ) {
+													$value = $user->$field_key;
+												} elseif ( 'multi_select2' === $field_key ) {
+													$values = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+
+													if ( ! empty( $values ) ) {
+														$value = implode( ',', $values );
+													}
+												} elseif ( 'country' === $field_key ) {
+													$value         = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+													$country_class = ur_load_form_field_class( $field_key );
+													$countries     = $country_class::get_instance()->get_country();
+													$value         = isset( $countries[ $value ] ) ? $countries[ $value ] : $value;
+												} elseif ( 'signature' === $field_key ) {
+													$value = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+													$value = wp_get_attachment_url( $value );
+												} elseif ( 'membership' === $field_key ) {
+													$membership_id = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+													$value         = get_the_title( $membership_id );
+												} else {
+													$value = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+
+													// For Woocommerce fields.
+													$value = empty( $value ) ? get_user_meta( $user->ID, $field_name, true ) : $value;
 												}
+
+												$checkbox_fields = array(
+													'checkbox',
+													'privacy_policy',
+													'mailerlite',
+													'separate_shipping',
+												);
+
+												// Mark checkbox fields as Checked/Unchecked.
+												if ( in_array( $field_key, $checkbox_fields, true ) ) {
+													$value = is_array( $value ) ? implode( ', ', $value ) : esc_attr( $value );
+												}
+
+												// Display the default values in user entry page if field visibility is used.
+												if ( ! metadata_exists( 'user', $user_id, 'user_registration_' . $field_name ) && ! in_array( $field_key, $skip_fields ) ) {
+													$profile       = user_registration_form_data( $user_id, $form_id );
+													$profile_index = 'user_registration_' . $field_name;
+
+													if ( isset( $profile[ $profile_index ]['default'] ) ) {
+														$default_value = $profile[ $profile_index ]['default'];
+
+														if ( is_array( $default_value ) ) {
+															$value = implode( ', ', $default_value );
+														} else {
+															$value = esc_html( $default_value );
+														}
+													} elseif ( metadata_exists( 'user', $user_id, $field_name ) ) {
+														$value = get_user_meta( $user_id, $field_name, true );
+													} else {
+														$value = '';
+													}
+
+													if ( empty( $value ) && isset( $profile[ $profile_index ]['type'] ) && 'date' === $profile[ $profile_index ]['type'] ) {
+														if ( isset( $profile[ $profile_index ]['custom_attributes']['data-default-date'] ) && 1 === absint( $profile[ $profile_index ]['custom_attributes']['data-default-date'] ) ) {
+															$date_format = isset( $profile[ $profile_index ]['custom_attributes']['data-date-format'] ) ? $profile[ $profile_index ]['custom_attributes']['data-date-format'] : 'd/m/Y';
+															$value       = date( $date_format, time() );
+														}
+													}
+												}
+
+												/**
+												 * Modify value for the single field.
+												 *
+												 * @since 4.1
+												 */
+												$value = apply_filters( 'user_registration_single_user_view_field_value', $value, $field_name, $field_key );
+
+												$non_text_fields = apply_filters(
+													'user_registration_single_user_view_non_text_fields',
+													array(
+														'file',
+													)
+												);
+
+												if ( is_string( $value ) && ! in_array( $field_key, $non_text_fields, true ) ) {
+													if ( 'wysiwyg' === $field_key ) {
+														echo wp_kses_post(
+															'<div class="single-field__wysiwyg"> ' . html_entity_decode( $value ) . '</div>'
+														);
+													} elseif ( 'signature' === $field_key ) {
+														echo wp_kses_post(
+															'<div class="single-field__signature"><img src="' . esc_url( $value ) . '" width="100%" /></div>'
+														);
+													} elseif ( 60 > strlen( $value ) ) {
+														printf(
+															'<input type="text" value="%s" disabled>',
+															esc_attr( $value )
+														);
+													} else {
+														printf(
+															'<textarea rows="6" disabled>%s</textarea>',
+															esc_attr( $value )
+														);
+													}
+												} else {
+													$field_value = get_user_meta( $user_id, 'user_registration_' . $field_key, true );
+													do_action( 'user_registration_single_user_view_output_' . $field_key . '_field', $user_id, $single_item, $field_value );
+												}
+												echo '</div>';
 											}
-										}
-
-										/**
-										 * Modify value for the single field.
-										 *
-										 * @since 4.1
-										 */
-										$value = apply_filters( 'user_registration_single_user_view_field_value', $value, $field_name, $field_key );
-
-										$non_text_fields = apply_filters(
-											'user_registration_single_user_view_non_text_fields',
-											array(
-												'file',
-											)
-										);
-
-										if ( is_string( $value ) && ! in_array( $field_key, $non_text_fields, true ) ) {
-											if ( 'wysiwyg' === $field_key ) {
-												echo wp_kses_post(
-													'<div class="single-field__wysiwyg"> ' . html_entity_decode( $value ) . '</div>'
-												);
-											} elseif ( 'signature' === $field_key ) {
-												echo wp_kses_post(
-													'<div class="single-field__signature"><img src="' . esc_url( $value ) . '" width="100%" /></div>'
-												);
-											} elseif ( 60 > strlen( $value ) ) {
-												printf(
-													'<input type="text" value="%s" disabled>',
-													esc_attr( $value )
-												);
-											} else {
-												printf(
-													'<textarea rows="6" disabled>%s</textarea>',
-													esc_attr( $value )
-												);
-											}
-										} else {
-											$field_value = get_user_meta( $user_id, 'user_registration_' . $field_key, true );
-											do_action( 'user_registration_single_user_view_output_' . $field_key . '_field', $user_id, $single_item, $field_value );
 										}
 										echo '</div>';
 									}
-								}
-								echo '</div>';
-							}
 
-							do_action( 'user_registration_single_user_view_row_data', $row_id, $row_data, $form_id, $user_id );
-						}
-						?>
-						<?php
-					else :
-						$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
-						?>
-					<div class="empty-list-table-container">
-						<img src="<?php echo $image_url; ?>" alt="" />
+									do_action( 'user_registration_single_user_view_row_data', $row_id, $row_data, $form_id, $user_id );
+								}
+								?>
+								<?php
+							else :
+								$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
+								?>
+							<div class="empty-list-table-container">
+								<img src="<?php echo $image_url; ?>" alt="" />
+							</div>
+							<?php endif; ?>
+						</div>
 					</div>
-					<?php endif; ?>
 				</div>
-				<?php do_action( 'user_registration_single_user_details_content', $user_id, $form_id ); ?>
 			</div>
 			<?php
 		}
@@ -1637,11 +1692,12 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 		/**
 		 * Render user form fields and their values.
 		 *
-		 * @param [int] $user_id User Id.
+		 * @param [int]  $user_id User Id.
+		 * @param [bool] $display Either display the form or not.
 		 *
 		 * @return void
 		 */
-		private function render_user_edit_form_fields( $user_id ) {
+		private function render_user_edit_form_fields( $user_id, $display ) {
 			$user            = get_userdata( $user_id );
 			$form_id         = ur_get_form_id_by_userid( $user_id );
 			$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
@@ -1672,51 +1728,57 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 					$profile[ $key ]['value'] = apply_filters( 'user_registration_my_account_edit_profile_field_value', $user_data->display_name, $key );
 				}
 			}
-			?>
-			<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
-				<?php
-				if ( ! empty( $form_data_array ) ) :
-					?>
-					<div id="user-registration-edit-user-body">
-						<form action="" class="edit-profile user-registration-EditProfileForm" method="post"
-							enctype="multipart/form-data"
-							data-form-id="<?php echo esc_attr( $form_id ); ?>"
-							data-user-id="<?php echo esc_attr__( $user_id ); ?>">
-							<div class="user-registration-edit-user-form-details">
-								<div class="ur-form-grid">
-									<?php
-									foreach ( $form_data_array as $index => $data ) {
-										$row_id = ( ! empty( $form_row_ids_array ) ) ? absint( $form_row_ids_array[ $index ] ) : $index;
-										ob_start();
-										echo '<div class="ur-form-row">';
-										user_registration_edit_profile_row_template( $data, $profile );
-										echo '</div>';
-										$row_template = ob_get_clean();
-										$row_template = apply_filters( 'user_registration_frontend_edit_profile_form_row_template', $row_template, $form_id, $profile, $row_id, $data );
-										echo $row_template; // phpcs:ignore
-									}
-									?>
-									<div class="ur-form-row edit-user-save-btn-container">
-										<button class="button btn-primary save_user_details"
-											type="button"><?php echo __( 'Save Changes' ); ?>
-											<span></span>
-										</button>
-									</div>
 
+			?>
+			<div class="urm-admin-user-content-container urm-admin-edit-user <?php echo ! $display ? 'user-registration-hidden' : ''; ?>">
+				<div id="urm-admin-user-content-header" >
+					<h3><?php esc_html_e( 'Personal Information', 'user-registration' ); ?></h3>
+				</div>
+				<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
+					<?php
+					if ( ! empty( $form_data_array ) ) :
+						?>
+						<div id="user-registration-edit-user-body">
+							<form action="" class="edit-profile user-registration-EditProfileForm" method="post"
+								enctype="multipart/form-data"
+								data-form-id="<?php echo esc_attr( $form_id ); ?>"
+								data-user-id="<?php echo esc_attr__( $user_id ); ?>">
+								<div class="user-registration-edit-user-form-details">
+									<div class="ur-form-grid">
+										<?php
+										foreach ( $form_data_array as $index => $data ) {
+											$row_id = ( ! empty( $form_row_ids_array ) ) ? absint( $form_row_ids_array[ $index ] ) : $index;
+											ob_start();
+											echo '<div class="ur-form-row">';
+											user_registration_edit_profile_row_template( $data, $profile );
+											echo '</div>';
+											$row_template = ob_get_clean();
+											$row_template = apply_filters( 'user_registration_frontend_edit_profile_form_row_template', $row_template, $form_id, $profile, $row_id, $data );
+											echo $row_template; // phpcs:ignore
+										}
+										?>
+										<div class="ur-form-row edit-user-save-btn-container">
+											<button class="button btn-primary save_user_details"
+												type="button"><?php echo __( 'Save Changes' ); ?>
+												<span></span>
+											</button>
+										</div>
+
+									</div>
 								</div>
-							</div>
-						</form>
-					</div>
-					<?php
-				else :
-					$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
+							</form>
+						</div>
+						<?php
+					else :
+						$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
+						?>
+						<div class="empty-list-table-container">
+							<img src="<?php echo $image_url; ?>" alt="" />
+						</div>
+						<?php
+					endif;
 					?>
-					<div class="empty-list-table-container">
-						<img src="<?php echo $image_url; ?>" alt="" />
-					</div>
-					<?php
-				endif;
-				?>
+				</div>
 			</div>
 			<?php
 		}
@@ -1760,6 +1822,106 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 			 * @return string The filtered URL of the asset.
 			 */
 			return apply_filters( 'user_registration_get_asset_url', plugins_url( $path, UR_PLUGIN_FILE ), $path );
+		}
+
+		/**
+		 * Render payment information of the user.
+		 *
+		 * @param [int] $user_id User Id.
+		 * @param [int] $form_id Form Id.
+		 *
+		 * @return void
+		 * @since 5.0
+		 */
+		public function render_user_payment_details( $user_id, $form_id ) {
+
+			$payment_method = get_user_meta( $user_id, 'ur_payment_method', true );
+
+			$user_source = get_user_meta( $user_id, 'ur_registration_source', true );
+
+			if ( 'membership' === $user_source || '' !== $payment_method ) {
+				$user_source = get_user_meta( $user_id, 'ur_registration_source', true );
+				$total_items = array();
+
+				if ( 'membership' === $user_source ) {
+					$order_repository = new MembersOrderRepository();
+					$total_items      = $order_repository->get_member_all_orders( $user_id );
+				}
+
+				$meta_value = get_user_meta( $user_id, 'ur_payment_invoices', true );
+
+				if ( 'membership' !== $user_source && ! empty( $meta_value ) && is_array( $meta_value ) ) {
+					foreach ( $meta_value as $values ) {
+						$total_items[] = array(
+							'user_id'        => $user_id,
+							'transaction_id' => $values['invoice_no'] ?? '',
+							'post_title'     => $values['invoice_plan'] ?? '',
+							'status'         => get_user_meta( $user_id, 'ur_payment_status', true ),
+							'created_at'     => $values['invoice_date'] ?? '',
+							'type'           => get_user_meta( $user_id, 'ur_payment_type', true ),
+							'payment_method' => str_replace( '_', ' ', get_user_meta( $user_id, 'ur_payment_method', true ) ),
+							'total_amount'   => ( $values['invoice_amount'] ?? '' ),
+							'currency'       => ( $values['invoice_currency'] ?? '' ),
+						);
+					}
+				}
+
+				if ( empty( $total_items ) ) {
+					return;
+				}
+
+				ob_start();
+				?>
+				<div class="urm-admin-user-content-container">
+					<div id="urm-admin-user-content-header" >
+						<h3>
+							<?php
+							esc_html_e( 'Payments', 'user-registration' );
+							?>
+						</h3>
+					</div>
+					<div class="user-registration-user-form-details">
+						<table class="wp-list-table widefat fixed striped users">
+							<thead>
+								<tr>
+									<th><?php esc_html_e( 'Transaction ID', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Amount', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Gateway', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Status', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Payment Date', 'user-registration' ); ?></th>
+									<th><?php esc_html_e( 'Action', 'user-registration' ); ?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php
+								foreach ( $total_items as $payment ) {
+									$amount     = $payment['total_amount'];
+									$currencies = ur_payment_integration_get_currencies();
+									$currency   = isset( $payment['currency'] ) && '' !== $payment['currency'] ? $payment['currency'] : 'USD';
+
+									$symbol = $currencies[ $currency ]['symbol'];
+									$amount = ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $amount, 2 ) : number_format( $amount, 2 ) . $symbol;
+
+									?>
+									<tr>
+										<td><?php echo esc_html( $payment['transaction_id'] ?? '' ); ?></td>
+										<td><?php echo esc_html( $amount ); ?></td>
+										<td><?php echo esc_html( $payment['payment_method'] ); ?></td>
+										<td class="status-<?php echo esc_attr( $payment['status'] ); ?>"><?php echo esc_html( ucfirst( $payment['status'] ) ); ?></td>
+										<td><?php echo ! empty( $payment['created_at'] ) ? esc_html( date_i18n( 'Y-m-d', strtotime( $payment['created_at'] ) ) ) : __( 'N/A', 'user-registration' ); ?></td>
+										<td><a href="<?php echo esc_url( admin_url( 'admin.php?page=member-payment-history&action=edit&id=' . ( $payment['ID'] ?? 0 ) ) ); ?>"><?php esc_html_e( 'View', 'user-registration' ); ?></a></td>
+									</tr>
+									<?php
+								}
+								?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<?php
+
+				echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
 		}
 
 		public function user_registration_show_admin_notice() {
