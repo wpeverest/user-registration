@@ -249,7 +249,7 @@ class URCR_Content_Access_Rules {
 		$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'create' );
 
 		// Unslash data before encoding to prevent double-escaping issues with quotes in HTML content
-		$access_rule_data = wp_unslash( $access_rule_data );
+		$access_rule_data      = wp_unslash( $access_rule_data );
 		$access_rule_data_json = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 		// Slash the JSON string so wp_insert_post() unslashing doesn't corrupt the JSON
 		$access_rule_data_json = wp_slash( $access_rule_data_json );
@@ -486,7 +486,7 @@ class URCR_Content_Access_Rules {
 			$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'update' );
 
 			// Unslash data before encoding to prevent double-escaping issues with quotes in HTML content
-			$access_rule_data = wp_unslash( $access_rule_data );
+			$access_rule_data      = wp_unslash( $access_rule_data );
 			$access_rule_data_json = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 			// Slash the JSON string so wp_insert_post() unslashing doesn't corrupt the JSON
 			$access_rule_data_json = wp_slash( $access_rule_data_json );
@@ -611,6 +611,18 @@ class URCR_Content_Access_Rules {
 			);
 		}
 
+		// Prevent duplication of membership rules unless UR_DEV is enabled
+		$rule_type = get_post_meta( $rule_id, 'urcr_rule_type', true );
+		if ( 'membership' === $rule_type && ! ( defined( 'UR_DEV' ) && UR_DEV ) ) {
+			return new \WP_REST_Response(
+				array(
+					'success' => false,
+					'message' => esc_html__( 'Membership rules cannot be duplicated.', 'user-registration' ),
+				),
+				403
+			);
+		}
+
 		$new_post = array(
 			'post_title'   => $rule_post->post_title . ' (Copy)',
 			'post_content' => $rule_post->post_content,
@@ -668,9 +680,9 @@ class URCR_Content_Access_Rules {
 			);
 		}
 
-		// Prevent deletion of membership rules
+		// Prevent deletion of membership rules unless UR_DEV is enabled
 		$rule_type = get_post_meta( $rule_id, 'urcr_rule_type', true );
-		if ( 'membership' === $rule_type && !UR_DEV) {
+		if ( 'membership' === $rule_type && ! ( defined( 'UR_DEV' ) && UR_DEV ) ) {
 			return new \WP_REST_Response(
 				array(
 					'success' => false,
@@ -710,4 +722,3 @@ class URCR_Content_Access_Rules {
 		}
 	}
 }
-

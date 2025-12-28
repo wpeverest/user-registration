@@ -57,7 +57,16 @@ const RuleGroup = ({
 					let conditionValue = cond.value;
 					const conditionType = getConditionType(cond.type);
 
-					if (cond.type === "user_state") {
+					if (cond.type === "ur_form_field") {
+						if (conditionValue && typeof conditionValue === "object" && conditionValue.form_id) {
+							conditionValue = {
+								form_id: conditionValue.form_id || "",
+								form_fields: Array.isArray(conditionValue.form_fields) ? conditionValue.form_fields : []
+							};
+						} else {
+							conditionValue = { form_id: "", form_fields: [] };
+						}
+					} else if (cond.type === "user_state") {
 						if (Array.isArray(conditionValue)) {
 							conditionValue = conditionValue[0] || "";
 						}
@@ -168,11 +177,11 @@ const RuleGroup = ({
 				return cond.group;
 			} else {
 				let conditionValue = cond.conditionValue;
-				if (cond.inputType === "ur_form_field" && typeof conditionValue === "object") {
-					if (conditionValue.form_id && conditionValue.field_name) {
+				if (cond.value === "ur_form_field" && typeof conditionValue === "object") {
+					if (conditionValue.form_id && Array.isArray(conditionValue.form_fields)) {
 						conditionValue = {
 							form_id: conditionValue.form_id,
-							form_fields: [conditionValue.field_name],
+							form_fields: conditionValue.form_fields.filter(field => field.field_name && field.operator)
 						};
 					} else {
 						conditionValue = {form_id: "", form_fields: []};

@@ -2,12 +2,12 @@
  * Membership Access Rules - Plain jQuery Implementation
  */
 (function ($) {
-	'use strict';
+	"use strict";
 
 	var URCRMembershipAccess = {
 		conditions: [],
 		contentTargets: [],
-		accessControl: 'access',
+		accessControl: "access",
 		membershipId: 0,
 		conditionCounter: 0,
 		targetCounter: 0,
@@ -18,26 +18,32 @@
 			var self = this;
 
 			// Check if required data is available
-			if (typeof urcr_membership_access_data === 'undefined') {
+			if (typeof urcr_membership_access_data === "undefined") {
 				return;
 			}
 
 			// Get membership ID from localized data
 			if (urcr_membership_access_data.membership_id) {
-				self.membershipId = parseInt(urcr_membership_access_data.membership_id, 10);
+				self.membershipId = parseInt(
+					urcr_membership_access_data.membership_id,
+					10
+				);
 			}
 
 			// Load existing rule data from PHP (if available)
 			var ruleData = null;
 
 			// Try to get from window variable first
-			if (typeof window.urcrMembershipRuleData !== 'undefined' && window.urcrMembershipRuleData) {
+			if (
+				typeof window.urcrMembershipRuleData !== "undefined" &&
+				window.urcrMembershipRuleData
+			) {
 				ruleData = window.urcrMembershipRuleData;
 			} else {
 				// Fallback to data attribute
-				var $section = $('#ur-membership-access-section');
+				var $section = $("#ur-membership-access-section");
 				if ($section.length) {
-					var dataAttr = $section.attr('data-rule-data');
+					var dataAttr = $section.attr("data-rule-data");
 					if (dataAttr) {
 						ruleData = JSON.parse(dataAttr);
 					}
@@ -45,10 +51,12 @@
 			}
 
 			// Check if conditions and targets are already rendered in PHP
-			var $conditionsList = $('.urcr-conditions-list');
-			var $targetsList = $('.urcr-target-type-group');
-			var hasExistingConditions = $conditionsList.find('.urcr-condition-wrapper').length > 0;
-			var hasExistingTargets = $targetsList.find('.urcr-target-item').length > 0;
+			var $conditionsList = $(".urcr-conditions-list");
+			var $targetsList = $(".urcr-target-type-group");
+			var hasExistingConditions =
+				$conditionsList.find(".urcr-condition-wrapper").length > 0;
+			var hasExistingTargets =
+				$targetsList.find(".urcr-target-item").length > 0;
 
 			if (hasExistingConditions || hasExistingTargets) {
 				// Data is already rendered in PHP, just initialize select2 and sync data
@@ -71,7 +79,6 @@
 
 			self.initActionSection();
 
-
 			self.initialized = true;
 		},
 
@@ -80,7 +87,9 @@
 			// For new memberships, always show membership condition when conditions are empty
 			// This applies to both free and pro users
 			if (self.membershipId > 0) {
-				self.addCondition('membership', true, [self.membershipId.toString()]);
+				self.addCondition("membership", true, [
+					self.membershipId.toString()
+				]);
 			}
 		},
 
@@ -88,14 +97,16 @@
 			var self = this;
 
 			// Sync visible conditions from existing HTML
-			$('.urcr-condition-wrapper').each(function () {
+			$(".urcr-condition-wrapper").each(function () {
 				var $wrapper = $(this);
-				var conditionId = $wrapper.data('condition-id');
-				var $fieldSelect = $wrapper.find('.urcr-condition-field-select');
-				var $valueInput = $wrapper.find('.urcr-condition-value-input');
-				var type = $fieldSelect.val() || 'roles';
+				var conditionId = $wrapper.data("condition-id");
+				var $fieldSelect = $wrapper.find(
+					".urcr-condition-field-select"
+				);
+				var $valueInput = $wrapper.find(".urcr-condition-value-input");
+				var type = $fieldSelect.val() || "roles";
 
-				var inputType = 'multiselect';
+				var inputType = "multiselect";
 
 				// Determine input type from field type
 				var conditionOptions = self.getConditionOptions();
@@ -103,14 +114,14 @@
 					return opt.value === type;
 				});
 				if (selectedOption) {
-					inputType = selectedOption.type || 'multiselect';
+					inputType = selectedOption.type || "multiselect";
 				}
 
 				// Get value
-				var value = '';
-				if (inputType === 'multiselect') {
+				var value = "";
+				if (inputType === "multiselect") {
 					// Get value from data attribute if available
-					var valueData = $valueInput.attr('data-value');
+					var valueData = $valueInput.attr("data-value");
 					if (valueData) {
 						try {
 							value = JSON.parse(valueData);
@@ -120,13 +131,23 @@
 					} else {
 						value = [];
 					}
-				} else if (inputType === 'checkbox') {
-					value = $valueInput.find('input[type="radio"]:checked').val() || 'logged-in';
-				} else if (inputType === 'date' || inputType === 'number' || inputType === 'text') {
-					value = $valueInput.val() || '';
-				} else if (inputType === 'period') {
-					var select = $valueInput.find('[data-period-part="select"]').val() || 'During';
-					var input = $valueInput.find('[data-period-part="input"]').val() || '';
+				} else if (inputType === "checkbox") {
+					value =
+						$valueInput.find('input[type="radio"]:checked').val() ||
+						"logged-in";
+				} else if (
+					inputType === "date" ||
+					inputType === "number" ||
+					inputType === "text"
+				) {
+					value = $valueInput.val() || "";
+				} else if (inputType === "period") {
+					var select =
+						$valueInput.find('[data-period-part="select"]').val() ||
+						"During";
+					var input =
+						$valueInput.find('[data-period-part="input"]').val() ||
+						"";
 					value = { select: select, input: input };
 				}
 
@@ -139,44 +160,61 @@
 				});
 
 				// Initialize select2 for multiselect
-				if (inputType === 'multiselect') {
+				if (inputType === "multiselect") {
 					self.initConditionSelect2(conditionId, inputType, value);
 				}
 			});
 
 			// Sync content targets from existing HTML
-			$('.urcr-target-item').each(function () {
+			$(".urcr-target-item").each(function () {
 				var $target = $(this);
-				var targetId = $target.data('target-id');
-				var $label = $target.find('.urcr-target-type-label');
-				var type = '';
+				var targetId = $target.data("target-id");
+				var $label = $target.find(".urcr-target-type-label");
+				var type = "";
 
 				// Determine type from label or data
-				var labelText = $label.length ? $label.text().toLowerCase() : '';
-				if (labelText.indexOf('pages') !== -1) type = 'pages';
-				else if (labelText.indexOf('posts') !== -1) type = 'posts';
-				else if (labelText.indexOf('post type') !== -1) type = 'post_types';
-				else if (labelText.indexOf('taxonomy') !== -1) type = 'taxonomy';
-				else if (labelText.indexOf('whole site') !== -1) type = 'whole_site';
+				var labelText = $label.length
+					? $label.text().toLowerCase()
+					: "";
+				if (labelText.indexOf("pages") !== -1) type = "pages";
+				else if (labelText.indexOf("posts") !== -1) type = "posts";
+				else if (labelText.indexOf("post type") !== -1)
+					type = "post_types";
+				else if (labelText.indexOf("taxonomy") !== -1)
+					type = "taxonomy";
+				else if (labelText.indexOf("whole site") !== -1)
+					type = "whole_site";
 				else {
 					// Fallback: check data-content-type attribute
-					var $contentInput = $target.find('.urcr-content-target-input');
+					var $contentInput = $target.find(
+						".urcr-content-target-input"
+					);
 					if ($contentInput.length) {
-						type = $contentInput.data('content-type') || $contentInput.data('field-type') || '';
+						type =
+							$contentInput.data("content-type") ||
+							$contentInput.data("field-type") ||
+							"";
 					}
 					// Check if it's whole_site by looking for text content
-					if (!type && $target.find('span').length && $target.text().indexOf('Whole Site') !== -1) {
-						type = 'whole_site';
+					if (
+						!type &&
+						$target.find("span").length &&
+						$target.text().indexOf("Whole Site") !== -1
+					) {
+						type = "whole_site";
 					}
 				}
 
-				var value = '';
-				if (type === 'whole_site') {
-					value = 'whole_site';
-				} else if (type === 'taxonomy') {
-					var taxonomy = $target.find('.urcr-taxonomy-select').val() || '';
-					var $termSelect = $target.find('.urcr-content-target-input');
-					var termsData = $termSelect.attr('data-value');
+				var value = "";
+				if (type === "whole_site") {
+					value = "whole_site";
+				} else if (type === "taxonomy") {
+					var taxonomy =
+						$target.find(".urcr-taxonomy-select").val() || "";
+					var $termSelect = $target.find(
+						".urcr-content-target-input"
+					);
+					var termsData = $termSelect.attr("data-value");
 					var terms = [];
 					if (termsData) {
 						try {
@@ -187,8 +225,10 @@
 					}
 					value = { taxonomy: taxonomy, value: terms };
 				} else {
-					var $contentSelect = $target.find('.urcr-content-target-input');
-					var contentData = $contentSelect.attr('data-value');
+					var $contentSelect = $target.find(
+						".urcr-content-target-input"
+					);
+					var contentData = $contentSelect.attr("data-value");
 					if (contentData) {
 						try {
 							value = JSON.parse(contentData);
@@ -208,22 +248,20 @@
 				});
 
 				// Initialize select2 for content targets
-				if (type !== 'whole_site') {
+				if (type !== "whole_site") {
 					setTimeout(function () {
 						self.initContentTargetSelect2(targetId, type, value);
 					}, 100);
 				}
 			});
-
 		},
 
 		populateRuleData: function (ruleData) {
 			var self = this;
 
-
 			// Clear existing conditions and targets first
-			$('.urcr-conditions-list').empty();
-			$('.urcr-target-type-group').empty();
+			$(".urcr-conditions-list").empty();
+			$(".urcr-target-type-group").empty();
 			self.conditions = [];
 			self.contentTargets = [];
 
@@ -232,18 +270,22 @@
 				self.accessControl = ruleData.access_control;
 				self.updateAccessControlClass();
 			} else {
-				self.accessControl = 'access';
+				self.accessControl = "access";
 				self.updateAccessControlClass();
 			}
 
 			// Populate conditions
-			if (ruleData.logic_map && ruleData.logic_map.conditions && ruleData.logic_map.conditions.length > 0) {
+			if (
+				ruleData.logic_map &&
+				ruleData.logic_map.conditions &&
+				ruleData.logic_map.conditions.length > 0
+			) {
 				var conditions = ruleData.logic_map.conditions;
 
 				// Sort conditions to ensure membership is first
 				conditions.sort(function (a, b) {
-					if (a.type === 'membership') return -1;
-					if (b.type === 'membership') return 1;
+					if (a.type === "membership") return -1;
+					if (b.type === "membership") return 1;
 					return 0;
 				});
 
@@ -251,56 +293,79 @@
 				conditions.forEach(function (condition, index) {
 					// First condition (membership) should be non-editable
 					var firstCondition = conditions[0];
-					var isFirstMembership = firstCondition && firstCondition.type === 'membership' && index === 0;
+					var isFirstMembership =
+						firstCondition &&
+						firstCondition.type === "membership" &&
+						index === 0;
 					var isLocked = isFirstMembership;
 					var value = condition.value;
 
 					// Handle different value formats
 					if (Array.isArray(value)) {
 						value = value;
-					} else if (typeof value === 'object' && value !== null) {
+					} else if (typeof value === "object" && value !== null) {
 						// Keep object as is (for period input, etc.)
 						value = value;
 					} else {
-						value = value || '';
+						value = value || "";
 					}
 
-					self.addCondition(condition.type, isLocked, value, condition.id);
+					self.addCondition(
+						condition.type,
+						isLocked,
+						value,
+						condition.id
+					);
 				});
 			} else {
 				// If no conditions, add membership condition if membership ID exists (non-editable for first condition)
 				if (self.membershipId > 0) {
-					self.addCondition('membership', true, [self.membershipId.toString()]);
+					self.addCondition("membership", true, [
+						self.membershipId.toString()
+					]);
 				}
 			}
 
 			// Populate content targets
-			if (ruleData.target_contents && ruleData.target_contents.length > 0) {
+			if (
+				ruleData.target_contents &&
+				ruleData.target_contents.length > 0
+			) {
 				ruleData.target_contents.forEach(function (target) {
 					var type = target.type;
-					if (type === 'wp_pages') type = 'pages';
-					if (type === 'wp_posts') type = 'posts';
+					if (type === "wp_pages") type = "pages";
+					if (type === "wp_posts") type = "posts";
 
-					var value = target.value || (type === 'whole_site' ? 'whole_site' : []);
+					var value =
+						target.value ||
+						(type === "whole_site" ? "whole_site" : []);
 
 					// Handle taxonomy format
-					if (type === 'taxonomy') {
+					if (type === "taxonomy") {
 						if (target.taxonomy) {
 							// Old format: { taxonomy: 'category', value: [] }
 							value = {
 								taxonomy: target.taxonomy,
-								value: Array.isArray(target.value) ? target.value : []
+								value: Array.isArray(target.value)
+									? target.value
+									: []
 							};
-						} else if (typeof target.value === 'object' && target.value !== null && !Array.isArray(target.value)) {
+						} else if (
+							typeof target.value === "object" &&
+							target.value !== null &&
+							!Array.isArray(target.value)
+						) {
 							// New format: { taxonomy: 'category', value: [] }
 							if (target.value.taxonomy) {
 								value = {
 									taxonomy: target.value.taxonomy,
-									value: Array.isArray(target.value.value) ? target.value.value : []
+									value: Array.isArray(target.value.value)
+										? target.value.value
+										: []
 								};
 							}
 						}
-					} else if (type !== 'whole_site') {
+					} else if (type !== "whole_site") {
 						// Ensure value is an array for pages/posts
 						if (!Array.isArray(value)) {
 							value = value ? [value] : [];
@@ -310,130 +375,168 @@
 					self.addContentTarget(type, value, target.id);
 				});
 			}
-
 		},
 
 		bindEvents: function () {
 			var self = this;
 
 			// Add condition button
-			$(document).on('click', '.urcr-add-condition-button', function (e) {
+			$(document).on("click", ".urcr-add-condition-button", function (e) {
 				e.preventDefault();
 				// Add a new visible condition (not membership - that's hidden)
-				self.addCondition('roles', false, '');
+				self.addCondition("roles", false, "");
 			});
 
 			// Add condition button keyboard support
-			$(document).on('keydown', '.urcr-add-condition-button', function (e) {
-				if (e.key === 'Enter' || e.key === ' ') {
-					e.preventDefault();
-					// Add a new visible condition (not membership - that's hidden)
-					self.addCondition('roles', false, '');
+			$(document).on(
+				"keydown",
+				".urcr-add-condition-button",
+				function (e) {
+					if (e.key === "Enter" || e.key === " ") {
+						e.preventDefault();
+						// Add a new visible condition (not membership - that's hidden)
+						self.addCondition("roles", false, "");
+					}
 				}
-			});
+			);
 
 			// Remove condition button
-			$(document).on('click', '.urcr-condition-remove', function (e) {
+			$(document).on("click", ".urcr-condition-remove", function (e) {
 				e.preventDefault();
-				var $wrapper = $(this).closest('.urcr-condition-wrapper');
-				var conditionId = $wrapper.data('condition-id');
+				var $wrapper = $(this).closest(".urcr-condition-wrapper");
+				var conditionId = $wrapper.data("condition-id");
 				self.removeCondition(conditionId);
 			});
 
 			// Condition field change
-			$(document).on('change', '.urcr-condition-field-select', function () {
-				var $wrapper = $(this).closest('.urcr-condition-wrapper');
-				var conditionId = $wrapper.data('condition-id');
-				var newType = $(this).val();
-				self.updateConditionType(conditionId, newType);
-			});
+			$(document).on(
+				"change",
+				".urcr-condition-field-select",
+				function () {
+					var $wrapper = $(this).closest(".urcr-condition-wrapper");
+					var conditionId = $wrapper.data("condition-id");
+					var newType = $(this).val();
+					self.updateConditionType(conditionId, newType);
+				}
+			);
 
 			// Condition value change
-			$(document).on('change', '.urcr-condition-value-input', function () {
-				var $wrapper = $(this).closest('.urcr-condition-wrapper');
-				if ($wrapper.length) {
-					var conditionId = $wrapper.data('condition-id');
-					self.updateConditionValue(conditionId, $(this));
-				}
-			});
-
-			// Handle period input changes
-			$(document).on('change', '.urcr-period-input-group input, .urcr-period-input-group select', function () {
-				var $wrapper = $(this).closest('.urcr-condition-wrapper');
-				if ($wrapper.length) {
-					var conditionId = $wrapper.data('condition-id');
-					var $periodContainer = $(this).closest('.urcr-period-input-group');
-					var select = $periodContainer.find('[data-period-part="select"]').val();
-					var input = $periodContainer.find('[data-period-part="input"]').val();
-					var periodValue = {
-						select: select || 'During',
-						input: input || ''
-					};
-
-					var condition = self.conditions.find(function (c) {
-						return c.id === conditionId;
-					});
-					if (condition) {
-						condition.value = periodValue;
+			$(document).on(
+				"change",
+				".urcr-condition-value-input",
+				function () {
+					var $wrapper = $(this).closest(".urcr-condition-wrapper");
+					if ($wrapper.length) {
+						var conditionId = $wrapper.data("condition-id");
+						self.updateConditionValue(conditionId, $(this));
 					}
 				}
-			});
+			);
+
+			// Handle period input changes
+			$(document).on(
+				"change",
+				".urcr-period-input-group input, .urcr-period-input-group select",
+				function () {
+					var $wrapper = $(this).closest(".urcr-condition-wrapper");
+					if ($wrapper.length) {
+						var conditionId = $wrapper.data("condition-id");
+						var $periodContainer = $(this).closest(
+							".urcr-period-input-group"
+						);
+						var select = $periodContainer
+							.find('[data-period-part="select"]')
+							.val();
+						var input = $periodContainer
+							.find('[data-period-part="input"]')
+							.val();
+						var periodValue = {
+							select: select || "During",
+							input: input || ""
+						};
+
+						var condition = self.conditions.find(function (c) {
+							return c.id === conditionId;
+						});
+						if (condition) {
+							condition.value = periodValue;
+						}
+					}
+				}
+			);
 
 			// Access control is always 'access' - no dropdown needed
 
 			// Add content button
-			$(document).on('click', '.urcr-add-content-button', function (e) {
+			$(document).on("click", ".urcr-add-content-button", function (e) {
 				e.preventDefault();
 				self.showContentTypeDropdown($(this));
 			});
 
-
-
 			// Remove content target
-			$(document).on('click', '.urcr-target-remove', function (e) {
+			$(document).on("click", ".urcr-target-remove", function (e) {
 				e.preventDefault();
-				var $target = $(this).closest('.urcr-target-item');
-				var targetId = $target.data('target-id');
+				var $target = $(this).closest(".urcr-target-item");
+				var targetId = $target.data("target-id");
 				self.removeContentTarget(targetId);
 			});
 
 			// Content type selection
-			$(document).on('click', '.urcr-content-type-option', function (e) {
+			$(document).on("click", ".urcr-content-type-option", function (e) {
 				e.preventDefault();
 				// Don't allow selection if option is disabled
-				if ($(this).hasClass('urcr-dropdown-option-disabled') || $(this).attr('aria-disabled') === 'true') {
+				if (
+					$(this).hasClass("urcr-dropdown-option-disabled") ||
+					$(this).attr("aria-disabled") === "true"
+				) {
 					return;
 				}
-				var contentType = $(this).data('content-type');
+				var contentType = $(this).data("content-type");
 				self.addContentTarget(contentType);
-				$('.urcr-content-type-dropdown-menu').removeClass('ur-d-flex').addClass('ur-d-none');
+				$(".urcr-content-type-dropdown-menu")
+					.removeClass("ur-d-flex")
+					.addClass("ur-d-none");
 			});
 
 			// Content type selection keyboard support
-			$(document).on('keydown', '.urcr-content-type-option', function (e) {
-				// Don't allow selection if option is disabled
-				if ($(this).hasClass('urcr-dropdown-option-disabled') || $(this).attr('aria-disabled') === 'true') {
-					return;
+			$(document).on(
+				"keydown",
+				".urcr-content-type-option",
+				function (e) {
+					// Don't allow selection if option is disabled
+					if (
+						$(this).hasClass("urcr-dropdown-option-disabled") ||
+						$(this).attr("aria-disabled") === "true"
+					) {
+						return;
+					}
+					if (e.key === "Enter" || e.key === " ") {
+						e.preventDefault();
+						var contentType = $(this).data("content-type");
+						self.addContentTarget(contentType);
+						$(".urcr-content-type-dropdown-menu")
+							.removeClass("ur-d-flex")
+							.addClass("ur-d-none");
+					}
 				}
-				if (e.key === 'Enter' || e.key === ' ') {
-					e.preventDefault();
-					var contentType = $(this).data('content-type');
-					self.addContentTarget(contentType);
-					$('.urcr-content-type-dropdown-menu').removeClass('ur-d-flex').addClass('ur-d-none');
-				}
-			});
+			);
 
 			// Click outside to close dropdowns
-			$(document).on('click', function (e) {
-				if (!$(e.target).closest('.urcr-content-dropdown-wrapper').length &&
-					!$(e.target).closest('.urcr-add-content-button').length) {
-					$('.urcr-content-type-dropdown-menu').removeClass('ur-d-flex').addClass('ur-d-none');
+			$(document).on("click", function (e) {
+				if (
+					!$(e.target).closest(".urcr-content-dropdown-wrapper")
+						.length &&
+					!$(e.target).closest(".urcr-add-content-button").length
+				) {
+					$(".urcr-content-type-dropdown-menu")
+						.removeClass("ur-d-flex")
+						.addClass("ur-d-none");
 				}
 			});
 
 			// Action type change
-			$(document).on('change', '.urcr-action-type-select', function () {
-				var actionType = $(this).val() || 'message';
+			$(document).on("change", ".urcr-action-type-select", function () {
+				var actionType = $(this).val() || "message";
 				self.handleActionTypeChange(actionType);
 			});
 		},
@@ -442,16 +545,16 @@
 			var self = this;
 
 			if (!type) {
-				type = 'roles'; // Default for new conditions
+				type = "roles"; // Default for new conditions
 			}
 
 			// Prevent adding membership conditions (they're hidden and handled separately)
-			if (type === 'membership') {
+			if (type === "membership") {
 				return;
 			}
 
 			if (!conditionId) {
-				conditionId = 'x' + Date.now() + '_' + (self.conditionCounter++);
+				conditionId = "x" + Date.now() + "_" + self.conditionCounter++;
 			}
 
 			var conditionOptions = self.getConditionOptions();
@@ -468,13 +571,20 @@
 				type = selectedOption.value;
 			}
 
-			var inputType = selectedOption.type || 'multiselect';
+			var inputType = selectedOption.type || "multiselect";
 			// In membership create, all conditions are editable and deletable
 			var shouldLock = false;
 
-			var conditionHtml = self.getConditionRowHtml(conditionId, type, selectedOption.label, inputType, value || '', shouldLock);
+			var conditionHtml = self.getConditionRowHtml(
+				conditionId,
+				type,
+				selectedOption.label,
+				inputType,
+				value || "",
+				shouldLock
+			);
 
-			var $conditionsList = $('.urcr-conditions-list');
+			var $conditionsList = $(".urcr-conditions-list");
 			if ($conditionsList.length === 0) {
 				return;
 			}
@@ -488,91 +598,262 @@
 			self.conditions.push({
 				id: conditionId,
 				type: type,
-				value: value || '',
+				value: value || "",
 				isLocked: shouldLock
 			});
 		},
 
-		getConditionRowHtml: function (id, type, label, inputType, value, isLocked) {
+		getConditionRowHtml: function (
+			id,
+			type,
+			label,
+			inputType,
+			value,
+			isLocked
+		) {
 			var self = this;
 			var conditionOptions = self.getConditionOptions();
-			var removeButton = '';
+			var removeButton = "";
 
 			// Hide remove button if condition is locked
 			if (!isLocked) {
-				removeButton = '<button type="button" class="button button-link-delete urcr-condition-remove" aria-label="Remove condition">' +
+				removeButton =
+					'<button type="button" class="button button-link-delete urcr-condition-remove" aria-label="Remove condition">' +
 					'<span class="dashicons dashicons-no-alt"></span>' +
-					'</button>';
+					"</button>";
 			}
 
 			// Add disabled attribute if condition is locked
-			var disabledAttr = isLocked ? ' disabled' : '';
-			var fieldSelect = '<select class="urcr-condition-field-select urcr-condition-value-input"' + disabledAttr + '>';
+			var disabledAttr = isLocked ? " disabled" : "";
+			var fieldSelect =
+				'<select class="urcr-condition-field-select urcr-condition-value-input"' +
+				disabledAttr +
+				">";
 			conditionOptions.forEach(function (option) {
-				var selected = option.value === type ? 'selected' : '';
-				fieldSelect += '<option value="' + option.value + '" ' + selected + '>' + option.label + '</option>';
+				var selected = option.value === type ? "selected" : "";
+				fieldSelect +=
+					'<option value="' +
+					option.value +
+					'" ' +
+					selected +
+					">" +
+					option.label +
+					"</option>";
 			});
-			fieldSelect += '</select>';
+			fieldSelect += "</select>";
 
-			var valueInput = self.getConditionValueInputHtml(id, inputType, type, value, isLocked);
+			var valueInput = self.getConditionValueInputHtml(
+				id,
+				inputType,
+				type,
+				value,
+				isLocked
+			);
 
-			return '<div class="urcr-condition-wrapper" data-condition-id="' + id + '">' +
+			return (
+				'<div class="urcr-condition-wrapper" data-condition-id="' +
+				id +
+				'">' +
 				'<div class="urcr-condition-row ur-d-flex ur-mt-2 ur-align-items-start">' +
 				'<div class="urcr-condition-only ur-d-flex ur-align-items-start">' +
 				'<div class="urcr-condition-selection-section ur-d-flex ur-align-items-center ur-g-4">' +
-				'<div class="urcr-condition-field-name">' + fieldSelect + '</div>' +
+				'<div class="urcr-condition-field-name">' +
+				fieldSelect +
+				"</div>" +
 				'<div class="urcr-condition-operator"><span>is</span></div>' +
-				'<div class="urcr-condition-value">' + valueInput + '</div>' +
-				'</div>' +
-				'</div>' +
-				'</div>' +
+				'<div class="urcr-condition-value">' +
+				valueInput +
+				"</div>" +
+				"</div>" +
+				"</div>" +
+				"</div>" +
 				removeButton +
-				'</div>';
+				"</div>"
+			);
 		},
 
-		getConditionValueInputHtml: function (id, inputType, fieldType, value, isLocked) {
+		getConditionValueInputHtml: function (
+			id,
+			inputType,
+			fieldType,
+			value,
+			isLocked
+		) {
 			var self = this;
-			var html = '';
+			var html = "";
 			// Add disabled attribute if condition is locked
-			var disabledAttr = isLocked ? ' disabled' : '';
+			var disabledAttr = isLocked ? " disabled" : "";
 
-			if (inputType === 'multiselect') {
-				html = '<select class="urcr-enhanced-select2 urcr-condition-value-input" multiple data-condition-id="' + id + '" data-field-type="' + fieldType + '" ' + disabledAttr + '></select>';
-			} else if (inputType === 'checkbox') {
-				// User state - radio buttons
-				var checkedLoggedIn = (value === 'logged-in' || value === 'logged_in' || value === '') ? 'checked' : '';
-				var checkedLoggedOut = (value === 'logged-out' || value === 'logged_out') ? 'checked' : '';
-				html = '<div class="urcr-checkbox-radio-input">' +
-					'<label><input type="radio" name="condition_' + id + '_user_state" value="logged-in" ' + checkedLoggedIn + ' ' + disabledAttr + '> ' + (urcr_membership_access_data.labels.logged_in || 'Logged In') + '</label>' +
-					'<label><input type="radio" name="condition_' + id + '_user_state" value="logged-out" ' + checkedLoggedOut + ' ' + disabledAttr + '> ' + (urcr_membership_access_data.labels.logged_out || 'Logged Out') + '</label>' +
-					'</div>';
-			} else if (inputType === 'date') {
-				html = '<input type="date" class="urcr-condition-value-input" data-condition-id="' + id + '" data-field-type="' + fieldType + '" value="' + (value || '') + '" ' + disabledAttr + '>';
-			} else if (inputType === 'period') {
-				// Period input - select (During/After) and input (number)
-				var periodSelect = 'During';
-				var periodInput = '';
-				if (value && typeof value === 'object') {
-					periodSelect = value.select || 'During';
-					periodInput = value.input || '';
-				} else if (value && typeof value === 'object' && value.value) {
-					// Handle old format with value/duration
-					periodInput = value.value || '';
-					periodSelect = 'During';
+			if (fieldType === "ur_form_field") {
+				var formId = "";
+				var formFields = [];
+				if (value && typeof value === "object") {
+					formId = value.form_id || "";
+					formFields = value.form_fields || [];
 				}
-				html = '<div class="urcr-period-input-group ur-d-flex ur-align-items-center" style="gap: 8px;">' +
-					'<select class="urcr-period-select urcr-condition-value-input" data-condition-id="' + id + '" data-field-type="' + fieldType + '" data-period-part="select" ' + disabledAttr + '>' +
-					'<option value="During" ' + (periodSelect === 'During' ? 'selected' : '') + '>During</option>' +
-					'<option value="After" ' + (periodSelect === 'After' ? 'selected' : '') + '>After</option>' +
-					'</select>' +
-					'<input type="number" class="urcr-period-number urcr-condition-value-input" data-condition-id="' + id + '" data-field-type="' + fieldType + '" data-period-part="input" value="' + periodInput + '" min="0" placeholder="Days" ' + disabledAttr + '>' +
-					'</div>';
-			} else if (inputType === 'number') {
-				html = '<input type="number" class="urcr-condition-value-input" data-condition-id="' + id + '" data-field-type="' + fieldType + '" value="' + (value || '') + '" ' + disabledAttr + '>';
-			} else if (inputType === 'text') {
-				html = '<input type="text" class="urcr-condition-value-input" data-condition-id="' + id + '" data-field-type="' + fieldType + '" value="' + (value || '') + '" ' + disabledAttr + '>';
+				var valueJson = value
+					? JSON.stringify(value)
+					: '{"form_id":"","form_fields":[]}';
+				var valueAttr =
+					' data-value="' + $("<div>").text(valueJson).html() + '"';
+				var urForms = urcr_membership_access_data.ur_forms || {};
+
+				html =
+					'<div class="urcr-ur-form-field-condition" data-condition-id="' +
+					id +
+					'"' +
+					valueAttr +
+					">";
+				html +=
+					'<div class="urcr-form-selection ur-d-flex ur-align-items-center ur-g-4 ur-mb-2">';
+				html +=
+					'<select class="urcr-form-select components-select-control__input urcr-condition-value-input"' +
+					disabledAttr +
+					">";
+				html += '<option value="">Select a form</option>';
+				for (var formIdKey in urForms) {
+					if (urForms.hasOwnProperty(formIdKey)) {
+						var selected = formIdKey === formId ? "selected" : "";
+						html +=
+							'<option value="' +
+							formIdKey +
+							'" ' +
+							selected +
+							">" +
+							urForms[formIdKey] +
+							"</option>";
+					}
+				}
+				html += "</select>";
+				html += "</div>";
+				html += '<div class="urcr-form-fields-list"></div>';
+				html += "</div>";
+			} else if (inputType === "multiselect") {
+				html =
+					'<select class="urcr-enhanced-select2 urcr-condition-value-input" multiple data-condition-id="' +
+					id +
+					'" data-field-type="' +
+					fieldType +
+					'" ' +
+					disabledAttr +
+					"></select>";
+			} else if (inputType === "checkbox") {
+				// User state - radio buttons
+				var checkedLoggedIn =
+					value === "logged-in" ||
+					value === "logged_in" ||
+					value === ""
+						? "checked"
+						: "";
+				var checkedLoggedOut =
+					value === "logged-out" || value === "logged_out"
+						? "checked"
+						: "";
+				html =
+					'<div class="urcr-checkbox-radio-input">' +
+					'<label><input type="radio" name="condition_' +
+					id +
+					'_user_state" value="logged-in" ' +
+					checkedLoggedIn +
+					" " +
+					disabledAttr +
+					"> " +
+					(urcr_membership_access_data.labels.logged_in ||
+						"Logged In") +
+					"</label>" +
+					'<label><input type="radio" name="condition_' +
+					id +
+					'_user_state" value="logged-out" ' +
+					checkedLoggedOut +
+					" " +
+					disabledAttr +
+					"> " +
+					(urcr_membership_access_data.labels.logged_out ||
+						"Logged Out") +
+					"</label>" +
+					"</div>";
+			} else if (inputType === "date") {
+				html =
+					'<input type="date" class="urcr-condition-value-input" data-condition-id="' +
+					id +
+					'" data-field-type="' +
+					fieldType +
+					'" value="' +
+					(value || "") +
+					'" ' +
+					disabledAttr +
+					">";
+			} else if (inputType === "period") {
+				// Period input - select (During/After) and input (number)
+				var periodSelect = "During";
+				var periodInput = "";
+				if (value && typeof value === "object") {
+					periodSelect = value.select || "During";
+					periodInput = value.input || "";
+				} else if (value && typeof value === "object" && value.value) {
+					// Handle old format with value/duration
+					periodInput = value.value || "";
+					periodSelect = "During";
+				}
+				html =
+					'<div class="urcr-period-input-group ur-d-flex ur-align-items-center" style="gap: 8px;">' +
+					'<select class="urcr-period-select urcr-condition-value-input" data-condition-id="' +
+					id +
+					'" data-field-type="' +
+					fieldType +
+					'" data-period-part="select" ' +
+					disabledAttr +
+					">" +
+					'<option value="During" ' +
+					(periodSelect === "During" ? "selected" : "") +
+					">During</option>" +
+					'<option value="After" ' +
+					(periodSelect === "After" ? "selected" : "") +
+					">After</option>" +
+					"</select>" +
+					'<input type="number" class="urcr-period-number urcr-condition-value-input" data-condition-id="' +
+					id +
+					'" data-field-type="' +
+					fieldType +
+					'" data-period-part="input" value="' +
+					periodInput +
+					'" min="0" placeholder="Days" ' +
+					disabledAttr +
+					">" +
+					"</div>";
+			} else if (inputType === "number") {
+				html =
+					'<input type="number" class="urcr-condition-value-input" data-condition-id="' +
+					id +
+					'" data-field-type="' +
+					fieldType +
+					'" value="' +
+					(value || "") +
+					'" ' +
+					disabledAttr +
+					">";
+			} else if (inputType === "text") {
+				html =
+					'<input type="text" class="urcr-condition-value-input" data-condition-id="' +
+					id +
+					'" data-field-type="' +
+					fieldType +
+					'" value="' +
+					(value || "") +
+					'" ' +
+					disabledAttr +
+					">";
 			} else {
-				html = '<input type="text" class="urcr-condition-value-input" data-condition-id="' + id + '" data-field-type="' + fieldType + '" value="' + (value || '') + '" ' + disabledAttr + '>';
+				html =
+					'<input type="text" class="urcr-condition-value-input" data-condition-id="' +
+					id +
+					'" data-field-type="' +
+					fieldType +
+					'" value="' +
+					(value || "") +
+					'" ' +
+					disabledAttr +
+					">";
 			}
 
 			return html;
@@ -580,15 +861,31 @@
 
 		initConditionSelect2: function (conditionId, inputType, value) {
 			var self = this;
-			var $select = $('.urcr-condition-wrapper[data-condition-id="' + conditionId + '"] .urcr-enhanced-select2');
+			var $select = $(
+				'.urcr-condition-wrapper[data-condition-id="' +
+					conditionId +
+					'"] .urcr-enhanced-select2'
+			);
 
-			if ($select.length && inputType === 'multiselect') {
-				var fieldType = $select.data('field-type');
+			if (
+				inputType === "ur_form_field" ||
+				$(
+					'.urcr-condition-wrapper[data-condition-id="' +
+						conditionId +
+						'"] .urcr-ur-form-field-condition'
+				).length
+			) {
+				self.initURFormFieldCondition(conditionId, value);
+				return;
+			}
+
+			if ($select.length && inputType === "multiselect") {
+				var fieldType = $select.data("field-type");
 				var options = self.getSelect2Options(fieldType);
 
 				// Destroy existing select2 if any
-				if ($select.hasClass('select2-hidden-accessible')) {
-					$select.select2('destroy');
+				if ($select.hasClass("select2-hidden-accessible")) {
+					$select.select2("destroy");
 				}
 
 				// Wait a bit for DOM to be ready
@@ -596,12 +893,12 @@
 					$select.select2({
 						data: options,
 						multiple: true,
-						width: '100%'
+						width: "100%"
 					});
 
 					// Set selected values - check data attribute first (from PHP), then use passed value
 					var valueToSet = value;
-					var valueData = $select.attr('data-value');
+					var valueData = $select.attr("data-value");
 					if (valueData) {
 						try {
 							valueToSet = JSON.parse(valueData);
@@ -610,13 +907,311 @@
 						}
 					}
 
-					if (valueToSet && Array.isArray(valueToSet) && valueToSet.length > 0) {
-						$select.val(valueToSet).trigger('change');
+					if (
+						valueToSet &&
+						Array.isArray(valueToSet) &&
+						valueToSet.length > 0
+					) {
+						$select.val(valueToSet).trigger("change");
 					} else if (valueToSet && !Array.isArray(valueToSet)) {
 						// Convert single value to array
-						$select.val([valueToSet]).trigger('change');
+						$select.val([valueToSet]).trigger("change");
 					}
 				}, 100);
+			}
+		},
+
+		initURFormFieldCondition: function (conditionId, value) {
+			var self = this;
+			var $container = $(
+				'.urcr-condition-wrapper[data-condition-id="' +
+					conditionId +
+					'"] .urcr-ur-form-field-condition'
+			);
+			if (!$container.length) return;
+
+			var formId = "";
+			var formFields = [];
+			var valueData = $container.attr("data-value");
+			if (valueData) {
+				try {
+					var parsed = JSON.parse(valueData);
+					formId = parsed.form_id || "";
+					formFields = parsed.form_fields || [];
+				} catch (e) {
+					if (value && typeof value === "object") {
+						formId = value.form_id || "";
+						formFields = value.form_fields || [];
+					}
+				}
+			} else if (value && typeof value === "object") {
+				formId = value.form_id || "";
+				formFields = value.form_fields || [];
+			}
+
+			var $formSelect = $container.find(".urcr-form-select");
+			var $fieldsList = $container.find(".urcr-form-fields-list");
+
+			if (formId) {
+				$formSelect.val(formId);
+				self.renderFormFields(
+					$fieldsList,
+					formId,
+					formFields,
+					conditionId
+				);
+			}
+
+			$formSelect.off("change").on("change", function () {
+				var selectedFormId = $(this).val();
+				if (selectedFormId) {
+					self.renderFormFields(
+						$fieldsList,
+						selectedFormId,
+						[{ field_name: "", operator: "is", value: "" }],
+						conditionId
+					);
+					self.updateURFormFieldValue(conditionId);
+				} else {
+					$fieldsList.empty();
+					self.updateURFormFieldValue(conditionId);
+				}
+			});
+		},
+
+		renderFormFields: function (
+			$container,
+			formId,
+			formFields,
+			conditionId
+		) {
+			var self = this;
+			$container.empty();
+
+			if (
+				!formId ||
+				!urcr_membership_access_data.ur_form_data ||
+				!urcr_membership_access_data.ur_form_data[formId]
+			) {
+				return;
+			}
+
+			var formFieldData =
+				urcr_membership_access_data.ur_form_data[formId];
+			var fieldOptions = [];
+			for (var fieldName in formFieldData) {
+				if (formFieldData.hasOwnProperty(fieldName)) {
+					fieldOptions.push({
+						value: fieldName,
+						label: formFieldData[fieldName] || fieldName
+					});
+				}
+			}
+
+			if (formFields.length === 0) {
+				formFields = [{ field_name: "", operator: "is", value: "" }];
+			}
+
+			formFields.forEach(function (field, index) {
+				self.renderFormFieldRow(
+					$container,
+					field,
+					index,
+					fieldOptions,
+					conditionId
+				);
+			});
+		},
+
+		renderFormFieldRow: function (
+			$container,
+			field,
+			index,
+			fieldOptions,
+			conditionId
+		) {
+			var self = this;
+			var fieldName = field.field_name || "";
+			var operator = field.operator || "is";
+			var fieldValue = field.value || "";
+
+			var rowHtml =
+				'<div class="urcr-form-field-row ur-d-flex ur-align-items-center ur-mb-2">' +
+				'<div class="urcr-form-field-name">' +
+				'<select class="components-select-control__input urcr-condition-value-input urcr-form-field-select">' +
+				'<option value="">Select field</option>';
+			fieldOptions.forEach(function (opt) {
+				var selected = opt.value === fieldName ? "selected" : "";
+				rowHtml +=
+					'<option value="' +
+					opt.value +
+					'" ' +
+					selected +
+					">" +
+					opt.label +
+					"</option>";
+			});
+			rowHtml +=
+				"</select></div>" +
+				'<div class="urcr-form-field-operator">' +
+				'<select class="components-select-control__input urcr-condition-value-input urcr-form-field-operator-select">' +
+				'<option value="is"' +
+				(operator === "is" ? " selected" : "") +
+				">is</option>" +
+				'<option value="is not"' +
+				(operator === "is not" ? " selected" : "") +
+				">is not</option>" +
+				'<option value="empty"' +
+				(operator === "empty" ? " selected" : "") +
+				">empty</option>" +
+				'<option value="not empty"' +
+				(operator === "not empty" ? " selected" : "") +
+				">not empty</option>" +
+				"</select></div>";
+
+			if (operator !== "empty" && operator !== "not empty") {
+				rowHtml +=
+					'<div class="urcr-form-field-value ur-flex-1">' +
+					'<input type="text" class="components-text-control__input urcr-condition-value-input urcr-condition-value-text urcr-form-field-value-input" value="' +
+					(fieldValue || "") +
+					'" placeholder="Enter value">' +
+					"</div>";
+			}
+
+			rowHtml +=
+				'<button type="button" class="button urcr-add-field-button" aria-label="Add field">' +
+				'<span class="dashicons dashicons-plus-alt2"></span></button>' +
+				'<button type="button" class="button urcr-remove-field-button" aria-label="Remove field">' +
+				'<span class="dashicons dashicons-minus"></span></button>' +
+				"</div>";
+
+			$container.append(rowHtml);
+
+			var $row = $container.find(".urcr-form-field-row").last();
+			$row.find(
+				".urcr-form-field-select, .urcr-form-field-operator-select, .urcr-form-field-value-input"
+			)
+				.off("change input")
+				.on("change input", function () {
+					self.updateURFormFieldValue(conditionId);
+				});
+
+			$row.find(".urcr-form-field-operator-select")
+				.off("change")
+				.on("change", function () {
+					var op = $(this).val();
+					var $valueContainer = $row.find(".urcr-form-field-value");
+					if (op === "empty" || op === "not empty") {
+						$valueContainer.remove();
+					} else if (!$valueContainer.length) {
+						$row.find(".urcr-form-field-operator").after(
+							'<div class="urcr-form-field-value ur-flex-1">' +
+								'<input type="text" class="components-text-control__input urcr-condition-value-input urcr-condition-value-text urcr-form-field-value-input" placeholder="Enter value">' +
+								"</div>"
+						);
+						$row.find(".urcr-form-field-value-input")
+							.off("input")
+							.on("input", function () {
+								self.updateURFormFieldValue(conditionId);
+							});
+					}
+					self.updateURFormFieldValue(conditionId);
+				});
+
+			$row.find(".urcr-add-field-button")
+				.off("click")
+				.on("click", function (e) {
+					e.preventDefault();
+					e.stopPropagation();
+					var newField = {
+						field_name: "",
+						operator: "is",
+						value: ""
+					};
+					var newIndex = $container.find(
+						".urcr-form-field-row"
+					).length;
+					self.renderFormFieldRow(
+						$container,
+						newField,
+						newIndex,
+						fieldOptions,
+						conditionId
+					);
+					self.updateURFormFieldValue(conditionId);
+				});
+
+			$row.find(".urcr-remove-field-button")
+				.off("click")
+				.on("click", function (e) {
+					e.preventDefault();
+					e.stopPropagation();
+					var $allRows = $container.find(".urcr-form-field-row");
+					var currentCount = $allRows.length;
+					if (currentCount > 1 && !$(this).prop("disabled")) {
+						$row.remove();
+						var remainingRows = $container.find(
+							".urcr-form-field-row"
+						).length;
+						$container
+							.find(".urcr-remove-field-button")
+							.prop("disabled", remainingRows <= 1);
+						self.updateURFormFieldValue(conditionId);
+					}
+				});
+
+			var $allRowsAfter = $container.find(".urcr-form-field-row");
+			var shouldDisable = $allRowsAfter.length <= 1;
+			$container
+				.find(".urcr-remove-field-button")
+				.prop("disabled", shouldDisable);
+		},
+
+		updateURFormFieldValue: function (conditionId) {
+			var self = this;
+			var $container = $(
+				'.urcr-condition-wrapper[data-condition-id="' +
+					conditionId +
+					'"] .urcr-ur-form-field-condition'
+			);
+			if (!$container.length) return;
+
+			var formId = $container.find(".urcr-form-select").val() || "";
+			var formFields = [];
+
+			$container.find(".urcr-form-field-row").each(function () {
+				var fieldName =
+					$(this).find(".urcr-form-field-select").val() || "";
+				var operator =
+					$(this).find(".urcr-form-field-operator-select").val() ||
+					"is";
+				var $valueInput = $(this).find(".urcr-form-field-value-input");
+				var value =
+					$valueInput.length &&
+					operator !== "empty" &&
+					operator !== "not empty"
+						? $valueInput.val()
+						: "";
+
+				if (fieldName) {
+					formFields.push({
+						field_name: fieldName,
+						operator: operator,
+						value: value
+					});
+				}
+			});
+
+			var conditionValue = {
+				form_id: formId,
+				form_fields: formFields
+			};
+
+			var condition = self.conditions.find(function (c) {
+				return c.id === conditionId;
+			});
+			if (condition) {
+				condition.value = conditionValue;
 			}
 		},
 
@@ -624,44 +1219,87 @@
 			var self = this;
 			var options = [];
 
-			if (fieldType === 'roles') {
+			if (fieldType === "roles") {
 				if (urcr_membership_access_data.wp_roles) {
-					options = Object.keys(urcr_membership_access_data.wp_roles).map(function (key) {
-						return { id: key, text: urcr_membership_access_data.wp_roles[key] };
+					options = Object.keys(
+						urcr_membership_access_data.wp_roles
+					).map(function (key) {
+						return {
+							id: key,
+							text: urcr_membership_access_data.wp_roles[key]
+						};
 					});
 				}
-			} else if (fieldType === 'membership') {
+			} else if (fieldType === "membership") {
 				// For membership condition, only show current membership
 				if (self.membershipId > 0) {
-					var membershipTitle = '';
-					if (urcr_membership_access_data.memberships && urcr_membership_access_data.memberships[self.membershipId]) {
-						membershipTitle = urcr_membership_access_data.memberships[self.membershipId];
+					var membershipTitle = "";
+					if (
+						urcr_membership_access_data.memberships &&
+						urcr_membership_access_data.memberships[
+							self.membershipId
+						]
+					) {
+						membershipTitle =
+							urcr_membership_access_data.memberships[
+								self.membershipId
+							];
 					}
-					options = [{ id: self.membershipId.toString(), text: membershipTitle || 'Current Membership' }];
+					options = [
+						{
+							id: self.membershipId.toString(),
+							text: membershipTitle || "Current Membership"
+						}
+					];
 				} else if (urcr_membership_access_data.memberships) {
-					options = Object.keys(urcr_membership_access_data.memberships).map(function (key) {
-						return { id: key, text: urcr_membership_access_data.memberships[key] };
+					options = Object.keys(
+						urcr_membership_access_data.memberships
+					).map(function (key) {
+						return {
+							id: key,
+							text: urcr_membership_access_data.memberships[key]
+						};
 					});
 				}
-			} else if (fieldType === 'capabilities') {
+			} else if (fieldType === "capabilities") {
 				if (urcr_membership_access_data.wp_capabilities) {
-					options = Object.keys(urcr_membership_access_data.wp_capabilities).map(function (key) {
-						return { id: key, text: urcr_membership_access_data.wp_capabilities[key] };
+					options = Object.keys(
+						urcr_membership_access_data.wp_capabilities
+					).map(function (key) {
+						return {
+							id: key,
+							text: urcr_membership_access_data.wp_capabilities[
+								key
+							]
+						};
 					});
 				}
-			} else if (fieldType === 'registration_source') {
+			} else if (fieldType === "registration_source") {
 				if (urcr_membership_access_data.registration_sources) {
-					options = Object.keys(urcr_membership_access_data.registration_sources).map(function (key) {
-						return { id: key, text: urcr_membership_access_data.registration_sources[key] };
+					options = Object.keys(
+						urcr_membership_access_data.registration_sources
+					).map(function (key) {
+						return {
+							id: key,
+							text: urcr_membership_access_data
+								.registration_sources[key]
+						};
 					});
 				}
-			} else if (fieldType === 'ur_form_field') {
+			} else if (fieldType === "ur_form_field") {
 				// Handle UR form fields - would need form ID context
 				options = [];
-			} else if (fieldType === 'payment_status') {
+			} else if (fieldType === "payment_status") {
 				if (urcr_membership_access_data.payment_status) {
-					options = Object.keys(urcr_membership_access_data.payment_status).map(function (key) {
-						return { id: key, text: urcr_membership_access_data.payment_status[key] };
+					options = Object.keys(
+						urcr_membership_access_data.payment_status
+					).map(function (key) {
+						return {
+							id: key,
+							text: urcr_membership_access_data.payment_status[
+								key
+							]
+						};
 					});
 				}
 			}
@@ -671,7 +1309,11 @@
 
 		removeCondition: function (conditionId) {
 			var self = this;
-			$('.urcr-condition-wrapper[data-condition-id="' + conditionId + '"]').remove();
+			$(
+				'.urcr-condition-wrapper[data-condition-id="' +
+					conditionId +
+					'"]'
+			).remove();
 			self.conditions = self.conditions.filter(function (cond) {
 				return cond.id !== conditionId;
 			});
@@ -685,12 +1327,22 @@
 			});
 
 			if (selectedOption) {
-				var $wrapper = $('.urcr-condition-wrapper[data-condition-id="' + conditionId + '"]');
-				var $valueContainer = $wrapper.find('.urcr-condition-value');
-				var newInputHtml = self.getConditionValueInputHtml(conditionId, selectedOption.type, newType, '', false);
+				var $wrapper = $(
+					'.urcr-condition-wrapper[data-condition-id="' +
+						conditionId +
+						'"]'
+				);
+				var $valueContainer = $wrapper.find(".urcr-condition-value");
+				var newInputHtml = self.getConditionValueInputHtml(
+					conditionId,
+					selectedOption.type,
+					newType,
+					"",
+					false
+				);
 
 				$valueContainer.html(newInputHtml);
-				self.initConditionSelect2(conditionId, selectedOption.type, '');
+				self.initConditionSelect2(conditionId, selectedOption.type, "");
 
 				// Update stored condition
 				var condition = self.conditions.find(function (c) {
@@ -698,28 +1350,43 @@
 				});
 				if (condition) {
 					condition.type = newType;
-					condition.value = '';
+					condition.value = "";
 				}
 			}
 		},
 
 		updateConditionValue: function (conditionId, $input) {
 			var self = this;
-			var value = '';
+			var value = "";
 
-			if ($input.is('select')) {
-				if ($input.is('[multiple]')) {
+			var $container = $(
+				'.urcr-condition-wrapper[data-condition-id="' +
+					conditionId +
+					'"] .urcr-ur-form-field-condition'
+			);
+			if ($container.length) {
+				self.updateURFormFieldValue(conditionId);
+				return;
+			}
+
+			if ($input.is("select")) {
+				if ($input.is("[multiple]")) {
 					value = $input.val() || [];
 				} else {
-					value = $input.val() || '';
+					value = $input.val() || "";
 				}
 			} else if ($input.is('input[type="radio"]')) {
-				var $wrapper = $input.closest('.urcr-condition-wrapper');
-				value = $wrapper.find('input[type="radio"]:checked').val() || '';
-			} else if ($input.is('input[type="number"]') || $input.is('input[type="text"]') || $input.is('input[type="date"]')) {
-				value = $input.val() || '';
+				var $wrapper = $input.closest(".urcr-condition-wrapper");
+				value =
+					$wrapper.find('input[type="radio"]:checked').val() || "";
+			} else if (
+				$input.is('input[type="number"]') ||
+				$input.is('input[type="text"]') ||
+				$input.is('input[type="date"]')
+			) {
+				value = $input.val() || "";
 			} else {
-				value = $input.val() || '';
+				value = $input.val() || "";
 			}
 
 			var condition = self.conditions.find(function (c) {
@@ -734,13 +1401,18 @@
 			var self = this;
 
 			if (!targetId) {
-				targetId = 'x' + Date.now() + '_' + (self.targetCounter++);
+				targetId = "x" + Date.now() + "_" + self.targetCounter++;
 			}
 
 			var typeLabel = self.getContentTypeLabel(type);
-			var targetHtml = self.getContentTargetHtml(targetId, type, typeLabel, value || '');
+			var targetHtml = self.getContentTargetHtml(
+				targetId,
+				type,
+				typeLabel,
+				value || ""
+			);
 
-			$('.urcr-target-type-group').append(targetHtml);
+			$(".urcr-target-type-group").append(targetHtml);
 
 			// Initialize select2 if needed
 			self.initContentTargetSelect2(targetId, type, value);
@@ -749,89 +1421,146 @@
 			self.contentTargets.push({
 				id: targetId,
 				type: type,
-				value: value || (type === 'whole_site' ? 'whole_site' : [])
+				value: value || (type === "whole_site" ? "whole_site" : [])
 			});
 		},
 
 		getContentTargetHtml: function (id, type, label, value) {
 			var self = this;
-			var inputHtml = '';
+			var inputHtml = "";
 
-			if (type === 'whole_site') {
-				inputHtml = '<span>' + urcr_membership_access_data.labels.whole_site + '</span>';
-			} else if (type === 'pages' || type === 'posts') {
-				inputHtml = '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' + id + '" data-content-type="' + type + '"></select>';
-			} else if (type === 'taxonomy') {
-				inputHtml = '<div class="urcr-taxonomy-select-group">' +
-					'<select class="urcr-taxonomy-select" data-target-id="' + id + '">' +
+			if (type === "whole_site") {
+				inputHtml =
+					"<span>" +
+					urcr_membership_access_data.labels.whole_site +
+					"</span>";
+			} else if (type === "pages" || type === "posts") {
+				inputHtml =
+					'<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' +
+					id +
+					'" data-content-type="' +
+					type +
+					'"></select>';
+			} else if (type === "taxonomy") {
+				inputHtml =
+					'<div class="urcr-taxonomy-select-group">' +
+					'<select class="urcr-taxonomy-select" data-target-id="' +
+					id +
+					'">' +
 					'<option value="">Select Taxonomy</option>' +
-					'</select>' +
-					'<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' + id + '" data-content-type="taxonomy"></select>' +
-					'</div>';
+					"</select>" +
+					'<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' +
+					id +
+					'" data-content-type="taxonomy"></select>' +
+					"</div>";
 			} else {
-				inputHtml = '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' + id + '" data-content-type="' + type + '"></select>';
+				inputHtml =
+					'<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' +
+					id +
+					'" data-content-type="' +
+					type +
+					'"></select>';
 			}
 
-			return '<div class="urcr-target-item" data-target-id="' + id + '">' +
-				'<span class="urcr-target-type-label">' + label + ':</span>' +
+			return (
+				'<div class="urcr-target-item" data-target-id="' +
+				id +
+				'">' +
+				'<span class="urcr-target-type-label">' +
+				label +
+				":</span>" +
 				inputHtml +
 				'<button type="button" class="button-link urcr-target-remove" aria-label="Remove">' +
 				'<span class="dashicons dashicons-no-alt"></span>' +
-				'</button>' +
-				'</div>';
+				"</button>" +
+				"</div>"
+			);
 		},
 
 		initContentTargetSelect2: function (targetId, type, value) {
 			var self = this;
-			var $select = $('.urcr-target-item[data-target-id="' + targetId + '"] .urcr-content-target-input');
+			var $select = $(
+				'.urcr-target-item[data-target-id="' +
+					targetId +
+					'"] .urcr-content-target-input'
+			);
 
-			if ($select.length && type !== 'whole_site') {
+			if ($select.length && type !== "whole_site") {
 				var options = self.getContentTargetOptions(type);
 
 				// Destroy existing select2 if any
-				if ($select.hasClass('select2-hidden-accessible')) {
-					$select.select2('destroy');
+				if ($select.hasClass("select2-hidden-accessible")) {
+					$select.select2("destroy");
 				}
 
 				$select.select2({
 					data: options,
 					multiple: true,
-					width: '100%'
+					width: "100%"
 				});
 
 				// Set selected values after select2 is initialized
 				setTimeout(function () {
 					if (value && Array.isArray(value) && value.length > 0) {
-						$select.val(value).trigger('change');
-					} else if (value && !Array.isArray(value) && typeof value === 'object' && value.value) {
+						$select.val(value).trigger("change");
+					} else if (
+						value &&
+						!Array.isArray(value) &&
+						typeof value === "object" &&
+						value.value
+					) {
 						// Handle taxonomy format
-						if (Array.isArray(value.value) && value.value.length > 0) {
-							$select.val(value.value).trigger('change');
+						if (
+							Array.isArray(value.value) &&
+							value.value.length > 0
+						) {
+							$select.val(value.value).trigger("change");
 						}
 					} else if (value && !Array.isArray(value)) {
 						// Convert single value to array
-						$select.val([value]).trigger('change');
+						$select.val([value]).trigger("change");
 					}
 				}, 50);
 			}
 
 			// Handle taxonomy type
-			if (type === 'taxonomy') {
+			if (type === "taxonomy") {
 				self.initTaxonomySelect(targetId, value);
 			}
 		},
 
 		initTaxonomySelect: function (targetId, value) {
 			var self = this;
-			var $taxonomySelect = $('.urcr-target-item[data-target-id="' + targetId + '"] .urcr-taxonomy-select');
-			var $termSelect = $('.urcr-target-item[data-target-id="' + targetId + '"] .urcr-content-target-input');
+			var $taxonomySelect = $(
+				'.urcr-target-item[data-target-id="' +
+					targetId +
+					'"] .urcr-taxonomy-select'
+			);
+			var $termSelect = $(
+				'.urcr-target-item[data-target-id="' +
+					targetId +
+					'"] .urcr-content-target-input'
+			);
 
-			if ($taxonomySelect.length && urcr_membership_access_data.taxonomies) {
+			if (
+				$taxonomySelect.length &&
+				urcr_membership_access_data.taxonomies
+			) {
 				// Only append options if select is empty (not already rendered from PHP)
-				if ($taxonomySelect.find('option').length <= 1) {
-					Object.keys(urcr_membership_access_data.taxonomies).forEach(function (taxKey) {
-						$taxonomySelect.append('<option value="' + taxKey + '">' + urcr_membership_access_data.taxonomies[taxKey] + '</option>');
-					});
+				if ($taxonomySelect.find("option").length <= 1) {
+					Object.keys(urcr_membership_access_data.taxonomies).forEach(
+						function (taxKey) {
+							$taxonomySelect.append(
+								'<option value="' +
+									taxKey +
+									'">' +
+									urcr_membership_access_data.taxonomies[
+										taxKey
+									] +
+									"</option>"
+							);
+						}
+					);
 				}
 
 				// Get taxonomy from value parameter, or from already selected option (PHP rendered), or from select value
@@ -845,9 +1574,9 @@
 				} else {
 					// Check if taxonomy is already selected (from PHP rendering)
 					taxonomy = $taxonomySelect.val();
-					
+
 					// Get terms from data-value attribute (from PHP rendering)
-					var termsData = $termSelect.attr('data-value');
+					var termsData = $termSelect.attr("data-value");
 					if (termsData) {
 						try {
 							terms = JSON.parse(termsData);
@@ -862,13 +1591,13 @@
 					if ($taxonomySelect.val() !== taxonomy) {
 						$taxonomySelect.val(taxonomy);
 					}
-					
+
 					// Initialize terms with selected values
 					self.updateTaxonomyTerms(targetId, taxonomy, terms);
 				}
 
 				// Handle taxonomy change
-				$taxonomySelect.off('change').on('change', function () {
+				$taxonomySelect.off("change").on("change", function () {
 					var selectedTaxonomy = $(this).val();
 					self.updateTaxonomyTerms(targetId, selectedTaxonomy, []);
 				});
@@ -877,23 +1606,32 @@
 
 		updateTaxonomyTerms: function (targetId, taxonomy, selectedTerms) {
 			var self = this;
-			var $termSelect = $('.urcr-target-item[data-target-id="' + targetId + '"] .urcr-content-target-input');
+			var $termSelect = $(
+				'.urcr-target-item[data-target-id="' +
+					targetId +
+					'"] .urcr-content-target-input'
+			);
 
-			if ($termSelect.length && taxonomy && urcr_membership_access_data.terms_list && urcr_membership_access_data.terms_list[taxonomy]) {
+			if (
+				$termSelect.length &&
+				taxonomy &&
+				urcr_membership_access_data.terms_list &&
+				urcr_membership_access_data.terms_list[taxonomy]
+			) {
 				var terms = urcr_membership_access_data.terms_list[taxonomy];
 				var options = Object.keys(terms).map(function (termId) {
 					return { id: termId, text: terms[termId] };
 				});
 
 				// Destroy existing select2 if any
-				if ($termSelect.hasClass('select2-hidden-accessible')) {
-					$termSelect.select2('destroy');
+				if ($termSelect.hasClass("select2-hidden-accessible")) {
+					$termSelect.select2("destroy");
 				}
 
 				$termSelect.empty().select2({
 					data: options,
 					multiple: true,
-					width: '100%'
+					width: "100%"
 				});
 
 				// Set selected terms after select2 is initialized
@@ -903,7 +1641,7 @@
 						var termIds = selectedTerms.map(function (term) {
 							return String(term);
 						});
-						$termSelect.val(termIds).trigger('change');
+						$termSelect.val(termIds).trigger("change");
 					}, 50);
 				}
 			}
@@ -913,17 +1651,35 @@
 			var self = this;
 			var options = [];
 
-			if (type === 'pages' && urcr_membership_access_data.pages) {
-				options = Object.keys(urcr_membership_access_data.pages).map(function (key) {
-					return { id: key, text: urcr_membership_access_data.pages[key] };
-				});
-			} else if (type === 'posts' && urcr_membership_access_data.posts) {
-				options = Object.keys(urcr_membership_access_data.posts).map(function (key) {
-					return { id: key, text: urcr_membership_access_data.posts[key] };
-				});
-			} else if (type === 'post_types' && urcr_membership_access_data.post_types) {
-				options = Object.keys(urcr_membership_access_data.post_types).map(function (key) {
-					return { id: key, text: urcr_membership_access_data.post_types[key] };
+			if (type === "pages" && urcr_membership_access_data.pages) {
+				options = Object.keys(urcr_membership_access_data.pages).map(
+					function (key) {
+						return {
+							id: key,
+							text: urcr_membership_access_data.pages[key]
+						};
+					}
+				);
+			} else if (type === "posts" && urcr_membership_access_data.posts) {
+				options = Object.keys(urcr_membership_access_data.posts).map(
+					function (key) {
+						return {
+							id: key,
+							text: urcr_membership_access_data.posts[key]
+						};
+					}
+				);
+			} else if (
+				type === "post_types" &&
+				urcr_membership_access_data.post_types
+			) {
+				options = Object.keys(
+					urcr_membership_access_data.post_types
+				).map(function (key) {
+					return {
+						id: key,
+						text: urcr_membership_access_data.post_types[key]
+					};
 				});
 			}
 
@@ -932,10 +1688,12 @@
 
 		removeContentTarget: function (targetId) {
 			var self = this;
-			var $target = $('.urcr-target-item[data-target-id="' + targetId + '"]');
+			var $target = $(
+				'.urcr-target-item[data-target-id="' + targetId + '"]'
+			);
 			if ($target.length) {
 				// Hide with ur-d-none utility class before removing
-				$target.removeClass('ur-d-flex').addClass('ur-d-none');
+				$target.removeClass("ur-d-flex").addClass("ur-d-none");
 				$target.remove();
 			}
 			self.contentTargets = self.contentTargets.filter(function (target) {
@@ -949,62 +1707,84 @@
 				return t.type;
 			});
 			var isPro = urcr_membership_access_data.is_pro || false;
-			var allContentTypes = urcr_membership_access_data.content_type_options;
+			var allContentTypes =
+				urcr_membership_access_data.content_type_options;
 
 			// Filter for free users - only show posts and pages
-			var contentTypes = isPro ? allContentTypes : allContentTypes.filter(function (ct) {
-				return ct.value === 'posts' || ct.value === 'pages';
-			});
+			var contentTypes = isPro
+				? allContentTypes
+				: allContentTypes.filter(function (ct) {
+						return ct.value === "posts" || ct.value === "pages";
+				  });
 
 			// Show all content types, but disable ones that are already selected
 			// No longer filtering out existing types
 
 			// Find or create dropdown wrapper
-			var $wrapper = $button.closest('.urcr-content-dropdown-wrapper');
+			var $wrapper = $button.closest(".urcr-content-dropdown-wrapper");
 
 			if ($wrapper.length === 0) {
-				$wrapper = $button.closest('.urcr-target-selection-section').find('.urcr-content-dropdown-wrapper');
+				$wrapper = $button
+					.closest(".urcr-target-selection-section")
+					.find(".urcr-content-dropdown-wrapper");
 			}
 
 			if ($wrapper.length === 0) {
-				$wrapper = $button.closest('.urcr-target-selection-wrapper').find('.urcr-content-dropdown-wrapper');
+				$wrapper = $button
+					.closest(".urcr-target-selection-wrapper")
+					.find(".urcr-content-dropdown-wrapper");
 			}
 
 			if ($wrapper.length === 0) {
 				return;
 			}
 
-			var $dropdown = $wrapper.find('.urcr-content-type-dropdown-menu');
+			var $dropdown = $wrapper.find(".urcr-content-type-dropdown-menu");
 
 			if ($dropdown.length === 0) {
-				$dropdown = $('<div class="urcr-content-type-dropdown-menu urcr-dropdown-menu"></div>');
+				$dropdown = $(
+					'<div class="urcr-content-type-dropdown-menu urcr-dropdown-menu"></div>'
+				);
 				$wrapper.append($dropdown);
 			}
 
 			$dropdown.empty();
 			contentTypes.forEach(function (ct) {
 				var isDisabled = existingTypes.indexOf(ct.value) !== -1;
-				var disabledClass = isDisabled ? 'urcr-dropdown-option-disabled' : '';
-				var disabledAttr = isDisabled ? 'aria-disabled="true"' : '';
-				var tabIndex = isDisabled ? '-1' : '0';
-				$dropdown.append('<span role="button" tabindex="' + tabIndex + '" class="urcr-dropdown-option urcr-content-type-option ' + disabledClass + '" data-content-type="' + ct.value + '" ' + disabledAttr + '>' + ct.label + '</span>');
+				var disabledClass = isDisabled
+					? "urcr-dropdown-option-disabled"
+					: "";
+				var disabledAttr = isDisabled ? 'aria-disabled="true"' : "";
+				var tabIndex = isDisabled ? "-1" : "0";
+				$dropdown.append(
+					'<span role="button" tabindex="' +
+						tabIndex +
+						'" class="urcr-dropdown-option urcr-content-type-option ' +
+						disabledClass +
+						'" data-content-type="' +
+						ct.value +
+						'" ' +
+						disabledAttr +
+						">" +
+						ct.label +
+						"</span>"
+				);
 			});
 
 			// Toggle dropdown using utility classes
-			if ($dropdown.hasClass('ur-d-none')) {
-				$dropdown.removeClass('ur-d-none').addClass('ur-d-flex');
+			if ($dropdown.hasClass("ur-d-none")) {
+				$dropdown.removeClass("ur-d-none").addClass("ur-d-flex");
 			} else {
-				$dropdown.removeClass('ur-d-flex').addClass('ur-d-none');
+				$dropdown.removeClass("ur-d-flex").addClass("ur-d-none");
 			}
-
 		},
 
 		updateAccessControlClass: function () {
 			var self = this;
 			// Access control is always 'access', so always add the access class
-			var $wrapper = $('.urcr-condition-value-input-wrapper');
-			$wrapper.removeClass('urcr-restrict-content');
-			$wrapper.addClass('urcr-access-content');
+			var $wrapper = $(".urcr-condition-value-input-wrapper");
+			$wrapper.removeClass("urcr-restrict-content");
+			$wrapper.addClass("urcr-access-content");
 		},
 
 		initSelect2: function () {
@@ -1014,28 +1794,34 @@
 
 		getConditionOptions: function () {
 			var self = this;
-			var allOptions = urcr_membership_access_data.condition_options || [];
+			var allOptions =
+				urcr_membership_access_data.condition_options || [];
 			var isPro = urcr_membership_access_data.is_pro || false;
 
 			// Filter for free users - show membership, roles, and user_state
 			// For pro users, show all conditions
 			if (!isPro) {
 				allOptions = allOptions.filter(function (opt) {
-					return opt.value === 'membership' || opt.value === 'roles' || opt.value === 'user_state';
+					return (
+						opt.value === "membership" ||
+						opt.value === "roles" ||
+						opt.value === "user_state"
+					);
 				});
 			}
 
 			// Always exclude membership from condition options dropdown
 			// (membership is handled separately as the first locked condition)
 			allOptions = allOptions.filter(function (opt) {
-				return opt.value !== 'membership';
+				return opt.value !== "membership";
 			});
 
 			return allOptions;
 		},
 
 		getContentTypeLabel: function (type) {
-			var contentTypeOptions = urcr_membership_access_data.content_type_options || [];
+			var contentTypeOptions =
+				urcr_membership_access_data.content_type_options || [];
 
 			// Find the matching option by value
 			for (var i = 0; i < contentTypeOptions.length; i++) {
@@ -1052,7 +1838,9 @@
 			var self = this;
 
 			// Update membership ID from form if available (for new memberships)
-			var $membershipIdInput = $('#ur-input-type-membership-name').closest('form').find('input[name="membership_id"]');
+			var $membershipIdInput = $("#ur-input-type-membership-name")
+				.closest("form")
+				.find('input[name="membership_id"]');
 			if ($membershipIdInput.length && $membershipIdInput.val()) {
 				self.membershipId = parseInt($membershipIdInput.val(), 10);
 			}
@@ -1060,7 +1848,7 @@
 			// Also check if membership ID is in the URL
 			if (!self.membershipId && window.location.search) {
 				var urlParams = new URLSearchParams(window.location.search);
-				var postId = urlParams.get('post_id');
+				var postId = urlParams.get("post_id");
 				if (postId) {
 					self.membershipId = parseInt(postId, 10);
 				}
@@ -1068,9 +1856,9 @@
 
 			// Ensure membership condition is included if membership ID exists
 			var hasMembershipCondition = false;
-			$('.urcr-condition-wrapper').each(function () {
-				var type = $(this).find('.urcr-condition-field-select').val();
-				if (type === 'membership') {
+			$(".urcr-condition-wrapper").each(function () {
+				var type = $(this).find(".urcr-condition-field-select").val();
+				if (type === "membership") {
 					hasMembershipCondition = true;
 					return false; // break
 				}
@@ -1078,44 +1866,93 @@
 
 			// Build conditions array
 			var conditions = [];
-			$('.urcr-condition-wrapper').each(function () {
+			$(".urcr-condition-wrapper").each(function () {
 				var $wrapper = $(this);
-				var conditionId = $wrapper.data('condition-id');
-				var type = $wrapper.find('.urcr-condition-field-select').val();
-				var value = '';
+				var conditionId = $wrapper.data("condition-id");
+				var type = $wrapper.find(".urcr-condition-field-select").val();
+				var value = "";
 
-				// Get value based on input type
-				// Get value based on input type - check for select2 first
-				var $select2 = $wrapper.find('.select2-hidden-accessible');
-				if ($select2.length) {
-					// This is a select2 multiselect
-					value = $select2.val() || [];
-					if (!Array.isArray(value)) {
-						value = value ? [value] : [];
+				if (type === "ur_form_field") {
+					var condition = self.conditions.find(function (c) {
+						return c.id === conditionId;
+					});
+					if (
+						condition &&
+						condition.value &&
+						typeof condition.value === "object"
+					) {
+						value = condition.value;
+					} else {
+						var $container = $wrapper.find(
+							".urcr-ur-form-field-condition"
+						);
+						if ($container.length) {
+							self.updateURFormFieldValue(conditionId);
+							var updatedCondition = self.conditions.find(
+								function (c) {
+									return c.id === conditionId;
+								}
+							);
+							if (updatedCondition && updatedCondition.value) {
+								value = updatedCondition.value;
+							} else {
+								value = { form_id: "", form_fields: [] };
+							}
+						} else {
+							value = { form_id: "", form_fields: [] };
+						}
 					}
 				} else {
-					var $valueInput = $wrapper.find('.urcr-condition-value-input');
-					if ($valueInput.is('select[multiple]')) {
-						var selectedValues = $valueInput.val();
-						value = Array.isArray(selectedValues) ? selectedValues : (selectedValues ? [selectedValues] : []);
-					} else if ($valueInput.is('input[type="radio"]')) {
-						value = $wrapper.find('input[type="radio"]:checked').val() || '';
-					} else if ($wrapper.find('.urcr-period-input-group').length) {
-						// Handle period input
-						var $periodContainer = $wrapper.find('.urcr-period-input-group');
-						var periodSelect = $periodContainer.find('[data-period-part="select"]').val();
-						var periodInput = $periodContainer.find('[data-period-part="input"]').val();
-						value = {
-							select: periodSelect || 'During',
-							input: periodInput || ''
-						};
+					// Get value based on input type
+					// Get value based on input type - check for select2 first
+					var $select2 = $wrapper.find(".select2-hidden-accessible");
+					if ($select2.length) {
+						// This is a select2 multiselect
+						value = $select2.val() || [];
+						if (!Array.isArray(value)) {
+							value = value ? [value] : [];
+						}
 					} else {
-						value = $valueInput.val() || '';
+						var $valueInput = $wrapper.find(
+							".urcr-condition-value-input"
+						);
+						if ($valueInput.is("select[multiple]")) {
+							var selectedValues = $valueInput.val();
+							value = Array.isArray(selectedValues)
+								? selectedValues
+								: selectedValues
+								? [selectedValues]
+								: [];
+						} else if ($valueInput.is('input[type="radio"]')) {
+							value =
+								$wrapper
+									.find('input[type="radio"]:checked')
+									.val() || "";
+						} else if (
+							$wrapper.find(".urcr-period-input-group").length
+						) {
+							// Handle period input
+							var $periodContainer = $wrapper.find(
+								".urcr-period-input-group"
+							);
+							var periodSelect = $periodContainer
+								.find('[data-period-part="select"]')
+								.val();
+							var periodInput = $periodContainer
+								.find('[data-period-part="input"]')
+								.val();
+							value = {
+								select: periodSelect || "During",
+								input: periodInput || ""
+							};
+						} else {
+							value = $valueInput.val() || "";
+						}
 					}
 				}
 
 				// Update membership condition value if it's a membership condition
-				if (type === 'membership' && self.membershipId > 0) {
+				if (type === "membership" && self.membershipId > 0) {
 					value = [self.membershipId.toString()];
 				}
 
@@ -1126,47 +1963,56 @@
 				});
 			});
 
-
 			// Add membership condition if not present and membership ID exists
 			if (!hasMembershipCondition && self.membershipId > 0) {
 				conditions.unshift({
-					id: 'x' + Date.now(),
-					type: 'membership',
+					id: "x" + Date.now(),
+					type: "membership",
 					value: [self.membershipId.toString()]
 				});
 			}
 
 			// Build content targets array
 			var targetContents = [];
-			$('.urcr-target-item').each(function () {
+			$(".urcr-target-item").each(function () {
 				var $target = $(this);
-				var targetId = $target.data('target-id');
+				var targetId = $target.data("target-id");
 
 				// Determine type
-				var type = '';
-				if ($target.find('.urcr-taxonomy-select').length) {
-					type = 'taxonomy';
-				} else if ($target.find('.urcr-content-target-input').length) {
-					type = $target.find('.urcr-content-target-input').data('content-type') || '';
+				var type = "";
+				if ($target.find(".urcr-taxonomy-select").length) {
+					type = "taxonomy";
+				} else if ($target.find(".urcr-content-target-input").length) {
+					type =
+						$target
+							.find(".urcr-content-target-input")
+							.data("content-type") || "";
 				} else {
 					// Check if it's whole_site by looking for text content
-					var $label = $target.find('.urcr-target-type-label');
-					if ($label.length && $label.text().indexOf('Whole Site') !== -1) {
-						type = 'whole_site';
+					var $label = $target.find(".urcr-target-type-label");
+					if (
+						$label.length &&
+						$label.text().indexOf("Whole Site") !== -1
+					) {
+						type = "whole_site";
 					}
 				}
-				var value = '';
+				var value = "";
 				switch (type) {
-					case 'whole_site':
-						value = 'whole_site';
+					case "whole_site":
+						value = "whole_site";
 						break;
-					case 'taxonomy':
-						var taxonomy = $target.find('.urcr-taxonomy-select').val();
-						var $termSelect = $target.find('.urcr-content-target-input');
+					case "taxonomy":
+						var taxonomy = $target
+							.find(".urcr-taxonomy-select")
+							.val();
+						var $termSelect = $target.find(
+							".urcr-content-target-input"
+						);
 						var terms = [];
 
 						// First check data-value attribute (from PHP rendering)
-						var termsData = $termSelect.attr('data-value');
+						var termsData = $termSelect.attr("data-value");
 						if (termsData) {
 							try {
 								terms = JSON.parse(termsData);
@@ -1186,13 +2032,15 @@
 							value: terms
 						};
 						break;
-					case 'pages':
-					case 'posts':
-						var $contentSelect = $target.find('.urcr-content-target-input');
+					case "pages":
+					case "posts":
+						var $contentSelect = $target.find(
+							".urcr-content-target-input"
+						);
 						var selectedValues = [];
 
 						// First check data-value attribute (from PHP rendering)
-						var contentData = $contentSelect.attr('data-value');
+						var contentData = $contentSelect.attr("data-value");
 						if (contentData) {
 							try {
 								selectedValues = JSON.parse(contentData);
@@ -1204,14 +2052,20 @@
 							selectedValues = $contentSelect.val() || [];
 						}
 
-						value = Array.isArray(selectedValues) ? selectedValues : (selectedValues ? [selectedValues] : []);
+						value = Array.isArray(selectedValues)
+							? selectedValues
+							: selectedValues
+							? [selectedValues]
+							: [];
 						break;
 					default:
-						var $contentSelect = $target.find('.urcr-content-target-input');
+						var $contentSelect = $target.find(
+							".urcr-content-target-input"
+						);
 						var defaultValue = [];
 
 						// First check data-value attribute (from PHP rendering)
-						var defaultData = $contentSelect.attr('data-value');
+						var defaultData = $contentSelect.attr("data-value");
 						if (defaultData) {
 							try {
 								defaultValue = JSON.parse(defaultData);
@@ -1233,11 +2087,11 @@
 
 				// Convert type names back to old format for backend
 				switch (type) {
-					case 'pages':
-						type = 'wp_pages';
+					case "pages":
+						type = "wp_pages";
 						break;
-					case 'posts':
-						type = 'wp_posts';
+					case "posts":
+						type = "wp_posts";
 						break;
 				}
 
@@ -1254,26 +2108,28 @@
 			// Build rule data - structure must match what backend expects
 			// Title will be set by PHP based on membership name
 			var ruleData = {
-				title: '',
+				title: "",
 				access_rule_data: {
 					enabled: true,
-					access_control: self.accessControl || 'access',
+					access_control: self.accessControl || "access",
 					logic_map: {
-						type: 'group',
-						id: 'x' + Date.now(),
+						type: "group",
+						id: "x" + Date.now(),
 						conditions: conditions,
-						logic_gate: 'AND'
+						logic_gate: "AND"
 					},
 					target_contents: targetContents,
 					actions: actions
 				},
-				rule_type: 'membership',
+				rule_type: "membership",
 				membership_id: self.membershipId
 			};
-			console.log(actions)
+			console.log(actions);
 
 			// Store in hidden input
-			$('#urcr-membership-access-rule-data').val(JSON.stringify(ruleData));
+			$("#urcr-membership-access-rule-data").val(
+				JSON.stringify(ruleData)
+			);
 
 			// Also store globally for integration script
 			window.urcrMembershipAccessRuleData = ruleData;
@@ -1283,132 +2139,151 @@
 
 		initActionSection: function () {
 			var self = this;
-			var $actionTypeSelect = $('#urcr-membership-action-type');
+			var $actionTypeSelect = $("#urcr-membership-action-type");
 
 			// Force hide all action containers using utility classes
-			$('.urcr-action-input-container').removeClass('ur-d-flex').addClass('ur-d-none');
+			$(".urcr-action-input-container")
+				.removeClass("ur-d-flex")
+				.addClass("ur-d-none");
 
 			if ($actionTypeSelect.length) {
 				// Initialize select2 for action inputs if needed
-				$('.urcr-action-local-page, .urcr-action-ur-form, .urcr-action-shortcode-tag').each(function () {
-					if (!$(this).hasClass('select2-hidden-accessible')) {
+				$(
+					".urcr-action-local-page, .urcr-action-ur-form, .urcr-action-shortcode-tag"
+				).each(function () {
+					if (!$(this).hasClass("select2-hidden-accessible")) {
 						$(this).select2({
-							width: '100%'
+							width: "100%"
 						});
 					}
 				});
 
 				// Show/hide appropriate inputs based on current selection
-				var currentType = $actionTypeSelect.val() || 'message';
+				var currentType = $actionTypeSelect.val() || "message";
 				self.handleActionTypeChange(currentType);
 			}
 		},
 
 		handleActionTypeChange: function (actionType) {
 			// Hide all action input containers first using utility classes
-			$('.urcr-action-input-container').removeClass('ur-d-flex').addClass('ur-d-none');
+			$(".urcr-action-input-container")
+				.removeClass("ur-d-flex")
+				.addClass("ur-d-none");
 
 			// Default to message if actionType is not provided or invalid
 			if (!actionType) {
-				actionType = 'message';
+				actionType = "message";
 			}
 			// Show the appropriate container based on action type
 			var $container = null;
 			switch (actionType) {
-				case 'message':
-					$container = $('.urcrra-message-input-container');
+				case "message":
+					$container = $(".urcrra-message-input-container");
 					break;
-				case 'redirect':
-					$container = $('.urcrra-redirect-input-container');
+				case "redirect":
+					$container = $(".urcrra-redirect-input-container");
 					break;
-				case 'local_page':
-					$container = $('.urcrra-redirect-to-local-page-input-container');
+				case "local_page":
+					$container = $(
+						".urcrra-redirect-to-local-page-input-container"
+					);
 					break;
-				case 'ur-form':
-					$container = $('.urcrra-ur-form-input-container');
+				case "ur-form":
+					$container = $(".urcrra-ur-form-input-container");
 					break;
-				case 'shortcode':
-					$container = $('.urcrra-shortcode-input-container');
+				case "shortcode":
+					$container = $(".urcrra-shortcode-input-container");
 					break;
 				default:
 					// Default to message if unknown type
-					$container = $('.urcrra-message-input-container');
+					$container = $(".urcrra-message-input-container");
 					break;
 			}
 
 			// Show the selected container using utility classes
 			if ($container && $container.length) {
-				$container.removeClass('ur-d-none').addClass('ur-d-flex');
+				$container.removeClass("ur-d-none").addClass("ur-d-flex");
 			}
 		},
 
 		getActionsFromForm: function () {
 			var self = this;
-			var $actionTypeSelect = $('#urcr-membership-action-type');
+			var $actionTypeSelect = $("#urcr-membership-action-type");
 
 			if (!$actionTypeSelect.length) {
 				return self.getDefaultActions();
 			}
 
-			var actionType = $actionTypeSelect.val() || 'message';
-			var actionId = 'x' + Date.now();
+			var actionType = $actionTypeSelect.val() || "message";
+			var actionId = "x" + Date.now();
 			var actionData = {
 				id: actionId,
 				type: actionType,
-				access_control: self.accessControl || 'access',
+				access_control: self.accessControl || "access"
 			};
 
 			switch (actionType) {
-				case 'message':
-					actionData.label = 'Show Message';
+				case "message":
+					actionData.label = "Show Message";
 					// Get content from TinyMCE editor if available
-					var message = '';
-					if (typeof wp !== 'undefined' && wp.editor && $('#urcr-membership-action-message').length) {
-						message = wp.editor.getContent('urcr-membership-action-message');
+					var message = "";
+					if (
+						typeof wp !== "undefined" &&
+						wp.editor &&
+						$("#urcr-membership-action-message").length
+					) {
+						message = wp.editor.getContent(
+							"urcr-membership-action-message"
+						);
 					} else {
-						message = $('#urcr-membership-action-message').val() || '';
+						message =
+							$("#urcr-membership-action-message").val() || "";
 					}
-					actionData.message = message || '<p>You do not have sufficient permission to access this content.</p>';
-					actionData.redirect_url = '';
-					actionData.local_page = '';
-					actionData.ur_form = '';
-					actionData.shortcode = { tag: '', args: '' };
+					actionData.message =
+						message ||
+						"<p>You do not have sufficient permission to access this content.</p>";
+					actionData.redirect_url = "";
+					actionData.local_page = "";
+					actionData.ur_form = "";
+					actionData.shortcode = { tag: "", args: "" };
 					break;
-				case 'redirect':
-					actionData.label = 'Redirect';
-					actionData.message = '';
-					actionData.redirect_url = $('.urcr-action-redirect-url').val() || '';
-					actionData.local_page = '';
-					actionData.ur_form = '';
-					actionData.shortcode = { tag: '', args: '' };
+				case "redirect":
+					actionData.label = "Redirect";
+					actionData.message = "";
+					actionData.redirect_url =
+						$(".urcr-action-redirect-url").val() || "";
+					actionData.local_page = "";
+					actionData.ur_form = "";
+					actionData.shortcode = { tag: "", args: "" };
 					break;
-				case 'local_page':
-					actionData.type = 'redirect_to_local_page'; // Map to backend type
-					actionData.label = 'Redirect to a Local Page';
-					actionData.message = '';
-					actionData.redirect_url = '';
-					actionData.local_page = $('.urcr-action-local-page').val() || '';
-					actionData.ur_form = '';
-					actionData.shortcode = { tag: '', args: '' };
+				case "local_page":
+					actionData.type = "redirect_to_local_page"; // Map to backend type
+					actionData.label = "Redirect to a Local Page";
+					actionData.message = "";
+					actionData.redirect_url = "";
+					actionData.local_page =
+						$(".urcr-action-local-page").val() || "";
+					actionData.ur_form = "";
+					actionData.shortcode = { tag: "", args: "" };
 					break;
-				case 'ur-form':
-					actionData.type = 'ur-form'; // Always use hyphen format
-					actionData.label = 'Show UR Form';
-					actionData.message = '';
-					actionData.redirect_url = '';
-					actionData.local_page = '';
-					actionData.ur_form = $('.urcr-action-ur-form').val() || '';
-					actionData.shortcode = { tag: '', args: '' };
+				case "ur-form":
+					actionData.type = "ur-form"; // Always use hyphen format
+					actionData.label = "Show UR Form";
+					actionData.message = "";
+					actionData.redirect_url = "";
+					actionData.local_page = "";
+					actionData.ur_form = $(".urcr-action-ur-form").val() || "";
+					actionData.shortcode = { tag: "", args: "" };
 					break;
-				case 'shortcode':
-					actionData.label = 'Render Shortcode';
-					actionData.message = '';
-					actionData.redirect_url = '';
-					actionData.local_page = '';
-					actionData.ur_form = '';
+				case "shortcode":
+					actionData.label = "Render Shortcode";
+					actionData.message = "";
+					actionData.redirect_url = "";
+					actionData.local_page = "";
+					actionData.ur_form = "";
 					actionData.shortcode = {
-						tag: $('.urcr-action-shortcode-tag').val() || '',
-						args: $('.urcr-action-shortcode-args').val() || ''
+						tag: $(".urcr-action-shortcode-tag").val() || "",
+						args: $(".urcr-action-shortcode-args").val() || ""
 					};
 					break;
 			}
@@ -1417,31 +2292,33 @@
 		},
 
 		getDefaultActions: function () {
-			return [{
-				id: 'x' + Date.now(),
-				type: 'message',
-				label: 'Show Message',
-				message: '<p>You do not have sufficient permission to access this content.</p>',
-				redirect_url: '',
-				access_control: this.accessControl,
-				local_page: '',
-				ur_form: '',
-				shortcode: {
-					tag: '',
-					args: ''
+			return [
+				{
+					id: "x" + Date.now(),
+					type: "message",
+					label: "Show Message",
+					message:
+						"<p>You do not have sufficient permission to access this content.</p>",
+					redirect_url: "",
+					access_control: this.accessControl,
+					local_page: "",
+					ur_form: "",
+					shortcode: {
+						tag: "",
+						args: ""
+					}
 				}
-			}];
+			];
 		}
 	};
 
 	// Initialize on document ready
 	$(document).ready(function () {
-
 		// Check if the container exists
-		if ($('#ur-membership-access-section').length === 0) {
+		if ($("#ur-membership-access-section").length === 0) {
 			// Try again after a short delay
 			setTimeout(function () {
-				if ($('#ur-membership-access-section').length > 0) {
+				if ($("#ur-membership-access-section").length > 0) {
 					URCRMembershipAccess.init();
 				}
 			}, 500);
@@ -1450,8 +2327,6 @@
 		}
 	});
 
-
 	// Expose globally for integration
 	window.URCRMembershipAccess = URCRMembershipAccess;
-
 })(jQuery);

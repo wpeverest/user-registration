@@ -1,19 +1,20 @@
 /**
  * External Dependencies
  */
-import React, {useState, useEffect} from "react";
-import {__} from "@wordpress/i18n";
+import React, { useState, useEffect } from "react";
+import { __ } from "@wordpress/i18n";
 import ConditionValueInput from "../inputs/ConditionValueInput";
-import {getFilteredConditionOptions} from "../../utils/condition-options";
+import URFormFieldCondition from "./URFormFieldCondition";
+import { getFilteredConditionOptions } from "../../utils/condition-options";
 
 const ConditionRow = ({
-						  condition,
-						  onUpdate,
-						  isMigrated = false,
-						  isLocked = false,
-						  ruleType = null,
-						  isFirstCondition = false,
-					  }) => {
+	condition,
+	onUpdate,
+	isMigrated = false,
+	isLocked = false,
+	ruleType = null,
+	isFirstCondition = false
+}) => {
 	const [operator] = useState(condition.operator || "is");
 	const [value, setValue] = useState(condition.conditionValue || "");
 
@@ -21,7 +22,7 @@ const ConditionRow = ({
 		onUpdate({
 			...condition,
 			operator,
-			conditionValue: value,
+			conditionValue: value
 		});
 	}, [operator, value]);
 
@@ -34,15 +35,20 @@ const ConditionRow = ({
 		}
 	}, [condition.inputType, condition.type, condition.value]);
 
-
 	const handleValueChange = (newValue) => {
 		setValue(newValue);
 	};
 
 	const handleFieldChange = (e) => {
 		const selectedValue = e.target.value;
-		const allOptions = getFilteredConditionOptions(isMigrated, ruleType, isFirstCondition);
-		const selectedOption = allOptions.find(opt => opt.value === selectedValue);
+		const allOptions = getFilteredConditionOptions(
+			isMigrated,
+			ruleType,
+			isFirstCondition
+		);
+		const selectedOption = allOptions.find(
+			(opt) => opt.value === selectedValue
+		);
 
 		if (selectedOption) {
 			const updatedCondition = {
@@ -51,13 +57,58 @@ const ConditionRow = ({
 				label: selectedOption.label,
 				inputType: selectedOption.type,
 				type: condition.type || "condition",
-				conditionValue: "",
+				conditionValue:
+					selectedOption.value === "ur_form_field"
+						? { form_id: "", form_fields: [] }
+						: ""
 			};
-			setValue("");
+			setValue(
+				selectedOption.value === "ur_form_field"
+					? { form_id: "", form_fields: [] }
+					: ""
+			);
 			onUpdate(updatedCondition);
 		}
 	};
 
+	if (condition.value === "ur_form_field") {
+		return (
+			<div className="urcr-condition-row ur-d-flex ur-mt-2 ur-align-items-start">
+				<div className="urcr-condition-only ur-d-flex ur-align-items-start">
+					<div className="urcr-condition-selection-section ur-d-flex ur-align-items-center ur-g-4">
+						<div className="urcr-condition-field-name">
+							<select
+								className="components-select-control__input urcr-condition-value-input"
+								value={condition.value || ""}
+								onChange={handleFieldChange}
+								disabled={isLocked}
+							>
+								{getFilteredConditionOptions(
+									isMigrated,
+									ruleType,
+									isFirstCondition
+								).map((option) => (
+									<option
+										key={option.value}
+										value={option.value}
+									>
+										{option.label}
+									</option>
+								))}
+							</select>
+						</div>
+						<div className="urcr-condition-value ur-flex-1">
+							<URFormFieldCondition
+								condition={condition}
+								onUpdate={onUpdate}
+								disabled={isLocked}
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="urcr-condition-row ur-d-flex ur-mt-2 ur-align-items-start">
@@ -70,7 +121,11 @@ const ConditionRow = ({
 							onChange={handleFieldChange}
 							disabled={isLocked}
 						>
-							{getFilteredConditionOptions(isMigrated, ruleType, isFirstCondition).map((option) => (
+							{getFilteredConditionOptions(
+								isMigrated,
+								ruleType,
+								isFirstCondition
+							).map((option) => (
 								<option key={option.value} value={option.value}>
 									{option.label}
 								</option>
@@ -100,4 +155,3 @@ const ConditionRow = ({
 };
 
 export default ConditionRow;
-
