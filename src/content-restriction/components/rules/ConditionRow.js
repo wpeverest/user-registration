@@ -4,6 +4,7 @@
 import React, {useState, useEffect} from "react";
 import {__} from "@wordpress/i18n";
 import ConditionValueInput from "../inputs/ConditionValueInput";
+import URFormFieldCondition from "./URFormFieldCondition";
 import {getFilteredConditionOptions} from "../../utils/condition-options";
 
 const ConditionRow = ({
@@ -25,7 +26,6 @@ const ConditionRow = ({
 		});
 	}, [operator, value]);
 
-	// Sync value when condition type or field changes
 	useEffect(() => {
 		if (condition.conditionValue !== undefined) {
 			setValue(condition.conditionValue);
@@ -46,27 +46,55 @@ const ConditionRow = ({
 		const selectedOption = allOptions.find(opt => opt.value === selectedValue);
 
 		if (selectedOption) {
-			// Update the condition with new field, label, and inputType
-			// Reset the value since the field type changed
 			const updatedCondition = {
 				...condition,
 				value: selectedOption.value,
 				label: selectedOption.label,
 				inputType: selectedOption.type,
-				type: condition.type || "condition", // Preserve type to distinguish from groups
-				conditionValue: "", // Reset value when field changes
+				type: condition.type || "condition",
+				conditionValue: selectedOption.value === "ur_form_field" ? { form_id: "", form_fields: [] } : "",
 			};
-			setValue(""); // Reset local value
+			setValue(selectedOption.value === "ur_form_field" ? { form_id: "", form_fields: [] } : "");
 			onUpdate(updatedCondition);
 		}
 	};
 
+	if (condition.value === "ur_form_field") {
+		return (
+			<div className="urcr-condition-row ur-d-flex ur-mt-2 ur-align-items-start">
+				<div className="urcr-condition-only ur-d-flex ur-align-items-start">
+					<div className="urcr-condition-selection-section ur-d-flex ur-align-items-center ur-g-4">
+						<div className="urcr-condition-field-name">
+							<select
+								className="components-select-control__input urcr-condition-value-input"
+								value={condition.value || ""}
+								onChange={handleFieldChange}
+								disabled={isLocked}
+							>
+								{getFilteredConditionOptions(isMigrated, ruleType, isFirstCondition).map((option) => (
+									<option key={option.value} value={option.value}>
+										{option.label}
+									</option>
+								))}
+							</select>
+						</div>
+						<div className="urcr-condition-value ur-flex-1">
+							<URFormFieldCondition
+								condition={condition}
+								onUpdate={onUpdate}
+								disabled={isLocked}
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="urcr-condition-row ur-d-flex ur-mt-2 ur-align-items-start">
 			<div className="urcr-condition-only ur-d-flex ur-align-items-start">
 				<div className="urcr-condition-selection-section ur-d-flex ur-align-items-center ur-g-4">
-					{/* Field Name (Select Dropdown) */}
 					<div className="urcr-condition-field-name">
 						<select
 							className="components-select-control__input urcr-condition-value-input"
@@ -82,12 +110,10 @@ const ConditionRow = ({
 						</select>
 					</div>
 
-					{/* Operator  */}
 					<div className="urcr-condition-operator">
 						<span>{operator}</span>
 					</div>
 
-					{/* Value Input */}
 					<div className="urcr-condition-value">
 						<ConditionValueInput
 							type={condition.inputType || condition.type}

@@ -4,8 +4,8 @@
 import React, {useState, useEffect, useRef} from "react";
 import {__} from "@wordpress/i18n";
 import {getURCRLocalizedData, getURCRData} from "../../utils/localized-data";
-import {updateRule} from "../../api/content-access-rules-api";
-import {showSuccess, showError} from "../../utils/notifications";
+import {showError} from "../../utils/notifications";
+import {saveRuleWithCollectiveData} from "../../utils/rule-save-helper";
 
 /* global wp */
 
@@ -23,23 +23,19 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 
 	// Initialize from rule actions
 	useEffect(() => {
-		// Get rule data - check content property first, then root level
 		const ruleData = rule.content || rule;
 		const ruleActions = ruleData.actions || rule.actions || [];
 
 		if (ruleActions && ruleActions.length > 0) {
 			const action = ruleActions[0];
 			if (action.type) {
-				// Handle both "ur-form" and "ur_form" for backward compatibility
 				let normalizedType = action.type === "ur_form" ? "ur-form" : action.type;
-				// Map backend type "redirect_to_local_page" to frontend type "local_page"
 				if (normalizedType === "redirect_to_local_page") {
 					normalizedType = "local_page";
 				}
 				setActionType(normalizedType);
 			}
 			if (action.message) {
-				// Decode URL encoded message if needed
 				try {
 					setMessage(decodeURIComponent(action.message));
 				} catch (e) {
@@ -58,9 +54,8 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			} else {
 				setLocalPage("");
 			}
-			// Handle ur_form - check both ur_form and ur-form keys for backward compatibility
 			if (action.ur_form !== undefined && action.ur_form !== null && action.ur_form !== "") {
-				setUrForm(String(action.ur_form)); // Ensure it's a string
+				setUrForm(String(action.ur_form));
 			} else {
 				setUrForm("");
 			}
@@ -80,7 +75,6 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				setShortcodeArgs("");
 			}
 		} else {
-			// Default to message with default text
 			setActionType("message");
 			setMessage("<p>" + __("You do not have sufficient permission to access this content.", "user-registration") + "</p>");
 			setRedirectUrl("");
@@ -94,15 +88,12 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 	// Initialize WordPress editor for message
 	useEffect(() => {
 		if (actionType === "message") {
-			// Wait for wp.editor to be available
 			const initEditor = () => {
 				if (typeof wp !== "undefined" && wp.editor && document.getElementById(editorId)) {
-					// Remove existing editor if it exists
 					if (window.tinymce && window.tinymce.get(editorId)) {
 						wp.editor.remove(editorId);
 					}
 
-					// Initialize editor with same settings as PHP version
 					wp.editor.initialize(editorId, {
 						quicktags: false,
 						mediaButtons: true,
@@ -115,7 +106,6 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 						},
 					});
 
-					// Listen for editor changes after a short delay to ensure editor is ready
 					setTimeout(() => {
 						if (window.tinymce && window.tinymce.get(editorId)) {
 							const editor = window.tinymce.get(editorId);
@@ -128,10 +118,7 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				}
 			};
 
-			// Try to initialize immediately
 			const timer1 = setTimeout(initEditor, 100);
-
-			// Also try after a longer delay in case wp.editor loads later
 			const timer2 = setTimeout(initEditor, 500);
 
 			return () => {
@@ -144,13 +131,11 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 		}
 	}, [actionType, editorId]);
 
-	// Initialize tooltips for help tips
+	// Initialize tooltips
 	useEffect(() => {
 		if (typeof window.jQuery !== "undefined" && typeof window.jQuery.fn.tooltipster !== "undefined") {
-			// Initialize tooltips for any help tips in this component
 			const $helpTips = window.jQuery(".user-registration-help-tip");
 			if ($helpTips.length > 0) {
-				// Destroy existing tooltips first to avoid duplicates
 				$helpTips.each(function () {
 					const $tip = window.jQuery(this);
 					if ($tip.hasClass("tooltipstered")) {
@@ -158,7 +143,6 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 					}
 				});
 
-				// Initialize tooltips
 				$helpTips.tooltipster({
 					theme: "tooltipster-borderless",
 					maxWidth: 200,
@@ -176,7 +160,6 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			}
 
 			return () => {
-				// Cleanup on unmount
 				$helpTips.each(function () {
 					const $tip = window.jQuery(this);
 					if ($tip.hasClass("tooltipstered")) {
@@ -185,23 +168,20 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				});
 			};
 		}
-	}, [actionType]); // Re-initialize when action type changes (component re-renders)
+	}, [actionType]);
 
-	// Get pages from localized data
 	const pages = getURCRData("pages", {});
 	const pageOptions = Object.entries(pages).map(([id, title]) => ({
 		value: id,
 		label: title,
 	}));
 
-	// Get UR forms from localized data
 	const urForms = getURCRData("ur_forms", {});
 	const formOptions = Object.entries(urForms).map(([id, title]) => ({
 		value: id,
 		label: title,
 	}));
 
-	// Get shortcodes from localized data
 	const shortcodes = getURCRData("shortcodes", {});
 	const shortcodeOptions = Object.keys(shortcodes).map((tag) => ({
 		value: tag,
@@ -213,14 +193,154 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 		setActionType(newType);
 	};
 
+	// Build actionData from current state
+	const buildActionDataFromState = () => {
+		const ruleData = rule.content || rule;
+		const ruleActions = ruleData.actions || rule.actions || [];
+
+		let currentMessage = message;
+		if (actionType === "message" && typeof wp !== "undefined" && wp.editor) {
+			if (document.getElementById(editorId) && window.tinymce && window.tinymce.get(editorId)) {
+				currentMessage = wp.editor.getContent(editorId);
+			}
+		}
+
+		const accessControl = rule.access_control || ruleData.access_control || 
+			(ruleActions && ruleActions.length > 0 && ruleActions[0].access_control) || "restrict";
+
+		let actionData = {
+			id: ruleActions && ruleActions.length > 0 ? ruleActions[0].id : `x${Date.now()}`,
+			type: actionType,
+			access_control: accessControl,
+		};
+
+		switch (actionType) {
+			case "message":
+				actionData.label = __("Show Message", "user-registration");
+				actionData.message = currentMessage || "<p>" + __("You do not have sufficient permission to access this content.", "user-registration") + "</p>";
+				actionData.redirect_url = "";
+				actionData.local_page = "";
+				actionData.ur_form = "";
+				actionData.shortcode = {tag: "", args: ""};
+				break;
+			case "redirect":
+				actionData.label = __("Redirect", "user-registration");
+				actionData.message = "";
+				actionData.redirect_url = redirectUrl;
+				actionData.local_page = "";
+				actionData.ur_form = "";
+				actionData.shortcode = {tag: "", args: ""};
+				break;
+			case "local_page":
+				actionData.type = "redirect_to_local_page";
+				actionData.label = __("Redirect to a Local Page", "user-registration");
+				actionData.message = "";
+				actionData.redirect_url = "";
+				actionData.local_page = localPage;
+				actionData.ur_form = "";
+				actionData.shortcode = {tag: "", args: ""};
+				break;
+			case "ur-form":
+			case "ur_form":
+				actionData.type = "ur-form";
+				actionData.label = __("Show UR Form", "user-registration");
+				actionData.message = "";
+				actionData.redirect_url = "";
+				actionData.local_page = "";
+				actionData.ur_form = urForm ? String(urForm) : "";
+				actionData.shortcode = {tag: "", args: ""};
+				break;
+			case "shortcode":
+				actionData.label = __("Render Shortcode", "user-registration");
+				actionData.message = "";
+				actionData.redirect_url = "";
+				actionData.local_page = "";
+				actionData.ur_form = "";
+				actionData.shortcode = {
+					tag: shortcodeTag,
+					args: shortcodeArgs,
+				};
+				break;
+		}
+
+		return { actionData, accessControl };
+	};
+
+	// Sync state to rule prop when action state changes
+	const hasInitialized = useRef(false);
+	const prevActionState = useRef(null);
+
+	useEffect(() => {
+		if (!hasInitialized.current) {
+			hasInitialized.current = true;
+			prevActionState.current = {
+				actionType,
+				message,
+				redirectUrl,
+				localPage,
+				urForm,
+				shortcodeTag,
+				shortcodeArgs,
+			};
+			return;
+		}
+
+		const currentState = {
+			actionType,
+			message,
+			redirectUrl,
+			localPage,
+			urForm,
+			shortcodeTag,
+			shortcodeArgs,
+		};
+
+		const stateChanged = !prevActionState.current ||
+			prevActionState.current.actionType !== currentState.actionType ||
+			prevActionState.current.message !== currentState.message ||
+			prevActionState.current.redirectUrl !== currentState.redirectUrl ||
+			prevActionState.current.localPage !== currentState.localPage ||
+			prevActionState.current.urForm !== currentState.urForm ||
+			prevActionState.current.shortcodeTag !== currentState.shortcodeTag ||
+			prevActionState.current.shortcodeArgs !== currentState.shortcodeArgs;
+
+		if (stateChanged) {
+			const { actionData, accessControl: syncAccessControl } = buildActionDataFromState();
+			
+			const currentLogicMap = rule.logic_map || (rule.content && rule.content.logic_map) || {
+				type: "group",
+				id: `x${Date.now()}`,
+				conditions: []
+			};
+			const currentTargetContents = rule.target_contents || (rule.content && rule.content.target_contents) || [];
+
+			if (onRuleUpdate) {
+				const updatedRule = {
+					...rule,
+					access_control: syncAccessControl,
+					actions: [actionData],
+					content: {
+						...(rule.content || {}),
+						access_control: syncAccessControl,
+						logic_map: currentLogicMap,
+						target_contents: currentTargetContents,
+						actions: [actionData],
+					}
+				};
+				onRuleUpdate(updatedRule);
+			}
+
+			prevActionState.current = currentState;
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [actionType, message, redirectUrl, localPage, urForm, shortcodeTag, shortcodeArgs]);
+
 	const handleSave = async () => {
 		setIsSaving(true);
 		try {
-			// Get rule data - check content property first, then root level
 			const ruleData = rule.content || rule;
 			const ruleActions = ruleData.actions || rule.actions || [];
 
-			// Get current content from editor if message type
 			let currentMessage = message;
 			if (actionType === "message" && typeof wp !== "undefined" && wp.editor) {
 				if (document.getElementById(editorId) && window.tinymce && window.tinymce.get(editorId)) {
@@ -228,12 +348,9 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				}
 			}
 
-			// Get access_control from existing action or rule, default to "restrict"
-			const accessControl = ruleActions && ruleActions.length > 0 && ruleActions[0].access_control
-				? ruleActions[0].access_control
-				: (ruleData.access_control || rule.access_control || "restrict");
+			const accessControl = rule.access_control || ruleData.access_control || 
+				(ruleActions && ruleActions.length > 0 && ruleActions[0].access_control) || "restrict";
 
-			// Build action based on type
 			let actionData = {
 				id: ruleActions && ruleActions.length > 0 ? ruleActions[0].id : `x${Date.now()}`,
 				type: actionType,
@@ -258,7 +375,7 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 					actionData.shortcode = {tag: "", args: ""};
 					break;
 				case "local_page":
-					actionData.type = "redirect_to_local_page"; // Map to backend type
+					actionData.type = "redirect_to_local_page";
 					actionData.label = __("Redirect to a Local Page", "user-registration");
 					actionData.message = "";
 					actionData.redirect_url = "";
@@ -268,12 +385,12 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 					break;
 				case "ur-form":
 				case "ur_form":
-					actionData.type = "ur-form"; // Always use hyphen format
+					actionData.type = "ur-form";
 					actionData.label = __("Show UR Form", "user-registration");
 					actionData.message = "";
 					actionData.redirect_url = "";
 					actionData.local_page = "";
-					actionData.ur_form = urForm ? String(urForm) : ""; // Ensure it's a string
+					actionData.ur_form = urForm ? String(urForm) : "";
 					actionData.shortcode = {tag: "", args: ""};
 					break;
 				case "shortcode":
@@ -289,41 +406,16 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 					break;
 			}
 
-			// Build the data to save
-			// Ensure access_control matches at both rule and action levels
-			const accessRuleData = {
-				enabled: ruleData.enabled !== undefined ? ruleData.enabled : (rule.enabled !== undefined ? rule.enabled : true),
-				access_control: accessControl, // Use same access_control as action
-				logic_map: ruleData.logic_map || rule.logic_map || {
-					type: "group",
-					id: `x${Date.now()}`,
-					conditions: []
+			await saveRuleWithCollectiveData({
+				rule,
+				onRuleUpdate,
+				settingsData: {
+					actionData,
+					accessControl,
 				},
-				target_contents: ruleData.target_contents || rule.target_contents || [],
-				actions: [actionData],
-			};
-
-			const data = {
-				title: rule.title || __("Untitled Rule", "user-registration"),
-				access_rule_data: accessRuleData,
-			};
-
-			// Debug: Log the payload to verify ur_form is included
-			if (actionType === "ur-form" || actionType === "ur_form") {
-				console.log("Saving UR Form action with form ID:", urForm);
-				console.log("Action data:", actionData);
-				console.log("Full payload:", JSON.stringify(data, null, 2));
-			}
-
-			const response = await updateRule(rule.id, data);
-			if (response.success) {
-				showSuccess(response.message || __("Settings saved successfully", "user-registration"));
-				// Don't update state - let parent component handle refresh if needed
-			} else {
-				showError(response.message || __("Failed to save settings", "user-registration"));
-			}
+			});
 		} catch (error) {
-			showError(error.message || __("An error occurred", "user-registration"));
+			// Error handled in saveRuleWithCollectiveData
 		} finally {
 			setIsSaving(false);
 		}
@@ -355,7 +447,6 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				</div>
 			</div>
 
-			{/* Show Message - Text Editor */}
 			{actionType === "message" && (
 				<div
 					className="urcr-title-body-pair urcr-rule-action-input-container urcrra-message-input-container  ur-form-group">
@@ -380,7 +471,6 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				</div>
 			)}
 
-			{/* Redirect - URL Input */}
 			{actionType === "redirect" && (
 				<div
 					className="urcr-title-body-pair urcr-rule-action-input-container urcrra-redirect-input-container  ur-form-group">
@@ -399,7 +489,6 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				</div>
 			)}
 
-			{/* Redirect to Local Page - Pages Dropdown */}
 			{actionType === "local_page" && (
 				<div
 					className="urcr-title-body-pair urcr-rule-action-input-container urcrra-redirect-to-local-page-input-container  ur-form-group">
@@ -424,7 +513,6 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				</div>
 			)}
 
-			{/* Show UR Form - Forms Dropdown */}
 			{(actionType === "ur-form" || actionType === "ur_form") && (
 				<div
 					className="urcr-title-body-pair urcr-rule-action-input-container urcrra-ur-form-input-container  ur-form-group">
@@ -449,7 +537,6 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				</div>
 			)}
 
-			{/* Render Shortcode - Two Inputs */}
 			{actionType === "shortcode" && (
 				<div
 					className="urcr-title-body-pair urcr-rule-action-input-container urcrra-shortcode-input-container  ur-form-group">
@@ -491,7 +578,7 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 					onClick={handleSave}
 					disabled={isSaving}
 				>
-					{isSaving ? __("Saving...", "user-registration") : __("Save Settings", "user-registration")}
+					{isSaving ? __("Saving...", "user-registration") : __("Save", "user-registration")}
 				</button>
 			</div>
 		</div>

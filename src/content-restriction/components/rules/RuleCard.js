@@ -35,7 +35,6 @@ const RuleCard = ({
 		? `${adminURL}admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule&post-id=${rule.id}`
 		: "#";
 
-	// Close menu when clicking outside
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (menuWrapperRef.current && !menuWrapperRef.current.contains(event.target)) {
@@ -58,7 +57,6 @@ const RuleCard = ({
 		try {
 			const response = await toggleRuleStatus(rule.id, newStatus);
 			if (response.success) {
-				// Update local state instead of reloading all rules
 				if (onRuleStatusUpdate) {
 					onRuleStatusUpdate(rule.id, newStatus);
 				}
@@ -100,7 +98,6 @@ const RuleCard = ({
 
 	return (
 		<div className="user-registration-card ur-mb-2 urcr-rule-card ">
-			{/* Header */}
 			<div
 				className={headerClass}
 				onClick={(e) => {
@@ -166,39 +163,37 @@ const RuleCard = ({
 						</button>
 						{menuOpen && (
 							<div className="urcr-menu-dropdown">
-								{/* Delete button - disabled for membership rules or migrated custom rules */}
 								<button
 									className="urcr-menu-item urcr-menu-trash"
 									type="button"
-									disabled={rule.rule_type === "membership" || Boolean(rule.is_migrated)}
+									disabled={(!isURDev() && rule.rule_type === "membership") || Boolean(rule.is_migrated)}
 									onClick={(e) => {
 										e.stopPropagation();
-										if (!(rule.rule_type === "membership" || Boolean(rule.is_migrated))) {
+										if (!((!isURDev() && rule.rule_type === "membership") || Boolean(rule.is_migrated))) {
 											handleDeleteClick();
 										}
 									}}
 									style={{
-										opacity: (rule.rule_type === "membership" || Boolean(rule.is_migrated)) ? 0.5 : 1,
-										cursor: (rule.rule_type === "membership" || Boolean(rule.is_migrated)) ? "not-allowed" : "pointer"
+										opacity: ((!isURDev() && rule.rule_type === "membership") || Boolean(rule.is_migrated)) ? 0.5 : 1,
+										cursor: ((!isURDev() && rule.rule_type === "membership") || Boolean(rule.is_migrated)) ? "not-allowed" : "pointer"
 									}}
 								>
 									<span className="dashicons dashicons-trash"></span>
 									{__("Trash", "user-registration")}
 								</button>
-								{/* Duplicate button - disabled for membership rules */}
 								<button
 									className="urcr-menu-item urcr-menu-duplicate"
 									type="button"
-									disabled={rule.rule_type === "membership"}
+									disabled={!isURDev() && rule.rule_type === "membership"}
 									onClick={(e) => {
 										e.stopPropagation();
-										if (rule.rule_type !== "membership") {
+										if (isURDev() || rule.rule_type !== "membership") {
 											handleDuplicateClick();
 										}
 									}}
 									style={{
-										opacity: rule.rule_type === "membership" ? 0.5 : 1,
-										cursor: rule.rule_type === "membership" ? "not-allowed" : "pointer"
+										opacity: (!isURDev() && rule.rule_type === "membership") ? 0.5 : 1,
+										cursor: (!isURDev() && rule.rule_type === "membership") ? "not-allowed" : "pointer"
 									}}
 								>
 									<span className="dashicons dashicons-admin-page"></span>
@@ -232,7 +227,6 @@ const RuleCard = ({
 				</div>
 			</div>
 
-			{/* Body */}
 			<div
 				className="user-registration-card__body ur-p-3 integration-body-info"
 				style={{display: isExpanded ? "block" : "none"}}
@@ -252,7 +246,6 @@ const RuleCard = ({
 				</div>
 			</div>
 
-			{/* Delete Modal */}
 			<DeleteRuleModal
 				isOpen={isDeleteModalOpen}
 				onClose={() => setIsDeleteModalOpen(false)}
@@ -260,7 +253,6 @@ const RuleCard = ({
 				onDeleteSuccess={handleDeleteSuccess}
 			/>
 
-			{/* Duplicate Modal */}
 			<DuplicateRuleModal
 				isOpen={isDuplicateModalOpen}
 				onClose={() => setIsDuplicateModalOpen(false)}

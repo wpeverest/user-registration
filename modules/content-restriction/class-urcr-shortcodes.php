@@ -190,7 +190,34 @@ class URCR_Shortcodes {
 					return do_shortcode($content);
 				}
 			}
-			return '<span class="urcr-restrict-message">' . $message . '</span>';
+
+			// Get URLs for login and signup
+			$login_page_id = get_option( 'user_registration_login_page_id' );
+			$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
+
+			$login_url = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
+			$signup_url = $registration_page_id ? get_permalink( $registration_page_id ) : ( $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url() );
+
+			if ( ! $registration_page_id ) {
+				$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
+				if ( $default_form_page_id ) {
+					$signup_url = get_permalink( $default_form_page_id );
+				}
+			}
+
+			// Use base template to generate styled content
+			ob_start();
+			urcr_get_template(
+				'base-restriction-template.php',
+				array(
+					'message'    => $message,
+					'login_url'  => $login_url,
+					'signup_url' => $signup_url,
+				)
+			);
+			$styled_content = ob_get_clean();
+
+			return $styled_content;
 
 		}
 			return do_shortcode( $content );

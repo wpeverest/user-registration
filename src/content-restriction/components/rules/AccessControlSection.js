@@ -17,13 +17,12 @@ const AccessControlSection = ({
 	const conditionValueInputWrapperRef = useRef(null);
 
 	const handleAfterContentTypeSelection = (option) => {
-		// Add new content target
 		const newContentTarget = {
 			id: `x${Date.now()}`,
 			type: option.value,
 			label: option.label,
-			value: option.value === "whole_site" ? "whole_site" : [], // Will be populated based on type
-			taxonomy: option.value === "taxonomy" ? "" : undefined, // For taxonomy type
+			value: option.value === "whole_site" ? "whole_site" : [],
+			taxonomy: option.value === "taxonomy" ? "" : undefined,
 		};
 		onContentTargetsChange([...contentTargets, newContentTarget]);
 	};
@@ -40,7 +39,6 @@ const AccessControlSection = ({
 		onContentTargetsChange(updatedTargets);
 	};
 
-	// Ensure free users can only use "restrict"
 	useEffect(() => {
 		if (!isProAccess() && accessControl === "access") {
 			onAccessControlChange("access");
@@ -48,7 +46,6 @@ const AccessControlSection = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [accessControl]);
 
-	// Set initial class based on accessControl value
 	useEffect(() => {
 		if (conditionValueInputWrapperRef.current) {
 			if (accessControl === "access") {
@@ -63,12 +60,10 @@ const AccessControlSection = ({
 
 	const handleAccessControlChange = (option) => {
 		const newValue = option.value;
-		// Prevent free users from selecting "restrict"
 		if (!isProAccess() && newValue === "restrict") {
 			return;
 		}
 		
-		// Add or remove classes based on value
 		if (conditionValueInputWrapperRef.current) {
 			if (newValue === "access") {
 				conditionValueInputWrapperRef.current.classList.add("urcr-access-content");
