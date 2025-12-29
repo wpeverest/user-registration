@@ -15,6 +15,7 @@ use WPEverest\URMembership\Admin\Forms\FormFields;
 use WPEverest\URMembership\Admin\Members\Members;
 use WPEverest\URMembership\Admin\Membership\Membership;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\Admin\Services\PaymentGatewaysWebhookActions;
 use WPEverest\URMembership\Admin\Subscriptions\Subscriptions;
@@ -158,6 +159,8 @@ if ( ! class_exists( 'Admin' ) ) :
 				1
 			);
 			add_action( 'admin_enqueue_scripts', array( $this, 'register_membership_admin_scripts' ) );
+
+			add_action( 'user_registration_single_user_details_content', array( $this, 'render_user_membership_details' ), 10, 2 );
 		}
 
 		public function register_membership_admin_scripts() {
@@ -243,10 +246,8 @@ if ( ! class_exists( 'Admin' ) ) :
 		public function includes() {
 			$this->ajax = new AJAX();
 			if ( $this->is_admin() ) {
-				$this->admin   = new Membership();
-				$this->members = new Members();
-
-				new Subscriptions();
+				$this->admin = new Membership();
+				// $this->members = new Members();
 			} else {
 				// require file.
 				$this->frontend = new Frontend();
@@ -471,6 +472,82 @@ if ( ! class_exists( 'Admin' ) ) :
 			}
 
 			return $settings;
+		}
+
+		public function render_user_membership_details( $user_id, $form_id ) {
+
+			if ( ur_check_module_activation( 'membership' ) === false ) {
+				return;
+			}
+
+			$members_repository = new MembersRepository();
+			$memberships        = $members_repository->get_member_memberships_by_id( $user_id );
+
+			if ( empty( $memberships ) ) {
+				return;
+			}
+
+			ob_start();
+			?>
+			<div class="urm-admin-user-content-container">
+				<div id="urm-admin-user-content-header" >
+					<h3>
+						<?php
+						if ( count( $memberships ) > 1 ) {
+							esc_html_e( 'Membership Details', 'user-registration' );
+						} else {
+							esc_html_e( 'Membership Detail', 'user-registration' );
+						}
+						?>
+					</h3>
+				</div>
+				<div class="user-registration-user-form-details">
+					<table class="wp-list-table widefat fixed striped users">
+						<thead>
+							<tr>
+								<th><?php esc_html_e( 'Plan Type', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Amount', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Status', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Starts On', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Expires On', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Action', 'user-registration' ); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							foreach ( $memberships as $membership ) {
+								$plan_details = json_decode( $membership['post_content'], true );
+								$amount       = $membership['billing_amount'];
+								$currencies   = ur_payment_integration_get_currencies();
+								$currency     = get_option( 'user_registration_payment_currency', 'USD' );
+
+								$symbol = $currencies[ $currency ]['symbol'];
+								$amount = ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $amount, 2 ) : number_format( $amount, 2 ) . $symbol;
+
+								if ( isset( $plan_details['type'] ) && 'subscription' === $plan_details['type'] ) {
+									$amount = $amount . ' / ' . $membership['billing_cycle'];
+								}
+								$expiry_date = 'subscription' === $plan_details['type'] && ! empty( $membership['expiry_date'] ) ? date_i18n( 'Y-m-d', strtotime( $membership['expiry_date'] ) ) : __( 'N/A', 'user-registration' );
+
+								?>
+								<tr>
+									<td><?php echo esc_html( $membership['post_title'] ); ?></td>
+									<td><?php echo esc_html( $amount ); ?></td>
+									<td class="status-<?php echo esc_attr( $membership['status'] ); ?>"><?php echo esc_html( ucfirst( $membership['status'] ) ); ?></td>
+									<td><?php echo ! empty( $membership['start_date'] ) ? esc_html( date_i18n( 'Y-m-d', strtotime( $membership['start_date'] ) ) ) : __( 'N/A', 'user-registration' ); ?></td>
+									<td><?php echo esc_html( $expiry_date ); ?></td>
+									<td><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-subscriptions&action=edit&id=' . ( $membership['subscription_id'] ?? 0 ) ) ); ?>"><?php esc_html_e( 'View', 'user-registration' ); ?></a></td>
+								</tr>
+								<?php
+							}
+							?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<?php
+
+			echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 endif;

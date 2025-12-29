@@ -154,7 +154,7 @@ class UR_Settings_Membership_Expiring_Soon_User_Email {
 					Just a reminder — your membership is set to expire on {{membership_end_date}}. <br>
 					To avoid any interruption in access to your member benefits, please make sure to renew before the expiration date. <br>
 					Otherwise, you can manually renew in just a few clicks.<br>
-					({renewal_link})<br>
+					({membership_renewal_link})<br>
 					Stay connected and keep enjoying everything your membership offers!<br>
 					Best regards, <br>
 					{{blog_info}}',
