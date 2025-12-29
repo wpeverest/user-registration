@@ -1,0 +1,165 @@
+.user-registration-card {
+    &.urcr-rule-card {
+        margin-bottom: 0 !important;
+        box-shadow: none;
+
+        .accordion {
+            padding: 22px 24px !important;
+            gap: 16px;
+            cursor: pointer;
+
+            .integration-detail {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 12px;
+                flex: 1;
+
+                .user-registration-card__title {
+                    color: #383838;
+                    font-size: 15px;
+                    font-weight: 600;
+                    line-height: 23px;
+                }
+
+                .urcr-separator {
+                    font-size: 16px;
+                    margin: 0;
+                    color: #bdbdbd;
+                }
+            }
+
+            .integration-action {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+
+                >svg {
+                    width: 24px;
+                    height: 24px;
+                    stroke: #737373;
+                    transition: transform .3s ease, stroke .3s ease;
+                }
+
+                .urcr-settings-text {
+                    margin-right: 0;
+                }
+            }
+
+            &.active {
+                border-bottom: 1px solid #EDF2F7;
+
+                ~.user-registration-card__body {
+                    padding: 24px !important;
+
+                    .urcr-rule-content-panel {
+                        gap: 24px;
+
+                        .button {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 6px;
+                            width: max-content;
+                            background: transparent;
+                            border: 1px solid transparent;
+                            border-radius: 4px;
+                            font-size: 13px;
+                            color: #383838;
+                            font-weight: 600;
+                            line-height: 20px;
+                            box-shadow: none;
+                            outline: none;
+                            min-height: 30px;
+
+                            &:focus {
+                                outline: none;
+                                box-shadow: none;
+                            }
+
+                            .dashicons {
+                                display: flex;
+                                width: 14px;
+                                height: 14px;
+
+                                &::before {
+                                    font-size: 14px;
+                                }
+                            }
+
+                            &.urcr-add-condition-button,
+                            &.urcr-add-content-button {
+                                border-color: #F8F8FA;
+                                background: #EDEFF7;
+                                color: #475BB2;
+                            }
+
+                            &.urcr-add-group-button {
+                                background: #f4f4f4;
+                            }
+                        }
+
+                        .urcr-empty-rule-state {
+                            margin-bottom: 0;
+                        }
+
+                        .urcr-rule-actions {
+                            .urcr-save-rule-btn {
+                                border-radius: 4px;
+                                font-size: 13px;
+                                line-height: 20px;
+                                color: #ffffff;
+                                background: #475bb2;
+                                padding: 0px 12px;
+                                box-shadow: none;
+                                border: 0;
+                                min-height: 30px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .urcr-rule-id {
+            color: #999999;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 21px;
+            margin: 0;
+        }
+
+        .urcr-status-label {
+            margin: 0;
+            color: #222222;
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 21px;
+        }
+
+        .button-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: transparent;
+            border-radius: 4px;
+            transition: all .3s ease;
+
+            &:hover {
+                background: #f4f4f4;
+            }
+
+            .dashicons {
+                width: 18px;
+                height: 18px;
+
+                &::before {
+                    font-size: 18px;
+                    color: #7a7a7a;
+                }
+            }
+        }
+    }
+}

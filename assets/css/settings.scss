@@ -1233,6 +1233,12 @@ body {
 								left: 2px;
 							}
 						}
+
+						&:has(input.urcr-advance-logic-toggle) {
+							display: flex;
+							align-items: center;
+							gap: 8px;
+						}
 					}
 				}
 

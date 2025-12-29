@@ -705,15 +705,29 @@
 		 * @param $this
 		 */
 		create_membership: function ($this) {
-			ur_membership_utils.toggleSaveButtons(true);
-			ur_membership_utils.append_spinner($this);
+			// ur_membership_utils.toggleSaveButtons(true);
+			// ur_membership_utils.append_spinner($this);
+
 			if (this.validate_membership_form()) {
+				// Prepare access rules data before creating membership
+				var ruleData = null;
+				if (typeof window.URCRMembershipAccess !== 'undefined' && typeof window.URCRMembershipAccess.prepareRuleData === 'function') {
+					ruleData = window.URCRMembershipAccess.prepareRuleData();
+				}
 				var prepare_membership_data = this.prepare_membership_data();
+				var ajaxData = {
+					action: "user_registration_membership_create_membership",
+					membership_data: JSON.stringify(prepare_membership_data)
+				};
+
+				// Add rule data to AJAX request if available
+				if (ruleData) {
+					ajaxData.urcr_membership_access_rule_data = JSON.stringify(ruleData);
+					console.log('Rule data added to AJAX request for create');
+				}
+
 				this.send_data(
-					{
-						action: "user_registration_membership_create_membership",
-						membership_data: JSON.stringify(prepare_membership_data)
-					},
+					ajaxData,
 					{
 						success: function (response) {
 							if (response.success) {
@@ -768,15 +782,30 @@
 			ur_membership_utils.toggleSaveButtons(true);
 			ur_membership_utils.append_spinner($this);
 			if (this.validate_membership_form()) {
+				// Prepare access rules data before updating membership
+				var ruleData = null;
+				if (typeof window.URCRMembershipAccess !== 'undefined' && typeof window.URCRMembershipAccess.prepareRuleData === 'function') {
+					ruleData = window.URCRMembershipAccess.prepareRuleData();
+				}
+				console.log(ruleData);
 				var prepare_membership_data = this.prepare_membership_data();
+
+				var ajaxData = {
+					action: "user_registration_membership_update_membership",
+					membership_data: JSON.stringify(
+						prepare_membership_data
+					),
+					membership_id: ur_membership_data.membership_id
+				};
+
+				// Add rule data to AJAX request if available
+				if (ruleData) {
+					ajaxData.urcr_membership_access_rule_data = JSON.stringify(ruleData);
+					console.log('Rule data added to AJAX request for update');
+				}
+
 				this.send_data(
-					{
-						action: "user_registration_membership_update_membership",
-						membership_data: JSON.stringify(
-							prepare_membership_data
-						),
-						membership_id: ur_membership_data.membership_id
-					},
+					ajaxData,
 					{
 						success: function (response) {
 							if (response.success) {
