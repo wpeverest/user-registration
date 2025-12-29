@@ -32,11 +32,14 @@ class MembershipGroupService {
 
 	public function remove_form_related_groups( $ids ) {
 
-		return array_filter( $ids, function ( $item ) {
-			$form_id = $this->get_group_form_id( $item );
+		return array_filter(
+			$ids,
+			function ( $item ) {
+				$form_id = $this->get_group_form_id( $item );
 
-			return $form_id == "";
-		} );
+				return $form_id == '';
+			}
+		);
 	}
 
 	/**
@@ -75,13 +78,12 @@ class MembershipGroupService {
 	public function get_group_memberships( $group_id ) {
 		$memberships = $this->membership_group_repository->get_group_memberships_by_id( $group_id );
 		return apply_filters( 'build_membership_list_frontend', $memberships );
-
 	}
 
 	public function validate_membership_group_data( $data ) {
 
 		$response = array(
-			'status' => true
+			'status' => true,
 		);
 		if ( isset( $data['post_data']['name'] ) && empty( $data['post_data']['name'] ) ) {
 			$response['status']  = false;
@@ -91,7 +93,7 @@ class MembershipGroupService {
 			$unique_error = false;
 			if ( ! isset( $data['post_data']['ID'] ) && ! empty( $group ) ) {
 				$unique_error = true;
-			} else if ( isset( $data['post_data']['ID'] ) && ! empty( $group ) && $data['post_data']['ID'] !== $group['ID'] ) {
+			} elseif ( isset( $data['post_data']['ID'] ) && ! empty( $group ) && $data['post_data']['ID'] !== $group['ID'] ) {
 				$unique_error = true;
 			}
 			if ( $unique_error ) {
@@ -108,28 +110,107 @@ class MembershipGroupService {
 	}
 
 	public function prepare_membership_group_data( $post_data ) {
-		$membership_group_id = ! empty( $post_data['post_data']['ID'] ) ? absint( $post_data['post_data']['ID'] ) : '';
-		$post_meta_data      = array_map( 'sanitize_text_field', $post_data['post_meta_data']['memberships'] );
+
+		$membership_group_id = ! empty( $post_data['post_data']['ID'] )
+		? absint( $post_data['post_data']['ID'] )
+		: 0;
+
+		$post_meta_data   = $post_data['post_meta_data'];
+		$urmg_memberships = array_map( 'absint', $post_meta_data['memberships'] ?? array() );
+		$membership_mode  = sanitize_text_field( $post_meta_data['mode'] ?? '' );
+
+		$updated_post_meta_data = array(
+			array(
+				'meta_key'   => 'urmg_memberships',
+				'meta_value' => wp_json_encode( $urmg_memberships ),
+			),
+			array(
+				'meta_key'   => 'urmg_mode',
+				'meta_value' => $membership_mode,
+			),
+		);
+
+		if ( 'upgrade' === $membership_mode ) {
+
+			$sanitized_upgrade_path = $this->sanitize_upgrade_paths(
+				$post_meta_data['upgrade_path'] ?? ''
+			);
+
+			$updated_post_meta_data = array_merge(
+				$updated_post_meta_data,
+				array(
+					array(
+						'meta_key'   => 'urmg_upgrade_type',
+						'meta_value' => sanitize_text_field( $post_meta_data['upgrade_type'] ?? '' ),
+					),
+					array(
+						'meta_key'   => 'urmg_upgrade_path',
+						'meta_value' => wp_json_encode( $sanitized_upgrade_path ),
+					),
+				)
+			);
+		}
 
 		return array(
 			'post_data'      => array(
-				'ID'             => $membership_group_id,
-				'post_title'     => sanitize_text_field( $post_data['post_data']['name'] ),
-				'post_content'   => wp_json_encode( array(
-					'description' => sanitize_text_field( $post_data['post_data']['description'] ),
-					'status'      => ur_string_to_bool( $post_data['post_data']['status'] ),
-				) ),
-				'post_type'      => 'ur_membership_groups',
-				'post_status'    => 'publish',
-				'comment_status' => 'closed',
-				'ping_status'    => 'closed',
+				'ID'           => $membership_group_id,
+				'post_title'   => sanitize_text_field( $post_data['post_data']['name'] ),
+				'post_content' => wp_json_encode(
+					array(
+						'description' => sanitize_text_field( $post_data['post_data']['description'] ),
+						'status'      => ur_string_to_bool( $post_data['post_data']['status'] ),
+					)
+				),
+				'post_type'    => 'ur_membership_groups',
+				'post_status'  => 'publish',
 			),
-			'post_meta_data' => array(
-				'meta_key'   => 'urmg_memberships',
-				'meta_value' => wp_json_encode( $post_meta_data ),
-			)
+			'post_meta_data' => $updated_post_meta_data,
 		);
 	}
+
+	/**
+	 * Sanitize upgrade paths array.
+	 *
+	 * @param [type] $upgrade_path Upgrade Path.
+	 */
+	private function sanitize_upgrade_paths( $upgrade_path ) {
+
+		if ( empty( $upgrade_path ) ) {
+			return array();
+		}
+
+		if ( is_string( $upgrade_path ) ) {
+			$upgrade_path = json_decode( wp_unslash( $upgrade_path ), true );
+		}
+
+		if ( ! is_array( $upgrade_path ) ) {
+			return array();
+		}
+
+		$sanitized = array();
+
+		foreach ( $upgrade_path as $from_membership_id => $paths ) {
+			$from_id = absint( $from_membership_id );
+
+			if ( empty( $paths ) || ! is_array( $paths ) ) {
+				$sanitized[ $from_id ] = array();
+				continue;
+			}
+
+			foreach ( $paths as $path ) {
+				$sanitized[ $from_id ][] = array(
+					'membership_id'     => absint( $path['membership_id'] ?? 0 ),
+					'label'             => sanitize_text_field( $path['label'] ?? '' ),
+					'chargeable_amount' => floatval( $path['chargeable_amount'] ?? 0 ),
+					'target_amount'     => floatval( $path['target_amount'] ?? 0 ),
+					'current_amount'    => floatval( $path['current_amount'] ?? 0 ),
+				);
+			}
+		}
+
+		return $sanitized;
+	}
+
 
 	/**
 	 * create_membership_groups
@@ -145,20 +226,21 @@ class MembershipGroupService {
 			$data                = $this->prepare_membership_group_data( $post_data );
 			$data                = apply_filters( 'ur_membership_after_create_membership_groups_data_before_save', $data );
 			$membership_group_id = wp_insert_post( $data['post_data'] );
-			if ( $membership_group_id ) {
-				if ( ! empty( $data['post_data']['ID'] ) ) {
-					update_post_meta( $membership_group_id, $data['post_meta_data']['meta_key'], $data['post_meta_data']['meta_value'] );
-				} else {
-					add_post_meta( $membership_group_id, $data['post_meta_data']['meta_key'], $data['post_meta_data']['meta_value'] );
 
+			if ( $membership_group_id ) {
+				foreach ( $data['post_meta_data'] as $meta ) {
+					if ( ! empty( $data['post_data']['ID'] ) ) {
+						update_post_meta( $membership_group_id, $meta['meta_key'], $meta['meta_value'] );
+					} else {
+						add_post_meta( $membership_group_id, $meta['meta_key'], $meta['meta_value'] );
+					}
 				}
 
 				return array(
 					'status'              => true,
-					'membership_group_id' => $membership_group_id
+					'membership_group_id' => $membership_group_id,
 				);
 			}
-
 		}
 
 		return $data;
@@ -167,11 +249,10 @@ class MembershipGroupService {
 	public function structure_membership_group_data( $membership_groups ) {
 		$updated_array = array();
 		if ( ! function_exists( 'post_exists' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/post.php' );
+			require_once ABSPATH . 'wp-admin/includes/post.php';
 		}
 		foreach ( $membership_groups as $key => $membership_group ) {
 			$group_content = json_decode( wp_unslash( $membership_group['post_content'] ), true );
-
 
 			if ( $group_content['status'] ) {
 				$updated_array[ $membership_group['ID'] ] = $membership_group['post_title'];
@@ -184,13 +265,29 @@ class MembershipGroupService {
 				}
 			}
 
-			update_post_meta( $membership_group['ID'], 'urmg_memberships', wp_json_encode( array_values($memberships) ) );
+			update_post_meta( $membership_group['ID'], 'urmg_memberships', wp_json_encode( array_values( $memberships ) ) );
 			if ( empty( $memberships ) ) {
 				unset( $updated_array[ $membership_group['ID'] ] );
 			}
-
 		}
 
 		return $updated_array;
+	}
+
+	public function check_if_multiple_memberships_allowed( $group_id ) {
+
+		if ( UR_PRO_ACTIVE && ur_check_module_activation( 'multi-membership' ) ) {
+			$group_mode = get_post_meta( $group_id, 'urmg_mode', true );
+
+			return ur_string_to_bool( 'multiple' === $group_mode );
+		}
+
+		return false;
+	}
+
+	public function check_if_upgrade_allowed( $group_id ) {
+		$group_mode = get_post_meta( $group_id, 'urmg_mode', true );
+
+		return ur_string_to_bool( 'upgrade' === $group_mode );
 	}
 }

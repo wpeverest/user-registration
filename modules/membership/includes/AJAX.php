@@ -29,6 +29,7 @@ use WPEverest\URMembership\Admin\Services\PaymentService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 use WPEverest\URMembership\Admin\Services\OrderService;
+use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -57,7 +58,6 @@ class AJAX {
 			'delete_memberships'           => false,
 			'delete_membership'            => false,
 			'update_membership_status'     => false,
-			'update_membership_order'      => false,
 			'create_member'                => false,
 			'edit_member'                  => false,
 			'delete_members'               => false,
@@ -76,7 +76,10 @@ class AJAX {
 			'verify_pages'                 => false,
 			'validate_pg'                  => false,
 			'upgrade_membership'           => false,
+			'add_multiple_membership'      => false,
 			'get_membership_details'       => false,
+			'update_membership_order'      => false,
+			'fetch_upgrade_path'           => false,
 			'addons_get_lists'             => false,
 			'create_subscription'          => false,
 			'update_subscription'          => false,
@@ -911,7 +914,6 @@ class AJAX {
 	public static function confirm_payment() {
 
 		ur_membership_verify_nonce( 'urm_confirm_payment' );
-
 		if ( empty( $_POST['member_id'] ) ) {
 			wp_send_json_error(
 				array(
@@ -927,11 +929,16 @@ class AJAX {
 			);
 		}
 
-		$member_id       = absint( $_POST['member_id'] );
-		$is_user_created = get_user_meta( $member_id, 'urm_user_just_created' );
-		$is_upgrading    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
-		$is_renewing     = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
-		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing ) {
+		$member_id              = absint( $_POST['member_id'] );
+		$is_user_created        = get_user_meta( $member_id, 'urm_user_just_created' );
+		$membership_process     = urm_get_membership_process( $member_id );
+		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
+		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( $_POST['current_membership_id'] ) : 0;
+		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
+		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
+		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $current_membership_id, $membership_process['renew'] );
+
+		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
 			wp_send_json_error(
 				array(
 					'message' => __( 'Invalid Request.', 'user-registration' ),
@@ -947,7 +954,6 @@ class AJAX {
 		}
 		$stripe_service = new StripeService();
 		$payment_status = sanitize_text_field( $_POST['payment_status'] );
-		$is_renewing    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 
 		$update_stripe_order = $stripe_service->update_order( $_POST );
 
@@ -983,22 +989,29 @@ class AJAX {
 
 			delete_user_meta( $member_id, 'urm_user_just_created' );
 			$response = array(
-				'message'      => $update_stripe_order['message'],
-				'is_upgrading' => ur_string_to_bool( $is_upgrading ),
-				'is_renewing'  => ur_string_to_bool( $is_renewing ),
+				'message'                => $update_stripe_order['message'],
+				'is_upgrading'           => ur_string_to_bool( $is_upgrading ),
+				'is_renewing'            => ur_string_to_bool( $is_renewing ),
+				'is_purchasing_multiple' => ur_string_to_bool( $is_purchasing_multiple ),
 			);
 			if ( $is_upgrading ) {
 				$response['message'] = __( 'Membership upgraded successfully', 'user-registration' );
-				delete_user_meta( $member_id, 'urm_is_upgrading' );
-				delete_user_meta( $member_id, 'urm_is_upgrading_to' );
+				unset( $membership_process['upgrade'][ $current_membership_id ] );
+				update_user_meta( $member_id, 'urm_membership_process', $membership_process );
 				update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
 			}
+			if ( $is_purchasing_multiple ) {
+				$response['message'] = __( 'Membership purchased successfully', 'user-registration' );
+				unset( $membership_process['multiple'][ array_search( $selected_membership_id, $membership_process['multiple'], true ) ] );
+				update_user_meta( $member_id, 'urm_membership_process', $membership_process );
+			}
+
 			if ( $is_renewing ) {
 				$response['message']            = __( 'Membership has been successfully renewed.', 'user-registration' );
 				$subscription_service           = new SubscriptionService();
 				$members_subscription_repo      = new MembersSubscriptionRepository();
 				$membership_repository          = new MembershipRepository();
-				$member_subscription            = $members_subscription_repo->get_member_subscription( $member_id );
+				$member_subscription            = $members_subscription_repo->get_subscription_data_by_member_and_membership_id( $member_id, $current_membership_id );
 				$membership                     = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
 				$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 				$membership_metas['post_title'] = $membership['post_title'];
@@ -1008,6 +1021,7 @@ class AJAX {
 				$response
 			);
 		}
+
 		if ( $is_upgrading ) {
 			$stripe_service->revert_subscription( $member_id );
 		}
@@ -1024,15 +1038,21 @@ class AJAX {
 		$customer_id       = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
 		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
 		$member_id         = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$is_upgrading      = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
-		$is_renewing       = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 		$is_user_created   = get_user_meta( $member_id, 'urm_user_just_created' );
-		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Invalid Request.', 'user-registration' ),
-				)
-			);
+
+		$membership_process     = urm_get_membership_process( $member_id );
+		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
+		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( $_POST['current_membership_id'] ) : 0;
+		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
+		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
+		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $current_membership_id, $membership_process['renew'] );
+
+		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Invalid Request.', 'user-registration' ),
+						)
+					);
 		}
 		if ( is_user_logged_in() && ! current_user_can( 'edit_user', $member_id ) ) {
 			wp_send_json_error(
@@ -1059,7 +1079,10 @@ class AJAX {
 			}
 			wp_send_json_success( $stripe_subscription );
 		} else {
-			wp_delete_user( absint( $member_id ) );
+			if ( ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
+				wp_delete_user( absint( $member_id ) );
+			}
+
 			wp_send_json_error(
 				array(
 					'message' => __( 'Something went wrong when updating users payment status' ),
@@ -1303,7 +1326,8 @@ class AJAX {
 				)
 			);
 		}
-		$data                     = $_POST['membership_groups_data'];
+		$data = $_POST['membership_groups_data'];
+
 		$membership_group_service = new MembershipGroupService();
 		$create_groups            = $membership_group_service->create_membership_groups( $data );
 
@@ -1433,6 +1457,7 @@ class AJAX {
 				404
 			);
 		}
+
 		wp_send_json_success(
 			$upgradable_memberships
 		);
@@ -1595,8 +1620,22 @@ class AJAX {
 			}
 
 			if ( $selected_pg !== 'free' ) {
-				update_user_meta( $member_id, 'urm_is_upgrading', true );
-				update_user_meta( $member_id, 'urm_is_upgrading_to', $data['selected_membership_id'] );
+				$membership_process = urm_get_membership_process( $member_id );
+				if ( $membership_process && ! isset( $membership_process['upgrade'][ $data['current_membership_id'] ] ) ) {
+					$membership_process['upgrade'][ $data['current_membership_id'] ] = array(
+						'from'            => $data['current_membership_id'],
+						'to'              => $data['selected_membership_id'],
+						'subscription_id' => $data['current_subscription_id'],
+					);
+
+					update_user_meta( $member_id, 'urm_membership_process', $membership_process );
+				} else {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Membership upgrade process already initiated.', 'user-registration' ),
+						)
+					);
+				}
 			} else {
 				// Free upgrade completes immediately
 				PaymentGatewayLogging::log_transaction_success(
@@ -1648,6 +1687,8 @@ class AJAX {
 					'transaction_id'           => $upgrade_membership_response['extra']['transaction_id'],
 					'updated_membership_title' => $upgrade_membership_response['extra']['updated_membership_title'],
 					'message'                  => $message,
+					'selected_membership_id'   => $data['selected_membership_id'],
+					'current_membership_id'    => $data['current_membership_id'],
 				)
 			);
 		}
@@ -1656,6 +1697,240 @@ class AJAX {
 		wp_send_json_error(
 			array(
 				'message' => $error_message,
+			)
+		);
+	}
+
+	/**
+	 * Add multiple membership ajax request
+	 *
+	 * @return void
+	 */
+	public static function add_multiple_membership() {
+
+		ur_membership_verify_nonce( 'urm_upgrade_membership' );
+
+		if ( empty( $_POST['selected_membership_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Field selected_membership_id is required', 'user-registration' ),
+				)
+			);
+		}
+
+		if ( isset( $_POST['form_data'] ) && ! empty( $_POST['form_data'] ) ) {
+			$single_field = array();
+			$form_data    = json_decode( wp_unslash( $_POST['form_data'] ) );
+			$user_id      = get_current_user_id();
+			$form_id      = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : ur_get_form_id_by_userid( $user_id );
+			$profile      = user_registration_form_data( $user_id, $form_id );
+
+			foreach ( $form_data as $data ) {
+				$single_field[ 'user_registration_' . $data->field_name ] = isset( $data->value ) ? $data->value : '';
+			}
+
+			list( $profile, $single_field ) = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, false );
+			$user                           = get_userdata( $user_id );
+			urm_update_user_profile_data( $user, $profile, $single_field, $form_id );
+
+			$logger = ur_get_logger();
+			$logger->info(
+				__( 'User details added while purchasing membership.', 'user-registration' ),
+				array( 'source' => 'form-save' )
+			);
+		}
+
+		$current_user_id     = get_current_user_id();
+		$user_membership_ids = array();
+		$members_repository  = new MembersRepository();
+
+		if ( $current_user_id ) {
+			$user_memberships    = $members_repository->get_member_membership_by_id( $current_user_id );
+			$user_membership_ids = array_filter(
+				array_map(
+					function ( $user_memberships ) {
+						return $user_memberships['post_id'];
+					},
+					$user_memberships
+				)
+			);
+		}
+
+		$ur_authorize_data = isset( $_POST['ur_authorize_data'] ) ? $_POST['ur_authorize_data'] : array();
+		$data              = array(
+			'selected_membership_id' => absint( $_POST['selected_membership_id'] ),
+			'current_membership_ids' => $user_membership_ids,
+			'payment_method'         => sanitize_text_field( $_POST['selected_pg'] ),
+			'ur_authorize_net'       => $ur_authorize_data,
+		);
+
+		if ( ! empty( $_POST['coupon'] ) ) {
+			$data['coupon'] = sanitize_text_field( $_POST['coupon'] );
+		}
+
+		$subscription_service = new SubscriptionService();
+		$status               = $subscription_service->can_purchase_multiple( $data );
+
+		if ( ! $status['status'] ) {
+			wp_send_json_error(
+				array(
+					'message' => $status['message'],
+				)
+			);
+		}
+
+		// Get membership type for logging
+		$membership_repository = new MembershipRepository();
+		$membership_data       = $membership_repository->get_single_membership_by_ID( $data['selected_membership_id'] );
+		$membership_meta       = json_decode( wp_unslash( $membership_data['meta_value'] ), true );
+		$membership_type       = $membership_meta['type'] ?? 'unknown'; // free, paid, or subscription
+
+		$payment_gateway = $data['payment_method'] ?? 'unknown';
+		$member_id       = get_current_user_id();
+		$member          = get_userdata( $member_id );
+
+		if ( class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
+			// Add session divider
+			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
+				$payment_gateway,
+				'========== NEW PAYMENT SESSION ==========',
+				'notice',
+				array(
+					'timestamp'       => current_time( 'mysql' ),
+					'membership_type' => $membership_type,
+					'username'        => $member->user_login,
+				)
+			);
+
+			// Log form submission
+			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
+				$payment_gateway,
+				'Membership registration form submitted',
+				'info',
+				array(
+					'event_type'      => 'form_submission',
+					'member_id'       => $member_id,
+					'username'        => $member->user_login,
+					'email'           => $member->user_email,
+					'membership_id'   => $data['membership'] ?? 'N/A',
+					'payment_method'  => $payment_gateway,
+					'membership_type' => $membership_type,
+				)
+			);
+		}
+
+		$membership_service = new MembershipService();
+		$data['membership'] = $data['selected_membership_id'];
+		$data['start_date'] = date( 'Y-m-d' );
+		$data['username']   = $member->user_login;
+
+		$response = $membership_service->create_membership_order_and_subscription( $data );
+
+		if ( $response['status'] && class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
+			// For free and bank, status is 'active' immediately. For others, it's 'pending'
+			$initial_status = ( 'free' === $payment_gateway ) ? 'active' : 'pending';
+
+			\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
+				$payment_gateway,
+				'Order and subscription created - Status: ' . $initial_status,
+				'info',
+				array(
+					'event_type'      => 'status_change',
+					'member_id'       => $member_id,
+					'subscription_id' => $response['subscription_id'] ?? 'N/A',
+					'transaction_id'  => $response['transaction_id'] ?? 'N/A',
+					'status'          => $initial_status,
+					'membership_id'   => $data['membership'] ?? 'N/A',
+					'membership_type' => $membership_type,
+				)
+			);
+
+			// Log activation for free and bank immediately
+			if ( 'free' === $payment_gateway ) {
+				\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_transaction_success(
+					$payment_gateway,
+					'Subscription activated successfully',
+					array(
+						'member_id'       => $member_id,
+						'subscription_id' => $response['subscription_id'] ?? 'N/A',
+						'status'          => 'active',
+						'payment_method'  => $payment_gateway,
+						'membership_type' => $membership_type,
+						'auto_activated'  => true,
+					)
+				);
+			}
+		}
+
+		$transaction_id          = isset( $response['transaction_id'] ) ? $response['transaction_id'] : 0;
+		$data['member_id']       = $member_id;
+		$data['subscription_id'] = isset( $response['subscription_id'] ) ? $response['subscription_id'] : 0;
+		$data['email']           = $response['member_email'];
+		$pg_data                 = array();
+		$response['type']        = isset( $response['type'] ) ? $response['type'] : $membership_type;
+
+		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
+			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
+			$pg_data         = $payment_service->build_response( $data );
+		}
+
+		if ( $response['status'] ) {
+			$selected_pg            = $data['payment_method'];
+			$member_id              = $member_id;
+			$member                 = get_userdata( $member_id );
+			$member_username        = $member ? $member->user_login : 'unknown';
+			$added_membership_title = get_post( $data['selected_membership_id'] )->post_title;
+
+			// Get membership type for logging
+			$membership_repository = new MembershipRepository();
+			$new_membership        = $membership_repository->get_single_membership_by_ID( $data['selected_membership_id'] );
+			$membership_metas      = json_decode( $new_membership['meta_value'], true );
+			$membership_type       = $membership_metas['type'] ?? 'unknown';
+
+			if ( $selected_pg !== 'free' ) {
+				$membership_process = urm_get_membership_process( $member_id );
+				if ( $membership_process && ! in_array( $data['selected_membership_id'], $membership_process['multiple'] ) ) {
+					$membership_process['multiple'][] = $data['selected_membership_id'];
+					update_user_meta( $member_id, 'urm_membership_process', $membership_process );
+				} else {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Membership purchase process already initiated.', 'user-registration' ),
+						)
+					);
+				}
+			} else {
+				// Free membership updates immediately
+				PaymentGatewayLogging::log_transaction_success(
+					'free',
+					'Free membership addition completed',
+					array(
+						'event_type'        => 'completed',
+						'member_id'         => $member_id,
+						'new_membership_id' => $data['selected_membership_id'],
+						'membership_type'   => $membership_type,
+					)
+				);
+			}
+
+			$message = 'free' === $selected_pg ? __( 'Membership purchased successfully.', 'user-registration-membership' ) : __( 'New Order created, initializing payment...', 'user-registration-membership' );
+			wp_send_json_success(
+				array(
+					'is_purchasing_multiple'   => true,
+					'pg_data'                  => $pg_data,
+					'member_id'                => $member_id,
+					'username'                 => $member_username,
+					'transaction_id'           => $transaction_id,
+					'updated_membership_title' => $added_membership_title,
+					'message'                  => $message,
+					'selected_membership_id'   => $data['selected_membership_id'],
+				)
+			);
+		}
+
+		wp_send_json_error(
+			array(
+				'message' => __( 'Something went wrong while purchasing membership.', 'user-registration' ),
 			)
 		);
 	}
@@ -1703,11 +1978,12 @@ class AJAX {
 		$user                 = get_userdata( $member_id );
 		$subscription_service = new SubscriptionService();
 		$selected_pg          = sanitize_text_field( $_POST['selected_pg'] );
+		$membership_id        = absint( $_POST['membership_id'] );
 
 		// Get membership type for logging
 		$members_subscription_repo = new MembersSubscriptionRepository();
 		$membership_repository     = new MembershipRepository();
-		$member_subscription       = $members_subscription_repo->get_member_subscription( $member_id );
+		$member_subscription       = $members_subscription_repo->get_subscription_data_by_member_and_membership_id( $member_id, $membership_id );
 		$membership_type           = 'unknown';
 		if ( ! empty( $member_subscription ) && ! empty( $member_subscription['item_id'] ) ) {
 			$membership = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
@@ -1748,7 +2024,7 @@ class AJAX {
 			);
 		}
 
-		$renew_membership = $subscription_service->renew_membership( $user, $selected_pg );
+		$renew_membership = $subscription_service->renew_membership( $user, $selected_pg, $membership_id );
 
 		$response = $renew_membership['response'];
 		if ( $response['status'] ) {
@@ -1774,12 +2050,13 @@ class AJAX {
 
 			wp_send_json_success(
 				array(
-					'pg_data'        => $response,
-					'member_id'      => $renew_membership['extra']['member_id'],
-					'username'       => $renew_membership['extra']['username'],
-					'transaction_id' => $renew_membership['extra']['transaction_id'],
-					'message'        => $message,
-					'is_renewing'    => true,
+					'pg_data'               => $response,
+					'member_id'             => $renew_membership['extra']['member_id'],
+					'username'              => $renew_membership['extra']['username'],
+					'transaction_id'        => $renew_membership['extra']['transaction_id'],
+					'message'               => $message,
+					'is_renewing'           => true,
+					'current_membership_id' => $membership_id,
 				)
 			);
 		}
@@ -2197,6 +2474,53 @@ class AJAX {
 		wp_send_json_success(
 			array(
 				'html' => $html,
+			)
+		);
+	}
+
+	/**
+	 * Fetch upgrade path for selected memberships in the group.
+	 */
+	public static function fetch_upgrade_path() {
+		if ( empty( $_POST['membership_ids'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Please select memberships.', 'user-registration' ),
+				)
+			);
+		}
+		$membership_upgrade_service = new UpgradeMembershipService();
+		$memberships                = isset( $_POST['membership_ids'] ) ? $_POST['membership_ids'] : '';
+
+		if ( empty( $memberships ) ) {
+			return wp_send_json_error(
+				array(
+					'message' => __( 'Please select memberships.', 'user-registration' ),
+				)
+			);
+
+		}
+		$memberships           = implode( ',', $memberships );
+		$membership_repository = new MembershipRepository();
+
+		$memberships = $membership_repository->get_multiple_membership_by_ID( $memberships );
+
+		$upgrade_paths = $membership_upgrade_service->fetch_upgrade_paths( $memberships );
+
+		if ( ! empty( $upgrade_paths ) ) {
+			$upgrade_paths_div = $membership_upgrade_service->build_upgrade_paths( $upgrade_paths );
+
+			wp_send_json_success(
+				array(
+					'upgrade_paths'     => $upgrade_paths,
+					'upgrade_paths_div' => $upgrade_paths_div,
+				)
+			);
+		}
+
+		wp_send_json_error(
+			array(
+				'message' => __( 'Something went wrong. Please refresh the page and try again.', 'user-registration' ),
 			)
 		);
 	}

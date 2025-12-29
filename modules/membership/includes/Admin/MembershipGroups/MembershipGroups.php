@@ -10,6 +10,7 @@ namespace WPEverest\URMembership\Admin\MembershipGroups;
 
 use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\MembershipService;
+use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
 
 class MembershipGroups {
 	public function __construct() {
@@ -22,14 +23,16 @@ class MembershipGroups {
 	}
 
 	public function remove_group_ids_having_form( $ids ) {
-
 	}
 
 	public function enqueue_scripts() {
-		if ( empty( $_GET['page'] ) || 'user-registration-membership' !== $_GET['page'] && ! in_array( $_GET['page'], array(
+		if ( empty( $_GET['page'] ) || 'user-registration-membership' !== $_GET['page'] && ! in_array(
+			$_GET['page'],
+			array(
 				'add_groups',
-				'list_groups'
-			) ) ) {
+				'list_groups',
+			)
+		) ) {
 			return;
 		}
 
@@ -82,15 +85,25 @@ class MembershipGroups {
 	}
 
 	public function render_membership_group_creator( $menu_items ) {
-		$membership_service       = new MembershipService();
-		$memberships              = $membership_service->list_active_memberships();
-		$membership_group_service = new MembershipGroupService();
+		$membership_service          = new MembershipService();
+		$membership_group_service    = new MembershipGroupService();
+		$membership_group_repository = new MembershipGroupRepository();
+		$memberships                 = $membership_service->list_active_memberships();
+		$group_id                    = 0;
 
 		if ( isset( $_GET['post_id'] ) && ! empty( $_GET['post_id'] ) ) {
 			$group_id         = absint( $_GET['post_id'] );
 			$membership_group = $membership_group_service->get_membership_group_by_id( $group_id );
 		}
+
+		foreach ( $memberships as $key => $membership ) {
+			$current_membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
+
+			if ( ! empty( $current_membership_group ) && absint( $current_membership_group['ID'] ) !== $group_id ) {
+				unset( $memberships[ $key ] );
+			}
+		}
+
 		include __DIR__ . '/../Views/membership-groups-create.php';
 	}
-
 }
