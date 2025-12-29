@@ -1133,9 +1133,6 @@ function urcr_migrate_global_restriction_settings() {
 		'logic_gate' => 'AND',
 	);
 
-		),
-	);
-
 	$rule_data = array(
 		'enabled'         => true,
 		'access_control'  => 'access',

@@ -138,8 +138,7 @@ class URCR_Frontend {
 		global $wp_query, $post;
 		$current_post_id                    = get_queried_object_id();
 
-<<<<<<< HEAD
-=======
+
 		// Get the current post object properly
 		if ( empty( $post ) || ! is_object( $post ) ) {
 			$post = get_queried_object();
@@ -148,7 +147,6 @@ class URCR_Frontend {
 			}
 		}
 
->>>>>>> v5.1.0
 		// Check if this page should be excluded from whole site restriction
 		if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $current_post_id ) ) {
 			return $template;
