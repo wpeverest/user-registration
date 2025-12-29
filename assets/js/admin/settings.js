@@ -1551,7 +1551,7 @@
 		$(".user-registration-settings-container").removeClass("user-registration-settings-container--dimmed");
 		$(this).addClass("user-registration-header__close--hidden");
 		$(".user-registration-options-header__burger").removeClass("user-registration-header__close--hidden");
-
+	});
 	/**
 	 * Handle display conditions/dependencies for settings fields.
 	 */
