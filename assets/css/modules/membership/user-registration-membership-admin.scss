@@ -174,7 +174,9 @@
 		border-top-right-radius: 4px;
 		border-bottom-right-radius: 4px;
 		border-left: none;
-		padding: 10px 22px;
+		padding: 0px 22px;
+		min-height: 38px;
+		align-content: center;
 	}
 }
 
@@ -1108,7 +1110,8 @@
 						}
 					}
 
-					#payment-gateway-container, #ur-sync-to-email-marketing-container {
+					#payment-gateway-container,
+					#ur-sync-to-email-marketing-container {
 						margin-top: 20px;
 
 						.user-registration-card {
@@ -1201,21 +1204,21 @@
 								.payment-option-body {
 									margin-top: $spacing_20px;
 
-									.ur-sync-to-email-marketing-addon{
-										&-title-container{
+									.ur-sync-to-email-marketing-addon {
+										&-title-container {
 											display: flex;
 											align-items: center;
 											justify-content: start;
 
-											&-inner{
+											&-inner {
 												display: flex;
 												justify-content: center;
-												align-items: center;gap: 10px;
+												align-items: center;
+												gap: 10px;
 											}
 										}
-										&-sync-container{
 
-										}
+										&-sync-container {}
 									}
 								}
 							}
