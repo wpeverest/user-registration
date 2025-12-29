@@ -47,7 +47,7 @@ endif;
 if ( 'block' === $type ) :
 	?>
 	<div class="ur-membership-list-container">
-		<form id="membership-old-selection-form" class="ur-membership-container layout-block column-<?php echo esc_attr( $column_number ); ?>"
+		<form id="membership-old-selection-form" class="membership-selection-form ur-membership-container layout-block column-<?php echo esc_attr( $column_number ); ?>"
 				method="GET" data-layout="block">
 			<?php
 			foreach ( $memberships as $k => $membership ) :
@@ -109,7 +109,7 @@ if ( 'block' === $type ) :
 					<div class="membership-title">
 						<span><?php echo esc_html( $membership['title'] ); ?></span>
 					</div>
-					<<div class="membership-body">
+					<div class="membership-body">
 						<input type="hidden" name="membership_id" value="<?php echo esc_html( $membership['ID'] ); ?>">
 						<input type="hidden" name="action" value="<?php echo esc_html( $intended_action ); ?>">
 						<input type="hidden" name="redirection_url"

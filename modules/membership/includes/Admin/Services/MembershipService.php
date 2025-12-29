@@ -764,12 +764,17 @@ class MembershipService {
 						} else {
 
 							$group_diff = array_diff( $user_membership_ids, json_decode( $membership_group['memberships'] ) );
-
-							// Check if current user membership
-							if ( count( $group_diff ) < $user_membership_ids ) {
-								$multiple_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group['ID'] );
-							} else {
+							$overlap    = array_intersect( $user_membership_ids, json_decode( $membership_group['memberships'] ) );
+							if ( ! $overlap ) {
 								$multiple_allowed = true;
+							} else {
+
+								// Check if current user membership
+								if ( count( $group_diff ) < $user_membership_ids ) {
+									$multiple_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group['ID'] );
+								} else {
+									$multiple_allowed = true;
+								}
 							}
 						}
 					}
@@ -808,8 +813,10 @@ class MembershipService {
 			);
 		} else {
 			return array(
-				'status'      => true,
-				'memberships' => $memberships,
+				'status'                  => true,
+				'memberships'             => $memberships,
+				'current_subscription_id' => $subscription_id,
+				'current_membership_id'   => $current_membership_id,
 			);
 		}
 	}

@@ -1805,30 +1805,36 @@
 						: false;
 
 			if (is_upgrading || is_renewing || is_purchasing_multiple) {
-			if (is_upgrading || is_renewing || true === data.three_d_secure || is_purchasing_multiple) {
-				stripe_settings.update_order_status(
-					data.subscription,
-					data.response_data,
-					data.prepare_members_data,
-					data.form_response
-				);
-			}
+				if (
+					is_upgrading ||
+					is_renewing ||
+					true === data.three_d_secure ||
+					is_purchasing_multiple
+				) {
+					stripe_settings.update_order_status(
+						data.subscription,
+						data.response_data,
+						data.prepare_members_data,
+						data.form_response
+					);
+				}
 
-			if (
-				data.subscription &&
-				(data.subscription.status === "active" ||
-					data.subscription.status === "trialing") &&
-				!is_upgrading &&
-				!is_renewing &&
-				!is_purchasing_multiple
-			) {
-				ur_membership_frontend_utils.show_form_success_message(
-					data.form_response,
-					{
-						username: data.prepare_members_data.username,
-						transaction_id: data.subscription.id
-					}
-				);
+				if (
+					data.subscription &&
+					(data.subscription.status === "active" ||
+						data.subscription.status === "trialing") &&
+					!is_upgrading &&
+					!is_renewing &&
+					!is_purchasing_multiple
+				) {
+					ur_membership_frontend_utils.show_form_success_message(
+						data.form_response,
+						{
+							username: data.prepare_members_data.username,
+							transaction_id: data.subscription.id
+						}
+					);
+				}
 			}
 		}
 	};
@@ -2042,6 +2048,15 @@
 							data.coupon = $("#ur-membership-coupon")
 								.val()
 								.trim();
+						}
+
+						if (!subscription_id && !current_membership_id) {
+							subscription_id = $(
+								".urm_membership_upgrade_data"
+							).data("current-subscription-id");
+							current_membership_id = $(
+								".urm_membership_upgrade_data"
+							).data("current-membership-id");
 						}
 
 						ur_membership_ajax_utils.upgrade_membership(
@@ -2348,9 +2363,7 @@
 			$(document).on(
 				"click",
 				".reactivate-membership-button",
-				function (e) {
-					e.preventDefault();
-
+				function () {
 					var $this = $(this),
 						error_div = $("#membership-error-div"),
 						button_text = $this.text(),
@@ -2393,7 +2406,6 @@
 
 			$(document).on("click", ".renew-membership-button", function (e) {
 				e.preventDefault();
-
 				var $this = $(this),
 					has_error = false,
 					selected_pg = "free",

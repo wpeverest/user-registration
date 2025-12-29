@@ -331,7 +331,9 @@ class SubscriptionService {
 		$selected_membership_details['membership'] = $data['selected_membership_id'];
 
 		$selected_membership_details['payment_method'] = $payment_method;
-		$is_upgrading                                  = ur_string_to_bool( get_user_meta( $user->ID, 'urm_is_upgrading', true ) );
+		$membership_process                            = urm_get_membership_process( $user->ID );
+
+		$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $data['current_membership_id'] ] );
 
 		if ( $is_upgrading ) {
 			$response['response']['status']  = false;
@@ -446,6 +448,7 @@ class SubscriptionService {
 				'member_id'                => $user->ID,
 				'username'                 => $user->user_login,
 				'transaction_id'           => $orders_data['orders_data']['transaction_id'],
+				'order_id'                 => $order['ID'],
 				'updated_membership_title' => $selected_membership_details['post_title'],
 			),
 			'response' => $response,

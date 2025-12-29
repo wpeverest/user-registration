@@ -36,7 +36,7 @@ if ( isset( $membership_group['upgrade_path'] ) ) {
 					<div id="ur-membership-main-fields">
 						<!--					membership group name-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-1" style="gap:20px;">
-							<div class="ur-label">
+							<div class="ur-label" style="width: 30%">
 								<label
 									for="ur-input-type-membership-group-name"><?php esc_html_e( 'Group Name', 'user-registration' ); ?>
 									<span style="color:red">*</span>
@@ -44,7 +44,7 @@ if ( isset( $membership_group['upgrade_path'] ) ) {
 											data-tip="<?php echo esc_attr__( 'Title for the group.' ); ?>"></span>
 								</label>
 							</div>
-							<div class="ur-input-type-membership-group-name ur-admin-template">
+							<div class="ur-input-type-membership-group-name ur-admin-template" style="width: 100%">
 								<div class="ur-field" data-field-key="membership_group_name">
 									<input type="text" data-key-name="Membership Group Name"
 											id="ur-input-type-membership-group-name" name="ur_membership_group_name"
@@ -67,7 +67,7 @@ if ( isset( $membership_group['upgrade_path'] ) ) {
 											data-tip="<?php echo esc_attr__( 'Describe the group.' ); ?>"></span>
 								</label>
 							</div>
-							<div class="ur-field" data-field-key="textarea">
+							<div class="ur-field" data-field-key="textarea" style="width: 100%">
 								<?php
 								$membership_description = '';
 

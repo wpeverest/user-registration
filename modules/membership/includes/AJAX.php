@@ -934,8 +934,8 @@ class AJAX {
 		$membership_process     = urm_get_membership_process( $member_id );
 		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
 		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( $_POST['current_membership_id'] ) : 0;
-		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
 		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
+		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
 		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $current_membership_id, $membership_process['renew'] );
 
 		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
@@ -1079,7 +1079,10 @@ class AJAX {
 			}
 			wp_send_json_success( $stripe_subscription );
 		} else {
-			wp_delete_user( absint( $member_id ) );
+			if ( ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
+				wp_delete_user( absint( $member_id ) );
+			}
+
 			wp_send_json_error(
 				array(
 					'message' => __( 'Something went wrong when updating users payment status' ),
@@ -2471,6 +2474,53 @@ class AJAX {
 		wp_send_json_success(
 			array(
 				'html' => $html,
+			)
+		);
+	}
+
+	/**
+	 * Fetch upgrade path for selected memberships in the group.
+	 */
+	public static function fetch_upgrade_path() {
+		if ( empty( $_POST['membership_ids'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Please select memberships.', 'user-registration' ),
+				)
+			);
+		}
+		$membership_upgrade_service = new UpgradeMembershipService();
+		$memberships                = isset( $_POST['membership_ids'] ) ? $_POST['membership_ids'] : '';
+
+		if ( empty( $memberships ) ) {
+			return wp_send_json_error(
+				array(
+					'message' => __( 'Please select memberships.', 'user-registration' ),
+				)
+			);
+
+		}
+		$memberships           = implode( ',', $memberships );
+		$membership_repository = new MembershipRepository();
+
+		$memberships = $membership_repository->get_multiple_membership_by_ID( $memberships );
+
+		$upgrade_paths = $membership_upgrade_service->fetch_upgrade_paths( $memberships );
+
+		if ( ! empty( $upgrade_paths ) ) {
+			$upgrade_paths_div = $membership_upgrade_service->build_upgrade_paths( $upgrade_paths );
+
+			wp_send_json_success(
+				array(
+					'upgrade_paths'     => $upgrade_paths,
+					'upgrade_paths_div' => $upgrade_paths_div,
+				)
+			);
+		}
+
+		wp_send_json_error(
+			array(
+				'message' => __( 'Something went wrong. Please refresh the page and try again.', 'user-registration' ),
 			)
 		);
 	}
