@@ -1529,9 +1529,12 @@
 									data.subscription.status = "active";
 									resolve({
 										subscription: data.subscription,
-										form_id: data.form_id,
+										form_id: data.form_response.form_id,
 										response_data: data.response_data,
-										form_response: data.form_response
+										prepare_members_data:
+											data.prepare_members_data,
+										form_response: data.form_response,
+										three_d_secure: true
 									});
 								} else {
 									var message =
@@ -1559,7 +1562,7 @@
 						? data.response_data.data.is_renewing
 						: false;
 
-			if (is_upgrading || is_renewing) {
+			if (is_upgrading || is_renewing || true === data.three_d_secure) {
 				stripe_settings.update_order_status(
 					data.subscription,
 					data.response_data,
@@ -1641,7 +1644,14 @@
 						upgrade_error_container = $(
 							"#upgrade-membership-notice"
 						),
-						urm_default_pg = $(this).data("urm-default-pg");
+						urm_default_pg = $(this).data("urm-default-pg"),
+						hasCouponLink = $(this).data("has-coupon-link");
+
+					if ("yes" === hasCouponLink) {
+						$(document).find("#ur_coupon_container").show();
+					} else {
+						$(document).find("#ur_coupon_container").hide();
+					}
 
 					var authorize_container = $(".authorize-net-container");
 					var authorize_error_container = $("#authorize-errors");
@@ -1891,25 +1901,53 @@
 				"click",
 				"#membership-old-selection-form .membership-signup-button",
 				function () {
-					var $this = $(this),
-						membership_id = $this
-							.siblings('input[name="membership_id"]')
-							.val(),
-						redirection_url = $this
-							.siblings('input[name="redirection_url"]')
-							.val(),
-						thank_you_page_id = $this
-							.siblings('input[name="thank_you_page_id"]')
-							.val(),
-						uuid = $this.siblings('input[name="urm_uuid"]').val(),
-						url =
-							redirection_url +
-							"?membership_id=" +
-							membership_id +
-							"&urm_uuid=" +
-							uuid +
-							"&thank_you=" +
-							thank_you_page_id;
+					if (urmf_data.isEditor) {
+						e.preventDefault();
+						return;
+					}
+
+					var $form = $(this).closest("form");
+
+					if ($form.hasClass("layout-list")) {
+						var membership_id = $form
+								.find('input[name="membership_id"]:checked')
+								.val(),
+							redirection_url = $form
+								.find('input[name="redirection_url"]')
+								.val(),
+							thank_you_page_id = $form
+								.find('input[name="thank_you_page_id"]')
+								.val(),
+							uuid = $form.find('input[name="urm_uuid"]').val();
+					} else {
+						var $this = $(this),
+							membership_id = $this
+								.siblings('input[name="membership_id"]')
+								.val(),
+							redirection_url = $this
+								.siblings('input[name="redirection_url"]')
+								.val(),
+							thank_you_page_id = $this
+								.siblings('input[name="thank_you_page_id"]')
+								.val(),
+							uuid = $this
+								.siblings('input[name="urm_uuid"]')
+								.val();
+					}
+					var url =
+						redirection_url +
+						"?membership_id=" +
+						membership_id +
+						"&urm_uuid=" +
+						uuid +
+						"&thank_you=" +
+						thank_you_page_id;
+
+					if ($(this).attr("target") === "_blank") {
+						window.open(url, "_blank");
+						return;
+					}
+
 					window.location.replace(url);
 				}
 			);
@@ -2100,7 +2138,9 @@
 				}
 			);
 
-			$(document).on("click", ".renew-membership-button", function () {
+			$(document).on("click", ".renew-membership-button", function (e) {
+				e.preventDefault();
+
 				var $this = $(this),
 					has_error = false,
 					selected_pg = "free",

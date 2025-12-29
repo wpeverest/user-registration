@@ -69,6 +69,9 @@ class PaypalService {
 			)
 		);
 		$membership_amount = number_format( $membership_metas['amount'] );
+		$is_automatic      = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
+		$discount_amount   = 0;
+		$is_renewing       = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 
 		$is_automatic    = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
 		$discount_amount = 0;
@@ -154,7 +157,7 @@ class PaypalService {
 				$paypal_args['a1'] = '0';
 			}
 
-			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) || ( $is_upgrading && $data['chargeable_amount'] < $membership_amount ) ) {
+			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) || ( $is_upgrading && $data['amount'] < $membership_amount ) ) {
 				$amount = $is_upgrading ? user_registration_sanitize_amount( $data['amount'] ) : ( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 
 				$paypal_args['t2'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';

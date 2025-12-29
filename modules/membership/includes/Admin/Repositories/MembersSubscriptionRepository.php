@@ -42,6 +42,47 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 		return ! $result ? false : $result;
 	}
 
+	// TODO - Handle Multiple ( Remove after multiple memberships merge )
+	/**
+	 * Get members subscription by their ID
+	 *
+	 * @param $member_id
+	 *
+	 * @return array|false|mixed|object|\stdClass|void
+	 */
+	public function get_member_subscriptions( $member_id ) {
+		$result = $this->wpdb()->get_results(
+			$this->wpdb()->prepare(
+				"SELECT wums.* FROM $this->users_table wpu
+		         JOIN $this->table wums ON wpu.ID = wums.user_id
+		         WHERE wpu.ID = %d",
+				$member_id
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? false : $result;
+	}
+
+	/**
+	 * Get members subscription by their subscription ID
+	 *
+	 * @param $subscription_id
+	 *
+	 * @return array|false|mixed|object|\stdClass|void
+	 */
+	public function get_subscription_data_by_subscription_id( $subscription_id ) {
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT * FROM $this->table WHERE ID = %d",
+				$subscription_id
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? false : $result;
+	}
+
 	/**
 	 * Get members subscription by their subscription ID
 	 *
@@ -190,5 +231,25 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
 
 		return ! $result ? array() : $result;
+	}
+
+	/**
+	 * Get subscription by subscription ID
+	 *
+	 * @param int $subscription_id The Subscription ID.
+	 *
+	 * @return array|false|mixed|object|\stdClass|void
+	 */
+	public function get_subscription_by_subscription_id( $subscription_id ) {
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT wums.* FROM $this->table wums
+		         WHERE wums.ID = %d",
+				$subscription_id
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? false : $result;
 	}
 }

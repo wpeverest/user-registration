@@ -30,7 +30,7 @@ $layout = get_option( 'user_registration_my_account_layout', 'vertical' );
 if ( 'vertical' === $layout ) {
 	?>
 	<div class="user-registration-MyAccount-navigation--wrapper">
-		<div class='user-registration-profile-header'>
+		<div class='user-registration-profile-header-nav'>
 			<div class='user-registration-img-container'>
 				<?php
 				$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
@@ -64,6 +64,10 @@ if ( 'vertical' === $layout ) {
 			<?php
 			$actual_endpoint = $endpoint;
 
+			$option = get_option( 'urm_is_new_installation' );
+			if ( 'edit-password' === $actual_endpoint || ( $option && 'dashboard' === $actual_endpoint ) ) {
+				continue;
+			}
 			?>
 			<li class="<?php echo esc_attr( ur_get_account_menu_item_classes( $endpoint ) ); ?>">
 				<a href="<?php echo esc_url( ur_get_account_endpoint_url( $endpoint ) ); ?>" <?php echo 'user-logout' === $actual_endpoint && ! $logout_confirmation ? esc_attr( 'class=ur-logout' ) : ''; ?> ><?php echo esc_html( $label ); ?></a>
