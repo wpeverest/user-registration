@@ -11,39 +11,33 @@ const ConditionLogicGate = ({
 	isFirstCondition = false,
 	totalConditions = 0,
 }) => {
-	// Check if advanced logic is enabled
 	const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
 
-	// Don't render if advanced logic is not enabled
 	if (!isAdvancedLogicEnabled) {
 		return null;
 	}
 
-	// Show the logic gate button:
-	// - For single condition: show on first condition
-	// - For multiple conditions: show on first condition (it will be positioned at 50% which is between conditions)
 	const showButton = isFirstCondition;
 
-	// Get color based on logic gate (matching urcr-content-access-rule-creator.scss)
 	const getGateColor = (gate) => {
 		switch (gate) {
 			case "AND":
 				return {
-					background: "#FED9A8", // $and-tag
+					background: "#FED9A8",
 					color: "#383838",
-					lineColor: "#F9E2CA", // $and-line
+					lineColor: "#F9E2CA",
 				};
 			case "OR":
 				return {
-					background: "#E9F0FE", // $or-tag
+					background: "#E9F0FE",
 					color: "#383838",
-					lineColor: "#89A7E5", // $or-line
+					lineColor: "#89A7E5",
 				};
 			case "NOT":
 				return {
-					background: "#F9CACA", // $not-tag
+					background: "#F9CACA",
 					color: "#383838",
-					lineColor: "#F9CACA", // $not-line
+					lineColor: "#F9CACA",
 				};
 			default:
 				return {

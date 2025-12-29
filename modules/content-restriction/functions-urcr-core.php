@@ -77,7 +77,6 @@ function urcr_get_all_capabilities() {
  * @since 4.0.0
  */
 function urcr_get_excluded_page_ids() {
-	// List of option names that contain page IDs to exclude
 	$option_names = array(
 		'user_registration_login_page_id',
 		'user_registration_login_options_login_redirect_url',
@@ -96,7 +95,6 @@ function urcr_get_excluded_page_ids() {
 
 	$excluded_page_ids = array();
 
-	// Collect page IDs from all options
 	foreach ( $option_names as $option_name ) {
 		$page_id = get_option( $option_name );
 		if ( ! empty( $page_id ) && is_numeric( $page_id ) ) {
@@ -104,7 +102,6 @@ function urcr_get_excluded_page_ids() {
 		}
 	}
 
-	// Remove duplicates and re-index array
 	$excluded_page_ids = array_values( array_unique( $excluded_page_ids ) );
 
 	/**
@@ -192,6 +189,22 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 	if ( is_array( $targets ) ) {
 		foreach ( $targets as $target ) {
 			if ( isset( $target['type'] ) && ! empty( $target['value'] ) ) {
+
+				$result = apply_filters(
+					'urcr_match_target_type',
+					null,
+					$target,
+					$target_post
+				);
+
+				if ( true === $result ) {
+					return true;
+				}
+
+				if ( false === $result ) {
+					continue;
+				}
+
 				switch ( $target['type'] ) {
 					case 'wp_posts':
 						$post_id         = ( 'object' === gettype( $target_post ) && $target_post->ID ) ? strval( $target_post->ID ) : '0';
@@ -220,7 +233,6 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 							return true;
 						}
 						$products_page_id = intval( get_option( 'woocommerce_shop_page_id' ) );
-						// Check if its a woocommerce product page.
 						if ( is_object( $target_post ) && (int) $products_page_id === $target_post->ID ) {
 							return true;
 						}
@@ -229,7 +241,6 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 
 					case 'taxonomy':
 						if ( ! empty( $target['taxonomy'] ) && ! empty( $target['value'] ) ) {
-							// Check if its a woocommerce product page.
 							$products_page_id = intval( get_option( 'woocommerce_shop_page_id' ) );
 							$post_taxonomies  = get_post_taxonomies( $target_post );
 							if ( is_numeric( $target_post ) && $target_post == $products_page_id ) {
@@ -265,6 +276,7 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 						}
 						break;
 					case 'whole_site':
+
 						return true;
 						break;
 
@@ -315,9 +327,7 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 	if ( ! empty( $logic_map ) ) {
 		$type = $logic_map['type'];
 
-		// Process Logic Map.
 		if ( 'group' === $type ) {
-			// Process with gates
 			$gate = ! empty( $logic_map['logic_gate'] ) ? $logic_map['logic_gate'] : 'OR';
 
 			foreach ( $logic_map['conditions'] as $sub_logic_map ) {
@@ -589,7 +599,6 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 	$actions = (array) $actions;
 	$action  = $actions[0];
 
-	// Filter to buypass access rules for certain conditions.
 	$run_rule = apply_filters( 'urcr_pre_confirm_access_rules_implementation', true, $target_post );
 
 	if ( false === $run_rule ) {
@@ -600,17 +609,78 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 		if ( 'message' === $action['type'] ) {
 			$message = ! empty( $action['message'] ) ? urldecode( $action['message'] ) : '';
 			$message = apply_filters( 'user_registration_process_smart_tags', $message );
+			if ( function_exists( 'apply_shortcodes' ) ) {
+				$message = apply_shortcodes( $message );
+			} else {
+				$message = do_shortcode( $message );
+			}
 
-			$target_post->post_content = $message;
+			$login_page_id = get_option( 'user_registration_login_page_id' );
+			$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
 
-			// Add filter for elementor content.
+			$login_url = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
+			$signup_url = $registration_page_id ? get_permalink( $registration_page_id ) : ( $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url() );
+
+			if ( ! $registration_page_id ) {
+				$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
+				if ( $default_form_page_id ) {
+					$signup_url = get_permalink( $default_form_page_id );
+				}
+			}
+
+			$is_whole_site_restriction = false;
+			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
+
+			if ( $whole_site_access_restricted ) {
+				$is_whole_site_restriction = true;
+			} else {
+				$access_rule_posts = get_posts(
+					array(
+						'numberposts' => -1,
+						'post_status' => 'publish',
+						'post_type'   => 'urcr_access_rule',
+					)
+				);
+
+				foreach ( $access_rule_posts as $access_rule_post ) {
+					$access_rule = json_decode( $access_rule_post->post_content, true );
+					if ( ! empty( $access_rule['target_contents'] ) && is_array( $access_rule['target_contents'] ) ) {
+						$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
+						if ( in_array( 'whole_site', $types, true ) ) {
+							$is_whole_site_restriction = true;
+							break;
+						}
+					}
+				}
+			}
+
+			if ( $is_whole_site_restriction ) {
+				add_filter( 'body_class', function( $classes ) {
+					$classes[] = 'urcr-hide-page-title';
+					return $classes;
+				});
+			}
+
+			ob_start();
+			urcr_get_template(
+				'base-restriction-template.php',
+				array(
+					'message'    => $message,
+					'login_url'  => $login_url,
+					'signup_url' => $signup_url,
+				)
+			);
+			$styled_content = ob_get_clean();
+
+			$target_post->post_content = $styled_content;
+
 			add_filter(
 				'elementor/frontend/the_content',
-				function () use ( $message ) {
+				function () use ( $styled_content ) {
 					if ( ! urcr_is_elementor_content_restricted() ) {
 						urcr_set_elementor_content_restricted();
 
-						return $message;
+						return $styled_content;
 					}
 
 					return '';
@@ -713,7 +783,6 @@ function urcr_get_template( $template_name, $args = array(), $template_path = ''
 
 	$located = urcr_locate_template( $template_name, $template_path, $default_path );
 
-	// Allow 3rd party plugin filter template file from their plugin.
 	$located = apply_filters( 'urcr_get_template', $located, $template_name, $args, $template_path, $default_path );
 
 	if ( ! file_exists( $located ) ) {
@@ -753,7 +822,6 @@ function urcr_locate_template( $template_name, $template_path = '', $default_pat
 		$default_path = UR()->plugin_path() . '/templates/modules/content-restriction/';
 	}
 
-	// Look within passed path within the theme - this is priority.
 	$template = locate_template(
 		array(
 			trailingslashit( $template_path ) . $template_name,
@@ -761,12 +829,10 @@ function urcr_locate_template( $template_name, $template_path = '', $default_pat
 		)
 	);
 
-	// Get default template.
 	if ( ! $template || UR_TEMPLATE_DEBUG_MODE ) {
 		$template = $default_path . $template_name;
 	}
 
-	// Return what we found.
 	return apply_filters( 'user_registration_content_restriction_locate_template', $template, $template_name, $template_path );
 }
 
@@ -880,7 +946,6 @@ function ur_restrict_files( $file, $restriction_conditions, $restricted_files ) 
 			exit;
 		}
 
-		// For default not to restrict for admin.
 		$current_user = wp_get_current_user();
 		if ( ! empty( $current_user->roles ) && in_array( 'administrator', $current_user->roles ) ) {
 			$fp = fopen( $file, 'r' );
@@ -889,7 +954,6 @@ function ur_restrict_files( $file, $restriction_conditions, $restricted_files ) 
 			fclose( $fp );
 			exit;
 		}
-		// Default send 403 forbidden.
 		header( 'HTTP/1.0 403 Forbidden' );
 		exit;
 
@@ -1038,35 +1102,28 @@ function urcr_create_migrated_rule( $title, $rule_data ) {
  * @return int|false Rule ID on success, false on failure.
  */
 function urcr_migrate_global_restriction_settings() {
-	// Check if migration already done
 	$migration_done = get_option( 'urcr_global_restriction_migrated', false );
 	if ( $migration_done ) {
-		return false; // Already migrated
+		return false;
 	}
 
-	// Check if global restriction is enabled
 	$whole_site_access = get_option( 'user_registration_content_restriction_whole_site_access', false );
 	if ( ! ur_string_to_bool( $whole_site_access ) ) {
-		// Mark as done even if not enabled, so we don't check again
 		update_option( 'urcr_global_restriction_migrated', true );
-		return false; // Global restriction not enabled
+		return false;
 	}
 
-	// Get allow_to option value
 	$allow_to = get_option( 'user_registration_content_restriction_allow_access_to', 0 );
 	$allow_to = absint( $allow_to );
 
-	// Build conditions
 	$conditions = urcr_build_migration_conditions( $allow_to );
 	if ( empty( $conditions ) ) {
-		// Mark as done even if no conditions, so we don't check again
 		update_option( 'urcr_global_restriction_migrated', true );
-		return false; // No conditions to migrate
+		return false;
 	}
 
 	$timestamp = time() * 1000;
 
-	// Build logic_map
 	$logic_map = array(
 		'type'       => 'group',
 		'id'         => 'x' . $timestamp,
@@ -1074,7 +1131,6 @@ function urcr_migrate_global_restriction_settings() {
 		'logic_gate' => 'AND',
 	);
 
-	// Build target_contents
 	$target_contents = array(
 		array(
 			'id'   => 'x' . ( $timestamp + 100 ),
@@ -1082,7 +1138,6 @@ function urcr_migrate_global_restriction_settings() {
 		),
 	);
 
-	// Build rule data
 	$rule_data = array(
 		'enabled'         => true,
 		'access_control'  => 'access',
@@ -1091,11 +1146,9 @@ function urcr_migrate_global_restriction_settings() {
 		'actions'         => urcr_build_migration_actions(),
 	);
 
-	// Create the rule post
 	$rule_id = urcr_create_migrated_rule( __( 'Migrated: Global Site Restriction', 'user-registration' ), $rule_data );
 
 	if ( $rule_id ) {
-		// Mark migration as done
 		update_option( 'urcr_global_restriction_migrated', true );
 		return $rule_id;
 	}
@@ -1132,10 +1185,10 @@ function urcr_migrate_post_page_restrictions() {
 
 	$posts = array();
 	foreach ( $results as $result ) {
-		$post = new stdClass();
-		$post->ID = (int) $result->ID;
+		$post            = new stdClass();
+		$post->ID        = (int) $result->ID;
 		$post->post_type = $result->post_type;
-		$posts[] = $post;
+		$posts[]         = $post;
 	}
 
 	$total_posts_count = count( $posts );
@@ -1206,7 +1259,7 @@ function urcr_migrate_post_page_restrictions() {
 
 	if ( ! empty( $posts_by_type['wp_posts'] ) ) {
 		$target_contents[] = array(
-			'id'    => 'x' . $target_id_counter ++,
+			'id'    => 'x' . $target_id_counter++,
 			'type'  => 'wp_posts',
 			'value' => array_map( 'strval', $posts_by_type['wp_posts'] ),
 		);
@@ -1215,7 +1268,7 @@ function urcr_migrate_post_page_restrictions() {
 
 	if ( ! empty( $posts_by_type['wp_pages'] ) ) {
 		$target_contents[] = array(
-			'id'    => 'x' . $target_id_counter ++,
+			'id'    => 'x' . $target_id_counter++,
 			'type'  => 'wp_pages',
 			'value' => array_map( 'strval', $posts_by_type['wp_pages'] ),
 		);
@@ -1275,8 +1328,7 @@ function urcr_logic_map_has_advanced_logic( $logic_map ) {
 		return false;
 	}
 
-
-	if ( isset( $logic_map['type'] )  ) {
+	if ( isset( $logic_map['type'] ) ) {
 		// Check for nested groups in conditions recursively
 		if ( ! empty( $logic_map['conditions'] ) && is_array( $logic_map['conditions'] ) ) {
 			$conditions_count = count( $logic_map['conditions'] );
@@ -1348,13 +1400,7 @@ function urcr_has_rules_with_advanced_logic() {
 	return false;
 }
 
-/**
- * Create a content access rule for a single membership.
- *
- * @param int $membership_id The membership ID.
- * @param string $membership_title The membership title (optional, will be fetched if not provided).
- * @return int|false The rule ID on success, false on failure.
- */
+
 /**
  * Create or update membership rule with data from UI.
  *
@@ -1365,23 +1411,24 @@ function urcr_has_rules_with_advanced_logic() {
 function urcr_create_or_update_membership_rule( $membership_id, $rule_data = null ) {
 
 	// Check if content restriction module is active
-	if (  ! ur_check_module_activation( 'content-restriction' ) || ! ur_check_module_activation( 'membership' ) ) {
+	if ( ! ur_check_module_activation( 'membership' ) ) {
 		return false;
 	}
 
-
 	// Check if rule already exists for this membership
-	$existing_rules = get_posts( array(
-		'post_type'      => 'urcr_access_rule',
-		'post_status'    => 'any',
-		'posts_per_page' => 1,
-		'meta_query'     => array(
-			array(
-				'key'   => 'urcr_membership_id',
-				'value' => $membership_id,
+	$existing_rules = get_posts(
+		array(
+			'post_type'      => 'urcr_access_rule',
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'meta_query'     => array(
+				array(
+					'key'   => 'urcr_membership_id',
+					'value' => $membership_id,
+				),
 			),
-		),
-	) );
+		)
+	);
 
 	$existing_rule = ! empty( $existing_rules ) ? $existing_rules[0] : null;
 
@@ -1422,7 +1469,7 @@ function urcr_create_or_update_membership_rule( $membership_id, $rule_data = nul
 		$access_rule_data['logic_map']['conditions'] = $existing_conditions;
 
 		// Always generate rule title from membership name (PHP side)
-		$membership_post = get_post( $membership_id );
+		$membership_post  = get_post( $membership_id );
 		$membership_title = $membership_post ? $membership_post->post_title : '';
 		if ( ! empty( $membership_title ) ) {
 			$rule_title = sprintf( __( '%s Rule', 'user-registration' ), $membership_title );
@@ -1430,7 +1477,11 @@ function urcr_create_or_update_membership_rule( $membership_id, $rule_data = nul
 			// Fallback if membership title not found
 			$rule_title = isset( $rule_data['title'] ) && ! empty( $rule_data['title'] ) ? $rule_data['title'] : __( 'Membership Access Rule', 'user-registration' );
 		}
-		$rule_content = wp_json_encode( $access_rule_data );
+		// Unslash data before encoding to prevent double-escaping issues with quotes in HTML content
+		$access_rule_data = wp_unslash( $access_rule_data );
+		$rule_content     = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		// Slash the JSON string so wp_insert_post() unslashing doesn't corrupt the JSON
+		$rule_content = wp_slash( $rule_content );
 	} else {
 		// Create default rule (fallback)
 		return urcr_create_membership_rule( $membership_id );
@@ -1444,7 +1495,7 @@ function urcr_create_or_update_membership_rule( $membership_id, $rule_data = nul
 			'post_title'   => $rule_title,
 			'post_content' => $rule_content,
 		);
-		$rule_id = wp_update_post( $rule_post );
+		$rule_id   = wp_update_post( $rule_post );
 	} else {
 		// Create new rule
 		$rule_post = array(
@@ -1453,7 +1504,7 @@ function urcr_create_or_update_membership_rule( $membership_id, $rule_data = nul
 			'post_type'    => 'urcr_access_rule',
 			'post_status'  => 'publish',
 		);
-		$rule_id = wp_insert_post( $rule_post );
+		$rule_id   = wp_insert_post( $rule_post );
 	}
 
 	if ( $rule_id && ! is_wp_error( $rule_id ) ) {
@@ -1478,17 +1529,19 @@ function urcr_create_membership_rule( $membership_id, $membership_title = '' ) {
 	}
 
 	// Check if rule already exists for this membership
-	$existing_rules = get_posts( array(
-		'post_type'      => 'urcr_access_rule',
-		'post_status'    => 'any',
-		'posts_per_page' => 1,
-		'meta_query'     => array(
-			array(
-				'key'   => 'urcr_membership_id',
-				'value' => $membership_id,
+	$existing_rules = get_posts(
+		array(
+			'post_type'      => 'urcr_access_rule',
+			'post_status'    => 'any',
+			'posts_per_page' => 1,
+			'meta_query'     => array(
+				array(
+					'key'   => 'urcr_membership_id',
+					'value' => $membership_id,
+				),
 			),
-		),
-	) );
+		)
+	);
 
 	if ( ! empty( $existing_rules ) ) {
 		// Rule already exists for this membership
@@ -1609,7 +1662,7 @@ function urcr_migrate_memberships() {
 	}
 
 	$migrated_rule_ids = array();
-	$base_timestamp = time() * 1000;
+	$base_timestamp    = time() * 1000;
 	$timestamp_counter = 0;
 
 	foreach ( $memberships as $membership ) {
@@ -1631,7 +1684,7 @@ function urcr_migrate_memberships() {
 		$rule_id = urcr_create_membership_rule( $membership_id, $membership_title );
 
 		if ( $rule_id ) {
-			$migrated_rule_ids[] = $rule_id;
+			$migrated_rule_ids[]       = $rule_id;
 			$migrated_membership_ids[] = $membership_id;
 		}
 	}
@@ -1697,9 +1750,9 @@ function urcr_has_unmigrated_memberships() {
  */
 function urcr_run_migration() {
 	$results = array(
-		'global_rule_id'    => false,
-		'post_page_rule_id' => false,
-		'migrated_post_ids' => array(),
+		'global_rule_id'      => false,
+		'post_page_rule_id'   => false,
+		'migrated_post_ids'   => array(),
 		'membership_rule_ids' => array(),
 	);
 
@@ -1766,7 +1819,7 @@ function urcr_get_membership_rule_data( $membership_id ) {
 		return null;
 	}
 
-	$rule_post = $existing_rules[0];
+	$rule_post    = $existing_rules[0];
 	$rule_content = json_decode( $rule_post->post_content, true );
 
 	if ( ! $rule_content ) {
@@ -1774,7 +1827,7 @@ function urcr_get_membership_rule_data( $membership_id ) {
 	}
 
 	// Add rule ID and other metadata
-	$rule_content['id'] = $rule_post->ID;
+	$rule_content['id']    = $rule_post->ID;
 	$rule_content['title'] = $rule_post->post_title;
 
 	// Default to true if not set (matches default for new rules)
@@ -1783,4 +1836,91 @@ function urcr_get_membership_rule_data( $membership_id ) {
 	}
 
 	return $rule_content;
+}
+
+/**
+ * Get count of content restriction rules.
+ *
+ * @param array|string $types Rule types to count. Options: 'custom', 'membership', 'migrated'. Can be array of types or single string. Empty array/string counts all rules.
+ * @return int Count of rules.
+ * @since 1.0.0
+ */
+function urcr_get_custom_rules_count( $types = array() ) {
+	// Check if content restriction post type exists
+	if ( ! post_type_exists( 'urcr_access_rule' ) ) {
+		return 0;
+	}
+
+	// Get all content access rules
+	$all_rules = get_posts(
+		array(
+			'post_type'      => 'urcr_access_rule',
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		)
+	);
+
+	if ( empty( $all_rules ) ) {
+		return 0;
+	}
+
+	// Convert string to array for backward compatibility
+	if ( is_string( $types ) ) {
+		$types = empty( $types ) ? array() : array( $types );
+	}
+
+	// Ensure $types is an array
+	if ( ! is_array( $types ) ) {
+		$types = array();
+	}
+
+	// If types array is empty, return count of all rules
+	if ( empty( $types ) ) {
+		return count( $all_rules );
+	}
+
+	// Count rules based on types (rules matching any of the provided types)
+	$rules_count = 0;
+	foreach ( $all_rules as $rule_id ) {
+		$rule_type     = get_post_meta( $rule_id, 'urcr_rule_type', true );
+		$membership_id = get_post_meta( $rule_id, 'urcr_membership_id', true );
+		$is_migrated   = get_post_meta( $rule_id, 'urcr_is_migrated', true );
+
+		$matches = false;
+
+		foreach ( $types as $type ) {
+			switch ( $type ) {
+				case 'custom':
+					// Count rules that are NOT membership rules
+					if ( 'membership' !== $rule_type && empty( $membership_id ) ) {
+						$matches = true;
+						break 2; // Break out of switch and foreach
+					}
+					break;
+
+				case 'membership':
+					// Count rules that ARE membership rules
+					if ( 'membership' === $rule_type || ! empty( $membership_id ) ) {
+						$matches = true;
+						break 2; // Break out of switch and foreach
+					}
+					break;
+
+				case 'migrated':
+					// Count rules that are migrated
+					if ( ! empty( $is_migrated ) ) {
+						$matches = true;
+						break 2; // Break out of switch and foreach
+					}
+					break;
+			}
+		}
+
+		if ( $matches ) {
+			++$rules_count;
+		}
+	}
+
+	return $rules_count;
 }

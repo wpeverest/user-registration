@@ -235,10 +235,14 @@ class URCR_AJAX {
 	 */
 	public static function prepare_access_rule_as_wp_post( $context = '', $access_rule_data = null, $post_status = 'publish' ) {
 		if ( ! $access_rule_data ) {
-			$access_rule_data = json_decode( stripslashes( $_POST['access_rule_data'] ), true );
+			$access_rule_data = json_decode( wp_unslash( $_POST['access_rule_data'] ), true );
 		}
 
-		$access_rule_data = wp_json_encode( $access_rule_data );
+		// Unslash data before encoding to prevent double-escaping issues with quotes in HTML content
+		$access_rule_data = wp_unslash( $access_rule_data );
+		$access_rule_data = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		// Slash the JSON string so wp_insert_post() unslashing doesn't corrupt the JSON
+		$access_rule_data = wp_slash( $access_rule_data );
 		$rule_id          = ! empty( $_POST['rule_id'] ) ? $_POST['rule_id'] : '';
 
 		return apply_filters(

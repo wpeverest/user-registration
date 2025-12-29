@@ -143,8 +143,7 @@ class OrdersListTable extends \UR_List_Table {
 		$total_items = array();
 		if ( ! empty( $users ) ) {
 			foreach ( $users as $user ) {
-				$meta_value = get_user_meta( $user->ID, 'ur_payment_invoices', true );
-
+				$meta_value    = get_user_meta( $user->ID, 'ur_payment_invoices', true );
 				$total_items[] = array(
 					'user_id'        => $user->ID,
 					'display_name'   => $user->user_login,
@@ -314,15 +313,15 @@ class OrdersListTable extends \UR_List_Table {
 	public function column_created_at( $item ) {
 		global $wpdb;
 		$orders_meta_table = TableList::order_meta_table();
-		$payment_date = $wpdb->get_var(
+		$payment_date      = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT meta_value FROM {$orders_meta_table} WHERE meta_key=%s AND order_id=%d LIMIT 1",
 				'payment_date',
-				$item[ 'order_id' ]
+				$item['order_id']
 			)
 		);
-		$payment_date = ! empty( $payment_date ) ? $payment_date : $item[ 'created_at' ];
-		return (new \DateTime( $payment_date ) )->format( 'F j, Y' );
+		$payment_date      = ! empty( $payment_date ) ? $payment_date : $item['created_at'];
+		return ( new \DateTime( $payment_date ) )->format( 'F j, Y' );
 	}
 
 	/**

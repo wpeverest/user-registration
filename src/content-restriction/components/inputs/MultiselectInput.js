@@ -1,13 +1,19 @@
 /**
  * External Dependencies
  */
-import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from "react";
+import React, {
+	useState,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useCallback
+} from "react";
 import { __ } from "@wordpress/i18n";
 import { getURCRLocalizedData } from "../../utils/localized-data";
 
 const MultiselectInput = ({ contentType, value, onChange }) => {
 	const [inputValue, setInputValue] = useState(
-		Array.isArray(value) ? value : (value ? [value] : [])
+		Array.isArray(value) ? value : value ? [value] : []
 	);
 	const selectRef = useRef(null);
 	const isUpdatingRef = useRef(false);
@@ -19,7 +25,7 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 	}, [onChange]);
 
 	useEffect(() => {
-		setInputValue(Array.isArray(value) ? value : (value ? [value] : []));
+		setInputValue(Array.isArray(value) ? value : value ? [value] : []);
 	}, [value]);
 
 	const handleChange = useCallback((newValue) => {
@@ -34,17 +40,46 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 		}
 	}, []);
 
+	// Check if options are grouped (have group and options properties)
+	const isGroupedOptions = (optionsArray) => {
+		return (
+			Array.isArray(optionsArray) &&
+			optionsArray.length > 0 &&
+			typeof optionsArray[0] === "object" &&
+			optionsArray[0] !== null &&
+			"group" in optionsArray[0] &&
+			"options" in optionsArray[0] &&
+			Array.isArray(optionsArray[0].options)
+		);
+	};
+
 	// Get options based on content type
-	const getOptions = () =>
-		Object.entries(getURCRLocalizedData()?.[contentType] ?? {}).map(
-			([id = "", label = ""]) => ({
-				value: id,
-				label: label || id
-			})
-		) ?? [];
+	const getOptions = () => {
+		const data = getURCRLocalizedData()?.[contentType];
+
+		if (!data) {
+			return [];
+		}
+
+		// Check if data is already an array (likely grouped options)
+		if (Array.isArray(data)) {
+			return data;
+		}
+
+		// Convert object to array of {value, label} options
+		return Object.entries(data).map(([id = "", label = ""]) => ({
+			value: id,
+			label: label || id
+		}));
+	};
 
 	const options = getOptions();
-	const selectedValues = Array.isArray(inputValue) ? inputValue : (inputValue ? [inputValue] : []);
+	const hasGroupedOptions = isGroupedOptions(options);
+	const selectedValues = Array.isArray(inputValue)
+		? inputValue
+		: inputValue
+		? [inputValue]
+		: [];
 
 	// Initialize select2 for multiselect content types
 	useLayoutEffect(() => {
@@ -64,14 +99,17 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 			const changeHandler = function (e) {
 				// Only handle change if not initializing and not updating
 				if (!isInitializing && !isUpdatingRef.current) {
-					const selected = Array.from(e.target.selectedOptions, option => option.value);
+					const selected = Array.from(
+						e.target.selectedOptions,
+						(option) => option.value
+					);
 					handleChange(selected);
 				}
 			};
 
 			$select
 				.select2({
-					containerCssClass: $select.data("select2_class"),
+					containerCssClass: $select.data("select2_class")
 				})
 				.on("select2:selecting", function () {
 					select2_changed_flag_up = true;
@@ -105,7 +143,9 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 			return () => {
 				if ($select && $select.hasClass("select2-hidden-accessible")) {
 					$select.off("change", changeHandler);
-					$select.off("select2:selecting select2:unselecting select2:closing");
+					$select.off(
+						"select2:selecting select2:unselecting select2:closing"
+					);
 					$select.select2("destroy");
 				}
 			};
@@ -118,8 +158,16 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 			const $select = window.jQuery(selectRef.current);
 			if ($select.hasClass("select2-hidden-accessible")) {
 				const currentVal = $select.val() || [];
-				const currentArray = Array.isArray(currentVal) ? currentVal : (currentVal ? [currentVal] : []);
-				const newArray = Array.isArray(inputValue) ? inputValue : (inputValue ? [inputValue] : []);
+				const currentArray = Array.isArray(currentVal)
+					? currentVal
+					: currentVal
+					? [currentVal]
+					: [];
+				const newArray = Array.isArray(inputValue)
+					? inputValue
+					: inputValue
+					? [inputValue]
+					: [];
 
 				// Only update if values actually differ
 				const currentSorted = [...currentArray].sort().join(",");
@@ -147,7 +195,10 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 			className="components-select-control__input urcr-enhanced-select2 urcr-condition-value-select urcr-condition-value-select--multiselect"
 			value={selectedValues}
 			onChange={(e) => {
-				const selected = Array.from(e.target.selectedOptions, option => option.value);
+				const selected = Array.from(
+					e.target.selectedOptions,
+					(option) => option.value
+				);
 				handleChange(selected);
 			}}
 			multiple
@@ -156,19 +207,29 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 				<option value="" disabled>
 					{__("No options available", "user-registration")}
 				</option>
+			) : hasGroupedOptions ? (
+				<>
+					{options.map((option) => (
+						<optgroup label={option.group} key={option.group}>
+							{option.options.map((option) => (
+								<option key={option.value} value={option.value}>
+									{option.label}
+								</option>
+							))}
+						</optgroup>
+					))}
+				</>
 			) : (
-				options.map((option) => (
-					<option
-						key={option.value}
-						value={option.value}
-					>
-						{option.label}
-					</option>
-				))
+				<>
+					{options.map((option) => (
+						<option key={option.value} value={option.value}>
+							{option.label}
+						</option>
+					))}
+				</>
 			)}
 		</select>
 	);
 };
 
 export default MultiselectInput;
-

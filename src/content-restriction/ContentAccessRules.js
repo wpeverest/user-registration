@@ -19,9 +19,8 @@ const ContentAccessRules = () => {
 	const [expandedRules, setExpandedRules] = useState(new Set());
 	const [openSettingsPanels, setOpenSettingsPanels] = useState(new Set());
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [activeTab, setActiveTab] = useState("custom"); // 'membership' or 'custom'
+	const [activeTab, setActiveTab] = useState("custom");
 
-	// Access urcr_localized_data
 	const urcrData = getURCRLocalizedData();
 	const hasMultipleMemberships = getURCRData("has_multiple_memberships", false);
 	const isContentRestrictionEnabled = getURCRData("is_content_restriction_enabled", false);
@@ -53,38 +52,27 @@ const ContentAccessRules = () => {
 		fetchRules();
 	}, [fetchRules]);
 
-	// Filter rules by type
 	const membershipRules = rules.filter((rule) => rule.rule_type === "membership");
 	const customRules = rules.filter((rule) => rule.rule_type !== "membership" || !rule.rule_type);
-	// Show membership rules tab only if there are multiple memberships AND more than 1 membership rule
 	const shouldShowMembershipTab = hasMultipleMemberships && membershipRules.length > 1;
-	// Show custom rules tab only if content restriction addon is enabled AND there are custom rules
 	const shouldShowCustomTab = isContentRestrictionEnabled;
-
-	// Show tab switcher only when content restriction is enabled AND there are more than 1 membership rules
 	const shouldShowTabSwitcher = isContentRestrictionEnabled && shouldShowMembershipTab;
 
-	// Get rules for current tab
-	// When content restriction is disabled, only show membership rules if there are multiple memberships AND more than 1 membership rule
 	const currentRules = (!isContentRestrictionEnabled) 
 		? (shouldShowMembershipTab ? membershipRules : [])
 		: (activeTab === "membership" ? membershipRules : customRules);
 
-	// Set default tab based on membership count (only once when rules are loaded)
 	const [hasSetDefaultTab, setHasSetDefaultTab] = useState(false);
 	useEffect(() => {
 		if (!hasSetDefaultTab && !isLoading) {
-			// When content restriction is disabled, always show membership rules (no tabs)
 			if (!isContentRestrictionEnabled) {
 				setActiveTab("membership");
 				setHasSetDefaultTab(true);
 			}
-			// When content restriction is enabled and we have membership tab, default to membership tab
 			else if (shouldShowMembershipTab && membershipRules.length > 0) {
 				setActiveTab("membership");
 				setHasSetDefaultTab(true);
 			}
-			// Otherwise, default to custom tab
 			else if (!shouldShowMembershipTab) {
 				setActiveTab("custom");
 				setHasSetDefaultTab(true);
@@ -120,7 +108,6 @@ const ContentAccessRules = () => {
 	};
 
 	const handleRuleUpdate = (updatedRule) => {
-		// If updatedRule is provided, update local state without refetching
 		if (updatedRule) {
 			setRules((prevRules) =>
 				prevRules.map((rule) =>
@@ -128,14 +115,10 @@ const ContentAccessRules = () => {
 				)
 			);
 		}
-		// If called without parameter (delete/duplicate), refetch is needed
-		// But for updates, we don't refetch - just update local state
 	};
 
 	const handleRuleDelete = (ruleId) => {
-		// Remove deleted rule from local state without refetching
 		setRules((prevRules) => prevRules.filter((rule) => rule.id !== ruleId));
-		// Also remove from expanded and settings panels if present
 		setExpandedRules((prev) => {
 			const newSet = new Set(prev);
 			newSet.delete(ruleId);
@@ -149,7 +132,6 @@ const ContentAccessRules = () => {
 	};
 
 	const handleRuleDuplicate = () => {
-		// Refetch rules after duplicate operation to get the new rule
 		fetchRules();
 	};
 
@@ -170,11 +152,8 @@ const ContentAccessRules = () => {
 	};
 
 	const handleRuleCreated = (newRule) => {
-		// Add the new rule to the top of the list
 		setRules((prevRules) => [newRule, ...prevRules]);
-		// Auto-expand the new rule
 		setExpandedRules((prev) => new Set([...prev, newRule.id]));
-		// Switch to custom tab if not already there
 		setActiveTab("custom");
 	};
 
@@ -214,7 +193,6 @@ const ContentAccessRules = () => {
 					)}
 				</div>
 
-				{/* Tabs - Show only when content restriction is enabled AND there are more than 1 membership rules */}
 				{shouldShowTabSwitcher && (
 					<div className="urcr-tabs">
 						<button
