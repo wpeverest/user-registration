@@ -1378,6 +1378,118 @@
 					}
 				}
 			}
+
+			&#membership-list {
+				.tablenav.top{
+					display: none;
+				}
+			}
+
+			&#user-registration-members-list-form {
+				#user-registration-base-list-filters-row {
+					margin-bottom: $spacing_32px;
+				}
+				.tablenav{
+					display: flex;
+					justify-content: flex-end;
+					align-self: center;
+					margin-bottom: $spacing_32px;
+					flex-wrap: wrap;
+					justify-content: space-between;
+
+					&.top{
+						justify-content: flex-end;
+						padding-top: 40px;
+						row-gap: $spacing_16px;
+					}
+
+					.bulkactions{
+						input[type="submit"]{
+							padding: 8px 14px;
+							font-size: 14px;
+							line-height: 20px;
+							color: #475BB2;
+							border-color: #475BB2;
+							background: #F6F7F7;
+							font-weight: 500;
+						}
+					}
+
+					.user-registration-members-filters{
+						display: flex;
+						flex-wrap: wrap;
+						gap: $spacing_16px;
+
+						@media (min-width: 1200px) {
+							flex-wrap: nowrap;
+						}
+
+						@media (max-width: 1199px) {
+							select {
+								flex: 1 1 180px;
+							}
+						}
+
+						@media (max-width: 768px) {
+							select{
+								flex: 1 1 100%;
+							}
+						}
+					}
+				}
+
+				.tablenav.top:has(.bulkactions){
+					justify-content: space-between;
+					padding-top: 0;
+				}
+
+				.wp-list-table.users {
+					tbody {
+						tr {
+							&.no-items {
+								background: #ffffff;
+
+								td {
+									padding: 0;
+
+									.empty-list-table-container {
+										text-align: center;
+										margin-top: 30px;
+										margin-bottom: 30px;
+
+										img {
+											width: 300px;
+										}
+
+										h3 {
+											margin-top: 16px;
+											margin-bottom: 8px;
+											color: #222222;
+											font-size: 22px;
+											font-weight: 600;
+											line-height: 32px;
+										}
+
+										p {
+											color: #6B6B6B;
+											font-size: 14px;
+											font-weight: 400;
+											line-height: 24px;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				@media (max-width: 767px) {
+					#user-registration-base-list-filters-row{
+						display: block;
+    					margin-top: 50px;
+					}
+				}
+			}
 		}
 	}
 }
@@ -1427,7 +1539,7 @@
 
 			#ur-member-form {
 				&-left {
-					width: 70%;
+					width: 100%;
 
 					#left-title {
 						padding-bottom: $spacing_20px;
@@ -1670,181 +1782,6 @@
 	display: flex;
 	line-height: 1;
 }
-
-// Membership field admin template styles
-// .ur-admin-template {
-// 	&.ur-input-type-select {
-// 		.urmg-container {
-// 			.urmg-membership-plans {
-// 				display: flex;
-// 				flex-direction: column;
-// 				gap: $spacing_16px;
-// 				margin: $spacing_20px 0;
-
-// 				.urmg-plan-card {
-// 					border: 2px solid #e0e0e0;
-// 					border-radius: $border_radius_4;
-// 					padding: $spacing_20px;
-// 					cursor: pointer;
-// 					transition: all 0.3s ease;
-// 					background: $white;
-// 					position: relative;
-
-// 					&:hover {
-// 						border-color: $primary_color;
-// 					}
-
-// 					&.selected {
-// 						border-color: $primary_color;
-// 						background: #f0f8ff;
-// 					}
-
-// 					input[type="radio"] {
-// 						position: absolute;
-// 						opacity: 0;
-// 						pointer-events: none;
-// 					}
-
-// 					.urmg-plan-header {
-// 						display: flex;
-// 						justify-content: space-between;
-// 						align-items: flex-start;
-// 						margin-bottom: $spacing_10px;
-// 						padding-left: $spacing_28px;
-// 					}
-
-// 					.urmg-plan-title {
-// 						font-size: 18px;
-// 						font-weight: $semi_bold;
-// 						color: #333;
-// 						margin: 0;
-// 					}
-
-// 					.urmg-plan-price {
-// 						font-size: 18px;
-// 						font-weight: $semi_bold;
-// 						color: #333;
-// 						text-align: right;
-// 					}
-
-// 					.urmg-plan-description {
-// 						font-size: 14px;
-// 						color: $grey-400;
-// 						margin-top: $spacing_8px;
-// 					}
-
-// 					.urmg-plan-radio {
-// 						position: absolute;
-// 						top: $spacing_20px;
-// 						left: $spacing_20px;
-// 						width: 20px;
-// 						height: 20px;
-// 						border: 2px solid #ccc;
-// 						border-radius: 50%;
-// 						background: $white;
-// 						transition: all 0.3s ease;
-// 					}
-
-// 					&.selected {
-// 						.urmg-plan-radio {
-// 							border-color: $primary_color;
-// 							background: $primary_color;
-
-// 							&::after {
-// 								content: '';
-// 								position: absolute;
-// 								top: 50%;
-// 								left: 50%;
-// 								transform: translate(-50%, -50%);
-// 								width: 8px;
-// 								height: 8px;
-// 								border-radius: 50%;
-// 								background: $white;
-// 							}
-// 						}
-// 					}
-// 				}
-// 			}
-
-// 			.urmg-total-container {
-// 				border: 2px dashed #ccc;
-// 				border-radius: $border_radius_4;
-// 				padding: $spacing_16px $spacing_20px;
-// 				margin: $spacing_20px 0;
-// 				display: flex;
-// 				justify-content: space-between;
-// 				align-items: center;
-// 				background: #f9f9f9;
-
-// 				.urmg-total-label {
-// 					font-size: 16px;
-// 					font-weight: $semi_bold;
-// 					color: #333;
-// 				}
-
-// 				.urmg-total-amount {
-// 					font-size: 18px;
-// 					font-weight: 700;
-// 					color: $primary_color;
-// 				}
-// 			}
-
-// 			.urmg-payment-gateways {
-// 				margin: $spacing_32px 0 $spacing_20px 0;
-
-// 				.urmg-payment-gateways-label {
-// 					font-size: 14px;
-// 					font-weight: $semi_bold;
-// 					color: #333;
-// 					margin-bottom: $spacing_16px;
-// 					display: block;
-
-// 					.required {
-// 						color: #dc3232;
-// 					}
-// 				}
-
-// 				.urmg-gateway-buttons {
-// 					display: flex;
-// 					gap: $spacing_16px;
-// 					flex-wrap: wrap;
-
-// 					.urmg-gateway-btn {
-// 						flex: 1;
-// 						min-width: 120px;
-// 						padding: $spacing_12px $spacing_20px;
-// 						border: 2px solid #e0e0e0;
-// 						border-radius: $border_radius_4;
-// 						background: $white;
-// 						cursor: pointer;
-// 						transition: all 0.3s ease;
-// 						text-align: center;
-// 						font-size: 14px;
-// 						font-weight: $medium;
-// 						color: #333;
-// 						position: relative;
-
-// 						&:hover {
-// 							border-color: $primary_color;
-// 						}
-
-// 						&.selected {
-// 							border-color: $primary_color;
-// 							background: #f0f8ff;
-// 							color: $primary_color;
-// 						}
-
-// 						input[type="radio"] {
-// 							position: absolute;
-// 							opacity: 0;
-// 							pointer-events: none;
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-// }
 
 .user-registration-membership_page_user-registration-members {
 	background-color: #fafafa;

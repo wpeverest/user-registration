@@ -5935,7 +5935,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 		$user_id = ! empty( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : get_current_user_id();
 		$form_id = ur_get_form_id_by_userid( $user_id );
 		$width   = floor( 100 / count( $data ) ) - count( $data );
-		$is_edit = isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'edit' && $user_id !== get_current_user_id();
+		$is_edit = isset( $_REQUEST['action'] ) && ( $_REQUEST['action'] === 'edit' || $_REQUEST['action'] === 'view' ) && $user_id !== get_current_user_id();
 
 		foreach ( $data as $grid_key => $grid_data ) {
 			$found_field = false;
@@ -6020,6 +6020,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					if ( $is_edit ) {
 						unset( $readonly_fields['user_pass'] );
 					}
+
 					if ( isset( $field['field_key'] ) && array_key_exists( $field['field_key'], $readonly_fields ) ) {
 						$field['custom_attributes']['readonly'] = 'readonly';
 						if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {
@@ -9593,7 +9594,7 @@ if ( ! function_exists( 'ur_get_membership_details' ) ) {
 	/**
 	 * Get membership details.
 	 *
-	 * @since xx.xx.xx
+	 * @since 5.0.0
 	 *
 	 * @return array
 	 */ function ur_get_membership_details() {
@@ -9828,5 +9829,54 @@ if ( ! function_exists( 'ur_get_membership_rules_count' ) ) {
 			);
 			return absint( $count );
 		}
+	}
+}
+
+if( ! function_exists( 'ur_get_coupon_meta_by_code' ) ){
+
+	/**
+	 * Fetch coupon meta using coupon code stored in post_content
+	 *
+	 * @param string $coupon_code
+	 * @return array|bool
+	 *
+	 * @since xx.xx.xx
+	 */
+	function ur_get_coupon_meta_by_code( $coupon_code ) {
+		global $wpdb;
+
+		$post_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT ID
+				FROM {$wpdb->posts}
+				WHERE post_type = %s
+				AND post_content = %s
+				LIMIT 1",
+				'ur_coupons',
+				$coupon_code
+			)
+		);
+
+		if ( empty( $post_id ) ) {
+			return false;
+		}
+
+		$coupon_meta = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT meta_value
+				FROM {$wpdb->postmeta}
+				WHERE post_id = %d
+				AND meta_key = %s
+				LIMIT 1",
+				$post_id,
+				'ur_coupon_meta'
+			)
+		);
+
+		if ( empty( $coupon_meta ) ) {
+			return false;
+		}
+
+		return json_decode( ur_maybe_unserialize( $coupon_meta ) );
 	}
 }

@@ -440,11 +440,11 @@ class MembershipService {
 			'status' => 'true'
 		);
 		switch ( $data[0] ) {
-			case 'paypal';
+			case 'paypal':
 				$paypal_service = new PaypalService();
 				$result         = $paypal_service->validate_setup( $data[1] );
 				break;
-			case 'stripe';
+			case 'stripe':
 				$stripe_service = new StripeService();
 				$result         = $stripe_service->validate_setup();
 				break;
