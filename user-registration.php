@@ -684,5 +684,37 @@ if ( ! function_exists( 'UR' ) ) {
 	// Do not process the plugin code further.
 	return;
 }
+/**
+ * Development: Hot reload support for webpack dev server.
+ * Enable by setting SCRIPT_DEBUG to true in wp-config.php
+ */
+if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+    add_filter(
+        'script_loader_src',
+        function ( $src, $handle ) {
+            $dev_scripts = array(
+                'user-registration-welcome',
+                'user-registration-dashboard',
+                'user-registration-blocks',
+                'user-registration-form-templates',
+                'user-registration-divi-builder',
+                'user-registration-content-access-rules',
+            );
+
+            if ( in_array( $handle, $dev_scripts, true ) ) {
+                $src = str_replace(
+                    UR_PLUGIN_URL . 'chunks/',
+                    'http://localhost:3000/',
+                    $src
+                );
+            }
+
+            return $src;
+        },
+        10,
+        2
+    );
+}
+
 // Global for backwards compatibility.
 $GLOBALS['user-registration'] = UR();
