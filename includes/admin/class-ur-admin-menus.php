@@ -599,7 +599,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						$this,
 						'registration_page',
 					),
-					9
+					10
 				);
 
 				if ( isset( $_GET['page'] ) && in_array(

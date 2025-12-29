@@ -978,7 +978,7 @@ class UR_Admin_Settings {
 												$checked = checked( $option_value, trim( $option_index ), false );
 											}
 
-											$settings .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
+											$settings .= '<label for="' . esc_attr( isset($args['id']) ? $args['id'] : '' ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
 											if ( isset( $value['radio-group-images'] ) ) {
 												$settings .= '<img src="' . $value['radio-group-images'][ $option_index ] . '" />';
@@ -1065,7 +1065,7 @@ class UR_Admin_Settings {
 									if( ! empty( $btn_name ) ) {
 										$settings .= ' data-name="' . esc_attr( $btn_name ) . '"';
 									}
-									$settings .= '>' . $value['title'] . '</button>';									
+									$settings .= '>' . $value['title'] . '</button>';
 									$settings .= '</div>';
 									if ( $is_captcha ) {
 										$settings .= '<a
