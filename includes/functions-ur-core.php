@@ -9831,7 +9831,7 @@ if ( ! function_exists( 'ur_get_membership_rules_count' ) ) {
 				array(
 					'post_type'      => 'urcr_access_rule',
 					'post_status'    => 'any',
-					'posts_per_page' => -1,
+					'posts_per_page' => - 1,
 					'meta_query'     => array(
 						array(
 							'key'   => 'urcr_rule_type',
@@ -9840,6 +9840,7 @@ if ( ! function_exists( 'ur_get_membership_rules_count' ) ) {
 					),
 				)
 			);
+
 			return is_array( $membership_rules ) ? count( $membership_rules ) : 0;
 		} else {
 			// Post type not registered yet, query directly from database
@@ -9857,102 +9858,108 @@ if ( ! function_exists( 'ur_get_membership_rules_count' ) ) {
 					'membership'
 				)
 			);
+
 			return absint( $count );
 		}
-if( ! function_exists( 'ur_get_coupon_meta_by_code' ) ){
-
-	/**
-	 * Fetch coupon meta using coupon code stored in post_content
-	 *
-	 * @param string $coupon_code
-	 * @return array|bool
-	 *
-	 * @since xx.xx.xx
-	 */
-	function ur_get_coupon_meta_by_code( $coupon_code ) {
-		global $wpdb;
-
-		$post_id = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT ID
-				FROM {$wpdb->posts}
-				WHERE post_type = %s
-				AND post_content = %s
-				LIMIT 1",
-				'ur_coupons',
-				$coupon_code
-			)
-		);
-
-		if ( empty( $post_id ) ) {
-			return false;
-		}
-
-		$coupon_meta = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT meta_value
-				FROM {$wpdb->postmeta}
-				WHERE post_id = %d
-				AND meta_key = %s
-				LIMIT 1",
-				$post_id,
-				'ur_coupon_meta'
-			)
-		);
-
-		if ( empty( $coupon_meta ) ) {
-			return false;
-		}
-
-		return json_decode( ur_maybe_unserialize( $coupon_meta ) );
 	}
-}
 
-if( ! function_exists( 'ur_get_coupon_meta_by_code' ) ){
+	if ( ! function_exists( 'ur_get_coupon_meta_by_code' ) ) {
 
-	/**
-	 * Fetch coupon meta using coupon code stored in post_content
-	 *
-	 * @param string $coupon_code
-	 * @return array|bool
-	 *
-	 * @since xx.xx.xx
-	 */
-	function ur_get_coupon_meta_by_code( $coupon_code ) {
-		global $wpdb;
+		/**
+		 * Fetch coupon meta using coupon code stored in post_content
+		 *
+		 * @param string $coupon_code
+		 *
+		 * @return array|bool
+		 *
+		 * @since xx.xx.xx
+		 */
+		function ur_get_coupon_meta_by_code( $coupon_code ) {
+			global $wpdb;
 
-		$post_id = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT ID
+			$post_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID
 				FROM {$wpdb->posts}
 				WHERE post_type = %s
 				AND post_content = %s
 				LIMIT 1",
-				'ur_coupons',
-				$coupon_code
-			)
-		);
+					'ur_coupons',
+					$coupon_code
+				)
+			);
 
-		if ( empty( $post_id ) ) {
-			return false;
-		}
+			if ( empty( $post_id ) ) {
+				return false;
+			}
 
-		$coupon_meta = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT meta_value
+			$coupon_meta = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT meta_value
 				FROM {$wpdb->postmeta}
 				WHERE post_id = %d
 				AND meta_key = %s
 				LIMIT 1",
-				$post_id,
-				'ur_coupon_meta'
-			)
-		);
+					$post_id,
+					'ur_coupon_meta'
+				)
+			);
 
-		if ( empty( $coupon_meta ) ) {
-			return false;
+			if ( empty( $coupon_meta ) ) {
+				return false;
+			}
+
+			return json_decode( ur_maybe_unserialize( $coupon_meta ) );
 		}
+	}
 
-		return json_decode( ur_maybe_unserialize( $coupon_meta ) );
+	if ( ! function_exists( 'ur_get_coupon_meta_by_code' ) ) {
+
+		/**
+		 * Fetch coupon meta using coupon code stored in post_content
+		 *
+		 * @param string $coupon_code
+		 *
+		 * @return array|bool
+		 *
+		 * @since xx.xx.xx
+		 */
+		function ur_get_coupon_meta_by_code( $coupon_code ) {
+			global $wpdb;
+
+			$post_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID
+				FROM {$wpdb->posts}
+				WHERE post_type = %s
+				AND post_content = %s
+				LIMIT 1",
+					'ur_coupons',
+					$coupon_code
+				)
+			);
+
+			if ( empty( $post_id ) ) {
+				return false;
+			}
+
+			$coupon_meta = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT meta_value
+				FROM {$wpdb->postmeta}
+				WHERE post_id = %d
+				AND meta_key = %s
+				LIMIT 1",
+					$post_id,
+					'ur_coupon_meta'
+				)
+			);
+
+			if ( empty( $coupon_meta ) ) {
+				return false;
+			}
+
+			return json_decode( ur_maybe_unserialize( $coupon_meta ) );
+		}
 	}
 }
