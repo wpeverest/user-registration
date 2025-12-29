@@ -887,6 +887,9 @@
 				&__header {
 					display: flex;
 					justify-content: space-between;
+					border-bottom: $border_width solid #F4F4F4;
+					padding-bottom: $spacing_16px;
+					margin-bottom: $spacing_32px;
 
 					&-content {
 						display: flex;
@@ -1811,34 +1814,9 @@
 				padding: $spacing_24px $spacing_24px 52px 36px;
 
 				&__header {
-					border-bottom: $border_width solid #F4F4F4;
-					padding-bottom: $spacing_16px;
-					margin-bottom: $spacing_32px;
 					display: flex;
 					justify-content: space-between;
 					align-items: center;
-
-					// .user-registration-Button {
-					// 	&.button-secondary {
-					// 		color: #4584FF;
-					// 		border-color: #4584FF;
-					// 		border-radius: $spacing_4px;
-					// 		padding: 8px 20px 8px 16px;
-					// 		background-color: #fff;
-					// 		font-size: 14px;
-					// 		line-height: 150%;
-					// 		font-weight: 500;
-					// 		text-decoration: none;
-
-					// 		&:hover,
-					// 		&:active,
-					// 		&:focus {
-					// 			color: $gray_base;
-					// 			background: $color_gray_three;
-					// 			border-color: $color_gray_three;
-					// 		}
-					// 	}
-					// }
 				}
 			}
 		}
