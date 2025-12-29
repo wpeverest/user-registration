@@ -4,7 +4,7 @@ import apiFetch from "@wordpress/api-fetch";
 const { urRestApiNonce, restURL } =
 	typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
-const base = restURL + "user-registration/v1/";
+const base =  "user-registration/v1/";
 const urls = {
 	rules: base + "content-access-rules",
 	getRule: (id) => base + `content-access-rules/${id}`,
