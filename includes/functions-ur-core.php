@@ -9724,51 +9724,331 @@ if ( ! function_exists( 'ur_get_membership_details' ) ) {
 }
 }
 
-if( ! function_exists( 'ur_get_coupon_meta_by_code' ) ){
-
+if ( ! function_exists( 'ur_pro_get_form_fields' ) ) {
 	/**
-	 * Fetch coupon meta using coupon code stored in post_content
+	 * Get form fields.
 	 *
-	 * @param string $coupon_code
-	 * @return array|bool
-	 *
-	 * @since xx.xx.xx
+	 * @param int $form_id Registration Form ID.
+	 * @return array|WP_Error
 	 */
-	function ur_get_coupon_meta_by_code( $coupon_code ) {
-		global $wpdb;
+	function ur_pro_get_form_fields( $form_id ) {
+		$form   = get_post( $form_id );
+		$fields = array();
 
-		$post_id = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT ID
+		if ( $form && 'user_registration' === $form->post_type ) {
+			$form_field_array = json_decode( $form->post_content );
+
+			if ( $form_field_array ) {
+
+				foreach ( $form_field_array as $post_content_row ) {
+					foreach ( $post_content_row as $post_content_grid ) {
+						foreach ( $post_content_grid as $field ) {
+							if ( isset( $field->field_key ) && ! in_array( $field->field_key, ur_pro_get_excluded_fields() ) ) {
+								$field_name        = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
+								$field_label       = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
+								$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
+								$placeholder       = isset( $field->general_setting->placeholder ) ? $field->general_setting->placeholder : '';
+								$options           = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
+								$field_key         = isset( $field->field_key ) ? ( $field->field_key ) : '';
+								$field_type        = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
+								$required          = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
+								$required          = ur_string_to_bool( $required );
+								$enable_cl         = isset( $field->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $field->advance_setting->enable_conditional_logic );
+								$cl_map            = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
+								$custom_attributes = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
+								$default           = '';
+
+								if ( isset( $field->general_setting->default_value ) ) {
+									$default = $field->general_setting->default_value;
+								} elseif ( isset( $field->advance_setting->default_value ) ) {
+									$default = $field->advance_setting->default_value;
+								}
+
+								if ( empty( $field_label ) ) {
+									$field_label_array = explode( '_', $field_name );
+									$field_label       = join( ' ', array_map( 'ucwords', $field_label_array ) );
+								}
+
+								if ( ! empty( $field_name ) ) {
+									$extra_params = array();
+
+									switch ( $field_key ) {
+
+										case 'radio':
+										case 'select':
+											$advanced_options        = isset( $field->advance_setting->options ) ? $field->advance_setting->options : '';
+											$advanced_options        = explode( ',', $advanced_options );
+											$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
+											$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
+
+											$extra_params['options'] = array_combine( $extra_params['options'], $extra_params['options'] );
+
+											break;
+
+										case 'checkbox':
+											$advanced_options        = isset( $field->advance_setting->choices ) ? $field->advance_setting->choices : '';
+											$advanced_options        = explode( ',', $advanced_options );
+											$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
+											$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
+
+											$extra_params['options'] = array_combine( $extra_params['options'], $extra_params['options'] );
+
+											break;
+
+										case 'date':
+											$date_format       = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
+											$min_date          = isset( $field->advance_setting->min_date ) ? str_replace( '/', '-', $field->advance_setting->min_date ) : '';
+											$max_date          = isset( $field->advance_setting->max_date ) ? str_replace( '/', '-', $field->advance_setting->max_date ) : '';
+											$set_current_date  = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
+											$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
+											$extra_params['custom_attributes']['data-date-format'] = $date_format;
+
+											if ( isset( $field->advance_setting->enable_min_max ) && ur_string_to_bool( $field->advance_setting->enable_min_max ) ) {
+												$extra_params['custom_attributes']['data-min-date'] = '' !== $min_date ? date_i18n( $date_format, strtotime( $min_date ) ) : '';
+												$extra_params['custom_attributes']['data-max-date'] = '' !== $max_date ? date_i18n( $date_format, strtotime( $max_date ) ) : '';
+											}
+											$extra_params['custom_attributes']['data-default-date'] = $set_current_date;
+											$extra_params['custom_attributes']['data-mode']         = $enable_date_range;
+											break;
+
+										case 'country':
+											$class_name              = ur_load_form_field_class( $field_key );
+											$extra_params['options'] = $class_name::get_instance()->get_selected_countries( $form_id, $field_name );
+											break;
+
+										case 'file':
+											$extra_params['max_files'] = isset( $field->general_setting->max_files ) ? $field->general_setting->max_files : '';
+											break;
+
+										case 'phone':
+											$extra_params['phone_format'] = isset( $field->general_setting->phone_format ) ? $field->general_setting->phone_format : '';
+											break;
+										case 'learndash_course':
+											$extra_params['learndash_field_type'] = isset( $field->general_setting->learndash_field_type ) ? $field->general_setting->learndash_field_type : '';
+											if ( isset( $field->advance_setting->enroll_type ) ) {
+												if ( 'courses' === $field->advance_setting->enroll_type ) {
+													$extra_params['options'] = function_exists( 'get_courses_list' ) ? get_courses_list() : array();
+												} else {
+													$extra_params['options'] = function_exists( 'get_groups_list' ) ? get_groups_list() : array();
+												}
+											}
+											break;
+
+										default:
+											break;
+									}
+
+									$extra_params['default'] = $default;
+
+									$fields[ 'user_registration_' . $field_name ] = array(
+										'label'       => ur_string_translation( $form_id, 'user_registration_' . $field_name . '_label', $field_label ),
+										'description' => ur_string_translation( $form_id, 'user_registration_' . $field_name . '_description', $field_description ),
+										'type'        => $field_type,
+										'placeholder' => ur_string_translation( $form_id, 'user_registration_' . $field_name . '_placeholder', $placeholder ),
+										'field_key'   => $field_key,
+										'required'    => $required,
+									);
+
+									if ( true === $enable_cl ) {
+										$fields[ 'user_registration_' . $field_name ]['enable_conditional_logic'] = $enable_cl;
+										$fields[ 'user_registration_' . $field_name ]['cl_map']                   = $cl_map;
+									}
+
+									if ( count( $custom_attributes ) > 0 ) {
+										$extra_params['custom_attributes'] = $custom_attributes;
+									}
+
+									if ( isset( $fields[ 'user_registration_' . $field_name ] ) && count( $extra_params ) > 0 ) {
+										$fields[ 'user_registration_' . $field_name ] = array_merge( $fields[ 'user_registration_' . $field_name ], $extra_params );
+									}
+									$filter_data = array(
+										'fields'     => $fields,
+										'field'      => $field,
+										'field_name' => $field_name,
+									);
+
+									$filtered_data_array = apply_filters( 'user_registration_profile_account_filter_' . $field_key, $filter_data, $form_id );
+									if ( isset( $filtered_data_array['fields'] ) ) {
+										$fields = $filtered_data_array['fields'];
+									}
+								}// End if().
+							}
+						}// End foreach().
+					}// End foreach().
+				}// End foreach().
+			}
+		} else {
+			return new WP_Error( 'form-not-found', __( 'Form not found!', 'user-registration' ) );
+		}
+
+		return apply_filters( 'user_registration_pro_form_field_list', $fields );
+	}
+}
+
+if ( ! function_exists( 'ur_pro_get_excluded_fields' ) ) {
+	/**
+	 * Get Excluded fields.
+	 */
+	function ur_pro_get_excluded_fields() {
+		$excluded_fields = array(
+			'user_confirm_password',
+			'user_confirm_email',
+			'section_title',
+		);
+
+		return apply_filters( 'user_registration_pro_excluded_fields', $excluded_fields );
+	}
+}
+
+/**
+ * Get the count of membership rules.
+ * This function checks for content access rules with rule_type = 'membership'.
+ *
+ * @return int The count of membership rules.
+ * @since 4.4.8
+ */
+if ( ! function_exists( 'ur_get_membership_rules_count' ) ) {
+	function ur_get_membership_rules_count() {
+		// Check if membership module is active
+		if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'membership' ) ) {
+			return 0;
+		}
+
+		// Check if post type exists, if not query directly from database
+		if ( post_type_exists( 'urcr_access_rule' ) ) {
+			$membership_rules = get_posts(
+				array(
+					'post_type'      => 'urcr_access_rule',
+					'post_status'    => 'any',
+					'posts_per_page' => - 1,
+					'meta_query'     => array(
+						array(
+							'key'   => 'urcr_rule_type',
+							'value' => 'membership',
+						),
+					),
+				)
+			);
+
+			return is_array( $membership_rules ) ? count( $membership_rules ) : 0;
+		} else {
+			// Post type not registered yet, query directly from database
+			global $wpdb;
+			$count = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(DISTINCT p.ID)
+					FROM {$wpdb->posts} p
+					INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
+					WHERE p.post_type = %s
+					AND pm.meta_key = %s
+					AND pm.meta_value = %s",
+					'urcr_access_rule',
+					'urcr_rule_type',
+					'membership'
+				)
+			);
+
+			return absint( $count );
+		}
+	}
+
+	if ( ! function_exists( 'ur_get_coupon_meta_by_code' ) ) {
+
+		/**
+		 * Fetch coupon meta using coupon code stored in post_content
+		 *
+		 * @param string $coupon_code
+		 *
+		 * @return array|bool
+		 *
+		 * @since xx.xx.xx
+		 */
+		function ur_get_coupon_meta_by_code( $coupon_code ) {
+			global $wpdb;
+
+			$post_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID
 				FROM {$wpdb->posts}
 				WHERE post_type = %s
 				AND post_content = %s
 				LIMIT 1",
-				'ur_coupons',
-				$coupon_code
-			)
-		);
+					'ur_coupons',
+					$coupon_code
+				)
+			);
 
-		if ( empty( $post_id ) ) {
-			return false;
-		}
+			if ( empty( $post_id ) ) {
+				return false;
+			}
 
-		$coupon_meta = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT meta_value
+			$coupon_meta = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT meta_value
 				FROM {$wpdb->postmeta}
 				WHERE post_id = %d
 				AND meta_key = %s
 				LIMIT 1",
-				$post_id,
-				'ur_coupon_meta'
-			)
-		);
+					$post_id,
+					'ur_coupon_meta'
+				)
+			);
 
-		if ( empty( $coupon_meta ) ) {
-			return false;
+			if ( empty( $coupon_meta ) ) {
+				return false;
+			}
+
+			return json_decode( ur_maybe_unserialize( $coupon_meta ) );
 		}
+	}
 
-		return json_decode( ur_maybe_unserialize( $coupon_meta ) );
+	if ( ! function_exists( 'ur_get_coupon_meta_by_code' ) ) {
+
+		/**
+		 * Fetch coupon meta using coupon code stored in post_content
+		 *
+		 * @param string $coupon_code
+		 *
+		 * @return array|bool
+		 *
+		 * @since xx.xx.xx
+		 */
+		function ur_get_coupon_meta_by_code( $coupon_code ) {
+			global $wpdb;
+
+			$post_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID
+				FROM {$wpdb->posts}
+				WHERE post_type = %s
+				AND post_content = %s
+				LIMIT 1",
+					'ur_coupons',
+					$coupon_code
+				)
+			);
+
+			if ( empty( $post_id ) ) {
+				return false;
+			}
+
+			$coupon_meta = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT meta_value
+				FROM {$wpdb->postmeta}
+				WHERE post_id = %d
+				AND meta_key = %s
+				LIMIT 1",
+					$post_id,
+					'ur_coupon_meta'
+				)
+			);
+
+			if ( empty( $coupon_meta ) ) {
+				return false;
+			}
+
+			return json_decode( ur_maybe_unserialize( $coupon_meta ) );
+		}
 	}
 }

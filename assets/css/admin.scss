@@ -14,9 +14,10 @@
 @import "forms";
 
 // Components
-@import "components/badge", "components/button", "components/card", "components/bulkactions", "components/tags",
+@import "components/accordion", "components/badge", "components/button", "components/card", "components/bulkactions", "components/tags",
 "components/list-group", "components/modal", "components/nav", "components/search", "components/typography",
 "components/scroll-ui", "components/dropdown", "components/input", "components/toggle", "components/navigation";
+
 
 @import "border";
 @import "spacing";
@@ -5134,7 +5135,7 @@ body.user-registration {
 
 			&-separator {
 				width: 80px;
-				height: 2px;
+				height: 1px;
 				border: 0;
 				background: $grey-50;
 				flex: 0 0 auto !important;

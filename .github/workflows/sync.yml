@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-3484-email-default-template-update
+      - v5.0.0
     workflow_dispatch:
 jobs:
   sync:
