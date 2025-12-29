@@ -199,9 +199,7 @@
 										);
 
 									var invite_code =
-										document.querySelector(
-											"#invite_code"
-										);
+										document.querySelector("#invite_code");
 
 									if (
 										"invite_code" === single_data.field_name
@@ -777,15 +775,13 @@
 								'<div class="user-registration-' + type + '"/>'
 							);
 							wrapper.append(message);
-							var my_account_selector = $(
-								".user-registration"
-							).find(".user-registration-MyAccount-navigation");
-							if (my_account_selector.length) {
+
+							if ($("#user-registration").hasClass("vertical")) {
+								wrapper.insertBefore(".ur-frontend-form");
+							} else {
 								wrapper.insertBefore(
 									".user-registration-MyAccount-navigation"
 								);
-							} else {
-								wrapper.insertBefore(".ur-frontend-form");
 							}
 						} else {
 							var wrapper = $(
@@ -987,8 +983,8 @@
 												$this
 													.find("#user_pass-error")
 													.remove();
-													console.log("hello");
-													
+												console.log("hello");
+
 												var error_msg_dom =
 													'<label id="user_pass-error" class="user-registration-error" for="user_pass">' +
 													ursL10n.password_strength_error +
@@ -1599,9 +1595,10 @@
 														"</li>"
 												);
 											} else if (
-												response.data.form_login_option == "payment" &&
-												typeof response.data
-														.message !==
+												response.data
+													.form_login_option ==
+													"payment" &&
+												typeof response.data.message !==
 													"undefined"
 											) {
 												message.append(

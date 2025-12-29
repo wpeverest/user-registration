@@ -178,7 +178,6 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 		return ! $result ? array() : $result;
 	}
 
-
 	// TODO - Handle Multiple ( Remove after multiple memberships merge )
 	/**
 	 * Get Member by their membership id.

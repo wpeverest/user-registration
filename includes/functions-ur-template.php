@@ -1289,7 +1289,6 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 
 		if ( ! empty( $wp->query_vars ) ) {
 			foreach ( $wp->query_vars as $key => $value ) {
-
 				// Ignore pagename param.
 				if ( 'pagename' === $key ) {
 					continue;

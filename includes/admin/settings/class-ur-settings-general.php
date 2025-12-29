@@ -127,7 +127,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) :
 									'title'              => __( 'Layout', 'user-registration' ),
 									'desc'               => __( 'This option lets you choose the layout for the user registration my account tabs.', 'user-registration' ),
 									'id'                 => 'user_registration_my_account_layout',
-									'default'            => 'horizontal',
+									'default'            => 'vertical',
 									'type'               => 'radio-group',
 									'css'                => '',
 									'desc_tip'           => true,
