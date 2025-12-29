@@ -238,6 +238,11 @@ class SubscriptionService {
 		$total                          = $order['total_amount'];
 		$membership_tab_url             = esc_url( ur_get_my_account_url() . "ur-membership" );
 
+		if ( ! empty( $data['context'] ) && 'thank_you_page' == $data['context'] ) {
+			$data[ 'payment_method'] = ! empty( $member_order['payment_method' ] ) ? $member_order['payment_method' ] : '';
+			$data[ 'transaction_id' ] = ! empty( $member_order[ 'transaction_id' ] ) ? $member_order[ 'transaction_id' ] : '';
+		}
+
 		if ( ! empty( $order['coupon'] ) && 'bank' !== $order['payment_method'] && isset( $membership_metas ) && ( 'paid' === $membership_metas['type'] || ( 'subscription' === $membership_metas['type'] && 'off' === $order['trial_status'] ) ) ) {
 			$coupon_meta = ur_get_coupon_meta_by_code( $order['coupon'] );
 
@@ -296,7 +301,8 @@ class SubscriptionService {
 			),
 			'membership_plan_coupon'            => esc_html( $order['coupon'] ?? '' ),
 			'membership_plan_total'             => (!empty($currencies[ $currency ]['symbol_pos']) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ?  $symbol . number_format( $total, 2 ) : number_format( $total, 2 ) . $symbol,
-			'membership_renewal_link'           => "<a href=$membership_tab_url>" . __( 'Renew Now', 'user-registration' ) . "</a>"
+			'membership_renewal_link'           => "<a href=$membership_tab_url>" . __( 'Renew Now', 'user-registration' ) . "</a>",
+			'membership_plan_transaction_id'	=> ! empty( $data[ 'transaction_id' ] ) ? $data[ 'transaction_id' ] : ''
 		);
 	}
 
