@@ -162,6 +162,7 @@ if ( ! class_exists( 'Admin' ) ) :
 			add_action( 'plugins_loaded', array( __CLASS__, 'ur_membership_maybe_run_migrations' ), 20 );
 
 			add_action( 'user_registration_single_user_details_content', array( $this, 'render_user_membership_details' ), 10, 2 );
+						new Subscriptions();
 		}
 
 		public function register_membership_admin_scripts() {

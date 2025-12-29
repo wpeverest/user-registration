@@ -262,13 +262,14 @@ $delete_url = wp_nonce_url(
 						</div>
 					</div>
 					<?php
-					$subscription_events_service = new WPEverest\URMembership\Admin\Services\SubscriptionEventsService();
-					$limit                       = 10;
-					$events                      = $subscription_events_service->get_events( $subscription['ID'], $limit );
-					$total_events                = $subscription_events_service->get_total_events( $subscription['ID'] );
+					if ( UR_PRO_ACTIVE ) {
+						$subscription_events_service = new WPEverest\URMembership\Admin\Services\SubscriptionEventsService();
+						$limit                       = 10;
+						$events                      = $subscription_events_service->get_events( $subscription['ID'], $limit );
+						$total_events                = $subscription_events_service->get_total_events( $subscription['ID'] );
 
-					if ( ! empty( $events ) ) {
-						?>
+						if ( ! empty( $events ) ) {
+							?>
 						<div class="ur-subscription__main-content-wrapper"
 						data-subscription-id="<?php echo esc_attr( $subscription['ID'] ); ?>"
 						data-limit="<?php echo esc_attr( $limit ); ?>"
@@ -296,7 +297,8 @@ $delete_url = wp_nonce_url(
 								<?php endif; ?>
 							</div>
 						</div>
-						<?php
+							<?php
+						}
 					}
 					?>
 				</div>

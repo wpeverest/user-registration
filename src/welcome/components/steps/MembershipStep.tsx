@@ -7,7 +7,6 @@ import {
 	HStack,
 	Input,
 	InputGroup,
-	InputLeftElement,
 	Button,
 	Select,
 	Card,

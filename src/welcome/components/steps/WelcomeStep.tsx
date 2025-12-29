@@ -11,7 +11,7 @@ import {
 	Link,
 	useColorModeValue,
 } from "@chakra-ui/react";
-import { __, sprintf } from "@wordpress/i18n";
+import { __ } from "@wordpress/i18n";
 import { useStateValue } from "../../context/StateProvider";
 import { MembershipSetupType } from "../../context/Gettingstartedcontext";
 

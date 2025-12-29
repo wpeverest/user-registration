@@ -81,7 +81,7 @@ const Stepper: React.FC<StepperProps> = ({
 				position="relative"
 			>
 				<Flex align="center" flexShrink={0} zIndex={2}>
-					<URMLogo h="40px" />
+					<URMLogo height="40px" />
 				</Flex>
 
 				<Flex
