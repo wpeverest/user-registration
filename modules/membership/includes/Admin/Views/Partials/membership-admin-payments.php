@@ -110,15 +110,14 @@ function render_paypal_settings( $membership_details ) {
 
 				<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
 					 style="gap:20px;">
-					<div class="ur-label" style="width: 30%">
+					<div class="ur-label">
 						<label
 							for="ur-input-type-paypal-mode"><?php esc_html_e( 'Mode', 'user-registration' ); ?>
 							<span style="color:red">*</span>
 						</label>
 					</div>
 					<div
-						class="ur-input-type-membership-email ur-admin-template"
-						style="width: 100%">
+						class="ur-input-type-membership-email ur-admin-template">
 						<div class="ur-field" data-field-key="paypal_email">
 							<input type="email"
 								   data-key-name="<?php esc_html_e( 'Paypal Email', 'user-registration' ); ?>"
@@ -136,15 +135,14 @@ function render_paypal_settings( $membership_details ) {
 				<!--					paypal email-->
 				<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
 					 style="gap:20px;">
-					<div class="ur-label" style="width: 30%">
+					<div class="ur-label">
 						<label
 							for="ur-input-type-paypal-email"><?php esc_html_e( 'Paypal Email', 'user-registration' ); ?>
 							<span style="color:red">*</span>
 						</label>
 					</div>
 					<div
-						class="ur-input-type-membership-email ur-admin-template"
-						style="width: 100%">
+						class="ur-input-type-membership-email ur-admin-template">
 						<div class="ur-field" data-field-key="paypal_email">
 							<input type="email"
 								   data-key-name="<?php esc_html_e( 'Paypal Email', 'user-registration' ); ?>"
@@ -164,7 +162,7 @@ function render_paypal_settings( $membership_details ) {
 				<div
 					class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
 					style="gap:20px;">
-					<div class="ur-label" style="width: 30%">
+					<div class="ur-label">
 						<label
 							for="ur-input-type-cancel-url"><?php esc_html_e( 'Cancel Url', 'user-registration' ); ?>
 							<span class="user-registration-help-tip tooltipstered"
@@ -173,8 +171,7 @@ function render_paypal_settings( $membership_details ) {
 					</div>
 
 					<div
-						class="ur-admin-template"
-						style="width: 100%">
+						class="ur-admin-template">
 						<div class="ur-field"
 							 data-field-key="paypal_cancel_url">
 							<input type="url"
@@ -194,7 +191,7 @@ function render_paypal_settings( $membership_details ) {
 				<div
 					class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
 					style="gap:20px;">
-					<div class="ur-label" style="width: 30%">
+					<div class="ur-label">
 						<label
 							for="ur-input-type-return-url"><?php esc_html_e( 'Return Url', 'user-registration' ); ?>
 							<span class="user-registration-help-tip tooltipstered"
@@ -202,8 +199,7 @@ function render_paypal_settings( $membership_details ) {
 						</label>
 					</div>
 					<div
-						class="ur-input-type-return-url ur-admin-template"
-						style="width: 100%">
+						class="ur-input-type-return-url ur-admin-template">
 						<div class="ur-field" data-field-key="return_url">
 							<input type="url"
 								   data-key-name="<?php esc_html_e( 'Return Url', 'user-registration' ); ?>"
@@ -224,15 +220,14 @@ function render_paypal_settings( $membership_details ) {
 					<div
 						class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
 						style="gap:20px;">
-						<div class="ur-label" style="width: 30%">
+						<div class="ur-label">
 							<label
 								for="ur-input-type-client-id"><?php esc_html_e( 'Client ID', 'user-registration' ); ?>
 								<span style="color:red">*</span>
 							</label>
 						</div>
 						<div
-							class="ur-input-type-client-id ur-admin-template"
-							style="width: 100%">
+							class="ur-input-type-client-id ur-admin-template">
 							<div class="ur-field" data-field-key="client_id">
 								<input type="text"
 									   autocomplete="off"
@@ -250,15 +245,14 @@ function render_paypal_settings( $membership_details ) {
 					<div
 						class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
 						style="gap:20px;">
-						<div class="ur-label" style="width: 30%">
+						<div class="ur-label">
 							<label
 								for="ur-input-type-client-secret"><?php esc_html_e( 'Client Secret', 'user-registration' ); ?>
 								<span style="color:red">*</span>
 							</label>
 						</div>
 						<div
-							class="ur-input-type-client-secret ur-admin-template"
-							style="width: 100%">
+							class="ur-input-type-client-secret ur-admin-template">
 							<div class="ur-field"
 								 data-field-key="client_secret">
 								<input type="text"
@@ -394,14 +388,13 @@ function render_stripe_settings( $membership_details ) {
 				<div
 					class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
 					style="gap:20px;">
-					<div class="ur-label" style="width: 30%">
+					<div class="ur-label">
 						<label
 							for="ur-input-type-cancel-url"><?php esc_html_e( 'Mode', 'user-registration' ); ?>
 						</label>
 					</div>
 					<div
-						class="ur-admin-template"
-						style="width: 100%">
+						class="ur-admin-template">
 						<div class="ur-field"
 							 data-field-key="stripe_mode">
 							<input type="url"
@@ -420,14 +413,13 @@ function render_stripe_settings( $membership_details ) {
 				<div
 					class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
 					style="gap:20px;">
-					<div class="ur-label" style="width: 30%">
+					<div class="ur-label">
 						<label
 							for="ur-input-type-cancel-url"><?php esc_html_e( 'Publishable Key', 'user-registration' ); ?>
 						</label>
 					</div>
 					<div
-						class="ur-admin-template"
-						style="width: 100%">
+						class="ur-admin-template">
 						<div class="ur-field"
 							 data-field-key="publishable_key">
 							<input type="url"
@@ -446,14 +438,13 @@ function render_stripe_settings( $membership_details ) {
 				<div
 					class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3"
 					style="gap:20px;">
-					<div class="ur-label" style="width: 30%">
+					<div class="ur-label">
 						<label
 							for="ur-input-type-cancel-url"><?php esc_html_e( 'Secret Key', 'user-registration' ); ?>
 						</label>
 					</div>
 					<div
-						class="ur-admin-template"
-						style="width: 100%">
+						class="ur-admin-template">
 						<div class="ur-field"
 							 data-field-key="secret_key">
 							<input type="url"

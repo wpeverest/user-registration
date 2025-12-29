@@ -506,9 +506,10 @@ $border-color_6: #475bb2;
 
 .urcr-label-input-pair,
 .urcr-title-body-pair {
-	display: flex !important;
+	display: flex;
 	align-items: center;
 	margin-bottom: 28px;
+	gap: 20px;
 
 	@media screen and (max-width: 600px) {
 		flex-direction: column;
@@ -526,13 +527,15 @@ $border-color_6: #475bb2;
 
 	// Ensure label container maintains width
 	.urcr-label-container {
-		flex: 0 0 38% !important;
+		// max-width: 600px;
+		// width: 100%;
+		flex: 0 0 38%;
 	}
 
 	// Ensure input/body containers take remaining space
 	.urcr-body,
 	.urcr-input-container {
-		flex: 1 !important;
+		flex: 0 0 60%;
 	}
 }
 
@@ -660,6 +663,33 @@ $border-color_6: #475bb2;
 		width: 100%;
 	}
 
+	.wp-editor-wrap {
+		.wp-media-buttons {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+
+			.button {
+				&[data-editor="urcr-membership-action-message"] {
+					display: flex;
+					align-items: center;
+					gap: 6px;
+					margin: 0;
+
+					.wp-media-buttons-icon {
+						margin: 0;
+					}
+
+					.dashicons {
+						&::before {
+							line-height: 22px;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	// Ensure inputs within body take full width
 	.urcr-input,
 	select.urcr-input,
@@ -758,3 +788,27 @@ $border-color_6: #475bb2;
 		flex-shrink: 0;
 	}
 }
+<<<<<<< Updated upstream
+=======
+
+// Label and Field Width CSS
+.ur-membership {
+	.user-registration-card {
+		&--form-step {
+			.user-registration-card__body {
+				.ur-label {
+					flex: 0 0 38%;
+				}
+
+				.ur-input-type-membership-name,
+				.ur-input-type-select,
+				.ur-toggle-section,
+				.ur-field {
+					// flex: 0 0 60%;
+					flex: 1;
+				}
+			}
+		}
+	}
+}
+>>>>>>> Stashed changes

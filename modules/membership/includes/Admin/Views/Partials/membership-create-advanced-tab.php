@@ -12,7 +12,7 @@
 		<div id="ur-membership-plan-and-price-section">
 			<!-- Membership Role -->
 			<div class="ur-membership-input-container ur-d-flex ur-p-1" style="gap:20px;">
-				<div class="ur-label" style="width: 30%">
+				<div class="ur-label">
 					<label for="ur-input-type-membership-role">
 						<?php esc_html_e( 'Membership Role :', 'user-registration' ); ?>
 						<span style="color:red">*</span>
@@ -20,7 +20,7 @@
 								data-tip="<?php esc_attr_e('Assign members to the selected role upon registration.(Overrides role set through form)','user-registration');?>"></span>
 					</label>
 				</div>
-				<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
+				<div class="ur-input-type-membership-name ur-admin-template">
 					<div class="ur-field">
 						<select data-key-name="<?php echo esc_html__( 'Role', 'user-registration' ); ?>"
 								id="ur-input-type-membership-role" class="user-membership-enhanced-select2">
@@ -42,10 +42,10 @@
 				<div class="ur-membership-subscription-field-container <?php echo isset( $membership_details['type'] ) && 'subscription' === $membership_details['type'] ? '' : 'ur-d-none'; ?>">
 					<!-- Trial Section -->
 					<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px">
-						<div class="ur-label" style="width: 30%">
+						<div class="ur-label">
 							<label class="ur-membership-trial-status" for="ur-membership-trial-status"><?php esc_html_e( 'Trial Period :', 'user-registration' ); ?></label>
 						</div>
-						<div class="ur-toggle-section m1-auto" style="width: 100%">
+						<div class="ur-toggle-section m1-auto">
 							<span class="user-registration-toggle-form">
 								<input data-key-name="Trial Period" id="ur-membership-trial-status"
 										type="checkbox" class="user-registration-switch__control hide-show-check enabled"
@@ -86,12 +86,12 @@
 			$is_upgrade_enabled = isset( $membership_details['upgrade_settings']['upgrade_action'] ) && true == $membership_details['upgrade_settings']['upgrade_action'];
 			?>
 			<div class="ur-membership-selection-container ur-d-flex ur-mt-2 ur-align-items-center" style="gap:20px;">
-				<div class="ur-label" style="width: 30%">
+				<div class="ur-label">
 					<label class="ur-membership-enable-upgrade-action" for="ur-membership-upgrade-action">
 						<?php esc_html_e( 'Upgrade Action :', 'user-registration' ); ?>
 					</label>
 				</div>
-				<div class="ur-toggle-section m1-auto" style="width: 100%">
+				<div class="ur-toggle-section m1-auto">
 					<span class="user-registration-toggle-form">
 						<input data-key-name="Upgrade Action" id="ur-membership-upgrade-action" type="checkbox"
 								class="user-registration-switch__control hide-show-check enabled"
