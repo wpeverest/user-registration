@@ -1611,7 +1611,8 @@ $not-tag: #fcdddd;
 
 .urcr-condition-row-parent {
 	display: flex;
-	gap: 30px;
+	// gap: 30px;
+	gap: 20px;
 	align-items: flex-start;
 
 	@media screen and (max-width: 1199px) {
@@ -2203,6 +2204,14 @@ $not-tag: #fcdddd;
 // Content Right Sidepart Access and Restrict Area CSS
 .urcr-condition-row-parent {
 	.urcr-conditions-list {
+		// max-width: 600px;
+		// width: 100%;
+		flex: 0 0 38%;
+
+		@media screen and (max-width: 1199px) {
+			max-width: 100%;
+		}
+
 		.urcr-condition-wrapper {
 			position: relative;
 
@@ -2233,8 +2242,10 @@ $not-tag: #fcdddd;
 	}
 
 	.urcr-target-selection-section {
-		max-width: 60%;
-		width: 100%;
+		// max-width: 60%;
+		// width: 100%;
+		// flex: 1;
+		flex: 0 0 60%;
 		flex-direction: column;
 		border: 1px solid #e1e1e1;
 		padding: 24px 0;
@@ -2244,12 +2255,13 @@ $not-tag: #fcdddd;
 		position: -webkit-sticky;
 		top: 60px;
 
-		@media screen and (max-width: 1399px) {
-			max-width: 420px;
-		}
+		// @media screen and (max-width: 1399px) {
+		// 	max-width: 420px;
+		// }
 
 		@media screen and (max-width: 1199px) {
 			max-width: 100%;
+			width: 100%;
 		}
 
 		.urcr-condition-value-input-wrapper {
