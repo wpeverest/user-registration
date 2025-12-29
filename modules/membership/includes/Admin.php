@@ -17,6 +17,7 @@ use WPEverest\URMembership\Admin\Membership\Membership;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\Admin\Services\PaymentGatewaysWebhookActions;
+use WPEverest\URMembership\Admin\Subscriptions\Subscriptions;
 use WPEverest\URMembership\Frontend\Frontend;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -126,27 +127,41 @@ if ( ! class_exists( 'Admin' ) ) :
 			add_action( 'plugins_loaded', array( $this, 'include_membership_payment_files' ) );
 			add_filter( 'user_registration_get_settings_pages', array( $this, 'add_membership_settings_page' ), 10, 1 );
 
-			add_filter( 'user_registration_form_redirect_url', array(
-				$this,
-				'update_redirect_url_for_membership'
-			), 10, 2 );
-			add_filter( 'user_registration_success_params_before_send_json', array(
-				$this,
-				'update_success_params_for_membership'
-			), 10, 4 );
+			add_filter(
+				'user_registration_form_redirect_url',
+				array(
+					$this,
+					'update_redirect_url_for_membership',
+				),
+				10,
+				2
+			);
+			add_filter(
+				'user_registration_success_params_before_send_json',
+				array(
+					$this,
+					'update_success_params_for_membership',
+				),
+				10,
+				4
+			);
 
 			register_deactivation_hook( UR_MEMBERSHIP_PLUGIN_FILE, array( $this, 'on_deactivation' ) );
 			register_activation_hook( UR_MEMBERSHIP_PLUGIN_FILE, array( $this, 'on_activation' ) );
-			add_filter( 'user_registration_content_restriction_settings', array(
-				$this,
-				'add_memberships_in_urcr_settings'
-			), 10, 1 );
+			add_filter(
+				'user_registration_content_restriction_settings',
+				array(
+					$this,
+					'add_memberships_in_urcr_settings',
+				),
+				10,
+				1
+			);
 			add_action( 'admin_enqueue_scripts', array( $this, 'register_membership_admin_scripts' ) );
-
 		}
 
 		public function register_membership_admin_scripts() {
-			if(isset($_GET['post']) && isset($_GET['action']) && 'edit' === $_GET['action']) {
+			if ( isset( $_GET['post'] ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 				// Enqueue frontend scripts here.
 				$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 				wp_register_script( 'user-registration-membership-frontend-script', UR_MEMBERSHIP_JS_ASSETS_URL . '/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
@@ -155,7 +170,6 @@ if ( ! class_exists( 'Admin' ) ) :
 				wp_register_style( 'user-registration-membership-frontend-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-frontend.css', array(), UR_MEMBERSHIP_VERSION );
 				wp_enqueue_style( 'user-registration-membership-frontend-style' );
 			}
-
 		}
 
 		public function add_memberships_in_urcr_settings( $settings ) {
@@ -171,7 +185,7 @@ if ( ! class_exists( 'Admin' ) ) :
 					'css'       => 'min-width: 350px; ' . ( '3' != get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) ? 'display:none;' : '',
 					'desc_tip'  => true,
 					'options'   => $options,
-				)
+				),
 			);
 			$just_settings       = $settings['sections']['user_registration_content_restriction_settings']['settings'];
 
@@ -231,6 +245,8 @@ if ( ! class_exists( 'Admin' ) ) :
 			if ( $this->is_admin() ) {
 				$this->admin   = new Membership();
 				$this->members = new Members();
+
+				new Subscriptions();
 			} else {
 				// require file.
 				$this->frontend = new Frontend();
@@ -394,11 +410,14 @@ if ( ! class_exists( 'Admin' ) ) :
 			/**
 			 * Filters that holds the list of payment gateways to be stored in ur_membership_payment_gateways option.
 			 */
-			$membership_payment_gateways = apply_filters( 'user_registration_membership_payment_gateways', array(
-				'paypal' => __( 'Paypal', 'user-registration' ),
-				'stripe' => __( 'Stripe', 'user-registration' ),
-				'bank'   => __( 'Bank', 'user-registration' ),
-			) );
+			$membership_payment_gateways = apply_filters(
+				'user_registration_membership_payment_gateways',
+				array(
+					'paypal' => __( 'Paypal', 'user-registration' ),
+					'stripe' => __( 'Stripe', 'user-registration' ),
+					'bank'   => __( 'Bank', 'user-registration' ),
+				)
+			);
 			update_option(
 				'ur_membership_payment_gateways',
 				$membership_payment_gateways
@@ -453,7 +472,5 @@ if ( ! class_exists( 'Admin' ) ) :
 
 			return $settings;
 		}
-
-
 	}
 endif;
