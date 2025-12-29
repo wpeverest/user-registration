@@ -23,9 +23,8 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 $membership_tabs = $this->get_membership_create_tabs();
 
 // Include header partial
-include __DIR__ . '/Partials/membership-create-header.php';
+require __DIR__ . '/Partials/membership-create-header.php';
 ?>
-
 <div class="ur-membership">
 	<div class="ur-membership-tab-contents-wrapper ur-registered-from ur-align-items-center ur-justify-content-center">
 		<form id="ur-membership-create-form" method="post">
@@ -35,7 +34,7 @@ include __DIR__ . '/Partials/membership-create-header.php';
 				$partial_path = __DIR__ . '/Partials/' . $tab['partial'];
 				if ( file_exists( $partial_path ) ) {
 					// Set active class for first tab
-					$is_active = ( $index === 0 );
+					$is_active    = ( $index === 0 );
 					$active_class = $is_active ? 'user-registration-card--form-step-active' : '';
 
 					echo '<div class="user-registration-card user-registration-card--form-step ' . esc_attr( $active_class ) . '">';

@@ -15,6 +15,7 @@ use WPEverest\URMembership\Admin\Members\Members;
 use WPEverest\URMembership\Admin\Membership\ListTable;
 use WPEverest\URMembership\Admin\MembershipGroups\MembershipGroups;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
+use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
 use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
@@ -207,13 +208,13 @@ class Membership {
 
 		switch ( $action ) {
 			case 'trash':
-				//              $this->bulk_trash( $delete_list );
+				// $this->bulk_trash( $delete_list );
 				break;
 			case 'untrash':
-				//              $this->bulk_untrash( $membership_list );
+				// $this->bulk_untrash( $membership_list );
 				break;
 			case 'delete':
-				//              $this->bulk_trash( $delete_list, true, $delete_membership );
+				// $this->bulk_trash( $delete_list, true, $delete_membership );
 				break;
 			default:
 				break;
@@ -585,7 +586,7 @@ class Membership {
 	 * @param array $condition Condition data.
 	 * @param array $condition_options Available condition options.
 	 * @param array $localized_data Localized data for labels and options.
-	 * @param bool $is_locked Whether the condition is locked (non-editable).
+	 * @param bool  $is_locked Whether the condition is locked (non-editable).
 	 *
 	 * @return string HTML for condition row.
 	 */
@@ -653,9 +654,9 @@ class Membership {
 	 * @param string $condition_id Condition ID.
 	 * @param string $input_type Input type (multiselect, checkbox, date, period, number, text).
 	 * @param string $field_type Field type.
-	 * @param mixed $value Current value.
-	 * @param array $localized_data Localized data.
-	 * @param bool $is_locked Whether the input is locked (non-editable).
+	 * @param mixed  $value Current value.
+	 * @param array  $localized_data Localized data.
+	 * @param bool   $is_locked Whether the input is locked (non-editable).
 	 *
 	 * @return string HTML for value input.
 	 */

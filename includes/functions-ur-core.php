@@ -6683,13 +6683,24 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 		}
 		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
 
-		$membership = $members_repository->get_member_membership_by_id( get_current_user_id() );
+		$user_memberships = $members_repository->get_member_membership_by_id( get_current_user_id() );
 
-		if ( empty( $membership ) ) {
+		if ( empty( $user_memberships ) ) {
 			return;
 		}
 
-		if ( in_array( $membership['status'], array( 'pending', 'inactive' ) ) ) {
+		$active_memberships = array_filter(
+			array_map(
+				function ( $user_memberships ) {
+					if ( ! empty( $user_memberships['status'] ) && ! in_array( $user_memberships['status'], array( 'pending', 'inactive' ) ) ) {
+						return $user_memberships['post_id'];
+					}
+				},
+				$user_memberships
+			)
+		);
+
+		if ( count( $active_memberships ) < 1 ) {
 			wp_logout();
 		}
 	}
