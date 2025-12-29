@@ -1,96 +1,56 @@
 const path = require("path");
-const CopyPlugin = require("copy-webpack-plugin");
-const isProd = process.env.NODE_ENV === "production";
-const WebpackBar = !isProd ? require("webpackbar") : null;
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const defaults = require("@wordpress/scripts/config/webpack.config");
+const PhpFilePathsPlugin = require("@wordpress/scripts/plugins/php-file-paths-plugin/index");
+const { getProjectSourcePath } = require("@wordpress/scripts/utils/index");
+const { realpathSync } = require("fs");
 
-module.exports = (env, argv) => {
-	return {
-		entry: {
-			welcome: "./src/welcome/index.js",
-			dashboard: "./src/dashboard/index.js",
-			blocks: "./src/blocks/index.js",
-			formblock: "./assets/js/admin/gutenberg/form-block.js",
-			form_templates: "./src/form-templates/index.js",
-			"divi-builder": "./src/widgets/divi-builder/index.js"
-		},
-		output: {
-			path: path.resolve(__dirname + "/chunks"),
-			publicPath: "/",
-			filename: "[name].js"
-		},
-		devtool: isProd ? false : "source-map",
-		resolve: {
-			extensions: [".js", ".jsx", ".json"]
-		},
-		module: {
-			rules: [
+module.exports = {
+	...defaults,
+	output: {
+		...defaults.output,
+		filename: "[name].js",
+		path: path.resolve(__dirname + "/chunks")
+	},
+	entry: {
+		welcome: "./src/welcome/index.tsx",
+		dashboard: "./src/dashboard/index.js",
+		blocks: "./src/blocks/index.js",
+		formblock: "./assets/js/admin/gutenberg/form-block.js",
+		form_templates: "./src/form-templates/index.js",
+		"divi-builder": "./src/widgets/divi-builder/index.js",
+		"content-access-rules": "./src/content-restriction/index.js"
+	},
+	plugins: [
+		...defaults.plugins.filter((plugin) => {
+			return plugin.constructor.name !== "CopyPlugin";
+		}),
+		new CopyWebpackPlugin({
+			patterns: [
 				{
-					test: /\.(js|jsx)$/,
-					exclude: /node_modules/,
-					use: [
-						{
-							loader: "babel-loader",
-							options: {
-								presets: [
-									"@babel/preset-env",
-									"@babel/preset-react"
-								]
-							}
-						},
-						{
-							loader: "eslint-loader"
-						}
-					]
+					from: "**/block.json",
+					to: ({ context, absoluteFilename }) => {
+						const parentDir = path.basename(
+							path.dirname(absoluteFilename)
+						);
+						return `${parentDir}/block.json`;
+					},
+					context: "src"
 				},
 				{
-					test: /\.s[ac]ss$/i,
-					use: [
-						// Creates `style` nodes from JS strings
-						"style-loader",
-						// Translates CSS into CommonJS
-						"css-loader",
-						// Compiles Sass to CSS
-						"sass-loader"
-					]
-				},
-				{
-					test: /\.(gif|webp|svg)$/i,
-					use: "url-loader"
-				},
-				{
-					test: /\.(png|jpg|jpeg)$/i,
-					use: [
-						{
-							loader: "file-loader"
-						}
-					]
+					from: "**/*.php",
+					context: getProjectSourcePath(),
+					noErrorOnMissing: true,
+					filter: (filepath) => {
+						return (
+							process.env.WP_COPY_PHP_FILES_TO_DIST ||
+							PhpFilePathsPlugin.paths.includes(
+								realpathSync(filepath).replace(/\\/g, "/")
+							)
+						);
+					}
 				}
 			]
-		},
-		plugins: [
-			new CopyPlugin({
-				patterns: [
-					{
-						from: "src/blocks/**/block.json",
-						to({ absoluteFilename }) {
-							return path.resolve(
-								__dirname,
-								"chunks",
-								path.basename(path.dirname(absoluteFilename)),
-								"block.json"
-							);
-						}
-					}
-				]
-			}),
-			...(!isProd && WebpackBar ? [new WebpackBar()] : [])
-		],
-		externals: {
-			"@wordpress/blocks": ["wp", "blocks"],
-			"@wordpress/components": ["wp", "components"],
-			"@wordpress/block-editor": ["wp", "blockEditor"],
-			"@wordpress/server-side-render": ["wp", "serverSideRender"],
-			react: ["React"]
-		}
-	};
+		})
+	]
 };

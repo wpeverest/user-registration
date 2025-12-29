@@ -947,7 +947,7 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 				array(
 					'users' => array(
 						'page_slug' => 'user-registration-users',
-						'label'     => esc_html__( 'Users', 'user-registration' ),
+						'label'     => esc_html__( 'Members', 'user-registration' ),
 					),
 				),
 				ur_check_module_activation( 'membership' ) ? array(
@@ -962,10 +962,6 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 							'groups'    => array(
 								'page_slug' => 'user-registration-membership&action=list_groups',
 								'label'     => esc_html__( 'Groups', 'user-registration' ),
-							),
-							'members'   => array(
-								'page_slug' => 'user-registration-members',
-								'label'     => esc_html__( 'Members', 'user-registration' ),
 							),
 						),
 					),
@@ -1063,7 +1059,7 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 					if ( ! UR_PRO_ACTIVE ) {
 						?>
 							<div class="ur-version-tag-separator" bis_skin_checked="1"><hr></div>
-							<a target="_blank" rel="noopener" class="" href="https://wpuserregistration.com/upgrade/?utm_campaign=lite-version&utm_source=header&utm_medium=top-menu-link">
+							<a target="_blank" rel="noopener" class="ur-upgrade--link" href="https://wpuserregistration.com/upgrade/?utm_campaign=lite-version&utm_source=header&utm_medium=top-menu-link">
 								<?php esc_html_e( 'Upgrade To Pro', 'user-registration' ); ?>
 							</a>
 						<?php

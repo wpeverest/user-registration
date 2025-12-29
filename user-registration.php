@@ -3,7 +3,7 @@
  * Plugin Name: User Registration & Membership
  * Plugin URI: https://wpuserregistration.com/
  * Description: The most flexible User Registration and Membership plugin for WordPress.
- * Version: 4.4.8
+ * Version: 5.0.0
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -35,7 +35,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '4.4.8';
+		public $version = '5.0.0';
 
 		/**
 		 * Session instance.
@@ -126,6 +126,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
 			add_action( 'init', array( $this, 'init' ), 0 );
 			add_action( 'init', array( 'UR_Shortcodes', 'init' ) );
+			add_action( 'init', array( $this, 'enable_multiple_registration_forms' ) );
 
 			add_filter( 'plugin_action_links_' . UR_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
 			add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
@@ -286,10 +287,17 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 				include_once UR_ABSPATH . 'modules/payment-history/Orders.php';
 			}
 
-			if ( ur_check_module_activation( 'content-restriction' ) ) {
-				include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
-				include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
-			}
+		// Check if there are membership rules (>= 2)
+		$membership_rules_count = 0;
+		if ( function_exists( 'ur_get_membership_rules_count' ) ) {
+			$membership_rules_count = ur_get_membership_rules_count();
+		}
+
+		if ( ur_check_module_activation( 'content-restriction' ) || $membership_rules_count >= 2 ) {
+
+			include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
+		}
 
 			/**
 			 * Elementor classes.
@@ -329,6 +337,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			}
 			include_once UR_ABSPATH . 'includes/class-ur-cron.php';
 			include_once UR_ABSPATH . 'includes/stats/class-ur-stats.php';
+			include_once UR_ABSPATH . 'includes/stats/class-ur-formbricks.php';
 			include_once UR_ABSPATH . 'includes/class-ur-captcha-conflict-manager.php';
 
 			$this->query = new UR_Query();
@@ -544,6 +553,27 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			}
 			return wp_kses_post( $upgrade_notice );
 		}
+
+		/**
+		 * Enable multiple registration module for old user.
+		 *
+		 * @since 5.0.0
+		 */
+		public function enable_multiple_registration_forms(){
+			$is_migrated = get_option( 'user_registration_multiple_registration_migration', false );
+
+			if ( ! $is_migrated ) {
+				$all_forms = ur_get_all_user_registration_form();
+				if ( count( $all_forms ) > 1) {
+					$enabled_features = get_option( 'user_registration_enabled_features', array() );
+					if ( ! isset( $enabled_features[ 'user-registration-multiple-registration' ] ) ) {
+						$enabled_features[] = 'user-registration-multiple-registration';
+						update_option( 'user_registration_enabled_features', $enabled_features );
+					}
+				}
+				update_option( 'user_registration_multiple_registration_migration', true );
+			}
+		}
 	}
 
 endif;
@@ -654,5 +684,37 @@ if ( ! function_exists( 'UR' ) ) {
 	// Do not process the plugin code further.
 	return;
 }
+/**
+ * Development: Hot reload support for webpack dev server.
+ * Enable by setting SCRIPT_DEBUG to true in wp-config.php
+ */
+if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+    add_filter(
+        'script_loader_src',
+        function ( $src, $handle ) {
+            $dev_scripts = array(
+                'user-registration-welcome',
+                'user-registration-dashboard',
+                'user-registration-blocks',
+                'user-registration-form-templates',
+                'user-registration-divi-builder',
+                'user-registration-content-access-rules',
+            );
+
+            if ( in_array( $handle, $dev_scripts, true ) ) {
+                $src = str_replace(
+                    UR_PLUGIN_URL . 'chunks/',
+                    'http://localhost:3000/',
+                    $src
+                );
+            }
+
+            return $src;
+        },
+        10,
+        2
+    );
+}
+
 // Global for backwards compatibility.
 $GLOBALS['user-registration'] = UR();
