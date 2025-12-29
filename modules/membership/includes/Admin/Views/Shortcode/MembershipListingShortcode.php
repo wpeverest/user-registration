@@ -35,7 +35,6 @@ class MembershipListingShortcode {
 	 */
 	public static function render_template( $attributes, $shortcode ) {
 		global $wp, $post;
-
 		$membership_service = new MembershipService();
 		$memberships        = $membership_service->list_active_memberships();
 
@@ -73,8 +72,10 @@ class MembershipListingShortcode {
 
 		$style = $attributes['style'];
 
-		$button_class = 'ur-membership-signup-btn-' . uniqid();
-		$radio_class  = 'ur-membership-radio-' . uniqid();
+		$uuid = ! empty( $attributes['uuid'] ) ? sanitize_key( $attributes['uuid'] ) : ( ! empty( $attributes['id'] ) ? sanitize_key( $attributes['id'] ) : ur_generate_random_key() );
+
+		$button_class = 'ur-membership-signup-btn-' . sanitize_html_class( $uuid );
+		$radio_class  = 'ur-membership-radio-' . sanitize_html_class( $uuid );
 
 		$button_style       = '';
 		$button_hover_style = '';
