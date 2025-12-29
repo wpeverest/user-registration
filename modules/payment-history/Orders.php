@@ -59,18 +59,21 @@ class Orders {
 
 	public function add_orders_menu() {
 
-		$orders_page = add_submenu_page(
-			'user-registration',
-			__( 'Payment History', 'user-registration' ), // page title
-			__( 'Payment History', 'user-registration' ), // menu title
-			'manage_user_registration', // Capability required to access
-			$this->page, // Menu slug
-			array(
-				$this,
-				'render_payment_history_page',
-			)
-		);
-		add_action( 'load-' . $orders_page, array( $this, 'orders_initialization' ) );
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
+			$orders_page = add_submenu_page(
+				'user-registration',
+				__( 'Payments', 'user-registration' ), // page title
+				'↳ ' . __( 'Payments', 'user-registration' ),
+				'manage_user_registration', // Capability required to access
+				$this->page, // Menu slug
+				array(
+					$this,
+					'render_payment_history_page',
+				),
+				4
+			);
+			add_action( 'load-' . $orders_page, array( $this, 'orders_initialization' ) );
+		}
 	}
 
 
@@ -175,6 +178,7 @@ class Orders {
 
 	/**
 	 * Renders add new payment history form.
+	 *
 	 * @return void
 	 */
 	public function render_add_new_payment_history_scratch() {
@@ -227,6 +231,7 @@ class Orders {
 </div>
 		<?php
 	}
+
 	public function render_add_new_payment_history() {
 		global $wpdb;
 		$subscription_table = \WPEverest\URMembership\TableList::subscriptions_table();

@@ -1,0 +1,433 @@
+.ur-admin-page-topnav {
+  position: sticky;
+  top: var(--wp-admin--admin-bar--height);
+  background-color: #ffffff;
+  z-index: 9;
+}
+
+.ur-membership-tab-contents-wrapper {
+  max-width: 100%;
+  margin: 24px;
+  display: block;
+  padding: 0;
+}
+
+.ur-membership-subscription-create-form.ur-subscription__form {
+  display: block;
+}
+
+.ur-subscription__form {
+  display: grid;
+  gap: 24px;
+  margin-top: 20px;
+  grid-template-columns: 3fr 1fr;
+}
+
+.ur-subscription__form--left {
+  min-width: 0;
+}
+
+.ur-subscription__form--right {
+  min-width: 0;
+}
+.ur-subscription__form--right > div:not(:last-of-type) {
+  margin-bottom: 24px;
+}
+
+.ur-subscription__main-content > div:not(:last-of-type) {
+  margin-bottom: 24px;
+}
+
+.ur-subscription__main-content-wrapper {
+  background: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.ur-subscription__summary-subscription-wrapper {
+  margin-bottom: 20px;
+  grid-column: 2/3;
+}
+
+.ur-subscription__table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+.ur-subscription__table thead th {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ccd0d4;
+  font-weight: 600;
+  font-size: 13px;
+  color: #1d2327;
+  background: #f6f7f7;
+}
+.ur-subscription__table tbody td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f1;
+  font-size: 13px;
+  color: #50575e;
+  vertical-align: top;
+}
+.ur-subscription__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.ur-subscription a {
+  color: #475bb2;
+  text-decoration: none;
+}
+
+.ur-subscription__table-discount {
+  font-size: 12px;
+  color: #646970;
+  margin-top: 4px;
+}
+
+.ur-subscription__table-price {
+  font-weight: 600;
+}
+
+.ur-subscription__badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: 1px solid #2271b1;
+}
+
+.ur-subscription__badge--status {
+  border: 1px solid #2271b1;
+}
+
+.ur-subscription__badge--status-completed {
+  color: #00a32a;
+  border-color: #00a32a;
+}
+
+.ur-subscription__badge--status-pending {
+  color: #f0b849;
+  border-color: #f0b849;
+}
+
+.ur-subscription__badge--status-failed {
+  color: #d63638;
+  border-color: #d63638;
+}
+
+.ur-subscription__badge--status-refunded {
+  color: #8c8f94;
+  border-color: #8c8f94;
+}
+
+.ur-subscription__badge--trial {
+  color: #475bb2;
+  border-color: #475bb2;
+  background-color: #f0f6fc;
+}
+
+.ur-subscription__badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ur-subscription__actions {
+  padding: 15px 0 0 0;
+  margin-top: 15px;
+  border-top: 1px solid #ccd0d4;
+}
+
+.ur-subscription__actions-button {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.ur-subscription__actions-button:last-child {
+  margin-bottom: 0;
+}
+
+.ur-subscription__fields {
+  background: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.ur-subscription__fields-header {
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.ur-subscription__fields-content > div:not(:last-of-type) {
+  margin-bottom: 24px;
+}
+
+.ur-subscription__field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ur-subscription__field-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #1d2327;
+}
+
+.ur-subscription__field-input {
+  width: 100%;
+}
+.ur-subscription__field-input input[type=text] {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #8c8f94;
+  border-radius: 3px;
+  font-size: 13px;
+}
+.ur-subscription__field-input input[type^=date] {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #8c8f94;
+  border-radius: 3px;
+  font-size: 13px;
+}
+.ur-subscription__field-input select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #8c8f94;
+  border-radius: 3px;
+  font-size: 13px;
+}
+
+.ur-subscription__readonly-field {
+  background-color: #f6f7f7;
+  color: #50575e;
+  cursor: not-allowed;
+}
+
+.ur-subscription__field-description {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #646970;
+}
+
+.ur-subscription__data {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.ur-subscription__subscription-label {
+  color: #50575e;
+  text-align: left;
+}
+
+.ur-subscription__subscription-label-highlight {
+  font-weight: 600;
+}
+
+.ur-subscription__subscription-total {
+  text-align: right;
+  font-weight: 600;
+  color: #1d2327;
+}
+
+.ur-subscription__subscription-description {
+  font-size: 12px;
+  color: #646970;
+  font-style: italic;
+}
+
+.ur-subscription__section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 15px;
+}
+
+.ur-subscription__section-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1d2327;
+  margin: 0;
+}
+
+.ur-subscription__item-info > .ur-subscription__section-content {
+  display: block;
+}
+
+.ur-subscription__section-content {
+  display: grid;
+  gap: 24px;
+  padding-top: 15px;
+}
+
+.ur-subscription__section-column {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+.ur-subscription__section-column > div:not(:last-of-type) {
+  margin-bottom: 16px;
+}
+
+.ur-subscription__section-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ur-subscription__section-item > div:not(:last-of-type) {
+  margin-bottom: 8px;
+}
+
+.ur-subscription__section-label {
+  font-size: 12px;
+  color: #646970;
+  font-weight: 500;
+}
+
+.ur-subscription__section-value {
+  font-size: 13px;
+  color: #1d2327;
+  font-weight: 400;
+}
+
+.ur-subscription__section-link {
+  color: #2271b1;
+  text-decoration: underline;
+  font-size: 13px;
+  margin-top: 4px;
+}
+.ur-subscription__section-link:hover {
+  color: #135e96;
+}
+
+.ur-subscription__section-id {
+  background-color: #f6f7f7;
+  border: 1px solid #dcdcde;
+  border-radius: 3px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #1d2327;
+  font-family: monospace;
+  word-break: break-all;
+}
+
+.ur-subscription__subscription-actions {
+  display: flex;
+  flex-direction: column;
+}
+.ur-subscription__subscription-actions .action.button {
+  text-align: center;
+  background-color: white;
+  border-color: #475bb2;
+  color: #475bb2;
+  min-height: 40px;
+  display: inline-grid;
+  place-items: center;
+}
+.ur-subscription__subscription-actions .action.button:hover {
+  border-color: #475bb2;
+  color: #475bb2;
+  background-color: white;
+}
+.ur-subscription__subscription-actions .action.button + .button.delete {
+  margin-left: 0;
+  margin-top: 8px;
+}
+.ur-subscription__subscription-actions .action.delete {
+  border-color: #d63638;
+  color: #d63638;
+}
+.ur-subscription__subscription-actions .action.delete:hover {
+  border-color: #d63638;
+  color: #d63638;
+}
+
+.ur-subscription__user {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.ur-subscription__user-avatar {
+  margin-bottom: 20px;
+  border-radius: 999px;
+}
+
+.ur-subscription__user-name {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.ur-subscription__user-email {
+  font-size: 14px;
+}
+
+.ur-subscription__table-head {
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: #646970;
+}
+.ur-subscription__table-body {
+  padding: 16px;
+  background-color: rgb(249, 250, 251);
+  font-weight: 500;
+}
+.ur-subscription__table-head, .ur-subscription__table-body {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+}
+.ur-subscription__table-head > div:nth-of-type(1), .ur-subscription__table-body > div:nth-of-type(1) {
+  grid-column: span 6/span 6;
+}
+.ur-subscription__table-head > div, .ur-subscription__table-body > div {
+  grid-column: span 3/span 3;
+}
+
+.ur-subscription__trial-notice {
+  background-color: rgb(240, 242, 250);
+  border-color: #475bb2;
+  border-radius: 0px;
+  border-width: 0px;
+  border-style: solid;
+  border-left-width: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  box-shadow: none;
+}
+.ur-subscription__trial-notice svg {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+}
+.ur-subscription__trial-notice > div {
+  flex: 1;
+}
+.ur-subscription__trial-notice__title {
+  font-weight: 600;
+  color: #475bb2;
+}
+.ur-subscription__trial-notice__content {
+  color: rgb(90, 107, 168);
+}
+
+.ur-membership-tab-contents-wrapper .ur-membership-subscription-create-form .user-registration-card {
+  padding: 24px 28px;
+  border: 1px solid #e1e1e1;
+  background: #ffffff;
+  border-radius: 13px;
+}

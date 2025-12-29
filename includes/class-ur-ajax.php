@@ -1655,6 +1655,14 @@ class UR_AJAX {
 		ob_start();
 
 		check_ajax_referer( 'user_registration_create_form', 'security' );
+
+		$all_forms = ur_get_all_user_registration_form();
+
+		if ( ( ! empty( $all_forms ) && count( $all_forms ) <= 1 && ! ur_check_module_activation( 'multiple-registration' ) ) ) {
+			wp_send_json_error( array( 'message' => __( 'Multiple registration forms cannot be created.', 'user-registration' ) ) );
+			die( -1 );
+		}
+
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => __( 'You do not have permission to create form.', 'user-registration' ) ) );
 			wp_die( - 1 );
@@ -2406,29 +2414,6 @@ class UR_AJAX {
 						array(
 							'message' => esc_html__(
 								'The selected page does not contain the required lost password shortcode [user_registration_lost_password]',
-								'user-registration'
-							),
-						)
-					);
-				}
-				break;
-			case 'user_registration_reset_password_page_id':
-				if ( empty( $page_id ) ) {
-					wp_send_json_error(
-						array(
-							'message' => esc_html__(
-								'Please select a valid reset password page that contains the reset password shortcode [user_registration_reset_password_form]',
-								'user-registration'
-							),
-						)
-					);
-				}
-				$is_page_reset_password_page = ur_find_reset_password_in_page( $page_id );
-				if ( ! $is_page_reset_password_page ) {
-					wp_send_json_error(
-						array(
-							'message' => esc_html__(
-								'The selected page does not contain the required password reset shortcode [user_registration_reset_password_form]',
 								'user-registration'
 							),
 						)

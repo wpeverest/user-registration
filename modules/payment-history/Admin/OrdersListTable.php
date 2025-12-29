@@ -146,8 +146,7 @@ class OrdersListTable extends \UR_List_Table {
 		$total_items = array();
 		if ( ! empty( $users ) ) {
 			foreach ( $users as $user ) {
-				$meta_value = get_user_meta( $user->ID, 'ur_payment_invoices', true );
-
+				$meta_value    = get_user_meta( $user->ID, 'ur_payment_invoices', true );
 				$total_items[] = array(
 					'user_id'        => $user->ID,
 					'display_name'   => $user->user_login,
