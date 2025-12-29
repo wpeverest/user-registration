@@ -171,6 +171,43 @@
 					</div>
 				</div>
 			</div>
+
+			<?php
+				if ( UR_PRO_ACTIVE && function_exists( 'ur_render_email_marketing_sync_settings' ) ) :
+			?>
+				<!-- Sync Membership to email marketing addons. -->
+				<div class="ur-membership-sync-to-email-marketing-addons">
+					<div class="ur-membership-selection-container ur-d-flex ur-mt-2 ur-align-items-center"
+						style="gap:20px;">
+						<div class="ur-label" style="width: 30%">
+							<label class="ur-membership-enable-email-marketing-sync-action"
+									for="ur-membership-email-marketing-sync-action"><?php esc_html_e( 'Enable email marketing sync :', 'user-registration' ); ?>
+							</label>
+						</div>
+						<div class="ur-toggle-section m1-auto" style="width: 100%">
+							<span class="user-registration-toggle-form">
+
+							<?php
+								$email_marketing_sync_details = isset( $membership_details[ 'email_marketing_sync'] ) ? $membership_details[ 'email_marketing_sync'] : array();
+								$is_email_marketing_sync      = ur_string_to_bool( isset( $email_marketing_sync_details[ 'is_enable' ] ) ? $email_marketing_sync_details[ 'is_enable' ] : '0' );
+							?>
+								<input
+									data-key-name="Sync Email Marketing Action"
+									id="ur-membership-email-marketing-sync-action" type="checkbox"
+									class="user-registration-switch__control hide-show-check enabled"
+
+									name="ur_membership_email_marketing_sync_action"
+									style="width: 100%; text-align: left"
+									<?php echo $is_email_marketing_sync ? esc_attr( 'checked' ) : ''; ?>
+									>
+								<span class="slider round"></span>
+							</span>
+						</div>
+					</div>
+				</div>
+
+				<?php ur_render_email_marketing_sync_settings( $membership_details );
+					endif;
+				?>
 		</div>
 	</div>
-
