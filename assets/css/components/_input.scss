@@ -45,6 +45,7 @@
             font-weight: $regular;
             margin: 0;
             box-shadow: none;
+            font-family: inherit;
 
             &::placeholder {
                 color: #bababa;
@@ -65,6 +66,17 @@
         &[type="checkbox"],
         &[type="radio"] {
             z-index: 0;
+
+            @media screen and (max-width: 782px) {
+                width: 16px;
+                height: 16px;
+
+                &::before {
+                    width: 8px;
+                    height: 8px;
+                    margin: 3px;
+                }
+            }
         }
 
         &[type="search"] {

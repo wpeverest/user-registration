@@ -21,9 +21,10 @@ class Database {
 	 */
 	public static function get_tables() {
 		return array(
-			'orders_meta_table'   => TableList::order_meta_table(),
-			'orders_table'        => TableList::orders_table(),
-			'subscriptions_table' => TableList::subscriptions_table(),
+			'orders_meta_table'         => TableList::order_meta_table(),
+			'orders_table'              => TableList::orders_table(),
+			'subscriptions_table'       => TableList::subscriptions_table(),
+			'subscription_events_table' => TableList::subscription_events_table(),
 		);
 	}
 
@@ -116,6 +117,39 @@ class Database {
                     ) $collate
                     "
 		);
+
+		if ( defined( UR_PRO_ACTIVE ) && UR_PRO_ACTIVE ) {
+			$subscription_events_table = TableList::subscription_events_table();
+
+			array_push(
+				$sqls,
+				"CREATE TABLE IF NOT EXISTS $subscription_events_table (
+					id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+					subscription_id BIGINT(20) UNSIGNED NOT NULL,
+					user_id BIGINT(20) UNSIGNED NOT NULL,
+
+					event_type VARCHAR(50) NOT NULL,
+					event_status VARCHAR(30) NULL,
+
+					title VARCHAR(255) NOT NULL,
+					message TEXT NULL,
+
+					reference_id VARCHAR(255) NULL,
+					meta LONGTEXT NULL,
+
+					created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+					PRIMARY KEY (id),
+					KEY subscription_id (subscription_id),
+					KEY user_id (user_id),
+					KEY event_type (event_type),
+
+					FOREIGN KEY (subscription_id)
+						REFERENCES $subscriptions_table(ID)
+						ON DELETE CASCADE ON UPDATE NO ACTION
+				) $collate"
+			);
+		}
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		foreach ( $sqls as $sql ) {

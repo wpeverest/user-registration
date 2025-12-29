@@ -27,6 +27,7 @@ class UR_Base_Layout {
             'search_id'      => '',
             'skip_query_key' => '',
             'form_id' => '',
+			'class'          => '',
         );
 
         $data = wp_parse_args( $args, $defaults );
@@ -40,27 +41,26 @@ class UR_Base_Layout {
         }
 
         ?>
-        <div id="user-registration-base-list-table-page">
-			<div class="user-registration-base-list-top-wrapper">
-				<div class="user-registration-base-list-table-heading">
-					<h1>
-						<?php echo esc_html( $data['title'] ); ?>
-					</h1>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $data['page'] . '&action=' . $data['add_new_action'] ) ); ?>" class="page-title-action">
-						<?php echo esc_html($data['add_new_label']) ?>
-					</a>
-				</div>
+        <div id="user-registration-base-list-table-page" class="<?php echo esc_attr( $data['class'] ); ?>">
+			<div class="user-registration-base-list-table-heading">
+				<h1>
+					<?php echo esc_html( $data['title'] ); ?>
+				</h1>
+				<?php if(!empty($data['add_new_action'])): ?>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $data['page'] . '&action=' . $data['add_new_action'] ) ); ?>" class="page-title-action">
+					<?php echo esc_html($data['add_new_label']) ?>
+				</a>
+				<?php endif; ?>
+			</div>
+            <form id="<?php echo esc_attr( $data['form_id'] );?>" method="get" class="user-registration-base-list-table-form">
+                <input type="hidden" name="page" value="<?php echo esc_attr( $data['page'] ); ?>"/>
 				<div id="user-registration-base-list-filters-row">
-
 					<?php
 					if ( is_object( $table ) && method_exists( $table, 'display_search_box' ) ) {
 						$table->display_search_box( $data['search_id'] );
 					}
 					?>
 				</div>
-			</div>
-            <form id="<?php echo esc_attr( $data['form_id'] );?>" method="get" class="user-registration-base-list-table-form">
-                <input type="hidden" name="page" value="<?php echo esc_attr( $data['page'] ); ?>"/>
                 <?php
                 if ( is_object( $table ) && method_exists( $table, 'display' ) ) {
                     $table->display();
