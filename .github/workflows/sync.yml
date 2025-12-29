@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-3265-complete-new-ui-ux-for-content-protection
+      - v5.0.0
     workflow_dispatch:
 jobs:
   sync:

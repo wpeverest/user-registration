@@ -5103,6 +5103,14 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 	 * @param string $template Email Template id.
 	 */
 	function user_registration_process_email_content( $email_content, $template = '' ) {
+
+		if ( UR_PRO_ACTIVE ) {
+			// Delegate to pro function if available to use header/footer wrapper.
+			if ( function_exists( 'ur_pro_user_registration_process_email_content' ) ) {
+				return ur_pro_user_registration_process_email_content( $email_content, $template );
+			}
+		}
+
 		// Check if email template is selected.
 		if ( '' !== $template && 'none' !== $template ) {
 			/**
@@ -5148,6 +5156,87 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 		}
 
 		return $email_content;
+	}
+}
+
+if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
+	/**
+	 * Wrap email body content with responsive email wrapper.
+	 *
+	 * @param string $body_content Email body content to wrap.
+	 * @return string Wrapped email content.
+	 */
+	function ur_wrap_email_body_content( $body_content ) {
+		// Responsive CSS styles for email template.
+		$responsive_styles = '<style type="text/css">
+	/* Responsive Email Styles */
+	@media only screen and (max-width: 600px) {
+		.email-wrapper-outer {
+			padding: 20px 0 !important;
+		}
+		.email-wrapper-inner {
+			width: 100% !important;
+			max-width: 100% !important;
+			margin: 0 !important;
+			border-radius: 0 !important;
+		}
+		.email-header {
+			padding: 20px 15px !important;
+			border-radius: 0 !important;
+		}
+		.email-body {
+			padding: 25px 15px !important;
+		}
+		.email-footer {
+			padding: 20px 15px !important;
+		}
+		.email-logo img {
+			max-width: 150px !important;
+			max-height: 50px !important;
+		}
+		.email-header-text {
+			font-size: 16px !important;
+			margin-top: 10px !important;
+		}
+		.email-footer p {
+			font-size: 12px !important;
+		}
+		.email-footer a {
+			font-size: 13px !important;
+		}
+	}
+	@media only screen and (max-width: 480px) {
+		.email-wrapper-outer {
+			padding: 10px 0 !important;
+		}
+		.email-header {
+			padding: 15px 10px !important;
+		}
+		.email-body {
+			padding: 20px 10px !important;
+		}
+		.email-footer {
+			padding: 15px 10px !important;
+		}
+		.email-logo img {
+			max-width: 120px !important;
+			max-height: 40px !important;
+		}
+		.email-header-text {
+			font-size: 14px !important;
+		}
+	}
+</style>';
+
+		// Check if this is a preview and set width to 600px.
+		$is_preview  = isset( $_GET['ur_email_preview'] ) && 'email_template_option' === sanitize_text_field( wp_unslash( $_GET['ur_email_preview'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$email_width = $is_preview ? '600px' : '50%';
+		$max_width   = $is_preview ? '600px' : '600px'; // Max width for better readability on all devices.
+
+		return $responsive_styles . '
+	<div class="email-wrapper-outer" style="font-family: Arial, sans-serif; padding: 100px 0; background-color: #ffffff;">
+	<div class="email-wrapper-inner" style="width: ' . esc_attr( $email_width ) . '; max-width: ' . esc_attr( $max_width ) . '; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+	<div class="email-body" style="padding: 30px; background-color: #ffffff;">' . $body_content . '</div></div></div>';
 	}
 }
 

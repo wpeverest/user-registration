@@ -3481,7 +3481,7 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:106
 #: includes/class-ur-emailer.php:477
-msgid "A New User Registered"
+msgid "A Member registration: {{username}} "
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:111
@@ -3568,7 +3568,7 @@ msgid "The email subject you want to customize."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-approval-link-email.php:106
-msgid "Action Required: Review & Approve New User Registration"
+msgid "Approval Needed: New Member Registration"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-approval-link-email.php:143
@@ -3602,7 +3602,7 @@ msgid "Enable this email sent to user notifying the registration is awaiting adm
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:96
-msgid "Awaiting Admin Approval – Registration Pending on {{blog_info}}"
+msgid "Your Registration is Pending Approval"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:141
@@ -3659,7 +3659,7 @@ msgid "Email Address Confirmation Email"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:89
-msgid "Email Address Confirmation – Verify Your Registration on {{blog_info}}"
+msgid "Confirm Your Email Address"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:135
@@ -3713,7 +3713,7 @@ msgid "Enable this email sent to the user after succesful payment."
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-payment-success-email.php:94
-msgid "Payment Success – Registration Payment Complete on {{blog_info}}"
+msgid "Payment Confirmed"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-payment-success-email.php:127
@@ -3741,7 +3741,7 @@ msgid "Enable this email sent to the admin when a user changed profile informati
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:107
-msgid "Profile Updated – Changes Made to User Account"
+msgid "Profile Updated: {{username}}"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:152
@@ -3879,7 +3879,7 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:97
 #: modules/membership/includes/Admin/Services/EmailService.php:109
-msgid "Registration Successful – Welcome to {{blog_info}}!"
+msgid "Welcome to {{blog_info}}!"
 msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:142
@@ -5085,12 +5085,12 @@ msgstr ""
 
 #: includes/class-ur-emailer.php:410
 #: includes/class-ur-emailer.php:657
-msgid "Sorry! Registration denied on {{blog_info}}"
+msgid "Registration Status Update"
 msgstr ""
 
 #: includes/class-ur-emailer.php:425
 #: includes/class-ur-emailer.php:672
-msgid "Congratulations! Registration Complete on {{blog_info}}"
+msgid "Welcome to {{blog_info}}!"
 msgstr ""
 
 #: includes/class-ur-emailer.php:504
@@ -5115,7 +5115,7 @@ msgstr ""
 
 #: includes/class-ur-emailer.php:715
 #: includes/class-ur-emailer.php:811
-msgid "Password Reset Email: {{blog_info}}"
+msgid "Password Reset Request"
 msgstr ""
 
 #: includes/class-ur-emailer.php:860
@@ -5123,7 +5123,7 @@ msgid "Profile Details Changed Email: {{blog_info}}"
 msgstr ""
 
 #: includes/class-ur-emailer.php:912
-msgid "Profile Details Updated Email: {{blog_info}}"
+msgid "Profile Updated Successfully"
 msgstr ""
 
 #: includes/class-ur-emailer.php:963
@@ -5151,7 +5151,7 @@ msgid "The user registration form selector block has been deprecated. Please use
 msgstr ""
 
 #: includes/class-ur-form-handler.php:384
-msgid "Confirm Your Email Address Change"
+msgid "Confirm Your New Email Address"
 msgstr ""
 
 #: includes/class-ur-form-handler.php:492
@@ -10640,7 +10640,7 @@ msgid "A New Member Registered"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:204
-msgid "Congratulations! Payment Complete on {{blog_info}}"
+msgid "Payment Confirmed"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:294
@@ -10653,28 +10653,28 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:329
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Cancellation_User_Email.php:88
-msgid "Membership Cancellation Confirmed – {{membership_plan_name}}"
+msgid "Membership Cancelled"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:356
 #: modules/membership/includes/Emails/Admin/UR_Settings_Membership_Cancellation_Admin_Email.php:88
-msgid "Membership Cancelled!"
+msgid "Membership Cancelled: {{username}}"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:374
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Renewal_Reminder_User_Email.php:119
-msgid "Reminder: Automatic Renewal for Your Membership is Coming Up"
+msgid "Your Membership Renews Soon"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:393
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Expiring_Soon_User_Email.php:64
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Expiring_Soon_User_Email.php:119
-msgid "Membership Will Expire Soon – Renew Now"
+msgid "Your Membership Expires on {{membership_end_date}}"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:413
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Ended_User_Email.php:88
-msgid "Your Membership Has Ended – Rejoin to Regain Access "
+msgid "Your Membership Has Expired"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/MembershipService.php:283

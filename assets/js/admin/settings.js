@@ -792,8 +792,9 @@
 				$("body")
 					.removeClass("ur-settings-sidebar-hidden")
 					.addClass("ur-settings-sidebar-show");
-				$(".user-registration-settings-sidebar-container")
-					.removeClass("ur-d-none");
+				$(".user-registration-settings-sidebar-container").removeClass(
+					"ur-d-none"
+				);
 				$(node)
 					.closest(".user-registration-options-header--top__right")
 					.find(".user-registration-toggle-text")
@@ -958,12 +959,18 @@
 		});
 	}
 
-	function update_captcha_section_settings(setting_id, section_data, $this, settings_container) {
+	function update_captcha_section_settings(
+		setting_id,
+		section_data,
+		$this,
+		settings_container
+	) {
 		$.ajax({
 			url: user_registration_settings_params.ajax_url,
 			data: {
 				action: "user_registration_save_captcha_settings",
-				security: user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
+				security:
+					user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
 				setting_id: setting_id,
 				section_data: JSON.stringify(section_data)
 			},
@@ -971,19 +978,21 @@
 			success: function (response) {
 				if (response.success) {
 					var successMessage = response.data.message;
-					settings_container.find('.integration-status').addClass('ur-integration-account-connected');
-					settings_container.find('.reset-captcha-keys').removeClass('ur-d-none');
-					$this.find('.ur-spinner').remove();
+					settings_container
+						.find(".integration-status")
+						.addClass("ur-integration-account-connected");
+					settings_container
+						.find(".reset-captcha-keys")
+						.removeClass("ur-d-none");
+					$this.find(".ur-spinner").remove();
 					show_success_message(successMessage);
 				} else {
-					$this.find('.ur-spinner').remove();
+					$this.find(".ur-spinner").remove();
 					show_failure_message(response.data.message);
 				}
 			}
 		});
 	}
-
-
 
 	$(document)
 		.find(".wp-list-table")
@@ -1150,40 +1159,52 @@
 	});
 	$("#user_registration_payment_currency").trigger("change");
 
-
-	$(document).on( 'click',".urm_license_setting_notice .install_pro_version_button", function() {
-		$(this)
-			.prop("disabled", true)
-			.text(
-				user_registration_settings_params.i18n
-					.installing_plugin_text
-			)
-			.prepend(
-				'<div class="ur-spinner is-active" style="margin-right: 8px;"></div>'
-			);
-		var data = {
-			action: 'user_registration_install_extension',
-			slug: 'user-registration-pro',
-			_ajax_nonce: user_registration_settings_params.ur_updater_nonce,
-		};
-		$.ajax({
-			type: 'POST',
-			url: user_registration_settings_params.ajax_url,
-			data: data,
-			success: function(response) {
-				if (response.success) {
-					window.location.href = window.location.href + '&download_user_registration_pro=1';
-				} else {
+	$(document).on(
+		"click",
+		".urm_license_setting_notice .install_pro_version_button",
+		function () {
+			$(this)
+				.prop("disabled", true)
+				.text(
+					user_registration_settings_params.i18n
+						.installing_plugin_text
+				)
+				.prepend(
+					'<div class="ur-spinner is-active" style="margin-right: 8px;"></div>'
+				);
+			var data = {
+				action: "user_registration_install_extension",
+				slug: "user-registration-pro",
+				_ajax_nonce: user_registration_settings_params.ur_updater_nonce
+			};
+			$.ajax({
+				type: "POST",
+				url: user_registration_settings_params.ajax_url,
+				data: data,
+				success: function (response) {
+					if (response.success) {
+						window.location.href =
+							window.location.href +
+							"&download_user_registration_pro=1";
+					} else {
+						$(".install_pro_version_button").prop(
+							"disabled",
+							false
+						);
+						$(".install_pro_version_button")
+							.find(".ur-spinner")
+							.remove();
+					}
+				},
+				error: function (response) {
 					$(".install_pro_version_button").prop("disabled", false);
-					$(".install_pro_version_button").find(".ur-spinner").remove();
+					$(".install_pro_version_button")
+						.find(".ur-spinner")
+						.remove();
 				}
-			},
-			error: function(response) {
-				$(".install_pro_version_button").prop("disabled", false);
-				$(".install_pro_version_button").find(".ur-spinner").remove();
-			}
-		});
-	});
+			});
+		}
+	);
 
 	var searchParams = new URLSearchParams(window.location.search);
 
@@ -1303,44 +1324,51 @@
 			container.find(".integration-header-info").trigger("click");
 		}, 400);
 	}
-	$('.captcha-save-btn').on('click', function () {
+	$(".captcha-save-btn").on("click", function () {
 		var $this = $(this),
-			setting_id = $this.data('id'),
-			settings_container = $this.closest('#' + setting_id);
+			setting_id = $this.data("id"),
+			settings_container = $this.closest("#" + setting_id);
 
-		if ($this.find('.ur-spinner').length > 0) {
+		if ($this.find(".ur-spinner").length > 0) {
 			return;
 		}
 		$this.append("<span class='ur-spinner'></span>");
 		var section_data = urm_get_captcha_section_data(settings_container);
-		update_captcha_section_settings(setting_id, section_data, $this, settings_container);
+		update_captcha_section_settings(
+			setting_id,
+			section_data,
+			$this,
+			settings_container
+		);
 	});
-	$('.reset-captcha-keys').on('click', function () {
+	$(".reset-captcha-keys").on("click", function () {
 		var $this = $(this);
 		Swal.fire({
 			title:
 				'<img src="' +
 				user_registration_settings_params.reset_keys_icon +
 				'">' +
-			user_registration_settings_params.i18n.captcha_reset_title,
-			html: '<p id="html_1">' +
+				user_registration_settings_params.i18n.captcha_reset_title,
+			html:
+				'<p id="html_1">' +
 				user_registration_settings_params.i18n.captcha_reset_prompt +
-				'</p>',
+				"</p>",
 			showCancelButton: true,
-			confirmButtonText: user_registration_settings_params.i18n.i18n_prompt_reset,
-			cancelButtonText: user_registration_settings_params.i18n.i18n_prompt_cancel,
+			confirmButtonText:
+				user_registration_settings_params.i18n.i18n_prompt_reset,
+			cancelButtonText:
+				user_registration_settings_params.i18n.i18n_prompt_cancel,
 			allowOutsideClick: false,
 			preConfirm: function () {
-				var btn = $('.swal2-confirm');
-				if (btn.find('.ur-spinner').length > 0) {
+				var btn = $(".swal2-confirm");
+				if (btn.find(".ur-spinner").length > 0) {
 					return;
 				}
 				btn.append('<span class="ur-spinner"></span>');
 				reset_captcha_keys($this, btn);
 				return false;
 			}
-		})
-
+		});
 	});
 
 	var $advancedLogicToggle = $('#urcr_is_advanced_logic_enabled');
@@ -1401,67 +1429,93 @@
 
 	function urm_get_captcha_section_data(settings_container) {
 		var section_data = {};
-		settings_container.find('input, select, textarea').each(function (key, item) {
-			var $item = $(item);
-			var name = $item.attr('name');
-			if (!name) return;
+		settings_container
+			.find("input, select, textarea")
+			.each(function (key, item) {
+				var $item = $(item);
+				var name = $item.attr("name");
+				if (!name) return;
 
-			var value;
-			if ($item.attr('type') === 'checkbox') {
-				value = $item.is(":checked");
-			} else if ($item.is('textarea') && typeof tinymce !== 'undefined' && tinymce.get(name)) {
-				value = tinymce.get(name).getContent();
-			} else {
-				value = $item.val();
-			}
-			section_data[name] = value;
-		});
+				var value;
+				if ($item.attr("type") === "checkbox") {
+					value = $item.is(":checked");
+				} else if (
+					$item.is("textarea") &&
+					typeof tinymce !== "undefined" &&
+					tinymce.get(name)
+				) {
+					value = tinymce.get(name).getContent();
+				} else {
+					value = $item.val();
+				}
+				section_data[name] = value;
+			});
 		return section_data;
 	}
 
 	function reset_captcha_keys($this, btn) {
-		var setting_id = $this.data('id'),
-			settings_container = $this.closest('#' + setting_id);
+		var setting_id = $this.data("id"),
+			settings_container = $this.closest("#" + setting_id);
 		$.ajax({
 			url: user_registration_settings_params.ajax_url,
 			data: {
 				action: "user_registration_reset_captcha_keys",
-				security: user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
+				security:
+					user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
 				setting_id: setting_id
 			},
 			type: "POST",
 			success: function (response) {
 				if (response.success) {
-					show_success_message(response.data.message || user_registration_settings_params.i18n.captcha_keys_reset_success);
-					settings_container.find('.integration-status').removeClass('ur-integration-account-connected');
-					settings_container.find('input[type="text"]').val('');
+					show_success_message(
+						response.data.message ||
+							user_registration_settings_params.i18n
+								.captcha_keys_reset_success
+					);
+					settings_container
+						.find(".integration-status")
+						.removeClass("ur-integration-account-connected");
+					settings_container.find('input[type="text"]').val("");
 
 					// Remove captcha node after successful reset
 					var urm_recaptcha_node = $(
 						'.ur-captcha-test-container[data-captcha-type="' +
-						setting_id +
-						'"] .ur-captcha-node'
+							setting_id +
+							'"] .ur-captcha-node'
 					);
 
 					if (urm_recaptcha_node.length !== 0) {
 						// Remove captcha widgets
-						urm_recaptcha_node.find('.g-recaptcha, .g-recaptcha-hcaptcha, .cf-turnstile').remove();
-						urm_recaptcha_node.find('[data-rendered]').removeAttr('data-rendered');
+						urm_recaptcha_node
+							.find(
+								".g-recaptcha, .g-recaptcha-hcaptcha, .cf-turnstile"
+							)
+							.remove();
+						urm_recaptcha_node
+							.find("[data-rendered]")
+							.removeAttr("data-rendered");
 					}
 
 					// Hide reset button after successful reset
-					$this.addClass('ur-d-none');
+					$this.addClass("ur-d-none");
 				} else {
-					show_failure_message(response.data.message || user_registration_settings_params.i18n.captcha_keys_reset_error);
+					show_failure_message(
+						response.data.message ||
+							user_registration_settings_params.i18n
+								.captcha_keys_reset_error
+					);
 				}
 			},
 			error: function (xhr, status, error) {
-				var errorMessage = error || user_registration_settings_params.i18n.captcha_keys_reset_error;
+				var errorMessage =
+					error ||
+					user_registration_settings_params.i18n
+						.captcha_keys_reset_error;
 				show_failure_message(errorMessage);
-				reject({data: {message: errorMessage}});
+				reject({ data: { message: errorMessage } });
 			},
 			complete: function (response) {
-				btn.find('.ur-spinner').remove();
+				btn.find(".ur-spinner").remove();
 				Swal.close();
 			}
 		});
@@ -1487,4 +1541,219 @@
 	function ur_remove_cookie(cookie_key) {
 		document.cookie = cookie_key + "=; Max-Age=-99999999; path=/";
 	}
+
+	/**
+	 * Handle display conditions/dependencies for settings fields.
+	 */
+	function handleDisplayConditions() {
+		// Find all fields with display conditions.
+		$('[data-has-display-condition="1"]').each(function () {
+			var $field = $(this);
+			var conditionField = $field.data("display-condition-field");
+			var operator =
+				$field.data("display-condition-operator") || "equals";
+			var conditionValue = $field.data("display-condition-value");
+			var caseSensitive =
+				$field.data("display-condition-case") || "insensitive";
+
+			if (!conditionField) {
+				return;
+			}
+
+			// Parse condition value if it's JSON (for arrays).
+			if (
+				typeof conditionValue === "string" &&
+				conditionValue.startsWith("[")
+			) {
+				try {
+					conditionValue = JSON.parse(conditionValue);
+				} catch (e) {
+					// If parsing fails, use as string.
+				}
+			}
+
+			// Function to check condition and show/hide field.
+			var checkCondition = function (useAnimation) {
+				var $conditionField = $("#" + conditionField);
+				var fieldValue = "";
+
+				// Get field value based on field type.
+				if ($conditionField.length === 0) {
+					return;
+				}
+
+				if ($conditionField.is(":checkbox")) {
+					fieldValue = $conditionField.is(":checked") ? "yes" : "no";
+				} else if ($conditionField.is(":radio")) {
+					fieldValue = $conditionField.filter(":checked").val() || "";
+				} else if ($conditionField.is("select")) {
+					fieldValue = $conditionField.val() || "";
+					// Handle multiselect.
+					if ($conditionField.attr("multiple")) {
+						fieldValue = $conditionField.val() || [];
+					}
+				} else {
+					fieldValue = $conditionField.val() || "";
+				}
+
+				// Convert fieldValue to string for comparison if needed.
+				var fieldValueStr = Array.isArray(fieldValue)
+					? fieldValue.join(",")
+					: String(fieldValue);
+				var conditionValueStr = Array.isArray(conditionValue)
+					? conditionValue.join(",")
+					: String(conditionValue);
+
+				// Case sensitivity handling.
+				if (
+					caseSensitive === "insensitive" ||
+					caseSensitive === "false"
+				) {
+					fieldValueStr = fieldValueStr.toLowerCase();
+					conditionValueStr = conditionValueStr.toLowerCase();
+				}
+
+				var shouldShow = false;
+
+				// Evaluate condition based on operator.
+				switch (operator) {
+					case "equals":
+					case "==":
+						shouldShow = fieldValueStr === conditionValueStr;
+						break;
+					case "not_equals":
+					case "!=":
+						shouldShow = fieldValueStr !== conditionValueStr;
+						break;
+					case "contains":
+						shouldShow =
+							fieldValueStr.indexOf(conditionValueStr) !== -1;
+						break;
+					case "not_contains":
+						shouldShow =
+							fieldValueStr.indexOf(conditionValueStr) === -1;
+						break;
+					case "empty":
+						shouldShow =
+							!fieldValue ||
+							fieldValueStr === "" ||
+							(Array.isArray(fieldValue) &&
+								fieldValue.length === 0);
+						break;
+					case "not_empty":
+						shouldShow =
+							fieldValue &&
+							fieldValueStr !== "" &&
+							!(
+								Array.isArray(fieldValue) &&
+								fieldValue.length === 0
+							);
+						break;
+					case "greater_than":
+					case ">":
+						shouldShow =
+							parseFloat(fieldValue) > parseFloat(conditionValue);
+						break;
+					case "less_than":
+					case "<":
+						shouldShow =
+							parseFloat(fieldValue) < parseFloat(conditionValue);
+						break;
+					case "greater_than_or_equal":
+					case ">=":
+						shouldShow =
+							parseFloat(fieldValue) >=
+							parseFloat(conditionValue);
+						break;
+					case "less_than_or_equal":
+					case "<=":
+						shouldShow =
+							parseFloat(fieldValue) <=
+							parseFloat(conditionValue);
+						break;
+					case "in":
+						if (Array.isArray(conditionValue)) {
+							shouldShow =
+								conditionValue.indexOf(fieldValue) !== -1 ||
+								conditionValue.indexOf(fieldValueStr) !== -1;
+						} else {
+							shouldShow =
+								String(conditionValue)
+									.split(",")
+									.indexOf(fieldValueStr) !== -1;
+						}
+						break;
+					case "not_in":
+						if (Array.isArray(conditionValue)) {
+							shouldShow =
+								conditionValue.indexOf(fieldValue) === -1 &&
+								conditionValue.indexOf(fieldValueStr) === -1;
+						} else {
+							shouldShow =
+								String(conditionValue)
+									.split(",")
+									.indexOf(fieldValueStr) === -1;
+						}
+						break;
+					default:
+						shouldShow = fieldValueStr === conditionValueStr;
+				}
+
+				// Show or hide field based on condition.
+				// Use instant show/hide for initial load, animation for subsequent changes.
+				if (shouldShow) {
+					if (useAnimation !== false) {
+						$field.slideDown(200);
+					} else {
+						$field.show();
+					}
+				} else {
+					if (useAnimation !== false) {
+						$field.slideUp(200);
+					} else {
+						$field.hide();
+					}
+				}
+			};
+
+			// Initial check without animation (instant).
+			checkCondition(false);
+
+			// Listen for changes on the condition field.
+			var $conditionField = $("#" + conditionField);
+			if ($conditionField.length > 0) {
+				// Handle different field types.
+				if (
+					$conditionField.is(":checkbox") ||
+					$conditionField.is(":radio")
+				) {
+					$conditionField.on("change", function () {
+						checkCondition(true); // Use animation for user interactions.
+					});
+				} else {
+					$conditionField.on("change keyup", function () {
+						checkCondition(true); // Use animation for user interactions.
+					});
+				}
+			}
+		});
+	}
+
+	// Initialize display conditions immediately when DOM is ready.
+	$(function () {
+		handleDisplayConditions();
+	});
+
+	// Also run immediately if DOM is already loaded (for inline scripts).
+	if (
+		document.readyState === "complete" ||
+		document.readyState === "interactive"
+	) {
+		setTimeout(handleDisplayConditions, 1);
+	}
+
+	// Re-initialize after AJAX updates (if needed).
+	$(document).on("ur_settings_updated", function () {
+		handleDisplayConditions();
+	});
 })(jQuery);

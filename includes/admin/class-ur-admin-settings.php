@@ -104,7 +104,7 @@ class UR_Admin_Settings {
 			}
 
 			// if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
-				$settings[] = include 'settings/class-ur-settings-license.php';
+			$settings[] = include 'settings/class-ur-settings-license.php';
 			// }
 
 			/**
@@ -604,6 +604,11 @@ class UR_Admin_Settings {
 							$field_description = self::get_field_description( $value );
 							extract( $field_description ); // phpcs:ignore
 
+							// Display condition/dependency handling.
+							$display_condition_data  = self::get_display_condition_attributes( $value );
+							$display_condition_attrs = $display_condition_data['attrs'];
+							$display_condition_style = $display_condition_data['initial_style'];
+
 							// Switch based on type.
 							switch ( $value['type'] ) {
 
@@ -615,7 +620,7 @@ class UR_Admin_Settings {
 								case 'date':
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
-									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label class="ur-label" for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$settings .= '<input
@@ -634,7 +639,7 @@ class UR_Admin_Settings {
 									$settings .= '</div>';
 									break;
 								case 'nonce':
-									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$settings .= '<input
 											name="' . esc_attr( $value['id'] ) . '"
@@ -649,7 +654,7 @@ class UR_Admin_Settings {
 								// Color picker.
 								case 'color':
 									$option_value = self::get_option( $value['id'], $value['default'] );
-									$settings    .= '<div class="user-registration-global-settings">';
+									$settings    .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings    .= '<div class="user-registration-global-settings--field">';
 									$settings    .= '<input
@@ -670,7 +675,7 @@ class UR_Admin_Settings {
 								case 'textarea':
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
-									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$settings .= wp_kses_post( $description );
@@ -693,7 +698,7 @@ class UR_Admin_Settings {
 								case 'multiselect':
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
-									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$multiple  = '';
@@ -733,7 +738,7 @@ class UR_Admin_Settings {
 								// Radio inputs.
 								case 'radio':
 									$option_value = self::get_option( $value['id'], $value['default'] );
-									$settings    .= '<div class="user-registration-global-settings">';
+									$settings    .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings    .= '<div class="user-registration-global-settings--field">';
 									$settings    .= '<fieldset>';
@@ -782,7 +787,7 @@ class UR_Admin_Settings {
 									if ( 'option' === $value['show_if_checked'] ) {
 										$visbility_class[] = 'show_options_if_checked';
 									}
-									$settings .= '<div class="user-registration-global-settings ' . esc_attr( implode( ' ', $visbility_class ) ) . ' ' . esc_attr( $value['row_class'] ) . '">';
+									$settings .= '<div class="user-registration-global-settings ' . esc_attr( implode( ' ', $visbility_class ) ) . ' ' . esc_attr( $value['row_class'] ) . '"' . $display_condition_attrs . $display_condition_style . '>';
 
 									if ( ! isset( $value['checkboxgroup'] ) || 'start' === $value['checkboxgroup'] ) {
 										$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
@@ -825,7 +830,18 @@ class UR_Admin_Settings {
 										$args = wp_parse_args( $value['args'], $args );
 									}
 
-									$settings .= '<div class="user-registration-global-settings single_select_page" ' . ( ( isset( $value['display'] ) && 'none' === $value['display'] ) ? 'style="display:none"' : '' ) . '>';
+									// Combine display condition style with existing display style if needed.
+									$existing_display = ( isset( $value['display'] ) && 'none' === $value['display'] ) ? 'display:none' : '';
+									if ( ! empty( $display_condition_style ) ) {
+										// Display condition style takes precedence (it already has style="...")
+										$combined_style = $display_condition_style;
+									} elseif ( ! empty( $existing_display ) ) {
+										// Only existing style exists
+										$combined_style = ' style="' . esc_attr( $existing_display ) . '"';
+									} else {
+										$combined_style = '';
+									}
+									$settings .= '<div class="user-registration-global-settings single_select_page"' . $display_condition_attrs . $combined_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$settings .= str_replace( ' id=', " data-placeholder='" . esc_attr__( 'Select a page&hellip;', 'user-registration' ) . "' style='" . esc_attr( $value['css'] ) . "' class='" . esc_attr( $value['class'] ) . "' id=", wp_dropdown_pages( $args ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -860,7 +876,7 @@ class UR_Admin_Settings {
 
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
-									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$settings .= wp_kses_post( $description );
@@ -876,7 +892,7 @@ class UR_Admin_Settings {
 									break;
 
 								case 'link':
-									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 
@@ -896,7 +912,7 @@ class UR_Admin_Settings {
 								case 'image':
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
-									$settings .= '<div class="user-registration-global-settings image-upload">';
+									$settings .= '<div class="user-registration-global-settings image-upload"' . $display_condition_attrs . $display_condition_style . '>';
 
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
@@ -920,7 +936,7 @@ class UR_Admin_Settings {
 								case 'radio-image':
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
-									$settings .= '<div class="user-registration-global-settings radio-image">';
+									$settings .= '<div class="user-registration-global-settings radio-image"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$settings .= '<ul>';
@@ -951,7 +967,7 @@ class UR_Admin_Settings {
 								case 'toggle':
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
-									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$settings .= '<div class="ur-toggle-section">';
@@ -978,7 +994,7 @@ class UR_Admin_Settings {
 									$options      = isset( $value['options'] ) ? $value['options'] : array(); // $args['choices'] for backward compatibility. Modified since 1.5.7.
 
 									if ( ! empty( $options ) ) {
-										$settings .= '<div class="user-registration-global-settings">';
+										$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 										$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 										$settings .= '<div class="user-registration-global-settings--field">';
 
@@ -1064,7 +1080,7 @@ class UR_Admin_Settings {
 										$field_css = 'ur-align-items-end';
 									}
 
-									$settings .= '<div class="user-registration-global-settings ' . $css . '">';
+									$settings .= '<div class="user-registration-global-settings ' . $css . '"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<div class="user-registration-global-settings--field ' . $field_css . '">';
 									$settings .= '<button
 											id="' . esc_attr( $value['id'] ) . '"
@@ -1176,6 +1192,141 @@ class UR_Admin_Settings {
 			'desc_field'   => $desc_field,
 			'tooltip_html' => $tooltip_html,
 		);
+	}
+
+	/**
+	 * Helper function to get display condition attributes for a field.
+	 *
+	 * @param array $value The form field value array.
+	 *
+	 * @return array Array with 'attrs' (HTML attributes) and 'initial_style' (inline style for initial visibility).
+	 */
+	public static function get_display_condition_attributes( $value ) {
+		$attrs         = '';
+		$initial_style = '';
+
+		if ( ! empty( $value['display_condition'] ) && is_array( $value['display_condition'] ) ) {
+			$condition = $value['display_condition'];
+
+			// Field ID to depend on.
+			if ( ! empty( $condition['field'] ) ) {
+				$attrs .= ' data-display-condition-field="' . esc_attr( $condition['field'] ) . '"';
+			}
+
+			// Operator (equals, not_equals, contains, not_contains, empty, not_empty, greater_than, less_than, in, not_in).
+			if ( ! empty( $condition['operator'] ) ) {
+				$attrs .= ' data-display-condition-operator="' . esc_attr( $condition['operator'] ) . '"';
+			} else {
+				$attrs .= ' data-display-condition-operator="equals"'; // Default operator.
+			}
+
+			// Value to compare against.
+			if ( isset( $condition['value'] ) ) {
+				$value_json = is_array( $condition['value'] ) ? wp_json_encode( $condition['value'] ) : esc_attr( $condition['value'] );
+				$attrs     .= ' data-display-condition-value="' . $value_json . '"';
+			}
+
+			// Case sensitivity (for string comparisons).
+			if ( isset( $condition['case'] ) ) {
+				$attrs .= ' data-display-condition-case="' . esc_attr( $condition['case'] ) . '"';
+			}
+
+			// Add class to identify fields with display conditions.
+			$attrs .= ' data-has-display-condition="1"';
+
+			// Check initial visibility state.
+			$should_show = self::check_display_condition_initial( $condition );
+			if ( ! $should_show ) {
+				$initial_style = ' style="display:none;"';
+			}
+		}
+
+		return array(
+			'attrs'         => $attrs,
+			'initial_style' => $initial_style,
+		);
+	}
+
+	/**
+	 * Check if a field should be visible initially based on its display condition.
+	 *
+	 * @param array $condition Display condition array.
+	 *
+	 * @return bool True if field should be visible, false otherwise.
+	 */
+	public static function check_display_condition_initial( $condition ) {
+		if ( empty( $condition['field'] ) ) {
+			return true;
+		}
+
+		$field_id        = $condition['field'];
+		$operator        = ! empty( $condition['operator'] ) ? $condition['operator'] : 'equals';
+		$condition_value = isset( $condition['value'] ) ? $condition['value'] : '';
+		$case_sensitive  = isset( $condition['case'] ) ? $condition['case'] : 'insensitive';
+
+		// Get current field value.
+		$field_value = self::get_option( $field_id, '' );
+
+		// Handle checkbox fields.
+		if ( 'yes' === $field_value || '1' === $field_value || true === $field_value ) {
+			$field_value = 'yes';
+		} elseif ( empty( $field_value ) || 'no' === $field_value || '0' === $field_value || false === $field_value ) {
+			$field_value = 'no';
+		}
+
+		// Convert to strings for comparison.
+		$field_value_str     = is_array( $field_value ) ? implode( ',', $field_value ) : (string) $field_value;
+		$condition_value_str = is_array( $condition_value ) ? implode( ',', $condition_value ) : (string) $condition_value;
+
+		// Case sensitivity handling.
+		if ( 'insensitive' === $case_sensitive || 'false' === $case_sensitive ) {
+			$field_value_str     = strtolower( $field_value_str );
+			$condition_value_str = strtolower( $condition_value_str );
+		}
+
+		// Evaluate condition.
+		switch ( $operator ) {
+			case 'equals':
+			case '==':
+				return $field_value_str === $condition_value_str;
+			case 'not_equals':
+			case '!=':
+				return $field_value_str !== $condition_value_str;
+			case 'contains':
+				return false !== strpos( $field_value_str, $condition_value_str );
+			case 'not_contains':
+				return false === strpos( $field_value_str, $condition_value_str );
+			case 'empty':
+				return empty( $field_value ) || '' === $field_value_str || ( is_array( $field_value ) && empty( $field_value ) );
+			case 'not_empty':
+				return ! empty( $field_value ) && '' !== $field_value_str && ! ( is_array( $field_value ) && empty( $field_value ) );
+			case 'greater_than':
+			case '>':
+				return is_numeric( $field_value ) && is_numeric( $condition_value ) && floatval( $field_value ) > floatval( $condition_value );
+			case 'less_than':
+			case '<':
+				return is_numeric( $field_value ) && is_numeric( $condition_value ) && floatval( $field_value ) < floatval( $condition_value );
+			case 'greater_than_or_equal':
+			case '>=':
+				return is_numeric( $field_value ) && is_numeric( $condition_value ) && floatval( $field_value ) >= floatval( $condition_value );
+			case 'less_than_or_equal':
+			case '<=':
+				return is_numeric( $field_value ) && is_numeric( $condition_value ) && floatval( $field_value ) <= floatval( $condition_value );
+			case 'in':
+				if ( is_array( $condition_value ) ) {
+					return in_array( $field_value, $condition_value, true ) || in_array( $field_value_str, $condition_value, true );
+				}
+				$values = explode( ',', $condition_value_str );
+				return in_array( $field_value_str, $values, true );
+			case 'not_in':
+				if ( is_array( $condition_value ) ) {
+					return ! in_array( $field_value, $condition_value, true ) && ! in_array( $field_value_str, $condition_value, true );
+				}
+				$values = explode( ',', $condition_value_str );
+				return ! in_array( $field_value_str, $values, true );
+			default:
+				return $field_value_str === $condition_value_str;
+		}
 	}
 
 	/**
