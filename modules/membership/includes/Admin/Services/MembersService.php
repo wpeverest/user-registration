@@ -24,10 +24,10 @@ class MembersService {
 	 *
 	 * @return array|bool[]
 	 */
-	public function validate_user_data( $data , $is_edit = false) {
+	public function validate_user_data( $data, $is_edit = false ) {
 
 		// validate membership_start date
-		if ( $data['start_date'] < date( 'Y-m-d' ) && !$is_edit) {
+		if ( $data['start_date'] < date( 'Y-m-d' ) && ! $is_edit ) {
 			return array(
 				'status'  => false,
 				'key'     => 'start_date',
@@ -104,9 +104,8 @@ class MembersService {
 	 * @return array
 	 */
 	public function prepare_members_data( $data ) {
-		$membership_details = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
-		$membership_meta    = json_decode( $membership_details['meta_value'], true );
-		$role               = isset( $membership_meta['role'] ) ? $membership_meta['role'] : 'subscriber';
+		$response         = array();
+		$response['role'] = isset( $data['role'] ) ? sanitize_text_field( $data['role'] ) : 'subscriber';
 
 		$tax_details = array();
 		if ( isset( $data['tax_rate'] ) && ! empty( $data['tax_rate'] ) ) {
@@ -117,7 +116,6 @@ class MembersService {
 		}
 		$local_currency_details = array();
 
-		error_log( print_r( $data, true ) );
 		if ( isset( $data['switched_currency'] ) && ! empty( $data[ 'switched_currency'] ) ) {
 			$local_currency_details = array(
 				'switched_currency' => sanitize_text_field( $data[ 'switched_currency' ] ),
@@ -127,10 +125,10 @@ class MembersService {
 
 		$coupon_details = array();
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
-			$coupon_details = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
+			$response['coupon_data'] = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
 		}
 
-		$user_data = array(
+		$response['user_data'] = array(
 			'user_login'    => ! empty( $data['username'] ) ? sanitize_text_field( $data['username'] ) : '',
 			'user_email'    => ! empty( $data['email'] ) ? sanitize_email( $data['email'] ) : '',
 			'user_pass'     => ! empty( $data['password'] ) ? $data['password'] : '',
@@ -141,11 +139,16 @@ class MembersService {
 			'user_status'   => isset( $data['member_status'] ) ? absint( $data['member_status'] ) : 1,
 		);
 
-		$membership_data = array(
-			'membership'     => absint( $data['membership'] ),
-			'start_date'     => date( 'Y-m-d', strtotime( $data['start_date'] ) ),
-			'payment_method' => sanitize_text_field( $data['payment_method'] ?? '' ),
-		);
+		if ( isset( $data['membership'] ) ) {
+			$membership_details          = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
+			$membership_meta             = json_decode( $membership_details['meta_value'], true );
+			$response['role']            = isset( $membership_meta['role'] ) ? sanitize_text_field( $membership_meta['role'] ) : $response['role'];
+			$response['membership_data'] = array(
+				'membership'     => absint( $data['membership'] ),
+				'start_date'     => date( 'Y-m-d', strtotime( $data['start_date'] ) ),
+				'payment_method' => sanitize_text_field( $data['payment_method'] ?? '' ),
+			);
+		}
 
 		return array(
 			'role'            		 => sanitize_text_field( $role ),
@@ -167,7 +170,6 @@ class MembersService {
 		}
 
 		return $user;
-
 	}
 
 	/**
@@ -183,8 +185,8 @@ class MembersService {
 			$is_just_created = get_user_meta( $user_id, 'urm_user_just_created', true );
 		}
 
-		if ( "yes" === $is_just_created ) {
-			delete_user_meta( $user_id, 'urm_user_just_created');
+		if ( 'yes' === $is_just_created ) {
+			delete_user_meta( $user_id, 'urm_user_just_created' );
 			wp_clear_auth_cookie();
 			$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 			wp_set_auth_cookie( $user_id, $remember );
@@ -193,7 +195,5 @@ class MembersService {
 		} else {
 			return false;
 		}
-
 	}
-
 }

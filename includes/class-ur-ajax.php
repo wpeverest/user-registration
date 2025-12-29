@@ -96,6 +96,7 @@ class UR_AJAX {
 			'skip_site_assistant_section'       => false,
 			'login_settings_page_validation'    => false,
 			'update_state_field'				=> true,
+			'check_advanced_logic_rules'        => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -272,6 +273,8 @@ class UR_AJAX {
 		$profile = user_registration_form_data( $user_id, $form_id );
 
 		$is_admin_user = $_POST['is_admin_user'] ?? false;
+		list( $profile, $single_field ) = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, $is_admin_user );
+		$user                           = get_userdata( $user_id );
 		foreach ( $profile as $key => $field ) {
 
 			if ( ! isset( $field['type'] ) ) {
@@ -343,61 +346,8 @@ class UR_AJAX {
 		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
-			$user_data = array();
-			/**
-			 * Filter to modify the email change confirmation.
-			 * Default vallue is 'true'.
-			 */
-			$is_email_change_confirmation = (bool) apply_filters( 'user_registration_email_change_confirmation', true );
-			$email_updated                = false;
-			$pending_email                = '';
-			$user                         = get_userdata( $user_id );
-			/**
-			 * Filter to modify the field settings.
-			 *
-			 * The dynamic portion of the hook name, $value->field_key.
-			 *
-			 * @param array $value The field value.
-			 */
-			$profile = apply_filters( 'user_registration_before_save_profile_details', $profile, $user_id, $form_id );
+			list( $email_updated, $pending_email ) = urm_update_user_profile_data( $user, $profile, $single_field, $form_id );
 
-			foreach ( $profile as $key => $field ) {
-				$new_key = str_replace( 'user_registration_', '', $key );
-
-				if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
-					if ( $user ) {
-						if ( sanitize_email( wp_unslash( $single_field[ $key ] ) ) !== $user->user_email ) {
-							$email_updated = true;
-							$pending_email = sanitize_email( wp_unslash( $single_field[ $key ] ) );
-						}
-						continue;
-					}
-				}
-
-				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
-					if ( 'display_name' === $new_key ) {
-						$user_data['display_name'] = sanitize_text_field( ( $single_field[ $key ] ) );
-					} else {
-						$user_data[ $new_key ] = sanitize_text_field( $single_field[ $key ] );
-					}
-				} else {
-					$update_key = $key;
-
-					if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
-						$update_key = str_replace( 'user_', '', $new_key );
-					}
-					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
-
-					if ( 'disabled' !== $disabled ) {
-						update_user_meta( $user_id, $update_key, $single_field[ $key ] );
-					}
-				}
-			}
-
-			if ( count( $user_data ) > 0 ) {
-				$user_data['ID'] = $user_id;
-				wp_update_user( $user_data );
-			}
 			/**
 			 * Filter to modify the profile update success message.
 			 */
@@ -1667,6 +1617,14 @@ class UR_AJAX {
 		ob_start();
 
 		check_ajax_referer( 'user_registration_create_form', 'security' );
+
+		$all_forms = ur_get_all_user_registration_form();
+
+		if ( ( ! empty( $all_forms ) && count( $all_forms ) <= 1 && ! ur_check_module_activation( 'multiple-registration' ) ) ) {
+			wp_send_json_error( array( 'message' => __( 'Multiple registration forms cannot be created.', 'user-registration' ) ) );
+			die( -1 );
+		}
+
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => __( 'You do not have permission to create form.', 'user-registration' ) ) );
 			wp_die( - 1 );
@@ -2460,9 +2418,42 @@ class UR_AJAX {
 	}
 
 	/**
-	 * Update state fields when country is changed.
+	 * Ajax handler: Check if rules with advanced logic exist.
 	 *
-	 * @since 5.0.0
+	 */
+	public static function check_advanced_logic_rules() {
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'You do not have permission to check advanced logic rules.', 'user-registration' ),
+				)
+			);
+			return;
+		}
+
+		check_ajax_referer( 'user_registration_settings_nonce', 'security' );
+
+		if ( function_exists( 'urcr_has_rules_with_advanced_logic' ) ) {
+			$has_advanced_logic = urcr_has_rules_with_advanced_logic();
+
+			wp_send_json_success(
+				array(
+					'has_advanced_logic' => $has_advanced_logic,
+				)
+			);
+		} else {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Function not found.', 'user-registration' ),
+				)
+			);
+		}
+	}
+
+	/* Update state fields when country is changed.
+	 *
+	 * @since 6.0.0
 	 */
 	public static function update_state_field(){
 		check_ajax_referer( 'user_registration_update_state_field_nonce', 'security' );
