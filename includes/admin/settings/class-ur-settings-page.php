@@ -165,6 +165,32 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			add_filter( 'user_registration_settings_hide_save_button', '__return_true' );
 			$title = ucwords( str_replace( '-', ' ', $current_section ) );
 			$setting = ucwords( str_replace( '_', ' ', $current_tab ) );
+
+			//in case of integration, list all email marketing addons.
+			$args = array();
+			if( 'integration' === $current_tab ) {
+				$addons = array( 'activecampaign', 'brevo', 'convertkit', 'klaviyo', 'mailchimp', 'mailerlite', 'mailpoet' );
+				foreach( $addons as $addon ) {
+					$args[] = array(
+						'id' => $addon,
+						'slug' => 'user-registration-' . $addon,
+						'name' => ucwords( $addon )
+					);
+				}
+			} elseif ( 'security' === $current_tab && '2fa' === $current_section ) {
+				$args[] = array(
+					'id' => 'two-factor-authentication',
+					'slug' => 'user-registration-two-factor-authentication',
+					'name' => 'Two Factor Authentication' 
+				);
+			} else {
+				$args[] = array(
+					'id' => $current_section,
+					'slug' => 'user-registration-' . $current_section,
+					'name' => 'User Registration - ' . $title
+				);
+			}
+
 			return apply_filters( 'user_registration_upgrade_to_pro_setting',
 				array(
 					'title' => '',
@@ -183,7 +209,8 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 							),
 						),
 					),
-				)
+				),
+				$args
 			);
 		}
 

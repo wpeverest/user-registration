@@ -16,7 +16,7 @@ if ( ! class_exists( 'UR_Settings_Integration' ) ) {
 	 */
 	class UR_Settings_Integration extends UR_Settings_Page {
         private static $_instance = null;
-        public $integrations;
+        public $integrations = array();
 		/**
 		 * Constructor.
 		 */
@@ -64,8 +64,8 @@ if ( ! class_exists( 'UR_Settings_Integration' ) ) {
          */
         public function get_settings_callback( $settings ) {
             global $current_section;
+            if( ! in_array( $current_section, array( 'email-marketing', 'pdf-submission', 'google-sheets', 'google-drive', 'salesforce', 'geolocation' ) ) ) return $settings;            return $this->upgrade_to_pro_setting();
             return $this->upgrade_to_pro_setting();
-            return $settings;
         }
         public function get_settings() {
             $integrations = $this->get_integrations();
@@ -76,7 +76,8 @@ if ( ! class_exists( 'UR_Settings_Integration' ) ) {
                     'sections' => $integrations
                 )
                 );
-            return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
+            return $settings;
+            // return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
         }
         public function get_integrations() {
             return $this->integrations;

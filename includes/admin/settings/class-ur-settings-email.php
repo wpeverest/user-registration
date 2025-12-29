@@ -452,7 +452,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				case 'general':
 					$settings = $this->get_settings();
 					break;
-                default:
+                case 'templates':
                     $settings = $this->upgrade_to_pro_setting();
                     break;
 			}

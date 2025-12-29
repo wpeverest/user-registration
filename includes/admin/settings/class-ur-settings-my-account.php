@@ -60,7 +60,9 @@ if ( ! class_exists( 'UR_Settings_My_Account' ) ) {
             if ( 'endpoint' === $current_section ) {
                 return $this->get_endpoint_settings();
             }
-            return $this->upgrade_to_pro_setting();
+            if ( 'customize-my-account' === $current_section ) {
+                return $this->upgrade_to_pro_setting();
+            }
         }
         public function get_general_settings() {
 
@@ -81,9 +83,9 @@ if ( ! class_exists( 'UR_Settings_My_Account' ) ) {
                     'my_account_options' => array(
                         'title'    => __( 'My account Section', 'user-registration' ),
                         'type'     => 'card',
-                        'before_desc'     => sprintf( 
+                        'desc'     => sprintf( 
                             __( '<strong>My Account page setting has moved.</strong> Configure your my account page <a href="%s">here</a>.', 'user-registration' ),
-                            admin_url( 'admin.php?page=user-registration-settings&tab=general&section=pages#user_registration_myaccount_page_id' )
+                            admin_url( 'admin.php?page=user-registration-settings&tab=general&section=pages' )
                         ),
                         'settings' => array(
                             array(

@@ -71,10 +71,6 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
          */
         public function get_sections_callback( $sections ) {
             $sections[ 'payment-method' ] = __( 'Payment Method', 'user-registration' );
-            $sections[ 'store' ] = __( 'Store', 'user-registration' );
-            $sections[ 'tax-vat' ] = __( 'Tax & VAT', 'user-registration' );
-            $sections[ 'invoices' ] = __( 'Invoices', 'user-registration' );
-            $sections[ 'payment-retry' ] = __( 'Payment Retry & Dunning', 'user-registration' );
             return $sections;
         }
         /**
@@ -82,6 +78,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
          */
         public function get_settings_callback( $settings ) {
             global $current_section;
+            if( ! in_array( $current_section, array( 'payment-method', 'store', 'tax-vat', 'invoices', 'payment-retry' ) ) ) return;
             $general_settings = $this->get_general_settings();
             $paypal_settings = $this->get_paypal_settings();
             $stripe_settings = $this->get_stripe_settings();

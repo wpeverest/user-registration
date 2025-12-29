@@ -47,18 +47,23 @@ if ( ! class_exists( 'UR_Settings_Security' ) ) {
             $sections[ '2fa' ] = __( '2FA', 'user-registration' );
             return $sections;
         }
+		
         /**
          * Filter to provide sections UI for security settings.
          */
         public function get_settings_callback( $settings ) {
             global $current_section;
-            if( $current_section == 'general' ) {
-				return $this->get_general_settings();
-			} else {
-				return $this->upgrade_to_pro_setting();
+
+			switch( $current_section ) {
+				case 'general':
+					return $this->get_general_settings();
+					break;
+				case '2fa':
+					return $this->upgrade_to_pro_setting();
 			}
             return $settings;
         }
+
 		/**
 		 * Get General settings settings
 		 *

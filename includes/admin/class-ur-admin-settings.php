@@ -190,6 +190,7 @@ class UR_Admin_Settings {
 	 */
 	public static function output() {
 		global $current_section, $current_tab;
+		global $current_section_part;
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
@@ -272,6 +273,7 @@ class UR_Admin_Settings {
 		// Get current tab/section.
 		$current_tab     = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		$current_section = empty( $_REQUEST['section'] ) ? apply_filters( 'user_registration_settings_' . $current_tab . '_default_section', 'general' ) : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$current_section_part = empty( $_GET[ 'part' ] ) ? ''  : sanitize_title( wp_unslash( $_GET[ 'part' ] ) );
 		/**
 		 * Filter to save settings actions
 		 *
@@ -984,6 +986,8 @@ class UR_Admin_Settings {
 									$css                   = '';
 									$field_css             = '';
 									$btn_css               = ! empty( $value['class'] ) ? $value['class'] : '';
+									$btn_slug              = ! empty( $value[ 'slug' ] ) ? $value['slug'] : '';
+									$btn_name              = ! empty( $value['name'] ) ? $value['name'] : '';
 									$is_connected          = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
 									$is_captcha            = in_array(
 										$section['id'],
@@ -1030,8 +1034,14 @@ class UR_Admin_Settings {
 											type="button"
 											class="button button-primary ' . esc_attr( $btn_css ) . '"
 											type="button"
-											data-id="' . esc_attr( $section['id'] ) . '"
-											/>' . $value['title'] . '</button>';
+											data-id="' . esc_attr( $section['id'] ) . '"';
+									if( ! empty( $btn_slug ) ) {
+										$settings .= ' data-slug="' . esc_attr( $btn_slug ) . '"';
+									}
+									if( ! empty( $btn_name ) ) {
+										$settings .= ' data-name="' . esc_attr( $btn_name ) . '"';
+									}
+									$settings .= '>' . $value['title'] . '</button>';									
 									$settings .= '</div>';
 									if ( $is_captcha ) {
 										$settings .= '<a

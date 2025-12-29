@@ -98,7 +98,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 									<h3><?php echo esc_html( $tabs[ $current_tab ] ); ?></h3>
 									<?php
 								} else {
-									$redirect_url = home_url( '/wp-admin/admin.php?page=user-registration-settings&tab=general&section=license' );
+									$redirect_url = home_url( '/wp-admin/admin.php?page=user-registration-settings&tab=general' );
 									?>
 									<script>
 									var redirect = '<?php echo esc_url_raw( $redirect_url ); ?>';
