@@ -52,13 +52,13 @@ class UR_Admin_Welcome {
 
 		$handle = 'ur-welcome-react-app';
 
-		wp_register_script(
-			$handle,
-			UR()->plugin_url() . '/chunks/welcome.js',
-			array( 'wp-element' ),
-			UR()->version,
-			true
+		$welcome_asset = file_exists( UR()->plugin_path() . '/chunks/welcome.asset.php' ) ? require_once UR()->plugin_path() . '/chunks/welcome.asset.php' : array(
+			'dependencies' => array(),
+			'version'      => UR()->version,
 		);
+		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/chunks/welcome.js', $welcome_asset['dependencies'], $welcome_asset['version'], true );
+		wp_enqueue_style( 'ur-setup-wizard-style', UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css', array(), UR()->version );
+		wp_enqueue_script( 'ur-setup-wizard-script' );
 
 		wp_enqueue_script( $handle );
 
@@ -68,8 +68,6 @@ class UR_Admin_Welcome {
 			array(),
 			null
 		);
-
-
 
 		/**
 		 * Localized variables available inside React via window._UR_WIZARD_
@@ -84,7 +82,7 @@ class UR_Admin_Welcome {
 				'onBoardIconsURL' => esc_url( UR()->plugin_url() . '/assets/images/onboard-icons' ),
 				'restURL'         => rest_url(),
 				'adminEmail'      => get_option( 'admin_email' ),
-				'isPro'        => defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE,
+				'isPro'           => defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE,
 			)
 		);
 
