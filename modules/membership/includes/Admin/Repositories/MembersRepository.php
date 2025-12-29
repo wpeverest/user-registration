@@ -189,26 +189,24 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 	public function get_member_memberships_by_id( $id ) {
 		return $this->wpdb()->get_results(
 			$this->wpdb()->prepare(
-				"SELECT wp.id as post_id ,
-							urs.id as subscription_id,
-							wo.ID as order_id,
-							urs.user_id,
-							urs.cancel_sub,
-							wp.post_title,
-							wp.post_content,
-							urs.status,
-							urs.trial_start_date,
-							urs.trial_end_date,
-							urs.billing_amount,
-							urs.expiry_date,
-							urs.start_date,
-							urs.next_billing_date,
-							urs.billing_cycle
-       					FROM $this->subscription_table urs
-                        JOIN $this->posts_table wp on wp.ID = urs.item_id
-                        JOIN $this->orders_table wo on urs.ID = wo.subscription_id
-        				WHERE urs.user_id = %d and wp.post_type = 'ur_membership'
-				",
+				"SELECT wp.ID as post_id,
+                    urs.ID as subscription_id,
+                    urs.user_id,
+                    urs.cancel_sub,
+                    wp.post_title,
+                    wp.post_content,
+                    urs.status,
+                    urs.trial_start_date,
+                    urs.trial_end_date,
+                    urs.billing_amount,
+                    urs.expiry_date,
+                    urs.start_date,
+                    urs.next_billing_date,
+                    urs.billing_cycle
+            FROM $this->subscription_table urs
+            JOIN $this->posts_table wp ON wp.ID = urs.item_id
+            WHERE urs.user_id = %d
+              AND wp.post_type = 'ur_membership'",
 				$id
 			),
 			ARRAY_A

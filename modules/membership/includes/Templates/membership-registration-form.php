@@ -123,7 +123,63 @@
 		</span>
 		<?php
 		if ( ! empty( $memberships ) ) :
-			$memberships = apply_filters( 'user_registration_membership_lists', $memberships );
+			if ( is_user_logged_in() && 'upgrade' === $_GET['action'] ) {
+				// Checkout page for logged in user to upgrade membership.
+				if ( isset( $_GET['current'] ) && '' !== $_GET['current'] ) {
+					$current_membership_id = absint( $_GET['current'] );
+
+					$members_order_repository = new WPEverest\URMembership\Admin\Repositories\MembersOrderRepository();
+					$orders_repository        = new WPEverest\URMembership\Admin\Repositories\OrdersRepository();
+					$member_id                = get_current_user_id();
+					$last_order               = $members_order_repository->get_member_orders( $member_id );
+
+					if ( ! empty( $last_order ) ) {
+						$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
+						if ( ! empty( $order_meta ) ) {
+							$upcoming_subscription = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
+							$membership            = get_post( $upcoming_subscription['membership'] );
+							return apply_filters( 'urm_delayed_plan_exist_notice', __( sprintf( 'You already have a scheduled upgrade to the <b>%s</b> plan at the end of your current subscription cycle (<i><b>%s</b></i>) <br> If you\'d like to cancel this upcoming change, click the <b>Cancel Membership</b> button to proceed.', $membership->post_title, date( 'M d, Y', strtotime( $order_meta['meta_value'] ) ) ), 'user-registration' ), $membership->post_title, $order_meta['meta_value'] );
+						}
+					}
+					$membership_service = new WPEverest\URMembership\Admin\Services\MembershipService();
+					$memberships        = $membership_service->get_upgradable_membership( $current_membership_id );
+
+					if ( empty( $memberships ) ) {
+						return esc_html_e( 'No upgradable Memberships.', 'user-registration' );
+					}
+
+					$subscription_service       = new WPEverest\URMembership\Admin\Services\SubscriptionService();
+					$subscription_repository    = new WPEverest\URMembership\Admin\Repositories\SubscriptionRepository();
+					$upgrade_service            = new WPEverest\URMembership\Admin\Services\UpgradeMembershipService();
+					$current_membership_details = $membership_service->get_membership_details( $current_membership_id );
+					$subscription               = $subscription_repository->retrieve( $_GET['subscription_id'] );
+
+					foreach ( $memberships as &$membership ) {
+						$selected_membership_details = $membership_service->get_membership_details( $membership['ID'] );
+						$upgrade_details             = $subscription_service->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
+
+						$selected_membership_amount   = $selected_membership_details['amount'];
+						$current_membership_amount    = $current_membership_details['amount'];
+						$upgrade_type                 = $current_membership_details['upgrade_settings']['upgrade_type'];
+						$remaining_subscription_value = isset( $selected_membership_details['subscription']['value'] ) ? $selected_membership_details['subscription']['value'] : '';
+						$delayed_until                = '';
+
+						$chargeable_amount    = $upgrade_service->calculate_chargeable_amount(
+							$selected_membership_amount,
+							$current_membership_amount,
+							$upgrade_type
+						);
+						$membership['amount'] = $chargeable_amount;
+					}
+					unset( $membership );
+				} else {
+					return esc_html_e( 'You donot have permission to purchase the selected membership. Please go through upgrade process from my account.', 'user-registration' );
+				}
+			} else {
+				// Checkout page for user registering into the site.
+				$memberships = apply_filters( 'user_registration_membership_lists', $memberships );
+			}
+
 			foreach ( $memberships as $m => $membership ) :
 				$urm_default_pg = apply_filters( 'user_registration_membership_default_payment_gateway', '' );
 				?>
@@ -141,6 +197,9 @@
 							data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
 							data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
 							data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['amount'] ); ?>"
+							<?php
+							echo isset( $_GET['action'] ) && 'upgrade' === $_GET['action'] && $membership['amount'] < $membership['calculated_amount'] ? 'data-urm-upgrade-type="' . esc_attr__( 'Prorated', 'user-registration' ) . '"' : '';
+							?>
 							data-urm-default-pg="<?php echo esc_attr( $urm_default_pg ); ?>"
 							data-has-coupon-link="<?php echo esc_attr( in_array( $membership['ID'], $membership_ids_link_with_coupons ) ? 'yes' : 'no' ); ?>"
 						<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
@@ -165,8 +224,8 @@
 	$is_coupon_addon_activated = ur_check_module_activation( 'coupon' );
 	if ( $is_coupon_addon_activated ) :
 		?>
-	<div class="ur_membership_frontend_input_container urm_hidden_payment_container urm-d-none"
-	id="ur_coupon_container">
+		<div class="ur_membership_frontend_input_container urm_hidden_payment_container urm-d-none"
+			id="ur_coupon_container">
 
 	<label class="ur_membership_input_label ur-label" for="ur-membership-coupon">
 				<?php echo esc_html__( 'Coupon', 'user-registration' ); ?>
@@ -185,9 +244,9 @@
 
 				<button type="button"
 						class="urm_apply_coupon membership-primary-btn"><?php echo esc_html__( 'Apply Coupon', 'user-registration' ); ?></button>
-	</div>
-	<span id="coupon-validation-error" class="notice_red"></span>
-	</div>
+			</div>
+			<span id="coupon-validation-error" class="notice_red"></span>
+		</div>
 		<?php
 	endif;
 	?>

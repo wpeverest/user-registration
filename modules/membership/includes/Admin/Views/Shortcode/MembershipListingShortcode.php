@@ -30,7 +30,7 @@ class MembershipListingShortcode {
 	/**
 	 * Output the shortcode.
 	 *
-	 * @param array $attributes Shortcode attributes.
+	 * @param array  $attributes Shortcode attributes.
 	 * @param string $shortcode Shortcode itself.
 	 */
 	public static function render_template( $attributes, $shortcode ) {
@@ -124,7 +124,7 @@ class MembershipListingShortcode {
 			$button_hover_style .= 'background:' . $style['buttonBgHoverColor'] . ' !important;';
 		}
 
-		//radio color
+		// radio color
 		$radio_color = isset( $style['radioColor'] ) ? $style['radioColor'] : '';
 
 		if ( $radio_color ) {
