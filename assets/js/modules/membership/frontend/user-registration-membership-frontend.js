@@ -791,7 +791,7 @@
 						},
 						failure: function (xhr, statusText) {
 							ur_membership_frontend_utils.show_failure_message(
-								user_registration_pro_frontend_data.network_error +
+								user_registration_params.network_error +
 									"(" +
 									statusText +
 									")"
@@ -919,7 +919,7 @@
 							},
 							failure: function (xhr, statusText) {
 								ur_membership_frontend_utils.show_failure_message(
-									user_registration_pro_frontend_data.network_error +
+									user_registration_params.network_error +
 										"(" +
 										statusText +
 										")"
@@ -1767,9 +1767,12 @@
 									data.subscription.status = "active";
 									resolve({
 										subscription: data.subscription,
-										form_id: data.form_id,
+										form_id: data.form_response.form_id,
 										response_data: data.response_data,
-										form_response: data.form_response
+										prepare_members_data:
+											data.prepare_members_data,
+										form_response: data.form_response,
+										three_d_secure: true
 									});
 								} else {
 									var message =
@@ -1802,6 +1805,7 @@
 						: false;
 
 			if (is_upgrading || is_renewing || is_purchasing_multiple) {
+			if (is_upgrading || is_renewing || true === data.three_d_secure || is_purchasing_multiple) {
 				stripe_settings.update_order_status(
 					data.subscription,
 					data.response_data,
@@ -1884,7 +1888,14 @@
 						upgrade_error_container = $(
 							"#upgrade-membership-notice"
 						),
-						urm_default_pg = $(this).data("urm-default-pg");
+						urm_default_pg = $(this).data("urm-default-pg"),
+						hasCouponLink = $(this).data("has-coupon-link");
+
+					if ("yes" === hasCouponLink) {
+						$(document).find("#ur_coupon_container").show();
+					} else {
+						$(document).find("#ur_coupon_container").hide();
+					}
 
 					var authorize_container = $(".authorize-net-container");
 					var authorize_error_container = $("#authorize-errors");
@@ -2027,6 +2038,12 @@
 							btn
 						);
 					} else if (action == "upgrade") {
+						if ($("#ur-membership-coupon").length > 0) {
+							data.coupon = $("#ur-membership-coupon")
+								.val()
+								.trim();
+						}
+
 						ur_membership_ajax_utils.upgrade_membership(
 							data,
 							current_membership_id,
@@ -2179,7 +2196,10 @@
 						url += "&uuid=" + uuid;
 					}
 
-					console.log(url);
+					if ($(this).attr("target") === "_blank") {
+						window.open(url, "_blank");
+						return;
+					}
 
 					window.location.replace(url);
 				}
@@ -2371,7 +2391,9 @@
 				}
 			);
 
-			$(document).on("click", ".renew-membership-button", function () {
+			$(document).on("click", ".renew-membership-button", function (e) {
+				e.preventDefault();
+
 				var $this = $(this),
 					has_error = false,
 					selected_pg = "free",

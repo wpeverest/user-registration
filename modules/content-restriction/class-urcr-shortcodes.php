@@ -75,6 +75,14 @@ class URCR_Shortcodes {
 
 			$is_membership_active = ur_check_module_activation( 'membership' );
 
+			if ( $is_membership_active ) {
+				$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
+				$subscription         = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
+
+				$current_user_membership   = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
+				$is_user_membership_active = ! empty( $subscription['status'] ) && 'active' === $subscription['status'];
+			}
+
 			if ( empty( $roles ) ) {
 				$override_global_settings = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', $single = true );
 
@@ -142,10 +150,14 @@ class URCR_Shortcodes {
 
 			$message = get_option( 'user_registration_content_restriction_message', '' );
 
-			if ( $override_global_settings === 'on' ) {
+			if ( 'on' === $override_global_settings ) {
 				$message = ! empty( get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) ) ? get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) : '';
-			} elseif ( isset( $atts['enable_content_restriction'] ) && $atts['enable_content_restriction'] === 'true' ) {
-				$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : get_option( 'user_registration_content_restriction_message' );
+			} elseif ( isset( $atts['enable_content_restriction'] ) && 'true' === $atts['enable_content_restriction'] ) {
+				if ( ! isset( $atts['enable_custom_restriction_msg'] ) ) {
+					$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : get_option( 'user_registration_content_restriction_message' );
+				} elseif ( 'true' === $atts['enable_custom_restriction_msg'] ) {
+					$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : '';
+				}
 			}
 
 			$message = empty( $message ) ? __( 'This content is restricted!', 'user-registration' ) : $message;
@@ -172,7 +184,7 @@ class URCR_Shortcodes {
 						break;
 
 					case 'memberships':
-						if ( $is_membership_active && ! empty( $memberships_roles ) && urm_check_user_membership_has_access( $memberships_roles ) ) {
+						if ( ! empty( $memberships_roles ) && in_array( $current_user_membership, $memberships_roles, true ) && $is_user_membership_active ) {
 							$matched = true;
 						}
 						break;
@@ -186,7 +198,34 @@ class URCR_Shortcodes {
 					return do_shortcode( $content );
 				}
 			}
-			return '<span class="urcr-restrict-message">' . $message . '</span>';
+
+			// Get URLs for login and signup
+			$login_page_id        = get_option( 'user_registration_login_page_id' );
+			$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
+
+			$login_url  = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
+			$signup_url = $registration_page_id ? get_permalink( $registration_page_id ) : ( $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url() );
+
+			if ( ! $registration_page_id ) {
+				$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
+				if ( $default_form_page_id ) {
+					$signup_url = get_permalink( $default_form_page_id );
+				}
+			}
+
+			// Use base template to generate styled content
+			ob_start();
+			urcr_get_template(
+				'base-restriction-template.php',
+				array(
+					'message'    => $message,
+					'login_url'  => $login_url,
+					'signup_url' => $signup_url,
+				)
+			);
+			$styled_content = ob_get_clean();
+
+			return $styled_content;
 
 		}
 			return do_shortcode( $content );

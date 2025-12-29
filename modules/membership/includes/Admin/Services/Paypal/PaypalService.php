@@ -74,7 +74,9 @@ class PaypalService {
 		$membership_process = urm_get_membership_process( $member_id );
 		$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $data['current_membership_id'], $membership_process['renew'] );
 
-		$final_amount = $membership_amount;
+		$final_amount    = $membership_amount;
+		$is_automatic    = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
+		$discount_amount = 0;
 
 		if ( isset( $data['upgrade'] ) && $data['upgrade'] ) {
 			$final_amount = $data['amount'];

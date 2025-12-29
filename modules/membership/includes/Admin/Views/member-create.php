@@ -205,7 +205,7 @@ $status_class       = ! empty( $member_subscription ) ? 'user-registration-badge
 						</div>
 					</div>
 				</div>
-				<div id="ur-member-form-right">
+				<!-- <div id="ur-member-form-right">
 					<div id="select-plan-container" class="right-container">
 						<div class="right-title">
 							<h3 class="ur-mt-2">
@@ -291,7 +291,7 @@ $status_class       = ! empty( $member_subscription ) ? 'user-registration-badge
 						<?php
 					endif;
 					?>
-				</div>
+				</div> -->
 			</div>
 			<?php
 			if ( ! empty( $_GET['action'] ) && 'view' !== $_GET['action'] ) :

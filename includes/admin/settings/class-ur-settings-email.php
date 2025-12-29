@@ -12,11 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'UR_Settings_Email' ) ) :
-
 	/**
 	 * UR_Settings_Email Class
 	 */
 	class UR_Settings_Email extends UR_Settings_Page {
+
+        private static $_instance;
 
 		/**
 		 * Email notification classes.
@@ -32,6 +33,31 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		 */
 		public $id = 'email';
 
+        /**
+         * Register hooks for submenus and section UI.
+         * @return void
+         */
+        public function handle_hooks() {
+            add_filter( "user_registration_get_sections_{$this->id}",  array( $this, 'get_sections_callback' ), 1, 1 );
+        }
+        public static function get_instance() {
+            if ( null === self::$_instance ) {
+                self::$_instance = new self();
+            }
+            return self::$_instance;
+        }
+
+        /**
+         * Filter to provide sections submenu for scaffold settings.
+         */
+        public function get_sections_callback( $sections ) {
+            $sections['general'] = __( 'General', 'user-registration' );
+            $sections[ 'to-admin' ] = __( 'To Admin', 'user-registration' );
+            $sections[ 'to-user' ] = __( 'To User', 'user-registration' );
+            $sections[ 'templates' ] = __( 'Templates', 'user-registration' );
+            return $sections;
+        }
+
 		/**
 		 * Constructor.
 		 */
@@ -40,10 +66,8 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			$this->id    = 'email';
 			$this->label = __( 'Emails', 'user-registration' );
 
-			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
-			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
-			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
-			add_action( 'user_registration_sections_' . $this->id, array( $this, 'output_sections' ) );
+            parent::__construct();
+            $this->handle_hooks();
 
 			add_filter( 'user_registration_admin_field_to_admin_email_notification', array(
 				$this,
@@ -236,7 +260,6 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 						'email_notification_settings' => array(
 							'title'    => __( 'To Admin', 'user-registration' ),
 							'type'     => 'card',
-//							'desc'     => __( 'Email notifications sent from user registration to the admin are listed below. Click on an email to configure it.', 'user-registration' ),
 							'button'   => array (
 								'button_link' => 'https://docs.wpuserregistration.com/docs/smart-tags/',
 								'button_text' => __( 'Smart Tags Reference', 'user-registration' ),
@@ -274,7 +297,6 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 						'email_notification_settings' => array(
 							'title'    => __( 'To User', 'user-registration' ),
 							'type'     => 'card',
-//							'desc'     => __( 'Email notifications sent from user registration to the admin are listed below. Click on an email to configure it.', 'user-registration' ),
 							'button'   => array (
 								'button_link' => 'https://docs.wpuserregistration.com/docs/smart-tags/',
 								'button_text' => __( 'Smart Tags Reference', 'user-registration' ),
@@ -296,26 +318,6 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 			 * @param array $settings Email Setting options to be enlisted.
 			 */
 			return apply_filters( 'user_registration_get_to_user_email_list_section_settings_' . $this->id, $settings );
-		}
-
-		/**
-		 * Get sections.
-		 *
-		 * @return array
-		 */
-		public function get_sections() {
-			$sections = array(
-				''         => __( 'General Options', 'user-registration' ),
-				'to-admin' => __( 'To Admin', 'user-registration' ),
-				'to-user'  => __( 'To User', 'user-registration' ),
-			);
-
-			/**
-			 * Filter to get the setings.
-			 *
-			 * @param array $settings Setting options to be enlisted.
-			 */
-			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
 		}
 
 		/**
@@ -408,34 +410,6 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		}
 
 		/**
-		 * Output sections.
-		 */
-		public function output_sections() {
-			global $current_section;
-
-			$sections = $this->get_sections();
-
-			// Hide this navbar when editing/configuring email templates
-			if ( ! empty( $current_section ) && ! in_array( $current_section, array_keys( $sections ) ) ) {
-				return;
-			}
-
-			if ( empty( $sections ) ) {
-				return;
-			}
-
-			echo '<div class="ur-scroll-ui__scroll-nav"><ul class="subsubsub  ur-scroll-ui__items">';
-
-			$array_keys = array_keys( $sections );
-
-			foreach ( $sections as $id => $label ) {
-				echo '<li><a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) ) . '" class="' . ( $current_section === $id ? 'current' : '' ) . ' ur-scroll-ui__item">' . esc_html( $label ) . '</a></li>';
-			}
-
-			echo '</ul></div>';
-		}
-
-		/**
 		 * Save Email Settings.
 		 */
 		public function save() {
@@ -475,16 +449,18 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				case 'to-user':
 					$settings = $this->get_to_user_email_list_section();
 					break;
-				default:
-					$settings = ! empty( $settings ) ? $settings : $this->get_settings();
+				case 'general':
+					$settings = $this->get_settings();
 					break;
+                case 'templates':
+                    $settings = $this->upgrade_to_pro_setting();
+                    break;
 			}
-
 
 			UR_Admin_Settings::output_fields( $settings );
 		}
 	}
-
 endif;
 
-return new UR_Settings_Email();
+//Backward Compatibility.
+return method_exists( 'UR_Settings_Email', 'get_instance' ) ? UR_Settings_Email::get_instance() : new UR_Settings_Email();

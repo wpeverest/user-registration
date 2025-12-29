@@ -775,15 +775,13 @@
 								'<div class="user-registration-' + type + '"/>'
 							);
 							wrapper.append(message);
-							var my_account_selector = $(
-								".user-registration"
-							).find(".user-registration-MyAccount-navigation");
-							if (my_account_selector.length) {
+
+							if ($("#user-registration").hasClass("vertical")) {
+								wrapper.insertBefore(".ur-frontend-form");
+							} else {
 								wrapper.insertBefore(
 									".user-registration-MyAccount-navigation"
 								);
-							} else {
-								wrapper.insertBefore(".ur-frontend-form");
 							}
 						} else {
 							var wrapper = $(
@@ -3221,8 +3219,8 @@ function customPasswordChecks(password) {
 //Shows the content restriction message if botiga theme is used.
 jQuery(document).ready(function ($) {
 	var urcrContentRestrictMsg = $(document).find(".urcr-restrict-msg");
-	if (urcrContentRestrictMsg.length > 0) {
-		urcrContentRestrictMsg.first().css("display", "block");
+	if (urcrContentRestrictMsg.length > 1) {
+		urcrContentRestrictMsg.hide().first().show();
 	}
 });
 

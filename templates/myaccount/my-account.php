@@ -19,9 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if ( function_exists( 'ur_print_notices' ) ) {
-	ur_print_notices();
-}
 /**
  * My Account navigation.
  */

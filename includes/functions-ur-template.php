@@ -461,7 +461,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 						$value = '';
 						if ( '' !== $default ) {
-							if ( is_array( $default ) && in_array( ur_sanitize_tooltip( trim( $choice_index ) ), $default ) ) {
+							if ( is_array( $default ) && in_array( html_entity_decode ( ur_sanitize_tooltip ( trim( $choice_index ) ) ) , $default ) ) {
 								$value = 'checked="checked"';
 							} elseif ( $default === $choice_index ) {
 								$value = 'checked="checked"';
@@ -675,7 +675,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$field .= '</div>';
 					} else {
 
-						$disabled = ( ( ( isset( $_REQUEST['page'] ) && isset( $args['field_key'] ) && 'user-registration-users' == $_REQUEST['page'] ) && 'user_email' === $args['field_key'] ) || ( isset( $args['repeater_field'] ) && $args['repeater_field'] ) ) ? ' readonly="readonly"' : '';
+						$disabled = ( ( ( isset( $_REQUEST['page'] ) && isset( $args['field_key'] ) && 'user-registration-members' == $_REQUEST['page'] ) && 'user_email' === $args['field_key'] ) || ( isset( $args['repeater_field'] ) && $args['repeater_field'] ) ) ? ' readonly="readonly"' : '';
 
 						$field .= '<input ' . $disabled . ' data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
 					}
@@ -1205,7 +1205,7 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						$user_profile_fields = ur_get_user_profile_field_only();
 
 						$is_admin_request = $_REQUEST['is_admin_user'] ?? false;
-						if ( $is_admin_request || ( isset( $_REQUEST['action'] ) && sanitize_text_field( $_REQUEST['action'] ) === 'edit' && $user_id !== get_current_user_id() ) ) {
+						if ( $is_admin_request || ( isset( $_REQUEST['action'] ) && sanitize_text_field( ( $_REQUEST['action'] ) === 'edit' || $_REQUEST['action'] === 'view' ) && $user_id !== get_current_user_id() ) ) {
 							array_push( $user_profile_fields, 'user_pass' );
 						}
 
@@ -1293,7 +1293,6 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 
 		if ( ! empty( $wp->query_vars ) ) {
 			foreach ( $wp->query_vars as $key => $value ) {
-
 				// Ignore pagename param.
 				if ( 'pagename' === $key ) {
 					continue;
@@ -1907,7 +1906,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 						$field .= '</div>';
 					} else {
 
-						$disabled = ( ( ( isset( $_REQUEST['page'] ) && isset( $args['field_key'] ) && 'user-registration-users' == $_REQUEST['page'] ) && 'user_email' === $args['field_key'] ) || ( isset( $args['repeater_field'] ) && $args['repeater_field'] ) ) ? ' readonly="readonly"' : '';
+						$disabled = ( ( ( isset( $_REQUEST['page'] ) && isset( $args['field_key'] ) && 'user-registration-members' == $_REQUEST['page'] ) && 'user_email' === $args['field_key'] ) || ( isset( $args['repeater_field'] ) && $args['repeater_field'] ) ) ? ' readonly="readonly"' : '';
 
 						$field .= '<input ' . $disabled . ' data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
 					}

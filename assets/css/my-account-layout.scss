@@ -14,6 +14,7 @@
 		.user-registration-message {
 			float: none;
 			width: 100%;
+			margin-top: 10px;
 		}
 
 		.user-registration-MyAccount-navigation {
@@ -55,6 +56,7 @@
 		.user-registration-error,
 		.user-registration-info {
 			margin-bottom: 0;
+			margin-top: 10px;
 		}
 
 		.user-registration-MyAccount-navigation {
@@ -84,13 +86,13 @@
 			text-align: center;
 
 			.user-registration-profile-header {
-				.button-group {
-					.button.user_registration_profile_picture_upload {
-						background: #edeff7;
-						color: $primary_color;
-						border: $border_width solid #edeff7 !important;
-					}
-				}
+				// .button-group {
+				// 	.button.user_registration_profile_picture_upload {
+				// 		background: #edeff7;
+				// 		color: $primary_color;
+				// 		border: $border_width solid #edeff7 !important;
+				// 	}
+				// }
 
 				.user-registration-img-container {
 					margin: 0 auto;
@@ -678,8 +680,6 @@
 							outline-style: none;
 						}
 					}
-
-
 				}
 
 				#membership-error-div {
@@ -891,12 +891,228 @@
 			}
 
 			&-content {
+				&__header {
+					display: flex;
+					justify-content: space-between;
+
+					&-content {
+						display: flex;
+						gap: $spacing_16px;
+
+						.urm-back-button {
+							padding: 0;
+							margin: 0;
+							border: 0;
+							position: relative;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							color: #383838;
+
+							&::before {
+								content: "";
+								background: #f4f4f4;
+								position: absolute;
+								width: 32px;
+								height: 32px;
+								top: 50%;
+								left: 50%;
+								border-radius: 4px;
+								z-index: 0;
+								transform: translate(-50%, -50%);
+								opacity: 0;
+								transition: all .3s ease-in-out;
+							}
+
+							&:hover {
+								color: #475BB2;
+
+								&::before {
+									opacity: 1;
+								}
+							}
+
+							svg {
+								width: 22px;
+								height: 22px;
+								position: relative;
+							}
+						}
+
+						h1 {
+							margin: 0;
+							text-align: left;
+							color: #16181A;
+							font-size: 20px;
+							font-weight: 500;
+							line-height: 30px;
+						}
+					}
+
+					&-buttons {
+						display: flex;
+						flex-direction: row-reverse;
+						align-items: center;
+						justify-content: flex-start;
+						gap: $spacing_12px;
+
+						.user-registration-Button {
+							padding: 0 $spacing_16px;
+							min-height: 34px;
+							width: max-content;
+							align-content: center;
+							background: transparent;
+							border: $border_width solid $border-color;
+							font-size: 14px;
+							line-height: 24px;
+							color: #4e4e4e;
+							font-weight: $medium;
+							box-shadow: none;
+							text-decoration: none;
+							transition: all .3s ease;
+
+							&:focus {
+								outline: none;
+								box-shadow: none;
+								border-color: transparent;
+							}
+
+							&:hover {
+								color: #383838;
+								border-color: #919191;
+							}
+
+							&.urm-profile-action-toggle {
+								color: $white;
+								background: $primary_color;
+								border-color: $primary_color;
+
+								&:hover {
+									background: darken($primary_color, 5%);
+								}
+							}
+
+							&.urm-profile-change-password-btn {}
+						}
+					}
+				}
+
 				&__body {
 					h2 {
 						margin-bottom: $spacing_20px;
 						color: $grey-400;
 						font-size: 22px;
 						line-height: 32px;
+					}
+
+					.user-registration-profile-fields {
+						&[data-action="view"] {
+							.user-registration-profile {
+								&-header {}
+
+								&-fields__field-wrapper {
+									.ur-form-grid {
+										display: flex;
+										flex-wrap: wrap;
+										gap: $spacing_24px;
+									}
+
+									.ur-field-item {
+										flex: 0 0 calc(50% - 16px);
+
+										.ur-label {
+											margin: 0;
+											margin-bottom: $spacing_8px;
+										}
+
+										input {
+											min-height: 38px;
+											padding: 0 $spacing_12px;
+											margin-bottom: 0;
+											border-color: $border-color;
+											background: $white;
+											color: #383838;
+
+											&:disabled {
+												border-color: #dcdcde;
+												background: #f6f7f7;
+												opacity: .6;
+												pointer-events: none;
+											}
+										}
+									}
+								}
+							}
+						}
+
+						&[data-action="edit"] {
+							select {
+								min-height: 38px;
+								height: 38px;
+								width: 100%;
+								padding: 0 $spacing_12px;
+								border-color: $border-color;
+								border-radius: $border_radius_4;
+								font-size: 14px;
+								line-height: 24px;
+								color: #383838;
+								font-weight: 400;
+								margin: 0;
+								box-shadow: none;
+								background: transparent;
+								background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M19.561 7.403a1.468 1.468 0 0 1 2.02 0 1.339 1.339 0 0 1 0 1.944l-8.57 8.25a1.468 1.468 0 0 1-2.021 0l-8.572-8.25a1.339 1.339 0 0 1 0-1.944 1.468 1.468 0 0 1 2.02 0L12 14.68l7.561-7.278Z'/%3E%3C/svg%3E");
+								background-repeat: no-repeat;
+								background-position: right 12px center;
+								background-size: 14px 14px;
+								cursor: pointer;
+
+								&:focus {
+									outline: none;
+									box-shadow: none;
+									border-color: $primary_color;
+								}
+							}
+
+							.user-registration-profile-header {
+								.user-registration-img-container {
+									.profile-preview {
+										border: 4px solid #edeff7;
+									}
+								}
+
+								.button-group {
+									margin-bottom: 0;
+									bottom: $spacing_20px;
+
+									.button {
+										svg {
+											width: 18px;
+											height: 18px;
+											fill: $primary_color;
+										}
+									}
+								}
+							}
+						}
+					}
+
+					.ur-form-grid {
+						p {
+							.user-registration-Button {
+								min-height: 38px;
+								padding: 0 $spacing_20px;
+								font-size: 15px;
+								line-height: 25px;
+								border-radius: $border_radius_4;
+								border: 0;
+								background: $primary_color;
+								color: $white;
+
+								&:hover {
+									background: darken($primary_color, 5%);
+								}
+							}
+						}
 					}
 
 					.user-registration-profile-header {
@@ -1135,7 +1351,7 @@
 
 													&::after {
 														content: "";
-														background: darken($primary_color, 10%);
+														background: darken($primary_color, 5%);
 														width: 0px;
 														height: 1.5px;
 														position: absolute;
@@ -1146,7 +1362,7 @@
 
 													&:hover {
 														background: transparent;
-														color: darken($primary_color, 10%);
+														color: darken($primary_color, 5%);
 
 														&::after {
 															width: 100%;
@@ -1173,35 +1389,41 @@
 						.ur-pagination {
 							display: flex;
 							gap: 8px;
-							justify-content: center;
-							margin-top: 25px;
+							justify-content: flex-end;
+							margin-top: 30px;
+							padding-left: 0;
 
-							a,
-							span {
-								padding: 8px 14px;
-								border: 1px solid #ddd;
-								border-radius: 6px;
-								font-size: 14px;
-								color: #333;
-								text-decoration: none;
-								transition: all 0.2s ease;
-								background: #fff;
-
-								&:hover {
-									background: #f5f5f5;
-									border-color: #ccc;
-								}
+							ul.page-numbers {
+								margin: 0;
+								padding-left: 0;
 							}
 
-							.current {
-								background: #0073aa;
-								color: #fff;
-								border-color: #0073aa;
-								cursor: default;
+							li {
+								.page-numbers {
+									padding: 0;
+									width: 34px;
+									height: 34px;
+									display: flex;
+									align-items: center;
+									justify-content: center;
+									border: $border_width solid #ddd;
+									border-radius: $border_radius_4;
+									font-size: 14px;
+									line-height: 24px;
+									font-weight: $medium;
+									color: #626262;
+									text-decoration: none;
+									transition: all 0.2s ease;
 
-								&:hover {
-									background: #0073aa;
-									border-color: #0073aa;
+									&:hover,
+									&.current {
+										// background: #edeff7;
+										// border-color: #edeff7;
+										// color: $primary_color;
+										background: $primary_color;
+										border-color: $primary_color;
+										color: $white;
+									}
 								}
 							}
 
@@ -1210,9 +1432,9 @@
 								font-weight: 600;
 
 								&:hover {
-									background: #eef7ff;
-									border-color: #0073aa;
-									color: #0073aa;
+									background: #edeff7;
+									border-color: #edeff7;
+									color: $primary_color;
 								}
 							}
 
@@ -1298,7 +1520,7 @@
 									padding: $spacing_14px $spacing_20px;
 									font-size: 14px;
 									color: #50565f;
-									vertical-align: middle;
+									align-content: center;
 									background: transparent;
 									text-align: left;
 									border: 0;
@@ -1306,6 +1528,7 @@
 
 									&--transaction-id {
 										font-family: 'Courier New', monospace;
+										word-break: break-all;
 									}
 
 									&--amount {
@@ -1328,6 +1551,73 @@
 									}
 
 									&--action {
+										.membership-row-btn-container {
+											.btn-div {
+												.action-menu {
+													position: relative;
+
+													.menu-trigger {
+														padding: 0;
+														border: $border_width solid transparent;
+														border-radius: 3px;
+														background: transparent;
+														width: 24px;
+														height: 28px;
+														box-shadow: none;
+														display: flex;
+														align-items: center;
+														justify-content: center;
+
+														svg {
+															width: 18px;
+															height: 18px;
+															fill: #4e4e4e;
+															transition: all .3s ease;
+														}
+
+														&:hover {
+															border-color: $border-color;
+
+															svg {
+																fill: $primary_color;
+															}
+														}
+													}
+
+													.dropdown {
+														position: absolute;
+														right: 0;
+														top: 28px;
+														background: #fff;
+														border: 1px solid #ccc;
+														border-radius: 6px;
+														display: flex;
+														flex-direction: column;
+														min-width: 140px;
+														box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+														z-index: 50;
+
+														&.hidden {
+															display: none;
+														}
+
+														a {
+															padding: 10px;
+															text-decoration: none;
+															color: #333;
+															display: flex;
+															align-items: center;
+															gap: 6px;
+
+															&:hover {
+																background: #f3f3f3;
+															}
+														}
+													}
+												}
+											}
+										}
+
 										.ur-account-action-link {
 											display: inline-flex;
 											align-items: center;
@@ -1372,57 +1662,6 @@
 									}
 								}
 							}
-						}
-
-						thead {
-							// background: #f4f6fa;
-
-							.ur-account-table__header-cell {
-								// padding: 14px 20px;
-								// font-size: 14px;
-								// font-weight: 600;
-								// color: #3c434a;
-								// text-align: left;
-								// border-bottom: 1px solid #e0e4ea;
-
-								// &:first-child {
-								// 	border-top-left-radius: 8px;
-								// }
-
-								// &:last-child {
-								// 	border-top-right-radius: 8px;
-								// }
-							}
-						}
-
-						tbody {
-
-							// .ur-account-table__row {
-							// 	border-bottom: 1px solid #f0f2f5;
-
-							// 	&:nth-child(odd) {
-							// 		.ur-account-table__cell {
-							// 			background: #fafbfc;
-							// 		}
-							// 	}
-							// }
-
-							.ur-account-table__cell {
-								// padding: 14px 20px;
-								// font-size: 14px;
-								// color: #50565f;
-								// vertical-align: middle;
-							}
-
-							// tr:last-child {
-							// 	.ur-account-table__cell:first-child {
-							// 		border-bottom-left-radius: 8px;
-							// 	}
-
-							// 	.ur-account-table__cell:last-child {
-							// 		border-bottom-right-radius: 8px;
-							// 	}
-							// }
 						}
 					}
 
@@ -1505,7 +1744,7 @@
 						max-width: 100%;
 					}
 
-					.user-registration-profile-header {
+					.user-registration-profile-header-nav {
 						display: flex;
 						gap: $spacing_12px;
 						align-items: center;
@@ -1524,7 +1763,7 @@
 
 						header {
 							>h3 {
-								margin-bottom: 0;
+								margin: 0;
 								font-size: 16px;
 								line-height: 24px;
 								color: #383838;
@@ -1582,15 +1821,31 @@
 					border-bottom: $border_width solid #F4F4F4;
 					padding-bottom: $spacing_16px;
 					margin-bottom: $spacing_32px;
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
 
-					h1 {
-						margin-bottom: 0;
-						text-align: left;
-						color: $grey-500;
-						font-size: 24px;
-						font-weight: 500;
-						line-height: 36px;
-					}
+					// .user-registration-Button {
+					// 	&.button-secondary {
+					// 		color: #4584FF;
+					// 		border-color: #4584FF;
+					// 		border-radius: $spacing_4px;
+					// 		padding: 8px 20px 8px 16px;
+					// 		background-color: #fff;
+					// 		font-size: 14px;
+					// 		line-height: 150%;
+					// 		font-weight: 500;
+					// 		text-decoration: none;
+
+					// 		&:hover,
+					// 		&:active,
+					// 		&:focus {
+					// 			color: $gray_base;
+					// 			background: $color_gray_three;
+					// 			border-color: $color_gray_three;
+					// 		}
+					// 	}
+					// }
 				}
 			}
 		}
@@ -1838,4 +2093,183 @@ body {
 	.highlight {
 		font-weight: bold;
 	}
+}
+
+.user-registration-profile-fields {
+	.user-registration-profile-header {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.user-registration-img-container {
+			position: relative;
+			width: 120px !important;
+			height: 120px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			.profile-preview {
+				width: 100% !important;
+				height: 100% !important;
+				max-width: none !important;
+				max-height: none !important;
+				border-radius: 50%;
+				object-fit: cover;
+				display: block;
+			}
+
+			.user-registration-tips {
+				display: none !important;
+			}
+		}
+
+		header {
+			position: relative;
+			inset: 0;
+			pointer-events: none;
+
+			.button-group {
+				position: absolute;
+				left: 30px;
+				bottom: 6px;
+				pointer-events: auto;
+
+				.user_registration_profile_picture_upload {
+					position: relative;
+					width: 32px;
+					height: 32px;
+					padding: 0;
+					margin: 0;
+					border-radius: 50%;
+					border: $border_width solid #edeff7;
+					background: #edeff7;
+					// box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+					box-shadow: none;
+					cursor: pointer;
+					font-size: 0;
+					line-height: 0;
+					color: transparent;
+
+					&:hover {
+						transform: translateY(-1px);
+					}
+				}
+			}
+		}
+	}
+}
+
+// .user-registration-profile-fields__field-wrapper {
+// 	.ur-form-grid {
+// 		// width: 100% !important;
+// 		// display: flex;
+// 		// flex-wrap: wrap;
+// 		// gap: 16px;
+// 		gap: $spacing_24px;
+
+// 		.ur-field-item {
+// 			// flex: 0 0 calc(50% - 8px);
+// 			flex: 0 0 calc(50% - 16px);
+// 			min-width: 0;
+
+// 			.ur-label {
+// 				margin: 0;
+// 				margin-bottom: 8px;
+// 			}
+
+// 			input {
+// 				min-height: 38px;
+// 				padding: 0 12px;
+// 				margin-bottom: 0;
+// 				border-color: #e1e1e1;
+// 				background: #fff;
+// 				color: #383838;
+
+// 				&:disabled {
+// 					border-color: #dcdcde;
+// 					background: #f6f7f7;
+// 					opacity: .6;
+// 					pointer-events: none;
+// 				}
+// 			}
+// 		}
+
+// 		.ur-field-item:empty {
+// 			display: none;
+// 		}
+
+// 		@media (max-width: 768px) {
+// 			.ur-field-item {
+// 				flex-basis: 100%;
+// 			}
+// 		}
+
+// 		.field-user_pass {
+// 			display: none;
+// 		}
+// 	}
+// }
+
+
+.user-registration-MyAccount-content__header {
+	h1 {
+		margin: 0;
+		text-align: left;
+		color: #16181A;
+		font-size: 20px;
+		font-weight: 500;
+		line-height: 30px;
+	}
+
+	&-buttons {
+		display: flex;
+		gap: 10px;
+		flex: 0 0 40%;
+	}
+}
+
+.membership-row-btn-container {
+	.dropdown {
+		position: absolute;
+		right: 0;
+		top: 28px;
+		background: #fff;
+		border: 1px solid #ccc;
+		border-radius: 6px;
+		display: flex;
+		flex-direction: column;
+		min-width: 140px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		z-index: 50;
+
+		&.hidden {
+			display: none;
+		}
+
+		a {
+			padding: 10px;
+			text-decoration: none;
+			color: #333;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+
+			&:hover {
+				background: #f3f3f3;
+			}
+		}
+	}
+}
+
+.dropdown {
+	background: #fff;
+	border-radius: 6px;
+	box-shadow: 0 6px 20px rgba(0, 0, 0, .15);
+	min-width: 180px;
+}
+
+.hidden {
+	display: none !important;
 }

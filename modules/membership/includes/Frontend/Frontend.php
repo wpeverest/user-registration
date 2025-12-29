@@ -182,7 +182,8 @@ class Frontend {
 				'membership_gateways'              => get_option( 'ur_membership_payment_gateways', array() ),
 				'urm_hide_stripe_card_postal_code' => apply_filters( 'user_registration_membership_disable_stripe_card_postal_code', false ),
 				'gateways_configured'              => urm_get_all_active_payment_gateways( 'paid' ),
-			)
+				'isEditor'                         => current_user_can( 'edit_post', get_the_ID() ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'],
+			),
 		);
 	}
 

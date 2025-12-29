@@ -14,6 +14,7 @@ use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\Paypal\PaypalService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 
+
 class MembershipService {
 	private $membership_repository, $members_repository, $members_service, $subscription_repository, $orders_repository, $logger;
 
@@ -96,6 +97,35 @@ class MembershipService {
 				$this->logger->info( 'Subscription and order created successfully for ' . $data['username'] . '.', array( 'source' => 'urm-registration-logs' ) );
 				$this->members_repository->wpdb()->query( 'COMMIT' );
 
+				$payload = array(
+					'subscription_id' => $subscription['ID'],
+					'member_id'       => $member->ID,
+					'event_type'      => '',
+					'meta'            => array(),
+				);
+
+				if ( isset( $subscription_data['status'] ) && 'trial' === $subscription_data['status'] ) {
+					// Register subscription trial started event.
+					$payload['event_type'] = 'trial_started';
+					$payload['meta']       = array(
+						'trial_end_date'    => $subscription_data['trial_end_date'],
+						'next_billing_date' => $subscription_data['next_billing_date'],
+					);
+
+					do_action( 'ur_membership_subscription_event_triggered', $payload );
+				} else {
+
+					// Register subscription created event.
+					$payload['event_type'] = 'created';
+					$payload['meta']       = array(
+						'order_id'          => $order['ID'],
+						'transaction_id'    => $order['transaction_id'],
+						'payment_method'    => $order['payment_method'],
+						'next_billing_date' => $subscription_data['next_billing_date'],
+					);
+					do_action( 'ur_membership_subscription_event_triggered', $payload );
+				}
+
 				return array(
 					'member_id'       => $member->ID,
 					'member_email'    => $member->user_email,
@@ -160,16 +190,16 @@ class MembershipService {
 	) {
 		$membership_id = ! empty( $data['post_data']['ID'] ) ? absint( $data['post_data']['ID'] ) : '';
 		$validate_data = $this->validate_membership_data( $data );
-		if ( ! empty( $data['post_meta_data']['payment_gateways'] ) ) {
-			foreach ( $data['post_meta_data']['payment_gateways'] as $pg => $pg_data ) {
-				if ( 'on' == $pg_data['status'] ) {
-					$validate_pg = $this->validate_payment_gateway( array( $pg, $data['post_meta_data']['type'] ) );
-					if ( ! $validate_pg['status'] ) {
-						$validate_data = $validate_pg;
-					}
-				}
-			}
-		}
+		// if( !empty($data['post_meta_data']['payment_gateways']) ) {
+		// foreach ($data['post_meta_data']['payment_gateways'] as $pg => $pg_data) {
+		// if("on" == $pg_data['status']) {
+		// $validate_pg = $this->validate_payment_gateway( array($pg, $data['post_meta_data']['type']));
+		// if(!$validate_pg['status']) {
+		// $validate_data = $validate_pg;
+		// }
+		// }
+		// }
+		// }
 
 		if ( ! $validate_data['status'] ) {
 			return $validate_data;
@@ -232,9 +262,9 @@ class MembershipService {
 		// Todo: make this dynamic in future
 		$data['type'] = sanitize_text_field( $data['type'] );
 		if ( isset( $data['subscription'] ) ) {
-			$data['subscription']['value']    = absint( $data['subscription']['value'] );
-			$data['subscription']['duration'] = sanitize_text_field( $data['subscription']['duration'] );
-			$data['trial_status']             = sanitize_text_field( $data['trial_status'] );
+			$data['subscription']['value']    = isset( $data['subscription']['value'] ) ? absint( $data['subscription']['value'] ) : '';
+			$data['subscription']['duration'] = isset( $data['subscription']['duration'] ) ? sanitize_text_field( $data['subscription']['duration'] ) : '';
+			$data['trial_status']             = isset( $data['trial_status'] ) ? sanitize_text_field( $data['trial_status'] ) : '';
 			if ( 'on' === $data['trial_status'] ) {
 				$data['trial_data']['value']    = absint( $data['trial_data']['value'] );
 				$data['trial_data']['duration'] = sanitize_text_field( $data['trial_data']['duration'] );
@@ -288,41 +318,6 @@ class MembershipService {
 			$result['message'] = esc_html__( 'Subscription type is a paid feature.', 'user-registration' );
 
 			return $result;
-		}
-
-		// payment gateway configuration validation
-		$is_no_pg_configured = empty( urm_get_all_active_payment_gateways( $data['post_meta_data']['type'] ) );
-		if ( isset( $data['post_meta_data']['type'] ) && in_array( $data['post_meta_data']['type'], array( 'paid', 'subscription' ) ) && $is_no_pg_configured ) {
-			$result['status']  = false;
-			$result['message'] = esc_html__( 'Incomplete payment gateway setup, please update payment settings before continuing.', 'user-registration' );
-			return $result;
-		}
-
-		// payment gateway validation:stripe
-		if ( isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && 'on' === $data['post_meta_data']['payment_gateways']['stripe']['status'] ) {
-			$mode            = get_option( 'user_registration_stripe_test_mode', false ) ? 'test' : 'live';
-			$publishable_key = get_option( sprintf( 'user_registration_stripe_%s_publishable_key', $mode ) );
-			$secret_key      = get_option( sprintf( 'user_registration_stripe_%s_secret_key', $mode ) );
-			$stripe_details  = $membership_details['payment_gateways']['stripe'] ?? '';
-
-			if ( empty( $secret_key ) || empty( $publishable_key ) ) {
-				$result['status']  = false;
-				$result['message'] = esc_html__( 'Incomplete Stripe setup, please update stripe payment settings before continuing.', 'user-registration' );
-
-				return $result;
-			}
-		}
-
-		// payment gateway validation:paypal
-		if ( isset( $data['post_meta_data']['payment_gateways']['paypal'] ) && 'on' === $data['post_meta_data']['payment_gateways']['paypal']['status'] ) {
-			$paypal_email = get_option( 'user_registration_global_paypal_email_address' );
-
-			if ( empty( $paypal_email ) ) {
-				$result['status']  = false;
-				$result['message'] = esc_html__( 'Incomplete Paypal setup, please update paypal payment settings before continuing.', 'user-registration' );
-
-				return $result;
-			}
 		}
 
 		/**
@@ -512,6 +507,65 @@ class MembershipService {
 
 		return array();
 	}
+
+	/**
+	 * create or update a membership using prepared post data.
+	 *
+	 * @since x.x.x
+	 *
+	 * @param array      $membership_data Membership data (same structure expected by prepare_membership_post_data).
+	 * @param array|null $rule_data       Optional access rule data for content restriction.
+	 *
+	 * @return int|\WP_Error Membership post ID on success, WP_Error on failure.
+	 */
+	public function create_membership( $membership_data, $rule_data = null ) {
+		$data = $this->prepare_membership_post_data( $membership_data );
+
+		if ( isset( $data['status'] ) && ! $data['status'] ) {
+			$message = isset( $data['message'] ) ? $data['message'] : __( 'Invalid membership data.', 'user-registration' );
+			return new \WP_Error( 'ur_membership_invalid_data', $message );
+		}
+
+		$data             = apply_filters( 'ur_membership_after_create_membership_data_prepare', $data );
+		$is_stripe_active = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && 'on' === $data['post_meta_data']['payment_gateways']['stripe']['status'];
+
+		$new_membership_id = wp_insert_post( $data['post_data'], true );
+		if ( is_wp_error( $new_membership_id ) ) {
+			return $new_membership_id;
+		}
+		if ( ! $new_membership_id ) {
+			return new \WP_Error( 'ur_membership_insert_failed', __( 'Failed to create membership.', 'user-registration' ) );
+		}
+
+		if ( ! empty( $data['post_meta_data'] ) ) {
+			foreach ( $data['post_meta_data'] as $datum ) {
+				add_post_meta( $new_membership_id, $datum['meta_key'], $datum['meta_value'] );
+			}
+		}
+
+		if ( $is_stripe_active && ! empty( $data['post_meta_data']['ur_membership']['meta_value'] ) ) {
+			$meta_data = json_decode( $data['post_meta_data']['ur_membership']['meta_value'], true );
+			if ( isset( $meta_data['type'] ) && 'free' !== $meta_data['type'] ) {
+				$stripe_service           = new StripeService();
+				$args                     = $data;
+				$args['membership_id']    = $new_membership_id;
+				$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $args['post_data'], $meta_data, false );
+
+				if ( ! empty( $stripe_price_and_product['success'] ) && $stripe_price_and_product['success'] ) {
+					$meta_data['payment_gateways']['stripe']['product_id'] = $stripe_price_and_product['price']->product;
+					$meta_data['payment_gateways']['stripe']['price_id']   = $stripe_price_and_product['price']->id;
+					update_post_meta( $new_membership_id, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
+				}
+			}
+		}
+
+		if ( $rule_data && function_exists( 'urcr_create_or_update_membership_rule' ) ) {
+			urcr_create_or_update_membership_rule( $new_membership_id, $rule_data );
+		}
+
+		return $new_membership_id;
+	}
+
 
 	public function delete_membership( $membership_id ) {
 		$response                  = array(

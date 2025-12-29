@@ -114,6 +114,76 @@ class MembershipListingShortcode {
 			$redirect_page_url = get_permalink( $membership_checkout_page_id );
 		}
 
+		$column_number    = isset( $attributes['column_number'] ) ? $attributes['column_number'] : 0;
+		$open_in_new_tab  = isset( $attributes['open_in_new_tab'] ) ? $attributes['open_in_new_tab'] : false;
+		$show_description = isset( $attributes['show_description'] ) ? $attributes['show_description'] : false;
+
+		$is_editor = false;
+		if ( function_exists( 'wp_is_block_editor' ) && wp_is_block_editor() ) {
+			$is_editor = true;
+		}
+
+		$style = $attributes['style'];
+
+		$uuid = ! empty( $attributes['uuid'] ) ? sanitize_key( $attributes['uuid'] ) : ( ! empty( $attributes['id'] ) ? sanitize_key( $attributes['id'] ) : ur_generate_random_key() );
+
+		$button_class = 'ur-membership-signup-btn-' . sanitize_html_class( $uuid );
+		$radio_class  = 'ur-membership-radio-' . sanitize_html_class( $uuid );
+
+		$button_style       = '';
+		$button_hover_style = '';
+		$radio_css          = '';
+
+		$map = array(
+			'buttonTextColor' => 'color',
+			'buttonBgColor'   => 'background',
+			'buttonFontSize'  => 'font-size',
+		);
+
+		foreach ( $map as $key => $css ) {
+			if ( ! empty( $style[ $key ] ) ) {
+				$button_style .= "{$css}:{$style[$key]};";
+			}
+		}
+
+		// Typography (nested array)
+		if ( ! empty( $style['buttonTypography']['fontWeight'] ) ) {
+			$button_style .= 'font-weight:' . $style['buttonTypography']['fontWeight'] . ';';
+		}
+
+		if ( ! empty( $style['buttonTypography']['fontStyle'] ) ) {
+			$button_style .= 'font-style:' . $style['buttonTypography']['fontStyle'] . ';';
+		}
+
+		// Padding loop
+		foreach ( array( 'top', 'right', 'bottom', 'left' ) as $pos ) {
+			if ( ! empty( $style['buttonPadding'][ $pos ] ) ) {
+				$button_style .= "padding-$pos:" . $style['buttonPadding'][ $pos ] . ';';
+			}
+		}
+
+		// Margin loop
+		foreach ( array( 'top', 'right', 'bottom', 'left' ) as $pos ) {
+			if ( ! empty( $style['buttonMargin'][ $pos ] ) ) {
+				$button_style .= "margin-$pos:" . $style['buttonMargin'][ $pos ] . ';';
+			}
+		}
+
+		// Hover colors
+		if ( ! empty( $style['buttonTextHoverColor'] ) ) {
+			$button_hover_style .= 'color:' . $style['buttonTextHoverColor'] . ' !important;';
+		}
+		if ( ! empty( $style['buttonBgHoverColor'] ) ) {
+			$button_hover_style .= 'background:' . $style['buttonBgHoverColor'] . ' !important;';
+		}
+
+		// radio color
+		$radio_color = isset( $style['radioColor'] ) ? $style['radioColor'] : '';
+
+		if ( $radio_color ) {
+			$radio_css .= 'accent-color:' . $radio_color . ';';
+		}
+
 		if ( empty( $memberships ) ) {
 			echo wp_kses_post( apply_filters( 'user_registration_membership_no_membership_message', __( 'Empty membership group.', 'user-registration' ) ) );
 

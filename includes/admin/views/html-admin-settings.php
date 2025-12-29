@@ -10,7 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $collapse_by_default = isset( $_GET['tab'] ) && ( strpos( $_GET['tab'], 'user-registration-customize-my-account' ) !== false || strpos( $_GET['tab'], 'user-registration-invite-codes' ) !== false ); //phpcs:ignore
-
 /**
  * Filter to add form method tabs.
  *
@@ -32,58 +31,52 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 		<h1 class="screen-reader-text"><?php echo isset( $tabs[ $current_tab ] ) ? esc_html( $tabs[ $current_tab ] ) : ''; ?></h1>
 		<div class="user-registration-settings" >
 			<div class="user-registration-settings-wrapper">
-
 				<header class="user-registration-header <?php echo $collapse_by_default ? 'collapsed' : ''; ?>">
+					<div class="user-registration-header__close user-registration-header__close--hidden">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="#000" viewBox="0 0 24 24">
+							<path d="M19.561 2.418a1.428 1.428 0 1 1 2.02 2.02L4.44 21.583a1.428 1.428 0 1 1-2.02-2.02L19.56 2.418Z"></path>
+							<path d="M2.418 2.418a1.428 1.428 0 0 1 2.02 0l17.144 17.143a1.428 1.428 0 1 1-2.02 2.02L2.418 4.44a1.428 1.428 0 0 1 0-2.02Z"></path>
+						</svg>
+					</div>
 					<div class="user-registration-header--top">
-						<!-- <div class="user-registration-header--top-logo">
-							<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/onboard-icons/logo.png' ); ?>" alt="">
-						</div> -->
 						<div class="ur-search-input ur-search--top-settings">
 							<input id="ur-search-settings" class="ur-type-text" type="text" placeholder="<?php esc_html_e( 'Search Settings...', 'user-registration' ); ?>" fdprocessedid="8fe27c">
 							<div class="user-registration-search-icon">
 								<svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" viewBox="0 0 24 24" fill="#a1a4b9"><path d="M21.71,20.29,18,16.61A9,9,0,1,0,16.61,18l3.68,3.68a1,1,0,0,0,1.42,0A1,1,0,0,0,21.71,20.29ZM11,18a7,7,0,1,1,7-7A7,7,0,0,1,11,18Z"></path></svg>
 							</div>
 						</div>
-						<!-- <div class="ur-search-input ur-search--top-toggle">
-							<label for="user_registration_hide_premium_features"><?php esc_html_e( 'Hide Premium Features', 'user-registration' ); ?></label>
-							<div class="ur-toggle-section">
-								<span class="user-registration-toggle-form">
-									<input type="checkbox" name="user_registration_hide_premium_features" id="user_registration_hide_premium_features">
-									<span class="slider round"></span>
-								</span>
-							</div>
-						</div> -->
 					</div>
 					<div class="user-registration-header--nav">
 						<nav class="nav-tab-wrapper ur-nav ur-nav--tab ur-nav-tab-wrapper">
 							<?php
 							foreach ( $tabs as $name => $label ) {
 								?>
+								<div class="ur-nav__tab-item">
 								<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $name ) ); ?>" class="nav-tab ur-nav__link <?php echo ( $current_tab === $name ? 'nav-tab-active is-active' : '' ); ?>">
 									<span class="ur-nav__link-icon">
 										<?php echo ur_file_get_contents( '/assets/images/settings-icons/' . $name . '.svg' ); //phpcs:ignore ?>
 									</span>
 									<span class="ur-nav__link-label">
-										<p>
+										<span>
 											<?php echo esc_html( $label ); ?>
-										</p>
+										</span>
 										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 											<path stroke="#383838" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18 6-6-6-6"/>
 										</svg>
 									</span>
 								</a>
+								<?php if ( $current_tab === $name ) : ?>
+								<div class="ur-scroll-ui">
+									<?php
+									do_action( 'user_registration_sections_' . $current_tab );
+									?>
+								</div>
+								<?php endif; ?>
+								</div>
 								<?php
 							}
 							do_action( 'user_registration_settings_tabs' );
 							?>
-							<button id="ur-settings-collapse" class="<?php echo $collapse_by_default ? 'open' : 'close'; ?> nav-tab ur-nav__link">
-								<span class="ur-nav-icon">
-									<img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/settings-icons/chevron-right-fill.svg' ); ?>" alt="">
-								</span>
-								<span class="ur-nav__link-label">
-									<?php esc_html_e( 'Collapse Menu', 'user-registration' ); ?>
-								</span>
-							</button>
 						</nav>
 					</div>
 				</header>
@@ -91,6 +84,13 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 					<div class="user-registration-options-header">
 						<div class="user-registration-options-header--top">
 							<div class="user-registration-options-header--top__left">
+								<div class="user-registration-options-header__burger">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none">
+										<path d="M4 18L20 18" stroke="#000000" stroke-width="2" stroke-linecap="round"></path>
+										<path d="M4 12L20 12" stroke="#000000" stroke-width="2" stroke-linecap="round"></path>
+										<path d="M4 6L20 6" stroke="#000000" stroke-width="2" stroke-linecap="round"></path>
+									</svg>
+								</div>
 								<?php if ( isset( $tabs[ $current_tab ] ) ) { ?>
 									<span class="user-registration-options-header--top__left--icon">
 										<?php echo ur_file_get_contents( '/assets/images/settings-icons/' . $current_tab . '.svg' ); //phpcs:ignore ?>
@@ -124,19 +124,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 							}
 							?>
 						</div>
-						<div class="user-registration-options-header--bottom" >
-							<div class="ur-scroll-ui">
-								<div class="ur-scroll-ui__scroll-nav ur-scroll-ui__scroll-nav--backward is-disabled">
-									<i class="ur-scroll-ui__scroll-nav__icon dashicons dashicons-arrow-left-alt2"></i>
-								</div>
-								<?php
-								do_action( 'user_registration_sections_' . $current_tab );
-								?>
-								<div class="ur-scroll-ui__scroll-nav ur-scroll-ui__scroll-nav--forward is-disabled">
-									<i class="ur-scroll-ui__scroll-nav__icon dashicons dashicons-arrow-right-alt2"></i>
-								</div>
-							</div>
-						</div>
+						<div class="user-registration-options-header--bottom"></div>
 					</div>
 					<div class="user-registration-options-container">
 						<?php
@@ -154,7 +142,8 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 					</div>
 					<p class="submit">
 						<?php
-						if ( ! isset( $GLOBALS['hide_save_button'] ) ) :
+						$hide_save_button = apply_filters( 'user_registration_settings_hide_save_button', $GLOBALS['hide_save_button'] ?? false );
+						if ( ! ur_string_to_bool( $hide_save_button ) ) :
 							/**
 							 * Filter to save the setting label.
 							 *

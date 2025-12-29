@@ -237,10 +237,23 @@ class SubscriptionService {
 		$total                          = $order['total_amount'];
 		$membership_tab_url             = esc_url( ur_get_my_account_url() . 'ur-membership' );
 
+		if ( ! empty( $data['context'] ) && 'thank_you_page' == $data['context'] ) {
+			$data['payment_method'] = ! empty( $member_order['payment_method'] ) ? $member_order['payment_method'] : '';
+			$data['transaction_id'] = ! empty( $member_order['transaction_id'] ) ? $member_order['transaction_id'] : '';
+		}
+
 		if ( ! empty( $order['coupon'] ) && 'bank' !== $order['payment_method'] && isset( $membership_metas ) && ( 'paid' === $membership_metas['type'] || ( 'subscription' === $membership_metas['type'] && 'off' === $order['trial_status'] ) ) ) {
-			$coupon_discount = isset( $order['coupon_discount'] ) ? (float) $order['coupon_discount'] : 0;
-			$discount_amount = ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] === 'fixed' ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
-			$total           = $order['total_amount'] - $discount_amount;
+			$coupon_meta = ur_get_coupon_meta_by_code( $order['coupon'] );
+
+			if ( ! empty( $coupon_meta ) ) {
+				$coupon_discount = isset( $coupon_meta->coupon_discount ) ? (float) $coupon_meta->coupon_discount : 0;
+				$discount_amount = ( isset( $coupon_meta->coupon_discount_type ) && $coupon_meta->coupon_discount_type === 'fixed' ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
+				$total           = $order['total_amount'] - $discount_amount;
+			} else {
+				$coupon_discount = isset( $order['coupon_discount'] ) ? (float) $order['coupon_discount'] : 0;
+				$discount_amount = ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] === 'fixed' ) ? $coupon_discount : $order['total_amount'] * $coupon_discount / 100;
+				$total           = $order['total_amount'] - $discount_amount;
+			}
 		}
 		$billing_cycle = ( 'subscription' === $membership_metas['type'] ) ? ( ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) ) : 'N/A';
 		$trial_period  = ( 'subscription' === $membership_metas['type'] && 'on' === $order['trial_status'] ) ? ( $membership_metas['trial_data']['value'] . ' ' . $membership_metas['trial_data']['duration'] . ( $membership_metas['trial_data']['value'] > 1 ? 's' : '' ) ) : 'N/A';
@@ -268,10 +281,27 @@ class SubscriptionService {
 			'membership_plan_payment_amount'    => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $membership_metas['amount'], 2 ) : number_format( $membership_metas['amount'], 2 ) . $symbol,
 			'membership_plan_payment_status'    => esc_html( ucwords( $order['status'] ) ),
 			'membership_plan_trial_amount'      => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( ( 'on' === $order['trial_status'] ) ? $order['total_amount'] : 0, 2 ) : number_format( ( 'on' === $order['trial_status'] ) ? $order['total_amount'] : 0, 2 ) . $symbol,
-			'membership_plan_coupon_discount'   => isset( $order['coupon_discount'] ) ? ( ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] == 'percent' ) ? $order['coupon_discount'] . '%' : $symbol . $order['coupon_discount'] ) : '',
+			'membership_plan_coupon_discount'   => (
+				isset( $order['coupon_discount'] )
+					? (
+						( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] == 'percent' )
+							? $order['coupon_discount'] . '%'
+							: $symbol . $order['coupon_discount']
+					)
+					: (
+						isset( $coupon_meta->coupon_discount )
+							? (
+								( isset( $coupon_meta->coupon_discount_type ) && $coupon_meta->coupon_discount_type == 'percent' )
+									? $coupon_meta->coupon_discount . '%'
+									: $symbol . $coupon_meta->coupon_discount
+							)
+							: ''
+					)
+			),
 			'membership_plan_coupon'            => esc_html( $order['coupon'] ?? '' ),
 			'membership_plan_total'             => ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $total, 2 ) : number_format( $total, 2 ) . $symbol,
 			'membership_renewal_link'           => "<a href=$membership_tab_url>" . __( 'Renew Now', 'user-registration' ) . '</a>',
+			'membership_plan_transaction_id'    => ! empty( $data['transaction_id'] ) ? $data['transaction_id'] : '',
 		);
 	}
 
@@ -901,6 +931,15 @@ class SubscriptionService {
 					),
 					array( 'source' => 'urm-membership-expiration' )
 				);
+
+				// Prepare data to trigger subscription expired event.
+				$payload = array(
+					'subscription_id' => $subscription_id,
+					'member_id'       => $user_id,
+					'event_type'      => 'expired',
+				);
+
+				do_action( 'ur_membership_subscription_event_triggered', $payload );
 			} else {
 				ur_get_logger()->error(
 					sprintf(

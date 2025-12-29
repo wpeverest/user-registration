@@ -21,6 +21,17 @@
   transition: all 0.25s ease 0s;
   box-shadow: 0 1px 3px rgba(182.4993283582, 186.8632089552, 206.5006716418, 0.15);
 }
+@media screen and (max-width: 782px) {
+  .user-registration button,
+  .user-registration .button,
+  .ur-form-container button,
+  .ur-form-container .button {
+    line-height: 20px;
+    font-size: 13px;
+    min-height: 30px;
+    margin-bottom: 0;
+  }
+}
 .user-registration button + button,
 .user-registration button + .button,
 .user-registration .button + button,
@@ -343,6 +354,7 @@
   width: 100%;
   padding: 0 12px;
   min-height: 38px;
+  height: 38px;
   border: 1px solid #e1e1e1;
   border-radius: 4px;
   font-size: 14px;
@@ -351,6 +363,7 @@
   font-weight: 400;
   margin: 0;
   box-shadow: none;
+  font-family: inherit;
 }
 .user-registration input[type=text]::placeholder, .user-registration input[type=password]::placeholder, .user-registration input[type=email]::placeholder, .user-registration input[type=number]::placeholder, .user-registration input[type=date]::placeholder, .user-registration input[type=phone]::placeholder, .user-registration input[type=tel]::placeholder, .user-registration input[type=time]::placeholder, .user-registration input[type=timepicker]::placeholder, .user-registration input[type=url]::placeholder, .user-registration input[type=search]::placeholder,
 .user-registration-page input[type=text]::placeholder,
@@ -437,6 +450,25 @@
 .ur-multi-device-form-preview input[type=radio] {
   z-index: 0;
 }
+@media screen and (max-width: 782px) {
+  .user-registration input[type=checkbox], .user-registration input[type=radio],
+  .user-registration-page input[type=checkbox],
+  .user-registration-page input[type=radio],
+  .ur-multi-device-form-preview input[type=checkbox],
+  .ur-multi-device-form-preview input[type=radio] {
+    width: 16px;
+    height: 16px;
+  }
+  .user-registration input[type=checkbox]::before, .user-registration input[type=radio]::before,
+  .user-registration-page input[type=checkbox]::before,
+  .user-registration-page input[type=radio]::before,
+  .ur-multi-device-form-preview input[type=checkbox]::before,
+  .ur-multi-device-form-preview input[type=radio]::before {
+    width: 8px;
+    height: 8px;
+    margin: 3px;
+  }
+}
 .user-registration input[type=search],
 .user-registration-page input[type=search],
 .ur-multi-device-form-preview input[type=search] {
@@ -455,6 +487,7 @@
 #user-registration.vertical .user-registration-message {
   float: none;
   width: 100%;
+  margin-top: 10px;
 }
 #user-registration.vertical .user-registration-MyAccount-navigation ul {
   flex-direction: column;
@@ -488,6 +521,7 @@
 #user-registration .user-registration-error,
 #user-registration .user-registration-info {
   margin-bottom: 0;
+  margin-top: 10px;
 }
 #user-registration.horizontal .user-registration-MyAccount-navigation ul, #user-registration .user-registration-MyAccount-navigation ul {
   justify-content: center;
@@ -501,13 +535,6 @@
 #user-registration.horizontal .ur-edit-profile, #user-registration .user-registration-MyAccount-content,
 #user-registration .ur-edit-profile {
   text-align: center;
-}
-#user-registration.horizontal .user-registration-MyAccount-content .user-registration-profile-header .button-group .button.user_registration_profile_picture_upload,
-#user-registration.horizontal .ur-edit-profile .user-registration-profile-header .button-group .button.user_registration_profile_picture_upload, #user-registration .user-registration-MyAccount-content .user-registration-profile-header .button-group .button.user_registration_profile_picture_upload,
-#user-registration .ur-edit-profile .user-registration-profile-header .button-group .button.user_registration_profile_picture_upload {
-  background: #edeff7;
-  color: #475bb2;
-  border: 1px solid #edeff7 !important;
 }
 #user-registration.horizontal .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container,
 #user-registration.horizontal .ur-edit-profile .user-registration-profile-header .user-registration-img-container, #user-registration .user-registration-MyAccount-content .user-registration-profile-header .user-registration-img-container,
@@ -890,6 +917,11 @@
 #user-registration .user-registration-MyAccount-content .ur-payments-container .ur-payment-invoices table tbody tr:nth-child(odd) td {
   background: #fafafa;
 }
+#user-registration .user-registration-MyAccount-content .user-registration-membership-wrapper {
+  padding: 32px;
+  margin-bottom: 32px;
+  border: 1px solid #383838;
+}
 #user-registration .user-registration-MyAccount-content .user-registration-membership-content {
   display: flex;
   flex-direction: column;
@@ -1127,11 +1159,177 @@
   justify-content: center;
   margin-right: 0 !important;
 }
+#user-registration.vertical .user-registration-MyAccount-content__header, #user-registration.horizontal .user-registration-MyAccount-content__header {
+  display: flex;
+  justify-content: space-between;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header-content, #user-registration.horizontal .user-registration-MyAccount-content__header-content {
+  display: flex;
+  gap: 16px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header-content .urm-back-button, #user-registration.horizontal .user-registration-MyAccount-content__header-content .urm-back-button {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #383838;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header-content .urm-back-button::before, #user-registration.horizontal .user-registration-MyAccount-content__header-content .urm-back-button::before {
+  content: "";
+  background: #f4f4f4;
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  top: 50%;
+  left: 50%;
+  border-radius: 4px;
+  z-index: 0;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header-content .urm-back-button:hover, #user-registration.horizontal .user-registration-MyAccount-content__header-content .urm-back-button:hover {
+  color: #475BB2;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header-content .urm-back-button:hover::before, #user-registration.horizontal .user-registration-MyAccount-content__header-content .urm-back-button:hover::before {
+  opacity: 1;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header-content .urm-back-button svg, #user-registration.horizontal .user-registration-MyAccount-content__header-content .urm-back-button svg {
+  width: 22px;
+  height: 22px;
+  position: relative;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header-content h1, #user-registration.horizontal .user-registration-MyAccount-content__header-content h1 {
+  margin: 0;
+  text-align: left;
+  color: #16181A;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header-buttons, #user-registration.horizontal .user-registration-MyAccount-content__header-buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header-buttons .user-registration-Button, #user-registration.horizontal .user-registration-MyAccount-content__header-buttons .user-registration-Button {
+  padding: 0 16px;
+  min-height: 34px;
+  width: max-content;
+  align-content: center;
+  background: transparent;
+  border: 1px solid #e1e1e1;
+  font-size: 14px;
+  line-height: 24px;
+  color: #4e4e4e;
+  font-weight: 500;
+  box-shadow: none;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header-buttons .user-registration-Button:focus, #user-registration.horizontal .user-registration-MyAccount-content__header-buttons .user-registration-Button:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: transparent;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header-buttons .user-registration-Button:hover, #user-registration.horizontal .user-registration-MyAccount-content__header-buttons .user-registration-Button:hover {
+  color: #383838;
+  border-color: #919191;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header-buttons .user-registration-Button.urm-profile-action-toggle, #user-registration.horizontal .user-registration-MyAccount-content__header-buttons .user-registration-Button.urm-profile-action-toggle {
+  color: #ffffff;
+  background: #475bb2;
+  border-color: #475bb2;
+}
+#user-registration.vertical .user-registration-MyAccount-content__header-buttons .user-registration-Button.urm-profile-action-toggle:hover, #user-registration.horizontal .user-registration-MyAccount-content__header-buttons .user-registration-Button.urm-profile-action-toggle:hover {
+  background: rgb(63.7289156627, 81.6807228916, 159.7710843373);
+}
 #user-registration.vertical .user-registration-MyAccount-content__body h2, #user-registration.horizontal .user-registration-MyAccount-content__body h2 {
   margin-bottom: 20px;
   color: #383838;
   font-size: 22px;
   line-height: 32px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=view] .user-registration-profile-fields__field-wrapper .ur-form-grid, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=view] .user-registration-profile-fields__field-wrapper .ur-form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=view] .user-registration-profile-fields__field-wrapper .ur-field-item, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=view] .user-registration-profile-fields__field-wrapper .ur-field-item {
+  flex: 0 0 calc(50% - 16px);
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=view] .user-registration-profile-fields__field-wrapper .ur-field-item .ur-label, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=view] .user-registration-profile-fields__field-wrapper .ur-field-item .ur-label {
+  margin: 0;
+  margin-bottom: 8px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=view] .user-registration-profile-fields__field-wrapper .ur-field-item input, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=view] .user-registration-profile-fields__field-wrapper .ur-field-item input {
+  min-height: 38px;
+  padding: 0 12px;
+  margin-bottom: 0;
+  border-color: #e1e1e1;
+  background: #ffffff;
+  color: #383838;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=view] .user-registration-profile-fields__field-wrapper .ur-field-item input:disabled, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=view] .user-registration-profile-fields__field-wrapper .ur-field-item input:disabled {
+  border-color: #dcdcde;
+  background: #f6f7f7;
+  opacity: 0.6;
+  pointer-events: none;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=edit] select, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=edit] select {
+  min-height: 38px;
+  height: 38px;
+  width: 100%;
+  padding: 0 12px;
+  border-color: #e1e1e1;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 24px;
+  color: #383838;
+  font-weight: 400;
+  margin: 0;
+  box-shadow: none;
+  background: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M19.561 7.403a1.468 1.468 0 0 1 2.02 0 1.339 1.339 0 0 1 0 1.944l-8.57 8.25a1.468 1.468 0 0 1-2.021 0l-8.572-8.25a1.339 1.339 0 0 1 0-1.944 1.468 1.468 0 0 1 2.02 0L12 14.68l7.561-7.278Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px 14px;
+  cursor: pointer;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=edit] select:focus, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=edit] select:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: #475bb2;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=edit] .user-registration-profile-header .user-registration-img-container .profile-preview, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=edit] .user-registration-profile-header .user-registration-img-container .profile-preview {
+  border: 4px solid #edeff7;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=edit] .user-registration-profile-header .button-group, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=edit] .user-registration-profile-header .button-group {
+  margin-bottom: 0;
+  bottom: 20px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=edit] .user-registration-profile-header .button-group .button svg, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-fields[data-action=edit] .user-registration-profile-header .button-group .button svg {
+  width: 18px;
+  height: 18px;
+  fill: #475bb2;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-form-grid p .user-registration-Button, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-form-grid p .user-registration-Button {
+  min-height: 38px;
+  padding: 0 20px;
+  font-size: 15px;
+  line-height: 25px;
+  border-radius: 4px;
+  border: 0;
+  background: #475bb2;
+  color: #ffffff;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-form-grid p .user-registration-Button:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-form-grid p .user-registration-Button:hover {
+  background: rgb(63.7289156627, 81.6807228916, 159.7710843373);
 }
 #user-registration.vertical .user-registration-MyAccount-content__body .user-registration-profile-header, #user-registration.horizontal .user-registration-MyAccount-content__body .user-registration-profile-header {
   display: flex;
@@ -1308,7 +1506,7 @@
 }
 #user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice::after, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice::after {
   content: "";
-  background: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+  background: rgb(63.7289156627, 81.6807228916, 159.7710843373);
   width: 0px;
   height: 1.5px;
   position: absolute;
@@ -1318,7 +1516,7 @@
 }
 #user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice:hover {
   background: transparent;
-  color: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+  color: rgb(63.7289156627, 81.6807228916, 159.7710843373);
 }
 #user-registration.vertical .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice:hover::after, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-payments-container .ur-payment-invoices table.ur-payment-invoice-table tbody tr td a#ur_download_payment_invoice:hover::after {
   width: 100%;
@@ -1332,36 +1530,34 @@
 #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination {
   display: flex;
   gap: 8px;
-  justify-content: center;
-  margin-top: 25px;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding-left: 0;
 }
-#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination a,
-#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination span, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination a,
-#user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination span {
-  padding: 8px 14px;
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination ul.page-numbers, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination ul.page-numbers {
+  margin: 0;
+  padding-left: 0;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination li .page-numbers, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination li .page-numbers {
+  padding: 0;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 14px;
-  color: #333;
+  line-height: 24px;
+  font-weight: 500;
+  color: #626262;
   text-decoration: none;
   transition: all 0.2s ease;
-  background: #fff;
 }
-#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination a:hover,
-#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination span:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination a:hover,
-#user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination span:hover {
-  background: #f5f5f5;
-  border-color: #ccc;
-}
-#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .current, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .current {
-  background: #0073aa;
-  color: #fff;
-  border-color: #0073aa;
-  cursor: default;
-}
-#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .current:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .current:hover {
-  background: #0073aa;
-  border-color: #0073aa;
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination li .page-numbers:hover, #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination li .page-numbers.current, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination li .page-numbers:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination li .page-numbers.current {
+  background: #475bb2;
+  border-color: #475bb2;
+  color: #ffffff;
 }
 #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .prev,
 #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .next, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .prev,
@@ -1371,9 +1567,9 @@
 #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .prev:hover,
 #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .next:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .prev:hover,
 #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .next:hover {
-  background: #eef7ff;
-  border-color: #0073aa;
-  color: #0073aa;
+  background: #edeff7;
+  border-color: #edeff7;
+  color: #475bb2;
 }
 #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .disabled, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table-container .ur-pagination .disabled {
   opacity: 0.4;
@@ -1436,7 +1632,7 @@
   padding: 14px 20px;
   font-size: 14px;
   color: #50565f;
-  vertical-align: middle;
+  align-content: center;
   background: transparent;
   text-align: left;
   border: 0;
@@ -1444,6 +1640,7 @@
 }
 #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--transaction-id, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--transaction-id {
   font-family: "Courier New", monospace;
+  word-break: break-all;
 }
 #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--amount, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--amount {
   font-weight: 600;
@@ -1457,6 +1654,60 @@
 #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--status span.btn-active, #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--status span.btn-completed, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--status span.btn-active, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--status span.btn-completed {
   color: #3aa530;
   background: #def8db;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu {
+  position: relative;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .menu-trigger, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .menu-trigger {
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  width: 24px;
+  height: 28px;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .menu-trigger svg, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .menu-trigger svg {
+  width: 18px;
+  height: 18px;
+  fill: #4e4e4e;
+  transition: all 0.3s ease;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .menu-trigger:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .menu-trigger:hover {
+  border-color: #e1e1e1;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .menu-trigger:hover svg, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .menu-trigger:hover svg {
+  fill: #475bb2;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .dropdown, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .dropdown {
+  position: absolute;
+  right: 0;
+  top: 28px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 50;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .dropdown.hidden, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .dropdown.hidden {
+  display: none;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .dropdown a, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .dropdown a {
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .dropdown a:hover, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .membership-row-btn-container .btn-div .action-menu .dropdown a:hover {
+  background: #f3f3f3;
 }
 #user-registration.vertical .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .ur-account-action-link, #user-registration.horizontal .user-registration-MyAccount-content__body .ur-account-table__body .ur-account-table__row .ur-account-table__cell--action .ur-account-action-link {
   display: inline-flex;
@@ -1531,7 +1782,7 @@
     max-width: 100%;
   }
 }
-#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header {
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header-nav {
   display: flex;
   gap: 12px;
   align-items: center;
@@ -1539,19 +1790,19 @@
   padding-bottom: 24px;
   border-bottom: 1px solid #E2E8F0;
 }
-#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header .user-registration-img-container img {
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header-nav .user-registration-img-container img {
   width: 42px;
   height: 42px;
   border-radius: 50%;
   border: 2px solid #ffffff;
 }
-#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header header > h3 {
-  margin-bottom: 0;
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header-nav header > h3 {
+  margin: 0;
   font-size: 16px;
   line-height: 24px;
   color: #383838;
 }
-#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header .user-registration-MyAccount-header .user-registration-MyAccount-username {
+#user-registration.vertical .user-registration-MyAccount-navigation--wrapper .user-registration-profile-header-nav .user-registration-MyAccount-header .user-registration-MyAccount-username {
   font-size: 20px;
   line-height: 28px;
   margin-bottom: 0;
@@ -1587,14 +1838,9 @@
   border-bottom: 1px solid #F4F4F4;
   padding-bottom: 16px;
   margin-bottom: 32px;
-}
-#user-registration.vertical .user-registration-MyAccount-content__header h1 {
-  margin-bottom: 0;
-  text-align: left;
-  color: #222222;
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 #user-registration.horizontal .user-registration-MyAccount-navigation {
   border-bottom: 1px solid #e1e1e1;
@@ -1786,4 +2032,113 @@ body.user-registration-page .user-registration-membership-notice__message {
 }
 .user-registration-myaccount-notice-box .highlight {
   font-weight: bold;
+}
+
+.user-registration-profile-fields .user-registration-profile-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.user-registration-profile-fields .user-registration-profile-header .user-registration-img-container {
+  position: relative;
+  width: 120px !important;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.user-registration-profile-fields .user-registration-profile-header .user-registration-img-container .profile-preview {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.user-registration-profile-fields .user-registration-profile-header .user-registration-img-container .user-registration-tips {
+  display: none !important;
+}
+.user-registration-profile-fields .user-registration-profile-header header {
+  position: relative;
+  inset: 0;
+  pointer-events: none;
+}
+.user-registration-profile-fields .user-registration-profile-header header .button-group {
+  position: absolute;
+  left: 30px;
+  bottom: 6px;
+  pointer-events: auto;
+}
+.user-registration-profile-fields .user-registration-profile-header header .button-group .user_registration_profile_picture_upload {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  border: 1px solid #edeff7;
+  background: #edeff7;
+  box-shadow: none;
+  cursor: pointer;
+  font-size: 0;
+  line-height: 0;
+  color: transparent;
+}
+.user-registration-profile-fields .user-registration-profile-header header .button-group .user_registration_profile_picture_upload:hover {
+  transform: translateY(-1px);
+}
+
+.user-registration-MyAccount-content__header h1 {
+  margin: 0;
+  text-align: left;
+  color: #16181A;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 30px;
+}
+.user-registration-MyAccount-content__header-buttons {
+  display: flex;
+  gap: 10px;
+  flex: 0 0 40%;
+}
+
+.membership-row-btn-container .dropdown {
+  position: absolute;
+  right: 0;
+  top: 28px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 50;
+}
+.membership-row-btn-container .dropdown.hidden {
+  display: none;
+}
+.membership-row-btn-container .dropdown a {
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.membership-row-btn-container .dropdown a:hover {
+  background: #f3f3f3;
+}
+
+.dropdown {
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  min-width: 180px;
+}
+
+.hidden {
+  display: none !important;
 }
