@@ -11,13 +11,13 @@
 		<div id="ur-membership-main-fields">
 			<!-- Membership Name -->
 			<div class="ur-membership-input-container ur-d-flex ur-p-1" style="gap:20px;">
-				<div class="ur-label" style="width: 30%">
+				<div class="ur-label">
 					<label for="ur-input-type-membership-name">
 						<?php esc_html_e( 'Name', 'user-registration' ); ?>
 						<span style="color:red">*</span> :
 					</label>
 				</div>
-				<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
+				<div class="ur-input-type-membership-name ur-admin-template">
 					<div class="ur-field" data-field-key="membership_name">
 						<input type="text" data-key-name="Membership Name"
 								id="ur-input-type-membership-name" name="ur_membership_name"
@@ -31,10 +31,10 @@
 
 			<!-- Membership Description -->
 			<div class="ur-membership-input-container ur-input-type-textarea ur-d-flex ur-p-1 ur-mt-3" style="gap:20px;">
-				<div class="ur-label" style="width: 30%">
+				<div class="ur-label">
 					<label for="ur-input-type-membership-description"><?php esc_html_e( 'Description :', 'user-registration' ); ?></label>
 				</div>
-				<div class="ur-field" data-field-key="textarea" style="width: 100%">
+				<div class="ur-field" data-field-key="textarea">
 					<?php
 					wp_editor(
 						! empty( $membership_content['description'] ) ? $membership_content['description'] : ( ! empty( $membership_details['description'] ) ? $membership_details['description'] : '' ),
@@ -68,10 +68,10 @@
 
 			<!-- Membership Type -->
 			<div class="ur-membership-selection-container ur-d-flex ur-p-1" style="gap:20px;">
-				<div class="ur-label" style="width: 30%">
+				<div class="ur-label">
 					<label for="ur-membership-free-type"><?php esc_html_e( 'Type :', 'user-registration' ); ?></label>
 				</div>
-				<div class="ur-input-type-select ur-admin-template" style="width: 100%">
+				<div class="ur-input-type-select ur-admin-template">
 					<div class="ur-field ur-d-flex" data-field-key="radio">
 						<!-- Free Type -->
 						<label class="ur-membership-types" for="ur-membership-free-type">
@@ -119,10 +119,10 @@
 				<!-- Cancellation section (currently disabled) -->
 				<div class="ur-membership-cancellation-container">
 					<div class="ur-membership-selection-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px;">
-						<div class="ur-label" style="width: 30%">
+						<div class="ur-label">
 							<label for="ur-membership-cancel-sub-immediately"><?php esc_html_e( 'Cancel Membership', 'user - registration' ); ?></label>
 						</div>
-						<div class="ur-input-type-select ur-admin-template" style="width: 100%">
+						<div class="ur-input-type-select ur-admin-template">
 							<div class="ur-field ur-d-flex ur-align-items-center" style="gap: 10px">
 								<input data-key-name="Cancel Subscription" type="radio"
 										id="ur-membership-cancel-sub-immediately" style="margin: 0"
@@ -140,13 +140,13 @@
 			<div id="paid-plan-container" class="<?php echo isset( $membership_details['type'] ) && in_array( $membership_details['type'], array( 'paid', 'subscription' ), true ) ? '' : 'ur-d-none'; ?>">
 				<!-- Membership Amount and Duration -->
 				<div class="ur-membership-input-container ur-d-flex ur-p-1" style="gap:20px;">
-					<div class="ur-label" style="width: 30%">
+					<div class="ur-label">
 						<label for="ur-membership-amount">
 							<?php esc_html_e( 'Price', 'user-registration' ); ?>
 							<span style="color:red">*</span> :
 						</label>
 					</div>
-					<div class="ur-d-flex" style="gap:16px;width:100%;">
+					<div class="ur-d-flex" style="gap:16px;">
 						<div class="ur-field field-amount" data-field-key="membership_amount">
 							<span class="ur-currency-symbol">
 								<?php
@@ -174,7 +174,7 @@
 
 				<!-- Membership Duration -->
 				<div class="ur-membership-selection-container ur-p-1 ur-mt-3 ur-subscription-fields <?php echo isset( $membership_details['type'] ) && 'subscription' === $membership_details['type'] ? 'ur-d-flex' : 'ur-d-none'; ?>" id="ur-membership-duration-container" style="gap:20px;">
-					<div class="ur-label" style="width: 30%">
+					<div class="ur-label" style="max-width: 600px; width: 100%">
 						<label for="ur-membership-duration">
 							<?php esc_html_e( 'Duration', 'user-registration' ); ?>
 							<span style="color:red">*</span> :
