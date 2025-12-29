@@ -194,4 +194,24 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 
 		return ! $result ? array() : $result;
 	}
+
+	/**
+	 * Get subscription by subscription ID
+	 *
+	 * @param int $subscription_id The Subscription ID.
+	 *
+	 * @return array|false|mixed|object|\stdClass|void
+	 */
+	public function get_subscription_by_subscription_id( $subscription_id ) {
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT wums.* FROM $this->table wums
+		         WHERE wums.ID = %d",
+				$subscription_id
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? false : $result;
+	}
 }

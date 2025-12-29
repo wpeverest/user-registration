@@ -228,7 +228,7 @@ class AJAX {
 			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
 
 			$form_response    = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-			$ur_authorize_net = array( 'ur_authorize_net' => ! empty( $form_response['ur_authorize_net'] ) ? $form_response['ur_authorize_net'] : [] );
+			$ur_authorize_net = array( 'ur_authorize_net' => ! empty( $form_response['ur_authorize_net'] ) ? $form_response['ur_authorize_net'] : array() );
 			$data             = array_merge( $data, $ur_authorize_net );
 			$pg_data          = $payment_service->build_response( $data );
 		}
@@ -290,20 +290,19 @@ class AJAX {
 		}
 		// Developers can override the verify_nonce function.
 		ur_membership_verify_nonce( 'ur_membership' );
-		$membership        = new MembershipService();
-		$data              = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
+		$membership = new MembershipService();
+		$data       = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
 
 		// Get rule data from POST if available (check both in POST directly and in membership_data)
 		$rule_data = null;
 		if ( isset( $_POST['urcr_membership_access_rule_data'] ) && ! empty( $_POST['urcr_membership_access_rule_data'] ) ) {
 			$rule_data_raw = wp_unslash( $_POST['urcr_membership_access_rule_data'] );
-			$rule_data = json_decode( $rule_data_raw, true );
+			$rule_data     = json_decode( $rule_data_raw, true );
 		} elseif ( isset( $data['urcr_membership_access_rule_data'] ) && ! empty( $data['urcr_membership_access_rule_data'] ) ) {
 			$rule_data = is_array( $data['urcr_membership_access_rule_data'] ) ? $data['urcr_membership_access_rule_data'] : json_decode( $data['urcr_membership_access_rule_data'], true );
 		}
 
-
-		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && "on" === $data['post_meta_data']['payment_gateways']['stripe']["status"];
+		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && 'on' === $data['post_meta_data']['payment_gateways']['stripe']['status'];
 		$data              = $membership->prepare_membership_post_data( $data );
 
 		if ( isset( $data['status'] ) && ! $data['status'] ) {
@@ -382,18 +381,17 @@ class AJAX {
 		}
 		ur_membership_verify_nonce( 'ur_membership' );
 
-		$membership        = new MembershipService();
-		$data              = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
+		$membership = new MembershipService();
+		$data       = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
 		// Get rule data from POST if available (check both in POST directly and in membership_data)
 		$rule_data = null;
 		if ( isset( $_POST['urcr_membership_access_rule_data'] ) && ! empty( $_POST['urcr_membership_access_rule_data'] ) ) {
 			$rule_data_raw = wp_unslash( $_POST['urcr_membership_access_rule_data'] );
-			$rule_data = json_decode( $rule_data_raw, true );
+			$rule_data     = json_decode( $rule_data_raw, true );
 		}
 
-		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && "on" === $data['post_meta_data']['payment_gateways']['stripe']["status"];
-		$is_mollie_enabled = isset( $data['post_meta_data']['payment_gateways']['mollie'] ) && "on" === $data['post_meta_data']['payment_gateways']['mollie']['status'];
-
+		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && 'on' === $data['post_meta_data']['payment_gateways']['stripe']['status'];
+		$is_mollie_enabled = isset( $data['post_meta_data']['payment_gateways']['mollie'] ) && 'on' === $data['post_meta_data']['payment_gateways']['mollie']['status'];
 
 		$data = $membership->prepare_membership_post_data( $data );
 
@@ -1071,7 +1069,6 @@ class AJAX {
 
 	/**
 	 * cancel_subscription
-	 *
 	 */
 	public static function cancel_subscription() {
 		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
@@ -1161,6 +1158,21 @@ class AJAX {
 			wp_destroy_current_session();
 			wp_clear_auth_cookie();
 			wp_set_current_user( 0 );
+
+			// Prepare data to register subscription cancellation event .
+			$payload = array(
+				'subscription_id' => $order['subscription_id'],
+				'member_id'       => $order['user_id'],
+				'event_type'      => 'canceled',
+				'meta'            => array(
+					'order_id'       => $order ? $order['ID'] : 0,
+					'transaction_id' => $order ? $order['transaction_id'] : '',
+					'payment_method' => $order['payment_method'],
+				),
+			);
+
+			do_action( 'ur_membership_subscription_event_triggered', $payload );
+
 			wp_send_json_success(
 				array(
 					'message' => $cancel_status['message'],
@@ -1207,6 +1219,16 @@ class AJAX {
 
 		$reactivation_status = $subscription_repository->reactivate_subscription_by_id( $subscription_id );
 		if ( $reactivation_status['status'] ) {
+
+			// Prepare data to register subscription reactivation event.
+			$payload = array(
+				'subscription_id' => $subscription_id,
+				'member_id'       => $user_id,
+				'event_type'      => 'reactivated',
+			);
+
+			do_action( 'ur_membership_subscription_event_triggered', $payload );
+
 			wp_send_json_success(
 				array(
 					'message' => __( 'Membership reactivated successfully.', 'user-registration' ),
@@ -1438,7 +1460,7 @@ class AJAX {
 				)
 			);
 		}
-		$ur_authorize_data = isset( $_POST['ur_authorize_data'] ) ? $_POST['ur_authorize_data'] : [];
+		$ur_authorize_data = isset( $_POST['ur_authorize_data'] ) ? $_POST['ur_authorize_data'] : array();
 		$data              = array(
 			'current_subscription_id' => absint( $_POST['current_subscription_id'] ),
 			'selected_membership_id'  => absint( $_POST['selected_membership_id'] ),
@@ -1520,6 +1542,34 @@ class AJAX {
 				);
 			}
 			$message = 'free' === $selected_pg ? __( 'Membership upgraded successfully.', 'user-registration-membership' ) : __( 'New Order created, initializing payment...', 'user-registration-membership' );
+
+			// Prepare data to register subscription upgrade event.
+			$members_subscription_repository = new MembersSubscriptionRepository();
+			$membership_repository           = new MembershipRepository();
+
+			$current_membership_details = $membership_repository->get_single_membership_by_ID( $data['current_membership_id'] );
+			$new_membership_details     = $membership_repository->get_single_membership_by_ID( $data['selected_membership_id'] );
+
+			$from                 = $current_membership_details['post_title'];
+			$to                   = $new_membership_details['post_title'];
+			$subscription_details = $members_subscription_repository->get_subscription_by_subscription_id( $data['current_subscription_id'] );
+
+			$payload = array(
+				'subscription_id' => $data['current_subscription_id'],
+				'member_id'       => $member_id,
+				'event_type'      => 'upgraded',
+				'meta'            => array(
+					'transaction_id'    => $upgrade_membership_response['extra']['transaction_id'],
+					'order_id'          => $upgrade_membership_response['extra']['order_id'],
+					'payment_method'    => $selected_pg,
+					'next_billing_date' => $subscription_details['next_billing_date'],
+					'from'              => $from,
+					'to'                => $to,
+				),
+			);
+
+			do_action( 'ur_membership_subscription_event_triggered', $payload );
+
 			wp_send_json_success(
 				array(
 					'is_upgrading'             => true,
@@ -1632,6 +1682,25 @@ class AJAX {
 		$response = $renew_membership['response'];
 		if ( $response['status'] ) {
 			$message = __( 'New Order created, initializing payment...', 'user-registration-membership' );
+
+			// Prepare data to register subscription renew event.
+			$members_subscription_repository = new MembersSubscriptionRepository();
+			$subscription_details            = $members_subscription_repository->get_subscription_by_subscription_id( $member_subscription['ID'] );
+
+			$payload = array(
+				'subscription_id' => $member_subscription['ID'],
+				'member_id'       => $member_id,
+				'event_type'      => 'renewed',
+				'meta'            => array(
+					'order_id'          => $renew_membership['extra']['order_id'],
+					'transaction_id'    => $renew_membership['extra']['transaction_id'],
+					'payment_method'    => $selected_pg,
+					'next_billing_date' => $subscription_details['next_billing_date'],
+				),
+			);
+
+			do_action( 'ur_membership_subscription_event_triggered', $payload );
+
 			wp_send_json_success(
 				array(
 					'pg_data'        => $response,
@@ -1721,9 +1790,9 @@ class AJAX {
 	public static function create_subscription() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error(
-				[
+				array(
 					'message' => __( 'Sorry, you do not have permission to create subscription', 'user-registration' ),
-				]
+				)
 			);
 		}
 
@@ -1733,9 +1802,9 @@ class AJAX {
 
 		if ( empty( $subscription_data['member'] ) || empty( $subscription_data['plan'] ) ) {
 			wp_send_json_error(
-				[
+				array(
 					'message' => __( 'Please fill in all required fields.', 'user-registration' ),
-				]
+				)
 			);
 		}
 
@@ -1747,9 +1816,9 @@ class AJAX {
 
 		if ( ! $membership || empty( $membership_meta ) ) {
 			wp_send_json_error(
-				[
+				array(
 					'message' => __( 'Invalid membership plan selected.', 'user-registration' ),
-				]
+				)
 			);
 		}
 
@@ -1757,9 +1826,9 @@ class AJAX {
 		if ( $is_recurring ) {
 			if ( empty( $subscription_data['expiry_date'] ) ) {
 				wp_send_json_error(
-					[
+					array(
 						'message' => __( 'Expiry date is required for recurring subscription plans.', 'user-registration' ),
-					]
+					)
 				);
 			}
 		}
@@ -1776,7 +1845,7 @@ class AJAX {
 			$billing_cycle = '';
 		}
 
-		$data = [
+		$data = array(
 			'user_id'           => absint( $subscription_data['member'] ),
 			'item_id'           => $membership_id,
 			'start_date'        => $start_date,
@@ -1786,7 +1855,7 @@ class AJAX {
 			'billing_amount'    => $billing_amount,
 			'status'            => $status,
 			'cancel_sub'        => $membership_meta['cancel_subscription'] ?? 'immediately',
-		];
+		);
 
 		if ( ! empty( $subscription_data['subscription_id'] ) ) {
 			$data['subscription_id'] = sanitize_text_field( $subscription_data['subscription_id'] );
@@ -1796,9 +1865,9 @@ class AJAX {
 
 		if ( false === $subscription ) {
 			wp_send_json_error(
-				[
+				array(
 					'message' => __( 'Failed to create subscription.', 'user-registration' ),
-				]
+				)
 			);
 		}
 
@@ -1820,8 +1889,8 @@ class AJAX {
 				$current_user->display_name
 			);
 
-		$order_data = [
-			'orders_data'      => [
+		$order_data = array(
+			'orders_data'      => array(
 				'user_id'         => absint( $subscription_data['member'] ),
 				'item_id'         => $membership_id,
 				'subscription_id' => $subscription['ID'],
@@ -1833,14 +1902,14 @@ class AJAX {
 				'order_type'      => $order_type,
 				'trial_status'    => 'off',
 				'notes'           => $notes_text,
-			],
-			'orders_meta_data' => [
-				[
+			),
+			'orders_meta_data' => array(
+				array(
 					'meta_key'   => 'is_admin_created',
 					'meta_value' => true,
-				],
-			],
-		];
+				),
+			),
+		);
 
 		$order = $orders_repository->create( $order_data );
 
@@ -1854,17 +1923,17 @@ class AJAX {
 
 		if ( false === $order ) {
 			wp_send_json_success(
-				[
+				array(
 					'id'      => $subscription['ID'],
 					'message' => $partial_success_message,
-				]
+				)
 			);
 		} else {
 			wp_send_json_success(
-				[
+				array(
 					'id'      => $subscription['ID'],
 					'message' => $success_message,
-				]
+				)
 			);
 		}
 		wp_die();
@@ -1873,9 +1942,9 @@ class AJAX {
 	public static function update_subscription() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error(
-				[
+				array(
 					'message' => __( 'Sorry, you do not have permission to update subscription', 'user-registration' ),
-				]
+				)
 			);
 		}
 
@@ -1886,9 +1955,9 @@ class AJAX {
 
 		if ( empty( $subscription_id ) ) {
 			wp_send_json_error(
-				[
+				array(
 					'message' => __( 'Subscription ID is required.', 'user-registration' ),
-				]
+				)
 			);
 		}
 
@@ -1897,9 +1966,9 @@ class AJAX {
 
 		if ( ! $existing_subscription ) {
 			wp_send_json_error(
-				[
+				array(
 					'message' => __( 'Subscription not found.', 'user-registration' ),
-				]
+				)
 			);
 		}
 
@@ -1912,7 +1981,7 @@ class AJAX {
 
 		$original_status = $existing_subscription['status'];
 
-		$update_data = [];
+		$update_data = array();
 
 		$expiry_date      = isset( $subscription_data['expiry_date'] ) && ! empty( $subscription_data['expiry_date'] ) ? sanitize_text_field( $subscription_data['expiry_date'] ) : $existing_subscription['expiry_date'];
 		$trial_start_date = isset( $subscription_data['trial_start_date'] ) && ! empty( $subscription_data['trial_start_date'] ) ? sanitize_text_field( $subscription_data['trial_start_date'] ) : $existing_subscription['trial_start_date'];
@@ -1924,9 +1993,9 @@ class AJAX {
 
 			if ( $trial_start_timestamp > $trial_end_timestamp ) {
 				wp_send_json_error(
-					[
+					array(
 						'message' => __( 'Trial start date cannot be after trial end date.', 'user-registration' ),
-					]
+					)
 				);
 			}
 		}
@@ -1937,9 +2006,9 @@ class AJAX {
 
 			if ( $trial_end_timestamp > $expiry_timestamp ) {
 				wp_send_json_error(
-					[
+					array(
 						'message' => __( 'Trial end date cannot exceed expiry date.', 'user-registration' ),
-					]
+					)
 				);
 			}
 		}
@@ -1950,9 +2019,9 @@ class AJAX {
 
 			if ( $expiry_timestamp < $trial_start_timestamp ) {
 				wp_send_json_error(
-					[
+					array(
 						'message' => __( 'Expiry date cannot be less than trial start date.', 'user-registration' ),
-					]
+					)
 				);
 			}
 		}
@@ -1975,9 +2044,9 @@ class AJAX {
 
 			if ( $expiry_date_in_past && 'active' === $requested_status ) {
 				wp_send_json_error(
-					[
+					array(
 						'message' => __( 'Cannot activate subscription with past expiry date.', 'user-registration' ),
-					]
+					)
 				);
 			}
 
@@ -2010,16 +2079,16 @@ class AJAX {
 
 		if ( false === $result ) {
 			wp_send_json_error(
-				[
+				array(
 					'message' => __( 'Failed to update subscription.', 'user-registration' ),
-				]
+				)
 			);
 		} else {
 			wp_send_json_success(
-				[
+				array(
 					'id'      => $subscription_id,
 					'message' => __( 'Subscription updated successfully.', 'user-registration' ),
-				]
+				)
 			);
 		}
 		wp_die();

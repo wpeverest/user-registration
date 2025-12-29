@@ -5,6 +5,8 @@
  * @package  UserRegistration/Classes
  */
 
+use WPEverest\URMembership\Admin\Services\SubscriptionService;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -161,6 +163,16 @@ class UR_Smart_Tags {
 
 			$values    = wp_parse_args( $values, $default_values );
 			$user_data = UR_Emailer::user_data_smart_tags( $values['email'] );
+
+			if ( ! empty( $values['context'] ) && 'thank_you_page' == $values['context'] ) {
+				$subscription_service = new SubscriptionService();
+				$user_data['member_id'] = $values['member_id'];
+				$user_data['context']   = $values['context'];
+				$values      = array(
+					'membership_tags' => $subscription_service->get_membership_plan_details( $user_data )
+				);
+			}
+
 			if ( is_array( $name_value ) && ! empty( $name_value ) ) {
 				$user_data = array_merge( $user_data, $name_value );
 			}
@@ -728,6 +740,11 @@ class UR_Smart_Tags {
 								'Next Billing Date' => $membership_tags['membership_plan_next_billing_date'] ?? '',
 								'Membership Status' => $membership_plan_statuses[ $membership_tags['membership_plan_status'] ] ?? '',
 							);
+
+							if ( ! empty( $values['context'] ) && 'thank_you_page' === $values['context'] ) {
+								$details['Payment Details']['Transaction ID'] =
+									! empty( $values['membership_tags']['membership_plan_transaction_id'] ) ? $values['membership_tags']['membership_plan_transaction_id'] : '';
+							}
 
 							$new_content = '<ul>';
 							foreach ( $details as $k => $value ) {

@@ -102,6 +102,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 			}
 		}
 	}
+
 	public function reactivate_subscription_by_id( $subscription_id, $send_email = true ) {
 		$subscription = $this->retrieve( $subscription_id );
 
@@ -157,7 +158,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 	 * }
 	 * @return array Array containing 'items' and 'total' count
 	 */
-	public function query( $args = [] ) {
+	public function query( $args = array() ) {
 		$defaults = array(
 			'page'       => 1,
 			'per_page'   => 20,
@@ -174,7 +175,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 		$args = wp_parse_args( $args, $defaults );
 
 		$args['order'] = strtoupper( $args['order'] );
-		$args['order'] = in_array( $args['order'], [ 'ASC', 'DESC' ], true ) ? $args['order'] : 'DESC';
+		$args['order'] = in_array( $args['order'], array( 'ASC', 'DESC' ), true ) ? $args['order'] : 'DESC';
 
 		$allowed_orderby = array(
 			'ID',
@@ -196,8 +197,8 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 			$args['orderby'] = 'ID';
 		}
 
-		$where_clauses  = [ '1=1' ];
-		$prepare_values = [];
+		$where_clauses  = array( '1=1' );
+		$prepare_values = array();
 
 		if ( ! empty( $args['status'] ) ) {
 			$where_clauses[]  = 'status = %s';
@@ -256,12 +257,12 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 		$query = $this->wpdb()->prepare( $query, $prepare_values );
 		$items = $this->wpdb()->get_results( $query );
 
-		return [
+		return array(
 			'items'        => $items,
 			'total'        => $total_items,
 			'total_pages'  => ceil( $total_items / $per_page ),
 			'current_page' => $page,
 			'per_page'     => $per_page,
-		];
+		);
 	}
 }
