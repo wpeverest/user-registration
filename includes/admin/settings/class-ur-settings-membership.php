@@ -113,23 +113,6 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 					'title'    => __( 'Content Restriction Settings', 'user-registration' ),
 					'desc'     => UR_PRO_ACTIVE ? $link_html : '',
 					'sections' => array(
-						'user_registration_site_restriction_settings' => array(
-							'title'    => __( 'Whole Site Restriction', 'user-registration' ),
-							'type'     => 'card',
-							'desc'     => '',
-							'settings' => array(
-								array(
-									'row_class' => 'urcr_enable_disable urcr_whole_site_access_enable',
-									'title'     => __( 'Enable Whole Site Restriction', 'user-registration' ),
-									'desc'      => __( 'Check this option to restrict your whole site. ', 'user-registration' ),
-									'id'        => 'user_registration_content_restriction_whole_site_access',
-									'default'   => 'no',
-									'desc_tip'  => true,
-									'type'      => 'toggle',
-									'autoload'  => false,
-								),
-							),
-						),
 						'user_registration_content_restriction_settings' => array(
 							'title'    => __( 'Global Restriction Settings', 'user-registration' ),
 							'type'     => 'card',
