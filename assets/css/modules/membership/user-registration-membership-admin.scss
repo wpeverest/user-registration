@@ -133,7 +133,8 @@
 	}
 
 	a {
-		text-decoration: none !important;;
+		text-decoration: none !important;
+		;
 	}
 }
 
@@ -141,9 +142,11 @@
 	0% {
 		transform: translateX(-5px);
 	}
+
 	50% {
 		transform: translateX(5px);
 	}
+
 	100% {
 		transform: translateX(-5px);
 	}
@@ -166,7 +169,7 @@
 		border-bottom-right-radius: 0 !important;
 	}
 
-	.ur-currency{
+	.ur-currency {
 		border: 1px solid $border-color;
 		border-top-right-radius: 4px;
 		border-bottom-right-radius: 4px;
@@ -301,11 +304,11 @@
 			form {
 				gap: $spacing_16px;
 
-				> p {
+				>p {
 					display: none;
 				}
 
-				> div {
+				>div {
 					position: relative;
 
 					select {
@@ -527,6 +530,7 @@
 
 				tfoot {
 					tr {
+
 						td,
 						th {
 							border-top: $border_width solid $border_color;
@@ -631,7 +635,8 @@
 				&__body {
 					padding: 0;
 
-					#ur-membership-main-fields, #ur-membership-plan-and-price-section {
+					#ur-membership-main-fields,
+					#ur-membership-plan-and-price-section {
 						display: flex;
 						flex-direction: column;
 						gap: 24px;
@@ -754,10 +759,10 @@
 							align-items: center;
 							padding: 0 !important;
 
-							.ur-label{
+							.ur-label {
 								margin-bottom: 0;
 
-								label{
+								label {
 									margin-bottom: 0;
 								}
 							}
@@ -776,7 +781,7 @@
 										padding: 12px 14px;
 										cursor: pointer;
 
-										.ur-membership-type-title{
+										.ur-membership-type-title {
 											margin-bottom: 0 !important;
 										}
 
@@ -971,6 +976,7 @@
 											cursor: not-allowed;
 
 											.ur-membership-type-title {
+
 												input[type="radio"],
 												.ur-membership-upgrade-type-full--label {
 													cursor: not-allowed;
@@ -994,12 +1000,13 @@
 									}
 								}
 							}
+
 							.user-registration-switch {
 								@include form-toggle;
 							}
 						}
 
-						> .user-registration-card {
+						>.user-registration-card {
 							padding: 0;
 							border: 0;
 							margin-top: 80px;
@@ -1011,6 +1018,7 @@
 						border-color: $primary_color;
 
 					}
+
 					#paid-plan-container {
 						display: flex;
 						flex-direction: column;
@@ -1177,6 +1185,7 @@
 													color: $grey-400;
 												}
 											}
+
 											.user-registration-switch {
 												@include form-toggle;
 											}
@@ -1217,9 +1226,10 @@
 					@include form-footer-button;
 				}
 
-				&--form-step{
+				&--form-step {
 					display: none;
-					&-active{
+
+					&-active {
 						display: block;
 					}
 				}
@@ -1241,8 +1251,17 @@
 				thead {
 					tr {
 						th {
-							&#title, &#membership_price, &#membership_type, &#members, &#status {
+
+							&#title,
+							&#membership_price,
+							&#membership_type,
+							&#members,
+							&#status {
 								width: 20%;
+							}
+
+							&#draggable {
+								width: 1%;
 							}
 
 						}
@@ -1271,6 +1290,19 @@
 								}
 							}
 
+							&.draggable {
+								display: flex;
+								align-items: flex-start;
+								padding-right: $spacing_2px;
+
+								svg {
+									width: 20px;
+									height: 20px;
+									fill: #a0a0a0;
+									margin-top: $spacing_2px;
+								}
+							}
+
 							&.membership_type {
 								.user-registration-badge {
 									padding: 0;
@@ -1282,13 +1314,13 @@
 								}
 							}
 
-							&.status{
-								.ur-toggle-section{
+							&.status {
+								.ur-toggle-section {
 									.user-registration-toggle-form {
 
 										input {
 
-											&:checked + .slider {
+											&:checked+.slider {
 												background-color: $green;
 											}
 										}
@@ -1336,6 +1368,7 @@
 
 				tfoot {
 					tr {
+
 						td,
 						th {
 							border-top: $border_width solid $border_color;
@@ -1376,8 +1409,25 @@
 		}
 	}
 
-	.ur-membership-error{
-		border-color:$red !important;
+	.ur-membership-error {
+		border-color: $red !important;
+	}
+
+	#ur-membership-payment-settings-notice {
+		border: 1px solid $primary_color;
+		border-radius: $spacing_6px;
+		padding: $spacing_8px;
+		background-color: #f8f9fc;
+
+		p {
+			margin: 0;
+		}
+
+		a {
+			color: $primary_color;
+			font-weight: $semi_bold;
+			text-decoration: underline;
+		}
 	}
 }
 
@@ -1438,6 +1488,7 @@
 					gap: $spacing_32px;
 					display: flex;
 					flex-direction: column;
+
 					.right-container {
 						border-radius: $border_radius_7;
 						height: fit-content;
@@ -1450,6 +1501,7 @@
 
 						&#plan-detail-container {
 							position: relative;
+
 							.form-row {
 								display: flex;
 								align-items: flex-end;
@@ -1460,14 +1512,17 @@
 									flex: 1;
 									margin: 0;
 								}
+
 								span {
 									flex: 1;
+
 									&.user-registration-badge {
 										font-size: 13px;
 										line-height: 18px;
 										border-radius: 30px;
 										padding: 4px 12px;
 									}
+
 									&.user-registration-badge {
 										&--active {
 											color: #3aa530;
@@ -1503,8 +1558,8 @@
 								}
 							}
 
-							.urm-membership-plan-spinner-container{
-								&.is_loading{
+							.urm-membership-plan-spinner-container {
+								&.is_loading {
 									position: absolute;
 									top: 0;
 									left: 0;
@@ -1520,6 +1575,7 @@
 								}
 							}
 						}
+
 						.right-title {
 							padding-bottom: $spacing_16px;
 							margin-bottom: $spacing_24px;
@@ -1591,7 +1647,8 @@
 	}
 }
 
-#ur-membership-main-fields .upgradable-type, #upgrade-settings-container .upgradable-type  {
+#ur-membership-main-fields .upgradable-type,
+#upgrade-settings-container .upgradable-type {
 	position: relative;
 	color: #bababa;
 
@@ -1625,6 +1682,181 @@
 	display: flex;
 	line-height: 1;
 }
+
+// Membership field admin template styles
+// .ur-admin-template {
+// 	&.ur-input-type-select {
+// 		.urmg-container {
+// 			.urmg-membership-plans {
+// 				display: flex;
+// 				flex-direction: column;
+// 				gap: $spacing_16px;
+// 				margin: $spacing_20px 0;
+
+// 				.urmg-plan-card {
+// 					border: 2px solid #e0e0e0;
+// 					border-radius: $border_radius_4;
+// 					padding: $spacing_20px;
+// 					cursor: pointer;
+// 					transition: all 0.3s ease;
+// 					background: $white;
+// 					position: relative;
+
+// 					&:hover {
+// 						border-color: $primary_color;
+// 					}
+
+// 					&.selected {
+// 						border-color: $primary_color;
+// 						background: #f0f8ff;
+// 					}
+
+// 					input[type="radio"] {
+// 						position: absolute;
+// 						opacity: 0;
+// 						pointer-events: none;
+// 					}
+
+// 					.urmg-plan-header {
+// 						display: flex;
+// 						justify-content: space-between;
+// 						align-items: flex-start;
+// 						margin-bottom: $spacing_10px;
+// 						padding-left: $spacing_28px;
+// 					}
+
+// 					.urmg-plan-title {
+// 						font-size: 18px;
+// 						font-weight: $semi_bold;
+// 						color: #333;
+// 						margin: 0;
+// 					}
+
+// 					.urmg-plan-price {
+// 						font-size: 18px;
+// 						font-weight: $semi_bold;
+// 						color: #333;
+// 						text-align: right;
+// 					}
+
+// 					.urmg-plan-description {
+// 						font-size: 14px;
+// 						color: $grey-400;
+// 						margin-top: $spacing_8px;
+// 					}
+
+// 					.urmg-plan-radio {
+// 						position: absolute;
+// 						top: $spacing_20px;
+// 						left: $spacing_20px;
+// 						width: 20px;
+// 						height: 20px;
+// 						border: 2px solid #ccc;
+// 						border-radius: 50%;
+// 						background: $white;
+// 						transition: all 0.3s ease;
+// 					}
+
+// 					&.selected {
+// 						.urmg-plan-radio {
+// 							border-color: $primary_color;
+// 							background: $primary_color;
+
+// 							&::after {
+// 								content: '';
+// 								position: absolute;
+// 								top: 50%;
+// 								left: 50%;
+// 								transform: translate(-50%, -50%);
+// 								width: 8px;
+// 								height: 8px;
+// 								border-radius: 50%;
+// 								background: $white;
+// 							}
+// 						}
+// 					}
+// 				}
+// 			}
+
+// 			.urmg-total-container {
+// 				border: 2px dashed #ccc;
+// 				border-radius: $border_radius_4;
+// 				padding: $spacing_16px $spacing_20px;
+// 				margin: $spacing_20px 0;
+// 				display: flex;
+// 				justify-content: space-between;
+// 				align-items: center;
+// 				background: #f9f9f9;
+
+// 				.urmg-total-label {
+// 					font-size: 16px;
+// 					font-weight: $semi_bold;
+// 					color: #333;
+// 				}
+
+// 				.urmg-total-amount {
+// 					font-size: 18px;
+// 					font-weight: 700;
+// 					color: $primary_color;
+// 				}
+// 			}
+
+// 			.urmg-payment-gateways {
+// 				margin: $spacing_32px 0 $spacing_20px 0;
+
+// 				.urmg-payment-gateways-label {
+// 					font-size: 14px;
+// 					font-weight: $semi_bold;
+// 					color: #333;
+// 					margin-bottom: $spacing_16px;
+// 					display: block;
+
+// 					.required {
+// 						color: #dc3232;
+// 					}
+// 				}
+
+// 				.urmg-gateway-buttons {
+// 					display: flex;
+// 					gap: $spacing_16px;
+// 					flex-wrap: wrap;
+
+// 					.urmg-gateway-btn {
+// 						flex: 1;
+// 						min-width: 120px;
+// 						padding: $spacing_12px $spacing_20px;
+// 						border: 2px solid #e0e0e0;
+// 						border-radius: $border_radius_4;
+// 						background: $white;
+// 						cursor: pointer;
+// 						transition: all 0.3s ease;
+// 						text-align: center;
+// 						font-size: 14px;
+// 						font-weight: $medium;
+// 						color: #333;
+// 						position: relative;
+
+// 						&:hover {
+// 							border-color: $primary_color;
+// 						}
+
+// 						&.selected {
+// 							border-color: $primary_color;
+// 							background: #f0f8ff;
+// 							color: $primary_color;
+// 						}
+
+// 						input[type="radio"] {
+// 							position: absolute;
+// 							opacity: 0;
+// 							pointer-events: none;
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// }
 
 .user-registration-membership_page_user-registration-members {
 	background-color: #fafafa;
@@ -1662,27 +1894,152 @@
 		}
 	}
 }
+
 .tooltipster-base.tooltipster-bottom {
-	margin-top: -30px /* Adjust gap for bottom-positioned tooltips */
+	margin-top: -30px
+		/* Adjust gap for bottom-positioned tooltips */
 }
 
 .wp-list-table {
 	&.memberships {
 		tfoot {
 			tr {
-				th, td {
+
+				th,
+				td {
 					border-top: none;
 				}
 			}
 		}
 	}
 
-	&.users{
+	&.users {
 		td {
 			vertical-align: middle;
 
 			p {
 				margin: 7px 0 5px;
+			}
+		}
+	}
+}
+
+// Drag-and-drop sorting styles for membership table
+#membership-list {
+	tbody#the-list {
+		.ur-membership-sortable-row {
+			cursor: move;
+			cursor: grab;
+			cursor: -webkit-grab;
+
+			&:active {
+				cursor: grabbing;
+				cursor: -webkit-grabbing;
+			}
+		}
+
+		// Sortable drag states (jQuery UI Sortable)
+		.ui-sortable-helper {
+			opacity: 0.8;
+			box-shadow: 0 2px 8px rgba(72, 91, 178, 0.2);
+			background: rgba(72, 91, 178, 0.1);
+			border-color: rgba(72, 91, 178, 0.3);
+			display: table !important;
+			table-layout: fixed;
+			margin: 0 !important;
+			border-collapse: collapse;
+
+			tr {
+				display: table-row !important;
+
+				td {
+					vertical-align: middle;
+
+					// Ensure drag handle column maintains alignment
+					&.draggable {
+						display: flex;
+						align-items: center;
+					}
+				}
+			}
+		}
+
+		.ur-sortable-placeholder {
+			opacity: 0.5;
+			background: rgba(72, 91, 178, 0.08);
+			border: 2px dashed rgba(72, 91, 178, 0.2);
+			visibility: visible !important;
+		}
+
+		tr.ui-sortable-helper {
+			display: table-row !important;
+			width: 100% !important;
+			margin: 0 !important;
+			padding: 0 !important;
+
+			td {
+				vertical-align: middle;
+			}
+
+			// Ensure drag handle column maintains alignment
+			td.draggable {
+				display: flex;
+				align-items: center;
+			}
+		}
+	}
+}
+
+.user-registration-base-list-table-heading {
+	.ur-membership-order-controls {
+		position: relative;
+
+		.button-primary {
+			display: flex;
+			align-items: center;
+			gap: $spacing_8px;
+			min-height: 36px;
+			padding: 0 $spacing_14px 0 $spacing_12px;
+			border: 0;
+			font-size: 14px;
+			line-height: 20px;
+			font-weight: 500;
+			border: $border_width solid $border-color;
+			background: transparent;
+			outline: none;
+			box-shadow: none;
+			color: #334155;
+			border-radius: $border_radius_4;
+
+			svg {
+				width: 16px;
+				height: 16px;
+				fill: #334155;
+			}
+
+			&:hover {
+				color: $primary_color;
+				background: lighten($primary_color, 50%);
+
+				svg {
+					fill: $primary_color;
+				}
+			}
+		}
+
+		.ur-spinner {
+			margin: 0;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			left: 13px;
+		}
+
+		&:has(.ur-spinner) {
+			.button-primary {
+				svg {
+					opacity: 0;
+				}
 			}
 		}
 	}

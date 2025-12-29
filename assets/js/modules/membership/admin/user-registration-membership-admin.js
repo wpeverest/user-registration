@@ -629,88 +629,89 @@
 						);
 					}
 				}
+
 				// payment gateway validations
 
 				// check if atleast one pg is enabled
-				var available_pgs = $(
-						"#payment-gateway-container .user-registration-switch__control"
-					),
-					is_one_selected = false;
+				// var available_pgs = $(
+				// 		"#payment-gateway-container .user-registration-switch__control"
+				// 	),
+				// 	is_one_selected = false;
 
-				available_pgs.each(function (index, item) {
-					if ($(item).is(":checked")) {
-						is_one_selected = true;
-					}
-				});
+				// available_pgs.each(function (index, item) {
+				// 	if ($(item).is(":checked")) {
+				// 		is_one_selected = true;
+				// 	}
+				// });
 
-				$(
-					"#payment-gateway-container .user-registration-card"
-				).removeClass("ur-membership-error");
-				if (!is_one_selected) {
-					no_errors = false;
-					advanced_error = true;
-					ur_membership_utils.show_failure_message(
-						ur_membership_data.labels.i18n_error +
-							"! " +
-							ur_membership_data.labels.i18n_pg_validation_error
-					);
-					$(
-						"#payment-gateway-container .user-registration-card"
-					).addClass("ur-membership-error");
-				}
+				// $(
+				// 	"#payment-gateway-container .user-registration-card"
+				// ).removeClass("ur-membership-error");
+				// if (!is_one_selected) {
+				// 	no_errors = false;
+				// 	advanced_error = true;
+				// 	ur_membership_utils.show_failure_message(
+				// 		ur_membership_data.labels.i18n_error +
+				// 			"! " +
+				// 			ur_membership_data.labels.i18n_pg_validation_error
+				// 	);
+				// 	$(
+				// 		"#payment-gateway-container .user-registration-card"
+				// 	).addClass("ur-membership-error");
+				// }
 				// paypal validations
-				var is_paypal_selected = form
-					.find("#ur-membership-pg-paypal:checked")
-					.val();
-				if (is_paypal_selected) {
-					var paypal_section = $("#paypal-section"),
-						paypal_inputs = paypal_section.find("input");
-					$("#paypal-section").removeClass("ur-membership-error");
-					if (selectedPlanType !== "subscription") {
-						paypal_inputs = paypal_section
-							.find("input")
-							.not('[name^="ur_membership_client_"]');
-						paypal_inputs = Object.values(paypal_inputs)
-							.reverse()
-							.slice(2)
-							.reverse();
-						result = ur_membership_utils.regular_validation(
-							paypal_inputs,
-							true,
-							"paypal"
-						);
-						if (!result) {
-							no_errors = false;
-							advanced_error = true;
-							$("#paypal-section").addClass(
-								"ur-membership-error"
-							);
-						}
-					} else {
-						var client_id = paypal_section
-								.find("#ur-input-type-client-id")
-								.val(),
-							client_secret = paypal_section
-								.find("#ur-input-type-client-secret")
-								.val();
+				// var is_paypal_selected = form
+				// 	.find("#ur-membership-pg-paypal:checked")
+				// 	.val();
+				// if (is_paypal_selected) {
+				// 	var paypal_section = $("#paypal-section"),
+				// 		paypal_inputs = paypal_section.find("input");
+				// 	$("#paypal-section").removeClass("ur-membership-error");
+				// 	if (selectedPlanType !== "subscription") {
+				// 		paypal_inputs = paypal_section
+				// 			.find("input")
+				// 			.not('[name^="ur_membership_client_"]');
+				// 		paypal_inputs = Object.values(paypal_inputs)
+				// 			.reverse()
+				// 			.slice(2)
+				// 			.reverse();
+				// 		result = ur_membership_utils.regular_validation(
+				// 			paypal_inputs,
+				// 			true,
+				// 			"paypal"
+				// 		);
+				// 		if (!result) {
+				// 			no_errors = false;
+				// 			advanced_error = true;
+				// 			$("#paypal-section").addClass(
+				// 				"ur-membership-error"
+				// 			);
+				// 		}
+				// 	} else {
+				// 		var client_id = paypal_section
+				// 				.find("#ur-input-type-client-id")
+				// 				.val(),
+				// 			client_secret = paypal_section
+				// 				.find("#ur-input-type-client-secret")
+				// 				.val();
 
-						if (client_id === "" || client_secret === "") {
-							no_errors = false;
-							advanced_error = true;
-							ur_membership_utils.show_failure_message(
-								ur_membership_data.labels.i18n_paypal +
-									" " +
-									ur_membership_data.labels.i18n_error +
-									"! " +
-									ur_membership_data.labels
-										.i18n_paypal_client_secret_id_error
-							);
-							$("#paypal-section").addClass(
-								"ur-membership-error"
-							);
-						}
-					}
-				}
+				// 		if (client_id === "" || client_secret === "") {
+				// 			no_errors = false;
+				// 			advanced_error = true;
+				// 			ur_membership_utils.show_failure_message(
+				// 				ur_membership_data.labels.i18n_paypal +
+				// 					" " +
+				// 					ur_membership_data.labels.i18n_error +
+				// 					"! " +
+				// 					ur_membership_data.labels
+				// 						.i18n_paypal_client_secret_id_error
+				// 			);
+				// 			$("#paypal-section").addClass(
+				// 				"ur-membership-error"
+				// 			);
+				// 		}
+				// 	}
+				// }
 			}
 			//upgrade settings validation
 			if (upgrade_action) {
@@ -1054,24 +1055,30 @@
 				sub_container = $(
 					".ur-membership-subscription-field-container"
 				),
-				payment_gateway_container = $("#payment-gateway-container"),
 				pro_rate_settings = $(
 					'label.ur-membership-upgrade-types[for="ur-membership-upgrade-type-pro-rata"]'
 				),
 				membership_duration_period = $("#ur-membership-duration"),
 				membership_duration_container_period = $(
 					"#ur-membership-duration-container"
-				);
+				),
+				payment_notice = $("#ur-membership-payment-settings-notice");
+			var paidConfigured = payment_notice.data("paid-configured") === 1;
+			var subscriptionConfigured =
+				payment_notice.data("subscription-configured") === 1;
 			plan_container.addClass("ur-d-none");
-			payment_gateway_container.addClass("ur-d-none");
 			pro_rate_settings.addClass("ur-d-none");
 			membership_duration_period.addClass("ur-d-none");
 			membership_duration_container_period.removeClass("ur-d-flex");
 			membership_duration_container_period.addClass("ur-d-none");
+			payment_notice.addClass("ur-d-none");
 			sub_container.show();
 			if ("free" !== val) {
 				if ("paid" === val) {
 					sub_container.hide();
+					if (!paidConfigured) {
+						payment_notice.removeClass("ur-d-none");
+					}
 				} else {
 					sub_container.removeClass("ur-d-none");
 					membership_duration_period.removeClass("ur-d-none");
@@ -1079,9 +1086,11 @@
 					membership_duration_container_period.removeClass(
 						"ur-d-none"
 					);
+					if (!subscriptionConfigured) {
+						payment_notice.removeClass("ur-d-none");
+					}
 				}
 				pro_rate_settings.removeClass("ur-d-none");
-				payment_gateway_container.removeClass("ur-d-none");
 				plan_container.removeClass("ur-d-none");
 			}
 		}
@@ -1303,7 +1312,189 @@
 		showStep($(this).data("step"));
 	});
 
-		$( document ).on( 'change', '#ur-membership-email-marketing-sync-action', function( e ){
+
+	var $membershipTable = $("#membership-list tbody#the-list");
+
+	if ($membershipTable.length > 0 && $.fn.sortable) {
+		var updateOrderButtonText = ur_membership_data.labels.i18n_update_order,
+			$updateOrderContainer = $(
+				'<div class="ur-membership-order-controls ur-d-none"><button type="button" class="button button-primary ur-update-membership-order-btn">' +
+					'<svg xmlns="http://www.w3.org/2000/svg" fill="#000" viewBox="0 0 24 24">' +
+					'<path d="M2 12A10 10 0 0 1 12 2h.004l.519.015a10.75 10.75 0 0 1 6.53 2.655l.394.363 2.26 2.26a1 1 0 1 1-1.414 1.414l-2.248-2.248-.31-.286A8.75 8.75 0 0 0 11.996 4 8 8 0 0 0 4 12a1 1 0 1 1-2 0Z"/>' +
+					'<path d="M20 3a1 1 0 1 1 2 0v5a1 1 0 0 1-1 1h-5a1 1 0 1 1 0-2h4V3Zm0 9a1 1 0 1 1 2 0 10 10 0 0 1-10 10h-.004a10.75 10.75 0 0 1-7.05-2.67l-.393-.363-2.26-2.26a1 1 0 1 1 1.414-1.414l2.248 2.248.31.286A8.749 8.749 0 0 0 12.003 20 7.999 7.999 0 0 0 20 12Z"/>' +
+					'<path d="M2 21v-5a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2H4v4a1 1 0 1 1-2 0Z"/>' +
+					"</svg>" +
+					'<span class="ur-update-order-btn-text">' +
+					updateOrderButtonText +
+					"</span>" +
+					"</button></div>"
+			),
+			$updateOrderBtn = $updateOrderContainer.find(
+				".ur-update-membership-order-btn"
+			),
+			$spinner = '<span class="ur-spinner"></span>',
+			initialOrder = [];
+		$(".user-registration-base-list-table-heading").append(
+			$updateOrderContainer
+		);
+
+		// Helper function to get current order of membership IDs
+		// Excludes rows that are being dragged (ui-sortable-helper)
+		function getCurrentOrder() {
+			var order = [];
+			$membershipTable.find("tr[data-membership-id]").each(function () {
+				var $row = $(this);
+				// Skip rows that are being dragged (helper) or are placeholders
+				if (
+					$row.hasClass("ui-sortable-helper") ||
+					$row.hasClass("ur-sortable-placeholder")
+				) {
+					return;
+				}
+				var membershipId = $row.attr("data-membership-id");
+				if (membershipId) {
+					order.push(parseInt(membershipId, 10));
+				}
+			});
+			return order;
+		}
+
+		// Helper function to compare two arrays
+		function arraysEqual(arr1, arr2) {
+			if (arr1.length !== arr2.length) {
+				return false;
+			}
+			for (var i = 0; i < arr1.length; i++) {
+				if (arr1[i] !== arr2[i]) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		// Initialize jQuery UI Sortable
+		$membershipTable.sortable({
+			items: "tr[data-membership-id]",
+			cancel: ".no-items",
+			cursor: "move",
+			opacity: 0.8,
+			placeholder: "ur-sortable-placeholder",
+			helper: function (e, tr) {
+				// Capture initial order before the drag starts affecting the DOM
+				// Get order from all rows in their original positions
+				initialOrder = [];
+				$membershipTable
+					.find("tr[data-membership-id]")
+					.each(function () {
+						var membershipId = $(this).attr("data-membership-id");
+						if (membershipId) {
+							initialOrder.push(parseInt(membershipId, 10));
+						}
+					});
+
+				var $originals = tr.children();
+				var $helper = tr.clone();
+				$helper.children().each(function (index) {
+					// Set width of each cell to match original
+					$(this).width($originals.eq(index).width());
+				});
+				// Create a temporary table to maintain table structure
+				var $table = $("<table></table>");
+				$table.css({
+					width: tr.closest("table").width() + "px",
+					margin: 0
+				});
+				$table.append($helper);
+				return $table;
+			},
+			start: function (e, ui) {
+				// Initial order should already be captured in helper callback
+				// This is just a fallback in case helper didn't run
+				if (initialOrder.length === 0) {
+					initialOrder = getCurrentOrder();
+				}
+			},
+			stop: function (e, ui) {
+				// Get the current order after dragging stops
+				var currentOrder = getCurrentOrder();
+
+				// Only show the update button if the order has actually changed
+				if (!arraysEqual(initialOrder, currentOrder)) {
+					$updateOrderBtn.prop("disabled", false);
+					$updateOrderContainer.removeClass("ur-d-none");
+					$updateOrderContainer.find(".ur-spinner").remove();
+				}
+
+				// Reset initialOrder for next drag
+				initialOrder = [];
+			}
+		});
+
+		$updateOrderContainer.on(
+			"click",
+			".ur-update-membership-order-btn",
+			function (e) {
+				e.preventDefault();
+				if ($updateOrderContainer.find(".ur-spinner").length > 0) {
+					return;
+				}
+				$updateOrderContainer.append($spinner);
+
+				// Collect membership IDs in current order
+				var membershipOrder = [];
+				$membershipTable
+					.find("tr[data-membership-id]")
+					.each(function () {
+						var membershipId = $(this).attr("data-membership-id");
+						if (membershipId) {
+							membershipOrder.push(parseInt(membershipId, 10));
+						}
+					});
+
+				if (membershipOrder.length === 0) {
+					$spinner.removeClass("is-active");
+					$updateOrderBtn.prop("disabled", false);
+					$updateOrderContainer.find(".ur-spinner").remove();
+					return;
+				}
+
+				// Send AJAX request
+				$.ajax({
+					url: ur_membership_data.ajax_url,
+					type: "POST",
+					data: {
+						action: ur_membership_data.update_order_action,
+						nonce: ur_membership_data.update_order_nonce,
+						membership_order: membershipOrder
+					},
+					success: function (response) {
+						// Remove spinner and reset button
+						$updateOrderContainer.find(".ur-spinner").remove();
+
+						if (response.success) {
+							ur_membership_utils.show_success_message(
+								response.data.message
+							);
+
+							$updateOrderContainer.addClass("ur-d-none");
+						} else {
+							ur_membership_utils.show_failure_message(
+								response.data.message
+							);
+						}
+					},
+					error: function (xhr, status, error) {
+						$updateOrderContainer.find(".ur-spinner").remove();
+						ur_membership_utils.show_failure_message(
+							ur_membership_data.labels.network_error
+						);
+					}
+				});
+			}
+		);
+	}
+
+	$( document ).on( 'change', '#ur-membership-email-marketing-sync-action', function( e ){
 		e.stopPropagation();
 		e.preventDefault();
 		var $el = $( this ),
@@ -1411,5 +1602,5 @@
 				}
 			})
 		}
-	)
+	);
 })(jQuery, window.ur_membership_localized_data);
