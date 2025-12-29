@@ -52,7 +52,8 @@ class UR_Admin {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
-		require_once UR_ABSPATH . 'includes/admin/settings/class-ur-users-menu.php';
+
+		require_once UR_ABSPATH . 'includes/admin/settings/class-ur-members-menu.php';
 	}
 
 	/**
