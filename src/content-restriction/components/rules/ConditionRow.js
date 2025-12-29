@@ -1,20 +1,20 @@
 /**
  * External Dependencies
  */
-import React, { useState, useEffect } from "react";
-import { __ } from "@wordpress/i18n";
+import React, {useState, useEffect} from "react";
+import {__} from "@wordpress/i18n";
 import ConditionValueInput from "../inputs/ConditionValueInput";
 import URFormFieldCondition from "./URFormFieldCondition";
-import { getFilteredConditionOptions } from "../../utils/condition-options";
+import {getFilteredConditionOptions} from "../../utils/condition-options";
 
 const ConditionRow = ({
-	condition,
-	onUpdate,
-	isMigrated = false,
-	isLocked = false,
-	ruleType = null,
-	isFirstCondition = false
-}) => {
+						  condition,
+						  onUpdate,
+						  isMigrated = false,
+						  isLocked = false,
+						  ruleType = null,
+						  isFirstCondition = false,
+					  }) => {
 	const [operator] = useState(condition.operator || "is");
 	const [value, setValue] = useState(condition.conditionValue || "");
 
@@ -22,7 +22,7 @@ const ConditionRow = ({
 		onUpdate({
 			...condition,
 			operator,
-			conditionValue: value
+			conditionValue: value,
 		});
 	}, [operator, value]);
 
@@ -35,20 +35,15 @@ const ConditionRow = ({
 		}
 	}, [condition.inputType, condition.type, condition.value]);
 
+
 	const handleValueChange = (newValue) => {
 		setValue(newValue);
 	};
 
 	const handleFieldChange = (e) => {
 		const selectedValue = e.target.value;
-		const allOptions = getFilteredConditionOptions(
-			isMigrated,
-			ruleType,
-			isFirstCondition
-		);
-		const selectedOption = allOptions.find(
-			(opt) => opt.value === selectedValue
-		);
+		const allOptions = getFilteredConditionOptions(isMigrated, ruleType, isFirstCondition);
+		const selectedOption = allOptions.find(opt => opt.value === selectedValue);
 
 		if (selectedOption) {
 			const updatedCondition = {
@@ -57,16 +52,9 @@ const ConditionRow = ({
 				label: selectedOption.label,
 				inputType: selectedOption.type,
 				type: condition.type || "condition",
-				conditionValue:
-					selectedOption.value === "ur_form_field"
-						? { form_id: "", form_fields: [] }
-						: ""
+				conditionValue: selectedOption.value === "ur_form_field" ? { form_id: "", form_fields: [] } : "",
 			};
-			setValue(
-				selectedOption.value === "ur_form_field"
-					? { form_id: "", form_fields: [] }
-					: ""
-			);
+			setValue(selectedOption.value === "ur_form_field" ? { form_id: "", form_fields: [] } : "");
 			onUpdate(updatedCondition);
 		}
 	};
@@ -83,15 +71,8 @@ const ConditionRow = ({
 								onChange={handleFieldChange}
 								disabled={isLocked}
 							>
-								{getFilteredConditionOptions(
-									isMigrated,
-									ruleType,
-									isFirstCondition
-								).map((option) => (
-									<option
-										key={option.value}
-										value={option.value}
-									>
+								{getFilteredConditionOptions(isMigrated, ruleType, isFirstCondition).map((option) => (
+									<option key={option.value} value={option.value}>
 										{option.label}
 									</option>
 								))}
@@ -121,11 +102,7 @@ const ConditionRow = ({
 							onChange={handleFieldChange}
 							disabled={isLocked}
 						>
-							{getFilteredConditionOptions(
-								isMigrated,
-								ruleType,
-								isFirstCondition
-							).map((option) => (
+							{getFilteredConditionOptions(isMigrated, ruleType, isFirstCondition).map((option) => (
 								<option key={option.value} value={option.value}>
 									{option.label}
 								</option>
@@ -155,3 +132,4 @@ const ConditionRow = ({
 };
 
 export default ConditionRow;
+

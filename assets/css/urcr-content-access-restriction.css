@@ -636,6 +636,31 @@
 	flex-shrink: 0;
 }
 
+.urcr-ur-form-field-condition .urcr-form-field-row {
+  gap: 12px;
+}
+.urcr-ur-form-field-condition .urcr-form-field-name {
+  flex: 1 1 auto;
+  min-width: 150px;
+}
+.urcr-ur-form-field-condition .urcr-form-field-name select {
+  width: 100%;
+}
+.urcr-ur-form-field-condition .urcr-form-field-operator {
+  flex: 0 0 auto;
+  min-width: 110px;
+}
+.urcr-ur-form-field-condition .urcr-form-field-operator select {
+  width: 100%;
+}
+.urcr-ur-form-field-condition .urcr-add-field-button,
+.urcr-ur-form-field-condition .urcr-remove-field-button {
+  width: 32px;
+  min-width: 32px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
 #user-registration-content-access-rules {
 	margin: 24px;
 }

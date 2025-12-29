@@ -1,30 +1,30 @@
 /**
  * External Dependencies
  */
-import React, { useState, useEffect, useRef } from "react";
-import { __ } from "@wordpress/i18n";
-import { toggleRuleStatus } from "../../api/content-access-rules-api";
+import React, {useState, useEffect, useRef} from "react";
+import {__} from "@wordpress/i18n";
+import {toggleRuleStatus} from "../../api/content-access-rules-api";
 import SettingsPanel from "../settings/SettingsPanel";
 import RuleContentDisplay from "./RuleContentDisplay";
 import DeleteRuleModal from "../modals/DeleteRuleModal";
 import DuplicateRuleModal from "../modals/DuplicateRuleModal";
-import { showSuccess, showError } from "../../utils/notifications";
-import { isURDev } from "../../utils/localized-data";
+import {showSuccess, showError} from "../../utils/notifications";
+import {isURDev} from "../../utils/localized-data";
 
 /* global _UR_DASHBOARD_ */
-const { adminURL } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+const {adminURL} = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
 const RuleCard = ({
-	rule,
-	isExpanded,
-	isSettingsOpen,
-	onToggleExpand,
-	onToggleSettings,
-	onRuleUpdate,
-	onRuleStatusUpdate,
-	onRuleDelete,
-	onRuleDuplicate
-}) => {
+					  rule,
+					  isExpanded,
+					  isSettingsOpen,
+					  onToggleExpand,
+					  onToggleSettings,
+					  onRuleUpdate,
+					  onRuleStatusUpdate,
+					  onRuleDelete,
+					  onRuleDuplicate,
+				  }) => {
 	const [isToggling, setIsToggling] = useState(false);
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -37,10 +37,7 @@ const RuleCard = ({
 
 	useEffect(() => {
 		const handleClickOutside = (event) => {
-			if (
-				menuWrapperRef.current &&
-				!menuWrapperRef.current.contains(event.target)
-			) {
+			if (menuWrapperRef.current && !menuWrapperRef.current.contains(event.target)) {
 				setMenuOpen(false);
 			}
 		};
@@ -63,20 +60,12 @@ const RuleCard = ({
 				if (onRuleStatusUpdate) {
 					onRuleStatusUpdate(rule.id, newStatus);
 				}
-				showSuccess(
-					response.message ||
-						__("Rule status updated", "user-registration")
-				);
+				showSuccess(response.message || __("Rule status updated", "user-registration"));
 			} else {
-				showError(
-					response.message ||
-						__("Failed to update rule status", "user-registration")
-				);
+				showError(response.message || __("Failed to update rule status", "user-registration"));
 			}
 		} catch (error) {
-			showError(
-				error.message || __("An error occurred", "user-registration")
-			);
+			showError(error.message || __("An error occurred", "user-registration"));
 		} finally {
 			setIsToggling(false);
 		}
@@ -105,19 +94,14 @@ const RuleCard = ({
 	};
 
 	const formattedId = String(rule.id).padStart(2, "0");
-	const headerClass = `user-registration-card__header ur-d-flex ur-align-items-center ur-p-5 integration-header-info accordion${
-		isExpanded ? " active" : ""
-	}`;
+	const headerClass = `user-registration-card__header ur-d-flex ur-align-items-center ur-p-5 integration-header-info accordion${isExpanded ? " active" : ""}`;
 
 	return (
 		<div className="user-registration-card ur-mb-2 urcr-rule-card ">
 			<div
 				className={headerClass}
 				onClick={(e) => {
-					if (
-						!e.target.closest(".integration-action") &&
-						!e.target.closest(".ur-toggle-section")
-					) {
+					if (!e.target.closest('.integration-action') && !e.target.closest('.ur-toggle-section')) {
 						onToggleExpand();
 					}
 				}}
@@ -127,16 +111,15 @@ const RuleCard = ({
 						{rule.title}
 					</h3>
 					<span className="urcr-separator"> | </span>
-					<span className="urcr-rule-id">ID: {formattedId}</span>
+					<span className="urcr-rule-id">
+						ID: {formattedId}
+					</span>
 					<span className="urcr-separator"> | </span>
 					<span className="urcr-status-label">
 						{__("Status", "user-registration")} :
 					</span>
 					<div className="ur-toggle-section">
-						<span
-							className="user-registration-toggle-form"
-							onClick={(e) => e.stopPropagation()}
-						>
+						<span className="user-registration-toggle-form" onClick={(e) => e.stopPropagation()}>
 							<input
 								type="checkbox"
 								checked={rule.enabled}
@@ -152,17 +135,11 @@ const RuleCard = ({
 				</div>
 
 				<div className="integration-action urcr-integration-action">
-					<span
-						className={`urcr-settings-text ${
-							isSettingsOpen ? "urcr-icon-active" : ""
-						}`}
-					>
+					<span className={`urcr-settings-text ${isSettingsOpen ? 'urcr-icon-active' : ''}`}>
 						{__("Settings", "user-registration")}
 					</span>
 					<button
-						className={`urcr-settings-icon button-link ${
-							isSettingsOpen ? "urcr-icon-active" : ""
-						}`}
+						className={`urcr-settings-icon button-link ${isSettingsOpen ? 'urcr-icon-active' : ''}`}
 						type="button"
 						onClick={(e) => {
 							e.stopPropagation();
@@ -174,9 +151,7 @@ const RuleCard = ({
 					</button>
 					<div className="urcr-menu-wrapper" ref={menuWrapperRef}>
 						<button
-							className={`urcr-menu-toggle button-link ${
-								menuOpen ? "urcr-icon-active" : ""
-							}`}
+							className={`urcr-menu-toggle button-link ${menuOpen ? 'urcr-icon-active' : ''}`}
 							type="button"
 							onClick={(e) => {
 								e.stopPropagation();
@@ -191,39 +166,16 @@ const RuleCard = ({
 								<button
 									className="urcr-menu-item urcr-menu-trash"
 									type="button"
-									disabled={
-										(!isURDev() &&
-											rule.rule_type === "membership") ||
-										Boolean(rule.is_migrated)
-									}
+									disabled={(!isURDev() && rule.rule_type === "membership") || Boolean(rule.is_migrated)}
 									onClick={(e) => {
 										e.stopPropagation();
-										if (
-											!(
-												(!isURDev() &&
-													rule.rule_type ===
-														"membership") ||
-												Boolean(rule.is_migrated)
-											)
-										) {
+										if (!((!isURDev() && rule.rule_type === "membership") || Boolean(rule.is_migrated))) {
 											handleDeleteClick();
 										}
 									}}
 									style={{
-										opacity:
-											(!isURDev() &&
-												rule.rule_type ===
-													"membership") ||
-											Boolean(rule.is_migrated)
-												? 0.5
-												: 1,
-										cursor:
-											(!isURDev() &&
-												rule.rule_type ===
-													"membership") ||
-											Boolean(rule.is_migrated)
-												? "not-allowed"
-												: "pointer"
+										opacity: ((!isURDev() && rule.rule_type === "membership") || Boolean(rule.is_migrated)) ? 0.5 : 1,
+										cursor: ((!isURDev() && rule.rule_type === "membership") || Boolean(rule.is_migrated)) ? "not-allowed" : "pointer"
 									}}
 								>
 									<span className="dashicons dashicons-trash"></span>
@@ -232,30 +184,16 @@ const RuleCard = ({
 								<button
 									className="urcr-menu-item urcr-menu-duplicate"
 									type="button"
-									disabled={
-										!isURDev() &&
-										rule.rule_type === "membership"
-									}
+									disabled={!isURDev() && rule.rule_type === "membership"}
 									onClick={(e) => {
 										e.stopPropagation();
-										if (
-											isURDev() ||
-											rule.rule_type !== "membership"
-										) {
+										if (isURDev() || rule.rule_type !== "membership") {
 											handleDuplicateClick();
 										}
 									}}
 									style={{
-										opacity:
-											!isURDev() &&
-											rule.rule_type === "membership"
-												? 0.5
-												: 1,
-										cursor:
-											!isURDev() &&
-											rule.rule_type === "membership"
-												? "not-allowed"
-												: "pointer"
+										opacity: (!isURDev() && rule.rule_type === "membership") ? 0.5 : 1,
+										cursor: (!isURDev() && rule.rule_type === "membership") ? "not-allowed" : "pointer"
 									}}
 								>
 									<span className="dashicons dashicons-admin-page"></span>
@@ -273,17 +211,13 @@ const RuleCard = ({
 						fill="none"
 						strokeLinecap="round"
 						strokeLinejoin="round"
-						className={`css-i6dzq1 ${
-							isExpanded ? "urcr-icon-active" : ""
-						}`}
+						className={`css-i6dzq1 ${isExpanded ? 'urcr-icon-active' : ''}`}
 						onClick={(e) => {
 							e.stopPropagation();
 							onToggleExpand();
 						}}
 						style={{
-							transform: isExpanded
-								? "rotate(180deg)"
-								: "rotate(0deg)",
+							transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
 							transition: "transform 0.3s ease",
 							cursor: "pointer"
 						}}
@@ -295,16 +229,16 @@ const RuleCard = ({
 
 			<div
 				className="user-registration-card__body ur-p-3 integration-body-info"
-				style={{ display: isExpanded ? "block" : "none" }}
+				style={{display: isExpanded ? "block" : "none"}}
 			>
-				<div style={{ display: isSettingsOpen ? "block" : "none" }}>
+				<div style={{display: isSettingsOpen ? "block" : "none"}}>
 					<SettingsPanel
 						rule={rule}
 						onRuleUpdate={onRuleUpdate}
 						onGoBack={onToggleSettings}
 					/>
 				</div>
-				<div style={{ display: !isSettingsOpen ? "block" : "none" }}>
+				<div style={{display: !isSettingsOpen ? "block" : "none"}}>
 					<RuleContentDisplay
 						rule={rule}
 						onRuleUpdate={onRuleUpdate}

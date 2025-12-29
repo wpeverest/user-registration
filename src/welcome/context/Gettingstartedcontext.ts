@@ -52,12 +52,14 @@ export interface GettingStartedState {
 
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
-const createDefaultPlan = (): MembershipPlan => ({
+const createDefaultPlan = (
+	type: MembershipPlanType = "free"
+): MembershipPlan => ({
 	id: generateId(),
 	name: "",
-	type: "free",
+	type: type,
 	price: "",
-	billingPeriod: "monthly",
+	billingPeriod: "one-time",
 	contentAccess: [],
 	isNew: false
 });
@@ -102,7 +104,7 @@ export const initialState: GettingStartedState = {
 				"I want registration and other features without membership."
 		}
 	],
-	membershipPlans: [createDefaultPlan()],
+	membershipPlans: [createDefaultPlan("paid")],
 	paymentSettings: {
 		currency: "USD",
 		offlinePayment: false,
@@ -129,9 +131,15 @@ export type Action =
 	| { type: "SET_ALLOW_TRACKING"; payload: boolean }
 	| { type: "SET_ADMIN_EMAIL"; payload: string }
 	| { type: "ADD_MEMBERSHIP_PLAN"; payload?: MembershipPlan }
-	| { type: "UPDATE_MEMBERSHIP_PLAN"; payload: { id: string; updates: Partial<MembershipPlan> } }
+	| {
+			type: "UPDATE_MEMBERSHIP_PLAN";
+			payload: { id: string; updates: Partial<MembershipPlan> };
+	  }
 	| { type: "REMOVE_MEMBERSHIP_PLAN"; payload: string }
-	| { type: "ADD_CONTENT_ACCESS"; payload: { planId: string; access: ContentAccess } }
+	| {
+			type: "ADD_CONTENT_ACCESS";
+			payload: { planId: string; access: ContentAccess };
+	  }
 	| {
 			type: "SET_PAYMENT_SETTING";
 			payload: { key: keyof PaymentSettings; value: boolean | string };
@@ -172,7 +180,25 @@ export const reducer = (
 			return { ...state, currentStep: action.payload };
 
 		case "SET_MEMBERSHIP_SETUP_TYPE":
-			return { ...state, membershipSetupType: action.payload };
+
+			const newDefaultType: MembershipPlanType =
+				action.payload === "paid" ? "paid" : "free";
+
+
+			const updatedPlansOnTypeChange = state.membershipPlans.map(
+				(plan, index) => {
+					if (index === 0 && plan.name === "") {
+						return { ...plan, type: newDefaultType };
+					}
+					return plan;
+				}
+			);
+
+			return {
+				...state,
+				membershipSetupType: action.payload,
+				membershipPlans: updatedPlansOnTypeChange
+			};
 
 		case "SET_ALLOW_TRACKING":
 			return { ...state, allowTracking: action.payload };
@@ -181,8 +207,10 @@ export const reducer = (
 			return { ...state, adminEmail: action.payload };
 
 		case "ADD_MEMBERSHIP_PLAN":
+			const defaultTypeForNewPlan: MembershipPlanType =
+				state.membershipSetupType === "paid" ? "paid" : "free";
 			const newPlan = action.payload || {
-				...createDefaultPlan(),
+				...createDefaultPlan(defaultTypeForNewPlan),
 				isNew: true
 			};
 			return {
@@ -215,7 +243,10 @@ export const reducer = (
 					plan.id === action.payload.planId
 						? {
 								...plan,
-								contentAccess: [...plan.contentAccess, action.payload.access]
+								contentAccess: [
+									...plan.contentAccess,
+									action.payload.access
+								]
 						  }
 						: plan
 				)
@@ -231,10 +262,39 @@ export const reducer = (
 			};
 
 		case "HYDRATE_FROM_API":
-			const hydratedStep = action.payload.currentStep || state.currentStep;
+			const hydratedStep =
+				action.payload.currentStep || state.currentStep;
+			const hydratedSetupType =
+				action.payload.membershipSetupType || state.membershipSetupType;
+
+			// Handle membership plans hydration
+			let hydratedPlans = state.membershipPlans;
+
+			if (
+				action.payload.membershipPlans &&
+				action.payload.membershipPlans.length > 0
+			) {
+				// If API returns saved memberships, use them directly
+				hydratedPlans = action.payload.membershipPlans;
+			} else if (
+				state.membershipPlans.length > 0 &&
+				state.membershipPlans[0].name === ""
+			) {
+				// If there are only default plans with empty names, update their type based on membershipSetupType
+				const syncedType: MembershipPlanType =
+					hydratedSetupType === "paid" ? "paid" : "free";
+				hydratedPlans = state.membershipPlans.map((plan, index) => {
+					if (index === 0 && plan.name === "") {
+						return { ...plan, type: syncedType };
+					}
+					return plan;
+				});
+			}
+
 			return {
 				...state,
 				...action.payload,
+				membershipPlans: hydratedPlans,
 				maxCompletedStep: Math.max(
 					state.maxCompletedStep,
 					hydratedStep,

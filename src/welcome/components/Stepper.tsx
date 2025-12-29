@@ -58,11 +58,6 @@ const Stepper: React.FC<StepperProps> = ({
 	const isStepCompleted = (stepNumber: number) => stepNumber < currentStep;
 	const isStepCurrent = (stepNumber: number) => stepNumber === currentStep;
 
-	// User can click:
-	// 1. Any previous step (go back)
-	// 2. Current step (already there)
-	// 3. Next step only (skip current step) - cannot jump multiple steps
-	// 4. Cannot go beyond the last step
 	const isStepClickable = (stepNumber: number) =>
 		stepNumber <= currentStep + 1 && stepNumber <= steps.length;
 
@@ -79,19 +74,16 @@ const Stepper: React.FC<StepperProps> = ({
 			px={{ base: 4, md: 6, lg: 10 }}
 			zIndex={1000}
 		>
-			{/* Outer container for logo and close button at edges */}
 			<Flex
 				justify="space-between"
 				align="center"
 				width="100%"
 				position="relative"
 			>
-				{/* Logo - Far Left */}
 				<Flex align="center" flexShrink={0} zIndex={2}>
 					<URMLogo h="40px" />
 				</Flex>
 
-				{/* Steps Container - Centered with max-width to match card below */}
 				<Flex
 					position="absolute"
 					left="0"
@@ -200,7 +192,6 @@ const Stepper: React.FC<StepperProps> = ({
 									</Text>
 								</Flex>
 
-								{/* Connecting Line (except after last step) */}
 								{index < steps.length - 1 && (
 									<Box
 										flex={1}
@@ -220,7 +211,6 @@ const Stepper: React.FC<StepperProps> = ({
 					</Flex>
 				</Flex>
 
-				{/* Close Button - Far Right */}
 				<Box flexShrink={0} zIndex={2}>
 					{onClose && (
 						<Box

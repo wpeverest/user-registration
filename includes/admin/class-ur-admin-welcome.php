@@ -84,6 +84,7 @@ class UR_Admin_Welcome {
 				'onBoardIconsURL' => esc_url( UR()->plugin_url() . '/assets/images/onboard-icons' ),
 				'restURL'         => rest_url(),
 				'adminEmail'      => get_option( 'admin_email' ),
+				'isPro'        => defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE,
 			)
 		);
 

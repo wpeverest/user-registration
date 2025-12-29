@@ -1,7 +1,7 @@
 /**
  * External Dependencies
  */
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import {
 	Box,
 	Badge,
@@ -26,40 +26,28 @@ import {
 	ModalCloseButton,
 	useDisclosure
 } from "@chakra-ui/react";
-import { FaCog, FaPlay, FaLock } from "react-icons/fa";
+import {FaCog, FaPlay, FaLock} from "react-icons/fa";
 import YouTubePlayer from "react-player/youtube";
-import { activateModule, deactivateModule } from "./modules-api";
+import {activateModule, deactivateModule} from "./modules-api";
 
-const AddonCard = ({ addon, showToast }) => {
+const AddonCard = ({addon, showToast}) => {
 	const [isActive, setIsActive] = useState(addon.status === "active");
 	const [isLoading, setIsLoading] = useState(false);
 	const [moduleEnabled, setModuleEnabled] = useState(false);
 	const [videoLoading, setVideoLoading] = useState(false);
-	const {
-		isOpen: isVideoOpen,
-		onOpen: onVideoOpen,
-		onClose: onVideoClose
-	} = useDisclosure();
-	const {
-		isOpen: isConfirmOpen,
-		onOpen: onConfirmOpen,
-		onClose: onConfirmClose
-	} = useDisclosure();
+	const {isOpen: isVideoOpen, onOpen: onVideoOpen, onClose: onVideoClose} = useDisclosure();
+	const {isOpen: isConfirmOpen, onOpen: onConfirmOpen, onClose: onConfirmClose} = useDisclosure();
 	const {
 		isPro,
 		licensePlan,
 		urm_is_new_installation,
 		urcr_custom_rules_count
-	} =
-		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_
-			? _UR_DASHBOARD_
-			: {};
+	} = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_ ? _UR_DASHBOARD_ : {};
 
 	// Get assets URL from global variable
 	const getImageUrl = (imagePath) => {
 		/* global _UR_DASHBOARD_ */
-		const { assetsURL } =
-			typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+		const {assetsURL} = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 		if (imagePath && assetsURL) {
 			return assetsURL + imagePath;
 		}
@@ -75,14 +63,8 @@ const AddonCard = ({ addon, showToast }) => {
 				if (addon.plan && addon.plan.includes("free")) {
 					setModuleEnabled(true);
 				} else if (isPro && licensePlan) {
-					const requiredPlan = licensePlan.item_plan.replace(
-						" lifetime",
-						""
-					);
-					if (
-						addon.plan &&
-						addon.plan.includes(requiredPlan.trim())
-					) {
+					const requiredPlan = licensePlan.item_plan.replace(" lifetime", "");
+					if (addon.plan && addon.plan.includes(requiredPlan.trim())) {
 						setModuleEnabled(true);
 					} else {
 						setModuleEnabled(false);
@@ -99,14 +81,8 @@ const AddonCard = ({ addon, showToast }) => {
 				} else if (addon.plan && addon.plan.includes("free")) {
 					setModuleEnabled(true);
 				} else if (isPro && licensePlan) {
-					const requiredPlan = licensePlan.item_plan.replace(
-						" lifetime",
-						""
-					);
-					if (
-						addon.plan &&
-						addon.plan.includes(requiredPlan.trim())
-					) {
+					const requiredPlan = licensePlan.item_plan.replace(" lifetime", "");
+					if (addon.plan && addon.plan.includes(requiredPlan.trim())) {
 						setModuleEnabled(true);
 					} else {
 						setModuleEnabled(false);
@@ -121,10 +97,7 @@ const AddonCard = ({ addon, showToast }) => {
 			if (addon.plan && addon.plan.includes("free")) {
 				setModuleEnabled(true);
 			} else if (isPro && licensePlan) {
-				const requiredPlan = licensePlan.item_plan.replace(
-					" lifetime",
-					""
-				);
+				const requiredPlan = licensePlan.item_plan.replace(" lifetime", "");
 				if (addon.plan && addon.plan.includes(requiredPlan.trim())) {
 					setModuleEnabled(true);
 				} else {
@@ -134,15 +107,13 @@ const AddonCard = ({ addon, showToast }) => {
 				setModuleEnabled(false);
 			}
 		}
+
 	}, [addon.plan, addon.slug, addon.status, isActive]);
 
 	const handleUpgradePlan = () => {
-		const { upgradeURL } =
-			typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+		const {upgradeURL} = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 		if (upgradeURL) {
-			const plan_upgrade_url =
-				upgradeURL +
-				"&utm_source=dashboard-all-feature&utm_medium=dashboard-upgrade-plan";
+			const plan_upgrade_url = upgradeURL + "&utm_source=dashboard-all-feature&utm_medium=dashboard-upgrade-plan";
 			window.open(plan_upgrade_url, "_blank");
 		}
 	};
@@ -158,15 +129,9 @@ const AddonCard = ({ addon, showToast }) => {
 			const response = await deactivateModule(addon.slug, addon.type);
 			if (response.success) {
 				setIsActive(false);
-				showToast(
-					response.message || "Module deactivated successfully",
-					"success"
-				);
+				showToast(response.message || "Module deactivated successfully", "success");
 			} else {
-				showToast(
-					response.message || "Failed to deactivate module",
-					"error"
-				);
+				showToast(response.message || "Failed to deactivate module", "error");
 			}
 		} catch (error) {
 			showToast(error.message || "An error occurred", "error");
@@ -178,8 +143,7 @@ const AddonCard = ({ addon, showToast }) => {
 	const handleToggle = async () => {
 		// Skip warning modal if isPro is true and slug is user-registration-content-restriction
 		// Check if isPro is truthy (handle boolean, string, number formats)
-		const isProUser =
-			isPro === true || String(isPro).toLowerCase() === "true";
+		const isProUser = isPro === true || String(isPro).toLowerCase() === "true";
 		console.log(isPro);
 		// If it's content-restriction addon, isActive, and isPro, skip modal and deactivate directly
 		if (
@@ -193,15 +157,9 @@ const AddonCard = ({ addon, showToast }) => {
 				const response = await deactivateModule(addon.slug, addon.type);
 				if (response.success) {
 					setIsActive(false);
-					showToast(
-						response.message || "Module deactivated successfully",
-						"success"
-					);
+					showToast(response.message || "Module deactivated successfully", "success");
 				} else {
-					showToast(
-						response.message || "Failed to deactivate module",
-						"error"
-					);
+					showToast(response.message || "Failed to deactivate module", "error");
 				}
 			} catch (error) {
 				showToast(error.message || "An error occurred", "error");
@@ -230,33 +188,17 @@ const AddonCard = ({ addon, showToast }) => {
 				response = await deactivateModule(addon.slug, addon.type);
 				if (response.success) {
 					setIsActive(false);
-					showToast(
-						response.message || "Module deactivated successfully",
-						"success"
-					);
+					showToast(response.message || "Module deactivated successfully", "success");
 				} else {
-					showToast(
-						response.message || "Failed to deactivate module",
-						"error"
-					);
+					showToast(response.message || "Failed to deactivate module", "error");
 				}
 			} else {
-				response = await activateModule(
-					addon.slug,
-					addon.name,
-					addon.type
-				);
+				response = await activateModule(addon.slug, addon.name, addon.type);
 				if (response.success) {
 					setIsActive(true);
-					showToast(
-						response.message || "Module activated successfully",
-						"success"
-					);
+					showToast(response.message || "Module activated successfully", "success");
 				} else {
-					showToast(
-						response.message || "Failed to activate module",
-						"error"
-					);
+					showToast(response.message || "Failed to activate module", "error");
 				}
 			}
 		} catch (error) {
@@ -304,7 +246,7 @@ const AddonCard = ({ addon, showToast }) => {
 			borderColor="gray.200"
 			p="6"
 			boxShadow="sm"
-			_hover={{ boxShadow: "md" }}
+			_hover={{boxShadow: "md"}}
 			transition="all 0.2s"
 			position="relative"
 			height="100%"
@@ -325,7 +267,11 @@ const AddonCard = ({ addon, showToast }) => {
 					justifyContent="center"
 					zIndex="10"
 				>
-					<Spinner size="lg" color="gray.500" thickness="3px" />
+					<Spinner
+						size="lg"
+						color="gray.500"
+						thickness="3px"
+					/>
 				</Flex>
 			)}
 			{/* Main Content Layout */}
@@ -376,12 +322,7 @@ const AddonCard = ({ addon, showToast }) => {
 				<VStack align="start" spacing="3" flex="1">
 					{/* Title and Plan Badge */}
 					<HStack justify="space-between" w="full" align="start">
-						<Heading
-							size="sm"
-							color="gray.800"
-							fontWeight="600"
-							fontSize="16px"
-						>
+						<Heading size="sm" color="gray.800" fontWeight="600" fontSize="16px">
 							{addon.title}
 						</Heading>
 						<Badge
@@ -390,40 +331,25 @@ const AddonCard = ({ addon, showToast }) => {
 							py="1"
 							borderRadius="base"
 							bg={
-								getPlanBadge(addon.plan) === "Free"
-									? "transparent"
-									: getPlanBadge(addon.plan) === "Personal"
-									? "#F0FDF4"
-									: getPlanBadge(addon.plan) === "Plus"
-									? "#f0f3fa"
-									: getPlanBadge(addon.plan) ===
-									  "Professional"
-									? "#EFF6FF"
-									: "#EFF6FF"
+								getPlanBadge(addon.plan) === "Free" ? "transparent" :
+									getPlanBadge(addon.plan) === "Personal" ? "#F0FDF4" :
+										getPlanBadge(addon.plan) === "Plus" ? "#f0f3fa" :
+											getPlanBadge(addon.plan) === "Professional" ? "#EFF6FF" :
+												"#EFF6FF"
 							}
 							border={
-								getPlanBadge(addon.plan) === "Free"
-									? "1px solid #D1D5DB"
-									: getPlanBadge(addon.plan) === "Personal"
-									? "1px solid #16A34A"
-									: getPlanBadge(addon.plan) === "Plus"
-									? "1px solid #92a2e4"
-									: getPlanBadge(addon.plan) ===
-									  "Professional"
-									? "1px solid #BFDBFE"
-									: "1px solid #BFDBFE"
+								getPlanBadge(addon.plan) === "Free" ? "1px solid #D1D5DB" :
+									getPlanBadge(addon.plan) === "Personal" ? "1px solid #16A34A" :
+										getPlanBadge(addon.plan) === "Plus" ? "1px solid #92a2e4" :
+											getPlanBadge(addon.plan) === "Professional" ? "1px solid #BFDBFE" :
+												"1px solid #BFDBFE"
 							}
 							color={
-								getPlanBadge(addon.plan) === "Free"
-									? "#4B5563"
-									: getPlanBadge(addon.plan) === "Personal"
-									? "#16A34A"
-									: getPlanBadge(addon.plan) === "Plus"
-									? "#92a2e4"
-									: getPlanBadge(addon.plan) ===
-									  "Professional"
-									? "#3B82F6"
-									: "#3B82F6"
+								getPlanBadge(addon.plan) === "Free" ? "#4B5563" :
+									getPlanBadge(addon.plan) === "Personal" ? "#16A34A" :
+										getPlanBadge(addon.plan) === "Plus" ? "#92a2e4" :
+											getPlanBadge(addon.plan) === "Professional" ? "#3B82F6" :
+												"#3B82F6"
 							}
 						>
 							{getPlanBadge(addon.plan)}
@@ -477,12 +403,10 @@ const AddonCard = ({ addon, showToast }) => {
 							<Text color="gray.300">|</Text>
 							<IconButton
 								size="sm"
-								icon={<FaCog />}
+								icon={<FaCog/>}
 								aria-label="Settings"
 								variant="ghost"
-								onClick={() =>
-									window.open(addon.setting_url, "_blank")
-								}
+								onClick={() => window.open(addon.setting_url, "_blank")}
 							/>
 						</>
 					)}
@@ -491,7 +415,7 @@ const AddonCard = ({ addon, showToast }) => {
 							<Text color="gray.300">|</Text>
 							<IconButton
 								size="sm"
-								icon={<Icon as={FaPlay} />}
+								icon={<Icon as={FaPlay}/>}
 								aria-label="Video Tutorial"
 								variant="ghost"
 								onClick={handleVideoPlay}
@@ -540,12 +464,12 @@ const AddonCard = ({ addon, showToast }) => {
 					size="3xl"
 					isCentered
 				>
-					<ModalOverlay />
+					<ModalOverlay/>
 					<ModalContent px={4} pb={4}>
 						<ModalHeader textAlign="center">
 							{addon.title}
 						</ModalHeader>
-						<ModalCloseButton />
+						<ModalCloseButton/>
 						<Box position="relative">
 							<YouTubePlayer
 								url={`https://www.youtube.com/embed/${addon.demo_video_url}`}
@@ -562,7 +486,7 @@ const AddonCard = ({ addon, showToast }) => {
 									left="50%"
 									transform="translate(-50%, -50%)"
 								>
-									<Spinner size="lg" />
+									<Spinner size="lg"/>
 								</Box>
 							)}
 						</Box>
@@ -577,30 +501,26 @@ const AddonCard = ({ addon, showToast }) => {
 				size="md"
 				isCentered
 			>
-				<ModalOverlay />
+				<ModalOverlay/>
 				<ModalContent>
 					<ModalHeader color="red.600">
 						Warning: Potential Data Loss
 					</ModalHeader>
-					<ModalCloseButton />
+					<ModalCloseButton/>
 					<ModalBody>
 						<VStack spacing="4" align="start">
 							<Text color="gray.700" lineHeight="1.6">
-								You are about to disable the Content Restriction
-								addon. Please be aware that:
+								You are about to disable the Content Restriction addon. Please be aware that:
 							</Text>
 							<Box as="ul" pl="5" color="gray.600">
 								<Text as="li" mb="2">
-									There might be existing content restriction
-									rules in your system
+									There might be existing content restriction rules in your system
 								</Text>
 								<Text as="li" mb="2">
-									If you continue, you may lose access to
-									these rules
+									If you continue, you may lose access to these rules
 								</Text>
 								<Text as="li">
-									You will need to upgrade to a higher plan to
-									access them again
+									You will need to upgrade to a higher plan to access them again
 								</Text>
 							</Box>
 							<Text color="gray.700" fontWeight="medium">

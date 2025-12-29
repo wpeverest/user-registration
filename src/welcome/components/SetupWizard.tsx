@@ -41,7 +41,6 @@ const getVisibleSteps = (
 	switch (membershipType) {
 		case "paid":
 		case "free":
-			// Show Payment step only if there's at least one paid membership plan
 			if (hasPaidPlan) {
 				filteredSteps = ALL_STEPS;
 			} else {
@@ -100,7 +99,6 @@ const SetupWizard: React.FC = () => {
 
 	const totalSteps = visibleSteps.length;
 
-	// If current step is beyond total steps (e.g., Payment was removed), go to last valid step
 	useEffect(() => {
 		if (currentStep > totalSteps) {
 			dispatch({ type: "SET_STEP", payload: totalSteps });
@@ -158,7 +156,6 @@ const SetupWizard: React.FC = () => {
 			name: plan.name,
 			type: plan.type,
 			price: plan.price,
-			currency: plan.currency,
 			billing_period: plan.billingPeriod,
 			access: plan.contentAccess.map((a) => ({
 				type: a.type,
@@ -232,7 +229,6 @@ const SetupWizard: React.FC = () => {
 	};
 
 	const handleStepClick = async (stepNumber: number) => {
-		// Don't do anything if clicking current step
 		if (stepNumber === currentStep) {
 			return;
 		}

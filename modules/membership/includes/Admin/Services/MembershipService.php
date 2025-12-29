@@ -285,41 +285,6 @@ class MembershipService {
 			return $result;
 		}
 
-		//payment gateway configuration validation
-		// $is_no_pg_configured = empty( urm_get_all_active_payment_gateways( $data['post_meta_data']['type']) );
-		// if (isset( $data['post_meta_data']['type'] ) && in_array($data['post_meta_data']['type'], array('paid','subscription')) && $is_no_pg_configured) {
-		// 	$result['status']  = false;
-		// 	$result['message'] = esc_html__( "Incomplete payment gateway setup, please update payment settings before continuing.", "user-registration" );
-		// 	return $result;
-		// }
-
-		//		payment gateway validation:stripe
-		// if ( isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && "on" === $data['post_meta_data']['payment_gateways']['stripe']['status'] ) {
-		// 	$mode            = get_option( 'user_registration_stripe_test_mode', false ) ? 'test' : 'live';
-		// 	$publishable_key = get_option( sprintf( 'user_registration_stripe_%s_publishable_key', $mode ) );
-		// 	$secret_key      = get_option( sprintf( 'user_registration_stripe_%s_secret_key', $mode ) );
-		// 	$stripe_details  = $membership_details['payment_gateways']['stripe'] ?? '';
-
-		// 	if ( empty( $secret_key ) || empty( $publishable_key ) ) {
-		// 		$result['status']  = false;
-		// 		$result['message'] = esc_html__( "Incomplete Stripe setup, please update stripe payment settings before continuing.", "user-registration" );
-
-		// 		return $result;
-		// 	}
-		// }
-
-		//		payment gateway validation:paypal
-		// if ( isset( $data['post_meta_data']['payment_gateways']['paypal'] ) && "on" === $data['post_meta_data']['payment_gateways']['paypal']['status'] ) {
-		// 	$paypal_email = get_option( 'user_registration_global_paypal_email_address' );
-
-		// 	if ( empty( $paypal_email ) ) {
-		// 		$result['status']  = false;
-		// 		$result['message'] = esc_html__( "Incomplete Paypal setup, please update paypal payment settings before continuing.", "user-registration" );
-
-		// 		return $result;
-		// 	}
-		// }
-
 		/**
 		 * Filters the membership data validation result
 		 *
