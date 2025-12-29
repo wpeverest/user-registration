@@ -248,10 +248,57 @@ $delete_url = wp_nonce_url(
 								</div>
 							</div>
 							<div class="ur-subscription__section-column ur-subscription__field">
-								<?php do_action( 'ur_membership_subscription_edit_form_payment_details', $subscription, $subscription_order ); ?>
+								<div class="ur-subscription__field-row">
+									<label class="ur-subscription__section-label" for="ur-subscription-id-field">
+										<?php esc_html_e( 'Subscription / Profile ID', 'user-registration' ); ?>
+									</label>
+									<div class="ur-subscription__section-value">
+										<input type="text" name="subscription_id" id="ur-subscription-id-field"
+											value="<?php echo esc_attr( $subscription['subscription_id'] ?? '' ); ?>"
+											placeholder="<?php esc_attr_e( 'External subscription/transaction ID', 'user-registration' ); ?>">
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
+					<?php
+					$subscription_events_service = new WPEverest\URMembership\Admin\Services\SubscriptionEventsService();
+					$limit                       = 10;
+					$events                      = $subscription_events_service->get_events( $subscription['ID'], $limit );
+					$total_events                = $subscription_events_service->get_total_events( $subscription['ID'] );
+
+					if ( ! empty( $events ) ) {
+						?>
+						<div class="ur-subscription__main-content-wrapper"
+						data-subscription-id="<?php echo esc_attr( $subscription['ID'] ); ?>"
+						data-limit="<?php echo esc_attr( $limit ); ?>"
+						data-offset="<?php echo esc_attr( $limit ); ?>"
+						data-total="<?php echo esc_attr( $total_events ); ?>">
+							<div class="ur-subscription__section-header">
+								<h3 class="ur-subscription__section-title">
+									<?php esc_html_e( 'Activity Log (Subscription Events)', 'user-registration' ); ?>
+								</h3>
+							</div>
+							<div class="ur-subscription__section-content">
+								<?php
+									ob_start();
+									$subscription_events_service->ur_render_subscription_events_section( $events );
+									echo ob_get_clean();
+								?>
+							</div>
+							<div class="ur-subscription__section-footer">
+								<?php if ( $total_events > $limit ) : ?>
+									<button
+										type="button"
+										class="button action urm-load-more-events">
+										<?php esc_html_e( 'View more', 'user-registration' ); ?>
+									</button>
+								<?php endif; ?>
+							</div>
+						</div>
+						<?php
+					}
+					?>
 				</div>
 			</div>
 			<div class="ur-subscription__form--right">

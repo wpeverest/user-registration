@@ -304,4 +304,51 @@
 			}
 		});
 	});
+
+	$(".urm-load-more-events").on("click", function () {
+		var $wrapper = $(this).closest(
+			".ur-subscription__main-content-wrapper"
+		);
+		var $button = $(this);
+
+		var offset = parseInt($wrapper.data("offset"), 10);
+		var limit = parseInt($wrapper.data("limit"), 10);
+		var total = parseInt($wrapper.data("total"), 10);
+
+		$button
+			.prop("disabled", true)
+			.text(ur_subscription_data.i18n_loading_text);
+
+		$.post(ur_subscription_data.ajax_url, {
+			action: "user_registration_pro_load_more_subscription_events",
+			nonce: ur_subscription_data._nonce,
+			subscription_id: $wrapper.data("subscription-id"),
+			limit: limit,
+			offset: offset
+		}).done(function (response) {
+			if (!response.success) {
+				$button.remove();
+				return;
+			}
+
+			var $newItems = $(response.data.html).find(
+				".ur-subscription__event"
+			);
+
+			$wrapper
+				.find(".ur-subscription__events-timeline")
+				.append($newItems);
+
+			offset += response.data.count;
+			$wrapper.data("offset", offset);
+
+			if (offset >= total) {
+				$button.remove();
+			} else {
+				$button
+					.prop("disabled", false)
+					.text(ur_subscription_data.i18n_view_more_text);
+			}
+		});
+	});
 })(jQuery, window.ur_subscription_data);
