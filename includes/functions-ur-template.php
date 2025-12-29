@@ -183,6 +183,10 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	 * @return string
 	 */
 	function user_registration_form_field( $key, $args, $value = null, $current_row = '', $is_edit = false ) {
+		if ( isset( $args['is_checkout'] ) && $args['is_checkout'] ) {
+			return;
+		}
+
 		/* Conditional Logic codes */
 		$rules                      = array();
 		$rules['conditional_rules'] = isset( $args['conditional_rules'] ) ? $args['conditional_rules'] : '';

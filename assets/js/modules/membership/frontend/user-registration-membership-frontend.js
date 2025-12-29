@@ -312,6 +312,7 @@
 			if (no_errors) {
 				ur_membership_frontend_utils.clear_validation_error();
 			}
+
 			return no_errors;
 		},
 		validate_coupon_data: function () {
@@ -492,9 +493,11 @@
 		 */
 		show_default_response: function (url, thank_you_data, timeout) {
 			timeout = timeout || 2000;
+			var thank_you_page_url = urmf_data.thank_you_page_url;
+
 			var url_params = $.param(thank_you_data).toString();
 			window.setTimeout(function () {
-				window.location.replace(url + "?" + url_params);
+				window.location.replace(thank_you_page_url + "?" + url_params);
 			}, timeout);
 		},
 		validate_coupon: function ($this) {
@@ -502,49 +505,58 @@
 			ur_membership_frontend_utils.append_spinner($this);
 
 			if (this.validate_coupon_data()) {
-				this.send_data(
-					{
+				var data = {
 						action: "user_registration_membership_validate_coupon",
 						coupon_data: this.prepare_coupons_apply_data()
 					},
-					{
-						success: function (response) {
-							if (response.success) {
-								ur_membership_ajax_utils.handle_coupon_validation_response(
-									response
-								);
-							} else {
-								ur_membership_frontend_utils.show_failure_message(
-									response.data.message
-								);
-							}
-						},
-						failure: function (xhr, statusText) {
-							if (xhr.status === 500) {
-								ur_membership_frontend_utils.show_failure_message(
-									urmf_data.labels.network_error +
-										"(" +
-										statusText +
-										")"
-								);
-							} else {
-								ur_membership_frontend_utils.show_validation_error(
-									$("#coupon-validation-error"),
-									urmf_data.labels.i18n_error +
-										"! " +
-										xhr.responseJSON.data.message
-								);
-							}
-						},
-						complete: function () {
-							ur_membership_frontend_utils.remove_spinner($this);
-							ur_membership_frontend_utils.toggleSaveButtons(
-								false,
-								$this
+					membership_field = $this
+						.closest(".ur_membership_registration_container")
+						.find("input[name='urm_membership']:checked"),
+					upgrade_type = membership_field.data("urm-upgrade-type");
+
+				if (upgrade_type) {
+					data.coupon_data.upgrade_amount = membership_field.data(
+						"urm-pg-calculated-amount"
+					);
+				}
+
+				this.send_data(data, {
+					success: function (response) {
+						if (response.success) {
+							ur_membership_ajax_utils.handle_coupon_validation_response(
+								response
+							);
+						} else {
+							ur_membership_frontend_utils.show_failure_message(
+								response.data.message
 							);
 						}
+					},
+					failure: function (xhr, statusText) {
+						if (xhr.status === 500) {
+							ur_membership_frontend_utils.show_failure_message(
+								urmf_data.labels.network_error +
+									"(" +
+									statusText +
+									")"
+							);
+						} else {
+							ur_membership_frontend_utils.show_validation_error(
+								$("#coupon-validation-error"),
+								urmf_data.labels.i18n_error +
+									"! " +
+									xhr.responseJSON.data.message
+							);
+						}
+					},
+					complete: function () {
+						ur_membership_frontend_utils.remove_spinner($this);
+						ur_membership_frontend_utils.toggleSaveButtons(
+							false,
+							$this
+						);
 					}
-				);
+				});
 			} else {
 				ur_membership_frontend_utils.toggleSaveButtons(false, $this);
 				ur_membership_frontend_utils.remove_spinner($this);
@@ -629,7 +641,24 @@
 				total =
 					discount_amount !== undefined && discount_amount !== ""
 						? urm_calculated_total - discount_amount
-						: urm_calculated_total;
+						: urm_calculated_total,
+				upgrade_type = $this.data("urm-upgrade-type");
+
+			var total_label = $(".urm-membership-total-value").find(
+				".ur_membership_input_label"
+			);
+
+			if (total_label.find(".user-registration-badge").length > 0) {
+				total_label.find(".user-registration-badge").remove();
+			}
+			if (upgrade_type) {
+				total_label.append(
+					'<span class="user-registration-badge">' +
+						upgrade_type +
+						"</span>"
+				);
+			}
+
 			total = parseFloat(total).toFixed(2);
 			if ("left" === urmf_data.curreny_pos) {
 				total_input.text(urmf_data.currency_symbol + total);
@@ -638,6 +667,7 @@
 			}
 		},
 		upgrade_membership: function (
+			data,
 			current_plan,
 			selected_membership_id,
 			current_subscription_id,
@@ -648,6 +678,7 @@
 			//gets the nonce token from ANET and send it via the AJAX request.
 			if ("authorize" === selected_pg) {
 				this.handle_authorize_upgrade(
+					data,
 					current_plan,
 					selected_membership_id,
 					current_subscription_id,
@@ -659,10 +690,13 @@
 					{
 						_wpnonce: urmf_data.upgrade_membership_nonce,
 						action: "user_registration_membership_upgrade_membership",
+						form_data: data.form_data,
+						form_id: data.form_id,
 						current_membership_id: current_plan,
 						selected_membership_id: selected_membership_id,
 						current_subscription_id: current_subscription_id,
-						selected_pg: selected_pg
+						selected_pg: selected_pg,
+						coupon: data.coupon
 					},
 					{
 						success: function (response) {
@@ -687,7 +721,7 @@
 						},
 						failure: function (xhr, statusText) {
 							ur_membership_frontend_utils.show_failure_message(
-								user_registration_pro_frontend_data.network_error +
+								user_registration_params.network_error +
 									"(" +
 									statusText +
 									")"
@@ -738,7 +772,7 @@
 					},
 					failure: function (xhr, statusText) {
 						ur_membership_frontend_utils.show_failure_message(
-							user_registration_pro_frontend_data.network_error +
+							user_registration_params.network_error +
 								"(" +
 								statusText +
 								")"
@@ -754,6 +788,7 @@
 			);
 		},
 		handle_authorize_upgrade: function (
+			submittedData,
 			current_plan,
 			selected_membership_id,
 			current_subscription_id,
@@ -765,7 +800,9 @@
 				selected_membership_id: selected_membership_id,
 				current_subscription_id: current_subscription_id,
 				selected_pg: selected_pg,
-				btn: btn
+				btn: btn,
+				form_data: submittedData.form_data,
+				coupon: submittedData.coupon
 			};
 
 			$(document).trigger("urm_before_upgrade_membership_submit", {
@@ -780,7 +817,9 @@
 							current_subscription_id:
 								data.current_subscription_id,
 							selected_pg: data.selected_pg,
-							ur_authorize_data: data.ur_authorize_data
+							ur_authorize_data: data.ur_authorize_data,
+							form_data: submittedData.form_data,
+							coupon: submittedData.coupon
 						},
 						{
 							success: function (response) {
@@ -809,7 +848,7 @@
 							},
 							failure: function (xhr, statusText) {
 								ur_membership_frontend_utils.show_failure_message(
-									user_registration_pro_frontend_data.network_error +
+									user_registration_params.network_error +
 										"(" +
 										statusText +
 										")"
@@ -1018,9 +1057,12 @@
 					window.location.replace(response.data.pg_data.payment_url);
 					break;
 				case "authorize":
+					window.location.replace(response.data.redirect);
+					break;
 				case "free":
 					var cleanUrl =
 						window.location.origin + window.location.pathname;
+
 					window.location.replace(response.data.pg_data.payment_url);
 				default:
 					ur_membership_ajax_utils.show_bank_response(
@@ -1489,7 +1531,8 @@
 										subscription: data.subscription,
 										form_id: data.form_response.form_id,
 										response_data: data.response_data,
-										prepare_members_data: data.prepare_members_data,
+										prepare_members_data:
+											data.prepare_members_data,
 										form_response: data.form_response,
 										three_d_secure: true
 									});
@@ -1709,6 +1752,59 @@
 			// membership input change trigger for page with membership id as params.
 			var searchParams = new URLSearchParams(window.location.search),
 				visible_memberships = $('input[name="urm_membership"]');
+
+			$(document).on(
+				"user_registration_membership_update_before_form_submit",
+				function (e, data) {
+					e.preventDefault();
+
+					var has_error = false,
+						selected_pg = "free",
+						selected_plan = "";
+					var pg_type = $(
+							'input[name="urm_membership"]:checked'
+						).data("urm-pg-type"),
+						btn = $(this);
+					//validation before request start
+					selected_plan = $(
+						'input[name="urm_membership"]:checked'
+					).val();
+					selected_pg =
+						$('input[name="urm_payment_method"]:checked').val() ===
+						undefined
+							? selected_pg
+							: $(
+									'input[name="urm_payment_method"]:checked'
+							  ).val();
+
+					//validation end
+					var action = searchParams.get("action"),
+						current_membership_id = searchParams.get("current"),
+						subscription_id = searchParams.get("subscription_id");
+					if (action == "multiple") {
+						ur_membership_ajax_utils.add_multiple_membership(
+							selected_plan,
+							selected_pg,
+							btn
+						);
+					} else if (action == "upgrade") {
+						if ($("#ur-membership-coupon").length > 0) {
+							data.coupon = $("#ur-membership-coupon")
+								.val()
+								.trim();
+						}
+
+						ur_membership_ajax_utils.upgrade_membership(
+							data,
+							current_membership_id,
+							selected_plan,
+							subscription_id,
+							selected_pg,
+							btn
+						);
+					}
+				}
+			);
 
 			if (searchParams.has("membership_id")) {
 				$('input[name="urm_membership"]:checked').change();

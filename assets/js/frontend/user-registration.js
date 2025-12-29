@@ -1265,29 +1265,46 @@
 										.find("span")
 										.addClass("ur-front-spinner");
 
-									var hit_third_party_api =
-										events.wait_third_party_api($this);
-									if (hit_third_party_api) {
-										var thirdPartyHandlerPromise =
-											new Promise(function (
-												resolve,
-												reject
-											) {
-												$(document).trigger(
-													"user_registration_third_party_api_before_form_submit",
-													[
-														data,
-														$this,
-														$error_message,
-														resolve,
-														reject
-													]
-												);
-											}).then(function (val) {
-												events.ajax_form_submit(val);
-											});
+									if (
+										$registration_form
+											.find(
+												"form.register button.ur-submit-button"
+											)
+											.hasClass(
+												"urm-update-membership-button"
+											)
+									) {
+										$(document).trigger(
+											"user_registration_membership_update_before_form_submit",
+											[data, $this, $error_message]
+										);
 									} else {
-										events.ajax_form_submit(data);
+										var hit_third_party_api =
+											events.wait_third_party_api($this);
+										if (hit_third_party_api) {
+											var thirdPartyHandlerPromise =
+												new Promise(function (
+													resolve,
+													reject
+												) {
+													$(document).trigger(
+														"user_registration_third_party_api_before_form_submit",
+														[
+															data,
+															$this,
+															$error_message,
+															resolve,
+															reject
+														]
+													);
+												}).then(function (val) {
+													events.ajax_form_submit(
+														val
+													);
+												});
+										} else {
+											events.ajax_form_submit(data);
+										}
 									}
 								});
 						});

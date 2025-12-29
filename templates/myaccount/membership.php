@@ -124,7 +124,7 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 												$thank_you_page_id           = get_option( 'user_registration_thank_you_page_id', false );
 												$uuid                        = ur_generate_random_key();
 												$subscription_id             = $membership['subscription_id'];
-												$redirect_page_url           = $redirect_page_url . '?action=upgrade&current="' . $membership['post_id'] . '"&subscription_id="' . $membership['subscription_id'] . '"&urm_uuid="' . $uuid . '"&thank_you="' . $thank_you_page_id . '"';
+												$redirect_page_url           = $redirect_page_url . '?action=upgrade&current="' . $membership['post_id'] . '"&subscription_id="' . $membership['subscription_id'] . '"&thank_you="' . $thank_you_page_id . '"';
 												$upgradable_plans            = $membership_service->get_upgradable_membership( $membership['post_id'] );
 												?>
 												<?php
@@ -138,14 +138,15 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 													$buttons[] = '<a class="ur-account-action-link membership-tab-btn reactivate-membership-button" href="' . esc_url( $redirect_page_url ) . '" data-id="' . esc_attr( $membership['subscription_id'] ?? '' ) . '">' . esc_html__( 'Reactivate Membership', 'user-registration' ) . '</a>';
 												}
 												?>
+
+												<?php
+
+												if ( $can_renew && $date_to_renew <= date( 'Y-m-d 00:00:00' ) && 'canceled' !== $membership['status'] ) {
+													$buttons[] = '<a class="ur-account-action-link membership-tab-btn renew-membership-button" href="' . esc_url( $redirect_page_url ) . '" data-pg-gateways="' . ( isset( $membership['active_gateways'] ) ? implode( ',', array_keys( $membership['active_gateways'] ) ) : '' ) . '" data-id="' . esc_attr( $membership['post_id'] ?? '' ) . '">' . esc_html__( 'Renew Membership', 'user-registration' ) . '</a>';
+												}
+												?>
 												<?php
 											endif;
-											?>
-											<?php
-
-											if ( $can_renew && $date_to_renew <= date( 'Y-m-d 00:00:00' ) && 'canceled' !== $membership['status'] ) {
-												$buttons[] = '<a class="ur-account-action-link membership-tab-btn renew-membership-button" href="' . esc_url( $redirect_page_url ) . '" data-pg-gateways="' . ( isset( $membership['active_gateways'] ) ? implode( ',', array_keys( $membership['active_gateways'] ) ) : '' ) . '" data-id="' . esc_attr( $membership['post_id'] ?? '' ) . '">' . esc_html__( 'Renew Membership', 'user-registration' ) . '</a>';
-											}
 											?>
 											<?php
 											if ( 'canceled' !== $membership['status'] ) {
@@ -154,29 +155,8 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 										}
 										?>
 										<div class="btn-div">
-											<?php
-											if ( ! empty( $buttons ) ) {
-												if ( count( $buttons ) > 2 ) {
-													?>
-													<div class="action-menu">
-														<button class="menu-trigger" type="button">
-															<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-																<path d="M10 12a2.222 2.222 0 1 1 4.444 0A2.222 2.222 0 0 1 10 12Zm0-7.778a2.222 2.222 0 1 1 4.444 0 2.222 2.222 0 0 1-4.444 0Zm0 15.556a2.222 2.222 0 1 1 4.444 0 2.222 2.222 0 0 1-4.444 0Z"/>
-															</svg>
-														</button>
-														<div class="hidden dropdown">
-															<?php foreach ( $buttons as $button ) : ?>
-																<?php echo $button; ?>
-															<?php endforeach; ?>
-														</div>
-													</div>
-													<?php
-												} else {
-													echo implode( ' | ', $buttons );
-												}
-											}
-											?>
-											<!--
+											<?php echo implode( ' | ', $buttons ); ?>
+										<!--
 										<?php
 
 										if ( ( isset( $data['is_upgrading'] ) && $data['is_upgrading'] ) || $is_renewing || ( isset( $data['is_purchasing_multiple'] ) && $data['is_purchasing_multiple'] ) ) :
