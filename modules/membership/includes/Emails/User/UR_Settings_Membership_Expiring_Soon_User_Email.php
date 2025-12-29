@@ -116,18 +116,18 @@ class UR_Settings_Membership_Expiring_Soon_User_Email {
 								'desc'     => __( 'Customize the email subject.', 'user-registration' ),
 								'id'       => 'user_registration_membership_expiring_soon_user_email_subject',
 								'type'     => 'text',
-								'default'  => __( 'Membership Will Expire Soon – Renew Now', 'user-registration' ),
+								'default'  => __( 'Your Membership Expires on {{membership_end_date}}', 'user-registration' ),
 								'css'      => 'min-width: 350px;',
 								'desc_tip' => true,
 							),
 							array(
-								'title'    => __( 'Email Content', 'user-registration' ),
-								'desc'     => __( 'Customize the content of the membership expiring soon email to admin.', 'user-registration' ),
-								'id'       => 'user_registration_membership_expiring_soon_user_email_message',
-								'type'     => 'tinymce',
-								'default'  => $this->user_registration_get_membership_expiring_soon_user_email(),
-								'css'      => 'min-width: 350px;',
-								'desc_tip' => true,
+								'title'                  => __( 'Email Content', 'user-registration' ),
+								'desc'                   => __( 'Customize the content of the membership expiring soon email to admin.', 'user-registration' ),
+								'id'                     => 'user_registration_membership_expiring_soon_user_email_message',
+								'type'                   => 'tinymce',
+								'default'                => $this->user_registration_get_membership_expiring_soon_user_email(),
+								'css'                    => 'min-width: 350px;',
+								'desc_tip'               => true,
 								'show-ur-registration-form-button' => false,
 								'show-smart-tags-button' => true,
 								'show-reset-content-button' => true,
@@ -145,23 +145,30 @@ class UR_Settings_Membership_Expiring_Soon_User_Email {
 	 * Notification sent to admin when member cancel their membership.
 	 */
 	public function user_registration_get_membership_expiring_soon_user_email() {
-		$message = apply_filters(
-			'user_registration_membership_expiring_soon_user_email_message',
-			sprintf(
-				__(
-					'
-					Hi {{username}}, <br>
-					Just a reminder — your membership is set to expire on {{membership_end_date}}. <br>
-					To avoid any interruption in access to your member benefits, please make sure to renew before the expiration date. <br>
-					Otherwise, you can manually renew in just a few clicks.<br>
-					({renewal_link})<br>
-					Stay connected and keep enjoying everything your membership offers!<br>
-					Best regards, <br>
-					{{blog_info}}',
-					'user-registration'
-				)
-			)
+		$body_content = __(
+			'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">Hi {{username}},</p>
+			<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">Your {{membership_plan_name}} membership expires on <strong>{{membership_end_date}}</strong>. </p>
+			<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">To continue accessing your member benefits, renew your membership:
+			<br>
+			<a href="{{renewal_link}}" rel="noreferrer noopener" target="_blank" style="color: #4A90E2; text-decoration: none; font-size: 16px;">Renew Now</a>
+			</p>
+			<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">If you have questions about renewal, we\'re here to help. </p>
+			<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thanks
+				</p>
+			',
+			'user-registration'
 		);
+
+		$body_content = ur_wrap_email_body_content( $body_content );
+
+		// Wrap with the pro email template if UR Pro is active.
+		if ( UR_PRO_ACTIVE ) {
+			$body_content = ur_get_email_template_wrapper( $body_content, false );
+		}
+
+		// Allow filtering so other code can modify the HTML body for this email.
+		$message = apply_filters( 'user_registration_membership_expiring_soon_user_email_message', $body_content );
 
 		return $message;
 	}
