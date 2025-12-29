@@ -87,7 +87,7 @@ class Frontend {
 		$position = array_search( $before, array_keys( $items ), true );
 
 		// Insert the new item.
-		$return_items = array_slice( $items, 0, $position, true );
+		$return_items  = array_slice( $items, 0, $position, true );
 		$return_items += $new_items;
 		$return_items += array_slice( $items, $position, count( $items ) - $position, true );
 
@@ -105,17 +105,21 @@ class Frontend {
 		$members_subscription_repository = new MembersSubscriptionRepository();
 		$orders_repository               = new OrdersRepository();
 		$membership                      = $membership_repositories->get_member_membership_by_id( $user_id );
-		if( ! empty( $membership['post_content'] ) ) {
+		if ( ! empty( $membership['post_content'] ) ) {
 			$membership['post_content'] = json_decode( $membership['post_content'], true );
 		}
-		$membership_service              = new MembershipService();
+		$membership_service = new MembershipService();
 		$membership_details = ( is_array( $membership ) && ! empty( $membership['post_id'] ) ) ? $membership_service->get_membership_details( $membership['post_id'] ) : array();
-		$active_gateways                 = array();
+		$active_gateways    = array();
 
 		if ( ! empty( $membership_details['payment_gateways'] ) ) {
-			$active_gateways = array_filter( $membership_details['payment_gateways'], function ( $item, $key ) {
-				return "on" == $item["status"] && in_array($key, array('paypal', 'stripe', 'bank'));
-			}, ARRAY_FILTER_USE_BOTH );
+			$active_gateways = array_filter(
+				$membership_details['payment_gateways'],
+				function ( $item, $key ) {
+					return 'on' == $item['status'] && in_array( $key, array( 'paypal', 'stripe', 'bank' ) );
+				},
+				ARRAY_FILTER_USE_BOTH
+			);
 		}
 
 		$membership['active_gateways'] = $active_gateways;
@@ -127,7 +131,7 @@ class Frontend {
 				'show_bank_notice' => true,
 				'bank_data'        => get_option( 'user_registration_global_bank_details', '' ),
 				'notice_1'         => apply_filters( 'urm_bank_info_notice_1_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your upgraded membership will be activated. Kindly wait for the admin\'s confirmation.', 'user-registration' ) ),
-				'notice_2'         => apply_filters( 'urm_bank_info_notice_2_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Your membership will be renewed once the payment is verified. Kindly wait for the admin\'s confirmation.', 'user-registration' ) )
+				'notice_2'         => apply_filters( 'urm_bank_info_notice_2_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Your membership will be renewed once the payment is verified. Kindly wait for the admin\'s confirmation.', 'user-registration' ) ),
 			);
 		}
 		$subscription_data = $members_subscription_repository->get_member_subscription( $user_id );
@@ -138,7 +142,7 @@ class Frontend {
 			'is_upgrading'      => $is_upgrading,
 			'bank_data'         => $bank_data,
 			'renewal_behaviour' => get_option( 'user_registration_renewal_behaviour', 'automatic' ),
-			'subscription_data' => $subscription_data
+			'subscription_data' => $subscription_data,
 		);
 
 		if ( ! empty( $last_order ) ) {
@@ -214,7 +218,6 @@ class Frontend {
 		$thank_you_page  = urm_get_thank_you_page();
 		$stripe_settings = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
 
-
 		wp_localize_script(
 			'user-registration-membership-frontend-script',
 			'ur_membership_frontend_localized_data',
@@ -233,8 +236,9 @@ class Frontend {
 				'stripe_publishable_key'           => $stripe_settings['publishable_key'],
 				'membership_gateways'              => get_option( 'ur_membership_payment_gateways', array() ),
 				'urm_hide_stripe_card_postal_code' => apply_filters( 'user_registration_membership_disable_stripe_card_postal_code', false ),
-				'gateways_configured'              => urm_get_all_active_payment_gateways('paid'),
-			)
+				'gateways_configured'              => urm_get_all_active_payment_gateways( 'paid' ),
+				'isEditor'                         => current_user_can( 'edit_post', get_the_ID() ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'],
+			),
 		);
 	}
 
@@ -287,7 +291,6 @@ class Frontend {
 		delete_transient( $transient_id );
 		$thank_you_page = get_permalink( absint( $_GET['thank_you'] ) );
 		set_transient( $transient_id, $thank_you_page, 15 * MINUTE_IN_SECONDS );
-
 	}
 
 	/**
@@ -304,7 +307,7 @@ class Frontend {
 		}
 		$next_subscription_data = json_decode( get_user_meta( $user_id, 'urm_next_subscription_data', true ), true );
 
-		if ( ! empty( $next_subscription_data ) && empty( $next_subscription_data['delayed_until'] ) && ! empty( $next_subscription_data['payment_method'] ) && ( "paypal" === $next_subscription_data['payment_method'] ) ) {
+		if ( ! empty( $next_subscription_data ) && empty( $next_subscription_data['delayed_until'] ) && ! empty( $next_subscription_data['payment_method'] ) && ( 'paypal' === $next_subscription_data['payment_method'] ) ) {
 			if ( $user_subscription['status'] === 'active' ) {
 				delete_user_meta( $user_id, 'urm_is_upgrading' );
 				delete_user_meta( $user_id, 'urm_is_upgrading_to' );

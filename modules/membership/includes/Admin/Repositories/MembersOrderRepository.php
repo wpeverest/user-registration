@@ -42,6 +42,27 @@ class MembersOrderRepository extends BaseRepository implements MembersOrderInter
 		return ! $result ? false : $result;
 	}
 
+	/**
+	 * get_member_all_orders
+	 *
+	 * @param $member_id
+	 *
+	 * @return array|false|object|\stdClass|void
+	 */
+	public function get_member_all_orders( $member_id ) {
+		$result = $this->wpdb()->get_results(
+			$this->wpdb()->prepare(
+				"SELECT wumo.* FROM $this->users_table wpu
+		         JOIN $this->table  wumo ON wpu.ID = wumo.user_id
+		         WHERE wpu.ID = %d  ORDER BY wumo.created_at DESC",
+				$member_id
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? false : $result;
+	}
+
 	public function delete_member_order( $member_id, $delete_all = true ) {
 		if ( $delete_all ) {
 			// Delete all orders for the member
@@ -75,25 +96,24 @@ class MembersOrderRepository extends BaseRepository implements MembersOrderInter
 
 	public function create_member_order( $order_data ) {
 		$data = array(
-			'user_id' => absint( $order_data[ 'ur_member_id' ] ),
-			'item_id' => absint( $order_data[ 'ur_membership_plan' ] ),
-			'total_amount'  => floatval( $order_data[ 'ur_membership_amount' ] ),
-			'status'  => sanitize_text_field( $order_data[ 'ur_transaction_status' ] ),
+			'user_id'        => absint( $order_data['ur_member_id'] ),
+			'item_id'        => absint( $order_data['ur_membership_plan'] ),
+			'total_amount'   => floatval( $order_data['ur_membership_amount'] ),
+			'status'         => sanitize_text_field( $order_data['ur_transaction_status'] ),
 			'payment_method' => 'manual',
-			'created_by' => get_current_user_id(),
-			'created_at' => date( 'Y-m-d H:i:s', strtotime( $order_data[ 'ur_payment_date' ] ) ),
+			'created_by'     => get_current_user_id(),
+			'created_at'     => date( 'Y-m-d H:i:s', strtotime( $order_data['ur_payment_date'] ) ),
 		);
 
 		$inserted = $this->wpdb()->insert(
 			$this->table,
 			$data,
-			array('%d', '%d', '%f', '%s', '%s', '%d', '%s'),
+			array( '%d', '%d', '%f', '%s', '%s', '%d', '%s' ),
 		);
-		if( $inserted ) {
+		if ( $inserted ) {
 			$order_id = $this->wpdb()->insert_id;
 			return $order_id;
 		}
 		return false;
 	}
-
 }

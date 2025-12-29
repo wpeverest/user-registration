@@ -230,12 +230,12 @@ class UR_Modules {
 		if ( 'addon' === $type ) {
 			$status = self::ur_install_addons( $slug, $name, $plugin );
 		} else {
-			$status = self::ur_enable_feature( sanitize_text_field($request['slug']) );
+			$status = self::ur_enable_feature( sanitize_text_field( $request['slug'] ) );
 		}
 
 		if ( isset( $status['success'] ) && ! $status['success'] ) {
 
-			if( isset( $status['errorMessage'] ) && ! empty( $status['errorMessage'] ) ) {
+			if ( isset( $status['errorMessage'] ) && ! empty( $status['errorMessage'] ) ) {
 				return new \WP_REST_Response(
 					array(
 						'success' => false,
@@ -313,7 +313,7 @@ class UR_Modules {
 			}
 		}
 
-		if ( in_array($slug , ['user-registration-payments', 'user-registration-stripe', 'user-registration-authorize-net'])   && !in_array('user-registration-payment-history', $enabled_features)) {
+		if ( in_array( $slug, array( 'user-registration-payments', 'user-registration-stripe', 'user-registration-authorize-net' ) ) && ! in_array( 'user-registration-payment-history', $enabled_features ) ) {
 			$enabled_features[] = 'user-registration-payment-history';
 		}
 		$enabled_features[] = $slug;
@@ -363,10 +363,17 @@ class UR_Modules {
 		}
 
 		if ( isset( $status['success'] ) && ! $status['success'] ) {
+
+			if ( 'user-registration-multiple-registration' === $slug ) {
+				$message = __( "You have multiple registration forms, so you can't deactivate the plugin.", 'user-registration' );
+			} else {
+				$message = __( "Module couldn't be deactivated. Please try again later.", 'user-registration' );
+			}
+
 			return new \WP_REST_Response(
 				array(
 					'success' => false,
-					'message' => esc_html__( "Module couldn't be deactivated. Please try again later.", 'user-registration' ),
+					'message' => $message,
 				),
 				400
 			);
@@ -411,6 +418,13 @@ class UR_Modules {
 		// Logic to disable Feature.
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
 		$enabled_features = array_values( array_diff( $enabled_features, array( $slug ) ) );
+		if ( 'user-registration-multiple-registration' === $slug ) {
+			$all_forms = ur_get_all_user_registration_form();
+
+			if ( count( $all_forms ) > 1 ) {
+				return array( 'success' => false );
+			}
+		}
 		update_option( 'user_registration_enabled_features', $enabled_features );
 
 		return in_array( $slug, $enabled_features, true ) ? array( 'success' => false ) : array( 'success' => true );
@@ -675,9 +689,9 @@ class UR_Modules {
 					return $status;
 				}
 
-				if ( in_array( $slug , [ 'userregistrationstripe', 'userregistrationauthorizenet'] ) && !in_array('user-registration-payment-history', $enabled_features)) {
+				if ( in_array( $slug, array( 'userregistrationstripe', 'userregistrationauthorizenet' ) ) && ! in_array( 'user-registration-payment-history', $enabled_features ) ) {
 					$enabled_features[] = 'user-registration-payment-history';
-					update_option( 'user_registration_enabled_features', array_unique($enabled_features)  );
+					update_option( 'user_registration_enabled_features', array_unique( $enabled_features ) );
 				}
 				$status['success'] = true;
 				$status['message'] = __( 'Addons activated successfully', 'user-registration' );
@@ -746,7 +760,7 @@ class UR_Modules {
 		activate_plugin( $plugin );
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
 
-		if ( in_array( $slug , [ 'userregistrationstripe', 'userregistrationauthorizenet'] ) && !in_array('user-registration-payment-history', $enabled_features)) {
+		if ( in_array( $slug, array( 'userregistrationstripe', 'userregistrationauthorizenet' ) ) && ! in_array( 'user-registration-payment-history', $enabled_features ) ) {
 			$enabled_features[] = 'user-registration-payment-history';
 			update_option( 'user_registration_enabled_features', $enabled_features );
 		}

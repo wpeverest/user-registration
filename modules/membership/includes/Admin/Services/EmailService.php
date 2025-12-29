@@ -19,8 +19,8 @@ use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Ended_User_Email;
 use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Expiring_Soon_User_Email;
 use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Renewal_Reminder_User_Email;
 
-class EmailService
-{
+class EmailService {
+
 	protected $email_type, $logger;
 
 	public function __construct() {
@@ -57,11 +57,11 @@ class EmailService
 			case 'membership_cancellation_email_admin': // membership cancellation email to admin.
 				return self::send_membership_cancellation_email_admin( $data );
 			case 'membership_renewal': // membership renewal
-				return self::send_membership_renewal_email($data);
+				return self::send_membership_renewal_email( $data );
 			case 'membership_expiring_soon': // membership expiring soon
-				return self::send_membership_expiring_soon_email($data);
+				return self::send_membership_expiring_soon_email( $data );
 			case 'membership_ended': // membership_ended
-				return self::send_membership_ended_email($data);
+				return self::send_membership_ended_email( $data );
 			default:
 				break;
 		}
@@ -74,39 +74,9 @@ class EmailService
 	 *
 	 * @return bool|mixed|void
 	 */
-	public function send_user_backend_register_email( $data ) {
-
-		$membership_title = get_the_title( $data['membership'] );
-		$subject          = __( 'Congratulations! Registration completed', 'user-registration' );
-		$message          = sprintf( __( 'Hi, %s', 'user-registration' ), $data['username'] ) . "\n\n";
-		$message          .= sprintf( __( 'Account created successfully under membership <b><i>%s</i></b>.', 'user-registration' ), $membership_title ) . "\n\n";
-		$extra_message    = sprintf( __( '<b>Username: </b><i>%1$s</i> <b>Password: </b><i>%2$s</i> ', 'user-registration' ), $data['username'], $data['password'] ) . "\n\n";
-		$final_greeting   = __( 'Thank You.', 'user-registration' );
-
-		$template_file = locate_template( 'membership-registration-email.php' );
-		if ( ! $template_file ) {
-			$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/Emails/membership-registration-email.php';
-		}
-		ob_start();
-		require $template_file;
-
-		$message = ob_get_clean();
-		$message = apply_filters( 'ur_membership_registration_email_custom_template', $message, $subject );
-		$headers = \UR_Emailer::ur_get_header();
-
-		return wp_mail( $data['email'], $subject, $message, $headers );
-	}
-
-	/**
-	 * Send user register email
-	 *
-	 * @param $data
-	 *
-	 * @return bool|mixed|void
-	 */
 	public function send_user_register_email( $data ) {
 		$user_id  = absint( $data['member_id'] );
-		$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Registration Successful – Welcome to {{blog_info}}!', 'user-registration' ) );
+		$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Welcome to {{blog_info}}!', 'user-registration' ) );
 		$settings = new \UR_Settings_Successfully_Registered_Email();
 		$message  = $settings->ur_get_successfully_registered_email();
 		$message  = get_option( 'user_registration_successfully_registered_email', $message );
@@ -115,12 +85,12 @@ class EmailService
 		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
 
 		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-		$message              = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email', $message, $current_language, 'user_registration_successfully_registered_email' );
-		$subject              = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email_subject', $subject, $current_language, 'user_registration_successfully_registered_email_subject' );
-		$subscription_service = new SubscriptionService();
+		$message                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email', $message, $current_language, 'user_registration_successfully_registered_email' );
+		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email_subject', $subject, $current_language, 'user_registration_successfully_registered_email_subject' );
+		$subscription_service      = new SubscriptionService();
 
 		$values      = array(
-			'membership_tags' => $subscription_service->get_membership_plan_details( $data )
+			'membership_tags' => $subscription_service->get_membership_plan_details( $data ),
 		);
 		$message     = \UR_Emailer::parse_smart_tags( $message, $values );
 		$subject     = \UR_Emailer::parse_smart_tags( $subject, $values );
@@ -147,7 +117,7 @@ class EmailService
 			return;
 		}
 		$user_id = absint( $data['member_id'] );
-		$subject = get_option( 'user_registration_admin_email_subject', __( 'A New Member Registered', 'user-registration' ) );
+		$subject = get_option( 'user_registration_admin_email_subject', __( 'A Member registration: {{username}}', 'user-registration' ) );
 		$form_id = ur_get_form_id_by_userid( $user_id );
 
 		$settings         = new UR_Settings_Admin_Email();
@@ -156,13 +126,13 @@ class EmailService
 		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
 
 		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-		$message              = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email', $message, $current_language, 'user_registration_successfully_registered_email' );
-		$subject              = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email_subject', $subject, $current_language, 'user_registration_successfully_registered_email_subject' );
-		$subscription_service = new SubscriptionService();
-		$values               = array(
-			'membership_tags' => $subscription_service->get_membership_plan_details( $data )
+		$message                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email', $message, $current_language, 'user_registration_successfully_registered_email' );
+		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email_subject', $subject, $current_language, 'user_registration_successfully_registered_email_subject' );
+		$subscription_service      = new SubscriptionService();
+		$values                    = array(
+			'membership_tags' => $subscription_service->get_membership_plan_details( $data ),
 		);
-		$values               = $data + $values;
+		$values                    = $data + $values;
 
 		$message     = \UR_Emailer::parse_smart_tags( $message, $values );
 		$subject     = \UR_Emailer::parse_smart_tags( $subject, $values );
@@ -176,7 +146,6 @@ class EmailService
 		foreach ( $admin_email as $email ) {
 			\UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), $template_id );
 		}
-
 	}
 
 	/**
@@ -196,16 +165,15 @@ class EmailService
 		$data['user_email']   = $user->user_email;
 		$subscription_service = new SubscriptionService();
 		$values               = array(
-			'membership_tags' => $subscription_service->get_membership_plan_details( $data )
+			'membership_tags' => $subscription_service->get_membership_plan_details( $data ),
 		);
 		$values               = $data + $values;
 
+		$subject = get_option( 'user_registration_payment_success_email_subject', __( 'Payment Confirmed', 'user-registration' ) );
 
-		$subject = get_option( 'user_registration_payment_success_email_subject', __( 'Congratulations! Payment Complete on {{blog_info}}', 'user-registration' ) );
-
-		$settings = new \UR_Settings_Payment_Success_Email();
-		$message  = $settings->ur_get_payment_success_email();
-		$message  = get_option( 'user_registration_payment_success_email', $message );
+		$settings                  = new \UR_Settings_Payment_Success_Email();
+		$message                   = $settings->ur_get_payment_success_email();
+		$message                   = get_option( 'user_registration_payment_success_email', $message );
 		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 
 		// Get selected email template id for specific form.
@@ -220,64 +188,6 @@ class EmailService
 			\UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), $template_id );
 		}
 	}
-//	/**
-//	 * Send payment successful email
-//	 *
-//	 * @param $data
-//	 *
-//	 * @return bool|mixed|void
-//	 */
-//	public function send_payment_successful_email( $data ) {
-//		if ( ! $this->validate_email_fields( $data ) ) {
-//			return false;
-//		}
-//		$subject          = __( 'Payment Received!', 'user-registration' );
-//		$user             = get_userdata( $data['member_id'] );
-//		$order            = $data['order'];
-//		$subscription     = $data['subscription'];
-//		$membership_metas = $data['membership_metas'];
-//		$extra_message    = $data['extra_message'] ?? '';
-//		$currency         = get_option( 'user_registration_payment_currency', 'USD' );
-//		$currencies       = ur_payment_integration_get_currencies();
-//		$symbol           = $currencies[ $currency ]['symbol'];
-	//
-//		$total = $order['total_amount'];
-	//
-//		if ( isset( $order['coupon'] ) && ! empty( $order['coupon'] ) && "bank" !== $order['payment_method'] && isset( $membership_metas ) && ( "paid" === $membership_metas['type'] || ( "subscription" === $membership_metas['type'] && "off" === $order['trial_status'] ) ) ) {
-//			$discount_amount = ( $order['coupon_discount_type'] === 'fixed' ) ? $order['coupon_discount'] : $order['total_amount'] * $order['coupon_discount'] / 100;
-//			$total           = $order['total_amount'] - $discount_amount;
-//		}
-//		$billing_cycle = ( "subscription" === $membership_metas['type'] ) ? ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) : 'N/A';
-	//
-//		$invoice_details = array(
-//			'membership_name'   => esc_html( $membership_metas['post_title'] ),
-//			'trial_status'      => esc_html( $order['trial_status'] ),
-//			'trial_start_date'  => esc_html( $subscription['trial_start_date'] ),
-//			'trial_end_date'    => esc_html( $subscription['trial_end_date'] ),
-//			'next_billing_date' => esc_html( $subscription['next_billing_date'] ),
-//			'payment_date'      => esc_html( $order['created_at'] ),
-//			'billing_cycle'     => esc_html( $billing_cycle ),
-//			'amount'            => $symbol . number_format( $membership_metas['amount'], 2 ),
-//			'trial_amount'      => $symbol . number_format( ( 'on' === $order['trial_status'] ) ? $order['total_amount'] : 0, 2 ),
-//			'coupon_discount'   => isset( $order['coupon_discount'] ) ? ( ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] == 'percent' ) ? $order['coupon_discount'] . '%' : $symbol . $order['coupon_discount'] ) : '',
-//			'coupon'            => esc_html( $order['coupon'] ?? '' ),
-//			'total'             => $symbol . number_format( $total, 2 ),
-//		);
-	//
-//		$template_file = locate_template( 'payment-successful-email.php' );
-	//
-//		if ( ! $template_file ) {
-//			$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/Emails/payment-successful-email.php';
-//		}
-//		ob_start();
-//		require $template_file;
-	//
-//		$message = ob_get_clean();
-//		$message = apply_filters( 'ur_membership_payment_successful_email_custom_template', $message, $subject );
-//		$headers = \UR_Emailer::ur_get_header();
-	//
-//		return wp_mail( $user->user_email, $subject, $message, $headers );
-//	}
 
 	/**
 	 * Send payment successful email
@@ -295,10 +205,9 @@ class EmailService
 		$currency       = get_option( 'user_registration_payment_currency', 'USD' );
 		$currencies     = ur_payment_integration_get_currencies();
 		$symbol         = $currencies[ $currency ]['symbol'];
-		$message        = sprintf( __( 'Hi <b><i>%s</i></b>, Your payment of amount %s for the membership: <b>%s</b> has been approved by admin.', 'user-registration' ), $data['display_name'] ?? '', number_format( $data['total_amount'], 2 ) . $symbol, $data['post_title'] ?? '' ) . "\n\n";
-		$extra_message  = __( "You can now login as a member." );
+		$message        = sprintf( __( 'Hi <b><i>%1$s</i></b>, Your payment of amount %2$s for the membership: <b>%3$s</b> has been approved by admin.', 'user-registration' ), $data['display_name'] ?? '', number_format( $data['total_amount'], 2 ) . $symbol, $data['post_title'] ?? '' ) . "\n\n";
+		$extra_message  = __( 'You can now login as a member.' );
 		$final_greeting = __( 'Thank You.', 'user-registration' );
-
 
 		$template_file = locate_template( 'payment-approval-email.php' );
 
@@ -312,122 +221,67 @@ class EmailService
 		$message = apply_filters( 'ur_membership_payment_successful_email_custom_template', $message, $subject );
 		$headers = \UR_Emailer::ur_get_header();
 
-		return wp_mail( $data["user_email"], $subject, $message, $headers );
+		return wp_mail( $data['user_email'], $subject, $message, $headers );
 	}
+	//  /**
+	//   * Send payment successful email
+	//   *
+	//   * @param $data
+	//   *
+	//   * @return bool|mixed|void
+	//   */
+	//  public function send_payment_successful_email( $data ) {
+	//      if ( ! $this->validate_email_fields( $data ) ) {
+	//          return false;
+	//      }
+	//      $subject          = __( 'Payment Received!', 'user-registration' );
+	//      $user             = get_userdata( $data['member_id'] );
+	//      $order            = $data['order'];
+	//      $subscription     = $data['subscription'];
+	//      $membership_metas = $data['membership_metas'];
+	//      $extra_message    = $data['extra_message'] ?? '';
+	//      $currency         = get_option( 'user_registration_payment_currency', 'USD' );
+	//      $currencies       = ur_payment_integration_get_currencies();
+	//      $symbol           = $currencies[ $currency ]['symbol'];
+	//
+	//      $total = $order['total_amount'];
+	//
+	//      if ( isset( $order['coupon'] ) && ! empty( $order['coupon'] ) && "bank" !== $order['payment_method'] && isset( $membership_metas ) && ( "paid" === $membership_metas['type'] || ( "subscription" === $membership_metas['type'] && "off" === $order['trial_status'] ) ) ) {
+	//          $discount_amount = ( $order['coupon_discount_type'] === 'fixed' ) ? $order['coupon_discount'] : $order['total_amount'] * $order['coupon_discount'] / 100;
+	//          $total           = $order['total_amount'] - $discount_amount;
+	//      }
+	//      $billing_cycle = ( "subscription" === $membership_metas['type'] ) ? ( 'day' === $membership_metas['subscription']['duration'] ) ? esc_html( 'Daily', 'user-registration' ) : ( esc_html( ucfirst( $membership_metas['subscription']['duration'] . 'ly' ) ) ) : 'N/A';
+	//
+	//      $invoice_details = array(
+	//          'membership_name'   => esc_html( $membership_metas['post_title'] ),
+	//          'trial_status'      => esc_html( $order['trial_status'] ),
+	//          'trial_start_date'  => esc_html( $subscription['trial_start_date'] ),
+	//          'trial_end_date'    => esc_html( $subscription['trial_end_date'] ),
+	//          'next_billing_date' => esc_html( $subscription['next_billing_date'] ),
+	//          'payment_date'      => esc_html( $order['created_at'] ),
+	//          'billing_cycle'     => esc_html( $billing_cycle ),
+	//          'amount'            => $symbol . number_format( $membership_metas['amount'], 2 ),
+	//          'trial_amount'      => $symbol . number_format( ( 'on' === $order['trial_status'] ) ? $order['total_amount'] : 0, 2 ),
+	//          'coupon_discount'   => isset( $order['coupon_discount'] ) ? ( ( isset( $order['coupon_discount_type'] ) && $order['coupon_discount_type'] == 'percent' ) ? $order['coupon_discount'] . '%' : $symbol . $order['coupon_discount'] ) : '',
+	//          'coupon'            => esc_html( $order['coupon'] ?? '' ),
+	//          'total'             => $symbol . number_format( $total, 2 ),
+	//      );
+	//
+	//      $template_file = locate_template( 'payment-successful-email.php' );
+	//
+	//      if ( ! $template_file ) {
+	//          $template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/Emails/payment-successful-email.php';
+	//      }
+	//      ob_start();
+	//      require $template_file;
+	//
+	//      $message = ob_get_clean();
+	//      $message = apply_filters( 'ur_membership_payment_successful_email_custom_template', $message, $subject );
+	//      $headers = \UR_Emailer::ur_get_header();
+	//
+	//      return wp_mail( $user->user_email, $subject, $message, $headers );
+	//  }
 
-	/**
-	 * Send membership cancellation email user
-	 *
-	 * @param $data
-	 *
-	 * @return bool|mixed|void
-	 */
-	public function send_membership_cancellation_email_user( $data ) {
-		if ( ! $this->validate_email_fields( $data ) || ! self::is_membership_email_enabled( 'user_registration_enable_membership_cancellation_user_email' ) ) {
-			return false;
-		}
-		$subject  = get_option( 'user_registration_membership_cancellation_user_email_subject', esc_html__( 'Membership Cancellation Confirmed – {{membership_plan_name}}', 'user-registration' ) );
-		$user     = get_userdata( $data['member_id'] );
-		$form_id  = ur_get_form_id_by_userid( $data['member_id'] );
-		$settings = new UR_Settings_Membership_Cancellation_User_Email();
-		$values   = array(
-			'membership_plan_name' => esc_html__( $data['membership_metas']['title'] )
-		);
-		$message  = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_cancellation_user_email() ), $values, $form_id );;
-		$message     = apply_filters( 'ur_membership_membership_cancellation_email_custom_template', $message, $subject );
-		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
-		$subject     = \UR_Emailer::parse_smart_tags( $subject, $values );
-		$headers     = \UR_Emailer::ur_get_header();
-
-		return \UR_Emailer::user_registration_process_and_send_email( $user->user_email, $subject, $message, $headers, array(), $template_id );
-	}
-
-	/**
-	 * Send membership cancellation email admin
-	 *
-	 * @param $data
-	 *
-	 * @return bool|mixed|void
-	 */
-	public function send_membership_cancellation_email_admin( $data ) {
-		if ( ! $this->validate_email_fields( $data ) || ! self::is_membership_email_enabled( 'user_registration_enable_membership_cancellation_admin_email' ) ) {
-			return false;
-		}
-		$subject = get_option( 'user_registration_membership_cancellation_admin_email_subject', esc_html__( 'Membership Cancelled!', 'user-registration' ) );
-		$user    = get_userdata( $data['member_id'] );
-
-		$form_id  = ur_get_form_id_by_userid( $data['member_id'] );
-		$settings = new UR_Settings_Membership_Cancellation_Admin_Email();
-
-		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_cancellation_admin_email() ), $data, $form_id );;
-
-		$message     = apply_filters( 'ur_membership_membership_cancellation_email_custom_template', $message, $subject );
-		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
-
-		$headers = \UR_Emailer::ur_get_header();
-
-		return \UR_Emailer::user_registration_process_and_send_email( get_option( 'admin_email' ), $subject, $message, $headers, array(), $template_id );
-
-	}
-
-	public function send_membership_renewal_email( $data ) {
-		$subject = get_option( 'user_registration_membership_renewal_reminder_user_email_subject', esc_html__( 'Reminder: Automatic Renewal for Your Membership is Coming Up', 'user-registration' ) );
-		$user    = get_userdata( $data['member_id'] );
-
-		$form_id  = ur_get_form_id_by_userid( $data['member_id'] );
-		$settings = new UR_Settings_Membership_Renewal_Reminder_User_Email();
-
-		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_renewal_reminder_user_email_message', $settings->user_registration_get_membership_renewal_reminder_user_email() ), $data, $form_id );;
-
-		$message     = apply_filters( 'ur_membership_renewal_reminder_email_custom_template', $message, $subject );
-
-		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
-
-		$headers = \UR_Emailer::ur_get_header();
-		if ( ur_string_to_bool( get_option( 'user_registration_membership_enable_renewal_reminder_user_email', true ) ) ) {
-			return \UR_Emailer::user_registration_process_and_send_email( $data['user_email'], $subject, $message, $headers, array(), $template_id );
-		}
-	}
-
-	public function send_membership_expiring_soon_email( $data ) {
-		$subject = get_option( 'user_registration_membership_expiring_soon_user_email_subject', esc_html__( 'Membership Will Expire Soon – Renew Now', 'user-registration' ) );
-
-		$form_id  = ur_get_form_id_by_userid( $data['member_id'] );
-		$settings = new UR_Settings_Membership_Expiring_Soon_User_Email();
-		$subscription_service = new SubscriptionService();
-		$tags = $subscription_service->get_membership_plan_details( $data );
-
-		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_expiring_soon_user_email_message', $settings->user_registration_get_membership_expiring_soon_user_email() ), $tags, $form_id );;
-
-		$message     = apply_filters( 'ur_membership_expiring_soon_email_custom_template', $message, $subject );
-
-		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
-
-		$headers = \UR_Emailer::ur_get_header();
-		if ( ur_string_to_bool( get_option( 'user_registration_membership_enable_expiring_soon_user_email', true ) ) ) {
-			return \UR_Emailer::user_registration_process_and_send_email( $data['user_email'], $subject, $message, $headers, array(), $template_id );
-		}
-	}
-
-	public function send_membership_ended_email( $data ) {
-		$subject = get_option( 'user_registration_membership_ended_user_email_subject', esc_html__( 'Your Membership Has Ended – Rejoin to Regain Access ', 'user-registration' ) );
-
-		$form_id  = ur_get_form_id_by_userid( $data['member_id'] );
-		$settings = new UR_Settings_Membership_Ended_User_Email();
-		$subscription_service = new SubscriptionService();
-		$tags = $subscription_service->get_membership_plan_details( $data );
-
-		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_ended_user_email_message', $settings->user_registration_get_membership_ended_user_email() ), $tags, $form_id );;
-
-		$message     = apply_filters( 'ur_membership_membership_ended_email_custom_template', $message, $subject );
-
-		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
-
-		$headers = \UR_Emailer::ur_get_header();
-		if ( ur_string_to_bool( get_option( 'user_registration_membership_enable_membership_ended_user_email', true ) ) ) {
-			return \UR_Emailer::user_registration_process_and_send_email( $data['user_email'], $subject, $message, $headers, array(), $template_id );
-		}
-	}
 	/**
 	 * Validate email fields
 	 *
@@ -454,6 +308,47 @@ class EmailService
 
 		return true;
 	}
+
+	/**
+	 * Send membership cancellation email user
+	 *
+	 * @param $data
+	 *
+	 * @return bool|mixed|void
+	 */
+	public function send_membership_cancellation_email_user( $data ) {
+		if ( ! $this->validate_email_fields( $data ) || ! self::is_membership_email_enabled( 'user_registration_enable_membership_cancellation_user_email' ) ) {
+			return false;
+		}
+		$subject              = get_option( 'user_registration_membership_cancellation_user_email_subject', esc_html__( 'Membership Cancelled', 'user-registration' ) );
+		$user                 = get_userdata( $data['member_id'] );
+		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
+		$settings             = new UR_Settings_Membership_Cancellation_User_Email();
+		$subscription_service = new SubscriptionService();
+		$membership_tags      = $subscription_service->get_membership_plan_details( $data );
+
+		// Add cancellation date to membership_tags.
+		$cancellation_date = get_user_meta( $data['member_id'], 'user_registration_membership_cancellation_date', true );
+		if ( ! empty( $cancellation_date ) ) {
+			$membership_tags['membership_cancellation_date'] = date( 'Y, F d', strtotime( $cancellation_date ) );
+		} else {
+			$membership_tags['membership_cancellation_date'] = date( 'Y, F d', strtotime( current_time( 'mysql' ) ) );
+		}
+
+		$values  = array(
+			'membership_tags' => $membership_tags,
+		);
+		$values  = $data + $values;
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_cancellation_user_email() ), $values, $form_id );
+
+		$message     = apply_filters( 'ur_membership_membership_cancellation_email_custom_template', $message, $subject );
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+		$subject     = \UR_Emailer::parse_smart_tags( $subject, $values );
+		$headers     = \UR_Emailer::ur_get_header();
+
+		return \UR_Emailer::user_registration_process_and_send_email( $user->user_email, $subject, $message, $headers, array(), $template_id );
+	}
+
 	/**
 	 * Checks if the 'is_membership_email_enabled' option is set to true or false.
 	 *
@@ -466,5 +361,135 @@ class EmailService
 		}
 
 		return true;
+	}
+
+	/**
+	 * Send membership cancellation email admin
+	 *
+	 * @param $data
+	 *
+	 * @return bool|mixed|void
+	 */
+	public function send_membership_cancellation_email_admin( $data ) {
+		if ( ! $this->validate_email_fields( $data ) || ! self::is_membership_email_enabled( 'user_registration_enable_membership_cancellation_admin_email' ) ) {
+			return false;
+		}
+		$subject              = get_option( 'user_registration_membership_cancellation_admin_email_subject', esc_html__( 'Membership Cancelled: {{username}}', 'user-registration' ) );
+		$user                 = get_userdata( $data['member_id'] );
+		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
+		$settings             = new UR_Settings_Membership_Cancellation_Admin_Email();
+		$subscription_service = new SubscriptionService();
+		$membership_tags      = $subscription_service->get_membership_plan_details( $data );
+
+		// Add cancellation date to membership_tags.
+		$cancellation_date = get_user_meta( $data['member_id'], 'user_registration_membership_cancellation_date', true );
+		if ( ! empty( $cancellation_date ) ) {
+			$membership_tags['membership_cancellation_date'] = date( 'Y, F d', strtotime( $cancellation_date ) );
+		} else {
+			$membership_tags['membership_cancellation_date'] = date( 'Y, F d', strtotime( current_time( 'mysql' ) ) );
+		}
+
+		$values = array(
+			'membership_tags' => $membership_tags,
+		);
+		$values = $data + $values;
+
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_cancellation_admin_email_message', $settings->user_registration_get_membership_cancellation_admin_email() ), $values, $form_id );
+
+		$message     = apply_filters( 'ur_membership_membership_cancellation_email_custom_template', $message, $subject );
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+		$subject     = \UR_Emailer::parse_smart_tags( $subject, $values );
+		$headers     = \UR_Emailer::ur_get_header();
+
+		return \UR_Emailer::user_registration_process_and_send_email( get_option( 'admin_email' ), $subject, $message, $headers, array(), $template_id );
+	}
+
+	public function send_membership_renewal_email( $data ) {
+		$subject = get_option( 'user_registration_membership_renewal_reminder_user_email_subject', esc_html__( 'Your Membership Renews Soon', 'user-registration' ) );
+		$user    = get_userdata( $data['member_id'] );
+
+		$form_id  = ur_get_form_id_by_userid( $data['member_id'] );
+		$settings = new UR_Settings_Membership_Renewal_Reminder_User_Email();
+
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_renewal_reminder_user_email_message', $settings->user_registration_get_membership_renewal_reminder_user_email() ), $data, $form_id );
+
+		$message = apply_filters( 'ur_membership_renewal_reminder_email_custom_template', $message, $subject );
+
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+
+		$headers = \UR_Emailer::ur_get_header();
+		if ( ur_string_to_bool( get_option( 'user_registration_membership_enable_renewal_reminder_user_email', true ) ) ) {
+			return \UR_Emailer::user_registration_process_and_send_email( $data['user_email'], $subject, $message, $headers, array(), $template_id );
+		}
+	}
+
+	public function send_membership_expiring_soon_email( $data ) {
+		$subject = get_option( 'user_registration_membership_expiring_soon_user_email_subject', esc_html__( 'Your Membership Expires on {{membership_end_date}}', 'user-registration' ) );
+
+		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
+		$settings             = new UR_Settings_Membership_Expiring_Soon_User_Email();
+		$subscription_service = new SubscriptionService();
+		$tags                 = $subscription_service->get_membership_plan_details( $data );
+
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_expiring_soon_user_email_message', $settings->user_registration_get_membership_expiring_soon_user_email() ), $tags, $form_id );
+
+		$message = apply_filters( 'ur_membership_expiring_soon_email_custom_template', $message, $subject );
+
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+
+		$headers = \UR_Emailer::ur_get_header();
+		if ( ur_string_to_bool( get_option( 'user_registration_membership_enable_expiring_soon_user_email', true ) ) ) {
+			return \UR_Emailer::user_registration_process_and_send_email( $data['user_email'], $subject, $message, $headers, array(), $template_id );
+		}
+	}
+
+	public function send_membership_ended_email( $data ) {
+		$subject = get_option( 'user_registration_membership_ended_user_email_subject', esc_html__( 'Your Membership Has Expired', 'user-registration' ) );
+
+		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
+		$settings             = new UR_Settings_Membership_Ended_User_Email();
+		$subscription_service = new SubscriptionService();
+		$tags                 = $subscription_service->get_membership_plan_details( $data );
+
+		$message = apply_filters( 'user_registration_process_smart_tags', get_option( 'user_registration_membership_ended_user_email_message', $settings->user_registration_get_membership_ended_user_email() ), $tags, $form_id );
+
+		$message = apply_filters( 'ur_membership_membership_ended_email_custom_template', $message, $subject );
+
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+
+		$headers = \UR_Emailer::ur_get_header();
+		if ( ur_string_to_bool( get_option( 'user_registration_membership_enable_membership_ended_user_email', true ) ) ) {
+			return \UR_Emailer::user_registration_process_and_send_email( $data['user_email'], $subject, $message, $headers, array(), $template_id );
+		}
+	}
+
+	/**
+	 * Send user register email
+	 *
+	 * @param $data
+	 *
+	 * @return bool|mixed|void
+	 */
+	public function send_user_backend_register_email( $data ) {
+
+		$membership_title = get_the_title( $data['membership'] );
+		$subject          = __( 'Congratulations! Registration completed', 'user-registration' );
+		$message          = sprintf( __( 'Hi, %s', 'user-registration' ), $data['username'] ) . "\n\n";
+		$message         .= sprintf( __( 'Account created successfully under membership <b><i>%s</i></b>.', 'user-registration' ), $membership_title ) . "\n\n";
+		$extra_message    = sprintf( __( '<b>Username: </b><i>%1$s</i> <b>Password: </b><i>%2$s</i> ', 'user-registration' ), $data['username'], $data['password'] ) . "\n\n";
+		$final_greeting   = __( 'Thank You.', 'user-registration' );
+
+		$template_file = locate_template( 'membership-registration-email.php' );
+		if ( ! $template_file ) {
+			$template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/Emails/membership-registration-email.php';
+		}
+		ob_start();
+		require $template_file;
+
+		$message = ob_get_clean();
+		$message = apply_filters( 'ur_membership_registration_email_custom_template', $message, $subject );
+		$headers = \UR_Emailer::ur_get_header();
+
+		return wp_mail( $data['email'], $subject, $message, $headers );
 	}
 }
