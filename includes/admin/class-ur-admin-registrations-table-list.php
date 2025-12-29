@@ -103,40 +103,12 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 
 		if ( current_user_can( $post_type_object->cap->delete_post, $row->ID ) ) {
 			if ( $current_status_trash ) {
-
-				$untrash_url = wp_nonce_url(
-					admin_url( sprintf( $post_type_object->_edit_link . '&action=untrash', $row->ID ) ),
-					'untrash-post_' . $row->ID
-				);
-
-				$untrash_url = wp_nonce_url( $untrash_url, 'ur_row_action_' . $row->ID, 'ur_action_nonce' );
-
-				$actions['untrash'] =
-					'<a aria-label="' . esc_attr__( 'Restore this item from the Trash', 'user-registration' ) . '" href="' . esc_url( $untrash_url ) . '">' .
-					esc_html__( 'Restore', 'user-registration' ) .
-					'</a>';
-
+				$actions['untrash'] = '<a aria-label="' . esc_attr__( 'Restore this item from the Trash', 'user-registration' ) . '" href="' . wp_nonce_url( admin_url( sprintf( $post_type_object->_edit_link . '&amp;action=untrash', $row->ID ) ), 'untrash-post_' . $row->ID ) . '">' . esc_html__( 'Restore', 'user-registration' ) . '</a>';
 			} elseif ( EMPTY_TRASH_DAYS ) {
-
-				$trash_url = get_delete_post_link( $row->ID );
-
-				$trash_url = wp_nonce_url( $trash_url, 'ur_row_action_' . $row->ID, 'ur_action_nonce' );
-
-				$actions['trash'] =
-					'<a class="submitdelete" aria-label="' . esc_attr__( 'Move this item to the Trash', 'user-registration' ) . '" href="' . esc_url( $trash_url ) . '">' .
-					esc_html__( 'Trash', 'user-registration' ) .
-					'</a>';
+				$actions['trash'] = '<a class="submitdelete" aria-label="' . esc_attr__( 'Move this item to the Trash', 'user-registration' ) . '" href="' . get_delete_post_link( $row->ID ) . '">' . esc_html__( 'Trash', 'user-registration' ) . '</a>';
 			}
-
 			if ( $current_status_trash || ! EMPTY_TRASH_DAYS ) {
-
-				$delete_url = get_delete_post_link( $row->ID, '', true );
-				$delete_url = wp_nonce_url( $delete_url, 'ur_row_action_' . $row->ID, 'ur_action_nonce' );
-
-				$actions['delete'] =
-					'<a class="submitdelete" aria-label="' . esc_attr__( 'Delete this item permanently', 'user-registration' ) . '" href="' . esc_url( $delete_url ) . '">' .
-					esc_html__( 'Delete permanently', 'user-registration' ) .
-					'</a>';
+				$actions['delete'] = '<a class="submitdelete" aria-label="' . esc_attr__( 'Delete this item permanently', 'user-registration' ) . '" href="' . get_delete_post_link( $row->ID, '', true ) . '">' . esc_html__( 'Delete permanently', 'user-registration' ) . '</a>';
 			}
 		}
 		$duplicate_nonce = wp_create_nonce( 'ur_duplicate_post_' . $row->ID );
