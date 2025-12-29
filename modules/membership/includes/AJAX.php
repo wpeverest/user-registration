@@ -1624,7 +1624,7 @@ class AJAX {
 	/**
 	 * Get membership details for a given membership ID.
 	 *
-	 * @since xx.xx.xx
+	 * @since 5.0.0
 	 */
 	public static function get_membership_details(){
 		if ( ! current_user_can( 'manage_options' ) ) {

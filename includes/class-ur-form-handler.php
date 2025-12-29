@@ -213,9 +213,9 @@ class UR_Form_Handler {
 					if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
 
 						if ( $user ) {
-							if ( sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) { // phpcs:ignore
+							if ( !empty($_POST[ $key ]) && sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) { // phpcs:ignore
 								$email_updated = true;
-								$pending_email = sanitize_email( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore
+								$pending_email = !empty($_POST[ $key ]) ? sanitize_email( wp_unslash( $_POST[ $key ] ) ) : ''; // phpcs:ignore
 							}
 							continue;
 						}

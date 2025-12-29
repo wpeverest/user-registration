@@ -291,6 +291,20 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 												required>
 										<span class="ur-currency"><?php echo esc_html( $currency ); ?></span>
 									</div>
+
+								</div>
+							</div>
+							<!--				membership duration-->
+							<div class="ur-membership-selection-container ur-p-1 ur-mt-3 ur-subscription-fields <?php echo isset( $membership_details['type'] ) && 'subscription' === $membership_details['type'] ? 'ur-d-flex' : 'ur-d-none'; ?>" id="ur-membership-duration-container"
+								style="gap:20px;">
+								<div class="ur-label" style="width: 30%">
+									<label
+										for="ur-membership-duration"><?php esc_html_e( 'Duration', 'user-registration' ); ?>
+										<span style="color:red">*</span> :
+									</label>
+								</div>
+								<div class="ur-field ur-d-flex ur-align-items-center"
+									data-field-key="membership_duration" style="width: 100%; gap: 20px;">
 									<select
 										id="ur-membership-duration"
 										data-key-name="Duration"
@@ -316,19 +330,6 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 										>Year(s)
 										</option>
 									</select>
-								</div>
-							</div>
-							<!--				membership duration-->
-							<div class="ur-membership-selection-container ur-p-1 ur-mt-3 ur-subscription-fields <?php echo isset( $membership_details['type'] ) && 'subscription' === $membership_details['type'] ? 'ur-d-flex' : 'ur-d-none'; ?>" id="ur-membership-duration-container"
-								style="gap:20px;">
-								<div class="ur-label" style="width: 30%">
-									<label
-										for="ur-membership-duration"><?php esc_html_e( 'Duration', 'user-registration' ); ?>
-										<span style="color:red">*</span> :
-									</label>
-								</div>
-								<div class="ur-field ur-d-flex ur-align-items-center"
-									data-field-key="membership_duration" style="width: 100%; gap: 20px;">
 									<input
 										data-key-name="Duration Value"
 										value="<?php echo isset( $membership_details['subscription'] ) ? esc_attr( $membership_details['subscription']['value'] ) : 1; ?>"
@@ -397,7 +398,7 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 								</div>
 							</div>
 						</div>
-						<?php if ( ! UR_PRO_ACTIVE ) : ?>
+						<?php if (  UR_PRO_ACTIVE ) : ?>
 						<!--									subscription fields container-->
 						<div
 							class="ur-membership-subscription-field-container <?php echo isset( $membership_details['type'] ) && 'subscription' === $membership_details['type'] ? '' : 'ur-d-none'; ?>">
@@ -596,10 +597,6 @@ if ( isset( $membership->post_content ) && ! empty( $membership->post_content ) 
 								</div>
 							</div>
 						</div>
-						<!--								membership all payments-->
-						<?php
-						require __DIR__ . '/./Partials/membership-admin-payments.php'
-						?>
 					</div>
 				</div>
 			</div>

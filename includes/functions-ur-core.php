@@ -1935,7 +1935,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 	} elseif ( 'test_captcha' === $context && false !== $recaptcha_enabled ) {
 		$recaptcha_type = $recaptcha_enabled;
 	} elseif ( 'lost_password' === $context ) {
-		//Same recaptcha type as login.
+		// Same recaptcha type as login.
 		$recaptcha_type = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
 		$recaptcha_type = apply_filters( 'user_registration_lost_password_captcha_type', $recaptcha_type );
 
@@ -1969,7 +1969,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 		$empty_credentials = true;
 	}
 
-	//Exit early if recaptcha is not enabled in global settings or has messing credentials.
+	// Exit early if recaptcha is not enabled in global settings or has messing credentials.
 	if ( $empty_credentials ) {
 		return '';
 	}
@@ -2164,7 +2164,7 @@ function ur_get_user_extra_fields( $user_id, $action = '' ) {
 	$form_fields   = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array(); //phpcs:ignore.
 	if ( ! empty( $form_fields ) ) {
 		foreach ( $form_fields as $field_key => $field_data ) {
-			//For repeator export
+			// For repeator export
 			if ( 'export_users' === $action ) {
 				$value = isset( $all_meta_for_user[ $field_key ] ) ? $all_meta_for_user[ $field_key ] : get_user_meta( $user_id, $field_key, true );
 			} else {
@@ -2555,12 +2555,11 @@ function ur_falls_in_date_range( $target_date, $start_date = null, $end_date = n
 /**
  * Get Post Content By Form ID.
  *
- * @param int $form_id Form Id.
+ * @param int    $form_id Form Id.
  * @param string $form_status The form status.
  *
  * @return array|mixed|null|object
  */
-
 function ur_get_post_content( $form_id, $form_status = 'publish' ) {
 	$args      = array(
 		'post_type'   => 'user_registration',
@@ -2666,7 +2665,6 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 						$seperator = 0 < $key ? ',' : '';
 
 						if ( wp_http_validate_url( $file ) ) {
-
 							$attachment_ids = $attachment_ids . '' . $seperator . '' . attachment_url_to_postid( $file );
 						}
 					}
@@ -6024,7 +6022,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 		$user_id = ! empty( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : get_current_user_id();
 		$form_id = ur_get_form_id_by_userid( $user_id );
 		$width   = floor( 100 / count( $data ) ) - count( $data );
-		$is_edit = isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'edit' && $user_id !== get_current_user_id();
+		$is_edit = isset( $_REQUEST['action'] ) && ( $_REQUEST['action'] === 'edit' || $_REQUEST['action'] === 'view' ) && $user_id !== get_current_user_id();
 
 		foreach ( $data as $grid_key => $grid_data ) {
 			$found_field = false;
@@ -6109,6 +6107,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 					if ( $is_edit ) {
 						unset( $readonly_fields['user_pass'] );
 					}
+
 					if ( isset( $field['field_key'] ) && array_key_exists( $field['field_key'], $readonly_fields ) ) {
 						$field['custom_attributes']['readonly'] = 'readonly';
 						if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {
@@ -7772,39 +7771,60 @@ if ( ! function_exists( 'ur_get_exclude_text_format_settings' ) ) {
 if ( ! function_exists( 'ur_check_url_is_image' ) ) {
 
 	/**
-	 * ur_check_is_image
+	 * Check if a URL points to a valid image.
 	 *
-	 * @param string $url
+	 * This function first checks if the URL belongs to a local WordPress attachment
+	 * to avoid self-referential HTTP requests which can cause heavy server load.
+	 * Only falls back to cURL for truly remote URLs (e.g., social login profile pictures).
 	 *
-	 * @return bool
+	 * @since x.x.x (updated)
+	 *
+	 * @param string $url The URL to check.
+	 *
+	 * @return bool True if the URL points to a valid image, false otherwise.
 	 */
 	function ur_check_url_is_image( $url ) {
-		$ch      = curl_init();
-		$headers = array(
-			'Accept: application/json',
-			'Content-Type: application/json',
-
-		);
-		curl_setopt( $ch, CURLOPT_URL, $url );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false ); //used for sites that have ssl disabled
-
-		curl_setopt( $ch, CURLOPT_NOBODY, true );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		curl_setopt( $ch, CURLOPT_HEADER, true );
-		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
-
-		curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
-		curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'GET' );
-
-		$response = curl_exec( $ch );
-
-		if ( false === $response ) {
-			curl_close( $ch );
+		if ( empty( $url ) || ! is_string( $url ) ) {
 			return false;
 		}
 
-		$contentType = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
-		return str_contains( $contentType, 'image/' );
+		$attachment_id = attachment_url_to_postid( $url );
+		if ( $attachment_id > 0 ) {
+			return wp_attachment_is_image( $attachment_id );
+		}
+
+		$site_url = get_site_url();
+		if ( strpos( $url, $site_url ) === 0 ) {
+			$allowed_image_extensions = array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'ico', 'svg' );
+			$parsed_url               = wp_parse_url( $url );
+			if ( ! empty( $parsed_url['path'] ) ) {
+				$extension = strtolower( pathinfo( $parsed_url['path'], PATHINFO_EXTENSION ) );
+				if ( in_array( $extension, $allowed_image_extensions, true ) ) {
+					$upload_dir = wp_upload_dir();
+					if ( strpos( $url, $upload_dir['baseurl'] ) === 0 ) {
+						$file_path = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $url );
+						return file_exists( $file_path );
+					}
+					return true;
+				}
+			}
+			return false;
+		}
+
+		$response = wp_remote_head(
+			$url,
+			array(
+				'timeout'   => 5,
+				'sslverify' => false,
+			)
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return false;
+		}
+
+		$content_type = wp_remote_retrieve_header( $response, 'content-type' );
+		return ! empty( $content_type ) && strpos( $content_type, 'image/' ) !== false;
 	}
 
 
@@ -8196,14 +8216,14 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'css'      => '',
 								'default'  => 'no',
 							),
-							//                          array(
-							//                              'title'    => __( 'Hide Field Labels', 'user-registration' ),
-							//                              'id'       => 'user_registration_login_options_hide_labels',
-							//                              'type'     => 'toggle',
-							//                              'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
-							//                              'css'      => '',
-							//                              'default'  => 'no',
-							//                          ),
+							// array(
+							// 'title'    => __( 'Hide Field Labels', 'user-registration' ),
+							// 'id'       => 'user_registration_login_options_hide_labels',
+							// 'type'     => 'toggle',
+							// 'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
+							// 'css'      => '',
+							// 'default'  => 'no',
+							// ),
 								array(
 									'title'    => __( 'Enable Captcha', 'user-registration' ),
 									'id'       => 'user_registration_login_options_enable_recaptcha',
@@ -8956,7 +8976,6 @@ if ( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 	 * and localization of URLs. It removes the filter temporarily to avoid infinite loops,
 	 * translates the endpoint, converts the URL using WPML's convert_url method, and then
 	 * re-adds the filter.
- *
 	 *
 	 * @param string $url       The endpoint URL.
 	 * @param string $endpoint  The endpoint slug.
@@ -8965,9 +8984,8 @@ if ( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 	 *
 	 * @return string Modified URL if WPML is active, original urk if WPML is not active.
 	 */
-
 	function ur_filter_get_endpoint_url( $url, $endpoint, $value, $permalink ) {
-		//Return early WPML is not active
+		// Return early WPML is not active
 		if ( ! class_exists( 'SitePress' ) ) {
 			return $url;
 		}
@@ -9531,6 +9549,7 @@ if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 if ( ! function_exists( 'ur_get_login_page_url' ) ) {
 	/**
 	 * Get the appropriate login page URL based on User Registration settings.
+	 *
 	 * @return string|false The login page URL or false if none found
 	 */
 	function ur_get_login_page_url() {
@@ -9694,7 +9713,7 @@ if ( ! function_exists( 'ur_get_membership_details' ) ) {
 	/**
 	 * Get membership details.
 	 *
-	 * @since xx.xx.xx
+	 * @since 5.0.0
 	 *
 	 * @return array
 	 */ function ur_get_membership_details() {
@@ -9703,4 +9722,53 @@ if ( ! function_exists( 'ur_get_membership_details' ) ) {
 
 		return $memberships;
 }
+}
+
+if( ! function_exists( 'ur_get_coupon_meta_by_code' ) ){
+
+	/**
+	 * Fetch coupon meta using coupon code stored in post_content
+	 *
+	 * @param string $coupon_code
+	 * @return array|bool
+	 *
+	 * @since xx.xx.xx
+	 */
+	function ur_get_coupon_meta_by_code( $coupon_code ) {
+		global $wpdb;
+
+		$post_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT ID
+				FROM {$wpdb->posts}
+				WHERE post_type = %s
+				AND post_content = %s
+				LIMIT 1",
+				'ur_coupons',
+				$coupon_code
+			)
+		);
+
+		if ( empty( $post_id ) ) {
+			return false;
+		}
+
+		$coupon_meta = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT meta_value
+				FROM {$wpdb->postmeta}
+				WHERE post_id = %d
+				AND meta_key = %s
+				LIMIT 1",
+				$post_id,
+				'ur_coupon_meta'
+			)
+		);
+
+		if ( empty( $coupon_meta ) ) {
+			return false;
+		}
+
+		return json_decode( ur_maybe_unserialize( $coupon_meta ) );
+	}
 }
