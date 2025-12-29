@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - v5.0.0
+            - v5.1.0
         workflow_dispatch:
 jobs:
     sync:
