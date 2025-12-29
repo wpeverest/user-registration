@@ -13,7 +13,7 @@ import * as thankYou from "./thank-you";
 import * as membershipBuyNow from "./membership-buy-now";
 
 /* global _UR_BLOCKS_ */
-const { iscRestrictionActive } =
+const { iscRestrictionActive, isProActive } =
 	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 let blocks = [

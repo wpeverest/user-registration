@@ -133,7 +133,8 @@
 	}
 
 	a {
-		text-decoration: none !important;;
+		text-decoration: none !important;
+		;
 	}
 }
 
@@ -141,26 +142,41 @@
 	0% {
 		transform: translateX(-5px);
 	}
+
 	50% {
 		transform: translateX(5px);
 	}
+
 	100% {
 		transform: translateX(-5px);
 	}
 }
 
 .field-amount {
+	display: flex;
 	position: relative;
 
-	span {
+	.ur-currency-symbol {
 		position: absolute;
-		top: 6px;
+		top: 10px;
 		left: 10px;
 		font-weight: 600;
 	}
 
 	input {
 		padding-left: 20px !important;
+		border-top-right-radius: 0 !important;
+		border-bottom-right-radius: 0 !important;
+	}
+
+	.ur-currency {
+		border: 1px solid $border-color;
+		border-top-right-radius: 4px;
+		border-bottom-right-radius: 4px;
+		border-left: none;
+		padding: 0px 22px;
+		min-height: 38px;
+		align-content: center;
 	}
 }
 
@@ -290,11 +306,11 @@
 			form {
 				gap: $spacing_16px;
 
-				> p {
+				>p {
 					display: none;
 				}
 
-				> div {
+				>div {
 					position: relative;
 
 					select {
@@ -516,6 +532,7 @@
 
 				tfoot {
 					tr {
+
 						td,
 						th {
 							border-top: $border_width solid $border_color;
@@ -620,7 +637,8 @@
 				&__body {
 					padding: 0;
 
-					#ur-membership-main-fields {
+					#ur-membership-main-fields,
+					#ur-membership-plan-and-price-section {
 						display: flex;
 						flex-direction: column;
 						gap: 24px;
@@ -738,179 +756,264 @@
 								@include form-toggle;
 							}
 						}
-					}
 
-					#ur-membership-plan-and-price-section {
-						margin: 0 !important;
-						padding: 0 !important;
+						.ur-membership-selection-container {
+							align-items: center;
+							padding: 0 !important;
 
-						.user-registration-card {
+							.ur-label {
+								margin-bottom: 0;
 
-							&__body {
-								.ur-membership-selection-container {
-									padding: 0 !important;
+								label {
+									margin-bottom: 0;
+								}
+							}
 
-									.ur-label {
-										label {
+							.ur-input-type-select {
+								.ur-field {
+									gap: 16px;
+									flex-wrap: wrap;
+
+									.ur-membership-types {
+										max-width: 225px;
+										margin-bottom: 0;
+										border-radius: 4px;
+										border: 1px solid #e1e1e1;
+										background: #FFF;
+										padding: 12px 14px;
+										cursor: pointer;
+
+										.ur-membership-type-title {
 											margin-bottom: 0 !important;
-											font-size: 15px;
-											line-height: 21px;
-											color: $grey-400;
 										}
-									}
 
-									.ur-input-type-select {
-										.ur-field {
-											gap: 16px;
-											flex-wrap: wrap;
+										.ur-membership-type {
+											&-title {
+												gap: $spacing_8px;
+												margin-bottom: $spacing_12px;
 
-											.ur-membership-types {
-												max-width: 250px;
-												margin-bottom: 0;
-												border-radius: 4px;
-												border: 1px solid #E9E9E9;
-												background: #FFF;
-												padding: 12px 14px;
-												cursor: pointer;
+												label {
+													padding: 0 !important;
+													font-size: 15px;
+													line-height: 20px;
+													font-weight: 500;
+													cursor: pointer;
 
-												.ur-membership-type {
-													&-title {
-														gap: $spacing_8px;
-														margin-bottom: $spacing_12px;
-
-														label {
-															padding: 0 !important;
-															font-size: 16px;
-															line-height: 24px;
-															cursor: pointer;
-														}													
-
-														input[type="radio"] {
-															&:checked::before {
-																background: $primary_color;
-															}
-														}
-
-														@media screen and (max-width: 782px) {
-															input[type="radio"] {
-																width: 1rem;
-																height: 1rem;
-
-																&::before {
-																	width: 0.5rem;
-																	height: 0.5rem;
-																	margin: 0.1875rem;
-																}
-
-																&:checked::before {
-																	background: $primary_color;
-																}
-															}															
-														}
-													}
-
-													&-description {
-														p {
-															color: #383838;
-															font-size: 14px !important;
-															font-weight: 400;
-															line-height: 20px;
-															margin: 0;
-														}
+													b {
+														font-weight: inherit;
 													}
 												}
 
-												&:has(input[type="radio"]:checked) {
-													border-color: $primary_color;
-												}
-											}
-
-											.ur-membership-upgrade-types {
-												width: 100%;
-												max-width: 220px;
-												margin-bottom: 0;
-												border-radius: $border_radius_4;
-												border: $border_width solid $border-color;
-												background: $white;
-												padding: $spacing_16px;
-												cursor: pointer;
-												display: flex;
-												align-items: center;
-												gap: $spacing_12px;
-
-												.ur-membership-upgrade-type {
-													&-title {
-														gap: $spacing_8px;
-														margin-bottom: $spacing_12px;
-
-														label {
-															padding: 0 !important;
-															font-size: 16px;
-															line-height: 24px;
-														}
-													}
-
-													&-full {
-														&--label {
-															padding: 0;
-														}
+												input[type="radio"] {
+													&:checked::before {
+														background: $primary_color;
 													}
 												}
 
-												.ur-membership-type-title {
-													gap: $spacing_8px;
-
-													input[type="radio"],
-													.ur-membership-upgrade-type-full--label {
-														cursor: pointer;
-													}
-
+												@media screen and (max-width: 782px) {
 													input[type="radio"] {
+														width: 1rem;
+														height: 1rem;
+
+														&::before {
+															width: 0.5rem;
+															height: 0.5rem;
+															margin: 0.1875rem;
+														}
+
 														&:checked::before {
 															background: $primary_color;
 														}
 													}
 												}
+											}
 
-												&:has(input[type="radio"]:checked) {
-													border-color: $primary_color;
-												}
-
-												&:has(input:disabled) {
-													cursor: not-allowed;
-
-													.ur-membership-type-title {
-														input[type="radio"],
-														.ur-membership-upgrade-type-full--label {
-															cursor: not-allowed;
-														}
-													}
+											&-description {
+												p {
+													color: #383838;
+													font-size: 14px !important;
+													font-weight: 400;
+													line-height: 20px;
+													margin: 0;
 												}
 											}
 										}
-									}
 
-									.ur-label {
-										margin-bottom: 0;
-									}
-
-									.ur-input-type-membership-upgrade-path {
-										.select2 {
-											&-selection {
-												&__rendered {
-													flex-wrap: wrap;
-												}
-											}
+										&:has(input[type="radio"]:checked) {
+											border-color: $primary_color;
 										}
-									}
-									.user-registration-switch {
-										@include form-toggle;
 									}
 								}
 							}
 						}
 
-						> .user-registration-card {
+					}
+
+					#ur-membership-plan-and-price-section {
+						.ur-membership-selection-container {
+							padding: 0 !important;
+
+							.ur-label {
+								label {
+									margin-bottom: 0 !important;
+									font-size: 15px;
+									line-height: 21px;
+									color: $grey-400;
+								}
+							}
+
+							.ur-input-type-select {
+								.ur-field {
+									gap: 16px;
+									flex-wrap: wrap;
+
+									.ur-membership-types {
+										max-width: 225px;
+										margin-bottom: 0;
+										border-radius: 4px;
+										border: 1px solid #e1e1e1;
+										background: #FFF;
+										padding: 12px 14px;
+										cursor: pointer;
+
+										.ur-membership-type {
+											&-title {
+												gap: $spacing_8px;
+												margin-bottom: $spacing_12px;
+
+												label {
+													padding: 0 !important;
+													font-size: 16px;
+													line-height: 24px;
+													cursor: pointer;
+												}
+
+												input[type="radio"] {
+													&:checked::before {
+														background: $primary_color;
+													}
+												}
+
+												@media screen and (max-width: 782px) {
+													input[type="radio"] {
+														width: 1rem;
+														height: 1rem;
+
+														&::before {
+															width: 0.5rem;
+															height: 0.5rem;
+															margin: 0.1875rem;
+														}
+
+														&:checked::before {
+															background: $primary_color;
+														}
+													}
+												}
+											}
+
+											&-description {
+												p {
+													color: #383838;
+													font-size: 14px !important;
+													font-weight: 400;
+													line-height: 20px;
+													margin: 0;
+												}
+											}
+										}
+
+										&:has(input[type="radio"]:checked) {
+											border-color: $primary_color;
+										}
+									}
+
+									.ur-membership-upgrade-types {
+										width: 100%;
+										max-width: 220px;
+										margin-bottom: 0;
+										border-radius: $border_radius_4;
+										border: $border_width solid $border-color;
+										background: $white;
+										padding: $spacing_16px;
+										cursor: pointer;
+										display: flex;
+										align-items: center;
+										gap: $spacing_12px;
+
+										.ur-membership-upgrade-type {
+											&-title {
+												gap: $spacing_8px;
+												margin-bottom: $spacing_12px;
+
+												label {
+													padding: 0 !important;
+													font-size: 16px;
+													line-height: 24px;
+												}
+											}
+
+											&-full {
+												&--label {
+													padding: 0;
+												}
+											}
+										}
+
+										.ur-membership-type-title {
+											gap: $spacing_8px;
+
+											input[type="radio"],
+											.ur-membership-upgrade-type-full--label {
+												cursor: pointer;
+											}
+
+											input[type="radio"] {
+												&:checked::before {
+													background: $primary_color;
+												}
+											}
+										}
+
+										&:has(input[type="radio"]:checked) {
+											border-color: $primary_color;
+										}
+
+										&:has(input:disabled) {
+											cursor: not-allowed;
+
+											.ur-membership-type-title {
+
+												input[type="radio"],
+												.ur-membership-upgrade-type-full--label {
+													cursor: not-allowed;
+												}
+											}
+										}
+									}
+								}
+							}
+
+							.ur-label {
+								margin-bottom: 0;
+							}
+
+							.ur-input-type-membership-upgrade-path {
+								.select2 {
+									&-selection {
+										&__rendered {
+											flex-wrap: wrap;
+										}
+									}
+								}
+							}
+
+							.user-registration-switch {
+								@include form-toggle;
+							}
+						}
+
+						>.user-registration-card {
 							padding: 0;
 							border: 0;
 							margin-top: 80px;
@@ -922,11 +1025,11 @@
 						border-color: $primary_color;
 
 					}
+
 					#paid-plan-container {
 						display: flex;
 						flex-direction: column;
 						gap: $spacing_24px;
-						margin-top: $spacing_24px;
 
 						.ur-membership-selection-container {
 							align-items: center;
@@ -943,22 +1046,42 @@
 									font-size: 16px;
 								}
 
-								input[type="number"] {
-									padding-left: $spacing_24px !important;
-								}
+								// input[type="number"] {
+								// 	padding-left: $spacing_24px !important;
+								// }
+							}
+						}
+					}
+
+					.ur-membership-subscription-field-container {
+						.ur-membership-selection-container {
+							.ur-field {
+								gap: $spacing_12px;
 							}
 						}
 
-						.ur-membership-subscription-field-container {
-							.ur-membership-selection-container {
-								.ur-field {
-									gap: $spacing_12px;
+						.ur-membership-input-container {
+							margin-top: $spacing_24px !important;
+							padding: 0 !important;
+
+							.ur-label {
+								margin-bottom: 0;
+
+								label {
+									margin-bottom: 0;
+									font-size: 15px;
+									line-height: 21px;
+									color: $grey-400;
 								}
 							}
 
-							.ur-membership-input-container {
-								margin-top: $spacing_24px !important;
-								padding: 0 !important;
+							.user-registration-switch {
+								@include form-toggle;
+							}
+						}
+
+						.trial-container {
+							&--wrapper {
 
 								.ur-label {
 									margin-bottom: 0;
@@ -971,52 +1094,25 @@
 									}
 								}
 
-								.user-registration-switch {
-									@include form-toggle;
-								}
-							}
+								.ur-field {
+									flex: 1;
+									gap: $spacing_12px;
 
-							.trial-container {
-								margin-top: $spacing_16px;
-
-								&--wrapper {
-									max-width: 650px;
-									background: #f4f4f4;
-									margin-left: 0 !important;
-									padding: $spacing_20px !important;
-									border-radius: $border_radius_4;
-
-									.ur-label {
-										margin-bottom: 0;
-										width: 260px !important;
-
-										label {
-											margin-bottom: 0;
-											font-size: 15px;
-											line-height: 21px;
-											color: $grey-400;
-										}
+									input[type="number"] {
+										width: 100px;
 									}
 
-									.ur-field {
+									select {
 										flex: 1;
-										gap: $spacing_12px;
-
-										input[type="number"] {
-											width: 100px;
-										}
-
-										select {
-											flex: 1;
-										}
 									}
 								}
 							}
 						}
 					}
 
-					#payment-gateway-container {
-						margin-top: 60px;
+					#payment-gateway-container,
+					#ur-sync-to-email-marketing-container {
+						margin-top: 20px;
 
 						.user-registration-card {
 							border-radius: $border_radius_7;
@@ -1097,6 +1193,7 @@
 													color: $grey-400;
 												}
 											}
+
 											.user-registration-switch {
 												@include form-toggle;
 											}
@@ -1106,6 +1203,23 @@
 
 								.payment-option-body {
 									margin-top: $spacing_20px;
+
+									.ur-sync-to-email-marketing-addon {
+										&-title-container {
+											display: flex;
+											align-items: center;
+											justify-content: start;
+
+											&-inner {
+												display: flex;
+												justify-content: center;
+												align-items: center;
+												gap: 10px;
+											}
+										}
+
+										&-sync-container {}
+									}
 								}
 							}
 						}
@@ -1118,6 +1232,283 @@
 
 				.submit {
 					@include form-footer-button;
+				}
+
+				&--form-step {
+					display: none;
+
+					&-active {
+						display: block;
+					}
+				}
+			}
+		}
+	}
+
+	#user-registration-base-list-table-page {
+
+		.user-registration-base-list-table-form {
+			.tablenav {
+				&-pages {
+					margin-top: 5px;
+					margin-bottom: 0;
+				}
+			}
+
+			.wp-list-table.memberships {
+				thead {
+					tr {
+						th {
+
+							&#title,
+							&#membership_price,
+							&#membership_type,
+							&#members,
+							&#status {
+								width: 20%;
+							}
+
+							&#draggable {
+								width: 1%;
+							}
+
+						}
+					}
+				}
+
+				tbody {
+					tr {
+						&:nth-child(odd) {
+							background: #F8F8FA;
+						}
+
+						td {
+							font-size: 14px;
+							line-height: 24px;
+							color: #383838;
+
+							strong {
+								margin: 0;
+
+								.ur-edit-title {
+									a {
+										line-height: 24px;
+										font-weight: 400;
+									}
+								}
+							}
+
+							&.draggable {
+								display: flex;
+								align-items: flex-start;
+								padding-right: $spacing_2px;
+
+								svg {
+									width: 20px;
+									height: 20px;
+									fill: #a0a0a0;
+									margin-top: $spacing_2px;
+								}
+							}
+
+							&.membership_type {
+								.user-registration-badge {
+									padding: 0;
+									background: none;
+									font-size: 14px;
+									text-transform: capitalize;
+									color: #383838;
+									font-weight: 500;
+								}
+							}
+
+							&.status {
+								.ur-toggle-section {
+									.user-registration-toggle-form {
+
+										input {
+
+											&:checked+.slider {
+												background-color: $green;
+											}
+										}
+
+									}
+								}
+							}
+						}
+
+						&.no-items {
+							background: #ffffff;
+
+							td {
+								padding: 0;
+
+								.empty-list-table-container {
+									text-align: center;
+									margin-top: 30px;
+									margin-bottom: 30px;
+
+									img {
+										width: 300px;
+									}
+
+									h3 {
+										margin-top: 16px;
+										margin-bottom: 8px;
+										color: #222222;
+										font-size: 22px;
+										font-weight: 600;
+										line-height: 32px;
+									}
+
+									p {
+										color: #6B6B6B;
+										font-size: 14px;
+										font-weight: 400;
+										line-height: 24px;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				tfoot {
+					tr {
+
+						td,
+						th {
+							border-top: $border_width solid $border_color;
+						}
+
+						th {
+							font-size: 14px;
+							font-weight: 600;
+							line-height: 24px;
+							color: #383838;
+
+							a {
+								padding: 12px 8px;
+								display: flex;
+								align-items: center;
+								gap: 8px;
+							}
+						}
+					}
+				}
+			}
+
+			&#membership-list {
+				.tablenav.top {
+					display: none;
+				}
+			}
+
+			&#user-registration-members-list-form {
+				#user-registration-base-list-filters-row {
+					margin-bottom: $spacing_32px;
+				}
+
+				.tablenav {
+					display: flex;
+					justify-content: flex-end;
+					align-self: center;
+					margin-bottom: $spacing_32px;
+					flex-wrap: wrap;
+					justify-content: space-between;
+
+					&.top {
+						justify-content: flex-end;
+						padding-top: 40px;
+						row-gap: $spacing_16px;
+					}
+
+					.bulkactions {
+						input[type="submit"] {
+							padding: 8px 14px;
+							font-size: 14px;
+							line-height: 20px;
+							color: #475BB2;
+							border-color: #475BB2;
+							background: #F6F7F7;
+							font-weight: 500;
+						}
+					}
+
+					.user-registration-members-filters {
+						display: flex;
+						flex-wrap: wrap;
+						gap: $spacing_16px;
+
+						@media (min-width: 1200px) {
+							flex-wrap: nowrap;
+						}
+
+						@media (max-width: 1199px) {
+							select {
+								flex: 1 1 180px;
+							}
+						}
+
+						@media (max-width: 768px) {
+							select {
+								flex: 1 1 100%;
+							}
+						}
+					}
+				}
+
+				.tablenav.top:has(.bulkactions) {
+					justify-content: space-between;
+					padding-top: 0;
+				}
+
+				.wp-list-table.users {
+					tbody {
+						tr {
+							&.no-items {
+								background: #ffffff;
+
+								td {
+									padding: 0;
+
+									.empty-list-table-container {
+										text-align: center;
+										margin-top: 30px;
+										margin-bottom: 30px;
+
+										img {
+											width: 300px;
+										}
+
+										h3 {
+											margin-top: 16px;
+											margin-bottom: 8px;
+											color: #222222;
+											font-size: 22px;
+											font-weight: 600;
+											line-height: 32px;
+										}
+
+										p {
+											color: #6B6B6B;
+											font-size: 14px;
+											font-weight: 400;
+											line-height: 24px;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				@media (max-width: 767px) {
+					#user-registration-base-list-filters-row {
+						display: block;
+						margin-top: 50px;
+					}
 				}
 			}
 		}
@@ -1138,6 +1529,27 @@
 			border-radius: $border_radius_13;
 		}
 	}
+
+	.ur-membership-error {
+		border-color: $red !important;
+	}
+
+	#ur-membership-payment-settings-notice {
+		border: 1px solid $primary_color;
+		border-radius: $spacing_6px;
+		padding: $spacing_8px;
+		background-color: #f8f9fc;
+
+		p {
+			margin: 0;
+		}
+
+		a {
+			color: $primary_color;
+			font-weight: $semi_bold;
+			text-decoration: underline;
+		}
+	}
 }
 
 #ur-membership-create-form {
@@ -1148,7 +1560,7 @@
 
 			#ur-member-form {
 				&-left {
-					width: 70%;
+					width: 100%;
 
 					#left-title {
 						padding-bottom: $spacing_20px;
@@ -1197,6 +1609,7 @@
 					gap: $spacing_32px;
 					display: flex;
 					flex-direction: column;
+
 					.right-container {
 						border-radius: $border_radius_7;
 						height: fit-content;
@@ -1209,6 +1622,7 @@
 
 						&#plan-detail-container {
 							position: relative;
+
 							.form-row {
 								display: flex;
 								align-items: flex-end;
@@ -1219,14 +1633,17 @@
 									flex: 1;
 									margin: 0;
 								}
+
 								span {
 									flex: 1;
+
 									&.user-registration-badge {
 										font-size: 13px;
 										line-height: 18px;
 										border-radius: 30px;
 										padding: 4px 12px;
 									}
+
 									&.user-registration-badge {
 										&--active {
 											color: #3aa530;
@@ -1262,8 +1679,8 @@
 								}
 							}
 
-							.urm-membership-plan-spinner-container{
-								&.is_loading{
+							.urm-membership-plan-spinner-container {
+								&.is_loading {
 									position: absolute;
 									top: 0;
 									left: 0;
@@ -1279,6 +1696,7 @@
 								}
 							}
 						}
+
 						.right-title {
 							padding-bottom: $spacing_16px;
 							margin-bottom: $spacing_24px;
@@ -1350,7 +1768,8 @@
 	}
 }
 
-#ur-membership-plan-and-price-section .upgradable-type {
+#ur-membership-main-fields .upgradable-type,
+#upgrade-settings-container .upgradable-type {
 	position: relative;
 	color: #bababa;
 
@@ -1421,27 +1840,152 @@
 		}
 	}
 }
+
 .tooltipster-base.tooltipster-bottom {
-	margin-top: -30px /* Adjust gap for bottom-positioned tooltips */
+	margin-top: -30px
+		/* Adjust gap for bottom-positioned tooltips */
 }
 
 .wp-list-table {
 	&.memberships {
 		tfoot {
 			tr {
-				th, td {
+
+				th,
+				td {
 					border-top: none;
 				}
 			}
 		}
 	}
 
-	&.users{
+	&.users {
 		td {
 			vertical-align: middle;
 
 			p {
 				margin: 7px 0 5px;
+			}
+		}
+	}
+}
+
+// Drag-and-drop sorting styles for membership table
+#membership-list {
+	tbody#the-list {
+		.ur-membership-sortable-row {
+			cursor: move;
+			cursor: grab;
+			cursor: -webkit-grab;
+
+			&:active {
+				cursor: grabbing;
+				cursor: -webkit-grabbing;
+			}
+		}
+
+		// Sortable drag states (jQuery UI Sortable)
+		.ui-sortable-helper {
+			opacity: 0.8;
+			box-shadow: 0 2px 8px rgba(72, 91, 178, 0.2);
+			background: rgba(72, 91, 178, 0.1);
+			border-color: rgba(72, 91, 178, 0.3);
+			display: table !important;
+			table-layout: fixed;
+			margin: 0 !important;
+			border-collapse: collapse;
+
+			tr {
+				display: table-row !important;
+
+				td {
+					vertical-align: middle;
+
+					// Ensure drag handle column maintains alignment
+					&.draggable {
+						display: flex;
+						align-items: center;
+					}
+				}
+			}
+		}
+
+		.ur-sortable-placeholder {
+			opacity: 0.5;
+			background: rgba(72, 91, 178, 0.08);
+			border: 2px dashed rgba(72, 91, 178, 0.2);
+			visibility: visible !important;
+		}
+
+		tr.ui-sortable-helper {
+			display: table-row !important;
+			width: 100% !important;
+			margin: 0 !important;
+			padding: 0 !important;
+
+			td {
+				vertical-align: middle;
+			}
+
+			// Ensure drag handle column maintains alignment
+			td.draggable {
+				display: flex;
+				align-items: center;
+			}
+		}
+	}
+}
+
+.user-registration-base-list-table-heading {
+	.ur-membership-order-controls {
+		position: relative;
+
+		.button-primary {
+			display: flex;
+			align-items: center;
+			gap: $spacing_8px;
+			min-height: 36px;
+			padding: 0 $spacing_14px 0 $spacing_12px;
+			border: 0;
+			font-size: 14px;
+			line-height: 20px;
+			font-weight: 500;
+			border: $border_width solid $border-color;
+			background: transparent;
+			outline: none;
+			box-shadow: none;
+			color: #334155;
+			border-radius: $border_radius_4;
+
+			svg {
+				width: 16px;
+				height: 16px;
+				fill: #334155;
+			}
+
+			&:hover {
+				color: $primary_color;
+				background: lighten($primary_color, 50%);
+
+				svg {
+					fill: $primary_color;
+				}
+			}
+		}
+
+		.ur-spinner {
+			margin: 0;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			left: 13px;
+		}
+
+		&:has(.ur-spinner) {
+			.button-primary {
+				svg {
+					opacity: 0;
+				}
 			}
 		}
 	}

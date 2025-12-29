@@ -95,6 +95,7 @@ class UR_AJAX {
 			'handle_default_wordpress_login'    => false,
 			'skip_site_assistant_section'       => false,
 			'login_settings_page_validation'    => false,
+			'check_advanced_logic_rules'        => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -268,124 +269,14 @@ class UR_AJAX {
 			}
 		}
 
-		$profile = user_registration_form_data( $user_id, $form_id );
-
-		$is_admin_user = $_POST['is_admin_user'] ?? false;
-		foreach ( $profile as $key => $field ) {
-
-			if ( ! isset( $field['type'] ) ) {
-				$field['type'] = 'text';
-			}
-			// Unset hidden field value.
-			if ( ( isset( $field['field_key'] ) && 'hidden' === $field['field_key'] ) || ( 'range' === $field['type'] && ur_string_to_bool( $field['enable_payment_slider'] ) ) ) {
-				self::unset_field( $field, $profile );
-			}
-			if ( ! $is_admin_user && 'hidden' === $field['type'] ) {
-				self::unset_field( $field, $profile );
-			}
-			// Get Value.
-			switch ( $field['type'] ) {
-				case 'checkbox':
-					if ( isset( $single_field[ $key ] ) ) {
-						// Serialize values fo checkbox field.
-						$single_field[ $key ] = ( json_decode( $single_field[ $key ] ) !== null ) ? json_decode( $single_field[ $key ] ) : sanitize_text_field( $single_field[ $key ] );
-					}
-					break;
-				case 'wysiwyg':
-					if ( isset( $single_field[ $key ] ) ) {
-						$single_field[ $key ] = sanitize_text_field( htmlentities( $single_field[ $key ] ) );
-					} else {
-						$single_field[ $key ] = '';
-					}
-					break;
-				case 'signature':
-					if ( isset( $single_field[ $key ] ) ) {
-						$single_field[ $key ] = apply_filters( 'user_registration_process_signature_field_data', $single_field[ $key ] );
-					} else {
-						$single_field[ $key ] = $field['default'];
-					}
-					break;
-				default:
-					if ( 'repeater' !== $field['type'] ) {
-						$single_field[ $key ] = isset( $single_field[ $key ] ) ? $single_field[ $key ] : '';
-					}
-					break;
-			}
-		}
-
-		/**
-		 * Action hook to perform validation of edit profile form.
-		 *
-		 * @param array $profile User profile data.
-		 * @param array $form_data The form data.
-		 * @param int $form_id The form ID.
-		 * @param int $user_id The user id.
-		 */
-		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id, $user_id );
-		/**
-		 * Action after the save profile validation.
-		 *
-		 * @param int The user ID.
-		 * @param array The profile data.
-		 */
-		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
+		$profile                        = user_registration_form_data( $user_id, $form_id );
+		$is_admin_user                  = $_POST['is_admin_user'] ?? false;
+		list( $profile, $single_field ) = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, $is_admin_user );
+		$user                           = get_userdata( $user_id );
 
 		if ( 0 === ur_notice_count( 'error' ) ) {
-			$user_data = array();
-			/**
-			 * Filter to modify the email change confirmation.
-			 * Default vallue is 'true'.
-			 */
-			$is_email_change_confirmation = (bool) apply_filters( 'user_registration_email_change_confirmation', true );
-			$email_updated                = false;
-			$pending_email                = '';
-			$user                         = get_userdata( $user_id );
-			/**
-			 * Filter to modify the field settings.
-			 *
-			 * The dynamic portion of the hook name, $value->field_key.
-			 *
-			 * @param array $value The field value.
-			 */
-			$profile = apply_filters( 'user_registration_before_save_profile_details', $profile, $user_id, $form_id );
+			list( $email_updated, $pending_email ) = urm_update_user_profile_data( $user, $profile, $single_field, $form_id );
 
-			foreach ( $profile as $key => $field ) {
-				$new_key = str_replace( 'user_registration_', '', $key );
-
-				if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
-					if ( $user ) {
-						if ( sanitize_email( wp_unslash( $single_field[ $key ] ) ) !== $user->user_email ) {
-							$email_updated = true;
-							$pending_email = sanitize_email( wp_unslash( $single_field[ $key ] ) );
-						}
-						continue;
-					}
-				}
-
-				if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
-					if ( 'display_name' === $new_key ) {
-						$user_data['display_name'] = sanitize_text_field( ( $single_field[ $key ] ) );
-					} else {
-						$user_data[ $new_key ] = sanitize_text_field( $single_field[ $key ] );
-					}
-				} else {
-					$update_key = $key;
-
-					if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
-						$update_key = str_replace( 'user_', '', $new_key );
-					}
-					$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
-
-					if ( 'disabled' !== $disabled ) {
-						update_user_meta( $user_id, $update_key, $single_field[ $key ] );
-					}
-				}
-			}
-
-			if ( count( $user_data ) > 0 ) {
-				$user_data['ID'] = $user_id;
-				wp_update_user( $user_data );
-			}
 			/**
 			 * Filter to modify the profile update success message.
 			 */
@@ -1655,6 +1546,14 @@ class UR_AJAX {
 		ob_start();
 
 		check_ajax_referer( 'user_registration_create_form', 'security' );
+
+		$all_forms = ur_get_all_user_registration_form();
+
+		if ( ( ! empty( $all_forms ) && count( $all_forms ) <= 1 && ! ur_check_module_activation( 'multiple-registration' ) ) ) {
+			wp_send_json_error( array( 'message' => __( 'Multiple registration forms cannot be created.', 'user-registration' ) ) );
+			die( -1 );
+		}
+
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => __( 'You do not have permission to create form.', 'user-registration' ) ) );
 			wp_die( - 1 );
@@ -2412,29 +2311,6 @@ class UR_AJAX {
 					);
 				}
 				break;
-			case 'user_registration_reset_password_page_id':
-				if ( empty( $page_id ) ) {
-					wp_send_json_error(
-						array(
-							'message' => esc_html__(
-								'Please select a valid reset password page that contains the reset password shortcode [user_registration_reset_password_form]',
-								'user-registration'
-							),
-						)
-					);
-				}
-				$is_page_reset_password_page = ur_find_reset_password_in_page( $page_id );
-				if ( ! $is_page_reset_password_page ) {
-					wp_send_json_error(
-						array(
-							'message' => esc_html__(
-								'The selected page does not contain the required password reset shortcode [user_registration_reset_password_form]',
-								'user-registration'
-							),
-						)
-					);
-				}
-				break;
 			case 'user_registration_login_options_login_redirect_url':
 				if ( empty( $page_id ) ) {
 					wp_send_json_error(
@@ -2468,6 +2344,40 @@ class UR_AJAX {
 				'message' => __( 'Page validation successful.', 'user-registration' ),
 			)
 		);
+	}
+
+	/**
+	 * Ajax handler: Check if rules with advanced logic exist.
+	 *
+	 */
+	public static function check_advanced_logic_rules() {
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'You do not have permission to check advanced logic rules.', 'user-registration' ),
+				)
+			);
+			return;
+		}
+
+		check_ajax_referer( 'user_registration_settings_nonce', 'security' );
+
+		if ( function_exists( 'urcr_has_rules_with_advanced_logic' ) ) {
+			$has_advanced_logic = urcr_has_rules_with_advanced_logic();
+
+			wp_send_json_success(
+				array(
+					'has_advanced_logic' => $has_advanced_logic,
+				)
+			);
+		} else {
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Function not found.', 'user-registration' ),
+				)
+			);
+		}
 	}
 }
 

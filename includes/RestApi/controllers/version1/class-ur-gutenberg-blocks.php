@@ -127,6 +127,16 @@ class UR_Gutenberg_Blocks {
 				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/get-content-rules',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'ur_get_content_rules' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
 	}
 
 	/**
@@ -143,6 +153,23 @@ class UR_Gutenberg_Blocks {
 			array(
 				'success'    => true,
 				'form_lists' => $form_lists,
+			),
+			200
+		);
+	}
+
+	/**
+	 * ur_get_content_rules
+	 *
+	 * @return WP_REST_Response
+	 */
+	public static function ur_get_content_rules() {
+		$rule_lists = urcr_get_rules();
+
+		return new \WP_REST_Response(
+			array(
+				'success'    => true,
+				'rule_lists' => $rule_lists,
 			),
 			200
 		);
