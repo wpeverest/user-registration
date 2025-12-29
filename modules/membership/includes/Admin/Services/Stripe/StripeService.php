@@ -146,9 +146,12 @@ class StripeService {
 		);
 
 		if ( isset( $payment_data['coupon'] ) && ! empty( $payment_data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
-			$coupon_details  = ur_get_coupon_details( $payment_data['coupon'] );
-			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $amount * $coupon_details['coupon_discount'] / 100;
-			$amount          = $amount - $discount_amount;
+			$coupon_details = ur_get_coupon_details( $payment_data['coupon'] );
+
+			if ( isset( $coupon_details['coupon_discount_type'] ) && isset( $coupon_details['coupon_discount'] ) ) {
+				$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $amount * $coupon_details['coupon_discount'] / 100;
+				$amount          = $amount - $discount_amount;
+			}
 		}
 
 		if ( 'JPY' === $currency ) {
@@ -289,6 +292,13 @@ class StripeService {
 
 	public function update_order( $data ) {
 		$transaction_id = $data['payment_result']['paymentIntent']['id'] ?? '';
+
+		if(empty($transaction_id)){
+			$transaction_id = $data['payment_result']['latest_invoice']['payment_intent']['next_action']['use_stripe_sdk']['directory_server_encryption']['server_transaction_id'] ?? '';
+		}
+
+		$three_d_secure_2_source = $data['payment_result']['latest_invoice']['payment_intent']['next_action']['use_stripe_sdk']['three_d_secure_2_source'] ?? '';
+
 		$payment_status = sanitize_text_field( $data['payment_status'] );
 		$member_id      = absint( $_POST['member_id'] );
 		$is_upgrading   = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
@@ -381,7 +391,7 @@ class StripeService {
 				)
 			);
 
-			if ( $is_order_updated && 'paid' === $member_order['order_type'] ) {
+			if ( ($is_order_updated && 'paid' === $member_order['order_type']) || ($is_order_updated && !empty($three_d_secure_2_source) && 'subscription' === $member_order['order_type']) ) {
 				$this->members_subscription_repository->update(
 					$member_subscription['ID'],
 					array(
@@ -684,17 +694,23 @@ class StripeService {
 				)
 			);
 
-			if ( 'active' === $subscription_status || 'trialing' === $subscription_status ) {
+			$three_ds2_source = $subscription->latest_invoice->payment_intent->next_action->use_stripe_sdk->three_d_secure_2_source ?? '';
+
+			if ( 'active' === $subscription_status || 'trialing' === $subscription_status || ( 'incomplete' === $subscription_status && ! empty( $three_ds2_source ) ) ) {
+				$status = ( 'incomplete' === $subscription_status && ! empty( $three_ds2_source ) ) ? 'pending' : 'completed';
 				$this->members_orders_repository->update(
 					$member_order['ID'],
 					array(
-						'status'         => 'completed',
+						'status'         => $status,
 						'transaction_id' => $subscription->id,
 					)
 				);
 				switch ( $subscription_status ) {
 					case 'trialing':
 						$subscription_status = ( $is_upgrading && ! empty( $next_subscription['delayed_until'] ) ) ? 'active' : 'trial';
+						break;
+					case ( 'incomplete' === $subscription_status && ! empty( $three_ds2_source ) ):
+						$subscription_status = 'pending';
 						break;
 					default:
 						break;
@@ -981,15 +997,15 @@ class StripeService {
 	}
 
 	public function handle_webhook( $event, $subscription_id ) {
-        // Verify that the event was sent by Stripe
-		if( isset( $event[ 'id' ] ) ) {
-            try {
-				$event_id = sanitize_text_field( $event[ 'id' ] );
-                $event = (array)\Stripe\Event::retrieve( $event_id );
-            } catch( \Exception $e ) {
+		// Verify that the event was sent by Stripe
+		if ( isset( $event['id'] ) ) {
+			try {
+				$event_id = sanitize_text_field( $event['id'] );
+				$event    = (array) \Stripe\Event::retrieve( $event_id );
+			} catch ( \Exception $e ) {
 				die();
-            }
-        } else {
+			}
+		} else {
 			die();
 		}
 		switch ( $event['type'] ) {
