@@ -83,9 +83,10 @@ $border-color_6: #475bb2;
 	}
 
 	&.is-selected {
-		background-color: $background-color_4;
-		color: $color_6;
-		font-weight: 500;
+		// background-color: $background-color_4;
+		// color: $color_6;
+		background: #f9fafb;
+		color: #475bb2;
 	}
 
 	&.is-disabled {

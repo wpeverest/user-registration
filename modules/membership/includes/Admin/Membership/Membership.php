@@ -566,7 +566,8 @@ class Membership {
 				'label'    => __( 'Advanced', 'user-registration' ),
 				'step'     => 2,
 				'partial'  => 'membership-create-advanced-tab.php',
-				'icon_svg' => $load_svg_icon( 'membership-advanced-icon' ),
+				// 'icon_svg' => $load_svg_icon( 'membership-advanced-icon' ),
+				'icon_svg' => $load_svg_icon( 'advanced' ),
 			),
 		);
 

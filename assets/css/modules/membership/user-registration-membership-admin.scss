@@ -731,6 +731,10 @@
 									.wp-editor-container {
 										.mce-container {
 											border-bottom: 0;
+
+											&.mce-edit-area {
+												padding: 0 $spacing_8px;
+											}
 										}
 
 										.mce-container-body {

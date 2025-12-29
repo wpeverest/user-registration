@@ -833,6 +833,10 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container .mce-container {
   border-bottom: 0;
 }
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container .mce-container.mce-edit-area,
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container .mce-container.mce-edit-area {
+  padding: 0 8px;
+}
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container .mce-container-body iframe,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container .mce-container-body iframe {
   height: 200px !important;
