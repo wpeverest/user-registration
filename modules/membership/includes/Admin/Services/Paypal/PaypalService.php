@@ -73,9 +73,16 @@ class PaypalService {
 		$discount_amount   = 0;
 		$is_renewing       = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 
-		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
+		$is_automatic    = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
+		$discount_amount = 0;
+		$is_renewing     = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+
+		if ( isset( $data['upgrade'] ) && $data['upgrade'] ) {
+			$final_amount = $data['amount'];
+		} elseif ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$coupon_details  = ur_get_coupon_details( $data['coupon'] );
 			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
+			$final_amount    = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 		}
 
 		if ( ( 'subscription' === ( $data['type'] ) && ! $is_renewing ) || ( $is_automatic && $is_renewing ) ) {
@@ -85,9 +92,9 @@ class PaypalService {
 		}
 		$paypal_verification_token = wp_generate_uuid4();
 		update_user_meta( $member_id, 'urm_paypal_verification_token', $paypal_verification_token );
-		$query_args   = 'membership=' . absint( $membership ) . '&member_id=' . absint( $member_id ) . '&hash=' . wp_hash( $membership . ',' . $member_id . ',' . $paypal_verification_token );
-		$return_url   = $paypal_options['return_url'] ?? wp_login_url();
-		$return_url   = esc_url_raw(
+		$query_args = 'membership=' . absint( $membership ) . '&member_id=' . absint( $member_id ) . '&hash=' . wp_hash( $membership . ',' . $member_id . ',' . $paypal_verification_token );
+		$return_url = $paypal_options['return_url'] ?? wp_login_url();
+		$return_url = esc_url_raw(
 			add_query_arg(
 				array(
 					'ur-membership-return' => base64_encode( $query_args ),
@@ -95,7 +102,6 @@ class PaypalService {
 				apply_filters( 'user_registration_paypal_return_url', $return_url, array() )
 			)
 		);
-		$final_amount = floatval( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 
 		// Build item name with pricing information
 		$item_name = $membership_data['post_title'];

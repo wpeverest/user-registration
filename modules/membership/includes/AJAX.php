@@ -76,8 +76,8 @@ class AJAX {
 			'verify_pages'                 => false,
 			'validate_pg'                  => false,
 			'upgrade_membership'           => false,
-			'get_membership_details'	   => false,
-			'addons_get_lists'			   => false,
+			'get_membership_details'       => false,
+			'addons_get_lists'             => false,
 			'create_subscription'          => false,
 			'update_subscription'          => false,
 		);
@@ -1439,6 +1439,47 @@ class AJAX {
 	}
 
 	/**
+	 * Fetch intended membership details.
+	 *
+	 * @return void
+	 */
+	public static function fetch_intended_membership_details() {
+
+		$security = isset( $_POST['security'] ) ? sanitize_text_field( wp_unslash( $_POST['security'] ) ) : '';
+		if ( '' === $security || ! wp_verify_nonce( $security, 'ur_members_frontend' ) ) {
+			wp_send_json_error( 'Nonce verification failed' );
+		}
+		if ( ! isset( $_POST['membership_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Membership does not exist', 'user-registration' ),
+				)
+			);
+		}
+		$membership_id            = absint( $_POST['membership_id'] );
+		$member_id                = get_current_user_id();
+		$members_order_repository = new MembersOrderRepository();
+
+		$membership_repository       = new MembershipRepository();
+		$intended_membership_details = $membership_repository->get_single_membership_by_ID( $membership_id );
+		$membership_service          = new MembershipService();
+		$intended_membership_details = $membership_service->prepare_single_membership_data( $intended_membership_details );
+		$intended_membership_details = apply_filters( 'build_membership_list_frontend', array( (array) $intended_membership_details ) )[0];
+
+		if ( empty( $intended_membership_details ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Selected membership details not found.', 'user-registration' ),
+				),
+				404
+			);
+		}
+		wp_send_json_success(
+			$intended_membership_details
+		);
+	}
+
+	/**
 	 * Upgrade membership ajax request
 	 *
 	 * @return void
@@ -1461,6 +1502,29 @@ class AJAX {
 				)
 			);
 		}
+
+		if ( isset( $_POST['form_data'] ) && ! empty( $_POST['form_data'] ) ) {
+			$single_field = array();
+			$form_data    = json_decode( wp_unslash( $_POST['form_data'] ) );
+			$user_id      = get_current_user_id();
+			$form_id      = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : ur_get_form_id_by_userid( $user_id );
+			$profile      = user_registration_form_data( $user_id, $form_id );
+
+			foreach ( $form_data as $data ) {
+				$single_field[ 'user_registration_' . $data->field_name ] = isset( $data->value ) ? $data->value : '';
+			}
+
+			list( $profile, $single_field ) = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, false );
+			$user                           = get_userdata( $user_id );
+			urm_update_user_profile_data( $user, $profile, $single_field, $form_id );
+
+			$logger = ur_get_logger();
+			$logger->info(
+				__( 'User details added while upgrading.', 'user-registration' ),
+				array( 'source' => 'form-save' )
+			);
+		}
+
 		$ur_authorize_data = isset( $_POST['ur_authorize_data'] ) ? $_POST['ur_authorize_data'] : array();
 		$data              = array(
 			'current_subscription_id' => absint( $_POST['current_subscription_id'] ),
@@ -1469,6 +1533,10 @@ class AJAX {
 			'selected_pg'             => sanitize_text_field( $_POST['selected_pg'] ),
 			'ur_authorize_net'        => $ur_authorize_data,
 		);
+
+		if ( ! empty( $_POST['coupon'] ) ) {
+			$data['coupon'] = sanitize_text_field( $_POST['coupon'] );
+		}
 
 		$subscription_service = new SubscriptionService();
 		$status               = $subscription_service->can_upgrade( $data );
@@ -1583,9 +1651,11 @@ class AJAX {
 				)
 			);
 		}
+
+		$error_message = isset( $response['message'] ) ? $response['message'] : __( 'Something went wrong while upgrading membership.', 'user-registration' );
 		wp_send_json_error(
 			array(
-				'message' => __( 'Something went wrong while upgrading membership.', 'user-registration' ),
+				'message' => $error_message,
 			)
 		);
 	}
@@ -2098,12 +2168,12 @@ class AJAX {
 	/**
 	 * Get addons list.
 	 */
-	public static function addons_get_lists(){
+	public static function addons_get_lists() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => __( 'You do not have permission to change membership details.', 'user-registration' ) ) );
 		}
 
-		if ( 'user_registration_membership_addons_get_lists' != sanitize_text_field( wp_unslash( $_POST[ 'action'] ) ) )  {
+		if ( 'user_registration_membership_addons_get_lists' != sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) {
 			wp_send_json_error( array( 'message' => __( 'You do not have permission to change membership details.', 'user-registration' ) ) );
 		}
 
@@ -2111,22 +2181,22 @@ class AJAX {
 		$api_key    = ! empty( $_POST['api_key'] ) ? sanitize_text_field( wp_unslash( $_POST['api_key'] ) ) : '';
 
 		$function_name = 'ur_' . $addon_name . '_get_lists';
-		$lists = $function_name( $api_key );
+		$lists         = $function_name( $api_key );
 
 		if ( is_wp_error( $lists ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'API list not found' )
+					'message' => __( 'API list not found' ),
 				)
 			);
 		}
 
 		$render_function = 'ur_' . $addon_name . '_render_list';
-		$html 			 = $render_function( $api_key );
+		$html            = $render_function( $api_key );
 
 		wp_send_json_success(
 			array(
-				'html' => $html
+				'html' => $html,
 			)
 		);
 	}
