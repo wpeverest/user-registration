@@ -887,10 +887,10 @@
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types {
-  max-width: 250px;
+  max-width: 225px;
   margin-bottom: 0;
   border-radius: 4px;
-  border: 1px solid #E9E9E9;
+  border: 1px solid #e1e1e1;
   background: #FFF;
   padding: 12px 14px;
   cursor: pointer;
@@ -963,10 +963,10 @@
   flex-wrap: wrap;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types {
-  max-width: 250px;
+  max-width: 225px;
   margin-bottom: 0;
   border-radius: 4px;
-  border: 1px solid #E9E9E9;
+  border: 1px solid #e1e1e1;
   background: #FFF;
   padding: 12px 14px;
   cursor: pointer;

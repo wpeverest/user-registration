@@ -805,8 +805,18 @@ $border-color_6: #475bb2;
 					// flex: 0 0 60%;
 					flex: 1;
 				}
+
+				.ur-field {
+					&.field-amount {
+						flex: unset;
+					}
+
+					&[data-field-key="membership_duration"] {
+						flex: unset;
+						width: max-content;
+					}
+				}
 			}
 		}
 	}
 }
-
