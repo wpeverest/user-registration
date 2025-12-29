@@ -19,11 +19,17 @@ class UR_Admin_Dashboard {
 	 * Show the Dashboard Page.
 	 */
 	public static function output() {
-		wp_enqueue_script( 'ur-dashboard-script', UR()->plugin_url() . '/chunks/dashboard.js', array(
-			'wp-element',
-			'wp-blocks',
-			'wp-editor'
-		), UR()->version, true );
+		$dashboard_asset = file_exists( UR()->plugin_path() . '/chunks/dashboard.asset.php' ) ? require_once UR()->plugin_path() . '/chunks/dashboard.asset.php' : array(
+			'dependencies' => array(),
+			'version'      => UR()->version,
+		);
+		wp_enqueue_script(
+			'ur-dashboard-script',
+			UR()->plugin_url() . '/chunks/dashboard.js',
+			$dashboard_asset['dependencies'],
+			$dashboard_asset['version'],
+			true
+		);
 
 		if ( ! function_exists( 'get_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -140,5 +146,4 @@ class UR_Admin_Dashboard {
 		</html>
 		<?php
 	}
-
 }
