@@ -260,6 +260,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-login-logout-menu.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-membership-listing.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-thank-you.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-membership-buy-now.php';
 			/**
 			 * Navigation menu item classes.
 			 */
