@@ -58,7 +58,12 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-email.php';
 			$settings[] = include 'settings/class-ur-settings-registration-login.php';
 			$settings[] = include 'settings/class-ur-settings-my-account.php';
-			$settings[] = include 'settings/class-ur-settings-integration.php';
+
+			$is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
+			if( $is_pro_active ) {
+				$settings[] = include 'settings/class-ur-settings-integration.php';
+			}
+
 			$settings[] = include 'settings/class-ur-settings-security.php';
 			$settings[] = include 'settings/class-ur-settings-advanced.php';
 
