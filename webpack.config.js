@@ -13,7 +13,7 @@ module.exports = {
 		path: path.resolve(__dirname + "/chunks")
 	},
 	entry: {
-		welcome: "./src/welcome/index.js",
+		welcome: "./src/welcome/index.tsx",
 		dashboard: "./src/dashboard/index.js",
 		blocks: "./src/blocks/index.js",
 		formblock: "./assets/js/admin/gutenberg/form-block.js",
