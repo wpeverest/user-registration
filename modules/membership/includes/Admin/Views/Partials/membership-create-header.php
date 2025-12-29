@@ -22,8 +22,8 @@
 					$tab_count = count( $membership_tabs );
 
 					foreach ( $membership_tabs as $index => $tab ) :
-						$is_first = ( $index === 0 );
-						$is_last = ( $index === $tab_count - 1 );
+						$is_first     = ( $index === 0 );
+						$is_last      = ( $index === $tab_count - 1 );
 						$active_class = $is_first ? 'ur-page-title__wrapper--steps-btn-active' : '';
 						?>
 						<button class="ur-page-title__wrapper--steps-btn <?php echo esc_attr( $active_class ); ?>"
@@ -83,4 +83,3 @@
 		</div>
 	</div>
 </div>
-

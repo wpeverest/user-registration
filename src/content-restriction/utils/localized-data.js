@@ -35,4 +35,3 @@ export const isURDev = () => {
 	const urDev = getURCRData("UR_DEV", false);
 	return urDev === true || urDev === "1" || urDev === 1;
 };
-

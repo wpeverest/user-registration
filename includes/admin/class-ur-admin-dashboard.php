@@ -53,30 +53,32 @@ class UR_Admin_Dashboard {
 
 		// Count custom content restriction rules (excluding membership rules)
 		$custom_rules_count = urcr_get_custom_rules_count( array( 'custom', 'is_migrated' ) );
-		
+
 		wp_localize_script(
 			'ur-dashboard-script',
 			'_UR_DASHBOARD_',
 			array(
-				'site_assistant_data'  => $site_assistant_data,
-				'adminURL'             => esc_url( admin_url() ),
-				'adminEmail'           => get_option( 'admin_email' ),
-				'settingsURL'          => esc_url( admin_url( '/admin.php?page=user-registration-settings' ) ),
-				'siteURL'              => esc_url( home_url( '/' ) ),
-				'liveDemoURL'          => esc_url_raw( 'https://userregistration.demoswp.net/' ),
-				'assetsURL'            => esc_url( UR()->plugin_url() . '/assets/' ),
-				'urRestApiNonce'       => wp_create_nonce( 'wp_rest' ),
-				'testEmailNonce'       => wp_create_nonce( 'test_email_nonce' ),
-				'newFormURL'           => esc_url( admin_url( '/admin.php?page=add-new-registration' ) ),
-				'allFormsURL'          => esc_url( admin_url( '/admin.php?page=user-registration' ) ),
-				'restURL'              => rest_url(),
-				'version'              => UR()->version,
-				'isPro'                => is_plugin_active( 'user-registration-pro/user-registration.php' ),
-				'licensePlan'          => ur_get_license_plan(),
-				'licenseActivationURL' => esc_url_raw( admin_url( '/admin.php?page=user-registration-settings&tab=license' ) ),
-				'utmCampaign'          => UR()->utm_campaign,
-				'upgradeURL'           => esc_url_raw( 'https://wpuserregistration.com/upgrade/?utm_campaign=' . UR()->utm_campaign ),
-				'plugins'              => array_reduce(
+				'site_assistant_data'     => $site_assistant_data,
+				'adminURL'                => esc_url( admin_url() ),
+				'adminEmail'              => get_option( 'admin_email' ),
+				'settingsURL'             => esc_url( admin_url( '/admin.php?page=user-registration-settings' ) ),
+				'siteURL'                 => esc_url( home_url( '/' ) ),
+				'liveDemoURL'             => esc_url_raw( 'https://userregistration.demoswp.net/' ),
+				'assetsURL'               => esc_url( UR()->plugin_url() . '/assets/' ),
+				'urRestApiNonce'          => wp_create_nonce( 'wp_rest' ),
+				'testEmailNonce'          => wp_create_nonce( 'test_email_nonce' ),
+				'newFormURL'              => esc_url( admin_url( '/admin.php?page=add-new-registration' ) ),
+				'allFormsURL'             => esc_url( admin_url( '/admin.php?page=user-registration' ) ),
+				'restURL'                 => rest_url(),
+				'version'                 => UR()->version,
+				'isPro'                   => is_plugin_active( 'user-registration-pro/user-registration.php' ),
+				'licensePlan'             => ur_get_license_plan(),
+				'licenseActivationURL'    => esc_url_raw( admin_url( '/admin.php?page=user-registration-settings&tab=license' ) ),
+				'utmCampaign'             => UR()->utm_campaign,
+				'upgradeURL'              => esc_url_raw( 'https://wpuserregistration.com/upgrade/?utm_campaign=' . UR()->utm_campaign ),
+				'isMasteriyoActive'       => is_plugin_active( 'learning-management-system/lms.php' )
+				|| is_plugin_active( 'learning-management-system-pro/lms.php' ),
+				'plugins'                 => array_reduce(
 					$allowed_plugin_slugs,
 					function ( $acc, $curr ) use ( $installed_plugin_slugs ) {
 						if ( in_array( $curr, $installed_plugin_slugs, true ) ) {
@@ -94,7 +96,7 @@ class UR_Admin_Dashboard {
 					},
 					array()
 				),
-				'themes'               => array(
+				'themes'                  => array(
 					'zakra'    => strpos( $current_theme, 'zakra' ) !== false ? 'active' : (
 					in_array( 'zakra', $installed_theme_slugs, true ) ? 'inactive' : 'not-installed'
 					),
@@ -102,8 +104,8 @@ class UR_Admin_Dashboard {
 					in_array( 'colormag', $installed_theme_slugs, true ) || in_array( 'colormag-pro', $installed_theme_slugs, true ) ? 'inactive' : 'not-installed'
 					),
 				),
-				'urm_is_new_installation'          => get_option( 'urm_is_new_installation', '' ),
-				'urcr_custom_rules_count'          => $custom_rules_count,
+				'urm_is_new_installation' => get_option( 'urm_is_new_installation', '' ),
+				'urcr_custom_rules_count' => $custom_rules_count,
 			)
 		);
 

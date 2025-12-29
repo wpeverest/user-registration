@@ -542,7 +542,6 @@ class Membership {
 					return file_get_contents( $icon_path );
 				}
 			}
-
 			return '';
 		};
 
