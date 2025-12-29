@@ -1,7 +1,7 @@
 import React, {useRef, useState} from 'react';
 import {Box, Flex, Tooltip, Heading, Text, Switch } from '@chakra-ui/react';
 import {InspectorControls, useBlockProps} from '@wordpress/block-editor';
-import {PanelBody, TextControl, CheckboxControl, Disabled, PanelRow, ToggleControl} from '@wordpress/components';
+import {PanelBody, TextControl, CheckboxControl, Disabled, PanelRow, ToggleControl, SelectControl} from '@wordpress/components';
 import {__} from '@wordpress/i18n';
 import metadata from "../thank-you/block.json";
 import {Editor} from '@tinymce/tinymce-react';
@@ -18,10 +18,12 @@ import ServerSideRender from '@wordpress/server-side-render';
 /* global _UR_BLOCKS_ */
 const { smart_tags } =
 	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
+const { pages_array } =
+	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 const Edit = (props) => {
 	const {
-		attributes: {header, footer, notice_message, transaction_info, show_notice_1, show_notice_2, show_bank_details, show_heading_icon, show_headline, headline_text, show_redirect_btn, redirect_btn_text },
+		attributes: {header, footer, notice_message, transaction_info, show_notice_1, show_notice_2, show_bank_details, show_heading_icon, show_headline, headline_text, show_redirect_btn, redirect_btn_text, redirect_page_id  },
 		setAttributes,
 	} = props;
 	const useProps = useBlockProps();
@@ -55,13 +57,15 @@ const Edit = (props) => {
 										setAttributes({ show_headline: value })
 									}
 								/>
-								<TextControl
-									key="ur-gutenberg-notice-text"
-									placeholder={__('Thank you for registering.', "user-registration")}
-									value={ headline_text }
-									onChange={(value) => setAttributes({headline_text: value})}
-									width={'100%'}
-								/>
+								{ show_headline && (
+									<TextControl
+										key="ur-gutenberg-notice-text"
+										placeholder={__('Thank you for registering.', "user-registration")}
+										value={ headline_text }
+										onChange={(value) => setAttributes({headline_text: value})}
+										width={'100%'}
+									/>
+								)}
 							</Box>
 
 						 <Heading as='h4' size='sm' marginBottom={ '4px'}>
@@ -123,13 +127,25 @@ const Edit = (props) => {
 									setAttributes({ show_redirect_btn: value } )
 								}
 							/>
-							<TextControl
-									key="ur-gutenberg-notice-text"
-									placeholder={__('Go To My Account', "user-registration")}
-									value={ redirect_btn_text }
-									onChange={(value) => setAttributes({redirect_btn_text: value})}
-									width={'100%'}
-								/>
+							{ show_redirect_btn && (
+								<Box>
+									<SelectControl
+										label={ __('Redirect Page', 'user-registration') }
+										value={ redirect_page_id }
+										options={ pages_array }
+										onChange={ ( value ) =>
+											setAttributes( { redirect_page_id: parseInt( value, 10 ) } )
+										}
+									/>
+									<TextControl
+										key="ur-gutenberg-notice-text"
+										placeholder={__('Go To My Account', "user-registration")}
+										value={ redirect_btn_text }
+										onChange={(value) => setAttributes({redirect_btn_text: value})}
+										width={'100%'}
+										/>
+								</Box>
+							)}
 						</Box>
 					</PanelBody>
 

@@ -19,7 +19,12 @@ $headline_text      = ! empty( $attributes['headline_text'] ) ? esc_html( $attri
 $show_redirect_btn  = isset( $attributes['show_redirect_btn'] ) ? $attributes['show_redirect_btn'] : true;
 $show_bank_details  = isset( $attributes['show_bank_details'] ) ? $attributes['show_bank_details'] : true;
 $redirect_btn_text  = ! empty( $attributes['redirect_btn_text'] ) ? esc_html( $attributes['redirect_btn_text'] ) : __( 'Go to My Account', 'user-registration' );
-$redirect_btn_url   = ! empty( $attributes['redirect_btn_url'] ) ? esc_url( $attributes['redirect_btn_url'] ) : get_permalink( get_option( 'woocommerce_myaccount_page_id' ) );
+$redirect_page_id = ! empty( $attributes['redirect_page_id'] )
+	? absint( $attributes['redirect_page_id'] )
+	: wc_get_page_id( 'myaccount' );
+$redirect_btn_url = ! empty( $attributes['redirect_page_id'] )
+	? get_permalink( absint( $attributes['redirect_page_id'] ) )
+	: wc_get_page_permalink( 'myaccount' );
 
 ?>
 <!-- Thank You Page Section -->

@@ -71,6 +71,21 @@ class UR_Blocks {
 			);
 		}
 
+		$pages = get_pages();
+		$page_options = array(
+			array(
+				'label' => __( 'Select a page', 'user-registration' ),
+				'value' => 0,
+			),
+		);
+
+		foreach ( $pages as $page ) {
+			$page_options[] = array(
+				'label' => $page->post_title,
+				'value' => $page->ID,
+			);
+		}
+
 		wp_localize_script(
 			'user-registration-blocks-editor',
 			'_UR_BLOCKS_',
@@ -83,6 +98,7 @@ class UR_Blocks {
 				'pages' 			   => array_map( function( $page ) { return [ 'label' => $page->post_title, 'value' => $page->ID ]; }, get_pages() ),
 				'login_page_id'		   => get_option('user_registration_login_page_id'),
 				'smart_tags'		   => $smart_tag,
+				'pages_array'		   => $page_options,
 			)
 		);
 		wp_register_script(
