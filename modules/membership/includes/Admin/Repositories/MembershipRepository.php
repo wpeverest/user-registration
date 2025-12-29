@@ -226,4 +226,55 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 			ARRAY_A
 		);
 	}
+
+	/**
+	 * Delete membership post using wp_delete_post to trigger WordPress hooks
+	 *
+	 * @param int $id Membership post ID
+	 * @return bool|int|\mysqli_result|null
+	 */
+	public function delete( $id ) {
+		$id = absint( $id );
+		if ( ! $id ) {
+			return false;
+		}
+
+		$post = get_post( $id );
+		if ( ! $post || 'ur_membership' !== $post->post_type ) {
+			return false;
+		}
+
+		$result = wp_delete_post( $id, true );
+		return $result ? true : false;
+	}
+
+	/**
+	 * Delete multiple memberships using wp_delete_post to trigger WordPress hooks
+	 *
+	 * @param string $ids Comma-separated membership IDs
+	 * @return bool|int|\mysqli_result|null
+	 */
+	public function delete_multiple( $ids ) {
+		if ( empty( $ids ) ) {
+			return false;
+		}
+
+		$ids_array = explode( ',', $ids );
+		$ids_array = array_map( 'absint', $ids_array );
+		$ids_array = array_filter( $ids_array );
+
+		if ( empty( $ids_array ) ) {
+			return false;
+		}
+
+		$deleted_count = 0;
+		foreach ( $ids_array as $id ) {
+			$result = $this->delete( $id );
+			if ( $result ) {
+				$deleted_count++;
+			}
+		}
+
+		return $deleted_count > 0;
+	}
 }

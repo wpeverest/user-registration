@@ -12,9 +12,11 @@
   "scripts": {
     "build": "npx grunt && npm run makepot && cross-env BABEL_ENV=default NODE_ENV=production webpack",
     "dev": "cross-env BABEL_ENV=default NODE_ENV=development webpack --watch",
+    "dev:hot": "cross-env NODE_ENV=development WEBPACK_SERVE=true webpack serve",
     "makepot": "composer run-script makepot",
     "start": "webpack --progress --watch --mode=development",
-    "eslint-fix": "eslint --fix \"src/**/*.js\" \"assets/js/admin/gutenberg/*.js\"",
+    "start:hot": "cross-env WEBPACK_SERVE=true webpack serve --mode=development",
+    "eslint-fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\" \"assets/js/admin/gutenberg/*.js\"",
     "prelint-php": "wp-env run composer 'install --no-interaction'",
     "lint-php": "wp-env composer run-script phpcs",
     "phpcs": "composer run-script phpcs --timeout 100000",
@@ -23,13 +25,21 @@
     "test-php:watch": "wp-env run composer run-script test:watch",
     "pretest-unit-php": "wp-env start",
     "test-unit-php": "wp-env run phpunit 'phpunit --configuration=/var/www/html/wp-content/plugins/user-registration/phpunit.xml.dist --verbose'",
-    "phpunit-test": "phpunit --verbose"
+    "phpunit-test": "phpunit --verbose",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.16.7",
     "@babel/preset-react": "7.12.13",
+    "@babel/preset-typescript": "^7.24.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
+    "@types/jquery": "^3.5.29",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "@types/wordpress__block-editor": "^11.5.11",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
     "@wordpress/block-editor": "^12.12.0",
     "@wordpress/blocks": "^12.29.0",
     "@wordpress/components": "^25.16.0",
@@ -63,9 +73,11 @@
     "grunt-shell": "^4.0.0",
     "grunt-stylelint": "^0.18.0",
     "html-webpack-plugin": "^5.5.0",
+    "react-refresh": "^0.14.0",
     "reflect-metadata": "^0.1.13",
     "sass": "^1.52.3",
     "sass-loader": "^12.3.0",
+    "typescript": "^5.4.0",
     "url-loader": "^4.1.1",
     "webpack": "^5.94.0",
     "webpack-cli": "^4.10.0",
@@ -73,8 +85,8 @@
     "webpackbar": "^7.0.0"
   },
   "engines": {
-    "node": ">=8.9.3",
-    "npm": ">=5.5.1"
+    "node": ">=16.14.0",
+    "npm": ">=8.0.0"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.17",
@@ -113,6 +125,10 @@
       "git add"
     ],
     "!(*.min).js": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.{ts,tsx}": [
       "eslint --fix",
       "git add"
     ]
