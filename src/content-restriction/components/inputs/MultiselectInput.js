@@ -40,16 +40,41 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 		}
 	}, []);
 
+	// Check if options are grouped (have group and options properties)
+	const isGroupedOptions = (optionsArray) => {
+		return (
+			Array.isArray(optionsArray) &&
+			optionsArray.length > 0 &&
+			typeof optionsArray[0] === "object" &&
+			optionsArray[0] !== null &&
+			"group" in optionsArray[0] &&
+			"options" in optionsArray[0] &&
+			Array.isArray(optionsArray[0].options)
+		);
+	};
+
 	// Get options based on content type
-	const getOptions = () =>
-		Object.entries(getURCRLocalizedData()?.[contentType] ?? {}).map(
-			([id = "", label = ""]) => ({
-				value: id,
-				label: label || id
-			})
-		) ?? [];
+	const getOptions = () => {
+		const data = getURCRLocalizedData()?.[contentType];
+
+		if (!data) {
+			return [];
+		}
+
+		// Check if data is already an array (likely grouped options)
+		if (Array.isArray(data)) {
+			return data;
+		}
+
+		// Convert object to array of {value, label} options
+		return Object.entries(data).map(([id = "", label = ""]) => ({
+			value: id,
+			label: label || id
+		}));
+	};
 
 	const options = getOptions();
+	const hasGroupedOptions = isGroupedOptions(options);
 	const selectedValues = Array.isArray(inputValue)
 		? inputValue
 		: inputValue
@@ -182,12 +207,26 @@ const MultiselectInput = ({ contentType, value, onChange }) => {
 				<option value="" disabled>
 					{__("No options available", "user-registration")}
 				</option>
+			) : hasGroupedOptions ? (
+				<>
+					{options.map((option) => (
+						<optgroup label={option.group} key={option.group}>
+							{option.options.map((option) => (
+								<option key={option.value} value={option.value}>
+									{option.label}
+								</option>
+							))}
+						</optgroup>
+					))}
+				</>
 			) : (
-				options.map((option) => (
-					<option key={option.value} value={option.value}>
-						{option.label}
-					</option>
-				))
+				<>
+					{options.map((option) => (
+						<option key={option.value} value={option.value}>
+							{option.label}
+						</option>
+					))}
+				</>
 			)}
 		</select>
 	);

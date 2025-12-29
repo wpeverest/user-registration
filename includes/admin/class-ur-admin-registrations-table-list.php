@@ -176,7 +176,9 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 					<div id="user-registration-list-table-page">
 						<div class="user-registration-list-table-header">
 							<h2><?php esc_html_e( 'All Registration Forms', 'user-registration' ); ?></h2>
+							<?php if ( ur_check_module_activation( 'multiple-registration' ) ) : ?>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
+							<?php endif; ?>
 						</div>
 						<div class="user-registration-list-table-page__body">
 							<form id="registration-list" class="user-registration-list-table-action-form" method="get" >

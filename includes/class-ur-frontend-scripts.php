@@ -473,6 +473,8 @@ class UR_Frontend_Scripts {
 					'message_confirm_number_field_max'  => esc_html__( 'Please enter a value less than or equal to %qty%.', 'user-registration' ),
 					'message_confirm_number_field_min'  => esc_html__( 'Please enter a value greater than or equal to %qty%.', 'user-registration' ),
 					'message_confirm_number_field_step' => esc_html__( 'Please enter a multiple of %qty%.', 'user-registration' ),
+					'message_min_length_fields'         => esc_html__( 'Please enter at least %qty% characters.', 'user-registration' ),
+					'message_max_length_fields'         => esc_html__( 'Please enter no more than %qty% characters.', 'user-registration' ),
 					'ursL10n'                           => array(
 						'user_successfully_saved'     => get_option( 'user_registration_successful_form_submission_message_manual_registation', esc_html__( 'User successfully registered.', 'user-registration' ) ),
 						'user_under_approval'         => get_option( 'user_registration_successful_form_submission_message_admin_approval', esc_html__( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),
@@ -491,6 +493,7 @@ class UR_Frontend_Scripts {
 					'logout_popup_cancel_text'          => esc_html__( 'Cancel', 'user-registration' ),
 					'user_registration_checkbox_validation_message' => apply_filters( 'user_registration_checkbox_validation_message', esc_html__( 'Please select no more than {0} options.', 'user-registration' ) ),
 					'user_registration_membership_renew_plan_button_text' => apply_filters( 'user_registration_membership_renew_plan_button_text', esc_html__( 'Change', 'user-registration' ) ),
+					'network_error'                     => esc_html__( 'Network error', 'user-registration' ),
 				);
 				break;
 

@@ -44,7 +44,7 @@ class Membership {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_filter( 'user_registration_screen_ids', array( $this, 'ur_membership_add_screen_id' ) );
-		add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 15 );
+		// add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 15 );
 		add_action( 'admin_init', array( $this, 'actions' ) );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_filter( 'user_registration_login_options', array( $this, 'add_payment_login_option' ) );
@@ -95,42 +95,36 @@ class Membership {
 		wp_enqueue_script( 'user-registration-membership' );
 
 		// Enqueue membership access rules script if content restriction module is enabled
-		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'content-restriction' ) ) {
-			$membership_id = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : 0;
+		$membership_id = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : 0;
 
-			// Enqueue jQuery UI for sortable if needed
-			wp_enqueue_script( 'jquery-ui-sortable' );
+		// Enqueue jQuery UI for sortable if needed
+		wp_enqueue_script( 'jquery-ui-sortable' );
 
-			// Enqueue select2 for enhanced dropdowns
-			wp_enqueue_script( 'select2' );
-			wp_enqueue_style( 'select2' );
+		// Enqueue membership access rules script (always use non-minified for now)
+		$script_path = UR()->plugin_url() . '/assets/js/modules/content-restriction/admin/urcr-membership-access-rules.js';
 
-			// Enqueue membership access rules script (always use non-minified for now)
-			$script_path = UR()->plugin_url() . '/assets/js/modules/content-restriction/admin/urcr-membership-access-rules.js';
+		wp_enqueue_script(
+			'urcr-membership-access-rules',
+			$script_path,
+			array( 'jquery', 'user-registration-membership' ),
+			UR()->version,
+			true
+		);
 
-			wp_enqueue_script(
-				'urcr-membership-access-rules',
-				$script_path,
-				array( 'jquery', 'user-registration-membership' ),
-				UR()->version,
-				true
-			);
-
-			// Localize script with necessary data
-			$localized_data = array();
-			if ( class_exists( '\URCR_Admin_Assets' ) ) {
-				$localized_data = \URCR_Admin_Assets::get_localized_data();
-			}
-			$localized_data['membership_id'] = $membership_id;
-			$localized_data['ajax_url']      = admin_url( 'admin-ajax.php' );
-			$localized_data['nonce']         = wp_create_nonce( 'urcr_manage_content_access_rule' );
-
-			wp_localize_script(
-				'urcr-membership-access-rules',
-				'urcr_membership_access_data',
-				$localized_data
-			);
+		// Localize script with necessary data
+		$localized_data = array();
+		if ( class_exists( '\URCR_Admin_Assets' ) ) {
+			$localized_data = \URCR_Admin_Assets::get_localized_data();
 		}
+		$localized_data['membership_id'] = $membership_id;
+		$localized_data['ajax_url']      = admin_url( 'admin-ajax.php' );
+		$localized_data['nonce']         = wp_create_nonce( 'urcr_manage_content_access_rule' );
+
+		wp_localize_script(
+			'urcr-membership-access-rules',
+			'urcr_membership_access_data',
+			$localized_data
+		);
 
 		$this->localize_scripts();
 	}
@@ -155,23 +149,21 @@ class Membership {
 		wp_enqueue_style( 'ur-membership-admin-style' );
 
 		// Enqueue shared content restriction styles if content restriction module is enabled
-		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'content-restriction' ) ) {
-			wp_register_style(
-				'urcr-shared',
-				UR()->plugin_url() . '/assets/css/urcr-shared.css',
-				array(),
-				UR()->version
-			);
-			wp_enqueue_style( 'urcr-shared' );
+		wp_register_style(
+			'urcr-shared',
+			UR()->plugin_url() . '/assets/css/urcr-shared.css',
+			array(),
+			UR()->version
+		);
+		wp_enqueue_style( 'urcr-shared' );
 
-			wp_register_style(
-				'urcr-content-access-restriction',
-				UR()->plugin_url() . '/assets/css/urcr-content-access-restriction.css',
-				array( 'urcr-shared' ),
-				UR()->version
-			);
-			wp_enqueue_style( 'urcr-content-access-restriction' );
-		}
+		wp_register_style(
+			'urcr-content-access-restriction',
+			UR()->plugin_url() . '/assets/css/urcr-content-access-restriction.css',
+			array( 'urcr-shared' ),
+			UR()->version
+		);
+		wp_enqueue_style( 'urcr-content-access-restriction' );
 	}
 
 	/**
@@ -192,7 +184,7 @@ class Membership {
 		}
 	}
 
-	//todo might need to remove later if none of the bulk actions are used
+	// todo might need to remove later if none of the bulk actions are used
 
 	/**
 	 * Bulk actions.
@@ -232,7 +224,7 @@ class Membership {
 	 * Bulk trash/delete.
 	 *
 	 * @param array $membership_lists Membership List post id.
-	 * @param bool $delete Delete action.
+	 * @param bool  $delete Delete action.
 	 */
 	private function bulk_trash( $membership_lists, $delete = false, $is_membership = true ) {
 		$membership_group_service = new MembershipGroupService();
@@ -355,38 +347,32 @@ class Membership {
 	public function add_urm_menu() {
 		$rules_page = add_submenu_page(
 			'user-registration',
-			__( 'Membership', 'user-registration' ), // page title
-			__( 'Membership', 'user-registration' ), // menu title
+			__( 'Memberships', 'user-registration' ), // page title
+			__( 'Memberships', 'user-registration' ), // menu title
 			'edit_posts', // capability
 			'user-registration-membership', // slug
 			array(
 				$this,
 				'render_membership_page',
-			)
+			),
+			2
 		);
 		add_action( 'load-' . $rules_page, array( $this, 'membership_initialization' ) );
 
-		if ( isset( $_GET['page'] ) && in_array(
-			$_GET['page'],
-			array(
-				'user-registration-membership',
-				'user-registration-membership-groups',
-				'user-registration-members',
-			)
-		) ) {
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
 
-			add_submenu_page(
-				'user-registration',
-				__( 'All Plans', 'user-registration' ),
-				'↳ ' . __( 'All Plans', 'user-registration' ),
-				'edit_posts',
-				'user-registration-membership',
-				array(
-					$this,
-					'render_membership_page',
-				),
-				16
-			);
+			// add_submenu_page(
+			// 'user-registration',
+			// __( 'All Plans', 'user-registration' ),
+			// '↳ ' . __( 'All Plans', 'user-registration' ),
+			// 'edit_posts',
+			// 'user-registration-membership',
+			// array(
+			// $this,
+			// 'render_membership_page',
+			// ),
+			// 3
+			// );
 
 			add_submenu_page(
 				'user-registration',
@@ -398,7 +384,7 @@ class Membership {
 					$this,
 					'render_membership_page',
 				),
-				17
+				3
 			);
 
 			$members = new Members();
@@ -513,22 +499,20 @@ class Membership {
 		$membership_condition_options = array();
 		$membership_localized_data    = array();
 
-		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'content-restriction' ) ) {
-			// Get condition options and localized data
-			if ( class_exists( '\URCR_Admin_Assets' ) ) {
-				$membership_localized_data    = \URCR_Admin_Assets::get_localized_data();
-				$membership_condition_options = isset( $membership_localized_data['condition_options'] ) ? $membership_localized_data['condition_options'] : array();
+		// Get condition options and localized data
+		if ( class_exists( '\URCR_Admin_Assets' ) ) {
+			$membership_localized_data    = \URCR_Admin_Assets::get_localized_data();
+			$membership_condition_options = isset( $membership_localized_data['condition_options'] ) ? $membership_localized_data['condition_options'] : array();
 
-				// Filter for free users - show membership, roles, and user_state
-				// For pro users, show all conditions
-				if ( ! isset( $membership_localized_data['is_pro'] ) || ! $membership_localized_data['is_pro'] ) {
-					$membership_condition_options = array_filter(
-						$membership_condition_options,
-						function ( $option ) {
-							return isset( $option['value'] ) && ( $option['value'] === 'membership' || $option['value'] === 'roles' || $option['value'] === 'user_state' );
-						}
-					);
-				}
+			// Filter for free users - show membership, roles, and user_state
+			// For pro users, show all conditions
+			if ( ! isset( $membership_localized_data['is_pro'] ) || ! $membership_localized_data['is_pro'] ) {
+				$membership_condition_options = array_filter(
+					$membership_condition_options,
+					function ( $option ) {
+						return isset( $option['value'] ) && ( $option['value'] === 'membership' || $option['value'] === 'roles' || $option['value'] === 'user_state' );
+					}
+				);
 			}
 		}
 
@@ -601,7 +585,7 @@ class Membership {
 	 * @param array $condition Condition data.
 	 * @param array $condition_options Available condition options.
 	 * @param array $localized_data Localized data for labels and options.
-	 * @param bool  $is_locked Whether the condition is locked (non-editable).
+	 * @param bool $is_locked Whether the condition is locked (non-editable).
 	 *
 	 * @return string HTML for condition row.
 	 */
@@ -671,7 +655,7 @@ class Membership {
 	 * @param string $field_type Field type.
 	 * @param mixed $value Current value.
 	 * @param array $localized_data Localized data.
-	 * @param bool  $is_locked Whether the input is locked (non-editable).
+	 * @param bool $is_locked Whether the input is locked (non-editable).
 	 *
 	 * @return string HTML for value input.
 	 */
@@ -680,7 +664,32 @@ class Membership {
 
 		$disabled_attr = $is_locked ? ' disabled' : '';
 
-		if ( $input_type === 'multiselect' ) {
+		if ( $field_type === 'ur_form_field' ) {
+			$form_id     = '';
+			$form_fields = array();
+			if ( is_array( $value ) && isset( $value['form_id'] ) ) {
+				$form_id = sanitize_text_field( $value['form_id'] );
+			}
+			if ( is_array( $value ) && isset( $value['form_fields'] ) && is_array( $value['form_fields'] ) ) {
+				$form_fields = $value['form_fields'];
+			}
+			$value_attr = ' data-value="' . esc_attr( wp_json_encode( $value ) ) . '"';
+
+			$ur_forms = isset( $localized_data['ur_forms'] ) ? $localized_data['ur_forms'] : array();
+
+			$html  = '<div class="urcr-ur-form-field-condition" data-condition-id="' . esc_attr( $condition_id ) . '"' . $value_attr . '>';
+			$html .= '<div class="urcr-form-selection ur-d-flex ur-align-items-center ur-g-4 ur-mb-2">';
+			$html .= '<select class="urcr-form-select components-select-control__input urcr-condition-value-input"' . $disabled_attr . '>';
+			$html .= '<option value="">' . esc_html__( 'Select a form', 'user-registration' ) . '</option>';
+			foreach ( $ur_forms as $id => $title ) {
+				$selected = ( (string) $id === (string) $form_id ) ? 'selected' : '';
+				$html    .= '<option value="' . esc_attr( $id ) . '" ' . $selected . '>' . esc_html( $title ) . '</option>';
+			}
+			$html .= '</select>';
+			$html .= '</div>';
+			$html .= '<div class="urcr-form-fields-list"></div>';
+			$html .= '</div>';
+		} elseif ( $input_type === 'multiselect' ) {
 			// Add data attribute for values to be set by JavaScript
 			$value_attr = '';
 			if ( is_array( $value ) && ! empty( $value ) ) {
@@ -751,10 +760,6 @@ class Membership {
 			'whole_site' => isset( $localized_data['labels']['whole_site'] ) ? $localized_data['labels']['whole_site'] : __( 'Whole Site', 'user-registration' ),
 		);
 
-		if ( ur_check_module_activation( 'masteriyo-course-integration' ) ) {
-			$type_labels['masteriyo_courses'] = isset( $localized_data['labels']['masteriyo_courses'] ) ? $localized_data['labels']['masteriyo_courses'] : __( 'Masteriyo Courses', 'user-registration' );
-		}
-
 		$type_label = isset( $type_labels[ $type ] ) ? $type_labels[ $type ] : $type;
 
 		$html = '<div class="urcr-target-item ur-d-flex ur-align-items-center ur-mt-2" data-target-id="' . $target_id . '">';
@@ -793,7 +798,7 @@ class Membership {
 			}
 
 			// Wrap taxonomy selects in a container for proper layout
-			$html .= '<div class="urcr-taxonomy-select-group" style="display: flex; flex-direction: column; gap: 8px; flex: 1;">';
+			$html .= '<div class="urcr-taxonomy-select-group">';
 			$html .= '<select class="urcr-taxonomy-select">';
 			if ( isset( $localized_data['taxonomies'] ) && is_array( $localized_data['taxonomies'] ) ) {
 				foreach ( $localized_data['taxonomies'] as $tax_key => $tax_label ) {

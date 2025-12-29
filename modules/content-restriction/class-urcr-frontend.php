@@ -22,7 +22,7 @@ class URCR_Frontend {
 	public function __construct() {
 
 		add_action( 'template_redirect', array( $this, 'run_content_restrictions' ) );
-		add_filter( 'template_include', array( $this, 'include_run_content_restrictions' ), PHP_INT_MAX );
+//		add_filter( 'template_include', array( $this, 'include_run_content_restrictions' ), PHP_INT_MAX );
 		add_filter( 'template_include', array( $this, 'restrict_whole_site' ), PHP_INT_MAX );
 		add_filter( 'template_include', array( $this, 'restrict_blog_page' ), PHP_INT_MAX );
 		add_filter( 'template_include', array( $this, 'restrict_wc_shop_page' ), PHP_INT_MAX );
@@ -59,7 +59,7 @@ class URCR_Frontend {
 	 */
 	public function include_run_content_restrictions( $template ) {
 
-		if ( is_embed() ) {
+		if ( is_embed() || current_user_can('manage_options') ) {
 			return $template;
 		}
 		$content_restriction_enabled = ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) );
@@ -136,10 +136,20 @@ class URCR_Frontend {
 		if ( ! $content_restriction_enabled ) {
 			return $template;
 		}
-		global $wp_query;
-		$post                               = $wp_query->posts;
+		global $wp_query, $post;
 		$current_post_id                    = get_queried_object_id();
 
+<<<<<<< HEAD
+=======
+		// Get the current post object properly
+		if ( empty( $post ) || ! is_object( $post ) ) {
+			$post = get_queried_object();
+			if ( ! is_object( $post ) && $current_post_id ) {
+				$post = get_post( $current_post_id );
+			}
+		}
+
+>>>>>>> v5.1.0
 		// Check if this page should be excluded from whole site restriction
 		if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $current_post_id ) ) {
 			return $template;
@@ -172,6 +182,14 @@ class URCR_Frontend {
 			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
 			if ( $is_whole_site_restriction ) {
+				// Ensure we have a valid post object
+				if ( empty( $post ) || ! is_object( $post ) ) {
+					$post = get_queried_object();
+					if ( ! is_object( $post ) && $current_post_id ) {
+						$post = get_post( $current_post_id );
+					}
+				}
+
 				foreach ( $access_rule_posts as $access_rule_post ) {
 					$access_rule = json_decode( $access_rule_post->post_content, true );
 
@@ -196,15 +214,12 @@ class URCR_Frontend {
 						if ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
 							do_action( 'urcr_pre_content_restriction_applied', $access_rule, $post );
 
-							$template = urcr_get_template(
-								'urcr-whole-site-template.php',
-								array(
-									'actions'     => $access_rule['actions'],
-									'target_post' => $post,
-								)
-							);
+							// Use urcr_apply_content_restriction to update post content instead of template
+							$is_applied = urcr_apply_content_restriction( $access_rule['actions'], $post );
 
 							do_action( 'urcr_post_content_restriction_applied', $access_rule, $post );
+
+							// Return the original template so normal theme structure is used
 							return $template;
 						}
 					}
@@ -249,6 +264,11 @@ class URCR_Frontend {
 			}
 
 			if ( null !== $post_id ) {
+				// Check if this page should be excluded from restriction
+				if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
+					return $template;
+				}
+
 				$urcr_meta_override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', true );
 
 				if (  ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
@@ -278,6 +298,11 @@ class URCR_Frontend {
 		$blog_page         = $page_for_posts_id != 0 ? get_post( $page_for_posts_id ) : array();
 
 		if ( empty( $blog_page ) ) {
+			return $template;
+		}
+
+		// Check if this page should be excluded from restriction
+		if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $blog_page->ID ) ) {
 			return $template;
 		}
 
@@ -344,6 +369,10 @@ class URCR_Frontend {
 		}
 
 		if ( ( is_post_type_archive( 'product' ) || is_page( $shop_page_id ) ) ) {
+			// Check if this page should be excluded from restriction
+			if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $shop_page->ID ) ) {
+				return $template;
+			}
 
 			$urcr_meta_override_global_settings = get_post_meta( $shop_page->ID, 'urcr_meta_override_global_settings', true );
 
@@ -384,6 +413,9 @@ class URCR_Frontend {
 		foreach ( $access_rule_posts as $access_rule_post ) {
 			$access_rule = json_decode( $access_rule_post->post_content, true );
 
+			if(!$access_rule['enabled']) {
+				continue;
+			}
 			// Verify if required params are available.
 			if ( ! empty( $access_rule['target_contents'] ) ) {
 				$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
@@ -411,10 +443,12 @@ class URCR_Frontend {
 				if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
 					continue;
 				}
+
 				// Check if the logic map data is in array format.
 				if ( ! is_array( $access_rule['logic_map'] ) ) {
 					continue;
 				}
+
 				// Validate against empty variables.
 				if ( empty( $access_rule['logic_map']['conditions'] ) || empty( $access_rule['logic_map']['conditions'] ) ) {
 					continue;
@@ -424,20 +458,22 @@ class URCR_Frontend {
 					$is_target = urcr_is_target_post( $access_rule['target_contents'], $post );
 
 					if ( true === $is_target ) {
+						// Check if this page should be excluded from restriction
+						if ( ! empty( $post_id ) && function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
+							continue;
+						}
+
 						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
 						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
 						if ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
 							do_action( 'urcr_pre_content_restriction_applied', $access_rule, $post );
 
-							$template = urcr_get_template(
-								'urcr-target-access-template.php',
-								array(
-									'actions'     => $access_rule['actions'],
-									'target_post' => $post,
-								)
-							);
+							// Use urcr_apply_content_restriction to update post content instead of template
+							$is_applied = urcr_apply_content_restriction( $access_rule['actions'], $post );
 
 							do_action( 'urcr_post_content_restriction_applied', $access_rule, $post );
+
+							// Return the original template so normal theme structure is used
 							return $template;
 						}
 					}
@@ -802,7 +838,7 @@ class URCR_Frontend {
 						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
 
 						if ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
-							$is_applied = urcr_apply_content_restriction( $access_rule['actions'], $product_id );
+//							$is_applied = urcr_apply_content_restriction( $access_rule['actions'], $product_id );
 							if ( true === $is_applied ) {
 								$restricted = false;
 							}
@@ -830,6 +866,12 @@ class URCR_Frontend {
 		if ( isset( $post->ID ) ) {
 			$post_id = $post->ID;
 		}
+
+		// Check if this page should be excluded from restriction
+		if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
+			return;
+		}
+
 		$urcr_meta_override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', true );
 
 		if ( ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
@@ -849,6 +891,7 @@ class URCR_Frontend {
 	 * Restrict contents with Access Rules.
 	 */
 	public function advanced_restriction_with_access_rules() {
+
 		global $wp_query;
 		$access_rule_posts = get_posts(
 			array(
@@ -878,9 +921,19 @@ class URCR_Frontend {
 				continue;
 			}
 
+
+
 			if ( urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule ) ) {
+
 				for ( $i = 0; $i < $posts_length; $i++ ) {
 					$post      = $posts[ $i ];
+					$post_id   = isset( $post->ID ) ? absint( $post->ID ) : 0;
+
+					// Check if this page should be excluded from restriction
+					if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
+						continue;
+					}
+
 					$is_target = urcr_is_target_post( $access_rule['target_contents'], $post );
 
 					if ( true === $is_target ) {
@@ -964,7 +1017,6 @@ class URCR_Frontend {
 	 * Perform basic restriction task for blogs.
 	 */
 	public function basic_restrictions_templates( $template, $post ) {
-
 		if ( is_object( $post ) ) {
 			$post_id = absint( $post->ID );
 		} elseif ( is_array( $post ) && isset( $post['ID'] ) ) {
@@ -977,6 +1029,11 @@ class URCR_Frontend {
 		// Check shop page and get it's page id.
 		if ( function_exists( 'is_shop' ) ) {
 			$post_id = is_shop() ? wc_get_page_id( 'shop' ) : $post_id;
+		}
+
+		// Check if this page should be excluded from restriction
+		if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
+			return $template;
 		}
 
 		$allowed_roles       = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
@@ -1050,7 +1107,6 @@ class URCR_Frontend {
 		} elseif ( $get_meta_data_checkbox ) {
 			$this->basic_restrictions();
 		}
-
 		return $template;
 	}
 
@@ -1065,6 +1121,11 @@ class URCR_Frontend {
 		// Check shop page and get it's page id.
 		if ( function_exists( 'is_shop' ) ) {
 			$post_id = is_shop() ? wc_get_page_id( 'shop' ) : $post_id;
+		}
+
+		// Check if this page should be excluded from restriction
+		if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
+			return;
 		}
 		$allowed_memberships = get_option( 'user_registration_content_restriction_allow_to_memberships' );
 
@@ -1153,14 +1214,81 @@ class URCR_Frontend {
 	 * @param  mixed $post Post. d
 	 */
 	public function urcr_restrict_contents_template( $template, $post ) {
-		$template = ur_get_template(
-			'modules/content-restriction/urcr-target-basic-template.php',
+		// Update post content with styled message using base template
+		$message = $this->message();
+
+		$login_page_id = get_option( 'user_registration_login_page_id' );
+		$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
+
+		$login_url = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
+		$signup_url = $registration_page_id ? get_permalink( $registration_page_id ) : ( $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url() );
+
+		if ( ! $registration_page_id ) {
+			$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
+			if ( $default_form_page_id ) {
+				$signup_url = get_permalink( $default_form_page_id );
+			}
+		}
+
+		// Check if this is a whole site restriction
+		$is_whole_site_restriction = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
+		$access_rule_posts = get_posts(
 			array(
-				'message'     => $this->message(),
-				'target_post' => $post,
+				'numberposts' => -1,
+				'post_status' => 'publish',
+				'post_type'   => 'urcr_access_rule',
 			)
 		);
 
+		foreach ( $access_rule_posts as $access_rule_post ) {
+			$access_rule = json_decode( $access_rule_post->post_content, true );
+			if ( ur_string_to_bool( $access_rule['enabled'] ) && ! empty( $access_rule['target_contents'] ) ) {
+				$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
+				if ( in_array( 'whole_site', $types, true ) ) {
+					$is_whole_site_restriction = true;
+					break;
+				}
+			}
+		}
+
+		if ( $is_whole_site_restriction ) {
+			add_filter( 'body_class', function( $classes ) {
+				$classes[] = 'urcr-hide-page-title';
+				return $classes;
+			});
+		}
+
+		// Use base template to generate styled content
+		ob_start();
+		urcr_get_template(
+			'base-restriction-template.php',
+			array(
+				'message'    => $message,
+				'login_url'  => $login_url,
+				'signup_url' => $signup_url,
+			)
+		);
+		$styled_content = ob_get_clean();
+
+		if ( is_object( $post ) && isset( $post->ID ) ) {
+			$post->post_content = $styled_content;
+
+			// Add filter for elementor content.
+			add_filter(
+				'elementor/frontend/the_content',
+				function () use ( $styled_content ) {
+					if ( ! urcr_is_elementor_content_restricted() ) {
+						urcr_set_elementor_content_restricted();
+
+						return $styled_content;
+					}
+
+					return '';
+				}
+			);
+		}
+
+		// Return the original template so theme header/footer are preserved
 		return $template;
 	}
 
@@ -1173,10 +1301,46 @@ class URCR_Frontend {
 			$this->restrict_products();
 		}
 
+		// Check if this is a whole site restriction
+		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
+		$is_whole_site_restriction = $whole_site_access_restricted;
+
+		// Also check access rules for whole site restriction
+		if ( ! $is_whole_site_restriction ) {
+			$access_rule_posts = get_posts(
+				array(
+					'numberposts' => -1,
+					'post_status' => 'publish',
+					'post_type'   => 'urcr_access_rule',
+				)
+			);
+
+			foreach ( $access_rule_posts as $access_rule_post ) {
+				$access_rule = json_decode( $access_rule_post->post_content, true );
+				if ( ! empty( $access_rule['target_contents'] ) && is_array( $access_rule['target_contents'] ) ) {
+					$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
+					if ( in_array( 'whole_site', $types, true ) ) {
+						$is_whole_site_restriction = true;
+						break;
+					}
+				}
+			}
+		}
+
 		// Display restriction message instead of post content.
 		$restricted_message      = get_post_meta( $post->ID, 'urcr_meta_content', true );
 		$override_global_message = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', true );
-		$post->post_content      = ! empty( $restricted_message ) && $override_global_message ? wp_kses_post( $restricted_message ) : $this->message();
+		$message_content         = ! empty( $restricted_message ) && $override_global_message ? wp_kses_post( $restricted_message ) : $this->message();
+
+		// Add body class to hide page title for whole site restrictions
+		if ( $is_whole_site_restriction ) {
+			add_filter( 'body_class', function( $classes ) {
+				$classes[] = 'urcr-hide-page-title';
+				return $classes;
+			});
+		}
+
+		$post->post_content = $message_content;
 
 		// Add filter for elementor content.
 		add_filter( 'elementor/frontend/the_content', array( $this, 'elementor_restrict' ) );

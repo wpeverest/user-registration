@@ -1,57 +1,64 @@
 /**
  * External Dependencies
  */
-import React, {useState, useRef, useEffect} from "react";
-import {__} from "@wordpress/i18n";
-import {updateRule} from "../../api/content-access-rules-api";
-import {showSuccess, showError} from "../../utils/notifications";
+import React, { useState, useRef, useEffect } from "react";
+import { __ } from "@wordpress/i18n";
+import { showError } from "../../utils/notifications";
 import AccessControlSection from "./AccessControlSection";
 import RuleGroup from "./RuleGroup";
-import {getURCRLocalizedData, getURCRData} from "../../utils/localized-data";
+import { getURCRLocalizedData, getURCRData } from "../../utils/localized-data";
+import { saveRuleWithCollectiveData } from "../../utils/rule-save-helper";
 
 /* global _UR_DASHBOARD_ */
-const {adminURL} = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+const { adminURL } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
-const RuleContentDisplay = ({rule, onRuleUpdate}) => {
+const RuleContentDisplay = ({ rule, onRuleUpdate }) => {
 	const [isSaving, setIsSaving] = useState(false);
 	const [rootGroup, setRootGroup] = useState(null);
-	const [accessControl, setAccessControl] = useState(rule.access_control || "access");
-	const [contentTargets, setContentTargets] = useState([]); // Rule-level content targets
-	
+	const [accessControl, setAccessControl] = useState(
+		rule.access_control ||
+			(rule.content && rule.content.access_control) ||
+			"access"
+	);
+	const [contentTargets, setContentTargets] = useState([]);
 
 	// Initialize root group from rule data
 	useEffect(() => {
 		if (rule.logic_map) {
-			// Initialize root group
 			const initialGroup = {
 				id: rule.logic_map.id || `x${Date.now()}`,
 				type: "group",
 				logic_gate: rule.logic_map.logic_gate || "AND",
-				conditions: rule.logic_map.conditions || [],
+				conditions: rule.logic_map.conditions || []
 			};
 			setRootGroup(initialGroup);
 
-			// Initialize access control from rule
-			if (rule.access_control) {
-				setAccessControl(rule.access_control);
+			const initialAccessControl =
+				rule.access_control ||
+				(rule.content && rule.content.access_control);
+			if (initialAccessControl) {
+				setAccessControl(initialAccessControl);
 			}
 
-			// Initialize content targets from rule.target_contents (rule-level)
-			if (rule.target_contents && Array.isArray(rule.target_contents) && rule.target_contents.length > 0) {
-				// Convert old format to new format
+			if (
+				rule.target_contents &&
+				Array.isArray(rule.target_contents) &&
+				rule.target_contents.length > 0
+			) {
 				const convertedTargets = rule.target_contents.map((target) => {
-					// Map old type names to new ones
 					let type = target.type;
 					if (type === "wp_pages") type = "pages";
 					if (type === "wp_posts") type = "posts";
 
-					// Handle taxonomy type - convert old format to new format
-					let value = target.value || (type === "whole_site" ? "whole_site" : []);
+					let value =
+						target.value ||
+						(type === "whole_site" ? "whole_site" : []);
 					if (type === "taxonomy" && target.taxonomy) {
-						// Convert old format { taxonomy: "category", value: [] } to new format
 						value = {
 							taxonomy: target.taxonomy,
-							value: Array.isArray(target.value) ? target.value : [],
+							value: Array.isArray(target.value)
+								? target.value
+								: []
 						};
 					}
 
@@ -59,158 +66,66 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 						id: target.id || `x${Date.now()}`,
 						type: type,
 						label: getTypeLabel(type),
-						value: value,
+						value: value
 					};
 				});
 				setContentTargets(convertedTargets);
 			}
 		} else {
-			// Initialize empty root group
 			setRootGroup({
 				id: `x${Date.now()}`,
 				type: "group",
 				logic_gate: "AND",
-				conditions: [],
+				conditions: []
 			});
 		}
-	}, [rule.id]); // Only run on initial load
+	}, [rule.id]);
 
-	// Access urcr_localized_data
+	// Update accessControl when rule.access_control changes (e.g., when switching from settings)
+	useEffect(() => {
+		const newAccessControl =
+			rule.access_control ||
+			(rule.content && rule.content.access_control);
+		if (newAccessControl && newAccessControl !== accessControl) {
+			setAccessControl(newAccessControl);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [rule.access_control, rule.content]);
+
 	const urcrData = getURCRLocalizedData();
 
 	const handleSave = async () => {
 		setIsSaving(true);
 		try {
-			// Check if advanced logic is enabled
-			const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
-			
 			if (!rootGroup) {
 				showError(__("No group data to save", "user-registration"));
 				setIsSaving(false);
 				return;
 			}
 
-			// Root group conditions are already serialized by notifyUpdate
-			const logicConditions = rootGroup.conditions || [];
-
-			// Build target_contents array from rule-level contentTargets
-			const targetContents = contentTargets.map((target) => {
-				// Map new type names back to old format
-				let type = target.type;
-				if (type === "pages") type = "wp_pages";
-				if (type === "posts") type = "wp_posts";
-
-				const targetData = {
-					id: target.id || `x${Date.now()}`,
-					type: type,
-				};
-
-				// Handle taxonomy type specially
-				if (type === "taxonomy") {
-					// For taxonomy, value is an object with taxonomy and value properties
-					if (target.value && typeof target.value === "object" && target.value.taxonomy) {
-						targetData.taxonomy = target.value.taxonomy;
-						targetData.value = Array.isArray(target.value.value) ? target.value.value : [];
-					} else {
-						targetData.taxonomy = target.taxonomy || "";
-						targetData.value = Array.isArray(target.value) ? target.value : [];
-					}
-				} else if (type !== "whole_site") {
-					// Add value if not whole_site
-					targetData.value = Array.isArray(target.value) ? target.value : [];
+			await saveRuleWithCollectiveData({
+				rule,
+				onRuleUpdate,
+				contentData: {
+					rootGroup,
+					contentTargets,
+					accessControl
 				}
-
-				return targetData;
 			});
-
-			// Use actions from rule, or create default if none exist
-			// Always use the current accessControl state value, not the existing action's value
-			const currentAccessControl = accessControl || "access";
-			let actions = rule.actions || [];
-			
-			if (actions.length === 0) {
-				// Create default action if none exists
-				actions = [
-					{
-						id: `x${Date.now()}`,
-						type: "message",
-						label: __("Show Message", "user-registration"),
-						message: "<p>" + __("You do not have sufficient permission to access this content.", "user-registration") + "</p>",
-						redirect_url: "",
-						access_control: currentAccessControl,
-						local_page: "",
-						ur_form: "",
-						shortcode: {
-							tag: "",
-							args: "",
-						},
-					},
-				];
-			} else {
-				// Always update access_control to match the current state
-				actions = actions.map(action => ({
-					...action,
-					access_control: currentAccessControl,
-				}));
-			}
-
-			// Build logic_map
-			const logicMap = {
-				type: "group",
-				id: rootGroup.id || rule.logic_map?.id || `x${Date.now()}`,
-				conditions: logicConditions,
-			};
-
-			// Only include logic_gate if advanced logic is enabled
-			if (isAdvancedLogicEnabled) {
-				logicMap.logic_gate = rootGroup.logic_gate || rule.logic_map?.logic_gate || "AND";
-			}
-
-			// Build the full access_rule_data structure
-			const accessRuleData = {
-				enabled: rule.enabled !== undefined ? rule.enabled : true,
-				access_control: accessControl || "access",
-				logic_map: logicMap,
-				target_contents: targetContents,
-				actions: actions,
-			};
-
-			const data = {
-				title: rule.title || __("Untitled Rule", "user-registration"),
-				access_rule_data: accessRuleData,
-			};
-
-			const response = await updateRule(rule.id, data);
-			if (response.success) {
-				showSuccess(response.message || __("Rule saved successfully", "user-registration"));
-				// Update local state with the updated rule data without refetching
-				const updatedRule = {
-					...rule,
-					title: data.title,
-					access_control: accessControl,
-					logic_map: logicMap,
-					target_contents: targetContents,
-					actions: actions,
-				};
-				onRuleUpdate(updatedRule);
-			} else {
-				showError(response.message || __("Failed to save rule", "user-registration"));
-			}
 		} catch (error) {
-			showError(error.message || __("An error occurred", "user-registration"));
+			// Error handled in saveRuleWithCollectiveData
 		} finally {
 			setIsSaving(false);
 		}
 	};
 
-	// Get type label
 	const getTypeLabel = (type) => {
 		const labels = {
 			wp_pages: __("Pages", "user-registration"),
 			wp_posts: __("Posts", "user-registration"),
 			post_types: __("Post Types", "user-registration"),
 			taxonomy: __("Taxonomy", "user-registration"),
-			whole_site: __("Whole Site", "user-registration"),
+			whole_site: __("Whole Site", "user-registration")
 		};
 		return labels[type] || type;
 	};
@@ -219,20 +134,144 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 		setRootGroup(updatedGroup);
 	};
 
-	// Check if advanced logic is enabled
-	const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
+	const isAdvancedLogicEnabled = Boolean(
+		getURCRData("is_advanced_logic_enabled", false)
+	);
+
+	// Build content data from current state
+	const buildContentDataFromState = () => {
+		if (!rootGroup) {
+			return null;
+		}
+
+		const targetContents = contentTargets.map((target) => {
+			let type = target.type;
+			if (type === "pages") type = "wp_pages";
+			if (type === "posts") type = "wp_posts";
+
+			const targetData = {
+				id: target.id || `x${Date.now()}`,
+				type: type
+			};
+
+			if (type === "taxonomy") {
+				if (
+					target.value &&
+					typeof target.value === "object" &&
+					target.value.taxonomy
+				) {
+					targetData.taxonomy = target.value.taxonomy;
+					targetData.value = Array.isArray(target.value.value)
+						? target.value.value
+						: [];
+				} else {
+					targetData.taxonomy = target.taxonomy || "";
+					targetData.value = Array.isArray(target.value)
+						? target.value
+						: [];
+				}
+			} else if (type !== "whole_site") {
+				targetData.value = Array.isArray(target.value)
+					? target.value
+					: [];
+			}
+
+			return targetData;
+		});
+
+		const logicConditions = rootGroup.conditions || [];
+		const logicMap = {
+			type: "group",
+			id: rootGroup.id || rule.logic_map?.id || `x${Date.now()}`,
+			conditions: logicConditions
+		};
+
+		if (isAdvancedLogicEnabled) {
+			logicMap.logic_gate =
+				rootGroup.logic_gate || rule.logic_map?.logic_gate || "AND";
+		}
+
+		return { targetContents, logicMap };
+	};
+
+	// Sync state to rule prop when content state changes
+	const hasInitialized = useRef(false);
+	const prevContentState = useRef(null);
+
+	useEffect(() => {
+		if (!rootGroup) {
+			return;
+		}
+
+		if (!hasInitialized.current) {
+			hasInitialized.current = true;
+			prevContentState.current = {
+				rootGroup: JSON.stringify(rootGroup),
+				contentTargets: JSON.stringify(contentTargets),
+				accessControl
+			};
+			return;
+		}
+
+		const currentState = {
+			rootGroup: JSON.stringify(rootGroup),
+			contentTargets: JSON.stringify(contentTargets),
+			accessControl
+		};
+
+		const stateChanged =
+			!prevContentState.current ||
+			prevContentState.current.rootGroup !== currentState.rootGroup ||
+			prevContentState.current.contentTargets !==
+				currentState.contentTargets ||
+			prevContentState.current.accessControl !==
+				currentState.accessControl;
+
+		if (stateChanged) {
+			const contentData = buildContentDataFromState();
+
+			if (contentData) {
+				const ruleData = rule.content || rule;
+				const currentActions =
+					rule.actions ||
+					(rule.content && rule.content.actions) ||
+					ruleData.actions ||
+					[];
+
+				if (onRuleUpdate) {
+					const updatedRule = {
+						...rule,
+						access_control: accessControl,
+						logic_map: contentData.logicMap,
+						target_contents: contentData.targetContents,
+						actions: currentActions,
+						content: {
+							...(rule.content || {}),
+							access_control: accessControl,
+							logic_map: contentData.logicMap,
+							target_contents: contentData.targetContents,
+							actions: currentActions
+						}
+					};
+					onRuleUpdate(updatedRule);
+				}
+			}
+
+			prevContentState.current = currentState;
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [rootGroup, contentTargets, accessControl]);
 
 	if (!rootGroup) {
 		return <div>Loading...</div>;
 	}
-
 
 	return (
 		<div className="urcr-rule-content-panel">
 			<RuleGroup
 				group={rootGroup}
 				onGroupUpdate={handleRootGroupUpdate}
-				onGroupRemove={() => {}} // Root group cannot be removed
+				onGroupRemove={() => {}}
 				isNested={false}
 				accessControl={accessControl}
 				onAccessControlChange={setAccessControl}
@@ -242,18 +281,19 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 				ruleType={rule.rule_type}
 			/>
 
-				{/* Save Button */}
-				<div className="urcr-rule-actions">
-					<button
-						className="urcr-save-rule-btn button button-primary"
-						type="button"
-						onClick={handleSave}
-						disabled={isSaving}
-						data-rule-id={rule.id}
-					>
-						{isSaving ? __("Saving...", "user-registration") : __("Save", "user-registration")}
-					</button>
-				</div>
+			<div className="urcr-rule-actions">
+				<button
+					className="urcr-save-rule-btn button button-primary"
+					type="button"
+					onClick={handleSave}
+					disabled={isSaving}
+					data-rule-id={rule.id}
+				>
+					{isSaving
+						? __("Saving...", "user-registration")
+						: __("Save", "user-registration")}
+				</button>
+			</div>
 		</div>
 	);
 };

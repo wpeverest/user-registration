@@ -34,7 +34,7 @@ class URCR_Admin {
 		/**
 		 * Register a settings in the core settings list.
 		 */
-		add_filter( 'user_registration_get_settings_pages', array( $this, 'add_content_restriction_setting' ), 10, 1 );
+		// add_filter( 'user_registration_get_settings_pages', array( $this, 'add_content_restriction_setting' ), 10, 1 );
 
 		/**
 		 * Elementor Section Restriction

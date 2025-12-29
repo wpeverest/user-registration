@@ -8,13 +8,16 @@ import ContentAccessRules from "./ContentAccessRules";
 // SCSS is enqueued separately via class-urcr-admin-assets.php
 
 document.addEventListener("DOMContentLoaded", () => {
-	const appRoot = document.getElementById("user-registration-content-access-rules");
+	const appRoot = document.getElementById(
+		"user-registration-content-access-rules"
+	);
 
 	if (appRoot) {
 		const root = createRoot(appRoot);
 
 		root.render(<ContentAccessRules />);
-
 	}
 });
 
+// Export for use in other modules (e.g., dashboard screens)
+export default ContentAccessRules;

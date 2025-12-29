@@ -1,6 +1,3 @@
-/**
- * Toast notification utility for WordPress admin
- */
 let toastContainer = null;
 
 const getToastContainer = () => {
@@ -13,14 +10,15 @@ const getToastContainer = () => {
 };
 
 export const showNotice = (message, type = "info", duration = 5000) => {
-	const noticeId = `urcr-toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+	const noticeId = `urcr-toast-${Date.now()}-${Math.random()
+		.toString(36)
+		.substr(2, 9)}`;
 	const container = getToastContainer();
-	
+
 	const toast = document.createElement("div");
 	toast.id = noticeId;
 	toast.className = `urcr-toast urcr-toast--${type}`;
-	
-	// Icon based on type
+
 	let icon = "";
 	if (type === "success") {
 		icon = '<span class="dashicons dashicons-yes-alt"></span>';
@@ -29,7 +27,7 @@ export const showNotice = (message, type = "info", duration = 5000) => {
 	} else {
 		icon = '<span class="dashicons dashicons-info"></span>';
 	}
-	
+
 	toast.innerHTML = `
 		<div class="urcr-toast__icon">${icon}</div>
 		<div class="urcr-toast__message">${message}</div>
@@ -37,43 +35,39 @@ export const showNotice = (message, type = "info", duration = 5000) => {
 			<span class="dashicons dashicons-no-alt"></span>
 		</button>
 	`;
-	
+
 	container.appendChild(toast);
-	
-	// Trigger animation
+
 	requestAnimationFrame(() => {
 		toast.classList.add("urcr-toast--show");
 	});
-	
-	// Handle dismiss button
+
 	const closeBtn = toast.querySelector(".urcr-toast__close");
 	if (closeBtn) {
 		closeBtn.addEventListener("click", () => {
 			dismissToast(toast);
 		});
 	}
-	
-	// Auto-dismiss after duration
+
 	if (duration > 0) {
 		setTimeout(() => {
 			dismissToast(toast);
 		}, duration);
 	}
-	
+
 	return toast;
 };
 
 const dismissToast = (toast) => {
 	if (!toast || !toast.parentNode) return;
-	
+
 	toast.classList.remove("urcr-toast--show");
 	toast.classList.add("urcr-toast--hide");
-	
+
 	setTimeout(() => {
 		if (toast.parentNode) {
 			toast.remove();
 		}
-		// Remove container if empty
 		if (toastContainer && toastContainer.children.length === 0) {
 			toastContainer.remove();
 			toastContainer = null;
@@ -92,4 +86,3 @@ export const showError = (message, duration = 5000) => {
 export const showInfo = (message, duration = 5000) => {
 	return showNotice(message, "info", duration);
 };
-

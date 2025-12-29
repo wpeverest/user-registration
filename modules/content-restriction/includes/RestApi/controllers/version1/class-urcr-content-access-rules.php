@@ -150,17 +150,13 @@ class URCR_Content_Access_Rules {
 
 			$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
 
-			// Check if rule is migrated
 			$is_migrated = get_post_meta( $rule_post->ID, 'urcr_is_migrated', true );
 
-			// Get rule type (membership or custom)
 			$rule_type = get_post_meta( $rule_post->ID, 'urcr_rule_type', true );
 			if ( empty( $rule_type ) ) {
-				// Default to 'custom' for backwards compatibility
 				$rule_type = 'custom';
 			}
 
-			// Get membership ID if this is a membership rule
 			$membership_id = '';
 			if ( 'membership' === $rule_type ) {
 				$membership_id = get_post_meta( $rule_post->ID, 'urcr_membership_id', true );
@@ -218,13 +214,10 @@ class URCR_Content_Access_Rules {
 	 *
 	 */
 	public static function create_rule( $request ) {
-		// Get title from request, default to 'Untitled Rule'
 		$title = isset( $request['title'] ) ? sanitize_text_field( $request['title'] ) : __( 'Untitled Rule', 'user-registration' );
 
-		// Get access_rule_data from request, or use default empty structure
 		$access_rule_data = isset( $request['access_rule_data'] ) ? $request['access_rule_data'] : array();
 
-		// If no access_rule_data provided, use default structure
 		if ( empty( $access_rule_data ) ) {
 			$access_rule_data = array(
 				'enabled'         => true,
@@ -248,13 +241,16 @@ class URCR_Content_Access_Rules {
 		 */
 		$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'create' );
 
-		// Prepare the post data similar to prepare_access_rule_as_wp_post
+		$access_rule_data      = wp_unslash( $access_rule_data );
+		$access_rule_data_json = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		$access_rule_data_json = wp_slash( $access_rule_data_json );
+
 		$access_rule_post = apply_filters(
 			'urcr_prepared_access_rule_as_wp_post',
 			array(
 				'ID'             => '',
 				'post_title'     => $title,
-				'post_content'   => wp_json_encode( $access_rule_data ),
+				'post_content'   => $access_rule_data_json,
 				'post_type'      => 'urcr_access_rule',
 				'post_status'    => 'publish',
 				'comment_status' => 'closed',
@@ -263,20 +259,15 @@ class URCR_Content_Access_Rules {
 			'create-content-access-rule'
 		);
 
-		// Fire pre-create action
 		do_action( 'urcr_pre_create_content_access_rule', $access_rule_post );
 
-		// Insert the post
 		$rule_id = wp_insert_post( $access_rule_post );
 
 		if ( $rule_id ) {
-			// Set rule type to 'custom' for newly created rules
 			update_post_meta( $rule_id, 'urcr_rule_type', 'custom' );
 
-			// Fire post-create action
 			do_action( 'urcr_post_create_content_access_rule', $access_rule_post, $rule_id );
 
-			// Get the created rule
 			$rule_post    = get_post( $rule_id );
 			$rule_content = json_decode( $rule_post->post_content, true );
 
@@ -308,7 +299,6 @@ class URCR_Content_Access_Rules {
 
 			return new \WP_REST_Response( $response_data, 200 );
 		} else {
-			// Fire failure action
 			do_action( 'urcr_create_content_access_rule_failure', $access_rule_post, $rule_id );
 
 			return new \WP_REST_Response(
@@ -348,7 +338,6 @@ class URCR_Content_Access_Rules {
 
 		$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
 
-		// Check if rule is migrated
 		$is_migrated = get_post_meta( $rule_post->ID, 'urcr_is_migrated', true );
 
 		$rule_data = array(
@@ -464,13 +453,10 @@ class URCR_Content_Access_Rules {
 			);
 		}
 
-		// Get title from request, or keep existing title
 		$title = isset( $request['title'] ) ? sanitize_text_field( $request['title'] ) : $content_rule->post_title;
 
-		// Get access_rule_data from request
 		$access_rule_data = isset( $request['access_rule_data'] ) ? $request['access_rule_data'] : null;
 
-		// If access_rule_data is provided, use it directly (same as old AJAX handler)
 		if ( $access_rule_data && is_array( $access_rule_data ) ) {
 			/**
 			 * @param array $access_rule_data
@@ -479,8 +465,9 @@ class URCR_Content_Access_Rules {
 			 */
 			$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'update' );
 
-			// Use the same logic as prepare_access_rule_as_wp_post
-			$access_rule_data_json = wp_json_encode( $access_rule_data );
+			$access_rule_data      = wp_unslash( $access_rule_data );
+			$access_rule_data_json = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+			$access_rule_data_json = wp_slash( $access_rule_data_json );
 
 			$access_rule_post = apply_filters(
 				'urcr_prepared_access_rule_as_wp_post',
@@ -529,7 +516,6 @@ class URCR_Content_Access_Rules {
 				);
 			}
 		} else {
-			// Fallback: Handle legacy format (access_control and redirect_url only)
 			$access_control = isset( $request['access_control'] ) ? sanitize_text_field( $request['access_control'] ) : 'access';
 			$redirect_url   = isset( $request['redirect_url'] ) ? esc_url_raw( $request['redirect_url'] ) : '';
 
@@ -602,6 +588,17 @@ class URCR_Content_Access_Rules {
 			);
 		}
 
+		$rule_type = get_post_meta( $rule_id, 'urcr_rule_type', true );
+		if ( 'membership' === $rule_type && ! ( defined( 'UR_DEV' ) && UR_DEV ) ) {
+			return new \WP_REST_Response(
+				array(
+					'success' => false,
+					'message' => esc_html__( 'Membership rules cannot be duplicated.', 'user-registration' ),
+				),
+				403
+			);
+		}
+
 		$new_post = array(
 			'post_title'   => $rule_post->post_title . ' (Copy)',
 			'post_content' => $rule_post->post_content,
@@ -612,7 +609,6 @@ class URCR_Content_Access_Rules {
 		$new_rule_id = wp_insert_post( $new_post );
 
 		if ( $new_rule_id ) {
-			// Set rule type to 'custom' for duplicated rules (duplicated rules are always custom)
 			update_post_meta( $new_rule_id, 'urcr_rule_type', 'custom' );
 
 			return new \WP_REST_Response(
@@ -659,9 +655,8 @@ class URCR_Content_Access_Rules {
 			);
 		}
 
-		// Prevent deletion of membership rules
 		$rule_type = get_post_meta( $rule_id, 'urcr_rule_type', true );
-		if ( 'membership' === $rule_type && !UR_DEV) {
+		if ( 'membership' === $rule_type && ! ( defined( 'UR_DEV' ) && UR_DEV ) ) {
 			return new \WP_REST_Response(
 				array(
 					'success' => false,
@@ -671,7 +666,6 @@ class URCR_Content_Access_Rules {
 			);
 		}
 
-		// Clear rule meta before deletion
 		delete_post_meta( $rule_id, 'urcr_rule_type' );
 		delete_post_meta( $rule_id, 'urcr_membership_id' );
 		delete_post_meta( $rule_id, 'urcr_is_migrated' );

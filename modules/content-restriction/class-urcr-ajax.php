@@ -235,10 +235,14 @@ class URCR_AJAX {
 	 */
 	public static function prepare_access_rule_as_wp_post( $context = '', $access_rule_data = null, $post_status = 'publish' ) {
 		if ( ! $access_rule_data ) {
-			$access_rule_data = json_decode( stripslashes( $_POST['access_rule_data'] ), true );
+			$access_rule_data = json_decode( wp_unslash( $_POST['access_rule_data'] ), true );
 		}
 
-		$access_rule_data = wp_json_encode( $access_rule_data );
+		// Unslash data before encoding to prevent double-escaping issues with quotes in HTML content
+		$access_rule_data = wp_unslash( $access_rule_data );
+		$access_rule_data = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+		// Slash the JSON string so wp_insert_post() unslashing doesn't corrupt the JSON
+		$access_rule_data = wp_slash( $access_rule_data );
 		$rule_id          = ! empty( $_POST['rule_id'] ) ? $_POST['rule_id'] : '';
 
 		return apply_filters(
@@ -260,11 +264,11 @@ class URCR_AJAX {
 
 		if ( current_user_can( 'edit_posts' ) ) {
 
-			if ( ! isset( $_POST['rule_id'] )  || ! isset( $_POST['enabled'] ) ) {
+			if ( ! isset( $_POST['rule_id'] ) || ! isset( $_POST['enabled'] ) ) {
 				wp_send_json_error();
 			}
 
-			$_nonce = isset( $_POST['security'] ) ? $_POST['security']  : '' ;
+			$_nonce = isset( $_POST['security'] ) ? $_POST['security'] : '';
 			if ( ! wp_verify_nonce( $_nonce, 'urcr_manage_content_access_rule' ) ) {
 				wp_send_json_error(
 					array(
@@ -280,10 +284,10 @@ class URCR_AJAX {
 
 				$content_rule = get_post( $rule_id );
 
-				$content_rule_content  = json_decode( $content_rule->post_content, true );
+				$content_rule_content = json_decode( $content_rule->post_content, true );
 
-				$content_rule_content['enabled'] = ( $_POST['enabled'] === "true" ) ? true : false;
-				$enabled_text = ( $_POST['enabled'] === "true" ) ? "enabled" : "disabled";
+				$content_rule_content['enabled'] = ( $_POST['enabled'] === 'true' ) ? true : false;
+				$enabled_text                    = ( $_POST['enabled'] === 'true' ) ? 'enabled' : 'disabled';
 
 				$content_rule->post_content = json_encode( $content_rule_content );
 
@@ -303,7 +307,6 @@ class URCR_AJAX {
 						)
 					);
 				}
-
 			} else {
 				wp_send_json_error(
 					array(
@@ -352,9 +355,9 @@ class URCR_AJAX {
 				return;
 			}
 
-			$content_rule_content = json_decode( $content_rule->post_content, true );
+			$content_rule_content            = json_decode( $content_rule->post_content, true );
 			$content_rule_content['enabled'] = ( 1 === $enabled ) ? true : false;
-			$enabled_text = ( 1 === $enabled ) ? 'enabled' : 'disabled';
+			$enabled_text                    = ( 1 === $enabled ) ? 'enabled' : 'disabled';
 
 			$content_rule->post_content = wp_json_encode( $content_rule_content );
 
@@ -499,4 +502,3 @@ class URCR_AJAX {
 }
 
 URCR_AJAX::init();
-

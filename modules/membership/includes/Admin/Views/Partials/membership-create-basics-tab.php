@@ -40,14 +40,14 @@
 						! empty( $membership_content['description'] ) ? $membership_content['description'] : ( ! empty( $membership_details['description'] ) ? $membership_details['description'] : '' ),
 						'ur-input-type-membership-description',
 						array(
-							'textarea_name' => 'Membership Description',
-							'textarea_rows' => 50,
-							'media_buttons' => false,
-							'quicktags'     => false,
-							'teeny'         => true,
+							'textarea_name'          => 'Membership Description',
+							'textarea_rows'          => 50,
+							'media_buttons'          => false,
+							'quicktags'              => false,
+							'teeny'                  => true,
 							'show-ur-registration-form-button' => false,
 							'show-smart-tags-button' => true,
-							'tinymce'       => array(
+							'tinymce'                => array(
 								'theme'       => 'modern',
 								'skin'        => 'lightgray',
 								'toolbar1'    => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
@@ -180,7 +180,7 @@
 							<span style="color:red">*</span> :
 						</label>
 					</div>
-					<div class="ur-field ur-d-flex ur-align-items-center" data-field-key="membership_duration" style="width: 100%; gap: 20px;">
+					<div class="ur-field ur-d-flex ur-align-items-center" data-field-key="membership_duration" style="gap: 20px;">
 						<input data-key-name="Duration Value"
 								value="<?php echo isset( $membership_details['subscription'] ) ? esc_attr( $membership_details['subscription']['value'] ) : 1; ?>"
 								class="" type="number" name="ur_membership[duration]_value"
@@ -189,15 +189,14 @@
 				</div>
 
 				<!-- Payment Settings Notice -->
-				<div id="ur-membership-payment-settings-notice" class="<?php echo isset( $membership_details['type'] ) && in_array( $membership_details['type'], array( 'paid', 'subscription' ), true ) && empty( urm_get_all_active_payment_gateways( $membership_details['type'] ) ) ? '' : 'ur-d-none'; ?>" 
+				<div id="ur-membership-payment-settings-notice" class="<?php echo isset( $membership_details['type'] ) && in_array( $membership_details['type'], array( 'paid', 'subscription' ), true ) && empty( urm_get_all_active_payment_gateways( $membership_details['type'] ) ) ? '' : 'ur-d-none'; ?>"
 					data-paid-configured="<?php echo empty( urm_get_all_active_payment_gateways( 'paid' ) ) ? '0' : '1'; ?>"
 					data-subscription-configured="<?php echo empty( urm_get_all_active_payment_gateways( 'subscription' ) ) ? '0' : '1'; ?>">
 					<p>
-						<?php esc_html_e('The payment setup is not configured yet. Please configure payment settings before proceeding.','user-registration')?>
-						<a href="<?php echo esc_url(admin_url('admin.php?page=user-registration-settings&tab=payment'))?>" target="_blank"><?php esc_html_e('Configure','user-registration'); ?></a>
+						<?php esc_html_e( 'The payment setup is not configured yet. Please configure payment settings before proceeding.', 'user-registration' ); ?>
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=payment' ) ); ?>" target="_blank"><?php esc_html_e( 'Configure', 'user-registration' ); ?></a>
 					</p>
 				</div>
 			</div>
 		</div>
 	</div>
-

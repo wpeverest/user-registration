@@ -11,40 +11,60 @@
 ?>
 	<div class="user-registration-card__body">
 		<div id="ur-membership-access-section" class="urcr-membership-access-section"
-			 data-rule-data="<?php echo isset( $membership_rule_data ) ? esc_attr( wp_json_encode( $membership_rule_data ) ) : ''; ?>">
+			data-rule-data="<?php echo isset( $membership_rule_data ) ? esc_attr( wp_json_encode( $membership_rule_data ) ) : ''; ?>">
 			<div class="urcr-rule-content-panel">
 				<div class="urcr-content-group">
 					<div class="urcr-rule-body ur-p-2">
 						<div class="urcr-condition-row-parent">
 							<div class="urcr-conditions-list">
 								<?php
+								// Get membership ID
+								$membership_id = isset( $membership ) && isset( $membership->ID ) ? $membership->ID : 0;
+
 								// Render conditions from PHP if rule data exists
 								if ( isset( $membership_rule_data ) && $membership_rule_data &&
-									 isset( $membership_rule_data['logic_map'] ) &&
-									 isset( $membership_rule_data['logic_map']['conditions'] ) ) {
+									isset( $membership_rule_data['logic_map'] ) &&
+									isset( $membership_rule_data['logic_map']['conditions'] ) &&
+									! empty( $membership_rule_data['logic_map']['conditions'] ) ) {
 									$conditions = $membership_rule_data['logic_map']['conditions'];
 
 									// Sort conditions to ensure membership is first
-									usort( $conditions, function( $a, $b ) {
-										if ( isset( $a['type'] ) && $a['type'] === 'membership' ) return -1;
-										if ( isset( $b['type'] ) && $b['type'] === 'membership' ) return 1;
-										return 0;
-									} );
+									usort(
+										$conditions,
+										function ( $a, $b ) {
+											if ( isset( $a['type'] ) && $a['type'] === 'membership' ) {
+												return -1;
+											}
+											if ( isset( $b['type'] ) && $b['type'] === 'membership' ) {
+												return 1;
+											}
+											return 0;
+										}
+									);
 
 									// Render all conditions including the first membership condition
 									// First condition (membership) should be non-editable
 									foreach ( $conditions as $index => $condition ) {
-										$first_condition = ! empty( $conditions ) ? $conditions[0] : null;
+										$first_condition     = ! empty( $conditions ) ? $conditions[0] : null;
 										$is_first_membership = isset( $first_condition['type'] ) && $first_condition['type'] === 'membership' && $index === 0;
-										$is_locked = $is_first_membership;
+										$is_locked           = $is_first_membership;
 										echo $this->render_condition_row( $condition, $membership_condition_options, $membership_localized_data, $is_locked );
 									}
+								} elseif ( $membership_id > 0 ) {
+									// If no conditions exist, show membership condition for the current membership
+									// This applies to both free and pro users
+									$membership_condition = array(
+										'id'    => 'x' . time() . '_' . wp_rand(),
+										'type'  => 'membership',
+										'value' => array( $membership_id ),
+									);
+									echo $this->render_condition_row( $membership_condition, $membership_condition_options, $membership_localized_data, true );
 								}
 								?>
 							</div>
 
 							<!-- Access Control Section -->
-							<div class="urcr-target-selection-section ur-mt-3">
+							<div class="urcr-target-selection-section">
 								<span class="urcr-arrow-icon" aria-hidden="true"></span>
 
 								<div class="urcr-target-selection-wrapper">
@@ -52,7 +72,7 @@
 										<?php
 										// Render content targets from PHP if rule data exists
 										if ( isset( $membership_rule_data ) && $membership_rule_data &&
-											 isset( $membership_rule_data['target_contents'] ) ) {
+											isset( $membership_rule_data['target_contents'] ) ) {
 											$targets = $membership_rule_data['target_contents'];
 											foreach ( $targets as $target ) {
 												echo $this->render_content_target( $target, $membership_localized_data );
@@ -81,7 +101,7 @@
 						</div>
 						<?php endif; ?>
 						<!-- Action Section -->
-						<div class="urcr-action-section ur-mt-3">
+						<div class="urcr-action-section">
 							<div class="urcr-label-input-pair urcr-rule-action urcr-align-items-center ">
 								<label class="urcr-label-container">
 									<span class="urcr-target-content-label"><?php esc_html_e( 'Action', 'user-registration' ); ?></span>
@@ -91,7 +111,7 @@
 									<select class="urcr-action-type-select urcr-condition-value-input" id="urcr-membership-action-type">
 										<?php
 										$action_type_options = isset( $membership_localized_data['action_type_options'] ) ? $membership_localized_data['action_type_options'] : array();
-										$selected_action = isset( $membership_rule_data['actions'][0]['type'] ) ? $membership_rule_data['actions'][0]['type'] : 'message';
+										$selected_action     = isset( $membership_rule_data['actions'][0]['type'] ) ? $membership_rule_data['actions'][0]['type'] : 'message';
 										// Map backend type to frontend type
 										if ( $selected_action === 'redirect_to_local_page' ) {
 											$selected_action = 'local_page';
@@ -103,17 +123,32 @@
 										if ( empty( $action_type_options ) ) {
 											// Fallback if not in localized data
 											$action_type_options = array(
-												array( 'value' => 'message', 'label' => __( 'Show Message', 'user-registration' ) ),
-												array( 'value' => 'redirect', 'label' => __( 'Redirect', 'user-registration' ) ),
-												array( 'value' => 'local_page', 'label' => __( 'Redirect to a Local Page', 'user-registration' ) ),
-												array( 'value' => 'ur-form', 'label' => __( 'Show UR Form', 'user-registration' ) ),
-												array( 'value' => 'shortcode', 'label' => __( 'Render Shortcode', 'user-registration' ) ),
+												array(
+													'value' => 'message',
+													'label' => __( 'Show Message', 'user-registration' ),
+												),
+												array(
+													'value' => 'redirect',
+													'label' => __( 'Redirect', 'user-registration' ),
+												),
+												array(
+													'value' => 'local_page',
+													'label' => __( 'Redirect to a Local Page', 'user-registration' ),
+												),
+												array(
+													'value' => 'ur-form',
+													'label' => __( 'Show UR Form', 'user-registration' ),
+												),
+												array(
+													'value' => 'shortcode',
+													'label' => __( 'Render Shortcode', 'user-registration' ),
+												),
 											);
 										}
 
 										foreach ( $action_type_options as $option ) {
-											$value = isset( $option['value'] ) ? $option['value'] : '';
-											$label = isset( $option['label'] ) ? $option['label'] : $value;
+											$value    = isset( $option['value'] ) ? $option['value'] : '';
+											$label    = isset( $option['label'] ) ? $option['label'] : $value;
 											$selected = ( $value === $selected_action ) ? 'selected="selected"' : '';
 											echo '<option value="' . esc_attr( $value ) . '" ' . $selected . '>' . esc_html( $label ) . '</option>';
 										}
@@ -144,9 +179,9 @@
 												'textarea_name' => 'urcr_action_message',
 												'textarea_rows' => 10,
 												'media_buttons' => true,
-												'quicktags'     => false,
-												'teeny'         => false,
-												'tinymce'       => array(
+												'quicktags' => false,
+												'teeny'   => false,
+												'tinymce' => array(
 													'toolbar1'    => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
 													'statusbar'   => false,
 													'plugins'     => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
@@ -164,8 +199,8 @@
 									</label>
 									<div class="urcr-body">
 										<input type="url" class="urcr-input urcr-action-redirect-url"
-											   value="<?php echo isset( $membership_rule_data['actions'][0]['redirect_url'] ) ? esc_attr( $membership_rule_data['actions'][0]['redirect_url'] ) : ''; ?>"
-											   placeholder="<?php esc_attr_e( 'Enter a URL to redirect to...', 'user-registration' ); ?>" />
+												value="<?php echo isset( $membership_rule_data['actions'][0]['redirect_url'] ) ? esc_attr( $membership_rule_data['actions'][0]['redirect_url'] ) : ''; ?>"
+												placeholder="<?php esc_attr_e( 'Enter a URL to redirect to...', 'user-registration' ); ?>" />
 									</div>
 								</div>
 
@@ -178,7 +213,7 @@
 										<select class="urcr-input urcr-action-local-page user-membership-enhanced-select2">
 											<option value=""><?php esc_html_e( 'Select a page', 'user-registration' ); ?></option>
 											<?php
-											$pages = isset( $membership_localized_data['pages'] ) ? $membership_localized_data['pages'] : array();
+											$pages         = isset( $membership_localized_data['pages'] ) ? $membership_localized_data['pages'] : array();
 											$selected_page = isset( $membership_rule_data['actions'][0]['local_page'] ) ? $membership_rule_data['actions'][0]['local_page'] : '';
 											foreach ( $pages as $page_id => $page_title ) {
 												$selected = ( (string) $page_id === (string) $selected_page ) ? 'selected="selected"' : '';
@@ -198,7 +233,7 @@
 										<select class="urcr-input urcr-action-ur-form user-membership-enhanced-select2">
 											<option value=""><?php esc_html_e( 'Select a form', 'user-registration' ); ?></option>
 											<?php
-											$ur_forms = isset( $membership_localized_data['ur_forms'] ) ? $membership_localized_data['ur_forms'] : array();
+											$ur_forms      = isset( $membership_localized_data['ur_forms'] ) ? $membership_localized_data['ur_forms'] : array();
 											$selected_form = isset( $membership_rule_data['actions'][0]['ur_form'] ) ? $membership_rule_data['actions'][0]['ur_form'] : '';
 											if ( empty( $selected_form ) && isset( $membership_rule_data['actions'][0]['ur-form'] ) ) {
 												$selected_form = $membership_rule_data['actions'][0]['ur-form'];
@@ -222,7 +257,7 @@
 											<select class="urcr-input urcr-action-shortcode-tag user-membership-enhanced-select2 ur-mb-2">
 												<option value=""><?php esc_html_e( 'Select shortcode', 'user-registration' ); ?></option>
 												<?php
-												$shortcodes = isset( $membership_localized_data['shortcodes'] ) ? $membership_localized_data['shortcodes'] : array();
+												$shortcodes   = isset( $membership_localized_data['shortcodes'] ) ? $membership_localized_data['shortcodes'] : array();
 												$selected_tag = isset( $membership_rule_data['actions'][0]['shortcode']['tag'] ) ? $membership_rule_data['actions'][0]['shortcode']['tag'] : '';
 												foreach ( $shortcodes as $tag => $tag_name ) {
 													$selected = ( $tag === $selected_tag ) ? 'selected="selected"' : '';
@@ -231,8 +266,8 @@
 												?>
 											</select>
 											<input type="text" class="urcr-input urcr-action-shortcode-args"
-												   value="<?php echo isset( $membership_rule_data['actions'][0]['shortcode']['args'] ) ? esc_attr( $membership_rule_data['actions'][0]['shortcode']['args'] ) : ''; ?>"
-												   placeholder='<?php esc_attr_e( 'Enter shortcode arguments here. Eg: id="345"', 'user-registration' ); ?>' />
+													value="<?php echo isset( $membership_rule_data['actions'][0]['shortcode']['args'] ) ? esc_attr( $membership_rule_data['actions'][0]['shortcode']['args'] ) : ''; ?>"
+													placeholder='<?php esc_attr_e( 'Enter shortcode arguments here. Eg: id="345"', 'user-registration' ); ?>' />
 										</div>
 									</div>
 								</div>
@@ -248,4 +283,3 @@
 			<input type="hidden" id="urcr-membership-access-rule-data" name="urcr_membership_access_rule_data" value="">
 		</div>
 	</div>
-

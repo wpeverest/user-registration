@@ -21,6 +21,8 @@ import {
 	ModalOverlay,
 	ModalContent,
 	ModalHeader,
+	ModalBody,
+	ModalFooter,
 	ModalCloseButton,
 	useDisclosure
 } from "@chakra-ui/react";
@@ -41,6 +43,20 @@ const AddonCard = ({ addon, showToast }) => {
 		onOpen: onVideoOpen,
 		onClose: onVideoClose
 	} = useDisclosure();
+	const {
+		isOpen: isConfirmOpen,
+		onOpen: onConfirmOpen,
+		onClose: onConfirmClose
+	} = useDisclosure();
+	const {
+		isPro,
+		licensePlan,
+		urm_is_new_installation,
+		urcr_custom_rules_count
+	} =
+		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_
+			? _UR_DASHBOARD_
+			: {};
 
 	// Get assets URL from global variable
 	const getImageUrl = (imagePath) => {
@@ -55,23 +71,73 @@ const AddonCard = ({ addon, showToast }) => {
 
 	// Check if module is enabled based on plan requirements
 	useEffect(() => {
-		/* global _UR_DASHBOARD_ */
-		const { isPro, licensePlan, plugins } =
-			typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
-
-		if (addon.plan && addon.plan.includes("free")) {
-			setModuleEnabled(true);
-		} else if (isPro && licensePlan) {
-			const requiredPlan = licensePlan.item_plan.replace(" lifetime", "");
-			if (addon.plan && addon.plan.includes(requiredPlan.trim())) {
+		// Special case for content-restriction addon
+		if (addon.slug === "user-registration-content-restriction") {
+			// For new users, keep the default behavior
+			if (urm_is_new_installation) {
+				if (addon.plan && addon.plan.includes("free")) {
+					setModuleEnabled(true);
+				} else if (isPro && licensePlan) {
+					const requiredPlan = licensePlan.item_plan.replace(
+						" lifetime",
+						""
+					);
+					if (
+						addon.plan &&
+						addon.plan.includes(requiredPlan.trim())
+					) {
+						setModuleEnabled(true);
+					} else {
+						setModuleEnabled(false);
+					}
+				} else {
+					setModuleEnabled(false);
+				}
+			} else {
+				// For old users: only allow enable/disable if currently active and isPro is false
+				// After disabling, if not in free plan and not pro, show upgrade plan
+				if (!isPro && isActive) {
+					// Allow enable/disable only when currently active (check only isActive state, not initial prop)
+					setModuleEnabled(true);
+				} else if (addon.plan && addon.plan.includes("free")) {
+					setModuleEnabled(true);
+				} else if (isPro && licensePlan) {
+					const requiredPlan = licensePlan.item_plan.replace(
+						" lifetime",
+						""
+					);
+					if (
+						addon.plan &&
+						addon.plan.includes(requiredPlan.trim())
+					) {
+						setModuleEnabled(true);
+					} else {
+						setModuleEnabled(false);
+					}
+				} else {
+					// Not active, not in free plan, and not pro - show upgrade plan
+					setModuleEnabled(false);
+				}
+			}
+		} else {
+			// Default behavior for other addons
+			if (addon.plan && addon.plan.includes("free")) {
 				setModuleEnabled(true);
+			} else if (isPro && licensePlan) {
+				const requiredPlan = licensePlan.item_plan.replace(
+					" lifetime",
+					""
+				);
+				if (addon.plan && addon.plan.includes(requiredPlan.trim())) {
+					setModuleEnabled(true);
+				} else {
+					setModuleEnabled(false);
+				}
 			} else {
 				setModuleEnabled(false);
 			}
-		} else {
-			setModuleEnabled(false);
 		}
-	}, [addon.plan]);
+	}, [addon.plan, addon.slug, addon.status, isActive]);
 
 	const handleUpgradePlan = () => {
 		const { upgradeURL } =
@@ -89,7 +155,77 @@ const AddonCard = ({ addon, showToast }) => {
 		onVideoOpen();
 	};
 
+	const handleDeactivateModule = async () => {
+		setIsLoading(true);
+		try {
+			const response = await deactivateModule(addon.slug, addon.type);
+			if (response.success) {
+				setIsActive(false);
+				showToast(
+					response.message || "Module deactivated successfully",
+					"success"
+				);
+			} else {
+				showToast(
+					response.message || "Failed to deactivate module",
+					"error"
+				);
+			}
+		} catch (error) {
+			showToast(error.message || "An error occurred", "error");
+		}
+		setIsLoading(false);
+		onConfirmClose();
+	};
+
 	const handleToggle = async () => {
+		// Skip warning modal if isPro is true and slug is user-registration-content-restriction
+		// Check if isPro is truthy (handle boolean, string, number formats)
+		const isProUser =
+			isPro === true || String(isPro).toLowerCase() === "true";
+		console.log(isPro);
+		// If it's content-restriction addon, isActive, and isPro, skip modal and deactivate directly
+		if (
+			addon.slug === "user-registration-content-restriction" &&
+			isActive &&
+			isProUser
+		) {
+			// Pro users can disable without warning modal - proceed directly to deactivation
+			setIsLoading(true);
+			try {
+				const response = await deactivateModule(addon.slug, addon.type);
+				if (response.success) {
+					setIsActive(false);
+					showToast(
+						response.message || "Module deactivated successfully",
+						"success"
+					);
+				} else {
+					showToast(
+						response.message || "Failed to deactivate module",
+						"error"
+					);
+				}
+			} catch (error) {
+				showToast(error.message || "An error occurred", "error");
+			}
+			setIsLoading(false);
+			return;
+		}
+
+		// Check if we need to show confirmation modal for content-restriction addon when disabling
+		// Only show modal if NOT a pro user (and other conditions are met)
+		if (
+			addon.slug === "user-registration-content-restriction" &&
+			isActive &&
+			!urm_is_new_installation &&
+			!isProUser &&
+			urcr_custom_rules_count >= 1
+		) {
+			onConfirmOpen();
+			return;
+		}
+
 		setIsLoading(true);
 		try {
 			let response;
@@ -147,6 +283,21 @@ const AddonCard = ({ addon, showToast }) => {
 		if (plan.includes("professional")) return "blue";
 		return "gray";
 	};
+
+	// Check if this addon should be hidden based on membership-specific rules
+
+	if (addon.slug === "user-registration-membership") {
+		// If urm_is_new_installation is set (user is not new), hide the addon
+		if (urm_is_new_installation) {
+			return null;
+		}
+		// If urm_is_new_installation is empty (new user) and addon is already active, hide it
+		// Check both the state and the initial prop to handle both initial render and after activation
+		if (isActive || addon.status === "active") {
+			return null;
+		}
+		// If urm_is_new_installation is empty (new user) and addon is not active, show it
+	}
 
 	return (
 		<Box
@@ -466,6 +617,64 @@ const AddonCard = ({ addon, showToast }) => {
 					</ModalContent>
 				</Modal>
 			)}
+
+			{/* Confirmation Modal for Content Restriction */}
+			<Modal
+				isOpen={isConfirmOpen}
+				onClose={onConfirmClose}
+				size="md"
+				isCentered
+			>
+				<ModalOverlay />
+				<ModalContent>
+					<ModalHeader color="red.600">
+						Warning: Potential Data Loss
+					</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody>
+						<VStack spacing="4" align="start">
+							<Text color="gray.700" lineHeight="1.6">
+								You are about to disable the Content Restriction
+								addon. Please be aware that:
+							</Text>
+							<Box as="ul" pl="5" color="gray.600">
+								<Text as="li" mb="2">
+									There might be existing content restriction
+									rules in your system
+								</Text>
+								<Text as="li" mb="2">
+									If you continue, you may lose access to
+									these rules
+								</Text>
+								<Text as="li">
+									You will need to upgrade to a higher plan to
+									access them again
+								</Text>
+							</Box>
+							<Text color="gray.700" fontWeight="medium">
+								Are you sure you want to continue?
+							</Text>
+						</VStack>
+					</ModalBody>
+					<ModalFooter>
+						<Button
+							variant="ghost"
+							mr={3}
+							onClick={onConfirmClose}
+							isDisabled={isLoading}
+						>
+							Cancel
+						</Button>
+						<Button
+							colorScheme="red"
+							onClick={handleDeactivateModule}
+							isLoading={isLoading}
+						>
+							Continue Anyway
+						</Button>
+					</ModalFooter>
+				</ModalContent>
+			</Modal>
 		</Box>
 	);
 };

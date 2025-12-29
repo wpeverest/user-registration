@@ -7,10 +7,17 @@ import { getAllRules } from "./api/content-access-rules-api";
 import RuleCard from "./components/rules/RuleCard";
 import AddNewRuleModal from "./components/modals/AddNewRuleModal";
 import { showError } from "./utils/notifications";
-import { getURCRLocalizedData, getURCRData, isProAccess } from "./utils/localized-data";
+import {
+	getURCRLocalizedData,
+	getURCRData,
+	isProAccess
+} from "./utils/localized-data";
 
 /* global _UR_DASHBOARD_ */
-const { adminURL, assetsURL } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_ ? _UR_DASHBOARD_ : {};
+const { adminURL, assetsURL } =
+	typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_
+		? _UR_DASHBOARD_
+		: {};
 
 const ContentAccessRules = () => {
 	const [rules, setRules] = useState([]);
@@ -19,12 +26,17 @@ const ContentAccessRules = () => {
 	const [expandedRules, setExpandedRules] = useState(new Set());
 	const [openSettingsPanels, setOpenSettingsPanels] = useState(new Set());
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [activeTab, setActiveTab] = useState("custom"); // 'membership' or 'custom'
+	const [activeTab, setActiveTab] = useState("custom");
 
-	// Access urcr_localized_data
 	const urcrData = getURCRLocalizedData();
-	const hasMultipleMemberships = getURCRData("has_multiple_memberships", false);
-	const isContentRestrictionEnabled = getURCRData("is_content_restriction_enabled", false);
+	const hasMultipleMemberships = getURCRData(
+		"has_multiple_memberships",
+		false
+	);
+	const isContentRestrictionEnabled = getURCRData(
+		"is_content_restriction_enabled",
+		false
+	);
 
 	const fetchRules = useCallback(() => {
 		setIsLoading(true);
@@ -34,13 +46,20 @@ const ContentAccessRules = () => {
 				if (data.success) {
 					setRules(data.rules || []);
 				} else {
-					const errorMsg = data.message || __("Failed to load rules", "user-registration");
+					const errorMsg =
+						data.message ||
+						__("Failed to load rules", "user-registration");
 					setError(errorMsg);
 					showError(errorMsg);
 				}
 			})
 			.catch((err) => {
-				const errorMessage = err.message || __("An error occurred while loading rules", "user-registration");
+				const errorMessage =
+					err.message ||
+					__(
+						"An error occurred while loading rules",
+						"user-registration"
+					);
 				setError(errorMessage);
 				showError(errorMessage);
 			})
@@ -53,45 +72,42 @@ const ContentAccessRules = () => {
 		fetchRules();
 	}, [fetchRules]);
 
-	// Filter rules by type
-	const membershipRules = rules.filter((rule) => rule.rule_type === "membership");
-	const customRules = rules.filter((rule) => rule.rule_type !== "membership" || !rule.rule_type);
-	// Show membership rules tab only if there are multiple memberships AND more than 1 membership rule
-	const shouldShowMembershipTab = hasMultipleMemberships && membershipRules.length > 1;
-	// Show custom rules tab only if content restriction addon is enabled AND there are custom rules
+	const membershipRules = rules.filter(
+		(rule) => rule.rule_type === "membership"
+	);
+	const customRules = rules.filter(
+		(rule) => rule.rule_type !== "membership" || !rule.rule_type
+	);
+	const shouldShowMembershipTab =
+		hasMultipleMemberships && membershipRules.length > 1;
 	const shouldShowCustomTab = isContentRestrictionEnabled;
+	const shouldShowTabSwitcher =
+		isContentRestrictionEnabled && shouldShowMembershipTab;
 
-	// Show tab switcher only when content restriction is enabled AND there are more than 1 membership rules
-	const shouldShowTabSwitcher = isContentRestrictionEnabled && shouldShowMembershipTab;
+	const currentRules = !isContentRestrictionEnabled
+		? shouldShowMembershipTab
+			? membershipRules
+			: []
+		: activeTab === "membership"
+		? membershipRules
+		: customRules;
 
-	// Get rules for current tab
-	// When content restriction is disabled, always show membership rules
-	const currentRules = (!isContentRestrictionEnabled) ? membershipRules : (activeTab === "membership" ? membershipRules : customRules);
-
-	// Set default tab based on membership count (only once when rules are loaded)
 	const [hasSetDefaultTab, setHasSetDefaultTab] = useState(false);
 	useEffect(() => {
 		if (!hasSetDefaultTab && !isLoading) {
-			// When content restriction is disabled, always show membership rules (no tabs)
 			if (!isContentRestrictionEnabled) {
 				setActiveTab("membership");
 				setHasSetDefaultTab(true);
-			}
-			// When content restriction is enabled and we have membership tab, default to membership tab
-			else if (shouldShowMembershipTab && membershipRules.length > 0) {
+			} else if (shouldShowMembershipTab && membershipRules.length > 0) {
 				setActiveTab("membership");
 				setHasSetDefaultTab(true);
-			}
-			// Otherwise, default to custom tab
-			else if (!shouldShowMembershipTab) {
+			} else if (!shouldShowMembershipTab) {
 				setActiveTab("custom");
 				setHasSetDefaultTab(true);
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rules, isLoading, hasMultipleMemberships, isContentRestrictionEnabled]);
-
-
 
 	const handleToggleExpand = (ruleId) => {
 		setExpandedRules((prev) => {
@@ -118,22 +134,19 @@ const ContentAccessRules = () => {
 	};
 
 	const handleRuleUpdate = (updatedRule) => {
-		// If updatedRule is provided, update local state without refetching
 		if (updatedRule) {
 			setRules((prevRules) =>
 				prevRules.map((rule) =>
-					rule.id === updatedRule.id ? { ...rule, ...updatedRule } : rule
+					rule.id === updatedRule.id
+						? { ...rule, ...updatedRule }
+						: rule
 				)
 			);
 		}
-		// If called without parameter (delete/duplicate), refetch is needed
-		// But for updates, we don't refetch - just update local state
 	};
 
 	const handleRuleDelete = (ruleId) => {
-		// Remove deleted rule from local state without refetching
 		setRules((prevRules) => prevRules.filter((rule) => rule.id !== ruleId));
-		// Also remove from expanded and settings panels if present
 		setExpandedRules((prev) => {
 			const newSet = new Set(prev);
 			newSet.delete(ruleId);
@@ -147,7 +160,6 @@ const ContentAccessRules = () => {
 	};
 
 	const handleRuleDuplicate = () => {
-		// Refetch rules after duplicate operation to get the new rule
 		fetchRules();
 	};
 
@@ -168,11 +180,8 @@ const ContentAccessRules = () => {
 	};
 
 	const handleRuleCreated = (newRule) => {
-		// Add the new rule to the top of the list
 		setRules((prevRules) => [newRule, ...prevRules]);
-		// Auto-expand the new rule
 		setExpandedRules((prev) => new Set([...prev, newRule.id]));
-		// Switch to custom tab if not already there
 		setActiveTab("custom");
 	};
 
@@ -191,7 +200,10 @@ const ContentAccessRules = () => {
 			<div className="user-registration-content-restriction-viewer">
 				<div className="urcr-error-container">
 					<p>{error}</p>
-					<button className="button button-primary" onClick={fetchRules}>
+					<button
+						className="button button-primary"
+						onClick={fetchRules}
+					>
 						{__("Retry", "user-registration")}
 					</button>
 				</div>
@@ -204,20 +216,29 @@ const ContentAccessRules = () => {
 			<div className="urcr-viewer-container">
 				<div className="urcr-header">
 					<h1>{__("Content Rules", "user-registration")}</h1>
-					{isProAccess() && isContentRestrictionEnabled && activeTab === "custom" && (
-						<button type="button" className="urcr-add-new-button" onClick={handleOpenModal}>
-							<span className="dashicons dashicons-plus-alt2"></span>
-							{__("Add New", "user-registration")}
-						</button>
-					)}
+					{isProAccess() &&
+						isContentRestrictionEnabled &&
+						activeTab === "custom" && (
+							<button
+								type="button"
+								className="urcr-add-new-button"
+								onClick={handleOpenModal}
+							>
+								<span className="dashicons dashicons-plus-alt2"></span>
+								{__("Add New", "user-registration")}
+							</button>
+						)}
 				</div>
 
-				{/* Tabs - Show only when content restriction is enabled AND there are more than 1 membership rules */}
 				{shouldShowTabSwitcher && (
 					<div className="urcr-tabs">
 						<button
 							type="button"
-							className={`urcr-tab ${activeTab === "membership" ? "urcr-tab-active" : ""}`}
+							className={`urcr-tab ${
+								activeTab === "membership"
+									? "urcr-tab-active"
+									: ""
+							}`}
 							onClick={() => setActiveTab("membership")}
 						>
 							{__("Membership Rules", "user-registration")}
@@ -225,7 +246,11 @@ const ContentAccessRules = () => {
 						{shouldShowCustomTab && (
 							<button
 								type="button"
-								className={`urcr-tab ${activeTab === "custom" ? "urcr-tab-active" : ""}`}
+								className={`urcr-tab ${
+									activeTab === "custom"
+										? "urcr-tab-active"
+										: ""
+								}`}
 								onClick={() => setActiveTab("custom")}
 							>
 								{__("Custom Rules", "user-registration")}
@@ -234,14 +259,22 @@ const ContentAccessRules = () => {
 					</div>
 				)}
 
-				<AddNewRuleModal isOpen={isModalOpen} onClose={handleCloseModal} onCreateSuccess={handleRuleCreated} />
+				<AddNewRuleModal
+					isOpen={isModalOpen}
+					onClose={handleCloseModal}
+					onCreateSuccess={handleRuleCreated}
+				/>
 
 				{currentRules.length === 0 ? (
 					<div className="user-registration-card ur-text-center urcr-no-rules">
 						<img
 							src={`${assetsURL || ""}images/empty-table.png`}
 							alt={__("No rules found", "user-registration")}
-							style={{maxWidth: "100%", height: "auto", margin: "20px 0"}}
+							style={{
+								maxWidth: "100%",
+								height: "auto",
+								margin: "20px 0"
+							}}
 						/>
 					</div>
 				) : (
@@ -252,8 +285,12 @@ const ContentAccessRules = () => {
 								rule={rule}
 								isExpanded={expandedRules.has(rule.id)}
 								isSettingsOpen={openSettingsPanels.has(rule.id)}
-								onToggleExpand={() => handleToggleExpand(rule.id)}
-								onToggleSettings={() => handleToggleSettings(rule.id)}
+								onToggleExpand={() =>
+									handleToggleExpand(rule.id)
+								}
+								onToggleSettings={() =>
+									handleToggleSettings(rule.id)
+								}
 								onRuleUpdate={handleRuleUpdate}
 								onRuleStatusUpdate={handleRuleStatusUpdate}
 								onRuleDelete={handleRuleDelete}

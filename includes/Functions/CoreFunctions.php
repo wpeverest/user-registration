@@ -398,7 +398,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				'amount'            => ! empty( $membership_meta_value ) ? $membership['meta_value']['amount'] : 0,
 				'currency_symbol'   => $symbol,
 				'calculated_amount' => 'free' === $membership_type ? 0 : ( ! empty( $membership_meta_value ) ? round( $membership_meta_value['amount'] ) : 0 ),
-				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : ( ( ! empty( $membership_meta_value ) && 'subscription' === $membership_meta_value['type'] ) ? $membership_cur_amount . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $duration_label ) . ( $membership['meta_value']['subscription']['value'] > 1 ? 's' : '' ) : $membership_cur_amount ),
+				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : ( ( ! empty( $membership_meta_value ) && 'subscription' === $membership_meta_value['type'] ) ? $membership_cur_amount . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $duration_label ) . ( $membership['meta_value']['subscription']['value'] > 1 ? __('s', 'user-registration'): '' ) : $membership_cur_amount ),
 			);
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
 				foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
@@ -738,11 +738,12 @@ if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
 				$secret_key      = get_option( sprintf( 'user_registration_stripe_%s_secret_key', $mode ) );
 				$is_configured   = ! empty( $publishable_key ) && ! empty( $secret_key );
 				break;
-
-			default:
+			case 'bank':
 				// For bank and other gateways, check if bank details are configured.
 				$bank_details = get_option( 'user_registration_global_bank_details' );
 				$is_configured = ! empty( $bank_details );
+				break;
+			case 'default':
 				break;
 		}
 
