@@ -21,10 +21,10 @@ $show_bank_details  = isset( $attributes['show_bank_details'] ) ? $attributes['s
 $redirect_btn_text  = ! empty( $attributes['redirect_btn_text'] ) ? esc_html( $attributes['redirect_btn_text'] ) : __( 'Go to My Account', 'user-registration' );
 $redirect_page_id = ! empty( $attributes['redirect_page_id'] )
 	? absint( $attributes['redirect_page_id'] )
-	: wc_get_page_id( 'myaccount' );
+	: ( function_exists( 'wc_get_page_id' ) ? wc_get_page_id( 'myaccount' ) : 0 );
 $redirect_btn_url = ! empty( $attributes['redirect_page_id'] )
 	? get_permalink( absint( $attributes['redirect_page_id'] ) )
-	: wc_get_page_permalink( 'myaccount' );
+	: ( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url() );
 
 ?>
 <!-- Thank You Page Section -->
