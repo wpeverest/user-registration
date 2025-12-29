@@ -44,7 +44,7 @@ class Membership {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_filter( 'user_registration_screen_ids', array( $this, 'ur_membership_add_screen_id' ) );
-		add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 15 );
+		// add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 15 );
 		add_action( 'admin_init', array( $this, 'actions' ) );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_filter( 'user_registration_login_options', array( $this, 'add_payment_login_option' ) );
@@ -184,7 +184,7 @@ class Membership {
 		}
 	}
 
-	//todo might need to remove later if none of the bulk actions are used
+	// todo might need to remove later if none of the bulk actions are used
 
 	/**
 	 * Bulk actions.
@@ -224,7 +224,7 @@ class Membership {
 	 * Bulk trash/delete.
 	 *
 	 * @param array $membership_lists Membership List post id.
-	 * @param bool $delete Delete action.
+	 * @param bool  $delete Delete action.
 	 */
 	private function bulk_trash( $membership_lists, $delete = false, $is_membership = true ) {
 		$membership_group_service = new MembershipGroupService();
@@ -347,38 +347,32 @@ class Membership {
 	public function add_urm_menu() {
 		$rules_page = add_submenu_page(
 			'user-registration',
-			__( 'Membership', 'user-registration' ), // page title
-			__( 'Membership', 'user-registration' ), // menu title
+			__( 'Memberships', 'user-registration' ), // page title
+			__( 'Memberships', 'user-registration' ), // menu title
 			'edit_posts', // capability
 			'user-registration-membership', // slug
 			array(
 				$this,
 				'render_membership_page',
-			)
+			),
+			2
 		);
 		add_action( 'load-' . $rules_page, array( $this, 'membership_initialization' ) );
 
-		if ( isset( $_GET['page'] ) && in_array(
-			$_GET['page'],
-			array(
-				'user-registration-membership',
-				'user-registration-membership-groups',
-				'user-registration-members',
-			)
-		) ) {
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
 
-			add_submenu_page(
-				'user-registration',
-				__( 'All Plans', 'user-registration' ),
-				'↳ ' . __( 'All Plans', 'user-registration' ),
-				'edit_posts',
-				'user-registration-membership',
-				array(
-					$this,
-					'render_membership_page',
-				),
-				16
-			);
+			// add_submenu_page(
+			// 'user-registration',
+			// __( 'All Plans', 'user-registration' ),
+			// '↳ ' . __( 'All Plans', 'user-registration' ),
+			// 'edit_posts',
+			// 'user-registration-membership',
+			// array(
+			// $this,
+			// 'render_membership_page',
+			// ),
+			// 3
+			// );
 
 			add_submenu_page(
 				'user-registration',
@@ -390,7 +384,7 @@ class Membership {
 					$this,
 					'render_membership_page',
 				),
-				17
+				3
 			);
 
 			$members = new Members();
