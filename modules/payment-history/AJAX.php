@@ -300,12 +300,77 @@ class AJAX {
 		ur_membership_verify_nonce( 'ur_membership_edit_order' );
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- L:303
-		$order_id = absint( $_POST['order_id'] ?? 0 );
+		$order_id        = absint( $_POST['order_id'] ?? 0 );
+		$is_form_payment = isset( $_POST['is_form_payment'] ) && 'true' === $_POST['is_form_payment'];
 
-		if ( ! $order_id ) {
+		if ( ! $order_id && ! $is_form_payment ) {
 			wp_send_json_error(
 				[
 					'message' => __( 'Missing required fields.', 'user-registration' ),
+				]
+			);
+		}
+
+		if ( $is_form_payment ) {
+			$user_id = $order_id;
+			$user    = get_user_by( 'ID', $user_id );
+
+			if ( ! $user ) {
+				wp_send_json_error(
+					[
+						'message' => sprintf(
+							/* translators: %d: User id */
+							__( 'Cannot find user with id %d.', 'user-registration' ),
+							$user_id
+						),
+					]
+				);
+			}
+
+			$status = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : false;
+			$status = in_array( $status, [ 'completed', 'pending', 'failed', 'refunded' ], true ) ? $status : false;
+
+			$created_at = isset( $_POST['created_at'] ) ? sanitize_text_field( wp_unslash( $_POST['created_at'] ) ) : false;
+
+			if ( $created_at ) {
+				$created_timestamp = strtotime( $created_at );
+				if ( false === $created_timestamp ) {
+					wp_send_json_error(
+						[
+							'message' => __( 'Invalid created date format.', 'user-registration' ),
+						]
+					);
+				}
+
+				if ( $created_timestamp > wp_date( 'U' ) ) {
+					wp_send_json_error(
+						[
+							'message' => __( 'Created date cannot be in the future.', 'user-registration' ),
+						]
+					);
+				}
+
+				// Update invoice date in ur_payment_invoices meta
+				$payment_invoices = get_user_meta( $user_id, 'ur_payment_invoices', true );
+				if ( ! empty( $payment_invoices ) && is_array( $payment_invoices ) && isset( $payment_invoices[0] ) ) {
+					$payment_invoices[0]['invoice_date'] = wp_date( 'Y-m-d H:i:s', $created_timestamp );
+					update_user_meta( $user_id, 'ur_payment_invoices', $payment_invoices );
+				}
+			}
+
+			// Update payment status
+			if ( $status ) {
+				update_user_meta( $user_id, 'ur_payment_status', $status );
+			}
+
+			// Update notes if provided (store in a separate meta key for form payments)
+			if ( isset( $_POST['notes'] ) ) {
+				update_user_meta( $user_id, 'ur_payment_notes', sanitize_textarea_field( wp_unslash( $_POST['notes'] ) ) );
+			}
+
+			wp_send_json_success(
+				[
+					'message' => __( 'Payment updated successfully.', 'user-registration' ),
 				]
 			);
 		}

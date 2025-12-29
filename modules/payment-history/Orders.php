@@ -145,9 +145,21 @@ class Orders {
 				$this->render_add_new_payment_history();
 				break;
 			case 'edit': // phpcs:ignore PSR2.ControlStructures.SwitchDeclaration.TerminatingComment
-				$id               = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
-				$order_repository = new OrdersRepository();
-				$order            = $order_repository->get_order_detail( $id );
+				$id   = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
+				$type = isset( $_GET['type'] ) ? sanitize_text_field( $_GET['type'] ) : 'order';
+
+				$order = array();
+
+				if ( 'form' === $type ) {
+					$order_service            = new \WPEverest\URMembership\Payment\Admin\OrderService();
+					$order                    = $order_service->get_user_form_order_detail( $id );
+					$order['order_id']        = 0;
+					$order['is_form_payment'] = true;
+				} else {
+					$order_repository         = new OrdersRepository();
+					$order                    = $order_repository->get_order_detail( $id );
+					$order['is_form_payment'] = false;
+				}
 
 				$order = apply_filters( 'ur_membership_payment_history_order', $order );
 

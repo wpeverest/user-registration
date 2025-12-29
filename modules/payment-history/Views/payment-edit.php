@@ -7,13 +7,23 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$order_id = isset( $order['order_id'] ) ? $order['order_id'] : 0;
-$user_id  = isset( $order['user_id'] ) ? $order['user_id'] : 0;
+$order_id        = isset( $order['order_id'] ) ? $order['order_id'] : 0;
+$user_id         = isset( $order['user_id'] ) ? $order['user_id'] : 0;
+$is_form_payment = isset( $order['is_form_payment'] ) ? $order['is_form_payment'] : false;
 
-$plan_details    = json_decode( $order['plan_details'], true );
+$plan_details    = ! empty( $order['plan_details'] ) ? json_decode( $order['plan_details'], true ) : array();
 $post_content    = isset( $order['post_content'] ) ? json_decode( wp_unslash( $order['post_content'] ), true ) : array();
 $membership_type = isset( $post_content['type'] ) ? $post_content['type'] : '';
 $trial_status    = isset( $order['trial_status'] ) ? $order['trial_status'] : 'off';
+
+if ( $is_form_payment ) {
+	$order['post_id']         = isset( $order['post_id'] ) ? $order['post_id'] : 0;
+	$order['subscription_id'] = isset( $order['subscription_id'] ) ? $order['subscription_id'] : 0;
+	$order['transaction_id']  = isset( $order['transaction_id'] ) ? $order['transaction_id'] : '';
+	$order['payment_method']  = isset( $order['payment_method'] ) ? $order['payment_method'] : '';
+	$order['notes']           = isset( $order['notes'] ) ? $order['notes'] : get_user_meta( $user_id, 'ur_payment_notes', true );
+	$trial_status             = 'off';
+}
 
 $plan_has_trial  = isset( $plan_details['trial_status'] ) && 'on' === $plan_details['trial_status'];
 $order_has_trial = isset( $order['trial_status'] ) && 'on' === $order['trial_status'];
@@ -32,6 +42,8 @@ if ( isset( $plan_details['amount'] ) ) {
 	$product_amount = (float) $order['billing_amount'];
 } elseif ( isset( $order['total_amount'] ) ) {
 	$product_amount = (float) $order['total_amount'];
+} elseif ( isset( $order['product_amount'] ) ) {
+	$product_amount = (float) $order['product_amount'];
 }
 
 $coupon               = ! empty( $order['coupon'] ) ? ur_get_coupon_details( $order['coupon'] ) : null;
@@ -138,7 +150,8 @@ if ( $first_name || $last_name ) {
 		<form method="post" id="ur-payments-edit-form" class="ur-payments__form"
 			action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 			<?php wp_nonce_field( 'ur_membership_edit_order', 'ur_membership_edit_order_nonce' ); ?>
-			<input type="hidden" name="order_id" value="<?php echo esc_attr( $order_id ); ?>">
+			<input type="hidden" name="order_id" value="<?php echo esc_attr( $order_id ?: $user_id ); ?>">
+			<input type="hidden" name="is_form_payment" value="<?php echo esc_attr( $is_form_payment ? 'true' : 'false' ); ?>">
 
 			<div class="ur-payments__form--left">
 				<div class="ur-payments__main-content">
@@ -147,10 +160,11 @@ if ( $first_name || $last_name ) {
 							<div class="ur-payments__section-header">
 								<h3 class="ur-payments__section-title">
 									<?php
+									$display_id = $is_form_payment ? $user_id : ( $order_id ?: $user_id );
 									printf(
 										/* translators: %d Order id */
 										esc_html__( 'Payment #%d', 'user-registration' ),
-										esc_html( $order_id )
+										esc_html( $display_id )
 									);
 									?>
 								</h3>
@@ -180,6 +194,7 @@ if ( $first_name || $last_name ) {
 									<tbody>
 										<tr>
 											<td>
+												<?php if ( ! $is_form_payment && ! empty( $order['post_id'] ) ) : ?>
 												<a href="<?php echo esc_url( admin_url( "admin.php?post_id={$order['post_id']}&action=add_new_membership&page=user-registration-membership" ) ); ?>"
 													class="ur-payments__table-item-link">
 													<?php
@@ -187,6 +202,12 @@ if ( $first_name || $last_name ) {
 													echo esc_html( $item_title );
 													?>
 												</a>
+												<?php else : ?>
+													<?php
+													$item_title = isset( $order['post_title'] ) ? $order['post_title'] : __( 'N/A', 'user-registration' );
+													echo esc_html( $item_title );
+													?>
+												<?php endif; ?>
 											</td>
 											<td><?php echo esc_html( $recurring_label ); ?></td>
 											<td class="ur-payments__table-price">
@@ -453,7 +474,7 @@ if ( $first_name || $last_name ) {
 					</div>
 				</div>
 				<?php
-				$is_trial_active = $supports_trial && 'on' === $trial_status;
+					$is_trial_active = $supports_trial && 'on' === $trial_status && ! $is_form_payment;
 				if ( $is_trial_active ) :
 					$trial_start_date = '';
 					$trial_end_date   = '';

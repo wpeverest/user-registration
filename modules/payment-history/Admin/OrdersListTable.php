@@ -258,18 +258,23 @@ class OrdersListTable extends \UR_List_Table {
 	 * @return array
 	 */
 	public function get_row_actions( $order ) {
+		$order_id  = $order['order_id'] ?? 0;
+		$user_id   = $order['user_id'] ?? 0;
+		$edit_id   = $order_id ? $order_id : $user_id;
+		$edit_type = $order_id ? 'order' : 'form';
+
 		return [
 			'id'     => sprintf(
 				/* translators: %d: Item id */
 				__( 'ID: %d', 'user-registration-file-downloads' ),
-				$order['order_id'] ?? 0
+				$order_id ?: $user_id
 			),
 			'edit'   => sprintf(
 				'<a href="%s">%s</a>',
-				esc_url( admin_url( 'admin.php?page=member-payment-history&action=edit&id=' . $order['order_id'] ?? 0 ) ),
+				esc_url( admin_url( 'admin.php?page=member-payment-history&action=edit&id=' . $edit_id . '&type=' . $edit_type ) ),
 				esc_html__( 'Edit', 'user-registration-file-downloads' )
 			),
-			'delete' => '<a data-user-id=' . esc_attr( $order['user_id'] ?? 0 ) . ' data-order-id = ' . esc_attr( $order['order_id'] ?? 0 ) . ' class="single-delete-order" style="cursor:pointer" >' . esc_html__( 'Trash', 'user-registration' ) . '</a>',
+			'delete' => '<a data-user-id=' . esc_attr( $user_id ) . ' data-order-id = ' . esc_attr( $order_id ) . ' class="single-delete-order" style="cursor:pointer" >' . esc_html__( 'Trash', 'user-registration' ) . '</a>',
 		];
 	}
 
