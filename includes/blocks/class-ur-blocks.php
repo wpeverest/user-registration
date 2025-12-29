@@ -55,6 +55,15 @@ class UR_Blocks {
 			UR_VERSION
 		);
 
+		wp_register_style(
+			'user-registration-blocks-style',
+			UR()->plugin_url() . '/chunks/blocks.css',
+			array(),
+			UR_VERSION
+		);
+
+		wp_enqueue_style( 'user-registration-blocks-style' );
+
 		$authenticate_smart_tag = \UR_Smart_Tags::ur_authenticated_parsable_smart_tags_list();
 
 		$smart_tag = array();

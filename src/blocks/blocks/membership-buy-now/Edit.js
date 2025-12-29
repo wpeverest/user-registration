@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { __ } from "@wordpress/i18n";
 import metadata from "./block.json";
 
@@ -21,6 +21,7 @@ import {
 	useBlockProps,
 	useSettings
 } from "@wordpress/block-editor";
+
 import apiFetch from "@wordpress/api-fetch";
 import JustifyControl from "./components/JustifyContentControl";
 import "./editor.scss";
@@ -31,6 +32,120 @@ const ServerSideRender = wp.serverSideRender
 
 const { urRestApiNonce, restURL } =
 	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
+
+const buildHoverCss = ({ blockId, hoverTextColor, hoverBgColor }) => {
+	if (!blockId) return "";
+
+	const selector = `.urm-${blockId}:hover`;
+	let css = "";
+
+	if (hoverTextColor) {
+		css += `${selector}{color:${hoverTextColor} !important;}\n`;
+	}
+	if (hoverBgColor) {
+		css += `${selector}{background-color:${hoverBgColor} !important;}\n`;
+	}
+	return css;
+};
+
+const HoverColorControl = ({
+	label,
+	colorValue,
+	onChangeLive,
+	onCommit,
+	themeColors
+}) => (
+	<div
+		data-wp-component="ToolsPanelItem"
+		className="components-tools-panel-item block-editor-tools-panel-color-gradient-settings__item urm-custom-hover-tool-panel"
+	>
+		<Dropdown
+			className="block-editor-tools-panel-color-gradient-settings__dropdown"
+			contentClassName="block-editor-panel-color-gradient-settings__dropdown-content"
+			popoverProps={{
+				placement: "left-start",
+				offset: 36,
+				shift: true,
+				focusOnMount: "container",
+				__unstableSlotName: "Popover"
+			}}
+			focusOnMount={false}
+			renderToggle={({ isOpen, onToggle }) => (
+				<Button
+					className="block-editor-panel-color-gradient-settings__dropdown"
+					onClick={onToggle}
+					aria-expanded={isOpen}
+					style={{ width: "100%" }}
+				>
+					<Flex justify="flex-start" align="center" gap={2}>
+						<FlexItem>
+							<span
+								className={
+									colorValue
+										? "custom-component-color-indicator"
+										: "component-color-indicator"
+								}
+								style={{
+									backgroundColor: colorValue || "transparent"
+								}}
+							/>
+						</FlexItem>
+						<FlexItem className="block-editor-panel-color-gradient-settings__color-name">
+							{label}
+						</FlexItem>
+					</Flex>
+				</Button>
+			)}
+			renderContent={({ onClose }) => (
+				<div
+					style={{ padding: "16px", width: "240px" }}
+					onClick={(e) => e.stopPropagation()}
+					onMouseDown={(e) => e.stopPropagation()}
+				>
+					<ColorPalette
+						enableCustomColor
+						value={colorValue}
+						onChange={onChangeLive}
+						colors={[]}
+						clearable={true}
+						enableAlpha={true}
+						__experimentalIsRenderedInSidebar={true}
+					/>
+
+					{themeColors?.length > 0 && (
+						<>
+							<span className="ur-hover-color-picker__title">
+								{__("Theme", "user-registration")}
+							</span>
+							<ColorPalette
+								colors={themeColors}
+								value={colorValue}
+								onChange={onChangeLive}
+								clearable={false}
+								disableCustomColors={true}
+							/>
+						</>
+					)}
+
+					<div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+						<Button
+							variant="primary"
+							onClick={() => {
+								onCommit?.();
+								onClose();
+							}}
+						>
+							{__("Apply", "user-registration")}
+						</Button>
+						<Button variant="secondary" onClick={() => onClose()}>
+							{__("Close", "user-registration")}
+						</Button>
+					</div>
+				</div>
+			)}
+		/>
+	</div>
+);
 
 const Edit = (props) => {
 	const blockName = metadata.name;
@@ -47,14 +162,10 @@ const Edit = (props) => {
 	} = attributes;
 
 	const [membershipList, setMembershipList] = useState(null);
-
 	const blockProps = useBlockProps();
 
-	// Get colors from settings
+	// Theme colors
 	const [themeColors] = useSettings("color.palette.theme");
-	// (defaultColors/customColors are unused right now, remove or use them)
-	// const [defaultColors] = useSettings("color.palette.default");
-	// const [customColors] = useSettings("color.palette.custom");
 
 	// Fetch membership list
 	const fetchData = async () => {
@@ -80,10 +191,12 @@ const Edit = (props) => {
 		fetchData();
 	}, []);
 
+	// ensure stable clientId is saved in attributes
 	useEffect(() => {
 		if (!attributes.clientId && clientId) {
 			setAttributes({ clientId });
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [clientId]);
 
 	const membershipOptions = useMemo(() => {
@@ -94,83 +207,43 @@ const Edit = (props) => {
 		}));
 	}, [membershipList]);
 
-	const HoverColorControl = ({ label, colorValue, onChange }) => (
-		<div
-			data-wp-component="ToolsPanelItem"
-			className="components-tools-panel-item block-editor-tools-panel-color-gradient-settings__item urm-custom-hover-tool-panel"
-		>
-			<Dropdown
-				className="block-editor-tools-panel-color-gradient-settings__dropdown"
-				contentClassName="block-editor-panel-color-gradient-settings__dropdown-content"
-				popoverProps={{
-					placement: "left-start",
-					offset: 36,
-					shift: true,
-					focusOnMount: "container",
-					__unstableSlotName: "Popover"
-				}}
-				focusOnMount={false}
-				renderToggle={({ isOpen, onToggle }) => (
-					<Button
-						className="block-editor-panel-color-gradient-settings__dropdown"
-						onClick={onToggle}
-						aria-expanded={isOpen}
-						style={{ width: "100%" }}
-					>
-						<Flex justify="flex-start" align="center" gap={2}>
-							<FlexItem>
-								<span
-									className={
-										colorValue
-											? "custom-component-color-indicator"
-											: "component-color-indicator"
-									}
-									style={{
-										backgroundColor:
-											colorValue || "transparent"
-									}}
-								/>
-							</FlexItem>
-							<FlexItem className="block-editor-panel-color-gradient-settings__color-name">
-								{label}
-							</FlexItem>
-						</Flex>
-					</Button>
-				)}
-				renderContent={() => (
-					<div
-						style={{ padding: "16px", width: "240px" }}
-						onClick={(e) => e.stopPropagation()}
-						onMouseDown={(e) => e.stopPropagation()}
-					>
-						<ColorPalette
-							enableCustomColor
-							value={colorValue}
-							onChange={onChange}
-							colors={[]}
-							clearable={true}
-							enableAlpha={true}
-							__experimentalIsRenderedInSidebar={true}
-						/>
-						{themeColors?.length > 0 && (
-							<>
-								<span className="ur-hover-color-picker__title">
-									{__("Theme", "user-registration")}
-								</span>
-								<ColorPalette
-									colors={themeColors}
-									value={colorValue}
-									onChange={onChange}
-									clearable={false}
-									disableCustomColors={true}
-								/>
-							</>
-						)}
-					</div>
-				)}
-			/>
-		</div>
+	const blockId = attributes.clientId || clientId;
+
+	const [localHover, setLocalHover] = useState({
+		hoverTextColor: hoverTextColor || "",
+		hoverBgColor: hoverBgColor || ""
+	});
+
+	// sync local state for undo/redo, etc.
+	useEffect(() => {
+		setLocalHover({
+			hoverTextColor: hoverTextColor || "",
+			hoverBgColor: hoverBgColor || ""
+		});
+	}, [hoverTextColor, hoverBgColor]);
+
+	const commitHover = useCallback(
+		(key) => {
+			setAttributes({ [key]: localHover[key] });
+		},
+		[localHover, setAttributes]
 	);
+
+	const hoverCss = useMemo(() => {
+		return buildHoverCss({
+			blockId,
+			hoverTextColor: localHover.hoverTextColor,
+			hoverBgColor: localHover.hoverBgColor
+		});
+	}, [blockId, localHover.hoverTextColor, localHover.hoverBgColor]);
+
+	const ssrAttributes = useMemo(() => {
+		const { hoverTextColor, hoverBgColor, ...rest } = attributes;
+		return {
+			...rest,
+			clientId: blockId
+		};
+	}, [attributes, blockId]);
 
 	if (!membershipList) {
 		return (
@@ -244,29 +317,33 @@ const Edit = (props) => {
 				<>
 					<HoverColorControl
 						label={__("Text Hover", "user-registration")}
-						colorValue={hoverTextColor}
-						onChange={(color) =>
-							setAttributes({ hoverTextColor: color })
+						colorValue={localHover.hoverTextColor}
+						onChangeLive={(c) =>
+							setLocalHover((p) => ({ ...p, hoverTextColor: c }))
 						}
+						onCommit={() => commitHover("hoverTextColor")}
+						themeColors={themeColors}
 					/>
+
 					<HoverColorControl
 						label={__("Background Hover", "user-registration")}
-						colorValue={hoverBgColor}
-						onChange={(color) =>
-							setAttributes({ hoverBgColor: color })
+						colorValue={localHover.hoverBgColor}
+						onChangeLive={(c) =>
+							setLocalHover((p) => ({ ...p, hoverBgColor: c }))
 						}
+						onCommit={() => commitHover("hoverBgColor")}
+						themeColors={themeColors}
 					/>
 				</>
 			</InspectorControls>
+
+			{!!hoverCss && <style>{hoverCss}</style>}
 
 			<div {...blockProps}>
 				<ServerSideRender
 					key="ur-gutenberg-membership-buy-now-form-server-side-renderer"
 					block={blockName}
-					attributes={{
-						...attributes,
-						clientId: attributes.clientId || clientId
-					}}
+					attributes={ssrAttributes}
 				/>
 			</div>
 		</>

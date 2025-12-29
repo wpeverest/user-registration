@@ -59,7 +59,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 
 		$style = isset( $attr['style'] ) ? $attr['style'] : array();
 
-		$button_classes = 'urm-buy-now-btn1';
+		$button_classes = 'urm-buy-now-btn1 urm-' . $block_id;
 		if ( ! empty( $attr['className'] ) ) {
 			$button_classes .= ' ' . $attr['className'];
 		}
@@ -186,10 +186,10 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 		// Build inline hover styles
 		$inline_hover_styles = '';
 		if ( $text_hover_color ) {
-			$inline_hover_styles .= '.' . $block_id . '.wp-block-user-registration-membership-buy-now .urm-buy-now-btn1:hover{color:' . esc_attr( $text_hover_color ) . ' !important;}';
+			$inline_hover_styles .= '.urm-' . $block_id . ':hover{color:' . esc_attr( $text_hover_color ) . ' !important;}';
 		}
 		if ( $text_hover_bg_color ) {
-			$inline_hover_styles .= '.' . $block_id . '.wp-block-user-registration-membership-buy-now .urm-buy-now-btn1:hover{background-color:' . esc_attr( $text_hover_bg_color ) . ' !important;}';
+			$inline_hover_styles .= '.urm-' . $block_id . ':hover{background-color:' . esc_attr( $text_hover_bg_color ) . ' !important;}';
 		}
 
 		// FINAL HTML
