@@ -1108,7 +1108,7 @@
 						}
 					}
 
-					#payment-gateway-container {
+					#payment-gateway-container, #ur-sync-to-email-marketing-container {
 						margin-top: 20px;
 
 						.user-registration-card {
@@ -1200,6 +1200,23 @@
 
 								.payment-option-body {
 									margin-top: $spacing_20px;
+
+									.ur-sync-to-email-marketing-addon{
+										&-title-container{
+											display: flex;
+											align-items: center;
+											justify-content: start;
+
+											&-inner{
+												display: flex;
+												justify-content: center;
+												align-items: center;gap: 10px;
+											}
+										}
+										&-sync-container{
+
+										}
+									}
 								}
 							}
 						}

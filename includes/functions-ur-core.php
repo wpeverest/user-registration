@@ -10052,3 +10052,23 @@ if ( ! function_exists( 'ur_get_membership_rules_count' ) ) {
 		}
 	}
 }
+
+
+if ( ! function_exists( 'ur_get_linked_membership_form_id' ) ) {
+
+	/**
+	 * Get linked membership form id.
+	 *
+	 * @since 5.0.0
+	 */
+	function ur_get_linked_membership_form_id(){
+		$page_id 	 = get_option( 'user_registration_member_registration_page_id' );
+		$post_by_id  = get_post( $page_id );
+		$matches 	 = array();
+
+		preg_match_all( '/\[user_registration_form\s+id="(\d+)"\]/', $post_by_id->post_content, $matches );
+		$membership_form_id    = $matches[1][0];
+
+		return $membership_form_id;
+	}
+}
