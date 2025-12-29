@@ -77,7 +77,6 @@ function urcr_get_all_capabilities() {
  * @since 4.0.0
  */
 function urcr_get_excluded_page_ids() {
-	// List of option names that contain page IDs to exclude
 	$option_names = array(
 		'user_registration_login_page_id',
 		'user_registration_login_options_login_redirect_url',
@@ -96,7 +95,6 @@ function urcr_get_excluded_page_ids() {
 
 	$excluded_page_ids = array();
 
-	// Collect page IDs from all options
 	foreach ( $option_names as $option_name ) {
 		$page_id = get_option( $option_name );
 		if ( ! empty( $page_id ) && is_numeric( $page_id ) ) {
@@ -104,7 +102,6 @@ function urcr_get_excluded_page_ids() {
 		}
 	}
 
-	// Remove duplicates and re-index array
 	$excluded_page_ids = array_values( array_unique( $excluded_page_ids ) );
 
 	/**
@@ -236,7 +233,6 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 							return true;
 						}
 						$products_page_id = intval( get_option( 'woocommerce_shop_page_id' ) );
-						// Check if its a woocommerce product page.
 						if ( is_object( $target_post ) && (int) $products_page_id === $target_post->ID ) {
 							return true;
 						}
@@ -245,7 +241,6 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 
 					case 'taxonomy':
 						if ( ! empty( $target['taxonomy'] ) && ! empty( $target['value'] ) ) {
-							// Check if its a woocommerce product page.
 							$products_page_id = intval( get_option( 'woocommerce_shop_page_id' ) );
 							$post_taxonomies  = get_post_taxonomies( $target_post );
 							if ( is_numeric( $target_post ) && $target_post == $products_page_id ) {
@@ -332,9 +327,7 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 	if ( ! empty( $logic_map ) ) {
 		$type = $logic_map['type'];
 
-		// Process Logic Map.
 		if ( 'group' === $type ) {
-			// Process with gates
 			$gate = ! empty( $logic_map['logic_gate'] ) ? $logic_map['logic_gate'] : 'OR';
 
 			foreach ( $logic_map['conditions'] as $sub_logic_map ) {
@@ -606,7 +599,6 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 	$actions = (array) $actions;
 	$action  = $actions[0];
 
-	// Filter to buypass access rules for certain conditions.
 	$run_rule = apply_filters( 'urcr_pre_confirm_access_rules_implementation', true, $target_post );
 
 	if ( false === $run_rule ) {
@@ -615,7 +607,6 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 
 	if ( isset( $target_post->ID ) && $target_post->ID && ! empty( $action['type'] ) ) {
 		if ( 'message' === $action['type'] ) {
-			// Process message
 			$message = ! empty( $action['message'] ) ? urldecode( $action['message'] ) : '';
 			$message = apply_filters( 'user_registration_process_smart_tags', $message );
 			if ( function_exists( 'apply_shortcodes' ) ) {
@@ -624,7 +615,6 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 				$message = do_shortcode( $message );
 			}
 
-			// Get URLs
 			$login_page_id = get_option( 'user_registration_login_page_id' );
 			$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
 
@@ -638,14 +628,12 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 				}
 			}
 
-			// Check if this is a whole site restriction
 			$is_whole_site_restriction = false;
 			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
 			if ( $whole_site_access_restricted ) {
 				$is_whole_site_restriction = true;
 			} else {
-				// Check access rules for whole site restriction
 				$access_rule_posts = get_posts(
 					array(
 						'numberposts' => -1,
@@ -666,7 +654,6 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 				}
 			}
 
-			// Add CSS to hide page title for whole site restrictions
 			if ( $is_whole_site_restriction ) {
 				add_filter( 'body_class', function( $classes ) {
 					$classes[] = 'urcr-hide-page-title';
@@ -674,7 +661,6 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 				});
 			}
 
-			// Use base template to generate styled content
 			ob_start();
 			urcr_get_template(
 				'base-restriction-template.php',
@@ -688,7 +674,6 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 
 			$target_post->post_content = $styled_content;
 
-			// Add filter for elementor content.
 			add_filter(
 				'elementor/frontend/the_content',
 				function () use ( $styled_content ) {
@@ -798,7 +783,6 @@ function urcr_get_template( $template_name, $args = array(), $template_path = ''
 
 	$located = urcr_locate_template( $template_name, $template_path, $default_path );
 
-	// Allow 3rd party plugin filter template file from their plugin.
 	$located = apply_filters( 'urcr_get_template', $located, $template_name, $args, $template_path, $default_path );
 
 	if ( ! file_exists( $located ) ) {
@@ -838,7 +822,6 @@ function urcr_locate_template( $template_name, $template_path = '', $default_pat
 		$default_path = UR()->plugin_path() . '/templates/modules/content-restriction/';
 	}
 
-	// Look within passed path within the theme - this is priority.
 	$template = locate_template(
 		array(
 			trailingslashit( $template_path ) . $template_name,
@@ -846,12 +829,10 @@ function urcr_locate_template( $template_name, $template_path = '', $default_pat
 		)
 	);
 
-	// Get default template.
 	if ( ! $template || UR_TEMPLATE_DEBUG_MODE ) {
 		$template = $default_path . $template_name;
 	}
 
-	// Return what we found.
 	return apply_filters( 'user_registration_content_restriction_locate_template', $template, $template_name, $template_path );
 }
 
@@ -965,7 +946,6 @@ function ur_restrict_files( $file, $restriction_conditions, $restricted_files ) 
 			exit;
 		}
 
-		// For default not to restrict for admin.
 		$current_user = wp_get_current_user();
 		if ( ! empty( $current_user->roles ) && in_array( 'administrator', $current_user->roles ) ) {
 			$fp = fopen( $file, 'r' );
@@ -974,7 +954,6 @@ function ur_restrict_files( $file, $restriction_conditions, $restricted_files ) 
 			fclose( $fp );
 			exit;
 		}
-		// Default send 403 forbidden.
 		header( 'HTTP/1.0 403 Forbidden' );
 		exit;
 
@@ -1123,35 +1102,28 @@ function urcr_create_migrated_rule( $title, $rule_data ) {
  * @return int|false Rule ID on success, false on failure.
  */
 function urcr_migrate_global_restriction_settings() {
-	// Check if migration already done
 	$migration_done = get_option( 'urcr_global_restriction_migrated', false );
 	if ( $migration_done ) {
-		return false; // Already migrated
+		return false;
 	}
 
-	// Check if global restriction is enabled
 	$whole_site_access = get_option( 'user_registration_content_restriction_whole_site_access', false );
 	if ( ! ur_string_to_bool( $whole_site_access ) ) {
-		// Mark as done even if not enabled, so we don't check again
 		update_option( 'urcr_global_restriction_migrated', true );
-		return false; // Global restriction not enabled
+		return false;
 	}
 
-	// Get allow_to option value
 	$allow_to = get_option( 'user_registration_content_restriction_allow_access_to', 0 );
 	$allow_to = absint( $allow_to );
 
-	// Build conditions
 	$conditions = urcr_build_migration_conditions( $allow_to );
 	if ( empty( $conditions ) ) {
-		// Mark as done even if no conditions, so we don't check again
 		update_option( 'urcr_global_restriction_migrated', true );
-		return false; // No conditions to migrate
+		return false;
 	}
 
 	$timestamp = time() * 1000;
 
-	// Build logic_map
 	$logic_map = array(
 		'type'       => 'group',
 		'id'         => 'x' . $timestamp,
@@ -1159,7 +1131,6 @@ function urcr_migrate_global_restriction_settings() {
 		'logic_gate' => 'AND',
 	);
 
-	// Build target_contents
 	$target_contents = array(
 		array(
 			'id'   => 'x' . ( $timestamp + 100 ),
@@ -1167,7 +1138,6 @@ function urcr_migrate_global_restriction_settings() {
 		),
 	);
 
-	// Build rule data
 	$rule_data = array(
 		'enabled'         => true,
 		'access_control'  => 'access',
@@ -1176,11 +1146,9 @@ function urcr_migrate_global_restriction_settings() {
 		'actions'         => urcr_build_migration_actions(),
 	);
 
-	// Create the rule post
 	$rule_id = urcr_create_migrated_rule( __( 'Migrated: Global Site Restriction', 'user-registration' ), $rule_data );
 
 	if ( $rule_id ) {
-		// Mark migration as done
 		update_option( 'urcr_global_restriction_migrated', true );
 		return $rule_id;
 	}

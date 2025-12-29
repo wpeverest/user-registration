@@ -64,7 +64,6 @@ class User_Registration_Content_Restriction {
 		include_once __DIR__ . '/class-urcr-post-types.php';
 		include_once __DIR__ . '/class-urcr-shortcodes.php';
 
-		// Include REST API.
 		include_once __DIR__ . '/includes/RestApi/class-urcr-rest-api.php';
 
 		if ( $this->is_request( 'admin' ) ) {
