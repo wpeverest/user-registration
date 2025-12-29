@@ -293,7 +293,7 @@ class StripeService {
 	public function update_order( $data ) {
 		$transaction_id = $data['payment_result']['paymentIntent']['id'] ?? '';
 
-		if(empty($transaction_id)){
+		if ( empty( $transaction_id ) ) {
 			$transaction_id = $data['payment_result']['latest_invoice']['payment_intent']['next_action']['use_stripe_sdk']['directory_server_encryption']['server_transaction_id'] ?? '';
 		}
 
@@ -391,7 +391,7 @@ class StripeService {
 				)
 			);
 
-			if ( ($is_order_updated && 'paid' === $member_order['order_type']) || ($is_order_updated && !empty($three_d_secure_2_source) && 'subscription' === $member_order['order_type']) ) {
+			if ( ( $is_order_updated && 'paid' === $member_order['order_type'] ) || ( $is_order_updated && ! empty( $three_d_secure_2_source ) && 'subscription' === $member_order['order_type'] ) ) {
 				$this->members_subscription_repository->update(
 					$member_subscription['ID'],
 					array(

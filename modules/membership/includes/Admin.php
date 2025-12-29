@@ -18,6 +18,7 @@ use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\Admin\Services\PaymentGatewaysWebhookActions;
+use WPEverest\URMembership\Admin\Subscriptions\Subscriptions;
 use WPEverest\URMembership\Frontend\Frontend;
 
 if ( ! defined( 'ABSPATH' ) ) {
