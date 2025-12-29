@@ -109,6 +109,8 @@ class UR_Blocks {
 				'isProActive'                 => UR_PRO_ACTIVE,
         'smart_tags'		   => $smart_tag,
 				'pages_array'		   => $page_options,
+        'membership_all_plan_url' => admin_url( 'admin.php?page=user-registration-membership' ),
+				'membership_group_url'    => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
 			)
 		);
 		wp_register_script(

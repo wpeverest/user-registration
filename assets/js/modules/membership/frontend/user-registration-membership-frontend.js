@@ -1800,25 +1800,53 @@
 				"click",
 				"#membership-old-selection-form .membership-signup-button",
 				function () {
-					var $this = $(this),
-						membership_id = $this
-							.siblings('input[name="membership_id"]')
-							.val(),
-						redirection_url = $this
-							.siblings('input[name="redirection_url"]')
-							.val(),
-						thank_you_page_id = $this
-							.siblings('input[name="thank_you_page_id"]')
-							.val(),
-						uuid = $this.siblings('input[name="urm_uuid"]').val(),
-						url =
-							redirection_url +
-							"?membership_id=" +
-							membership_id +
-							"&urm_uuid=" +
-							uuid +
-							"&thank_you=" +
-							thank_you_page_id;
+					if (urmf_data.isEditor) {
+						e.preventDefault();
+						return;
+					}
+
+					var $form = $(this).closest("form");
+
+					if ($form.hasClass("layout-list")) {
+						var membership_id = $form
+								.find('input[name="membership_id"]:checked')
+								.val(),
+							redirection_url = $form
+								.find('input[name="redirection_url"]')
+								.val(),
+							thank_you_page_id = $form
+								.find('input[name="thank_you_page_id"]')
+								.val(),
+							uuid = $form.find('input[name="urm_uuid"]').val();
+					} else {
+						var $this = $(this),
+							membership_id = $this
+								.siblings('input[name="membership_id"]')
+								.val(),
+							redirection_url = $this
+								.siblings('input[name="redirection_url"]')
+								.val(),
+							thank_you_page_id = $this
+								.siblings('input[name="thank_you_page_id"]')
+								.val(),
+							uuid = $this
+								.siblings('input[name="urm_uuid"]')
+								.val();
+					}
+					var url =
+						redirection_url +
+						"?membership_id=" +
+						membership_id +
+						"&urm_uuid=" +
+						uuid +
+						"&thank_you=" +
+						thank_you_page_id;
+
+					if ($(this).attr("target") === "_blank") {
+						window.open(url, "_blank");
+						return;
+					}
+
 					window.location.replace(url);
 				}
 			);
