@@ -44,19 +44,16 @@ const getVisibleSteps = (
 		case "paid":
 		case "free":
 			if (hasPaidPlan) {
-				// Paid/Free with paid plan: Welcome → Membership → Payment → Finish
 				filteredSteps = ALL_STEPS.filter(
 					(step) => step.id !== "settings"
 				);
 			} else {
-				// Paid/Free without paid plan: Welcome → Membership → Finish
 				filteredSteps = ALL_STEPS.filter(
 					(step) => step.id !== "payment" && step.id !== "settings"
 				);
 			}
 			break;
 		case "other":
-			// Advanced Registration: Welcome → Settings → Finish
 			filteredSteps = ALL_STEPS.filter(
 				(step) => step.id !== "membership" && step.id !== "payment"
 			);
@@ -128,7 +125,7 @@ const SetupWizard: React.FC = () => {
 						allowTracking:
 							typeof welcome?.allow_usage_tracking === "boolean"
 								? welcome.allow_usage_tracking
-								: state.allowTracking,
+								: true,
 						adminEmail:
 							typeof welcome?.admin_email === "string" &&
 							welcome.admin_email
@@ -176,7 +173,6 @@ const SetupWizard: React.FC = () => {
 						state.membershipSetupType
 					),
 					allow_usage_tracking: state.allowTracking,
-					allow_email_updates: state.allowTracking,
 					admin_email: state.adminEmail
 				});
 			} else if (currentStepId === "membership") {

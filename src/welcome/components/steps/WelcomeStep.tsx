@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
 	Box,
 	Text,
@@ -9,6 +9,7 @@ import {
 	RadioGroup,
 	Checkbox,
 	Link,
+	Input,
 	useColorModeValue
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
@@ -92,9 +93,14 @@ const WelcomeStep: React.FC = () => {
 		membershipOptions
 	} = state;
 
+	const [isEditingEmail, setIsEditingEmail] = useState(false);
+	const [tempEmail, setTempEmail] = useState(adminEmail);
+
 	const textColor = useColorModeValue("gray.800", "white");
 	const mutedColor = useColorModeValue("gray.600", "gray.400");
 	const linkColor = "#475BD8";
+	const inputBg = useColorModeValue("white", "gray.700");
+	const inputBorder = useColorModeValue("gray.300", "gray.600");
 
 	const handleMembershipChange = (value: MembershipSetupType) => {
 		dispatch({ type: "SET_MEMBERSHIP_SETUP_TYPE", payload: value });
@@ -102,6 +108,33 @@ const WelcomeStep: React.FC = () => {
 
 	const handleTrackingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		dispatch({ type: "SET_ALLOW_TRACKING", payload: e.target.checked });
+	};
+
+	const handleChangeEmailClick = (e: React.MouseEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setTempEmail(adminEmail);
+		setIsEditingEmail(true);
+	};
+
+	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setTempEmail(e.target.value);
+	};
+
+	const handleEmailBlur = () => {
+		if (tempEmail && tempEmail.includes("@")) {
+			dispatch({ type: "SET_ADMIN_EMAIL", payload: tempEmail });
+		}
+		setIsEditingEmail(false);
+	};
+
+	const handleEmailKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === "Enter") {
+			handleEmailBlur();
+		} else if (e.key === "Escape") {
+			setTempEmail(adminEmail);
+			setIsEditingEmail(false);
+		}
 	};
 
 	const emailForDisplay = adminEmail || "admin@example.com";
@@ -192,30 +225,77 @@ const WelcomeStep: React.FC = () => {
 			</Box>
 
 			<Box>
-				<Checkbox
-					isChecked={allowTracking}
-					onChange={handleTrackingChange}
-					colorScheme="blue"
-					sx={{
-						".chakra-checkbox__control[data-checked]": {
-							bg: "#475BD8",
-							borderColor: "#475BD8"
-						}
-					}}
-				>
-					<Text fontSize="sm" color={mutedColor}>
-						{__(
-							"Allow usage tracking and subscribe to updates (security updates, new features, and occasional offers). We will use your email if provided.",
-							"user-registration"
-						)}{" "}
-						<Link
-							color={linkColor}
-							href={`mailto:${emailForDisplay}`}
+				<HStack align="flex-start" spacing={2}>
+					<Box flexShrink={0} pt="1px">
+						<Checkbox
+							isChecked={allowTracking}
+							onChange={handleTrackingChange}
+							colorScheme="blue"
+							sx={{
+								".chakra-checkbox__control[data-checked]": {
+									bg: "#475BD8",
+									borderColor: "#475BD8"
+								}
+							}}
+						/>
+					</Box>
+					<Box>
+						<Text
+							fontSize="sm"
+							color={mutedColor}
+							lineHeight="20px"
 						>
-							{emailForDisplay}
-						</Link>
-					</Text>
-				</Checkbox>
+							{__(
+								"Share anonymous usage data to improve URM, plus receive updates and offers.",
+								"user-registration"
+							)}
+						</Text>
+						<Box mt={1}>
+							{isEditingEmail ? (
+								<Input
+									value={tempEmail}
+									onChange={handleEmailChange}
+									onBlur={handleEmailBlur}
+									onKeyDown={handleEmailKeyDown}
+									size="sm"
+									width="220px"
+									bg={inputBg}
+									borderColor={inputBorder}
+									autoFocus
+									placeholder="Enter email address"
+									_focus={{
+										borderColor: "#475BD8",
+										boxShadow: "0 0 0 1px #475BD8"
+									}}
+								/>
+							) : (
+								<Text
+									fontSize="sm"
+									color={mutedColor}
+									lineHeight="20px"
+								>
+									{__("Email:", "user-registration")}{" "}
+									<Text
+										as="span"
+										fontWeight="600"
+										color={textColor}
+									>
+										{emailForDisplay}
+									</Text>
+									{" · "}
+									<Link
+										color={linkColor}
+										onClick={handleChangeEmailClick}
+										cursor="pointer"
+										_hover={{ textDecoration: "underline" }}
+									>
+										{__("Change", "user-registration")}
+									</Link>
+								</Text>
+							)}
+						</Box>
+					</Box>
+				</HStack>
 			</Box>
 		</>
 	);
