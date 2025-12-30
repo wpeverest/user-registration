@@ -17,6 +17,7 @@ import Stepper from "./Stepper";
 import WelcomeStep from "./steps/WelcomeStep";
 import MembershipStep from "./steps/MembershipStep";
 import PaymentStep from "./steps/PaymentStep";
+import SettingsStep from "./steps/SettingsStep";
 import FinishStep from "./steps/FinishStep";
 
 interface StepConfig {
@@ -29,7 +30,8 @@ const ALL_STEPS: StepConfig[] = [
 	{ id: "welcome", label: "Welcome", stepNumber: 1 },
 	{ id: "membership", label: "Membership", stepNumber: 2 },
 	{ id: "payment", label: "Payment", stepNumber: 3 },
-	{ id: "finish", label: "Finish", stepNumber: 4 }
+	{ id: "settings", label: "Settings", stepNumber: 4 },
+	{ id: "finish", label: "Finish", stepNumber: 5 }
 ];
 
 const getVisibleSteps = (
@@ -42,21 +44,25 @@ const getVisibleSteps = (
 		case "paid":
 		case "free":
 			if (hasPaidPlan) {
-				filteredSteps = ALL_STEPS;
-			} else {
+				// Paid/Free with paid plan: Welcome → Membership → Payment → Finish
 				filteredSteps = ALL_STEPS.filter(
-					(step) => step.id !== "payment"
+					(step) => step.id !== "settings"
+				);
+			} else {
+				// Paid/Free without paid plan: Welcome → Membership → Finish
+				filteredSteps = ALL_STEPS.filter(
+					(step) => step.id !== "payment" && step.id !== "settings"
 				);
 			}
 			break;
 		case "other":
-			// No membership at all - skip both Membership and Payment
+			// Advanced Registration: Welcome → Settings → Finish
 			filteredSteps = ALL_STEPS.filter(
 				(step) => step.id !== "membership" && step.id !== "payment"
 			);
 			break;
 		default:
-			filteredSteps = ALL_STEPS;
+			filteredSteps = ALL_STEPS.filter((step) => step.id !== "settings");
 	}
 
 	return filteredSteps.map((step, index) => ({
@@ -77,12 +83,8 @@ const HEADER_HEIGHT = "73px";
 
 const SetupWizard: React.FC = () => {
 	const { state, dispatch } = useStateValue();
-	const {
-		currentStep,
-		isLoading,
-		membershipSetupType,
-		membershipPlans
-	} = state;
+	const { currentStep, isLoading, membershipSetupType, membershipPlans } =
+		state;
 
 	const cardBg = useColorModeValue("white", "gray.800");
 	const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -177,10 +179,6 @@ const SetupWizard: React.FC = () => {
 					allow_email_updates: state.allowTracking,
 					admin_email: state.adminEmail
 				});
-
-				if (membershipSetupType === "other") {
-					await apiPost("/finish");
-				}
 			} else if (currentStepId === "membership") {
 				await apiPost("/memberships", {
 					memberships: state.membershipPlans.map(mapPlanToApi)
@@ -195,6 +193,11 @@ const SetupWizard: React.FC = () => {
 					mapPaymentSettingsToApi(state.paymentSettings)
 				);
 				await apiPost("/finish");
+			} else if (currentStepId === "settings") {
+				await apiPost("/settings", {
+					login_option: state.registrationSettings.loginOption,
+					default_role: state.registrationSettings.defaultRole
+				});
 			}
 
 			if (currentStep < totalSteps) {
@@ -238,13 +241,10 @@ const SetupWizard: React.FC = () => {
 			return;
 		}
 
-
 		if (stepNumber === currentStep + 1) {
 			await handleSkip();
 			return;
 		}
-
-
 	};
 
 	const handleClose = () => {
@@ -262,6 +262,8 @@ const SetupWizard: React.FC = () => {
 				return <MembershipStep />;
 			case "payment":
 				return <PaymentStep />;
+			case "settings":
+				return <SettingsStep />;
 			case "finish":
 				return <FinishStep />;
 			default:

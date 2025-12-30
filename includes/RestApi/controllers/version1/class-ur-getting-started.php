@@ -49,7 +49,8 @@ class UR_Getting_Started {
 		1 => 'welcome',
 		2 => 'membership',
 		3 => 'payment',
-		4 => 'finish',
+		4 => 'settings',
+		5 => 'finish',
 	);
 
 	/**
@@ -145,6 +146,23 @@ class UR_Getting_Started {
 				array(
 					'methods'             => 'POST',
 					'callback'            => array( __CLASS__, 'save_payment_settings' ),
+					'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/settings',
+			array(
+				array(
+					'methods'             => 'GET',
+					'callback'            => array( __CLASS__, 'get_settings_data' ),
+					'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+				),
+				array(
+					'methods'             => 'POST',
+					'callback'            => array( __CLASS__, 'save_settings_data' ),
 					'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 				),
 			)
@@ -252,6 +270,10 @@ class UR_Getting_Started {
 				'label' => __( 'Payment', 'user-registration' ),
 			),
 			4 => array(
+				'id'    => 'settings',
+				'label' => __( 'Settings', 'user-registration' ),
+			),
+			5 => array(
 				'id'    => 'finish',
 				'label' => __( 'Finish', 'user-registration' ),
 			),
@@ -285,15 +307,141 @@ class UR_Getting_Started {
 	 * @return bool
 	 */
 	protected static function is_step_accessible( $step_number, $membership_type ) {
+		// Membership step (2) - not accessible for "normal" type
 		if ( 2 === $step_number && 'normal' === $membership_type ) {
 			return false;
 		}
 
+		// Payment step (3) - only accessible for paid_membership type
 		if ( 3 === $step_number && 'paid_membership' !== $membership_type ) {
 			return false;
 		}
 
+		// Settings step (4) - only accessible for "normal" type
+		if ( 4 === $step_number && 'normal' !== $membership_type ) {
+			return false;
+		}
+
 		return true;
+	}
+
+	/**
+	 * Get settings screen data for Advanced Registration flow.
+	 *
+	 * @since x.x.x
+	 *
+	 * @param \WP_REST_Request $request Request instance.
+	 * @return \WP_REST_Response
+	 */
+	public static function get_settings_data( $request ) {
+		$login_options_raw = ur_login_option();
+		$login_options = array();
+		foreach ( $login_options_raw as $value => $label ) {
+			$login_options[] = array(
+				'value' => $value,
+				'label' => $label,
+			);
+		}
+
+		$roles = array();
+		$available_roles = array();
+
+		if ( function_exists( 'ur_get_default_admin_roles' ) ) {
+			$available_roles = ur_get_default_admin_roles();
+		} else {
+			$wp_roles = wp_roles();
+			$available_roles = $wp_roles->get_names();
+		}
+
+		if ( is_array( $available_roles ) ) {
+			foreach ( $available_roles as $role_key => $role_name ) {
+				$roles[] = array(
+					'value' => $role_key,
+					'label' => $role_name,
+				);
+			}
+		}
+
+		$selected_login_option = get_option( 'user_registration_general_setting_login_options', 'default' );
+		$selected_role = get_option( 'user_registration_default_user_role', 'subscriber' );
+
+		$data = array(
+			'login_options'         => $login_options,
+			'roles'                 => $roles,
+			'selected_login_option' => $selected_login_option,
+			'selected_role'         => $selected_role,
+		);
+error_log( print_r( $data, true ) );
+		return new \WP_REST_Response(
+			array(
+				'success' => true,
+				'data'    => $data,
+			),
+			200
+		);
+	}
+
+	/**
+	 * Save settings data and move to next step.
+	 *
+	 * @since x.x.x
+	 *
+	 * @param \WP_REST_Request $request Request instance.
+	 * @return \WP_REST_Response
+	 */
+	public static function save_settings_data( $request ) {
+		$login_option = isset( $request['login_option'] ) ? sanitize_text_field( $request['login_option'] ) : 'default';
+		$default_role = isset( $request['default_role'] ) ? sanitize_text_field( $request['default_role'] ) : 'subscriber';
+
+		// Validate login option
+		$valid_login_options = array( 'default', 'auto_login', 'admin_approval', 'email_confirmation' );
+		if ( function_exists( 'ur_login_option' ) ) {
+			$valid_login_options = array_keys( ur_login_option() );
+		}
+
+		if ( in_array( $login_option, $valid_login_options, true ) ) {
+			update_option( 'user_registration_general_setting_login_options', $login_option );
+		}
+
+		// Validate and save default role
+		$available_roles = array();
+		if ( function_exists( 'ur_get_default_admin_roles' ) ) {
+			$available_roles = ur_get_default_admin_roles();
+		} else {
+			$wp_roles = wp_roles();
+			$available_roles = $wp_roles->get_names();
+		}
+
+		if ( is_array( $available_roles ) && array_key_exists( $default_role, $available_roles ) ) {
+			update_option( 'user_registration_default_user_role', $default_role );
+
+			// Also update the default form settings
+			$default_form_id = get_option( 'user_registration_default_form_page_id', 0 );
+			if ( $default_form_id ) {
+				$form_settings = get_post_meta( $default_form_id, 'user_registration_form_setting', true );
+				if ( ! is_array( $form_settings ) ) {
+					$form_settings = array();
+				}
+				$form_settings['user_registration_form_setting_default_user_role'] = $default_role;
+				$form_settings['user_registration_form_setting_login_options'] = $login_option;
+				update_post_meta( $default_form_id, 'user_registration_form_setting', $form_settings );
+			}
+		}
+
+		$membership_type = get_option( 'urm_onboarding_membership_type', 'normal' );
+
+
+		$next_step = self::calculate_next_step( 4, $membership_type );
+		self::update_current_step( $next_step );
+
+		return new \WP_REST_Response(
+			array(
+				'success'   => true,
+				'message'   => __( 'Settings saved successfully.', 'user-registration' ),
+				'next_step' => $next_step,
+			),
+			200
+		);
 	}
 
 	/**
@@ -315,17 +463,17 @@ class UR_Getting_Started {
 				array(
 					'value'       => 'paid_membership',
 					'label'       => __( 'Paid Membership', 'user-registration' ),
-					'description' => __( 'Paid members can access protected content. Choose this even if you have combination of both free and paid.', 'user-registration' ),
+					'description' => __( 'Charge users to access premium content (you can offer free plans too).', 'user-registration' ),
 				),
 				array(
 					'value'       => 'free_membership',
 					'label'       => __( 'Free Membership', 'user-registration' ),
-					'description' => __( 'Registered users can access protected content.', 'user-registration' ),
+					'description' => __( 'Let users register for free and access members-only content.', 'user-registration' ),
 				),
 				array(
 					'value'       => 'normal',
-					'label'       => __( 'Other URM Features (no membership now)', 'user-registration' ),
-					'description' => __( 'I want registration and other features without membership.', 'user-registration' ),
+					'label'       => __( 'Advanced Registration', 'user-registration' ),
+					'description' => __( "Complete registration system to replace WordPress's basic signup. Custom signup fields, login & account pages, and user approval.", 'user-registration' ),
 				),
 			),
 		);
@@ -1242,14 +1390,6 @@ class UR_Getting_Started {
 	 * @param \WP_REST_Request $request Request instance.
 	 * @return \WP_REST_Response
 	 */
-	/**
-	 * Get payment settings for step 3.
-	 *
-	 * @since x.x.x
-	 *
-	 * @param \WP_REST_Request $request Request instance.
-	 * @return \WP_REST_Response
-	 */
 	public static function get_payment_settings( $request ) {
 		$gateways = array(
 			array(
@@ -1421,7 +1561,7 @@ class UR_Getting_Started {
 			}
 		}
 
-		$next_step = 4;
+		$next_step = 5; // Finish step
 		self::update_current_step( $next_step );
 
 		return new \WP_REST_Response(
@@ -1603,7 +1743,7 @@ class UR_Getting_Started {
 		update_option( 'user_registration_onboarding_skipped', false );
 		delete_option( 'user_registration_onboarding_skipped_step' );
 		update_option( 'urm_onboarding_completed_at', current_time( 'mysql' ) );
-		self::update_current_step( 4 );
+		self::update_current_step( 5 ); // Finish step is now 5
 
 		do_action( 'user_registration_getting_started_completed' );
 
@@ -1641,7 +1781,7 @@ class UR_Getting_Started {
 
 		update_option( 'user_registration_onboarding_skipped_steps', array_unique( $skipped_steps ) );
 
-		if ( 4 === $next_step ) {
+		if ( 5 === $next_step ) {
 			update_option( 'user_registration_onboarding_skipped', true );
 			update_option( 'user_registration_onboarding_skipped_step', $current_step );
 		}
@@ -1727,6 +1867,13 @@ class UR_Getting_Started {
 	/**
 	 * Calculate the next step based on current step and membership type.
 	 *
+	 * Steps:
+	 * 1 = welcome
+	 * 2 = membership (skipped for "normal")
+	 * 3 = payment (only for "paid_membership")
+	 * 4 = settings (only for "normal")
+	 * 5 = finish
+	 *
 	 * @since x.x.x
 	 *
 	 * @param int    $current_step    Current step.
@@ -1736,15 +1883,30 @@ class UR_Getting_Started {
 	protected static function calculate_next_step( $current_step, $membership_type ) {
 		$next_step = $current_step + 1;
 
+
+		if ( 'normal' === $membership_type ) {
+			if ( 1 === $current_step ) {
+				return 4;
+			}
+			if ( 4 === $current_step ) {
+				return 5;
+			}
+		}
+
 		if ( 2 === $next_step && 'normal' === $membership_type ) {
 			$next_step = 4;
 		}
 
+
 		if ( 3 === $next_step && 'paid_membership' !== $membership_type ) {
-			$next_step = 4;
+			$next_step = 5;
 		}
 
-		return min( $next_step, 4 );
+		if ( 4 === $next_step && 'normal' !== $membership_type ) {
+			$next_step = 5;
+		}
+
+		return min( $next_step, 5 );
 	}
 
 	/**

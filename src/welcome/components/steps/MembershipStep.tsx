@@ -350,7 +350,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 							color={labelColor}
 							flexShrink={0}
 						>
-							Name :
+							{__("Plan Name", "user-registration")}
 						</Text>
 						<Input
 							flex={1}
@@ -459,7 +459,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 									<Input
 										value={plan.price}
 										onChange={handlePriceChange}
-										placeholder="0.00"
 										bg={inputBg}
 										borderColor={borderColor}
 									/>
@@ -618,6 +617,7 @@ const MembershipStep: React.FC = () => {
 	const { membershipPlans, membershipSetupType } = state;
 
 	const textColor = useColorModeValue("gray.800", "white");
+	const subtextColor = useColorModeValue("gray.600", "gray.300");
 
 	const [pages, setPages] = useState<ContentOption[]>([]);
 	const [posts, setPosts] = useState<ContentOption[]>([]);
@@ -700,11 +700,17 @@ const MembershipStep: React.FC = () => {
 				lineHeight="34px"
 				letterSpacing="-0.01em"
 				color={textColor}
-				mb={8}
+				mb={2}
 			>
 				{__("Create Membership", "user-registration")}
 			</Heading>
 
+			<Text fontSize="sm" color={subtextColor} mb={8}>
+				{__(
+					"Create your first membership plan. Choose what content to protect. You can edit this anytime.",
+					"user-registration"
+				)}
+			</Text>
 			<VStack spacing={4} align="stretch" mb={6}>
 				{membershipPlans.map((plan) => (
 					<MembershipCard

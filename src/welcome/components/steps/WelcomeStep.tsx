@@ -9,7 +9,7 @@ import {
 	RadioGroup,
 	Checkbox,
 	Link,
-	useColorModeValue,
+	useColorModeValue
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import { useStateValue } from "../../context/StateProvider";
@@ -26,7 +26,7 @@ const MembershipOption: React.FC<MembershipOptionProps> = ({
 	value,
 	title,
 	description,
-	isSelected,
+	isSelected
 }) => {
 	const selectedBg = useColorModeValue("blue.50", "blue.900");
 	const selectedBorder = "#475BD8";
@@ -49,7 +49,7 @@ const MembershipOption: React.FC<MembershipOptionProps> = ({
 			transition="all 0.2s ease"
 			_hover={{
 				borderColor: isSelected ? selectedBorder : "gray.300",
-				bg: isSelected ? selectedBg : hoverBg,
+				bg: isSelected ? selectedBg : hoverBg
 			}}
 		>
 			<HStack align="flex-start" spacing={3}>
@@ -60,8 +60,8 @@ const MembershipOption: React.FC<MembershipOptionProps> = ({
 					sx={{
 						"&[data-checked]": {
 							bg: "#475BD8",
-							borderColor: "#475BD8",
-						},
+							borderColor: "#475BD8"
+						}
 					}}
 				/>
 				<VStack align="flex-start" spacing={0.5}>
@@ -85,8 +85,12 @@ const mapApiValueToSetupType = (value: string): MembershipSetupType => {
 
 const WelcomeStep: React.FC = () => {
 	const { state, dispatch } = useStateValue();
-	const { membershipSetupType, allowTracking, adminEmail, membershipOptions } =
-		state;
+	const {
+		membershipSetupType,
+		allowTracking,
+		adminEmail,
+		membershipOptions
+	} = state;
 
 	const textColor = useColorModeValue("gray.800", "white");
 	const mutedColor = useColorModeValue("gray.600", "gray.400");
@@ -107,33 +111,36 @@ const WelcomeStep: React.FC = () => {
 			? membershipOptions.map((opt) => ({
 					value: mapApiValueToSetupType(opt.value),
 					title: opt.label,
-					description: opt.description,
+					description: opt.description
 			  }))
 			: [
 					{
 						value: "paid" as MembershipSetupType,
-						title: __("Paid Membership", "urm"),
+						title: __("Paid Membership", "user-registration"),
 						description: __(
-							"Paid members can access protected content. Choose this even if you have combination of both free and paid.",
-							"urm"
-						),
+							"Charge users to access premium content (you can offer free plans too).",
+							"user-registration"
+						)
 					},
 					{
 						value: "free" as MembershipSetupType,
-						title: __("Free Membership", "urm"),
+						title: __("Free Membership", "user-registration"),
 						description: __(
-							"Registered users can access protected content.",
-							"urm"
-						),
+							"Let users register for free and access members-only content.",
+							"user-registration"
+						)
 					},
 					{
 						value: "other" as MembershipSetupType,
-						title: __("Other URM Features (no membership now)", "urm"),
-						description: __(
-							"I want registration and other features without membership.",
-							"urm"
+						title: __(
+							"Advanced Registrations",
+							"user-registration"
 						),
-					},
+						description: __(
+							"Complete registration system to replace WordPress's basic signup. Custom signup fields, login & account pages, and user approval.",
+							"user-registration"
+						)
+					}
 			  ];
 
 	return (
@@ -147,22 +154,22 @@ const WelcomeStep: React.FC = () => {
 					letterSpacing="-0.01em"
 					color={textColor}
 				>
-					{__("Welcome 🙂", "urm")}
+					{__("Welcome 🙂", "user-registration")}
 				</Heading>
 				<Text color={textColor} fontWeight="500">
-					{__("Thanks for choosing URM!", "urm")}
+					{__("Thanks for choosing URM!", "user-registration")}
 				</Text>
 				<Text color={mutedColor} fontSize="sm">
 					{__(
-						"Select what applies to your site. We'll create the pages and features you need. You can always change this later.",
-						"urm"
+						"Tell us what you want to do. We'll set up the right pages and features for your site. Don't worry—you can change this anytime.",
+						"user-registration"
 					)}
 				</Text>
 			</VStack>
 
 			<Box mb={10}>
 				<Text fontWeight="600" color={textColor} mb={4}>
-					{__("I want to setup", "urm")}
+					{__("Choose your setup:", "user-registration")}
 				</Text>
 				<RadioGroup
 					value={membershipSetupType}
@@ -175,7 +182,9 @@ const WelcomeStep: React.FC = () => {
 								value={option.value}
 								title={option.title}
 								description={option.description}
-								isSelected={membershipSetupType === option.value}
+								isSelected={
+									membershipSetupType === option.value
+								}
 							/>
 						))}
 					</VStack>
@@ -190,16 +199,19 @@ const WelcomeStep: React.FC = () => {
 					sx={{
 						".chakra-checkbox__control[data-checked]": {
 							bg: "#475BD8",
-							borderColor: "#475BD8",
-						},
+							borderColor: "#475BD8"
+						}
 					}}
 				>
 					<Text fontSize="sm" color={mutedColor}>
 						{__(
 							"Allow usage tracking and subscribe to updates (security updates, new features, and occasional offers). We will use your email if provided.",
-							"urm"
+							"user-registration"
 						)}{" "}
-						<Link color={linkColor} href={`mailto:${emailForDisplay}`}>
+						<Link
+							color={linkColor}
+							href={`mailto:${emailForDisplay}`}
+						>
 							{emailForDisplay}
 						</Link>
 					</Text>
