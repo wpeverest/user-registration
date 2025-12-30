@@ -702,8 +702,9 @@ class MembershipService {
 				}
 			}
 
-			$current_membership_details = $this->get_membership_details( $current_membership_id );
-			$subscription               = $subscription_repository->retrieve( $subscription_id );
+			$current_membership_details       = $this->get_membership_details( $current_membership_id );
+			$current_membership_details['ID'] = $current_membership_id;
+			$subscription                     = $subscription_repository->retrieve( $subscription_id );
 
 			foreach ( $memberships as $key => &$membership ) {
 				$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
@@ -716,12 +717,19 @@ class MembershipService {
 					}
 				}
 
-				$selected_membership_details = $this->get_membership_details( $membership['ID'] );
-				$upgrade_details             = $subscription_service->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
+				$selected_membership_details       = $this->get_membership_details( $membership['ID'] );
+				$selected_membership_details['ID'] = $membership['ID'];
 
-				$selected_membership_amount   = $selected_membership_details['amount'];
-				$current_membership_amount    = $current_membership_details['amount'];
-				$upgrade_type                 = $current_membership_details['upgrade_settings']['upgrade_type'];
+				$upgrade_details = $subscription_service->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
+
+				$selected_membership_amount = $selected_membership_details['amount'];
+				$current_membership_amount  = $current_membership_details['amount'];
+
+				$upgrade_service = new UpgradeMembershipService();
+
+				$upgrade_data = $upgrade_service->get_upgrade_details( $current_membership_details );
+				$upgrade_type = ! empty( $upgrade_data['upgrade_type'] ) ? $upgrade_data['upgrade_type'] : '';
+
 				$remaining_subscription_value = isset( $selected_membership_details['subscription']['value'] ) ? $selected_membership_details['subscription']['value'] : '';
 				$delayed_until                = '';
 

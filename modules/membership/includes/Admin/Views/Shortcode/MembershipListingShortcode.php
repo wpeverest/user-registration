@@ -123,7 +123,7 @@ class MembershipListingShortcode {
 			$is_editor = true;
 		}
 
-		$style = $attributes['style'];
+		$style = $attributes['style'] ?? '';
 
 		$uuid = ! empty( $attributes['uuid'] ) ? sanitize_key( $attributes['uuid'] ) : ( ! empty( $attributes['id'] ) ? sanitize_key( $attributes['id'] ) : ur_generate_random_key() );
 

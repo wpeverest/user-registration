@@ -14,6 +14,7 @@ use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
 use WPEverest\URMembership\Admin\Services\Paypal\PaypalService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URMembership\Admin\Services\MembersService;
+use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
 use WPEverest\URMembership\Admin\Services\CouponService;
 
 class SubscriptionService {
@@ -352,7 +353,9 @@ class SubscriptionService {
 			return $response;
 		}
 
-		$upgrade_details = $this->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
+		$current_membership_details['ID']  = $data['current_membership_id'];
+		$selected_membership_details['ID'] = $data['selected_membership_id'];
+		$upgrade_details                   = $this->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
 
 		if ( isset( $upgrade_details['status'] ) && ! $upgrade_details['status'] ) {
 			return array(
@@ -586,18 +589,35 @@ class SubscriptionService {
 	 * @return array
 	 */
 	public function can_upgrade( $data ) {
-		$membership_service = new MembershipService();
-		$membership_details = $membership_service->get_membership_details( $data['current_membership_id'] );
-		$status             = true;
-		if ( empty( $membership_details['upgrade_settings']['upgrade_path'] ) ) {
+		$membership_service       = new MembershipService();
+		$upgrade_service          = new UpgradeMembershipService();
+		$membership_details       = $membership_service->get_membership_details( $data['current_membership_id'] );
+		$membership_details['ID'] = $data['current_membership_id'];
+
+		$upgrade_details = $upgrade_service->get_upgrade_details( $membership_details );
+		$status          = true;
+		if ( empty( $upgrade_details['upgrade_path'] ) ) {
 			return array(
 				'status'  => false,
 				'message' => __( 'Sorry, you cannot upgrade to the selected plan.', 'user-registration' ),
 			);
 		}
-		$upgradable_memberships = explode( ',', $membership_details['upgrade_settings']['upgrade_path'] );
 
-		$status = in_array( $data['selected_membership_id'], $upgradable_memberships );
+		if ( is_array( $upgrade_details['upgrade_path'] ) && isset( $upgrade_details['upgrade_path'][ $data['current_membership_id'] ] ) ) {
+			$current_upgrade_path   = $upgrade_details['upgrade_path'][ $data['current_membership_id'] ];
+			$selected_membership_id = $data['selected_membership_id'];
+			$status                 = array_filter(
+				$current_upgrade_path,
+				function ( $item ) use ( $selected_membership_id ) {
+					return $item['membership_id'] === $selected_membership_id;
+				}
+			);
+
+		} else {
+			$upgradable_memberships = explode( ',', $upgrade_details['upgrade_path'] );
+			$status                 = in_array( $data['selected_membership_id'], $upgradable_memberships );
+		}
+
 		if ( ! $status ) {
 			return array(
 				'status'  => false,
