@@ -118,7 +118,7 @@ class Database {
                     "
 		);
 
-		if ( defined( UR_PRO_ACTIVE ) && UR_PRO_ACTIVE ) {
+		if ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) {
 			$subscription_events_table = TableList::subscription_events_table();
 
 			array_push(

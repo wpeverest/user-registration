@@ -216,7 +216,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	const accessBg = useColorModeValue("green.50", "green.900");
 	const accessBorderColor = useColorModeValue("green.200", "green.700");
 
-	// Reset billing period to "one-time" for non-Pro users if they have a subscription billing period
 	useEffect(() => {
 		if (!isPro && plan.billingPeriod !== "one-time") {
 			dispatch({
@@ -244,7 +243,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	};
 
 	const handleTypeChange = (type: MembershipPlanType) => {
-		// Only allow changing to paid if canCreatePaid is true
 		if (type === "paid" && !canCreatePaid) {
 			return;
 		}
@@ -350,7 +348,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 							color={labelColor}
 							flexShrink={0}
 						>
-							Name :
+							{__("Plan Name", "user-registration")}
 						</Text>
 						<Input
 							flex={1}
@@ -459,7 +457,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 									<Input
 										value={plan.price}
 										onChange={handlePriceChange}
-										placeholder="0.00"
 										bg={inputBg}
 										borderColor={borderColor}
 									/>
@@ -618,6 +615,7 @@ const MembershipStep: React.FC = () => {
 	const { membershipPlans, membershipSetupType } = state;
 
 	const textColor = useColorModeValue("gray.800", "white");
+	const subtextColor = useColorModeValue("gray.600", "gray.300");
 
 	const [pages, setPages] = useState<ContentOption[]>([]);
 	const [posts, setPosts] = useState<ContentOption[]>([]);
@@ -700,11 +698,17 @@ const MembershipStep: React.FC = () => {
 				lineHeight="34px"
 				letterSpacing="-0.01em"
 				color={textColor}
-				mb={8}
+				mb={2}
 			>
 				{__("Create Membership", "user-registration")}
 			</Heading>
 
+			<Text fontSize="sm" color={subtextColor} mb={8}>
+				{__(
+					"Create your first membership plan. Choose what content to protect. You can edit this anytime.",
+					"user-registration"
+				)}
+			</Text>
 			<VStack spacing={4} align="stretch" mb={6}>
 				{membershipPlans.map((plan) => (
 					<MembershipCard

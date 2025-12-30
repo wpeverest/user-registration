@@ -162,7 +162,7 @@ if ( ! class_exists( 'Admin' ) ) :
 			add_action( 'plugins_loaded', array( __CLASS__, 'ur_membership_maybe_run_migrations' ), 20 );
 
 			add_action( 'user_registration_single_user_details_content', array( $this, 'render_user_membership_details' ), 10, 2 );
-						new Subscriptions();
+			new Subscriptions();
 		}
 
 		public function register_membership_admin_scripts() {
@@ -489,7 +489,7 @@ if ( ! class_exists( 'Admin' ) ) :
 			$installed_version = get_option( 'ur_membership_db_version', '0.0.0' );
 
 			if ( version_compare( $installed_version, '1.0.0', '<' ) ) {
-				if ( defined( UR_PRO_ACTIVE ) && UR_PRO_ACTIVE ) {
+				if ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) {
 					self::on_activation();
 					update_option( 'ur_membership_db_version', '1.0.0' );
 				}

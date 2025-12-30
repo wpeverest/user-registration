@@ -68,6 +68,7 @@ const PaymentOption: React.FC<PaymentOptionProps> = ({
 	children
 }) => {
 	const textColor = useColorModeValue("gray.800", "white");
+	const subtextColor = useColorModeValue("gray.600", "gray.300");
 
 	return (
 		<Box>
@@ -112,6 +113,7 @@ const PaymentStep: React.FC = () => {
 	const [currencies, setCurrencies] = useState<CurrencyData[]>([]);
 
 	const textColor = useColorModeValue("gray.800", "white");
+	const subtextColor = useColorModeValue("gray.600", "gray.300");
 	const mutedColor = useColorModeValue("gray.600", "gray.400");
 	const inputBg = useColorModeValue("white", "gray.700");
 	const inputBorder = useColorModeValue("gray.300", "gray.600");
@@ -281,11 +283,17 @@ const PaymentStep: React.FC = () => {
 				lineHeight="34px"
 				letterSpacing="-0.01em"
 				color={textColor}
-				mb={6}
+				mb={2}
 			>
 				{__("Payments", "user-registration")}
 			</Heading>
 
+			<Text fontSize="sm" color={subtextColor} mb={8}>
+				{__(
+					"Set up payment options for your membership plans. Choose currency and enable payment gateways . You can edit this anytime.",
+					"user-registration"
+				)}
+			</Text>
 
 			<Flex justify="space-between" align="center" mb={2}>
 				<Text fontWeight="500" color={textColor} fontSize="sm">
@@ -757,26 +765,6 @@ const PaymentStep: React.FC = () => {
 					</VStack>
 				</PaymentOption>
 			</VStack>
-
-			<Alert
-				status="info"
-				variant="subtle"
-				mt={6}
-				borderRadius="md"
-				bg="white"
-				borderWidth="1px"
-				borderColor="blue.200"
-				py={3}
-				px={4}
-			>
-				<AlertIcon color="#475BD8" boxSize={4} />
-				<Text fontSize="sm" color={mutedColor}>
-					{__(
-						"Additional payment gateways can be setup later as well.",
-						"user-registration"
-					)}
-				</Text>
-			</Alert>
 		</>
 	);
 };

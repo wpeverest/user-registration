@@ -318,7 +318,14 @@ $delete_url = wp_nonce_url(
 						</div>
 						<div class="ur-subscription__subscription-actions">
 							<?php
-							$member_edit_url = admin_url( "admin.php?page=user-registration-members&action=edit&member_id={$subscription['user_id']}" );
+							$member_edit_url = add_query_arg(
+								array(
+									'action'   => 'edit',
+									'user_id'  => $subscription['user_id'],
+									'_wpnonce' => wp_create_nonce( 'bulk-users' ),
+								),
+								admin_url( 'admin.php?page=user-registration-users&view_user' ),
+							);
 							?>
 							<a class="button action" href="<?php echo esc_url( $member_edit_url ); ?>">
 								<?php esc_html_e( 'Edit Member', 'user-registration' ); ?>

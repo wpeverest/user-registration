@@ -3,13 +3,13 @@
   "apiVersion": 3,
   "name": "user-registration/membership-listing",
   "version": "1.0.0",
-  "title": "Membership Listing",
+  "title": "Membership Pricing",
   "category": "user-registration",
-  "description": "This block provides block for membership listing.",
+  "description": "This block provides block for membership pricing.",
   "keywords": [
-    "user registration membership listing",
-    "urm membership listing",
-    "membership listing"
+    "user registration membership pricing",
+    "urm membership pricing",
+    "membership pricing"
   ],
   "textdomain": "user-registration",
   "example": {

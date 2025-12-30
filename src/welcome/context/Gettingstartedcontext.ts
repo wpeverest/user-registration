@@ -48,6 +48,10 @@ export interface GettingStartedState {
 	}[];
 	membershipPlans: MembershipPlan[];
 	paymentSettings: PaymentSettings;
+	registrationSettings: {
+		loginOption: string;
+		defaultRole: string;
+	};
 }
 
 const generateId = () => Math.random().toString(36).substring(2, 9);
@@ -65,14 +69,16 @@ const createDefaultPlan = (
 });
 
 
-export const getTotalStepsForType = (membershipType: MembershipSetupType): number => {
+export const getTotalStepsForType = (
+	membershipType: MembershipSetupType
+): number => {
 	switch (membershipType) {
 		case "paid":
 			return 4;
 		case "free":
 			return 3;
 		case "other":
-			return 2;
+			return 3; // Welcome → Settings → Finish
 		default:
 			return 4;
 	}
@@ -90,18 +96,19 @@ export const initialState: GettingStartedState = {
 			value: "paid_membership",
 			label: "Paid Membership",
 			description:
-				"Paid members can access protected content. Choose this even if you have combination of both free and paid."
+				"Charge users to access premium content (you can offer free plans too)."
 		},
 		{
 			value: "free_membership",
 			label: "Free Membership",
-			description: "Registered users can access protected content."
+			description:
+				"Let users register for free and access members-only content."
 		},
 		{
 			value: "normal",
-			label: "Other URM Features (no membership now)",
+			label: "Advanced Registration",
 			description:
-				"I want registration and other features without membership."
+				"Complete registration system to replace WordPress's basic signup. Custom signup fields, login & account pages, and user approval."
 		}
 	],
 	membershipPlans: [createDefaultPlan("paid")],
@@ -119,6 +126,10 @@ export const initialState: GettingStartedState = {
 		stripeTestSecretKey: "",
 		stripeLivePublishableKey: "",
 		stripeLiveSecretKey: ""
+	},
+	registrationSettings: {
+		loginOption: "default",
+		defaultRole: "subscriber"
 	}
 };
 
@@ -143,6 +154,10 @@ export type Action =
 	| {
 			type: "SET_PAYMENT_SETTING";
 			payload: { key: keyof PaymentSettings; value: boolean | string };
+	  }
+	| {
+			type: "SET_REGISTRATION_SETTINGS";
+			payload: { loginOption: string; defaultRole: string };
 	  }
 	| {
 			type: "HYDRATE_FROM_API";
@@ -258,6 +273,15 @@ export const reducer = (
 				paymentSettings: {
 					...state.paymentSettings,
 					[action.payload.key]: action.payload.value
+				}
+			};
+
+		case "SET_REGISTRATION_SETTINGS":
+			return {
+				...state,
+				registrationSettings: {
+					...state.registrationSettings,
+					...action.payload
 				}
 			};
 

@@ -16,21 +16,21 @@ class ListTable extends \UR_List_Table {
 		$this->page            = 'user-registration-subscriptions';
 		$this->per_page_option = 'user_registration_subscriptions_per_page';
 		$this->addnew_action   = 'add_new_subscription';
-		$this->sort_by         = [
-			'subscription_id'   => [ 'subscription_id', false ],
-			'user_id'           => [ 'user_id', false ],
-			'item_id'           => [ 'item_id', false ],
-			'start_date'        => [ 'start_date', true ],
-			'next_billing_date' => [ 'next_billing_date', false ],
-			'status'            => [ 'status', false ],
-		];
+		$this->sort_by         = array(
+			'subscription_id'   => array( 'subscription_id', false ),
+			'user_id'           => array( 'user_id', false ),
+			'item_id'           => array( 'item_id', false ),
+			'start_date'        => array( 'start_date', true ),
+			'next_billing_date' => array( 'next_billing_date', false ),
+			'status'            => array( 'status', false ),
+		);
 
 		parent::__construct(
-			[
+			array(
 				'singular' => 'subscription',
 				'plural'   => 'subscriptions',
 				'ajax'     => false,
-			]
+			)
 		);
 	}
 
@@ -45,13 +45,13 @@ class ListTable extends \UR_List_Table {
 	public function get_columns() {
 		return apply_filters(
 			'ur_membership_subscriptions_list_table_columns',
-			[
+			array(
 				'id'         => __( 'Subscription ID', 'user-registration' ),
 				'user_id'    => __( 'Member', 'user-registration' ),
 				'item_id'    => __( 'Membership', 'user-registration' ),
 				'start_date' => __( 'Created At', 'user-registration' ),
 				'status'     => __( 'Status', 'user-registration' ),
-			]
+			)
 		);
 	}
 
@@ -84,9 +84,17 @@ class ListTable extends \UR_List_Table {
 		} elseif ( ! empty( $user->nickname ) ) {
 			$user_display_name = $user->nickname;
 		}
+		$member_edit_url = add_query_arg(
+			array(
+				'action'   => 'edit',
+				'user_id'  => $subscription->user_id,
+				'_wpnonce' => wp_create_nonce( 'bulk-users' ),
+			),
+			admin_url( 'admin.php?page=user-registration-users&view_user' ),
+		);
 		return sprintf(
 			'<a href="%s">%s</a>',
-			admin_url( "admin.php?page=user-registration-members&action=edit&member_id={$subscription->user_id}" ),
+			$member_edit_url,
 			$user_display_name
 		);
 	}
@@ -203,7 +211,7 @@ class ListTable extends \UR_List_Table {
 			admin_url( 'admin.php?page=user-registration-subscriptions&action=delete&id=' . $row->ID ),
 			'ur_subscription_delete'
 		);
-		return [
+		return array(
 			'id'     => sprintf(
 				/* translators: %d: Item id */
 				esc_html__( 'ID: %d', 'user-registration' ),
@@ -211,6 +219,6 @@ class ListTable extends \UR_List_Table {
 			),
 			'edit'   => '<a href="' . esc_url( $this->get_edit_links( $row ) ) . '">' . __( 'Edit', 'user-registration' ) . '</a>',
 			'delete' => '<a class="submitdelete" aria-label="' . esc_attr__( 'Delete this item permanently', 'user-registration' ) . '" href="' . $delete_url . '">' . esc_html__( 'Delete', 'user-registration' ) . '</a>',
-		];
+		);
 	}
 }
