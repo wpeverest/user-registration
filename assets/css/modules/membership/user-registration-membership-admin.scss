@@ -1255,6 +1255,30 @@
 				}
 			}
 
+			.wp-list-table{
+				tbody{
+					tr{
+						td{
+							&.status {
+								.ur-toggle-section {
+									.user-registration-toggle-form {
+
+										input {
+
+											&:checked+.slider {
+												background-color: $green;
+											}
+										}
+
+									}
+								}
+							}
+						}
+					}
+
+				}
+			}
+
 			.wp-list-table.memberships {
 				thead {
 					tr {
@@ -1319,21 +1343,6 @@
 									text-transform: capitalize;
 									color: #383838;
 									font-weight: 500;
-								}
-							}
-
-							&.status {
-								.ur-toggle-section {
-									.user-registration-toggle-form {
-
-										input {
-
-											&:checked+.slider {
-												background-color: $green;
-											}
-										}
-
-									}
 								}
 							}
 						}
@@ -2011,21 +2020,32 @@
 		&.membership_groups {
 			th {
 				&#title {
-					width: 200px;
+					width: 30%;
 				}
 
 				&#shortcode {
-					width: 220px;
+					width: 50%;
 				}
 
 				&#status {
-					width: 100px;
+					width: 20%;
 				}
 
-				&#action {
-					width: 200px;
-				}
 			}
+
+			tbody{
+				tr{
+					td{
+						&.shortcode{
+							.urm-shortcode{
+								width: 70%;
+							}
+						}
+					}
+				}
+
+			}
+
 		}
 	}
 
