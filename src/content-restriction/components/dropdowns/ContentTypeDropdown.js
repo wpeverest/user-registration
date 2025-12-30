@@ -20,7 +20,7 @@ const ContentTypeDropdown = ({ onSelect, existingContentTypes = [] }) => {
 	// For free users, only show posts and pages
 	const filteredOptions = isProAccess()
 		? allOptions
-		: allOptions.filter(option => option.value === "posts" || option.value === "pages");
+		: allOptions.filter(option => option.value === "posts" || option.value === "pages" || option.value === "whole_site");
 
 	// Check if a content type already exists
 	const isContentTypeExists = (contentType) => {

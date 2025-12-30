@@ -1080,9 +1080,8 @@
 			var allContentTypes = urcr_membership_access_data.content_type_options;
 
 			var contentTypes = isPro ? allContentTypes : allContentTypes.filter(function (ct) {
-				return ct.value === 'posts' || ct.value === 'pages';
+				return ct.value === 'posts' || ct.value === 'pages' || ct.value === 'whole_site';
 			});
-
 			var $wrapper = $button.closest('.urcr-content-dropdown-wrapper');
 
 			if ($wrapper.length === 0) {
