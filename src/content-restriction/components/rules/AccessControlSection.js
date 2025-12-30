@@ -13,6 +13,7 @@ const AccessControlSection = ({
 	onAccessControlChange,
 	contentTargets = [],
 	onContentTargetsChange,
+	conditions
 }) => {
 	const conditionValueInputWrapperRef = useRef(null);
 
@@ -22,7 +23,7 @@ const AccessControlSection = ({
 			type: option.value,
 			label: option.label,
 			value: option.value === "whole_site" ? "whole_site" : [],
-			taxonomy: option.value === "taxonomy" ? "" : undefined,
+			taxonomy: option.value === "taxonomy" ? "" : undefined
 		};
 		onContentTargetsChange([...contentTargets, newContentTarget]);
 	};
@@ -35,7 +36,9 @@ const AccessControlSection = ({
 	};
 
 	const handleContentTargetRemove = (targetId) => {
-		const updatedTargets = contentTargets.filter((target) => target.id !== targetId);
+		const updatedTargets = contentTargets.filter(
+			(target) => target.id !== targetId
+		);
 		onContentTargetsChange(updatedTargets);
 	};
 
@@ -49,11 +52,19 @@ const AccessControlSection = ({
 	useEffect(() => {
 		if (conditionValueInputWrapperRef.current) {
 			if (accessControl === "access") {
-				conditionValueInputWrapperRef.current.classList.add("urcr-access-content");
-				conditionValueInputWrapperRef.current.classList.remove("urcr-restrict-content");
+				conditionValueInputWrapperRef.current.classList.add(
+					"urcr-access-content"
+				);
+				conditionValueInputWrapperRef.current.classList.remove(
+					"urcr-restrict-content"
+				);
 			} else {
-				conditionValueInputWrapperRef.current.classList.add("urcr-restrict-content");
-				conditionValueInputWrapperRef.current.classList.remove("urcr-access-content");
+				conditionValueInputWrapperRef.current.classList.add(
+					"urcr-restrict-content"
+				);
+				conditionValueInputWrapperRef.current.classList.remove(
+					"urcr-access-content"
+				);
 			}
 		}
 	}, [accessControl]);
@@ -63,17 +74,25 @@ const AccessControlSection = ({
 		if (!isProAccess() && newValue === "restrict") {
 			return;
 		}
-		
+
 		if (conditionValueInputWrapperRef.current) {
 			if (newValue === "access") {
-				conditionValueInputWrapperRef.current.classList.add("urcr-access-content");
-				conditionValueInputWrapperRef.current.classList.remove("urcr-restrict-content");
+				conditionValueInputWrapperRef.current.classList.add(
+					"urcr-access-content"
+				);
+				conditionValueInputWrapperRef.current.classList.remove(
+					"urcr-restrict-content"
+				);
 			} else {
-				conditionValueInputWrapperRef.current.classList.add("urcr-restrict-content");
-				conditionValueInputWrapperRef.current.classList.remove("urcr-access-content");
+				conditionValueInputWrapperRef.current.classList.add(
+					"urcr-restrict-content"
+				);
+				conditionValueInputWrapperRef.current.classList.remove(
+					"urcr-access-content"
+				);
 			}
 		}
-		
+
 		onAccessControlChange(newValue);
 	};
 
@@ -86,9 +105,16 @@ const AccessControlSection = ({
 
 	const getAccessControlOptions = () => {
 		return [
-			...(isProAccess() ? [{ value: "restrict", label: __("Restrict", "user-registration") }] : []),
-			{ value: "access", label: __("Access", "user-registration") },
-		].map(option => ({
+			...(isProAccess()
+				? [
+						{
+							value: "restrict",
+							label: __("Restrict", "user-registration")
+						}
+				  ]
+				: []),
+			{ value: "access", label: __("Access", "user-registration") }
+		].map((option) => ({
 			...option,
 			disabled: !isProAccess() && option.value === "restrict"
 		}));
@@ -97,11 +123,16 @@ const AccessControlSection = ({
 	return (
 		<div className="urcr-target-selection-section ur-d-flex ur-align-items-start">
 			{/* Access/Restrict Section */}
-			<div className="urcr-condition-value-input-wrapper" ref={conditionValueInputWrapperRef}>
+			<div
+				className="urcr-condition-value-input-wrapper"
+				ref={conditionValueInputWrapperRef}
+			>
 				<DropdownButton
 					buttonContent={
 						<>
-							<span className="urcr-dropdown-button-text">{getAccessControlLabel()}</span>
+							<span className="urcr-dropdown-button-text">
+								{getAccessControlLabel()}
+							</span>
 							<span className="urcr-dropdown-button-arrow dashicons dashicons-arrow-down-alt2"></span>
 						</>
 					}
@@ -119,17 +150,29 @@ const AccessControlSection = ({
 					<div className="urcr-target-type-group">
 						{contentTargets.map((target) => (
 							<div key={target.id} className="urcr-target-item">
-								<span className="urcr-target-type-label">{target.label}:</span>
+								<span className="urcr-target-type-label">
+									{target.label.replace(/_/g, " ")}:
+								</span>
 								<ContentValueInput
 									contentType={target.type}
 									value={target.value}
-									onChange={(newValue) => handleContentTargetUpdate(target.id, newValue)}
+									onChange={(newValue) =>
+										handleContentTargetUpdate(
+											target.id,
+											newValue
+										)
+									}
 								/>
 								<button
 									type="button"
 									className="button-link urcr-target-remove"
-									onClick={() => handleContentTargetRemove(target.id)}
-									aria-label={__("Remove", "user-registration")}
+									onClick={() =>
+										handleContentTargetRemove(target.id)
+									}
+									aria-label={__(
+										"Remove",
+										"user-registration"
+									)}
 								>
 									<span className="dashicons dashicons-no-alt"></span>
 								</button>
@@ -154,6 +197,8 @@ const AccessControlSection = ({
 						<ContentTypeDropdown
 							onSelect={handleAfterContentTypeSelection}
 							existingContentTypes={contentTargets}
+							conditions={conditions}
+							accessControl={accessControl}
 						/>
 					)}
 				/>
@@ -163,6 +208,3 @@ const AccessControlSection = ({
 };
 
 export default AccessControlSection;
-
-
-

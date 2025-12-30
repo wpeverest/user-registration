@@ -8,8 +8,6 @@ import {
 	Input,
 	Textarea,
 	Box,
-	FormControl,
-	FormLabel,
 	useColorModeValue,
 	Collapse,
 	Icon,
@@ -18,8 +16,7 @@ import {
 	AlertIcon,
 	Select,
 	Skeleton,
-	Flex,
-	Divider
+	Flex
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import { useStateValue } from "../../context/StateProvider";

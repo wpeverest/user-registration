@@ -5193,8 +5193,14 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			}
 		}
 
-		// Check if email template is selected.
-		if ( '' !== $template && 'none' !== $template ) {
+		// Normalize template value - handle null, empty, false, 0, and 'none' cases.
+		// Convert to string and trim whitespace for consistent comparison.
+		$template = is_null( $template ) ? '' : (string) $template;
+		$template = trim( $template );
+
+		// Check if email template is selected and not 'none'.
+		// If template is empty or 'none', use email-wrapper.php template.
+		if ( '' !== $template && 'none' !== strtolower( $template ) ) {
 			/**
 			 * Filters the email template message.
 			 *
@@ -5203,38 +5209,12 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			 * an opportunity to customize the email content based on the original content and the template.
 			 *
 			 * @param string $email_content The original content of the email template.
-			 * @param string $template The template being used for the email.
+			 * @param string $template      The template being used for the email.
 			 */
 			$email_content = apply_filters( 'user_registration_email_template_message', $email_content, $template );
 		} else {
-			$default_width = '50%';
-
-			/**
-			 * Filters to change the email body width.
-			 *
-			 * The 'user_registration_email_body_width' filter allows developers to modify
-			 * the width of the email body used during the user registration process. It provides
-			 * an opportunity to customize the width of the email body based as per user requirements.
-			 *
-			 * @param string $default_width The default width.
-			 */
-			$email_body_width = apply_filters( 'user_registration_email_body_width', $default_width );
-			ob_start();
-			?>
-			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
-				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
-					   style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
-					<tbody>
-					<tr>
-						<td colspan="2" style="text-align: left;">
-							<?php echo wp_kses_post( $email_content ); ?>
-						</td>
-					</tr>
-					</tbody>
-				</table>
-			</div>
-			<?php
-			$email_content = wp_kses_post( ob_get_clean() );
+			// Use wrapper function to process email content with email-wrapper.php template.
+			$email_content = ur_process_email_content_wrapper( $email_content );
 		}
 
 		return $email_content;
@@ -5319,6 +5299,59 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 	<div class="email-wrapper-outer" style="font-family: Arial, sans-serif; padding: 100px 0; background-color: #ffffff;">
 	<div class="email-wrapper-inner" style="width: ' . esc_attr( $email_width ) . '; max-width: ' . esc_attr( $max_width ) . '; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
 	<div class="email-body" style="padding: 30px; background-color: #ffffff;">' . $body_content . '</div></div></div>';
+	}
+}
+
+if ( ! function_exists( 'ur_get_email_template_wrapper' ) ) {
+	/**
+	 * Wraps email body content using email-wrapper.php template (Free version).
+	 *
+	 * @param string $body_content Email body content to wrap.
+	 * @param bool   $wrap Whether to wrap the content. Default true.
+	 * @param array  $values Values for smart tag processing (not used in free version).
+	 * @return string Wrapped email content.
+	 */
+	function ur_get_email_template_wrapper( $body_content, $wrap = true, $values = array() ) {
+		// If wrap is false, return only the body content (for editor display).
+		if ( ! $wrap ) {
+			return $body_content;
+		}
+
+		// Locate the email wrapper template.
+		$template_path = ur_locate_template( 'emails/email-wrapper.php' );
+
+		// If template file exists, use it.
+		if ( $template_path && file_exists( $template_path ) ) {
+			ob_start();
+			// Make body_content available to the template.
+			include $template_path;
+			return ob_get_clean();
+		}
+
+		// Fallback to ur_wrap_email_body_content if template not found.
+		return ur_wrap_email_body_content( $body_content );
+	}
+}
+
+if ( ! function_exists( 'ur_process_email_content_wrapper' ) ) {
+	/**
+	 * Process email content with wrapper and smart tags.
+	 * This function handles the email wrapper logic for free version.
+	 *
+	 * @param string $email_content Email content to process.
+	 * @return string Processed email content with wrapper and smart tags.
+	 */
+	function ur_process_email_content_wrapper( $email_content ) {
+		// Use wrapper function to wrap email content with email-wrapper.php template.
+		if ( function_exists( 'ur_get_email_template_wrapper' ) ) {
+			$email_content = ur_get_email_template_wrapper( $email_content, true );
+		}
+
+		// Process smart tags in the wrapped content.
+		// This ensures smart tags are processed after wrapping.
+		$email_content = apply_filters( 'user_registration_process_smart_tags', $email_content, array(), array() );
+
+		return $email_content;
 	}
 }
 
@@ -6989,13 +7022,24 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 		}
 		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
 
-		$membership = $members_repository->get_member_membership_by_id( get_current_user_id() );
+		$user_memberships = $members_repository->get_member_membership_by_id( get_current_user_id() );
 
-		if ( empty( $membership ) ) {
+		if ( empty( $user_memberships ) ) {
 			return;
 		}
 
-		if ( in_array( $membership['status'], array( 'pending', 'inactive' ) ) ) {
+		$active_memberships = array_filter(
+			array_map(
+				function ( $user_memberships ) {
+					if ( ! empty( $user_memberships['status'] ) && ! in_array( $user_memberships['status'], array( 'pending', 'inactive' ) ) ) {
+						return $user_memberships['post_id'];
+					}
+				},
+				$user_memberships
+			)
+		);
+
+		if ( count( $active_memberships ) < 1 ) {
 			wp_logout();
 		}
 	}
@@ -10761,6 +10805,232 @@ if ( ! function_exists( 'urcr_get_custom_rules_count' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_pro_get_form_fields' ) ) {
+	/**
+	 * Get form fields.
+	 *
+	 * @param int $form_id Registration Form ID.
+	 * @return array|WP_Error
+	 */
+	function ur_pro_get_form_fields( $form_id ) {
+		$form   = get_post( $form_id );
+		$fields = array();
+
+		if ( $form && 'user_registration' === $form->post_type ) {
+			$form_field_array = json_decode( $form->post_content );
+
+			if ( $form_field_array ) {
+
+				foreach ( $form_field_array as $post_content_row ) {
+					foreach ( $post_content_row as $post_content_grid ) {
+						foreach ( $post_content_grid as $field ) {
+							if ( isset( $field->field_key ) && ! in_array( $field->field_key, ur_pro_get_excluded_fields() ) ) {
+								$field_name        = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
+								$field_label       = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
+								$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
+								$placeholder       = isset( $field->general_setting->placeholder ) ? $field->general_setting->placeholder : '';
+								$options           = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
+								$field_key         = isset( $field->field_key ) ? ( $field->field_key ) : '';
+								$field_type        = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
+								$required          = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
+								$required          = ur_string_to_bool( $required );
+								$enable_cl         = isset( $field->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $field->advance_setting->enable_conditional_logic );
+								$cl_map            = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
+								$custom_attributes = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
+								$default           = '';
+
+								if ( isset( $field->general_setting->default_value ) ) {
+									$default = $field->general_setting->default_value;
+								} elseif ( isset( $field->advance_setting->default_value ) ) {
+									$default = $field->advance_setting->default_value;
+								}
+
+								if ( empty( $field_label ) ) {
+									$field_label_array = explode( '_', $field_name );
+									$field_label       = join( ' ', array_map( 'ucwords', $field_label_array ) );
+								}
+
+								if ( ! empty( $field_name ) ) {
+									$extra_params = array();
+
+									switch ( $field_key ) {
+
+										case 'radio':
+										case 'select':
+											$advanced_options        = isset( $field->advance_setting->options ) ? $field->advance_setting->options : '';
+											$advanced_options        = explode( ',', $advanced_options );
+											$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
+											$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
+
+											$extra_params['options'] = array_combine( $extra_params['options'], $extra_params['options'] );
+
+											break;
+
+										case 'checkbox':
+											$advanced_options        = isset( $field->advance_setting->choices ) ? $field->advance_setting->choices : '';
+											$advanced_options        = explode( ',', $advanced_options );
+											$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
+											$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
+
+											$extra_params['options'] = array_combine( $extra_params['options'], $extra_params['options'] );
+
+											break;
+
+										case 'date':
+											$date_format       = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
+											$min_date          = isset( $field->advance_setting->min_date ) ? str_replace( '/', '-', $field->advance_setting->min_date ) : '';
+											$max_date          = isset( $field->advance_setting->max_date ) ? str_replace( '/', '-', $field->advance_setting->max_date ) : '';
+											$set_current_date  = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
+											$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
+											$extra_params['custom_attributes']['data-date-format'] = $date_format;
+
+											if ( isset( $field->advance_setting->enable_min_max ) && ur_string_to_bool( $field->advance_setting->enable_min_max ) ) {
+												$extra_params['custom_attributes']['data-min-date'] = '' !== $min_date ? date_i18n( $date_format, strtotime( $min_date ) ) : '';
+												$extra_params['custom_attributes']['data-max-date'] = '' !== $max_date ? date_i18n( $date_format, strtotime( $max_date ) ) : '';
+											}
+											$extra_params['custom_attributes']['data-default-date'] = $set_current_date;
+											$extra_params['custom_attributes']['data-mode']         = $enable_date_range;
+											break;
+
+										case 'country':
+											$class_name              = ur_load_form_field_class( $field_key );
+											$extra_params['options'] = $class_name::get_instance()->get_selected_countries( $form_id, $field_name );
+											break;
+
+										case 'file':
+											$extra_params['max_files'] = isset( $field->general_setting->max_files ) ? $field->general_setting->max_files : '';
+											break;
+
+										case 'phone':
+											$extra_params['phone_format'] = isset( $field->general_setting->phone_format ) ? $field->general_setting->phone_format : '';
+											break;
+										case 'learndash_course':
+											$extra_params['learndash_field_type'] = isset( $field->general_setting->learndash_field_type ) ? $field->general_setting->learndash_field_type : '';
+											if ( isset( $field->advance_setting->enroll_type ) ) {
+												if ( 'courses' === $field->advance_setting->enroll_type ) {
+													$extra_params['options'] = function_exists( 'get_courses_list' ) ? get_courses_list() : array();
+												} else {
+													$extra_params['options'] = function_exists( 'get_groups_list' ) ? get_groups_list() : array();
+												}
+											}
+											break;
+
+										default:
+											break;
+									}
+
+									$extra_params['default'] = $default;
+
+									$fields[ 'user_registration_' . $field_name ] = array(
+										'label'       => ur_string_translation( $form_id, 'user_registration_' . $field_name . '_label', $field_label ),
+										'description' => ur_string_translation( $form_id, 'user_registration_' . $field_name . '_description', $field_description ),
+										'type'        => $field_type,
+										'placeholder' => ur_string_translation( $form_id, 'user_registration_' . $field_name . '_placeholder', $placeholder ),
+										'field_key'   => $field_key,
+										'required'    => $required,
+									);
+
+									if ( true === $enable_cl ) {
+										$fields[ 'user_registration_' . $field_name ]['enable_conditional_logic'] = $enable_cl;
+										$fields[ 'user_registration_' . $field_name ]['cl_map']                   = $cl_map;
+									}
+
+									if ( count( $custom_attributes ) > 0 ) {
+										$extra_params['custom_attributes'] = $custom_attributes;
+									}
+
+									if ( isset( $fields[ 'user_registration_' . $field_name ] ) && count( $extra_params ) > 0 ) {
+										$fields[ 'user_registration_' . $field_name ] = array_merge( $fields[ 'user_registration_' . $field_name ], $extra_params );
+									}
+									$filter_data = array(
+										'fields'     => $fields,
+										'field'      => $field,
+										'field_name' => $field_name,
+									);
+
+									$filtered_data_array = apply_filters( 'user_registration_profile_account_filter_' . $field_key, $filter_data, $form_id );
+									if ( isset( $filtered_data_array['fields'] ) ) {
+										$fields = $filtered_data_array['fields'];
+									}
+								}// End if().
+							}
+						}// End foreach().
+					}// End foreach().
+				}// End foreach().
+			}
+		} else {
+			return new WP_Error( 'form-not-found', __( 'Form not found!', 'user-registration' ) );
+		}
+
+		return apply_filters( 'user_registration_pro_form_field_list', $fields );
+	}
+}
+
+if ( ! function_exists( 'ur_pro_get_excluded_fields' ) ) {
+	/**
+	 * Get Excluded fields.
+	 */
+	function ur_pro_get_excluded_fields() {
+		$excluded_fields = array(
+			'user_confirm_password',
+			'user_confirm_email',
+			'section_title',
+		);
+
+		return apply_filters( 'user_registration_pro_excluded_fields', $excluded_fields );
+	}
+}
+
+/**
+ * Get the count of membership rules.
+ * This function checks for content access rules with rule_type = 'membership'.
+ *
+ * @return int The count of membership rules.
+ * @since 4.4.8
+ */
+if ( ! function_exists( 'ur_get_membership_rules_count' ) ) {
+	function ur_get_membership_rules_count() {
+		// Check if membership module is active
+		if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'membership' ) ) {
+			return 0;
+		}
+
+		// Check if post type exists, if not query directly from database
+		if ( post_type_exists( 'urcr_access_rule' ) ) {
+			$membership_rules = get_posts(
+				array(
+					'post_type'      => 'urcr_access_rule',
+					'post_status'    => 'any',
+					'posts_per_page' => -1,
+					'meta_query'     => array(
+						array(
+							'key'   => 'urcr_rule_type',
+							'value' => 'membership',
+						),
+					),
+				)
+			);
+			return is_array( $membership_rules ) ? count( $membership_rules ) : 0;
+		} else {
+			// Post type not registered yet, query directly from database
+			global $wpdb;
+			$count = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(DISTINCT p.ID)
+					FROM {$wpdb->posts} p
+					INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
+					WHERE p.post_type = %s
+					AND pm.meta_key = %s
+					AND pm.meta_value = %s",
+					'urcr_access_rule',
+					'urcr_rule_type',
+					'membership'
+				)
+			);
+			return absint( $count );
+		}
+	}
+}
 
 if ( ! function_exists( 'ur_get_country_lists') ) {
 
@@ -11253,6 +11523,5 @@ if ( ! function_exists( 'ur_get_currency_by_key' ) ) {
 		$name = sprintf( '%s', $curreny_details[ $currency_key ] );
 
 		return apply_filters( 'ur_get_currency_by_key', $name );
-
 	}
 }

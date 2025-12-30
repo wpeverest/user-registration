@@ -14,10 +14,12 @@
 @import "forms";
 
 // Components
-@import "components/accordion", "components/badge", "components/button", "components/card", "components/bulkactions", "components/tags",
-"components/list-group", "components/modal", "components/nav", "components/search", "components/typography",
-"components/scroll-ui", "components/dropdown", "components/input", "components/toggle", "components/navigation";
-
+@import "components/accordion", "components/badge", "components/button",
+	"components/card", "components/bulkactions", "components/tags",
+	"components/list-group", "components/modal", "components/nav",
+	"components/search", "components/typography", "components/scroll-ui",
+	"components/dropdown", "components/input", "components/toggle",
+	"components/navigation";
 
 @import "border";
 @import "spacing";
@@ -47,11 +49,9 @@
 // }
 
 body {
-
 	&.user-registration,
 	&.user-registration-page {
 		#wpbody-content {
-
 			.ur-admin-page-topnav,
 			.memberships,
 			div[class*="user-registration-"],
@@ -67,7 +67,17 @@ body {
 			p,
 			small,
 			label {
-				font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+				font-family:
+					"Inter",
+					-apple-system,
+					BlinkMacSystemFont,
+					"Segoe UI",
+					Roboto,
+					Oxygen-Sans,
+					Ubuntu,
+					Cantarell,
+					"Helvetica Neue",
+					sans-serif;
 			}
 		}
 	}
@@ -82,7 +92,6 @@ body {
 
 	&[class*="user-registration-"],
 	&[class^="ur-"] {
-
 		/* Minimal WordPress Editor Styles */
 		.wp-editor-container {
 			border-radius: 8px !important;
@@ -103,7 +112,7 @@ body {
 				margin-bottom: 0 !important;
 				padding: 6px 8px !important;
 
-				&-grp>div {
+				&-grp > div {
 					padding: 0;
 				}
 
@@ -262,7 +271,7 @@ body {
 .toplevel_page_user-registration,
 .user-registration-membership_page_user-registration-frontend-list {
 	#screen-meta {
-		background-color: #FAFAFA;
+		background-color: #fafafa;
 		margin: 10px;
 
 		input.button {
@@ -299,7 +308,7 @@ body {
 }
 
 .user-registration-membership_page_user-registration-settings {
-	background-color: #FAFAFA;
+	background-color: #fafafa;
 
 	.notice {
 		display: none;
@@ -329,7 +338,6 @@ body {
 
 .user-registration {
 	&__wrap {
-
 		*,
 		::before,
 		::after {
@@ -533,7 +541,6 @@ body {
 			.plugin-card-bottom {
 				.action-buttons {
 					.button.updating-message {
-
 						&::before,
 						&::after {
 							margin-top: -1px;
@@ -570,7 +577,6 @@ body {
 .user-registration-membership_page_add-new-registration,
 .toplevel_page_user-registration,
 .user-registration-membership_page_user-registration-login-forms {
-
 	#wpfooter {
 		display: none; //Hide WP footer on form builder page
 	}
@@ -752,7 +758,8 @@ body {
 			border: 0;
 			border-left: 1px solid $border_color;
 			background-color: transparent;
-			transition: color 0.1s ease-in-out,
+			transition:
+				color 0.1s ease-in-out,
 				background 0.1s ease-in-out;
 
 			&::before {
@@ -1021,7 +1028,6 @@ body {
 		}
 
 		input {
-
 			&[type="radio"],
 			&[type="checkbox"] {
 				opacity: 1;
@@ -1057,7 +1063,6 @@ body {
 				}
 
 				input {
-
 					&[type="radio"],
 					&[type="checkbox"] {
 						display: none;
@@ -1250,7 +1255,7 @@ body {
 							z-index: 0;
 							transform: translateY(-50%);
 							opacity: 0;
-							transition: all .3s ease-in-out;
+							transition: all 0.3s ease-in-out;
 						}
 
 						&::after {
@@ -1270,7 +1275,10 @@ body {
 							}
 
 							&::after {
-								filter: brightness(0) saturate(100%) invert(35%) sepia(13%) saturate(3079%) hue-rotate(194deg) brightness(96%) contrast(89%);
+								filter: brightness(0) saturate(100%) invert(35%)
+									sepia(13%) saturate(3079%)
+									hue-rotate(194deg) brightness(96%)
+									contrast(89%);
 							}
 						}
 					}
@@ -1315,7 +1323,9 @@ body {
 							}
 
 							&::after {
-								filter: invert(36%) sepia(58%) saturate(767%) hue-rotate(193deg) brightness(84%) contrast(88%);
+								filter: invert(36%) sepia(58%) saturate(767%)
+									hue-rotate(193deg) brightness(84%)
+									contrast(88%);
 							}
 						}
 
@@ -1468,7 +1478,8 @@ body {
 						line-height: 24px;
 
 						&:focus {
-							box-shadow: 0 0 0 0px transparent,
+							box-shadow:
+								0 0 0 0px transparent,
 								0 0 0px 0px transparent;
 						}
 
@@ -1517,7 +1528,7 @@ body {
 								line-height: 18px;
 								border-radius: $border_radius_4;
 								padding: $spacing_16px $spacing_18px;
-								box-shadow: 0 6px 24px 0 rgba(10, 10, 10, .1);
+								box-shadow: 0 6px 24px 0 rgba(10, 10, 10, 0.1);
 							}
 						}
 
@@ -1562,7 +1573,7 @@ body {
 					padding-bottom: $spacing_16px;
 					margin-bottom: 0;
 
-					~hr {
+					~ hr {
 						display: none;
 						border-top: 1px solid $border-color;
 						margin: 0;
@@ -1628,7 +1639,7 @@ body {
 		position: relative;
 		flex: 1;
 		height: calc(100vh - 89px);
-		background: #F4F4F4;
+		background: #f4f4f4;
 		border-left: 1px solid $border_color;
 		overflow-y: auto;
 
@@ -1731,7 +1742,8 @@ body {
 
 					&:first-child {
 						border-radius: 0 0 0 $border_radius_4;
-						border-right: $border_width solid transparentize($white, 0.8);
+						border-right: $border_width solid
+							transparentize($white, 0.8);
 					}
 
 					&:nth-child(2) {
@@ -1841,7 +1853,8 @@ body {
 						}
 
 						&.ui-sortable-helper {
-							box-shadow: 0 0 10px 5px transparentize($gray_base, 0.9);
+							box-shadow: 0 0 10px 5px
+								transparentize($gray_base, 0.9);
 						}
 
 						&.ui-sortable-placeholder {
@@ -1946,7 +1959,7 @@ body {
 						}
 					}
 
-					>li.ur-item-dragged {
+					> li.ur-item-dragged {
 						list-style: none;
 						width: 100%;
 						text-align: center;
@@ -2159,14 +2172,14 @@ body {
 				display: flex;
 				background: transparent;
 				border-radius: $border_radius_4;
-				transition: all .3s;
+				transition: all 0.3s;
 				cursor: pointer;
 
 				svg {
 					width: 14px;
 					height: 14px;
 					fill: #131313;
-					opacity: .6;
+					opacity: 0.6;
 				}
 
 				&:hover {
@@ -2227,7 +2240,7 @@ body {
 				gap: $spacing_20px;
 				padding: $spacing_12px;
 				border-radius: $border_radius_7;
-				transition: all .3s;
+				transition: all 0.3s;
 				color: $color_gray_one;
 				outline: none;
 
@@ -2235,7 +2248,6 @@ body {
 					outline: none;
 					box-shadow: none;
 				}
-
 
 				&:hover {
 					background: #f9fafb;
@@ -2279,7 +2291,7 @@ body {
 					font-size: 14px;
 					font-weight: $medium;
 					color: #1f2937;
-					transition: all .3s;
+					transition: all 0.3s;
 				}
 
 				&-desc {
@@ -2299,7 +2311,7 @@ body {
 					justify-content: center;
 					border: $border_width solid $border_color;
 					cursor: pointer;
-					transition: all .3s;
+					transition: all 0.3s;
 
 					&:hover {
 						color: $primary_color;
@@ -2404,7 +2416,6 @@ body {
 			}
 
 			.ur-multiple-choice .ur-subscription-plan {
-
 				.ur-regular-price,
 				.ur-selling-price {
 					display: grid;
@@ -2426,7 +2437,7 @@ body {
 					margin-right: 0;
 				}
 
-				>input[type="text"] {
+				> input[type="text"] {
 					width: 80%;
 				}
 
@@ -2526,7 +2537,7 @@ body {
 		flex-wrap: wrap;
 		margin-bottom: $spacing_8px;
 
-		>div {
+		> div {
 			margin-right: $spacing_8px;
 		}
 
@@ -2842,7 +2853,8 @@ body {
 			&.entered {
 				display: block;
 				height: 50px;
-				animation: 240ms cubic-bezier(0.175, 0.885, 0.32, 1.175) 0s 1 normal both open-message;
+				animation: 240ms cubic-bezier(0.175, 0.885, 0.32, 1.175) 0s 1
+					normal both open-message;
 
 				.ur-error {
 					display: flex;
@@ -2863,7 +2875,8 @@ body {
 
 			&.exiting {
 				display: block;
-				animation: 120ms cubic-bezier(0.4, 0, 1, 1) 0s 1 normal both close-message;
+				animation: 120ms cubic-bezier(0.4, 0, 1, 1) 0s 1 normal both
+					close-message;
 			}
 
 			&:first-child {
@@ -2930,12 +2943,11 @@ body {
 
 @media screen and (max-width: 782px) {
 	body.user-registration-membership_page_add-new-registration {
-		background-color: #FAFAFA;
+		background-color: #fafafa;
 		min-width: 0 !important;
 	}
 
 	.ur-registered-from {
-
 		.ur-registered-inputs {
 			width: 300px !important;
 			margin-bottom: $spacing_10px;
@@ -2959,7 +2971,8 @@ body {
 }
 
 @media screen and (max-width: 600px) {
-	.user-registration-membership_page_add-new-registration .major-publishing-actions {
+	.user-registration-membership_page_add-new-registration
+		.major-publishing-actions {
 		clear: both;
 		padding: 10px 0 19px;
 		line-height: 28px;
@@ -3022,7 +3035,6 @@ body {
 		}
 	}
 
-
 	.user-registration-toggle-form {
 		position: relative;
 		display: inline-block;
@@ -3036,15 +3048,15 @@ body {
 			height: 22px;
 			width: 40px;
 
-			&:checked+.slider {
+			&:checked + .slider {
 				background-color: $primary_color;
 			}
 
-			&:focus+.slider {
+			&:focus + .slider {
 				box-shadow: 0 0 1px #2196f3;
 			}
 
-			&:checked+.slider::before {
+			&:checked + .slider::before {
 				transform: translateX(16px);
 			}
 		}
@@ -3316,7 +3328,6 @@ body {
 				}
 
 				&.loading {
-
 					.ur-button,
 					.ur-button::before,
 					.ur-button::after {
@@ -3360,7 +3371,6 @@ body {
 					}
 
 					@-webkit-keyframes load1 {
-
 						0%,
 						80%,
 						100% {
@@ -3375,7 +3385,6 @@ body {
 					}
 
 					@keyframes load1 {
-
 						0%,
 						80%,
 						100% {
@@ -3474,7 +3483,8 @@ body {
 					margin-right: 0;
 					border-left: 3px solid #f27474;
 					justify-content: flex-start;
-					padding: $spacing_12px $spacing_6px $spacing_12px $spacing_6px;
+					padding: $spacing_12px $spacing_6px $spacing_12px
+						$spacing_6px;
 				}
 			}
 
@@ -3553,7 +3563,8 @@ body {
 								transform-origin: left top;
 								border-top: 2px solid $color_gray-lighten;
 								border-right: 2px solid $color_gray-lighten;
-								transform: scaleX(-1) rotate(135deg) translate(-58%, -40%);
+								transform: scaleX(-1) rotate(135deg)
+									translate(-58%, -40%);
 							}
 						}
 
@@ -3680,7 +3691,7 @@ a.button.ur-smart-tags-list-button {
 }
 
 .user-registration-membership_page_user-registration-login-forms {
-	background-color: #FAFAFA;
+	background-color: #fafafa;
 
 	.ur-admin-page-topnav {
 		.ur-editing-tag {
@@ -3828,7 +3839,7 @@ a.button.ur-smart-tags-list-button {
 
 .user-registration-membership_page_add-new-registration,
 .toplevel_page_user-registration {
-	background-color: #FAFAFA;
+	background-color: #fafafa;
 
 	#nav-menu-header {
 		padding-right: $spacing_30px;
@@ -4039,7 +4050,7 @@ a.button.ur-smart-tags-list-button {
 	.ur-builder-wrapper {
 		.ur-selected-inputs {
 			padding: $spacing_30px;
-			background: #F4F4F4;
+			background: #f4f4f4;
 
 			.ur-login-form-wrapper {
 				display: flex;
@@ -4095,7 +4106,8 @@ a.button.ur-smart-tags-list-button {
 						font-size: 22px;
 						line-height: 130%;
 						color: $grey-500;
-						padding: $spacing_4px $spacing_8px $spacing_4px $spacing_12px;
+						padding: $spacing_4px $spacing_8px $spacing_4px
+							$spacing_12px;
 						margin: 0;
 						border: $border_width solid transparent;
 						border-radius: 0;
@@ -4252,7 +4264,6 @@ a.button.ur-smart-tags-list-button {
 							}
 
 							&.very-weak {
-
 								&:hover,
 								&.active {
 									label {
@@ -4264,7 +4275,6 @@ a.button.ur-smart-tags-list-button {
 							}
 
 							&.weak {
-
 								&:hover,
 								&.active {
 									label {
@@ -4276,7 +4286,6 @@ a.button.ur-smart-tags-list-button {
 							}
 
 							&.medium {
-
 								&:hover,
 								&.active {
 									label {
@@ -4288,7 +4297,6 @@ a.button.ur-smart-tags-list-button {
 							}
 
 							&.strong {
-
 								&:hover,
 								&.active {
 									label {
@@ -4300,7 +4308,6 @@ a.button.ur-smart-tags-list-button {
 							}
 
 							&.custom {
-
 								&:hover,
 								&.active {
 									label {
@@ -4377,7 +4384,7 @@ a.button.ur-smart-tags-list-button {
 					.user-registration-card {
 						margin: $spacing_4px 0 $spacing_16px !important;
 						border-radius: $border_radius_4;
-						border: 1px solid #EDF2F7;
+						border: 1px solid #edf2f7;
 						background-color: #ffffff;
 
 						&:last-child {
@@ -4537,7 +4544,7 @@ a.button.ur-smart-tags-list-button {
 							flex: 1;
 							height: calc(100vh - 89px);
 							border-left: $border_width solid $border_color;
-							background: #F4F4F4;
+							background: #f4f4f4;
 
 							.ur-selected-inputs {
 								background: transparent;
@@ -4597,12 +4604,15 @@ a.button.ur-smart-tags-list-button {
 
 														.ur-copy-shortcode {
 															box-shadow: none;
-															transition: all 0.3s ease-in-out;
+															transition: all 0.3s
+																ease-in-out;
 
 															svg {
 																path {
 																	fill: $primary_color;
-																	transition: all 0.3s ease-in-out;
+																	transition: all
+																		0.3s
+																		ease-in-out;
 																}
 															}
 
@@ -4665,7 +4675,8 @@ a.button.ur-smart-tags-list-button {
 												display: flex;
 												align-items: center;
 												justify-content: center;
-												border-radius: 0 0 0 $border_radius_7;
+												border-radius: 0 0 0
+													$border_radius_7;
 												background: #676f8a;
 												top: 0;
 												right: 0;
@@ -4679,7 +4690,6 @@ a.button.ur-smart-tags-list-button {
 												color: $white;
 												font-size: 13px;
 												transform: scaleX(-1);
-
 											}
 										}
 
@@ -4702,17 +4712,26 @@ a.button.ur-smart-tags-list-button {
 		padding-left: 0;
 	}
 
-	.user-registration-membership_page_add-new-registration .ur-form-container #menu-management .menu-edit {
+	.user-registration-membership_page_add-new-registration
+		.ur-form-container
+		#menu-management
+		.menu-edit {
 		left: $spacing_36px !important;
 	}
 
-	.ur-registered-from .ur-registered-inputs .ur-tab-contents button#ur-collapse {
+	.ur-registered-from
+		.ur-registered-inputs
+		.ur-tab-contents
+		button#ur-collapse {
 		left: 448px;
 	}
 }
 
 @media screen and (max-width: 782px) {
-	.user-registration-membership_page_add-new-registration .ur-form-container #menu-management .menu-edit {
+	.user-registration-membership_page_add-new-registration
+		.ur-form-container
+		#menu-management
+		.menu-edit {
 		left: 0 !important;
 	}
 }
@@ -4744,7 +4763,7 @@ a.button.ur-smart-tags-list-button {
 								}
 
 								&-sub-details {
-									>p {
+									> p {
 										display: flex;
 										align-items: center;
 										gap: $spacing_8px;
@@ -4773,8 +4792,10 @@ a.button.ur-smart-tags-list-button {
 				td {
 					&:has(.user-registration-user-profile-info) {
 						display: grid;
-						grid-template-columns: repeat(auto-fill,
-								minmax(160px, 1fr));
+						grid-template-columns: repeat(
+							auto-fill,
+							minmax(160px, 1fr)
+						);
 						gap: $spacing_12px;
 						width: 760px;
 
@@ -4785,7 +4806,6 @@ a.button.ur-smart-tags-list-button {
 
 					.user-registration-user-profile-info {
 						input {
-
 							&[type="radio"],
 							&[type="checkbox"] {
 								display: none;
@@ -4841,7 +4861,7 @@ a.button.ur-smart-tags-list-button {
 
 						input[type="radio"],
 						input[type="checkbox"] {
-							&:checked~label {
+							&:checked ~ label {
 								color: #0693e3;
 								border-color: #0693e3;
 
@@ -4889,7 +4909,7 @@ a.button.ur-smart-tags-list-button {
 	padding: 10px 0px;
 	cursor: pointer;
 
-	&~.select2-container {
+	& ~ .select2-container {
 		visibility: hidden;
 		position: absolute;
 		right: 0;
@@ -4940,7 +4960,6 @@ a.button.ur-smart-tags-list-button {
 						}
 
 						li {
-
 							&.select2-results__option--highlighted,
 							&[data-selected="true"] {
 								background: #f8f8fa;
@@ -5165,7 +5184,7 @@ body.user-registration {
 
 				.user-registration-toggle-form {
 					input {
-						&:checked+.slider {
+						&:checked + .slider {
 							background-color: $green !important;
 						}
 					}
@@ -5214,7 +5233,7 @@ body.user-registration {
 			}
 		}
 
-		>.ur-button-primary {
+		> .ur-button-primary {
 			color: $grey-400;
 			font-size: 14px;
 			font-weight: $regular;
@@ -5274,7 +5293,6 @@ body.user-registration {
 	background: $grey-0;
 	border: $border_width solid $border_color;
 
-
 	.user-registration-list-table-header,
 	.user-registration-list-table-heading {
 		display: flex;
@@ -5309,7 +5327,7 @@ body.user-registration {
 			border-radius: $border_radius_4;
 			font-weight: $medium;
 			text-decoration: none;
-			transition: all .3s ease-in-out;
+			transition: all 0.3s ease-in-out;
 			box-sizing: border-box;
 			display: flex;
 			align-items: center;
@@ -5397,7 +5415,7 @@ body.user-registration {
 						padding: $spacing_6px $spacing_14px;
 						border-radius: $border_radius_4;
 						border: $border_width solid $primary_color;
-						background: #F6F7F7;
+						background: #f6f7f7;
 						color: $primary_color;
 						font-size: 14px;
 						font-weight: $regular;
@@ -5501,7 +5519,7 @@ body.user-registration {
 			width: 275px;
 			position: relative;
 
-			>p {
+			> p {
 				display: none;
 			}
 
@@ -5614,7 +5632,6 @@ body.user-registration {
 		thead,
 		tfoot {
 			tr {
-
 				td,
 				th {
 					border-bottom-color: $border_color;
@@ -5734,7 +5751,7 @@ body.user-registration {
 					}
 
 					.row-actions {
-						>span {
+						> span {
 							font-weight: $regular;
 
 							a {
@@ -5748,7 +5765,6 @@ body.user-registration {
 
 		tfoot {
 			tr {
-
 				td,
 				th {
 					border-top-color: $border_color;
@@ -5855,7 +5871,7 @@ body.user-registration {
 				border: 0;
 				padding: 28px;
 				border-radius: $border_radius_8;
-				border: 1px solid #EDF2F7;
+				border: 1px solid #edf2f7;
 				background: $white;
 
 				#ur-coupon-form-container {
@@ -6069,7 +6085,6 @@ body.user-registration {
 			margin-bottom: 24px;
 
 			.ur-page-title__wrapper {
-
 				h1 {
 					margin: 0;
 					color: #222;
@@ -6191,7 +6206,8 @@ body.user-registration {
 									&#title {
 										width: 220px;
 									}
-									&#code, &#type {
+									&#code,
+									&#type {
 										width: 170px;
 									}
 
@@ -6225,7 +6241,8 @@ body.user-registration {
 								}
 							}
 
-							.coupon-active, .coupon-never {
+							.coupon-active,
+							.coupon-never {
 								font-weight: $medium;
 								color: #4cc741;
 							}
@@ -6371,8 +6388,10 @@ body.user-registration {
 
 					.icons-group {
 						display: grid;
-						grid-template-columns: repeat(auto-fill,
-								minmax(100px, 1fr));
+						grid-template-columns: repeat(
+							auto-fill,
+							minmax(100px, 1fr)
+						);
 						gap: 10px;
 						width: 100%;
 
@@ -6411,7 +6430,7 @@ body.user-registration {
 									&[type="radio"] {
 										display: none;
 
-										&:checked~.dashicons {
+										&:checked ~ .dashicons {
 											background: rgba(240, 242, 249, 1%);
 											border-color: $primary_color;
 										}
@@ -6589,10 +6608,12 @@ body {
 	font-family: "UserRegistration";
 	src: url("../fonts/UserRegistration.eot?v5p6f");
 	src:
-		url("../fonts/UserRegistration.eot?v5p6f#iefix") format("embedded-opentype"),
+		url("../fonts/UserRegistration.eot?v5p6f#iefix")
+			format("embedded-opentype"),
 		url("../fonts/UserRegistration.ttf?v5p6f") format("truetype"),
 		url("../fonts/UserRegistration.woff?v5p6f") format("woff"),
-		url("../fonts/UserRegistration.svg?v5p6f#UserRegistration") format("svg");
+		url("../fonts/UserRegistration.svg?v5p6f#UserRegistration")
+			format("svg");
 	font-weight: normal;
 	font-style: normal;
 	font-display: block;
@@ -6744,7 +6765,7 @@ body {
 body {
 	&.user-registration-membership_page_user-registration-login-forms {
 		overflow-x: hidden;
-		background-color: #F9FAFB;
+		background-color: #f9fafb;
 
 		.user-registration-login-form-container {
 			.ur-registered-from {
@@ -6785,7 +6806,8 @@ body {
 										}
 									}
 
-									label[for="user_registration_login_options_prevent_core_login"] span {
+									label[for="user_registration_login_options_prevent_core_login"]
+										span {
 										bottom: 18px;
 										right: 20px;
 									}
@@ -6855,7 +6877,8 @@ body {
 										}
 
 										.ur-copy-shortcode {
-											border-radius: 0 $border_radius_4 $border_radius_4 0;
+											border-radius: 0 $border_radius_4
+												$border_radius_4 0;
 										}
 									}
 
@@ -6927,21 +6950,28 @@ body {
 		.ur--loading--animate {
 			margin-bottom: 10px;
 			background: #ececec;
-			background-image: -webkit-linear-gradient(90deg,
-					#ddd 0px,
-					#e8e8e8 40px,
-					#ddd 80px);
-			background-image: -o-linear-gradient(90deg,
-					#ddd 0px,
-					#e8e8e8 40px,
-					#ddd 80px);
-			background-image: linear-gradient(90deg,
-					#ddd 0px,
-					#e8e8e8 40px,
-					#ddd 80px);
+			background-image: -webkit-linear-gradient(
+				90deg,
+				#ddd 0px,
+				#e8e8e8 40px,
+				#ddd 80px
+			);
+			background-image: -o-linear-gradient(
+				90deg,
+				#ddd 0px,
+				#e8e8e8 40px,
+				#ddd 80px
+			);
+			background-image: linear-gradient(
+				90deg,
+				#ddd 0px,
+				#e8e8e8 40px,
+				#ddd 80px
+			);
 			background-size: 250px;
 			border-radius: 10px;
-			-webkit-animation: shine-loading-container-items 0.6s infinite ease-out;
+			-webkit-animation: shine-loading-container-items 0.6s infinite
+				ease-out;
 			animation: shine-loading-container-items 0.6s infinite ease-out;
 
 			&.loading-btn {
@@ -6956,24 +6986,31 @@ body {
 
 		.ur--loading--animate--long {
 			background: #f4f4f4;
-			background-image: -webkit-linear-gradient(90deg,
-					#f4f4f4 0px,
-					#f8f8f8 40px,
-					#f8f8f8 70px,
-					#f4f4f4 80px);
-			background-image: -o-linear-gradient(90deg,
-					#f4f4f4 0px,
-					#f8f8f8 40px,
-					#f8f8f8 70px,
-					#f4f4f4 80px);
-			background-image: linear-gradient(90deg,
-					#f4f4f4 0px,
-					#f8f8f8 40px,
-					#f8f8f8 70px,
-					#f4f4f4 80px);
+			background-image: -webkit-linear-gradient(
+				90deg,
+				#f4f4f4 0px,
+				#f8f8f8 40px,
+				#f8f8f8 70px,
+				#f4f4f4 80px
+			);
+			background-image: -o-linear-gradient(
+				90deg,
+				#f4f4f4 0px,
+				#f8f8f8 40px,
+				#f8f8f8 70px,
+				#f4f4f4 80px
+			);
+			background-image: linear-gradient(
+				90deg,
+				#f4f4f4 0px,
+				#f8f8f8 40px,
+				#f8f8f8 70px,
+				#f4f4f4 80px
+			);
 			background-size: 1400px;
 			border-radius: 10px;
-			-webkit-animation: shine-loading-container-items-long 1s infinite ease-out;
+			-webkit-animation: shine-loading-container-items-long 1s infinite
+				ease-out;
 			animation: shine-loading-container-items-long 1s infinite ease-out;
 
 			&.circular {
@@ -7046,7 +7083,6 @@ body {
 // For RTL Options CSS
 .user-registration {
 	&.rtl {
-
 		input,
 		textarea,
 		select {
@@ -7147,7 +7183,10 @@ body {
 		width: 16px;
 	}
 
-	&.tooltipster-base .tooltipster-arrow .tooltipster-arrow-uncropped .tooltipster-arrow-border {
+	&.tooltipster-base
+		.tooltipster-arrow
+		.tooltipster-arrow-uncropped
+		.tooltipster-arrow-border {
 		border-top-color: #fff !important;
 		border-bottom-color: #fff !important;
 	}
@@ -7364,8 +7403,6 @@ body.user-registration {
 			margin: 0;
 			padding: 0;
 		}
-
-
 	}
 
 	#log-viewer {
@@ -7556,8 +7593,8 @@ body.user-registration {
 								&:hover {
 									background-color: $redLight;
 
-									&::before{
-										background:  $redLight;
+									&::before {
+										background: $redLight;
 										opacity: 1;
 									}
 
@@ -7569,7 +7606,7 @@ body.user-registration {
 
 							&::before {
 								content: "";
-								background:  $blue-25;
+								background: $blue-25;
 								position: absolute;
 								width: 24px;
 								height: 100%;
@@ -7577,7 +7614,8 @@ body.user-registration {
 								top: 0;
 								opacity: 0;
 								z-index: -1;
-								border-radius: $border_radius_3 0 0 $border_radius_3;
+								border-radius: $border_radius_3 0 0
+									$border_radius_3;
 								transition: all 0.2s ease-in-out;
 							}
 
@@ -7800,7 +7838,6 @@ body.user-registration {
 							}
 						}
 					}
-
 				}
 			}
 
@@ -7833,7 +7870,6 @@ body.user-registration {
 		.ur-info-wrap {
 			table {
 				tr {
-
 					th,
 					td {
 						padding: 5px;
@@ -7849,7 +7885,8 @@ body.user-registration {
 	}
 }
 
-.user-registration-membership_page_user-registration-users, .user-registration-membership_page_user-registration-members {
+.user-registration-membership_page_user-registration-users,
+.user-registration-membership_page_user-registration-members {
 	#wpbody-content {
 		#message {
 			display: none !important;
@@ -7880,9 +7917,9 @@ body.user-registration {
 	color: #ee9936 !important;
 }
 
-.user-registration-membership_page_user-registration-users, .user-registration-membership_page_user-registration-members {
+.user-registration-membership_page_user-registration-users,
+.user-registration-membership_page_user-registration-members {
 	#wpcontent {
-
 		@media (max-width: 782px) {
 			padding-left: $spacing_15px;
 		}
@@ -7953,28 +7990,28 @@ body.user-registration {
 	// 		margin-bottom: $spacing_16px;
 	// 	}
 
-		// &-title {
-		// 	display: flex !important;
-		// 	align-items: center;
-		// 	gap: $spacing_8px;
-		// 	text-align: left;
-		// 	font-size: 16px;
-		// 	font-weight: 600;
-		// 	line-height: 120%;
-		// 	padding-bottom: $spacing-16px;
-		// 	width: 100%;
-		// 	margin-bottom: 0;
-		// 	color: $grey-500;
+	// &-title {
+	// 	display: flex !important;
+	// 	align-items: center;
+	// 	gap: $spacing_8px;
+	// 	text-align: left;
+	// 	font-size: 16px;
+	// 	font-weight: 600;
+	// 	line-height: 120%;
+	// 	padding-bottom: $spacing-16px;
+	// 	width: 100%;
+	// 	margin-bottom: 0;
+	// 	color: $grey-500;
 
-		// 	img {
-		// 		width: 26px !important;
-		// 		height: 26px !important;
-		// 		background: #fff4f4;
-		// 		padding: $spacing_6px;
-		// 		box-sizing: border-box;
-		// 		border-radius: 50%;
-		// 	}
-		// }
+	// 	img {
+	// 		width: 26px !important;
+	// 		height: 26px !important;
+	// 		background: #fff4f4;
+	// 		padding: $spacing_6px;
+	// 		box-sizing: border-box;
+	// 		border-radius: 50%;
+	// 	}
+	// }
 
 	// 	&-content {
 	// 		padding-left: $spacing_20px;
@@ -7989,29 +8026,29 @@ body.user-registration {
 	// 		p {
 	// 			margin: 0;
 
-			// 	&#html {
-			// 		&_1 {
-			// 			margin: 0 0 $spacing_14px;
-			// 			color: $grey-400;
-			// 			font-size: 15px;
-			// 			font-weight: 500;
-			// 			line-height: 24px;
-			// 		}
+	// 	&#html {
+	// 		&_1 {
+	// 			margin: 0 0 $spacing_14px;
+	// 			color: $grey-400;
+	// 			font-size: 15px;
+	// 			font-weight: 500;
+	// 			line-height: 24px;
+	// 		}
 
-			// 		&_2 {
-			// 			display: flex;
-			// 			gap: $spacing_10px;
-			// 			color: #f25656;
-			// 			border-radius: $border_radius_3;
-			// 			padding: $spacing_10px $spacing_18px $spacing_10px
-			// 				$spacing_14px;
-			// 			background: #fff4f4;
-			// 			font-size: 13px;
-			// 			font-weight: 400;
-			// 			line-height: 23px;
-			// 		}
-			// 	}
-			// }
+	// 		&_2 {
+	// 			display: flex;
+	// 			gap: $spacing_10px;
+	// 			color: #f25656;
+	// 			border-radius: $border_radius_3;
+	// 			padding: $spacing_10px $spacing_18px $spacing_10px
+	// 				$spacing_14px;
+	// 			background: #fff4f4;
+	// 			font-size: 13px;
+	// 			font-weight: 400;
+	// 			line-height: 23px;
+	// 		}
+	// 	}
+	// }
 
 	// 		a {
 	// 			font-size: 12px;
@@ -8073,7 +8110,7 @@ body.user-registration {
 					padding: 0 16px;
 					border-radius: 4px;
 
-					>li {
+					> li {
 						padding-right: 0;
 						padding-bottom: 0;
 
@@ -8085,7 +8122,7 @@ body.user-registration {
 							flex-direction: column;
 						}
 
-						>p {
+						> p {
 							span {
 								font-weight: $regular;
 								color: #6b6b6b;
@@ -8095,7 +8132,7 @@ body.user-registration {
 						.ur-user-payment-multiple-choice {
 							padding-left: 12px;
 
-							>li {
+							> li {
 								padding: 0;
 								padding-bottom: 10px;
 
@@ -8142,7 +8179,11 @@ $border-top-color_1: #ff4f55;
 	flex-direction: row-reverse;
 }
 
-#user-registration-pro-single-user-view #user-registration-user-sidebar .sidebar-box ul li:has(a) {
+#user-registration-pro-single-user-view
+	#user-registration-user-sidebar
+	.sidebar-box
+	ul
+	li:has(a) {
 	a.active {
 		background: #505bbf;
 
@@ -8166,7 +8207,6 @@ $border-top-color_1: #ff4f55;
 			fill: white;
 		}
 	}
-
 }
 
 #user-registration-edit-user-body {
@@ -8199,7 +8239,7 @@ $border-top-color_1: #ff4f55;
 				}
 			}
 
-			input[type=text] {
+			input[type="text"] {
 				margin-bottom: 0;
 			}
 
@@ -8268,10 +8308,10 @@ $border-top-color_1: #ff4f55;
 	}
 
 	.user-registration-edit-user-form-details {
-        .ur-form-grid {
-            display: block;
-        }
-    }
+		.ur-form-grid {
+			display: block;
+		}
+	}
 
 	.hide-show-password {
 		position: absolute;
@@ -8368,16 +8408,13 @@ $border-top-color_1: #ff4f55;
 }
 
 .toplevel_page_user-registration {
-
 	&.wp-has-submenu {
 		background: transparent;
 	}
 }
 
-
 .tablenav-pages {
 	.button {
-
 		&.tablenav-pages-navspan,
 		&.first-page,
 		&.prev-page,
@@ -8395,13 +8432,12 @@ $border-top-color_1: #ff4f55;
 
 body.user-registration-page {
 	#profile-page {
-		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+			Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 
 		#your-profile {
-
 			table.form-table,
 			#application-passwords-section {
-
 				select,
 				input,
 				textarea {
@@ -8425,7 +8461,7 @@ body.user-registration-page {
 					line-height: 0;
 					height: 1rem;
 					min-height: auto;
-					margin: -.25rem .25rem 0 0;
+					margin: -0.25rem 0.25rem 0 0;
 					outline: 0;
 					padding: 0 !important;
 					text-align: center;
@@ -8433,8 +8469,8 @@ body.user-registration-page {
 					width: 1rem;
 					min-width: 1rem;
 					-webkit-appearance: none;
-					box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
-					transition: .05s border-color ease-in-out;
+					box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+					transition: 0.05s border-color ease-in-out;
 				}
 
 				input[type="radio"] {
@@ -8442,7 +8478,7 @@ body.user-registration-page {
 					margin-right: 4px;
 					float: none;
 					border-radius: 50%;
-					line-height: .71428571;
+					line-height: 0.71428571;
 				}
 			}
 		}
@@ -8536,7 +8572,6 @@ body.user-registration-page {
 	background: $grey-0;
 	border: $border_width solid $border_color;
 
-
 	.user-registration-base-list-table-heading {
 		position: absolute;
 		display: inline-flex;
@@ -8570,7 +8605,7 @@ body.user-registration-page {
 			border-radius: $border_radius_4;
 			font-weight: $medium;
 			text-decoration: none;
-			transition: all .3s ease-in-out;
+			transition: all 0.3s ease-in-out;
 			box-sizing: border-box;
 			display: flex;
 			align-items: center;
@@ -8642,7 +8677,6 @@ body.user-registration-page {
 					}
 				}
 			}
-
 		}
 
 		#search-submit {
@@ -8758,7 +8792,6 @@ body.user-registration-page {
 		thead,
 		tfoot {
 			tr {
-
 				td,
 				th {
 					border-bottom-color: $border_color;
@@ -8851,14 +8884,13 @@ body.user-registration-page {
 		}
 
 		@media screen and (min-width: 783px) {
-			tbody tr td  {
+			tbody tr td {
 				padding: $spacing_14px $spacing_16px;
 			}
 		}
 
 		tfoot {
 			tr {
-
 				td,
 				th {
 					border-top-color: $border_color;
@@ -8867,12 +8899,12 @@ body.user-registration-page {
 		}
 	}
 
-	.user-registration-base-list-table-form{
+	.user-registration-base-list-table-form {
 		.tablenav {
 			.actions:has(#new_role) {
 				display: none;
 			}
-			.actions.show-flex{
+			.actions.show-flex {
 				display: flex !important;
 			}
 			.actions {
@@ -8916,7 +8948,7 @@ body.user-registration-page {
 			}
 		}
 
-		.user-registration-members-filters{
+		.user-registration-members-filters {
 			position: relative;
 
 			#user-registration-users-advanced-filters {
@@ -8959,7 +8991,7 @@ body.user-registration-page {
 				}
 			}
 
-			select{
+			select {
 				width: auto !important;
 				max-width: max-content !important;
 				min-width: auto !important;
@@ -8981,7 +9013,7 @@ body.user-registration-page {
 						padding: $spacing_6px $spacing_14px;
 						border-radius: $border_radius_4;
 						border: $border_width solid $primary_color;
-						background: #F6F7F7;
+						background: #f6f7f7;
 						color: $primary_color;
 						font-size: 14px;
 						font-weight: $regular;
@@ -9033,41 +9065,41 @@ body.user-registration-page {
 	}
 }
 
-.user-subscription-status{
+.user-subscription-status {
 	font-weight: 500;
 }
-.user-subscription-secondary{
+.user-subscription-secondary {
 	color: $color_gray-light;
 }
 
-.user-subscription-active{
+.user-subscription-active {
 	color: $approve_user;
 }
 
-.user-subscription-pending{
+.user-subscription-pending {
 	color: $pending_user;
 }
 
-.user-subscription-expired{
+.user-subscription-expired {
 	color: $deny_color;
 }
 
-.user-subscription-status{
+.user-subscription-status {
 	font-weight: 500;
 }
-.user-subscription-secondary{
+.user-subscription-secondary {
 	color: $color_gray-light;
 }
 
-.user-subscription-active{
+.user-subscription-active {
 	color: $approve_user;
 }
 
-.user-subscription-pending{
+.user-subscription-pending {
 	color: $pending_user;
 }
 
-.user-subscription-expired{
+.user-subscription-expired {
 	color: $deny_color;
 }
 
@@ -9092,7 +9124,7 @@ body.user-registration-page {
 							border-radius: $border_radius_4;
 							border: $border_width solid $border-color;
 							cursor: pointer;
-							transition: all .3s ease;
+							transition: all 0.3s ease;
 							background: $white;
 							position: relative;
 
@@ -9111,7 +9143,6 @@ body.user-registration-page {
 								&::before {
 									width: 8px;
 									height: 8px;
-
 								}
 
 								&:checked {
@@ -9146,7 +9177,7 @@ body.user-registration-page {
 						}
 
 						&-price {
-							color: #1F1F1F;
+							color: #1f1f1f;
 							font-size: 15px;
 							font-weight: $semi_bold;
 							line-height: 18px;
@@ -9169,7 +9200,7 @@ body.user-registration-page {
 						justify-content: space-between;
 						align-items: center;
 						background: #f9f9f9;
-						opacity: .5;
+						opacity: 0.5;
 					}
 
 					&-label {
@@ -9191,7 +9222,7 @@ body.user-registration-page {
 					margin: $spacing_24px 0 0;
 					padding-top: $spacing_16px;
 					border-top: $border_width solid $border-color;
-					opacity: .5;
+					opacity: 0.5;
 
 					&-label {
 						color: #222222;
@@ -9497,141 +9528,141 @@ body.user-registration-page {
    ========================================= */
 
 #ur-sync-to-email-marketing-container {
-  width: 100%;
+	width: 100%;
 
-  .ur-sync-to-email-marketing-container-wrapper {
-    width: 100%;
-  }
+	.ur-sync-to-email-marketing-container-wrapper {
+		width: 100%;
+	}
 
-  /* =========================================
+	/* =========================================
      Addon Title Section
      ========================================= */
 
-  .ur-sync-to-email-marketing-addon-title-container {
-    padding-bottom: 12px;
-    border-bottom: 1px solid #f1f1f1;
+	.ur-sync-to-email-marketing-addon-title-container {
+		padding-bottom: 12px;
+		border-bottom: 1px solid #f1f1f1;
 
-    &-inner {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-  }
+		&-inner {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+	}
 
-  .ur-sync-to-email-marketing-addon-logo {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    background-color: #f3f4f6;
-    color: #111827;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-	img{
+	.ur-sync-to-email-marketing-addon-logo {
 		width: 28px;
 		height: 28px;
+		border-radius: 6px;
+		background-color: #f3f4f6;
+		color: #111827;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		img {
+			width: 28px;
+			height: 28px;
+		}
 	}
-  }
 
-  .ur-sync-to-email-marketing-addon-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: #111827;
-  }
+	.ur-sync-to-email-marketing-addon-title {
+		font-size: 13px;
+		font-weight: 600;
+		color: #111827;
+	}
 
-  /* =========================================
+	/* =========================================
      Sync Container
      ========================================= */
 
-  .ur-sync-to-email-marketing-addon-sync-container {
-    padding-left: 40px;
-  }
+	.ur-sync-to-email-marketing-addon-sync-container {
+		padding-left: 40px;
+	}
 
-  .ur-sync-to-email-marketing-addon-sync-container-inner {
-    // display: flex;
-    align-items: flex-start;
-    gap: 12px;
-	flex-direction: column;
-  }
+	.ur-sync-to-email-marketing-addon-sync-container-inner {
+		// display: flex;
+		align-items: flex-start;
+		gap: 12px;
+		flex-direction: column;
+	}
 
-  /* =========================================
+	/* =========================================
      Checkbox
      ========================================= */
 
-  .ur-sync-to-email-marketing-addon-sync-toggle-container {
-    padding-top: 3px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 12px;
+	.ur-sync-to-email-marketing-addon-sync-toggle-container {
+		padding-top: 3px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 12px;
 
-    input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-    }
+		input[type="checkbox"] {
+			width: 16px;
+			height: 16px;
+			cursor: pointer;
+		}
 
-	span{
-		transform: translateY(-3px);
+		span {
+			transform: translateY(-3px);
+		}
 	}
-  }
 
-  /* =========================================
+	/* =========================================
      Label + Fields
      ========================================= */
 
-  .ur-sync-to-email-marketing-addon-sync-toggle-label-container {
-    font-size: 14px;
-    color: #374151;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+	.ur-sync-to-email-marketing-addon-sync-toggle-label-container {
+		font-size: 14px;
+		color: #374151;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
 
-    /* Select Wrapper */
-    .form-row {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      max-width: 320px;
+		/* Select Wrapper */
+		.form-row {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+			max-width: 320px;
 
-      label {
-        font-size: 13px;
-        font-weight: 500;
-        color: #6b7280;
-      }
+			label {
+				font-size: 13px;
+				font-weight: 500;
+				color: #6b7280;
+			}
 
-      select {
-        width: 100%;
-        padding: 8px 10px;
-        border-radius: 6px;
-        border: 1px solid #d1d5db;
-        background-color: #ffffff;
-        font-size: 14px;
-        color: #111827;
-        cursor: pointer;
+			select {
+				width: 100%;
+				padding: 8px 10px;
+				border-radius: 6px;
+				border: 1px solid #d1d5db;
+				background-color: #ffffff;
+				font-size: 14px;
+				color: #111827;
+				cursor: pointer;
 
-        &:focus {
-          outline: none;
-          border-color: #2563eb;
-          box-shadow: 0 0 0 1px #2563eb;
-        }
-      }
+				&:focus {
+					outline: none;
+					border-color: #2563eb;
+					box-shadow: 0 0 0 1px #2563eb;
+				}
+			}
 
-	  .ur_sync_email_marketing_addon_account{
-		// height: 38px;
-	  }
-    }
-  }
+			.ur_sync_email_marketing_addon_account {
+				// height: 38px;
+			}
+		}
+	}
 
-  .urmc-sync-email-marketing-mailchimp-list-wrap,
-  .urmc-sync-email-marketing-brevo-list-wrap,
-  .urmc-sync-email-marketing-convertkit-list-wrap,
-  .urmc-sync-email-marketing-klaviyo-list-wrap,
-  .urmc-sync-email-marketing-mailerlite-list-wrap,
-  .urmc-sync-email-marketing-mailpoet-list-wrap {
-    margin-top: 10px;
-    max-width: 320px;
-  }
+	.urmc-sync-email-marketing-mailchimp-list-wrap,
+	.urmc-sync-email-marketing-brevo-list-wrap,
+	.urmc-sync-email-marketing-convertkit-list-wrap,
+	.urmc-sync-email-marketing-klaviyo-list-wrap,
+	.urmc-sync-email-marketing-mailerlite-list-wrap,
+	.urmc-sync-email-marketing-mailpoet-list-wrap {
+		margin-top: 10px;
+		max-width: 320px;
+	}
 }

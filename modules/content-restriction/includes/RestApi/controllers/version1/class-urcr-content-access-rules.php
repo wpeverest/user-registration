@@ -241,7 +241,7 @@ class URCR_Content_Access_Rules {
 		 */
 		$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'create' );
 
-		$access_rule_data = wp_unslash( $access_rule_data );
+		$access_rule_data      = wp_unslash( $access_rule_data );
 		$access_rule_data_json = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 		$access_rule_data_json = wp_slash( $access_rule_data_json );
 
@@ -465,7 +465,7 @@ class URCR_Content_Access_Rules {
 			 */
 			$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'update' );
 
-			$access_rule_data = wp_unslash( $access_rule_data );
+			$access_rule_data      = wp_unslash( $access_rule_data );
 			$access_rule_data_json = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 			$access_rule_data_json = wp_slash( $access_rule_data_json );
 
@@ -695,4 +695,3 @@ class URCR_Content_Access_Rules {
 		}
 	}
 }
-

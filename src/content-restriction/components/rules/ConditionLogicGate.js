@@ -2,16 +2,18 @@
  * External Dependencies
  */
 import React from "react";
-import {__} from "@wordpress/i18n";
-import {getURCRData} from "../../utils/localized-data";
+import { __ } from "@wordpress/i18n";
+import { getURCRData } from "../../utils/localized-data";
 
 const ConditionLogicGate = ({
 	logicGate = "AND",
 	conditionIndex = 0,
 	isFirstCondition = false,
-	totalConditions = 0,
+	totalConditions = 0
 }) => {
-	const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
+	const isAdvancedLogicEnabled = Boolean(
+		getURCRData("is_advanced_logic_enabled", false)
+	);
 
 	if (!isAdvancedLogicEnabled) {
 		return null;
@@ -25,25 +27,25 @@ const ConditionLogicGate = ({
 				return {
 					background: "#FED9A8",
 					color: "#383838",
-					lineColor: "#F9E2CA",
+					lineColor: "#F9E2CA"
 				};
 			case "OR":
 				return {
 					background: "#E9F0FE",
 					color: "#383838",
-					lineColor: "#89A7E5",
+					lineColor: "#89A7E5"
 				};
 			case "NOT":
 				return {
 					background: "#F9CACA",
 					color: "#383838",
-					lineColor: "#F9CACA",
+					lineColor: "#F9CACA"
 				};
 			default:
 				return {
 					background: "#FED9A8",
 					color: "#383838",
-					lineColor: "#F9E2CA",
+					lineColor: "#F9E2CA"
 				};
 		}
 	};
@@ -51,13 +53,15 @@ const ConditionLogicGate = ({
 	const gateColor = getGateColor(logicGate);
 
 	return (
-		<div className={`urcr-condition-logic-gate-wrapper urcr-logic-group-rule-${logicGate}`}>
+		<div
+			className={`urcr-condition-logic-gate-wrapper urcr-logic-group-rule-${logicGate}`}
+		>
 			{showButton && (
-				<div 
+				<div
 					className={`urcr-condition-logic-gate-button urcr-sub-logic-group-rule-${logicGate}`}
 					style={{
 						backgroundColor: gateColor.background,
-						color: gateColor.color,
+						color: gateColor.color
 					}}
 				>
 					{logicGate}
@@ -68,4 +72,3 @@ const ConditionLogicGate = ({
 };
 
 export default ConditionLogicGate;
-

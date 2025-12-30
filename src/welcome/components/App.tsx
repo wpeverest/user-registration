@@ -2,7 +2,6 @@ import React from "react";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import SetupWizard from "./SetupWizard";
 import { StateProvider } from "../context/StateProvider";
-import reducer, { initialState } from "../context/Gettingstartedcontext";
 
 const theme = extendTheme({
 	fonts: {
@@ -78,7 +77,7 @@ const theme = extendTheme({
 
 const App: React.FC = () => {
 	return (
-		<StateProvider initialState={initialState} reducer={reducer}>
+		<StateProvider>
 			<ChakraProvider theme={theme}>
 				<SetupWizard />
 			</ChakraProvider>

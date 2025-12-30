@@ -1,4 +1,4 @@
-wpeverest/user-registration-pro@v6.0.0:
+wpeverest/user-registration-pro@v6.1.0:
   - assets
   - includes
   - modules
@@ -14,3 +14,4 @@ wpeverest/user-registration-pro@v6.0.0:
   - uninstall.php
   - webpack.config.js
   - wpml-config.xml
+  

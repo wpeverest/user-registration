@@ -75,32 +75,37 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 	 * @return array|object|\stdClass|void|null
 	 */
 	public function get_member_membership_by_id( $id ) {
-		return $this->wpdb()->get_row(
+		$result = $this->wpdb()->get_results(
 			$this->wpdb()->prepare(
-				"SELECT wp.id as post_id ,
-							urs.id as subscription_id,
-							wo.ID as order_id,
-							urs.user_id,
-							urs.cancel_sub,
-							wp.post_title,
-							wp.post_content,
-							urs.status,
-							urs.trial_start_date,
-							urs.trial_end_date,
-							urs.billing_amount,
-							urs.expiry_date,
-							urs.start_date,
-							urs.next_billing_date,
-							urs.billing_cycle
-       					FROM $this->subscription_table urs
-                        JOIN $this->posts_table wp on wp.ID = urs.item_id
-                        JOIN $this->orders_table wo on urs.ID = wo.subscription_id
-        				WHERE urs.user_id = %d and wp.post_type = 'ur_membership'
-				",
+				"SELECT wp.ID as post_id,
+                urs.ID as subscription_id,
+                -- wo.ID as order_id,
+                urs.user_id,
+                urs.cancel_sub,
+                wp.post_title,
+                wp.post_content,
+                urs.status,
+                urs.trial_start_date,
+                urs.trial_end_date,
+                urs.billing_amount,
+                urs.expiry_date,
+                urs.start_date,
+                urs.next_billing_date,
+                urs.billing_cycle
+				FROM $this->subscription_table AS urs
+				JOIN $this->posts_table AS wp
+						ON wp.ID = urs.item_id
+				-- LEFT JOIN $this->orders_table AS wo
+				-- 		ON urs.ID = wo.subscription_id
+				WHERE urs.user_id = %d
+				AND wp.post_type = 'ur_membership'
+				ORDER BY urs.ID DESC",
 				$id
 			),
 			ARRAY_A
 		);
+
+		return $result;
 	}
 
 	public function get_all_members( $args ) {
@@ -126,29 +131,20 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 		$order = ( ! empty( $args['order'] ) && strtoupper( $args['order'] ) === 'ASC' ) ? 'ASC' : 'DESC';
 
 		$sql = "
-			SELECT wpu.ID,
-			       wums.ID AS subscription_id,
-			       wpp.post_title,
-			       wpu.user_login,
-			       wpu.user_email,
-			       wums.status,
-			       wpu.user_registered,
-			       wums.expiry_date,
-		           wumo_latest.payment_method
-			FROM $this->table wpu
-	        JOIN $this->subscription_table wums ON wpu.ID = wums.user_id
-			JOIN (
-				    SELECT user_id, MAX(created_at) AS latest_order_date
-				    FROM  $this->orders_table
-				    GROUP BY user_id
-				) latest_orders ON wpu.ID = latest_orders.user_id
-			JOIN $this->orders_table wumo_latest ON wumo_latest.user_id = latest_orders.user_id AND wumo_latest.created_at = latest_orders.latest_order_date
-	        JOIN $this->posts_table wpp ON wums.item_id = wpp.ID
-			WHERE wpp.post_status = 'publish'
-			AND 1 = 1
-		";
+		SELECT
+			wpu.ID,
+			wpu.user_login,
+			wpu.user_email,
+			wpu.user_registered,
+			wpp.post_title,
+			wums.status
+		FROM $this->table wpu
+		JOIN $this->subscription_table wums ON wpu.ID = wums.user_id
+		JOIN $this->posts_table wpp ON wums.item_id = wpp.ID
+		WHERE wpp.post_status = 'publish'
+		AND 1 = 1
+	";
 
-		// Use $wpdb->prepare for dynamic values
 		$prepare_args = array();
 
 		if ( $membership_id ) {
@@ -174,8 +170,43 @@ class MembersRepository extends BaseRepository implements MembersInterface {
 			$sql = $wpdb->prepare( $sql, $prepare_args );
 		}
 
-		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
-		return ! $result ? array() : $result;
+		$rows = $this->wpdb()->get_results( $sql, ARRAY_A );
+
+		if ( empty( $rows ) ) {
+			return array();
+		}
+
+		$final = array();
+
+		foreach ( $rows as $row ) {
+			$user_id = $row['ID'];
+
+			if ( ! isset( $final[ $user_id ] ) ) {
+				$final[ $user_id ] = array(
+					'ID'              => $row['ID'],
+					'user_login'      => $row['user_login'],
+					'user_email'      => $row['user_email'],
+					'user_registered' => $row['user_registered'],
+					'subscriptions'   => array(),
+					'status'          => 'inactive',
+				);
+			}
+
+			// Add subscription title
+			$final[ $user_id ]['subscriptions'][] = $row['post_title'];
+
+			// If any active → overall status becomes active
+			if ( $row['status'] === 'active' ) {
+				$final[ $user_id ]['status'] = 'active';
+			}
+		}
+
+		// Convert subscriptions to comma-separated string
+		foreach ( $final as &$user ) {
+			$user['subscriptions'] = implode( ', ', $user['subscriptions'] );
+		}
+
+		return array_values( $final );
 	}
 
 	// TODO - Handle Multiple ( Remove after multiple memberships merge )

@@ -276,7 +276,6 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 						}
 						break;
 					case 'whole_site':
-
 						return true;
 						break;
 
@@ -615,10 +614,10 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 				$message = do_shortcode( $message );
 			}
 
-			$login_page_id = get_option( 'user_registration_login_page_id' );
+			$login_page_id        = get_option( 'user_registration_login_page_id' );
 			$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
 
-			$login_url = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
+			$login_url  = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
 			$signup_url = $registration_page_id ? get_permalink( $registration_page_id ) : ( $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url() );
 
 			if ( ! $registration_page_id ) {
@@ -628,7 +627,7 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 				}
 			}
 
-			$is_whole_site_restriction = false;
+			$is_whole_site_restriction    = false;
 			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
 			if ( $whole_site_access_restricted ) {
@@ -655,10 +654,13 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 			}
 
 			if ( $is_whole_site_restriction ) {
-				add_filter( 'body_class', function( $classes ) {
-					$classes[] = 'urcr-hide-page-title';
-					return $classes;
-				});
+				add_filter(
+					'body_class',
+					function ( $classes ) {
+						$classes[] = 'urcr-hide-page-title';
+						return $classes;
+					}
+				);
 			}
 
 			ob_start();
@@ -1131,13 +1133,6 @@ function urcr_migrate_global_restriction_settings() {
 		'logic_gate' => 'AND',
 	);
 
-	$target_contents = array(
-		array(
-			'id'   => 'x' . ( $timestamp + 100 ),
-			'type' => 'whole_site',
-		),
-	);
-
 	$rule_data = array(
 		'enabled'         => true,
 		'access_control'  => 'access',
@@ -1399,7 +1394,6 @@ function urcr_has_rules_with_advanced_logic() {
 
 	return false;
 }
-
 
 /**
  * Create or update membership rule with data from UI.
@@ -1837,4 +1831,3 @@ function urcr_get_membership_rule_data( $membership_id ) {
 
 	return $rule_content;
 }
-

@@ -51,6 +51,17 @@ class TableList {
 	}
 
 	/**
+	 * Returns the name of the subscriptions events table.
+	 *
+	 * @return string The name of the subscriptions events table.
+	 */
+	public static function subscription_events_table() {
+		global $wpdb;
+
+		return $wpdb->prefix . 'ur_membership_subscription_events';
+	}
+
+	/**
 	 * Returns the name of the users table.
 	 *
 	 * @return string The name of the users table.
