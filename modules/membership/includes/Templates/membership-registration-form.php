@@ -377,23 +377,57 @@ use WPEverest\URMembership\Local_Currency\Admin\Api;
 	endif;
 	?>
 
-	<!--	total container-->
+		<!--	total container-->
 	<div id="urm-total_container"
-	class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
-	<div class="urm-membership-total-value">
-	<label class="ur_membership_input_label ur-label"
+		class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
+		<div class="urm-membership-sub-total-value">
+			<label class="ur_membership_input_label ur-label"
+					for="ur-membership-subtotal"><?php echo esc_html__( 'Sub Total', 'user-registration' ); ?></label>
+			<span class="ur_membership_input_class"
+					id="ur-membership-subtotal"
+					data-key-name="<?php echo esc_html__( 'Sub Total', 'user-registration' ); ?>"
+					disabled
+			>
+				<?php echo ceil( 0 ); ?>
+			</span>
+		</div>
+		<div class="urm-membership-tax-value">
+			<label class="ur_membership_input_label ur-label"
+					for="ur-membership-tax"><?php echo esc_html__( 'Tax', 'user-registration' ); ?></label>
+			<span class="ur_membership_input_class"
+					id="ur-membership-tax"
+					data-key-name="<?php echo esc_html__( 'Tax', 'user-registration' ); ?>"
+					disabled
+			>
+				<?php echo ceil( 0 ); ?>
+			</span>
+		</div>
+		<div class="urm-membership-coupons-value">
+			<label class="ur_membership_input_label ur-label"
+					for="ur-membership-coupons"><?php echo esc_html__( 'Coupons', 'user-registration' ); ?></label>
+			<span class="ur_membership_input_class"
+					id="ur-membership-coupons"
+					data-key-name="<?php echo esc_html__( 'Coupons', 'user-registration' ); ?>"
+					disabled
+			>
+				<?php echo ceil( 0 ); ?>
+			</span>
+		</div>
+		<div class="urm-membership-total-value">
+			<label class="ur_membership_input_label ur-label"
 					for="ur-membership-total"><?php echo esc_html__( 'Total', 'user-registration' ); ?></label>
-	<span class="ur_membership_input_class"
+			<span class="ur_membership_input_class"
 					id="ur-membership-total"
 					data-key-name="<?php echo esc_html__( 'Total', 'user-registration' ); ?>"
 					disabled
-	>
+			>
 				<?php echo ceil( 0 ); ?>
-	</span>
+			</span>
+		</div>
+		<span id="total-input-notice">
+		</span>
 	</div>
-	<span id="total-input-notice">
-	</span>
-	</div>
+
 
 	<!--	payment gateway container -->
 	<div

@@ -125,12 +125,6 @@ class StripeService {
 	public function process_stripe_payment( $payment_data, $response_data ) {
 		$currency        = get_option( 'user_registration_payment_currency', 'USD' );
 
-		if ( ! empty( $response_data['tax_rate' ] ) && ! empty( $response_data['tax_calculation_method'] ) && 'calculate_tax' === $response_data['tax_calculation_method'] ) {
-			$tax_rate           	= floatval( $response_data['tax_rate'] );
-			$tax_amount 			= $payment_data['amount'] * $tax_rate / 100;
-			$payment_data['amount'] = $payment_data['amount'] + $tax_amount;
-		}
-
 		$amount          = $payment_data['amount'];
 		$user_email      = $response_data['email'];
 		$member_id       = $response_data['member_id'];
@@ -151,6 +145,12 @@ class StripeService {
 			if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data[ 'is_enable'] ) ) {
 				$amount = CoreFunctions::ur_get_amount_after_conversion( $amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
 			}
+		}
+
+		if ( ! empty( $response_data['tax_rate' ] ) && ! empty( $response_data['tax_calculation_method'] ) && 'calculate_tax' === $response_data['tax_calculation_method'] ) {
+			$tax_rate   = floatval( $response_data['tax_rate'] );
+			$tax_amount = $amount * $tax_rate / 100;
+			$amount     = $amount + $tax_amount;
 		}
 
 		PaymentGatewayLogging::log_transaction_start(

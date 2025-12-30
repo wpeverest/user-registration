@@ -6768,7 +6768,6 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 		if ( ! $is_edit ) {
 			echo apply_filters( 'user_registration_frontend_form_row_end', '', $form_id, $current_row ); // phpcs:ignore
 		}
-	}
 }
 
 if ( ! file_exists( 'user_registration_sanitize_profile_update' ) ) {

@@ -1213,8 +1213,6 @@
 
 									// Append tax details if available
 									var taxDetails = $( document ).find( "#ur-tax-details" );
-									console.log('taxDetails', taxDetails);
-
 
 									if ( taxDetails.length > 0 ) {
 										form_data.tax_rate       = taxDetails.data("tax-rate");
@@ -2939,7 +2937,6 @@
 				var response = JSON.parse(ajax_response.responseText);
 				if (response.success) {
 					$.each(response.data, function (index, item) {
-						console.log(index, item);
 						$("#user-registration-form-" + index)
 							.find("#ur_frontend_form_nonce")
 							.val(item);
@@ -3170,7 +3167,7 @@
 		var state 					= '';
 		var regions 				= user_registration_params.regions_list.regions[country];
 		var tax_calculation_method 	= user_registration_params.tax_calculation_method;
-		var defaultRate 			= regions?.rate ?? 0;
+		var defaultRate             = (regions && regions.rate != null) ? regions.rate : 0;
 		var membershipData  		= {};
 
 		if ( $( document ).find( '#urm-membership-list' ).length ) {
@@ -3201,7 +3198,7 @@
 					if ( 'calculate_tax' === tax_calculation_method ) {
 						calculate_total( membershipData, taxRate );
 					}else{
-						console.log('already set tax');
+
 					}
 				}else{
 					if ( defaultRate !== undefined && defaultRate !== '' ) {

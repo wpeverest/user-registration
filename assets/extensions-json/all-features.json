@@ -66,21 +66,6 @@
       "released_date": "25/06/2018"
     },
     {
-      "title": "Multiple Registration",
-      "slug": "user-registration-multiple-registration",
-      "name": "User Registration-Multiple Registration",
-      "image": "extensions-json/sections/icons/advanced_fields.png",
-      "excerpt": "Add customizable fields for collecting complex user data during registration.",
-      "category": "Others",
-      "link": "https://docs.wpuserregistration.com/docs/user-registration-advanced-fields/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
-      "plan": [
-        "free"
-      ],
-      "setting_url": "",
-      "demo_video_url": "X1h7xCLfIPA",
-      "released_date": "25/06/2018"
-    },
-    {
       "title": "Payment History",
       "slug" : "user-registration-payment-history",
       "name" : "User Registration Membership - Payment History",

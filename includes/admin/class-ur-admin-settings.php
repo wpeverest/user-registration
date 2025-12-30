@@ -432,6 +432,12 @@ class UR_Admin_Settings {
 							}
 							$settings .= esc_html( strtoupper( $section['title'] ) );
 							$settings .= '</h3>';
+							if ( 'local_currency' === $id ) {
+								$settings .= '<div class="user-registration-list-table-header" style="justify-content: end;">';
+
+								$settings .= '<a href="#" class="page-title-action ur-local-currency-add-pricing-zone" data-action="add">' . esc_html__( 'Add Pricing Zone', 'user-registration' ) . '</a>';
+								$settings .= '</div>';
+							}
 
 							if ( ! empty( $section['button'] ) ) {
 								if( isset( $section[ 'button'][ 'button_type'] ) && 'upgrade_link' === $section[ 'button' ][ 'button_type' ] ) {

@@ -128,7 +128,7 @@ class MembersService {
 			$response['coupon_data'] = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
 		}
 
-		$response['user_data'] = array(
+		$user_data = array(
 			'user_login'    => ! empty( $data['username'] ) ? sanitize_text_field( $data['username'] ) : '',
 			'user_email'    => ! empty( $data['email'] ) ? sanitize_email( $data['email'] ) : '',
 			'user_pass'     => ! empty( $data['password'] ) ? $data['password'] : '',
@@ -142,8 +142,8 @@ class MembersService {
 		if ( isset( $data['membership'] ) ) {
 			$membership_details          = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
 			$membership_meta             = json_decode( $membership_details['meta_value'], true );
-			$response['role']            = isset( $membership_meta['role'] ) ? sanitize_text_field( $membership_meta['role'] ) : $response['role'];
-			$response['membership_data'] = array(
+			$role           			 = isset( $membership_meta['role'] ) ? sanitize_text_field( $membership_meta['role'] ) : $response['role'];
+			$membership_data  			 = array(
 				'membership'     => absint( $data['membership'] ),
 				'start_date'     => date( 'Y-m-d', strtotime( $data['start_date'] ) ),
 				'payment_method' => sanitize_text_field( $data['payment_method'] ?? '' ),
