@@ -45,11 +45,13 @@ class UpgradeMembershipService {
 	}
 
 	public function handle_paid_to_paid_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription ) {
-		$upgrade_settings = $current_membership_details['upgrade_settings'];
-		$response         = array(
+		$upgrade_data = $this->get_upgrade_details( $current_membership_details );
+		$upgrade_type = ! empty( $upgrade_data['upgrade_type'] ) ? $upgrade_data['upgrade_type'] : '';
+
+		$response = array(
 			'status' => false,
 		);
-		if ( ! ( $upgrade_settings['upgrade_action'] ) ) {
+		if ( empty( $upgrade_type ) ) {
 			$response['status']  = true;
 			$response['message'] = __( 'Membership upgrade is not enabled for this plan', 'user-registration' );
 		}
@@ -57,16 +59,19 @@ class UpgradeMembershipService {
 		$response['chargeable_amount'] = $this->calculate_chargeable_amount(
 			$selected_membership_details['amount'],
 			$current_membership_details['amount'],
-			$upgrade_settings['upgrade_type']
+			$upgrade_type
 		);
 
 		return $response;
 	}
 
 	public function handle_paid_to_subscription_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription ) {
-		$selected_membership_amount   = $selected_membership_details['amount'];
-		$current_membership_amount    = $current_membership_details['amount'];
-		$upgrade_type                 = $current_membership_details['upgrade_settings']['upgrade_type'];
+		$selected_membership_amount = $selected_membership_details['amount'];
+		$current_membership_amount  = $current_membership_details['amount'];
+
+		$upgrade_data         = $this->get_upgrade_details( $current_membership_details );
+				$upgrade_type = ! empty( $upgrade_data['upgrade_type'] ) ? $upgrade_data['upgrade_type'] : '';
+
 		$remaining_subscription_value = $selected_membership_details['subscription']['value'];
 		$delayed_until                = '';
 
@@ -89,9 +94,11 @@ class UpgradeMembershipService {
 	}
 
 	public function handle_subscription_to_paid_or_subscription_membership_upgrade( $current_membership_details, $selected_membership_details, $subscription, $is_trial ) {
-		$selected_membership_amount   = $selected_membership_details['amount'];
-		$current_membership_amount    = $current_membership_details['amount'];
-		$upgrade_type                 = $current_membership_details['upgrade_settings']['upgrade_type'];
+		$selected_membership_amount = $selected_membership_details['amount'];
+		$current_membership_amount  = $current_membership_details['amount'];
+		$upgrade_data               = $this->get_upgrade_details( $current_membership_details );
+		$upgrade_type               = ! empty( $upgrade_data['upgrade_type'] ) ? $upgrade_data['upgrade_type'] : '';
+
 		$chargeable_amount            = 0;
 		$remaining_subscription_value = $selected_membership_details['subscription']['value'];
 		$delayed_until                = '';
@@ -289,5 +296,33 @@ class UpgradeMembershipService {
 			<?php
 		}
 		return ob_get_clean();
+	}
+
+	/**
+	 * Get upgrade details
+	 */
+	public function get_upgrade_details( $membership_details ) {
+		$membership_group_repository = new MembershipGroupRepository();
+		$membership_id               = $membership_details['ID'];
+		$group_details               = $membership_group_repository->get_membership_group_by_membership_id( $membership_details['ID'] );
+
+		$upgrade_details = array();
+
+		if ( ! empty( $group_details ) ) {
+			if ( isset( $group_details['mode'] ) && 'upgrade' === $group_details['mode'] ) {
+				if ( isset( $group_details['upgrade_path'] ) && '' !== $group_details['upgrade_path'] ) {
+					$upgrade_details['upgrade_type'] = $group_details['upgrade_type'] ?? '';
+					$upgrade_paths                   = json_decode( $group_details['upgrade_path'], true );
+
+					if ( isset( $upgrade_paths[ $membership_id ] ) && ! empty( $upgrade_paths[ $membership_id ] ) ) {
+						$upgrade_details['upgrade_path'] = $upgrade_paths;
+					}
+				}
+			}
+		} else {
+			$upgrade_details = $membership_details['upgrade_settings'];
+		}
+
+		return $upgrade_details;
 	}
 }
