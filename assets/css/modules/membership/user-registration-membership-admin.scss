@@ -1274,8 +1274,10 @@
 								}
 							}
 						}
+						&:nth-child(odd) {
+							background: #F8F8FA;
+						}
 					}
-
 				}
 			}
 

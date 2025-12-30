@@ -1356,6 +1356,9 @@
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table tbody tr td.status .ur-toggle-section .user-registration-toggle-form input:checked + .slider {
   background-color: #4CC741;
 }
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table tbody tr:nth-child(odd) {
+  background: #F8F8FA;
+}
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#title, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#membership_price, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#membership_type, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#members, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#status {
   width: 20%;
 }
