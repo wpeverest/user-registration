@@ -39,7 +39,13 @@ class UR_Block_Thank_You extends UR_Block_Abstract {
 		$is_preview        = isset( $attr['is_preview'] ) ? absint( $attr['is_preview'] ) : false;
 		$show_notice_1     = isset( $attr['show_notice_1'] ) ? ( $attr['show_notice_1'] ) : false;
 		$show_notice_2     = isset( $attr['show_notice_2'] ) ? ( $attr['show_notice_2'] ) : false;
-
+		$show_bank_details = isset( $attr['show_bank_details'] ) ? $attr['show_bank_details'] : false;
+		$show_heading_icon = isset( $attr['show_heading_icon'] ) ? $attr['show_heading_icon'] : false;
+		$show_headline     = isset( $attr['show_headline'] ) ? $attr['show_headline'] : false;
+		$headline_text     = isset( $attr['headline_text'] ) ? sanitize_text_field( $attr['headline_text'] ) : '';
+		$show_redirect_btn = isset( $attr['show_redirect_btn'] ) ? $attr['show_redirect_btn'] : false;
+		$redirect_btn_text = isset( $attr['redirect_btn_text'] ) ? sanitize_text_field( $attr['redirect_btn_text'] ) : '';
+		$redirect_page_id  = isset( $attr['redirect_page_id'] ) ? sanitize_text_field( $attr['redirect_page_id'] ) : '';
 
 		return ShortCodes::thank_you(
 			array(
@@ -50,7 +56,14 @@ class UR_Block_Thank_You extends UR_Block_Abstract {
 				'transaction_info'  => $transaction_info,
 				'is_preview'        => $is_preview,
 				'show_notice_1'     => $show_notice_1,
-				'show_notice_2'     => $show_notice_2
+				'show_notice_2'     => $show_notice_2,
+				'show_bank_details' => $show_bank_details,
+				'show_heading_icon' => $show_heading_icon,
+				'show_redirect_btn' => $show_redirect_btn,
+				'show_headline' 	=> $show_headline,
+				'headline_text' 	=> $headline_text,
+				'redirect_btn_text' => $redirect_btn_text,
+				'redirect_page_id'  => $redirect_page_id,
 			),
 			'user_registration_membership_thank_you'
 		);

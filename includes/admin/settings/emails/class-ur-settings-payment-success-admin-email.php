@@ -101,22 +101,22 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Admin_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_payment_success_admin_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Payment Received', 'user-registration' ),
+									'default'  => __( 'Payment Received from {{username}}', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
-							array(
-								'title'    => __( 'Email Content', 'user-registration' ),
-								'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
-								'id'       => 'user_registration_payment_success_admin_email',
-								'type'     => 'tinymce',
-								'default'  => $this->ur_get_payment_success_admin_email(),
-								'css'      => '',
-								'desc_tip' => true,
-								'show-ur-registration-form-button' => false,
-								'show-smart-tags-button' => true,
-								'show-reset-content-button' => true,
-							),
+								array(
+									'title'    => __( 'Email Content', 'user-registration' ),
+									'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_payment_success_admin_email',
+									'type'     => 'tinymce',
+									'default'  => $this->ur_get_payment_success_admin_email(),
+									'css'      => '',
+									'desc_tip' => true,
+									'show-ur-registration-form-button' => false,
+									'show-smart-tags-button' => true,
+									'show-reset-content-button' => true,
+								),
 							),
 						),
 					),
@@ -131,18 +131,53 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Admin_Email', false ) ) :
 		 */
 		public static function ur_get_payment_success_admin_email() {
 
-			$message = apply_filters(
-				'user_registration_payment_admin_email_message',
-				sprintf(
-					__(
-						'Hi Admin, <br/><br/>
-						You have successfully received a payment from {{username}}. <br/><br/>
-						<a href="{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}">Click Here to view payment details</a> .<br/><br/>
-						Thank You!',
-						'user-registration'
-					)
-				)
+			/**
+			 * Filter to overwrite the payment success admin email.
+			 *
+			 * @param string Message content to overwrite the existing email content.
+			 */
+			$body_content = __(
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi Admin,
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					You have received a payment.
+				</p>
+				<p>
+					<b>Payment Details:</b>
+					<ul>
+					<li style="margin-bottom:10px;">
+						<b>Member:</b> {{username}}
+					</li>
+					<li style="margin-bottom:10px;">
+						<b>Amount:</b> {{payment_amount}}
+					</li>
+					<li style="margin-bottom:10px;">
+						<b>Payment Date:</b> {{payment_date}}
+					</li>
+					</ul>
+					</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					View full payment details: <br>
+					<a href="{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}" style="color: #4A90E2; text-decoration: none;">Click Here</a>
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				Thanks
+</p>
+				',
+				'user-registration'
 			);
+			// Use email template wrapper for editor display (unwrapped content).
+			if ( function_exists( 'ur_get_email_template_wrapper' ) ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
+
+			/**
+			 * Filter to modify the payment success admin email message content.
+			 *
+			 * @param string $body_content Message content for payment success admin email to be overridden.
+			 */
+			$message = apply_filters( 'user_registration_payment_admin_email_message', $body_content );
 
 			return $message;
 		}

@@ -13,9 +13,7 @@ class User_Registration_Content_Restriction {
 	 */
 	public function __construct() {
 
-		if ( UR_PRO_ACTIVE ) {
-			$this->define( 'URCR_TEMPLATES_DIR', UR()->plugin_path() . '/templates/pro/content-restriction/' );
-		}
+		$this->define( 'URCR_TEMPLATES_DIR', UR()->plugin_path() . '/templates/modules/content-restriction/' );
 
 		$this->includes();
 	}
@@ -61,19 +59,16 @@ class User_Registration_Content_Restriction {
 			include_once __DIR__ . '/admin/class-urcr-admin-meta-boxes.php';
 		}
 
-		if ( UR_PRO_ACTIVE ) {
-			include_once UR_ABSPATH . 'includes/pro/addons/content-restriction/functions-urcr-core.php';
-			include_once UR_ABSPATH . 'includes/pro/addons/content-restriction/class-urcr-ajax.php';
-		}
+		include_once __DIR__ . '/functions-urcr-core.php';
 
 		include_once __DIR__ . '/class-urcr-post-types.php';
 		include_once __DIR__ . '/class-urcr-shortcodes.php';
 
+		include_once __DIR__ . '/includes/RestApi/class-urcr-rest-api.php';
+
 		if ( $this->is_request( 'admin' ) ) {
 
-			if ( UR_PRO_ACTIVE ) {
-				include_once UR_ABSPATH . 'includes/pro/addons/content-restriction/admin/class-urcr-admin-assets.php';
-			}
+			include_once __DIR__ . '/admin/class-urcr-admin-assets.php';
 
 			include_once __DIR__ . '/admin/class-urcr-admin.php';
 		}

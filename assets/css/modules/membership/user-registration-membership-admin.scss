@@ -174,7 +174,9 @@
 		border-top-right-radius: 4px;
 		border-bottom-right-radius: 4px;
 		border-left: none;
-		padding: 10px 22px;
+		padding: 0px 22px;
+		min-height: 38px;
+		align-content: center;
 	}
 }
 
@@ -773,10 +775,10 @@
 									flex-wrap: wrap;
 
 									.ur-membership-types {
-										max-width: 250px;
+										max-width: 225px;
 										margin-bottom: 0;
 										border-radius: 4px;
-										border: 1px solid #E9E9E9;
+										border: 1px solid #e1e1e1;
 										background: #FFF;
 										padding: 12px 14px;
 										cursor: pointer;
@@ -792,9 +794,14 @@
 
 												label {
 													padding: 0 !important;
-													font-size: 16px;
-													line-height: 24px;
+													font-size: 15px;
+													line-height: 20px;
+													font-weight: 500;
 													cursor: pointer;
+
+													b {
+														font-weight: inherit;
+													}
 												}
 
 												input[type="radio"] {
@@ -861,10 +868,10 @@
 									flex-wrap: wrap;
 
 									.ur-membership-types {
-										max-width: 250px;
+										max-width: 225px;
 										margin-bottom: 0;
 										border-radius: 4px;
-										border: 1px solid #E9E9E9;
+										border: 1px solid #e1e1e1;
 										background: #FFF;
 										padding: 12px 14px;
 										cursor: pointer;
@@ -1039,9 +1046,9 @@
 									font-size: 16px;
 								}
 
-								input[type="number"] {
-									padding-left: $spacing_24px !important;
-								}
+								// input[type="number"] {
+								// 	padding-left: $spacing_24px !important;
+								// }
 							}
 						}
 					}
@@ -1103,7 +1110,8 @@
 						}
 					}
 
-					#payment-gateway-container {
+					#payment-gateway-container,
+					#ur-sync-to-email-marketing-container {
 						margin-top: 20px;
 
 						.user-registration-card {
@@ -1195,6 +1203,23 @@
 
 								.payment-option-body {
 									margin-top: $spacing_20px;
+
+									.ur-sync-to-email-marketing-addon {
+										&-title-container {
+											display: flex;
+											align-items: center;
+											justify-content: start;
+
+											&-inner {
+												display: flex;
+												justify-content: center;
+												align-items: center;
+												gap: 10px;
+											}
+										}
+
+										&-sync-container {}
+									}
 								}
 							}
 						}
@@ -1373,6 +1398,119 @@
 					}
 				}
 			}
+
+			&#membership-list {
+				.tablenav.top {
+					display: none;
+				}
+			}
+
+			&#user-registration-members-list-form {
+				#user-registration-base-list-filters-row {
+					margin-bottom: $spacing_32px;
+				}
+
+				.tablenav {
+					display: flex;
+					justify-content: flex-end;
+					align-self: center;
+					margin-bottom: $spacing_32px;
+					flex-wrap: wrap;
+					justify-content: space-between;
+
+					&.top {
+						justify-content: flex-end;
+						padding-top: 40px;
+						row-gap: $spacing_16px;
+					}
+
+					.bulkactions {
+						input[type="submit"] {
+							padding: 8px 14px;
+							font-size: 14px;
+							line-height: 20px;
+							color: #475BB2;
+							border-color: #475BB2;
+							background: #F6F7F7;
+							font-weight: 500;
+						}
+					}
+
+					.user-registration-members-filters {
+						display: flex;
+						flex-wrap: wrap;
+						gap: $spacing_16px;
+
+						@media (min-width: 1200px) {
+							flex-wrap: nowrap;
+						}
+
+						@media (max-width: 1199px) {
+							select {
+								flex: 1 1 180px;
+							}
+						}
+
+						@media (max-width: 768px) {
+							select {
+								flex: 1 1 100%;
+							}
+						}
+					}
+				}
+
+				.tablenav.top:has(.bulkactions) {
+					justify-content: space-between;
+					padding-top: 0;
+				}
+
+				.wp-list-table.users {
+					tbody {
+						tr {
+							&.no-items {
+								background: #ffffff;
+
+								td {
+									padding: 0;
+
+									.empty-list-table-container {
+										text-align: center;
+										margin-top: 30px;
+										margin-bottom: 30px;
+
+										img {
+											width: 300px;
+										}
+
+										h3 {
+											margin-top: 16px;
+											margin-bottom: 8px;
+											color: #222222;
+											font-size: 22px;
+											font-weight: 600;
+											line-height: 32px;
+										}
+
+										p {
+											color: #6B6B6B;
+											font-size: 14px;
+											font-weight: 400;
+											line-height: 24px;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				@media (max-width: 767px) {
+					#user-registration-base-list-filters-row {
+						display: block;
+						margin-top: 50px;
+					}
+				}
+			}
 		}
 	}
 }
@@ -1422,7 +1560,7 @@
 
 			#ur-member-form {
 				&-left {
-					width: 70%;
+					width: 100%;
 
 					#left-title {
 						padding-bottom: $spacing_20px;
@@ -1664,6 +1802,27 @@
 .urmg-shortcode {
 	display: flex;
 	line-height: 1;
+}
+
+#ur-membership-main-fields {
+	.ur-p-tag {
+		margin-bottom: 24px;
+		padding: 10px 12px 10px 16px;
+		background: rgba(71, 91, 178, 0.04);
+		border: 1px solid #475bb2;
+		font-weight: 400;
+		color: #383838;
+		border-radius: 4px;
+		font-size: 14px;
+		line-height: 22px;
+		font-style: normal;
+	}
+}
+
+.ur-membership-upgrade-container {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
 }
 
 // Membership field admin template styles

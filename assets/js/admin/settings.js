@@ -892,7 +892,6 @@
 			}
 		);
 	});
-
 	/**
 	 * Open collapsed menu on search input clicked.
 	 */
@@ -1618,6 +1617,62 @@
 		});
 	});
 
+	var $advancedLogicToggle = $('#urcr_is_advanced_logic_enabled');
+	if ($advancedLogicToggle.length > 0) {
+		$advancedLogicToggle.on('change', function (e) {
+			var $checkbox = $(this);
+			var isChecked = $checkbox.is(':checked');
+			var $parent = $checkbox.closest('.user-registration-toggle-form');
+			var $spinner = $parent.find('.ur-spinner');
+			if ($spinner.length > 0) {
+				return;
+			}
+			e.preventDefault();
+			e.stopPropagation();
+
+			if (!isChecked) {
+				$checkbox.prop('checked', true);
+				$checkbox.prop('disabled', true);
+				$spinner = $('<span class="ur-spinner"></span>');
+				$parent.append($spinner);
+
+
+				$.ajax({
+					url: user_registration_settings_params.ajax_url,
+					data: {
+						action: 'user_registration_check_advanced_logic_rules',
+						security: user_registration_settings_params.user_registration_settings_nonce
+					},
+					type: 'POST',
+					success: function (response) {
+						// Remove spinner element
+						$spinner.remove();
+						// Enable checkbox
+						$checkbox.prop('disabled', false);
+
+						if (response.success && response.data.has_advanced_logic) {
+							$checkbox.prop('checked', true);
+
+							var errorMessage = user_registration_settings_params.i18n.advanced_logic_rules_exist_error;
+							show_failure_message(errorMessage);
+						} else {
+							$checkbox.prop('checked', false);
+						}
+					},
+					error: function () {
+						$spinner.remove();
+						$checkbox.prop('disabled', false);
+						$checkbox.prop('checked', true);
+						show_failure_message(user_registration_settings_params.i18n.advanced_logic_check_error);
+					}
+				});
+			} else {
+				$checkbox.prop('checked', true);
+			}
+		});
+	}
+
+
 	function urm_get_captcha_section_data(settings_container) {
 		var section_data = {};
 		settings_container
@@ -1732,4 +1787,230 @@
 	function ur_remove_cookie(cookie_key) {
 		document.cookie = cookie_key + "=; Max-Age=-99999999; path=/";
 	}
+	$(document).on("click", ".user-registration-options-header__burger", function() {
+		$(".user-registration-header").addClass("user-registration-header--open");
+		$(".user-registration-settings-container").addClass("user-registration-settings-container--dimmed");
+		$(this).addClass(".user-registration-header__burger--hidden");
+		$(".user-registration-header__close").removeClass("user-registration-header__close--hidden");
+	});
+	$(document).on("click", ".user-registration-header__close", function() {
+		$(".user-registration-header").removeClass("user-registration-header--open");
+		$(".user-registration-settings-container").removeClass("user-registration-settings-container--dimmed");
+		$(this).addClass("user-registration-header__close--hidden");
+		$(".user-registration-options-header__burger").removeClass("user-registration-header__close--hidden");
+	});
+	/**
+	 * Handle display conditions/dependencies for settings fields.
+	 */
+	function handleDisplayConditions() {
+		// Find all fields with display conditions.
+		$('[data-has-display-condition="1"]').each(function () {
+			var $field = $(this);
+			var conditionField = $field.data("display-condition-field");
+			var operator =
+				$field.data("display-condition-operator") || "equals";
+			var conditionValue = $field.data("display-condition-value");
+			var caseSensitive =
+				$field.data("display-condition-case") || "insensitive";
+
+			if (!conditionField) {
+				return;
+			}
+
+			// Parse condition value if it's JSON (for arrays).
+			if (
+				typeof conditionValue === "string" &&
+				conditionValue.startsWith("[")
+			) {
+				try {
+					conditionValue = JSON.parse(conditionValue);
+				} catch (e) {
+					// If parsing fails, use as string.
+				}
+			}
+
+			// Function to check condition and show/hide field.
+			var checkCondition = function (useAnimation) {
+				var $conditionField = $("#" + conditionField);
+				var fieldValue = "";
+
+				// Get field value based on field type.
+				if ($conditionField.length === 0) {
+					return;
+				}
+
+				if ($conditionField.is(":checkbox")) {
+					fieldValue = $conditionField.is(":checked") ? "yes" : "no";
+				} else if ($conditionField.is(":radio")) {
+					fieldValue = $conditionField.filter(":checked").val() || "";
+				} else if ($conditionField.is("select")) {
+					fieldValue = $conditionField.val() || "";
+					// Handle multiselect.
+					if ($conditionField.attr("multiple")) {
+						fieldValue = $conditionField.val() || [];
+					}
+				} else {
+					fieldValue = $conditionField.val() || "";
+				}
+
+				// Convert fieldValue to string for comparison if needed.
+				var fieldValueStr = Array.isArray(fieldValue)
+					? fieldValue.join(",")
+					: String(fieldValue);
+				var conditionValueStr = Array.isArray(conditionValue)
+					? conditionValue.join(",")
+					: String(conditionValue);
+
+				// Case sensitivity handling.
+				if (
+					caseSensitive === "insensitive" ||
+					caseSensitive === "false"
+				) {
+					fieldValueStr = fieldValueStr.toLowerCase();
+					conditionValueStr = conditionValueStr.toLowerCase();
+				}
+
+				var shouldShow = false;
+
+				// Evaluate condition based on operator.
+				switch (operator) {
+					case "equals":
+					case "==":
+						shouldShow = fieldValueStr === conditionValueStr;
+						break;
+					case "not_equals":
+					case "!=":
+						shouldShow = fieldValueStr !== conditionValueStr;
+						break;
+					case "contains":
+						shouldShow =
+							fieldValueStr.indexOf(conditionValueStr) !== -1;
+						break;
+					case "not_contains":
+						shouldShow =
+							fieldValueStr.indexOf(conditionValueStr) === -1;
+						break;
+					case "empty":
+						shouldShow =
+							!fieldValue ||
+							fieldValueStr === "" ||
+							(Array.isArray(fieldValue) &&
+								fieldValue.length === 0);
+						break;
+					case "not_empty":
+						shouldShow =
+							fieldValue &&
+							fieldValueStr !== "" &&
+							!(
+								Array.isArray(fieldValue) &&
+								fieldValue.length === 0
+							);
+						break;
+					case "greater_than":
+					case ">":
+						shouldShow =
+							parseFloat(fieldValue) > parseFloat(conditionValue);
+						break;
+					case "less_than":
+					case "<":
+						shouldShow =
+							parseFloat(fieldValue) < parseFloat(conditionValue);
+						break;
+					case "greater_than_or_equal":
+					case ">=":
+						shouldShow =
+							parseFloat(fieldValue) >=
+							parseFloat(conditionValue);
+						break;
+					case "less_than_or_equal":
+					case "<=":
+						shouldShow =
+							parseFloat(fieldValue) <=
+							parseFloat(conditionValue);
+						break;
+					case "in":
+						if (Array.isArray(conditionValue)) {
+							shouldShow =
+								conditionValue.indexOf(fieldValue) !== -1 ||
+								conditionValue.indexOf(fieldValueStr) !== -1;
+						} else {
+							shouldShow =
+								String(conditionValue)
+									.split(",")
+									.indexOf(fieldValueStr) !== -1;
+						}
+						break;
+					case "not_in":
+						if (Array.isArray(conditionValue)) {
+							shouldShow =
+								conditionValue.indexOf(fieldValue) === -1 &&
+								conditionValue.indexOf(fieldValueStr) === -1;
+						} else {
+							shouldShow =
+								String(conditionValue)
+									.split(",")
+									.indexOf(fieldValueStr) === -1;
+						}
+						break;
+					default:
+						shouldShow = fieldValueStr === conditionValueStr;
+				}
+
+				// Show or hide field based on condition.
+				// Use instant show/hide for initial load, animation for subsequent changes.
+				if (shouldShow) {
+					if (useAnimation !== false) {
+						$field.slideDown(200);
+					} else {
+						$field.show();
+					}
+				} else {
+					if (useAnimation !== false) {
+						$field.slideUp(200);
+					} else {
+						$field.hide();
+					}
+				}
+			};
+
+			// Initial check without animation (instant).
+			checkCondition(false);
+
+			// Listen for changes on the condition field.
+			var $conditionField = $("#" + conditionField);
+			if ($conditionField.length > 0) {
+				// Handle different field types.
+				if (
+					$conditionField.is(":checkbox") ||
+					$conditionField.is(":radio")
+				) {
+					$conditionField.on("change", function () {
+						checkCondition(true); // Use animation for user interactions.
+					});
+				} else {
+					$conditionField.on("change keyup", function () {
+						checkCondition(true); // Use animation for user interactions.
+					});
+				}
+			}
+		});
+	}
+
+	// Initialize display conditions immediately when DOM is ready.
+	$(function () {
+		handleDisplayConditions();
+	});
+
+	// Also run immediately if DOM is already loaded (for inline scripts).
+	if (
+		document.readyState === "complete" ||
+		document.readyState === "interactive"
+	) {
+		setTimeout(handleDisplayConditions, 1);
+	}
+
+	// Re-initialize after AJAX updates (if needed).
+	$(document).on("ur_settings_updated", function () {
+		handleDisplayConditions();
+	});
 })(jQuery);

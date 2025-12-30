@@ -9,6 +9,8 @@
  * @package  UserRegistration/Shortcodes/My_Account
  */
 
+use Masteriyo\Constants;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -126,6 +128,13 @@ class UR_Shortcode_My_Account {
 			}
 		} else {
 
+			if ( isset( $wp->query_vars['urm-course-portal'] ) ) {
+
+				echo do_shortcode( '[masteriyo_account]' );
+
+				return;
+			}
+
 			// Enqueue script.
 			$user_id = get_current_user_id();
 			$form_id = get_user_meta( $user_id, 'ur_form_id', true );
@@ -241,8 +250,6 @@ class UR_Shortcode_My_Account {
 			}
 
 			include_once UR_ABSPATH . 'includes/functions-ur-notice.php';
-			$notices = ur_get_notices();
-			ur_print_notices();
 
 			ur_get_template(
 				'myaccount/form-edit-profile.php',
