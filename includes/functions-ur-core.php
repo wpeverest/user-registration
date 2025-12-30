@@ -5184,8 +5184,14 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			}
 		}
 
-		// Check if email template is selected.
-		if ( '' !== $template && 'none' !== $template ) {
+		// Normalize template value - handle null, empty, false, 0, and 'none' cases.
+		// Convert to string and trim whitespace for consistent comparison.
+		$template = is_null( $template ) ? '' : (string) $template;
+		$template = trim( $template );
+
+		// Check if email template is selected and not 'none'.
+		// If template is empty or 'none', use email-wrapper.php template.
+		if ( '' !== $template && 'none' !== strtolower( $template ) ) {
 			/**
 			 * Filters the email template message.
 			 *
@@ -5194,38 +5200,12 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			 * an opportunity to customize the email content based on the original content and the template.
 			 *
 			 * @param string $email_content The original content of the email template.
-			 * @param string $template The template being used for the email.
+			 * @param string $template      The template being used for the email.
 			 */
 			$email_content = apply_filters( 'user_registration_email_template_message', $email_content, $template );
 		} else {
-			$default_width = '50%';
-
-			/**
-			 * Filters to change the email body width.
-			 *
-			 * The 'user_registration_email_body_width' filter allows developers to modify
-			 * the width of the email body used during the user registration process. It provides
-			 * an opportunity to customize the width of the email body based as per user requirements.
-			 *
-			 * @param string $default_width The default width.
-			 */
-			$email_body_width = apply_filters( 'user_registration_email_body_width', $default_width );
-			ob_start();
-			?>
-			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
-				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
-					   style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
-					<tbody>
-					<tr>
-						<td colspan="2" style="text-align: left;">
-							<?php echo wp_kses_post( $email_content ); ?>
-						</td>
-					</tr>
-					</tbody>
-				</table>
-			</div>
-			<?php
-			$email_content = wp_kses_post( ob_get_clean() );
+			// Use wrapper function to process email content with email-wrapper.php template.
+			$email_content = ur_process_email_content_wrapper( $email_content );
 		}
 
 		return $email_content;
@@ -5311,6 +5291,59 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 	<div class="email-wrapper-outer" style="font-family: Arial, sans-serif; padding: 100px 0; background-color: #ffffff;">
 	<div class="email-wrapper-inner" style="width: ' . esc_attr( $email_width ) . '; max-width: ' . esc_attr( $max_width ) . '; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
 	<div class="email-body" style="padding: 30px; background-color: #ffffff;">' . $body_content . '</div></div></div>';
+	}
+}
+
+if ( ! function_exists( 'ur_get_email_template_wrapper' ) ) {
+	/**
+	 * Wraps email body content using email-wrapper.php template (Free version).
+	 *
+	 * @param string $body_content Email body content to wrap.
+	 * @param bool   $wrap Whether to wrap the content. Default true.
+	 * @param array  $values Values for smart tag processing (not used in free version).
+	 * @return string Wrapped email content.
+	 */
+	function ur_get_email_template_wrapper( $body_content, $wrap = true, $values = array() ) {
+		// If wrap is false, return only the body content (for editor display).
+		if ( ! $wrap ) {
+			return $body_content;
+		}
+
+		// Locate the email wrapper template.
+		$template_path = ur_locate_template( 'emails/email-wrapper.php' );
+
+		// If template file exists, use it.
+		if ( $template_path && file_exists( $template_path ) ) {
+			ob_start();
+			// Make body_content available to the template.
+			include $template_path;
+			return ob_get_clean();
+		}
+
+		// Fallback to ur_wrap_email_body_content if template not found.
+		return ur_wrap_email_body_content( $body_content );
+	}
+}
+
+if ( ! function_exists( 'ur_process_email_content_wrapper' ) ) {
+	/**
+	 * Process email content with wrapper and smart tags.
+	 * This function handles the email wrapper logic for free version.
+	 *
+	 * @param string $email_content Email content to process.
+	 * @return string Processed email content with wrapper and smart tags.
+	 */
+	function ur_process_email_content_wrapper( $email_content ) {
+		// Use wrapper function to wrap email content with email-wrapper.php template.
+		if ( function_exists( 'ur_get_email_template_wrapper' ) ) {
+			$email_content = ur_get_email_template_wrapper( $email_content, true );
+		}
+
+		// Process smart tags in the wrapped content.
+		// This ensures smart tags are processed after wrapping.
+		$email_content = apply_filters( 'user_registration_process_smart_tags', $email_content, array(), array() );
+
+		return $email_content;
 	}
 }
 

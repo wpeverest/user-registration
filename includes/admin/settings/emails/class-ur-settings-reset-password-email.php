@@ -160,9 +160,8 @@ if ( ! class_exists( 'UR_Settings_Reset_Password_Email', false ) ) :
 				',
 				'user-registration'
 			);
-			$body_content = ur_wrap_email_body_content( $body_content );
-
-			if ( UR_PRO_ACTIVE ) {
+			// Use email template wrapper for editor display (unwrapped content).
+			if ( function_exists( 'ur_get_email_template_wrapper' ) ) {
 				$body_content = ur_get_email_template_wrapper( $body_content, false );
 			}
 
