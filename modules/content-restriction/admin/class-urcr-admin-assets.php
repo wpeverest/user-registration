@@ -434,4 +434,3 @@ class URCR_Admin_Assets {
 }
 
 return new URCR_Admin_Assets();
-

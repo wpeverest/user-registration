@@ -64,6 +64,12 @@ class UR_Blocks {
 
 		wp_enqueue_style( 'user-registration-blocks-editor-style' );
 
+		if ( ur_check_module_activation( 'membership' ) ) {
+
+			wp_register_style( 'user-registration-membership-frontend-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-frontend.css', array(), UR_MEMBERSHIP_VERSION );
+			wp_enqueue_style( 'user-registration-membership-frontend-style' );
+		}
+
 		$authenticate_smart_tag = \UR_Smart_Tags::ur_authenticated_parsable_smart_tags_list();
 
 		$smart_tag = array();

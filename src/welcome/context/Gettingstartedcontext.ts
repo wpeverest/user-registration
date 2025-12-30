@@ -68,6 +68,7 @@ const createDefaultPlan = (
 	isNew: false
 });
 
+
 export const getTotalStepsForType = (
 	membershipType: MembershipSetupType
 ): number => {
@@ -194,8 +195,10 @@ export const reducer = (
 			return { ...state, currentStep: action.payload };
 
 		case "SET_MEMBERSHIP_SETUP_TYPE":
+
 			const newDefaultType: MembershipPlanType =
 				action.payload === "paid" ? "paid" : "free";
+
 
 			const updatedPlansOnTypeChange = state.membershipPlans.map(
 				(plan, index) => {

@@ -19,12 +19,12 @@ interface Step {
 interface StepperProps {
 	steps: Step[];
 	currentStep: number;
-	maxCompletedStep?: number; // Optional - kept for backward compatibility
+	maxCompletedStep?: number;
 	onStepClick: (stepNumber: number) => void;
 	onClose?: () => void;
 }
 
-// Custom X icon component
+
 const CloseXIcon: React.FC = () => (
 	<svg
 		width="18"

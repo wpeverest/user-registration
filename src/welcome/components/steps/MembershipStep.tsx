@@ -216,7 +216,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	const accessBg = useColorModeValue("green.50", "green.900");
 	const accessBorderColor = useColorModeValue("green.200", "green.700");
 
-	// Reset billing period to "one-time" for non-Pro users if they have a subscription billing period
 	useEffect(() => {
 		if (!isPro && plan.billingPeriod !== "one-time") {
 			dispatch({
@@ -244,7 +243,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	};
 
 	const handleTypeChange = (type: MembershipPlanType) => {
-		// Only allow changing to paid if canCreatePaid is true
 		if (type === "paid" && !canCreatePaid) {
 			return;
 		}
