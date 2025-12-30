@@ -37,7 +37,7 @@
 				</div>
 			</div>
 
-			<?php if ( ! UR_PRO_ACTIVE ) : ?>
+			<?php if ( UR_PRO_ACTIVE ) : ?>
 				<!-- Subscription Fields Container -->
 				<div class="ur-membership-subscription-field-container <?php echo isset( $membership_details['type'] ) && 'subscription' === $membership_details['type'] ? '' : 'ur-d-none'; ?>">
 					<!-- Trial Section -->
