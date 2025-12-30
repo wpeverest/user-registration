@@ -300,6 +300,7 @@ const RuleGroup = ({
 							onAccessControlChange={onAccessControlChange}
 							contentTargets={contentTargets}
 							onContentTargetsChange={onContentTargetsChange}
+							ruleType={ruleType}
 						/>
 					)}
 				</div>

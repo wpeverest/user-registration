@@ -79,8 +79,19 @@ class URCR_Shortcodes {
 				$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
 				$subscription         = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
 
-				$current_user_membership   = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
-				$is_user_membership_active = ! empty( $subscription['status'] ) && 'active' === $subscription['status'];
+				$current_user_membership   = array();
+				$is_user_membership_active = false;
+
+				if ( ! empty( $subscription ) && is_array( $subscription ) ) {
+					foreach ( $subscription as $sub ) {
+						if ( ! empty( $sub['item_id'] ) ) {
+							$current_user_membership[] = $sub['item_id'];
+						}
+						if ( ! empty( $sub['status'] ) && 'active' === $sub['status'] ) {
+							$is_user_membership_active = true;
+						}
+					}
+				}
 			}
 
 			if ( empty( $roles ) ) {
@@ -184,8 +195,11 @@ class URCR_Shortcodes {
 						break;
 
 					case 'memberships':
-						if ( ! empty( $memberships_roles ) && in_array( $current_user_membership, $memberships_roles, true ) && $is_user_membership_active ) {
-							$matched = true;
+						if ( ! empty( $memberships_roles ) && is_array( $current_user_membership ) && $is_user_membership_active ) {
+							$common = array_intersect( $current_user_membership, $memberships_roles );
+							if ( ! empty( $common ) ) {
+								$matched = true;
+							}
 						}
 						break;
 				}
