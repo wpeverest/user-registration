@@ -43,6 +43,56 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 		return ! $result ? false : $result;
 	}
 
+	public function get_subscriptions_to_retry() {
+		// Check if payment retry is enabled
+		if ( ! ur_string_to_bool( get_option( 'user_registration_payment_retry_enabled', 'no' ) ) ) {
+			return array();
+		}
+
+		// Get retry settings
+		$retry_count = (int) get_option( 'user_registration_payment_retry_count', 3 );
+		$retry_interval = (int) get_option( 'user_registration_payment_retry_interval', 3 );
+
+		// Calculate retry window in days
+		$retry_window_days = $retry_count * $retry_interval;
+
+		// Calculate the date from which we need to fetch subscriptions
+		// We want subscriptions updated within the last X days based on the retry window
+		$current_date = current_time( 'mysql' );
+		$check_date = date( 'Y-m-d H:i:s', strtotime( "-{$retry_window_days} days", strtotime( $current_date ) ) );
+
+		$sql = sprintf(
+			"
+			SELECT wu.user_email,
+			       wu.user_login as username,
+			       wu.ID as member_id,
+				   wo.payment_method,
+				   wo.status as order_status,
+				   wo.order_type,
+			       wp.post_title as membership_plan_name,
+			       wums.item_id as membership,
+			       wums.ID as subscription_id,
+				   wums.subscription_id as sub_id,
+			       wums.status,
+			       wums.updated_at
+			FROM $this->table wums
+			LEFT JOIN $this->users_table wu ON wums.user_id = wu.ID
+			LEFT JOIN $this->posts_table wp ON wums.item_id = wp.ID
+			LEFT JOIN $this->orders_table wo ON wums.ID = wo.subscription_id
+			WHERE (wums.status = 'failed' OR wums.status = 'expired')
+			AND wums.updated_at >= '%s'
+			ORDER BY wums.updated_at ASC
+			",
+			$check_date
+		);
+
+		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
+
+		return ! $result ? array() : $result;
+	}
+
+
+
 	// TODO - Handle Multiple ( Remove after multiple memberships merge )
 	/**
 	 * Get members subscription by their ID
