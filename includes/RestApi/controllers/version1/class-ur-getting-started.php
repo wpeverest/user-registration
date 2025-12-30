@@ -197,6 +197,8 @@ class UR_Getting_Started {
 	 * @return \WP_REST_Response
 	 */
 	public static function get_wizard_state( $request ) {
+		delete_option( 'user_registration_onboarding_skipped_step' );
+		delete_option('	urm_onboarding_current_step');
 		update_option('urm_is_new_installation', true);
 		$current_step    = self::get_current_step();
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
