@@ -472,19 +472,23 @@ class UR_Frontend {
 			}
 		}
 
-		$total_count = count( $total_items );
-		$page        = max( 1, intval( $page ) );
-		$per_page    = max( 1, intval( $per_page ) );
-		$offset      = ( $page - 1 ) * $per_page;
-		$items       = array_slice( $total_items, $offset, $per_page );
+		if ( ! empty( $total_items ) ) {
+			$total_count = count( $total_items );
+			$page        = max( 1, intval( $page ) );
+			$per_page    = max( 1, intval( $per_page ) );
+			$offset      = ( $page - 1 ) * $per_page;
+			$items       = array_slice( $total_items, $offset, $per_page );
 
-		return array(
-			'items'       => $items,
-			'total_items' => $total_count,
-			'page'        => $page,
-			'per_page'    => $per_page,
-			'total_pages' => ( $per_page > 0 ) ? (int) ceil( $total_count / $per_page ) : 1,
-		);
+			return array(
+				'items'       => $items,
+				'total_items' => $total_count,
+				'page'        => $page,
+				'per_page'    => $per_page,
+				'total_pages' => ( $per_page > 0 ) ? (int) ceil( $total_count / $per_page ) : 1,
+			);
+		}
+
+		return array();
 	}
 
 	/**
