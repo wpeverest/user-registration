@@ -2168,6 +2168,10 @@
 				function (e) {
 					e.preventDefault();
 
+					if (urmf_data.isEditor) {
+						return;
+					}
+
 					var $this = $(this),
 						membership_id = $this
 							.siblings('input[name="membership_id"]')

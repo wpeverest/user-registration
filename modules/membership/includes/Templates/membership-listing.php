@@ -219,7 +219,7 @@ if ( 'block' === $type ) :
 		<?php
 elseif ( 'list' === $type ) :
 	?>
-	<form id="membership-selection-form-<?php echo esc_attr( $uuid ); ?>" class="membership-selection-form ur-membership-container" method="GET" >
+	<form id="membership-old-selection-form-<?php echo esc_attr( $uuid ); ?>" class="membership-selection-form layout-list ur-membership-container" method="GET" >
 		<input type="hidden" name="urm_uuid" value="<?php echo esc_html( $uuid ); ?>">
 		<input type="hidden" name="thank_you_page_id" value="<?php echo absint( $thank_you_page_id ); ?>">
 		<input type="hidden" name="redirection_url"
