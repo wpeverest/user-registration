@@ -126,6 +126,10 @@ if ( ! class_exists( 'Hooks' ) ) :
 		public function add_single_course_sidebar_content( $course ) {
 			$course_id = $course->get_id();
 
+			if ( Helper::check_course_access( $course ) ) {
+				return;
+			}
+
 			if ( CourseAccessMode::OPEN === $course->get_access_mode() ) {
 				return;
 			}
@@ -455,7 +459,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 			if ( is_user_logged_in() && CourseAccessMode::NEED_REGISTRATION === $course_obj->get_access_mode() ) {
 
-				if ( ! $this->check_course_access( $course_obj ) ) {
+				if ( ! Helper::check_course_access( $course_obj ) ) {
 					$text = __( 'Join Now', 'learning-management-system' );
 				}
 
@@ -504,61 +508,6 @@ if ( ! class_exists( 'Hooks' ) ) :
 				$default_args              = array_merge( $default_args, $GLOBALS['masteriyo_loop'] );
 				$GLOBALS['masteriyo_loop'] = wp_parse_args( $args, $default_args );
 			}
-		}
-
-		/**
-		 * Checks whether the currently logged-in user has access to a course.
-		 *
-		 * @param mixed $course Course object.
-		 * @return bool
-		 */
-		public function check_course_access( $course ) {
-
-			$can_start_course = false;
-
-			if ( is_user_logged_in() && CourseAccessMode::NEED_REGISTRATION === $course->get_access_mode() ) {
-
-				$user = masteriyo_get_current_user();
-				$id   = is_a( $user, 'WP_User' ) ? $user->ID : $user->get_id();
-
-				$user_registration_source = get_user_meta( $id, 'ur_registration_source', true );
-
-				if ( 'membership' !== $user_registration_source ) {
-					$can_start_course = false;
-				} else {
-
-					$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
-					$memberships        = $members_repository->get_member_membership_by_id( $id );
-
-						$compare_data = array(
-							'courses' => array(),
-							'status'  => array(),
-						);
-
-						foreach ( $memberships as $membership ) {
-							$compare_data['status'][] = $membership['status'];
-							if ( 'active' !== $membership['status'] ) {
-								continue;
-							}
-							$access_course           = Helper::get_courses_based_on_membership( $membership['post_id'] );
-							$compare_data['courses'] = array_merge( $compare_data['courses'], $access_course );
-						}
-
-						if ( empty( $compare_data['status'] ) || ! in_array( 'active', $compare_data['status'], true ) ) {
-							$can_start_course = false;
-						} else {
-							$membership_courses = $compare_data['courses'];
-
-							$course_id = is_a( $course, 'Masteriyo\Models\Course' )
-							? $course->get_id()
-							: $course->ID;
-
-							$can_start_course = in_array( (string) $course_id, $membership_courses, true );
-						}
-				}
-			}
-
-			return $can_start_course;
 		}
 
 		public function get_current_user_access_course() {
