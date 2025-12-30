@@ -1867,6 +1867,9 @@
   width: 8px;
   height: 15px;
 }
+.user-registration-membership_page_user-registration-membership #ur-membership-group-create-form .ur-input-type-membership-group-name .select2-container--default .select2-selection--multiple .select2-search__field {
+  width: 100% !important;
+}
 
 .tooltipster-base.tooltipster-bottom {
   margin-top: -30px;
