@@ -386,6 +386,7 @@ class URCR_Admin_Assets {
 			'is_pro'                         => UR_PRO_ACTIVE,
 			'content_type_options'           => $content_type_options,
 			'condition_options'              => $condition_options,
+			'masteriyo_courses'              => class_exists( 'WPEverest\URM\Masteriyo\Helper' ) ? WPEverest\URM\Masteriyo\Helper::get_courses( array(), '', 'free' ) : array(),
 			'is_membership_module_enabled'   => $is_membership_module_enabled,
 			'membership_count'               => $membership_count,
 			'has_multiple_memberships'       => $has_multiple_memberships,

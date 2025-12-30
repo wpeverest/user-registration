@@ -6,7 +6,12 @@ import { __ } from "@wordpress/i18n";
 import { isProAccess, getURCRData } from "../../utils/localized-data";
 import DropdownMenu from "./DropdownMenu";
 
-const ContentTypeDropdown = ({ onSelect, existingContentTypes = [] }) => {
+const ContentTypeDropdown = ({
+	onSelect,
+	existingContentTypes = [],
+	conditions,
+	accessControl
+}) => {
 	// Get content type options from localized data
 	const allOptions = getURCRData("content_type_options", [
 		{ value: "pages", label: __("Pages", "user-registration") },

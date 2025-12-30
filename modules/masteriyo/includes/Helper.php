@@ -102,7 +102,7 @@ if ( ! class_exists( 'Helper' ) ) :
 
 			$user_courses = array();
 
-			if ( $content_rules['enabled'] && ! empty( $content_rules['access_control'] ) && 'access' === $content_rules['access_control'] ) {
+			if ( isset( $content_rules['enabled'] ) && $content_rules['enabled'] && ! empty( $content_rules['access_control'] ) && 'access' === $content_rules['access_control'] ) {
 				foreach ( $content_rules['target_contents'] as $content ) {
 					if ( 'masteriyo_courses' === $content['type'] ) {
 						$user_courses = $content['value'];

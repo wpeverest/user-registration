@@ -390,6 +390,7 @@ const RuleGroup = ({
 							onAccessControlChange={onAccessControlChange}
 							contentTargets={contentTargets}
 							onContentTargetsChange={onContentTargetsChange}
+							conditions={conditions}
 						/>
 					)}
 				</div>

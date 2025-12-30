@@ -68,7 +68,7 @@ class Frontend {
 
 		$page = get_page_by_path( 'course-portal' );
 
-		if ( ( $page && $page->ID === $post->ID ) || masteriyo_is_single_course_page() ) {
+		if ( ( $post && $page && $page->ID === $post->ID ) || masteriyo_is_single_course_page() ) {
 			wp_enqueue_style( 'urm-masteriyo-frontend-style' );
 			wp_enqueue_script( 'urm-masteriyo-frontend-script' );
 			return;
@@ -103,6 +103,10 @@ class Frontend {
 
 		$account_page_id = masteriyo_get_setting( 'general.pages.account_page_id' );
 
+		if ( ! $page ) {
+			return;
+		}
+
 		if ( $account_page_id === $page->ID ) {
 			return;
 		}
@@ -128,6 +132,10 @@ class Frontend {
 		$user_source     = get_user_meta( $current_user_id, 'ur_registration_source', true );
 
 		if ( 'membership' !== $user_source ) {
+			return $items;
+		}
+
+		if ( empty( $this->get_current_user_course() ) ) {
 			return $items;
 		}
 
@@ -163,11 +171,7 @@ class Frontend {
 	 * @return void
 	 */
 	public function tab_endpoint_content() {
-		$user_id            = get_current_user_id();
-		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
-		$membership         = $members_repository->get_member_membership_by_id( $user_id );
-
-		$user_courses = Helper::get_courses_based_on_membership( $membership['post_id'] );
+		$user_courses = $this->get_current_user_course();
 
 		$courses = array();
 
@@ -199,8 +203,10 @@ class Frontend {
 
 		$current_user_id = get_current_user_id();
 		$user_source     = get_user_meta( $current_user_id, 'ur_registration_source', true );
-
 		if ( 'membership' !== $user_source ) {
+			return;
+		}
+		if ( empty( $this->get_current_user_course() ) ) {
 			return;
 		}
 
@@ -209,5 +215,26 @@ class Frontend {
 		add_rewrite_endpoint( 'urm-courses', $mask );
 		add_rewrite_endpoint( 'urm-course-portal', $mask );
 		flush_rewrite_rules();
+	}
+
+	public function get_current_user_course() {
+		$user_id = get_current_user_id();
+
+		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
+		$memberships        = $members_repository->get_member_membership_by_id( $user_id );
+
+		if ( empty( $memberships ) ) {
+			return array();
+		}
+
+		$user_courses = array();
+		foreach ( $memberships as $key => $membership ) {
+			if ( empty( $membership['post_id'] ) ) {
+				continue;
+			}
+			$user_courses = array_merge( $user_courses, Helper::get_courses_based_on_membership( $membership['post_id'] ) );
+		}
+
+		return $user_courses;
 	}
 }

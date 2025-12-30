@@ -12,7 +12,8 @@ const AccessControlSection = ({
 	accessControl = "access",
 	onAccessControlChange,
 	contentTargets = [],
-	onContentTargetsChange
+	onContentTargetsChange,
+	conditions
 }) => {
 	const conditionValueInputWrapperRef = useRef(null);
 
@@ -150,7 +151,7 @@ const AccessControlSection = ({
 						{contentTargets.map((target) => (
 							<div key={target.id} className="urcr-target-item">
 								<span className="urcr-target-type-label">
-									{target.label}:
+									{target.label.replace(/_/g, " ")}:
 								</span>
 								<ContentValueInput
 									contentType={target.type}
@@ -196,6 +197,8 @@ const AccessControlSection = ({
 						<ContentTypeDropdown
 							onSelect={handleAfterContentTypeSelection}
 							existingContentTypes={contentTargets}
+							conditions={conditions}
+							accessControl={accessControl}
 						/>
 					)}
 				/>

@@ -1583,6 +1583,18 @@
 						text: urcr_membership_access_data.post_types[key]
 					};
 				});
+			} else if (
+				type === "masteriyo_courses" &&
+				urcr_membership_access_data.masteriyo_courses
+			) {
+				options = Object.keys(
+					urcr_membership_access_data.masteriyo_courses
+				).map(function (key) {
+					return {
+						id: key,
+						text: urcr_membership_access_data.masteriyo_courses[key]
+					};
+				});
 			}
 
 			return options;

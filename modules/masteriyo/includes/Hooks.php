@@ -83,7 +83,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 			$page = get_page_by_path( 'course-portal' );
 
-			$account_page_id = $page && $page->ID === $post->ID;
+			$account_page_id = $post && $page && $page->ID === $post->ID;
 
 			return $account_page_id;
 		}
@@ -101,13 +101,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 			$access_courses = array();
 
 			if ( is_user_logged_in() ) {
-				$user = masteriyo_get_current_user();
-				$id   = is_a( $user, 'WP_User' ) ? $user->ID : $user->get_id();
-
-				$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
-				$membership         = $members_repository->get_member_membership_by_id( $id );
-
-				$access_courses = Helper::get_courses_based_on_membership( $membership['post_id'] );
+				$access_courses = $this->get_current_user_access_course();
 			}
 
 			$course_id   = $data['course']['id'];
@@ -339,9 +333,23 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 					// Membership users
 					$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
-					$membership         = $members_repository->get_member_membership_by_id( $id );
+					$memberships        = $members_repository->get_member_membership_by_id( $id );
 
-					if ( empty( $membership ) || empty( $membership['status'] ) || 'active' !== $membership['status'] ) {
+					$compare_data = array(
+						'courses' => array(),
+						'status'  => array(),
+					);
+
+					foreach ( $memberships as $membership ) {
+						$compare_data['status'][] = $membership['status'];
+						if ( 'active' !== $membership['status'] ) {
+							continue;
+						}
+						$access_course           = Helper::get_courses_based_on_membership( $membership['post_id'] );
+						$compare_data['courses'] = array_merge( $compare_data['courses'], $access_course );
+					}
+
+					if ( empty( $compare_data['status'] ) || ! in_array( 'active', $compare_data['status'], true ) ) {
 
 						if ( masteriyo_is_single_course_page() ) {
 							$url = Helper::get_checkout_page_url();
@@ -349,7 +357,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 							$url = $course->get_permalink();
 						}
 					} else {
-						$access_course = Helper::get_courses_based_on_membership( $membership['post_id'] );
+						$access_course = $compare_data['courses'];
 
 						$course_id = is_a( $course, 'Masteriyo\Models\Course' ) ? $course->get_id() : $course->ID;
 
@@ -393,15 +401,28 @@ if ( ! class_exists( 'Hooks' ) ) :
 					} else {
 
 						$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
-						$membership         = $members_repository->get_member_membership_by_id( $id );
+						$memberships        = $members_repository->get_member_membership_by_id( $id );
 
-						if ( empty( $membership ) || empty( $membership['status'] ) || 'active' !== $membership['status'] ) {
+						$compare_data = array(
+							'courses' => array(),
+							'status'  => array(),
+						);
+
+						foreach ( $memberships as $membership ) {
+							$compare_data['status'][] = $membership['status'];
+							if ( 'active' !== $membership['status'] ) {
+								continue;
+							}
+							$access_course           = Helper::get_courses_based_on_membership( $membership['post_id'] );
+							$compare_data['courses'] = array_merge( $compare_data['courses'], $access_course );
+						}
+
+						if ( empty( $compare_data['status'] ) || ! in_array( 'active', $compare_data['status'], true ) ) {
 							$can_start_course = false;
 						} else {
 
-							$membership_courses = Helper::get_courses_based_on_membership( $membership['post_id'] );
-
-							$course_id = is_a( $course, 'Masteriyo\Models\Course' )
+							$membership_courses = $compare_data['courses'];
+							$course_id          = is_a( $course, 'Masteriyo\Models\Course' )
 								? $course->get_id()
 								: $course->ID;
 
@@ -507,23 +528,59 @@ if ( ! class_exists( 'Hooks' ) ) :
 				} else {
 
 					$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
-					$membership         = $members_repository->get_member_membership_by_id( $id );
+					$memberships        = $members_repository->get_member_membership_by_id( $id );
 
-					if ( empty( $membership ) || empty( $membership['status'] ) || 'active' !== $membership['status'] ) {
-						$can_start_course = false;
-					} else {
-						$membership_courses = Helper::get_courses_based_on_membership( $membership['post_id'] );
+						$compare_data = array(
+							'courses' => array(),
+							'status'  => array(),
+						);
 
-						$course_id = is_a( $course, 'Masteriyo\Models\Course' )
+						foreach ( $memberships as $membership ) {
+							$compare_data['status'][] = $membership['status'];
+							if ( 'active' !== $membership['status'] ) {
+								continue;
+							}
+							$access_course           = Helper::get_courses_based_on_membership( $membership['post_id'] );
+							$compare_data['courses'] = array_merge( $compare_data['courses'], $access_course );
+						}
+
+						if ( empty( $compare_data['status'] ) || ! in_array( 'active', $compare_data['status'], true ) ) {
+							$can_start_course = false;
+						} else {
+							$membership_courses = $compare_data['courses'];
+
+							$course_id = is_a( $course, 'Masteriyo\Models\Course' )
 							? $course->get_id()
 							: $course->ID;
 
-						$can_start_course = in_array( (string) $course_id, $membership_courses, true );
-					}
+							$can_start_course = in_array( (string) $course_id, $membership_courses, true );
+						}
 				}
 			}
 
 			return $can_start_course;
+		}
+
+		public function get_current_user_access_course() {
+			$user    = masteriyo_get_current_user();
+			$user_id = is_a( $user, 'WP_User' ) ? $user->ID : $user->get_id();
+
+			$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
+			$memberships        = $members_repository->get_member_membership_by_id( $user_id );
+
+			if ( empty( $memberships ) ) {
+				return array();
+			}
+
+			$user_courses = array();
+			foreach ( $memberships as $key => $membership ) {
+				if ( empty( $membership['post_id'] ) ) {
+					continue;
+				}
+				$user_courses = array_merge( $user_courses, Helper::get_courses_based_on_membership( $membership['post_id'] ) );
+			}
+
+			return $user_courses;
 		}
 	}
 endif;
