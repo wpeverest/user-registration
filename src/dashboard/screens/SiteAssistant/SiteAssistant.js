@@ -242,28 +242,6 @@ const SiteAssistant = () => {
 
 	return (
 		<Container maxW="100%" py={1} marginLeft={"10px"}>
-			<Stack align={"flex-start"} gap={4} mb={8}>
-				<Heading
-					as="h3"
-					fontSize="2xl"
-					color="gray.800"
-					mt={0}
-					css={{
-						fontWeight: "bold !important"
-					}}
-				>
-					{__(
-						"Welcome to User Registration & Membership",
-						"user-registration"
-					)}
-				</Heading>
-				<Text fontSize="18px !important" fontWeight={"light"}>
-					{__(
-						"Let's get your user registration system set up and ready to go!",
-						"user-registration"
-					)}
-				</Text>
-			</Stack>
 			<Grid
 				gridGap="5"
 				gridTemplateColumns={{
