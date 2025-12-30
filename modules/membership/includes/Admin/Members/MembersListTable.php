@@ -142,7 +142,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 				// Add a link to the user's author archive, if not empty.
 				$actions['view'] = sprintf(
 					'<a href="%s" target="_blank">%s</a>',
-					esc_url( admin_url( 'admin.php?page=user-registration-members&action=view&member_id=' . $user_id ) ),
+					esc_url( admin_url( 'admin.php?page=user-registration-users&action=view&member_id=' . $user_id ) ),
 					__( 'View' )
 				);
 

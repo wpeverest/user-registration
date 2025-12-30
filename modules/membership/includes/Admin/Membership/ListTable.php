@@ -163,19 +163,19 @@ class ListTable extends \UR_List_Table {
 		$membership_content = json_decode( $membership->post_content, true );
 		$enabled            = $membership_content['status'] == 'true';
 		$actions            = '<div class="ur-status-toggle ur-d-flex ur-align-items-center visible" style="gap: 5px">';
-		$actions            .= '<div class="ur-toggle-section">';
-		$actions            .= '<span class="user-registration-toggle-form">';
-		$actions            .= '<input
+		$actions           .= '<div class="ur-toggle-section">';
+		$actions           .= '<span class="user-registration-toggle-form">';
+		$actions           .= '<input
 						id="ur-membership-change-status"
 						class="ur-membership-change-status user-registration-switch__control hide-show-check enabled"
 						type="checkbox"
 						value="1"
 						' . esc_attr( checked( true, ur_string_to_bool( $enabled ), false ) ) . '
 						data-ur-membership-id="' . esc_attr( $membership->ID ) . '">';
-		$actions            .= '<span class="slider round"></span>';
-		$actions            .= '</span>';
-		$actions            .= '</div>';
-		$actions            .= '</div>';
+		$actions           .= '<span class="slider round"></span>';
+		$actions           .= '</span>';
+		$actions           .= '</div>';
+		$actions           .= '</div>';
 
 		return $actions;
 	}
@@ -210,22 +210,24 @@ class ListTable extends \UR_List_Table {
 			ARRAY_A
 		);
 
-		return sprintf( '<a target="_blank" href="%s"> %d </a>', admin_url( "admin.php?page=user-registration-members&membership_id=$membership->ID" ), $result[0]['total'] );
-
+		return sprintf( '<a target="_blank" href="%s"> %d </a>', admin_url( "admin.php?page=user-registration-users&membership_id=$membership->ID" ), $result[0]['total'] );
 	}
 
 	/**
 	 * Render the list table page, including header, notices, status filters and table.
 	 */
 	public function display_page() {
-		UR_Base_Layout::render_layout( $this, array(
-			'page'           => $this->page,
-			'title'          => esc_html__( 'All Membership', 'user-registration' ),
-			'add_new_action' => 'add_new_membership',
-			'search_id'      => 'membership-list-search-input',
-			'skip_query_key' => 'add-new-membership',
-			'form_id'        => 'membership-list',
-		) );
+		UR_Base_Layout::render_layout(
+			$this,
+			array(
+				'page'           => $this->page,
+				'title'          => esc_html__( 'All Membership', 'user-registration' ),
+				'add_new_action' => 'add_new_membership',
+				'search_id'      => 'membership-list-search-input',
+				'skip_query_key' => 'add-new-membership',
+				'form_id'        => 'membership-list',
+			)
+		);
 	}
 
 	/**
@@ -248,16 +250,14 @@ class ListTable extends \UR_List_Table {
 			</div>
 			<p></p>
 		<?php
-
 	}
 
 	/**
 	 * @return array
 	 * @global string $comment_status
-	 *
 	 */
 	protected function get_bulk_actions() {
-		$actions = array(//			'delete' => __( 'Delete permanently' )
+		$actions = array(// 'delete' => __( 'Delete permanently' )
 		);
 
 		return $actions;

@@ -411,7 +411,7 @@ if ( $first_name || $last_name ) {
 					<div class="ur-payments__fields-content">
 						<div class="ur-payments__field-row">
 							<div class="ur-payments__user">
-								<?php echo get_avatar( $user_id, 122, '', '', [ 'class' => 'ur-payments__user-avatar' ] ); ?>
+								<?php echo get_avatar( $user_id, 122, '', '', array( 'class' => 'ur-payments__user-avatar' ) ); ?>
 								<div class="ur-payments__user-name">
 									<?php echo esc_html( $user_display_name ); ?>
 								</div>
@@ -420,7 +420,7 @@ if ( $first_name || $last_name ) {
 						</div>
 						<div class="ur-payments__payment-actions">
 							<?php
-							$member_edit_url = admin_url( "admin.php?page=user-registration-members&action=edit&member_id={$user_id}" );
+							$member_edit_url = admin_url( "admin.php?page=user-registration-users&action=edit&member_id={$user_id}" );
 							?>
 							<a class="button action"
 								href="<?php echo esc_url( $member_edit_url ); ?>"><?php esc_html_e( 'Edit Member', 'user-registration' ); ?></a>
