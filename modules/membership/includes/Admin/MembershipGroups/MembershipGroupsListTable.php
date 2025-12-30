@@ -46,11 +46,25 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	 */
 	public function no_items() {
 		$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
+		$is_searching = ! empty( $_GET['s'] );
+
+		if ( $is_searching ) {
+			$search_value = sanitize_text_field( $_GET['s'] );
+			$primary_message = __( 'Oops, No result found.', 'user-registration' );
+			$secondary_message = sprintf(
+				/* translators: %s: search term */
+				__( 'Sorry no group with the name <i>%s</i> found.', 'user-registration' ),
+				esc_html( $search_value )
+			);
+		} else {
+			$primary_message = __( 'You don\'t have any Membership Groups yet.', 'user-registration' );
+			$secondary_message = __( 'Please add a membership group and you are good to go.', 'user-registration' );
+		}
 		?>
 		<div class="empty-list-table-container">
-			<img src="<?php echo $image_url; ?>" alt="">
-			<h3><?php echo _e( 'You don\'t have any Membership Groups yet.', 'user-registration' ); ?></h3>
-			<p><?php echo __( 'Please add a membership group and you are good to go.', 'user-registration' ); ?></p>
+			<img src="<?php echo esc_url( $image_url ); ?>" alt="">
+			<h3><?php echo esc_html( $primary_message ); ?></h3>
+			<p><?php echo wp_kses_post( $secondary_message ); ?></p>
 		</div>
 		<?php
 	}
