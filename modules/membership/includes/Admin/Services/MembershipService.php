@@ -492,6 +492,8 @@ class MembershipService {
 						$memberships = $this->membership_repository->get_multiple_membership_by_ID( implode( ',', $upgradeable_membership_ids ) );
 					}
 				}
+			} elseif ( isset( $group_details['mode'] ) && 'multiple' === $group_details['mode'] ) {
+				return array();
 			}
 		}
 
