@@ -420,7 +420,14 @@ if ( $first_name || $last_name ) {
 						</div>
 						<div class="ur-payments__payment-actions">
 							<?php
-							$member_edit_url = admin_url( "admin.php?page=user-registration-users&action=edit&member_id={$user_id}" );
+							$member_edit_url = add_query_arg(
+								array(
+									'action'   => 'edit',
+									'user_id'  => $user_id,
+									'_wpnonce' => wp_create_nonce( 'bulk-users' ),
+								),
+								admin_url( 'admin.php?page=user-registration-users&view_user' ),
+							);
 							?>
 							<a class="button action"
 								href="<?php echo esc_url( $member_edit_url ); ?>"><?php esc_html_e( 'Edit Member', 'user-registration' ); ?></a>

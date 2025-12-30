@@ -189,7 +189,7 @@ class OrdersListTable extends \UR_List_Table {
 	public function column_transaction_id( $row ) {
 		return sprintf(
 			'<strong><div class="ur-edit-title"><a href="%s" class="row-title">%s</a></div></strong>%s',
-			esc_url( $this->get_edit_links( $row ) ),
+			esc_url( admin_url( "admin.php?page=member-payment-history&action=edit&id={$row['order_id']}" ) ),
 			esc_html( isset( $row['transaction_id'] ) && ! empty( $row['transaction_id'] ) ? $row['transaction_id'] : ( $row['order_id'] ?? '' ) ),
 			$this->row_actions( $this->get_row_actions( $row ) )
 		);
@@ -262,7 +262,7 @@ class OrdersListTable extends \UR_List_Table {
 		$edit_id   = $order_id ? $order_id : $user_id;
 		$edit_type = $order_id ? 'order' : 'form';
 
-		return [
+		return array(
 			'id'     => sprintf(
 				/* translators: %d: Item id */
 				__( 'ID: %d', 'user-registration-file-downloads' ),
@@ -274,18 +274,18 @@ class OrdersListTable extends \UR_List_Table {
 				esc_html__( 'Edit', 'user-registration-file-downloads' )
 			),
 			'delete' => '<a data-user-id=' . esc_attr( $user_id ) . ' data-order-id = ' . esc_attr( $order_id ) . ' class="single-delete-order" style="cursor:pointer" >' . esc_html__( 'Trash', 'user-registration' ) . '</a>',
-		];
+		);
 	}
 
 	public function get_delete_links( $row ) {
 		return wp_nonce_url(
 			add_query_arg(
-				[
+				array(
 					'page'   => $this->page,
 					'screen' => $this->get_screen(),
 					'action' => 'delete',
 					'id'     => $row['order_id'] ?? 0,
-				],
+				),
 				admin_url( 'admin.php' )
 			),
 			'delete'

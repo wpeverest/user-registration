@@ -135,14 +135,24 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 					array(
 						'action'    => 'edit',
 						'member_id' => $user_id,
+						'_wpnonce'  => wp_create_nonce( 'bulk-users' ),
 					),
 					admin_url( 'admin.php?page=user-registration-members' ),
+				);
+
+				$member_view_url = add_query_arg(
+					array(
+						'action'   => 'view',
+						'user_id'  => $user_id,
+						'_wpnonce' => wp_create_nonce( 'bulk-users' ),
+					),
+					admin_url( 'admin.php?page=user-registration-users&view_user' ),
 				);
 
 				// Add a link to the user's author archive, if not empty.
 				$actions['view'] = sprintf(
 					'<a href="%s" target="_blank">%s</a>',
-					esc_url( admin_url( 'admin.php?page=user-registration-users&action=view&member_id=' . $user_id ) ),
+					esc_url( $member_view_url ),
 					__( 'View' )
 				);
 
