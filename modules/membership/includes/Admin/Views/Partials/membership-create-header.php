@@ -74,7 +74,8 @@
 						</div>
 						<div class="ur-page-title__wrapper--actions-publish">
 							<button class="button-primary ur-membership-save-btn" type="submit">
-								<?php esc_html_e( 'Publish', 'user-registration' ); ?>
+
+								<?php !empty($membership_id) ? esc_html_e( 'Save', 'user-registration' ) : esc_html_e( 'Publish', 'user-registration' ); ?>
 							</button>
 						</div>
 					</div>
