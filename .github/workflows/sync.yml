@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - v5.1.0
+      - UR-2659-feat/local-currency
     workflow_dispatch:
 jobs:
   sync:
