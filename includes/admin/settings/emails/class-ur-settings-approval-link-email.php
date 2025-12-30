@@ -103,22 +103,22 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_approval_link_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Action Required: Review & Approve New User Registration', 'user-registration' ),
+									'default'  => __( 'Approval Needed: New Member Registration', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
-							array(
-								'title'    => __( 'Email Content', 'user-registration' ),
-								'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
-								'id'       => 'user_registration_approval_link_email',
-								'type'     => 'tinymce',
-								'default'  => $this->ur_get_approval_link_email(),
-								'css'      => '',
-								'desc_tip' => true,
-								'show-ur-registration-form-button' => false,
-								'show-smart-tags-button' => true,
-								'show-reset-content-button' => true,
-							),
+								array(
+									'title'    => __( 'Email Content', 'user-registration' ),
+									'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_approval_link_email',
+									'type'     => 'tinymce',
+									'default'  => $this->ur_get_approval_link_email(),
+									'css'      => '',
+									'desc_tip' => true,
+									'show-ur-registration-form-button' => false,
+									'show-smart-tags-button' => true,
+									'show-reset-content-button' => true,
+								),
 							),
 						),
 					),
@@ -139,28 +139,51 @@ if ( ! class_exists( 'UR_Settings_Approval_Link_Email', false ) ) :
 		 * @return string $approval_msg Message content for approval link in email.
 		 */
 		public function ur_get_approval_link_email() {
-			$approval_msg = sprintf(
-				__(
-					'Hi Admin, <br/><br/>
-
-					A new user {{username}} - {{email}} has successfully registered to your site {{blog_info}}. <br/><br/>
-
-					Please review their details and assigned role in the \'<b>Users</b>\' menu of your WordPress dashboard.  <br/><br/>
-
-					[Approve User: {{approval_link}}] - Link <br/>
-					[Deny User: {{denial_link}}] - Link <br/><br/>
-
-					Thank You!',
-					'user-registration'
-				)
+			$body_content = __(
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi Admin,
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					A new user has registered and requires your approval.
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; font-weight:600; line-height: 1.6;">
+					<b>Member Details:</b>
+				</p>
+				<ul>
+					<li style="margin: 0 0 10px 20px; font-weight:500; color: #000000; font-size: 15px; line-height: 1.6;">
+						<b>Name:</b> {{username}}
+					</li>
+					<li style="margin: 0 0 10px 20px; font-weight:500; color: #000000; font-size: 15px; line-height: 1.6;">
+						<b>Email:</b> {{email}}
+					</li>
+				</ul>
+					<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Please review and approve or deny this registration:
+				</p>
+				<p style="margin: 0 0 10px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Approve User: {{approval_link}}
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Deny User: {{denial_link}}
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thanks
+				</p>
+				',
+				'user-registration'
 			);
+
+			// Use email template wrapper for editor display (unwrapped content).
+			if ( function_exists( 'ur_get_email_template_wrapper' ) ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
 
 			/**
 			 * Filter to modify the approval email message email content.
 			 *
-			 * @param string $approval_msg Message content to be overridden for admin approval email.
+			 * @param string $body_content Message content to be overridden for admin approval email.
 			 */
-			$approval_msg = apply_filters( 'user_registration_admin_approval_email_message', $approval_msg );
+			$approval_msg = apply_filters( 'user_registration_admin_approval_email_message', $body_content );
 
 			return $approval_msg;
 		}

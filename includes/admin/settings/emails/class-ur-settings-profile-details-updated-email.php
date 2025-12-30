@@ -93,22 +93,22 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_profile_details_updated_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Profile Updated Successfully on {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Profile Updated Successfully', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
-							array(
-								'title'    => __( 'Email Content', 'user-registration' ),
-								'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
-								'id'       => 'user_registration_profile_details_Updated_email',
-								'type'     => 'tinymce',
-								'default'  => $this->ur_get_profile_details_updated_email(),
-								'css'      => '',
-								'desc_tip' => true,
-								'show-ur-registration-form-button' => false,
-								'show-smart-tags-button' => true,
-								'show-reset-content-button' => true,
-							),
+								array(
+									'title'    => __( 'Email Content', 'user-registration' ),
+									'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_profile_details_Updated_email',
+									'type'     => 'tinymce',
+									'default'  => $this->ur_get_profile_details_updated_email(),
+									'css'      => '',
+									'desc_tip' => true,
+									'show-ur-registration-form-button' => false,
+									'show-smart-tags-button' => true,
+									'show-reset-content-button' => true,
+								),
 							),
 						),
 					),
@@ -131,21 +131,37 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Updated_Email', false ) ) :
 		public function ur_get_profile_details_updated_email() {
 
 			/**
+			 * Filter to overwrite the profile details updated email.
+			 *
+			 * @param string Message content to overwrite the existing email content.
+			 */
+			$body_content = __(
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi {{username}},
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Your profile has been updated at <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a>.
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					If you did not make these changes, please contact us immediately at {{admin_email}}.
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thanks
+				</p>
+				',
+				'user-registration'
+			);
+			// Use email template wrapper for editor display (unwrapped content).
+			if ( function_exists( 'ur_get_email_template_wrapper' ) ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
+
+			/**
 			 * Filter to modify the message content for profile details updated.
 			 *
-			 * @return string $message Message content for profile details updated email to be overridden.
+			 * @param string $body_content Message content for profile details updated email to be overridden.
 			 */
-			$message = apply_filters(
-				'user_registration_profile_details_updated_email_message',
-				sprintf(
-					__(
-						'Hi {{username}},<br/><br/>
-					Your profile details have been successfully updated on {{blog_info}}.<br/><br/>
-					Thank You!',
-						'user-registration'
-					)
-				)
-			);
+			$message = apply_filters( 'user_registration_profile_details_updated_email_message', $body_content );
 
 			return $message;
 		}

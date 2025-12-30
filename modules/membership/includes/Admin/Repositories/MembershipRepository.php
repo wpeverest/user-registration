@@ -10,9 +10,9 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 	protected $table, $members_meta, $posts_meta_table, $subscription_table;
 
 	public function __construct() {
-		$this->table            = TableList::posts_table();
-		$this->members_meta     = TableList::users_meta_table();
-		$this->posts_meta_table = TableList::posts_meta_table();
+		$this->table              = TableList::posts_table();
+		$this->members_meta       = TableList::users_meta_table();
+		$this->posts_meta_table   = TableList::posts_meta_table();
 		$this->subscription_table = TableList::subscriptions_table();
 	}
 
@@ -43,7 +43,6 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 		);
 		$membership_service = new MembershipService();
 		return $membership_service->prepare_membership_data( $memberships );
-
 	}
 
 	/**
@@ -76,7 +75,6 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 			),
 			ARRAY_A
 		);
-
 	}
 
 
@@ -202,20 +200,20 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 	 * @return array|false|object|\stdClass|null
 	 */
 	public function check_deletable_membership( $id, $statuses ) {
-		if (!is_array($statuses)) {
+		if ( ! is_array( $statuses ) ) {
 			return false;
 		}
 
 		$placeholders = array();
-		$values = array();
+		$values       = array();
 
-		foreach ($statuses as $status) {
+		foreach ( $statuses as $status ) {
 			$placeholders[] = '%s';
-			$values[] = trim($status);
+			$values[]       = trim( $status );
 		}
 
-		$placeholders_string = implode(',', $placeholders);
-		$values = array_merge(array($id), $values);
+		$placeholders_string = implode( ',', $placeholders );
+		$values              = array_merge( array( $id ), $values );
 
 		return $this->wpdb()->get_row(
 			$this->wpdb()->prepare(
@@ -225,5 +223,56 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 			),
 			ARRAY_A
 		);
+	}
+
+	/**
+	 * Delete membership post using wp_delete_post to trigger WordPress hooks
+	 *
+	 * @param int $id Membership post ID
+	 * @return bool|int|\mysqli_result|null
+	 */
+	public function delete( $id ) {
+		$id = absint( $id );
+		if ( ! $id ) {
+			return false;
+		}
+
+		$post = get_post( $id );
+		if ( ! $post || 'ur_membership' !== $post->post_type ) {
+			return false;
+		}
+
+		$result = wp_delete_post( $id, true );
+		return $result ? true : false;
+	}
+
+	/**
+	 * Delete multiple memberships using wp_delete_post to trigger WordPress hooks
+	 *
+	 * @param string $ids Comma-separated membership IDs
+	 * @return bool|int|\mysqli_result|null
+	 */
+	public function delete_multiple( $ids ) {
+		if ( empty( $ids ) ) {
+			return false;
+		}
+
+		$ids_array = explode( ',', $ids );
+		$ids_array = array_map( 'absint', $ids_array );
+		$ids_array = array_filter( $ids_array );
+
+		if ( empty( $ids_array ) ) {
+			return false;
+		}
+
+		$deleted_count = 0;
+		foreach ( $ids_array as $id ) {
+			$result = $this->delete( $id );
+			if ( $result ) {
+				++$deleted_count;
+			}
+		}
+
+		return $deleted_count > 0;
 	}
 }

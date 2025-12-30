@@ -38,16 +38,39 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
         public function handle_hooks() {
             add_filter( "user_registration_get_sections_{$this->id}",  array( $this, 'get_sections_callback' ), 1, 1 );
             add_filter( "user_registration_get_settings_{$this->id}", array( $this, 'get_settings_callback' ), 1, 1 );
+            
+			add_filter( 'urm_validate_bank_payment_section_before_update', array(
+				$this,
+				'validate_bank_section'
+			) );
+            
+			add_action( 'urm_save_bank_payment_section', array( $this, 'save_section_settings' ), 10, 1 );
         }
+        		
+		public function validate_bank_section( $form_data ) {
+			$response = array(
+				'status' => true,
+			);
+
+			if ( empty( $form_data['user_registration_global_bank_details'] ) ) {
+				$response['status']  = false;
+				$response['message'] = 'Bank details cannot be empty';
+				return $response;
+			}
+
+			return $response;
+		}
+		
+		public function save_section_settings( $form_data ) {
+			$section = $this->get_bank_transfer_settings();
+			ur_save_settings_options( $section, $form_data );
+		}
+
         /**
          * Filter to provide sections submenu for payment settings.
          */
         public function get_sections_callback( $sections ) {
             $sections[ 'payment-method' ] = __( 'Payment Method', 'user-registration' );
-            $sections[ 'store' ] = __( 'Store', 'user-registration' );
-            $sections[ 'tax-vat' ] = __( 'Tax & VAT', 'user-registration' );
-            $sections[ 'invoices' ] = __( 'Invoices', 'user-registration' );
-            $sections[ 'payment-retry' ] = __( 'Payment Retry & Dunning', 'user-registration' );
             return $sections;
         }
         /**
@@ -55,15 +78,17 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
          */
         public function get_settings_callback( $settings ) {
             global $current_section;
+            if( ! in_array( $current_section, array( 'payment-method', 'store', 'tax-vat', 'invoices', 'payment-retry' ) ) ) return;
+            $general_settings = $this->get_general_settings();
+            $paypal_settings = $this->get_paypal_settings();
+            $stripe_settings = $this->get_stripe_settings();
+            $bank_transfer_settings = $this->get_bank_transfer_settings();
             if( 'payment-method' === $current_section ) {
-                $paypal_settings = $this->get_paypal_settings();
-                $stripe_settings = $this->get_stripe_settings();
-                $bank_transfer_settings = $this->get_bank_transfer_settings();
-
-                add_filter( 'user_registration_settings_payment-method_hide_save_button', true );
+                add_filter( 'user_registration_settings_hide_save_button', '__return_true' );
                 $settings = array(
                     'title' => '',
                     'sections' => array(
+                        'general_options' => $general_settings,
                         'paypal_options' => $paypal_settings,
                         'stripe_options' => $stripe_settings,
                         'bank_transfer_options' => $bank_transfer_settings,
@@ -74,6 +99,48 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
             }
             return $settings;
         }
+        /**
+		 * Function to get general Settings
+		 */
+		public function get_general_settings() {
+			$currencies      = ur_payment_integration_get_currencies();
+			$currencies_list = array();
+
+			// Break and concatenate the currency symbol and code.
+			foreach ( $currencies as $code => $currency ) {
+				$currencies_list[ $code ] = $currency['name'] . ' ( ' . $code . ' ' . $currency['symbol'] . ' )';
+			}
+
+			$settings = array(
+						'id'          => 'payment-settings',
+						'title'       => esc_html__( 'Payment Settings', 'user-registration' ),
+						'type'        => 'card',
+						'desc'        => '',
+						'show_status' => false,
+						'show_logo'   => false,
+						'settings'    => array(
+							array(
+								'title'    => __( 'Currency', 'user-registration' ),
+								'desc'     => __( 'This option lets you choose currency for payments.', 'user-registration' ),
+								'id'       => 'user_registration_payment_currency',
+								'default'  => 'USD',
+								'type'     => 'select',
+								'class'    => 'ur-enhanced-select',
+								'css'      => '',
+								'desc_tip' => true,
+								'options'  => $currencies_list,
+							),
+							array(
+								'title' => __( 'Save', 'user-registration' ),
+								'id'    => 'user_registration_payment_save_settings',
+								'type'  => 'button',
+								'class' => 'payment-settings-btn'
+							),
+						)
+			    );
+            return apply_filters( 'user_registration_payment_settings', $settings );
+		}
+
         public function get_paypal_settings() {
             return array(
                 'title'        => __( 'Paypal Settings', 'user-registration' ),

@@ -104,22 +104,22 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_profile_details_changed_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Profile Updated – Changes Made to User Account', 'user-registration' ),
+									'default'  => __( 'Profile Updated: {{username}}', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
-							array(
-								'title'    => __( 'Email Content', 'user-registration' ),
-								'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
-								'id'       => 'user_registration_profile_details_changed_email',
-								'type'     => 'tinymce',
-								'default'  => $this->ur_get_profile_details_changed_email(),
-								'css'      => '',
-								'desc_tip' => true,
-								'show-ur-registration-form-button' => false,
-								'show-smart-tags-button' => true,
-								'show-reset-content-button' => true,
-							),
+								array(
+									'title'    => __( 'Email Content', 'user-registration' ),
+									'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_profile_details_changed_email',
+									'type'     => 'tinymce',
+									'default'  => $this->ur_get_profile_details_changed_email(),
+									'css'      => '',
+									'desc_tip' => true,
+									'show-ur-registration-form-button' => false,
+									'show-smart-tags-button' => true,
+									'show-reset-content-button' => true,
+								),
 							),
 						),
 					),
@@ -142,24 +142,45 @@ if ( ! class_exists( 'UR_Settings_Profile_Details_Changed_Email', false ) ) :
 		public function ur_get_profile_details_changed_email() {
 
 			/**
+			 * Filter to overwrite the profile details changed email.
+			 *
+			 * @param string Message content to overwrite the existing email content.
+			 */
+			$body_content = __(
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi Admin,
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				A member has updated their profile information.
+				</p>
+				<ul>
+					<li style="margin-bottom:10px">
+					<b>Member</b>: {{username}}
+					</li>
+					<li style="margin-bottom:10px">
+					<b>Updated</b>: {{update_date}}
+					</li>
+					</ul>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				View and manage this member in your <b>User Registration and Membership</b> dashboard under <b>Members</b>.
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				Thanks
+				</p>
+				',
+				'user-registration'
+			);
+			// Use email template wrapper for editor display (unwrapped content).
+			if ( function_exists( 'ur_get_email_template_wrapper' ) ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
+
+			/**
 			 * Filter to modify the message content for profile details changed.
 			 *
-			 * @return string $message Message content for profile details changed email to be overridden.
+			 * @param string $body_content Message content for profile details changed email to be overridden.
 			 */
-			$message = apply_filters(
-				'user_registration_profile_details_changed_email_message',
-				sprintf(
-					__(
-						'
-						Hi Admin,<br/><br/>
-						A user has updated their profile information for the following account:<br/><br/>
-						SiteName: {{blog_info}} <br/><br/>
-						Username: {{username}} <br/><br/>
-						Thank You!',
-						'user-registration'
-					)
-				)
-			);
+			$message = apply_filters( 'user_registration_profile_details_changed_email_message', $body_content );
 
 			return $message;
 		}

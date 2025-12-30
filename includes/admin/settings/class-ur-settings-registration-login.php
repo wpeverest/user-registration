@@ -63,6 +63,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Login' ) ) {
 				return $this->get_messages_settings();
 			}
 			if ( 'captcha' === $current_section ) {
+				add_filter( 'user_registration_settings_hide_save_button', '__return_true' );
 				return $this->get_captcha_settings();
 			}
 			if ( in_array( $current_section, [ 'social-connect', 'profile-connect', 'popup', 'invite-code', 'file-upload', 'role-based-redirection' ] ) ) {

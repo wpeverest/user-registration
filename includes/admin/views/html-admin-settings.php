@@ -23,96 +23,7 @@ $is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string
 
 $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
 ?>
-<style>
-	.ur-scroll-ui__items {
-		position: relative;
-		overflow: visible;
-		margin: 0 0 0 30px; /* left margin for timeline */
-	}
-	.ur-nav__link.is-active::after {
-		opacity: 0 !important;
-	}
-	.ur-scroll-ui__items::before {
-		content: '';
-		position: absolute;
-		left: 0;
-		top: 16px;
-		width: 2px;
-		height: calc(100% - 16px - 16px); /* height clipped for last item and top shift and last item. */
-		background-color: #f1f1f1;
-	}
-	.ur-scroll-ui__items li {
-		position: relative;
-	}
 
-	.ur-scroll-ui__items li::before {
-		content: '';
-		position: absolute;
-		top: calc(16px - 2px);
-		left: -15px; /* - padding of ul + half of width of vertical line: 2px / 2 = 1px. */
-		transform: translateX(-50%); /* move 50% of its width to the left i.e. 4px */
-		width: 8px;
-		height: 8px;
-		border-radius: 50%;
-		background-color: #f1f1f1;
-		z-index: 10;
-	}
-	.ur-scroll-ui__items li.current::before {
-		background-color: #475bb2;
-	}
-</style>
-<style>
-	.user-registration-header__close {
-		cursor: pointer;
-		position: absolute;
-		top: 16px;
-		right: calc(-24px - 16px); /* width of close btn + padding */
-		z-index: 999; /* higher value is desired. */
-		background-color: #f9f9f9;
-		width: 24px; /* 16px: content, 8px: padding */
-		height: 24px;
-		box-sizing: border-box;
-		padding: 4px; /* total: 24px */
-		border-radius: 4px;
-		display: inline-block;
-	}
-	.user-registration-header__close--hidden {
-		display: none;
-	}
-	.user-registration-options-header__burger--hidden {
-		display: none;
-	}
-	.user-registration-header--open {
-		transform: translateX(0) !important;
-		margin-top: 0 !important;
-		box-shadow: 2px 0 12px rgba(0,0,0,0.1);
-		z-index: 999;
-	}
-	/* auto hides on bigger screen */
-	@media screen and (min-width: 1140px) {
-		.user-registration-options-header__burger, .user-registration-header__close {
-			display: none;
-		}
-	}
-
-	@media screen and (max-width: 1140px) {
-		.user-registration-header {
-			position: fixed;
-			height: 100vh;
-			transition: transform 0.4s ease-in-out;
-			transform: translateX(-200%);
-		}
-		.user-registration-settings-container--dimmed {
-			opacity: 0.4;
-			pointer-events: none;
-			filter: brightness(0.5);
-			transition: filter 1s ease;
-		}
-		.user-registration-options-header__burger {
-			display: inline-block;
-		}
-	}
-</style>
 <hr class="wp-header-end">
 <?php echo user_registration_plugin_main_header(); ?>
 <div class="wrap user-registration">
@@ -140,6 +51,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 							<?php
 							foreach ( $tabs as $name => $label ) {
 								?>
+								<div class="ur-nav__tab-item">
 								<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $name ) ); ?>" class="nav-tab ur-nav__link <?php echo ( $current_tab === $name ? 'nav-tab-active is-active' : '' ); ?>">
 									<span class="ur-nav__link-icon">
 										<?php echo ur_file_get_contents( '/assets/images/settings-icons/' . $name . '.svg' ); //phpcs:ignore ?>
@@ -160,6 +72,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 									?>
 								</div>
 								<?php endif; ?>
+								</div>
 								<?php
 							}
 							do_action( 'user_registration_settings_tabs' );
@@ -185,7 +98,7 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 									<h3><?php echo esc_html( $tabs[ $current_tab ] ); ?></h3>
 									<?php
 								} else {
-									$redirect_url = home_url( '/wp-admin/admin.php?page=user-registration-settings&tab=general&section=license' );
+									$redirect_url = home_url( '/wp-admin/admin.php?page=user-registration-settings&tab=general' );
 									?>
 									<script>
 									var redirect = '<?php echo esc_url_raw( $redirect_url ); ?>';
@@ -229,8 +142,8 @@ $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php'
 					</div>
 					<p class="submit">
 						<?php
-						$hide_save_button = apply_filters( 'user_registration_settings_hide_save_button', $GLOBALS['hide_save_button'] );
-						if ( ! isset( $hide_save_button ) ) :
+						$hide_save_button = apply_filters( 'user_registration_settings_hide_save_button', $GLOBALS['hide_save_button'] ?? false );
+						if ( ! ur_string_to_bool( $hide_save_button ) ) :
 							/**
 							 * Filter to save the setting label.
 							 *

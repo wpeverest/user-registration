@@ -103,7 +103,7 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 									'desc'     => __( 'A New Member Registered.', 'user-registration' ),
 									'id'       => 'user_registration_admin_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'A New User Registered', 'user-registration' ),
+									'default'  => __( 'A Member registration: {{username}}', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
@@ -140,23 +140,48 @@ if ( ! class_exists( 'UR_Settings_Admin_Email', false ) ) :
 		 */
 		public function ur_get_admin_email() {
 
-			$general_msg = sprintf(
-				__(
-					'Hi Admin, <br/><br/>
-					A new user {{username}} - {{email}} has successfully registered to your site <a href="{{home_url}}">{{blog_info}}</a>. <br/>
-					{{membership_plan_details}} <br/>
-					You can review their details and manage their role from the \'<b>Users</b>\' section in your WordPress dashboard.<br/><br />
-					Thank You!',
-					'user-registration'
-				)
+			$body_content = __(
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi Admin,
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					A new member has been registered.
+				</p>
+				<p>
+					<strong>Member Details:</strong>
+					<ul>
+					<li style="margin-bottom:10px;">
+						<b>Name</b>: {{username}}
+					</li>
+					<li style="margin-bottom:10px;">
+						<b>Email</b>: {{email}}
+					</li>
+					</ul>
+					</p>
+					<p>
+					{{membership_plan_details}}
+					</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					View and manage this member in your <b>User Registration and Membership</b> dashboard under <b>Members</b>.
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				Thanks
+				</p>
+				',
+				'user-registration'
 			);
+
+			// Use email template wrapper for editor display (unwrapped content).
+			if ( function_exists( 'ur_get_email_template_wrapper' ) ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
 
 			/**
 			 * Filter to modify the admin email message content.
 			 *
 			 * @param string $general_msg Message to be overridden for admin email.
 			 */
-			$message = apply_filters( 'user_registration_admin_email_message', $general_msg );
+			$message = apply_filters( 'user_registration_admin_email_message', $body_content );
 
 			return $message;
 		}
