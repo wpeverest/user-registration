@@ -53,7 +53,6 @@ if ( ! class_exists( 'UR_Settings_Integration' ) ) {
             $sections[ 'email-marketing' ] = __( 'Email Marketing', 'user-registration' );
             $sections[ 'pdf-submission' ] = __( 'PDF Submission' , 'user-registration' );
             $sections[ 'google-sheets' ] = __( 'Google Sheets' , 'user-registration' );
-            $sections[ 'google-drive' ] = __( 'Google Drive' , 'user-registration' );
             $sections[ 'salesforce' ] = __( 'Salesforce' , 'user-registration' );
             $sections[ 'geolocation' ] = __( 'Geolocation' , 'user-registration' );
             
@@ -64,21 +63,21 @@ if ( ! class_exists( 'UR_Settings_Integration' ) ) {
          */
         public function get_settings_callback( $settings ) {
             global $current_section;
-            if( ! in_array( $current_section, array( 'email-marketing', 'pdf-submission', 'google-sheets', 'google-drive', 'salesforce', 'geolocation' ) ) ) return $settings;            return $this->upgrade_to_pro_setting();
+            if( ! in_array( $current_section, array( '', 'email-marketing', 'pdf-submission', 'google-sheets', 'google-drive', 'salesforce', 'geolocation' ) ) ) return $settings;            return $this->upgrade_to_pro_setting();
             return $this->upgrade_to_pro_setting();
         }
-        public function get_settings() {
-            $integrations = $this->get_integrations();
-            $settings = apply_filters(
-                'user_registration_integration_settings',
-                array(
-                    'title' => '',
-                    'sections' => $integrations
-                )
-                );
-            return $settings;
-            // return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
-        }
+        // public function get_settings() {
+        //     $integrations = $this->get_integrations();
+        //     $settings = apply_filters(
+        //         'user_registration_integration_settings',
+        //         array(
+        //             'title' => '',
+        //             'sections' => $integrations
+        //         )
+        //         );
+        //     return $settings;
+        //     // return apply_filters( 'user_registration_get_settings_' . $this->id, $settings );
+        // }
         public function get_integrations() {
             return $this->integrations;
         }
