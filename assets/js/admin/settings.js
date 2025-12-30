@@ -42,7 +42,257 @@
 		.trigger("change");
 
 	// Color picker
-	$(".colorpick, .colorpickpreview")
+	$(".colorpick").each(function () {
+		var $input = $(this);
+		var alphaEnabled =
+			$input.data("alpha") === true ||
+			$input.attr("data-alpha") === "true";
+
+		// Get current value from input (saved value) - read BEFORE any manipulation
+		// Read directly from the DOM element's value attribute first (most reliable)
+		var domElement = $input[0];
+		var currentValue =
+			(domElement && domElement.value) ||
+			$input.attr("value") ||
+			$input.val() ||
+			$input.data("current-value") ||
+			$input.attr("data-current-value") ||
+			"";
+		// Get default value from data attribute
+		var defaultValue =
+			$input.data("default-value") ||
+			$input.attr("data-default-value") ||
+			"";
+		// Use current value if available, otherwise use default
+		var initialValue = currentValue || defaultValue;
+
+		// Trim whitespace and ensure it's a valid color value
+		if (initialValue) {
+			initialValue = initialValue.toString().trim();
+			// If empty after trim, set to empty string
+			if (!initialValue) {
+				initialValue = "";
+			}
+		}
+
+		// Ensure the input has the value set before initializing color picker
+		// Set both val() and attr() to be sure
+		if (initialValue) {
+			$input.val(initialValue);
+			$input.attr("value", initialValue);
+			if (domElement) {
+				domElement.value = initialValue;
+			}
+		}
+
+		// Initialize color picker with defaultColor option
+		var colorPickerOptions = {
+			change: function (event, ui) {
+				$(this)
+					.parent()
+					.find(".colorpickpreview")
+					.css({ backgroundColor: ui.color.toString() });
+			},
+			clear: function () {
+				$(this)
+					.parent()
+					.find(".colorpickpreview")
+					.css({ backgroundColor: "" });
+			},
+			hide: true,
+			border: true,
+			width: 255,
+			mode: alphaEnabled ? "rgba" : "hex"
+		};
+
+		// Add defaultColor if we have an initial value
+		if (initialValue) {
+			colorPickerOptions.defaultColor = initialValue;
+			colorPickerOptions.color = initialValue;
+		}
+
+		$input.wpColorPicker(colorPickerOptions);
+
+		// After color picker initializes, ensure the color is displayed correctly
+		// Use multiple timeouts to ensure it works even if initialization is delayed
+		var applyColor = function () {
+			if (!initialValue) {
+				$input.css("display", "none");
+				return;
+			}
+
+			var $container = $input.closest(".wp-picker-container");
+			if (!$container.length) {
+				return; // Container not ready yet
+			}
+
+			var $colorResult = $container.find(".wp-color-result");
+			if (!$colorResult.length) {
+				return; // Color result not ready yet
+			}
+
+			// Set the input value first
+			$input.val(initialValue);
+
+			// Update color result button background - this is what users see
+			$colorResult.css("background-color", initialValue);
+
+			// Update the color span inside the button (the actual color display)
+			var $colorSpan = $colorResult.find("span");
+			if ($colorSpan.length) {
+				$colorSpan.css("background-color", initialValue);
+			}
+
+			// Try to set iris color
+			try {
+				if ($input.data("wp-wpColorPicker")) {
+					var picker = $input.data("wp-wpColorPicker");
+					if (picker.iris && picker.iris._color) {
+						picker.iris._color = initialValue;
+					}
+				}
+				// Also try the iris method
+				if (typeof $input.iris === "function") {
+					$input.iris("color", initialValue);
+				}
+			} catch (e) {
+				// Ignore errors, visual update is more important
+			}
+
+			// Hide input field AFTER color picker is initialized and color is set
+			$input.css("display", "none");
+		};
+
+		// Try multiple times with increasing delays
+		setTimeout(applyColor, 50);
+		setTimeout(applyColor, 200);
+		setTimeout(applyColor, 500);
+
+		// Ensure input wrap stays inside holder, fix positioning, and add border radius
+		setTimeout(function () {
+			var $container = $input.closest(".wp-picker-container");
+			if ($container.length) {
+				var $holder = $container.find(".wp-picker-holder");
+				var $inputWrap = $container.find(".wp-picker-input-wrap");
+				// Get default value again in this scope
+				var inputDefaultValue =
+					$input.data("default-value") ||
+					$input.attr("data-default-value") ||
+					"";
+
+				// Ensure input field is hidden on load
+				$input.css("display", "none");
+
+				// Ensure input wrap is inside the holder
+				if ($holder.length && $inputWrap.length) {
+					// If input wrap is not inside holder, move it there
+					if (!$holder.find($inputWrap).length) {
+						$inputWrap.appendTo($holder);
+					}
+				}
+
+				// Ensure holder is positioned absolutely and doesn't take space when hidden
+				if ($holder.length) {
+					$holder.css({
+						position: "absolute",
+						top: "100%",
+						left: "0",
+						zIndex: "100",
+						marginTop: "2px"
+					});
+
+					// Show/hide iris-picker, iris-border, and input field based on active state
+					var $irisPicker = $container.find(".iris-picker");
+					var $irisBorder = $container.find(".iris-border");
+					var $colorInput = $container.find(
+						".colorpick.wp-color-picker"
+					);
+
+					// Function to toggle visibility based on active state
+					function togglePickerVisibility() {
+						setTimeout(function () {
+							if ($container.hasClass("wp-picker-active")) {
+								$holder.show();
+								$irisPicker.show();
+								$irisBorder.show();
+								$colorInput.show();
+								$inputWrap.show();
+							} else {
+								$holder.hide();
+								$irisPicker.hide();
+								$irisBorder.hide();
+								$colorInput.hide();
+								$inputWrap.hide();
+							}
+						}, 10);
+					}
+
+					// Watch for active state changes
+					$container.on(
+						"click",
+						".wp-color-result",
+						togglePickerVisibility
+					);
+
+					// Also watch for class changes using MutationObserver
+					var observer = new MutationObserver(function (mutations) {
+						mutations.forEach(function (mutation) {
+							if (
+								mutation.type === "attributes" &&
+								mutation.attributeName === "class"
+							) {
+								togglePickerVisibility();
+							}
+						});
+					});
+
+					observer.observe($container[0], {
+						attributes: true,
+						attributeFilter: ["class"]
+					});
+				}
+
+				// Add border radius to color result button
+				$container.find(".wp-color-result").css({
+					borderRadius: "100px",
+					margin: "0"
+				});
+
+			// Set tooltip for color-group items (only show on hover)
+			var $colorGroupItem = $container.closest(
+				".user-registration-color-group-item"
+			);
+			if ($colorGroupItem.length) {
+				var $label = $colorGroupItem.find(".ur-color-state-label");
+				var labelText = $label.text();
+				if (labelText) {
+					// Hide the label and show it only in tooltip on hover
+					$label.css("display", "none");
+					$container
+						.find(".wp-color-result")
+						.attr("title", labelText);
+				}
+			}
+			}
+		}, 50);
+	});
+
+	// Color group tooltip functionality (for dynamically added elements)
+	$(document).on(
+		"mouseenter",
+		".user-registration-color-group-item .wp-color-result",
+		function () {
+			var $item = $(this).closest(".user-registration-color-group-item");
+			var $label = $item.find(".ur-color-state-label");
+			var labelText = $label.text();
+
+			if (labelText && !$(this).attr("title")) {
+				$(this).attr("title", labelText);
+			}
+		}
+	);
+
+	$(".colorpickpreview")
 		.iris({
 			change: function (event, ui) {
 				$(this)
@@ -1370,13 +1620,13 @@
 		});
 	});
 
-	var $advancedLogicToggle = $('#urcr_is_advanced_logic_enabled');
+	var $advancedLogicToggle = $("#urcr_is_advanced_logic_enabled");
 	if ($advancedLogicToggle.length > 0) {
-		$advancedLogicToggle.on('change', function (e) {
+		$advancedLogicToggle.on("change", function (e) {
 			var $checkbox = $(this);
-			var isChecked = $checkbox.is(':checked');
-			var $parent = $checkbox.closest('.user-registration-toggle-form');
-			var $spinner = $parent.find('.ur-spinner');
+			var isChecked = $checkbox.is(":checked");
+			var $parent = $checkbox.closest(".user-registration-toggle-form");
+			var $spinner = $parent.find(".ur-spinner");
 			if ($spinner.length > 0) {
 				return;
 			}
@@ -1384,47 +1634,54 @@
 			e.stopPropagation();
 
 			if (!isChecked) {
-				$checkbox.prop('checked', true);
-				$checkbox.prop('disabled', true);
+				$checkbox.prop("checked", true);
+				$checkbox.prop("disabled", true);
 				$spinner = $('<span class="ur-spinner"></span>');
 				$parent.append($spinner);
-
 
 				$.ajax({
 					url: user_registration_settings_params.ajax_url,
 					data: {
-						action: 'user_registration_check_advanced_logic_rules',
-						security: user_registration_settings_params.user_registration_settings_nonce
+						action: "user_registration_check_advanced_logic_rules",
+						security:
+							user_registration_settings_params.user_registration_settings_nonce
 					},
-					type: 'POST',
+					type: "POST",
 					success: function (response) {
 						// Remove spinner element
 						$spinner.remove();
 						// Enable checkbox
-						$checkbox.prop('disabled', false);
+						$checkbox.prop("disabled", false);
 
-						if (response.success && response.data.has_advanced_logic) {
-							$checkbox.prop('checked', true);
+						if (
+							response.success &&
+							response.data.has_advanced_logic
+						) {
+							$checkbox.prop("checked", true);
 
-							var errorMessage = user_registration_settings_params.i18n.advanced_logic_rules_exist_error;
+							var errorMessage =
+								user_registration_settings_params.i18n
+									.advanced_logic_rules_exist_error;
 							show_failure_message(errorMessage);
 						} else {
-							$checkbox.prop('checked', false);
+							$checkbox.prop("checked", false);
 						}
 					},
 					error: function () {
 						$spinner.remove();
-						$checkbox.prop('disabled', false);
-						$checkbox.prop('checked', true);
-						show_failure_message(user_registration_settings_params.i18n.advanced_logic_check_error);
+						$checkbox.prop("disabled", false);
+						$checkbox.prop("checked", true);
+						show_failure_message(
+							user_registration_settings_params.i18n
+								.advanced_logic_check_error
+						);
 					}
 				});
 			} else {
-				$checkbox.prop('checked', true);
+				$checkbox.prop("checked", true);
 			}
 		});
 	}
-
 
 	function urm_get_captcha_section_data(settings_container) {
 		var section_data = {};
@@ -1540,18 +1797,36 @@
 	function ur_remove_cookie(cookie_key) {
 		document.cookie = cookie_key + "=; Max-Age=-99999999; path=/";
 	}
-	$(document).on("click", ".user-registration-options-header__burger", function() {
-		$(".user-registration-header").addClass("user-registration-header--open");
-		$(".user-registration-settings-container").addClass("user-registration-settings-container--dimmed");
-		$(this).addClass(".user-registration-header__burger--hidden");
-		$(".user-registration-header__close").removeClass("user-registration-header__close--hidden");
-	});
-	$(document).on("click", ".user-registration-header__close", function() {
-		$(".user-registration-header").removeClass("user-registration-header--open");
-		$(".user-registration-settings-container").removeClass("user-registration-settings-container--dimmed");
+
+	$(document).on(
+		"click",
+		".user-registration-options-header__burger",
+		function () {
+			$(".user-registration-header").addClass(
+				"user-registration-header--open"
+			);
+			$(".user-registration-settings-container").addClass(
+				"user-registration-settings-container--dimmed"
+			);
+			$(this).addClass(".user-registration-header__burger--hidden");
+			$(".user-registration-header__close").removeClass(
+				"user-registration-header__close--hidden"
+			);
+		}
+	);
+	$(document).on("click", ".user-registration-header__close", function () {
+		$(".user-registration-header").removeClass(
+			"user-registration-header--open"
+		);
+		$(".user-registration-settings-container").removeClass(
+			"user-registration-settings-container--dimmed"
+		);
 		$(this).addClass("user-registration-header__close--hidden");
-		$(".user-registration-options-header__burger").removeClass("user-registration-header__close--hidden");
+		$(".user-registration-options-header__burger").removeClass(
+			"user-registration-header__close--hidden"
+		);
 	});
+
 	/**
 	 * Handle display conditions/dependencies for settings fields.
 	 */
