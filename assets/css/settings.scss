@@ -682,7 +682,7 @@ body {
 								outline: none;
 							}
 
-							svg{
+							svg {
 								position: relative;
 								top: $spacing_6px;
 								margin-left: 2px;
@@ -1247,7 +1247,7 @@ body {
 					padding: $spacing_20px 0 !important;
 
 					.nav-tab-inside {
-						>div {
+						> div {
 							display: block;
 						}
 					}
@@ -1498,7 +1498,7 @@ body {
 										}
 									}
 
-									>label {
+									> label {
 										padding: $spacing_4px $spacing_8px;
 										border-radius: 100px;
 										font-weight: $regular !important;
@@ -2281,6 +2281,33 @@ body {
 		}
 	}
 
+	.user-registration-color-group-item {
+		display: flex;
+		flex-direction: row !important;
+		gap: 0;
+		flex: 0 0 auto;
+		position: relative;
+
+		.ur-color-state-label {
+			font-size: 12px;
+			font-weight: 500;
+			color: #666;
+			margin-bottom: 0;
+			text-transform: capitalize;
+			position: absolute;
+			left: -9999px;
+			opacity: 0;
+			visibility: hidden;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+		}
+
+		.wp-picker-container {
+			width: fit-content !important;
+		}
+	}
+
 	&.user-registration-color-group {
 		.user-registration-color-group-field {
 			display: flex;
@@ -2325,6 +2352,14 @@ body {
 			border-radius: 8px;
 		}
 	}
+}
+
+.user-registration-global-settings.user-registration-color-group .user-registration-color-group-item {
+	display: flex;
+	flex-direction: row !important;
+	gap: 0;
+	flex: 0 0 auto;
+	position: relative;
 }
 
 

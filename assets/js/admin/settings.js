@@ -254,22 +254,25 @@
 
 				// Add border radius to color result button
 				$container.find(".wp-color-result").css({
-					borderRadius: "4px"
+					borderRadius: "100px",
+					margin: "0"
 				});
 
-				// Set tooltip for color-group items
-				var $colorGroupItem = $container.closest(
-					".user-registration-color-group-item"
-				);
-				if ($colorGroupItem.length) {
-					var $label = $colorGroupItem.find(".ur-color-state-label");
-					var labelText = $label.text();
-					if (labelText) {
-						$container
-							.find(".wp-color-result")
-							.attr("title", labelText);
-					}
+			// Set tooltip for color-group items (only show on hover)
+			var $colorGroupItem = $container.closest(
+				".user-registration-color-group-item"
+			);
+			if ($colorGroupItem.length) {
+				var $label = $colorGroupItem.find(".ur-color-state-label");
+				var labelText = $label.text();
+				if (labelText) {
+					// Hide the label and show it only in tooltip on hover
+					$label.css("display", "none");
+					$container
+						.find(".wp-color-result")
+						.attr("title", labelText);
 				}
+			}
 			}
 		}, 50);
 	});
@@ -1617,13 +1620,13 @@
 		});
 	});
 
-	var $advancedLogicToggle = $('#urcr_is_advanced_logic_enabled');
+	var $advancedLogicToggle = $("#urcr_is_advanced_logic_enabled");
 	if ($advancedLogicToggle.length > 0) {
-		$advancedLogicToggle.on('change', function (e) {
+		$advancedLogicToggle.on("change", function (e) {
 			var $checkbox = $(this);
-			var isChecked = $checkbox.is(':checked');
-			var $parent = $checkbox.closest('.user-registration-toggle-form');
-			var $spinner = $parent.find('.ur-spinner');
+			var isChecked = $checkbox.is(":checked");
+			var $parent = $checkbox.closest(".user-registration-toggle-form");
+			var $spinner = $parent.find(".ur-spinner");
 			if ($spinner.length > 0) {
 				return;
 			}
@@ -1631,47 +1634,54 @@
 			e.stopPropagation();
 
 			if (!isChecked) {
-				$checkbox.prop('checked', true);
-				$checkbox.prop('disabled', true);
+				$checkbox.prop("checked", true);
+				$checkbox.prop("disabled", true);
 				$spinner = $('<span class="ur-spinner"></span>');
 				$parent.append($spinner);
-
 
 				$.ajax({
 					url: user_registration_settings_params.ajax_url,
 					data: {
-						action: 'user_registration_check_advanced_logic_rules',
-						security: user_registration_settings_params.user_registration_settings_nonce
+						action: "user_registration_check_advanced_logic_rules",
+						security:
+							user_registration_settings_params.user_registration_settings_nonce
 					},
-					type: 'POST',
+					type: "POST",
 					success: function (response) {
 						// Remove spinner element
 						$spinner.remove();
 						// Enable checkbox
-						$checkbox.prop('disabled', false);
+						$checkbox.prop("disabled", false);
 
-						if (response.success && response.data.has_advanced_logic) {
-							$checkbox.prop('checked', true);
+						if (
+							response.success &&
+							response.data.has_advanced_logic
+						) {
+							$checkbox.prop("checked", true);
 
-							var errorMessage = user_registration_settings_params.i18n.advanced_logic_rules_exist_error;
+							var errorMessage =
+								user_registration_settings_params.i18n
+									.advanced_logic_rules_exist_error;
 							show_failure_message(errorMessage);
 						} else {
-							$checkbox.prop('checked', false);
+							$checkbox.prop("checked", false);
 						}
 					},
 					error: function () {
 						$spinner.remove();
-						$checkbox.prop('disabled', false);
-						$checkbox.prop('checked', true);
-						show_failure_message(user_registration_settings_params.i18n.advanced_logic_check_error);
+						$checkbox.prop("disabled", false);
+						$checkbox.prop("checked", true);
+						show_failure_message(
+							user_registration_settings_params.i18n
+								.advanced_logic_check_error
+						);
 					}
 				});
 			} else {
-				$checkbox.prop('checked', true);
+				$checkbox.prop("checked", true);
 			}
 		});
 	}
-
 
 	function urm_get_captcha_section_data(settings_container) {
 		var section_data = {};
@@ -1787,18 +1797,36 @@
 	function ur_remove_cookie(cookie_key) {
 		document.cookie = cookie_key + "=; Max-Age=-99999999; path=/";
 	}
-	$(document).on("click", ".user-registration-options-header__burger", function() {
-		$(".user-registration-header").addClass("user-registration-header--open");
-		$(".user-registration-settings-container").addClass("user-registration-settings-container--dimmed");
-		$(this).addClass(".user-registration-header__burger--hidden");
-		$(".user-registration-header__close").removeClass("user-registration-header__close--hidden");
-	});
-	$(document).on("click", ".user-registration-header__close", function() {
-		$(".user-registration-header").removeClass("user-registration-header--open");
-		$(".user-registration-settings-container").removeClass("user-registration-settings-container--dimmed");
+
+	$(document).on(
+		"click",
+		".user-registration-options-header__burger",
+		function () {
+			$(".user-registration-header").addClass(
+				"user-registration-header--open"
+			);
+			$(".user-registration-settings-container").addClass(
+				"user-registration-settings-container--dimmed"
+			);
+			$(this).addClass(".user-registration-header__burger--hidden");
+			$(".user-registration-header__close").removeClass(
+				"user-registration-header__close--hidden"
+			);
+		}
+	);
+	$(document).on("click", ".user-registration-header__close", function () {
+		$(".user-registration-header").removeClass(
+			"user-registration-header--open"
+		);
+		$(".user-registration-settings-container").removeClass(
+			"user-registration-settings-container--dimmed"
+		);
 		$(this).addClass("user-registration-header__close--hidden");
-		$(".user-registration-options-header__burger").removeClass("user-registration-header__close--hidden");
+		$(".user-registration-options-header__burger").removeClass(
+			"user-registration-header__close--hidden"
+		);
 	});
+
 	/**
 	 * Handle display conditions/dependencies for settings fields.
 	 */
