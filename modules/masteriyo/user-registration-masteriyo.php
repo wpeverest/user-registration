@@ -17,7 +17,7 @@ if ( ! defined( 'URM_MASTERIYO_VERSION' ) ) {
 	define( 'URM_MASTERIYO_VERSION', '1.0.0' );
 }
 
-// Define URM_MASTERIYO_FILE.
+// Define URM_MASTERIYO_FILE
 if ( ! defined( 'URM_MASTERIYO_FILE' ) ) {
 	define( 'URM_MASTERIYO_FILE', __FILE__ );
 }
