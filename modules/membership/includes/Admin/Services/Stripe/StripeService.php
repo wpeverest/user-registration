@@ -32,6 +32,169 @@ class StripeService {
 		\Stripe\Stripe::setApiKey( $stripe_settings['secret_key'] );
 	}
 
+
+	/**
+	 * Retries subscription for Stripe subscription payments.
+	 */
+	public function retry_subscription( $subscription ) {
+		$response = array(
+			'status'  => false,
+			'message' => '',
+		);
+
+		if ( empty( $subscription['sub_id'] ) ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Stripe subscription ID not found for retry',
+				array(
+					'error_code' => 'MISSING_SUBSCRIPTION_ID',
+				)
+			);
+
+			$response['message'] = __( 'Subscription ID not found', 'user-registration' );
+
+			return $response;
+		}
+
+		PaymentGatewayLogging::log_general(
+			'stripe',
+			'Retrying Stripe subscription payment',
+			'notice',
+			array(
+				'event_type'      => 'retry_initiated',
+				'subscription_id' => $subscription['sub_id'],
+				'user_id'         => $subscription['user_id'] ?? 'unknown',
+				'item_id'         => $subscription['item_id'] ?? 'unknown',
+			)
+		);
+
+		try {
+			$stripe_subscription = \Stripe\Subscription::retrieve( $subscription['sub_id'] );
+
+			if ( ! $stripe_subscription ) {
+				PaymentGatewayLogging::log_error(
+					'stripe',
+					'Stripe subscription not found for retry',
+					array(
+						'subscription_id' => $subscription['sub_id'],
+					)
+				);
+
+				$response['message'] = __( 'Subscription not found in Stripe', 'user-registration' );
+
+				return $response;
+			}
+
+			if ( in_array( $stripe_subscription->status, array( 'past_due', 'unpaid' ) ) ) {
+				// Update subscription to retry payment
+				$updated_subscription = \Stripe\Subscription::update(
+					$subscription['sub_id'],
+					array(
+						'default_payment_method' => $stripe_subscription->default_payment_method,
+						'off_session'            => true,
+					)
+				);
+
+				PaymentGatewayLogging::log_api_response(
+					'stripe',
+					'Stripe subscription updated for retry',
+					array(
+						'subscription_id' => $subscription['sub_id'],
+						'old_status'      => $stripe_subscription->status,
+						'new_status'      => $updated_subscription->status,
+					)
+				);
+
+				if ( 'active' === $updated_subscription->status || 'trialing' === $updated_subscription->status ) {
+					PaymentGatewayLogging::log_transaction_success(
+						'stripe',
+						'Subscription payment retry successful',
+						array(
+							'subscription_id' => $subscription['sub_id'],
+							'user_id'         => $subscription['user_id'] ?? 'unknown',
+							'status'          => $updated_subscription->status,
+						)
+					);
+
+					$response['status']  = true;
+					$response['message'] = __( 'Subscription payment retried successfully', 'user-registration' );
+				} else {
+					PaymentGatewayLogging::log_error(
+						'stripe',
+						'Subscription payment retry - Unexpected status',
+						array(
+							'subscription_id' => $subscription['sub_id'],
+							'status'          => $updated_subscription->status,
+						)
+					);
+					
+
+					// Notify user via email about a failed retry attempt
+					$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $subscription[ 'sub_id' ], true );
+					if ( ! empty( $current_subscription ) ) {
+						$member_id   = $current_subscription['user_id'];
+
+						if( 1 === intval( get_user_meta( $member_id, 'urm_is_payment_retrying', true ) ) ) {							
+							$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
+							$membership  = $this->membership_repository->get_single_membership_by_ID( $current_subscription['item_id'] );
+							$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
+							$email_service = new EmailService();
+							$email_data = array(
+								'subscription' => $current_subscription,
+								'order' => $latest_order,
+								'membership_metas' => $membership_metas,
+								'member_id' => $member_id,
+							);
+							$email_service->send_email( $email_data, 'payment_retry_failed' );
+						}
+						$response['message'] = __( 'Subscription retry did not resolve the issue', 'user-registration' );
+					}
+				}
+			} elseif ( 'active' === $stripe_subscription->status || 'trialing' === $stripe_subscription->status ) {
+				//Scenario: if automatic retry is enabled in stripe dashboard, it might be already active via smart retry.
+				PaymentGatewayLogging::log_general(
+					'stripe',
+					'Subscription is already active - no retry needed',
+					'notice',
+					array(
+						'subscription_id' => $subscription['sub_id'],
+						'status'          => $stripe_subscription->status,
+						'user_id'         => $subscription['user_id'] ?? 'unknown',
+					)
+				);
+				$response['status']  = true;
+				$response['message'] = __( 'Subscription is already active', 'user-registration' );
+			} else {
+				PaymentGatewayLogging::log_error(
+					'stripe',
+					'Subscription cannot be recovered.',
+					array(
+						'subscription_id' => $subscription['sub_id'],
+						'status'          => $stripe_subscription->status,
+					)
+				);
+
+				$response['message'] = sprintf( __( 'Subscription status is %s and cannot be retried', 'user-registration' ), $stripe_subscription->status );
+			}
+
+			return $response;
+		} catch ( ApiErrorException $e ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Stripe subscription retry failed',
+				array(
+					'error_code'      => $e->getStripeCode(),
+					'error_message'   => $e->getMessage(),
+					'subscription_id' => $subscription['subscription_id'],
+					'user_id'         => $subscription['user_id'] ?? 'unknown',
+				)
+			);
+
+			$response['message'] = $e->getMessage();
+
+			return $response;
+		}
+	}
 	public function create_stripe_product_and_price( $post_data, $meta_data, $should_create_new_price ) {
 
 		$products      = \Stripe\Product::all();

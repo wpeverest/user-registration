@@ -47,6 +47,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
             return self::$_instance;
         }
 
+
         /**
          * Filter to provide sections submenu for scaffold settings.
          */
@@ -111,6 +112,8 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				'UR_Settings_Registration_Denied_Email',
 				'UR_Settings_Registration_Pending_Email',
 				'UR_Settings_Reset_Password_Email',
+                'UR_Settings_Payment_Retry_Failed_Email',
+                'UR_Settings_Payment_Retry_Cancel_Email',
 				'UR_Settings_Profile_Details_Changed_Email',
 				'UR_Settings_Profile_Details_Updated_Email',
 				'UR_Settings_Confirm_Email_Address_Change_Email',
@@ -452,9 +455,9 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				case 'general':
 					$settings = $this->get_settings();
 					break;
-                case 'templates':
-                    $settings = $this->upgrade_to_pro_setting();
-                    break;
+        case 'templates':
+            $settings = $this->upgrade_to_pro_setting();
+            break;
 			}
 
 			UR_Admin_Settings::output_fields( $settings );

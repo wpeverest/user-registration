@@ -965,4 +965,39 @@ class SubscriptionService {
 			array( 'source' => 'urm-membership-expiration' )
 		);
 	}
+	
+	public function daily_payment_retry_check() {
+		
+		$subscriptions = $this->members_subscription_repository->get_subscriptions_to_retry();
+		$expired_count = 0;
+		$expired_users = array();
+		foreach ( $subscriptions as $subscription ) {
+			//only handle the subscription case.
+			if( $subscription['order_type'] !== 'subscription' ) {
+				continue;
+			}
+
+			// Update subscription status to expired
+			// $update_result = $this->members_subscription_repository->update( $subscription_id, array( 'status' => 'expired' ) );
+			$this->failed_payment_retry_callback( $subscription );
+		}
+}
+	public function failed_payment_retry_callback( $subscription ) {
+		//update the counter for failed payment retry.
+		$retry_count = (int)get_user_meta( $subscription[ 'member_id' ], 'urm_is_payment_retrying', true );
+		update_user_meta( $subscription[ 'member_id' ], 'urm_is_payment_retrying', $retry_count + 1 );
+		switch( $subscription[ 'payment_method' ] ) {
+			case 'paypal':
+				$paypal_service = new PaypalService();
+				$paypal_service->retry_subscription( $subscription );
+				break;
+			case 'stripe':
+				$stripe_service = new StripeService();
+				$stripe_service->retry_subscription( $subscription );
+				break;
+			default:
+				do_action( 'urm_handle_failed_payment_retry', $subscription );
+				break;
+		}
+	}
 }

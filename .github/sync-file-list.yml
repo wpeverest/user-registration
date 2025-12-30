@@ -1,16 +1,17 @@
-wpeverest/user-registration-pro@v6.1.0:
-    - assets
-    - includes
-    - modules
-    - src
-    - templates
-    - .babelrc
-    - .editorconfig
-    - .gitattributes
-    - .gitignore
-    - .jshintrc
-    - license.txt
-    - phpcs.xml
-    - uninstall.php
-    - webpack.config.js
-    - wpml-config.xml
+wpeverest/user-registration-pro@UR-2670-payment-retry-settings:
+  - assets
+  - includes
+  - modules
+  - src
+  - templates
+  - .babelrc
+  - .editorconfig
+  - .gitattributes
+  - .gitignore
+  - .jshintrc
+  - license.txt
+  - phpcs.xml
+  - uninstall.php
+  - webpack.config.js
+  - wpml-config.xml
+  

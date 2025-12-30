@@ -863,7 +863,8 @@ class UR_Admin_Settings {
 								case 'link':
 									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
-									$settings .= '<div class="user-registration-global-settings--field">';
+									$classes = isset( $value[ 'class' ] ) ? esc_attr( $value['class'] ) : '';
+									$settings .= '<div class="user-registration-global-settings--field ' . $classes .  '">';
 
 									if ( isset( $value['buttons'] ) && is_array( $value['buttons'] ) ) {
 										foreach ( $value['buttons'] as $button ) {
