@@ -21,8 +21,6 @@ use WPEverest\URMembership\Emails\User\UR_Settings_Membership_Renewal_Reminder_U
 
 class EmailService {
 
-class EmailService {
-
 	protected $email_type, $logger;
 
 	public function __construct() {

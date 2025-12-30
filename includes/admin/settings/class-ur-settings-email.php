@@ -1,18 +1,7 @@
 <?php
 /**
  * UserRegistration Email Settings
- * UserRegistration Email Settings
  *
- * @class    UR_Settings_Email
- * @version  1.0.0
- * @package  UserRegistration/Admin
- */
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
-
-if ( ! class_exists( 'UR_Settings_Email' ) ) :
  * @class    UR_Settings_Email
  * @version  1.0.0
  * @package  UserRegistration/Admin
@@ -30,30 +19,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 
         private static $_instance;
 
-
-        private static $_instance;
-
 		/**
-		 * Email notification classes.
-		 *
-		 * @var array
-		 */
-		public $emails = array();
-
-		/**
-		 * Setting Id.
-		 *
-		 * @var string
-		 */
-		public $id = 'email';
-
-        /**
-         * Register hooks for submenus and section UI.
-         * @return void
-         */
-        public function handle_hooks() {
-            add_filter( "user_registration_get_sections_{$this->id}",  array( $this, 'get_sections_callback' ), 1, 1 );
-        }
 		 * Email notification classes.
 		 *
 		 * @var array
@@ -489,10 +455,9 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				case 'general':
 					$settings = $this->get_settings();
 					break;
-                default:
-                    //email setting configuration preview.
-                    $settings = ! empty( $settings ) ? $settings : $this->upgrade_to_pro_setting();
-                    break;
+        case 'templates':
+            $settings = $this->upgrade_to_pro_setting();
+            break;
 			}
 
 			UR_Admin_Settings::output_fields( $settings );
