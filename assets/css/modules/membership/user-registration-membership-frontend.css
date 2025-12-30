@@ -164,9 +164,9 @@ html {
   min-height: 40px;
   padding: 0 12px;
   border-radius: 4px;
-  border: 1px solid #475bb2;
-  background: #475bb2;
-  color: white;
+  border: 1px solid var(--ur-button-background-normal-color, var(--ur-primary-color, #475bb2));
+  background: var(--ur-button-background-normal-color, var(--ur-primary-color, #475bb2));
+  color: var(--ur-button-text-normal-color, white);
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
@@ -177,7 +177,9 @@ html {
 .user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover,
 .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover,
 #pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover {
-  background: #38488e;
+  color: var(--ur-button-text-hover-color, white);
+  background: var(--ur-button-background-hover-color, #38488e);
+  border-color: var(--ur-button-background-hover-color, #38488e);
 }
 .user-registration-page .ur-membership-list-container .ur-membership-container .ur_membership_frontend_input_container.radio .membership-block,
 .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .ur_membership_frontend_input_container.radio .membership-block,
@@ -702,7 +704,7 @@ html {
   padding: 14px;
   border-radius: 4px;
   border: 1px dashed #475bb2;
-  background: #f8f8fa;
+  background: #F8F8FA;
 }
 .user-registration-page .ur_membership_registration_container #urm-total_container .ur_membership_input_label,
 .user-registration-page .membership-upgrade-container #urm-total_container .ur_membership_input_label,
@@ -789,12 +791,12 @@ html {
     flex-direction: column;
     gap: 0;
   }
-  .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists l .ur_membership_input_label,
-  .user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists l .ur_membership_input_label,
-  .ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists l .ur_membership_input_label,
-  .ur-multi-device-form-preview .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists l .ur_membership_input_label,
-  #pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists l .ur_membership_input_label,
-  #pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists l .ur_membership_input_label {
+  .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label,
+  .user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label,
+  .ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label,
+  .ur-multi-device-form-preview .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label,
+  #pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label,
+  #pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label {
     width: 100%;
   }
 }
@@ -828,7 +830,7 @@ html {
 .ur-multi-device-form-preview .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label[for=ur-membership-stripe] .ur-membership-duration,
 #pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label[for=ur-membership-stripe] .ur-membership-duration,
 #pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label[for=ur-membership-stripe] .ur-membership-duration {
-  color: #635bff;
+  color: #635BFF;
 }
 .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label input[type=radio],
 .user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label input[type=radio],
@@ -925,8 +927,8 @@ html {
   width: 200px;
   cursor: pointer;
   font-size: 14px;
-  background: #475bb2;
-  color: white;
+  background: var(--ur-button-background-normal-color, var(--ur-primary-color, #475bb2));
+  color: var(--ur-button-text-normal-color, white);
   padding: 10px 0;
   border-radius: 5px;
   border: none;
@@ -961,10 +963,8 @@ html {
   position: relative;
   width: max-content;
   cursor: pointer;
-  font-size: 14px;
   background: #475bb2;
   color: white;
-  padding: 10px 0;
   border-radius: 4px;
   border: none;
   display: flex;
@@ -1182,7 +1182,7 @@ html {
 .user-registration-page .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-header h2,
 .ur-multi-device-form-preview .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-header h2,
 #pg-container .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-header h2 {
-  border-bottom: 1px solid #d3d3d3;
+  border-bottom: 1px solid #D3D3D3;
   padding-bottom: 16px;
   width: 100%;
   text-align: left;
@@ -1360,7 +1360,7 @@ html {
   margin-bottom: 10px;
   line-height: 1.5;
   padding: 4px 8px;
-  border-radius: 0px;
+  border-radius: 0;
 }
 .user-registration-page .upgrade-plan-container #upgradable-plans,
 .ur-multi-device-form-preview .upgrade-plan-container #upgradable-plans,
@@ -1666,4 +1666,275 @@ html {
 #pg-container .ur-membership-list-container .ur-membership-container .membership-block:hover {
   background: none;
   box-shadow: none;
+}
+
+.ur-thank-you-page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+.thank-you-page-container {
+  max-width: 640px;
+  width: 100%;
+  text-align: center;
+  background-color: #ffffff;
+  padding: 60px 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.thank-you-page-container .ur-success-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 40px;
+  animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.thank-you-page-container .ur-success-icon svg {
+  width: 80px;
+  height: 80px;
+  stroke: #ffffff;
+  fill: none;
+}
+.thank-you-page-container .ur-headline {
+  margin-bottom: 24px;
+}
+.thank-you-page-container .ur-headline h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+.thank-you-page-container .ur-message {
+  margin-bottom: 40px;
+}
+.thank-you-page-container .ur-message p {
+  font-size: 16px;
+  color: #6c757d;
+  line-height: 1.6;
+  margin: 0;
+}
+.thank-you-page-container .ur-message ul {
+  text-align: left;
+}
+.thank-you-page-container .ur-button-wrapper {
+  margin-bottom: 32px;
+}
+.thank-you-page-container .ur-button-wrapper .ur-redirect-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background-color: #2680C2;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(38, 128, 194, 0.2);
+}
+.thank-you-page-container .ur-button-wrapper .ur-redirect-btn:hover {
+  background-color: #1e6ba8;
+  box-shadow: 0 4px 8px rgba(38, 128, 194, 0.3);
+  transform: translateY(-1px);
+}
+.thank-you-page-container .ur-button-wrapper .ur-redirect-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(38, 128, 194, 0.2);
+}
+.thank-you-page-container .ur-button-wrapper .ur-redirect-btn:focus {
+  outline: 2px solid #2680C2;
+  outline-offset: 2px;
+}
+.thank-you-page-container .ur-button-wrapper .ur-redirect-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: #ffffff;
+  fill: none;
+  transition: transform 0.3s ease;
+}
+.thank-you-page-container .ur-button-wrapper .ur-redirect-btn:hover svg {
+  transform: translateX(3px);
+}
+.thank-you-page-container .ur-bank-details {
+  width: 100%;
+  margin-bottom: 24px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  text-align: left;
+}
+.thank-you-page-container .ur-bank-details h3,
+.thank-you-page-container .ur-bank-details h4 {
+  margin: 0 0 12px 0;
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 600;
+}
+.thank-you-page-container .ur-bank-details p {
+  margin: 6px 0;
+  color: #495057;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.thank-you-page-container .ur-bank-details table {
+  width: 100%;
+  margin-top: 12px;
+  border-collapse: collapse;
+}
+.thank-you-page-container .ur-bank-details table th,
+.thank-you-page-container .ur-bank-details table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 14px;
+}
+.thank-you-page-container .ur-bank-details table th {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+.thank-you-page-container .ur-bank-details table td {
+  color: #495057;
+}
+.thank-you-page-container .ur-transaction-info {
+  margin-bottom: 24px;
+  padding: 14px 18px;
+  background-color: #e7f3ff;
+  border-left: 4px solid #2680C2;
+  border-radius: 4px;
+  text-align: left;
+}
+.thank-you-page-container .ur-transaction-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #495057;
+  line-height: 1.5;
+}
+.thank-you-page-container .ur-transaction-info strong {
+  color: #2680C2;
+  font-weight: 600;
+}
+.thank-you-page-container .ur-footer p {
+  font-size: 14px;
+  color: #868e96;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@media (max-width: 768px) {
+  .thank-you-page-container {
+    padding: 50px 32px;
+  }
+  .thank-you-page-container .ur-headline h1 {
+    font-size: 28px;
+  }
+  .thank-you-page-container .ur-message p {
+    font-size: 15px;
+  }
+  .thank-you-page-container .ur-button-wrapper .ur-redirect-btn {
+    padding: 13px 28px;
+    font-size: 15px;
+  }
+}
+@media (max-width: 640px) {
+  .ur-thank-you-page {
+    padding: 20px 16px;
+  }
+  .thank-you-page-container {
+    padding: 40px 24px;
+    border-radius: 6px;
+  }
+  .thank-you-page-container .ur-success-icon {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 28px;
+  }
+  .thank-you-page-container .ur-success-icon svg {
+    width: 40px;
+    height: 40px;
+  }
+  .thank-you-page-container .ur-headline {
+    margin-bottom: 16px;
+  }
+  .thank-you-page-container .ur-headline h1 {
+    font-size: 24px;
+  }
+  .thank-you-page-container .ur-message {
+    margin-bottom: 28px;
+  }
+  .thank-you-page-container .ur-message p {
+    font-size: 15px;
+  }
+  .thank-you-page-container .ur-button-wrapper {
+    margin-bottom: 24px;
+  }
+  .thank-you-page-container .ur-button-wrapper .ur-redirect-btn {
+    width: 100%;
+    padding: 12px 24px;
+    font-size: 15px;
+  }
+  .thank-you-page-container .ur-bank-details {
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .thank-you-page-container .ur-transaction-info {
+    padding: 12px 16px;
+    margin-bottom: 20px;
+  }
+  .thank-you-page-container .ur-footer p {
+    font-size: 13px;
+  }
+}
+@media (max-width: 480px) {
+  .thank-you-page-container {
+    padding: 32px 20px;
+  }
+  .thank-you-page-container .ur-headline h1 {
+    font-size: 22px;
+  }
+  .thank-you-page-container .ur-message p {
+    font-size: 14px;
+  }
+}
+@media print {
+  .ur-thank-you-page {
+    background-color: #ffffff;
+    min-height: auto;
+    padding: 0;
+  }
+  .thank-you-page-container {
+    box-shadow: none;
+    padding: 20px;
+  }
+  .thank-you-page-container .ur-button-wrapper {
+    display: none;
+  }
+  .thank-you-page-container .ur-success-icon {
+    box-shadow: none;
+  }
 }

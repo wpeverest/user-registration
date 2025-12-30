@@ -38,140 +38,6 @@ class UR_Admin_Settings {
 	private static $messages = array();
 
 	/**
-	 * Include the settings page classes.
-	 */
-	public static function get_settings_pages() {
-
-		if ( empty( self::$settings ) ) {
-			$settings = array();
-
-			include_once __DIR__ . '/settings/class-ur-settings-page.php';
-
-			if ( ! empty( $_GET['install_user_registration_pages'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
-				UR_Install::create_pages();
-				UR_Admin_Notices::remove_notice( 'install' );
-			}
-
-			$settings[] = include 'settings/class-ur-settings-general.php';
-			$settings[] = include 'settings/class-ur-settings-membership.php';
-			$settings[] = include 'settings/class-ur-settings-payment.php';
-			$settings[] = include 'settings/class-ur-settings-email.php';
-			$settings[] = include 'settings/class-ur-settings-registration-login.php';
-			$settings[] = include 'settings/class-ur-settings-my-account.php';
-
-			$is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
-			if( $is_pro_active ) {
-				$settings[] = include 'settings/class-ur-settings-integration.php';
-			}
-
-			$settings[] = include 'settings/class-ur-settings-security.php';
-			$settings[] = include 'settings/class-ur-settings-advanced.php';
-
-			/**
-			 * Filter to retrieve settings pages
-			 *
-			 * @param array $settings Settings.
-			 */
-			self::$settings = apply_filters( 'user_registration_get_settings_pages', $settings );
-		}
-
-		return self::$settings;
-	}
-
-	/**
-	 * Save the settings.
-	 */
-	public static function save() {
-		global $current_tab;
-
-		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'user-registration-settings' ) ) {
-			die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
-		}
-
-		/**
-		 * Filter to modify display of setting message
-		 *
-		 * @param boolean Show/Hide.
-		 */
-		$flag = apply_filters( 'show_user_registration_setting_message', true );
-
-		$flag = apply_filters( 'user_registration_settings_prevent_default_login', $_REQUEST );
-
-		if ( $flag && is_bool( $flag ) ) {
-			if ( $current_tab !== 'license' ) {
-				self::add_message( esc_html__( 'Your settings have been saved.', 'user-registration' ) );
-			}
-
-			/**
-			 * Action to save current tab settings
-			 */
-			do_action( 'user_registration_settings_save_' . $current_tab );
-			/**
-			 * Action to save current tab options
-			 */
-			do_action( 'user_registration_update_options_' . $current_tab );
-			/**
-			 * Action to save options
-			 */
-			do_action( 'user_registration_update_options' );
-		} elseif ( $flag && 'redirect_login_error' === $flag ) {
-
-			self::add_error(
-				esc_html__(
-					'Your settings has not been saved. You enabled "Disable Default WordPress Login Screen" but did not select a login page. Please select a page for "Redirect Default WordPress Login To".',
-					'user-registration'
-				)
-			);
-
-		} elseif ( $flag && 'redirect_login_not_myaccount' === $flag ) {
-
-			self::add_error(
-				esc_html__(
-					'Your settings has not been saved.The selected page for "Redirect Default WordPress Login To" is not a login page. Please select a valid login page.',
-					'user-registration'
-				)
-			);
-
-		} elseif ( $flag && 'invalid_membership_pages' === $flag ) {
-			self::add_error(
-				esc_html__(
-					'Your settings has not been saved. Please select valid pages for the fields.',
-					'user-registration'
-				)
-			);
-		}
-		// Flush rules.
-		wp_schedule_single_event( time(), 'user_registration_flush_rewrite_rules' );
-
-		/**
-		 * Action to save settings
-		 */
-		do_action( 'user_registration_settings_saved' );
-	}
-
-	/**
-	 * Add a message.
-	 *
-	 * @param string $text Text.
-	 */
-	public static function add_message( $text ) {
-		self::$messages[] = $text;
-	}
-
-	/**
-	 * Add an error.
-	 *
-	 * @param string $text Text.
-	 */
-	public static function add_error( $text, $type = '' ) {
-		if ( ! empty( $type ) ) {
-			self::$errors[ $type ] = $text;
-		} else {
-			self::$errors[] = $text;
-		}
-	}
-
-	/**
 	 * Output messages + errors.
 	 *
 	 * @echo string
@@ -212,7 +78,8 @@ class UR_Admin_Settings {
 				'jquery',
 				'jquery-ui-datepicker',
 				'jquery-ui-sortable',
-				'iris',
+				'wp-color-picker',
+				'wp-color-picker-alpha',
 				'tooltipster',
 				'ur-snackbar',
 			),
@@ -321,50 +188,176 @@ class UR_Admin_Settings {
 	}
 
 	/**
-	 * Get a setting from the settings API.
-	 *
-	 * @param mixed $option_name Option Name.
-	 * @param mixed $default Default.
-	 *
-	 * @return string
+	 * Include the settings page classes.
 	 */
-	public static function get_option( $option_name, $default = '' ) {
+	public static function get_settings_pages() {
 
-		global $current_section;
+		if ( empty( self::$settings ) ) {
+			$settings = array();
 
-		if ( 'add-new-popup' === $current_section ) {
-			return $default;
-		} else {
-			// Array value.
-			if ( null !== $option_name ) {
-				if ( strstr( $option_name, '[' ) ) {
-					parse_str( $option_name, $option_array );
+			include_once __DIR__ . '/settings/class-ur-settings-page.php';
 
-					// Option name is first key.
-					$option_name = current( array_keys( $option_array ) );
+			if ( ! empty( $_GET['install_user_registration_pages'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification
+				UR_Install::create_pages();
+				UR_Admin_Notices::remove_notice( 'install' );
+			}
 
-					// Get value.
-					$option_values = get_option( $option_name, '' );
+			$settings[] = include 'settings/class-ur-settings-general.php';
+			$settings[] = include 'settings/class-ur-settings-captcha.php';
+			$settings[] = include 'settings/class-ur-settings-email.php';
+			$settings[] = include 'settings/class-ur-settings-import-export.php';
+			$settings[] = include 'settings/class-ur-settings-misc.php';
 
-					$key = key( $option_array[ $option_name ] );
+			if ( UR_PRO_ACTIVE ) {
+				$settings[] = include 'settings/class-ur-settings-integration.php';
+			}
 
-					if ( isset( $option_values[ $key ] ) ) {
-						$option_value = $option_values[ $key ];
-					} else {
-						$option_value = null;
-					}
+			$modules = array();
+
+			if ( UR_PRO_ACTIVE ) {
+				if ( ur_check_module_activation( 'membership' ) ) {
+					$modules = array(
+						'class-ur-payment-settings.php',
+						'stripe/class-ur-stripe-module.php',
+						'paypal/class-ur-paypal-module.php',
+					);
 				} else {
-					$option_value = get_option( $option_name, $default );
+					if ( ur_check_module_activation( 'payments' ) ) {
+						$modules[] = 'class-ur-payment-settings.php';
+						$modules[] = 'paypal/class-ur-paypal-module.php';
+					}
+					if ( is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
+						$modules[] = 'class-ur-payment-settings.php';
+						$modules[] = 'stripe/class-ur-stripe-module.php';
+					}
+					if ( is_plugin_active( 'user-registration-authorize-net/user-registration-authorize-net.php' ) ) {
+						$modules[] = 'class-ur-payment-settings.php';
+					}
+					if ( is_plugin_active( 'user-registration-mollie/user-registration-mollie.php' ) ) {
+						$modules[] = 'class-ur-payment-settings.php';
+					}
 				}
+			} elseif ( ur_check_module_activation( 'membership' ) ) {
+				$modules = array(
+					'class-ur-payment-settings.php',
+					'stripe/class-ur-stripe-module.php',
+					'paypal/class-ur-paypal-module.php',
+				);
 			}
 
-			if ( is_array( $option_value ) ) {
-				$option_value = array_map( 'stripslashes', $option_value );
-			} elseif ( ! is_null( $option_value ) ) {
-				$option_value = stripslashes( $option_value );
+			foreach ( $modules as $module ) {
+				include_once UR_ABSPATH . 'modules/' . $module;
 			}
 
-			return null === $option_value ? $default : $option_value;
+			if ( ! function_exists( 'is_plugin_active' ) ) {
+				include_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+
+			// if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+				$settings[] = include 'settings/class-ur-settings-license.php';
+			// }
+
+			/**
+			 * Filter to retrieve settings pages
+			 *
+			 * @param array $settings Settings.
+			 */
+			self::$settings = apply_filters( 'user_registration_get_settings_pages', $settings );
+		}
+
+		return self::$settings;
+	}
+
+	/**
+	 * Save the settings.
+	 */
+	public static function save() {
+		global $current_tab;
+
+		if ( empty( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_REQUEST['_wpnonce'] ), 'user-registration-settings' ) ) {
+			die( esc_html__( 'Action failed. Please refresh the page and retry.', 'user-registration' ) );
+		}
+
+		/**
+		 * Filter to modify display of setting message
+		 *
+		 * @param boolean Show/Hide.
+		 */
+		$flag = apply_filters( 'show_user_registration_setting_message', true );
+
+		$flag = apply_filters( 'user_registration_settings_prevent_default_login', $_REQUEST );
+
+		if ( $flag && is_bool( $flag ) ) {
+			if ( $current_tab !== 'license' ) {
+				self::add_message( esc_html__( 'Your settings have been saved.', 'user-registration' ) );
+			}
+
+			/**
+			 * Action to save current tab settings
+			 */
+			do_action( 'user_registration_settings_save_' . $current_tab );
+			/**
+			 * Action to save current tab options
+			 */
+			do_action( 'user_registration_update_options_' . $current_tab );
+			/**
+			 * Action to save options
+			 */
+			do_action( 'user_registration_update_options' );
+		} elseif ( $flag && 'redirect_login_error' === $flag ) {
+
+			self::add_error(
+				esc_html__(
+					'Your settings has not been saved. You enabled "Disable Default WordPress Login Screen" but did not select a login page. Please select a page for "Redirect Default WordPress Login To".',
+					'user-registration'
+				)
+			);
+
+		} elseif ( $flag && 'redirect_login_not_myaccount' === $flag ) {
+
+			self::add_error(
+				esc_html__(
+					'Your settings has not been saved.The selected page for "Redirect Default WordPress Login To" is not a login page. Please select a valid login page.',
+					'user-registration'
+				)
+			);
+
+		} elseif ( $flag && 'invalid_membership_pages' === $flag ) {
+			self::add_error(
+				esc_html__(
+					'Your settings has not been saved. Please select valid pages for the fields.',
+					'user-registration'
+				)
+			);
+		}
+		// Flush rules.
+		wp_schedule_single_event( time(), 'user_registration_flush_rewrite_rules' );
+
+		/**
+		 * Action to save settings
+		 */
+		do_action( 'user_registration_settings_saved' );
+	}
+
+	/**
+	 * Add a message.
+	 *
+	 * @param string $text Text.
+	 */
+	public static function add_message( $text ) {
+		self::$messages[] = $text;
+	}
+
+	/**
+	 * Add an error.
+	 *
+	 * @param string $text Text.
+	 */
+	public static function add_error( $text, $type = '' ) {
+		if ( ! empty( $type ) ) {
+			self::$errors[ $type ] = $text;
+		} else {
+			self::$errors[] = $text;
 		}
 	}
 
@@ -622,11 +615,12 @@ class UR_Admin_Settings {
 
 								// Color picker.
 								case 'color':
-									$option_value = self::get_option( $value['id'], $value['default'] );
-									$settings    .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
-									$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
-									$settings    .= '<div class="user-registration-global-settings--field">';
-									$settings    .= '<input
+									$option_value  = self::get_option( $value['id'], $value['default'] );
+									$default_value = isset( $value['default'] ) ? $value['default'] : '';
+									$settings     .= '<div class="user-registration-global-settings user-registration-color-picker"' . $display_condition_attrs . $display_condition_style . '>';
+									$settings     .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+									$settings     .= '<div class="user-registration-global-settings--field">';
+									$settings     .= '<input
 											name="' . esc_attr( $value['id'] ) . '"
 											id="' . esc_attr( $value['id'] ) . '"
 											type="text"
@@ -634,10 +628,105 @@ class UR_Admin_Settings {
 											style="' . esc_attr( $value['css'] ) . '"
 											value="' . esc_attr( $option_value ) . '"
 											class="' . esc_attr( $value['class'] ) . 'colorpick"
+											data-alpha="true"
+											data-default-value="' . esc_attr( $default_value ) . '"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
 											' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>&lrm;' . wp_kses_post( $description );
-									$settings    .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></div>';
-									$settings    .= '</div>';
+									$settings     .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></div>';
+									$settings     .= '</div>';
+									break;
+
+								// Color group picker.
+								case 'color-group':
+									$base_id = $value['id'];
+
+									$states_config = isset( $value['states'] ) && is_array( $value['states'] ) ? $value['states'] : array( 'normal', 'hover' );
+
+									$default_labels = array(
+										'normal' => __( 'Normal', 'user-registration' ),
+										'active' => __( 'Active', 'user-registration' ),
+										'hover'  => __( 'Hover', 'user-registration' ),
+										'focus'  => __( 'Focus', 'user-registration' ),
+									);
+
+									// Build color states array dynamically
+									$color_states = array();
+									foreach ( $states_config as $state_key => $state ) {
+										// Handle different input formats
+										if ( is_numeric( $state_key ) && is_string( $state ) ) {
+											// Simple array format: array('normal', 'active')
+											$state_key = $state;
+											$state     = array();
+										} elseif ( is_array( $state ) && isset( $state['key'] ) ) {
+											$state_key = $state['key'];
+										} elseif ( is_string( $state ) ) {
+											// Associative array format: array('normal' => 'Normal Label')
+											$state = array( 'label' => $state );
+										}
+
+										// Get label
+										if ( is_array( $state ) && isset( $state['label'] ) ) {
+											$state_label = $state['label'];
+										} elseif ( isset( $value['labels'][ $state_key ] ) ) {
+											$state_label = $value['labels'][ $state_key ];
+										} else {
+											$state_label = isset( $default_labels[ $state_key ] ) ? $default_labels[ $state_key ] : ucfirst( $state_key );
+										}
+
+										// Get default value
+										if ( is_array( $state ) && isset( $state['default'] ) ) {
+											$state_default = $state['default'];
+										} elseif ( isset( $value['default'][ $state_key ] ) ) {
+											$state_default = $value['default'][ $state_key ];
+										} else {
+											$state_default = '';
+										}
+
+										$color_states[ $state_key ] = array(
+											'label'   => $state_label,
+											'default' => $state_default,
+										);
+									}
+
+									$settings .= '<div class="user-registration-global-settings user-registration-color-group">';
+									$settings .= '<label>' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+									$settings .= '<div class="user-registration-global-settings--field user-registration-color-group-field">';
+
+									// Get saved values as array from base_id option
+									$saved_colors = self::get_option( $base_id, array() );
+									if ( ! is_array( $saved_colors ) ) {
+										$saved_colors = array();
+									}
+
+									foreach ( $color_states as $state => $state_data ) {
+										$state_id = $base_id . '_' . $state;
+										// Get value from array structure: id['normal'], id['hover'], etc.
+										$option_value  = isset( $saved_colors[ $state ] ) ? $saved_colors[ $state ] : ( isset( $state_data['default'] ) ? $state_data['default'] : '' );
+										$default_value = isset( $state_data['default'] ) ? $state_data['default'] : '';
+
+										$settings .= '<div class="user-registration-color-group-item">';
+										$settings .= '<span class="ur-color-state-label">' . esc_html( ucfirst( $state ) ) . '</span>';
+										$settings .= '<input
+												name="' . esc_attr( $state_id ) . '"
+												id="' . esc_attr( $state_id ) . '"
+												type="text"
+												dir="ltr"
+												style="' . esc_attr( $value['css'] ) . '"
+												value="' . esc_attr( $option_value ) . '"
+												class="' . esc_attr( $value['class'] ) . ' colorpick"
+												data-alpha="true"
+												data-state="' . esc_attr( $state ) . '"
+												data-default-value="' . esc_attr( $default_value ) . '"
+												data-current-value="' . esc_attr( $option_value ) . '"
+												placeholder="' . esc_attr( $value['placeholder'] ) . '"
+												' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>&lrm;';
+										$settings .= '<div id="colorPickerDiv_' . esc_attr( $state_id ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div>';
+										$settings .= '</div>';
+									}
+
+									$settings .= wp_kses_post( $description );
+									$settings .= '</div>';
+									$settings .= '</div>';
 									break;
 
 								// Textarea.
@@ -1121,6 +1210,44 @@ class UR_Admin_Settings {
 	}
 
 	/**
+	 * Capitalize Settings Title Phrase.
+	 *
+	 * @param string $text Setting Label.
+	 */
+	public static function capitalize_title( $text = null ) {
+		$prepositions = array( 'at', 'by', 'for', 'in', 'on', 'to', 'or' );
+
+		$words = explode( ' ', $text );
+
+		$capitalized_words = array();
+
+		foreach ( $words as $word ) {
+			$word = trim( $word );
+			if ( ! in_array( $word, $prepositions ) ) {
+
+				// Check if the word is a shash separated terms. Eg: "Hide/Show".
+				if ( strpos( $word, '/' ) ) {
+					$separate_terms    = explode( '/', $word );
+					$capitalized_terms = array();
+
+					foreach ( $separate_terms as $term ) {
+						$capitalized_terms[] = ucfirst( $term );
+					}
+
+					$word = implode( '/', $capitalized_terms );
+				} elseif ( strpos( $word, 'CAPTCHA' ) ) {
+					$word = $word;
+				} else {
+					$word = ucfirst( $word );
+				}
+			}
+			$capitalized_words[] = $word;
+		}
+
+		return implode( ' ', $capitalized_words );
+	}
+
+	/**
 	 * Helper function to get the formated description and tip HTML for a
 	 * given form field. Plugins can call this when implementing their own custom
 	 * settings types.
@@ -1170,6 +1297,73 @@ class UR_Admin_Settings {
 			'desc_field'   => $desc_field,
 			'tooltip_html' => $tooltip_html,
 		);
+	}
+
+	/**
+	 * Get a setting from the settings API.
+	 *
+	 * @param mixed $option_name Option Name.
+	 * @param mixed $default Default.
+	 *
+	 * @return string
+	 */
+	public static function get_option( $option_name, $default = '' ) {
+
+		global $current_section;
+
+		if ( 'add-new-popup' === $current_section ) {
+			return $default;
+		} else {
+			// Array value.
+			if ( null !== $option_name ) {
+				if ( strstr( $option_name, '[' ) ) {
+					parse_str( $option_name, $option_array );
+
+					// Option name is first key.
+					$option_name = current( array_keys( $option_array ) );
+
+					// Get value.
+					$option_values = get_option( $option_name, '' );
+
+					$key = key( $option_array[ $option_name ] );
+
+					if ( isset( $option_values[ $key ] ) ) {
+						$option_value = $option_values[ $key ];
+					} else {
+						$option_value = null;
+					}
+				} else {
+					$option_value = get_option( $option_name, $default );
+				}
+			}
+
+			if ( is_array( $option_value ) ) {
+				$option_value = array_map( 'stripslashes', $option_value );
+			} elseif ( ! is_null( $option_value ) ) {
+				$option_value = stripslashes( $option_value );
+			}
+
+			return null === $option_value ? $default : $option_value;
+		}
+	}
+
+	/**
+	 * Get color-group option value by ID and state.
+	 *
+	 * @param string $option_id Option ID (base ID).
+	 * @param string $state     State name (normal, hover, etc.).
+	 * @param string $default   Default value if not found.
+	 *
+	 * @return string Color value.
+	 */
+	public static function get_color_group_option( $option_id, $state, $default = '' ) {
+		$color_array = self::get_option( $option_id, array() );
+
+		if ( is_array( $color_array ) && isset( $color_array[ $state ] ) ) {
+			return $color_array[ $state ];
+		}
+
+		return $default;
 	}
 
 	/**
@@ -1347,6 +1541,68 @@ class UR_Admin_Settings {
 			}
 
 			foreach ( $section['settings'] as $option ) {
+				// Skip color-group type - handled separately below
+				if ( isset( $option['type'] ) && 'color-group' === $option['type'] ) {
+					// Handle color-group fields - save as array structure: id => array('normal' => value, 'hover' => value)
+					if ( ! empty( $option['id'] ) ) {
+						$base_id = $option['id'];
+
+						// Get states from settings, or use default states (normal and hover)
+						$states_config = isset( $option['states'] ) && is_array( $option['states'] ) ? $option['states'] : array( 'normal', 'hover' );
+
+						// Extract state keys
+						$state_keys = array();
+						foreach ( $states_config as $state_key => $state ) {
+							if ( is_numeric( $state_key ) && is_string( $state ) ) {
+								$state_keys[] = $state;
+							} elseif ( is_array( $state ) && isset( $state['key'] ) ) {
+								$state_keys[] = $state['key'];
+							} else {
+								$state_keys[] = $state_key;
+							}
+						}
+
+						// Initialize the color array
+						$color_array = array();
+
+						// Collect all state values into array structure
+						foreach ( $state_keys as $state ) {
+							$state_id = $base_id . '_' . $state;
+
+							// Check if the field exists in POST (even if empty)
+							if ( array_key_exists( $state_id, $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+								$state_raw_value = isset( $_POST[ $state_id ] ) ? wp_unslash( $_POST[ $state_id ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+								// Create a temporary option array for sanitization (same as regular color field)
+								$state_option = array_merge(
+									$option,
+									array(
+										'id'   => $state_id,
+										'type' => 'color',
+									)
+								);
+								$state_value  = ur_sanitize_value_by_type( $state_option, $state_raw_value );
+
+								// Apply filters (same as regular color field)
+								$state_value = apply_filters( 'user_registration_admin_settings_sanitize_option', $state_value, $state_option, $state_raw_value );
+								$state_value = apply_filters( "user_registration_admin_settings_sanitize_option_$state_id", $state_value, $state_option, $state_raw_value );
+
+								// Add to color array
+								if ( ! is_null( $state_value ) ) {
+									$color_array[ $state ] = $state_value;
+								}
+							}
+						}
+
+						// Save as array structure: id => array('normal' => value, 'hover' => value)
+						// Same pattern as regular color field but as array
+						if ( ! empty( $color_array ) ) {
+							$update_options[ $base_id ] = $color_array;
+						}
+					}
+					continue; // Skip the regular processing for color-group
+				}
+
 				// Get posted value.
 				if ( null !== $option['id'] ) {
 					if ( strstr( $option['id'], '[' ) ) {
@@ -1407,44 +1663,6 @@ class UR_Admin_Settings {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Capitalize Settings Title Phrase.
-	 *
-	 * @param string $text Setting Label.
-	 */
-	public static function capitalize_title( $text = null ) {
-		$prepositions = array( 'at', 'by', 'for', 'in', 'on', 'to', 'or' );
-
-		$words = explode( ' ', $text );
-
-		$capitalized_words = array();
-
-		foreach ( $words as $word ) {
-			$word = trim( $word );
-			if ( ! in_array( $word, $prepositions ) ) {
-
-				// Check if the word is a shash separated terms. Eg: "Hide/Show".
-				if ( strpos( $word, '/' ) ) {
-					$separate_terms    = explode( '/', $word );
-					$capitalized_terms = array();
-
-					foreach ( $separate_terms as $term ) {
-						$capitalized_terms[] = ucfirst( $term );
-					}
-
-					$word = implode( '/', $capitalized_terms );
-				} elseif ( strpos( $word, 'CAPTCHA' ) ) {
-					$word = $word;
-				} else {
-					$word = ucfirst( $word );
-				}
-			}
-			$capitalized_words[] = $word;
-		}
-
-		return implode( ' ', $capitalized_words );
 	}
 
 	/**
@@ -1547,6 +1765,42 @@ class UR_Admin_Settings {
 	}
 
 	/**
+	 * Return Non Nested Array from Nested Settings Array
+	 *
+	 * @param array $nested_array Nested Settings Array.
+	 *
+	 * @return array
+	 */
+	public static function flatten_array( $nested_array ) {
+
+		$settings_array = array();  // create an empty array to store the list of settings.
+		if ( isset( $nested_array['sections'] ) ) {
+			// loop through each section in the array.
+			foreach ( $nested_array['sections'] as $section ) {
+
+				if ( isset( $section['settings'] ) ) {
+
+					if ( is_string( $section['settings'] ) ) {
+						continue;
+					}
+
+					// loop through each setting in the section and add it to the $settings_array.
+					foreach ( $section['settings'] as $setting ) {
+						$settings_array[] = $setting;
+					}
+				} else {
+					$inner_settings = self::flatten_array( $section );
+					if ( ! empty( $inner_settings ) ) {
+						$settings_array[] = $inner_settings;
+					}
+				}
+			}
+		}
+
+		return $settings_array;
+	}
+
+	/**
 	 * Search String in Array.
 	 *
 	 * @param string $string_to_search String to Search.
@@ -1581,42 +1835,6 @@ class UR_Admin_Settings {
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Return Non Nested Array from Nested Settings Array
-	 *
-	 * @param array $nested_array Nested Settings Array.
-	 *
-	 * @return array
-	 */
-	public static function flatten_array( $nested_array ) {
-
-		$settings_array = array();  // create an empty array to store the list of settings.
-		if ( isset( $nested_array['sections'] ) ) {
-			// loop through each section in the array.
-			foreach ( $nested_array['sections'] as $section ) {
-
-				if ( isset( $section['settings'] ) ) {
-
-					if ( is_string( $section['settings'] ) ) {
-						continue;
-					}
-
-					// loop through each setting in the section and add it to the $settings_array.
-					foreach ( $section['settings'] as $setting ) {
-						$settings_array[] = $setting;
-					}
-				} else {
-					$inner_settings = self::flatten_array( $section );
-					if ( ! empty( $inner_settings ) ) {
-						$settings_array[] = $inner_settings;
-					}
-				}
-			}
-		}
-
-		return $settings_array;
 	}
 
 	/**

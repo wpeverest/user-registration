@@ -131,18 +131,20 @@ html {
 							min-height: 40px;
 							padding: 0 12px;
 							border-radius: 4px;
-							border: 1px solid $color_1;
-							background: $color_1;
-							color: $color_2;
+							border: 1px solid var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
+							background: var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
+							color: var(--ur-button-text-normal-color, $color_2);;
 							font-size: 14px;
 							font-weight: 500;
 							line-height: 24px;
 							cursor: pointer;
 							width: 100%;
-							transition: all 0.3s ease-in-out;
+							transition: all .3s ease-in-out;
 
 							&:hover {
-								background: #38488e;
+								color: var(--ur-button-text-hover-color, $color_2);
+								background: var(--ur-button-background-hover-color, #38488e);
+								border-color: var(--ur-button-background-hover-color, #38488e);
 							}
 						}
 					}
@@ -261,6 +263,7 @@ html {
 					border-color: $primary_color;
 				}
 
+
 				.ur-membership-duration {
 					margin: 0;
 					color: #1f1f1f;
@@ -304,6 +307,7 @@ html {
 			}
 
 			.notice {
+
 				&_red,
 				&_blue {
 					&:empty {
@@ -351,7 +355,7 @@ html {
 				padding: $spacing_14px;
 				border-radius: $border_radius_4;
 				border: $border_width dashed $primary_color;
-				background: #f8f8fa;
+				background: #F8F8FA;
 			}
 
 			.ur_membership_input_label {
@@ -410,7 +414,7 @@ html {
 					@media screen and (max-width: 600px) {
 						flex-direction: column;
 						gap: 0;
-						l .ur_membership_input_label {
+						.ur_membership_input_label {
 							width: 100%;
 						}
 					}
@@ -425,7 +429,7 @@ html {
 					justify-content: center;
 					flex: 1;
 					align-items: center;
-					transition: all 0.3s ease;
+					transition: all .3s ease;
 
 					&:hover {
 						border-color: $primary_color;
@@ -433,7 +437,7 @@ html {
 
 					&[for="ur-membership-stripe"] {
 						.ur-membership-duration {
-							color: #635bff;
+							color: #635BFF;
 						}
 					}
 
@@ -498,8 +502,8 @@ html {
 			width: 200px;
 			cursor: pointer;
 			font-size: 14px;
-			background: #475bb2;
-			color: $color_2;
+			background: var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
+			color: var(--ur-button-text-normal-color, $color_2);
 			padding: 10px 0;
 			border-radius: 5px;
 			border: none;
@@ -531,10 +535,8 @@ html {
 		position: relative;
 		width: max-content;
 		cursor: pointer;
-		font-size: 14px;
 		background: $color_1;
 		color: $color_2;
-		padding: 10px 0;
 		border-radius: 4px;
 		border: none;
 		display: flex;
@@ -545,7 +547,7 @@ html {
 		font-size: 15px;
 		font-weight: 500;
 		line-height: 25px;
-		transition: all 0.3s;
+		transition: all .3s;
 
 		&:hover {
 			color: $color_2;
@@ -723,7 +725,7 @@ html {
 				align-items: baseline;
 
 				h2 {
-					border-bottom: 1px solid #d3d3d3;
+					border-bottom: 1px solid #D3D3D3;
 					padding-bottom: 16px;
 					width: 100%;
 					text-align: left;
@@ -848,9 +850,7 @@ html {
 				margin-right: 0;
 			}
 
-			.user-registration-membership_page_user-registration-frontend-list
-				.shortcode
-				.widefat {
+			.user-registration-membership_page_user-registration-frontend-list .shortcode .widefat {
 				width: calc(100% - 40px);
 			}
 
@@ -868,6 +868,7 @@ html {
 				color: red;
 			}
 
+
 			abbr[title] {
 				text-decoration: none;
 			}
@@ -879,7 +880,7 @@ html {
 				margin-bottom: 10px;
 				line-height: 1.5;
 				padding: 4px 8px;
-				border-radius: 0px;
+				border-radius: 0;
 			}
 		}
 	}

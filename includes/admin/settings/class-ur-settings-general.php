@@ -49,6 +49,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) {
 				$sections['license'] = __( 'License', 'user-registration' );
 			}
 			$sections['pages'] = __( 'Pages', 'user-registration' );
+			$sections['style'] = __( 'Style', 'user-registration' );
 			return $sections;
 		}
 		/**
@@ -177,6 +178,57 @@ if ( ! class_exists( 'UR_Settings_General' ) ) {
 							),
 						),
 					),
+				);
+			} elseif ( 'style' === $current_section ) {
+				$settings = apply_filters(
+					'user_registration_style_settings',
+					array(
+						'title'    => '',
+						'sections' => array(
+							'style_settings' => array(
+								'title'    => __( 'Style', 'user-registration' ),
+								'type'     => 'card',
+								'desc'     => '',
+								'settings' => array(
+									array(
+										'title'    => __( 'Primary', 'user-registration' ),
+										'desc'     => __( 'Choose color to match your brand or site', 'user-registration' ),
+										'id'       => 'user_registration_style_setting_primary_color',
+										'default'  => '',
+										'type'     => 'color',
+										'class'    => '',
+										'css'      => '',
+										'desc_tip' => true,
+									),
+									array(
+										'id'       => 'user_registration_style_setting_button_text_colors',
+										'type'     => 'color-group',
+										'desc'     => __( 'Choose color to match your brand or site', 'user-registration' ),
+										'title'    => __( 'Button Text', 'user-registration' ),
+										'states'   => array( 'normal', 'hover' ),
+										'desc_tip' => true,
+										'default'  => array(
+											'normal' => '#FFFFFF',
+											'hover'  => '#FFFFFF',
+										),
+									),
+									array(
+										'id'       => 'user_registration_style_setting_button_background_colors',
+										'type'     => 'color-group',
+										'desc'     => __( 'Choose color to match your brand or site', 'user-registration' ),
+										'title'    => __( 'Button Background', 'user-registration' ),
+										'states'   => array( 'normal', 'hover' ),
+										'desc_tip' => true,
+										'default'  => array(
+											'normal' => '#475bb2',
+											'hover'  => '#38488e',
+										),
+									),
+
+								),
+							),
+						),
+					)
 				);
 			}
 			return $settings;
