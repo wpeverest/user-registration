@@ -29,6 +29,7 @@ use WPEverest\URMembership\Admin\Services\PaymentService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 use WPEverest\URMembership\Admin\Services\OrderService;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -78,6 +79,7 @@ class AJAX {
 			'upgrade_membership'           => false,
 			'add_multiple_membership'      => false,
 			'get_membership_details'       => false,
+			'validate_payment_currency'	   => false,
 			'update_membership_order'      => false,
 			'fetch_upgrade_path'           => false,
 			'addons_get_lists'             => false,
@@ -306,7 +308,7 @@ class AJAX {
 			$rule_data = is_array( $data['urcr_membership_access_rule_data'] ) ? $data['urcr_membership_access_rule_data'] : json_decode( $data['urcr_membership_access_rule_data'], true );
 		}
 
-		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && 'on' === $data['post_meta_data']['payment_gateways']['stripe']['status'];
+		$is_stripe_enabled = urm_is_payment_gateway_configured( 'stripe' );
 		$data              = $membership->prepare_membership_post_data( $data );
 
 		if ( isset( $data['status'] ) && ! $data['status'] ) {
@@ -387,6 +389,7 @@ class AJAX {
 
 		$membership = new MembershipService();
 		$data       = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
+		$membership_details =  $membership->get_membership_details( $_POST['membership_id'] );
 		// Get rule data from POST if available (check both in POST directly and in membership_data)
 		$rule_data = null;
 		if ( isset( $_POST['urcr_membership_access_rule_data'] ) && ! empty( $_POST['urcr_membership_access_rule_data'] ) ) {
@@ -394,24 +397,24 @@ class AJAX {
 			$rule_data     = json_decode( $rule_data_raw, true );
 		}
 
-		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && 'on' === $data['post_meta_data']['payment_gateways']['stripe']['status'];
-		$is_mollie_enabled = isset( $data['post_meta_data']['payment_gateways']['mollie'] ) && 'on' === $data['post_meta_data']['payment_gateways']['mollie']['status'];
+		$is_stripe_enabled = urm_is_payment_gateway_configured( 'stripe' );
+		$is_mollie_enabled = urm_is_payment_gateway_configured( 'mollie' );
 
+		$data['post_meta_data']['payment_gateways'] = isset( $membership_details['payment_gateways'] ) ? $membership_details['payment_gateways']: array();
 		$data = $membership->prepare_membership_post_data( $data );
-
 		if ( isset( $data['status'] ) && ! $data['status'] ) {
 			wp_send_json_error(
 				array(
 					'message' => $data['message'],
-				)
-			);
-		}
+					)
+				);
+			}
 
-		$data = apply_filters( 'ur_membership_after_create_membership_data_prepare', $data );
+			$data = apply_filters( 'ur_membership_after_create_membership_data_prepare', $data );
 
-		$old_membership_data = $membership->get_membership_details( $_POST['membership_id'] );
+			$old_membership_data = $membership->get_membership_details( $_POST['membership_id'] );
 
-		$updated_ID = wp_insert_post( $data['post_data'] );
+			$updated_ID = wp_insert_post( $data['post_data'] );
 
 		if ( $updated_ID ) {
 			if ( ! empty( $data['post_meta_data'] ) ) {
@@ -424,8 +427,9 @@ class AJAX {
 
 			if ( $is_stripe_enabled && 'free' !== $meta_data['type'] ) {
 				$stripe_service       = new StripeService();
-				$check_stripe_product = $stripe_service->check_exists_product_in_stripe( $meta_data['payment_gateways']['stripe']['product_id'] );
+				$check_stripe_product = $stripe_service->check_exists_product_in_stripe( !empty( $meta_data['payment_gateways']['stripe']['product_id'] ) ? $meta_data['payment_gateways']['stripe']['product_id']  : '' );
 
+				error_log( print_r( $check_stripe_product, true ) );
 				if ( isset( $check_stripe_product['success'] ) && true === $check_stripe_product['success'] ) {
 					$check_stripe_price = $stripe_service->check_price_exists_in_stripe( $meta_data['payment_gateways']['stripe']['price_id'] );
 
@@ -2521,6 +2525,55 @@ class AJAX {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Something went wrong. Please refresh the page and try again.', 'user-registration' ),
+			)
+		);
+	}
+
+	/**
+	 * Valid local currency payment.
+	 *
+	 * @since 5.0.0
+	 */
+	public static function validate_payment_currency(){
+		check_ajax_referer( 'validate_local_payment_currency', 'security' );
+
+		$zone_id = ! empty( sanitize_text_field( wp_unslash( $_POST[ 'zone_id' ] ) ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'zone_id' ] ) ) : '';
+
+		error_log( print_r( $zone_id, true ) );
+		if ( empty( $zone_id ) ) {
+			wp_send_json_success(
+				array(
+					'message' => __( 'Currency is invalid.', 'user-registration' ),
+				)
+			);
+		}
+
+		$zone_data = CoreFunctions::ur_get_pricing_zone_by_id( $zone_id );
+		$currency  = $zone_data[ 'meta' ][ 'ur_local_currency' ][0];
+
+		$currency_not_supported_payment_gateways = array();
+
+		// if the currency is not supported by Paypal.
+		if ( ! in_array( $currency, paypal_supported_currencies_list() ) ) {
+			$currency_not_supported_payment_gateways[] = 'Paypal';
+		}
+
+		$currency_not_supported_payment_gateways = apply_filters( 'urm_currency_not_supported_payment_gateways', $currency_not_supported_payment_gateways, $currency );
+		if ( ! empty( $currency_not_supported_payment_gateways ) ) {
+			wp_send_json_error(
+				array(
+					'message' => sprintf(
+						__( '%1$s is not currently supported by %2$s.', 'user-registration' ),
+						$currency,
+						implode( ', ', $currency_not_supported_payment_gateways ),
+					),
+				)
+			);
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Currency is valid.', 'user-registration' ),
 			)
 		);
 	}

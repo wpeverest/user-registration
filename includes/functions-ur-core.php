@@ -2598,7 +2598,7 @@ function ur_falls_in_date_range( $target_date, $start_date = null, $end_date = n
 /**
  * Get Post Content By Form ID.
  *
- * @param int $form_id Form Id.
+ * @param int    $form_id Form Id.
  * @param string $form_status The form status.
  *
  * @return array|mixed|null|object
@@ -2791,9 +2791,18 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		}
 
 		if ( isset( $form_data->extra_params['field_key'] ) && 'country' === $form_data->extra_params['field_key'] && '' !== $form_data->value ) {
-			$country_class    = ur_load_form_field_class( $form_data->extra_params['field_key'] );
-			$countries        = $country_class::get_instance()->get_country();
-			$form_data->value = isset( $countries[ $form_data->value ] ) ? $countries[ $form_data->value ] : $form_data->value;
+			$isJson = preg_match( '/^\{.*\}$/s', $form_data->value ) ? true : false;
+			if ( $isJson ) {
+				$country_data 	 = json_decode( $form_data->value, true );
+				$country_code 	 = isset( $country_data['country'] ) ? $country_data['country'] : '';
+				$state_code 	 = isset( $country_data['state'] ) ? $country_data['state'] : '';
+
+				$form_data->value = ur_format_country_field_data( $country_code, $state_code );
+			}else{
+				$country_class    = ur_load_form_field_class( $form_data->extra_params['field_key'] );
+				$countries        = $country_class::get_instance()->get_country();
+				$form_data->value = isset( $countries[ $form_data->value ] ) ? $countries[ $form_data->value ] : $form_data->value;
+			}
 		}
 		/**
 		 * Filter hook allows developers to modify the parsed values for smart tags
@@ -3488,7 +3497,7 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 				'content'             => '[user_registration_login]',
 				'requires_membership' => false,
 			),
-			'user_registration_lost_password_page_id'       => array(
+			'user_registration_lost_password_page_id'      => array(
 				'name'                => 'lost-password',
 				'title'               => __( 'Lost Password', 'user-registration' ),
 				'content'             => '[user_registration_lost_password]',
@@ -5217,7 +5226,6 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 	 * Wrap email body content with responsive email wrapper.
 	 *
 	 * @param string $body_content Email body content to wrap.
-	 *
 	 * @return string Wrapped email content.
 	 */
 	function ur_wrap_email_body_content( $body_content ) {
@@ -5869,6 +5877,24 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 		$form_key_list  = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$form_validator = new UR_Form_Validation();
 
+		if ( preg_match('/^country_/', $data->field_name ) && in_array( $data->field_name, $form_key_list, true ) ) {
+			$field_data = array(
+				'country' => $data->value
+			);
+
+			foreach ( $form_data as $state ) {
+				switch ( $state->field_name) {
+					case $data->field_name . '_state':
+						$field_data['state'] = ! empty( $state->value ) ? $state->value : '' ;
+						break;
+
+					default:
+						break;
+				}
+			}
+			$data->value = json_encode( $field_data );
+		}
+
 		if ( in_array( $data->field_name, $form_key_list, true ) ) {
 			$form_data_index    = array_search( $data->field_name, $form_key_list, true );
 			$single_form_field  = $form_field_data[ $form_data_index ];
@@ -6215,16 +6241,287 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						continue;
 					}
 
+					if ( 'country' === $single_item->field_key && isset( $single_item->advance_setting->enable_state ) ) {
+						$field['enable_state'] = ur_string_to_bool( $single_item->advance_setting->enable_state );
+					}
+
 					// Unset multiple choice and single item.
 					if ( 'subscription_plan' === $single_item->field_key || 'multiple_choice' === $single_item->field_key || 'single_item' === $single_item->field_key || 'captcha' === $single_item->field_key || 'stripe_gateway' === $single_item->field_key ) {
 						continue;
 					}
 
 					?>
-					<div
-						class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>" <?php echo $cl_props; //PHPCS:ignore?>
-						data-field-id="<?php echo esc_attr( $field_id ); ?>"
-						data-ref-id="<?php echo esc_attr( $key ); ?>">
+					<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key );?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>"  <?php echo $cl_props; //PHPCS:ignore?> data-field-id="<?php echo esc_attr( $field_id ); ?>" data-ref-id="<?php echo esc_attr( $key ); ?>">
+					<?php
+					$readonly_fields = ur_readonly_profile_details_fields();
+					if ( $is_edit ) {
+						unset( $readonly_fields['user_pass'] );
+					}
+
+					if ( isset( $field['field_key'] ) && array_key_exists( $field['field_key'], $readonly_fields ) ) {
+						$field['custom_attributes']['readonly'] = 'readonly';
+						if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {
+							$field['value'] = $readonly_fields[ $field['field_key'] ] ['value'];
+						}
+						if ( isset( $readonly_fields[ $field['field_key'] ] ['message'] ) ) {
+							$field['custom_attributes']['title'] = $readonly_fields[ $field['field_key'] ] ['message'];
+							$field['input_class'][]              = 'user-registration-help-tip';
+						}
+					}
+
+					if ( 'number' === $single_item->field_key ) {
+						$field['min']  = isset( $advance_data['advance_setting']->min ) ? $advance_data['advance_setting']->min : '';
+						$field['max']  = isset( $advance_data['advance_setting']->max ) ? $advance_data['advance_setting']->max : '';
+						$field['step'] = isset( $advance_data['advance_setting']->step ) ? $advance_data['advance_setting']->step : '';
+					}
+					$length_validation_fields = array( 'text', 'textarea', 'display_name', 'first_name', 'last_name', 'description', 'nickname' );
+					if ( in_array( $single_item->field_key, $length_validation_fields, true ) ) {
+						if ( isset( $advance_data['advance_setting']->limit_length ) && $advance_data['advance_setting']->limit_length ) {
+							if ( isset( $advance_data['advance_setting']->limit_length_limit_count ) && isset( $advance_data['advance_setting']->limit_length_limit_mode ) ) {
+								if ( 'characters' === $advance_data['advance_setting']->limit_length_limit_mode ) {
+									$field['max-characters'] = $advance_data['advance_setting']->limit_length_limit_count;
+								} elseif ( 'words' === $advance_data['advance_setting']->limit_length_limit_mode ) {
+									$field['max-words'] = $advance_data['advance_setting']->limit_length_limit_count;
+								}
+							}
+						}
+
+						if ( isset( $advance_data['advance_setting']->minimum_length ) && $advance_data['advance_setting']->minimum_length ) {
+							if ( isset( $advance_data['advance_setting']->minimum_length_limit_count ) && isset( $advance_data['advance_setting']->minimum_length_limit_mode ) ) {
+								if ( 'characters' === $advance_data['advance_setting']->minimum_length_limit_mode ) {
+									$field['min-characters'] = $advance_data['advance_setting']->minimum_length_limit_count;
+								} elseif ( 'words' === $advance_data['advance_setting']->minimum_length_limit_mode ) {
+									$field['min-words'] = $advance_data['advance_setting']->minimum_length_limit_count;
+								}
+							}
+						}
+					}
+
+					if ( 'range' === $single_item->field_key ) {
+						$field['range_min']             = ( isset( $advance_data['advance_setting']->range_min ) && '' !== $advance_data['advance_setting']->range_min ) ? $advance_data['advance_setting']->range_min : '0';
+						$field['range_max']             = ( isset( $advance_data['advance_setting']->range_max ) && '' !== $advance_data['advance_setting']->range_max ) ? $advance_data['advance_setting']->range_max : '10';
+						$field['range_step']            = isset( $advance_data['advance_setting']->range_step ) ? $advance_data['advance_setting']->range_step : '1';
+						$field['enable_payment_slider'] = isset( $advance_data['advance_setting']->enable_payment_slider ) ? $advance_data['advance_setting']->enable_payment_slider : 'false';
+
+						if ( ur_string_to_bool( $advance_data['advance_setting']->enable_prefix_postfix ) ) {
+							if ( ur_string_to_bool( $advance_data['advance_setting']->enable_text_prefix_postfix ) ) {
+								$field['range_prefix']  = isset( $advance_data['advance_setting']->range_prefix ) ? $advance_data['advance_setting']->range_prefix : '';
+								$field['range_postfix'] = isset( $advance_data['advance_setting']->range_postfix ) ? $advance_data['advance_setting']->range_postfix : '';
+							} else {
+								$field['range_prefix']  = $field['range_min'];
+								$field['range_postfix'] = $field['range_max'];
+							}
+						}
+
+						// to hide the range as payment slider in edit profile.
+						if ( ur_string_to_bool( $field['enable_payment_slider'] ) ) {
+							continue;
+						}
+					}
+
+					if ( 'phone' === $single_item->field_key ) {
+						$field['phone_format'] = $single_item->general_setting->phone_format;
+						if ( 'smart' === $field['phone_format'] ) {
+							unset( $field['input_mask'] );
+						}
+					}
+
+					if ( 'password' === $single_item->field_key ) {
+						$field['size'] = $advance_data['advance_setting']->size;
+					}
+
+					if ( isset( $single_item->general_setting->hide_label ) ) {
+						if ( ur_string_to_bool( $single_item->general_setting->hide_label ) ) {
+							unset( $field['label'] );
+						}
+					}
+
+					if ( 'select' === $single_item->field_key ) {
+						$option_data         = isset( $advance_data['advance_setting']->options ) ? explode( ',', $advance_data['advance_setting']->options ) : array();
+						$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $option_data;
+						$options             = array();
+
+						if ( is_array( $option_advance_data ) ) {
+							foreach ( $option_advance_data as $index_data => $option ) {
+								$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+							}
+							$field['options'] = $options;
+						}
+
+						$field['placeholder'] = $single_item->general_setting->placeholder;
+
+					}
+
+					if ( 'radio' === $single_item->field_key ) {
+						if ( isset( $advance_data['general_setting']->image_choice ) && ur_string_to_bool( $advance_data['general_setting']->image_choice ) ) {
+							$option_advance_data = isset( $advance_data['general_setting']->image_options ) ? $advance_data['general_setting']->image_options : array();
+							$options             = array();
+							if ( is_array( $option_advance_data ) ) {
+								foreach ( $option_advance_data as $index_data => $option ) {
+									$options[ $option->label ] = array(
+										'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->label ),
+										'image' => $option->image,
+									);
+								}
+								$field['image_options'] = $options;
+							}
+						} else {
+							$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : array();
+							$options             = array();
+
+							if ( is_array( $option_advance_data ) ) {
+								foreach ( $option_advance_data as $index_data => $option ) {
+									$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+								}
+								$field['options'] = $options;
+							}
+						}
+					}
+
+					if ( 'file' === $single_item->field_key ) {
+						if ( isset( $single_item->general_setting->max_files ) ) {
+							$field['max_files'] = $single_item->general_setting->max_files;
+						} else {
+							$field['max_files'] = 1;
+						}
+
+						if ( isset( $advance_data['advance_setting']->max_upload_size ) ) {
+							$field['max_upload_size'] = $advance_data['advance_setting']->max_upload_size;
+						}
+
+						if ( isset( $advance_data['advance_setting']->valid_file_type ) ) {
+							$field['valid_file_type'] = $advance_data['advance_setting']->valid_file_type;
+						}
+
+						// Remove files attachment id from user meta if file is deleted by admin.
+						if ( isset( $field['value'] ) && '' !== $field['value'] ) {
+							$attachment_ids = is_array( $field['value'] ) ? $field['value'] : explode( ',', $field['value'] );
+
+							foreach ( $attachment_ids as $attachment_key => $attachment_id ) {
+								$attachment_url = get_attached_file( $attachment_id );
+
+								// Check to see if file actually exists or not.
+								if ( '' !== $attachment_url && file_exists( $attachment_url ) ) {
+									continue;
+								}
+								unset( $attachment_ids[ $attachment_key ] );
+							}
+
+							$field['value'] = ! empty( $attachment_ids ) ? implode( ',', $attachment_ids ) : '';
+							update_user_meta( get_current_user_id(), 'user_registration_' . $single_item->general_setting->field_name, $field['value'] );
+						}
+					}
+
+					if ( isset( $advance_data['general_setting']->required ) ) {
+						if ( in_array( $single_item->field_key, ur_get_required_fields() )
+						|| ur_string_to_bool( $advance_data['general_setting']->required ) ) {
+							$field['required']                      = true;
+							$field['custom_attributes']['required'] = 'required';
+						}
+					}
+
+					// Add choice_limit setting valur in order to limit choice fields.
+					if ( 'checkbox' === $single_item->field_key || 'multi_select2' === $single_item->field_key ) {
+						if ( isset( $advance_data['general_setting']->image_choice ) && ur_string_to_bool( $advance_data['general_setting']->image_choice ) ) {
+							$option_data = isset( $advance_data['general_setting']->image_options ) ? $advance_data['general_setting']->image_options : array();
+							$options     = array();
+
+							if ( is_array( $option_data ) ) {
+								foreach ( $option_data as $index_data => $option ) {
+									$options[ $option->label ] = array(
+										'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->label ),
+										'image' => $option->image,
+									);
+								}
+								$field['image_options'] = $options;
+							}
+						} else {
+							$option_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : array();
+							$options     = array();
+
+							if ( is_array( $option_data ) ) {
+								foreach ( $option_data as $index_data => $option ) {
+									$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+								}
+
+								$field['options'] = $options;
+							}
+						}
+
+						if ( isset( $advance_data['advance_setting']->choice_limit ) ) {
+							$field['choice_limit'] = $advance_data['advance_setting']->choice_limit;
+						}
+						if ( isset( $advance_data['advance_setting']->select_all ) ) {
+							$field['select_all'] = ur_string_to_bool( $advance_data['advance_setting']->select_all );
+						}
+					}
+
+					if ( 'timepicker' === $single_item->field_key ) {
+						$field['current_time']  = isset( $advance_data['advance_setting']->current_time ) ? $advance_data['advance_setting']->current_time : '';
+						$field['time_interval'] = isset( $advance_data['advance_setting']->time_interval ) ? $advance_data['advance_setting']->time_interval : '';
+						$field['time_format']   = isset( $advance_data['advance_setting']->time_format ) ? $advance_data['advance_setting']->time_format : '';
+						$field['time_range']    = isset( $advance_data['advance_setting']->time_range ) ? $advance_data['advance_setting']->time_range : '';
+						$field['time_min']      = ( isset( $advance_data['advance_setting']->time_min ) && '' !== $advance_data['advance_setting']->time_min ) ? $advance_data['advance_setting']->time_min : '';
+						$field['time_max']      = ( isset( $advance_data['advance_setting']->time_max ) && '' !== $advance_data['advance_setting']->time_max ) ? $advance_data['advance_setting']->time_max : '';
+						$timemin                = isset( $field['time_min'] ) ? strtolower( substr( $field['time_min'], -2 ) ) : '';
+						$timemax                = isset( $field['time_max'] ) ? strtolower( substr( $field['time_max'], -2 ) ) : '';
+						$minampm                = intval( $field['time_min'] ) <= 12 ? 'AM' : 'PM';
+						$maxampm                = intval( $field['time_max'] ) <= 12 ? 'AM' : 'PM';
+						// For slot booking.
+						$field['enable_time_slot_booking'] = isset( $advance_data['advance_setting']->enable_time_slot_booking ) ? $advance_data['advance_setting']->enable_time_slot_booking : '';
+						$field['target_date_field']        = isset( $advance_data['advance_setting']->target_date_field ) ? $advance_data['advance_setting']->target_date_field : '';
+							// Handles the time format.
+						if ( 'am' === $timemin || 'pm' === $timemin ) {
+							$field['time_min'] = $field['time_min'];
+						} else {
+							$field['time_min'] = $field['time_min'] . '' . $minampm;
+						}
+
+						if ( 'am' === $timemax || 'pm' === $timemax ) {
+							$field['time_max'] = $field['time_max'];
+						} else {
+							$field['time_max'] = $field['time_max'] . '' . $maxampm;
+						}
+					}
+
+					if ( 'date' === $single_item->field_key ) {
+						// For slot booking.
+						$field['enable_date_slot_booking'] = isset( $advance_data['advance_setting']->enable_date_slot_booking ) ? $advance_data['advance_setting']->enable_date_slot_booking : false;
+					}
+					$field['form_id'] = $form_id;
+					$filter_data      = array(
+						'form_data' => $field,
+						'data'      => $advance_data,
+					);
+
+					$field_key       = isset( $field['field_key'] ) ? $field['field_key'] : '';
+					$form_data_array = apply_filters( 'user_registration_' . $field_key . '_frontend_form_data', $filter_data, true );
+					$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
+					$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : ( isset( $field['value'] ) ? $field['value'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+					if ( isset( $field['field_key'] ) ) {
+						$row_count_to_send = '' === $row_count ? $current_row : $row_count;
+						$field             = user_registration_form_field( $key, $field, $value, $row_count_to_send, $is_edit );
+					}
+
+					/**
+					 * Embed the current country value to allow to remove it if it's not allowed.
+					 */
+					// if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
+					// 	$isJson = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
+					// 	if ( $isJson ) {
+					// 		$value 	 = json_decode( $value, true );
+					// 	}
+					// 	$country = is_array( $value ) ? $value['country'] : $value;
+					// 	printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $country ] ) , esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $country ] ) );
+					// }
+					?>
+					</div>
+					<?php } ?>
+				<?php } ?>
+
+					<?php if ( $found_field ) { ?>
+				</div>
 						<?php
 						$readonly_fields = ur_readonly_profile_details_fields();
 						if ( $is_edit ) {
@@ -6504,7 +6801,6 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 		if ( ! $is_edit ) {
 			echo apply_filters( 'user_registration_frontend_form_row_end', '', $form_id, $current_row ); // phpcs:ignore
 		}
-	}
 }
 
 if ( ! file_exists( 'user_registration_sanitize_profile_update' ) ) {
@@ -6552,6 +6848,16 @@ if ( ! file_exists( 'user_registration_sanitize_profile_update' ) ) {
 				} else {
 					$value = '';
 				}
+				break;
+			case 'country':
+				$country_data = array();
+				if ( isset( $submitted_data[ $key ] ) ) { // phpcs:ignore
+					$country_data['country'] = sanitize_text_field( wp_unslash( $submitted_data[ $key ] ) ); // phpcs:ignore
+				}
+				if ( isset( $submitted_data[ $key . '_state' ] ) ) { // phpcs:ignore
+					$country_data['state'] = sanitize_text_field( wp_unslash( $submitted_data[ $key . '_state' ] ) ); // phpcs:ignore
+				}
+				$value = json_encode( $country_data );
 				break;
 			default:
 				$value = isset( $submitted_data[ $key ] ) ? $submitted_data[ $key ] : ''; // phpcs:ignore
@@ -6703,14 +7009,14 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	 */
 	function ur_check_is_inactive() {
 		if ( ! ur_check_module_activation( 'membership' ) ||
-			 current_user_can( 'manage_options' ) ||
-			 ( ! empty( $_POST['action'] ) && in_array(
-					 $_POST['action'],
-					 array(
-						 'user_registration_membership_confirm_payment',
-						 'user_registration_membership_create_stripe_subscription',
-					 )
-				 ) )
+			current_user_can( 'manage_options' ) ||
+			( ! empty( $_POST['action'] ) && in_array(
+				$_POST['action'],
+				array(
+					'user_registration_membership_confirm_payment',
+					'user_registration_membership_create_stripe_subscription',
+				)
+			) )
 		) {
 			return;
 		}
@@ -7031,7 +7337,6 @@ add_filter(
 	function ( $classes ) {
 		$is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string_to_bool( sanitize_text_field( wp_unslash( $_COOKIE['isSidebarEnabled'] ) ) ) : true;
 		$body_class                  = ! $is_settings_sidebar_enabled ? 'ur-settings-sidebar-hidden' : 'ur-settings-sidebar-show';
-
 		return array_merge( $classes, array( $body_class ) );
 	}
 );
@@ -7939,11 +8244,11 @@ if ( ! function_exists( 'ur_check_url_is_image' ) ) {
 	 * to avoid self-referential HTTP requests which can cause heavy server load.
 	 * Only falls back to cURL for truly remote URLs (e.g., social login profile pictures).
 	 *
+	 * @since x.x.x (updated)
+	 *
 	 * @param string $url The URL to check.
 	 *
 	 * @return bool True if the URL points to a valid image, false otherwise.
-	 * @since x.x.x (updated)
-	 *
 	 */
 	function ur_check_url_is_image( $url ) {
 		if ( empty( $url ) || ! is_string( $url ) ) {
@@ -7965,14 +8270,11 @@ if ( ! function_exists( 'ur_check_url_is_image' ) ) {
 					$upload_dir = wp_upload_dir();
 					if ( strpos( $url, $upload_dir['baseurl'] ) === 0 ) {
 						$file_path = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $url );
-
 						return file_exists( $file_path );
 					}
-
 					return true;
 				}
 			}
-
 			return false;
 		}
 
@@ -7989,7 +8291,6 @@ if ( ! function_exists( 'ur_check_url_is_image' ) ) {
 		}
 
 		$content_type = wp_remote_retrieve_header( $response, 'content-type' );
-
 		return ! empty( $content_type ) && strpos( $content_type, 'image/' ) !== false;
 	}
 
@@ -9894,6 +10195,8 @@ if ( ! function_exists( 'ur_get_membership_details' ) ) {
 	/**
 	 * Get membership details.
 	 *
+	 * @since 5.0.0
+	 *
 	 * @return array
 	 * @since 5.0.0
 	 *
@@ -9913,9 +10216,9 @@ if ( ! function_exists( 'urm_process_profile_fields' ) ) {
 	 * @param array $profile User profile data.
 	 * @param array $single_field Single field data.
 	 * @param array $form_data The form data.
-	 * @param int $form_id The form ID.
-	 * @param int $user_id The user id.
-	 * @param bool $is_admin_user Whether the user is an admin.
+	 * @param int   $form_id The form ID.
+	 * @param int   $user_id The user id.
+	 * @param bool  $is_admin_user Whether the user is an admin.
 	 */
 	function urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, $is_admin_user = false ) {
 
@@ -9996,9 +10299,9 @@ if ( ! function_exists( 'urm_update_user_profile_data' ) ) {
 	 * Helper function to update user profile data.
 	 *
 	 * @param object $user The user object.
-	 * @param array $profile User profile data.
-	 * @param array $single_field Single field data.
-	 * @param int $form_id The form ID.
+	 * @param array  $profile User profile data.
+	 * @param array  $single_field Single field data.
+	 * @param int    $form_id The form ID.
 	 */
 	function urm_update_user_profile_data( $user, $profile, $single_field, $form_id ) {
 
@@ -10067,7 +10370,6 @@ if ( ! function_exists( 'ur_pro_get_form_fields' ) ) {
 	 * Get form fields.
 	 *
 	 * @param int $form_id Registration Form ID.
-	 *
 	 * @return array|WP_Error
 	 */
 	function ur_pro_get_form_fields( $form_id ) {
@@ -10400,13 +10702,13 @@ if ( ! function_exists( 'ur_get_linked_membership_form_id' ) ) {
 	 *
 	 * @since 5.0.0
 	 */
-	function ur_get_linked_membership_form_id() {
-		$page_id    = get_option( 'user_registration_member_registration_page_id' );
-		$post_by_id = get_post( $page_id );
-		$matches    = array();
+	function ur_get_linked_membership_form_id(){
+		$page_id 	 = get_option( 'user_registration_member_registration_page_id' );
+		$post_by_id  = get_post( $page_id );
+		$matches 	 = array();
 
 		preg_match_all( '/\[user_registration_form\s+id="(\d+)"\]/', $post_by_id->post_content, $matches );
-		$membership_form_id = $matches[1][0];
+		$membership_form_id    = $matches[1][0];
 
 		return $membership_form_id;
 	}
@@ -10727,5 +11029,499 @@ if ( ! function_exists( 'ur_get_membership_rules_count' ) ) {
 			);
 			return absint( $count );
 		}
+	}
+}
+
+if ( ! function_exists( 'ur_get_country_lists') ) {
+
+	/**
+	 * Get country lists.
+	 *
+	 * @since 5.0.0
+	 */
+	function ur_get_country_lists(){
+		$countries = include UR_ABSPATH . 'includes/pro/country-and-state/countries.php';
+		return $countries;
+	}
+}
+
+if ( ! function_exists( 'ur_get_state_lists') ) {
+
+	/**
+	 * Get State lists.
+	 *
+	 * @since 5.0.0
+	 */
+	function ur_get_state_lists(){
+		$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
+		$states      = json_decode( $states_json, true );
+		return $states;
+	}
+}
+
+if ( !function_exists( 'ur_get_currency_symbols' ) ) {
+
+	/**
+	 * Get all available Currency symbols.
+	 *
+	 * Currency symbols and names should follow the Unicode CLDR recommendation (http://cldr.unicode.org/translation/currency-names)
+	 *
+	 * @since 6.0.0
+	 *
+	 * @return array
+	 */
+	function ur_get_currency_symbols() {
+		/**
+		 * Filters currency symbols.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param string[] $currency_symbols Currency code to currency symbol index array.
+		 */
+		$symbols = apply_filters(
+			'ur_currency_symbols',
+			array(
+				'AED' => '&#x62f;.&#x625;',
+				'AFN' => '&#x60b;',
+				'ALL' => 'L',
+				'AMD' => 'AMD',
+				'ANG' => '&fnof;',
+				'AOA' => 'Kz',
+				'ARS' => '&#36;',
+				'AUD' => '&#36;',
+				'AWG' => 'Afl.',
+				'AZN' => 'AZN',
+				'BAM' => 'KM',
+				'BBD' => '&#36;',
+				'BDT' => '&#2547;&nbsp;',
+				'BGN' => '&#1083;&#1074;.',
+				'BHD' => '.&#x62f;.&#x628;',
+				'BIF' => 'Fr',
+				'BMD' => '&#36;',
+				'BND' => '&#36;',
+				'BOB' => 'Bs.',
+				'BRL' => '&#82;&#36;',
+				'BSD' => '&#36;',
+				'BTC' => '&#3647;',
+				'BTN' => 'Nu.',
+				'BWP' => 'P',
+				'BYR' => 'Br',
+				'BYN' => 'Br',
+				'BZD' => '&#36;',
+				'CAD' => '&#36;',
+				'CDF' => 'Fr',
+				'CHF' => '&#67;&#72;&#70;',
+				'CLP' => '&#36;',
+				'CNY' => '&yen;',
+				'COP' => '&#36;',
+				'CRC' => '&#x20a1;',
+				'CUC' => '&#36;',
+				'CUP' => '&#36;',
+				'CVE' => '&#36;',
+				'CZK' => '&#75;&#269;',
+				'DJF' => 'Fr',
+				'DKK' => 'DKK',
+				'DOP' => 'RD&#36;',
+				'DZD' => '&#x62f;.&#x62c;',
+				'EGP' => 'EGP',
+				'ERN' => 'Nfk',
+				'ETB' => 'Br',
+				'EUR' => '&euro;',
+				'FJD' => '&#36;',
+				'FKP' => '&pound;',
+				'GBP' => '&pound;',
+				'GEL' => '&#x20be;',
+				'GGP' => '&pound;',
+				'GHS' => '&#x20b5;',
+				'GIP' => '&pound;',
+				'GMD' => 'D',
+				'GNF' => 'Fr',
+				'GTQ' => 'Q',
+				'GYD' => '&#36;',
+				'HKD' => '&#36;',
+				'HNL' => 'L',
+				'HRK' => 'kn',
+				'HTG' => 'G',
+				'HUF' => '&#70;&#116;',
+				'IDR' => 'Rp',
+				'ILS' => '&#8362;',
+				'IMP' => '&pound;',
+				'INR' => '&#8377;',
+				'IQD' => '&#x639;.&#x62f;',
+				'IRR' => '&#xfdfc;',
+				'IRT' => '&#x062A;&#x0648;&#x0645;&#x0627;&#x0646;',
+				'ISK' => 'kr.',
+				'JEP' => '&pound;',
+				'JMD' => '&#36;',
+				'JOD' => '&#x62f;.&#x627;',
+				'JPY' => '&yen;',
+				'KES' => 'KSh',
+				'KGS' => '&#x441;&#x43e;&#x43c;',
+				'KHR' => '&#x17db;',
+				'KMF' => 'Fr',
+				'KPW' => '&#x20a9;',
+				'KRW' => '&#8361;',
+				'KWD' => '&#x62f;.&#x643;',
+				'KYD' => '&#36;',
+				'KZT' => '&#8376;',
+				'LAK' => '&#8365;',
+				'LBP' => '&#x644;.&#x644;',
+				'LKR' => '&#xdbb;&#xdd4;',
+				'LRD' => '&#36;',
+				'LSL' => 'L',
+				'LYD' => '&#x644;.&#x62f;',
+				'MAD' => '&#x62f;.&#x645;.',
+				'MDL' => 'MDL',
+				'MGA' => 'Ar',
+				'MKD' => '&#x434;&#x435;&#x43d;',
+				'MMK' => 'Ks',
+				'MNT' => '&#x20ae;',
+				'MOP' => 'P',
+				'MRU' => 'UM',
+				'MUR' => '&#x20a8;',
+				'MVR' => '.&#x783;',
+				'MWK' => 'MK',
+				'MXN' => '&#36;',
+				'MYR' => '&#82;&#77;',
+				'MZN' => 'MT',
+				'NAD' => 'N&#36;',
+				'NGN' => '&#8358;',
+				'NIO' => 'C&#36;',
+				'NOK' => '&#107;&#114;',
+				'NPR' => '&#8360;',
+				'NZD' => '&#36;',
+				'OMR' => '&#x631;.&#x639;.',
+				'PAB' => 'B/.',
+				'PEN' => 'S/',
+				'PGK' => 'K',
+				'PHP' => '&#8369;',
+				'PKR' => '&#8360;',
+				'PLN' => '&#122;&#322;',
+				'PRB' => '&#x440;.',
+				'PYG' => '&#8370;',
+				'QAR' => '&#x631;.&#x642;',
+				'RMB' => '&yen;',
+				'RON' => 'lei',
+				'RSD' => '&#1088;&#1089;&#1076;',
+				'RUB' => '&#8381;',
+				'RWF' => 'Fr',
+				'SAR' => '&#x631;.&#x633;',
+				'SBD' => '&#36;',
+				'SCR' => '&#x20a8;',
+				'SDG' => '&#x62c;.&#x633;.',
+				'SEK' => '&#107;&#114;',
+				'SGD' => '&#36;',
+				'SHP' => '&pound;',
+				'SLL' => 'Le',
+				'SOS' => 'Sh',
+				'SRD' => '&#36;',
+				'SSP' => '&pound;',
+				'STN' => 'Db',
+				'SYP' => '&#x644;.&#x633;',
+				'SZL' => 'L',
+				'THB' => '&#3647;',
+				'TJS' => '&#x405;&#x41c;',
+				'TMT' => 'm',
+				'TND' => '&#x62f;.&#x62a;',
+				'TOP' => 'T&#36;',
+				'TRY' => '&#8378;',
+				'TTD' => '&#36;',
+				'TWD' => '&#78;&#84;&#36;',
+				'TZS' => 'Sh',
+				'UAH' => '&#8372;',
+				'UGX' => 'UGX',
+				'USD' => '&#36;',
+				'UYU' => '&#36;',
+				'UZS' => 'UZS',
+				'VEF' => 'Bs F',
+				'VES' => 'Bs.S',
+				'VND' => '&#8363;',
+				'VUV' => 'Vt',
+				'WST' => 'T',
+				'XAF' => 'CFA',
+				'XCD' => '&#36;',
+				'XOF' => 'CFA',
+				'XPF' => 'Fr',
+				'YER' => '&#xfdfc;',
+				'ZAR' => '&#82;',
+				'ZMW' => 'ZK',
+			)
+		);
+
+		return $symbols;
+	}
+}
+
+if ( !function_exists( 'ur_get_currencies_with_symbols' ) ) {
+
+	/**
+	 * Get full list of currency codes with symbols.
+	 *
+	 * @since 6.0.0
+	 *
+	 * @return array
+	 */
+	function ur_get_currencies_with_symbols() {
+		$currencies = ur_get_currencies();
+
+		foreach ( $currencies as $key => $value ) {
+			$currencies[ $key ] = sprintf( '%s (%s)', $value, html_entity_decode( ur_get_currency_symbol( $key ) ) );
+		}
+
+		/**
+		 * Filters list of currency codes with symbols.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param array $currencies List of currency codes with symbols.
+		 */
+		return apply_filters( 'ur_currencies_with_symbols', $currencies );
+	}
+
+}
+
+if ( !function_exists( 'ur_get_currencies' ) ) {
+
+	/**
+	 * Get full list of currency codes.
+	 *
+	 * Currency symbols and names should follow the Unicode CLDR recommendation (http://cldr.unicode.org/translation/currency-names)
+	 *
+	 * @since 6.0.0
+	 *
+	 * @return array
+	 */
+	function ur_get_currencies() {
+		$currencies = array_unique(
+			/**
+			 * Filters full list of currency codes.
+			 *
+			 * @since 6.0.0
+			 *
+			 * @param string[] $currencies Full list of currency codes.
+			 */
+			apply_filters(
+				'ur_currencies',
+				array(
+					'AED' => __( 'United Arab Emirates dirham', 'user-registration' ),
+					'AFN' => __( 'Afghan afghani', 'user-registration' ),
+					'ALL' => __( 'Albanian lek', 'user-registration' ),
+					'AMD' => __( 'Armenian dram', 'user-registration' ),
+					'ANG' => __( 'Netherlands Antillean guilder', 'user-registration' ),
+					'AOA' => __( 'Angolan kwanza', 'user-registration' ),
+					'ARS' => __( 'Argentine peso', 'user-registration' ),
+					'AUD' => __( 'Australian dollar', 'user-registration' ),
+					'AWG' => __( 'Aruban florin', 'user-registration' ),
+					'AZN' => __( 'Azerbaijani manat', 'user-registration' ),
+					'BAM' => __( 'Bosnia and Herzegovina convertible mark', 'user-registration' ),
+					'BBD' => __( 'Barbadian dollar', 'user-registration' ),
+					'BDT' => __( 'Bangladeshi taka', 'user-registration' ),
+					'BGN' => __( 'Bulgarian lev', 'user-registration' ),
+					'BHD' => __( 'Bahraini dinar', 'user-registration' ),
+					'BIF' => __( 'Burundian franc', 'user-registration' ),
+					'BMD' => __( 'Bermudian dollar', 'user-registration' ),
+					'BND' => __( 'Brunei dollar', 'user-registration' ),
+					'BOB' => __( 'Bolivian boliviano', 'user-registration' ),
+					'BRL' => __( 'Brazilian real', 'user-registration' ),
+					'BSD' => __( 'Bahamian dollar', 'user-registration' ),
+					'BTC' => __( 'Bitcoin', 'user-registration' ),
+					'BTN' => __( 'Bhutanese ngultrum', 'user-registration' ),
+					'BWP' => __( 'Botswana pula', 'user-registration' ),
+					'BYR' => __( 'Belarusian ruble (old)', 'user-registration' ),
+					'BYN' => __( 'Belarusian ruble', 'user-registration' ),
+					'BZD' => __( 'Belize dollar', 'user-registration' ),
+					'CAD' => __( 'Canadian dollar', 'user-registration' ),
+					'CDF' => __( 'Congolese franc', 'user-registration' ),
+					'CHF' => __( 'Swiss franc', 'user-registration' ),
+					'CLP' => __( 'Chilean peso', 'user-registration' ),
+					'CNY' => __( 'Chinese yuan', 'user-registration' ),
+					'COP' => __( 'Colombian peso', 'user-registration' ),
+					'CRC' => __( 'Costa Rican col&oacute;n', 'user-registration' ),
+					'CUC' => __( 'Cuban convertible peso', 'user-registration' ),
+					'CUP' => __( 'Cuban peso', 'user-registration' ),
+					'CVE' => __( 'Cape Verdean escudo', 'user-registration' ),
+					'CZK' => __( 'Czech koruna', 'user-registration' ),
+					'DJF' => __( 'Djiboutian franc', 'user-registration' ),
+					'DKK' => __( 'Danish krone', 'user-registration' ),
+					'DOP' => __( 'Dominican peso', 'user-registration' ),
+					'DZD' => __( 'Algerian dinar', 'user-registration' ),
+					'EGP' => __( 'Egyptian pound', 'user-registration' ),
+					'ERN' => __( 'Eritrean nakfa', 'user-registration' ),
+					'ETB' => __( 'Ethiopian birr', 'user-registration' ),
+					'EUR' => __( 'Euro', 'user-registration' ),
+					'FJD' => __( 'Fijian dollar', 'user-registration' ),
+					'FKP' => __( 'Falkland Islands pound', 'user-registration' ),
+					'GBP' => __( 'Pound sterling', 'user-registration' ),
+					'GEL' => __( 'Georgian lari', 'user-registration' ),
+					'GGP' => __( 'Guernsey pound', 'user-registration' ),
+					'GHS' => __( 'Ghana cedi', 'user-registration' ),
+					'GIP' => __( 'Gibraltar pound', 'user-registration' ),
+					'GMD' => __( 'Gambian dalasi', 'user-registration' ),
+					'GNF' => __( 'Guinean franc', 'user-registration' ),
+					'GTQ' => __( 'Guatemalan quetzal', 'user-registration' ),
+					'GYD' => __( 'Guyanese dollar', 'user-registration' ),
+					'HKD' => __( 'Hong Kong dollar', 'user-registration' ),
+					'HNL' => __( 'Honduran lempira', 'user-registration' ),
+					'HRK' => __( 'Croatian kuna', 'user-registration' ),
+					'HTG' => __( 'Haitian gourde', 'user-registration' ),
+					'HUF' => __( 'Hungarian forint', 'user-registration' ),
+					'IDR' => __( 'Indonesian rupiah', 'user-registration' ),
+					'ILS' => __( 'Israeli new shekel', 'user-registration' ),
+					'IMP' => __( 'Manx pound', 'user-registration' ),
+					'INR' => __( 'Indian rupee', 'user-registration' ),
+					'IQD' => __( 'Iraqi dinar', 'user-registration' ),
+					'IRR' => __( 'Iranian rial', 'user-registration' ),
+					'IRT' => __( 'Iranian toman', 'user-registration' ),
+					'ISK' => __( 'Icelandic kr&oacute;na', 'user-registration' ),
+					'JEP' => __( 'Jersey pound', 'user-registration' ),
+					'JMD' => __( 'Jamaican dollar', 'user-registration' ),
+					'JOD' => __( 'Jordanian dinar', 'user-registration' ),
+					'JPY' => __( 'Japanese yen', 'user-registration' ),
+					'KES' => __( 'Kenyan shilling', 'user-registration' ),
+					'KGS' => __( 'Kyrgyzstani som', 'user-registration' ),
+					'KHR' => __( 'Cambodian riel', 'user-registration' ),
+					'KMF' => __( 'Comorian franc', 'user-registration' ),
+					'KPW' => __( 'North Korean won', 'user-registration' ),
+					'KRW' => __( 'South Korean won', 'user-registration' ),
+					'KWD' => __( 'Kuwaiti dinar', 'user-registration' ),
+					'KYD' => __( 'Cayman Islands dollar', 'user-registration' ),
+					'KZT' => __( 'Kazakhstani tenge', 'user-registration' ),
+					'LAK' => __( 'Lao kip', 'user-registration' ),
+					'LBP' => __( 'Lebanese pound', 'user-registration' ),
+					'LKR' => __( 'Sri Lankan rupee', 'user-registration' ),
+					'LRD' => __( 'Liberian dollar', 'user-registration' ),
+					'LSL' => __( 'Lesotho loti', 'user-registration' ),
+					'LYD' => __( 'Libyan dinar', 'user-registration' ),
+					'MAD' => __( 'Moroccan dirham', 'user-registration' ),
+					'MDL' => __( 'Moldovan leu', 'user-registration' ),
+					'MGA' => __( 'Malagasy ariary', 'user-registration' ),
+					'MKD' => __( 'Macedonian denar', 'user-registration' ),
+					'MMK' => __( 'Burmese kyat', 'user-registration' ),
+					'MNT' => __( 'Mongolian t&ouml;gr&ouml;g', 'user-registration' ),
+					'MOP' => __( 'Macanese pataca', 'user-registration' ),
+					'MRU' => __( 'Mauritanian ouguiya', 'user-registration' ),
+					'MUR' => __( 'Mauritian rupee', 'user-registration' ),
+					'MVR' => __( 'Maldivian rufiyaa', 'user-registration' ),
+					'MWK' => __( 'Malawian kwacha', 'user-registration' ),
+					'MXN' => __( 'Mexican peso', 'user-registration' ),
+					'MYR' => __( 'Malaysian ringgit', 'user-registration' ),
+					'MZN' => __( 'Mozambican metical', 'user-registration' ),
+					'NAD' => __( 'Namibian dollar', 'user-registration' ),
+					'NGN' => __( 'Nigerian naira', 'user-registration' ),
+					'NIO' => __( 'Nicaraguan c&oacute;rdoba', 'user-registration' ),
+					'NOK' => __( 'Norwegian krone', 'user-registration' ),
+					'NPR' => __( 'Nepalese rupee', 'user-registration' ),
+					'NZD' => __( 'New Zealand dollar', 'user-registration' ),
+					'OMR' => __( 'Omani rial', 'user-registration' ),
+					'PAB' => __( 'Panamanian balboa', 'user-registration' ),
+					'PEN' => __( 'Sol', 'user-registration' ),
+					'PGK' => __( 'Papua New Guinean kina', 'user-registration' ),
+					'PHP' => __( 'Philippine peso', 'user-registration' ),
+					'PKR' => __( 'Pakistani rupee', 'user-registration' ),
+					'PLN' => __( 'Polish z&#x142;oty', 'user-registration' ),
+					'PRB' => __( 'Transnistrian ruble', 'user-registration' ),
+					'PYG' => __( 'Paraguayan guaran&iacute;', 'user-registration' ),
+					'QAR' => __( 'Qatari riyal', 'user-registration' ),
+					'RON' => __( 'Romanian leu', 'user-registration' ),
+					'RSD' => __( 'Serbian dinar', 'user-registration' ),
+					'RUB' => __( 'Russian ruble', 'user-registration' ),
+					'RWF' => __( 'Rwandan franc', 'user-registration' ),
+					'SAR' => __( 'Saudi riyal', 'user-registration' ),
+					'SBD' => __( 'Solomon Islands dollar', 'user-registration' ),
+					'SCR' => __( 'Seychellois rupee', 'user-registration' ),
+					'SDG' => __( 'Sudanese pound', 'user-registration' ),
+					'SEK' => __( 'Swedish krona', 'user-registration' ),
+					'SGD' => __( 'Singapore dollar', 'user-registration' ),
+					'SHP' => __( 'Saint Helena pound', 'user-registration' ),
+					'SLL' => __( 'Sierra Leonean leone', 'user-registration' ),
+					'SOS' => __( 'Somali shilling', 'user-registration' ),
+					'SRD' => __( 'Surinamese dollar', 'user-registration' ),
+					'SSP' => __( 'South Sudanese pound', 'user-registration' ),
+					'STN' => __( 'S&atilde;o Tom&eacute; and Pr&iacute;ncipe dobra', 'user-registration' ),
+					'SYP' => __( 'Syrian pound', 'user-registration' ),
+					'SZL' => __( 'Swazi lilangeni', 'user-registration' ),
+					'THB' => __( 'Thai baht', 'user-registration' ),
+					'TJS' => __( 'Tajikistani somoni', 'user-registration' ),
+					'TMT' => __( 'Turkmenistan manat', 'user-registration' ),
+					'TND' => __( 'Tunisian dinar', 'user-registration' ),
+					'TOP' => __( 'Tongan pa&#x2bb;anga', 'user-registration' ),
+					'TRY' => __( 'Turkish lira', 'user-registration' ),
+					'TTD' => __( 'Trinidad and Tobago dollar', 'user-registration' ),
+					'TWD' => __( 'New Taiwan dollar', 'user-registration' ),
+					'TZS' => __( 'Tanzanian shilling', 'user-registration' ),
+					'UAH' => __( 'Ukrainian hryvnia', 'user-registration' ),
+					'UGX' => __( 'Ugandan shilling', 'user-registration' ),
+					'USD' => __( 'United States (US) dollar', 'user-registration' ),
+					'UYU' => __( 'Uruguayan peso', 'user-registration' ),
+					'UZS' => __( 'Uzbekistani som', 'user-registration' ),
+					'VEF' => __( 'Venezuelan bol&iacute;var', 'user-registration' ),
+					'VES' => __( 'Bol&iacute;var soberano', 'user-registration' ),
+					'VND' => __( 'Vietnamese &#x111;&#x1ed3;ng', 'user-registration' ),
+					'VUV' => __( 'Vanuatu vatu', 'user-registration' ),
+					'WST' => __( 'Samoan t&#x101;l&#x101;', 'user-registration' ),
+					'XAF' => __( 'Central African CFA franc', 'user-registration' ),
+					'XCD' => __( 'East Caribbean dollar', 'user-registration' ),
+					'XOF' => __( 'West African CFA franc', 'user-registration' ),
+					'XPF' => __( 'CFP franc', 'user-registration' ),
+					'YER' => __( 'Yemeni rial', 'user-registration' ),
+					'ZAR' => __( 'South African rand', 'user-registration' ),
+					'ZMW' => __( 'Zambian kwacha', 'user-registration' ),
+				)
+			)
+		);
+
+		return $currencies;
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_symbol' ) ) {
+
+	/**
+	 * Get Currency symbol.
+	 *
+	 * Currency symbols and names should follow the Unicode CLDR recommendation (http://cldr.unicode.org/translation/currency-names)
+	 *
+	 * @since 6.0.0
+	 *
+	 * @param string $currency Currency. (default: '').
+	 *
+	 * @return string
+	 */
+	function ur_get_currency_symbol( $currency = '' ) {
+		$symbols = ur_get_currency_symbols();
+
+		$currency_symbol = isset( $symbols[ $currency ] ) ? $symbols[ $currency ] : '';
+
+		/**
+		 * Filters currency symbol.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param string $currency_symbol Currency symbol.
+		 * @param string $currency Currency.
+		 */
+		return apply_filters( 'ur_currency_symbol', $currency_symbol, $currency );
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_name_by_key' ) ) {
+
+	function ur_get_currency_name_by_key( $currency_key ){
+		$curreny_details = ur_get_currencies();
+
+		$name = sprintf( '%s (%s)', $curreny_details[ $currency_key ], html_entity_decode( ur_get_currency_symbol( $currency_key ) ) );
+
+		return apply_filters( 'ur_get_currency_name_by_key', $name );
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_by_key' ) ) {
+
+	function ur_get_currency_by_key( $currency_key ){
+		$curreny_details = ur_get_currencies();
+
+		$name = sprintf( '%s', $curreny_details[ $currency_key ] );
+
+		return apply_filters( 'ur_get_currency_by_key', $name );
 	}
 }

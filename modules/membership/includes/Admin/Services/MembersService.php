@@ -107,11 +107,28 @@ class MembersService {
 		$response         = array();
 		$response['role'] = isset( $data['role'] ) ? sanitize_text_field( $data['role'] ) : 'subscriber';
 
+		$tax_details = array();
+		if ( isset( $data['tax_rate'] ) && ! empty( $data['tax_rate'] ) ) {
+			$tax_details = array(
+				'tax_rate'       		 => floatval( $data['tax_rate'] ),
+				'tax_calculation_method' => sanitize_text_field( $data['tax_calculation_method'] ),
+			);
+		}
+		$local_currency_details = array();
+
+		if ( isset( $data['switched_currency'] ) && ! empty( $data[ 'switched_currency'] ) ) {
+			$local_currency_details = array(
+				'switched_currency' => sanitize_text_field( $data[ 'switched_currency' ] ),
+				'urm_zone_id'		=> ! empty( $data[ 'urm_zone_id' ] ) ? $data[ 'urm_zone_id' ] : '',
+			);
+		}
+
+		$coupon_details = array();
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$response['coupon_data'] = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
 		}
 
-		$response['user_data'] = array(
+		$user_data = array(
 			'user_login'    => ! empty( $data['username'] ) ? sanitize_text_field( $data['username'] ) : '',
 			'user_email'    => ! empty( $data['email'] ) ? sanitize_email( $data['email'] ) : '',
 			'user_pass'     => ! empty( $data['password'] ) ? $data['password'] : '',
@@ -125,15 +142,22 @@ class MembersService {
 		if ( isset( $data['membership'] ) ) {
 			$membership_details          = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
 			$membership_meta             = json_decode( $membership_details['meta_value'], true );
-			$response['role']            = isset( $membership_meta['role'] ) ? sanitize_text_field( $membership_meta['role'] ) : $response['role'];
-			$response['membership_data'] = array(
+			$role           			 = isset( $membership_meta['role'] ) ? sanitize_text_field( $membership_meta['role'] ) : $response['role'];
+			$membership_data  			 = array(
 				'membership'     => absint( $data['membership'] ),
 				'start_date'     => date( 'Y-m-d', strtotime( $data['start_date'] ) ),
 				'payment_method' => sanitize_text_field( $data['payment_method'] ?? '' ),
 			);
 		}
 
-		return $response;
+		return array(
+			'role'            		 => sanitize_text_field( $role ),
+			'membership_data' 		 => $membership_data,
+			'coupon_data'     		 => $coupon_details,
+			'user_data'       		 => $user_data,
+			'tax_data'        		 => $tax_details,
+			'local_currency_details' => $local_currency_details,
+		);
 	}
 
 	public function update_user_meta( $data, $new_user_id ) {
