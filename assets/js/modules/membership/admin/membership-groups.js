@@ -529,6 +529,7 @@
 		delete_single_membership_group: function ($this) {
 			var urlParams = new URLSearchParams($this.attr("href"));
 			var form_title = urlParams.get("form");
+			var $membership_group_id = $this.data("membership-group-id");
 
 			if (form_title !== null) {
 				Swal.fire({
@@ -548,6 +549,7 @@
 				});
 				return;
 			}
+			membership_group_object.append_spinner(parent);
 			Swal.fire({
 				title:
 					'<img src="' +
@@ -564,7 +566,44 @@
 				allowOutsideClick: false
 			}).then(function (result) {
 				if (result.isConfirmed) {
-					$(location).attr("href", $this.attr("href"));
+					// $(location).attr("href", $this.attr("href"));
+					membership_group_object.send_data(
+						{
+							action: "user_registration_membership_delete_membership_group",
+							membership_group_id: $membership_group_id
+						},
+						{
+							success: function (response) {
+								if (response.success) {
+									membership_group_object.show_success_message(
+										response.data.message
+									);
+									membership_group_object.remove_deleted_memberships(
+										$this,
+										false
+									);
+								} else {
+									membership_group_object.show_failure_message(
+										response.data.message
+									);
+								}
+							},
+							failure: function (xhr, statusText) {
+								membership_group_object.show_failure_message(
+									urmg_data.labels.network_error +
+										"(" +
+										statusText +
+										")"
+								);
+							},
+							complete: function () {
+								membership_group_object.remove_spinner(
+									$this.closest(".delete")
+								);
+								// window.location.reload(); //Todo: Can be removed after fixing checkbox error and adding no content image if empty for all delete on ajax
+							}
+						}
+					);
 				}
 			});
 		},
