@@ -84,7 +84,7 @@ const PaymentOption: React.FC<PaymentOptionProps> = ({
 						size="md"
 						sx={{
 							"& .chakra-switch__track[data-checked]": {
-								bg: "#475BD8"
+								bg: "#475BB2"
 							}
 						}}
 					/>
@@ -95,7 +95,7 @@ const PaymentOption: React.FC<PaymentOptionProps> = ({
 					pl={4}
 					pb={5}
 					borderLeftWidth="2px"
-					borderLeftColor="#475BD8"
+					borderLeftColor="#475BB2"
 					ml={1}
 					mb={2}
 				>
@@ -316,8 +316,8 @@ const PaymentStep: React.FC = () => {
 						w="60%"
 						placeholder={__("Select currency", "user-registration")}
 						_focus={{
-							borderColor: "#475BD8",
-							boxShadow: "0 0 0 1px #475BD8"
+							borderColor: "#475BB2",
+							boxShadow: "0 0 0 1px #475BB2"
 						}}
 					>
 						{currencies.map((currency) => (
@@ -330,7 +330,6 @@ const PaymentStep: React.FC = () => {
 			</Flex>
 
 			<VStack spacing={0} align="stretch">
-				{/* Offline Payment */}
 				<PaymentOption
 					label={__("Offline Payment", "user-registration")}
 					isChecked={paymentSettings.offlinePayment}
@@ -374,14 +373,13 @@ const PaymentStep: React.FC = () => {
 							w="60%"
 							ml="auto"
 							_focus={{
-								borderColor: "#475BD8",
-								boxShadow: "0 0 0 1px #475BD8"
+								borderColor: "#475BB2",
+								boxShadow: "0 0 0 1px #475BB2"
 							}}
 						/>
 					</Flex>
 				</PaymentOption>
 
-				{/* PayPal */}
 				<PaymentOption
 					label={__("Paypal", "user-registration")}
 					isChecked={paymentSettings.paypal}
@@ -425,8 +423,8 @@ const PaymentStep: React.FC = () => {
 								fontSize="sm"
 								w="60%"
 								_focus={{
-									borderColor: "#475BD8",
-									boxShadow: "0 0 0 1px #475BD8"
+									borderColor: "#475BB2",
+									boxShadow: "0 0 0 1px #475BB2"
 								}}
 							/>
 						</Flex>
@@ -463,8 +461,8 @@ const PaymentStep: React.FC = () => {
 								fontSize="sm"
 								w="60%"
 								_focus={{
-									borderColor: "#475BD8",
-									boxShadow: "0 0 0 1px #475BD8"
+									borderColor: "#475BB2",
+									boxShadow: "0 0 0 1px #475BB2"
 								}}
 							/>
 						</Flex>
@@ -501,15 +499,14 @@ const PaymentStep: React.FC = () => {
 								fontSize="sm"
 								w="60%"
 								_focus={{
-									borderColor: "#475BD8",
-									boxShadow: "0 0 0 1px #475BD8"
+									borderColor: "#475BB2",
+									boxShadow: "0 0 0 1px #475BB2"
 								}}
 							/>
 						</Flex>
 					</VStack>
 				</PaymentOption>
 
-				{/* Stripe */}
 				<PaymentOption
 					label={__("Stripe", "user-registration")}
 					isChecked={paymentSettings.stripe}
@@ -558,7 +555,7 @@ const PaymentStep: React.FC = () => {
 									sx={{
 										"& .chakra-switch__track[data-checked]":
 											{
-												bg: "#475BD8"
+												bg: "#475BB2"
 											}
 									}}
 								/>
@@ -609,8 +606,8 @@ const PaymentStep: React.FC = () => {
 										fontSize="sm"
 										w="60%"
 										_focus={{
-											borderColor: "#475BD8",
-											boxShadow: "0 0 0 1px #475BD8"
+											borderColor: "#475BB2",
+											boxShadow: "0 0 0 1px #475BB2"
 										}}
 									/>
 								</Flex>
@@ -657,8 +654,8 @@ const PaymentStep: React.FC = () => {
 										fontSize="sm"
 										w="60%"
 										_focus={{
-											borderColor: "#475BD8",
-											boxShadow: "0 0 0 1px #475BD8"
+											borderColor: "#475BB2",
+											boxShadow: "0 0 0 1px #475BB2"
 										}}
 									/>
 								</Flex>
@@ -707,8 +704,8 @@ const PaymentStep: React.FC = () => {
 										fontSize="sm"
 										w="60%"
 										_focus={{
-											borderColor: "#475BD8",
-											boxShadow: "0 0 0 1px #475BD8"
+											borderColor: "#475BB2",
+											boxShadow: "0 0 0 1px #475BB2"
 										}}
 									/>
 								</Flex>
@@ -755,8 +752,8 @@ const PaymentStep: React.FC = () => {
 										fontSize="sm"
 										w="60%"
 										_focus={{
-											borderColor: "#475BD8",
-											boxShadow: "0 0 0 1px #475BD8"
+											borderColor: "#475BB2",
+											boxShadow: "0 0 0 1px #475BB2"
 										}}
 									/>
 								</Flex>

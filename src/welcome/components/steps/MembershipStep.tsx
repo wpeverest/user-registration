@@ -101,14 +101,14 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 						py={2}
 						bg={inputBg}
 						border="1px solid"
-						borderColor={isOpen ? "#475BD8" : borderColor}
+						borderColor={isOpen ? "#475BB2" : borderColor}
 						borderRadius="md"
 						textAlign="left"
 						cursor="pointer"
 						_hover={{ borderColor: "gray.300" }}
 						_focus={{
-							borderColor: "#475BD8",
-							boxShadow: "0 0 0 1px #475BD8",
+							borderColor: "#475BB2",
+							boxShadow: "0 0 0 1px #475BB2",
 							outline: "none"
 						}}
 					>
@@ -359,8 +359,8 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 							borderColor={borderColor}
 							_hover={{ borderColor: "gray.300" }}
 							_focus={{
-								borderColor: "#475BD8",
-								boxShadow: "0 0 0 1px #475BD8"
+								borderColor: "#475BB2",
+								boxShadow: "0 0 0 1px #475BB2"
 							}}
 						/>
 
@@ -388,19 +388,19 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 						</Text>
 						<ButtonGroup size="sm" isAttached variant="outline">
 							<Button
-								bg={plan.type === "free" ? "#475BD8" : "white"}
+								bg={plan.type === "free" ? "#475BB2" : "white"}
 								color={
 									plan.type === "free" ? "white" : "gray.700"
 								}
 								borderColor={
 									plan.type === "free"
-										? "#475BD8"
+										? "#475BB2"
 										: "gray.200"
 								}
 								_hover={{
 									bg:
 										plan.type === "free"
-											? "#3a4bc2"
+											? "#3A4B9C"
 											: "gray.50"
 								}}
 								onClick={() => handleTypeChange("free")}
@@ -409,19 +409,19 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 								Free
 							</Button>
 							<Button
-								bg={plan.type === "paid" ? "#475BD8" : "white"}
+								bg={plan.type === "paid" ? "#475BB2" : "white"}
 								color={
 									plan.type === "paid" ? "white" : "gray.700"
 								}
 								borderColor={
 									plan.type === "paid"
-										? "#475BD8"
+										? "#475BB2"
 										: "gray.200"
 								}
 								_hover={{
 									bg:
 										plan.type === "paid"
-											? "#3a4bc2"
+											? "#3A4B9C"
 											: "gray.50"
 								}}
 								onClick={() => handleTypeChange("paid")}
@@ -570,8 +570,8 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 								leftIcon={<AddIcon boxSize={3} />}
 								variant="outline"
 								colorScheme="blue"
-								borderColor="#475BD8"
-								color="#475BD8"
+								borderColor="#475BB2"
+								color="#475BB2"
 								_hover={{ bg: "blue.50" }}
 							>
 								Content
@@ -683,7 +683,7 @@ const MembershipStep: React.FC = () => {
 	if (isLoadingData) {
 		return (
 			<Flex justify="center" align="center" minH="200px">
-				<Spinner size="lg" color="#475BD8" />
+				<Spinner size="lg" color="#475BB2" />
 			</Flex>
 		);
 	}
@@ -727,8 +727,8 @@ const MembershipStep: React.FC = () => {
 					leftIcon={<AddIcon boxSize={3} />}
 					variant="outline"
 					colorScheme="blue"
-					borderColor="#475BD8"
-					color="#475BD8"
+					borderColor="#475BB2"
+					color="#475BB2"
 					_hover={{ bg: "blue.50" }}
 					onClick={handleAddPlan}
 				>

@@ -5,7 +5,8 @@ import {
 	Circle,
 	Flex,
 	Icon,
-	useColorModeValue
+	useColorModeValue,
+	Tooltip
 } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 import { URMLogo } from "./Icon/Icon";
@@ -24,11 +25,10 @@ interface StepperProps {
 	onClose?: () => void;
 }
 
-
 const CloseXIcon: React.FC = () => (
 	<svg
-		width="18"
-		height="18"
+		width="22"
+		height="22"
 		viewBox="0 0 24 24"
 		fill="none"
 		stroke="currentColor"
@@ -51,9 +51,10 @@ const Stepper: React.FC<StepperProps> = ({
 	const borderColor = useColorModeValue("gray.200", "gray.700");
 	const textColor = useColorModeValue("gray.700", "gray.200");
 	const mutedColor = useColorModeValue("gray.400", "gray.500");
-	const activeColor = "#475BD8";
+	const activeColor = "#475BB2";
 	const lineColor = useColorModeValue("gray.300", "gray.600");
 	const hoverBg = useColorModeValue("gray.100", "gray.700");
+	const closeIconColor = "#909090";
 
 	const isStepCompleted = (stepNumber: number) => stepNumber < currentStep;
 	const isStepCurrent = (stepNumber: number) => stepNumber === currentStep;
@@ -102,7 +103,6 @@ const Stepper: React.FC<StepperProps> = ({
 					>
 						{steps.map((step, index) => (
 							<React.Fragment key={step.id}>
-								{/* Step Item */}
 								<Flex
 									align="center"
 									cursor={
@@ -134,7 +134,6 @@ const Stepper: React.FC<StepperProps> = ({
 									}
 									flexShrink={0}
 								>
-									{/* Step Circle */}
 									<Circle
 										size="28px"
 										bg={
@@ -170,7 +169,6 @@ const Stepper: React.FC<StepperProps> = ({
 										)}
 									</Circle>
 
-									{/* Step Label - Beside Circle */}
 									<Text
 										ml={2}
 										fontSize="sm"
@@ -181,8 +179,11 @@ const Stepper: React.FC<StepperProps> = ({
 												: "400"
 										}
 										color={
-											isStepCurrent(step.stepNumber) ||
-											isStepCompleted(step.stepNumber)
+											isStepCurrent(step.stepNumber)
+												? activeColor
+												: isStepCompleted(
+														step.stepNumber
+												  )
 												? textColor
 												: mutedColor
 										}
@@ -213,24 +214,36 @@ const Stepper: React.FC<StepperProps> = ({
 
 				<Box flexShrink={0} zIndex={2}>
 					{onClose && (
-						<Box
-							as="button"
-							onClick={onClose}
-							p={2}
+						<Tooltip
+							label="Skip to Dashboard"
+							hasArrow
+							placement="bottom"
+							bg="gray.700"
+							color="white"
+							fontSize="sm"
+							px={3}
+							py={2}
 							borderRadius="md"
-							color={mutedColor}
-							display="flex"
-							alignItems="center"
-							justifyContent="center"
-							transition="all 0.2s"
-							_hover={{
-								bg: hoverBg,
-								color: textColor
-							}}
-							aria-label="Close wizard"
 						>
-							<CloseXIcon />
-						</Box>
+							<Box
+								as="button"
+								onClick={onClose}
+								p={2}
+								borderRadius="md"
+								color={closeIconColor}
+								display="flex"
+								alignItems="center"
+								justifyContent="center"
+								transition="all 0.2s"
+								_hover={{
+									bg: hoverBg,
+									color: textColor
+								}}
+								aria-label="Skip to Dashboard"
+							>
+								<CloseXIcon />
+							</Box>
+						</Tooltip>
 					)}
 				</Box>
 			</Flex>
