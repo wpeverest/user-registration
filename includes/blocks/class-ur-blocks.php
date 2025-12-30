@@ -55,6 +55,15 @@ class UR_Blocks {
 			UR_VERSION
 		);
 
+		wp_register_style(
+			'user-registration-blocks-style',
+			UR()->plugin_url() . '/chunks/blocks.css',
+			array(),
+			UR_VERSION
+		);
+
+		wp_enqueue_style( 'user-registration-blocks-style' );
+
 		$authenticate_smart_tag = \UR_Smart_Tags::ur_authenticated_parsable_smart_tags_list();
 
 		$smart_tag = array();
@@ -71,7 +80,7 @@ class UR_Blocks {
 			);
 		}
 
-		$pages = get_pages();
+		$pages        = get_pages();
 		$page_options = array(
 			array(
 				'label' => __( 'Select a page', 'user-registration' ),
@@ -107,10 +116,10 @@ class UR_Blocks {
 				'urcrConfigurl'               => ur_check_module_activation( 'content-restriction' ) ? admin_url( 'admin.php?page=user-registration-content-restriction' ) : '',
 				'urcrGlobalRestrictionMsgUrl' => ur_check_module_activation( 'content-restriction' ) ? admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) : '',
 				'isProActive'                 => UR_PRO_ACTIVE,
-        'smart_tags'		   => $smart_tag,
-				'pages_array'		   => $page_options,
-        'membership_all_plan_url' => admin_url( 'admin.php?page=user-registration-membership' ),
-				'membership_group_url'    => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
+				'smart_tags'                  => $smart_tag,
+				'pages_array'                 => $page_options,
+				'membership_all_plan_url'     => admin_url( 'admin.php?page=user-registration-membership' ),
+				'membership_group_url'        => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
 			)
 		);
 		wp_register_script(
@@ -187,6 +196,7 @@ class UR_Blocks {
 		if ( ur_check_module_activation( 'membership' ) ) {
 			$ur_blocks_classes[] = UR_Block_Membership_Listing::class;
 			$ur_blocks_classes[] = UR_Block_Thank_You::class;
+			$ur_blocks_classes[] = UR_Block_Membership_Buy_Now::class;
 		}
 
 		return apply_filters(

@@ -28,7 +28,6 @@ $current = $page;
 
 $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' ) ) . 'ur-membership/';
 ?>
-
 <div class="user-registration-MyAccount-content__body">
 	<div class="ur-account-table-container">
 		<div class="ur-account-table-wrapper">

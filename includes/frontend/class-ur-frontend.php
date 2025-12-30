@@ -544,9 +544,12 @@ class UR_Frontend {
 					}
 
 					$membership['active_gateways'] = $active_gateways;
-					$is_upgrading                  = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
-					$last_order                    = $members_order_repository->get_member_orders( $user_id );
-					$bank_data                     = array();
+					$membership_process            = urm_get_membership_process( $user_id );
+
+					$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $membership['post_id'] ] );
+
+					$last_order = $members_order_repository->get_member_orders( $user_id );
+					$bank_data  = array();
 					if ( ! empty( $last_order ) && $last_order['status'] == 'pending' && $last_order['payment_method'] === 'bank' ) {
 						$bank_data = array(
 							'show_bank_notice' => true,

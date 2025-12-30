@@ -17,7 +17,7 @@
 						<?php esc_html_e( 'Membership Role :', 'user-registration' ); ?>
 						<span style="color:red">*</span>
 						<span class="user-registration-help-tip tooltipstered"
-								data-tip="<?php esc_attr_e('Assign members to the selected role upon registration.(Overrides role set through form)','user-registration');?>"></span>
+								data-tip="<?php esc_attr_e( 'Assign members to the selected role upon registration.(Overrides role set through form)', 'user-registration' ); ?>"></span>
 					</label>
 				</div>
 				<div class="ur-input-type-membership-name ur-admin-template">
@@ -173,8 +173,8 @@
 			</div>
 
 			<?php
-				if ( UR_PRO_ACTIVE && function_exists( 'ur_render_email_marketing_sync_settings' ) ) :
-			?>
+			if ( UR_PRO_ACTIVE && function_exists( 'ur_render_email_marketing_sync_settings' ) ) :
+				?>
 				<!-- Sync Membership to email marketing addons. -->
 				<div class="ur-membership-sync-to-email-marketing-addons">
 					<div class="ur-membership-selection-container ur-d-flex ur-mt-2 ur-align-items-center"
@@ -187,10 +187,10 @@
 						<div class="ur-toggle-section m1-auto" style="width: 100%">
 							<span class="user-registration-toggle-form">
 
-							<?php
-								$email_marketing_sync_details = isset( $membership_details[ 'email_marketing_sync'] ) ? $membership_details[ 'email_marketing_sync'] : array();
-								$is_email_marketing_sync      = ur_string_to_bool( isset( $email_marketing_sync_details[ 'is_enable' ] ) ? $email_marketing_sync_details[ 'is_enable' ] : '0' );
-							?>
+						<?php
+							$email_marketing_sync_details = isset( $membership_details['email_marketing_sync'] ) ? $membership_details['email_marketing_sync'] : array();
+							$is_email_marketing_sync      = ur_string_to_bool( isset( $email_marketing_sync_details['is_enable'] ) ? $email_marketing_sync_details['is_enable'] : '0' );
+						?>
 								<input
 									data-key-name="Sync Email Marketing Action"
 									id="ur-membership-email-marketing-sync-action" type="checkbox"
@@ -198,7 +198,7 @@
 
 									name="ur_membership_email_marketing_sync_action"
 									style="width: 100%; text-align: left"
-									<?php echo $is_email_marketing_sync ? esc_attr( 'checked' ) : ''; ?>
+								<?php echo $is_email_marketing_sync ? esc_attr( 'checked' ) : ''; ?>
 									>
 								<span class="slider round"></span>
 							</span>
@@ -206,8 +206,9 @@
 					</div>
 				</div>
 
-				<?php ur_render_email_marketing_sync_settings( $membership_details );
+				<?php
+				ur_render_email_marketing_sync_settings( $membership_details );
 					endif;
-				?>
+			?>
 		</div>
 	</div>

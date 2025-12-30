@@ -29,7 +29,7 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 	 * @return array|false|mixed|object|\stdClass|void
 	 */
 	public function get_member_subscription( $member_id ) {
-		$result = $this->wpdb()->get_row(
+		$result = $this->wpdb()->get_results(
 			$this->wpdb()->prepare(
 				"SELECT wums.* FROM $this->users_table wpu
 		         JOIN $this->table wums ON wpu.ID = wums.user_id
@@ -76,6 +76,29 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 			$this->wpdb()->prepare(
 				"SELECT * FROM $this->table WHERE ID = %d",
 				$subscription_id
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? false : $result;
+	}
+
+	/**
+	 * Get members subscription by their ID and Membership ID
+	 *
+	 * @param $member_id
+	 * @param $membership_id
+	 *
+	 * @return array|false|mixed|object|\stdClass|void
+	 */
+	public function get_subscription_data_by_member_and_membership_id( $member_id, $membership_id ) {
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT wums.* FROM $this->users_table wpu
+		         JOIN $this->table wums ON wpu.ID = wums.user_id
+		         WHERE wpu.ID = %d AND wums.item_id = %d",
+				$member_id,
+				$membership_id
 			),
 			ARRAY_A
 		);

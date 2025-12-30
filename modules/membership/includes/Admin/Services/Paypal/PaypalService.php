@@ -68,14 +68,15 @@ class PaypalService {
 				'membership_type' => $membership_type,
 			)
 		);
-		$membership_amount = number_format( $membership_metas['amount'] );
-		$is_automatic      = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
-		$discount_amount   = 0;
-		$is_renewing       = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+		$membership_amount  = number_format( $membership_metas['amount'] );
+		$is_automatic       = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
+		$discount_amount    = 0;
+		$membership_process = urm_get_membership_process( $member_id );
+		$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $data['current_membership_id'], $membership_process['renew'] );
 
+		$final_amount    = $membership_amount;
 		$is_automatic    = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
 		$discount_amount = 0;
-		$is_renewing     = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
 
 		if ( isset( $data['upgrade'] ) && $data['upgrade'] ) {
 			$final_amount = $data['amount'];
@@ -90,9 +91,10 @@ class PaypalService {
 		} else {
 			$transaction = '_xclick';
 		}
+
 		$paypal_verification_token = wp_generate_uuid4();
 		update_user_meta( $member_id, 'urm_paypal_verification_token', $paypal_verification_token );
-		$query_args = 'membership=' . absint( $membership ) . '&member_id=' . absint( $member_id ) . '&hash=' . wp_hash( $membership . ',' . $member_id . ',' . $paypal_verification_token );
+		$query_args = 'membership=' . absint( $membership ) . '&member_id=' . absint( $member_id ) . '&current_membership_id=' . absint( $data['current_membership_id'] ) . '&hash=' . wp_hash( $membership . ',' . $member_id . ',' . $paypal_verification_token );
 		$return_url = $paypal_options['return_url'] ?? wp_login_url();
 		$return_url = esc_url_raw(
 			add_query_arg(
@@ -120,7 +122,7 @@ class PaypalService {
 			'charset'       => get_bloginfo( 'charset' ),
 			'cmd'           => $transaction,
 			'currency_code' => get_option( 'user_registration_payment_currency', 'USD' ),
-			'custom'        => $membership . '-' . $member_id . '-' . $subscription_id,
+			'custom'        => $membership . '-' . $member_id . '-' . $data['current_membership_id'] . '-' . $subscription_id,
 			'return'        => $return_url,
 			'rm'            => '2',
 			'tax'           => 0,
@@ -157,7 +159,7 @@ class PaypalService {
 				$paypal_args['a1'] = '0';
 			}
 
-			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) || ( $is_upgrading && $data['amount'] < $membership_amount ) ) {
+			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) || ( $is_upgrading && $data['chargeable_amount'] < $membership_amount ) ) {
 				$amount = $is_upgrading ? user_registration_sanitize_amount( $data['amount'] ) : ( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
 
 				$paypal_args['t2'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
@@ -217,6 +219,7 @@ class PaypalService {
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_metas['post_title'] = $membership['post_title'];
 		$membership_type                = $membership_metas['type'] ?? 'unknown'; // free, paid, or subscription
+		$membership_process             = urm_get_membership_process( $member_id );
 
 		PaymentGatewayLogging::log_webhook_received(
 			'paypal',
@@ -229,8 +232,8 @@ class PaypalService {
 				'membership_type' => $membership_type,
 			)
 		);
-		$member_subscription = $this->members_subscription_repository->get_member_subscription( $member_id );
-		$is_renewing         = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+		$member_subscription = $this->members_subscription_repository->get_subscription_data_by_member_and_membership_id( $member_id, $member_order['item_id'] );
+		$is_renewing         = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'] );
 
 		if ( 'completed' === $member_order['status'] ) {
 			ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
@@ -239,7 +242,7 @@ class PaypalService {
 		$is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array( 'status' => 'completed' ) );
 
 		if ( $is_order_updated && ( 'paid' === $member_order['order_type'] || 'subscription' === $member_order['order_type'] ) ) {
-			$member_subscription = $this->members_subscription_repository->get_member_subscription( $member_id );
+			$member_subscription = $this->members_subscription_repository->get_subscription_data_by_member_and_membership_id( $member_id, $member_order['item_id'] );
 			$status              = 'on' === $member_order['trial_status'] ? 'trial' : 'active';
 			$this->members_subscription_repository->update(
 				$member_subscription['ID'],
@@ -314,7 +317,9 @@ class PaypalService {
 				)
 			);
 		}
-		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+
+		$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $url_params['current_membership_id'] ] );
+
 		if ( $is_upgrading ) {
 			PaymentGatewayLogging::log_general(
 				'paypal',
@@ -428,8 +433,12 @@ class PaypalService {
 			);
 		}
 
-		delete_user_meta( $member_id, 'urm_is_upgrading' );
-		delete_user_meta( $member_id, 'urm_is_upgrading_to' );
+		$membership_process = urm_get_membership_process( $member_id );
+		if ( ! empty( $membership_process ) && isset( $membership_process['upgrade'][ $get_user_old_subscription['item_id'] ] ) ) {
+			unset( $membership_process['upgrade'][ $get_user_old_subscription['item_id'] ] );
+			update_user_meta( $member_id, 'urm_membership_process', $membership_process );
+		}
+
 		update_user_meta( $member_id, 'urm_is_user_upgraded', 1 );
 
 		PaymentGatewayLogging::log_transaction_success(
@@ -502,15 +511,16 @@ class PaypalService {
 			return;
 		}
 
-		$custom           = explode( '-', $data['custom'] );
-		$membership_id    = $custom[0];
-		$member_id        = $custom[1];
-		$subscription_id  = $custom[2];
-		$latest_order     = $this->members_orders_repository->get_member_orders( $member_id );
-		$membership       = $this->membership_repository->get_single_membership_by_ID( $membership_id );
-		$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
-		$membership_type  = $membership_metas['type'] ?? 'unknown'; // free, paid, or subscription
-		$paypal_options   = $membership_metas['payment_gateways']['paypal'];
+		$custom                = explode( '-', $data['custom'] );
+		$membership_id         = $custom[0];
+		$member_id             = $custom[1];
+		$current_membership_id = $custom[2];
+		$subscription_id       = $custom[3];
+		$latest_order          = $this->members_orders_repository->get_member_orders( $member_id );
+		$membership            = $this->membership_repository->get_single_membership_by_ID( $membership_id );
+		$membership_metas      = wp_unslash( json_decode( $membership['meta_value'], true ) );
+		$membership_type       = $membership_metas['type'] ?? 'unknown'; // free, paid, or subscription
+		$paypal_options        = $membership_metas['payment_gateways']['paypal'];
 
 		$paypal_options['mode']       = get_option( 'user_registration_global_paypal_mode', $paypal_options['mode'] );
 		$paypal_options['email']      = get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] );
@@ -521,7 +531,7 @@ class PaypalService {
 		$receiver_email                 = $paypal_options['email'];
 		$amount                         = $membership_metas['amount'];
 		$payment_mode                   = $paypal_options['mode'];
-		$subscription                   = $this->members_subscription_repository->get_member_subscription( $member_id );
+		$subscription                   = $this->members_subscription_repository->get_subscription_data_by_subscription_id( $membership_id );
 
 		// initialize email service.
 		$email_service = new EmailService();
@@ -821,7 +831,10 @@ class PaypalService {
 				)
 			);
 		}
-		$is_upgrading = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+
+		$membership_process = urm_get_membership_process( $member_id );
+		$is_upgrading       = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
+
 		if ( $is_upgrading ) {
 			PaymentGatewayLogging::log_general(
 				'paypal',
@@ -837,7 +850,8 @@ class PaypalService {
 
 			$this->handle_upgrade_for_paypal( $member_id, $subscription_id );
 		}
-		$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+
+		$is_renewing = ! empty( $membership_process['renew'] ) && in_array( $membership_id, $membership_process['renew'] );
 
 		if ( $is_renewing ) {
 			$subscription_service = new SubscriptionService();

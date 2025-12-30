@@ -1825,6 +1825,25 @@
   line-height: 1;
 }
 
+#ur-membership-main-fields .ur-p-tag {
+  margin-bottom: 24px;
+  padding: 10px 12px 10px 16px;
+  background: rgba(71, 91, 178, 0.04);
+  border: 1px solid #475bb2;
+  font-weight: 400;
+  color: #383838;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 22px;
+  font-style: normal;
+}
+
+.ur-membership-upgrade-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 .user-registration-membership_page_user-registration-members {
   background-color: #fafafa;
 }

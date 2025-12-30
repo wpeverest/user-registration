@@ -101,7 +101,7 @@ class URCR_Shortcodes {
 							return do_shortcode( $content );
 						}
 					} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-						if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) && $is_user_membership_active ) {
+						if ( $is_membership_active && is_array( $allowed_memberships ) && urm_check_user_membership_has_access( $allowed_memberships ) ) {
 							return do_shortcode( $content );
 						}
 					}
@@ -128,7 +128,7 @@ class URCR_Shortcodes {
 							break;
 						case '3':
 							if ( ! empty( $get_meta_data_memberships ) ) {
-								if ( is_array( $get_meta_data_memberships ) && in_array( $current_user_membership, $get_meta_data_memberships ) && $is_user_membership_active ) {
+								if ( $is_membership_active && is_array( $get_meta_data_memberships ) && urm_check_user_membership_has_access( $get_meta_data_memberships ) ) {
 									return do_shortcode( $content );
 								}
 							}
@@ -200,10 +200,10 @@ class URCR_Shortcodes {
 			}
 
 			// Get URLs for login and signup
-			$login_page_id = get_option( 'user_registration_login_page_id' );
+			$login_page_id        = get_option( 'user_registration_login_page_id' );
 			$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
 
-			$login_url = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
+			$login_url  = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
 			$signup_url = $registration_page_id ? get_permalink( $registration_page_id ) : ( $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url() );
 
 			if ( ! $registration_page_id ) {

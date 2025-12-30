@@ -1359,6 +1359,8 @@ html {
   min-height: 36px;
   margin-bottom: 10px;
   line-height: 1.5;
+  padding: 4px 8px;
+  border-radius: 0px;
 }
 .user-registration-page .upgrade-plan-container #upgradable-plans,
 .ur-multi-device-form-preview .upgrade-plan-container #upgradable-plans,
@@ -1374,6 +1376,26 @@ html {
   display: flex;
   gap: 5px;
   align-items: center;
+}
+
+.user-registration .membership-upgrade-container > span {
+  display: block;
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #6b6b6b;
+}
+.user-registration .ur-upgrade-label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 17px;
+  color: #1f1f1f;
+}
+.user-registration .notice_red,
+.user-registration #upgrade-membership-notice {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #ef4444;
 }
 
 .user-registration-page .ur-membership-container.layout-list .membership-block {

@@ -29,7 +29,10 @@ import {
 import { FaCog, FaPlay, FaLock } from "react-icons/fa";
 import YouTubePlayer from "react-player/youtube";
 import { activateModule, deactivateModule } from "./modules-api";
+import { __ } from "@wordpress/i18n";
 
+const { isMasteriyoActive } =
+	typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 const AddonCard = ({ addon, showToast }) => {
 	const [isActive, setIsActive] = useState(addon.status === "active");
 	const [isLoading, setIsLoading] = useState(false);
@@ -501,16 +504,61 @@ const AddonCard = ({ addon, showToast }) => {
 				</HStack>
 				<HStack spacing="2">
 					{moduleEnabled ? (
-						<Switch
-							isChecked={isActive}
-							onChange={handleToggle}
-							isDisabled={isLoading}
-							sx={{
-								"& .chakra-switch__track[data-checked]": {
-									bg: "#475bb2"
-								}
-							}}
-						/>
+						<>
+							{" "}
+							{"user-registration-masteriyo-course-integration" ===
+							addon.slug ? (
+								isMasteriyoActive ? (
+									<Switch
+										isChecked={isActive}
+										onChange={handleToggle}
+										isDisabled={isLoading}
+										sx={{
+											"& .chakra-switch__track[data-checked]":
+												{
+													bg: "#475bb2"
+												}
+										}}
+									/>
+								) : (
+									<Tooltip
+										hasArrow
+										placement="top"
+										label={__(
+											"Masteriyo plugin must be activated to enable this module",
+											"user-registration"
+										)}
+										aria-label="A tooltip"
+									>
+										<span>
+											<Switch
+												isChecked={false}
+												onChange={handleToggle}
+												isDisabled={true}
+												sx={{
+													"& .chakra-switch__track[data-checked]":
+														{
+															bg: "#475bb2"
+														}
+												}}
+											/>
+										</span>
+									</Tooltip>
+								)
+							) : (
+								<Switch
+									isChecked={isActive}
+									onChange={handleToggle}
+									isDisabled={isLoading}
+									sx={{
+										"& .chakra-switch__track[data-checked]":
+											{
+												bg: "#475bb2"
+											}
+									}}
+								/>
+							)}
+						</>
 					) : (
 						<Button
 							size="sm"

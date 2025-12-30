@@ -9,6 +9,8 @@
  * @package  UserRegistration/Shortcodes/My_Account
  */
 
+use Masteriyo\Constants;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -125,6 +127,13 @@ class UR_Shortcode_My_Account {
 				do_action( 'user_registration_my_account_custom_render' );
 			}
 		} else {
+
+			if ( isset( $wp->query_vars['urm-course-portal'] ) ) {
+
+				echo do_shortcode( '[masteriyo_account]' );
+
+				return;
+			}
 
 			// Enqueue script.
 			$user_id = get_current_user_id();

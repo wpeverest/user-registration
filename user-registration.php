@@ -170,7 +170,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_TEMPLATE_DEBUG_MODE', false );
 			$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
 			$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
-			$this->define( 'UR_PRO_ACTIVE', false );
+			$this->define( 'UR_PRO_ACTIVE', true );
 			$this->define( 'UR_DEV', false );
 		}
 
@@ -260,6 +260,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-login-logout-menu.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-membership-listing.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-thank-you.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-membership-buy-now.php';
 			/**
 			 * Navigation menu item classes.
 			 */
@@ -281,23 +282,28 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			if ( ur_check_module_activation( 'membership' ) ) {
 				/** include modules */
 				include_once UR_ABSPATH . 'modules/membership/user-registration-membership.php';
+
+				if ( ur_check_module_activation( 'masteriyo-course-integration' ) && ( is_plugin_active( 'learning-management-system/lms.php' )
+				|| is_plugin_active( 'learning-management-system-pro/lms.php' ) ) ) {
+					include_once UR_ABSPATH . 'modules/masteriyo/user-registration-masteriyo.php';
+				}
 			}
 
 			if ( ( ur_check_module_activation( 'membership' ) || ur_check_module_activation( 'payments' ) ) && ur_check_module_activation( 'payment-history' ) ) {
 				include_once UR_ABSPATH . 'modules/payment-history/Orders.php';
 			}
 
-		// Check if there are membership rules (>= 2)
-		$membership_rules_count = 0;
-		if ( function_exists( 'ur_get_membership_rules_count' ) ) {
-			$membership_rules_count = ur_get_membership_rules_count();
-		}
+			// Check if there are membership rules (>= 2)
+			$membership_rules_count = 0;
+			if ( function_exists( 'ur_get_membership_rules_count' ) ) {
+				$membership_rules_count = ur_get_membership_rules_count();
+			}
 
-		if ( ur_check_module_activation( 'content-restriction' ) || $membership_rules_count >= 2 ) {
+			if ( ur_check_module_activation( 'content-restriction' ) || $membership_rules_count >= 2 ) {
 
-			include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
-			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
-		}
+				include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
+				include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
+			}
 
 			/**
 			 * Elementor classes.
@@ -559,14 +565,14 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @since 5.0.0
 		 */
-		public function enable_multiple_registration_forms(){
+		public function enable_multiple_registration_forms() {
 			$is_migrated = get_option( 'user_registration_multiple_registration_migration', false );
 
 			if ( ! $is_migrated ) {
 				$all_forms = ur_get_all_user_registration_form();
-				if ( count( $all_forms ) > 1) {
+				if ( count( $all_forms ) > 1 ) {
 					$enabled_features = get_option( 'user_registration_enabled_features', array() );
-					if ( ! isset( $enabled_features[ 'user-registration-multiple-registration' ] ) ) {
+					if ( ! isset( $enabled_features['user-registration-multiple-registration'] ) ) {
 						$enabled_features[] = 'user-registration-multiple-registration';
 						update_option( 'user_registration_enabled_features', $enabled_features );
 					}
@@ -689,31 +695,31 @@ if ( ! function_exists( 'UR' ) ) {
  * Enable by setting SCRIPT_DEBUG to true in wp-config.php
  */
 if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
-    add_filter(
-        'script_loader_src',
-        function ( $src, $handle ) {
-            $dev_scripts = array(
-                'user-registration-welcome',
-                'user-registration-dashboard',
-                'user-registration-blocks',
-                'user-registration-form-templates',
-                'user-registration-divi-builder',
-                'user-registration-content-access-rules',
-            );
+	add_filter(
+		'script_loader_src',
+		function ( $src, $handle ) {
+			$dev_scripts = array(
+				'user-registration-welcome',
+				'user-registration-dashboard',
+				'user-registration-blocks',
+				'user-registration-form-templates',
+				'user-registration-divi-builder',
+				'user-registration-content-access-rules',
+			);
 
-            if ( in_array( $handle, $dev_scripts, true ) ) {
-                $src = str_replace(
-                    UR_PLUGIN_URL . 'chunks/',
-                    'http://localhost:3000/',
-                    $src
-                );
-            }
+			if ( in_array( $handle, $dev_scripts, true ) ) {
+				$src = str_replace(
+					UR_PLUGIN_URL . 'chunks/',
+					'http://localhost:3000/',
+					$src
+				);
+			}
 
-            return $src;
-        },
-        10,
-        2
-    );
+			return $src;
+		},
+		10,
+		2
+	);
 }
 
 // Global for backwards compatibility.
