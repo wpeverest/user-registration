@@ -978,12 +978,12 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 						'label'     => esc_html__( 'Addons', 'user-registration' ),
 					),
 				),
-				array(
-					'help' => array(
-						'page_slug' => 'user-registration-dashboard#help',
-						'label'     => esc_html__( 'Help', 'user-registration' ),
-					),
-				),
+				// array(
+				// 	'help' => array(
+				// 		'page_slug' => 'user-registration-dashboard#help',
+				// 		'label'     => esc_html__( 'Help', 'user-registration' ),
+				// 	),
+				// ),
 				// UR_PRO_ACTIVE ? array() : array(
 				// 	'free-vs-pro' => array(
 				// 		'page_slug' => 'user-registration-dashboard#free-vs-pro',
@@ -1054,11 +1054,15 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 					</div>
 				</div>
 				<div class="ur-page-title__wrapper--right">
+					<div class="ur-version-tag-separator" bis_skin_checked="1"><hr></div>
+						<a target="" rel="noopener" class="ur-help--link" href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-dashboard#help' ) ); ?>">
+							<?php esc_html_e( 'Help', 'user-registration' ); ?>
+						</a>
 					<?php
 					if ( ! UR_PRO_ACTIVE ) {
 						?>
 							<div class="ur-version-tag-separator" bis_skin_checked="1"><hr></div>
-							<a target="_blank" rel="noopener" class="ur-free-vs-pro--link" href="https://wpuserregistration.com/upgrade/?utm_campaign=lite-version&utm_source=header&utm_medium=top-menu-link">
+							<a target="_blank" rel="noopener" class="ur-free-vs-pro--link" href="https://wpuserregistration.com/free-vs-pro/?utm_campaign=lite-version&utm_source=header&utm_medium=top-menu-link">
 								<?php esc_html_e( 'Free vs Pro', 'user-registration' ); ?>
 							</a>
 						<?php
