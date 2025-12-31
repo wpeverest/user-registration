@@ -1518,13 +1518,15 @@
 									color: #50565f;
 									align-content: center;
 									background: transparent;
+									text-transform: capitalize;
 									text-align: left;
 									border: 0;
 									border-bottom: $border_width solid #f4f4f4;
 
 									&--transaction-id {
-										font-family: 'Courier New', monospace;
+										// font-family: 'Courier New', monospace;
 										word-break: break-all;
+										color: #656565;
 									}
 
 									&--amount {
@@ -1537,6 +1539,7 @@
 											padding: 6px 12px !important;
 											border-radius: 4px !important;
 											font-weight: 500;
+											text-transform: capitalize;
 
 											&.btn-active,
 											&.btn-completed {

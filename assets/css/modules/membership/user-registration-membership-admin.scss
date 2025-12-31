@@ -69,7 +69,12 @@
 }
 
 .payment-status-btn {
-	padding: 3px 5px;
+	padding: 4px 12px;
+	border-radius: 4px;
+	font-weight: 500;
+	font-size: 13px;
+	line-height: 18px;
+	// padding: 3px 5px;
 
 	&.pending {
 		border: 1px solid #f0a64f;
@@ -712,6 +717,9 @@
 
 							.ur-label {
 								margin-bottom: 0;
+								// flex: 0 0 38%;
+								max-width: 300px;
+								width: 100% !important;
 
 								@media screen and (max-width: 992px) {
 									width: 100% !important;
@@ -724,6 +732,11 @@
 									font-weight: 500;
 									line-height: 21px;
 								}
+							}
+
+							.ur-input-type-membership-group-name,
+							.ur-field {
+								flex: 1;
 							}
 
 							.ur-field {
@@ -749,11 +762,11 @@
 									}
 								}
 
-								.select2 {
-									&-container {
-										width: 100% !important;
-									}
-								}
+								// .select2 {
+								// 	&-container {
+								// 		width: 100% !important;
+								// 	}
+								// }
 							}
 
 							.user-registration-switch {

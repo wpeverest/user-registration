@@ -158,7 +158,7 @@
 							</span>
 							<input data-key-name="Amount" type="number" id="ur-membership-amount"
 									value="<?php echo esc_attr( $membership_details['amount'] ?? 1 ); ?>"
-									name="ur_membership_amount" style="width: 80%" min="0" required>
+									name="ur_membership_amount" style="width: max-content" min="0" required>
 							<span class="ur-currency"><?php echo esc_html( $currency ); ?></span>
 						</div>
 						<select id="ur-membership-duration" data-key-name="Duration"

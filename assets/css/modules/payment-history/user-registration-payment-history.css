@@ -108,6 +108,36 @@ body.user-registration #ur-membership-order-create-form {
   width: 100%;
   max-width: 100%;
 }
+body.user-registration #ur-membership-order-create-form .user_registration-card__body .ur-membership-input-container {
+  align-items: center;
+}
+body.user-registration #ur-membership-order-create-form .user_registration-card__body .ur-membership-input-container .ur-label {
+  flex: 0 0 38%;
+  margin-bottom: 0;
+}
+body.user-registration #ur-membership-order-create-form .user_registration-card__body .ur-membership-input-container .ur-label label {
+  margin-bottom: 0;
+}
+body.user-registration #ur-membership-order-create-form .user_registration-card__body .ur-membership-input-container .ur-admin-template {
+  flex: 1;
+}
+body.user-registration #ur-membership-order-create-form .user_registration-card__body .ur-membership-input-container .ur-admin-template.ur-membership-plan-name {
+  padding: 8px 16px;
+  border: 1px dashed #e1e1e1;
+  background: #f7f7f7;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 18px;
+  color: #4e4e4e;
+  flex: unset;
+  width: max-content !important;
+}
+body.user-registration #ur-membership-order-create-form .user_registration-card__body .ur-membership-input-container:has(textarea) {
+  align-items: flex-start;
+}
+body.user-registration #ur-membership-order-create-form .user_registration-card__body .ur-membership-input-container:has(textarea) .ur-label {
+  margin-top: 10px;
+}
 
 .ur-payments__form {
   display: grid;

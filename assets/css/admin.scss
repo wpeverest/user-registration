@@ -6246,9 +6246,14 @@ body.user-registration {
 
 						tbody {
 							tr {
+								th {
+									padding-top: 16px;
+								}
+
 								td {
 									font-size: 14px;
 									line-height: 24px;
+									padding: 12px;
 
 									&.membership_type {
 										.user-registration-badge {

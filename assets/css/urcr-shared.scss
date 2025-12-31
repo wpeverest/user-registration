@@ -235,6 +235,14 @@ $border-color_6: #475bb2;
 	padding: 6px 12px 6px 24px;
 }
 
+.urcr-condition-selection-section {
+	.select2 {
+		&-container {
+			width: 100% !important;
+		}
+	}
+}
+
 // Target Selection Section
 .urcr-target-selection-section {
 	display: flex;
@@ -528,15 +536,16 @@ $border-color_6: #475bb2;
 
 	// Ensure label container maintains width
 	.urcr-label-container {
-		// max-width: 600px;
-		// width: 100%;
-		flex: 0 0 38%;
+		max-width: 300px;
+		width: 100%;
+		// flex: 0 0 38%;
 	}
 
 	// Ensure input/body containers take remaining space
 	.urcr-body,
 	.urcr-input-container {
-		flex: 0 0 60%;
+		// flex: 0 0 60%;
+		flex: 1;
 	}
 }
 
@@ -575,7 +584,9 @@ $border-color_6: #475bb2;
 
 		// Ensure label and body containers work correctly
 		.urcr-label-container {
-			flex: 0 0 38% !important;
+			// flex: 0 0 38% !important;
+			max-width: 300px;
+			width: 100% !important;
 			margin-bottom: 0;
 		}
 
@@ -620,7 +631,9 @@ $border-color_6: #475bb2;
 	font-weight: 500;
 	color: $color_4;
 	font-size: 14px;
-	flex: 0 0 38%;
+	// flex: 0 0 38%;
+	max-width: 300px;
+	width: 100% !important;
 	margin-bottom: 0;
 	padding: 0;
 
@@ -707,9 +720,13 @@ $border-color_6: #475bb2;
 }
 
 .urcr-action-section {
-	border-top: 1px solid #e1e1e1;
-	margin-top: 30px;
-	padding-top: 28px;
+	// border-top: 1px solid #e1e1e1;
+	// margin-top: 30px;
+	// padding-top: 28px;
+	background: #fafafa;
+	border-radius: 7px;
+	padding: 30px;
+	margin-top: 40px;
 }
 
 .urcr-buttons-wrapper,
@@ -796,7 +813,9 @@ $border-color_6: #475bb2;
 		&--form-step {
 			.user-registration-card__body {
 				.ur-label {
-					flex: 0 0 38%;
+					// flex: 0 0 38%;
+					max-width: 300px;
+					width: 100% !important;
 				}
 
 				.ur-input-type-membership-name,
@@ -809,12 +828,18 @@ $border-color_6: #475bb2;
 
 				.ur-field {
 					&.field-amount {
-						flex: unset;
+						flex: unset !important;
 					}
 
 					&[data-field-key="membership_duration"] {
-						flex: unset;
-						width: max-content;
+						flex: unset !important;
+						width: max-content !important;
+					}
+
+					.select2 {
+						&-container {
+							width: 100% !important;
+						}
 					}
 				}
 			}

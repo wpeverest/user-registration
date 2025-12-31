@@ -304,6 +304,7 @@ html {
 			}
 
 			.notice {
+
 				&_red,
 				&_blue {
 					&:empty {
@@ -410,8 +411,8 @@ html {
 					@media screen and (max-width: 600px) {
 						flex-direction: column;
 						gap: 0;
-l
-						.ur_membership_input_label {
+
+						l .ur_membership_input_label {
 							width: 100%;
 						}
 					}
@@ -596,6 +597,7 @@ l
 
 	.notice-container {
 		.notice {
+
 			&_red,
 			&_blue {
 				&:empty {
@@ -850,9 +852,7 @@ l
 				margin-right: 0;
 			}
 
-			.user-registration-membership_page_user-registration-frontend-list
-				.shortcode
-				.widefat {
+			.user-registration-membership_page_user-registration-frontend-list .shortcode .widefat {
 				width: calc(100% - 40px);
 			}
 
@@ -1122,6 +1122,7 @@ l
 		.ur-membership-container {
 			&.layout-row {
 				align-items: center;
+
 				.membership-block {
 					flex-direction: row;
 					padding: 0;
@@ -1218,18 +1219,9 @@ l
 	}
 }
 
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block:hover,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block:hover,
-#pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block:hover {
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block:hover,
+.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block:hover,
+#pg-container .ur-membership-list-container .ur-membership-container .membership-block:hover {
 	background: none;
 	box-shadow: none;
 }

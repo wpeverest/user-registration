@@ -1561,7 +1561,8 @@ body {
 
 				.user-registration-global-settings {
 					display: flex;
-					justify-content: space-between;
+					// justify-content: space-between;
+					gap: $spacing_30px;
 					align-items: center;
 					margin-bottom: $spacing_28px;
 
@@ -1608,7 +1609,9 @@ body {
 						font-weight: $medium;
 						color: $grey-400;
 						font-size: 14px;
-						flex: 0 0 38%;
+						// flex: 0 0 38%;
+						max-width: 300px;
+						width: 100%;
 						margin-bottom: 0;
 
 						span {
@@ -1649,7 +1652,8 @@ body {
 						gap: $spacing_12px;
 						line-height: 1.3;
 						vertical-align: middle;
-						flex: 0 0 60%;
+						// flex: 0 0 60%;
+						flex: 1;
 
 						@media (max-width: 1199px) {
 							flex: auto;
@@ -1785,7 +1789,9 @@ body {
 					}
 
 					.ur-captcha-test-button {
-						flex: 0 0 38%;
+						// flex: 0 0 38%;
+						max-width: 300px;
+						width: 100%;
 
 						button {
 							color: #475bb2;

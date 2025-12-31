@@ -1276,6 +1276,14 @@ $border-left-color_3: #0073aa;
 				margin: 0;
 				width: 100%;
 
+				.select2 {
+					&-search {
+						&__field {
+							width: 0.75em !important;
+						}
+					}
+				}
+
 				.urcr-condition-value-input {
 					color: #383838;
 
@@ -2237,9 +2245,9 @@ $not-tag: #fcdddd;
 // Content Right Sidepart Access and Restrict Area CSS
 .urcr-condition-row-parent {
 	.urcr-conditions-list {
-		// max-width: 600px;
-		// width: 100%;
-		flex: 0 0 38%;
+		max-width: 600px;
+		width: 100%;
+		// flex: 0 0 38%;
 
 		@media screen and (max-width: 1199px) {
 			max-width: 100%;
@@ -2277,8 +2285,8 @@ $not-tag: #fcdddd;
 	.urcr-target-selection-section {
 		// max-width: 60%;
 		// width: 100%;
-		// flex: 1;
-		flex: 0 0 60%;
+		flex: 1;
+		// flex: 0 0 60%;
 		flex-direction: column;
 		border: 1px solid #e1e1e1;
 		padding: 24px 0;
