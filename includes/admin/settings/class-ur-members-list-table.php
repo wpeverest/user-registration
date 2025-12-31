@@ -247,14 +247,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 		 * No items found text.
 		 */
 		public function no_items() {
-			$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
-			?>
-			<div class="empty-list-table-container">
-				<img src="<?php echo $image_url; ?>" alt="">
-				<h3><?php echo __( 'You don\'t have any Members yet.', 'user-registration' ); ?></h3>
-				<p><?php echo __( 'Please add Members and you are good to go.', 'user-registration' ); ?></p>
-			</div>
-			<?php
+			UR_Base_Layout::no_items('Members');
 		}
 		/**
 		 * Returns a combined meta query array for different user statuses.

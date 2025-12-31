@@ -1255,6 +1255,64 @@
 				}
 			}
 
+			.wp-list-table{
+				tbody{
+					tr{
+						td{
+							&.status {
+								.ur-toggle-section {
+									.user-registration-toggle-form {
+
+										input {
+
+											&:checked+.slider {
+												background-color: $green;
+											}
+										}
+
+									}
+								}
+							}
+						}
+						&:nth-child(odd) {
+							background: #F8F8FA;
+						}
+						&.no-items {
+							background: #ffffff;
+							td {
+								padding: 0;
+
+								.empty-list-table-container {
+									text-align: center;
+									margin-top: 30px;
+									margin-bottom: 30px;
+
+									img {
+										width: 300px;
+									}
+
+									h3 {
+										margin-top: 16px;
+										margin-bottom: 8px;
+										color: #222222;
+										font-size: 22px;
+										font-weight: 600;
+										line-height: 32px;
+									}
+
+									p {
+										color: #6B6B6B;
+										font-size: 14px;
+										font-weight: 400;
+										line-height: 24px;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
 			.wp-list-table.memberships {
 				thead {
 					tr {
@@ -1319,21 +1377,6 @@
 									text-transform: capitalize;
 									color: #383838;
 									font-weight: 500;
-								}
-							}
-
-							&.status {
-								.ur-toggle-section {
-									.user-registration-toggle-form {
-
-										input {
-
-											&:checked+.slider {
-												background-color: $green;
-											}
-										}
-
-									}
 								}
 							}
 						}
@@ -2011,21 +2054,32 @@
 		&.membership_groups {
 			th {
 				&#title {
-					width: 200px;
+					width: 30%;
 				}
 
 				&#shortcode {
-					width: 220px;
+					width: 50%;
 				}
 
 				&#status {
-					width: 100px;
+					width: 20%;
 				}
 
-				&#action {
-					width: 200px;
-				}
 			}
+
+			tbody{
+				tr{
+					td{
+						&.shortcode{
+							.urm-shortcode{
+								width: 70%;
+							}
+						}
+					}
+				}
+
+			}
+
 		}
 	}
 
@@ -2033,6 +2087,19 @@
 		&::after {
 			width: 8px;
 			height: 15px;
+		}
+	}
+
+	#ur-membership-group-create-form{
+		.ur-input-type-membership-group-name {
+			.select2-container--default{
+				.select2-selection--multiple{
+					.select2-search__field{
+						width: 100% !important;
+					}
+
+				}
+			}
 		}
 	}
 }
