@@ -581,7 +581,8 @@ class UR_Frontend {
 						}
 					}
 
-					$data['period'] = 'subscription' === $membership['post_content']['type'] ? $membership['billing_amount'] . ' / ' . $membership['billing_cycle'] : $membership['billing_amount'];
+					$duration       = $membership_details['subscription']['value'] ?? '';
+					$data['period'] = 'subscription' === $membership['post_content']['type'] ? $membership['billing_amount'] . ' / ' . $duration . ' ' . $membership['billing_cycle'] : $membership['billing_amount'];
 
 					array_push( $membership_data, $data );
 				}
