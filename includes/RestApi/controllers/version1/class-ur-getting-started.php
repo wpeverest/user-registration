@@ -674,7 +674,7 @@ class UR_Getting_Started {
 			'{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}' .
 		']]]';
 
-		$title = esc_html__( 'Sign up', 'user-registration' );
+		$title = esc_html__( 'Registration Form', 'user-registration' );
 
 		$new_id = wp_insert_post(
 			array(
