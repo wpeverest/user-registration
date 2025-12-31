@@ -46,6 +46,7 @@ class ListTable extends \UR_List_Table {
 		return apply_filters(
 			'ur_membership_subscriptions_list_table_columns',
 			[
+				'cb'         => '<input type="checkbox" />',
 				'id'         => __( 'Subscription ID', 'user-registration' ),
 				'user_id'    => __( 'Member', 'user-registration' ),
 				'item_id'    => __( 'Membership', 'user-registration' ),
@@ -211,6 +212,12 @@ class ListTable extends \UR_List_Table {
 			),
 			'edit'   => '<a href="' . esc_url( $this->get_edit_links( $row ) ) . '">' . __( 'Edit', 'user-registration' ) . '</a>',
 			'delete' => '<a class="submitdelete" aria-label="' . esc_attr__( 'Delete this item permanently', 'user-registration' ) . '" href="' . $delete_url . '">' . esc_html__( 'Delete', 'user-registration' ) . '</a>',
+		];
+	}
+
+	protected function get_bulk_actions() {
+		return [
+			'delete' => __( 'Delete', 'user-registration' ),
 		];
 	}
 }
