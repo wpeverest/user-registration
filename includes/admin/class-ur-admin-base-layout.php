@@ -41,11 +41,11 @@ class UR_Base_Layout {
 			$table->prepare_items();
 		}
 
-		if ( isset( $table->total_items ) ) {
-			$show_search = (int) $table->total_items > 10;
-		} elseif ( isset( $table->items ) && is_array( $table->items ) ) {
-			$show_search = count( $table->items ) > 10;
+		if ( is_object( $table ) && method_exists( $table, 'get_pagination_arg' ) ) {
+			$total_items = (int) $table->get_pagination_arg( 'total_items' );
 		}
+
+		$show_search = $total_items > 10;
 
 		?>
 		<div id="user-registration-base-list-table-page" class="<?php echo esc_attr( $data['class'] ); ?>">
@@ -82,14 +82,14 @@ class UR_Base_Layout {
 		<?php
 	}
 
-		/**
-		 * Display Search Input with button
-		 *
-		 * @param $search_id
-		 * @param $placeholder
-		 *
-		 * @return void
-		 */
+	/**
+	 * Display Search Input with button
+	 *
+	 * @param $search_id
+	 * @param $placeholder
+	 *
+	 * @return void
+	 */
 	public static function display_search_field( $search_id, $placeholder ) {
 		?>
 			<input type="search" id="<?php echo esc_attr( $search_id ); ?>" name="s"
