@@ -44,10 +44,6 @@ if ( ! class_exists( 'UR_Settings_General' ) ) {
 		 * Filter to provide sections submenu for membership settings.
 		 */
 		public function get_sections_callback( $sections ) {
-			// if license key is not set, show license section in general settings.
-			if ( empty( get_option( 'user-registration_license_key', '' ) ) ) {
-				$sections['license'] = __( 'License', 'user-registration' );
-			}
 			$sections['pages'] = __( 'Pages', 'user-registration' );
 			return $sections;
 		}
@@ -56,63 +52,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) {
 		 */
 		public function get_settings_callback( $settings ) {
 			global $current_section;
-			if ( 'license' === $current_section ) {
-				$settings = array(
-					'title'    => '',
-					'sections' => array(
-						'license_options_settings' => array(
-							'title'    => __( 'License Activation', 'user-registration' ),
-							'type'     => 'card',
-							'desc'     => '<strong>' . __( 'License: ', 'user-registration' ) . '</strong>' . __( 'Please enter the license key below in order to use our premium addons smoothly.', 'user-registration' ),
-							'settings' => array(
-								array(
-									'title'    => __( 'License Key', 'user-registration' ),
-									'desc'     => __( 'Please enter the license key', 'user-registration' ),
-									'id'       => 'user-registration_license_key',
-									'default'  => '',
-									'type'     => 'text',
-									'css'      => '',
-									'desc_tip' => true,
-								),
-								array(
-									'id'     => 'ur_license_nonce',
-									'action' => '_ur_license_nonce',
-									'type'   => 'nonce',
-								),
-							),
-						),
-					),
-				);
-
-				// if license key is already set, show install pro notice.
-				if ( ! empty( get_option( 'user-registration_license_key', '' ) ) ) {
-					$settings['sections']['license_options_settings']['desc']        = '';
-					$settings['sections']['license_options_settings']['before_desc'] = wp_kses_post( '<div class="urm_license_setting_notice urm_install_pro_notice"><h3><span class="dashicons dashicons-info-outline notice-icon"></span>' . __( 'Complete Your Pro Setup', 'user-registration' ) . '</h3><p>' . __( 'Your license is activated, but User Registration & Membership pro plugin needs to be installed to unlock all features. This is a one-time setup that takes less than a minute.', 'user-registration' ) . '</p><button class="button install_pro_version_button">' . __( 'Install Pro Version', 'user-registration' ) . '</button></div>' );
-				} else {
-					$img             = UR()->plugin_url() . '/assets/images/rocket.gif';
-					$license_message = false !== ur_get_license_plan() ? '' : '<br>No license is required. Enjoy!';
-					$settings['sections']['license_options_settings']['before_desc'] = __(
-						'You\'re currently using the free version of User Registration & Membership.' . $license_message . '<br><br>To unlock advanced features and extended functionality, consider <a target="_blank" href="' . esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=ur-license-setting&utm_medium=upgrade-link&utm_campaign=' . UR()->utm_campaign ) . '">Upgrading to Pro.</a>',
-						'user-registration'
-					);
-					$settings['sections']['license_options_settings']['desc']        = wp_kses_post(
-						__(
-							'<img style="width:20px;height:20px;" src="' . $img . '" /> <span>Already purchased a license? Enter your license key below to activate PRO features.</span>',
-							'user-registration'
-						)
-					);
-				}
-				/**
-				 * Filter to allow modification of license settings if license is not already activated.
-				 *
-				 * @param array $settings License settings array.
-				 */
-				$settings = apply_filters( 'user_registration_general_license_settings', $settings );
-				$settings = apply_filters(
-					'user_registration_license_settings', // @deprecated 5.0.0
-					$settings,
-				);
-			} elseif ( 'pages' === $current_section ) {
+			if ( 'pages' === $current_section ) {
 				$settings = array(
 					'title'    => '',
 					'sections' => array(

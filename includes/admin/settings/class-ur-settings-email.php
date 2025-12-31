@@ -434,7 +434,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		public function output() {
 			global $current_section;
 			$emails = $this->get_emails();
-
+			$settings = array(); // in case of settings page.
 			foreach ( $emails as $email ) {
 				if ( 'ur_settings_' . $email->id === $current_section ) {
 					$settings = new $email();
