@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import metadata from "./block.json";
-import { LoginForm } from "./../../components/Icon";
+import { MembershipBuyNow } from "./../../components/Icon";
 import Edit from "./Edit";
 import "./editor.scss";
 import "./style.scss";
@@ -8,7 +8,7 @@ import "./style.scss";
 export const name = metadata.name;
 export const settings = {
 	...metadata,
-	icon: LoginForm,
+	icon: MembershipBuyNow,
 	edit: Edit,
 	save: () => null
 };

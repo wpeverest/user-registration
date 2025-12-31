@@ -37,7 +37,14 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 	 * Build HTML.
 	 */
 	protected function build_html( $content ) {
+		wp_register_style(
+			'user-registration-blocks-style',
+			UR()->plugin_url() . '/chunks/blocks.css',
+			array(),
+			UR_VERSION
+		);
 
+		wp_enqueue_style( 'user-registration-blocks-style' );
 		$block_id = isset( $this->attributes['clientId'] ) ? $this->attributes['clientId'] : '';
 		$attr     = $this->attributes;
 
@@ -59,7 +66,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 
 		$style = isset( $attr['style'] ) ? $attr['style'] : array();
 
-		$button_classes = 'urm-buy-now-btn1 urm-' . $block_id;
+		$button_classes = 'urm-buy-now-btn urm-' . $block_id;
 		if ( ! empty( $attr['className'] ) ) {
 			$button_classes .= ' ' . $attr['className'];
 		}
@@ -104,7 +111,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 		$text_decoration = isset( $typography['textDecoration'] ) ? $typography['textDecoration'] : '';
 		$letter_spacing  = isset( $typography['letterSpacing'] ) ? $typography['letterSpacing'] : '';
 		$text_transform  = isset( $typography['textTransform'] ) ? $typography['textTransform'] : '';
-		$font_size       = isset( $typography['fontSize'] ) ? $typography['fontSize'] : '';
+		$font_size       = isset( $typography['fontSize'] ) ? $typography['fontSize'] : ( isset( $attr['fontSize'] ) ? $attr['fontSize'] : '' );
 
 		// Build BUTTON inline style
 		$button_style = 'width:100%;';
@@ -145,7 +152,21 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 			$button_style .= 'padding-right:' . $padding_right . ';';
 		}
 
-		$button_style .= 'border-radius:' . $border_radius . ';';
+		if ( ! empty( $radius['topLeft'] ) ) {
+			$button_style .= 'border-top-left-radius:' . $radius['topLeft'] . ';';
+		}
+
+		if ( ! empty( $radius['topRight'] ) ) {
+			$button_style .= 'border-top-right-radius:' . $radius['topRight'] . ';';
+		}
+
+		if ( ! empty( $radius['bottomRight'] ) ) {
+			$button_style .= 'border-bottom-right-radius:' . $radius['bottomRight'] . ';';
+		}
+
+		if ( ! empty( $radius['bottomLeft'] ) ) {
+			$button_style .= 'border-bottom-left-radius:' . $radius['bottomLeft'] . ';';
+		}
 
 		// Typography
 		if ( $font_style ) {
@@ -164,7 +185,17 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 			$button_style .= 'text-transform:' . $text_transform . ';';
 		}
 		if ( $font_size ) {
-			$button_style .= 'font-size:' . $font_size . ';';
+			if ( 'small' === $font_size ) {
+				$button_style .= 'font-size:12px;';
+			} elseif ( 'medium' === $font_size ) {
+				$button_style .= 'font-size:14px;';
+			} elseif ( 'large' === $font_size ) {
+				$button_style .= 'font-size:16px;';
+			} elseif ( 'x-large' === $font_size ) {
+				$button_style .= 'font-size:18px;';
+			} else {
+				$button_style .= 'font-size:' . $font_size . ';';
+			}
 		}
 
 		// Wrapper attributes
@@ -202,7 +233,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 
 		$html .= '<div ' . $wrapper_attributes . '>';
 		$html .= '<div style="width:' . esc_attr( $attr['width'] ) . ';">';
-		$html .= '<a href="' . esc_url( $page_url ) . '" ' . $link_extra_attributes . ' >';
+		$html .= '<a class="buynow-link" href="' . esc_url( $page_url ) . '" ' . $link_extra_attributes . ' >';
 		$html .= '<button type="button" class="' . esc_attr( $button_classes ) . '" style="' . esc_attr( $button_style ) . '">';
 		$html .= '<span class="label">' . esc_html( $attr['text'] ) . '</span>';
 		$html .= '</button>';

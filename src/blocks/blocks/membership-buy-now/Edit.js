@@ -48,13 +48,7 @@ const buildHoverCss = ({ blockId, hoverTextColor, hoverBgColor }) => {
 	return css;
 };
 
-const HoverColorControl = ({
-	label,
-	colorValue,
-	onChangeLive,
-	onCommit,
-	themeColors
-}) => (
+const HoverColorControl = ({ label, colorValue, onChange, themeColors }) => (
 	<div
 		data-wp-component="ToolsPanelItem"
 		className="components-tools-panel-item block-editor-tools-panel-color-gradient-settings__item urm-custom-hover-tool-panel"
@@ -105,7 +99,7 @@ const HoverColorControl = ({
 					<ColorPalette
 						enableCustomColor
 						value={colorValue}
-						onChange={onChangeLive}
+						onChange={onChange}
 						colors={[]}
 						clearable={true}
 						enableAlpha={true}
@@ -120,27 +114,12 @@ const HoverColorControl = ({
 							<ColorPalette
 								colors={themeColors}
 								value={colorValue}
-								onChange={onChangeLive}
+								onChange={onChange}
 								clearable={false}
 								disableCustomColors={true}
 							/>
 						</>
 					)}
-
-					<div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-						<Button
-							variant="primary"
-							onClick={() => {
-								onCommit?.();
-								onClose();
-							}}
-						>
-							{__("Apply", "user-registration")}
-						</Button>
-						<Button variant="secondary" onClick={() => onClose()}>
-							{__("Close", "user-registration")}
-						</Button>
-					</div>
 				</div>
 			)}
 		/>
@@ -318,20 +297,14 @@ const Edit = (props) => {
 					<HoverColorControl
 						label={__("Text Hover", "user-registration")}
 						colorValue={localHover.hoverTextColor}
-						onChangeLive={(c) =>
-							setLocalHover((p) => ({ ...p, hoverTextColor: c }))
-						}
-						onCommit={() => commitHover("hoverTextColor")}
+						onChange={(c) => setAttributes({ hoverTextColor: c })}
 						themeColors={themeColors}
 					/>
 
 					<HoverColorControl
 						label={__("Background Hover", "user-registration")}
 						colorValue={localHover.hoverBgColor}
-						onChangeLive={(c) =>
-							setLocalHover((p) => ({ ...p, hoverBgColor: c }))
-						}
-						onCommit={() => commitHover("hoverBgColor")}
+						onChange={(c) => setAttributes({ hoverBgColor: c })}
 						themeColors={themeColors}
 					/>
 				</>
