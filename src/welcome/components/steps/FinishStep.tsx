@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
-	Heading,
+	Box,
 	Button,
 	Flex,
-	useColorModeValue,
+	Heading,
+	Skeleton,
 	Text,
-	Box,
-	Skeleton
+	useColorModeValue
 } from "@chakra-ui/react";
-import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { __ } from "@wordpress/i18n";
+import React, { useEffect, useState } from "react";
 import { apiGet, apiPost } from "../../api/gettingStartedApi";
 
 interface FinishLinks {
@@ -29,10 +29,7 @@ const FinishStep: React.FC = () => {
 			try {
 				setIsLoadingData(true);
 				const response = await apiGet("/finish");
-
-				if (response.links) {
-					setLinks(response.links);
-				}
+				if (response.links) setLinks(response.links);
 			} catch (e) {
 				console.error("Failed to load finish data:", e);
 			} finally {
@@ -47,10 +44,7 @@ const FinishStep: React.FC = () => {
 		try {
 			setIsSaving(true);
 			await apiPost("/finish", {});
-
-			if (links.dashboard) {
-				window.location.href = links.dashboard;
-			}
+			if (links.dashboard) window.location.href = links.dashboard;
 		} catch (e) {
 			console.error("Failed to complete action:", e);
 		} finally {
@@ -59,63 +53,74 @@ const FinishStep: React.FC = () => {
 	};
 
 	return (
-		<Box textAlign="center">
-			<Heading
-				size="lg"
-				fontFamily="Inter"
-				fontWeight={600}
-				fontSize="21px"
-				lineHeight="34px"
-				letterSpacing="-0.01em"
-				color={textColor}
-				mb={2}
-			>
-				{__("Congratulations! 🎉", "user-registration")}
-			</Heading>
-
-			<Heading
-				size="md"
-				fontFamily="Inter"
-				fontWeight={600}
-				fontSize="18px"
-				lineHeight="28px"
-				color={textColor}
-				mb={4}
-			>
-				{__("Setup complete!", "user-registration")}
-			</Heading>
-
-			<Text
-				fontSize="sm"
-				color={subtextColor}
-				mb={10}
-				maxW="400px"
-				mx="auto"
-			>
-				{__(
-					"We have created all the pages you need and your site is ready to go. You can customize everything from the URM dashboard.",
-					"user-registration"
-				)}
-			</Text>
-
-			<Flex justify="flex-end" align="center">
-				{isLoadingData ? (
-					<Skeleton height="40px" width="180px" borderRadius="md" />
-				) : (
-					<Button
-						bg="#475BD8"
-						color="white"
-						rightIcon={<ArrowForwardIcon />}
-						_hover={{ bg: "#3a4bc2" }}
-						_active={{ bg: "#2f3da6" }}
-						px={6}
-						onClick={handleGoToDashboard}
-						isLoading={isSaving}
-						isDisabled={!links.dashboard}
+		<Box maxW="960px" w="100%" p={8}>
+			<Flex direction="column" minH="200px" justify="space-between">
+				<Box>
+					<Heading
+						fontFamily="Inter"
+						fontWeight={600}
+						fontSize="24px"
+						lineHeight="32px"
+						letterSpacing="-0.01em"
+						color={textColor}
+						mb={3}
 					>
-						{__("Go to Dashboard", "user-registration")}
-					</Button>
-				)}
+						{__("Congratulations! 🎉", "user-registration")}
+					</Heading>
+
+					<Heading
+						fontFamily="Inter"
+						fontWeight={500}
+						fontSize="16px"
+						lineHeight="24px"
+						color={textColor}
+						mb={4}
+					>
+						{__("Setup complete!", "user-registration")}
+					</Heading>
+
+					<Text
+						fontSize="14px"
+						lineHeight="22px"
+						color={subtextColor}
+					>
+						{__(
+							"We have created all the pages you need and your site is ready to go. You can customize everything from the",
+							"user-registration"
+						)}
+						<br />
+						{__("URM dashboard.", "user-registration")}
+					</Text>
+				</Box>
+
+				<Flex justify="flex-end" mt={8}>
+					{isLoadingData ? (
+						<Skeleton
+							height="44px"
+							width="180px"
+							borderRadius="md"
+						/>
+					) : (
+						<Button
+							bg="#475BD8"
+							color="white"
+							rightIcon={<ArrowForwardIcon />}
+							_hover={{ bg: "#3a4bc2" }}
+							_active={{ bg: "#2f3da6" }}
+							px={6}
+							h="44px"
+							fontSize="14px"
+							fontWeight={500}
+							borderRadius="md"
+							minW="180px"
+							onClick={handleGoToDashboard}
+							isLoading={isSaving}
+							isDisabled={!links.dashboard}
+						>
+							{__("Go to Dashboard", "user-registration")}
+						</Button>
+					)}
+				</Flex>
 			</Flex>
 		</Box>
 	);

@@ -1,14 +1,14 @@
-import React from "react";
+import { CheckIcon } from "@chakra-ui/icons";
 import {
 	Box,
-	Text,
 	Circle,
 	Flex,
 	Icon,
-	useColorModeValue,
-	Tooltip
+	Text,
+	Tooltip,
+	useColorModeValue
 } from "@chakra-ui/react";
-import { CheckIcon } from "@chakra-ui/icons";
+import React from "react";
 import { URMLogo } from "./Icon/Icon";
 
 interface Step {
@@ -82,7 +82,9 @@ const Stepper: React.FC<StepperProps> = ({
 				position="relative"
 			>
 				<Flex align="center" flexShrink={0} zIndex={2}>
-					<URMLogo height="40px" />
+					<Box sx={{ "& svg": { height: "40px", width: "auto" } }}>
+						<URMLogo />
+					</Box>
 				</Flex>
 
 				<Flex

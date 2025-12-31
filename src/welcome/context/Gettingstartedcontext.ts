@@ -4,7 +4,7 @@ export type BillingPeriod = "weekly" | "monthly" | "yearly" | "one-time";
 
 export interface ContentAccess {
 	id: string;
-	type: "posts" | "pages";
+	type: "posts" | "pages" | "wholesite";
 	value: number[];
 }
 

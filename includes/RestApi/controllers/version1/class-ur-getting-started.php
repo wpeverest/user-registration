@@ -559,7 +559,7 @@ class UR_Getting_Started {
 			$normal_form_id = self::ensure_default_form( 'normal' );
 
 			$page_details['default_form_id'] = array(
-				'title'         => esc_html__( 'Default Registration Form', 'user-registration' ),
+				'title'         => esc_html__( 'Registration Form', 'user-registration' ),
 				'page_url'      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $normal_form_id ),
 				'page_url_text' => esc_html__( 'View Form', 'user-registration' ),
 				'page_slug'     => sprintf( esc_html__( 'Form Id: %s', 'user-registration' ), $normal_form_id ),
@@ -661,9 +661,7 @@ class UR_Getting_Started {
 			'{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}' .
 		']]]';
 
-		$title = $is_membership
-			? esc_html__( 'Default Membership Registration Form', 'user-registration' )
-			: esc_html__( 'Default Form', 'user-registration' );
+		$title = esc_html__( 'Sign up', 'user-registration' );
 
 		$new_id = wp_insert_post(
 			array(
@@ -719,77 +717,6 @@ class UR_Getting_Started {
 		);
 	}
 
-	/**
-	 * Fetch memberships created during wizard for display.
-	 *
-	 * @since x.x.x
-	 *
-	 * @param array $membership_ids Array of membership IDs to fetch.
-	 * @return array
-	 */
-	protected static function fetch_memberships_for_wizard( $membership_ids = array() ) {
-		if ( empty( $membership_ids ) ) {
-			return array();
-		}
-
-		$memberships = array();
-
-		foreach ( $membership_ids as $membership_id ) {
-			$post = get_post( $membership_id );
-
-			if ( ! $post || 'ur_membership' !== $post->post_type ) {
-				continue;
-			}
-
-			$meta_type = get_post_meta( $membership_id, 'urm_type', true );
-			$meta_amount = get_post_meta( $membership_id, 'urm_amount', true );
-			$meta_subscription = get_post_meta( $membership_id, 'urm_subscription', true );
-			$access_rules = get_post_meta( $membership_id, '_ur_membership_access_rules', true );
-
-
-			$plan_type = 'free';
-			if ( in_array( $meta_type, array( 'paid', 'subscription' ), true ) ) {
-				$plan_type = 'paid';
-			}
-
-
-			$billing_period = 'one-time';
-			if ( 'subscription' === $meta_type && ! empty( $meta_subscription ) ) {
-				$duration = isset( $meta_subscription['duration'] ) ? $meta_subscription['duration'] : '';
-				$duration_map = array(
-					'week'  => 'weekly',
-					'month' => 'monthly',
-					'year'  => 'yearly',
-				);
-				$billing_period = isset( $duration_map[ $duration ] ) ? $duration_map[ $duration ] : 'monthly';
-			}
-
-			$content_access = array();
-			if ( ! empty( $access_rules ) && is_array( $access_rules ) ) {
-				foreach ( $access_rules as $rule ) {
-					if ( ! empty( $rule['type'] ) && ! empty( $rule['value'] ) ) {
-						$content_access[] = array(
-							'id'    => wp_generate_uuid4(),
-							'type'  => $rule['type'],
-							'value' => array_map( 'intval', (array) $rule['value'] ),
-						);
-					}
-				}
-			}
-
-			$memberships[] = array(
-				'id'            => $membership_id,
-				'name'          => $post->post_title,
-				'type'          => $plan_type,
-				'price'         => ! empty( $meta_amount ) ? strval( $meta_amount ) : '',
-				'billingPeriod' => $billing_period,
-				'contentAccess' => $content_access,
-				'isNew'         => false,
-			);
-		}
-
-		return $memberships;
-	}
 
 	/**
 	 * Fetch memberships from database or posts.
@@ -923,7 +850,7 @@ class UR_Getting_Started {
 	}
 
 
-/**
+	/**
 	 * Save a single membership (insert/update) and sync access rules.
 	 *
 	 * @since x.x.x
@@ -1043,7 +970,19 @@ class UR_Getting_Started {
 		$formatted_rules = array();
 
 		foreach ( $access_rules as $rule ) {
-			if ( empty( $rule['type'] ) || empty( $rule['value'] ) ) {
+			if ( empty( $rule['type'] ) ) {
+				continue;
+			}
+
+			if ( 'wholesite' === $rule['type'] ) {
+				$formatted_rules[] = array(
+					'type'  => 'wholesite',
+					'value' => array(),
+				);
+				continue;
+			}
+
+			if ( empty( $rule['value'] ) ) {
 				continue;
 			}
 
@@ -1067,7 +1006,6 @@ class UR_Getting_Started {
 
 		return true;
 	}
-
 
 	/**
 	 * Sync membership access rules with Content Restriction engine.
@@ -1106,18 +1044,28 @@ class UR_Getting_Started {
 		update_option( 'user_registration_enabled_features', $enabled_features );
 
 		$normalized = array(
-			'pages' => array(),
-			'posts' => array(),
+			'pages'     => array(),
+			'posts'     => array(),
+			'wholesite' => false,
 		);
 
 		foreach ( $access_rules as $rule ) {
-			if ( empty( $rule['type'] ) || ! isset( $rule['value'] ) ) {
+			if ( empty( $rule['type'] ) ) {
 				continue;
 			}
 
 			$type = sanitize_text_field( $rule['type'] );
 
+			if ( 'wholesite' === $type ) {
+				$normalized['wholesite'] = true;
+				continue;
+			}
+
 			if ( ! isset( $normalized[ $type ] ) ) {
+				continue;
+			}
+
+			if ( ! isset( $rule['value'] ) ) {
 				continue;
 			}
 
@@ -1164,7 +1112,17 @@ class UR_Getting_Started {
 			),
 		);
 
-		foreach ( $normalized as $type => $values ) {
+		if ( $normalized['wholesite'] ) {
+			$access_rule_data['target_contents'][] = array(
+				'id'    => $mkid( 'target_wholesite' ),
+				'type'  => 'whole_site',
+				'value' => array(),
+			);
+		}
+
+		foreach ( array( 'pages', 'posts' ) as $type ) {
+			$values = $normalized[ $type ];
+
 			if ( empty( $values ) ) {
 				continue;
 			}
@@ -1196,6 +1154,89 @@ class UR_Getting_Started {
 		);
 
 		urcr_create_or_update_membership_rule( $membership_id, $rule_data );
+	}
+
+	/**
+	 * Fetch memberships created during wizard for display.
+	 *
+	 * @since x.x.x
+	 *
+	 * @param array $membership_ids Array of membership IDs to fetch.
+	 * @return array
+	 */
+	protected static function fetch_memberships_for_wizard( $membership_ids = array() ) {
+		if ( empty( $membership_ids ) ) {
+			return array();
+		}
+
+		$memberships = array();
+
+		foreach ( $membership_ids as $membership_id ) {
+			$post = get_post( $membership_id );
+
+			if ( ! $post || 'ur_membership' !== $post->post_type ) {
+				continue;
+			}
+
+			$meta_type         = get_post_meta( $membership_id, 'urm_type', true );
+			$meta_amount       = get_post_meta( $membership_id, 'urm_amount', true );
+			$meta_subscription = get_post_meta( $membership_id, 'urm_subscription', true );
+			$access_rules      = get_post_meta( $membership_id, '_ur_membership_access_rules', true );
+
+			$plan_type = 'free';
+			if ( in_array( $meta_type, array( 'paid', 'subscription' ), true ) ) {
+				$plan_type = 'paid';
+			}
+
+			$billing_period = 'one-time';
+			if ( 'subscription' === $meta_type && ! empty( $meta_subscription ) ) {
+				$duration     = isset( $meta_subscription['duration'] ) ? $meta_subscription['duration'] : '';
+				$duration_map = array(
+					'week'  => 'weekly',
+					'month' => 'monthly',
+					'year'  => 'yearly',
+				);
+				$billing_period = isset( $duration_map[ $duration ] ) ? $duration_map[ $duration ] : 'monthly';
+			}
+
+			$content_access = array();
+			if ( ! empty( $access_rules ) && is_array( $access_rules ) ) {
+				foreach ( $access_rules as $rule ) {
+					if ( empty( $rule['type'] ) ) {
+						continue;
+					}
+
+					if ( 'wholesite' === $rule['type'] ) {
+						$content_access[] = array(
+							'id'    => wp_generate_uuid4(),
+							'type'  => 'wholesite',
+							'value' => array(),
+						);
+						continue;
+					}
+
+					if ( ! empty( $rule['value'] ) ) {
+						$content_access[] = array(
+							'id'    => wp_generate_uuid4(),
+							'type'  => $rule['type'],
+							'value' => array_map( 'intval', (array) $rule['value'] ),
+						);
+					}
+				}
+			}
+
+			$memberships[] = array(
+				'id'            => $membership_id,
+				'name'          => $post->post_title,
+				'type'          => $plan_type,
+				'price'         => ! empty( $meta_amount ) ? strval( $meta_amount ) : '',
+				'billingPeriod' => $billing_period,
+				'contentAccess' => $content_access,
+				'isNew'         => false,
+			);
+		}
+
+		return $memberships;
 	}
 
 	/**
@@ -1234,7 +1275,7 @@ class UR_Getting_Started {
 		$page_details = array();
 
 		$page_details['membership_form_id'] = array(
-			'title'         => esc_html__( 'Membership Registration Form', 'user-registration' ),
+			'title'         => esc_html__( 'Registration Form', 'user-registration' ),
 			'page_url'      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $membership_form_id ),
 			'page_url_text' => esc_html__( 'View Form', 'user-registration' ),
 			'page_slug'     => sprintf( esc_html__( 'Form Id: %s', 'user-registration' ), $membership_form_id ),
@@ -1244,8 +1285,8 @@ class UR_Getting_Started {
 
 		$membership_pages = array(
 			'membership_registration' => array(
-				'name'    => _x( 'membership-registration', 'Page slug', 'user-registration' ),
-				'title'   => _x( 'Membership Registration', 'Page title', 'user-registration' ),
+				'name'    => _x( 'registration', 'Page slug', 'user-registration' ),
+				'title'   => _x( 'Registration', 'Page title', 'user-registration' ),
 				'option'  => 'user_registration_member_registration_page_id',
 				'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $membership_form_id ) . '"]',
 			),
@@ -1255,8 +1296,8 @@ class UR_Getting_Started {
 				'content' => '[user_registration_groups]',
 			),
 			'membership_thankyou'     => array(
-				'name'    => _x( 'membership-thankyou', 'Page slug', 'user-registration' ),
-				'title'   => _x( 'Membership ThankYou', 'Page title', 'user-registration' ),
+				'name'    => _x( 'thankyou', 'Page slug', 'user-registration' ),
+				'title'   => _x( 'ThankYou', 'Page title', 'user-registration' ),
 				'option'  => 'user_registration_thank_you_page_id',
 				'content' => '[user_registration_membership_thank_you]',
 			),

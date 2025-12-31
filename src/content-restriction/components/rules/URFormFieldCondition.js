@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { __ } from "@wordpress/i18n";
 import { getURCRData } from "../../utils/localized-data";
 
@@ -9,36 +9,85 @@ const URFormFieldCondition = ({
 }) => {
 	const [formId, setFormId] = useState("");
 	const [formFields, setFormFields] = useState([]);
+	const lastSentValueRef = useRef(null);
+	const isSyncingFromProps = useRef(false);
+	const currentStateRef = useRef({ formId: "", formFields: [] });
 
 	const urForms = getURCRData("ur_forms", {});
 	const urFormData = getURCRData("ur_form_data", {});
 
 	useEffect(() => {
-		if (condition.conditionValue && typeof condition.conditionValue === "object") {
-			if (condition.conditionValue.form_id) {
-				setFormId(condition.conditionValue.form_id);
+		const currentValue = condition.conditionValue;
+		
+		const normalizedValue = currentValue && typeof currentValue === "object" 
+			? {
+				form_id: currentValue.form_id || "",
+				form_fields: Array.isArray(currentValue.form_fields) ? currentValue.form_fields : []
 			}
-			if (condition.conditionValue.form_fields && Array.isArray(condition.conditionValue.form_fields)) {
-				setFormFields(condition.conditionValue.form_fields);
-			} else {
-				setFormFields([]);
+			: { form_id: "", form_fields: [] };
+		
+		const lastSentValue = lastSentValueRef.current;
+		if (lastSentValue && typeof lastSentValue === "object") {
+			const lastSentNormalized = {
+				form_id: lastSentValue.form_id || "",
+				form_fields: Array.isArray(lastSentValue.form_fields) ? lastSentValue.form_fields : []
+			};
+			
+			if (normalizedValue.form_id === lastSentNormalized.form_id &&
+				JSON.stringify(normalizedValue.form_fields) === JSON.stringify(lastSentNormalized.form_fields)) {
+				return;
 			}
-		} else {
-			setFormId("");
-			setFormFields([]);
+		}
+		
+		const currentState = currentStateRef.current;
+		if (normalizedValue.form_id !== currentState.formId ||
+			JSON.stringify(normalizedValue.form_fields) !== JSON.stringify(currentState.formFields)) {
+			isSyncingFromProps.current = true;
+			setFormId(normalizedValue.form_id);
+			setFormFields(normalizedValue.form_fields);
+			currentStateRef.current = {
+				formId: normalizedValue.form_id,
+				formFields: normalizedValue.form_fields
+			};
+			
+			requestAnimationFrame(() => {
+				isSyncingFromProps.current = false;
+			});
 		}
 	}, [condition.conditionValue]);
 
 	useEffect(() => {
+		if (isSyncingFromProps.current) {
+			return;
+		}
+
 		const value = {
 			form_id: formId || "",
 			form_fields: formFields
 		};
+
+		currentStateRef.current = {
+			formId: value.form_id,
+			formFields: value.form_fields
+		};
+
+		const lastSentValue = lastSentValueRef.current;
+		if (lastSentValue && typeof lastSentValue === "object") {
+			const lastSentFormId = lastSentValue.form_id || "";
+			const lastSentFormFields = Array.isArray(lastSentValue.form_fields) ? lastSentValue.form_fields : [];
+			
+			if (value.form_id === lastSentFormId &&
+				JSON.stringify(value.form_fields) === JSON.stringify(lastSentFormFields)) {
+				return;
+			}
+		}
+
+		lastSentValueRef.current = value;
 		onUpdate({
 			...condition,
 			conditionValue: value
 		});
-	}, [formId, formFields]);
+	}, [formId, formFields, condition, onUpdate]);
 
 	const getFormFieldOptions = () => {
 		if (!formId || !urFormData[formId]) {

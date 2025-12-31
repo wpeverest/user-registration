@@ -1,7 +1,7 @@
-import React from "react";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import SetupWizard from "./SetupWizard";
+import React from "react";
 import { StateProvider } from "../context/StateProvider";
+import SetupWizard from "./SetupWizard";
 
 const theme = extendTheme({
 	fonts: {

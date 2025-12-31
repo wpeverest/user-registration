@@ -599,9 +599,19 @@ class URCR_Content_Access_Rules {
 			);
 		}
 
+		$rule_content = json_decode( $rule_post->post_content, true );
+		if ( $rule_content ) {
+			$base_timestamp = time() * 1000;
+			$counter = 0;
+			$rule_content = self::regenerate_ids_in_content( $rule_content, $base_timestamp, $counter );
+			$new_post_content = wp_json_encode( $rule_content );
+		} else {
+			$new_post_content = $rule_post->post_content;
+		}
+
 		$new_post = array(
 			'post_title'   => $rule_post->post_title . ' (Copy)',
-			'post_content' => $rule_post->post_content,
+			'post_content' => $new_post_content,
 			'post_status'  => 'publish',
 			'post_type'    => 'urcr_access_rule',
 		);
@@ -628,6 +638,20 @@ class URCR_Content_Access_Rules {
 				500
 			);
 		}
+	}
+
+	private static function regenerate_ids_in_content( $data, $base_timestamp, &$counter ) {
+		if ( is_array( $data ) ) {
+			foreach ( $data as $key => $value ) {
+				if ( 'id' === $key && is_string( $value ) && preg_match( '/^x\d+$/', $value ) ) {
+					$counter++;
+					$data[ $key ] = 'x' . ( $base_timestamp + $counter );
+				} else {
+					$data[ $key ] = self::regenerate_ids_in_content( $value, $base_timestamp, $counter );
+				}
+			}
+		}
+		return $data;
 	}
 
 	/**

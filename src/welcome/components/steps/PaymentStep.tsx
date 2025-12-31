@@ -1,31 +1,29 @@
-import React, { useEffect, useState } from "react";
 import {
-	Heading,
-	VStack,
-	HStack,
-	Switch,
-	Text,
-	Input,
-	Textarea,
 	Box,
-	useColorModeValue,
 	Collapse,
+	Flex,
+	Heading,
+	HStack,
 	Icon,
-	Tooltip,
-	Alert,
-	AlertIcon,
+	Input,
 	Select,
 	Skeleton,
-	Flex
+	Switch,
+	Text,
+	Textarea,
+	Tooltip,
+	useColorModeValue,
+	VStack
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
-import { useStateValue } from "../../context/StateProvider";
-import { PaymentSettings } from "../../context/Gettingstartedcontext";
+import React, { useEffect, useState } from "react";
 import {
 	apiGet,
 	CurrencyData,
 	PaymentSettingsResponse
 } from "../../api/gettingStartedApi";
+import { PaymentSettings } from "../../context/Gettingstartedcontext";
+import { useStateValue } from "../../context/StateProvider";
 
 interface PaymentGatewayData {
 	id: string;
@@ -72,30 +70,33 @@ const PaymentOption: React.FC<PaymentOptionProps> = ({
 
 	return (
 		<Box>
-			<Flex justify="space-between" align="center" py={4}>
-				<Text fontWeight="500" color={textColor} fontSize="sm">
+			<Flex align="center" py={4}>
+				<Text
+					fontWeight="500"
+					color={textColor}
+					fontSize="sm"
+					minW="40%"
+				>
 					{label}
 				</Text>
-				<Box w="60%" display="flex" justifyContent="flex-start">
-					<Switch
-						isChecked={isChecked}
-						onChange={(e) => onChange(e.target.checked)}
-						colorScheme="blue"
-						size="md"
-						sx={{
-							"& .chakra-switch__track[data-checked]": {
-								bg: "#475BB2"
-							}
-						}}
-					/>
-				</Box>
+				<Switch
+					isChecked={isChecked}
+					onChange={(e) => onChange(e.target.checked)}
+					colorScheme="blue"
+					size="sm"
+					sx={{
+						"& .chakra-switch__track[data-checked]": {
+							bg: "#475BB2"
+						}
+					}}
+				/>
 			</Flex>
 			<Collapse in={isChecked && !!children} animateOpacity>
 				<Box
 					pl={4}
 					pb={5}
 					borderLeftWidth="2px"
-					borderLeftColor="#475BB2"
+					borderLeftColor="gray.300"
 					ml={1}
 					mb={2}
 				>
@@ -114,7 +115,7 @@ const PaymentStep: React.FC = () => {
 
 	const textColor = useColorModeValue("gray.800", "white");
 	const subtextColor = useColorModeValue("gray.600", "gray.300");
-	const mutedColor = useColorModeValue("gray.600", "gray.400");
+	const mutedColor = useColorModeValue("#383838", "gray.300");
 	const inputBg = useColorModeValue("white", "gray.700");
 	const inputBorder = useColorModeValue("gray.300", "gray.600");
 
@@ -337,8 +338,8 @@ const PaymentStep: React.FC = () => {
 						handlePaymentSettingChange("offlinePayment", checked)
 					}
 				>
-					<Flex align="flex-start" gap={4} mt={3}>
-						<HStack spacing={1} minW="140px" flexShrink={0} pt={2}>
+					<Flex align="flex-start" mt={3}>
+						<HStack spacing={1} minW="40%" flexShrink={0} pt={2}>
 							<Text fontSize="sm" color={mutedColor}>
 								{__("Bank Details", "user-registration")}
 							</Text>
@@ -370,8 +371,7 @@ const PaymentStep: React.FC = () => {
 							borderColor={inputBorder}
 							rows={3}
 							fontSize="sm"
-							w="60%"
-							ml="auto"
+							flex="1"
 							_focus={{
 								borderColor: "#475BB2",
 								boxShadow: "0 0 0 1px #475BB2"
@@ -388,8 +388,8 @@ const PaymentStep: React.FC = () => {
 					}
 				>
 					<VStack spacing={4} align="stretch" mt={3}>
-						<Flex align="center" justify="space-between">
-							<HStack spacing={1} minW="140px" flexShrink={0}>
+						<Flex align="center">
+							<HStack spacing={1} minW="40%" flexShrink={0}>
 								<Text fontSize="sm" color={mutedColor}>
 									{__("PayPal Email", "user-registration")}
 								</Text>
@@ -421,7 +421,7 @@ const PaymentStep: React.FC = () => {
 								bg={inputBg}
 								borderColor={inputBorder}
 								fontSize="sm"
-								w="60%"
+								flex="1"
 								_focus={{
 									borderColor: "#475BB2",
 									boxShadow: "0 0 0 1px #475BB2"
@@ -429,8 +429,8 @@ const PaymentStep: React.FC = () => {
 							/>
 						</Flex>
 
-						<Flex align="center" justify="space-between">
-							<HStack spacing={1} minW="140px" flexShrink={0}>
+						<Flex align="center">
+							<HStack spacing={1} minW="40%" flexShrink={0}>
 								<Text fontSize="sm" color={mutedColor}>
 									{__("Client ID", "user-registration")}
 								</Text>
@@ -459,7 +459,7 @@ const PaymentStep: React.FC = () => {
 								bg={inputBg}
 								borderColor={inputBorder}
 								fontSize="sm"
-								w="60%"
+								flex="1"
 								_focus={{
 									borderColor: "#475BB2",
 									boxShadow: "0 0 0 1px #475BB2"
@@ -467,8 +467,8 @@ const PaymentStep: React.FC = () => {
 							/>
 						</Flex>
 
-						<Flex align="center" justify="space-between">
-							<HStack spacing={1} minW="140px" flexShrink={0}>
+						<Flex align="center">
+							<HStack spacing={1} minW="40%" flexShrink={0}>
 								<Text fontSize="sm" color={mutedColor}>
 									{__("Client Secret", "user-registration")}
 								</Text>
@@ -497,7 +497,7 @@ const PaymentStep: React.FC = () => {
 								bg={inputBg}
 								borderColor={inputBorder}
 								fontSize="sm"
-								w="60%"
+								flex="1"
 								_focus={{
 									borderColor: "#475BB2",
 									boxShadow: "0 0 0 1px #475BB2"
@@ -515,8 +515,8 @@ const PaymentStep: React.FC = () => {
 					}
 				>
 					<VStack spacing={4} align="stretch" mt={3}>
-						<Flex justify="space-between" align="center">
-							<HStack spacing={1}>
+						<Flex align="center">
+							<HStack spacing={1} minW="40%" flexShrink={0}>
 								<Text fontSize="sm" color={mutedColor}>
 									{__(
 										"Enable Test Mode",
@@ -535,39 +535,32 @@ const PaymentStep: React.FC = () => {
 									</span>
 								</Tooltip>
 							</HStack>
-							<Box
-								w="60%"
-								display="flex"
-								justifyContent="flex-start"
-							>
-								<Switch
-									isChecked={
-										paymentSettings.stripeTestMode || false
+							<Switch
+								isChecked={
+									paymentSettings.stripeTestMode || false
+								}
+								onChange={(e) =>
+									handlePaymentSettingChange(
+										"stripeTestMode",
+										e.target.checked
+									)
+								}
+								colorScheme="blue"
+								size="sm"
+								sx={{
+									"& .chakra-switch__track[data-checked]": {
+										bg: "#475BB2"
 									}
-									onChange={(e) =>
-										handlePaymentSettingChange(
-											"stripeTestMode",
-											e.target.checked
-										)
-									}
-									colorScheme="blue"
-									size="sm"
-									sx={{
-										"& .chakra-switch__track[data-checked]":
-											{
-												bg: "#475BB2"
-											}
-									}}
-								/>
-							</Box>
+								}}
+							/>
 						</Flex>
 
 						{paymentSettings.stripeTestMode ? (
 							<>
-								<Flex align="center" justify="space-between">
+								<Flex align="center">
 									<HStack
 										spacing={1}
-										minW="140px"
+										minW="40%"
 										flexShrink={0}
 									>
 										<Text fontSize="sm" color={mutedColor}>
@@ -604,7 +597,7 @@ const PaymentStep: React.FC = () => {
 										bg={inputBg}
 										borderColor={inputBorder}
 										fontSize="sm"
-										w="60%"
+										flex="1"
 										_focus={{
 											borderColor: "#475BB2",
 											boxShadow: "0 0 0 1px #475BB2"
@@ -612,10 +605,10 @@ const PaymentStep: React.FC = () => {
 									/>
 								</Flex>
 
-								<Flex align="center" justify="space-between">
+								<Flex align="center">
 									<HStack
 										spacing={1}
-										minW="140px"
+										minW="40%"
 										flexShrink={0}
 									>
 										<Text fontSize="sm" color={mutedColor}>
@@ -652,7 +645,7 @@ const PaymentStep: React.FC = () => {
 										bg={inputBg}
 										borderColor={inputBorder}
 										fontSize="sm"
-										w="60%"
+										flex="1"
 										_focus={{
 											borderColor: "#475BB2",
 											boxShadow: "0 0 0 1px #475BB2"
@@ -662,10 +655,10 @@ const PaymentStep: React.FC = () => {
 							</>
 						) : (
 							<>
-								<Flex align="center" justify="space-between">
+								<Flex align="center">
 									<HStack
 										spacing={1}
-										minW="140px"
+										minW="40%"
 										flexShrink={0}
 									>
 										<Text fontSize="sm" color={mutedColor}>
@@ -702,7 +695,7 @@ const PaymentStep: React.FC = () => {
 										bg={inputBg}
 										borderColor={inputBorder}
 										fontSize="sm"
-										w="60%"
+										flex="1"
 										_focus={{
 											borderColor: "#475BB2",
 											boxShadow: "0 0 0 1px #475BB2"
@@ -710,10 +703,10 @@ const PaymentStep: React.FC = () => {
 									/>
 								</Flex>
 
-								<Flex align="center" justify="space-between">
+								<Flex align="center">
 									<HStack
 										spacing={1}
-										minW="140px"
+										minW="40%"
 										flexShrink={0}
 									>
 										<Text fontSize="sm" color={mutedColor}>
@@ -750,7 +743,7 @@ const PaymentStep: React.FC = () => {
 										bg={inputBg}
 										borderColor={inputBorder}
 										fontSize="sm"
-										w="60%"
+										flex="1"
 										_focus={{
 											borderColor: "#475BB2",
 											boxShadow: "0 0 0 1px #475BB2"

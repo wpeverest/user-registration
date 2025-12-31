@@ -408,11 +408,11 @@ class AJAX {
 			);
 		}
 
-		$data = apply_filters( 'ur_membership_after_create_membership_data_prepare', $data );
+			$data = apply_filters( 'ur_membership_after_create_membership_data_prepare', $data );
 
-		$old_membership_data = $membership->get_membership_details( $_POST['membership_id'] );
+			$old_membership_data = $membership->get_membership_details( $_POST['membership_id'] );
 
-		$updated_ID = wp_insert_post( $data['post_data'] );
+			$updated_ID = wp_insert_post( $data['post_data'] );
 
 		if ( $updated_ID ) {
 			if ( ! empty( $data['post_meta_data'] ) ) {
@@ -434,8 +434,8 @@ class AJAX {
 						$stripe_existing_product_price = $stripe_service->create_stripe_price_for_existing_product( $meta_data['payment_gateways']['stripe']['product_id'], $meta_data );
 
 						if ( isset( $stripe_existing_product_price['success'] ) && ur_string_to_bool( $stripe_existing_product_price['success'] ) ) {
-								$meta_data['payment_gateways']['stripe']['price_id'] = $stripe_existing_product_price['price']->id;
-								update_post_meta( $updated_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
+							$meta_data['payment_gateways']['stripe']['price_id'] = $stripe_existing_product_price['price']->id;
+							update_post_meta( $updated_ID, $data['post_meta_data']['ur_membership']['meta_key'], wp_json_encode( $meta_data ) );
 						} else {
 							wp_send_json_error(
 								array(
@@ -462,7 +462,7 @@ class AJAX {
 						}
 					}
 				} else {
-						$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data['post_data'], $meta_data, false );
+					$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data['post_data'], $meta_data, false );
 					if ( ur_string_to_bool( $stripe_price_and_product['success'] ) ) {
 						$meta_data['payment_gateways']['stripe']['product_id'] = $stripe_price_and_product['price']->product;
 						$meta_data['payment_gateways']['stripe']['price_id']   = $stripe_price_and_product['price']->id;
@@ -481,16 +481,16 @@ class AJAX {
 				$new_subscription = isset( $meta_data['subscription'] ) ? $meta_data['subscription'] : array();
 
 				$should_create_new_product = (
-				( isset( $old_membership_data['amount'] ) && $old_membership_data['amount'] !== $meta_data['amount'] ) ||
-				( isset( $old_subscription['value'] ) && isset( $new_subscription['value'] ) && $old_subscription['value'] !== $new_subscription['value'] ) ||
-				( isset( $old_subscription['duration'] ) && isset( $new_subscription['duration'] ) && $old_subscription['duration'] !== $new_subscription['duration'] )
+					( isset( $old_membership_data['amount'] ) && $old_membership_data['amount'] !== $meta_data['amount'] ) ||
+					( isset( $old_subscription['value'] ) && isset( $new_subscription['value'] ) && $old_subscription['value'] !== $new_subscription['value'] ) ||
+					( isset( $old_subscription['duration'] ) && isset( $new_subscription['duration'] ) && $old_subscription['duration'] !== $new_subscription['duration'] )
 				);
 
 				$meta_data = json_decode( $data['post_meta_data']['ur_membership']['meta_value'], true );
 
 				if ( $should_create_new_product || empty( $meta_data['payment_gateways']['stripe']['product_id'] ) ) {
-						$data['membership_id']    = $updated_ID;
-						$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data['post_data'], $meta_data, $should_create_new_product );
+					$data['membership_id']    = $updated_ID;
+					$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $data['post_data'], $meta_data, $should_create_new_product );
 
 					if ( ur_string_to_bool( $stripe_price_and_product['success'] ) ) {
 						$meta_data['payment_gateways']['stripe']['product_id'] = $stripe_price_and_product['price']->product;
@@ -2376,37 +2376,8 @@ class AJAX {
 			$update_data['expiry_date'] = ! empty( $subscription_data['expiry_date'] ) ? sanitize_text_field( $subscription_data['expiry_date'] ) : null;
 		}
 
-		$expiry_date_in_past = false;
-		if ( ! empty( $expiry_date ) ) {
-			$expiry_timestamp    = strtotime( $expiry_date );
-			$current_timestamp   = time();
-			$expiry_date_in_past = $expiry_timestamp < $current_timestamp;
-		}
-
-		$has_no_trial = empty( $trial_start_date ) && empty( $trial_end_date );
-
 		if ( isset( $subscription_data['status'] ) ) {
-			$requested_status = sanitize_text_field( $subscription_data['status'] );
-
-			if ( $expiry_date_in_past && 'active' === $requested_status ) {
-				wp_send_json_error(
-					array(
-						'message' => __( 'Cannot activate subscription with past expiry date.', 'user-registration' ),
-					)
-				);
-			}
-
-			if ( $trial_has_ended && ( isset( $subscription_data['trial_start_date'] ) || isset( $subscription_data['trial_end_date'] ) ) ) {
-				$update_data['status'] = $original_status;
-			} else { // phpcs:ignore Universal.ControlStructures.DisallowLonelyIf.Found
-				if ( $expiry_date_in_past && ( $has_no_trial || $trial_has_ended ) ) {
-					$update_data['status'] = 'trial';
-				} else {
-					$update_data['status'] = $requested_status;
-				}
-			}
-		} elseif ( $expiry_date_in_past && ( $has_no_trial || $trial_has_ended ) ) {
-			$update_data['status'] = 'trial';
+			$update_data['status'] = sanitize_text_field( $subscription_data['status'] );
 		}
 
 		if ( isset( $subscription_data['subscription_id'] ) ) {

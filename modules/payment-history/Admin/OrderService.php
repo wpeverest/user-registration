@@ -241,7 +241,7 @@ class OrderService {
 				if ( $is_renewing ) {
 					$members_subscription_repo      = new MembersSubscriptionRepository();
 					$membership_repository          = new MembershipRepository();
-					$member_subscription            = $members_subscription_repo->get_member_subscription( $user_id );
+					$member_subscription            = $members_subscription_repo->get_subscription_data_by_subscription_id( $subscription_id );
 					$membership                     = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
 					$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 					$membership_metas['post_title'] = $membership['post_title'];
