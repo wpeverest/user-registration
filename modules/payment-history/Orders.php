@@ -290,50 +290,22 @@ class Orders {
 		}
 		$enable_members_button = true;
 		?>
-<hr class="wp-header-end">
-		<?php echo user_registration_plugin_main_header(); ?>
-<div id="payment-detail-modal" class="modal">
-	<div class="modal-content">
-		<div class="modal-header">
-			<span class="close-button">&times;</span>
-			<h2><?php echo __( 'Transaction Details', 'user-registration' ); ?></h2>
-			<hr>
+		<hr class="wp-header-end">
+				<?php echo user_registration_plugin_main_header(); ?>
+		<div id="payment-detail-modal" class="modal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<span class="close-button">&times;</span>
+					<h2><?php echo __( 'Transaction Details', 'user-registration' ); ?></h2>
+					<hr>
+				</div>
+				<div class="modal-body">
+				</div>
+			</div>
 		</div>
-		<div class="modal-body">
-		</div>
-	</div>
-</div>
-<div id="user-registration-list-table-page">
-	<div class="user-registration-list-table-heading" id="ur-users-page-topnav">
-		<div class="ur-page-title__wrapper">
-			<h1>
-				<?php esc_html_e( 'Payment History', 'user-registration' ); ?>
-			</h1>
-		</div>
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_new_payment' ) ); ?>"
-			id="user-registration-members-add-btn" class="page-title-action">
-			<?php esc_html_e( 'Add New', 'user-registration' ); ?>
-		</a>
-	</div>
-	<div id="user-registration-pro-filters-row" style="align-items: center;">
-		<div class="ur-membership-filter-container" style="display: flex;align-items: center; gap: 10px">
-			<form method="get" id="user-registration-users-search-form" style="display: flex; width: auto; gap: 20px">
-				<input type="hidden" name="page" value="<?php echo $this->page; ?>" />
-				<?php
-						$orders_list_table->display_advance_filter();
-				?>
-			</form>
-		</div>
-
-	</div>
-	<hr>
-	<form method="get" id="ur-membership-payment-history-form">
-		<input type="hidden" name="page" value="<?php echo $this->page; ?>" />
 		<?php
-				$orders_list_table->display_page();
+		$orders_list_table->display_page();
 		?>
-	</form>
-</div>
 		<?php
 	}
 
