@@ -22,8 +22,8 @@
 					$tab_count = count( $membership_tabs );
 
 					foreach ( $membership_tabs as $index => $tab ) :
-						$is_first = ( $index === 0 );
-						$is_last = ( $index === $tab_count - 1 );
+						$is_first     = ( $index === 0 );
+						$is_last      = ( $index === $tab_count - 1 );
 						$active_class = $is_first ? 'ur-page-title__wrapper--steps-btn-active' : '';
 						?>
 						<button class="ur-page-title__wrapper--steps-btn <?php echo esc_attr( $active_class ); ?>"
@@ -61,9 +61,7 @@
 										value="1"
 										<?php
 										checked(
-											true,
-											isset( $membership_content['status'] ) && 'true' === $membership_content['status'] ? ur_string_to_bool( $membership_content['status'] ) : true,
-											true
+											! isset( $membership_content['status'] ) || '1' == $membership_content['status']
 										);
 										?>
 										>
@@ -75,7 +73,7 @@
 						<div class="ur-page-title__wrapper--actions-publish">
 							<button class="button-primary ur-membership-save-btn" type="submit">
 
-								<?php !empty($membership_id) ? esc_html_e( 'Save', 'user-registration' ) : esc_html_e( 'Publish', 'user-registration' ); ?>
+								<?php ! empty( $membership_id ) ? esc_html_e( 'Save', 'user-registration' ) : esc_html_e( 'Publish', 'user-registration' ); ?>
 							</button>
 						</div>
 					</div>
