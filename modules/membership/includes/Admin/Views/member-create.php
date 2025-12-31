@@ -1,5 +1,5 @@
 <?php
-$return_url         = admin_url( 'admin.php?page=user-registration-members' );
+$return_url         = admin_url( 'admin.php?page=user-registration-users' );
 $membership_details = ! empty( $member_membership ) && ! empty( $member_membership['meta_value'] ) ? json_decode( $member_membership['meta_value'], true ) : array();
 $membership         = apply_filters( 'build_membership_list_frontend', array( (array) $membership_details ) );
 $status_class       = ! empty( $member_subscription ) ? 'user-registration-badge user-registration-badge--' . $member_subscription['status'] : '';
