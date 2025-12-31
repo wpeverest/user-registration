@@ -1,47 +1,48 @@
-import React, { useEffect, useState } from "react";
+import { AddIcon, ChevronDownIcon, CloseIcon } from "@chakra-ui/icons";
 import {
 	Box,
-	Text,
-	Heading,
-	VStack,
-	HStack,
-	Input,
-	InputGroup,
 	Button,
-	Select,
+	ButtonGroup,
 	Card,
 	CardBody,
-	useColorModeValue,
-	ButtonGroup,
+	Checkbox,
 	Flex,
+	Heading,
+	HStack,
+	IconButton,
+	Input,
+	InputGroup,
 	Menu,
 	MenuButton,
-	MenuList,
 	MenuItem,
-	Tag,
-	TagLabel,
-	TagCloseButton,
-	IconButton,
-	Wrap,
-	WrapItem,
+	MenuList,
 	Popover,
-	PopoverTrigger,
-	PopoverContent,
 	PopoverBody,
-	Checkbox,
+	PopoverContent,
+	PopoverTrigger,
+	Select,
+	Spinner,
+	Tag,
+	TagCloseButton,
+	TagLabel,
+	Text,
+	useColorModeValue,
 	useDisclosure,
-	Spinner
+	VStack,
+	Wrap,
+	WrapItem
 } from "@chakra-ui/react";
-import { AddIcon, CloseIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { useStateValue } from "../../context/StateProvider";
-import {
-	MembershipPlan,
-	MembershipPlanType,
-	BillingPeriod,
-	ContentAccess
-} from "../../context/Gettingstartedcontext";
-import { apiGet } from "../../api/gettingStartedApi";
 import { __ } from "@wordpress/i18n";
+import React, { useEffect, useState } from "react";
+import { apiGet } from "../../api/gettingStartedApi";
+import {
+	BillingPeriod,
+	ContentAccess,
+	MembershipPlan,
+	MembershipPlanType
+} from "../../context/Gettingstartedcontext";
+import { useStateValue } from "../../context/StateProvider";
+import { DeleteIcon } from "../Icon/Icon";
 
 interface ContentOption {
 	value: number;
@@ -102,13 +103,13 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 						bg={inputBg}
 						border="1px solid"
 						borderColor={isOpen ? "#475BB2" : borderColor}
-						borderRadius="md"
+						borderRadius="4px"
 						textAlign="left"
 						cursor="pointer"
 						_hover={{ borderColor: "gray.300" }}
 						_focus={{
 							borderColor: "#475BB2",
-							boxShadow: "0 0 0 1px #475BB2",
+							boxShadow: "none",
 							outline: "none"
 						}}
 					>
@@ -119,12 +120,12 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 										<WrapItem key={opt.value}>
 											<Tag
 												size="sm"
-												borderRadius="sm"
-												variant="outline"
-												colorScheme="gray"
-												bg="gray.100"
+												borderRadius="2px"
+												variant="solid"
+												bg="#EDEFF7"
+												color="#383838"
 											>
-												<TagLabel fontSize="sm">
+												<TagLabel fontSize="14px">
 													{opt.label}
 												</TagLabel>
 												<TagCloseButton
@@ -139,7 +140,7 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 										</WrapItem>
 									))
 								) : (
-									<Text color="gray.400" fontSize="sm">
+									<Text color="gray.400" fontSize="14px">
 										{placeholder}
 									</Text>
 								)}
@@ -155,7 +156,7 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 					boxShadow="lg"
 					border="1px solid"
 					borderColor="gray.200"
-					borderRadius="md"
+					borderRadius="4px"
 					zIndex={10}
 					mt={1}
 				>
@@ -177,11 +178,16 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 										mr={2}
 										colorScheme="blue"
 									/>
-									<Text fontSize="sm">{opt.label}</Text>
+									<Text fontSize="14px">{opt.label}</Text>
 								</Flex>
 							))
 						) : (
-							<Text px={3} py={2} color="gray.500" fontSize="sm">
+							<Text
+								px={3}
+								py={2}
+								color="gray.500"
+								fontSize="14px"
+							>
 								No options available
 							</Text>
 						)}
@@ -198,6 +204,8 @@ interface MembershipCardProps {
 	posts: ContentOption[];
 	canCreatePaid: boolean;
 	isPro: boolean;
+	onDelete: (id: string) => void;
+	showDelete: boolean;
 }
 
 const MembershipCard: React.FC<MembershipCardProps> = ({
@@ -205,16 +213,16 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	pages,
 	posts,
 	canCreatePaid,
-	isPro
+	isPro,
+	onDelete,
+	showDelete
 }) => {
 	const { dispatch } = useStateValue();
 
 	const cardBg = useColorModeValue("white", "gray.800");
 	const borderColor = useColorModeValue("gray.200", "gray.600");
-	const labelColor = useColorModeValue("gray.700", "gray.300");
+	const labelColor = useColorModeValue("#383838", "gray.300");
 	const inputBg = useColorModeValue("white", "gray.700");
-	const accessBg = useColorModeValue("green.50", "green.900");
-	const accessBorderColor = useColorModeValue("green.200", "green.700");
 
 	useEffect(() => {
 		if (!isPro && plan.billingPeriod !== "one-time") {
@@ -227,13 +235,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 			});
 		}
 	}, [isPro, plan.id, plan.billingPeriod, dispatch]);
-
-	const handleCancelPlan = () => {
-		dispatch({
-			type: "REMOVE_MEMBERSHIP_PLAN",
-			payload: plan.id
-		});
-	};
 
 	const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		dispatch({
@@ -271,7 +272,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 		});
 	};
 
-	const handleAddContentAccess = (type: "pages" | "posts") => {
+	const handleAddContentAccess = (type: "pages" | "posts" | "wholesite") => {
 		if (plan.contentAccess.some((a) => a.type === type)) {
 			return;
 		}
@@ -317,6 +318,13 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 
 	const hasPages = plan.contentAccess.some((a) => a.type === "pages");
 	const hasPosts = plan.contentAccess.some((a) => a.type === "posts");
+	const hasWholeSite = plan.contentAccess.some((a) => a.type === "wholesite");
+
+	// Sort content access: wholesite first, then pages, then posts
+	const sortedContentAccess = [...plan.contentAccess].sort((a, b) => {
+		const order = { wholesite: 0, pages: 1, posts: 2 };
+		return (order[a.type] ?? 3) - (order[b.type] ?? 3);
+	});
 
 	const getOptionsForAccess = (access: ContentAccess): ContentOption[] => {
 		if (access.type === "pages") return pages;
@@ -327,7 +335,38 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	const labelForAccess = (access: ContentAccess) => {
 		if (access.type === "pages") return "Pages:";
 		if (access.type === "posts") return "Posts:";
+		if (access.type === "wholesite") return "Whole Site:";
 		return access.type + ":";
+	};
+
+	const placeholderForAccess = (access: ContentAccess) => {
+		if (access.type === "pages") return "Select pages";
+		if (access.type === "posts") return "Select posts";
+		return "Select...";
+	};
+
+	// Input field styles
+	const inputStyles = {
+		fontSize: "14px",
+		bg: inputBg,
+		borderColor: borderColor,
+		borderRadius: "4px",
+		_hover: { borderColor: "gray.300" },
+		_focus: {
+			borderColor: "#475BB2",
+			boxShadow: "none",
+			borderRadius: "4px"
+		},
+		_placeholder: { fontSize: "14px", color: "gray.400" }
+	};
+
+	// Label styles
+	const labelStyles = {
+		minW: "100px",
+		fontWeight: "600",
+		color: labelColor,
+		fontSize: "14px",
+		flexShrink: 0
 	};
 
 	return (
@@ -335,68 +374,46 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 			bg={cardBg}
 			borderWidth="1px"
 			borderColor={borderColor}
-			borderRadius="lg"
+			borderRadius="8px"
 			mb={4}
 			boxShadow="none"
 		>
 			<CardBody p={6}>
 				<VStack spacing={5} align="stretch">
 					<Flex align="center">
-						<Text
-							minW="100px"
-							fontWeight="500"
-							color={labelColor}
-							flexShrink={0}
-						>
-							{__("Plan Name", "user-registration")}
+						<Text {...labelStyles}>
+							{__("Plan Name :", "user-registration")}
 						</Text>
 						<Input
 							flex={1}
 							value={plan.name}
 							onChange={handleNameChange}
 							placeholder="Enter plan name"
-							bg={inputBg}
-							borderColor={borderColor}
-							_hover={{ borderColor: "gray.300" }}
-							_focus={{
-								borderColor: "#475BB2",
-								boxShadow: "0 0 0 1px #475BB2"
-							}}
+							{...inputStyles}
 						/>
-
-						{plan.isNew && (
-							<IconButton
-								aria-label="Cancel new plan"
-								icon={<CloseIcon boxSize={2.5} />}
-								size="sm"
-								variant="ghost"
-								colorScheme="red"
-								ml={3}
-								onClick={handleCancelPlan}
-							/>
-						)}
 					</Flex>
 
 					<Flex align="center">
-						<Text
-							minW="100px"
-							fontWeight="500"
-							color={labelColor}
-							flexShrink={0}
-						>
-							Type :
+						<Text {...labelStyles}>
+							{__("Type :", "user-registration")}
 						</Text>
-						<ButtonGroup size="sm" isAttached variant="outline">
+						<ButtonGroup
+							size="sm"
+							isAttached
+							variant="outline"
+							borderRadius="4px"
+						>
 							<Button
 								bg={plan.type === "free" ? "#475BB2" : "white"}
 								color={
-									plan.type === "free" ? "white" : "gray.700"
+									plan.type === "free" ? "white" : "#383838"
 								}
 								borderColor={
 									plan.type === "free"
 										? "#475BB2"
 										: "gray.200"
 								}
+								borderRadius="4px 0 0 4px"
 								_hover={{
 									bg:
 										plan.type === "free"
@@ -405,19 +422,23 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 								}}
 								onClick={() => handleTypeChange("free")}
 								px={6}
+								fontSize="14px"
+								fontWeight="500"
+								h="36px"
 							>
-								Free
+								{__("Free", "user-registration")}
 							</Button>
 							<Button
 								bg={plan.type === "paid" ? "#475BB2" : "white"}
 								color={
-									plan.type === "paid" ? "white" : "gray.700"
+									plan.type === "paid" ? "white" : "#383838"
 								}
 								borderColor={
 									plan.type === "paid"
 										? "#475BB2"
 										: "gray.200"
 								}
+								borderRadius="0 4px 4px 0"
 								_hover={{
 									bg:
 										plan.type === "paid"
@@ -426,6 +447,9 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 								}}
 								onClick={() => handleTypeChange("paid")}
 								px={6}
+								fontSize="14px"
+								fontWeight="500"
+								h="36px"
 								isDisabled={!canCreatePaid}
 								opacity={canCreatePaid ? 1 : 0.5}
 								cursor={
@@ -437,173 +461,256 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 										: ""
 								}
 							>
-								Paid
+								{__("Paid", "user-registration")}
 							</Button>
 						</ButtonGroup>
 					</Flex>
 
 					{plan.type === "paid" && (
 						<Flex align="center">
-							<Text
-								minW="100px"
-								fontWeight="500"
-								color={labelColor}
-								flexShrink={0}
-							>
-								{__("Price", "user-registration")}
+							<Text {...labelStyles}>
+								{__("Price :", "user-registration")}
 							</Text>
 							<HStack spacing={3} flex={1}>
-								<InputGroup maxW="150px">
+								<InputGroup maxW="120px">
 									<Input
 										value={plan.price}
 										onChange={handlePriceChange}
-										bg={inputBg}
-										borderColor={borderColor}
+										{...inputStyles}
 									/>
 								</InputGroup>
 								{isPro && (
 									<Select
 										value={plan.billingPeriod}
 										onChange={handleBillingPeriodChange}
-										maxW="130px"
-										bg={inputBg}
-										borderColor={borderColor}
+										maxW="120px"
+										{...inputStyles}
 									>
-										<>
-											<option value="weekly">
-												Weekly
-											</option>
-											<option value="monthly">
-												Monthly
-											</option>
-											<option value="yearly">
-												Yearly
-											</option>
-											<option value="one-time">
-												One-Time
-											</option>
-										</>
+										<option value="weekly">Weekly</option>
+										<option value="monthly">Monthly</option>
+										<option value="yearly">Annually</option>
+										<option value="one-time">
+											One-Time
+										</option>
 									</Select>
 								)}
 							</HStack>
 						</Flex>
 					)}
 
-					{plan.contentAccess.length > 0 && (
-						<Box
-							bg={accessBg}
-							borderRadius="md"
-							p={4}
-							borderWidth="1px"
-							borderColor={accessBorderColor}
-						>
-							<Text
-								color="green.600"
-								fontWeight="500"
-								mb={3}
-								fontSize="sm"
-							>
-								Access ▾
-							</Text>
-							<VStack spacing={3} align="stretch">
-								{plan.contentAccess.map((access) => {
-									const options = getOptionsForAccess(access);
-									return (
-										<Flex
-											key={access.id}
-											align="center"
-											bg="white"
-											borderRadius="md"
-											borderWidth="1px"
-											borderColor="gray.200"
-											p={3}
-										>
-											<Text
-												minW="70px"
-												fontWeight="500"
-												color={labelColor}
-												fontSize="sm"
-												flexShrink={0}
-											>
-												{labelForAccess(access)}
-											</Text>
-											<Box flex="1" mx={2}>
-												<Select2MultiSelect
-													options={options}
-													value={access.value}
-													onChange={(ids) =>
-														handleAccessValueChange(
-															access,
-															ids
-														)
-													}
-													placeholder={
-														access.type === "pages"
-															? "Select pages"
-															: "Select posts"
-													}
-												/>
-											</Box>
-											<IconButton
-												aria-label="Remove access"
-												icon={<CloseIcon boxSize={2} />}
-												size="xs"
-												variant="ghost"
-												colorScheme="red"
-												onClick={() =>
-													handleRemoveContentAccess(
-														access.id
-													)
-												}
-											/>
-										</Flex>
-									);
-								})}
-							</VStack>
-						</Box>
-					)}
+					<Flex align="flex-start">
+						<Text {...labelStyles} pt={2}>
+							{__("Access :", "user-registration")}
+						</Text>
+						<VStack spacing={3} align="stretch" flex={1}>
+							{/* Single container box for all access items */}
+							{sortedContentAccess.length > 0 && (
+								<Box
+									bg="white"
+									borderRadius="4px"
+									borderWidth="1px"
+									borderColor="gray.200"
+									p={4}
+								>
+									<VStack spacing={4} align="stretch">
+										{sortedContentAccess.map((access) => {
+											const isWholeSite =
+												access.type === "wholesite";
+											const options =
+												getOptionsForAccess(access);
 
-					<Flex>
-						<Menu>
-							<MenuButton
-								as={Button}
-								leftIcon={<AddIcon boxSize={3} />}
-								variant="outline"
-								colorScheme="blue"
-								borderColor="#475BB2"
-								color="#475BB2"
-								_hover={{ bg: "blue.50" }}
-							>
-								Content
-							</MenuButton>
-							<MenuList>
-								<MenuItem
-									onClick={() =>
-										handleAddContentAccess("pages")
-									}
-									isDisabled={hasPages}
-									opacity={hasPages ? 0.5 : 1}
-									cursor={
-										hasPages ? "not-allowed" : "pointer"
-									}
-								>
-									Pages
-								</MenuItem>
-								<MenuItem
-									onClick={() =>
-										handleAddContentAccess("posts")
-									}
-									isDisabled={hasPosts}
-									opacity={hasPosts ? 0.5 : 1}
-									cursor={
-										hasPosts ? "not-allowed" : "pointer"
-									}
-								>
-									Posts
-								</MenuItem>
-							</MenuList>
-						</Menu>
+											return (
+												<Flex
+													key={access.id}
+													align="center"
+													role="group"
+												>
+													<Text
+														minW="80px"
+														fontWeight="500"
+														color={labelColor}
+														fontSize="14px"
+														flexShrink={0}
+													>
+														{labelForAccess(access)}
+													</Text>
+													{isWholeSite ? (
+														<Box
+															flex="1"
+															mx={2}
+															minH="40px"
+															px={3}
+															py={2}
+															bg={inputBg}
+															border="1px solid"
+															borderColor={
+																borderColor
+															}
+															borderRadius="4px"
+															display="flex"
+															alignItems="center"
+														>
+															<Tag
+																size="sm"
+																borderRadius="2px"
+																variant="solid"
+																bg="#EDEFF7"
+																color="#383838"
+															>
+																<TagLabel fontSize="14px">
+																	{__(
+																		"Whole Site",
+																		"user-registration"
+																	)}
+																</TagLabel>
+															</Tag>
+														</Box>
+													) : (
+														<Box flex="1" mx={2}>
+															<Select2MultiSelect
+																options={
+																	options
+																}
+																value={
+																	access.value
+																}
+																onChange={(
+																	ids
+																) =>
+																	handleAccessValueChange(
+																		access,
+																		ids
+																	)
+																}
+																placeholder={placeholderForAccess(
+																	access
+																)}
+															/>
+														</Box>
+													)}
+													<IconButton
+														aria-label="Remove access"
+														icon={
+															<CloseIcon
+																boxSize={2}
+															/>
+														}
+														size="sm"
+														variant="ghost"
+														opacity={0}
+														color="red.500"
+														_groupHover={{
+															opacity: 1
+														}}
+														_hover={{
+															bg: "red.50"
+														}}
+														onClick={() =>
+															handleRemoveContentAccess(
+																access.id
+															)
+														}
+													/>
+												</Flex>
+											);
+										})}
+									</VStack>
+								</Box>
+							)}
+
+							<Box>
+								<Menu>
+									<MenuButton
+										as={Button}
+										leftIcon={<AddIcon boxSize={2.5} />}
+										variant="solid"
+										bg="#EDEFF7"
+										color="#475BB2"
+										fontSize="14px"
+										fontWeight="500"
+										h="32px"
+										px={3}
+										borderRadius="4px"
+										border="1px solid"
+										borderColor="#F8F8FA"
+										_hover={{ bg: "#E2E6F3" }}
+										_active={{ bg: "#D8DCF0" }}
+									>
+										{__("Content", "user-registration")}
+									</MenuButton>
+									<MenuList borderRadius="4px" boxShadow="md">
+										<MenuItem
+											onClick={() =>
+												handleAddContentAccess(
+													"wholesite"
+												)
+											}
+											isDisabled={hasWholeSite}
+											opacity={hasWholeSite ? 0.5 : 1}
+											cursor={
+												hasWholeSite
+													? "not-allowed"
+													: "pointer"
+											}
+											fontSize="14px"
+										>
+											{__(
+												"Whole Site",
+												"user-registration"
+											)}
+										</MenuItem>
+										<MenuItem
+											onClick={() =>
+												handleAddContentAccess("pages")
+											}
+											isDisabled={hasPages}
+											opacity={hasPages ? 0.5 : 1}
+											cursor={
+												hasPages
+													? "not-allowed"
+													: "pointer"
+											}
+											fontSize="14px"
+										>
+											{__("Pages", "user-registration")}
+										</MenuItem>
+										<MenuItem
+											onClick={() =>
+												handleAddContentAccess("posts")
+											}
+											isDisabled={hasPosts}
+											opacity={hasPosts ? 0.5 : 1}
+											cursor={
+												hasPosts
+													? "not-allowed"
+													: "pointer"
+											}
+											fontSize="14px"
+										>
+											{__("Posts", "user-registration")}
+										</MenuItem>
+									</MenuList>
+								</Menu>
+							</Box>
+						</VStack>
 					</Flex>
+
+					{showDelete && (
+						<Flex justify="flex-end">
+							<IconButton
+								aria-label="Delete membership"
+								icon={<DeleteIcon />}
+								size="sm"
+								variant="ghost"
+								color="gray.400"
+								_hover={{
+									color: "red.500",
+									bg: "transparent"
+								}}
+								onClick={() => onDelete(plan.id)}
+							/>
+						</Flex>
+					)}
 				</VStack>
 			</CardBody>
 		</Card>
@@ -614,7 +721,7 @@ const MembershipStep: React.FC = () => {
 	const { state, dispatch } = useStateValue();
 	const { membershipPlans, membershipSetupType } = state;
 
-	const textColor = useColorModeValue("gray.800", "white");
+	const textColor = useColorModeValue("#383838", "white");
 	const subtextColor = useColorModeValue("gray.600", "gray.300");
 
 	const [pages, setPages] = useState<ContentOption[]>([]);
@@ -680,6 +787,13 @@ const MembershipStep: React.FC = () => {
 		dispatch({ type: "ADD_MEMBERSHIP_PLAN" });
 	};
 
+	const handleDeletePlan = (id: string) => {
+		dispatch({
+			type: "REMOVE_MEMBERSHIP_PLAN",
+			payload: id
+		});
+	};
+
 	if (isLoadingData) {
 		return (
 			<Flex justify="center" align="center" minH="200px">
@@ -691,24 +805,24 @@ const MembershipStep: React.FC = () => {
 	return (
 		<>
 			<Heading
-				size="lg"
 				fontFamily="Inter"
 				fontWeight={600}
-				fontSize="21px"
+				fontSize="24px"
 				lineHeight="34px"
 				letterSpacing="-0.01em"
 				color={textColor}
-				mb={2}
+				mb={3}
 			>
 				{__("Create Membership", "user-registration")}
 			</Heading>
 
-			<Text fontSize="sm" color={subtextColor} mb={8}>
+			<Text fontSize="14px" color={subtextColor} mb={8}>
 				{__(
 					"Create your first membership plan. Choose what content to protect. You can edit this anytime.",
 					"user-registration"
 				)}
 			</Text>
+
 			<VStack spacing={4} align="stretch" mb={6}>
 				{membershipPlans.map((plan) => (
 					<MembershipCard
@@ -718,21 +832,30 @@ const MembershipStep: React.FC = () => {
 						posts={posts}
 						canCreatePaid={canCreatePaid}
 						isPro={isPro}
+						onDelete={handleDeletePlan}
+						showDelete={membershipPlans.length > 1}
 					/>
 				))}
 			</VStack>
 
 			<Flex justify="center">
 				<Button
-					leftIcon={<AddIcon boxSize={3} />}
+					leftIcon={<AddIcon boxSize={2.5} />}
 					variant="outline"
-					colorScheme="blue"
-					borderColor="#475BB2"
+					borderRadius="4px"
+					borderColor="#F8F8FA"
+					bg="#EDEFF7"
 					color="#475BB2"
-					_hover={{ bg: "blue.50" }}
+					fontSize="14px"
+					fontWeight="500"
+					px={6}
+					py={4}
+					h="auto"
+					_hover={{ bg: "#E2E6F3" }}
+					_active={{ bg: "#D8DCF0" }}
 					onClick={handleAddPlan}
 				>
-					{__("Add More", "user-registration")}
+					{__("Add Membership", "user-registration")}
 				</Button>
 			</Flex>
 		</>

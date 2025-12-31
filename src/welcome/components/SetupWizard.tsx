@@ -1,24 +1,24 @@
-import React, { useEffect, useMemo } from "react";
-import { Box, Button, Flex, Link, useColorModeValue } from "@chakra-ui/react";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import { useStateValue } from "../context/StateProvider";
-import {
-	MembershipPlan,
-	MembershipSetupType
-} from "../context/Gettingstartedcontext";
+import { Box, Button, Flex, Link, useColorModeValue } from "@chakra-ui/react";
+import React, { useEffect, useMemo } from "react";
 import {
 	apiGet,
 	apiPost,
 	mapApiToSetupType,
-	mapSetupToApiType,
-	mapPaymentSettingsToApi
+	mapPaymentSettingsToApi,
+	mapSetupToApiType
 } from "../api/gettingStartedApi";
+import {
+	MembershipPlan,
+	MembershipSetupType
+} from "../context/Gettingstartedcontext";
+import { useStateValue } from "../context/StateProvider";
 import Stepper from "./Stepper";
-import WelcomeStep from "./steps/WelcomeStep";
+import FinishStep from "./steps/FinishStep";
 import MembershipStep from "./steps/MembershipStep";
 import PaymentStep from "./steps/PaymentStep";
 import SettingsStep from "./steps/SettingsStep";
-import FinishStep from "./steps/FinishStep";
+import WelcomeStep from "./steps/WelcomeStep";
 
 interface StepConfig {
 	id: string;

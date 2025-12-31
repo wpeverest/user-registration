@@ -1,20 +1,20 @@
-import React, { useState } from "react";
 import {
 	Box,
-	Text,
+	Checkbox,
 	Heading,
-	VStack,
 	HStack,
+	Input,
+	Link,
 	Radio,
 	RadioGroup,
-	Checkbox,
-	Link,
-	Input,
-	useColorModeValue
+	Text,
+	useColorModeValue,
+	VStack
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
-import { useStateValue } from "../../context/StateProvider";
+import React, { useState } from "react";
 import { MembershipSetupType } from "../../context/Gettingstartedcontext";
+import { useStateValue } from "../../context/StateProvider";
 
 interface MembershipOptionProps {
 	value: MembershipSetupType;
@@ -56,7 +56,7 @@ const MembershipOption: React.FC<MembershipOptionProps> = ({
 				<Radio
 					value={value}
 					colorScheme="blue"
-					mt="2px"
+					mt="3px"
 					sx={{
 						"&[data-checked]": {
 							bg: "#475BB2",
@@ -64,14 +64,24 @@ const MembershipOption: React.FC<MembershipOptionProps> = ({
 						}
 					}}
 				/>
-				<VStack align="flex-start" spacing={0.5}>
-					<Text fontWeight="600" color={titleColor} fontSize="md">
+				<Box>
+					<Text
+						fontWeight="600"
+						color={titleColor}
+						fontSize="md"
+						lineHeight="20px"
+					>
 						{title}
 					</Text>
-					<Text fontSize="sm" color={descColor}>
+					<Text
+						fontSize="sm"
+						color={descColor}
+						mt={1}
+						lineHeight="20px"
+					>
 						{description}
 					</Text>
-				</VStack>
+				</Box>
 			</HStack>
 		</Box>
 	);
@@ -164,10 +174,7 @@ const WelcomeStep: React.FC = () => {
 					},
 					{
 						value: "other" as MembershipSetupType,
-						title: __(
-							"Advanced Registrations",
-							"user-registration"
-						),
+						title: __("Advanced Registration", "user-registration"),
 						description: __(
 							"Complete registration system to replace WordPress's basic signup. Custom signup fields, login & account pages, and user approval.",
 							"user-registration"

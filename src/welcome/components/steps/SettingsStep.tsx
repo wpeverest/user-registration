@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from "react";
 import {
-	Heading,
-	Text,
-	Box,
-	VStack,
+	Flex,
 	FormControl,
 	FormLabel,
-	Select,
-	Tooltip,
+	Heading,
 	Icon,
-	useColorModeValue,
+	Select,
 	Skeleton,
-	Flex
+	Text,
+	Tooltip,
+	useColorModeValue,
+	VStack
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
+import React, { useEffect, useState } from "react";
 import { apiGet } from "../../api/gettingStartedApi";
 import { useStateValue } from "../../context/StateProvider";
 
