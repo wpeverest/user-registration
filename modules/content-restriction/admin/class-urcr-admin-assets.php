@@ -218,6 +218,10 @@ class URCR_Admin_Assets {
 		// Prepare content type options.
 		$content_type_options = array(
 			array(
+				'value' => 'whole_site',
+				'label' => esc_html__( 'Whole Site', 'user-registration' ),
+			),
+			array(
 				'value' => 'pages',
 				'label' => esc_html__( 'Pages', 'user-registration' ),
 			),
@@ -232,11 +236,7 @@ class URCR_Admin_Assets {
 			array(
 				'value' => 'taxonomy',
 				'label' => esc_html__( 'Taxonomy', 'user-registration' ),
-			),
-			array(
-				'value' => 'whole_site',
-				'label' => esc_html__( 'Whole Site', 'user-registration' ),
-			),
+			)
 		);
 
 		/**
