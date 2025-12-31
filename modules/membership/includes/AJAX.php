@@ -79,7 +79,7 @@ class AJAX {
 			'upgrade_membership'           => false,
 			'add_multiple_membership'      => false,
 			'get_membership_details'       => false,
-			'validate_payment_currency'	   => false,
+			'validate_payment_currency'    => false,
 			'update_membership_order'      => false,
 			'fetch_upgrade_path'           => false,
 			'addons_get_lists'             => false,
@@ -387,9 +387,9 @@ class AJAX {
 		}
 		ur_membership_verify_nonce( 'ur_membership' );
 
-		$membership = new MembershipService();
-		$data       = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
-		$membership_details =  $membership->get_membership_details( $_POST['membership_id'] );
+		$membership         = new MembershipService();
+		$data               = isset( $_POST['membership_data'] ) ? (array) json_decode( wp_unslash( $_POST['membership_data'] ), true ) : array();
+		$membership_details = $membership->get_membership_details( $_POST['membership_id'] );
 		// Get rule data from POST if available (check both in POST directly and in membership_data)
 		$rule_data = null;
 		if ( isset( $_POST['urcr_membership_access_rule_data'] ) && ! empty( $_POST['urcr_membership_access_rule_data'] ) ) {
@@ -400,15 +400,15 @@ class AJAX {
 		$is_stripe_enabled = urm_is_payment_gateway_configured( 'stripe' );
 		$is_mollie_enabled = urm_is_payment_gateway_configured( 'mollie' );
 
-		$data['post_meta_data']['payment_gateways'] = isset( $membership_details['payment_gateways'] ) ? $membership_details['payment_gateways']: array();
-		$data = $membership->prepare_membership_post_data( $data );
+		$data['post_meta_data']['payment_gateways'] = isset( $membership_details['payment_gateways'] ) ? $membership_details['payment_gateways'] : array();
+		$data                                       = $membership->prepare_membership_post_data( $data );
 		if ( isset( $data['status'] ) && ! $data['status'] ) {
 			wp_send_json_error(
 				array(
 					'message' => $data['message'],
-					)
-				);
-			}
+				)
+			);
+		}
 
 			$data = apply_filters( 'ur_membership_after_create_membership_data_prepare', $data );
 
@@ -427,7 +427,7 @@ class AJAX {
 
 			if ( $is_stripe_enabled && 'free' !== $meta_data['type'] ) {
 				$stripe_service       = new StripeService();
-				$check_stripe_product = $stripe_service->check_exists_product_in_stripe( !empty( $meta_data['payment_gateways']['stripe']['product_id'] ) ? $meta_data['payment_gateways']['stripe']['product_id']  : '' );
+				$check_stripe_product = $stripe_service->check_exists_product_in_stripe( ! empty( $meta_data['payment_gateways']['stripe']['product_id'] ) ? $meta_data['payment_gateways']['stripe']['product_id'] : '' );
 
 				error_log( print_r( $check_stripe_product, true ) );
 				if ( isset( $check_stripe_product['success'] ) && true === $check_stripe_product['success'] ) {
@@ -2382,37 +2382,8 @@ class AJAX {
 			$update_data['expiry_date'] = ! empty( $subscription_data['expiry_date'] ) ? sanitize_text_field( $subscription_data['expiry_date'] ) : null;
 		}
 
-		$expiry_date_in_past = false;
-		if ( ! empty( $expiry_date ) ) {
-			$expiry_timestamp    = strtotime( $expiry_date );
-			$current_timestamp   = time();
-			$expiry_date_in_past = $expiry_timestamp < $current_timestamp;
-		}
-
-		$has_no_trial = empty( $trial_start_date ) && empty( $trial_end_date );
-
 		if ( isset( $subscription_data['status'] ) ) {
-			$requested_status = sanitize_text_field( $subscription_data['status'] );
-
-			if ( $expiry_date_in_past && 'active' === $requested_status ) {
-				wp_send_json_error(
-					array(
-						'message' => __( 'Cannot activate subscription with past expiry date.', 'user-registration' ),
-					)
-				);
-			}
-
-			if ( $trial_has_ended && ( isset( $subscription_data['trial_start_date'] ) || isset( $subscription_data['trial_end_date'] ) ) ) {
-				$update_data['status'] = $original_status;
-			} else { // phpcs:ignore Universal.ControlStructures.DisallowLonelyIf.Found
-				if ( $expiry_date_in_past && ( $has_no_trial || $trial_has_ended ) ) {
-					$update_data['status'] = 'trial';
-				} else {
-					$update_data['status'] = $requested_status;
-				}
-			}
-		} elseif ( $expiry_date_in_past && ( $has_no_trial || $trial_has_ended ) ) {
-			$update_data['status'] = 'trial';
+			$update_data['status'] = sanitize_text_field( $subscription_data['status'] );
 		}
 
 		if ( isset( $subscription_data['subscription_id'] ) ) {
@@ -2534,10 +2505,10 @@ class AJAX {
 	 *
 	 * @since 5.0.0
 	 */
-	public static function validate_payment_currency(){
+	public static function validate_payment_currency() {
 		check_ajax_referer( 'validate_local_payment_currency', 'security' );
 
-		$zone_id = ! empty( sanitize_text_field( wp_unslash( $_POST[ 'zone_id' ] ) ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'zone_id' ] ) ) : '';
+		$zone_id = ! empty( sanitize_text_field( wp_unslash( $_POST['zone_id'] ) ) ) ? sanitize_text_field( wp_unslash( $_POST['zone_id'] ) ) : '';
 
 		error_log( print_r( $zone_id, true ) );
 		if ( empty( $zone_id ) ) {
@@ -2549,7 +2520,7 @@ class AJAX {
 		}
 
 		$zone_data = CoreFunctions::ur_get_pricing_zone_by_id( $zone_id );
-		$currency  = $zone_data[ 'meta' ][ 'ur_local_currency' ][0];
+		$currency  = $zone_data['meta']['ur_local_currency'][0];
 
 		$currency_not_supported_payment_gateways = array();
 
