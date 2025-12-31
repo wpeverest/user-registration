@@ -595,6 +595,9 @@ body.user-registration #ur-membership-order-create-form {
   justify-content: space-between;
   padding-top: 0;
 }
+#user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form .wp-list-table.orders tbody tr:nth-child(odd) {
+  background: #F8F8FA;
+}
 @media (max-width: 767px) {
   #user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form #user-registration-base-list-filters-row {
     display: block;

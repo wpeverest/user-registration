@@ -626,6 +626,16 @@ body.user-registration {
 				padding-top: 0;
 			}
 
+			.wp-list-table.orders{
+				tbody{
+					tr{
+						&:nth-child(odd) {
+							background: #F8F8FA;
+						}
+					}
+				}
+			}
+
 			@media (max-width: 767px) {
 				#user-registration-base-list-filters-row {
 					display: block;
