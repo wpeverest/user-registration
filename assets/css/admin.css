@@ -15400,7 +15400,6 @@ body.user-registration-page #profile-page #your-profile #application-passwords-s
   flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
-  gap: 20px;
   margin-bottom: 40px;
 }
 #user-registration-base-list-table-page #user-registration-base-list-filters-row:has(.subsubsub) {
