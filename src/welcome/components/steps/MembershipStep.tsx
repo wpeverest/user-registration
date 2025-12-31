@@ -174,9 +174,9 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 								>
 									<Checkbox
 										isChecked={value.includes(opt.value)}
-										onChange={() => handleToggle(opt.value)}
 										mr={2}
 										colorScheme="blue"
+										pointerEvents="none"
 									/>
 									<Text fontSize="14px">{opt.label}</Text>
 								</Flex>
@@ -725,10 +725,22 @@ const MembershipStep: React.FC = () => {
 				setPages(content.pages || []);
 				setPosts(content.posts || []);
 
+				// Check if current plans have been modified by user
+				// Access current state to check for modifications
+				const currentPlans = state.membershipPlans;
+				const hasModifiedPlans = currentPlans.some(
+					(plan) =>
+						plan.name !== "" ||
+						plan.price !== "" ||
+						plan.contentAccess.length > 0
+				);
+
+				// Only hydrate from API if current plans are untouched
 				if (
 					res.memberships &&
 					Array.isArray(res.memberships) &&
-					res.memberships.length > 0
+					res.memberships.length > 0 &&
+					!hasModifiedPlans
 				) {
 					const hydratedPlans: MembershipPlan[] = res.memberships.map(
 						(m: any) => ({
@@ -757,7 +769,8 @@ const MembershipStep: React.FC = () => {
 		};
 
 		loadMembershipsData();
-	}, [dispatch]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleAddPlan = () => {
 		dispatch({ type: "ADD_MEMBERSHIP_PLAN" });
