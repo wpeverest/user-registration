@@ -472,28 +472,30 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 	return (
 		<div className="urcr-rule-settings-panel">
 
-			<div className={`urcr-label-input-pair urcr-rule-action ur-align-items-center ur-form-group ${isMembershipRule ? "urcr-hidden" : ""}`}>
-				<label className="urcr-label-container ur-col-4">
-					<span className="urcr-target-content-label">{__("Action", "user-registration")}</span>
-					<span className="urcr-puncher"></span>
-					<span className="user-registration-help-tip"
-						  data-tip={__("Action to perform for restricting the specified contents", "user-registration")}></span>
-				</label>
-				<div className="urcr-input-container">
-					<select
-						className="urcr-action-type-select urcr-condition-value-input"
-						value={actionType}
-						onChange={handleActionTypeChange}
-						style={{width: "100%"}}
-					>
-						<option value="message">{__("Show Message", "user-registration")}</option>
-						<option value="redirect">{__("Redirect", "user-registration")}</option>
-						<option value="local_page">{__("Redirect to a Local Page", "user-registration")}</option>
-						<option value="ur-form">{__("Show UR Form", "user-registration")}</option>
-						<option value="shortcode">{__("Render Shortcode", "user-registration")}</option>
-					</select>
+			{!isMembershipRule && (
+				<div className="urcr-label-input-pair urcr-rule-action ur-align-items-center ur-form-group">
+					<label className="urcr-label-container ur-col-4">
+						<span className="urcr-target-content-label">{__("Action", "user-registration")}</span>
+						<span className="urcr-puncher"></span>
+						<span className="user-registration-help-tip"
+							  data-tip={__("Action to perform for restricting the specified contents", "user-registration")}></span>
+					</label>
+					<div className="urcr-input-container">
+						<select
+							className="urcr-action-type-select urcr-condition-value-input"
+							value={actionType}
+							onChange={handleActionTypeChange}
+							style={{width: "100%"}}
+						>
+							<option value="message">{__("Show Message", "user-registration")}</option>
+							<option value="redirect">{__("Redirect", "user-registration")}</option>
+							<option value="local_page">{__("Redirect to a Local Page", "user-registration")}</option>
+							<option value="ur-form">{__("Show UR Form", "user-registration")}</option>
+							<option value="shortcode">{__("Render Shortcode", "user-registration")}</option>
+						</select>
+					</div>
 				</div>
-			</div>
+			)}
 
 			{actionType === "message" && (
 				<div
