@@ -1180,9 +1180,6 @@ class AJAX {
 		$cancel_status = $subscription_repository->cancel_subscription_by_id( $subscription_id );
 
 		if ( $cancel_status['status'] ) {
-			wp_destroy_current_session();
-			wp_clear_auth_cookie();
-			wp_set_current_user( 0 );
 
 			// Prepare data to register subscription cancellation event .
 			$payload = array(
