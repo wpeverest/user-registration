@@ -87,7 +87,7 @@ class ListTable extends \UR_List_Table {
 		}
 		$member_edit_url = add_query_arg(
 			array(
-				'action'   => 'edit',
+				'action'   => 'view',
 				'user_id'  => $subscription->user_id,
 				'_wpnonce' => wp_create_nonce( 'bulk-users' ),
 			),
