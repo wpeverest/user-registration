@@ -20,8 +20,17 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 	);
 	const [contentTargets, setContentTargets] = useState([]);
 
-	// Initialize root group from rule data
+	const prevRuleIdRef = useRef(rule.id);
+	const isUpdatingFromPropsRef = useRef(false);
+
 	useEffect(() => {
+		if (prevRuleIdRef.current === rule.id && rootGroup !== null) {
+			return;
+		}
+		
+		prevRuleIdRef.current = rule.id;
+		isUpdatingFromPropsRef.current = true;
+		
 		if (rule.logic_map) {
 			const initialGroup = {
 				id: rule.logic_map.id || `x${Date.now()}`,
@@ -67,12 +76,13 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 				conditions: [],
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rule.id]);
 
-	// Update accessControl when rule.access_control changes (e.g., when switching from settings)
 	useEffect(() => {
 		const newAccessControl = rule.access_control || (rule.content && rule.content.access_control);
 		if (newAccessControl && newAccessControl !== accessControl) {
+			isUpdatingFromPropsRef.current = true;
 			setAccessControl(newAccessControl);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -167,12 +177,27 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 		return { targetContents, logicMap };
 	};
 
-	// Sync state to rule prop when content state changes
 	const hasInitialized = useRef(false);
 	const prevContentState = useRef(null);
 
 	useEffect(() => {
+		hasInitialized.current = false;
+		prevContentState.current = null;
+	}, [rule.id]);
+
+	useEffect(() => {
 		if (!rootGroup) {
+			return;
+		}
+
+		if (isUpdatingFromPropsRef.current) {
+			prevContentState.current = {
+				rootGroup: JSON.stringify(rootGroup),
+				contentTargets: JSON.stringify(contentTargets),
+				accessControl,
+			};
+			hasInitialized.current = true;
+			isUpdatingFromPropsRef.current = false;
 			return;
 		}
 
@@ -197,34 +222,36 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 			prevContentState.current.contentTargets !== currentState.contentTargets ||
 			prevContentState.current.accessControl !== currentState.accessControl;
 
-		if (stateChanged) {
-			const contentData = buildContentDataFromState();
-			
-			if (contentData) {
-				const ruleData = rule.content || rule;
-				const currentActions = rule.actions || (rule.content && rule.content.actions) || ruleData.actions || [];
+		if (!stateChanged) {
+			return;
+		}
 
-				if (onRuleUpdate) {
-					const updatedRule = {
-						...rule,
+		const contentData = buildContentDataFromState();
+		
+		if (contentData) {
+			const ruleData = rule.content || rule;
+			const currentActions = rule.actions || (rule.content && rule.content.actions) || ruleData.actions || [];
+
+			if (onRuleUpdate) {
+				const updatedRule = {
+					...rule,
+					access_control: accessControl,
+					logic_map: contentData.logicMap,
+					target_contents: contentData.targetContents,
+					actions: currentActions,
+					content: {
+						...(rule.content || {}),
 						access_control: accessControl,
 						logic_map: contentData.logicMap,
 						target_contents: contentData.targetContents,
 						actions: currentActions,
-						content: {
-							...(rule.content || {}),
-							access_control: accessControl,
-							logic_map: contentData.logicMap,
-							target_contents: contentData.targetContents,
-							actions: currentActions,
-						}
-					};
-					onRuleUpdate(updatedRule);
-				}
+					}
+				};
+				onRuleUpdate(updatedRule);
 			}
-
-			prevContentState.current = currentState;
 		}
+
+		prevContentState.current = currentState;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rootGroup, contentTargets, accessControl]);
 

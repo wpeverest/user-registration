@@ -820,3 +820,42 @@ $border-color_6: #475bb2;
 		}
 	}
 }
+
+.urcr-membership-tabs {
+	display: flex;
+	gap: 0;
+	align-items: center;
+	margin-right: 8px;
+}
+
+.urcr-tab-button {
+	padding: 8px 16px;
+	font-size: 13px;
+	font-weight: 500;
+	color: $color_3;
+	background: transparent;
+	border: none;
+	border-bottom: 2px solid transparent;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	white-space: nowrap;
+	line-height: 1.5;
+
+	&:hover {
+		color: $color_5;
+	}
+
+	&.urcr-tab-active {
+		color: $color_5;
+		border-bottom-color: $color_5;
+		font-weight: 600;
+	}
+}
+
+.urcr-tab-content {
+	display: none !important;
+
+	&.urcr-tab-content-active {
+		display: block !important;
+	}
+}

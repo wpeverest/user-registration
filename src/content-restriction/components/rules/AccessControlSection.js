@@ -45,12 +45,12 @@ const AccessControlSection = ({
 	useEffect(() => {
 		const isMembershipRule = ruleType === "membership";
 		const ruleTypeChanged = lastRuleTypeRef.current !== ruleType;
-		
+
 		// Update ref to track ruleType changes
 		if (ruleTypeChanged) {
 			lastRuleTypeRef.current = ruleType;
 		}
-		
+
 		// For membership rules, always force access control to "access"
 		// Only correct on mount (when ruleType changes) or if value is wrong
 		if (isMembershipRule && accessControl !== "access") {
@@ -60,7 +60,7 @@ const AccessControlSection = ({
 			}
 			return;
 		}
-		
+
 		// For non-membership rules, if not pro and accessControl is "restrict", force to "access"
 		// Only correct when ruleType changes to prevent infinite loops
 		if (!isMembershipRule && !isProAccess() && accessControl === "restrict" && ruleTypeChanged) {
@@ -74,7 +74,7 @@ const AccessControlSection = ({
 			const isMembershipRule = ruleType === "membership";
 			// For membership rules, always use access class even if accessControl is "restrict"
 			const effectiveAccessControl = isMembershipRule ? "access" : accessControl;
-			
+
 			if (effectiveAccessControl === "access") {
 				conditionValueInputWrapperRef.current.classList.add("urcr-access-content");
 				conditionValueInputWrapperRef.current.classList.remove("urcr-restrict-content");
@@ -88,17 +88,17 @@ const AccessControlSection = ({
 	const handleAccessControlChange = (option) => {
 		const newValue = option.value;
 		const isMembershipRule = ruleType === "membership";
-		
+
 		// For membership rules, never allow restrict option
 		if (isMembershipRule && newValue === "restrict") {
 			return;
 		}
-		
+
 		// For non-membership rules, if not pro and trying to set restrict, prevent it
 		if (!isMembershipRule && !isProAccess() && newValue === "restrict") {
 			return;
 		}
-		
+
 		if (conditionValueInputWrapperRef.current) {
 			if (newValue === "access") {
 				conditionValueInputWrapperRef.current.classList.add("urcr-access-content");
@@ -108,18 +108,18 @@ const AccessControlSection = ({
 				conditionValueInputWrapperRef.current.classList.remove("urcr-access-content");
 			}
 		}
-		
+
 		onAccessControlChange(newValue);
 	};
 
 	const getAccessControlLabel = () => {
 		const isMembershipRule = ruleType === "membership";
-		
+
 		// For membership rules, always show "Access" even if accessControl is "restrict"
 		if (isMembershipRule) {
 			return __("Access", "user-registration");
 		}
-		
+
 		if (accessControl === "restrict") {
 			return __("Restrict", "user-registration");
 		}
@@ -128,14 +128,14 @@ const AccessControlSection = ({
 
 	const getAccessControlOptions = () => {
 		const isMembershipRule = ruleType === "membership";
-		
+
 		// For membership rules, never show restrict option (neither for free nor pro)
 		if (isMembershipRule) {
 			return [
 				{ value: "access", label: __("Access", "user-registration") },
 			];
 		}
-		
+
 		return [
 			...(isProAccess() ? [{ value: "restrict", label: __("Restrict", "user-registration") }] : []),
 			{ value: "access", label: __("Access", "user-registration") },
@@ -145,23 +145,32 @@ const AccessControlSection = ({
 		}));
 	};
 
+	const isMembershipRule = ruleType === "membership";
+
 	return (
 		<div className="urcr-target-selection-section ur-d-flex ur-align-items-start">
 			{/* Access/Restrict Section */}
 			<div className="urcr-condition-value-input-wrapper" ref={conditionValueInputWrapperRef}>
-				<DropdownButton
-					buttonContent={
-						<>
-							<span className="urcr-dropdown-button-text">{getAccessControlLabel()}</span>
-							<span className="urcr-dropdown-button-arrow dashicons dashicons-arrow-down-alt2"></span>
-						</>
-					}
-					options={getAccessControlOptions()}
-					value={ruleType === "membership" ? "access" : accessControl}
-					onSelect={handleAccessControlChange}
-					buttonClassName="urcr-access-control-button urcr-condition-value-input"
-					wrapperClassName="urcr-access-control-dropdown-wrapper"
-				/>
+				{isMembershipRule ? (
+					// For membership rules, show only "Access" text without dropdown
+					<span className="urcr-access-control-button urcr-condition-value-input urcr-dropdown-button">
+						<span className="urcr-dropdown-button-text">{__("Access", "user-registration")}</span>
+					</span>
+				) : (
+					<DropdownButton
+						buttonContent={
+							<>
+								<span className="urcr-dropdown-button-text">{getAccessControlLabel()}</span>
+								<span className="urcr-dropdown-button-arrow dashicons dashicons-arrow-down-alt2"></span>
+							</>
+						}
+						options={getAccessControlOptions()}
+						value={accessControl}
+						onSelect={handleAccessControlChange}
+						buttonClassName="urcr-access-control-button urcr-condition-value-input"
+						wrapperClassName="urcr-access-control-dropdown-wrapper"
+					/>
+				)}
 			</div>
 
 			<span className="urcr-arrow-icon" aria-hidden="true"></span>

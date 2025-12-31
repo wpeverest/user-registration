@@ -10,6 +10,7 @@ import {saveRuleWithCollectiveData} from "../../utils/rule-save-helper";
 /* global wp */
 
 const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
+	const isMembershipRule = rule.rule_type === "membership";
 	const [actionType, setActionType] = useState("message");
 	const [message, setMessage] = useState("");
 	const [redirectUrl, setRedirectUrl] = useState("");
@@ -25,6 +26,25 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 	useEffect(() => {
 		const ruleData = rule.content || rule;
 		const ruleActions = ruleData.actions || rule.actions || [];
+
+		if (isMembershipRule) {
+			setActionType("message");
+			if (ruleActions && ruleActions.length > 0 && ruleActions[0].message) {
+				try {
+					setMessage(decodeURIComponent(ruleActions[0].message));
+				} catch (e) {
+					setMessage(ruleActions[0].message);
+				}
+			} else {
+				setMessage("<p>" + __("You do not have sufficient permission to access this content.", "user-registration") + "</p>");
+			}
+			setRedirectUrl("");
+			setLocalPage("");
+			setUrForm("");
+			setShortcodeTag("");
+			setShortcodeArgs("");
+			return;
+		}
 
 		if (ruleActions && ruleActions.length > 0) {
 			const action = ruleActions[0];
@@ -83,7 +103,13 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			setShortcodeTag("");
 			setShortcodeArgs("");
 		}
-	}, [rule.id, rule.content, rule.actions]);
+	}, [rule.id, rule.content, rule.actions, isMembershipRule]);
+
+	useEffect(() => {
+		if (isMembershipRule && actionType !== "message") {
+			setActionType("message");
+		}
+	}, [isMembershipRule, actionType]);
 
 	// Initialize WordPress editor for message
 	useEffect(() => {
@@ -189,6 +215,9 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 	}));
 
 	const handleActionTypeChange = (e) => {
+		if (isMembershipRule) {
+			return;
+		}
 		const newType = e.target.value;
 		setActionType(newType);
 	};
@@ -198,8 +227,13 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 		const ruleData = rule.content || rule;
 		const ruleActions = ruleData.actions || rule.actions || [];
 
+		let effectiveActionType = actionType;
+		if (isMembershipRule) {
+			effectiveActionType = "message";
+		}
+
 		let currentMessage = message;
-		if (actionType === "message" && typeof wp !== "undefined" && wp.editor) {
+		if (effectiveActionType === "message" && typeof wp !== "undefined" && wp.editor) {
 			if (document.getElementById(editorId) && window.tinymce && window.tinymce.get(editorId)) {
 				currentMessage = wp.editor.getContent(editorId);
 			}
@@ -210,11 +244,11 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 
 		let actionData = {
 			id: ruleActions && ruleActions.length > 0 ? ruleActions[0].id : `x${Date.now()}`,
-			type: actionType,
+			type: effectiveActionType,
 			access_control: accessControl,
 		};
 
-		switch (actionType) {
+		switch (effectiveActionType) {
 			case "message":
 				actionData.label = __("Show Message", "user-registration");
 				actionData.message = currentMessage || "<p>" + __("You do not have sufficient permission to access this content.", "user-registration") + "</p>";
@@ -305,7 +339,16 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			prevActionState.current.shortcodeArgs !== currentState.shortcodeArgs;
 
 		if (stateChanged) {
+			let effectiveActionType = actionType;
+			if (isMembershipRule) {
+				effectiveActionType = "message";
+			}
+
 			const { actionData, accessControl: syncAccessControl } = buildActionDataFromState();
+			
+			if (isMembershipRule) {
+				actionData.type = "message";
+			}
 			
 			const currentLogicMap = rule.logic_map || (rule.content && rule.content.logic_map) || {
 				type: "group",
@@ -341,8 +384,13 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			const ruleData = rule.content || rule;
 			const ruleActions = ruleData.actions || rule.actions || [];
 
+			let effectiveActionType = actionType;
+			if (isMembershipRule) {
+				effectiveActionType = "message";
+			}
+
 			let currentMessage = message;
-			if (actionType === "message" && typeof wp !== "undefined" && wp.editor) {
+			if (effectiveActionType === "message" && typeof wp !== "undefined" && wp.editor) {
 				if (document.getElementById(editorId) && window.tinymce && window.tinymce.get(editorId)) {
 					currentMessage = wp.editor.getContent(editorId);
 				}
@@ -353,11 +401,11 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 
 			let actionData = {
 				id: ruleActions && ruleActions.length > 0 ? ruleActions[0].id : `x${Date.now()}`,
-				type: actionType,
+				type: effectiveActionType,
 				access_control: accessControl,
 			};
 
-			switch (actionType) {
+			switch (effectiveActionType) {
 				case "message":
 					actionData.label = __("Show Message", "user-registration");
 					actionData.message = currentMessage || "<p>" + __("You do not have sufficient permission to access this content.", "user-registration") + "</p>";
@@ -424,7 +472,7 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 	return (
 		<div className="urcr-rule-settings-panel">
 
-			<div className="urcr-label-input-pair urcr-rule-action ur-align-items-center ur-form-group">
+			<div className={`urcr-label-input-pair urcr-rule-action ur-align-items-center ur-form-group ${isMembershipRule ? "urcr-hidden" : ""}`}>
 				<label className="urcr-label-container ur-col-4">
 					<span className="urcr-target-content-label">{__("Action", "user-registration")}</span>
 					<span className="urcr-puncher"></span>
