@@ -105,4 +105,41 @@ class UR_Base_Layout {
 			</button>
 			<?php
 	}
+
+	/**
+	 * No items found text.
+	 */
+	public static function no_items($type) {
+		$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
+		$is_searching = ! empty( $_GET['s'] );
+
+		if ( $is_searching ) {
+			$search_value = sanitize_text_field( $_GET['s'] );
+			$primary_message = __( 'Oops, No results found.', 'user-registration' );
+			$secondary_message = sprintf(
+				/* translators: %s: search term */
+				__( 'Sorry no results found for <i>%s</i>.', 'user-registration' ),
+				esc_html( $search_value )
+			);
+		} else {
+			$primary_message = sprintf(
+				/* translators: %s: type */
+				__( 'You don’t have any %s yet.', 'user-registration' ),
+				esc_html( $type )
+			);
+
+			$secondary_message = sprintf(
+				/* translators: %s: type */
+				__( 'Please add %s and you’re good to go.', 'user-registration' ),
+				esc_html( strtolower( $type ) )
+			);
+		}
+		?>
+		<div class="empty-list-table-container">
+			<img src="<?php echo esc_url( $image_url ); ?>" alt="">
+			<h3><?php echo esc_html( $primary_message ); ?></h3>
+			<p><?php echo wp_kses_post( $secondary_message ); ?></p>
+		</div>
+		<?php
+	}
 }

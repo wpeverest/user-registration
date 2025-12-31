@@ -46,28 +46,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	 * No items found text.
 	 */
 	public function no_items() {
-		$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
-		$is_searching = ! empty( $_GET['s'] );
-
-		if ( $is_searching ) {
-			$search_value = sanitize_text_field( $_GET['s'] );
-			$primary_message = __( 'Oops, No result found.', 'user-registration' );
-			$secondary_message = sprintf(
-				/* translators: %s: search term */
-				__( 'Sorry no group with the name <i>%s</i> found.', 'user-registration' ),
-				esc_html( $search_value )
-			);
-		} else {
-			$primary_message = __( 'You don\'t have any Membership Groups yet.', 'user-registration' );
-			$secondary_message = __( 'Please add a membership group and you are good to go.', 'user-registration' );
-		}
-		?>
-		<div class="empty-list-table-container">
-			<img src="<?php echo esc_url( $image_url ); ?>" alt="">
-			<h3><?php echo esc_html( $primary_message ); ?></h3>
-			<p><?php echo wp_kses_post( $secondary_message ); ?></p>
-		</div>
-		<?php
+		UR_Base_Layout::no_items('Membership Groups');
 	}
 
 	/**
@@ -210,7 +189,6 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	 */
 	public function display_search_box( $search_id ) {
 		?>
-			<input type="hidden" name="page" value="user-registration-membership">
 			<input type="hidden" name="action" value="list_groups">
 			<p class="search-box">
 			</p>
@@ -235,5 +213,66 @@ class MembershipGroupsListTable extends \UR_List_Table {
 		);
 
 		return $actions;
+	}
+
+	/**
+	 * Displays the bulk actions dropdown.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param string $which The location of the bulk actions: 'top' or 'bottom'.
+	 *                      This is designated as optional for backward compatibility.
+	 */
+	protected function bulk_actions( $which = '' ) {
+		if ( is_null( $this->_actions ) ) {
+			$this->_actions = $this->get_bulk_actions();
+
+			/**
+			 * Filters the items in the bulk actions menu of the list table.
+			 *
+			 * The dynamic portion of the hook name, `$this->screen->id`, refers
+			 * to the ID of the current screen.
+			 *
+			 * @since 3.1.0
+			 * @since 5.6.0 A bulk action can now contain an array of options in order to create an optgroup.
+			 *
+			 * @param array $actions An array of the available bulk actions.
+			 */
+			$this->_actions = apply_filters( "bulk_actions-{$this->screen->id}", $this->_actions ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+
+			$two = '';
+		} else {
+			$two = '2';
+		}
+
+		if ( empty( $this->_actions ) ) {
+			return;
+		}
+
+		echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . __( 'Select bulk action' ) . '</label>';
+		echo '<select name="bulk_action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
+		echo '<option value="-1">' . __( 'Bulk actions' ) . "</option>\n";
+
+		foreach ( $this->_actions as $key => $value ) {
+			if ( is_array( $value ) ) {
+				echo "\t" . '<optgroup label="' . esc_attr( $key ) . '">' . "\n";
+
+				foreach ( $value as $name => $title ) {
+					$class = ( 'edit' === $name ) ? ' class="hide-if-no-js"' : '';
+
+					echo "\t\t" . '<option value="' . esc_attr( $name ) . '"' . $class . '>' . $title . "</option>\n";
+				}
+				echo "\t" . "</optgroup>\n";
+			} else {
+				$class = ( 'edit' === $key ) ? ' class="hide-if-no-js"' : '';
+
+				echo "\t" . '<option value="' . esc_attr( $key ) . '"' . $class . '>' . $value . "</option>\n";
+			}
+		}
+
+		echo "</select>\n";
+
+		submit_button( __( 'Apply' ), 'action', '', false, array( 'id' => "doaction$two" ) );
+		echo "\n";
 	}
 }
