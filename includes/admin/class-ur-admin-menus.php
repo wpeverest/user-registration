@@ -8,6 +8,8 @@
  */
 
 use WPEverest\URMembership\Admin\Members\Members;
+use WPEverest\URMembership\Admin\Subscriptions\Subscriptions;
+use WPEverest\URMembership\Payment\Orders;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -544,7 +546,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					);
 					add_action( 'load-' . $rules_page, array( $membership_obj, 'membership_initialization' ) );
 
-				if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
+				// if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
 
 					// add_submenu_page(
 					// 'user-registration',
@@ -562,7 +564,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					add_submenu_page(
 						'user-registration',
 						__( 'Membership Groups', 'user-registration' ),
-						'↳ ' . __( 'Groups', 'user-registration' ),
+						__( 'Groups', 'user-registration' ),
 						'manage_user_registration',
 						'user-registration-membership&action=list_groups',
 						array(
@@ -582,8 +584,24 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					// array( $members, 'render_members_page'),
 					// 4
 					// );
-				}
+				// }
 			}
+
+			if ( ur_check_module_activation( 'content-restriction' ) ) {
+				$content_rules = new \URCR_Admin();
+				$content_rules->add_urcr_menus();
+			}
+
+			if ( ur_check_module_activation( 'payment-history' ) ) {
+				$orders_obj = new Orders();
+				$orders_obj->add_orders_menu();
+			}
+
+			if ( ur_check_module_activation( 'membership' ) ) {
+				$subscription_obj = new Subscriptions();
+				$subscription_obj->add_menu();
+			}
+
 
 			$all_forms = ur_get_all_user_registration_form();
 			$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';

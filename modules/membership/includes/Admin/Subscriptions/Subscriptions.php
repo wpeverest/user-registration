@@ -14,7 +14,7 @@ class Subscriptions {
 	}
 
 	private function init_hooks() {
-		add_action( 'admin_menu', [ $this, 'add_menu' ], 41 );
+		// add_action( 'admin_menu', [ $this, 'add_menu' ], 41 );
 		add_filter( 'user_registration_notice_excluded_pages', [ $this, 'add_excluded_page' ] );
 		add_action( 'admin_init', [ $this, 'delete_subscription' ] );
 	}
@@ -53,7 +53,8 @@ class Subscriptions {
 			__( 'Subscriptions', 'user-registration' ),
 			'manage_options',
 			'user-registration-subscriptions',
-			[ $this, 'render_subscriptions_page' ]
+			[ $this, 'render_subscriptions_page' ],
+			6
 		);
 
 		add_action( "load-$page", [ $this, 'enqueue_scripts_styles' ] );

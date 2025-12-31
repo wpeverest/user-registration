@@ -29,7 +29,7 @@ class URCR_Admin {
 		/**
 		 * Register admin menus.
 		 */
-		add_action( 'admin_menu', array( $this, 'add_urcr_menus' ), 30 );
+		// add_action( 'admin_menu', array( $this, 'add_urcr_menus' ), 30 );
 
 		/**
 		 * Register a settings in the core settings list.
@@ -153,7 +153,8 @@ class URCR_Admin {
 			array(
 				$this,
 				'render_content_access_rules',
-			)
+			),
+			4
 		);
 	}
 
@@ -292,7 +293,7 @@ class URCR_Admin {
 			delete_post_meta( $rule->ID, 'urcr_rule_type' );
 			delete_post_meta( $rule->ID, 'urcr_membership_id' );
 			delete_post_meta( $rule->ID, 'urcr_is_migrated' );
-			
+
 			wp_delete_post( $rule->ID, true ); // true = force delete (skip trash)
 		}
 	}

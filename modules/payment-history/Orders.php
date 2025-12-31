@@ -27,7 +27,7 @@ class Orders {
 	 * @since 1.0.0
 	 */
 	private function init_hooks() {
-		add_action( 'admin_menu', array( $this, 'add_orders_menu' ), 40 );
+		// add_action( 'admin_menu', array( $this, 'add_orders_menu' ), 40 );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
@@ -63,14 +63,14 @@ class Orders {
 			$orders_page = add_submenu_page(
 				'user-registration',
 				__( 'Payments', 'user-registration' ), // page title
-				'↳ ' . __( 'Payments', 'user-registration' ),
+				__( 'Payments', 'user-registration' ),
 				'manage_user_registration', // Capability required to access
 				$this->page, // Menu slug
 				array(
 					$this,
 					'render_payment_history_page',
 				),
-				4
+				5
 			);
 			add_action( 'load-' . $orders_page, array( $this, 'orders_initialization' ) );
 		// }
