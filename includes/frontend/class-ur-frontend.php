@@ -581,8 +581,12 @@ class UR_Frontend {
 						}
 					}
 
-					$duration       = $membership_details['subscription']['value'] ?? '';
-					$data['period'] = 'subscription' === $membership['post_content']['type'] ? $membership['billing_amount'] . ' / ' . $duration . ' ' . $membership['billing_cycle'] : $membership['billing_amount'];
+					$duration = $membership_details['subscription']['value'] ?? '';
+					if ( ! empty( $duration ) && ! empty( $membership['billing_cycle'] ) ) {
+						$data['period'] = 'subscription' === $membership['post_content']['type'] ? $membership['billing_amount'] . ' / ' . $duration . ' ' . $membership['billing_cycle'] : $membership['billing_amount'];
+					} else {
+						$data['period'] = $membership['billing_amount'] ?? '';
+					}
 
 					array_push( $membership_data, $data );
 				}
