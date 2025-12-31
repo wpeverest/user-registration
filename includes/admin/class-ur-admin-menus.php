@@ -605,7 +605,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$subscription_obj->add_menu();
 			}
 
-			if ( ur_check_module_activation( 'coupon') ) {
+			if ( UR_PRO_ACTIVE &&  ur_check_module_activation( 'coupon') && class_exists( 'WPEverest\URMembership\Coupons\Coupons' ) ) {
 				$coupons_obj = new Coupons();
 				$coupons_obj->add_coupons_menu();
 			}
@@ -614,6 +614,53 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$all_forms = ur_get_all_user_registration_form();
 			$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';
 
+			if ( count( $all_forms ) > 1 || ur_check_module_activation( 'multiple-registration' ) ) {
+				add_submenu_page(
+					'user-registration',
+					__( 'All Forms', 'user-registration' ),
+					__( 'All Forms', 'user-registration' ),
+					'manage_user_registration',
+					'user-registration',
+					array(
+						$this,
+						'registration_page',
+					),
+					10
+				);
+
+				if ( isset( $_GET['page'] ) && in_array(
+					$_GET['page'],
+					array(
+						'user-registration',
+						'user-registration-login-forms',
+					)
+				) ) {
+					add_submenu_page(
+						'user-registration',
+						__( 'Registration Forms', 'user-registration' ),
+						'↳ ' . sprintf( __( 'Registration %s', 'user-registration' ), $postfix ),
+						'manage_user_registration',
+						'user-registration',
+						array(
+							$this,
+							'registration_page',
+						),
+						10
+					);
+					add_submenu_page(
+						'user-registration',
+						__( 'Login Form', 'user-registration' ),
+						'↳ ' . __( 'Login Form', 'user-registration' ),
+						'manage_user_registration',
+						'user-registration-login-forms',
+						array(
+							$this,
+							'registration_page',
+						),
+						11
+					);
+				}
+			} else {
 				add_submenu_page(
 					'user-registration',
 					__( 'Registration Form', 'user-registration' ),
@@ -636,11 +683,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						'registration_page',
 					)
 				);
+			}
 
 			$members_obj = new \User_Registration_Members_Menu();
 			$members_obj->add_members_menu_tab();
 
-			if ( class_exists( 'WPEverest\URPrivateNotes\UserRegistrationPrivateNotes' ) ) {
+			if ( UR_PRO_ACTIVE && class_exists( 'WPEverest\URPrivateNotes\UserRegistrationPrivateNotes' ) ) {
 				$private_notes_obj = new Admin();
 				$private_notes_obj->private_notes_menu();
 			}

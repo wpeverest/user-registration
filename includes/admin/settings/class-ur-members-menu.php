@@ -54,7 +54,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 			$this->page = 'user-registration-users';
 			add_action( 'in_admin_header', array( $this, 'hide_unrelated_notices' ) );
 			add_action( 'admin_init', array( $this, 'include_files' ) );
-			add_action( 'admin_menu', array( $this, 'add_members_menu_tab' ), 60 );
+			// add_action( 'admin_menu', array( $this, 'add_members_menu_tab' ), 60 );
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
