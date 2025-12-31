@@ -17,11 +17,15 @@
 					<div class="urcr-rule-body ur-p-2">
 						<div class="urcr-condition-row-parent">
 							<div class="urcr-conditions-list">
-								<?php
-								// Get membership ID
-								$membership_id = isset( $membership ) && isset( $membership->ID ) ? $membership->ID : 0;
+								<?php if( empty( $membership_id ) ): ?>
+								<label class="urcr-label-container">
+									<span class="urcr-target-content-label"><?php esc_html_e( 'Access', 'user-registration' ); ?></span>
+									<span class="user-registration-help-tip tooltipstered" data-tip="<?php esc_attr_e( 'Select content to give access to this plan.', 'user-registration' ); ?>"></span>
+								</label>
+								<?php endif;?>
 
-								// Render conditions from PHP if rule data exists
+								<?php
+								// Render conditions if rule data exists
 								if ( isset( $membership_rule_data ) && $membership_rule_data &&
 									 isset( $membership_rule_data['logic_map'] ) &&
 									 isset( $membership_rule_data['logic_map']['conditions'] ) &&
@@ -56,16 +60,19 @@
 								?>
 							</div>
 
-							<!-- Access Control Section -->
-							<div class="urcr-target-selection-section">
+							<div class="urcr-target-selection-section ur-d-flex ur-align-items-start">
+								<div class="urcr-condition-value-input-wrapper urcr-access-content">
+									<span class="urcr-access-control-button urcr-condition-value-input urcr-dropdown-button">
+										<span class="urcr-dropdown-button-text"><?php esc_html_e( 'Access', 'user-registration' ); ?></span>
+									</span>
+								</div>
+
 								<span class="urcr-arrow-icon" aria-hidden="true"></span>
 
-								<div class="urcr-target-selection-wrapper">
+								<div class="ur-d-flex ur-flex-column">
 									<div class="urcr-target-type-group">
 										<?php
-										// Render content targets from PHP if rule data exists
-										if ( isset( $membership_rule_data ) && $membership_rule_data &&
-											 isset( $membership_rule_data['target_contents'] ) ) {
+										if ( isset( $membership_rule_data ) && $membership_rule_data && isset( $membership_rule_data['target_contents'] ) && ! empty( $membership_rule_data['target_contents'] ) ) {
 											$targets = $membership_rule_data['target_contents'];
 											foreach ( $targets as $target ) {
 												echo $this->render_content_target( $target, $membership_localized_data );
@@ -141,7 +148,7 @@
 								<!-- Message Input -->
 								<div class="urcr-title-body-pair urcr-action-input-container urcrra-message-input-container ">
 									<label class="urcr-label-container">
-										<span class="urcr-target-content-label"><?php esc_html_e( 'Redirection Message', 'user-registration' ); ?></span>
+										<span class="urcr-target-content-label"><?php esc_html_e( 'Restriction Message', 'user-registration' ); ?></span>
 									</label>
 									<div class="urcr-body">
 										<?php

@@ -55,9 +55,9 @@
       "type": "boolean",
       "default": false
     },
-    "enableCustomRestrictionMessage": {
-      "type": "boolean",
-      "default": true
+    "restrictionMessageType": {
+      "type": "string",
+      "default": "custom"
     }
   },
   "editorScript": "user-registration-blocks-editor",

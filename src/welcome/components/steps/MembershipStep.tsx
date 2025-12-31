@@ -174,9 +174,9 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 								>
 									<Checkbox
 										isChecked={value.includes(opt.value)}
-										onChange={() => handleToggle(opt.value)}
 										mr={2}
 										colorScheme="blue"
+										pointerEvents="none"
 									/>
 									<Text fontSize="14px">{opt.label}</Text>
 								</Flex>
@@ -202,7 +202,6 @@ interface MembershipCardProps {
 	plan: MembershipPlan;
 	pages: ContentOption[];
 	posts: ContentOption[];
-	canCreatePaid: boolean;
 	isPro: boolean;
 	onDelete: (id: string) => void;
 	showDelete: boolean;
@@ -212,7 +211,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	plan,
 	pages,
 	posts,
-	canCreatePaid,
 	isPro,
 	onDelete,
 	showDelete
@@ -244,9 +242,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	};
 
 	const handleTypeChange = (type: MembershipPlanType) => {
-		if (type === "paid" && !canCreatePaid) {
-			return;
-		}
 		dispatch({
 			type: "UPDATE_MEMBERSHIP_PLAN",
 			payload: { id: plan.id, updates: { type } }
@@ -450,16 +445,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 								fontSize="14px"
 								fontWeight="500"
 								h="36px"
-								isDisabled={!canCreatePaid}
-								opacity={canCreatePaid ? 1 : 0.5}
-								cursor={
-									canCreatePaid ? "pointer" : "not-allowed"
-								}
-								title={
-									!canCreatePaid
-										? "Paid memberships require 'Paid Membership' selection in Welcome step"
-										: ""
-								}
 							>
 								{__("Paid", "user-registration")}
 							</Button>
@@ -719,7 +704,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 
 const MembershipStep: React.FC = () => {
 	const { state, dispatch } = useStateValue();
-	const { membershipPlans, membershipSetupType } = state;
+	const { membershipPlans } = state;
 
 	const textColor = useColorModeValue("#383838", "white");
 	const subtextColor = useColorModeValue("gray.600", "gray.300");
@@ -727,9 +712,6 @@ const MembershipStep: React.FC = () => {
 	const [pages, setPages] = useState<ContentOption[]>([]);
 	const [posts, setPosts] = useState<ContentOption[]>([]);
 	const [isLoadingData, setIsLoadingData] = useState(true);
-	const [canCreatePaid, setCanCreatePaid] = useState(
-		membershipSetupType === "paid"
-	);
 
 	const isPro = (window as any).urmSetupWizard?.isPro || false;
 
@@ -743,12 +725,22 @@ const MembershipStep: React.FC = () => {
 				setPages(content.pages || []);
 				setPosts(content.posts || []);
 
-				setCanCreatePaid(res.can_create_paid || false);
+				// Check if current plans have been modified by user
+				// Access current state to check for modifications
+				const currentPlans = state.membershipPlans;
+				const hasModifiedPlans = currentPlans.some(
+					(plan) =>
+						plan.name !== "" ||
+						plan.price !== "" ||
+						plan.contentAccess.length > 0
+				);
 
+				// Only hydrate from API if current plans are untouched
 				if (
 					res.memberships &&
 					Array.isArray(res.memberships) &&
-					res.memberships.length > 0
+					res.memberships.length > 0 &&
+					!hasModifiedPlans
 				) {
 					const hydratedPlans: MembershipPlan[] = res.memberships.map(
 						(m: any) => ({
@@ -777,11 +769,8 @@ const MembershipStep: React.FC = () => {
 		};
 
 		loadMembershipsData();
-	}, [dispatch]);
-
-	useEffect(() => {
-		setCanCreatePaid(membershipSetupType === "paid");
-	}, [membershipSetupType]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const handleAddPlan = () => {
 		dispatch({ type: "ADD_MEMBERSHIP_PLAN" });
@@ -830,7 +819,6 @@ const MembershipStep: React.FC = () => {
 						plan={plan}
 						pages={pages}
 						posts={posts}
-						canCreatePaid={canCreatePaid}
 						isPro={isPro}
 						onDelete={handleDeletePlan}
 						showDelete={membershipPlans.length > 1}

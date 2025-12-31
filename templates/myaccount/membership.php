@@ -73,7 +73,7 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 									if ( isset( $membership['status'] ) && ! empty( $membership ) ) {
 										$status = 'inactive';
 										$status = ( '' != $membership['status'] ) ? $membership['status'] : $status;
-										if ( 'inactive' !== $status && 'free' !== $membership['post_content']['type'] && 'paid' !== $membership['post_content']['type'] ) {
+										if ( 'inactive' !== $status && 'free' !== $membership['post_content']['type'] && 'paid' !== $membership['post_content']['type'] && ! empty( $membership['billing_cycle'] ) ) {
 											$expiry_date = new DateTime( $membership['expiry_date'] );
 											if ( date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
 												$status = 'expired';

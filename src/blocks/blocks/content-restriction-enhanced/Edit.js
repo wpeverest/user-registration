@@ -12,6 +12,8 @@ import {
 	SelectControl,
 	PanelBody,
 	ToggleControl,
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 	Notice
 } from "@wordpress/components";
 import {
@@ -23,7 +25,7 @@ import Select from "react-select";
 import { Editor } from "@tinymce/tinymce-react";
 
 /* global _UR_BLOCKS_ */
-const { urRestApiNonce, restURL } =
+const { urRestApiNonce, restURL, urcrGlobalRestrictionMsgUrl } =
 	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 const labelStyle = {
@@ -48,8 +50,7 @@ const Edit = ({ attributes, setAttributes }) => {
 		accessControl,
 		message,
 		enableContentRestriction,
-		enableCustomRestrictionMessage,
-		urcrGlobalRestrictionMsgUrl
+		restrictionMessageType
 	} = attributes;
 	const blockProps = useBlockProps();
 
@@ -261,36 +262,53 @@ const Edit = ({ attributes, setAttributes }) => {
 								</FormControl>
 							)}
 
-							<ToggleControl
-								className="urcr-custom-restriction-msg-toggle"
+							<ToggleGroupControl
 								label={__(
-									"Custom restriction message",
+									"Custom Restriction Message",
 									"user-registration"
 								)}
-								checked={enableCustomRestrictionMessage}
+								value={restrictionMessageType}
 								onChange={(val) =>
 									setAttributes({
-										enableCustomRestrictionMessage: val
+										restrictionMessageType: val
 									})
 								}
-							/>
+								isBlock
+							>
+								<ToggleGroupControlOption
+									value="global"
+									label={__("Global", "user-registration")}
+								/>
+								<ToggleGroupControlOption
+									value="custom"
+									label={__("Custom", "user-registration")}
+								/>
+							</ToggleGroupControl>
 
-							{!enableCustomRestrictionMessage && (
-								<div className="urcr-config-link">
-									<a
-										className="link"
-										href={urcrGlobalRestrictionMsgUrl}
-										target="__blank"
-									>
+							{"global" === restrictionMessageType && (
+								<div className="urcr-config-link-wrapper">
+									<span>
 										{__(
-											"Setup global restriction message from here",
+											"The block will show global restriction message. ",
 											"user-registration"
 										)}
-									</a>
+									</span>
+									<span className="urcr-config-link">
+										<a
+											className="link"
+											href={urcrGlobalRestrictionMsgUrl}
+											target="__blank"
+										>
+											{__(
+												"Change here",
+												"user-registration"
+											)}
+										</a>
+									</span>
 								</div>
 							)}
 
-							{enableCustomRestrictionMessage && (
+							{"custom" === restrictionMessageType && (
 								<FormControl mt={6}>
 									<FormLabel sx={labelStyle}>
 										{__(

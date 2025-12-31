@@ -399,6 +399,8 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 														'total_field',
 														'subscription_plan',
 														'membership',
+														'password',
+														'privacy_policy',
 													)
 												);
 
@@ -508,7 +510,7 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 														);
 													} elseif ( 'signature' === $field_key ) {
 														echo wp_kses_post(
-															'<div class="single-field__signature"><img src="' . esc_url( $value ) . '" width="100%" /></div>'
+															'<div class="single-field__signature"><img src="' . esc_url( $value ) . '" width="100%" style="position:relative;top:4px;" /></div>'
 														);
 													} elseif ( 60 > strlen( $value ) ) {
 														printf(

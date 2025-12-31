@@ -7,7 +7,7 @@ const v1 = {
 		orientation: {
 			type: "object"
 		},
-		enableCustomRestrictionMessage: {
+		restrictionMessageType: {
 			type: "boolean",
 			default: true
 		}

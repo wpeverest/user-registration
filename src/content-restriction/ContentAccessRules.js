@@ -58,7 +58,7 @@ const ContentAccessRules = () => {
 	const shouldShowCustomTab = isContentRestrictionEnabled;
 	const shouldShowTabSwitcher = isContentRestrictionEnabled && shouldShowMembershipTab;
 
-	const currentRules = (!isContentRestrictionEnabled) 
+	const currentRules = (!isContentRestrictionEnabled)
 		? (shouldShowMembershipTab ? membershipRules : [])
 		: (activeTab === "membership" ? membershipRules : customRules);
 
@@ -80,6 +80,13 @@ const ContentAccessRules = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rules, isLoading, hasMultipleMemberships, isContentRestrictionEnabled]);
+
+	useEffect(() => {
+		if (!isLoading && rules.length > 0) {
+			const allRuleIds = new Set(rules.map((rule) => rule.id));
+			setExpandedRules(allRuleIds);
+		}
+	}, [rules, isLoading]);
 
 
 

@@ -29,7 +29,9 @@ const RuleCard = ({
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false);
+	const [activeTab, setActiveTab] = useState("rules");
 	const menuWrapperRef = useRef(null);
+	const isMembershipRule = rule.rule_type === "membership";
 
 	const editUrl = adminURL
 		? `${adminURL}admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule&post-id=${rule.id}`
@@ -152,26 +154,53 @@ const RuleCard = ({
 				</div>
 
 				<div className="integration-action urcr-integration-action">
-					<span
-						className={`urcr-settings-text ${
-							isSettingsOpen ? "urcr-icon-active" : ""
-						}`}
-					>
-						{__("Settings", "user-registration")}
-					</span>
-					<button
-						className={`urcr-settings-icon button-link ${
-							isSettingsOpen ? "urcr-icon-active" : ""
-						}`}
-						type="button"
-						onClick={(e) => {
-							e.stopPropagation();
-							onToggleSettings();
-						}}
-						aria-label={__("Settings", "user-registration")}
-					>
-						<span className="dashicons dashicons-admin-generic"></span>
-					</button>
+					{isMembershipRule ? (
+						<div className="urcr-membership-tabs">
+							<button
+								className={`urcr-tab-button ${activeTab === "rules" ? "urcr-tab-active" : ""}`}
+								type="button"
+								onClick={(e) => {
+									e.stopPropagation();
+									setActiveTab("rules");
+								}}
+							>
+								{__("Rules", "user-registration")}
+							</button>
+							<button
+								className={`urcr-tab-button ${activeTab === "message" ? "urcr-tab-active" : ""}`}
+								type="button"
+								onClick={(e) => {
+									e.stopPropagation();
+									setActiveTab("message");
+								}}
+							>
+								{__("Message", "user-registration")}
+							</button>
+						</div>
+					) : (
+						<>
+							<span
+								className={`urcr-settings-text ${
+									isSettingsOpen ? "urcr-icon-active" : ""
+								}`}
+							>
+								{__("Settings", "user-registration")}
+							</span>
+							<button
+								className={`urcr-settings-icon button-link ${
+									isSettingsOpen ? "urcr-icon-active" : ""
+								}`}
+								type="button"
+								onClick={(e) => {
+									e.stopPropagation();
+									onToggleSettings();
+								}}
+								aria-label={__("Settings", "user-registration")}
+							>
+								<span className="dashicons dashicons-admin-generic"></span>
+							</button>
+						</>
+					)}
 					<div className="urcr-menu-wrapper" ref={menuWrapperRef}>
 						<button
 							className={`urcr-menu-toggle button-link ${
@@ -297,19 +326,39 @@ const RuleCard = ({
 				className="user-registration-card__body ur-p-3 integration-body-info"
 				style={{ display: isExpanded ? "block" : "none" }}
 			>
-				<div style={{ display: isSettingsOpen ? "block" : "none" }}>
-					<SettingsPanel
-						rule={rule}
-						onRuleUpdate={onRuleUpdate}
-						onGoBack={onToggleSettings}
-					/>
-				</div>
-				<div style={{ display: !isSettingsOpen ? "block" : "none" }}>
-					<RuleContentDisplay
-						rule={rule}
-						onRuleUpdate={onRuleUpdate}
-					/>
-				</div>
+				{isMembershipRule ? (
+					<>
+						<div className={activeTab === "rules" ? "urcr-tab-content urcr-tab-content-active" : "urcr-tab-content"}>
+							<RuleContentDisplay
+								rule={rule}
+								onRuleUpdate={onRuleUpdate}
+							/>
+						</div>
+						<div className={activeTab === "message" ? "urcr-tab-content urcr-tab-content-active" : "urcr-tab-content"}>
+							<SettingsPanel
+								rule={rule}
+								onRuleUpdate={onRuleUpdate}
+								onGoBack={() => setActiveTab("rules")}
+							/>
+						</div>
+					</>
+				) : (
+					<>
+						<div className={isSettingsOpen ? "urcr-tab-content urcr-tab-content-active" : "urcr-tab-content"}>
+							<SettingsPanel
+								rule={rule}
+								onRuleUpdate={onRuleUpdate}
+								onGoBack={onToggleSettings}
+							/>
+						</div>
+						<div className={!isSettingsOpen ? "urcr-tab-content urcr-tab-content-active" : "urcr-tab-content"}>
+							<RuleContentDisplay
+								rule={rule}
+								onRuleUpdate={onRuleUpdate}
+							/>
+						</div>
+					</>
+				)}
 			</div>
 
 			<DeleteRuleModal

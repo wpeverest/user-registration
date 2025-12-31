@@ -1,5 +1,6 @@
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Link, useColorModeValue } from "@chakra-ui/react";
+import { __ } from "@wordpress/i18n";
 import React, { useEffect, useMemo } from "react";
 import {
 	apiGet,
@@ -325,7 +326,10 @@ const SetupWizard: React.FC = () => {
 										cursor="pointer"
 										onClick={handleSkip}
 									>
-										Skip this step
+										{__(
+											"Skip this step",
+											"user-registration"
+										)}
 									</Link>
 									<Button
 										bg="#475BD8"
