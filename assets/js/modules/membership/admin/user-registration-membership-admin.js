@@ -542,6 +542,9 @@
 					);
 					$("#ur-membership-amount").addClass("ur-membership-error");
 				}
+				var subscription_duration_value = $(
+							"#ur-membership-duration-value"
+						).val();
 				//trial validations
 				var trial_status = $("#ur-membership-trial-status").val();
 				if (
@@ -556,9 +559,6 @@
 						).val(),
 						subscription_duration = $(
 							"#ur-membership-duration"
-						).val(),
-						subscription_duration_value = $(
-							"#ur-membership-duration-value"
 						).val(),
 						total_trial_time =
 							ur_membership_utils.convert_to_timestamp(
