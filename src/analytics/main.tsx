@@ -8,7 +8,7 @@ import { ProgressIndicator } from "./components/progress-indicator";
 const rootElement = document.getElementById("UR-Pro-Analytics-Root");
 const queryClient = new QueryClient();
 
-const ProApp = React.lazy(async () => {
+const AnalyticsApp = React.lazy(async () => {
 	try {
 		// @ts-ignore
 		return await import("./ProApp");
@@ -25,7 +25,7 @@ if (rootElement) {
 		<React.StrictMode>
 			<React.Suspense fallback={<div>Loading...</div>}>
 				<QueryClientProvider client={queryClient}>
-					<ProApp />
+					<AnalyticsApp />
 					<ProgressIndicator />
 				</QueryClientProvider>
 			</React.Suspense>
