@@ -20,7 +20,7 @@
 								<?php
 								// Get membership ID
 								$membership_id = isset( $membership ) && isset( $membership->ID ) ? $membership->ID : 0;
-								
+
 								// Render conditions from PHP if rule data exists
 								if ( isset( $membership_rule_data ) && $membership_rule_data &&
 									 isset( $membership_rule_data['logic_map'] ) &&
@@ -85,7 +85,8 @@
 							</div>
 						</div>
 						<!-- Add Condition Button -->
-						<?php if ( UR_PRO_ACTIVE ) : ?>
+						<!-- hiding this for now can be added later in future updates.-->
+						<?php if ( false ) : ?>
 						<div class="urcr-buttons-wrapper">
 							<span role="button" tabindex="0" class="button urcr-add-condition-button">
 								<span class="dashicons dashicons-plus-alt2"></span>
