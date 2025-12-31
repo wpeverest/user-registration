@@ -303,7 +303,8 @@ if ( ! class_exists( 'Members' ) ) {
 			if ( ! empty( $member_id ) ) {
 				$subscription_repository = new MembersSubscriptionRepository();
 				$membership_repository   = new MembershipRepository();
-				$member_subscription     = $subscription_repository->get_member_subscription( $member_id );
+
+				$member_subscription = $subscription_repository->get_member_subscription( $member_id );
 
 				$member_membership = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
 

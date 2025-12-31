@@ -228,7 +228,16 @@ class SubscriptionService {
 		$currency   = get_option( 'user_registration_payment_currency', 'USD' );
 		$symbol     = $currencies[ $currency ]['symbol'];
 
-		$subscription                   = $this->members_subscription_repository->get_member_subscription( $data['member_id'] );
+		$subscription_id = '';
+
+		if ( isset( $data['subscription'] ) ) {
+			$subscription_id = $data['subscription']['ID'];
+		} else {
+			$members_order_repository = new MembersOrderRepository();
+			$last_order               = $members_order_repository->get_member_orders( $data['member_id'] );
+			$subscription_id          = ! empty( $last_order ) ? $last_order['subscription_id'] : '';
+		}
+		$subscription                   = $this->members_subscription_repository->get_subscription_by_subscription_id( $subscription_id );
 		$membership_id                  = isset( $data['membership'] ) ? $data['membership'] : $subscription['item_id'];
 		$membership                     = $this->membership_repository->get_single_membership_by_ID( $membership_id );
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
