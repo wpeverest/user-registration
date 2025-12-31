@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - v5.0.0
+            - UR-3507-enhance/global-horizontal-and-vertical-menu
         workflow_dispatch:
 jobs:
     sync:
