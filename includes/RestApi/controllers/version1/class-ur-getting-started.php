@@ -219,6 +219,19 @@ class UR_Getting_Started {
 		delete_option( 'urm_onboarding_current_step' );
 		update_option( 'urm_is_new_installation', true );
 
+		$enabled_features  = get_option( 'user_registration_enabled_features', array() );
+		$required_features = array(
+			'user-registration-membership',
+		);
+
+		foreach ( $required_features as $feature ) {
+			if ( ! in_array( $feature, $enabled_features, true ) ) {
+				$enabled_features[] = $feature;
+			}
+		}
+
+		update_option( 'user_registration_enabled_features', $enabled_features );
+
 		$current_step    = self::get_current_step();
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
 		$is_completed    = ! get_option( 'user_registration_first_time_activation_flag', true );
