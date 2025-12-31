@@ -41,11 +41,11 @@ class UR_Base_Layout {
 			$table->prepare_items();
 		}
 
-		if ( isset( $table->total_items ) ) {
-			$show_search = (int) $table->total_items > 10;
-		} elseif ( isset( $table->items ) && is_array( $table->items ) ) {
-			$show_search = count( $table->items ) > 10;
+		if ( is_object( $table ) && method_exists( $table, 'get_pagination_arg' ) ) {
+			$total_items = (int) $table->get_pagination_arg( 'total_items' );
 		}
+
+		$show_search = $total_items > 10;
 
 		?>
 		<div id="user-registration-base-list-table-page" class="<?php echo esc_attr( $data['class'] ); ?>">
@@ -82,14 +82,14 @@ class UR_Base_Layout {
 		<?php
 	}
 
-		/**
-		 * Display Search Input with button
-		 *
-		 * @param $search_id
-		 * @param $placeholder
-		 *
-		 * @return void
-		 */
+	/**
+	 * Display Search Input with button
+	 *
+	 * @param $search_id
+	 * @param $placeholder
+	 *
+	 * @return void
+	 */
 	public static function display_search_field( $search_id, $placeholder ) {
 		?>
 			<input type="search" id="<?php echo esc_attr( $search_id ); ?>" name="s"
@@ -104,5 +104,42 @@ class UR_Base_Layout {
 				</svg>
 			</button>
 			<?php
+	}
+
+	/**
+	 * No items found text.
+	 */
+	public static function no_items($type) {
+		$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
+		$is_searching = ! empty( $_GET['s'] );
+
+		if ( $is_searching ) {
+			$search_value = sanitize_text_field( $_GET['s'] );
+			$primary_message = __( 'Oops, No results found.', 'user-registration' );
+			$secondary_message = sprintf(
+				/* translators: %s: search term */
+				__( 'Sorry no results found for <i>%s</i>.', 'user-registration' ),
+				esc_html( $search_value )
+			);
+		} else {
+			$primary_message = sprintf(
+				/* translators: %s: type */
+				__( 'You don’t have any %s yet.', 'user-registration' ),
+				esc_html( $type )
+			);
+
+			$secondary_message = sprintf(
+				/* translators: %s: type */
+				__( 'Please add %s and you’re good to go.', 'user-registration' ),
+				esc_html( strtolower( $type ) )
+			);
+		}
+		?>
+		<div class="empty-list-table-container">
+			<img src="<?php echo esc_url( $image_url ); ?>" alt="">
+			<h3><?php echo esc_html( $primary_message ); ?></h3>
+			<p><?php echo wp_kses_post( $secondary_message ); ?></p>
+		</div>
+		<?php
 	}
 }

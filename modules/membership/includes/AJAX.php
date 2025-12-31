@@ -13,6 +13,7 @@
 namespace WPEverest\URMembership;
 
 use WPEverest\URMembership\Admin\Controllers\MembersController;
+use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersRepository;
@@ -72,6 +73,7 @@ class AJAX {
 			'fetch_upgradable_memberships' => false,
 			'get_group_memberships'        => false,
 			'create_membership_group'      => false,
+			'delete_membership_group'      => false,
 			'delete_membership_groups'     => false,
 			'verify_pages'                 => false,
 			'validate_pg'                  => false,
@@ -617,6 +619,51 @@ class AJAX {
 	 *
 	 * @return void
 	 */
+	public static function delete_membership_group() {
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Permission not allowed.', 'user-registration' ),
+				),
+				403
+			);
+		}
+
+		ur_membership_verify_nonce( 'ur_membership_group' );
+		if ( empty( $_POST['membership_group_id'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Field membership_group_id is required.', 'user-registration' ),
+				),
+				422
+			);
+		}
+		$membership_group_id = absint( $_POST['membership_group_id'] );
+		$membership_service  = new MembershipGroupService();
+		$membership_service->remove_form_related_groups( array( $membership_group_id ), true );
+		$membership_group_repository = new MembershipGroupRepository();
+		$deleted                     = $membership_group_repository->delete( $membership_group_id );
+		if ( $deleted ) {
+			wp_send_json_success(
+				array(
+					'message' => esc_html__( 'Membership Group deleted successfully.', 'user-registration' ),
+				)
+			);
+		}
+		wp_send_json_error(
+			array(
+				'message' => esc_html__( 'Sorry! There was an unexpected error while deleting the membership group.', 'user-registration' ),
+			)
+		);
+	}
+
+
+	/**
+	 * Delete multiple Memberships
+	 *
+	 * @return void
+	 */
 	public static function delete_membership_groups() {
 
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -642,9 +689,9 @@ class AJAX {
 
 		$membership_group_ids = implode( ',', $membership_group_ids );
 
-		$membership_repository = new MembershipRepository();
+		$membership_group_repository = new MembershipGroupRepository();
 
-		$deleted = $membership_repository->delete_multiple( $membership_group_ids );
+		$deleted = $membership_group_repository->delete_multiple( $membership_group_ids );
 		if ( $deleted ) {
 			wp_send_json_success(
 				array(
