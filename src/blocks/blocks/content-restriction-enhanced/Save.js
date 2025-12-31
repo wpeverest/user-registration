@@ -9,7 +9,7 @@ const Save = ({ attributes }) => {
 		accessControl,
 		message,
 		enableContentRestriction,
-		enableCustomRestrictionMessage
+		restrictionMessageType
 	} = attributes;
 
 	const escapeAttribute = (str) =>
@@ -52,9 +52,9 @@ const Save = ({ attributes }) => {
 		)}"`;
 	}
 
-	// if (enableCustomRestrictionMessage) {
-	params += ` enable_custom_restriction_msg="${escapeAttribute(
-		enableCustomRestrictionMessage
+	// if (restrictionMessageType) {
+	params += ` restriction_message_type="${escapeAttribute(
+		restrictionMessageType
 	)}"`;
 	// }
 

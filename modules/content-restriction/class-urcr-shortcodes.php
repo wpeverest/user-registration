@@ -164,9 +164,9 @@ class URCR_Shortcodes {
 			if ( 'on' === $override_global_settings ) {
 				$message = ! empty( get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) ) ? get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) : '';
 			} elseif ( isset( $atts['enable_content_restriction'] ) && 'true' === $atts['enable_content_restriction'] ) {
-				if ( ! isset( $atts['enable_custom_restriction_msg'] ) ) {
+				if ( ! isset( $atts['restriction_message_type'] ) ) {
 					$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : get_option( 'user_registration_content_restriction_message' );
-				} elseif ( 'true' === $atts['enable_custom_restriction_msg'] ) {
+				} elseif ( 'custom' === $atts['restriction_message_type'] ) {
 					$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : '';
 				}
 			}
