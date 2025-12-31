@@ -10,6 +10,9 @@
 use WPEverest\URMembership\Admin\Members\Members;
 use WPEverest\URMembership\Admin\Subscriptions\Subscriptions;
 use WPEverest\URMembership\Payment\Orders;
+use WPEverest\URMembership\Coupons\Coupons;
+use WPEverest\URPrivateNotes\UserRegistrationPrivateNotes;
+use WPEverest\URPrivateNotes\Admin\Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -602,57 +605,15 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$subscription_obj->add_menu();
 			}
 
+			if ( ur_check_module_activation( 'coupon') ) {
+				$coupons_obj = new Coupons();
+				$coupons_obj->add_coupons_menu();
+			}
+
 
 			$all_forms = ur_get_all_user_registration_form();
 			$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';
 
-			if ( count( $all_forms ) > 1 || ur_check_module_activation( 'multiple-registration' ) ) {
-				add_submenu_page(
-					'user-registration',
-					__( 'All Forms', 'user-registration' ),
-					__( 'All Forms', 'user-registration' ),
-					'manage_user_registration',
-					'user-registration',
-					array(
-						$this,
-						'registration_page',
-					),
-					10
-				);
-
-				if ( isset( $_GET['page'] ) && in_array(
-					$_GET['page'],
-					array(
-						'user-registration',
-						'user-registration-login-forms',
-					)
-				) ) {
-					add_submenu_page(
-						'user-registration',
-						__( 'Registration Forms', 'user-registration' ),
-						'↳ ' . sprintf( __( 'Registration %s', 'user-registration' ), $postfix ),
-						'manage_user_registration',
-						'user-registration',
-						array(
-							$this,
-							'registration_page',
-						),
-						10
-					);
-					add_submenu_page(
-						'user-registration',
-						__( 'Login Form', 'user-registration' ),
-						'↳ ' . __( 'Login Form', 'user-registration' ),
-						'manage_user_registration',
-						'user-registration-login-forms',
-						array(
-							$this,
-							'registration_page',
-						),
-						11
-					);
-				}
-			} else {
 				add_submenu_page(
 					'user-registration',
 					__( 'Registration Form', 'user-registration' ),
@@ -673,9 +634,15 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					array(
 						$this,
 						'registration_page',
-					),
-					11
+					)
 				);
+
+			$members_obj = new \User_Registration_Members_Menu();
+			$members_obj->add_members_menu_tab();
+
+			if ( class_exists( 'WPEverest\URPrivateNotes\UserRegistrationPrivateNotes' ) ) {
+				$private_notes_obj = new Admin();
+				$private_notes_obj->private_notes_menu();
 			}
 		}
 
