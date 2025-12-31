@@ -342,14 +342,6 @@ class AJAX {
 					);
 				}
 
-				if ( $created_timestamp > wp_date( 'U' ) ) {
-					wp_send_json_error(
-						[
-							'message' => __( 'Created date cannot be in the future.', 'user-registration' ),
-						]
-					);
-				}
-
 				// Update invoice date in ur_payment_invoices meta
 				$payment_invoices = get_user_meta( $user_id, 'ur_payment_invoices', true );
 				if ( ! empty( $payment_invoices ) && is_array( $payment_invoices ) && isset( $payment_invoices[0] ) ) {
