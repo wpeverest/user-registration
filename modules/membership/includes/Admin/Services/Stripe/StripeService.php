@@ -11,6 +11,7 @@ use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Admin\Services\OrderService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 use WPEverest\URMembership\Admin\Services\PaymentGatewayLogging;
+use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
 
 class StripeService {
 	protected $members_orders_repository, $members_subscription_repository, $membership_repository, $orders_repository;
@@ -295,7 +296,6 @@ class StripeService {
 	}
 
 	public function update_order( $data ) {
-
 		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? '';
 		$payment_status         = sanitize_text_field( $data['payment_status'] );
 		$member_id              = absint( $_POST['member_id'] );
@@ -595,15 +595,30 @@ class StripeService {
 						$previous_membership_metas = json_decode( wp_unslash( $previous_membership['meta_value'] ), true );
 
 						if ( isset( $previous_membership_metas['type'], $previous_membership_metas['amount'] ) && $previous_membership_metas['type'] !== 'free' ) {
-							$new_price         = isset( $membership_metas['amount'] ) ? $membership_metas['amount'] : 0;
-							$current_price     = $previous_membership_metas['amount'];
-							$first_month_price = $new_price - $current_price;
+							$new_price     = isset( $membership_metas['amount'] ) ? $membership_metas['amount'] : 0;
+							$current_price = $previous_membership_metas['amount'];
+
+							$membership_upgrade_service      = new UpgradeMembershipService();
+							$previous_membership_metas['ID'] = $previous_membership['ID'];
+							$upgrade_details                 = $membership_upgrade_service->get_upgrade_details( $previous_membership_metas );
+							$upgrade_type                    = $upgrade_details['upgrade_type'] ?? '';
+							$first_month_price               = $new_price - $current_price;
+
+							if ( 'full' === $upgrade_type ) {
+								$first_month_price = $new_price;
+							}
 
 							if ( $new_price > $current_price ) {
 								if ( isset( $order_detail['coupon'] ) && ! empty( $order_detail['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 									$coupon_details  = ur_get_coupon_details( $order_detail['coupon'] );
 									$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $first_month_price * $coupon_details['coupon_discount'] / 100;
-									$amount          = $new_price - $discount_amount;
+
+									if ( 'full' === $upgrade_type ) {
+										$amount = $discount_amount;
+									} else {
+										$amount = $current_price + $discount_amount;
+
+									}
 								} else {
 									$amount = $new_price - $first_month_price;
 								}

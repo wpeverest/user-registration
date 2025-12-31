@@ -30,7 +30,8 @@ class UR_Base_Layout {
 			'class'          => '',
 		);
 
-		$data = wp_parse_args( $args, $defaults );
+		$data        = wp_parse_args( $args, $defaults );
+		$show_search = true;
 
 		if ( ! empty( $data['skip_query_key'] ) && isset( $_GET[ $data['skip_query_key'] ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return;
@@ -40,9 +41,15 @@ class UR_Base_Layout {
 			$table->prepare_items();
 		}
 
+		if ( isset( $table->total_items ) ) {
+			$show_search = (int) $table->total_items > 10;
+		} elseif ( isset( $table->items ) && is_array( $table->items ) ) {
+			$show_search = count( $table->items ) > 10;
+		}
+
 		?>
 		<div id="user-registration-base-list-table-page" class="<?php echo esc_attr( $data['class'] ); ?>">
-			<div class="user-registration-base-list-table-heading">
+			<div class="user-registration-base-list-table-heading" style="<?php echo( ! $show_search ? 'position:relative;margin-bottom:40px;' : '' ); ?>">
 				<h1>
 					<?php echo esc_html( $data['title'] ); ?>
 				</h1>
@@ -54,13 +61,17 @@ class UR_Base_Layout {
 			</div>
 			<form id="<?php echo esc_attr( $data['form_id'] ); ?>" method="get" class="user-registration-base-list-table-form">
 				<input type="hidden" name="page" value="<?php echo esc_attr( $data['page'] ); ?>"/>
-				<div id="user-registration-base-list-filters-row">
-					<?php
-					if ( is_object( $table ) && method_exists( $table, 'display_search_box' ) ) {
-						$table->display_search_box( $data['search_id'] );
-					}
+					<?php if ( $show_search ) : ?>
+					<div id="user-registration-base-list-filters-row">
+						<?php
+						if ( is_object( $table ) && method_exists( $table, 'display_search_box' ) ) {
+							$table->display_search_box( $data['search_id'] );
+						}
+						?>
+					</div>
+						<?php
+					endif;
 					?>
-				</div>
 				<?php
 				if ( is_object( $table ) && method_exists( $table, 'display' ) ) {
 					$table->display();
@@ -71,14 +82,14 @@ class UR_Base_Layout {
 		<?php
 	}
 
-	/**
-	 * Display Search Input with button
-	 *
-	 * @param $search_id
-	 * @param $placeholder
-	 *
-	 * @return void
-	 */
+		/**
+		 * Display Search Input with button
+		 *
+		 * @param $search_id
+		 * @param $placeholder
+		 *
+		 * @return void
+		 */
 	public static function display_search_field( $search_id, $placeholder ) {
 		?>
 			<input type="search" id="<?php echo esc_attr( $search_id ); ?>" name="s"
@@ -92,6 +103,6 @@ class UR_Base_Layout {
 							clip-rule="evenodd"></path>
 				</svg>
 			</button>
-		<?php
+			<?php
 	}
 }

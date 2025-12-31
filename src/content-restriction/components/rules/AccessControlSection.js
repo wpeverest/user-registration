@@ -13,8 +13,10 @@ const AccessControlSection = ({
 	onAccessControlChange,
 	contentTargets = [],
 	onContentTargetsChange,
+	ruleType = null,
 }) => {
 	const conditionValueInputWrapperRef = useRef(null);
+	const lastRuleTypeRef = useRef(null);
 
 	const handleAfterContentTypeSelection = (option) => {
 		const newContentTarget = {
@@ -39,16 +41,41 @@ const AccessControlSection = ({
 		onContentTargetsChange(updatedTargets);
 	};
 
+	// Handle correction of access control for membership rules on mount and when ruleType changes
 	useEffect(() => {
-		if (!isProAccess() && accessControl === "access") {
+		const isMembershipRule = ruleType === "membership";
+		const ruleTypeChanged = lastRuleTypeRef.current !== ruleType;
+		
+		// Update ref to track ruleType changes
+		if (ruleTypeChanged) {
+			lastRuleTypeRef.current = ruleType;
+		}
+		
+		// For membership rules, always force access control to "access"
+		// Only correct on mount (when ruleType changes) or if value is wrong
+		if (isMembershipRule && accessControl !== "access") {
+			// Only update if ruleType just changed (initial load or type change) to prevent loops
+			if (ruleTypeChanged) {
+				onAccessControlChange("access");
+			}
+			return;
+		}
+		
+		// For non-membership rules, if not pro and accessControl is "restrict", force to "access"
+		// Only correct when ruleType changes to prevent infinite loops
+		if (!isMembershipRule && !isProAccess() && accessControl === "restrict" && ruleTypeChanged) {
 			onAccessControlChange("access");
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [accessControl]);
+	}, [ruleType]); // Only depend on ruleType to prevent loops
 
 	useEffect(() => {
 		if (conditionValueInputWrapperRef.current) {
-			if (accessControl === "access") {
+			const isMembershipRule = ruleType === "membership";
+			// For membership rules, always use access class even if accessControl is "restrict"
+			const effectiveAccessControl = isMembershipRule ? "access" : accessControl;
+			
+			if (effectiveAccessControl === "access") {
 				conditionValueInputWrapperRef.current.classList.add("urcr-access-content");
 				conditionValueInputWrapperRef.current.classList.remove("urcr-restrict-content");
 			} else {
@@ -56,11 +83,19 @@ const AccessControlSection = ({
 				conditionValueInputWrapperRef.current.classList.remove("urcr-access-content");
 			}
 		}
-	}, [accessControl]);
+	}, [accessControl, ruleType]);
 
 	const handleAccessControlChange = (option) => {
 		const newValue = option.value;
-		if (!isProAccess() && newValue === "restrict") {
+		const isMembershipRule = ruleType === "membership";
+		
+		// For membership rules, never allow restrict option
+		if (isMembershipRule && newValue === "restrict") {
+			return;
+		}
+		
+		// For non-membership rules, if not pro and trying to set restrict, prevent it
+		if (!isMembershipRule && !isProAccess() && newValue === "restrict") {
 			return;
 		}
 		
@@ -78,6 +113,13 @@ const AccessControlSection = ({
 	};
 
 	const getAccessControlLabel = () => {
+		const isMembershipRule = ruleType === "membership";
+		
+		// For membership rules, always show "Access" even if accessControl is "restrict"
+		if (isMembershipRule) {
+			return __("Access", "user-registration");
+		}
+		
 		if (accessControl === "restrict") {
 			return __("Restrict", "user-registration");
 		}
@@ -85,6 +127,15 @@ const AccessControlSection = ({
 	};
 
 	const getAccessControlOptions = () => {
+		const isMembershipRule = ruleType === "membership";
+		
+		// For membership rules, never show restrict option (neither for free nor pro)
+		if (isMembershipRule) {
+			return [
+				{ value: "access", label: __("Access", "user-registration") },
+			];
+		}
+		
 		return [
 			...(isProAccess() ? [{ value: "restrict", label: __("Restrict", "user-registration") }] : []),
 			{ value: "access", label: __("Access", "user-registration") },
@@ -106,7 +157,7 @@ const AccessControlSection = ({
 						</>
 					}
 					options={getAccessControlOptions()}
-					value={accessControl}
+					value={ruleType === "membership" ? "access" : accessControl}
 					onSelect={handleAccessControlChange}
 					buttonClassName="urcr-access-control-button urcr-condition-value-input"
 					wrapperClassName="urcr-access-control-dropdown-wrapper"

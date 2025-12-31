@@ -326,6 +326,12 @@ elseif ( 'list' === $type ) :
 				endforeach;
 			endif;
 			?>
+			<div class="notice-container">
+				<div id="urm-listing-error" class="notice_red">
+					<span class="notice_message"></span>
+					<span class="close_notice">&times;</span>
+				</div>
+			</div>
 			<div class="membership-footer">
 				<button type="button"
 						class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>" <?php echo $open_in_new_tab ? "target = '_blank'" : ''; ?> ><?php echo esc_html( $sign_up_text ); ?></button>

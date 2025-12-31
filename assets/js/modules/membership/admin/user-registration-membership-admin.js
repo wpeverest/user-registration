@@ -538,7 +538,7 @@
 						ur_membership_data.labels.i18n_error +
 							"! " +
 							ur_membership_data.labels
-								.i18n_valid_amount_field_validation
+								.i18n_valid_price_field_validation
 					);
 					$("#ur-membership-amount").addClass("ur-membership-error");
 				}
@@ -792,6 +792,7 @@
 							if (response.success) {
 								ur_membership_data.membership_id =
 									response.data.membership_id;
+									console.log($this);
 								$this.text(ur_membership_data.labels.i18n_save);
 								ur_membership_utils.show_success_message(
 									response.data.message

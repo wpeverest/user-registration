@@ -490,10 +490,29 @@ class Membership {
 	 * @return void
 	 */
 	public function render_membership_creator( $membership = null, $membership_details = null, $menu_items = null ) {
-		$enable_membership_button = false;
-		$roles                    = wp_roles()->role_names;
-		$membership_service       = new MembershipService();
-		$memberships              = $membership_service->list_active_memberships();
+		$enable_membership_button    = false;
+		$roles                       = wp_roles()->role_names;
+		$membership_service          = new MembershipService();
+		$membership_group_service    = new MembershipGroupService();
+		$membership_group_repository = new MembershipGroupRepository();
+
+		$memberships = $membership_service->list_active_memberships();
+
+		$group_id = 0;
+
+		if ( isset( $_GET['post_id'] ) && ! empty( $_GET['post_id'] ) ) {
+			$membership_id    = absint( $_GET['post_id'] );
+			$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
+			$group_id         = $membership_group['ID'] ?? 0;
+		}
+
+		foreach ( $memberships as $key => $_membership ) {
+			$current_membership_group = $membership_group_repository->get_membership_group_by_membership_id( $_membership['ID'] );
+
+			if ( ! empty( $current_membership_group ) && absint( $current_membership_group['ID'] ) !== $group_id ) {
+				unset( $memberships[ $key ] );
+			}
+		}
 
 		// Get membership rule data if membership exists
 		$membership_rule_data         = null;
@@ -896,6 +915,7 @@ class Membership {
 			'network_error'                                => esc_html__( 'Network error', 'user-registration' ),
 			'i18n_field_is_required'                       => _x( 'field is required.', 'user registration membership', 'user-registration' ),
 			'i18n_valid_url_field_validation'              => _x( 'Please enter a valid url for', 'user registration membership', 'user-registration' ),
+			'i18n_valid_price_field_validation'            => _x( 'Invalid Price. The amount must be greater than 0.', 'user registration membership', 'user-registration' ),
 			'i18n_valid_amount_field_validation'           => _x( 'Input Field Amount must be greater than 0.', 'user registration membership', 'user-registration' ),
 			'i18n_valid_trial_period_field_validation'     => _x( 'Trial period must be less than subscription period.', 'user registration membership', 'user-registration' ),
 			'i18n_error'                                   => _x( 'Error', 'user registration membership', 'user-registration' ),

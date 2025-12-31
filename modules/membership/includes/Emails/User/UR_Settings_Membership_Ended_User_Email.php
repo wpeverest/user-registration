@@ -129,7 +129,7 @@ class UR_Settings_Membership_Ended_User_Email {
 		$body_content = ur_wrap_email_body_content( $body_content );
 
 		// Wrap with the pro email template if UR Pro is active.
-		if ( UR_PRO_ACTIVE ) {
+		if ( UR_PRO_ACTIVE && function_exists( 'ur_get_email_template_wrapper' ) ) {
 			$body_content = ur_get_email_template_wrapper( $body_content, false );
 		}
 

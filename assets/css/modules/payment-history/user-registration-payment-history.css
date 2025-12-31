@@ -537,3 +537,70 @@ body.user-registration #ur-membership-order-create-form {
 .ur-payments__user-email {
   font-size: 14px;
 }
+
+#user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form #user-registration-base-list-filters-row {
+  margin-bottom: 32px;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form .tablenav {
+  display: flex;
+  justify-content: flex-end;
+  align-self: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form .tablenav.top {
+  justify-content: flex-end;
+  padding-top: 40px;
+  row-gap: 16px;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form .tablenav .bulkactions input[type=submit] {
+  padding: 8px 14px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #475BB2;
+  border-color: #475BB2;
+  background: #F6F7F7;
+  font-weight: 500;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form .tablenav .user-registration-payments-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form .tablenav .user-registration-payments-filters select {
+  width: auto !important;
+  max-width: max-content !important;
+  min-width: auto !important;
+  flex: 0 0 auto !important;
+  display: inline-block !important;
+  padding-right: 32px !important;
+}
+@media (min-width: 1200px) {
+  #user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form .tablenav .user-registration-payments-filters {
+    flex-wrap: nowrap;
+  }
+}
+@media (max-width: 1199px) {
+  #user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form .tablenav .user-registration-payments-filters select {
+    flex: 1 1 180px;
+  }
+}
+@media (max-width: 768px) {
+  #user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form .tablenav .user-registration-payments-filters select {
+    flex: 1 1 100%;
+  }
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form .tablenav.top:has(.bulkactions) {
+  justify-content: space-between;
+  padding-top: 0;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form .wp-list-table.orders tbody tr:nth-child(odd) {
+  background: #F8F8FA;
+}
+@media (max-width: 767px) {
+  #user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form #user-registration-base-list-filters-row {
+    display: block;
+    margin-top: 50px;
+  }
+}

@@ -84,10 +84,9 @@ const SetupWizard: React.FC = () => {
 		state;
 
 	const cardBg = useColorModeValue("white", "gray.800");
-	const borderColor = useColorModeValue("gray.200", "gray.700");
 	const textColor = useColorModeValue("gray.800", "white");
 	const mutedColor = useColorModeValue("gray.600", "gray.400");
-	const pageBg = useColorModeValue("gray.50", "gray.900");
+	const pageBg = useColorModeValue("#F8F8FA", "gray.900");
 
 	const hasPaidPlan = membershipPlans.some((plan) => plan.type === "paid");
 
@@ -283,10 +282,10 @@ const SetupWizard: React.FC = () => {
 						maxW="920px"
 						bg={cardBg}
 						borderWidth="1px"
-						borderColor={borderColor}
-						borderRadius="xl"
+						borderColor="#F4F4F4"
+						borderRadius="8px"
 						p={8}
-						boxShadow="sm"
+						boxShadow="0 10px 15px -3px rgba(0, 0, 0, 0.06)"
 					>
 						<Box mb={isFinishStep ? 0 : 8}>{renderStep()}</Box>
 						{!isFinishStep && (
@@ -318,7 +317,7 @@ const SetupWizard: React.FC = () => {
 								<Flex gap={4} align="center">
 									<Link
 										fontSize="sm"
-										color={mutedColor}
+										color="#999999"
 										_hover={{
 											color: textColor,
 											textDecoration: "none"
@@ -337,6 +336,8 @@ const SetupWizard: React.FC = () => {
 										onClick={handleNext}
 										isLoading={isLoading}
 										px={6}
+										py={5}
+										borderRadius="4px"
 									>
 										Next
 									</Button>

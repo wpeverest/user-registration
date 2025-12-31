@@ -121,7 +121,7 @@ if ( ! class_exists( 'UR_FORMBRICKS' ) ) {
 				'environmentId' => self::ENVIRONMENT_ID,
 				'attributes'    => array(
 					'free_version'        => UR()->version,
-					'install_days_number' => $this->get_install_days(),
+					'install_days_number' => (int) $this->get_install_days(),
 					'is_premium'          => $this->is_premium(),
 				),
 			);

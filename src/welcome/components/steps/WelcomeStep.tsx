@@ -29,10 +29,9 @@ const MembershipOption: React.FC<MembershipOptionProps> = ({
 	description,
 	isSelected
 }) => {
-	const selectedBg = useColorModeValue("blue.50", "blue.900");
-	const selectedBorder = "#475BD8";
+	const selectedBorder = "#475BB2";
 	const defaultBg = useColorModeValue("white", "gray.800");
-	const defaultBorder = useColorModeValue("gray.200", "gray.600");
+	const defaultBorder = useColorModeValue("#F4F4F4", "gray.600");
 	const titleColor = useColorModeValue("gray.800", "white");
 	const descColor = useColorModeValue("gray.600", "gray.400");
 	const hoverBg = useColorModeValue("gray.50", "gray.700");
@@ -43,25 +42,25 @@ const MembershipOption: React.FC<MembershipOptionProps> = ({
 			cursor="pointer"
 			w="100%"
 			p={4}
-			borderRadius="lg"
-			borderWidth="2px"
+			borderRadius="4px"
+			borderWidth="1px"
 			borderColor={isSelected ? selectedBorder : defaultBorder}
-			bg={isSelected ? selectedBg : defaultBg}
+			bg={isSelected ? "transparent" : defaultBg}
 			transition="all 0.2s ease"
 			_hover={{
 				borderColor: isSelected ? selectedBorder : "gray.300",
-				bg: isSelected ? selectedBg : hoverBg
+				bg: isSelected ? "transparent" : hoverBg
 			}}
 		>
 			<HStack align="flex-start" spacing={3}>
 				<Radio
 					value={value}
 					colorScheme="blue"
-					mt={0.5}
+					mt="2px"
 					sx={{
 						"&[data-checked]": {
-							bg: "#475BD8",
-							borderColor: "#475BD8"
+							bg: "#475BB2",
+							borderColor: "#475BB2"
 						}
 					}}
 				/>
@@ -98,7 +97,7 @@ const WelcomeStep: React.FC = () => {
 
 	const textColor = useColorModeValue("gray.800", "white");
 	const mutedColor = useColorModeValue("gray.600", "gray.400");
-	const linkColor = "#475BD8";
+	const linkColor = "#475BB2";
 	const inputBg = useColorModeValue("white", "gray.700");
 	const inputBorder = useColorModeValue("gray.300", "gray.600");
 
@@ -178,7 +177,7 @@ const WelcomeStep: React.FC = () => {
 
 	return (
 		<>
-			<VStack align="flex-start" spacing={2} mb={8}>
+			<VStack align="flex-start" spacing={1} mb={8}>
 				<Heading
 					fontFamily="Inter"
 					fontWeight={600}
@@ -189,10 +188,10 @@ const WelcomeStep: React.FC = () => {
 				>
 					{__("Welcome 🙂", "user-registration")}
 				</Heading>
-				<Text color={textColor} fontWeight="500">
+				<Text color={textColor} fontWeight="500" fontSize="14px">
 					{__("Thanks for choosing URM!", "user-registration")}
 				</Text>
-				<Text color={mutedColor} fontSize="sm">
+				<Text color={mutedColor} fontSize="14px">
 					{__(
 						"Tell us what you want to do. We'll set up the right pages and features for your site. Don't worry—you can change this anytime.",
 						"user-registration"
@@ -201,14 +200,14 @@ const WelcomeStep: React.FC = () => {
 			</VStack>
 
 			<Box mb={10}>
-				<Text fontWeight="600" color={textColor} mb={4}>
+				<Text fontWeight="600" color={textColor} mb={4} fontSize="14px">
 					{__("Choose your setup:", "user-registration")}
 				</Text>
 				<RadioGroup
 					value={membershipSetupType}
 					onChange={handleMembershipChange as any}
 				>
-					<VStack spacing={3} align="stretch">
+					<VStack spacing={4} align="stretch">
 						{optionsToRender.map((option) => (
 							<MembershipOption
 								key={option.value}
@@ -225,16 +224,16 @@ const WelcomeStep: React.FC = () => {
 			</Box>
 
 			<Box>
-				<HStack align="flex-start" spacing={2}>
-					<Box flexShrink={0} pt="1px">
+				<HStack align="flex-start" spacing="10px">
+					<Box flexShrink={0} pt="2px">
 						<Checkbox
 							isChecked={allowTracking}
 							onChange={handleTrackingChange}
 							colorScheme="blue"
 							sx={{
 								".chakra-checkbox__control[data-checked]": {
-									bg: "#475BD8",
-									borderColor: "#475BD8"
+									bg: "#475BB2",
+									borderColor: "#475BB2"
 								}
 							}}
 						/>
@@ -261,11 +260,12 @@ const WelcomeStep: React.FC = () => {
 									width="220px"
 									bg={inputBg}
 									borderColor={inputBorder}
+									borderRadius="4px"
 									autoFocus
 									placeholder="Enter email address"
 									_focus={{
-										borderColor: "#475BD8",
-										boxShadow: "0 0 0 1px #475BD8"
+										borderColor: "#475BB2",
+										boxShadow: "0 0 0 1px #475BB2"
 									}}
 								/>
 							) : (

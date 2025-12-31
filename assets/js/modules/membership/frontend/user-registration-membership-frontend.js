@@ -2175,7 +2175,7 @@
 					var $this = $(this),
 						membership_id = $this
 							.siblings('input[name="membership_id"]')
-							.val(),
+							.attr("value"),
 						redirection_url = $this
 							.siblings('input[name="redirection_url"]')
 							.val(),
@@ -2184,6 +2184,8 @@
 							.val(),
 						uuid = $this.siblings('input[name="urm_uuid"]').val(),
 						action = $this.siblings('input[name="action"]').val();
+
+					ur_membership_frontend_utils.clear_validation_error();
 
 					if (
 						$this
@@ -2199,6 +2201,23 @@
 							thank_you_page_id = selected.data("thankyou");
 							uuid = selected.data("urm-uuid");
 							action = selected.data("action");
+						} else {
+							var error_div = $this
+								.closest(".membership-selection-form")
+								.find("#urm-listing-error");
+
+							error_div
+								.parent()
+								.css("position", "static")
+								.css("margin-bottom", "10px");
+
+							ur_membership_frontend_utils.show_validation_error(
+								error_div,
+								urmf_data.labels.i18n_error +
+									"! " +
+									urmf_data.membership_selection_message
+							);
+							return;
 						}
 					}
 

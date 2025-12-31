@@ -529,11 +529,17 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 					if ( $user->ID && ur_check_module_activation( 'membership' ) ) {
 						$members_repository        = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
 						$user_membership           = $members_repository->get_member_membership_by_id( $user->ID );
-						$is_user_membership_active = ! empty( $user_membership['status'] ) && 'active' === $user_membership['status'];
-						$sources                   = ! empty( $logic_map['value'] ) ? $logic_map['value'] : array();
 
-						if ( ! empty( $user_membership ) && in_array( $user_membership['post_id'], $sources, true ) && $is_user_membership_active ) {
-							return true;
+						$sources                   = ! empty( $logic_map['value'] ) ? $logic_map['value'] : array();
+						
+						if ( ! empty( $user_membership ) && is_array( $user_membership ) ) {
+							foreach ( $user_membership as $membership ) {
+								if ( ! empty( $membership['status'] ) && 'active' === $membership['status'] ) {
+									if ( ! empty( $membership['post_id'] ) && in_array( $membership['post_id'], $sources, true ) ) {
+										return true;
+									}
+								}
+							}
 						}
 					}
 			}

@@ -379,7 +379,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 			$amount                = ! empty( $membership['meta_value']['amount'] ) ? number_format( (float) $membership['meta_value']['amount'], 2 ) : 0;
 			$symbol_pos            = isset( $currencies[ $currency ]['symbol_pos'] ) ? $currencies[ $currency ]['symbol_pos'] : 'left';
 			$membership_cur_amount = ! empty( $amount ) ? ( 'right' === $symbol_pos ? $amount . $symbol : $symbol . $amount ) : '';
-			$duration_label = '';
+			$duration_label        = '';
 			if ( ! empty( $membership['meta_value']['subscription']['duration'] ) ) {
 				$duration_key    = isset( $membership['meta_value']['subscription']['duration'] ) ? strtolower( $membership['meta_value']['subscription']['duration'] ) : '';
 				$duration_labels = array(
@@ -398,11 +398,12 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				'amount'            => ! empty( $membership_meta_value ) ? $membership['meta_value']['amount'] : 0,
 				'currency_symbol'   => $symbol,
 				'calculated_amount' => 'free' === $membership_type ? 0 : ( ! empty( $membership_meta_value ) ? round( $membership_meta_value['amount'] ) : 0 ),
-				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : ( ( ! empty( $membership_meta_value ) && 'subscription' === $membership_meta_value['type'] ) ? $membership_cur_amount . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $duration_label ) . ( $membership['meta_value']['subscription']['value'] > 1 ? __('s', 'user-registration'): '' ) : $membership_cur_amount ),
+				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : ( ( ! empty( $membership_meta_value ) && 'subscription' === $membership_meta_value['type'] ) ? $membership_cur_amount . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $duration_label ) . ( $membership['meta_value']['subscription']['value'] > 1 ? __( 's', 'user-registration' ) : '' ) : $membership_cur_amount ),
 			);
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
 				foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
-					if ( 'on' !== $gateways['status'] ) {
+
+					if ( ! urm_is_payment_gateway_configured( $key ) ) {
 						continue;
 					}
 					$active_payment_gateways[ $key ] = $gateways['status'];
@@ -418,7 +419,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 		if ( ! empty( $saved_order ) && ! empty( $new_mem ) ) {
 			$order_map = array_flip( $saved_order );
 
-			$ordered_memberships = array();
+			$ordered_memberships   = array();
 			$unordered_memberships = array();
 
 			foreach ( $new_mem as $membership ) {
@@ -740,7 +741,7 @@ if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
 				break;
 			case 'bank':
 				// For bank and other gateways, check if bank details are configured.
-				$bank_details = get_option( 'user_registration_global_bank_details' );
+				$bank_details  = get_option( 'user_registration_global_bank_details' );
 				$is_configured = ! empty( $bank_details );
 				break;
 			case 'default':

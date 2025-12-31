@@ -51,6 +51,14 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 					'on_module_activate',
 				)
 			); // Hook on module activation ( Our UR module activation ).
+
+			//Skiping the uninstall feedback from the themegrill sdk
+			add_filter(
+				'user_registration_hide_uninstall_feedback',
+				function () {
+					return true;
+				}
+			);
 		}
 
 		/**

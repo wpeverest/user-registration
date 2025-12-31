@@ -253,7 +253,7 @@ class MembershipService {
 			$membership_meta = get_post_meta( $membership_id, 'ur_membership' );
 			$membership_meta = json_decode( $membership_meta[0], true );
 
-			if ( isset( $membership_meta['payment_gateways']['stripe'] ) && 'on' == $membership_meta['payment_gateways']['stripe']['status'] ) {
+			if ( isset( $membership_meta['payment_gateways']['stripe'] ) ) {
 				$product_id = $membership_meta['payment_gateways']['stripe']['product_id'] ?? '';
 				$price_id   = $membership_meta['payment_gateways']['stripe']['price_id'] ?? '';
 			}
@@ -274,17 +274,17 @@ class MembershipService {
 
 		$data['amount'] = $data['amount'] ?? 0;
 		if ( isset( $data['payment_gateways'] ) ) {
-			if ( isset( $data['payment_gateways']['paypal'] ) && 'on' === $data['payment_gateways']['paypal']['status'] ) {
+			if ( isset( $data['payment_gateways']['paypal'] ) ) {
 				$data['payment_gateways']['paypal']['status']     = sanitize_text_field( $data['payment_gateways']['paypal']['status'] );
 				$data['payment_gateways']['paypal']['email']      = sanitize_email( ! empty( $data['payment_gateways']['paypal']['email'] ) ? $data['payment_gateways']['paypal']['email'] : '' );
 				$data['payment_gateways']['paypal']['mode']       = sanitize_text_field( ! empty( $data['payment_gateways']['paypal']['mode'] ) ? $data['payment_gateways']['paypal']['mode'] : 'sandbox' );
 				$data['payment_gateways']['paypal']['cancel_url'] = esc_url( ! empty( $data['payment_gateways']['paypal']['cancel_url'] ) ? $data['payment_gateways']['paypal']['cancel_url'] : '' );
 				$data['payment_gateways']['paypal']['return_url'] = esc_url( ! empty( $data['payment_gateways']['paypal']['return_url'] ) ? $data['payment_gateways']['paypal']['return_url'] : '' );
 			}
-			if ( isset( $data['payment_gateways']['bank'] ) && 'on' === $data['payment_gateways']['bank']['status'] ) {
+			if ( isset( $data['payment_gateways']['bank'] ) ) {
 				$data['payment_gateways']['bank']['status'] = sanitize_text_field( $data['payment_gateways']['bank']['status'] );
 			}
-			if ( isset( $data['payment_gateways']['stripe'] ) && 'on' === $data['payment_gateways']['stripe']['status'] ) {
+			if ( isset( $data['payment_gateways']['stripe'] ) ) {
 				$data['payment_gateways']['stripe']['status']     = sanitize_text_field( $data['payment_gateways']['stripe']['status'] );
 				$data['payment_gateways']['stripe']['product_id'] = sanitize_text_field( $product_id );
 				$data['payment_gateways']['stripe']['price_id']   = sanitize_text_field( $price_id );
@@ -492,6 +492,8 @@ class MembershipService {
 						$memberships = $this->membership_repository->get_multiple_membership_by_ID( implode( ',', $upgradeable_membership_ids ) );
 					}
 				}
+			} elseif ( isset( $group_details['mode'] ) && 'multiple' === $group_details['mode'] ) {
+				return array();
 			}
 		}
 

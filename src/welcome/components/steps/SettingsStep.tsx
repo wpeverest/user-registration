@@ -128,7 +128,6 @@ const SettingsStep: React.FC = () => {
 			</Text>
 
 			<VStack spacing={6} align="stretch">
-				{/* User Approval And Login Option */}
 				<FormControl>
 					<Flex align="center" justify="space-between">
 						<FormLabel
@@ -174,8 +173,8 @@ const SettingsStep: React.FC = () => {
 								flex="1"
 								maxW="400px"
 								_focus={{
-									borderColor: "#475BD8",
-									boxShadow: "0 0 0 1px #475BD8"
+									borderColor: "#475BB2",
+									boxShadow: "0 0 0 1px #475BB2"
 								}}
 							>
 								{loginOptions.map((option) => (
@@ -191,7 +190,6 @@ const SettingsStep: React.FC = () => {
 					</Flex>
 				</FormControl>
 
-				{/* Assign Default User Role */}
 				<FormControl>
 					<Flex align="center" justify="space-between">
 						<FormLabel
@@ -237,8 +235,8 @@ const SettingsStep: React.FC = () => {
 								flex="1"
 								maxW="400px"
 								_focus={{
-									borderColor: "#475BD8",
-									boxShadow: "0 0 0 1px #475BD8"
+									borderColor: "#475BB2",
+									boxShadow: "0 0 0 1px #475BB2"
 								}}
 							>
 								{roles.map((role) => (
