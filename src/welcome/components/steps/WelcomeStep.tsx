@@ -43,9 +43,9 @@ const MembershipOption: React.FC<MembershipOptionProps> = ({
 			w="100%"
 			p={4}
 			borderRadius="4px"
-			borderWidth="1px"
+			borderWidth="2px"
 			borderColor={isSelected ? selectedBorder : defaultBorder}
-			bg={isSelected ? "transparent" : defaultBg}
+			bg={"transparent"}
 			transition="all 0.2s ease"
 			_hover={{
 				borderColor: isSelected ? selectedBorder : "gray.300",
@@ -68,7 +68,7 @@ const MembershipOption: React.FC<MembershipOptionProps> = ({
 					<Text
 						fontWeight="600"
 						color={titleColor}
-						fontSize="md"
+						fontSize="14px"
 						lineHeight="20px"
 					>
 						{title}
@@ -77,7 +77,7 @@ const MembershipOption: React.FC<MembershipOptionProps> = ({
 						fontSize="sm"
 						color={descColor}
 						mt={1}
-						lineHeight="20px"
+						lineHeight="22px"
 					>
 						{description}
 					</Text>
@@ -207,7 +207,7 @@ const WelcomeStep: React.FC = () => {
 			</VStack>
 
 			<Box mb={10}>
-				<Text fontWeight="600" color={textColor} mb={4} fontSize="14px">
+				<Text fontWeight="600" color={textColor} mb={4} fontSize="16px">
 					{__("Choose your setup:", "user-registration")}
 				</Text>
 				<RadioGroup
@@ -282,19 +282,20 @@ const WelcomeStep: React.FC = () => {
 									lineHeight="20px"
 								>
 									{__("Email:", "user-registration")}{" "}
-									<Text
-										as="span"
-										fontWeight="600"
-										color={textColor}
-									>
-										{emailForDisplay}
-									</Text>
-									{" · "}
 									<Link
 										color={linkColor}
+										href={`mailto:${emailForDisplay}`}
+									>
+										{emailForDisplay}
+									</Link>
+									{" · "}
+									<Link
 										onClick={handleChangeEmailClick}
 										cursor="pointer"
-										_hover={{ textDecoration: "underline" }}
+										_hover={{
+											color: linkColor,
+											textDecoration: "underline"
+										}}
 									>
 										{__("Change", "user-registration")}
 									</Link>

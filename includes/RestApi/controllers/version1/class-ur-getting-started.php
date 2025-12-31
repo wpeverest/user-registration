@@ -640,18 +640,10 @@ class UR_Getting_Started {
 	protected static function ensure_default_form( $mode = 'normal' ) {
 		$is_membership = ( 'membership' === $mode );
 
-		if ( $is_membership ) {
-			$existing = (int) get_option( self::OPTION_MEMBERSHIP_FORM_ID, 0 );
+		$existing = (int) get_option( 'user_registration_registration_form', 0 );
 
-			if ( $existing > 0 ) {
-				return $existing;
-			}
-		} else {
-			$existing = (int) get_option( 'user_registration_default_form_page_id', 0 );
-
-			if ( $existing > 0 ) {
-				return $existing;
-			}
+		if ( $existing > 0 ) {
+			return $existing;
 		}
 
 		$hasposts = get_posts( 'post_type=user_registration' );
@@ -693,6 +685,8 @@ class UR_Getting_Started {
 		} else {
 			update_option( 'user_registration_default_form_page_id', (int) $new_id );
 		}
+
+		update_option( 'user_registration_registration_form', (int) $new_id );
 
 		return (int) $new_id;
 	}
