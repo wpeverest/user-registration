@@ -619,6 +619,8 @@ class StripeService {
 										$amount = $current_price + $discount_amount;
 
 									}
+								} elseif ( 'full' === $upgrade_type ) {
+										$amount = $new_price;
 								} else {
 									$amount = $new_price - $first_month_price;
 								}

@@ -305,34 +305,26 @@ class UR_Shortcodes {
 				if ( ! $has_all_params ) {
 					global $wp;
 
-					$user_id      = get_current_user_id();
-					$user         = get_user_by( 'ID', $user_id );
-					$current_url  = home_url( add_query_arg( array(), $wp->request ) );
-					$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
-					/**
-					 * Applies a filter to customize the pre-form message for user registration.
-					 *
-					 * @param string $default_message Default pre-form message.
-					 */
-					/* translators: 1: Link and username of user 2: Logout url */
-					return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . esc_attr( $display_name ) . '">' . esc_html( $display_name ) . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_id );
+					$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
 
+					if ( ! current_user_can( $current_user_capability ) ) {
+						$user_id      = get_current_user_id();
+						$user         = get_user_by( 'ID', $user_id );
+						$current_url  = home_url( add_query_arg( array(), $wp->request ) );
+						$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
+						/**
+						 * Applies a filter to customize the pre-form message for user registration.
+						 *
+						 * @param string $default_message Default pre-form message.
+						 */
+						/* translators: 1: Link and username of user 2: Logout url */
+						return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . esc_attr( $display_name ) . '">' . esc_html( $display_name ) . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_id );
+					}
 				} else {
-
-					// ob_start();
-					// echo '<div class="user-registration ur-frontend-form">';
-					// $template_file = locate_template( 'membership-checkout.php' );
-
-					// if ( ! $template_file ) {
-					// $template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/membership-checkout.php';
-					// }
-					// include_once $template_file;
-					// echo '</div>';
-					// return ob_get_clean();
-
 					$membership_service = new WPEverest\URMembership\Admin\Services\MembershipService();
 
 					$fetched_data = $membership_service->fetch_membership_details_from_intended_actions( $_GET );
+
 					if ( isset( $fetched_data['status'] ) && $fetched_data['status'] ) {
 						$user_id = get_current_user_id();
 						$form_id = get_user_meta( $user_id, 'ur_form_id', true );
