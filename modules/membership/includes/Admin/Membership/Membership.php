@@ -915,6 +915,7 @@ class Membership {
 			'network_error'                                => esc_html__( 'Network error', 'user-registration' ),
 			'i18n_field_is_required'                       => _x( 'field is required.', 'user registration membership', 'user-registration' ),
 			'i18n_valid_url_field_validation'              => _x( 'Please enter a valid url for', 'user registration membership', 'user-registration' ),
+			'i18n_valid_price_field_validation'            => _x( 'Invalid Price. The amount must be greater than 0.', 'user registration membership', 'user-registration' ),
 			'i18n_valid_amount_field_validation'           => _x( 'Input Field Amount must be greater than 0.', 'user registration membership', 'user-registration' ),
 			'i18n_valid_trial_period_field_validation'     => _x( 'Trial period must be less than subscription period.', 'user registration membership', 'user-registration' ),
 			'i18n_error'                                   => _x( 'Error', 'user registration membership', 'user-registration' ),

@@ -538,7 +538,7 @@
 						ur_membership_data.labels.i18n_error +
 							"! " +
 							ur_membership_data.labels
-								.i18n_valid_amount_field_validation
+								.i18n_valid_price_field_validation
 					);
 					$("#ur-membership-amount").addClass("ur-membership-error");
 				}
