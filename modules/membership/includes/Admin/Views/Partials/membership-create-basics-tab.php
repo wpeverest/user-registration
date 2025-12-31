@@ -41,7 +41,7 @@
 						'ur-input-type-membership-description',
 						array(
 							'textarea_name' => 'Membership Description',
-							'textarea_rows' => 50,
+							'textarea_rows' => 10,
 							'media_buttons' => false,
 							'quicktags'     => false,
 							'teeny'         => true,
@@ -189,7 +189,7 @@
 				</div>
 
 				<!-- Payment Settings Notice -->
-				<div id="ur-membership-payment-settings-notice" class="<?php echo isset( $membership_details['type'] ) && in_array( $membership_details['type'], array( 'paid', 'subscription' ), true ) && empty( urm_get_all_active_payment_gateways( $membership_details['type'] ) ) ? '' : 'ur-d-none'; ?>" 
+				<div id="ur-membership-payment-settings-notice" class="<?php echo isset( $membership_details['type'] ) && in_array( $membership_details['type'], array( 'paid', 'subscription' ), true ) && empty( urm_get_all_active_payment_gateways( $membership_details['type'] ) ) ? '' : 'ur-d-none'; ?>"
 					data-paid-configured="<?php echo empty( urm_get_all_active_payment_gateways( 'paid' ) ) ? '0' : '1'; ?>"
 					data-subscription-configured="<?php echo empty( urm_get_all_active_payment_gateways( 'subscription' ) ) ? '0' : '1'; ?>">
 					<p>
