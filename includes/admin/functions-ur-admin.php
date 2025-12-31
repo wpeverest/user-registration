@@ -928,6 +928,22 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 						'label'     => esc_html__( 'Analytics', 'user-registration' ),
 					),
 				) : array(),
+				ur_check_module_activation( 'membership' ) ? array(
+					'membership' => array(
+						'page_slug' => 'user-registration-membership',
+						'label'     => esc_html__( 'Membership', 'user-registration' ),
+						'sub_menu'  => array(
+							'all-plans' => array(
+								'page_slug' => 'user-registration-membership',
+								'label'     => esc_html__( 'All Plans', 'user-registration' ),
+							),
+							'groups'    => array(
+								'page_slug' => 'user-registration-membership&action=list_groups',
+								'label'     => esc_html__( 'Groups', 'user-registration' ),
+							),
+						),
+					),
+				) : array(),
 				array(
 					'all-forms' => array(
 						'page_slug' => 'user-registration',
@@ -950,22 +966,6 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 						'label'     => esc_html__( 'Members', 'user-registration' ),
 					),
 				),
-				ur_check_module_activation( 'membership' ) ? array(
-					'membership' => array(
-						'page_slug' => 'user-registration-membership',
-						'label'     => esc_html__( 'Membership', 'user-registration' ),
-						'sub_menu'  => array(
-							'all-plans' => array(
-								'page_slug' => 'user-registration-membership',
-								'label'     => esc_html__( 'All Plans', 'user-registration' ),
-							),
-							'groups'    => array(
-								'page_slug' => 'user-registration-membership&action=list_groups',
-								'label'     => esc_html__( 'Groups', 'user-registration' ),
-							),
-						),
-					),
-				) : array(),
 				array(
 					'settings' => array(
 						'page_slug' => 'user-registration-settings',

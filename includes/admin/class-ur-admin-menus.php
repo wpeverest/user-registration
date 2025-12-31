@@ -527,7 +527,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				999
 			);
 
-			if ( class_exists( 'WPEverest\URMembership\Admin\Membership\Membership' ) ) {
+			if ( class_exists( 'WPEverest\URMembership\Admin\Membership\Membership' ) && ur_check_module_activation( 'membership' ) ) {
 				$membership_obj = new WPEverest\URMembership\Admin\Membership\Membership();
 
 					$rules_page = add_submenu_page(

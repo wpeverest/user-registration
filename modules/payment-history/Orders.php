@@ -59,7 +59,7 @@ class Orders {
 
 	public function add_orders_menu() {
 
-		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
+		// if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
 			$orders_page = add_submenu_page(
 				'user-registration',
 				__( 'Payments', 'user-registration' ), // page title
@@ -73,7 +73,7 @@ class Orders {
 				4
 			);
 			add_action( 'load-' . $orders_page, array( $this, 'orders_initialization' ) );
-		}
+		// }
 	}
 
 
