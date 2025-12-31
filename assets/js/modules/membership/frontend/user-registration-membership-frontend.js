@@ -373,9 +373,6 @@
 				{
 					success: function (response) {
 						if (response.success) {
-							ur_membership_frontend_utils.show_success_message(
-								response.data.message
-							);
 							ur_membership_ajax_utils.handle_response(
 								response,
 								prepare_members_data,
@@ -385,6 +382,7 @@
 							ur_membership_frontend_utils.show_failure_message(
 								response.data.message
 							);
+							form_object.hide_loader(form_response.form_id);
 						}
 					},
 					failure: function (xhr, statusText) {
@@ -394,9 +392,10 @@
 								statusText +
 								")"
 						);
+						form_object.hide_loader(form_response.form_id);
 					},
 					complete: function () {
-						form_object.hide_loader(form_response.form_id);
+						// form_object.hide_loader(form_response.form_id);
 					}
 				}
 			);
@@ -420,6 +419,9 @@
 					window.location.replace(response.data.pg_data.payment_url);
 					break;
 				case "bank":
+					ur_membership_frontend_utils.show_success_message(
+						response.data.message
+					);
 					this.show_bank_response(
 						response,
 						prepare_members_data,
@@ -1466,6 +1468,7 @@
 			prepare_members_data,
 			form_response
 		) {
+
 			if (response.data.pg_data.type === "paid") {
 				this.handle_one_time_payment(
 					response,
@@ -1479,6 +1482,13 @@
 					response_data: response,
 					prepare_members_data: prepare_members_data,
 					form_response: form_response
+				}).then(function(){
+					ur_membership_frontend_utils.show_success_message(
+						response.data.message
+					);
+					form_object.hide_loader(form_response.form_id);
+				}).catch(function(){
+					form_object.hide_loader(form_response.form_id);
 				});
 			}
 		},
@@ -1488,7 +1498,7 @@
 			prepare_members_data,
 			form_response
 		) {
-			elements.stripe
+			return elements.stripe
 				.confirmCardPayment(response.data.pg_data.client_secret, {
 					payment_method: {
 						card: elements.card
@@ -1592,7 +1602,7 @@
 			);
 		},
 		handle_recurring_payment: function (response, data) {
-			Promise.resolve(
+			return Promise.resolve(
 				$.extend({}, data, {
 					customer_id: response.data.pg_data.stripe_cus_id,
 					selected_membership_id: response.data.selected_membership_id
@@ -1614,6 +1624,7 @@
 						data.prepare_members_data,
 						data.form_response
 					);
+					return Promise.reject(error);
 				});
 		},
 		/**
@@ -1836,6 +1847,7 @@
 					);
 				}
 			}
+			return { success: true };
 		}
 	};
 	var register_events = {
