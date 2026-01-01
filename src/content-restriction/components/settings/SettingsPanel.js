@@ -6,8 +6,11 @@ import { __ } from "@wordpress/i18n";
 import { getURCRLocalizedData, getURCRData } from "../../utils/localized-data";
 import { showError } from "../../utils/notifications";
 import { saveRuleWithCollectiveData } from "../../utils/rule-save-helper";
-import SmartTagsButton from "./SmartTagsButton";
-import MediaButton from "./MediaButton";
+import MessageAction from "./MessageAction";
+import RedirectAction from "./RedirectAction";
+import LocalPageAction from "./LocalPageAction";
+import URFormAction from "./URFormAction";
+import ShortcodeAction from "./ShortcodeAction";
 
 /* global wp */
 
@@ -21,7 +24,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 	const [shortcodeTag, setShortcodeTag] = useState("");
 	const [shortcodeArgs, setShortcodeArgs] = useState("");
 	const [isSaving, setIsSaving] = useState(false);
-	const editorRef = useRef(null);
+	const [useGlobalMessage, setUseGlobalMessage] = useState(true);
 	const editorId = `urcr-action-message-editor-${rule.id}`;
 
 	// Initialize from rule actions
@@ -34,22 +37,20 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			if (
 				ruleActions &&
 				ruleActions.length > 0 &&
-				ruleActions[0].message
+				ruleActions[0].message &&
+				ruleActions[0].message.trim() !== ""
 			) {
 				try {
-					setMessage(decodeURIComponent(ruleActions[0].message));
+					const decodedMessage = decodeURIComponent(ruleActions[0].message);
+					setMessage(decodedMessage);
+					setUseGlobalMessage(false);
 				} catch (e) {
 					setMessage(ruleActions[0].message);
+					setUseGlobalMessage(false);
 				}
 			} else {
-				setMessage(
-					"<p>" +
-						__(
-							"You do not have sufficient permission to access this content.",
-							"user-registration"
-						) +
-						"</p>"
-				);
+				setMessage("");
+				setUseGlobalMessage(true);
 			}
 			setRedirectUrl("");
 			setLocalPage("");
@@ -61,22 +62,54 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 
 		if (ruleActions && ruleActions.length > 0) {
 			const action = ruleActions[0];
+			let normalizedType = "message"; // Default to message
 			if (action.type) {
-				let normalizedType =
+				normalizedType =
 					action.type === "ur_form" ? "ur-form" : action.type;
 				if (normalizedType === "redirect_to_local_page") {
 					normalizedType = "local_page";
 				}
 				setActionType(normalizedType);
 			}
+			
+			// Helper function to get default message
+			const getDefaultMessage = () => {
+				return (
+					"<p>" +
+					__(
+						"You do not have sufficient permission to access this content.",
+						"user-registration"
+					) +
+					"</p>"
+				);
+			};
+			
 			if (action.message) {
 				try {
-					setMessage(decodeURIComponent(action.message));
+					const decodedMessage = decodeURIComponent(action.message);
+					if (decodedMessage.trim() !== "") {
+						setMessage(decodedMessage);
+					} else {
+						// If message is empty and action type is message, show default message
+						setMessage(
+							normalizedType === "message" ? getDefaultMessage() : ""
+						);
+					}
 				} catch (e) {
-					setMessage(action.message);
+					if (action.message.trim() !== "") {
+						setMessage(action.message);
+					} else {
+						// If message is empty and action type is message, show default message
+						setMessage(
+							normalizedType === "message" ? getDefaultMessage() : ""
+						);
+					}
 				}
 			} else {
-				setMessage("");
+				// If message is not set and action type is message, show default message
+				setMessage(
+					normalizedType === "message" ? getDefaultMessage() : ""
+				);
 			}
 			if (action.redirect_url) {
 				setRedirectUrl(action.redirect_url);
@@ -136,134 +169,6 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 		}
 	}, [isMembershipRule, actionType]);
 
-	// Initialize WordPress editor for message
-	useEffect(() => {
-		if (actionType === "message") {
-			const initEditor = () => {
-				if (
-					typeof wp !== "undefined" &&
-					wp.editor &&
-					document.getElementById(editorId)
-				) {
-					if (window.tinymce && window.tinymce.get(editorId)) {
-						wp.editor.remove(editorId);
-					}
-
-					wp.editor.initialize(editorId, {
-						quicktags: false,
-						mediaButtons: true,
-						tinymce: {
-							toolbar1:
-								"undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat",
-							statusbar: false,
-							plugins:
-								"wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists",
-							theme_advanced_buttons1:
-								"bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator",
-							theme_advanced_buttons2: ""
-						}
-					});
-
-					setTimeout(() => {
-						if (window.tinymce && window.tinymce.get(editorId)) {
-							const editor = window.tinymce.get(editorId);
-
-							// Set editor height after initialization
-							if (
-								editor &&
-								editor.theme &&
-								editor.theme.resizeTo
-							) {
-								editor.theme.resizeTo(null, 200);
-							}
-
-							editor.on("change keyup", () => {
-								const content = wp.editor.getContent(editorId);
-								setMessage(content);
-							});
-						}
-					}, 500);
-				}
-			};
-
-			const timer1 = setTimeout(initEditor, 100);
-			const timer2 = setTimeout(initEditor, 500);
-
-			return () => {
-				clearTimeout(timer1);
-				clearTimeout(timer2);
-				if (
-					typeof wp !== "undefined" &&
-					wp.editor &&
-					document.getElementById(editorId)
-				) {
-					wp.editor.remove(editorId);
-				}
-			};
-		}
-	}, [actionType, editorId]);
-
-	// Initialize tooltips
-	useEffect(() => {
-		if (
-			typeof window.jQuery !== "undefined" &&
-			typeof window.jQuery.fn.tooltipster !== "undefined"
-		) {
-			const $helpTips = window.jQuery(".user-registration-help-tip");
-			if ($helpTips.length > 0) {
-				$helpTips.each(function () {
-					const $tip = window.jQuery(this);
-					if ($tip.hasClass("tooltipstered")) {
-						$tip.tooltipster("destroy");
-					}
-				});
-
-				$helpTips.tooltipster({
-					theme: "tooltipster-borderless",
-					maxWidth: 200,
-					multiple: true,
-					interactive: true,
-					position: "bottom",
-					contentAsHTML: true,
-					functionInit: function (instance, helper) {
-						const tip = window
-							.jQuery(helper.origin)
-							.attr("data-tip");
-						if (tip) {
-							instance.content(tip);
-						}
-					}
-				});
-			}
-
-			return () => {
-				$helpTips.each(function () {
-					const $tip = window.jQuery(this);
-					if ($tip.hasClass("tooltipstered")) {
-						$tip.tooltipster("destroy");
-					}
-				});
-			};
-		}
-	}, [actionType]);
-
-	const pages = getURCRData("pages", {});
-	const pageOptions = Object.entries(pages).map(([id, title]) => ({
-		value: id,
-		label: title
-	}));
-
-	const urForms = getURCRData("ur_forms", {});
-	const formOptions = Object.entries(urForms).map(([id, title]) => ({
-		value: id,
-		label: title
-	}));
-
-	const shortcodes = getURCRData("shortcodes", {});
-	const shortcodeOptions = Object.keys(shortcodes).map((tag) => ({
-		value: tag,
-		label: tag
-	}));
 
 	const handleActionTypeChange = (e) => {
 		if (isMembershipRule) {
@@ -318,14 +223,18 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 		switch (effectiveActionType) {
 			case "message":
 				actionData.label = __("Show Message", "user-registration");
-				actionData.message =
-					currentMessage ||
-					"<p>" +
-						__(
-							"You do not have sufficient permission to access this content.",
-							"user-registration"
-						) +
-						"</p>";
+				if (isMembershipRule && useGlobalMessage) {
+					actionData.message = "";
+				} else {
+					actionData.message =
+						currentMessage ||
+						"<p>" +
+							__(
+								"You do not have sufficient permission to access this content.",
+								"user-registration"
+							) +
+							"</p>";
+				}
 				actionData.redirect_url = "";
 				actionData.local_page = "";
 				actionData.ur_form = "";
@@ -391,7 +300,8 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				localPage,
 				urForm,
 				shortcodeTag,
-				shortcodeArgs
+				shortcodeArgs,
+				useGlobalMessage
 			};
 			return;
 		}
@@ -403,7 +313,8 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			localPage,
 			urForm,
 			shortcodeTag,
-			shortcodeArgs
+			shortcodeArgs,
+			useGlobalMessage
 		};
 
 		const stateChanged =
@@ -416,7 +327,9 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			prevActionState.current.shortcodeTag !==
 				currentState.shortcodeTag ||
 			prevActionState.current.shortcodeArgs !==
-				currentState.shortcodeArgs;
+				currentState.shortcodeArgs ||
+			prevActionState.current.useGlobalMessage !==
+				currentState.useGlobalMessage;
 
 		if (stateChanged) {
 			let effectiveActionType = actionType;
@@ -468,7 +381,8 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 		localPage,
 		urForm,
 		shortcodeTag,
-		shortcodeArgs
+		shortcodeArgs,
+		useGlobalMessage
 	]);
 
 	const handleSave = async () => {
@@ -517,14 +431,18 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			switch (effectiveActionType) {
 				case "message":
 					actionData.label = __("Show Message", "user-registration");
-					actionData.message =
-						currentMessage ||
-						"<p>" +
-							__(
-								"You do not have sufficient permission to access this content.",
-								"user-registration"
-							) +
-							"</p>";
+					if (isMembershipRule && useGlobalMessage) {
+						actionData.message = "";
+					} else {
+						actionData.message =
+							currentMessage ||
+							"<p>" +
+								__(
+									"You do not have sufficient permission to access this content.",
+									"user-registration"
+								) +
+								"</p>";
+					}
 					actionData.redirect_url = "";
 					actionData.local_page = "";
 					actionData.ur_form = "";
@@ -639,191 +557,44 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			)}
 
 			{actionType === "message" && (
-				<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-message-input-container  ur-form-group">
-					<label className="urcr-label-container ur-col-4">
-						<span className="urcr-target-content-label">
-							{__("Restriction Message", "user-registration")}
-						</span>
-					</label>
-					<div className="urcr-body">
-						<div className="wp-media-buttons">
-							{/* Add Media Button */}
-							<MediaButton editorId={editorId} />
-
-							{/* Smart Tags Button */}
-							<SmartTagsButton
-								editorId={editorId}
-								onTagInsert={(tag) => {
-									// Insert tag into TinyMCE editor
-									if (
-										typeof wp !== "undefined" &&
-										wp.editor &&
-										window.tinymce
-									) {
-										const editor =
-											window.tinymce.get(editorId);
-										if (editor) {
-											editor.execCommand(
-												"mceInsertContent",
-												false,
-												tag
-											);
-											editor.fire("change");
-											// Update message state
-											const content =
-												wp.editor.getContent(editorId);
-											setMessage(content);
-										}
-									}
-								}}
-							/>
-						</div>
-						<div className="wp-editor-container">
-							<div
-								className="wp-core-ui wp-editor-wrap tmce-active"
-								id={`wp-${editorId}-wrap`}
-							>
-								<div id={`wp-${editorId}-editor-container`}>
-									<textarea
-										id={editorId}
-										ref={editorRef}
-										value={message}
-										onChange={(e) =>
-											setMessage(e.target.value)
-										}
-										className="wp-editor-area"
-									/>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+				<MessageAction
+					rule={rule}
+					message={message}
+					onMessageChange={setMessage}
+					isMembershipRule={isMembershipRule}
+					useGlobalMessage={useGlobalMessage}
+					onUseGlobalMessageChange={setUseGlobalMessage}
+				/>
 			)}
 
 			{actionType === "redirect" && (
-				<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-redirect-input-container  ur-form-group">
-					<label className="urcr-label-container ur-col-4">
-						<span className="urcr-target-content-label">
-							{__("Redirection URL", "user-registration")}
-						</span>
-					</label>
-					<div className="urcr-body ">
-						<input
-							type="url"
-							className="urcr-input"
-							value={redirectUrl}
-							onChange={(e) => setRedirectUrl(e.target.value)}
-							placeholder={__(
-								"Enter a URL to redirect to...",
-								"user-registration"
-							)}
-						/>
-					</div>
-				</div>
+				<RedirectAction
+					redirectUrl={redirectUrl}
+					onRedirectUrlChange={setRedirectUrl}
+				/>
 			)}
 
 			{actionType === "local_page" && (
-				<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-redirect-to-local-page-input-container  ur-form-group">
-					<label className="urcr-label-container ur-col-4">
-						<span className="urcr-target-content-label">
-							{__(
-								"Redirect to a local page",
-								"user-registration"
-							)}
-						</span>
-					</label>
-					<div className="urcr-body ">
-						<select
-							className="urcr-input"
-							value={localPage}
-							onChange={(e) => setLocalPage(e.target.value)}
-						>
-							<option value="">
-								{__("Select a page", "user-registration")}
-							</option>
-							{pageOptions.map((page) => (
-								<option key={page.value} value={page.value}>
-									{page.label}
-								</option>
-							))}
-						</select>
-					</div>
-				</div>
+				<LocalPageAction
+					localPage={localPage}
+					onLocalPageChange={setLocalPage}
+				/>
 			)}
 
 			{(actionType === "ur-form" || actionType === "ur_form") && (
-				<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-ur-form-input-container  ur-form-group">
-					<label className="urcr-label-container ur-col-4">
-						<span className="urcr-target-content-label">
-							{__(
-								"Display User Registration Form",
-								"user-registration"
-							)}
-						</span>
-					</label>
-					<div className="urcr-body ">
-						<select
-							className="urcr-input"
-							value={urForm}
-							onChange={(e) => setUrForm(e.target.value)}
-						>
-							<option value="">
-								{__("Select a form", "user-registration")}
-							</option>
-							{formOptions.map((form) => (
-								<option key={form.value} value={form.value}>
-									{form.label}
-								</option>
-							))}
-						</select>
-					</div>
-				</div>
+				<URFormAction
+					urForm={urForm}
+					onUrFormChange={setUrForm}
+				/>
 			)}
 
 			{actionType === "shortcode" && (
-				<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-shortcode-input-container  ur-form-group">
-					<label className="urcr-label-container ur-col-4">
-						<span className="urcr-target-content-label">
-							{__("Render a Shortcode", "user-registration")}
-						</span>
-					</label>
-					<div className="urcr-body ">
-						<div className="urcrra-shortcode-input">
-							<select
-								className="urcr-input"
-								value={shortcodeTag}
-								onChange={(e) =>
-									setShortcodeTag(e.target.value)
-								}
-								style={{ marginBottom: "16px" }}
-							>
-								<option value="">
-									{__(
-										"Select shortcode",
-										"user-registration"
-									)}
-								</option>
-								{shortcodeOptions.map((shortcode) => (
-									<option
-										key={shortcode.value}
-										value={shortcode.value}
-									>
-										{shortcode.label}
-									</option>
-								))}
-							</select>
-							<input
-								type="text"
-								className="urcr-input"
-								value={shortcodeArgs}
-								onChange={(e) =>
-									setShortcodeArgs(e.target.value)
-								}
-								placeholder='Enter shortcode arguments here. Eg: id="345"'
-							/>
-						</div>
-					</div>
-				</div>
+				<ShortcodeAction
+					shortcodeTag={shortcodeTag}
+					shortcodeArgs={shortcodeArgs}
+					onShortcodeTagChange={setShortcodeTag}
+					onShortcodeArgsChange={setShortcodeArgs}
+				/>
 			)}
 
 			<div

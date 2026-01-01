@@ -172,6 +172,28 @@ class MembershipService {
 		return array_values( $memberships );
 	}
 
+	/**
+	 * Prepare membership data without filtering by status
+	 * Used for content restriction where all memberships should be available
+	 *
+	 * @param array $memberships Raw membership data from database
+	 * @return array Prepared membership data
+	 */
+	public function prepare_membership_data_without_status_filter(
+		$memberships
+	) {
+		foreach ( $memberships as $key => $membership ) {
+			$membership_post_content = json_decode( wp_unslash( $membership['post_content'] ), true );
+			// Don't filter by status - include all memberships
+			$memberships[ $key ]['post_content'] = $membership_post_content;
+			if ( isset( $membership['meta_value'] ) ) {
+				$memberships[ $key ]['meta_value'] = json_decode( wp_unslash( $membership['meta_value'] ), true );
+			}
+		}
+
+		return array_values( $memberships );
+	}
+
 
 	/**
 	 * Prepare membership post data by validating and sanitizing it.

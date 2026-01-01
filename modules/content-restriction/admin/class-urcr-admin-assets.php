@@ -80,7 +80,7 @@ class URCR_Admin_Assets {
 			wp_enqueue_style( 'flatpickr' );
 			wp_enqueue_style( 'urcr-content-access-rule-creator' );
 			wp_enqueue_style( 'ur-core-builder-style' );
-			
+
 			// Enqueue shared content restriction styles
 			wp_register_style(
 				'urcr-shared',
@@ -89,7 +89,7 @@ class URCR_Admin_Assets {
 				UR()->version
 			);
 			wp_enqueue_style( 'urcr-shared' );
-			
+
 			// React viewer mode - only load viewer styles
 			wp_register_style(
 				'urcr-content-access-restriction',
@@ -218,7 +218,8 @@ class URCR_Admin_Assets {
 
 		if ( ( ( function_exists( 'ur_check_module_activation' ) ) && ur_check_module_activation( 'membership' ) ) ) {
 			$membership_repository = new MembershipRepository();
-			$memberships           = $membership_repository->get_all_membership();
+			$memberships           = $membership_repository->get_all_memberships_without_status_filter();
+
 			array_map(
 				function ( $membership ) use ( &$formatted_memberships ) {
 					$formatted_memberships[ $membership['ID'] ] = $membership['post_title'];
@@ -369,8 +370,8 @@ class URCR_Admin_Assets {
 		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'membership' ) ) {
 			$is_membership_module_enabled = true;
 			if ( class_exists( '\WPEverest\URMembership\Admin\Services\MembershipService' ) ) {
-				$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
-				$memberships = $membership_service->list_active_memberships();
+				$membership_repository = new MembershipRepository();
+				$memberships = $membership_repository->get_all_memberships_without_status_filter();
 				$membership_count = is_array( $memberships ) ? count( $memberships ) : 0;
 				$has_multiple_memberships = $membership_count > 1;
 			}
@@ -381,12 +382,12 @@ class URCR_Admin_Assets {
 		if ( class_exists( 'UR_Smart_Tags' ) ) {
 			$smart_tags_list = UR_Smart_Tags::smart_tags_list();
 		}
-		
+
 		// Filter to only include sign_up and log_in tags for content restriction editor
 		// The smart tags list uses keys with curly braces like {{sign_up}} and {{log_in}}
 		$allowed_tags = array( '{{sign_up}}', '{{log_in}}' );
 		$smart_tags_list = array_intersect_key( $smart_tags_list, array_flip( $allowed_tags ) );
-		
+
 		/**
 		 * Filter smart tags list for content restriction editor.
 		 *
@@ -394,7 +395,7 @@ class URCR_Admin_Assets {
 		 * @param string $editor_id Editor ID (optional, for context-specific filtering).
 		 */
 		$smart_tags_list = apply_filters( 'urcr_smart_tags_list', $smart_tags_list );
-		
+
 		// Check if smart tags button should be shown (configurable via filter)
 		$show_smart_tags_button = apply_filters( 'urcr_show_smart_tags_button', true, 'urcr-action-message-editor' );
 
@@ -434,6 +435,10 @@ class URCR_Admin_Assets {
 			'show_smart_tags_button'    => $show_smart_tags_button,
 			'smart_tags_dropdown_title' => __( 'Smart Tags', 'user-registration' ),
 			'smart_tags_dropdown_search_placeholder' => __( 'Search Tags...', 'user-registration' ),
+			'membership_default_message' => '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
+<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
+<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
+<p>{{log_in}} {{sign_up}}</p>',
 			'labels'                    => array(
 				'pages'                    => __( 'Pages', 'user-registration' ),
 				'posts'                    => __( 'Posts',  'user-registration' ),

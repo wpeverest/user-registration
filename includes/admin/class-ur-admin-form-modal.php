@@ -237,8 +237,8 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 				return;
 			}
 
-			// For membership access tab editor, only show sign_up and log_in smart tags
-			if ( 'urcr-membership-action-message' === $editor_id ) {
+			// For membership access tab editor and global restriction message, only show sign_up and log_in smart tags
+			if ( 'urcr-membership-action-message' === $editor_id || 'user_registration_content_restriction_message' === $editor_id ) {
 				$smart_tags_list = array(
 					'{{sign_up}}' => esc_html__( 'Sign Up', 'user-registration' ),
 					'{{log_in}}'  => esc_html__( 'Log In', 'user-registration' ),

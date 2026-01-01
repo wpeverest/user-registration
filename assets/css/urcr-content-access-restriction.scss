@@ -1953,7 +1953,6 @@ $not-tag: #fcdddd;
 .urcr-checkbox-radio-group {
 	display: flex;
 	gap: 12px;
-	flex-wrap: wrap;
 
 	.urcr-checkbox-radio-option {
 		.urcr-checkbox-radio-input {
@@ -2006,8 +2005,8 @@ $not-tag: #fcdddd;
 	margin: 0;
 	margin-right: 8px;
 	cursor: pointer;
-	width: 16px;
-	height: 16px;
+	width: 1rem!important;
+	height: 1rem!important;
 	accent-color: #475bb2;
 }
 

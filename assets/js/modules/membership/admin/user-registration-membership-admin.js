@@ -1629,4 +1629,5 @@
 			})
 		}
 	);
+
 })(jQuery, window.ur_membership_localized_data);

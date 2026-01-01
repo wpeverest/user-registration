@@ -99,10 +99,6 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
         }
         
 		public function urcr_settings() {
-
-			$access_rules_list_link = admin_url( 'admin.php?page=user-registration-content-restriction' );
-			$link_html              = sprintf( __( 'Go to <a href="%s">Content Rules page</a> for advanced restrictions', 'user-registration' ), $access_rules_list_link );
-
 			// Build settings array for Advanced section
 			$advanced_settings = array();
 
@@ -135,18 +131,19 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 			}
 
 			$sections['user_registration_content_restriction_settings'] = array(
-				'title'    => __( 'Global Restriction Settings', 'user-registration' ),
+				'title'    => __( 'Content Rules', 'user-registration' ),
 				'type'     => 'card',
-				'desc'     => sprintf( __( 'These settings affect whole site restriction as well as individual page/post restriction if enabled. <a href="%1$s" target="_blank" style="text-decoration: underline;" >Learn More.</a>', 'user-registration' ), esc_url_raw( 'https://docs.wpuserregistration.com/docs/content-restriction/' ) ),
 				'settings' => array(
 					array(
-						'title'    => __( 'Restricted Content Message', 'user-registration' ),
-						'desc'     => __( 'The message you would like to display in restricted content.', 'user-registration' ),
+						'title'    => __( 'Global Restriction Message', 'user-registration' ),
+						'desc'     => __( ' Default message for all restricted content.', 'user-registration' ),
 						'id'       => 'user_registration_content_restriction_message',
 						'type'     => 'tinymce',
 						'default'  => 'This content is restricted!',
 						'css'      => '',
-						'show-smart-tags-button' => false,
+						'show-smart-tags-button' => true,
+						'show-ur-registration-form-button' => false,
+						'show-reset-content-button' => false,
 						'desc_tip' => true,
 					),
 				),
@@ -156,7 +153,7 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 				'user_registration_content_restriction_settings',
 				array(
 					'title'    => __( 'Content Restriction Settings', 'user-registration' ),
-					'desc'     => UR_PRO_ACTIVE ? $link_html : '',
+					'desc'     => '',
 					'sections' => $sections,
 				)
 			);

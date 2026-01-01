@@ -1483,6 +1483,17 @@ function urcr_create_or_update_membership_rule( $membership_id, $rule_data = nul
 			// Fallback if membership title not found
 			$rule_title = isset( $rule_data['title'] ) && ! empty( $rule_data['title'] ) ? $rule_data['title'] : __( 'Membership Access Rule', 'user-registration' );
 		}
+		
+		// Sync rule enabled status with membership status
+		// Membership status is stored in post_content as JSON with a 'status' field (boolean)
+		if ( $membership_post && ! empty( $membership_post->post_content ) ) {
+			$membership_content = json_decode( $membership_post->post_content, true );
+			if ( isset( $membership_content['status'] ) ) {
+				// Set rule enabled status to match membership status
+				$access_rule_data['enabled'] = ur_string_to_bool( $membership_content['status'] );
+			}
+		}
+		
 		// Unslash data before encoding to prevent double-escaping issues with quotes in HTML content
 		$access_rule_data = wp_unslash( $access_rule_data );
 		$rule_content     = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
