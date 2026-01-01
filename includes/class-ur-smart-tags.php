@@ -86,6 +86,8 @@ class UR_Smart_Tags {
 			'{{author_email}}'     => esc_html__( 'Author Email', 'user-registration' ),
 			'{{author_name}}'      => esc_html__( 'Author Name', 'user-registration' ),
 			'{{unique_id}}'        => esc_html__( 'Unique ID', 'user-registration' ),
+			'{{sign_up}}'          => esc_html__( 'Sign Up', 'user-registration' ),
+			'{{log_in}}'           => esc_html__( 'Log In', 'user-registration' ),
 		);
 
 		/**
@@ -678,6 +680,49 @@ class UR_Smart_Tags {
 						break;
 					case 'otp_expiry_time':
 						$content = str_replace( '{{' . $tag . '}}', isset( $values['otp_expiry_time'] ) ? $values['otp_expiry_time'] : '', $content );
+						break;
+					case 'sign_up':
+						$sign_up_text = esc_html__( 'Sign Up', 'user-registration' );
+						preg_match_all( '/text\s*=\s*["\']([^"\']*)["\']/', $tag, $text_matches );
+						if ( ! empty( $text_matches[1][0] ) ) {
+							$sign_up_text = esc_html( $text_matches[1][0] );
+						}
+
+						$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
+						if ( $registration_page_id ) {
+							$signup_url = get_permalink( $registration_page_id );
+						} else {
+							$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
+							if ( $default_form_page_id ) {
+								$signup_url = get_permalink( $default_form_page_id );
+							} else {
+								$login_page_id = get_option( 'user_registration_login_page_id' );
+								$signup_url    = $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url();
+							}
+						}
+						$sign_up_button = '<a href="' . esc_url( $signup_url ) . '" class="urcr-signup-link">' . $sign_up_text . '</a>';
+						$content        = str_replace( '{{' . $tag . '}}', wp_kses_post( $sign_up_button ), $content );
+						break;
+					case 'log_in':
+						$log_in_text = esc_html__( 'Log In', 'user-registration' );
+						preg_match_all( '/text\s*=\s*["\']([^"\']*)["\']/', $tag, $text_matches );
+						if ( ! empty( $text_matches[1][0] ) ) {
+							$log_in_text = esc_html( $text_matches[1][0] );
+						}
+
+						$login_page_id = get_option( 'user_registration_login_page_id' );
+						if ( $login_page_id ) {
+							$login_url = get_permalink( $login_page_id );
+						} else {
+							$ur_account_page_exists   = ur_get_page_id( 'myaccount' ) > 0;
+							$ur_login_or_account_page = ur_get_page_permalink( 'myaccount' );
+							if ( ! $ur_account_page_exists ) {
+								$ur_login_or_account_page = ur_get_page_permalink( 'login' );
+							}
+							$login_url = ( get_home_url() !== $ur_login_or_account_page ) ? $ur_login_or_account_page : wp_login_url();
+						}
+						$log_in_button = '<a href="' . esc_url( $login_url ) . '" class="urcr-access-button urcr-access-button-primary">' . $log_in_text . '</a>';
+						$content       = str_replace( '{{' . $tag . '}}', wp_kses_post( $log_in_button ), $content );
 						break;
 					case 'membership_plan_name':
 					case 'membership_plan_type':

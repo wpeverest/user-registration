@@ -1621,10 +1621,9 @@ jQuery(function ($) {
 
 		var buttonOffset = $(this).offset(),
 			buttonOffsetTop = Math.round(
-				buttonOffset.top + $(this).innerHeight()
+				buttonOffset.top
 			),
 			buttonOffsetRight = Math.round(buttonOffset.left);
-
 		var select2_container = $(
 			".select2-container--open:not(.ur-hide-select2)"
 		);

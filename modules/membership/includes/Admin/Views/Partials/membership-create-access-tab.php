@@ -47,7 +47,7 @@
 										$is_locked = $is_first_membership;
 										echo $this->render_condition_row( $condition, $membership_condition_options, $membership_localized_data, $is_locked );
 									}
-								} elseif ( $membership_id > 0 ) {
+								} elseif ( !empty( $membership_id ) && $membership_id > 0 ) {
 									// If no conditions exist, show membership condition for the current membership
 									// This applies to both free and pro users
 									$membership_condition = array(
@@ -156,18 +156,23 @@
 										if ( isset( $membership_rule_data['actions'][0]['message'] ) ) {
 											$action_message = urldecode( $membership_rule_data['actions'][0]['message'] );
 										} else {
-											$action_message = '<p>' . esc_html__( 'You do not have sufficient permission to access this content.', 'user-registration' ) . '</p>';
+											$action_message = '<h3>Membership Required</h3>
+<p>This content is available to members only.</p>
+<p>Sign up to unlock access or log in if you already have an account.</p>
+<p>{{log_in}} {{sign_up}}</p>';
 										}
 										wp_editor(
 											$action_message,
 											'urcr-membership-action-message',
 											array(
-												'textarea_name' => 'urcr_action_message',
-												'textarea_rows' => 10,
-												'media_buttons' => true,
-												'quicktags'     => false,
-												'teeny'         => false,
-												'tinymce'       => array(
+												'textarea_name'                  => 'urcr_action_message',
+												'textarea_rows'                 => 10,
+												'media_buttons'                  => true,
+												'quicktags'                     => false,
+												'teeny'                         => false,
+												'show-reset-content-button'     => false,
+												'show-ur-registration-form-button' => false,
+												'tinymce'                       => array(
 													'toolbar1'    => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
 													'statusbar'   => false,
 													'plugins'     => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',

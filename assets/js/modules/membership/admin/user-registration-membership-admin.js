@@ -782,7 +782,6 @@
 				// Add rule data to AJAX request if available
 				if (ruleData) {
 					ajaxData.urcr_membership_access_rule_data = JSON.stringify(ruleData);
-					console.log('Rule data added to AJAX request for create');
 				}
 
 				this.send_data(
@@ -792,7 +791,6 @@
 							if (response.success) {
 								ur_membership_data.membership_id =
 									response.data.membership_id;
-									console.log($this);
 								$this.text(ur_membership_data.labels.i18n_save);
 								ur_membership_utils.show_success_message(
 									response.data.message
@@ -847,7 +845,6 @@
 				if (typeof window.URCRMembershipAccess !== 'undefined' && typeof window.URCRMembershipAccess.prepareRuleData === 'function') {
 					ruleData = window.URCRMembershipAccess.prepareRuleData();
 				}
-				console.log(ruleData);
 				var prepare_membership_data = this.prepare_membership_data();
 
 				var ajaxData = {
@@ -861,7 +858,6 @@
 				// Add rule data to AJAX request if available
 				if (ruleData) {
 					ajaxData.urcr_membership_access_rule_data = JSON.stringify(ruleData);
-					console.log('Rule data added to AJAX request for update');
 				}
 
 				this.send_data(

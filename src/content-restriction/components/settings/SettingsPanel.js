@@ -1,15 +1,16 @@
 /**
  * External Dependencies
  */
-import React, {useState, useEffect, useRef} from "react";
-import {__} from "@wordpress/i18n";
-import {getURCRLocalizedData, getURCRData} from "../../utils/localized-data";
-import {showError} from "../../utils/notifications";
-import {saveRuleWithCollectiveData} from "../../utils/rule-save-helper";
+import React, { useState, useEffect, useRef } from "react";
+import { __ } from "@wordpress/i18n";
+import { getURCRLocalizedData, getURCRData } from "../../utils/localized-data";
+import { showError } from "../../utils/notifications";
+import { saveRuleWithCollectiveData } from "../../utils/rule-save-helper";
+import SmartTagsButton from "./SmartTagsButton";
 
 /* global wp */
 
-const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
+const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 	const isMembershipRule = rule.rule_type === "membership";
 	const [actionType, setActionType] = useState("message");
 	const [message, setMessage] = useState("");
@@ -29,14 +30,25 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 
 		if (isMembershipRule) {
 			setActionType("message");
-			if (ruleActions && ruleActions.length > 0 && ruleActions[0].message) {
+			if (
+				ruleActions &&
+				ruleActions.length > 0 &&
+				ruleActions[0].message
+			) {
 				try {
 					setMessage(decodeURIComponent(ruleActions[0].message));
 				} catch (e) {
 					setMessage(ruleActions[0].message);
 				}
 			} else {
-				setMessage("<p>" + __("You do not have sufficient permission to access this content.", "user-registration") + "</p>");
+				setMessage(
+					"<p>" +
+						__(
+							"You do not have sufficient permission to access this content.",
+							"user-registration"
+						) +
+						"</p>"
+				);
 			}
 			setRedirectUrl("");
 			setLocalPage("");
@@ -49,7 +61,8 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 		if (ruleActions && ruleActions.length > 0) {
 			const action = ruleActions[0];
 			if (action.type) {
-				let normalizedType = action.type === "ur_form" ? "ur-form" : action.type;
+				let normalizedType =
+					action.type === "ur_form" ? "ur-form" : action.type;
 				if (normalizedType === "redirect_to_local_page") {
 					normalizedType = "local_page";
 				}
@@ -74,7 +87,11 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			} else {
 				setLocalPage("");
 			}
-			if (action.ur_form !== undefined && action.ur_form !== null && action.ur_form !== "") {
+			if (
+				action.ur_form !== undefined &&
+				action.ur_form !== null &&
+				action.ur_form !== ""
+			) {
 				setUrForm(String(action.ur_form));
 			} else {
 				setUrForm("");
@@ -96,7 +113,14 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			}
 		} else {
 			setActionType("message");
-			setMessage("<p>" + __("You do not have sufficient permission to access this content.", "user-registration") + "</p>");
+			setMessage(
+				"<p>" +
+					__(
+						"You do not have sufficient permission to access this content.",
+						"user-registration"
+					) +
+					"</p>"
+			);
 			setRedirectUrl("");
 			setLocalPage("");
 			setUrForm("");
@@ -115,7 +139,11 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 	useEffect(() => {
 		if (actionType === "message") {
 			const initEditor = () => {
-				if (typeof wp !== "undefined" && wp.editor && document.getElementById(editorId)) {
+				if (
+					typeof wp !== "undefined" &&
+					wp.editor &&
+					document.getElementById(editorId)
+				) {
 					if (window.tinymce && window.tinymce.get(editorId)) {
 						wp.editor.remove(editorId);
 					}
@@ -124,17 +152,30 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 						quicktags: false,
 						mediaButtons: true,
 						tinymce: {
-							toolbar1: "undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat",
+							toolbar1:
+								"undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat",
 							statusbar: false,
-							plugins: "wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists",
-							theme_advanced_buttons1: "bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator",
-							theme_advanced_buttons2: "",
-						},
+							plugins:
+								"wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists",
+							theme_advanced_buttons1:
+								"bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator",
+							theme_advanced_buttons2: ""
+						}
 					});
 
 					setTimeout(() => {
 						if (window.tinymce && window.tinymce.get(editorId)) {
 							const editor = window.tinymce.get(editorId);
+
+							// Set editor height after initialization
+							if (
+								editor &&
+								editor.theme &&
+								editor.theme.resizeTo
+							) {
+								editor.theme.resizeTo(null, 200);
+							}
+
 							editor.on("change keyup", () => {
 								const content = wp.editor.getContent(editorId);
 								setMessage(content);
@@ -150,7 +191,11 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			return () => {
 				clearTimeout(timer1);
 				clearTimeout(timer2);
-				if (typeof wp !== "undefined" && wp.editor && document.getElementById(editorId)) {
+				if (
+					typeof wp !== "undefined" &&
+					wp.editor &&
+					document.getElementById(editorId)
+				) {
 					wp.editor.remove(editorId);
 				}
 			};
@@ -159,7 +204,10 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 
 	// Initialize tooltips
 	useEffect(() => {
-		if (typeof window.jQuery !== "undefined" && typeof window.jQuery.fn.tooltipster !== "undefined") {
+		if (
+			typeof window.jQuery !== "undefined" &&
+			typeof window.jQuery.fn.tooltipster !== "undefined"
+		) {
 			const $helpTips = window.jQuery(".user-registration-help-tip");
 			if ($helpTips.length > 0) {
 				$helpTips.each(function () {
@@ -177,7 +225,9 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 					position: "bottom",
 					contentAsHTML: true,
 					functionInit: function (instance, helper) {
-						const tip = window.jQuery(helper.origin).attr("data-tip");
+						const tip = window
+							.jQuery(helper.origin)
+							.attr("data-tip");
 						if (tip) {
 							instance.content(tip);
 						}
@@ -199,19 +249,19 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 	const pages = getURCRData("pages", {});
 	const pageOptions = Object.entries(pages).map(([id, title]) => ({
 		value: id,
-		label: title,
+		label: title
 	}));
 
 	const urForms = getURCRData("ur_forms", {});
 	const formOptions = Object.entries(urForms).map(([id, title]) => ({
 		value: id,
-		label: title,
+		label: title
 	}));
 
 	const shortcodes = getURCRData("shortcodes", {});
 	const shortcodeOptions = Object.keys(shortcodes).map((tag) => ({
 		value: tag,
-		label: tag,
+		label: tag
 	}));
 
 	const handleActionTypeChange = (e) => {
@@ -233,29 +283,52 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 		}
 
 		let currentMessage = message;
-		if (effectiveActionType === "message" && typeof wp !== "undefined" && wp.editor) {
-			if (document.getElementById(editorId) && window.tinymce && window.tinymce.get(editorId)) {
+		if (
+			effectiveActionType === "message" &&
+			typeof wp !== "undefined" &&
+			wp.editor
+		) {
+			if (
+				document.getElementById(editorId) &&
+				window.tinymce &&
+				window.tinymce.get(editorId)
+			) {
 				currentMessage = wp.editor.getContent(editorId);
 			}
 		}
 
-		const accessControl = rule.access_control || ruleData.access_control || 
-			(ruleActions && ruleActions.length > 0 && ruleActions[0].access_control) || "restrict";
+		const accessControl =
+			rule.access_control ||
+			ruleData.access_control ||
+			(ruleActions &&
+				ruleActions.length > 0 &&
+				ruleActions[0].access_control) ||
+			"restrict";
 
 		let actionData = {
-			id: ruleActions && ruleActions.length > 0 ? ruleActions[0].id : `x${Date.now()}`,
+			id:
+				ruleActions && ruleActions.length > 0
+					? ruleActions[0].id
+					: `x${Date.now()}`,
 			type: effectiveActionType,
-			access_control: accessControl,
+			access_control: accessControl
 		};
 
 		switch (effectiveActionType) {
 			case "message":
 				actionData.label = __("Show Message", "user-registration");
-				actionData.message = currentMessage || "<p>" + __("You do not have sufficient permission to access this content.", "user-registration") + "</p>";
+				actionData.message =
+					currentMessage ||
+					"<p>" +
+						__(
+							"You do not have sufficient permission to access this content.",
+							"user-registration"
+						) +
+						"</p>";
 				actionData.redirect_url = "";
 				actionData.local_page = "";
 				actionData.ur_form = "";
-				actionData.shortcode = {tag: "", args: ""};
+				actionData.shortcode = { tag: "", args: "" };
 				break;
 			case "redirect":
 				actionData.label = __("Redirect", "user-registration");
@@ -263,16 +336,19 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				actionData.redirect_url = redirectUrl;
 				actionData.local_page = "";
 				actionData.ur_form = "";
-				actionData.shortcode = {tag: "", args: ""};
+				actionData.shortcode = { tag: "", args: "" };
 				break;
 			case "local_page":
 				actionData.type = "redirect_to_local_page";
-				actionData.label = __("Redirect to a Local Page", "user-registration");
+				actionData.label = __(
+					"Redirect to a Local Page",
+					"user-registration"
+				);
 				actionData.message = "";
 				actionData.redirect_url = "";
 				actionData.local_page = localPage;
 				actionData.ur_form = "";
-				actionData.shortcode = {tag: "", args: ""};
+				actionData.shortcode = { tag: "", args: "" };
 				break;
 			case "ur-form":
 			case "ur_form":
@@ -282,7 +358,7 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				actionData.redirect_url = "";
 				actionData.local_page = "";
 				actionData.ur_form = urForm ? String(urForm) : "";
-				actionData.shortcode = {tag: "", args: ""};
+				actionData.shortcode = { tag: "", args: "" };
 				break;
 			case "shortcode":
 				actionData.label = __("Render Shortcode", "user-registration");
@@ -292,7 +368,7 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				actionData.ur_form = "";
 				actionData.shortcode = {
 					tag: shortcodeTag,
-					args: shortcodeArgs,
+					args: shortcodeArgs
 				};
 				break;
 		}
@@ -314,7 +390,7 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				localPage,
 				urForm,
 				shortcodeTag,
-				shortcodeArgs,
+				shortcodeArgs
 			};
 			return;
 		}
@@ -326,17 +402,20 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			localPage,
 			urForm,
 			shortcodeTag,
-			shortcodeArgs,
+			shortcodeArgs
 		};
 
-		const stateChanged = !prevActionState.current ||
+		const stateChanged =
+			!prevActionState.current ||
 			prevActionState.current.actionType !== currentState.actionType ||
 			prevActionState.current.message !== currentState.message ||
 			prevActionState.current.redirectUrl !== currentState.redirectUrl ||
 			prevActionState.current.localPage !== currentState.localPage ||
 			prevActionState.current.urForm !== currentState.urForm ||
-			prevActionState.current.shortcodeTag !== currentState.shortcodeTag ||
-			prevActionState.current.shortcodeArgs !== currentState.shortcodeArgs;
+			prevActionState.current.shortcodeTag !==
+				currentState.shortcodeTag ||
+			prevActionState.current.shortcodeArgs !==
+				currentState.shortcodeArgs;
 
 		if (stateChanged) {
 			let effectiveActionType = actionType;
@@ -344,18 +423,23 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				effectiveActionType = "message";
 			}
 
-			const { actionData, accessControl: syncAccessControl } = buildActionDataFromState();
-			
+			const { actionData, accessControl: syncAccessControl } =
+				buildActionDataFromState();
+
 			if (isMembershipRule) {
 				actionData.type = "message";
 			}
-			
-			const currentLogicMap = rule.logic_map || (rule.content && rule.content.logic_map) || {
-				type: "group",
-				id: `x${Date.now()}`,
-				conditions: []
-			};
-			const currentTargetContents = rule.target_contents || (rule.content && rule.content.target_contents) || [];
+
+			const currentLogicMap = rule.logic_map ||
+				(rule.content && rule.content.logic_map) || {
+					type: "group",
+					id: `x${Date.now()}`,
+					conditions: []
+				};
+			const currentTargetContents =
+				rule.target_contents ||
+				(rule.content && rule.content.target_contents) ||
+				[];
 
 			if (onRuleUpdate) {
 				const updatedRule = {
@@ -367,7 +451,7 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 						access_control: syncAccessControl,
 						logic_map: currentLogicMap,
 						target_contents: currentTargetContents,
-						actions: [actionData],
+						actions: [actionData]
 					}
 				};
 				onRuleUpdate(updatedRule);
@@ -376,7 +460,15 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			prevActionState.current = currentState;
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [actionType, message, redirectUrl, localPage, urForm, shortcodeTag, shortcodeArgs]);
+	}, [
+		actionType,
+		message,
+		redirectUrl,
+		localPage,
+		urForm,
+		shortcodeTag,
+		shortcodeArgs
+	]);
 
 	const handleSave = async () => {
 		setIsSaving(true);
@@ -390,29 +482,52 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			}
 
 			let currentMessage = message;
-			if (effectiveActionType === "message" && typeof wp !== "undefined" && wp.editor) {
-				if (document.getElementById(editorId) && window.tinymce && window.tinymce.get(editorId)) {
+			if (
+				effectiveActionType === "message" &&
+				typeof wp !== "undefined" &&
+				wp.editor
+			) {
+				if (
+					document.getElementById(editorId) &&
+					window.tinymce &&
+					window.tinymce.get(editorId)
+				) {
 					currentMessage = wp.editor.getContent(editorId);
 				}
 			}
 
-			const accessControl = rule.access_control || ruleData.access_control || 
-				(ruleActions && ruleActions.length > 0 && ruleActions[0].access_control) || "restrict";
+			const accessControl =
+				rule.access_control ||
+				ruleData.access_control ||
+				(ruleActions &&
+					ruleActions.length > 0 &&
+					ruleActions[0].access_control) ||
+				"restrict";
 
 			let actionData = {
-				id: ruleActions && ruleActions.length > 0 ? ruleActions[0].id : `x${Date.now()}`,
+				id:
+					ruleActions && ruleActions.length > 0
+						? ruleActions[0].id
+						: `x${Date.now()}`,
 				type: effectiveActionType,
-				access_control: accessControl,
+				access_control: accessControl
 			};
 
 			switch (effectiveActionType) {
 				case "message":
 					actionData.label = __("Show Message", "user-registration");
-					actionData.message = currentMessage || "<p>" + __("You do not have sufficient permission to access this content.", "user-registration") + "</p>";
+					actionData.message =
+						currentMessage ||
+						"<p>" +
+							__(
+								"You do not have sufficient permission to access this content.",
+								"user-registration"
+							) +
+							"</p>";
 					actionData.redirect_url = "";
 					actionData.local_page = "";
 					actionData.ur_form = "";
-					actionData.shortcode = {tag: "", args: ""};
+					actionData.shortcode = { tag: "", args: "" };
 					break;
 				case "redirect":
 					actionData.label = __("Redirect", "user-registration");
@@ -420,16 +535,19 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 					actionData.redirect_url = redirectUrl;
 					actionData.local_page = "";
 					actionData.ur_form = "";
-					actionData.shortcode = {tag: "", args: ""};
+					actionData.shortcode = { tag: "", args: "" };
 					break;
 				case "local_page":
 					actionData.type = "redirect_to_local_page";
-					actionData.label = __("Redirect to a Local Page", "user-registration");
+					actionData.label = __(
+						"Redirect to a Local Page",
+						"user-registration"
+					);
 					actionData.message = "";
 					actionData.redirect_url = "";
 					actionData.local_page = localPage;
 					actionData.ur_form = "";
-					actionData.shortcode = {tag: "", args: ""};
+					actionData.shortcode = { tag: "", args: "" };
 					break;
 				case "ur-form":
 				case "ur_form":
@@ -439,17 +557,20 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 					actionData.redirect_url = "";
 					actionData.local_page = "";
 					actionData.ur_form = urForm ? String(urForm) : "";
-					actionData.shortcode = {tag: "", args: ""};
+					actionData.shortcode = { tag: "", args: "" };
 					break;
 				case "shortcode":
-					actionData.label = __("Render Shortcode", "user-registration");
+					actionData.label = __(
+						"Render Shortcode",
+						"user-registration"
+					);
 					actionData.message = "";
 					actionData.redirect_url = "";
 					actionData.local_page = "";
 					actionData.ur_form = "";
 					actionData.shortcode = {
 						tag: shortcodeTag,
-						args: shortcodeArgs,
+						args: shortcodeArgs
 					};
 					break;
 			}
@@ -459,8 +580,8 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				onRuleUpdate,
 				settingsData: {
 					actionData,
-					accessControl,
-				},
+					accessControl
+				}
 			});
 		} catch (error) {
 			// Error handled in saveRuleWithCollectiveData
@@ -471,50 +592,96 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 
 	return (
 		<div className="urcr-rule-settings-panel">
-
 			{!isMembershipRule && (
 				<div className="urcr-label-input-pair urcr-rule-action ur-align-items-center ur-form-group">
 					<label className="urcr-label-container ur-col-4">
-						<span className="urcr-target-content-label">{__("Action", "user-registration")}</span>
+						<span className="urcr-target-content-label">
+							{__("Action", "user-registration")}
+						</span>
 						<span className="urcr-puncher"></span>
-						<span className="user-registration-help-tip"
-							  data-tip={__("Action to perform for restricting the specified contents", "user-registration")}></span>
+						<span
+							className="user-registration-help-tip"
+							data-tip={__(
+								"Action to perform for restricting the specified contents",
+								"user-registration"
+							)}
+						></span>
 					</label>
 					<div className="urcr-input-container">
 						<select
 							className="urcr-action-type-select urcr-condition-value-input"
 							value={actionType}
 							onChange={handleActionTypeChange}
-							style={{width: "100%"}}
+							style={{ width: "100%" }}
 						>
-							<option value="message">{__("Show Message", "user-registration")}</option>
-							<option value="redirect">{__("Redirect", "user-registration")}</option>
-							<option value="local_page">{__("Redirect to a Local Page", "user-registration")}</option>
-							<option value="ur-form">{__("Show UR Form", "user-registration")}</option>
-							<option value="shortcode">{__("Render Shortcode", "user-registration")}</option>
+							<option value="message">
+								{__("Show Message", "user-registration")}
+							</option>
+							<option value="redirect">
+								{__("Redirect", "user-registration")}
+							</option>
+							<option value="local_page">
+								{__(
+									"Redirect to a Local Page",
+									"user-registration"
+								)}
+							</option>
+							<option value="ur-form">
+								{__("Show UR Form", "user-registration")}
+							</option>
+							<option value="shortcode">
+								{__("Render Shortcode", "user-registration")}
+							</option>
 						</select>
 					</div>
 				</div>
 			)}
 
 			{actionType === "message" && (
-				<div
-					className="urcr-title-body-pair urcr-rule-action-input-container urcrra-message-input-container  ur-form-group">
+				<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-message-input-container  ur-form-group">
 					<label className="urcr-label-container ur-col-4">
-						<span
-							className="urcr-target-content-label">{__("Redirection Message", "user-registration")}</span>
+						<span className="urcr-target-content-label">
+							{__("Restriction Message", "user-registration")}
+						</span>
 					</label>
 					<div className="urcr-body">
-
-						<div className="wp-editor-wrap">
-							<div className="wp-editor-container">
-							<textarea
-								id={editorId}
-								ref={editorRef}
-								value={message}
-								onChange={(e) => setMessage(e.target.value)}
-								style={{minHeight: "175px", width: "100%"}}
-							/>
+						{/* Smart Tags Button - will portal into media buttons area above editor */}
+						<SmartTagsButton
+							editorId={editorId}
+							onTagInsert={(tag) => {
+								// Insert tag into TinyMCE editor
+								if (
+									typeof wp !== "undefined" &&
+									wp.editor &&
+									window.tinymce
+								) {
+									const editor = window.tinymce.get(editorId);
+									if (editor) {
+										editor.execCommand(
+											"mceInsertContent",
+											false,
+											tag
+										);
+										editor.fire("change");
+										// Update message state
+										const content =
+											wp.editor.getContent(editorId);
+										setMessage(content);
+									}
+								}
+							}}
+						/>
+						<div className="wp-editor-container">
+							<div
+								className="wp-editor-wrap"
+								id={`wp-${editorId}-wrap`}
+							>
+								<textarea
+									id={editorId}
+									ref={editorRef}
+									value={message}
+									onChange={(e) => setMessage(e.target.value)}
+								/>
 							</div>
 						</div>
 					</div>
@@ -522,10 +689,11 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			)}
 
 			{actionType === "redirect" && (
-				<div
-					className="urcr-title-body-pair urcr-rule-action-input-container urcrra-redirect-input-container  ur-form-group">
+				<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-redirect-input-container  ur-form-group">
 					<label className="urcr-label-container ur-col-4">
-						<span className="urcr-target-content-label">{__("Redirection URL", "user-registration")}</span>
+						<span className="urcr-target-content-label">
+							{__("Redirection URL", "user-registration")}
+						</span>
 					</label>
 					<div className="urcr-body ">
 						<input
@@ -533,18 +701,24 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 							className="urcr-input"
 							value={redirectUrl}
 							onChange={(e) => setRedirectUrl(e.target.value)}
-							placeholder={__("Enter a URL to redirect to...", "user-registration")}
+							placeholder={__(
+								"Enter a URL to redirect to...",
+								"user-registration"
+							)}
 						/>
 					</div>
 				</div>
 			)}
 
 			{actionType === "local_page" && (
-				<div
-					className="urcr-title-body-pair urcr-rule-action-input-container urcrra-redirect-to-local-page-input-container  ur-form-group">
+				<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-redirect-to-local-page-input-container  ur-form-group">
 					<label className="urcr-label-container ur-col-4">
-						<span
-							className="urcr-target-content-label">{__("Redirect to a local page", "user-registration")}</span>
+						<span className="urcr-target-content-label">
+							{__(
+								"Redirect to a local page",
+								"user-registration"
+							)}
+						</span>
 					</label>
 					<div className="urcr-body ">
 						<select
@@ -552,7 +726,9 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 							value={localPage}
 							onChange={(e) => setLocalPage(e.target.value)}
 						>
-							<option value="">{__("Select a page", "user-registration")}</option>
+							<option value="">
+								{__("Select a page", "user-registration")}
+							</option>
 							{pageOptions.map((page) => (
 								<option key={page.value} value={page.value}>
 									{page.label}
@@ -564,11 +740,14 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			)}
 
 			{(actionType === "ur-form" || actionType === "ur_form") && (
-				<div
-					className="urcr-title-body-pair urcr-rule-action-input-container urcrra-ur-form-input-container  ur-form-group">
+				<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-ur-form-input-container  ur-form-group">
 					<label className="urcr-label-container ur-col-4">
-						<span
-							className="urcr-target-content-label">{__("Display User Registration Form", "user-registration")}</span>
+						<span className="urcr-target-content-label">
+							{__(
+								"Display User Registration Form",
+								"user-registration"
+							)}
+						</span>
 					</label>
 					<div className="urcr-body ">
 						<select
@@ -576,7 +755,9 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 							value={urForm}
 							onChange={(e) => setUrForm(e.target.value)}
 						>
-							<option value="">{__("Select a form", "user-registration")}</option>
+							<option value="">
+								{__("Select a form", "user-registration")}
+							</option>
 							{formOptions.map((form) => (
 								<option key={form.value} value={form.value}>
 									{form.label}
@@ -588,23 +769,33 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 			)}
 
 			{actionType === "shortcode" && (
-				<div
-					className="urcr-title-body-pair urcr-rule-action-input-container urcrra-shortcode-input-container  ur-form-group">
+				<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-shortcode-input-container  ur-form-group">
 					<label className="urcr-label-container ur-col-4">
-						<span
-							className="urcr-target-content-label">{__("Render a Shortcode", "user-registration")}</span>
+						<span className="urcr-target-content-label">
+							{__("Render a Shortcode", "user-registration")}
+						</span>
 					</label>
 					<div className="urcr-body ">
 						<div className="urcrra-shortcode-input">
 							<select
 								className="urcr-input"
 								value={shortcodeTag}
-								onChange={(e) => setShortcodeTag(e.target.value)}
-								style={{marginBottom: "16px"}}
+								onChange={(e) =>
+									setShortcodeTag(e.target.value)
+								}
+								style={{ marginBottom: "16px" }}
 							>
-								<option value="">{__("Select shortcode", "user-registration")}</option>
+								<option value="">
+									{__(
+										"Select shortcode",
+										"user-registration"
+									)}
+								</option>
 								{shortcodeOptions.map((shortcode) => (
-									<option key={shortcode.value} value={shortcode.value}>
+									<option
+										key={shortcode.value}
+										value={shortcode.value}
+									>
 										{shortcode.label}
 									</option>
 								))}
@@ -613,7 +804,9 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 								type="text"
 								className="urcr-input"
 								value={shortcodeArgs}
-								onChange={(e) => setShortcodeArgs(e.target.value)}
+								onChange={(e) =>
+									setShortcodeArgs(e.target.value)
+								}
 								placeholder='Enter shortcode arguments here. Eg: id="345"'
 							/>
 						</div>
@@ -621,14 +814,19 @@ const SettingsPanel = ({rule, onRuleUpdate, onGoBack}) => {
 				</div>
 			)}
 
-			<div className="urcr-settings-actions" style={{marginTop: "20px"}}>
+			<div
+				className="urcr-settings-actions"
+				style={{ marginTop: "20px" }}
+			>
 				<button
 					type="button"
 					className="button button-primary"
 					onClick={handleSave}
 					disabled={isSaving}
 				>
-					{isSaving ? __("Saving...", "user-registration") : __("Save", "user-registration")}
+					{isSaving
+						? __("Saving...", "user-registration")
+						: __("Save", "user-registration")}
 				</button>
 			</div>
 		</div>
