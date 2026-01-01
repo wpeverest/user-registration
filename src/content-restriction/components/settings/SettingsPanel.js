@@ -7,6 +7,7 @@ import { getURCRLocalizedData, getURCRData } from "../../utils/localized-data";
 import { showError } from "../../utils/notifications";
 import { saveRuleWithCollectiveData } from "../../utils/rule-save-helper";
 import SmartTagsButton from "./SmartTagsButton";
+import MediaButton from "./MediaButton";
 
 /* global wp */
 
@@ -645,43 +646,54 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 						</span>
 					</label>
 					<div className="urcr-body">
-						{/* Smart Tags Button - will portal into media buttons area above editor */}
-						<SmartTagsButton
-							editorId={editorId}
-							onTagInsert={(tag) => {
-								// Insert tag into TinyMCE editor
-								if (
-									typeof wp !== "undefined" &&
-									wp.editor &&
-									window.tinymce
-								) {
-									const editor = window.tinymce.get(editorId);
-									if (editor) {
-										editor.execCommand(
-											"mceInsertContent",
-											false,
-											tag
-										);
-										editor.fire("change");
-										// Update message state
-										const content =
-											wp.editor.getContent(editorId);
-										setMessage(content);
+						<div className="wp-media-buttons">
+							{/* Add Media Button */}
+							<MediaButton editorId={editorId} />
+
+							{/* Smart Tags Button */}
+							<SmartTagsButton
+								editorId={editorId}
+								onTagInsert={(tag) => {
+									// Insert tag into TinyMCE editor
+									if (
+										typeof wp !== "undefined" &&
+										wp.editor &&
+										window.tinymce
+									) {
+										const editor =
+											window.tinymce.get(editorId);
+										if (editor) {
+											editor.execCommand(
+												"mceInsertContent",
+												false,
+												tag
+											);
+											editor.fire("change");
+											// Update message state
+											const content =
+												wp.editor.getContent(editorId);
+											setMessage(content);
+										}
 									}
-								}
-							}}
-						/>
+								}}
+							/>
+						</div>
 						<div className="wp-editor-container">
 							<div
-								className="wp-editor-wrap"
+								className="wp-core-ui wp-editor-wrap tmce-active"
 								id={`wp-${editorId}-wrap`}
 							>
-								<textarea
-									id={editorId}
-									ref={editorRef}
-									value={message}
-									onChange={(e) => setMessage(e.target.value)}
-								/>
+								<div id={`wp-${editorId}-editor-container`}>
+									<textarea
+										id={editorId}
+										ref={editorRef}
+										value={message}
+										onChange={(e) =>
+											setMessage(e.target.value)
+										}
+										className="wp-editor-area"
+									/>
+								</div>
 							</div>
 						</div>
 					</div>

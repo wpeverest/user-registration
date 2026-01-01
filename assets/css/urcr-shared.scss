@@ -663,37 +663,33 @@ $border-color_6: #475bb2;
 		width: 100%;
 	}
 
-	.wp-editor-wrap {
+	.wp-media-buttons {
+		display: flex !important;
+		align-items: center;
+		justify-content: space-between !important;
+		gap: 10px;
+		width: 100%;
+		.button {
+			&[data-editor="urcr-membership-action-message"] {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				margin: 0;
 
-		
-		.wp-media-buttons {
-			display: flex !important;
-			align-items: center;
-			justify-content: space-between;
-			gap: 10px;
-
-			.button {
-				&[data-editor="urcr-membership-action-message"] {
-					display: flex;
-					align-items: center;
-					gap: 6px;
+				.wp-media-buttons-icon {
 					margin: 0;
+				}
 
-					.wp-media-buttons-icon {
-						margin: 0;
-					}
-
-					.dashicons {
-						&::before {
-							line-height: 22px;
-						}
+				.dashicons {
+					&::before {
+						line-height: 22px;
 					}
 				}
 			}
+		}
 
-			#ur-smart-tags-selector {
-				margin-left: auto;
-			}
+		#ur-smart-tags-selector {
+			margin-left: auto;
 		}
 	}
 
@@ -710,7 +706,7 @@ $border-color_6: #475bb2;
 .wp-media-buttons {
 	display: flex !important;
 	justify-content: flex-end !important;
-	
+
 	.urcr-smart-tags-button-wrapper {
 		position: relative !important;
 		display: inline-block !important;
@@ -802,7 +798,9 @@ $border-color_6: #475bb2;
 				cursor: pointer;
 				font-size: 13px;
 				color: #383838;
-				transition: background-color 0.15s ease, color 0.15s ease;
+				transition:
+					background-color 0.15s ease,
+					color 0.15s ease;
 				margin: 0;
 				margin-left: 0 !important;
 
