@@ -307,7 +307,7 @@ class StripeService {
 		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? '';
 
 		if ( empty( $transaction_id ) ) {
-			$transaction_id = $data['payment_result']['latest_invoice']['payment_intent']['next_action']['use_stripe_sdk']['directory_server_encryption']['server_transaction_id'] ?? '';
+			$transaction_id = $data['payment_result']['latest_invoice']['payment_intent']['id'] ?? '';
 		}
 
 		$three_d_secure_2_source = $data['payment_result']['latest_invoice']['payment_intent']['next_action']['use_stripe_sdk']['three_d_secure_2_source'] ?? '';
@@ -724,7 +724,6 @@ class StripeService {
 
 			$subscription        = \Stripe\Subscription::create( $subscription_details );
 			$subscription_status = $subscription->status ?? '';
-
 			PaymentGatewayLogging::log_api_response(
 				'stripe',
 				'Stripe subscription created',
