@@ -1097,9 +1097,13 @@ function urcr_build_migration_actions() {
  * @return int|false Rule ID on success, false on failure.
  */
 function urcr_create_migrated_rule( $title, $rule_data ) {
+	$rule_data = wp_unslash( $rule_data );
+	$rule_content = wp_json_encode( $rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+	$rule_content = wp_slash( $rule_content );
+
 	$rule_post = array(
 		'post_title'   => $title,
-		'post_content' => wp_json_encode( $rule_data ),
+		'post_content' => $rule_content,
 		'post_type'    => 'urcr_access_rule',
 		'post_status'  => 'publish',
 	);
@@ -1195,18 +1199,20 @@ function urcr_migrate_post_page_restrictions() {
 		"SELECT DISTINCT p.ID, p.post_type
 		FROM {$wpdb->posts} p
 		INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
+		LEFT JOIN {$wpdb->postmeta} pm_override
+			ON pm_override.post_id = p.ID
+				AND pm_override.meta_key = %s
 		WHERE pm.meta_key = %s
 			AND pm.meta_value = %s
 			AND p.post_type IN ('post', 'page')
 			AND p.post_status = 'publish'
-			AND p.ID NOT IN (
-				SELECT DISTINCT pm2.post_id
-				FROM {$wpdb->postmeta} pm2
-				WHERE pm2.meta_key = %s
+			AND (
+				pm_override.post_id IS NULL
+				OR pm_override.meta_value = ''
 			)",
+		'urcr_meta_override_global_settings',
 		'urcr_meta_checkbox',
-		'on',
-		'urcr_meta_override_global_settings'
+		'on'
 	);
 
 	$results = $wpdb->get_results( $query );
@@ -1229,6 +1235,7 @@ function urcr_migrate_post_page_restrictions() {
 
 	// Get already migrated IDs
 	$migrated_ids = get_option( 'urcr_migrated_post_page_ids', array() );
+
 	if ( ! is_array( $migrated_ids ) ) {
 		$migrated_ids = array();
 	}
@@ -1268,6 +1275,7 @@ function urcr_migrate_post_page_restrictions() {
 
 	// Build conditions
 	$conditions = urcr_build_migration_conditions( $allow_to );
+
 	if ( empty( $conditions ) ) {
 		return array(); // No conditions to migrate
 	}
@@ -1511,7 +1519,6 @@ function urcr_create_or_update_membership_rule( $membership_id, $rule_data = nul
 		}
 
 		// Sync rule enabled status with membership status
-		// Membership status is stored in post_content as JSON with a 'status' field (boolean)
 		if ( $membership_post && ! empty( $membership_post->post_content ) ) {
 			$membership_content = json_decode( $membership_post->post_content, true );
 			if ( isset( $membership_content['status'] ) ) {
@@ -1795,6 +1802,7 @@ function urcr_has_unmigrated_memberships() {
  * @return array Migration results.
  */
 function urcr_run_migration() {
+
 	$results = array(
 		'global_rule_id'      => false,
 		'post_page_rule_id'   => false,
