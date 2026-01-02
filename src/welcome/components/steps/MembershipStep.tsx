@@ -598,25 +598,37 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 									maxW="150px"
 									{...inputStyles}
 								/>
-								<Select
-									value={plan.billingCycle}
-									onChange={handleBillingCycleChange}
-									maxW="140px"
-									{...inputStyles}
-								>
-									<option value="day">
-										{getBillingCycleLabel("day")}
-									</option>
-									<option value="week">
-										{getBillingCycleLabel("week")}
-									</option>
-									<option value="month">
-										{getBillingCycleLabel("month")}
-									</option>
-									<option value="year">
-										{getBillingCycleLabel("year")}
-									</option>
-								</Select>
+								<Box position="relative" w="140px">
+									<Select
+										value={plan.billingCycle}
+										onChange={handleBillingCycleChange}
+										fontSize="14px"
+										bg={inputBg}
+										borderColor={borderColor}
+										borderRadius="4px"
+										h="40px"
+										w="140px"
+										_hover={{ borderColor: "gray.300" }}
+										_focus={{
+											borderColor: "#475BB2",
+											boxShadow: "none",
+											borderRadius: "4px"
+										}}
+									>
+										<option value="day">
+											{getBillingCycleLabel("day")}
+										</option>
+										<option value="week">
+											{getBillingCycleLabel("week")}
+										</option>
+										<option value="month">
+											{getBillingCycleLabel("month")}
+										</option>
+										<option value="year">
+											{getBillingCycleLabel("year")}
+										</option>
+									</Select>
+								</Box>
 							</HStack>
 						</Flex>
 					)}
