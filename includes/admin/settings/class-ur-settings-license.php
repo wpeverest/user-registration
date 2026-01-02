@@ -51,7 +51,6 @@ if ( ! class_exists( 'UR_Settings_License' ) ) {
 					'license_options_settings' => array(
 						'title'    => __( 'License Activation', 'user-registration' ),
 						'type'     => 'card',
-						'before_desc'     => '<strong>' . __( 'License: ', 'user-registration' ) . '</strong>' . __( 'Please enter the license key below in order to use our premium addons smoothly.', 'user-registration' ),
 						'settings' => array(
 							array(
 								'title'    => __( 'License Key', 'user-registration' ),
@@ -79,6 +78,12 @@ if ( ! class_exists( 'UR_Settings_License' ) ) {
 				} else {
 					$settings[ 'sections' ][ 'license_options_settings' ][ 'before_desc' ] = __( 'You\'re currently using the free version of User Registration & Membership.<br>You can continue using all free features without any limitations.<br><br>Want more? <a target="_blank" href="' . esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=ur-license-setting&utm_medium=upgrade-link&utm_campaign=' . UR()->utm_campaign ) . '">Upgrade to Pro</a> to unlock advanced features and premium support.<br>Already purchased Pro? Enter your license key below and we\'ll automatically upgrade you to Pro.', 'user-registration' );
 				}
+			} else {
+				if ( get_option( 'user_registration_license_key' ) ) {
+					$settings['sections']['license_options_settings']['before_desc'] = __( 'Your Pro license is active! Enjoy all premium features and priority support.', 'user-registration' );
+				} else {
+					$settings['sections']['license_options_settings']['before_desc'] = __( 'You\'re using the Pro version, but your license needs to be activated.<br>Enter your license key below to unlock Pro features and receive updates.', 'user-registration' );
+				}
 			}
 
 			// Replace license input box and display deactivate license button when license is activated.
@@ -104,15 +109,8 @@ if ( ! class_exists( 'UR_Settings_License' ) ) {
 						'id'   => 'user_registration_license_section_settings',
 					),
 				);
-
-				if( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
-					/* translators: %1$s - WPeverest My Account url */
-					$settings['sections']['license_options_settings']['desc'] = sprintf( __( 'Your license has been activated. Enjoy using <strong>User Registration</strong>. Please go to %1$sMy Account Page%2$s for more details ', 'user-registration' ), '<a href="https://wpeverest.com/login/" rel="noreferrer noopener" target="_blank">', '</a>' );
-				}
-				// Hide save changes button from settings when license is activated.
-				$GLOBALS['hide_save_button'] = true;
+				$GLOBALS[ 'hide_save_button' ] = true;
 			}
-
 			return $settings;
 		}
     }
