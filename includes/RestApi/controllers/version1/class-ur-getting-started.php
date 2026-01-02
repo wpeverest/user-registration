@@ -232,6 +232,11 @@ class UR_Getting_Started {
 
 		update_option( 'user_registration_enabled_features', $enabled_features );
 
+		if ( class_exists( 'WPEverest\URMembership\Admin\Database\Database' ) ) {
+			$membership_db = new Database();
+			$membership_db::create_tables();
+		}
+
 		$current_step    = self::get_current_step();
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
 		$is_completed    = ! get_option( 'user_registration_first_time_activation_flag', true );
@@ -1060,7 +1065,6 @@ class UR_Getting_Started {
 		$enabled_features  = get_option( 'user_registration_enabled_features', array() );
 		$required_features = array(
 			'user-registration-membership',
-			'user-registration-content-restriction',
 		);
 
 		foreach ( $required_features as $feature ) {
