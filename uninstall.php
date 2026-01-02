@@ -30,6 +30,9 @@ if ( defined( 'UR_REMOVE_ALL_DATA' ) && true === UR_REMOVE_ALL_DATA || 'yes' == 
 	// Pages.
 	wp_trash_post( get_option( 'user_registration_myaccount_page_id' ) );
 	wp_trash_post( get_option( 'user_registration_default_form_page_id' ) );
+	wp_trash_post( get_option( 'user_registration_registration_form' ) );
+	wp_trash_post( get_option( 'urm_membership_default_form_page_id' ) );
+
 
 	// Tables.
 	UR_Install::drop_tables();
