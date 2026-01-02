@@ -17,7 +17,8 @@
   "supports": {
     "className": false,
     "customClassName": false,
-    "reusable": false
+    "reusable": false,
+    "inserter": false
   },
   "attributes": {
     "accessAllRoles": {
@@ -53,6 +54,10 @@
     "enableContentRestriction": {
       "type": "boolean",
       "default": false
+    },
+    "restrictionMessageType": {
+      "type": "string",
+      "default": "custom"
     }
   },
   "editorScript": "user-registration-blocks-editor",

@@ -1462,15 +1462,50 @@ span.ur-shortcode-form-embed-dot {
 }
 
 #user-registration-pro-single-user-view {
-	.user-registration-user-form-details {
-		.empty-list-table-container {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			padding: 50px;
-		}
-	}
+  .user-registration-user-form-details {
+
+    .empty-list-table-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 50px;
+    }
+
+    .wp-list-table {
+      width: 100%;
+      background: #fff;
+      border: 1px solid #E1E1E1;
+      border-radius: 4px;
+
+      thead {
+        background: none;
+
+        th {
+          padding: 12px 14px;
+          font-size: 14px;
+          font-weight: 600;
+          border-color: #E1E1E1;
+          color: #383838;
+          text-align: left;
+        }
+      }
+
+      tbody {
+        tr {
+          background: #F8F8FA;
+
+          td {
+            padding: 12px 14px;
+            font-size: 13px;
+            color: #383838;
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+  }
 }
+
 
 //Individual oxygen widgets styles.
 .oxygen-add-section-accordion-contents[ng-if*="user-registration"] {
@@ -1615,7 +1650,8 @@ span.ur-shortcode-form-embed-dot {
 }
 
 // Revamp error design for registration and login form
-.ur-field-item, .ur-form-grid {
+.ur-field-item,
+.ur-form-grid {
 	input {
 		border-radius: 4px !important;
 	}
@@ -2395,7 +2431,7 @@ body {
 						.ur-field-item {
 							label:not(.user-registration-error) {
 								margin-top: 0;
-								margin-bottom: 12px;
+								margin-bottom: 16px;
 								color: #222;
 								font-size: 15px;
 								font-weight: 500;
@@ -2432,7 +2468,7 @@ body {
 					display: flex !important;
 					align-items: center;
 					gap: $spacing_4px;
-					margin-top: 32px;
+					margin-top: $spacing_32px;
 					padding: 0 10px;
 
 					.ur-submit-button {
@@ -3193,6 +3229,7 @@ body.user-registration-page {
 		}
 	}
 }
+
 .user-registration-login-form-container {
 	.ur-login-form-settings {
 		.user-registration-login-form-global-settings {
@@ -3200,11 +3237,13 @@ body.user-registration-page {
 				display: flex;
 				align-items: center;
 			}
+
 			&:has(.error) {
 				.select2-selection {
-					border-color: #f34c4c!important;
+					border-color: #f34c4c !important;
 				}
 			}
+
 			.error {
 				&.inline {
 					box-shadow: none;
@@ -3233,20 +3272,24 @@ body.user-registration-page {
 			}
 		}
 	}
+
 	.ur-builder-wrapper {
 		.user-registration-login-form-global-settings {
 			&--field {
 				display: flex;
 				align-items: center;
+
 				.select2-selection {
 					position: relative;
 				}
 			}
+
 			&:has(.error) {
 				.select2-selection {
-					border-color: #f34c4c!important;
+					border-color: #f34c4c !important;
 				}
 			}
+
 			.error {
 				&.inline {
 					box-shadow: none;
@@ -3313,6 +3356,10 @@ body.user-registration-page {
 	white-space: nowrap;
 	z-index: 9999;
 	animation: toaster 5s ease-in-out forwards;
+
+	&.urm-error {
+		background-color: red;
+	}
 }
 
 .ur-frontend-form .user-registration-EditAccountForm.edit-password {
@@ -3322,11 +3369,13 @@ body.user-registration-page {
 			padding: 0;
 			margin: 0;
 		}
-		p > input.user-registration-Button.button {
+
+		p>input.user-registration-Button.button {
 			background: $primary_color;
 			border: $border_width $primary_color;
 			border-radius: $border_radius_4;
 			border-style: inherit;
+
 			&:hover {
 				background: #38488e;
 				border-color: #38488e;

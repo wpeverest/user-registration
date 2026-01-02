@@ -3,23 +3,44 @@
   "apiVersion": 3,
   "name": "user-registration/membership-listing",
   "version": "1.0.0",
-  "title": "Membership Listing",
+  "title": "Membership Pricing",
   "category": "user-registration",
-  "description": "This block provides block for membership listing.",
+  "description": "This block provides block for membership pricing.",
   "keywords": [
-    "user registration membership listing",
-    "urm membership listing",
-    "membership listing"
+    "user registration membership pricing",
+    "urm membership pricing",
+    "membership pricing"
   ],
   "textdomain": "user-registration",
   "example": {
     "attributes": {}
   },
   "supports": {
-    "className": false,
-    "customClassName": false,
-    "reusable": false
+    "reusable": false,
+    "className": true,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "color": {
+      "__experimentalSkipSerialization": true,
+      "gradients": true,
+      "__experimentalDefaultControls": {
+        "text": true
+      }
+    }
   },
+  "styles": [
+    {
+      "name": "fill",
+      "label": "Fill",
+      "isDefault": true
+    },
+    {
+      "name": "outline",
+      "label": "Outline"
+    }
+  ],
   "attributes": {
     "id": {
       "type": "string"
@@ -43,6 +64,65 @@
     "button_text": {
       "type": "string",
       "default": "Sign Up"
+    },
+    "openInNewTab": {
+      "type": "boolean",
+      "default": true
+    },
+    "showDescription": {
+      "type": "boolean",
+      "default": true
+    },
+    "columnNumber": {
+      "type": "number",
+      "default": 3
+    },
+    "buttonTextColor": {
+      "type": "string"
+    },
+    "buttonBgColor": {
+      "type": "string"
+    },
+    "buttonTextHoverColor": {
+      "type": "string"
+    },
+    "buttonBgHoverColor": {
+      "type": "string"
+    },
+    "radioColor": {
+      "type": "string"
+    },
+    "buttonWidth": {
+      "type": "string",
+      "default": ""
+    },
+    "buttonFontSize": {
+      "type": "string"
+    },
+    "buttonTypography": {
+      "type": "object",
+      "default": {
+        "fontWeight": "",
+        "fontStyle": ""
+      }
+    },
+    "buttonPadding": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
+    },
+    "buttonMargin": {
+      "type": "object",
+      "default": {
+        "top": "",
+        "right": "",
+        "bottom": "",
+        "left": ""
+      }
     }
   },
   "editorScript": "user-registration-blocks-editor",

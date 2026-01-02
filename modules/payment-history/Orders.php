@@ -3,6 +3,7 @@
 namespace WPEverest\URMembership\Payment;
 
 use WPEverest\URMembership\Admin\Members\MembersListTable;
+use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Payment\Admin\OrdersListTable;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\TableList;
@@ -26,7 +27,7 @@ class Orders {
 	 * @since 1.0.0
 	 */
 	private function init_hooks() {
-		add_action( 'admin_menu', array( $this, 'add_orders_menu' ), 40 );
+		// add_action( 'admin_menu', array( $this, 'add_orders_menu' ), 40 );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
@@ -58,18 +59,21 @@ class Orders {
 
 	public function add_orders_menu() {
 
-		$orders_page = add_submenu_page(
-			'user-registration',
-			__( 'Payment History', 'user-registration' ), // page title
-			__( 'Payment History', 'user-registration' ), // menu title
-			'manage_user_registration', // Capability required to access
-			$this->page, // Menu slug
-			array(
-				$this,
-				'render_payment_history_page',
-			)
-		);
-		add_action( 'load-' . $orders_page, array( $this, 'orders_initialization' ) );
+		// if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
+			$orders_page = add_submenu_page(
+				'user-registration',
+				__( 'Payments', 'user-registration' ), // page title
+				__( 'Payments', 'user-registration' ),
+				'manage_user_registration', // Capability required to access
+				$this->page, // Menu slug
+				array(
+					$this,
+					'render_payment_history_page',
+				),
+				5
+			);
+			add_action( 'load-' . $orders_page, array( $this, 'orders_initialization' ) );
+		// }
 	}
 
 
@@ -143,6 +147,29 @@ class Orders {
 			case 'add_new_payment':
 				$this->render_add_new_payment_history();
 				break;
+			case 'edit': // phpcs:ignore PSR2.ControlStructures.SwitchDeclaration.TerminatingComment
+				$id   = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
+				$type = isset( $_GET['type'] ) ? sanitize_text_field( $_GET['type'] ) : 'order';
+
+				$order = array();
+
+				if ( 'form' === $type ) {
+					$order_service            = new \WPEverest\URMembership\Payment\Admin\OrderService();
+					$order                    = $order_service->get_user_form_order_detail( $id );
+					$order['order_id']        = 0;
+					$order['is_form_payment'] = true;
+				} else {
+					$order_repository         = new OrdersRepository();
+					$order                    = $order_repository->get_order_detail( $id );
+					$order['is_form_payment'] = false;
+				}
+
+				$order = apply_filters( 'ur_membership_payment_history_order', $order );
+
+				if ( ! empty( $order ) ) {
+					include_once __DIR__ . '/Views/payment-edit.php';
+					break;
+				}
 			default:
 				$this->render_payment_history_list();
 				break;
@@ -151,62 +178,64 @@ class Orders {
 
 	/**
 	 * Renders add new payment history form.
+	 *
 	 * @return void
 	 */
 	public function render_add_new_payment_history_scratch() {
 		global $orders_list_table;
 
 		if ( ! $orders_list_table ) {
-		return;
+			return;
 		}
 		$enable_members_button = true;
 		?>
-		<style>
-			.navigator{
-				padding: 8px 14px;
-				background-color: #f0f0f0;
-				border-radius: 4px;
-				cursor: pointer;
-			}
-		</style>
-		<div class="ur-membership-header ur-d-flex ur-mr-0 ur-p-3 ur-align-items-center" id=""
-			 style="margin-left: -20px; background:white; gap: 20px; position: sticky; top: 32px; z-index: 700">
-			<img style="max-width: 30px"
-				 src="<?php echo UR()->plugin_url() . '/assets/images/logo.svg'; ?>" alt="">
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page ) ); ?>"
-			   class="<?php echo esc_attr( ( $_GET['page'] == $this->page ) ? 'row-title' : '' ); ?>"
-			   style="text-decoration: none"
-			>
-				<?php esc_html_e( 'Payment History', 'user-registration' ); ?>
-			</a>
+<style>
+.navigator {
+	padding: 8px 14px;
+	background-color: #f0f0f0;
+	border-radius: 4px;
+	cursor: pointer;
+}
+</style>
+<div class="ur-membership-header ur-d-flex ur-mr-0 ur-p-3 ur-align-items-center" id=""
+	style="margin-left: -20px; background:white; gap: 20px; position: sticky; top: 32px; z-index: 700">
+	<img style="max-width: 30px" src="<?php echo UR()->plugin_url() . '/assets/images/logo.svg'; ?>" alt="">
+	<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page ) ); ?>"
+		class="<?php echo esc_attr( ( $_GET['page'] == $this->page ) ? 'row-title' : '' ); ?>"
+		style="text-decoration: none">
+		<?php esc_html_e( 'Payment History', 'user-registration' ); ?>
+	</a>
+</div>
+
+<div id="user-registration-list-table-page">
+	<div class="user-registration-list-table-heading" id="ur-users-page-topnav" style="gap: 14px;">
+		<div class="navigator navigator-prev" onclick="window.history.back();"><span
+				class="dashicons dashicons-arrow-left-alt2"></span></div>
+		<div class="ur-page-title__wrapper">
+			<h1>
+				<?php esc_html_e( 'Add Manual Payment', 'user-registration' ); ?>
+			</h1>
+		</div>
+	</div>
+	<hr>
+	<form method="get" id="ur-membership-payment-history-form">
+		<input type="hidden" name="page" value="<?php echo $this->page; ?>" />
+		<input type="hidden" name="action" value="<?php echo $_GET['action']; ?>" />
+		<div>
+			<strong>Important Note:</strong>
+			This form is intended only to record missed payments for tracking purposes. Adding a payment here does not
+			renew the next billing cycle or assign any new plan to the user.
 		</div>
 
-		<div id="user-registration-list-table-page">
-			<div class="user-registration-list-table-heading" id="ur-users-page-topnav" style="gap: 14px;">
-				<div class="navigator navigator-prev" onclick="window.history.back();"><span class="dashicons dashicons-arrow-left-alt2"></span></div>
-				<div class="ur-page-title__wrapper">
-					<h1>
-						<?php esc_html_e( 'Add Manual Payment', 'user-registration' ); ?>
-					</h1>
-				</div>
-			</div>
-			<hr>
-			<form method="get" id="ur-membership-payment-history-form">
-				<input type="hidden" name="page" value="<?php echo $this->page; ?>"/>
-				<input type="hidden" name="action" value="<?php echo $_GET['action']; ?>" />
-				<div>
-					<strong>Important Note:</strong>
-					This form is intended only to record missed payments for tracking purposes. Adding a payment here does not renew the next billing cycle or assign any new plan to the user.
-				</div>
-
-			</form>
-		</div>
+	</form>
+</div>
 		<?php
 	}
+
 	public function render_add_new_payment_history() {
 		global $wpdb;
 		$subscription_table = \WPEverest\URMembership\TableList::subscriptions_table();
-		$users = $wpdb->get_results(
+		$users              = $wpdb->get_results(
 			"
 						SELECT s.user_id, s.item_id, u.user_login, u.user_email
 						FROM $subscription_table AS s
@@ -215,18 +244,24 @@ class Orders {
 						",
 			ARRAY_A
 		);
-		$users = array_filter( $users, function( $user ) {
-			 $post = get_post( $user[ 'item_id' ], array(
-				'post_type' => 'ur_memberships',
-				'post_status' => 'publish'
-			));
-			if( $post && ! empty( $post->post_content ) ) {
-				$membership = json_decode( wp_unslash( $post->post_content ), true );
-				return isset( $membership[ 'type' ] ) && $membership[ 'type' ] !== 'free';
+		$users              = array_filter(
+			$users,
+			function ( $user ) {
+				$post = get_post(
+					$user['item_id'],
+					array(
+						'post_type'   => 'ur_memberships',
+						'post_status' => 'publish',
+					)
+				);
+				if ( $post && ! empty( $post->post_content ) ) {
+					$membership = json_decode( wp_unslash( $post->post_content ), true );
+					return isset( $membership['type'] ) && $membership['type'] !== 'free';
+				}
+				return false;
 			}
-			return false;
-		});
-		$memberships = $wpdb->get_results(
+		);
+		$memberships        = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT ID, post_title as title FROM {$wpdb->posts} WHERE post_type = %s AND post_status=%s",
 				'ur_membership',
@@ -234,10 +269,10 @@ class Orders {
 			),
 			ARRAY_A
 		);
-		$membership_plans = array();
-		foreach( $memberships as $membership ) {
+		$membership_plans   = array();
+		foreach ( $memberships as $membership ) {
 			$membership_details = json_decode( wp_unslash( ur_get_single_post_meta( $membership['ID'], 'ur_membership' ) ), true );
-			$membership_plans[] = array_merge( $membership, array( 'amount' => $membership_details[ 'amount' ] ) );
+			$membership_plans[] = array_merge( $membership, array( 'amount' => $membership_details['amount'] ) );
 		}
 		$payment_methods = get_option( 'ur_membership_payment_gateways', array() );
 		include __DIR__ . '/Views/orders-create.php';
@@ -256,7 +291,7 @@ class Orders {
 		$enable_members_button = true;
 		?>
 		<hr class="wp-header-end">
-		<?php echo user_registration_plugin_main_header(); ?>
+				<?php echo user_registration_plugin_main_header(); ?>
 		<div id="payment-detail-modal" class="modal">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -268,38 +303,9 @@ class Orders {
 				</div>
 			</div>
 		</div>
-		<div id="user-registration-list-table-page">
-			<div class="user-registration-list-table-heading" id="ur-users-page-topnav">
-				<div class="ur-page-title__wrapper">
-					<h1>
-						<?php esc_html_e( 'Payment History', 'user-registration' ); ?>
-					</h1>
-				</div>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_new_payment' ) ); ?>"
-					id="user-registration-members-add-btn" class="page-title-action">
-					<?php esc_html_e( 'Add New', 'user-registration' ); ?>
-				</a>
-			</div>
-			<div id="user-registration-pro-filters-row" style="align-items: center;">
-				<div class="ur-membership-filter-container" style="display: flex;align-items: center; gap: 10px">
-					<form method="get" id="user-registration-users-search-form"
-							style="display: flex; width: auto; gap: 20px">
-						<input type="hidden" name="page" value="<?php echo $this->page; ?>"/>
-						<?php
-						$orders_list_table->display_advance_filter();
-						?>
-					</form>
-				</div>
-
-			</div>
-			<hr>
-			<form method="get" id="ur-membership-payment-history-form">
-				<input type="hidden" name="page" value="<?php echo $this->page; ?>"/>
-				<?php
-				$orders_list_table->display_page();
-				?>
-			</form>
-		</div>
+		<?php
+		$orders_list_table->display_page();
+		?>
 		<?php
 	}
 
@@ -339,15 +345,15 @@ class Orders {
 			'payment-history',
 			'urm_orders_localized_data',
 			array(
-				'_nonce'              => wp_create_nonce( 'ur_member_orders' ),
-				'ajax_url'            => admin_url( 'admin-ajax.php' ),
-				'labels'              => $this->get_i18_labels(),
-				'membership_page_url' => admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' ),
-				'ur_forms'            => ur_get_all_user_registration_form(),
-				'memberships'         => $memberships,
-				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
+				'_nonce'                 => wp_create_nonce( 'ur_member_orders' ),
+				'ajax_url'               => admin_url( 'admin-ajax.php' ),
+				'labels'                 => $this->get_i18_labels(),
+				'membership_page_url'    => admin_url( 'admin.php?page=user-registration-membership&action=add_new_membership' ),
+				'ur_forms'               => ur_get_all_user_registration_form(),
+				'memberships'            => $memberships,
+				'delete_icon'            => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
 				'add_manual_payment_url' => admin_url( 'admin.php?page=member-payment-history&action=add_new_payment' ),
-				'payment_history_url' => admin_url( 'admin.php?page=member-payment-history' ),
+				'payment_history_url'    => admin_url( 'admin.php?page=member-payment-history' ),
 			)
 		);
 	}
@@ -382,16 +388,16 @@ class Orders {
 	public function add_payment_gateway_options() {
 
 		$payment_gateways = array(
-				'paypal'      => __( 'Paypal', 'user-registration' ),
-				'stripe'      => __( 'Stripe', 'user-registration' ),
-				'credit_card' => __( 'Stripe (Credit Card)', 'user-registration' ),
-				'bank'        => __( 'Bank', 'user-registration' ),
+			'paypal'      => __( 'Paypal', 'user-registration' ),
+			'stripe'      => __( 'Stripe', 'user-registration' ),
+			'credit_card' => __( 'Stripe (Credit Card)', 'user-registration' ),
+			'bank'        => __( 'Bank', 'user-registration' ),
 		);
 		/**
 		 * Filters that hold the list of payment gateway for payment orders.
 		 *
 		 *@param array $payment_gateways
-   		*/
+		*/
 		$payment_gateways = apply_filters( 'user_registration_payment_gateways', $payment_gateways );
 
 		update_option( 'ur_payment_gateways', $payment_gateways );
@@ -399,12 +405,11 @@ class Orders {
 		 * Filters that hold the list of payment gateway for payment orders.
 		 *
 		 *@param array $payment_gateways
-   		*/
+		*/
 		$payment_gateways = apply_filters( 'user_registration_payment_gateways', $payment_gateways );
 
 		update_option( 'ur_payment_gateways', $payment_gateways );
 	}
-
 }
 
 new Orders();

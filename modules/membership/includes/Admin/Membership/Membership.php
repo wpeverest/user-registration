@@ -15,6 +15,7 @@ use WPEverest\URMembership\Admin\Members\Members;
 use WPEverest\URMembership\Admin\Membership\ListTable;
 use WPEverest\URMembership\Admin\MembershipGroups\MembershipGroups;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
+use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
 use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
@@ -32,7 +33,6 @@ class Membership {
 	public function __construct() {
 
 		$this->init_hooks();
-
 	}
 
 	/**
@@ -45,7 +45,7 @@ class Membership {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_filter( 'user_registration_screen_ids', array( $this, 'ur_membership_add_screen_id' ) );
-		add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 15 );
+		// add_action( 'admin_menu', array( $this, 'add_urm_menu' ), 15 );
 		add_action( 'admin_init', array( $this, 'actions' ) );
 		add_action( 'in_admin_header', array( __CLASS__, 'hide_unrelated_notices' ) );
 		add_filter( 'user_registration_login_options', array( $this, 'add_payment_login_option' ) );
@@ -76,13 +76,58 @@ class Membership {
 		if ( empty( $_GET['page'] ) || 'user-registration-membership' !== $_GET['page'] ) {
 			return;
 		}
-		wp_register_script( 'user-registration-membership', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/user-registration-membership-admin' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
+
+		// Enqueue jQuery UI Sortable for drag-and-drop functionality
+		wp_enqueue_script( 'jquery-ui-sortable' );
+
+		wp_register_script(
+			'user-registration-membership',
+			UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/user-registration-membership-admin' . $suffix . '.js',
+			array(
+				'jquery',
+				'jquery-ui-sortable',
+			),
+			'1.0.0',
+			true
+		);
 		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
 		wp_enqueue_script( 'ur-snackbar' );
 		wp_enqueue_script( 'sweetalert2' );
 		wp_enqueue_script( 'user-registration-membership' );
-		$this->localize_scripts();
 
+		// Enqueue membership access rules script if content restriction module is enabled
+		$membership_id = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : 0;
+
+		// Enqueue jQuery UI for sortable if needed
+		wp_enqueue_script( 'jquery-ui-sortable' );
+
+		// Enqueue membership access rules script (always use non-minified for now)
+		$script_path = UR()->plugin_url() . '/assets/js/modules/content-restriction/admin/urcr-membership-access-rules.js';
+
+		wp_enqueue_script(
+			'urcr-membership-access-rules',
+			$script_path,
+			array( 'jquery', 'user-registration-membership' ),
+			UR()->version,
+			true
+		);
+
+		// Localize script with necessary data
+		$localized_data = array();
+		if ( class_exists( '\URCR_Admin_Assets' ) ) {
+			$localized_data = \URCR_Admin_Assets::get_localized_data();
+		}
+		$localized_data['membership_id'] = $membership_id;
+		$localized_data['ajax_url']      = admin_url( 'admin-ajax.php' );
+		$localized_data['nonce']         = wp_create_nonce( 'urcr_manage_content_access_rule' );
+
+		wp_localize_script(
+			'urcr-membership-access-rules',
+			'urcr_membership_access_data',
+			$localized_data
+		);
+
+		$this->localize_scripts();
 	}
 
 	/**
@@ -103,6 +148,23 @@ class Membership {
 		wp_register_style( 'ur-core-builder-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR_MEMBERSHIP_VERSION );
 		wp_enqueue_style( 'ur-core-builder-style' );
 		wp_enqueue_style( 'ur-membership-admin-style' );
+
+		// Enqueue shared content restriction styles if content restriction module is enabled
+		wp_register_style(
+			'urcr-shared',
+			UR()->plugin_url() . '/assets/css/urcr-shared.css',
+			array(),
+			UR()->version
+		);
+		wp_enqueue_style( 'urcr-shared' );
+
+		wp_register_style(
+			'urcr-content-access-restriction',
+			UR()->plugin_url() . '/assets/css/urcr-content-access-restriction.css',
+			array( 'urcr-shared' ),
+			UR()->version
+		);
+		wp_enqueue_style( 'urcr-content-access-restriction' );
 	}
 
 	/**
@@ -123,7 +185,7 @@ class Membership {
 		}
 	}
 
-	//todo might need to remove later if none of the bulk actions are used
+	// todo might need to remove later if none of the bulk actions are used
 
 	/**
 	 * Bulk actions.
@@ -146,13 +208,13 @@ class Membership {
 
 		switch ( $action ) {
 			case 'trash':
-//				$this->bulk_trash( $delete_list );
+				// $this->bulk_trash( $delete_list );
 				break;
 			case 'untrash':
-//				$this->bulk_untrash( $membership_list );
+				// $this->bulk_untrash( $membership_list );
 				break;
 			case 'delete':
-//				$this->bulk_trash( $delete_list, true, $delete_membership );
+				// $this->bulk_trash( $delete_list, true, $delete_membership );
 				break;
 			default:
 				break;
@@ -163,14 +225,14 @@ class Membership {
 	 * Bulk trash/delete.
 	 *
 	 * @param array $membership_lists Membership List post id.
-	 * @param bool $delete Delete action.
+	 * @param bool  $delete Delete action.
 	 */
 	private function bulk_trash( $membership_lists, $delete = false, $is_membership = true ) {
 		$membership_group_service = new MembershipGroupService();
 		foreach ( $membership_lists as $membership_id ) {
 			$form_id = $membership_group_service->get_group_form_id( $membership_id );
 			if ( $delete ) {
-				if ( ! $is_membership && ( "" != $form_id ) ) {
+				if ( ! $is_membership && ( '' != $form_id ) ) {
 					break;
 				}
 				wp_delete_post( $membership_id, true );
@@ -286,31 +348,32 @@ class Membership {
 	public function add_urm_menu() {
 		$rules_page = add_submenu_page(
 			'user-registration',
-			__( 'Membership', 'user-registration' ), // page title
-			__( 'Membership', 'user-registration' ), // menu title
+			__( 'Memberships', 'user-registration' ), // page title
+			__( 'Memberships', 'user-registration' ), // menu title
 			'edit_posts', // capability
 			'user-registration-membership', // slug
 			array(
 				$this,
 				'render_membership_page',
-			)
+			),
+			2
 		);
 		add_action( 'load-' . $rules_page, array( $this, 'membership_initialization' ) );
 
-		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], ['user-registration-membership', 'user-registration-membership-groups', 'user-registration-members'] ) ) {
+		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
 
-			add_submenu_page(
-				'user-registration',
-				__( 'All Plans', 'user-registration' ),
-				'↳ ' . __( 'All Plans', 'user-registration' ),
-				'edit_posts',
-				'user-registration-membership',
-				array(
-					$this,
-					'render_membership_page',
-				),
-				16
-			);
+			// add_submenu_page(
+			// 'user-registration',
+			// __( 'All Plans', 'user-registration' ),
+			// '↳ ' . __( 'All Plans', 'user-registration' ),
+			// 'edit_posts',
+			// 'user-registration-membership',
+			// array(
+			// $this,
+			// 'render_membership_page',
+			// ),
+			// 3
+			// );
 
 			add_submenu_page(
 				'user-registration',
@@ -322,7 +385,7 @@ class Membership {
 					$this,
 					'render_membership_page',
 				),
-				17
+				3
 			);
 
 			$members = new Members();
@@ -332,7 +395,7 @@ class Membership {
 				'↳ ' . __( 'Members', 'user-registration' ),
 				'manage_user_registration',
 				'user-registration-members',
-				array( $members, 'render_members_page'),
+				array( $members, 'render_members_page' ),
 				18
 			);
 		}
@@ -427,13 +490,366 @@ class Membership {
 	 * @return void
 	 */
 	public function render_membership_creator( $membership = null, $membership_details = null, $menu_items = null ) {
-		$enable_membership_button = false;
-		$roles                    = wp_roles()->role_names;
-		$membership_service       = new MembershipService();
+		$enable_membership_button    = false;
+		$roles                       = wp_roles()->role_names;
+		$membership_service          = new MembershipService();
+		$membership_group_service    = new MembershipGroupService();
+		$membership_group_repository = new MembershipGroupRepository();
+
 		$memberships = $membership_service->list_active_memberships();
 
-		include __DIR__ . '/../Views/membership-create.php';
+		$group_id = 0;
 
+		if ( isset( $_GET['post_id'] ) && ! empty( $_GET['post_id'] ) ) {
+			$membership_id    = absint( $_GET['post_id'] );
+			$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
+			$group_id         = $membership_group['ID'] ?? 0;
+		}
+
+		foreach ( $memberships as $key => $_membership ) {
+			$current_membership_group = $membership_group_repository->get_membership_group_by_membership_id( $_membership['ID'] );
+
+			if ( ! empty( $current_membership_group ) && absint( $current_membership_group['ID'] ) !== $group_id ) {
+				unset( $memberships[ $key ] );
+			}
+		}
+
+		// Get membership rule data if membership exists
+		$membership_rule_data         = null;
+		$membership_condition_options = array();
+		$membership_localized_data    = array();
+
+		// Get condition options and localized data
+		if ( class_exists( '\URCR_Admin_Assets' ) ) {
+			$membership_localized_data    = \URCR_Admin_Assets::get_localized_data();
+			$membership_condition_options = isset( $membership_localized_data['condition_options'] ) ? $membership_localized_data['condition_options'] : array();
+
+			// Filter for free users - show membership, roles, and user_state
+			// For pro users, show all conditions
+			if ( ! isset( $membership_localized_data['is_pro'] ) || ! $membership_localized_data['is_pro'] ) {
+				$membership_condition_options = array_filter(
+					$membership_condition_options,
+					function ( $option ) {
+						return isset( $option['value'] ) && ( $option['value'] === 'membership' || $option['value'] === 'roles' || $option['value'] === 'user_state' );
+					}
+				);
+			}
+		}
+
+		if ( $membership && isset( $membership->ID ) ) {
+			$membership_id = $membership->ID;
+
+			// Get membership rule data using reusable function
+			if ( function_exists( 'urcr_get_membership_rule_data' ) ) {
+				$membership_rule_data = urcr_get_membership_rule_data( $membership_id );
+			}
+		}
+
+		include __DIR__ . '/../Views/membership-create.php';
+	}
+
+	/**
+	 * Get membership create page tabs configuration
+	 *
+	 * @return array Array of tab configurations with keys: id, label, step, partial, icon_svg
+	 */
+	public function get_membership_create_tabs() {
+		// Helper function to load SVG icon from file
+		$load_svg_icon = function ( $icon_name ) {
+			if ( function_exists( 'UR' ) && method_exists( UR(), 'plugin_path' ) ) {
+				$icon_path = UR()->plugin_path() . '/assets/images/icons/' . $icon_name . '.svg';
+				if ( file_exists( $icon_path ) ) {
+					return file_get_contents( $icon_path );
+				}
+			}
+
+			return '';
+		};
+
+		$tabs = array(
+			array(
+				'id'       => 'ur-basic-tab',
+				'label'    => __( 'Basics', 'user-registration' ),
+				'step'     => 0,
+				'partial'  => 'membership-create-basics-tab.php',
+				'icon_svg' => $load_svg_icon( 'membership-basics-icon' ),
+			),
+			array(
+				'id'       => 'ur-access-tab',
+				'label'    => __( 'Access', 'user-registration' ),
+				'step'     => 1,
+				'partial'  => 'membership-create-access-tab.php',
+				'icon_svg' => $load_svg_icon( 'membership-access-icon' ),
+			),
+			array(
+				'id'       => 'ur-advanced-tab',
+				'label'    => __( 'Advanced', 'user-registration' ),
+				'step'     => 2,
+				'partial'  => 'membership-create-advanced-tab.php',
+				'icon_svg' => $load_svg_icon( 'membership-advanced-icon' ),
+			),
+		);
+
+		/**
+		 * Filter membership create page tabs
+		 *
+		 * @param array $tabs Array of tab configurations
+		 *
+		 * @return array Modified tabs array
+		 */
+		return apply_filters( 'ur_membership_create_tabs', $tabs );
+	}
+
+	/**
+	 * Render condition row HTML for membership access rules
+	 *
+	 * @param array $condition Condition data.
+	 * @param array $condition_options Available condition options.
+	 * @param array $localized_data Localized data for labels and options.
+	 * @param bool  $is_locked Whether the condition is locked (non-editable).
+	 *
+	 * @return string HTML for condition row.
+	 */
+	private function render_condition_row( $condition, $condition_options, $localized_data, $is_locked = false ) {
+		$condition_id = isset( $condition['id'] ) ? esc_attr( $condition['id'] ) : 'x' . time() . '_' . wp_rand();
+		$type         = isset( $condition['type'] ) ? sanitize_text_field( $condition['type'] ) : 'roles';
+		$value        = isset( $condition['value'] ) ? $condition['value'] : '';
+
+		// Find condition option
+		$selected_option = null;
+		foreach ( $condition_options as $option ) {
+			if ( $option['value'] === $type ) {
+				$selected_option = $option;
+				break;
+			}
+		}
+
+		if ( ! $selected_option ) {
+			$selected_option = $condition_options[0];
+			$type            = $selected_option['value'];
+		}
+
+		$input_type = isset( $selected_option['type'] ) ? $selected_option['type'] : 'multiselect';
+		$label      = isset( $selected_option['label'] ) ? $selected_option['label'] : $type;
+
+		// Build condition field select
+		$disabled_attr = $is_locked ? ' disabled' : '';
+		$field_select  = '<select class="urcr-condition-field-select urcr-condition-value-input"' . $disabled_attr . '>';
+		foreach ( $condition_options as $option ) {
+			$selected      = ( $option['value'] === $type ) ? 'selected' : '';
+			$field_select .= '<option value="' . esc_attr( $option['value'] ) . '" ' . $selected . '>' . esc_html( $option['label'] ) . '</option>';
+		}
+		$field_select .= '</select>';
+
+		// Build value input
+		$value_input = $this->render_condition_value_input( $condition_id, $input_type, $type, $value, $localized_data, $is_locked );
+
+		// Remove button - hide if locked
+		$remove_button = '';
+		if ( ! $is_locked ) {
+			$remove_button = '<button type="button" class="button button-link-delete urcr-condition-remove" aria-label="' . esc_attr__( 'Remove condition', 'user-registration' ) . '">' .
+							'<span class="dashicons dashicons-no-alt"></span>' .
+							'</button>';
+		}
+
+		$operator_text = esc_html__( 'is', 'user-registration' );
+
+		return '<div class="urcr-condition-wrapper" data-condition-id="' . esc_attr( $condition_id ) . '">' .
+				'<div class="urcr-condition-row ur-d-flex ur-mt-2 ur-align-items-start">' .
+				'<div class="urcr-condition-only ur-d-flex ur-align-items-start">' .
+				'<div class="urcr-condition-selection-section ur-d-flex ur-align-items-center ur-g-4">' .
+				'<div class="urcr-condition-field-name">' . $field_select . '</div>' .
+				'<div class="urcr-condition-operator"><span>' . $operator_text . '</span></div>' .
+				'<div class="urcr-condition-value">' . $value_input . '</div>' .
+				'</div>' .
+				'</div>' .
+				'</div>' .
+				$remove_button .
+				'</div>';
+	}
+
+	/**
+	 * Render condition value input HTML
+	 *
+	 * @param string $condition_id Condition ID.
+	 * @param string $input_type Input type (multiselect, checkbox, date, period, number, text).
+	 * @param string $field_type Field type.
+	 * @param mixed  $value Current value.
+	 * @param array  $localized_data Localized data.
+	 * @param bool   $is_locked Whether the input is locked (non-editable).
+	 *
+	 * @return string HTML for value input.
+	 */
+	private function render_condition_value_input( $condition_id, $input_type, $field_type, $value, $localized_data, $is_locked = false ) {
+		$html = '';
+
+		$disabled_attr = $is_locked ? ' disabled' : '';
+
+		if ( $field_type === 'ur_form_field' ) {
+			$form_id     = '';
+			$form_fields = array();
+			if ( is_array( $value ) && isset( $value['form_id'] ) ) {
+				$form_id = sanitize_text_field( $value['form_id'] );
+			}
+			if ( is_array( $value ) && isset( $value['form_fields'] ) && is_array( $value['form_fields'] ) ) {
+				$form_fields = $value['form_fields'];
+			}
+			$value_attr = ' data-value="' . esc_attr( wp_json_encode( $value ) ) . '"';
+
+			$ur_forms = isset( $localized_data['ur_forms'] ) ? $localized_data['ur_forms'] : array();
+
+			$html  = '<div class="urcr-ur-form-field-condition" data-condition-id="' . esc_attr( $condition_id ) . '"' . $value_attr . '>';
+			$html .= '<div class="urcr-form-selection ur-d-flex ur-align-items-center ur-g-4 ur-mb-2">';
+			$html .= '<select class="urcr-form-select components-select-control__input urcr-condition-value-input"' . $disabled_attr . '>';
+			$html .= '<option value="">' . esc_html__( 'Select a form', 'user-registration' ) . '</option>';
+			foreach ( $ur_forms as $id => $title ) {
+				$selected = ( (string) $id === (string) $form_id ) ? 'selected' : '';
+				$html    .= '<option value="' . esc_attr( $id ) . '" ' . $selected . '>' . esc_html( $title ) . '</option>';
+			}
+			$html .= '</select>';
+			$html .= '</div>';
+			$html .= '<div class="urcr-form-fields-list"></div>';
+			$html .= '</div>';
+		} elseif ( $input_type === 'multiselect' ) {
+			// Add data attribute for values to be set by JavaScript
+			$value_attr = '';
+			if ( is_array( $value ) && ! empty( $value ) ) {
+				$value_attr = ' data-value="' . esc_attr( wp_json_encode( $value ) ) . '"';
+			} elseif ( ! empty( $value ) ) {
+				$value_attr = ' data-value="' . esc_attr( wp_json_encode( array( $value ) ) ) . '"';
+			}
+			$html = '<select class="urcr-enhanced-select2 urcr-condition-value-input" multiple data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '"' . $value_attr . $disabled_attr . '></select>';
+		} elseif ( $input_type === 'checkbox' ) {
+			// User state - radio buttons
+			$checked_logged_in  = ( $value === 'logged-in' || $value === 'logged_in' || $value === '' ) ? 'checked' : '';
+			$checked_logged_out = ( $value === 'logged-out' || $value === 'logged_out' ) ? 'checked' : '';
+			$logged_in_label    = isset( $localized_data['labels']['logged_in'] ) ? $localized_data['labels']['logged_in'] : __( 'Logged In', 'user-registration' );
+			$logged_out_label   = isset( $localized_data['labels']['logged_out'] ) ? $localized_data['labels']['logged_out'] : __( 'Logged Out', 'user-registration' );
+
+			$html = '<div class="urcr-checkbox-radio-input">' .
+					'<label><input type="radio" name="condition_' . esc_attr( $condition_id ) . '_user_state" value="logged-in" ' . $checked_logged_in . $disabled_attr . '> ' . esc_html( $logged_in_label ) . '</label>' .
+					'<label><input type="radio" name="condition_' . esc_attr( $condition_id ) . '_user_state" value="logged-out" ' . $checked_logged_out . $disabled_attr . '> ' . esc_html( $logged_out_label ) . '</label>' .
+					'</div>';
+		} elseif ( $input_type === 'date' ) {
+			$html = '<input type="date" class="urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" value="' . esc_attr( $value ) . '"' . $disabled_attr . '>';
+		} elseif ( $input_type === 'period' ) {
+			$period_select = 'During';
+			$period_input  = '';
+			if ( is_array( $value ) ) {
+				$period_select = isset( $value['select'] ) ? sanitize_text_field( $value['select'] ) : 'During';
+				$period_input  = isset( $value['input'] ) ? absint( $value['input'] ) : '';
+			}
+
+			$during_text      = esc_html__( 'During', 'user-registration' );
+			$after_text       = esc_html__( 'After', 'user-registration' );
+			$days_placeholder = esc_attr__( 'Days', 'user-registration' );
+
+			$html = '<div class="urcr-period-input-group ur-d-flex ur-align-items-center" style="gap: 8px;">' .
+					'<select class="urcr-period-select urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" data-period-part="select"' . $disabled_attr . '>' .
+					'<option value="During" ' . ( $period_select === 'During' ? 'selected' : '' ) . '>' . $during_text . '</option>' .
+					'<option value="After" ' . ( $period_select === 'After' ? 'selected' : '' ) . '>' . $after_text . '</option>' .
+					'</select>' .
+					'<input type="number" class="urcr-period-number urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" data-period-part="input" value="' . esc_attr( $period_input ) . '" min="0" placeholder="' . $days_placeholder . '"' . $disabled_attr . '>' .
+					'</div>';
+		} elseif ( $input_type === 'number' ) {
+			$html = '<input type="number" class="urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" value="' . esc_attr( $value ) . '"' . $disabled_attr . '>';
+		} else {
+			$html = '<input type="text" class="urcr-condition-value-input" data-condition-id="' . esc_attr( $condition_id ) . '" data-field-type="' . esc_attr( $field_type ) . '" value="' . esc_attr( $value ) . '"' . $disabled_attr . '>';
+		}
+
+		return $html;
+	}
+
+	/**
+	 * Render content target HTML
+	 *
+	 * @param array $target Target data.
+	 * @param array $localized_data Localized data for labels.
+	 *
+	 * @return string HTML for content target.
+	 */
+	private function render_content_target( $target, $localized_data ) {
+		$target_id = isset( $target['id'] ) ? esc_attr( $target['id'] ) : 'x' . time() . '_' . wp_rand();
+		$type      = isset( $target['type'] ) ? sanitize_text_field( $target['type'] ) : 'pages';
+		$value     = isset( $target['value'] ) ? $target['value'] : '';
+
+		$type_labels = array(
+			'pages'      => isset( $localized_data['labels']['pages'] ) ? $localized_data['labels']['pages'] : __( 'Pages', 'user-registration' ),
+			'posts'      => isset( $localized_data['labels']['posts'] ) ? $localized_data['labels']['posts'] : __( 'Posts', 'user-registration' ),
+			'post_types' => isset( $localized_data['labels']['post_types'] ) ? $localized_data['labels']['post_types'] : __( 'Post Types', 'user-registration' ),
+			'taxonomy'   => isset( $localized_data['labels']['taxonomy'] ) ? $localized_data['labels']['taxonomy'] : __( 'Taxonomy', 'user-registration' ),
+			'whole_site' => isset( $localized_data['labels']['whole_site'] ) ? $localized_data['labels']['whole_site'] : __( 'Whole Site', 'user-registration' ),
+		);
+
+		$type_label = isset( $type_labels[ $type ] ) ? $type_labels[ $type ] : $type;
+
+		$html = '<div class="urcr-target-item ur-d-flex ur-align-items-center ur-mt-2" data-target-id="' . $target_id . '">';
+
+		// All types get the label with colon, matching JavaScript format
+		$html .= '<span class="urcr-target-type-label">' . esc_html( $type_label ) . ':</span>';
+
+		if ( $type === 'whole_site' ) {
+			// For whole_site, show the label text as content (matching JavaScript line 709)
+			$html .= '<span>' . esc_html( $type_label ) . '</span>';
+		} elseif ( $type === 'taxonomy' ) {
+			// Handle taxonomy value structure
+			// Target can have: { type: 'taxonomy', taxonomy: 'cat', value: [] }
+			// Or value can be: { taxonomy: 'cat', value: [] }
+			$taxonomy = '';
+			$terms    = array();
+
+			// Check if taxonomy is at target level
+			if ( isset( $target['taxonomy'] ) ) {
+				$taxonomy = sanitize_text_field( $target['taxonomy'] );
+			}
+
+			// Check value structure
+			if ( is_array( $value ) ) {
+				if ( isset( $value['taxonomy'] ) ) {
+					$taxonomy = sanitize_text_field( $value['taxonomy'] );
+				}
+				if ( isset( $value['value'] ) && is_array( $value['value'] ) ) {
+					$terms = $value['value'];
+				} elseif ( isset( $value['terms'] ) && is_array( $value['terms'] ) ) {
+					$terms = $value['terms'];
+				} elseif ( ! isset( $value['taxonomy'] ) && ! isset( $value['value'] ) && ! isset( $value['terms'] ) ) {
+					// Value might be the terms array directly
+					$terms = $value;
+				}
+			}
+
+			// Wrap taxonomy selects in a container for proper layout
+			$html .= '<div class="urcr-taxonomy-select-group">';
+			$html .= '<select class="urcr-taxonomy-select">';
+			if ( isset( $localized_data['taxonomies'] ) && is_array( $localized_data['taxonomies'] ) ) {
+				foreach ( $localized_data['taxonomies'] as $tax_key => $tax_label ) {
+					$selected = ( $tax_key === $taxonomy ) ? 'selected' : '';
+					$html    .= '<option value="' . esc_attr( $tax_key ) . '" ' . $selected . '>' . esc_html( $tax_label ) . '</option>';
+				}
+			}
+			$html .= '</select>';
+
+			// Add data-value attribute for terms
+			$terms_attr = '';
+			if ( ! empty( $terms ) ) {
+				$terms_attr = ' data-value="' . esc_attr( wp_json_encode( $terms ) ) . '"';
+			}
+			$html .= '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' . $target_id . '" data-content-type="taxonomy" data-field-type="taxonomy"' . $terms_attr . '></select>';
+			$html .= '</div>';
+		} else {
+			$value_attr = '';
+			if ( is_array( $value ) && ! empty( $value ) ) {
+				$value_attr = ' data-value="' . esc_attr( wp_json_encode( $value ) ) . '"';
+			}
+			$html .= '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' . $target_id . '" data-content-type="' . esc_attr( $type ) . '" data-field-type="' . esc_attr( $type ) . '"' . $value_attr . '></select>';
+		}
+
+		$html .= '<button type="button" class="button button-link-delete urcr-target-remove" aria-label="' . esc_attr__( 'Remove content target', 'user-registration' ) . '">' .
+				'<span class="dashicons dashicons-no-alt"></span>' .
+				'</button>';
+		$html .= '</div>';
+
+		return $html;
 	}
 
 	/**
@@ -481,11 +897,13 @@ class Membership {
 				'posts'               => $posts,
 				'labels'              => $this->get_i18_labels(),
 				'membership_page_url' => admin_url( 'admin.php?page=user-registration-membership' ),
-				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE )
+				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
+				'update_order_nonce'  => wp_create_nonce( 'ur_membership_update_order' ),
+				'update_order_action' => 'user_registration_membership_update_membership_order',
 			)
 		);
 	}
-	
+
 
 	/**
 	 * Get i18 Labels
@@ -497,6 +915,7 @@ class Membership {
 			'network_error'                                => esc_html__( 'Network error', 'user-registration' ),
 			'i18n_field_is_required'                       => _x( 'field is required.', 'user registration membership', 'user-registration' ),
 			'i18n_valid_url_field_validation'              => _x( 'Please enter a valid url for', 'user registration membership', 'user-registration' ),
+			'i18n_valid_price_field_validation'            => _x( 'Invalid Price. The amount must be greater than 0.', 'user registration membership', 'user-registration' ),
 			'i18n_valid_amount_field_validation'           => _x( 'Input Field Amount must be greater than 0.', 'user registration membership', 'user-registration' ),
 			'i18n_valid_trial_period_field_validation'     => _x( 'Trial period must be less than subscription period.', 'user registration membership', 'user-registration' ),
 			'i18n_error'                                   => _x( 'Error', 'user registration membership', 'user-registration' ),
@@ -518,6 +937,7 @@ class Membership {
 			'i18n_bank_setup_error'                        => __( 'Incomplete Bank Transfer setup please update bank transfer payment settings before continuing.', 'user-registration' ),
 			'i18n_paypal_client_secret_id_error'           => __( 'Settings for client_id and client_secret is incomplete.', 'user-registration' ),
 			'i18n_previous_save_action_ongoing'            => _x( 'Previous save action on going.', 'user registration admin', 'user-registration' ),
+			'i18n_update_order'                            => __( 'Update Order', 'user-registration' ),
 		);
 	}
 

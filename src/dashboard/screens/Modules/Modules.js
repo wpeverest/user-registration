@@ -261,6 +261,24 @@ const Modules = () => {
 				});
 			}
 
+			/* global _UR_DASHBOARD_ */
+			const { urm_is_new_installation } =
+				typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_
+					? _UR_DASHBOARD_
+					: {};
+			
+			filtered = filtered.filter((mod) => {
+				if (mod.slug === "user-registration-membership") {
+					if (urm_is_new_installation) {
+						return false;
+					}
+					if (mod.status === "active") {
+						return false;
+					}
+				}
+				return true;
+			});
+
 			// Filter by search term
 		const searchValue = searchItemRef.current.toLowerCase();
 		filtered = filtered.filter((mod) =>

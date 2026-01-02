@@ -9,6 +9,7 @@ const Save = ({ attributes }) => {
 		accessControl,
 		message,
 		enableContentRestriction,
+		restrictionMessageType
 	} = attributes;
 
 	const escapeAttribute = (str) =>
@@ -32,7 +33,9 @@ const Save = ({ attributes }) => {
 		const membershipRoles = Array.isArray(accessMembershipRoles)
 			? accessMembershipRoles.map((r) => r.trim()).join(",")
 			: String(accessMembershipRoles).trim();
-		params += ` access_membership_role="${escapeAttribute(membershipRoles)}"`;
+		params += ` access_membership_role="${escapeAttribute(
+			membershipRoles
+		)}"`;
 	}
 
 	if (accessControl) {
@@ -44,8 +47,16 @@ const Save = ({ attributes }) => {
 	}
 
 	if (enableContentRestriction) {
-		params += ` enable_content_restriction="${escapeAttribute(enableContentRestriction)}"`;
+		params += ` enable_content_restriction="${escapeAttribute(
+			enableContentRestriction
+		)}"`;
 	}
+
+	// if (restrictionMessageType) {
+	params += ` restriction_message_type="${escapeAttribute(
+		restrictionMessageType
+	)}"`;
+	// }
 
 	if (message) {
 		params += ` message="${escapeAttribute(message)}"`;

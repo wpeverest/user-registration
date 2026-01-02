@@ -54,17 +54,78 @@ class UR_Blocks {
 			$enqueue_script,
 			UR_VERSION
 		);
+
+		wp_register_style(
+			'user-registration-blocks-editor-style',
+			UR()->plugin_url() . '/chunks/blocks.css',
+			array(),
+			UR_VERSION
+		);
+
+		wp_enqueue_style( 'user-registration-blocks-editor-style' );
+
+		if ( ur_check_module_activation( 'membership' ) ) {
+
+			wp_register_style( 'user-registration-membership-frontend-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-frontend.css', array(), UR_MEMBERSHIP_VERSION );
+			wp_enqueue_style( 'user-registration-membership-frontend-style' );
+		}
+
+		$authenticate_smart_tag = \UR_Smart_Tags::ur_authenticated_parsable_smart_tags_list();
+
+		$smart_tag = array();
+
+		$smart_tag[] = array(
+			'text'  => esc_html__( 'Membership Plan Details', 'user-registration' ),
+			'value' => '{{membership_plan_details}}',
+		);
+
+		foreach ( $authenticate_smart_tag as $value => $text ) {
+			$smart_tag[] = array(
+				'text'  => $text,
+				'value' => $value,
+			);
+		}
+
+		$pages        = get_pages();
+		$page_options = array(
+			array(
+				'label' => __( 'Select a page', 'user-registration' ),
+				'value' => 0,
+			),
+		);
+
+		foreach ( $pages as $page ) {
+			$page_options[] = array(
+				'label' => $page->post_title,
+				'value' => $page->ID,
+			);
+		}
+
 		wp_localize_script(
 			'user-registration-blocks-editor',
 			'_UR_BLOCKS_',
 			array(
-				'logoUrl'              => UR()->plugin_url() . '/assets/images/logo.png',
-				'urRestApiNonce'       => wp_create_nonce( 'wp_rest' ),
-				'restURL'              => rest_url(),
-				'isPro'                => is_plugin_active( 'user-registration-pro/user-registration.php' ),
-				'iscRestrictionActive' => ur_check_module_activation( 'content-restriction' ),
-				'pages' 			   => array_map( function( $page ) { return [ 'label' => $page->post_title, 'value' => $page->ID ]; }, get_pages() ),
-				'login_page_id'		   => get_option('user_registration_login_page_id')
+				'logoUrl'                     => UR()->plugin_url() . '/assets/images/logo.png',
+				'urRestApiNonce'              => wp_create_nonce( 'wp_rest' ),
+				'restURL'                     => '',
+				'isPro'                       => is_plugin_active( 'user-registration-pro/user-registration.php' ),
+				'iscRestrictionActive'        => ur_check_module_activation( 'content-restriction' ),
+				'pages'                       => array_map(
+					function ( $page ) {
+						return array(
+							'label' => $page->post_title,
+							'value' => $page->ID,
+						); },
+					get_pages()
+				),
+				'login_page_id'               => get_option( 'user_registration_login_page_id' ),
+				'urcrConfigurl'               => ur_check_module_activation( 'content-restriction' ) ? admin_url( 'admin.php?page=user-registration-content-restriction' ) : '',
+				'urcrGlobalRestrictionMsgUrl' => ur_check_module_activation( 'content-restriction' ) ? admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) : '',
+				'isProActive'                 => UR_PRO_ACTIVE,
+				'smart_tags'                  => $smart_tag,
+				'pages_array'                 => $page_options,
+				'membership_all_plan_url'     => admin_url( 'admin.php?page=user-registration-membership' ),
+				'membership_group_url'        => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
 			)
 		);
 		wp_register_script(
@@ -140,7 +201,7 @@ class UR_Blocks {
 		}
 		if ( ur_check_module_activation( 'membership' ) ) {
 			$ur_blocks_classes[] = UR_Block_Membership_Listing::class;
-			$ur_blocks_classes[] = 	UR_Block_Thank_You::class;
+			$ur_blocks_classes[] = UR_Block_Thank_You::class;
 		}
 
 		return apply_filters(
