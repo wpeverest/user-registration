@@ -351,4 +351,13 @@
 			}
 		});
 	});
+
+	$("#ur-subscription-start-date, #ur-subscription-expiry-date").on(
+		"click focus",
+		function () {
+			if (this.showPicker) {
+				this.showPicker();
+			}
+		}
+	);
 })(jQuery, window.ur_subscription_data);
