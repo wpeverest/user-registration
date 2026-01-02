@@ -218,6 +218,7 @@ if ( 'block' === $type ) :
 	</div>
 		<?php
 elseif ( 'list' === $type ) :
+
 	?>
 	<form id="membership-old-selection-form-<?php echo esc_attr( $uuid ); ?>" class="membership-selection-form layout-list ur-membership-container" method="GET" >
 		<input type="hidden" name="urm_uuid" value="<?php echo esc_html( $uuid ); ?>">
@@ -226,6 +227,8 @@ elseif ( 'list' === $type ) :
 								value="<?php echo esc_url( $redirect_page_url ); ?>">
 		<div class="ur_membership_frontend_input_container radio">
 			<?php
+			$membership_listing_div = '';
+			ob_start();
 			if ( ! empty( $memberships ) ) :
 				foreach ( $memberships as $m => $membership ) :
 					$current_plan = false;
@@ -325,17 +328,28 @@ elseif ( 'list' === $type ) :
 					<?php
 				endforeach;
 			endif;
-			?>
-			<div class="notice-container">
-				<div id="urm-listing-error" class="notice_red">
-					<span class="notice_message"></span>
-					<span class="close_notice">&times;</span>
+			$membership_listing_div = ob_get_clean();
+
+			if ( $membership_listing_div ) {
+				echo $membership_listing_div;
+				?>
+				<div class="notice-container">
+					<div id="urm-listing-error" class="notice_red">
+						<span class="notice_message"></span>
+						<span class="close_notice">&times;</span>
+					</div>
 				</div>
-			</div>
-			<div class="membership-footer">
-				<button type="button"
-						class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>" <?php echo $open_in_new_tab ? "target = '_blank'" : ''; ?> ><?php echo esc_html( $sign_up_text ); ?></button>
-			</div>
+				<div class="membership-footer">
+					<button type="button"
+							class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>" <?php echo $open_in_new_tab ? "target = '_blank'" : ''; ?> ><?php echo esc_html( $sign_up_text ); ?></button>
+				</div>
+				<?php
+			} else {
+				?>
+				<div id="user-registration" class="user-registration"><?php esc_html_e( 'You have purchased all available membership plans.', 'user-registration' ); ?></div>
+				<?php
+			}
+			?>
 		</div>
 	</form>
 	<?php
