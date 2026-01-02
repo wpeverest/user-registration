@@ -82,6 +82,7 @@ function urcr_get_excluded_page_ids() {
 		'user_registration_login_options_login_redirect_url',
 		'user_registration_myaccount_page_id',
 		'user_registration_member_registration_page_id',
+		'user_registration_thank_you_page_id'
 	);
 
 	/**
@@ -526,6 +527,7 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 					}
 					break;
 				case 'membership':
+
 					if ( $user->ID && ur_check_module_activation( 'membership' ) ) {
 						$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
 						$user_membership    = $members_repository->get_member_membership_by_id( $user->ID );
