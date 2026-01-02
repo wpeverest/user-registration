@@ -6181,6 +6181,10 @@ body.user-registration {
 						margin-top: 20px;
 						margin-bottom: 20px;
 
+						&.fixed {
+							table-layout: unset;
+						}
+
 						thead {
 							tr {
 								th {
