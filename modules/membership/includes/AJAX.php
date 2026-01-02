@@ -641,7 +641,14 @@ class AJAX {
 		}
 		$membership_group_id = absint( $_POST['membership_group_id'] );
 		$membership_service  = new MembershipGroupService();
-		$membership_service->remove_form_related_groups( array( $membership_group_id ), true );
+		$membership_group_form = $membership_service->check_if_group_used_in_form( $membership_group_id );
+		if(false === $membership_group_form){
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Sorry! There was an unexpected error while deleting the membership group.', 'user-registration' ),
+				)
+			);
+		}
 		$membership_group_repository = new MembershipGroupRepository();
 		$deleted                     = $membership_group_repository->delete( $membership_group_id );
 		if ( $deleted ) {
