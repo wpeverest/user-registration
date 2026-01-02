@@ -1280,7 +1280,6 @@ class UR_Getting_Started {
 		$membership_features = array(
 			'user-registration-membership',
 			'user-registration-payment-history',
-			'user-registration-content-restriction',
 		);
 
 		foreach ( $membership_features as $feature ) {
