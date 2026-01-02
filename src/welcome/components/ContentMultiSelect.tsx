@@ -1,18 +1,18 @@
-import React from "react";
 import {
 	Box,
-	HStack,
-	Tag,
-	TagLabel,
-	Menu,
-	MenuButton,
-	MenuList,
-	MenuItem,
 	Checkbox,
 	CheckboxGroup,
+	HStack,
+	Menu,
+	MenuButton,
+	MenuItem,
+	MenuList,
+	Tag,
+	TagLabel,
 	Text,
-	useColorModeValue,
+	useColorModeValue
 } from "@chakra-ui/react";
+import React from "react";
 
 interface Option {
 	value: number;
@@ -30,7 +30,7 @@ const ContentMultiSelect: React.FC<ContentMultiSelectProps> = ({
 	options,
 	value,
 	onChange,
-	placeholder = "Select items",
+	placeholder = "Select items"
 }) => {
 	const borderColor = useColorModeValue("gray.200", "gray.600");
 	const bg = useColorModeValue("white", "gray.800");
@@ -80,7 +80,9 @@ const ContentMultiSelect: React.FC<ContentMultiSelectProps> = ({
 				>
 					{options.map((opt) => (
 						<MenuItem key={opt.value} closeOnSelect={false} px={3}>
-							<Checkbox value={String(opt.value)}>{opt.label}</Checkbox>
+							<Checkbox value={String(opt.value)}>
+								{opt.label}
+							</Checkbox>
 						</MenuItem>
 					))}
 				</CheckboxGroup>

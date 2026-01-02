@@ -419,9 +419,14 @@ class URCR_Admin {
 				'post_status'    => 'publish',
 				'posts_per_page' => 1,
 				'meta_query'     => array(
+					'relation' => 'AND',
 					array(
 						'key'   => 'urcr_meta_checkbox',
 						'value' => 'on',
+					),
+					array(
+						'key'     => 'urcr_meta_override_global_settings',
+						'compare' => 'NOT EXISTS',
 					),
 				),
 			);

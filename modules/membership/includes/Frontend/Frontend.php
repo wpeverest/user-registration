@@ -183,6 +183,7 @@ class Frontend {
 				'urm_hide_stripe_card_postal_code' => apply_filters( 'user_registration_membership_disable_stripe_card_postal_code', false ),
 				'gateways_configured'              => urm_get_all_active_payment_gateways( 'paid' ),
 				'isEditor'                         => current_user_can( 'edit_post', get_the_ID() ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'],
+				'membership_selection_message'     => __( 'Please select at least one membership plan', 'user-registration' ),
 			),
 		);
 	}
@@ -216,6 +217,7 @@ class Frontend {
 			'i18n_incomplete_stripe_setup_error'           => __( 'Stripe Payment stopped. Incomplete Stripe setup.', 'user-registration' ),
 			'i18n_bank_details_title'                      => __( 'Bank Details.', 'user-registration' ),
 			'i18n_change_membership_title'                 => __( 'Change Membership', 'user-registration' ),
+			'i18n_purchasing_multiple_membership_title'    => __( 'Purchase Membership', 'user-registration' ),
 			'i18n_change_renew_title'                      => __( 'Renew Membership', 'user-registration' ),
 			'i18n_change_plan_required'                    => __( 'At least one Plan must be selected', 'user-registration' ),
 			'i18n_error'                                   => __( 'Error', 'user-registration' ),
@@ -252,11 +254,17 @@ class Frontend {
 			return;
 		}
 		$next_subscription_data = json_decode( get_user_meta( $user_id, 'urm_next_subscription_data', true ), true );
+		$prev_subscription_data = json_decode( get_user_meta( $user_id, 'urm_previous_subscription_data', true ), true );
 
 		if ( ! empty( $next_subscription_data ) && empty( $next_subscription_data['delayed_until'] ) && ! empty( $next_subscription_data['payment_method'] ) && ( 'paypal' === $next_subscription_data['payment_method'] ) ) {
-			if ( $user_subscription['status'] === 'active' ) {
-				delete_user_meta( $user_id, 'urm_is_upgrading' );
-				delete_user_meta( $user_id, 'urm_is_upgrading_to' );
+
+			if ( $prev_subscription_data['status'] === 'active' ) {
+				$membership_process = urm_get_membership_process( $user_id );
+
+				if ( ! empty( $membership_process ) && isset( $membership_process['upgrade'][ $prev_subscription_data['item_id'] ] ) ) {
+					unset( $membership_process['upgrade'][ $prev_subscription_data['item_id'] ] );
+					update_user_meta( $user_id, 'urm_membership_process', $membership_process );
+				}
 			}
 		}
 	}

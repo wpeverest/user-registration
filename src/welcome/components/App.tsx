@@ -1,8 +1,7 @@
-import React from "react";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import SetupWizard from "./SetupWizard";
+import React from "react";
 import { StateProvider } from "../context/StateProvider";
-import reducer, { initialState } from "../context/Gettingstartedcontext";
+import SetupWizard from "./SetupWizard";
 
 const theme = extendTheme({
 	fonts: {
@@ -17,8 +16,8 @@ const theme = extendTheme({
 			200: "#b8c1ff",
 			300: "#9ba8ff",
 			400: "#7e8fff",
-			500: "#475BD8",
-			600: "#3a4bc2",
+			500: "#475BB2",
+			600: "#3A4B9C",
 			700: "#2f3da6",
 			800: "#252f89",
 			900: "#1c246d"
@@ -27,7 +26,7 @@ const theme = extendTheme({
 	styles: {
 		global: {
 			body: {
-				bg: "gray.50"
+				bg: "#F8F8FA"
 			}
 		}
 	},
@@ -35,13 +34,13 @@ const theme = extendTheme({
 		Button: {
 			baseStyle: {
 				fontWeight: "500",
-				borderRadius: "lg"
+				borderRadius: "4px"
 			}
 		},
 		Card: {
 			baseStyle: {
 				container: {
-					borderRadius: "xl"
+					borderRadius: "8px"
 				}
 			}
 		},
@@ -78,7 +77,7 @@ const theme = extendTheme({
 
 const App: React.FC = () => {
 	return (
-		<StateProvider initialState={initialState} reducer={reducer}>
+		<StateProvider>
 			<ChakraProvider theme={theme}>
 				<SetupWizard />
 			</ChakraProvider>

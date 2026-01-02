@@ -44,7 +44,7 @@ if ( empty( $signup_url ) ) {
 	.urcr-access-card {
 		background-color: #ffffff;
 		border-radius: 12px;
-		padding: 48px 40px;
+		padding: 10px 28px;
 		max-width: 500px;
 		width: 100%;
 		box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.1);
@@ -82,12 +82,8 @@ if ( empty( $signup_url ) ) {
 	.urcr-actions .urcr-access-button {
 		margin-bottom: 12px;
 	}
-	.urcr-signup-link {
-		color: #475bb2;
-		font-size: 14px;
-	}
 	.urcr-access-button {
-		max-width: 50px;
+		max-width: 100%;
 		padding: 8px 16px;
 		border-radius: 8px;
 		font-size: 16px;
@@ -99,12 +95,24 @@ if ( empty( $signup_url ) ) {
 		display: inline-block;
 	}
 	.urcr-access-button-primary {
-		background-color: #4f46e5;
+		background-color: #475BB2;
 		color: #ffffff;
+		text-decoration: none;
 	}
 	.urcr-access-button-primary:hover {
-		background-color: #4338ca;
+		background-color: rgb(56.4578313253, 72.3614457831, 141.5421686747);
 		color: #ffffff;
+		text-decoration: none;
+	}
+	.urcr-signup-link {
+		color: #6366f1;
+		font-size: 16px;
+		font-weight: 500;
+		text-decoration: none;
+	}
+	.urcr-signup-link:hover {
+		color: #475BB2;
+		text-decoration: underline;
 	}
 	@media (max-width: 480px) {
 		.urcr-access-card {
@@ -119,12 +127,5 @@ if ( empty( $signup_url ) ) {
 	}
 </style>
 <div class="urcr-access-card">
-	<h1 class="urcr-access-heading"><?php esc_html_e( 'Access Required', 'user-registration' ); ?></h1>
-	<p class="urcr-access-description"><?php echo wp_kses_post( $message ); ?></p>
-	<div class="urcr-actions">
-		<?php if ( ! is_user_logged_in() ) : ?>
-			<a href="<?php echo esc_url( $login_url ); ?>" class="urcr-access-button urcr-access-button-primary"><?php esc_html_e( 'Log In', 'user-registration' ); ?></a>
-		<?php endif; ?>
-		<a href="<?php echo esc_url( $signup_url ); ?>" class="urcr-signup-link"><?php esc_html_e( 'Register now?', 'user-registration' ); ?></a>
-	</div>
+	<?php echo wp_kses_post( $message ); ?>
 </div>

@@ -1365,6 +1365,40 @@
   margin-top: 5px;
   margin-bottom: 0;
 }
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table tbody tr td.status .ur-toggle-section .user-registration-toggle-form input:checked + .slider {
+  background-color: #4CC741;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table tbody tr:nth-child(odd) {
+  background: #F8F8FA;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table tbody tr.no-items {
+  background: #ffffff;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table tbody tr.no-items td {
+  padding: 0;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table tbody tr.no-items td .empty-list-table-container {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table tbody tr.no-items td .empty-list-table-container img {
+  width: 300px;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table tbody tr.no-items td .empty-list-table-container h3 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  color: #222222;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 32px;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table tbody tr.no-items td .empty-list-table-container p {
+  color: #6B6B6B;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+}
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#title, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#membership_price, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#membership_type, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#members, .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships thead tr th#status {
   width: 20%;
 }
@@ -1404,9 +1438,6 @@
   text-transform: capitalize;
   color: #383838;
   font-weight: 500;
-}
-.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td.status .ur-toggle-section .user-registration-toggle-form input:checked + .slider {
-  background-color: #4CC741;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items {
   background: #ffffff;
@@ -1837,6 +1868,25 @@
   line-height: 1;
 }
 
+#ur-membership-main-fields .ur-p-tag {
+  margin-bottom: 24px;
+  padding: 10px 12px 10px 16px;
+  background: rgba(71, 91, 178, 0.04);
+  border: 1px solid #475bb2;
+  font-weight: 400;
+  color: #383838;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 22px;
+  font-style: normal;
+}
+
+.ur-membership-upgrade-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 .user-registration-membership_page_user-registration-members {
   background-color: #fafafa;
 }
@@ -1845,20 +1895,23 @@
   background-color: #fafafa;
 }
 .user-registration-membership_page_user-registration-membership table.membership_groups th#title {
-  width: 200px;
+  width: 30%;
 }
 .user-registration-membership_page_user-registration-membership table.membership_groups th#shortcode {
-  width: 220px;
+  width: 50%;
 }
 .user-registration-membership_page_user-registration-membership table.membership_groups th#status {
-  width: 100px;
+  width: 20%;
 }
-.user-registration-membership_page_user-registration-membership table.membership_groups th#action {
-  width: 200px;
+.user-registration-membership_page_user-registration-membership table.membership_groups tbody tr td.shortcode .urm-shortcode {
+  width: 70%;
 }
 .user-registration-membership_page_user-registration-membership .user-registration-help-tip::after {
   width: 8px;
   height: 15px;
+}
+.user-registration-membership_page_user-registration-membership #ur-membership-group-create-form .ur-input-type-membership-group-name .select2-container--default .select2-selection--multiple .select2-search__field {
+  width: 100% !important;
 }
 
 .tooltipster-base.tooltipster-bottom {

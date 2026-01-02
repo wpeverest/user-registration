@@ -160,7 +160,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 				true
 			);
 			wp_enqueue_script( 'ur-snackbar' );
-			wp_enqueue_script( 'user-registration-users' );
+			wp_enqueue_script( 'user-registration-members' );
 			wp_enqueue_script( 'sweetalert2' );
 			wp_register_script( 'selectWoo', UR()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), '5.0.0', false );
 			wp_enqueue_script( 'selectWoo' );
@@ -968,7 +968,6 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 			$memberships        = $members_list_table->get_all_memberships();
 			$membership_service = new MembershipService();
 			$memberships        = $membership_service->list_active_memberships();
-
 			include UR_MEMBERSHIP_DIR . '/includes/Admin/Views/member-create.php';
 		}
 
@@ -988,8 +987,9 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 			if ( ! empty( $member_id ) ) {
 				$subscription_repository = new MembersSubscriptionRepository();
 				$membership_repository   = new MembershipRepository();
-				$member_subscription     = $subscription_repository->get_member_subscription( $member_id );
-				$member_membership       = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
+
+				$member_subscription = $subscription_repository->get_member_subscription( $member_id );
+				$member_membership   = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
 
 				$member_membership_details['ID']           = $member_subscription['item_id'];
 				$member_membership_details['post_title']   = $member_membership['post_title'];

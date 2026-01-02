@@ -472,19 +472,23 @@ class UR_Frontend {
 			}
 		}
 
-		$total_count = count( $total_items );
-		$page        = max( 1, intval( $page ) );
-		$per_page    = max( 1, intval( $per_page ) );
-		$offset      = ( $page - 1 ) * $per_page;
-		$items       = array_slice( $total_items, $offset, $per_page );
+		if ( ! empty( $total_items ) ) {
+			$total_count = count( $total_items );
+			$page        = max( 1, intval( $page ) );
+			$per_page    = max( 1, intval( $per_page ) );
+			$offset      = ( $page - 1 ) * $per_page;
+			$items       = array_slice( $total_items, $offset, $per_page );
 
-		return array(
-			'items'       => $items,
-			'total_items' => $total_count,
-			'page'        => $page,
-			'per_page'    => $per_page,
-			'total_pages' => ( $per_page > 0 ) ? (int) ceil( $total_count / $per_page ) : 1,
-		);
+			return array(
+				'items'       => $items,
+				'total_items' => $total_count,
+				'page'        => $page,
+				'per_page'    => $per_page,
+				'total_pages' => ( $per_page > 0 ) ? (int) ceil( $total_count / $per_page ) : 1,
+			);
+		}
+
+		return array();
 	}
 
 	/**
@@ -544,9 +548,12 @@ class UR_Frontend {
 					}
 
 					$membership['active_gateways'] = $active_gateways;
-					$is_upgrading                  = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
-					$last_order                    = $members_order_repository->get_member_orders( $user_id );
-					$bank_data                     = array();
+					$membership_process            = urm_get_membership_process( $user_id );
+
+					$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $membership['post_id'] ] );
+
+					$last_order = $members_order_repository->get_member_orders( $user_id );
+					$bank_data  = array();
 					if ( ! empty( $last_order ) && $last_order['status'] == 'pending' && $last_order['payment_method'] === 'bank' ) {
 						$bank_data = array(
 							'show_bank_notice' => true,
@@ -574,7 +581,12 @@ class UR_Frontend {
 						}
 					}
 
-					$data['period'] = 'subscription' === $membership['post_content']['type'] ? $membership['billing_amount'] . ' / ' . $membership['billing_cycle'] : $membership['billing_amount'];
+					$duration = $membership_details['subscription']['value'] ?? '';
+					if ( ! empty( $duration ) && ! empty( $membership['billing_cycle'] ) ) {
+						$data['period'] = 'subscription' === $membership['post_content']['type'] ? $membership['billing_amount'] . ' / ' . $duration . ' ' . $membership['billing_cycle'] : $membership['billing_amount'];
+					} else {
+						$data['period'] = $membership['billing_amount'] ?? '';
+					}
 
 					array_push( $membership_data, $data );
 				}

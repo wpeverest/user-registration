@@ -145,7 +145,7 @@ if ( ! class_exists( 'UR_Settings_Confirm_Email_Address_Change_Email', false ) )
 			);
 			$body_content = ur_wrap_email_body_content( $body_content );
 
-			if ( UR_PRO_ACTIVE ) {
+			if ( UR_PRO_ACTIVE && function_exists( 'ur_get_email_template_wrapper' ) ) {
 				$body_content = ur_get_email_template_wrapper( $body_content, false );
 			}
 

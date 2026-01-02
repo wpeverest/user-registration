@@ -538,7 +538,7 @@
 						ur_membership_data.labels.i18n_error +
 							"! " +
 							ur_membership_data.labels
-								.i18n_valid_amount_field_validation
+								.i18n_valid_price_field_validation
 					);
 					$("#ur-membership-amount").addClass("ur-membership-error");
 				}
@@ -782,7 +782,6 @@
 				// Add rule data to AJAX request if available
 				if (ruleData) {
 					ajaxData.urcr_membership_access_rule_data = JSON.stringify(ruleData);
-					console.log('Rule data added to AJAX request for create');
 				}
 
 				this.send_data(
@@ -846,7 +845,6 @@
 				if (typeof window.URCRMembershipAccess !== 'undefined' && typeof window.URCRMembershipAccess.prepareRuleData === 'function') {
 					ruleData = window.URCRMembershipAccess.prepareRuleData();
 				}
-				console.log(ruleData);
 				var prepare_membership_data = this.prepare_membership_data();
 
 				var ajaxData = {
@@ -860,7 +858,6 @@
 				// Add rule data to AJAX request if available
 				if (ruleData) {
 					ajaxData.urcr_membership_access_rule_data = JSON.stringify(ruleData);
-					console.log('Rule data added to AJAX request for update');
 				}
 
 				this.send_data(
@@ -1632,4 +1629,5 @@
 			})
 		}
 	);
+
 })(jQuery, window.ur_membership_localized_data);

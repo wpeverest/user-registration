@@ -257,30 +257,31 @@ class UR_Form_Handler {
 					$user_data['ID'] = get_current_user_id();
 					wp_update_user( $user_data );
 				}
+
+				/**
+				 * Filter to modify the profile update success message.
+				 */
+				$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
+
+				if ( $email_updated ) {
+					self::send_confirmation_email( $user, $pending_email, $form_id );
+					/* translators: user_email */
+					$user_email_update_message = sprintf( __( 'Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email.', 'user-registration' ), $pending_email );
+					ur_add_notice( $user_email_update_message, 'notice' );
+				}
+
+				ur_add_notice( $message );
+				/**
+				 * Action save profile details.
+				 *
+				 * @param int $user_id The user ID.
+				 * @param int $form_id The form ID.
+				 */
+				do_action( 'user_registration_save_profile_details', $user_id, $form_id );
+
+				wp_safe_redirect( ur_get_account_endpoint_url( $profile_endpoint ) );
+				exit;
 			}
-			/**
-			 * Filter to modify the profile update success message.
-			 */
-			$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
-
-			if ( $email_updated ) {
-				self::send_confirmation_email( $user, $pending_email, $form_id );
-				/* translators: user_email */
-				$user_email_update_message = sprintf( __( 'Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email.', 'user-registration' ), $pending_email );
-				ur_add_notice( $user_email_update_message, 'notice' );
-			}
-
-			ur_add_notice( $message );
-			/**
-			 * Action save profile details.
-			 *
-			 * @param int $user_id The user ID.
-			 * @param int $form_id The form ID.
-			 */
-			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
-
-			wp_safe_redirect( ur_get_account_endpoint_url( $profile_endpoint ) );
-			exit;
 		}
 	}
 

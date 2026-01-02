@@ -7,11 +7,15 @@
 
 namespace WPEverest\URMembership\Payment\Admin;
 
+use UR_Base_Layout;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\TableList;
 
 if ( ! class_exists( 'UR_List_Table' ) ) {
 	include_once dirname( UR_PLUGIN_FILE ) . '/includes/abstracts/abstract-ur-list-table.php';
+}
+if ( ! class_exists( 'UR_Base_Layout' ) ) {
+	include_once dirname( UR_PLUGIN_FILE ) . '/includes/admin/class-ur-admin-base-layout.php';
 }
 
 /**
@@ -28,7 +32,7 @@ class OrdersListTable extends \UR_List_Table {
 	 */
 	public function __construct() {
 
-		$this->page                 = 'user-registration-membership';
+		$this->page                 = 'member-payment-history';
 		$this->per_page_option      = 'user_registration_membership_per_page';
 		$this->addnew_action        = 'add_new_orders';
 		$this->sort_by              = array(
@@ -189,7 +193,7 @@ class OrdersListTable extends \UR_List_Table {
 	public function column_transaction_id( $row ) {
 		return sprintf(
 			'<strong><div class="ur-edit-title"><a href="%s" class="row-title">%s</a></div></strong>%s',
-			esc_url( $this->get_edit_links( $row ) ),
+			esc_url( admin_url( "admin.php?page=member-payment-history&action=edit&id={$row['order_id']}" ) ),
 			esc_html( isset( $row['transaction_id'] ) && ! empty( $row['transaction_id'] ) ? $row['transaction_id'] : ( $row['order_id'] ?? '' ) ),
 			$this->row_actions( $this->get_row_actions( $row ) )
 		);
@@ -199,14 +203,7 @@ class OrdersListTable extends \UR_List_Table {
 	 * No items found text.
 	 */
 	public function no_items() {
-		$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
-		?>
-<div class="empty-list-table-container">
-	<img src="<?php echo esc_url( $image_url ); ?>" alt="">
-	<h3><?php esc_html_e( 'You don\'t have any Payments yet.', 'user-registration' ); ?></h3>
-	<p><?php esc_html_e( 'Please add Payments and you are good to go.', 'user-registration' ); ?></p>
-</div>
-		<?php
+		UR_Base_Layout::no_items('Payments');
 	}
 
 	/**
@@ -262,7 +259,7 @@ class OrdersListTable extends \UR_List_Table {
 		$edit_id   = $order_id ? $order_id : $user_id;
 		$edit_type = $order_id ? 'order' : 'form';
 
-		return [
+		return array(
 			'id'     => sprintf(
 				/* translators: %d: Item id */
 				__( 'ID: %d', 'user-registration-file-downloads' ),
@@ -274,18 +271,18 @@ class OrdersListTable extends \UR_List_Table {
 				esc_html__( 'Edit', 'user-registration-file-downloads' )
 			),
 			'delete' => '<a data-user-id=' . esc_attr( $user_id ) . ' data-order-id = ' . esc_attr( $order_id ) . ' class="single-delete-order" style="cursor:pointer" >' . esc_html__( 'Trash', 'user-registration' ) . '</a>',
-		];
+		);
 	}
 
 	public function get_delete_links( $row ) {
 		return wp_nonce_url(
 			add_query_arg(
-				[
+				array(
 					'page'   => $this->page,
 					'screen' => $this->get_screen(),
 					'action' => 'delete',
 					'id'     => $row['order_id'] ?? 0,
-				],
+				),
 				admin_url( 'admin.php' )
 			),
 			'delete'
@@ -347,38 +344,98 @@ class OrdersListTable extends \UR_List_Table {
 	 * Render the list table page, including header, notices, status filters and table.
 	 */
 	public function display_page() {
-		$this->prepare_items();
-		if ( ! isset( $_GET['add-new-membership'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			?>
-<div class="wrap">
-	<form id="membership-list" method="get">
-		<input type="hidden" name="page" value="<?php echo esc_attr( $this->page ); ?>" />
-			<?php
-								$this->display();
-			?>
-	</form>
-</div>
-			<?php
-		}
+		UR_Base_Layout::render_layout(
+			$this,
+			array(
+				'page'           => $this->page,
+				'title'          => esc_html__( 'Payment History', 'user-registration' ),
+				'add_new_action' => 'add_new_payment',
+				'search_id'      => 'user-registration-payment-history-search',
+				'skip_query_key' => 'add-new-membership',
+				'form_id'        => 'ur-membership-payment-history-form',
+			)
+		);
 	}
 
 	public function display() {
 		$this->display_tablenav( 'top' );
 		$this->screen->render_screen_reader_content( 'heading_list' );
 		?>
-<table class="wp-list-table <?php echo implode( ' ', array_map( 'esc_attr', $this->get_table_classes() ) ); ?>">
-	<thead>
-		<tr>
-			<?php $this->print_column_headers(); ?>
-		</tr>
-	</thead>
-	<tbody id="the-list">
-		<?php $this->display_rows_or_placeholder(); ?>
-	</tbody>
-</table>
+		<table class="wp-list-table <?php echo implode( ' ', array_map( 'esc_attr', $this->get_table_classes() ) ); ?>">
+			<thead>
+				<tr>
+					<?php $this->print_column_headers(); ?>
+				</tr>
+			</thead>
+			<tbody id="the-list">
+				<?php $this->display_rows_or_placeholder(); ?>
+			</tbody>
+		</table>
 		<?php
 		$this->display_tablenav( 'bottom' );
 	}
+
+	/**
+		 * Generates the table navigation above or below the table
+		 *
+		 * @since 4.1
+		 *
+		 * @param string $which
+		 */
+	protected function display_tablenav( $which ) {
+		if ( 'top' === $which ) {
+			wp_nonce_field( 'bulk-' . $this->_args['plural'] );
+		}
+		?>
+			<div class="tablenav <?php echo esc_attr( $which ); ?>">
+
+			<?php if ( $this->has_items() && 'top' === $which ) : ?>
+					<div>
+						<div class="alignleft actions bulkactions">
+							<?php $this->bulk_actions( $which ); ?>
+						</div>
+						<?php $this->extra_tablenav( $which ); ?>
+					</div>
+					<?php
+				endif;
+			if ( 'top' === $which ) :
+				?>
+				<div class="user-registration-payments-filters">
+				<?php $this->display_advance_filter(); ?>
+				</div>
+					<?php
+				endif;
+			if ( 'bottom' === $which ) :
+				?>
+				<div class="alignleft">
+				<?php $this->footer_text(); ?>
+				</div>
+					<?php
+					$this->pagination( $which );
+			endif;
+			?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Displays the search box.
+	 *
+	 * @since 4.1
+	 */
+	public function display_search_box( $input_id ) {
+		?>
+			<div id="user-registration-list-search-form">
+				<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" placeholder="<?php esc_html_e( 'Search Members ...', 'user-registration' ); ?>" />
+				<button type="submit" id="search-submit">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+						<path fill="#000" fill-rule="evenodd" d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z" clip-rule="evenodd"/>
+					</svg>
+				</button>
+			</div>
+		<?php
+	}
+
 
 	/**
 	 * Displays advance filter.
@@ -386,108 +443,94 @@ class OrdersListTable extends \UR_List_Table {
 	 * @since 4.1
 	 */
 	public function display_advance_filter() {
-		$input_id             = 'user-registration-payment-history-search';
 		$is_membership_active = $this->is_membership_active;
 		$show_membership      = ( isset( $_REQUEST['payment_for'] ) && 'memberships' == $_REQUEST['payment_for'] || ( ! isset( $_REQUEST['payment_for'] ) && $this->is_membership_active !== null ) );
 
 		?>
-<!--		main search box-->
-<div class="search-box">
-	<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>"
-		placeholder="<?php esc_html_e( 'Search Members ...', 'user-registration' ); ?>" />
-	<input type="hidden" name="page" value="member-payment-history">
-		<?php wp_nonce_field( 'user-registration-pro-filter-members' ); ?>
-	<button type="submit" id="search-submit">
-		<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-			<path fill="#000" fill-rule="evenodd"
-				d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z"
-				clip-rule="evenodd" />
-		</svg>
-	</button>
-</div>
-<div class="module" style="display: flex; gap: 10px">
-	<select name="payment_for" id="user-registration-pro-payment-type-filters" class="ur-enhanced-select">
-		<option value="" selected><?php echo esc_html__( 'Select Module', 'user-registration' ); ?></option>
-		<option value="forms"
-			<?php echo isset( $_REQUEST['payment_for'] ) && 'forms' == $_REQUEST['payment_for'] ? 'selected=selected' : ''; ?>>
-			<?php echo esc_html__( 'Forms', 'user-registration' ); ?></option>
-		<?php
-		if ( $this->is_membership_active ) :
-			?>
-		<option value="memberships"
-			<?php echo ( isset( $_REQUEST['payment_for'] ) && 'memberships' == $_REQUEST['payment_for'] ) || ! isset( $_REQUEST['payment_for'] ) ? 'selected=selected' : ''; ?>>
-			<?php echo esc_html__( 'Membership', 'user-registration' ); ?></option>
-			<?php
-						endif;
-		?>
-	</select>
-</div>
-<!--		membership dropdown-->
-<div class="module-box" id="user-registration-pro-memberships-filters-container"
-	style="display:<?php echo $show_membership ? 'flex' : 'none'; ?>; gap: 10px;">
-	<select name="membership_id" id="user-registration-pro-memberships-filter" class="ur-enhanced-select">
-		<option value=""><?php echo esc_html__( 'All Membership', 'user-registration' ); ?></option>
-		<?php
-		foreach ( $this->get_all_memberships() as $id => $form ) {
-			$selected = isset( $_REQUEST['membership_id'] ) && $id == $_REQUEST['membership_id'] ? 'selected=selected' : '';
-			?>
-		<option value='<?php echo esc_attr( $id ); ?>' <?php echo esc_attr( $selected ); ?>>
-			<?php echo esc_html( $form ); ?></option>
-			<?php
-		}
-		?>
-	</select>
-</div>
 
-<div class="module-box" id="user-registration-pro-forms-filters-container"
-	style="display:<?php echo ! $show_membership && $_REQUEST['payment_for'] == 'forms' ? 'flex' : 'none'; ?>; gap: 10px;">
-	<select name="form_id" id="user-registration-pro-forms-filter" class="ur-enhanced-select">
-		<option value=""><?php echo esc_html__( 'All Forms', 'user-registration' ); ?></option>
-		<?php
-		foreach ( ur_get_all_user_registration_form() as $id => $form ) {
-			$selected = isset( $_REQUEST['form_id'] ) && $id == $_REQUEST['form_id'] ? 'selected=selected' : '';
-			?>
-		<option value='<?php echo esc_attr( $id ); ?>' <?php echo esc_attr( $selected ); ?>>
-			<?php echo esc_html( $form ); ?></option>
-			<?php
-		}
-		?>
-	</select>
-</div>
+		<div class="module" style="display: flex; gap: 10px">
+			<select name="payment_for" id="user-registration-pro-payment-type-filters">
+				<option value="" selected><?php echo esc_html__( 'Select Module', 'user-registration' ); ?></option>
+				<option value="forms"
+					<?php echo isset( $_REQUEST['payment_for'] ) && 'forms' == $_REQUEST['payment_for'] ? 'selected=selected' : ''; ?>>
+					<?php echo esc_html__( 'Forms', 'user-registration' ); ?></option>
+				<?php
+				if ( $this->is_membership_active ) :
+					?>
+				<option value="memberships"
+					<?php echo ( isset( $_REQUEST['payment_for'] ) && 'memberships' == $_REQUEST['payment_for'] ) || ! isset( $_REQUEST['payment_for'] ) ? 'selected=selected' : ''; ?>>
+					<?php echo esc_html__( 'Membership', 'user-registration' ); ?></option>
+					<?php
+								endif;
+				?>
+			</select>
+		</div>
+		<!--		membership dropdown-->
+		<div class="module-box" id="user-registration-pro-memberships-filters-container"
+			style="display:<?php echo $show_membership ? 'flex' : 'none'; ?>; gap: 10px;">
+			<select name="membership_id" id="user-registration-pro-memberships-filter">
+				<option value=""><?php echo esc_html__( 'All Membership', 'user-registration' ); ?></option>
+				<?php
+				foreach ( $this->get_all_memberships() as $id => $form ) {
+					$selected = isset( $_REQUEST['membership_id'] ) && $id == $_REQUEST['membership_id'] ? 'selected=selected' : '';
+					?>
+				<option value='<?php echo esc_attr( $id ); ?>' <?php echo esc_attr( $selected ); ?>>
+					<?php echo esc_html( $form ); ?></option>
+					<?php
+				}
+				?>
+			</select>
+		</div>
 
-<div class="" id="user-registration-pro-members-filters" style="display: flex; gap: 10px">
-	<select name="payment_method" id="user_registration_pro_users_form_filter" class="ur-enhanced-select">
-		<option value=""><?php echo esc_html__( 'All Gateway', 'user-registration' ); ?></option>
-		<?php
-						$options = ( isset( $_REQUEST['payment_for'] ) && 'membership' == $_REQUEST['payment_for'] ) ? get_option( 'ur_membership_payment_gateways' ) : get_option( 'ur_payment_gateways' );
+		<div class="module-box" id="user-registration-pro-forms-filters-container"
+			style="display:<?php echo ! $show_membership && $_REQUEST['payment_for'] == 'forms' ? 'flex' : 'none'; ?>; gap: 10px;">
+			<select name="form_id" id="user-registration-pro-forms-filter">
+				<option value=""><?php echo esc_html__( 'All Forms', 'user-registration' ); ?></option>
+				<?php
+				foreach ( ur_get_all_user_registration_form() as $id => $form ) {
+					$selected = isset( $_REQUEST['form_id'] ) && $id == $_REQUEST['form_id'] ? 'selected=selected' : '';
+					?>
+				<option value='<?php echo esc_attr( $id ); ?>' <?php echo esc_attr( $selected ); ?>>
+					<?php echo esc_html( $form ); ?></option>
+					<?php
+				}
+				?>
+			</select>
+		</div>
 
-		foreach ( $options as $id => $form ) {
-			$selected = isset( $_REQUEST['payment_method'] ) && $id == $_REQUEST['payment_method'] ? 'selected=selected' : '';
-			?>
-		<option value='<?php echo esc_attr( $id ); ?>' <?php echo esc_attr( $selected ); ?>>
-			<?php echo esc_html( $form ); ?></option>
-			<?php
-		}
-		?>
-	</select>
-</div>
-<div class="payment-status" id="user-registration-pro-members-filters" style="display: flex; gap: 10px">
-	<select name="status" id="user_registration_pro_users_form_filter" class="ur-enhanced-select">
-		<option value=""><?php echo esc_html__( 'All Status', 'user-registration' ); ?></option>
-		<?php
-		foreach ( array( 'completed', 'pending', 'failed', 'refunded' ) as $id => $status ) {
-			$selected = isset( $_REQUEST['status'] ) && $status == $_REQUEST['status'] ? 'selected=selected' : '';
-			?>
-		<option value='<?php echo esc_attr( $status ); ?>' <?php echo esc_attr( $selected ); ?>>
-			<?php echo esc_html( ucfirst( $status ) ); ?></option>
-			<?php
-		}
-		?>
-	</select>
-</div>
-<button type="submit" name="ur_users_filter" id="user-registration-users-filter-btn" class="button ur-button-primary">
-		<?php esc_html_e( 'Filter', 'user-registration' ); ?>
-</button>
+		<div class="" id="user-registration-pro-members-filters" style="display: flex; gap: 10px">
+			<select name="payment_method" id="user_registration_pro_users_form_filter">
+				<option value=""><?php echo esc_html__( 'All Gateway', 'user-registration' ); ?></option>
+				<?php
+								$options = ( isset( $_REQUEST['payment_for'] ) && 'membership' == $_REQUEST['payment_for'] ) ? get_option( 'ur_membership_payment_gateways' ) : get_option( 'ur_payment_gateways' );
+
+				foreach ( $options as $id => $form ) {
+					$selected = isset( $_REQUEST['payment_method'] ) && $id == $_REQUEST['payment_method'] ? 'selected=selected' : '';
+					?>
+				<option value='<?php echo esc_attr( $id ); ?>' <?php echo esc_attr( $selected ); ?>>
+					<?php echo esc_html( $form ); ?></option>
+					<?php
+				}
+				?>
+			</select>
+		</div>
+		<div class="payment-status" id="user-registration-pro-members-filters" style="display: flex; gap: 10px">
+			<select name="status" id="user_registration_pro_users_form_filter">
+				<option value=""><?php echo esc_html__( 'All Status', 'user-registration' ); ?></option>
+				<?php
+				foreach ( array( 'completed', 'pending', 'failed', 'refunded' ) as $id => $status ) {
+					$selected = isset( $_REQUEST['status'] ) && $status == $_REQUEST['status'] ? 'selected=selected' : '';
+					?>
+				<option value='<?php echo esc_attr( $status ); ?>' <?php echo esc_attr( $selected ); ?>>
+					<?php echo esc_html( ucfirst( $status ) ); ?></option>
+					<?php
+				}
+				?>
+			</select>
+		</div>
+		<button type="submit" name="ur_users_filter" id="user-registration-users-filter-btn" class="button ur-button-primary">
+				<?php esc_html_e( 'Filter', 'user-registration' ); ?>
+		</button>
 		<?php
 	}
 
@@ -566,10 +609,8 @@ class OrdersListTable extends \UR_List_Table {
 		if ( empty( $this->_actions ) ) {
 			return;
 		}
-
-		echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . esc_html_e( 'Select bulk action' ) . '</label>';
-		echo '<select name="action' . esc_attr( $two ) . '" class="ur-enhanced-select" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
-		echo '<option value="-1">' . esc_html_e( 'Bulk actions' ) . "</option>\n";
+		echo '<select name="action' . esc_attr( $two ) . '" id="bulk-action-selector-' . esc_attr( $which ) . '">' . "\n";
+		echo '<option value="-1">' . esc_html__( 'Bulk actions' ) . "</option>\n";
 
 		foreach ( $this->_actions as $key => $value ) {
 			if ( is_array( $value ) ) {

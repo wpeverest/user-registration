@@ -95,13 +95,13 @@ class UR_Shortcodes {
 			array( 'UR_Shortcode_My_Account', 'output' ),
 			$atts,
 			/**
-			 * Applies a filter to customize attributes for the User Registration 'my_account' shortcode.
-			 *
-			 * The 'user_registration_my_account_shortcode' filter allows developers to modify
-			 * shortcode attributes like class, before, and after before rendering the 'my_account' shortcode.
-			 *
-			 * @param array $default_attributes Default attributes for the 'my_account' shortcode.
-			 */
+			* Applies a filter to customize attributes for the User Registration 'my_account' shortcode.
+			*
+			* The 'user_registration_my_account_shortcode' filter allows developers to modify
+			* shortcode attributes like class, before, and after before rendering the 'my_account' shortcode.
+			*
+			* @param array $default_attributes Default attributes for the 'my_account' shortcode.
+			*/
 			apply_filters(
 				'user_registration_my_account_shortcode',
 				array(
@@ -135,13 +135,13 @@ class UR_Shortcodes {
 			array( 'UR_Shortcode_Login', 'output' ),
 			$atts,
 			/**
-			 * Applies a filter to customize attributes for the User Registration 'login' shortcode.
-			 *
-			 * The 'user_registration_login_shortcode' filter allows developers to modify
-			 * shortcode attributes like class, before, and after before rendering the 'login' shortcode.
-			 *
-			 * @param array $default_attributes Default attributes for the 'login' shortcode.
-			 */
+			* Applies a filter to customize attributes for the User Registration 'login' shortcode.
+			*
+			* The 'user_registration_login_shortcode' filter allows developers to modify
+			* shortcode attributes like class, before, and after before rendering the 'login' shortcode.
+			*
+			* @param array $default_attributes Default attributes for the 'login' shortcode.
+			*/
 			apply_filters(
 				'user_registration_login_shortcode',
 				array(
@@ -219,19 +219,19 @@ class UR_Shortcodes {
 	 * Output for Edit-profile form .
 	 */
 	private static function render_edit_profile() {
-			$user_id = get_current_user_id();
-			$form_id = get_user_meta( $user_id, 'ur_form_id', true );
-			/**
-			 * Enqueues scripts for customizing 'my_account' shortcode rendering.
-			 *
-			 * The 'user_registration_my_account_enqueue_scripts' action allows developers
-			 * to enqueue custom scripts before rendering the 'my_account' shortcode.
-			 *
-			 * @param array $empty_array Empty array passed for customization.
-			 * @param int   $form_id      ID of the associated registration form.
-			 */
-			do_action( 'user_registration_my_account_enqueue_scripts', array(), $form_id );
-			$has_flatpickr = ur_has_flatpickr_field( $form_id );
+		$user_id = get_current_user_id();
+		$form_id = get_user_meta( $user_id, 'ur_form_id', true );
+		/**
+		 * Enqueues scripts for customizing 'my_account' shortcode rendering.
+		 *
+		 * The 'user_registration_my_account_enqueue_scripts' action allows developers
+		 * to enqueue custom scripts before rendering the 'my_account' shortcode.
+		 *
+		 * @param array $empty_array Empty array passed for customization.
+		 * @param int   $form_id      ID of the associated registration form.
+		 */
+		do_action( 'user_registration_my_account_enqueue_scripts', array(), $form_id );
+		$has_flatpickr = ur_has_flatpickr_field( $form_id );
 
 		if ( true === $has_flatpickr ) {
 			wp_enqueue_style( 'flatpickr' );
@@ -305,116 +305,118 @@ class UR_Shortcodes {
 				if ( ! $has_all_params ) {
 					global $wp;
 
-					$user_id      = get_current_user_id();
-					$user         = get_user_by( 'ID', $user_id );
-					$current_url  = home_url( add_query_arg( array(), $wp->request ) );
-					$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
-					/**
-					 * Applies a filter to customize the pre-form message for user registration.
-					 *
-					 * @param string $default_message Default pre-form message.
-					 */
-					/* translators: 1: Link and username of user 2: Logout url */
-					return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . esc_attr( $display_name ) . '">' . esc_html( $display_name ) . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_id );
+					$current_user_capability = apply_filters( 'ur_registration_user_capability', 'create_users' );
 
+					if ( ! current_user_can( $current_user_capability ) ) {
+						$user_id      = get_current_user_id();
+						$user         = get_user_by( 'ID', $user_id );
+						$current_url  = home_url( add_query_arg( array(), $wp->request ) );
+						$display_name = ! empty( $user->data->display_name ) ? $user->data->display_name : $user->data->user_email;
+						/**
+						 * Applies a filter to customize the pre-form message for user registration.
+						 *
+						 * @param string $default_message Default pre-form message.
+						 */
+						/* translators: 1: Link and username of user 2: Logout url */
+						return apply_filters( 'ur_register_pre_form_message', '<p class="alert" id="ur_register_pre_form_message">' . sprintf( __( 'You are currently logged in as %1$1s. %2$2s', 'user-registration' ), '<a href="#" title="' . esc_attr( $display_name ) . '">' . esc_html( $display_name ) . '</a>', '<a href="' . wp_logout_url( $current_url ) . '" title="' . __( 'Log out of this account.', 'user-registration' ) . '">' . __( 'Logout', 'user-registration' ) . '  &raquo;</a>' ) . '</p>', $user_id );
+					}
 				} else {
+					$membership_service = new WPEverest\URMembership\Admin\Services\MembershipService();
 
-					// ob_start();
-					// echo '<div class="user-registration ur-frontend-form">';
-					// $template_file = locate_template( 'membership-checkout.php' );
+					$fetched_data = $membership_service->fetch_membership_details_from_intended_actions( $_GET );
 
-					// if ( ! $template_file ) {
-					// $template_file = UR_MEMBERSHIP_DIR . 'includes/Templates/membership-checkout.php';
-					// }
-					// include_once $template_file;
-					// echo '</div>';
-					// return ob_get_clean();
-					$user_id = get_current_user_id();
-					$form_id = get_user_meta( $user_id, 'ur_form_id', true );
+					if ( isset( $fetched_data['status'] ) && $fetched_data['status'] ) {
+						$user_id = get_current_user_id();
+						$form_id = get_user_meta( $user_id, 'ur_form_id', true );
 
-					$form_fields = ur_get_form_fields( $form_id );
+						$form_fields = ur_get_form_fields( $form_id );
 
-					foreach ( $form_fields as $field ) {
-						add_filter(
-							'user_registration_' . $field->field_key . '_frontend_form_data',
-							function ( $default_data ) use ( $user_id, $field ) {
-								if ( 'membership' !== $field->field_key && isset( $field->general_setting->field_name ) ) {
-									$default_fields      = ur_get_user_table_fields();
-									$default_meta_fields = ur_get_registered_user_meta_fields();
+						foreach ( $form_fields as $field ) {
+							add_filter(
+								'user_registration_' . $field->field_key . '_frontend_form_data',
+								function ( $default_data ) use ( $user_id, $field ) {
+									if ( 'membership' !== $field->field_key && isset( $field->general_setting->field_name ) ) {
+										$default_fields      = ur_get_user_table_fields();
+										$default_meta_fields = ur_get_registered_user_meta_fields();
 
-									$user_data = get_userdata( $user_id );
+										$user_data = get_userdata( $user_id );
 
-									if ( in_array( $field->field_key, $default_fields, true ) ) {
-										$user_submitted_value = isset( $user_data->data->{ $field->field_key } ) ? $user_data->data->{ $field->field_key } : '';
-									} elseif ( in_array( $field->field_key, $default_meta_fields, true ) ) {
-										$user_submitted_value = get_user_meta( $user_id, $field->field_key, true );
-									} else {
-										$user_submitted_value = get_user_meta( $user_id, 'user_registration_' . $field->general_setting->field_name, true );
+										if ( in_array( $field->field_key, $default_fields, true ) ) {
+											$user_submitted_value = isset( $user_data->data->{ $field->field_key } ) ? $user_data->data->{ $field->field_key } : '';
+										} elseif ( in_array( $field->field_key, $default_meta_fields, true ) ) {
+											$user_submitted_value = get_user_meta( $user_id, $field->field_key, true );
+										} else {
+											$user_submitted_value = get_user_meta( $user_id, 'user_registration_' . $field->general_setting->field_name, true );
+										}
+
+										if ( 'user_pass' === $field->field_key || 'user_confirm_password' === $field->field_key || 'user_confirm_email' === $field->field_key ) {
+											$default_data['form_data']['is_checkout'] = true;
+										}
+
+										$default_data['form_data']['default'] = $user_submitted_value;
+
+										if ( ! empty( $user_submitted_value ) ) {
+											$default_data['form_data']['custom_attributes']['disabled'] = 'disabled';
+											$default_data['form_data']['custom_attributes']['readonly'] = 'readonly';
+										}
+										return $default_data;
 									}
-
-									if ( 'user_pass' === $field->field_key || 'user_confirm_password' === $field->field_key || 'user_confirm_email' === $field->field_key ) {
-										$default_data['form_data']['is_checkout'] = true;
-									}
-
-									$default_data['form_data']['default'] = $user_submitted_value;
-
-									if ( ! empty( $user_submitted_value ) ) {
-										$default_data['form_data']['custom_attributes']['disabled'] = 'disabled';
-										$default_data['form_data']['custom_attributes']['readonly'] = 'readonly';
-									}
-									return $default_data;
 								}
+							);
+						}
+
+						add_filter(
+							'user_registration_handle_form_fields',
+							function ( $grid_data ) use ( $user_id, $field ) {
+
+								foreach ( $grid_data as $key => $data ) {
+									$ignore_checkout = apply_filters(
+										'user_registration_ignorable_checkout_fields',
+										array(
+											'user_pass',
+											'user_confirm_password',
+											'user_confirm_email',
+											'profile_picture',
+											'wysiwyg',
+											'select2',
+											'multi_select2',
+											'range',
+											'file',
+										)
+									);
+									if ( in_array( $data->field_key, $ignore_checkout ) ) {
+										unset( $grid_data[ $key ] );
+									}
+								}
+								return $grid_data;
 							}
 						);
-					}
 
-					add_filter(
-						'user_registration_handle_form_fields',
-						function ( $grid_data ) use ( $user_id, $field ) {
+						add_filter(
+							'user_registration_parts_data',
+							function () {
+								return false;
+							},
+							9999
+						);
 
-							foreach ( $grid_data as $key => $data ) {
-								$ignore_checkout = apply_filters(
-									'user_registration_ignorable_checkout_fields',
-									array(
-										'user_pass',
-										'user_confirm_password',
-										'user_confirm_email',
-										'profile_picture',
-										'wysiwyg',
-										'select2',
-										'multi_select2',
-										'range',
-										'file',
-									)
-								);
-								if ( in_array( $data->field_key, $ignore_checkout ) ) {
-									unset( $grid_data[ $key ] );
-								}
+						add_filter(
+							'user_registration_form_submit_btn_class',
+							function ( $classes ) {
+								$classes[] = 'urm-update-membership-button';
+								return $classes;
 							}
-							return $grid_data;
-						}
-					);
+						);
 
-					add_filter(
-						'user_registration_parts_data',
-						function () {
-							return false;
-						},
-						9999
-					);
+						ob_start();
+						self::render_form( $form_id );
 
-					add_filter(
-						'user_registration_form_submit_btn_class',
-						function ( $classes ) {
-							$classes[] = 'urm-update-membership-button';
-							return $classes;
-						}
-					);
+						return ob_get_clean();
+					} else {
+						$message = isset( $fetched_data['message'] ) ? $fetched_data['message'] : esc_html__( 'Cannot fetch membership details. Please contact your site administrator.', 'user-registration' );
 
-					ob_start();
-					self::render_form( $form_id );
-
-					return ob_get_clean();
+						return '<div id="user-registration" class="user-registration">' . $message . '</div>';
+					}
 				}
 			} else {
 				/**
@@ -456,8 +458,8 @@ class UR_Shortcodes {
 		 * The 'user_registration_form_shortcode_scripts' action allows developers
 		 * to enqueue custom scripts or perform actions related to the 'user_registration_form' shortcode.
 		 *
-		 * @param array $atts Shortcode attributes passed for customization.
-		 */
+	 * @param array $atts Shortcode attributes passed for customization.
+	 */
 		do_action( 'user_registration_form_shortcode_scripts', $atts );
 
 		ob_start();

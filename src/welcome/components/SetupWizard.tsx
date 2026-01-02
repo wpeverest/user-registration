@@ -1,23 +1,25 @@
-import React, { useEffect, useMemo } from "react";
-import { Box, Button, Flex, Link, useColorModeValue } from "@chakra-ui/react";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import { useStateValue } from "../context/StateProvider";
-import {
-	MembershipPlan,
-	MembershipSetupType
-} from "../context/Gettingstartedcontext";
+import { Box, Button, Flex, Link, useColorModeValue } from "@chakra-ui/react";
+import { __ } from "@wordpress/i18n";
+import React, { useEffect, useMemo } from "react";
 import {
 	apiGet,
 	apiPost,
 	mapApiToSetupType,
-	mapSetupToApiType,
-	mapPaymentSettingsToApi
+	mapPaymentSettingsToApi,
+	mapSetupToApiType
 } from "../api/gettingStartedApi";
+import {
+	MembershipPlan,
+	MembershipSetupType
+} from "../context/Gettingstartedcontext";
+import { useStateValue } from "../context/StateProvider";
 import Stepper from "./Stepper";
-import WelcomeStep from "./steps/WelcomeStep";
+import FinishStep from "./steps/FinishStep";
 import MembershipStep from "./steps/MembershipStep";
 import PaymentStep from "./steps/PaymentStep";
-import FinishStep from "./steps/FinishStep";
+import SettingsStep from "./steps/SettingsStep";
+import WelcomeStep from "./steps/WelcomeStep";
 
 interface StepConfig {
 	id: string;
@@ -29,7 +31,8 @@ const ALL_STEPS: StepConfig[] = [
 	{ id: "welcome", label: "Welcome", stepNumber: 1 },
 	{ id: "membership", label: "Membership", stepNumber: 2 },
 	{ id: "payment", label: "Payment", stepNumber: 3 },
-	{ id: "finish", label: "Finish", stepNumber: 4 }
+	{ id: "settings", label: "Settings", stepNumber: 4 },
+	{ id: "finish", label: "Finish", stepNumber: 5 }
 ];
 
 const getVisibleSteps = (
@@ -42,21 +45,22 @@ const getVisibleSteps = (
 		case "paid":
 		case "free":
 			if (hasPaidPlan) {
-				filteredSteps = ALL_STEPS;
+				filteredSteps = ALL_STEPS.filter(
+					(step) => step.id !== "settings"
+				);
 			} else {
 				filteredSteps = ALL_STEPS.filter(
-					(step) => step.id !== "payment"
+					(step) => step.id !== "payment" && step.id !== "settings"
 				);
 			}
 			break;
 		case "other":
-			// No membership at all - skip both Membership and Payment
 			filteredSteps = ALL_STEPS.filter(
 				(step) => step.id !== "membership" && step.id !== "payment"
 			);
 			break;
 		default:
-			filteredSteps = ALL_STEPS;
+			filteredSteps = ALL_STEPS.filter((step) => step.id !== "settings");
 	}
 
 	return filteredSteps.map((step, index) => ({
@@ -73,22 +77,17 @@ const getStepIdByDisplayNumber = (
 	return step ? step.id : "welcome";
 };
 
-const HEADER_HEIGHT = "73px";
+const HEADER_HEIGHT = "65px";
 
 const SetupWizard: React.FC = () => {
 	const { state, dispatch } = useStateValue();
-	const {
-		currentStep,
-		isLoading,
-		membershipSetupType,
-		membershipPlans
-	} = state;
+	const { currentStep, isLoading, membershipSetupType, membershipPlans } =
+		state;
 
 	const cardBg = useColorModeValue("white", "gray.800");
-	const borderColor = useColorModeValue("gray.200", "gray.700");
 	const textColor = useColorModeValue("gray.800", "white");
 	const mutedColor = useColorModeValue("gray.600", "gray.400");
-	const pageBg = useColorModeValue("gray.50", "gray.900");
+	const pageBg = useColorModeValue("#F8F8FA", "gray.900");
 
 	const hasPaidPlan = membershipPlans.some((plan) => plan.type === "paid");
 
@@ -126,7 +125,7 @@ const SetupWizard: React.FC = () => {
 						allowTracking:
 							typeof welcome?.allow_usage_tracking === "boolean"
 								? welcome.allow_usage_tracking
-								: state.allowTracking,
+								: true,
 						adminEmail:
 							typeof welcome?.admin_email === "string" &&
 							welcome.admin_email
@@ -174,13 +173,8 @@ const SetupWizard: React.FC = () => {
 						state.membershipSetupType
 					),
 					allow_usage_tracking: state.allowTracking,
-					allow_email_updates: state.allowTracking,
 					admin_email: state.adminEmail
 				});
-
-				if (membershipSetupType === "other") {
-					await apiPost("/finish");
-				}
 			} else if (currentStepId === "membership") {
 				await apiPost("/memberships", {
 					memberships: state.membershipPlans.map(mapPlanToApi)
@@ -195,6 +189,11 @@ const SetupWizard: React.FC = () => {
 					mapPaymentSettingsToApi(state.paymentSettings)
 				);
 				await apiPost("/finish");
+			} else if (currentStepId === "settings") {
+				await apiPost("/settings", {
+					login_option: state.registrationSettings.loginOption,
+					default_role: state.registrationSettings.defaultRole
+				});
 			}
 
 			if (currentStep < totalSteps) {
@@ -238,13 +237,10 @@ const SetupWizard: React.FC = () => {
 			return;
 		}
 
-
 		if (stepNumber === currentStep + 1) {
 			await handleSkip();
 			return;
 		}
-
-
 	};
 
 	const handleClose = () => {
@@ -262,6 +258,8 @@ const SetupWizard: React.FC = () => {
 				return <MembershipStep />;
 			case "payment":
 				return <PaymentStep />;
+			case "settings":
+				return <SettingsStep />;
 			case "finish":
 				return <FinishStep />;
 			default:
@@ -279,20 +277,31 @@ const SetupWizard: React.FC = () => {
 			/>
 
 			<Box pt={HEADER_HEIGHT}>
-				<Flex justify="center" align="flex-start" px={4} py={10}>
+				<Flex
+					justify="center"
+					align="flex-start"
+					px={{ base: 3, md: 4 }}
+					py={{ base: 2, md: 3 }}
+				>
 					<Box
 						w="100%"
 						maxW="920px"
 						bg={cardBg}
 						borderWidth="1px"
-						borderColor={borderColor}
-						borderRadius="xl"
-						p={8}
-						boxShadow="sm"
+						borderColor="#F4F4F4"
+						borderRadius="8px"
+						px={{ base: 4, md: 8 }}
+						py={{ base: 5, md: 6 }}
+						boxShadow="0 10px 15px -3px rgba(0, 0, 0, 0.06)"
 					>
-						<Box mb={isFinishStep ? 0 : 8}>{renderStep()}</Box>
+						<Box mb={isFinishStep ? 0 : 6}>{renderStep()}</Box>
 						{!isFinishStep && (
-							<Flex justify="space-between" align="center">
+							<Flex
+								justify="space-between"
+								align="center"
+								flexDir={{ base: "column-reverse", sm: "row" }}
+								gap={{ base: 4, sm: 0 }}
+							>
 								{/* Back Link */}
 								<Link
 									display="flex"
@@ -314,33 +323,40 @@ const SetupWizard: React.FC = () => {
 									opacity={currentStep === 1 ? 0.5 : 1}
 								>
 									<ArrowBackIcon mr={1} />
-									Back
+									{__("Back", "user-registration")}
 								</Link>
 
-								<Flex gap={4} align="center">
+								<Flex gap={{ base: 3, md: 4 }} align="center">
 									<Link
 										fontSize="sm"
-										color={mutedColor}
+										color="#999999"
 										_hover={{
 											color: textColor,
-											textDecoration: "none"
+											textDecoration: "underline"
 										}}
 										cursor="pointer"
 										onClick={handleSkip}
+										display={{ base: "none", sm: "block" }}
 									>
-										Skip this step
+										{__(
+											"Skip this step",
+											"user-registration"
+										)}
 									</Link>
 									<Button
-										bg="#475BD8"
+										bg="#475BB2"
 										color="white"
 										rightIcon={<ArrowForwardIcon />}
-										_hover={{ bg: "#3a4bc2" }}
-										_active={{ bg: "#2f3da6" }}
+										_hover={{ bg: "#475BB2" }}
+										_active={{ bg: "#475BB2" }}
 										onClick={handleNext}
 										isLoading={isLoading}
-										px={6}
+										px={{ base: 4, md: 6 }}
+										py={5}
+										borderRadius="4px"
+										fontSize={{ base: "sm", md: "md" }}
 									>
-										Next
+										{__("Next", "user-registration")}
 									</Button>
 								</Flex>
 							</Flex>

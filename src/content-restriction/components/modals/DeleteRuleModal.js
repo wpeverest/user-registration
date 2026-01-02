@@ -18,7 +18,7 @@ const DeleteRuleModal = ({ isOpen, onClose, rule, onDeleteSuccess }) => {
 		setIsDeleting(true);
 
 		try {
-			const response = await deleteRule(rule.id, false);
+			const response = await deleteRule(rule.id, true);
 			if (response.success) {
 				showSuccess(response.message || __("Rule deleted successfully", "user-registration"));
 				onClose();

@@ -31,14 +31,20 @@ class Subscriptions {
 			return;
 		}
 
-		check_admin_referer( 'ur_subscription_delete' );
+		check_admin_referer( isset( $_GET['bulk_action'] ) ? 'bulk-subscriptions' : 'ur_subscription_delete' );
+		$ids = [];
 
-		$id = isset( $_GET['id'] ) ? absint( wp_unslash( $_GET['id'] ) ) : 0;
-		if ( $id > 0 ) {
-			( new SubscriptionRepository() )->delete( $id );
-			wp_safe_redirect( admin_url( 'admin.php?page=user-registration-subscriptions&deleted=1' ) );
-			exit;
+		if ( isset( $_GET['bulk_action'] ) ) {
+			$ids = array_map( 'absint', $_GET['subscription'] ?? [] );
+		} else {
+			$ids = [ absint( wp_unslash( $_GET['id'] ?? 0 ) ) ];
 		}
+		foreach ( $ids  as $id ) {
+			if ( $id > 0 ) {
+				( new SubscriptionRepository() )->delete( $id );
+			}
+		}
+		wp_safe_redirect( admin_url( 'admin.php?page=user-registration-subscriptions&deleted=1' ) );
 	}
 
 	public function add_excluded_page( $excluded_pages ) {

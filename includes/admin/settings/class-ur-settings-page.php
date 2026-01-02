@@ -168,15 +168,23 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 
 			//in case of integration, list all email marketing addons.
 			$args = array();
-			if( 'integration' === $current_tab ) {
-				$addons = array( 'activecampaign', 'brevo', 'convertkit', 'klaviyo', 'mailchimp', 'mailerlite', 'mailpoet' );
-				foreach( $addons as $addon ) {
-					$args[] = array(
-						'id' => $addon,
-						'slug' => 'user-registration-' . $addon,
-						'name' => ucwords( $addon )
-					);
-				}
+			if( 'integration' === $current_tab && 'email-marketing' === $current_section ) {
+				//upselling marketing addons in free version.
+				// $addons = array( 'activecampaign', 'brevo', 'convertkit', 'klaviyo', 'mailchimp', 'mailerlite', 'mailpoet' );
+				// foreach( $addons as $addon ) {
+				// 	$args[] = array(
+				// 		'id' => $addon,
+				// 		'slug' => 'user-registration-' . $addon,
+				// 		'name' => ucwords( $addon )
+				// 	);
+				// }
+				$args[] = array();
+			} elseif( 'integration' === $current_section && 'pdf-submission' === $current_section ) {
+				$args[] = array(
+					'id' => 'pdf-form-submission',
+					'slug' => 'user-registration-pdf-form-submission',
+					'name' => 'PDF Form Submission'
+				);
 			} elseif ( 'security' === $current_tab && '2fa' === $current_section ) {
 				$args[] = array(
 					'id' => 'two-factor-authentication',

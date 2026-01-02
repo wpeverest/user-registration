@@ -79,8 +79,19 @@ class URCR_Shortcodes {
 				$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
 				$subscription         = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
 
-				$current_user_membership   = ( ! empty( $subscription ) ) ? $subscription['item_id'] : array();
-				$is_user_membership_active = ! empty( $subscription['status'] ) && 'active' === $subscription['status'];
+				$current_user_membership   = array();
+				$is_user_membership_active = false;
+
+				if ( ! empty( $subscription ) && is_array( $subscription ) ) {
+					foreach ( $subscription as $sub ) {
+						if ( ! empty( $sub['item_id'] ) ) {
+							$current_user_membership[] = $sub['item_id'];
+						}
+						if ( ! empty( $sub['status'] ) && 'active' === $sub['status'] ) {
+							$is_user_membership_active = true;
+						}
+					}
+				}
 			}
 
 			if ( empty( $roles ) ) {
@@ -101,7 +112,7 @@ class URCR_Shortcodes {
 							return do_shortcode( $content );
 						}
 					} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-						if ( is_array( $allowed_memberships ) && in_array( $current_user_membership, $allowed_memberships ) && $is_user_membership_active ) {
+						if ( $is_membership_active && is_array( $allowed_memberships ) && urm_check_user_membership_has_access( $allowed_memberships ) ) {
 							return do_shortcode( $content );
 						}
 					}
@@ -128,7 +139,7 @@ class URCR_Shortcodes {
 							break;
 						case '3':
 							if ( ! empty( $get_meta_data_memberships ) ) {
-								if ( is_array( $get_meta_data_memberships ) && in_array( $current_user_membership, $get_meta_data_memberships ) && $is_user_membership_active ) {
+								if ( $is_membership_active && is_array( $get_meta_data_memberships ) && urm_check_user_membership_has_access( $get_meta_data_memberships ) ) {
 									return do_shortcode( $content );
 								}
 							}
@@ -153,9 +164,9 @@ class URCR_Shortcodes {
 			if ( 'on' === $override_global_settings ) {
 				$message = ! empty( get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) ) ? get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) : '';
 			} elseif ( isset( $atts['enable_content_restriction'] ) && 'true' === $atts['enable_content_restriction'] ) {
-				if ( ! isset( $atts['enable_custom_restriction_msg'] ) ) {
+				if ( ! isset( $atts['restriction_message_type'] ) ) {
 					$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : get_option( 'user_registration_content_restriction_message' );
-				} elseif ( 'true' === $atts['enable_custom_restriction_msg'] ) {
+				} elseif ( 'custom' === $atts['restriction_message_type'] ) {
 					$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : '';
 				}
 			}
@@ -184,8 +195,11 @@ class URCR_Shortcodes {
 						break;
 
 					case 'memberships':
-						if ( ! empty( $memberships_roles ) && in_array( $current_user_membership, $memberships_roles, true ) && $is_user_membership_active ) {
-							$matched = true;
+						if ( ! empty( $memberships_roles ) && is_array( $current_user_membership ) && $is_user_membership_active ) {
+							$common = array_intersect( $current_user_membership, $memberships_roles );
+							if ( ! empty( $common ) ) {
+								$matched = true;
+							}
 						}
 						break;
 				}
@@ -200,10 +214,10 @@ class URCR_Shortcodes {
 			}
 
 			// Get URLs for login and signup
-			$login_page_id = get_option( 'user_registration_login_page_id' );
+			$login_page_id        = get_option( 'user_registration_login_page_id' );
 			$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
 
-			$login_url = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
+			$login_url  = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
 			$signup_url = $registration_page_id ? get_permalink( $registration_page_id ) : ( $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url() );
 
 			if ( ! $registration_page_id ) {

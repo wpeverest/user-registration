@@ -192,6 +192,32 @@ export const RightArrowIcon = React.forwardRef((props, ref) => (
 		/>
 	</chakra.svg>
 ));
+
+export const DeleteIcon = React.forwardRef((props, ref) => (
+		<chakra.svg
+			viewBox="0 0 16 16"
+			xmlns="http://www.w3.org/2000/svg"
+			height="16px"
+			width="16px"
+			ref={ref}
+			fill="none"
+			{...props}
+		>
+			<g fill="currentColor" clipPath="url(#delete-icon-clip)">
+				<path d="M6 11.334v-4a.667.667 0 0 1 1.334 0v4a.667.667 0 0 1-1.334 0M8.666 11.334v-4a.667.667 0 0 1 1.334 0v4a.667.667 0 0 1-1.334 0" />
+				<path d="M2.666 13.333V4A.667.667 0 0 1 4 4v9.333a.667.667 0 0 0 .666.667h6.667a.667.667 0 0 0 .667-.667V4a.667.667 0 1 1 1.333 0v9.333a2 2 0 0 1-2 2H4.666a2 2 0 0 1-2-2" />
+				<path d="M14 3.333a.667.667 0 0 1 0 1.334H2a.667.667 0 0 1 0-1.334z" />
+				<path d="M10 4V2.667A.667.667 0 0 0 9.333 2H6.666A.666.666 0 0 0 6 2.667V4a.667.667 0 0 1-1.334 0V2.667a2 2 0 0 1 2-2h2.667a2 2 0 0 1 2 2V4A.667.667 0 0 1 10 4" />
+			</g>
+			<defs>
+				<clipPath id="delete-icon-clip">
+					<path fill="#fff" d="M0 0h16v16H0z" />
+				</clipPath>
+			</defs>
+		</chakra.svg>
+	)
+);
+
 URMLogo.displayName = "URMLogo";
 AdvancedFieldsLogo.displayName = "AdvancedFieldsLogo";
 WooCommerceLogo.displayName = "WooCommerceLogo";
@@ -200,3 +226,4 @@ ContentRestrictionLogo.displayName = "ContentRestrictionLogo";
 StyleCustomizerLogo.displayName = "StyleCustomizerLogo";
 CheckIcon.displayName = "CheckIcon";
 RightArrowIcon.displayName = "RightArrowIcon";
+DeleteIcon.displayName = "DeleteIcon";

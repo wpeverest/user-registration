@@ -6,6 +6,11 @@ use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
+use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
+use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
+use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\Paypal\PaypalService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 
@@ -86,7 +91,8 @@ class MembershipService {
 			$subscription         = $this->subscription_repository->create( $subscription_data );
 			$order_service        = new OrderService();
 			$orders_data          = $order_service->prepare_orders_data( $members_data, $member->ID, $subscription ); // prepare data for orders table.
-			$order                = $this->orders_repository->create( $orders_data );
+
+			$order = $this->orders_repository->create( $orders_data );
 			if ( $subscription && $order ) {
 				$this->logger->info( 'Subscription and order created successfully for ' . $data['username'] . '.', array( 'source' => 'urm-registration-logs' ) );
 				$this->members_repository->wpdb()->query( 'COMMIT' );
@@ -157,6 +163,28 @@ class MembershipService {
 				unset( $memberships[ $key ] );
 				continue;
 			}
+			$memberships[ $key ]['post_content'] = $membership_post_content;
+			if ( isset( $membership['meta_value'] ) ) {
+				$memberships[ $key ]['meta_value'] = json_decode( wp_unslash( $membership['meta_value'] ), true );
+			}
+		}
+
+		return array_values( $memberships );
+	}
+
+	/**
+	 * Prepare membership data without filtering by status
+	 * Used for content restriction where all memberships should be available
+	 *
+	 * @param array $memberships Raw membership data from database
+	 * @return array Prepared membership data
+	 */
+	public function prepare_membership_data_without_status_filter(
+		$memberships
+	) {
+		foreach ( $memberships as $key => $membership ) {
+			$membership_post_content = json_decode( wp_unslash( $membership['post_content'] ), true );
+			// Don't filter by status - include all memberships
 			$memberships[ $key ]['post_content'] = $membership_post_content;
 			if ( isset( $membership['meta_value'] ) ) {
 				$memberships[ $key ]['meta_value'] = json_decode( wp_unslash( $membership['meta_value'] ), true );
@@ -247,7 +275,7 @@ class MembershipService {
 			$membership_meta = get_post_meta( $membership_id, 'ur_membership' );
 			$membership_meta = json_decode( $membership_meta[0], true );
 
-			if ( isset( $membership_meta['payment_gateways']['stripe'] ) && 'on' == $membership_meta['payment_gateways']['stripe']['status'] ) {
+			if ( isset( $membership_meta['payment_gateways']['stripe'] ) ) {
 				$product_id = $membership_meta['payment_gateways']['stripe']['product_id'] ?? '';
 				$price_id   = $membership_meta['payment_gateways']['stripe']['price_id'] ?? '';
 			}
@@ -268,23 +296,24 @@ class MembershipService {
 
 		$data['amount'] = $data['amount'] ?? 0;
 		if ( isset( $data['payment_gateways'] ) ) {
-			if ( isset( $data['payment_gateways']['paypal'] ) && 'on' === $data['payment_gateways']['paypal']['status'] ) {
+			if ( isset( $data['payment_gateways']['paypal'] ) ) {
 				$data['payment_gateways']['paypal']['status']     = sanitize_text_field( $data['payment_gateways']['paypal']['status'] );
 				$data['payment_gateways']['paypal']['email']      = sanitize_email( ! empty( $data['payment_gateways']['paypal']['email'] ) ? $data['payment_gateways']['paypal']['email'] : '' );
 				$data['payment_gateways']['paypal']['mode']       = sanitize_text_field( ! empty( $data['payment_gateways']['paypal']['mode'] ) ? $data['payment_gateways']['paypal']['mode'] : 'sandbox' );
 				$data['payment_gateways']['paypal']['cancel_url'] = esc_url( ! empty( $data['payment_gateways']['paypal']['cancel_url'] ) ? $data['payment_gateways']['paypal']['cancel_url'] : '' );
 				$data['payment_gateways']['paypal']['return_url'] = esc_url( ! empty( $data['payment_gateways']['paypal']['return_url'] ) ? $data['payment_gateways']['paypal']['return_url'] : '' );
 			}
-			if ( isset( $data['payment_gateways']['bank'] ) && 'on' === $data['payment_gateways']['bank']['status'] ) {
+			if ( isset( $data['payment_gateways']['bank'] ) ) {
 				$data['payment_gateways']['bank']['status'] = sanitize_text_field( $data['payment_gateways']['bank']['status'] );
 			}
-			if ( isset( $data['payment_gateways']['stripe'] ) && 'on' === $data['payment_gateways']['stripe']['status'] ) {
+			if ( isset( $data['payment_gateways']['stripe'] ) ) {
 				$data['payment_gateways']['stripe']['status']     = sanitize_text_field( $data['payment_gateways']['stripe']['status'] );
 				$data['payment_gateways']['stripe']['product_id'] = sanitize_text_field( $product_id );
 				$data['payment_gateways']['stripe']['price_id']   = sanitize_text_field( $price_id );
 			}
 		}
-		if ( isset( $data['upgrade_settings'] ) ) {
+
+		if ( isset( $data['upgrade_settings'] ) && ! empty( $data['upgrade_settings']['upgrade_action'] ) ) {
 			$data['upgrade_settings']['upgrade_action'] = absint( $data['upgrade_settings']['upgrade_action'] );
 			$data['upgrade_settings']['upgrade_path']   = sanitize_text_field( implode( ',', $data['upgrade_settings']['upgrade_path'] ) );
 			$data['upgrade_settings']['upgrade_type']   = ! empty( $data['upgrade_settings']['upgrade_type'] ) ? sanitize_text_field( $data['upgrade_settings']['upgrade_type'] ) : 'full';
@@ -465,11 +494,39 @@ class MembershipService {
 	}
 
 	public function get_upgradable_membership( $membership_id ) {
-		$membership_details = $this->get_membership_details( $membership_id );
+		$membership_group_repository = new MembershipGroupRepository();
+		$membership_details          = $this->get_membership_details( $membership_id );
+		$group_details               = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
 
-		if ( ! empty( $membership_details['upgrade_settings'] ) && $membership_details['upgrade_settings']['upgrade_action'] ) {
-			$memberships = $this->membership_repository->get_multiple_membership_by_ID( $membership_details['upgrade_settings']['upgrade_path'] );
+		if ( ! empty( $group_details ) ) {
+			if ( isset( $group_details['mode'] ) && 'upgrade' === $group_details['mode'] ) {
+				if ( isset( $group_details['upgrade_path'] ) && '' !== $group_details['upgrade_path'] ) {
+					$upgrade_paths = json_decode( $group_details['upgrade_path'], true );
 
+					if ( isset( $upgrade_paths[ $membership_id ] ) && ! empty( $upgrade_paths[ $membership_id ] ) ) {
+						$upgradeable_memberships    = $upgrade_paths[ $membership_id ];
+						$upgradeable_membership_ids = array_map(
+							function ( $upgradeable_memberships ) {
+								return $upgradeable_memberships['membership_id'];
+							},
+							$upgradeable_memberships
+						);
+
+						$memberships = $this->membership_repository->get_multiple_membership_by_ID( implode( ',', $upgradeable_membership_ids ) );
+					}
+				}
+			} elseif ( isset( $group_details['mode'] ) && 'multiple' === $group_details['mode'] ) {
+				return array();
+			}
+		}
+
+		if ( empty( $memberships ) ) {
+			if ( ! empty( $membership_details['upgrade_settings'] ) && $membership_details['upgrade_settings']['upgrade_action'] ) {
+				$memberships = $this->membership_repository->get_multiple_membership_by_ID( $membership_details['upgrade_settings']['upgrade_path'] );
+			}
+		}
+
+		if ( ! empty( $memberships ) ) {
 			return apply_filters( 'build_membership_list_frontend', $memberships );
 		}
 
@@ -566,5 +623,234 @@ class MembershipService {
 		}
 
 		return $response;
+	}
+
+	public function prepare_single_membership_data(
+		$membership
+	) {
+		$membership_post_content = json_decode( wp_unslash( $membership['post_content'] ), true );
+		if ( ! $membership_post_content['status'] ) {
+			return array();
+		}
+		$membership['post_content'] = $membership_post_content;
+		if ( isset( $membership['meta_value'] ) ) {
+			$membership['meta_value'] = json_decode( wp_unslash( $membership['meta_value'] ), true );
+		}
+
+		return $membership;
+	}
+
+	/**
+	 * Fetch Membership details from intended actions like upgrade or purchase multiple.
+	 *
+	 * @param array $data Intended actions data.
+	 */
+	public function fetch_membership_details_from_intended_actions( $data ) {
+		$subscription_repository     = new SubscriptionRepository();
+		$upgrade_service             = new UpgradeMembershipService();
+		$members_order_repository    = new MembersOrderRepository();
+		$orders_repository           = new OrdersRepository();
+		$members_repository          = new MembersRepository();
+		$membership_repository       = new MembershipRepository();
+		$members_subscription_repo   = new MembersSubscriptionRepository();
+		$subscription_service        = new SubscriptionService();
+		$membership_group_repository = new MembershipGroupRepository();
+		$membership_group_service    = new MembershipGroupService();
+
+		$subscription_id       = absint( $data['subscription_id'] ?? 0 );
+		$memberships           = array();
+		$current_membership_id = absint( $data['current'] ?? 0 );
+
+		if ( isset( $data['action'] ) && 'upgrade' === $data['action'] ) {
+			// Checkout page for logged in user to upgrade membership.
+			if ( isset( $data['current'] ) && '' !== $data['current'] ) {
+
+				$member_id  = get_current_user_id();
+				$last_order = $members_order_repository->get_member_orders( $member_id );
+
+				if ( ! empty( $last_order ) ) {
+					$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
+					if ( ! empty( $order_meta ) ) {
+						$upcoming_subscription = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
+						$membership            = get_post( $upcoming_subscription['membership'] );
+						$message               = apply_filters( 'urm_delayed_plan_exist_notice', __( sprintf( 'You already have a scheduled upgrade to the <b>%s</b> plan at the end of your current subscription cycle (<i><b>%s</b></i>) <br> If you\'d like to cancel this upcoming change, click the <b>Cancel Membership</b> button to proceed.', $membership->post_title, date( 'M d, Y', strtotime( $order_meta['meta_value'] ) ) ), 'user-registration' ), $membership->post_title, $order_meta['meta_value'] );
+
+						return array(
+							'status'  => false,
+							'message' => $message,
+						);
+					}
+				}
+				$memberships = $this->get_upgradable_membership( $current_membership_id );
+
+				if ( empty( $memberships ) ) {
+					return array(
+						'status'  => false,
+						'message' => esc_html__( 'No upgradable Memberships.', 'user-registration' ),
+					);
+				}
+			} else {
+				$current_user_id        = get_current_user_id();
+				$user_memberships       = $members_repository->get_member_membership_by_id( $current_user_id );
+				$intended_membership_id = absint( $data['membership_id'] );
+				$user_membership_id     = 0;
+
+				foreach ( $user_memberships as $membership ) {
+					$current_upgradable_memberships     = $this->get_upgradable_membership( $membership['post_id'] );
+					$current_upgradable_memberships_ids = array_filter(
+						array_map(
+							function ( $current_upgradable_memberships ) {
+								return $current_upgradable_memberships['ID'];
+							},
+							$current_upgradable_memberships
+						)
+					);
+
+					if ( in_array( $intended_membership_id, $current_upgradable_memberships_ids ) ) {
+						$user_membership_id  = $membership['post_id'];
+						$member_subscription = $members_subscription_repo->get_subscription_data_by_member_and_membership_id( $current_user_id, $user_membership_id );
+						$subscription_id     = $member_subscription['ID'] ?? 0;
+						break;
+					}
+				}
+
+				if ( $user_membership_id ) {
+					$current_membership_id = $user_membership_id;
+
+					$memberships = $membership_repository->get_multiple_membership_by_ID( $intended_membership_id );
+					$memberships = apply_filters( 'build_membership_list_frontend', $memberships );
+				} else {
+					return array(
+						'status'  => false,
+						'message' => esc_html__( 'No upgradable Memberships.', 'user-registration' ),
+					);
+				}
+			}
+
+			$current_membership_details       = $this->get_membership_details( $current_membership_id );
+			$current_membership_details['ID'] = $current_membership_id;
+			$subscription                     = $subscription_repository->retrieve( $subscription_id );
+
+			foreach ( $memberships as $key => &$membership ) {
+				$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
+				if ( ! empty( $membership_group ) && isset( $membership_group['ID'] ) ) {
+					$multiple_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group['ID'] );
+
+					if ( $multiple_allowed ) {
+						unset( $memberships[ $key ] );
+						continue;
+					}
+				}
+
+				$selected_membership_details       = $this->get_membership_details( $membership['ID'] );
+				$selected_membership_details['ID'] = $membership['ID'];
+
+				$upgrade_details = $subscription_service->calculate_membership_upgrade_cost( $current_membership_details, $selected_membership_details, $subscription );
+
+				$selected_membership_amount = $selected_membership_details['amount'];
+				$current_membership_amount  = $current_membership_details['amount'];
+
+				$upgrade_service = new UpgradeMembershipService();
+
+				$upgrade_data = $upgrade_service->get_upgrade_details( $current_membership_details );
+				$upgrade_type = ! empty( $upgrade_data['upgrade_type'] ) ? $upgrade_data['upgrade_type'] : '';
+
+				$remaining_subscription_value = isset( $selected_membership_details['subscription']['value'] ) ? $selected_membership_details['subscription']['value'] : '';
+				$delayed_until                = '';
+
+				$chargeable_amount    = $upgrade_service->calculate_chargeable_amount(
+					$selected_membership_amount,
+					$current_membership_amount,
+					$upgrade_type
+				);
+				$membership['amount'] = $chargeable_amount;
+			}
+			unset( $membership );
+		} elseif ( isset( $data['action'] ) && 'multiple' === $data['action'] ) {
+			if ( UR_PRO_ACTIVE && ur_check_module_activation( 'multi-membership' ) ) {
+				$membership_id    = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
+				$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
+
+				// If current membership is associated with a group then check if multiple can be purchased.
+				if ( ! empty( $membership_group ) ) {
+
+					$current_user_id     = get_current_user_id();
+					$user_membership_ids = array();
+					$multiple_allowed    = false;
+
+					if ( $current_user_id ) {
+						$user_memberships    = $members_repository->get_member_membership_by_id( $current_user_id );
+						$user_membership_ids = array_filter(
+							array_map(
+								function ( $user_memberships ) {
+									return $user_memberships['post_id'];
+								},
+								$user_memberships
+							)
+						);
+
+						if ( in_array( $membership_id, $user_membership_ids ) ) {
+							return array(
+								'status'  => false,
+								'message' => esc_html__( 'You already have purchased this membership plan.', 'user-registration' ),
+							);
+						} else {
+
+							$group_diff = array_diff( $user_membership_ids, json_decode( $membership_group['memberships'] ) );
+							$overlap    = array_intersect( $user_membership_ids, json_decode( $membership_group['memberships'] ) );
+							if ( ! $overlap ) {
+								$multiple_allowed = true;
+							} else {
+
+								// Check if current user membership
+								if ( count( $group_diff ) < $user_membership_ids ) {
+									$multiple_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group['ID'] );
+								} else {
+									$multiple_allowed = true;
+								}
+							}
+						}
+					}
+
+					if ( $multiple_allowed ) {
+						$memberships = $membership_repository->get_single_membership_by_ID( $membership_id );
+						$memberships = $this->prepare_single_membership_data( $memberships );
+						$memberships = apply_filters( 'build_membership_list_frontend', array( (array) $memberships ) )[0];
+						$memberships = array( $memberships );
+					} else {
+						return array(
+							'status'  => false,
+							'message' => esc_html__( 'You cannot purchase this membership.', 'user-registration' ),
+						);
+					}
+				} else {
+					// If current membership is not associated with any group then users are not allowed to buy membership.
+					return array(
+						'status'  => false,
+						'message' => esc_html__( 'You cannot purchase this membership.', 'user-registration' ),
+					);
+				}
+			} else {
+				// If pro version and multiple membership module is not active then users are not allowed to buy membership.
+				return array(
+					'status'  => false,
+					'message' => esc_html__( 'You cannot purchase this membership.', 'user-registration' ),
+				);
+			}
+		}
+
+		if ( empty( $memberships ) ) {
+			return array(
+				'status'  => false,
+				'message' => esc_html__( 'Selected membership details not found. Please contact your site administrator.', 'user-registration' ),
+			);
+		} else {
+			return array(
+				'status'                  => true,
+				'memberships'             => $memberships,
+				'current_subscription_id' => $subscription_id,
+				'current_membership_id'   => $current_membership_id,
+			);
+		}
 	}
 }

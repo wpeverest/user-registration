@@ -342,15 +342,6 @@ class AJAX {
 					);
 				}
 
-				if ( $created_timestamp > wp_date( 'U' ) ) {
-					wp_send_json_error(
-						[
-							'message' => __( 'Created date cannot be in the future.', 'user-registration' ),
-						]
-					);
-				}
-
-				// Update invoice date in ur_payment_invoices meta
 				$payment_invoices = get_user_meta( $user_id, 'ur_payment_invoices', true );
 				if ( ! empty( $payment_invoices ) && is_array( $payment_invoices ) && isset( $payment_invoices[0] ) ) {
 					$payment_invoices[0]['invoice_date'] = wp_date( 'Y-m-d H:i:s', $created_timestamp );
@@ -358,12 +349,10 @@ class AJAX {
 				}
 			}
 
-			// Update payment status
 			if ( $status ) {
 				update_user_meta( $user_id, 'ur_payment_status', $status );
 			}
 
-			// Update notes if provided (store in a separate meta key for form payments)
 			if ( isset( $_POST['notes'] ) ) {
 				update_user_meta( $user_id, 'ur_payment_notes', sanitize_textarea_field( wp_unslash( $_POST['notes'] ) ) );
 			}
@@ -410,14 +399,6 @@ class AJAX {
 				wp_send_json_error(
 					[
 						'message' => __( 'Invalid created date format.', 'user-registration' ),
-					]
-				);
-			}
-
-			if ( $created_timestamp > wp_date( 'U' ) ) {
-				wp_send_json_error(
-					[
-						'message' => __( 'Created date cannot be in the future.', 'user-registration' ),
 					]
 				);
 			}
@@ -544,7 +525,7 @@ class AJAX {
 				[
 					'status'     => $status,
 					'notes'      => isset( $_POST['notes'] ) ? sanitize_textarea_field( wp_unslash( $_POST['notes'] ) ) : false,
-					'created_at' => $created_at ? wp_date( 'Y-m-d H:i:s', $created_at ) : false,
+					'created_at' => $created_at ? wp_date( 'Y-m-d H:i:s', strtotime( $created_at ) ) : false,
 				]
 			)
 		);

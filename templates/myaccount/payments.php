@@ -29,7 +29,8 @@ $current     = intval( $orders['page'] ?? 1 );
 $total_pages = intval( $orders['total_pages'] ?? 1 );
 $per_page    = intval( $orders['per_page'] ?? 10 );
 
-$current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' ) ) . 'urm-payments/';
+$current_url       = get_permalink( get_option( 'user_registration_myaccount_page_id' ) ) . 'urm-payments/';
+$is_invoice_active = ur_check_module_activation( 'pdf-invoice' );
 ?>
 
 <div class="user-registration-MyAccount-content__body">
@@ -44,7 +45,13 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 						<th class="ur-account-table__cell ur-account-table__header-cell"><?php esc_html_e( 'Amount', 'user-registration' ); ?></th>
 						<th class="ur-account-table__cell ur-account-table__header-cell"><?php esc_html_e( 'Status', 'user-registration' ); ?></th>
 						<th class="ur-account-table__cell ur-account-table__header-cell"><?php esc_html_e( 'Payment Date', 'user-registration' ); ?></th>
+						<?php
+						if ( $is_invoice_active ) {
+							?>
 						<th class="ur-account-table__cell ur-account-table__header-cell"><?php esc_html_e( 'Action', 'user-registration' ); ?></th>
+							<?php
+						}
+						?>
 					</tr>
 				</thead>
 
@@ -75,6 +82,9 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 									: '-';
 								?>
 							</td>
+							<?php
+							if ( $is_invoice_active ) {
+								?>
 							<td class="ur-account-table__cell ur-account-table__cell--action">
 								<?php
 								// Build download link safely using add_query_arg and wp_nonce_url
@@ -93,6 +103,9 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 									<?php esc_html_e( 'Download', 'user-registration' ); ?>
 								</a>
 							</td>
+								<?php
+							}
+							?>
 						</tr>
 					<?php endforeach; ?>
 

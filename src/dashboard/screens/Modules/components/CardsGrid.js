@@ -17,21 +17,29 @@ const CardsGrid = ({
 	selectedCategory,
 	showToast
 }) => {
-	// Group modules by category for "All" view
 	const getModulesByCategory = () => {
-		const modulesByCategory = modules.reduce((acc, module) => {
-			const category = module.category || 'Uncategorized';
-			if (!acc[category]) {
-				acc[category] = [];
-			}
-			acc[category].push(module);
-			return acc;
-		}, {});
-
-		// Map category names to display names
+		const modulesByCategory = new Map();
 		const categoryDisplayNames = {};
 
-		return Object.entries(modulesByCategory).map(([category, categoryModules]) => ({
+		modules.forEach((module) => {
+			const category = module.category || 'Uncategorized';
+			if (!modulesByCategory.has(category)) {
+				modulesByCategory.set(category, []);
+			}
+			modulesByCategory.get(category).push(module);
+		});
+
+		const sortedCategories = [];
+		if (modulesByCategory.has('Membership')) {
+			sortedCategories.push(['Membership', modulesByCategory.get('Membership')]);
+		}
+		modulesByCategory.forEach((categoryModules, category) => {
+			if (category !== 'Membership') {
+				sortedCategories.push([category, categoryModules]);
+			}
+		});
+
+		return sortedCategories.map(([category, categoryModules]) => ({
 			category,
 			displayName: categoryDisplayNames[category] || category,
 			modules: categoryModules
@@ -107,9 +115,7 @@ const CardsGrid = ({
 						alignItems="center"
 						textAlign="center"
 					>
-						<Text fontSize="18px" fontWeight="600" color="gray.600">
-							No addons found
-						</Text>
+						
 						<Text fontSize="14px" color="gray.500">
 							No addons are available in the {categoryName} category.
 						</Text>

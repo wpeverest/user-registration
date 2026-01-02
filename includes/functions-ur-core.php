@@ -6683,13 +6683,24 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 		}
 		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
 
-		$membership = $members_repository->get_member_membership_by_id( get_current_user_id() );
+		$user_memberships = $members_repository->get_member_membership_by_id( get_current_user_id() );
 
-		if ( empty( $membership ) ) {
+		if ( empty( $user_memberships ) ) {
 			return;
 		}
 
-		if ( in_array( $membership['status'], array( 'pending', 'inactive' ) ) ) {
+		$active_memberships = array_filter(
+			array_map(
+				function ( $user_memberships ) {
+					if ( ! empty( $user_memberships['status'] ) && ! in_array( $user_memberships['status'], array( 'pending', 'inactive' ) ) ) {
+						return $user_memberships['post_id'];
+					}
+				},
+				$user_memberships
+			)
+		);
+
+		if ( count( $active_memberships ) < 1 ) {
 			wp_logout();
 		}
 	}
@@ -6991,70 +7002,6 @@ add_filter(
 		return array_merge( $classes, array( $body_class ) );
 	}
 );
-
-if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
-
-	/**
-	 * Quick settings tab content.
-	 */
-	function ur_quick_settings_tab_content() {
-		$default_form_page_id      = get_option( 'user_registration_default_form_page_id', false );
-		$registration_form_page_id = get_option( 'user_registration_registration_page_id', false );
-		$my_account_page_id        = get_option( 'user_registration_myaccount_page_id', false );
-		$prevent_core_login        = get_option( 'user_registration_login_options_prevent_core_login', false );
-		$captcha_setup             = get_option( 'user_registration_captcha_setting_recaptcha_version', false );
-
-		$lists = array(
-			array(
-				'text'          => esc_html__( 'Create a registration form.', 'user-registration' ),
-				'completed'     => $default_form_page_id ? true : false,
-				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-create-a-user-registration-form/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
-			),
-			array(
-				'text'          => esc_html__( 'Create registration and my account page.', 'user-registration' ),
-				'completed'     => $registration_form_page_id || $my_account_page_id ? true : false,
-				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-show-account-profile/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
-			),
-			array(
-				'text'          => esc_html__( 'Disable WordPress default registration and login page.', 'user-registration' ),
-				'completed'     => $prevent_core_login ? ur_string_to_bool( $prevent_core_login ) : false,
-				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-hide-the-wordpress-default-login-page-and-use-user-registration-login-page/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
-			),
-			array(
-				'text'          => esc_html__( 'Setup spam protection mechanisms.', 'user-registration' ),
-				'completed'     => $captcha_setup ? true : false,
-				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-integrate-google-recaptcha/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
-			),
-		);
-
-		$completed_count = 0;
-
-		foreach ( $lists as $list ) {
-			if ( isset( $list['completed'] ) && $list['completed'] ) {
-				++ $completed_count;
-			}
-		}
-
-		if ( $completed_count === count( $lists ) ) {
-			update_option( 'user_registration_quick_setup_completed', true );
-		}
-
-		$activation_date   = get_option( 'user_registration_activated' );
-		$installation_date = get_option( 'user_registration_installation_date', $activation_date );
-
-		$days_to_validate = strtotime( $installation_date );
-		$days_to_validate = strtotime( '+15 day', $days_to_validate );
-		$days_to_validate = date_i18n( 'Y-m-d', $days_to_validate );
-
-		$current_date = date_i18n( 'Y-m-d' );
-
-		if ( $current_date > $days_to_validate ) {
-			update_option( 'user_registration_quick_setup_completed', true );
-		}
-
-		return $lists;
-	}
-}
 
 add_filter( 'user_registration_settings_text_format', 'ur_settings_text_format', 10 );
 if ( ! function_exists( 'ur_settings_text_format' ) ) {
