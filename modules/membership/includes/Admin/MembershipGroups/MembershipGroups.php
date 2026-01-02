@@ -37,7 +37,10 @@ class MembershipGroups {
 		}
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) ? '' : '.min';
-		wp_register_script( 'user-registration-membership-groups', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/membership-groups' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
+
+		wp_enqueue_script( 'jquery-ui-sortable' );
+
+		wp_register_script( 'user-registration-membership-groups', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/membership-groups' . $suffix . '.js', array( 'jquery', 'jquery-ui-sortable' ), '1.0.0', true );
 		wp_enqueue_script( 'user-registration-membership-groups' );
 		$this->localize_scripts();
 	}

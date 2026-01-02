@@ -296,63 +296,62 @@
 				.find('input[name="ur_membership_cancel_on"]:checked')
 				.val();
 
-				var syncActionEl = form.find(
-					'input[name="ur_membership_email_marketing_sync_action"]:checked'
-				);
+			var syncActionEl = form.find(
+				'input[name="ur_membership_email_marketing_sync_action"]:checked'
+			);
 
-				post_meta_data.email_marketing_sync = {};
-				var email_marketing_sync = {}
-				post_meta_data.email_marketing_sync.is_enable = syncActionEl.val();
+			post_meta_data.email_marketing_sync = {};
+			var email_marketing_sync = {};
+			post_meta_data.email_marketing_sync.is_enable = syncActionEl.val();
 
-				if ( syncActionEl.length && syncActionEl.val() ) {
+			if (syncActionEl.length && syncActionEl.val()) {
+				var marketingAddonsList = [
+					"activecampaign",
+					"brevo",
+					"convertkit",
+					"klaviyo",
+					"mailchimp",
+					"mailerlite",
+					"mailpoet",
+					"salesforce"
+				];
+				marketingAddonsList.forEach(function (val) {
+					if (!email_marketing_sync[val]) {
+						email_marketing_sync[val] = {};
+					}
+					var checkbox = form.find(
+						'input[name="sync_membership_plan_with_' + val + '"]'
+					);
 
-					var marketingAddonsList = [
-						'activecampaign',
-						'brevo',
-						'convertkit',
-						'klaviyo',
-						'mailchimp',
-						'mailerlite',
-						'mailpoet',
-						'salesforce'
-					];
-					marketingAddonsList.forEach( function ( val ) {
+					if (checkbox.length && checkbox.is(":checked")) {
+						email_marketing_sync[val].email_marketing_sync =
+							checkbox.is(":checked");
 
-						if ( ! email_marketing_sync[val] ) {
-							email_marketing_sync[val] = {};
-						}
-						var checkbox = form.find(
-							'input[name="sync_membership_plan_with_' + val + '"]'
+						var accountSelect = form.find(
+							"#ur_sync_email_marketing_" + val + "_account"
 						);
 
-						if ( checkbox.length && checkbox.is(':checked') ) {
-							email_marketing_sync[val].email_marketing_sync =
-								checkbox.is(':checked');
-
-							var accountSelect = form.find(
-								'#ur_sync_email_marketing_' + val + '_account'
-							);
-
-							if ( accountSelect.length ) {
-								email_marketing_sync[val].email_marketing_account =
-									accountSelect.val();
-							}
-
-							var listSelect = form.find(
-								'#ur_sync_email_marketing_' + val + '_integration_list_id'
-							);
-
-							if ( listSelect.length ) {
-								email_marketing_sync[val].integration_list_id =
-									listSelect.val();
-							}
+						if (accountSelect.length) {
+							email_marketing_sync[val].email_marketing_account =
+								accountSelect.val();
 						}
 
-					});
+						var listSelect = form.find(
+							"#ur_sync_email_marketing_" +
+								val +
+								"_integration_list_id"
+						);
 
-				}
+						if (listSelect.length) {
+							email_marketing_sync[val].integration_list_id =
+								listSelect.val();
+						}
+					}
+				});
+			}
 
-			post_meta_data.email_marketing_sync.addons_sync_details = email_marketing_sync;
+			post_meta_data.email_marketing_sync.addons_sync_details =
+				email_marketing_sync;
 
 			post_meta_data.role = form
 				.find("#ur-input-type-membership-role")
@@ -770,7 +769,11 @@
 			if (this.validate_membership_form()) {
 				// Prepare access rules data before creating membership
 				var ruleData = null;
-				if (typeof window.URCRMembershipAccess !== 'undefined' && typeof window.URCRMembershipAccess.prepareRuleData === 'function') {
+				if (
+					typeof window.URCRMembershipAccess !== "undefined" &&
+					typeof window.URCRMembershipAccess.prepareRuleData ===
+						"function"
+				) {
 					ruleData = window.URCRMembershipAccess.prepareRuleData();
 				}
 				var prepare_membership_data = this.prepare_membership_data();
@@ -781,46 +784,44 @@
 
 				// Add rule data to AJAX request if available
 				if (ruleData) {
-					ajaxData.urcr_membership_access_rule_data = JSON.stringify(ruleData);
+					ajaxData.urcr_membership_access_rule_data =
+						JSON.stringify(ruleData);
 				}
 
-				this.send_data(
-					ajaxData,
-					{
-						success: function (response) {
-							if (response.success) {
-								ur_membership_data.membership_id =
-									response.data.membership_id;
-								$this.text(ur_membership_data.labels.i18n_save);
-								ur_membership_utils.show_success_message(
-									response.data.message
-								);
-								// var current_url = $(location).attr('href');
-								// current_url += '&post_id=' + ur_membership_data.membership_group_id;
-								$(location).attr(
-									"href",
-									ur_membership_data.membership_page_url
-								);
-							} else {
-								ur_membership_utils.show_failure_message(
-									response.data.message
-								);
-							}
-						},
-						failure: function (xhr, statusText) {
-							ur_membership_utils.show_failure_message(
-								ur_membership_data.labels.network_error +
-									"(" +
-									statusText +
-									")"
+				this.send_data(ajaxData, {
+					success: function (response) {
+						if (response.success) {
+							ur_membership_data.membership_id =
+								response.data.membership_id;
+							$this.text(ur_membership_data.labels.i18n_save);
+							ur_membership_utils.show_success_message(
+								response.data.message
 							);
-						},
-						complete: function () {
-							ur_membership_utils.remove_spinner($this);
-							ur_membership_utils.toggleSaveButtons(false);
+							// var current_url = $(location).attr('href');
+							// current_url += '&post_id=' + ur_membership_data.membership_group_id;
+							$(location).attr(
+								"href",
+								ur_membership_data.membership_page_url
+							);
+						} else {
+							ur_membership_utils.show_failure_message(
+								response.data.message
+							);
 						}
+					},
+					failure: function (xhr, statusText) {
+						ur_membership_utils.show_failure_message(
+							ur_membership_data.labels.network_error +
+								"(" +
+								statusText +
+								")"
+						);
+					},
+					complete: function () {
+						ur_membership_utils.remove_spinner($this);
+						ur_membership_utils.toggleSaveButtons(false);
 					}
-				);
+				});
 			} else {
 				if (basic_error) {
 					$("#ur-basic-tab").trigger("click");
@@ -842,52 +843,52 @@
 			if (this.validate_membership_form()) {
 				// Prepare access rules data before updating membership
 				var ruleData = null;
-				if (typeof window.URCRMembershipAccess !== 'undefined' && typeof window.URCRMembershipAccess.prepareRuleData === 'function') {
+				if (
+					typeof window.URCRMembershipAccess !== "undefined" &&
+					typeof window.URCRMembershipAccess.prepareRuleData ===
+						"function"
+				) {
 					ruleData = window.URCRMembershipAccess.prepareRuleData();
 				}
 				var prepare_membership_data = this.prepare_membership_data();
 
 				var ajaxData = {
 					action: "user_registration_membership_update_membership",
-					membership_data: JSON.stringify(
-						prepare_membership_data
-					),
+					membership_data: JSON.stringify(prepare_membership_data),
 					membership_id: ur_membership_data.membership_id
 				};
 
 				// Add rule data to AJAX request if available
 				if (ruleData) {
-					ajaxData.urcr_membership_access_rule_data = JSON.stringify(ruleData);
+					ajaxData.urcr_membership_access_rule_data =
+						JSON.stringify(ruleData);
 				}
 
-				this.send_data(
-					ajaxData,
-					{
-						success: function (response) {
-							if (response.success) {
-								ur_membership_utils.show_success_message(
-									response.data.message
-								);
-							} else {
-								ur_membership_utils.show_failure_message(
-									response.data.message
-								);
-							}
-						},
-						failure: function (xhr, statusText) {
-							ur_membership_utils.show_failure_message(
-								ur_membership_data.labels.network_error +
-									"(" +
-									statusText +
-									")"
+				this.send_data(ajaxData, {
+					success: function (response) {
+						if (response.success) {
+							ur_membership_utils.show_success_message(
+								response.data.message
 							);
-						},
-						complete: function () {
-							ur_membership_utils.remove_spinner($this);
-							ur_membership_utils.toggleSaveButtons(false);
+						} else {
+							ur_membership_utils.show_failure_message(
+								response.data.message
+							);
 						}
+					},
+					failure: function (xhr, statusText) {
+						ur_membership_utils.show_failure_message(
+							ur_membership_data.labels.network_error +
+								"(" +
+								statusText +
+								")"
+						);
+					},
+					complete: function () {
+						ur_membership_utils.remove_spinner($this);
+						ur_membership_utils.toggleSaveButtons(false);
 					}
-				);
+				});
 			} else {
 				if (basic_error) {
 					$("#ur-basic-tab").trigger("click");
@@ -1338,7 +1339,6 @@
 		showStep($(this).data("step"));
 	});
 
-
 	var $membershipTable = $("#membership-list tbody#the-list");
 
 	if ($membershipTable.length > 0 && $.fn.sortable) {
@@ -1520,43 +1520,48 @@
 		);
 	}
 
-	$( document ).on( 'change', '#ur-membership-email-marketing-sync-action', function( e ){
-		e.stopPropagation();
-		e.preventDefault();
-		var $el = $( this ),
-			$syncEmailContainer = $( "#ur-sync-to-email-marketing-container" );
-		hideSyncEmailContainer( $el.is( ":checked" ), $syncEmailContainer )
-	});
+	$(document).on(
+		"change",
+		"#ur-membership-email-marketing-sync-action",
+		function (e) {
+			e.stopPropagation();
+			e.preventDefault();
+			var $el = $(this),
+				$syncEmailContainer = $(
+					"#ur-sync-to-email-marketing-container"
+				);
+			hideSyncEmailContainer($el.is(":checked"), $syncEmailContainer);
+		}
+	);
 
-	function hideSyncEmailContainer( $isChecked, $syncEmailContainer ){
-		if ( $isChecked ) {
+	function hideSyncEmailContainer($isChecked, $syncEmailContainer) {
+		if ($isChecked) {
 			$syncEmailContainer.show();
-		}else{
+		} else {
 			$syncEmailContainer.hide();
 		}
 	}
 
-	var $initialEl = $( "#ur-membership-email-marketing-sync-action" );
-	var $initialContainer = $( "#ur-sync-to-email-marketing-container" );
+	var $initialEl = $("#ur-membership-email-marketing-sync-action");
+	var $initialContainer = $("#ur-sync-to-email-marketing-container");
 
-	hideSyncEmailContainer( $initialEl.is(":checked"), $initialContainer );
+	hideSyncEmailContainer($initialEl.is(":checked"), $initialContainer);
 	toggleEmailMarketingFields();
 
 	function toggleEmailMarketingFields() {
-		$( '.ur-sync-to-email-marketing-addon-sync-container' ).each( function () {
-
+		$(".ur-sync-to-email-marketing-addon-sync-container").each(function () {
 			var $container = $(this);
 			var $checkbox = $container.find(
 				'.ur-sync-to-email-marketing-addon-sync-toggle-container input[type="checkbox"]'
 			);
 			var $fields = $container.find(
-				'.ur-sync-to-email-marketing-addon-sync-toggle-label-container .form-row, ' +
-				'.urmc-sync-email-marketing-mailchimp-list-wrap, ' +
-				'.urmc-sync-email-marketing-brevo-list-wrap, ' +
-				'[class*="urmc-sync-email-marketing-"][class$="-list-wrap"]'
+				".ur-sync-to-email-marketing-addon-sync-toggle-label-container .form-row, " +
+					".urmc-sync-email-marketing-mailchimp-list-wrap, " +
+					".urmc-sync-email-marketing-brevo-list-wrap, " +
+					'[class*="urmc-sync-email-marketing-"][class$="-list-wrap"]'
 			);
 
-			if ($checkbox.is(':checked')) {
+			if ($checkbox.is(":checked")) {
 				$fields.show();
 			} else {
 				$fields.hide();
@@ -1564,70 +1569,72 @@
 		});
 	}
 
-	$( document ).on(
-		'change',
+	$(document).on(
+		"change",
 		'.ur-sync-to-email-marketing-addon-sync-toggle-container input[type="checkbox"]',
 		function () {
 			toggleEmailMarketingFields();
 		}
 	);
 
-	$( document ).on(
-		'change',
-		'.ur_sync_email_marketing_addon_account',
-		function( e ){
+	$(document).on(
+		"change",
+		".ur_sync_email_marketing_addon_account",
+		function (e) {
 			e.stopPropagation();
 			e.preventDefault();
 
-			var $el = $( this ),
-				addon = $el.data( 'addon_name' ),
+			var $el = $(this),
+				addon = $el.data("addon_name"),
 				apiKey = $el.val();
 
-
-			var	data  = {
-					action : 'user_registration_membership_addons_get_lists',
-					addon : addon,
-					api_key: apiKey
-				}
+			var data = {
+				action: "user_registration_membership_addons_get_lists",
+				addon: addon,
+				api_key: apiKey
+			};
 
 			$.ajax({
 				type: "post",
 				url: ur_membership_data.ajax_url,
 				data: data,
-				beforeSend: function(){
-				   var $listWrap = $(document).find(
-						'.urmc-sync-email-marketing-' + addon + '-list-wrap'
-						);
+				beforeSend: function () {
+					var $listWrap = $(document).find(
+						".urmc-sync-email-marketing-" + addon + "-list-wrap"
+					);
 
-						ur_membership_utils.append_spinner($listWrap);
+					ur_membership_utils.append_spinner($listWrap);
 
-						$listWrap.find( 'select' ).prop( 'disabled', true );
+					$listWrap.find("select").prop("disabled", true);
 
-						 $listWrap
-							.closest('.ur-sync-to-email-marketing-addon-sync-container')
-							.find('select')
-							.prop('disabled', true);
+					$listWrap
+						.closest(
+							".ur-sync-to-email-marketing-addon-sync-container"
+						)
+						.find("select")
+						.prop("disabled", true);
 				},
-				success: function( response ){
+				success: function (response) {
 					var $listContainer = $(
-						'.urmc-sync-email-marketing-' + addon + '-list-wrap'
-						);
+						".urmc-sync-email-marketing-" + addon + "-list-wrap"
+					);
 
-						$listContainer.find('.ur-spinner').remove();
+					$listContainer.find(".ur-spinner").remove();
 
-						if ( response.success ) {
-							$listContainer.find( 'select' ).remove();
+					if (response.success) {
+						$listContainer.find("select").remove();
 
-							$listContainer.append( response.data.html );
-						}
+						$listContainer.append(response.data.html);
+					}
 
-						$listContainer
-						.closest('.ur-sync-to-email-marketing-addon-sync-container')
-						.find('select')
-						.prop('disabled', false);
+					$listContainer
+						.closest(
+							".ur-sync-to-email-marketing-addon-sync-container"
+						)
+						.find("select")
+						.prop("disabled", false);
 				}
-			})
+			});
 		}
 	);
-
 })(jQuery, window.ur_membership_localized_data);

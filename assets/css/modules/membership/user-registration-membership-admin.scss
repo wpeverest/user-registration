@@ -2253,3 +2253,46 @@
 		}
 	}
 }
+
+.ur-membership-upgrade-container{
+	.ur-sortable-box {
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		background: #fff;
+	}
+
+	.ur-sortable-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.ur-sortable-item {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 10px 12px;
+		border-bottom: 1px solid #eee;
+		cursor: default;
+		background: #fff;
+	}
+
+	.ur-sortable-item:last-child {
+		border-bottom: none;
+	}
+
+	.ur-drag-handle {
+		cursor: grab;
+		color: #666;
+	}
+
+	.ur-sortable-item.ui-sortable-helper {
+		background: #f6f7f7;
+	}
+
+	.ur-sortable-placeholder {
+		height: 42px;
+		background: #f0f0f0;
+		border: 1px dashed #ccc;
+	}
+}
