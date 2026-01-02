@@ -1468,7 +1468,6 @@
 			prepare_members_data,
 			form_response
 		) {
-
 			if (response.data.pg_data.type === "paid") {
 				this.handle_one_time_payment(
 					response,
@@ -1482,14 +1481,16 @@
 					response_data: response,
 					prepare_members_data: prepare_members_data,
 					form_response: form_response
-				}).then(function(){
-					ur_membership_frontend_utils.show_success_message(
-						response.data.message
-					);
-					form_object.hide_loader(form_response.form_id);
-				}).catch(function(){
-					form_object.hide_loader(form_response.form_id);
-				});
+				})
+					.then(function () {
+						ur_membership_frontend_utils.show_success_message(
+							response.data.message
+						);
+						form_object.hide_loader(form_response.form_id);
+					})
+					.catch(function () {
+						form_object.hide_loader(form_response.form_id);
+					});
 			}
 		},
 
@@ -1813,39 +1814,41 @@
 				is_purchasing_multiple =
 					data.response_data.data.is_purchasing_multiple !== undefined
 						? data.response_data.data.is_purchasing_multiple
+						: false,
+				is_three_d_secure =
+					undefined !== data.three_d_secure
+						? data.three_d_secure
 						: false;
 
-			if (is_upgrading || is_renewing || is_purchasing_multiple) {
-				if (
-					is_upgrading ||
-					is_renewing ||
-					true === data.three_d_secure ||
-					is_purchasing_multiple
-				) {
-					stripe_settings.update_order_status(
-						data.subscription,
-						data.response_data,
-						data.prepare_members_data,
-						data.form_response
-					);
-				}
+			if (
+				is_upgrading ||
+				is_renewing ||
+				is_purchasing_multiple ||
+				is_three_d_secure
+			) {
+				stripe_settings.update_order_status(
+					data.subscription,
+					data.response_data,
+					data.prepare_members_data,
+					data.form_response
+				);
+			}
 
-				if (
-					data.subscription &&
-					(data.subscription.status === "active" ||
-						data.subscription.status === "trialing") &&
-					!is_upgrading &&
-					!is_renewing &&
-					!is_purchasing_multiple
-				) {
-					ur_membership_frontend_utils.show_form_success_message(
-						data.form_response,
-						{
-							username: data.prepare_members_data.username,
-							transaction_id: data.subscription.id
-						}
-					);
-				}
+			if (
+				data.subscription &&
+				(data.subscription.status === "active" ||
+					data.subscription.status === "trialing") &&
+				!is_upgrading &&
+				!is_renewing &&
+				!is_purchasing_multiple
+			) {
+				ur_membership_frontend_utils.show_form_success_message(
+					data.form_response,
+					{
+						username: data.prepare_members_data.username,
+						transaction_id: data.subscription.id
+					}
+				);
 			}
 			return { success: true };
 		}
