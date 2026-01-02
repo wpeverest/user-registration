@@ -8,6 +8,7 @@
  */
 
 use WPEverest\URMembership\Admin\Members\Members;
+use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -559,18 +560,23 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					// 3
 					// );
 
-					add_submenu_page(
-						'user-registration',
-						__( 'Membership Groups', 'user-registration' ),
-						'↳ ' . __( 'Groups', 'user-registration' ),
-						'manage_user_registration',
-						'user-registration-membership&action=list_groups',
-						array(
-							$membership_obj,
-							'render_membership_page',
-						),
-						3
-					);
+					$membership_groups_repository = new MembershipGroupRepository();
+					$membership_groups            = $membership_groups_repository->get_all_membership_groups();
+
+					if ( ur_check_module_activation( 'membership-groups' ) || ! empty( $membership_groups ) ) {
+						add_submenu_page(
+							'user-registration',
+							__( 'Membership Groups', 'user-registration' ),
+							'↳ ' . __( 'Groups', 'user-registration' ),
+							'manage_user_registration',
+							'user-registration-membership&action=list_groups',
+							array(
+								$membership_obj,
+								'render_membership_page',
+							),
+							3
+						);
+					}
 
 					// $members = new Members();
 					// add_submenu_page(
