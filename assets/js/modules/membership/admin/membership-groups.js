@@ -242,7 +242,11 @@
 						group_select_field = $(
 							"#ur-setting-form .ur-general-setting-membership_group"
 						);
-					group_select_field.hide();
+					group_select_field
+					.hide()
+					.find("select")
+					.prop("selectedIndex", 0)
+					.trigger("change");
 					$(
 						".ur-general-setting-membership_listing_option select"
 					).val($this.val());
