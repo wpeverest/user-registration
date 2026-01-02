@@ -6,12 +6,16 @@ import {
 	HStack,
 	Icon,
 	Input,
+	Popover,
+	PopoverArrow,
+	PopoverBody,
+	PopoverContent,
+	PopoverTrigger,
 	Select,
 	Skeleton,
 	Switch,
 	Text,
 	Textarea,
-	Tooltip,
 	useColorModeValue,
 	VStack
 } from "@chakra-ui/react";
@@ -44,13 +48,64 @@ interface PaymentGatewayData {
 }
 
 const InfoIcon: React.FC = () => (
-	<Icon viewBox="0 0 20 20" boxSize={4} color="gray.400">
+	<Icon viewBox="0 0 16 16" boxSize={4} color="#9CA3AF">
+		<circle
+			cx="8"
+			cy="8"
+			r="7"
+			stroke="currentColor"
+			strokeWidth="1.5"
+			fill="none"
+		/>
 		<path
 			fill="currentColor"
-			d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z"
+			d="M8 7a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 018 7zM8 4.5a.75.75 0 100 1.5.75.75 0 000-1.5z"
 		/>
 	</Icon>
 );
+
+interface CustomTooltipProps {
+	label: string;
+	children?: React.ReactNode;
+}
+
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ label }) => {
+	return (
+		<Popover trigger="hover" placement="bottom-start" gutter={8}>
+			<PopoverTrigger>
+				<Box
+					as="span"
+					cursor="pointer"
+					display="inline-flex"
+					alignItems="center"
+				>
+					<InfoIcon />
+				</Box>
+			</PopoverTrigger>
+			<PopoverContent
+				bg="white"
+				border="none"
+				boxShadow="0px 4px 16px rgba(0, 0, 0, 0.12)"
+				borderRadius="4px"
+				width="auto"
+				maxW="250px"
+				_focus={{ boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.12)" }}
+			>
+				<PopoverArrow bg="white" boxShadow="none" />
+				<PopoverBody
+					px={3}
+					py={2}
+					fontSize="13px"
+					color="#6B7280"
+					fontWeight="400"
+					lineHeight="1.5"
+				>
+					{label}
+				</PopoverBody>
+			</PopoverContent>
+		</Popover>
+	);
+};
 
 // Consistent width for all labels
 const LABEL_WIDTH = "200px";
@@ -120,6 +175,7 @@ interface FieldRowProps {
 	children: React.ReactNode;
 	alignItems?: string;
 	isNested?: boolean;
+	isRequired?: boolean;
 }
 
 const FieldRow: React.FC<FieldRowProps> = ({
@@ -127,7 +183,8 @@ const FieldRow: React.FC<FieldRowProps> = ({
 	tooltip,
 	children,
 	alignItems = "center",
-	isNested = true
+	isNested = true,
+	isRequired = false
 }) => {
 	const mutedColor = useColorModeValue("#383838", "gray.300");
 	const labelW = isNested ? NESTED_LABEL_WIDTH : LABEL_WIDTH;
@@ -138,13 +195,12 @@ const FieldRow: React.FC<FieldRowProps> = ({
 				<Text fontSize="sm" color={mutedColor}>
 					{label}
 				</Text>
-				{tooltip && (
-					<Tooltip label={tooltip} hasArrow>
-						<span>
-							<InfoIcon />
-						</span>
-					</Tooltip>
+				{isRequired && (
+					<Text as="span" color="red.500" fontSize="sm">
+						*
+					</Text>
 				)}
+				{tooltip && <CustomTooltip label={tooltip} />}
 			</HStack>
 			<Box flex={CONTENT_FLEX}>{children}</Box>
 		</Flex>

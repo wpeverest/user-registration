@@ -332,7 +332,7 @@ const SetupWizard: React.FC = () => {
 										color="#999999"
 										_hover={{
 											color: textColor,
-											textDecoration: "none"
+											textDecoration: "underline"
 										}}
 										cursor="pointer"
 										onClick={handleSkip}

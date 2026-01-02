@@ -208,7 +208,6 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 	);
 };
 
-// Type Toggle Component
 interface TypeToggleProps {
 	value: MembershipPlanType;
 	onChange: (type: MembershipPlanType) => void;
@@ -376,7 +375,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	const hasPosts = plan.contentAccess.some((a) => a.type === "posts");
 	const hasWholeSite = plan.contentAccess.some((a) => a.type === "wholesite");
 
-	// Sort content access: wholesite first, then pages, then posts
 	const sortedContentAccess = [...plan.contentAccess].sort((a, b) => {
 		const order = { wholesite: 0, pages: 1, posts: 2 };
 		return (order[a.type] ?? 3) - (order[b.type] ?? 3);
@@ -401,7 +399,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 		return "Select...";
 	};
 
-	// Input field styles
 	const inputStyles = {
 		fontSize: "14px",
 		bg: inputBg,
@@ -416,7 +413,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 		_placeholder: { fontSize: "14px", color: "gray.400" }
 	};
 
-	// Label styles
 	const labelStyles = {
 		minW: "100px",
 		fontWeight: "600",
@@ -498,13 +494,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 						<VStack spacing={3} align="stretch" flex={1}>
 							{/* Single container box for all access items */}
 							{sortedContentAccess.length > 0 && (
-								<Box
-									bg="white"
-									borderRadius="4px"
-									borderWidth="1px"
-									borderColor="gray.200"
-									p={4}
-								>
+								<Box>
 									<VStack spacing={4} align="stretch">
 										{sortedContentAccess.map((access) => {
 											const isWholeSite =
@@ -528,36 +518,17 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 														{labelForAccess(access)}
 													</Text>
 													{isWholeSite ? (
-														<Box
+														<Text
 															flex="1"
 															mx={2}
-															minH="40px"
-															px={3}
-															py={2}
-															bg={inputBg}
-															border="1px solid"
-															borderColor={
-																borderColor
-															}
-															borderRadius="4px"
-															display="flex"
-															alignItems="center"
+															fontSize="14px"
+															color={labelColor}
 														>
-															<Tag
-																size="sm"
-																borderRadius="2px"
-																variant="solid"
-																bg="#EDEFF7"
-																color="#383838"
-															>
-																<TagLabel fontSize="14px">
-																	{__(
-																		"Whole Site",
-																		"user-registration"
-																	)}
-																</TagLabel>
-															</Tag>
-														</Box>
+															{__(
+																"Whole Site",
+																"user-registration"
+															)}
+														</Text>
 													) : (
 														<Box flex="1" mx={2}>
 															<Select2MultiSelect
@@ -589,14 +560,11 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 															/>
 														}
 														size="sm"
-														variant="ghost"
 														opacity={0}
+														variant="ghost"
 														color="red.500"
-														_groupHover={{
-															opacity: 1
-														}}
 														_hover={{
-															bg: "red.50"
+															opacity: "1"
 														}}
 														onClick={() =>
 															handleRemoveContentAccess(
@@ -733,8 +701,6 @@ const MembershipStep: React.FC = () => {
 				setPages(content.pages || []);
 				setPosts(content.posts || []);
 
-				// Check if current plans have been modified by user
-				// Access current state to check for modifications
 				const currentPlans = state.membershipPlans;
 				const hasModifiedPlans = currentPlans.some(
 					(plan) =>
@@ -743,7 +709,6 @@ const MembershipStep: React.FC = () => {
 						plan.contentAccess.length > 0
 				);
 
-				// Only hydrate from API if current plans are untouched
 				if (
 					res.memberships &&
 					Array.isArray(res.memberships) &&
@@ -851,7 +816,7 @@ const MembershipStep: React.FC = () => {
 					_active={{ bg: "#D8DCF0" }}
 					onClick={handleAddPlan}
 				>
-					{__("Add Membership", "user-registration")}
+					{__("Add Another Plan", "user-registration")}
 				</Button>
 			</Flex>
 		</>
