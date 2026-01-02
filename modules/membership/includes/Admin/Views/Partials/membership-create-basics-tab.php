@@ -148,16 +148,12 @@
 					</div>
 					<div class="ur-d-flex" style="gap:16px;width:100%;">
 						<div class="ur-field field-amount" data-field-key="membership_amount">
-							<span class="ur-currency-symbol">
 								<?php
 								$currency   = get_option( 'user_registration_payment_currency', 'USD' );
 								$currencies = ur_payment_integration_get_currencies();
-								$symbol     = $currencies[ $currency ]['symbol'];
-								echo esc_html( $symbol );
 								?>
-							</span>
 							<input data-key-name="Amount" type="number" id="ur-membership-amount"
-									value="<?php echo esc_attr( $membership_details['amount'] ?? 1 ); ?>"
+									value="<?php echo esc_attr( $membership_details['amount'] ?? "" ); ?>"
 									name="ur_membership_amount" style="width: 80%" min="0" required>
 							<span class="ur-currency"><?php echo esc_html( $currency ); ?></span>
 						</div>
