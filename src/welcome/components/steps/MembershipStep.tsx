@@ -235,11 +235,14 @@ const TypeSelector: React.FC<TypeSelectorProps> = ({
 			value: "one-time",
 			label: __("One-Time Payment", "user-registration")
 		},
-		{
-			value: "subscription",
-			label: __("Subscription Based", "user-registration"),
-			disabled: !isPro
-		}
+		...(isPro
+			? [
+					{
+						value: "subscription" as MembershipPlanType,
+						label: __("Subscription Based", "user-registration")
+					}
+			  ]
+			: [])
 	];
 
 	return (
@@ -384,6 +387,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	const handleBillingCycleCountChange = (
 		e: React.ChangeEvent<HTMLInputElement>
 	) => {
+		// Allow only numbers
 		const value = e.target.value.replace(/[^0-9]/g, "");
 		dispatch({
 			type: "UPDATE_MEMBERSHIP_PLAN",
@@ -623,7 +627,12 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 						</Text>
 						<VStack spacing={3} align="stretch" flex={1}>
 							{sortedContentAccess.length > 0 && (
-								<Box>
+								<Box
+									border="1px solid"
+									borderColor={borderColor}
+									borderRadius="4px"
+									p={4}
+								>
 									<VStack spacing={4} align="stretch">
 										{sortedContentAccess.map((access) => {
 											const isWholeSite =
@@ -866,7 +875,7 @@ const MembershipStep: React.FC = () => {
 							type: m.type || "free",
 							price: m.price || "",
 							billingCycle: m.billingCycle || "month",
-							billingCycleCount: m.billingCycleCount || "",
+							billingCycleCount: m.billingCycleCount || "1",
 							contentAccess: m.contentAccess || [],
 							isNew: false
 						})
