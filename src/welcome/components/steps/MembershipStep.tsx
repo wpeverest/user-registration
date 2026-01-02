@@ -2,7 +2,6 @@ import { AddIcon, ChevronDownIcon, CloseIcon } from "@chakra-ui/icons";
 import {
 	Box,
 	Button,
-	ButtonGroup,
 	Card,
 	CardBody,
 	Checkbox,
@@ -114,18 +113,24 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 						}}
 					>
 						<Flex align="center" justify="space-between">
-							<Wrap spacing={1} flex={1}>
+							<Wrap spacing={2} flex={1}>
 								{selectedOptions.length > 0 ? (
 									selectedOptions.map((opt) => (
 										<WrapItem key={opt.value}>
 											<Tag
 												size="sm"
-												borderRadius="2px"
+												borderRadius="4px"
 												variant="solid"
-												bg="#EDEFF7"
-												color="#383838"
+												bg="#F3F4F6"
+												color="#4B5563"
+												px={2}
+												py={1}
+												h="26px"
 											>
-												<TagLabel fontSize="14px">
+												<TagLabel
+													fontSize="12px"
+													fontWeight="400"
+												>
 													{opt.label}
 												</TagLabel>
 												<TagCloseButton
@@ -135,17 +140,19 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 															e
 														)
 													}
+													color="#9CA3AF"
+													fontSize="10px"
 												/>
 											</Tag>
 										</WrapItem>
 									))
 								) : (
-									<Text color="gray.400" fontSize="14px">
+									<Text color="gray.400" fontSize="13px">
 										{placeholder}
 									</Text>
 								)}
 							</Wrap>
-							<ChevronDownIcon color="gray.500" ml={2} />
+							<ChevronDownIcon color="gray.400" ml={2} />
 						</Flex>
 					</Box>
 				</PopoverTrigger>
@@ -177,8 +184,11 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 										mr={2}
 										colorScheme="blue"
 										pointerEvents="none"
+										size="sm"
 									/>
-									<Text fontSize="14px">{opt.label}</Text>
+									<Text fontSize="13px" color="#4B5563">
+										{opt.label}
+									</Text>
 								</Flex>
 							))
 						) : (
@@ -186,7 +196,7 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 								px={3}
 								py={2}
 								color="gray.500"
-								fontSize="14px"
+								fontSize="13px"
 							>
 								No options available
 							</Text>
@@ -194,6 +204,57 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 					</PopoverBody>
 				</PopoverContent>
 			</Popover>
+		</Box>
+	);
+};
+
+// Type Toggle Component
+interface TypeToggleProps {
+	value: MembershipPlanType;
+	onChange: (type: MembershipPlanType) => void;
+}
+
+const TypeToggle: React.FC<TypeToggleProps> = ({ value, onChange }) => {
+	return (
+		<Box bg="#F6F6F9" borderRadius="6px" p="4px" display="inline-flex">
+			<Button
+				bg={value === "free" ? "#475BB2" : "transparent"}
+				color={value === "free" ? "white" : "#6B7280"}
+				borderRadius="4px"
+				_hover={{
+					bg: value === "free" ? "#3A4B9C" : "transparent"
+				}}
+				_active={{
+					bg: value === "free" ? "#3A4B9C" : "transparent"
+				}}
+				onClick={() => onChange("free")}
+				px={6}
+				fontSize="14px"
+				fontWeight="500"
+				h="32px"
+				minW="70px"
+			>
+				{__("Free", "user-registration")}
+			</Button>
+			<Button
+				bg={value === "paid" ? "#475BB2" : "transparent"}
+				color={value === "paid" ? "white" : "#6B7280"}
+				borderRadius="4px"
+				_hover={{
+					bg: value === "paid" ? "#3A4B9C" : "transparent"
+				}}
+				_active={{
+					bg: value === "paid" ? "#3A4B9C" : "transparent"
+				}}
+				onClick={() => onChange("paid")}
+				px={6}
+				fontSize="14px"
+				fontWeight="500"
+				h="32px"
+				minW="70px"
+			>
+				{__("Paid", "user-registration")}
+			</Button>
 		</Box>
 	);
 };
@@ -392,63 +453,10 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 						<Text {...labelStyles}>
 							{__("Type :", "user-registration")}
 						</Text>
-						<ButtonGroup
-							size="sm"
-							isAttached
-							variant="outline"
-							borderRadius="4px"
-						>
-							<Button
-								bg={plan.type === "free" ? "#475BB2" : "white"}
-								color={
-									plan.type === "free" ? "white" : "#383838"
-								}
-								borderColor={
-									plan.type === "free"
-										? "#475BB2"
-										: "gray.200"
-								}
-								borderRadius="4px 0 0 4px"
-								_hover={{
-									bg:
-										plan.type === "free"
-											? "#3A4B9C"
-											: "gray.50"
-								}}
-								onClick={() => handleTypeChange("free")}
-								px={6}
-								fontSize="14px"
-								fontWeight="500"
-								h="36px"
-							>
-								{__("Free", "user-registration")}
-							</Button>
-							<Button
-								bg={plan.type === "paid" ? "#475BB2" : "white"}
-								color={
-									plan.type === "paid" ? "white" : "#383838"
-								}
-								borderColor={
-									plan.type === "paid"
-										? "#475BB2"
-										: "gray.200"
-								}
-								borderRadius="0 4px 4px 0"
-								_hover={{
-									bg:
-										plan.type === "paid"
-											? "#3A4B9C"
-											: "gray.50"
-								}}
-								onClick={() => handleTypeChange("paid")}
-								px={6}
-								fontSize="14px"
-								fontWeight="500"
-								h="36px"
-							>
-								{__("Paid", "user-registration")}
-							</Button>
-						</ButtonGroup>
+						<TypeToggle
+							value={plan.type}
+							onChange={handleTypeChange}
+						/>
 					</Flex>
 
 					{plan.type === "paid" && (

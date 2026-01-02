@@ -77,7 +77,7 @@ const getStepIdByDisplayNumber = (
 	return step ? step.id : "welcome";
 };
 
-const HEADER_HEIGHT = "73px";
+const HEADER_HEIGHT = "65px";
 
 const SetupWizard: React.FC = () => {
 	const { state, dispatch } = useStateValue();
@@ -277,7 +277,12 @@ const SetupWizard: React.FC = () => {
 			/>
 
 			<Box pt={HEADER_HEIGHT}>
-				<Flex justify="center" align="flex-start" px={4} py={10}>
+				<Flex
+					justify="center"
+					align="flex-start"
+					px={{ base: 3, md: 4 }}
+					py={{ base: 2, md: 3 }}
+				>
 					<Box
 						w="100%"
 						maxW="920px"
@@ -285,12 +290,18 @@ const SetupWizard: React.FC = () => {
 						borderWidth="1px"
 						borderColor="#F4F4F4"
 						borderRadius="8px"
-						p={8}
+						px={{ base: 4, md: 8 }}
+						py={{ base: 5, md: 6 }}
 						boxShadow="0 10px 15px -3px rgba(0, 0, 0, 0.06)"
 					>
-						<Box mb={isFinishStep ? 0 : 8}>{renderStep()}</Box>
+						<Box mb={isFinishStep ? 0 : 6}>{renderStep()}</Box>
 						{!isFinishStep && (
-							<Flex justify="space-between" align="center">
+							<Flex
+								justify="space-between"
+								align="center"
+								flexDir={{ base: "column-reverse", sm: "row" }}
+								gap={{ base: 4, sm: 0 }}
+							>
 								{/* Back Link */}
 								<Link
 									display="flex"
@@ -312,10 +323,10 @@ const SetupWizard: React.FC = () => {
 									opacity={currentStep === 1 ? 0.5 : 1}
 								>
 									<ArrowBackIcon mr={1} />
-									Back
+									{__("Back", "user-registration")}
 								</Link>
 
-								<Flex gap={4} align="center">
+								<Flex gap={{ base: 3, md: 4 }} align="center">
 									<Link
 										fontSize="sm"
 										color="#999999"
@@ -325,6 +336,7 @@ const SetupWizard: React.FC = () => {
 										}}
 										cursor="pointer"
 										onClick={handleSkip}
+										display={{ base: "none", sm: "block" }}
 									>
 										{__(
 											"Skip this step",
@@ -332,18 +344,19 @@ const SetupWizard: React.FC = () => {
 										)}
 									</Link>
 									<Button
-										bg="#475BD8"
+										bg="#475BB2"
 										color="white"
 										rightIcon={<ArrowForwardIcon />}
-										_hover={{ bg: "#3a4bc2" }}
-										_active={{ bg: "#2f3da6" }}
+										_hover={{ bg: "#475BB2" }}
+										_active={{ bg: "#475BB2" }}
 										onClick={handleNext}
 										isLoading={isLoading}
-										px={6}
+										px={{ base: 4, md: 6 }}
 										py={5}
 										borderRadius="4px"
+										fontSize={{ base: "sm", md: "md" }}
 									>
-										Next
+										{__("Next", "user-registration")}
 									</Button>
 								</Flex>
 							</Flex>

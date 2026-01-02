@@ -52,6 +52,12 @@ const InfoIcon: React.FC = () => (
 	</Icon>
 );
 
+// Consistent width for all labels
+const LABEL_WIDTH = "200px";
+// Nested labels are smaller to compensate for border offset (ml={1} + pl={4} = ~20px)
+const NESTED_LABEL_WIDTH = "180px";
+const CONTENT_FLEX = "1";
+
 interface PaymentOptionProps {
 	label: string;
 	isChecked: boolean;
@@ -66,7 +72,6 @@ const PaymentOption: React.FC<PaymentOptionProps> = ({
 	children
 }) => {
 	const textColor = useColorModeValue("gray.800", "white");
-	const subtextColor = useColorModeValue("gray.600", "gray.300");
 
 	return (
 		<Box>
@@ -75,35 +80,74 @@ const PaymentOption: React.FC<PaymentOptionProps> = ({
 					fontWeight="500"
 					color={textColor}
 					fontSize="sm"
-					minW="40%"
+					w={LABEL_WIDTH}
+					flexShrink={0}
 				>
 					{label}
 				</Text>
-				<Switch
-					isChecked={isChecked}
-					onChange={(e) => onChange(e.target.checked)}
-					colorScheme="blue"
-					size="sm"
-					sx={{
-						"& .chakra-switch__track[data-checked]": {
-							bg: "#475BB2"
-						}
-					}}
-				/>
+				<Box flex={CONTENT_FLEX}>
+					<Switch
+						isChecked={isChecked}
+						onChange={(e) => onChange(e.target.checked)}
+						colorScheme="blue"
+						size="sm"
+						sx={{
+							"& .chakra-switch__track[data-checked]": {
+								bg: "#475BB2"
+							}
+						}}
+					/>
+				</Box>
 			</Flex>
 			<Collapse in={isChecked && !!children} animateOpacity>
 				<Box
-					pl={4}
-					pb={5}
-					borderLeftWidth="2px"
-					borderLeftColor="gray.300"
+					pb={4}
 					ml={1}
-					mb={2}
+					pl={4}
+					borderLeftWidth="1px"
+					borderLeftColor="gray.300"
 				>
 					{children}
 				</Box>
 			</Collapse>
 		</Box>
+	);
+};
+
+interface FieldRowProps {
+	label: string;
+	tooltip?: string;
+	children: React.ReactNode;
+	alignItems?: string;
+	isNested?: boolean;
+}
+
+const FieldRow: React.FC<FieldRowProps> = ({
+	label,
+	tooltip,
+	children,
+	alignItems = "center",
+	isNested = true
+}) => {
+	const mutedColor = useColorModeValue("#383838", "gray.300");
+	const labelW = isNested ? NESTED_LABEL_WIDTH : LABEL_WIDTH;
+
+	return (
+		<Flex align={alignItems} py={2}>
+			<HStack spacing={1} w={labelW} flexShrink={0}>
+				<Text fontSize="sm" color={mutedColor}>
+					{label}
+				</Text>
+				{tooltip && (
+					<Tooltip label={tooltip} hasArrow>
+						<span>
+							<InfoIcon />
+						</span>
+					</Tooltip>
+				)}
+			</HStack>
+			<Box flex={CONTENT_FLEX}>{children}</Box>
+		</Flex>
 	);
 };
 
@@ -115,7 +159,6 @@ const PaymentStep: React.FC = () => {
 
 	const textColor = useColorModeValue("gray.800", "white");
 	const subtextColor = useColorModeValue("gray.600", "gray.300");
-	const mutedColor = useColorModeValue("#383838", "gray.300");
 	const inputBg = useColorModeValue("white", "gray.700");
 	const inputBorder = useColorModeValue("gray.300", "gray.600");
 
@@ -274,6 +317,16 @@ const PaymentStep: React.FC = () => {
 		});
 	};
 
+	const inputStyles = {
+		bg: inputBg,
+		borderColor: inputBorder,
+		fontSize: "sm",
+		_focus: {
+			borderColor: "#475BB2",
+			boxShadow: "0 0 0 1px #475BB2"
+		}
+	};
+
 	return (
 		<>
 			<Heading
@@ -291,46 +344,59 @@ const PaymentStep: React.FC = () => {
 
 			<Text fontSize="sm" color={subtextColor} mb={8}>
 				{__(
-					"Set up payment options for your membership plans. Choose currency and enable payment gateways . You can edit this anytime.",
+					"Set up payment options for your membership plans. Choose currency and enable payment gateways. You can edit this anytime.",
 					"user-registration"
 				)}
 			</Text>
 
-			<Flex justify="space-between" align="center" mb={2}>
-				<Text fontWeight="500" color={textColor} fontSize="sm">
+			{/* Currency Row */}
+			<Flex align="center" mb={2} py={2}>
+				<Text
+					fontWeight="500"
+					color={textColor}
+					fontSize="sm"
+					w={LABEL_WIDTH}
+					flexShrink={0}
+				>
 					{__("Currency", "user-registration")}
 				</Text>
-				{isLoadingSettings ? (
-					<Skeleton height="40px" width="60%" borderRadius="md" />
-				) : (
-					<Select
-						value={paymentSettings.currency || ""}
-						onChange={(e) =>
-							handlePaymentSettingChange(
-								"currency",
-								e.target.value
-							)
-						}
-						bg={inputBg}
-						borderColor={inputBorder}
-						fontSize="sm"
-						w="60%"
-						placeholder={__("Select currency", "user-registration")}
-						_focus={{
-							borderColor: "#475BB2",
-							boxShadow: "0 0 0 1px #475BB2"
-						}}
-					>
-						{currencies.map((currency) => (
-							<option key={currency.code} value={currency.code}>
-								{currency.name} ({currency.symbol})
-							</option>
-						))}
-					</Select>
-				)}
+				<Box flex={CONTENT_FLEX}>
+					{isLoadingSettings ? (
+						<Skeleton
+							height="40px"
+							width="100%"
+							borderRadius="md"
+						/>
+					) : (
+						<Select
+							value={paymentSettings.currency || ""}
+							onChange={(e) =>
+								handlePaymentSettingChange(
+									"currency",
+									e.target.value
+								)
+							}
+							{...inputStyles}
+							placeholder={__(
+								"Select currency",
+								"user-registration"
+							)}
+						>
+							{currencies.map((currency) => (
+								<option
+									key={currency.code}
+									value={currency.code}
+								>
+									{currency.name} ({currency.symbol})
+								</option>
+							))}
+						</Select>
+					)}
+				</Box>
 			</Flex>
 
 			<VStack spacing={0} align="stretch">
+				{/* Offline Payment */}
 				<PaymentOption
 					label={__("Offline Payment", "user-registration")}
 					isChecked={paymentSettings.offlinePayment}
@@ -338,23 +404,14 @@ const PaymentStep: React.FC = () => {
 						handlePaymentSettingChange("offlinePayment", checked)
 					}
 				>
-					<Flex align="flex-start" mt={3}>
-						<HStack spacing={1} minW="40%" flexShrink={0} pt={2}>
-							<Text fontSize="sm" color={mutedColor}>
-								{__("Bank Details", "user-registration")}
-							</Text>
-							<Tooltip
-								label={__(
-									"Enter your bank account details for offline payments",
-									"user-registration"
-								)}
-								hasArrow
-							>
-								<span>
-									<InfoIcon />
-								</span>
-							</Tooltip>
-						</HStack>
+					<FieldRow
+						label={__("Bank Details", "user-registration")}
+						tooltip={__(
+							"Enter your bank account details for offline payments",
+							"user-registration"
+						)}
+						alignItems="flex-start"
+					>
 						<Textarea
 							placeholder={__(
 								"Enter your bank account details here...",
@@ -367,19 +424,13 @@ const PaymentStep: React.FC = () => {
 									e.target.value
 								)
 							}
-							bg={inputBg}
-							borderColor={inputBorder}
+							{...inputStyles}
 							rows={3}
-							fontSize="sm"
-							flex="1"
-							_focus={{
-								borderColor: "#475BB2",
-								boxShadow: "0 0 0 1px #475BB2"
-							}}
 						/>
-					</Flex>
+					</FieldRow>
 				</PaymentOption>
 
+				{/* PayPal */}
 				<PaymentOption
 					label={__("Paypal", "user-registration")}
 					isChecked={paymentSettings.paypal}
@@ -387,24 +438,14 @@ const PaymentStep: React.FC = () => {
 						handlePaymentSettingChange("paypal", checked)
 					}
 				>
-					<VStack spacing={4} align="stretch" mt={3}>
-						<Flex align="center">
-							<HStack spacing={1} minW="40%" flexShrink={0}>
-								<Text fontSize="sm" color={mutedColor}>
-									{__("PayPal Email", "user-registration")}
-								</Text>
-								<Tooltip
-									label={__(
-										"Enter the email address associated with your PayPal account",
-										"user-registration"
-									)}
-									hasArrow
-								>
-									<span>
-										<InfoIcon />
-									</span>
-								</Tooltip>
-							</HStack>
+					<VStack spacing={0} align="stretch">
+						<FieldRow
+							label={__("PayPal Email", "user-registration")}
+							tooltip={__(
+								"Enter the email address associated with your PayPal account",
+								"user-registration"
+							)}
+						>
 							<Input
 								type="email"
 								placeholder={__(
@@ -418,34 +459,17 @@ const PaymentStep: React.FC = () => {
 										e.target.value
 									)
 								}
-								bg={inputBg}
-								borderColor={inputBorder}
-								fontSize="sm"
-								flex="1"
-								_focus={{
-									borderColor: "#475BB2",
-									boxShadow: "0 0 0 1px #475BB2"
-								}}
+								{...inputStyles}
 							/>
-						</Flex>
+						</FieldRow>
 
-						<Flex align="center">
-							<HStack spacing={1} minW="40%" flexShrink={0}>
-								<Text fontSize="sm" color={mutedColor}>
-									{__("Client ID", "user-registration")}
-								</Text>
-								<Tooltip
-									label={__(
-										"Your client_id, Required for subscription related operations.",
-										"user-registration"
-									)}
-									hasArrow
-								>
-									<span>
-										<InfoIcon />
-									</span>
-								</Tooltip>
-							</HStack>
+						<FieldRow
+							label={__("Client ID", "user-registration")}
+							tooltip={__(
+								"Your client_id, Required for subscription related operations.",
+								"user-registration"
+							)}
+						>
 							<Input
 								type="text"
 								placeholder=""
@@ -456,34 +480,17 @@ const PaymentStep: React.FC = () => {
 										e.target.value
 									)
 								}
-								bg={inputBg}
-								borderColor={inputBorder}
-								fontSize="sm"
-								flex="1"
-								_focus={{
-									borderColor: "#475BB2",
-									boxShadow: "0 0 0 1px #475BB2"
-								}}
+								{...inputStyles}
 							/>
-						</Flex>
+						</FieldRow>
 
-						<Flex align="center">
-							<HStack spacing={1} minW="40%" flexShrink={0}>
-								<Text fontSize="sm" color={mutedColor}>
-									{__("Client Secret", "user-registration")}
-								</Text>
-								<Tooltip
-									label={__(
-										"Your client_secret, Required for subscription related operations",
-										"user-registration"
-									)}
-									hasArrow
-								>
-									<span>
-										<InfoIcon />
-									</span>
-								</Tooltip>
-							</HStack>
+						<FieldRow
+							label={__("Client Secret", "user-registration")}
+							tooltip={__(
+								"Your client_secret, Required for subscription related operations",
+								"user-registration"
+							)}
+						>
 							<Input
 								type="password"
 								placeholder=""
@@ -494,19 +501,13 @@ const PaymentStep: React.FC = () => {
 										e.target.value
 									)
 								}
-								bg={inputBg}
-								borderColor={inputBorder}
-								fontSize="sm"
-								flex="1"
-								_focus={{
-									borderColor: "#475BB2",
-									boxShadow: "0 0 0 1px #475BB2"
-								}}
+								{...inputStyles}
 							/>
-						</Flex>
+						</FieldRow>
 					</VStack>
 				</PaymentOption>
 
+				{/* Stripe */}
 				<PaymentOption
 					label={__("Stripe", "user-registration")}
 					isChecked={paymentSettings.stripe}
@@ -514,27 +515,14 @@ const PaymentStep: React.FC = () => {
 						handlePaymentSettingChange("stripe", checked)
 					}
 				>
-					<VStack spacing={4} align="stretch" mt={3}>
-						<Flex align="center">
-							<HStack spacing={1} minW="40%" flexShrink={0}>
-								<Text fontSize="sm" color={mutedColor}>
-									{__(
-										"Enable Test Mode",
-										"user-registration"
-									)}
-								</Text>
-								<Tooltip
-									label={__(
-										"Enable test mode to use Stripe's test environment",
-										"user-registration"
-									)}
-									hasArrow
-								>
-									<span>
-										<InfoIcon />
-									</span>
-								</Tooltip>
-							</HStack>
+					<VStack spacing={0} align="stretch">
+						<FieldRow
+							label={__("Enable Test Mode", "user-registration")}
+							tooltip={__(
+								"Enable test mode to use Stripe's test environment",
+								"user-registration"
+							)}
+						>
 							<Switch
 								isChecked={
 									paymentSettings.stripeTestMode || false
@@ -553,34 +541,20 @@ const PaymentStep: React.FC = () => {
 									}
 								}}
 							/>
-						</Flex>
+						</FieldRow>
 
 						{paymentSettings.stripeTestMode ? (
 							<>
-								<Flex align="center">
-									<HStack
-										spacing={1}
-										minW="40%"
-										flexShrink={0}
-									>
-										<Text fontSize="sm" color={mutedColor}>
-											{__(
-												"Test Publishable Key",
-												"user-registration"
-											)}
-										</Text>
-										<Tooltip
-											label={__(
-												"Your Stripe test publishable key (starts with pk_test_)",
-												"user-registration"
-											)}
-											hasArrow
-										>
-											<span>
-												<InfoIcon />
-											</span>
-										</Tooltip>
-									</HStack>
+								<FieldRow
+									label={__(
+										"Test Publishable Key",
+										"user-registration"
+									)}
+									tooltip={__(
+										"Your Stripe test publishable key (starts with pk_test_)",
+										"user-registration"
+									)}
+								>
 									<Input
 										type="text"
 										placeholder="pk_test_..."
@@ -594,41 +568,20 @@ const PaymentStep: React.FC = () => {
 												e.target.value
 											)
 										}
-										bg={inputBg}
-										borderColor={inputBorder}
-										fontSize="sm"
-										flex="1"
-										_focus={{
-											borderColor: "#475BB2",
-											boxShadow: "0 0 0 1px #475BB2"
-										}}
+										{...inputStyles}
 									/>
-								</Flex>
+								</FieldRow>
 
-								<Flex align="center">
-									<HStack
-										spacing={1}
-										minW="40%"
-										flexShrink={0}
-									>
-										<Text fontSize="sm" color={mutedColor}>
-											{__(
-												"Test Secret Key",
-												"user-registration"
-											)}
-										</Text>
-										<Tooltip
-											label={__(
-												"Your Stripe test secret key (starts with sk_test_)",
-												"user-registration"
-											)}
-											hasArrow
-										>
-											<span>
-												<InfoIcon />
-											</span>
-										</Tooltip>
-									</HStack>
+								<FieldRow
+									label={__(
+										"Test Secret Key",
+										"user-registration"
+									)}
+									tooltip={__(
+										"Your Stripe test secret key (starts with sk_test_)",
+										"user-registration"
+									)}
+								>
 									<Input
 										type="password"
 										placeholder="sk_test_..."
@@ -642,43 +595,22 @@ const PaymentStep: React.FC = () => {
 												e.target.value
 											)
 										}
-										bg={inputBg}
-										borderColor={inputBorder}
-										fontSize="sm"
-										flex="1"
-										_focus={{
-											borderColor: "#475BB2",
-											boxShadow: "0 0 0 1px #475BB2"
-										}}
+										{...inputStyles}
 									/>
-								</Flex>
+								</FieldRow>
 							</>
 						) : (
 							<>
-								<Flex align="center">
-									<HStack
-										spacing={1}
-										minW="40%"
-										flexShrink={0}
-									>
-										<Text fontSize="sm" color={mutedColor}>
-											{__(
-												"Live Publishable Key",
-												"user-registration"
-											)}
-										</Text>
-										<Tooltip
-											label={__(
-												"Your Stripe live publishable key (starts with pk_live_)",
-												"user-registration"
-											)}
-											hasArrow
-										>
-											<span>
-												<InfoIcon />
-											</span>
-										</Tooltip>
-									</HStack>
+								<FieldRow
+									label={__(
+										"Live Publishable Key",
+										"user-registration"
+									)}
+									tooltip={__(
+										"Your Stripe live publishable key (starts with pk_live_)",
+										"user-registration"
+									)}
+								>
 									<Input
 										type="text"
 										placeholder="pk_live_..."
@@ -692,41 +624,20 @@ const PaymentStep: React.FC = () => {
 												e.target.value
 											)
 										}
-										bg={inputBg}
-										borderColor={inputBorder}
-										fontSize="sm"
-										flex="1"
-										_focus={{
-											borderColor: "#475BB2",
-											boxShadow: "0 0 0 1px #475BB2"
-										}}
+										{...inputStyles}
 									/>
-								</Flex>
+								</FieldRow>
 
-								<Flex align="center">
-									<HStack
-										spacing={1}
-										minW="40%"
-										flexShrink={0}
-									>
-										<Text fontSize="sm" color={mutedColor}>
-											{__(
-												"Live Secret Key",
-												"user-registration"
-											)}
-										</Text>
-										<Tooltip
-											label={__(
-												"Your Stripe live secret key (starts with sk_live_)",
-												"user-registration"
-											)}
-											hasArrow
-										>
-											<span>
-												<InfoIcon />
-											</span>
-										</Tooltip>
-									</HStack>
+								<FieldRow
+									label={__(
+										"Live Secret Key",
+										"user-registration"
+									)}
+									tooltip={__(
+										"Your Stripe live secret key (starts with sk_live_)",
+										"user-registration"
+									)}
+								>
 									<Input
 										type="password"
 										placeholder="sk_live_..."
@@ -740,16 +651,9 @@ const PaymentStep: React.FC = () => {
 												e.target.value
 											)
 										}
-										bg={inputBg}
-										borderColor={inputBorder}
-										fontSize="sm"
-										flex="1"
-										_focus={{
-											borderColor: "#475BB2",
-											boxShadow: "0 0 0 1px #475BB2"
-										}}
+										{...inputStyles}
 									/>
-								</Flex>
+								</FieldRow>
 							</>
 						)}
 					</VStack>
