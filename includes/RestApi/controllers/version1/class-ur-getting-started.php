@@ -708,8 +708,31 @@ class UR_Getting_Started {
 			'pages' => self::get_available_pages(),
 		);
 
+		$default_type = 'paid_membership' === $membership_type ? 'one-time' : 'free';
 
-		$default_type = 'paid_membership' === $membership_type ? 'paid' : 'free';
+
+		$currencies_raw = array();
+		if ( function_exists( 'ur_payment_integration_get_currencies' ) ) {
+			$currencies_raw = ur_payment_integration_get_currencies();
+		}
+
+		$currencies = array();
+		$currency_symbol = '$';
+		$selected_currency = get_option( 'user_registration_payment_currency', 'USD' );
+
+		foreach ( $currencies_raw as $code => $currency_data ) {
+			$symbol = html_entity_decode( $currency_data['symbol'], ENT_QUOTES, 'UTF-8' );
+			$currencies[] = array(
+				'code'   => $code,
+				'name'   => $currency_data['name'],
+				'symbol' => $symbol,
+			);
+
+
+			if ( $code === $selected_currency ) {
+				$currency_symbol = $symbol;
+			}
+		}
 
 		return new \WP_REST_Response(
 			array(
@@ -719,6 +742,9 @@ class UR_Getting_Started {
 				'membership_type'   => $membership_type,
 				'default_plan_type' => $default_type,
 				'can_create_paid'   => 'paid_membership' === $membership_type,
+				'currency'          => $selected_currency,
+				'currency_symbol'   => $currency_symbol,
+				'currencies'        => $currencies,
 			),
 			200
 		);
@@ -792,7 +818,10 @@ class UR_Getting_Started {
 			);
 		}
 
-		$allowed_type = ( 'paid_membership' === $membership_type ) ? array( 'free', 'paid' ) : array( 'free' );
+
+		$allowed_types = ( 'paid_membership' === $membership_type )
+			? array( 'free', 'one-time', 'subscription' )
+			: array( 'free' );
 
 		$results = array(
 			'created' => array(),
@@ -803,14 +832,14 @@ class UR_Getting_Started {
 		foreach ( $memberships as $index => $membership ) {
 			$plan_type = isset( $membership['type'] ) ? sanitize_text_field( $membership['type'] ) : 'free';
 
-			if ( ! in_array( $plan_type, $allowed_type, true ) ) {
+			if ( ! in_array( $plan_type, $allowed_types, true ) ) {
 				$results['errors'][] = array(
 					'index'   => $index,
 					'name'    => isset( $membership['name'] ) ? $membership['name'] : '',
 					'message' => sprintf(
 						__( 'Invalid membership type: %s. Only %s memberships are allowed based on your selection.', 'user-registration' ),
 						$plan_type,
-						implode( ' or ', $allowed_type )
+						implode( ' or ', $allowed_types )
 					),
 				);
 				continue;
@@ -875,9 +904,10 @@ class UR_Getting_Started {
 			);
 		}
 
-		$type_input = ! empty( $membership['type'] ) ? sanitize_text_field( $membership['type'] ) : 'free';
-		$billing    = ! empty( $membership['billing_period'] ) ? sanitize_text_field( $membership['billing_period'] ) : '';
-		$amount     = isset( $membership['price'] ) ? floatval( $membership['price'] ) : 0;
+		$type_input        = ! empty( $membership['type'] ) ? sanitize_text_field( $membership['type'] ) : 'free';
+		$billing_cycle     = ! empty( $membership['billing_cycle'] ) ? sanitize_text_field( $membership['billing_cycle'] ) : 'month';
+		$billing_count     = ! empty( $membership['billing_cycle_count'] ) ? absint( $membership['billing_cycle_count'] ) : 1;
+		$amount            = isset( $membership['price'] ) ? floatval( $membership['price'] ) : 0;
 
 		$meta = array(
 			'payment_gateways' => array(),
@@ -886,23 +916,14 @@ class UR_Getting_Started {
 
 		if ( 'free' === $type_input ) {
 			$meta['type'] = 'free';
-		} elseif ( 'paid' === $type_input ) {
-			if ( in_array( $billing, array( 'weekly', 'monthly', 'yearly' ), true ) ) {
-				$meta['type'] = 'subscription';
-
-				$duration_map = array(
-					'weekly'  => 'week',
-					'monthly' => 'month',
-					'yearly'  => 'year',
-				);
-
-				$meta['subscription'] = array(
-					'value'    => 1,
-					'duration' => $duration_map[ $billing ],
-				);
-			} else {
-				$meta['type'] = 'paid';
-			}
+		} elseif ( 'one-time' === $type_input ) {
+			$meta['type'] = 'paid';
+		} elseif ( 'subscription' === $type_input ) {
+			$meta['type'] = 'subscription';
+			$meta['subscription'] = array(
+				'value'    => $billing_count,
+				'duration' => $billing_cycle,
+			);
 		} else {
 			$meta['type'] = 'free';
 		}
@@ -1190,20 +1211,19 @@ class UR_Getting_Started {
 			$meta_subscription = get_post_meta( $membership_id, 'urm_subscription', true );
 			$access_rules      = get_post_meta( $membership_id, '_ur_membership_access_rules', true );
 
+
 			$plan_type = 'free';
-			if ( in_array( $meta_type, array( 'paid', 'subscription' ), true ) ) {
-				$plan_type = 'paid';
+			if ( 'paid' === $meta_type ) {
+				$plan_type = 'one-time';
+			} elseif ( 'subscription' === $meta_type ) {
+				$plan_type = 'subscription';
 			}
 
-			$billing_period = 'one-time';
+			$billing_cycle = 'month';
+			$billing_cycle_count = '';
 			if ( 'subscription' === $meta_type && ! empty( $meta_subscription ) ) {
-				$duration     = isset( $meta_subscription['duration'] ) ? $meta_subscription['duration'] : '';
-				$duration_map = array(
-					'week'  => 'weekly',
-					'month' => 'monthly',
-					'year'  => 'yearly',
-				);
-				$billing_period = isset( $duration_map[ $duration ] ) ? $duration_map[ $duration ] : 'monthly';
+				$billing_cycle = isset( $meta_subscription['duration'] ) ? $meta_subscription['duration'] : 'month';
+				$billing_cycle_count = isset( $meta_subscription['value'] ) ? strval( $meta_subscription['value'] ) : '1';
 			}
 
 			$content_access = array();
@@ -1233,13 +1253,14 @@ class UR_Getting_Started {
 			}
 
 			$memberships[] = array(
-				'id'            => $membership_id,
-				'name'          => $post->post_title,
-				'type'          => $plan_type,
-				'price'         => ! empty( $meta_amount ) ? strval( $meta_amount ) : '',
-				'billingPeriod' => $billing_period,
-				'contentAccess' => $content_access,
-				'isNew'         => false,
+				'id'                => $membership_id,
+				'name'              => $post->post_title,
+				'type'              => $plan_type,
+				'price'             => ! empty( $meta_amount ) ? strval( $meta_amount ) : '',
+				'billingCycle'      => $billing_cycle,
+				'billingCycleCount' => $billing_cycle_count,
+				'contentAccess'     => $content_access,
+				'isNew'             => false,
 			);
 		}
 
