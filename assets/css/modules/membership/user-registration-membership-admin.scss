@@ -778,6 +778,11 @@
 							align-items: center;
 							padding: 0 !important;
 
+							@media screen and (max-width: 992px) {
+								flex-direction: column;
+								align-items: flex-start !important;
+							}
+
 							.ur-label {
 								margin-bottom: 0;
 
@@ -1272,10 +1277,10 @@
 				}
 			}
 
-			.wp-list-table{
-				tbody{
-					tr{
-						td{
+			.wp-list-table {
+				tbody {
+					tr {
+						td {
 							&.status {
 								.ur-toggle-section {
 									.user-registration-toggle-form {
@@ -1291,11 +1296,14 @@
 								}
 							}
 						}
+
 						&:nth-child(odd) {
 							background: #F8F8FA;
 						}
+
 						&.no-items {
 							background: #ffffff;
+
 							td {
 								padding: 0;
 
@@ -2084,11 +2092,11 @@
 
 			}
 
-			tbody{
-				tr{
-					td{
-						&.shortcode{
-							.urm-shortcode{
+			tbody {
+				tr {
+					td {
+						&.shortcode {
+							.urm-shortcode {
 								width: 70%;
 							}
 						}
@@ -2107,11 +2115,11 @@
 		}
 	}
 
-	#ur-membership-group-create-form{
+	#ur-membership-group-create-form {
 		.ur-input-type-membership-group-name {
-			.select2-container--default{
-				.select2-selection--multiple{
-					.select2-search__field{
+			.select2-container--default {
+				.select2-selection--multiple {
+					.select2-search__field {
 						width: 100% !important;
 					}
 

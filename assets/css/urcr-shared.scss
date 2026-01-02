@@ -582,6 +582,18 @@ $border-color_6: #475bb2;
 			}
 		}
 
+		&.urcr-label-input-pair.urcr-rule-action {
+			align-items: flex-start !important;
+
+			@media screen and (max-width: 992px) {
+				flex-direction: column;
+			}
+
+			.urcr-label-container {
+				margin-top: 10px;
+			}
+		}
+
 		// Ensure label and body containers work correctly
 		.urcr-label-container {
 			// flex: 0 0 38% !important;
@@ -592,14 +604,73 @@ $border-color_6: #475bb2;
 
 		.urcr-body,
 		.urcr-input-container {
-			flex: 1 !important;
+			flex: 1;
+
+			.urcr-checkbox-radio-group {
+				gap: 20px;
+
+				@media screen and (max-width: 600px) {
+					flex-direction: column;
+				}
+
+				.urcr-checkbox-radio-option {
+					display: flex;
+					align-items: flex-start;
+					gap: 8px;
+					max-width: 100%;
+					width: 100%;
+					padding: 16px;
+					margin-bottom: 0;
+
+					@media screen and (min-width: 601px) {
+						max-width: 350px;
+					}
+
+					.urcr-checkbox-radio {
+						&--content {
+							display: flex;
+							flex-direction: column;
+							gap: 4px;
+
+							.urcr-checkbox-radio-label {
+								font-size: 15px;
+								line-height: 23px;
+							}
+						}
+
+						&--desc {
+							font-size: 13px;
+							line-height: 18px;
+							font-weight: 400;
+							color: #6b7280;
+						}
+					}
+
+					.urcr-checkbox-radio-input {
+						margin-right: 0;
+						margin-top: 3px;
+					}
+				}
+			}
 		}
 	}
 
 	// Ensure title-body-pair maintains horizontal layout even with ur-form-group
-	.urcr-title-body-pair.ur-form-group {
-		display: flex !important;
-		align-items: flex-start;
+	.urcr-title-body-pair {
+		&.ur-form-group {
+			display: flex !important;
+			align-items: flex-start;
+		}
+
+		&.urcrra-message-input-container {
+			@media screen and (max-width: 992px) {
+				.urcr-label-container {
+					&:has(.urcr-target-content-label:empty) {
+						display: none !important;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -683,6 +754,7 @@ $border-color_6: #475bb2;
 		justify-content: space-between !important;
 		gap: 10px;
 		width: 100%;
+
 		.button {
 			&[data-editor="urcr-membership-action-message"] {
 				display: flex;

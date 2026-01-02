@@ -227,9 +227,10 @@ const ContentAccessRules = () => {
 					<div className="user-registration-card ur-text-center urcr-no-rules">
 						<img
 							src={`${assetsURL || ""}images/empty-table.png`}
-							alt={__("No rules found", "user-registration")}
-							style={{maxWidth: "100%", height: "auto", margin: "20px 0"}}
+							alt={__("No rules found", "user-registration")}							
 						/>
+						<h3 className="urcr-no-rules--title">You don't have any custom content rules.</h3>
+						<button className="button-primary">Add New</button>
 					</div>
 				) : (
 					<div className="urcr-rules-list">

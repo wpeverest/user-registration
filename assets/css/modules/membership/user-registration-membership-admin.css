@@ -886,6 +886,13 @@
   align-items: center;
   padding: 0 !important;
 }
+@media screen and (max-width: 992px) {
+  .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container,
+  .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+}
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-label,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-label {
   margin-bottom: 0;

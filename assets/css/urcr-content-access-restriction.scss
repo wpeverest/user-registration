@@ -164,6 +164,18 @@ $border-left-color_3: #0073aa;
 			flex-direction: column;
 			gap: 24px;
 		}
+
+		.urcr-no-rules {
+			border-radius: 13px;
+			border: 1px solid #e1e1e1;
+
+			img {
+				max-width: 320px;
+				width: 100%;
+				height: auto;
+				margin: 0;
+			}
+		}
 	}
 }
 
@@ -2028,7 +2040,7 @@ $not-tag: #fcdddd;
 
 	&:hover {
 		border-color: #475bb2;
-		background: #f6f7f7;
+		// background: #f6f7f7;
 	}
 
 	&.is-checked {
@@ -2046,8 +2058,8 @@ $not-tag: #fcdddd;
 	margin: 0;
 	margin-right: 8px;
 	cursor: pointer;
-	width: 1rem!important;
-	height: 1rem!important;
+	width: 1rem !important;
+	height: 1rem !important;
 	accent-color: #475bb2;
 }
 
@@ -2354,6 +2366,10 @@ $not-tag: #fcdddd;
 			width: 100%;
 			gap: 24px;
 			box-sizing: border-box;
+
+			&:empty {
+				display: none;
+			}
 
 			.urcr-target-item {
 				position: relative;
