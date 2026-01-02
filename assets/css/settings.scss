@@ -2223,13 +2223,14 @@ body {
 		transition: transform 0.4s ease-in-out;
 		transform: translateX(-200%);
 		z-index: 2;
-		top: 106px;
+		top: 92px;
 		bottom: 0;
 
 		&--nav {
 			// max-height: calc(100vh - 194px);
 			overflow-x: hidden;
 			overflow-y: scroll;
+			height: 80%;
 		}
 	}
 
@@ -2242,5 +2243,11 @@ body {
 
 	.user-registration-options-header__burger {
 		display: inline-block;
+	}
+}
+
+@media screen and (max-width: 782px) {
+	.user-registration-header {
+		top: 106px;
 	}
 }
