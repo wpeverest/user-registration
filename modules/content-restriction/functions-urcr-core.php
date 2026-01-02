@@ -1182,9 +1182,15 @@ function urcr_migrate_post_page_restrictions() {
 		WHERE pm.meta_key = %s
 			AND pm.meta_value = %s
 			AND p.post_type IN ('post', 'page')
-			AND p.post_status = 'publish'",
+			AND p.post_status = 'publish'
+			AND p.ID NOT IN (
+				SELECT DISTINCT pm2.post_id
+				FROM {$wpdb->postmeta} pm2
+				WHERE pm2.meta_key = %s
+			)",
 		'urcr_meta_checkbox',
-		'on'
+		'on',
+		'urcr_meta_override_global_settings'
 	);
 
 	$results = $wpdb->get_results( $query );
