@@ -1174,7 +1174,7 @@ class UR_Getting_Started {
 			$access_rule_data['target_contents'][] = array(
 				'id'    => $mkid( 'target_' . $type ),
 				'type'  => $cr_type,
-				'value' => $values,
+				'value' => array_map( 'strval', $values ),
 			);
 		}
 
