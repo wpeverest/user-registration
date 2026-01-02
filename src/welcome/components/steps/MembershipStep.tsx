@@ -875,7 +875,7 @@ const MembershipStep: React.FC = () => {
 							type: m.type || "free",
 							price: m.price || "",
 							billingCycle: m.billingCycle || "month",
-							billingCycleCount: m.billingCycleCount || "1",
+							billingCycleCount: m.billingCycleCount || "",
 							contentAccess: m.contentAccess || [],
 							isNew: false
 						})
