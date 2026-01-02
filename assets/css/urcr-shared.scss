@@ -663,30 +663,33 @@ $border-color_6: #475bb2;
 		width: 100%;
 	}
 
-	.wp-editor-wrap {
-		.wp-media-buttons {
-			display: flex;
-			align-items: center;
-			gap: 10px;
+	.wp-media-buttons {
+		display: flex !important;
+		align-items: center;
+		justify-content: space-between !important;
+		gap: 10px;
+		width: 100%;
+		.button {
+			&[data-editor="urcr-membership-action-message"] {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				margin: 0;
 
-			.button {
-				&[data-editor="urcr-membership-action-message"] {
-					display: flex;
-					align-items: center;
-					gap: 6px;
+				.wp-media-buttons-icon {
 					margin: 0;
+				}
 
-					.wp-media-buttons-icon {
-						margin: 0;
-					}
-
-					.dashicons {
-						&::before {
-							line-height: 22px;
-						}
+				.dashicons {
+					&::before {
+						line-height: 22px;
 					}
 				}
 			}
+		}
+
+		#ur-smart-tags-selector {
+			margin-left: auto;
 		}
 	}
 
@@ -696,6 +699,124 @@ $border-color_6: #475bb2;
 	input[type="url"].urcr-input,
 	input[type="text"].urcr-input {
 		width: 100%;
+	}
+}
+
+// Higher specificity to ensure styles apply
+.wp-media-buttons {
+	display: flex !important;
+	justify-content: flex-end !important;
+
+	.urcr-smart-tags-button-wrapper {
+		position: relative !important;
+		display: inline-block !important;
+		margin-left: auto !important;
+	}
+}
+
+.urcr-smart-tags-button-wrapper {
+	position: relative !important;
+	display: inline-block !important;
+	margin-left: auto !important;
+
+	.urcr-smart-tags-button {
+		display: inline-flex !important;
+		align-items: center !important;
+		gap: 4px;
+		padding: 6px 12px !important;
+		background: transparent !important;
+		border: none !important;
+		color: #6b6b6b !important;
+		font-size: 14px !important;
+		cursor: pointer !important;
+		text-decoration: underline !important;
+		transition: color 0.15s ease;
+
+		&:hover {
+			color: #475bb2;
+		}
+	}
+
+	.urcr-smart-tags-dropdown {
+		position: absolute;
+		top: 100%;
+		right: 0;
+		margin-top: 5px;
+		width: 180px;
+		background: #fff;
+		border: 1px solid #d1d5db;
+		border-radius: 4px;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+		z-index: 10000;
+		overflow: hidden;
+
+		.urcr-smart-tags-dropdown-title {
+			padding: 6px 8px;
+			background-color: #f4f4f4;
+			border-bottom: 1px solid #ccc;
+
+			p {
+				margin: 0;
+				font-size: 13px;
+				font-weight: 600;
+				color: #383838;
+			}
+		}
+
+		.urcr-smart-tags-search {
+			position: relative;
+			padding: 8px;
+			border-bottom: 1px solid #ccc;
+
+			.urcr-smart-tags-search-icon {
+				position: absolute;
+				left: 12px;
+				top: 14px;
+				color: #999;
+			}
+
+			input {
+				width: 100%;
+				padding: 6px 29px;
+				border: 1px solid #d1d5db;
+				border-radius: 4px;
+				font-size: 13px;
+			}
+		}
+
+		.urcr-smart-tags-list {
+			max-height: 250px;
+			overflow-y: auto;
+
+			.urcr-smart-tags-item {
+				display: block;
+				width: 100%;
+				padding: 8px 12px;
+				text-align: left;
+				border: none;
+				background: transparent;
+				cursor: pointer;
+				font-size: 13px;
+				color: #383838;
+				transition:
+					background-color 0.15s ease,
+					color 0.15s ease;
+				margin: 0;
+				margin-left: 0 !important;
+
+				&:hover {
+					background-color: #f8f8fa;
+					color: #475bb2;
+				}
+			}
+
+			.urcr-smart-tags-empty {
+				padding: 12px;
+				text-align: center;
+				color: #8c8f94;
+				font-size: 13px;
+			}
+		}
 	}
 }
 

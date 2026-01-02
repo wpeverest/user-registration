@@ -369,6 +369,23 @@
 				var actionType = $(this).val() || 'message';
 				self.handleActionTypeChange(actionType);
 			});
+
+			$(document).on('change', 'input[name="urcr-membership-message-type"]', function () {
+				var messageType = $(this).val();
+				var $messageContainer = $('.urcrra-message-input-container');
+				var $radioOptions = $('input[name="urcr-membership-message-type"]').closest('.urcr-checkbox-radio-option');
+
+				$radioOptions.removeClass('is-checked');
+				$(this).closest('.urcr-checkbox-radio-option').addClass('is-checked');
+
+				if (messageType === 'global') {
+					$messageContainer.removeClass('ur-d-flex').addClass('ur-d-none');
+					$messageContainer.hide();
+				} else if (messageType === 'custom') {
+					$messageContainer.removeClass('ur-d-none').addClass('ur-d-flex');
+					$messageContainer.show();
+				}
+			});
 		},
 
 		addCondition: function (type, isLocked, value, conditionId) {
@@ -1383,8 +1400,6 @@
 				rule_type: 'membership',
 				membership_id: self.membershipId
 			};
-			console.log(actions)
-
 			$('#urcr-membership-access-rule-data').val(JSON.stringify(ruleData));
 
 			window.urcrMembershipAccessRuleData = ruleData;
@@ -1409,6 +1424,24 @@
 
 				var currentType = $actionTypeSelect.val() || 'message';
 				self.handleActionTypeChange(currentType);
+			}
+
+			var $messageTypeRadio = $('input[name="urcr-membership-message-type"]');
+			if ($messageTypeRadio.length) {
+				var $checkedRadio = $messageTypeRadio.filter(':checked');
+				
+				if (!$checkedRadio.length) {
+					$messageTypeRadio.filter('[value="global"]').prop('checked', true);
+					$checkedRadio = $messageTypeRadio.filter('[value="global"]');
+				}
+				
+				$checkedRadio.trigger('change');
+			} else {
+				var $messageContainer = $('.urcrra-message-input-container');
+				if ($messageContainer.length) {
+					$messageContainer.removeClass('ur-d-flex').addClass('ur-d-none');
+					$messageContainer.hide();
+				}
 			}
 		},
 
@@ -1464,13 +1497,25 @@
 			switch (actionType) {
 				case 'message':
 					actionData.label = 'Show Message';
+					var $messageTypeRadio = $('input[name="urcr-membership-message-type"]:checked');
+					var messageType = $messageTypeRadio.length ? $messageTypeRadio.val() : 'global';
 					var message = '';
-					if (typeof wp !== 'undefined' && wp.editor && $('#urcr-membership-action-message').length) {
-						message = wp.editor.getContent('urcr-membership-action-message');
+					
+					if (messageType === 'global') {
+						message = '';
 					} else {
-						message = $('#urcr-membership-action-message').val() || '';
+						if (typeof wp !== 'undefined' && wp.editor && $('#urcr-membership-action-message').length) {
+							var editor = window.tinymce && window.tinymce.get('urcr-membership-action-message');
+							if (editor) {
+								message = editor.getContent();
+							} else {
+								message = wp.editor.getContent('urcr-membership-action-message');
+							}
+						} else {
+							message = $('#urcr-membership-action-message').val() || '';
+						}
 					}
-					actionData.message = message || '<p>You do not have sufficient permission to access this content.</p>';
+					actionData.message = message ? encodeURIComponent(message) : '';
 					actionData.redirect_url = '';
 					actionData.local_page = '';
 					actionData.ur_form = '';
@@ -1523,7 +1568,7 @@
 				id: 'x' + Date.now(),
 				type: 'message',
 				label: 'Show Message',
-				message: '<p>You do not have sufficient permission to access this content.</p>',
+				message: '<h3>Membership Required</h3>\n<p>This content is available to members only.</p>\n<p>Sign up to unlock access or log in if you already have an account.</p>\n<p>{{log_in}} {{sign_up}}</p>',
 				redirect_url: '',
 				access_control: this.accessControl,
 				local_page: '',

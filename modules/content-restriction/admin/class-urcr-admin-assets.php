@@ -49,6 +49,8 @@ class URCR_Admin_Assets {
 		);
 
 		if ( 'user-registration-content-restriction' === $this->current_page ) {
+			// Enqueue media scripts for media button functionality
+			wp_enqueue_media();
 			wp_enqueue_script( 'urcr-content-access-rule-creator' );
 		}
 	}
@@ -61,7 +63,7 @@ class URCR_Admin_Assets {
 		 * Third party style scripts.
 		 */
 		if ( function_exists( 'UR' ) ) {
-			wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', '4.5.1' );
+			wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', array(), '4.5.1' );
 		}
 
 		/**
@@ -69,7 +71,7 @@ class URCR_Admin_Assets {
 		 */
 
 		if ( function_exists( 'UR' ) ) {
-			wp_register_style( 'ur-core-builder-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR_VERSION );
+			wp_register_style( 'ur-core-builder-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR()->version );
 		}
 
 		if ( 'user-registration-content-restriction' === $this->current_page ) {
@@ -78,11 +80,21 @@ class URCR_Admin_Assets {
 			wp_enqueue_style( 'flatpickr' );
 			wp_enqueue_style( 'urcr-content-access-rule-creator' );
 			wp_enqueue_style( 'ur-core-builder-style' );
+
+			// Enqueue shared content restriction styles
+			wp_register_style(
+				'urcr-shared',
+				UR()->plugin_url() . '/assets/css/urcr-shared.css',
+				array(),
+				UR()->version
+			);
+			wp_enqueue_style( 'urcr-shared' );
+
 			// React viewer mode - only load viewer styles
 			wp_register_style(
 				'urcr-content-access-restriction',
 				UR()->plugin_url() . '/assets/css/urcr-content-access-restriction.css',
-				array(),
+				array( 'urcr-shared' ),
 				'1.0.0'
 			);
 			wp_enqueue_style( 'urcr-content-access-restriction' );
@@ -206,7 +218,8 @@ class URCR_Admin_Assets {
 
 		if ( ( ( function_exists( 'ur_check_module_activation' ) ) && ur_check_module_activation( 'membership' ) ) ) {
 			$membership_repository = new MembershipRepository();
-			$memberships           = $membership_repository->get_all_membership();
+			$memberships           = $membership_repository->get_all_memberships_without_status_filter();
+
 			array_map(
 				function ( $membership ) use ( &$formatted_memberships ) {
 					$formatted_memberships[ $membership['ID'] ] = $membership['post_title'];
@@ -357,12 +370,34 @@ class URCR_Admin_Assets {
 		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'membership' ) ) {
 			$is_membership_module_enabled = true;
 			if ( class_exists( '\WPEverest\URMembership\Admin\Services\MembershipService' ) ) {
-				$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
-				$memberships = $membership_service->list_active_memberships();
+				$membership_repository = new MembershipRepository();
+				$memberships = $membership_repository->get_all_memberships_without_status_filter();
 				$membership_count = is_array( $memberships ) ? count( $memberships ) : 0;
 				$has_multiple_memberships = $membership_count > 1;
 			}
 		}
+
+		// Get smart tags list
+		$smart_tags_list = array();
+		if ( class_exists( 'UR_Smart_Tags' ) ) {
+			$smart_tags_list = UR_Smart_Tags::smart_tags_list();
+		}
+
+		// Filter to only include sign_up and log_in tags for content restriction editor
+		// The smart tags list uses keys with curly braces like {{sign_up}} and {{log_in}}
+		$allowed_tags = array( '{{sign_up}}', '{{log_in}}' );
+		$smart_tags_list = array_intersect_key( $smart_tags_list, array_flip( $allowed_tags ) );
+
+		/**
+		 * Filter smart tags list for content restriction editor.
+		 *
+		 * @param array $smart_tags_list List of smart tags.
+		 * @param string $editor_id Editor ID (optional, for context-specific filtering).
+		 */
+		$smart_tags_list = apply_filters( 'urcr_smart_tags_list', $smart_tags_list );
+
+		// Check if smart tags button should be shown (configurable via filter)
+		$show_smart_tags_button = apply_filters( 'urcr_show_smart_tags_button', true, 'urcr-action-message-editor' );
 
 		$localized_data = array(
 			'URCR_DEBUG'                => apply_filters( 'urcr_debug_mode', true ),
@@ -388,7 +423,7 @@ class URCR_Admin_Assets {
 				'failed'    => __( 'Failed', 'user-registration' ),
 			),
 			'memberships'               => $formatted_memberships,
-			'is_pro'                    => UR_PRO_ACTIVE,
+			'is_pro'                    => defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE,
 			'content_type_options'      => $content_type_options,
 			'condition_options'         => $condition_options,
 			'is_membership_module_enabled' => $is_membership_module_enabled,
@@ -396,6 +431,14 @@ class URCR_Admin_Assets {
 			'has_multiple_memberships'  => $has_multiple_memberships,
 			'is_content_restriction_enabled' => ur_check_module_activation( 'content-restriction' ),
 			'action_type_options'       => $action_type_options,
+			'smart_tags_list'           => $smart_tags_list,
+			'show_smart_tags_button'    => $show_smart_tags_button,
+			'smart_tags_dropdown_title' => __( 'Smart Tags', 'user-registration' ),
+			'smart_tags_dropdown_search_placeholder' => __( 'Search Tags...', 'user-registration' ),
+			'membership_default_message' => '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
+<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
+<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
+<p>{{log_in}} {{sign_up}}</p>',
 			'labels'                    => array(
 				'pages'                    => __( 'Pages', 'user-registration' ),
 				'posts'                    => __( 'Posts',  'user-registration' ),
@@ -430,6 +473,16 @@ class URCR_Admin_Assets {
 			'urcr_localized_data',
 			$localized_data
 		);
+	}
+
+	/**
+	 * Get the default message for content restriction (membership_default_message).
+	 *
+	 * @return string Default message.
+	 */
+	public static function get_default_message() {
+		$localized_data = self::get_localized_data();
+		return isset( $localized_data['membership_default_message'] ) ? $localized_data['membership_default_message'] : '<p>' . __( 'You do not have sufficient permission to access this content.', 'user-registration' ) . '</p>';
 	}
 }
 

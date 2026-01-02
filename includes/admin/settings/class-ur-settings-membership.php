@@ -7,7 +7,7 @@
  * This class is responsible for:
  * - Membership Settings.
  * - Content Restriction Settings.
- * 
+ *
  * @package   UserRegistration\Admin
  * @version   5.0.0
  * @since     5.0.0
@@ -21,7 +21,7 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 		/**
 		 * Constructor.
 		 */
-		private function __construct() {            
+		private function __construct() {
 			$this->id    = 'membership';
 			$this->label = __( 'Membership', 'user-registration' );
             parent::__construct();
@@ -68,7 +68,7 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
                             'membership_settings' => array(
                                 'title'    => __( 'Membership', 'user-registration' ),
                                 'type'     => 'card',
-								'desc'     => sprintf( 
+								'desc'     => sprintf(
 									__( '<strong>Membership page setting has moved.</strong> Configure your membership page <a href="%s">here</a>.', 'user-registration' ),
 									admin_url( 'admin.php?page=user-registration-settings&tab=general&section=pages' )
 								),
@@ -97,12 +97,8 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
             }
             return $settings;
         }
-        
+
 		public function urcr_settings() {
-
-			$access_rules_list_link = admin_url( 'admin.php?page=user-registration-content-restriction' );
-			$link_html              = sprintf( __( 'Go to <a href="%s">Content Rules page</a> for advanced restrictions', 'user-registration' ), $access_rules_list_link );
-
 			// Build settings array for Advanced section
 			$advanced_settings = array();
 
@@ -134,19 +130,25 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 				);
 			}
 
+			$default_message = '<p>' . __( 'You do not have sufficient permission to access this content.', 'user-registration' ) . '</p>';
+			if ( class_exists( 'URCR_Admin_Assets' ) ) {
+				$default_message = URCR_Admin_Assets::get_default_message();
+			}
+
 			$sections['user_registration_content_restriction_settings'] = array(
-				'title'    => __( 'Global Restriction Settings', 'user-registration' ),
+				'title'    => __( 'Content Rules', 'user-registration' ),
 				'type'     => 'card',
-				'desc'     => sprintf( __( 'These settings affect whole site restriction as well as individual page/post restriction if enabled. <a href="%1$s" target="_blank" style="text-decoration: underline;" >Learn More.</a>', 'user-registration' ), esc_url_raw( 'https://docs.wpuserregistration.com/docs/content-restriction/' ) ),
 				'settings' => array(
 					array(
-						'title'    => __( 'Restricted Content Message', 'user-registration' ),
-						'desc'     => __( 'The message you would like to display in restricted content.', 'user-registration' ),
+						'title'    => __( 'Global Restriction Message', 'user-registration' ),
+						'desc'     => __( ' Default message for all restricted content.', 'user-registration' ),
 						'id'       => 'user_registration_content_restriction_message',
 						'type'     => 'tinymce',
-						'default'  => 'This content is restricted!',
+						'default'  => $default_message,
 						'css'      => '',
-						'show-smart-tags-button' => false,
+						'show-smart-tags-button' => true,
+						'show-ur-registration-form-button' => false,
+						'show-reset-content-button' => false,
 						'desc_tip' => true,
 					),
 				),
@@ -156,7 +158,7 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 				'user_registration_content_restriction_settings',
 				array(
 					'title'    => __( 'Content Restriction Settings', 'user-registration' ),
-					'desc'     => UR_PRO_ACTIVE ? $link_html : '',
+					'desc'     => '',
 					'sections' => $sections,
 				)
 			);

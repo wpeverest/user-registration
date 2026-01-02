@@ -619,5 +619,11 @@
 				.val(membership_plan_id)
 				.trigger("change");
 		});
+
+		$("#ur-input-type-payment-date").on("click focus", function () {
+			if (this.showPicker) {
+				this.showPicker();
+			}
+		});
 	});
 })(jQuery, window.urm_orders_localized_data);

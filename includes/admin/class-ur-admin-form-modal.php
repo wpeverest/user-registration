@@ -237,7 +237,15 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 				return;
 			}
 
-			$smart_tags_list = UR_Smart_Tags::smart_tags_list();
+			// For membership access tab editor and global restriction message, only show sign_up and log_in smart tags
+			if ( 'urcr-membership-action-message' === $editor_id || 'user_registration_content_restriction_message' === $editor_id ) {
+				$smart_tags_list = array(
+					'{{sign_up}}' => esc_html__( 'Sign Up', 'user-registration' ),
+					'{{log_in}}'  => esc_html__( 'Log In', 'user-registration' ),
+				);
+			} else {
+				$smart_tags_list = UR_Smart_Tags::smart_tags_list();
+			}
 
 			$selector  = '<a id="ur-smart-tags-selector">';
 			$selector .= '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">

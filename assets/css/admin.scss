@@ -5839,8 +5839,8 @@ body.user-registration {
 	}
 
 	.ur-coupon-tab-contents-wrapper {
-		max-width: 1280px;
-		margin: 32px auto;
+		// max-width: 1280px;
+		margin: 24px;
 		padding: 0 !important;
 
 		form {
@@ -9398,4 +9398,84 @@ body.user-registration-page {
     margin-top: 10px;
     max-width: 320px;
   }
+}
+
+.ur-coupon-type-field{
+	gap: 16px;
+    flex-wrap: wrap;
+
+	.ur-start-date, .ur-end-date{
+		min-width: unset !important;
+		height: 38px;
+	}
+
+	.ur-coupon-types {
+		max-width: 225px;
+		margin-bottom: 0;
+		border-radius: 4px;
+		border: 1px solid #e1e1e1;
+		background: #FFF;
+		padding: 12px 14px;
+		cursor: pointer;
+
+		.ur-coupon-type-title {
+			margin-bottom: 0 !important;
+		}
+
+		.ur-coupon-type {
+			&-title {
+				gap: $spacing_8px;
+				margin-bottom: $spacing_12px;
+
+				label {
+					padding: 0 !important;
+					font-size: 15px;
+					line-height: 20px;
+					font-weight: 500;
+					cursor: pointer;
+
+					b {
+						font-weight: inherit;
+					}
+				}
+
+				input[type="radio"] {
+					&:checked::before {
+						background: $primary_color;
+					}
+				}
+
+				@media screen and (max-width: 782px) {
+					input[type="radio"] {
+						width: 1rem;
+						height: 1rem;
+
+						&::before {
+							width: 0.5rem;
+							height: 0.5rem;
+							margin: 0.1875rem;
+						}
+
+						&:checked::before {
+							background: $primary_color;
+						}
+					}
+				}
+			}
+
+			&-description {
+				p {
+					color: #383838;
+					font-size: 14px !important;
+					font-weight: 400;
+					line-height: 20px;
+					margin: 0;
+				}
+			}
+		}
+
+		&:has(input[type="radio"]:checked) {
+			border-color: $primary_color;
+		}
+	}
 }

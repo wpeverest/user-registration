@@ -336,9 +336,9 @@ class UR_Admin_Assets {
 			$no_captcha_set = (count($ur_enabled_captchas) < 1);
 			$captcha_not_set_error = sprintf(
 			/* translators: %s - Integration tab url */
-				'%s <a href="%s" class="ur-captcha-error" rel="noreferrer noopener" target="_blank">here</a> to add them and save your form.',
-				esc_html__( 'Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click', 'user-registration' ),
-				esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=captcha' ) )  );
+				'%s <a href="%s" class="ur-captcha-error" rel="noreferrer noopener" target="_blank">here</a> to add the captcha keys and save your changes.',
+				esc_html__( 'Captcha setup is incomplete. Click', 'user-registration' ),
+				esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=registration_login&section=captcha' ) )  );
 			$params  = array(
 				'required_form_html'                       => self::get_form_required_html(),
 				'ajax_url'                                 => admin_url( 'admin-ajax.php' ),

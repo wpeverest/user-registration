@@ -296,63 +296,62 @@
 				.find('input[name="ur_membership_cancel_on"]:checked')
 				.val();
 
-				var syncActionEl = form.find(
-					'input[name="ur_membership_email_marketing_sync_action"]:checked'
-				);
+			var syncActionEl = form.find(
+				'input[name="ur_membership_email_marketing_sync_action"]:checked'
+			);
 
-				post_meta_data.email_marketing_sync = {};
-				var email_marketing_sync = {}
-				post_meta_data.email_marketing_sync.is_enable = syncActionEl.val();
+			post_meta_data.email_marketing_sync = {};
+			var email_marketing_sync = {};
+			post_meta_data.email_marketing_sync.is_enable = syncActionEl.val();
 
-				if ( syncActionEl.length && syncActionEl.val() ) {
+			if (syncActionEl.length && syncActionEl.val()) {
+				var marketingAddonsList = [
+					"activecampaign",
+					"brevo",
+					"convertkit",
+					"klaviyo",
+					"mailchimp",
+					"mailerlite",
+					"mailpoet",
+					"salesforce"
+				];
+				marketingAddonsList.forEach(function (val) {
+					if (!email_marketing_sync[val]) {
+						email_marketing_sync[val] = {};
+					}
+					var checkbox = form.find(
+						'input[name="sync_membership_plan_with_' + val + '"]'
+					);
 
-					var marketingAddonsList = [
-						'activecampaign',
-						'brevo',
-						'convertkit',
-						'klaviyo',
-						'mailchimp',
-						'mailerlite',
-						'mailpoet',
-						'salesforce'
-					];
-					marketingAddonsList.forEach( function ( val ) {
+					if (checkbox.length && checkbox.is(":checked")) {
+						email_marketing_sync[val].email_marketing_sync =
+							checkbox.is(":checked");
 
-						if ( ! email_marketing_sync[val] ) {
-							email_marketing_sync[val] = {};
-						}
-						var checkbox = form.find(
-							'input[name="sync_membership_plan_with_' + val + '"]'
+						var accountSelect = form.find(
+							"#ur_sync_email_marketing_" + val + "_account"
 						);
 
-						if ( checkbox.length && checkbox.is(':checked') ) {
-							email_marketing_sync[val].email_marketing_sync =
-								checkbox.is(':checked');
-
-							var accountSelect = form.find(
-								'#ur_sync_email_marketing_' + val + '_account'
-							);
-
-							if ( accountSelect.length ) {
-								email_marketing_sync[val].email_marketing_account =
-									accountSelect.val();
-							}
-
-							var listSelect = form.find(
-								'#ur_sync_email_marketing_' + val + '_integration_list_id'
-							);
-
-							if ( listSelect.length ) {
-								email_marketing_sync[val].integration_list_id =
-									listSelect.val();
-							}
+						if (accountSelect.length) {
+							email_marketing_sync[val].email_marketing_account =
+								accountSelect.val();
 						}
 
-					});
+						var listSelect = form.find(
+							"#ur_sync_email_marketing_" +
+								val +
+								"_integration_list_id"
+						);
 
-				}
+						if (listSelect.length) {
+							email_marketing_sync[val].integration_list_id =
+								listSelect.val();
+						}
+					}
+				});
+			}
 
-			post_meta_data.email_marketing_sync.addons_sync_details = email_marketing_sync;
+			post_meta_data.email_marketing_sync.addons_sync_details =
+				email_marketing_sync;
 
 			post_meta_data.role = form
 				.find("#ur-input-type-membership-role")
@@ -506,9 +505,23 @@
 				upgrade_action = $("#ur-membership-upgrade-action").is(
 					":checked"
 				),
-				no_errors = true,
-				//main fields validation
-				main_fields = Object.values(main_fields).reverse().slice(2);
+				no_errors = true;
+
+			var selectedPlanTypeEarly = $("#ur-membership-main-fields")
+				.find('input[name="ur_membership_type"]:checked')
+				.val();
+
+			if (selectedPlanTypeEarly === "free") {
+				$("#ur-membership-amount")
+					.prop("required", false)
+					.removeAttr("required")
+					.removeClass("ur-membership-error");
+
+				main_fields = main_fields.not("#ur-membership-amount");
+			}
+
+			main_fields = Object.values(main_fields).reverse().slice(2);
+
 			var result = ur_membership_utils.regular_validation(
 				main_fields,
 				true,
@@ -518,10 +531,8 @@
 			if (!result) {
 				return false;
 			}
-			//all validations related with paid membership
-			var selectedPlanType = $("#ur-membership-main-fields")
-					.find('input[name="ur_membership_type"]:checked')
-					.val(),
+
+			var selectedPlanType = selectedPlanTypeEarly,
 				amount = $("#ur-membership-main-fields")
 					.find("#ur-membership-amount")
 					.val();
@@ -542,7 +553,7 @@
 					);
 					$("#ur-membership-amount").addClass("ur-membership-error");
 				}
-				//trial validations
+
 				var trial_status = $("#ur-membership-trial-status").val();
 				if (
 					trial_status === "on" &&
@@ -570,12 +581,14 @@
 								parseInt(subscription_duration_value, 10),
 								subscription_duration
 							);
+
 					$("#ur-membership-trial-duration-value").removeClass(
 						"ur-membership-error"
 					);
 					$("#ur-membership-trial-duration").removeClass(
 						"ur-membership-error"
 					);
+
 					if (total_trial_time >= total_subscription_time) {
 						no_errors = false;
 						advanced_error = true;
@@ -592,12 +605,14 @@
 							"ur-membership-error"
 						);
 					}
+
 					$("#ur-membership-duration-value").removeClass(
 						"ur-membership-error"
 					);
 					$("#ur-membership-trial-duration-value").removeClass(
 						"ur-membership-error"
 					);
+
 					if (trial_duration_value < 1) {
 						no_errors = false;
 						advanced_error = true;
@@ -613,7 +628,6 @@
 					}
 				}
 
-				//subscription duration validation
 				if (selectedPlanType === "subscription") {
 					if (subscription_duration_value < 1) {
 						no_errors = false;
@@ -629,91 +643,8 @@
 						);
 					}
 				}
-
-				// payment gateway validations
-
-				// check if atleast one pg is enabled
-				// var available_pgs = $(
-				// 		"#payment-gateway-container .user-registration-switch__control"
-				// 	),
-				// 	is_one_selected = false;
-
-				// available_pgs.each(function (index, item) {
-				// 	if ($(item).is(":checked")) {
-				// 		is_one_selected = true;
-				// 	}
-				// });
-
-				// $(
-				// 	"#payment-gateway-container .user-registration-card"
-				// ).removeClass("ur-membership-error");
-				// if (!is_one_selected) {
-				// 	no_errors = false;
-				// 	advanced_error = true;
-				// 	ur_membership_utils.show_failure_message(
-				// 		ur_membership_data.labels.i18n_error +
-				// 			"! " +
-				// 			ur_membership_data.labels.i18n_pg_validation_error
-				// 	);
-				// 	$(
-				// 		"#payment-gateway-container .user-registration-card"
-				// 	).addClass("ur-membership-error");
-				// }
-				// paypal validations
-				// var is_paypal_selected = form
-				// 	.find("#ur-membership-pg-paypal:checked")
-				// 	.val();
-				// if (is_paypal_selected) {
-				// 	var paypal_section = $("#paypal-section"),
-				// 		paypal_inputs = paypal_section.find("input");
-				// 	$("#paypal-section").removeClass("ur-membership-error");
-				// 	if (selectedPlanType !== "subscription") {
-				// 		paypal_inputs = paypal_section
-				// 			.find("input")
-				// 			.not('[name^="ur_membership_client_"]');
-				// 		paypal_inputs = Object.values(paypal_inputs)
-				// 			.reverse()
-				// 			.slice(2)
-				// 			.reverse();
-				// 		result = ur_membership_utils.regular_validation(
-				// 			paypal_inputs,
-				// 			true,
-				// 			"paypal"
-				// 		);
-				// 		if (!result) {
-				// 			no_errors = false;
-				// 			advanced_error = true;
-				// 			$("#paypal-section").addClass(
-				// 				"ur-membership-error"
-				// 			);
-				// 		}
-				// 	} else {
-				// 		var client_id = paypal_section
-				// 				.find("#ur-input-type-client-id")
-				// 				.val(),
-				// 			client_secret = paypal_section
-				// 				.find("#ur-input-type-client-secret")
-				// 				.val();
-
-				// 		if (client_id === "" || client_secret === "") {
-				// 			no_errors = false;
-				// 			advanced_error = true;
-				// 			ur_membership_utils.show_failure_message(
-				// 				ur_membership_data.labels.i18n_paypal +
-				// 					" " +
-				// 					ur_membership_data.labels.i18n_error +
-				// 					"! " +
-				// 					ur_membership_data.labels
-				// 						.i18n_paypal_client_secret_id_error
-				// 			);
-				// 			$("#paypal-section").addClass(
-				// 				"ur-membership-error"
-				// 			);
-				// 		}
-				// 	}
-				// }
 			}
-			//upgrade settings validation
+
 			if (upgrade_action) {
 				var upgrade_path = $("#ur-input-type-membership-upgrade-path"),
 					upgrade_type_container = $(
@@ -724,6 +655,7 @@
 							'input[name="ur_membership_upgrade_type"]:checked'
 						)
 						.val();
+
 				$(
 					".ur-input-type-membership-upgrade-path .select2-selection--multiple"
 				).removeClass("ur-membership-error");
@@ -770,7 +702,11 @@
 			if (this.validate_membership_form()) {
 				// Prepare access rules data before creating membership
 				var ruleData = null;
-				if (typeof window.URCRMembershipAccess !== 'undefined' && typeof window.URCRMembershipAccess.prepareRuleData === 'function') {
+				if (
+					typeof window.URCRMembershipAccess !== "undefined" &&
+					typeof window.URCRMembershipAccess.prepareRuleData ===
+						"function"
+				) {
 					ruleData = window.URCRMembershipAccess.prepareRuleData();
 				}
 				var prepare_membership_data = this.prepare_membership_data();
@@ -781,48 +717,44 @@
 
 				// Add rule data to AJAX request if available
 				if (ruleData) {
-					ajaxData.urcr_membership_access_rule_data = JSON.stringify(ruleData);
-					console.log('Rule data added to AJAX request for create');
+					ajaxData.urcr_membership_access_rule_data =
+						JSON.stringify(ruleData);
 				}
 
-				this.send_data(
-					ajaxData,
-					{
-						success: function (response) {
-							if (response.success) {
-								ur_membership_data.membership_id =
-									response.data.membership_id;
-									console.log($this);
-								$this.text(ur_membership_data.labels.i18n_save);
-								ur_membership_utils.show_success_message(
-									response.data.message
-								);
-								// var current_url = $(location).attr('href');
-								// current_url += '&post_id=' + ur_membership_data.membership_group_id;
-								$(location).attr(
-									"href",
-									ur_membership_data.membership_page_url
-								);
-							} else {
-								ur_membership_utils.show_failure_message(
-									response.data.message
-								);
-							}
-						},
-						failure: function (xhr, statusText) {
-							ur_membership_utils.show_failure_message(
-								ur_membership_data.labels.network_error +
-									"(" +
-									statusText +
-									")"
+				this.send_data(ajaxData, {
+					success: function (response) {
+						if (response.success) {
+							ur_membership_data.membership_id =
+								response.data.membership_id;
+							$this.text(ur_membership_data.labels.i18n_save);
+							ur_membership_utils.show_success_message(
+								response.data.message
 							);
-						},
-						complete: function () {
-							ur_membership_utils.remove_spinner($this);
-							ur_membership_utils.toggleSaveButtons(false);
+							// var current_url = $(location).attr('href');
+							// current_url += '&post_id=' + ur_membership_data.membership_group_id;
+							$(location).attr(
+								"href",
+								ur_membership_data.membership_page_url
+							);
+						} else {
+							ur_membership_utils.show_failure_message(
+								response.data.message
+							);
 						}
+					},
+					failure: function (xhr, statusText) {
+						ur_membership_utils.show_failure_message(
+							ur_membership_data.labels.network_error +
+								"(" +
+								statusText +
+								")"
+						);
+					},
+					complete: function () {
+						ur_membership_utils.remove_spinner($this);
+						ur_membership_utils.toggleSaveButtons(false);
 					}
-				);
+				});
 			} else {
 				if (basic_error) {
 					$("#ur-basic-tab").trigger("click");
@@ -844,54 +776,52 @@
 			if (this.validate_membership_form()) {
 				// Prepare access rules data before updating membership
 				var ruleData = null;
-				if (typeof window.URCRMembershipAccess !== 'undefined' && typeof window.URCRMembershipAccess.prepareRuleData === 'function') {
+				if (
+					typeof window.URCRMembershipAccess !== "undefined" &&
+					typeof window.URCRMembershipAccess.prepareRuleData ===
+						"function"
+				) {
 					ruleData = window.URCRMembershipAccess.prepareRuleData();
 				}
-				console.log(ruleData);
 				var prepare_membership_data = this.prepare_membership_data();
 
 				var ajaxData = {
 					action: "user_registration_membership_update_membership",
-					membership_data: JSON.stringify(
-						prepare_membership_data
-					),
+					membership_data: JSON.stringify(prepare_membership_data),
 					membership_id: ur_membership_data.membership_id
 				};
 
 				// Add rule data to AJAX request if available
 				if (ruleData) {
-					ajaxData.urcr_membership_access_rule_data = JSON.stringify(ruleData);
-					console.log('Rule data added to AJAX request for update');
+					ajaxData.urcr_membership_access_rule_data =
+						JSON.stringify(ruleData);
 				}
 
-				this.send_data(
-					ajaxData,
-					{
-						success: function (response) {
-							if (response.success) {
-								ur_membership_utils.show_success_message(
-									response.data.message
-								);
-							} else {
-								ur_membership_utils.show_failure_message(
-									response.data.message
-								);
-							}
-						},
-						failure: function (xhr, statusText) {
-							ur_membership_utils.show_failure_message(
-								ur_membership_data.labels.network_error +
-									"(" +
-									statusText +
-									")"
+				this.send_data(ajaxData, {
+					success: function (response) {
+						if (response.success) {
+							ur_membership_utils.show_success_message(
+								response.data.message
 							);
-						},
-						complete: function () {
-							ur_membership_utils.remove_spinner($this);
-							ur_membership_utils.toggleSaveButtons(false);
+						} else {
+							ur_membership_utils.show_failure_message(
+								response.data.message
+							);
 						}
+					},
+					failure: function (xhr, statusText) {
+						ur_membership_utils.show_failure_message(
+							ur_membership_data.labels.network_error +
+								"(" +
+								statusText +
+								")"
+						);
+					},
+					complete: function () {
+						ur_membership_utils.remove_spinner($this);
+						ur_membership_utils.toggleSaveButtons(false);
 					}
-				);
+				});
 			} else {
 				if (basic_error) {
 					$("#ur-basic-tab").trigger("click");
@@ -1342,7 +1272,6 @@
 		showStep($(this).data("step"));
 	});
 
-
 	var $membershipTable = $("#membership-list tbody#the-list");
 
 	if ($membershipTable.length > 0 && $.fn.sortable) {
@@ -1524,43 +1453,48 @@
 		);
 	}
 
-	$( document ).on( 'change', '#ur-membership-email-marketing-sync-action', function( e ){
-		e.stopPropagation();
-		e.preventDefault();
-		var $el = $( this ),
-			$syncEmailContainer = $( "#ur-sync-to-email-marketing-container" );
-		hideSyncEmailContainer( $el.is( ":checked" ), $syncEmailContainer )
-	});
+	$(document).on(
+		"change",
+		"#ur-membership-email-marketing-sync-action",
+		function (e) {
+			e.stopPropagation();
+			e.preventDefault();
+			var $el = $(this),
+				$syncEmailContainer = $(
+					"#ur-sync-to-email-marketing-container"
+				);
+			hideSyncEmailContainer($el.is(":checked"), $syncEmailContainer);
+		}
+	);
 
-	function hideSyncEmailContainer( $isChecked, $syncEmailContainer ){
-		if ( $isChecked ) {
+	function hideSyncEmailContainer($isChecked, $syncEmailContainer) {
+		if ($isChecked) {
 			$syncEmailContainer.show();
-		}else{
+		} else {
 			$syncEmailContainer.hide();
 		}
 	}
 
-	var $initialEl = $( "#ur-membership-email-marketing-sync-action" );
-	var $initialContainer = $( "#ur-sync-to-email-marketing-container" );
+	var $initialEl = $("#ur-membership-email-marketing-sync-action");
+	var $initialContainer = $("#ur-sync-to-email-marketing-container");
 
-	hideSyncEmailContainer( $initialEl.is(":checked"), $initialContainer );
+	hideSyncEmailContainer($initialEl.is(":checked"), $initialContainer);
 	toggleEmailMarketingFields();
 
 	function toggleEmailMarketingFields() {
-		$( '.ur-sync-to-email-marketing-addon-sync-container' ).each( function () {
-
+		$(".ur-sync-to-email-marketing-addon-sync-container").each(function () {
 			var $container = $(this);
 			var $checkbox = $container.find(
 				'.ur-sync-to-email-marketing-addon-sync-toggle-container input[type="checkbox"]'
 			);
 			var $fields = $container.find(
-				'.ur-sync-to-email-marketing-addon-sync-toggle-label-container .form-row, ' +
-				'.urmc-sync-email-marketing-mailchimp-list-wrap, ' +
-				'.urmc-sync-email-marketing-brevo-list-wrap, ' +
-				'[class*="urmc-sync-email-marketing-"][class$="-list-wrap"]'
+				".ur-sync-to-email-marketing-addon-sync-toggle-label-container .form-row, " +
+					".urmc-sync-email-marketing-mailchimp-list-wrap, " +
+					".urmc-sync-email-marketing-brevo-list-wrap, " +
+					'[class*="urmc-sync-email-marketing-"][class$="-list-wrap"]'
 			);
 
-			if ($checkbox.is(':checked')) {
+			if ($checkbox.is(":checked")) {
 				$fields.show();
 			} else {
 				$fields.hide();
@@ -1568,69 +1502,72 @@
 		});
 	}
 
-	$( document ).on(
-		'change',
+	$(document).on(
+		"change",
 		'.ur-sync-to-email-marketing-addon-sync-toggle-container input[type="checkbox"]',
 		function () {
 			toggleEmailMarketingFields();
 		}
 	);
 
-	$( document ).on(
-		'change',
-		'.ur_sync_email_marketing_addon_account',
-		function( e ){
+	$(document).on(
+		"change",
+		".ur_sync_email_marketing_addon_account",
+		function (e) {
 			e.stopPropagation();
 			e.preventDefault();
 
-			var $el = $( this ),
-				addon = $el.data( 'addon_name' ),
+			var $el = $(this),
+				addon = $el.data("addon_name"),
 				apiKey = $el.val();
 
-
-			var	data  = {
-					action : 'user_registration_membership_addons_get_lists',
-					addon : addon,
-					api_key: apiKey
-				}
+			var data = {
+				action: "user_registration_membership_addons_get_lists",
+				addon: addon,
+				api_key: apiKey
+			};
 
 			$.ajax({
 				type: "post",
 				url: ur_membership_data.ajax_url,
 				data: data,
-				beforeSend: function(){
-				   var $listWrap = $(document).find(
-						'.urmc-sync-email-marketing-' + addon + '-list-wrap'
-						);
+				beforeSend: function () {
+					var $listWrap = $(document).find(
+						".urmc-sync-email-marketing-" + addon + "-list-wrap"
+					);
 
-						ur_membership_utils.append_spinner($listWrap);
+					ur_membership_utils.append_spinner($listWrap);
 
-						$listWrap.find( 'select' ).prop( 'disabled', true );
+					$listWrap.find("select").prop("disabled", true);
 
-						 $listWrap
-							.closest('.ur-sync-to-email-marketing-addon-sync-container')
-							.find('select')
-							.prop('disabled', true);
+					$listWrap
+						.closest(
+							".ur-sync-to-email-marketing-addon-sync-container"
+						)
+						.find("select")
+						.prop("disabled", true);
 				},
-				success: function( response ){
+				success: function (response) {
 					var $listContainer = $(
-						'.urmc-sync-email-marketing-' + addon + '-list-wrap'
-						);
+						".urmc-sync-email-marketing-" + addon + "-list-wrap"
+					);
 
-						$listContainer.find('.ur-spinner').remove();
+					$listContainer.find(".ur-spinner").remove();
 
-						if ( response.success ) {
-							$listContainer.find( 'select' ).remove();
+					if (response.success) {
+						$listContainer.find("select").remove();
 
-							$listContainer.append( response.data.html );
-						}
+						$listContainer.append(response.data.html);
+					}
 
-						$listContainer
-						.closest('.ur-sync-to-email-marketing-addon-sync-container')
-						.find('select')
-						.prop('disabled', false);
+					$listContainer
+						.closest(
+							".ur-sync-to-email-marketing-addon-sync-container"
+						)
+						.find("select")
+						.prop("disabled", false);
 				}
-			})
+			});
 		}
 	);
 })(jQuery, window.ur_membership_localized_data);

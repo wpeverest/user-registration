@@ -15,9 +15,6 @@
 				<div class="ur-label">
 					<label for="ur-input-type-membership-role">
 						<?php esc_html_e( 'Membership Role :', 'user-registration' ); ?>
-						<span style="color:red">*</span>
-						<span class="user-registration-help-tip tooltipstered"
-								data-tip="<?php esc_attr_e( 'Assign members to the selected role upon registration.(Overrides role set through form)', 'user-registration' ); ?>"></span>
 					</label>
 				</div>
 				<div class="ur-input-type-membership-name ur-admin-template">
@@ -133,7 +130,7 @@
 								<select multiple data-key-name="<?php echo esc_html__( 'Upgrade Path', 'user-registration' ); ?>"
 										id="ur-input-type-membership-upgrade-path" class="user-membership-enhanced-select2">
 									<?php
-									$upgrade_path = isset( $membership_details['upgrade_settings']['upgrade_path'] ) ? explode( ',', $membership_details['upgrade_settings']['upgrade_path'] ) : array();
+									$upgrade_path = !empty( $membership_details['upgrade_settings']['upgrade_path'] ) ? explode( ',', $membership_details['upgrade_settings']['upgrade_path'] ) : array();
 									foreach ( $memberships as $k => $m ) :
 										if ( isset( $_GET['post_id'] ) && $_GET['post_id'] == $m['ID'] ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 											continue;

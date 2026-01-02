@@ -3,8 +3,8 @@ import { __ } from "@wordpress/i18n";
 const { isPro } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
 // Check if Site Assistant should be shown based on backend data
-const shouldShowSiteAssistant = typeof _UR_DASHBOARD_ !== "undefined" && 
-	_UR_DASHBOARD_.site_assistant_data ? 
+const shouldShowSiteAssistant = typeof _UR_DASHBOARD_ !== "undefined" &&
+	_UR_DASHBOARD_.site_assistant_data ?
 	// Check if any options are not handled
 	!_UR_DASHBOARD_.site_assistant_data.has_default_form ||
 	_UR_DASHBOARD_.site_assistant_data.missing_pages.length > 0 ||
@@ -34,22 +34,22 @@ let ROUTES = [
 		route: "/help",
 		label: __("Help", "user-registration"),
 	},
-	{
-		route: "/products",
-		label: __("Other Products", "user-registration"),
-	},
+	// {
+	// 	route: "/products",
+	// 	label: __("Other Products", "user-registration"),
+	// },
 ];
 
-if (!isPro) {
-	// Find the index where to insert Free vs Pro (after Settings)
-	const settingsIndex = ROUTES.findIndex(route => route.route === "/settings");
-	if (settingsIndex !== -1) {
-		ROUTES.splice(settingsIndex + 1, 0, {
-			route: "/free-vs-pro",
-			label: __("Free vs Pro", "user-registration"),
-		});
-	}
-}
+// if (!isPro) {
+// 	// Find the index where to insert Free vs Pro (after Settings)
+// 	const settingsIndex = ROUTES.findIndex(route => route.route === "/settings");
+// 	if (settingsIndex !== -1) {
+// 		ROUTES.splice(settingsIndex + 1, 0, {
+// 			route: "/free-vs-pro",
+// 			label: __("Free vs Pro", "user-registration"),
+// 		});
+// 	}
+// }
 export default ROUTES;
 
 export const CHANGELOG_TAG_COLORS = {

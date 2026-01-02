@@ -373,9 +373,6 @@
 				{
 					success: function (response) {
 						if (response.success) {
-							ur_membership_frontend_utils.show_success_message(
-								response.data.message
-							);
 							ur_membership_ajax_utils.handle_response(
 								response,
 								prepare_members_data,
@@ -385,6 +382,7 @@
 							ur_membership_frontend_utils.show_failure_message(
 								response.data.message
 							);
+							form_object.hide_loader(form_response.form_id);
 						}
 					},
 					failure: function (xhr, statusText) {
@@ -394,9 +392,10 @@
 								statusText +
 								")"
 						);
+						form_object.hide_loader(form_response.form_id);
 					},
 					complete: function () {
-						form_object.hide_loader(form_response.form_id);
+						// form_object.hide_loader(form_response.form_id);
 					}
 				}
 			);
@@ -420,6 +419,9 @@
 					window.location.replace(response.data.pg_data.payment_url);
 					break;
 				case "bank":
+					ur_membership_frontend_utils.show_success_message(
+						response.data.message
+					);
 					this.show_bank_response(
 						response,
 						prepare_members_data,
@@ -1479,7 +1481,16 @@
 					response_data: response,
 					prepare_members_data: prepare_members_data,
 					form_response: form_response
-				});
+				})
+					.then(function () {
+						ur_membership_frontend_utils.show_success_message(
+							response.data.message
+						);
+						form_object.hide_loader(form_response.form_id);
+					})
+					.catch(function () {
+						form_object.hide_loader(form_response.form_id);
+					});
 			}
 		},
 
@@ -1488,7 +1499,7 @@
 			prepare_members_data,
 			form_response
 		) {
-			elements.stripe
+			return elements.stripe
 				.confirmCardPayment(response.data.pg_data.client_secret, {
 					payment_method: {
 						card: elements.card
@@ -1592,7 +1603,7 @@
 			);
 		},
 		handle_recurring_payment: function (response, data) {
-			Promise.resolve(
+			return Promise.resolve(
 				$.extend({}, data, {
 					customer_id: response.data.pg_data.stripe_cus_id,
 					selected_membership_id: response.data.selected_membership_id
@@ -1614,6 +1625,7 @@
 						data.prepare_members_data,
 						data.form_response
 					);
+					return Promise.reject(error);
 				});
 		},
 		/**
@@ -1802,40 +1814,43 @@
 				is_purchasing_multiple =
 					data.response_data.data.is_purchasing_multiple !== undefined
 						? data.response_data.data.is_purchasing_multiple
+						: false,
+				is_three_d_secure =
+					undefined !== data.three_d_secure
+						? data.three_d_secure
 						: false;
 
-			if (is_upgrading || is_renewing || is_purchasing_multiple) {
-				if (
-					is_upgrading ||
-					is_renewing ||
-					true === data.three_d_secure ||
-					is_purchasing_multiple
-				) {
-					stripe_settings.update_order_status(
-						data.subscription,
-						data.response_data,
-						data.prepare_members_data,
-						data.form_response
-					);
-				}
-
-				if (
-					data.subscription &&
-					(data.subscription.status === "active" ||
-						data.subscription.status === "trialing") &&
-					!is_upgrading &&
-					!is_renewing &&
-					!is_purchasing_multiple
-				) {
-					ur_membership_frontend_utils.show_form_success_message(
-						data.form_response,
-						{
-							username: data.prepare_members_data.username,
-							transaction_id: data.subscription.id
-						}
-					);
-				}
+			if (
+				is_upgrading ||
+				is_renewing ||
+				is_purchasing_multiple ||
+				is_three_d_secure
+			) {
+				stripe_settings.update_order_status(
+					data.subscription,
+					data.response_data,
+					data.prepare_members_data,
+					data.form_response
+				);
 			}
+
+			if (
+				data.subscription &&
+				(data.subscription.status === "active" ||
+					data.subscription.status === "trialing") &&
+				!is_upgrading &&
+				!is_renewing &&
+				!is_purchasing_multiple
+			) {
+				ur_membership_frontend_utils.show_form_success_message(
+					data.form_response,
+					{
+						username: data.prepare_members_data.username,
+						transaction_id: data.subscription.id
+					}
+				);
+			}
+			return { success: true };
 		}
 	};
 	var register_events = {
@@ -2386,7 +2401,9 @@
 			$(document).on(
 				"click",
 				".reactivate-membership-button",
-				function () {
+				function (e) {
+					e.preventDefault();
+
 					var $this = $(this),
 						error_div = $("#membership-error-div"),
 						button_text = $this.text(),
@@ -2403,22 +2420,25 @@
 							$this.text(urmf_data.labels.i18n_sending_text);
 						},
 						success: function (response) {
-							if (response.success) {
-								if (error_div.hasClass("btn-error")) {
-									error_div.removeClass("btn-error");
-									error_div.addClass("btn-success");
-								}
-								error_div.text(response.data.message);
-								error_div.show();
-								location.reload();
-							} else {
-								if (error_div.hasClass("btn-success")) {
-									error_div.removeClass("btn-success");
-									error_div.addClass("btn-error");
-								}
-								error_div.text(response.data.message);
-								error_div.show();
+							if (
+								$(".user-registration-page .notice-container")
+									.length === 0
+							) {
+								$(
+									".user-registration-membership-notice__container"
+								).remove();
+								// Adds the toast container on the top of page.
+								$(document)
+									.find(".user-registration-page")
+									.prepend(
+										'<div class="user-registration-membership-notice__container"><div class="ur-toaster urm-error user-registration-membership-notice__red"><span class="user-registration-membership-notice__message"></span><span class="user-registration-membership__close_notice">&times;</span></div></div>'
+									);
 							}
+
+							$(document).trigger("urm_show_action_message", {
+								message: response.data.message,
+								type: response.success ? "success" : "error"
+							});
 						},
 						complete: function () {
 							$this.text(button_text);

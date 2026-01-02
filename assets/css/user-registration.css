@@ -3791,6 +3791,9 @@ body.user-registration-page .elementor-widget-container .user-registration:not(.
   z-index: 9999;
   animation: toaster 5s ease-in-out forwards;
 }
+.ur-toaster.urm-error {
+  background-color: red;
+}
 
 .ur-frontend-form .user-registration-EditAccountForm.edit-password .ur-form-row .ur-form-grid fieldset {
   border: 0;

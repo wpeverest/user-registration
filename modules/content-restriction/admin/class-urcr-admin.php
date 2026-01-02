@@ -29,7 +29,7 @@ class URCR_Admin {
 		/**
 		 * Register admin menus.
 		 */
-		add_action( 'admin_menu', array( $this, 'add_urcr_menus' ), 30 );
+		// add_action( 'admin_menu', array( $this, 'add_urcr_menus' ), 30 );
 
 		/**
 		 * Register a settings in the core settings list.
@@ -153,7 +153,8 @@ class URCR_Admin {
 			array(
 				$this,
 				'render_content_access_rules',
-			)
+			),
+			4
 		);
 	}
 
@@ -292,7 +293,7 @@ class URCR_Admin {
 			delete_post_meta( $rule->ID, 'urcr_rule_type' );
 			delete_post_meta( $rule->ID, 'urcr_membership_id' );
 			delete_post_meta( $rule->ID, 'urcr_is_migrated' );
-			
+
 			wp_delete_post( $rule->ID, true ); // true = force delete (skip trash)
 		}
 	}
@@ -414,18 +415,31 @@ class URCR_Admin {
 		// Check if there are unmigrated posts/pages
 		$has_unmigrated_posts = false;
 		if ( ! $post_page_migrated ) {
-			$args = array(
-				'post_type'      => array( 'post', 'page' ),
-				'post_status'    => 'publish',
-				'posts_per_page' => 1,
-				'meta_query'     => array(
-					array(
-						'key'   => 'urcr_meta_checkbox',
-						'value' => 'on',
-					),
-				),
+			global $wpdb;
+
+			$query = $wpdb->prepare(
+				"SELECT DISTINCT wp.ID
+				FROM {$wpdb->posts} AS wp
+				INNER JOIN {$wpdb->postmeta} AS wpm
+					ON wpm.post_id = wp.ID
+				LEFT JOIN {$wpdb->postmeta} AS wpm_override
+					ON wpm_override.post_id = wp.ID
+						AND wpm_override.meta_key = %s
+				WHERE wpm.meta_key = %s
+					AND wpm.meta_value = %s
+					AND wp.post_type IN ('post', 'page')
+					AND wp.post_status = 'publish'
+					AND (
+						wpm_override.post_id IS NULL
+						OR wpm_override.meta_value = ''
+					)
+				LIMIT 1",
+				'urcr_meta_override_global_settings',
+				'urcr_meta_checkbox',
+				'on'
 			);
-			$posts = get_posts( $args );
+
+			$posts = $wpdb->get_results( $query );
 
 			$has_unmigrated_posts = ! empty( $posts );
 		}
@@ -440,7 +454,7 @@ class URCR_Admin {
 
 		// Run migration if any step needs to run
 		if ( ! $global_migrated || $has_unmigrated_posts || ! $memberships_migrated || $has_unmigrated_memberships ) {
-			if ( function_exists( 'urcr_run_migration' ) ) {
+		if ( function_exists( 'urcr_run_migration' ) ) {
 				urcr_run_migration();
 			}
 		}

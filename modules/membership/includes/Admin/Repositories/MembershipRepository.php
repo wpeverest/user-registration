@@ -16,6 +16,7 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 		$this->subscription_table = TableList::subscriptions_table();
 	}
 
+
 	/**
 	 * @return array
 	 */
@@ -43,6 +44,36 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 		);
 		$membership_service = new MembershipService();
 		return $membership_service->prepare_membership_data( $memberships );
+	}
+
+	/**
+	 * Get all memberships without status filter for content restriction
+	 * 
+	 * @return array
+	 */
+	public function get_all_memberships_without_status_filter() {
+		global $wpdb;
+		$sql = "
+				SELECT wpp.ID,
+				       wpp.post_title,
+				       wpp.post_content,
+				       wpp.post_status,
+				       wpp.post_type,
+				       wpm.meta_value
+				FROM $this->table wpp
+				         JOIN $this->posts_meta_table wpm on wpm.post_id = wpp.ID
+				WHERE wpm.meta_key = 'ur_membership'
+				  AND wpp.post_type = 'ur_membership'
+				ORDER BY 1 DESC
+		";
+
+		$memberships = $wpdb->get_results(
+			$sql,
+			ARRAY_A
+		);
+		
+		$membership_service = new MembershipService();
+		return $membership_service->prepare_membership_data_without_status_filter( $memberships );
 	}
 
 	/**

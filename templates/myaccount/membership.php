@@ -134,12 +134,11 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 												<?php
 												$membership_type = isset( $membership['post_content'] ) && ! empty( $membership['post_content'] ) ? esc_html( ucfirst( wp_unslash( $membership['post_content']['type'] ) ) ) : 'NA';
 												if ( 'canceled' === $membership['status'] && ( $membership_type !== 'subscription' || $date_to_renew > date( 'Y-m-d 00:00:00' ) ) ) {
-													$buttons[] = '<a class="ur-account-action-link membership-tab-btn reactivate-membership-button" href="' . esc_url( $redirect_page_url ) . '" data-id="' . esc_attr( $membership['subscription_id'] ?? '' ) . '">' . esc_html__( 'Reactivate Membership', 'user-registration' ) . '</a>';
+													$buttons[] = '<a class="ur-account-action-link membership-tab-btn reactivate-membership-button" href="#" data-id="' . esc_attr( $membership['subscription_id'] ?? '' ) . '">' . esc_html__( 'Reactivate Membership', 'user-registration' ) . '</a>';
 												}
 												?>
 
 												<?php
-
 												if ( $can_renew && $date_to_renew <= date( 'Y-m-d 00:00:00' ) && 'canceled' !== $membership['status'] ) {
 													$buttons[] = '<a class="ur-account-action-link membership-tab-btn renew-membership-button" href="' . esc_url( $redirect_page_url ) . '" data-pg-gateways="' . ( isset( $membership['active_gateways'] ) ? implode( ',', array_keys( $membership['active_gateways'] ) ) : '' ) . '" data-id="' . esc_attr( $membership['post_id'] ?? '' ) . '">' . esc_html__( 'Renew Membership', 'user-registration' ) . '</a>';
 												}
@@ -156,7 +155,7 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 										<div class="btn-div">
 											<?php
 											if ( ! empty( $buttons ) ) {
-												if ( count( $buttons ) > 2 ) {
+												if ( count( $buttons ) > 1 ) {
 													?>
 													<div class="action-menu">
 														<button class="menu-trigger" type="button">

@@ -143,32 +143,20 @@
 					<div class="ur-label" style="width: 30%">
 						<label for="ur-membership-amount">
 							<?php esc_html_e( 'Price', 'user-registration' ); ?>
-							<span style="color:red">*</span> :
+							 :
 						</label>
 					</div>
 					<div class="ur-d-flex" style="gap:16px;width:100%;">
 						<div class="ur-field field-amount" data-field-key="membership_amount">
-							<span class="ur-currency-symbol">
 								<?php
 								$currency   = get_option( 'user_registration_payment_currency', 'USD' );
 								$currencies = ur_payment_integration_get_currencies();
-								$symbol     = $currencies[ $currency ]['symbol'];
-								echo esc_html( $symbol );
 								?>
-							</span>
 							<input data-key-name="Amount" type="number" id="ur-membership-amount"
-									value="<?php echo esc_attr( $membership_details['amount'] ?? 1 ); ?>"
+									value="<?php echo esc_attr( $membership_details['amount'] ?? "" ); ?>"
 									name="ur_membership_amount" style="width: 80%" min="0" required>
 							<span class="ur-currency"><?php echo esc_html( $currency ); ?></span>
 						</div>
-						<select id="ur-membership-duration" data-key-name="Duration"
-								class="ur-subscription-fields <?php echo isset( $membership_details['type'] ) && 'subscription' === $membership_details['type'] ? '' : 'ur-d-none'; ?>"
-								name="ur_membership[duration]_period" style="width: 15%">
-							<option value="day" <?php echo isset( $membership_details['subscription'] ) && 'day' === $membership_details['subscription']['duration'] ? 'selected="selected"' : ''; ?>>Day(s)</option>
-							<option value="week" <?php echo isset( $membership_details['subscription'] ) && 'week' === $membership_details['subscription']['duration'] ? 'selected="selected"' : ''; ?>>Week(s)</option>
-							<option value="month" <?php echo isset( $membership_details['subscription'] ) && 'month' === $membership_details['subscription']['duration'] ? 'selected="selected"' : ''; ?>>Month(s)</option>
-							<option value="year" <?php echo isset( $membership_details['subscription'] ) && 'year' === $membership_details['subscription']['duration'] ? 'selected="selected"' : ''; ?>>Year(s)</option>
-						</select>
 					</div>
 				</div>
 
@@ -176,8 +164,8 @@
 				<div class="ur-membership-selection-container ur-p-1 ur-mt-3 ur-subscription-fields <?php echo isset( $membership_details['type'] ) && 'subscription' === $membership_details['type'] ? 'ur-d-flex' : 'ur-d-none'; ?>" id="ur-membership-duration-container" style="gap:20px;">
 					<div class="ur-label" style="width: 30%">
 						<label for="ur-membership-duration">
-							<?php esc_html_e( 'Duration', 'user-registration' ); ?>
-							<span style="color:red">*</span> :
+							<?php esc_html_e( 'Billing Cycle', 'user-registration' ); ?>
+							 :
 						</label>
 					</div>
 					<div class="ur-field ur-d-flex ur-align-items-center" data-field-key="membership_duration" style="gap: 20px;">
@@ -186,6 +174,14 @@
 								class="" type="number" name="ur_membership[duration]_value"
 								autocomplete="off" id="ur-membership-duration-value" min="1">
 					</div>
+						<select id="ur-membership-duration" data-key-name="Duration"
+								class="ur-subscription-fields <?php echo isset( $membership_details['type'] ) && 'subscription' === $membership_details['type'] ? '' : 'ur-d-none'; ?>"
+								name="ur_membership[duration]_period" style="width: 15%">
+							<option value="day" <?php echo isset( $membership_details['subscription'] ) && 'day' === $membership_details['subscription']['duration'] ? 'selected="selected"' : ''; ?>>Day(s)</option>
+							<option value="week" <?php echo isset( $membership_details['subscription'] ) && 'week' === $membership_details['subscription']['duration'] ? 'selected="selected"' : ''; ?>>Week(s)</option>
+							<option value="month" <?php echo isset( $membership_details['subscription'] ) && 'month' === $membership_details['subscription']['duration'] ? 'selected="selected"' : ''; ?>>Month(s)</option>
+							<option value="year" <?php echo isset( $membership_details['subscription'] ) && 'year' === $membership_details['subscription']['duration'] ? 'selected="selected"' : ''; ?>>Year(s)</option>
+						</select>
 				</div>
 
 				<!-- Payment Settings Notice -->
@@ -200,4 +196,3 @@
 			</div>
 		</div>
 	</div>
-

@@ -21,7 +21,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Login' ) ) {
 		 */
 		private function __construct() {
 			$this->id    = 'registration_login';
-			$this->label = __( 'Registration Login', 'user-registration' );
+			$this->label = __( 'Registration & Login', 'user-registration' );
             parent::__construct();
             $this->handle_hooks();
 		}
