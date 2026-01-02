@@ -79,7 +79,7 @@ const Help = () => {
 				) : (
 					<>
 						{/* Welcome Section and Video Section - Combined in Single Container */}
-						<Box
+						{/* <Box
 							p="6"
 							borderRadius="base"
 							border="1px"
@@ -97,7 +97,7 @@ const Help = () => {
 								h="100%"
 							>
 								{/* Welcome Section - Left */}
-								<Stack gap="4" justify="center">
+								{/* <Stack gap="4" justify="center">
 									<Heading
 										as="h2"
 										fontSize="2xl"
@@ -150,10 +150,10 @@ const Help = () => {
 											{__("View all forms", "user-registration")}
 										</Button>
 									</Stack>
-								</Stack>
+								</Stack> */}
 
 								{/* Video Section - Right */}
-								<Box>
+								{/* <Box>
 									<AspectRatio ratio={16 / 9}>
 										<iframe
 											src="https://www.youtube.com/embed/ZOXVbfBTNPQ?si=82Q2iOOE2iUF7M02&autoplay=1&mute=1&rel=0"
@@ -168,8 +168,101 @@ const Help = () => {
 										></iframe>
 									</AspectRatio>
 								</Box>
-							</Grid>
-						</Box>
+							</Grid> */}
+						{/* </Box>  */}
+
+						{/* Getting started and support */}
+						<Grid
+							gridTemplateColumns={{
+								sm: "1fr",
+								md: "1fr 1fr"
+							}}
+							gridGap="5"
+						>
+						<Stack
+							px="6"
+							py="8"
+							align="center"
+							gap="3"
+							bgColor="white"
+							borderRadius="base"
+							border="1px"
+							borderColor="gray.100"
+							textAlign="center"
+						>
+							<Icon.Shortcode w="8" h="8" fill="#475bb2" />
+							<Heading as="h3" size="sm" fontWeight="semibold">
+								{__("Getting  Started", "user-registration")}
+							</Heading>
+							<Text fontSize="13px" color="gray.700">
+								{__(
+									"Check our documentation for detailed information on User Registration features and how to use them.",
+									"user-registration"
+								)}
+							</Text>
+							<Button
+								mt="10"
+								variant="outline"
+								color="#475bb2"
+								borderColor="#475bb2"
+								borderRadius="base"
+								fontSize="14px"
+								fontWeight="normal"
+								onClick={() => {
+									setIsListViewerOpen(true);
+									setListViewerType("shortcodes");
+								}}
+							>
+								<Link
+									href={docURL}
+									isExternal
+									textDecoration="none"
+									_hover={{ textDecoration: "none" }}
+									fontSize="13px"
+									fontWeight="normal"
+								>
+									{__("View Documentation", "user-registration")}
+								</Link>
+							</Button>
+						</Stack>
+						<Stack
+							px="6"
+							py="8"
+							align="center"
+							gap="3"
+							bgColor="white"
+							borderRadius="base"
+							border="1px"
+							borderColor="gray.100"
+							textAlign="center"
+						>
+							<Icon.SmartTag w="8" h="8" fill="#475bb2" />
+							<Heading as="h3" size="sm" fontWeight="semibold">
+								{__("Support", "user-registration")}
+							</Heading>
+							<Text fontSize="13px" color="gray.700">
+								{__(
+									"Submit a ticket for encountered issues and get help from our support team instantly.",
+									"user-registration"
+								)}
+							</Text>
+							<Button
+								mt="10"
+								variant="outline"
+								color="#475bb2"
+								borderColor="#475bb2"
+								borderRadius="base"
+								fontSize="14px"
+								fontWeight="normal"
+								onClick={() => {
+									setIsListViewerOpen(true);
+									setListViewerType("smartTags");
+								}}
+							>
+								{__("Create a Ticket", "user-registration")}
+							</Button>
+						</Stack>
+						</Grid>
 
 						{/* Shortcodes and Smart Tags Section */}
 						<Grid
@@ -412,7 +505,7 @@ const Help = () => {
 				</Grid>
 			</Stack>
 			<Stack gap="5">
-				<Stack
+				{/* <Stack
 					p="6"
 					gap="3"
 					bgColor="white"
@@ -443,8 +536,8 @@ const Help = () => {
 					>
 						{__("Join our Facebook Group", "user-registration")}
 					</Link>
-				</Stack>
-				<Stack
+				</Stack> */}
+				{/* <Stack
 					p="6"
 					gap="3"
 					bgColor="white"
@@ -476,8 +569,8 @@ const Help = () => {
 					>
 						{__("View Documentation", "user-registration")}
 					</Link>
-				</Stack>
-				<Stack
+				</Stack> */}
+				{/* <Stack
 					p="6"
 					gap="3"
 					bgColor="white"
@@ -509,7 +602,7 @@ const Help = () => {
 					>
 						{__("Create a Ticket", "user-registration")}
 					</Link>
-				</Stack>
+				</Stack> */}
 				<Stack
 					p="6"
 					gap="3"
