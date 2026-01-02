@@ -15,9 +15,6 @@
 				<div class="ur-label">
 					<label for="ur-input-type-membership-role">
 						<?php esc_html_e( 'Membership Role :', 'user-registration' ); ?>
-						<span style="color:red">*</span>
-						<span class="user-registration-help-tip tooltipstered"
-								data-tip="<?php esc_attr_e( 'Assign members to the selected role upon registration.(Overrides role set through form)', 'user-registration' ); ?>"></span>
 					</label>
 				</div>
 				<div class="ur-input-type-membership-name ur-admin-template">
