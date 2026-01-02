@@ -8818,6 +8818,7 @@ body.user-registration-page {
 			tr {
 				td {
 					height: 38px;
+					align-content: flex-start;
 
 					.row-actions {
 						color: $grey-300;
@@ -9003,10 +9004,11 @@ body.user-registration-page {
 						line-height: 150%;
 						letter-spacing: 0.3px;
 
-						&:hover {
-							background: darken($primary_color, 10%);
-							border-color: darken($primary_color, 10%);
-						}
+						// &:hover {
+						// 	color: $white;
+						// 	background: darken($primary_color, 10%);
+						// 	border-color: darken($primary_color, 10%);
+						// }
 					}
 
 					&[type="reset"],
