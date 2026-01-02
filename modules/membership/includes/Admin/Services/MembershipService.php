@@ -661,6 +661,23 @@ class MembershipService {
 		$memberships           = array();
 		$current_membership_id = absint( $data['current'] ?? 0 );
 
+		$current_user_id     = get_current_user_id();
+		$user_memberships    = array();
+		$user_membership_ids = array();
+
+		if ( $current_user_id ) {
+
+			$user_memberships    = $members_repository->get_member_membership_by_id( $current_user_id );
+			$user_membership_ids = array_filter(
+				array_map(
+					function ( $user_memberships ) {
+											return $user_memberships['post_id'];
+					},
+					$user_memberships
+				)
+			);
+		}
+
 		if ( isset( $data['action'] ) && 'upgrade' === $data['action'] ) {
 			// Checkout page for logged in user to upgrade membership.
 			if ( isset( $data['current'] ) && '' !== $data['current'] ) {
@@ -682,6 +699,12 @@ class MembershipService {
 					}
 				}
 				$memberships = $this->get_upgradable_membership( $current_membership_id );
+				$memberships = array_filter(
+					$memberships,
+					function ( $membership ) use ( $user_membership_ids ) {
+						return ! in_array( $membership['ID'], $user_membership_ids );
+					}
+				);
 
 				if ( empty( $memberships ) ) {
 					return array(
@@ -690,8 +713,6 @@ class MembershipService {
 					);
 				}
 			} else {
-				$current_user_id        = get_current_user_id();
-				$user_memberships       = $members_repository->get_member_membership_by_id( $current_user_id );
 				$intended_membership_id = absint( $data['membership_id'] );
 				$user_membership_id     = 0;
 
@@ -705,6 +726,13 @@ class MembershipService {
 							$current_upgradable_memberships
 						)
 					);
+
+					if ( in_array( $intended_membership_id, $user_membership_ids ) ) {
+						return array(
+							'status'  => false,
+							'message' => esc_html__( 'You already have purchased this membership plan.', 'user-registration' ),
+						);
+					}
 
 					if ( in_array( $intended_membership_id, $current_upgradable_memberships_ids ) ) {
 						$user_membership_id  = $membership['post_id'];
@@ -734,6 +762,7 @@ class MembershipService {
 			foreach ( $memberships as $key => &$membership ) {
 				$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
 				if ( ! empty( $membership_group ) && isset( $membership_group['ID'] ) ) {
+					$multiple_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group['ID'] );
 					$multiple_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group['ID'] );
 
 					if ( $multiple_allowed ) {
@@ -773,21 +802,9 @@ class MembershipService {
 
 				// If current membership is associated with a group then check if multiple can be purchased.
 				if ( ! empty( $membership_group ) ) {
-
-					$current_user_id     = get_current_user_id();
-					$user_membership_ids = array();
-					$multiple_allowed    = false;
+					$multiple_allowed = false;
 
 					if ( $current_user_id ) {
-						$user_memberships    = $members_repository->get_member_membership_by_id( $current_user_id );
-						$user_membership_ids = array_filter(
-							array_map(
-								function ( $user_memberships ) {
-									return $user_memberships['post_id'];
-								},
-								$user_memberships
-							)
-						);
 
 						if ( in_array( $membership_id, $user_membership_ids ) ) {
 							return array(
