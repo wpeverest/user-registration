@@ -2401,7 +2401,9 @@
 			$(document).on(
 				"click",
 				".reactivate-membership-button",
-				function () {
+				function (e) {
+					e.preventDefault();
+
 					var $this = $(this),
 						error_div = $("#membership-error-div"),
 						button_text = $this.text(),
@@ -2418,22 +2420,25 @@
 							$this.text(urmf_data.labels.i18n_sending_text);
 						},
 						success: function (response) {
-							if (response.success) {
-								if (error_div.hasClass("btn-error")) {
-									error_div.removeClass("btn-error");
-									error_div.addClass("btn-success");
-								}
-								error_div.text(response.data.message);
-								error_div.show();
-								location.reload();
-							} else {
-								if (error_div.hasClass("btn-success")) {
-									error_div.removeClass("btn-success");
-									error_div.addClass("btn-error");
-								}
-								error_div.text(response.data.message);
-								error_div.show();
+							if (
+								$(".user-registration-page .notice-container")
+									.length === 0
+							) {
+								$(
+									".user-registration-membership-notice__container"
+								).remove();
+								// Adds the toast container on the top of page.
+								$(document)
+									.find(".user-registration-page")
+									.prepend(
+										'<div class="user-registration-membership-notice__container"><div class="ur-toaster urm-error user-registration-membership-notice__red"><span class="user-registration-membership-notice__message"></span><span class="user-registration-membership__close_notice">&times;</span></div></div>'
+									);
 							}
+
+							$(document).trigger("urm_show_action_message", {
+								message: response.data.message,
+								type: response.success ? "success" : "error"
+							});
 						},
 						complete: function () {
 							$this.text(button_text);

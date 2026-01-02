@@ -54,14 +54,10 @@ const Stepper: React.FC<StepperProps> = ({
 	const mutedColor = useColorModeValue("gray.400", "gray.500");
 	const activeColor = "#475BB2";
 	const lineColor = useColorModeValue("gray.300", "gray.600");
-	const hoverBg = useColorModeValue("gray.100", "gray.700");
 	const closeIconColor = "#909090";
 
-	// Responsive: show labels only on larger screens
 	const showLabels = useBreakpointValue({ base: false, md: false, lg: true });
-	// Responsive: show logo text only on larger screens
-	const showLogoText = useBreakpointValue({ base: false, sm: true });
-	// Responsive circle size
+
 	const circleSize = useBreakpointValue({ base: "24px", md: "28px" });
 
 	const isStepCompleted = (stepNumber: number) => stepNumber < currentStep;
@@ -98,7 +94,6 @@ const Stepper: React.FC<StepperProps> = ({
 					</Box>
 				</Flex>
 
-				{/* Steps - Center with fixed first/last positions */}
 				<Flex
 					position="absolute"
 					left="50%"
