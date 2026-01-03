@@ -2524,14 +2524,12 @@ class AJAX {
 		$upgrade_paths = $membership_upgrade_service->fetch_upgrade_paths( $memberships, 'manual' );
 
 		if ( ! empty( $upgrade_paths ) ) {
-			$upgrade_paths_div   = $membership_upgrade_service->build_upgrade_paths( $upgrade_paths );
 			$upgrade_paths_order = $membership_upgrade_service->build_upgrade_order( $upgrade_paths );
 
 			wp_send_json_success(
 				array(
 					'upgrade_paths'       => $upgrade_paths,
 					'upgrade_order'       => array_keys( $upgrade_paths ),
-					'upgrade_paths_div'   => $upgrade_paths_div,
 					'upgrade_paths_order' => $upgrade_paths_order,
 				)
 			);

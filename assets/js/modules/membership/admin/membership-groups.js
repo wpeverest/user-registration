@@ -121,9 +121,17 @@
 				.find("#ur-input-type-membership-group-memberships")
 				.select2("val");
 
-			post_meta_data.mode = $(
-				'input[name="ur_membership_management_mode"]:checked'
-			).val();
+			var multiple_enabled = $(
+					'input[name="ur_membership_enable_multiple_memberships"]'
+				).is(":checked"),
+				upgrade_enabled = $(
+					'input[name="ur_membership_enable_upgrade"]:checked'
+				).is(":checked");
+			post_meta_data.mode = multiple_enabled
+				? "multiple"
+				: upgrade_enabled
+				? "upgrade"
+				: "";
 
 			if ("upgrade" === post_meta_data.mode) {
 				post_meta_data.upgrade_type = $(
@@ -521,7 +529,7 @@
 				});
 
 			$(document)
-				.find("input[name='ur_membership_management_mode']")
+				.find("input[name='ur_membership_enable_upgrade']")
 				.on("change", function (event) {
 					var membership_ids = $(
 						"#ur-input-type-membership-group-memberships"
@@ -549,6 +557,40 @@
 							order,
 							"sort"
 						);
+					}
+				});
+
+			$(document)
+				.find("input[name='ur_membership_enable_multiple_memberships']")
+				.on("change", function (event) {
+					if ($(this).is(":checked")) {
+						$(this)
+							.closest("form")
+							.find(".ur-membership-enable-upgrade-container")
+							.hide();
+						$(this)
+							.closest("form")
+							.find(".ur-membership-upgrade-container")
+							.hide();
+					} else {
+						$(this)
+							.closest("form")
+							.find(".ur-membership-enable-upgrade-container")
+							.show();
+
+						if (
+							$(this)
+								.closest("form")
+								.find(
+									"input[name='ur_membership_enable_upgrade']"
+								)
+								.is(":checked")
+						) {
+							$(this)
+								.closest("form")
+								.find(".ur-membership-upgrade-container")
+								.show();
+						}
 					}
 				});
 		},
@@ -991,9 +1033,17 @@
 		 * @param {string} membership_ids Membership Ids in the group.
 		 */
 		build_upgrade_paths: function (membership_ids, type) {
-			var membership_mode = $(
-				'input[name="ur_membership_management_mode"]:checked'
-			).val();
+			var multiple_enabled = $(
+					'input[name="ur_membership_enable_multiple_memberships"]'
+				).is(":checked"),
+				upgrade_enabled = $(
+					'input[name="ur_membership_enable_upgrade"]'
+				).is(":checked");
+			membership_mode = multiple_enabled
+				? "multiple"
+				: upgrade_enabled
+				? "upgrade"
+				: "";
 
 			if ("upgrade" === membership_mode) {
 				var upgrade_path = $(
@@ -1035,51 +1085,53 @@
 					}
 				}
 
-				if (JSON.stringify(membership_ids) === upgrade_order) {
-					$(document).find(".ur-membership-upgrade-container").show();
-				} else {
-					$.ajax({
-						type: "post",
-						dataType: "json",
-						url: urmg_data.ajax_url,
-						data: {
-							action: "user_registration_membership_fetch_upgrade_path",
-							membership_ids: mergedUpgradeOrder
-						},
-						success: function (response) {
-							if (response.success) {
-								var upgrade_paths = response.data.upgrade_paths,
-									upgrade_order = response.data.upgrade_order,
-									upgrade_paths_div =
-										response.data.upgrade_paths_div,
-									upgrade_paths_order =
-										response.data.upgrade_paths_order;
+				if (mergedUpgradeOrder.length > 0) {
+					if (JSON.stringify(membership_ids) === upgrade_order) {
+						$(document)
+							.find(".ur-membership-upgrade-container")
+							.show();
+					} else {
+						$.ajax({
+							type: "post",
+							dataType: "json",
+							url: urmg_data.ajax_url,
+							data: {
+								action: "user_registration_membership_fetch_upgrade_path",
+								membership_ids: mergedUpgradeOrder
+							},
+							success: function (response) {
+								if (response.success) {
+									var upgrade_paths =
+											response.data.upgrade_paths,
+										upgrade_order =
+											response.data.upgrade_order,
+										upgrade_paths_order =
+											response.data.upgrade_paths_order;
 
-								$(
-									'input[name="ur_membership_upgrade_path"]'
-								).val(JSON.stringify(upgrade_paths));
-								$("#ur-membership-upgrade-order").val(
-									JSON.stringify(upgrade_order)
-								);
+									$(
+										'input[name="ur_membership_upgrade_path"]'
+									).val(JSON.stringify(upgrade_paths));
+									$("#ur-membership-upgrade-order").val(
+										JSON.stringify(upgrade_order)
+									);
 
-								$(".ur-membership-upgrade-paths-info").html(
-									upgrade_paths_div
-								);
-								$(".ur-sortable-list").html(
-									upgrade_paths_order
-								);
-							} else {
-								$(".ur-membership-upgrade-paths-info").html("");
-								$(
-									'input[name="ur_membership_upgrade_path"]'
-								).val("");
+									$(".ur-sortable-list").html(
+										upgrade_paths_order
+									);
+								} else {
+									$(
+										'input[name="ur_membership_upgrade_path"]'
+									).val("");
+								}
+
+								$(document)
+									.find(".ur-membership-upgrade-container")
+									.show();
 							}
-
-							$(document)
-								.find(".ur-membership-upgrade-container")
-								.show();
-						}
-					});
+						});
+					}
+				} else {
+					$(document).find(".ur-membership-upgrade-container").hide();
 				}
 			} else {
 				$(document).find(".ur-membership-upgrade-container").hide();

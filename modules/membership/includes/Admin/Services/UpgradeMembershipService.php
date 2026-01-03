@@ -313,62 +313,6 @@ class UpgradeMembershipService {
 	}
 
 	/**
-	 * Build upgrade path html for user.
-	 *
-	 * @param array $upgrade_paths Upgrade Paths for the memberships inside the group.
-	 */
-	public function build_upgrade_paths( $upgrade_paths ) {
-		$built_upgrade_paths = array();
-
-		foreach ( $upgrade_paths as $membership_id => $path ) {
-
-			$membership_details = $this->membership_service->prepare_single_membership_data(
-				$this->membership_repository->get_single_membership_by_ID( $membership_id )
-			);
-
-			$current_label = $membership_details['post_title'];
-			$paths_label   = array( $current_label );
-			$paths_label   = array_map(
-				function ( $single_path ) {
-					return isset( $single_path['label'] ) ? $single_path['label'] : null;
-				},
-				$path
-			);
-
-			if ( ! empty( $paths_label ) ) {
-
-				array_unshift( $paths_label, $current_label );
-				$paths_label = array_filter( $paths_label );
-
-				$built_upgrade_paths[] = sprintf(
-					'Upgrade paths for %s: %s',
-					$current_label,
-					print_r( implode( ' -> ', $paths_label ), true )
-				);
-			}
-		}
-
-		ob_start();
-		if ( ! empty( $built_upgrade_paths ) ) {
-			?>
-			<div class="ur-p-tag">
-				Automatic upgrade paths setup for memberships in this group:
-				<ul>
-					<?php
-					foreach ( $built_upgrade_paths as $paths ) {
-						?>
-						<li><?php echo esc_html( $paths ); ?></li>
-						<?php
-					}
-					?>
-				</ul>
-			</div>
-			<?php
-		}
-		return ob_get_clean();
-	}
-
-	/**
 	 * Build upgrade order html for user.
 	 *
 	 * @param array $upgrade_paths Upgrade Paths for the memberships inside the group.

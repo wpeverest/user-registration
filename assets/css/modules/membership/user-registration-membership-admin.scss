@@ -1817,6 +1817,7 @@
 	color: #bababa;
 
 	.ur-membership-type-title,
+	label,
 	.ur-membership-type-description {
 		opacity: 0.5;
 	}
@@ -2255,6 +2256,14 @@
 }
 
 .ur-membership-upgrade-container{
+
+	.ur-membership-upgrade-paths-info {
+		font-size: 13px;
+		color: #646970;
+		margin: 0 0 12px 0;
+		line-height: 1.5;
+	}
+
 	.ur-sortable-box {
 		border: 1px solid #ddd;
 		border-radius: 4px;
