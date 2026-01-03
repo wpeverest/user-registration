@@ -100,7 +100,7 @@ class UpgradeMembershipService {
 		$upgrade_type               = ! empty( $upgrade_data['upgrade_type'] ) ? $upgrade_data['upgrade_type'] : '';
 
 		$chargeable_amount            = 0;
-		$remaining_subscription_value = $selected_membership_details['subscription']['value'];
+		$remaining_subscription_value = $selected_membership_details['subscription']['value'] ?? 0;
 		$delayed_until                = '';
 		$timezone                     = get_option( 'timezone_string' );
 		if ( ! $timezone ) {
@@ -323,12 +323,31 @@ class UpgradeMembershipService {
 
 		ob_start();
 		foreach ( $upgrade_paths as $membership_id => $path ) {
-
 			$membership_details = $this->membership_service->prepare_single_membership_data(
 				$this->membership_repository->get_single_membership_by_ID( $membership_id )
 			);
 
-			$current_label = $membership_details['post_title'];
+			$current_label   = $membership_details['post_title'];
+			$membership_meta = isset( $membership_details['meta_value'] ) ? $membership_details['meta_value'] : array();
+			$target_amount   = isset( $membership_meta['amount'] ) ? (float) $membership_meta['amount'] : 0.0;
+
+			$currencies = ur_payment_integration_get_currencies();
+			$currency   = get_option( 'user_registration_payment_currency', 'USD' );
+
+			$symbol = $currencies[ $currency ]['symbol'];
+			$amount = ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $target_amount, 2 ) : number_format( $target_amount, 2 ) . $symbol;
+
+			$current_term = '';
+
+			$duration       = $membership_meta['subscription']['duration'] ?? '';
+			$duration_value = trim( absint( $membership_meta['subscription']['value'] ?? 0 ) > 1 ?? '' );
+
+			if ( ! empty( $duration ) ) {
+				$duration     = ! empty( $duration_value ) ? $duration_value . ' ' . $duration : $duration;
+				$current_term = 'subscription' === $membership_meta['type'] ? $amount . ' / ' . $duration : $amount;
+			} else {
+				$current_term = $amount ?? '';
+			}
 
 			?>
 			<li class="ur-sortable-item" data-id="<?php echo esc_attr( $membership_id ); ?>">
@@ -337,7 +356,12 @@ class UpgradeMembershipService {
 						<path d="M7 12c0-1.227.985-2.222 2.2-2.222 1.215 0 2.2.995 2.2 2.222a2.211 2.211 0 0 1-2.2 2.222C7.985 14.222 7 13.227 7 12Zm0-7.778C7 2.995 7.985 2 9.2 2c1.215 0 2.2.995 2.2 2.222a2.211 2.211 0 0 1-2.2 2.222A2.21 2.21 0 0 1 7 4.222Zm0 15.556c0-1.227.985-2.222 2.2-2.222 1.215 0 2.2.994 2.2 2.222A2.211 2.211 0 0 1 9.2 22C7.985 22 7 21.005 7 19.778ZM13.6 12c0-1.227.985-2.222 2.2-2.222 1.215 0 2.2.995 2.2 2.222a2.211 2.211 0 0 1-2.2 2.222c-1.215 0-2.2-.995-2.2-2.222Zm0-7.778C13.6 2.995 14.585 2 15.8 2c1.215 0 2.2.995 2.2 2.222a2.211 2.211 0 0 1-2.2 2.222 2.21 2.21 0 0 1-2.2-2.222Zm0 15.556c0-1.227.985-2.222 2.2-2.222 1.215 0 2.2.994 2.2 2.222A2.211 2.211 0 0 1 15.8 22c-1.215 0-2.2-.995-2.2-2.222Z"></path>
 					</svg>
 				</span>
-				<span class="ur-item-label"><?php echo esc_html( $current_label ); ?></span>
+				<div class="ur-drag-label">
+					<div class="ur-item-label" style="font-weight: 500;"><?php echo esc_html( $current_label ); ?></div>
+					<?php if ( ! empty( $current_term ) ) : ?>
+					<div class="ur-item-label"><?php echo esc_html( $current_term ); ?></div>
+					<?php endif; ?>
+				</div>
 			</li>
 			<?php
 		}

@@ -140,6 +140,9 @@
 				post_meta_data.upgrade_path = $(
 					'input[name="ur_membership_upgrade_path"]'
 				).val();
+				post_meta_data.upgrade_order = $(
+					'input[name="ur_membership_upgrade_order"]'
+				).val();
 			}
 
 			return {
