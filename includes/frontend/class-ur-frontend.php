@@ -535,13 +535,13 @@ class UR_Frontend {
 					}
 					$membership_service = new MembershipService();
 					$membership_details = ( is_array( $membership ) && ! empty( $membership['post_id'] ) ) ? $membership_service->get_membership_details( $membership['post_id'] ) : array();
-					$active_gateways    = array();
+					$active_gateways    = urm_get_all_active_payment_gateways();
 
-					if ( ! empty( $membership_details['payment_gateways'] ) ) {
+					if ( ! empty( $active_gateways ) ) {
 						$active_gateways = array_filter(
-							$membership_details['payment_gateways'],
+							$active_gateways,
 							function ( $item, $key ) {
-								return 'on' == $item['status'] && in_array( $key, array( 'paypal', 'stripe', 'bank' ) );
+								return in_array( $key, array( 'paypal', 'stripe', 'bank' ) );
 							},
 							ARRAY_FILTER_USE_BOTH
 						);
