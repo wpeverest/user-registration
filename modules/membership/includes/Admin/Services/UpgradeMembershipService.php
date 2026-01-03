@@ -304,8 +304,6 @@ class UpgradeMembershipService {
 				$paths[ $current_id ] = $options;
 			}
 
-			// error_log( print_r( $paths, true ) );
-
 			return $paths;
 		}
 

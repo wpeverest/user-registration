@@ -111,7 +111,7 @@
 				description: form
 					.find("#ur-input-type-membership-group-description")
 					.val(),
-				status: form.find("#ur-membership-group-status").prop("checked")
+				status: $("#ur-membership-group-status").prop("checked")
 			};
 			if (urmg_data.membership_group_id) {
 				post_data.ID = urmg_data.membership_group_id;
@@ -309,10 +309,12 @@
 			// listen for clicks on the membership group save button
 			$(document).on(
 				"click",
-				"#ur-membership-group-create-form .ur-membership-group-save-btn",
+				".ur-membership-group-save-btn",
 				function (e) {
 					e.preventDefault();
 					e.stopPropagation();
+					console.log("hello");
+
 					var $this = $(this);
 					membership_group_object.create_membership_group($this);
 				}

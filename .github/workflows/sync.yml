@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - v5.0.0
+            - tweak/upgrade-path-builder-from-hierarchy
         workflow_dispatch:
 jobs:
     sync:

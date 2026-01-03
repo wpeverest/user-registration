@@ -24,6 +24,13 @@ if ( isset( $membership_group['upgrade_path'] ) ) {
 	);
 	$upgrade_order_html = $membership_group_service->build_upgrade_order( $upgrade_path );
 }
+
+$membership_description = '';
+
+if ( ! empty( $membership_group['post_content'] ) ) {
+	$membership_group_content = json_decode( wp_unslash( $membership_group['post_content'] ), true );
+	$membership_description   = $membership_group_content['description'];
+}
 ?>
 <div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
 	<div class="ur-page-title__wrapper">
@@ -36,6 +43,41 @@ if ( isset( $membership_group['upgrade_path'] ) ) {
 					<p>
 						<?php echo isset( $_GET['post_id'] ) ? esc_html_e( 'Edit Membership Group', 'user-registration' ) : esc_html_e( 'Create New Membership Group', 'user-registration' ); ?>
 					</p>
+				</div>
+			</div>
+		</div>
+		<div class="ur-page-title__wrapper--right">
+			<div class="ur-page-title__wrapper--right-menu">
+				<div class="ur-page-title__wrapper--right-menu__item">
+					<div class="ur-page-title__wrapper--actions">
+						<div class="ur-page-title__wrapper--actions-status">
+							<p><?php esc_html_e( 'Status', 'user-registration' ); ?></p>
+							<span class="separator">|</span>
+							<div class="visible ur-d-flex ur-align-items-center" style="gap: 5px">
+								<div class="ur-toggle-section">
+									<span class="user-registration-toggle-form">
+										<input
+										data-key-name="Membership Group Status"
+										id="ur-membership-group-status" type="checkbox"
+										class="ur-membership-change__status user-registration-switch__control hide-show-check enabled"
+										value="1"
+										<?php
+										checked(
+											! isset( $membership_group_content['status'] ) || ur_string_to_bool( $membership_group_content['status'] )
+										);
+										?>
+										>
+										<span class="slider round"></span>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="ur-page-title__wrapper--actions-publish">
+							<button class="button-primary ur-membership-group-save-btn" type="submit">
+								<?php ! empty( $membership_group['ID'] ) ? esc_html_e( 'Save', 'user-registration' ) : esc_html_e( 'Publish', 'user-registration' ); ?>
+							</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -82,16 +124,6 @@ if ( isset( $membership_group['upgrade_path'] ) ) {
 								</label>
 							</div>
 							<div class="ur-field" data-field-key="textarea" style="width: 100%">
-								<?php
-								$membership_description = '';
-
-								if ( ! empty( $membership_group['post_content'] ) ) {
-									$membership_content     = json_decode( wp_unslash( $membership_group['post_content'] ), true );
-									$membership_description = $membership_content['description'];
-								}
-
-
-								?>
 								<textarea data-key-name="Membership Description"
 											id="ur-input-type-membership-group-description"
 											name="ur_membership_description"
@@ -100,29 +132,6 @@ if ( isset( $membership_group['upgrade_path'] ) ) {
 											value=""><?php echo $membership_description; ?></textarea>
 							</div>
 						</div>
-						<!--					membership status-->
-						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px">
-							<div class="ur-label" style="width: 62%;">
-								<label class="ur-membership-group-enable-status"
-										for="ur-membership-group-status"><?php esc_html_e( 'Group Status', 'user-registration' ); ?>
-									<span class="user-registration-help-tip tooltipstered"
-											data-tip="<?php echo esc_attr__( 'Only active groups will be visible in the frontend.' ); ?>"></span>
-								</label>
-							</div>
-							<div class="ur-toggle-section m1-auto" style="width:100%">
-								<span class="user-registration-toggle-form">
-									<input
-										data-key-name="Membership Status"
-										id="ur-membership-group-status" type="checkbox"
-										class="user-registration-switch__control hide-show-check enabled urmg-input"
-										<?php echo isset( $membership_content ) && $membership_content['status'] == 'true' ? 'checked' : ''; ?>
-										name="ur_membership_status"
-										style="width: 100%; text-align: left">
-									<span class="slider round"></span>
-								</span>
-							</div>
-						</div>
-						<!--						role-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
 							<div class="ur-label" style="width: 62%">
 								<label
@@ -316,11 +325,6 @@ if ( isset( $membership_group['upgrade_path'] ) ) {
 					</div>
 				</div>
 				<hr>
-				<?php
-				$save_btn_class  = 'ur-membership-group-save-btn';
-				$create_btn_text = isset( $_GET['post_id'] ) ? esc_html__( 'Save', 'user-registration' ) : esc_html__( 'Create Membership Group', 'user-registration' );
-				require __DIR__ . '/./Partials/footer-actions.php'
-				?>
 			</div>
 		</form>
 	</div>
