@@ -604,7 +604,9 @@ class URCR_Content_Access_Rules {
 			$base_timestamp = time() * 1000;
 			$counter = 0;
 			$rule_content = self::regenerate_ids_in_content( $rule_content, $base_timestamp, $counter );
-			$new_post_content = wp_json_encode( $rule_content );
+			$rule_content = wp_unslash( $rule_content );
+			$new_post_content = wp_json_encode( $rule_content, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+			$new_post_content = wp_slash( $new_post_content );
 		} else {
 			$new_post_content = $rule_post->post_content;
 		}

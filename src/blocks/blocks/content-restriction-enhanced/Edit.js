@@ -140,6 +140,7 @@ const Edit = ({ attributes, setAttributes }) => {
 			<InspectorControls>
 				<PanelBody title={__("Settings", "user-registration")}>
 					<ToggleControl
+						className="urcr-ib-enable-content-restriction"
 						label={__(
 							"Enable Content Restriction",
 							"user-registration"
@@ -151,7 +152,10 @@ const Edit = ({ attributes, setAttributes }) => {
 					/>
 
 					{enableContentRestriction && (
-						<Box>
+						<Box
+							className="urcr-inspector-settings-wrapper"
+							mt={"12px"}
+						>
 							<SelectControl
 								label={__(
 									"Select Access Control",

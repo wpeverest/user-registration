@@ -92,7 +92,7 @@ class UR_Getting_Started {
 					'callback'            => array( __CLASS__, 'save_welcome_data' ),
 					'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 					'args'                => array(
-						'membership_type' => array(
+						'membership_type'      => array(
 							'type'              => 'string',
 							'required'          => true,
 							'enum'              => array( 'paid_membership', 'free_membership', 'normal' ),
@@ -102,11 +102,11 @@ class UR_Getting_Started {
 							'type'     => 'boolean',
 							'required' => false,
 						),
-						'allow_email_updates' => array(
+						'allow_email_updates'  => array(
 							'type'     => 'boolean',
 							'required' => false,
 						),
-						'admin_email' => array(
+						'admin_email'          => array(
 							'type'              => 'string',
 							'format'            => 'email',
 							'required'          => false,
@@ -232,6 +232,11 @@ class UR_Getting_Started {
 
 		update_option( 'user_registration_enabled_features', $enabled_features );
 
+		if ( class_exists( 'WPEverest\URMembership\Admin\Database\Database' ) ) {
+			$membership_db = new Database();
+			$membership_db::create_tables();
+		}
+
 		$current_step    = self::get_current_step();
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
 		$is_completed    = ! get_option( 'user_registration_first_time_activation_flag', true );
@@ -347,7 +352,7 @@ class UR_Getting_Started {
 	public static function get_settings_data( $request ) {
 
 		$login_options_raw = ur_login_option();
-		$login_options = array();
+		$login_options     = array();
 		foreach ( $login_options_raw as $value => $label ) {
 			$login_options[] = array(
 				'value' => $value,
@@ -355,13 +360,13 @@ class UR_Getting_Started {
 			);
 		}
 
-		$roles = array();
+		$roles           = array();
 		$available_roles = array();
 
 		if ( function_exists( 'ur_get_default_admin_roles' ) ) {
 			$available_roles = ur_get_default_admin_roles();
 		} else {
-			$wp_roles = wp_roles();
+			$wp_roles        = wp_roles();
 			$available_roles = $wp_roles->get_names();
 		}
 
@@ -375,7 +380,7 @@ class UR_Getting_Started {
 		}
 
 		$selected_login_option = get_option( 'user_registration_general_setting_login_options', 'default' );
-		$selected_role = get_option( 'user_registration_default_user_role', 'subscriber' );
+		$selected_role         = get_option( 'user_registration_default_user_role', 'subscriber' );
 
 		$data = array(
 			'login_options'         => $login_options,
@@ -418,7 +423,7 @@ class UR_Getting_Started {
 		if ( function_exists( 'ur_get_default_admin_roles' ) ) {
 			$available_roles = ur_get_default_admin_roles();
 		} else {
-			$wp_roles = wp_roles();
+			$wp_roles        = wp_roles();
 			$available_roles = $wp_roles->get_names();
 		}
 
@@ -432,7 +437,7 @@ class UR_Getting_Started {
 					$form_settings = array();
 				}
 				$form_settings['user_registration_form_setting_default_user_role'] = $default_role;
-				$form_settings['user_registration_form_setting_login_options'] = $login_option;
+				$form_settings['user_registration_form_setting_login_options']     = $login_option;
 				update_post_meta( $default_form_id, 'user_registration_form_setting', $form_settings );
 			}
 		}
@@ -581,17 +586,17 @@ class UR_Getting_Started {
 			);
 
 			$pages = array(
-				'registration' => array(
+				'registration'  => array(
 					'name'    => _x( 'registration', 'Page slug', 'user-registration' ),
 					'title'   => _x( 'Registration', 'Page title', 'user-registration' ),
 					'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $normal_form_id ) . '"]',
 				),
-				'login'        => array(
+				'login'         => array(
 					'name'    => _x( 'login', 'Page slug', 'user-registration' ),
 					'title'   => _x( 'Login', 'Page title', 'user-registration' ),
 					'content' => '[' . apply_filters( 'user_registration_login_shortcode_tag', 'user_registration_login' ) . ']',
 				),
-				'myaccount'    => array(
+				'myaccount'     => array(
 					'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
 					'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
 					'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
@@ -700,16 +705,37 @@ class UR_Getting_Started {
 	 * @return \WP_REST_Response
 	 */
 	public static function get_memberships_data( $request ) {
-		$membership_type = get_option( 'urm_onboarding_membership_type', 'free_membership' );
+		$membership_type      = get_option( 'urm_onboarding_membership_type', 'free_membership' );
 		$saved_membership_ids = get_option( 'urm_onboarding_membership_ids', array() );
-		$memberships = self::fetch_memberships_for_wizard( $saved_membership_ids );
-		$content = array(
+		$memberships          = self::fetch_memberships_for_wizard( $saved_membership_ids );
+		$content              = array(
 			'posts' => self::get_available_posts(),
 			'pages' => self::get_available_pages(),
 		);
 
+		$default_type = 'paid_membership' === $membership_type ? 'one-time' : 'free';
 
-		$default_type = 'paid_membership' === $membership_type ? 'paid' : 'free';
+		$currencies_raw = array();
+		if ( function_exists( 'ur_payment_integration_get_currencies' ) ) {
+			$currencies_raw = ur_payment_integration_get_currencies();
+		}
+
+		$currencies        = array();
+		$currency_symbol   = '$';
+		$selected_currency = get_option( 'user_registration_payment_currency', 'USD' );
+
+		foreach ( $currencies_raw as $code => $currency_data ) {
+			$symbol       = html_entity_decode( $currency_data['symbol'], ENT_QUOTES, 'UTF-8' );
+			$currencies[] = array(
+				'code'   => $code,
+				'name'   => $currency_data['name'],
+				'symbol' => $symbol,
+			);
+
+			if ( $code === $selected_currency ) {
+				$currency_symbol = $symbol;
+			}
+		}
 
 		return new \WP_REST_Response(
 			array(
@@ -719,6 +745,9 @@ class UR_Getting_Started {
 				'membership_type'   => $membership_type,
 				'default_plan_type' => $default_type,
 				'can_create_paid'   => 'paid_membership' === $membership_type,
+				'currency'          => $selected_currency,
+				'currency_symbol'   => $currency_symbol,
+				'currencies'        => $currencies,
 			),
 			200
 		);
@@ -792,7 +821,9 @@ class UR_Getting_Started {
 			);
 		}
 
-		$allowed_type = ( 'paid_membership' === $membership_type ) ? array( 'free', 'paid' ) : array( 'free' );
+		$allowed_types = ( 'paid_membership' === $membership_type )
+			? array( 'free', 'one-time', 'subscription' )
+			: array( 'free' );
 
 		$results = array(
 			'created' => array(),
@@ -803,14 +834,14 @@ class UR_Getting_Started {
 		foreach ( $memberships as $index => $membership ) {
 			$plan_type = isset( $membership['type'] ) ? sanitize_text_field( $membership['type'] ) : 'free';
 
-			if ( ! in_array( $plan_type, $allowed_type, true ) ) {
+			if ( ! in_array( $plan_type, $allowed_types, true ) ) {
 				$results['errors'][] = array(
 					'index'   => $index,
 					'name'    => isset( $membership['name'] ) ? $membership['name'] : '',
 					'message' => sprintf(
-						__( 'Invalid membership type: %s. Only %s memberships are allowed based on your selection.', 'user-registration' ),
+						__( 'Invalid membership type: %1$s. Only %2$s memberships are allowed based on your selection.', 'user-registration' ),
 						$plan_type,
-						implode( ' or ', $allowed_type )
+						implode( ' or ', $allowed_types )
 					),
 				);
 				continue;
@@ -875,9 +906,10 @@ class UR_Getting_Started {
 			);
 		}
 
-		$type_input = ! empty( $membership['type'] ) ? sanitize_text_field( $membership['type'] ) : 'free';
-		$billing    = ! empty( $membership['billing_period'] ) ? sanitize_text_field( $membership['billing_period'] ) : '';
-		$amount     = isset( $membership['price'] ) ? floatval( $membership['price'] ) : 0;
+		$type_input    = ! empty( $membership['type'] ) ? sanitize_text_field( $membership['type'] ) : 'free';
+		$billing_cycle = ! empty( $membership['billing_cycle'] ) ? sanitize_text_field( $membership['billing_cycle'] ) : 'month';
+		$billing_count = ! empty( $membership['billing_cycle_count'] ) ? absint( $membership['billing_cycle_count'] ) : 1;
+		$amount        = isset( $membership['price'] ) ? floatval( $membership['price'] ) : 0;
 
 		$meta = array(
 			'payment_gateways' => array(),
@@ -886,23 +918,14 @@ class UR_Getting_Started {
 
 		if ( 'free' === $type_input ) {
 			$meta['type'] = 'free';
-		} elseif ( 'paid' === $type_input ) {
-			if ( in_array( $billing, array( 'weekly', 'monthly', 'yearly' ), true ) ) {
-				$meta['type'] = 'subscription';
-
-				$duration_map = array(
-					'weekly'  => 'week',
-					'monthly' => 'month',
-					'yearly'  => 'year',
-				);
-
-				$meta['subscription'] = array(
-					'value'    => 1,
-					'duration' => $duration_map[ $billing ],
-				);
-			} else {
-				$meta['type'] = 'paid';
-			}
+		} elseif ( 'one-time' === $type_input ) {
+			$meta['type'] = 'paid';
+		} elseif ( 'subscription' === $type_input ) {
+			$meta['type']         = 'subscription';
+			$meta['subscription'] = array(
+				'value'    => $billing_count,
+				'duration' => $billing_cycle,
+			);
 		} else {
 			$meta['type'] = 'free';
 		}
@@ -919,7 +942,6 @@ class UR_Getting_Started {
 
 		$service  = new \WPEverest\URMembership\Admin\Services\MembershipService();
 		$prepared = $service->prepare_membership_post_data( $data );
-
 
 		if ( isset( $prepared['status'] ) && ! $prepared['status'] ) {
 			$message = ! empty( $prepared['message'] ) ? $prepared['message'] : __( 'Invalid membership data.', 'user-registration' );
@@ -1039,7 +1061,6 @@ class UR_Getting_Started {
 		$enabled_features  = get_option( 'user_registration_enabled_features', array() );
 		$required_features = array(
 			'user-registration-membership',
-			'user-registration-content-restriction',
 		);
 
 		foreach ( $required_features as $feature ) {
@@ -1092,9 +1113,9 @@ class UR_Getting_Started {
 		};
 
 		$access_rule_data = array(
-			'enabled'        => true,
-			'access_control' => 'access',
-			'logic_map'      => array(
+			'enabled'         => true,
+			'access_control'  => 'access',
+			'logic_map'       => array(
 				'type'       => 'group',
 				'id'         => $mkid( 'logic' ),
 				'conditions' => array(),
@@ -1149,7 +1170,7 @@ class UR_Getting_Started {
 			$access_rule_data['target_contents'][] = array(
 				'id'    => $mkid( 'target_' . $type ),
 				'type'  => $cr_type,
-				'value' => $values,
+				'value' => array_map( 'strval', $values ),
 			);
 		}
 
@@ -1191,19 +1212,17 @@ class UR_Getting_Started {
 			$access_rules      = get_post_meta( $membership_id, '_ur_membership_access_rules', true );
 
 			$plan_type = 'free';
-			if ( in_array( $meta_type, array( 'paid', 'subscription' ), true ) ) {
-				$plan_type = 'paid';
+			if ( 'paid' === $meta_type ) {
+				$plan_type = 'one-time';
+			} elseif ( 'subscription' === $meta_type ) {
+				$plan_type = 'subscription';
 			}
 
-			$billing_period = 'one-time';
+			$billing_cycle       = 'month';
+			$billing_cycle_count = '';
 			if ( 'subscription' === $meta_type && ! empty( $meta_subscription ) ) {
-				$duration     = isset( $meta_subscription['duration'] ) ? $meta_subscription['duration'] : '';
-				$duration_map = array(
-					'week'  => 'weekly',
-					'month' => 'monthly',
-					'year'  => 'yearly',
-				);
-				$billing_period = isset( $duration_map[ $duration ] ) ? $duration_map[ $duration ] : 'monthly';
+				$billing_cycle       = isset( $meta_subscription['duration'] ) ? $meta_subscription['duration'] : 'month';
+				$billing_cycle_count = isset( $meta_subscription['value'] ) ? strval( $meta_subscription['value'] ) : '1';
 			}
 
 			$content_access = array();
@@ -1233,13 +1252,14 @@ class UR_Getting_Started {
 			}
 
 			$memberships[] = array(
-				'id'            => $membership_id,
-				'name'          => $post->post_title,
-				'type'          => $plan_type,
-				'price'         => ! empty( $meta_amount ) ? strval( $meta_amount ) : '',
-				'billingPeriod' => $billing_period,
-				'contentAccess' => $content_access,
-				'isNew'         => false,
+				'id'                => $membership_id,
+				'name'              => $post->post_title,
+				'type'              => $plan_type,
+				'price'             => ! empty( $meta_amount ) ? strval( $meta_amount ) : '',
+				'billingCycle'      => $billing_cycle,
+				'billingCycleCount' => $billing_cycle_count,
+				'contentAccess'     => $content_access,
+				'isNew'             => false,
 			);
 		}
 
@@ -1260,7 +1280,6 @@ class UR_Getting_Started {
 		$membership_features = array(
 			'user-registration-membership',
 			'user-registration-payment-history',
-			'user-registration-content-restriction',
 		);
 
 		foreach ( $membership_features as $feature ) {
@@ -1300,7 +1319,10 @@ class UR_Getting_Started {
 			'membership_pricing'      => array(
 				'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
 				'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
-				'content' => '[user_registration_groups]',
+				'content' => '<!-- wp:user-registration/membership-listing -->
+<div>Membership Listing</div>
+<!-- /wp:user-registration/membership-listing -->
+',
 			),
 			'membership_thankyou'     => array(
 				'name'    => _x( 'thankyou', 'Page slug', 'user-registration' ),
@@ -1331,12 +1353,12 @@ class UR_Getting_Started {
 		}
 
 		$common_pages = array(
-			'login'        => array(
+			'login'         => array(
 				'name'    => _x( 'login', 'Page slug', 'user-registration' ),
 				'title'   => _x( 'Login', 'Page title', 'user-registration' ),
 				'content' => '[' . apply_filters( 'user_registration_login_shortcode_tag', 'user_registration_login' ) . ']',
 			),
-			'myaccount'    => array(
+			'myaccount'     => array(
 				'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
 				'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
 				'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
@@ -1483,15 +1505,15 @@ class UR_Getting_Started {
 				'bank_details' => get_option( 'user_registration_global_bank_details', '' ),
 			),
 			array(
-				'id'           => 'paypal',
-				'label'        => __( 'PayPal', 'user-registration' ),
-				'description'  => __( 'Accept payments via PayPal.', 'user-registration' ),
-				'enabled'      => self::get_bool_option( 'urm_paypal_connection_status' ),
-				'configured'   => self::is_gateway_configured( 'paypal' ),
-				'settings_url' => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
-				'paypal_email' => get_option( 'user_registration_global_paypal_email_address', '' ),
-				'paypal_client_id' => get_option('user_registration_global_paypal_client_id'),
-				'paypal_client_secret' => get_option('user_registration_global_paypal_client_secret'),
+				'id'                   => 'paypal',
+				'label'                => __( 'PayPal', 'user-registration' ),
+				'description'          => __( 'Accept payments via PayPal.', 'user-registration' ),
+				'enabled'              => self::get_bool_option( 'urm_paypal_connection_status' ),
+				'configured'           => self::is_gateway_configured( 'paypal' ),
+				'settings_url'         => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
+				'paypal_email'         => get_option( 'user_registration_global_paypal_email_address', '' ),
+				'paypal_client_id'     => get_option( 'user_registration_global_paypal_client_id' ),
+				'paypal_client_secret' => get_option( 'user_registration_global_paypal_client_secret' ),
 			),
 			array(
 				'id'                          => 'stripe',
@@ -1548,16 +1570,16 @@ class UR_Getting_Started {
 		$paypal          = isset( $request['paypal'] ) ? (bool) $request['paypal'] : false;
 		$stripe          = isset( $request['stripe'] ) ? (bool) $request['stripe'] : false;
 
-		$currency                     = isset( $request['currency'] ) ? sanitize_text_field( $request['currency'] ) : 'USD';
-		$bank_details                 = isset( $request['bank_details'] ) ? sanitize_textarea_field( $request['bank_details'] ) : '';
-		$paypal_email                 = isset( $request['paypal_email'] ) ? sanitize_email( $request['paypal_email'] ) : '';
-		$paypal_client_id             = isset( $request['paypal_client_id'] ) ? sanitize_text_field( $request['paypal_client_id'] ) : '';
-		$paypal_client_secret         = isset( $request['paypal_client_secret'] ) ? sanitize_text_field( $request['paypal_client_secret'] ) : '';
-		$stripe_test_mode             = isset( $request['stripe_test_mode'] ) ? (bool) $request['stripe_test_mode'] : false;
-		$stripe_test_publishable_key  = isset( $request['stripe_test_publishable_key'] ) ? sanitize_text_field( $request['stripe_test_publishable_key'] ) : '';
-		$stripe_test_secret_key       = isset( $request['stripe_test_secret_key'] ) ? sanitize_text_field( $request['stripe_test_secret_key'] ) : '';
-		$stripe_live_publishable_key  = isset( $request['stripe_live_publishable_key'] ) ? sanitize_text_field( $request['stripe_live_publishable_key'] ) : '';
-		$stripe_live_secret_key       = isset( $request['stripe_live_secret_key'] ) ? sanitize_text_field( $request['stripe_live_secret_key'] ) : '';
+		$currency                    = isset( $request['currency'] ) ? sanitize_text_field( $request['currency'] ) : 'USD';
+		$bank_details                = isset( $request['bank_details'] ) ? sanitize_textarea_field( $request['bank_details'] ) : '';
+		$paypal_email                = isset( $request['paypal_email'] ) ? sanitize_email( $request['paypal_email'] ) : '';
+		$paypal_client_id            = isset( $request['paypal_client_id'] ) ? sanitize_text_field( $request['paypal_client_id'] ) : '';
+		$paypal_client_secret        = isset( $request['paypal_client_secret'] ) ? sanitize_text_field( $request['paypal_client_secret'] ) : '';
+		$stripe_test_mode            = isset( $request['stripe_test_mode'] ) ? (bool) $request['stripe_test_mode'] : false;
+		$stripe_test_publishable_key = isset( $request['stripe_test_publishable_key'] ) ? sanitize_text_field( $request['stripe_test_publishable_key'] ) : '';
+		$stripe_test_secret_key      = isset( $request['stripe_test_secret_key'] ) ? sanitize_text_field( $request['stripe_test_secret_key'] ) : '';
+		$stripe_live_publishable_key = isset( $request['stripe_live_publishable_key'] ) ? sanitize_text_field( $request['stripe_live_publishable_key'] ) : '';
+		$stripe_live_secret_key      = isset( $request['stripe_live_secret_key'] ) ? sanitize_text_field( $request['stripe_live_secret_key'] ) : '';
 
 		update_option( 'user_registration_payment_currency', $currency );
 
@@ -1565,18 +1587,15 @@ class UR_Getting_Started {
 		update_option( 'urm_paypal_connection_status', $paypal );
 		update_option( 'urm_stripe_connection_status', $stripe );
 
-
 		if ( $offline_payment ) {
 			update_option( 'user_registration_global_bank_details', $bank_details );
 		}
-
 
 		if ( $paypal ) {
 			update_option( 'user_registration_global_paypal_email_address', $paypal_email );
 			update_option( 'user_registration_global_paypal_client_id', $paypal_client_id );
 			update_option( 'user_registration_global_paypal_client_secret', $paypal_client_secret );
 		}
-
 
 		if ( $stripe ) {
 			update_option( 'user_registration_stripe_test_mode', $stripe_test_mode );
@@ -1737,7 +1756,7 @@ class UR_Getting_Started {
 			'url'   => self::get_page_url( 'user_registration_myaccount_page_id' ),
 		);
 
-		$roles = array();
+		$roles        = array();
 		$default_role = get_option( 'user_registration_default_user_role', 'subscriber' );
 
 		if ( 'normal' === $membership_type ) {
@@ -1754,9 +1773,9 @@ class UR_Getting_Started {
 		}
 
 		$action_urls = array(
-			'dashboard'         => admin_url( 'admin.php?page=user-registration-dashboard' ),
-			'settings'          => admin_url( 'admin.php?page=user-registration-settings' ),
-			'forms'             => admin_url( 'admin.php?page=user-registration' ),
+			'dashboard' => admin_url( 'admin.php?page=user-registration-dashboard' ),
+			'settings'  => admin_url( 'admin.php?page=user-registration-settings' ),
+			'forms'     => admin_url( 'admin.php?page=user-registration' ),
 		);
 
 		if ( $is_membership ) {
@@ -1973,16 +1992,13 @@ class UR_Getting_Started {
 			}
 		}
 
-
 		if ( 2 === $next_step && 'normal' === $membership_type ) {
 			$next_step = 4;
 		}
 
-
 		if ( 3 === $next_step && 'paid_membership' !== $membership_type ) {
 			$next_step = 5;
 		}
-
 
 		if ( 4 === $next_step && 'normal' !== $membership_type ) {
 			$next_step = 5;

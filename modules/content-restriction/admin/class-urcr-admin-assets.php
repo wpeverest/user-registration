@@ -474,6 +474,16 @@ class URCR_Admin_Assets {
 			$localized_data
 		);
 	}
+
+	/**
+	 * Get the default message for content restriction (membership_default_message).
+	 *
+	 * @return string Default message.
+	 */
+	public static function get_default_message() {
+		$localized_data = self::get_localized_data();
+		return isset( $localized_data['membership_default_message'] ) ? $localized_data['membership_default_message'] : '<p>' . __( 'You do not have sufficient permission to access this content.', 'user-registration' ) . '</p>';
+	}
 }
 
 return new URCR_Admin_Assets();

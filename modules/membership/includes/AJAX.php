@@ -1286,28 +1286,66 @@ class AJAX {
 			);
 		}
 
-		$reactivation_status = $subscription_repository->reactivate_subscription_by_id( $subscription_id );
-		if ( $reactivation_status['status'] ) {
+		$membership_id      = $user_subscription['item_id'] ?? 0;
+		$membership_service = new MembershipService();
+		$membership_details = $membership_service->get_membership_details( $membership_id );
 
-			// Prepare data to register subscription reactivation event.
-			$payload = array(
-				'subscription_id' => $subscription_id,
-				'member_id'       => $user_id,
-				'event_type'      => 'reactivated',
-			);
+		$order_repository                      = new OrdersRepository();
+		$order_associated_with_subscription_id = $order_repository->get_order_by_subscription( $subscription_id );
 
-			do_action( 'ur_membership_subscription_event_triggered', $payload );
+		if ( ! empty( $order_associated_with_subscription_id['order_type'] ) && $order_associated_with_subscription_id['order_type'] === $membership_details['type'] ) {
+			if ( isset( $membership_details['type'] ) && 'subscription' !== $membership_details['type'] ) {
+				$subscription_repository = new SubscriptionRepository();
+				$subscription_repository->update(
+					$subscription_id,
+					array(
+						'status' => 'active',
+					)
+				);
 
-			wp_send_json_success(
-				array(
-					'message' => __( 'Membership reactivated successfully.', 'user-registration' ),
-				)
-			);
+				wp_send_json_success(
+					array(
+						'message' => __( 'Membership reactivated successfully.', 'user-registration' ),
+					)
+				);
+			} elseif ( isset( $membership_details['type'] ) && 'subscription' === $membership_details['type'] ) {
+
+				$reactivation_status = $subscription_repository->reactivate_subscription_by_id( $subscription_id );
+				if ( $reactivation_status['status'] ) {
+
+					// Prepare data to register subscription reactivation event.
+					$payload = array(
+						'subscription_id' => $subscription_id,
+						'member_id'       => $user_id,
+						'event_type'      => 'reactivated',
+					);
+
+					do_action( 'ur_membership_subscription_event_triggered', $payload );
+
+					wp_send_json_success(
+						array(
+							'message' => __( 'Membership reactivated successfully.', 'user-registration' ),
+						)
+					);
+				} else {
+					$message = ! empty( $reactivation_status['message'] ) ? $reactivation_status['message'] : __( 'Failed to reactivate membership.', 'user-registration' );
+					wp_send_json_error(
+						array(
+							'message' => $message,
+						)
+					);
+				}
+			} else {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Membership details not found. Please contact site administrator.', 'user-registration' ),
+					)
+				);
+			}
 		} else {
-			$message = ! empty( $reactivation_status['message'] ) ? $reactivation_status['message'] : __( 'Failed to reactivate membership.', 'user-registration' );
 			wp_send_json_error(
 				array(
-					'message' => $message,
+					'message' => __( 'Cannot reactivate this membership. Please contact site administrator.', 'user-registration' ),
 				)
 			);
 		}

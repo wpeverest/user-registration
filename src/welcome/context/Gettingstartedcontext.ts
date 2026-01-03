@@ -1,6 +1,6 @@
 export type MembershipSetupType = "paid" | "free" | "other";
-export type MembershipPlanType = "free" | "paid";
-export type BillingPeriod = "weekly" | "monthly" | "yearly" | "one-time";
+export type MembershipPlanType = "free" | "one-time" | "subscription";
+export type BillingCycle = "day" | "week" | "month" | "year";
 
 export interface ContentAccess {
 	id: string;
@@ -13,13 +13,15 @@ export interface MembershipPlan {
 	name: string;
 	type: MembershipPlanType;
 	price: string;
-	billingPeriod: BillingPeriod;
+	billingCycle: BillingCycle;
+	billingCycleCount: string;
 	contentAccess: ContentAccess[];
 	isNew?: boolean;
 }
 
 export interface PaymentSettings {
 	currency: string;
+	currencySymbol: string;
 	offlinePayment: boolean;
 	bankDetails: string;
 	paypal: boolean;
@@ -63,11 +65,11 @@ const createDefaultPlan = (
 	name: "",
 	type: type,
 	price: "",
-	billingPeriod: "one-time",
+	billingCycle: "month",
+	billingCycleCount: "",
 	contentAccess: [],
 	isNew: false
 });
-
 
 export const getTotalStepsForType = (
 	membershipType: MembershipSetupType
@@ -78,7 +80,7 @@ export const getTotalStepsForType = (
 		case "free":
 			return 3;
 		case "other":
-			return 3; // Welcome → Settings → Finish
+			return 3;
 		default:
 			return 4;
 	}
@@ -111,9 +113,10 @@ export const initialState: GettingStartedState = {
 				"Complete registration system to replace WordPress's basic signup. Custom signup fields, login & account pages, and user approval."
 		}
 	],
-	membershipPlans: [createDefaultPlan("paid")],
+	membershipPlans: [createDefaultPlan("one-time")],
 	paymentSettings: {
 		currency: "USD",
+		currencySymbol: "$",
 		offlinePayment: false,
 		bankDetails: "",
 		paypal: false,
@@ -195,10 +198,8 @@ export const reducer = (
 			return { ...state, currentStep: action.payload };
 
 		case "SET_MEMBERSHIP_SETUP_TYPE":
-
 			const newDefaultType: MembershipPlanType =
-				action.payload === "paid" ? "paid" : "free";
-
+				action.payload === "paid" ? "one-time" : "free";
 
 			const updatedPlansOnTypeChange = state.membershipPlans.map(
 				(plan, index) => {
@@ -223,7 +224,7 @@ export const reducer = (
 
 		case "ADD_MEMBERSHIP_PLAN":
 			const defaultTypeForNewPlan: MembershipPlanType =
-				state.membershipSetupType === "paid" ? "paid" : "free";
+				state.membershipSetupType === "paid" ? "one-time" : "free";
 			const newPlan = action.payload || {
 				...createDefaultPlan(defaultTypeForNewPlan),
 				isNew: true
@@ -291,22 +292,19 @@ export const reducer = (
 			const hydratedSetupType =
 				action.payload.membershipSetupType || state.membershipSetupType;
 
-			// Handle membership plans hydration
 			let hydratedPlans = state.membershipPlans;
 
 			if (
 				action.payload.membershipPlans &&
 				action.payload.membershipPlans.length > 0
 			) {
-				// If API returns saved memberships, use them directly
 				hydratedPlans = action.payload.membershipPlans;
 			} else if (
 				state.membershipPlans.length > 0 &&
 				state.membershipPlans[0].name === ""
 			) {
-				// If there are only default plans with empty names, update their type based on membershipSetupType
 				const syncedType: MembershipPlanType =
-					hydratedSetupType === "paid" ? "paid" : "free";
+					hydratedSetupType === "paid" ? "one-time" : "free";
 				hydratedPlans = state.membershipPlans.map((plan, index) => {
 					if (index === 0 && plan.name === "") {
 						return { ...plan, type: syncedType };

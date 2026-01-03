@@ -1,4 +1,8 @@
-import { MembershipSetupType, PaymentSettings } from "../context/Gettingstartedcontext";
+import {
+	MembershipPlanType,
+	MembershipSetupType,
+	PaymentSettings
+} from "../context/Gettingstartedcontext";
 
 export const API_BASE = "/wp-json/user-registration/v1/getting-started";
 
@@ -21,7 +25,7 @@ const getHeaders = () => {
 
 	return {
 		"Content-Type": "application/json",
-		...(nonce ? { "X-WP-Nonce": nonce } : {}),
+		...(nonce ? { "X-WP-Nonce": nonce } : {})
 	};
 };
 
@@ -29,7 +33,7 @@ export const apiGet = async <T = any>(path: string): Promise<T> => {
 	const res = await fetch(`${API_BASE}${path}`, {
 		method: "GET",
 		headers: getHeaders(),
-		credentials: "same-origin",
+		credentials: "same-origin"
 	});
 	const json = await res.json();
 	if (!json.success) {
@@ -38,12 +42,15 @@ export const apiGet = async <T = any>(path: string): Promise<T> => {
 	return json.data ?? json;
 };
 
-export const apiPost = async <T = any>(path: string, body?: any): Promise<T> => {
+export const apiPost = async <T = any>(
+	path: string,
+	body?: any
+): Promise<T> => {
 	const res = await fetch(`${API_BASE}${path}`, {
 		method: "POST",
 		headers: getHeaders(),
 		credentials: "same-origin",
-		body: body ? JSON.stringify(body) : undefined,
+		body: body ? JSON.stringify(body) : undefined
 	});
 	const json = await res.json();
 	if (!json.success) {
@@ -74,9 +81,32 @@ export const mapApiToSetupType = (apiType: string): MembershipSetupType => {
 	}
 };
 
-/**
- * Maps the frontend PaymentSettings to the API format
- */
+export const mapPlanTypeToApi = (type: MembershipPlanType): string => {
+	switch (type) {
+		case "free":
+			return "free";
+		case "one-time":
+			return "paid";
+		case "subscription":
+			return "subscription";
+		default:
+			return "free";
+	}
+};
+
+export const mapApiToPlanType = (apiType: string): MembershipPlanType => {
+	switch (apiType) {
+		case "free":
+			return "free";
+		case "paid":
+			return "one-time";
+		case "subscription":
+			return "subscription";
+		default:
+			return "free";
+	}
+};
+
 export const mapPaymentSettingsToApi = (settings: PaymentSettings) => {
 	return {
 		currency: settings.currency,
@@ -95,14 +125,12 @@ export const mapPaymentSettingsToApi = (settings: PaymentSettings) => {
 	};
 };
 
-/**
- * Maps API payment settings response to frontend format
- */
 export const mapApiToPaymentSettings = (
 	apiData: any
 ): Partial<PaymentSettings> => {
 	return {
 		currency: apiData.currency ?? "USD",
+		currencySymbol: apiData.currency_symbol ?? "$",
 		offlinePayment: apiData.offline_payment ?? false,
 		bankDetails: apiData.bank_details ?? "",
 		paypal: apiData.paypal ?? false,
@@ -116,4 +144,21 @@ export const mapApiToPaymentSettings = (
 		stripeLivePublishableKey: apiData.stripe_live_publishable_key ?? "",
 		stripeLiveSecretKey: apiData.stripe_live_secret_key ?? ""
 	};
+};
+
+export const mapBillingCycleToApi = (cycle: string): string => {
+	return cycle;
+};
+export const mapApiToBillingCycle = (apiCycle: string): string => {
+	const cycleMap: Record<string, string> = {
+		daily: "day",
+		weekly: "week",
+		monthly: "month",
+		yearly: "year",
+		day: "day",
+		week: "week",
+		month: "month",
+		year: "year"
+	};
+	return cycleMap[apiCycle] || "month";
 };
