@@ -207,6 +207,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					wpu.user_login,
 					wpu.user_email,
 					wums.status,
+					wums.billing_cycle,
 					wpu.user_registered,
 					wums.expiry_date,
 					wumo_latest.payment_method
@@ -226,11 +227,33 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 				ORDER BY FIELD(wpu.ID, $user_ids_in)
 			";
 
-			$results         = $wpdb->get_results( $sql, ARRAY_A );
+			$results = $wpdb->get_results( $sql, ARRAY_A );
+
 			$user_id_indexed = array();
 
 			foreach ( $results as $row ) {
-				$user_id_indexed[ $row['ID'] ] = $row;
+				$user_id = $row['ID'];
+
+				if ( ! isset( $user_id_indexed[ $user_id ] ) ) {
+					$user_id_indexed[ $user_id ] = array(
+						'ID'              => $user_id,
+						'user_login'      => $row['user_login'],
+						'user_email'      => $row['user_email'],
+						'user_registered' => $row['user_registered'],
+						'payment_method'  => $row['payment_method'],
+						'subscriptions'   => array(),
+					);
+				}
+
+				if ( ! empty( $row['subscription_id'] ) ) {
+					$user_id_indexed[ $user_id ]['subscriptions'][] = array(
+						'subscription_id'  => $row['subscription_id'],
+						'membership_title' => $row['membership_title'],
+						'status'           => $row['status'],
+						'expiry_date'      => $row['expiry_date'],
+						'billing_cycle'    => $row['billing_cycle'],
+					);
+				}
 			}
 
 			$this->items = $user_id_indexed;
@@ -247,7 +270,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 		 * No items found text.
 		 */
 		public function no_items() {
-			UR_Base_Layout::no_items('Members');
+			UR_Base_Layout::no_items( 'Members' );
 		}
 		/**
 		 * Returns a combined meta query array for different user statuses.
@@ -445,13 +468,9 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 				$user_id         = $user_object['ID'];
 				$new_user_object = get_userdata( (int) $user_id );
 			}
-			$new_user_object->filter           = 'display';
-			$email                             = $new_user_object->user_email;
-			$new_user_object->subscription_id  = $user_object['subscription_id'] ?? '';
-			$new_user_object->membership_title = $user_object['membership_title'] ?? '';
-			$new_user_object->status           = $user_object['status'] ?? '';
-			$new_user_object->expiry_date      = $user_object['expiry_date'] ?? '';
-			$new_user_object->payment_method   = $user_object['payment_method'] ?? '';
+			$new_user_object->filter        = 'display';
+			$email                          = $new_user_object->user_email;
+			$new_user_object->subscriptions = $user_object['subscriptions'] ?? '';
 
 			$user_manager = new UR_Admin_User_Manager( $new_user_object );
 
@@ -703,31 +722,100 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 							$row .= $new_user_object->user_registered;
 							break;
 						case 'membership':
-							$row .= ( ! empty( $new_user_object->membership_title ) ? $new_user_object->membership_title : '-' );
+							if ( count( $new_user_object->subscriptions ) > 1 ) {
+								$all_subs          = $new_user_object->subscriptions;
+								$membership_titles = wp_list_pluck( $all_subs, 'membership_title' );
+								$row              .= implode( ', ', $membership_titles );
+							} else {
+								$user_subs_object = $new_user_object->subscriptions[0] ?? '';
+								$row             .= ( ! empty( $user_subs_object['membership_title'] ) ? $user_subs_object['membership_title'] : '-' );
+							}
 							break;
 						case 'subscription_status':
-							$status = $new_user_object->status ?? '';
-							if ( empty( $status ) ) {
-								$row .= '<span>-</span>';
-								break;
-							}
+							if ( count( $new_user_object->subscriptions ) > 1 ) {
+								$subscriptions = $new_user_object->subscriptions;
+								foreach ( $subscriptions as $key => $sub ) {
+									$expiry_date = new \DateTime( $sub['expiry_date'] );
 
-							$expiry_date = new \DateTime( $new_user_object->expiry_date );
+									if ( ! empty( $sub['billing_cycle'] ) && date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
+										$subscriptions[ $key ]['status'] = 'expired';
+									}
+								}
 
-							if ( ! empty( $new_user_object->payment_method ) && ( 'subscription' == $new_user_object->payment_method ) && date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
-								$status = 'expired';
-							}
+								$statuses       = array_column( $subscriptions, 'status' );
+								$status_counts  = array_count_values( $statuses );
+								$known_statuses = array( 'active', 'pending', 'expired', 'cancelled' );
 
-							$status_class = 'user-subscription-secondary';
-							if ( $status == 'active' ) {
-								$status_class = 'user-subscription-active';
-							} elseif ( $status == 'pending' ) {
-								$status_class = 'user-subscription-pending';
+								foreach ( $known_statuses as $status ) {
+									if ( ! isset( $status_counts[ $status ] ) ) {
+										$status_counts[ $status ] = 0;
+									}
+								}
+
+								$total_subs = count( $subscriptions );
+								$all_set    = false;
+								foreach ( $known_statuses as $status ) {
+									if ( $status_counts[ $status ] === $total_subs && $total_subs > 0 ) {
+										$status_class = 'user-subscription-secondary';
+										if ( $status == 'active' ) {
+											$status_class = 'user-subscription-active';
+										} elseif ( $status == 'pending' ) {
+											$status_class = 'user-subscription-pending';
+										} else {
+											$status_class = 'user-subscription-expired';
+										}
+
+										$row    .= sprintf( '<span id="" class="user-subscription-status %s">%s</span>', $status_class, ucwords( "All {$status}" ) );
+										$all_set = true;
+										break;
+									}
+								}
+
+								if ( ! $all_set ) {
+									$summary = array();
+									foreach ( $known_statuses as $status ) {
+										if ( $status_counts[ $status ] > 0 ) {
+											$status_class = 'user-subscription-secondary';
+											if ( $status == 'active' ) {
+												$status_class = 'user-subscription-active';
+											} elseif ( $status == 'pending' ) {
+												$status_class = 'user-subscription-pending';
+											} else {
+												$status_class = 'user-subscription-expired';
+											}
+											$summary[] = sprintf( '<span id="" class="user-subscription-status %s">%s</span>', $status_class, ucwords( "{$status_counts[$status]} {$status}" ) );
+										}
+									}
+									$row .= implode( ', ', $summary );
+								}
 							} else {
-								$status_class = 'user-subscription-expired';
+								$user_subs_object = $new_user_object->subscriptions[0] ?? '';
+
+								$status = $user_subs_object['status'] ?? '';
+
+								if ( empty( $status ) ) {
+									$row .= '<span>-</span>';
+									break;
+								}
+
+								$expiry_date = new \DateTime( $user_subs_object['expiry_date'] );
+
+								if ( ! empty( $user_subs_object['payment_method'] ) && ( 'subscription' == $user_subs_object['payment_method'] ) && date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
+									$status = 'expired';
+								}
+
+								$status_class = 'user-subscription-secondary';
+								if ( $status == 'active' ) {
+									$status_class = 'user-subscription-active';
+								} elseif ( $status == 'pending' ) {
+									$status_class = 'user-subscription-pending';
+								} else {
+									$status_class = 'user-subscription-expired';
+								}
+
+								$row .= sprintf( '<span id="" class="user-subscription-status %s">%s</span>', $status_class, ucfirst( $status ) );
 							}
 
-							$row .= sprintf( '<span id="" class="user-subscription-status %s">%s</span>', $status_class, ucfirst( $status ) );
 							break;
 						default:
 							/**
