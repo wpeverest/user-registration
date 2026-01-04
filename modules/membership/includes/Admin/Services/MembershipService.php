@@ -801,7 +801,7 @@ class MembershipService {
 			}
 			unset( $membership );
 		} elseif ( isset( $data['action'] ) && 'multiple' === $data['action'] ) {
-			if ( UR_PRO_ACTIVE && ur_check_module_activation( 'multi-membership' ) ) {
+			if ( UR_PRO_ACTIVE && ur_check_module_activation( 'membership-groups' ) ) {
 				$membership_id    = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
 				$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
 

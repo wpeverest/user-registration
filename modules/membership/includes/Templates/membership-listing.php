@@ -94,7 +94,7 @@ if ( 'block' === $type ) :
 									}
 								}
 							}
-						} elseif ( UR_PRO_ACTIVE && ur_check_module_activation( 'multi-membership' ) ) {
+						} elseif ( UR_PRO_ACTIVE && ur_check_module_activation( 'membership-groups' ) ) {
 								$intended_action = 'multiple';
 						}
 					} else {

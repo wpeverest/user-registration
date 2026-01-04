@@ -291,7 +291,7 @@ class MembershipGroupService {
 
 	public function check_if_multiple_memberships_allowed( $group_id ) {
 
-		if ( UR_PRO_ACTIVE && ur_check_module_activation( 'multi-membership' ) ) {
+		if ( UR_PRO_ACTIVE && ur_check_module_activation( 'membership-groups' ) ) {
 			$group_mode = get_post_meta( $group_id, 'urmg_mode', true );
 
 			return ur_string_to_bool( 'multiple' === $group_mode );
