@@ -5308,7 +5308,7 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 		$max_width   = $is_preview ? '600px' : '600px'; // Max width for better readability on all devices.
 
 		return $responsive_styles . '
-	<div class="email-wrapper-outer" style="font-family: Arial, sans-serif; padding: 100px 0; background-color: #ffffff;">
+	<div class="email-wrapper-outer" style="font-family: Arial, sans-serif; padding: 100px 0;">
 	<div class="email-wrapper-inner" style="width: ' . esc_attr( $email_width ) . '; max-width: ' . esc_attr( $max_width ) . '; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
 	<div class="email-body" style="padding: 30px; background-color: #ffffff;">' . $body_content . '</div></div></div>';
 	}
