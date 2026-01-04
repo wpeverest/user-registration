@@ -89,7 +89,9 @@ const SetupWizard: React.FC = () => {
 	const mutedColor = useColorModeValue("gray.600", "gray.400");
 	const pageBg = useColorModeValue("#F8F8FA", "gray.900");
 
-	const hasPaidPlan = membershipPlans.some((plan) => plan.type === "paid");
+	const hasPaidPlan = membershipPlans.some(
+		(plan) => plan.type === "one-time" || plan.type === "subscription"
+	);
 
 	const visibleSteps = useMemo(
 		() => getVisibleSteps(membershipSetupType, hasPaidPlan),

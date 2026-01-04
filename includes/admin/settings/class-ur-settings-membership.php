@@ -7,7 +7,7 @@
  * This class is responsible for:
  * - Membership Settings.
  * - Content Restriction Settings.
- * 
+ *
  * @package   UserRegistration\Admin
  * @version   5.0.0
  * @since     5.0.0
@@ -21,7 +21,7 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 		/**
 		 * Constructor.
 		 */
-		private function __construct() {            
+		private function __construct() {
 			$this->id    = 'membership';
 			$this->label = __( 'Membership', 'user-registration' );
             parent::__construct();
@@ -68,7 +68,7 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
                             'membership_settings' => array(
                                 'title'    => __( 'Membership', 'user-registration' ),
                                 'type'     => 'card',
-								'desc'     => sprintf( 
+								'desc'     => sprintf(
 									__( '<strong>Membership page setting has moved.</strong> Configure your membership page <a href="%s">here</a>.', 'user-registration' ),
 									admin_url( 'admin.php?page=user-registration-settings&tab=general&section=pages' )
 								),
@@ -97,7 +97,7 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
             }
             return $settings;
         }
-        
+
 		public function urcr_settings() {
 			// Build settings array for Advanced section
 			$advanced_settings = array();
@@ -130,6 +130,11 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 				);
 			}
 
+			$default_message = '<p>' . __( 'You do not have sufficient permission to access this content.', 'user-registration' ) . '</p>';
+			if ( class_exists( 'URCR_Admin_Assets' ) ) {
+				$default_message = URCR_Admin_Assets::get_default_message();
+			}
+
 			$sections['user_registration_content_restriction_settings'] = array(
 				'title'    => __( 'Content Rules', 'user-registration' ),
 				'type'     => 'card',
@@ -139,7 +144,7 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 						'desc'     => __( ' Default message for all restricted content.', 'user-registration' ),
 						'id'       => 'user_registration_content_restriction_message',
 						'type'     => 'tinymce',
-						'default'  => 'This content is restricted!',
+						'default'  => $default_message,
 						'css'      => '',
 						'show-smart-tags-button' => true,
 						'show-ur-registration-form-button' => false,

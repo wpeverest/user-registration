@@ -30,7 +30,7 @@ const Router = () => {
 			<Route path="/features" element={<Modules />} />
 			<Route path="/products" element={<Products />} />
 			<Route path="/content-access-rules" element={<ContentAccessRules />} />
-			{!isPro && <Route path="/free-vs-pro" element={<FreeVsPro />} />}
+			{/* {!isPro && <Route path="/free-vs-pro" element={<FreeVsPro />} />} */}
 			<Route path="/help" element={<Help />} />
 			<Route path="*" element={<SiteAssistant />} />
 		</Routes>

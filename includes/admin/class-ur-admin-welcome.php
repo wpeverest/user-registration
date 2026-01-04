@@ -1,6 +1,8 @@
 <?php
 /**
- * Welcome Screen
+ * Admin Welcome Screen.
+ *
+ * Loads the React-based welcome/setup wizard inside WordPress admin.
  *
  * @package UserRegistration\Admin
  * @since 4.5.0
@@ -11,17 +13,18 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class UR_Admin_Welcome
  *
- * Responsible for registering the welcome page in admin
- * and loading the React application instead of PHP-rendered HTML.
+ * Registers the welcome admin page and bootstraps
+ * the React application with localized data.
  *
  * @since 4.5.0
  */
 class UR_Admin_Welcome {
 
 	/**
-	 * Initialize hooks.
+	 * Initialize admin hooks.
 	 *
 	 * @since 4.5.0
+	 * @return void
 	 */
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__, 'add_menu' ) );
@@ -29,9 +32,10 @@ class UR_Admin_Welcome {
 	}
 
 	/**
-	 * Register the welcome page inside WP Admin menu.
+	 * Register the welcome page in the admin menu.
 	 *
 	 * @since 4.5.0
+	 * @return void
 	 */
 	public static function add_menu() {
 		add_menu_page(
@@ -44,23 +48,42 @@ class UR_Admin_Welcome {
 	}
 
 	/**
-	 * Enqueue
+	 * Render the welcome page and enqueue React assets.
 	 *
 	 * @since 4.5.0
+	 * @return void
 	 */
 	public static function render_welcome_page() {
+		if ( empty( $_GET['page'] ) || 'user-registration-welcome' !== $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			return;
+		}
 
-		$handle = 'ur-welcome-react-app';
+		$handle = 'ur-setup-wizard-script';
 
-		$welcome_asset = file_exists( UR()->plugin_path() . '/chunks/welcome.asset.php' ) ? require_once UR()->plugin_path() . '/chunks/welcome.asset.php' : array(
-			'dependencies' => array(),
-			'version'      => UR()->version,
+		$asset_path   = UR()->plugin_path() . '/chunks/welcome.asset.php';
+		$asset_config = file_exists( $asset_path )
+			? require $asset_path
+			: array(
+				'dependencies' => array(),
+				'version'      => UR()->version,
+			);
+
+		wp_register_script(
+			$handle,
+			UR()->plugin_url() . '/chunks/welcome.js',
+			$asset_config['dependencies'],
+			$asset_config['version'],
+			true
 		);
-		wp_register_script( 'ur-setup-wizard-script', UR()->plugin_url() . '/chunks/welcome.js', $welcome_asset['dependencies'], $welcome_asset['version'], true );
-		wp_enqueue_style( 'ur-setup-wizard-style', UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css', array(), UR()->version );
-		wp_enqueue_script( 'ur-setup-wizard-script' );
 
 		wp_enqueue_script( $handle );
+
+		wp_enqueue_style(
+			'ur-setup-wizard-style',
+			UR()->plugin_url() . '/assets/css/user-registration-setup-wizard.css',
+			array(),
+			UR()->version
+		);
 
 		wp_enqueue_style(
 			'ur-inter-font',
@@ -69,9 +92,6 @@ class UR_Admin_Welcome {
 			null
 		);
 
-		/**
-		 * Localized variables available inside React via window._UR_WIZARD_
-		 */
 		wp_localize_script(
 			$handle,
 			'_UR_WIZARD_',
@@ -80,42 +100,30 @@ class UR_Admin_Welcome {
 				'siteURL'         => esc_url( home_url( '/' ) ),
 				'urRestApiNonce'  => wp_create_nonce( 'wp_rest' ),
 				'onBoardIconsURL' => esc_url( UR()->plugin_url() . '/assets/images/onboard-icons' ),
-				'restURL'         => rest_url(),
-				'adminEmail'      => get_option( 'admin_email' ),
-				'isPro'           => defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE,
+				'restURL'         => esc_url_raw( rest_url() ),
+				'adminEmail'      => sanitize_email( get_option( 'admin_email' ) ),
+				'isPro'           => (bool) ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ),
 			)
 		);
-
-		/**
-		 * Render the React page only on our admin page.
-		 */
-		if ( ! empty( $_GET['page'] ) && 'user-registration-welcome' === $_GET['page'] ) { //phpcs:ignore WordPress.Security.NonceVerification
-			?>
-			<!DOCTYPE html>
-			<html <?php language_attributes(); ?>>
-			<head>
-				<meta charset="utf-8">
-				<meta name="viewport" content="width=device-width, initial-scale=1"/>
-				<title><?php esc_html_e( 'User Registration – Welcome', 'user-registration' ); ?></title>
-
-				<?php wp_print_head_scripts(); ?>
-			</head>
-
-			<body class="ur-react-welcome-page">
-
-				<!-- React Root Element -->
-				<div id="user-registration-setup-wizard"></div>
-
-				<?php
-					wp_print_footer_scripts();
-					wp_print_scripts( $handle );
-				?>
-			</body>
-			</html>
+		?>
+		<!DOCTYPE html>
+		<html <?php language_attributes(); ?>>
+		<head>
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<title><?php esc_html_e( 'User Registration – Welcome', 'user-registration' ); ?></title>
 			<?php
-
-			exit;
-		}
+			wp_print_styles();
+			wp_print_head_scripts();
+			?>
+		</head>
+		<body class="ur-react-welcome-page">
+			<div id="user-registration-setup-wizard"></div>
+			<?php wp_print_footer_scripts(); ?>
+		</body>
+		</html>
+		<?php
+		exit;
 	}
 }
 

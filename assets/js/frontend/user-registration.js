@@ -31,7 +31,32 @@
 						".user-registration-membership-notice__container .ur-toaster"
 					);
 				}
-				this.toggleNotice();
+				// this.toggleNotice();
+				this.ur_remove_cookie("urm_toast_content");
+				this.ur_remove_cookie("urm_toast_success_message");
+			},
+			show_error_message: function (message) {
+				$(".user-registration-membership-notice__container")
+					.removeClass("user-registration-membership-notice__blue")
+					.addClass("user-registration-membership-notice__red");
+				$(".user-registration-membership-notice__message").text(
+					message
+				);
+				$(".user-registration-membership-notice__container").css(
+					"display",
+					"block"
+				);
+
+				//attach near my account title.
+				if (
+					$(document).find(".user-registration-MyAccount").length ===
+					1
+				) {
+					$(
+						".user-registration-membership-notice__container .ur-toaster "
+					);
+				}
+				// this.toggleNotice();
 				this.ur_remove_cookie("urm_toast_content");
 				this.ur_remove_cookie("urm_toast_success_message");
 			},
@@ -2869,6 +2894,18 @@
 						});
 					}
 				});
+			}
+		});
+
+		$(document).on("urm_show_action_message", function (e, data) {
+			if (data.type == "error") {
+				user_registration_frontend_utils.show_error_message(
+					data.message
+				);
+			} else {
+				user_registration_frontend_utils.show_success_message(
+					data.message
+				);
 			}
 		});
 	};

@@ -10,7 +10,6 @@ import {
 	HStack,
 	IconButton,
 	Input,
-	InputGroup,
 	Menu,
 	MenuButton,
 	MenuItem,
@@ -35,7 +34,7 @@ import { __ } from "@wordpress/i18n";
 import React, { useEffect, useState } from "react";
 import { apiGet } from "../../api/gettingStartedApi";
 import {
-	BillingPeriod,
+	BillingCycle,
 	ContentAccess,
 	MembershipPlan,
 	MembershipPlanType
@@ -208,53 +207,106 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 	);
 };
 
-interface TypeToggleProps {
+interface TypeOption {
 	value: MembershipPlanType;
-	onChange: (type: MembershipPlanType) => void;
+	label: string;
+	disabled?: boolean;
 }
 
-const TypeToggle: React.FC<TypeToggleProps> = ({ value, onChange }) => {
+interface TypeSelectorProps {
+	value: MembershipPlanType;
+	onChange: (type: MembershipPlanType) => void;
+	isPro: boolean;
+}
+
+const TypeSelector: React.FC<TypeSelectorProps> = ({
+	value,
+	onChange,
+	isPro
+}) => {
+	const borderColor = useColorModeValue("gray.200", "gray.600");
+	const activeBorderColor = "#475BB2";
+	const activeColor = "#475BB2";
+	const inactiveColor = useColorModeValue("#6B7280", "gray.400");
+
+	const options: TypeOption[] = [
+		{ value: "free", label: __("Free", "user-registration") },
+		{
+			value: "one-time",
+			label: __("One-Time Payment", "user-registration")
+		},
+		...(isPro
+			? [
+					{
+						value: "subscription" as MembershipPlanType,
+						label: __("Subscription Based", "user-registration")
+					}
+			  ]
+			: [])
+	];
+
 	return (
-		<Box bg="#F6F6F9" borderRadius="6px" p="4px" display="inline-flex">
-			<Button
-				bg={value === "free" ? "#475BB2" : "transparent"}
-				color={value === "free" ? "white" : "#6B7280"}
-				borderRadius="4px"
-				_hover={{
-					bg: value === "free" ? "#3A4B9C" : "transparent"
-				}}
-				_active={{
-					bg: value === "free" ? "#3A4B9C" : "transparent"
-				}}
-				onClick={() => onChange("free")}
-				px={6}
-				fontSize="14px"
-				fontWeight="500"
-				h="32px"
-				minW="70px"
-			>
-				{__("Free", "user-registration")}
-			</Button>
-			<Button
-				bg={value === "paid" ? "#475BB2" : "transparent"}
-				color={value === "paid" ? "white" : "#6B7280"}
-				borderRadius="4px"
-				_hover={{
-					bg: value === "paid" ? "#3A4B9C" : "transparent"
-				}}
-				_active={{
-					bg: value === "paid" ? "#3A4B9C" : "transparent"
-				}}
-				onClick={() => onChange("paid")}
-				px={6}
-				fontSize="14px"
-				fontWeight="500"
-				h="32px"
-				minW="70px"
-			>
-				{__("Paid", "user-registration")}
-			</Button>
-		</Box>
+		<HStack spacing={3}>
+			{options.map((option) => {
+				const isActive = value === option.value;
+				const isDisabled = option.disabled;
+
+				return (
+					<Box
+						key={option.value}
+						as="button"
+						type="button"
+						onClick={() => !isDisabled && onChange(option.value)}
+						px={4}
+						py={2}
+						minW="140px"
+						h="40px"
+						bg="white"
+						border="1px solid"
+						borderColor={isActive ? activeBorderColor : borderColor}
+						borderRadius="4px"
+						cursor={isDisabled ? "not-allowed" : "pointer"}
+						opacity={isDisabled ? 0.5 : 1}
+						display="flex"
+						alignItems="center"
+						justifyContent="flex-start"
+						gap={2}
+						_hover={!isDisabled ? { borderColor: "gray.300" } : {}}
+						transition="all 0.2s"
+					>
+						{/* Radio circle */}
+						<Box
+							w="16px"
+							h="16px"
+							borderRadius="full"
+							border="2px solid"
+							borderColor={isActive ? activeColor : borderColor}
+							display="flex"
+							alignItems="center"
+							justifyContent="center"
+							flexShrink={0}
+						>
+							{isActive && (
+								<Box
+									w="8px"
+									h="8px"
+									borderRadius="full"
+									bg={activeColor}
+								/>
+							)}
+						</Box>
+						<Text
+							fontSize="14px"
+							fontWeight="400"
+							color={isActive ? activeColor : inactiveColor}
+							whiteSpace="nowrap"
+						>
+							{option.label}
+						</Text>
+					</Box>
+				);
+			})}
+		</HStack>
 	);
 };
 
@@ -263,6 +315,7 @@ interface MembershipCardProps {
 	pages: ContentOption[];
 	posts: ContentOption[];
 	isPro: boolean;
+	currency: string;
 	onDelete: (id: string) => void;
 	showDelete: boolean;
 }
@@ -272,6 +325,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	pages,
 	posts,
 	isPro,
+	currency,
 	onDelete,
 	showDelete
 }) => {
@@ -282,17 +336,18 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	const labelColor = useColorModeValue("#383838", "gray.300");
 	const inputBg = useColorModeValue("white", "gray.700");
 
+	// If not Pro and subscription is selected, switch to one-time
 	useEffect(() => {
-		if (!isPro && plan.billingPeriod !== "one-time") {
+		if (!isPro && plan.type === "subscription") {
 			dispatch({
 				type: "UPDATE_MEMBERSHIP_PLAN",
 				payload: {
 					id: plan.id,
-					updates: { billingPeriod: "one-time" }
+					updates: { type: "one-time" }
 				}
 			});
 		}
-	}, [isPro, plan.id, plan.billingPeriod, dispatch]);
+	}, [isPro, plan.id, plan.type, dispatch]);
 
 	const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		dispatch({
@@ -309,20 +364,36 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	};
 
 	const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		// Allow only numbers and decimal point
+		const value = e.target.value.replace(/[^0-9.]/g, "");
 		dispatch({
 			type: "UPDATE_MEMBERSHIP_PLAN",
-			payload: { id: plan.id, updates: { price: e.target.value } }
+			payload: { id: plan.id, updates: { price: value } }
 		});
 	};
 
-	const handleBillingPeriodChange = (
+	const handleBillingCycleChange = (
 		e: React.ChangeEvent<HTMLSelectElement>
 	) => {
 		dispatch({
 			type: "UPDATE_MEMBERSHIP_PLAN",
 			payload: {
 				id: plan.id,
-				updates: { billingPeriod: e.target.value as BillingPeriod }
+				updates: { billingCycle: e.target.value as BillingCycle }
+			}
+		});
+	};
+
+	const handleBillingCycleCountChange = (
+		e: React.ChangeEvent<HTMLInputElement>
+	) => {
+		// Allow only numbers
+		const value = e.target.value.replace(/[^0-9]/g, "");
+		dispatch({
+			type: "UPDATE_MEMBERSHIP_PLAN",
+			payload: {
+				id: plan.id,
+				updates: { billingCycleCount: value }
 			}
 		});
 	};
@@ -418,7 +489,22 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 		fontWeight: "600",
 		color: labelColor,
 		fontSize: "14px",
-		flexShrink: 0
+		flexShrink: 0,
+		mr: 4
+	};
+
+	const showPriceField =
+		plan.type === "one-time" || plan.type === "subscription";
+	const showBillingCycle = plan.type === "subscription";
+
+	const getBillingCycleLabel = (cycle: BillingCycle) => {
+		const labels: Record<BillingCycle, string> = {
+			day: "Day(s)",
+			week: "Week(s)",
+			month: "Month(s)",
+			year: "Year(s)"
+		};
+		return labels[cycle] || cycle;
 	};
 
 	return (
@@ -440,7 +526,6 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 							flex={1}
 							value={plan.name}
 							onChange={handleNameChange}
-							placeholder="Enter plan name"
 							{...inputStyles}
 						/>
 					</Flex>
@@ -449,40 +534,101 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 						<Text {...labelStyles}>
 							{__("Type :", "user-registration")}
 						</Text>
-						<TypeToggle
+						<TypeSelector
 							value={plan.type}
 							onChange={handleTypeChange}
+							isPro={isPro}
 						/>
 					</Flex>
 
-					{plan.type === "paid" && (
+					{showPriceField && (
 						<Flex align="center">
 							<Text {...labelStyles}>
-								{__("Price :", "user-registration")}
+								{__("Price", "user-registration")}
+								{" :"}
+							</Text>
+							<HStack spacing={0} flex={1}>
+								<Input
+									value={plan.price}
+									onChange={handlePriceChange}
+									type="text"
+									inputMode="decimal"
+									maxW="150px"
+									borderRightRadius={0}
+									{...inputStyles}
+								/>
+								<Box
+									px={4}
+									py={2}
+									h="40px"
+									bg="gray.50"
+									border="1px solid"
+									borderColor={borderColor}
+									borderLeft="none"
+									borderRightRadius="4px"
+									display="flex"
+									alignItems="center"
+									justifyContent="center"
+									minW="50px"
+								>
+									<Text
+										fontSize="14px"
+										color={labelColor}
+										fontWeight="500"
+									>
+										{currency}
+									</Text>
+								</Box>
+							</HStack>
+						</Flex>
+					)}
+
+					{showBillingCycle && (
+						<Flex align="center">
+							<Text {...labelStyles}>
+								{__("Billing Cycle", "user-registration")}
+								{" :"}
 							</Text>
 							<HStack spacing={3} flex={1}>
-								<InputGroup maxW="120px">
-									<Input
-										value={plan.price}
-										onChange={handlePriceChange}
-										{...inputStyles}
-									/>
-								</InputGroup>
-								{isPro && (
+								<Input
+									value={plan.billingCycleCount}
+									onChange={handleBillingCycleCountChange}
+									type="text"
+									inputMode="numeric"
+									maxW="150px"
+									{...inputStyles}
+								/>
+								<Box position="relative" w="140px">
 									<Select
-										value={plan.billingPeriod}
-										onChange={handleBillingPeriodChange}
-										maxW="120px"
-										{...inputStyles}
+										value={plan.billingCycle}
+										onChange={handleBillingCycleChange}
+										fontSize="14px"
+										bg={inputBg}
+										borderColor={borderColor}
+										borderRadius="4px"
+										h="40px"
+										w="140px"
+										_hover={{ borderColor: "gray.300" }}
+										_focus={{
+											borderColor: "#475BB2",
+											boxShadow: "none",
+											borderRadius: "4px"
+										}}
 									>
-										<option value="weekly">Weekly</option>
-										<option value="monthly">Monthly</option>
-										<option value="yearly">Annually</option>
-										<option value="one-time">
-											One-Time
+										<option value="day">
+											{getBillingCycleLabel("day")}
+										</option>
+										<option value="week">
+											{getBillingCycleLabel("week")}
+										</option>
+										<option value="month">
+											{getBillingCycleLabel("month")}
+										</option>
+										<option value="year">
+											{getBillingCycleLabel("year")}
 										</option>
 									</Select>
-								)}
+								</Box>
 							</HStack>
 						</Flex>
 					)}
@@ -492,9 +638,13 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 							{__("Access :", "user-registration")}
 						</Text>
 						<VStack spacing={3} align="stretch" flex={1}>
-							{/* Single container box for all access items */}
 							{sortedContentAccess.length > 0 && (
-								<Box>
+								<Box
+									border="1px solid"
+									borderColor={borderColor}
+									borderRadius="4px"
+									p={4}
+								>
 									<VStack spacing={4} align="stretch">
 										{sortedContentAccess.map((access) => {
 											const isWholeSite =
@@ -563,8 +713,11 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 														opacity={0}
 														variant="ghost"
 														color="red.500"
+														_groupHover={{
+															opacity: 1
+														}}
 														_hover={{
-															opacity: "1"
+															bg: "transparent"
 														}}
 														onClick={() =>
 															handleRemoveContentAccess(
@@ -680,7 +833,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 
 const MembershipStep: React.FC = () => {
 	const { state, dispatch } = useStateValue();
-	const { membershipPlans } = state;
+	const { membershipPlans, paymentSettings } = state;
 
 	const textColor = useColorModeValue("#383838", "white");
 	const subtextColor = useColorModeValue("gray.600", "gray.300");
@@ -688,8 +841,11 @@ const MembershipStep: React.FC = () => {
 	const [pages, setPages] = useState<ContentOption[]>([]);
 	const [posts, setPosts] = useState<ContentOption[]>([]);
 	const [isLoadingData, setIsLoadingData] = useState(true);
+	const [currency, setCurrency] = useState<string>(
+		paymentSettings.currency || "USD"
+	);
 
-	const isPro = (window as any).urmSetupWizard?.isPro || false;
+	const isPro = (window as any)._UR_WIZARD_?.isPro ?? false;
 
 	useEffect(() => {
 		const loadMembershipsData = async () => {
@@ -700,6 +856,15 @@ const MembershipStep: React.FC = () => {
 				const content = res.content || {};
 				setPages(content.pages || []);
 				setPosts(content.posts || []);
+
+				// Get currency from memberships API response
+				if (res.currency) {
+					setCurrency(res.currency);
+					dispatch({
+						type: "SET_PAYMENT_SETTING",
+						payload: { key: "currency", value: res.currency }
+					});
+				}
 
 				const currentPlans = state.membershipPlans;
 				const hasModifiedPlans = currentPlans.some(
@@ -721,7 +886,8 @@ const MembershipStep: React.FC = () => {
 							name: m.name || "",
 							type: m.type || "free",
 							price: m.price || "",
-							billingPeriod: m.billingPeriod || "monthly",
+							billingCycle: m.billingCycle || "month",
+							billingCycleCount: m.billingCycleCount || "",
 							contentAccess: m.contentAccess || [],
 							isNew: false
 						})
@@ -793,6 +959,7 @@ const MembershipStep: React.FC = () => {
 						pages={pages}
 						posts={posts}
 						isPro={isPro}
+						currency={currency}
 						onDelete={handleDeletePlan}
 						showDelete={membershipPlans.length > 1}
 					/>

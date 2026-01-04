@@ -133,7 +133,7 @@ class Frontend {
 		wp_enqueue_script( 'user-registration-membership-stripe-v3', 'https://js.stripe.com/v3/', array() );
 		wp_enqueue_script( 'user-registration-membership-frontend-script' );
 		// Enqueue frontend styles here.
-		wp_register_style( 'user-registration-membership-frontend-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-frontend.css', array(), UR_MEMBERSHIP_VERSION );
+		wp_register_style( 'user-registration-membership-frontend-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-frontend.css', array(), UR_VERSION );
 		wp_enqueue_style( 'user-registration-membership-frontend-style' );
 		$this->localize_scripts();
 	}

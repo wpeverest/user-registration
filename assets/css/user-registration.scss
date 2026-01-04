@@ -3364,6 +3364,10 @@ body.user-registration-page {
 	white-space: nowrap;
 	z-index: 9999;
 	animation: toaster 5s ease-in-out forwards;
+
+	&.urm-error {
+		background-color: red;
+	}
 }
 
 .ur-frontend-form .user-registration-EditAccountForm.edit-password {

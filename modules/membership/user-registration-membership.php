@@ -12,10 +12,6 @@ if ( file_exists( UR()->plugin_path() . '/vendor/autoload.php' ) ) {
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'UR_MEMBERSHIP_VERSION' ) ) {
-	define( 'UR_MEMBERSHIP_VERSION', '1.0.2' );
-}
-
 // Define UR_MEMBERSHIP_PLUGIN_FILE.
 if ( ! defined( 'UR_MEMBERSHIP_PLUGIN_FILE' ) ) {
 	define( 'UR_MEMBERSHIP_PLUGIN_FILE', __FILE__ );

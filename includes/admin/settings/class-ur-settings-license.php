@@ -79,7 +79,7 @@ if ( ! class_exists( 'UR_Settings_License' ) ) {
 					$settings[ 'sections' ][ 'license_options_settings' ][ 'before_desc' ] = __( 'You\'re currently using the free version of User Registration & Membership.<br>You can continue using all free features without any limitations.<br><br>Want more? <a target="_blank" href="' . esc_url( 'https://wpuserregistration.com/upgrade/?utm_source=ur-license-setting&utm_medium=upgrade-link&utm_campaign=' . UR()->utm_campaign ) . '">Upgrade to Pro</a> to unlock advanced features and premium support.<br>Already purchased Pro? Enter your license key below and we\'ll automatically upgrade you to Pro.', 'user-registration' );
 				}
 			} else {
-				if ( get_option( 'user_registration_license_key' ) ) {
+				if ( get_option( 'user-registration_license_key' ) ) {
 					$settings['sections']['license_options_settings']['before_desc'] = __( 'Your Pro license is active! Enjoy all premium features and priority support.', 'user-registration' );
 				} else {
 					$settings['sections']['license_options_settings']['before_desc'] = __( 'You\'re using the Pro version, but your license needs to be activated.<br>Enter your license key below to unlock Pro features and receive updates.', 'user-registration' );
