@@ -734,6 +734,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						case 'subscription_status':
 							if ( count( $new_user_object->subscriptions ) > 1 ) {
 								$subscriptions = $new_user_object->subscriptions;
+
 								foreach ( $subscriptions as $key => $sub ) {
 									$expiry_date = new \DateTime( $sub['expiry_date'] );
 
@@ -744,7 +745,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 								$statuses       = array_column( $subscriptions, 'status' );
 								$status_counts  = array_count_values( $statuses );
-								$known_statuses = array( 'active', 'pending', 'expired', 'cancelled' );
+								$known_statuses = array( 'active', 'pending', 'expired', 'canceled' );
 
 								foreach ( $known_statuses as $status ) {
 									if ( ! isset( $status_counts[ $status ] ) ) {

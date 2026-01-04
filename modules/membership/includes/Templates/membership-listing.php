@@ -244,8 +244,11 @@ elseif ( 'list' === $type ) :
 					$user_membership_group_ids   = array();
 
 					foreach ( $user_membership_ids as $user_membership_id ) {
-						$user_membership_group_id    = $membership_group_repository->get_membership_group_by_membership_id( $user_membership_id );
-						$user_membership_group_ids[] = $user_membership_group_id['ID'];
+						$user_membership_group_id = $membership_group_repository->get_membership_group_by_membership_id( $user_membership_id );
+
+						if ( isset( $user_membership_group_id['ID'] ) ) {
+							$user_membership_group_ids[] = $user_membership_group_id['ID'];
+						}
 					}
 
 					$user_membership_group_ids = array_values( array_unique( $user_membership_group_ids ) );
