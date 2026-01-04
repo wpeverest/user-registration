@@ -37,7 +37,13 @@ if ( ! class_exists( 'UR_Settings_License' ) ) {
          */
         public function handle_hooks() {
             add_filter( "user_registration_get_settings_{$this->id}", array( $this, 'get_settings_callback' ), 1, 1 );
-        }
+        
+			if ( isset( $_GET['tab'] ) && 'license' === $_GET['tab'] ) { // phpcs:ignore
+				add_filter( 'user_registration_setting_save_label', array( $this, 'user_registration_license_setting_label' ) );
+				add_filter( 'user_registration_admin_field_license_options', array( $this, 'license_options_settings' ), 10, 2 );
+				add_filter( 'user_registration_setting_save_button_classes', array( $this, 'user_registration_license_setting_classes' ) );
+			}
+		}
         /**
          * Filter to provide sections UI for scaffold settings.
          */
@@ -112,6 +118,34 @@ if ( ! class_exists( 'UR_Settings_License' ) ) {
 				$GLOBALS[ 'hide_save_button' ] = true;
 			}
 			return $settings;
+		}
+		public function user_registration_license_setting_label() {
+			return esc_html__( 'Activate License', 'user-registration' );
+		}
+		public function license_options_settings( $settings, $value ) {
+			$license_data     = ur_get_license_plan();
+			$license_date_str = ! empty( $license_data->expires ) ? $license_data->expires : '';
+			if ( 'lifetime' === $license_date_str || '' === $license_date_str ) {
+				$license_date_formatted = $license_date_str;
+			} else {
+				$license_date_obj       = new DateTime( $license_date_str );
+				$license_date_formatted = $license_date_obj->format( 'jS F Y h:i A' );
+			}
+			$settings .= '<div class="user-registration-global-settings">';
+			$settings .= '<label for="user-registration_license_plan">' . esc_html__( 'License Plan', 'user-registration' ) . '</label>';
+			$settings .= '<div class="user-registration-global-settings--field">';
+			$settings .= ! empty( $license_data->item_name ) ? $license_data->item_name : '';
+			$settings .= '</div></div>';
+			$settings .= '<div class="user-registration-global-settings">';
+			$settings .= '<label for="user-registration_license_plan">' . esc_html__( 'License Expiry Date', 'user-registration' ) . '</label>';
+			$settings .= '<div class="user-registration-global-settings--field">';
+			$settings .= $license_date_formatted;
+			$settings .= '</div></div>';
+			return $settings;
+		}
+		public function user_registration_license_setting_classes( $classes ) {
+			$classes[] = 'license_setting_save_button';
+			return $classes;
 		}
     }
 }
