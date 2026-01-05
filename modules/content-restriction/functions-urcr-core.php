@@ -1061,7 +1061,7 @@ function urcr_build_migration_actions() {
 	$default_message = '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
 <p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
 <p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
-<p>{{log_in}} {{sign_up}}</p>';
+<p>{{sign_up}} {{log_in}}</p>';
 	if ( class_exists( 'URCR_Admin_Assets' ) ) {
 		$default_message = URCR_Admin_Assets::get_default_message();
 	}

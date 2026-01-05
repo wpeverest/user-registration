@@ -596,7 +596,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				// }
 			}
 
-			if ( ur_check_module_activation( 'content-restriction' ) ) {
+			$membership_rules_count = 0;
+			if ( function_exists( 'ur_get_membership_rules_count' ) ) {
+				$membership_rules_count = ur_get_membership_rules_count();
+			}
+
+			if ( ur_check_module_activation( 'content-restriction' ) || $membership_rules_count >= 2 ) {
 				$content_rules = new \URCR_Admin();
 				$content_rules->add_urcr_menus();
 			}

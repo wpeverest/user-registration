@@ -489,7 +489,7 @@
 				var valueJson = value ? JSON.stringify(value) : '{"form_id":"","form_fields":[]}';
 				var valueAttr = ' data-value="' + $('<div>').text(valueJson).html() + '"';
 				var urForms = urcr_membership_access_data.ur_forms || {};
-				
+
 				html = '<div class="urcr-ur-form-field-condition" data-condition-id="' + id + '"' + valueAttr + '>';
 				html += '<div class="urcr-form-selection ur-d-flex ur-align-items-center ur-g-4 ur-mb-2">';
 				html += '<select class="urcr-form-select components-select-control__input urcr-condition-value-input"' + disabledAttr + '>';
@@ -998,7 +998,7 @@
 					terms = value.value || [];
 				} else {
 					taxonomy = $taxonomySelect.val();
-					
+
 					var termsData = $termSelect.attr('data-value');
 					if (termsData) {
 						try {
@@ -1013,7 +1013,7 @@
 					if ($taxonomySelect.val() !== taxonomy) {
 						$taxonomySelect.val(taxonomy);
 					}
-					
+
 					self.updateTaxonomyTerms(targetId, taxonomy, terms);
 				}
 
@@ -1429,12 +1429,12 @@
 			var $messageTypeRadio = $('input[name="urcr-membership-message-type"]');
 			if ($messageTypeRadio.length) {
 				var $checkedRadio = $messageTypeRadio.filter(':checked');
-				
+
 				if (!$checkedRadio.length) {
 					$messageTypeRadio.filter('[value="global"]').prop('checked', true);
 					$checkedRadio = $messageTypeRadio.filter('[value="global"]');
 				}
-				
+
 				$checkedRadio.trigger('change');
 			} else {
 				var $messageContainer = $('.urcrra-message-input-container');
@@ -1500,7 +1500,7 @@
 					var $messageTypeRadio = $('input[name="urcr-membership-message-type"]:checked');
 					var messageType = $messageTypeRadio.length ? $messageTypeRadio.val() : 'global';
 					var message = '';
-					
+
 					if (messageType === 'global') {
 						message = '';
 					} else {
@@ -1568,7 +1568,7 @@
 				id: 'x' + Date.now(),
 				type: 'message',
 				label: 'Show Message',
-				message: '<h3>Membership Required</h3>\n<p>This content is available to members only.</p>\n<p>Sign up to unlock access or log in if you already have an account.</p>\n<p>{{log_in}} {{sign_up}}</p>',
+				message: '<h3>Membership Required</h3>\n<p>This content is available to members only.</p>\n<p>Sign up to unlock access or log in if you already have an account.</p>\n<p>{{sign_up}} {{log_in}}</p>',
 				redirect_url: '',
 				access_control: this.accessControl,
 				local_page: '',
