@@ -46,13 +46,26 @@ class FormFields {
 			if ( ! isset( $s->general_setting ) ) {
 				return;
 			}
-			$has_membership_group = true;
-			$membership_group     = $s->general_setting->membership_group;
+			if ( 'all' === $s->general_setting->membership_listing_option ) {
+				$has_membership_group = false;
+			} else {
+				$has_membership_group = true;
+				$membership_group     = $s->general_setting->membership_group;
+			}
 		}
-		if ( $has_membership_group ) {
-			update_post_meta( $post['form_id'], 'urm_form_group_' . $membership_group, true );
+		$post_id = $post['form_id'];
+
+		$all_meta = get_post_meta( $post_id );
+
+		foreach ( $all_meta as $meta_key => $meta_value ) {
+			if ( 0 === strpos( $meta_key, 'urm_form_group_' ) ) {
+				delete_post_meta( $post_id, $meta_key );
+			}
 		}
 
+		if ( $has_membership_group && ! empty( $membership_group ) ) {
+			update_post_meta( $post_id, 'urm_form_group_' . $membership_group, true );
+		}
 	}
 
 	public function enable_one_time_drag_for_membership_field( $fields ) {

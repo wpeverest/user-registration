@@ -35,11 +35,14 @@ class MembershipGroupService {
 		return array_filter(
 			$ids,
 			function ( $item ) {
-				$form_id = $this->get_group_form_id( $item );
-
-				return $form_id == '';
+				return $this->check_if_group_used_in_form($item);
 			}
 		);
+	}
+
+	public function check_if_group_used_in_form($id){
+		$form_id = $this->get_group_form_id( $id );
+		return $form_id == '';
 	}
 
 	/**
