@@ -10,12 +10,16 @@ import { getURCRData, isProAccess } from "./localized-data";
  * @param {boolean} isMigrated - Whether the rule is migrated
  * @param {string|null} ruleType - Type of rule ('membership' or null for custom)
  * @param {boolean} isFirstCondition - Whether this is the first condition
+ * @param {string|null} currentValue - Current selected value (for select field to include current option)
+ * @param {boolean} forSelectField - Whether this is for the select field (true) or dropdown (false)
  * @returns {Array} Filtered array of condition options
  */
 export const getFilteredConditionOptions = (
 	isMigrated = false,
 	ruleType = null,
-	isFirstCondition = false
+	isFirstCondition = false,
+	currentValue = null,
+	forSelectField = false
 ) => {
 	// Get condition options from localized data
 	const allOptions = getURCRData("condition_options", [
@@ -35,21 +39,26 @@ export const getFilteredConditionOptions = (
 	// Filter options based on pro access and migration status
 	const isPro = isProAccess();
 	const isMembershipRule = ruleType === "membership";
+
+	// For select field: show membership only if it's the current value of this specific condition
+	// For dropdown: show membership only for first condition of membership rules (NOT for migrated)
+	const shouldShowMembershipInDropdown = isMembershipRule && isFirstCondition;
+	const shouldShowMembershipInSelect = (isMembershipRule && isFirstCondition) || (currentValue === "membership" && forSelectField);
 	
-	// Show membership option only for the first condition of membership rules, hide it for all other cases
-	const shouldShowMembership = isMembershipRule && isFirstCondition;
-	
+	// Use different logic for dropdown vs select field
+	const shouldShowMembership = forSelectField ? shouldShowMembershipInSelect : shouldShowMembershipInDropdown;
+
 	let filteredOptions;
-	
+
 	// Pro users: show all conditions
 	if (isPro) {
 		filteredOptions = allOptions;
 	}
 	// Free users: show user_state and roles for both membership and custom rules
-	// For membership rules, also show membership option if it's the first condition
+	// For membership rules, also show membership option if it should be shown
 	else {
-		filteredOptions = allOptions.filter(option => 
-			option.value === "roles" || 
+		filteredOptions = allOptions.filter(option =>
+			option.value === "roles" ||
 			option.value === "user_state" ||
 			(shouldShowMembership && option.value === "membership")
 		);
@@ -59,7 +68,15 @@ export const getFilteredConditionOptions = (
 	if (!shouldShowMembership) {
 		filteredOptions = filteredOptions.filter(option => option.value !== "membership");
 	}
-	
+
+	// For select field: always include current value if it exists (to prevent losing selection)
+	if (forSelectField && currentValue) {
+		const currentOption = allOptions.find(opt => opt.value === currentValue);
+		if (currentOption && !filteredOptions.find(opt => opt.value === currentValue)) {
+			filteredOptions.push(currentOption);
+		}
+	}
+
 	return filteredOptions;
 };
 

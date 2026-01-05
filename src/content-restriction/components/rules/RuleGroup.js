@@ -262,10 +262,10 @@ const RuleGroup = ({
 										</div>
 									);
 								} else {
-									// Check if this is the first condition in a membership rule
-									const isFirstCondition = isMembershipRule && index === 0;
-									// For membership rules, only hide remove button for first condition (unless UR_DEV is enabled)
-									const shouldShowRemoveButton = !isMembershipRule || !isFirstCondition || isURDev();
+									// Check if this is the first condition in a membership rule or migrated rule
+									const isFirstCondition = (isMembershipRule || isMigrated) && index === 0;
+									// For membership rules and migrated rules, only hide remove button for first condition (unless UR_DEV is enabled)
+									const shouldShowRemoveButton = (!isMembershipRule && !isMigrated) || !isFirstCondition || isURDev();
 									return (
 										<div key={condition.id} className="urcr-condition-wrapper">
 											<ConditionRow
@@ -306,7 +306,7 @@ const RuleGroup = ({
 				</div>
 
 				<div className="urcr-buttons-wrapper" style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-					{isProAccess() && !isMembershipRule && (
+					{isProAccess() && !isMembershipRule && !isMigrated && (
 						<DropdownButton
 							buttonContent={
 								<>
@@ -329,7 +329,7 @@ const RuleGroup = ({
 						/>
 					)}
 
-					{isProAccess() && isAdvancedLogicEnabled && !isMembershipRule && (
+					{isProAccess() && isAdvancedLogicEnabled && !isMembershipRule && !isMigrated && (
 						<button
 							type="button"
 							className="button urcr-add-group-button"

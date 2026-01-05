@@ -164,7 +164,7 @@ const RuleCard = ({
 								setActiveTab("rules");
 							}}
 						>
-							{__("Rules", "user-registration")}
+							{__("Rule", "user-registration")}
 						</button>
 						<button
 							className={`urcr-tab-button ${activeTab === "message" ? "urcr-tab-active" : ""}`}

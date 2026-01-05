@@ -1071,6 +1071,12 @@ function urcr_build_migration_actions() {
 	$saved_message = get_option( 'user_registration_content_restriction_message', '' );
 	$message       = ! empty( $saved_message ) ? $saved_message : $default_message;
 
+	$message = wp_unslash( $message );
+
+	$message = str_replace( array( '\\n', '\\r\\n', '\\r' ), array( "\n", "\n", "\n" ), $message );
+
+	$message = str_replace( array( "\r\n", "\r" ), "\n", $message );
+
 	$timestamp = time() * 1000;
 
 	return array(
@@ -1572,11 +1578,6 @@ function urcr_create_or_update_membership_rule( $membership_id, $rule_data = nul
 }
 
 function urcr_create_membership_rule( $membership_id, $membership_title = '' ) {
-	// Check if content restriction module is active
-	if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'content-restriction' ) ) {
-		return false;
-	}
-
 	// Check if membership module is active
 	if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'membership' ) ) {
 		return false;
@@ -1598,7 +1599,6 @@ function urcr_create_membership_rule( $membership_id, $membership_title = '' ) {
 	);
 
 	if ( ! empty( $existing_rules ) ) {
-		// Rule already exists for this membership
 		return false;
 	}
 
