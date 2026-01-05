@@ -130,11 +130,7 @@ class URCR_Frontend {
 		if ( is_embed() ) {
 			return $template;
 		}
-		$content_restriction_enabled = ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) );
 
-		if ( ! $content_restriction_enabled ) {
-			return $template;
-		}
 		global $wp_query, $post;
 		$current_post_id                    = get_queried_object_id();
 
@@ -175,6 +171,7 @@ class URCR_Frontend {
 					}
 				}
 			}
+
 			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
 			if ( $is_whole_site_restriction ) {
@@ -186,7 +183,11 @@ class URCR_Frontend {
 					}
 				}
 
+				$access_granted = false;
+				$restriction_rule = null;
+
 				foreach ( $access_rule_posts as $access_rule_post ) {
+
 					$access_rule = json_decode( $access_rule_post->post_content, true );
 
 					// Verify if required params are available.
@@ -202,24 +203,37 @@ class URCR_Frontend {
 						continue;
 					}
 
+
 					if ( urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule ) ) {
 
 						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
+
+
 						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
 
-						if ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
-							do_action( 'urcr_pre_content_restriction_applied', $access_rule, $post );
+						if ( ( true === $should_allow_access && 'access' === $access_control ) || ( false == $should_allow_access && 'restrict' === $access_control ) ) {
+							$access_granted = true;
+						} elseif ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
 
-							// Use urcr_apply_content_restriction to update post content instead of template
-							$is_applied = urcr_apply_content_restriction( $access_rule['actions'], $post );
-
-							do_action( 'urcr_post_content_restriction_applied', $access_rule, $post );
-
-							// Return the original template so normal theme structure is used
-							return $template;
+							$restriction_rule = $access_rule;
 						}
 					}
 				}
+
+				// If any rule granted access, allow it
+				if ( $access_granted ) {
+					return $template;
+				}
+
+				// If no rule granted access and we have a restriction rule, apply it
+				if ( null !== $restriction_rule ) {
+					do_action( 'urcr_pre_content_restriction_applied', $restriction_rule, $post );
+
+					urcr_apply_content_restriction( $restriction_rule['actions'], $post );
+
+					do_action( 'urcr_post_content_restriction_applied', $restriction_rule, $post );
+				}
+
 			} else {
 				$access_given = $this->check_access_with_access_rules();
 

@@ -293,7 +293,7 @@ class UR_Shortcodes {
 				wp_enqueue_script( 'user-registration' );
 				wp_register_script( 'user-registration-membership-frontend-script', UR_MEMBERSHIP_JS_ASSETS_URL . '/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
 				wp_enqueue_script( 'user-registration-membership-frontend-script' );
-				wp_register_style( 'user-registration-membership-frontend-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-frontend.css', array(), UR_MEMBERSHIP_VERSION );
+				wp_register_style( 'user-registration-membership-frontend-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-frontend.css', array(), UR_VERSION );
 				wp_register_style( 'user-registration-general', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
 				wp_enqueue_style( 'user-registration-membership-frontend-style' );
 				wp_enqueue_style( 'user-registration-general' );

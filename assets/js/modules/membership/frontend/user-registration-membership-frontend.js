@@ -118,6 +118,7 @@
 				timeout = form_response.data.redirect_timeout
 					? form_response.data.redirect_timeout
 					: 2000;
+				var originalRedirectUrl = redirect_url;
 
 			if ("undefined" !== typeof response_data.role_based_redirect_url) {
 				redirect_url = response_data.role_based_redirect_url;
@@ -145,6 +146,10 @@
 				window.setTimeout(function () {
 					window.location = redirect_url;
 				}, timeout);
+
+				if ( '' != originalRedirectUrl ) {
+					return;
+				}
 			} else {
 				redirect_url = urmf_data.thank_you_page_url;
 			}

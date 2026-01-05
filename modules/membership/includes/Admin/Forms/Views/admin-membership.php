@@ -91,7 +91,11 @@ $field_label = esc_html( $this->get_general_setting_data( 'label' ) );
 ?>
 <div class="ur-input-type-select ur-admin-template">
 	<div class="ur-label">
-		<label><?php echo $field_label; ?></label>
+		<label>
+			<?php echo $field_label; ?>
+			<span style="color:red">*</span>
+		</label>
+
 	</div>
 	<div class="ur-field" data-field-key="membership">
 		<span class="empty-urmg-label"<?php echo $empty_label_style; ?>>

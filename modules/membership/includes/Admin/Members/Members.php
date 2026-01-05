@@ -110,8 +110,8 @@ if ( ! class_exists( 'Members' ) ) {
 				return;
 			}
 			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
-			wp_register_style( 'ur-core-builder-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR_MEMBERSHIP_VERSION );
-			wp_register_style( 'ur-membership-admin-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-admin.css', array(), UR_MEMBERSHIP_VERSION );
+			wp_register_style( 'ur-core-builder-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR_VERSION );
+			wp_register_style( 'ur-membership-admin-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-admin.css', array(), UR_VERSION );
 			wp_enqueue_style( 'ur-membership-admin-style' );
 			wp_enqueue_style( 'user-registration-pro-admin-style' );
 			wp_enqueue_style( 'sweetalert2' );

@@ -93,7 +93,7 @@ class MembershipThankYou extends BuilderAbstract {
 
 		$parameters = array();
 
-		if ( ! defined( 'UR_MEMBERSHIP_VERSION' ) ) {
+		if ( ! defined( 'UR_VERSION' ) ) {
 			return sprintf( '<div class="user-registration ur-frontend-form"><div class="user-registration-info">%s</div></div>', esc_html__( 'Please Active the membership.', 'user-registration' ) );
 		}
 

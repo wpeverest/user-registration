@@ -108,12 +108,12 @@ class Subscriptions {
 				'ur-core-builder-style',
 				UR()->plugin_url() . '/assets/css/admin.css',
 				array(),
-				UR_MEMBERSHIP_VERSION
+				UR_VERSION
 			);
 		}
 		wp_enqueue_style( 'ur-core-builder-style' );
 
-		wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), UR_MEMBERSHIP_VERSION );
+		wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), UR_VERSION );
 
 		$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
@@ -130,14 +130,14 @@ class Subscriptions {
 			'ur-subscription',
 			UR()->plugin_url() . '/assets/css/modules/membership/user-registration-membership-subscription.css',
 			array(),
-			UR_MEMBERSHIP_VERSION
+			UR_VERSION
 		);
 
 		wp_register_script(
 			'ur-subscription',
 			UR()->plugin_url() . '/assets/js/modules/membership/admin/subscription' . $suffix . '.js',
 			array( 'jquery', 'ur-enhanced-select' ),
-			UR_MEMBERSHIP_VERSION,
+			UR_VERSION,
 			true
 		);
 
