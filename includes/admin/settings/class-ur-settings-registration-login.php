@@ -50,7 +50,6 @@ if ( ! class_exists( 'UR_Settings_Registration_Login' ) ) {
             $sections[ 'popup' ] =  __( 'Popups', 'user-registration' );
             $sections[ 'invite-code' ] =  __( 'Invite Codes', 'user-registration' );
             $sections[ 'file-upload' ] =  __( 'File Upload', 'user-registration' );
-            $sections[ 'role-based-redirection' ] =  __( 'Role Based Redirection', 'user-registration' );
 
             return $sections;
         }
