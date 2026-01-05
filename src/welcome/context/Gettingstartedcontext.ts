@@ -86,12 +86,39 @@ export const getTotalStepsForType = (
 	}
 };
 
+export const DEFAULT_WELCOME_STATE = {
+	membershipSetupType: "paid" as MembershipSetupType,
+	allowTracking: true
+};
+
+export const DEFAULT_PAYMENT_SETTINGS: PaymentSettings = {
+	currency: "USD",
+	currencySymbol: "$",
+	offlinePayment: false,
+	bankDetails: "",
+	paypal: false,
+	paypalEmail: "",
+	paypalClientId: "",
+	paypalClientSecret: "",
+	stripe: false,
+	stripeTestMode: false,
+	stripeTestPublishableKey: "",
+	stripeTestSecretKey: "",
+	stripeLivePublishableKey: "",
+	stripeLiveSecretKey: ""
+};
+
+export const DEFAULT_REGISTRATION_SETTINGS = {
+	loginOption: "default",
+	defaultRole: "subscriber"
+};
+
 export const initialState: GettingStartedState = {
 	currentStep: 1,
 	maxCompletedStep: 1,
 	isLoading: false,
-	membershipSetupType: "paid",
-	allowTracking: true,
+	membershipSetupType: DEFAULT_WELCOME_STATE.membershipSetupType,
+	allowTracking: DEFAULT_WELCOME_STATE.allowTracking,
 	adminEmail: "",
 	membershipOptions: [
 		{
@@ -114,26 +141,8 @@ export const initialState: GettingStartedState = {
 		}
 	],
 	membershipPlans: [createDefaultPlan("one-time")],
-	paymentSettings: {
-		currency: "USD",
-		currencySymbol: "$",
-		offlinePayment: false,
-		bankDetails: "",
-		paypal: false,
-		paypalEmail: "",
-		paypalClientId: "",
-		paypalClientSecret: "",
-		stripe: false,
-		stripeTestMode: false,
-		stripeTestPublishableKey: "",
-		stripeTestSecretKey: "",
-		stripeLivePublishableKey: "",
-		stripeLiveSecretKey: ""
-	},
-	registrationSettings: {
-		loginOption: "default",
-		defaultRole: "subscriber"
-	}
+	paymentSettings: { ...DEFAULT_PAYMENT_SETTINGS },
+	registrationSettings: { ...DEFAULT_REGISTRATION_SETTINGS }
 };
 
 export type Action =
@@ -169,7 +178,11 @@ export type Action =
 	| {
 			type: "HYDRATE_PAYMENT_SETTINGS";
 			payload: Partial<PaymentSettings>;
-	  };
+	  }
+	| { type: "RESET_WELCOME_DEFAULTS" }
+	| { type: "RESET_MEMBERSHIP_DEFAULTS" }
+	| { type: "RESET_PAYMENT_DEFAULTS" }
+	| { type: "RESET_SETTINGS_DEFAULTS" };
 
 export const reducer = (
 	state: GettingStartedState,
@@ -331,6 +344,36 @@ export const reducer = (
 					...state.paymentSettings,
 					...action.payload
 				}
+			};
+
+		// New reset actions for skip functionality
+		case "RESET_WELCOME_DEFAULTS":
+			return {
+				...state,
+				membershipSetupType: DEFAULT_WELCOME_STATE.membershipSetupType,
+				allowTracking: DEFAULT_WELCOME_STATE.allowTracking,
+				// Reset membership plans to default based on default membership type
+				membershipPlans: [createDefaultPlan("one-time")]
+			};
+
+		case "RESET_MEMBERSHIP_DEFAULTS":
+			const defaultPlanType: MembershipPlanType =
+				state.membershipSetupType === "paid" ? "one-time" : "free";
+			return {
+				...state,
+				membershipPlans: [createDefaultPlan(defaultPlanType)]
+			};
+
+		case "RESET_PAYMENT_DEFAULTS":
+			return {
+				...state,
+				paymentSettings: { ...DEFAULT_PAYMENT_SETTINGS }
+			};
+
+		case "RESET_SETTINGS_DEFAULTS":
+			return {
+				...state,
+				registrationSettings: { ...DEFAULT_REGISTRATION_SETTINGS }
 			};
 
 		default:

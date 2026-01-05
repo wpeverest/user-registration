@@ -157,7 +157,7 @@ const SetupWizard: React.FC = () => {
 			name: plan.name,
 			type: plan.type,
 			price: plan.price,
-			billing_period: plan.billingPeriod,
+			billing_period: plan.billingCycle,
 			access: plan.contentAccess.map((a) => ({
 				type: a.type,
 				value: a.value
@@ -217,7 +217,26 @@ const SetupWizard: React.FC = () => {
 	const handleSkip = async () => {
 		try {
 			dispatch({ type: "SET_LOADING", payload: true });
-			await apiPost("/skip", { step: currentStep });
+
+			await apiPost("/skip", {
+				step: currentStep,
+				step_id: currentStepId
+			});
+
+			switch (currentStepId) {
+				case "welcome":
+					dispatch({ type: "RESET_WELCOME_DEFAULTS" });
+					break;
+				case "membership":
+					dispatch({ type: "RESET_MEMBERSHIP_DEFAULTS" });
+					break;
+				case "payment":
+					dispatch({ type: "RESET_PAYMENT_DEFAULTS" });
+					break;
+				case "settings":
+					dispatch({ type: "RESET_SETTINGS_DEFAULTS" });
+					break;
+			}
 
 			if (currentStep < totalSteps) {
 				dispatch({ type: "SET_STEP", payload: currentStep + 1 });
@@ -248,7 +267,7 @@ const SetupWizard: React.FC = () => {
 	const handleClose = () => {
 		const dashboardUrl =
 			(window as any).urmSetupWizard?.dashboardUrl ||
-			"/wp-admin/admin.php?page=user-registration";
+			"/wp-admin/admin.php?page=user-registration-dashboard";
 		window.location.href = dashboardUrl;
 	};
 
@@ -304,29 +323,26 @@ const SetupWizard: React.FC = () => {
 								flexDir={{ base: "column-reverse", sm: "row" }}
 								gap={{ base: 4, sm: 0 }}
 							>
-								{/* Back Link */}
-								<Link
-									display="flex"
-									alignItems="center"
-									fontSize="sm"
-									color={mutedColor}
-									_hover={{
-										color: textColor,
-										textDecoration: "none"
-									}}
-									cursor={
-										currentStep === 1
-											? "not-allowed"
-											: "pointer"
-									}
-									onClick={
-										currentStep > 1 ? handleBack : undefined
-									}
-									opacity={currentStep === 1 ? 0.5 : 1}
-								>
-									<ArrowBackIcon mr={1} />
-									{__("Back", "user-registration")}
-								</Link>
+								{/* Back Link - only show if not on first step */}
+								{currentStep > 1 ? (
+									<Link
+										display="flex"
+										alignItems="center"
+										fontSize="sm"
+										color={mutedColor}
+										_hover={{
+											color: textColor,
+											textDecoration: "none"
+										}}
+										cursor="pointer"
+										onClick={handleBack}
+									>
+										<ArrowBackIcon mr={1} />
+										{__("Back", "user-registration")}
+									</Link>
+								) : (
+									<Box />
+								)}
 
 								<Flex gap={{ base: 3, md: 4 }} align="center">
 									<Link
