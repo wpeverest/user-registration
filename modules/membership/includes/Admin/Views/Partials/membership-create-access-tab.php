@@ -140,7 +140,7 @@
 										/>
 										<div class="urcr-checkbox-radio--content">
 											<span class="urcr-checkbox-radio-label">
-													<?php esc_html_e( 'Same as Global Restriction Message', 'user-registration' ); ?>
+													<?php esc_html_e( 'Use Global Restriction Message', 'user-registration' ); ?>
 											</span>
 										</div>
 									</label>
