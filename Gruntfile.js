@@ -1,6 +1,6 @@
-/* jshint node:true */
 const fs = require("fs");
 
+/** @param {import('grunt')} grunt */
 module.exports = function (grunt) {
 	const distIgnorePatterns = fs
 		.readFileSync(".distignore", "utf-8")
@@ -20,7 +20,6 @@ module.exports = function (grunt) {
 				"!*.zip",
 				"!.*/**",
 				"!sass/**",
-				"!phpcs.xml",
 				"!Gruntfile.js",
 				"!package.json",
 				"!renovate.json",
@@ -31,55 +30,27 @@ module.exports = function (grunt) {
 				"!tests/**",
 				"!phpunit-watcher.yml.dist",
 				"!phpunit.xml.dist",
-				"!phpcs.xml.dist",
 				"!changelog.txt",
 				"!release/**",
 				...distIgnorePatterns
 			],
-			dest: "user-registration" // Ensure this ends with a slash
+			dest: "user-registration"
 		}
 	];
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON("package.json"),
-
-		// Setting folder templates.
 		dirs: {
 			js: "assets/js",
 			css: "assets/css"
 		},
-
-		// JavaScript linting with JSHint.
-		jshint: {
+		terser: {
 			options: {
-				jshintrc: ".jshintrc"
-			},
-			all: [
-				"Gruntfile.js",
-				"<%= dirs.js %>/admin/*.js",
-				"!<%= dirs.js %>/admin/*.min.js",
-				"<%= dirs.js %>/frontend/*.js",
-				"!<%= dirs.js %>/frontend/*.min.js"
-			]
-		},
-
-		// Sass linting with Stylelint.
-		stylelint: {
-			options: {
-				stylelintrc: ".stylelintrc"
-			},
-			all: ["<%= dirs.css %>/*.scss", "!<%= dirs.css %>/select2.scss"]
-		},
-
-		// Minify all .js files.
-		uglify: {
-			options: {
-				ie8: true,
-				parse: {
-					strict: false
-				},
 				output: {
 					comments: /@license|@preserve|^!/
+				},
+				compress: {
+					drop_console: false
 				}
 			},
 			admin: {
@@ -138,54 +109,95 @@ module.exports = function (grunt) {
 				]
 			},
 			vendor: {
-				files: {
-					"<%= dirs.js %>/inputmask/jquery.inputmask.bundle.min.js": [
-						"<%= dirs.js %>/inputmask/jquery.inputmask.bundle.js"
-					],
-					"<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.min.js":
-						[
-							"<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.js"
-						],
-					"<%= dirs.js %>/tooltipster/tooltipster.bundle.min.js": [
-						"<%= dirs.js %>/tooltipster/tooltipster.bundle.js"
-					],
-					"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.min.js":
-						[
-							"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.js"
-						],
-					"<%= dirs.js %>/selectWoo/selectWoo.min.js": [
-						"<%= dirs.js %>/selectWoo/selectWoo.js"
-					],
-					"<%= dirs.js %>/sweetalert2/sweetalert2.min.js": [
-						"<%= dirs.js %>/sweetalert2/sweetalert2.js"
-					],
-					"<%= dirs.js %>/sweetalert2/sweetalert2.min.js": [
-						"<%= dirs.js %>/sweetalert2/sweetalert2.js"
-					]
-				}
+				// files: {
+				// 	"<%= dirs.js %>/inputmask/jquery.inputmask.bundle.min.js": [
+				// 		"<%= dirs.js %>/inputmask/jquery.inputmask.bundle.js"
+				// 	],
+				// 	"<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.min.js":
+				// 		[
+				// 			"<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.js"
+				// 		],
+				// 	"<%= dirs.js %>/tooltipster/tooltipster.bundle.min.js": [
+				// 		"<%= dirs.js %>/tooltipster/tooltipster.bundle.js"
+				// 	],
+				// 	"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.min.js":
+				// 		[
+				// 			"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.js"
+				// 		],
+				// 	"<%= dirs.js %>/selectWoo/selectWoo.min.js": [
+				// 		"<%= dirs.js %>/selectWoo/selectWoo.js"
+				// 	],
+				// 	"<%= dirs.js %>/sweetalert2/sweetalert2.min.js": [
+				// 		"<%= dirs.js %>/sweetalert2/sweetalert2.js"
+				// 	]
+				// }
+				files: [
+					{
+						expand: true,
+						cwd: "<%= dirs.js %>/inputmask/",
+						src: ["jquery.inputmask.bundle.js"],
+						dest: "<%= dirs.js %>/inputmask/",
+						ext: ".min.js"
+					},
+					{
+						expand: true,
+						cwd: "<%= dirs.js %>/jquery-blockui/",
+						src: ["jquery.jquery.blockUI.js"],
+						dest: "<%= dirs.js %>/jquery-blockui/",
+						ext: ".min.js"
+					},
+					{
+						expand: true,
+						cwd: "<%= dirs.js %>/tooltipster/",
+						src: ["tooltipster.bundle.js"],
+						dest: "<%= dirs.js %>/tooltipster/",
+						ext: ".min.js"
+					},
+					{
+						expand: true,
+						cwd: "<%= dirs.js %>/perfect-scrollbar/",
+						src: ["perfect-scrollbar.js"],
+						dest: "<%= dirs.js %>/perfect-scrollbar/",
+						ext: ".min.js"
+					},
+					{
+						expand: true,
+						cwd: "<%= dirs.js %>/selectWoo/",
+						src: ["selectWoo.js"],
+						dest: "<%= dirs.js %>/selectWoo/",
+						ext: ".min.js"
+					},
+					{
+						expand: true,
+						cwd: "<%= dirs.js %>/sweetalert2/",
+						src: ["sweetalert2.js"],
+						dest: "<%= dirs.js %>/sweetalert2/",
+						ext: ".min.js"
+					}
+				]
 			}
 		},
-
-		// Compile all .scss files.
 		sass: {
 			options: {
-				sourceMap: false,
-				implementation: require("sass")
+				implementation: require("sass"),
+				sourceMap: false
 			},
 			compile: {
 				files: [
 					{
 						expand: true,
 						cwd: "<%= dirs.css %>/",
-						src: ["*.scss", "modules/**/*.scss", "ur-snackbar/*.scss"], // Include the modules and ur-snackbar directories
+						src: [
+							"*.scss",
+							"modules/**/*.scss",
+							"ur-snackbar/*.scss"
+						],
 						dest: "<%= dirs.css %>/",
 						ext: ".css"
 					}
 				]
 			}
 		},
-
-		// Generate all RTL .css files
 		rtlcss: {
 			generate: {
 				expand: true,
@@ -195,8 +207,6 @@ module.exports = function (grunt) {
 				ext: "-rtl.css"
 			}
 		},
-
-		// Minify all .css files.
 		cssmin: {
 			minify: {
 				expand: true,
@@ -206,8 +216,6 @@ module.exports = function (grunt) {
 				ext: ".css"
 			}
 		},
-
-		// Concatenate select2.css onto the admin.css files.
 		concat: {
 			admin: {
 				files: {
@@ -222,8 +230,6 @@ module.exports = function (grunt) {
 				}
 			}
 		},
-
-		// Watch changes for assets.
 		watch: {
 			css: {
 				files: [
@@ -243,26 +249,9 @@ module.exports = function (grunt) {
 					"!<%= dirs.js %>/frontend/*.min.js",
 					"!<%= dirs.js %>/ur-snackbar/*.min.js"
 				],
-				tasks: ["jshint", "uglify"]
+				tasks: ["terser"]
 			}
 		},
-
-		// PHP Code Sniffer.
-		phpcs: {
-			options: {
-				bin: "vendor/bin/phpcs"
-			},
-			dist: {
-				src: [
-					"**/*.php", // Include all files
-					"!includes/libraries/**", // Exclude libraries/
-					"!node_modules/**", // Exclude node_modules/
-					"!vendor/**" // Exclude vendor/
-				]
-			}
-		},
-
-		// Autoprefixer.
 		postcss: {
 			options: {
 				processors: [
@@ -275,25 +264,6 @@ module.exports = function (grunt) {
 				src: ["<%= dirs.css %>/*.css"]
 			}
 		},
-
-		// Generate POT file for translations
-		makepot: {
-			target: {
-				options: {
-					domainPath: "/languages/",
-					mainFile: "user-registration.php",
-					potFilename: "user-registration.pot",
-					potHeaders: {
-						poedit: true,
-						"x-poedit-keywordslist": true
-					},
-					type: "wp-plugin",
-					exclude: ["node_modules/.*", "tests/.*", "vendor/.*"]
-				}
-			}
-		},
-
-		// Compress files and folders.
 		compress: {
 			withVersion: {
 				options: {
@@ -301,12 +271,6 @@ module.exports = function (grunt) {
 				},
 				files: filesToCompress
 			}
-			// withoutVersion: {
-			// 	options: {
-			// 		archive: "release/<%= pkg.name %>.zip"
-			// 	},
-			// 	files: filesToCompress
-			// }
 		},
 		shell: {
 			composerProd: {
@@ -315,31 +279,26 @@ module.exports = function (grunt) {
 		}
 	});
 
-	// Load NPM tasks to be used here
 	grunt.loadNpmTasks("grunt-sass");
-	grunt.loadNpmTasks("grunt-phpcs");
 	grunt.loadNpmTasks("grunt-rtlcss");
-	grunt.loadNpmTasks("grunt-postcss");
-	grunt.loadNpmTasks("grunt-stylelint");
-	grunt.loadNpmTasks("grunt-contrib-jshint");
-	grunt.loadNpmTasks("grunt-contrib-uglify");
+	grunt.loadNpmTasks("@lodder/grunt-postcss");
+	grunt.loadNpmTasks("grunt-terser");
 	grunt.loadNpmTasks("grunt-contrib-cssmin");
 	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.loadNpmTasks("grunt-contrib-watch");
 	grunt.loadNpmTasks("grunt-contrib-compress");
 	grunt.loadNpmTasks("grunt-shell");
 
-	// Register tasks.
-	grunt.registerTask("default", ["uglify"]);
+	grunt.registerTask("default", ["terser"]);
 
 	grunt.registerTask("js", [
-		// 'jshint',
-		"uglify:admin",
-		"uglify:frontend",
-		"uglify:urComponents",
-		"uglify:modules",
-		"uglify:urSnackbar"
+		"terser:admin",
+		"terser:frontend",
+		"terser:urComponents",
+		"terser:modules",
+		"terser:urSnackbar"
 	]);
+
 	grunt.registerTask("css", [
 		"sass",
 		"rtlcss",
@@ -348,16 +307,15 @@ module.exports = function (grunt) {
 		"concat"
 	]);
 
-	// Register tasks
 	grunt.registerTask("release", [
 		"shell:composerProd",
 		"sass",
 		"rtlcss",
 		"cssmin",
 		"concat",
-		"uglify",
-		// "compress:withoutVersion",
+		"terser",
 		"compress:withVersion"
 	]);
+
 	grunt.registerTask("dev", ["watch"]);
 };
