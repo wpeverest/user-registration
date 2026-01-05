@@ -1147,6 +1147,8 @@ function urcr_migrate_global_restriction_settings() {
 	if ( $rule_id ) {
 		update_option( 'urcr_global_restriction_migrated', true );
 
+		delete_option( 'user_registration_content_restriction_whole_site_access' );
+
 		return $rule_id;
 	}
 
