@@ -1139,7 +1139,7 @@ function urcr_migrate_global_restriction_settings() {
 		'access_control'  => 'access',
 		'logic_map'       => $logic_map,
 		'target_contents' => $target_contents,
-		'actions'         => urcr_build_migration_actions( 'content' ),
+		'actions'         => urcr_build_migration_actions( 'content', $timestamp ),
 	);
 
 	$rule_id = urcr_create_migrated_rule( __( 'Legacy: Global Site Rule', 'user-registration' ), $rule_data );
@@ -1294,7 +1294,7 @@ function urcr_migrate_post_page_restrictions() {
 		'access_control'  => 'access',
 		'logic_map'       => $logic_map,
 		'target_contents' => $target_contents,
-		'actions'         => urcr_build_migration_actions( 'content' ),
+		'actions'         => urcr_build_migration_actions( 'content', $timestamp ),
 	);
 
 	// Create the rule post

@@ -765,10 +765,13 @@ if ( ! function_exists( 'urcr_build_migration_actions' ) ) {
 	 * Build migration actions array.
 	 *
 	 * @param string $migration_source Migration source type ('membership' or 'content').
+	 * @param int    $timestamp        Optional timestamp to use for action IDs. If not provided, generates a new one.
 	 * @return array Actions array.
 	 */
-	function urcr_build_migration_actions( $migration_source = 'content' ) {
-		$timestamp = time() * 1000;
+	function urcr_build_migration_actions( $migration_source = 'content', $timestamp = null ) {
+		if ( null === $timestamp ) {
+			$timestamp = time() * 1000;
+		}
 
 		if ( $migration_source === 'membership' ) {
 			$message = '';
@@ -868,7 +871,7 @@ if ( ! function_exists( 'urcr_create_membership_rule' ) ) {
 			'access_control'  => 'access',
 			'logic_map'       => $logic_map,
 			'target_contents' => $target_contents,
-			'actions'         => urcr_build_migration_actions( 'membership' ),
+			'actions'         => urcr_build_migration_actions( 'membership', $timestamp ),
 		);
 
 		$rule_title = sprintf( __( '%s Rule', 'user-registration' ), $membership_title );
