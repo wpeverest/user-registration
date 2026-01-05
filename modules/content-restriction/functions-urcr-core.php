@@ -1173,7 +1173,7 @@ function urcr_migrate_global_restriction_settings() {
 		'actions'         => urcr_build_migration_actions(),
 	);
 
-	$rule_id = urcr_create_migrated_rule( __( 'Migrated: Global Site Restriction', 'user-registration' ), $rule_data );
+	$rule_id = urcr_create_migrated_rule( __( 'Legacy: Global Site Rule', 'user-registration' ), $rule_data );
 
 	if ( $rule_id ) {
 		update_option( 'urcr_global_restriction_migrated', true );
@@ -1329,7 +1329,7 @@ function urcr_migrate_post_page_restrictions() {
 	);
 
 	// Create the rule post
-	$rule_id = urcr_create_migrated_rule( __( 'Migrated: Post/Page Restrictions', 'user-registration' ), $rule_data );
+	$rule_id = urcr_create_migrated_rule( __( 'Legacy: Post/Page Rule', 'user-registration' ), $rule_data );
 
 	if ( $rule_id ) {
 		// Delete urcr_meta_checkbox meta for each migrated post/page

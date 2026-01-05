@@ -87,10 +87,10 @@ class Membership {
 				'jquery',
 				'jquery-ui-sortable',
 			),
-			'1.0.0',
+			'UR_VERSION',
 			true
 		);
-		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
+		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), 'UR_VERSION', true );
 		wp_enqueue_script( 'ur-snackbar' );
 		wp_enqueue_script( 'sweetalert2' );
 		wp_enqueue_script( 'user-registration-membership' );
@@ -140,7 +140,7 @@ class Membership {
 			return;
 		}
 		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
-			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
+			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), 'UR_VERSION' );
 		}
 		wp_enqueue_style( 'ur-snackbar' );
 		wp_enqueue_style( 'sweetalert2' );

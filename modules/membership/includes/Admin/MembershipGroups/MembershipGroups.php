@@ -11,7 +11,6 @@ namespace WPEverest\URMembership\Admin\MembershipGroups;
 use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
-use WPEverest\URMembership\Admin\Membership\Membership;
 
 class MembershipGroups {
 	public function __construct() {
@@ -38,10 +37,7 @@ class MembershipGroups {
 		}
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) ? '' : '.min';
-
-		wp_enqueue_script( 'jquery-ui-sortable' );
-
-		wp_register_script( 'user-registration-membership-groups', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/membership-groups' . $suffix . '.js', array( 'jquery', 'jquery-ui-sortable' ), '1.0.0', true );
+		wp_register_script( 'user-registration-membership-groups', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/membership-groups' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_enqueue_script( 'user-registration-membership-groups' );
 		$this->localize_scripts();
 	}
@@ -82,8 +78,6 @@ class MembershipGroups {
 	}
 
 	public function render_membership_groups_list_table( $menu_items ) {
-		$this->enable_groups_module();
-
 		$membership_table_list = new MembershipGroupsListTable();
 		$enable_members_button = true;
 		require __DIR__ . '/../Views/Partials/header.php';
@@ -96,8 +90,6 @@ class MembershipGroups {
 		$membership_group_repository = new MembershipGroupRepository();
 		$memberships                 = $membership_service->list_active_memberships();
 		$group_id                    = 0;
-
-		$this->enable_groups_module();
 
 		if ( isset( $_GET['post_id'] ) && ! empty( $_GET['post_id'] ) ) {
 			$group_id         = absint( $_GET['post_id'] );
@@ -113,13 +105,5 @@ class MembershipGroups {
 		}
 
 		include __DIR__ . '/../Views/membership-groups-create.php';
-	}
-
-	private function enable_groups_module() {
-		if ( ! ur_check_module_activation( 'membership-groups' ) ) {
-			$enabled_features   = get_option( 'user_registration_enabled_features', array() );
-			$enabled_features[] = 'user-registration-membership-groups';
-			update_option( 'user_registration_enabled_features', $enabled_features );
-		}
 	}
 }
