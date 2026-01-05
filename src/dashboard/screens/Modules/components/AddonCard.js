@@ -27,7 +27,7 @@ import {
 	useDisclosure
 } from "@chakra-ui/react";
 import { FaCog, FaPlay, FaLock } from "react-icons/fa";
-import YouTubePlayer from "react-player/youtube";
+import { Youtube } from "react-player";
 import { activateModule, deactivateModule } from "./modules-api";
 
 const AddonCard = ({ addon, showToast }) => {
