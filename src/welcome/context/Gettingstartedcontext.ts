@@ -346,13 +346,11 @@ export const reducer = (
 				}
 			};
 
-		// New reset actions for skip functionality
 		case "RESET_WELCOME_DEFAULTS":
 			return {
 				...state,
 				membershipSetupType: DEFAULT_WELCOME_STATE.membershipSetupType,
 				allowTracking: DEFAULT_WELCOME_STATE.allowTracking,
-				// Reset membership plans to default based on default membership type
 				membershipPlans: [createDefaultPlan("one-time")]
 			};
 

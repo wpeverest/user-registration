@@ -1875,7 +1875,6 @@ class UR_Getting_Started {
 		$step_id         = isset( $request['step_id'] ) ? sanitize_text_field( $request['step_id'] ) : '';
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
 
-		self::reset_step_to_defaults( $current_step, $step_id );
 
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
 
@@ -1901,57 +1900,6 @@ class UR_Getting_Started {
 			),
 			200
 		);
-	}
-
-	/**
-	 * Reset step data to defaults when skipping.
-	 *
-	 * @since x.x.x
-	 *
-	 * @param int    $step    Step number.
-	 * @param string $step_id Step ID.
-	 * @return void
-	 */
-	protected static function reset_step_to_defaults( $step, $step_id ) {
-
-		if ( empty( $step_id ) && isset( self::$steps[ $step ] ) ) {
-			$step_id = self::$steps[ $step ];
-		}
-
-		switch ( $step_id ) {
-			case 'welcome':
-				delete_option( 'urm_onboarding_membership_type' );
-				update_option( 'user_registration_allow_usage_tracking', true );
-				break;
-
-			case 'membership':
-				$membership_ids = get_option( 'urm_onboarding_membership_ids', array() );
-				if ( ! empty( $membership_ids ) && is_array( $membership_ids ) ) {
-					foreach ( $membership_ids as $membership_id ) {
-						if ( is_numeric( $membership_id ) && $membership_id > 0 ) {
-							wp_delete_post( absint( $membership_id ), true );
-						}
-					}
-				}
-				delete_option( 'urm_onboarding_membership_ids' );
-				break;
-
-			case 'payment':
-				update_option( 'urm_bank_connection_status', false );
-				update_option( 'urm_paypal_connection_status', false );
-				update_option( 'urm_stripe_connection_status', false );
-				update_option( 'urm_enabled_payment_gateways', array() );
-				delete_option( 'user_registration_global_bank_details' );
-				delete_option( 'user_registration_global_paypal_email_address' );
-				delete_option( 'user_registration_global_paypal_client_id' );
-				delete_option( 'user_registration_global_paypal_client_secret' );
-				break;
-
-			case 'settings':
-				update_option( 'user_registration_general_setting_login_options', 'default' );
-				update_option( 'user_registration_default_user_role', 'subscriber' );
-				break;
-		}
 	}
 
 	/**
@@ -2024,13 +1972,6 @@ class UR_Getting_Started {
 
 	/**
 	 * Calculate the next step based on current step and membership type.
-	 *
-	 * Steps:
-	 * 1 = welcome
-	 * 2 = membership (skipped for "normal")
-	 * 3 = payment (only for "paid_membership")
-	 * 4 = settings (only for "normal")
-	 * 5 = finish
 	 *
 	 * @since x.x.x
 	 *

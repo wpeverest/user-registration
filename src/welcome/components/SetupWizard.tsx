@@ -223,21 +223,6 @@ const SetupWizard: React.FC = () => {
 				step_id: currentStepId
 			});
 
-			switch (currentStepId) {
-				case "welcome":
-					dispatch({ type: "RESET_WELCOME_DEFAULTS" });
-					break;
-				case "membership":
-					dispatch({ type: "RESET_MEMBERSHIP_DEFAULTS" });
-					break;
-				case "payment":
-					dispatch({ type: "RESET_PAYMENT_DEFAULTS" });
-					break;
-				case "settings":
-					dispatch({ type: "RESET_SETTINGS_DEFAULTS" });
-					break;
-			}
-
 			if (currentStep < totalSteps) {
 				dispatch({ type: "SET_STEP", payload: currentStep + 1 });
 			}
