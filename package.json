@@ -11,6 +11,7 @@
   "main": "Gruntfile.js",
   "scripts": {
     "build": "pnpm exec grunt && pnpm run makepot && wp-scripts build --node-env=production --mode=production",
+    "build:pro": "cross-env UR_PRO=true pnpm run build",
     "dev": "wp-scripts start --node-env=development --mode=development",
     "dev:pro": "cross-env UR_PRO=true pnpm run dev",
     "makepot": "composer run-script makepot",
