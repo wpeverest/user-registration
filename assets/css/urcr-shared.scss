@@ -616,10 +616,10 @@ $border-color_6: #475bb2;
 				.urcr-checkbox-radio-option {
 					display: flex;
 					align-items: flex-start;
-					gap: 8px;
+					gap: 10px;
 					max-width: 100%;
 					width: 100%;
-					padding: 16px;
+					padding: 14px 16px;
 					margin-bottom: 0;
 
 					@media screen and (min-width: 601px) {

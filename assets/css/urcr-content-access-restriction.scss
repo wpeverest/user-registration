@@ -1183,7 +1183,7 @@ $border-left-color_3: #0073aa;
 
 .urcr-condition-wrapper {
 	display: flex;
-	gap: 10px;
+	gap: 4px;
 	align-items: center;
 	position: relative;
 	transition: all .3s ease-in-out;
@@ -1683,7 +1683,7 @@ $not-tag: #fcdddd;
 		flex-direction: column;
 		gap: 24px;
 		flex: 1;
-		padding-right: 30px;
+		padding-right: 16px;
 		box-sizing: border-box;
 
 		@media screen and (max-width: 1550px) {
@@ -2274,28 +2274,33 @@ $not-tag: #fcdddd;
 			position: relative;
 
 			.button-link-delete {
-				position: absolute;
-				top: 50%;
-				right: -32px;
-				transform: translateY(-50%);
+				// position: absolute;
+				// top: 50%;
+				// right: -32px;
+				// transform: translateY(-50%);
 				background: none !important;
-				opacity: 0;
+				// opacity: 1;
 				border: 0;
 				box-shadow: none;
 				display: flex;
 				align-items: center;
 				justify-content: center;
+
+				// &:hover {
+				// 	background: #fff4f4 !important;
+				// }
 			}
 
-			&:hover {
-				>.button-link-delete {
-					opacity: 1;
+			// &:hover {
+			// 	>.button-link-delete {
 
-					.dashicons {
-						opacity: 1;
-					}
-				}
-			}
+			// 		// opacity: 1;
+
+			// 		.dashicons {
+			// 			// opacity: 1;
+			// 		}
+			// 	}
+			// }
 		}
 	}
 
@@ -2312,6 +2317,7 @@ $not-tag: #fcdddd;
 		position: sticky;
 		position: -webkit-sticky;
 		top: 60px;
+		z-index: 3;
 
 		// @media screen and (max-width: 1399px) {
 		// 	max-width: 420px;
@@ -2368,7 +2374,7 @@ $not-tag: #fcdddd;
 		}
 
 		.urcr-target-type-group {
-			padding: 0 24px;
+			padding: 0 10px 0 24px;
 			width: 100%;
 			gap: 24px;
 			box-sizing: border-box;
@@ -2399,16 +2405,21 @@ $not-tag: #fcdddd;
 				}
 
 				.urcr-target-remove {
-					position: absolute;
-					top: 50%;
-					right: -22px;
+					// position: absolute;
+					// top: 50%;
+					// right: -22px;
 					padding: 0;
-					opacity: 0;
-					transform: translateY(-50%);
+					opacity: 1;
+					// transform: translateY(-50%);
 					display: inline-block;
+					width: 20px;
+					height: 20px;
 
 					.dashicons {
-						opacity: 0;
+						font-size: 20px;
+						width: 20px;
+						height: 20px;
+						opacity: 1;
 
 						&::before {
 							font-size: 20px;
@@ -2438,6 +2449,7 @@ $not-tag: #fcdddd;
 
 		.urcr-content-dropdown-wrapper {
 			padding: 0 24px;
+			box-sizing: border-box;
 		}
 	}
 }
