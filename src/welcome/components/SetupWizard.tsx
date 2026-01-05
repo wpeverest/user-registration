@@ -308,7 +308,6 @@ const SetupWizard: React.FC = () => {
 								flexDir={{ base: "column-reverse", sm: "row" }}
 								gap={{ base: 4, sm: 0 }}
 							>
-								{/* Back Link - only show if not on first step */}
 								{currentStep > 1 ? (
 									<Link
 										display="flex"
@@ -334,7 +333,7 @@ const SetupWizard: React.FC = () => {
 										fontSize="sm"
 										color="#999999"
 										_hover={{
-											color: textColor,
+											color: "#475BB2",
 											textDecoration: "underline"
 										}}
 										cursor="pointer"
@@ -354,8 +353,8 @@ const SetupWizard: React.FC = () => {
 										_active={{ bg: "#475BB2" }}
 										onClick={handleNext}
 										isLoading={isLoading}
-										px={{ base: 4, md: 6 }}
-										py={5}
+										px={{ base: 2, md: 4 }}
+										py={2}
 										borderRadius="4px"
 										fontSize={{ base: "sm", md: "md" }}
 									>

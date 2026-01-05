@@ -48,7 +48,7 @@ interface PaymentGatewayData {
 }
 
 const InfoIcon: React.FC = () => (
-	<Icon viewBox="0 0 16 16" boxSize={4} color="#9CA3AF">
+	<Icon viewBox="0 0 16 16" boxSize={4} color="#383838">
 		<circle
 			cx="8"
 			cy="8"
@@ -96,7 +96,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ label }) => {
 					px={3}
 					py={2}
 					fontSize="13px"
-					color="#6B7280"
+					color="#222222"
 					fontWeight="400"
 					lineHeight="1.5"
 				>
