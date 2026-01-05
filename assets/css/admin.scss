@@ -8534,7 +8534,7 @@ body.user-registration-page {
 
 	.user-registration-base-list-table-heading {
 		position: absolute;
-		display: inline-flex;
+		display: flex;
 		align-items: center;
 		gap: $spacing_16px;
 
@@ -8586,6 +8586,24 @@ body.user-registration-page {
 				background-repeat: no-repeat;
 				background-position: center;
 				background-size: 100%;
+			}
+
+			&.urm-create-group-btn {
+				background: $blue-50;
+				border-color: $blue-50;
+				box-shadow: 0 1px 0 $blue-50;
+				font-size: 14px;
+				color: $grey-400;
+				border-radius: $border_radius_3;
+				margin-left: auto;
+
+				&::before {
+					content: none;
+					display: none;
+					background: none;
+					width: 0;
+					height: 0;
+				}
 			}
 		}
 	}

@@ -1825,8 +1825,10 @@
   color: #bababa;
 }
 #ur-membership-main-fields .upgradable-type .ur-membership-type-title,
+#ur-membership-main-fields .upgradable-type label,
 #ur-membership-main-fields .upgradable-type .ur-membership-type-description,
 #upgrade-settings-container .upgradable-type .ur-membership-type-title,
+#upgrade-settings-container .upgradable-type label,
 #upgrade-settings-container .upgradable-type .ur-membership-type-description {
   opacity: 0.5;
 }
@@ -2007,4 +2009,45 @@
 }
 .user-registration-base-list-table-heading .ur-membership-order-controls:has(.ur-spinner) .button-primary svg {
   opacity: 0;
+}
+
+.ur-membership-upgrade-container .ur-membership-upgrade-paths-info {
+  font-size: 13px;
+  color: #646970;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+.ur-membership-upgrade-container .ur-sortable-box {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+}
+.ur-membership-upgrade-container .ur-sortable-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ur-membership-upgrade-container .ur-sortable-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  cursor: default;
+  background: #fff;
+}
+.ur-membership-upgrade-container .ur-sortable-item:last-child {
+  border-bottom: none;
+}
+.ur-membership-upgrade-container .ur-drag-handle {
+  cursor: grab;
+  color: #666;
+}
+.ur-membership-upgrade-container .ur-sortable-item.ui-sortable-helper {
+  background: #f6f7f7;
+}
+.ur-membership-upgrade-container .ur-sortable-placeholder {
+  height: 42px;
+  background: #f0f0f0;
+  border: 1px dashed #ccc;
 }

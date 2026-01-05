@@ -100,7 +100,7 @@ class UpgradeMembershipService {
 		$upgrade_type               = ! empty( $upgrade_data['upgrade_type'] ) ? $upgrade_data['upgrade_type'] : '';
 
 		$chargeable_amount            = 0;
-		$remaining_subscription_value = $selected_membership_details['subscription']['value'];
+		$remaining_subscription_value = $selected_membership_details['subscription']['value'] ?? 0;
 		$delayed_until                = '';
 		$timezone                     = get_option( 'timezone_string' );
 		if ( ! $timezone ) {
@@ -236,6 +236,74 @@ class UpgradeMembershipService {
 				}
 			);
 
+			uasort(
+				$paths,
+				function ( $a, $b ) {
+					$count_a = is_array( $a ) ? count( $a ) : 0;
+					$count_b = is_array( $b ) ? count( $b ) : 0;
+
+					if ( $count_a < $count_b ) {
+						return 1;
+					}
+					if ( $count_a > $count_b ) {
+						return -1;
+					}
+
+					return 0;
+				}
+			);
+
+			return $paths;
+		} else {
+			$paths     = array();
+			$to_remove = array();
+
+			foreach ( $memberships as $current ) {
+				if ( empty( $current['ID'] ) ) {
+					continue;
+				}
+
+				array_push( $to_remove, $current['ID'] );
+
+				$current_id     = (int) $current['ID'];
+				$current_meta   = isset( $current['meta_value'] ) ? $current['meta_value'] : array();
+				$current_amount = isset( $current_meta['amount'] ) ? (float) $current_meta['amount'] : 0.0;
+
+				$options = array();
+
+				foreach ( $memberships as $target ) {
+
+					if ( empty( $target['ID'] ) ) {
+						continue;
+					}
+
+					if ( in_array( $target['ID'], $to_remove ) ) {
+						continue;
+					}
+
+					$target_id = (int) $target['ID'];
+
+					if ( $target_id === $current_id ) {
+						continue;
+					}
+
+					$target_meta   = isset( $target['meta_value'] ) ? $target['meta_value'] : array();
+					$target_amount = isset( $target_meta['amount'] ) ? (float) $target_meta['amount'] : 0.0;
+
+					$target_membership_detais = $this->membership_service->prepare_single_membership_data( $this->membership_repository->get_single_membership_by_ID( $target_id ) );
+					$target_label             = $target_membership_detais['post_title'];
+
+					$options[] = array(
+						'membership_id'  => $target_id,
+						'label'          => $target_label,
+						'target_amount'  => (float) $target_amount,
+						'current_amount' => (float) $current_amount,
+					);
+				}
+
+				$paths[ $current_id ] = $options;
+			}
+
 			return $paths;
 		}
 
@@ -243,56 +311,58 @@ class UpgradeMembershipService {
 	}
 
 	/**
-	 * Build upgrade path html for user.
+	 * Build upgrade order html for user.
 	 *
 	 * @param array $upgrade_paths Upgrade Paths for the memberships inside the group.
 	 */
-	public function build_upgrade_paths( $upgrade_paths ) {
-		$built_upgrade_paths = array();
+	public function build_upgrade_order( $upgrade_paths ) {
 
+		if ( empty( $upgrade_paths ) ) {
+			return '';
+		}
+
+		ob_start();
 		foreach ( $upgrade_paths as $membership_id => $path ) {
-
 			$membership_details = $this->membership_service->prepare_single_membership_data(
 				$this->membership_repository->get_single_membership_by_ID( $membership_id )
 			);
 
-			$current_label = $membership_details['post_title'];
-			$paths_label   = array( $current_label );
-			$paths_label   = array_map(
-				function ( $single_path ) {
-					return isset( $single_path['label'] ) ? $single_path['label'] : null;
-				},
-				$path
-			);
+			$current_label   = $membership_details['post_title'];
+			$membership_meta = isset( $membership_details['meta_value'] ) ? $membership_details['meta_value'] : array();
+			$target_amount   = isset( $membership_meta['amount'] ) ? (float) $membership_meta['amount'] : 0.0;
 
-			if ( ! empty( $paths_label ) ) {
+			$currencies = ur_payment_integration_get_currencies();
+			$currency   = get_option( 'user_registration_payment_currency', 'USD' );
 
-				array_unshift( $paths_label, $current_label );
-				$paths_label = array_filter( $paths_label );
+			$symbol = $currencies[ $currency ]['symbol'];
+			$amount = ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $target_amount, 2 ) : number_format( $target_amount, 2 ) . $symbol;
 
-				$built_upgrade_paths[] = sprintf(
-					'Upgrade paths for %s: %s',
-					$current_label,
-					print_r( implode( ' -> ', $paths_label ), true )
-				);
+			$current_term = '';
+
+			$duration       = $membership_meta['subscription']['duration'] ?? '';
+			$duration_value = trim( absint( $membership_meta['subscription']['value'] ?? 0 ) > 1 ?? '' );
+
+			if ( ! empty( $duration ) ) {
+				$duration     = ! empty( $duration_value ) ? $duration_value . ' ' . $duration : $duration;
+				$current_term = 'subscription' === $membership_meta['type'] ? $amount . ' / ' . $duration : $amount;
+			} else {
+				$current_term = $amount ?? '';
 			}
-		}
 
-		ob_start();
-		if ( ! empty( $built_upgrade_paths ) ) {
 			?>
-			<div class="ur-p-tag">
-				Automatic upgrade paths setup for memberships in this group:
-				<ul>
-					<?php
-					foreach ( $built_upgrade_paths as $paths ) {
-						?>
-						<li><?php echo esc_html( $paths ); ?></li>
-						<?php
-					}
-					?>
-				</ul>
-			</div>
+			<li class="ur-sortable-item" data-id="<?php echo esc_attr( $membership_id ); ?>">
+				<span class="ur-drag-handle">
+					<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+						<path d="M7 12c0-1.227.985-2.222 2.2-2.222 1.215 0 2.2.995 2.2 2.222a2.211 2.211 0 0 1-2.2 2.222C7.985 14.222 7 13.227 7 12Zm0-7.778C7 2.995 7.985 2 9.2 2c1.215 0 2.2.995 2.2 2.222a2.211 2.211 0 0 1-2.2 2.222A2.21 2.21 0 0 1 7 4.222Zm0 15.556c0-1.227.985-2.222 2.2-2.222 1.215 0 2.2.994 2.2 2.222A2.211 2.211 0 0 1 9.2 22C7.985 22 7 21.005 7 19.778ZM13.6 12c0-1.227.985-2.222 2.2-2.222 1.215 0 2.2.995 2.2 2.222a2.211 2.211 0 0 1-2.2 2.222c-1.215 0-2.2-.995-2.2-2.222Zm0-7.778C13.6 2.995 14.585 2 15.8 2c1.215 0 2.2.995 2.2 2.222a2.211 2.211 0 0 1-2.2 2.222 2.21 2.21 0 0 1-2.2-2.222Zm0 15.556c0-1.227.985-2.222 2.2-2.222 1.215 0 2.2.994 2.2 2.222A2.211 2.211 0 0 1 15.8 22c-1.215 0-2.2-.995-2.2-2.222Z"></path>
+					</svg>
+				</span>
+				<div class="ur-drag-label">
+					<div class="ur-item-label" style="font-weight: 500;"><?php echo esc_html( $current_label ); ?></div>
+					<?php if ( ! empty( $current_term ) ) : ?>
+					<div class="ur-item-label"><?php echo esc_html( $current_term ); ?></div>
+					<?php endif; ?>
+				</div>
+			</li>
 			<?php
 		}
 		return ob_get_clean();

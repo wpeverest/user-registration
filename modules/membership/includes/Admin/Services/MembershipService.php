@@ -497,9 +497,12 @@ class MembershipService {
 		$membership_group_repository = new MembershipGroupRepository();
 		$membership_details          = $this->get_membership_details( $membership_id );
 		$group_details               = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
+		$memberships                 = array();
+		$group_mode                  = '';
 
 		if ( ! empty( $group_details ) ) {
 			if ( isset( $group_details['mode'] ) && 'upgrade' === $group_details['mode'] ) {
+				$group_mode = 'upgrade';
 				if ( isset( $group_details['upgrade_path'] ) && '' !== $group_details['upgrade_path'] ) {
 					$upgrade_paths = json_decode( $group_details['upgrade_path'], true );
 
@@ -516,11 +519,12 @@ class MembershipService {
 					}
 				}
 			} elseif ( isset( $group_details['mode'] ) && 'multiple' === $group_details['mode'] ) {
+				$group_mode = 'multiple';
 				return array();
 			}
 		}
 
-		if ( empty( $memberships ) ) {
+		if ( empty( $memberships ) && empty( $group_mode ) ) {
 			if ( ! empty( $membership_details['upgrade_settings'] ) && $membership_details['upgrade_settings']['upgrade_action'] ) {
 				$memberships = $this->membership_repository->get_multiple_membership_by_ID( $membership_details['upgrade_settings']['upgrade_path'] );
 			}
@@ -679,25 +683,26 @@ class MembershipService {
 		}
 
 		if ( isset( $data['action'] ) && 'upgrade' === $data['action'] ) {
+
+			$member_id  = get_current_user_id();
+			$last_order = $members_order_repository->get_member_orders( $member_id );
+
+			if ( ! empty( $last_order ) ) {
+				$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
+				if ( ! empty( $order_meta ) ) {
+					$upcoming_subscription = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
+					$membership            = get_post( $upcoming_subscription['membership'] );
+					$message               = apply_filters( 'urm_delayed_plan_exist_notice', __( sprintf( 'You already have a scheduled upgrade to the <b>%s</b> plan at the end of your current subscription cycle (<i><b>%s</b></i>) <br> If you\'d like to cancel this upcoming change, please proceed from my account page.', $membership->post_title, date( 'M d, Y', strtotime( $order_meta['meta_value'] ) ) ), 'user-registration' ), $membership->post_title, $order_meta['meta_value'] );
+
+					return array(
+						'status'  => false,
+						'message' => $message,
+					);
+				}
+			}
+
 			// Checkout page for logged in user to upgrade membership.
 			if ( isset( $data['current'] ) && '' !== $data['current'] ) {
-
-				$member_id  = get_current_user_id();
-				$last_order = $members_order_repository->get_member_orders( $member_id );
-
-				if ( ! empty( $last_order ) ) {
-					$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
-					if ( ! empty( $order_meta ) ) {
-						$upcoming_subscription = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
-						$membership            = get_post( $upcoming_subscription['membership'] );
-						$message               = apply_filters( 'urm_delayed_plan_exist_notice', __( sprintf( 'You already have a scheduled upgrade to the <b>%s</b> plan at the end of your current subscription cycle (<i><b>%s</b></i>) <br> If you\'d like to cancel this upcoming change, click the <b>Cancel Membership</b> button to proceed.', $membership->post_title, date( 'M d, Y', strtotime( $order_meta['meta_value'] ) ) ), 'user-registration' ), $membership->post_title, $order_meta['meta_value'] );
-
-						return array(
-							'status'  => false,
-							'message' => $message,
-						);
-					}
-				}
 				$memberships = $this->get_upgradable_membership( $current_membership_id );
 				$memberships = array_filter(
 					$memberships,
@@ -796,7 +801,7 @@ class MembershipService {
 			}
 			unset( $membership );
 		} elseif ( isset( $data['action'] ) && 'multiple' === $data['action'] ) {
-			if ( UR_PRO_ACTIVE && ur_check_module_activation( 'multi-membership' ) ) {
+			if ( UR_PRO_ACTIVE && ur_check_module_activation( 'membership-groups' ) ) {
 				$membership_id    = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
 				$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
 

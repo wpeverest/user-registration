@@ -15367,7 +15367,7 @@ body.user-registration-page #profile-page #your-profile #application-passwords-s
 }
 #user-registration-base-list-table-page .user-registration-base-list-table-heading {
   position: absolute;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 16px;
 }
@@ -15416,6 +15416,22 @@ body.user-registration-page #profile-page #your-profile #application-passwords-s
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100%;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-heading .page-title-action.urm-create-group-btn {
+  background: #edeff7;
+  border-color: #edeff7;
+  box-shadow: 0 1px 0 #edeff7;
+  font-size: 14px;
+  color: #383838;
+  border-radius: 3px;
+  margin-right: auto;
+}
+#user-registration-base-list-table-page .user-registration-base-list-table-heading .page-title-action.urm-create-group-btn::before {
+  content: none;
+  display: none;
+  background: none;
+  width: 0;
+  height: 0;
 }
 #user-registration-base-list-table-page #user-registration-base-list-filters-row {
   display: flex;
