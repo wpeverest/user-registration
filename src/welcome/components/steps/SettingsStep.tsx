@@ -21,13 +21,6 @@ interface OptionItem {
 	label: string;
 }
 
-interface SettingsData {
-	login_options: OptionItem[];
-	roles: OptionItem[];
-	selected_login_option: string;
-	selected_role: string;
-}
-
 const InfoIcon: React.FC = () => (
 	<Icon viewBox="0 0 20 20" boxSize={4} color="gray.400">
 		<path
@@ -38,8 +31,7 @@ const InfoIcon: React.FC = () => (
 );
 
 const SettingsStep: React.FC = () => {
-	const { state, dispatch } = useStateValue();
-
+	const { dispatch } = useStateValue();
 	const [isLoading, setIsLoading] = useState(true);
 	const [loginOptions, setLoginOptions] = useState<OptionItem[]>([]);
 	const [roles, setRoles] = useState<OptionItem[]>([]);

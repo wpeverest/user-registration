@@ -48,7 +48,7 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 
 	/**
 	 * Get all memberships without status filter for content restriction
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_all_memberships_without_status_filter() {
@@ -71,7 +71,7 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 			$sql,
 			ARRAY_A
 		);
-		
+
 		$membership_service = new MembershipService();
 		return $membership_service->prepare_membership_data_without_status_filter( $memberships );
 	}
@@ -109,7 +109,7 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 	}
 
 
-	public function get_multiple_membership_by_ID( $ids ) {
+	public function get_multiple_membership_by_ID( $ids, $order = true ) {
 		global $wpdb;
 		$sql = "
 				SELECT wpp.ID,
@@ -124,13 +124,19 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 				  AND wpp.post_type = 'ur_membership'
 				  AND wpp.post_status = 'publish'
 				AND wpp.ID IN ($ids)
-				ORDER BY 1 DESC
 		";
 
-		$memberships        = $wpdb->get_results(
+		if ( $order ) {
+			$sql .= 'ORDER BY 1 DESC';
+		} else {
+			$sql .= " ORDER BY FIELD(wpp.ID, $ids)";
+		}
+
+		$memberships = $wpdb->get_results(
 			$sql,
 			ARRAY_A
 		);
+
 		$membership_service = new MembershipService();
 		return $membership_service->prepare_membership_data( $memberships );
 	}

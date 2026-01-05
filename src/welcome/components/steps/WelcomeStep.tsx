@@ -30,11 +30,9 @@ const MembershipOption: React.FC<MembershipOptionProps> = ({
 	isSelected
 }) => {
 	const selectedBorder = "#475BB2";
-	const defaultBg = useColorModeValue("white", "gray.800");
 	const defaultBorder = useColorModeValue("#F4F4F4", "gray.600");
 	const titleColor = useColorModeValue("gray.800", "white");
 	const descColor = useColorModeValue("gray.600", "gray.400");
-	const hoverBg = useColorModeValue("gray.50", "gray.700");
 
 	return (
 		<Box
@@ -47,10 +45,6 @@ const MembershipOption: React.FC<MembershipOptionProps> = ({
 			borderColor={isSelected ? selectedBorder : defaultBorder}
 			bg={"transparent"}
 			transition="all 0.2s ease"
-			_hover={{
-				borderColor: isSelected ? selectedBorder : "gray.300",
-				bg: isSelected ? "transparent" : hoverBg
-			}}
 		>
 			<HStack align="flex-start" spacing={3}>
 				<Radio

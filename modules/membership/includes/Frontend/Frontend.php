@@ -129,7 +129,7 @@ class Frontend {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		wp_enqueue_script( 'sweetalert2' );
 
-		wp_register_script( 'user-registration-membership-frontend-script', UR_MEMBERSHIP_JS_ASSETS_URL . '/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
+		wp_register_script( 'user-registration-membership-frontend-script', UR_MEMBERSHIP_JS_ASSETS_URL . '/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_enqueue_script( 'user-registration-membership-stripe-v3', 'https://js.stripe.com/v3/', array() );
 		wp_enqueue_script( 'user-registration-membership-frontend-script' );
 		// Enqueue frontend styles here.

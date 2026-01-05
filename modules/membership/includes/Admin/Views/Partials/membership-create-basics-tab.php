@@ -41,7 +41,7 @@
 						'ur-input-type-membership-description',
 						array(
 							'textarea_name' => 'Membership Description',
-							'textarea_rows' => 50,
+							'textarea_rows' => 10,
 							'media_buttons' => false,
 							'quicktags'     => false,
 							'teeny'         => true,
@@ -170,7 +170,7 @@
 					</div>
 					<div class="ur-field ur-d-flex ur-align-items-center" data-field-key="membership_duration" style="gap: 20px;">
 						<input data-key-name="Duration Value"
-								value="<?php echo isset( $membership_details['subscription'] ) ? esc_attr( $membership_details['subscription']['value'] ) : 1; ?>"
+								value="<?php echo isset( $membership_details['subscription'] ) ? esc_attr( $membership_details['subscription']['value'] ) : ""; ?>"
 								class="" type="number" name="ur_membership[duration]_value"
 								autocomplete="off" id="ur-membership-duration-value" min="1">
 					</div>

@@ -81,6 +81,7 @@
 							<div class="ur-d-flex ur-flex-column">
 								<div class="urcr-target-type-group">
 									<?php
+
 									if ( isset( $membership_rule_data ) && $membership_rule_data && isset( $membership_rule_data['target_contents'] ) && ! empty( $membership_rule_data['target_contents'] ) ) {
 										$targets = $membership_rule_data['target_contents'];
 										foreach ( $targets as $target ) {
@@ -137,9 +138,11 @@
 											<?php checked( $use_global_message, true ); ?>
 											class="urcr-checkbox-radio-input"
 										/>
-										<span class="urcr-checkbox-radio-label">
-												<?php esc_html_e( 'Same as global restriction message', 'user-registration' ); ?>
+										<div class="urcr-checkbox-radio--content">
+											<span class="urcr-checkbox-radio-label">
+													<?php esc_html_e( 'Use Global Restriction Message', 'user-registration' ); ?>
 											</span>
+										</div>
 									</label>
 									<label
 										class="urcr-checkbox-radio-option <?php echo ! $use_global_message ? 'is-checked' : ''; ?>">
@@ -150,9 +153,11 @@
 											<?php checked( $use_global_message, false ); ?>
 											class="urcr-checkbox-radio-input"
 										/>
-										<span class="urcr-checkbox-radio-label">
-												<?php esc_html_e( 'Custom message', 'user-registration' ); ?>
+										<div class="urcr-checkbox-radio--content">
+											<span class="urcr-checkbox-radio-label">
+												<?php esc_html_e( 'Custom Message', 'user-registration' ); ?>
 											</span>
+										</div>
 									</label>
 								</div>
 							</div>
@@ -174,7 +179,7 @@
 										$action_message = '<h3>Membership Required</h3>
 <p>This content is available to members only.</p>
 <p>Sign up to unlock access or log in if you already have an account.</p>
-<p>{{log_in}} {{sign_up}}</p>';
+<p>{{sign_up}} {{log_in}}</p>';
 									}
 									wp_editor(
 										$action_message,

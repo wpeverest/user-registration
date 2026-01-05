@@ -82,7 +82,8 @@ function urcr_get_excluded_page_ids() {
 		'user_registration_login_options_login_redirect_url',
 		'user_registration_myaccount_page_id',
 		'user_registration_member_registration_page_id',
-		'user_registration_thank_you_page_id'
+		'user_registration_thank_you_page_id',
+		'user_registration_lost_password_page_id'
 	);
 
 	/**
@@ -1061,7 +1062,7 @@ function urcr_build_migration_actions() {
 	$default_message = '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
 <p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
 <p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
-<p>{{log_in}} {{sign_up}}</p>';
+<p>{{sign_up}} {{log_in}}</p>';
 	if ( class_exists( 'URCR_Admin_Assets' ) ) {
 		$default_message = URCR_Admin_Assets::get_default_message();
 	}
@@ -1173,7 +1174,7 @@ function urcr_migrate_global_restriction_settings() {
 		'actions'         => urcr_build_migration_actions(),
 	);
 
-	$rule_id = urcr_create_migrated_rule( __( 'Migrated: Global Site Restriction', 'user-registration' ), $rule_data );
+	$rule_id = urcr_create_migrated_rule( __( 'Legacy: Global Site Rule', 'user-registration' ), $rule_data );
 
 	if ( $rule_id ) {
 		update_option( 'urcr_global_restriction_migrated', true );
@@ -1329,7 +1330,7 @@ function urcr_migrate_post_page_restrictions() {
 	);
 
 	// Create the rule post
-	$rule_id = urcr_create_migrated_rule( __( 'Migrated: Post/Page Restrictions', 'user-registration' ), $rule_data );
+	$rule_id = urcr_create_migrated_rule( __( 'Legacy: Post/Page Rule', 'user-registration' ), $rule_data );
 
 	if ( $rule_id ) {
 		// Delete urcr_meta_checkbox meta for each migrated post/page
@@ -1853,7 +1854,7 @@ function urcr_get_membership_rule_data( $membership_id ) {
 	}
 
 	// Check if content restriction module is active
-	if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'content-restriction' ) ) {
+	if ( ! function_exists( 'ur_check_module_activation' )) {
 		return null;
 	}
 

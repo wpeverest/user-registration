@@ -489,7 +489,7 @@
 				var valueJson = value ? JSON.stringify(value) : '{"form_id":"","form_fields":[]}';
 				var valueAttr = ' data-value="' + $('<div>').text(valueJson).html() + '"';
 				var urForms = urcr_membership_access_data.ur_forms || {};
-				
+
 				html = '<div class="urcr-ur-form-field-condition" data-condition-id="' + id + '"' + valueAttr + '>';
 				html += '<div class="urcr-form-selection ur-d-flex ur-align-items-center ur-g-4 ur-mb-2">';
 				html += '<select class="urcr-form-select components-select-control__input urcr-condition-value-input"' + disabledAttr + '>';
@@ -918,9 +918,11 @@
 		getContentTargetHtml: function (id, type, label, value) {
 			var self = this;
 			var inputHtml = '';
+			var displayLabel = type === 'whole_site' ? 'Includes' : label;
 
 			if (type === 'whole_site') {
-				inputHtml = '<span>' + urcr_membership_access_data.labels.whole_site + '</span>';
+				var wholeSiteValue = label || 'Whole Site';
+				inputHtml = '<span>' + wholeSiteValue + '</span>';
 			} else if (type === 'pages' || type === 'posts') {
 				inputHtml = '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' + id + '" data-content-type="' + type + '"></select>';
 			} else if (type === 'taxonomy') {
@@ -935,7 +937,7 @@
 			}
 
 			return '<div class="urcr-target-item" data-target-id="' + id + '">' +
-				'<span class="urcr-target-type-label">' + label + ':</span>' +
+				'<span class="urcr-target-type-label">' + displayLabel + ':</span>' +
 				inputHtml +
 				'<button type="button" class="button-link urcr-target-remove" aria-label="Remove">' +
 				'<span class="dashicons dashicons-no-alt"></span>' +
@@ -998,7 +1000,7 @@
 					terms = value.value || [];
 				} else {
 					taxonomy = $taxonomySelect.val();
-					
+
 					var termsData = $termSelect.attr('data-value');
 					if (termsData) {
 						try {
@@ -1013,7 +1015,7 @@
 					if ($taxonomySelect.val() !== taxonomy) {
 						$taxonomySelect.val(taxonomy);
 					}
-					
+
 					self.updateTaxonomyTerms(targetId, taxonomy, terms);
 				}
 
@@ -1429,12 +1431,12 @@
 			var $messageTypeRadio = $('input[name="urcr-membership-message-type"]');
 			if ($messageTypeRadio.length) {
 				var $checkedRadio = $messageTypeRadio.filter(':checked');
-				
+
 				if (!$checkedRadio.length) {
 					$messageTypeRadio.filter('[value="global"]').prop('checked', true);
 					$checkedRadio = $messageTypeRadio.filter('[value="global"]');
 				}
-				
+
 				$checkedRadio.trigger('change');
 			} else {
 				var $messageContainer = $('.urcrra-message-input-container');
@@ -1500,7 +1502,7 @@
 					var $messageTypeRadio = $('input[name="urcr-membership-message-type"]:checked');
 					var messageType = $messageTypeRadio.length ? $messageTypeRadio.val() : 'global';
 					var message = '';
-					
+
 					if (messageType === 'global') {
 						message = '';
 					} else {
@@ -1568,7 +1570,7 @@
 				id: 'x' + Date.now(),
 				type: 'message',
 				label: 'Show Message',
-				message: '<h3>Membership Required</h3>\n<p>This content is available to members only.</p>\n<p>Sign up to unlock access or log in if you already have an account.</p>\n<p>{{log_in}} {{sign_up}}</p>',
+				message: '<h3>Membership Required</h3>\n<p>This content is available to members only.</p>\n<p>Sign up to unlock access or log in if you already have an account.</p>\n<p>{{sign_up}} {{log_in}}</p>',
 				redirect_url: '',
 				access_control: this.accessControl,
 				local_page: '',
