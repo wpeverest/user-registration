@@ -786,12 +786,20 @@ class Membership {
 
 		$html = '<div class="urcr-target-item ur-d-flex ur-align-items-center ur-mt-2" data-target-id="' . $target_id . '">';
 
-		// All types get the label with colon, matching JavaScript format
-		$html .= '<span class="urcr-target-type-label">' . esc_html( $type_label ) . ':</span>';
+		$display_label = ( $type === 'whole_site' ) ? __( 'Includes', 'user-registration' ) : $type_label;
+		$html .= '<span class="urcr-target-type-label">' . esc_html( $display_label ) . ':</span>';
 
 		if ( $type === 'whole_site' ) {
-			// For whole_site, show the label text as content (matching JavaScript line 709)
-			$html .= '<span>' . esc_html( $type_label ) . '</span>';
+			$whole_site_value_label = __( 'Whole Site', 'user-registration' );
+			if ( isset( $localized_data['content_type_options'] ) && is_array( $localized_data['content_type_options'] ) ) {
+				foreach ( $localized_data['content_type_options'] as $option ) {
+					if ( isset( $option['value'] ) && $option['value'] === 'whole_site' && isset( $option['label'] ) ) {
+						$whole_site_value_label = $option['label'];
+						break;
+					}
+				}
+			}
+			$html .= '<span>' . esc_html( $whole_site_value_label ) . '</span>';
 		} elseif ( $type === 'taxonomy' ) {
 			// Handle taxonomy value structure
 			// Target can have: { type: 'taxonomy', taxonomy: 'cat', value: [] }

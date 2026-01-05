@@ -81,6 +81,7 @@
 							<div class="ur-d-flex ur-flex-column">
 								<div class="urcr-target-type-group">
 									<?php
+
 									if ( isset( $membership_rule_data ) && $membership_rule_data && isset( $membership_rule_data['target_contents'] ) && ! empty( $membership_rule_data['target_contents'] ) ) {
 										$targets = $membership_rule_data['target_contents'];
 										foreach ( $targets as $target ) {
@@ -141,9 +142,6 @@
 											<span class="urcr-checkbox-radio-label">
 													<?php esc_html_e( 'Same as Global Restriction Message', 'user-registration' ); ?>
 											</span>
-											<span class="urcr-checkbox-radio--desc">
-												Use the default restriction message configured in global settings
-											</span>
 										</div>
 									</label>
 									<label
@@ -159,10 +157,7 @@
 											<span class="urcr-checkbox-radio-label">
 												<?php esc_html_e( 'Custom Message', 'user-registration' ); ?>
 											</span>
-											<span class="urcr-checkbox-radio--desc">
-												Create a custom restriction message for this membership
-											</span>
-										</div>										
+										</div>
 									</label>
 								</div>
 							</div>

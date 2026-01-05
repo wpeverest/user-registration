@@ -918,9 +918,11 @@
 		getContentTargetHtml: function (id, type, label, value) {
 			var self = this;
 			var inputHtml = '';
+			var displayLabel = type === 'whole_site' ? 'Includes' : label;
 
 			if (type === 'whole_site') {
-				inputHtml = '<span>' + urcr_membership_access_data.labels.whole_site + '</span>';
+				var wholeSiteValue = label || 'Whole Site';
+				inputHtml = '<span>' + wholeSiteValue + '</span>';
 			} else if (type === 'pages' || type === 'posts') {
 				inputHtml = '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' + id + '" data-content-type="' + type + '"></select>';
 			} else if (type === 'taxonomy') {
@@ -935,7 +937,7 @@
 			}
 
 			return '<div class="urcr-target-item" data-target-id="' + id + '">' +
-				'<span class="urcr-target-type-label">' + label + ':</span>' +
+				'<span class="urcr-target-type-label">' + displayLabel + ':</span>' +
 				inputHtml +
 				'<button type="button" class="button-link urcr-target-remove" aria-label="Remove">' +
 				'<span class="dashicons dashicons-no-alt"></span>' +

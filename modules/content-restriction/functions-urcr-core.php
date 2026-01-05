@@ -1853,7 +1853,7 @@ function urcr_get_membership_rule_data( $membership_id ) {
 	}
 
 	// Check if content restriction module is active
-	if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'content-restriction' ) ) {
+	if ( ! function_exists( 'ur_check_module_activation' )) {
 		return null;
 	}
 
