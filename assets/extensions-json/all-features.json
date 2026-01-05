@@ -155,19 +155,16 @@
       "demo_video_url": "-iUMcr03FP8"
     },
     {
-      "title": "Multi Membership",
-      "slug" : "user-registration-multi-membership",
-      "name" : "User Registration Multiple Membership",
+      "title": "Membership Groups",
+      "slug" : "user-registration-membership-groups",
+      "name" : "User Registration Membership Groups",
       "image": "extensions-json/sections/icons/membership.png",
-      "excerpt": "Allow your users to purchase more than one membership plan.",
+      "excerpt": "Organize membership plans into groups, enabling seamless upgrades and multi-plan purchases.",
       "category": "Membership",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-membership/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "07/01/2026",
       "plan" : [
-        "personal",
-        "plus",
-        "professional",
-        "themegrill agency"
+        "free"
       ],
       "setting_url": "",
       "demo_video_url": ""

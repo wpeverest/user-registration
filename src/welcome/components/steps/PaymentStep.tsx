@@ -48,7 +48,7 @@ interface PaymentGatewayData {
 }
 
 const InfoIcon: React.FC = () => (
-	<Icon viewBox="0 0 16 16" boxSize={4} color="#9CA3AF">
+	<Icon viewBox="0 0 16 16" boxSize={4} color="#383838">
 		<circle
 			cx="8"
 			cy="8"
@@ -96,7 +96,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ label }) => {
 					px={3}
 					py={2}
 					fontSize="13px"
-					color="#6B7280"
+					color="#222222"
 					fontWeight="400"
 					lineHeight="1.5"
 				>
@@ -469,10 +469,6 @@ const PaymentStep: React.FC = () => {
 						alignItems="flex-start"
 					>
 						<Textarea
-							placeholder={__(
-								"Enter your bank account details here...",
-								"user-registration"
-							)}
 							value={paymentSettings.bankDetails || ""}
 							onChange={(e) =>
 								handlePaymentSettingChange(
@@ -504,10 +500,6 @@ const PaymentStep: React.FC = () => {
 						>
 							<Input
 								type="email"
-								placeholder={__(
-									"your-email@example.com",
-									"user-registration"
-								)}
 								value={paymentSettings.paypalEmail || ""}
 								onChange={(e) =>
 									handlePaymentSettingChange(
@@ -528,7 +520,6 @@ const PaymentStep: React.FC = () => {
 						>
 							<Input
 								type="text"
-								placeholder=""
 								value={paymentSettings.paypalClientId || ""}
 								onChange={(e) =>
 									handlePaymentSettingChange(
@@ -549,7 +540,6 @@ const PaymentStep: React.FC = () => {
 						>
 							<Input
 								type="password"
-								placeholder=""
 								value={paymentSettings.paypalClientSecret || ""}
 								onChange={(e) =>
 									handlePaymentSettingChange(
@@ -613,7 +603,6 @@ const PaymentStep: React.FC = () => {
 								>
 									<Input
 										type="text"
-										placeholder="pk_test_..."
 										value={
 											paymentSettings.stripeTestPublishableKey ||
 											""
@@ -640,7 +629,6 @@ const PaymentStep: React.FC = () => {
 								>
 									<Input
 										type="password"
-										placeholder="sk_test_..."
 										value={
 											paymentSettings.stripeTestSecretKey ||
 											""
@@ -669,7 +657,6 @@ const PaymentStep: React.FC = () => {
 								>
 									<Input
 										type="text"
-										placeholder="pk_live_..."
 										value={
 											paymentSettings.stripeLivePublishableKey ||
 											""
@@ -696,7 +683,6 @@ const PaymentStep: React.FC = () => {
 								>
 									<Input
 										type="password"
-										placeholder="sk_live_..."
 										value={
 											paymentSettings.stripeLiveSecretKey ||
 											""

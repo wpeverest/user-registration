@@ -106,6 +106,12 @@ class MembershipGroupService {
 			$response['message'] = 'Field memberships is required.';
 		}
 
+		$is_upgrade_mode = ! empty( $data['post_meta_data']['mode'] ) && 'upgrade' === $data['post_meta_data']['mode'];
+		if ( $is_upgrade_mode && ! isset( $data['post_meta_data']['upgrade_type'] ) ) {
+			$response['status']  = false;
+			$response['message'] = esc_html__( 'Field upgrade type is required.', 'user-registration' );
+		}
+
 		return $response;
 	}
 
@@ -132,9 +138,15 @@ class MembershipGroupService {
 
 		if ( 'upgrade' === $membership_mode ) {
 
-			$sanitized_upgrade_path = $this->sanitize_upgrade_paths(
+			$sanitized_upgrade_path          = $this->sanitize_upgrade_paths(
 				$post_meta_data['upgrade_path'] ?? ''
 			);
+			$new_upgrade_path                = array();
+			$post_meta_data['upgrade_order'] = json_decode( $post_meta_data['upgrade_order'], true );
+
+			foreach ( $post_meta_data['upgrade_order'] as $order ) {
+				$new_upgrade_path[ $order ] = $sanitized_upgrade_path[ $order ];
+			}
 
 			$updated_post_meta_data = array_merge(
 				$updated_post_meta_data,
@@ -145,7 +157,7 @@ class MembershipGroupService {
 					),
 					array(
 						'meta_key'   => 'urmg_upgrade_path',
-						'meta_value' => wp_json_encode( $sanitized_upgrade_path ),
+						'meta_value' => wp_json_encode( $new_upgrade_path ),
 					),
 				)
 			);
@@ -221,9 +233,12 @@ class MembershipGroupService {
 	 */
 	public function create_membership_groups( $post_data ) {
 		$post_data = json_decode( wp_unslash( $post_data ), true );
-		$data      = $this->validate_membership_group_data( $post_data );
+
+		$data = $this->validate_membership_group_data( $post_data );
+
 		if ( $data['status'] ) {
-			$data                = $this->prepare_membership_group_data( $post_data );
+			$data = $this->prepare_membership_group_data( $post_data );
+
 			$data                = apply_filters( 'ur_membership_after_create_membership_groups_data_before_save', $data );
 			$membership_group_id = wp_insert_post( $data['post_data'] );
 
@@ -276,7 +291,7 @@ class MembershipGroupService {
 
 	public function check_if_multiple_memberships_allowed( $group_id ) {
 
-		if ( UR_PRO_ACTIVE && ur_check_module_activation( 'multi-membership' ) ) {
+		if ( UR_PRO_ACTIVE && ur_check_module_activation( 'membership-groups' ) ) {
 			$group_mode = get_post_meta( $group_id, 'urmg_mode', true );
 
 			return ur_string_to_bool( 'multiple' === $group_mode );

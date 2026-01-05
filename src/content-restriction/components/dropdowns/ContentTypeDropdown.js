@@ -15,7 +15,7 @@ const ContentTypeDropdown = ({ onSelect, existingContentTypes = [] }) => {
 		{ value: "taxonomy", label: __("Taxonomy", "user-registration") },
 		{ value: "whole_site", label: __("Whole Site", "user-registration") },
 	]);
-	
+
 	// Filter options based on pro access
 	// For free users, only show posts and pages
 	const filteredOptions = isProAccess()

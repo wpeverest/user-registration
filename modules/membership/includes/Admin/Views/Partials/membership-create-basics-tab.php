@@ -41,7 +41,7 @@
 						'ur-input-type-membership-description',
 						array(
 							'textarea_name' => 'Membership Description',
-							'textarea_rows' => 50,
+							'textarea_rows' => 10,
 							'media_buttons' => false,
 							'quicktags'     => false,
 							'teeny'         => true,

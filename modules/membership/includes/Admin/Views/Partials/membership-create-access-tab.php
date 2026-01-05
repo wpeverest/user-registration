@@ -184,7 +184,7 @@
 										$action_message = '<h3>Membership Required</h3>
 <p>This content is available to members only.</p>
 <p>Sign up to unlock access or log in if you already have an account.</p>
-<p>{{log_in}} {{sign_up}}</p>';
+<p>{{sign_up}} {{log_in}}</p>';
 									}
 									wp_editor(
 										$action_message,
