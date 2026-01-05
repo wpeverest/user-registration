@@ -69,7 +69,12 @@
 }
 
 .payment-status-btn {
-	padding: 3px 5px;
+	padding: 4px 12px;
+	border-radius: 4px;
+	font-weight: 500;
+	font-size: 13px;
+	line-height: 18px;
+	// padding: 3px 5px;
 
 	&.pending {
 		border: 1px solid #f0a64f;
@@ -712,6 +717,9 @@
 
 							.ur-label {
 								margin-bottom: 0;
+								// flex: 0 0 38%;
+								max-width: 300px;
+								width: 100% !important;
 
 								@media screen and (max-width: 992px) {
 									width: 100% !important;
@@ -726,11 +734,20 @@
 								}
 							}
 
+							.ur-input-type-membership-group-name,
+							.ur-field {
+								flex: 1;
+							}
+
 							.ur-field {
 								.wp-editor-wrap {
 									.wp-editor-container {
 										.mce-container {
 											border-bottom: 0;
+
+											&.mce-edit-area {
+												padding: 0 $spacing_8px;
+											}
 										}
 
 										.mce-container-body {
@@ -745,11 +762,11 @@
 									}
 								}
 
-								.select2 {
-									&-container {
-										width: 100% !important;
-									}
-								}
+								// .select2 {
+								// 	&-container {
+								// 		width: 100% !important;
+								// 	}
+								// }
 							}
 
 							.user-registration-switch {
@@ -760,6 +777,11 @@
 						.ur-membership-selection-container {
 							align-items: center;
 							padding: 0 !important;
+
+							@media screen and (max-width: 992px) {
+								flex-direction: column;
+								align-items: flex-start !important;
+							}
 
 							.ur-label {
 								margin-bottom: 0;
@@ -807,6 +829,7 @@
 												input[type="radio"] {
 													&:checked::before {
 														background: $primary_color;
+														margin: 3.2px;
 													}
 												}
 
@@ -1255,10 +1278,10 @@
 				}
 			}
 
-			.wp-list-table{
-				tbody{
-					tr{
-						td{
+			.wp-list-table {
+				tbody {
+					tr {
+						td {
 							&.status {
 								.ur-toggle-section {
 									.user-registration-toggle-form {
@@ -1274,11 +1297,14 @@
 								}
 							}
 						}
+
 						&:nth-child(odd) {
 							background: #F8F8FA;
 						}
+
 						&.no-items {
 							background: #ffffff;
+
 							td {
 								padding: 0;
 
@@ -1815,6 +1841,11 @@
 #upgrade-settings-container .upgradable-type {
 	position: relative;
 	color: #bababa;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 12px;
+	flex-direction: row-reverse;
 
 	.ur-membership-type-title,
 	label,
@@ -1829,8 +1860,9 @@
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 100%;
-		position: absolute;
-		right: $spacing_12px;
+		// position: absolute;
+		// right: $spacing_12px;
+		display: block;
 		border-radius: $border_radius_2;
 		width: 18px;
 		height: 18px;
@@ -2068,11 +2100,11 @@
 
 			}
 
-			tbody{
-				tr{
-					td{
-						&.shortcode{
-							.urm-shortcode{
+			tbody {
+				tr {
+					td {
+						&.shortcode {
+							.urm-shortcode {
 								width: 70%;
 							}
 						}
@@ -2091,11 +2123,11 @@
 		}
 	}
 
-	#ur-membership-group-create-form{
+	#ur-membership-group-create-form {
 		.ur-input-type-membership-group-name {
-			.select2-container--default{
-				.select2-selection--multiple{
-					.select2-search__field{
+			.select2-container--default {
+				.select2-selection--multiple {
+					.select2-search__field {
 						width: 100% !important;
 					}
 

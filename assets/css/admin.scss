@@ -67,7 +67,7 @@ body {
 			p,
 			small,
 			label {
-				font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+				font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 			}
 		}
 	}
@@ -5150,7 +5150,7 @@ body.user-registration {
 			&-status {
 				display: flex;
 				align-items: center;
-				gap: $spacing_4px;
+				gap: $spacing_12px;
 
 				p {
 					color: $grey-300;
@@ -5158,6 +5158,7 @@ body.user-registration {
 				}
 
 				.separator {
+					display: none;
 					color: $grey-300;
 					margin-left: $spacing_4px;
 					margin-right: $spacing_4px;
@@ -6180,13 +6181,19 @@ body.user-registration {
 						margin-top: 20px;
 						margin-bottom: 20px;
 
+						&.fixed {
+							table-layout: unset;
+						}
+
 						thead {
 							tr {
 								th {
 									&#title {
 										width: 220px;
 									}
-									&#code, &#type {
+
+									&#code,
+									&#type {
 										width: 170px;
 									}
 
@@ -6220,7 +6227,8 @@ body.user-registration {
 								}
 							}
 
-							.coupon-active, .coupon-never {
+							.coupon-active,
+							.coupon-never {
 								font-weight: $medium;
 								color: #4cc741;
 							}
@@ -6242,9 +6250,14 @@ body.user-registration {
 
 						tbody {
 							tr {
+								th {
+									padding-top: 16px;
+								}
+
 								td {
 									font-size: 14px;
 									line-height: 24px;
+									padding: 12px;
 
 									&.membership_type {
 										.user-registration-badge {
@@ -7551,8 +7564,8 @@ body.user-registration {
 								&:hover {
 									background-color: $redLight;
 
-									&::before{
-										background:  $redLight;
+									&::before {
+										background: $redLight;
 										opacity: 1;
 									}
 
@@ -7564,7 +7577,7 @@ body.user-registration {
 
 							&::before {
 								content: "";
-								background:  $blue-25;
+								background: $blue-25;
 								position: absolute;
 								width: 24px;
 								height: 100%;
@@ -7803,12 +7816,14 @@ body.user-registration {
 				.status-active {
 					color: $approve_user;
 				}
+
 				.status-expired {
 					color: $deny_color;
 				}
 				.status-canceled {
 					color: $deny_color;
 				}
+
 				.status-inactive {
 					color: $pending_user;
 				}
@@ -7844,7 +7859,8 @@ body.user-registration {
 	}
 }
 
-.user-registration-membership_page_user-registration-users, .user-registration-membership_page_user-registration-members {
+.user-registration-membership_page_user-registration-users,
+.user-registration-membership_page_user-registration-members {
 	#wpbody-content {
 		#message {
 			display: none !important;
@@ -7875,7 +7891,8 @@ body.user-registration {
 	color: #ee9936 !important;
 }
 
-.user-registration-membership_page_user-registration-users, .user-registration-membership_page_user-registration-members {
+.user-registration-membership_page_user-registration-users,
+.user-registration-membership_page_user-registration-members {
 	#wpcontent {
 
 		@media (max-width: 782px) {
@@ -7948,28 +7965,28 @@ body.user-registration {
 	// 		margin-bottom: $spacing_16px;
 	// 	}
 
-		// &-title {
-		// 	display: flex !important;
-		// 	align-items: center;
-		// 	gap: $spacing_8px;
-		// 	text-align: left;
-		// 	font-size: 16px;
-		// 	font-weight: 600;
-		// 	line-height: 120%;
-		// 	padding-bottom: $spacing-16px;
-		// 	width: 100%;
-		// 	margin-bottom: 0;
-		// 	color: $grey-500;
+	// &-title {
+	// 	display: flex !important;
+	// 	align-items: center;
+	// 	gap: $spacing_8px;
+	// 	text-align: left;
+	// 	font-size: 16px;
+	// 	font-weight: 600;
+	// 	line-height: 120%;
+	// 	padding-bottom: $spacing-16px;
+	// 	width: 100%;
+	// 	margin-bottom: 0;
+	// 	color: $grey-500;
 
-		// 	img {
-		// 		width: 26px !important;
-		// 		height: 26px !important;
-		// 		background: #fff4f4;
-		// 		padding: $spacing_6px;
-		// 		box-sizing: border-box;
-		// 		border-radius: 50%;
-		// 	}
-		// }
+	// 	img {
+	// 		width: 26px !important;
+	// 		height: 26px !important;
+	// 		background: #fff4f4;
+	// 		padding: $spacing_6px;
+	// 		box-sizing: border-box;
+	// 		border-radius: 50%;
+	// 	}
+	// }
 
 	// 	&-content {
 	// 		padding-left: $spacing_20px;
@@ -7984,29 +8001,29 @@ body.user-registration {
 	// 		p {
 	// 			margin: 0;
 
-			// 	&#html {
-			// 		&_1 {
-			// 			margin: 0 0 $spacing_14px;
-			// 			color: $grey-400;
-			// 			font-size: 15px;
-			// 			font-weight: 500;
-			// 			line-height: 24px;
-			// 		}
+	// 	&#html {
+	// 		&_1 {
+	// 			margin: 0 0 $spacing_14px;
+	// 			color: $grey-400;
+	// 			font-size: 15px;
+	// 			font-weight: 500;
+	// 			line-height: 24px;
+	// 		}
 
-			// 		&_2 {
-			// 			display: flex;
-			// 			gap: $spacing_10px;
-			// 			color: #f25656;
-			// 			border-radius: $border_radius_3;
-			// 			padding: $spacing_10px $spacing_18px $spacing_10px
-			// 				$spacing_14px;
-			// 			background: #fff4f4;
-			// 			font-size: 13px;
-			// 			font-weight: 400;
-			// 			line-height: 23px;
-			// 		}
-			// 	}
-			// }
+	// 		&_2 {
+	// 			display: flex;
+	// 			gap: $spacing_10px;
+	// 			color: #f25656;
+	// 			border-radius: $border_radius_3;
+	// 			padding: $spacing_10px $spacing_18px $spacing_10px
+	// 				$spacing_14px;
+	// 			background: #fff4f4;
+	// 			font-size: 13px;
+	// 			font-weight: 400;
+	// 			line-height: 23px;
+	// 		}
+	// 	}
+	// }
 
 	// 		a {
 	// 			font-size: 12px;
@@ -8263,10 +8280,10 @@ $border-top-color_1: #ff4f55;
 	}
 
 	.user-registration-edit-user-form-details {
-        .ur-form-grid {
-            display: block;
-        }
-    }
+		.ur-form-grid {
+			display: block;
+		}
+	}
 
 	.hide-show-password {
 		position: absolute;
@@ -8659,6 +8676,7 @@ body.user-registration-page {
 
 		#search-submit {
 			cursor: pointer;
+
 			img {
 				width: 18px;
 				height: 18px;
@@ -8713,7 +8731,7 @@ body.user-registration-page {
 			width: 275px;
 			position: relative;
 
-			> p {
+			>p {
 				display: none;
 			}
 
@@ -8817,6 +8835,7 @@ body.user-registration-page {
 			tr {
 				td {
 					height: 38px;
+					align-content: flex-start;
 
 					.row-actions {
 						color: $grey-300;
@@ -8863,7 +8882,7 @@ body.user-registration-page {
 		}
 
 		@media screen and (min-width: 783px) {
-			tbody tr td  {
+			tbody tr td {
 				padding: $spacing_14px $spacing_16px;
 			}
 		}
@@ -8879,14 +8898,16 @@ body.user-registration-page {
 		}
 	}
 
-	.user-registration-base-list-table-form{
+	.user-registration-base-list-table-form {
 		.tablenav {
 			.actions:has(#new_role) {
 				display: none;
 			}
-			.actions.show-flex{
+
+			.actions.show-flex {
 				display: flex !important;
 			}
+
 			.actions {
 				display: flex;
 				align-items: center;
@@ -8928,7 +8949,7 @@ body.user-registration-page {
 			}
 		}
 
-		.user-registration-members-filters{
+		.user-registration-members-filters {
 			position: relative;
 
 			#user-registration-users-advanced-filters {
@@ -8971,7 +8992,7 @@ body.user-registration-page {
 				}
 			}
 
-			select{
+			select {
 				width: auto !important;
 				max-width: max-content !important;
 				min-width: auto !important;
@@ -9000,10 +9021,11 @@ body.user-registration-page {
 						line-height: 150%;
 						letter-spacing: 0.3px;
 
-						&:hover {
-							background: darken($primary_color, 10%);
-							border-color: darken($primary_color, 10%);
-						}
+						// &:hover {
+						// 	color: $white;
+						// 	background: darken($primary_color, 10%);
+						// 	border-color: darken($primary_color, 10%);
+						// }
 					}
 
 					&[type="reset"],
@@ -9045,41 +9067,43 @@ body.user-registration-page {
 	}
 }
 
-.user-subscription-status{
+.user-subscription-status {
 	font-weight: 500;
 }
-.user-subscription-secondary{
+
+.user-subscription-secondary {
 	color: $color_gray-light;
 }
 
-.user-subscription-active{
+.user-subscription-active {
 	color: $approve_user;
 }
 
-.user-subscription-pending{
+.user-subscription-pending {
 	color: $pending_user;
 }
 
-.user-subscription-expired{
+.user-subscription-expired {
 	color: $deny_color;
 }
 
-.user-subscription-status{
+.user-subscription-status {
 	font-weight: 500;
 }
-.user-subscription-secondary{
+
+.user-subscription-secondary {
 	color: $color_gray-light;
 }
 
-.user-subscription-active{
+.user-subscription-active {
 	color: $approve_user;
 }
 
-.user-subscription-pending{
+.user-subscription-pending {
 	color: $pending_user;
 }
 
-.user-subscription-expired{
+.user-subscription-expired {
 	color: $deny_color;
 }
 
@@ -9154,7 +9178,7 @@ body.user-registration-page {
 							font-size: 14px;
 							font-weight: $medium;
 							line-height: 18px;
-							text-transform: capitalize;
+							// text-transform: capitalize;
 						}
 
 						&-price {
@@ -9279,150 +9303,151 @@ body.user-registration-page {
    ========================================= */
 
 #ur-sync-to-email-marketing-container {
-  width: 100%;
+	width: 100%;
 
-  .ur-sync-to-email-marketing-container-wrapper {
-    width: 100%;
-  }
+	.ur-sync-to-email-marketing-container-wrapper {
+		width: 100%;
+	}
 
-  /* =========================================
+	/* =========================================
      Addon Title Section
      ========================================= */
 
-  .ur-sync-to-email-marketing-addon-title-container {
-    padding-bottom: 12px;
-    border-bottom: 1px solid #f1f1f1;
+	.ur-sync-to-email-marketing-addon-title-container {
+		padding-bottom: 12px;
+		border-bottom: 1px solid #f1f1f1;
 
-    &-inner {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-  }
+		&-inner {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+	}
 
-  .ur-sync-to-email-marketing-addon-logo {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    background-color: #f3f4f6;
-    color: #111827;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-	img{
+	.ur-sync-to-email-marketing-addon-logo {
 		width: 28px;
 		height: 28px;
+		border-radius: 6px;
+		background-color: #f3f4f6;
+		color: #111827;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		img {
+			width: 28px;
+			height: 28px;
+		}
 	}
-  }
 
-  .ur-sync-to-email-marketing-addon-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: #111827;
-  }
+	.ur-sync-to-email-marketing-addon-title {
+		font-size: 13px;
+		font-weight: 600;
+		color: #111827;
+	}
 
-  /* =========================================
+	/* =========================================
      Sync Container
      ========================================= */
 
-  .ur-sync-to-email-marketing-addon-sync-container {
-    padding-left: 40px;
-  }
+	.ur-sync-to-email-marketing-addon-sync-container {
+		padding-left: 40px;
+	}
 
-  .ur-sync-to-email-marketing-addon-sync-container-inner {
-    // display: flex;
-    align-items: flex-start;
-    gap: 12px;
-	flex-direction: column;
-  }
+	.ur-sync-to-email-marketing-addon-sync-container-inner {
+		// display: flex;
+		align-items: flex-start;
+		gap: 12px;
+		flex-direction: column;
+	}
 
-  /* =========================================
+	/* =========================================
      Checkbox
      ========================================= */
 
-  .ur-sync-to-email-marketing-addon-sync-toggle-container {
-    padding-top: 3px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 12px;
+	.ur-sync-to-email-marketing-addon-sync-toggle-container {
+		padding-top: 3px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 12px;
 
-    input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-    }
+		input[type="checkbox"] {
+			width: 16px;
+			height: 16px;
+			cursor: pointer;
+		}
 
-	span{
-		transform: translateY(-3px);
+		span {
+			transform: translateY(-3px);
+		}
 	}
-  }
 
-  /* =========================================
+	/* =========================================
      Label + Fields
      ========================================= */
 
-  .ur-sync-to-email-marketing-addon-sync-toggle-label-container {
-    font-size: 14px;
-    color: #374151;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+	.ur-sync-to-email-marketing-addon-sync-toggle-label-container {
+		font-size: 14px;
+		color: #374151;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
 
-    /* Select Wrapper */
-    .form-row {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      max-width: 320px;
+		/* Select Wrapper */
+		.form-row {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+			max-width: 320px;
 
-      label {
-        font-size: 13px;
-        font-weight: 500;
-        color: #6b7280;
-      }
+			label {
+				font-size: 13px;
+				font-weight: 500;
+				color: #6b7280;
+			}
 
-      select {
-        width: 100%;
-        padding: 8px 10px;
-        border-radius: 6px;
-        border: 1px solid #d1d5db;
-        background-color: #ffffff;
-        font-size: 14px;
-        color: #111827;
-        cursor: pointer;
+			select {
+				width: 100%;
+				padding: 8px 10px;
+				border-radius: 6px;
+				border: 1px solid #d1d5db;
+				background-color: #ffffff;
+				font-size: 14px;
+				color: #111827;
+				cursor: pointer;
 
-        &:focus {
-          outline: none;
-          border-color: #2563eb;
-          box-shadow: 0 0 0 1px #2563eb;
-        }
-      }
+				&:focus {
+					outline: none;
+					border-color: #2563eb;
+					box-shadow: 0 0 0 1px #2563eb;
+				}
+			}
 
-	  .ur_sync_email_marketing_addon_account{
-		// height: 38px;
-	  }
-    }
-  }
+			.ur_sync_email_marketing_addon_account {
+				// height: 38px;
+			}
+		}
+	}
 
-  .urmc-sync-email-marketing-mailchimp-list-wrap,
-  .urmc-sync-email-marketing-brevo-list-wrap,
-  .urmc-sync-email-marketing-convertkit-list-wrap,
-  .urmc-sync-email-marketing-klaviyo-list-wrap,
-  .urmc-sync-email-marketing-mailerlite-list-wrap,
-  .urmc-sync-email-marketing-mailpoet-list-wrap {
-    margin-top: 10px;
-    max-width: 320px;
-  }
+	.urmc-sync-email-marketing-mailchimp-list-wrap,
+	.urmc-sync-email-marketing-brevo-list-wrap,
+	.urmc-sync-email-marketing-convertkit-list-wrap,
+	.urmc-sync-email-marketing-klaviyo-list-wrap,
+	.urmc-sync-email-marketing-mailerlite-list-wrap,
+	.urmc-sync-email-marketing-mailpoet-list-wrap {
+		margin-top: 10px;
+		max-width: 320px;
+	}
 }
 
-.ur-coupon-type-field{
+.ur-coupon-type-field {
 	gap: 16px;
-    flex-wrap: wrap;
+	flex-wrap: wrap;
 
-	.ur-start-date, .ur-end-date{
+	.ur-start-date,
+	.ur-end-date {
 		min-width: unset !important;
 		height: 38px;
 	}

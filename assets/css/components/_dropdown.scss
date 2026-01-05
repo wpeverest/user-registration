@@ -43,6 +43,7 @@
 
     .select2 {
         &-container {
+            width: 100% !important;
 
             &--open,
             &--focus {
@@ -135,7 +136,7 @@
 
                             &__field {
                                 margin: 0;
-                                // width: 100% !important;
+                                width: 100% !important;
                             }
                         }
                     }

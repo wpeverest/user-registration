@@ -137,9 +137,14 @@
 											<?php checked( $use_global_message, true ); ?>
 											class="urcr-checkbox-radio-input"
 										/>
-										<span class="urcr-checkbox-radio-label">
-												<?php esc_html_e( 'Same as global restriction message', 'user-registration' ); ?>
+										<div class="urcr-checkbox-radio--content">
+											<span class="urcr-checkbox-radio-label">
+													<?php esc_html_e( 'Same as Global Restriction Message', 'user-registration' ); ?>
 											</span>
+											<span class="urcr-checkbox-radio--desc">
+												Use the default restriction message configured in global settings
+											</span>
+										</div>
 									</label>
 									<label
 										class="urcr-checkbox-radio-option <?php echo ! $use_global_message ? 'is-checked' : ''; ?>">
@@ -150,9 +155,14 @@
 											<?php checked( $use_global_message, false ); ?>
 											class="urcr-checkbox-radio-input"
 										/>
-										<span class="urcr-checkbox-radio-label">
-												<?php esc_html_e( 'Custom message', 'user-registration' ); ?>
+										<div class="urcr-checkbox-radio--content">
+											<span class="urcr-checkbox-radio-label">
+												<?php esc_html_e( 'Custom Message', 'user-registration' ); ?>
 											</span>
+											<span class="urcr-checkbox-radio--desc">
+												Create a custom restriction message for this membership
+											</span>
+										</div>										
 									</label>
 								</div>
 							</div>

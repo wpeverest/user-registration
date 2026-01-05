@@ -499,7 +499,6 @@ html {
   font-size: 14px;
   font-weight: 500;
   line-height: 18px;
-  text-transform: capitalize;
   flex: 1;
 }
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label .ur-membership-duration:last-child,
