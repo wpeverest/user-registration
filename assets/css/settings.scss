@@ -1051,6 +1051,12 @@ body {
 				margin-bottom: 0;
 			}
 
+			&:has(.ur-upgrade--link) {
+				p.ur-p-tag {
+					margin-bottom: 0;
+				}
+			}
+
 			&.ur-captcha-settings,
 			&.ur-integration-settings {
 				&:has(.active) {
