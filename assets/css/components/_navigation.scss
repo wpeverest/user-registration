@@ -62,7 +62,9 @@
                             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
                             padding: $spacing_22px;
                             z-index: 99;
-                            width: 20rem;
+                            // width: 20rem;
+                            max-width: 300px;
+                            width: 100%;
                             left: -370px;
                             top: $spacing_30px;
                             // height: calc(100vh - 32px);
@@ -555,6 +557,7 @@
                                     svg {
                                         width: 16px;
                                         height: 16px;
+                                        fill: #4e4e4e;
 
                                         path {
                                             stroke: none;
@@ -631,7 +634,7 @@
     @media screen and (max-width: 1140px) {
         position: sticky !important;
         position: -webkit-sticky;
-        top: 46px;
+        top: 32px;
         background: $white !important;
         z-index: 2;
     }

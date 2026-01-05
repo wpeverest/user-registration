@@ -279,7 +279,11 @@
 }
 
 .payment-status-btn {
-  padding: 3px 5px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 18px;
 }
 .payment-status-btn.pending {
   border: 1px solid #f0a64f;
@@ -357,7 +361,6 @@
   font-weight: 600;
 }
 .field-amount input {
-  padding-left: 20px !important;
   border-top-right-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
@@ -814,6 +817,8 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-label,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-input-container .ur-label {
   margin-bottom: 0;
+  max-width: 300px;
+  width: 100% !important;
 }
 @media screen and (max-width: 992px) {
   .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-label,
@@ -829,9 +834,19 @@
   font-weight: 500;
   line-height: 21px;
 }
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-input-type-membership-group-name,
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-field,
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-input-container .ur-input-type-membership-group-name,
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-input-container .ur-field {
+  flex: 1;
+}
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container .mce-container,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container .mce-container {
   border-bottom: 0;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container .mce-container.mce-edit-area,
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container .mce-container.mce-edit-area {
+  padding: 0 8px;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container .mce-container-body iframe,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container .mce-container-body iframe {
@@ -840,10 +855,6 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container textarea,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-input-container .ur-field .wp-editor-wrap .wp-editor-container textarea {
   border: 0;
-}
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-field .select2-container,
-.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-input-container .ur-field .select2-container {
-  width: 100% !important;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .user-registration-switch input[type=checkbox],
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-input-container .user-registration-switch input[type=checkbox] {
@@ -873,6 +884,13 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container {
   align-items: center;
   padding: 0 !important;
+}
+@media screen and (max-width: 992px) {
+  .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container,
+  .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-label,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-label {
@@ -921,6 +939,7 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio]:checked::before,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio]:checked::before {
   background: #475bb2;
+  margin: 3.2px;
 }
 @media screen and (max-width: 782px) {
   .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio],
@@ -1823,10 +1842,17 @@
 #upgrade-settings-container .upgradable-type {
   position: relative;
   color: #bababa;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-direction: row-reverse;
 }
 #ur-membership-main-fields .upgradable-type .ur-membership-type-title,
+#ur-membership-main-fields .upgradable-type label,
 #ur-membership-main-fields .upgradable-type .ur-membership-type-description,
 #upgrade-settings-container .upgradable-type .ur-membership-type-title,
+#upgrade-settings-container .upgradable-type label,
 #upgrade-settings-container .upgradable-type .ur-membership-type-description {
   opacity: 0.5;
 }
@@ -1838,8 +1864,7 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100%;
-  position: absolute;
-  right: 12px;
+  display: block;
   border-radius: 2px;
   width: 18px;
   height: 18px;
@@ -2007,4 +2032,45 @@
 }
 .user-registration-base-list-table-heading .ur-membership-order-controls:has(.ur-spinner) .button-primary svg {
   opacity: 0;
+}
+
+.ur-membership-upgrade-container .ur-membership-upgrade-paths-info {
+  font-size: 13px;
+  color: #646970;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+.ur-membership-upgrade-container .ur-sortable-box {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+}
+.ur-membership-upgrade-container .ur-sortable-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ur-membership-upgrade-container .ur-sortable-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  cursor: default;
+  background: #fff;
+}
+.ur-membership-upgrade-container .ur-sortable-item:last-child {
+  border-bottom: none;
+}
+.ur-membership-upgrade-container .ur-drag-handle {
+  cursor: grab;
+  color: #666;
+}
+.ur-membership-upgrade-container .ur-sortable-item.ui-sortable-helper {
+  background: #f6f7f7;
+}
+.ur-membership-upgrade-container .ur-sortable-placeholder {
+  height: 42px;
+  background: #f0f0f0;
+  border: 1px dashed #ccc;
 }

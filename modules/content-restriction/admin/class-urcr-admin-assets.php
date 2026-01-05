@@ -438,7 +438,7 @@ class URCR_Admin_Assets {
 			'membership_default_message' => '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
 <p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
 <p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
-<p>{{log_in}} {{sign_up}}</p>',
+<p>{{sign_up}} {{log_in}}</p>',
 			'labels'                    => array(
 				'pages'                    => __( 'Pages', 'user-registration' ),
 				'posts'                    => __( 'Posts',  'user-registration' ),

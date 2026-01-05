@@ -4,7 +4,8 @@ jQuery(document).ready(function () {
 	$multipleSelect.select2({
 		dropdownAutoWidth: true,
 		containerCss: { display: 'block' },
-		width: '20%'
+		width: '20%',
+		minimumResultsForSearch: -1
 	});
 
 	var $metaOverride = jQuery('#urcr_meta_override_global_settings'),

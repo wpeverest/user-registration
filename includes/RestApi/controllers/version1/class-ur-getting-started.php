@@ -1854,15 +1854,16 @@ class UR_Getting_Started {
 				'redirect_url' => admin_url( 'admin.php?page=user-registration' ),
 				'links'        => array(
 					'registration_page' => self::get_registration_page_url(),
-					'dashboard'         => admin_url( 'admin.php?page=user-registration' ),
+						'dashboard'         => admin_url( 'admin.php?page=user-registration' ),
+					),
 				),
-			),
-			200
-		);
-	}
+				200
+			);
+		}
 
 	/**
 	 * Skip current step and move to the next one.
+	 * Resets step data to defaults when skipping.
 	 *
 	 * @since x.x.x
 	 *
@@ -1871,6 +1872,10 @@ class UR_Getting_Started {
 	 */
 	public static function skip_step( $request ) {
 		$current_step    = isset( $request['step'] ) ? absint( $request['step'] ) : self::get_current_step();
+		$step_id         = isset( $request['step_id'] ) ? sanitize_text_field( $request['step_id'] ) : '';
+		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
+
+
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
 
 		$next_step = self::calculate_next_step( $current_step, $membership_type );
@@ -1891,6 +1896,7 @@ class UR_Getting_Started {
 				'success'   => true,
 				'message'   => __( 'Step skipped.', 'user-registration' ),
 				'next_step' => $next_step,
+				'skipped'   => true,
 			),
 			200
 		);
@@ -1966,13 +1972,6 @@ class UR_Getting_Started {
 
 	/**
 	 * Calculate the next step based on current step and membership type.
-	 *
-	 * Steps:
-	 * 1 = welcome
-	 * 2 = membership (skipped for "normal")
-	 * 3 = payment (only for "paid_membership")
-	 * 4 = settings (only for "normal")
-	 * 5 = finish
 	 *
 	 * @since x.x.x
 	 *

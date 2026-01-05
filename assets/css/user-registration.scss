@@ -462,7 +462,7 @@ textarea.ur-input-border-red {
 							min-height: 38px;
 							height: 38px;
 							padding: 0 $spacing_12px;
-							border-radius: 0 $border_radius_4 $border_radius_4 $border_radius_4;
+							border-radius: $border_radius_4;
 
 							&--focus {
 								border-color: $primary_color;
@@ -567,6 +567,12 @@ textarea.ur-input-border-red {
 			select {
 				-webkit-appearance: none;
 				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E") no-repeat right 5px top 55%;
+				min-height: 38px;
+				max-height: 38px;
+				padding: 0 $spacing_12px;
+				border-radius: $border_radius_4;
+				box-shadow: none;
+				cursor: pointer;
 			}
 
 			legend,
@@ -1462,48 +1468,48 @@ span.ur-shortcode-form-embed-dot {
 }
 
 #user-registration-pro-single-user-view {
-  .user-registration-user-form-details {
+	.user-registration-user-form-details {
 
-    .empty-list-table-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 50px;
-    }
+		.empty-list-table-container {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 50px;
+		}
 
-    .wp-list-table {
-      width: 100%;
-      background: #fff;
-      border: 1px solid #E1E1E1;
-      border-radius: 4px;
+		.wp-list-table {
+			width: 100%;
+			background: #fff;
+			border: 1px solid #E1E1E1;
+			border-radius: 4px;
 
-      thead {
-        background: none;
+			thead {
+				background: none;
 
-        th {
-          padding: 12px 14px;
-          font-size: 14px;
-          font-weight: 600;
-          border-color: #E1E1E1;
-          color: #383838;
-          text-align: left;
-        }
-      }
+				th {
+					padding: 12px 14px;
+					font-size: 14px;
+					font-weight: 600;
+					border-color: #E1E1E1;
+					color: #383838;
+					text-align: left;
+				}
+			}
 
-      tbody {
-        tr {
-          background: #F8F8FA;
+			tbody {
+				tr {
+					background: #F8F8FA;
 
-          td {
-            padding: 12px 14px;
-            font-size: 13px;
-            color: #383838;
-            vertical-align: middle;
-          }
-        }
-      }
-    }
-  }
+					td {
+						padding: 12px 14px;
+						font-size: 13px;
+						color: #383838;
+						vertical-align: middle;
+					}
+				}
+			}
+		}
+	}
 }
 
 
@@ -2178,6 +2184,7 @@ body {
 			&:not(.user-registration-MyAccount) {
 				max-width: 520px;
 				// margin: $spacing_30px auto;
+				margin: 0 auto;
 				border-radius: $border_radius_4;
 				// background: transparent;
 				border: 0;
@@ -2450,6 +2457,7 @@ body {
 									line-height: 20px;
 									padding: 0 14px;
 									color: #383838;
+									box-shadow: none;
 
 									&:focus {
 										border-color: $primary_color;

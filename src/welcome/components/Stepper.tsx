@@ -80,8 +80,12 @@ const Stepper: React.FC<StepperProps> = ({
 			zIndex={1000}
 		>
 			<Flex justify="space-between" align="center" width="100%">
-				{/* Logo - Far Left */}
-				<Flex align="center" flexShrink={0}>
+				{/* Logo - Far Left - Hidden on mobile and tablet */}
+				<Flex
+					align="center"
+					flexShrink={0}
+					display={{ base: "none", lg: "flex" }}
+				>
 					<Box
 						sx={{
 							"& svg": {
@@ -95,9 +99,9 @@ const Stepper: React.FC<StepperProps> = ({
 				</Flex>
 
 				<Flex
-					position="absolute"
-					left="50%"
-					transform="translateX(-50%)"
+					position={{ base: "relative", lg: "absolute" }}
+					left={{ base: "auto", lg: "50%" }}
+					transform={{ base: "none", lg: "translateX(-50%)" }}
 					align="center"
 					justify="center"
 					w="100%"
@@ -255,8 +259,7 @@ const Stepper: React.FC<StepperProps> = ({
 					</Flex>
 				</Flex>
 
-				{/* Close button - Far Right */}
-				<Box flexShrink={0}>
+				<Box flexShrink={0} display={{ base: "none", lg: "block" }}>
 					{onClose && (
 						<Tooltip
 							label="Skip to Dashboard"

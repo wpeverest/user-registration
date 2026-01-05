@@ -112,7 +112,6 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 										data-key-name="<?php echo esc_html__( 'Amount', 'user-registration' ); ?>"
 										id="ur-input-type-membership-amount"
 										name="ur_membership_amount"
-										style="width: 100%; padding: 8px; border: 1px solid #e1e1e1; border-radius: 4px; height: 38px;"
 										required>
 								</div>
 							</div>
@@ -205,7 +204,6 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 										data-key-name="<?php echo esc_html__( 'Payment Notes', 'user-registration' ); ?>"
 										id="ur-input-type-payment-notes"
 										name="ur_payment_notes"
-										style="width: 100%; min-height: 100px; padding: 8px;border: 1px solid #e1e1e1;resize:none;"
 									>
 									</textarea>
 								</div>

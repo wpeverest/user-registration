@@ -88,7 +88,7 @@ const FinishStep: React.FC = () => {
 					<Skeleton height="44px" width="180px" borderRadius="md" />
 				) : (
 					<Button
-						bg="#475BD8"
+						bg="#475BB2"
 						color="white"
 						rightIcon={<ArrowForwardIcon />}
 						_hover={{ bg: "#3a4bc2" }}

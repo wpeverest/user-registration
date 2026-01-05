@@ -30,7 +30,7 @@ const MessageAction = ({
 
 	useEffect(() => {
 		const wasUsingGlobal = prevUseGlobalMessageRef.current;
-		
+
 		if (isMembershipRule && useGlobalMessage && !wasUsingGlobal) {
 			const cleanupEditor = () => {
 				if (
@@ -65,12 +65,12 @@ const MessageAction = ({
 
 		const wasUsingGlobal = prevUseGlobalMessageRef.current;
 		const switchingToCustom = isMembershipRule && !useGlobalMessage && wasUsingGlobal;
-		
+
 		if (editorInitializedRef.current && !switchingToCustom) {
 			prevUseGlobalMessageRef.current = useGlobalMessage;
 			return;
 		}
-		
+
 		if (switchingToCustom) {
 			editorInitializedRef.current = false;
 			editorInitializingRef.current = false;
@@ -338,7 +338,7 @@ const MessageAction = ({
 								/>
 								<span className="urcr-checkbox-radio-label">
 									{__(
-										"Same as global restriction message",
+										"Use global restriction message",
 										"user-registration"
 									)}
 								</span>
@@ -368,7 +368,7 @@ const MessageAction = ({
 				<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-message-input-container ur-form-group">
 					<label className="urcr-label-container ur-col-4">
 						<span className="urcr-target-content-label">
-							
+
 						</span>
 					</label>
 					<div className="urcr-body">

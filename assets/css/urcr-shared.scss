@@ -83,9 +83,10 @@ $border-color_6: #475bb2;
 	}
 
 	&.is-selected {
-		background-color: $background-color_4;
-		color: $color_6;
-		font-weight: 500;
+		// background-color: $background-color_4;
+		// color: $color_6;
+		background: #f9fafb;
+		color: #475bb2;
 	}
 
 	&.is-disabled {
@@ -232,6 +233,14 @@ $border-color_6: #475bb2;
 .urcr-condition-field-dropdown-option {
 	@extend .urcr-dropdown-option;
 	padding: 6px 12px 6px 24px;
+}
+
+.urcr-condition-selection-section {
+	.select2 {
+		&-container {
+			width: 100% !important;
+		}
+	}
 }
 
 // Target Selection Section
@@ -527,15 +536,16 @@ $border-color_6: #475bb2;
 
 	// Ensure label container maintains width
 	.urcr-label-container {
-		// max-width: 600px;
-		// width: 100%;
-		flex: 0 0 38%;
+		max-width: 300px;
+		width: 100%;
+		// flex: 0 0 38%;
 	}
 
 	// Ensure input/body containers take remaining space
 	.urcr-body,
 	.urcr-input-container {
-		flex: 0 0 60%;
+		// flex: 0 0 60%;
+		flex: 1;
 	}
 }
 
@@ -572,22 +582,95 @@ $border-color_6: #475bb2;
 			}
 		}
 
+		&.urcr-label-input-pair.urcr-rule-action {
+			align-items: flex-start !important;
+
+			@media screen and (max-width: 992px) {
+				flex-direction: column;
+			}
+
+			.urcr-label-container {
+				margin-top: 10px;
+			}
+		}
+
 		// Ensure label and body containers work correctly
 		.urcr-label-container {
-			flex: 0 0 38% !important;
+			// flex: 0 0 38% !important;
+			max-width: 300px;
+			width: 100% !important;
 			margin-bottom: 0;
 		}
 
 		.urcr-body,
 		.urcr-input-container {
-			flex: 1 !important;
+			flex: 1;
+
+			.urcr-checkbox-radio-group {
+				gap: 20px;
+
+				@media screen and (max-width: 600px) {
+					flex-direction: column;
+				}
+
+				.urcr-checkbox-radio-option {
+					display: flex;
+					align-items: flex-start;
+					gap: 10px;
+					max-width: 100%;
+					width: 100%;
+					padding: 12px 14px;
+					margin-bottom: 0;
+
+					@media screen and (min-width: 601px) {
+						max-width: 350px;
+					}
+
+					.urcr-checkbox-radio {
+						&--content {
+							display: flex;
+							flex-direction: column;
+							gap: 4px;
+
+							.urcr-checkbox-radio-label {
+								font-size: 15px;
+								line-height: 23px;
+							}
+						}
+
+						&--desc {
+							font-size: 13px;
+							line-height: 18px;
+							font-weight: 400;
+							color: #6b7280;
+						}
+					}
+
+					.urcr-checkbox-radio-input {
+						margin-right: 0;
+						margin-top: 3px;
+					}
+				}
+			}
 		}
 	}
 
 	// Ensure title-body-pair maintains horizontal layout even with ur-form-group
-	.urcr-title-body-pair.ur-form-group {
-		display: flex !important;
-		align-items: flex-start;
+	.urcr-title-body-pair {
+		&.ur-form-group {
+			display: flex !important;
+			align-items: flex-start;
+		}
+
+		&.urcrra-message-input-container {
+			@media screen and (max-width: 992px) {
+				.urcr-label-container {
+					&:has(.urcr-target-content-label:empty) {
+						display: none !important;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -619,7 +702,9 @@ $border-color_6: #475bb2;
 	font-weight: 500;
 	color: $color_4;
 	font-size: 14px;
-	flex: 0 0 38%;
+	// flex: 0 0 38%;
+	max-width: 300px;
+	width: 100% !important;
 	margin-bottom: 0;
 	padding: 0;
 
@@ -669,6 +754,7 @@ $border-color_6: #475bb2;
 		justify-content: space-between !important;
 		gap: 10px;
 		width: 100%;
+
 		.button {
 			&[data-editor="urcr-membership-action-message"] {
 				display: flex;
@@ -827,9 +913,13 @@ $border-color_6: #475bb2;
 }
 
 .urcr-action-section {
-	border-top: 1px solid #e1e1e1;
-	margin-top: 30px;
-	padding-top: 28px;
+	// border-top: 1px solid #e1e1e1;
+	// margin-top: 30px;
+	// padding-top: 28px;
+	background: #fafafa;
+	border-radius: 7px;
+	padding: 30px;
+	margin-top: 40px;
 }
 
 .urcr-buttons-wrapper,
@@ -916,7 +1006,9 @@ $border-color_6: #475bb2;
 		&--form-step {
 			.user-registration-card__body {
 				.ur-label {
-					flex: 0 0 38%;
+					// flex: 0 0 38%;
+					max-width: 300px;
+					width: 100% !important;
 				}
 
 				.ur-input-type-membership-name,
@@ -929,12 +1021,18 @@ $border-color_6: #475bb2;
 
 				.ur-field {
 					&.field-amount {
-						flex: unset;
+						flex: unset !important;
 					}
 
 					&[data-field-key="membership_duration"] {
-						flex: unset;
-						width: max-content;
+						flex: unset !important;
+						width: max-content !important;
+					}
+
+					.select2 {
+						&-container {
+							width: 100% !important;
+						}
 					}
 				}
 			}

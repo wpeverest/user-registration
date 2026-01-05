@@ -894,6 +894,9 @@
 				&__header {
 					display: flex;
 					justify-content: space-between;
+					border-bottom: $border_width solid #F4F4F4;
+					padding-bottom: $spacing_16px;
+					margin-bottom: $spacing_32px;
 
 					&-content {
 						display: flex;
@@ -1522,13 +1525,15 @@
 									color: #50565f;
 									align-content: center;
 									background: transparent;
+									text-transform: capitalize;
 									text-align: left;
 									border: 0;
 									border-bottom: $border_width solid #f4f4f4;
 
 									&--transaction-id {
-										font-family: 'Courier New', monospace;
+										// font-family: 'Courier New', monospace;
 										word-break: break-all;
+										color: #656565;
 									}
 
 									&--amount {
@@ -1541,6 +1546,7 @@
 											padding: 6px 12px !important;
 											border-radius: 4px !important;
 											font-weight: 500;
+											text-transform: capitalize;
 
 											&.btn-active,
 											&.btn-completed {
@@ -1567,6 +1573,7 @@
 														display: flex;
 														align-items: center;
 														justify-content: center;
+														cursor: pointer;
 
 														svg {
 															width: 18px;
@@ -1585,32 +1592,48 @@
 													}
 
 													.dropdown {
-														position: absolute;
-														right: 0;
-														top: 28px;
-														background: #fff;
-														border: 1px solid #ccc;
-														border-radius: 6px;
 														display: flex;
 														flex-direction: column;
-														min-width: 140px;
-														box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 														z-index: 50;
+														background: #fff;
+														border: 1px solid #d1d5db;
+														box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
+														opacity: 1;
+														transition: all .15s ease;
+														min-width: 210px;
+														border-radius: 4px;
+														padding: 8px;
 
 														&.hidden {
 															display: none;
 														}
 
 														a {
-															padding: 10px;
+															color: #4b5563;
 															text-decoration: none;
-															color: #333;
+															transition: all .15s ease;
+															font-size: 14px;
+															line-height: 20px;
+															font-weight: 400;
+															padding: 8px 12px;
+															border: 0;
 															display: flex;
 															align-items: center;
-															gap: 6px;
+															gap: 8px;
+															justify-content: flex-start;
 
 															&:hover {
 																background: #f3f3f3;
+															}
+
+															svg {
+																width: 14px;
+																height: 14px;
+																fill: #4e4e4e;
+															}
+
+															.urm-spinner {
+																margin-left: auto;
 															}
 														}
 													}
@@ -1818,34 +1841,9 @@
 				padding: $spacing_24px $spacing_24px 52px 36px;
 
 				&__header {
-					border-bottom: $border_width solid #F4F4F4;
-					padding-bottom: $spacing_16px;
-					margin-bottom: $spacing_32px;
 					display: flex;
 					justify-content: space-between;
 					align-items: center;
-
-					// .user-registration-Button {
-					// 	&.button-secondary {
-					// 		color: #4584FF;
-					// 		border-color: #4584FF;
-					// 		border-radius: $spacing_4px;
-					// 		padding: 8px 20px 8px 16px;
-					// 		background-color: #fff;
-					// 		font-size: 14px;
-					// 		line-height: 150%;
-					// 		font-weight: 500;
-					// 		text-decoration: none;
-
-					// 		&:hover,
-					// 		&:active,
-					// 		&:focus {
-					// 			color: $gray_base;
-					// 			background: $color_gray_three;
-					// 			border-color: $color_gray_three;
-					// 		}
-					// 	}
-					// }
 				}
 			}
 		}
