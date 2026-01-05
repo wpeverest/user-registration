@@ -460,7 +460,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 	const labelForAccess = (access: ContentAccess) => {
 		if (access.type === "pages") return "Pages:";
 		if (access.type === "posts") return "Posts:";
-		if (access.type === "wholesite") return "Whole Site:";
+		if (access.type === "wholesite") return "Includes:";
 		return access.type + ":";
 	};
 

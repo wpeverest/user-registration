@@ -5,7 +5,8 @@ import {
 	Heading,
 	Skeleton,
 	Text,
-	useColorModeValue
+	useColorModeValue,
+	VStack
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
 import React, { useEffect, useState } from "react";
@@ -53,37 +54,50 @@ const FinishStep: React.FC = () => {
 
 	return (
 		<>
-			<Heading
-				fontFamily="Inter"
-				fontWeight={600}
-				fontSize="24px"
-				lineHeight="32px"
-				letterSpacing="-0.01em"
-				color={textColor}
-				mb={2}
-			>
-				{__("Congratulations! 🎉", "user-registration")}
-			</Heading>
+			<VStack gap={10} align={"start"}>
+				<VStack gap={4} align={"start"}>
+					<Heading
+						fontFamily="Inter"
+						fontWeight={600}
+						fontSize="22px"
+						lineHeight="38px"
+						letterSpacing="-0.01em"
+						color={textColor}
+					>
+						{__("Congratulations! 🎉", "user-registration")}
+					</Heading>
+					<VStack gap={3} align={"start"}>
+						{/* Subtitle */}
+						<Heading
+							fontFamily="Inter"
+							fontWeight={500}
+							fontSize="16px"
+							lineHeight="28px"
+							color={textColor}
+						>
+							{__("Setup complete !", "user-registration")}
+						</Heading>
 
-			<Heading
-				fontFamily="Inter"
-				fontWeight={500}
-				fontSize="16px"
-				lineHeight="24px"
-				color={textColor}
-				mb={4}
-			>
-				{__("Setup complete!", "user-registration")}
-			</Heading>
+						<Text
+							fontSize="14px"
+							lineHeight="27px"
+							color={subtextColor}
+							mb={8}
+						>
+							{__(
+								"We have created all the pages you need and your site is ready to go. You can customize everything from the ",
+								"user-registration"
+							)}
+							<br />
+							{__("URM dashboard.", "user-registration")}
+						</Text>
+					</VStack>
+				</VStack>
+			</VStack>
+			{/* Title */}
 
-			<Text fontSize="14px" lineHeight="22px" color={subtextColor} mb={8}>
-				{__(
-					"We have created all the pages you need and your site is ready to go. You can customize everything from the URM dashboard.",
-					"user-registration"
-				)}
-			</Text>
-
-			<Flex justify="flex-end" mt={8}>
+			{/* Action */}
+			<Flex justify="flex-end">
 				{isLoadingData ? (
 					<Skeleton height="44px" width="180px" borderRadius="md" />
 				) : (
