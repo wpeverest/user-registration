@@ -190,7 +190,7 @@ module.exports = function (grunt) {
 			generate: {
 				expand: true,
 				cwd: "<%= dirs.css %>",
-				src: ["*.css", "!select2.css", "!*-rtl.css"],
+				src: ["*.css", "!select2.css", "!*-rtl.css", "!ltr_only_support.css"],
 				dest: "<%= dirs.css %>/",
 				ext: "-rtl.css"
 			}
