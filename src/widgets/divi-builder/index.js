@@ -7,7 +7,8 @@ import MembershipThankYou from "./modules/MembershipThankYou";
 import MyAccount from "./modules/MyAccount";
 import RegistrationForm from "./modules/RegistrationForm";
 
-const { isPro } = typeof _URM_DIVI_ !== "undefined" && _URM_DIVI_;
+const isProEnabled =
+	process.env.UR_PRO === "true" || process.env.UR_PRO === true;
 
 jQuery(window).on("et_builder_api_ready", (_, API) => {
 	let modules = [
@@ -18,10 +19,10 @@ jQuery(window).on("et_builder_api_ready", (_, API) => {
 		EditProfile,
 		MembershipGroups,
 		MembershipThankYou,
-		ContentRestriction,
+		ContentRestriction
 	];
 
-	if (isPro) {
+	if (isProEnabled) {
 		try {
 			const proModules = require("./modules/pro").default;
 			modules = [...modules, ...proModules()];
