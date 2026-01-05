@@ -361,7 +361,6 @@
   font-weight: 600;
 }
 .field-amount input {
-  padding-left: 20px !important;
   border-top-right-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
