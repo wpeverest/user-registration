@@ -829,6 +829,7 @@
 												input[type="radio"] {
 													&:checked::before {
 														background: $primary_color;
+														margin: 3.2px;
 													}
 												}
 
@@ -1840,6 +1841,11 @@
 #upgrade-settings-container .upgradable-type {
 	position: relative;
 	color: #bababa;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 12px;
+	flex-direction: row-reverse;
 
 	.ur-membership-type-title,
 	.ur-membership-type-description {
@@ -1853,8 +1859,9 @@
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 100%;
-		position: absolute;
-		right: $spacing_12px;
+		// position: absolute;
+		// right: $spacing_12px;
+		display: block;
 		border-radius: $border_radius_2;
 		width: 18px;
 		height: 18px;

@@ -67,7 +67,7 @@ body {
 			p,
 			small,
 			label {
-				font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+				font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 			}
 		}
 	}
@@ -9425,11 +9425,12 @@ body.user-registration-page {
 	}
 }
 
-.ur-coupon-type-field{
+.ur-coupon-type-field {
 	gap: 16px;
-    flex-wrap: wrap;
+	flex-wrap: wrap;
 
-	.ur-start-date, .ur-end-date{
+	.ur-start-date,
+	.ur-end-date {
 		min-width: unset !important;
 		height: 38px;
 	}

@@ -1277,7 +1277,12 @@ $border-left-color_3: #0073aa;
 			width: 100%;
 			gap: 12px;
 
-			@media screen and (max-width: 1550px) {
+			// @media screen and (max-width: 1550px) {
+			// 	flex-direction: column;
+			// 	align-items: flex-start !important;
+			// }
+
+			@media screen and (max-width: 1500px) {
 				flex-direction: column;
 				align-items: flex-start !important;
 			}
@@ -2022,6 +2027,7 @@ $not-tag: #fcdddd;
 
 				&::before {
 					background: #475BB2;
+					margin: 3.2px;
 				}
 			}
 		}

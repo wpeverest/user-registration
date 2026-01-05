@@ -940,6 +940,7 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio]:checked::before,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio]:checked::before {
   background: #475bb2;
+  margin: 3.2px;
 }
 @media screen and (max-width: 782px) {
   .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio],
@@ -1842,6 +1843,11 @@
 #upgrade-settings-container .upgradable-type {
   position: relative;
   color: #bababa;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-direction: row-reverse;
 }
 #ur-membership-main-fields .upgradable-type .ur-membership-type-title,
 #ur-membership-main-fields .upgradable-type .ur-membership-type-description,
@@ -1857,8 +1863,7 @@
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100%;
-  position: absolute;
-  right: 12px;
+  display: block;
   border-radius: 2px;
   width: 18px;
   height: 18px;
