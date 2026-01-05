@@ -178,12 +178,12 @@ class ListTable extends \UR_List_Table {
 		</a>
 	</div>
 	<div id="user-registration-list-filters-row">
-		<form method="get" id="user-registration-list-search-form">
-			<input type="hidden" name="page" value="user-registration-membership">
+		<form method="get" id="user-registration-list-search-form" action="/wp-admin/admin.php?page=user-registration-subscriptions">
+			<input type="hidden" name="page" value="user-registration-subscriptions">
 			<div>
 				<input type="search" id="subscriptions-list-search-input" name="s"
 					value="<?php echo esc_attr( $_GET['s'] ?? '' ); ?>"
-					placeholder="<?php esc_attr_e( 'Search Subscription', ' user-registration' ); ?> ..."
+					placeholder="<?php esc_attr_e( 'Search by id or email or username', ' user-registration' ); ?> ..."
 					autocomplete="off">
 				<button type="submit" id="search-submit">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
