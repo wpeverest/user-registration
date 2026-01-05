@@ -527,7 +527,6 @@
 				true,
 				"form"
 			);
-
 			if (!result) {
 				return false;
 			}
@@ -537,11 +536,17 @@
 					.find("#ur-membership-amount")
 					.val();
 
+			var subscription_duration = $("#ur-membership-duration").val(),
+				subscription_duration_value = $(
+					"#ur-membership-duration-value"
+				).val();
+
 			if (
 				selectedPlanType === "paid" ||
 				selectedPlanType === "subscription"
 			) {
 				$("#ur-membership-amount").removeClass("ur-membership-error");
+
 				if (amount <= 0) {
 					no_errors = false;
 					basic_error = true;
@@ -564,12 +569,6 @@
 						).val(),
 						trial_duration_value = $(
 							"#ur-membership-trial-duration-value"
-						).val(),
-						subscription_duration = $(
-							"#ur-membership-duration"
-						).val(),
-						subscription_duration_value = $(
-							"#ur-membership-duration-value"
 						).val(),
 						total_trial_time =
 							ur_membership_utils.convert_to_timestamp(
@@ -629,15 +628,44 @@
 				}
 
 				if (selectedPlanType === "subscription") {
-					if (subscription_duration_value < 1) {
+					$("#ur-membership-duration-value").removeClass(
+						"ur-membership-error"
+					);
+					$("#ur-membership-duration").removeClass(
+						"ur-membership-error"
+					);
+
+					if (
+						subscription_duration_value === "" ||
+						subscription_duration_value === null ||
+						typeof subscription_duration_value === "undefined"
+					) {
 						no_errors = false;
 						basic_error = true;
+
+						ur_membership_utils.show_failure_message(
+							ur_membership_data.labels.i18n_error +
+								"! Billing Cycle " +
+								ur_membership_data.labels.i18n_field_is_required
+						);
+
+						$("#ur-membership-duration-value").addClass(
+							"ur-membership-error"
+						);
+						$("#ur-membership-duration").addClass(
+							"ur-membership-error"
+						);
+					} else if (parseInt(subscription_duration_value, 10) < 1) {
+						no_errors = false;
+						basic_error = true;
+
 						ur_membership_utils.show_failure_message(
 							ur_membership_data.labels.i18n_error +
 								"! " +
 								ur_membership_data.labels
 									.i18n_valid_min_subs_period_field_validation
 						);
+
 						$("#ur-membership-duration-value").addClass(
 							"ur-membership-error"
 						);
