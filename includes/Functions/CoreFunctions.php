@@ -759,3 +759,254 @@ if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
 		return apply_filters( 'urm_is_payment_gateway_configured', $is_configured, $gateway_key, $membership_type );
 	}
 }
+
+if ( ! function_exists( 'urcr_build_migration_actions' ) ) {
+	/**
+	 * Build migration actions array.
+	 *
+	 * @param string $migration_source Migration source type ('membership' or 'content').
+	 * @return array Actions array.
+	 */
+	function urcr_build_migration_actions( $migration_source = 'content' ) {
+		$timestamp = time() * 1000;
+
+		if ( $migration_source === 'membership' ) {
+			$message = '';
+		} else {
+			$saved_message = get_option( 'user_registration_content_restriction_message', '' );
+			$message = ! empty( $saved_message ) ? $saved_message : '';
+
+			if ( ! empty( $message ) ) {
+				$message = wp_unslash( $message );
+				$message = str_replace( array( '\\n', '\\r\\n', '\\r' ), array( "\n", "\n", "\n" ), $message );
+				$message = str_replace( array( "\r\n", "\r" ), "\n", $message );
+			}
+		}
+
+		return array(
+			array(
+				'id'             => 'x' . ( $timestamp + 200 ),
+				'type'           => 'message',
+				'label'          => 'Show Message',
+				'message'        => $message,
+				'redirect_url'   => '',
+				'access_control' => 'access',
+				'local_page'     => '',
+				'ur_form'        => '',
+				'shortcode'      => array(
+					'tag'  => '',
+					'args' => '',
+				),
+			),
+		);
+	}
+}
+
+if ( ! function_exists( 'urcr_create_membership_rule' ) ) {
+	/**
+	 * Create a default membership rule.
+	 *
+	 * @param int    $membership_id    The membership ID.
+	 * @param string $membership_title Optional membership title.
+	 *
+	 * @return int|false Rule ID on success, false on failure.
+	 */
+	function urcr_create_membership_rule( $membership_id, $membership_title = '' ) {
+		if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'membership' ) ) {
+			return false;
+		}
+
+		$existing_rules = get_posts(
+			array(
+				'post_type'      => 'urcr_access_rule',
+				'post_status'    => 'any',
+				'posts_per_page' => 1,
+				'meta_query'     => array(
+					array(
+						'key'   => 'urcr_membership_id',
+						'value' => $membership_id,
+					),
+				),
+			)
+		);
+
+		if ( ! empty( $existing_rules ) ) {
+			return false;
+		}
+
+		if ( empty( $membership_title ) ) {
+			$membership_post = get_post( $membership_id );
+			if ( ! $membership_post || 'ur_membership' !== $membership_post->post_type ) {
+				return false;
+			}
+			$membership_title = $membership_post->post_title;
+		}
+
+		if ( empty( $membership_title ) ) {
+			return false;
+		}
+
+		$timestamp = time() * 1000;
+
+		$condition = array(
+			'type'  => 'membership',
+			'id'    => 'x' . $timestamp,
+			'value' => array( strval( $membership_id ) ),
+		);
+
+		$logic_map = array(
+			'type'       => 'group',
+			'id'         => 'x' . ( $timestamp + 1 ),
+			'conditions' => array( $condition ),
+			'logic_gate' => 'AND',
+		);
+
+		$target_contents = array();
+
+		$rule_data = array(
+			'enabled'         => true,
+			'access_control'  => 'access',
+			'logic_map'       => $logic_map,
+			'target_contents' => $target_contents,
+			'actions'         => urcr_build_migration_actions( 'membership' ),
+		);
+
+		$rule_title = sprintf( __( '%s Rule', 'user-registration' ), $membership_title );
+
+		$rule_post = array(
+			'post_title'   => $rule_title,
+			'post_content' => wp_json_encode( $rule_data ),
+			'post_type'    => 'urcr_access_rule',
+			'post_status'  => 'publish',
+		);
+
+		$rule_id = wp_insert_post( $rule_post );
+
+		if ( $rule_id && ! is_wp_error( $rule_id ) ) {
+			update_post_meta( $rule_id, 'urcr_rule_type', 'membership' );
+			update_post_meta( $rule_id, 'urcr_membership_id', $membership_id );
+
+			$migrated_membership_ids = get_option( 'urcr_migrated_membership_ids', array() );
+			if ( ! is_array( $migrated_membership_ids ) ) {
+				$migrated_membership_ids = array();
+			}
+			if ( ! in_array( $membership_id, $migrated_membership_ids, true ) ) {
+				$migrated_membership_ids[] = $membership_id;
+				update_option( 'urcr_migrated_membership_ids', $migrated_membership_ids );
+			}
+
+			return $rule_id;
+		}
+
+		return false;
+	}
+}
+
+if ( ! function_exists( 'urcr_create_or_update_membership_rule' ) ) {
+	/**
+	 * Create or update membership rule with data from UI.
+	 *
+	 * @param int   $membership_id The membership ID.
+	 * @param array $rule_data     Optional rule data from UI (access_rule_data structure).
+	 *
+	 * @return int|false Rule ID on success, false on failure.
+	 */
+	function urcr_create_or_update_membership_rule( $membership_id, $rule_data = null ) {
+		if ( ! ur_check_module_activation( 'membership' ) ) {
+			return false;
+		}
+
+		$existing_rules = get_posts(
+			array(
+				'post_type'      => 'urcr_access_rule',
+				'post_status'    => 'any',
+				'posts_per_page' => 1,
+				'meta_query'     => array(
+					array(
+						'key'   => 'urcr_membership_id',
+						'value' => $membership_id,
+					),
+				),
+			)
+		);
+
+		$existing_rule = ! empty( $existing_rules ) ? $existing_rules[0] : null;
+
+		if ( $rule_data && isset( $rule_data['access_rule_data'] ) ) {
+			$access_rule_data = $rule_data['access_rule_data'];
+
+			$membership_condition = array(
+				'type'  => 'membership',
+				'id'    => 'x' . ( time() * 1000 ),
+				'value' => array( strval( $membership_id ) ),
+			);
+
+			$existing_conditions = array();
+			if ( isset( $access_rule_data['logic_map']['conditions'] ) && is_array( $access_rule_data['logic_map']['conditions'] ) ) {
+				$existing_conditions = $access_rule_data['logic_map']['conditions'];
+			}
+
+			$has_membership_condition = false;
+			foreach ( $existing_conditions as $key => $condition ) {
+				if ( isset( $condition['type'] ) && $condition['type'] === 'membership' ) {
+					$has_membership_condition = true;
+					$existing_conditions[ $key ]['value'] = array( strval( $membership_id ) );
+					break;
+				}
+			}
+
+			if ( ! $has_membership_condition ) {
+				array_unshift( $existing_conditions, $membership_condition );
+			}
+
+			$access_rule_data['logic_map']['conditions'] = $existing_conditions;
+
+			$membership_post  = get_post( $membership_id );
+			$membership_title = $membership_post ? $membership_post->post_title : '';
+			if ( ! empty( $membership_title ) ) {
+				$rule_title = sprintf( __( '%s Rule', 'user-registration' ), $membership_title );
+			} else {
+				$rule_title = isset( $rule_data['title'] ) && ! empty( $rule_data['title'] ) ? $rule_data['title'] : __( 'Membership Access Rule', 'user-registration' );
+			}
+
+			if ( $membership_post && ! empty( $membership_post->post_content ) ) {
+				$membership_content = json_decode( $membership_post->post_content, true );
+				if ( isset( $membership_content['status'] ) ) {
+					$access_rule_data['enabled'] = ur_string_to_bool( $membership_content['status'] );
+				}
+			}
+
+			$access_rule_data = wp_unslash( $access_rule_data );
+			$rule_content     = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+			$rule_content = wp_slash( $rule_content );
+		} else {
+			return urcr_create_membership_rule( $membership_id );
+		}
+
+		if ( $existing_rule ) {
+			$rule_post = array(
+				'ID'           => $existing_rule->ID,
+				'post_title'   => $rule_title,
+				'post_content' => $rule_content,
+			);
+			$rule_id   = wp_update_post( $rule_post );
+		} else {
+			$rule_post = array(
+				'post_title'   => $rule_title,
+				'post_content' => $rule_content,
+				'post_type'    => 'urcr_access_rule',
+				'post_status'  => 'publish',
+			);
+			$rule_id   = wp_insert_post( $rule_post );
+		}
+
+		if ( $rule_id && ! is_wp_error( $rule_id ) ) {
+			update_post_meta( $rule_id, 'urcr_rule_type', 'membership' );
+			update_post_meta( $rule_id, 'urcr_membership_id', $membership_id );
+
+			return $rule_id;
+		}
+
+		return false;
+	}
+}

@@ -16,6 +16,8 @@ import ShortcodeAction from "./ShortcodeAction";
 
 const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 	const isMembershipRule = rule.rule_type === "membership";
+	const isMigratedRule = Boolean(rule.is_migrated);
+	const isMigratedCustomRule = isMigratedRule && !isMembershipRule;
 	const [actionType, setActionType] = useState("message");
 	const [message, setMessage] = useState("");
 	const [redirectUrl, setRedirectUrl] = useState("");
@@ -63,7 +65,11 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 		if (ruleActions && ruleActions.length > 0) {
 			const action = ruleActions[0];
 			let normalizedType = "message"; // Default to message
-			if (action.type) {
+			// For migrated custom rules, always use message type
+			if (isMigratedCustomRule) {
+				setActionType("message");
+				normalizedType = "message";
+			} else if (action.type) {
 				normalizedType =
 					action.type === "ur_form" ? "ur-form" : action.type;
 				if (normalizedType === "redirect_to_local_page") {
@@ -74,17 +80,26 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			
 			// Helper function to get default message
 			const getDefaultMessage = () => {
-				return (
-					"<p>" +
-					__(
-						"You do not have sufficient permission to access this content.",
-						"user-registration"
-					) +
-					"</p>"
+				const defaultMessage = getURCRData(
+					"membership_default_message",
+					""
 				);
+				return defaultMessage;
 			};
 			
-			if (action.message) {
+			// For migrated custom rules, always load the message from action
+			if (isMigratedCustomRule) {
+				if (action.message) {
+					try {
+						const decodedMessage = decodeURIComponent(action.message);
+						setMessage(decodedMessage.trim() !== "" ? decodedMessage : "");
+					} catch (e) {
+						setMessage(action.message || "");
+					}
+				} else {
+					setMessage("");
+				}
+			} else if (action.message) {
 				try {
 					const decodedMessage = decodeURIComponent(action.message);
 					if (decodedMessage.trim() !== "") {
@@ -146,32 +161,30 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				setShortcodeArgs("");
 			}
 		} else {
+			// For migrated custom rules, always use message type
 			setActionType("message");
-			setMessage(
-				"<p>" +
-					__(
-						"You do not have sufficient permission to access this content.",
-						"user-registration"
-					) +
-					"</p>"
+			const defaultMessage = getURCRData(
+				"membership_default_message",
+				""
 			);
+			setMessage(defaultMessage);
 			setRedirectUrl("");
 			setLocalPage("");
 			setUrForm("");
 			setShortcodeTag("");
 			setShortcodeArgs("");
 		}
-	}, [rule.id, rule.content, rule.actions, isMembershipRule]);
+	}, [rule.id, rule.content, rule.actions, isMembershipRule, isMigratedCustomRule]);
 
 	useEffect(() => {
-		if (isMembershipRule && actionType !== "message") {
+		if ((isMembershipRule || isMigratedCustomRule) && actionType !== "message") {
 			setActionType("message");
 		}
-	}, [isMembershipRule, actionType]);
+	}, [isMembershipRule, isMigratedCustomRule, actionType]);
 
 
 	const handleActionTypeChange = (e) => {
-		if (isMembershipRule) {
+		if (isMembershipRule || isMigratedCustomRule) {
 			return;
 		}
 		const newType = e.target.value;
@@ -184,7 +197,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 		const ruleActions = ruleData.actions || rule.actions || [];
 
 		let effectiveActionType = actionType;
-		if (isMembershipRule) {
+		if (isMembershipRule || isMigratedCustomRule) {
 			effectiveActionType = "message";
 		}
 
@@ -226,14 +239,11 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				if (isMembershipRule && useGlobalMessage) {
 					actionData.message = "";
 				} else {
-					actionData.message =
-						currentMessage ||
-						"<p>" +
-							__(
-								"You do not have sufficient permission to access this content.",
-								"user-registration"
-							) +
-							"</p>";
+					const defaultMessage = getURCRData(
+						"membership_default_message",
+						""
+					);
+					actionData.message = currentMessage || defaultMessage;
 				}
 				actionData.redirect_url = "";
 				actionData.local_page = "";
@@ -333,14 +343,14 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 
 		if (stateChanged) {
 			let effectiveActionType = actionType;
-			if (isMembershipRule) {
+			if (isMembershipRule || isMigratedCustomRule) {
 				effectiveActionType = "message";
 			}
 
 			const { actionData, accessControl: syncAccessControl } =
 				buildActionDataFromState();
 
-			if (isMembershipRule) {
+			if (isMembershipRule || isMigratedCustomRule) {
 				actionData.type = "message";
 			}
 
@@ -392,7 +402,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			const ruleActions = ruleData.actions || rule.actions || [];
 
 			let effectiveActionType = actionType;
-			if (isMembershipRule) {
+			if (isMembershipRule || isMigratedCustomRule) {
 				effectiveActionType = "message";
 			}
 
@@ -434,14 +444,11 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 					if (isMembershipRule && useGlobalMessage) {
 						actionData.message = "";
 					} else {
-						actionData.message =
-							currentMessage ||
-							"<p>" +
-								__(
-									"You do not have sufficient permission to access this content.",
-									"user-registration"
-								) +
-								"</p>";
+						const defaultMessage = getURCRData(
+							"membership_default_message",
+							""
+						);
+						actionData.message = currentMessage || defaultMessage;
 					}
 					actionData.redirect_url = "";
 					actionData.local_page = "";
@@ -511,7 +518,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 
 	return (
 		<div className="urcr-rule-settings-panel">
-			{!isMembershipRule && (
+			{!isMembershipRule && !isMigratedCustomRule && (
 				<div className="urcr-label-input-pair urcr-rule-action ur-align-items-center ur-form-group">
 					<label className="urcr-label-container ur-col-4">
 						<span className="urcr-target-content-label">
