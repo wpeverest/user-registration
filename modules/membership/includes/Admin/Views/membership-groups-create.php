@@ -195,39 +195,35 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 							</div>
 						</div>
 						<?php
-						if ( ! isset( $membership_group['mode'] ) || ( isset( $membership_group['mode'] ) && 'multiple' !== $membership_group['mode'] ) ) :
-							?>
-							<div class="ur-membership-enable-upgrade-container ">
-								<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px">
-									<div class="ur-label" style="width: 62%;">
-										<span class="<?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>">
-											<label class="ur-membership-group-enable-upgrade"
-													for="ur-membership-group-upgrade"><?php esc_html_e( 'Upgrade action', 'user-registration' ); ?>
-												<span class="user-registration-help-tip tooltipstered"
-														data-tip="<?php echo esc_attr__( 'Enable automatic upgrade paths between memberships in this group.' ); ?>"></span>
-											</label>
-										</span>
-									</div>
-									<div class="ur-toggle-section m1-auto" style="width:100%">
-										<span class="user-registration-toggle-form">
-											<input
-												data-key-name="Upgrade action"
-												id="ur-membership-group-upgrade" type="checkbox"
-												class="user-registration-switch__control hide-show-check enabled urmg-input"
-												<?php echo isset( $membership_group ) && 'upgrade' === $membership_group['mode'] ? 'checked' : ''; ?>
-												name="ur_membership_enable_upgrade"
-												style="width: 100%; text-align: left"
-												<?php echo ! UR_PRO_ACTIVE ? 'disabled' : ''; ?>
-												>
-											<span class="slider round"></span>
-										</span>
-									</div>
-								</div>
-							</div>
-						<?php endif; ?>
-						<?php
 						$upgrade_style = UR_PRO_ACTIVE && isset( $membership_group['mode'] ) && 'upgrade' === $membership_group['mode'] ? '' : 'display:none;';
 						?>
+						<div class="ur-membership-enable-upgrade-container " style="<?php echo esc_attr( $upgrade_style ); ?>">
+							<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px">
+								<div class="ur-label" style="width: 62%;">
+									<span class="<?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>">
+										<label class="ur-membership-group-enable-upgrade"
+												for="ur-membership-group-upgrade"><?php esc_html_e( 'Upgrade action', 'user-registration' ); ?>
+											<span class="user-registration-help-tip tooltipstered"
+													data-tip="<?php echo esc_attr__( 'Enable automatic upgrade paths between memberships in this group.' ); ?>"></span>
+										</label>
+									</span>
+								</div>
+								<div class="ur-toggle-section m1-auto" style="width:100%">
+									<span class="user-registration-toggle-form">
+										<input
+											data-key-name="Upgrade action"
+											id="ur-membership-group-upgrade" type="checkbox"
+											class="user-registration-switch__control hide-show-check enabled urmg-input"
+											<?php echo isset( $membership_group ) && 'upgrade' === $membership_group['mode'] ? 'checked' : ''; ?>
+											name="ur_membership_enable_upgrade"
+											style="width: 100%; text-align: left"
+											<?php echo ! UR_PRO_ACTIVE ? 'disabled' : ''; ?>
+											>
+										<span class="slider round"></span>
+									</span>
+								</div>
+							</div>
+						</div>
 						<div class="ur-membership-upgrade-container" style="<?php echo esc_attr( $upgrade_style ); ?>">
 							<!--						Membership Upgrade Path Type-->
 							<div
