@@ -1049,7 +1049,7 @@ function ur_insert_after_helper( $items, $new_items, $after ) {
 	$position = array_search( $after, array_keys( $items ), true ) + 1;
 
 	// Insert the new item.
-	$return_items = array_slice( $items, 0, $position, true );
+	$return_items  = array_slice( $items, 0, $position, true );
 	$return_items += $new_items;
 	$return_items += array_slice( $items, $position, count( $items ) - $position, true );
 
@@ -1901,7 +1901,7 @@ function check_username( $username ) {
 		if ( isset( $matches[0][0] ) ) {
 			$last_char       = $matches[0][0];
 			$strip_last_char = substr( $username, 0, - ( strlen( (string) $last_char ) ) );
-			++ $last_char;
+			++$last_char;
 			$username = $strip_last_char . $last_char;
 			$username = check_username( $username );
 
@@ -2033,7 +2033,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 		} else {
 			wp_localize_script( $enqueue_script, $ur_recaptcha_slug, $ur_recaptcha_code );
 		}
-		++ $rc_counter;
+		++$rc_counter;
 
 		if ( 'v3' === $recaptcha_type ) {
 			if ( 'login' === $context ) {
@@ -2985,11 +2985,11 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 	 */
 	function user_registration_pro_render_conditional_logic( $connection, $integration, $form_id ) {
 		$output  = '<div class="ur_conditional_logic_container">';
-		$output  .= '<div class="form-row ur-form-settings-section ur-form-settings-' . $integration . '-section">';
-		$output  .= '<div class="ur-form-settings-section--field">';
-		$output  .= '<h4>' . esc_html__( 'Conditional Logic', 'user-registration' ) . '</h4>';
-		$output  .= '</div>';
-		$output  .= '</div>';
+		$output .= '<div class="form-row ur-form-settings-section ur-form-settings-' . $integration . '-section">';
+		$output .= '<div class="ur-form-settings-section--field">';
+		$output .= '<h4>' . esc_html__( 'Conditional Logic', 'user-registration' ) . '</h4>';
+		$output .= '</div>';
+		$output .= '</div>';
 		$checked = '';
 
 		if ( isset( $connection['enable_conditional_logic'] ) && ur_string_to_bool( $connection['enable_conditional_logic'] ) ) {
@@ -3006,11 +3006,11 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$output .= '</div>';
 		$output .= '</div>';
 
-		$output                 .= '<div class="form-row ur_conditional_logic_wrapper" data-source="' . esc_attr( $integration ) . '">';
-		$output                 .= '<label class="ur-label checkbox">' . esc_html__( 'Conditional Rules', 'user-registration' ) . '</label>';
-		$output                 .= '<div class="ur-logic"><p>' . esc_html__( 'Send data only if the following matches.', 'user-registration' ) . '</p></div>';
-		$output                 .= '<div class="ur-conditional-wrapper">';
-		$output                 .= '<select class="ur_conditional_field" name="ur_conditional_field">';
+		$output                .= '<div class="form-row ur_conditional_logic_wrapper" data-source="' . esc_attr( $integration ) . '">';
+		$output                .= '<label class="ur-label checkbox">' . esc_html__( 'Conditional Rules', 'user-registration' ) . '</label>';
+		$output                .= '<div class="ur-logic"><p>' . esc_html__( 'Send data only if the following matches.', 'user-registration' ) . '</p></div>';
+		$output                .= '<div class="ur-conditional-wrapper">';
+		$output                .= '<select class="ur_conditional_field" name="ur_conditional_field">';
 		$get_all_fields         = user_registration_pro_get_conditional_fields_by_form_id( $form_id, '' );
 		$selected_ur_field_type = '';
 
@@ -3034,7 +3034,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 
 		if ( 'checkbox' == $selected_ur_field_type || 'radio' == $selected_ur_field_type || 'select' == $selected_ur_field_type || 'country' == $selected_ur_field_type || 'billing_country' == $selected_ur_field_type || 'shipping_country' == $selected_ur_field_type || 'select2' == $selected_ur_field_type || 'multi_select2' == $selected_ur_field_type ) {
 			$choices = user_registration_pro_get_checkbox_choices( $form_id, $connection['conditional_logic_data']['conditional_field'] );
-			$output  .= '<select name="ur-conditional-input" class="ur-conditional-input">';
+			$output .= '<select name="ur-conditional-input" class="ur-conditional-input">';
 
 			if ( is_array( $choices ) && array_filter( $choices ) ) {
 				$output .= '<option>--select--</option>';
@@ -3042,15 +3042,15 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 				foreach ( $choices as $key => $choice ) {
 					$key           = 'country' == $selected_ur_field_type ? $key : $choice;
 					$selectedvalue = isset( $connection['conditional_logic_data']['conditional_value'] ) && $connection['conditional_logic_data']['conditional_value'] == $key ? 'selected="selected"' : '';
-					$output        .= '<option ' . $selectedvalue . ' value="' . esc_attr( $key ) . '">' . esc_html( $choice ) . '</option>';
+					$output       .= '<option ' . $selectedvalue . ' value="' . esc_attr( $key ) . '">' . esc_html( $choice ) . '</option>';
 				}
 			} else {
 				$selected = isset( $connection['conditional_logic_data']['conditional_value'] ) ? $connection['conditional_logic_data']['conditional_value'] : 0;
-				$output   .= '<option value="1" ' . ( ur_string_to_bool( $selected ) ? 'selected="selected"' : '' ) . ' >' . esc_html__( 'Checked', 'user-registration' ) . '</option>';
+				$output  .= '<option value="1" ' . ( ur_string_to_bool( $selected ) ? 'selected="selected"' : '' ) . ' >' . esc_html__( 'Checked', 'user-registration' ) . '</option>';
 			}
 			$output .= '</select>';
 		} else {
-			$value  = isset( $connection['conditional_logic_data']['conditional_value'] ) ? $connection['conditional_logic_data']['conditional_value'] : '';
+			$value   = isset( $connection['conditional_logic_data']['conditional_value'] ) ? $connection['conditional_logic_data']['conditional_value'] : '';
 			$output .= '<input class="ur-conditional-input" type="text" name="ur-conditional-input" value="' . esc_attr( $value ) . '">';
 		}
 		$output .= '</div>';
@@ -3482,13 +3482,13 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 
 		// Define page configurations
 		$page_configs = array(
-			'user_registration_login_page_id'               => array(
+			'user_registration_login_page_id'              => array(
 				'name'                => 'login',
 				'title'               => __( 'Login', 'user-registration' ),
 				'content'             => '[user_registration_login]',
 				'requires_membership' => false,
 			),
-			'user_registration_lost_password_page_id'       => array(
+			'user_registration_lost_password_page_id'      => array(
 				'name'                => 'lost-password',
 				'title'               => __( 'Lost Password', 'user-registration' ),
 				'content'             => '[user_registration_lost_password]',
@@ -3500,19 +3500,19 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 				'content'             => '[user_registration_form id="' . get_option( 'user_registration_default_form_page_id', 0 ) . '"]',
 				'requires_membership' => true,
 			),
-			'user_registration_thank_you_page_id'           => array(
+			'user_registration_thank_you_page_id'          => array(
 				'name'                => 'membership-thankyou',
 				'title'               => __( 'Membership Thank You', 'user-registration' ),
 				'content'             => '[user_registration_membership_thank_you]',
 				'requires_membership' => true,
 			),
-			'user_registration_myaccount_page_id'           => array(
+			'user_registration_myaccount_page_id'          => array(
 				'name'                => 'my-account',
 				'title'               => __( 'My Account', 'user-registration' ),
 				'content'             => '[user_registration_my_account]',
 				'requires_membership' => false,
 			),
-			'user_registration_membership_pricing_page_id'  => array(
+			'user_registration_membership_pricing_page_id' => array(
 				'name'                => 'membership-pricing',
 				'title'               => __( 'Membership Pricing', 'user-registration' ),
 				'content'             => '[user_registration_groups]',
@@ -4973,7 +4973,7 @@ if ( ! function_exists( 'paypal_generate_redirect_url' ) ) {
 								$paypal_args[ 'item_name_' . $i ] = $label;
 								$paypal_args[ 'amount_' . $i ]    = $value;
 							}
-							++ $i;
+							++$i;
 						}
 					} elseif ( ! empty( $quantity ) ) {
 						$paypal_args[ 'item_name_' . $i ] = $payment_items->extra_params->label;
@@ -4984,7 +4984,7 @@ if ( ! function_exists( 'paypal_generate_redirect_url' ) ) {
 						$paypal_args[ 'item_name_' . $i ] = $payment_items->extra_params->label;
 						$paypal_args[ 'amount_' . $i ]    = $payment_items->value;
 					}
-					++ $i;
+					++$i;
 				}
 			}
 		} elseif ( '_donations' === $transaction ) {
@@ -5037,7 +5037,7 @@ if ( ! function_exists( 'paypal_generate_redirect_url' ) ) {
 
 		// Build query.
 		$redirect .= http_build_query( $paypal_args );
-		$redirect = str_replace( '&amp;', '&', $redirect );
+		$redirect  = str_replace( '&amp;', '&', $redirect );
 
 		return $redirect;
 	}
@@ -5214,7 +5214,7 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			?>
 			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
 				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
-					   style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+						style="width: <?php echo esc_attr( $email_body_width ); ?>; max-width:600px; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
 					<tbody>
 					<tr>
 						<td colspan="2" style="text-align: left;">
@@ -5304,11 +5304,11 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 
 		// Check if this is a preview and set width to 600px.
 		$is_preview  = isset( $_GET['ur_email_preview'] ) && 'email_template_option' === sanitize_text_field( wp_unslash( $_GET['ur_email_preview'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$email_width = $is_preview ? '600px' : '50%';
+		$email_width = $is_preview ? '600px' : 'unset';
 		$max_width   = $is_preview ? '600px' : '600px'; // Max width for better readability on all devices.
 
 		return $responsive_styles . '
-	<div class="email-wrapper-outer" style="font-family: Arial, sans-serif; padding: 100px 0; background-color: #ffffff;">
+	<div class="email-wrapper-outer" style="font-family: Arial, sans-serif; padding: 100px 0;">
 	<div class="email-wrapper-inner" style="width: ' . esc_attr( $email_width ) . '; max-width: ' . esc_attr( $max_width ) . '; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
 	<div class="email-body" style="padding: 30px; background-color: #ffffff;">' . $body_content . '</div></div></div>';
 	}
@@ -6221,7 +6221,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 							'first_name',
 							'last_name',
 							'description',
-							'nickname'
+							'nickname',
 						);
 						if ( in_array( $single_item->field_key, $length_validation_fields, true ) ) {
 							if ( isset( $advance_data['advance_setting']->limit_length ) && $advance_data['advance_setting']->limit_length ) {
@@ -6291,7 +6291,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 
 							if ( is_array( $option_advance_data ) ) {
 								foreach ( $option_advance_data as $index_data => $option ) {
-									$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++ $index_data ), $option );
+									$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 								}
 								$field['options'] = $options;
 							}
@@ -6307,7 +6307,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 								if ( is_array( $option_advance_data ) ) {
 									foreach ( $option_advance_data as $index_data => $option ) {
 										$options[ $option->label ] = array(
-											'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++ $index_data ), $option->label ),
+											'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->label ),
 											'image' => $option->image,
 										);
 									}
@@ -6319,7 +6319,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 
 								if ( is_array( $option_advance_data ) ) {
 									foreach ( $option_advance_data as $index_data => $option ) {
-										$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++ $index_data ), $option );
+										$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 									}
 									$field['options'] = $options;
 								}
@@ -6362,7 +6362,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 
 						if ( isset( $advance_data['general_setting']->required ) ) {
 							if ( in_array( $single_item->field_key, ur_get_required_fields() )
-								 || ur_string_to_bool( $advance_data['general_setting']->required ) ) {
+								|| ur_string_to_bool( $advance_data['general_setting']->required ) ) {
 								$field['required']                      = true;
 								$field['custom_attributes']['required'] = 'required';
 							}
@@ -6377,7 +6377,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 								if ( is_array( $option_data ) ) {
 									foreach ( $option_data as $index_data => $option ) {
 										$options[ $option->label ] = array(
-											'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++ $index_data ), $option->label ),
+											'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->label ),
 											'image' => $option->image,
 										);
 									}
@@ -6389,7 +6389,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 
 								if ( is_array( $option_data ) ) {
 									foreach ( $option_data as $index_data => $option ) {
-										$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++ $index_data ), $option );
+										$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
 									}
 
 									$field['options'] = $options;
@@ -6670,14 +6670,14 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	 */
 	function ur_check_is_inactive() {
 		if ( ! ur_check_module_activation( 'membership' ) ||
-			 current_user_can( 'manage_options' ) ||
-			 ( ! empty( $_POST['action'] ) && in_array(
-					 $_POST['action'],
-					 array(
-						 'user_registration_membership_confirm_payment',
-						 'user_registration_membership_create_stripe_subscription',
-					 )
-				 ) )
+			current_user_can( 'manage_options' ) ||
+			( ! empty( $_POST['action'] ) && in_array(
+				$_POST['action'],
+				array(
+					'user_registration_membership_confirm_payment',
+					'user_registration_membership_create_stripe_subscription',
+				)
+			) )
 		) {
 			return;
 		}
@@ -8482,7 +8482,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 		);
 		foreach ( $repositionable_settings as $setting ) {
 			[ $position, $setting_id ] = $setting['item_position'];
-			$offset = array_search( $setting_id, array_column( $section_settings, 'id' ) );
+			$offset                    = array_search( $setting_id, array_column( $section_settings, 'id' ) );
 			if ( 'before' === $position ) {
 				array_splice( $section_settings, $offset, 0, array( $setting ) );
 			}
@@ -8566,10 +8566,10 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 				case 'password':
 				case 'date':
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
-					$settings     .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
-					$settings     .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
-					$settings     .= '<div class="user-registration-login-form-global-settings--field">';
-					$settings     .= '<input
+					$settings    .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
+					$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings    .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings    .= '<input
 							name="' . esc_attr( $value['id'] ) . '"
 							id="' . esc_attr( $value['id'] ) . '"
 							type="' . esc_attr( $value['type'] ) . '"
@@ -8578,8 +8578,8 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 							class="' . esc_attr( $value['class'] ) . '"
 							placeholder="' . esc_attr( $value['placeholder'] ) . '"
 							' . esc_attr( implode( ' ', $custom_attributes ) ) . ' ' . wp_kses_post( $description ) . '/>';
-					$settings     .= '</div>';
-					$settings     .= '</div>';
+					$settings    .= '</div>';
+					$settings    .= '</div>';
 					break;
 				case 'nonce':
 					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
@@ -8597,10 +8597,10 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 				// Color picker.
 				case 'color':
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
-					$settings     .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
-					$settings     .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
-					$settings     .= '<div class="user-registration-login-form-global-settings--field">';
-					$settings     .= '<input
+					$settings    .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
+					$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings    .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings    .= '<input
 							name="' . esc_attr( $value['id'] ) . '"
 							id="' . esc_attr( $value['id'] ) . '"
 							type="text"
@@ -8610,8 +8610,8 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 							class="' . esc_attr( $value['class'] ) . 'colorpick"
 							placeholder="' . esc_attr( $value['placeholder'] ) . '"
 							' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>&lrm;' . wp_kses_post( $description );
-					$settings     .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></div>';
-					$settings     .= '</div>';
+					$settings    .= '<div id="colorPickerDiv_' . esc_attr( $value['id'] ) . '" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div></div>';
+					$settings    .= '</div>';
 					break;
 
 				// Textarea.
@@ -8631,7 +8631,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 							cols="' . esc_attr( $value['cols'] ) . '"
 							placeholder="' . esc_attr( $value['placeholder'] ) . '"
 							' . esc_html( implode( ' ', $custom_attributes ) ) . '>'
-								 . esc_textarea( $option_value ) . '</textarea>';
+								. esc_textarea( $option_value ) . '</textarea>';
 					$settings .= '</div>';
 					$settings .= '</div>';
 					break;
@@ -8644,8 +8644,8 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
-					$multiple = '';
-					$type     = '';
+					$multiple  = '';
+					$type      = '';
 					if ( 'multiselect' == $value['type'] ) {
 						$type     = '[]';
 						$multiple = 'multiple="multiple"';
@@ -8681,12 +8681,12 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 				// Radio inputs.
 				case 'radio':
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
-					$settings     .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
-					$settings     .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
-					$settings     .= '<div class="user-registration-login-form-global-settings--field">';
-					$settings     .= '<fieldset>';
-					$settings     .= wp_kses_post( $description );
-					$settings     .= '<ul>';
+					$settings    .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
+					$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings    .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings    .= '<fieldset>';
+					$settings    .= wp_kses_post( $description );
+					$settings    .= '<ul>';
 
 					foreach ( $value['options'] as $key => $val ) {
 						$settings .= '<li>';
@@ -8927,7 +8927,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 
 						$settings .= '<ul class="ur-radio-group-list">';
 						foreach ( $options as $option_index => $option_text ) {
-							$class    = str_replace( ' ', '-', strtolower( $option_text ) );
+							$class     = str_replace( ' ', '-', strtolower( $option_text ) );
 							$settings .= '<li class="ur-radio-group-list--item  ' . $class . ( trim( $option_index ) === $option_value ? ' active' : '' ) . '">';
 
 							$checked = '';
@@ -9184,7 +9184,7 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
 	 */
 	function ur_setting_keys() {
 		return array(
-			'user-registration/user-registration.php'                                                     => array(
+			'user-registration/user-registration.php'     => array(
 				array( 'user_registration_general_setting_disabled_user_roles', '["subscriber"]' ),
 				array( 'user_registration_login_option_hide_show_password', false ),
 				array( 'user_registration_myaccount_page_id', '' ),
@@ -9193,7 +9193,7 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
 				array( 'user_registration_disable_profile_picture', false ),
 				array(
 					'user_registration_disable_logout_confirmation',
-					apply_filters( 'user_registration_disable_logout_confirmation_status', true )
+					apply_filters( 'user_registration_disable_logout_confirmation_status', true ),
 				),
 				array( 'user_registration_login_options_form_template', 'default' ),
 				array( 'user_registration_general_setting_login_options_with', 'default' ),
@@ -9213,7 +9213,7 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
 				array( 'user_registration_hide_label_password', false ),
 				array( 'user_registration_hide_label_username_or_email', false ),
 			),
-			'user-registration-pro/user-registration.php'                                                 => array(
+			'user-registration-pro/user-registration.php' => array(
 				array( 'user_registration_pro_general_setting_delete_account', 'disable' ),
 				array( 'user_registration_pro_general_setting_login_form', false ),
 				array( 'user_registration_pro_general_setting_prevent_active_login', false ),
@@ -9226,11 +9226,11 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
 				array( 'user_registration_content_restriction_enable', true ),
 				array( 'user_registration_content_restriction_allow_to_roles', '["administrator"]' ),
 			),
-			'user-registration-file-upload/user-registration-file-upload.php'                             => array(
+			'user-registration-file-upload/user-registration-file-upload.php' => array(
 				array( 'user_registration_file_upload_setting_valid_file_type', '["pdf"]' ),
 				array( 'user_registration_file_upload_setting_max_file_size', '1024' ),
 			),
-			'user-registration-pdf-submission/user-registration-pdf-submission.php'                       => array(
+			'user-registration-pdf-submission/user-registration-pdf-submission.php' => array(
 				array( 'user_registration_pdf_template', 'default' ),
 				array( 'user_registration_pdf_logo_image', '' ),
 				array( 'user_registration_pdf_setting_header', '' ),
@@ -9248,7 +9248,7 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
 				array( 'user_registration_pdf_print_user_default_fields', false ),
 				array( 'user_registration_pdf_hide_empty_fields', false ),
 			),
-			'user-registration-social-connect/user-registration-social-connect.php'                       => array(
+			'user-registration-social-connect/user-registration-social-connect.php' => array(
 				array( 'user_registration_social_setting_enable_facebook_connect', '' ),
 				array( 'user_registration_social_setting_enable_twitter_connect', '' ),
 				array( 'user_registration_social_setting_enable_google_connect', '' ),
@@ -9402,7 +9402,7 @@ if ( ! function_exists( 'user_registration_profile_details_form_fields' ) ) {
 			foreach ( $row as $grid_index => $grid ) {
 				foreach ( $grid as $field_index => $field ) {
 					if ( isset( $field->general_setting->field_name ) ) {
-						$field->field_key                                             = isset( $field->field_key ) ? $field->field_key : '';
+						$field->field_key = isset( $field->field_key ) ? $field->field_key : '';
 						$form_field_data_array[ $field->general_setting->field_name ] = array(
 							'field_key' => $field->field_key,
 							'label'     => $field->general_setting->label,
@@ -9451,11 +9451,17 @@ if ( ! function_exists( 'user_registration_profile_details_form_field_datas' ) )
 
 			}
 
-			$fields_to_exclude = array_merge( ur_exclude_profile_details_fields(), apply_filters( 'user_registration_pro_excluded_fields_in_view_details_page', array(
-				'profile_picture',
-				'privacy_policy',
-				'password'
-			) ) );
+			$fields_to_exclude = array_merge(
+				ur_exclude_profile_details_fields(),
+				apply_filters(
+					'user_registration_pro_excluded_fields_in_view_details_page',
+					array(
+						'profile_picture',
+						'privacy_policy',
+						'password',
+					)
+				)
+			);
 
 			if ( isset( $user_data_to_show[ $key ]['field_key'] ) ) {
 				if ( 'file' === $user_data_to_show[ $key ]['field_key'] && '' !== $user_data_to_show[ $key ]['value'] ) {
@@ -9507,12 +9513,12 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 	function ur_get_site_assistant_data() {
 		// Check for required pages
 		$required_pages = array(
-			'user_registration_login_page_id'               => 'Login Page',
-			'user_registration_lost_password_page_id'       => 'Lost Password Page',
+			'user_registration_login_page_id'              => 'Login Page',
+			'user_registration_lost_password_page_id'      => 'Lost Password Page',
 			'user_registration_member_registration_page_id' => 'Membership Registration Page',
-			'user_registration_thank_you_page_id'           => 'Membership Thank You Page',
-			'user_registration_myaccount_page_id'           => 'My Account Page',
-			'user_registration_membership_pricing_page_id'  => 'Membership Pricing Page',
+			'user_registration_thank_you_page_id'          => 'Membership Thank You Page',
+			'user_registration_myaccount_page_id'          => 'My Account Page',
+			'user_registration_membership_pricing_page_id' => 'Membership Pricing Page',
 		);
 
 		// Check if membership module is activated
@@ -10038,11 +10044,11 @@ if ( ! function_exists( 'ur_pro_get_form_fields' ) ) {
 											break;
 
 										case 'date':
-											$date_format                                           = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
-											$min_date                                              = isset( $field->advance_setting->min_date ) ? str_replace( '/', '-', $field->advance_setting->min_date ) : '';
-											$max_date                                              = isset( $field->advance_setting->max_date ) ? str_replace( '/', '-', $field->advance_setting->max_date ) : '';
-											$set_current_date                                      = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
-											$enable_date_range                                     = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
+											$date_format       = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
+											$min_date          = isset( $field->advance_setting->min_date ) ? str_replace( '/', '-', $field->advance_setting->min_date ) : '';
+											$max_date          = isset( $field->advance_setting->max_date ) ? str_replace( '/', '-', $field->advance_setting->max_date ) : '';
+											$set_current_date  = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
+											$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
 											$extra_params['custom_attributes']['data-date-format'] = $date_format;
 
 											if ( isset( $field->advance_setting->enable_min_max ) && ur_string_to_bool( $field->advance_setting->enable_min_max ) ) {
@@ -10398,7 +10404,7 @@ if ( ! function_exists( 'urcr_get_custom_rules_count' ) ) {
 			}
 
 			if ( $matches ) {
-				++ $rules_count;
+				++$rules_count;
 			}
 		}
 

@@ -263,6 +263,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Refactor - Membership upgrade and renewal process.
 * Refactor - Payment configuration in the membership creation process.
 * Refactor - Single members list table for normal and membership registrations.
+* New      - Membership Groups Module.
 * New      - Subscriptions table and entries.
 * New      - Multiple registration form module.
 * New      - Membership registration analytics.

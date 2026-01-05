@@ -177,24 +177,30 @@ const AccessControlSection = ({
 			<div className="ur-d-flex ur-flex-column">
 				{contentTargets.length > 0 && (
 					<div className="urcr-target-type-group">
-						{contentTargets.map((target) => (
-							<div key={target.id} className="urcr-target-item">
-								<span className="urcr-target-type-label">{target.label}:</span>
-								<ContentValueInput
-									contentType={target.type}
-									value={target.value}
-									onChange={(newValue) => handleContentTargetUpdate(target.id, newValue)}
-								/>
-								<button
-									type="button"
-									className="button-link urcr-target-remove"
-									onClick={() => handleContentTargetRemove(target.id)}
-									aria-label={__("Remove", "user-registration")}
-								>
-									<span className="dashicons dashicons-no-alt"></span>
-								</button>
-							</div>
-						))}
+						{contentTargets.map((target) => {
+							// For whole_site, use "Includes" as label prefix, otherwise use target.label
+							const displayLabel = target.type === "whole_site" 
+								? __("Includes", "user-registration")
+								: target.label;
+							return (
+								<div key={target.id} className="urcr-target-item">
+									<span className="urcr-target-type-label">{displayLabel}:</span>
+									<ContentValueInput
+										contentType={target.type}
+										value={target.value}
+										onChange={(newValue) => handleContentTargetUpdate(target.id, newValue)}
+									/>
+									<button
+										type="button"
+										className="button-link urcr-target-remove"
+										onClick={() => handleContentTargetRemove(target.id)}
+										aria-label={__("Remove", "user-registration")}
+									>
+										<span className="dashicons dashicons-no-alt"></span>
+									</button>
+								</div>
+							);
+						})}
 					</div>
 				)}
 

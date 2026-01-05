@@ -87,10 +87,10 @@ class Membership {
 				'jquery',
 				'jquery-ui-sortable',
 			),
-			'1.0.0',
+			'UR_VERSION',
 			true
 		);
-		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
+		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), 'UR_VERSION', true );
 		wp_enqueue_script( 'ur-snackbar' );
 		wp_enqueue_script( 'sweetalert2' );
 		wp_enqueue_script( 'user-registration-membership' );
@@ -140,7 +140,7 @@ class Membership {
 			return;
 		}
 		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
-			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
+			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), 'UR_VERSION' );
 		}
 		wp_enqueue_style( 'ur-snackbar' );
 		wp_enqueue_style( 'sweetalert2' );
@@ -586,7 +586,8 @@ class Membership {
 				'label'    => __( 'Advanced', 'user-registration' ),
 				'step'     => 2,
 				'partial'  => 'membership-create-advanced-tab.php',
-				'icon_svg' => $load_svg_icon( 'membership-advanced-icon' ),
+				// 'icon_svg' => $load_svg_icon( 'membership-advanced-icon' ),
+				'icon_svg' => $load_svg_icon( 'advanced' ),
 			),
 		);
 
@@ -785,12 +786,20 @@ class Membership {
 
 		$html = '<div class="urcr-target-item ur-d-flex ur-align-items-center ur-mt-2" data-target-id="' . $target_id . '">';
 
-		// All types get the label with colon, matching JavaScript format
-		$html .= '<span class="urcr-target-type-label">' . esc_html( $type_label ) . ':</span>';
+		$display_label = ( $type === 'whole_site' ) ? __( 'Includes', 'user-registration' ) : $type_label;
+		$html .= '<span class="urcr-target-type-label">' . esc_html( $display_label ) . ':</span>';
 
 		if ( $type === 'whole_site' ) {
-			// For whole_site, show the label text as content (matching JavaScript line 709)
-			$html .= '<span>' . esc_html( $type_label ) . '</span>';
+			$whole_site_value_label = __( 'Whole Site', 'user-registration' );
+			if ( isset( $localized_data['content_type_options'] ) && is_array( $localized_data['content_type_options'] ) ) {
+				foreach ( $localized_data['content_type_options'] as $option ) {
+					if ( isset( $option['value'] ) && $option['value'] === 'whole_site' && isset( $option['label'] ) ) {
+						$whole_site_value_label = $option['label'];
+						break;
+					}
+				}
+			}
+			$html .= '<span>' . esc_html( $whole_site_value_label ) . '</span>';
 		} elseif ( $type === 'taxonomy' ) {
 			// Handle taxonomy value structure
 			// Target can have: { type: 'taxonomy', taxonomy: 'cat', value: [] }

@@ -139,7 +139,7 @@ const Select2MultiSelect: React.FC<Select2MultiSelectProps> = ({
 															e
 														)
 													}
-													color="#9CA3AF"
+													color="#383838"
 													fontSize="10px"
 												/>
 											</Tag>
@@ -227,7 +227,7 @@ const TypeSelector: React.FC<TypeSelectorProps> = ({
 	const borderColor = useColorModeValue("gray.200", "gray.600");
 	const activeBorderColor = "#475BB2";
 	const activeColor = "#475BB2";
-	const inactiveColor = useColorModeValue("#6B7280", "gray.400");
+	const inactiveColor = useColorModeValue("#222222", "gray.400");
 
 	const options: TypeOption[] = [
 		{ value: "free", label: __("Free", "user-registration") },
@@ -742,7 +742,8 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 										color="#475BB2"
 										fontSize="14px"
 										fontWeight="500"
-										h="32px"
+										h="36px"
+										py={2}
 										px={3}
 										borderRadius="4px"
 										border="1px solid"

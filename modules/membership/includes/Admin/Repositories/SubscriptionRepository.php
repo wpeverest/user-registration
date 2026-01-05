@@ -154,7 +154,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 	 *     @type int    $item_id        Filter by item ID. Default 0 (all).
 	 *     @type string $start_date     Filter by start date (from). Format: Y-m-d. Default empty.
 	 *     @type string $end_date       Filter by end date (to). Format: Y-m-d. Default empty.
-	 *     @type string $search         Search in subscription_id or coupon. Default empty.
+	 *     @type string $search         Search in subscription_id or email. Default empty.
 	 * }
 	 * @return array Array containing 'items' and 'total' count
 	 */
@@ -199,6 +199,8 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 
 		$where_clauses  = array( '1=1' );
 		$prepare_values = array();
+		$join_clause    = '';
+		$users_table    = TableList::users_table();
 
 		if ( ! empty( $args['status'] ) ) {
 			$where_clauses[]  = 'status = %s';
@@ -226,7 +228,8 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 		}
 
 		if ( ! empty( $args['search'] ) ) {
-			$where_clauses[]  = '(subscription_id LIKE %s OR coupon LIKE %s)';
+			$join_clause      = "LEFT JOIN {$users_table} u ON {$this->table}.user_id = u.ID";
+			$where_clauses[]  = '(subscription_id LIKE %s OR u.user_email LIKE %s or u.user_login LIKE %s)';
 			$search_term      = '%' . $this->wpdb()->esc_like( $args['search'] ) . '%';
 			$prepare_values[] = $search_term;
 			$prepare_values[] = $search_term;
@@ -234,7 +237,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 
 		$where_sql = implode( ' AND ', $where_clauses );
 
-		$count_query = "SELECT COUNT(*) FROM {$this->table} WHERE {$where_sql}";
+		$count_query = "SELECT COUNT(*) FROM {$this->table} {$join_clause} WHERE {$where_sql}";
 
 		if ( ! empty( $prepare_values ) ) {
 			$count_query = $this->wpdb()->prepare( $count_query, $prepare_values );
@@ -246,9 +249,9 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 		$per_page = max( 1, absint( $args['per_page'] ) );
 		$offset   = ( $page - 1 ) * $per_page;
 
-		$query = "SELECT * FROM {$this->table}
+		$query = "SELECT {$this->table}.* FROM {$this->table} {$join_clause}
 			WHERE {$where_sql}
-			ORDER BY {$args['orderby']} {$args['order']}
+			ORDER BY {$this->table}.{$args['orderby']} {$args['order']}
 			LIMIT %d OFFSET %d";
 
 		$prepare_values[] = $per_page;
