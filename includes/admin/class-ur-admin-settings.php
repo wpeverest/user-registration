@@ -381,10 +381,12 @@ class UR_Admin_Settings {
 		if ( is_array( $options ) && ! empty( $options ) ) {
 			$back_link      = isset( $options['back_link'] ) ? esc_url( $options['back_link'] ) : '';
 			$back_link_text = isset( $options['back_link_text'] ) ? wp_kses_post( $options['back_link_text'] ) : '';
-
+			$back_link_style = isset( $options['back_link_style'] ) ? wp_kses_post( $options['back_link_style'] ) : '';
+			
 			if ( isset( $options['back_link'] ) ) {
-				$settings .= '<a href="' . esc_url( $back_link ) . '" class="page-title-action">';
-
+				$class = 'inline' === $back_link_style ? 'navigator-action' : 'page-title-action';
+				$settings .= '<a href="' . esc_url( $back_link ) . '" class="' . $class . '">';
+				
 				if ( isset( $options['back_link_text'] ) ) {
 					$settings .= wp_kses_post( $back_link_text );
 				}
