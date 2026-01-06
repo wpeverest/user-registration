@@ -161,7 +161,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 					'title'    => '',
 					'sections' => array(
 						'general_options' => array(
-							'title'    => __( 'General Options', 'user-registration' ),
+							'title'    => __( 'General', 'user-registration' ),
 							'type'     => 'card',
 							'desc'     => '',
 							'settings' => array(
@@ -173,13 +173,6 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 									'type'     => 'toggle',
 									'autoload' => false,
 								),
-							),
-						),
-						'sender_option'   => array(
-							'title'    => __( 'Email Sender Options', 'user-registration' ),
-							'type'     => 'card',
-							'desc'     => '',
-							'settings' => array(
 								array(
 									'title'    => __( '"From" name', 'user-registration' ),
 									'desc'     => __( 'How the sender name appears in outgoing user registration emails.', 'user-registration' ),
@@ -204,15 +197,8 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 									'autoload'          => false,
 									'desc_tip'          => true,
 								),
-							),
-						),
-						'send_test_email' => array(
-							'title'    => __( 'Send a Test Email', 'user-registration' ),
-							'type'     => 'card',
-							'desc'     => '',
-							'settings' => array(
 								array(
-									'title'             => __( 'Send To', 'user-registration' ),
+									'title'             => __( 'Send Test Email', 'user-registration' ),
 									'desc'              => __( 'Enter email address where test email will be sent.', 'user-registration' ),
 									'id'                => 'user_registration_email_send_to',
 									'type'              => 'email',
@@ -225,10 +211,9 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 									'desc_tip'          => true,
 								),
 								array(
-									'title'    => __( 'Send Email', 'user-registration' ),
-									'desc'     => __( 'Click to send test email.', 'user-registration' ),
 									'id'       => 'user_registration_email_test',
 									'type'     => 'link',
+									'align'    => 'end',
 									'css'      => 'min-width:90px;',
 									'buttons'  => array(
 										array(
@@ -237,10 +222,9 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 											'class' => 'button user_registration_send_email_test',
 										),
 									),
-									'desc_tip' => true,
 								),
 							),
-						)
+						),
 					),
 				)
 			);

@@ -121,7 +121,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 
 			$settings = array(
 						'id'          => 'payment-settings',
-						'title'       => esc_html__( 'Payment Settings', 'user-registration' ),
+						'title'       => esc_html__( 'Store', 'user-registration' ),
 						'type'        => 'card',
 						'desc'        => '',
 						'show_status' => false,
@@ -151,7 +151,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 
         public function get_paypal_settings() {
             return array(
-                'title'        => __( 'Paypal Settings', 'user-registration' ),
+                'title'        => __( 'Paypal', 'user-registration' ),
                 'type'         => 'accordian',
                 'id'           => 'paypal',
                 'desc'         => '',
@@ -226,7 +226,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
         public function get_stripe_settings() {
             return array(
                 'id'           => 'stripe',
-                'title'        => __( 'Stripe Settings', 'user-registration' ),
+                'title'        => __( 'Stripe', 'user-registration' ),
                 'type'         => 'accordian',
                 'show_status'  => false,
                 'desc'         => '',
@@ -288,7 +288,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
         public function get_bank_transfer_settings() {
             return array(
                 'id'           => 'bank',
-                'title'        => __( 'Bank Transfer Settings', 'user-registration' ),
+                'title'        => __( 'Bank Transfer', 'user-registration' ),
                 'type'         => 'accordian',
                 'desc'         => '',
                 'is_connected' => get_option( 'urm_bank_connection_status', false ),

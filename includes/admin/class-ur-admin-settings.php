@@ -868,9 +868,11 @@ class UR_Admin_Settings {
 									break;
 
 								case 'link':
+									$align_items = isset( $value[ 'align' ] ) ? $value[ 'align' ] : '';
+
 									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
-									$settings .= '<div class="user-registration-global-settings--field">';
+									$settings .= '<div class="user-registration-global-settings--field"' . ( !empty($align_items) ? 'style="align-items: end;"' : '' ) . '>';
 
 									if ( isset( $value['buttons'] ) && is_array( $value['buttons'] ) ) {
 										foreach ( $value['buttons'] as $button ) {
