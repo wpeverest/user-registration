@@ -1420,13 +1420,6 @@
   line-height: 24px;
   color: #383838;
 }
-.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td strong {
-  margin: 0;
-}
-.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td strong .ur-edit-title a {
-  line-height: 24px;
-  font-weight: 400;
-}
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td.draggable {
   display: flex;
   align-items: flex-start;
@@ -1437,14 +1430,6 @@
   height: 20px;
   fill: #a0a0a0;
   margin-top: 2px;
-}
-.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td.membership_type .user-registration-badge {
-  padding: 0;
-  background: none;
-  font-size: 14px;
-  text-transform: capitalize;
-  color: #383838;
-  font-weight: 500;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items {
   background: #ffffff;
@@ -1493,20 +1478,15 @@
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#membership-list .tablenav.top {
   display: none;
 }
-.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#user-registration-members-list-form #user-registration-base-list-filters-row {
-  margin-bottom: 32px;
-}
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#user-registration-members-list-form .tablenav {
   display: flex;
   justify-content: flex-end;
   align-self: center;
-  margin-bottom: 32px;
   flex-wrap: wrap;
   justify-content: space-between;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#user-registration-members-list-form .tablenav.top {
   justify-content: flex-end;
-  padding-top: 40px;
   row-gap: 16px;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#user-registration-members-list-form .tablenav .bulkactions input[type=submit] {

@@ -568,20 +568,15 @@ body.user-registration #ur-membership-order-create-form .user_registration-card_
   font-size: 14px;
 }
 
-#user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form #user-registration-base-list-filters-row {
-  margin-bottom: 32px;
-}
 #user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form .tablenav {
   display: flex;
   justify-content: flex-end;
   align-self: center;
-  margin-bottom: 32px;
   flex-wrap: wrap;
   justify-content: space-between;
 }
 #user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form .tablenav.top {
   justify-content: flex-end;
-  padding-top: 40px;
   row-gap: 16px;
 }
 #user-registration-base-list-table-page .user-registration-base-list-table-form#ur-membership-payment-history-form .tablenav .bulkactions input[type=submit] {

@@ -1371,16 +1371,16 @@
 							line-height: 24px;
 							color: #383838;
 
-							strong {
-								margin: 0;
+							// strong {
+							// 	margin: 0;
 
-								.ur-edit-title {
-									a {
-										line-height: 24px;
-										font-weight: 400;
-									}
-								}
-							}
+							// 	.ur-edit-title {
+							// 		a {
+							// 			line-height: 24px;
+							// 			font-weight: 400;
+							// 		}
+							// 	}
+							// }
 
 							&.draggable {
 								display: flex;
@@ -1395,16 +1395,6 @@
 								}
 							}
 
-							&.membership_type {
-								.user-registration-badge {
-									padding: 0;
-									background: none;
-									font-size: 14px;
-									text-transform: capitalize;
-									color: #383838;
-									font-weight: 500;
-								}
-							}
 						}
 
 						&.no-items {
@@ -1475,21 +1465,15 @@
 			}
 
 			&#user-registration-members-list-form {
-				#user-registration-base-list-filters-row {
-					margin-bottom: $spacing_32px;
-				}
-
 				.tablenav {
 					display: flex;
 					justify-content: flex-end;
 					align-self: center;
-					margin-bottom: $spacing_32px;
 					flex-wrap: wrap;
 					justify-content: space-between;
 
 					&.top {
 						justify-content: flex-end;
-						padding-top: 40px;
 						row-gap: $spacing_16px;
 					}
 

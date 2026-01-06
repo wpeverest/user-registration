@@ -8612,7 +8612,6 @@ body.user-registration-page {
 				font-size: 14px;
 				color: $grey-400;
 				border-radius: $border_radius_3;
-				margin-left: auto;
 
 				&::before {
 					content: none;
@@ -8630,7 +8629,6 @@ body.user-registration-page {
 		flex-wrap: wrap;
 		justify-content: flex-end;
 		align-items: center;
-		margin-bottom: $spacing_40px;
 
 		&:has(.subsubsub) {
 			flex-direction: row-reverse;
@@ -8772,6 +8770,7 @@ body.user-registration-page {
 		border-color: $border_color;
 		border-radius: $border_radius_5;
 		margin-bottom: $spacing-16px;
+		margin-top: $spacing_40px;
 		overflow: hidden;
 		box-shadow: none;
 
@@ -8845,7 +8844,6 @@ body.user-registration-page {
 						}
 
 						.ur-row-actions {
-							font-size: 12px;
 							line-height: normal;
 							color: $grey-400;
 						}
@@ -8878,6 +8876,45 @@ body.user-registration-page {
 						}
 					}
 				}
+
+				&:nth-child(odd){
+					background: #F8F8FA;
+				}
+
+				&.no-items {
+					background: $white;
+
+					td {
+						padding: 0;
+
+						.empty-list-table-container {
+							text-align: center;
+							margin-top: $spacing_30px;
+							margin-bottom: $spacing_30px;
+
+							img {
+								width: 300px;
+							}
+
+							h3 {
+								margin-top: $spacing_16px;
+								margin-bottom: $spacing_8px;
+								color: $grey-500;
+								font-size: 22px;
+								font-weight: $semi_bold;
+								line-height: 32px;
+							}
+
+							p {
+								color: #6b6b6b;
+								font-size: 14px;
+								font-weight: $regular;
+								line-height: 24px;
+							}
+						}
+					}
+				}
+
 			}
 		}
 
@@ -8945,6 +8982,41 @@ body.user-registration-page {
 							background: #f2f2f2;
 						}
 					}
+				}
+			}
+
+			&.bottom, &.top{
+				display: flex;
+				justify-content: space-between;
+				flex-wrap: wrap;
+			}
+
+			&.top{
+				margin-bottom: 0;
+			}
+
+			&.top:has(div){
+				margin-top: 32px;
+			}
+
+			.bulkactions{
+				input[type=submit]{
+					align-self: stretch;
+					padding: 8px 14px;
+					font-size: 14px;
+					line-height: 20px;
+					color: #475BB2;
+					border-color: #475BB2;
+					background: #F6F7F7;
+					font-weight: 500;
+				}
+				select{
+					min-height: 38px;
+					padding: 0 12px;
+					background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M19.561 7.403a1.468 1.468 0 0 1 2.02 0 1.339 1.339 0 0 1 0 1.944l-8.57 8.25a1.468 1.468 0 0 1-2.021 0l-8.572-8.25a1.339 1.339 0 0 1 0-1.944 1.468 1.468 0 0 1 2.02 0L12 14.68l7.561-7.278Z'/%3E%3C/svg%3E");
+					background-size: 14px 14px;
+					background-repeat: no-repeat;
+					background-position: right 12px center;
 				}
 			}
 		}
@@ -9064,6 +9136,30 @@ body.user-registration-page {
 				}
 			}
 		}
+
+		.wp-list-table{
+			tbody {
+				tr {
+					td {
+						font-size: 14px;
+						line-height: 24px;
+						color: #383838;
+						font-weight:400;
+
+						&.membership_type {
+							.user-registration-badge {
+								padding: 0;
+								background: none;
+								font-size: 14px;
+								text-transform: capitalize;
+								color: #383838;
+								font-weight: 400;
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -9071,39 +9167,19 @@ body.user-registration-page {
 	font-weight: 500;
 }
 
-.user-subscription-secondary {
+.user-subscription-secondary, .user-payment-secondary {
 	color: $color_gray-light;
 }
 
-.user-subscription-active {
+.user-subscription-active, .user-payment-completed {
 	color: $approve_user;
 }
 
-.user-subscription-pending {
+.user-subscription-pending, .user-payment-pending {
 	color: $pending_user;
 }
 
-.user-subscription-expired {
-	color: $deny_color;
-}
-
-.user-subscription-status {
-	font-weight: 500;
-}
-
-.user-subscription-secondary {
-	color: $color_gray-light;
-}
-
-.user-subscription-active {
-	color: $approve_user;
-}
-
-.user-subscription-pending {
-	color: $pending_user;
-}
-
-.user-subscription-expired {
+.user-subscription-expired, .user-payment-failed {
 	color: $deny_color;
 }
 
