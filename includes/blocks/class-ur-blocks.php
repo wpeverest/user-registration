@@ -143,7 +143,7 @@ class UR_Blocks {
 				'user_registration_blocks_editor_prams',
 				array(
 					'i18n_add_a_block'     => esc_html__( 'Add a block', 'user-registration' ),
-					'i18n_add_a_block_tip' => sprintf( '%s %s', esc_html__( 'Click the plus button, search for User Registration, click the block to embed it. ', 'user-registration' ), '<a href="#" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>' ),
+					'i18n_add_a_block_tip' => sprintf( '%s %s', esc_html__( 'Click the plus button, search for User Registration & Membership, click the block to embed it. ', 'user-registration' ), '<a href="#" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>' ),
 					'i18n_done_btn'        => esc_html__( 'Done', 'user-registration' ),
 				)
 			);
@@ -162,7 +162,7 @@ class UR_Blocks {
 			array(
 				array(
 					'slug'  => 'user-registration',
-					'title' => esc_html__( 'User Registration', 'user-registration' ),
+					'title' => esc_html__( 'User Registration & Membership', 'user-registration' ),
 				),
 			),
 			$block_categories

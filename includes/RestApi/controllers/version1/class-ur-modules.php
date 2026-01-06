@@ -809,7 +809,7 @@ class UR_Modules {
 				return new \WP_REST_Response(
 					array(
 						'status'  => true,
-						'message' => esc_html__( 'User Registration Pro activated successfully.', 'user-registration' ),
+						'message' => esc_html__( 'User Registration & Membership Pro activated successfully.', 'user-registration' ),
 						'code'    => 200,
 					),
 					200

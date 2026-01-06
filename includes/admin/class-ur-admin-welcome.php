@@ -111,7 +111,7 @@ class UR_Admin_Welcome {
 		<head>
 			<meta charset="utf-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
-			<title><?php esc_html_e( 'User Registration – Welcome', 'user-registration' ); ?></title>
+			<title><?php esc_html_e( 'User Registration & Membership – Welcome', 'user-registration' ); ?></title>
 			<?php
 			wp_print_styles();
 			wp_print_head_scripts();

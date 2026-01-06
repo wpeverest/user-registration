@@ -287,17 +287,17 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 				include_once UR_ABSPATH . 'modules/payment-history/Orders.php';
 			}
 
-		// Check if there are membership rules (>= 2)
-		$membership_rules_count = 0;
-		if ( function_exists( 'ur_get_membership_rules_count' ) ) {
-			$membership_rules_count = ur_get_membership_rules_count();
-		}
+			// Check if there are membership rules (>= 2)
+			$membership_rules_count = 0;
+			if ( function_exists( 'ur_get_membership_rules_count' ) ) {
+				$membership_rules_count = ur_get_membership_rules_count();
+			}
 
-		if ( ur_check_module_activation( 'content-restriction' ) || $membership_rules_count >= 2 ) {
+			if ( ur_check_module_activation( 'content-restriction' ) || $membership_rules_count >= 2 ) {
 
-			include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
-			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
-		}
+				include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
+				include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
+			}
 
 			/**
 			 * Elementor classes.
@@ -559,14 +559,14 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @since 5.0.0
 		 */
-		public function enable_multiple_registration_forms(){
+		public function enable_multiple_registration_forms() {
 			$is_migrated = get_option( 'user_registration_multiple_registration_migration', false );
 
 			if ( ! $is_migrated ) {
 				$all_forms = ur_get_all_user_registration_form();
-				if ( count( $all_forms ) > 1) {
+				if ( count( $all_forms ) > 1 ) {
 					$enabled_features = get_option( 'user_registration_enabled_features', array() );
-					if ( ! isset( $enabled_features[ 'user-registration-multiple-registration' ] ) ) {
+					if ( ! isset( $enabled_features['user-registration-multiple-registration'] ) ) {
 						$enabled_features[] = 'user-registration-multiple-registration';
 						update_option( 'user_registration_enabled_features', $enabled_features );
 					}
@@ -670,7 +670,7 @@ if ( ! function_exists( 'UR' ) ) {
 				return;
 			}
 
-			echo '<div class="notice-warning notice is-dismissible"><p>' . wp_kses_post( __( 'As <strong>User Registration & Membership Pro</strong> is active, <strong>User Registration Free</strong> is now not needed.', 'user-registration' ) ) . '</p></div>';
+			echo '<div class="notice-warning notice is-dismissible"><p>' . wp_kses_post( __( 'As <strong>User Registration & Membership Pro</strong> is active, <strong>User Registration & Membership Free</strong> is now not needed.', 'user-registration' ) ) . '</p></div>';
 
 			if ( isset( $_GET['activate'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				unset( $_GET['activate'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -689,31 +689,31 @@ if ( ! function_exists( 'UR' ) ) {
  * Enable by setting SCRIPT_DEBUG to true in wp-config.php
  */
 if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
-    add_filter(
-        'script_loader_src',
-        function ( $src, $handle ) {
-            $dev_scripts = array(
-                'user-registration-welcome',
-                'user-registration-dashboard',
-                'user-registration-blocks',
-                'user-registration-form-templates',
-                'user-registration-divi-builder',
-                'user-registration-content-access-rules',
-            );
+	add_filter(
+		'script_loader_src',
+		function ( $src, $handle ) {
+			$dev_scripts = array(
+				'user-registration-welcome',
+				'user-registration-dashboard',
+				'user-registration-blocks',
+				'user-registration-form-templates',
+				'user-registration-divi-builder',
+				'user-registration-content-access-rules',
+			);
 
-            if ( in_array( $handle, $dev_scripts, true ) ) {
-                $src = str_replace(
-                    UR_PLUGIN_URL . 'chunks/',
-                    'http://localhost:3000/',
-                    $src
-                );
-            }
+			if ( in_array( $handle, $dev_scripts, true ) ) {
+				$src = str_replace(
+					UR_PLUGIN_URL . 'chunks/',
+					'http://localhost:3000/',
+					$src
+				);
+			}
 
-            return $src;
-        },
-        10,
-        2
-    );
+			return $src;
+		},
+		10,
+		2
+	);
 }
 
 // Global for backwards compatibility.

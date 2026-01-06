@@ -7187,11 +7187,11 @@ if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
 				'type'                  => 'info',
 				'status'                => 'active',
 				'priority'              => '1',
-				'title'                 => __( 'User Registration Email Send Error', 'user-registration' ),
+				'title'                 => __( 'User Registration & Membership Email Send Error', 'user-registration' ),
 				'message_content'       => wp_kses_post(
 					sprintf(
 						'<p>%s</p><p class="ur-email-send-failed-log">%s</p>',
-						__( 'The last emails sent from User Registration Plugin was not delivered to the user. ', 'user-registration' ),
+						__( 'The last emails sent from User Registration & Membership Plugin was not delivered to the user. ', 'user-registration' ),
 						$error_message
 					)
 				),
@@ -7300,8 +7300,8 @@ if ( ! function_exists( 'ur_spam_users_detected' ) ) {
 				'message_content'       => wp_kses_post(
 					sprintf(
 						'<p>%s</p><p>%s</p>',
-						__( 'A significant number of users have registered on your site from sources other than the User Registration plugin\'s form.', 'user-registration' ),
-						__( 'These registrations may be suspicious. Please review and disable any other methods that allow user registrations if they are not intended. Additionally, consider enabling spam protection measures in the User Registration plugin to safeguard your site.', 'user-registration' ),
+						__( 'A significant number of users have registered on your site from sources other than the User Registration & Membership plugin\'s form.', 'user-registration' ),
+						__( 'These registrations may be suspicious. Please review and disable any other methods that allow user registrations if they are not intended. Additionally, consider enabling spam protection measures in the User Registration & Membership to safeguard your site.', 'user-registration' ),
 					)
 				),
 				'buttons'               => array(
@@ -7559,7 +7559,7 @@ function create_wpbakery_widget_category() {
 			'name'        => esc_html__( 'Edit Profile', 'user-registration' ),
 			'base'        => 'user_registration_edit_profile',
 			'icon'        => 'icon-wpb-vc_user_registration',
-			'category'    => esc_html__( 'User Registration', 'user-registration' ),
+			'category'    => esc_html__( 'User Registration & Membership', 'user-registration' ),
 			'description' => esc_html__( 'Edit Profile widget for WPBakery.', 'user-registration' ),
 		),
 	);
@@ -7568,7 +7568,7 @@ function create_wpbakery_widget_category() {
 			'name'        => esc_html__( 'Edit Password', 'user-registration' ),
 			'base'        => 'user_registration_edit_password',
 			'icon'        => 'icon-wpb-vc_user_registration',
-			'category'    => esc_html__( 'User Registration', 'user-registration' ),
+			'category'    => esc_html__( 'User Registration & Membership', 'user-registration' ),
 			'description' => esc_html__( 'Edit Password widget for WPBakery.', 'user-registration' ),
 		),
 	);
