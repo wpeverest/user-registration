@@ -189,20 +189,8 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 
 			$this->ur_metabox_checkbox(
 				array(
-					'id'       => 'urcr_meta_checkbox',
-					'label'    => 'Restrict Access to This Page/Post',
-					'type'     => 'Checkbox',
-					'disabled' => false,
-				)
-			);
-
-
-
-
-			$this->ur_metabox_checkbox(
-				array(
 					'id'    => 'urcr_meta_override_global_settings',
-					'label' => 'Override Global Settings:',
+					'label' => 'Enable Custom Restrictions for This Page:',
 					'type'  => 'Checkbox',
 				)
 			);
