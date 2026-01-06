@@ -429,7 +429,7 @@ class UR_Admin_Settings {
 								$settings .= $section['back_link']; // removed kses since the inputs are sanitized in the function ur_back_link itself
 							}
 							$settings .= '<h3 class="user-registration-card__title">';
-							$settings .= esc_html( strtoupper( $section['title'] ) );
+							$settings .= esc_html( ucwords( $section['title'] ) );
 
 							if ( isset( $section['is_premium'] ) && $section['is_premium'] ) {
 								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' . '" /></div>';
