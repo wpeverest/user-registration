@@ -868,14 +868,16 @@ body {
 		p.ur-p-tag {
 			margin-bottom: $spacing_24px;
 			padding: $spacing_10px $spacing_12px $spacing_10px $spacing_16px;
-			background: rgba(71, 91, 178, 0.04);
-			border: $border_width solid $primary_color;
+			// background: rgba(71, 91, 178, 0.04);
+			// border: $border_width solid $primary_color;
 			font-weight: $regular;
 			color: $grey-400;
 			border-radius: $border_radius_4;
 			font-size: 14px;
 			line-height: 22px;
 			font-style: normal;
+			border-left: 4px solid $primary_color;
+			background: #F1F2F9;
 
 			strong {
 				font-weight: $semi_bold;
@@ -1797,6 +1799,17 @@ body {
 							.wp-editor-container {
 								iframe {
 									height: 200px !important;
+								}
+							}
+						}
+
+						#wp-user_registration_content_restriction_message-wrap {
+							#wp-user_registration_content_restriction_message-media-buttons {
+								display: flex;
+								align-items: center;
+
+								#ur-smart-tags-selector {
+									margin-left: auto;
 								}
 							}
 						}

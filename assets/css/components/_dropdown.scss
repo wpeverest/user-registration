@@ -170,3 +170,84 @@
         }
     }
 }
+
+body.user-registration {
+    .select2 {
+        &-container {
+            &:has(.urcr-editor-select2-dropdown) {
+                max-width: 200px;
+            }
+
+            .select2-dropdown {
+                &.urcr-editor-select2-dropdown {
+                    width: 100% !important;
+                    border: 1px solid #e1e1e1;
+                    border-radius: 4px;
+                    padding: 0;
+                    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+                    .ur-select2-title {
+                        padding: 0;
+                        width: 100%;
+                        border-radius: 4px 4px 0 0;
+                        overflow: hidden;
+
+                        >p {
+                            padding: 6px 12px;
+                        }
+                    }
+
+                    .select2-search {
+                        width: 100% !important;
+                        box-sizing: border-box;
+                        padding: 10px 8px;
+
+                        .search-icon {
+                            top: 20px !important;
+                            left: 17px !important;
+                        }
+
+                        &__field {
+                            height: 36px;
+                            min-height: 36px;
+                            padding-right: 12px !important;
+                            border-color: #e1e1e1;
+
+                            &:focus {
+                                border-color: #475bb2;
+                            }
+                        }
+                    }
+
+                    .select2-results {
+                        padding: 0 8px 8px;
+
+                        &__options {
+                            border-top: 0 !important;
+                        }
+
+                        &__option {
+                            font-family: inherit;
+                            border-radius: 4px;
+                            padding: 8px 12px;
+                            font-size: 13px;
+                            line-height: 19px;
+
+                            &:focus {
+                                outline: none;
+                                box-shadow: none;
+                                border: 0;
+                            }
+
+                            &:hover,
+                            &--highlighted {
+                                background: #f8f8fa !important;
+                                color: $primary_color !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

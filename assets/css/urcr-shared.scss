@@ -920,7 +920,8 @@ $border-color_6: #475bb2;
 	// border-top: 1px solid #e1e1e1;
 	// margin-top: 30px;
 	// padding-top: 28px;
-	background: #fafafa;
+	// background: #fafafa;
+	background: #f7f7f7;
 	border-radius: 7px;
 	padding: 30px;
 	margin-top: 40px;
@@ -1089,69 +1090,3 @@ $border-color_6: #475bb2;
 		display: block !important;
 	}
 }
-
-// body.user-registration {
-// 	&.user-registration-membership_page_user-registration-membership {
-// 		&:has(#select2-select-smart-tags-results) {
-// 			.select2 {
-// 				&-container {
-// 					max-width: 220px;
-// 				}
-
-// 				&-dropdown {
-// 					width: 100% !important;
-// 					border: 1px solid #e1e1e1;
-// 					border-radius: 4px;
-// 					padding: 0;
-
-// 					.ur-select2-title {
-// 						padding: 0;
-// 						width: 100%;
-// 						border-radius: 4px 4px 0 0;
-// 						overflow: hidden;
-
-// 						>p {
-// 							padding: 6px 12px;
-// 						}
-// 					}
-// 				}
-
-// 				&-search {
-// 					width: 100% !important;
-// 					box-sizing: border-box;
-// 					padding: 10px 8px;
-
-// 					.search-icon {
-// 						top: 20px !important;
-// 						left: 17px !important;
-// 					}
-
-// 					&__field {
-// 						height: 36px;
-// 						min-height: 36px;
-// 						padding-right: 12px !important;
-// 						border-color: #e1e1e1;
-
-// 						&:focus {
-// 							border-color: #475bb2;
-// 						}
-// 					}
-// 				}
-
-// 				&-results {
-// 					padding: 0 8px 8px;
-
-// 					&__options {
-// 						border-top: 0 !important;
-// 					}
-
-// 					&__option {
-// 						border-radius: 4px;
-// 						padding: 8px 12px;
-
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-// }
