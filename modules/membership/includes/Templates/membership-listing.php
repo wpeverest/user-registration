@@ -339,7 +339,7 @@ elseif ( 'list' === $type ) :
 				<div class="notice-container">
 					<div id="urm-listing-error" class="notice_red">
 						<span class="notice_message"></span>
-						<span class="close_notice">&times;</span>
+						<!-- <span class="close_notice">&times;</span> -->
 					</div>
 				</div>
 				<div class="membership-footer">
