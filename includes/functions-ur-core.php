@@ -4520,13 +4520,15 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 						$button_title = sprintf( esc_html__( '%s Addon', 'user-registration' ), $action );
 
 						$settings[ 'sections' ][ 'premium_setting_section' ][ 'before_desc' ] = $description;
-						$settings[ 'sections' ][ 'premium_setting_section' ][ 'settings' ] =
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'desc' ] = false;
 						$settings[ 'sections' ][ 'premium_setting_section' ][ 'settings' ] = array(
-							'id' => 'ur-install-addon__button',
-							'type' => 'button',
-							'class' => $button_class,
-							'attrs' => $button_attrs,
-							'title' => $button_title,
+							array(
+								'id' => 'ur-install-addon__button',
+								'type' => 'button',
+								'class' => $button_class,
+								'attrs' => $button_attrs,
+								'title' => $button_title,
+							)
 						);
 					}
 				} else {

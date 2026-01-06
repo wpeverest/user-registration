@@ -153,8 +153,11 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 					$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
 					$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
 
-					if ( ! empty( $premium_tab['plan'] ) && ! in_array( $license_plan, $premium_tab['plan'], true ) ) {
-						if ( file_exists( WP_PLUGIN_DIR . '/' . $premium_tab['plugin'] ) && is_plugin_active( $premium_tab['plugin'] . '/' . $premium_tab['plugin'] . '.php' ) ) {
+					if ( ! empty( $premium_tab[ $id ]['plan'] ) ) {
+
+						if ( in_array( $license_plan, $premium_tab[ $id ]['plan'], true ) ) {
+							$show_premium_icon = false;
+						} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $premium_tab['plugin'] ) && is_plugin_active( $premium_tab['plugin'] . '/' . $premium_tab['plugin'] . '.php' ) ) {
 							$show_premium_icon = false;
 						} else {
 							$show_premium_icon = true;

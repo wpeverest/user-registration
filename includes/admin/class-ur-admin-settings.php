@@ -428,6 +428,7 @@ class UR_Admin_Settings {
 							}
 							$settings .= '<h3 class="user-registration-card__title">';
 							$settings .= esc_html( strtoupper( $section['title'] ) );
+
 							if ( isset( $section['is_premium'] ) && $section['is_premium'] ) {
 								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' . '" /></div>';
 							}
@@ -1017,8 +1018,8 @@ class UR_Admin_Settings {
 									$css                   = '';
 									$field_css             = '';
 									$btn_css               = ! empty( $value['class'] ) ? $value['class'] : '';
-									$btn_slug              = ! empty( $value['slug'] ) ? $value['slug'] : '';
-									$btn_name              = ! empty( $value['name'] ) ? $value['name'] : '';
+									$btn_slug              = ! empty( $value['attrs']['data-slug'] ) ? $value['attrs']['data-slug'] : '';
+									$btn_name              = ! empty( $value['attrs']['data-name'] ) ? $value['attrs']['data-name'] : '';
 									$is_connected          = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
 									$is_captcha            = in_array(
 										$section['id'],
