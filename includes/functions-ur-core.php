@@ -4209,23 +4209,157 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 	function ur_premium_settings_tab() {
 
 		$premium_tabs = array(
-			'woocommerce'                            => array(
-				'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
-				'plugin' => 'user-registration-woocommerce',
-				'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-				'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
+			'email' => array(
+				'templates' => array(
+					'label' => esc_html__( 'Email Templates', 'user-registration' ),
+					'plugin' => 'user-registration-email-templates',
+					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency'),
+					'name' => esc_html__( 'User Registration - Email Templates', 'user-registration' ),
+				),
 			),
-			'file_upload'                            => array(
-				'label'  => esc_html__( 'File Uploads', 'user-registration' ),
-				'plugin' => 'user-registration-file-upload',
-				'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-				'name'   => esc_html__( 'User Registration - File Upload', 'user-registration' ),
+			'registration_login' => array(		
+				'social-connect' => array(
+					'label' => esc_html__( 'Social Connect', 'user-registration' ),
+					'plugin' => 'user-registration-social-connect',
+					'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+					'name' => esc_html__( 'User Registration - Social Connect', 'user-registration' ),
+				),
+				'profile-connect' => array(
+					'label' => esc_html__( 'Profile Connect', 'user-registration' ),
+					'plugin' => 'user-registration-profile-connect',
+					'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+					'name' => esc_html__( 'User Registration - Profile Connect', 'user-registration' ),
+				),
+				'invite-code' => array(
+					'label' => esc_html__( 'Invite Codes', 'user-registration' ),
+					'plugin' => 'user-registration-invite-codes',
+					'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+					'name' => esc_html__( 'User Registration - Invite Code', 'user-registration' ),
+				),
+				'file-upload' => array(
+					'label' => esc_html__( 'File Upload', 'user-registration' ),
+					'plugin' => 'user-registration-file-upload',
+					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name' => esc_html__( 'User Registration - File Upload', 'user-registration' ),
+				),
 			),
-			'user-registration-customize-my-account' => array(
-				'label'  => esc_html__( 'Customize My Account', 'user-registration' ),
-				'plugin' => 'user-registration-customize-my-account',
-				'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-				'name'   => esc_html__( 'User Registration customize my account', 'user-registration' ),
+			'my_account' => array(
+				'customize-my-account' => array(
+					'label' => esc_html__( 'Customize My Account', 'user-registration' ),
+					'plugin' => 'user-registration-customize-my-account',
+					'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+					'name' => esc_html__( 'User Registration - Customize My Account', 'user-registration' ),
+				),
+			),
+			'integration' => array(
+				'email-marketing' => array(
+					'is_collection' => true,
+					'collections' => array(
+						'activecampaign' => array(
+							'label'  => esc_html__( 'Active Campaign', 'user-registration' ),
+							'plugin' => 'user-registration-activecampaign',
+							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+							'name' => esc_html__( 'User Registration - ActiveCampaign', 'user-registration' ),
+						),
+						'brevo' => array(
+							'label'  => esc_html__( 'Brevo', 'user-registration' ),
+							'plugin' => 'user-registration-brevo',
+							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+							'name' => esc_html__( 'User Registration - Brevo', 'user-registration' ),
+						),
+						'convertkit' => array(
+							'label'  => esc_html__( 'Kit (Previously Convertkit)', 'user-registration' ),
+							'plugin' => 'user-registration-convertkit',
+							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+							'name' => esc_html__( 'User Registration - Convertkit', 'user-registration' ),
+						),
+						'klaviyo' => array(
+							'label'  => esc_html__( 'Klaviyo', 'user-registration' ),
+							'plugin' => 'user-registration-klaviyo',
+							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+							'name' => esc_html__( 'User Registration - Klaviyo', 'user-registration' ),
+						),
+						'mailchimp' => array(
+							'label'  => esc_html__( 'Mailchimp', 'user-registration' ),
+							'plugin' => 'user-registration-mailchimp',
+							'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+							'name' => esc_html__( 'User Registration - Mailchimp', 'user-registration' ),
+						),
+						'mailerlite' => array(
+							'label'  => esc_html__( 'Mailerlite', 'user-registration' ),
+							'plugin' => 'user-registration-mailerlite',
+							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+							'name' => esc_html__( 'User Registration - Mailerlite', 'user-registration' ),
+						),
+						'mailpoet' => array(
+							'label'  => esc_html__( 'Mailpoet', 'user-registration' ),
+							'plugin' => 'user-registration-mailpoet',
+							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+							'name' => esc_html__( 'User Registration - Mailpoet', 'user-registration' ),
+						),
+						'zapier' => array(
+							'label'  => esc_html__( 'Zapier', 'user-registration' ),
+							'plugin' => 'user-registration-zapier',
+							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+							'name' => esc_html__( 'User Registration - Zapier', 'user-registration' ),
+						),
+					)
+				),
+				'pdf-submission' => array(
+					'label' => esc_html__( 'PDF Form Submission', 'user-registration' ),
+					'plugin' => 'user-registration-pdf-form-submission',
+					'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+					'name' => esc_html__( 'User Registration - PDF Form Submission', 'user-registration' ),
+				),
+				'google-sheets' => array(
+					'label' => esc_html__( 'Google Sheets', 'user-registration' ),
+					'plugin' => 'user-registration-google-sheets',
+					'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+					'name' => esc_html__( 'User Registration - Google Sheets', 'user-registration' ),
+				),
+				'salesforce' => array(
+					'label' => esc_html__( 'Salesforce', 'user-registration' ),
+					'plugin' => 'user-registration-salesforce',
+					'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+					'name' => esc_html__( 'User Registration - Salesforce', 'user-registration' ),
+				),
+				'geolocation' => array(
+					'label' => esc_html__( 'Geolocation', 'user-registration' ),
+					'plugin' => 'user-registration-geolocation',
+					'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+					'name' => esc_html__( 'User Registration - Geolocation', 'user-registration' ),
+				),
+				'woocommerce' => array(
+					'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
+					'plugin' => 'user-registration-woocommerce',
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
+				),
+				'cloud-storage' => array(
+					'is_collection' => true,
+					'collections' => array(
+						'google-drive' => array(
+							'label' => esc_html__( 'Google Drive', 'user-registration' ),
+							'plugin' => 'user-registration-googledrive',
+							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+							'name' => esc_html__( 'User Registration - Google Drive', 'user-registration' ),
+						),
+						'dropbox' => array(
+							'label' => esc_html__( 'Dropbox', 'user-registration' ),
+							'plugin' => 'user-registration-dropbox',
+							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+							'name' => esc_html__( 'User Registration - Dropbox', 'user-registration' ),
+						)
+					)
+				),
+			),
+			'security' => array(
+				'2fa' => array(
+					'label' => esc_html__( 'Two Factor Authentication', 'user-registration' ),
+					'plugin' => 'user-registration-two-factor-authentication',
+					'plan' => array( 'plus', 'professional', 'themegrill agency' ),
+					'name' => esc_html__( 'User Registration - Two Factor Authentication', 'user-registration' ),
+				),
 			),
 		);
 
@@ -4243,87 +4377,170 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 	}
 }
 
-// add_action( 'user_registration_settings_tabs', 'ur_display_premium_settings_tab' );
+add_filter( 'user_registration_upgrade_to_pro_setting', 'ur_get_premium_settings_tab' );
 
-if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
+if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 
 	/**
-	 * Method to display premium settings tabs.
+	 * Premium settings tabs.
 	 *
-	 * @since 3.0
+	 * @since 5.0
 	 */
-	function ur_display_premium_settings_tab() {
+	function ur_get_premium_settings_tab( $settings ) {
+		global $current_tab;
+		global $current_section;
+
 		$license_data    = ur_get_license_plan();
 		$license_plan    = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
 		$premium_tabs    = ur_premium_settings_tab();
-		$tabs_to_display = array();
-		$tab_html        = '';
 
-		foreach ( $premium_tabs as $tab => $detail ) {
-			$tooltip_html = '';
-			$button       = '';
-			if ( 'woocommerce' === $tab && ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
-				continue;
-			}
+		if( ! isset( $current_section ) ) {
+			$current_section = apply_filters( 'user_registration_settings_' . $current_tab . '_default_section', '' );
+		}
+		
+		$is_upgradable_section = isset( $premium_tabs[ $current_tab ] [ $current_section ] );
+		if( $is_upgradable_section ) {
+			$section_details = $premium_tabs[ $current_tab ][ $current_section ];
+			if( isset( $section_details[ 'is_collection' ] ) && ur_string_to_bool( $section_details[ 'is_collection' ] ) ) {
+				$settings[ 'sections' ] = array();
+				foreach( $section_details[ 'collections' ] as $detail ) {
+					if( ! empty( $license_plan ) ) {
+						$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
+						if ( ! in_array( $license_plan, $detail[ 'plan' ], true ) ) {
+							if ( is_plugin_active( $detail[ 'plugin' ] . '/' . $detail[ 'plugin' ] . '.php' ) ) {
+								continue;
+							}
+							/* translators: %s: License Plan Name. */
+							$description = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
+							$button_text = esc_html__( 'Upgrade Plan', 'user-registration' );
 
-			if ( ! empty( $license_plan ) ) {
-				$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
-				if ( ! in_array( $license_plan, $detail['plan'], true ) ) {
-					if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
-						continue;
-					}
-
-					/* translators: %s: License Plan Name. */
-					$tooltip_html = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
-					$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/upgrade/?utm_source=settings-sidebar-right&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
-					array_push( $tabs_to_display, $tab );
-				} else {
-					$plugin_name = $detail['name'];
-					$action      = '';
-
-					if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
-						if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
-							$action = 'Activate';
+							$settings[ 'sections' ][ $detail[ 'plugin' ] ] = array(
+								'title' => $detail[ 'label' ],
+								'before_desc' => $description,
+								'button'      => array(
+									'button_type' => 'upgrade_link',
+									'button_link' => 'https://wpuserregistration.com/upgrade/?utm_source=ur-settings-' . $current_section . '&utm_medium=upgrade-link&utm_campaign=lite-version',
+									'button_text' => $button_text
+								),
+							);
 						} else {
-							continue;
+							$plugin_name = $detail[ 'name' ];
+							$action = '';
+							if( file_exists( WP_PLUGIN_DIR . '/' . $detail[ 'plugin' ] ) ) {
+								if( ! is_plugin_active( $detail[ 'plugin' ] . '/' . $detail[ 'plugin' ] . '.php' ) ) {
+									$action = 'Activate';
+								} else {
+									continue;
+								}
+							} else {
+								$action = 'Install';
+							}
+							/* translators: %s: Addon Name. */
+							$description = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, ucwords( str_replace( '-', ' ', $detail[ 'plugin' ] ) ) );
+
+							/* translators: %s: Action Name. */
+							// $button = '<a href="#" class="user-registration-settings-addon-' . strtolower( $action ) . '" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . sprintf( esc_html__( '%s Addon', 'user-registration' ), $action ) . '</a>';
+							$button_class = 'user-registration-settings-addon-' . strtolower( $action );
+							$button_attrs = array(
+								'data-slug' => $detail[ 'plugin' ],
+								'data-name' => $plugin_name
+							);
+							$button_title = sprintf( esc_html__( '%s Addon', 'user-registration' ), $action );
+
+							$settings[ 'sections' ][ $detail[ 'plugin' ] ] = array(
+								'title' => $detail[ 'label' ],
+								'before_desc' => $description,
+								'settings' => array(
+									array(
+										'id' => 'ur-install-addon__button',
+										'type' => 'button',
+										'class' => $button_class,
+										'attrs' => $button_attrs,
+										'title' => $button_title,
+									),
+								),
+							);
 						}
 					} else {
-						$action = 'Install';
+						if( is_plugin_active( $detail[ 'plugin' ] . '/' . $detail[ 'plugin' ] . '.php' ) ) {
+							continue;
+						}
+						$description = esc_html__( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
+						$settings[ 'sections' ][ $detail[ 'plugin' ] ] = array(
+							'type' => 'card',
+							'is_premium' => true,
+							'title' => $detail[ 'label' ],
+							'before_desc' => $description,
+							'desc' => 'To unlock this setting, consider upgrading to <a href="https://wpuserregistration.com/upgrade/?utm_source=ur-settings-desc&utm_medium=upgrade-link&utm-campaign=lite-version">Pro</a>.',
+							'class' => 'ur-upgrade--link',
+							'button' => array(
+								'button_type' => 'upgrade_link',
+								'button_text' => 'Upgrade to Pro',
+								'button_link' => 'https://wpuserregistration.com/upgrade/?utm_source=ur-settings-' . $current_section . '&utm_medium=upgrade-link&utm_campaign=lite-version',
+							),
+						);
 					}
-
-					/* translators: %s: Addon Name. */
-					$tooltip_html = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, ucwords( str_replace( '-', ' ', $detail['plugin'] ) ) );
-
-					/* translators: %s: Action Name. */
-					$button = '<a href="#" class="user-registration-settings-addon-' . strtolower( $action ) . '" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . sprintf( esc_html__( '%s Addon', 'user-registration' ), $action ) . '</a>';
-					array_push( $tabs_to_display, $tab );
 				}
-			} else {
+			} else { //scalar section.
+				$detail = $section_details;
+				if( ! empty( $license_plan ) ) {
+					$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
+					if ( ! in_array( $license_plan, $detail[ 'plan' ], true ) ) {
+						if ( is_plugin_active( $detail[ 'plugin' ] . '/' . $detail[ 'plugin' ] . '.php' ) ) {
+							return array();
+						}
+						/* translators: %s: License Plan Name. */
+						$description = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
+						$button_text = esc_html__( 'Upgrade Plan', 'user-registration' );
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'before_desc' ] = $description;
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'button' ][ 'button_text' ] = $button_text;
+					} 
+					else {
+						$plugin_name = $detail[ 'name' ];
+						$action = '';
+						if( file_exists( WP_PLUGIN_DIR . '/' . $detail[ 'plugin' ] ) ) {
+							if( ! is_plugin_active( $detail[ 'plugin' ] . '/' . $detail[ 'plugin' ] . '.php' ) ) {
+								$action = 'Activate';
+							} else {
+								return array();
+							}
+						} else {
+							$action = 'Install';
+						}
+						/* translators: %s: Addon Name. */
+						$description = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, ucwords( str_replace( '-', ' ', $detail[ 'plugin' ] ) ) );
 
-				if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
-					continue;
+						/* translators: %s: Action Name. */
+						// $button = '<a href="#" class="user-registration-settings-addon-' . strtolower( $action ) . '" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . sprintf( esc_html__( '%s Addon', 'user-registration' ), $action ) . '</a>';
+						$button_class = 'user-registration-settings-addon-' . strtolower( $action );
+						$button_attrs = array(
+							'data-slug' => $detail[ 'plugin' ],
+							'data-name' => $plugin_name
+						);
+						$button_title = sprintf( esc_html__( '%s Addon', 'user-registration' ), $action );
+
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'before_desc' ] = $description;
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'settings' ] =
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'settings' ] = array(
+							'id' => 'ur-install-addon__button',
+							'type' => 'button',
+							'class' => $button_class,
+							'attrs' => $button_attrs,
+							'title' => $button_title,
+						);
+					}
+				} else {
+					if( is_plugin_active( $detail[ 'plugin' ] . '/' . $detail[ 'plugin' ] . '.php' ) ) {
+						return array();
+					}
+					$description = esc_html__( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
+					$settings[ 'sections' ][ 'premium_setting_section' ][ 'title' ] = $detail[ 'label' ];
+					$settings[ 'sections' ][ 'premium_setting_section' ][ 'before_desc' ] = $description;
 				}
-
-				$tooltip_html = __( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
-				$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/upgrade/?utm_source=settings-sidebar-right&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade to Pro', 'user-registration' ) . '</a>';
-				array_push( $tabs_to_display, $tab );
 			}
-
-			if ( in_array( $tab, $tabs_to_display, true ) ) {
-				$tab_html .= '<button class="nav-tab ur-nav__link ur-nav-premium" disabled>';
-				$tab_html .= '<span class="ur-tooltip">' . esc_html( $tooltip_html ) . wp_kses_post( $button ) . '</span>';
-				$tab_html .= '<span class="ur-nav__link-icon">';
-				$tab_html .= ur_file_get_contents( '/assets/images/settings-icons/' . $tab . '.svg' );
-				$tab_html .= '</span>';
-				$tab_html .= '<span class="ur-nav__link-label">';
-				$tab_html .= '<p>' . esc_html( $detail['label'] ) . '</p>';
-				$tab_html .= '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="19" height="19" rx="2.5" fill="#5462FF" stroke="#5462FF"/><path d="M10 5L13 13H7L10 5Z" fill="#EFEFEF"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5 7L5.71429 13H14.2857L15 7L10 11.125L5 7ZM14.2857 13.5714H5.71427V15H14.2857V13.5714Z" fill="white"/></svg>';
-				$tab_html .= '</span>';
-				$tab_html .= '</button>';
-			}
+			return $settings;
 		}
-
-		echo $tab_html; // phpcs:ignore.WordPress.Security.EscapeOutput.OutputNotEscaped
+		return $settings;
 	}
 }
 

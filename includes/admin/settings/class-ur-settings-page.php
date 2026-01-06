@@ -220,6 +220,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 				),
 				$args
 			);
+			return apply_filters( 'user_registration_upgrade_to_pro_setting', array(), $args );
 		}
 
 		/**

@@ -46,7 +46,7 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
          */
         public function get_sections_callback( $sections ) {
             $sections[ 'general' ] = __( 'General', 'user-registration' );
-            $sections[ 'content-rules' ] = __( 'Content Rules', 'user-registration' );
+            $sections[ 'content-rules' ] = __( 'Content Restriction', 'user-registration' );
             return $sections;
         }
         /**
@@ -66,7 +66,7 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
                         'title'    => '',
                         'sections' => array(
                             'membership_settings' => array(
-                                'title'    => __( 'Membership', 'user-registration' ),
+                                'title'    => __( 'General', 'user-registration' ),
                                 'type'     => 'card',
 								'desc'     => sprintf(
 									__( '<strong>Membership page setting has moved.</strong> Configure your membership page <a href="%s">here</a>.', 'user-registration' ),
@@ -139,7 +139,7 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 			}
 
 			$sections['user_registration_content_restriction_settings'] = array(
-				'title'    => __( 'Content Rules', 'user-registration' ),
+				'title'    => __( 'Content Restriction', 'user-registration' ),
 				'type'     => 'card',
 				'settings' => array(
 					array(
