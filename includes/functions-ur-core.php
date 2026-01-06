@@ -4417,11 +4417,6 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 							$settings[ 'sections' ][ $detail[ 'plugin' ] ] = array(
 								'title' => $detail[ 'label' ],
 								'before_desc' => $description,
-								'button'      => array(
-									'button_type' => 'upgrade_link',
-									'button_link' => 'https://wpuserregistration.com/upgrade/?utm_source=ur-settings-' . $current_section . '&utm_medium=upgrade-link&utm_campaign=lite-version',
-									'button_text' => $button_text
-								),
 							);
 						} else {
 							$plugin_name = $detail[ 'name' ];
@@ -4473,11 +4468,6 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 							'before_desc' => $description,
 							'desc' => 'To unlock this setting, consider upgrading to <a href="https://wpuserregistration.com/upgrade/?utm_source=ur-settings-desc&utm_medium=upgrade-link&utm-campaign=lite-version">Pro</a>.',
 							'class' => 'ur-upgrade--link',
-							'button' => array(
-								'button_type' => 'upgrade_link',
-								'button_text' => 'Upgrade to Pro',
-								'button_link' => 'https://wpuserregistration.com/upgrade/?utm_source=ur-settings-' . $current_section . '&utm_medium=upgrade-link&utm_campaign=lite-version',
-							),
 						);
 					}
 				}

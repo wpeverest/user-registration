@@ -157,7 +157,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 
 						if ( in_array( $license_plan, $premium_tab[ $id ]['plan'], true ) ) {
 							$show_premium_icon = false;
-						} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $premium_tab['plugin'] ) && is_plugin_active( $premium_tab['plugin'] . '/' . $premium_tab['plugin'] . '.php' ) ) {
+						} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $premium_tab[ $id]['plugin'] ) && is_plugin_active( $premium_tab[$id]['plugin'] . '/' . $premium_tab[$id]['plugin'] . '.php' ) ) {
 							$show_premium_icon = false;
 						} else {
 							$show_premium_icon = true;

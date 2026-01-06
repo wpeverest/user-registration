@@ -82,7 +82,7 @@ if ( ! class_exists( 'UR_Settings_My_Account' ) ) {
 				'title'    => '',
 				'sections' => array(
 					'my_account_options' => array(
-						'title'    => __( 'My account Section', 'user-registration' ),
+						'title'    => __( 'General', 'user-registration' ),
 						'type'     => 'card',
 						'desc'     => sprintf(
 							__( '<strong>My Account page setting has moved.</strong> Configure your my account page <a href="%s">here</a>.', 'user-registration' ),
@@ -161,7 +161,7 @@ if ( ! class_exists( 'UR_Settings_My_Account' ) ) {
 				'title'    => '',
 				'sections' => array(
 					'endpoint_options' => array(
-						'title'    => __( 'Endpoints Section', 'user-registration' ),
+						'title'    => __( 'Endpoints', 'user-registration' ),
 						'type'     => 'card',
 						'desc'     => '<strong>' . __( 'Endpoints: ', 'user-registration' ) . '</strong>' . __( 'Endpoints are appended to your page URLs to handle specific actions on the accounts pages. They should be unique and can be left blank to disable the endpoint.', 'user-registration' ),
 						'settings' => array(
