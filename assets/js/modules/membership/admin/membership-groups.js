@@ -253,7 +253,11 @@
 						group_select_field = $(
 							"#ur-setting-form .ur-general-setting-membership_group"
 						);
-					group_select_field.hide();
+					group_select_field
+						.hide()
+						.find("select")
+						.prop("selectedIndex", 0)
+						.trigger("change");
 					$(
 						".ur-general-setting-membership_listing_option select"
 					).val($this.val());
@@ -539,6 +543,12 @@
 					var membership_ids = $(
 						"#ur-input-type-membership-group-memberships"
 					).val();
+
+					if ($(this).is(":checked")) {
+						$(".ur-membership-upgrade-container").show();
+					} else {
+						$(".ur-membership-upgrade-container").hide();
+					}
 
 					membership_group_object.build_upgrade_paths(
 						membership_ids,
@@ -1135,8 +1145,6 @@
 							}
 						});
 					}
-				} else {
-					$(document).find(".ur-membership-upgrade-container").hide();
 				}
 			} else {
 				$(document).find(".ur-membership-upgrade-container").hide();

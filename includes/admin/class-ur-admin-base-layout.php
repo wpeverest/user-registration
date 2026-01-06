@@ -1,8 +1,9 @@
 <?php
 /**
  * Base Page class for pages.
- *
  */
+
+use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -47,6 +48,8 @@ class UR_Base_Layout {
 
 		$show_search = $total_items > 10;
 
+		$is_membership_page = isset( $_GET['page'] ) && 'user-registration-membership' === $_GET['page'] && ! isset( $_GET['action'] ) ? true : false;
+
 		?>
 		<div id="user-registration-base-list-table-page" class="<?php echo esc_attr( $data['class'] ); ?>">
 			<div class="user-registration-base-list-table-heading" style="<?php echo( ! $show_search ? 'position:relative;margin-bottom:40px;' : '' ); ?>">
@@ -58,6 +61,22 @@ class UR_Base_Layout {
 					<?php echo esc_html( $data['add_new_label'] ); ?>
 				</a>
 				<?php endif; ?>
+				<?php if ( $is_membership_page ) : ?>
+					<?php
+					$membership_groups_repository = new MembershipGroupRepository();
+					$membership_groups            = $membership_groups_repository->get_all_membership_groups();
+
+					if ( empty( $membership_groups ) ) {
+						?>
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-membership&action=add_groups' ) ); ?>" class="page-title-action button-secondary urm-create-group-btn">
+							<?php echo esc_html( 'Create Group' ); ?>
+						</a>
+						<?php
+					}
+					?>
+					<?php
+				endif;
+				?>
 			</div>
 			<form id="<?php echo esc_attr( $data['form_id'] ); ?>" method="get" class="user-registration-base-list-table-form">
 				<input type="hidden" name="page" value="<?php echo esc_attr( $data['page'] ); ?>"/>
@@ -82,14 +101,14 @@ class UR_Base_Layout {
 		<?php
 	}
 
-	/**
-	 * Display Search Input with button
-	 *
-	 * @param $search_id
-	 * @param $placeholder
-	 *
-	 * @return void
-	 */
+		/**
+		 * Display Search Input with button
+		 *
+		 * @param $search_id
+		 * @param $placeholder
+		 *
+		 * @return void
+		 */
 	public static function display_search_field( $search_id, $placeholder ) {
 		?>
 			<input type="search" id="<?php echo esc_attr( $search_id ); ?>" name="s"
@@ -106,30 +125,30 @@ class UR_Base_Layout {
 			<?php
 	}
 
-	/**
-	 * No items found text.
-	 */
-	public static function no_items($type) {
-		$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
+		/**
+		 * No items found text.
+		 */
+	public static function no_items( $type ) {
+		$image_url    = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
 		$is_searching = ! empty( $_GET['s'] );
 
 		if ( $is_searching ) {
-			$search_value = sanitize_text_field( $_GET['s'] );
-			$primary_message = __( 'Oops, No results found.', 'user-registration' );
+			$search_value      = sanitize_text_field( $_GET['s'] );
+			$primary_message   = __( 'Oops, No results found.', 'user-registration' );
 			$secondary_message = sprintf(
-				/* translators: %s: search term */
+			/* translators: %s: search term */
 				__( 'Sorry no results found for <i>%s</i>.', 'user-registration' ),
 				esc_html( $search_value )
 			);
 		} else {
 			$primary_message = sprintf(
-				/* translators: %s: type */
+			/* translators: %s: type */
 				__( 'You don’t have any %s yet.', 'user-registration' ),
 				esc_html( $type )
 			);
 
 			$secondary_message = sprintf(
-				/* translators: %s: type */
+			/* translators: %s: type */
 				__( 'Please add %s and you’re good to go.', 'user-registration' ),
 				esc_html( strtolower( $type ) )
 			);
@@ -140,6 +159,6 @@ class UR_Base_Layout {
 			<h3><?php echo esc_html( $primary_message ); ?></h3>
 			<p><?php echo wp_kses_post( $secondary_message ); ?></p>
 		</div>
-		<?php
+			<?php
 	}
 }

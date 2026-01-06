@@ -8,6 +8,7 @@
  */
 
 use WPEverest\URMembership\Admin\Members\Members;
+use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
 use WPEverest\URMembership\Admin\Subscriptions\Subscriptions;
 use WPEverest\URMembership\Payment\Orders;
 use WPEverest\URMembership\Coupons\Coupons;
@@ -564,6 +565,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					// 3
 					// );
 
+					$membership_groups_repository = new MembershipGroupRepository();
+					$membership_groups            = $membership_groups_repository->get_all_membership_groups();
+
+				if ( ur_check_module_activation( 'membership-groups' ) || ! empty( $membership_groups ) ) {
 					add_submenu_page(
 						'user-registration',
 						__( 'Membership Groups', 'user-registration' ),
@@ -576,6 +581,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						),
 						3
 					);
+				}
 
 					// $members = new Members();
 					// add_submenu_page(
@@ -590,7 +596,12 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				// }
 			}
 
-			if ( ur_check_module_activation( 'content-restriction' ) ) {
+			$membership_rules_count = 0;
+			if ( function_exists( 'ur_get_membership_rules_count' ) ) {
+				$membership_rules_count = ur_get_membership_rules_count();
+			}
+
+			if ( ur_check_module_activation( 'content-restriction' ) || $membership_rules_count >= 2 ) {
 				$content_rules = new \URCR_Admin();
 				$content_rules->add_urcr_menus();
 			}
@@ -605,11 +616,10 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$subscription_obj->add_menu();
 			}
 
-			if ( UR_PRO_ACTIVE &&  ur_check_module_activation( 'coupon') && class_exists( 'WPEverest\URMembership\Coupons\Coupons' ) ) {
+			if ( UR_PRO_ACTIVE && ur_check_module_activation( 'coupon' ) && class_exists( 'WPEverest\URMembership\Coupons\Coupons' ) ) {
 				$coupons_obj = new Coupons();
 				$coupons_obj->add_coupons_menu();
 			}
-
 
 			$all_forms = ur_get_all_user_registration_form();
 			$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';

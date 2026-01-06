@@ -57,10 +57,10 @@
                 border-color: $primary_color;
             }
 
-            &:disabled {
-                color: $color_gray_three;
-                background: $color_gray_five;
-            }
+            // &:disabled {
+            //     color: $color_gray_three;
+            //     background: $color_gray_five;
+            // }
         }
 
         &[type="checkbox"],
@@ -74,7 +74,7 @@
                 &::before {
                     width: 8px;
                     height: 8px;
-                    margin: 3px;
+                    margin: 3.2px;
                 }
             }
         }

@@ -641,7 +641,14 @@ class AJAX {
 		}
 		$membership_group_id = absint( $_POST['membership_group_id'] );
 		$membership_service  = new MembershipGroupService();
-		$membership_service->remove_form_related_groups( array( $membership_group_id ), true );
+		$membership_group_form = $membership_service->check_if_group_used_in_form( $membership_group_id );
+		if(false === $membership_group_form){
+			wp_send_json_error(
+				array(
+					'message' => esc_html__( 'Sorry! There was an unexpected error while deleting the membership group.', 'user-registration' ),
+				)
+			);
+		}
 		$membership_group_repository = new MembershipGroupRepository();
 		$deleted                     = $membership_group_repository->delete( $membership_group_id );
 		if ( $deleted ) {
@@ -1523,7 +1530,7 @@ class AJAX {
 				$membership            = get_post( $upcoming_subscription['membership'] );
 				wp_send_json_error(
 					array(
-						'message' => apply_filters( 'urm_delayed_plan_exist_notice', __( sprintf( 'You already have a scheduled upgrade to the <b>%s</b> plan at the end of your current subscription cycle (<i><b>%s</b></i>) <br> If you\'d like to cancel this upcoming change, click the <b>Cancel Membership</b> button to proceed.', $membership->post_title, date( 'M d, Y', strtotime( $order_meta['meta_value'] ) ) ), 'user-registration' ), $membership->post_title, $order_meta['meta_value'] ),
+						'message' => apply_filters( 'urm_delayed_plan_exist_notice', __( sprintf( 'You already have a scheduled upgrade to the <b>%s</b> plan at the end of your current subscription cycle (<i><b>%s</b></i>) <br> If you\'d like to cancel this upcoming change, please proceed from my account page.', $membership->post_title, date( 'M d, Y', strtotime( $order_meta['meta_value'] ) ) ), 'user-registration' ), $membership->post_title, $order_meta['meta_value'] ),
 					)
 				);
 			}
@@ -2557,17 +2564,18 @@ class AJAX {
 		$memberships           = implode( ',', $memberships );
 		$membership_repository = new MembershipRepository();
 
-		$memberships = $membership_repository->get_multiple_membership_by_ID( $memberships );
+		$memberships = $membership_repository->get_multiple_membership_by_ID( $memberships, false );
 
-		$upgrade_paths = $membership_upgrade_service->fetch_upgrade_paths( $memberships );
+		$upgrade_paths = $membership_upgrade_service->fetch_upgrade_paths( $memberships, 'manual' );
 
 		if ( ! empty( $upgrade_paths ) ) {
-			$upgrade_paths_div = $membership_upgrade_service->build_upgrade_paths( $upgrade_paths );
+			$upgrade_paths_order = $membership_upgrade_service->build_upgrade_order( $upgrade_paths );
 
 			wp_send_json_success(
 				array(
-					'upgrade_paths'     => $upgrade_paths,
-					'upgrade_paths_div' => $upgrade_paths_div,
+					'upgrade_paths'       => $upgrade_paths,
+					'upgrade_order'       => array_keys( $upgrade_paths ),
+					'upgrade_paths_order' => $upgrade_paths_order,
 				)
 			);
 		}
