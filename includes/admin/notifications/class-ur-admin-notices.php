@@ -259,7 +259,12 @@ class UR_Admin_Notices {
 				$valid = ur_check_updation_date( $value );
 				break;
 			case 'option_exists':
-				$valid = ! empty( get_option( $value, true ) );
+				if ( 'user_registration_allow_usage_tracking' === $value ) {
+					$valid = false === ur_string_to_bool( get_option( $value, false ) );
+				} else {
+					$valid = ! empty( get_option( $value, true ) );
+				}
+
 				break;
 			case 'show_notice':
 				$valid = $value;
@@ -526,7 +531,6 @@ class UR_Admin_Notices {
 								'show_notice'   => ! ur_check_notice_already_permanent_dismissed( 'allow-usage' ),
 								'updation_days' => '1',
 								'option_exists' => 'user_registration_allow_usage_tracking',
-								'option_exists' => 'user_registration_allow_usage_notice_shown',
 							),
 						),
 					),
