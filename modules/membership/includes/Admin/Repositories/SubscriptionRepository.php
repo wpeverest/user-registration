@@ -233,6 +233,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 			$search_term      = '%' . $this->wpdb()->esc_like( $args['search'] ) . '%';
 			$prepare_values[] = $search_term;
 			$prepare_values[] = $search_term;
+			$prepare_values[] = $search_term;
 		}
 
 		$where_sql = implode( ' AND ', $where_clauses );
