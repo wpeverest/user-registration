@@ -243,8 +243,8 @@ class UR_Admin_Settings {
 				'user_registration_settings_nonce'     => wp_create_nonce( 'user_registration_settings_nonce' ),
 				'i18n_nav_warning'                     => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 				'i18n'                                 => array(
-					'advanced_logic_rules_exist_error' => esc_html__( 'Remove all rules with advance logics first before disabling.', 'user-registration' ),
-					'advanced_logic_check_error'       => esc_html__( 'An error occurred while checking for advanced logic rules.', 'user-registration' ),
+					'advanced_logic_rules_exist_error'   => esc_html__( 'Remove all rules with advance logics first before disabling.', 'user-registration' ),
+					'advanced_logic_check_error'         => esc_html__( 'An error occurred while checking for advanced logic rules.', 'user-registration' ),
 					'captcha_success'                    => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
 					'captcha_reset_title'                => esc_html__( 'Reset Keys', 'user-registration' ),
 					'i18n_prompt_reset'                  => esc_html__( 'Reset', 'user-registration' ),
@@ -279,9 +279,9 @@ class UR_Admin_Settings {
 		self::get_settings_pages();
 
 		// Get current tab/section.
-		$current_tab     = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$current_section = empty( $_REQUEST['section'] ) ? apply_filters( 'user_registration_settings_' . $current_tab . '_default_section', 'general' ) : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$current_section_part = empty( $_GET[ 'part' ] ) ? ''  : sanitize_title( wp_unslash( $_GET[ 'part' ] ) );
+		$current_tab          = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$current_section      = empty( $_REQUEST['section'] ) ? apply_filters( 'user_registration_settings_' . $current_tab . '_default_section', 'general' ) : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$current_section_part = empty( $_GET['part'] ) ? '' : sanitize_title( wp_unslash( $_GET['part'] ) );
 		/**
 		 * Filter to save settings actions
 		 *
@@ -312,7 +312,7 @@ class UR_Admin_Settings {
 		 */
 		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
 
-		$GLOBALS[ 'hide_save_button' ] = false;
+		$GLOBALS['hide_save_button'] = false;
 		if ( 'import_export' === $current_tab ) {
 			$GLOBALS['hide_save_button'] = true;
 		}
@@ -379,14 +379,14 @@ class UR_Admin_Settings {
 		$settings = '';
 
 		if ( is_array( $options ) && ! empty( $options ) ) {
-			$back_link      = isset( $options['back_link'] ) ? esc_url( $options['back_link'] ) : '';
-			$back_link_text = isset( $options['back_link_text'] ) ? wp_kses_post( $options['back_link_text'] ) : '';
+			$back_link       = isset( $options['back_link'] ) ? esc_url( $options['back_link'] ) : '';
+			$back_link_text  = isset( $options['back_link_text'] ) ? wp_kses_post( $options['back_link_text'] ) : '';
 			$back_link_style = isset( $options['back_link_style'] ) ? wp_kses_post( $options['back_link_style'] ) : '';
-			
+
 			if ( isset( $options['back_link'] ) ) {
-				$class = 'inline' === $back_link_style ? 'navigator-action' : 'page-title-action';
+				$class     = 'inline' === $back_link_style ? 'navigator-action' : 'page-title-action';
 				$settings .= '<a href="' . esc_url( $back_link ) . '" class="' . $class . '">';
-				
+
 				if ( isset( $options['back_link_text'] ) ) {
 					$settings .= wp_kses_post( $back_link_text );
 				}
@@ -427,14 +427,14 @@ class UR_Admin_Settings {
 								$settings .= $section['back_link']; // removed kses since the inputs are sanitized in the function ur_back_link itself
 							}
 							$settings .= '<h3 class="user-registration-card__title">';
-							if ( isset( $section[ 'is_premium' ] ) && $section[ 'is_premium' ] ) {
-								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png'. '" /></div>';
-							}
 							$settings .= esc_html( strtoupper( $section['title'] ) );
+							if ( isset( $section['is_premium'] ) && $section['is_premium'] ) {
+								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' . '" /></div>';
+							}
 							$settings .= '</h3>';
 
 							if ( ! empty( $section['button'] ) ) {
-								if( isset( $section[ 'button'][ 'button_type'] ) && 'upgrade_link' === $section[ 'button' ][ 'button_type' ] ) {
+								if ( isset( $section['button']['button_type'] ) && 'upgrade_link' === $section['button']['button_type'] ) {
 									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="ur-upgrade--link" target="_blank">' . '<span>' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span></a>';
 								} else {
 									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="user_registration_smart_tags_used" style="min-width:90px;" target="_blank">' . '<span style="text-decoration: underline;">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span>' . '<span class="dashicons dashicons-external"></span>' . '</a>';
@@ -985,7 +985,7 @@ class UR_Admin_Settings {
 												$checked = checked( $option_value, trim( $option_index ), false );
 											}
 
-											$settings .= '<label for="' . esc_attr( isset($args['id']) ? $args['id'] : '' ) . '_' . esc_attr( $option_text ) . '" class="radio">';
+											$settings .= '<label for="' . esc_attr( isset( $args['id'] ) ? $args['id'] : '' ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
 											if ( isset( $value['radio-group-images'] ) ) {
 												$settings .= '<img src="' . $value['radio-group-images'][ $option_index ] . '" />';
@@ -1017,7 +1017,7 @@ class UR_Admin_Settings {
 									$css                   = '';
 									$field_css             = '';
 									$btn_css               = ! empty( $value['class'] ) ? $value['class'] : '';
-									$btn_slug              = ! empty( $value[ 'slug' ] ) ? $value['slug'] : '';
+									$btn_slug              = ! empty( $value['slug'] ) ? $value['slug'] : '';
 									$btn_name              = ! empty( $value['name'] ) ? $value['name'] : '';
 									$is_connected          = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
 									$is_captcha            = in_array(
@@ -1066,10 +1066,10 @@ class UR_Admin_Settings {
 											class="button button-primary ' . esc_attr( $btn_css ) . '"
 											type="button"
 											data-id="' . esc_attr( $section['id'] ) . '"';
-									if( ! empty( $btn_slug ) ) {
+									if ( ! empty( $btn_slug ) ) {
 										$settings .= ' data-slug="' . esc_attr( $btn_slug ) . '"';
 									}
-									if( ! empty( $btn_name ) ) {
+									if ( ! empty( $btn_name ) ) {
 										$settings .= ' data-name="' . esc_attr( $btn_name ) . '"';
 									}
 									$settings .= '>' . $value['title'] . '</button>';
@@ -1631,7 +1631,7 @@ class UR_Admin_Settings {
 	public static function load_payment_modules() {
 		$modules = array();
 		include_once __DIR__ . '/settings/class-ur-settings-page.php';
-		//Always available.
+		// Always available.
 		include_once __DIR__ . '/settings/class-ur-settings-payment.php';
 		include_once __DIR__ . '/settings/class-ur-settings-membership.php';
 
