@@ -26,66 +26,66 @@ defined( 'ABSPATH' ) || exit;
 					min-height: 100vh;
 				}
 
-				a {
+				.ur-email-preview-container a {
 					pointer-events: none;
 					cursor: default;
 				}
 			</style>
 			<style type="text/css">
-			/* Responsive Email Styles */
+			/* Responsive Email Styles - Scoped to preview container only */
 			@media only screen and (max-width: 600px) {
-				.email-wrapper-outer {
+				.ur-email-preview-container .email-wrapper-outer {
 					padding: 20px 0 !important;
 				}
-				.email-wrapper-inner {
+				.ur-email-preview-container .email-wrapper-inner {
 					width: 100% !important;
 					max-width: 100% !important;
 					margin: 0 !important;
 					border-radius: 0 !important;
 				}
-				.email-header {
+				.ur-email-preview-container .email-header {
 					padding: 20px 15px !important;
 					border-radius: 0 !important;
 				}
-				.email-body {
+				.ur-email-preview-container .email-body {
 					padding: 25px 15px !important;
 				}
-				.email-footer {
+				.ur-email-preview-container .email-footer {
 					padding: 20px 15px !important;
 				}
-				.email-logo img {
+				.ur-email-preview-container .email-logo img {
 					max-width: 150px !important;
 					max-height: 50px !important;
 				}
-				.email-header-text {
+				.ur-email-preview-container .email-header-text {
 					font-size: 16px !important;
 					margin-top: 10px !important;
 				}
-				.email-footer p {
+				.ur-email-preview-container .email-footer p {
 					font-size: 12px !important;
 				}
-				.email-footer a {
+				.ur-email-preview-container .email-footer a {
 					font-size: 13px !important;
 				}
 			}
 			@media only screen and (max-width: 480px) {
-				.email-wrapper-outer {
+				.ur-email-preview-container .email-wrapper-outer {
 					padding: 10px 0 !important;
 				}
-				.email-header {
+				.ur-email-preview-container .email-header {
 					padding: 15px 10px !important;
 				}
-				.email-body {
+				.ur-email-preview-container .email-body {
 					padding: 20px 10px !important;
 				}
-				.email-footer {
+				.ur-email-preview-container .email-footer {
 					padding: 15px 10px !important;
 				}
-				.email-logo img {
+				.ur-email-preview-container .email-logo img {
 					max-width: 120px !important;
 					max-height: 40px !important;
 				}
-				.email-header-text {
+				.ur-email-preview-container .email-header-text {
 					font-size: 14px !important;
 				}
 			}
@@ -121,8 +121,10 @@ defined( 'ABSPATH' ) || exit;
 			?>
 		</head>
 		<body <?php body_class(); ?> >
+			<div class="ur-email-preview-container">
 			<?php
 				echo $processed_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
+			</div>
 		</body>
 	</html>

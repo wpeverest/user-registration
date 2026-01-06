@@ -5241,9 +5241,26 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 	 * @return string Wrapped email content.
 	 */
 	function ur_wrap_email_body_content( $body_content ) {
-		// Responsive CSS styles for email template.
-		$responsive_styles = '<style type="text/css">
-	/* Responsive Email Styles */
+		// Check if we're in editor context - exclude CSS when displaying editor on settings page.
+		// Include CSS for preview, email sending, cron, CLI, and AJAX email actions.
+		$is_preview = isset( $_GET['ur_email_preview'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$current_screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		$is_settings_page = $current_screen && 'user-registration_page_user-registration-settings' === $current_screen->id;
+		$is_email_action = isset( $_REQUEST['action'] ) && ( 
+			'ur_send_test_email' === $_REQUEST['action'] || 
+			strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		);
+		
+		// Only exclude CSS when on settings page displaying editor (not when sending emails).
+		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action && 
+		                     ! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) && 
+		                     ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
+		
+		// Responsive CSS styles for email template - only include when not in editor context.
+		$responsive_styles = '';
+		if ( ! $is_editor_context ) {
+			$responsive_styles = '<style type="text/css">
+	/* Responsive Email Styles - Scoped to email wrapper only */
 	@media only screen and (max-width: 600px) {
 		.email-wrapper-outer {
 			padding: 20px 0 !important;
@@ -5301,6 +5318,7 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 		}
 	}
 </style>';
+		}
 
 		// Check if this is a preview and set width to 600px.
 		$is_preview  = isset( $_GET['ur_email_preview'] ) && 'email_template_option' === sanitize_text_field( wp_unslash( $_GET['ur_email_preview'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -5311,6 +5329,51 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 	<div class="email-wrapper-outer" style="font-family: Arial, sans-serif; padding: 100px 0;">
 	<div class="email-wrapper-inner" style="width: ' . esc_attr( $email_width ) . '; max-width: ' . esc_attr( $max_width ) . '; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
 	<div class="email-body" style="padding: 30px; background-color: #ffffff;">' . $body_content . '</div></div></div>';
+	}
+}
+
+if ( ! function_exists( 'ur_unwrap_email_body_content' ) ) {
+	/**
+	 * Unwrap email body content by removing wrapper HTML and style tags.
+	 * Used when loading email content into the editor.
+	 *
+	 * @param string $wrapped_content Wrapped email content.
+	 *
+	 * @return string Unwrapped email content.
+	 */
+	function ur_unwrap_email_body_content( $wrapped_content ) {
+		if ( empty( $wrapped_content ) ) {
+			return $wrapped_content;
+		}
+
+		$content = $wrapped_content;
+
+		// Remove style tags (including those with type="text/css").
+		$content = preg_replace( '/<style[^>]*>.*?<\/style>/is', '', $content );
+
+		// Check if content contains email wrapper structure.
+		if ( strpos( $content, 'email-wrapper-outer' ) !== false || strpos( $content, 'email-body' ) !== false ) {
+			// Pattern to match: <div...class="...email-body...">CONTENT</div> followed by closing divs
+			// Use a pattern that matches the email-body div and extracts its content.
+			if ( preg_match( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>(.*)<\/div>\s*<\/div>\s*<\/div>/is', $content, $matches ) ) {
+				$content = $matches[1];
+			} elseif ( preg_match( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>(.*?)<\/div>/is', $content, $matches ) ) {
+				// Fallback: just get content from email-body div (may have nested divs).
+				$content = $matches[1];
+			} else {
+				// Last resort: Remove wrapper divs manually.
+				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-wrapper-outer[^"\']*["\'][^>]*>/is', '', $content );
+				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-wrapper-inner[^"\']*["\'][^>]*>/is', '', $content );
+				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>/is', '', $content );
+				// Remove closing divs at the end (up to 3 closing divs).
+				$content = preg_replace( '/(<\/div>\s*){1,3}\s*$/is', '', $content );
+			}
+		}
+
+		// Clean up any extra whitespace.
+		$content = trim( $content );
+
+		return $content;
 	}
 }
 
@@ -8800,6 +8863,11 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					);
 
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
+
+					// Unwrap email content if it contains wrapper HTML (for editor display).
+					if ( function_exists( 'ur_unwrap_email_body_content' ) ) {
+						$option_value = ur_unwrap_email_body_content( $option_value );
+					}
 
 					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';

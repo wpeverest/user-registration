@@ -87,7 +87,14 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 					$method_name = 'user_registration_get_' . $email->id;
 				}
 				$key = strtolower( $key );
-				$email_content_default_values[ $key ] = method_exists($email, $method_name) ? $email->$method_name() : '';
+				$default_content = method_exists($email, $method_name) ? $email->$method_name() : '';
+				
+				// Unwrap email content for editor display (remove wrapper HTML and style tags).
+				if ( function_exists( 'ur_unwrap_email_body_content' ) && ! empty( $default_content ) ) {
+					$default_content = ur_unwrap_email_body_content( $default_content );
+				}
+				
+				$email_content_default_values[ $key ] = $default_content;
 			}
 			wp_localize_script(
 				'user-registration-settings',
