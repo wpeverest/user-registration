@@ -1306,6 +1306,7 @@ function urcr_migrate_post_page_restrictions() {
 		// Delete urcr_meta_checkbox meta for each migrated post/page
 		foreach ( $new_migrated_ids as $post_id ) {
 			delete_post_meta( $post_id, 'urcr_meta_checkbox' );
+			update_post_meta( $post_id, 'urcr_migrated_rule_id', $rule_id );
 		}
 
 		// Update migrated IDs

@@ -96,7 +96,7 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 
 		add_meta_box(
 			'urcr-meta-box',
-			__( 'Restrict This Content', 'user-registration' ),
+			__( 'Restrict This Content (Legacy)', 'user-registration' ),
 			array( $this, 'render_metabox' ),
 			array( 'post', 'page' ),
 			'advanced',
@@ -130,7 +130,7 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 		$has_checkbox = get_post_meta( $post->ID, 'urcr_meta_checkbox', true ) === 'on';
 		$is_migrated = in_array( $post->ID, $migrated_ids, true );
 
-		if ( $has_checkbox && ! $is_migrated ) {
+		if ( $has_checkbox && ! $is_migrated || $is_migrated) {
 			return true; // Show metabox for posts with checkbox that haven't been migrated
 		}
 
@@ -148,73 +148,81 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 	 * Renders the meta box.
 	 */
 	public function render_metabox( $post ) {
+		// Get migrated post/page IDs
+		$migrated_ids = get_option( 'urcr_migrated_post_page_ids', array() );
+		$is_migrated = in_array( $post->ID, $migrated_ids, true );
 
-		echo '<p>' . esc_html__( 'Use shortcode [urcr_restrict]....[/urcr_restrict] to restrict partial contents.', 'user-registration' ) . '</p>';
-		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
+		if( $is_migrated ) {
+//			$get_rule =
+		} else{
+			echo '<p>' . esc_html__( 'Use shortcode [urcr_restrict]....[/urcr_restrict] to restrict partial contents.', 'user-registration' ) . '</p>';
+			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
-		$this->ur_metabox_checkbox(
-			array(
-				'id'       => 'urcr_meta_checkbox',
-				'label'    => 'Restrict Access to This Page/Post',
-				'type'     => 'Checkbox',
-				'disabled' => $whole_site_access_restricted ? true : false,
-			)
-		);
+			$this->ur_metabox_checkbox(
+				array(
+					'id'       => 'urcr_meta_checkbox',
+					'label'    => 'Restrict Access to This Page/Post',
+					'type'     => 'Checkbox',
+					'disabled' => $whole_site_access_restricted ? true : false,
+				)
+			);
 
-		if ( $whole_site_access_restricted ) {
-			echo '<p class="notice notice-info " style="padding: 10px; margin: -10px 0 0 0;">' . sprintf( __( 'Currently this setting is disabled and will not work because whole site restriction is enabled in <a href="%s" target="_blank" style="text-decoration:underline;" >global restriction settings</a>', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) ) . '</p>';
-		} else {
-			echo '<p style="margin: -10px 0 0 0;">' . sprintf( __( 'When enabled, the page/post will be restricted as per the <a href="%s" target="_blank" style="text-decoration:underline;" >global restriction settings</a>', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) ) . '</p>';
+			if ( $whole_site_access_restricted ) {
+				echo '<p class="notice notice-info " style="padding: 10px; margin: -10px 0 0 0;">' . sprintf( __( 'Currently this setting is disabled and will not work because whole site restriction is enabled in <a href="%s" target="_blank" style="text-decoration:underline;" >global restriction settings</a>', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) ) . '</p>';
+			} else {
+				echo '<p style="margin: -10px 0 0 0;">' . sprintf( __( 'When enabled, the page/post will be restricted as per the <a href="%s" target="_blank" style="text-decoration:underline;" >global restriction settings</a>', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) ) . '</p>';
+			}
+
+			$this->ur_metabox_checkbox(
+				array(
+					'id'    => 'urcr_meta_override_global_settings',
+					'label' => 'Override Global Settings:',
+					'type'  => 'Checkbox',
+				)
+			);
+			echo '<p  style="margin: -10px 0 0 0;">' . sprintf( __( 'Set custom restriction setting for this page/post, overriding the <a href="%s" target="_blank" style="text-decoration:underline;" >global restriction settings</a>', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) ) . '</p>';
+
+			$this->ur_metabox_select(
+				array(
+					'id'      => 'urcr_allow_to',
+					'label'   => __( 'Allow Access To: ', 'user-registration' ),
+					'options' => array( 'All Logged In Users', 'Choose Specific Roles', 'Guest Users', 'Memberships' ),
+					'desc'    => __( 'Only select this if you want to override global setting for allow option', 'user-registration' ),
+					'class'   => 'ur-enhanced-select',
+				)
+			);
+
+			$this->ur_metabox_multiple_select(
+				array(
+					'id'      => 'urcr_meta_roles[]',
+					'label'   => __( 'Allow Access To Roles: ', 'user-registration' ),
+					'options' => ur_get_all_roles(),
+					'desc'    => __( 'Only select this if you want to override global setting for access roles', 'user-registration' ),
+					'class'   => 'ur-enhanced-select',
+				)
+			);
+
+			$this->ur_metabox_multiple_select(
+				array(
+					'id'      => 'urcr_meta_memberships[]',
+					'label'   => __( 'Allow Access To Memberships: ', 'user-registration' ),
+					'options' => get_active_membership_id_name(),
+					'desc'    => __( 'Only select this if you want to override global setting for membership', 'user-registration' ),
+					'class'   => 'ur-enhanced-select',
+				)
+			);
+
+			$this->ur_metabox_textarea(
+				array(
+					'id'      => 'urcr_meta_content',
+					'label'   => __( 'Restricted Content Message: ', 'user-registration' ),
+					'desc'    => __( 'Enter the message to show to users who do not have access to this content.', 'user-registration' ),
+					'type'   => 'tinymce',
+					'default' =>  __( 'This content is restricted!', 'user-registration' ),
+				)
+			);
 		}
 
-		$this->ur_metabox_checkbox(
-			array(
-				'id'    => 'urcr_meta_override_global_settings',
-				'label' => 'Override Global Settings:',
-				'type'  => 'Checkbox',
-			)
-		);
-		echo '<p  style="margin: -10px 0 0 0;">' . sprintf( __( 'Set custom restriction setting for this page/post, overriding the <a href="%s" target="_blank" style="text-decoration:underline;" >global restriction settings</a>', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) ) . '</p>';
-
-		$this->ur_metabox_select(
-			array(
-				'id'      => 'urcr_allow_to',
-				'label'   => __( 'Allow Access To: ', 'user-registration' ),
-				'options' => array( 'All Logged In Users', 'Choose Specific Roles', 'Guest Users', 'Memberships' ),
-				'desc'    => __( 'Only select this if you want to override global setting for allow option', 'user-registration' ),
-				'class'   => 'ur-enhanced-select',
-			)
-		);
-
-		$this->ur_metabox_multiple_select(
-			array(
-				'id'      => 'urcr_meta_roles[]',
-				'label'   => __( 'Allow Access To Roles: ', 'user-registration' ),
-				'options' => ur_get_all_roles(),
-				'desc'    => __( 'Only select this if you want to override global setting for access roles', 'user-registration' ),
-				'class'   => 'ur-enhanced-select',
-			)
-		);
-
-		$this->ur_metabox_multiple_select(
-			array(
-				'id'      => 'urcr_meta_memberships[]',
-				'label'   => __( 'Allow Access To Memberships: ', 'user-registration' ),
-				'options' => get_active_membership_id_name(),
-				'desc'    => __( 'Only select this if you want to override global setting for membership', 'user-registration' ),
-				'class'   => 'ur-enhanced-select',
-			)
-		);
-
-		$this->ur_metabox_textarea(
-			array(
-				'id'      => 'urcr_meta_content',
-				'label'   => __( 'Restricted Content Message: ', 'user-registration' ),
-				'desc'    => __( 'Enter the message to show to users who do not have access to this content.', 'user-registration' ),
-				'type'   => 'tinymce',
-				'default' =>  __( 'This content is restricted!', 'user-registration' ),
-			)
-		);
 
 		do_action( 'render_metabox_complete' );
 	}
