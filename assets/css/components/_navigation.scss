@@ -382,6 +382,11 @@
 
                 a {
                     order: 1;
+
+                    &.ur-help--link {
+                        font-size: 14px;
+                        line-height: 18px;
+                    }
                 }
 
                 .ur-version-tag-separator {

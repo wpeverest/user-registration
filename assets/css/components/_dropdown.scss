@@ -169,6 +169,10 @@
             }
         }
     }
+
+    >.select2-container {
+        width: auto !important;
+    }
 }
 
 body.user-registration {
