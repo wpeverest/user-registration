@@ -66,11 +66,11 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 		}
 	}
 
-	public function register_styles() {
+	public function register_styles( $hook ) {
 		// enqueue styles here.
 		$screen    = get_current_screen();
 		$screen_id = $screen ? $screen->id : '';
-		if ( in_array( $screen_id, ur_get_screen_ids(), true ) ) {
+		if ( in_array( $screen_id, ur_get_screen_ids(), true ) || $hook == 'post-new.php' || $hook == 'post.php' ) {
 			wp_enqueue_style( 'select2' );
 		}
 	}
@@ -145,6 +145,35 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 	}
 
 	/**
+	 * Renders the migration notice for migrated posts/pages.
+	 *
+	 * @param int|string $migrated_rule_id The ID of the migrated content access rule.
+	 */
+	private function render_migration_notice( $migrated_rule_id = '') {
+		$message          = esc_html__( "This page's restriction has been converted to a Content Rule. Manage it with your other rules in the Content Rules screen.", 'user-registration' );
+		$link_text        = esc_html__( 'View Content Rule', 'user-registration' );
+		$sub_notice = esc_html__( 'This setting will be removed in a future version.', 'user-registration' );
+
+		if ( ! empty( $migrated_rule_id ) ) {
+			$content_rules_url = admin_url( 'admin.php?page=user-registration-content-restriction&id=' . absint( $migrated_rule_id ) );
+		} else {
+			$message          = esc_html__( "This page uses custom restriction settings. We recommend switching to Content Rules for centralized management.", 'user-registration' );
+			$content_rules_url = admin_url( 'admin.php?page=user-registration-content-restriction' );
+			$link_text        = esc_html__( 'Manage Content Rules', 'user-registration' );
+		}
+
+		echo '<div class="user-registration-notice">';
+		echo '<div class=" user-registration-notice-text">';
+		echo '<p><strong>' . esc_html( $message ) . '</strong></p>';
+		echo '<p><a target="_blank" href="' . esc_url( $content_rules_url ) . '">' . esc_html( $link_text ) . '</a></p>';
+		if( ! empty( $migrated_rule_id )) {
+			echo '<p class="ur-notice-subtitle">' . esc_html( $sub_notice ) . '</p>';
+		}
+		echo '</div>';
+		echo '</div>';
+	}
+
+	/**
 	 * Renders the meta box.
 	 */
 	public function render_metabox( $post ) {
@@ -153,25 +182,22 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 		$is_migrated = in_array( $post->ID, $migrated_ids, true );
 
 		if( $is_migrated ) {
-//			$get_rule =
+			$migrated_rule_id = get_post_meta( $post->ID, 'urcr_migrated_rule_id', true );
+			$this->render_migration_notice( $migrated_rule_id );
 		} else{
-			echo '<p>' . esc_html__( 'Use shortcode [urcr_restrict]....[/urcr_restrict] to restrict partial contents.', 'user-registration' ) . '</p>';
-			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
+			$this->render_migration_notice();
 
 			$this->ur_metabox_checkbox(
 				array(
 					'id'       => 'urcr_meta_checkbox',
 					'label'    => 'Restrict Access to This Page/Post',
 					'type'     => 'Checkbox',
-					'disabled' => $whole_site_access_restricted ? true : false,
+					'disabled' => false,
 				)
 			);
 
-			if ( $whole_site_access_restricted ) {
-				echo '<p class="notice notice-info " style="padding: 10px; margin: -10px 0 0 0;">' . sprintf( __( 'Currently this setting is disabled and will not work because whole site restriction is enabled in <a href="%s" target="_blank" style="text-decoration:underline;" >global restriction settings</a>', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) ) . '</p>';
-			} else {
-				echo '<p style="margin: -10px 0 0 0;">' . sprintf( __( 'When enabled, the page/post will be restricted as per the <a href="%s" target="_blank" style="text-decoration:underline;" >global restriction settings</a>', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) ) . '</p>';
-			}
+
+
 
 			$this->ur_metabox_checkbox(
 				array(
@@ -180,7 +206,7 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 					'type'  => 'Checkbox',
 				)
 			);
-			echo '<p  style="margin: -10px 0 0 0;">' . sprintf( __( 'Set custom restriction setting for this page/post, overriding the <a href="%s" target="_blank" style="text-decoration:underline;" >global restriction settings</a>', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) ) . '</p>';
+			echo '<p  style="margin: -10px 0 0 0;">' . sprintf( __( 'When enabled, the settings below will restrict access to this page. When disabled, only Content Rules will apply.', 'user-registration' ), admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) ) . '</p>';
 
 			$this->ur_metabox_select(
 				array(
