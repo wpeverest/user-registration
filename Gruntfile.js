@@ -109,72 +109,27 @@ module.exports = function (grunt) {
 				]
 			},
 			vendor: {
-				// files: {
-				// 	"<%= dirs.js %>/inputmask/jquery.inputmask.bundle.min.js": [
-				// 		"<%= dirs.js %>/inputmask/jquery.inputmask.bundle.js"
-				// 	],
-				// 	"<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.min.js":
-				// 		[
-				// 			"<%= dirs.js %>/jquery-blockui/jquery.jquery.blockUI.js"
-				// 		],
-				// 	"<%= dirs.js %>/tooltipster/tooltipster.bundle.min.js": [
-				// 		"<%= dirs.js %>/tooltipster/tooltipster.bundle.js"
-				// 	],
-				// 	"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.min.js":
-				// 		[
-				// 			"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.js"
-				// 		],
-				// 	"<%= dirs.js %>/selectWoo/selectWoo.min.js": [
-				// 		"<%= dirs.js %>/selectWoo/selectWoo.js"
-				// 	],
-				// 	"<%= dirs.js %>/sweetalert2/sweetalert2.min.js": [
-				// 		"<%= dirs.js %>/sweetalert2/sweetalert2.js"
-				// 	]
-				// }
-				files: [
-					{
-						expand: true,
-						cwd: "<%= dirs.js %>/inputmask/",
-						src: ["jquery.inputmask.bundle.js"],
-						dest: "<%= dirs.js %>/inputmask/",
-						ext: ".min.js"
-					},
-					{
-						expand: true,
-						cwd: "<%= dirs.js %>/jquery-blockui/",
-						src: ["jquery.jquery.blockUI.js"],
-						dest: "<%= dirs.js %>/jquery-blockui/",
-						ext: ".min.js"
-					},
-					{
-						expand: true,
-						cwd: "<%= dirs.js %>/tooltipster/",
-						src: ["tooltipster.bundle.js"],
-						dest: "<%= dirs.js %>/tooltipster/",
-						ext: ".min.js"
-					},
-					{
-						expand: true,
-						cwd: "<%= dirs.js %>/perfect-scrollbar/",
-						src: ["perfect-scrollbar.js"],
-						dest: "<%= dirs.js %>/perfect-scrollbar/",
-						ext: ".min.js"
-					},
-					{
-						expand: true,
-						cwd: "<%= dirs.js %>/selectWoo/",
-						src: ["selectWoo.js"],
-						dest: "<%= dirs.js %>/selectWoo/",
-						ext: ".min.js"
-					},
-					{
-						expand: true,
-						cwd: "<%= dirs.js %>/sweetalert2/",
-						src: ["sweetalert2.js"],
-						dest: "<%= dirs.js %>/sweetalert2/",
-						ext: ".min.js"
-					}
-				]
+				files: {
+					"<%= dirs.js %>/inputmask/jquery.inputmask.bundle.min.js": [
+						"<%= dirs.js %>/inputmask/jquery.inputmask.bundle.js"
+					],
+					"<%= dirs.js %>/jquery-blockui/jquery.blockUI.min.js": [
+						"<%= dirs.js %>/jquery-blockui/jquery.blockUI.js"
+					],
+					"<%= dirs.js %>/tooltipster/tooltipster.bundle.min.js": [
+						"<%= dirs.js %>/tooltipster/tooltipster.bundle.js"
+					],
+					"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.min.js":
+						[
+							"<%= dirs.js %>/perfect-scrollbar/perfect-scrollbar.js"
+						],
+					"<%= dirs.js %>/selectWoo/selectWoo.min.js": [
+						"<%= dirs.js %>/selectWoo/selectWoo.js"
+					],
+					"<%= dirs.js %>/sweetalert2/sweetalert2.min.js": [
+						"<%= dirs.js %>/sweetalert2/sweetalert2.js"
+					]
+				}
 			}
 		},
 		sass: {
