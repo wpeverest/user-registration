@@ -245,6 +245,8 @@ class UR_Admin_Settings {
 				'i18n'                                 => array(
 					'advanced_logic_rules_exist_error'   => esc_html__( 'Remove all rules with advance logics first before disabling.', 'user-registration' ),
 					'advanced_logic_check_error'         => esc_html__( 'An error occurred while checking for advanced logic rules.', 'user-registration' ),
+					'advanced_logic_rules_exist_error'   => esc_html__( 'Remove all rules with advance logics first before disabling.', 'user-registration' ),
+					'advanced_logic_check_error'         => esc_html__( 'An error occurred while checking for advanced logic rules.', 'user-registration' ),
 					'captcha_success'                    => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
 					'captcha_reset_title'                => esc_html__( 'Reset Keys', 'user-registration' ),
 					'i18n_prompt_reset'                  => esc_html__( 'Reset', 'user-registration' ),
@@ -427,7 +429,7 @@ class UR_Admin_Settings {
 								$settings .= $section['back_link']; // removed kses since the inputs are sanitized in the function ur_back_link itself
 							}
 							$settings .= '<h3 class="user-registration-card__title">';
-							$settings .= esc_html( ucwords( $section['title'] ) );
+							$settings .= esc_html( strtoupper( $section['title'] ) );
 
 							if ( isset( $section['is_premium'] ) && $section['is_premium'] ) {
 								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' . '" /></div>';
