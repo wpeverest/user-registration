@@ -8,6 +8,8 @@
  * @version 1.2.0
  */
 
+use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -399,5 +401,33 @@ function ur_update_322_option_migrate() {
 
 	if ( $activation_date && $current_date >= $days_to_validate ) {
 		update_option( 'user_registration_quick_setup_completed', true );
+	}
+}
+
+/**
+ * URM v5.0 migration functions.
+ *
+ * @return void
+ */
+function urm_update_50_option_migrate() {
+
+	$all_forms = ur_get_all_user_registration_form();
+	if ( count( $all_forms ) > 1 ) {
+		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+		if ( ! isset( $enabled_features['user-registration-multiple-registration'] ) ) {
+			$enabled_features[] = 'user-registration-multiple-registration';
+			update_option( 'user_registration_enabled_features', $enabled_features );
+		}
+	}
+
+	$membership_groups_repository = new MembershipGroupRepository();
+	$all_groups                   = $membership_groups_repository->get_all_membership_groups();
+
+	if ( count( $all_groups ) > 0 ) {
+		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+		if ( ! isset( $enabled_features['user-registration-membership-groups'] ) ) {
+			$enabled_features[] = 'user-registration-membership-groups';
+			update_option( 'user_registration_enabled_features', $enabled_features );
+		}
 	}
 }

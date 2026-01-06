@@ -118,7 +118,7 @@
 				timeout = form_response.data.redirect_timeout
 					? form_response.data.redirect_timeout
 					: 2000;
-				var originalRedirectUrl = redirect_url;
+			var originalRedirectUrl = redirect_url;
 
 			if ("undefined" !== typeof response_data.role_based_redirect_url) {
 				redirect_url = response_data.role_based_redirect_url;
@@ -147,7 +147,7 @@
 					window.location = redirect_url;
 				}, timeout);
 
-				if ( '' != originalRedirectUrl ) {
+				if ("" != originalRedirectUrl) {
 					return;
 				}
 			} else {
@@ -178,30 +178,36 @@
 				);
 			}
 
-			$registration_form.find("form")[0].reset();
-			var wrapper = $(
-				'<div class="ur-message user-registration-message" id="ur-submit-message-node"/>'
-			);
-			wrapper.append(message);
+			var searchParams = new URLSearchParams(window.location.search),
+				action = searchParams.get("action");
 
-			// Check the position set by the admin and append message accordingly.
-			if ("1" === success_message_position) {
-				$registration_form.find("form").append(wrapper);
-				$(window).scrollTop(
-					$registration_form
-						.find("form")
-						.find(".ur-button-container")
-						.offset().top
+			if (action === "register" || null === action) {
+				$registration_form.find("form")[0].reset();
+				var wrapper = $(
+					'<div class="ur-message user-registration-message" id="ur-submit-message-node"/>'
 				);
-			} else {
-				$registration_form.find("form").prepend(wrapper);
-				$(window).scrollTop(
-					$registration_form
-						.find("form")
-						.closest(".ur-frontend-form")
-						.offset().top
-				);
+				wrapper.append(message);
+
+				// Check the position set by the admin and append message accordingly.
+				if ("1" === success_message_position) {
+					$registration_form.find("form").append(wrapper);
+					$(window).scrollTop(
+						$registration_form
+							.find("form")
+							.find(".ur-button-container")
+							.offset().top
+					);
+				} else {
+					$registration_form.find("form").prepend(wrapper);
+					$(window).scrollTop(
+						$registration_form
+							.find("form")
+							.closest(".ur-frontend-form")
+							.offset().top
+					);
+				}
 			}
+
 			$registration_form
 				.find("form")
 				.find(".ur-submit-button")
@@ -474,12 +480,8 @@
 			prepare_members_data,
 			form_response
 		) {
-			if (
-				response.data.is_upgrading ||
-				response.data.is_renewing ||
-				response.data.is_purchasing_multiple
-			) {
-				window.location.replace(urmf_data.membership_endpoint_url);
+			if (response.data.is_renewing) {
+				window.location.replace(response.data.redirect);
 			} else {
 				var bank_data = {
 					transaction_id: response.data.transaction_id,
@@ -2539,10 +2541,24 @@
 				});
 			}
 
-			$(".view-bank-data").on("click", function () {
+			$(document).on("click", ".view-bank-data", function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+
+				jQuery(".user-registration-help-tip.tooltipstered").tooltipster(
+					"close"
+				);
+
+				const html =
+					jQuery(this)
+						.closest(".tooltipster-box")
+						.find(".upgrade-info")
+						.html() ||
+					jQuery(this).siblings(".upgrade-info").html();
+
 				Swal.fire({
 					title: urmf_data.labels.i18n_bank_details_title,
-					html: $(".upgrade-info").html(),
+					html: html,
 					customClass:
 						"user-registration-upgrade-membership-swal2-container",
 					showCancelButton: false,

@@ -86,7 +86,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					example_name:
 						'[user_registration_login redirect_url="https://wpuserregistration.com"]',
 					example_description: __(
-						"Redirects to User Registration website after login.",
+						"Redirects to User Registration & Membership website after login.",
 						"user-registration"
 					)
 				}
@@ -141,7 +141,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					example_name:
 						'[user_registration_my_account redirect_url="https://wpuserregistration.com" logout_redirect="https://everestforms.net"]',
 					example_description: __(
-						"Redirects to the User Registration website on login and redirects to the Everest Forms website after user logout.",
+						"Redirects to the User Registration & Membership website on login and redirects to the Everest Forms website after user logout.",
 						"user-registration"
 					)
 				}
@@ -168,7 +168,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				"user-registration"
 			),
 			requires: __(
-				"Requires User Registration Pro to be activated.",
+				"Requires User Registration & Membership Pro to be activated.",
 				"user-registration"
 			)
 		},
@@ -199,7 +199,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				{
 					example_name: '[user_registration_popup id="1"]',
 					example_description: __(
-						"Displays user registration popup with id 1",
+						"Displays User Registration & Membership popup with id 1",
 						"user-registration"
 					)
 				},
@@ -212,7 +212,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				}
 			],
 			requires: __(
-				"Requires User Registration Pro to be activated.",
+				"Requires User Registration & Membership Pro to be activated.",
 				"user-registration"
 			)
 		},
@@ -242,7 +242,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				}
 			],
 			requires: __(
-				"Requires User Registration Pro to be activated.",
+				"Requires User Registration & Membership Pro to be activated.",
 				"user-registration"
 			)
 		},
@@ -272,7 +272,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				}
 			],
 			requires: __(
-				"Requires User Registration Pro to be activated.",
+				"Requires User Registration & Membership Pro to be activated.",
 				"user-registration"
 			)
 		},
@@ -283,7 +283,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				"user-registration"
 			),
 			requires: __(
-				"Requires User Registration Pro and User Registration PDF Form Submission add-on to be activated.",
+				"Requires User Registration & Membership Pro and PDF Form Submission add-on to be activated.",
 				"user-registration"
 			)
 		},

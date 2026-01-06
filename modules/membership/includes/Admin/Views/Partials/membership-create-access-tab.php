@@ -11,40 +11,43 @@
 ?>
 <div class="user-registration-card__body">
 	<div id="ur-membership-access-section" class="urcr-membership-access-section"
-		 data-rule-data="<?php echo isset( $membership_rule_data ) ? esc_attr( wp_json_encode( $membership_rule_data ) ) : ''; ?>">
+		data-rule-data="<?php echo isset( $membership_rule_data ) ? esc_attr( wp_json_encode( $membership_rule_data ) ) : ''; ?>">
 		<div class="urcr-rule-content-panel">
 			<div class="urcr-content-group">
 				<div class="urcr-rule-body ur-p-2">
 					<div class="urcr-condition-row-parent">
 						<div class="urcr-conditions-list">
-							<?php if ( empty( $membership_id ) ): ?>
+							<?php if ( empty( $membership_id ) ) : ?>
 								<label class="urcr-label-container">
 									<span
 										class="urcr-target-content-label"><?php esc_html_e( 'Access', 'user-registration' ); ?></span>
 									<span class="user-registration-help-tip tooltipstered"
-										  data-tip="<?php esc_attr_e( 'Select content to give access to this plan.', 'user-registration' ); ?>"></span>
+											data-tip="<?php esc_attr_e( 'Select content to give access to this plan.', 'user-registration' ); ?>"></span>
 								</label>
 							<?php endif; ?>
 
 							<?php
 							// Render conditions if rule data exists
 							if ( isset( $membership_rule_data ) && $membership_rule_data &&
-								 isset( $membership_rule_data['logic_map'] ) &&
-								 isset( $membership_rule_data['logic_map']['conditions'] ) &&
-								 ! empty( $membership_rule_data['logic_map']['conditions'] ) ) {
+								isset( $membership_rule_data['logic_map'] ) &&
+								isset( $membership_rule_data['logic_map']['conditions'] ) &&
+								! empty( $membership_rule_data['logic_map']['conditions'] ) ) {
 								$conditions = $membership_rule_data['logic_map']['conditions'];
 
 								// Sort conditions to ensure membership is first
-								usort( $conditions, function ( $a, $b ) {
-									if ( isset( $a['type'] ) && $a['type'] === 'membership' ) {
-										return - 1;
-									}
-									if ( isset( $b['type'] ) && $b['type'] === 'membership' ) {
-										return 1;
-									}
+								usort(
+									$conditions,
+									function ( $a, $b ) {
+										if ( isset( $a['type'] ) && $a['type'] === 'membership' ) {
+											return - 1;
+										}
+										if ( isset( $b['type'] ) && $b['type'] === 'membership' ) {
+											return 1;
+										}
 
-									return 0;
-								} );
+										return 0;
+									}
+								);
 
 								// Render all conditions including the first membership condition
 								// First condition (membership) should be non-editable
@@ -185,17 +188,17 @@
 										$action_message,
 										'urcr-membership-action-message',
 										array(
-											'textarea_name'                    => 'urcr_action_message',
-											'textarea_rows'                    => 20,
-											'media_buttons'                    => true,
-											'quicktags'                        => false,
-											'teeny'                            => false,
-											'show-reset-content-button'        => false,
+											'textarea_name' => 'urcr_action_message',
+											'textarea_rows' => 20,
+											'media_buttons' => true,
+											'quicktags' => false,
+											'teeny'     => false,
+											'show-reset-content-button' => false,
 											'show-ur-registration-form-button' => false,
-											'tinymce'                          => array(
-												'toolbar1'  => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
+											'tinymce'   => array(
+												'toolbar1' => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
 												'statusbar' => false,
-												'plugins'   => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
+												'plugins'  => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
 											),
 										)
 									);
@@ -212,8 +215,8 @@
 								</label>
 								<div class="urcr-body">
 									<input type="url" class="urcr-input urcr-action-redirect-url"
-										   value="<?php echo isset( $membership_rule_data['actions'][0]['redirect_url'] ) ? esc_attr( $membership_rule_data['actions'][0]['redirect_url'] ) : ''; ?>"
-										   placeholder="<?php esc_attr_e( 'Enter a URL to redirect to...', 'user-registration' ); ?>"/>
+											value="<?php echo isset( $membership_rule_data['actions'][0]['redirect_url'] ) ? esc_attr( $membership_rule_data['actions'][0]['redirect_url'] ) : ''; ?>"
+											placeholder="<?php esc_attr_e( 'Enter a URL to redirect to...', 'user-registration' ); ?>"/>
 								</div>
 							</div>
 
@@ -245,7 +248,7 @@
 								class="urcr-title-body-pair urcr-action-input-container urcrra-ur-form-input-container ">
 								<label class="urcr-label-container">
 									<span
-										class="urcr-target-content-label"><?php esc_html_e( 'Display User Registration Form', 'user-registration' ); ?></span>
+										class="urcr-target-content-label"><?php esc_html_e( 'Display User Registration & Membership Form', 'user-registration' ); ?></span>
 								</label>
 								<div class="urcr-body">
 									<select class="urcr-input urcr-action-ur-form user-membership-enhanced-select2">
@@ -289,8 +292,8 @@
 											?>
 										</select>
 										<input type="text" class="urcr-input urcr-action-shortcode-args"
-											   value="<?php echo isset( $membership_rule_data['actions'][0]['shortcode']['args'] ) ? esc_attr( $membership_rule_data['actions'][0]['shortcode']['args'] ) : ''; ?>"
-											   placeholder='<?php esc_attr_e( 'Enter shortcode arguments here. Eg: id="345"', 'user-registration' ); ?>'/>
+												value="<?php echo isset( $membership_rule_data['actions'][0]['shortcode']['args'] ) ? esc_attr( $membership_rule_data['actions'][0]['shortcode']['args'] ) : ''; ?>"
+												placeholder='<?php esc_attr_e( 'Enter shortcode arguments here. Eg: id="345"', 'user-registration' ); ?>'/>
 									</div>
 								</div>
 							</div>
@@ -306,4 +309,3 @@
 		<input type="hidden" id="urcr-membership-access-rule-data" name="urcr_membership_access_rule_data" value="">
 	</div>
 </div>
-

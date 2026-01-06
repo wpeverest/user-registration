@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="notice notice-warning is-dismissible" id="user-registration-php-deprecation-notice">
 	<p>
 		<strong><?php esc_html_e( 'Warning!', 'user-registration' ); ?></strong>
-		<?php _e( "Your website is running on an outdated version of PHP ( v$php_version ) that might not be supported by <strong>User Registration</strong> plugin in future updates.", 'user-registration' ); //phpcs:ignore ?>
+		<?php _e( "Your website is running on an outdated version of PHP ( v$php_version ) that might not be supported by <strong>User Registration & Membership</strong> plugin in future updates.", 'user-registration' ); //phpcs:ignore ?>
 		</br>
 		<?php
 		echo esc_html__( //phpcs:ignore

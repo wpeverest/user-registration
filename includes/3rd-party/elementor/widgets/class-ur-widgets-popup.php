@@ -90,7 +90,6 @@ class UR_Elementor_Widget_Popup extends Widget_Base {
 		$this->end_controls_section();
 
 		do_action( 'user_registration_elementor_popup_style', $this );
-
 	}
 	/**
 	 * Retrieve the shortcode.
@@ -99,7 +98,7 @@ class UR_Elementor_Widget_Popup extends Widget_Base {
 
 		$settings = $this->get_settings_for_display();
 		if ( ! $settings['ur_popup_form'] ) {
-			return '<p>' . __( 'Please select a User Registration Popup.', 'user-registration' ) . '</p>';
+			return '<p>' . __( 'Please select a User Registration & Membership Popup.', 'user-registration' ) . '</p>';
 		}
 		$attributes = array(
 			'id' => $settings['ur_popup_form'],

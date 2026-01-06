@@ -146,7 +146,6 @@ jQuery(function ($) {
 
 				UREditUsers.edit_profile_event($this);
 				$this.submit();
-				UREditUsers.toggle_edit_form_visibility(false);
 			});
 
 			/**
@@ -974,6 +973,9 @@ jQuery(function ($) {
 									UREditUsers.show_failure_message(
 										response.data.message
 									);
+									UREditUsers.toggle_edit_form_visibility(
+										true
+									);
 								} else {
 									UREditUsers.show_success_message(
 										response.data.message
@@ -991,12 +993,14 @@ jQuery(function ($) {
 							$(window).scrollTop(
 								$(".user-registration").position()
 							);
+							UREditUsers.toggle_edit_form_visibility(false);
 						}
 					}).fail(function () {
 						UREditUsers.show_failure_message(
 							l10n.ajax_form_submit_error
 						);
 						button.prop("disabled", false);
+						UREditUsers.toggle_edit_form_visibility(true);
 						return;
 					});
 				}

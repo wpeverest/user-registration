@@ -61,29 +61,8 @@ if ( ! class_exists( 'UR_Settings_General' ) ) {
 							'title'    => __( 'Pages', 'user-registration' ),
 							'settings' => array(
 								array(
-									'title'    => __( 'My Account Page', 'user-registration' ),
-									'desc'     => sprintf( __( 'Select the page which contains your login form: [%s]', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_my_account' ) ), //phpcs:ignore
-									'id'       => 'user_registration_myaccount_page_id',
-									'type'     => 'single_select_page',
-									'default'  => '',
-									'class'    => 'ur-enhanced-select-nostd',
-									'css'      => '',
-									'desc_tip' => true,
-								),
-								array(
-									'title'     => __( 'Lost Password Page', 'user-registration' ),
-									'desc'      => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
-									'id'        => 'user_registration_lost_password_page_id',
-									'type'      => 'single_select_page',
-									'default'   => '',
-									'class'     => 'ur-enhanced-select-nostd',
-									'css'       => '',
-									'desc_tip'  => true,
-									'field-key' => 'lost-password',
-								),
-								array(
 									'title'    => __( 'Registration Page', 'user-registration' ),
-									'desc'     => sprintf( __( 'Select the page which contains membership registration shortcode: [%s]', 'user-registration' ), apply_filters( 'user_registration_registration_shortcode_tag', 'user_registration_form' ) ),
+									'desc'     => sprintf( __( 'Displays the registration form where new users can sign up. Add the Registration Form block or [%s] shortcode to this page.', 'user-registration' ), apply_filters( 'user_registration_registration_shortcode_tag', 'user_registration_form' ) ),
 									//phpcs:ignore
 									'id'       => 'user_registration_member_registration_page_id',
 									'type'     => 'single_select_page',
@@ -93,8 +72,39 @@ if ( ! class_exists( 'UR_Settings_General' ) ) {
 									'desc_tip' => true,
 								),
 								array(
+									'title' => __( 'Login Page', 'user-registration' ),
+									'desc' => sprintf( __( 'Displays the login form where existing users can access their account. Add the Login Form block or [%s] shortcode to this page. ', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_login' ) ),
+									'desc_tip' => true,
+									'css' => '',
+									'class' => 'ur-enhanced-select-nostd',
+									'default' => '',
+									'type' => 'single_select_page',
+									'id' => 'user_registration_login_page_id',
+								),
+								array(
+									'title'    => __( 'My Account Page', 'user-registration' ),
+									'desc'     => sprintf( __( 'Member dashboard for managing account details, subscriptions, and profile information. Add the My Account block or [%s] shortcode to this page.', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_my_account' ) ), //phpcs:ignore
+									'id'       => 'user_registration_myaccount_page_id',
+									'type'     => 'single_select_page',
+									'default'  => '',
+									'class'    => 'ur-enhanced-select-nostd',
+									'css'      => '',
+									'desc_tip' => true,
+								),
+								array(
+									'title'     => __( 'Lost Password Page', 'user-registration' ),
+									'desc'      => sprintf( __( 'Allows users to reset their password if forgotten. A password reset link will be sent to their registered email address. Add the [%s] shortcode to this page.', 'user-registration' ), apply_filters( '', 'user_registration_lost_password' ) ),
+									'id'        => 'user_registration_lost_password_page_id',
+									'type'      => 'single_select_page',
+									'default'   => '',
+									'class'     => 'ur-enhanced-select-nostd',
+									'css'       => '',
+									'desc_tip'  => true,
+									'field-key' => 'lost-password',
+								),
+								array(
 									'title'    => __( 'Membership Pricing Page', 'user-registration' ),
-									'desc'     => sprintf( __( 'Select the page which contains the membership pricing shortcode: [%s]', 'user-registration' ), apply_filters( 'user_registration_membership_pricing_shortcode_tag', 'user_registration_membership_pricing' ) ),
+									'desc'     => sprintf( __( 'Displays all available membership plans and pricing options. Users can view and select which membership to purchase. Add the Membership Pricing block or [%s] shortcode to this page.', 'user-registration' ), apply_filters( 'user_registration_membership_pricing_shortcode_tag', 'user_registration_membership_pricing' ) ),
 									//phpcs:ignore
 									'id'       => 'user_registration_membership_pricing_page_id',
 									'type'     => 'single_select_page',
@@ -105,7 +115,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) {
 								),
 								array(
 									'title'    => __( 'Thank You Page', 'user-registration' ),
-									'desc'     => sprintf( __( 'Select the page which contains the membership thank you shortcode: [%s]', 'user-registration' ), apply_filters( 'user_registration_membership_thank_you_shortcode_tag', 'user_registration_membership_thank_you' ) ),
+									'desc'     => sprintf( __( 'Confirmation page shown after successful registration or membership purchase. Use it to welcome new members and provide next steps. Add the Thank You block or [%s] shortcode to this page.', 'user-registration' ), apply_filters( 'user_registration_membership_thank_you_shortcode_tag', 'user_registration_membership_thank_you' ) ),
 									//phpcs:ignore
 									'id'       => 'user_registration_thank_you_page_id',
 									'type'     => 'single_select_page',

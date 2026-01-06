@@ -848,6 +848,19 @@
 
 // Tooltip for privacy tab
 .tooltipster-base {
+	position: absolute;
+	top: 0px;
+
+	.tooltipster-content {
+		color: white;
+		font-size: 14px;
+
+		button {
+			margin: 10px 0px 10px 0px;
+		}
+
+	}
+
 	.tooltipster-box {
 		background: $grey-400 !important;
 		padding: $spacing_4px $spacing_8px;
