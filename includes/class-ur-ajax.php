@@ -90,6 +90,7 @@ class UR_AJAX {
 			'validate_payment_currency'         => false,
 			'save_captcha_settings'             => false,
 			'reset_captcha_keys'                => false,
+			'reset_payment_keys'                => false,
 			'create_default_form'               => false,
 			'generate_required_pages'           => false,
 			'handle_default_wordpress_login'    => false,
@@ -1852,6 +1853,10 @@ class UR_AJAX {
 		}
 		update_option( 'urm_' . $setting_id . '_connection_status', true );
 
+		if( 'paypal' === $setting_id ) {
+			update_option( 'urm_global_paypal_settings_migrated_', true );
+		}
+
 		do_action( 'urm_save_' . $setting_id . '_payment_section', $form_data );
 		$message = 'payment-settings' === $setting_id ? 'Settings has been saved successfully' : sprintf( __( 'Payment Setting for %s has been saved successfully.', 'user-registration' ), $setting_id );
 		wp_send_json_success(
@@ -1899,6 +1904,88 @@ class UR_AJAX {
 		);
 	}
 
+	public static function reset_payment_keys() {
+
+		check_ajax_referer( 'user_registration_validate_payment_settings_none', 'security' );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to reset captcha keys.', 'user-registration' ) ) );
+		}
+
+		$setting_id = isset( $_POST['setting_id'] ) ? sanitize_text_field( wp_unslash( $_POST['setting_id'] ) ) : '';
+
+		if ( empty( $setting_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Setting ID is required.', 'user-registration' ) ) );
+		}
+
+		$reset_keys = array();
+		switch ( $setting_id ) {
+			case 'paypal':
+				$reset_keys = array(
+					'urm_paypal_connection_status',
+					'user_registration_global_paypal_mode',
+					'user_registration_global_paypal_cancel_url',
+					'user_registration_global_paypal_return_url',
+
+					'user_registration_global_paypal_client_id',
+					'user_registration_global_paypal_client_secret',
+
+					'user_registration_global_paypal_test_email_address',
+					'user_registration_global_paypal_test_client_id',
+					'user_registration_global_paypal_test_client_secret',
+
+					'user_registration_global_paypal_live_email_address',
+					'user_registration_global_paypal_live_client_id',
+					'user_registration_global_paypal_live_client_secret',
+				);
+				break;
+			case 'stripe':
+				$reset_keys = array(
+					'urm_stripe_connection_status',
+					'user_registration_stripe_test_publishable_key',
+					'user_registration_stripe_test_secret_key',
+					'user_registration_stripe_test_mode',
+					'user_registration_stripe_live_publishable_key',
+					'user_registration_stripe_live_secret_key',
+				);
+				break;
+			case 'bank':
+				$reset_keys = array(
+					'user_registration_global_bank_details',
+					'urm_bank_connection_status',
+				);
+				break;
+			case 'mollie':
+				$reset_keys = array(
+					'urm_mollie_connection_status',
+					'user_registration_mollie_global_test_mode',
+					'user_registration_mollie_global_test_publishable_key',
+					'user_registration_mollie_global_live_publishable_key'
+				);
+				break;
+			case 'authorize-net':
+				$reset_keys = array(
+					'urm_authorize-net_connection_status',
+					'user_registration_authorize_net_test_mode',
+					'user_registration_authorize_net_test_publishable_key',
+					'user_registration_authorize_net_test_secret_key',
+					'user_registration_authorize_net_live_publishable_key',
+					'user_registration_authorize_net_live_secret_key'
+				);
+				break;
+			default:
+				wp_send_json_error( array( 'message' => __( 'Invalid payment method.', 'user-registration' ) ) );
+				return;
+		}
+		// Reset all keys for the specified payment method.
+		foreach ( $reset_keys as $key ) {
+			delete_option( $key );
+		}
+		wp_send_json_success(
+			array(
+				'message' => sprintf( __( 'Payment method settings for %s have been reset successfully.', 'user-registration' ), $setting_id ),
+			)
+		);
+	}
 	/**
 	 * Reset captcha keys for a specific captcha type.
 	 *
