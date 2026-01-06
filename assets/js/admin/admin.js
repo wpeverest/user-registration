@@ -1590,13 +1590,13 @@ jQuery(function ($) {
 	}
 
 	$(document.body).on("click", "#ur-smart-tags-selector", function () {
-		var $this = $(this);
-
+		var $this = $(this),
+		is_urcr_rule_editor = $this.closest("#wp-urcr-membership-action-message-media-buttons").length > 0;
 		$(this)
 			.siblings("#select-smart-tags")
 			.select2({
 				placeholder: "",
-				dropdownCssClass: "ur-select2-dropdown",
+				dropdownCssClass: "ur-select2-dropdown" + (is_urcr_rule_editor ? " urcr-editor-select2-dropdown" : ""),
 				templateResult: function (data, container) {
 					if ($this.siblings(".ur_advance_setting").length > 0) {
 						if (data.element) {
