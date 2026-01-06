@@ -789,6 +789,13 @@ class MembershipService {
 				$upgrade_data = $upgrade_service->get_upgrade_details( $current_membership_details );
 				$upgrade_type = ! empty( $upgrade_data['upgrade_type'] ) ? $upgrade_data['upgrade_type'] : '';
 
+				if ( empty( $upgrade_type ) || empty( $upgrade_data['upgrade_path'] ) ) {
+					return array(
+						'status'  => false,
+						'message' => esc_html__( 'Membership upgrade is not enabled for this plan.', 'user-registration' ),
+					);
+				}
+
 				$remaining_subscription_value = isset( $selected_membership_details['subscription']['value'] ) ? $selected_membership_details['subscription']['value'] : '';
 				$delayed_until                = '';
 
