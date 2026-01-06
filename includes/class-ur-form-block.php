@@ -59,12 +59,12 @@ class UR_Form_Block {
 			'forms'    => ur_get_all_user_registration_form(),
 			'logo_url' => UR()->plugin_url() . '/assets/images/logo.png',
 			'i18n'     => array(
-				'title'         => esc_html( 'User Registration' ),
-				'description'   => esc_html__( 'Select &#38; display one of your form.', 'user-registration' ),
-				'form_select'   => esc_html__( 'Select a Form', 'user-registration' ),
-				'form_settings' => esc_html__( 'Form Settings', 'user-registration' ),
-				'form_selected' => esc_html__( 'Form', 'user-registration' ),
-				'deprecated_notice' => esc_html__( 'The user registration form selector block has been deprecated. Please use the new updated block with new functionality.', 'user-registration' ),
+				'title'             => esc_html( 'User Registration & Membership' ),
+				'description'       => esc_html__( 'Select &#38; display one of your form.', 'user-registration' ),
+				'form_select'       => esc_html__( 'Select a Form', 'user-registration' ),
+				'form_settings'     => esc_html__( 'Form Settings', 'user-registration' ),
+				'form_selected'     => esc_html__( 'Form', 'user-registration' ),
+				'deprecated_notice' => esc_html__( 'The user registration & membership form selector block has been deprecated. Please use the new updated block with new functionality.', 'user-registration' ),
 			),
 		);
 

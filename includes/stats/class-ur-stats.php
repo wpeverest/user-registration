@@ -52,7 +52,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				)
 			); // Hook on module activation ( Our UR module activation ).
 
-			//Skiping the uninstall feedback from the themegrill sdk
+			// Skiping the uninstall feedback from the themegrill sdk
 			add_filter(
 				'user_registration_hide_uninstall_feedback',
 				function () {
@@ -196,7 +196,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		public function get_plugin_lists() {
 			$is_premium        = $this->is_premium();
 			$base_product      = $this->get_base_product();
-			$base_product_name = $is_premium ? 'User Registration Pro' : 'User Registration';
+			$base_product_name = $is_premium ? 'User Registration & Membership Pro' : 'User Registration & Membership';
 			$license_key       = $this->get_base_product_license();
 			$form_wise_users   = $this->get_form_wise_user();
 			$active_plugins    = get_option( 'active_plugins', array() );

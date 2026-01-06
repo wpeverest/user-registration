@@ -979,22 +979,22 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 					),
 				),
 				// array(
-				// 	'help' => array(
-				// 		'page_slug' => 'user-registration-dashboard#help',
-				// 		'label'     => esc_html__( 'Help', 'user-registration' ),
-				// 	),
+				// 'help' => array(
+				// 'page_slug' => 'user-registration-dashboard#help',
+				// 'label'     => esc_html__( 'Help', 'user-registration' ),
+				// ),
 				// ),
 				// UR_PRO_ACTIVE ? array() : array(
-				// 	'free-vs-pro' => array(
-				// 		'page_slug' => 'user-registration-dashboard#free-vs-pro',
-				// 		'label'     => esc_html__( 'Free vs Pro', 'user-registration' ),
-				// 	),
+				// 'free-vs-pro' => array(
+				// 'page_slug' => 'user-registration-dashboard#free-vs-pro',
+				// 'label'     => esc_html__( 'Free vs Pro', 'user-registration' ),
+				// ),
 				// ),
 				// array(
-				// 	'products' => array(
-				// 		'page_slug' => 'user-registration-dashboard#products',
-				// 		'label'     => esc_html__( 'Other Products', 'user-registration' ),
-				// 	),
+				// 'products' => array(
+				// 'page_slug' => 'user-registration-dashboard#products',
+				// 'label'     => esc_html__( 'Other Products', 'user-registration' ),
+				// ),
 				// )
 			)
 		);

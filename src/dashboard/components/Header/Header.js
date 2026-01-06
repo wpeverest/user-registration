@@ -99,7 +99,9 @@ const Header = () => {
 											borderColor: "#475bb2",
 											marginBottom: "-2px"
 										}}
-										display={hidden ? "none" : "inline-flex"}
+										display={
+											hidden ? "none" : "inline-flex"
+										}
 										alignItems="center"
 										px="2"
 										h="full"
@@ -144,7 +146,7 @@ const Header = () => {
 							<Tooltip
 								label={sprintf(
 									__(
-										"You are currently using User Registration %s",
+										"You are currently using User Registration & Membership %s",
 										"user-registration"
 									),
 									(isPro && "Pro ") + "v" + version

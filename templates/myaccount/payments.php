@@ -127,8 +127,12 @@ $is_invoice_active = ur_check_module_activation( 'pdf-invoice' );
 						'format'    => 'page/%#%/',
 						'current'   => $current,
 						'total'     => $total_pages,
-						'prev_text' => '&laquo;',
-						'next_text' => '&raquo;',
+						'prev_text' => '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" height="18px" width="18px">
+											<path d="M14.653 2.418a1.339 1.339 0 0 1 1.944 0 1.468 1.468 0 0 1 0 2.02L9.32 12l7.278 7.561a1.468 1.468 0 0 1 0 2.02 1.339 1.339 0 0 1-1.944 0l-8.25-8.57a1.468 1.468 0 0 1 0-2.021l8.25-8.572Z"/>
+										</svg>',
+						'next_text' => '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" height="18px" width="18px">
+											<path d="M7.403 2.418a1.339 1.339 0 0 1 1.944 0l8.25 8.572a1.468 1.468 0 0 1 0 2.02l-8.25 8.572a1.339 1.339 0 0 1-1.944 0 1.468 1.468 0 0 1 0-2.02L14.68 12 7.403 4.439a1.468 1.468 0 0 1 0-2.02Z"/>
+										</svg>',
 						'type'      => 'list',
 					)
 				);

@@ -449,7 +449,7 @@ class UR_Admin {
 				// );
 				$footer_text = '';
 			} else {
-				$footer_text = esc_html__( 'Thank you for using User Registration.', 'user-registration' );
+				$footer_text = esc_html__( 'Thank you for using User Registration & Membership.', 'user-registration' );
 			}
 		}
 

@@ -16,7 +16,10 @@ const URFormAction = ({ urForm, onUrFormChange }) => {
 		<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-ur-form-input-container ur-form-group">
 			<label className="urcr-label-container ur-col-4">
 				<span className="urcr-target-content-label">
-					{__("Display User Registration Form", "user-registration")}
+					{__(
+						"Display User Registration & Membership Form",
+						"user-registration"
+					)}
 				</span>
 			</label>
 			<div className="urcr-body">
@@ -40,4 +43,3 @@ const URFormAction = ({ urForm, onUrFormChange }) => {
 };
 
 export default URFormAction;
-
