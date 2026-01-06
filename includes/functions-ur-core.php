@@ -10696,3 +10696,21 @@ if ( ! function_exists( 'urcr_get_custom_rules_count' ) ) {
 		return $rules_count;
 	}
 }
+
+
+if ( !function_exists( 'urm_array_key_exists_recursive' ) ) {
+
+	function urm_array_key_exists_recursive( $needle, array $haystack ) {
+		foreach ( $haystack as $key => $value ) {
+			if ( $key === $needle ) {
+				return $value;
+			}
+
+			if ( is_array( $value ) && urm_array_key_exists_recursive( $needle, $value ) ) {
+				return $value;
+			}
+		}
+
+		return false;
+	}
+}
