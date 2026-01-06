@@ -845,6 +845,11 @@ class UR_Admin_Settings {
 
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
+									// Unwrap email content if it contains wrapper HTML (for editor display).
+									if ( function_exists( 'ur_unwrap_email_body_content' ) ) {
+										$option_value = ur_unwrap_email_body_content( $option_value );
+									}
+
 									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
