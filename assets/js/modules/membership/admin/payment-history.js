@@ -626,4 +626,24 @@
 			}
 		});
 	});
+	/**
+	 * Resets the set filter in payments table.
+	 */
+	$("#user-registration-payments-filter-reset-btn").on("click", function (e) {
+		e.preventDefault();
+		var url = window.location.href;
+
+		var form = $(this).closest("form")[0];
+		form.reset();
+
+		$(form).find('input[type="hidden"]').val("");
+
+		$(form)
+			.find("select")
+			.each(function () {
+				$(this).prop("selectedIndex", 0);
+			});
+
+		window.location.href = url.split("&")[0];
+	});
 })(jQuery, window.urm_orders_localized_data);

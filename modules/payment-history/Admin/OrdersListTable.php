@@ -536,9 +536,17 @@ class OrdersListTable extends \UR_List_Table {
 				?>
 			</select>
 		</div>
-		<button type="submit" name="ur_users_filter" id="user-registration-users-filter-btn" class="button ur-button-primary">
+		<div class="user-registration-users-filter-btns">
+			<button type="submit" name="ur_users_filter" id="user-registration-users-filter-btn" class="button ur-button-primary">
 				<?php esc_html_e( 'Filter', 'user-registration' ); ?>
-		</button>
+			</button>
+
+			<button type="reset"  id="user-registration-payments-filter-reset-btn" class="" title="<?php _e( 'Reset', 'user-registration' ); ?>">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+					<path fill="#000" fill-rule="evenodd" d="M12 2h-.004a10.75 10.75 0 0 0-7.431 3.021l-.012.012L4 5.586V3a1 1 0 1 0-2 0v5a.997.997 0 0 0 1 1h5a1 1 0 0 0 0-2H5.414l.547-.547A8.75 8.75 0 0 1 12.001 4 8 8 0 1 1 4 12a1 1 0 1 0-2 0A10 10 0 1 0 12 2Z" clip-rule="evenodd"/>
+				</svg>
+			</button>
+		</div>
 		<?php
 	}
 
