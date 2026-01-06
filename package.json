@@ -17,7 +17,9 @@
     "makepot": "composer run-script makepot",
     "start": "wp-scripts start --node-env=development --mode=development",
     "start:pro": "cross-env UR_PRO=true pnpm run start",
-    "eslint-fix": "eslint --fix \"src/**/*.js\" \"assets/js/admin/gutenberg/*.js\"",
+    "prettier": "prettier --ignore-path .gitignore --check \"src/**/*.{ts,tsx,js,jsx}\" \"**/*.scss\"",
+    "format": "prettier --ignore-path .gitignore --write \"src/**/*.{ts,tsx,js,jsx}\" \"**/*.scss\"",
+    "prettier:fix": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\" \"**/*.scss\"",
     "prelint-php": "wp-env run composer 'install --no-interaction'",
     "lint-php": "wp-env composer run-script phpcs",
     "phpcs": "composer run-script phpcs --timeout 100000",
@@ -43,6 +45,7 @@
     "@wordpress/server-side-render": "^6.13.0",
     "autoprefixer": "^10.4.23",
     "cross-env": "^10.1.0",
+    "globals": "^17.0.0",
     "grunt": "^1.6.1",
     "grunt-contrib-compress": "^2.0.0",
     "grunt-contrib-concat": "^2.1.0",
@@ -56,6 +59,8 @@
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
     "postcss": "^8.5.6",
+    "prettier": "^3.7.4",
+    "prettier-plugin-organize-imports": "^4.3.0",
     "sass": "^1.97.1",
     "typescript": "^5.9.3"
   },
@@ -86,16 +91,8 @@
       "php -d display_errors=1 -l",
       "composer run-script phpcs-pre-commit"
     ],
-    "*.scss": [
-      "stylelint --syntax=scss --fix",
-      "git add"
-    ],
-    "!(*.min).js": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.{ts,tsx}": [
-      "eslint --fix",
+    "*.{ts,tsx,scss}": [
+      "prettier --write",
       "git add"
     ]
   }
