@@ -4217,7 +4217,7 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 					'name' => esc_html__( 'User Registration - Email Templates', 'user-registration' ),
 				),
 			),
-			'registration_login' => array(		
+			'registration_login' => array(
 				'social-connect' => array(
 					'label' => esc_html__( 'Social Connect', 'user-registration' ),
 					'plugin' => 'user-registration-social-connect',
@@ -4397,7 +4397,7 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 		if( ! isset( $current_section ) ) {
 			$current_section = apply_filters( 'user_registration_settings_' . $current_tab . '_default_section', '' );
 		}
-		
+
 		$is_upgradable_section = isset( $premium_tabs[ $current_tab ] [ $current_section ] );
 		if( $is_upgradable_section ) {
 			$section_details = $premium_tabs[ $current_tab ][ $current_section ];
@@ -4494,7 +4494,7 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 						$button_text = esc_html__( 'Upgrade Plan', 'user-registration' );
 						$settings[ 'sections' ][ 'premium_setting_section' ][ 'before_desc' ] = $description;
 						$settings[ 'sections' ][ 'premium_setting_section' ][ 'button' ][ 'button_text' ] = $button_text;
-					} 
+					}
 					else {
 						$plugin_name = $detail[ 'name' ];
 						$action = '';
@@ -5463,16 +5463,16 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 		$is_preview = isset( $_GET['ur_email_preview'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$current_screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		$is_settings_page = $current_screen && 'user-registration_page_user-registration-settings' === $current_screen->id;
-		$is_email_action = isset( $_REQUEST['action'] ) && ( 
-			'ur_send_test_email' === $_REQUEST['action'] || 
+		$is_email_action = isset( $_REQUEST['action'] ) && (
+			'ur_send_test_email' === $_REQUEST['action'] ||
 			strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		);
-		
+
 		// Only exclude CSS when on settings page displaying editor (not when sending emails).
-		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action && 
-		                     ! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) && 
+		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action &&
+		                     ! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
 		                     ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
-		
+
 		// Responsive CSS styles for email template - only include when not in editor context.
 		$responsive_styles = '';
 		if ( ! $is_editor_context ) {
@@ -9841,7 +9841,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		$payment_connections = ur_get_payment_connection_statuses();
 
 		$site_assistant_data = array(
-			'has_default_form'        => ! empty( get_post( get_option( 'user_registration_default_form_page_id', '' ) ) ),
+			'has_default_form'        => ! empty( get_post( get_option( 'user_registration_registration_form', '' ) ) ),
 			'missing_pages'           => $missing_pages_data,
 			'test_email_sent'         => get_option( 'user_registration_successful_test_mail', false ),
 			'wordpress_login_handled' => ( get_option( 'user_registration_login_options_prevent_core_login', false ) == true ) || ( get_option( 'user_registration_default_wordpress_login_skipped', false ) == true ),
