@@ -430,7 +430,7 @@ class UR_Admin_Settings {
 							if ( isset( $section[ 'is_premium' ] ) && $section[ 'is_premium' ] ) {
 								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png'. '" /></div>';
 							}
-							$settings .= esc_html( strtoupper( $section['title'] ) );
+							$settings .= esc_html( ucwords( $section['title'] ) );
 							$settings .= '</h3>';
 
 							if ( ! empty( $section['button'] ) ) {
@@ -487,8 +487,6 @@ class UR_Admin_Settings {
 						}
 						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion' . $is_captcha_header . '">';
 						$settings .= '<div class="integration-detail">';
-						$settings .= '<span class="integration-status ' . ( $is_connected ? 'ur-integration-account-connected' : '' ) . '">';
-						$settings .= '</span>';
 						$settings .= '<figure class="logo">';
 						$settings .= '<img src="' . UR()->plugin_url() . '/assets/images/settings-icons/' . $section['id'] . '.png" alt="' . $section['title'] . '">';
 						$settings .= '</figure>';
@@ -496,6 +494,9 @@ class UR_Admin_Settings {
 							$settings .= '<h3 class="user-registration-card__title">' . esc_html( $section['title'] );
 							$settings .= '</h3>';
 						}
+						$settings .= '<span class="ur-connection-status ' . ( $is_connected ? 'ur-connection-status--active' : '' ) . '">';
+						$settings .= '</span>';
+
 						$settings .= '</div>';
 						$settings .= '<div class="integration-action">';
 						$settings .= '<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><polyline points="6 9 12 15 18 9"></polyline></svg>';

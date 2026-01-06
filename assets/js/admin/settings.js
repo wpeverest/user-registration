@@ -852,8 +852,8 @@
 				.is(":checked");
 			if (is_enabled) {
 				$(this)
-					.find(".ur-captcha-settings-header .integration-status")
-					.addClass("ur-integration-account-connected");
+					.find(".ur-captcha-settings-header .ur-connection-status")
+					.addClass("ur-connection-status--active");
 			}
 		});
 	}
@@ -949,8 +949,8 @@
 				if (response.responseJSON.success) {
 					show_success_message(response.responseJSON.data.message);
 					settings_container
-						.find(".integration-status")
-						.addClass("ur-integration-account-connected");
+						.find(".ur-connection-status")
+						.addClass("ur-connection-status--active");
 				} else {
 					show_failure_message(response.responseJSON.data.message);
 				}
@@ -978,8 +978,8 @@
 				if (response.success) {
 					var successMessage = response.data.message;
 					settings_container
-						.find(".integration-status")
-						.addClass("ur-integration-account-connected");
+						.find(".ur-connection-status")
+						.addClass("ur-connection-status--active");
 					settings_container
 						.find(".reset-captcha-keys")
 						.removeClass("ur-d-none");
@@ -1472,8 +1472,8 @@
 								.captcha_keys_reset_success
 					);
 					settings_container
-						.find(".integration-status")
-						.removeClass("ur-integration-account-connected");
+						.find(".ur-connection-status")
+						.removeClass("ur-connection-status--active");
 					settings_container.find('input[type="text"]').val("");
 
 					// Remove captcha node after successful reset

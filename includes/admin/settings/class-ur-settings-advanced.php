@@ -92,7 +92,7 @@ if ( ! class_exists( 'UR_Settings_Advanced' ) ) {
                                 'settings' => array(
                                     array(
                                         'title'    => __( 'Uninstall User Registration & Membership', 'user-registration' ),
-                                        'desc'     => __( '<strong>Heads Up!</strong> Check this if you would like to remove ALL User Registration data upon plugin deletion.', 'user-registration' ),
+                                        'desc'     => __( '<strong>Heads Up!</strong> Check this if you would like to remove ALL User Registration & Membership data upon plugin deletion.', 'user-registration' ),
                                         'id'       => 'user_registration_general_setting_uninstall_option',
                                         'type'     => 'toggle',
                                         'desc_tip' => 'All user registration forms, settings and users metadata will be deleted upon plugin uninstallation.',
