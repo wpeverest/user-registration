@@ -252,6 +252,7 @@ $border-left-color_3: #0073aa;
 		box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
 		opacity: 0.9;
 	}
+
 	100% {
 		border-color: #475bb2;
 		border-width: 2px;
@@ -264,9 +265,11 @@ $border-left-color_3: #0073aa;
 	0% {
 		box-shadow: 0 4px 12px rgba(71, 91, 178, 0.3);
 	}
+
 	50% {
 		box-shadow: 0 6px 16px rgba(71, 91, 178, 0.5);
 	}
+
 	100% {
 		box-shadow: 0 4px 12px rgba(71, 91, 178, 0.3);
 	}
