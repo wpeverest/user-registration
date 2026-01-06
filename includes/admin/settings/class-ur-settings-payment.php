@@ -225,7 +225,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                 'is_connected' => get_option( 'urm_stripe_connection_status', false ),
                 'settings'     => array(
                     array(
-                        'title'    => __( 'Test Publishable key', 'user-registration' ),
+                        'title'    => __( 'Publishable key', 'user-registration' ),
                         'desc'     => __( 'Stripe test publishable  key.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_test_publishable_key',
                         'type'     => 'text',
@@ -234,7 +234,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                         'default'  => '',
                     ),
                     array(
-                        'title'    => __( 'Test Secret key', 'user-registration' ),
+                        'title'    => __( 'Secret key', 'user-registration' ),
                         'desc'     => __( 'Stripe test secret key.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_test_secret_key',
                         'type'     => 'text',
@@ -251,7 +251,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                         'default'  => '',
                     ),
                     array(
-                        'title'    => __( 'Live Publishable Key', 'user-registration' ),
+                        'title'    => __( 'Publishable Key', 'user-registration' ),
                         'desc'     => __( 'Stripe live publishable key.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_live_publishable_key',
                         'type'     => 'text',
@@ -260,7 +260,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                         'default'  => '',
                     ),
                     array(
-                        'title'    => __( 'Live Secret key', 'user-registration' ),
+                        'title'    => __( 'Secret key', 'user-registration' ),
                         'desc'     => __( 'Stripe live secret key.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_live_secret_key',
                         'type'     => 'text',
