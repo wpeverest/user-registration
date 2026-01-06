@@ -816,7 +816,7 @@
 
 												label {
 													padding: 0 !important;
-													font-size: 15px;
+													font-size: 14px;
 													line-height: 20px;
 													font-weight: 500;
 													cursor: pointer;
@@ -827,9 +827,13 @@
 												}
 
 												input[type="radio"] {
-													&:checked::before {
-														background: $primary_color;
-														margin: 3.2px;
+													&:checked {
+														border-color: $primary_color;
+
+														&::before {
+															background: $primary_color;
+															margin: 3.2px;
+														}
 													}
 												}
 
@@ -1866,6 +1870,7 @@
 		border-radius: $border_radius_2;
 		width: 18px;
 		height: 18px;
+		margin-left: auto;
 	}
 }
 
