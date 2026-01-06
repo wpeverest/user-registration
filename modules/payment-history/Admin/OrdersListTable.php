@@ -8,6 +8,7 @@
 namespace WPEverest\URMembership\Payment\Admin;
 
 use UR_Base_Layout;
+use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\TableList;
 
@@ -161,6 +162,8 @@ class OrdersListTable extends \UR_List_Table {
 					'created_at'     => $meta_value[0]['invoice_date'] ?? '',
 					'type'           => get_user_meta( $user->ID, 'ur_payment_type', true ),
 					'payment_method' => str_replace( '_', ' ', get_user_meta( $user->ID, 'ur_payment_method', true ) ),
+					'total_amount'   => $meta_value[0]['invoice_amount'] ?? 0,
+					'currency'       => $meta_value[0]['invoice_currency'] ?? '',
 				);
 			}
 		}
@@ -203,7 +206,7 @@ class OrdersListTable extends \UR_List_Table {
 	 * No items found text.
 	 */
 	public function no_items() {
-		UR_Base_Layout::no_items('Payments');
+		UR_Base_Layout::no_items( 'Payments' );
 	}
 
 	/**
@@ -221,6 +224,7 @@ class OrdersListTable extends \UR_List_Table {
 			'payment_method'  => __( 'Gateway', 'user-registration' ),
 			'payer_email'     => __( 'Payer Email', 'user-registration' ),
 			'status'          => __( 'Status', 'user-registration' ),
+			'total'           => __( 'Total', 'user-registration' ),
 			'created_at'      => __( 'Payment Date', 'user-registration' ),
 		);
 	}
@@ -338,6 +342,50 @@ class OrdersListTable extends \UR_List_Table {
 		);
 		$payment_date      = ! empty( $payment_date ) ? $payment_date : $item['created_at'];
 		return ( new \DateTime( $payment_date ) )->format( 'F j, Y' );
+	}
+
+	public function column_total( $item ) {
+		$total_amount        = $item['total_amount'] ?? 0;
+		$currency            = get_option( 'user_registration_payment_currency', 'USD' );
+		$currencies          = ur_payment_integration_get_currencies();
+		$currency_info       = isset( $currencies[ $currency ] ) ? $currencies[ $currency ] : $currencies['USD'];
+		$symbol              = isset( $currency_info['symbol'] ) ? $currency_info['symbol'] : '$';
+		$symbol_pos          = isset( $currency_info['symbol_pos'] ) ? $currency_info['symbol_pos'] : 'left';
+		$thousands_separator = isset( $currency_info['thousands_separator'] ) ? $currency_info['thousands_separator'] : ',';
+		$decimal_separator   = isset( $currency_info['decimal_separator'] ) ? $currency_info['decimal_separator'] : '.';
+		$decimals            = isset( $currency_info['decimals'] ) ? (int) $currency_info['decimals'] : 2;
+		$coupon_discount     = 0;
+
+		if ( isset( $item['subscription_id'] ) ) {
+			$subscription = ( new MembersSubscriptionRepository() )->get_subscription_by_subscription_id( absint( $item['subscription_id'] ) );
+			if ( ! empty( $subscription ) && ! empty( $subscription['coupon'] ) ) {
+				$coupon = ur_get_coupon_details( $subscription['coupon'] );
+				if ( ! empty( $coupon ) ) {
+					$discount_value = null;
+					$discount_type  = 'fixed';
+
+					if ( isset( $coupon['coupon_discount'] ) && isset( $coupon['coupon_discount_type'] ) ) {
+						$discount_value = (float) $coupon['coupon_discount'];
+						$discount_type  = $coupon['coupon_discount_type'];
+					} elseif ( isset( $coupon['discount'] ) ) {
+						$discount_value = (float) $coupon['discount'];
+						$discount_type  = isset( $coupon['discount_type'] ) ? $coupon['discount_type'] : ( isset( $coupon['coupon_discount_type'] ) ? $coupon['coupon_discount_type'] : 'fixed' );
+					}
+
+					if ( null !== $discount_value && $total_amount ) {
+						if ( 'percent' === $discount_type ) {
+							$coupon_discount = $total_amount * ( $discount_value / 100 );
+						} else {
+							$coupon_discount = $discount_value;
+						}
+					}
+				}
+			}
+		}
+
+		$total_amount     = max( $total_amount - $coupon_discount, 0 );
+		$formatted_amount = number_format( $total_amount, $decimals, $decimal_separator, $thousands_separator );
+		return 'right' === $symbol_pos ? $formatted_amount . ' ' . $symbol : $symbol . $formatted_amount;
 	}
 
 	/**
