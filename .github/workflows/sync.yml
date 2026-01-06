@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - fix-preview-issue
+      - v5.0.0
     workflow_dispatch:
 jobs:
   sync:
@@ -15,5 +15,5 @@ jobs:
         with:
           GH_PAT: ${{ secrets.REPO_SYNC }}
           COMMIT_BODY: "Update: Sync changes from main repository"
-          ASSIGNEES: som
+          ASSIGNEES: iamprazol
           CONFIG_PATH: .github/sync-file-list.yml
