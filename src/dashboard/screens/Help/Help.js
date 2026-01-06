@@ -208,10 +208,6 @@ const Help = () => {
 								borderRadius="base"
 								fontSize="14px"
 								fontWeight="normal"
-								onClick={() => {
-									setIsListViewerOpen(true);
-									setListViewerType("shortcodes");
-								}}
 							>
 								<Link
 									href={docURL}
@@ -254,12 +250,17 @@ const Help = () => {
 								borderRadius="base"
 								fontSize="14px"
 								fontWeight="normal"
-								onClick={() => {
-									setIsListViewerOpen(true);
-									setListViewerType("smartTags");
-								}}
 							>
-								{__("Create a Ticket", "user-registration")}
+								<Link
+									href={ticketUrl}
+									isExternal
+									textDecoration="none"
+									_hover={{ textDecoration: "none" }}
+									fontSize="13px"
+									fontWeight="normal"
+								>
+									{__("Create a Ticket", "user-registration")}
+								</Link>
 							</Button>
 						</Stack>
 						</Grid>
