@@ -482,7 +482,10 @@ class URCR_Admin_Assets {
 	 */
 	public static function get_default_message() {
 		$localized_data = self::get_localized_data();
-		return isset( $localized_data['membership_default_message'] ) ? $localized_data['membership_default_message'] : '<p>' . __( 'You do not have sufficient permission to access this content.', 'user-registration' ) . '</p>';
+		return isset( $localized_data['membership_default_message'] ) ? $localized_data['membership_default_message'] : '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
+<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
+<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
+<p>{{sign_up}} {{log_in}}</p>';
 	}
 }
 

@@ -38,7 +38,8 @@ const groupOptions = (options) => {
 
 const ConditionFieldDropdown = ({ onSelect, isMigrated = false, ruleType = null, isFirstCondition = false }) => {
 	// Use shared utility function to get filtered condition options
-	const filteredOptions = getFilteredConditionOptions(isMigrated, ruleType, isFirstCondition);
+	// Pass forSelectField=false to exclude membership for migrated rules in dropdown
+	const filteredOptions = getFilteredConditionOptions(isMigrated, ruleType, isFirstCondition, null, false);
 	const options = groupOptions(filteredOptions);
 	return (
 		<DropdownMenu

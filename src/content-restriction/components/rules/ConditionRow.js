@@ -1,7 +1,7 @@
 /**
  * External Dependencies
  */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { __ } from "@wordpress/i18n";
 import ConditionValueInput from "../inputs/ConditionValueInput";
 import URFormFieldCondition from "./URFormFieldCondition";
@@ -17,6 +17,7 @@ const ConditionRow = ({
 }) => {
 	const [operator] = useState(condition.operator || "is");
 	const [value, setValue] = useState(condition.conditionValue || "");
+	const selectRef = useRef(null);
 
 	useEffect(() => {
 		onUpdate({
@@ -35,6 +36,13 @@ const ConditionRow = ({
 		}
 	}, [condition.inputType, condition.type, condition.value]);
 
+	// Ensure select stays in sync with condition.value
+	useEffect(() => {
+		if (selectRef.current && selectRef.current.value !== condition.value) {
+			selectRef.current.value = condition.value || "";
+		}
+	}, [condition.value]);
+
 	const handleValueChange = (newValue) => {
 		setValue(newValue);
 	};
@@ -44,7 +52,9 @@ const ConditionRow = ({
 		const allOptions = getFilteredConditionOptions(
 			isMigrated,
 			ruleType,
-			isFirstCondition
+			isFirstCondition,
+			condition.value,
+			true
 		);
 		const selectedOption = allOptions.find(
 			(opt) => opt.value === selectedValue
@@ -78,6 +88,7 @@ const ConditionRow = ({
 					<div className="urcr-condition-selection-section ur-d-flex ur-align-items-center ur-g-4">
 						<div className="urcr-condition-field-name">
 							<select
+								ref={selectRef}
 								className="components-select-control__input urcr-condition-value-input"
 								value={condition.value || ""}
 								onChange={handleFieldChange}
@@ -86,7 +97,9 @@ const ConditionRow = ({
 								{getFilteredConditionOptions(
 									isMigrated,
 									ruleType,
-									isFirstCondition
+									isFirstCondition,
+									condition.value,
+									true
 								).map((option) => (
 									<option
 										key={option.value}
@@ -116,6 +129,7 @@ const ConditionRow = ({
 				<div className="urcr-condition-selection-section ur-d-flex ur-align-items-center ur-g-4">
 					<div className="urcr-condition-field-name">
 						<select
+							ref={selectRef}
 							className="components-select-control__input urcr-condition-value-input"
 							value={condition.value || ""}
 							onChange={handleFieldChange}
@@ -124,7 +138,9 @@ const ConditionRow = ({
 							{getFilteredConditionOptions(
 								isMigrated,
 								ruleType,
-								isFirstCondition
+								isFirstCondition,
+								condition.value,
+								true
 							).map((option) => (
 								<option key={option.value} value={option.value}>
 									{option.label}

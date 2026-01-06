@@ -140,7 +140,11 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 
 												<?php
 												if ( $can_renew && $date_to_renew <= date( 'Y-m-d 00:00:00' ) && 'canceled' !== $membership['status'] ) {
-													$buttons[] = '<a class="ur-account-action-link membership-tab-btn renew-membership-button" href="' . esc_url( $redirect_page_url ) . '" data-pg-gateways="' . ( isset( $membership['active_gateways'] ) ? implode( ',', array_keys( $membership['active_gateways'] ) ) : '' ) . '" data-id="' . esc_attr( $membership['post_id'] ?? '' ) . '">' . esc_html__( 'Renew Membership', 'user-registration' ) . '</a>';
+													$buttons[] = '<a class="ur-account-action-link membership-tab-btn renew-membership-button" href="' . esc_url( $redirect_page_url ) . '" data-pg-gateways="' . ( isset( $membership['active_gateways'] ) ? implode( ',', array_keys( $membership['active_gateways'] ) ) : '' ) . '" data-id="' . esc_attr( $membership['post_id'] ?? '' ) . '"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+  <path d="M2 12A10 10 0 0 1 12 2h.004l.519.015a10.75 10.75 0 0 1 6.53 2.655l.394.363 2.26 2.26a1 1 0 1 1-1.414 1.414l-2.248-2.248-.31-.286A8.75 8.75 0 0 0 11.996 4 8 8 0 0 0 4 12a1 1 0 1 1-2 0Z"/>
+  <path d="M20 3a1 1 0 1 1 2 0v5a1 1 0 0 1-1 1h-5a1 1 0 1 1 0-2h4V3Zm0 9a1 1 0 1 1 2 0 10 10 0 0 1-10 10h-.004a10.75 10.75 0 0 1-7.05-2.67l-.393-.363-2.26-2.26a1 1 0 1 1 1.414-1.414l2.248 2.248.31.286A8.749 8.749 0 0 0 12.003 20 7.999 7.999 0 0 0 20 12Z"/>
+  <path d="M2 21v-5a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2H4v4a1 1 0 1 1-2 0Z"/>
+</svg>' . '<span class="urm-action-link--text">' . esc_html__( 'Renew Membership', 'user-registration' ) . '</span>' . '</a>';
 												}
 												?>
 												<?php
@@ -148,7 +152,10 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 											?>
 											<?php
 											if ( 'canceled' !== $membership['status'] ) {
-												$buttons[] = '<a class="ur-account-action-link membership-tab-btn cancel-membership-button" data-id="' . esc_attr( $membership['subscription_id'] ?? '' ) . '"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>' . esc_html__( 'Cancel', 'user-registration' ) . '</a>';
+												$buttons[] = '<a class="ur-account-action-link membership-tab-btn cancel-membership-button" data-id="' . esc_attr( $membership['subscription_id'] ?? '' ) . '"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+  <path d="M18.05 4.335a1.143 1.143 0 1 1 1.615 1.616L5.951 19.665a1.143 1.143 0 1 1-1.616-1.616L18.049 4.335Z"/>
+  <path d="M4.335 4.335a1.143 1.143 0 0 1 1.616 0l13.714 13.714a1.143 1.143 0 1 1-1.616 1.616L4.335 5.951a1.143 1.143 0 0 1 0-1.616Z"/>
+</svg>' . '<span class="urm-action-link--text">' . esc_html__( 'Cancel', 'user-registration' ) . '</span>' . '</a>';
 											}
 										}
 										?>

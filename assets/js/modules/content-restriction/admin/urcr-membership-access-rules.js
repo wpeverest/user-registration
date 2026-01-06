@@ -384,6 +384,44 @@
 				} else if (messageType === 'custom') {
 					$messageContainer.removeClass('ur-d-none').addClass('ur-d-flex');
 					$messageContainer.show();
+
+					// Check if editor value is empty and add default message
+					var editorContent = '';
+					var $editorField = $('#urcr-membership-action-message');
+
+					if (typeof wp !== 'undefined' && wp.editor && $editorField.length) {
+						var editor = window.tinymce && window.tinymce.get('urcr-membership-action-message');
+						if (editor) {
+							editorContent = editor.getContent();
+						} else {
+							editorContent = wp.editor.getContent('urcr-membership-action-message');
+						}
+					} else {
+						editorContent = $editorField.val() || '';
+					}
+
+					// If editor is empty, set default message
+					if (!editorContent || editorContent.trim() === '') {
+						var defaultMessage = '';
+						if (typeof urcr_membership_access_data !== 'undefined' && urcr_membership_access_data.membership_default_message) {
+							defaultMessage = urcr_membership_access_data.membership_default_message;
+						}
+
+						if (defaultMessage) {
+							setTimeout(function() {
+								if ($editorField.length) {
+									var editor = window.tinymce && window.tinymce.get('urcr-membership-action-message');
+									if (editor) {
+										editor.setContent(defaultMessage);
+									} else {
+										wp.editor.setContent('urcr-membership-action-message', defaultMessage);
+									}
+								} else {
+									$editorField.val(defaultMessage);
+								}
+							}, 100);
+						}
+					}
 				}
 			});
 		},

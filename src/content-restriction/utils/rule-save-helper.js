@@ -29,12 +29,13 @@ export const saveRuleWithCollectiveData = async ({
 			
 			if (actions.length === 0) {
 				const currentAccessControl = contentData?.accessControl || rule.access_control || "access";
+				const defaultMessage = getURCRData("membership_default_message", "");
 				actions = [
 					{
 						id: `x${Date.now()}`,
 						type: "message",
 						label: __("Show Message", "user-registration"),
-						message: "<p>" + __("You do not have sufficient permission to access this content.", "user-registration") + "</p>",
+						message: defaultMessage,
 						redirect_url: "",
 						access_control: currentAccessControl,
 						local_page: "",

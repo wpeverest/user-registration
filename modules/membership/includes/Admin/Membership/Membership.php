@@ -626,8 +626,18 @@ class Membership {
 		}
 
 		if ( ! $selected_option ) {
-			$selected_option = $condition_options[0];
-			$type            = $selected_option['value'];
+			// Check if condition_options is not empty before accessing index 0
+			if ( ! empty( $condition_options ) && isset( $condition_options[0] ) ) {
+				$selected_option = $condition_options[0];
+				$type            = isset( $selected_option['value'] ) ? $selected_option['value'] : $type;
+			} else {
+				// Fallback if condition_options is empty
+				$selected_option = array(
+					'value' => $type,
+					'label' => $type,
+					'type'  => 'multiselect',
+				);
+			}
 		}
 
 		$input_type = isset( $selected_option['type'] ) ? $selected_option['type'] : 'multiselect';

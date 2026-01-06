@@ -569,6 +569,16 @@ class UR_Getting_Started {
 
 		$page_details = array();
 
+		// Set default content restriction message
+		$default_message = '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
+<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
+<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
+<p>{{sign_up}} {{log_in}}</p>';
+		if ( class_exists( 'URCR_Admin_Assets' ) ) {
+			$default_message = URCR_Admin_Assets::get_default_message();
+		}
+		update_option( 'user_registration_content_restriction_message', $default_message );
+
 		$is_membership_setup = in_array( $membership_type, array( 'paid_membership', 'free_membership' ), true );
 
 		if ( $is_membership_setup ) {
@@ -1128,7 +1138,7 @@ class UR_Getting_Started {
 					'type'           => 'message',
 					'access_control' => 'access',
 					'label'          => __( 'Show Message', 'user-registration' ),
-					'message'        => __( 'You do not have sufficient permission to access this content.', 'user-registration' ),
+					'message'        => '',
 					'redirect_url'   => '',
 					'local_page'     => '',
 					'ur_form'        => '',

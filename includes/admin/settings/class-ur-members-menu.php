@@ -630,40 +630,54 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 								$this->errors[] = new WP_Error( 'edit_users', __( 'Sorry, you are not allowed to perform this action.', 'user-registration' ) );
 								break;
 							}
-							// Update user meta and redirect
-							if ( $action === 'enable_user' ) {
-								$value     = false;
-								$message   = 'User enabled successfully.';
-								$no_change = 'Selected Users are Already Enabled.';
-								foreach ( $userids as $user_id ) {
-									delete_user_meta( $user_id, 'ur_disable_users' );
-									delete_user_meta( $user_id, 'ur_auto_enable_time' );
-								}
-							}
-							if ( $action === 'disable_user' ) {
-								$value     = true;
-								$message   = 'User disabled successfully.';
-								$no_change = 'Selected Users are Already Disabled.';
-							}
 							$enable_disable_count = 0;
+							$count_type           = 'enable_user' === $action ? 'enable_user' : 'disable_user';
 
 							foreach ( $userids as $user_id ) {
-								$enable_disable_user = update_user_meta( $user_id, 'ur_disable_users', $value );
-								++$enable_disable_count;
+								$current_status = get_user_meta( $user_id, 'ur_disable_users', true );
+
+								if ( 'enable_user' === $action ) {
+									if ( empty( $current_status ) ) {
+										continue;
+									}
+
+									delete_user_meta( $user_id, 'ur_disable_users' );
+									delete_user_meta( $user_id, 'ur_auto_enable_time' );
+									++$enable_disable_count;
+
+								} elseif ( 'disable_user' === $action ) {
+									if ( '1' === (string) $current_status ) {
+										continue;
+									}
+
+									update_user_meta( $user_id, 'ur_disable_users', true );
+									++$enable_disable_count;
+								}
 							}
-							if ( $enable_disable_user ) {
-								$this->notice_data = array(
-									'type'    => 'enable_disable',
-									'count'   => $enable_disable_count,
-									'message' => $message,
+							if ( $enable_disable_count ) {
+								$redirect_url = add_query_arg(
+									array(
+										'enable_disable_count' => $enable_disable_count,
+										'_wpnonce'   => wp_create_nonce( 'count-nonce' ),
+										'count_type' => $count_type,
+									),
+									admin_url( 'admin.php?page=user-registration-users' )
 								);
-								add_action( 'admin_notices', array( $this, 'user_registration_show_admin_notice' ) );
+
+								wp_safe_redirect( esc_url_raw( $redirect_url ) );
+								exit;
 							} else {
-								$this->notice_data = array(
-									'type'      => 'no_change',
-									'no_change' => $no_change,
+								$redirect_url = add_query_arg(
+									array(
+										'enable_disable_count' => 'no_change',
+										'_wpnonce'   => wp_create_nonce( 'count-nonce' ),
+										'count_type' => $count_type,
+									),
+									admin_url( 'admin.php?page=user-registration-users' )
 								);
-								add_action( 'admin_notices', array( $this, 'user_registration_show_admin_notice' ) );
+
+								wp_safe_redirect( esc_url_raw( $redirect_url ) );
+								exit;
 							}
 							break;
 
@@ -831,6 +845,26 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 					$count_message     = 1 < $user_delete_count ? $user_delete_count . ' users' : 'User';
 					/* translators: Count message */
 					$message = sprintf( __( '%s deleted successfully.', 'user-registration' ), $count_message );
+				}
+
+				if ( isset( $_REQUEST['enable_disable_count'] ) ) {
+					if ( 'no_change' === $_REQUEST['enable_disable_count'] ) {
+						if ( 'enable_user' === $_REQUEST['count_type'] ) {
+							$message = __( 'Selected Users are Already Enabled.', 'user-registration' );
+						} else {
+							$message = __( 'Selected Users are Already Disabled.', 'user-registration' );
+						}
+					} else {
+						$enable_disable_count = absint( $_REQUEST['enable_disable_count'] );
+						$count_message        = 1 < $enable_disable_count ? $enable_disable_count . ' users' : 'User';
+						if ( 'enable_user' === $_REQUEST['count_type'] ) {
+							/* translators: Count message */
+							$message = sprintf( __( '%s enabled successfully.', 'user-registration' ), $count_message );
+						} else {
+							/* translators: Count message */
+							$message = sprintf( __( '%s disabled successfully.', 'user-registration' ), $count_message );
+						}
+					}
 				}
 			}
 
@@ -1929,18 +1963,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 				return;
 			}
 
-			if ( 'enable_disable' === $this->notice_data['type'] ) {
-				printf(
-					"<div class='updated notice ur-users-notice is-dismissible'><p>%s %s</p></div>",
-					esc_html( $this->notice_data['count'] ),
-					esc_html( isset( $this->notice_data['message'] ) ? $this->notice_data['message'] : '' ),
-				);
-			} elseif ( 'no_change' === $this->notice_data['type'] ) {
-				printf(
-					"<div class='updated notice ur-users-notice is-dismissible'><p>%s</p></div>",
-					esc_html( isset( $no_change ) ? $no_change : '' ),
-				);
-			} elseif ( 'error' === $this->notice_data['type'] ) {
+			if ( 'error' === $this->notice_data['type'] ) {
 				echo '<div class="notice ur-toaster ur-users-notice notice-error is-dismissible"><p>' . esc_html( $this->notice_data['error']->get_error_message() ) . '</p></div>';
 
 			}

@@ -1051,6 +1051,12 @@ body {
 				margin-bottom: 0;
 			}
 
+			&:has(.ur-upgrade--link) {
+				p.ur-p-tag {
+					margin-bottom: 0;
+				}
+			}
+
 			&.ur-captcha-settings,
 			&.ur-integration-settings {
 				&:has(.active) {
@@ -1730,13 +1736,14 @@ body {
 							&--item {
 								max-width: 120px;
 								height: auto;
-								border: $border_width solid #E9E9E9;
+								border: $border_width solid $border-color;
 								border-radius: $border_radius_5;
 								text-align: center;
 								padding: $spacing_6px;
 								align-items: center;
 								display: flex;
 								margin-bottom: 0;
+								cursor: pointer;
 
 								&.active {
 									label {
@@ -1752,6 +1759,7 @@ body {
 									font-weight: $semi-bold;
 									color: $grey-400;
 									opacity: 0.5;
+									cursor: pointer;
 
 									input {
 										display: none;

@@ -32,6 +32,8 @@ const RuleCard = ({
 	const [activeTab, setActiveTab] = useState("rules");
 	const menuWrapperRef = useRef(null);
 	const isMembershipRule = rule.rule_type === "membership";
+	const isMigratedRule = Boolean(rule.is_migrated);
+	const shouldHideMenu = (!isURDev() && isMembershipRule) || isMigratedRule;
 	const messageTabLabel = isMembershipRule ? __("Restriction Message", "user-registration") : __("Settings", "user-registration");
 
 	const editUrl = adminURL
@@ -164,7 +166,7 @@ const RuleCard = ({
 								setActiveTab("rules");
 							}}
 						>
-							{__("Rules", "user-registration")}
+							{__("Rule", "user-registration")}
 						</button>
 						<button
 							className={`urcr-tab-button ${activeTab === "message" ? "urcr-tab-active" : ""}`}
@@ -177,98 +179,49 @@ const RuleCard = ({
 							{messageTabLabel}
 						</button>
 					</div>
-					<div className="urcr-menu-wrapper" ref={menuWrapperRef}>
-						<button
-							className={`urcr-menu-toggle button-link ${
-								menuOpen ? "urcr-icon-active" : ""
-							}`}
-							type="button"
-							onClick={(e) => {
-								e.stopPropagation();
-								setMenuOpen(!menuOpen);
-							}}
-							aria-label={__("More options", "user-registration")}
-						>
-							<span className="dashicons dashicons-ellipsis"></span>
-						</button>
-						{menuOpen && (
-							<div className="urcr-menu-dropdown">
-								<button
-									className="urcr-menu-item urcr-menu-trash"
-									type="button"
-									disabled={
-										(!isURDev() &&
-											rule.rule_type === "membership") ||
-										Boolean(rule.is_migrated)
-									}
-									onClick={(e) => {
-										e.stopPropagation();
-										if (
-											!(
-												(!isURDev() &&
-													rule.rule_type ===
-														"membership") ||
-												Boolean(rule.is_migrated)
-											)
-										) {
+					{!shouldHideMenu && (
+						<div className="urcr-menu-wrapper" ref={menuWrapperRef}>
+							<button
+								className={`urcr-menu-toggle button-link ${
+									menuOpen ? "urcr-icon-active" : ""
+								}`}
+								type="button"
+								onClick={(e) => {
+									e.stopPropagation();
+									setMenuOpen(!menuOpen);
+								}}
+								aria-label={__("More options", "user-registration")}
+							>
+								<span className="dashicons dashicons-ellipsis"></span>
+							</button>
+							{menuOpen && (
+								<div className="urcr-menu-dropdown">
+									<button
+										className="urcr-menu-item urcr-menu-trash"
+										type="button"
+										onClick={(e) => {
+											e.stopPropagation();
 											handleDeleteClick();
-										}
-									}}
-									style={{
-										opacity:
-											(!isURDev() &&
-												rule.rule_type ===
-													"membership") ||
-											Boolean(rule.is_migrated)
-												? 0.5
-												: 1,
-										cursor:
-											(!isURDev() &&
-												rule.rule_type ===
-													"membership") ||
-											Boolean(rule.is_migrated)
-												? "not-allowed"
-												: "pointer"
-									}}
-								>
-									<span className="dashicons dashicons-trash"></span>
-									{__("Trash", "user-registration")}
-								</button>
-								<button
-									className="urcr-menu-item urcr-menu-duplicate"
-									type="button"
-									disabled={
-										!isURDev() &&
-										rule.rule_type === "membership"
-									}
-									onClick={(e) => {
-										e.stopPropagation();
-										if (
-											isURDev() ||
-											rule.rule_type !== "membership"
-										) {
+										}}
+									>
+										<span className="dashicons dashicons-trash"></span>
+										{__("Trash", "user-registration")}
+									</button>
+									<button
+										className="urcr-menu-item urcr-menu-duplicate"
+										type="button"
+										onClick={(e) => {
+											e.stopPropagation();
 											handleDuplicateClick();
-										}
-									}}
-									style={{
-										opacity:
-											!isURDev() &&
-											rule.rule_type === "membership"
-												? 0.5
-												: 1,
-										cursor:
-											!isURDev() &&
-											rule.rule_type === "membership"
-												? "not-allowed"
-												: "pointer"
-									}}
-								>
-									<span className="dashicons dashicons-admin-page"></span>
-									{__("Duplicate", "user-registration")}
-								</button>
-							</div>
-						)}
-					</div>
+										}}
+									>
+										<span className="dashicons dashicons-admin-page"></span>
+										{__("Duplicate", "user-registration")}
+									</button>
+								</div>
+							)}
+						</div>
+					)}
 					<svg
 						viewBox="0 0 24 24"
 						width="24"

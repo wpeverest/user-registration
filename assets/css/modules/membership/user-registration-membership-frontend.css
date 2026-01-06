@@ -806,7 +806,7 @@ html {
   border-radius: 4px;
   border: 1px solid #e1e1e1;
   padding: 14px;
-  min-height: 48px;
+  height: 48px;
   margin-bottom: 20px;
   justify-content: center;
   flex: 1;
@@ -1150,11 +1150,6 @@ html {
   font-style: italic;
   font-size: x-small;
 }
-.user-registration-page .stripe-input-container,
-.ur-multi-device-form-preview .stripe-input-container,
-#pg-container .stripe-input-container {
-  border: 1px solid #e9e9e9;
-}
 .user-registration-page .stripe-card-indicator,
 .ur-multi-device-form-preview .stripe-card-indicator,
 #pg-container .stripe-card-indicator {
@@ -1227,7 +1222,6 @@ html {
   line-height: 24px;
   margin: 0;
   padding: 6px 12px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1607843137);
 }
 .user-registration-page .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button:focus,
 .ur-multi-device-form-preview .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button:focus,
@@ -1266,8 +1260,9 @@ html {
 .user-registration-page .membership-upgrade-container .StripeElement,
 .ur-multi-device-form-preview .membership-upgrade-container .StripeElement,
 #pg-container .membership-upgrade-container .StripeElement {
-  padding: 0px 8px;
+  padding: 0px 12px;
   border: 1px solid #e1e1e1;
+  border-radius: 4px;
 }
 .user-registration-page .membership-upgrade-container .StripeElement .__PrivateStripeElement,
 .ur-multi-device-form-preview .membership-upgrade-container .StripeElement .__PrivateStripeElement,
