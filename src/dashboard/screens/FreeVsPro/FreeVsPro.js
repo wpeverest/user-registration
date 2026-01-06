@@ -106,7 +106,7 @@ const FreeVsPro = () => {
 				},
 				{
 					title: __(
-						"User Registration Analytics widget",
+						"User Registration & Membership Analytics widget",
 						"user-registration"
 					),
 					free: true,
@@ -441,7 +441,10 @@ const FreeVsPro = () => {
 					padding="10px 16px"
 					borderRadius="3px"
 				>
-					{__("Get User Registration Pro Now", "user-registration")}
+					{__(
+						"Get User Registration & Membership Pro Now",
+						"user-registration"
+					)}
 				</Button>
 			</Stack>
 		</Stack>

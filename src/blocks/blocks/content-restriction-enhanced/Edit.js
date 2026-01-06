@@ -351,7 +351,7 @@ const Edit = ({ attributes, setAttributes }) => {
 				p={"0.5px"}
 			>
 				<Flex
-					className="ur-note"
+					className="urcr-block-notice"
 					bg={"gray.200"}
 					justify="center"
 					align="center"

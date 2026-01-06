@@ -355,14 +355,14 @@ const SiteAssistant = () => {
 							<URIcon.Team w="5" h="5" fill={PRIMARY_COLOR} />
 							<Heading as="h3" size="sm" fontWeight="semibold">
 								{__(
-									"User Registration Community",
+									"User Registration & Membership Community",
 									"user-registration"
 								)}
 							</Heading>
 						</HStack>
 						<Text fontSize="13px" color="gray.700">
 							{__(
-								"Join our exclusive group and connect with fellow User Registration members. Ask questions, contribute to discussions, and share feedback!",
+								"Join our exclusive group and connect with fellow User Registration & Membership members. Ask questions, contribute to discussions, and share feedback!",
 								"user-registration"
 							)}
 						</Text>
@@ -395,7 +395,7 @@ const SiteAssistant = () => {
 						</HStack>
 						<Text fontSize="13px" color="gray.700">
 							{__(
-								"Check our documentation for detailed information on User Registration features and how to use them.",
+								"Check our documentation for detailed information on User Registration & Membership features and how to use them.",
 								"user-registration"
 							)}
 						</Text>
@@ -515,7 +515,7 @@ const SiteAssistant = () => {
 						</HStack>
 						<Text fontSize="13px" color="gray.700">
 							{__(
-								"Watch our step-by-step video tutorials that'll help you get the best out of User Registration's features.",
+								"Watch our step-by-step video tutorials that'll help you get the best out of User Registration & Membership's features.",
 								"user-registration"
 							)}
 						</Text>

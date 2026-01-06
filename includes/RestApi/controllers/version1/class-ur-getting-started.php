@@ -1864,12 +1864,12 @@ class UR_Getting_Started {
 				'redirect_url' => admin_url( 'admin.php?page=user-registration' ),
 				'links'        => array(
 					'registration_page' => self::get_registration_page_url(),
-						'dashboard'         => admin_url( 'admin.php?page=user-registration' ),
-					),
+					'dashboard'         => admin_url( 'admin.php?page=user-registration' ),
 				),
-				200
-			);
-		}
+			),
+			200
+		);
+	}
 
 	/**
 	 * Skip current step and move to the next one.
@@ -1884,7 +1884,6 @@ class UR_Getting_Started {
 		$current_step    = isset( $request['step'] ) ? absint( $request['step'] ) : self::get_current_step();
 		$step_id         = isset( $request['step_id'] ) ? sanitize_text_field( $request['step_id'] ) : '';
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
-
 
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
 
@@ -2100,7 +2099,7 @@ class UR_Getting_Started {
 					'data' => array(
 						'email'       => sanitize_email( $email ),
 						'website_url' => get_bloginfo( 'url' ),
-						'plugin_name' => ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) ? 'User Registration PRO' : 'User Registration',
+						'plugin_name' => ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) ? 'User Registration & Membership PRO' : 'User Registration & Membership',
 						'plugin_slug' => defined( 'UR_PLUGIN_FILE' ) ? plugin_basename( UR_PLUGIN_FILE ) : 'user-registration',
 					),
 				),

@@ -461,4 +461,45 @@ jQuery(function ($) {
 			$activeDropdown = null;
 		}
 	});
+
+	ur_init_tooltips($(".user-registration-help-tip"));
 });
+
+/**
+ * Set tooltips for specified elements.
+ *
+ * @param {String|jQuery} $elements Elements to set tooltips for.
+ * @param {JSON} options Overriding options for tooltips.
+ */
+function ur_init_tooltips($elements, options) {
+	if (undefined !== $elements && null !== $elements && "" !== $elements) {
+		var args = {
+			theme: "tooltipster-borderless",
+			maxWidth: 200,
+			multiple: true,
+			interactive: true,
+			position: "bottom",
+			contentAsHTML: true,
+			functionInit: function (instance, helper) {
+				var $origin = jQuery(helper.origin),
+					dataTip = $origin.attr("data-tip");
+
+				if (dataTip) {
+					instance.content(dataTip);
+				}
+			}
+		};
+
+		if (options && "object" === typeof options) {
+			Object.keys(options).forEach(function (key) {
+				args[key] = options[key];
+			});
+		}
+
+		if ("string" === typeof $elements) {
+			jQuery($elements).tooltipster(args);
+		} else {
+			$elements.tooltipster(args);
+		}
+	}
+}

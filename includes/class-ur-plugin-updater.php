@@ -124,7 +124,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			return false;
 		}
 
-		if( false !== get_option( 'user-registration_license_key', false ) && ! empty( $_REQUEST[ 'download_user_registration_pro' ] ) ) {
+		if ( false !== get_option( 'user-registration_license_key', false ) && ! empty( $_REQUEST['download_user_registration_pro'] ) ) {
 			$this->install_extension();
 			wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
 			exit;
@@ -160,8 +160,8 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$license_key = sanitize_text_field( $_POST[ $this->plugin_slug . '_license_key' ] ); // phpcs:ignore
 
 		if ( $this->activate_license( $license_key ) ) {
-			if( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
-				setcookie('urm_license_status', 'license_activated', time() + 300, '/', '', false, false);
+			if ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+				setcookie( 'urm_license_status', 'license_activated', time() + 300, '/', '', false, false );
 			}
 			wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
 			exit;
@@ -201,7 +201,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * Display plugin license view.
 	 */
 	private function plugin_license_view() {
-		if( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+		if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
 			add_filter( 'plugin_action_links_' . $this->plugin_name, array( $this, 'plugin_action_links' ) );
 		}
 		add_action( 'admin_notices', array( $this, 'user_registration_error_notices' ) );
@@ -224,9 +224,9 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * @param string $type    Type of error message.
 	 */
 	public function add_error( $message, $type = '' ) {
-		foreach( $this->errors as $key => $errors ) {
-			if( 'Error code: 403' === $errors) {
-				unset( $this->errors[$key] );
+		foreach ( $this->errors as $key => $errors ) {
+			if ( 'Error code: 403' === $errors ) {
+				unset( $this->errors[ $key ] );
 			}
 		}
 
@@ -273,8 +273,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 				if ( $key === 'activation_error' ) {
 					UR_Admin_Settings::add_error( $error, $key );
 					unset( $this->errors[ $key ] );
-				}
-				else {
+				} else {
 					include __DIR__ . '/admin/notifications/views/html-notice-error.php';
 					if ( 'invalid_key' !== $key && did_action( 'all_admin_notices' ) ) {
 						unset( $this->errors[ $key ] );
@@ -498,12 +497,12 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$message             = get_option( 'user_registration_failed_installing_extensions_message', '' );
 
 		if ( ! file_exists( $ur_pro_plugins_path ) ) {
-			$message = $message . esc_html__( ' Please manually download <strong>User Registration PRO</strong>.', 'user-registration' );
+			$message = $message . esc_html__( ' Please manually download <strong>User Registration & Membership PRO</strong>.', 'user-registration' );
 
 			echo '<div class="error updated notice is-dismissible"><p>' . wp_kses_post( $message ) . '</p></div>';
 
 		} elseif ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
-			$message = esc_html__( ' Please manually activate <strong>User Registration PRO</strong>.', 'user-registration' );
+			$message = esc_html__( ' Please manually activate <strong>User Registration & Membership PRO</strong>.', 'user-registration' );
 
 			echo '<div class="error updated notice is-dismissible"><p>' . wp_kses_post( $message ) . '</p></div>';
 
@@ -531,12 +530,12 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 		$content = '';
 
 		if ( $license_key ) {
-			$content .= sprintf( __( '<strong>If you have active premium license of User Registration</strong>, please click button below to install and activate <strong>User Registration Pro</strong>. Going forward <strong>User Registration Pro</strong> is necessary for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
+			$content .= sprintf( __( '<strong>If you have active premium license of User Registration & Membership</strong>, please click button below to install and activate <strong>User Registration & Membership Pro</strong>. Going forward <strong>User Registration & Membership Pro</strong> is necessary for smooth running of premium addons of User Registration & Membership that you are currently using.', 'user-registration' ) );
 			$link    .= '<input name="ur_license_nonce" id="ur_license_nonce" type="hidden" value="' . wp_create_nonce( '_ur_license_nonce' ) . '"/>';
-			$link    .= '<button class="button button-primary" type="text" name="download_user_registration_pro" value="download_user_registration_pro"><span class="dashicons dashicons-external"></span>' . __( 'Install and Activate User Registration Pro', 'user-registration' ) . '</button>';
+			$link    .= '<button class="button button-primary" type="text" name="download_user_registration_pro" value="download_user_registration_pro"><span class="dashicons dashicons-external"></span>' . __( 'Install and Activate User Registration & Membership Pro', 'user-registration' ) . '</button>';
 		} else {
 			$content .= sprintf( '<p class="extra-pad"><strong>%1$s</strong>, %2$s</p>', __( 'If you already have an active license key.', 'user-registration' ), __( 'please activate the key.', 'user-registration' ) );
-			$content .= sprintf( '<p class="extra-pad"><strong>%1$s</strong>, %2$s</p>', __( 'If you do not have active premium license of User Registration', 'user-registration' ), __( 'please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
+			$content .= sprintf( '<p class="extra-pad"><strong>%1$s</strong>, %2$s</p>', __( 'If you do not have active premium license of User Registration & Membership', 'user-registration' ), __( 'please purchase premium license. Going forward active premium license will be vital for smooth running of premium addons of User Registration that you are currently using.', 'user-registration' ) );
 			$link    .= '<li><a class="button button-primary" href="' . esc_url_raw( 'https://wpuserregistration.com/upgrade/?utm_source=user-dashboard&utm_medium=notice-3.0.0&utm_campaign=user-registration-pro-3.0.0' ) . '" rel="noreferrer noopener" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Purchase Premium License', 'user-registration' ) . '</a></li>';
 			$link    .= '<li><a class="button button-secondary" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=license' ) ) . '" rel="noreferrer noopener" target="_blank"><span class="dashicons dashicons-external"></span>' . __( 'Activate License Key', 'user-registration' ) . '</a></li>';
 		}
@@ -623,9 +622,9 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 					</div>
 					<div class="user-registration-notice-text">
 						<div class="user-registration-notice-header">
-							<h3 class="ur-error extra-pad"><?php echo wp_kses_post( sprintf( __( '<strong> Update all addons of User Registration!!</strong>', 'user-registration' ) ) ); ?></h3>
+							<h3 class="ur-error extra-pad"><?php echo wp_kses_post( sprintf( __( '<strong> Update all addons of User Registration & Membership!!</strong>', 'user-registration' ) ) ); ?></h3>
 						</div>
-						<p class="extra-pad"><?php echo wp_kses_post( sprintf( __( 'It seems some of the <strong>User Registration</strong> Addons are outdated. Please update the outdated addons to the latest version for the <strong>User Registration Pro</strong> plugin to work correctly.<br>', 'user-registration' ) ) ); ?></p>
+						<p class="extra-pad"><?php echo wp_kses_post( sprintf( __( 'It seems some of the <strong>User Registration & Membership</strong> Addons are outdated. Please update the outdated addons to the latest version for the <strong>User Registration & Membership Pro</strong> plugin to work correctly.<br>', 'user-registration' ) ) ); ?></p>
 						<?php echo wp_kses_post( $update_addon_content ); ?>
 						<div class="user-registration-notice-links">
 							<ul class="user-registration-notice-ul">
@@ -647,7 +646,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 							<h3 class="ur-error extra-pad"><?php echo wp_kses_post( sprintf( __( '<strong> Upgrade To PRO!!</strong>', 'user-registration' ) ) ); ?></h3>
 						</div>
 
-						<p class="extra-pad"><?php echo wp_kses_post( sprintf( __( 'It seems you are using some premium addons of User Registration plugin. <br>', 'user-registration' ) ) ); ?></p>
+						<p class="extra-pad"><?php echo wp_kses_post( sprintf( __( 'It seems you are using some premium addons of User Registration & Membership plugin. <br>', 'user-registration' ) ) ); ?></p>
 						<?php echo esc_html( $license_key ) ? '<p class="extra-pad">' . wp_kses_post( $content ) . '</p>' : wp_kses_post( $content ); ?>
 						<div class="user-registration-notice-links">
 							<ul class="user-registration-notice-ul">
@@ -667,7 +666,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 	 * @since 2.0.0
 	 */
 	public function user_registration_extension_download_success_notice() {
-		$notice_html = __( 'User Registration Pro has been installed successfully.', 'user-registration' );
+		$notice_html = __( 'User Registration & Membership Pro has been installed successfully.', 'user-registration' );
 		include __DIR__ . '/admin/notifications/views/html-notice-key-activated.php';
 	}
 }

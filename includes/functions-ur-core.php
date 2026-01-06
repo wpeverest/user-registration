@@ -4217,7 +4217,7 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 					'name' => esc_html__( 'User Registration - Email Templates', 'user-registration' ),
 				),
 			),
-			'registration_login' => array(		
+			'registration_login' => array(
 				'social-connect' => array(
 					'label' => esc_html__( 'Social Connect', 'user-registration' ),
 					'plugin' => 'user-registration-social-connect',
@@ -4397,7 +4397,7 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 		if( ! isset( $current_section ) ) {
 			$current_section = apply_filters( 'user_registration_settings_' . $current_tab . '_default_section', '' );
 		}
-		
+
 		$is_upgradable_section = isset( $premium_tabs[ $current_tab ] [ $current_section ] );
 		if( $is_upgradable_section ) {
 			$section_details = $premium_tabs[ $current_tab ][ $current_section ];
@@ -4494,7 +4494,7 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 						$button_text = esc_html__( 'Upgrade Plan', 'user-registration' );
 						$settings[ 'sections' ][ 'premium_setting_section' ][ 'before_desc' ] = $description;
 						$settings[ 'sections' ][ 'premium_setting_section' ][ 'button' ][ 'button_text' ] = $button_text;
-					} 
+					}
 					else {
 						$plugin_name = $detail[ 'name' ];
 						$action = '';
@@ -4520,13 +4520,15 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 						$button_title = sprintf( esc_html__( '%s Addon', 'user-registration' ), $action );
 
 						$settings[ 'sections' ][ 'premium_setting_section' ][ 'before_desc' ] = $description;
-						$settings[ 'sections' ][ 'premium_setting_section' ][ 'settings' ] =
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'desc' ] = false;
 						$settings[ 'sections' ][ 'premium_setting_section' ][ 'settings' ] = array(
-							'id' => 'ur-install-addon__button',
-							'type' => 'button',
-							'class' => $button_class,
-							'attrs' => $button_attrs,
-							'title' => $button_title,
+							array(
+								'id' => 'ur-install-addon__button',
+								'type' => 'button',
+								'class' => $button_class,
+								'attrs' => $button_attrs,
+								'title' => $button_title,
+							)
 						);
 					}
 				} else {
@@ -5463,16 +5465,16 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 		$is_preview = isset( $_GET['ur_email_preview'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$current_screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		$is_settings_page = $current_screen && 'user-registration_page_user-registration-settings' === $current_screen->id;
-		$is_email_action = isset( $_REQUEST['action'] ) && ( 
-			'ur_send_test_email' === $_REQUEST['action'] || 
+		$is_email_action = isset( $_REQUEST['action'] ) && (
+			'ur_send_test_email' === $_REQUEST['action'] ||
 			strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		);
-		
+
 		// Only exclude CSS when on settings page displaying editor (not when sending emails).
-		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action && 
-		                     ! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) && 
+		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action &&
+		                     ! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
 		                     ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
-		
+
 		// Responsive CSS styles for email template - only include when not in editor context.
 		$responsive_styles = '';
 		if ( ! $is_editor_context ) {
@@ -7467,11 +7469,11 @@ if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
 				'type'                  => 'info',
 				'status'                => 'active',
 				'priority'              => '1',
-				'title'                 => __( 'User Registration Email Send Error', 'user-registration' ),
+				'title'                 => __( 'User Registration & Membership Email Send Error', 'user-registration' ),
 				'message_content'       => wp_kses_post(
 					sprintf(
 						'<p>%s</p><p class="ur-email-send-failed-log">%s</p>',
-						__( 'The last emails sent from User Registration Plugin was not delivered to the user. ', 'user-registration' ),
+						__( 'The last emails sent from User Registration & Membership Plugin was not delivered to the user. ', 'user-registration' ),
 						$error_message
 					)
 				),
@@ -7580,8 +7582,8 @@ if ( ! function_exists( 'ur_spam_users_detected' ) ) {
 				'message_content'       => wp_kses_post(
 					sprintf(
 						'<p>%s</p><p>%s</p>',
-						__( 'A significant number of users have registered on your site from sources other than the User Registration plugin\'s form.', 'user-registration' ),
-						__( 'These registrations may be suspicious. Please review and disable any other methods that allow user registrations if they are not intended. Additionally, consider enabling spam protection measures in the User Registration plugin to safeguard your site.', 'user-registration' ),
+						__( 'A significant number of users have registered on your site from sources other than the User Registration & Membership plugin\'s form.', 'user-registration' ),
+						__( 'These registrations may be suspicious. Please review and disable any other methods that allow user registrations if they are not intended. Additionally, consider enabling spam protection measures in the User Registration & Membership to safeguard your site.', 'user-registration' ),
 					)
 				),
 				'buttons'               => array(
@@ -7839,7 +7841,7 @@ function create_wpbakery_widget_category() {
 			'name'        => esc_html__( 'Edit Profile', 'user-registration' ),
 			'base'        => 'user_registration_edit_profile',
 			'icon'        => 'icon-wpb-vc_user_registration',
-			'category'    => esc_html__( 'User Registration', 'user-registration' ),
+			'category'    => esc_html__( 'User Registration & Membership', 'user-registration' ),
 			'description' => esc_html__( 'Edit Profile widget for WPBakery.', 'user-registration' ),
 		),
 	);
@@ -7848,7 +7850,7 @@ function create_wpbakery_widget_category() {
 			'name'        => esc_html__( 'Edit Password', 'user-registration' ),
 			'base'        => 'user_registration_edit_password',
 			'icon'        => 'icon-wpb-vc_user_registration',
-			'category'    => esc_html__( 'User Registration', 'user-registration' ),
+			'category'    => esc_html__( 'User Registration & Membership', 'user-registration' ),
 			'description' => esc_html__( 'Edit Password widget for WPBakery.', 'user-registration' ),
 		),
 	);
@@ -9841,7 +9843,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		$payment_connections = ur_get_payment_connection_statuses();
 
 		$site_assistant_data = array(
-			'has_default_form'        => ! empty( get_post( get_option( 'user_registration_default_form_page_id', '' ) ) ),
+			'has_default_form'        => ! empty( get_post( get_option( 'user_registration_registration_form', '' ) ) ),
 			'missing_pages'           => $missing_pages_data,
 			'test_email_sent'         => get_option( 'user_registration_successful_test_mail', false ),
 			'wordpress_login_handled' => ( get_option( 'user_registration_login_options_prevent_core_login', false ) == true ) || ( get_option( 'user_registration_default_wordpress_login_skipped', false ) == true ),
@@ -10694,5 +10696,23 @@ if ( ! function_exists( 'urcr_get_custom_rules_count' ) ) {
 		}
 
 		return $rules_count;
+	}
+}
+
+
+if ( !function_exists( 'urm_array_key_exists_recursive' ) ) {
+
+	function urm_array_key_exists_recursive( $needle, array $haystack ) {
+		foreach ( $haystack as $key => $value ) {
+			if ( $key === $needle ) {
+				return $value;
+			}
+
+			if ( is_array( $value ) && urm_array_key_exists_recursive( $needle, $value ) ) {
+				return $value;
+			}
+		}
+
+		return false;
 	}
 }

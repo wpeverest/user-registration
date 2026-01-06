@@ -6,6 +6,9 @@
  * @version  1.0.0
  */
 
+use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
+use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -910,6 +913,19 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 		$all_forms = ur_get_all_user_registration_form();
 		$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';
 
+		$membership_groups_repository = new MembershipGroupRepository();
+		$membership_groups            = $membership_groups_repository->get_all_membership_groups();
+
+		$membership_rules_count = 0;
+		if ( function_exists( 'ur_get_membership_rules_count' ) ) {
+			$membership_rules_count = ur_get_membership_rules_count();
+		}
+
+		$subscription_repository = new SubscriptionRepository();
+		$result                  = $subscription_repository->query();
+
+		$all_forms = ur_get_all_user_registration_form();
+
 		// Only include Site Assistant if there are unhandled options
 		$site_assistant_item = ur_should_show_site_assistant_menu() ? array(
 			'dashboard' => array(
@@ -932,18 +948,44 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 					'membership' => array(
 						'page_slug' => 'user-registration-membership',
 						'label'     => esc_html__( 'Membership', 'user-registration' ),
-						'sub_menu'  => array(
-							'all-plans' => array(
-								'page_slug' => 'user-registration-membership',
-								'label'     => esc_html__( 'All Plans', 'user-registration' ),
-							),
-							'groups'    => array(
-								'page_slug' => 'user-registration-membership&action=list_groups',
-								'label'     => esc_html__( 'Groups', 'user-registration' ),
-							),
-						),
 					),
 				) : array(),
+				( ur_check_module_activation( 'membership-groups' ) || ! empty( $membership_groups ) ) ?
+				array(
+					'groups' => array(
+						'page_slug' => 'user-registration-membership&action=list_groups',
+						'label' 	=> esc_html__( 'Groups', 'user-registration' )
+					)
+				) : array(),
+				( ur_check_module_activation( 'content-restriction' ) || $membership_rules_count >= 2 ) ?
+				array(
+					'content-rules' => array(
+						'page_slug' => 'user-registration-content-restriction',
+						'label' 	=> esc_html__( 'Content Rules', 'user-registration' )
+					)
+				) : array(),
+				( ur_check_module_activation( 'payment-history' ) ) ?
+				array(
+					'payment-history' => array(
+						'page_slug' => 'member-payment-history',
+						'label' 	=> esc_html__( 'Payments', 'user-registration' )
+					)
+				) : array(),
+				( isset( $result['items'] ) && count( $result['items'] ) > 0 )  ?
+				array(
+					'subscriptions' => array(
+						'page_slug' => 'user-registration-subscriptions',
+						'label' 	=> esc_html__( 'Subscriptions', 'user-registration' )
+					)
+				) : array(),
+				( UR_PRO_ACTIVE && ur_check_module_activation( 'coupon' ) && class_exists( 'WPEverest\URMembership\Coupons\Coupons' ) ) ?
+				array(
+					'coupons' => array(
+						'page_slug' => 'user-registration-coupons',
+						'label' 	=> esc_html__( 'Coupons', 'user-registration' )
+					)
+				) : array(),
+				( count( $all_forms ) > 1 || ur_check_module_activation( 'multiple-registration' ) ) ?
 				array(
 					'all-forms' => array(
 						'page_slug' => 'user-registration',
@@ -959,17 +1001,68 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 							),
 						),
 					),
-				),
+				) : array(),
+				( count( $all_forms ) == 1  || ! ur_check_module_activation( 'multiple-registration' ) ) ?
+				array(
+					'registration-form' => array(
+						'page_slug' => 'user-registration',
+						'label'     => sprintf( esc_html__( 'Registration %s', 'user-registration' ), $postfix ),
+					),
+				) : array(),
+				( count( $all_forms ) == 1  || ! ur_check_module_activation( 'multiple-registration' ) ) ?
+				array(
+					'login-form'        => array(
+						'page_slug' => 'user-registration-login-forms',
+						'label'     => esc_html__( 'Login Form', 'user-registration' ),
+					),
+				) : array(),
 				array(
 					'users' => array(
 						'page_slug' => 'user-registration-users',
 						'label'     => esc_html__( 'Members', 'user-registration' ),
 					),
 				),
+				( UR_PRO_ACTIVE && class_exists( 'WPEverest\URPrivateNotes\UserRegistrationPrivateNotes' ) ) ?
+					array(
+					'private-notes' => array(
+						'page_slug' => 'user-registration-private-notes',
+						'label'     => esc_html__( 'Private Notes', 'user-registration' ),
+						'sub_menu'  => array(
+							'ur-notes' => array(
+								'page_slug' => 'user-registration-private-notes&tab=ur-notes',
+								'label'     => esc_html__( 'All Notes', 'user-registration' ),
+							),
+							'notes-reply'        => array(
+								'page_slug' => 'user-registration-private-notes&tab=ur-reply',
+								'label'     => esc_html__( 'Reply', 'user-registration' ),
+							),
+						),
+					),
+				) : array(),
 				array(
 					'settings' => array(
 						'page_slug' => 'user-registration-settings',
 						'label'     => esc_html__( 'Settings', 'user-registration' ),
+					),
+				),
+					array(
+					'status' => array(
+						'page_slug' => 'user-registration-status',
+						'label'     => esc_html__( 'Tools', 'user-registration' ),
+						'sub_menu'  => array(
+							'logs' => array(
+								'page_slug' => 'user-registration-status&tab=logs',
+								'label'     => esc_html__( 'Logs', 'user-registration' ),
+							),
+							'system-info'        => array(
+								'page_slug' => 'user-registration-status&tab=system_info',
+								'label'     => esc_html__( 'System Info', 'user-registration' ),
+							),
+							'setup-wizard'        => array(
+								'page_slug' => 'user-registration-welcome&tab=setup-wizard',
+								'label'     => esc_html__( 'Setup Wizard', 'user-registration' ),
+							),
+						),
 					),
 				),
 				array(
