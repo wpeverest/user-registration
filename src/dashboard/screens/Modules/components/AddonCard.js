@@ -27,7 +27,7 @@ import {
 	useDisclosure
 } from "@chakra-ui/react";
 import { FaCog, FaPlay, FaLock } from "react-icons/fa";
-import { Youtube } from "react-player";
+import ReactPlayer from "react-player";
 import { activateModule, deactivateModule } from "./modules-api";
 
 const AddonCard = ({ addon, showToast }) => {
@@ -393,37 +393,37 @@ const AddonCard = ({ addon, showToast }) => {
 								getPlanBadge(addon.plan) === "Free"
 									? "transparent"
 									: getPlanBadge(addon.plan) === "Personal"
-									? "#F0FDF4"
-									: getPlanBadge(addon.plan) === "Plus"
-									? "#f0f3fa"
-									: getPlanBadge(addon.plan) ===
-									  "Professional"
-									? "#EFF6FF"
-									: "#EFF6FF"
+										? "#F0FDF4"
+										: getPlanBadge(addon.plan) === "Plus"
+											? "#f0f3fa"
+											: getPlanBadge(addon.plan) ===
+												  "Professional"
+												? "#EFF6FF"
+												: "#EFF6FF"
 							}
 							border={
 								getPlanBadge(addon.plan) === "Free"
 									? "1px solid #D1D5DB"
 									: getPlanBadge(addon.plan) === "Personal"
-									? "1px solid #16A34A"
-									: getPlanBadge(addon.plan) === "Plus"
-									? "1px solid #92a2e4"
-									: getPlanBadge(addon.plan) ===
-									  "Professional"
-									? "1px solid #BFDBFE"
-									: "1px solid #BFDBFE"
+										? "1px solid #16A34A"
+										: getPlanBadge(addon.plan) === "Plus"
+											? "1px solid #92a2e4"
+											: getPlanBadge(addon.plan) ===
+												  "Professional"
+												? "1px solid #BFDBFE"
+												: "1px solid #BFDBFE"
 							}
 							color={
 								getPlanBadge(addon.plan) === "Free"
 									? "#4B5563"
 									: getPlanBadge(addon.plan) === "Personal"
-									? "#16A34A"
-									: getPlanBadge(addon.plan) === "Plus"
-									? "#92a2e4"
-									: getPlanBadge(addon.plan) ===
-									  "Professional"
-									? "#3B82F6"
-									: "#3B82F6"
+										? "#16A34A"
+										: getPlanBadge(addon.plan) === "Plus"
+											? "#92a2e4"
+											: getPlanBadge(addon.plan) ===
+												  "Professional"
+												? "#3B82F6"
+												: "#3B82F6"
 							}
 						>
 							{getPlanBadge(addon.plan)}
@@ -547,13 +547,14 @@ const AddonCard = ({ addon, showToast }) => {
 						</ModalHeader>
 						<ModalCloseButton />
 						<Box position="relative">
-							<YouTubePlayer
-								url={`https://www.youtube.com/embed/${addon.demo_video_url}`}
+							<ReactPlayer
+								src={`https://www.youtube.com/embed/${addon.demo_video_url}`}
 								playing={true}
 								width="100%"
 								controls
 								onReady={() => setVideoLoading(false)}
-								onBufferEnd={() => setVideoLoading(false)}
+								onPlaying={() => setVideoLoading(false)}
+								height={360}
 							/>
 							{videoLoading && (
 								<Box
