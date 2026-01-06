@@ -1596,7 +1596,7 @@ jQuery(function ($) {
 			.siblings("#select-smart-tags")
 			.select2({
 				placeholder: "",
-				dropdownCssClass: "ur-select2-dropdown" + (is_urcr_rule_editor ? "urcr-editor-select2-dropdown" : ""),
+				dropdownCssClass: "ur-select2-dropdown" + (is_urcr_rule_editor ? " urcr-editor-select2-dropdown" : ""),
 				templateResult: function (data, container) {
 					if ($this.siblings(".ur_advance_setting").length > 0) {
 						if (data.element) {
