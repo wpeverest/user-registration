@@ -728,7 +728,7 @@ class MembershipService {
 				if ( empty( $memberships ) ) {
 					return array(
 						'status'  => false,
-						'message' => esc_html__( 'No upgradable Memberships.', 'user-registration' ),
+						'message' => esc_html__( 'You cannot upgrade to selected membership plan. Please contact site administrator.', 'user-registration' ),
 					);
 				}
 			} else {
@@ -783,7 +783,7 @@ class MembershipService {
 				} else {
 					return array(
 						'status'  => false,
-						'message' => esc_html__( 'No upgradable Memberships.', 'user-registration' ),
+						'message' => esc_html__( 'You cannot upgrade to selected membership plan. Please contact site administrator.', 'user-registration' ),
 					);
 				}
 			}
