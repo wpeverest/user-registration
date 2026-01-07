@@ -380,7 +380,7 @@ class UR_Getting_Started {
 		}
 
 		$selected_login_option = get_option( 'user_registration_general_setting_login_options', 'default' );
-		$selected_role         = get_option( 'user_registration_default_user_role', 'subscriber' );
+		$selected_role         = get_option( 'user_registration_form_setting_default_user_role', 'subscriber' );
 
 		$data = array(
 			'login_options'         => $login_options,
@@ -428,7 +428,7 @@ class UR_Getting_Started {
 		}
 
 		if ( is_array( $available_roles ) && array_key_exists( $default_role, $available_roles ) ) {
-			update_option( 'user_registration_default_user_role', $default_role );
+			update_option( 'user_registration_form_setting_default_user_role', $default_role );
 
 			$default_form_id = get_option( 'user_registration_default_form_page_id', 0 );
 			if ( $default_form_id ) {
@@ -1767,7 +1767,7 @@ class UR_Getting_Started {
 		);
 
 		$roles        = array();
-		$default_role = get_option( 'user_registration_default_user_role', 'subscriber' );
+		$default_role = get_option( 'user_registration_form_setting_default_user_role', 'subscriber' );
 
 		if ( 'normal' === $membership_type ) {
 			$available_roles = ur_get_default_admin_roles();
@@ -1833,7 +1833,7 @@ class UR_Getting_Started {
 			$available_roles = ur_get_default_admin_roles();
 
 			if ( is_array( $available_roles ) && array_key_exists( $default_user_role, $available_roles ) ) {
-				update_option( 'user_registration_default_user_role', $default_user_role );
+				update_option( 'user_registration_form_setting_default_user_role', $default_user_role );
 				$default_form_id = get_option( 'user_registration_default_form_page_id', 0 );
 
 				if ( $default_form_id ) {
