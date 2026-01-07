@@ -985,7 +985,7 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 				// 		'label' 	=> esc_html__( 'Coupons', 'user-registration' )
 				// 	)
 				// ) : array(),
-				( count( $all_forms ) > 1 || ur_check_module_activation( 'multiple-registration' ) ) ?
+				( count( $all_forms ) > 1 ) ?
 				array(
 					'all-forms' => array(
 						'page_slug' => 'user-registration',
@@ -1002,14 +1002,14 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 						),
 					),
 				) : array(),
-				( count( $all_forms ) == 1  || ! ur_check_module_activation( 'multiple-registration' ) ) ?
+				( count( $all_forms ) == 1  ) ?
 				array(
 					'registration-form' => array(
 						'page_slug' => 'user-registration',
 						'label'     => sprintf( esc_html__( 'Registration %s', 'user-registration' ), $postfix ),
 					),
 				) : array(),
-				( count( $all_forms ) == 1  || ! ur_check_module_activation( 'multiple-registration' ) ) ?
+				( count( $all_forms ) == 1  ) ?
 				array(
 					'login-form'        => array(
 						'page_slug' => 'user-registration-login-forms',
