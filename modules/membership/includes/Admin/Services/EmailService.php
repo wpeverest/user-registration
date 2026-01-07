@@ -77,19 +77,17 @@ class EmailService {
 	public function send_user_register_email( $data ) {
 		$user_id = absint( $data['member_id'] );
 
-		if ( UR_PRO_ACTIVE ) {
-			// Check if custom email should override default email
-			$membership_id = isset( $data['membership'] ) ? absint( $data['membership'] ) : 0;
-			if ( class_exists( '\Custom_Email_Sender' ) ) {
-				// Check for all_members override
-				if ( \Custom_Email_Sender::should_override_default_email( 'member_signs_up', 'all_members', $user_id, $membership_id ) ) {
-					return;
-				}
-				// Check for specific_memberships override
-				if ( $membership_id > 0 && \Custom_Email_Sender::should_override_default_email( 'member_signs_up', 'specific_memberships', $user_id, $membership_id ) ) {
-					return;
-				}
-			}
+		// Check if custom email should override default email
+		$membership_id = isset( $data['membership'] ) ? absint( $data['membership'] ) : 0;
+		
+		// Check for all_members override
+		if ( apply_filters( 'user_registration_should_override_default_email', false, 'member_signs_up', 'all_members', $user_id, $membership_id ) ) {
+			return;
+		}
+		
+		// Check for specific_memberships override
+		if ( $membership_id > 0 && apply_filters( 'user_registration_should_override_default_email', false, 'member_signs_up', 'specific_memberships', $user_id, $membership_id ) ) {
+			return;
 		}
 
 		$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Welcome to {{blog_info}}!', 'user-registration' ) );
@@ -134,13 +132,9 @@ class EmailService {
 		}
 		$user_id = absint( $data['member_id'] );
 
-		if ( UR_PRO_ACTIVE ) {
-			// Check if custom email should override default admin email
-			if ( class_exists( '\Custom_Email_Sender' ) ) {
-				if ( \Custom_Email_Sender::should_override_default_email( 'member_signs_up', 'admin', $user_id, 0 ) ) {
-					return;
-				}
-			}
+		// Check if custom email should override default admin email
+		if ( apply_filters( 'user_registration_should_override_default_email', false, 'member_signs_up', 'admin', $user_id, 0 ) ) {
+			return;
 		}
 
 			$subject = get_option( 'user_registration_admin_email_subject', __( 'A Member registration: {{username}}', 'user-registration' ) );
@@ -347,26 +341,23 @@ class EmailService {
 			return false;
 		}
 
-		if ( UR_PRO_ACTIVE ) {
-			$user_id       = absint( $data['member_id'] );
-			$membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
+		$user_id       = absint( $data['member_id'] );
+		$membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
 
-			// If membership_id not in data, try to get it from subscription
-			if ( $membership_id <= 0 && isset( $data['subscription'] ) && is_array( $data['subscription'] ) && isset( $data['subscription']['item_id'] ) ) {
-				$membership_id = absint( $data['subscription']['item_id'] );
-			}
+		// If membership_id not in data, try to get it from subscription
+		if ( $membership_id <= 0 && isset( $data['subscription'] ) && is_array( $data['subscription'] ) && isset( $data['subscription']['item_id'] ) ) {
+			$membership_id = absint( $data['subscription']['item_id'] );
+		}
 
-			// Check if custom email should override default email
-			if ( class_exists( '\Custom_Email_Sender' ) ) {
-				// Check for all_members override
-				if ( \Custom_Email_Sender::should_override_default_email( 'membership_cancellation', 'all_members', $user_id, $membership_id ) ) {
-					return false;
-				}
-				// Check for specific_memberships override (always check, function handles membership matching)
-				if ( \Custom_Email_Sender::should_override_default_email( 'membership_cancellation', 'specific_memberships', $user_id, $membership_id ) ) {
-					return false;
-				}
-			}
+		// Check if custom email should override default email
+		// Check for all_members override
+		if ( apply_filters( 'user_registration_should_override_default_email', false, 'membership_cancellation', 'all_members', $user_id, $membership_id ) ) {
+			return false;
+		}
+		
+		// Check for specific_memberships override (always check, function handles membership matching)
+		if ( apply_filters( 'user_registration_should_override_default_email', false, 'membership_cancellation', 'specific_memberships', $user_id, $membership_id ) ) {
+			return false;
 		}
 
 		$subject              = get_option( 'user_registration_membership_cancellation_user_email_subject', esc_html__( 'Membership Cancelled', 'user-registration' ) );
@@ -424,14 +415,11 @@ class EmailService {
 			return false;
 		}
 
-		if ( UR_PRO_ACTIVE ) {
-			$user_id = absint( $data['member_id'] );
-			// Check if custom email should override default admin email
-			if ( class_exists( '\Custom_Email_Sender' ) ) {
-				if ( \Custom_Email_Sender::should_override_default_email( 'membership_cancellation', 'admin', $user_id, 0 ) ) {
-					return false;
-				}
-			}
+		$user_id = absint( $data['member_id'] );
+		
+		// Check if custom email should override default admin email
+		if ( apply_filters( 'user_registration_should_override_default_email', false, 'membership_cancellation', 'admin', $user_id, 0 ) ) {
+			return false;
 		}
 
 		$user                 = get_userdata( $data['member_id'] );
@@ -504,22 +492,18 @@ class EmailService {
 	}
 
 	public function send_membership_ended_email( $data ) {
+		$user_id       = absint( $data['member_id'] );
+		$membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
 
-		if ( UR_PRO_ACTIVE ) {
-			$user_id       = absint( $data['member_id'] );
-			$membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
-
-			// Check if custom email should override default email
-			if ( class_exists( '\Custom_Email_Sender' ) ) {
-				// Check for all_members override
-				if ( \Custom_Email_Sender::should_override_default_email( 'membership_expired', 'all_members', $user_id, $membership_id ) ) {
-					return;
-				}
-				// Check for specific_memberships override
-				if ( $membership_id > 0 && \Custom_Email_Sender::should_override_default_email( 'membership_expired', 'specific_memberships', $user_id, $membership_id ) ) {
-					return;
-				}
-			}
+		// Check if custom email should override default email
+		// Check for all_members override
+		if ( apply_filters( 'user_registration_should_override_default_email', false, 'membership_expired', 'all_members', $user_id, $membership_id ) ) {
+			return;
+		}
+		
+		// Check for specific_memberships override
+		if ( $membership_id > 0 && apply_filters( 'user_registration_should_override_default_email', false, 'membership_expired', 'specific_memberships', $user_id, $membership_id ) ) {
+			return;
 		}
 
 		$subject = get_option( 'user_registration_membership_ended_user_email_subject', esc_html__( 'Your Membership Has Expired', 'user-registration' ) );
