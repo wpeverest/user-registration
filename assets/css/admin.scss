@@ -7360,7 +7360,7 @@ body.user-registration {
 	// 	position: fixed;
 	// 	bottom: 0;
 	// 	background: $white;
-	// 	border: $border_width solid $border-color;	
+	// 	border: $border_width solid $border-color;
 	// }
 
 	.user-registration-message {
@@ -9528,5 +9528,12 @@ body.user-registration-page {
 		&:has(input[type="radio"]:checked) {
 			border-color: $primary_color;
 		}
+	}
+}
+
+.ur-activate-dependent-module{
+	&.ui-add-disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
 	}
 }

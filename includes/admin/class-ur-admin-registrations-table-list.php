@@ -176,9 +176,26 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 					<div id="user-registration-list-table-page">
 						<div class="user-registration-list-table-header">
 							<h2><?php esc_html_e( 'All Registration Forms', 'user-registration' ); ?></h2>
-							<?php if ( ur_check_module_activation( 'multiple-registration' ) ) : ?>
-							<a href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
-							<?php endif; ?>
+							<?php
+								$class = '';
+								$attr  = '';
+
+								if ( ! ur_check_module_activation( 'multiple-registration' ) ) {
+									$class = ' ur-activate-dependent-module ui-add-disabled';
+									$attr  = 'data-slug="user-registration-multiple-registration"
+										data-name="User Registration - Multiple Registration"
+										data-plan="free"
+										aria-disabled="true"';
+								}
+								?>
+
+								<a
+									href="<?php echo esc_url( admin_url( 'admin.php?page=add-new-registration' ) ); ?>"
+									class="page-title-action<?php echo esc_attr( $class ); ?>"
+									<?php echo $attr; ?>
+								>
+									<?php esc_html_e( 'Add New', 'user-registration' ); ?>
+								</a>
 						</div>
 						<div class="user-registration-list-table-page__body">
 							<form id="registration-list" class="user-registration-list-table-action-form" method="get" >

@@ -213,6 +213,75 @@ jQuery(function ($) {
 		}
 	});
 
+	$(document).on("click", ".ur-activate-dependent-module", function (e) {
+		e.preventDefault();
+		e.stopImmediatePropagation();
+
+		var $this = $(this);
+
+		var icon =
+			'<i class="dashicons dashicons-lock" style="color:#72aee6;"></i>';
+
+		var plan = $this.data("plan");
+		var name = $this.data("name");
+		var slug = $this.data("slug");
+
+		if ( !slug ) {
+			return;
+		}
+
+		Swal.fire({
+			title: icon + " Install dependent addon",
+			html:
+				"To add multiple forms you need to install <strong>" +
+				name +
+				"</strong> module.",
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
+			showCloseButton: true,
+			showConfirmButton: true,
+			confirmButtonText: "Activate Module",
+			showLoaderOnConfirm: true,
+			allowOutsideClick: function () {
+				return !Swal.isLoading();
+			},
+			allowEscapeKey: function () {
+				return !Swal.isLoading();
+			},
+			heightAuto: false,
+			width: "575px",
+
+			preConfirm: function () {
+				return $.ajax({
+					url: user_registration_all_forms.ajax_url,
+					type: "POST",
+					dataType: "json",
+					data: {
+						action: "user_registration_activate_dependent_module",
+						security: user_registration_all_forms.ajax_all_forms_nonce,
+						plan: plan,
+						slug: slug,
+						name: name
+					}
+				})
+				.then(function (response) {
+					if (!response.success) {
+						throw new Error(response.data || "Activation failed");
+					}
+					return response;
+				})
+				.fail(function () {
+					Swal.showValidationMessage("Something went wrong");
+				});
+			}
+		}).then(function (result) {
+			if (result.isConfirmed) {
+				window.location.reload();
+			}
+		});
+	});
+
+
 	// Adjust builder width
 	$(window).on("resize orientationchange", function () {
 		var resizeTimer;
