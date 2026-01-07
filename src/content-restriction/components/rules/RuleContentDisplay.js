@@ -130,7 +130,7 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 		setRootGroup(updatedGroup);
 	};
 
-	const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
+	const isAdvancedLogicEnabled = Boolean(rule.is_advanced_logic_enabled || false);
 
 	// Build content data from current state
 	const buildContentDataFromState = () => {
@@ -273,6 +273,7 @@ const RuleContentDisplay = ({rule, onRuleUpdate}) => {
 				onContentTargetsChange={setContentTargets}
 				isMigrated={Boolean(rule.is_migrated)}
 				ruleType={rule.rule_type}
+				rule={rule}
 			/>
 
 				<div className="urcr-rule-actions">

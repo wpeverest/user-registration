@@ -96,7 +96,6 @@ class UR_AJAX {
 			'handle_default_wordpress_login'    => false,
 			'skip_site_assistant_section'       => false,
 			'login_settings_page_validation'    => false,
-			'check_advanced_logic_rules'        => false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -2432,40 +2431,6 @@ class UR_AJAX {
 				'message' => __( 'Page validation successful.', 'user-registration' ),
 			)
 		);
-	}
-
-	/**
-	 * Ajax handler: Check if rules with advanced logic exist.
-	 *
-	 */
-	public static function check_advanced_logic_rules() {
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error(
-				array(
-					'message' => esc_html__( 'You do not have permission to check advanced logic rules.', 'user-registration' ),
-				)
-			);
-			return;
-		}
-
-		check_ajax_referer( 'user_registration_settings_nonce', 'security' );
-
-		if ( function_exists( 'urcr_has_rules_with_advanced_logic' ) ) {
-			$has_advanced_logic = urcr_has_rules_with_advanced_logic();
-
-			wp_send_json_success(
-				array(
-					'has_advanced_logic' => $has_advanced_logic,
-				)
-			);
-		} else {
-			wp_send_json_error(
-				array(
-					'message' => esc_html__( 'Function not found.', 'user-registration' ),
-				)
-			);
-		}
 	}
 }
 

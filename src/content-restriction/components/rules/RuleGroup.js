@@ -37,12 +37,13 @@ const RuleGroup = ({
 	contentTargets,
 	onContentTargetsChange,
 	isMigrated = false,
-	ruleType = null
+	ruleType = null,
+	rule = null
 }) => {
 	const [conditions, setConditions] = useState([]);
 	const [logicGate, setLogicGate] = useState(group.logic_gate || "AND");
 	const isAdvancedLogicEnabled = Boolean(
-		getURCRData("is_advanced_logic_enabled", false)
+		rule?.is_advanced_logic_enabled || false
 	);
 	const isMembershipRule = ruleType === "membership";
 
@@ -315,6 +316,7 @@ const RuleGroup = ({
 												isNested={true}
 												isMigrated={isMigrated}
 												ruleType={ruleType}
+												rule={rule}
 											/>
 											{!isMembershipRule && (
 												<button
@@ -446,7 +448,7 @@ const RuleGroup = ({
 					<div className="urcr-condition-row-parent"></div>
 					<div
 						className="urcr-buttons-wrapper"
-						style={{ "justify-content": "end" }}
+						style={{ justifyContent: "end" }}
 					>
 						<div className="urcr-migrated-notice">
 							<span className="dashicons dashicons-warning"></span>

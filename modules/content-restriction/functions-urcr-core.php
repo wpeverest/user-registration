@@ -1387,9 +1387,9 @@ function urcr_logic_map_has_advanced_logic( $logic_map ) {
 }
 
 /**
- * Check if any existing rules have advanced logic (nested groups).
+ * Check if any existing rules have advanced logic.
  *
- * @return bool True if any rule has advanced logic (nested groups), false otherwise.
+ * @return bool True if any rule has advanced logic.
  */
 function urcr_has_rules_with_advanced_logic() {
 	$access_rule_posts = get_posts(
@@ -1400,21 +1400,34 @@ function urcr_has_rules_with_advanced_logic() {
 		)
 	);
 
+	$has_advanced_logic = false;
+
 	foreach ( $access_rule_posts as $rule_post ) {
 		$rule_content = json_decode( $rule_post->post_content, true );
 
 		if ( empty( $rule_content ) || ! is_array( $rule_content ) ) {
 			continue;
 		}
-
+		
 		$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
 
 		if ( urcr_logic_map_has_advanced_logic( $logic_map ) ) {
-			return true;
+			$has_advanced_logic = true;
+			$rule_content['is_advanced_logic_enabled'] = true;
+			
+			$updated_content = wp_json_encode( $rule_content, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+			$updated_content = wp_slash( $updated_content );
+			
+			wp_update_post(
+				array(
+					'ID'           => $rule_post->ID,
+					'post_content' => $updated_content,
+				)
+			);
 		}
 	}
 
-	return false;
+	return $has_advanced_logic;
 }
 
 
@@ -1576,9 +1589,8 @@ function urcr_run_migration() {
 		$results['membership_rule_ids'] = $membership_rule_ids;
 	}
 
-	// Check if any existing rules have advanced logic (groups or logic gates)
-	$has_advanced_logic = urcr_has_rules_with_advanced_logic();
-	update_option( 'urcr_is_advanced_logic_enabled', $has_advanced_logic ? 'yes' : 'no' );
+	// Check if any existing rules have advanced logic and add advance logic enabled flag.
+	urcr_has_rules_with_advanced_logic();
 
 	return $results;
 }
