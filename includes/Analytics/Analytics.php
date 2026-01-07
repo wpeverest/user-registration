@@ -103,10 +103,13 @@ class Analytics {
 		wp_localize_script(
 			'ur-analytics',
 			'__UR_ANALYTICS__',
-			array(
-				'install_date' => get_option( 'user_registration_installation_date' ),
-				'memberships'  => ( new MembershipService() )->get_memberships_list(),
-				'currency'     => strtoupper( get_option( 'user_registration_payment_currency', 'USD' ) ),
+			apply_filters(
+				'user_registration_analytics_localized_data',
+				array(
+					'install_date' => get_option( 'user_registration_installation_date' ),
+					'memberships'  => ( new MembershipService() )->get_memberships_list(),
+					'currency'     => strtoupper( get_option( 'user_registration_payment_currency', 'USD' ) ),
+				)
 			)
 		);
 
