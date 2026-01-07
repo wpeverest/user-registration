@@ -129,7 +129,6 @@ const HoverColorControl = ({ label, colorValue, themeColors, onChange }) => (
 
 const buildMembershipCss = ({ buttonClass, radioClass, style }) => {
 	if (!style) return "";
-	console.log(buttonClass, radioClass, style);
 
 	let buttonStyle = "";
 	let buttonHoverStyle = "";

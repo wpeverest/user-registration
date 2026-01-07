@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "title": "Content Restriction",
   "category": "user-registration",
-  "description": "The block restricts the content.",
+  "description": "A basic wrapper block with partial content restriction capabilities for pages and posts.",
   "keywords": [
     "user registration content restriction",
     "content restriction"

@@ -5,8 +5,11 @@
   "version": "1.0.0",
   "title": "Login Form",
   "category": "user-registration",
-  "description": "The block give the login form for registered users.",
-  "keywords": ["user registration login form", "login form"],
+  "description": "Display the URM Login Form.",
+  "keywords": [
+    "user registration login form",
+    "login form"
+  ],
   "textdomain": "user-registration",
   "example": {
     "attributes": {}

@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "title": "Membership Pricing",
   "category": "user-registration",
-  "description": "This block provides block for membership pricing.",
+  "description": "Display the membership pricing in various layouts.",
   "keywords": [
     "user registration membership pricing",
     "urm membership pricing",
