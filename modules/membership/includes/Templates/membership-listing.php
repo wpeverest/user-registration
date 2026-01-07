@@ -175,11 +175,13 @@ if ( 'block' === $type ) :
 					<div class="membership-title">
 						<span><?php echo esc_html( $membership['title'] ); ?></span>
 					</div>
+					<?php if ( $show_description ) { ?>
 					<div class="membership-body">
 						<div class="membership-description">
 							<?php echo $membership['description']; ?>
 						</div>
 					</div>
+						<?php } ?>
 					</div>
 					<div class="membership-footer right-container">
 						<input type="hidden" name="membership_id" value="<?php echo esc_html( $membership['ID'] ); ?>">
