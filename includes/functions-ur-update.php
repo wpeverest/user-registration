@@ -411,7 +411,18 @@ function ur_update_322_option_migrate() {
  */
 function urm_update_50_option_migrate() {
 
-	$all_forms = ur_get_all_user_registration_form();
+	$args      = array(
+		'order'         => 'ASC',
+		'numberposts'   => -1,
+		'status'        => 'publish',
+		'post_type'     => array( 'user_registration' ),
+		'orderby'       => 'ID',
+		'order'         => 'DESC',
+		'no_found_rows' => true,
+		'nopaging'      => true,
+	);
+	$all_forms = get_posts( $args );
+
 	if ( count( $all_forms ) > 1 ) {
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
 		if ( ! isset( $enabled_features['user-registration-multiple-registration'] ) ) {
@@ -420,8 +431,18 @@ function urm_update_50_option_migrate() {
 		}
 	}
 
-	$membership_groups_repository = new MembershipGroupRepository();
-	$all_groups                   = $membership_groups_repository->get_all_membership_groups();
+	$group_args = array(
+		'order'         => 'ASC',
+		'numberposts'   => -1,
+		'status'        => 'publish',
+		'post_type'     => array( 'ur_membership_groups' ),
+		'orderby'       => 'ID',
+		'order'         => 'DESC',
+		'no_found_rows' => true,
+		'nopaging'      => true,
+	);
+
+	$all_groups = get_posts( $group_args );
 
 	if ( count( $all_groups ) > 0 ) {
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
