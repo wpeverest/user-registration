@@ -190,7 +190,11 @@ const Help = () => {
 								fontSize="14px"
 								fontWeight="normal"
 							>
-								<Icon.Shortcode w="8" h="8" fill="#475bb2" />
+							<URIcon.DocsLines
+								w="5"
+								h="5"
+								fill={PRIMARY_COLOR}
+							/>
 								<Heading
 									as="h3"
 									size="sm"
@@ -215,10 +219,6 @@ const Help = () => {
 									borderRadius="base"
 									fontSize="14px"
 									fontWeight="normal"
-									onClick={() => {
-										setIsListViewerOpen(true);
-										setListViewerType("shortcodes");
-									}}
 								>
 									<Link
 										href={docURL}
@@ -245,6 +245,36 @@ const Help = () => {
 								fontSize="14px"
 								fontWeight="normal"
 							>
+							<URIcon.Headphones
+									w="5"
+									h="5"
+									fill={PRIMARY_COLOR}
+								/>
+								<Heading
+									as="h3"
+									size="sm"
+									fontWeight="semibold"
+								>
+									{__(
+										"Support",
+										"user-registration"
+									)}
+								</Heading>
+								<Text fontSize="13px" color="gray.700">
+									{__(
+										"Submit a ticket for encountered issues and get help from our support team instantly.",
+										"user-registration"
+									)}
+								</Text>
+							<Button
+									mt="10"
+									variant="outline"
+									color="#475bb2"
+									borderColor="#475bb2"
+									borderRadius="base"
+									fontSize="14px"
+									fontWeight="normal"
+								>
 								<Link
 									href={ticketUrl}
 									isExternal
