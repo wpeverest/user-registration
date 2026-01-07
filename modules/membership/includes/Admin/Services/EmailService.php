@@ -75,7 +75,23 @@ class EmailService {
 	 * @return bool|mixed|void
 	 */
 	public function send_user_register_email( $data ) {
-		$user_id  = absint( $data['member_id'] );
+		$user_id = absint( $data['member_id'] );
+
+		if ( UR_PRO_ACTIVE ) {
+			// Check if custom email should override default email
+			$membership_id = isset( $data['membership'] ) ? absint( $data['membership'] ) : 0;
+			if ( class_exists( '\Custom_Email_Sender' ) ) {
+				// Check for all_members override
+				if ( \Custom_Email_Sender::should_override_default_email( 'member_signs_up', 'all_members', $user_id, $membership_id ) ) {
+					return;
+				}
+				// Check for specific_memberships override
+				if ( $membership_id > 0 && \Custom_Email_Sender::should_override_default_email( 'member_signs_up', 'specific_memberships', $user_id, $membership_id ) ) {
+					return;
+				}
+			}
+		}
+
 		$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Welcome to {{blog_info}}!', 'user-registration' ) );
 		$settings = new \UR_Settings_Successfully_Registered_Email();
 		$message  = $settings->ur_get_successfully_registered_email();
@@ -84,10 +100,10 @@ class EmailService {
 		$form_id          = ur_get_form_id_by_userid( $user_id );
 		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
 
-		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-		$message                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email', $message, $current_language, 'user_registration_successfully_registered_email' );
-		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email_subject', $subject, $current_language, 'user_registration_successfully_registered_email_subject' );
-		$subscription_service      = new SubscriptionService();
+		[ $message, $subject ] = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+		$message               = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email', $message, $current_language, 'user_registration_successfully_registered_email' );
+		$subject               = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email_subject', $subject, $current_language, 'user_registration_successfully_registered_email_subject' );
+		$subscription_service  = new SubscriptionService();
 
 		$values      = array(
 			'membership_tags' => $subscription_service->get_membership_plan_details( $data ),
@@ -117,22 +133,32 @@ class EmailService {
 			return;
 		}
 		$user_id = absint( $data['member_id'] );
-		$subject = get_option( 'user_registration_admin_email_subject', __( 'A Member registration: {{username}}', 'user-registration' ) );
-		$form_id = ur_get_form_id_by_userid( $user_id );
+
+		if ( UR_PRO_ACTIVE ) {
+			// Check if custom email should override default admin email
+			if ( class_exists( '\Custom_Email_Sender' ) ) {
+				if ( \Custom_Email_Sender::should_override_default_email( 'member_signs_up', 'admin', $user_id, 0 ) ) {
+					return;
+				}
+			}
+		}
+
+			$subject = get_option( 'user_registration_admin_email_subject', __( 'A Member registration: {{username}}', 'user-registration' ) );
+		$form_id     = ur_get_form_id_by_userid( $user_id );
 
 		$settings         = new UR_Settings_Admin_Email();
 		$message          = $settings->ur_get_admin_email();
 		$message          = get_option( 'user_registration_admin_email', $message );
 		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
 
-		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-		$message                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email', $message, $current_language, 'user_registration_successfully_registered_email' );
-		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email_subject', $subject, $current_language, 'user_registration_successfully_registered_email_subject' );
-		$subscription_service      = new SubscriptionService();
-		$values                    = array(
+		[ $message, $subject ] = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+		$message               = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email', $message, $current_language, 'user_registration_successfully_registered_email' );
+		$subject               = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email_subject', $subject, $current_language, 'user_registration_successfully_registered_email_subject' );
+		$subscription_service  = new SubscriptionService();
+		$values                = array(
 			'membership_tags' => $subscription_service->get_membership_plan_details( $data ),
 		);
-		$values                    = $data + $values;
+		$values                = $data + $values;
 
 		$message     = \UR_Emailer::parse_smart_tags( $message, $values );
 		$subject     = \UR_Emailer::parse_smart_tags( $subject, $values );
@@ -171,10 +197,10 @@ class EmailService {
 
 		$subject = get_option( 'user_registration_payment_success_email_subject', __( 'Payment Confirmed', 'user-registration' ) );
 
-		$settings                  = new \UR_Settings_Payment_Success_Email();
-		$message                   = $settings->ur_get_payment_success_email();
-		$message                   = get_option( 'user_registration_payment_success_email', $message );
-		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+		$settings              = new \UR_Settings_Payment_Success_Email();
+		$message               = $settings->ur_get_payment_success_email();
+		$message               = get_option( 'user_registration_payment_success_email', $message );
+		[ $message, $subject ] = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 
 		// Get selected email template id for specific form.
 		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
@@ -320,6 +346,29 @@ class EmailService {
 		if ( ! $this->validate_email_fields( $data ) || ! self::is_membership_email_enabled( 'user_registration_enable_membership_cancellation_user_email' ) ) {
 			return false;
 		}
+
+		if ( UR_PRO_ACTIVE ) {
+			$user_id       = absint( $data['member_id'] );
+			$membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
+
+			// If membership_id not in data, try to get it from subscription
+			if ( $membership_id <= 0 && isset( $data['subscription'] ) && is_array( $data['subscription'] ) && isset( $data['subscription']['item_id'] ) ) {
+				$membership_id = absint( $data['subscription']['item_id'] );
+			}
+
+			// Check if custom email should override default email
+			if ( class_exists( '\Custom_Email_Sender' ) ) {
+				// Check for all_members override
+				if ( \Custom_Email_Sender::should_override_default_email( 'membership_cancellation', 'all_members', $user_id, $membership_id ) ) {
+					return false;
+				}
+				// Check for specific_memberships override (always check, function handles membership matching)
+				if ( \Custom_Email_Sender::should_override_default_email( 'membership_cancellation', 'specific_memberships', $user_id, $membership_id ) ) {
+					return false;
+				}
+			}
+		}
+
 		$subject              = get_option( 'user_registration_membership_cancellation_user_email_subject', esc_html__( 'Membership Cancelled', 'user-registration' ) );
 		$user                 = get_userdata( $data['member_id'] );
 		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
@@ -374,8 +423,19 @@ class EmailService {
 		if ( ! $this->validate_email_fields( $data ) || ! self::is_membership_email_enabled( 'user_registration_enable_membership_cancellation_admin_email' ) ) {
 			return false;
 		}
-		$subject              = get_option( 'user_registration_membership_cancellation_admin_email_subject', esc_html__( 'Membership Cancelled: {{username}}', 'user-registration' ) );
+
+		if ( UR_PRO_ACTIVE ) {
+			$user_id = absint( $data['member_id'] );
+			// Check if custom email should override default admin email
+			if ( class_exists( '\Custom_Email_Sender' ) ) {
+				if ( \Custom_Email_Sender::should_override_default_email( 'membership_cancellation', 'admin', $user_id, 0 ) ) {
+					return false;
+				}
+			}
+		}
+
 		$user                 = get_userdata( $data['member_id'] );
+		$subject              = get_option( 'user_registration_membership_cancellation_admin_email_subject', esc_html__( 'Membership Cancelled: {{username}}', 'user-registration' ) );
 		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
 		$settings             = new UR_Settings_Membership_Cancellation_Admin_Email();
 		$subscription_service = new SubscriptionService();
@@ -444,6 +504,24 @@ class EmailService {
 	}
 
 	public function send_membership_ended_email( $data ) {
+
+		if ( UR_PRO_ACTIVE ) {
+			$user_id       = absint( $data['member_id'] );
+			$membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
+
+			// Check if custom email should override default email
+			if ( class_exists( '\Custom_Email_Sender' ) ) {
+				// Check for all_members override
+				if ( \Custom_Email_Sender::should_override_default_email( 'membership_expired', 'all_members', $user_id, $membership_id ) ) {
+					return;
+				}
+				// Check for specific_memberships override
+				if ( $membership_id > 0 && \Custom_Email_Sender::should_override_default_email( 'membership_expired', 'specific_memberships', $user_id, $membership_id ) ) {
+					return;
+				}
+			}
+		}
+
 		$subject = get_option( 'user_registration_membership_ended_user_email_subject', esc_html__( 'Your Membership Has Expired', 'user-registration' ) );
 
 		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
