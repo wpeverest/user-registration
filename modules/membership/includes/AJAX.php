@@ -2531,11 +2531,15 @@ class AJAX {
 
 		$render_function = 'ur_' . $addon_name . '_render_list';
 		$html            = $render_function( $api_key );
+		$data 			 = array(
+				'html' => $html,
+		);
+		if ( 'mailchimp' === $addon_name && function_exists( 'urmc_render_list_tags' ) ) {
+			$data['tag_html'] = urmc_render_list_tags( $api_key );
+		}
 
 		wp_send_json_success(
-			array(
-				'html' => $html,
-			)
+			$data
 		);
 	}
 
