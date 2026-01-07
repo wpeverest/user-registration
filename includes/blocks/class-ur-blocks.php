@@ -62,7 +62,7 @@ class UR_Blocks {
 			UR_VERSION
 		);
 
-		wp_enqueue_style( 'user-registration-blocks-editor-style', );
+		wp_enqueue_style( 'user-registration-blocks-editor-style' );
 
 		if ( ur_check_module_activation( 'membership' ) ) {
 
@@ -101,8 +101,6 @@ class UR_Blocks {
 			);
 		}
 
-		$all_forms = ur_get_all_user_registration_form();
-
 		wp_localize_script(
 			'user-registration-blocks-editor',
 			'_UR_BLOCKS_',
@@ -128,7 +126,7 @@ class UR_Blocks {
 				'pages_array'                 => $page_options,
 				'membership_all_plan_url'     => admin_url( 'admin.php?page=user-registration-membership' ),
 				'membership_group_url'        => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
-				'oldestForm'                  => ! empty( $all_forms ) ? array_key_first( $all_forms ) : 0,
+				'bank_details_settings'		  => admin_url( 'admin.php?page=user-registration-settings&tab=payment' ),
 			)
 		);
 		wp_register_script(

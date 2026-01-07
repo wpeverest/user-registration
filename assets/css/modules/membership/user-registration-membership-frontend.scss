@@ -1346,7 +1346,7 @@ html {
 			box-shadow: 0 2px 4px rgba(38, 128, 194, 0.2);
 
 			&:hover {
-				background-color: #1e6ba8;
+				background-color: #475bb2;
 				box-shadow: 0 4px 8px rgba(38, 128, 194, 0.3);
 				transform: translateY(-1px);
 			}
@@ -1589,4 +1589,8 @@ html {
 			box-shadow: none;
 		}
 	}
+}
+
+.ur-show-bank-details-toggle{
+	margin-bottom: 5px !important;
 }
