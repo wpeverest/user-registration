@@ -30,17 +30,6 @@
       }
     }
   },
-  "styles": [
-    {
-      "name": "fill",
-      "label": "Fill",
-      "isDefault": true
-    },
-    {
-      "name": "outline",
-      "label": "Outline"
-    }
-  ],
   "attributes": {
     "id": {
       "type": "string"
