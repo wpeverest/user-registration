@@ -910,4 +910,58 @@ class MembershipService {
 			);
 		}
 	}
+
+	/**
+	 * Fetch intended action from details.
+	 *
+	 * @param string $intended_action Intended action.
+	 * @param array  $membership Membership Details.
+	 * @param array  $user_membership_ids User Membership ID.
+	 */
+	public function fetch_intended_action( $intended_action, $membership, $user_membership_ids ) {
+
+		$membership_group_repository = new MembershipGroupRepository();
+		$membership_group_service    = new MembershipGroupService();
+		$current_membership_group    = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
+		$user_membership_group_ids   = array();
+
+		foreach ( $user_membership_ids as $user_membership_id ) {
+			$user_membership_group_id = $membership_group_repository->get_membership_group_by_membership_id( $user_membership_id );
+
+			if ( isset( $user_membership_group_id['ID'] ) ) {
+				$user_membership_group_ids[] = $user_membership_group_id['ID'];
+			}
+		}
+
+		$user_membership_group_ids = array_values( array_unique( $user_membership_group_ids ) );
+
+		if ( is_user_logged_in() ) {
+
+			if ( ! empty( $current_membership_group ) ) {
+
+				if ( in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
+					foreach ( $user_membership_group_ids as $group_id ) {
+						if ( $current_membership_group['ID'] === $group_id ) {
+							$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $current_membership_group['ID'] );
+							$upgrade_allowed              = $membership_group_service->check_if_upgrade_allowed( $current_membership_group['ID'] );
+
+							if ( $multiple_memberships_allowed ) {
+								$intended_action = 'multiple';
+							} elseif ( $upgrade_allowed ) {
+								$intended_action = 'upgrade';
+							}
+						}
+					}
+				} else {
+					$intended_action = 'multiple';
+				}
+			} else {
+				$intended_action = 'upgrade';
+			}
+		} else {
+			$intended_action = 'register';
+		}
+
+		return $intended_action;
+	}
 }

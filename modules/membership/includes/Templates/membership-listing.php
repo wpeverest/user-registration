@@ -64,45 +64,7 @@ if ( 'block' === $type ) :
 					$button_text  = esc_html__( 'Current Plan', 'user-registration' );
 				}
 
-				$membership_group_repository = new WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository();
-				$membership_group_service    = new WPEverest\URMembership\Admin\Services\MembershipGroupService();
-				$current_membership_group    = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
-				$user_membership_group_ids   = array();
-
-				foreach ( $user_membership_ids as $user_membership_id ) {
-					$user_membership_group_id    = $membership_group_repository->get_membership_group_by_membership_id( $user_membership_id );
-					$user_membership_group_ids[] = $user_membership_group_id['ID'];
-				}
-
-				$user_membership_group_ids = array_values( array_unique( $user_membership_group_ids ) );
-				$intended_action           = $action_to_take;
-
-				if ( is_user_logged_in() ) {
-
-					if ( ! empty( $current_membership_group ) ) {
-
-						if ( in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
-							foreach ( $user_membership_group_ids as $group_id ) {
-								if ( $current_membership_group['ID'] === $group_id ) {
-									$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $current_membership_group['ID'] );
-									$upgrade_allowed              = $membership_group_service->check_if_upgrade_allowed( $current_membership_group['ID'] );
-
-									if ( $multiple_memberships_allowed ) {
-										$intended_action = 'multiple';
-									} elseif ( $upgrade_allowed ) {
-										$intended_action = 'upgrade';
-									}
-								}
-							}
-						} elseif ( UR_PRO_ACTIVE && ur_check_module_activation( 'membership-groups' ) ) {
-								$intended_action = 'multiple';
-						}
-					} else {
-						$intended_action = 'upgrade';
-					}
-				} else {
-					$intended_action = 'register';
-				}
+				$intended_action = $membership_service->fetch_intended_action( $action_to_take, $membership, $user_membership_ids );
 
 				?>
 				<div class="membership-block">
@@ -158,15 +120,24 @@ if ( 'block' === $type ) :
 	elseif ( 'row' === $type ) :
 		?>
 	<div class="ur-membership-list-container">
-		<form id="membership-old-selection-form" class="ur-membership-container layout-row"
+		<form id="membership-old-selection-form" class="membership-selection-form ur-membership-container layout-row"
 				method="GET" data-layout="row">
 			<?php
 			foreach ( $memberships as $k => $membership ) :
-				$time = '';
+				$current_plan = false;
+				$button_text  = $sign_up_text;
 
+				$time = '';
 				if ( 'paid' === $membership['type'] ) {
 					$time = esc_html__( 'lifetime', 'user-registration' );
 				}
+
+				if ( in_array( $membership['ID'], $user_membership_ids ) ) {
+					$current_plan = true;
+					$button_text  = esc_html__( 'Current Plan', 'user-registration' );
+				}
+
+				$intended_action = $membership_service->fetch_intended_action( $action_to_take, $membership, $user_membership_ids );
 
 				?>
 				<div class="membership-block">
@@ -183,6 +154,7 @@ if ( 'block' === $type ) :
 					</div>
 					<div class="membership-footer right-container">
 						<input type="hidden" name="membership_id" value="<?php echo esc_html( $membership['ID'] ); ?>">
+						<input type="hidden" name="action" value="<?php echo esc_html( $intended_action ); ?>">
 						<input type="hidden" name="redirection_url"
 								value="<?php echo esc_url( $redirect_page_url ); ?>">
 						<input type="hidden" name="urm_uuid" value="<?php echo esc_html( $uuid ); ?>">
@@ -207,7 +179,7 @@ if ( 'block' === $type ) :
 								<?php } ?>
 						</div>
 						<button type="button"
-								class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) || $is_editor ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>" <?php echo $open_in_new_tab ? "target = '_blank'" : ''; ?> ><?php echo esc_html( $sign_up_text ); ?></button>
+								class="membership-signup-button <?php echo esc_attr( $button_class ); ?>" <?php echo( empty( $registration_page_id ) || $is_editor || $current_plan ? 'disabled' : '' ); ?> style="<?php echo esc_attr( $button_style ); ?>" <?php echo $open_in_new_tab ? "target = '_blank'" : ''; ?> ><?php echo esc_html( $button_text ); ?></button>
 					</div>
 				</div>
 				<?php
@@ -237,51 +209,8 @@ elseif ( 'list' === $type ) :
 						unset( $memberships[ $m ] );
 						continue;
 					}
-
-					$membership_group_repository = new WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository();
-					$membership_group_service    = new WPEverest\URMembership\Admin\Services\MembershipGroupService();
-					$current_membership_group    = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
-					$user_membership_group_ids   = array();
-
-					foreach ( $user_membership_ids as $user_membership_id ) {
-						$user_membership_group_id = $membership_group_repository->get_membership_group_by_membership_id( $user_membership_id );
-
-						if ( isset( $user_membership_group_id['ID'] ) ) {
-							$user_membership_group_ids[] = $user_membership_group_id['ID'];
-						}
-					}
-
-					$user_membership_group_ids = array_values( array_unique( $user_membership_group_ids ) );
-					$intended_action           = $action_to_take;
-
-					if ( is_user_logged_in() ) {
-
-						if ( ! empty( $current_membership_group ) ) {
-
-							if ( in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
-								foreach ( $user_membership_group_ids as $group_id ) {
-									if ( $current_membership_group['ID'] === $group_id ) {
-										$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $current_membership_group['ID'] );
-										$upgrade_allowed              = $membership_group_service->check_if_upgrade_allowed( $current_membership_group['ID'] );
-
-										if ( $multiple_memberships_allowed ) {
-											$intended_action = 'multiple';
-										} elseif ( $upgrade_allowed ) {
-											$intended_action = 'upgrade';
-										}
-									}
-								}
-							} else {
-								$intended_action = 'multiple';
-							}
-						} else {
-							$intended_action = 'upgrade';
-						}
-					} else {
-						$intended_action = 'register';
-					}
-
-					$time = '';
+					$intended_action = $membership_service->fetch_intended_action( $action_to_take, $membership, $user_membership_ids );
+					$time            = '';
 
 					if ( 'paid' === $membership['type'] ) {
 						$time = esc_html__( 'lifetime', 'user-registration' );
