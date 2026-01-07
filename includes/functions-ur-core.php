@@ -4303,7 +4303,8 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
 							'name' => esc_html__( 'User Registration Zapier', 'user-registration' ),
 						),
-					)
+					),
+					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 				),
 				'pdf-submission' => array(
 					'label' => esc_html__( 'PDF Form Submission', 'user-registration' ),
@@ -4335,6 +4336,10 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
 				),
+				'popup' => array(
+					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'plugin' => 'user-registration-pro',
+				),
 				'cloud-storage' => array(
 					'is_collection' => true,
 					'collections' => array(
@@ -4350,7 +4355,8 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 							'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 							'name' => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
 						)
-					)
+					),
+				'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 				),
 			),
 			'security' => array(
