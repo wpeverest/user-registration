@@ -51,6 +51,9 @@ class URCR_Admin_Assets {
 		if ( 'user-registration-content-restriction' === $this->current_page ) {
 			// Enqueue media scripts for media button functionality
 			wp_enqueue_media();
+			
+			wp_enqueue_script( 'flatpickr' );
+			
 			wp_enqueue_script( 'urcr-content-access-rule-creator' );
 		}
 	}
