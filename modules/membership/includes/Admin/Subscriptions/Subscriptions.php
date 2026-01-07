@@ -14,11 +14,9 @@ class Subscriptions {
 	}
 
 	private function init_hooks() {
-		// add_action( 'admin_menu', [ $this, 'add_menu' ], 41 );
 		add_filter( 'user_registration_notice_excluded_pages', [ $this, 'add_excluded_page' ] );
 		add_action( 'admin_init', [ $this, 'delete_subscription' ] );
 	}
-
 
 	public function delete_subscription() {
 		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : null;

@@ -613,12 +613,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 
 			if ( ur_check_module_activation( 'membership' ) ) {
-				$subscription_repository = new SubscriptionRepository();
-				$result                  = $subscription_repository->query();
-				if ( isset( $result['items'] ) && count( $result['items'] ) > 0 ) {
-					$subscription_obj = new Subscriptions();
-					$subscription_obj->add_menu();
-				}
+				$subscription_obj = new Subscriptions();
+				$subscription_obj->add_menu();
 			}
 
 			if ( UR_PRO_ACTIVE && ur_check_module_activation( 'coupon' ) && class_exists( 'WPEverest\URMembership\Coupons\Coupons' ) ) {
