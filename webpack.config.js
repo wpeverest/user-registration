@@ -23,7 +23,8 @@ module.exports = {
 		formblock: "./assets/js/admin/gutenberg/form-block.js",
 		form_templates: "./src/form-templates/index.js",
 		"divi-builder": "./src/widgets/divi-builder/index.js",
-		"content-access-rules": "./src/content-restriction/index.js"
+		"content-access-rules": "./src/content-restriction/index.js",
+		analytics: "./src/analytics/main.tsx"
 	},
 	plugins: [
 		...defaults.plugins.filter((plugin) => {
@@ -45,7 +46,7 @@ module.exports = {
 						resourceRegExp: /^\.\/blocks\/pro\/blocks$/,
 						contextRegExp: /src\/blocks$/
 					})
-			  ]),
+				]),
 		new CopyWebpackPlugin({
 			patterns: [
 				{
