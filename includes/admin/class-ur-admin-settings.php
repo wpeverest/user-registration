@@ -490,7 +490,11 @@ class UR_Admin_Settings {
 								if ( isset( $section['button']['button_type'] ) && 'upgrade_link' === $section['button']['button_type'] ) {
 									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="ur-upgrade--link" target="_blank">' . '<span>' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span></a>';
 								} else {
-									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="user_registration_smart_tags_used" style="min-width:90px;" target="_blank">' . '<span style="text-decoration: underline;">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span>' . '<span class="dashicons dashicons-external"></span>' . '</a>';
+									$button_class  = isset( $section['button']['button_class'] ) ? esc_attr( $section['button']['button_class'] ) : 'user_registration_smart_tags_used';
+									$button_type   = isset( $section['button']['button_type'] ) ? $section['button']['button_type'] : '';
+									$button_target = ( 'ur-add-new-custom-email' === $button_type ) ? '' : 'target="_blank"';
+									$external_icon = ( 'ur-add-new-custom-email' === $button_type ) ? '' : '<span class="dashicons dashicons-external"></span>';
+									$settings     .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="' . $button_class . '" style="min-width:90px;" ' . $button_target . '>' . '<span style="text-decoration: underline;">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span>' . $external_icon . '</a>';
 								}
 							}
 							$settings .= '</div>';
