@@ -868,14 +868,16 @@ body {
 		p.ur-p-tag {
 			margin-bottom: $spacing_24px;
 			padding: $spacing_10px $spacing_12px $spacing_10px $spacing_16px;
-			background: rgba(71, 91, 178, 0.04);
-			border: $border_width solid $primary_color;
+			// background: rgba(71, 91, 178, 0.04);
+			// border: $border_width solid $primary_color;
 			font-weight: $regular;
 			color: $grey-400;
 			border-radius: $border_radius_4;
 			font-size: 14px;
 			line-height: 22px;
 			font-style: normal;
+			border-left: 4px solid $primary_color;
+			background: #F1F2F9;
 
 			strong {
 				font-weight: $semi_bold;
@@ -1736,13 +1738,14 @@ body {
 							&--item {
 								max-width: 120px;
 								height: auto;
-								border: $border_width solid #E9E9E9;
+								border: $border_width solid $border-color;
 								border-radius: $border_radius_5;
 								text-align: center;
 								padding: $spacing_6px;
 								align-items: center;
 								display: flex;
 								margin-bottom: 0;
+								cursor: pointer;
 
 								&.active {
 									label {
@@ -1758,6 +1761,7 @@ body {
 									font-weight: $semi-bold;
 									color: $grey-400;
 									opacity: 0.5;
+									cursor: pointer;
 
 									input {
 										display: none;
@@ -1795,6 +1799,17 @@ body {
 							.wp-editor-container {
 								iframe {
 									height: 200px !important;
+								}
+							}
+						}
+
+						#wp-user_registration_content_restriction_message-wrap {
+							#wp-user_registration_content_restriction_message-media-buttons {
+								display: flex;
+								align-items: center;
+
+								#ur-smart-tags-selector {
+									margin-left: auto;
 								}
 							}
 						}
@@ -2262,4 +2277,25 @@ body {
 	.user-registration-header {
 		top: 106px;
 	}
+}
+
+.ur-connection-status--active {
+  display: inline-block;
+  white-space: nowrap;
+  vertical-align: middle;
+
+  padding: 4px 8px;
+
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: capitalize;
+
+  color: #2f855a;        /* green-600 */
+  background-color: #f0fff4; /* green-50 */
+
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.ur-connection-status--active::after {
+  content: 'Connected';
 }

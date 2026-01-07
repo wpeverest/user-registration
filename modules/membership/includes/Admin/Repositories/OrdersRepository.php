@@ -41,7 +41,9 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 						urmo.payment_method,
 						wpu.user_email,
 						urmo.status,
+						urmo.total_amount,
 						urmo.created_at
+						urmo.subscription_id
 					FROM $this->table urmo
 					JOIN $this->posts_table wpp ON urmo.item_id = wpp.ID
 					JOIN $this->users_table wpu ON urmo.user_id = wpu.ID

@@ -18,6 +18,7 @@ const RuleCard = ({
 	rule,
 	isExpanded,
 	isSettingsOpen,
+	isHighlighted = false,
 	onToggleExpand,
 	onToggleSettings,
 	onRuleUpdate,
@@ -114,8 +115,15 @@ const RuleCard = ({
 		isExpanded ? " active" : ""
 	}`;
 
+	const cardClassName = `user-registration-card ur-mb-2 urcr-rule-card ${
+		isHighlighted ? "urcr-rule-highlighted" : ""
+	}`;
+
 	return (
-		<div className="user-registration-card ur-mb-2 urcr-rule-card ">
+		<div 
+			className={cardClassName}
+			data-rule-id={rule.id}
+		>
 			<div
 				className={headerClass}
 				onClick={(e) => {

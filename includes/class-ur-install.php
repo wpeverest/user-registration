@@ -328,6 +328,9 @@ class UR_Install {
 			'3.2.2' => array(
 				'ur_update_322_option_migrate',
 			),
+			'5.0.0' => array(
+				'urm_update_50_option_migrate',
+			),
 		);
 
 		if ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) {
@@ -339,6 +342,9 @@ class UR_Install {
 				),
 				'4.2.0' => array(
 					'ur_pro_module_addons_migrate',
+				),
+				'6.0.0' => array(
+					'urm_update_50_option_migrate',
 				),
 			);
 

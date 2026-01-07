@@ -29,53 +29,41 @@ const PluginStatus = ({ requiredPlugins, onActivateAndContinue }) => {
 	useEffect(() => {
 		const fetchPluginStatus = async () => {
 			try {
-				const response = await fetch(restURL + 'user-registration/v1/plugin/status', {
+				const data = await apiFetch({
+					path: `${restURL}user-registration/v1/plugin/status`,
 					method: "GET",
 					headers: {
 						"X-WP-Nonce": security
 					}
 				});
 
-				if (response.ok) {
-					var data = await response.json();
-					if (data.success) {
-						setPluginStatuses(data.plugin_status);
-						updateButtonLabel(data.plugin_status);
-					} else {
-						toast({
-							title: __("Error", "user-registration"),
-							description: __(
-								"Invalid response format.",
-								"user-registration"
-							),
-							status: "error",
-							position: "bottom-right",
-							duration: 5000,
-							isClosable: true,
-							variant: "subtle"
-						});
-					}
-				} else {
-					toast({
-						title: __("Error", "user-registration"),
-						description: __(
-							"HTTP request failed.",
-							"user-registration"
-						),
-						status: "error",
-						position: "bottom-right",
-						duration: 5000,
-						isClosable: true,
-						variant: "subtle"
-					});
+				if (data?.success && data?.plugin_status) {
+					setPluginStatuses(data.plugin_status);
+					updateButtonLabel(data.plugin_status);
+					return;
 				}
-			} catch (error) {
+
 				toast({
 					title: __("Error", "user-registration"),
 					description: __(
-						"Unable to check plugin status.",
+						"Invalid response format.",
 						"user-registration"
 					),
+					status: "error",
+					position: "bottom-right",
+					duration: 5000,
+					isClosable: true,
+					variant: "subtle"
+				});
+			} catch (error) {
+				toast({
+					title: __("Error", "user-registration"),
+					description:
+						error?.message ||
+						__(
+							"Unable to check plugin status.",
+							"user-registration"
+						),
 					status: "error",
 					position: "bottom-right",
 					duration: 5000,

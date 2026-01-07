@@ -20,6 +20,8 @@ const ContentAccessRules = () => {
 	const [openSettingsPanels, setOpenSettingsPanels] = useState(new Set());
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [activeTab, setActiveTab] = useState("custom");
+	const [highlightedRuleId, setHighlightedRuleId] = useState(null);
+	const [hasAppliedHighlight, setHasAppliedHighlight] = useState(false);
 
 	const urcrData = getURCRLocalizedData();
 	const hasMultipleMemberships = getURCRData("has_multiple_memberships", false);
@@ -51,6 +53,18 @@ const ContentAccessRules = () => {
 	useEffect(() => {
 		fetchRules();
 	}, [fetchRules]);
+
+	// Get rule ID from URL params
+	useEffect(() => {
+		const urlParams = new URLSearchParams(window.location.search);
+		const ruleId = urlParams.get('id');
+		if (ruleId) {
+			const ruleIdNum = parseInt(ruleId, 10);
+			if (!isNaN(ruleIdNum)) {
+				setHighlightedRuleId(ruleIdNum);
+			}
+		}
+	}, []);
 
 	const membershipRules = rules.filter((rule) => rule.rule_type === "membership");
 	const customRules = rules.filter((rule) => rule.rule_type !== "membership" || !rule.rule_type);
@@ -87,6 +101,46 @@ const ContentAccessRules = () => {
 			setExpandedRules(allRuleIds);
 		}
 	}, [rules, isLoading]);
+
+	// Handle rule highlighting: switch tab, expand rule, and scroll to it (only once on initial load)
+	useEffect(() => {
+		if (highlightedRuleId && !isLoading && rules.length > 0 && !hasAppliedHighlight) {
+			const targetRule = rules.find((rule) => rule.id === highlightedRuleId);
+			if (targetRule) {
+				// Determine which tab the rule belongs to
+				const isMembershipRule = targetRule.rule_type === "membership";
+				
+				// Switch to the correct tab only on initial load
+				if (isMembershipRule && shouldShowMembershipTab) {
+					setActiveTab("membership");
+				} else if (!isMembershipRule && shouldShowCustomTab) {
+					setActiveTab("custom");
+				}
+
+				// Expand the rule
+				setExpandedRules((prev) => new Set([...prev, highlightedRuleId]));
+
+				// Scroll to the rule after a short delay to allow DOM update
+				setTimeout(() => {
+					const ruleElement = document.querySelector(
+						`.urcr-rule-card[data-rule-id="${highlightedRuleId}"]`
+					);
+					if (ruleElement) {
+						ruleElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					}
+				}, 300);
+
+				// Mark highlight as applied so it doesn't run again
+				setHasAppliedHighlight(true);
+
+				// Clear highlight after 3 seconds
+				setTimeout(() => {
+					setHighlightedRuleId(null);
+				}, 3000);
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [highlightedRuleId, isLoading, rules, hasAppliedHighlight]);
 
 
 
@@ -238,6 +292,7 @@ const ContentAccessRules = () => {
 								rule={rule}
 								isExpanded={expandedRules.has(rule.id)}
 								isSettingsOpen={openSettingsPanels.has(rule.id)}
+								isHighlighted={highlightedRuleId === rule.id}
 								onToggleExpand={() => handleToggleExpand(rule.id)}
 								onToggleSettings={() => handleToggleSettings(rule.id)}
 								onRuleUpdate={handleRuleUpdate}

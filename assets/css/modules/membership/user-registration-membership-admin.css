@@ -830,9 +830,9 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-input-container .ur-label label {
   margin-bottom: 0;
   color: #383838;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
-  line-height: 21px;
+  line-height: 22px;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-input-type-membership-group-name,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-input-container .ur-field,
@@ -899,6 +899,8 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-label label,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-label label {
   margin-bottom: 0;
+  font-size: 14px;
+  line-height: 22px;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-input-type-select .ur-field {
@@ -927,7 +929,7 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title label,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title label {
   padding: 0 !important;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
   font-weight: 500;
   cursor: pointer;
@@ -935,6 +937,10 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title label b,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title label b {
   font-weight: inherit;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio]:checked,
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio]:checked {
+  border-color: #475bb2;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio]:checked::before,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio]:checked::before {
@@ -975,8 +981,8 @@
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-label label {
   margin-bottom: 0 !important;
-  font-size: 15px;
-  line-height: 21px;
+  font-size: 14px;
+  line-height: 22px;
   color: #383838;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-input-type-select .ur-field {
@@ -1138,8 +1144,8 @@
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body .ur-membership-subscription-field-container .ur-membership-input-container .ur-label label {
   margin-bottom: 0;
-  font-size: 15px;
-  line-height: 21px;
+  font-size: 14px;
+  line-height: 22px;
   color: #383838;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body .ur-membership-subscription-field-container .ur-membership-input-container .user-registration-switch input[type=checkbox] {
@@ -1637,9 +1643,9 @@
 }
 #ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-left #left-body .ur-membership-input-container .ur-label label {
   color: #383838;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
-  line-height: 21px;
+  line-height: 22px;
 }
 #ur-membership-create-form .user-registration-card #ur-membership-form-container #ur-member-form-left #left-body .ur-membership-input-container .user-registration-switch input[type=checkbox] {
   border-radius: 20px;
@@ -1848,6 +1854,7 @@
   border-radius: 2px;
   width: 18px;
   height: 18px;
+  margin-left: auto;
 }
 
 .urmg-loader {

@@ -79,7 +79,7 @@ const Edit = (props) => {
 				<InspectorControls key="ur-gutenberg-registration-form-inspector-controls">
 					<PanelBody
 						title={__(
-							"User Registration Forms",
+							"User Registration & Membership Forms",
 							"user-registration"
 						)}
 					>
@@ -124,7 +124,7 @@ const Edit = (props) => {
 							<Center>
 								<Heading as="h3" ml={5}>
 									{__(
-										"User Registration Forms",
+										"User Registration & Membership Forms",
 										"user-registration"
 									)}
 								</Heading>

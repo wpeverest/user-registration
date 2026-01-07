@@ -12,7 +12,6 @@ use Elementor\Controls_Manager;
 
 /**
  * User Registration Forms Widget for Elementor.
- *
  */
 class UR_Elementor_Widget_Registration extends Widget_Base {
 	/**
@@ -40,7 +39,6 @@ class UR_Elementor_Widget_Registration extends Widget_Base {
 	 *
 	 * Retrieve shortcode widget icon.
 	 *
-	 *
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
@@ -48,7 +46,6 @@ class UR_Elementor_Widget_Registration extends Widget_Base {
 	}
 	/**
 	 * Get widget categories.
-	 *
 	 *
 	 * @return array Widget categories.
 	 */
@@ -63,7 +60,6 @@ class UR_Elementor_Widget_Registration extends Widget_Base {
 	 *
 	 * Retrieve the list of keywords the widget belongs to.
 	 *
-	 *
 	 * @return array Widget keywords.
 	 */
 	public function get_keywords() {
@@ -71,7 +67,6 @@ class UR_Elementor_Widget_Registration extends Widget_Base {
 	}
 	/**
 	 * Register controls.
-	 *
 	 */
 	protected function register_controls() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
 		$this->start_controls_section(
@@ -97,13 +92,12 @@ class UR_Elementor_Widget_Registration extends Widget_Base {
 	}
 	/**
 	 * Retrieve the shortcode.
-	 *
 	 */
 	private function get_shortcode() {
 
 		$settings = $this->get_settings_for_display();
 		if ( ! $settings['user_registration_form'] ) {
-			return '<p>' . __( 'Please select a User Registration Forms.', 'user-registration' ) . '</p>';
+			return '<p>' . __( 'Please select a User Registration & Membership Forms.', 'user-registration' ) . '</p>';
 		}
 
 		$attributes = array(
@@ -113,20 +107,18 @@ class UR_Elementor_Widget_Registration extends Widget_Base {
 		$this->add_render_attribute( 'shortcode', $attributes );
 		$shortcode   = array();
 		$shortcode[] = sprintf( '[user_registration_form %s]', $this->get_render_attribute_string( 'shortcode' ) );
-		$shortcode = implode( '', $shortcode );
-		$shortcode = sprintf( apply_filters( 'user_registration_elementor_shortcode_registration_form', $shortcode, $settings ) );
+		$shortcode   = implode( '', $shortcode );
+		$shortcode   = sprintf( apply_filters( 'user_registration_elementor_shortcode_registration_form', $shortcode, $settings ) );
 		return $shortcode;
 	}
 	/**
 	 * Render widget output.
-	 *
 	 */
 	protected function render() {
 		echo do_shortcode( $this->get_shortcode() );
 	}
 	/**
 	 * Retrieve the  available UR forms.
-	 *
 	 */
 	public function get_forms() {
 		$user_registration_forms = array();

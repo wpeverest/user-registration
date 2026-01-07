@@ -25,6 +25,9 @@ abstract class UR_Meta_Boxes {
 		global $thepostid, $post;
 
 		$get_meta_data = get_post_meta( $post->ID, $field['id'], true );
+		$has_checkbox = get_post_meta( $post->ID, 'urcr_meta_checkbox', true );
+
+
 
 		$thepostid              = empty( $thepostid ) ? $post->ID : $thepostid;
 		$field['class']         = isset( $field['class'] ) ? $field['class'] : 'urfl-checkbox';
@@ -43,17 +46,9 @@ abstract class UR_Meta_Boxes {
 
 		echo '<div class="ur-metabox-field-detail">';
 
-		if ( isset( $field['disabled'] ) && $field['disabled'] ) {
+		$non_checked = '<input type="checkbox" id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" >';
 
-			$non_checked = '<input type="checkbox" id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" disabled >';
-
-			$checked = '<input type="checkbox" id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" checked disabled >';
-		} else {
-			$non_checked = '<input type="checkbox" id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" >';
-
-			$checked = '<input type="checkbox" id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" checked >';
-
-		}
+		$checked = '<input type="checkbox" id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" checked >';
 
 		$metabox__allowedtags = array(
 			'input' => array(
@@ -67,7 +62,7 @@ abstract class UR_Meta_Boxes {
 			),
 		);
 
-		if ( 'on' === $get_meta_data ) {
+		if ( 'on' === $get_meta_data && 'on' === $has_checkbox ) {
 			echo wp_kses( $checked, $metabox__allowedtags );
 		} else {
 			echo wp_kses( $non_checked, $metabox__allowedtags );

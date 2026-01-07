@@ -65,7 +65,41 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 						$current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' ) ) . 'ur-membership/';
 						?>
 							<tr class="ur-account-table__row">
-								<td class="ur-account-table__cell ur-account-table__cell--membership-type"><?php echo isset( $membership['post_title'] ) && ! empty( $membership['post_title'] ) ? esc_html( $membership['post_title'] ) : __( 'N/A', 'user-registration' ); ?></td>
+								<td class="ur-account-table__cell ur-account-table__cell--membership-type">
+									<div style="display: flex; gap:4px;">
+										<?php
+										if ( ( isset( $data['is_upgrading'] ) && $data['is_upgrading'] ) || $is_renewing || ( isset( $data['is_purchasing_multiple'] ) && $data['is_purchasing_multiple'] ) ) {
+											if ( ! empty( $data['bank_data']['notice_1'] ) ) {
+												$notice = '';
+												if ( $data['is_upgrading'] ) {
+													$notice = isset( $data['bank_data']['notice_1'] ) ? $data['bank_data']['notice_1'] : '';
+												} elseif ( $is_renewing ) {
+													$notice = isset( $data['bank_data']['notice_2'] ) ? $data['bank_data']['notice_2'] : '';
+												} elseif ( $data['is_purchasing_multiple'] ) {
+													$notice = isset( $data['bank_data']['notice_3'] ) ? $data['bank_data']['notice_3'] : '';
+												}
+
+												if ( ! empty( $notice ) ) {
+													$notice .= '</br><button class="view-bank-data">' . __( 'View Bank Info', 'user-registration' ) . '</button>';
+													$notice .= '<div class="upgrade-info urm-d-none">' . $membership_info . '</div>';
+
+													ob_start();
+													?>
+													<span class="user-registration-help-tip" data-tip="<?php echo esc_attr( $notice ); ?>">
+														<svg xmlns="http://www.w3.org/2000/svg" fill="#FFC107" viewBox="0 0 24 24" height="18px" width="18px">
+															<path fill-rule="evenodd" d="M9.491 4.44c1.115-1.92 3.903-1.92 5.017 0l7.1 12.24C22.722 18.6 21.328 21 19.1 21H4.9c-2.229 0-3.622-2.4-2.508-4.32L9.49 4.44h.001Zm2.51 5.038a.726.726 0 0 1 .723.72v3.6a.718.718 0 0 1-.724.72.726.726 0 0 1-.724-.72v-3.6a.718.718 0 0 1 .724-.72Zm0 7.92a.726.726 0 0 0 .723-.72.718.718 0 0 0-.724-.72.718.718 0 1 0 0 1.44Z" clip-rule="evenodd"/>
+														</svg>
+													</span>
+													<?php
+													echo ob_get_clean();
+												}
+											}
+										}
+										?>
+
+										<?php echo isset( $membership['post_title'] ) && ! empty( $membership['post_title'] ) ? esc_html( $membership['post_title'] ) : __( 'N/A', 'user-registration' ); ?>
+									</div>
+								</td>
 								<td class="ur-account-table__cell ur-account-table__cell--terms"><?php echo esc_html( $data['period'] ?? '-' ); ?></td>
 								<td class="ur-account-table__cell ur-account-table__cell--status">
 									<?php
@@ -182,44 +216,6 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 												}
 											}
 											?>
-											<!--
-										<?php
-
-										if ( ( isset( $data['is_upgrading'] ) && $data['is_upgrading'] ) || $is_renewing || ( isset( $data['is_purchasing_multiple'] ) && $data['is_purchasing_multiple'] ) ) :
-
-											if ( ! empty( $data['bank_data']['notice_1'] ) ) :
-												?>
-												<div id="bank-notice" class="btn-success">
-													<div class="user-registration-myaccount-notice-box">
-														<?php
-
-														if ( $data['is_upgrading'] ) {
-															echo isset( $data['bank_data']['notice_1'] ) ? $data['bank_data']['notice_1'] : '';
-														} elseif ( $is_renewing ) {
-															echo isset( $data['bank_data']['notice_2'] ) ? $data['bank_data']['notice_2'] : '';
-														} elseif ( $data['is_purchasing_multiple'] ) {
-															echo isset( $data['bank_data']['notice_3'] ) ? $data['bank_data']['notice_3'] : '';
-														}
-														?>
-													</div>
-													<span class="view-bank-data">
-														<?php
-														echo __( 'Bank Info', 'user-registration' );
-														?>
-													</span>
-													</div>
-												<?php
-											endif;
-											?>
-											<div class="upgrade-info urm-d-none">
-												<?php
-												echo $membership_info;
-												?>
-											</div>
-											<?php
-										endif;
-										?>
-										-->
 										</div>
 									</div>
 								</td>
@@ -241,8 +237,12 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 						'format'    => 'page/%#%/',
 						'current'   => $current,
 						'total'     => $total_pages,
-						'prev_text' => '&laquo;',
-						'next_text' => '&raquo;',
+						'prev_text' => '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" height="18px" width="18px">
+											<path d="M14.653 2.418a1.339 1.339 0 0 1 1.944 0 1.468 1.468 0 0 1 0 2.02L9.32 12l7.278 7.561a1.468 1.468 0 0 1 0 2.02 1.339 1.339 0 0 1-1.944 0l-8.25-8.57a1.468 1.468 0 0 1 0-2.021l8.25-8.572Z"/>
+										</svg>',
+						'next_text' => '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" height="18px" width="18px">
+											<path d="M7.403 2.418a1.339 1.339 0 0 1 1.944 0l8.25 8.572a1.468 1.468 0 0 1 0 2.02l-8.25 8.572a1.339 1.339 0 0 1-1.944 0 1.468 1.468 0 0 1 0-2.02L14.68 12 7.403 4.439a1.468 1.468 0 0 1 0-2.02Z"/>
+										</svg>',
 						'type'      => 'list',
 					)
 				);

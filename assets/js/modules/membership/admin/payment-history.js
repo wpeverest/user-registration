@@ -294,6 +294,7 @@
 			$(".ur-payment-update-btn")
 				.prop("disabled", true)
 				.append('<span class="ur-spinner"></span>');
+
 			var data = {};
 			$.each(form.serializeArray(), function (idx, field) {
 				var name = field.name.replace(/\[\]$/, "");
@@ -442,58 +443,6 @@
 				).css({ display: "flex" });
 			}
 		);
-		$(document).on("click", ".approve-payment", function () {
-			var $this = $(this),
-				order_id = $this.data("order-id");
-			handle_orders_utils.append_spinner($this);
-			handle_orders_utils.toggleSaveButtons(true);
-
-			handle_orders_utils.send_data(
-				{
-					action: "user_registration_membership_approve_payment",
-					order_id: order_id
-				},
-				{
-					success: function (response) {
-						response = JSON.parse(response.data);
-						if (response.status) {
-							handle_orders_utils.show_success_message(
-								response.message
-							);
-							// update the status in modal
-							$this
-								.siblings("span")
-								.removeClass("pending")
-								.addClass("completed")
-								.text(urmo_data.labels.i18n_payment_completed);
-							//update the status in table
-							$("#ur-order-" + order_id)
-								.removeClass("pending")
-								.addClass("completed")
-								.text(urmo_data.labels.i18n_payment_completed);
-							$this.remove();
-						} else {
-							handle_orders_utils.show_failure_message(
-								response.message
-							);
-						}
-					},
-					failure: function (xhr, statusText) {
-						console.log(xhr);
-						handle_orders_utils.show_failure_message(
-							urmo_data.labels.network_error +
-								"(" +
-								statusText +
-								")"
-						);
-					},
-					complete: function () {
-						handle_orders_utils.remove_spinner($this);
-						handle_orders_utils.toggleSaveButtons(false);
-					}
-				}
-			);
-		});
 	});
 	$(document).ready(function () {
 		$(".manual-payment-button").on("click", function () {

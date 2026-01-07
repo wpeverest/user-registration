@@ -188,3 +188,16 @@
 		gap: 5px;
 	}
 }
+
+#urcr-meta-box .user-registration-notice {
+	border: 0 solid #e1e1e1;
+	border-left-width: 4px;
+	border-left-color: #475bb2;
+	a {
+		text-decoration: none;
+	}
+	.ur-notice-subtitle {
+		color: #646970;
+		font-size: 13px;
+	}
+}

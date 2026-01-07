@@ -12,7 +12,24 @@
   ],
   "textdomain": "user-registration",
   "example": {
-    "attributes": {}
+    "attributes": {},
+    "innerBlocks": [
+      {
+        "name": "core/gallery",
+        "attributes": {
+          "columns": 3,
+          "imageCrop": true,
+          "linkTo": "none"
+        }
+      },
+      {
+        "name": "core/paragraph",
+        "attributes": {
+          "content": "This block is restricted!!"
+        }
+      }
+    ],
+    "viewportWidth": 400
   },
   "supports": {
     "className": false,

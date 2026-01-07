@@ -304,15 +304,6 @@ class UR_Modules {
 		// Logic to enable Feature.
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
 
-		if ( 'user-registration-membership' === $slug ) {
-			array_push( $enabled_features, 'user-registration-payment-history' );
-			array_push( $enabled_features, 'user-registration-content-restriction' );
-			if ( ! get_option( 'user_registration_membership_installed_flag', false ) ) {
-				ur_membership_install_required_pages();
-				\WPEverest\URMembership\Admin\Database\Database::create_tables();
-			}
-		}
-
 		if ( in_array( $slug, array( 'user-registration-payments', 'user-registration-stripe', 'user-registration-authorize-net' ) ) && ! in_array( 'user-registration-payment-history', $enabled_features ) ) {
 			$enabled_features[] = 'user-registration-payment-history';
 		}
@@ -543,14 +534,6 @@ class UR_Modules {
 
 		foreach ( $feature_data as $slug => $name ) {
 			array_push( $enabled_features, $slug );
-
-			if ( 'user-registration-membership' === $slug ) {
-				if ( ! get_option( 'user_registration_membership_installed_flag', false ) ) {
-					array_push( $enabled_features, 'payment-history' );
-					array_push( $enabled_features, 'content-restriction' );
-					ur_membership_install_required_pages();
-				}
-			}
 		}
 
 		update_option( 'user_registration_enabled_features', $enabled_features );
@@ -809,7 +792,7 @@ class UR_Modules {
 				return new \WP_REST_Response(
 					array(
 						'status'  => true,
-						'message' => esc_html__( 'User Registration Pro activated successfully.', 'user-registration' ),
+						'message' => esc_html__( 'User Registration & Membership Pro activated successfully.', 'user-registration' ),
 						'code'    => 200,
 					),
 					200

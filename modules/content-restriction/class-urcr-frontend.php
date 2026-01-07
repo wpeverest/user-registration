@@ -871,18 +871,12 @@ class URCR_Frontend {
 		}
 
 		$urcr_meta_override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', true );
-
-		if ( ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
-			$restriction_applied = $this->advanced_restriction_with_access_rules();
+		if( $urcr_meta_override_global_settings ) {
+			$this->basic_restrictions();
+		} else if ( ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
+			$this->advanced_restriction_with_access_rules();
 		}
 
-		if ( false === $restriction_applied ) {
-			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
-
-			if ( ! $whole_site_access_restricted ) {
-				$this->basic_restrictions();
-			}
-		}
 	}
 
 	/**
@@ -1128,64 +1122,58 @@ class URCR_Frontend {
 
 		$get_meta_data_allow_to = get_post_meta( $post_id, 'urcr_allow_to', $single = true );
 
-		$get_meta_data_checkbox = get_post_meta( $post_id, 'urcr_meta_checkbox', $single = true );
-
 		$override_global_settings  = get_post_meta( $post_id, 'urcr_meta_override_global_settings', $single = true );
 		$is_membership_active      = ur_check_module_activation( 'membership' );
 		$get_meta_data_memberships = get_post_meta( $post_id, 'urcr_meta_memberships', $single = true );
 
-		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
-
-		if ( ur_string_to_bool( $get_meta_data_checkbox ) || $whole_site_access_restricted ) {
-			if ( ! ur_string_to_bool( $override_global_settings ) ) {
-				if ( '0' == get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) {
-
-					if ( ! is_user_logged_in() ) {
-						$this->urcr_apply_basic_restriction_template();
-					}
-					return $post;
-				} elseif ( '1' == get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-					if ( is_array( $allowed_roles ) && in_array( $current_user_role, $allowed_roles ) ) {
-						return;
-					}
-					$this->urcr_apply_basic_restriction_template();
-				} elseif ( '2' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-					if ( is_user_logged_in() ) {
-						$this->urcr_apply_basic_restriction_template();
-					}
-					return $post;
-				} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-					if ( $is_membership_active && is_array( $allowed_memberships ) && urm_check_user_membership_has_access( $allowed_memberships ) ) {
-						return;
-					}
-					$this->urcr_apply_basic_restriction_template();
-				}
-			} elseif ( $get_meta_data_allow_to == '0' ) {
+		if ( ! ur_string_to_bool( $override_global_settings ) ) {
+			if ( '0' == get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) {
 
 				if ( ! is_user_logged_in() ) {
 					$this->urcr_apply_basic_restriction_template();
 				}
 				return $post;
-			} elseif ( $get_meta_data_allow_to == '1' ) {
-				if ( isset( $get_meta_data_roles ) && ! empty( $get_meta_data_roles ) ) {
-					if ( is_array( $get_meta_data_roles ) && in_array( $current_user_role, $get_meta_data_roles ) ) {
-						return;
-					}
-					$this->urcr_apply_basic_restriction_template();
+			} elseif ( '1' == get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
+				if ( is_array( $allowed_roles ) && in_array( $current_user_role, $allowed_roles ) ) {
+					return;
 				}
-			} elseif ( $get_meta_data_allow_to === '2' ) {
+				$this->urcr_apply_basic_restriction_template();
+			} elseif ( '2' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
 				if ( is_user_logged_in() ) {
 					$this->urcr_apply_basic_restriction_template();
 				}
-
 				return $post;
-			} elseif ( $get_meta_data_allow_to === '3' ) {
-				if ( $is_membership_active && is_array( $get_meta_data_memberships ) && urm_check_user_membership_has_access( $get_meta_data_memberships ) ) {
-					return $post;
+			} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
+				if ( $is_membership_active && is_array( $allowed_memberships ) && urm_check_user_membership_has_access( $allowed_memberships ) ) {
+					return;
 				}
 				$this->urcr_apply_basic_restriction_template();
 			}
+		} elseif ( $get_meta_data_allow_to == '0' ) {
+			if ( ! is_user_logged_in() ) {
+				$this->urcr_apply_basic_restriction_template();
+			}
+			return $post;
+		} elseif ( $get_meta_data_allow_to == '1' ) {
+			if ( isset( $get_meta_data_roles ) && ! empty( $get_meta_data_roles ) ) {
+				if ( is_array( $get_meta_data_roles ) && in_array( $current_user_role, $get_meta_data_roles ) ) {
+					return;
+				}
+				$this->urcr_apply_basic_restriction_template();
+			}
+		} elseif ( $get_meta_data_allow_to === '2' ) {
+			if ( is_user_logged_in() ) {
+				$this->urcr_apply_basic_restriction_template();
+			}
+
+			return $post;
+		} elseif ( $get_meta_data_allow_to === '3' ) {
+			if ( $is_membership_active && is_array( $get_meta_data_memberships ) && urm_check_user_membership_has_access( $get_meta_data_memberships ) ) {
+				return $post;
+			}
+			$this->urcr_apply_basic_restriction_template();
 		}
+
 	}
 
 	/**

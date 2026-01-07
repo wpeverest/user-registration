@@ -728,9 +728,9 @@
 								label {
 									margin-bottom: 0;
 									color: #383838;
-									font-size: 15px;
+									font-size: 14px;
 									font-weight: 500;
-									line-height: 21px;
+									line-height: 22px;
 								}
 							}
 
@@ -788,6 +788,8 @@
 
 								label {
 									margin-bottom: 0;
+									font-size: 14px;
+									line-height: 22px;
 								}
 							}
 
@@ -816,7 +818,7 @@
 
 												label {
 													padding: 0 !important;
-													font-size: 15px;
+													font-size: 14px;
 													line-height: 20px;
 													font-weight: 500;
 													cursor: pointer;
@@ -827,9 +829,13 @@
 												}
 
 												input[type="radio"] {
-													&:checked::before {
-														background: $primary_color;
-														margin: 3.2px;
+													&:checked {
+														border-color: $primary_color;
+
+														&::before {
+															background: $primary_color;
+															margin: 3.2px;
+														}
 													}
 												}
 
@@ -879,8 +885,8 @@
 							.ur-label {
 								label {
 									margin-bottom: 0 !important;
-									font-size: 15px;
-									line-height: 21px;
+									font-size: 14px;
+									line-height: 22px;
 									color: $grey-400;
 								}
 							}
@@ -1092,8 +1098,8 @@
 
 								label {
 									margin-bottom: 0;
-									font-size: 15px;
-									line-height: 21px;
+									font-size: 14px;
+									line-height: 22px;
 									color: $grey-400;
 								}
 							}
@@ -1644,9 +1650,9 @@
 
 								label {
 									color: #383838;
-									font-size: 15px;
+									font-size: 14px;
 									font-weight: 500;
-									line-height: 21px;
+									line-height: 22px;
 								}
 							}
 
@@ -1850,6 +1856,7 @@
 		border-radius: $border_radius_2;
 		width: 18px;
 		height: 18px;
+		margin-left: auto;
 	}
 }
 

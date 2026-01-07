@@ -304,7 +304,6 @@ html {
 			}
 
 			.notice {
-
 				&_red,
 				&_blue {
 					&:empty {
@@ -597,7 +596,6 @@ html {
 
 	.notice-container {
 		.notice {
-
 			&_red,
 			&_blue {
 				&:empty {
@@ -814,7 +812,6 @@ html {
 				line-height: 1.5;
 				height: 38px;
 
-
 				iframe {
 					position: absolute;
 					top: $spacing_12px;
@@ -849,7 +846,9 @@ html {
 				margin-right: 0;
 			}
 
-			.user-registration-membership_page_user-registration-frontend-list .shortcode .widefat {
+			.user-registration-membership_page_user-registration-frontend-list
+				.shortcode
+				.widefat {
 				width: calc(100% - 40px);
 			}
 
@@ -901,7 +900,7 @@ html {
 
 .user-registration {
 	.membership-upgrade-container {
-		>span {
+		> span {
 			display: block;
 			margin-bottom: 20px;
 			font-size: 16px;
@@ -925,120 +924,118 @@ html {
 	}
 }
 
-.user-registration-page {
-	.ur-membership-container {
-		&.layout-list {
-			.membership-block {
+.ur-membership-container {
+	&.layout-list {
+		.membership-block {
+			display: flex;
+			margin-bottom: 20px;
+			border-width: 1px;
+			border-style: solid;
+			border-color: rgb(225, 225, 225);
+			border-image: initial;
+			border-radius: 4px;
+			padding: 16px;
+
+			.ur_membership_input_label {
+				width: 100%;
 				display: flex;
-				margin-bottom: 20px;
-				border-width: 1px;
-				border-style: solid;
-				border-color: rgb(225, 225, 225);
-				border-image: initial;
-				border-radius: 4px;
-				padding: 16px;
+				align-items: center;
+				color: #383838;
+				font-size: 14px;
+				font-weight: 700;
+				line-height: 25px;
+				margin-bottom: 0;
+				margin-top: 0;
+				gap: 8px;
+			}
 
-				.ur_membership_input_label {
-					width: 100%;
-					display: flex;
-					align-items: center;
+			.ur_membership_input_class {
+				&:not(.ur_membership_radio_input, .pg-list) {
+					height: 38px;
+					padding: 0 14px;
+					border-radius: 4px;
+					border: 1px solid #e9e9e9;
+					background: $color_2;
 					color: #383838;
-					font-size: 14px;
-					font-weight: 700;
-					line-height: 25px;
 					margin-bottom: 0;
-					margin-top: 0;
-					gap: 8px;
-				}
 
-				.ur_membership_input_class {
-					&:not(.ur_membership_radio_input, .pg-list) {
-						height: 38px;
-						padding: 0 14px;
-						border-radius: 4px;
-						border: 1px solid #e9e9e9;
-						background: $color_2;
-						color: #383838;
-						margin-bottom: 0;
-
-						&::placeholder {
-							color: #b5b5b5;
-						}
-
-						&:focus {
-							border-color: $color_1;
-						}
+					&::placeholder {
+						color: #b5b5b5;
 					}
-				}
-
-				.ur-frontend-field {
-					accent-color: #475bb2;
 
 					&:focus {
-						outline: none;
-						box-shadow: none;
-						vertical-align: center;
+						border-color: $color_1;
 					}
 				}
+			}
 
-				&:has(.ur-frontend-field:checked) {
-					border-color: #475bb2;
+			.ur-frontend-field {
+				accent-color: #475bb2;
+
+				&:focus {
+					outline: none;
+					box-shadow: none;
+					vertical-align: center;
+				}
+			}
+
+			&:has(.ur-frontend-field:checked) {
+				border-color: #475bb2;
+			}
+
+			.ur-membership-title-wrapper {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				width: 100%;
+
+				.ur-membership-title {
+					color: #1f1f1f;
+					font-weight: 600;
+					display: inline-block;
+					vertical-align: middle;
+					font-size: 16px;
+					text-align: left;
 				}
 
-				.ur-membership-title-wrapper {
+				.ur-membership-amount-wrapper {
 					display: flex;
-					justify-content: space-between;
 					align-items: center;
-					width: 100%;
+					justify-content: center;
+					gap: 4px;
 
-					.ur-membership-title {
-						color: #1f1f1f;
-						font-weight: 600;
-						display: inline-block;
-						vertical-align: middle;
+					.membership-amount {
+						font-weight: 700;
 						font-size: 16px;
-						text-align: left;
-					}
-
-					.ur-membership-amount-wrapper {
-						display: flex;
-						align-items: center;
-						justify-content: center;
-						gap: 4px;
-
-						.membership-amount {
-							font-weight: 700;
-							font-size: 16px;
-							color: #1f1f1f;
-						}
+						color: #1f1f1f;
 					}
 				}
 			}
+		}
 
-			.ur-membership-duration {
-				color: #6b6b6b;
-				font-size: 13px;
-				font-weight: 400;
-			}
+		.ur-membership-duration {
+			color: #6b6b6b;
+			font-size: 13px;
+			font-weight: 400;
 		}
 	}
+}
 
-	.membership-footer {
-		padding: 0px;
+.membership-footer {
+	padding: 0px;
 
-		.membership-signup-button {
-			width: 200px;
-			cursor: pointer;
-			font-size: 16px;
-			line-height: 24px;
-			font-weight: 600;
-			background: #475bb2;
-			color: white;
-			padding: 14px 0;
-			border-radius: 5px;
-			border: none;
-			font-family: inherit;
-		}
+	.membership-signup-button {
+		width: 200px;
+		cursor: pointer;
+		font-size: 16px;
+		line-height: 24px;
+		font-weight: 600;
+		background: #475bb2;
+		color: white;
+		padding: 14px 0;
+		border-radius: 5px;
+		border: none;
+		font-family: inherit;
 	}
 }
 
@@ -1244,9 +1241,18 @@ html {
 	}
 }
 
-.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block:hover,
-.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block:hover,
-#pg-container .ur-membership-list-container .ur-membership-container .membership-block:hover {
+.user-registration-page
+	.ur-membership-list-container
+	.ur-membership-container
+	.membership-block:hover,
+.ur-multi-device-form-preview
+	.ur-membership-list-container
+	.ur-membership-container
+	.membership-block:hover,
+#pg-container
+	.ur-membership-list-container
+	.ur-membership-container
+	.membership-block:hover {
 	background: none;
 	box-shadow: none;
 }
@@ -1254,7 +1260,7 @@ html {
 // Thankyou Page CSS
 .ur-thank-you-page {
 	width: 100%;
-	min-height: 100vh;
+	// min-height: 100vh;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -1328,7 +1334,7 @@ html {
 			justify-content: center;
 			gap: 8px;
 			padding: 14px 32px;
-			background-color: #2680C2;
+			background-color: #2680c2;
 			color: #ffffff;
 			font-size: 16px;
 			font-weight: 600;
@@ -1351,7 +1357,7 @@ html {
 			}
 
 			&:focus {
-				outline: 2px solid #2680C2;
+				outline: 2px solid #2680c2;
 				outline-offset: 2px;
 			}
 
@@ -1422,7 +1428,7 @@ html {
 		margin-bottom: 24px;
 		padding: 14px 18px;
 		background-color: #e7f3ff;
-		border-left: 4px solid #2680C2;
+		border-left: 4px solid #2680c2;
 		border-radius: 4px;
 		text-align: left;
 
@@ -1434,7 +1440,7 @@ html {
 		}
 
 		strong {
-			color: #2680C2;
+			color: #2680c2;
 			font-weight: 600;
 		}
 	}

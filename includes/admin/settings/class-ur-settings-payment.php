@@ -71,6 +71,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
          */
         public function get_sections_callback( $sections ) {
             $sections[ 'payment-method' ] = __( 'Payment Method', 'user-registration' );
+            $sections[ 'store' ] = __( 'Store', 'user-registration' );
             return $sections;
         }
         /**
@@ -88,11 +89,18 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                 $settings = array(
                     'title' => '',
                     'sections' => array(
-                        'general_options' => $general_settings,
                         'paypal_options' => $paypal_settings,
                         'stripe_options' => $stripe_settings,
                         'bank_transfer_options' => $bank_transfer_settings,
                     ),
+                );
+            } elseif( 'store' === $current_section ) {
+                add_filter( 'user_registration_settings_hide_save_button', '__return_true' );
+                $settings = array(
+                    'title' => '',
+                    'sections' => array(
+                        'general_options' => $general_settings,
+                    )
                 );
             } else {
                 $settings = $this->upgrade_to_pro_setting();
@@ -113,7 +121,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 
 			$settings = array(
 						'id'          => 'payment-settings',
-						'title'       => esc_html__( 'Payment Settings', 'user-registration' ),
+						'title'       => esc_html__( 'Store', 'user-registration' ),
 						'type'        => 'card',
 						'desc'        => '',
 						'show_status' => false,
@@ -143,7 +151,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 
         public function get_paypal_settings() {
             return array(
-                'title'        => __( 'Paypal Settings', 'user-registration' ),
+                'title'        => __( 'Paypal', 'user-registration' ),
                 'type'         => 'accordian',
                 'id'           => 'paypal',
                 'desc'         => '',
@@ -218,14 +226,14 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
         public function get_stripe_settings() {
             return array(
                 'id'           => 'stripe',
-                'title'        => __( 'Stripe Settings', 'user-registration' ),
+                'title'        => __( 'Stripe', 'user-registration' ),
                 'type'         => 'accordian',
                 'show_status'  => false,
                 'desc'         => '',
                 'is_connected' => get_option( 'urm_stripe_connection_status', false ),
                 'settings'     => array(
                     array(
-                        'title'    => __( 'Test Publishable key', 'user-registration' ),
+                        'title'    => __( 'Publishable key', 'user-registration' ),
                         'desc'     => __( 'Stripe test publishable  key.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_test_publishable_key',
                         'type'     => 'text',
@@ -234,7 +242,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                         'default'  => '',
                     ),
                     array(
-                        'title'    => __( 'Test Secret key', 'user-registration' ),
+                        'title'    => __( 'Secret key', 'user-registration' ),
                         'desc'     => __( 'Stripe test secret key.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_test_secret_key',
                         'type'     => 'text',
@@ -251,7 +259,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                         'default'  => '',
                     ),
                     array(
-                        'title'    => __( 'Live Publishable Key', 'user-registration' ),
+                        'title'    => __( 'Publishable Key', 'user-registration' ),
                         'desc'     => __( 'Stripe live publishable key.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_live_publishable_key',
                         'type'     => 'text',
@@ -260,7 +268,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                         'default'  => '',
                     ),
                     array(
-                        'title'    => __( 'Live Secret key', 'user-registration' ),
+                        'title'    => __( 'Secret key', 'user-registration' ),
                         'desc'     => __( 'Stripe live secret key.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_live_secret_key',
                         'type'     => 'text',
@@ -280,7 +288,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
         public function get_bank_transfer_settings() {
             return array(
                 'id'           => 'bank',
-                'title'        => __( 'Bank Transfer Settings', 'user-registration' ),
+                'title'        => __( 'Bank Transfer', 'user-registration' ),
                 'type'         => 'accordian',
                 'desc'         => '',
                 'is_connected' => get_option( 'urm_bank_connection_status', false ),

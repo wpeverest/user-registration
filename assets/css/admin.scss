@@ -4878,15 +4878,15 @@ a.button.ur-smart-tags-list-button {
 }
 
 #ur-smart-tags-selector {
-	float: right;
+	// float: right;
 	display: inline-flex;
-	gap: 4px;
+	gap: $spacing-4px;
 	align-items: center;
 	color: #6b6b6b;
 	font-weight: $regular;
-	font-size: 14px;
+	font-size: 13px;
 	text-decoration: underline;
-	padding: 10px 0px;
+	padding: $spacing_14px 0px;
 	cursor: pointer;
 
 	&~.select2-container {
@@ -7356,6 +7356,13 @@ body {
 
 // Tools Page CSS
 body.user-registration {
+	// #wpfooter {
+	// 	position: fixed;
+	// 	bottom: 0;
+	// 	background: $white;
+	// 	border: $border_width solid $border-color;	
+	// }
+
 	.user-registration-message {
 		margin: $spacing_6px $spacing_20px;
 		border-radius: $border_radius_4;
@@ -7820,6 +7827,7 @@ body.user-registration {
 				.status-expired {
 					color: $deny_color;
 				}
+
 				.status-canceled {
 					color: $deny_color;
 				}

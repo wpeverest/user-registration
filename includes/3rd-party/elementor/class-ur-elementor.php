@@ -25,7 +25,6 @@ class UR_Elementor {
 
 	/**
 	 * Initialize elementor hooks.
-	 *
 	 */
 	public function init() {
 
@@ -41,7 +40,6 @@ class UR_Elementor {
 
 	/**
 	 * Register User Registration forms Widget.
-	 *
 	 */
 	public function register_widget() {
 			// Include Widget files.
@@ -57,27 +55,25 @@ class UR_Elementor {
 			ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_Edit_Profile() );
 			ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_Edit_Password() );
 
-
-			//include if pro version
-			if(is_plugin_active('user-registration-pro/user-registration.php')){
-				require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-profile-details.php';
-				require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-popup.php';
-				ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_View_Details() );
-				ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_Popup() );
-			}
+			// include if pro version
+		if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+			require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-profile-details.php';
+			require_once UR_ABSPATH . 'includes/3rd-party/elementor/widgets/class-ur-widgets-popup.php';
+			ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_View_Details() );
+			ElementorPlugin::instance()->widgets_manager->register( new UR_Elementor_Widget_Popup() );
+		}
 	}
 
 	/**
 	 * Custom Widgets Category.
 	 *
 	 * @param object $elements_manager Elementor elements manager.
-	 *
 	 */
 	public function ur_elementor_widget_categories( $elements_manager ) {
 		$elements_manager->add_category(
 			'user-registration',
 			array(
-				'title' => esc_html__( 'User Registration', 'user-registration' ),
+				'title' => esc_html__( 'User Registration & Membership', 'user-registration' ),
 				'icon'  => 'fa fa-plug',
 			)
 		);
@@ -88,7 +84,7 @@ class UR_Elementor {
 	 */
 	public function editor_assets() {
 		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array(), UR()->version );
-		wp_register_style( 'user-registration-my-account', UR()->plugin_url() . '/assets/css/my-account-layout.css', array( ), UR()->version );
+		wp_register_style( 'user-registration-my-account', UR()->plugin_url() . '/assets/css/my-account-layout.css', array(), UR()->version );
 
 		wp_enqueue_style( 'user-registration-admin' );
 		wp_enqueue_style( 'user-registration-my-account' );

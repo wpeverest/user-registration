@@ -92,7 +92,7 @@ if ( ! class_exists( 'UR_Admin_Form_Modal', false ) ) :
 			printf(
 				'<a href="#" class="button ur-insert-form-button" data-editor="%s" title="%s">%s %s</a>',
 				esc_attr( $editor_id ),
-				esc_attr__( 'Add User Registration Form', 'user-registration' ),
+				esc_attr__( 'Add User Registration & Membership Form', 'user-registration' ),
 				wp_kses_post( $icon ),
 				esc_html__( 'Add Registration Form', 'user-registration' )
 			);

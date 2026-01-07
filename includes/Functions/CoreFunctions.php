@@ -406,7 +406,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 					if ( ! urm_is_payment_gateway_configured( $key ) ) {
 						continue;
 					}
-					$active_payment_gateways[ $key ] = $gateways['status'];
+					$active_payment_gateways[ $key ] = true;
 				}
 
 				$new_mem[ $k ]['active_payment_gateways'] = ( wp_unslash( wp_json_encode( $active_payment_gateways ) ) );

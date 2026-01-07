@@ -113,35 +113,49 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 								?>
 									<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
 
-									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( apply_filters ('user_registration_profile_picture_max_upload_size', size_format( $max_upload_size ) ) ); ?></p>
+									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( apply_filters( 'user_registration_profile_picture_max_upload_size', size_format( $max_upload_size ) ) ); ?></p>
 									</div>
 									<header>
-										<p><strong>
-										<?php
-										echo esc_html(
-											/**
-											 * Filter to modify the upload new profile image message.
-											 *
-											 * @param string Message content to be modified.
-											 * @return string modified message.
-											 */
-											apply_filters( 'user_registration_upload_new_profile_image_message', esc_html__( 'Upload your new profile image.', 'user-registration' ) )
-										);
-										?>
-											</strong></p>
 										<div class="button-group">
-											<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo esc_attr( $profile_picture_url ); ?>" />
-											<input type="hidden" name="profile-default-image" value="<?php echo esc_url( $gravatar_image ); ?>" />
-											<button class="button profile-pic-remove" data-attachment-id="<?php echo esc_attr( get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) ); ?>" style="<?php echo esc_attr( ( $gravatar_image === $image ) ? 'display:none;' : '' ); ?>"><?php echo esc_html__( 'Remove', 'user-registration' ); ?></php></button>
+											<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="#475bb2" height="18px" width="18px" viewBox="0 0 24 24">
+													<path d="M2 19.142V5.807a2.857 2.857 0 0 1 2.858-2.858h6.668a.953.953 0 1 1 0 1.905H4.858a.952.952 0 0 0-.953.953v13.335a.952.952 0 0 0 .953.953h13.336a.952.952 0 0 0 .952-.953v-6.667a.953.953 0 0 1 1.905 0v6.667A2.857 2.857 0 0 1 18.194 22H4.858A2.857 2.857 0 0 1 2 19.142Z"/>
+													<path d="M20.095 4.973a1.069 1.069 0 0 0-1.823-.755l-8.586 8.587a.955.955 0 0 0-.241.405l-.557 1.9 1.903-.555.112-.04a.956.956 0 0 0 .294-.2l8.585-8.587.071-.078c.156-.19.242-.43.242-.677Zm1.905 0c0 .789-.313 1.545-.87 2.102l-8.586 8.587c-.34.34-.759.587-1.22.721l.002.001-2.737.8a1.432 1.432 0 0 1-1.785-1.017c-.064-.248-.06-.51.012-.755l.8-2.737c.119-.402.324-.775.6-1.088l.123-.13 8.586-8.586.107-.102A2.973 2.973 0 0 1 22 4.973Z"/>
+												</svg>
+											</button>
+											<?php
 
-											<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" ><?php echo esc_html__( 'Upload Picture', 'user-registration' ); ?></button>
-											<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg,image/gif,image/png" style="display:none" />
-										</div>
-										<?php
-										if ( ! $profile_picture_url ) {
+											if ( has_action( 'uraf_profile_picture_buttons' ) ) {
+												?>
+												<div class="uraf-profile-picture-upload">
+													<p class="form-row " id="profile_pic_url_field" data-priority="">
+														<span class="uraf-profile-picture-upload-node" style="height: 0;width: 0;margin: 0;padding: 0;float: left;border: 0;overflow: hidden;">
+														<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" size="<?php echo esc_attr( $max_upload_size ); ?>" accept="<?php echo esc_attr( $edit_profile_valid_file_type ); ?>" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" data-crop-picture="<?php echo esc_attr( $crop_picture ); ?>"/>
+														<?php echo '<input type="text" class="uraf-profile-picture-input input-text ur-frontend-field" name="profile_pic_url" id="profile_pic_url" value="' . get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) . '" />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+														</span>
+														<?php
+														/**
+														 * Fires to display buttons for user profile picture.
+														 *
+														 * @param array $profile_pic_args Array of buttons to be added.
+														 */
+														do_action( 'uraf_profile_picture_buttons', $profile_pic_args );
+														?>
+													</p>
+													<div style="clear:both; margin-bottom: 20px"></div>
+												</div>
+
+												<?php
+											} else {
+												?>
+												<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo esc_attr( $profile_picture_url ); ?>" />
+												<input type="hidden" name="profile-default-image" value="<?php echo esc_url( $gravatar_image ); ?>" />
+												<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg,image/gif,image/png" style="display:none" />
+												<?php
+											}
 											?>
-											<span><i><?php echo esc_html__( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php esc_html_e( 'Gravatar', 'user-registration' ); ?></a></i></span>
-										<?php } ?>
+
+										</div>
 									</header>
 								</div>
 							<?php } ?>
