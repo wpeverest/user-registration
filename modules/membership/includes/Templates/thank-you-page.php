@@ -61,6 +61,12 @@ $redirect_btn_url  = ! empty( $attributes['redirect_page_id'] )
 				echo $main_content;
 			?>
 			</p>
+
+			<?php if ( $show_bank_details && ! empty( $bank_data ) ) : ?>
+				<div class="ur-bank-details">
+					<?php echo $bank_data; ?>
+				</div>
+			<?php endif; ?>
 		</div>
 
 		<?php if ( $show_redirect_btn ) : ?>
@@ -71,12 +77,6 @@ $redirect_btn_url  = ! empty( $attributes['redirect_page_id'] )
 						<path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 					</svg>
 				</a>
-			</div>
-		<?php endif; ?>
-
-		<?php if ( $show_bank_details && ! empty( $bank_data ) ) : ?>
-			<div class="ur-bank-details">
-				<?php echo $bank_data; ?>
 			</div>
 		<?php endif; ?>
 
