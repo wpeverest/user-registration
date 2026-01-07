@@ -498,10 +498,6 @@ class AnalyticsDataService {
 		];
 	}
 
-
-
-
-
 	public function get_single_item_revenue_data( $start_date, $end_date, $unit = 'day' ) {
 		/** @var \wpdb $wpdb */
 		global $wpdb;
