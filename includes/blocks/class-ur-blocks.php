@@ -70,21 +70,38 @@ class UR_Blocks {
 			wp_enqueue_style( 'user-registration-membership-frontend-style' );
 		}
 
-		$authenticate_smart_tag = \UR_Smart_Tags::ur_authenticated_parsable_smart_tags_list();
-
-		$smart_tag = array();
-
-		$smart_tag[] = array(
-			'text'  => esc_html__( 'Membership Plan Details', 'user-registration' ),
-			'value' => '{{membership_plan_details}}',
+		$smart_tag = array(
+			array(
+				'text'  => esc_html__( 'Membership Plan Details', 'user-registration' ),
+				'value' => '{{membership_plan_details}}',
+			),
+			array(
+				'text'  => esc_html__( 'All Fields', 'user-registration' ),
+				'value' => '{{all_fields}}',
+			),
+			array(
+				'text'  => esc_html__( 'User Name', 'user-registration' ),
+				'value' => '{{username}}',
+			),
+			array(
+				'text'  => esc_html__( 'Email', 'user-registration' ),
+				'value' => '{{email}}',
+			),
+			array(
+				'text'  => esc_html__( 'First Name', 'user-registration' ),
+				'value' => '{{first_name}}',
+			),
+			array(
+				'text'  => esc_html__( 'Last Name', 'user-registration' ),
+				'value' => '{{last_name}}',
+			),
+			array(
+				'text'  => esc_html__( 'User Display Name', 'user-registration' ),
+				'value' => '{{display_name}}',
+			)
 		);
 
-		foreach ( $authenticate_smart_tag as $value => $text ) {
-			$smart_tag[] = array(
-				'text'  => $text,
-				'value' => $value,
-			);
-		}
+		$smart_tag = apply_filters( 'user_registration_thank_you_page_smart_tags', $smart_tag );
 
 		$pages        = get_pages();
 		$page_options = array(
