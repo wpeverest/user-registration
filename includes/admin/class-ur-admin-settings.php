@@ -1027,7 +1027,7 @@ class UR_Admin_Settings {
 									$btn_name              = ! empty( $value['attrs']['data-name'] ) ? $value['attrs']['data-name'] : '';
 									$is_connected          = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
 									$is_captcha            = in_array(
-										$section['id'],
+										$section['id'] ?? '',
 										array(
 											'v2',
 											'v3',
@@ -1045,7 +1045,7 @@ class UR_Admin_Settings {
 										)
 									) );
 									if ( in_array(
-										$section['id'],
+										$section['id'] ?? '',
 										array(
 											'stripe',
 											'paypal',
@@ -1067,7 +1067,7 @@ class UR_Admin_Settings {
 									$settings .= '<div class="user-registration-global-settings ' . $css . '"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<div class="user-registration-global-settings--field ' . $field_css . '">';
 									$settings .= '<button
-											id="' . esc_attr( $value['id'] ) . '"
+											id="' . (esc_attr( $value['id'] ) ?? '') . '"
 											type="button"
 											class="button button-primary ' . esc_attr( $btn_css ) . '"
 											type="button"

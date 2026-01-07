@@ -1481,6 +1481,7 @@
 					prepare_members_data,
 					form_response
 				);
+				
 			} else {
 				this.handle_recurring_payment(response, {
 					paymentElements: elements,
