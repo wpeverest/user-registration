@@ -4357,6 +4357,7 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 						)
 					),
 				'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+				'plugin' => 'user-registration-cloud-storage',
 				),
 			),
 			'security' => array(
