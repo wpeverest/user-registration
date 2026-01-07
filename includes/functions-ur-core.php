@@ -1219,7 +1219,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'label'             => __( 'User Approval And Login Option', 'user-registration' ),
 				'description'       => '',
 				'id'                => 'user_registration_form_setting_login_options',
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', 'default' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options' ) ),
 				'default_value'     => 'default',
 				'type'              => 'select',
 				'class'             => array( 'ur-enhanced-select' ),
