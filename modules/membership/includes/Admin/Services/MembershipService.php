@@ -703,6 +703,20 @@ class MembershipService {
 
 			// Checkout page for logged in user to upgrade membership.
 			if ( isset( $data['current'] ) && '' !== $data['current'] ) {
+
+				$membership_process = urm_get_membership_process( $member_id );
+				if ( $membership_process && isset( $membership_process['upgrade'][ $current_membership_id ] ) ) {
+					$current_membership       = $membership_repository->get_single_membership_by_ID( $current_membership_id );
+						$current_plan_name    = $current_membership['post_title'] ?? '';
+						$initiated_membership = $membership_repository->get_single_membership_by_ID( $membership_process['upgrade'][ $current_membership_id ]['to'] ?? 0 );
+						$initiated_plan_name  = $initiated_membership['post_title'] ?? '';
+
+						return array(
+							'status'  => false,
+							'message' => sprintf( esc_html__( 'You already have a membership plan upgrade initiated from %1$s to %2$s. Please complete the process and try again.', 'user-registration' ), $current_plan_name, $initiated_plan_name ),
+						);
+				}
+
 				$memberships = $this->get_upgradable_membership( $current_membership_id );
 				$memberships = array_filter(
 					$memberships,
@@ -749,6 +763,20 @@ class MembershipService {
 
 				if ( $user_membership_id ) {
 					$current_membership_id = $user_membership_id;
+
+					$membership_process = urm_get_membership_process( $member_id );
+					if ( $membership_process && isset( $membership_process['upgrade'][ $current_membership_id ] ) ) {
+
+						$current_membership   = $membership_repository->get_single_membership_by_ID( $current_membership_id );
+						$current_plan_name    = $current_membership['post_title'] ?? '';
+						$initiated_membership = $membership_repository->get_single_membership_by_ID( $membership_process['upgrade'][ $current_membership_id ]['to'] ?? 0 );
+						$initiated_plan_name  = $initiated_membership['post_title'] ?? '';
+
+						return array(
+							'status'  => false,
+							'message' => sprintf( esc_html__( 'You already have a membership plan upgrade initiated from %1$s to %2$s. Please complete the process and try again.', 'user-registration' ), $current_plan_name, $initiated_plan_name ),
+						);
+					}
 
 					$memberships = $membership_repository->get_multiple_membership_by_ID( $intended_membership_id );
 					$memberships = apply_filters( 'build_membership_list_frontend', $memberships );
