@@ -2549,7 +2549,7 @@
 					"close"
 				);
 
-				const html =
+				var html =
 					jQuery(this)
 						.closest(".tooltipster-box")
 						.find(".upgrade-info")
