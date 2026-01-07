@@ -15,9 +15,8 @@ project.properties
 build/
 chunks/
 
-# Grunt
+# Package managers
 /node_modules/
-none
 
 # Sass
 .sass-cache/
