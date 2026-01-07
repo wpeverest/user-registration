@@ -61,12 +61,15 @@ $is_invoice_active = ur_check_module_activation( 'pdf-invoice' );
 					foreach ( $items as $user_order ) :
 						$total_amount = $user_order['total_amount'] ? number_format( $user_order['total_amount'], 2 ) : '-';
 
-						if ( isset( $user_order['currency'] ) ) {
-							$total_amount .= ' ' . $user_order['currency'];
+						$user_id    = get_current_user_id();
+						$currencies = ur_payment_integration_get_currencies();
+						$currency   = get_user_meta( $user_id, 'ur_payment_currency', true );
+						$currency   = empty( $currency ) ? get_option( 'user_registration_payment_currency', 'USD' ) : $currency;
+
+						if ( isset( $currencies[ $currency ]['symbol_pos'] ) && 'right' === $currencies[ $currency ]['symbol_pos'] ) {
+							$total_amount = $total_amount . '' . $currencies[ $currency ]['symbol'];
 						} else {
-							$user_id       = get_current_user_id();
-							$currency      = get_user_meta( $user_id, 'ur_payment_currency', true );
-							$total_amount .= ' ' . $currency;
+							$total_amount = $currencies[ $currency ]['symbol'] . '' . $total_amount;
 						}
 
 						?>

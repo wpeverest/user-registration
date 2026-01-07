@@ -81,6 +81,9 @@ class MembershipGroups {
 		$membership_table_list = new MembershipGroupsListTable();
 		$enable_members_button = true;
 		require __DIR__ . '/../Views/Partials/header.php';
+
+		self::enable_groups_module();
+
 		$membership_table_list->display_page();
 	}
 
@@ -88,8 +91,11 @@ class MembershipGroups {
 		$membership_service          = new MembershipService();
 		$membership_group_service    = new MembershipGroupService();
 		$membership_group_repository = new MembershipGroupRepository();
-		$memberships                 = $membership_service->list_active_memberships();
-		$group_id                    = 0;
+
+		self::enable_groups_module();
+
+		$memberships = $membership_service->list_active_memberships();
+		$group_id    = 0;
 
 		if ( isset( $_GET['post_id'] ) && ! empty( $_GET['post_id'] ) ) {
 			$group_id         = absint( $_GET['post_id'] );
@@ -105,5 +111,17 @@ class MembershipGroups {
 		}
 
 		include __DIR__ . '/../Views/membership-groups-create.php';
+	}
+
+	/**
+	 * Enable groups module if not already enabled.
+	 */
+	private function enable_groups_module() {
+
+		if ( ! ur_check_module_activation( 'membership-groups' ) ) {
+			$enabled_features   = get_option( 'user_registration_enabled_features', array() );
+			$enabled_features[] = 'user-registration-membership-groups';
+			update_option( 'user_registration_enabled_features', $enabled_features );
+		}
 	}
 }
