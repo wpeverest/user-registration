@@ -8,8 +8,7 @@ const Save = ({ attributes }) => {
 		accessMembershipRoles,
 		accessControl,
 		message,
-		enableContentRestriction,
-		restrictionMessageType
+		enableContentRestriction
 	} = attributes;
 
 	const escapeAttribute = (str) =>
@@ -51,12 +50,6 @@ const Save = ({ attributes }) => {
 			enableContentRestriction
 		)}"`;
 	}
-
-	// if (restrictionMessageType) {
-	params += ` restriction_message_type="${escapeAttribute(
-		restrictionMessageType
-	)}"`;
-	// }
 
 	if (message) {
 		params += ` message="${escapeAttribute(message)}"`;
