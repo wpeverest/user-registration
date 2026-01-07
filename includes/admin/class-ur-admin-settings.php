@@ -1029,6 +1029,7 @@ class UR_Admin_Settings {
 									$btn_slug              = ! empty( $value['attrs']['data-slug'] ) ? $value['attrs']['data-slug'] : '';
 									$btn_name              = ! empty( $value['attrs']['data-name'] ) ? $value['attrs']['data-name'] : '';
 									$is_connected          = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
+									$is_payment            = in_array( $section[ 'id' ], array( 'paypal', 'stripe', 'bank', 'authorize-net', 'mollie' ) );
 									$is_captcha            = in_array(
 										$section['id'] ?? '',
 										array(
