@@ -195,7 +195,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 							</div>
 						</div>
 						<?php
-						$upgrade_style = ( ! isset( $membership_group['mode'] ) || ( isset( $membership_group['mode'] ) && 'upgrade' === $membership_group['mode'] ) ) ? '' : 'display:none;';
+						$upgrade_style = ( ! isset( $membership_group['mode'] ) || ( isset( $membership_group['mode'] ) && ( empty( $membership_group['mode'] ) || 'upgrade' === $membership_group['mode'] ) ) ) ? '' : 'display:none;';
 						?>
 						<div class="ur-membership-enable-upgrade-container" style="<?php echo esc_attr( $upgrade_style ); ?>">
 							<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px">
@@ -231,7 +231,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 							<div class="ur-membership-upgrade-container" style="<?php echo esc_attr( $upgrade_style ); ?>">
 								<!--						Membership Upgrade Path Type-->
 								<div
-									class="urm-upgrade-path-type-container ur-membership-selection-container ur-d-flex ur-align-items-center ur-d-none"
+									class="urm-upgrade-path-type-container ur-membership-selection-container ur-membership-input-container ur-d-flex ur-align-items-center ur-d-none"
 									data-key-name="<?php echo __( 'Upgrade Type', 'user-registration' ); ?>"
 									style="gap:20px;">
 									<div class="ur-label" style="width: 62%">
@@ -293,7 +293,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 									</div>
 								</div>
 								<div class="ur-membership-upgrade-path-container">
-									<div class="urm-upgrade-path-type-container ur-membership-selection-container ur-d-flex ur-mt-6 ur-align-items-center ur-d-none" data-key-name="Upgrade Type" style="gap:20px;">
+									<div class="urm-upgrade-path-type-container ur-membership-selection-container ur-membership-input-container ur-d-flex ur-mt-6 ur-align-items-center ur-d-none" data-key-name="Upgrade Type" style="gap:20px;">
 										<div class="ur-label" style="width: 62%">
 											<label for="ur-membership-upgrade-type-full">
 												<?php esc_html_e( 'Upgrade Path Order', 'user-registration' ); ?>
