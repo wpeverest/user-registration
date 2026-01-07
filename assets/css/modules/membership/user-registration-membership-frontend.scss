@@ -1594,3 +1594,56 @@ html {
 .ur-show-bank-details-toggle{
 	margin-bottom: 5px !important;
 }
+
+.user-registration-email__entries {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 12px 0;
+	font-size: 14px;
+
+	&-tr {
+		&:empty {
+			display: none;
+		}
+	}
+
+	td {
+		padding: 10px 12px;
+		border: 1px solid #e5e7eb;
+		vertical-align: top;
+	}
+
+	&-label {
+		width: 35%;
+		font-weight: 600;
+		color: #374151;
+		background-color: #f9fafb;
+		white-space: nowrap;
+	}
+
+	&-data {
+		color: #111827;
+		word-break: break-word;
+	}
+
+	&-tr:nth-child(even) {
+		background-color: #fcfcfd;
+	}
+
+	@media (max-width: 600px) {
+		td {
+			display: block;
+			width: 100%;
+			border-bottom: none;
+		}
+
+		&-label {
+			border-bottom: 0;
+			padding-bottom: 4px;
+		}
+
+		&-data {
+			padding-top: 0;
+		}
+	}
+}
