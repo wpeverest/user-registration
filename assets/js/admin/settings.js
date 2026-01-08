@@ -561,7 +561,7 @@
 			}
 		});
 	});
-	
+
 	// Display error when page with our lost password shortcode is not selected.
 	$("#user_registration_lost_password_page_id").on("change", function () {
 		var $this = $(this),
@@ -1141,8 +1141,7 @@
 
 		var section_data = {};
 
-		settings_container
-			.find("input, select, textarea")
+		$("input, select, textarea", settings_container[0] || settings_container)
 			.each(function (key, item) {
 				var $item = $(item);
 				var name = $item.attr("name");
@@ -1855,7 +1854,7 @@
 	$(document).on("ur_settings_updated", function () {
 		handleDisplayConditions();
 	});
-	
+
 	$(document).on("change", "#user_registration_stripe_test_mode", function() {
 		if( $("#user_registration_stripe_test_mode").is(":checked")) {
 			$("#user_registration_stripe_test_publishable_key").closest(".user-registration-global-settings").show();
@@ -1916,17 +1915,41 @@
 			$("#user_registration_global_paypal_test_client_secret").closest(".user-registration-global-settings").hide();
 		}
 	});
-	
-	if( $("#user_registration_authorize_net_test_mode").length > 0) {
-		$("#user_registration_authorize_net_test_mode").trigger("change");
+
+	// Function to trigger payment gateway mode changes
+	function trigger_payment_gateway_mode_changes() {
+		if( $("#user_registration_authorize_net_test_mode").length > 0) {
+			$("#user_registration_authorize_net_test_mode").trigger("change");
+		}
+		if( $("#user_registration_mollie_global_test_mode").length > 0) {
+			$("#user_registration_mollie_global_test_mode").trigger("change");
+		}
+		if ( $("#user_registration_stripe_test_mode").length > 0) {
+			$("#user_registration_stripe_test_mode").trigger("change");
+		}
+		if( $("#user_registration_global_paypal_mode").length > 0 ) {
+			$("#user_registration_global_paypal_mode").trigger("change");
+		}
 	}
-	if( $("#user_registration_mollie_global_test_mode").length > 0) {
-		$("#user_registration_mollie_global_test_mode").trigger("change");
+
+	trigger_payment_gateway_mode_changes();
+
+	$(document).ready(function() {
+		if($('.urm_toggle_pg_status').length > 0) {
+		$(document).on("change", ".urm_toggle_pg_status", function () {
+			var $toggle = $(this);
+			var isChecked = $toggle.is(":checked");
+			var $allSiblings = $toggle.closest(".user-registration-global-settings").siblings(".user-registration-global-settings");
+			var $siblingsExcludingLast = $allSiblings.not(":last");
+
+			if (isChecked) {
+				$siblingsExcludingLast.show();
+				trigger_payment_gateway_mode_changes();
+			} else {
+				$allSiblings.hide();
+			}
+		}).trigger();
 	}
-	if ( $("#user_registration_stripe_test_mode").length > 0) {
-		$("#user_registration_stripe_test_mode").trigger("change");
-	}
-	if( $("#user_registration_global_paypal_mode").length > 0 ) {
-		$("#user_registration_global_paypal_mode").trigger("change");
-	}
+	});
+
 })(jQuery);
