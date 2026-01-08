@@ -703,7 +703,7 @@ class UR_Getting_Started {
 		} else {
 			update_option( 'user_registration_default_form_page_id', (int) $new_id );
 		}
-
+		update_option( 'user_registration_default_form_page_id', (int) $new_id );
 		update_option( 'user_registration_registration_form', (int) $new_id );
 
 		return (int) $new_id;

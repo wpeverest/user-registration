@@ -9840,7 +9840,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		$payment_connections = ur_get_payment_connection_statuses();
 
 		$site_assistant_data = array(
-			'has_default_form'        => ! empty( get_post( get_option( 'user_registration_registration_form', '' ) ) ) && ! empty( get_post( get_option( 'user_registration_default_form_page_id', '' ) ) ),
+			'has_default_form'        =>  ! empty( get_post( get_option( 'user_registration_default_form_page_id', '' ) ) ),
 			'missing_pages'           => $missing_pages_data,
 			'test_email_sent'         => get_option( 'user_registration_successful_test_mail', false ),
 			'wordpress_login_handled' => ( get_option( 'user_registration_login_options_prevent_core_login', false ) == true ) || ( get_option( 'user_registration_default_wordpress_login_skipped', false ) == true ),
