@@ -7,7 +7,7 @@ export const getDaysDiff = (date1: Date, date2: Date) => {
 };
 
 export const getUnitsForDayRange = (days: number): Array<DateUnit> => {
-	if (days === 1) return ["hour"];
+	if (days <= 1) return ["hour"];
 	if (days <= 7) return ["day", "hour"];
 	if (days <= 14) return ["day", "week"];
 	if (days <= 30) return ["day", "week"];

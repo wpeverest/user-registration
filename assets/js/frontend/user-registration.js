@@ -1562,10 +1562,15 @@
 											ajax_response.responseText
 										);
 
-										var timeout = response.data
-											.redirect_timeout
-											? response.data.redirect_timeout
-											: 2000;
+									var timeout = (
+										response &&
+										response.data &&
+										response.data.redirect_timeout !== undefined &&
+										response.data.redirect_timeout !== null &&
+										response.data.redirect_timeout !== ''
+											)
+												? response.data.redirect_timeout
+												: 2000;
 
 										if (
 											typeof response.success !==

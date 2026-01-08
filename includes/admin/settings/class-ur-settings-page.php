@@ -144,29 +144,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			$array_keys = array_keys( $sections );
 
 			foreach ( $sections as $id => $label ) {
-				$premium_tabs      = ur_premium_settings_tab();
-				$premium_tab       = urm_array_key_exists_recursive( $id, $premium_tabs );
-				$show_premium_icon = false;
-
-				if ( ! empty( $premium_tab ) ) {
-					$license_data = ur_get_license_plan();
-					$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
-					$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
-
-					if ( ! empty( $premium_tab[ $id ]['plan'] ) ) {
-
-						if ( in_array( $license_plan, $premium_tab[ $id ]['plan'], true ) ) {
-							$show_premium_icon = false;
-						} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $premium_tab[ $id ]['plugin'] ) && is_plugin_active( $premium_tab[ $id ][ 'plugin' ] . '/' . $premium_tab[ $id ]['plugin'] . '.php' ) ) {
-							$show_premium_icon = false;
-						} else {
-							$show_premium_icon = true;
-						}
-					} else {
-						$show_premium_icon = $premium_tab ? true : false;
-					}
-				}
-
+				$show_premium_icon = urm_is_premium_setting_section( $id );
 				ob_start();
 				?>
 				<li <?php echo ( $current_section === $id ? ' class="current" ' : '' ); ?>>
@@ -254,7 +232,6 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 				),
 				$args
 			);
-			return apply_filters( 'user_registration_upgrade_to_pro_setting', array(), $args );
 		}
 
 		/**

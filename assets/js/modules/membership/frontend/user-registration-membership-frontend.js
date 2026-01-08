@@ -440,6 +440,9 @@
 					);
 					break;
 				case "stripe":
+					ur_membership_frontend_utils.show_success_message(
+						response.data.message
+					);
 					stripe_settings.handle_stripe_response(
 						response,
 						prepare_members_data,
@@ -1291,7 +1294,9 @@
 					var cleanUrl =
 						window.location.origin + window.location.pathname;
 
-					window.location.replace(response.data.pg_data.payment_url);
+					window.location.replace(
+						response.data.pg_data.thank_you_page_url
+					);
 				default:
 					ur_membership_ajax_utils.show_bank_response(
 						response,
@@ -1481,7 +1486,6 @@
 					prepare_members_data,
 					form_response
 				);
-				
 			} else {
 				this.handle_recurring_payment(response, {
 					paymentElements: elements,

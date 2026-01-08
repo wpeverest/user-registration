@@ -214,7 +214,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                     ),
                     array(
                         'type'        => 'text',
-                        'title'       => __( 'Test PayPal Email Address', 'user-registration' ),
+                        'title'       => __( 'PayPal Email Address', 'user-registration' ),
                         'desc'        => __( 'Enter your PayPal email address in sandbox/test mode.', 'user-registration' ),
                         'desc_tip'    => true,
                         'required'    => true,
@@ -224,7 +224,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                     ),
                     array(
                         'type'     => 'text',
-                        'title'    => __( 'Test Client ID', 'user-registration' ),
+                        'title'    => __( 'Client ID', 'user-registration' ),
                         'desc'     => __( 'Client ID for PayPal in sandbox/test mode.', 'user-registration' ),
                         'desc_tip' => true,
                         'id'       => 'user_registration_global_paypal_test_client_id',
@@ -232,7 +232,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                     ),
                     array(
                         'type'     => 'text',
-                        'title'    => __( 'Test Client Secret', 'user-registration' ),
+                        'title'    => __( 'Client Secret', 'user-registration' ),
                         'desc'     => __( 'Client Secret for PayPal in sandbox/test mode.', 'user-registration' ),
                         'desc_tip' => true,
                         'id'       => 'user_registration_global_paypal_test_client_secret',
@@ -291,8 +291,8 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                         'default'  => '',
                     ),
                     array(
-                        'title'    => __( 'Test Publishable key', 'user-registration' ),
-                        'desc'     => __( 'Stripe test publishable  key.', 'user-registration' ),
+                        'title'    => __( 'Publishable key', 'user-registration' ),
+                        'desc'     => __( 'Stripe publishable key in test mode.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_test_publishable_key',
                         'type'     => 'text',
                         'css'      => 'min-width: 350px',
@@ -301,7 +301,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                     ),
                     array(
                         'title'    => __( 'Secret key', 'user-registration' ),
-                        'desc'     => __( 'Stripe test secret key.', 'user-registration' ),
+                        'desc'     => __( 'Stripe secret key in test mode.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_test_secret_key',
                         'type'     => 'text',
                         'css'      => 'min-width: 350px',
@@ -309,8 +309,8 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                         'default'  => '',
                     ),
                     array(
-                        'title'    => __( 'Live Publishable Key', 'user-registration' ),
-                        'desc'     => __( 'Stripe live publishable key.', 'user-registration' ),
+                        'title'    => __( 'Publishable Key', 'user-registration' ),
+                        'desc'     => __( 'Stripe publishable key in live mode.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_live_publishable_key',
                         'type'     => 'text',
                         'css'      => 'min-width: 350px',
@@ -319,7 +319,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                     ),
                     array(
                         'title'    => __( 'Secret key', 'user-registration' ),
-                        'desc'     => __( 'Stripe live secret key.', 'user-registration' ),
+                        'desc'     => __( 'Stripe secret key in live mode.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_live_secret_key',
                         'type'     => 'text',
                         'css'      => 'min-width: 350px',
