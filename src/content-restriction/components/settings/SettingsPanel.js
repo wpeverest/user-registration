@@ -3,7 +3,7 @@
  */
 import React, { useState, useEffect, useRef } from "react";
 import { __ } from "@wordpress/i18n";
-import { getURCRLocalizedData, getURCRData } from "../../utils/localized-data";
+import { getURCRLocalizedData, getURCRData, isProAccess } from "../../utils/localized-data";
 import { showError } from "../../utils/notifications";
 import { saveRuleWithCollectiveData } from "../../utils/rule-save-helper";
 import { hasAdvancedLogic } from "../../utils/advanced-logic-helper";
@@ -648,7 +648,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				/>
 			)}
 
-			{!isMembershipRule && !isMigratedCustomRule && (
+			{!isMembershipRule && !isMigratedCustomRule && isProAccess (
 				<div className="urcr-label-input-pair urcr-rule-action ur-align-items-center ur-form-group">
 					<label className="urcr-label-container ur-col-4">
 						<span className="urcr-target-content-label">
