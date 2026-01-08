@@ -1147,6 +1147,7 @@ function urcr_migrate_global_restriction_settings() {
 
 	if ( $rule_id ) {
 		update_option( 'urcr_global_restriction_migrated', true );
+		update_post_meta( $rule_id, 'urcr_is_global', true );
 
 		delete_option( 'user_registration_content_restriction_whole_site_access' );
 
@@ -1408,16 +1409,16 @@ function urcr_has_rules_with_advanced_logic() {
 		if ( empty( $rule_content ) || ! is_array( $rule_content ) ) {
 			continue;
 		}
-		
+
 		$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
 
 		if ( urcr_logic_map_has_advanced_logic( $logic_map ) ) {
-			$has_advanced_logic = true;
+			$has_advanced_logic                        = true;
 			$rule_content['is_advanced_logic_enabled'] = true;
-			
+
 			$updated_content = wp_json_encode( $rule_content, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 			$updated_content = wp_slash( $updated_content );
-			
+
 			wp_update_post(
 				array(
 					'ID'           => $rule_post->ID,

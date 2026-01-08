@@ -45,8 +45,8 @@ class URCR_Shortcodes {
 
 			$override_global_settings = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', $single = true );
 
-			if ( $migrated ) {
-				$rule = urcr_migrated_global_rule();
+			$rule = urcr_migrated_global_rule();
+			if ( $migrated && ! empty( $rule ) ) {
 
 				$allowed_roles = isset( $rule['logic_map'], $rule['logic_map']['conditions'], $rule['logic_map']['conditions'][0], $rule['logic_map']['conditions'][0]['type'], $rule['logic_map']['conditions'][0]['value'] ) && 'roles' === $rule['logic_map']['conditions'][0]['type'] ? $rule['logic_map']['conditions'][0]['value'] : 'administrator';
 
@@ -181,7 +181,7 @@ class URCR_Shortcodes {
 				$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : $message;
 			}
 
-			$message = empty( $message ) ? __( 'This content is restricted!', 'user-registration' ) : $message;
+			$message = empty( $message ) ? __( 'This content is restricted1!', 'user-registration' ) : $message;
 			$message = apply_filters( 'user_registration_process_smart_tags', $message );
 			$message = do_shortcode( $message );
 
