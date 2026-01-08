@@ -66,6 +66,7 @@ class UR_Admin_Settings {
 
 			$settings[] = include 'settings/class-ur-settings-security.php';
 			$settings[] = include 'settings/class-ur-settings-advanced.php';
+			$settings[] = include 'settings/class-ur-settings-import-export.php';
 			$settings[] = include 'settings/class-ur-settings-license.php';
 			/**
 			 * Filter to retrieve settings pages
@@ -284,7 +285,7 @@ class UR_Admin_Settings {
 
 		// Get current tab/section.
 		$current_tab          = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$current_section      = empty( $_REQUEST['section'] ) ? apply_filters( 'user_registration_settings_' . $current_tab . '_default_section', 'general' ) : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$current_section      = empty( $_REQUEST['section'] ) ? apply_filters( 'user_registration_settings_' . $current_tab . '_default_section', '' ) : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		$current_section_part = empty( $_GET['part'] ) ? '' : sanitize_title( wp_unslash( $_GET['part'] ) );
 		/**
 		 * Filter to save settings actions
@@ -308,7 +309,7 @@ class UR_Admin_Settings {
 		if ( ! empty( $_GET['ur_message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			self::add_message( wp_unslash( $_GET['ur_error'] ) ); // phpcs:ignore
 		}
-
+		global $tabs;
 		/**
 		 * Filter to get tabs for settings page
 		 *
@@ -406,7 +407,9 @@ class UR_Admin_Settings {
 				foreach ( $options['sections'] as $id => $section ) {
 
 					if ( ! isset( $section['type'] ) ) {
-						continue;
+						//default is card.
+						$section[ 'type' ] = 'card'; 
+						// continue;
 					}
 
 					if ( 'card' === $section['type'] ) {
@@ -433,7 +436,7 @@ class UR_Admin_Settings {
 							$settings .= '<h3 class="user-registration-card__title">';
 							$settings .= esc_html( ucwords( $section['title'] ) );
 
-							if ( isset( $section['is_premium'] ) && $section['is_premium'] ) {
+							if ( isset( $section['is_premium'] ) && $section['is_premium'] && (! is_plugin_active( 'user-registration-pro/user-registration.php' ) || empty( get_option( 'user-registration_license_key', '' ) ) ) ) {
 								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' . '" /></div>';
 							}
 							$settings .= '</h3>';
@@ -476,7 +479,7 @@ class UR_Admin_Settings {
 
 						$available_in      = isset( $section['available_in'] ) ? sanitize_text_field( wp_unslash( $section['available_in'] ) ) : '';
 						$is_captcha        = isset( $section['settings_type'] ) ? ' ur-captcha-settings' : '';
-						$is_payment        = in_array( $section[ 'id' ], array( 'paypal', 'stripe', 'bank', 'mollie', 'authorize-net' ) );
+						$is_payment        = in_array( $section[ 'id' ] ?? '', array( 'paypal', 'stripe', 'bank', 'mollie', 'authorize-net' ) );
 						$is_captcha_header = isset( $section['settings_type'] ) ? $is_captcha . '-header' : '';
 						$is_captcha_body   = isset( $section['settings_type'] ) ? $is_captcha . '-body' : '';
 						$is_connected      = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
@@ -1080,7 +1083,7 @@ class UR_Admin_Settings {
 											type="button"
 											class="button button-primary ' . esc_attr( $btn_css ) . '"
 											type="button"
-											data-id="' . esc_attr( $section['id'] ) . '"';
+											data-id="' . esc_attr( $section['id'] ?? '' ) . '"';
 									if ( ! empty( $btn_slug ) ) {
 										$settings .= ' data-slug="' . esc_attr( $btn_slug ) . '"';
 									}

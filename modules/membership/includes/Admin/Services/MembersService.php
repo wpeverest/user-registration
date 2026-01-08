@@ -131,6 +131,10 @@ class MembersService {
 				'start_date'     => date( 'Y-m-d', strtotime( $data['start_date'] ) ),
 				'payment_method' => sanitize_text_field( $data['payment_method'] ?? '' ),
 			);
+
+			if ( isset( $data['is_purchasing_multiple'] ) ) {
+				$response['is_purchasing_multiple'] = $data['is_purchasing_multiple'];
+			}
 		}
 
 		return $response;

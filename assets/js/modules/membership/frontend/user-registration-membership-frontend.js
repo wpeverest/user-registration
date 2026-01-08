@@ -181,7 +181,10 @@
 			var searchParams = new URLSearchParams(window.location.search),
 				action = searchParams.get("action");
 
-			if ( 'free_membership' != thank_you_data.context && ( action === "register" || null === action ) ) {
+			if (
+				"free_membership" != thank_you_data.context &&
+				(action === "register" || null === action)
+			) {
 				$registration_form.find("form")[0].reset();
 				var wrapper = $(
 					'<div class="ur-message user-registration-message" id="ur-submit-message-node"/>'
@@ -469,7 +472,7 @@
 						form_response,
 						{
 							username: prepare_members_data.username,
-							context: 'free_membership'
+							context: "free_membership"
 						}
 					);
 					break;
@@ -2435,25 +2438,29 @@
 							$this.text(urmf_data.labels.i18n_sending_text);
 						},
 						success: function (response) {
-							if (
-								$(".user-registration-page .notice-container")
-									.length === 0
-							) {
-								$(
-									".user-registration-membership-notice__container"
-								).remove();
-								// Adds the toast container on the top of page.
-								$(document)
-									.find(".user-registration-page")
-									.prepend(
-										'<div class="user-registration-membership-notice__container"><div class="ur-toaster urm-error user-registration-membership-notice__red"><span class="user-registration-membership-notice__message"></span><span class="user-registration-membership__close_notice">&times;</span></div></div>'
-									);
+							if (!response.success) {
+								if (
+									$(
+										".user-registration-page .notice-container"
+									).length === 0
+								) {
+									$(
+										".user-registration-membership-notice__container"
+									).remove();
+									// Adds the toast container on the top of page.
+									$(document)
+										.find(".user-registration-page")
+										.prepend(
+											'<div class="user-registration-membership-notice__container"><div class="ur-toaster urm-error user-registration-membership-notice__red"><span class="user-registration-membership-notice__message"></span><span class="user-registration-membership__close_notice">&times;</span></div></div>'
+										);
+								}
+								$(document).trigger("urm_show_action_message", {
+									message: response.data.message,
+									type: response.success ? "success" : "error"
+								});
+							} else {
+								location.reload();
 							}
-
-							$(document).trigger("urm_show_action_message", {
-								message: response.data.message,
-								type: response.success ? "success" : "error"
-							});
 						},
 						complete: function () {
 							$this.text(button_text);

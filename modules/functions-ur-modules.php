@@ -440,7 +440,7 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 		$default_form_page_id = wp_insert_post(
 			array(
 				'post_type'      => 'user_registration',
-				'post_title'     => esc_html__( 'Default Membership Registration Form', 'user-registration' ),
+				'post_title'     => esc_html__( ' Registration Form', 'user-registration' ),
 				'post_content'   => $post_content,
 				'post_status'    => 'publish',
 				'comment_status' => 'closed',
