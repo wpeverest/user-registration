@@ -155,21 +155,21 @@ class URCR_Admin_Meta_Box extends UR_Meta_Boxes {
 		$sub_notice = esc_html__( 'This setting will be removed in a future version.', 'user-registration' );
 
 		if ( ! empty( $migrated_rule_id ) ) {
-			$content_rules_url = admin_url( 'admin.php?page=user-registration-content-restriction&id=' . absint( $migrated_rule_id ) );
+		$content_rules_url = admin_url( 'admin.php?page=user-registration-content-restriction&id=' . absint( $migrated_rule_id ) );
 		} else {
-			$message          = esc_html__( "This page uses custom restriction settings. We recommend switching to Content Rules for centralized management.", 'user-registration' );
-			$content_rules_url = admin_url( 'admin.php?page=user-registration-content-restriction' );
-			$link_text        = esc_html__( 'Manage Content Rules', 'user-registration' );
+		$message          = esc_html__( "This page uses custom restriction settings. We recommend switching to Content Rules for centralized management.", 'user-registration' );
+		$content_rules_url = admin_url( 'admin.php?page=user-registration-content-restriction' );
+		$link_text        = esc_html__( 'Manage Content Rules', 'user-registration' );
 		}
 
 		echo '<div class="user-registration-notice">';
 		echo '<div class=" user-registration-notice-text">';
 		echo '<p><strong>' . esc_html( $message ) . '</strong></p>';
 		echo '<p><a target="_blank" href="' . esc_url( $content_rules_url ) . '">' . esc_html( $link_text ) . '</a></p>';
-		if( ! empty( $migrated_rule_id )) {
-			echo '<p class="ur-notice-subtitle">' . esc_html( $sub_notice ) . '</p>';
-		}
 		echo '</div>';
+		if( ! empty( $migrated_rule_id )) {
+		echo '<p class="ur-notice-subtitle">' . esc_html( $sub_notice ) . '</p>';
+		}
 		echo '</div>';
 	}
 
