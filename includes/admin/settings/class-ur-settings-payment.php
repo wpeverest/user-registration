@@ -52,7 +52,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 				'status' => true,
 			);
 
-			if ( empty( $form_data['user_registration_global_bank_details'] ) ) {
+			if ( empty( $form_data['user_registration_global_bank_details'] )) {
 				$response['status']  = false;
 				$response['message'] = 'Bank details cannot be empty';
 				return $response;

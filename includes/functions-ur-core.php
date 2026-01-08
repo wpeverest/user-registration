@@ -9600,7 +9600,6 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 	 */
 	function ur_save_settings_options( $section, $form_data ) {
 		$update_options = array();
-
 		foreach ( $section['settings'] as $option ) {
 			if ( empty( $option['id'] ) ) {
 				continue;
@@ -9620,6 +9619,7 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 				$option_name = sanitize_text_field( $option_id );
 			}
 
+
 			if ( isset( $form_data[ $option_id ] ) ) {
 				$value = ur_sanitize_value_by_type( $option, $form_data[ $option_id ] );
 				if ( $option_name && $setting_name ) {
@@ -9633,7 +9633,6 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 				}
 			}
 		}
-
 		foreach ( $update_options as $name => $value ) {
 			update_option( $name, $value );
 		}

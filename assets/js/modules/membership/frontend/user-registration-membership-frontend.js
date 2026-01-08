@@ -1927,7 +1927,6 @@
 						),
 						urm_default_pg = $(this).data("urm-default-pg"),
 						hasCouponLink = $(this).data("has-coupon-link");
-
 					if ("yes" === hasCouponLink) {
 						$(document).find("#ur_coupon_container").show();
 					} else {
@@ -1998,23 +1997,23 @@
 								}
 							});
 						}
-						// urm_pg_inputs.each(function (key, item) {
-						// 	var current_gateway = $(item).val(),
-						// 		input_container = $(
-						// 			'label[for="ur-membership-' +
-						// 				current_gateway +
-						// 				'"]'
-						// 		);
-						// 	if (urmf_data.gateways_configured) {
-						// 	}
-						// 	if (
-						// 		!urm_payment_gateways.hasOwnProperty(
-						// 			current_gateway
-						// 		)
-						// 	) {
-						// 		input_container.addClass("urm-d-none");
-						// 	}
-						// });
+						urm_pg_inputs.each(function (key, item) {
+							var current_gateway = $(item).val(),
+								input_container = $(
+									'label[for="ur-membership-' +
+										current_gateway +
+										'"]'
+								);
+							if (urmf_data.gateways_configured) {
+							}
+							if (
+								!urm_payment_gateways.hasOwnProperty(
+									current_gateway
+								)
+							) {
+								input_container.addClass("urm-d-none");
+							}
+						});
 
 						if (
 							urm_pg_container.find("input:visible").length === 1

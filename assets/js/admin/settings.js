@@ -48,7 +48,7 @@
 				$(this)
 					.parent()
 					.find(".colorpickpreview")
-					.css({ backgroundColor: ui.color.toString() });
+					.css({backgroundColor: ui.color.toString()});
 			},
 			hide: true,
 			border: true
@@ -221,8 +221,8 @@
 					)
 					.append(
 						'<div class="error inline" style="padding:10px;">' +
-							user_registration_settings_params.user_registration_membership_redirect_default_page_message +
-							"</div>"
+						user_registration_settings_params.user_registration_membership_redirect_default_page_message +
+						"</div>"
 					);
 			} else {
 				$(wpbody_class)
@@ -252,8 +252,8 @@
 				.closest(".user-registration-login-form-global-settings--field")
 				.append(
 					'<div class="error inline" style="padding:10px;">' +
-						user_registration_settings_params.user_registration_membership_redirect_default_page_message +
-						"</div>"
+					user_registration_settings_params.user_registration_membership_redirect_default_page_message +
+					"</div>"
 				);
 
 			$redirect.prop("required", true);
@@ -451,7 +451,7 @@
 			data = {
 				action: "user_registration_my_account_selection_validator",
 				security:
-					user_registration_settings_params.user_registration_my_account_selection_validator_nonce
+				user_registration_settings_params.user_registration_my_account_selection_validator_nonce
 			};
 
 		data.user_registration_selected_my_account_page = $this.val();
@@ -476,8 +476,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-								response.responseJSON.data.message +
-								"</div>"
+							response.responseJSON.data.message +
+							"</div>"
 						);
 					$this.css("border", "1px solid red");
 					$this
@@ -509,7 +509,7 @@
 			data = {
 				action: "user_registration_my_account_selection_validator",
 				security:
-					user_registration_settings_params.user_registration_my_account_selection_validator_nonce
+				user_registration_settings_params.user_registration_my_account_selection_validator_nonce
 			};
 
 		data.user_registration_selected_my_account_page = $this.val();
@@ -534,8 +534,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-								response.responseJSON.data.message +
-								"</div>"
+							response.responseJSON.data.message +
+							"</div>"
 						);
 					$this.css("border", "1px solid red");
 					$this
@@ -568,7 +568,7 @@
 			data = {
 				action: "user_registration_lost_password_selection_validator",
 				security:
-					user_registration_settings_params.user_registration_lost_password_selection_validator_nonce
+				user_registration_settings_params.user_registration_lost_password_selection_validator_nonce
 			};
 
 		data.user_registration_selected_lost_password_page = $this.val();
@@ -600,8 +600,8 @@
 							)
 							.append(
 								"<div id='message' class='error inline' style='padding:10px;'>" +
-									response.responseJSON.data.message +
-									"</div>"
+								response.responseJSON.data.message +
+								"</div>"
 							);
 					}
 					$this.css("border", "1px solid red");
@@ -805,7 +805,7 @@
 			heightAuto: false,
 			width: "575px",
 			confirmButtonText:
-				user_registration_settings_params.i18n.upgrade_plan
+			user_registration_settings_params.i18n.upgrade_plan
 		}).then(function (result) {
 			if (result.isConfirmed) {
 				window.open(
@@ -997,7 +997,7 @@
 			data: {
 				action: "user_registration_save_payment_settings",
 				security:
-					user_registration_settings_params.user_registration_membership_payment_settings_nonce,
+				user_registration_settings_params.user_registration_membership_payment_settings_nonce,
 				setting_id: setting_id,
 				section_data: JSON.stringify(section_data)
 			},
@@ -1030,7 +1030,7 @@
 			data: {
 				action: "user_registration_save_captcha_settings",
 				security:
-					user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
+				user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
 				setting_id: setting_id,
 				section_data: JSON.stringify(section_data)
 			},
@@ -1085,7 +1085,7 @@
 				type: type,
 				value: val,
 				security:
-					user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
+				user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
 			},
 			type: "POST",
 			complete: function (response) {
@@ -1094,8 +1094,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-								response.responseJSON.message +
-								"</div>"
+							response.responseJSON.message +
+							"</div>"
 						);
 
 					$this
@@ -1185,7 +1185,7 @@
 			data: {
 				action: "user_registration_validate_payment_currency",
 				security:
-					user_registration_settings_params.user_registration_membership_validate_payment_currency_nonce,
+				user_registration_settings_params.user_registration_membership_validate_payment_currency_nonce,
 				currency: currency
 			},
 			type: "POST",
@@ -1199,8 +1199,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='warning inline' style='padding:10px;'>" +
-								response.responseJSON.data.message +
-								"</div>"
+							response.responseJSON.data.message +
+							"</div>"
 						);
 				} else {
 					$this
@@ -1414,9 +1414,9 @@
 				"</p>",
 			showCancelButton: true,
 			confirmButtonText:
-				user_registration_settings_params.i18n.i18n_prompt_reset,
+			user_registration_settings_params.i18n.i18n_prompt_reset,
 			cancelButtonText:
-				user_registration_settings_params.i18n.i18n_prompt_cancel,
+			user_registration_settings_params.i18n.i18n_prompt_cancel,
 			allowOutsideClick: false,
 			preConfirm: function () {
 				var btn = $(".swal2-confirm");
@@ -1444,9 +1444,9 @@
 				"</p>",
 			showCancelButton: true,
 			confirmButtonText:
-				user_registration_settings_params.i18n.i18n_prompt_reset,
+			user_registration_settings_params.i18n.i18n_prompt_reset,
 			cancelButtonText:
-				user_registration_settings_params.i18n.i18n_prompt_cancel,
+			user_registration_settings_params.i18n.i18n_prompt_cancel,
 			allowOutsideClick: false,
 			preConfirm: function () {
 				var btn = $(".swal2-confirm");
@@ -1494,7 +1494,7 @@
 			data: {
 				action: "user_registration_reset_captcha_keys",
 				security:
-					user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
+				user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
 				setting_id: setting_id
 			},
 			type: "POST",
@@ -1502,8 +1502,8 @@
 				if (response.success) {
 					show_success_message(
 						response.data.message ||
-							user_registration_settings_params.i18n
-								.captcha_keys_reset_success
+						user_registration_settings_params.i18n
+							.captcha_keys_reset_success
 					);
 					settings_container
 						.find(".ur-connection-status")
@@ -1513,8 +1513,8 @@
 					// Remove captcha node after successful reset
 					var urm_recaptcha_node = $(
 						'.ur-captcha-test-container[data-captcha-type="' +
-							setting_id +
-							'"] .ur-captcha-node'
+						setting_id +
+						'"] .ur-captcha-node'
 					);
 
 					if (urm_recaptcha_node.length !== 0) {
@@ -1534,8 +1534,8 @@
 				} else {
 					show_failure_message(
 						response.data.message ||
-							user_registration_settings_params.i18n
-								.captcha_keys_reset_error
+						user_registration_settings_params.i18n
+							.captcha_keys_reset_error
 					);
 				}
 			},
@@ -1545,7 +1545,7 @@
 					user_registration_settings_params.i18n
 						.captcha_keys_reset_error;
 				show_failure_message(errorMessage);
-				reject({ data: { message: errorMessage } });
+				reject({data: {message: errorMessage}});
 			},
 			complete: function (response) {
 				btn.find(".ur-spinner").remove();
@@ -1556,13 +1556,13 @@
 
 	function reset_payment_keys($this, btn) {
 		var setting_id = $this.data("id"),
-		settings_container = $this.closest("#" + setting_id);
+			settings_container = $this.closest("#" + setting_id);
 		$.ajax({
 			url: user_registration_settings_params.ajax_url,
 			data: {
 				action: "user_registration_reset_payment_keys",
 				security:
-					user_registration_settings_params.user_registration_membership_payment_settings_nonce,
+				user_registration_settings_params.user_registration_membership_payment_settings_nonce,
 				setting_id: setting_id
 			},
 			type: "POST",
@@ -1570,16 +1570,16 @@
 				if (response.success) {
 					show_success_message(
 						response.data.message ||
-							user_registration_settings_params.i18n
-								.payment_keys_reset_success
+						user_registration_settings_params.i18n
+							.payment_keys_reset_success
 					);
 					settings_container
 						.find(".ur-connection-status")
 						.removeClass("ur-connection-status--active");
 					settings_container.find('input[type="text"]').val("");
-					settings_container.find('textarea').each(function() {
+					settings_container.find('textarea').each(function () {
 						let editor = $(this).attr('id');
-						if( editor && tinymce.get(editor) ) {
+						if (editor && tinymce.get(editor)) {
 							tinymce.get(editor).setContent('');
 						}
 					});
@@ -1588,8 +1588,8 @@
 				} else {
 					show_failure_message(
 						response.data.message ||
-							user_registration_settings_params.i18n
-								.payment_keys_reset_error
+						user_registration_settings_params.i18n
+							.payment_keys_reset_error
 					);
 				}
 			},
@@ -1599,7 +1599,7 @@
 					user_registration_settings_params.i18n
 						.payment_keys_reset_error;
 				show_failure_message(errorMessage);
-				reject({ data: { message: errorMessage } });
+				reject({data: {message: errorMessage}});
 			},
 			complete: function (response) {
 				btn.find(".ur-spinner").remove();
@@ -1615,8 +1615,8 @@
 		var matches = document.cookie.match(
 			new RegExp(
 				"(?:^|; )" +
-					cookie_key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
-					"=([^;]*)"
+				cookie_key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+				"=([^;]*)"
 			)
 		);
 		return matches ? decodeURIComponent(matches[1]) : undefined;
@@ -1628,18 +1628,20 @@
 	function ur_remove_cookie(cookie_key) {
 		document.cookie = cookie_key + "=; Max-Age=-99999999; path=/";
 	}
-	$(document).on("click", ".user-registration-options-header__burger", function() {
+
+	$(document).on("click", ".user-registration-options-header__burger", function () {
 		$(".user-registration-header").addClass("user-registration-header--open");
 		$(".user-registration-settings-container").addClass("user-registration-settings-container--dimmed");
 		$(this).addClass(".user-registration-header__burger--hidden");
 		$(".user-registration-header__close").removeClass("user-registration-header__close--hidden");
 	});
-	$(document).on("click", ".user-registration-header__close", function() {
+	$(document).on("click", ".user-registration-header__close", function () {
 		$(".user-registration-header").removeClass("user-registration-header--open");
 		$(".user-registration-settings-container").removeClass("user-registration-settings-container--dimmed");
 		$(this).addClass("user-registration-header__close--hidden");
 		$(".user-registration-options-header__burger").removeClass("user-registration-header__close--hidden");
 	});
+
 	/**
 	 * Handle display conditions/dependencies for settings fields.
 	 */
@@ -1855,8 +1857,8 @@
 		handleDisplayConditions();
 	});
 
-	$(document).on("change", "#user_registration_stripe_test_mode", function() {
-		if( $("#user_registration_stripe_test_mode").is(":checked")) {
+	$(document).on("change", "#user_registration_stripe_test_mode", function () {
+		if ($("#user_registration_stripe_test_mode").is(":checked")) {
 			$("#user_registration_stripe_test_publishable_key").closest(".user-registration-global-settings").show();
 			$("#user_registration_stripe_test_secret_key").closest(".user-registration-global-settings").show();
 
@@ -1871,17 +1873,17 @@
 			$("#user_registration_stripe_live_secret_key").closest(".user-registration-global-settings").show();
 		}
 	});
-	$(document).on("change", "#user_registration_mollie_global_test_mode", function() {
-		if( $("#user_registration_mollie_global_test_mode").is(":checked") ) {
+	$(document).on("change", "#user_registration_mollie_global_test_mode", function () {
+		if ($("#user_registration_mollie_global_test_mode").is(":checked")) {
 			$("#user_registration_mollie_global_test_publishable_key").closest(".user-registration-global-settings").show();
 			$("#user_registration_mollie_global_live_publishable_key").closest(".user-registration-global-settings").hide();
-		} else{
+		} else {
 			$("#user_registration_mollie_global_live_publishable_key").closest(".user-registration-global-settings").show();
 			$("#user_registration_mollie_global_test_publishable_key").closest(".user-registration-global-settings").hide();
 		}
 	});
-	$(document).on("change", "#user_registration_authorize_net_test_mode", function() {
-		if( $("#user_registration_authorize_net_test_mode").is(":checked")) {
+	$(document).on("change", "#user_registration_authorize_net_test_mode", function () {
+		if ($("#user_registration_authorize_net_test_mode").is(":checked")) {
 			$("#user_registration_authorize_net_test_publishable_key").closest(".user-registration-global-settings").show();
 			$("#user_registration_authorize_net_test_secret_key").closest(".user-registration-global-settings").show();
 
@@ -1896,8 +1898,8 @@
 			$("#user_registration_authorize_net_live_secret_key").closest(".user-registration-global-settings").show();
 		}
 	});
-	$(document).on("change", "#user_registration_global_paypal_mode", function() {
-		if ( $(this).val() && "test" === $(this).val() ) {
+	$(document).on("change", "#user_registration_global_paypal_mode", function () {
+		if ($(this).val() && "test" === $(this).val()) {
 			$("#user_registration_global_paypal_test_email_address").closest(".user-registration-global-settings").show();
 			$("#user_registration_global_paypal_test_client_id").closest(".user-registration-global-settings").show();
 			$("#user_registration_global_paypal_test_client_secret").closest(".user-registration-global-settings").show();
@@ -1917,39 +1919,59 @@
 	});
 
 	// Function to trigger payment gateway mode changes
-	function trigger_payment_gateway_mode_changes() {
-		if( $("#user_registration_authorize_net_test_mode").length > 0) {
-			$("#user_registration_authorize_net_test_mode").trigger("change");
-		}
-		if( $("#user_registration_mollie_global_test_mode").length > 0) {
-			$("#user_registration_mollie_global_test_mode").trigger("change");
-		}
-		if ( $("#user_registration_stripe_test_mode").length > 0) {
-			$("#user_registration_stripe_test_mode").trigger("change");
-		}
-		if( $("#user_registration_global_paypal_mode").length > 0 ) {
-			$("#user_registration_global_paypal_mode").trigger("change");
+	function trigger_payment_gateway_mode_changes(gatewayToggleId) {
+		// Mapping of gateway toggle IDs to their mode selectors
+		var gatewayMap = {
+			'user_registration_paypal_enabled': '#user_registration_global_paypal_mode',
+			'user_registration_stripe_enabled': '#user_registration_stripe_test_mode',
+			'user_registration_authorize_net_enabled': '#user_registration_authorize_net_test_mode',
+			'user_registration_mollie_enabled': '#user_registration_mollie_global_test_mode'
+		};
+		if (gatewayToggleId && gatewayMap[gatewayToggleId]) {
+			var $modeSelector = $(gatewayMap[gatewayToggleId]);
+			
+			if ($modeSelector.length > 0) {
+				if (gatewayToggleId === 'user_registration_paypal_enabled') {
+					$modeSelector.val('test');
+				}
+				setTimeout(function() {
+					$modeSelector.trigger("change");
+				}, 0);
+			}
+		} else {
+			if ($("#user_registration_authorize_net_test_mode").length > 0) {
+				$("#user_registration_authorize_net_test_mode").trigger("change");
+			}
+			if ($("#user_registration_mollie_global_test_mode").length > 0) {
+				$("#user_registration_mollie_global_test_mode").trigger("change");
+			}
+			if ($("#user_registration_stripe_test_mode").length > 0) {
+				$("#user_registration_stripe_test_mode").trigger("change");
+			}
+			if ($("#user_registration_global_paypal_mode").length > 0) {
+				$("#user_registration_global_paypal_mode").trigger("change");
+			}
 		}
 	}
-
 	trigger_payment_gateway_mode_changes();
 
-	$(document).ready(function() {
-		if($('.urm_toggle_pg_status').length > 0) {
-		$(document).on("change", ".urm_toggle_pg_status", function () {
-			var $toggle = $(this);
-			var isChecked = $toggle.is(":checked");
-			var $allSiblings = $toggle.closest(".user-registration-global-settings").siblings(".user-registration-global-settings");
-			var $siblingsExcludingLast = $allSiblings.not(":last");
-
-			if (isChecked) {
-				$siblingsExcludingLast.show();
-				trigger_payment_gateway_mode_changes();
-			} else {
-				$allSiblings.hide();
+	
+	$(document).on("change", ".urm_toggle_pg_status", function () {
+		var $toggle = $(this);
+		var isChecked = $toggle.is(":checked");
+		var $allSiblings = $toggle.closest(".user-registration-global-settings").siblings(".user-registration-global-settings");
+		var $siblingsExcludingLast = $allSiblings.not(":last");
+		if (isChecked) {
+			$siblingsExcludingLast.show();
+			if($toggle.attr('id') !== 'user_registration_bank_transfer_enabled') {
+				trigger_payment_gateway_mode_changes($toggle.attr('id'));
 			}
-		}).trigger();
-	}
+		} else {
+			$siblingsExcludingLast.hide();
+		}
+	});
+	$(document).ready(function () {
+		$('.urm_toggle_pg_status').trigger("change");
 	});
 
 })(jQuery);

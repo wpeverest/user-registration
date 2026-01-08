@@ -746,6 +746,7 @@
 					ruleData = window.URCRMembershipAccess.prepareRuleData();
 				}
 				var prepare_membership_data = this.prepare_membership_data();
+
 				var ajaxData = {
 					action: "user_registration_membership_create_membership",
 					membership_data: JSON.stringify(prepare_membership_data)

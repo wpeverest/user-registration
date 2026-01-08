@@ -1851,7 +1851,6 @@ class UR_AJAX {
 				)
 			);
 		}
-		update_option( 'urm_' . $setting_id . '_connection_status', true );
 
 		if( 'paypal' === $setting_id ) {
 			update_option( 'urm_global_paypal_settings_migrated_', true );

@@ -18,14 +18,14 @@ const AdvancedLogicWarningModal = ({ isOpen, onClose }) => {
 		<Modal
 			isOpen={isOpen}
 			onClose={onClose}
-			title={__("Cannot Disable Advanced Logic", "user-registration")}
+			title={__("Remove Advanced Logic First", "user-registration")}
 			icon="dashicons-warning"
 			footer={footer}
 			className="urcr-modal--warning"
 		>
 			<p className="urcr-modal-message">
 				{__(
-					"Please remove all advanced logic features before disabling this option. Only AND gates are allowed when advanced logic is disabled.",
+					"You're currently using OR, NOT, or subgroups for this rule. Please remove these first, then you can disable Advanced Logic. When disabled, only AND will be used for multiple conditions",
 					"user-registration"
 				)}
 			</p>

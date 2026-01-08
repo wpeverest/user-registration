@@ -1141,7 +1141,6 @@
 
 					#payment-gateway-container,
 					#ur-sync-to-email-marketing-container {
-						margin-top: 20px;
 
 						.user-registration-card {
 							border-radius: $border_radius_7;
@@ -1154,102 +1153,7 @@
 							}
 
 							&__body {
-								.user-registration-payment__items {
-									border: $border_width solid $border_color;
-									border-radius: $border_radius_5;
-									padding: $spacing_16px $spacing_20px;
-									transition: all .3s ease-in-out;
-									cursor: pointer;
 
-									&:hover {
-										background: #f6f6f6;
-									}
-
-									h2 {
-										margin: 0;
-										font-size: 15px;
-										line-height: 25px;
-										color: $grey-400;
-									}
-
-									.user-registration-switch {
-										@include form-toggle;
-									}
-
-									.payment-option-body {
-										border-top: $border_width solid $border-color;
-										margin-top: $spacing_14px;
-										display: flex;
-										flex-direction: column;
-										gap: $spacing_10px;
-
-										a {
-											font-weight: $medium;
-											color: $primary_color;
-
-											&:focus {
-												outline: none;
-												box-shadow: none;
-											}
-										}
-
-										.ur-membership-input-container {
-											padding: 0 !important;
-											align-items: center;
-
-											.ur-label {
-												margin-bottom: 0;
-
-												label {
-													margin-bottom: 0;
-													font-size: 14px;
-													line-height: 20px;
-													color: $grey-400;
-												}
-											}
-										}
-
-										.ur-membership-selection-container {
-											align-items: center;
-
-											.ur-label {
-												margin-bottom: 0;
-
-												label {
-													margin-bottom: 0;
-													font-size: 14px;
-													line-height: 20px;
-													color: $grey-400;
-												}
-											}
-
-											.user-registration-switch {
-												@include form-toggle;
-											}
-										}
-									}
-								}
-
-								.payment-option-body {
-									margin-top: $spacing_20px;
-
-									.ur-sync-to-email-marketing-addon {
-										&-title-container {
-											display: flex;
-											align-items: center;
-											justify-content: start;
-
-											&-inner {
-												display: flex;
-												justify-content: center;
-												align-items: center;
-												gap: 10px;
-											}
-										}
-
-										&-sync-container {}
-									}
-								}
 							}
 						}
 					}
@@ -1269,6 +1173,105 @@
 					&-active {
 						display: block;
 					}
+				}
+			}
+			.user-registration-payment__items {
+				border: $border_width solid $border_color;
+				border-radius: $border_radius_5;
+				padding: $spacing_16px $spacing_20px;
+				transition: all .3s ease-in-out;
+				cursor: pointer;
+				width: 100%;
+
+				&:hover {
+					background: #f6f6f6;
+				}
+
+				h2 {
+					margin: 0;
+					font-size: 15px;
+					line-height: 25px;
+					color: $grey-400;
+				}
+
+				.user-registration-switch {
+					@include form-toggle;
+				}
+				.ur-toggle-section {
+					flex: none!important;
+				}
+				.payment-option-body {
+					border-top: $border_width solid $border-color;
+					margin-top: $spacing_14px;
+					display: flex;
+					flex-direction: column;
+					gap: $spacing_10px;
+
+					a {
+						font-weight: $medium;
+						color: $primary_color;
+
+						&:focus {
+							outline: none;
+							box-shadow: none;
+						}
+					}
+
+					.ur-membership-input-container {
+						padding: 0 !important;
+						align-items: center;
+
+						.ur-label {
+							margin-bottom: 0;
+
+							label {
+								margin-bottom: 0;
+								font-size: 14px;
+								line-height: 20px;
+								color: $grey-400;
+							}
+						}
+					}
+
+					.ur-membership-selection-container {
+						align-items: center;
+
+						.ur-label {
+							margin-bottom: 0;
+
+							label {
+								margin-bottom: 0;
+								font-size: 14px;
+								line-height: 20px;
+								color: $grey-400;
+							}
+						}
+
+						.user-registration-switch {
+							@include form-toggle;
+						}
+					}
+				}
+			}
+
+			.payment-option-body {
+				margin-top: $spacing_20px;
+
+				.ur-sync-to-email-marketing-addon {
+					&-title-container {
+						display: flex;
+						align-items: center;
+						justify-content: start;
+
+						&-inner {
+							display: flex;
+							justify-content: center;
+							align-items: center;
+							gap: 10px;
+						}
+					}
+
+					&-sync-container {}
 				}
 			}
 		}

@@ -400,7 +400,6 @@ class AJAX {
 		$is_stripe_enabled = urm_is_payment_gateway_configured( 'stripe' );
 		$is_mollie_enabled = urm_is_payment_gateway_configured( 'mollie' );
 
-		$data['post_meta_data']['payment_gateways'] = isset( $membership_details['payment_gateways'] ) ? $membership_details['payment_gateways'] : array();
 		$data                                       = $membership->prepare_membership_post_data( $data );
 		if ( isset( $data['status'] ) && ! $data['status'] ) {
 			wp_send_json_error(

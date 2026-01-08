@@ -1730,7 +1730,7 @@ html {
   justify-content: center;
   gap: 8px;
   padding: 14px 32px;
-  background-color: #2680c2;
+  background-color: #475bb2;
   color: #ffffff;
   font-size: 16px;
   font-weight: 600;
@@ -1742,7 +1742,7 @@ html {
   box-shadow: 0 2px 4px rgba(38, 128, 194, 0.2);
 }
 .thank-you-page-container .ur-button-wrapper .ur-redirect-btn:hover {
-  background-color: #1e6ba8;
+  background-color: #475bb2;
   box-shadow: 0 4px 8px rgba(38, 128, 194, 0.3);
   transform: translateY(-1px);
 }
@@ -1766,12 +1766,19 @@ html {
 }
 .thank-you-page-container .ur-bank-details {
   width: 100%;
-  margin-bottom: 24px;
+  margin: 24px 0;
   padding: 20px;
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
+  background-color: #F8F8FA;
+  border: 1px solid #EDF2F7;
   border-radius: 6px;
   text-align: left;
+}
+.thank-you-page-container .ur-bank-details .ur-bank-details-title {
+  font-size: 20px;
+  margin: 0;
+  font-weight: 500;
+  border-bottom: 1px solid #e1e1e1;
+  padding-bottom: 10px;
 }
 .thank-you-page-container .ur-bank-details h3,
 .thank-you-page-container .ur-bank-details h4 {
@@ -1930,5 +1937,51 @@ html {
   }
   .thank-you-page-container .ur-success-icon {
     box-shadow: none;
+  }
+}
+.ur-show-bank-details-toggle {
+  margin-bottom: 5px !important;
+}
+
+.user-registration-email__entries {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 14px;
+}
+.user-registration-email__entries-tr:empty {
+  display: none;
+}
+.user-registration-email__entries td {
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  vertical-align: top;
+}
+.user-registration-email__entries-label {
+  width: 35%;
+  font-weight: 600;
+  color: #374151;
+  background-color: #f9fafb;
+  white-space: nowrap;
+}
+.user-registration-email__entries-data {
+  color: #111827;
+  word-break: break-word;
+}
+.user-registration-email__entries-tr:nth-child(even) {
+  background-color: #fcfcfd;
+}
+@media (max-width: 600px) {
+  .user-registration-email__entries td {
+    display: block;
+    width: 100%;
+    border-bottom: none;
+  }
+  .user-registration-email__entries-label {
+    border-bottom: 0;
+    padding-bottom: 4px;
+  }
+  .user-registration-email__entries-data {
+    padding-top: 0;
   }
 }
