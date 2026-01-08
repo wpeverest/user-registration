@@ -440,6 +440,9 @@
 					);
 					break;
 				case "stripe":
+					ur_membership_frontend_utils.show_success_message(
+						response.data.message
+					);
 					stripe_settings.handle_stripe_response(
 						response,
 						prepare_members_data,
