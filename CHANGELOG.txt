@@ -1,3 +1,6 @@
+= 4.4.9    - 08/01/2026 =
+* Security - Fixed XSS vulnerability for delete users.
+
 = 4.4.8    - 07/12/2025 =
 * Tweak    - Fixed empty sdk url.
 
