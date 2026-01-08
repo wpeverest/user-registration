@@ -43,11 +43,11 @@ if ( empty( $signup_url ) ) {
 	}
 	.urcr-access-card {
 		background-color: #ffffff;
-		border-radius: 12px;
-		padding: 10px 28px;
+		border-radius: 8px;
+		padding: 40px;
 		max-width: 500px;
 		width: 100%;
-		box-shadow: 1px 2px 11px 3px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.08);
 		margin: 20px auto;
 	}
 	.urcr-access-heading {
@@ -59,8 +59,8 @@ if ( empty( $signup_url ) ) {
 	}
 	.urcr-access-description {
 		font-size: 16px;
-		color: #666666;
-		margin: 0 0 32px 0;
+		color: #6B6B6B;
+		margin: 0 0 40px 0;
 		line-height: 1.5;
 	}
 	.urcr-access-description br {
@@ -83,9 +83,23 @@ if ( empty( $signup_url ) ) {
 		margin-bottom: 12px;
 	}
 	.urcr-access-button {
+		color: #6366f1;
+		font-size: 16px;
+		font-weight: 500;
+		text-decoration: none;
+	}
+	.urcr-access-button-primary {
+		color: #475bb2;
+		text-decoration: underline;
+	}
+	.urcr-access-button-primary:hover {
+		color: #475BB2;
+		text-decoration: underline;
+	}
+	.urcr-signup-link {
 		max-width: 100%;
-		padding: 8px 16px;
-		border-radius: 8px;
+		padding: 14px 32px;
+		border-radius: 5px;
 		font-size: 16px;
 		font-weight: 600;
 		text-align: center;
@@ -93,26 +107,15 @@ if ( empty( $signup_url ) ) {
 		transition: all 0.2s ease;
 		border: none;
 		display: inline-block;
-	}
-	.urcr-access-button-primary {
 		background-color: #475BB2;
 		color: #ffffff;
 		text-decoration: none;
+		margin-right: 20px;
 	}
-	.urcr-access-button-primary:hover {
+	.urcr-signup-link:hover {
 		background-color: rgb(56.4578313253, 72.3614457831, 141.5421686747);
 		color: #ffffff;
 		text-decoration: none;
-	}
-	.urcr-signup-link {
-		color: #6366f1;
-		font-size: 16px;
-		font-weight: 500;
-		text-decoration: none;
-	}
-	.urcr-signup-link:hover {
-		color: #475BB2;
-		text-decoration: underline;
 	}
 	@media (max-width: 480px) {
 		.urcr-access-card {

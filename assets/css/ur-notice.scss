@@ -11,10 +11,11 @@
 .user-registration-notice {
 	display: flex;
 	gap: 30px;
-	padding: 24px;
-	background: #ffffff;
-	margin: 15px;
+	padding: 16px 16px;
+	background: #f1f2f9;
+	margin: 16px 0;
 	box-shadow: none;
+	border-radius: 4px;
 	border: 1px solid #e1e1e1;
 	border-left-width: 4px;
 	border-left-color: #475bb2;
@@ -51,8 +52,8 @@
 	.user-registration-notice-text {
 		flex: 1;
 		display: flex;
-		flex-direction: column;
-		gap: 12px;
+		flex-direction: row;
+		gap: 6px;
 		overflow: hidden;
 
 		.ur-email-send-failed-log {
@@ -93,6 +94,17 @@
 			margin: 0;
 			padding: 0;
 		}
+		a{
+		  color: #475bb2;
+		  font-weight: 500;
+		  font-size: 14px;
+
+		&:hover{
+			text-decoration: underline;
+		}
+
+
+		}
 	}
 
 	.extra-pad {
@@ -107,6 +119,7 @@
 		a {
 			position: relative;
 			text-decoration: none;
+			
 		}
 
 		.user-registration-notice-ul {
