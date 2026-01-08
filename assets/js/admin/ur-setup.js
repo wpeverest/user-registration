@@ -414,6 +414,16 @@ jQuery(function ($) {
 				ur_setup_actions.install_addon_from_settings($(this));
 			});
 
+			// Settings feature activate actions.
+			$(document).on(
+				"click",
+				".user-registration-settings-feature-activate",
+				function (e) {
+					e.preventDefault();
+					ur_setup_actions.activate_feature_from_settings($(this));
+				}
+			);
+
 			$(document).on(
 				"click",
 				".user-registration-install-extensions",
@@ -666,6 +676,97 @@ jQuery(function ($) {
 
 			// Check the queue, now that the event handlers have been added.
 			wp.updates.queueChecker();
+		},
+		activate_feature_from_settings: function (node) {
+			var $node = $(node);
+			var slug = $node.data("slug");
+			var type = $node.data("type") || "feature";
+			var name = $node.data("name") || "";
+
+			if (!slug) {
+				return;
+			}
+
+			var originalText = $node.html();
+			$node
+				.html(ur_setup_params.i18n_activating + '<div class="ur-spinner"></div>')
+				.closest("button")
+				.prop("disabled", true);
+
+			// Use REST API URL and nonce from localized script
+			var restUrl = (ur_setup_params.rest_url || "").replace(/\/$/, "") + "/modules/activate";
+			var nonce = ur_setup_params.rest_nonce || "";
+
+			$.ajax({
+				url: restUrl,
+				type: "POST",
+				dataType: "json",
+				beforeSend: function (xhr) {
+					if (nonce) {
+						xhr.setRequestHeader("X-WP-Nonce", nonce);
+					}
+				},
+				data: {
+					slug: slug,
+					type: type,
+					name: name
+				},
+				success: function (response) {
+					if (response.success) {
+						Swal.fire({
+							customClass:
+								"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-settings-swal2",
+							icon: "success",
+							title:
+								'<span class="user-registration-swal2-modal__title">' +
+								(response.message || ur_setup_params.download_successful_title) +
+								"</span>",
+							text: response.message || ur_setup_params.download_successful_message,
+							allowOutsideClick: false,
+							confirmButtonText: ur_setup_params.i18n_ok || "OK",
+							showCancelButton: false,
+						}).then(function (result) {
+							if (result.isConfirmed) {
+								location.reload();
+							}
+						});
+					} else {
+						Swal.fire({
+							customClass:
+								"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-settings-swal2",
+							icon: "error",
+							title: response.message || "Activation Failed",
+							text: ur_setup_params.download_failed,
+						});
+						$node.html(originalText).closest("button").prop("disabled", false);
+					}
+				},
+				error: function (xhr, status, error) {
+					var errorMessage = ur_setup_params.download_failed;
+					
+					// Try to get error message from response
+					if (xhr.responseJSON && xhr.responseJSON.message) {
+						errorMessage = xhr.responseJSON.message;
+					} else if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
+						errorMessage = xhr.responseJSON.data.message;
+					} else if (xhr.status === 404) {
+						errorMessage = "REST API endpoint not found. Please check if the plugin is properly installed.";
+					} else if (xhr.status === 403) {
+						errorMessage = "Permission denied. Please refresh the page and try again.";
+					} else if (xhr.status === 0) {
+						errorMessage = "Network error. Please check your connection and try again.";
+					}
+					
+					Swal.fire({
+						customClass:
+							"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-settings-swal2",
+						icon: "error",
+						title: "Activation Failed",
+						text: errorMessage,
+					});
+					$node.html(originalText).closest("button").prop("disabled", false);
+				}
+			});
 		},
 		install_addon_from_builder: function (node) {
 			wp.updates.maybeRequestFilesystemCredentials(event);

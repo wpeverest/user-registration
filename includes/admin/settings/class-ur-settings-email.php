@@ -462,8 +462,8 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 					break;
 
 				case 'custom-email':
-					// Check if custom email addon is active, otherwise show upgrade message
-					if ( is_plugin_active( 'user-registration-email-custom-email/user-registration-email-custom-email.php' ) ) {
+					// Check if custom email addon is active, otherwise activate it
+					if ( ur_check_module_activation( 'custom-email' ) ) {
 						// Get settings from filter (handled by custom email addon)
 						$settings = apply_filters( 'user_registration_get_email_settings_email', array() );
 					} else {
@@ -471,10 +471,12 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 					}
 					break;
 				default:
-					// Handle dynamic custom email configuration sections
-					if ( ! empty( $current_section ) && strpos( $current_section, 'ur_settings_custom_email_' ) === 0 ) {
-						// Get settings from filter (handled by custom email addon)
-						$settings = apply_filters( 'user_registration_get_email_settings_email', array() );
+					// Check if custom email addon is active, otherwise activate it
+					if ( ur_check_module_activation( 'custom-email' ) ) {
+						if ( ! empty( $current_section ) && strpos( $current_section, 'ur_settings_custom_email_' ) === 0 ) {
+							// Get settings from filter (handled by custom email addon)
+							$settings = apply_filters( 'user_registration_get_email_settings_email', array() );
+						}
 					}
 					break;
 			}
