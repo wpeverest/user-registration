@@ -53,6 +53,15 @@ class SubscriptionService {
 		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] ) {
 			$status = 'active';
 		}
+
+		if ( $current_user->ID != 0 ) {
+			$is_purchasing_multiple = isset( $data['is_purchasing_multiple'] ) && ur_string_to_bool( $data['is_purchasing_multiple'] );
+
+			if ( $is_purchasing_multiple && 'free' != $membership_meta['type'] ) {
+				$status = 'pending';
+			}
+		}
+
 		$billing_cycle = ( 'subscription' === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] : '';
 
 		$subscription_data = array(

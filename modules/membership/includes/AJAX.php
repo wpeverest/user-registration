@@ -639,10 +639,10 @@ class AJAX {
 				422
 			);
 		}
-		$membership_group_id = absint( $_POST['membership_group_id'] );
-		$membership_service  = new MembershipGroupService();
+		$membership_group_id   = absint( $_POST['membership_group_id'] );
+		$membership_service    = new MembershipGroupService();
 		$membership_group_form = $membership_service->check_if_group_used_in_form( $membership_group_id );
-		if(false === $membership_group_form){
+		if ( false === $membership_group_form ) {
 			wp_send_json_error(
 				array(
 					'message' => esc_html__( 'Sorry! There was an unexpected error while deleting the membership group.', 'user-registration' ),
@@ -1852,6 +1852,7 @@ class AJAX {
 			'current_membership_ids' => $user_membership_ids,
 			'payment_method'         => sanitize_text_field( $_POST['selected_pg'] ),
 			'ur_authorize_net'       => $ur_authorize_data,
+			'is_purchasing_multiple' => true,
 		);
 
 		if ( ! empty( $_POST['coupon'] ) ) {
@@ -2531,8 +2532,8 @@ class AJAX {
 
 		$render_function = 'ur_' . $addon_name . '_render_list';
 		$html            = $render_function( $api_key );
-		$data 			 = array(
-				'html' => $html,
+		$data            = array(
+			'html' => $html,
 		);
 		if ( 'mailchimp' === $addon_name && function_exists( 'urmc_render_list_tags' ) ) {
 			$data['tag_html'] = urmc_render_list_tags( $api_key );
