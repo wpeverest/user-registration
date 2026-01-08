@@ -530,7 +530,7 @@ class UR_Install {
 			$default_post_id = wp_insert_post(
 				array(
 					'post_type'      => 'user_registration',
-					'post_title'     => esc_html__( 'Default form', 'user-registration' ),
+					'post_title'     => esc_html__( 'Registration form', 'user-registration' ),
 					'post_content'   => $post_content,
 					'post_status'    => 'publish',
 					'comment_status' => 'closed',
@@ -765,7 +765,7 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 			$default_post_id = wp_insert_post(
 				array(
 					'post_type'      => 'user_registration',
-					'post_title'     => esc_html__( 'Default Membership Registration form', 'user-registration' ),
+					'post_title'     => esc_html__( 'Registration form', 'user-registration' ),
 					'post_content'   => $post_content,
 					'post_status'    => 'publish',
 					'comment_status' => 'closed',
