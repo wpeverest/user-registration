@@ -1,4 +1,4 @@
-/* global user_registration_settings_params, ur_login_form_params, UR_Snackbar */
+/* global user_registration_settings_params, user_registration_settings_params, UR_Snackbar */
 (function ($) {
 	if (UR_Snackbar) {
 		var snackbar = new UR_Snackbar();
@@ -221,7 +221,7 @@
 					)
 					.append(
 						'<div class="error inline" style="padding:10px;">' +
-							ur_login_form_params.user_registration_membership_redirect_default_page_message +
+							user_registration_settings_params.user_registration_membership_redirect_default_page_message +
 							"</div>"
 					);
 			} else {
@@ -252,7 +252,7 @@
 				.closest(".user-registration-login-form-global-settings--field")
 				.append(
 					'<div class="error inline" style="padding:10px;">' +
-						ur_login_form_params.user_registration_membership_redirect_default_page_message +
+						user_registration_settings_params.user_registration_membership_redirect_default_page_message +
 						"</div>"
 				);
 
@@ -504,13 +504,71 @@
 		});
 	});
 
+	$("#user_registration_login_page_id").on("change", function () {
+		var $this = $(this),
+			data = {
+				action: "user_registration_my_account_selection_validator",
+				security:
+					user_registration_settings_params.user_registration_my_account_selection_validator_nonce
+			};
+
+		data.user_registration_selected_my_account_page = $this.val();
+
+		$this.prop("disabled", true);
+		$this.css("border", "1px solid #e1e1e1");
+		$this
+			.closest(".user-registration-global-settings--field")
+			.find(".error.inline")
+			.remove();
+		$this
+			.closest(".user-registration-global-settings")
+			.append('<div class="ur-spinner is-active"></div>');
+
+		$.ajax({
+			url: user_registration_settings_params.ajax_url,
+			data: data,
+			type: "POST",
+			complete: function (response) {
+				if (response.responseJSON.success === false) {
+					$this
+						.closest(".user-registration-global-settings--field")
+						.append(
+							"<div id='message' class='error inline' style='padding:10px;'>" +
+								response.responseJSON.data.message +
+								"</div>"
+						);
+					$this.css("border", "1px solid red");
+					$this
+						.closest("form")
+						.find("input[name='save']")
+						.prop("disabled", true);
+				} else {
+					$this
+						.closest("form")
+						.find("input[name='save']")
+						.prop("disabled", false);
+					$this
+						.closest(".user-registration-global-settings")
+						.find(".error inline")
+						.remove();
+				}
+				$this.prop("disabled", false);
+
+				$this
+					.closest(".user-registration-global-settings")
+					.find(".ur-spinner")
+					.remove();
+			}
+		});
+	});
+	
 	// Display error when page with our lost password shortcode is not selected.
 	$("#user_registration_lost_password_page_id").on("change", function () {
 		var $this = $(this),
 			data = {
 				action: "user_registration_lost_password_selection_validator",
 				security:
-					ur_login_form_params.user_registration_lost_password_selection_validator_nonce
+					user_registration_settings_params.user_registration_lost_password_selection_validator_nonce
 			};
 
 		data.user_registration_selected_lost_password_page = $this.val();
@@ -524,7 +582,7 @@
 			.remove();
 
 		$.ajax({
-			url: ur_login_form_params.ajax_url,
+			url: user_registration_settings_params.ajax_url,
 			data: data,
 			type: "POST",
 			complete: function (response) {
@@ -1517,8 +1575,8 @@
 								.payment_keys_reset_success
 					);
 					settings_container
-						.find(".integration-status")
-						.removeClass("ur-integration-account-connected");
+						.find(".ur-connection-status")
+						.removeClass("ur-connection-status--active");
 					settings_container.find('input[type="text"]').val("");
 					settings_container.find('textarea').each(function() {
 						let editor = $(this).attr('id');

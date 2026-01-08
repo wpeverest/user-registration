@@ -249,12 +249,12 @@ class UR_Admin_Settings {
 					'advanced_logic_check_error'         => esc_html__( 'An error occurred while checking for advanced logic rules.', 'user-registration' ),
 					'captcha_success'                    => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
 					'captcha_reset_title'                => esc_html__( 'Reset Keys', 'user-registration' ),
-					'payment_reset_title'                => esc_html__( 'Reset Keys', 'user-registration' ),
+					'payment_reset_title'                => esc_html__( 'Reset Details', 'user-registration' ),
 					'i18n_prompt_reset'                  => esc_html__( 'Reset', 'user-registration' ),
 					'i18n_prompt_cancel'                 => esc_html__( 'Cancel', 'user-registration' ),
 					'captcha_failed'                     => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
 					'captcha_reset_prompt'               => esc_html__( 'Are you sure you want to reset these keys? This action will clear both the Site Key and Secret Key permanently.', 'user-registration' ),
-					'payment_reset_prompt'               => esc_html__( 'Are you sure you want to reset these keys? This will permanently remove the stored API keys from our system. This action cannot be undone.', 'user-registration' ),
+					'payment_reset_prompt'          => esc_html__( 'Are you sure you want to reset these details? This will permanently remove the stored details from our system. This action cannot be undone.', 'user-registration' ),
 					'unsaved_changes'                    => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
 					'pro_feature_title'                  => esc_html__( 'is a Pro Feature', 'user-registration' ),
 					'upgrade_message'                    => esc_html__(
@@ -1099,7 +1099,7 @@ class UR_Admin_Settings {
 										<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
 			                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
 			                            </svg>
-										' . __( 'Reset Keys', 'user-registration' ) . '</a>';
+										' .  ( $is_captcha ? __( 'Reset Keys', 'user-registration' ) : __( 'Reset Details', 'user-registration' ) ) . '</a>';
 									}
 									$settings .= '</div>';
 									break;

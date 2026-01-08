@@ -4290,7 +4290,8 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 							'name'   => esc_html__( 'User Registration Zapier', 'user-registration' ),
 						),
 					),
-					'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'plugin' => '',
 				),
 				'pdf-submission'  => array(
 					'label'  => esc_html__( 'PDF Form Submission', 'user-registration' ),
@@ -4338,15 +4339,15 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 						'dropbox'      => array(
 							'label'  => esc_html__( 'Dropbox', 'user-registration' ),
 							'plugin' => 'user-registration-cloud-storage',
-							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
-						),
+							'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+							'name' => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
+						)
 					),
-					'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'plugin'        => 'user-registration-cloud-storage',
+					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'plugin' => 'user-registration-cloud-storage',
 				),
 			),
-			'security'           => array(
+			'security' => array(
 				'2fa' => array(
 					'label'  => esc_html__( 'Two Factor Authentication', 'user-registration' ),
 					'plugin' => 'user-registration-two-factor-authentication',
@@ -4436,8 +4437,9 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 							);
 							$button_title = sprintf( esc_html__( '%s Addon', 'user-registration' ), $action );
 
-							$settings['sections'][ $detail['plugin'] ] = array(
-								'title'       => $detail['label'],
+							$settings[ 'sections' ][ $detail[ 'plugin' ] ] = array(
+								'is_premium' => false,
+								'title' => $detail[ 'label' ],
 								'before_desc' => $description,
 								'settings'    => array(
 									array(
@@ -4475,14 +4477,15 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 						}
 						/* translators: %s: License Plan Name. */
 						$description = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
-						$button_text = esc_html__( 'Upgrade Plan', 'user-registration' );
-						$settings['sections']['premium_setting_section']['before_desc']           = $description;
-						$settings['sections']['premium_setting_section']['button']['button_text'] = $button_text;
-					} else {
-						$plugin_name = $detail['name'];
-						$action      = '';
-						if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
-							if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'before_desc' ] = $description;
+						$upgradable_plans = implode( 'plan, ', $detail[ 'plan' ] );
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'desc' ] = sprintf( __( 'To unlock this setting, consider upgrading to %s', 'user-registration '), $upgradable_plans );
+					}
+					else {
+						$plugin_name = $detail[ 'name' ];
+						$action = '';
+						if( file_exists( WP_PLUGIN_DIR . '/' . $detail[ 'plugin' ] ) ) {
+							if( ! is_plugin_active( $detail[ 'plugin' ] . '/' . $detail[ 'plugin' ] . '.php' ) ) {
 								$action = 'Activate';
 							} else {
 								return array();
@@ -10680,5 +10683,32 @@ if ( ! function_exists( 'urm_array_key_exists_recursive' ) ) {
 		}
 
 		return false;
+	}
+}
+
+if( ! function_exists( 'urm_is_premium_setting_section' ) ) {
+	function urm_is_premium_setting_section( $id ) {
+		$premium_tabs      = ur_premium_settings_tab();
+		$premium_tab       = urm_array_key_exists_recursive( $id, $premium_tabs );
+		$show_premium_icon = false;
+
+		if ( ! empty( $premium_tab ) ) {
+			$license_data = ur_get_license_plan();
+			$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
+			$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
+
+			if ( ! empty( $premium_tab[ $id ]['plan'] ) ) {
+				if ( in_array( $license_plan, $premium_tab[ $id ]['plan'], true ) ) {
+					$show_premium_icon = false;
+				} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $premium_tab[ $id ]['plugin'] ) && is_plugin_active( $premium_tab[ $id ][ 'plugin' ] . '/' . $premium_tab[ $id ]['plugin'] . '.php' ) ) {
+					$show_premium_icon = false;
+				} else {
+					$show_premium_icon = true;
+				}
+			} else {
+				$show_premium_icon = $premium_tab ? true : false;
+			}
+		}
+		return $show_premium_icon;
 	}
 }
