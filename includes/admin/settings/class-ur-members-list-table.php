@@ -141,13 +141,16 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			}
 
 			$args['orderby'] = 'user_registered';
-			if ( isset( $_REQUEST['orderby'] ) ) {
+			$args['order']   = 'desc';
+
+			$allowed_orderby = array( 'user_registered', 'user_login', 'user_email' );
+
+			if ( isset( $_REQUEST['orderby'] ) && in_array( $_REQUEST['orderby'], $allowed_orderby, true ) ) {
 				$args['orderby'] = $_REQUEST['orderby'];
 			}
 
-			$args['order'] = 'desc';
-			if ( isset( $_REQUEST['order'] ) ) {
-				$args['order'] = $_REQUEST['order'];
+			if ( isset( $_REQUEST['order'] ) && in_array( strtoupper( $_REQUEST['order'] ), array( 'ASC', 'DESC' ), true ) ) {
+				$args['order'] = strtoupper( $_REQUEST['order'] );
 			}
 
 			$subscription_table = $wpdb->prefix . 'ur_membership_subscriptions';
@@ -182,7 +185,9 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 			$this->items = $wp_user_search->get_results();
 
-			if ( empty( $this->items ) ) {
+			$user_ids = wp_list_pluck( $this->items, 'ID' );
+
+			if ( empty( $user_ids ) ) {
 				$this->items = array();
 				$this->set_pagination_args(
 					array(
@@ -193,41 +198,48 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 				return;
 			}
 
+			$results = array();
+
+			foreach ( $this->items as $user ) {
+				$results[] = $user->to_array();
+			}
+
 			$total_users = $wp_user_search->total_users;
 
-			$user_ids     = wp_list_pluck( $this->items, 'ID' );
-			$user_ids_in  = implode( ',', array_map( 'intval', $user_ids ) );
-			$orders_table = $wpdb->prefix . 'ur_membership_orders';
-			$posts_table  = $wpdb->posts;
+			if ( ur_check_module_activation( 'membership' ) ) {
+				$user_ids_in  = implode( ',', array_map( 'intval', $user_ids ) );
+				$orders_table = $wpdb->prefix . 'ur_membership_orders';
+				$posts_table  = $wpdb->posts;
 
-			$sql = "
-				SELECT wpu.ID,
-					wums.ID AS subscription_id,
-					wpp.post_title AS membership_title,
-					wpu.user_login,
-					wpu.user_email,
-					wums.status,
-					wums.billing_cycle,
-					wpu.user_registered,
-					wums.expiry_date,
-					wumo_latest.payment_method
-				FROM {$wpdb->users} wpu
-				LEFT JOIN {$subscription_table} wums
-					ON wpu.ID = wums.user_id
-				LEFT JOIN {$orders_table} wumo_latest
-					ON wumo_latest.ID = (
-						SELECT ID
-						FROM {$orders_table} sub
-						WHERE sub.user_id = wpu.ID
-						ORDER BY sub.created_at DESC
-						LIMIT 1
-					)
-				LEFT JOIN {$posts_table} wpp ON wums.item_id = wpp.ID  AND wpp.post_status = 'publish'
-				WHERE wpu.ID IN ($user_ids_in)
-				ORDER BY FIELD(wpu.ID, $user_ids_in)
-			";
+				$sql = "
+					SELECT wpu.ID,
+						wums.ID AS subscription_id,
+						wpp.post_title AS membership_title,
+						wpu.user_login,
+						wpu.user_email,
+						wums.status,
+						wums.billing_cycle,
+						wpu.user_registered,
+						wums.expiry_date,
+						wumo_latest.payment_method
+					FROM {$wpdb->users} wpu
+					LEFT JOIN {$subscription_table} wums
+						ON wpu.ID = wums.user_id
+					LEFT JOIN {$orders_table} wumo_latest
+						ON wumo_latest.ID = (
+							SELECT ID
+							FROM {$orders_table} sub
+							WHERE sub.user_id = wpu.ID
+							ORDER BY sub.created_at DESC
+							LIMIT 1
+						)
+					LEFT JOIN {$posts_table} wpp ON wums.item_id = wpp.ID  AND wpp.post_status = 'publish'
+					WHERE wpu.ID IN ($user_ids_in)
+					ORDER BY FIELD(wpu.ID, $user_ids_in)
+				";
 
-			$results = $wpdb->get_results( $sql, ARRAY_A );
+				$results = $wpdb->get_results( $sql, ARRAY_A );
+			}
 
 			$user_id_indexed = array();
 
