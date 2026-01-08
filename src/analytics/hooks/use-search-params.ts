@@ -1,25 +1,25 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 
 type SearchParamValue = string | number | boolean | null | undefined;
 
 const valueToString = (value: SearchParamValue): string | null => {
 	if (value === null || value === undefined) return null;
-	if (typeof value === 'boolean') return value ? 'true' : 'false';
+	if (typeof value === "boolean") return value ? "true" : "false";
 	return String(value);
 };
 
 const parseValue = <T extends SearchParamValue>(
 	value: string | null,
-	type: 'string' | 'number' | 'boolean',
+	type: "string" | "number" | "boolean"
 ): T | null => {
 	if (value === null) return null;
 
 	switch (type) {
-		case 'number':
+		case "number":
 			const num = Number(value);
 			return (isNaN(num) ? null : num) as T;
-		case 'boolean':
-			return (value === 'true') as T;
+		case "boolean":
+			return (value === "true") as T;
 		default:
 			return value as T;
 	}
@@ -27,35 +27,44 @@ const parseValue = <T extends SearchParamValue>(
 
 type SearchParamSchema = {
 	[key: string]: {
-		type: 'string' | 'number' | 'boolean';
+		type: "string" | "number" | "boolean";
 		default?: SearchParamValue;
 	};
 };
 
 type InferSchemaType<T extends SearchParamSchema> = {
-	[K in keyof T]: T[K]['default'] extends NonNullable<SearchParamValue>
+	[K in keyof T]: T[K]["default"] extends NonNullable<SearchParamValue>
 		? NonNullable<
-				T[K]['type'] extends 'number'
+				T[K]["type"] extends "number"
 					? number
-					: T[K]['type'] extends 'boolean'
-					? boolean
-					: string
-		  >
-		: T[K]['type'] extends 'number'
-		? number | null
-		: T[K]['type'] extends 'boolean'
-		? boolean | null
-		: string | null;
+					: T[K]["type"] extends "boolean"
+						? boolean
+						: string
+			>
+		: T[K]["type"] extends "number"
+			? number | null
+			: T[K]["type"] extends "boolean"
+				? boolean | null
+				: string | null;
 };
 
-export function useSearchParams<T extends SearchParamSchema>(schema: T) {
+function useSearchParams<T extends SearchParamSchema>(schema: T) {
 	type ParamsType = InferSchemaType<T>;
+	const schemaRef = useRef(schema);
+	const stableSchema = useMemo(() => {
+		const schemasEqual =
+			JSON.stringify(schemaRef.current) === JSON.stringify(schema);
+		if (!schemasEqual) {
+			schemaRef.current = schema;
+		}
+		return schemaRef.current;
+	}, [schema]);
 
-	const getInitialParams = useCallback((): ParamsType => {
+	const getParamsFromURL = useCallback((): ParamsType => {
 		const urlParams = new URLSearchParams(window.location.search);
 		const params = {} as ParamsType;
 
-		for (const [key, config] of Object.entries(schema)) {
+		for (const [key, config] of Object.entries(stableSchema)) {
 			const urlValue = urlParams.get(key);
 			const parsedValue = parseValue(urlValue, config.type);
 			params[key as keyof ParamsType] = (parsedValue ??
@@ -64,28 +73,36 @@ export function useSearchParams<T extends SearchParamSchema>(schema: T) {
 		}
 
 		return params;
-	}, [schema]);
+	}, [stableSchema]);
 
-	const [params, setParamsState] = useState<ParamsType>(getInitialParams);
+	const [params, setParamsState] = useState<ParamsType>(getParamsFromURL);
 
 	useEffect(() => {
 		const handlePopState = () => {
-			setParamsState(getInitialParams());
+			setParamsState(getParamsFromURL());
 		};
 
-		window.addEventListener('popstate', handlePopState);
-		return () => window.removeEventListener('popstate', handlePopState);
-	}, [getInitialParams]);
+		window.addEventListener("popstate", handlePopState);
+		return () => window.removeEventListener("popstate", handlePopState);
+	}, [getParamsFromURL]);
+
+	useEffect(() => {
+		const currentSearch = window.location.search;
+		const newParams = getParamsFromURL();
+		if (JSON.stringify(params) !== JSON.stringify(newParams)) {
+			setParamsState(newParams);
+		}
+	}, [window.location.search]);
 
 	const setParams = useCallback(
 		(
 			updates:
 				| Partial<ParamsType>
-				| ((prev: ParamsType) => Partial<ParamsType>),
+				| ((prev: ParamsType) => Partial<ParamsType>)
 		) => {
 			setParamsState((prev) => {
 				const newParams =
-					typeof updates === 'function'
+					typeof updates === "function"
 						? { ...prev, ...updates(prev) }
 						: { ...prev, ...updates };
 
@@ -98,23 +115,15 @@ export function useSearchParams<T extends SearchParamSchema>(schema: T) {
 				}
 
 				const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-
-				window.history.pushState({}, '', newUrl);
+				window.history.pushState({}, "", newUrl);
 
 				return newParams;
 			});
 		},
-		[],
+		[]
 	);
 
-	const clearParams = useCallback(() => {
-		const defaults = {} as ParamsType;
-		for (const [key, config] of Object.entries(schema)) {
-			defaults[key as keyof ParamsType] = (config.default ?? null) as any;
-		}
-		setParamsState(defaults);
-		window.history.pushState({}, '', window.location.pathname);
-	}, [schema]);
-
-	return [params, setParams, clearParams] as const;
+	return [params, setParams] as const;
 }
+
+export default useSearchParams;
