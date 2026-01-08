@@ -42,6 +42,34 @@
 			@media (max-width: 767px) {
 				width: 100%;
 			}
+			.select2-container{
+				.select2-search--inline{
+					.select2-search__field{
+						width: auto !important;
+					}
+				
+				}
+			}
+		}
+	}
+}
+
+#urcr-meta-box{
+	.ur-metabox-field-row {
+		.ur-metabox-field-detail {
+			flex: 0 0 65%;
+
+			@media (max-width: 767px) {
+				width: 100%;
+			}
+			.select2-container{
+				.select2-search--inline{
+					.select2-search__field{
+						width: auto !important;
+					}
+				
+				}
+			}
 		}
 	}
 }

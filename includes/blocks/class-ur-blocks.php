@@ -98,7 +98,7 @@ class UR_Blocks {
 			array(
 				'text'  => esc_html__( 'User Display Name', 'user-registration' ),
 				'value' => '{{display_name}}',
-			)
+			),
 		);
 
 		$smart_tag = apply_filters( 'user_registration_thank_you_page_smart_tags', $smart_tag );
@@ -143,7 +143,7 @@ class UR_Blocks {
 				'pages_array'                 => $page_options,
 				'membership_all_plan_url'     => admin_url( 'admin.php?page=user-registration-membership' ),
 				'membership_group_url'        => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
-				'bank_details_settings'		  => admin_url( 'admin.php?page=user-registration-settings&tab=payment' ),
+				'bank_details_settings'       => admin_url( 'admin.php?page=user-registration-settings&tab=payment' ),
 			)
 		);
 		wp_register_script(
@@ -180,7 +180,7 @@ class UR_Blocks {
 			array(
 				array(
 					'slug'  => 'user-registration',
-					'title' => esc_html__( 'User Registration & Membership', 'user-registration' ),
+					'title' => esc_html__( 'User Registration and Membership', 'user-registration' ),
 				),
 			),
 			$block_categories
