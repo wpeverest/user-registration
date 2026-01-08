@@ -541,11 +541,6 @@ class UR_Getting_Started {
 			update_option( 'user_registration_updates_admin_email', $admin_email );
 		}
 
-		if ( $tracking_value ) {
-			$email_to_send = ! empty( $admin_email ) ? $admin_email : get_option( 'admin_email' );
-			self::send_email_to_tracking_server( $email_to_send );
-		}
-
 		$page_details = self::install_initial_pages( $membership_type );
 
 		$next_step = self::calculate_next_step( 1, $membership_type );
