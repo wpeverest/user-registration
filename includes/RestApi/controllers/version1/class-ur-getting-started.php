@@ -1524,9 +1524,9 @@ class UR_Getting_Started {
 				'enabled'              => self::get_bool_option( 'urm_paypal_connection_status' ),
 				'configured'           => self::is_gateway_configured( 'paypal' ),
 				'settings_url'         => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
-				'paypal_email'         => get_option( 'user_registration_global_paypal_email_address', '' ),
-				'paypal_client_id'     => get_option( 'user_registration_global_paypal_client_id' ),
-				'paypal_client_secret' => get_option( 'user_registration_global_paypal_client_secret' ),
+				'paypal_email'         => get_option( 'user_registration_global_paypal_live_admin_email', '' ),
+				'paypal_client_id'     => get_option( 'user_registration_global_paypal_live_client_id' ),
+				'paypal_client_secret' => get_option( 'user_registration_global_paypal_live_client_secret' ),
 			),
 			array(
 				'id'                          => 'stripe',
@@ -1655,9 +1655,9 @@ class UR_Getting_Started {
 		}
 
 		if ( $paypal_enabled ) {
-			update_option( 'user_registration_global_paypal_email_address', $paypal_email );
-			update_option( 'user_registration_global_paypal_client_id', $paypal_client_id );
-			update_option( 'user_registration_global_paypal_client_secret', $paypal_client_secret );
+			update_option( 'user_registration_global_paypal_live_admin_email', $paypal_email );
+			update_option( 'user_registration_global_paypal_live_client_id', $paypal_client_id );
+			update_option( 'user_registration_global_paypal_live_client_secret', $paypal_client_secret );
 		}
 
 		if ( $stripe_enabled ) {
@@ -1711,7 +1711,7 @@ class UR_Getting_Started {
 	protected static function is_gateway_configured( $gateway ) {
 		switch ( $gateway ) {
 			case 'paypal':
-				$paypal_email = get_option( 'user_registration_global_paypal_email_address', '' );
+				$paypal_email = get_option( 'user_registration_global_paypal_live_admin_email', '' );
 				return ! empty( $paypal_email );
 
 			case 'stripe':
@@ -2165,6 +2165,14 @@ class UR_Getting_Started {
 	 * @return bool
 	 */
 	public static function check_admin_permissions( $request ) {
-		return current_user_can( 'manage_options' );
+		if ( ! is_user_logged_in() ) {
+			return new WP_Error( 'rest_not_logged_in', 'You must be logged in.', array( 'status' => 401 ) );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return new WP_Error( 'rest_forbidden', 'Admins only.', array( 'status' => 403 ) );
+		}
+
+		return true;
 	}
 }
