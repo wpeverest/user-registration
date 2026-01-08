@@ -102,6 +102,12 @@ class UR_Frontend_Scripts {
 					'media'   => 'all',
 					'has_rtl' => true,
 				),
+				'ltr-support'               => array(
+					'src'     => self::get_asset_url( 'assets/css/ltr_only_support.css' ),
+					'deps'    => '',
+					'version' => UR_VERSION,
+					'media'   => 'all',
+				),
 
 			)
 		);
