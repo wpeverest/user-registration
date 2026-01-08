@@ -461,7 +461,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 						$value = '';
 						if ( '' !== $default ) {
-							if ( is_array( $default ) && in_array( html_entity_decode ( ur_sanitize_tooltip ( trim( $choice_index ) ) ) , $default ) ) {
+							if ( is_array( $default ) && in_array( html_entity_decode( ur_sanitize_tooltip( trim( $choice_index ) ) ), $default ) ) {
 								$value = 'checked="checked"';
 							} elseif ( $default === $choice_index ) {
 								$value = 'checked="checked"';
@@ -705,17 +705,20 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					);
 
 					if ( ! empty( $pending_email ) && time() <= $expiration ) {
-						$field .= sprintf(
-						/* translators: %s - Email Change Pending Message. */
-							'<div class="email-updated inline"><p>%s</p></div>',
-							sprintf(
-							/* translators: 1: Pending email message 2: Cancel Link */
-								__( 'There is a pending change of your email to <code>%1$s</code>. <a href="%2$s">Cancel</a>', 'user-registration' ),
-								$pending_email,
-								$cancel_url
-							)
-						);
 
+						if ( ! empty( $_REQUEST['action'] ) && 'edit' === $_REQUEST['action'] ) {
+
+							$field .= sprintf(
+							/* translators: %s - Email Change Pending Message. */
+								'<div class="email-updated inline"><p>%s</p></div>',
+								sprintf(
+								/* translators: 1: Pending email message 2: Cancel Link */
+									__( 'There is a pending change of your email to <code>%1$s</code>. <a href="%2$s">Cancel</a>', 'user-registration' ),
+									$pending_email,
+									$cancel_url
+								)
+							);
+						}
 					} else {
 						// Remove the confirmation key, pending email and expiry date.
 						UR_Form_Handler::delete_pending_email_change( $user_id );

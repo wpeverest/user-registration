@@ -380,7 +380,7 @@ class UR_Getting_Started {
 		}
 
 		$selected_login_option = get_option( 'user_registration_general_setting_login_options', 'default' );
-		$selected_role         = get_option( 'user_registration_default_user_role', 'subscriber' );
+		$selected_role         = get_option( 'user_registration_form_setting_default_user_role', 'subscriber' );
 
 		$data = array(
 			'login_options'         => $login_options,
@@ -428,7 +428,7 @@ class UR_Getting_Started {
 		}
 
 		if ( is_array( $available_roles ) && array_key_exists( $default_role, $available_roles ) ) {
-			update_option( 'user_registration_default_user_role', $default_role );
+			update_option( 'user_registration_form_setting_default_user_role', $default_role );
 
 			$default_form_id = get_option( 'user_registration_default_form_page_id', 0 );
 			if ( $default_form_id ) {
@@ -1593,67 +1593,35 @@ class UR_Getting_Started {
 
 		update_option( 'user_registration_payment_currency', $currency );
 
-		update_option( 'urm_bank_connection_status', $offline_payment );
-		update_option( 'urm_paypal_connection_status', $paypal );
-		update_option( 'urm_stripe_connection_status', $stripe );
-
-		if ( $offline_payment ) {
-			update_option( 'user_registration_global_bank_details', $bank_details );
-		}
-
-		if ( $paypal ) {
-			update_option( 'user_registration_global_paypal_email_address', $paypal_email );
-			update_option( 'user_registration_global_paypal_client_id', $paypal_client_id );
-			update_option( 'user_registration_global_paypal_client_secret', $paypal_client_secret );
-		}
-
-		if ( $stripe ) {
-			update_option( 'user_registration_stripe_test_mode', $stripe_test_mode );
-
-			if ( ! empty( $stripe_test_publishable_key ) ) {
-				update_option( 'user_registration_stripe_test_publishable_key', $stripe_test_publishable_key );
-			}
-			if ( ! empty( $stripe_test_secret_key ) ) {
-				update_option( 'user_registration_stripe_test_secret_key', $stripe_test_secret_key );
-			}
-
-			if ( ! empty( $stripe_live_publishable_key ) ) {
-				update_option( 'user_registration_stripe_live_publishable_key', $stripe_live_publishable_key );
-			}
-			if ( ! empty( $stripe_live_secret_key ) ) {
-				update_option( 'user_registration_stripe_live_secret_key', $stripe_live_secret_key );
-			}
-		}
-
-		$enabled_gateways = array();
-
-		if ( $offline_payment ) {
-			$enabled_gateways[] = 'offline';
-		}
-
-		if ( $paypal ) {
-			$enabled_gateways[] = 'paypal';
-		}
-
-		if ( $stripe ) {
-			$enabled_gateways[] = 'stripe';
-		}
-
-		update_option( 'urm_enabled_payment_gateways', $enabled_gateways );
-
 		$configuration_needed = array();
 
-		if ( $paypal && empty( $paypal_email ) ) {
-			$configuration_needed[] = array(
-				'gateway'      => 'paypal',
-				'message'      => __( 'PayPal requires an email address.', 'user-registration' ),
-				'settings_url' => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
-			);
+		$offline_configured = true;
+		if ( $offline_payment ) {
+			$offline_configured = ! empty( trim( wp_strip_all_tags( $bank_details ) ) );
+			if ( ! $offline_configured ) {
+				$configuration_needed[] = array(
+					'gateway'      => 'offline',
+					'message'      => __( 'Offline payment requires bank details.', 'user-registration' ),
+					'settings_url' => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
+				);
+			}
 		}
 
-		if ( $stripe ) {
-			$stripe_configured = false;
+		$paypal_configured = true;
+		if ( $paypal ) {
+			$paypal_configured = ! empty( $paypal_email ) && ! empty( $paypal_client_id ) && ! empty( $paypal_client_secret );
 
+			if ( ! $paypal_configured ) {
+				$configuration_needed[] = array(
+					'gateway'      => 'paypal',
+					'message'      => __( 'PayPal requires an email address.', 'user-registration' ),
+					'settings_url' => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
+				);
+			}
+		}
+
+		$stripe_configured = true;
+		if ( $stripe ) {
 			if ( $stripe_test_mode ) {
 				$stripe_configured = ! empty( $stripe_test_publishable_key ) && ! empty( $stripe_test_secret_key );
 			} else {
@@ -1671,6 +1639,48 @@ class UR_Getting_Started {
 			}
 		}
 
+		$offline_enabled = $offline_payment && $offline_configured;
+		$paypal_enabled  = $paypal && $paypal_configured;
+		$stripe_enabled  = $stripe && $stripe_configured;
+
+		update_option( 'urm_bank_connection_status', $offline_enabled );
+		update_option( 'urm_paypal_connection_status', $paypal_enabled );
+		update_option( 'urm_stripe_connection_status', $stripe_enabled );
+
+		if ( $offline_enabled ) {
+			update_option( 'user_registration_global_bank_details', $bank_details );
+		}
+
+		if ( $paypal_enabled ) {
+			update_option( 'user_registration_global_paypal_email_address', $paypal_email );
+			update_option( 'user_registration_global_paypal_client_id', $paypal_client_id );
+			update_option( 'user_registration_global_paypal_client_secret', $paypal_client_secret );
+		}
+
+		if ( $stripe_enabled ) {
+			update_option( 'user_registration_stripe_test_mode', $stripe_test_mode );
+			update_option( 'user_registration_stripe_test_publishable_key', $stripe_test_publishable_key );
+			update_option( 'user_registration_stripe_test_secret_key', $stripe_test_secret_key );
+			update_option( 'user_registration_stripe_live_publishable_key', $stripe_live_publishable_key );
+			update_option( 'user_registration_stripe_live_secret_key', $stripe_live_secret_key );
+		}
+
+		$enabled_gateways = array();
+
+		if ( $offline_enabled ) {
+			$enabled_gateways[] = 'offline';
+		}
+
+		if ( $paypal_enabled ) {
+			$enabled_gateways[] = 'paypal';
+		}
+
+		if ( $stripe_enabled ) {
+			$enabled_gateways[] = 'stripe';
+		}
+
+		update_option( 'urm_enabled_payment_gateways', $enabled_gateways );
+
 		$next_step = 5;
 		self::update_current_step( $next_step );
 
@@ -1685,6 +1695,7 @@ class UR_Getting_Started {
 			200
 		);
 	}
+
 
 	/**
 	 * Check if a payment gateway is configured.
@@ -1767,7 +1778,7 @@ class UR_Getting_Started {
 		);
 
 		$roles        = array();
-		$default_role = get_option( 'user_registration_default_user_role', 'subscriber' );
+		$default_role = get_option( 'user_registration_form_setting_default_user_role', 'subscriber' );
 
 		if ( 'normal' === $membership_type ) {
 			$available_roles = ur_get_default_admin_roles();
@@ -1833,7 +1844,7 @@ class UR_Getting_Started {
 			$available_roles = ur_get_default_admin_roles();
 
 			if ( is_array( $available_roles ) && array_key_exists( $default_user_role, $available_roles ) ) {
-				update_option( 'user_registration_default_user_role', $default_user_role );
+				update_option( 'user_registration_form_setting_default_user_role', $default_user_role );
 				$default_form_id = get_option( 'user_registration_default_form_page_id', 0 );
 
 				if ( $default_form_id ) {

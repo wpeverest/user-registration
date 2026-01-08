@@ -101,22 +101,6 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 		public function urcr_settings() {
 			// Build settings array for Advanced section
 			$advanced_settings = array();
-
-			// Only include "Enable Advance Logic" option if Pro version is active
-			if ( UR_PRO_ACTIVE ) {
-				$advanced_settings[] = array(
-					'row_class' => 'urcr_enable_disable urcr_content_access_rule_is_advanced_logic_enabled',
-					'title'     => __( 'Enable Advance Logic', 'user-registration' ),
-					'desc'      => __( 'Check this option to enable advance grouping and logic gates. ', 'user-registration' ),
-					'id'        => 'urcr_is_advanced_logic_enabled',
-					'default'   => false,
-					'desc_tip'  => true,
-					'type'      => 'toggle',
-					'autoload'  => false,
-					'class' => 'urcr-advance-logic-toggle'
-				);
-			}
-
 			// Build sections array
 			$sections = array();
 

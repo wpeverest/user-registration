@@ -149,9 +149,11 @@ const ConditionRow = ({
 						</select>
 					</div>
 
-					<div className="urcr-condition-operator">
-						<span>{operator}</span>
-					</div>
+					{condition.value !== "user_registered_date" && (
+						<div className="urcr-condition-operator">
+							<span>{operator}</span>
+						</div>
+					)}
 
 					<div className="urcr-condition-value">
 						<ConditionValueInput

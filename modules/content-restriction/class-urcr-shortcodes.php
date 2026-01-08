@@ -41,14 +41,30 @@ class URCR_Shortcodes {
 
 		$enable_disable = ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) );
 		if ( $enable_disable ) {
+			$migrated = get_option( 'urcr_post_page_restrictions_migrated', false );
+
 			$override_global_settings = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', $single = true );
 
-			$allowed_roles       = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
-			$allowed_memberships = get_option( 'user_registration_content_restriction_allow_to_memberships' );
+			if ( $migrated ) {
+				$rule = urcr_migrated_global_rule();
 
-			$current_user_role         = is_user_logged_in() ? wp_get_current_user()->roles[0] : 'guest';
-			$get_meta_data_roles       = get_post_meta( $post->ID, 'urcr_meta_roles', $single = true );
+				$allowed_roles = isset( $rule['logic_map'], $rule['logic_map']['conditions'], $rule['logic_map']['conditions'][0], $rule['logic_map']['conditions'][0]['type'], $rule['logic_map']['conditions'][0]['value'] ) && 'roles' === $rule['logic_map']['conditions'][0]['type'] ? $rule['logic_map']['conditions'][0]['value'] : 'administrator';
+
+				$allowed_memberships = isset( $rule['logic_map'], $rule['logic_map']['conditions'], $rule['logic_map']['conditions'][0], $rule['logic_map']['conditions'][0]['type'], $rule['logic_map']['conditions'][0]['value'] ) && 'memberships' === $rule['logic_map']['conditions'][0]['type'] ? $rule['logic_map']['conditions'][0]['value'] : '';
+
+				$message = isset( $rule['actions'], $rule['actions'][0], $rule['actions'][0]['message'] ) ? $rule['actions'][0]['message'] : __( 'This content is restricted!', 'user-registration' );
+
+			} else {
+
+				$allowed_roles       = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
+				$allowed_memberships = get_option( 'user_registration_content_restriction_allow_to_memberships' );
+				$message             = get_option( 'user_registration_content_restriction_message', '' );
+			}
+
 			$get_meta_data_memberships = get_post_meta( $post->ID, 'urcr_meta_memberships', true );
+			$get_meta_data_roles       = get_post_meta( $post->ID, 'urcr_meta_roles', $single = true );
+			$current_user_role         = is_user_logged_in() ? wp_get_current_user()->roles[0] : 'guest';
+
 			foreach ( $atts as $key => $value ) {
 				if ( is_string( $value ) ) {
 					$value        = html_entity_decode( $value, ENT_QUOTES );
@@ -159,16 +175,10 @@ class URCR_Shortcodes {
 				$memberships_roles
 			);
 
-			$message = get_option( 'user_registration_content_restriction_message', '' );
-
-			if ( 'on' === $override_global_settings ) {
+			if ( $override_global_settings === 'on' ) {
 				$message = ! empty( get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) ) ? get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) : '';
-			} elseif ( isset( $atts['enable_content_restriction'] ) && 'true' === $atts['enable_content_restriction'] ) {
-				if ( ! isset( $atts['restriction_message_type'] ) ) {
-					$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : get_option( 'user_registration_content_restriction_message' );
-				} elseif ( 'custom' === $atts['restriction_message_type'] ) {
-					$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : '';
-				}
+			} elseif ( isset( $atts['enable_content_restriction'] ) && $atts['enable_content_restriction'] === 'true' ) {
+				$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : $message;
 			}
 
 			$message = empty( $message ) ? __( 'This content is restricted!', 'user-registration' ) : $message;

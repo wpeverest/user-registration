@@ -340,6 +340,10 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/class-ur-captcha-conflict-manager.php';
 
 			$this->query = new UR_Query();
+
+			if ( class_exists( 'WPEverest\URM\Analytics\Analytics' ) ) {
+				WPEverest\URM\Analytics\Analytics::get_instance();
+			}
 		}
 
 		/**

@@ -344,7 +344,15 @@
 
 						if (listSelect.length) {
 							email_marketing_sync[val].integration_list_id =
-								listSelect.val();
+							listSelect.val();
+						}
+
+						if ( 'mailchimp' === val ) {
+							var tagSelect = form.find( "#ur_sync_email_marketing_mailchimp_tag_id" );
+
+							if ( tagSelect.length ) {
+								email_marketing_sync[val].list_tags = tagSelect.val();
+							}
 						}
 					}
 				});
@@ -1586,6 +1594,28 @@
 						$listContainer.find("select").remove();
 
 						$listContainer.append(response.data.html);
+
+						if ('mailchimp' === addon && response.data?.tag_html) {
+							var $tagContainer = $(
+								".urmc-sync-email-marketing-" + addon + "-list-tag-wrap"
+							);
+
+							$tagContainer.find("select").each(function () {
+								if ($(this).hasClass("select2-hidden-accessible")) {
+									$(this).select2("destroy");
+								}
+							});
+
+							$tagContainer.find("select").remove();
+
+							$tagContainer.append(response.data.tag_html);
+
+							$tagContainer.find("select.ur-enhanced-select").select2({
+								width: "100%",
+								placeholder: "Select Tags",
+								allowClear: true
+							});
+						}
 					}
 
 					$listContainer

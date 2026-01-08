@@ -249,10 +249,12 @@ class UR_Admin_Settings {
 					'advanced_logic_check_error'         => esc_html__( 'An error occurred while checking for advanced logic rules.', 'user-registration' ),
 					'captcha_success'                    => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
 					'captcha_reset_title'                => esc_html__( 'Reset Keys', 'user-registration' ),
+					'payment_reset_title'                => esc_html__( 'Reset Keys', 'user-registration' ),
 					'i18n_prompt_reset'                  => esc_html__( 'Reset', 'user-registration' ),
 					'i18n_prompt_cancel'                 => esc_html__( 'Cancel', 'user-registration' ),
 					'captcha_failed'                     => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
 					'captcha_reset_prompt'               => esc_html__( 'Are you sure you want to reset these keys? This action will clear both the Site Key and Secret Key permanently.', 'user-registration' ),
+					'payment_reset_prompt'               => esc_html__( 'Are you sure you want to reset these keys? This will permanently remove the stored API keys from our system. This action cannot be undone.', 'user-registration' ),
 					'unsaved_changes'                    => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
 					'pro_feature_title'                  => esc_html__( 'is a Pro Feature', 'user-registration' ),
 					'upgrade_message'                    => esc_html__(
@@ -474,6 +476,7 @@ class UR_Admin_Settings {
 
 						$available_in      = isset( $section['available_in'] ) ? sanitize_text_field( wp_unslash( $section['available_in'] ) ) : '';
 						$is_captcha        = isset( $section['settings_type'] ) ? ' ur-captcha-settings' : '';
+						$is_payment        = in_array( $section[ 'id' ], array( 'paypal', 'stripe', 'bank', 'mollie', 'authorize-net' ) );
 						$is_captcha_header = isset( $section['settings_type'] ) ? $is_captcha . '-header' : '';
 						$is_captcha_body   = isset( $section['settings_type'] ) ? $is_captcha . '-body' : '';
 						$is_connected      = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
@@ -1026,8 +1029,9 @@ class UR_Admin_Settings {
 									$btn_slug              = ! empty( $value['attrs']['data-slug'] ) ? $value['attrs']['data-slug'] : '';
 									$btn_name              = ! empty( $value['attrs']['data-name'] ) ? $value['attrs']['data-name'] : '';
 									$is_connected          = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
+									$is_payment            = in_array( $section[ 'id' ], array( 'paypal', 'stripe', 'bank', 'authorize-net', 'mollie' ) );
 									$is_captcha            = in_array(
-										$section['id'],
+										$section['id'] ?? '',
 										array(
 											'v2',
 											'v3',
@@ -1042,10 +1046,15 @@ class UR_Admin_Settings {
 											'v3',
 											'hCaptcha',
 											'cloudflare',
+											'paypal',
+											'stripe',
+											'bank',
+											'mollie',
+											'authorize-net'
 										)
 									) );
 									if ( in_array(
-										$section['id'],
+										$section['id'] ?? '',
 										array(
 											'stripe',
 											'paypal',
@@ -1067,7 +1076,7 @@ class UR_Admin_Settings {
 									$settings .= '<div class="user-registration-global-settings ' . $css . '"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<div class="user-registration-global-settings--field ' . $field_css . '">';
 									$settings .= '<button
-											id="' . esc_attr( $value['id'] ) . '"
+											id="' . (esc_attr( $value['id'] ) ?? '') . '"
 											type="button"
 											class="button button-primary ' . esc_attr( $btn_css ) . '"
 											type="button"
@@ -1080,10 +1089,11 @@ class UR_Admin_Settings {
 									}
 									$settings .= '>' . $value['title'] . '</button>';
 									$settings .= '</div>';
-									if ( $is_captcha ) {
+									if ( $is_captcha || $is_payment ) {
+										$classname = $is_captcha ? 'reset-captcha-keys ' : 'reset-payment-keys ';
 										$settings .= '<a
 										href="#"
-										class="reset-captcha-keys ' . ( $show_reset_key_button ? '' : 'ur-d-none' ) . '"
+										class="' . $classname . ( $show_reset_key_button ? '' : 'ur-d-none' ) . '"
 										data-id="' . esc_attr( $section['id'] ) . '"
 										/>
 										<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">

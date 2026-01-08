@@ -960,7 +960,7 @@
 
 			if (type === 'whole_site') {
 				var wholeSiteValue = label || 'Whole Site';
-				inputHtml = '<span>' + wholeSiteValue + '</span>';
+				inputHtml = '<span data-content-type="whole_site" data-field-type="whole_site">' + wholeSiteValue + '</span>';
 			} else if (type === 'pages' || type === 'posts') {
 				inputHtml = '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' + id + '" data-content-type="' + type + '"></select>';
 			} else if (type === 'taxonomy') {
@@ -1325,14 +1325,21 @@
 				var targetId = $target.data('target-id');
 
 				var type = '';
-				if ($target.find('.urcr-taxonomy-select').length) {
-					type = 'taxonomy';
-				} else if ($target.find('.urcr-content-target-input').length) {
-					type = $target.find('.urcr-content-target-input').data('content-type') || '';
-				} else {
-					var $label = $target.find('.urcr-target-type-label');
-					if ($label.length && $label.text().indexOf('Whole Site') !== -1) {
-						type = 'whole_site';
+				var $elementWithType = $target.find('[data-content-type]');
+				if ($elementWithType.length) {
+					type = $elementWithType.first().data('content-type') || '';
+				}
+				
+				if (!type) {
+					if ($target.find('.urcr-taxonomy-select').length) {
+						type = 'taxonomy';
+					} else if ($target.find('.urcr-content-target-input').length) {
+						type = $target.find('.urcr-content-target-input').data('content-type') || '';
+					} else {
+						var $label = $target.find('.urcr-target-type-label');
+						if ($label.length && $label.text().indexOf('Whole Site') !== -1) {
+							type = 'whole_site';
+						}
 					}
 				}
 				var value = '';
@@ -1414,11 +1421,16 @@
 						break;
 				}
 
-				targetContents.push({
+				var targetData = {
 					id: targetId,
-					type: type,
-					value: value
-				});
+					type: type
+				};
+				// Only add value field if type is not whole_site
+				if (type !== 'whole_site') {
+					targetData.value = value;
+				}
+
+				targetContents.push(targetData);
 			});
 
 			var actions = self.getActionsFromForm();

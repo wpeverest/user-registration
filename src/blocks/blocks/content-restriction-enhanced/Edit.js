@@ -1,20 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { __ } from "@wordpress/i18n";
 import apiFetch from "@wordpress/api-fetch";
-import {
-	Box,
-	ChakraProvider,
-	Flex,
-	FormControl,
-	FormLabel
-} from "@chakra-ui/react";
+import { Box, ChakraProvider, FormControl, FormLabel } from "@chakra-ui/react";
 import {
 	SelectControl,
 	PanelBody,
 	ToggleControl,
-	__experimentalToggleGroupControl as ToggleGroupControl,
-	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
-	Notice
+	RadioControl
 } from "@wordpress/components";
 import {
 	InspectorControls,
@@ -25,7 +17,7 @@ import Select from "react-select";
 import { Editor } from "@tinymce/tinymce-react";
 
 /* global _UR_BLOCKS_ */
-const { urRestApiNonce, restURL, urcrGlobalRestrictionMsgUrl } =
+const { urRestApiNonce, restURL } =
 	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 const labelStyle = {
@@ -49,8 +41,7 @@ const Edit = ({ attributes, setAttributes }) => {
 		accessMembershipRoles = [],
 		accessControl,
 		message,
-		enableContentRestriction,
-		restrictionMessageType
+		enableContentRestriction
 	} = attributes;
 	const blockProps = useBlockProps();
 
@@ -137,182 +128,154 @@ const Edit = ({ attributes, setAttributes }) => {
 
 	return (
 		<ChakraProvider>
-			<InspectorControls>
-				<PanelBody title={__("Settings", "user-registration")}>
-					<ToggleControl
-						className="urcr-ib-enable-content-restriction"
-						label={__(
-							"Enable Content Restriction",
-							"user-registration"
-						)}
-						checked={enableContentRestriction}
-						onChange={(val) =>
-							setAttributes({ enableContentRestriction: val })
-						}
-					/>
+			<Box {...blockProps} borderWidth="1px" borderRadius="lg" p={5}>
+				<InspectorControls>
+					<PanelBody title={__("Settings", "user-registration")}>
+						<RadioControl
+							label={__(
+								"Restrict Content as per",
+								"user-registration"
+							)}
+							selected={
+								enableContentRestriction ? "true" : "false"
+							}
+							options={[
+								{
+									label: __(
+										"Migrated Global Restriction Rule",
+										"user-registration"
+									),
+									value: "false"
+								},
+								{
+									label: __(
+										"Custom Restriction",
+										"user-registration"
+									),
+									value: "true"
+								}
+							]}
+							onChange={(value) => {
+								setAttributes({
+									enableContentRestriction: value === "true"
+								});
+							}}
+						/>
 
-					{enableContentRestriction && (
-						<Box
-							className="urcr-inspector-settings-wrapper"
-							mt={"12px"}
-						>
-							<SelectControl
-								label={__(
-									"Select Access Control",
-									"user-registration"
-								)}
-								value={accessControl}
-								options={[
-									{
-										label: __(
-											"Access",
-											"user-registration"
-										),
-										value: "access"
-									},
-									{
-										label: __(
-											"Restrict",
-											"user-registration"
-										),
-										value: "restrict"
+						{enableContentRestriction && (
+							<Box>
+								<SelectControl
+									label={__(
+										"Select Access Control",
+										"user-registration"
+									)}
+									value={accessControl}
+									options={[
+										{
+											label: __(
+												"Access",
+												"user-registration"
+											),
+											value: "access"
+										},
+										{
+											label: __(
+												"Restrict",
+												"user-registration"
+											),
+											value: "restrict"
+										}
+									]}
+									onChange={(val) =>
+										setAttributes({ accessControl: val })
 									}
-								]}
-								onChange={(val) =>
-									setAttributes({ accessControl: val })
-								}
-							/>
-
-							<SelectControl
-								label={getAccessLabel()}
-								value={accessAllRoles}
-								options={[
-									{
-										label: `Select ${getAccessLabel()}`,
-										value: ""
-									},
-									...accessRoleDropdownOptions
-								]}
-								onChange={(val) =>
-									setAttributes({ accessAllRoles: val })
-								}
-							/>
-
-							{accessAllRoles === "choose_specific_roles" && (
-								<FormControl>
-									<FormLabel sx={labelStyle}>
-										{__(
-											"Specific Roles",
-											"user-registration"
-										)}
-									</FormLabel>
-									<Select
-										isMulti
-										options={roleDropdownOptions}
-										classNamePrefix="react-select"
-										placeholder={__(
-											"Select specific roles...",
-											"user-registration"
-										)}
-										value={roleDropdownOptions.filter(
-											(opt) =>
-												accessSpecificRoles.includes(
-													opt.value
-												)
-										)}
-										onChange={(selected) =>
-											setAttributes({
-												accessSpecificRoles:
-													selected.map(
-														(opt) => opt.value
-													)
-											})
-										}
-									/>
-								</FormControl>
-							)}
-
-							{accessAllRoles === "memberships" && (
-								<FormControl>
-									<FormLabel sx={labelStyle}>
-										{__(
-											"Select Memberships",
-											"user-registration"
-										)}
-									</FormLabel>
-									<Select
-										isMulti
-										options={membershipRoleDropdownOptions}
-										classNamePrefix="react-select"
-										placeholder={__(
-											"Select membership roles...",
-											"user-registration"
-										)}
-										value={membershipRoleDropdownOptions.filter(
-											(opt) =>
-												accessMembershipRoles.includes(
-													opt.value
-												)
-										)}
-										onChange={(selected) =>
-											setAttributes({
-												accessMembershipRoles:
-													selected.map(
-														(opt) => opt.value
-													)
-											})
-										}
-									/>
-								</FormControl>
-							)}
-
-							<ToggleGroupControl
-								label={__(
-									"Custom Restriction Message",
-									"user-registration"
-								)}
-								value={restrictionMessageType}
-								onChange={(val) =>
-									setAttributes({
-										restrictionMessageType: val
-									})
-								}
-								isBlock
-							>
-								<ToggleGroupControlOption
-									value="global"
-									label={__("Global", "user-registration")}
 								/>
-								<ToggleGroupControlOption
-									value="custom"
-									label={__("Custom", "user-registration")}
-								/>
-							</ToggleGroupControl>
 
-							{"global" === restrictionMessageType && (
-								<div className="urcr-config-link-wrapper">
-									<span>
-										{__(
-											"The block will show global restriction message. ",
-											"user-registration"
-										)}
-									</span>
-									<span className="urcr-config-link">
-										<a
-											className="link"
-											href={urcrGlobalRestrictionMsgUrl}
-											target="__blank"
-										>
+								<SelectControl
+									label={getAccessLabel()}
+									value={accessAllRoles}
+									options={[
+										{
+											label: `Select ${getAccessLabel()}`,
+											value: ""
+										},
+										...accessRoleDropdownOptions
+									]}
+									onChange={(val) =>
+										setAttributes({ accessAllRoles: val })
+									}
+								/>
+
+								{accessAllRoles === "choose_specific_roles" && (
+									<FormControl>
+										<FormLabel sx={labelStyle}>
 											{__(
-												"Change here",
+												"Specific Roles",
 												"user-registration"
 											)}
-										</a>
-									</span>
-								</div>
-							)}
+										</FormLabel>
+										<Select
+											isMulti
+											options={roleDropdownOptions}
+											classNamePrefix="react-select"
+											placeholder={__(
+												"Select specific roles...",
+												"user-registration"
+											)}
+											value={roleDropdownOptions.filter(
+												(opt) =>
+													accessSpecificRoles.includes(
+														opt.value
+													)
+											)}
+											onChange={(selected) =>
+												setAttributes({
+													accessSpecificRoles:
+														selected.map(
+															(opt) => opt.value
+														)
+												})
+											}
+										/>
+									</FormControl>
+								)}
 
-							{"custom" === restrictionMessageType && (
+								{accessAllRoles === "memberships" && (
+									<FormControl>
+										<FormLabel sx={labelStyle}>
+											{__(
+												"Select Memberships",
+												"user-registration"
+											)}
+										</FormLabel>
+										<Select
+											isMulti
+											options={
+												membershipRoleDropdownOptions
+											}
+											classNamePrefix="react-select"
+											placeholder={__(
+												"Select membership roles...",
+												"user-registration"
+											)}
+											value={membershipRoleDropdownOptions.filter(
+												(opt) =>
+													accessMembershipRoles.includes(
+														opt.value
+													)
+											)}
+											onChange={(selected) =>
+												setAttributes({
+													accessMembershipRoles:
+														selected.map(
+															(opt) => opt.value
+														)
+												})
+											}
+										/>
+									</FormControl>
+								)}
+
 								<FormControl mt={6}>
 									<FormLabel sx={labelStyle}>
 										{__(
@@ -323,9 +286,7 @@ const Edit = ({ attributes, setAttributes }) => {
 									<Editor
 										value={message}
 										onEditorChange={(val) =>
-											setAttributes({
-												message: val
-											})
+											setAttributes({ message: val })
 										}
 										init={{
 											height: 200,
@@ -338,36 +299,22 @@ const Edit = ({ attributes, setAttributes }) => {
 										}}
 									/>
 								</FormControl>
-							)}
-						</Box>
-					)}
-				</PanelBody>
-			</InspectorControls>
-
-			<Box
-				{...blockProps}
-				borderWidth="1px"
-				borderRadius="lg"
-				p={"0.5px"}
-			>
-				<Flex
-					className="urcr-block-notice"
-					bg={"gray.200"}
-					justify="center"
-					align="center"
-					h="40px"
-					borderTopRadius="lg"
-				>
-					<span className="dashicons dashicons-lock" />
-					<span>
-						{__(
-							"The contents of this block are protected",
-							"user-registration"
+							</Box>
 						)}
-					</span>
-				</Flex>
+					</PanelBody>
+				</InspectorControls>
+
 				<Box mb={6}>
 					<InnerBlocks templateLock={false} />
+					<div className="user-registration-content-restriction-block-note">
+						<span className="dashicon dashicons dashicons-lock" />
+						<p className="user-registration-content-restriction-block-note-text">
+							{__(
+								"This block has global content restriction settings.",
+								"user-registration"
+							)}
+						</p>
+					</div>
 				</Box>
 			</Box>
 		</ChakraProvider>

@@ -1481,6 +1481,7 @@
 					prepare_members_data,
 					form_response
 				);
+				
 			} else {
 				this.handle_recurring_payment(response, {
 					paymentElements: elements,
@@ -2549,7 +2550,7 @@
 					"close"
 				);
 
-				const html =
+				var html =
 					jQuery(this)
 						.closest(".tooltipster-box")
 						.find(".upgrade-info")

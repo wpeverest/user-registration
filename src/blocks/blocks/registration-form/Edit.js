@@ -68,6 +68,12 @@ const Edit = (props) => {
 		label: formList[index]
 	}));
 
+	useEffect(() => {
+		if (formId === "initial" && formOptions.length > 0) {
+			setAttributes({ formId: formOptions[0].value });
+		}
+	}, [formId, formOptions]);
+
 	const selectRegistrationForm = (id) => {
 		setAttributes({ formId: id });
 		setFormState(id);

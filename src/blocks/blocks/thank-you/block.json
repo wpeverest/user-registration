@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "title": "Thank You",
   "category": "user-registration",
-  "description": "This provides block for a thank you page.",
+  "description": "Customize and display the Membership Thank You content.",
   "keywords": [
     "user registration thank you",
     "urm thank you",
@@ -73,11 +73,11 @@
       "type": "string",
       "default": "Go to my Account"
     },
-     "show_redirect_btn": {
+    "show_redirect_btn": {
       "type": "boolean",
       "default": true
     },
-      "redirect_page_id": {
+    "redirect_page_id": {
       "type": "number",
       "default": 0
     }

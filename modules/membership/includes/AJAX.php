@@ -307,7 +307,7 @@ class AJAX {
 		} elseif ( isset( $data['urcr_membership_access_rule_data'] ) && ! empty( $data['urcr_membership_access_rule_data'] ) ) {
 			$rule_data = is_array( $data['urcr_membership_access_rule_data'] ) ? $data['urcr_membership_access_rule_data'] : json_decode( $data['urcr_membership_access_rule_data'], true );
 		}
-		error_log( print_r( $rule_data, true ) );
+
 		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && 'on' === $data['post_meta_data']['payment_gateways']['stripe']['status'];
 		$data              = $membership->prepare_membership_post_data( $data );
 
@@ -345,9 +345,7 @@ class AJAX {
 
 			// Create or update content access rule if rule data provided
 			if ( $rule_data && function_exists( 'urcr_create_or_update_membership_rule' ) ) {
-				error_log( print_r( 'function exists', true ) );
 				$_POST['urcr_membership_access_rule_data'] = wp_unslash( json_encode( $rule_data ) );
-				error_log( print_r( $_POST['urcr_membership_access_rule_data'], true ) );
 				urcr_create_or_update_membership_rule( $new_membership_ID, $rule_data );
 			}
 
@@ -2533,11 +2531,15 @@ class AJAX {
 
 		$render_function = 'ur_' . $addon_name . '_render_list';
 		$html            = $render_function( $api_key );
+		$data 			 = array(
+				'html' => $html,
+		);
+		if ( 'mailchimp' === $addon_name && function_exists( 'urmc_render_list_tags' ) ) {
+			$data['tag_html'] = urmc_render_list_tags( $api_key );
+		}
 
 		wp_send_json_success(
-			array(
-				'html' => $html,
-			)
+			$data
 		);
 	}
 

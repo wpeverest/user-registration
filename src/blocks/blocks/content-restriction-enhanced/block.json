@@ -3,33 +3,16 @@
   "apiVersion": 3,
   "name": "user-registration/content-restriction-enhanced",
   "version": "1.0.0",
-  "title": "Content Restriction",
+  "title": "Content Restriction (Legacy)",
   "category": "user-registration",
-  "description": "The block restricts the content.",
+  "description": "This block is no longer maintained, please use the new content restriction block from the block inserter. It will work as it is but please use the new block for better features.",
   "keywords": [
     "user registration content restriction",
     "content restriction"
   ],
   "textdomain": "user-registration",
   "example": {
-    "attributes": {},
-    "innerBlocks": [
-      {
-        "name": "core/gallery",
-        "attributes": {
-          "columns": 3,
-          "imageCrop": true,
-          "linkTo": "none"
-        }
-      },
-      {
-        "name": "core/paragraph",
-        "attributes": {
-          "content": "This block is restricted!!"
-        }
-      }
-    ],
-    "viewportWidth": 400
+    "attributes": {}
   },
   "supports": {
     "className": false,
@@ -71,10 +54,6 @@
     "enableContentRestriction": {
       "type": "boolean",
       "default": false
-    },
-    "restrictionMessageType": {
-      "type": "string",
-      "default": "custom"
     }
   },
   "editorScript": "user-registration-blocks-editor",
