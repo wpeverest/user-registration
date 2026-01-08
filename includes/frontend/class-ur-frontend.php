@@ -581,11 +581,23 @@ class UR_Frontend {
 						}
 					}
 
+					$currencies = ur_payment_integration_get_currencies();
+					$currency   = get_user_meta( $user_id, 'ur_payment_currency', true );
+					$currency   = empty( $currency ) ? get_option( 'user_registration_payment_currency', 'USD' ) : $currency;
+
+					$amount = $membership['billing_amount'] ?? '';
+
+					if ( isset( $currencies[ $currency ]['symbol_pos'] ) && 'right' === $currencies[ $currency ]['symbol_pos'] ) {
+						$amount = $amount . '' . $currencies[ $currency ]['symbol'];
+					} else {
+						$amount = $currencies[ $currency ]['symbol'] . '' . $amount;
+					}
+
 					$duration = $membership_details['subscription']['value'] ?? '';
 					if ( ! empty( $duration ) && ! empty( $membership['billing_cycle'] ) ) {
-						$data['period'] = 'subscription' === $membership['post_content']['type'] ? $membership['billing_amount'] . ' / ' . $duration . ' ' . $membership['billing_cycle'] : $membership['billing_amount'];
+						$data['period'] = 'subscription' === $membership['post_content']['type'] ? $amount . ' / ' . $duration . ' ' . $membership['billing_cycle'] : $amount;
 					} else {
-						$data['period'] = $membership['billing_amount'] ?? '';
+						$data['period'] = $amount;
 					}
 
 					array_push( $membership_data, $data );
@@ -643,6 +655,7 @@ class UR_Frontend {
 			} else {
 				$amount = $currencies[ $currency ]['symbol'] . '' . $amount;
 			}
+
 			$payment_details['period'] = $amount . ' / ' . str_replace( '1 ', '', $payment_details['membership']['billing_cycle'] );
 			$buttons                   = array();
 			$stripe_is_enabled         = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_stripe', false ) );

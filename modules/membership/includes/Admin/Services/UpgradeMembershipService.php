@@ -388,6 +388,8 @@ class UpgradeMembershipService {
 						$upgrade_details['upgrade_path'] = $upgrade_paths;
 					}
 				}
+			} elseif ( ! isset( $group_details['mode'] ) || ( isset( $group_details['mode'] ) && empty( $group_details['mode'] ) ) ) {
+				$upgrade_details = $membership_details['upgrade_settings'];
 			}
 		} else {
 			$upgrade_details = $membership_details['upgrade_settings'];

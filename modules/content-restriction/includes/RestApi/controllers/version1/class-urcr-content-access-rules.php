@@ -177,6 +177,7 @@ class URCR_Content_Access_Rules {
 				'rule_type'       => $rule_type,
 				'membership_id'   => $membership_id,
 				'created_at'      => $rule_post->post_date,
+				'is_advanced_logic_enabled' => isset( $rule_content['is_advanced_logic_enabled'] ) ? (bool) $rule_content['is_advanced_logic_enabled'] : false,
 			);
 
 			/**
@@ -352,6 +353,7 @@ class URCR_Content_Access_Rules {
 			'logic_map'       => $logic_map,
 			'target_contents' => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
 			'is_migrated'     => ! empty( $is_migrated ),
+			'is_advanced_logic_enabled' => isset( $rule_content['is_advanced_logic_enabled'] ) ? (bool) $rule_content['is_advanced_logic_enabled'] : false,
 		);
 
 		/**

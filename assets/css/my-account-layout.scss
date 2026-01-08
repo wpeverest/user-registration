@@ -1690,6 +1690,12 @@
 											}
 										}
 									}
+
+									.user-registration-help-tip {
+										&::after{
+											content: none;
+										}
+									}
 								}
 
 								&:last-child {

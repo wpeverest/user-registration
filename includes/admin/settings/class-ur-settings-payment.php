@@ -150,6 +150,30 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 		}
 
         public function get_paypal_settings() {
+
+            $test_admin_email = get_option( 'user_registration_global_paypal_test_admin_email', '' );            
+            $test_client_id = get_option( 'user_registration_global_paypal_test_client_id', '' );
+            $test_client_secret = get_option( 'user_registration_global_paypal_test_client_secret', '' );
+            
+            $live_admin_email = get_option( 'user_registration_global_paypal_live_admin_email', '' );
+            $live_client_id = get_option( 'user_registration_global_paypal_live_client_id', '' );
+            $live_client_secret = get_option( 'user_registration_global_paypal_live_client_secret', '' );
+
+            $paypal_mode = get_option( 'user_registration_global_paypal_mode', '' );
+
+            if ( false === get_option( 'urm_global_paypal_settings_migrated_', false ) ) {
+                //runs for backward compatibility, could be removed in future versions.
+                if( 'test' === $paypal_mode ) {
+                    $test_admin_email   = get_option( 'admin_email', '' );
+                    $test_client_id     = get_option( 'user_registration_global_paypal_client_id', '' );
+                    $test_client_secret = get_option( 'user_registration_global_paypal_client_secret', '' );
+                } else {
+                    $live_admin_email   = get_option( 'admin_email', '' );
+                    $live_client_id     = get_option( 'user_registration_global_paypal_client_id', '' );
+                    $live_client_secret = get_option( 'user_registration_global_paypal_client_secret', '' );
+                }
+            }
+
             return array(
                 'title'        => __( 'Paypal', 'user-registration' ),
                 'type'         => 'accordian',
@@ -168,17 +192,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                             'test'       => __( 'Test/Sandbox', 'user-registration' ),
                         ),
                         'class'    => 'ur-enhanced-select',
-                        'default'  => get_option( 'user_registration_global_paypal_mode', 'test' ),
-                    ),
-                    array(
-                        'type'        => 'text',
-                        'title'       => __( 'PayPal Email Address', 'user-registration' ),
-                        'desc'        => __( 'Enter you PayPal email address.', 'user-registration' ),
-                        'desc_tip'    => true,
-                        'required'    => true,
-                        'id'          => 'user_registration_global_paypal_email_address',
-                        'default'     => get_option( 'user_registration_global_paypal_email_address' ),
-                        'placeholder' => get_option( 'admin_email' ),
+                        'default'  => $paypal_mode,
                     ),
                     array(
                         'type'        => 'text',
@@ -199,20 +213,56 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                         'placeholder' => esc_url( wp_login_url() ),
                     ),
                     array(
+                        'type'        => 'text',
+                        'title'       => __( 'Test PayPal Email Address', 'user-registration' ),
+                        'desc'        => __( 'Enter your PayPal email address in sandbox/test mode.', 'user-registration' ),
+                        'desc_tip'    => true,
+                        'required'    => true,
+                        'id'          => 'user_registration_global_paypal_test_email_address',
+                        'default'     => $test_admin_email,
+                        'placeholder' => $test_admin_email
+                    ),
+                    array(
+                        'type'     => 'text',
+                        'title'    => __( 'Test Client ID', 'user-registration' ),
+                        'desc'     => __( 'Client ID for PayPal in sandbox/test mode.', 'user-registration' ),
+                        'desc_tip' => true,
+                        'id'       => 'user_registration_global_paypal_test_client_id',
+                        'default'  => $test_client_id,
+                    ),
+                    array(
+                        'type'     => 'text',
+                        'title'    => __( 'Test Client Secret', 'user-registration' ),
+                        'desc'     => __( 'Client Secret for PayPal in sandbox/test mode.', 'user-registration' ),
+                        'desc_tip' => true,
+                        'id'       => 'user_registration_global_paypal_test_client_secret',
+                        'default'  => $test_client_secret,
+                    ),
+                    array(
+                        'type'        => 'text',
+                        'title'       => __( 'PayPal Email Address', 'user-registration' ),
+                        'desc'        => __( 'Enter your PayPal email address.', 'user-registration' ),
+                        'desc_tip'    => true,
+                        'required'    => true,
+                        'id'          => 'user_registration_global_paypal_live_email_address',
+                        'default'     => $live_admin_email,
+                        'placeholder' => $live_admin_email,
+                    ),
+                    array(
                         'type'     => 'text',
                         'title'    => __( 'Client ID', 'user-registration' ),
                         'desc'     => __( 'Your client_id, Required for subscription related operations.', 'user-registration' ),
                         'desc_tip' => true,
-                        'id'       => 'user_registration_global_paypal_client_id',
-                        'default'  => get_option( 'user_registration_global_paypal_client_id' ),
+                        'id'       => 'user_registration_global_paypal_live_client_id',
+                        'default'  => $live_client_id,
                     ),
                     array(
                         'type'     => 'text',
                         'title'    => __( 'Client Secret', 'user-registration' ),
                         'desc'     => __( 'Your client_secret, Required for subscription related operations.', 'user-registration' ),
                         'desc_tip' => true,
-                        'id'       => 'user_registration_global_paypal_client_secret',
-                        'default'  => get_option( 'user_registration_global_paypal_client_secret' ),
+                        'id'       => 'user_registration_global_paypal_live_client_secret',
+                        'default'  => $live_client_secret,
                     ),
                     array(
                         'title' => __( 'Save', 'user-registration' ),
@@ -233,7 +283,15 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                 'is_connected' => get_option( 'urm_stripe_connection_status', false ),
                 'settings'     => array(
                     array(
-                        'title'    => __( 'Publishable key', 'user-registration' ),
+                        'type'     => 'toggle',
+                        'title'    => __( 'Enable Test Mode', 'user-registration' ),
+                        'desc'     => __( 'Check if using test mode.', 'user-registration' ),
+                        'id'       => 'user_registration_stripe_test_mode',
+                        'desc_tip' => true,
+                        'default'  => '',
+                    ),
+                    array(
+                        'title'    => __( 'Test Publishable key', 'user-registration' ),
                         'desc'     => __( 'Stripe test publishable  key.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_test_publishable_key',
                         'type'     => 'text',
@@ -251,15 +309,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                         'default'  => '',
                     ),
                     array(
-                        'type'     => 'toggle',
-                        'title'    => __( 'Enable Test Mode', 'user-registration' ),
-                        'desc'     => __( 'Check if using test mode.', 'user-registration' ),
-                        'id'       => 'user_registration_stripe_test_mode',
-                        'desc_tip' => true,
-                        'default'  => '',
-                    ),
-                    array(
-                        'title'    => __( 'Publishable Key', 'user-registration' ),
+                        'title'    => __( 'Live Publishable Key', 'user-registration' ),
                         'desc'     => __( 'Stripe live publishable key.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_live_publishable_key',
                         'type'     => 'text',

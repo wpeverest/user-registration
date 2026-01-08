@@ -3,14 +3,16 @@
  */
 import React, { useState, useEffect, useRef } from "react";
 import { __ } from "@wordpress/i18n";
-import { getURCRLocalizedData, getURCRData } from "../../utils/localized-data";
+import { getURCRLocalizedData, getURCRData, isProAccess } from "../../utils/localized-data";
 import { showError } from "../../utils/notifications";
 import { saveRuleWithCollectiveData } from "../../utils/rule-save-helper";
+import { hasAdvancedLogic } from "../../utils/advanced-logic-helper";
 import MessageAction from "./MessageAction";
 import RedirectAction from "./RedirectAction";
 import LocalPageAction from "./LocalPageAction";
 import URFormAction from "./URFormAction";
 import ShortcodeAction from "./ShortcodeAction";
+import AdvancedLogicWarningModal from "../modals/AdvancedLogicWarningModal";
 
 /* global wp */
 
@@ -27,6 +29,10 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 	const [shortcodeArgs, setShortcodeArgs] = useState("");
 	const [isSaving, setIsSaving] = useState(false);
 	const [useGlobalMessage, setUseGlobalMessage] = useState(true);
+	const [isAdvancedLogicEnabled, setIsAdvancedLogicEnabled] = useState(
+		Boolean(rule.is_advanced_logic_enabled || false)
+	);
+	const [showWarningModal, setShowWarningModal] = useState(false);
 	const editorId = `urcr-action-message-editor-${rule.id}`;
 
 	// Initialize from rule actions
@@ -177,6 +183,10 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 	}, [rule.id, rule.content, rule.actions, isMembershipRule, isMigratedCustomRule]);
 
 	useEffect(() => {
+		setIsAdvancedLogicEnabled(Boolean(rule.is_advanced_logic_enabled || false));
+	}, [rule.id, rule.is_advanced_logic_enabled]);
+
+	useEffect(() => {
 		if ((isMembershipRule || isMigratedCustomRule) && actionType !== "message") {
 			setActionType("message");
 		}
@@ -189,6 +199,32 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 		}
 		const newType = e.target.value;
 		setActionType(newType);
+	};
+
+	const handleAdvancedLogicToggle = (e) => {
+		const newValue = e.target.checked;
+		
+		if (!newValue) {
+			const logicMap = rule.logic_map || (rule.content && rule.content.logic_map) || null;
+			if (hasAdvancedLogic(logicMap)) {
+				setShowWarningModal(true);
+				return;
+			}
+		}
+		
+		setIsAdvancedLogicEnabled(newValue);
+		
+		if (onRuleUpdate) {
+			const updatedRule = {
+				...rule,
+				is_advanced_logic_enabled: newValue,
+				content: {
+					...(rule.content || {}),
+					is_advanced_logic_enabled: newValue,
+				}
+			};
+			onRuleUpdate(updatedRule);
+		}
 	};
 
 	// Build actionData from current state
@@ -502,11 +538,19 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			}
 
 			await saveRuleWithCollectiveData({
-				rule,
+				rule: {
+					...rule,
+					is_advanced_logic_enabled: isAdvancedLogicEnabled,
+					content: {
+						...(rule.content || {}),
+						is_advanced_logic_enabled: isAdvancedLogicEnabled,
+					}
+				},
 				onRuleUpdate,
 				settingsData: {
 					actionData,
-					accessControl
+					accessControl,
+					isAdvancedLogicEnabled
 				}
 			});
 		} catch (error) {
@@ -604,6 +648,36 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				/>
 			)}
 
+			{!isMembershipRule && !isMigratedCustomRule && isProAccess (
+				<div className="urcr-label-input-pair urcr-rule-action ur-align-items-center ur-form-group">
+					<label className="urcr-label-container ur-col-4">
+						<span className="urcr-target-content-label">
+							{__("Advanced Logic", "user-registration")}
+						</span>
+						<span className="urcr-puncher"></span>
+						<span
+							className="user-registration-help-tip"
+							data-tip={__(
+								"Enable advanced logic gates (OR, NOT) and nested groups for complex condition rules",
+								"user-registration"
+							)}
+						></span>
+					</label>
+					<div className="urcr-input-container">
+						<div className="ur-toggle-section">
+							<span className="user-registration-toggle-form">
+								<input
+									type="checkbox"
+									checked={isAdvancedLogicEnabled}
+									onChange={handleAdvancedLogicToggle}
+								/>
+								<span className="slider round"></span>
+							</span>
+						</div>
+					</div>
+				</div>
+			)}
+
 			<div
 				className="urcr-settings-actions"
 				style={{ marginTop: "20px" }}
@@ -619,6 +693,10 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 						: __("Save", "user-registration")}
 				</button>
 			</div>
+			<AdvancedLogicWarningModal
+				isOpen={showWarningModal}
+				onClose={() => setShowWarningModal(false)}
+			/>
 		</div>
 	);
 };

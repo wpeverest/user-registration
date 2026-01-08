@@ -1,39 +1,31 @@
-import React, {
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-	useCallback
-} from "react";
 import { Box } from "@chakra-ui/react";
-import metadata from "./block.json";
+import apiFetch from "@wordpress/api-fetch";
 import {
 	InspectorControls,
 	useBlockProps,
 	useSettings
 } from "@wordpress/block-editor";
 import {
-	Notice,
+	__experimentalBoxControl as BoxControl,
+	Button,
+	ColorPalette,
+	Dropdown,
+	Flex,
+	FlexItem,
 	PanelBody,
+	RangeControl,
 	SelectControl,
-	Spinner,
 	TextControl,
 	ToggleControl,
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
-	ColorPalette,
-	Dropdown,
-	Button,
-	Flex,
-	FlexItem,
-	__experimentalUnitControl as UnitControl,
-	__experimentalBoxControl as BoxControl,
 	__experimentalToolsPanel as ToolsPanel,
 	__experimentalToolsPanelItem as ToolsPanelItem,
-	RangeControl
+	__experimentalUnitControl as UnitControl
 } from "@wordpress/components";
 import { __ } from "@wordpress/i18n";
-import apiFetch from "@wordpress/api-fetch";
+import { useEffect, useMemo, useState } from "react";
+import metadata from "./block.json";
 
 const {
 	urRestApiNonce,
@@ -91,7 +83,7 @@ const HoverColorControl = ({ label, colorValue, themeColors, onChange }) => (
 					</Flex>
 				</Button>
 			)}
-			renderContent={({ onClose }) => (
+			renderContent={() => (
 				<div
 					style={{ padding: "16px", width: "240px" }}
 					onClick={(e) => e.stopPropagation()}
@@ -223,9 +215,7 @@ const Edit = (props) => {
 
 	const {
 		id,
-		redirection_page_id,
 		group_id,
-		thank_you_page_id,
 		type,
 		button_text,
 		columnNumber,
@@ -244,21 +234,10 @@ const Edit = (props) => {
 		buttonMargin
 	} = attributes;
 
-	// State variables
-	const [redirectionPageList, setRedirectionPageList] = useState("");
-	const [thankYouPageList, setThankYouPageList] = useState("");
 	const [groupList, setGroupList] = useState("");
-	const [error, setError] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
 
-	// Refs for locking post saving
-	const redirectionLock = useRef(false);
-	const thankYouLock = useRef(false);
-
-	// Block props
 	const useProps = useBlockProps();
 	const blockName = metadata.name;
-	const [success, setSuccess] = useState(false);
 
 	const updateTypography = (key, value) => {
 		setAttributes({
@@ -269,21 +248,9 @@ const Edit = (props) => {
 		});
 	};
 
-	// Fetch data for pages and groups
+	// Fetch groups only
 	const fetchData = async () => {
 		try {
-			if (!thankYouPageList || !redirectionPageList) {
-				const res = await apiFetch({
-					path: `${restURL}user-registration/v1/gutenberg-blocks/pages`,
-					method: "GET",
-					headers: { "X-WP-Nonce": urRestApiNonce }
-				});
-				if (res.success) {
-					setThankYouPageList(res.page_lists);
-					setRedirectionPageList(res.page_lists);
-				}
-			}
-
 			if (!groupList) {
 				const res = await apiFetch({
 					path: `${restURL}user-registration/v1/gutenberg-blocks/groups`,
@@ -299,60 +266,17 @@ const Edit = (props) => {
 		}
 	};
 
-	// Verify a page
-	const verifyPage = async ({ id, type, lockKey, isLockedRef }) => {
-		setIsLoading(true);
-		setError("");
-		setSuccess(false);
-		try {
-			await apiFetch({
-				path: `${restURL}user-registration/v1/gutenberg-blocks/verify-pages`,
-				method: "POST",
-				headers: {
-					"X-WP-Nonce": urRestApiNonce,
-					"Content-Type": "application/json"
-				},
-				data: JSON.stringify({ page_id: id, type })
+	const onGroupTypeChange = (val) => {
+		if (val === "list") {
+			setAttributes({
+				type: val,
+				showDescription: false
 			});
-
-			if (isLockedRef.current) {
-				wp.data.dispatch("core/editor").unlockPostSaving(lockKey);
-				isLockedRef.current = false;
-			}
-			setSuccess(true);
-		} catch (err) {
-			setError(err?.message || "Something went wrong.");
-			if (!isLockedRef.current) {
-				wp.data.dispatch("core/editor").lockPostSaving(lockKey);
-				isLockedRef.current = true;
-			}
-		} finally {
-			setIsLoading(false);
+			return;
 		}
+		setAttributes({ type: val });
 	};
 
-	// Verify pages on load
-	const verifyPagesOnLoad = async () => {
-		if (redirection_page_id) {
-			await verifyPage({
-				id: redirection_page_id,
-				type: "user_registration_member_registration_page_id",
-				lockKey: "ur-redirection-page-lock",
-				isLockedRef: redirectionLock
-			});
-		}
-
-		if (thank_you_page_id) {
-			await verifyPage({
-				id: thank_you_page_id,
-				type: "user_registration_thank_you_page_id",
-				lockKey: "ur-thank-you-page-lock",
-				isLockedRef: thankYouLock
-			});
-		}
-	};
-
-	const onGroupTypeChange = (val) => setAttributes({ type: val });
 	const onButtonTextChange = (val) => setAttributes({ button_text: val });
 
 	const generateUUID = () =>
@@ -365,28 +289,7 @@ const Edit = (props) => {
 	const [themeColors] = useSettings("color.palette.theme");
 
 	useEffect(() => {
-		return () => {
-			if (redirectionLock.current) {
-				wp.data
-					.dispatch("core/editor")
-					.unlockPostSaving("ur-redirection-page-lock");
-				redirectionLock.current = false;
-			}
-			if (thankYouLock.current) {
-				wp.data
-					.dispatch("core/editor")
-					.unlockPostSaving("ur-thank-you-page-lock");
-				thankYouLock.current = false;
-			}
-		};
-	}, []);
-
-	useEffect(() => {
 		fetchData();
-	}, []);
-
-	useEffect(() => {
-		verifyPagesOnLoad();
 	}, []);
 
 	useEffect(() => {
@@ -394,37 +297,6 @@ const Edit = (props) => {
 			setAttributes({ id: generateUUID() });
 		}
 	}, []);
-
-	const [localColors, setLocalColors] = useState({
-		buttonTextColor: buttonTextColor || "",
-		buttonBgColor: buttonBgColor || "",
-		buttonTextHoverColor: buttonTextHoverColor || "",
-		buttonBgHoverColor: buttonBgHoverColor || "",
-		radioColor: radioColor || ""
-	});
-
-	useEffect(() => {
-		setLocalColors({
-			buttonTextColor: buttonTextColor || "",
-			buttonBgColor: buttonBgColor || "",
-			buttonTextHoverColor: buttonTextHoverColor || "",
-			buttonBgHoverColor: buttonBgHoverColor || "",
-			radioColor: radioColor || ""
-		});
-	}, [
-		buttonTextColor,
-		buttonBgColor,
-		buttonTextHoverColor,
-		buttonBgHoverColor,
-		radioColor
-	]);
-
-	const commitColor = useCallback(
-		(key) => {
-			setAttributes({ [key]: localColors[key] });
-		},
-		[localColors, setAttributes]
-	);
 
 	const uuid = id || "temp";
 	const buttonClass = `ur-membership-signup-btn-${uuid}`;
@@ -487,81 +359,6 @@ const Edit = (props) => {
 			{!!inlineCss && <style>{inlineCss}</style>}
 
 			<InspectorControls key="ur-gutenberg-membership-listing-inspector-controls">
-				<PanelBody
-					initialOpen={false}
-					title={__("Redirection Page settings", "user-registration")}
-				>
-					<SelectControl
-						key="ur-gutenberg-registration-form-id"
-						value={redirection_page_id}
-						label={__("Set Redirection Page", "user-registration")}
-						options={[
-							{
-								label: __("Select a page", "user-registration"),
-								value: ""
-							},
-							...mapOptions(redirectionPageList)
-						]}
-						onChange={(pid) =>
-							setAttributes({ redirection_page_id: pid }) ||
-							verifyPage({
-								id: pid,
-								type: "user_registration_member_registration_page_id",
-								lockKey: "ur-redirection-page-lock",
-								isLockedRef: redirectionLock
-							})
-						}
-						__nextHasNoMarginBottom={true}
-						__next40pxDefaultSize
-					/>
-
-					<SelectControl
-						key="ur-gutenberg-thank-you-page-id"
-						value={thank_you_page_id}
-						label={__("Set Thank You Page", "user-registration")}
-						options={[
-							{
-								label: __(
-									"Select thank you page",
-									"user-registration"
-								),
-								value: ""
-							},
-							...mapOptions(thankYouPageList)
-						]}
-						onChange={(pid) =>
-							setAttributes({ thank_you_page_id: pid }) ||
-							verifyPage({
-								id: pid,
-								type: "user_registration_thank_you_page_id",
-								lockKey: "ur-thank-you-page-lock",
-								isLockedRef: thankYouLock
-							})
-						}
-						__nextHasNoMarginBottom={true}
-						__next40pxDefaultSize
-					/>
-
-					{isLoading && (
-						<div style={{ textAlign: "center", margin: "10px 0" }}>
-							<Spinner />
-						</div>
-					)}
-					{error && (
-						<Notice status="error" isDismissible={false}>
-							{error}
-						</Notice>
-					)}
-					{!error && success && (
-						<Notice status="success" isDismissible={false}>
-							{__(
-								"Page's verified successfully!",
-								"user-registration"
-							)}
-						</Notice>
-					)}
-				</PanelBody>
-
 				<PanelBody title={__("Group Settings", "user-registration")}>
 					<SelectControl
 						key="ur-gutenberg-group-id"
@@ -573,7 +370,7 @@ const Edit = (props) => {
 						options={[
 							{
 								label: __(
-									"Select a Group",
+									"All memberships",
 									"user-registration"
 								),
 								value: ""
@@ -606,12 +403,16 @@ const Edit = (props) => {
 						onChange={(v) => setAttributes({ openInNewTab: v })}
 					/>
 
-					<ToggleControl
-						__nextHasNoMarginBottom
-						label={__("Show description", "user-registration")}
-						checked={showDescription}
-						onChange={(v) => setAttributes({ showDescription: v })}
-					/>
+					{"list" !== type && (
+						<ToggleControl
+							__nextHasNoMarginBottom
+							label={__("Show description", "user-registration")}
+							checked={showDescription}
+							onChange={(v) =>
+								setAttributes({ showDescription: v })
+							}
+						/>
+					)}
 
 					<div className="ur-membership-listing-config-link">
 						<a
@@ -715,12 +516,15 @@ const Edit = (props) => {
 						}
 						themeColors={themeColors}
 					/>
-					<HoverColorControl
-						label={__("Radio Color", "user-registration")}
-						colorValue={attributes.radioColor}
-						onChange={(c) => setAttributes({ radioColor: c })}
-						themeColors={themeColors}
-					/>
+
+					{type === "list" && (
+						<HoverColorControl
+							label={__("Radio Color", "user-registration")}
+							colorValue={attributes.radioColor}
+							onChange={(c) => setAttributes({ radioColor: c })}
+							themeColors={themeColors}
+						/>
+					)}
 				</>
 			</InspectorControls>
 
@@ -806,6 +610,7 @@ const Edit = (props) => {
 											__nextHasNoMarginBottom
 										/>
 									</div>
+
 									<RangeControl
 										value={numericValue}
 										onChange={(value) =>

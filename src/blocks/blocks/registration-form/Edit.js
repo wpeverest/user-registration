@@ -70,7 +70,8 @@ const Edit = (props) => {
 
 	useEffect(() => {
 		if (formId === "initial" && formOptions.length > 0) {
-			setAttributes({ formId: formOptions[0].value });
+			setAttributes({ formId: String(formOptions[0].value) });
+			setFormState(String(formOptions[0].value));
 		}
 	}, [formId, formOptions]);
 
@@ -167,13 +168,20 @@ const Edit = (props) => {
 						</CardBody>
 					</Card>
 				) : (
-					<Disabled>
-						<ServerSideRender
-							key="ur-gutenberg-registration-form-server-side-renderer"
-							block={blockName}
-							attributes={{ ...props.attributes, userState }}
-						/>
-					</Disabled>
+					<>
+						{"initial" !== props.attributes.formId && (
+							<Disabled>
+								<ServerSideRender
+									key="ur-gutenberg-registration-form-server-side-renderer"
+									block={blockName}
+									attributes={{
+										...props.attributes,
+										userState
+									}}
+								/>
+							</Disabled>
+						)}
+					</>
 				)}
 			</Box>
 		</ChakraProvider>

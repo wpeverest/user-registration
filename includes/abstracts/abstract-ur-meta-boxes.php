@@ -62,7 +62,7 @@ abstract class UR_Meta_Boxes {
 			),
 		);
 
-		if ( 'on' === $get_meta_data && 'on' === $has_checkbox ) {
+		if ( ( 'on' === $get_meta_data && 'on' === $has_checkbox ) || $get_meta_data) {
 			echo wp_kses( $checked, $metabox__allowedtags );
 		} else {
 			echo wp_kses( $non_checked, $metabox__allowedtags );

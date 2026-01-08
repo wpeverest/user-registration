@@ -61,6 +61,15 @@ class UR_Getting_Started {
 	const OPTION_MEMBERSHIP_FORM_ID = 'urm_membership_default_form_page_id';
 
 	/**
+	 * Option key used to store setup wizard data.
+	 *
+	 * @since x.x.x
+	 */
+	const OPTION_ONBOARDING_SNAPSHOT = 'urm_onboarding_snapshot';
+
+
+
+	/**
 	 * Register all REST API routes for the getting started wizard.
 	 *
 	 * @since x.x.x
@@ -532,11 +541,6 @@ class UR_Getting_Started {
 			update_option( 'user_registration_updates_admin_email', $admin_email );
 		}
 
-		if ( $tracking_value ) {
-			$email_to_send = ! empty( $admin_email ) ? $admin_email : get_option( 'admin_email' );
-			self::send_email_to_tracking_server( $email_to_send );
-		}
-
 		$page_details = self::install_initial_pages( $membership_type );
 
 		$next_step = self::calculate_next_step( 1, $membership_type );
@@ -569,11 +573,10 @@ class UR_Getting_Started {
 
 		$page_details = array();
 
-		// Set default content restriction message
 		$default_message = '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
-<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
-<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
-<p>{{sign_up}} {{log_in}}</p>';
+			<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
+			<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
+			<p>{{sign_up}} {{log_in}}</p>';
 		if ( class_exists( 'URCR_Admin_Assets' ) ) {
 			$default_message = URCR_Admin_Assets::get_default_message();
 		}
@@ -700,7 +703,7 @@ class UR_Getting_Started {
 		} else {
 			update_option( 'user_registration_default_form_page_id', (int) $new_id );
 		}
-
+		update_option( 'user_registration_default_form_page_id', (int) $new_id );
 		update_option( 'user_registration_registration_form', (int) $new_id );
 
 		return (int) $new_id;
@@ -1521,9 +1524,9 @@ class UR_Getting_Started {
 				'enabled'              => self::get_bool_option( 'urm_paypal_connection_status' ),
 				'configured'           => self::is_gateway_configured( 'paypal' ),
 				'settings_url'         => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
-				'paypal_email'         => get_option( 'user_registration_global_paypal_email_address', '' ),
-				'paypal_client_id'     => get_option( 'user_registration_global_paypal_client_id' ),
-				'paypal_client_secret' => get_option( 'user_registration_global_paypal_client_secret' ),
+				'paypal_email'         => get_option( 'user_registration_global_paypal_live_admin_email', '' ),
+				'paypal_client_id'     => get_option( 'user_registration_global_paypal_live_client_id' ),
+				'paypal_client_secret' => get_option( 'user_registration_global_paypal_live_client_secret' ),
 			),
 			array(
 				'id'                          => 'stripe',
@@ -1652,9 +1655,9 @@ class UR_Getting_Started {
 		}
 
 		if ( $paypal_enabled ) {
-			update_option( 'user_registration_global_paypal_email_address', $paypal_email );
-			update_option( 'user_registration_global_paypal_client_id', $paypal_client_id );
-			update_option( 'user_registration_global_paypal_client_secret', $paypal_client_secret );
+			update_option( 'user_registration_global_paypal_live_admin_email', $paypal_email );
+			update_option( 'user_registration_global_paypal_live_client_id', $paypal_client_id );
+			update_option( 'user_registration_global_paypal_live_client_secret', $paypal_client_secret );
 		}
 
 		if ( $stripe_enabled ) {
@@ -1708,7 +1711,7 @@ class UR_Getting_Started {
 	protected static function is_gateway_configured( $gateway ) {
 		switch ( $gateway ) {
 			case 'paypal':
-				$paypal_email = get_option( 'user_registration_global_paypal_email_address', '' );
+				$paypal_email = get_option( 'user_registration_global_paypal_live_admin_email', '' );
 				return ! empty( $paypal_email );
 
 			case 'stripe':
@@ -2083,40 +2086,75 @@ class UR_Getting_Started {
 		return $reg_page_id > 0 ? get_permalink( $reg_page_id ) : null;
 	}
 
+
 	/**
-	 * Send email to tracking server.
+	 * Build onboarding snapshot data.
 	 *
 	 * @since x.x.x
 	 *
-	 * @param string $email Email address.
-	 * @return void
+	 * @return array
 	 */
-	private static function send_email_to_tracking_server( $email ) {
-		if ( empty( $email ) || ! is_email( $email ) ) {
-			return;
-		}
+	protected static function build_onboarding_snapshot() {
+		return array(
+			'onboarding' => array(
+				'current_step' => (int) get_option( 'urm_onboarding_current_step', 1 ),
+				'completed_at' => get_option( 'urm_onboarding_completed_at', '' ),
+				'is_completed' => ! get_option( 'user_registration_first_time_activation_flag', true ),
+				'is_skipped'   => (bool) get_option( 'user_registration_onboarding_skipped', false ),
 
-		wp_remote_post(
-			'https://stats.wpeverest.com/wp-json/tgreporting/v1/process-email/',
-			array(
-				'method'      => 'POST',
-				'timeout'     => 10,
-				'redirection' => 5,
-				'httpversion' => '1.0',
-				'headers'     => array(
-					'user-agent' => 'UserRegistration/' . ( function_exists( 'UR' ) ? UR()->version : '1.0.0' ) . '; ' . get_bloginfo( 'url' ),
-				),
-				'body'        => array(
-					'data' => array(
-						'email'       => sanitize_email( $email ),
-						'website_url' => get_bloginfo( 'url' ),
-						'plugin_name' => ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) ? 'User Registration & Membership PRO' : 'User Registration & Membership',
-						'plugin_slug' => defined( 'UR_PLUGIN_FILE' ) ? plugin_basename( UR_PLUGIN_FILE ) : 'user-registration',
+				'welcome'      => array(
+					'membership_type'      => get_option( 'urm_onboarding_membership_type', '' ),
+					'allow_usage_tracking' => (bool) get_option( 'user_registration_allow_usage_tracking', true ),
+					'admin_email'          => get_option(
+						'user_registration_updates_admin_email',
+						get_option( 'admin_email' )
 					),
 				),
-			)
+
+				'memberships'  => array(
+					'ids' => (array) get_option( 'urm_onboarding_membership_ids', array() ),
+				),
+
+				'payments'     => array(
+					'currency'         => get_option( 'user_registration_payment_currency', 'USD' ),
+					'enabled_gateways' => (array) get_option( 'urm_enabled_payment_gateways', array() ),
+				),
+
+				'settings'     => array(
+					'login_option' => get_option(
+						'user_registration_general_setting_login_options',
+						'default'
+					),
+					'default_role' => get_option(
+						'user_registration_default_user_role',
+						'subscriber'
+					),
+				),
+			),
+
+			'meta'       => array(
+				'site_url' => get_bloginfo( 'url' ),
+				'saved_at' => current_time( 'mysql' ),
+			),
 		);
 	}
+
+		/**
+		 * Save onboarding snapshot to options table.
+		 *
+		 * @since x.x.x
+		 *
+		 * @return bool
+		 */
+	protected static function save_onboarding_snapshot() {
+		return update_option(
+			self::OPTION_ONBOARDING_SNAPSHOT,
+			self::build_onboarding_snapshot(),
+			false
+		);
+	}
+
+
 
 	/**
 	 * Permission callback for all getting started endpoints.
@@ -2127,6 +2165,14 @@ class UR_Getting_Started {
 	 * @return bool
 	 */
 	public static function check_admin_permissions( $request ) {
+		if ( ! is_user_logged_in() ) {
+			return new WP_Error( 'rest_not_logged_in', 'You must be logged in.', array( 'status' => 401 ) );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return new WP_Error( 'rest_forbidden', 'Admins only.', array( 'status' => 403 ) );
+		}
+
 		return true;
 	}
 }

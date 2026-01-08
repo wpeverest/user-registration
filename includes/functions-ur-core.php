@@ -156,7 +156,6 @@ function ur_clean( $var ) {
  *
  * @return string
  * @since  1.0.0  Tooltips are encoded with htmlspecialchars to prevent XSS. Should not be used in conjunction with esc_attr()
- *
  */
 function ur_sanitize_tooltip( $var ) {
 	return htmlspecialchars(
@@ -193,7 +192,7 @@ function ur_sanitize_dimension_unit( $dimensions = array(), $unit = 'px' ) {
 /**
  * Add a suffix into an array.
  *
- * @param array $array Raw array data.
+ * @param array  $array Raw array data.
  * @param string $suffix Suffix to be added.
  *
  * @return array Modified array with suffix added.
@@ -206,7 +205,7 @@ function ur_suffix_array( $array = array(), $suffix = '' ) {
 /**
  * Implode an array into a string by $glue and remove empty values.
  *
- * @param array $array Array to convert.
+ * @param array  $array Array to convert.
  * @param string $glue Glue, defaults to ' '.
  *
  * @return string
@@ -259,7 +258,7 @@ function ur_bool_to_string( $bool ) {
  * Get other templates (e.g. my account) passing attributes and including the file.
  *
  * @param string $template_name Template Name.
- * @param array $args Extra arguments(default: array()).
+ * @param array  $args Extra arguments(default: array()).
  * @param string $template_path Path of template provided (default: '').
  * @param string $default_path Default path of template provided(default: '').
  */
@@ -368,7 +367,7 @@ function ur_locate_template( $template_name, $template_path = '', $default_path 
  * Display a UserRegistration help tip.
  *
  * @param string $tip Help tip text.
- * @param bool $allow_html Allow sanitized HTML if true or escape.
+ * @param bool   $allow_html Allow sanitized HTML if true or escape.
  * @param string $classname Classname.
  *
  * @return string
@@ -421,7 +420,6 @@ function ur_post_content_has_shortcode( $tag = '' ) {
  * @param string $version Version of the plugin.
  *
  * @since  1.0.0
- *
  */
 function ur_doing_it_wrong( $function, $message, $version ) {
 	$message .= ' Backtrace: ' . wp_debug_backtrace_summary();
@@ -444,10 +442,10 @@ function ur_doing_it_wrong( $function, $message, $version ) {
 /**
  * Set a cookie - wrapper for setcookie using WP constants.
  *
- * @param string $name Name of the cookie being set.
- * @param string $value Value of the cookie.
+ * @param string  $name Name of the cookie being set.
+ * @param string  $value Value of the cookie.
  * @param integer $expire Expiry of the cookie.
- * @param string $secure Whether the cookie should be served only over https.
+ * @param string  $secure Whether the cookie should be served only over https.
  */
 function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
 	if ( ! headers_sent() ) {
@@ -465,7 +463,6 @@ function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
  *
  * @return array $headers
  * @since  1.1.0
- *
  */
 function ur_enable_ur_plugin_headers( $headers ) {
 	if ( ! class_exists( 'UR_Plugin_Updates', false ) ) {
@@ -1036,8 +1033,8 @@ function ur_get_general_settings( $id ) {
 /**
  * Insert in between the indexes in multidimensional array.
  *
- * @param array $items An array of items.
- * @param array $new_items New items to insert inbetween.
+ * @param array  $items An array of items.
+ * @param array  $new_items New items to insert inbetween.
  * @param string $after Index to insert after.
  *
  * @return array              Ordered array of items.
@@ -1135,7 +1132,6 @@ function ur_get_random_number() {
  *
  * @return array Form settings.
  * @since 1.0.1
- *
  */
 function ur_admin_form_settings_fields( $form_id ) {
 
@@ -1651,13 +1647,12 @@ function ur_login_option_with() {
 /**
  * Get Post meta value by meta key.
  *
- * @param int $post_id Post ID.
+ * @param int    $post_id Post ID.
  * @param string $meta_key Meta Key.
- * @param mixed $default Default Value.
+ * @param mixed  $default Default Value.
  *
  * @return mixed
  * @since 1.0.1
- *
  */
 function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 
@@ -1680,13 +1675,12 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 /**
  * Get general form settings by meta key (settings id).
  *
- * @param int $form_id Form ID.
+ * @param int    $form_id Form ID.
  * @param string $meta_key Meta Key.
- * @param mixed $default Default Value.
+ * @param mixed  $default Default Value.
  *
  * @return mixed
  * @since 1.0.1
- *
  */
 function ur_get_form_setting_by_key( $form_id, $meta_key, $default = '' ) {
 
@@ -1728,7 +1722,7 @@ function ur_get_user_approval_status( $user_id ) {
 /**
  * Get form data by field key.
  *
- * @param array $form_data Form Data.
+ * @param array  $form_data Form Data.
  * @param string $key Field Key.
  *
  * @return array
@@ -1776,7 +1770,6 @@ function ur_get_form_data_by_key( $form_data, $key = null ) {
  *
  * @return string the log file path.
  * @since 1.0.5
- *
  */
 function ur_get_log_file_path( $handle ) {
 	return UR_Log_Handler_File::get_log_file_path( $handle );
@@ -1789,7 +1782,6 @@ function ur_get_log_file_path( $handle ) {
  *
  * @return array
  * @since 1.0.5
- *
  */
 function ur_register_default_log_handler( $handlers ) {
 
@@ -1829,7 +1821,6 @@ function ur_get_logger() {
 		 * @param string|object $class The class name or an instance of the logger.
 		 *
 		 * @since 1.1.0
-		 *
 		 */
 		$class      = apply_filters( 'user_registration_logging_class', 'UR_Logger' );
 		$implements = class_implements( $class );
@@ -1860,9 +1851,9 @@ function ur_get_logger() {
  * Handles addon plugin updater.
  *
  * @param string $file Plugin File.
- * @param int $item_id Item ID.
+ * @param int    $item_id Item ID.
  * @param string $addon_version Addon Version.
- * @param bool $beta Is beta version.
+ * @param bool   $beta Is beta version.
  *
  * @since 1.1.0
  */
@@ -2417,7 +2408,6 @@ function ur_print_js() {
  *
  * @since 1.1.2
  * Queue some JavaScript code to be output in the footer.
- *
  */
 function ur_enqueue_js( $code ) {
 	global $ur_queued_js;
@@ -2478,12 +2468,11 @@ add_action( 'user_registration_installed', 'ur_delete_expired_transients' );
 /**
  * String translation function.
  *
- * @param int $form_id Form ID.
+ * @param int    $form_id Form ID.
  * @param string $field_id Field ID.
- * @param mixed $variable To be translated for WPML compatibility.
+ * @param mixed  $variable To be translated for WPML compatibility.
  *
  * @since 1.7.3
- *
  */
 function ur_string_translation( $form_id, $field_id, $variable ) {
 	$context = ( isset( $form_id ) && 0 !== $form_id )
@@ -2538,7 +2527,6 @@ function ur_get_form_id_by_userid( $user_id ) {
  *
  * @return mixed
  * @since 1.9.0
- *
  */
 function ur_get_registration_source_id( $user_id ) {
 	$user_metas = get_user_meta( $user_id );
@@ -2562,13 +2550,12 @@ function ur_get_registration_source_id( $user_id ) {
 /**
  * Check if a datetime falls in a range of time.
  *
- * @param string $target_date Target date.
+ * @param string      $target_date Target date.
  * @param string|null $start_date Start date.
  * @param string|null $end_date End date.
  *
  * @return bool
  * @since 1.9.0
- *
  */
 function ur_falls_in_date_range( $target_date, $start_date = null, $end_date = null ) {
 	$start_ts       = strtotime( $start_date );
@@ -2598,7 +2585,7 @@ function ur_falls_in_date_range( $target_date, $start_date = null, $end_date = n
 /**
  * Get Post Content By Form ID.
  *
- * @param int $form_id Form Id.
+ * @param int    $form_id Form Id.
  * @param string $form_status The form status.
  *
  * @return array|mixed|null|object
@@ -2650,7 +2637,7 @@ function ur_parse_args( &$args, $defaults ) {
 /**
  * Override email content for specific form.
  *
- * @param int $form_id Form Id.
+ * @param int    $form_id Form Id.
  * @param object $settings Settings for specific email.
  * @param string $message Message to be sent in email body.
  * @param string $subject Subject of the email.
@@ -2682,8 +2669,8 @@ function user_registration_email_content_overrider( $form_id, $settings, $messag
  *
  * @param string $new_string Field Key.
  * @param string $post_key Post Key.
- * @param array $profile Form Data.
- * @param mixed $value Value.
+ * @param array  $profile Form Data.
+ * @param mixed  $value Value.
  */
 function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value ) {
 	$valid_form_data = array();
@@ -2765,13 +2752,12 @@ add_filter( 'aioseo_conflicting_shortcodes', 'ur_resolve_conflicting_shortcodes_
 /**
  * Parse name values and smart tags
  *
- * @param int $user_id User ID.
- * @param int $form_id Form ID.
+ * @param int   $user_id User ID.
+ * @param int   $form_id Form ID.
  * @param array $valid_form_data Form filled data.
  *
  * @return array
  * @since 1.9.6
- *
  */
 function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_data ) {
 
@@ -2862,7 +2848,7 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 /**
  * Get field data by field_name.
  *
- * @param int $form_id Form Id.
+ * @param int    $form_id Form Id.
  * @param string $field_name Field Name.
  *
  * @return array
@@ -2916,7 +2902,7 @@ if ( ! function_exists( 'user_registration_pro_get_conditional_fields_by_form_id
 	/**
 	 * Get form fields by form id
 	 *
-	 * @param int $form_id Form ID.
+	 * @param int    $form_id Form ID.
 	 * @param string $selected_field_key Field Key.
 	 */
 	function user_registration_pro_get_conditional_fields_by_form_id( $form_id, $selected_field_key ) {
@@ -2977,9 +2963,9 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 	/**
 	 * Render Conditional Logic in form settings of form builder.
 	 *
-	 * @param array $connection Connection Data.
+	 * @param array  $connection Connection Data.
 	 * @param string $integration Integration.
-	 * @param int $form_id Form ID.
+	 * @param int    $form_id Form ID.
 	 *
 	 * @return string
 	 */
@@ -3066,7 +3052,7 @@ if ( ! function_exists( 'user_registration_pro_get_checkbox_choices' ) ) {
 	/**
 	 * Get Select and Checkbox Fields Choices
 	 *
-	 * @param int $form_id Form ID.
+	 * @param int    $form_id Form ID.
 	 * @param string $field_name Field Name.
 	 *
 	 * @return array $choices
@@ -3101,7 +3087,7 @@ if ( ! function_exists( 'user_registration_pro_get_field_data' ) ) {
 	/**
 	 * Get all fields data
 	 *
-	 * @param int $form_id Form ID.
+	 * @param int    $form_id Form ID.
 	 * @param string $field_name Field Name.
 	 *
 	 * @return array    $field_data.
@@ -3438,7 +3424,7 @@ if ( ! function_exists( 'ur_format_field_values' ) ) {
 	/**
 	 * Get field type by meta key
 	 *
-	 * @param int $field_meta_key Field key or meta key.
+	 * @param int    $field_meta_key Field key or meta key.
 	 * @param string $field_value Field's value .
 	 */
 	function ur_format_field_values( $field_meta_key, $field_value ) {
@@ -4209,156 +4195,163 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 	function ur_premium_settings_tab() {
 
 		$premium_tabs = array(
-			'email' => array(
+			'email'              => array(
 				'templates' => array(
-					'label' => esc_html__( 'Email Templates', 'user-registration' ),
+					'label'  => esc_html__( 'Email Templates', 'user-registration' ),
 					'plugin' => 'user-registration-email-templates',
-					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency'),
-					'name' => esc_html__( 'User Registration Email Templates', 'user-registration' ),
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration Email Templates', 'user-registration' ),
 				),
 			),
 			'registration_login' => array(
-				'social-connect' => array(
-					'label' => esc_html__( 'Social Connect', 'user-registration' ),
+				'social-connect'  => array(
+					'label'  => esc_html__( 'Social Connect', 'user-registration' ),
 					'plugin' => 'user-registration-social-connect',
-					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name' => esc_html__( 'User Registration - Social Connect', 'user-registration' ),
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration - Social Connect', 'user-registration' ),
 				),
 				'profile-connect' => array(
-					'label' => esc_html__( 'Profile Connect', 'user-registration' ),
+					'label'  => esc_html__( 'Profile Connect', 'user-registration' ),
 					'plugin' => 'user-registration-profile-connect',
-					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name' => esc_html__( 'User Registration Profile Connect', 'user-registration' ),
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration Profile Connect', 'user-registration' ),
 				),
-				'invite-code' => array(
-					'label' => esc_html__( 'Invite Codes', 'user-registration' ),
+				'invite-code'     => array(
+					'label'  => esc_html__( 'Invite Codes', 'user-registration' ),
 					'plugin' => 'user-registration-invite-codes',
-					'plan' => array( 'plus', 'professional', 'themegrill agency' ),
-					'name' => esc_html__( 'User Registration Invite Codes', 'user-registration' ),
+					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration Invite Codes', 'user-registration' ),
 				),
-				'file-upload' => array(
-					'label' => esc_html__( 'File Upload', 'user-registration' ),
+				'file-upload'     => array(
+					'label'  => esc_html__( 'File Upload', 'user-registration' ),
 					'plugin' => 'user-registration-file-upload',
-					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name' => esc_html__( 'User Registration - File Upload', 'user-registration' ),
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration - File Upload', 'user-registration' ),
 				),
 			),
-			'my_account' => array(
+			'my_account'         => array(
 				'customize-my-account' => array(
-					'label' => esc_html__( 'Customize My Account', 'user-registration' ),
+					'label'  => esc_html__( 'Customize My Account', 'user-registration' ),
 					'plugin' => 'user-registration-customize-my-account',
-					'plan' => array( 'plus', 'professional', 'themegrill agency' ),
-					'name' => esc_html__( 'User Registration customize my account', 'user-registration' ),
+					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration customize my account', 'user-registration' ),
 				),
 			),
-			'integration' => array(
+			'integration'        => array(
 				'email-marketing' => array(
 					'is_collection' => true,
-					'collections' => array(
+					'collections'   => array(
 						'activecampaign' => array(
 							'label'  => esc_html__( 'Active Campaign', 'user-registration' ),
 							'plugin' => 'user-registration-activecampaign',
-							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
-							'name' => esc_html__( 'User Registration ActiveCampaign', 'user-registration' ),
+							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration ActiveCampaign', 'user-registration' ),
 						),
-						'brevo' => array(
+						'brevo'          => array(
 							'label'  => esc_html__( 'Brevo', 'user-registration' ),
 							'plugin' => 'user-registration-brevo',
-							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
-							'name' => esc_html__( 'User Registration Brevo', 'user-registration' ),
+							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration Brevo', 'user-registration' ),
 						),
-						'convertkit' => array(
+						'convertkit'     => array(
 							'label'  => esc_html__( 'Kit (Previously Convertkit)', 'user-registration' ),
 							'plugin' => 'user-registration-convertkit',
-							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
-							'name' => esc_html__( 'User Registration convertkit', 'user-registration' ),
+							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration convertkit', 'user-registration' ),
 						),
-						'klaviyo' => array(
+						'klaviyo'        => array(
 							'label'  => esc_html__( 'Klaviyo', 'user-registration' ),
 							'plugin' => 'user-registration-klaviyo',
-							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
-							'name' => esc_html__( 'User Registration Klaviyo', 'user-registration' ),
+							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration Klaviyo', 'user-registration' ),
 						),
-						'mailchimp' => array(
+						'mailchimp'      => array(
 							'label'  => esc_html__( 'Mailchimp', 'user-registration' ),
 							'plugin' => 'user-registration-mailchimp',
-							'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-							'name' => esc_html__( 'User Registration - Mailchimp', 'user-registration' ),
+							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration - Mailchimp', 'user-registration' ),
 						),
-						'mailerlite' => array(
+						'mailerlite'     => array(
 							'label'  => esc_html__( 'Mailerlite', 'user-registration' ),
 							'plugin' => 'user-registration-mailerlite',
-							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
-							'name' => esc_html__( 'User Registration MailerLite', 'user-registration' ),
+							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration MailerLite', 'user-registration' ),
 						),
-						'mailpoet' => array(
+						'mailpoet'       => array(
 							'label'  => esc_html__( 'Mailpoet', 'user-registration' ),
 							'plugin' => 'user-registration-mailpoet',
-							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
-							'name' => esc_html__( 'User Registration MailPoet', 'user-registration' ),
+							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration MailPoet', 'user-registration' ),
 						),
-						'zapier' => array(
+						'zapier'         => array(
 							'label'  => esc_html__( 'Zapier', 'user-registration' ),
 							'plugin' => 'user-registration-zapier',
-							'plan' => array( 'plus', 'professional', 'themegrill agency' ),
-							'name' => esc_html__( 'User Registration Zapier', 'user-registration' ),
+							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration Zapier', 'user-registration' ),
 						),
-					)
+					),
+					'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 				),
-				'pdf-submission' => array(
-					'label' => esc_html__( 'PDF Form Submission', 'user-registration' ),
+				'pdf-submission'  => array(
+					'label'  => esc_html__( 'PDF Form Submission', 'user-registration' ),
 					'plugin' => 'user-registration-pdf-form-submission',
-					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name' => esc_html__( 'User Registration PDF Form Submission', 'user-registration' ),
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration PDF Form Submission', 'user-registration' ),
 				),
-				'google-sheets' => array(
-					'label' => esc_html__( 'Google Sheets', 'user-registration' ),
+				'google-sheets'   => array(
+					'label'  => esc_html__( 'Google Sheets', 'user-registration' ),
 					'plugin' => 'user-registration-google-sheets',
-					'plan' => array( 'plus', 'professional', 'themegrill agency' ),
-					'name' => esc_html__( 'User Registration Google Sheets', 'user-registration' ),
+					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration Google Sheets', 'user-registration' ),
 				),
-				'salesforce' => array(
-					'label' => esc_html__( 'Salesforce', 'user-registration' ),
+				'salesforce'      => array(
+					'label'  => esc_html__( 'Salesforce', 'user-registration' ),
 					'plugin' => 'user-registration-salesforce',
-					'plan' => array( 'plus', 'professional', 'themegrill agency' ),
-					'name' => esc_html__( 'User Registration Salesforce', 'user-registration' ),
+					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration Salesforce', 'user-registration' ),
 				),
-				'geolocation' => array(
-					'label' => esc_html__( 'Geolocation', 'user-registration' ),
+				'geolocation'     => array(
+					'label'  => esc_html__( 'Geolocation', 'user-registration' ),
 					'plugin' => 'user-registration-geolocation',
-					'plan' => array( 'plus', 'professional', 'themegrill agency' ),
-					'name' => esc_html__( 'User Registration Geolocation', 'user-registration' ),
+					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration Geolocation', 'user-registration' ),
 				),
-				'woocommerce' => array(
+				'woocommerce'     => array(
 					'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
 					'plugin' => 'user-registration-woocommerce',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
 				),
-				'cloud-storage' => array(
+				'popup'           => array(
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'plugin' => 'user-registration-pro',
+				),
+				'cloud-storage'   => array(
 					'is_collection' => true,
-					'collections' => array(
+					'collections'   => array(
 						'google-drive' => array(
-							'label' => esc_html__( 'Google Drive', 'user-registration' ),
+							'label'  => esc_html__( 'Google Drive', 'user-registration' ),
 							'plugin' => 'user-registration-cloud-storage',
-							'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-							'name' => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
+							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
 						),
-						'dropbox' => array(
-							'label' => esc_html__( 'Dropbox', 'user-registration' ),
+						'dropbox'      => array(
+							'label'  => esc_html__( 'Dropbox', 'user-registration' ),
 							'plugin' => 'user-registration-cloud-storage',
-							'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-							'name' => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
-						)
-					)
+							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
+						),
+					),
+					'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'plugin'        => 'user-registration-cloud-storage',
 				),
 			),
-			'security' => array(
+			'security'           => array(
 				'2fa' => array(
-					'label' => esc_html__( 'Two Factor Authentication', 'user-registration' ),
+					'label'  => esc_html__( 'Two Factor Authentication', 'user-registration' ),
 					'plugin' => 'user-registration-two-factor-authentication',
-					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name' => esc_html__( 'User Registration - Two Factor Authentication', 'user-registration' ),
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration - Two Factor Authentication', 'user-registration' ),
 				),
 			),
 		);
@@ -4390,39 +4383,39 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 		global $current_tab;
 		global $current_section;
 
-		$license_data    = ur_get_license_plan();
-		$license_plan    = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
-		$premium_tabs    = ur_premium_settings_tab();
+		$license_data = ur_get_license_plan();
+		$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
+		$premium_tabs = ur_premium_settings_tab();
 
-		if( ! isset( $current_section ) ) {
+		if ( ! isset( $current_section ) ) {
 			$current_section = apply_filters( 'user_registration_settings_' . $current_tab . '_default_section', '' );
 		}
 
 		$is_upgradable_section = isset( $premium_tabs[ $current_tab ] [ $current_section ] );
-		if( $is_upgradable_section ) {
+		if ( $is_upgradable_section ) {
 			$section_details = $premium_tabs[ $current_tab ][ $current_section ];
-			if( isset( $section_details[ 'is_collection' ] ) && ur_string_to_bool( $section_details[ 'is_collection' ] ) ) {
-				$settings[ 'sections' ] = array();
-				foreach( $section_details[ 'collections' ] as $detail ) {
-					if( ! empty( $license_plan ) ) {
+			if ( isset( $section_details['is_collection'] ) && ur_string_to_bool( $section_details['is_collection'] ) ) {
+				$settings['sections'] = array();
+				foreach ( $section_details['collections'] as $detail ) {
+					if ( ! empty( $license_plan ) ) {
 						$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
-						if ( ! in_array( $license_plan, $detail[ 'plan' ], true ) ) {
-							if ( is_plugin_active( $detail[ 'plugin' ] . '/' . $detail[ 'plugin' ] . '.php' ) ) {
+						if ( ! in_array( $license_plan, $detail['plan'], true ) ) {
+							if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 								continue;
 							}
 							/* translators: %s: License Plan Name. */
 							$description = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
 							$button_text = esc_html__( 'Upgrade Plan', 'user-registration' );
 
-							$settings[ 'sections' ][ $detail[ 'plugin' ] ] = array(
-								'title' => $detail[ 'label' ],
+							$settings['sections'][ $detail['plugin'] ] = array(
+								'title'       => $detail['label'],
 								'before_desc' => $description,
 							);
 						} else {
-							$plugin_name = $detail[ 'name' ];
-							$action = '';
-							if( file_exists( WP_PLUGIN_DIR . '/' . $detail[ 'plugin' ] ) ) {
-								if( ! is_plugin_active( $detail[ 'plugin' ] . '/' . $detail[ 'plugin' ] . '.php' ) ) {
+							$plugin_name = $detail['name'];
+							$action      = '';
+							if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
+								if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 									$action = 'Activate';
 								} else {
 									continue;
@@ -4431,24 +4424,25 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 								$action = 'Install';
 							}
 							/* translators: %s: Addon Name. */
-							$description = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, ucwords( str_replace( '-', ' ', $detail[ 'plugin' ] ) ) );
+							$description = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, ucwords( str_replace( '-', ' ', $detail['plugin'] ) ) );
 
-							/* translators: %s: Action Name. */
+							/*
+							translators: %s: Action Name. */
 							// $button = '<a href="#" class="user-registration-settings-addon-' . strtolower( $action ) . '" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . sprintf( esc_html__( '%s Addon', 'user-registration' ), $action ) . '</a>';
 							$button_class = 'user-registration-settings-addon-' . strtolower( $action );
 							$button_attrs = array(
-								'data-slug' => $detail[ 'plugin' ],
-								'data-name' => $plugin_name
+								'data-slug' => $detail['plugin'],
+								'data-name' => $plugin_name,
 							);
 							$button_title = sprintf( esc_html__( '%s Addon', 'user-registration' ), $action );
 
-							$settings[ 'sections' ][ $detail[ 'plugin' ] ] = array(
-								'title' => $detail[ 'label' ],
+							$settings['sections'][ $detail['plugin'] ] = array(
+								'title'       => $detail['label'],
 								'before_desc' => $description,
-								'settings' => array(
+								'settings'    => array(
 									array(
-										'id' => 'ur-install-addon__button',
-										'type' => 'button',
+										'id'    => 'ur-install-addon__button',
+										'type'  => 'button',
 										'class' => $button_class,
 										'attrs' => $button_attrs,
 										'title' => $button_title,
@@ -4457,39 +4451,38 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 							);
 						}
 					} else {
-						if( is_plugin_active( $detail[ 'plugin' ] . '/' . $detail[ 'plugin' ] . '.php' ) ) {
+						if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 							continue;
 						}
-						$description = esc_html__( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
-						$settings[ 'sections' ][ $detail[ 'plugin' ] ] = array(
-							'type' => 'card',
-							'is_premium' => true,
-							'title' => $detail[ 'label' ],
+						$description                               = esc_html__( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
+						$settings['sections'][ $detail['plugin'] ] = array(
+							'type'        => 'card',
+							'is_premium'  => true,
+							'title'       => $detail['label'],
 							'before_desc' => $description,
-							'desc' => 'To unlock this setting, consider upgrading to <a href="https://wpuserregistration.com/upgrade/?utm_source=ur-settings-desc&utm_medium=upgrade-link&utm-campaign=lite-version">Pro</a>.',
-							'class' => 'ur-upgrade--link',
+							'desc'        => 'To unlock this setting, consider upgrading to <a href="https://wpuserregistration.com/upgrade/?utm_source=ur-settings-desc&utm_medium=upgrade-link&utm-campaign=lite-version">Pro</a>.',
+							'class'       => 'ur-upgrade--link',
 						);
 					}
 				}
-			} else { //scalar section.
+			} else { // scalar section.
 				$detail = $section_details;
-				if( ! empty( $license_plan ) ) {
+				if ( ! empty( $license_plan ) ) {
 					$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
-					if ( ! in_array( $license_plan, $detail[ 'plan' ], true ) ) {
-						if ( is_plugin_active( $detail[ 'plugin' ] . '/' . $detail[ 'plugin' ] . '.php' ) ) {
+					if ( ! in_array( $license_plan, $detail['plan'], true ) ) {
+						if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 							return array();
 						}
 						/* translators: %s: License Plan Name. */
 						$description = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
 						$button_text = esc_html__( 'Upgrade Plan', 'user-registration' );
-						$settings[ 'sections' ][ 'premium_setting_section' ][ 'before_desc' ] = $description;
-						$settings[ 'sections' ][ 'premium_setting_section' ][ 'button' ][ 'button_text' ] = $button_text;
-					}
-					else {
-						$plugin_name = $detail[ 'name' ];
-						$action = '';
-						if( file_exists( WP_PLUGIN_DIR . '/' . $detail[ 'plugin' ] ) ) {
-							if( ! is_plugin_active( $detail[ 'plugin' ] . '/' . $detail[ 'plugin' ] . '.php' ) ) {
+						$settings['sections']['premium_setting_section']['before_desc']           = $description;
+						$settings['sections']['premium_setting_section']['button']['button_text'] = $button_text;
+					} else {
+						$plugin_name = $detail['name'];
+						$action      = '';
+						if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
+							if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 								$action = 'Activate';
 							} else {
 								return array();
@@ -4498,36 +4491,37 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 							$action = 'Install';
 						}
 						/* translators: %s: Addon Name. */
-						$description = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, ucwords( str_replace( '-', ' ', $detail[ 'plugin' ] ) ) );
+						$description = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, ucwords( str_replace( '-', ' ', $detail['plugin'] ) ) );
 
-						/* translators: %s: Action Name. */
+						/*
+						translators: %s: Action Name. */
 						// $button = '<a href="#" class="user-registration-settings-addon-' . strtolower( $action ) . '" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . sprintf( esc_html__( '%s Addon', 'user-registration' ), $action ) . '</a>';
 						$button_class = 'user-registration-settings-addon-' . strtolower( $action );
 						$button_attrs = array(
-							'data-slug' => $detail[ 'plugin' ],
-							'data-name' => $plugin_name
+							'data-slug' => $detail['plugin'],
+							'data-name' => $plugin_name,
 						);
 						$button_title = sprintf( esc_html__( '%s Addon', 'user-registration' ), $action );
 
-						$settings[ 'sections' ][ 'premium_setting_section' ][ 'before_desc' ] = $description;
-						$settings[ 'sections' ][ 'premium_setting_section' ][ 'desc' ] = false;
-						$settings[ 'sections' ][ 'premium_setting_section' ][ 'settings' ] = array(
+						$settings['sections']['premium_setting_section']['before_desc'] = $description;
+						$settings['sections']['premium_setting_section']['desc']        = false;
+						$settings['sections']['premium_setting_section']['settings']    = array(
 							array(
-								'id' => 'ur-install-addon__button',
-								'type' => 'button',
+								'id'    => 'ur-install-addon__button',
+								'type'  => 'button',
 								'class' => $button_class,
 								'attrs' => $button_attrs,
 								'title' => $button_title,
-							)
+							),
 						);
 					}
 				} else {
-					if( is_plugin_active( $detail[ 'plugin' ] . '/' . $detail[ 'plugin' ] . '.php' ) ) {
+					if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 						return array();
 					}
 					$description = esc_html__( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
-					$settings[ 'sections' ][ 'premium_setting_section' ][ 'title' ] = $detail[ 'label' ];
-					$settings[ 'sections' ][ 'premium_setting_section' ][ 'before_desc' ] = $description;
+					$settings['sections']['premium_setting_section']['title']       = $detail['label'];
+					$settings['sections']['premium_setting_section']['before_desc'] = $description;
 				}
 			}
 			return $settings;
@@ -5256,10 +5250,10 @@ if ( ! function_exists( 'ur_generate_onetime_token' ) ) {
 	/**
 	 * Generate a one-time token for the given user ID and action.
 	 *
-	 * @param int $user_id The ID of the user for whom to generate the token.
+	 * @param int    $user_id The ID of the user for whom to generate the token.
 	 * @param string $action The action for which to generate the token.
-	 * @param int $key_length The length of the random key to be generated. Defaults to 32.
-	 * @param int $expiration_time The duration of the token's validity in minutes. Defaults to 60.
+	 * @param int    $key_length The length of the random key to be generated. Defaults to 32.
+	 * @param int    $expiration_time The duration of the token's validity in minutes. Defaults to 60.
 	 *
 	 * @return string The generated one-time token.
 	 */
@@ -5452,18 +5446,18 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 	function ur_wrap_email_body_content( $body_content ) {
 		// Check if we're in editor context - exclude CSS when displaying editor on settings page.
 		// Include CSS for preview, email sending, cron, CLI, and AJAX email actions.
-		$is_preview = isset( $_GET['ur_email_preview'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$current_screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		$is_preview       = isset( $_GET['ur_email_preview'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$current_screen   = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		$is_settings_page = $current_screen && 'user-registration_page_user-registration-settings' === $current_screen->id;
-		$is_email_action = isset( $_REQUEST['action'] ) && (
+		$is_email_action  = isset( $_REQUEST['action'] ) && (
 			'ur_send_test_email' === $_REQUEST['action'] ||
 			strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		);
 
 		// Only exclude CSS when on settings page displaying editor (not when sending emails).
 		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action &&
-		                     ! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
-		                     ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
+							! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
+							! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
 
 		// Responsive CSS styles for email template - only include when not in editor context.
 		$responsive_styles = '';
@@ -5613,8 +5607,8 @@ if ( ! function_exists( 'ur_parse_and_update_hidden_field' ) ) {
 	 * Parse the hidden field value and update.
 	 *
 	 * @param array $form_data form data.
-	 * @param int $form_id form id.
-	 * @param int $user_id user id.
+	 * @param int   $form_id form id.
+	 * @param int   $user_id user id.
 	 */
 	function ur_parse_and_update_hidden_field( $form_data, $form_id, $user_id ) {
 		$values = array(
@@ -5659,7 +5653,7 @@ if ( ! function_exists( 'ur_maybe_unserialize' ) ) {
 	 * UR Unserialize data.
 	 *
 	 * @param string $data Data that might be unserialized.
-	 * @param array $options Options.
+	 * @param array  $options Options.
 	 *
 	 * @return mixed Unserialized data can be any type.
 	 *
@@ -5686,8 +5680,8 @@ if ( ! function_exists( 'user_registration_conditional_user_meta_filter' ) ) {
 	 * Filter user meta field when conditinal logic applied.
 	 *
 	 * @param array $valid_form_data Form Data.
-	 * @param int $user_id User Id.
-	 * @param int $form_id Form Id.
+	 * @param int   $user_id User Id.
+	 * @param int   $form_id Form Id.
 	 *
 	 * @return array array of form data.
 	 *
@@ -5911,7 +5905,6 @@ if ( ! function_exists( 'ur_array_clone' ) ) {
 	 * @param  [mixed] $array Array to clone.
 	 *
 	 * @since 3.0.5
-	 *
 	 */
 	function ur_array_clone( $array ) {
 		if ( is_object( $array ) ) {
@@ -6002,7 +5995,6 @@ if ( ! function_exists( 'ur_automatic_user_login' ) ) {
 	 * @param object $user The user.
 	 *
 	 * @since 3.1.5
-	 *
 	 */
 	function ur_automatic_user_login( $user ) {
 		wp_clear_auth_cookie();
@@ -6036,7 +6028,6 @@ if ( ! function_exists( 'ur_resend_verification_email' ) ) {
 	 * @param int $user_id User ID.
 	 *
 	 * @since 3.1.5
-	 *
 	 */
 	function ur_resend_verification_email( $user_id ) {
 		$user    = get_user_by( 'id', $user_id );
@@ -6069,7 +6060,6 @@ if ( ! function_exists( 'ur_merge_translations' ) ) {
 	 * @param string $text_domain Existing Text Domain/ Addon slug.
 	 *
 	 * @since 4.1.5
-	 *
 	 */
 	function ur_merge_translations( $source_dir, $destination_dir, $file_extension, $text_domain ) {
 		$source_files = glob( $source_dir . '/*.' . $file_extension );
@@ -6098,11 +6088,11 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 	 * Function to validate individual form field data.
 	 *
 	 * @param object $data Form field data submitted by the user.
-	 * @param array $form_data Form Data.
-	 * @param int $form_id Form id.
-	 * @param array $response_array Response Array.
-	 * @param array $form_field_data Form Field Data..
-	 * @param array $valid_form_data Valid Form Data..
+	 * @param array  $form_data Form Data.
+	 * @param int    $form_id Form id.
+	 * @param array  $response_array Response Array.
+	 * @param array  $form_field_data Form Field Data..
+	 * @param array  $valid_form_data Valid Form Data..
 	 */
 	function user_registration_validate_form_field_data( $data, $form_data, $form_id, $response_array, $form_field_data, $valid_form_data ) {
 		$form_key_list  = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
@@ -6248,11 +6238,11 @@ if ( ! function_exists( 'user_registration_validate_edit_profile_form_field_data
 	 * Function to validate edit profile individual form field data.
 	 *
 	 * @param object $data Form field data submitted by the user.
-	 * @param array $form_data Form Data.
-	 * @param int $form_id Form id.
-	 * @param array $form_field_data Form Field Data..
-	 * @param array $form_fields Form Fields.
-	 * @param int $user_id User ID.
+	 * @param array  $form_data Form Data.
+	 * @param int    $form_id Form id.
+	 * @param array  $form_field_data Form Field Data..
+	 * @param array  $form_fields Form Fields.
+	 * @param int    $user_id User ID.
 	 */
 	function user_registration_validate_edit_profile_form_field_data( $data, $form_data, $form_id, $form_field_data, $form_fields, $user_id ) {
 		$form_validator   = new UR_Form_Validation();
@@ -6371,8 +6361,8 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 	/**
 	 * Generate edit profile individual row template
 	 *
-	 * @param array $data Form row data.
-	 * @param array $profile User profile data.
+	 * @param array  $data Form row data.
+	 * @param array  $profile User profile data.
 	 * @param string $current_row Current row id.
 	 * @param string $row_count Current row count.
 	 */
@@ -6751,7 +6741,7 @@ if ( ! file_exists( 'user_registration_sanitize_profile_update' ) ) {
 	/**
 	 * Sanitize the data submitted by user.
 	 *
-	 * @param array $submitted_data Submitted data.
+	 * @param array  $submitted_data Submitted data.
 	 * @param string $field_type Field Type.
 	 * @param string $key Field Key.
 	 */
@@ -6808,7 +6798,6 @@ if ( ! function_exists( 'ur_get_coupon_details' ) ) {
 	 * @param int $user_id User ID.
 	 *
 	 * @since 3.1.5
-	 *
 	 */
 	function ur_get_coupon_details( $coupon ) {
 
@@ -6846,7 +6835,6 @@ if ( ! function_exists( 'ur_get_registration_field_value_by_field_name' ) ) {
 	 * @param string $field_name Field Name.
 	 *
 	 * @since 0
-	 *
 	 */
 	function ur_get_registration_field_value_by_field_name( $field_name ) {
 		$field_value = '';
@@ -6880,7 +6868,6 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 	 * @param string $form_id Form ID.
 	 *
 	 * @since 4.2.1
-	 *
 	 */
 	function ur_get_translated_string( $domain, $string, $language_code, $field_key, $form_id = 0 ) {
 		if ( function_exists( 'icl_translate' ) ) {
@@ -7095,7 +7082,6 @@ if ( ! function_exists( 'ur_is_akismet_configured' ) ) {
 	 *
 	 * @return bool
 	 * @since 4.2.1.2
-	 *
 	 */
 	function ur_is_akismet_configured() {
 
@@ -7128,7 +7114,7 @@ if ( ! function_exists( 'ur_get_akismet_validate' ) ) {
 	 * validation option is enabled for a specific form. If validation is enabled, it prepares the
 	 * necessary data for the validation request and sends it to Akismet's 'registration-check' endpoint.
 	 *
-	 * @param int $form_id The form_id to check if to validate.
+	 * @param int   $form_id The form_id to check if to validate.
 	 * @param array $form_data values to validate.
 	 *
 	 * @return bool
@@ -7246,7 +7232,6 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 	 *
 	 * @return string
 	 * @since 3.2.0
-	 *
 	 */
 	function ur_current_url() {
 
@@ -7284,7 +7269,6 @@ if ( ! function_exists( 'ur_settings_text_format' ) ) {
 	 *
 	 * @return array
 	 * @since 3.3.1
-	 *
 	 */
 	function ur_settings_text_format( $args ) {
 		// Group similar text format fields.
@@ -7360,7 +7344,6 @@ if ( ! function_exists( 'ur_get_capitalized_words' ) ) {
 	 *
 	 * @return array
 	 * @since 3.3.1
-	 *
 	 */
 	function ur_get_capitalized_words( $label ) {
 		$prepositions = array( 'at', 'by', 'for', 'in', 'on', 'to', 'or' );
@@ -7669,7 +7652,6 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 	 *
 	 * @return @mixed
 	 * @since 3.3.1
-	 *
 	 */
 	function ur_prevent_default_login( $data ) {
 
@@ -7857,7 +7839,6 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 	 *
 	 * @return array
 	 * @since 3.3.1
-	 *
 	 */
 	function ur_integration_addons() {
 
@@ -8009,7 +7990,6 @@ if ( ! function_exists( 'ur_list_top_integrations' ) ) {
 	 *
 	 * @return array
 	 * @since 3.3.1
-	 *
 	 */
 	function ur_list_top_integrations( $integrations ) {
 		$is_free = is_plugin_active( 'user-registration/user-registration.php' );
@@ -8035,7 +8015,6 @@ if ( ! function_exists( 'ur_get_captcha_integrations' ) ) {
 	 *
 	 * @return array
 	 * @since 3.3.4
-	 *
 	 */
 	function ur_get_captcha_integrations() {
 		return apply_filters(
@@ -8118,7 +8097,6 @@ if ( ! function_exists( 'ur_check_url_is_image' ) ) {
 	 *
 	 * @return bool True if the URL points to a valid image, false otherwise.
 	 * @since x.x.x (updated)
-	 *
 	 */
 	function ur_check_url_is_image( $url ) {
 		if ( empty( $url ) || ! is_string( $url ) ) {
@@ -8179,7 +8157,6 @@ if ( ! function_exists( 'ur_get_user_registered_source' ) ) {
 	 *
 	 * @return string
 	 * @since 4.1
-	 *
 	 */
 	function ur_get_user_registered_source( $user_id ) {
 		$user_metas = get_user_meta( $user_id );
@@ -9327,7 +9304,7 @@ if ( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 	 *
 	 * @param string $url The endpoint URL.
 	 * @param string $endpoint The endpoint slug.
-	 * @param mixed $value The value to add to the URL.
+	 * @param mixed  $value The value to add to the URL.
 	 * @param string $permalink The permalink URL.
 	 *
 	 * @return string Modified URL if WPML is active, original urk if WPML is not active.
@@ -9665,7 +9642,7 @@ if ( ! function_exists( 'user_registration_profile_details_form_fields' ) ) {
 	/**
 	 * Get the user registration form fields to include in view profile.
 	 *
-	 * @param int $form_id Id of the form through which user was registered.
+	 * @param int   $form_id Id of the form through which user was registered.
 	 * @param array $fields_to_include Fields to include.
 	 *
 	 * @return array
@@ -9702,7 +9679,7 @@ if ( ! function_exists( 'user_registration_profile_details_form_field_datas' ) )
 	/**
 	 * Get the user registration form fields data for fields included in view profile.
 	 *
-	 * @param int $form_id Id of the form through which user was registered.
+	 * @param int   $form_id Id of the form through which user was registered.
 	 * @param array $user_data All the datas of the user.
 	 * @param array $form_field_data_array All the fields to be included in profile details page.
 	 * @param array $field_to_include Field to include.
@@ -9833,7 +9810,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		$payment_connections = ur_get_payment_connection_statuses();
 
 		$site_assistant_data = array(
-			'has_default_form'        => ! empty( get_post( get_option( 'user_registration_registration_form', '' ) ) ),
+			'has_default_form'        => ! empty( get_post( get_option( 'user_registration_default_form_page_id', '' ) ) ),
 			'missing_pages'           => $missing_pages_data,
 			'test_email_sent'         => get_option( 'user_registration_successful_test_mail', false ),
 			'wordpress_login_handled' => ( get_option( 'user_registration_login_options_prevent_core_login', false ) == true ) || ( get_option( 'user_registration_default_wordpress_login_skipped', false ) == true ),
@@ -10082,7 +10059,6 @@ if ( ! function_exists( 'ur_get_membership_details' ) ) {
 	 *
 	 * @return array
 	 * @since 5.0.0
-	 *
 	 */
 	function ur_get_membership_details() {
 		$membership_service = new MembershipService();
@@ -10099,9 +10075,9 @@ if ( ! function_exists( 'urm_process_profile_fields' ) ) {
 	 * @param array $profile User profile data.
 	 * @param array $single_field Single field data.
 	 * @param array $form_data The form data.
-	 * @param int $form_id The form ID.
-	 * @param int $user_id The user id.
-	 * @param bool $is_admin_user Whether the user is an admin.
+	 * @param int   $form_id The form ID.
+	 * @param int   $user_id The user id.
+	 * @param bool  $is_admin_user Whether the user is an admin.
 	 */
 	function urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, $is_admin_user = false ) {
 
@@ -10182,9 +10158,9 @@ if ( ! function_exists( 'urm_update_user_profile_data' ) ) {
 	 * Helper function to update user profile data.
 	 *
 	 * @param object $user The user object.
-	 * @param array $profile User profile data.
-	 * @param array $single_field Single field data.
-	 * @param int $form_id The form ID.
+	 * @param array  $profile User profile data.
+	 * @param array  $single_field Single field data.
+	 * @param int    $form_id The form ID.
 	 */
 	function urm_update_user_profile_data( $user, $profile, $single_field, $form_id ) {
 
@@ -10690,7 +10666,7 @@ if ( ! function_exists( 'urcr_get_custom_rules_count' ) ) {
 }
 
 
-if ( !function_exists( 'urm_array_key_exists_recursive' ) ) {
+if ( ! function_exists( 'urm_array_key_exists_recursive' ) ) {
 
 	function urm_array_key_exists_recursive( $needle, array $haystack ) {
 		foreach ( $haystack as $key => $value ) {

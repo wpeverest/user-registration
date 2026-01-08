@@ -6,6 +6,7 @@ import { __ } from "@wordpress/i18n";
 import { getURCRLocalizedData, getURCRData } from "../../utils/localized-data";
 import CheckboxRadioInput from "./CheckboxRadioInput";
 import PeriodInput from "./PeriodInput";
+import DateRangeInput from "./DateRangeInput";
 
 const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId, disabled = false }) => {
 	const urcrData = getURCRLocalizedData();
@@ -270,6 +271,15 @@ const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId,
 			);
 
 		case "date":
+			if (field === "user_registered_date") {
+				return (
+					<DateRangeInput
+						value={inputValue}
+						onChange={handleChange}
+						disabled={disabled}
+					/>
+				);
+			}
 			return (
 				<input
 					type="date"

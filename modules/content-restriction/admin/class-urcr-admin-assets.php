@@ -51,6 +51,9 @@ class URCR_Admin_Assets {
 		if ( 'user-registration-content-restriction' === $this->current_page ) {
 			// Enqueue media scripts for media button functionality
 			wp_enqueue_media();
+			
+			wp_enqueue_script( 'flatpickr' );
+			
 			wp_enqueue_script( 'urcr-content-access-rule-creator' );
 		}
 	}
@@ -416,7 +419,6 @@ class URCR_Admin_Assets {
 			'ur_form_data'              => $ur_forms,
 			'shortcodes'                => $shortcodes_list,
 			'content_rule_url'          => admin_url( 'admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule' ),
-			'is_advanced_logic_enabled' => ur_string_to_bool( get_option( 'urcr_is_advanced_logic_enabled', 'no' ) ),
 			'payment_status'            => array(
 				'pending'   => __( 'Pending', 'user-registration' ),
 				'completed' => __( 'Completed', 'user-registration' ),

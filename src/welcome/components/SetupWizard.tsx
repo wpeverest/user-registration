@@ -217,7 +217,6 @@ const SetupWizard: React.FC = () => {
 	const handleSkip = async () => {
 		try {
 			dispatch({ type: "SET_LOADING", payload: true });
-
 			await apiPost("/skip", {
 				step: currentStep,
 				step_id: currentStepId
