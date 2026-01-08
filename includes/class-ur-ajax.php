@@ -96,6 +96,7 @@ class UR_AJAX {
 			'handle_default_wordpress_login'    => false,
 			'skip_site_assistant_section'       => false,
 			'login_settings_page_validation'    => false,
+			'activate_dependent_module'			=> false,
 		);
 
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
@@ -2432,6 +2433,36 @@ class UR_AJAX {
 			)
 		);
 	}
+
+	public static function activate_dependent_module() {
+
+		if (
+			empty( $_POST['security'] ) ||
+			! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['security'] ) ), 'all-forms-ajax-nonce' )
+		) {
+			wp_send_json_error( 'Nonce verification failed' );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( 'Permission denied' );
+		}
+
+		$slug = isset( $_POST['slug'] ) ? sanitize_text_field( wp_unslash( $_POST['slug'] ) ) : '';
+
+		if ( empty( $slug ) ) {
+			wp_send_json_error( 'Invalid module slug' );
+		}
+
+		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+
+		if ( ! in_array( $slug, $enabled_features, true ) ) {
+			$enabled_features[] = $slug;
+			update_option( 'user_registration_enabled_features', $enabled_features );
+		}
+
+		wp_send_json_success();
+	}
+
 }
 
 UR_AJAX::init();
