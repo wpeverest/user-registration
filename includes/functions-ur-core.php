@@ -4291,7 +4291,7 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 						),
 					),
 					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'plugin' => '',
+					'plugin' => 'user-registration-mailchimp',
 				),
 				'pdf-submission'  => array(
 					'label'  => esc_html__( 'PDF Form Submission', 'user-registration' ),

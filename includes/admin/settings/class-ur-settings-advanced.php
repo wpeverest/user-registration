@@ -41,7 +41,7 @@ if ( ! class_exists( 'UR_Settings_Advanced' ) ) {
 			add_filter( "user_registration_get_settings_{$this->id}", array( $this, 'get_settings_callback' ), 1, 1 );
 
 			// handle settings HTML UI via action hook.
-			add_action( "user_registration_settings_{$this->id}", array( $this, 'output_import_export' ) );
+			// add_action( "user_registration_settings_{$this->id}", array( $this, 'output_import_export' ) );
 		}
 
 		public function output_import_export() {
