@@ -28,6 +28,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 
 		const LAST_RUN_STAMP = 'user_registration_send_usage_last_run';
 
+		const OPTION_ONBOARDING_SNAPSHOT = 'urm_onboarding_snapshot';
 
 		/**
 		 * Constructor of the class.
@@ -455,6 +456,24 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 		}
 
 		/**
+		 * Get onboarding snapshot data.
+		 *
+		 * @since x.x.x
+		 *
+		 * @return array
+		 */
+		public function get_onboarding_data() {
+			$onboarding = get_option( self::OPTION_ONBOARDING_SNAPSHOT, array() );
+
+			if ( ! is_array( $onboarding ) ) {
+				return array();
+			}
+
+			return $onboarding;
+		}
+
+
+		/**
 		 * Call API.
 		 *
 		 * @return void
@@ -491,6 +510,7 @@ if ( ! class_exists( 'UR_Stats' ) ) {
 				'base_product'      => $this->get_base_product(),
 				'product_info'      => $this->get_plugin_lists(),
 				'settings'          => array_merge( $this->get_global_settings(), $this->get_form_settings() ),
+				'onboarding'        => $this->get_onboarding_data(),
 			);
 
 			$this->send_request( apply_filters( 'user_registration_tg_tracking_remote_url', $stats_api_url ), $data );
