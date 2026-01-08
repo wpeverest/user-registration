@@ -15,49 +15,49 @@ if ( ! class_exists( 'UR_Settings_Registration_Login' ) ) {
 	 * UR_Settings_Registration_Login Class
 	 */
 	class UR_Settings_Registration_Login extends UR_Settings_Page {
-        private static $_instance = null;
+		private static $_instance = null;
 		/**
 		 * Constructor.
 		 */
 		private function __construct() {
 			$this->id    = 'registration_login';
 			$this->label = __( 'Registration & Login', 'user-registration' );
-            parent::__construct();
-            $this->handle_hooks();
+			parent::__construct();
+			$this->handle_hooks();
 		}
-        public static function get_instance() {
-            if ( null === self::$_instance ) {
-                self::$_instance = new self();
-            }
-            return self::$_instance;
-        }
-        /**
-         * Register hooks for submenus and section UI.
-         * @return void
-         */
-        public function handle_hooks() {
-            add_filter( "user_registration_get_sections_{$this->id}",  array( $this, 'get_sections_callback' ), 1, 1 );
-            add_filter( "user_registration_get_settings_{$this->id}", array( $this, 'get_settings_callback' ), 1, 1 );
-        }
-        /**
-         * Filter to provide sections submenu for registration_login settings.
-         */
-        public function get_sections_callback( $sections ) {
-            $sections[ 'messages' ] =  __( 'Messages', 'user-registration' );
-            $sections[ 'captcha' ] =  __( 'Captcha', 'user-registration' );
-            $sections[ 'social-connect' ] =  __( 'Social Connect', 'user-registration' );
-            $sections[ 'profile-connect' ] =  __( 'Profile Connect', 'user-registration' );
-            $sections[ 'popup' ] =  __( 'Popups', 'user-registration' );
-            $sections[ 'invite-code' ] =  __( 'Invite Codes', 'user-registration' );
-            $sections[ 'file-upload' ] =  __( 'File Upload', 'user-registration' );
+		public static function get_instance() {
+			if ( null === self::$_instance ) {
+				self::$_instance = new self();
+			}
+			return self::$_instance;
+		}
+		/**
+		 * Register hooks for submenus and section UI.
+		 * @return void
+		 */
+		public function handle_hooks() {
+			add_filter( "user_registration_get_sections_{$this->id}", array( $this, 'get_sections_callback' ), 1, 1 );
+			add_filter( "user_registration_get_settings_{$this->id}", array( $this, 'get_settings_callback' ), 1, 1 );
+		}
+		/**
+		 * Filter to provide sections submenu for registration_login settings.
+		 */
+		public function get_sections_callback( $sections ) {
+			$sections['messages']        = __( 'Messages', 'user-registration' );
+			$sections['captcha']         = __( 'Captcha', 'user-registration' );
+			$sections['social-connect']  = __( 'Social Connect', 'user-registration' );
+			$sections['profile-connect'] = __( 'Profile Connect', 'user-registration' );
+			$sections['popup']           = __( 'Popups', 'user-registration' );
+			$sections['invite-code']     = __( 'Invite Codes', 'user-registration' );
+			$sections['file-upload']     = __( 'File Upload', 'user-registration' );
 
-            return $sections;
-        }
-        /**
-         * Filter to provide sections UI for registration_login settings.
-         */
-        public function get_settings_callback( $settings ) {
-            global $current_section;
+			return $sections;
+		}
+		/**
+		 * Filter to provide sections UI for registration_login settings.
+		 */
+		public function get_settings_callback( $settings ) {
+			global $current_section;
 			if ( 'messages' === $current_section ) {
 				return $this->get_messages_settings();
 			}
@@ -68,8 +68,8 @@ if ( ! class_exists( 'UR_Settings_Registration_Login' ) ) {
 			if ( in_array( $current_section, [ 'social-connect', 'profile-connect', 'popup', 'invite-code', 'file-upload', 'role-based-redirection' ] ) ) {
 				return $this->upgrade_to_pro_setting();
 			}
-            return $settings;
-        }
+			return $settings;
+		}
 		/**
 		 * Settings for frontend messages customization.
 		 *
@@ -270,13 +270,13 @@ if ( ! class_exists( 'UR_Settings_Registration_Login' ) ) {
 							'default'  => false,
 							'type'     => 'toggle',
 							'css'      => 'min-width: 350px;',
-							'desc_tip' => true
+							'desc_tip' => true,
 						),
 						array(
 							'title' => __( 'Save', 'user-registration' ),
 							'id'    => 'user_registration_captcha_save_settings',
 							'type'  => 'button',
-							'class' => 'captcha-save-btn'
+							'class' => 'captcha-save-btn',
 						),
 					),
 				),
@@ -495,7 +495,7 @@ if ( ! class_exists( 'UR_Settings_Registration_Login' ) ) {
 							'class' => 'captcha-save-btn',
 						),
 					),
-				)
+				),
 			);
 
 			return $captcha_global_settings;

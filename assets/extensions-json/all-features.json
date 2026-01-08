@@ -182,9 +182,9 @@
       "title": "Custom Email",
       "slug": "user-registration-custom-email",
       "name": "User Registration - Custom Email",
-      "image": "extensions-json/sections/icons/email_reminder.png",
+      "image": "extensions-json/sections/icons/custom_email.png",
       "excerpt": "Send automated emails to users based on specific triggers or time intervals.",
-      "category": "Membership",
+      "category": "Email Marketing",
       "link": "https://docs.wpuserregistration.com/docs/custom-email/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "19/08/2024",
       "plan": [

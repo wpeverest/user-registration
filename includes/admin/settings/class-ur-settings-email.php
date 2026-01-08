@@ -51,10 +51,11 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		 * Filter to provide sections submenu for scaffold settings.
 		 */
 		public function get_sections_callback( $sections ) {
-			$sections['general']   = __( 'General', 'user-registration' );
-			$sections['to-admin']  = __( 'To Admin', 'user-registration' );
-			$sections['to-user']   = __( 'To User', 'user-registration' );
-			$sections['templates'] = __( 'Templates', 'user-registration' );
+			$sections['general']      = __( 'General', 'user-registration' );
+			$sections['to-admin']     = __( 'To Admin', 'user-registration' );
+			$sections['to-user']      = __( 'To User', 'user-registration' );
+			$sections['templates']    = __( 'Templates', 'user-registration' );
+			$sections['custom-email'] = __( 'Custom Email', 'user-registration' );
 			return $sections;
 		}
 
@@ -461,8 +462,13 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 					break;
 
 				case 'custom-email':
-					// Get settings from filter (handled by custom email addon)
-					$settings = apply_filters( 'user_registration_get_email_settings_email', array() );
+					// Check if custom email addon is active, otherwise show upgrade message
+					if ( is_plugin_active( 'user-registration-email-custom-email/user-registration-email-custom-email.php' ) ) {
+						// Get settings from filter (handled by custom email addon)
+						$settings = apply_filters( 'user_registration_get_email_settings_email', array() );
+					} else {
+						$settings = $this->upgrade_to_pro_setting();
+					}
 					break;
 				default:
 					// Handle dynamic custom email configuration sections
