@@ -181,7 +181,7 @@
 			var searchParams = new URLSearchParams(window.location.search),
 				action = searchParams.get("action");
 
-			if (action === "register" || null === action) {
+			if ( 'free_membership' != thank_you_data.context && ( action === "register" || null === action ) ) {
 				$registration_form.find("form")[0].reset();
 				var wrapper = $(
 					'<div class="ur-message user-registration-message" id="ur-submit-message-node"/>'
@@ -462,10 +462,14 @@
 					window.location.replace(response.data.pg_data.payment_url);
 					break;
 				default:
+					ur_membership_frontend_utils.show_success_message(
+						response.data.message
+					);
 					ur_membership_frontend_utils.show_form_success_message(
 						form_response,
 						{
-							username: prepare_members_data.username
+							username: prepare_members_data.username,
+							context: 'free_membership'
 						}
 					);
 					break;
