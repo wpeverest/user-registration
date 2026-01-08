@@ -1264,29 +1264,30 @@ html {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background-color: #f5f5f5;
+	background-color: none;
 	padding: 40px 20px;
 	box-sizing: border-box;
 }
 
 .thank-you-page-container {
-	max-width: 640px;
+	max-width: 680px;
 	width: 100%;
 	text-align: center;
 	background-color: #ffffff;
-	padding: 60px 40px;
+	padding: 60px 60px;
 	border-radius: 8px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	border: 1px solid #F1F5F9;
+	box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.06);
 
 	.ur-success-icon {
-		width: 80px;
-		height: 80px;
+		width: 72px;
+		height: 72px;
 		// background-color: #28a745;
 		border-radius: 50%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		margin: 0 auto 40px;
+		margin: 0 auto 24px;
 		animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
 		svg {
@@ -1298,24 +1299,26 @@ html {
 	}
 
 	.ur-headline {
-		margin-bottom: 24px;
+		margin-bottom: 16px;
 
 		h1 {
 			font-size: 32px;
 			font-weight: 700;
-			color: #1a1a1a;
+			color: #1f1f1f;
 			margin: 0;
 			line-height: 1.2;
 			letter-spacing: -0.5px;
+			text-transform: capitalize;
 		}
 	}
 
 	.ur-message {
-		margin-bottom: 40px;
+		margin-bottom: 48px;
 
 		p {
 			font-size: 16px;
-			color: #6c757d;
+			font-weight: 400;
+			color: #6b6b6b;
 			line-height: 1.6;
 			margin: 0;
 		}
@@ -1333,7 +1336,7 @@ html {
 			align-items: center;
 			justify-content: center;
 			gap: 8px;
-			padding: 14px 32px;
+			padding: 16px 32px;
 			background-color: #475bb2;
 			color: #ffffff;
 			font-size: 16px;
@@ -1343,21 +1346,20 @@ html {
 			text-decoration: none;
 			cursor: pointer;
 			transition: all 0.3s ease;
-			box-shadow: 0 2px 4px rgba(38, 128, 194, 0.2);
+			// box-shadow: 0 2px 4px rgba(38, 128, 194, 0.2);
 
 			&:hover {
-				background-color: #475bb2;
-				box-shadow: 0 4px 8px rgba(38, 128, 194, 0.3);
-				transform: translateY(-1px);
+				background-color: #38488e;
+				// transform: translateY(-1px);
 			}
 
 			&:active {
 				transform: translateY(0);
-				box-shadow: 0 2px 4px rgba(38, 128, 194, 0.2);
+				// box-shadow: 0 2px 4px rgba(38, 128, 194, 0.2);
 			}
 
 			&:focus {
-				outline: 2px solid #2680c2;
+				outline: 2px solid #475bb2;
 				outline-offset: 2px;
 			}
 
@@ -1370,7 +1372,7 @@ html {
 			}
 
 			&:hover svg {
-				transform: translateX(3px);
+				// transform: translateX(3px);
 			}
 		}
 	}
