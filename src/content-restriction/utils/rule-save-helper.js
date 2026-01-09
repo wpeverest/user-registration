@@ -12,7 +12,10 @@ export const saveRuleWithCollectiveData = async ({
 }) => {
 	try {
 		const ruleData = rule.content || rule;
-		const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
+		
+		const isAdvancedLogicEnabled = settingsData?.isAdvancedLogicEnabled !== undefined
+			? settingsData.isAdvancedLogicEnabled
+			: (rule.is_advanced_logic_enabled !== undefined ? Boolean(rule.is_advanced_logic_enabled) : false);
 
 		let actions = [];
 		
@@ -115,6 +118,7 @@ export const saveRuleWithCollectiveData = async ({
 			logic_map: logicMap,
 			target_contents: targetContents,
 			actions: actions,
+			is_advanced_logic_enabled: isAdvancedLogicEnabled,
 		};
 
 		const data = {
@@ -134,6 +138,7 @@ export const saveRuleWithCollectiveData = async ({
 				logic_map: logicMap,
 				target_contents: targetContents,
 				actions: actions,
+				is_advanced_logic_enabled: isAdvancedLogicEnabled,
 				content: {
 					...(rule.content || {}),
 					enabled: accessRuleData.enabled,
@@ -141,6 +146,7 @@ export const saveRuleWithCollectiveData = async ({
 					logic_map: logicMap,
 					target_contents: targetContents,
 					actions: actions,
+					is_advanced_logic_enabled: isAdvancedLogicEnabled,
 				}
 			};
 			

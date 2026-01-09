@@ -1,10 +1,10 @@
 import apiFetch from "@wordpress/api-fetch";
 
-/* global _UR_DASHBOARD_ */
-const { urRestApiNonce, restURL } =
-	typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+/* global _URCR_DASHBOARD_ */
+const { urRestApiNonce } =
+	typeof _URCR_DASHBOARD_ !== "undefined" && _URCR_DASHBOARD_;
 
-const base =  "user-registration/v1/";
+const base = "user-registration/v1/";
 const urls = {
 	rules: base + "content-access-rules",
 	getRule: (id) => base + `content-access-rules/${id}`,
@@ -12,7 +12,7 @@ const urls = {
 	toggleStatus: (id) => base + `content-access-rules/${id}/toggle-status`,
 	updateRule: (id) => base + `content-access-rules/${id}`,
 	duplicateRule: (id) => base + `content-access-rules/${id}/duplicate`,
-	deleteRule: (id) => base + `content-access-rules/${id}`,
+	deleteRule: (id) => base + `content-access-rules/${id}`
 };
 
 export const getAllRules = () => {
@@ -20,8 +20,8 @@ export const getAllRules = () => {
 		path: urls.rules,
 		method: "GET",
 		headers: {
-			"X-WP-Nonce": urRestApiNonce,
-		},
+			"X-WP-Nonce": urRestApiNonce
+		}
 	}).then((res) => res);
 };
 
@@ -30,8 +30,8 @@ export const getRule = (id) => {
 		path: urls.getRule(id),
 		method: "GET",
 		headers: {
-			"X-WP-Nonce": urRestApiNonce,
-		},
+			"X-WP-Nonce": urRestApiNonce
+		}
 	}).then((res) => res);
 };
 
@@ -40,11 +40,11 @@ export const createRule = (title) => {
 		path: urls.createRule,
 		method: "POST",
 		headers: {
-			"X-WP-Nonce": urRestApiNonce,
+			"X-WP-Nonce": urRestApiNonce
 		},
 		data: {
-			title: title,
-		},
+			title: title
+		}
 	}).then((res) => res);
 };
 
@@ -53,11 +53,11 @@ export const toggleRuleStatus = (id, enabled) => {
 		path: urls.toggleStatus(id),
 		method: "POST",
 		headers: {
-			"X-WP-Nonce": urRestApiNonce,
+			"X-WP-Nonce": urRestApiNonce
 		},
 		data: {
-			enabled: enabled,
-		},
+			enabled: enabled
+		}
 	}).then((res) => res);
 };
 
@@ -66,9 +66,9 @@ export const updateRule = (id, data) => {
 		path: urls.updateRule(id),
 		method: "POST",
 		headers: {
-			"X-WP-Nonce": urRestApiNonce,
+			"X-WP-Nonce": urRestApiNonce
 		},
-		data: data,
+		data: data
 	}).then((res) => res);
 };
 
@@ -77,8 +77,8 @@ export const duplicateRule = (id) => {
 		path: urls.duplicateRule(id),
 		method: "POST",
 		headers: {
-			"X-WP-Nonce": urRestApiNonce,
-		},
+			"X-WP-Nonce": urRestApiNonce
+		}
 	}).then((res) => res);
 };
 
@@ -87,8 +87,7 @@ export const deleteRule = (id, force = false) => {
 		path: urls.deleteRule(id) + (force ? "?force=true" : ""),
 		method: "DELETE",
 		headers: {
-			"X-WP-Nonce": urRestApiNonce,
-		},
+			"X-WP-Nonce": urRestApiNonce
+		}
 	}).then((res) => res);
 };
-

@@ -2299,3 +2299,12 @@ body {
 .ur-connection-status--active::after {
   content: 'Connected';
 }
+
+.user-registration-settings-parts li {
+	padding: 2px 4px;
+	color: black !important;
+}
+.user-registration-settings-parts .current {
+	color: #475BB2;
+	border-bottom: 1px solid #475BB2;
+}

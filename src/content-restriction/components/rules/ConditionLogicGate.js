@@ -10,8 +10,9 @@ const ConditionLogicGate = ({
 	conditionIndex = 0,
 	isFirstCondition = false,
 	totalConditions = 0,
+	rule = null,
 }) => {
-	const isAdvancedLogicEnabled = Boolean(getURCRData("is_advanced_logic_enabled", false));
+	const isAdvancedLogicEnabled = Boolean(rule?.is_advanced_logic_enabled || false);
 
 	if (!isAdvancedLogicEnabled) {
 		return null;

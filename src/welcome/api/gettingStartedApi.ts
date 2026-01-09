@@ -4,7 +4,11 @@ import {
 	PaymentSettings
 } from "../context/Gettingstartedcontext";
 
-export const API_BASE = "/wp-json/user-registration/v1/getting-started";
+const REST_ROOT =
+	(window as any)._UR_WIZARD_?.restURL ||
+	`${window.location.origin}/wp-json/`;
+
+export const API_BASE = `${REST_ROOT}user-registration/v1/getting-started`;
 
 export interface CurrencyData {
 	code: string;
@@ -20,6 +24,7 @@ export interface PaymentSettingsResponse {
 
 const getHeaders = () => {
 	const nonce =
+		(window as any)._UR_WIZARD_?.urRestApiNonce ||
 		(window as any).urmSetupWizard?.nonce ||
 		(window as any).wpApiSettings?.nonce;
 
@@ -28,6 +33,7 @@ const getHeaders = () => {
 		...(nonce ? { "X-WP-Nonce": nonce } : {})
 	};
 };
+
 
 export const apiGet = async <T = any>(path: string): Promise<T> => {
 	const res = await fetch(`${API_BASE}${path}`, {

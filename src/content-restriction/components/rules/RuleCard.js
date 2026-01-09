@@ -11,8 +11,9 @@ import DuplicateRuleModal from "../modals/DuplicateRuleModal";
 import { showSuccess, showError } from "../../utils/notifications";
 import { isURDev } from "../../utils/localized-data";
 
-/* global _UR_DASHBOARD_ */
-const { adminURL } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
+/* global _URCR_DASHBOARD_ */
+const { adminURL } =
+	typeof _URCR_DASHBOARD_ !== "undefined" && _URCR_DASHBOARD_;
 
 const RuleCard = ({
 	rule,
@@ -35,7 +36,9 @@ const RuleCard = ({
 	const isMembershipRule = rule.rule_type === "membership";
 	const isMigratedRule = Boolean(rule.is_migrated);
 	const shouldHideMenu = (!isURDev() && isMembershipRule) || isMigratedRule;
-	const messageTabLabel = isMembershipRule ? __("Restriction Message", "user-registration") : __("Settings", "user-registration");
+	const messageTabLabel = isMembershipRule
+		? __("Restriction Message", "user-registration")
+		: __("Settings", "user-registration");
 
 	const editUrl = adminURL
 		? `${adminURL}admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule&post-id=${rule.id}`
@@ -120,10 +123,7 @@ const RuleCard = ({
 	}`;
 
 	return (
-		<div 
-			className={cardClassName}
-			data-rule-id={rule.id}
-		>
+		<div className={cardClassName} data-rule-id={rule.id}>
 			<div
 				className={headerClass}
 				onClick={(e) => {
@@ -167,7 +167,9 @@ const RuleCard = ({
 				<div className="integration-action urcr-integration-action">
 					<div className="urcr-membership-tabs">
 						<button
-							className={`urcr-tab-button ${activeTab === "rules" ? "urcr-tab-active" : ""}`}
+							className={`urcr-tab-button ${
+								activeTab === "rules" ? "urcr-tab-active" : ""
+							}`}
 							type="button"
 							onClick={(e) => {
 								e.stopPropagation();
@@ -177,7 +179,9 @@ const RuleCard = ({
 							{__("Rule", "user-registration")}
 						</button>
 						<button
-							className={`urcr-tab-button ${activeTab === "message" ? "urcr-tab-active" : ""}`}
+							className={`urcr-tab-button ${
+								activeTab === "message" ? "urcr-tab-active" : ""
+							}`}
 							type="button"
 							onClick={(e) => {
 								e.stopPropagation();
@@ -198,7 +202,10 @@ const RuleCard = ({
 									e.stopPropagation();
 									setMenuOpen(!menuOpen);
 								}}
-								aria-label={__("More options", "user-registration")}
+								aria-label={__(
+									"More options",
+									"user-registration"
+								)}
 							>
 								<span className="dashicons dashicons-ellipsis"></span>
 							</button>
@@ -263,13 +270,25 @@ const RuleCard = ({
 				className="user-registration-card__body ur-p-3 integration-body-info"
 				style={{ display: isExpanded ? "block" : "none" }}
 			>
-				<div className={activeTab === "rules" ? "urcr-tab-content urcr-tab-content-active" : "urcr-tab-content"}>
+				<div
+					className={
+						activeTab === "rules"
+							? "urcr-tab-content urcr-tab-content-active"
+							: "urcr-tab-content"
+					}
+				>
 					<RuleContentDisplay
 						rule={rule}
 						onRuleUpdate={onRuleUpdate}
 					/>
 				</div>
-				<div className={activeTab === "message" ? "urcr-tab-content urcr-tab-content-active" : "urcr-tab-content"}>
+				<div
+					className={
+						activeTab === "message"
+							? "urcr-tab-content urcr-tab-content-active"
+							: "urcr-tab-content"
+					}
+				>
 					<SettingsPanel
 						rule={rule}
 						onRuleUpdate={onRuleUpdate}

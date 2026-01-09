@@ -61,6 +61,15 @@ class UR_Getting_Started {
 	const OPTION_MEMBERSHIP_FORM_ID = 'urm_membership_default_form_page_id';
 
 	/**
+	 * Option key used to store setup wizard data.
+	 *
+	 * @since x.x.x
+	 */
+	const OPTION_ONBOARDING_SNAPSHOT = 'urm_onboarding_snapshot';
+
+
+
+	/**
 	 * Register all REST API routes for the getting started wizard.
 	 *
 	 * @since x.x.x
@@ -217,7 +226,6 @@ class UR_Getting_Started {
 	public static function get_wizard_state( $request ) {
 		delete_option( 'user_registration_onboarding_skipped_step' );
 		delete_option( 'urm_onboarding_current_step' );
-		update_option( 'urm_is_new_installation', true );
 
 		$enabled_features  = get_option( 'user_registration_enabled_features', array() );
 		$required_features = array(
@@ -236,6 +244,9 @@ class UR_Getting_Started {
 			$membership_db = new Database();
 			$membership_db::create_tables();
 		}
+
+		self::install_initial_pages( 'normal' );
+		self::ensure_default_form( 'normal' );
 
 		$current_step    = self::get_current_step();
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
@@ -380,7 +391,7 @@ class UR_Getting_Started {
 		}
 
 		$selected_login_option = get_option( 'user_registration_general_setting_login_options', 'default' );
-		$selected_role         = get_option( 'user_registration_default_user_role', 'subscriber' );
+		$selected_role         = get_option( 'user_registration_form_setting_default_user_role', 'subscriber' );
 
 		$data = array(
 			'login_options'         => $login_options,
@@ -428,7 +439,7 @@ class UR_Getting_Started {
 		}
 
 		if ( is_array( $available_roles ) && array_key_exists( $default_role, $available_roles ) ) {
-			update_option( 'user_registration_default_user_role', $default_role );
+			update_option( 'user_registration_form_setting_default_user_role', $default_role );
 
 			$default_form_id = get_option( 'user_registration_default_form_page_id', 0 );
 			if ( $default_form_id ) {
@@ -525,19 +536,18 @@ class UR_Getting_Started {
 		update_option( 'urm_onboarding_membership_type', $membership_type );
 
 		$tracking_value = ur_string_to_bool( $allow_usage_tracking ) ? true : false;
-
 		update_option( 'user_registration_allow_usage_tracking', $tracking_value );
 
 		if ( ! empty( $admin_email ) ) {
 			update_option( 'user_registration_updates_admin_email', $admin_email );
 		}
 
-		if ( $tracking_value ) {
-			$email_to_send = ! empty( $admin_email ) ? $admin_email : get_option( 'admin_email' );
-			self::send_email_to_tracking_server( $email_to_send );
-		}
+		$page_details = array();
 
-		$page_details = self::install_initial_pages( $membership_type );
+		if ( in_array( $membership_type, array( 'paid_membership', 'free_membership' ), true ) ) {
+			self::ensure_membership_field_in_default_form();
+			$page_details = self::create_membership_specific_pages();
+		}
 
 		$next_step = self::calculate_next_step( 1, $membership_type );
 		self::update_current_step( $next_step );
@@ -551,6 +561,89 @@ class UR_Getting_Started {
 			),
 			200
 		);
+	}
+
+	/**
+	 * Create only membership-specific pages (pricing and thankyou).
+	 * Does NOT create registration form or common pages as they already exist.
+	 *
+	 * @since x.x.x
+	 *
+	 * @return array
+	 */
+	protected static function create_membership_specific_pages() {
+		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
+
+		$enabled_features    = get_option( 'user_registration_enabled_features', array() );
+		$membership_features = array(
+			'user-registration-membership',
+			'user-registration-payment-history',
+		);
+
+		foreach ( $membership_features as $feature ) {
+			if ( ! in_array( $feature, $enabled_features, true ) ) {
+				$enabled_features[] = $feature;
+			}
+		}
+
+		update_option( 'user_registration_enabled_features', $enabled_features );
+		update_option( 'user_registration_membership_installed_flag', true );
+		update_option( 'urm_initial_registration_type', 'membership' );
+
+		if ( class_exists( 'WPEverest\URMembership\Admin\Database\Database' ) ) {
+			Database::create_tables();
+		}
+
+		$page_details = array();
+
+		$existing_form_id = (int) get_option( 'user_registration_default_form_page_id', 0 );
+		if ( ! $existing_form_id ) {
+			$existing_form_id = (int) get_option( 'user_registration_registration_form', 0 );
+		}
+
+		if ( $existing_form_id ) {
+			update_option( self::OPTION_MEMBERSHIP_FORM_ID, $existing_form_id );
+			update_option( 'user_registration_member_registration_page_id', get_option( 'user_registration_registration_page_id', 0 ) );
+		}
+
+		$membership_pages = array(
+			'membership_pricing'  => array(
+				'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
+				'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
+				'content' => '<!-- wp:user-registration/membership-listing -->
+<div>Membership Listing</div>
+<!-- /wp:user-registration/membership-listing -->
+',
+			),
+			'membership_thankyou' => array(
+				'name'    => _x( 'thankyou', 'Page slug', 'user-registration' ),
+				'title'   => _x( 'ThankYou', 'Page title', 'user-registration' ),
+				'option'  => 'user_registration_thank_you_page_id',
+				'content' => '[user_registration_membership_thank_you]',
+			),
+		);
+
+		foreach ( $membership_pages as $key => $page ) {
+			$post_id = ur_create_page(
+				esc_sql( $page['name'] ),
+				'user_registration_' . $key . '_page_id',
+				wp_kses_post( $page['title'] ),
+				wp_kses_post( $page['content'] )
+			);
+
+			if ( ! empty( $page['option'] ) ) {
+				update_option( $page['option'], $post_id );
+			}
+
+			$page_details[ get_post_field( 'post_name', $post_id ) ] = array(
+				'page_url'      => get_permalink( $post_id ),
+				'page_url_text' => esc_html__( 'View Page', 'user-registration' ),
+				'title'         => get_the_title( $post_id ) . esc_html__( ' Page', 'user-registration' ),
+				'page_slug'     => '/' . get_post_field( 'post_name', $post_id ),
+			);
+		}
+
+		return $page_details;
 	}
 
 	/**
@@ -569,77 +662,70 @@ class UR_Getting_Started {
 
 		$page_details = array();
 
-		// Set default content restriction message
 		$default_message = '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
-<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
-<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
-<p>{{sign_up}} {{log_in}}</p>';
+			<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
+			<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
+			<p>{{sign_up}} {{log_in}}</p>';
 		if ( class_exists( 'URCR_Admin_Assets' ) ) {
 			$default_message = URCR_Admin_Assets::get_default_message();
 		}
 		update_option( 'user_registration_content_restriction_message', $default_message );
 
-		$is_membership_setup = in_array( $membership_type, array( 'paid_membership', 'free_membership' ), true );
+		$normal_form_id = self::ensure_default_form( 'normal' );
 
-		if ( $is_membership_setup ) {
-			$page_details = self::install_membership_setup_pages();
-		} else {
-			$normal_form_id = self::ensure_default_form( 'normal' );
+		$page_details['default_form_id'] = array(
+			'title'         => esc_html__( 'Registration Form', 'user-registration' ),
+			'page_url'      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $normal_form_id ),
+			'page_url_text' => esc_html__( 'View Form', 'user-registration' ),
+			'page_slug'     => sprintf( esc_html__( 'Form Id: %s', 'user-registration' ), $normal_form_id ),
+			'status'        => 'enabled',
+			'status_label'  => esc_html__( 'Ready to use', 'user-registration' ),
+		);
 
-			$page_details['default_form_id'] = array(
-				'title'         => esc_html__( 'Registration Form', 'user-registration' ),
-				'page_url'      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $normal_form_id ),
-				'page_url_text' => esc_html__( 'View Form', 'user-registration' ),
-				'page_slug'     => sprintf( esc_html__( 'Form Id: %s', 'user-registration' ), $normal_form_id ),
-				'status'        => 'enabled',
-				'status_label'  => esc_html__( 'Ready to use', 'user-registration' ),
+		$pages = array(
+			'registration'  => array(
+				'name'    => _x( 'registration', 'Page slug', 'user-registration' ),
+				'title'   => _x( 'Registration', 'Page title', 'user-registration' ),
+				'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $normal_form_id ) . '"]',
+			),
+			'login'         => array(
+				'name'    => _x( 'login', 'Page slug', 'user-registration' ),
+				'title'   => _x( 'Login', 'Page title', 'user-registration' ),
+				'content' => '[' . apply_filters( 'user_registration_login_shortcode_tag', 'user_registration_login' ) . ']',
+			),
+			'myaccount'     => array(
+				'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
+				'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
+				'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
+			),
+			'lost_password' => array(
+				'name'    => _x( 'lost-password', 'Page slug', 'user-registration' ),
+				'title'   => _x( 'Lost Password', 'Page title', 'user-registration' ),
+				'content' => '[user_registration_lost_password]',
+			),
+		);
+
+		foreach ( $pages as $key => $page ) {
+			$post_id = ur_create_page(
+				esc_sql( $page['name'] ),
+				'user_registration_' . $key . '_page_id',
+				wp_kses_post( $page['title'] ),
+				wp_kses_post( $page['content'] )
 			);
 
-			$pages = array(
-				'registration'  => array(
-					'name'    => _x( 'registration', 'Page slug', 'user-registration' ),
-					'title'   => _x( 'Registration', 'Page title', 'user-registration' ),
-					'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $normal_form_id ) . '"]',
-				),
-				'login'         => array(
-					'name'    => _x( 'login', 'Page slug', 'user-registration' ),
-					'title'   => _x( 'Login', 'Page title', 'user-registration' ),
-					'content' => '[' . apply_filters( 'user_registration_login_shortcode_tag', 'user_registration_login' ) . ']',
-				),
-				'myaccount'     => array(
-					'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
-					'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
-					'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
-				),
-				'lost_password' => array(
-					'name'    => _x( 'lost-password', 'Page slug', 'user-registration' ),
-					'title'   => _x( 'Lost Password', 'Page title', 'user-registration' ),
-					'content' => '[user_registration_lost_password]',
-				),
-			);
-
-			foreach ( $pages as $key => $page ) {
-				$post_id = ur_create_page(
-					esc_sql( $page['name'] ),
-					'user_registration_' . $key . '_page_id',
-					wp_kses_post( $page['title'] ),
-					wp_kses_post( $page['content'] )
-				);
-
-				if ( 'login' === $key ) {
-					update_option( 'user_registration_login_options_login_redirect_url', $post_id );
-				}
-
-				$page_details[ get_post_field( 'post_name', $post_id ) ] = array(
-					'page_url'      => get_permalink( $post_id ),
-					'page_url_text' => esc_html__( 'View Page', 'user-registration' ),
-					'title'         => get_the_title( $post_id ) . esc_html__( ' Page', 'user-registration' ),
-					'page_slug'     => '/' . get_post_field( 'post_name', $post_id ),
-				);
+			if ( 'login' === $key ) {
+				update_option( 'user_registration_login_options_login_redirect_url', $post_id );
 			}
 
-			update_option( 'user_registration_membership_installed_flag', false );
+			$page_details[ get_post_field( 'post_name', $post_id ) ] = array(
+				'page_url'      => get_permalink( $post_id ),
+				'page_url_text' => esc_html__( 'View Page', 'user-registration' ),
+				'title'         => get_the_title( $post_id ) . esc_html__( ' Page', 'user-registration' ),
+				'page_slug'     => '/' . get_post_field( 'post_name', $post_id ),
+			);
 		}
+
+		update_option( 'user_registration_membership_installed_flag', false );
 
 		return $page_details;
 	}
@@ -655,15 +741,22 @@ class UR_Getting_Started {
 	protected static function ensure_default_form( $mode = 'normal' ) {
 		$is_membership = ( 'membership' === $mode );
 
-		$existing = (int) get_option( 'user_registration_registration_form', 0 );
+		$existing = 0;
+
+		if ( $is_membership ) {
+			$existing = (int) get_option( self::OPTION_MEMBERSHIP_FORM_ID, 0 );
+		} else {
+			$existing = (int) get_option( 'user_registration_default_form_page_id', 0 );
+			if ( ! $existing ) {
+				$existing = (int) get_option( 'user_registration_registration_form', 0 );
+			}
+		}
 
 		if ( $existing > 0 ) {
 			return $existing;
 		}
 
-		$hasposts = get_posts( 'post_type=user_registration' );
-
-		$membership_field_name = 'membership_field_' . ur_get_random_number();
+		$membership_field_name = 'membership_field_' . ( function_exists( 'ur_get_random_number' ) ? ur_get_random_number() : wp_rand( 1000, 999999 ) );
 
 		$post_content = $is_membership
 		? '[[[' .
@@ -699,12 +792,13 @@ class UR_Getting_Started {
 			update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
 		} else {
 			update_option( 'user_registration_default_form_page_id', (int) $new_id );
+			update_option( 'user_registration_registration_form', (int) $new_id );
 		}
-
-		update_option( 'user_registration_registration_form', (int) $new_id );
 
 		return (int) $new_id;
 	}
+
+
 
 	/**
 	 * Get memberships data for step 2 including saved memberships and available content.
@@ -763,47 +857,6 @@ class UR_Getting_Started {
 		);
 	}
 
-
-	/**
-	 * Fetch memberships from database or posts.
-	 *
-	 * @since x.x.x
-	 *
-	 * @return array
-	 */
-	protected static function fetch_memberships() {
-		if ( class_exists( 'WPEverest\URMembership\Admin\Database\Database' ) ) {
-			$db = new Database();
-			if ( method_exists( $db, 'get_all_memberships' ) ) {
-				return $db->get_all_memberships();
-			}
-		}
-
-		$posts = get_posts(
-			array(
-				'post_type'      => 'ur_membership',
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'orderby'        => 'title',
-				'order'          => 'ASC',
-			)
-		);
-
-		$memberships = array();
-
-		foreach ( $posts as $post ) {
-			$memberships[] = array(
-				'id'     => $post->ID,
-				'name'   => $post->post_title,
-				'type'   => get_post_meta( $post->ID, '_ur_membership_type', true ) ? get_post_meta( $post->ID, '_ur_membership_type', true ) : 'free',
-				'status' => get_post_meta( $post->ID, '_ur_membership_status', true ) ? get_post_meta( $post->ID, '_ur_membership_status', true ) : 'active',
-				'access' => get_post_meta( $post->ID, '_ur_membership_access_rules', true ) ? get_post_meta( $post->ID, '_ur_membership_access_rules', true ) : array(),
-			);
-		}
-
-		return $memberships;
-	}
-
 	/**
 	 * Save memberships from step 2.
 	 *
@@ -820,6 +873,14 @@ class UR_Getting_Started {
 		}
 
 		$membership_type = get_option( 'urm_onboarding_membership_type', 'free_membership' );
+
+		if ( in_array( $membership_type, array( 'paid_membership', 'free_membership' ), true ) ) {
+			self::ensure_membership_field_in_default_form();
+			$pricing_page_id = get_option( 'user_registration_membership_pricing_page_id', 0 );
+			if ( ! $pricing_page_id ) {
+				self::create_membership_specific_pages();
+			}
+		}
 
 		if ( empty( $memberships ) ) {
 			return new \WP_REST_Response(
@@ -896,6 +957,80 @@ class UR_Getting_Started {
 			200
 		);
 	}
+
+
+	/**
+	 * Ensure the already-created default registration form contains Membership field.
+	 *
+	 * @since x.x.x
+	 *
+	 * @return int|false Updated form ID on success, false on failure.
+	 */
+	protected static function ensure_membership_field_in_default_form() {
+		$form_id = (int) get_option( 'user_registration_default_form_page_id', 0 );
+
+		if ( ! $form_id ) {
+			$form_id = (int) get_option( 'user_registration_registration_form', 0 );
+		}
+
+		if ( ! $form_id ) {
+			$form_id = (int) self::ensure_default_form( 'normal' );
+		}
+
+		if ( ! $form_id ) {
+			return false;
+		}
+
+		$post = get_post( $form_id );
+		if ( ! $post || 'user_registration' !== $post->post_type ) {
+			return false;
+		}
+
+		$content = (string) $post->post_content;
+
+		if ( false !== strpos( $content, '"field_key":"membership"' ) ) {
+			update_option( self::OPTION_MEMBERSHIP_FORM_ID, (int) $form_id );
+			return (int) $form_id;
+		}
+
+		$membership_field_name = get_option( 'ur_membership_default_membership_field_name', '' );
+		if ( empty( $membership_field_name ) ) {
+			$membership_field_name = 'membership_field_' . ( function_exists( 'ur_get_random_number' ) ? ur_get_random_number() : wp_rand( 1000, 999999 ) );
+			update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
+		}
+
+		$membership_field_json =
+			'{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' .
+			$membership_field_name .
+			'","required":"false","hide_label":"false","membership_listing_option":"all","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}';
+
+		if ( substr( $content, -3 ) === ']]]' ) {
+			$content = substr( $content, 0, -3 ) . '],[' . $membership_field_json . ']]]';
+		} else {
+			$content .= "\n" . $membership_field_json;
+		}
+
+		$updated = wp_update_post(
+			array(
+				'ID'           => $form_id,
+				'post_content' => $content,
+			),
+			true
+		);
+
+		if ( is_wp_error( $updated ) || ! $updated ) {
+			return false;
+		}
+
+		update_option( self::OPTION_MEMBERSHIP_FORM_ID, (int) $form_id );
+
+		if ( ! get_option( 'user_registration_registration_form', 0 ) ) {
+			update_option( 'user_registration_registration_form', (int) $form_id );
+		}
+
+		return (int) $form_id;
+	}
+
 
 
 	/**
@@ -1277,133 +1412,6 @@ class UR_Getting_Started {
 	}
 
 	/**
-	 * Install membership setup pages and enable membership-related features.
-	 *
-	 * @since x.x.x
-	 *
-	 * @return array
-	 */
-	protected static function install_membership_setup_pages() {
-		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
-
-		$enabled_features    = get_option( 'user_registration_enabled_features', array() );
-		$membership_features = array(
-			'user-registration-membership',
-			'user-registration-payment-history',
-		);
-
-		foreach ( $membership_features as $feature ) {
-			if ( ! in_array( $feature, $enabled_features, true ) ) {
-				$enabled_features[] = $feature;
-			}
-		}
-
-		update_option( 'user_registration_enabled_features', $enabled_features );
-		update_option( 'user_registration_membership_installed_flag', true );
-		update_option( 'urm_initial_registration_type', 'membership' );
-
-		if ( class_exists( 'WPEverest\URMembership\Admin\Database\Database' ) ) {
-			Database::create_tables();
-		}
-
-		$membership_form_id = self::ensure_default_form( 'membership' );
-
-		$page_details = array();
-
-		$page_details['membership_form_id'] = array(
-			'title'         => esc_html__( 'Registration Form', 'user-registration' ),
-			'page_url'      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $membership_form_id ),
-			'page_url_text' => esc_html__( 'View Form', 'user-registration' ),
-			'page_slug'     => sprintf( esc_html__( 'Form Id: %s', 'user-registration' ), $membership_form_id ),
-			'status'        => 'enabled',
-			'status_label'  => esc_html__( 'Ready to use', 'user-registration' ),
-		);
-
-		$membership_pages = array(
-			'membership_registration' => array(
-				'name'    => _x( 'registration', 'Page slug', 'user-registration' ),
-				'title'   => _x( 'Registration', 'Page title', 'user-registration' ),
-				'option'  => 'user_registration_member_registration_page_id',
-				'content' => '[' . apply_filters( 'user_registration_form_shortcode_tag', 'user_registration_form' ) . ' id="' . esc_attr( $membership_form_id ) . '"]',
-			),
-			'membership_pricing'      => array(
-				'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
-				'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
-				'content' => '<!-- wp:user-registration/membership-listing -->
-<div>Membership Listing</div>
-<!-- /wp:user-registration/membership-listing -->
-',
-			),
-			'membership_thankyou'     => array(
-				'name'    => _x( 'thankyou', 'Page slug', 'user-registration' ),
-				'title'   => _x( 'ThankYou', 'Page title', 'user-registration' ),
-				'option'  => 'user_registration_thank_you_page_id',
-				'content' => '[user_registration_membership_thank_you]',
-			),
-		);
-
-		foreach ( $membership_pages as $key => $page ) {
-			$post_id = ur_create_page(
-				esc_sql( $page['name'] ),
-				'user_registration_' . $key . '_page_id',
-				wp_kses_post( $page['title'] ),
-				wp_kses_post( $page['content'] )
-			);
-
-			if ( ! empty( $page['option'] ) ) {
-				update_option( $page['option'], $post_id );
-			}
-
-			$page_details[ get_post_field( 'post_name', $post_id ) ] = array(
-				'page_url'      => get_permalink( $post_id ),
-				'page_url_text' => esc_html__( 'View Page', 'user-registration' ),
-				'title'         => get_the_title( $post_id ) . esc_html__( ' Page', 'user-registration' ),
-				'page_slug'     => '/' . get_post_field( 'post_name', $post_id ),
-			);
-		}
-
-		$common_pages = array(
-			'login'         => array(
-				'name'    => _x( 'login', 'Page slug', 'user-registration' ),
-				'title'   => _x( 'Login', 'Page title', 'user-registration' ),
-				'content' => '[' . apply_filters( 'user_registration_login_shortcode_tag', 'user_registration_login' ) . ']',
-			),
-			'myaccount'     => array(
-				'name'    => _x( 'my-account', 'Page slug', 'user-registration' ),
-				'title'   => _x( 'My Account', 'Page title', 'user-registration' ),
-				'content' => '[' . apply_filters( 'user_registration_my_account_shortcode_tag', 'user_registration_my_account' ) . ']',
-			),
-			'lost_password' => array(
-				'name'    => _x( 'lost-password', 'Page slug', 'user-registration' ),
-				'title'   => _x( 'Lost Password', 'Page title', 'user-registration' ),
-				'content' => '[user_registration_lost_password]',
-			),
-		);
-
-		foreach ( $common_pages as $key => $page ) {
-			$post_id = ur_create_page(
-				esc_sql( $page['name'] ),
-				'user_registration_' . $key . '_page_id',
-				wp_kses_post( $page['title'] ),
-				wp_kses_post( $page['content'] )
-			);
-
-			if ( 'login' === $key ) {
-				update_option( 'user_registration_login_options_login_redirect_url', $post_id );
-			}
-
-			$page_details[ get_post_field( 'post_name', $post_id ) ] = array(
-				'page_url'      => get_permalink( $post_id ),
-				'page_url_text' => esc_html__( 'View Page', 'user-registration' ),
-				'title'         => get_the_title( $post_id ) . esc_html__( ' Page', 'user-registration' ),
-				'page_slug'     => '/' . get_post_field( 'post_name', $post_id ),
-			);
-		}
-
-		return $page_details;
-	}
-
-	/**
 	 * Get available posts and pages for content restriction setup.
 	 *
 	 * @since x.x.x
@@ -1521,9 +1529,9 @@ class UR_Getting_Started {
 				'enabled'              => self::get_bool_option( 'urm_paypal_connection_status' ),
 				'configured'           => self::is_gateway_configured( 'paypal' ),
 				'settings_url'         => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
-				'paypal_email'         => get_option( 'user_registration_global_paypal_email_address', '' ),
-				'paypal_client_id'     => get_option( 'user_registration_global_paypal_client_id' ),
-				'paypal_client_secret' => get_option( 'user_registration_global_paypal_client_secret' ),
+				'paypal_email'         => get_option( 'user_registration_global_paypal_live_admin_email', '' ),
+				'paypal_client_id'     => get_option( 'user_registration_global_paypal_live_client_id' ),
+				'paypal_client_secret' => get_option( 'user_registration_global_paypal_live_client_secret' ),
 			),
 			array(
 				'id'                          => 'stripe',
@@ -1593,67 +1601,35 @@ class UR_Getting_Started {
 
 		update_option( 'user_registration_payment_currency', $currency );
 
-		update_option( 'urm_bank_connection_status', $offline_payment );
-		update_option( 'urm_paypal_connection_status', $paypal );
-		update_option( 'urm_stripe_connection_status', $stripe );
-
-		if ( $offline_payment ) {
-			update_option( 'user_registration_global_bank_details', $bank_details );
-		}
-
-		if ( $paypal ) {
-			update_option( 'user_registration_global_paypal_email_address', $paypal_email );
-			update_option( 'user_registration_global_paypal_client_id', $paypal_client_id );
-			update_option( 'user_registration_global_paypal_client_secret', $paypal_client_secret );
-		}
-
-		if ( $stripe ) {
-			update_option( 'user_registration_stripe_test_mode', $stripe_test_mode );
-
-			if ( ! empty( $stripe_test_publishable_key ) ) {
-				update_option( 'user_registration_stripe_test_publishable_key', $stripe_test_publishable_key );
-			}
-			if ( ! empty( $stripe_test_secret_key ) ) {
-				update_option( 'user_registration_stripe_test_secret_key', $stripe_test_secret_key );
-			}
-
-			if ( ! empty( $stripe_live_publishable_key ) ) {
-				update_option( 'user_registration_stripe_live_publishable_key', $stripe_live_publishable_key );
-			}
-			if ( ! empty( $stripe_live_secret_key ) ) {
-				update_option( 'user_registration_stripe_live_secret_key', $stripe_live_secret_key );
-			}
-		}
-
-		$enabled_gateways = array();
-
-		if ( $offline_payment ) {
-			$enabled_gateways[] = 'offline';
-		}
-
-		if ( $paypal ) {
-			$enabled_gateways[] = 'paypal';
-		}
-
-		if ( $stripe ) {
-			$enabled_gateways[] = 'stripe';
-		}
-
-		update_option( 'urm_enabled_payment_gateways', $enabled_gateways );
-
 		$configuration_needed = array();
 
-		if ( $paypal && empty( $paypal_email ) ) {
-			$configuration_needed[] = array(
-				'gateway'      => 'paypal',
-				'message'      => __( 'PayPal requires an email address.', 'user-registration' ),
-				'settings_url' => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
-			);
+		$offline_configured = true;
+		if ( $offline_payment ) {
+			$offline_configured = ! empty( trim( wp_strip_all_tags( $bank_details ) ) );
+			if ( ! $offline_configured ) {
+				$configuration_needed[] = array(
+					'gateway'      => 'offline',
+					'message'      => __( 'Offline payment requires bank details.', 'user-registration' ),
+					'settings_url' => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
+				);
+			}
 		}
 
-		if ( $stripe ) {
-			$stripe_configured = false;
+		$paypal_configured = true;
+		if ( $paypal ) {
+			$paypal_configured = ! empty( $paypal_email ) && ! empty( $paypal_client_id ) && ! empty( $paypal_client_secret );
 
+			if ( ! $paypal_configured ) {
+				$configuration_needed[] = array(
+					'gateway'      => 'paypal',
+					'message'      => __( 'PayPal requires an email address.', 'user-registration' ),
+					'settings_url' => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
+				);
+			}
+		}
+
+		$stripe_configured = true;
+		if ( $stripe ) {
 			if ( $stripe_test_mode ) {
 				$stripe_configured = ! empty( $stripe_test_publishable_key ) && ! empty( $stripe_test_secret_key );
 			} else {
@@ -1671,6 +1647,48 @@ class UR_Getting_Started {
 			}
 		}
 
+		$offline_enabled = $offline_payment && $offline_configured;
+		$paypal_enabled  = $paypal && $paypal_configured;
+		$stripe_enabled  = $stripe && $stripe_configured;
+
+		update_option( 'urm_bank_connection_status', $offline_enabled );
+		update_option( 'urm_paypal_connection_status', $paypal_enabled );
+		update_option( 'urm_stripe_connection_status', $stripe_enabled );
+
+		if ( $offline_enabled ) {
+			update_option( 'user_registration_global_bank_details', $bank_details );
+		}
+
+		if ( $paypal_enabled ) {
+			update_option( 'user_registration_global_paypal_live_admin_email', $paypal_email );
+			update_option( 'user_registration_global_paypal_live_client_id', $paypal_client_id );
+			update_option( 'user_registration_global_paypal_live_client_secret', $paypal_client_secret );
+		}
+
+		if ( $stripe_enabled ) {
+			update_option( 'user_registration_stripe_test_mode', $stripe_test_mode );
+			update_option( 'user_registration_stripe_test_publishable_key', $stripe_test_publishable_key );
+			update_option( 'user_registration_stripe_test_secret_key', $stripe_test_secret_key );
+			update_option( 'user_registration_stripe_live_publishable_key', $stripe_live_publishable_key );
+			update_option( 'user_registration_stripe_live_secret_key', $stripe_live_secret_key );
+		}
+
+		$enabled_gateways = array();
+
+		if ( $offline_enabled ) {
+			$enabled_gateways[] = 'offline';
+		}
+
+		if ( $paypal_enabled ) {
+			$enabled_gateways[] = 'paypal';
+		}
+
+		if ( $stripe_enabled ) {
+			$enabled_gateways[] = 'stripe';
+		}
+
+		update_option( 'urm_enabled_payment_gateways', $enabled_gateways );
+
 		$next_step = 5;
 		self::update_current_step( $next_step );
 
@@ -1686,6 +1704,7 @@ class UR_Getting_Started {
 		);
 	}
 
+
 	/**
 	 * Check if a payment gateway is configured.
 	 *
@@ -1697,7 +1716,7 @@ class UR_Getting_Started {
 	protected static function is_gateway_configured( $gateway ) {
 		switch ( $gateway ) {
 			case 'paypal':
-				$paypal_email = get_option( 'user_registration_global_paypal_email_address', '' );
+				$paypal_email = get_option( 'user_registration_global_paypal_live_admin_email', '' );
 				return ! empty( $paypal_email );
 
 			case 'stripe':
@@ -1738,7 +1757,7 @@ class UR_Getting_Started {
 		if ( $is_membership ) {
 			$pages['membership_registration'] = array(
 				'id'    => get_option( 'user_registration_member_registration_page_id', 0 ),
-				'label' => __( 'Membership Registration', 'user-registration' ),
+				'label' => __( 'Registration', 'user-registration' ),
 				'url'   => self::get_page_url( 'user_registration_member_registration_page_id' ),
 			);
 			$pages['membership_pricing']      = array(
@@ -1767,7 +1786,7 @@ class UR_Getting_Started {
 		);
 
 		$roles        = array();
-		$default_role = get_option( 'user_registration_default_user_role', 'subscriber' );
+		$default_role = get_option( 'user_registration_form_setting_default_user_role', 'subscriber' );
 
 		if ( 'normal' === $membership_type ) {
 			$available_roles = ur_get_default_admin_roles();
@@ -1833,7 +1852,7 @@ class UR_Getting_Started {
 			$available_roles = ur_get_default_admin_roles();
 
 			if ( is_array( $available_roles ) && array_key_exists( $default_user_role, $available_roles ) ) {
-				update_option( 'user_registration_default_user_role', $default_user_role );
+				update_option( 'user_registration_form_setting_default_user_role', $default_user_role );
 				$default_form_id = get_option( 'user_registration_default_form_page_id', 0 );
 
 				if ( $default_form_id ) {
@@ -1882,9 +1901,6 @@ class UR_Getting_Started {
 	 */
 	public static function skip_step( $request ) {
 		$current_step    = isset( $request['step'] ) ? absint( $request['step'] ) : self::get_current_step();
-		$step_id         = isset( $request['step_id'] ) ? sanitize_text_field( $request['step_id'] ) : '';
-		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
-
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
 
 		$next_step = self::calculate_next_step( $current_step, $membership_type );
@@ -1910,6 +1926,7 @@ class UR_Getting_Started {
 			200
 		);
 	}
+
 
 	/**
 	 * Navigate to a specific step (back navigation).
@@ -2072,40 +2089,75 @@ class UR_Getting_Started {
 		return $reg_page_id > 0 ? get_permalink( $reg_page_id ) : null;
 	}
 
+
 	/**
-	 * Send email to tracking server.
+	 * Build onboarding snapshot data.
 	 *
 	 * @since x.x.x
 	 *
-	 * @param string $email Email address.
-	 * @return void
+	 * @return array
 	 */
-	private static function send_email_to_tracking_server( $email ) {
-		if ( empty( $email ) || ! is_email( $email ) ) {
-			return;
-		}
+	protected static function build_onboarding_snapshot() {
+		return array(
+			'onboarding' => array(
+				'current_step' => (int) get_option( 'urm_onboarding_current_step', 1 ),
+				'completed_at' => get_option( 'urm_onboarding_completed_at', '' ),
+				'is_completed' => ! get_option( 'user_registration_first_time_activation_flag', true ),
+				'is_skipped'   => (bool) get_option( 'user_registration_onboarding_skipped', false ),
 
-		wp_remote_post(
-			'https://stats.wpeverest.com/wp-json/tgreporting/v1/process-email/',
-			array(
-				'method'      => 'POST',
-				'timeout'     => 10,
-				'redirection' => 5,
-				'httpversion' => '1.0',
-				'headers'     => array(
-					'user-agent' => 'UserRegistration/' . ( function_exists( 'UR' ) ? UR()->version : '1.0.0' ) . '; ' . get_bloginfo( 'url' ),
-				),
-				'body'        => array(
-					'data' => array(
-						'email'       => sanitize_email( $email ),
-						'website_url' => get_bloginfo( 'url' ),
-						'plugin_name' => ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) ? 'User Registration & Membership PRO' : 'User Registration & Membership',
-						'plugin_slug' => defined( 'UR_PLUGIN_FILE' ) ? plugin_basename( UR_PLUGIN_FILE ) : 'user-registration',
+				'welcome'      => array(
+					'membership_type'      => get_option( 'urm_onboarding_membership_type', '' ),
+					'allow_usage_tracking' => (bool) get_option( 'user_registration_allow_usage_tracking', true ),
+					'admin_email'          => get_option(
+						'user_registration_updates_admin_email',
+						get_option( 'admin_email' )
 					),
 				),
-			)
+
+				'memberships'  => array(
+					'ids' => (array) get_option( 'urm_onboarding_membership_ids', array() ),
+				),
+
+				'payments'     => array(
+					'currency'         => get_option( 'user_registration_payment_currency', 'USD' ),
+					'enabled_gateways' => (array) get_option( 'urm_enabled_payment_gateways', array() ),
+				),
+
+				'settings'     => array(
+					'login_option' => get_option(
+						'user_registration_general_setting_login_options',
+						'default'
+					),
+					'default_role' => get_option(
+						'user_registration_form_setting_default_user_role',
+						'subscriber'
+					),
+				),
+			),
+
+			'meta'       => array(
+				'site_url' => get_bloginfo( 'url' ),
+				'saved_at' => current_time( 'mysql' ),
+			),
 		);
 	}
+
+	/**
+	 * Save onboarding snapshot to options table.
+	 *
+	 * @since x.x.x
+	 *
+	 * @return bool
+	 */
+	protected static function save_onboarding_snapshot() {
+		return update_option(
+			self::OPTION_ONBOARDING_SNAPSHOT,
+			self::build_onboarding_snapshot(),
+			false
+		);
+	}
+
+
 
 	/**
 	 * Permission callback for all getting started endpoints.
@@ -2116,6 +2168,14 @@ class UR_Getting_Started {
 	 * @return bool
 	 */
 	public static function check_admin_permissions( $request ) {
+		if ( ! is_user_logged_in() ) {
+			return new WP_Error( 'rest_not_logged_in', 'You must be logged in.', array( 'status' => 401 ) );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return new WP_Error( 'rest_forbidden', 'Admins only.', array( 'status' => 403 ) );
+		}
+
 		return true;
 	}
 }

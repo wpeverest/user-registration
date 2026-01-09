@@ -53,6 +53,15 @@ class SubscriptionService {
 		if ( $current_user->ID != 0 || 'free' == $membership_meta['type'] ) {
 			$status = 'active';
 		}
+
+		if ( $current_user->ID != 0 ) {
+			$is_purchasing_multiple = isset( $data['is_purchasing_multiple'] ) && ur_string_to_bool( $data['is_purchasing_multiple'] );
+
+			if ( $is_purchasing_multiple && 'free' != $membership_meta['type'] ) {
+				$status = 'pending';
+			}
+		}
+
 		$billing_cycle = ( 'subscription' === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] : '';
 
 		$subscription_data = array(
@@ -230,7 +239,7 @@ class SubscriptionService {
 
 		$subscription_id = '';
 
-		if ( isset( $data['subscription'] ) ) {
+		if ( isset( $data['subscription']['ID'] ) ) {
 			$subscription_id = $data['subscription']['ID'] ?? 0;
 		} else {
 			$members_order_repository = new MembersOrderRepository();
@@ -238,9 +247,10 @@ class SubscriptionService {
 			$subscription_id          = ! empty( $last_order ) ? $last_order['subscription_id'] : '';
 		}
 
-		$subscription                   = $this->members_subscription_repository->get_subscription_by_subscription_id( $subscription_id );
-		$membership_id                  = isset( $data['membership'] ) ? $data['membership'] : $subscription['item_id'];
-		$membership                     = $this->membership_repository->get_single_membership_by_ID( $membership_id );
+		$subscription  = $this->members_subscription_repository->get_subscription_by_subscription_id( $subscription_id );
+		$membership_id = isset( $data['membership'] ) ? $data['membership'] : $subscription['item_id'];
+		$membership    = $this->membership_repository->get_single_membership_by_ID( $membership_id );
+
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_metas['post_title'] = $membership['post_title'];
 		$member_order                   = $this->members_orders_repository->get_member_orders( $data['member_id'] );

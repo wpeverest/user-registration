@@ -938,12 +938,12 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 			'user_registration_plugin_main_header_items',
 			array_merge(
 				$site_assistant_item,
-				UR_PRO_ACTIVE ? array(
+				array(
 					'analytics' => array(
 						'page_slug' => 'user-registration-analytics',
 						'label'     => esc_html__( 'Analytics', 'user-registration' ),
 					),
-				) : array(),
+				),
 				ur_check_module_activation( 'membership' ) ? array(
 					'membership' => array(
 						'page_slug' => 'user-registration-membership',

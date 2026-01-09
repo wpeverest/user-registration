@@ -19,8 +19,8 @@
       "title": "Multiple Registration",
       "slug": "user-registration-multiple-registration",
       "name": "User Registration-Multiple Registration",
-      "image": "extensions-json/sections/icons/advanced_fields.png",
-      "excerpt": "Add customizable fields for collecting complex user data during registration.",
+      "image": "extensions-json/sections/icons/multiple-registration.png",
+      "excerpt": "Allows creating multiple registration forms, each as a separate and independent form.",
       "category": "Others",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-advanced-fields/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "plan": [

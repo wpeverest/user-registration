@@ -36,11 +36,8 @@ ur_do_deprecated_action( 'user_registration_before_edit_account_form', array(), 
  * and execute custom code or modifications before the change password form is displayed.
  */
 do_action( 'user_registration_before_change_password_form' );
-$layout = get_option( 'user_registration_my_account_layout', 'vertical' );
-
-
-
-
+$layout         = get_option( 'user_registration_my_account_layout', 'vertical' );
+$endpoint_label = ur_get_account_menu_items()['edit-password'];
 ?>
 <div class="user-registration-MyAccount-content__header">
 	<div class="user-registration-MyAccount-content__header-content">

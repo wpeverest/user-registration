@@ -620,7 +620,7 @@ class StripeService {
 
 									}
 								} elseif ( 'full' === $upgrade_type ) {
-										$amount = $new_price;
+									$amount = $new_price;
 								} else {
 									$amount = $new_price - $first_month_price;
 								}
@@ -813,11 +813,15 @@ class StripeService {
 	 * @return array
 	 */
 	public static function get_stripe_settings() {
+		$is_enabled = get_option( 'user_registration_stripe_enabled', '' );
+		$stripe_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false )) ;
+		$is_stripe_enabled = ($is_enabled) ? $is_enabled : $stripe_default;
 		$mode            = get_option( 'user_registration_stripe_test_mode', false ) ? 'test' : 'live';
 		$publishable_key = get_option( sprintf( 'user_registration_stripe_%s_publishable_key', $mode ) );
 		$secret_key      = get_option( sprintf( 'user_registration_stripe_%s_secret_key', $mode ) );
 
 		return array(
+			'is_stipe_enabled'      => $is_stripe_enabled,
 			'mode'            => $mode,
 			'publishable_key' => $publishable_key,
 			'secret_key'      => $secret_key,
@@ -827,10 +831,10 @@ class StripeService {
 	/**
 	 * Sends an email.
 	 *
-	 * @param int   $ID The ID of the email.
+	 * @param int $ID The ID of the email.
 	 * @param mixed $member_subscription The subscription details of the member.
 	 * @param array $membership_metas Metadata related to the membership.
-	 * @param int   $member_id The ID of the member.
+	 * @param int $member_id The ID of the member.
 	 * @param array $response The response data.
 	 *
 	 * @return array The result of the email operation.
@@ -980,6 +984,7 @@ class StripeService {
 
 		return $response;
 	}
+
 	/**
 	 * Reactivates stripe subscription if it has been soft cancelled.
 	 *
@@ -1003,6 +1008,7 @@ class StripeService {
 					$subscription_id,
 					array( 'cancel_at_period_end' => false )
 				);
+
 				return array(
 					'status'  => true,
 					'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
@@ -1181,7 +1187,7 @@ class StripeService {
 	public function validate_setup() {
 		$stripe_settings = self::get_stripe_settings();
 
-		return ( empty( $stripe_settings['publishable_key'] ) || empty( $stripe_settings['secret_key'] ) );
+		return ( empty( $stripe_settings['publishable_key'] ) || empty( $stripe_settings['secret_key'] ) || empty($stripe_settings['is_stipe_enabled']) );
 	}
 
 	public function refund_subscription( $subscription, $refund_amount = null, $cancel_subscription = false, $cancel_at_end_period = false ) {
@@ -1309,9 +1315,10 @@ class StripeService {
 	/**
 	 * Checks if the product exists or not in stripe.
 	 *
+	 * @param string $product_id
+	 *
 	 * @since 4.4.2
 	 *
-	 * @param  string $product_id
 	 */
 	public function check_exists_product_in_stripe( $product_id ) {
 		try {
@@ -1337,9 +1344,10 @@ class StripeService {
 	/**
 	 * Checks if price id exists or not in stripe.
 	 *
+	 * @param string $price_id
+	 *
 	 * @since 4.4.2
 	 *
-	 * @param  string $price_id
 	 */
 	public function check_price_exists_in_stripe( $price_id ) {
 		try {
@@ -1360,10 +1368,11 @@ class StripeService {
 	/**
 	 * Creates price for existing product if price_id not found.
 	 *
+	 * @param string $product_id
+	 * @param array $meta_data
+	 *
 	 * @since 4.4.2
 	 *
-	 * @param  string $product_id
-	 * @param  array  $meta_data
 	 */
 	public function create_stripe_price_for_existing_product( $product_id, $meta_data ) {
 		$currency = get_option( 'user_registration_payment_currency', 'USD' );
@@ -1404,6 +1413,7 @@ class StripeService {
 					'error_message' => $e->getMessage(),
 				)
 			);
+
 			return array(
 				'success' => false,
 				'message' => $e->getMessage(),

@@ -784,6 +784,12 @@ class Membership {
 		$type      = isset( $target['type'] ) ? sanitize_text_field( $target['type'] ) : 'pages';
 		$value     = isset( $target['value'] ) ? $target['value'] : '';
 
+		if ( $type === 'wp_pages' ) {
+			$type = 'pages';
+		} elseif ( $type === 'wp_posts' ) {
+			$type = 'posts';
+		}
+
 		$type_labels = array(
 			'pages'      => isset( $localized_data['labels']['pages'] ) ? $localized_data['labels']['pages'] : __( 'Pages', 'user-registration' ),
 			'posts'      => isset( $localized_data['labels']['posts'] ) ? $localized_data['labels']['posts'] : __( 'Posts', 'user-registration' ),
@@ -809,7 +815,7 @@ class Membership {
 					}
 				}
 			}
-			$html .= '<span>' . esc_html( $whole_site_value_label ) . '</span>';
+			$html .= '<span data-content-type="whole_site" data-field-type="whole_site">' . esc_html( $whole_site_value_label ) . '</span>';
 		} elseif ( $type === 'taxonomy' ) {
 			// Handle taxonomy value structure
 			// Target can have: { type: 'taxonomy', taxonomy: 'cat', value: [] }

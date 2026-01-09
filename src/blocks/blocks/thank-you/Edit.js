@@ -1,11 +1,12 @@
 import React, {useRef, useState} from 'react';
-import {Box, Flex, Tooltip, Heading, Text, Switch } from '@chakra-ui/react';
+import {Box, Flex, Tooltip, Heading, Text, Switch, Link, FormLabel } from '@chakra-ui/react';
 import {InspectorControls, useBlockProps} from '@wordpress/block-editor';
 import {PanelBody, TextControl, CheckboxControl, Disabled, PanelRow, ToggleControl, SelectControl} from '@wordpress/components';
 import {__} from '@wordpress/i18n';
 import metadata from "../thank-you/block.json";
 import {Editor} from '@tinymce/tinymce-react';
 import ServerSideRender from '@wordpress/server-side-render';
+import { ExternalLinkIcon, InfoOutlineIcon, LinkIcon } from '@chakra-ui/icons';
 
 
 /**
@@ -19,6 +20,8 @@ import ServerSideRender from '@wordpress/server-side-render';
 const { smart_tags } =
 	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 const { pages_array } =
+	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
+const { bank_details_settings } =
 	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 const Edit = (props) => {
@@ -109,15 +112,36 @@ const Edit = (props) => {
 							}}
 						/>
 
-						<PanelRow>
+						<Box margin={"14px 0"}>
 							<ToggleControl
-										label={ __( 'Show bank details', 'user-registration' ) }
-										checked={ show_bank_details }
-										onChange={ ( value ) =>
-											setAttributes({ show_bank_details: value })
-										}
-									/>
-						</PanelRow>
+								label={ __( 'Show bank details', 'user-registration' ) }
+								checked={ show_bank_details }
+								onChange={ ( value ) =>
+									setAttributes({ show_bank_details: value })
+								}
+								className='ur-show-bank-details-toggle'
+							/>
+								<Link
+									href={ bank_details_settings}
+									isExternal
+									fontSize="13px"
+									fontWeight="normal"
+								>
+									{__("Setup your bank details from here ", "user-registration")}
+									<ExternalLinkIcon/>
+								</Link>
+								<Text
+									fontSize="12px"
+									color="gray.500"
+									display="flex"
+									alignItems="center"
+									mt="2px"
+									fontStyle={'italic'}
+								>
+									<InfoOutlineIcon mr="4px" />
+									{ __( 'Only shown for offline payments', 'user-registration' ) }
+								</Text>
+						</Box>
 
 						<Box>
 							<ToggleControl

@@ -613,12 +613,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			}
 
 			if ( ur_check_module_activation( 'membership' ) ) {
-				$subscription_repository = new SubscriptionRepository();
-				$result                  = $subscription_repository->query();
-				if ( isset( $result['items'] ) && count( $result['items'] ) > 0 ) {
-					$subscription_obj = new Subscriptions();
-					$subscription_obj->add_menu();
-				}
+				$subscription_obj = new Subscriptions();
+				$subscription_obj->add_menu();
 			}
 
 			if ( UR_PRO_ACTIVE && ur_check_module_activation( 'coupon' ) && class_exists( 'WPEverest\URMembership\Coupons\Coupons' ) ) {
@@ -703,7 +699,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 			$members_obj = new \User_Registration_Members_Menu();
 			$members_obj->add_members_menu_tab();
 
-			if ( UR_PRO_ACTIVE && class_exists( 'WPEverest\URPrivateNotes\UserRegistrationPrivateNotes' ) ) {
+			if ( UR_PRO_ACTIVE && class_exists( 'WPEverest\URPrivateNotes\UserRegistrationPrivateNotes' ) && version_compare( UR_PRIVATE_NOTES_VERSION, '1.0.12', '>' ) ) {
 				$private_notes_obj = new Admin();
 				$private_notes_obj->private_notes_menu();
 			}
@@ -1042,6 +1038,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					'is_login_settings_page'      => isset( $_GET['page'] ) && 'user-registration-login-forms' === $_GET['page'] ? true : false,
 					'i18n_admin'                  => self::get_i18n_admin_data(),
 					'user_registration_lost_password_selection_validator_nonce' => wp_create_nonce( 'user_registration_lost_password_selection_validator' ),
+					'user_registration_my_account_selection_validator_nonce' => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
 					'user_registration_membership_redirect_default_page_message' => esc_html__( 'Please select a page for redirection', 'user-registration' ),
 					'email_confirmation_disabled' => ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', true ) ) ? 'no' : 'yes',
 					'ur_embed_page_list'          => wp_create_nonce( 'ur_embed_page_list_nonce' ),
@@ -1056,9 +1053,7 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				wp_localize_script(
 					'user-registration-settings',
 					'ur_login_form_params',
-					array(
-						'user_registration_my_account_selection_validator_nonce' => wp_create_nonce( 'user_registration_my_account_selection_validator' ),
-					)
+					$ur_login_form_params
 				);
 				$login_option_settings = get_login_field_settings();
 				$login_form_settings   = get_login_form_settings();

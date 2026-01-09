@@ -7,6 +7,7 @@
 <!--user registration section-->
 <div id="ur-membership-registration" class="ur_membership_registration_container ur-form-container">
 	<?php
+
 	$is_coupon_addon_activated        = ur_check_module_activation( 'coupon' );
 	$membership_ids_link_with_coupons = array();
 	if ( $is_coupon_addon_activated && function_exists( 'ur_get_membership_ids_link_with_coupons' ) ) :
@@ -40,7 +41,6 @@
 			if ( is_user_logged_in() ) {
 				$membership_service = new WPEverest\URMembership\Admin\Services\MembershipService();
 				$fetched_data       = $membership_service->fetch_membership_details_from_intended_actions( $_GET );
-
 				if ( isset( $fetched_data['status'] ) && $fetched_data['status'] ) {
 					$memberships = $fetched_data['memberships'] ?? array();
 				}

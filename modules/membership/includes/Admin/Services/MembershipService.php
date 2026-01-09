@@ -295,6 +295,7 @@ class MembershipService {
 		$data['cancel_subscription'] = sanitize_text_field( ! empty( $data['cancel_subscription'] ) ? $data['cancel_subscription'] : '' );
 
 		$data['amount'] = $data['amount'] ?? 0;
+
 		if ( isset( $data['payment_gateways'] ) ) {
 			if ( isset( $data['payment_gateways']['paypal'] ) ) {
 				$data['payment_gateways']['paypal']['status']     = sanitize_text_field( $data['payment_gateways']['paypal']['status'] );
@@ -472,7 +473,10 @@ class MembershipService {
 				$result         = $stripe_service->validate_setup();
 				break;
 			default:
-				$result = empty( get_option( 'user_registration_global_bank_details' ) );
+				$bank_enabled = get_option( 'user_registration_bank_transfer_enabled', '' );
+				$bank_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false ));
+				$is_bank_enabled = $bank_enabled ? $bank_enabled : $bank_default;
+				$result = empty( get_option( 'user_registration_global_bank_details' ) ) || ! $is_bank_enabled;
 				break;
 		}
 		/**
@@ -703,6 +707,20 @@ class MembershipService {
 
 			// Checkout page for logged in user to upgrade membership.
 			if ( isset( $data['current'] ) && '' !== $data['current'] ) {
+
+				$membership_process = urm_get_membership_process( $member_id );
+				if ( $membership_process && isset( $membership_process['upgrade'][ $current_membership_id ] ) ) {
+					$current_membership       = $membership_repository->get_single_membership_by_ID( $current_membership_id );
+						$current_plan_name    = $current_membership['post_title'] ?? '';
+						$initiated_membership = $membership_repository->get_single_membership_by_ID( $membership_process['upgrade'][ $current_membership_id ]['to'] ?? 0 );
+						$initiated_plan_name  = $initiated_membership['post_title'] ?? '';
+
+						return array(
+							'status'  => false,
+							'message' => sprintf( esc_html__( 'You already have a membership plan upgrade initiated from %1$s to %2$s. Please complete the process and try again.', 'user-registration' ), $current_plan_name, $initiated_plan_name ),
+						);
+				}
+
 				$memberships = $this->get_upgradable_membership( $current_membership_id );
 				$memberships = array_filter(
 					$memberships,
@@ -714,7 +732,7 @@ class MembershipService {
 				if ( empty( $memberships ) ) {
 					return array(
 						'status'  => false,
-						'message' => esc_html__( 'No upgradable Memberships.', 'user-registration' ),
+						'message' => esc_html__( 'You cannot upgrade to selected membership plan. Please contact site administrator.', 'user-registration' ),
 					);
 				}
 			} else {
@@ -750,12 +768,26 @@ class MembershipService {
 				if ( $user_membership_id ) {
 					$current_membership_id = $user_membership_id;
 
+					$membership_process = urm_get_membership_process( $member_id );
+					if ( $membership_process && isset( $membership_process['upgrade'][ $current_membership_id ] ) ) {
+
+						$current_membership   = $membership_repository->get_single_membership_by_ID( $current_membership_id );
+						$current_plan_name    = $current_membership['post_title'] ?? '';
+						$initiated_membership = $membership_repository->get_single_membership_by_ID( $membership_process['upgrade'][ $current_membership_id ]['to'] ?? 0 );
+						$initiated_plan_name  = $initiated_membership['post_title'] ?? '';
+
+						return array(
+							'status'  => false,
+							'message' => sprintf( esc_html__( 'You already have a membership plan upgrade initiated from %1$s to %2$s. Please complete the process and try again.', 'user-registration' ), $current_plan_name, $initiated_plan_name ),
+						);
+					}
+
 					$memberships = $membership_repository->get_multiple_membership_by_ID( $intended_membership_id );
 					$memberships = apply_filters( 'build_membership_list_frontend', $memberships );
 				} else {
 					return array(
 						'status'  => false,
-						'message' => esc_html__( 'No upgradable Memberships.', 'user-registration' ),
+						'message' => esc_html__( 'You cannot upgrade to selected membership plan. Please contact site administrator.', 'user-registration' ),
 					);
 				}
 			}
@@ -881,5 +913,59 @@ class MembershipService {
 				'current_membership_id'   => $current_membership_id,
 			);
 		}
+	}
+
+	/**
+	 * Fetch intended action from details.
+	 *
+	 * @param string $intended_action Intended action.
+	 * @param array  $membership Membership Details.
+	 * @param array  $user_membership_ids User Membership ID.
+	 */
+	public function fetch_intended_action( $intended_action, $membership, $user_membership_ids ) {
+
+		$membership_group_repository = new MembershipGroupRepository();
+		$membership_group_service    = new MembershipGroupService();
+		$current_membership_group    = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
+		$user_membership_group_ids   = array();
+
+		foreach ( $user_membership_ids as $user_membership_id ) {
+			$user_membership_group_id = $membership_group_repository->get_membership_group_by_membership_id( $user_membership_id );
+
+			if ( isset( $user_membership_group_id['ID'] ) ) {
+				$user_membership_group_ids[] = $user_membership_group_id['ID'];
+			}
+		}
+
+		$user_membership_group_ids = array_values( array_unique( $user_membership_group_ids ) );
+
+		if ( is_user_logged_in() ) {
+
+			if ( ! empty( $current_membership_group ) ) {
+
+				if ( in_array( $current_membership_group['ID'], $user_membership_group_ids ) ) {
+					foreach ( $user_membership_group_ids as $group_id ) {
+						if ( $current_membership_group['ID'] === $group_id ) {
+							$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $current_membership_group['ID'] );
+							$upgrade_allowed              = $membership_group_service->check_if_upgrade_allowed( $current_membership_group['ID'] );
+
+							if ( $multiple_memberships_allowed ) {
+								$intended_action = 'multiple';
+							} elseif ( $upgrade_allowed ) {
+								$intended_action = 'upgrade';
+							}
+						}
+					}
+				} else {
+					$intended_action = 'multiple';
+				}
+			} else {
+				$intended_action = 'upgrade';
+			}
+		} else {
+			$intended_action = 'register';
+		}
+
+		return $intended_action;
 	}
 }

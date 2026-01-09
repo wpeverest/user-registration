@@ -127,6 +127,7 @@ class UR_Post_Types {
 
 			if ( $default_form_id && $default_form_id == $post_id ) {
 				delete_option( 'user_registration_default_form_page_id' );
+				delete_option( 'user_registration_registration_form' );
 
 				$default_membership_form_id = get_option( 'user_registration_default_membership_form_id', 0 );
 				if ( $default_membership_form_id && $default_membership_form_id == $post_id ) {

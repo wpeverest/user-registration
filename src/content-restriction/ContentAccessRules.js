@@ -7,10 +7,17 @@ import { getAllRules } from "./api/content-access-rules-api";
 import RuleCard from "./components/rules/RuleCard";
 import AddNewRuleModal from "./components/modals/AddNewRuleModal";
 import { showError } from "./utils/notifications";
-import { getURCRLocalizedData, getURCRData, isProAccess } from "./utils/localized-data";
+import {
+	getURCRLocalizedData,
+	getURCRData,
+	isProAccess
+} from "./utils/localized-data";
 
-/* global _UR_DASHBOARD_ */
-const { adminURL, assetsURL } = typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_ ? _UR_DASHBOARD_ : {};
+/* global _URCR_DASHBOARD_ */
+const { adminURL, assetsURL } =
+	typeof _URCR_DASHBOARD_ !== "undefined" && _URCR_DASHBOARD_
+		? _URCR_DASHBOARD_
+		: {};
 
 const ContentAccessRules = () => {
 	const [rules, setRules] = useState([]);
@@ -24,8 +31,14 @@ const ContentAccessRules = () => {
 	const [hasAppliedHighlight, setHasAppliedHighlight] = useState(false);
 
 	const urcrData = getURCRLocalizedData();
-	const hasMultipleMemberships = getURCRData("has_multiple_memberships", false);
-	const isContentRestrictionEnabled = getURCRData("is_content_restriction_enabled", false);
+	const hasMultipleMemberships = getURCRData(
+		"has_multiple_memberships",
+		false
+	);
+	const isContentRestrictionEnabled = getURCRData(
+		"is_content_restriction_enabled",
+		false
+	);
 
 	const fetchRules = useCallback(() => {
 		setIsLoading(true);
@@ -35,13 +48,20 @@ const ContentAccessRules = () => {
 				if (data.success) {
 					setRules(data.rules || []);
 				} else {
-					const errorMsg = data.message || __("Failed to load rules", "user-registration");
+					const errorMsg =
+						data.message ||
+						__("Failed to load rules", "user-registration");
 					setError(errorMsg);
 					showError(errorMsg);
 				}
 			})
 			.catch((err) => {
-				const errorMessage = err.message || __("An error occurred while loading rules", "user-registration");
+				const errorMessage =
+					err.message ||
+					__(
+						"An error occurred while loading rules",
+						"user-registration"
+					);
 				setError(errorMessage);
 				showError(errorMessage);
 			})
@@ -57,7 +77,7 @@ const ContentAccessRules = () => {
 	// Get rule ID from URL params
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		const ruleId = urlParams.get('id');
+		const ruleId = urlParams.get("id");
 		if (ruleId) {
 			const ruleIdNum = parseInt(ruleId, 10);
 			if (!isNaN(ruleIdNum)) {
@@ -66,15 +86,25 @@ const ContentAccessRules = () => {
 		}
 	}, []);
 
-	const membershipRules = rules.filter((rule) => rule.rule_type === "membership");
-	const customRules = rules.filter((rule) => rule.rule_type !== "membership" || !rule.rule_type);
-	const shouldShowMembershipTab = hasMultipleMemberships && membershipRules.length > 1;
+	const membershipRules = rules.filter(
+		(rule) => rule.rule_type === "membership"
+	);
+	const customRules = rules.filter(
+		(rule) => rule.rule_type !== "membership" || !rule.rule_type
+	);
+	const shouldShowMembershipTab =
+		hasMultipleMemberships && membershipRules.length > 1;
 	const shouldShowCustomTab = isContentRestrictionEnabled;
-	const shouldShowTabSwitcher = isContentRestrictionEnabled && shouldShowMembershipTab;
+	const shouldShowTabSwitcher =
+		isContentRestrictionEnabled && shouldShowMembershipTab;
 
-	const currentRules = (!isContentRestrictionEnabled)
-		? (shouldShowMembershipTab ? membershipRules : [])
-		: (activeTab === "membership" ? membershipRules : customRules);
+	const currentRules = !isContentRestrictionEnabled
+		? shouldShowMembershipTab
+			? membershipRules
+			: []
+		: activeTab === "membership"
+		? membershipRules
+		: customRules;
 
 	const [hasSetDefaultTab, setHasSetDefaultTab] = useState(false);
 	useEffect(() => {
@@ -82,12 +112,10 @@ const ContentAccessRules = () => {
 			if (!isContentRestrictionEnabled) {
 				setActiveTab("membership");
 				setHasSetDefaultTab(true);
-			}
-			else if (shouldShowMembershipTab && membershipRules.length > 0) {
+			} else if (shouldShowMembershipTab && membershipRules.length > 0) {
 				setActiveTab("membership");
 				setHasSetDefaultTab(true);
-			}
-			else if (!shouldShowMembershipTab) {
+			} else if (!shouldShowMembershipTab) {
 				setActiveTab("custom");
 				setHasSetDefaultTab(true);
 			}
@@ -104,12 +132,19 @@ const ContentAccessRules = () => {
 
 	// Handle rule highlighting: switch tab, expand rule, and scroll to it (only once on initial load)
 	useEffect(() => {
-		if (highlightedRuleId && !isLoading && rules.length > 0 && !hasAppliedHighlight) {
-			const targetRule = rules.find((rule) => rule.id === highlightedRuleId);
+		if (
+			highlightedRuleId &&
+			!isLoading &&
+			rules.length > 0 &&
+			!hasAppliedHighlight
+		) {
+			const targetRule = rules.find(
+				(rule) => rule.id === highlightedRuleId
+			);
 			if (targetRule) {
 				// Determine which tab the rule belongs to
 				const isMembershipRule = targetRule.rule_type === "membership";
-				
+
 				// Switch to the correct tab only on initial load
 				if (isMembershipRule && shouldShowMembershipTab) {
 					setActiveTab("membership");
@@ -118,7 +153,9 @@ const ContentAccessRules = () => {
 				}
 
 				// Expand the rule
-				setExpandedRules((prev) => new Set([...prev, highlightedRuleId]));
+				setExpandedRules(
+					(prev) => new Set([...prev, highlightedRuleId])
+				);
 
 				// Scroll to the rule after a short delay to allow DOM update
 				setTimeout(() => {
@@ -126,7 +163,10 @@ const ContentAccessRules = () => {
 						`.urcr-rule-card[data-rule-id="${highlightedRuleId}"]`
 					);
 					if (ruleElement) {
-						ruleElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+						ruleElement.scrollIntoView({
+							behavior: "smooth",
+							block: "center"
+						});
 					}
 				}, 300);
 
@@ -141,8 +181,6 @@ const ContentAccessRules = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [highlightedRuleId, isLoading, rules, hasAppliedHighlight]);
-
-
 
 	const handleToggleExpand = (ruleId) => {
 		setExpandedRules((prev) => {
@@ -172,7 +210,9 @@ const ContentAccessRules = () => {
 		if (updatedRule) {
 			setRules((prevRules) =>
 				prevRules.map((rule) =>
-					rule.id === updatedRule.id ? { ...rule, ...updatedRule } : rule
+					rule.id === updatedRule.id
+						? { ...rule, ...updatedRule }
+						: rule
 				)
 			);
 		}
@@ -233,7 +273,10 @@ const ContentAccessRules = () => {
 			<div className="user-registration-content-restriction-viewer">
 				<div className="urcr-error-container">
 					<p>{error}</p>
-					<button className="button button-primary" onClick={fetchRules}>
+					<button
+						className="button button-primary"
+						onClick={fetchRules}
+					>
 						{__("Retry", "user-registration")}
 					</button>
 				</div>
@@ -246,19 +289,29 @@ const ContentAccessRules = () => {
 			<div className="urcr-viewer-container">
 				<div className="urcr-header">
 					<h1>{__("Content Rules", "user-registration")}</h1>
-					{isProAccess() && isContentRestrictionEnabled && activeTab === "custom" && (
-						<button type="button" className="urcr-add-new-button" onClick={handleOpenModal}>
-							<span className="dashicons dashicons-plus-alt2"></span>
-							{__("Add New", "user-registration")}
-						</button>
-					)}
+					{isProAccess() &&
+						isContentRestrictionEnabled &&
+						activeTab === "custom" && (
+							<button
+								type="button"
+								className="urcr-add-new-button"
+								onClick={handleOpenModal}
+							>
+								<span className="dashicons dashicons-plus-alt2"></span>
+								{__("Add New", "user-registration")}
+							</button>
+						)}
 				</div>
 
 				{shouldShowTabSwitcher && (
 					<div className="urcr-tabs">
 						<button
 							type="button"
-							className={`urcr-tab ${activeTab === "membership" ? "urcr-tab-active" : ""}`}
+							className={`urcr-tab ${
+								activeTab === "membership"
+									? "urcr-tab-active"
+									: ""
+							}`}
 							onClick={() => setActiveTab("membership")}
 						>
 							{__("Membership Rules", "user-registration")}
@@ -266,7 +319,11 @@ const ContentAccessRules = () => {
 						{shouldShowCustomTab && (
 							<button
 								type="button"
-								className={`urcr-tab ${activeTab === "custom" ? "urcr-tab-active" : ""}`}
+								className={`urcr-tab ${
+									activeTab === "custom"
+										? "urcr-tab-active"
+										: ""
+								}`}
 								onClick={() => setActiveTab("custom")}
 							>
 								{__("Custom Rules", "user-registration")}
@@ -275,13 +332,17 @@ const ContentAccessRules = () => {
 					</div>
 				)}
 
-				<AddNewRuleModal isOpen={isModalOpen} onClose={handleCloseModal} onCreateSuccess={handleRuleCreated} />
+				<AddNewRuleModal
+					isOpen={isModalOpen}
+					onClose={handleCloseModal}
+					onCreateSuccess={handleRuleCreated}
+				/>
 
 				{currentRules.length === 0 ? (
 					<div className="user-registration-card ur-text-center urcr-no-rules">
 						<img
 							src={`${assetsURL || ""}images/empty-table.png`}
-							alt={__("No rules found", "user-registration")}							
+							alt={__("No rules found", "user-registration")}
 						/>
 					</div>
 				) : (
@@ -293,8 +354,12 @@ const ContentAccessRules = () => {
 								isExpanded={expandedRules.has(rule.id)}
 								isSettingsOpen={openSettingsPanels.has(rule.id)}
 								isHighlighted={highlightedRuleId === rule.id}
-								onToggleExpand={() => handleToggleExpand(rule.id)}
-								onToggleSettings={() => handleToggleSettings(rule.id)}
+								onToggleExpand={() =>
+									handleToggleExpand(rule.id)
+								}
+								onToggleSettings={() =>
+									handleToggleSettings(rule.id)
+								}
 								onRuleUpdate={handleRuleUpdate}
 								onRuleStatusUpdate={handleRuleStatusUpdate}
 								onRuleDelete={handleRuleDelete}

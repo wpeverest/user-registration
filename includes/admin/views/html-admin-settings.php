@@ -108,6 +108,7 @@ $user_registration_settings_form_method_tab = apply_filters( 'user_registration_
 					</div>
 					<div class="user-registration-options-container">
 						<?php
+							do_action( 'user_registration_section_parts_' . $current_tab );
 							self::show_messages();
 
 							/**

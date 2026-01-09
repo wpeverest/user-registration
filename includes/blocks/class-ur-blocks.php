@@ -62,7 +62,7 @@ class UR_Blocks {
 			UR_VERSION
 		);
 
-		wp_enqueue_style( 'user-registration-blocks-editor-style', );
+		wp_enqueue_style( 'user-registration-blocks-editor-style' );
 
 		if ( ur_check_module_activation( 'membership' ) ) {
 
@@ -70,21 +70,38 @@ class UR_Blocks {
 			wp_enqueue_style( 'user-registration-membership-frontend-style' );
 		}
 
-		$authenticate_smart_tag = \UR_Smart_Tags::ur_authenticated_parsable_smart_tags_list();
-
-		$smart_tag = array();
-
-		$smart_tag[] = array(
-			'text'  => esc_html__( 'Membership Plan Details', 'user-registration' ),
-			'value' => '{{membership_plan_details}}',
+		$smart_tag = array(
+			array(
+				'text'  => esc_html__( 'Membership Plan Details', 'user-registration' ),
+				'value' => '{{membership_plan_details}}',
+			),
+			array(
+				'text'  => esc_html__( 'All Fields', 'user-registration' ),
+				'value' => '{{all_fields}}',
+			),
+			array(
+				'text'  => esc_html__( 'User Name', 'user-registration' ),
+				'value' => '{{username}}',
+			),
+			array(
+				'text'  => esc_html__( 'Email', 'user-registration' ),
+				'value' => '{{email}}',
+			),
+			array(
+				'text'  => esc_html__( 'First Name', 'user-registration' ),
+				'value' => '{{first_name}}',
+			),
+			array(
+				'text'  => esc_html__( 'Last Name', 'user-registration' ),
+				'value' => '{{last_name}}',
+			),
+			array(
+				'text'  => esc_html__( 'User Display Name', 'user-registration' ),
+				'value' => '{{display_name}}',
+			),
 		);
 
-		foreach ( $authenticate_smart_tag as $value => $text ) {
-			$smart_tag[] = array(
-				'text'  => $text,
-				'value' => $value,
-			);
-		}
+		$smart_tag = apply_filters( 'user_registration_thank_you_page_smart_tags', $smart_tag );
 
 		$pages        = get_pages();
 		$page_options = array(
@@ -100,8 +117,6 @@ class UR_Blocks {
 				'value' => $page->ID,
 			);
 		}
-
-		$all_forms = ur_get_all_user_registration_form();
 
 		wp_localize_script(
 			'user-registration-blocks-editor',
@@ -128,7 +143,7 @@ class UR_Blocks {
 				'pages_array'                 => $page_options,
 				'membership_all_plan_url'     => admin_url( 'admin.php?page=user-registration-membership' ),
 				'membership_group_url'        => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
-				'oldestForm'                  => ! empty( $all_forms ) ? array_key_first( $all_forms ) : 0,
+				'bank_details_settings'       => admin_url( 'admin.php?page=user-registration-settings&tab=payment' ),
 			)
 		);
 		wp_register_script(
@@ -165,7 +180,7 @@ class UR_Blocks {
 			array(
 				array(
 					'slug'  => 'user-registration',
-					'title' => esc_html__( 'User Registration & Membership', 'user-registration' ),
+					'title' => esc_html__( 'User Registration and Membership', 'user-registration' ),
 				),
 			),
 			$block_categories

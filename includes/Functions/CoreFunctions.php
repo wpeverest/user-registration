@@ -402,11 +402,20 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 			);
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
 				foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
+					$is_new_installation = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
 
-					if ( ! urm_is_payment_gateway_configured( $key ) ) {
-						continue;
+					if ( $is_new_installation ) {
+						if ( ! urm_is_payment_gateway_configured( $key ) ) {
+							continue;
+						}
+						$active_payment_gateways[ $key ] = true;
+					} else {
+						if ( 'on' !== $gateways['status'] ) {
+							continue;
+						}
+						$active_payment_gateways[ $key ] = $gateways['status'];
 					}
-					$active_payment_gateways[ $key ] = true;
+
 				}
 
 				$new_mem[ $k ]['active_payment_gateways'] = ( wp_unslash( wp_json_encode( $active_payment_gateways ) ) );
@@ -455,21 +464,21 @@ if ( ! function_exists( 'get_membership_menus' ) ) {
 				'label'  => __( 'Memberships', 'user-registration' ),
 				'url'    => admin_url( 'admin.php?page=user-registration-membership' ),
 				'active' => isset( $_GET['page'] ) &&
-							$_GET['page'] === 'user-registration-membership' &&
-							( isset( $_GET['action'] ) ? ! in_array(
-								$_GET['action'],
-								array(
-									'list_groups',
-									'add_groups',
-								)
-							) : true ),
+				            $_GET['page'] === 'user-registration-membership' &&
+				            ( isset( $_GET['action'] ) ? ! in_array(
+					            $_GET['action'],
+					            array(
+						            'list_groups',
+						            'add_groups',
+					            )
+				            ) : true ),
 			),
 			'membership_groups' => array(
 				'label'  => __( 'Membership Groups', 'user-registration' ),
 				'url'    => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
 				'active' => isset( $_GET['page'], $_GET['action'] ) &&
-							$_GET['page'] === 'user-registration-membership' &&
-							in_array( $_GET['action'], array( 'list_groups', 'add_groups' ) ),
+				            $_GET['page'] === 'user-registration-membership' &&
+				            in_array( $_GET['action'], array( 'list_groups', 'add_groups' ) ),
 			),
 			'members'           => array(
 				'label'  => __( 'Members', 'user-registration' ),
@@ -590,6 +599,7 @@ if ( ! function_exists( 'urm_get_plan_description' ) ) {
 	 *
 	 * @param string $plan_type Plan type.
 	 * @param string $plan_period Plan period.
+	 *
 	 * @return string
 	 */
 	function urm_get_plan_description( $plan_type, $plan_period ) {
@@ -615,8 +625,9 @@ if ( ! function_exists( 'urm_get_gateway_image_url' ) ) {
 	 * Get payment gateway image URL.
 	 *
 	 * @param string $gateway_key Gateway key.
-	 * @param array  $gateway_images Gateway images mapping.
+	 * @param array $gateway_images Gateway images mapping.
 	 * @param string $plugin_url Plugin URL.
+	 *
 	 * @return string
 	 */
 	function urm_get_gateway_image_url( $gateway_key, $gateway_images, $plugin_url ) {
@@ -636,6 +647,7 @@ if ( ! function_exists( 'urm_get_active_gateways_for_plan' ) ) {
 	 *
 	 * @param array $option Membership option data.
 	 * @param array $payment_gateways Available payment gateways.
+	 *
 	 * @return array
 	 */
 	function urm_get_active_gateways_for_plan( $option, $payment_gateways ) {
@@ -668,6 +680,7 @@ if ( ! function_exists( 'urm_get_all_active_payment_gateways' ) ) {
 	 * Get all payment gateways that are configured/setup.
 	 *
 	 * @param string $membership_type Optional. The membership type ('paid' or 'subscription')
+	 *
 	 * @return array
 	 */
 	function urm_get_all_active_payment_gateways( $membership_type = 'paid' ) {
@@ -697,8 +710,9 @@ if ( ! function_exists( 'urm_get_all_active_payment_gateways' ) ) {
 		/**
 		 * Filters the list of active payment gateways.
 		 *
-		 * @param array  $active_gateways Active payment gateways.
+		 * @param array $active_gateways Active payment gateways.
 		 * @param string $membership_type Membership type.
+		 *
 		 * @return array
 		 */
 		return apply_filters( 'urm_active_payment_gateways', $active_gateways, $membership_type );
@@ -712,12 +726,39 @@ if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
 	 * This function checks if a payment gateway has the required settings configured,
 	 * without validating if they are correct or complete.
 	 *
-	 * @param string $gateway_key     Payment gateway key (e.g., 'paypal', 'stripe', 'bank').
+	 * @param string $gateway_key Payment gateway key (e.g., 'paypal', 'stripe', 'bank').
 	 * @param string $membership_type Optional. Membership type for PayPal check. Default 'paid'.
+	 *
 	 * @return bool True if gateway is configured, false otherwise.
 	 */
 	function urm_is_payment_gateway_configured( $gateway_key, $membership_type = 'paid' ) {
 		$is_configured = false;
+		$is_new_installation = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
+
+		// First check if the gateway is enabled
+		$enabled_option = '';
+		switch ( $gateway_key ) {
+			case 'paypal':
+				$enabled_option = get_option( 'user_registration_paypal_enabled', '' );
+				break;
+			case 'stripe':
+				$enabled_option = get_option( 'user_registration_stripe_enabled', '' );
+				break;
+			case 'bank':
+				$enabled_option = get_option( 'user_registration_bank_transfer_enabled', '' );
+				break;
+		}
+
+
+		if ( empty( $enabled_option ) ) {
+			$is_enabled = ! $is_new_installation;
+		} else {
+			$is_enabled = ur_string_to_bool( $enabled_option );
+		}
+
+		if ( ! $is_enabled ) {
+			return false;
+		}
 
 		switch ( $gateway_key ) {
 			case 'paypal':
@@ -751,9 +792,10 @@ if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
 		/**
 		 * Filters whether the payment gateway is configured.
 		 *
-		 * @param bool   $is_configured  Whether the gateway is configured.
-		 * @param string $gateway_key    Payment gateway key.
+		 * @param bool $is_configured Whether the gateway is configured.
+		 * @param string $gateway_key Payment gateway key.
 		 * @param string $membership_type Membership type.
+		 *
 		 * @return bool
 		 */
 		return apply_filters( 'urm_is_payment_gateway_configured', $is_configured, $gateway_key, $membership_type );
@@ -765,7 +807,8 @@ if ( ! function_exists( 'urcr_build_migration_actions' ) ) {
 	 * Build migration actions array.
 	 *
 	 * @param string $migration_source Migration source type ('membership' or 'content').
-	 * @param int    $timestamp        Optional timestamp to use for action IDs. If not provided, generates a new one.
+	 * @param int $timestamp Optional timestamp to use for action IDs. If not provided, generates a new one.
+	 *
 	 * @return array Actions array.
 	 */
 	function urcr_build_migration_actions( $migration_source = 'content', $timestamp = null ) {
@@ -776,8 +819,11 @@ if ( ! function_exists( 'urcr_build_migration_actions' ) ) {
 		if ( $migration_source === 'membership' ) {
 			$message = '';
 		} else {
-			$saved_message = get_option( 'user_registration_content_restriction_message', '' );
-			$message = ! empty( $saved_message ) ? $saved_message : '';
+			$default_message = '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
+<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
+<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
+<p>{{sign_up}} {{log_in}}</p>';
+			$message         = get_option( 'user_registration_content_restriction_message', $default_message );
 
 			if ( ! empty( $message ) ) {
 				$message = wp_unslash( $message );
@@ -809,7 +855,7 @@ if ( ! function_exists( 'urcr_create_membership_rule' ) ) {
 	/**
 	 * Create a default membership rule.
 	 *
-	 * @param int    $membership_id    The membership ID.
+	 * @param int $membership_id The membership ID.
 	 * @param string $membership_title Optional membership title.
 	 *
 	 * @return int|false Rule ID on success, false on failure.
@@ -909,8 +955,8 @@ if ( ! function_exists( 'urcr_create_or_update_membership_rule' ) ) {
 	/**
 	 * Create or update membership rule with data from UI.
 	 *
-	 * @param int   $membership_id The membership ID.
-	 * @param array $rule_data     Optional rule data from UI (access_rule_data structure).
+	 * @param int $membership_id The membership ID.
+	 * @param array $rule_data Optional rule data from UI (access_rule_data structure).
 	 *
 	 * @return int|false Rule ID on success, false on failure.
 	 */
@@ -952,7 +998,7 @@ if ( ! function_exists( 'urcr_create_or_update_membership_rule' ) ) {
 			$has_membership_condition = false;
 			foreach ( $existing_conditions as $key => $condition ) {
 				if ( isset( $condition['type'] ) && $condition['type'] === 'membership' ) {
-					$has_membership_condition = true;
+					$has_membership_condition             = true;
 					$existing_conditions[ $key ]['value'] = array( strval( $membership_id ) );
 					break;
 				}
@@ -981,7 +1027,7 @@ if ( ! function_exists( 'urcr_create_or_update_membership_rule' ) ) {
 
 			$access_rule_data = wp_unslash( $access_rule_data );
 			$rule_content     = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
-			$rule_content = wp_slash( $rule_content );
+			$rule_content     = wp_slash( $rule_content );
 		} else {
 			return urcr_create_membership_rule( $membership_id );
 		}

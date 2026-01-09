@@ -181,7 +181,10 @@
 			var searchParams = new URLSearchParams(window.location.search),
 				action = searchParams.get("action");
 
-			if (action === "register" || null === action) {
+			if (
+				"free_membership" != thank_you_data.context &&
+				(action === "register" || null === action)
+			) {
 				$registration_form.find("form")[0].reset();
 				var wrapper = $(
 					'<div class="ur-message user-registration-message" id="ur-submit-message-node"/>'
@@ -440,6 +443,9 @@
 					);
 					break;
 				case "stripe":
+					ur_membership_frontend_utils.show_success_message(
+						response.data.message
+					);
 					stripe_settings.handle_stripe_response(
 						response,
 						prepare_members_data,
@@ -459,10 +465,14 @@
 					window.location.replace(response.data.pg_data.payment_url);
 					break;
 				default:
+					ur_membership_frontend_utils.show_success_message(
+						response.data.message
+					);
 					ur_membership_frontend_utils.show_form_success_message(
 						form_response,
 						{
-							username: prepare_members_data.username
+							username: prepare_members_data.username,
+							context: "free_membership"
 						}
 					);
 					break;
@@ -1291,7 +1301,9 @@
 					var cleanUrl =
 						window.location.origin + window.location.pathname;
 
-					window.location.replace(response.data.pg_data.payment_url);
+					window.location.replace(
+						response.data.pg_data.thank_you_page_url
+					);
 				default:
 					ur_membership_ajax_utils.show_bank_response(
 						response,
@@ -1918,7 +1930,6 @@
 						),
 						urm_default_pg = $(this).data("urm-default-pg"),
 						hasCouponLink = $(this).data("has-coupon-link");
-
 					if ("yes" === hasCouponLink) {
 						$(document).find("#ur_coupon_container").show();
 					} else {
@@ -1989,23 +2000,23 @@
 								}
 							});
 						}
-						// urm_pg_inputs.each(function (key, item) {
-						// 	var current_gateway = $(item).val(),
-						// 		input_container = $(
-						// 			'label[for="ur-membership-' +
-						// 				current_gateway +
-						// 				'"]'
-						// 		);
-						// 	if (urmf_data.gateways_configured) {
-						// 	}
-						// 	if (
-						// 		!urm_payment_gateways.hasOwnProperty(
-						// 			current_gateway
-						// 		)
-						// 	) {
-						// 		input_container.addClass("urm-d-none");
-						// 	}
-						// });
+						urm_pg_inputs.each(function (key, item) {
+							var current_gateway = $(item).val(),
+								input_container = $(
+									'label[for="ur-membership-' +
+										current_gateway +
+										'"]'
+								);
+							if (urmf_data.gateways_configured) {
+							}
+							if (
+								!urm_payment_gateways.hasOwnProperty(
+									current_gateway
+								)
+							) {
+								input_container.addClass("urm-d-none");
+							}
+						});
 
 						if (
 							urm_pg_container.find("input:visible").length === 1
@@ -2427,25 +2438,29 @@
 							$this.text(urmf_data.labels.i18n_sending_text);
 						},
 						success: function (response) {
-							if (
-								$(".user-registration-page .notice-container")
-									.length === 0
-							) {
-								$(
-									".user-registration-membership-notice__container"
-								).remove();
-								// Adds the toast container on the top of page.
-								$(document)
-									.find(".user-registration-page")
-									.prepend(
-										'<div class="user-registration-membership-notice__container"><div class="ur-toaster urm-error user-registration-membership-notice__red"><span class="user-registration-membership-notice__message"></span><span class="user-registration-membership__close_notice">&times;</span></div></div>'
-									);
+							if (!response.success) {
+								if (
+									$(
+										".user-registration-page .notice-container"
+									).length === 0
+								) {
+									$(
+										".user-registration-membership-notice__container"
+									).remove();
+									// Adds the toast container on the top of page.
+									$(document)
+										.find(".user-registration-page")
+										.prepend(
+											'<div class="user-registration-membership-notice__container"><div class="ur-toaster urm-error user-registration-membership-notice__red"><span class="user-registration-membership-notice__message"></span><span class="user-registration-membership__close_notice">&times;</span></div></div>'
+										);
+								}
+								$(document).trigger("urm_show_action_message", {
+									message: response.data.message,
+									type: response.success ? "success" : "error"
+								});
+							} else {
+								location.reload();
 							}
-
-							$(document).trigger("urm_show_action_message", {
-								message: response.data.message,
-								type: response.success ? "success" : "error"
-							});
 						},
 						complete: function () {
 							$this.text(button_text);

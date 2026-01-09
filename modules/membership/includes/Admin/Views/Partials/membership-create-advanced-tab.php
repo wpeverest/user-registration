@@ -130,7 +130,12 @@
 								<select multiple data-key-name="<?php echo esc_html__( 'Upgrade Path', 'user-registration' ); ?>"
 										id="ur-input-type-membership-upgrade-path" class="user-membership-enhanced-select2">
 									<?php
-									$upgrade_path = !empty( $membership_details['upgrade_settings']['upgrade_path'] ) ? explode( ',', $membership_details['upgrade_settings']['upgrade_path'] ) : array();
+									$upgrade_path_raw = $membership_details['upgrade_settings']['upgrade_path'] ?? '';
+
+									$upgrade_path = is_array( $upgrade_path_raw )
+									? $upgrade_path_raw
+									: ( ! empty( $upgrade_path_raw ) ? explode( ',', $upgrade_path_raw ) : array() );
+
 									foreach ( $memberships as $k => $m ) :
 										if ( isset( $_GET['post_id'] ) && $_GET['post_id'] == $m['ID'] ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 											continue;

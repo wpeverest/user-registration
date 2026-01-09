@@ -220,7 +220,7 @@ jQuery(function ($) {
 		var $this = $(this);
 
 		var icon =
-			'<i class="dashicons dashicons-lock" style="color:#72aee6;"></i>';
+			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
 
 		var plan = $this.data("plan");
 		var name = $this.data("name");
