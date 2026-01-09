@@ -136,7 +136,7 @@ class UR_Blocks {
 				),
 				'login_page_id'               => get_option( 'user_registration_login_page_id' ),
 				'urcrConfigurl'               => ur_check_module_activation( 'content-restriction' ) ? admin_url( 'admin.php?page=user-registration-content-restriction' ) : '',
-				'urcrGlobalRestrictionMsgUrl' => ur_check_module_activation( 'content-restriction' ) ? admin_url( 'admin.php?page=user-registration-settings&tab=content_restriction' ) : '',
+				'urcrGlobalRestrictionMsgUrl' => ur_check_module_activation( 'content-restriction' ) ? admin_url( 'admin.php?page=user-registration-settings&tab=membership&section=content-rules' ) : '',
 				'isProActive'                 => UR_PRO_ACTIVE,
 				'smart_tags'                  => $smart_tag,
 				'pages_array'                 => $page_options,
