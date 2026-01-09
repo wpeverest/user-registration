@@ -292,11 +292,10 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 				$membership_rules_count = ur_get_membership_rules_count();
 			}
 
-			if ( ur_check_module_activation( 'content-restriction' ) || $membership_rules_count >= 2 ) {
 
-				include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
-				include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
-			}
+			include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
+
 
 			/**
 			 * Elementor classes.

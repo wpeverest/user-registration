@@ -83,7 +83,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				}
 				setActionType(normalizedType);
 			}
-			
+
 			// Helper function to get default message
 			const getDefaultMessage = () => {
 				const defaultMessage = getURCRData(
@@ -92,7 +92,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				);
 				return defaultMessage;
 			};
-			
+
 			// For migrated custom rules, always load the message from action
 			if (isMigratedCustomRule) {
 				if (action.message) {
@@ -203,7 +203,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 
 	const handleAdvancedLogicToggle = (e) => {
 		const newValue = e.target.checked;
-		
+
 		if (!newValue) {
 			const logicMap = rule.logic_map || (rule.content && rule.content.logic_map) || null;
 			if (hasAdvancedLogic(logicMap)) {
@@ -211,9 +211,9 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				return;
 			}
 		}
-		
+
 		setIsAdvancedLogicEnabled(newValue);
-		
+
 		if (onRuleUpdate) {
 			const updatedRule = {
 				...rule,
@@ -648,7 +648,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				/>
 			)}
 
-			{!isMembershipRule && !isMigratedCustomRule && isProAccess (
+			{!isMembershipRule && !isMigratedCustomRule && isProAccess() && (
 				<div className="urcr-label-input-pair urcr-rule-action ur-align-items-center ur-form-group">
 					<label className="urcr-label-container ur-col-4">
 						<span className="urcr-target-content-label">
