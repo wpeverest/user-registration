@@ -152,7 +152,7 @@ class URCR_Frontend {
 
 			foreach ( $access_rule_posts as $access_rule_post ) {
 				$access_rule = json_decode( $access_rule_post->post_content, true );
-
+				
 				// Verify if required params are available.
 				if ( ur_string_to_bool( $access_rule['enabled'] ) && ! empty( $access_rule['target_contents'] ) ) {
 					$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
@@ -161,7 +161,7 @@ class URCR_Frontend {
 					}
 				}
 			}
-
+			
 			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
 			if ( $is_whole_site_restriction ) {
@@ -193,11 +193,14 @@ class URCR_Frontend {
 						continue;
 					}
 
+					$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
+					if ( ! in_array( 'whole_site', $types, true ) ) {
+						continue;
+					}
 
 					if ( urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule ) ) {
 
 						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
-
 
 						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
 
@@ -210,9 +213,45 @@ class URCR_Frontend {
 					}
 				}
 
-				// If any rule granted access, allow it
 				if ( $access_granted ) {
 					return $template;
+				}
+
+				foreach ( $access_rule_posts as $access_rule_post ) {
+					$access_rule = json_decode( $access_rule_post->post_content, true );
+
+					// Verify if required params are available.
+					if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
+						continue;
+					}
+					// Check if the logic map data is in array format.
+					if ( ! is_array( $access_rule['logic_map'] ) ) {
+						continue;
+					}
+					// Validate against empty variables.
+					if ( empty( $access_rule['logic_map']['conditions'] ) || empty( $access_rule['logic_map']['conditions'] ) ) {
+						continue;
+					}
+
+					$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
+					if ( in_array( 'whole_site', $types, true ) ) {
+						continue;
+					}
+
+					$is_target = urcr_is_target_post( $access_rule['target_contents'], $post );
+					if ( true !== $is_target ) {
+						continue;
+					}
+
+					if ( urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule ) ) {
+						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
+
+						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
+
+						if ( ( true === $should_allow_access && 'access' === $access_control ) || ( false == $should_allow_access && 'restrict' === $access_control ) ) {
+							return $template;
+						}
+					}
 				}
 
 				// If no rule granted access and we have a restriction rule, apply it
@@ -232,7 +271,7 @@ class URCR_Frontend {
 				}
 			}
 		}
-
+		
 		return $template;
 	}
 
@@ -814,6 +853,9 @@ class URCR_Frontend {
 		}
 
 		if ( ! $is_whole_site_restriction ) {
+			$access_granted = false;
+
+			// First, check all rules to see if any grant access
 			foreach ( $access_rule_posts as $access_rule_post ) {
 				$access_rule = json_decode( $access_rule_post->post_content, true );
 
@@ -837,9 +879,44 @@ class URCR_Frontend {
 						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $product_id );
 						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
 
-						if ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
-							$can_view_purchase = false;
+						// If any rule grants access, allow it
+						if ( ( true === $should_allow_access && 'access' === $access_control ) || ( false == $should_allow_access && 'restrict' === $access_control ) ) {
+							$access_granted = true;
 							break;
+						}
+					}
+				}
+			}
+
+			// Only restrict if no rule granted access
+			if ( ! $access_granted ) {
+				foreach ( $access_rule_posts as $access_rule_post ) {
+					$access_rule = json_decode( $access_rule_post->post_content, true );
+
+					// Verify if required params are available.
+					if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
+						continue;
+					}
+					// Check if the logic map data is in array format.
+					if ( ! is_array( $access_rule['logic_map'] ) ) {
+						continue;
+					}
+					// Validate against empty variables.
+					if ( empty( $access_rule['logic_map']['conditions'] ) || empty( $access_rule['logic_map']['conditions'] ) ) {
+						continue;
+					}
+
+					if ( urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule ) ) {
+
+						$is_target = urcr_is_target_post( $access_rule['target_contents'], $product_id );
+						if ( true === $is_target ) {
+							$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $product_id );
+							$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
+
+							if ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
+								$can_view_purchase = false;
+								break;
+							}
 						}
 					}
 				}
@@ -897,59 +974,68 @@ class URCR_Frontend {
 		$posts_length           = empty( $posts ) ? 0 : count( $posts );
 		$is_restriction_applied = false;
 
-		foreach ( $access_rule_posts as $access_rule_post ) {
-			$access_rule = json_decode( $access_rule_post->post_content, true );
+		for ( $i = 0; $i < $posts_length; $i++ ) {
+			$post      = $posts[ $i ];
+			$post_id   = isset( $post->ID ) ? absint( $post->ID ) : 0;
 
-			// Verify if required params are available.
-			if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
-				continue;
-			}
-			// Check if the logic map data is in array format.
-			if ( ! is_array( $access_rule['logic_map'] ) ) {
-				continue;
-			}
-			// Validate against empty variables.
-			if ( empty( $access_rule['logic_map']['conditions'] ) || empty( $access_rule['logic_map']['conditions'] ) ) {
+			if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
 				continue;
 			}
 
+			$access_granted = false;
+			$restriction_rule = null;
 
+			foreach ( $access_rule_posts as $access_rule_post ) {
+				$access_rule = json_decode( $access_rule_post->post_content, true );
+				
+				// Verify if required params are available.
+				if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
+					continue;
+				}
+				// Check if the logic map data is in array format.
+				if ( ! is_array( $access_rule['logic_map'] ) ) {
+					continue;
+				}
+				// Validate against empty variables.
+				if ( empty( $access_rule['logic_map']['conditions'] ) || empty( $access_rule['logic_map']['conditions'] ) ) {
+					continue;
+				}
 
-			if ( urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule ) ) {
-
-				for ( $i = 0; $i < $posts_length; $i++ ) {
-					$post      = $posts[ $i ];
-					$post_id   = isset( $post->ID ) ? absint( $post->ID ) : 0;
-
-					// Check if this page should be excluded from restriction
-					if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
-						continue;
-					}
-
+				if ( urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule ) ) {
+					
 					$is_target = urcr_is_target_post( $access_rule['target_contents'], $post );
-
+					
 					if ( true === $is_target ) {
-
 						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
 
 						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
 
-						if ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
-
-							do_action( 'urcr_pre_content_restriction_applied', $access_rule, $post );
-
-							$is_applied = urcr_apply_content_restriction( $access_rule['actions'], $post );
-
-							// In case there are multiple posts and 'true' occurred at least once, never change it to false.
-							$is_restriction_applied = $posts_length > 1 && $is_restriction_applied ? true : $is_applied;
-
-							do_action( 'urcr_post_content_restriction_applied', $access_rule, $post );
+						if ( ( true === $should_allow_access && 'access' === $access_control ) || ( false == $should_allow_access && 'restrict' === $access_control ) ) {
+							$access_granted = true;
+						} elseif ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
+							$restriction_rule = $access_rule;
 						}
 					}
 				}
 			}
-		}
+			
+			
+			if ( $access_granted ) {
+				continue;
+			}
+			
+			if ( null !== $restriction_rule ) {
+				do_action( 'urcr_pre_content_restriction_applied', $restriction_rule, $post );
 
+				$is_applied = urcr_apply_content_restriction( $restriction_rule['actions'], $post );
+
+				// In case there are multiple posts and 'true' occurred at least once, never change it to false.
+				$is_restriction_applied = $posts_length > 1 && $is_restriction_applied ? true : $is_applied;
+
+				do_action( 'urcr_post_content_restriction_applied', $restriction_rule, $post );
+			}
+		}
+	
 		return $is_restriction_applied;
 	}
 
