@@ -94,6 +94,8 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                         'bank_transfer_options' => $bank_transfer_settings,
                     ),
                 );
+                /* Backward compatibility */
+                $settings = apply_filters( 'user_registration_payment_settings', $settings );
             } elseif( 'store' === $current_section ) {
                 add_filter( 'user_registration_settings_hide_save_button', '__return_true' );
                 $settings = array(

@@ -43,7 +43,11 @@ if ( ! class_exists( 'UR_Settings_Import_Export' ) ) :
 		 *
 		 * @return array
 		 */
-		public function get_parts() {
+		public function get_parts( $sections ) {
+			global $current_section;
+
+			if( 'import-export' !== $current_section ) return $sections;
+
 			$sections = array(
 				''                    => __( 'Export Users', 'user-registration' ),
 				'import-export-forms' => __( 'Import/Export Forms', 'user-registration' ),
