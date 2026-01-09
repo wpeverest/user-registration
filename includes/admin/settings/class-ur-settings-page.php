@@ -159,8 +159,13 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 					$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
 
 					if ( ! empty( $premium_tab[ $id ]['plan'] ) ) {
+						$id_bc = str_replace('-', '_', $id );
 
-						if( isset( $premium_tab[ $id ][ 'plugin' ] ) && is_plugin_active( $premium_tab[ $id ][ 'plugin' ] . '/' . $premium_tab[ $id ][ 'plugin' ] . '.php' ) && ( in_array( $premium_tab[ $id ][ 'plugin' ], $tab_slugs ) || in_array( $id, $tab_slugs ) ) ) {
+						if( isset( $premium_tab[ $id ][ 'plugin' ] ) && is_plugin_active( $premium_tab[ $id ][ 'plugin' ] . '/' . $premium_tab[ $id ][ 'plugin' ] . '.php' ) && ( in_array( $premium_tab[ $id ][ 'plugin' ], $tab_slugs ) || in_array( $id, $tab_slugs ) || in_array( $id_bc, $tab_slugs ) ) ) {
+							$show_section = false;
+						}
+						//woocommerce compatibility.
+						if( 'woocommerce' === $id && ! is_plugin_active('woocommerce/woocommerce.php') ) {
 							$show_section = false;
 						}
 
