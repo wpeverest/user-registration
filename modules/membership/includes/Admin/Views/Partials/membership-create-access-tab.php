@@ -189,7 +189,7 @@
 										'urcr-membership-action-message',
 										array(
 											'textarea_name' => 'urcr_action_message',
-											'textarea_rows' => 20,
+											'textarea_rows' => 30,
 											'media_buttons' => true,
 											'quicktags' => false,
 											'teeny'     => false,
@@ -198,6 +198,7 @@
 											'tinymce'   => array(
 												'toolbar1' => 'undo,redo,formatselect,fontselect,fontsizeselect,bold,italic,forecolor,alignleft,aligncenter,alignright,alignjustify,bullist,numlist,outdent,indent,removeformat',
 												'statusbar' => false,
+												'min_height' => 250,
 												'plugins'  => 'wordpress,wpautoresize,wplink,wpdialogs,wptextpattern,wpview,colorpicker,textcolor,hr,charmap,link,fullscreen,lists',
 											),
 										)
