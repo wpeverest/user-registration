@@ -182,7 +182,7 @@
 				action = searchParams.get("action");
 
 			if (
-				"free_membership" != thank_you_data.context &&
+				"hide_message" != thank_you_data.context &&
 				(action === "register" || null === action)
 			) {
 				$registration_form.find("form")[0].reset();
@@ -472,7 +472,7 @@
 						form_response,
 						{
 							username: prepare_members_data.username,
-							context: "free_membership"
+							context: "hide_message"
 						}
 					);
 					break;
@@ -497,7 +497,8 @@
 					transaction_id: response.data.transaction_id,
 					payment_type: "unpaid",
 					info: response.data.pg_data.data,
-					username: prepare_members_data.username
+					username: prepare_members_data.username,
+					context: 'hide_message'
 				};
 
 				ur_membership_frontend_utils.show_form_success_message(

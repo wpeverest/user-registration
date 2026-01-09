@@ -837,7 +837,8 @@ class UR_Admin_Notices {
 
 		$first_time_activation = get_option( 'user_registration_first_time_activation_flag', false );
 
-		$onboarding_completed = true;
+		$onboarding_completed     = true;
+		$onboarding_complete_text = '';
 
 		if ( ! $first_time_activation ) {
 			$onboard_skipped           = get_option( 'user_registration_onboarding_skipped', false );
