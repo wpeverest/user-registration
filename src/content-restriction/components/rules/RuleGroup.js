@@ -394,6 +394,7 @@ const RuleGroup = ({
 							contentTargets={contentTargets}
 							onContentTargetsChange={onContentTargetsChange}
 							ruleType={ruleType}
+							rule={rule}
 						/>
 					)}
 				</div>
@@ -443,23 +444,6 @@ const RuleGroup = ({
 						)}
 				</div>
 			</div>
-			{isMigrated && (
-				<div className="urcr-rule-body ur-p-2">
-					<div className="urcr-condition-row-parent"></div>
-					<div
-						className="urcr-buttons-wrapper"
-						style={{ justifyContent: "end" }}
-					>
-						<div className="urcr-migrated-notice">
-							<span className="dashicons dashicons-warning"></span>
-							{__(
-								"This rule's condition also affects the [urcr_restrict]....[/urcr_restrict] shortcode.",
-								"user-registration"
-							)}
-						</div>
-					</div>
-				</div>
-			)}
 		</div>
 	);
 };

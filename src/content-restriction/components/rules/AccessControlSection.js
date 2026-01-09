@@ -14,6 +14,7 @@ const AccessControlSection = ({
 	contentTargets = [],
 	onContentTargetsChange,
 	ruleType = null,
+	rule = null
 }) => {
 	const conditionValueInputWrapperRef = useRef(null);
 	const lastRuleTypeRef = useRef(null);
@@ -24,7 +25,7 @@ const AccessControlSection = ({
 			type: option.value,
 			label: option.label,
 			value: option.value === "whole_site" ? "whole_site" : [],
-			taxonomy: option.value === "taxonomy" ? "" : undefined,
+			taxonomy: option.value === "taxonomy" ? "" : undefined
 		};
 		onContentTargetsChange([...contentTargets, newContentTarget]);
 	};
@@ -37,7 +38,9 @@ const AccessControlSection = ({
 	};
 
 	const handleContentTargetRemove = (targetId) => {
-		const updatedTargets = contentTargets.filter((target) => target.id !== targetId);
+		const updatedTargets = contentTargets.filter(
+			(target) => target.id !== targetId
+		);
 		onContentTargetsChange(updatedTargets);
 	};
 
@@ -63,7 +66,12 @@ const AccessControlSection = ({
 
 		// For non-membership rules, if not pro and accessControl is "restrict", force to "access"
 		// Only correct when ruleType changes to prevent infinite loops
-		if (!isMembershipRule && !isProAccess() && accessControl === "restrict" && ruleTypeChanged) {
+		if (
+			!isMembershipRule &&
+			!isProAccess() &&
+			accessControl === "restrict" &&
+			ruleTypeChanged
+		) {
 			onAccessControlChange("access");
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,14 +81,24 @@ const AccessControlSection = ({
 		if (conditionValueInputWrapperRef.current) {
 			const isMembershipRule = ruleType === "membership";
 			// For membership rules, always use access class even if accessControl is "restrict"
-			const effectiveAccessControl = isMembershipRule ? "access" : accessControl;
+			const effectiveAccessControl = isMembershipRule
+				? "access"
+				: accessControl;
 
 			if (effectiveAccessControl === "access") {
-				conditionValueInputWrapperRef.current.classList.add("urcr-access-content");
-				conditionValueInputWrapperRef.current.classList.remove("urcr-restrict-content");
+				conditionValueInputWrapperRef.current.classList.add(
+					"urcr-access-content"
+				);
+				conditionValueInputWrapperRef.current.classList.remove(
+					"urcr-restrict-content"
+				);
 			} else {
-				conditionValueInputWrapperRef.current.classList.add("urcr-restrict-content");
-				conditionValueInputWrapperRef.current.classList.remove("urcr-access-content");
+				conditionValueInputWrapperRef.current.classList.add(
+					"urcr-restrict-content"
+				);
+				conditionValueInputWrapperRef.current.classList.remove(
+					"urcr-access-content"
+				);
 			}
 		}
 	}, [accessControl, ruleType]);
@@ -101,11 +119,19 @@ const AccessControlSection = ({
 
 		if (conditionValueInputWrapperRef.current) {
 			if (newValue === "access") {
-				conditionValueInputWrapperRef.current.classList.add("urcr-access-content");
-				conditionValueInputWrapperRef.current.classList.remove("urcr-restrict-content");
+				conditionValueInputWrapperRef.current.classList.add(
+					"urcr-access-content"
+				);
+				conditionValueInputWrapperRef.current.classList.remove(
+					"urcr-restrict-content"
+				);
 			} else {
-				conditionValueInputWrapperRef.current.classList.add("urcr-restrict-content");
-				conditionValueInputWrapperRef.current.classList.remove("urcr-access-content");
+				conditionValueInputWrapperRef.current.classList.add(
+					"urcr-restrict-content"
+				);
+				conditionValueInputWrapperRef.current.classList.remove(
+					"urcr-access-content"
+				);
 			}
 		}
 
@@ -132,14 +158,21 @@ const AccessControlSection = ({
 		// For membership rules, never show restrict option (neither for free nor pro)
 		if (isMembershipRule) {
 			return [
-				{ value: "access", label: __("Access", "user-registration") },
+				{ value: "access", label: __("Access", "user-registration") }
 			];
 		}
 
 		return [
-			...(isProAccess() ? [{ value: "restrict", label: __("Restrict", "user-registration") }] : []),
-			{ value: "access", label: __("Access", "user-registration") },
-		].map(option => ({
+			...(isProAccess()
+				? [
+						{
+							value: "restrict",
+							label: __("Restrict", "user-registration")
+						}
+				  ]
+				: []),
+			{ value: "access", label: __("Access", "user-registration") }
+		].map((option) => ({
 			...option,
 			disabled: !isProAccess() && option.value === "restrict"
 		}));
@@ -150,17 +183,24 @@ const AccessControlSection = ({
 	return (
 		<div className="urcr-target-selection-section ur-d-flex ur-align-items-start">
 			{/* Access/Restrict Section */}
-			<div className="urcr-condition-value-input-wrapper" ref={conditionValueInputWrapperRef}>
+			<div
+				className="urcr-condition-value-input-wrapper"
+				ref={conditionValueInputWrapperRef}
+			>
 				{isMembershipRule ? (
 					// For membership rules, show only "Access" text without dropdown
 					<span className="urcr-access-control-button urcr-condition-value-input urcr-dropdown-button">
-						<span className="urcr-dropdown-button-text">{__("Access", "user-registration")}</span>
+						<span className="urcr-dropdown-button-text">
+							{__("Access", "user-registration")}
+						</span>
 					</span>
 				) : (
 					<DropdownButton
 						buttonContent={
 							<>
-								<span className="urcr-dropdown-button-text">{getAccessControlLabel()}</span>
+								<span className="urcr-dropdown-button-text">
+									{getAccessControlLabel()}
+								</span>
 								<span className="urcr-dropdown-button-arrow dashicons dashicons-arrow-down-alt2"></span>
 							</>
 						}
@@ -175,26 +215,57 @@ const AccessControlSection = ({
 
 			<span className="urcr-arrow-icon" aria-hidden="true"></span>
 			<div className="ur-d-flex ur-flex-column">
+				{rule && rule?.is_global && (
+					<div class="urcr-target-type-group">
+						<div class="urcr-target-item">
+							<span class="urcr-target-type-label">
+								{__("Shortcode", "user-registration")}:
+							</span>
+							<span class="urcr-whole-site-text">
+								{__(
+									"This rule's condition also affects the [urcr_restrict]....[/urcr_restrict] shortcode.",
+									"user-registration"
+								)}
+							</span>
+						</div>
+					</div>
+				)}
 				{contentTargets.length > 0 && (
 					<div className="urcr-target-type-group">
 						{contentTargets.map((target) => {
 							// For whole_site, use "Includes" as label prefix, otherwise use target.label
-							const displayLabel = target.type === "whole_site" 
-								? __("Includes", "user-registration")
-								: target.label;
+							const displayLabel =
+								target.type === "whole_site"
+									? __("Includes", "user-registration")
+									: target.label;
 							return (
-								<div key={target.id} className="urcr-target-item">
-									<span className="urcr-target-type-label">{displayLabel}:</span>
+								<div
+									key={target.id}
+									className="urcr-target-item"
+								>
+									<span className="urcr-target-type-label">
+										{displayLabel}:
+									</span>
 									<ContentValueInput
 										contentType={target.type}
 										value={target.value}
-										onChange={(newValue) => handleContentTargetUpdate(target.id, newValue)}
+										onChange={(newValue) =>
+											handleContentTargetUpdate(
+												target.id,
+												newValue
+											)
+										}
 									/>
 									<button
 										type="button"
 										className="button-link urcr-target-remove"
-										onClick={() => handleContentTargetRemove(target.id)}
-										aria-label={__("Remove", "user-registration")}
+										onClick={() =>
+											handleContentTargetRemove(target.id)
+										}
+										aria-label={__(
+											"Remove",
+											"user-registration"
+										)}
 									>
 										<span className="dashicons dashicons-no-alt"></span>
 									</button>
@@ -229,6 +300,3 @@ const AccessControlSection = ({
 };
 
 export default AccessControlSection;
-
-
-

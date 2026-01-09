@@ -1103,21 +1103,11 @@ function urcr_migrate_global_restriction_settings() {
 	}
 
 	$whole_site_access = get_option( 'user_registration_content_restriction_whole_site_access', false );
-	if ( ! ur_string_to_bool( $whole_site_access ) ) {
-		update_option( 'urcr_global_restriction_migrated', true );
-
-		return false;
-	}
 
 	$allow_to = get_option( 'user_registration_content_restriction_allow_access_to', 0 );
 	$allow_to = absint( $allow_to );
 
 	$conditions = urcr_build_migration_conditions( $allow_to );
-	if ( empty( $conditions ) ) {
-		update_option( 'urcr_global_restriction_migrated', true );
-
-		return false;
-	}
 
 	$timestamp = time() * 1000;
 
@@ -1139,7 +1129,7 @@ function urcr_migrate_global_restriction_settings() {
 		'enabled'         => true,
 		'access_control'  => 'access',
 		'logic_map'       => $logic_map,
-		'target_contents' => $target_contents,
+		'target_contents' => ur_string_to_bool( $whole_site_access ) ? $target_contents : array(),
 		'actions'         => urcr_build_migration_actions( 'content', $timestamp ),
 	);
 
@@ -1147,8 +1137,8 @@ function urcr_migrate_global_restriction_settings() {
 
 	if ( $rule_id ) {
 		update_option( 'urcr_global_restriction_migrated', true );
+		//To track it is global.
 		update_post_meta( $rule_id, 'urcr_is_global', true );
-
 		delete_option( 'user_registration_content_restriction_whole_site_access' );
 
 		return $rule_id;
@@ -1319,9 +1309,6 @@ function urcr_migrate_post_page_restrictions() {
 		if ( count( $all_migrated_ids ) >= $total_posts_count ) {
 			update_option( 'urcr_post_page_restrictions_migrated', true );
 		}
-
-		//To track it is global.
-		update_post_meta( $rule_id, 'urcr_is_global', true );
 
 		return array(
 			'rule_id'  => $rule_id,
@@ -1667,5 +1654,5 @@ function urcr_migrated_global_rule() {
 		)
 	);
 
-	return ! empty( $posts ) ? json_decode( $posts[0]->post_content, true ) : null;
+	return ! empty( $posts ) ? json_decode( $posts[0]->post_content, true ) : array();
 }

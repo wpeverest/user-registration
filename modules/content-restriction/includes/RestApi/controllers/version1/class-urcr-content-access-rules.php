@@ -151,6 +151,7 @@ class URCR_Content_Access_Rules {
 			$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
 
 			$is_migrated = get_post_meta( $rule_post->ID, 'urcr_is_migrated', true );
+			$is_global   = get_post_meta( $rule_post->ID, 'urcr_is_global', false );
 
 			$rule_type = get_post_meta( $rule_post->ID, 'urcr_rule_type', true );
 			if ( empty( $rule_type ) ) {
@@ -163,20 +164,21 @@ class URCR_Content_Access_Rules {
 			}
 
 			$rule_data = array(
-				'id'              => $rule_post->ID,
-				'title'           => $rule_post->post_title,
-				'content'         => $rule_content,
-				'enabled'         => urcr_is_access_rule_enabled( $rule_content ),
-				'access_control'  => isset( $rule_content['actions'][0]['access_control'] ) ? $rule_content['actions'][0]['access_control'] : 'access',
-				'action_type'     => isset( $rule_content['actions'][0]['type'] ) ? $rule_content['actions'][0]['type'] : '',
-				'redirect_url'    => isset( $rule_content['actions'][0]['redirect_url'] ) ? $rule_content['actions'][0]['redirect_url'] : '',
-				'local_page'      => isset( $rule_content['actions'][0]['local_page'] ) ? $rule_content['actions'][0]['local_page'] : '',
-				'logic_map'       => $logic_map,
-				'target_contents' => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
-				'is_migrated'     => ! empty( $is_migrated ),
-				'rule_type'       => $rule_type,
-				'membership_id'   => $membership_id,
-				'created_at'      => $rule_post->post_date,
+				'id'                        => $rule_post->ID,
+				'title'                     => $rule_post->post_title,
+				'content'                   => $rule_content,
+				'enabled'                   => urcr_is_access_rule_enabled( $rule_content ),
+				'access_control'            => isset( $rule_content['actions'][0]['access_control'] ) ? $rule_content['actions'][0]['access_control'] : 'access',
+				'action_type'               => isset( $rule_content['actions'][0]['type'] ) ? $rule_content['actions'][0]['type'] : '',
+				'redirect_url'              => isset( $rule_content['actions'][0]['redirect_url'] ) ? $rule_content['actions'][0]['redirect_url'] : '',
+				'local_page'                => isset( $rule_content['actions'][0]['local_page'] ) ? $rule_content['actions'][0]['local_page'] : '',
+				'logic_map'                 => $logic_map,
+				'target_contents'           => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
+				'is_migrated'               => ! empty( $is_migrated ),
+				'is_global'                 => ! empty( $is_global ),
+				'rule_type'                 => $rule_type,
+				'membership_id'             => $membership_id,
+				'created_at'                => $rule_post->post_date,
 				'is_advanced_logic_enabled' => isset( $rule_content['is_advanced_logic_enabled'] ) ? (bool) $rule_content['is_advanced_logic_enabled'] : false,
 			);
 
@@ -242,7 +244,7 @@ class URCR_Content_Access_Rules {
 		 */
 		$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'create' );
 
-		$access_rule_data = wp_unslash( $access_rule_data );
+		$access_rule_data      = wp_unslash( $access_rule_data );
 		$access_rule_data_json = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 		$access_rule_data_json = wp_slash( $access_rule_data_json );
 
@@ -342,17 +344,17 @@ class URCR_Content_Access_Rules {
 		$is_migrated = get_post_meta( $rule_post->ID, 'urcr_is_migrated', true );
 
 		$rule_data = array(
-			'id'              => $rule_post->ID,
-			'title'           => $rule_post->post_title,
-			'content'         => $rule_content,
-			'enabled'         => urcr_is_access_rule_enabled( $rule_content ),
-			'access_control'  => isset( $rule_content['actions'][0]['access_control'] ) ? $rule_content['actions'][0]['access_control'] : 'access',
-			'action_type'     => isset( $rule_content['actions'][0]['type'] ) ? $rule_content['actions'][0]['type'] : '',
-			'redirect_url'    => isset( $rule_content['actions'][0]['redirect_url'] ) ? $rule_content['actions'][0]['redirect_url'] : '',
-			'local_page'      => isset( $rule_content['actions'][0]['local_page'] ) ? $rule_content['actions'][0]['local_page'] : '',
-			'logic_map'       => $logic_map,
-			'target_contents' => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
-			'is_migrated'     => ! empty( $is_migrated ),
+			'id'                        => $rule_post->ID,
+			'title'                     => $rule_post->post_title,
+			'content'                   => $rule_content,
+			'enabled'                   => urcr_is_access_rule_enabled( $rule_content ),
+			'access_control'            => isset( $rule_content['actions'][0]['access_control'] ) ? $rule_content['actions'][0]['access_control'] : 'access',
+			'action_type'               => isset( $rule_content['actions'][0]['type'] ) ? $rule_content['actions'][0]['type'] : '',
+			'redirect_url'              => isset( $rule_content['actions'][0]['redirect_url'] ) ? $rule_content['actions'][0]['redirect_url'] : '',
+			'local_page'                => isset( $rule_content['actions'][0]['local_page'] ) ? $rule_content['actions'][0]['local_page'] : '',
+			'logic_map'                 => $logic_map,
+			'target_contents'           => isset( $rule_content['target_contents'] ) ? $rule_content['target_contents'] : array(),
+			'is_migrated'               => ! empty( $is_migrated ),
 			'is_advanced_logic_enabled' => isset( $rule_content['is_advanced_logic_enabled'] ) ? (bool) $rule_content['is_advanced_logic_enabled'] : false,
 		);
 
@@ -467,7 +469,7 @@ class URCR_Content_Access_Rules {
 			 */
 			$access_rule_data = apply_filters( 'urm_content_access_rule_data_before_process', $access_rule_data, $request, 'update' );
 
-			$access_rule_data = wp_unslash( $access_rule_data );
+			$access_rule_data      = wp_unslash( $access_rule_data );
 			$access_rule_data_json = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 			$access_rule_data_json = wp_slash( $access_rule_data_json );
 
@@ -603,10 +605,10 @@ class URCR_Content_Access_Rules {
 
 		$rule_content = json_decode( $rule_post->post_content, true );
 		if ( $rule_content ) {
-			$base_timestamp = time() * 1000;
-			$counter = 0;
-			$rule_content = self::regenerate_ids_in_content( $rule_content, $base_timestamp, $counter );
-			$rule_content = wp_unslash( $rule_content );
+			$base_timestamp   = time() * 1000;
+			$counter          = 0;
+			$rule_content     = self::regenerate_ids_in_content( $rule_content, $base_timestamp, $counter );
+			$rule_content     = wp_unslash( $rule_content );
 			$new_post_content = wp_json_encode( $rule_content, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 			$new_post_content = wp_slash( $new_post_content );
 		} else {
@@ -648,7 +650,7 @@ class URCR_Content_Access_Rules {
 		if ( is_array( $data ) ) {
 			foreach ( $data as $key => $value ) {
 				if ( 'id' === $key && is_string( $value ) && preg_match( '/^x\d+$/', $value ) ) {
-					$counter++;
+					++$counter;
 					$data[ $key ] = 'x' . ( $base_timestamp + $counter );
 				} else {
 					$data[ $key ] = self::regenerate_ids_in_content( $value, $base_timestamp, $counter );
@@ -723,4 +725,3 @@ class URCR_Content_Access_Rules {
 		}
 	}
 }
-
