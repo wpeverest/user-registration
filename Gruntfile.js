@@ -32,6 +32,7 @@ module.exports = function (grunt) {
 				"!phpunit.xml.dist",
 				"!changelog.txt",
 				"!release/**",
+				"!src/**",
 				...distIgnorePatterns
 			],
 			dest: "user-registration"
@@ -157,7 +158,12 @@ module.exports = function (grunt) {
 			generate: {
 				expand: true,
 				cwd: "<%= dirs.css %>",
-				src: ["*.css", "!select2.css", "!*-rtl.css", "!ltr_only_support.css"],
+				src: [
+					"*.css",
+					"!select2.css",
+					"!*-rtl.css",
+					"!ltr_only_support.css"
+				],
 				dest: "<%= dirs.css %>/",
 				ext: "-rtl.css"
 			}
