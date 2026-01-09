@@ -815,7 +815,9 @@ class StripeService {
 	public static function get_stripe_settings() {
 		$is_enabled = get_option( 'user_registration_stripe_enabled', '' );
 		$stripe_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false )) ;
-		$is_stripe_enabled = ($is_enabled) ? $is_enabled : ! $stripe_default;
+		$has_user_changed = ur_string_to_bool(get_option( 'urm_stripe_updated_connection_status', false )) ;
+		$is_stripe_enabled = ($is_enabled) ? $is_enabled : ($has_user_changed ? $stripe_default : ! $stripe_default);;
+
 		$mode            = get_option( 'user_registration_stripe_test_mode', false ) ? 'test' : 'live';
 		$publishable_key = get_option( sprintf( 'user_registration_stripe_%s_publishable_key', $mode ) );
 		$secret_key      = get_option( sprintf( 'user_registration_stripe_%s_secret_key', $mode ) );

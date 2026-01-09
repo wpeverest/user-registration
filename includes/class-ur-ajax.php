@@ -1855,10 +1855,11 @@ class UR_AJAX {
 			);
 		}
 		$is_disabled = isset($form_data[ 'user_registration_' . $setting_id . '_enabled']) && !$form_data[ 'user_registration_' . $setting_id . '_enabled'];
-		if( !$is_disabled ) {
-			update_option( 'urm_' . $setting_id . '_connection_status', true );
-		} else {
+		if( $is_disabled ) {
+			update_option( 'urm_' . $setting_id . '_updated_connection_status', true ); //to check if this setting has been updated at least once
 			update_option( 'urm_' . $setting_id . '_connection_status', false );
+		} else {
+			update_option( 'urm_' . $setting_id . '_connection_status', true );
 		}
 
 		if ( 'paypal' === $setting_id ) {
