@@ -304,10 +304,10 @@
 						var is_empty = is_upgrade
 							? $(".membership-upgrade-container").find(
 									".stripe-input-container .StripeElement--empty"
-							  ).length
+								).length
 							: $(".ur-frontend-form").find(
 									".stripe-input-container .StripeElement--empty"
-							  ).length;
+								).length;
 
 						if (is_empty) {
 							no_errors = false;
@@ -498,7 +498,7 @@
 					payment_type: "unpaid",
 					info: response.data.pg_data.data,
 					username: prepare_members_data.username,
-					context: 'hide_message'
+					context: "hide_message"
 				};
 
 				ur_membership_frontend_utils.show_form_success_message(
@@ -606,8 +606,8 @@
 			prefix =
 				response.coupon_details.coupon_discount_type === "fixed"
 					? urmf_data.currency_symbol +
-					  "" +
-					  response.coupon_details.coupon_discount
+						"" +
+						response.coupon_details.coupon_discount
 					: response.coupon_details.coupon_discount + "%";
 			// show notice below total
 			$("#total-input-notice").text(
@@ -2059,7 +2059,7 @@
 							? selected_pg
 							: $(
 									'input[name="urm_payment_method"]:checked'
-							  ).val();
+								).val();
 
 					//validation end
 					var action = searchParams.get("action"),
@@ -2255,9 +2255,13 @@
 						}
 					}
 
+					var concatenator =
+						redirection_url.indexOf("?") === -1 ? "?" : "&";
+
 					var url =
 						redirection_url +
-						"?membership_id=" +
+						concatenator +
+						"membership_id=" +
 						membership_id +
 						"&action=" +
 						action +
@@ -2520,7 +2524,7 @@
 								? selected_pg
 								: $(
 										'input[name="urm_payment_method"]:checked'
-								  ).val();
+									).val();
 
 						//validation end
 						ur_membership_ajax_utils.renew_membership(
