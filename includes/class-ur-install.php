@@ -147,12 +147,12 @@ class UR_Install {
 			update_option( 'user_registration_first_time_activation_flag', true );
 
 		}
-		if ( ! get_option( 'urm_is_new_installation' ) ) {
-			update_option( 'urm_is_new_installation', 1 );
+		if ( false === get_option( 'urm_is_new_installation' ) ) {
+			add_option( 'urm_is_new_installation', 1 );
 		}
 
 		self::create_files();
-		self::update_ur_version();
+		self::update_ur_version(); 
 		self::maybe_update_db_version();
 		self::maybe_add_installation_date();
 		self::maybe_run_migrations();
