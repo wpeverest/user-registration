@@ -1006,12 +1006,18 @@
 				$this.find(".ur-spinner").remove();
 				if (response.responseJSON.success) {
 					show_success_message(response.responseJSON.data.message);
-					settings_container
-						.find(".ur-connection-status")
-						.addClass("ur-connection-status--active");
-					settings_container
-						.find(".reset-payment-keys")
-						.removeClass("ur-d-none");
+					if(response.responseJSON.data.is_connected) {
+						settings_container
+							.find(".ur-connection-status")
+							.addClass("ur-connection-status--active");
+						settings_container
+							.find(".reset-payment-keys")
+							.removeClass("ur-d-none");
+					} else {
+						settings_container
+							.find(".ur-connection-status")
+							.removeClass("ur-connection-status--active");
+					}
 				} else {
 					show_failure_message(response.responseJSON.data.message);
 				}
@@ -1929,7 +1935,7 @@
 		};
 		if (gatewayToggleId && gatewayMap[gatewayToggleId]) {
 			var $modeSelector = $(gatewayMap[gatewayToggleId]);
-			
+
 			if ($modeSelector.length > 0) {
 				if (gatewayToggleId === 'user_registration_paypal_enabled') {
 					$modeSelector.val('test');
@@ -1955,7 +1961,7 @@
 	}
 	trigger_payment_gateway_mode_changes();
 
-	
+
 	$(document).on("change", ".urm_toggle_pg_status", function () {
 		var $toggle = $(this);
 		var isChecked = $toggle.is(":checked");

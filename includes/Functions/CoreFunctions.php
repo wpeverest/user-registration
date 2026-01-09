@@ -745,7 +745,7 @@ if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
 				$enabled_option = get_option( 'user_registration_stripe_enabled', '' );
 				break;
 			case 'bank':
-				$enabled_option = get_option( 'user_registration_bank_transfer_enabled', '' );
+				$enabled_option = get_option( 'user_registration_bank_enabled', '' );
 				break;
 		}
 

@@ -193,7 +193,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 		                'desc'     => __( 'Enable PayPal payment gateway.', 'user-registration' ),
 		                'id'       => 'user_registration_paypal_enabled',
 		                'desc_tip' => true,
-		                'default'  => ($paypal_enabled) ? $paypal_enabled : $paypal_toggle_default,
+		                'default'  => ($paypal_enabled) ? $paypal_enabled : !$paypal_toggle_default,
 		                'class'    => 'urm_toggle_pg_status',
 	                ),
                     array(
@@ -308,7 +308,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                         'desc'     => __( 'Enable Stripe payment gateway.', 'user-registration' ),
                         'id'       => 'user_registration_stripe_enabled',
                         'desc_tip' => true,
-                        'default'  => ($stripe_enabled) ? $stripe_enabled : $stripe_toggle_default,
+                        'default'  => ($stripe_enabled) ? $stripe_enabled : !$stripe_toggle_default,
                         'class'    => 'urm_toggle_pg_status',
                     ),
                     array(
@@ -365,7 +365,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 		    );
         }
         public function get_bank_transfer_settings() {
-            $bank_transfer_enabled = get_option( 'user_registration_bank_transfer_enabled', '' );
+            $bank_transfer_enabled = get_option( 'user_registration_bank_enabled', '' );
 
             // Determine default toggle value based on urm_is_new_installation option
             $bank_toggle_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false ));
@@ -381,9 +381,9 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                         'type'     => 'toggle',
                         'title'    => __( 'Enable Bank Transfer', 'user-registration' ),
                         'desc'     => __( 'Enable Bank Transfer payment gateway.', 'user-registration' ),
-                        'id'       => 'user_registration_bank_transfer_enabled',
+                        'id'       => 'user_registration_bank_enabled',
                         'desc_tip' => true,
-                        'default'  => ($bank_transfer_enabled) ? $bank_transfer_enabled : $bank_toggle_default,
+                        'default'  => ($bank_transfer_enabled) ? $bank_transfer_enabled : !$bank_toggle_default,
                         'class'    => 'urm_toggle_pg_status',
                     ),
                     array(

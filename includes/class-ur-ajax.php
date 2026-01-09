@@ -1854,6 +1854,12 @@ class UR_AJAX {
 				)
 			);
 		}
+		$is_disabled = isset($form_data[ 'user_registration_' . $setting_id . '_enabled']) && !$form_data[ 'user_registration_' . $setting_id . '_enabled'];
+		if( !$is_disabled ) {
+			update_option( 'urm_' . $setting_id . '_connection_status', true );
+		} else {
+			update_option( 'urm_' . $setting_id . '_connection_status', false );
+		}
 
 		if ( 'paypal' === $setting_id ) {
 			update_option( 'urm_global_paypal_settings_migrated_', true );
@@ -1861,9 +1867,11 @@ class UR_AJAX {
 
 		do_action( 'urm_save_' . $setting_id . '_payment_section', $form_data );
 		$message = 'payment-settings' === $setting_id ? 'Settings has been saved successfully' : sprintf( __( 'Payment Setting for %s has been saved successfully.', 'user-registration' ), $setting_id );
+
 		wp_send_json_success(
 			array(
 				'message' => $message,
+				'is_connected' => !$is_disabled
 			)
 		);
 	}

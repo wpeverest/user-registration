@@ -473,7 +473,7 @@ class MembershipService {
 				$result         = $stripe_service->validate_setup();
 				break;
 			default:
-				$bank_enabled = get_option( 'user_registration_bank_transfer_enabled', '' );
+				$bank_enabled = get_option( 'user_registration_bank_enabled', '' );
 				$bank_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false ));
 				$is_bank_enabled = $bank_enabled ? $bank_enabled : $bank_default;
 				$result = empty( get_option( 'user_registration_global_bank_details' ) ) || ! $is_bank_enabled;
