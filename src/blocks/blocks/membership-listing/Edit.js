@@ -409,20 +409,21 @@ const Edit = (props) => {
 							}
 						/>
 					)}
-
-					<div className="ur-membership-listing-config-link">
-						<a
-							className="ur-membership-listing-config-link"
-							href={membership_all_plan_url}
-							target="__blank"
-							rel="noreferrer"
-						>
-							{__(
-								"Configure description from here",
-								"user-registration"
-							)}
-						</a>
-					</div>
+					{"list" !== type && (
+						<div className="ur-membership-listing-config-link">
+							<a
+								className="ur-membership-listing-config-link"
+								href={membership_all_plan_url}
+								target="__blank"
+								rel="noreferrer"
+							>
+								{__(
+									"Configure description from here",
+									"user-registration"
+								)}
+							</a>
+						</div>
+					)}
 
 					<ToggleGroupControl
 						label="Layout"

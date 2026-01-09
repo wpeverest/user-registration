@@ -48,7 +48,7 @@ interface PaymentGatewayData {
 }
 
 const InfoIcon: React.FC = () => (
-	<Icon viewBox="0 0 16 16" boxSize={4} color="#383838">
+	<Icon viewBox="0 0 16 16" boxSize="14px" color="#383838">
 		<circle
 			cx="8"
 			cy="8"
@@ -377,6 +377,7 @@ const PaymentStep: React.FC = () => {
 		bg: inputBg,
 		borderColor: inputBorder,
 		fontSize: "sm",
+		borderRadius: "4px",
 		_focus: {
 			borderColor: "#475BB2",
 			boxShadow: "0 0 0 1px #475BB2"
@@ -421,7 +422,7 @@ const PaymentStep: React.FC = () => {
 						<Skeleton
 							height="40px"
 							width="100%"
-							borderRadius="md"
+							borderRadius="4px"
 						/>
 					) : (
 						<Select
