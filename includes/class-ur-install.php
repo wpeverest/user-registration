@@ -147,8 +147,9 @@ class UR_Install {
 			update_option( 'user_registration_first_time_activation_flag', true );
 
 		}
-
-		update_option( 'urm_is_new_installation', 1 );
+		if ( ! get_option( 'urm_is_new_installation' ) ) {
+			update_option( 'urm_is_new_installation', 1 );
+		}
 
 		self::create_files();
 		self::update_ur_version();
