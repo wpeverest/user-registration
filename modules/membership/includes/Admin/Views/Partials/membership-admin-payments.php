@@ -88,6 +88,7 @@ function render_paypal_settings( $membership_details ) {
 				</span>
 			</div>
 		</div>
+		<?php if(false): ?>
 		<div class="payment-option-body"
 			 data-target-id="ur-membership-paypal-toggle-container"
 			 style="<?php echo $is_incomplete ? '' : 'display:none'; ?>">
@@ -274,6 +275,7 @@ function render_paypal_settings( $membership_details ) {
 			endif;
 			?>
 		</div>
+		<?php endif; ?>
 	</div>
 	<?php
 }
@@ -312,6 +314,7 @@ function render_bank_settings( $membership_details ) {
 				</span>
 			</div>
 		</div>
+		<?php if(false): ?>
 		<div class="payment-option-body"
 			 data-target-id="ur-membership-bank-toggle-container"
 			 style="<?php echo empty( $global_bank_details ) ? '' : 'display:none'; ?>"
@@ -332,6 +335,7 @@ function render_bank_settings( $membership_details ) {
 				</a>
 			</div>
 		</div>
+		<?php endif; ?>
 	</div>
 	<?php
 }
@@ -367,6 +371,7 @@ function render_stripe_settings( $membership_details ) {
 				</span>
 			</div>
 		</div>
+		<?php if(false): ?>
 		<div class="payment-option-body"
 			 data-target-id="ur-membership-stripe-toggle-container"
 			 style="<?php echo $setup_incomplete ? '' : 'display:none'; ?>">
@@ -468,8 +473,8 @@ function render_stripe_settings( $membership_details ) {
 			endif;
 			?>
 
-
 		</div>
+		<?php endif; ?>
 	</div>
 	<?php
 }
