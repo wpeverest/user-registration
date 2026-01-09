@@ -39,10 +39,15 @@ class URCR_Admin {
 		/**
 		 * Elementor Section Restriction
 		 */
-		add_action( 'elementor/element/before_section_end', array(
-			$this,
-			'urcr_add_option_to_restrict_elementor_section'
-		), 10, 3 );
+		add_action(
+			'elementor/element/before_section_end',
+			array(
+				$this,
+				'urcr_add_option_to_restrict_elementor_section',
+			),
+			10,
+			3
+		);
 
 		/**
 		 * Run migration on admin init (only once)
@@ -127,14 +132,14 @@ class URCR_Admin {
 	public function add_urcr_menus() {
 
 		// Check if membership module is enabled and count memberships
-		$membership_count = 0;
+		$membership_count         = 0;
 		$has_multiple_memberships = false;
 
 		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'membership' ) ) {
 			if ( class_exists( '\WPEverest\URMembership\Admin\Services\MembershipService' ) ) {
-				$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
-				$memberships = $membership_service->list_active_memberships();
-				$membership_count = is_array( $memberships ) ? count( $memberships ) : 0;
+				$membership_service       = new \WPEverest\URMembership\Admin\Services\MembershipService();
+				$memberships              = $membership_service->list_active_memberships();
+				$membership_count         = is_array( $memberships ) ? count( $memberships ) : 0;
 				$has_multiple_memberships = $membership_count > 1;
 			}
 		}
@@ -184,12 +189,11 @@ class URCR_Admin {
 		// Localize script with necessary data
 		wp_localize_script(
 			'ur-content-access-rules-script',
-			'_UR_DASHBOARD_',
+			'_URCR_DASHBOARD_',
 			array(
 				'adminURL'       => esc_url( admin_url() ),
 				'assetsURL'      => esc_url( UR()->plugin_url() . '/assets/' ),
 				'urRestApiNonce' => wp_create_nonce( 'wp_rest' ),
-				'restURL'        => rest_url(),
 				'version'        => UR()->version,
 			)
 		);
@@ -275,17 +279,19 @@ class URCR_Admin {
 		}
 
 		// Find and delete the associated content access rules
-		$existing_rules = get_posts( array(
-			'post_type'      => 'urcr_access_rule',
-			'post_status'    => 'any',
-			'posts_per_page' => -1,
-			'meta_query'     => array(
-				array(
-					'key'   => 'urcr_membership_id',
-					'value' => $membership_id,
+		$existing_rules = get_posts(
+			array(
+				'post_type'      => 'urcr_access_rule',
+				'post_status'    => 'any',
+				'posts_per_page' => -1,
+				'meta_query'     => array(
+					array(
+						'key'   => 'urcr_membership_id',
+						'value' => $membership_id,
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		// Delete all associated rules
 		foreach ( $existing_rules as $rule ) {
@@ -360,23 +366,25 @@ class URCR_Admin {
 		}
 
 		// Find existing rule for this membership
-		$existing_rules = get_posts( array(
-			'post_type'      => 'urcr_access_rule',
-			'post_status'    => 'any',
-			'posts_per_page' => 1,
-			'meta_query'     => array(
-				array(
-					'key'   => 'urcr_membership_id',
-					'value' => $membership_id,
+		$existing_rules = get_posts(
+			array(
+				'post_type'      => 'urcr_access_rule',
+				'post_status'    => 'any',
+				'posts_per_page' => 1,
+				'meta_query'     => array(
+					array(
+						'key'   => 'urcr_membership_id',
+						'value' => $membership_id,
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		if ( empty( $existing_rules ) ) {
 			wp_send_json_success( array( 'data' => null ) );
 		}
 
-		$rule_post = $existing_rules[0];
+		$rule_post    = $existing_rules[0];
 		$rule_content = json_decode( $rule_post->post_content, true );
 
 		if ( ! $rule_content ) {
@@ -384,7 +392,7 @@ class URCR_Admin {
 		}
 
 		// Add rule ID and other metadata
-		$rule_content['id'] = $rule_post->ID;
+		$rule_content['id']    = $rule_post->ID;
 		$rule_content['title'] = $rule_post->post_title;
 
 		// Get enabled status from rule content (stored in post_content JSON)
@@ -408,8 +416,8 @@ class URCR_Admin {
 		}
 
 		// Check if we should run migration
-		$global_migrated = get_option( 'urcr_global_restriction_migrated', false );
-		$post_page_migrated = get_option( 'urcr_post_page_restrictions_migrated', false );
+		$global_migrated      = get_option( 'urcr_global_restriction_migrated', false );
+		$post_page_migrated   = get_option( 'urcr_post_page_restrictions_migrated', false );
 		$memberships_migrated = get_option( 'urcr_memberships_migrated', false );
 
 		// Check if there are unmigrated posts/pages
@@ -454,7 +462,7 @@ class URCR_Admin {
 
 		// Run migration if any step needs to run
 		if ( ! $global_migrated || $has_unmigrated_posts || ! $memberships_migrated || $has_unmigrated_memberships ) {
-		if ( function_exists( 'urcr_run_migration' ) ) {
+			if ( function_exists( 'urcr_run_migration' ) ) {
 				urcr_run_migration();
 			}
 		}
