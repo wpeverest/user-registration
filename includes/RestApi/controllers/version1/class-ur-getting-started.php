@@ -1654,6 +1654,9 @@ class UR_Getting_Started {
 		update_option( 'urm_bank_connection_status', $offline_enabled );
 		update_option( 'urm_paypal_connection_status', $paypal_enabled );
 		update_option( 'urm_stripe_connection_status', $stripe_enabled );
+		update_option( 'user_registration_bank_enabled', $offline_enabled );
+		update_option( 'user_registration_paypal_enabled', $paypal_enabled );
+		update_option( 'user_registration_stripe_enabled', $stripe_enabled );
 
 		if ( $offline_enabled ) {
 			update_option( 'user_registration_global_bank_details', $bank_details );
