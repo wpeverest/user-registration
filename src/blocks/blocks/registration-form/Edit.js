@@ -23,7 +23,7 @@ const ServerSideRender = wp.serverSideRender
 	: wp.components.ServerSideRender;
 
 /* global _UR_BLOCKS_ */
-const { urRestApiNonce, restURL, logoUrl } =
+const { urRestApiNonce, logoUrl } =
 	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 const Edit = (props) => {
@@ -43,9 +43,7 @@ const Edit = (props) => {
 			if (!formList) {
 				try {
 					const res = await apiFetch({
-						path:
-							restURL +
-							"user-registration/v1/gutenberg-blocks/form-list",
+						path: "user-registration/v1/gutenberg-blocks/form-list",
 						method: "GET",
 						headers: {
 							"X-WP-Nonce": urRestApiNonce

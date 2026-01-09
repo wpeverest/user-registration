@@ -124,7 +124,6 @@ class UR_Blocks {
 			array(
 				'logoUrl'                     => UR()->plugin_url() . '/assets/images/logo.png',
 				'urRestApiNonce'              => wp_create_nonce( 'wp_rest' ),
-				'restURL'                     => '',
 				'isPro'                       => is_plugin_active( 'user-registration-pro/user-registration.php' ),
 				'iscRestrictionActive'        => ur_check_module_activation( 'content-restriction' ),
 				'pages'                       => array_map(

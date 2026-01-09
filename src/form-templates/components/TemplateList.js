@@ -33,7 +33,7 @@ import { IoPlayOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 
-const { restURL, security, siteURL } = ur_templates_script;
+const { security, siteURL } = ur_templates_script;
 
 const LockIcon = (props) => (
 	<Icon viewBox="0 0 24 24" {...props}>
@@ -68,7 +68,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 		const fetchFavorites = async () => {
 			try {
 				const response = await apiFetch({
-					path: `${restURL}user-registration/v1/form-templates/favorite_forms`,
+					path: `user-registration/v1/form-templates/favorite_forms`,
 					method: "GET",
 					headers: {
 						"X-WP-Nonce": security
@@ -90,7 +90,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 		const fetchLicenseStatus = async () => {
 			try {
 				const response = await apiFetch({
-					path: `${restURL}user-registration/v1/plugin/get_plan`,
+					path: `user-registration/v1/plugin/get_plan`,
 					method: "GET",
 					headers: {
 						"X-WP-Nonce": security
@@ -154,7 +154,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 
 		try {
 			const response = await apiFetch({
-				path: `${restURL}user-registration/v1/plugin/upgrade`,
+				path: `user-registration/v1/plugin/upgrade`,
 				method: "POST",
 				body: JSON.stringify({ requiredPlugins }),
 				headers: {
@@ -210,7 +210,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 
 		try {
 			const response = await apiFetch({
-				path: `${restURL}user-registration/v1/form-templates/create`,
+				path: `user-registration/v1/form-templates/create`,
 				method: "POST",
 				body: JSON.stringify({
 					title: formTemplateName,
@@ -265,7 +265,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 			setFavorites(newFavorites);
 
 			await apiFetch({
-				path: `${restURL}user-registration/v1/form-templates/favorite`,
+				path: `user-registration/v1/form-templates/favorite`,
 				method: "POST",
 				body: JSON.stringify({
 					action: newFavorites.includes(slug)

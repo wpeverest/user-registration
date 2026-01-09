@@ -27,12 +27,8 @@ import { __ } from "@wordpress/i18n";
 import { useEffect, useMemo, useState } from "react";
 import metadata from "./block.json";
 
-const {
-	urRestApiNonce,
-	restURL,
-	membership_all_plan_url,
-	membership_group_url
-} = typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
+const { urRestApiNonce, membership_all_plan_url, membership_group_url } =
+	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 // Helper function to map options for SelectControl
 const mapOptions = (list) =>
@@ -253,7 +249,7 @@ const Edit = (props) => {
 		try {
 			if (!groupList) {
 				const res = await apiFetch({
-					path: `${restURL}user-registration/v1/gutenberg-blocks/groups`,
+					path: `user-registration/v1/gutenberg-blocks/groups`,
 					method: "GET",
 					headers: { "X-WP-Nonce": urRestApiNonce }
 				});

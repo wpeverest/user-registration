@@ -6,11 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 import apiFetch from "@wordpress/api-fetch";
 import { __ } from "@wordpress/i18n";
 
-const { restURL, security } = ur_templates_script;
+const { security } = ur_templates_script;
 
 const fetchTemplates = async () => {
 	const response = await apiFetch({
-		path: `${restURL}user-registration/v1/form-templates`,
+		path: `user-registration/v1/form-templates`,
 		method: "GET",
 		headers: {
 			"X-WP-Nonce": security

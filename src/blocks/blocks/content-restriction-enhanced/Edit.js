@@ -17,8 +17,7 @@ import Select from "react-select";
 import { Editor } from "@tinymce/tinymce-react";
 
 /* global _UR_BLOCKS_ */
-const { urRestApiNonce, restURL } =
-	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
+const { urRestApiNonce } = typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 const labelStyle = {
 	fontSize: "11px",
@@ -56,19 +55,19 @@ const Edit = ({ attributes, setAttributes }) => {
 				const [membershipRoles, accessRoles, roles, crData] =
 					await Promise.all([
 						apiFetch({
-							path: `${restURL}user-registration/v1/gutenberg-blocks/membership-role-list`,
+							path: `user-registration/v1/gutenberg-blocks/membership-role-list`,
 							headers: { "X-WP-Nonce": urRestApiNonce }
 						}),
 						apiFetch({
-							path: `${restURL}user-registration/v1/gutenberg-blocks/access-role-list`,
+							path: `user-registration/v1/gutenberg-blocks/access-role-list`,
 							headers: { "X-WP-Nonce": urRestApiNonce }
 						}),
 						apiFetch({
-							path: `${restURL}user-registration/v1/gutenberg-blocks/role-list`,
+							path: `user-registration/v1/gutenberg-blocks/role-list`,
 							headers: { "X-WP-Nonce": urRestApiNonce }
 						}),
 						apiFetch({
-							path: `${restURL}user-registration/v1/gutenberg-blocks/cr-data`,
+							path: `user-registration/v1/gutenberg-blocks/cr-data`,
 							headers: { "X-WP-Nonce": urRestApiNonce }
 						})
 					]);

@@ -17,7 +17,7 @@ import {
 import { CheckCircleIcon, WarningIcon } from "@chakra-ui/icons";
 import { __, sprintf } from "@wordpress/i18n";
 
-const { restURL, security } = ur_templates_script;
+const { security } = ur_templates_script;
 
 const PluginStatus = ({ requiredPlugins, onActivateAndContinue }) => {
 	const [pluginStatuses, setPluginStatuses] = useState({});
@@ -30,7 +30,7 @@ const PluginStatus = ({ requiredPlugins, onActivateAndContinue }) => {
 		const fetchPluginStatus = async () => {
 			try {
 				const data = await apiFetch({
-					path: `${restURL}user-registration/v1/plugin/status`,
+					path: `user-registration/v1/plugin/status`,
 					method: "GET",
 					headers: {
 						"X-WP-Nonce": security
@@ -123,7 +123,7 @@ const PluginStatus = ({ requiredPlugins, onActivateAndContinue }) => {
 				for (const plugin of requiredPlugins) {
 					try {
 						const response = await apiFetch({
-							path: `${restURL}user-registration/v1/plugin/activate`,
+							path: `user-registration/v1/plugin/activate`,
 							method: "POST",
 							body: JSON.stringify({
 								addonData: {
