@@ -51,7 +51,9 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
 			$response = array(
 				'status' => true,
 			);
-
+			if( isset($form_data['user_registration_bank_enabled']) && ! $form_data['user_registration_bank_enabled'] ) {
+				return $response;
+			}
 			if ( empty( $form_data['user_registration_global_bank_details'] )) {
 				$response['status']  = false;
 				$response['message'] = 'Bank details cannot be empty';

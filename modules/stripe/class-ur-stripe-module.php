@@ -138,7 +138,9 @@ class User_Registration_Stripe_Module {
 			'status' => true,
 			'connected' => true,
 		);
-
+		if( isset( $form_data['user_registration_stripe_enabled'] ) && ! $form_data['user_registration_stripe_enabled'] ) {
+			return $response;
+		}
 		foreach ( $form_data as $k => $data ) {
 			$last_data = get_option( $k );
 			if ( $last_data !== $data ) {

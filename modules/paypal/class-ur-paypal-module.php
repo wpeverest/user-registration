@@ -200,7 +200,7 @@ class User_Registration_Paypal_Module {
 		$response = array(
 			'status' => true,
 		);
-		if( isset($form_data['user_registration_paypal_enabled']) && !$form_data['user_registration_paypal_enabled'] == 'on' ) {
+		if( isset($form_data['user_registration_paypal_enabled']) && ! $form_data['user_registration_paypal_enabled'] ) {
 			return $response;
 		}
 		//these value should not be empty
