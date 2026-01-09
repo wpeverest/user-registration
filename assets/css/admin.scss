@@ -9367,6 +9367,12 @@ body.user-registration-page {
 		align-items: flex-start;
 		gap: 12px;
 		flex-direction: column;
+
+		.user-registration-notice{
+			margin: 0px;
+			gap: 2px;
+			padding: 9px;
+		}
 	}
 
 	/* =========================================
