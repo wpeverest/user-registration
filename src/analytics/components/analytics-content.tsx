@@ -473,65 +473,16 @@ function getWeekNumber(d: Date): number {
 	);
 }
 
-export function getPresetDateRange(preset: PresetRange): DateRange {
-	const now = new Date();
-
-	const ranges: Record<PresetRange, DateRange> = {
-		today: {
-			start: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
-			end: now,
-			unit: "hour"
-		},
-		week: {
-			start: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000),
-			end: now,
-			unit: "day"
-		},
-		month: {
-			start: new Date(
-				now.getFullYear(),
-				now.getMonth() - 1,
-				now.getDate()
-			),
-			end: now,
-			unit: "day"
-		},
-		quarter: {
-			start: new Date(
-				now.getFullYear(),
-				now.getMonth() - 3,
-				now.getDate()
-			),
-			end: now,
-			unit: "week"
-		},
-		year: {
-			start: new Date(
-				now.getFullYear() - 1,
-				now.getMonth(),
-				now.getDate()
-			),
-			end: now,
-			unit: "month"
-		},
-		allTime: {
-			start: new Date(now.getFullYear() - 5, 0, 1),
-			end: now,
-			unit: "year"
-		}
-	};
-
-	return ranges[preset];
-}
-
 export const AnalyticsContent = ({ overviewData }: AnalyticsContentProps) => {
 	const { filters } = useAnalyticsFilters();
 	const { dateFrom, dateTo, unit } = filters;
 
 	const charts = generateAllCharts(
-		dateFrom ? new Date(dateFrom) : new Date(),
+		dateFrom
+			? new Date(dateFrom)
+			: new Date(new Date().setDate(new Date().getDate() - 30)),
 		dateTo ? new Date(dateTo) : new Date(),
-		unit
+		unit ?? "day"
 	);
 	return (
 		<div className="UR-Analytics-Content">

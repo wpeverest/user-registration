@@ -1,121 +1,13 @@
-import { useState, useCallback, useEffect } from 'react';
-import { getDaysDiff, getUnitsForDayRange } from '../constants/configs';
-import { DateUnit } from '../types/analytics';
-
-type SearchParamValue = string | number | boolean | null | undefined;
-
-const valueToString = (value: SearchParamValue): string | null => {
-	if (value === null || value === undefined) return null;
-	if (typeof value === 'boolean') return value ? 'true' : 'false';
-	return String(value);
-};
-
-const parseValue = <T extends SearchParamValue>(
-	value: string | null,
-	type: 'string' | 'number' | 'boolean',
-): T | null => {
-	if (value === null) return null;
-
-	switch (type) {
-		case 'number':
-			const num = Number(value);
-			return (isNaN(num) ? null : num) as T;
-		case 'boolean':
-			return (value === 'true') as T;
-		default:
-			return value as T;
-	}
-};
-
-type SearchParamSchema = {
-	[key: string]: {
-		type: 'string' | 'number' | 'boolean';
-		default?: SearchParamValue;
-	};
-};
-
-type InferSchemaType<T extends SearchParamSchema> = {
-	[K in keyof T]: T[K]['default'] extends NonNullable<SearchParamValue>
-		? NonNullable<
-				T[K]['type'] extends 'number'
-					? number
-					: T[K]['type'] extends 'boolean'
-					? boolean
-					: string
-		  >
-		: T[K]['type'] extends 'number'
-		? number | null
-		: T[K]['type'] extends 'boolean'
-		? boolean | null
-		: string | null;
-};
-
-function useSearchParams<T extends SearchParamSchema>(schema: T) {
-	type ParamsType = InferSchemaType<T>;
-
-	const getParamsFromURL = useCallback((): ParamsType => {
-		const urlParams = new URLSearchParams(window.location.search);
-		const params = {} as ParamsType;
-
-		for (const [key, config] of Object.entries(schema)) {
-			const urlValue = urlParams.get(key);
-			const parsedValue = parseValue(urlValue, config.type);
-			params[key as keyof ParamsType] = (parsedValue ??
-				config.default ??
-				null) as any;
-		}
-
-		return params;
-	}, [schema]);
-
-	const [params, setParamsState] = useState<ParamsType>(getParamsFromURL);
-
-	useEffect(() => {
-		const handlePopState = () => {
-			setParamsState(getParamsFromURL());
-		};
-
-		window.addEventListener('popstate', handlePopState);
-		return () => window.removeEventListener('popstate', handlePopState);
-	}, [getParamsFromURL]);
-
-	const setParams = useCallback(
-		(
-			updates:
-				| Partial<ParamsType>
-				| ((prev: ParamsType) => Partial<ParamsType>),
-		) => {
-			setParamsState((prev) => {
-				const newParams =
-					typeof updates === 'function'
-						? { ...prev, ...updates(prev) }
-						: { ...prev, ...updates };
-
-				const urlParams = new URLSearchParams();
-				for (const [key, value] of Object.entries(newParams)) {
-					const strValue = valueToString(value as SearchParamValue);
-					if (strValue !== null) {
-						urlParams.set(key, strValue);
-					}
-				}
-
-				const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-				window.history.pushState({}, '', newUrl);
-
-				return newParams;
-			});
-		},
-		[],
-	);
-
-	return [params, setParams] as const;
-}
+import { useState, useCallback, useEffect } from "react";
+import { getDaysDiff, getUnitsForDayRange } from "../constants/configs";
+import { DateUnit } from "../types/analytics";
+import useSearchParams from "./use-search-params";
 
 export type AnalyticsFilters = {
 	dateFrom?: string;
 	dateTo?: string;
 	unit?: DateUnit;
-	scope?: 'all' | 'others' | 'membership';
+	scope?: "all" | "others" | "membership";
 	membership?: number;
 	page?: string;
 };
@@ -136,11 +28,11 @@ const parseDateParam = (value: string | null): string | null => {
 
 const parseUnitParam = (value: string | null): DateUnit | null => {
 	if (
-		value === 'hour' ||
-		value === 'day' ||
-		value === 'week' ||
-		value === 'month' ||
-		value === 'year'
+		value === "hour" ||
+		value === "day" ||
+		value === "week" ||
+		value === "month" ||
+		value === "year"
 	) {
 		return value as DateUnit;
 	}
@@ -149,25 +41,26 @@ const parseUnitParam = (value: string | null): DateUnit | null => {
 
 export function useAnalyticsFilters() {
 	const [params, setParams] = useSearchParams({
-		'date-from': { type: 'string' as const },
-		'date-to': { type: 'string' as const },
-		unit: { type: 'string' as const },
-		scope: { type: 'string', default: 'all' },
-		membership: { type: 'number' as const },
-		page: { type: 'string' as const },
+		"date-from": { type: "string" as const },
+		"date-to": { type: "string" as const },
+		unit: { type: "string" as const },
+		scope: { type: "string", default: "all" },
+		membership: { type: "number" as const },
+		page: { type: "string" as const }
 	});
 
 	const filters: AnalyticsFilters = {
-		dateFrom: parseDateParam(params['date-from']) || undefined,
-		dateTo: parseDateParam(params['date-to']) || undefined,
-		unit: parseUnitParam(params['unit']) || undefined,
-		scope: (params['scope'] as 'all' | 'others' | 'membership') || undefined,
-		membership: params['membership'] || undefined,
+		dateFrom: parseDateParam(params["date-from"]) || undefined,
+		dateTo: parseDateParam(params["date-to"]) || undefined,
+		unit: parseUnitParam(params["unit"]) || undefined,
+		scope:
+			(params["scope"] as "all" | "others" | "membership") || undefined,
+		membership: params["membership"] || undefined
 	};
 
 	const getValidUnits = useCallback((): Array<DateUnit> => {
 		if (!filters.dateFrom || !filters.dateTo) {
-			return ['day', 'week'];
+			return ["day", "week"];
 		}
 
 		const dateFromObj = new Date(filters.dateFrom);
@@ -176,17 +69,17 @@ export function useAnalyticsFilters() {
 		const allValidUnits = getUnitsForDayRange(daysDiff);
 
 		const supportedUnits: Array<DateUnit> = [
-			'hour',
-			'day',
-			'week',
-			'month',
-			'year',
+			"hour",
+			"day",
+			"week",
+			"month",
+			"year"
 		];
 		const validUnits = allValidUnits.filter((u): u is DateUnit =>
-			supportedUnits.includes(u as any),
+			supportedUnits.includes(u as any)
 		);
 
-		return validUnits.length > 0 ? validUnits : ['day'];
+		return validUnits.length > 0 ? validUnits : ["day"];
 	}, [filters.dateFrom, filters.dateTo]);
 
 	const validUnits = getValidUnits();
@@ -198,35 +91,41 @@ export function useAnalyticsFilters() {
 			if (newUnit && newUnit !== filters.unit) {
 				setParams((prev) => ({
 					...prev,
-					unit: newUnit,
+					unit: newUnit
 				}));
 			}
 		}
 	}, [filters.unit, validUnits, setParams]);
 
-	const isValidDateRange = useCallback((filters: AnalyticsFilters): boolean => {
-		if (!filters.dateFrom || !filters.dateTo) return true;
-		return new Date(filters.dateFrom) <= new Date(filters.dateTo);
-	}, []);
+	const isValidDateRange = useCallback(
+		(filters: AnalyticsFilters): boolean => {
+			if (!filters.dateFrom || !filters.dateTo) return true;
+			return new Date(filters.dateFrom) <= new Date(filters.dateTo);
+		},
+		[]
+	);
 
 	const setFilters = useCallback(
 		(
 			updates:
 				| Partial<AnalyticsFilters>
-				| ((prev: AnalyticsFilters) => Partial<AnalyticsFilters>),
+				| ((prev: AnalyticsFilters) => Partial<AnalyticsFilters>)
 		) => {
 			const currentFilters = {
-				dateFrom: parseDateParam(params['date-from']) || undefined,
-				dateTo: parseDateParam(params['date-to']) || undefined,
-				unit: parseUnitParam(params['unit']) || undefined,
+				dateFrom: parseDateParam(params["date-from"]) || undefined,
+				dateTo: parseDateParam(params["date-to"]) || undefined,
+				unit: parseUnitParam(params["unit"]) || undefined,
 				scope:
-					(params['scope'] as 'all' | 'others' | 'membership') || undefined,
-				membership: params['membership'] || undefined,
+					(params["scope"] as "all" | "others" | "membership") ||
+					undefined,
+				membership: params["membership"] || undefined
 			};
 
 			const newFilters = {
 				...currentFilters,
-				...(typeof updates === 'function' ? updates(currentFilters) : updates),
+				...(typeof updates === "function"
+					? updates(currentFilters)
+					: updates)
 			};
 
 			if (newFilters.dateFrom && !isValidDate(newFilters.dateFrom)) {
@@ -240,14 +139,16 @@ export function useAnalyticsFilters() {
 
 			if (!isValidDateRange(newFilters)) {
 				console.warn(
-					'Invalid date range: dateFrom must be before or equal to dateTo',
+					"Invalid date range: dateFrom must be before or equal to dateTo"
 				);
 				return;
 			}
 
 			if (
 				newFilters.unit &&
-				!['hour', 'day', 'week', 'month', 'year'].includes(newFilters.unit)
+				!["hour", "day", "week", "month", "year"].includes(
+					newFilters.unit
+				)
 			) {
 				console.warn(`Invalid unit: ${newFilters.unit}`);
 				return;
@@ -255,7 +156,7 @@ export function useAnalyticsFilters() {
 
 			if (
 				newFilters.scope &&
-				!['all', 'others', 'membership'].includes(newFilters.scope)
+				!["all", "others", "membership"].includes(newFilters.scope)
 			) {
 				console.warn(`Invalid scope: ${newFilters.scope}`);
 				return;
@@ -268,30 +169,31 @@ export function useAnalyticsFilters() {
 				const daysDiff = getDaysDiff(dateFromObj, dateToObj);
 				const allValidUnits = getUnitsForDayRange(daysDiff);
 				const supportedUnits: Array<DateUnit> = [
-					'hour',
-					'day',
-					'week',
-					'month',
-					'year',
+					"hour",
+					"day",
+					"week",
+					"month",
+					"year"
 				];
 				const validUnits = allValidUnits.filter((u): u is DateUnit =>
-					supportedUnits.includes(u as any),
+					supportedUnits.includes(u as any)
 				);
 
 				if (!validUnits.includes(newFilters.unit)) {
-					compatibleUnit = validUnits.length > 0 ? validUnits[0] : 'day';
+					compatibleUnit =
+						validUnits.length > 0 ? validUnits[0] : "day";
 				}
 			}
 
 			setParams({
-				'date-from': newFilters.dateFrom || null,
-				'date-to': newFilters.dateTo || null,
+				"date-from": newFilters.dateFrom || null,
+				"date-to": newFilters.dateTo || null,
 				unit: compatibleUnit || null,
-				scope: newFilters.scope || 'all',
-				membership: newFilters.membership || null,
+				scope: newFilters.scope || "all",
+				membership: newFilters.membership || null
 			});
 		},
-		[params, setParams, isValidDateRange],
+		[params, setParams, isValidDateRange]
 	);
 
 	const clearFilters = useCallback(
@@ -299,11 +201,11 @@ export function useAnalyticsFilters() {
 			if (keys) {
 				const updates: Partial<Record<string, null>> = {};
 				const keyMap = {
-					dateFrom: 'date-from',
-					dateTo: 'date-to',
-					unit: 'unit',
-					scope: 'scope',
-					membership: 'membership',
+					dateFrom: "date-from",
+					dateTo: "date-to",
+					unit: "unit",
+					scope: "scope",
+					membership: "membership"
 				};
 
 				for (const key of keys) {
@@ -312,15 +214,15 @@ export function useAnalyticsFilters() {
 				setParams(updates as any);
 			} else {
 				setParams({
-					'date-from': null,
-					'date-to': null,
+					"date-from": null,
+					"date-to": null,
 					unit: null,
-					scope: 'all',
-					membership: null,
+					scope: "all",
+					membership: null
 				});
 			}
 		},
-		[setParams],
+		[setParams]
 	);
 
 	const replaceFilters = useCallback(
@@ -335,13 +237,15 @@ export function useAnalyticsFilters() {
 			}
 			if (!isValidDateRange(newFilters)) {
 				console.warn(
-					'Invalid date range: dateFrom must be before or equal to dateTo',
+					"Invalid date range: dateFrom must be before or equal to dateTo"
 				);
 				return;
 			}
 			if (
 				newFilters.unit &&
-				!['hour', 'day', 'week', 'month', 'year'].includes(newFilters.unit)
+				!["hour", "day", "week", "month", "year"].includes(
+					newFilters.unit
+				)
 			) {
 				console.warn(`Invalid unit: ${newFilters.unit}`);
 				return;
@@ -354,31 +258,33 @@ export function useAnalyticsFilters() {
 				const daysDiff = getDaysDiff(dateFromObj, dateToObj);
 				const allValidUnits = getUnitsForDayRange(daysDiff);
 				const supportedUnits: Array<DateUnit> = [
-					'hour',
-					'day',
-					'week',
-					'month',
-					'year',
+					"hour",
+					"day",
+					"week",
+					"month",
+					"year"
 				];
-				const validUnitsForRange = allValidUnits.filter((u): u is DateUnit =>
-					supportedUnits.includes(u as any),
+				const validUnitsForRange = allValidUnits.filter(
+					(u): u is DateUnit => supportedUnits.includes(u as any)
 				);
 
 				if (!validUnitsForRange.includes(newFilters.unit)) {
 					compatibleUnit =
-						validUnitsForRange.length > 0 ? validUnitsForRange[0] : 'day';
+						validUnitsForRange.length > 0
+							? validUnitsForRange[0]
+							: "day";
 				}
 			}
 
 			setParams({
-				'date-from': newFilters.dateFrom || null,
-				'date-to': newFilters.dateTo || null,
+				"date-from": newFilters.dateFrom || null,
+				"date-to": newFilters.dateTo || null,
 				unit: compatibleUnit || null,
-				scope: newFilters.scope || 'all',
-				membership: newFilters.membership || null,
+				scope: newFilters.scope || "all",
+				membership: newFilters.membership || null
 			});
 		},
-		[setParams, isValidDateRange],
+		[setParams, isValidDateRange]
 	);
 
 	const compatibleFilters: AnalyticsFilters = {
@@ -387,8 +293,8 @@ export function useAnalyticsFilters() {
 			filters.unit && validUnits.includes(filters.unit)
 				? filters.unit
 				: validUnits.length > 0
-				? validUnits[0]
-				: undefined,
+					? validUnits[0]
+					: undefined
 	};
 
 	return {
@@ -405,6 +311,6 @@ export function useAnalyticsFilters() {
 
 		setFilters,
 		clearFilters,
-		replaceFilters,
+		replaceFilters
 	};
 }

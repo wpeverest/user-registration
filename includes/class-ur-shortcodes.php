@@ -265,10 +265,6 @@ class UR_Shortcodes {
 	 * @param mixed $atts Extra attributes.
 	 */
 	public static function form( $atts ) {
-
-		if ( empty( $atts ) || ! isset( $atts['id'] ) ) {
-			return '';
-		}
 		/**
 		 * Applies a filter to override the 'users_can_register' setting.
 		 *
@@ -463,7 +459,9 @@ class UR_Shortcodes {
 		do_action( 'user_registration_form_shortcode_scripts', $atts );
 
 		ob_start();
-		self::render_form( $atts['id'] );
+		$form_id = !empty($atts['id']) ? $atts['id'] : get_option( 'user_registration_registration_form', true );
+
+		self::render_form( $form_id );
 
 		return ob_get_clean();
 	}

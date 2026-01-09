@@ -4291,6 +4291,7 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 						),
 					),
 					'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'plugin'        => '',
 				),
 				'pdf-submission'  => array(
 					'label'  => esc_html__( 'PDF Form Submission', 'user-registration' ),
@@ -4338,15 +4339,15 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 						'dropbox'      => array(
 							'label'  => esc_html__( 'Dropbox', 'user-registration' ),
 							'plugin' => 'user-registration-cloud-storage',
-							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
-						),
+							'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+							'name' => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
+						)
 					),
-					'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'plugin'        => 'user-registration-cloud-storage',
+					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'plugin' => 'user-registration-cloud-storage',
 				),
 			),
-			'security'           => array(
+			'security' => array(
 				'2fa' => array(
 					'label'  => esc_html__( 'Two Factor Authentication', 'user-registration' ),
 					'plugin' => 'user-registration-two-factor-authentication',
@@ -4437,6 +4438,7 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 							$button_title = sprintf( esc_html__( '%s Addon', 'user-registration' ), $action );
 
 							$settings['sections'][ $detail['plugin'] ] = array(
+								'is_premium'  => false,
 								'title'       => $detail['label'],
 								'before_desc' => $description,
 								'settings'    => array(
@@ -4475,9 +4477,9 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 						}
 						/* translators: %s: License Plan Name. */
 						$description = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
-						$button_text = esc_html__( 'Upgrade Plan', 'user-registration' );
-						$settings['sections']['premium_setting_section']['before_desc']           = $description;
-						$settings['sections']['premium_setting_section']['button']['button_text'] = $button_text;
+						$settings['sections']['premium_setting_section']['before_desc'] = $description;
+						$upgradable_plans                                        = implode( 'plan, ', $detail['plan'] );
+						$settings['sections']['premium_setting_section']['desc'] = sprintf( __( 'To unlock this setting, consider upgrading to %s', 'user-registration ' ), $upgradable_plans );
 					} else {
 						$plugin_name = $detail['name'];
 						$action      = '';
@@ -9597,7 +9599,6 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 	 */
 	function ur_save_settings_options( $section, $form_data ) {
 		$update_options = array();
-
 		foreach ( $section['settings'] as $option ) {
 			if ( empty( $option['id'] ) ) {
 				continue;
@@ -9617,6 +9618,7 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 				$option_name = sanitize_text_field( $option_id );
 			}
 
+
 			if ( isset( $form_data[ $option_id ] ) ) {
 				$value = ur_sanitize_value_by_type( $option, $form_data[ $option_id ] );
 				if ( $option_name && $setting_name ) {
@@ -9630,7 +9632,6 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 				}
 			}
 		}
-
 		foreach ( $update_options as $name => $value ) {
 			update_option( $name, $value );
 		}
@@ -9808,15 +9809,49 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 
 		// Get payment connection statuses
 		$payment_connections = ur_get_payment_connection_statuses();
+		$enabled_features    = (array) get_option( 'user_registration_enabled_features', array() );
+		$membership_enabled  = in_array( 'user-registration-membership', $enabled_features, true );
+
+		$default_form_id = (int) get_option( 'user_registration_default_form_page_id', 0 );
+		if ( ! $default_form_id ) {
+			$default_form_id = (int) get_option( 'user_registration_registration_form', 0 );
+		}
+
+		$default_form_post    = $default_form_id ? get_post( $default_form_id ) : null;
+		$default_form_content = $default_form_post ? (string) $default_form_post->post_content : '';
+
+		$default_form_has_membership = false !== strpos( $default_form_content, '"field_key":"membership"' );
+
+		$membership_field_skipped = (bool) get_option( 'user_registration_membership_field_skipped', false );
+
+		$membership_field_handled = ( ! $membership_enabled ) || $default_form_has_membership || $membership_field_skipped;
+
+		$has_membership_plans = false;
+
+			if ( post_type_exists( 'ur_membership' ) ) {
+				$has_membership_plans = (bool) get_posts(
+					array(
+						'post_type'      => 'ur_membership',
+						'post_status'    => 'publish',
+						'posts_per_page' => 1,
+						'fields'         => 'ids',
+					)
+				);
+			}
+
 
 		$site_assistant_data = array(
-			'has_default_form'        => ! empty( get_post( get_option( 'user_registration_default_form_page_id', '' ) ) ),
-			'missing_pages'           => $missing_pages_data,
-			'test_email_sent'         => get_option( 'user_registration_successful_test_mail', false ),
-			'wordpress_login_handled' => ( get_option( 'user_registration_login_options_prevent_core_login', false ) == true ) || ( get_option( 'user_registration_default_wordpress_login_skipped', false ) == true ),
-			'spam_protection_handled' => ur_string_to_bool( get_option( 'user_registration_captcha_setting_v2_connection_status', false ) ) || ur_string_to_bool( get_option( 'user_registration_spam_protection_skipped', false ) ),
-			'payment_setup_handled'   => $payment_setup_handled,
-			'payment_connections'     => $payment_connections,
+			'has_default_form'                  => ! empty( $default_form_post ),
+			'missing_pages'                     => $missing_pages_data,
+			'test_email_sent'                   => get_option( 'user_registration_successful_test_mail', false ),
+			'wordpress_login_handled'           => ( get_option( 'user_registration_login_options_prevent_core_login', false ) == true ) || ( get_option( 'user_registration_default_wordpress_login_skipped', false ) == true ),
+			'spam_protection_handled'           => ur_string_to_bool( get_option( 'user_registration_captcha_setting_v2_connection_status', false ) ) || ur_string_to_bool( get_option( 'user_registration_spam_protection_skipped', false ) ),
+			'payment_setup_handled'             => $payment_setup_handled,
+			'payment_connections'               => $payment_connections,
+			'membership_enabled'                => $membership_enabled,
+			'default_form_has_membership_field' => $default_form_has_membership,
+			'membership_field_handled'          => $membership_field_handled,
+			'has_membership_plans'              => $has_membership_plans,
 		);
 
 		return apply_filters( 'ur_site_assistant_data', $site_assistant_data );
@@ -10680,5 +10715,32 @@ if ( ! function_exists( 'urm_array_key_exists_recursive' ) ) {
 		}
 
 		return false;
+	}
+}
+
+if ( ! function_exists( 'urm_is_premium_setting_section' ) ) {
+	function urm_is_premium_setting_section( $id ) {
+		$premium_tabs      = ur_premium_settings_tab();
+		$premium_tab       = urm_array_key_exists_recursive( $id, $premium_tabs );
+		$show_premium_icon = false;
+
+		if ( ! empty( $premium_tab ) ) {
+			$license_data = ur_get_license_plan();
+			$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
+			$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
+
+			if ( ! empty( $premium_tab[ $id ]['plan'] ) ) {
+				if ( in_array( $license_plan, $premium_tab[ $id ]['plan'], true ) ) {
+					$show_premium_icon = false;
+				} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $premium_tab[ $id ]['plugin'] ) && is_plugin_active( $premium_tab[ $id ]['plugin'] . '/' . $premium_tab[ $id ]['plugin'] . '.php' ) ) {
+					$show_premium_icon = false;
+				} else {
+					$show_premium_icon = true;
+				}
+			} else {
+				$show_premium_icon = $premium_tab ? true : false;
+			}
+		}
+		return $show_premium_icon;
 	}
 }

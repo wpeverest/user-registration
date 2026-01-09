@@ -11,17 +11,16 @@
 ?>
 <!--								payment gateway container-->
 <div id="payment-gateway-container"
-	 class="ur-payment-gateway-wrapper <?php echo isset( $membership_details['type'] ) && $membership_details['type'] !== 'free' ? '' : 'ur-d-none'; ?>">
-	<div class="user-registration-card">
-		<div class="user-registration-card__header">
-			<h3><?php echo __( "Payment Gateways", "user-registration" ) ?></h3>
-		</div>
-		<div class="user-registration-card__body ur-d-flex ur-flex-column"
-			 style="gap: 20px">
-
-			<?php render_payment_gateways( $membership_details ); ?>
-		</div>
+	 style="gap: 20px"
+	 class="ur-payment-gateway-wrapper ur-d-flex ur-align-items-center ur-g-2 <?php echo isset( $membership_details['type'] ) && $membership_details['type'] !== 'free' ? '' : 'ur-d-none'; ?>">
+	<div class="ur-label" style="width: 30%">
+		<label for="ur-membership-free-type"> <?php echo __('Payment Gateways', 'user-registration'); ?> :</label>
 	</div>
+	<div class="ur-d-flex ur-justify-content-between "  style="gap: 20px; width: 100%">
+		<?php render_payment_gateways( $membership_details ); ?>
+
+	</div>
+
 </div>
 
 <?php
@@ -68,19 +67,21 @@ function render_paypal_settings( $membership_details ) {
 	);
 	$is_incomplete          = empty( $global_paypal_settings['paypal_email'] );
 	?>
+
 	<div id="paypal-section" class="user-registration-payment__items">
 		<div
 			id="ur-membership-paypal-toggle-container"
-			class="ur-d-flex ur-justify-content-between ur-payment-option-header"
+			class="ur-d-flex ur-payment-option-header"
+			style="gap: 20px; justify-content: space-between;"
 		>
-			<h2><?php echo __( 'Paypal', 'user-registration' ); ?></h2>
+			<label><?php echo __( 'Paypal', 'user-registration' ); ?></label>
 			<div class="ur-toggle-section m1-auto">
 				<span class="user-registration-toggle-form">
 					<input
 						data-key-name="Payment Gateway"
 						id="ur-membership-pg-paypal" type="checkbox"
 						class="user-registration-switch__control hide-show-check enabled pg-switch"
-						<?php echo isset( $membership_details['payment_gateways']['paypal'] ) && $membership_details['payment_gateways']['paypal']['status'] == 'on' && !$is_incomplete ? 'checked' : ''; ?>
+						<?php echo isset( $membership_details['payment_gateways']['paypal'] ) && $membership_details['payment_gateways']['paypal']['status'] == 'on' && ! $is_incomplete ? 'checked' : ''; ?>
 						name="ur_membership_pg_paypal_status"
 					>
 				<span class="slider round"></span>
@@ -294,15 +295,17 @@ function render_bank_settings( $membership_details ) {
 		?>
 		<div
 			id="ur-membership-bank-toggle-container"
-			class="ur-d-flex ur-justify-content-between ur-payment-option-header">
-			<h2><?php echo __( 'Bank Transfer', 'user-registration' ); ?></h2>
+			class="ur-d-flex ur-justify-content-between ur-payment-option-header"
+			style="gap: 20px; justify-content: space-between;"
+		>
+			<label><?php echo __( 'Bank Transfer', 'user-registration' ); ?></label>
 			<div class="ur-toggle-section m1-auto">
 				<span class="user-registration-toggle-form">
 					<input
 						data-key-name="Payment Gateway"
 						id="ur-membership-pg-bank" type="checkbox"
 						class="user-registration-switch__control hide-show-check ur-payment-option-header enabled pg-switch"
-						<?php echo isset( $bank_details['status'] ) && $bank_details['status'] == 'on' && !empty( $global_bank_details ) ? 'checked' : ''; ?>
+						<?php echo isset( $bank_details['status'] ) && $bank_details['status'] == 'on' && ! empty( $global_bank_details ) ? 'checked' : ''; ?>
 						name="ur_membership_pg_bank_status"
 					>
 				<span class="slider round"></span>
@@ -347,15 +350,17 @@ function render_stripe_settings( $membership_details ) {
 	<div id="stripe-section" class="user-registration-payment__items">
 		<div
 			id="ur-membership-stripe-toggle-container"
-			class="ur-d-flex ur-justify-content-between ur-payment-option-header">
-			<h2><?php echo __( 'Stripe', 'user-registration' ); ?></h2>
+			class="ur-d-flex ur-justify-content-between ur-payment-option-header"
+			style="gap: 20px; justify-content: space-between;"
+		>
+			<label><?php echo __( 'Stripe', 'user-registration' ); ?></label>
 			<div class="ur-toggle-section m1-auto">
 				<span class="user-registration-toggle-form">
 					<input
 						data-key-name="Payment Gateway"
 						id="ur-membership-pg-stripe" type="checkbox"
 						class="user-registration-switch__control hide-show-check ur-payment-option-header enabled pg-switch"
-						<?php echo isset( $stripe_details['status'] ) && $stripe_details['status'] == 'on' && !$setup_incomplete ? 'checked' : ''; ?>
+						<?php echo isset( $stripe_details['status'] ) && $stripe_details['status'] == 'on' && ! $setup_incomplete ? 'checked' : ''; ?>
 						name="ur_membership_pg_bank_status"
 					>
 				<span class="slider round"></span>

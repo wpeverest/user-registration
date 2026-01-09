@@ -245,6 +245,8 @@ class UR_Getting_Started {
 			$membership_db = new Database();
 			$membership_db::create_tables();
 		}
+		self::install_initial_pages( 'normal' );
+		self::ensure_default_form( 'normal' );
 
 		$current_step    = self::get_current_step();
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
@@ -534,7 +536,6 @@ class UR_Getting_Started {
 		update_option( 'urm_onboarding_membership_type', $membership_type );
 
 		$tracking_value = ur_string_to_bool( $allow_usage_tracking ) ? true : false;
-
 		update_option( 'user_registration_allow_usage_tracking', $tracking_value );
 
 		if ( ! empty( $admin_email ) ) {
@@ -542,6 +543,10 @@ class UR_Getting_Started {
 		}
 
 		$page_details = self::install_initial_pages( $membership_type );
+
+		if ( in_array( $membership_type, array( 'paid_membership', 'free_membership' ), true ) ) {
+			self::ensure_membership_field_in_default_form();
+		}
 
 		$next_step = self::calculate_next_step( 1, $membership_type );
 		self::update_current_step( $next_step );
@@ -556,6 +561,7 @@ class UR_Getting_Started {
 			200
 		);
 	}
+
 
 	/**
 	 * Create initial/common pages and default registration form.
@@ -658,15 +664,22 @@ class UR_Getting_Started {
 	protected static function ensure_default_form( $mode = 'normal' ) {
 		$is_membership = ( 'membership' === $mode );
 
-		$existing = (int) get_option( 'user_registration_registration_form', 0 );
+		$existing = 0;
+
+		if ( $is_membership ) {
+			$existing = (int) get_option( self::OPTION_MEMBERSHIP_FORM_ID, 0 );
+		} else {
+			$existing = (int) get_option( 'user_registration_default_form_page_id', 0 );
+			if ( ! $existing ) {
+				$existing = (int) get_option( 'user_registration_registration_form', 0 );
+			}
+		}
 
 		if ( $existing > 0 ) {
 			return $existing;
 		}
 
-		$hasposts = get_posts( 'post_type=user_registration' );
-
-		$membership_field_name = 'membership_field_' . ur_get_random_number();
+		$membership_field_name = 'membership_field_' . ( function_exists( 'ur_get_random_number' ) ? ur_get_random_number() : wp_rand( 1000, 999999 ) );
 
 		$post_content = $is_membership
 		? '[[[' .
@@ -702,12 +715,13 @@ class UR_Getting_Started {
 			update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
 		} else {
 			update_option( 'user_registration_default_form_page_id', (int) $new_id );
+			update_option( 'user_registration_registration_form', (int) $new_id );
 		}
-		update_option( 'user_registration_default_form_page_id', (int) $new_id );
-		update_option( 'user_registration_registration_form', (int) $new_id );
 
 		return (int) $new_id;
 	}
+
+
 
 	/**
 	 * Get memberships data for step 2 including saved memberships and available content.
@@ -766,47 +780,6 @@ class UR_Getting_Started {
 		);
 	}
 
-
-	/**
-	 * Fetch memberships from database or posts.
-	 *
-	 * @since x.x.x
-	 *
-	 * @return array
-	 */
-	protected static function fetch_memberships() {
-		if ( class_exists( 'WPEverest\URMembership\Admin\Database\Database' ) ) {
-			$db = new Database();
-			if ( method_exists( $db, 'get_all_memberships' ) ) {
-				return $db->get_all_memberships();
-			}
-		}
-
-		$posts = get_posts(
-			array(
-				'post_type'      => 'ur_membership',
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'orderby'        => 'title',
-				'order'          => 'ASC',
-			)
-		);
-
-		$memberships = array();
-
-		foreach ( $posts as $post ) {
-			$memberships[] = array(
-				'id'     => $post->ID,
-				'name'   => $post->post_title,
-				'type'   => get_post_meta( $post->ID, '_ur_membership_type', true ) ? get_post_meta( $post->ID, '_ur_membership_type', true ) : 'free',
-				'status' => get_post_meta( $post->ID, '_ur_membership_status', true ) ? get_post_meta( $post->ID, '_ur_membership_status', true ) : 'active',
-				'access' => get_post_meta( $post->ID, '_ur_membership_access_rules', true ) ? get_post_meta( $post->ID, '_ur_membership_access_rules', true ) : array(),
-			);
-		}
-
-		return $memberships;
-	}
-
 	/**
 	 * Save memberships from step 2.
 	 *
@@ -823,6 +796,10 @@ class UR_Getting_Started {
 		}
 
 		$membership_type = get_option( 'urm_onboarding_membership_type', 'free_membership' );
+
+		if ( in_array( $membership_type, array( 'paid_membership', 'free_membership' ), true ) ) {
+			self::ensure_membership_field_in_default_form();
+		}
 
 		if ( empty( $memberships ) ) {
 			return new \WP_REST_Response(
@@ -899,6 +876,80 @@ class UR_Getting_Started {
 			200
 		);
 	}
+
+
+	/**
+	 * Ensure the already-created default registration form contains Membership field.
+	 *
+	 * @since x.x.x
+	 *
+	 * @return int|false Updated form ID on success, false on failure.
+	 */
+	protected static function ensure_membership_field_in_default_form() {
+		$form_id = (int) get_option( 'user_registration_default_form_page_id', 0 );
+
+		if ( ! $form_id ) {
+			$form_id = (int) get_option( 'user_registration_registration_form', 0 );
+		}
+
+		if ( ! $form_id ) {
+			$form_id = (int) self::ensure_default_form( 'normal' );
+		}
+
+		if ( ! $form_id ) {
+			return false;
+		}
+
+		$post = get_post( $form_id );
+		if ( ! $post || 'user_registration' !== $post->post_type ) {
+			return false;
+		}
+
+		$content = (string) $post->post_content;
+
+		if ( false !== strpos( $content, '"field_key":"membership"' ) ) {
+			update_option( self::OPTION_MEMBERSHIP_FORM_ID, (int) $form_id );
+			return (int) $form_id;
+		}
+
+		$membership_field_name = get_option( 'ur_membership_default_membership_field_name', '' );
+		if ( empty( $membership_field_name ) ) {
+			$membership_field_name = 'membership_field_' . ( function_exists( 'ur_get_random_number' ) ? ur_get_random_number() : wp_rand( 1000, 999999 ) );
+			update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
+		}
+
+		$membership_field_json =
+			'{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' .
+			$membership_field_name .
+			'","required":"false","hide_label":"false","membership_listing_option":"all","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}';
+
+		if ( substr( $content, -3 ) === ']]]' ) {
+			$content = substr( $content, 0, -3 ) . '],[' . $membership_field_json . ']]]';
+		} else {
+			$content .= "\n" . $membership_field_json;
+		}
+
+		$updated = wp_update_post(
+			array(
+				'ID'           => $form_id,
+				'post_content' => $content,
+			),
+			true
+		);
+
+		if ( is_wp_error( $updated ) || ! $updated ) {
+			return false;
+		}
+
+		update_option( self::OPTION_MEMBERSHIP_FORM_ID, (int) $form_id );
+
+		if ( ! get_option( 'user_registration_registration_form', 0 ) ) {
+			update_option( 'user_registration_registration_form', (int) $form_id );
+		}
+
+		return (int) $form_id;
+	}
+
 
 
 	/**
@@ -1885,20 +1936,17 @@ class UR_Getting_Started {
 		);
 	}
 
-	/**
-	 * Skip current step and move to the next one.
-	 * Resets step data to defaults when skipping.
-	 *
-	 * @since x.x.x
-	 *
-	 * @param \WP_REST_Request $request Request instance.
-	 * @return \WP_REST_Response
-	 */
+		/**
+		 * Skip current step and move to the next one.
+		 * Resets step data to defaults when skipping.
+		 *
+		 * @since x.x.x
+		 *
+		 * @param \WP_REST_Request $request Request instance.
+		 * @return \WP_REST_Response
+		 */
 	public static function skip_step( $request ) {
 		$current_step    = isset( $request['step'] ) ? absint( $request['step'] ) : self::get_current_step();
-		$step_id         = isset( $request['step_id'] ) ? sanitize_text_field( $request['step_id'] ) : '';
-		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
-
 		$membership_type = get_option( 'urm_onboarding_membership_type', '' );
 
 		$next_step = self::calculate_next_step( $current_step, $membership_type );
@@ -1924,6 +1972,7 @@ class UR_Getting_Started {
 			200
 		);
 	}
+
 
 	/**
 	 * Navigate to a specific step (back navigation).
@@ -2126,7 +2175,7 @@ class UR_Getting_Started {
 						'default'
 					),
 					'default_role' => get_option(
-						'user_registration_default_user_role',
+						'user_registration_form_setting_default_user_role',
 						'subscriber'
 					),
 				),

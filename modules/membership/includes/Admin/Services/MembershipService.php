@@ -295,6 +295,7 @@ class MembershipService {
 		$data['cancel_subscription'] = sanitize_text_field( ! empty( $data['cancel_subscription'] ) ? $data['cancel_subscription'] : '' );
 
 		$data['amount'] = $data['amount'] ?? 0;
+
 		if ( isset( $data['payment_gateways'] ) ) {
 			if ( isset( $data['payment_gateways']['paypal'] ) ) {
 				$data['payment_gateways']['paypal']['status']     = sanitize_text_field( $data['payment_gateways']['paypal']['status'] );
@@ -472,7 +473,10 @@ class MembershipService {
 				$result         = $stripe_service->validate_setup();
 				break;
 			default:
-				$result = empty( get_option( 'user_registration_global_bank_details' ) );
+				$bank_enabled = get_option( 'user_registration_bank_transfer_enabled', '' );
+				$bank_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false ));
+				$is_bank_enabled = $bank_enabled ? $bank_enabled : $bank_default;
+				$result = empty( get_option( 'user_registration_global_bank_details' ) ) || ! $is_bank_enabled;
 				break;
 		}
 		/**
