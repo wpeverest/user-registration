@@ -337,7 +337,7 @@ class UR_Admin_Settings {
 
 		global $current_section;
 
-		if ( 'add-new-popup' === $current_section ) {
+		if ( 'popup' === $current_section ) {
 			return $default;
 		} else {
 			// Array value.
@@ -408,7 +408,7 @@ class UR_Admin_Settings {
 
 					if ( ! isset( $section['type'] ) ) {
 						//default is card.
-						$section[ 'type' ] = 'card'; 
+						$section[ 'type' ] = 'card';
 						// continue;
 					}
 
