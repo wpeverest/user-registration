@@ -1457,7 +1457,16 @@ class URCR_Frontend {
 
 		$message = get_option( 'user_registration_content_restriction_message' );
 
-		$message = ( false === $message ) ? esc_html__( 'This content is restricted!', 'user-registration' ) : $message;
+		if ( false === $message || empty( $message ) ) {
+			if ( class_exists( 'URCR_Admin_Assets' ) ) {
+				$message = URCR_Admin_Assets::get_default_message();
+			} else {
+				$message = '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
+<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
+<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
+<p>{{sign_up}} {{log_in}}</p>';
+			}
+		}
 
 		$message = apply_filters( 'user_registration_process_smart_tags', $message );
 
