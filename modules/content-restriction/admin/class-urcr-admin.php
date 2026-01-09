@@ -415,6 +415,11 @@ class URCR_Admin {
 			return;
 		}
 
+		//For new fresh user.
+		if ( ur_string_to_bool( get_option( 'urm_is_new_installation' ) ) ) {
+			return;
+		}
+
 		// Check if we should run migration
 		$global_migrated      = get_option( 'urcr_global_restriction_migrated', false );
 		$post_page_migrated   = get_option( 'urcr_post_page_restrictions_migrated', false );

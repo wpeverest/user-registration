@@ -383,6 +383,33 @@ const RuleGroup = ({
 									);
 								}
 							})}
+
+							{rule && rule?.is_global && (
+								<div className="urcr-condition-wrapper urcr-global-migration-notice">
+									<p className="urcr-notice-wrap">
+										<span style={{ fontWeight: "bold" }}>
+											Note:
+										</span>
+										{__(
+											" For partial content restriction with the above condition, use the ",
+											"user-registration"
+										)}
+										<span style={{ fontWeight: "bold" }}>
+											[urcr_restrict]...[/urcr_restrict]
+										</span>
+										{__(
+											" shortcode. It may be deprecated",
+											"user-registration"
+										)}
+										{true &&
+											__(
+												"—use the Content Restriction block instead",
+												"user-registration"
+											)}
+										.
+									</p>
+								</div>
+							)}
 						</div>
 					)}
 

@@ -215,21 +215,6 @@ const AccessControlSection = ({
 
 			<span className="urcr-arrow-icon" aria-hidden="true"></span>
 			<div className="ur-d-flex ur-flex-column">
-				{rule && rule?.is_global && (
-					<div class="urcr-target-type-group">
-						<div class="urcr-target-item">
-							<span class="urcr-target-type-label">
-								{__("Shortcode", "user-registration")}:
-							</span>
-							<span class="urcr-whole-site-text">
-								{__(
-									"This rule's condition also affects the [urcr_restrict]....[/urcr_restrict] shortcode.",
-									"user-registration"
-								)}
-							</span>
-						</div>
-					</div>
-				)}
 				{contentTargets.length > 0 && (
 					<div className="urcr-target-type-group">
 						{contentTargets.map((target) => {
