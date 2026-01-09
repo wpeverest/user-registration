@@ -1933,6 +1933,7 @@ class UR_AJAX {
 			case 'paypal':
 				$reset_keys = array(
 					'urm_paypal_connection_status',
+					'user_registration_paypal_enabled',
 					'user_registration_global_paypal_mode',
 					'user_registration_global_paypal_cancel_url',
 					'user_registration_global_paypal_return_url',
@@ -1952,6 +1953,7 @@ class UR_AJAX {
 			case 'stripe':
 				$reset_keys = array(
 					'urm_stripe_connection_status',
+					'user_registration_stripe_enabled',
 					'user_registration_stripe_test_publishable_key',
 					'user_registration_stripe_test_secret_key',
 					'user_registration_stripe_test_mode',
@@ -1961,6 +1963,7 @@ class UR_AJAX {
 				break;
 			case 'bank':
 				$reset_keys = array(
+					'user_registration_bank_enabled',
 					'user_registration_global_bank_details',
 					'urm_bank_connection_status',
 				);
@@ -1968,6 +1971,7 @@ class UR_AJAX {
 			case 'mollie':
 				$reset_keys = array(
 					'urm_mollie_connection_status',
+					'user_registration_mollie_enabled',
 					'user_registration_mollie_global_test_mode',
 					'user_registration_mollie_global_test_publishable_key',
 					'user_registration_mollie_global_live_publishable_key',
@@ -1976,6 +1980,7 @@ class UR_AJAX {
 			case 'authorize-net':
 				$reset_keys = array(
 					'urm_authorize-net_connection_status',
+					'user_registration_authorize-net_enabled',
 					'user_registration_authorize_net_test_mode',
 					'user_registration_authorize_net_test_publishable_key',
 					'user_registration_authorize_net_test_secret_key',
