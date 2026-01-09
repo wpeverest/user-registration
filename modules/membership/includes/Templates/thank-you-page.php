@@ -64,7 +64,7 @@ $redirect_btn_url  = ! empty( $attributes['redirect_page_id'] )
 
 			<?php if ( $show_bank_details && ! empty( $bank_data ) ) : ?>
 				<div class="ur-bank-details">
-					<p class="ur-bank-details-title" ><?php echo __( 'Bank Details') ?></p>
+					<p class="ur-bank-details-title" ><?php echo __( 'Bank Details :') ?></p>
 					<?php echo $bank_data; ?>
 				</div>
 			<?php endif; ?>
