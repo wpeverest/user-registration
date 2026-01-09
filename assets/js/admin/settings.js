@@ -1583,6 +1583,8 @@
 						.find(".ur-connection-status")
 						.removeClass("ur-connection-status--active");
 					settings_container.find('input[type="text"]').val("");
+					settings_container.find("input[type='checkbox']").prop("checked", false);
+
 					settings_container.find('textarea').each(function () {
 						let editor = $(this).attr('id');
 						if (editor && tinymce.get(editor)) {
