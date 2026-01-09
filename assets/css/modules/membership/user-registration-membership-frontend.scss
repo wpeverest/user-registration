@@ -1625,13 +1625,14 @@ html {
 		width: 35%;
 		font-weight: 600;
 		color: #374151;
-		background-color: #EDF2F7;
+		background-color: #F8F8FA;
 		white-space: nowrap;
 	}
 
 	&-data {
 		color: #111827;
 		word-break: break-word;
+		background-color: #F8F8FA;
 	}
 
 	&-tr:nth-child(even) {
