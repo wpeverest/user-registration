@@ -256,8 +256,8 @@ const TemplateList = ({ selectedCategory, templates }) => {
 		}
 	};
 
-	const mutation = useMutation(
-		async (slug) => {
+	const mutation = useMutation({
+		mutationFn: async (slug) => {
 			const newFavorites = favorites.includes(slug)
 				? favorites.filter((item) => item !== slug)
 				: [...favorites, slug];
@@ -281,28 +281,26 @@ const TemplateList = ({ selectedCategory, templates }) => {
 
 			return newFavorites;
 		},
-		{
-			onError: (error) => {
-				toast({
-					title: __("Error", "user-registration"),
-					description: __(
-						"An error occurred while updating favorites.",
-						"user-registration"
-					),
-					status: "error",
-					position: "bottom-right",
-					duration: 5000,
-					isClosable: true,
-					variant: "subtle"
-				});
-			},
-			onSuccess: (newFavorites) => {
-				queryClient.invalidateQueries(["templates"]);
-				setFavorites(newFavorites);
-				queryClient.invalidateQueries(["favorites"]);
-			}
+		onError: (error) => {
+			toast({
+				title: __("Error", "user-registration"),
+				description: __(
+					"An error occurred while updating favorites.",
+					"user-registration"
+				),
+				status: "error",
+				position: "bottom-right",
+				duration: 5000,
+				isClosable: true,
+				variant: "subtle"
+			});
+		},
+		onSuccess: (newFavorites) => {
+			queryClient.invalidateQueries(["templates"]);
+			setFavorites(newFavorites);
+			queryClient.invalidateQueries(["favorites"]);
 		}
-	);
+	});
 
 	const handleFavoriteToggle = (slug) => {
 		mutation.mutate(slug);
@@ -321,7 +319,7 @@ const TemplateList = ({ selectedCategory, templates }) => {
 		? Object.entries(previewTemplate.addons).map(([key, value]) => ({
 				key,
 				value
-		  }))
+			}))
 		: [];
 
 	const requiredPlugins = addonEntries.map((addon) => ({
@@ -633,14 +631,14 @@ const TemplateList = ({ selectedCategory, templates }) => {
 											"user-registration"
 										),
 										formTemplateName
-								  )
+									)
 								: sprintf(
 										__(
 											"%s is a Premium Template",
 											"user-registration"
 										),
 										formTemplateName
-								  )}
+									)}
 						</Heading>
 					</ModalHeader>
 					<ModalCloseButton top="12px" right="12px" />
@@ -659,11 +657,11 @@ const TemplateList = ({ selectedCategory, templates }) => {
 								? __(
 										"This template requires plus and above plan. Please upgrade to the Plus and above to unlock all these awesome templates.",
 										"user-registration"
-								  )
+									)
 								: __(
 										"This template requires premium addons. Please upgrade to the Premium to unlock all these awesome templates.",
 										"user-registration"
-								  )}
+									)}
 						</Text>
 					</ModalBody>
 					<ModalFooter justifyContent="flex-end" padding="0px">

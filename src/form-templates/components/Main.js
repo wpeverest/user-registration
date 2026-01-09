@@ -10,11 +10,7 @@ const { security } = ur_templates_script;
 
 const fetchTemplates = async () => {
 	const response = await apiFetch({
-		path: `user-registration/v1/form-templates`,
-		method: "GET",
-		headers: {
-			"X-WP-Nonce": security
-		}
+		path: `user-registration/v1/form-templates`
 	});
 	if (response && Array.isArray(response.templates)) {
 		const allTemplates = response.templates.flatMap(
@@ -38,7 +34,10 @@ const Main = ({ filter }) => {
 		data: templates = [],
 		isLoading,
 		error
-	} = useQuery(["templates"], fetchTemplates);
+	} = useQuery({
+		queryKey: ["templates"],
+		queryFn: fetchTemplates
+	});
 
 	const categories = useMemo(() => {
 		const categoriesSet = new Set();
