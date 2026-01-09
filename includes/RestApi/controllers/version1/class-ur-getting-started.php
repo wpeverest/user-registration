@@ -876,6 +876,10 @@ class UR_Getting_Started {
 
 		if ( in_array( $membership_type, array( 'paid_membership', 'free_membership' ), true ) ) {
 			self::ensure_membership_field_in_default_form();
+			$pricing_page_id = get_option( 'user_registration_membership_pricing_page_id', 0 );
+			if ( ! $pricing_page_id ) {
+				self::create_membership_specific_pages();
+			}
 		}
 
 		if ( empty( $memberships ) ) {
