@@ -1992,6 +1992,47 @@ jQuery(function ($) {
 			}
 		});
 	});
+
+	window.addEventListener("hashchange", function () {
+		updateMenuActiveHighlight();
+	});
+
+	updateMenuActiveHighlight();
+
+	function updateMenuActiveHighlight() {
+		var params = new URLSearchParams(window.location.search);
+		var page = params.get("page");
+		if (page !== "user-registration-dashboard") {
+			return;
+		}
+
+		var $menu = $("#toplevel_page_user-registration");
+
+		$menu
+			.find("li.current, li.current-submenu")
+			.removeClass("current current-submenu");
+
+		$menu.find("a").removeClass("current");
+
+		if (window.location.hash === "#features") {
+			$menu
+				.find('.wp-submenu a[href$="#features"]')
+				.closest("li")
+				.addClass("current");
+		} else if (window.location.hash === "#help") {
+			$menu
+				.find('.wp-submenu a[href$="#help"]')
+				.closest("li")
+				.addClass("current");
+		} else {
+			$menu
+				.find(
+					'.wp-submenu a[href="admin.php?page=user-registration-dashboard"]'
+				)
+				.closest("li")
+				.addClass("current");
+		}
+	}
 });
 
 (function ($, user_registration_admin_data) {
