@@ -6,7 +6,7 @@ import { __ } from "@wordpress/i18n";
 import { getURCRData } from "../../utils/localized-data";
 
 const LocalPageAction = ({ localPage, onLocalPageChange }) => {
-	const pages = getURCRData("pages", {});
+	const pages = getURCRData('pages_for_redirect', {});
 	const pageOptions = Object.entries(pages).map(([id, title]) => ({
 		value: id,
 		label: title

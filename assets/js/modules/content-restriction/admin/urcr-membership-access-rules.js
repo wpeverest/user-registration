@@ -1329,7 +1329,7 @@
 				if ($elementWithType.length) {
 					type = $elementWithType.first().data('content-type') || '';
 				}
-				
+
 				if (!type) {
 					if ($target.find('.urcr-taxonomy-select').length) {
 						type = 'taxonomy';

@@ -196,7 +196,7 @@ class URCR_Admin_Assets {
 			)
 		);
 		$pages = wp_list_pluck( $pages, 'post_title', 'ID' );
-
+		$pages_for_redirect = $pages;
 		// Filter out excluded pages
 		if ( function_exists( 'urcr_get_excluded_page_ids' ) ) {
 			$excluded_page_ids = urcr_get_excluded_page_ids();
@@ -411,6 +411,7 @@ class URCR_Admin_Assets {
 			'terms_list'                             => $terms_list,
 			'posts'                                  => $posts,
 			'pages'                                  => $pages,
+			'pages_for_redirect'                     => $pages_for_redirect,
 			'ur_form_data'                           => $ur_forms,
 			'shortcodes'                             => $shortcodes_list,
 			'content_rule_url'                       => admin_url( 'admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule' ),

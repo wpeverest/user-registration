@@ -198,7 +198,7 @@ const URFormFieldCondition = ({
 							</div>
 
 							{(field.operator !== "empty" && field.operator !== "not empty") && (
-								<div className="urcr-form-field-value ur-flex-1">
+								<div className="urcr-form-field-value ur-flex-1" style={{ minWidth: 0 }}>
 									<input
 										type="text"
 										className="components-text-control__input urcr-condition-value-input urcr-condition-value-text"
@@ -206,6 +206,7 @@ const URFormFieldCondition = ({
 										onChange={(e) => handleFieldUpdate(index, { value: e.target.value })}
 										placeholder={__("Enter value", "user-registration")}
 										disabled={disabled}
+										style={{ width: "150px" }}
 									/>
 								</div>
 							)}
@@ -216,6 +217,7 @@ const URFormFieldCondition = ({
 								onClick={handleAddField}
 								disabled={disabled}
 								aria-label={__("Add field", "user-registration")}
+								style={{ minWidth: "32px", width: "32px", padding: "0" }}
 							>
 								<span className="dashicons dashicons-plus-alt2"></span>
 							</button>
@@ -226,6 +228,7 @@ const URFormFieldCondition = ({
 								onClick={() => handleRemoveField(index)}
 								disabled={disabled || formFields.length === 1}
 								aria-label={__("Remove field", "user-registration")}
+								style={{ minWidth: "32px", width: "32px", padding: "0" }}
 							>
 								<span className="dashicons dashicons-minus"></span>
 							</button>
