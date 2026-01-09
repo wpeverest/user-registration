@@ -117,11 +117,13 @@ class MembershipGroups {
 	 * Enable groups module if not already enabled.
 	 */
 	private function enable_groups_module() {
+		$group_installation_flag = get_option( 'urm_group_module_installation_flag', false );
 
-		if ( ! ur_check_module_activation( 'membership-groups' ) ) {
+		if ( ! ur_check_module_activation( 'membership-groups' ) && ! $group_installation_flag ) {
 			$enabled_features   = get_option( 'user_registration_enabled_features', array() );
 			$enabled_features[] = 'user-registration-membership-groups';
 			update_option( 'user_registration_enabled_features', $enabled_features );
+			update_option( 'urm_group_module_installation_flag', true );
 		}
 	}
 }

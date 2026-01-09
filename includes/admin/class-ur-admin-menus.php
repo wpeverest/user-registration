@@ -568,8 +568,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 
 					$membership_groups_repository = new MembershipGroupRepository();
 					$membership_groups            = $membership_groups_repository->get_all_membership_groups();
+					$group_installation_flag      = get_option( 'urm_group_module_installation_flag', false );
 
-				if ( ur_check_module_activation( 'membership-groups' ) || ! empty( $membership_groups ) ) {
+				if ( ur_check_module_activation( 'membership-groups' ) || ( ! $group_installation_flag && ! empty( $membership_groups ) ) ) {
 					add_submenu_page(
 						'user-registration',
 						__( 'Membership Groups', 'user-registration' ),

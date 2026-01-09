@@ -307,6 +307,14 @@ class UR_Modules {
 		if ( in_array( $slug, array( 'user-registration-payments', 'user-registration-stripe', 'user-registration-authorize-net' ) ) && ! in_array( 'user-registration-payment-history', $enabled_features ) ) {
 			$enabled_features[] = 'user-registration-payment-history';
 		}
+
+		if ( $slug === 'user-registration-membership-groups' ) {
+			$group_installation_flag = get_option( 'urm_group_module_installation_flag', false );
+
+			if ( ! $group_installation_flag ) {
+				update_option( 'urm_group_module_installation_flag', true );
+			}
+		}
 		$enabled_features[] = $slug;
 		update_option( 'user_registration_enabled_features', $enabled_features );
 

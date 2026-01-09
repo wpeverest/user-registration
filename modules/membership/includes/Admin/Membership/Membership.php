@@ -455,10 +455,18 @@ class Membership {
 				$this->render_membership_creator( $membership, $membership_details, $menu_items );
 				break;
 			case 'list_groups':
-				$membership_groups->render_membership_groups_list_table( $menu_items );
+				if ( ur_check_module_activation( 'membership-groups' ) ) {
+					$membership_groups->render_membership_groups_list_table( $menu_items );
+				} else {
+					$this->render_membership_viewer( $menu_items );
+				}
 				break;
 			case 'add_groups':
-				$membership_groups->render_membership_group_creator( $menu_items );
+				if ( ur_check_module_activation( 'membership-groups' ) ) {
+					$membership_groups->render_membership_group_creator( $menu_items );
+				} else {
+					$this->render_membership_viewer( $menu_items );
+				}
 				break;
 			default:
 				$this->render_membership_viewer( $menu_items );
