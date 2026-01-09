@@ -1055,12 +1055,6 @@ function urcr_build_migration_conditions( $allow_to_value ) {
 }
 
 /**
- * Build default actions for migrated rules.
- *
- * @return array Actions array.
- */
-
-/**
  * Create a migrated rule post.
  *
  * @param string $title Rule title.
