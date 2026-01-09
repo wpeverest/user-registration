@@ -475,7 +475,7 @@ class MembershipService {
 			default:
 				$bank_enabled = get_option( 'user_registration_bank_enabled', '' );
 				$bank_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false ));
-				$is_bank_enabled = $bank_enabled ? $bank_enabled : $bank_default;
+				$is_bank_enabled = $bank_enabled ? $bank_enabled : ! $bank_default;
 				$result = empty( get_option( 'user_registration_global_bank_details' ) ) || ! $is_bank_enabled;
 				break;
 		}

@@ -1133,7 +1133,7 @@ class PaypalService {
 	public function validate_setup( $membership_type ) {
 		$paypal_enabled = get_option( 'user_registration_paypal_enabled', '' );
 		$paypal_toggle_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false )) ;
-		$is_paypal_enabled = ($paypal_enabled) ? $paypal_enabled : $paypal_toggle_default;
+		$is_paypal_enabled = ($paypal_enabled) ? $paypal_enabled : ! $paypal_toggle_default;
 
 		if( ! $is_paypal_enabled ) {
 			return true;

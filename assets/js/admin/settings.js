@@ -1969,7 +1969,7 @@
 		var $siblingsExcludingLast = $allSiblings.not(":last");
 		if (isChecked) {
 			$siblingsExcludingLast.show();
-			if($toggle.attr('id') !== 'user_registration_bank_transfer_enabled') {
+			if($toggle.attr('id') !== 'user_registration_bank_enabled') {
 				trigger_payment_gateway_mode_changes($toggle.attr('id'));
 			}
 		} else {
