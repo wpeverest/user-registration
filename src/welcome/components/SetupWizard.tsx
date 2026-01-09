@@ -345,7 +345,7 @@ const SetupWizard: React.FC = () => {
 										bg="#475BB2"
 										color="white"
 										rightIcon={<ArrowForwardIcon />}
-										_hover={{ bg: "#475BB2" }}
+										_hover={{ bg: "#38488e" }}
 										_active={{ bg: "#475BB2" }}
 										onClick={handleNext}
 										isLoading={isLoading}

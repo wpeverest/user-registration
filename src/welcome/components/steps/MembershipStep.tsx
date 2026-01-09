@@ -572,7 +572,7 @@ const MembershipCard: React.FC<MembershipCardProps> = ({
 									minW="50px"
 								>
 									<Text
-										fontSize="14px"
+										fontSize="12px"
 										color={labelColor}
 										fontWeight="500"
 									>

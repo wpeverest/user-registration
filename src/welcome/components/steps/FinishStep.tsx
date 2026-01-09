@@ -105,13 +105,13 @@ const FinishStep: React.FC = () => {
 						bg="#475BB2"
 						color="white"
 						rightIcon={<ArrowForwardIcon />}
-						_hover={{ bg: "#3a4bc2" }}
+						_hover={{ bg: "#38488e" }}
 						_active={{ bg: "#2f3da6" }}
 						px={6}
 						h="44px"
 						fontSize="14px"
 						fontWeight={500}
-						borderRadius="md"
+						borderRadius="4px"
 						minW="180px"
 						onClick={handleGoToDashboard}
 						isLoading={isSaving}

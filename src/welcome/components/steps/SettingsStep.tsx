@@ -1,13 +1,19 @@
 import {
+	Box,
 	Flex,
 	FormControl,
 	FormLabel,
 	Heading,
+	HStack,
 	Icon,
+	Popover,
+	PopoverArrow,
+	PopoverBody,
+	PopoverContent,
+	PopoverTrigger,
 	Select,
 	Skeleton,
 	Text,
-	Tooltip,
 	useColorModeValue,
 	VStack
 } from "@chakra-ui/react";
@@ -22,13 +28,62 @@ interface OptionItem {
 }
 
 const InfoIcon: React.FC = () => (
-	<Icon viewBox="0 0 20 20" boxSize={4} color="gray.400">
+	<Icon viewBox="0 0 16 16" boxSize="14px" color="#383838">
+		<circle
+			cx="8"
+			cy="8"
+			r="7"
+			stroke="currentColor"
+			strokeWidth="1.5"
+			fill="none"
+		/>
 		<path
 			fill="currentColor"
-			d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z"
+			d="M8 7a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 018 7zM8 4.5a.75.75 0 100 1.5.75.75 0 000-1.5z"
 		/>
 	</Icon>
 );
+interface CustomTooltipProps {
+	label: string;
+}
+
+const CustomTooltip: React.FC<CustomTooltipProps> = ({ label }) => {
+	return (
+		<Popover trigger="hover" placement="bottom-start" gutter={8}>
+			<PopoverTrigger>
+				<Box
+					as="span"
+					cursor="pointer"
+					display="inline-flex"
+					alignItems="center"
+				>
+					<InfoIcon />
+				</Box>
+			</PopoverTrigger>
+			<PopoverContent
+				bg="white"
+				border="none"
+				boxShadow="0px 4px 16px rgba(0, 0, 0, 0.12)"
+				borderRadius="4px"
+				width="auto"
+				maxW="250px"
+				_focus={{ boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.12)" }}
+			>
+				<PopoverArrow bg="white" boxShadow="none" />
+				<PopoverBody
+					px={3}
+					py={2}
+					fontSize="13px"
+					color="#222222"
+					fontWeight="400"
+					lineHeight="1.5"
+				>
+					{label}
+				</PopoverBody>
+			</PopoverContent>
+		</Popover>
+	);
+};
 
 const SettingsStep: React.FC = () => {
 	const { dispatch } = useStateValue();
@@ -118,7 +173,7 @@ const SettingsStep: React.FC = () => {
 				)}
 			</Text>
 
-			<VStack spacing={6} align="stretch">
+			<VStack gap={6} align="stretch" spacing={0}>
 				<FormControl>
 					<Flex align="center" justify="space-between">
 						<FormLabel
@@ -131,21 +186,20 @@ const SettingsStep: React.FC = () => {
 							mb={0}
 							minW="250px"
 						>
-							{__(
-								"User Approval And Login Option",
-								"user-registration"
-							)}
-							<Tooltip
-								label={__(
-									"Select how users are approved after registration",
-									"user-registration"
-								)}
-								hasArrow
-							>
-								<span>
-									<InfoIcon />
-								</span>
-							</Tooltip>
+							<HStack spacing={2}>
+								<Text>
+									{__(
+										"User Approval And Login Option",
+										"user-registration"
+									)}
+								</Text>
+								<CustomTooltip
+									label={__(
+										"Select how users are approved after registration",
+										"user-registration"
+									)}
+								/>
+							</HStack>
 						</FormLabel>
 						{isLoading ? (
 							<Skeleton
@@ -193,21 +247,20 @@ const SettingsStep: React.FC = () => {
 							mb={0}
 							minW="250px"
 						>
-							{__(
-								"Assign Default User Role",
-								"user-registration"
-							)}
-							<Tooltip
-								label={__(
-									"Select the default role assigned to new users upon registration",
-									"user-registration"
-								)}
-								hasArrow
-							>
-								<span>
-									<InfoIcon />
-								</span>
-							</Tooltip>
+							<HStack spacing={2}>
+								<Text>
+									{__(
+										"Assign Default User Role",
+										"user-registration"
+									)}
+								</Text>
+								<CustomTooltip
+									label={__(
+										"Select the default role assigned to new users upon registration",
+										"user-registration"
+									)}
+								/>
+							</HStack>
 						</FormLabel>
 						{isLoading ? (
 							<Skeleton
