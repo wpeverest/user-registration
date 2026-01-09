@@ -88,13 +88,13 @@ if ( ! class_exists( 'Members' ) ) {
 					'ur-enhanced-select',
 					'user-registration-admin',
 				),
-				'1.0.0',
+				UR_VERSION,
 				true
 			);
 			wp_enqueue_script( 'ur-snackbar' );
 			wp_enqueue_script( 'user-registration-members' );
 			wp_enqueue_script( 'sweetalert2' );
-			wp_register_script( 'selectWoo', UR()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), '5.0.0', false );
+			wp_register_script( 'selectWoo', UR()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), UR_VERSION, false );
 			wp_enqueue_script( 'selectWoo' );
 			$this->localize_scripts();
 		}
@@ -117,7 +117,7 @@ if ( ! class_exists( 'Members' ) ) {
 			wp_enqueue_style( 'sweetalert2' );
 			wp_enqueue_style( 'ur-core-builder-style' );
 			wp_enqueue_style( 'ur-snackbar' );
-			wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), '4.0.6' );
+			wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), UR_VERSION );
 		}
 
 		/**

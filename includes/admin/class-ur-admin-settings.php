@@ -204,7 +204,7 @@ class UR_Admin_Settings {
 		 * Action to output start settings
 		 */
 		do_action( 'user_registration_settings_start' );
-		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
+		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), UR_VERSION, true );
 
 		wp_enqueue_script(
 			'user-registration-settings',
@@ -222,7 +222,7 @@ class UR_Admin_Settings {
 		);
 		wp_enqueue_script( 'ur-setup' );
 		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
-			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
+			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), UR_VERSION );
 		}
 		wp_enqueue_style( 'ur-snackbar' );
 		wp_localize_script(
@@ -255,7 +255,7 @@ class UR_Admin_Settings {
 					'i18n_prompt_cancel'                 => esc_html__( 'Cancel', 'user-registration' ),
 					'captcha_failed'                     => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
 					'captcha_reset_prompt'               => esc_html__( 'Are you sure you want to reset these keys? This action will clear both the Site Key and Secret Key permanently.', 'user-registration' ),
-					'payment_reset_prompt'          => esc_html__( 'Are you sure you want to reset these details? This will permanently remove the stored details from our system. This action cannot be undone.', 'user-registration' ),
+					'payment_reset_prompt'               => esc_html__( 'Are you sure you want to reset these details? This will permanently remove the stored details from our system. This action cannot be undone.', 'user-registration' ),
 					'unsaved_changes'                    => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
 					'pro_feature_title'                  => esc_html__( 'is a Pro Feature', 'user-registration' ),
 					'upgrade_message'                    => esc_html__(
@@ -407,8 +407,8 @@ class UR_Admin_Settings {
 				foreach ( $options['sections'] as $id => $section ) {
 
 					if ( ! isset( $section['type'] ) ) {
-						//default is card.
-						$section[ 'type' ] = 'card';
+						// default is card.
+						$section['type'] = 'card';
 						// continue;
 					}
 
@@ -436,7 +436,7 @@ class UR_Admin_Settings {
 							$settings .= '<h3 class="user-registration-card__title">';
 							$settings .= esc_html( ucwords( $section['title'] ) );
 
-							if ( isset( $section['is_premium'] ) && $section['is_premium'] && (! is_plugin_active( 'user-registration-pro/user-registration.php' ) || empty( get_option( 'user-registration_license_key', '' ) ) ) ) {
+							if ( isset( $section['is_premium'] ) && $section['is_premium'] && ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) || empty( get_option( 'user-registration_license_key', '' ) ) ) ) {
 								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' . '" /></div>';
 							}
 							$settings .= '</h3>';
@@ -479,7 +479,7 @@ class UR_Admin_Settings {
 
 						$available_in      = isset( $section['available_in'] ) ? sanitize_text_field( wp_unslash( $section['available_in'] ) ) : '';
 						$is_captcha        = isset( $section['settings_type'] ) ? ' ur-captcha-settings' : '';
-						$is_payment        = in_array( $section[ 'id' ] ?? '', array( 'paypal', 'stripe', 'bank', 'mollie', 'authorize-net' ) );
+						$is_payment        = in_array( $section['id'] ?? '', array( 'paypal', 'stripe', 'bank', 'mollie', 'authorize-net' ) );
 						$is_captcha_header = isset( $section['settings_type'] ) ? $is_captcha . '-header' : '';
 						$is_captcha_body   = isset( $section['settings_type'] ) ? $is_captcha . '-body' : '';
 						$is_connected      = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
@@ -878,11 +878,11 @@ class UR_Admin_Settings {
 									break;
 
 								case 'link':
-									$align_items = isset( $value[ 'align' ] ) ? $value[ 'align' ] : '';
+									$align_items = isset( $value['align'] ) ? $value['align'] : '';
 
 									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
-									$settings .= '<div class="user-registration-global-settings--field"' . ( !empty($align_items) ? 'style="align-items: end;"' : '' ) . '>';
+									$settings .= '<div class="user-registration-global-settings--field"' . ( ! empty( $align_items ) ? 'style="align-items: end;"' : '' ) . '>';
 
 									if ( isset( $value['buttons'] ) && is_array( $value['buttons'] ) ) {
 										foreach ( $value['buttons'] as $button ) {
@@ -1032,7 +1032,7 @@ class UR_Admin_Settings {
 									$btn_slug              = ! empty( $value['attrs']['data-slug'] ) ? $value['attrs']['data-slug'] : '';
 									$btn_name              = ! empty( $value['attrs']['data-name'] ) ? $value['attrs']['data-name'] : '';
 									$is_connected          = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
-									$is_payment            = in_array( $section[ 'id' ] ?? '', array( 'paypal', 'stripe', 'bank', 'authorize-net', 'mollie' ) );
+									$is_payment            = in_array( $section['id'] ?? '', array( 'paypal', 'stripe', 'bank', 'authorize-net', 'mollie' ) );
 									$is_captcha            = in_array(
 										$section['id'] ?? '',
 										array(
@@ -1053,7 +1053,7 @@ class UR_Admin_Settings {
 											'stripe',
 											'bank',
 											'mollie',
-											'authorize-net'
+											'authorize-net',
 										)
 									) );
 									if ( in_array(
@@ -1079,7 +1079,7 @@ class UR_Admin_Settings {
 									$settings .= '<div class="user-registration-global-settings ' . $css . '"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<div class="user-registration-global-settings--field ' . $field_css . '">';
 									$settings .= '<button
-											id="' . (esc_attr( $value['id'] ) ?? '') . '"
+											id="' . ( esc_attr( $value['id'] ) ?? '' ) . '"
 											type="button"
 											class="button button-primary ' . esc_attr( $btn_css ) . '"
 											type="button"
@@ -1102,7 +1102,7 @@ class UR_Admin_Settings {
 										<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
 			                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
 			                            </svg>
-										' .  ( $is_captcha ? __( 'Reset Keys', 'user-registration' ) : __( 'Reset Details', 'user-registration' ) ) . '</a>';
+										' . ( $is_captcha ? __( 'Reset Keys', 'user-registration' ) : __( 'Reset Details', 'user-registration' ) ) . '</a>';
 									}
 									$settings .= '</div>';
 									break;

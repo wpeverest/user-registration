@@ -87,10 +87,10 @@ class Membership {
 				'jquery',
 				'jquery-ui-sortable',
 			),
-			'UR_VERSION',
+			UR_VERSION,
 			true
 		);
-		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), 'UR_VERSION', true );
+		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), UR_VERSION, true );
 		wp_enqueue_script( 'ur-snackbar' );
 		wp_enqueue_script( 'sweetalert2' );
 		wp_enqueue_script( 'user-registration-membership' );
@@ -140,7 +140,7 @@ class Membership {
 			return;
 		}
 		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
-			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), 'UR_VERSION' );
+			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), UR_VERSION );
 		}
 		wp_enqueue_style( 'ur-snackbar' );
 		wp_enqueue_style( 'sweetalert2' );
@@ -803,7 +803,7 @@ class Membership {
 		$html = '<div class="urcr-target-item ur-d-flex ur-align-items-center ur-mt-2" data-target-id="' . $target_id . '">';
 
 		$display_label = ( $type === 'whole_site' ) ? __( 'Includes', 'user-registration' ) : $type_label;
-		$html .= '<span class="urcr-target-type-label">' . esc_html( $display_label ) . ':</span>';
+		$html         .= '<span class="urcr-target-type-label">' . esc_html( $display_label ) . ':</span>';
 
 		if ( $type === 'whole_site' ) {
 			$whole_site_value_label = __( 'Whole Site', 'user-registration' );

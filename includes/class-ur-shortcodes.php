@@ -287,7 +287,7 @@ class UR_Shortcodes {
 				$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 				do_action( 'wp_enqueue_membership_scripts' );
 				wp_enqueue_script( 'user-registration' );
-				wp_register_script( 'user-registration-membership-frontend-script', UR_MEMBERSHIP_JS_ASSETS_URL . '/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
+				wp_register_script( 'user-registration-membership-frontend-script', UR_MEMBERSHIP_JS_ASSETS_URL . '/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 				wp_enqueue_script( 'user-registration-membership-frontend-script' );
 				wp_register_style( 'user-registration-membership-frontend-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-frontend.css', array(), UR_VERSION );
 				wp_register_style( 'user-registration-general', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
@@ -459,7 +459,7 @@ class UR_Shortcodes {
 		do_action( 'user_registration_form_shortcode_scripts', $atts );
 
 		ob_start();
-		$form_id = !empty($atts['id']) ? $atts['id'] : get_option( 'user_registration_registration_form', true );
+		$form_id = ! empty( $atts['id'] ) ? $atts['id'] : get_option( 'user_registration_registration_form', true );
 
 		self::render_form( $form_id );
 

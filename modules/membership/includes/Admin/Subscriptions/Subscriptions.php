@@ -14,8 +14,8 @@ class Subscriptions {
 	}
 
 	private function init_hooks() {
-		add_filter( 'user_registration_notice_excluded_pages', [ $this, 'add_excluded_page' ] );
-		add_action( 'admin_init', [ $this, 'delete_subscription' ] );
+		add_filter( 'user_registration_notice_excluded_pages', array( $this, 'add_excluded_page' ) );
+		add_action( 'admin_init', array( $this, 'delete_subscription' ) );
 	}
 
 	public function delete_subscription() {
@@ -30,12 +30,12 @@ class Subscriptions {
 		}
 
 		check_admin_referer( isset( $_GET['bulk_action'] ) ? 'bulk-subscriptions' : 'ur_subscription_delete' );
-		$ids = [];
+		$ids = array();
 
 		if ( isset( $_GET['bulk_action'] ) ) {
-			$ids = array_map( 'absint', $_GET['subscription'] ?? [] );
+			$ids = array_map( 'absint', $_GET['subscription'] ?? array() );
 		} else {
-			$ids = [ absint( wp_unslash( $_GET['id'] ?? 0 ) ) ];
+			$ids = array( absint( wp_unslash( $_GET['id'] ?? 0 ) ) );
 		}
 		foreach ( $ids  as $id ) {
 			if ( $id > 0 ) {
@@ -57,11 +57,11 @@ class Subscriptions {
 			__( 'Subscriptions', 'user-registration' ),
 			'manage_options',
 			'user-registration-subscriptions',
-			[ $this, 'render_subscriptions_page' ],
+			array( $this, 'render_subscriptions_page' ),
 			6
 		);
 
-		add_action( "load-$page", [ $this, 'enqueue_scripts_styles' ] );
+		add_action( "load-$page", array( $this, 'enqueue_scripts_styles' ) );
 	}
 
 	public function render_subscriptions_page() {
@@ -94,7 +94,7 @@ class Subscriptions {
 				'ur-snackbar',
 				UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css',
 				array(),
-				'1.0.0'
+				UR_VERSION
 			);
 		}
 		wp_enqueue_style( 'ur-snackbar' );
@@ -145,7 +145,7 @@ class Subscriptions {
 		wp_localize_script(
 			'ur-subscription',
 			'ur_subscription_data',
-			[
+			array(
 				'ajax_url'                       => admin_url( 'admin-ajax.php' ),
 				'subscriptions_url'              => admin_url( 'admin.php?page=user-registration-subscriptions' ),
 				'_nonce'                         => wp_create_nonce( 'ur_membership_subscription' ),
@@ -159,7 +159,7 @@ class Subscriptions {
 				'i18n_prompt_delete_description' => __( 'Are you sure you want to delete this subscription?', 'user-registration' ),
 				'i18n_prompt_delete_cancel'      => __( 'Cancel', 'user-registration' ),
 				'i18n_prompt_delete_confirm'     => __( 'Delete', 'user-registration' ),
-			]
+			)
 		);
 	}
 }

@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class URCR_Admin_Assets {
 	public $current_page = '';
-	public $action = '';
+	public $action       = '';
 
 	/**
 	 * Constructor.
@@ -42,18 +42,18 @@ class URCR_Admin_Assets {
 			'urcr-content-access-rule-creator',
 			UR()->plugin_url() . '/assets/js/modules/content-restriction/admin/urcr-content-access-rule-creator' . $suffix . '.js',
 			array(
-				'jquery'
+				'jquery',
 			),
-			'1.0.0',
+			UR_VERSION,
 			true
 		);
 
 		if ( 'user-registration-content-restriction' === $this->current_page ) {
 			// Enqueue media scripts for media button functionality
 			wp_enqueue_media();
-			
+
 			wp_enqueue_script( 'flatpickr' );
-			
+
 			wp_enqueue_script( 'urcr-content-access-rule-creator' );
 		}
 	}
@@ -66,7 +66,7 @@ class URCR_Admin_Assets {
 		 * Third party style scripts.
 		 */
 		if ( function_exists( 'UR' ) ) {
-			wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', array(), '4.5.1' );
+			wp_register_style( 'flatpickr', UR()->plugin_url() . '/assets/css/flatpickr/flatpickr.min.css', array(), UR_VERSION );
 		}
 
 		/**
@@ -98,7 +98,7 @@ class URCR_Admin_Assets {
 				'urcr-content-access-restriction',
 				UR()->plugin_url() . '/assets/css/urcr-content-access-restriction.css',
 				array( 'urcr-shared' ),
-				'1.0.0'
+				UR_VERSION
 			);
 			wp_enqueue_style( 'urcr-content-access-restriction' );
 
@@ -136,7 +136,6 @@ class URCR_Admin_Assets {
 			$ur_forms[ $form_id ] = $form_fields;
 		}
 
-
 		// Prepare list of posttypes.
 
 		$post_types = get_post_types(
@@ -146,7 +145,6 @@ class URCR_Admin_Assets {
 			'objects'
 		);
 		$post_types = wp_list_pluck( $post_types, 'label', 'name' );
-
 
 		// Prepare list of taxonomy.
 
@@ -158,7 +156,6 @@ class URCR_Admin_Assets {
 		);
 
 		$taxonomies = wp_list_pluck( $taxonomies, 'label', 'name' );
-
 
 		// Prepare terms of taxonomy.
 
@@ -180,7 +177,6 @@ class URCR_Admin_Assets {
 			}
 		}
 
-
 		// Prepare list of posts.
 
 		$posts = get_posts(
@@ -190,7 +186,6 @@ class URCR_Admin_Assets {
 			)
 		);
 		$posts = wp_list_pluck( $posts, 'post_title', 'ID' );
-
 
 		// Prepare list of pages.
 
@@ -252,7 +247,7 @@ class URCR_Admin_Assets {
 			array(
 				'value' => 'taxonomy',
 				'label' => esc_html__( 'Taxonomy', 'user-registration' ),
-			)
+			),
 		);
 
 		/**
@@ -366,16 +361,16 @@ class URCR_Admin_Assets {
 		$action_type_options = apply_filters( 'urcr_action_type_options', $action_type_options );
 
 		// Check membership module status and count
-		$membership_count = 0;
+		$membership_count             = 0;
 		$is_membership_module_enabled = false;
-		$has_multiple_memberships = false;
+		$has_multiple_memberships     = false;
 
 		if ( function_exists( 'ur_check_module_activation' ) && ur_check_module_activation( 'membership' ) ) {
 			$is_membership_module_enabled = true;
 			if ( class_exists( '\WPEverest\URMembership\Admin\Services\MembershipService' ) ) {
-				$membership_repository = new MembershipRepository();
-				$memberships = $membership_repository->get_all_memberships_without_status_filter();
-				$membership_count = is_array( $memberships ) ? count( $memberships ) : 0;
+				$membership_repository    = new MembershipRepository();
+				$memberships              = $membership_repository->get_all_memberships_without_status_filter();
+				$membership_count         = is_array( $memberships ) ? count( $memberships ) : 0;
 				$has_multiple_memberships = $membership_count > 1;
 			}
 		}
@@ -388,7 +383,7 @@ class URCR_Admin_Assets {
 
 		// Filter to only include sign_up and log_in tags for content restriction editor
 		// The smart tags list uses keys with curly braces like {{sign_up}} and {{log_in}}
-		$allowed_tags = array( '{{sign_up}}', '{{log_in}}' );
+		$allowed_tags    = array( '{{sign_up}}', '{{log_in}}' );
 		$smart_tags_list = array_intersect_key( $smart_tags_list, array_flip( $allowed_tags ) );
 
 		/**
@@ -403,55 +398,55 @@ class URCR_Admin_Assets {
 		$show_smart_tags_button = apply_filters( 'urcr_show_smart_tags_button', true, 'urcr-action-message-editor' );
 
 		$localized_data = array(
-			'URCR_DEBUG'                => apply_filters( 'urcr_debug_mode', true ),
-			'UR_DEV'                    => defined( 'UR_DEV' ) && UR_DEV,
-			'_nonce'                    => wp_create_nonce( 'urcr_manage_content_access_rule' ),
-			'ajax_url'                  => admin_url( 'admin-ajax.php' ),
-			'wp_roles'                  => ur_get_all_roles(),
-			'wp_capabilities'           => urcr_get_all_capabilities(),
-			'ur_forms'                  => ur_get_all_user_registration_form(),
-			'registration_sources'      => $registration_sources,
-			'post_types'                => $post_types,
-			'taxonomies'                => $taxonomies,
-			'terms_list'                => $terms_list,
-			'posts'                     => $posts,
-			'pages'                     => $pages,
-			'ur_form_data'              => $ur_forms,
-			'shortcodes'                => $shortcodes_list,
-			'content_rule_url'          => admin_url( 'admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule' ),
-			'payment_status'            => array(
+			'URCR_DEBUG'                             => apply_filters( 'urcr_debug_mode', true ),
+			'UR_DEV'                                 => defined( 'UR_DEV' ) && UR_DEV,
+			'_nonce'                                 => wp_create_nonce( 'urcr_manage_content_access_rule' ),
+			'ajax_url'                               => admin_url( 'admin-ajax.php' ),
+			'wp_roles'                               => ur_get_all_roles(),
+			'wp_capabilities'                        => urcr_get_all_capabilities(),
+			'ur_forms'                               => ur_get_all_user_registration_form(),
+			'registration_sources'                   => $registration_sources,
+			'post_types'                             => $post_types,
+			'taxonomies'                             => $taxonomies,
+			'terms_list'                             => $terms_list,
+			'posts'                                  => $posts,
+			'pages'                                  => $pages,
+			'ur_form_data'                           => $ur_forms,
+			'shortcodes'                             => $shortcodes_list,
+			'content_rule_url'                       => admin_url( 'admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule' ),
+			'payment_status'                         => array(
 				'pending'   => __( 'Pending', 'user-registration' ),
 				'completed' => __( 'Completed', 'user-registration' ),
 				'failed'    => __( 'Failed', 'user-registration' ),
 			),
-			'memberships'               => $formatted_memberships,
-			'is_pro'                    => defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE,
-			'content_type_options'      => $content_type_options,
-			'condition_options'         => $condition_options,
-			'is_membership_module_enabled' => $is_membership_module_enabled,
-			'membership_count'          => $membership_count,
-			'has_multiple_memberships'  => $has_multiple_memberships,
-			'is_content_restriction_enabled' => ur_check_module_activation( 'content-restriction' ),
-			'action_type_options'       => $action_type_options,
-			'smart_tags_list'           => $smart_tags_list,
-			'show_smart_tags_button'    => $show_smart_tags_button,
-			'smart_tags_dropdown_title' => __( 'Smart Tags', 'user-registration' ),
+			'memberships'                            => $formatted_memberships,
+			'is_pro'                                 => defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE,
+			'content_type_options'                   => $content_type_options,
+			'condition_options'                      => $condition_options,
+			'is_membership_module_enabled'           => $is_membership_module_enabled,
+			'membership_count'                       => $membership_count,
+			'has_multiple_memberships'               => $has_multiple_memberships,
+			'is_content_restriction_enabled'         => ur_check_module_activation( 'content-restriction' ),
+			'action_type_options'                    => $action_type_options,
+			'smart_tags_list'                        => $smart_tags_list,
+			'show_smart_tags_button'                 => $show_smart_tags_button,
+			'smart_tags_dropdown_title'              => __( 'Smart Tags', 'user-registration' ),
 			'smart_tags_dropdown_search_placeholder' => __( 'Search Tags...', 'user-registration' ),
-			'membership_default_message' => '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
+			'membership_default_message'             => '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
 <p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
 <p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
 <p>{{sign_up}} {{log_in}}</p>',
-			'labels'                    => array(
-				'pages'                    => __( 'Pages', 'user-registration' ),
-				'posts'                    => __( 'Posts',  'user-registration' ),
-				'post_types'               => __( 'Post Types', 'user-registration' ),
-				'taxonomy'                 => __( 'Taxonomy', 'user-registration' ),
-				'whole_site'               => __( 'Whole Site', 'user-registration' ),
-				'logged_in'                => __( 'Logged In', 'user-registration' ),
-				'logged_out'               => __( 'Logged Out', 'user-registration' ),
-				'membership'               => __( 'Membership', 'user-registration' ),
-				'membership_rule_title'    => __( 'Membership Access Rule', 'user-registration' ),
-				'all_content_types_added'  => __( 'All content types have been added', 'user-registration' ),
+			'labels'                                 => array(
+				'pages'                   => __( 'Pages', 'user-registration' ),
+				'posts'                   => __( 'Posts', 'user-registration' ),
+				'post_types'              => __( 'Post Types', 'user-registration' ),
+				'taxonomy'                => __( 'Taxonomy', 'user-registration' ),
+				'whole_site'              => __( 'Whole Site', 'user-registration' ),
+				'logged_in'               => __( 'Logged In', 'user-registration' ),
+				'logged_out'              => __( 'Logged Out', 'user-registration' ),
+				'membership'              => __( 'Membership', 'user-registration' ),
+				'membership_rule_title'   => __( 'Membership Access Rule', 'user-registration' ),
+				'all_content_types_added' => __( 'All content types have been added', 'user-registration' ),
 			),
 		);
 

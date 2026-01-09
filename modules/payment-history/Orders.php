@@ -104,11 +104,11 @@ class Orders {
 		}
 		$suffix = defined( 'SCRIPT_DEBUG' ) ? '' : '.min';
 		if ( ! wp_script_is( 'ur-snackbar', 'reqistered' ) ) {
-			wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
+			wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), UR_VERSION, true );
 			wp_enqueue_script( 'ur-snackbar' );
 		}
 		wp_enqueue_script( 'sweetalert2' );
-		wp_register_script( 'payment-history', UR()->plugin_url() . '/assets/js/modules/membership/admin/payment-history' . $suffix . '.js', array( 'jquery', 'ur-enhanced-select' ), '1.0.0', true );
+		wp_register_script( 'payment-history', UR()->plugin_url() . '/assets/js/modules/membership/admin/payment-history' . $suffix . '.js', array( 'jquery', 'ur-enhanced-select' ), UR_VERSION, true );
 		wp_enqueue_script( 'payment-history' );
 
 		$this->localize_scripts();
@@ -129,7 +129,7 @@ class Orders {
 		wp_register_style( 'ur-membership-admin-style', UR()->plugin_url() . '/assets/css/modules/membership/user-registration-membership-admin.css', array(), UR_VERSION );
 		wp_enqueue_style( 'ur-membership-admin-style' );
 		if ( ! wp_style_is( 'ur-snackbar', 'reqistered' ) ) {
-			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
+			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), UR_VERSION );
 		}
 		wp_enqueue_style( 'payment-history-css' );
 		wp_enqueue_style( 'sweetalert2' );

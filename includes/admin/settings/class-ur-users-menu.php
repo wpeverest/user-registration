@@ -122,7 +122,7 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 					'ur-inputmask',
 					self::get_asset_url( '/assets/js/inputmask/jquery.inputmask.bundle' . $suffix . '.js' ),
 					array( 'jquery' ),
-					'4.0.0-beta.58',
+					UR_VERSION,
 					true
 				);
 				wp_enqueue_script(
@@ -136,7 +136,7 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 					'ur-jquery-validate',
 					self::get_asset_url( '/assets/js/frontend/jquery.validate' . $suffix . '.js' ),
 					array( 'jquery' ),
-					'1.19.5',
+					UR_VERSION,
 					true
 				);
 				wp_enqueue_script(
@@ -155,13 +155,13 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 					true
 				);
 
-				wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
+				wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), UR_VERSION, true );
 
 				wp_enqueue_script( 'ur-snackbar' );
 
-				wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
+				wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), UR_VERSION );
 				wp_enqueue_style( 'ur-snackbar' );
-				wp_register_style( 'user-registration', UR()->plugin_url() . '/assets/css/user-registration.css', array( 'flatpickr' ), '1.0.0' );
+				wp_register_style( 'user-registration', UR()->plugin_url() . '/assets/css/user-registration.css', array( 'flatpickr' ), UR_VERSION );
 				wp_enqueue_style( 'user-registration' );
 			}
 
