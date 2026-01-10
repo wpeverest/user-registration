@@ -462,11 +462,7 @@ class Membership {
 				}
 				break;
 			case 'add_groups':
-				if ( ur_check_module_activation( 'membership-groups' ) ) {
-					$membership_groups->render_membership_group_creator( $menu_items );
-				} else {
-					$this->render_membership_viewer( $menu_items );
-				}
+				$membership_groups->render_membership_group_creator( $menu_items );
 				break;
 			default:
 				$this->render_membership_viewer( $menu_items );
