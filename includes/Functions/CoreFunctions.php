@@ -744,6 +744,12 @@ if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
 			case 'stripe':
 				$enabled_option = get_option( 'user_registration_stripe_enabled', '' );
 				break;
+			case 'authorize':
+				$enabled_option = get_option( 'user_registration_authorize-net_enabled', '' );
+				break;
+			case 'mollie':
+				$enabled_option = get_option( 'user_registration_mollie_enabled', '' );
+				break;
 			case 'bank':
 				$enabled_option = get_option( 'user_registration_bank_enabled', '' );
 				break;
