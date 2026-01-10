@@ -540,7 +540,11 @@
 														)
 												]
 													? "user_registration_" +
-													  $("[name='" + key + "']")
+														$(
+															"[name='" +
+																key +
+																"']"
+														)
 															.closest(
 																".ur-repeater-row"
 															)
@@ -1008,7 +1012,6 @@
 												$this
 													.find("#user_pass-error")
 													.remove();
-												console.log("hello");
 
 												var error_msg_dom =
 													'<label id="user_pass-error" class="user-registration-error" for="user_pass">' +
@@ -1562,13 +1565,15 @@
 											ajax_response.responseText
 										);
 
-									var timeout = (
-										response &&
-										response.data &&
-										response.data.redirect_timeout !== undefined &&
-										response.data.redirect_timeout !== null &&
-										response.data.redirect_timeout !== ''
-											)
+										var timeout =
+											response &&
+											response.data &&
+											response.data.redirect_timeout !==
+												undefined &&
+											response.data.redirect_timeout !==
+												null &&
+											response.data.redirect_timeout !==
+												""
 												? response.data.redirect_timeout
 												: 2000;
 
@@ -2400,7 +2405,7 @@
 																			) ===
 																			-1
 																				? "user_registration_" +
-																				  index
+																					index
 																				: index;
 																	}
 

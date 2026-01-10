@@ -373,22 +373,27 @@ class UpgradeMembershipService {
 	 */
 	public function get_upgrade_details( $membership_details ) {
 		$membership_group_repository = new MembershipGroupRepository();
+		$membership_group_service    = new MembershipGroupService();
 		$membership_id               = $membership_details['ID'];
 		$group_details               = $membership_group_repository->get_membership_group_by_membership_id( $membership_details['ID'] );
 
 		$upgrade_details = array();
 
 		if ( ! empty( $group_details ) ) {
-			if ( isset( $group_details['mode'] ) && 'upgrade' === $group_details['mode'] ) {
-				if ( isset( $group_details['upgrade_path'] ) && '' !== $group_details['upgrade_path'] ) {
-					$upgrade_details['upgrade_type'] = $group_details['upgrade_type'] ?? '';
-					$upgrade_paths                   = json_decode( $group_details['upgrade_path'], true );
+			if ( $membership_group_service->check_if_upgrade_allowed( $group_details['ID'] ) ) {
+				if ( isset( $group_details['mode'] ) && 'upgrade' === $group_details['mode'] ) {
+					if ( isset( $group_details['upgrade_path'] ) && '' !== $group_details['upgrade_path'] ) {
+						$upgrade_details['upgrade_type'] = $group_details['upgrade_type'] ?? '';
+						$upgrade_paths                   = json_decode( $group_details['upgrade_path'], true );
 
-					if ( isset( $upgrade_paths[ $membership_id ] ) && ! empty( $upgrade_paths[ $membership_id ] ) ) {
-						$upgrade_details['upgrade_path'] = $upgrade_paths;
+						if ( isset( $upgrade_paths[ $membership_id ] ) && ! empty( $upgrade_paths[ $membership_id ] ) ) {
+							$upgrade_details['upgrade_path'] = $upgrade_paths;
+						}
 					}
+				} elseif ( ! isset( $group_details['mode'] ) || ( isset( $group_details['mode'] ) && empty( $group_details['mode'] ) ) ) {
+					$upgrade_details = $membership_details['upgrade_settings'];
 				}
-			} elseif ( ! isset( $group_details['mode'] ) || ( isset( $group_details['mode'] ) && empty( $group_details['mode'] ) ) ) {
+			} else {
 				$upgrade_details = $membership_details['upgrade_settings'];
 			}
 		} else {

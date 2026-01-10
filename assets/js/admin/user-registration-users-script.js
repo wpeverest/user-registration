@@ -76,8 +76,6 @@ jQuery(function ($) {
 						e.preventDefault();
 					}
 
-					console.log("hello");
-
 					var $selector = $(this).find(".disable-user-link");
 					URUsers.handle_disable_user($selector);
 				}

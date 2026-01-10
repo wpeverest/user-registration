@@ -170,7 +170,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 						</div>
 						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px" >
 							<div class="ur-label" style="width: 62%;">
-								<span class="<?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>">
+								<span class="<?php echo UR_PRO_ACTIVE && urm_check_if_plus_and_above_plan() ? '' : 'upgradable-type'; ?>">
 									<label class="ur-membership-group-enable-multiple-memberships"
 										for="ur-membership-group-multiple-memberships">
 										<?php esc_html_e( 'Allow multiple memberships', 'user-registration' ); ?>
@@ -188,7 +188,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 									<?php echo isset( $membership_group['mode'] ) && 'multiple' === $membership_group['mode'] ? 'checked' : ''; ?>
 									name="ur_membership_enable_multiple_memberships"
 									style="width: 100%; text-align: left"
-									<?php echo ! UR_PRO_ACTIVE ? 'disabled' : ''; ?>
+									<?php echo UR_PRO_ACTIVE && urm_check_if_plus_and_above_plan() ? '' : 'disabled'; ?>
 									>
 									<span class="slider round"></span>
 								</span>
@@ -200,7 +200,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 						<div class="ur-membership-enable-upgrade-container" style="<?php echo esc_attr( $upgrade_style ); ?>">
 							<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px">
 								<div class="ur-label" style="width: 62%;">
-									<span class="<?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>">
+									<span class="<?php echo UR_PRO_ACTIVE && urm_check_if_plus_and_above_plan() ? '' : 'upgradable-type'; ?>">
 										<label class="ur-membership-group-enable-upgrade"
 												for="ur-membership-group-upgrade"><?php esc_html_e( 'Upgrade action', 'user-registration' ); ?>
 											<span class="user-registration-help-tip tooltipstered"
@@ -217,7 +217,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 											<?php echo isset( $membership_group ) && 'upgrade' === $membership_group['mode'] ? 'checked' : ''; ?>
 											name="ur_membership_enable_upgrade"
 											style="width: 100%; text-align: left"
-											<?php echo ! UR_PRO_ACTIVE ? 'disabled' : ''; ?>
+											<?php echo UR_PRO_ACTIVE && urm_check_if_plus_and_above_plan() ? '' : 'disabled'; ?>
 											>
 										<span class="slider round"></span>
 									</span>
@@ -225,7 +225,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 							</div>
 						</div>
 						<?php
-						if ( UR_PRO_ACTIVE ) {
+						if ( UR_PRO_ACTIVE && urm_check_if_plus_and_above_plan() ) {
 							$upgrade_style = isset( $membership_group['mode'] ) && 'upgrade' === $membership_group['mode'] ? '' : 'display:none;';
 							?>
 							<div class="ur-membership-upgrade-container" style="<?php echo esc_attr( $upgrade_style ); ?>">

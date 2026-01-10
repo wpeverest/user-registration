@@ -405,16 +405,23 @@ class MembershipService {
 	 */
 	private static function verify_membership_registration_form_shortcode( $post, $response ) {
 		$membership_field_exists = false;
-		$match                   = preg_match_all( '/\[user_registration_form\s+id="(\d+)"\]/', $post->post_content, $matches );
-		if ( ! $match ) {
-			$match = preg_match_all( '<!-- /wp:user-registration/membership-listing -->', $post->post_content, $matches );
-			if ( ! $match ) {
-				$response['status']  = false;
-				$response['message'] = __( 'The selected page does not consist any User Registration & Membership Form.' );
+		$form_id                 = 0;
 
-				return $response;
-			}
+		if ( preg_match_all( '/\[user_registration_form\s+id="(\d+)"\]/', $post->post_content, $matches ) ) {
+			$form_id = ! empty( $matches[1][0] ) ? absint( $matches[1][0] ) : 0;
 		}
+
+		if ( ! $form_id && preg_match( '/<!--\s*\/wp:user-registration\/registration-form\s*-->/', $post->post_content ) ) {
+			$form_id = ! empty( $matches[1][0] ) ? absint( $matches[1][0] ) : 0;
+			return $response;
+		}
+
+		if ( ! $form_id ) {
+			$response['status']  = false;
+			$response['message'] = __( 'The selected page does not consist any User Registration & Membership Form.' );
+			return $response;
+		}
+
 		$fields = ur_get_form_fields( $matches[1][0] );
 		foreach ( $fields as $k => $field ) {
 			if ( 'membership' === $field->field_key ) {
@@ -473,11 +480,12 @@ class MembershipService {
 				$result         = $stripe_service->validate_setup();
 				break;
 			default:
-				$bank_enabled = get_option( 'user_registration_bank_enabled', '' );
-				$bank_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false ));
-				$has_user_changed = ur_string_to_bool(get_option( 'urm_bank_updated_connection_status', false )) ;
+				$bank_enabled     = get_option( 'user_registration_bank_enabled', '' );
+				$bank_default     = ur_string_to_bool( get_option( 'urm_is_new_installation', false ) );
+				$has_user_changed = ur_string_to_bool( get_option( 'urm_bank_updated_connection_status', false ) );
 
-				$is_bank_enabled = $bank_enabled ? $bank_enabled :  ($has_user_changed ? $bank_enabled : ! $bank_default);;
+				$is_bank_enabled = $bank_enabled ? $bank_enabled : ( $has_user_changed ? $bank_enabled : ! $bank_default );
+
 				$result = empty( get_option( 'user_registration_global_bank_details' ) ) || ! $is_bank_enabled;
 				break;
 		}
@@ -802,7 +810,6 @@ class MembershipService {
 				$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
 				if ( ! empty( $membership_group ) && isset( $membership_group['ID'] ) ) {
 					$multiple_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group['ID'] );
-					$multiple_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group['ID'] );
 
 					if ( $multiple_allowed ) {
 						unset( $memberships[ $key ] );
@@ -842,7 +849,7 @@ class MembershipService {
 			}
 			unset( $membership );
 		} elseif ( isset( $data['action'] ) && 'multiple' === $data['action'] ) {
-			if ( UR_PRO_ACTIVE && ur_check_module_activation( 'membership-groups' ) ) {
+			if ( UR_PRO_ACTIVE && urm_check_if_plus_and_above_plan() && ur_check_module_activation( 'membership-groups' ) ) {
 				$membership_id    = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
 				$membership_group = $membership_group_repository->get_membership_group_by_membership_id( $membership_id );
 
