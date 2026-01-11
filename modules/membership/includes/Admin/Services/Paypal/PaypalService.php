@@ -46,9 +46,10 @@ class PaypalService {
 	public function build_url( $data, $membership, $member_email, $subscription_id, $member_id ) {
 
 		$is_upgrading                 = ! empty( $data['upgrade'] ) ? $data['upgrade'] : false;
-		$paypal_options               = $data['payment_gateways']['paypal'];
-		$paypal_options['mode']       = get_option( 'user_registration_global_paypal_mode', $paypal_options['mode'] );
-		$paypal_options['email']      = get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] );
+		$paypal_options               = is_array( $data['payment_gateways']['paypal'] ) ? $data['payment_gateways']['paypal'] : array();
+		$mode                         = get_option( 'user_registration_global_paypal_mode', 'test' ) == "test" ? 'test' : 'live';
+		$paypal_options['mode']       = $mode;
+		$paypal_options['email']      = get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] ?? '' ) );
 		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
 		$paypal_options['return_url'] = get_option( 'user_registration_global_paypal_return_url', wp_login_url() );
 		$redirect                     = ( 'production' === $paypal_options['mode'] ) ? 'https://www.paypal.com/cgi-bin/webscr/?' : 'https://www.sandbox.paypal.com/cgi-bin/webscr/?';
@@ -520,10 +521,11 @@ class PaypalService {
 		$membership            = $this->membership_repository->get_single_membership_by_ID( $membership_id );
 		$membership_metas      = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_type       = $membership_metas['type'] ?? 'unknown'; // free, paid, or subscription
-		$paypal_options        = $membership_metas['payment_gateways']['paypal'];
+		$paypal_options        = is_array( $membership_metas['payment_gateways']['paypal'] ) ? $membership_metas['payment_gateways']['paypal'] : array();
 
-		$paypal_options['mode']       = get_option( 'user_registration_global_paypal_mode', $paypal_options['mode'] );
-		$paypal_options['email']      = get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] );
+		$mode                         = get_option( 'user_registration_global_paypal_mode', 'test' ) == "test" ? 'test' : 'live';
+		$paypal_options['mode']       = $mode;
+		$paypal_options['email']      = get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] ?? '' ) );
 		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', home_url() );
 		$paypal_options['return_url'] = get_option( 'user_registration_global_paypal_return_url', wp_login_url() );
 
@@ -904,9 +906,9 @@ class PaypalService {
 	 * @return array|bool[]
 	 */
 	public function cancel_subscription( $order, $subscription ) {
-		$paypal_options['mode']          = get_option( 'user_registration_global_paypal_mode', 'test' );
-		$paypal_options['client_id']     = get_option( 'user_registration_global_paypal_client_id', '' );
-		$paypal_options['client_secret'] = get_option( 'user_registration_global_paypal_client_secret', '' );
+		$paypal_options['mode']          = get_option( 'user_registration_global_paypal_mode', 'test' ) == "test" ? 'test' : 'live';
+		$paypal_options['client_id']     = get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $paypal_options['mode'] ), get_option( 'user_registration_global_paypal_client_id', '' ) );
+		$paypal_options['client_secret'] = get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $paypal_options['mode'] ), get_option( 'user_registration_global_paypal_client_secret', '' ) );
 
 		$client_id     = $paypal_options['client_id'];
 		$client_secret = $paypal_options['client_secret'];
@@ -1003,9 +1005,9 @@ class PaypalService {
 	 * @param $subscription_id Subscription Id.
 	 */
 	public function reactivate_subscription( $subscription_id ) {
-		$paypal_options['mode']          = get_option( 'user_registration_global_paypal_mode', 'test' );
-		$paypal_options['client_id']     = get_option( 'user_registration_global_paypal_client_id', '' );
-		$paypal_options['client_secret'] = get_option( 'user_registration_global_paypal_client_secret', '' );
+		$paypal_options['mode']          = get_option( 'user_registration_global_paypal_mode', 'test' ) == "test" ? 'test' : 'live';
+		$paypal_options['client_id']     = get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $paypal_options['mode'] ), get_option( 'user_registration_global_paypal_client_id', '' ) );
+		$paypal_options['client_secret'] = get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $paypal_options['mode'] ), get_option( 'user_registration_global_paypal_client_secret', '' ) );
 		$client_id                       = $paypal_options['client_id'];
 		$client_secret                   = $paypal_options['client_secret'];
 		$url                             = ( 'production' === $paypal_options['mode'] ) ? 'https://api-m.paypal.com/' : 'https://api-m.sandbox.paypal.com/';
@@ -1139,10 +1141,11 @@ class PaypalService {
 		if( ! $is_paypal_enabled ) {
 			return true;
 		}
-		$paypal_options['email'] = get_option( 'user_registration_global_paypal_email_address' );
+		$mode = get_option( 'user_registration_global_paypal_mode', 'test' ) == "test" ? 'test' : 'live';
+		$paypal_options['email'] = get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address' ) );
 		if ( 'subscription' === $membership_type ) {
-			$paypal_options['client_id']     = get_option( 'user_registration_global_paypal_client_id' );
-			$paypal_options['client_secret'] = get_option( 'user_registration_global_paypal_client_secret' );
+			$paypal_options['client_id']     = get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id' ) );
+			$paypal_options['client_secret'] = get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret' ) );
 		}
 
 		$is_incomplete = false;
