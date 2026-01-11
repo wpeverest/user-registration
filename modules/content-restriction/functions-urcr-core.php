@@ -84,6 +84,7 @@ function urcr_get_excluded_page_ids() {
 		'user_registration_member_registration_page_id',
 		'user_registration_thank_you_page_id',
 		'user_registration_lost_password_page_id',
+		'user_registration_membership_pricing_page_id',
 	);
 
 	/**
