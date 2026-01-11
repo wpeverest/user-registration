@@ -25,9 +25,13 @@ export interface PaymentSettings {
 	offlinePayment: boolean;
 	bankDetails: string;
 	paypal: boolean;
-	paypalEmail: string;
-	paypalClientId: string;
-	paypalClientSecret: string;
+	paypalMode: string;
+	paypalTestEmail: string;
+	paypalTestClientId: string;
+	paypalTestClientSecret: string;
+	paypalProductionEmail: string;
+	paypalProductionClientId: string;
+	paypalProductionClientSecret: string;
 	stripe: boolean;
 	stripeTestMode: boolean;
 	stripeTestPublishableKey: string;
@@ -97,9 +101,13 @@ export const DEFAULT_PAYMENT_SETTINGS: PaymentSettings = {
 	offlinePayment: false,
 	bankDetails: "",
 	paypal: false,
-	paypalEmail: "",
-	paypalClientId: "",
-	paypalClientSecret: "",
+	paypalMode: "test",
+	paypalTestEmail: "",
+	paypalTestClientId: "",
+	paypalTestClientSecret: "",
+	paypalProductionEmail: "",
+	paypalProductionClientId: "",
+	paypalProductionClientSecret: "",
 	stripe: false,
 	stripeTestMode: false,
 	stripeTestPublishableKey: "",

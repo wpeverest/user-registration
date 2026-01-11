@@ -1525,15 +1525,19 @@ class UR_Getting_Started {
 				'bank_details' => get_option( 'user_registration_global_bank_details', '' ),
 			),
 			array(
-				'id'                   => 'paypal',
-				'label'                => __( 'PayPal', 'user-registration' ),
-				'description'          => __( 'Accept payments via PayPal.', 'user-registration' ),
-				'enabled'              => self::get_bool_option( 'urm_paypal_connection_status' ),
-				'configured'           => self::is_gateway_configured( 'paypal' ),
-				'settings_url'         => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
-				'paypal_email'         => get_option( 'user_registration_global_paypal_live_admin_email', '' ),
-				'paypal_client_id'     => get_option( 'user_registration_global_paypal_live_client_id' ),
-				'paypal_client_secret' => get_option( 'user_registration_global_paypal_live_client_secret' ),
+				'id'                           => 'paypal',
+				'label'                        => __( 'PayPal', 'user-registration' ),
+				'description'                  => __( 'Accept payments via PayPal.', 'user-registration' ),
+				'enabled'                      => self::get_bool_option( 'urm_paypal_connection_status' ),
+				'configured'                   => self::is_gateway_configured( 'paypal' ),
+				'settings_url'                 => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
+				'paypal_mode'                  => get_option( 'user_registration_global_paypal_mode', 'test' ),
+				'paypal_test_email'            => get_option( 'user_registration_global_paypal_test_email_address', '' ),
+				'paypal_test_client_id'         => get_option( 'user_registration_global_paypal_test_client_id', '' ),
+				'paypal_test_client_secret'    => get_option( 'user_registration_global_paypal_test_client_secret', '' ),
+				'paypal_production_email'      => get_option( 'user_registration_global_paypal_live_admin_email', '' ),
+				'paypal_production_client_id'   => get_option( 'user_registration_global_paypal_live_client_id', '' ),
+				'paypal_production_client_secret' => get_option( 'user_registration_global_paypal_live_client_secret', '' ),
 			),
 			array(
 				'id'                          => 'stripe',
@@ -1592,9 +1596,13 @@ class UR_Getting_Started {
 
 		$currency                    = isset( $request['currency'] ) ? sanitize_text_field( $request['currency'] ) : 'USD';
 		$bank_details                = isset( $request['bank_details'] ) ? sanitize_textarea_field( $request['bank_details'] ) : '';
-		$paypal_email                = isset( $request['paypal_email'] ) ? sanitize_email( $request['paypal_email'] ) : '';
-		$paypal_client_id            = isset( $request['paypal_client_id'] ) ? sanitize_text_field( $request['paypal_client_id'] ) : '';
-		$paypal_client_secret        = isset( $request['paypal_client_secret'] ) ? sanitize_text_field( $request['paypal_client_secret'] ) : '';
+		$paypal_mode                 = isset( $request['paypal_mode'] ) ? sanitize_text_field( $request['paypal_mode'] ) : 'test';
+		$paypal_test_email           = isset( $request['paypal_test_email'] ) ? sanitize_email( $request['paypal_test_email'] ) : '';
+		$paypal_test_client_id       = isset( $request['paypal_test_client_id'] ) ? sanitize_text_field( $request['paypal_test_client_id'] ) : '';
+		$paypal_test_client_secret   = isset( $request['paypal_test_client_secret'] ) ? sanitize_text_field( $request['paypal_test_client_secret'] ) : '';
+		$paypal_production_email     = isset( $request['paypal_production_email'] ) ? sanitize_email( $request['paypal_production_email'] ) : '';
+		$paypal_production_client_id = isset( $request['paypal_production_client_id'] ) ? sanitize_text_field( $request['paypal_production_client_id'] ) : '';
+		$paypal_production_client_secret = isset( $request['paypal_production_client_secret'] ) ? sanitize_text_field( $request['paypal_production_client_secret'] ) : '';
 		$stripe_test_mode            = isset( $request['stripe_test_mode'] ) ? (bool) $request['stripe_test_mode'] : false;
 		$stripe_test_publishable_key = isset( $request['stripe_test_publishable_key'] ) ? sanitize_text_field( $request['stripe_test_publishable_key'] ) : '';
 		$stripe_test_secret_key      = isset( $request['stripe_test_secret_key'] ) ? sanitize_text_field( $request['stripe_test_secret_key'] ) : '';
@@ -1619,12 +1627,16 @@ class UR_Getting_Started {
 
 		$paypal_configured = true;
 		if ( $paypal ) {
-			$paypal_configured = ! empty( $paypal_email ) && ! empty( $paypal_client_id ) && ! empty( $paypal_client_secret );
+			if ( 'test' === $paypal_mode ) {
+				$paypal_configured = ! empty( $paypal_test_email ) && ! empty( $paypal_test_client_id ) && ! empty( $paypal_test_client_secret );
+			} else {
+				$paypal_configured = ! empty( $paypal_production_email ) && ! empty( $paypal_production_client_id ) && ! empty( $paypal_production_client_secret );
+			}
 
 			if ( ! $paypal_configured ) {
 				$configuration_needed[] = array(
 					'gateway'      => 'paypal',
-					'message'      => __( 'PayPal requires an email address.', 'user-registration' ),
+					'message'      => __( 'PayPal requires an email address, client ID, and client secret.', 'user-registration' ),
 					'settings_url' => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
 				);
 			}
@@ -1664,11 +1676,13 @@ class UR_Getting_Started {
 			update_option( 'user_registration_global_bank_details', $bank_details );
 		}
 
-		if ( $paypal_enabled ) {
-			update_option( 'user_registration_global_paypal_live_admin_email', $paypal_email );
-			update_option( 'user_registration_global_paypal_live_client_id', $paypal_client_id );
-			update_option( 'user_registration_global_paypal_live_client_secret', $paypal_client_secret );
-		}
+		update_option( 'user_registration_global_paypal_mode', $paypal_mode );
+		update_option( 'user_registration_global_paypal_test_email_address', $paypal_test_email );
+		update_option( 'user_registration_global_paypal_test_client_id', $paypal_test_client_id );
+		update_option( 'user_registration_global_paypal_test_client_secret', $paypal_test_client_secret );
+		update_option( 'user_registration_global_paypal_live_admin_email', $paypal_production_email );
+		update_option( 'user_registration_global_paypal_live_client_id', $paypal_production_client_id );
+		update_option( 'user_registration_global_paypal_live_client_secret', $paypal_production_client_secret );
 
 		if ( $stripe_enabled ) {
 			update_option( 'user_registration_stripe_test_mode', $stripe_test_mode );

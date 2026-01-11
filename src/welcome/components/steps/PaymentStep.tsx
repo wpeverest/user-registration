@@ -36,9 +36,13 @@ interface PaymentGatewayData {
 	enabled: boolean;
 	configured: boolean;
 	settings_url: string;
-	paypal_email?: string;
-	paypal_client_id?: string;
-	paypal_client_secret?: string;
+	paypal_mode?: string;
+	paypal_test_email?: string;
+	paypal_test_client_id?: string;
+	paypal_test_client_secret?: string;
+	paypal_production_email?: string;
+	paypal_production_client_id?: string;
+	paypal_production_client_secret?: string;
 	bank_details?: string;
 	stripe_test_mode?: boolean;
 	stripe_test_publishable_key?: string;
@@ -269,31 +273,66 @@ const PaymentStep: React.FC = () => {
 									value: gateway.enabled
 								}
 							});
-							if (gateway.paypal_email) {
+							if (gateway.paypal_mode) {
 								dispatch({
 									type: "SET_PAYMENT_SETTING",
 									payload: {
-										key: "paypalEmail",
-										value: gateway.paypal_email
+										key: "paypalMode",
+										value: gateway.paypal_mode
 									}
 								});
 							}
-							if (gateway.paypal_client_id) {
+							if (gateway.paypal_test_email) {
 								dispatch({
 									type: "SET_PAYMENT_SETTING",
 									payload: {
-										key: "paypalClientId",
-										value: gateway.paypal_client_id
+										key: "paypalTestEmail",
+										value: gateway.paypal_test_email
 									}
 								});
 							}
-
-							if (gateway.paypal_client_secret) {
+							if (gateway.paypal_test_client_id) {
 								dispatch({
 									type: "SET_PAYMENT_SETTING",
 									payload: {
-										key: "paypalClientSecret",
-										value: gateway.paypal_client_secret
+										key: "paypalTestClientId",
+										value: gateway.paypal_test_client_id
+									}
+								});
+							}
+							if (gateway.paypal_test_client_secret) {
+								dispatch({
+									type: "SET_PAYMENT_SETTING",
+									payload: {
+										key: "paypalTestClientSecret",
+										value: gateway.paypal_test_client_secret
+									}
+								});
+							}
+							if (gateway.paypal_production_email) {
+								dispatch({
+									type: "SET_PAYMENT_SETTING",
+									payload: {
+										key: "paypalProductionEmail",
+										value: gateway.paypal_production_email
+									}
+								});
+							}
+							if (gateway.paypal_production_client_id) {
+								dispatch({
+									type: "SET_PAYMENT_SETTING",
+									payload: {
+										key: "paypalProductionClientId",
+										value: gateway.paypal_production_client_id
+									}
+								});
+							}
+							if (gateway.paypal_production_client_secret) {
+								dispatch({
+									type: "SET_PAYMENT_SETTING",
+									payload: {
+										key: "paypalProductionClientSecret",
+										value: gateway.paypal_production_client_secret
 									}
 								});
 							}
@@ -493,64 +532,152 @@ const PaymentStep: React.FC = () => {
 				>
 					<VStack spacing={0} align="stretch">
 						<FieldRow
-							label={__("PayPal Email", "user-registration")}
-							tooltip={__(
-								"Enter the email address associated with your PayPal account",
-								"user-registration"
-							)}
+							label={__("Mode", "user-registration")}
 						>
-							<Input
-								type="email"
-								value={paymentSettings.paypalEmail || ""}
+							<Select
+								value={paymentSettings.paypalMode || "test"}
 								onChange={(e) =>
 									handlePaymentSettingChange(
-										"paypalEmail",
+										"paypalMode",
 										e.target.value
 									)
 								}
 								{...inputStyles}
-							/>
+							>
+								<option value="production">
+									{__("Production", "user-registration")}
+								</option>
+								<option value="test">
+									{__("Test/Sandbox", "user-registration")}
+								</option>
+							</Select>
 						</FieldRow>
 
-						<FieldRow
-							label={__("Client ID", "user-registration")}
-							tooltip={__(
-								"Your client_id, Required for subscription related operations.",
-								"user-registration"
-							)}
-						>
-							<Input
-								type="text"
-								value={paymentSettings.paypalClientId || ""}
-								onChange={(e) =>
-									handlePaymentSettingChange(
-										"paypalClientId",
-										e.target.value
-									)
-								}
-								{...inputStyles}
-							/>
-						</FieldRow>
+						{paymentSettings.paypalMode === "test" ? (
+							<>
+								<FieldRow
+									label={__("PayPal Email", "user-registration")}
+									tooltip={__(
+										"Enter the email address associated with your PayPal account",
+										"user-registration"
+									)}
+								>
+									<Input
+										type="email"
+										value={paymentSettings.paypalTestEmail || ""}
+										onChange={(e) =>
+											handlePaymentSettingChange(
+												"paypalTestEmail",
+												e.target.value
+											)
+										}
+										{...inputStyles}
+									/>
+								</FieldRow>
 
-						<FieldRow
-							label={__("Client Secret", "user-registration")}
-							tooltip={__(
-								"Your client_secret, Required for subscription related operations",
-								"user-registration"
-							)}
-						>
-							<Input
-								type="password"
-								value={paymentSettings.paypalClientSecret || ""}
-								onChange={(e) =>
-									handlePaymentSettingChange(
-										"paypalClientSecret",
-										e.target.value
-									)
-								}
-								{...inputStyles}
-							/>
-						</FieldRow>
+								<FieldRow
+									label={__("Client ID", "user-registration")}
+									tooltip={__(
+										"Your client_id, Required for subscription related operations.",
+										"user-registration"
+									)}
+								>
+									<Input
+										type="text"
+										value={paymentSettings.paypalTestClientId || ""}
+										onChange={(e) =>
+											handlePaymentSettingChange(
+												"paypalTestClientId",
+												e.target.value
+											)
+										}
+										{...inputStyles}
+									/>
+								</FieldRow>
+
+								<FieldRow
+									label={__("Client Secret", "user-registration")}
+									tooltip={__(
+										"Your client_secret, Required for subscription related operations",
+										"user-registration"
+									)}
+								>
+									<Input
+										type="password"
+										value={paymentSettings.paypalTestClientSecret || ""}
+										onChange={(e) =>
+											handlePaymentSettingChange(
+												"paypalTestClientSecret",
+												e.target.value
+											)
+										}
+										{...inputStyles}
+									/>
+								</FieldRow>
+							</>
+						) : (
+							<>
+								<FieldRow
+									label={__("PayPal Email", "user-registration")}
+									tooltip={__(
+										"Enter the email address associated with your PayPal account",
+										"user-registration"
+									)}
+								>
+									<Input
+										type="email"
+										value={paymentSettings.paypalProductionEmail || ""}
+										onChange={(e) =>
+											handlePaymentSettingChange(
+												"paypalProductionEmail",
+												e.target.value
+											)
+										}
+										{...inputStyles}
+									/>
+								</FieldRow>
+
+								<FieldRow
+									label={__("Client ID", "user-registration")}
+									tooltip={__(
+										"Your client_id, Required for subscription related operations.",
+										"user-registration"
+									)}
+								>
+									<Input
+										type="text"
+										value={paymentSettings.paypalProductionClientId || ""}
+										onChange={(e) =>
+											handlePaymentSettingChange(
+												"paypalProductionClientId",
+												e.target.value
+											)
+										}
+										{...inputStyles}
+									/>
+								</FieldRow>
+
+								<FieldRow
+									label={__("Client Secret", "user-registration")}
+									tooltip={__(
+										"Your client_secret, Required for subscription related operations",
+										"user-registration"
+									)}
+								>
+									<Input
+										type="password"
+										value={paymentSettings.paypalProductionClientSecret || ""}
+										onChange={(e) =>
+											handlePaymentSettingChange(
+												"paypalProductionClientSecret",
+												e.target.value
+											)
+										}
+										{...inputStyles}
+									/>
+								</FieldRow>
+							</>
+						)}
 					</VStack>
 				</PaymentOption>
 
