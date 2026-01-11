@@ -130,8 +130,8 @@
 			post_meta_data.mode = multiple_enabled
 				? "multiple"
 				: upgrade_enabled
-				? "upgrade"
-				: "";
+					? "upgrade"
+					: "";
 
 			if ("upgrade" === post_meta_data.mode) {
 				post_meta_data.upgrade_type = $(
@@ -320,7 +320,6 @@
 				function (e) {
 					e.preventDefault();
 					e.stopPropagation();
-					console.log("hello");
 
 					var $this = $(this);
 					membership_group_object.create_membership_group($this);
@@ -954,8 +953,8 @@
 							image_file = gateway_images[gateway_key] || "",
 							image_url = image_file
 								? plugin_url +
-								  "/assets/images/settings-icons/membership-field/" +
-								  image_file
+									"/assets/images/settings-icons/membership-field/" +
+									image_file
 								: "";
 
 						html +=
@@ -1057,8 +1056,8 @@
 			membership_mode = multiple_enabled
 				? "multiple"
 				: upgrade_enabled
-				? "upgrade"
-				: "";
+					? "upgrade"
+					: "";
 
 			if ("upgrade" === membership_mode) {
 				var upgrade_path = $(

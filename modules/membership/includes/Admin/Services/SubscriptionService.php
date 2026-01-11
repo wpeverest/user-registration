@@ -676,7 +676,7 @@ class SubscriptionService {
 		$multiple_purchasable_with_current = array();
 		$multiple_allowed                  = false;
 
-		if ( UR_PRO_ACTIVE && ur_check_module_activation( 'membership-groups' ) ) {
+		if ( UR_PRO_ACTIVE && urm_check_if_plus_and_above_plan() && ur_check_module_activation( 'membership-groups' ) ) {
 
 			if ( isset( $data['selected_membership_id'] ) && ! empty( $data['selected_membership_id'] ) ) {
 				$membership_id    = absint( $data['selected_membership_id'] );

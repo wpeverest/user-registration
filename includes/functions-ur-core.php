@@ -10744,3 +10744,23 @@ if ( ! function_exists( 'urm_is_premium_setting_section' ) ) {
 		return $show_premium_icon;
 	}
 }
+
+if ( ! function_exists('urm_check_if_plus_and_above_plan') ) {
+
+	/**
+	 * Check if user's license is plus or above plan.
+	 */
+	function urm_check_if_plus_and_above_plan() {
+		$license_data = ur_get_license_plan();
+		$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
+		$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
+
+		$available_plans = array( 'plus', 'professional', 'themegrill agency');
+
+		if ( in_array( $license_plan, $available_plans, true ) ) {
+			return true;
+		}
+
+		return false;
+	}
+}
