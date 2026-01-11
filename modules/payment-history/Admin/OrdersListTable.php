@@ -196,7 +196,7 @@ class OrdersListTable extends \UR_List_Table {
 	public function column_transaction_id( $row ) {
 		return sprintf(
 			'<strong><div class="ur-edit-title"><a href="%s" class="row-title">%s</a></div></strong>%s',
-			esc_url( admin_url( "admin.php?page=member-payment-history&action=edit&id={$row['order_id']}" ) ),
+			esc_url( isset($row['order_id']) ? admin_url( "admin.php?page=member-payment-history&action=edit&id={$row['order_id']}" ) : '' ),
 			esc_html( isset( $row['transaction_id'] ) && ! empty( $row['transaction_id'] ) ? $row['transaction_id'] : ( $row['order_id'] ?? '' ) ),
 			$this->row_actions( $this->get_row_actions( $row ) )
 		);
@@ -337,7 +337,7 @@ class OrdersListTable extends \UR_List_Table {
 			$wpdb->prepare(
 				"SELECT meta_value FROM {$orders_meta_table} WHERE meta_key=%s AND order_id=%d LIMIT 1",
 				'payment_date',
-				$item['order_id']
+				$item['order_id'] ?? 0
 			)
 		);
 		$payment_date      = ! empty( $payment_date ) ? $payment_date : $item['created_at'];
