@@ -402,7 +402,7 @@ class UR_Admin_Settings {
 			if ( ! empty( $options['desc'] ) ) {
 				$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $options['desc'] ) ) . '</p>';
 			}
-			if ( isset( $options['sections'] ) ) {
+			if ( isset( $options['sections'] ) && is_array( $options[ 'sections' ] ) ) {
 
 				foreach ( $options['sections'] as $id => $section ) {
 
