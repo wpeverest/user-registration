@@ -297,6 +297,7 @@ abstract class UR_List_Table extends WP_List_Table {
 						$post_ids = isset( $_REQUEST[ $this->_args['singular'] ] ) ? array_map( 'absint', (array) $_REQUEST[ $this->_args['singular'] ] ) : '';
 						$this->bulk_delete( $post_ids );
 					}
+
 					break;
 
 				case 'empty_trash':
