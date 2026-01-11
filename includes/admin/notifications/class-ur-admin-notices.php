@@ -56,6 +56,7 @@ class UR_Admin_Notices {
 
 		add_action( 'admin_init', array( __CLASS__, 'user_registration_install_pages_notice' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'php_deprecation_notice' ) );
+		add_action( 'admin_init', array( __CLASS__, 'same_membership_in_group' ) );
 
 		/**
 		 * Render Notice with Logo and Buttons.
@@ -871,6 +872,68 @@ class UR_Admin_Notices {
 			$notice .= '</div>';
 
 			echo wp_kses_post( $notice );
+		}
+	}
+
+	/**
+	 * If user have same membership in multiple groupds display the notice.
+	 */
+	public static function same_membership_in_group() {
+
+		if ( ! ur_check_module_activation( 'membership' ) ) {
+			return;
+		}
+
+		$groups = get_posts(
+			array(
+				'post_type'      => 'ur_membership_groups',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'no_found_rows'  => true,
+			)
+		);
+
+		if ( count( $groups ) < 2 ) {
+			return;
+		}
+
+		$group_memberships = array();
+
+		foreach ( $groups as $group ) {
+			$memberships = get_post_meta( $group->ID, 'urmg_memberships', true );
+
+			if ( empty( $memberships ) ) {
+				continue;
+			}
+
+			$memberships = is_string( $memberships )
+				? array_filter( array_map( 'absint', explode( ',', trim( $memberships, '[]' ) ) ) )
+				: (array) $memberships;
+
+			if ( $memberships ) {
+				$group_memberships[ $group->ID ] = $memberships;
+			}
+		}
+
+		$group_ids = array_keys( $group_memberships );
+
+		for ( $i = 0; $i < count( $group_ids ); $i++ ) {
+			for ( $j = $i + 1; $j < count( $group_ids ); $j++ ) {
+
+				if ( array_intersect(
+					$group_memberships[ $group_ids[ $i ] ],
+					$group_memberships[ $group_ids[ $j ] ]
+				) ) {
+					$message = '<strong>' . __( 'User Registration & Membership: ', 'user-registration' ) . '</strong>';
+					$message .= __(
+						'We’ve detected that a membership plan is assigned to multiple groups. Each plan must belong to only one group. Please update your settings.',
+						'user-registration'
+					);
+
+					self::add_custom_notice( 'membership_group_conflict', $message );
+					return;
+				}
+			}
 		}
 	}
 }
