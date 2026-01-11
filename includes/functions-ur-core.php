@@ -1286,9 +1286,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array(),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', ur_string_to_bool( get_option( 'user_registration_form_setting_enable_strong_password', 1 ) ) ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', ur_string_to_bool( get_option( 'user_registration_form_setting_enable_strong_password', 0 ) ) ),
 				'tip'               => __( 'Make sure users create a password that’s harder to guess.', 'user-registration' ),
-				'default_value'     => ur_string_to_bool( get_option( 'user_registration_form_setting_enable_strong_password', 1 ) ),
+				'default_value'     => ur_string_to_bool( get_option( 'user_registration_form_setting_enable_strong_password', 0 ) ),
 				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
