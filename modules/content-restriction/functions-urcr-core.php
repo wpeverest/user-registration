@@ -1134,6 +1134,7 @@ function urcr_migrate_global_restriction_settings() {
 		update_option( 'urcr_global_restriction_migrated', true );
 		//To track it is global.
 		update_post_meta( $rule_id, 'urcr_is_global', true );
+		update_option( 'urcr_is_global', $rule_id );
 		delete_option( 'user_registration_content_restriction_whole_site_access' );
 
 		return $rule_id;
@@ -1304,7 +1305,7 @@ function urcr_migrate_post_page_restrictions() {
 		if ( count( $all_migrated_ids ) >= $total_posts_count ) {
 			update_option( 'urcr_post_page_restrictions_migrated', true );
 		}
-
+		update_option( 'urcr_is_global', $rule_id );
 		return array(
 			'rule_id'  => $rule_id,
 			'post_ids' => $new_migrated_ids,

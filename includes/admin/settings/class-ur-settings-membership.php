@@ -99,20 +99,8 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
         }
 
 		public function urcr_settings() {
-			// Build settings array for Advanced section
-			$advanced_settings = array();
 			// Build sections array
 			$sections = array();
-
-			// Only include Advanced section if it has settings (i.e., if Pro is active)
-			if ( ! empty( $advanced_settings ) ) {
-				$sections['user_registration_site_restriction_settings'] = array(
-					'title'    => __( 'Advanced', 'user-registration' ),
-					'type'     => 'card',
-					'desc'     => '',
-					'settings' => $advanced_settings,
-				);
-			}
 
 			$default_message = '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
 <p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
@@ -122,9 +110,15 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 				$default_message = URCR_Admin_Assets::get_default_message();
 			}
 
+			$global_rule_id = get_option('urcr_global_rule_id','');
+			$content_rule_url = admin_url( 'admin.php' ). '?page=user-registration-content-restriction';
+			if (! empty($global_rule_id) ) {
+				$content_rule_url .= '&id=' . $global_rule_id;
+			}
 			$sections['user_registration_content_restriction_settings'] = array(
 				'title'    => __( 'Content Restriction', 'user-registration' ),
 				'type'     => 'card',
+				'desc'     => sprintf( __( 'The Global Restriction setting has moved. You can now manage it <a href="%1$s" target="_blank" style="text-decoration: underline;" >here.</a>', 'user-registration' ), esc_url_raw( $content_rule_url ) ),
 				'settings' => array(
 					array(
 						'title'    => __( 'Global Restriction Message', 'user-registration' ),
