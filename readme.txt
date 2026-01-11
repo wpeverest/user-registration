@@ -258,7 +258,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 5.0.0    - 07/01/2026 =
+= 5.0.0    - 12/01/2026 =
 * Refactor - Global Settings UI.
 * Refactor - Membership upgrade and renewal process.
 * Refactor - Payment configuration in the membership creation process.
@@ -300,6 +300,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix      - Custom pattern validation error message not translatable in WPML.
 * Fix      - Membership smart tag and plural translation for membership duration.
 * Fix      - Admin unable to access content when restricting all content while using the Divi theme.
+
+= 4.4.9    - 08/01/2026 =
+* Security - Fixed XSS vulnerability for delete users.
 
 = 4.4.8    - 07/12/2025 =
 * Tweak    - Fixed empty sdk url.
