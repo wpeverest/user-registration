@@ -370,6 +370,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 		$symbol                  = $currencies[ $currency ]['symbol'];
 		$new_mem                 = array();
 		$active_payment_gateways = array();
+		$is_new_installation = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
 
 		foreach ( $memberships as $k => $membership ) {
 
@@ -400,9 +401,10 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				'calculated_amount' => 'free' === $membership_type ? 0 : ( ! empty( $membership_meta_value ) ? round( $membership_meta_value['amount'] ) : 0 ),
 				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : ( ( ! empty( $membership_meta_value ) && 'subscription' === $membership_meta_value['type'] ) ? $membership_cur_amount . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $duration_label ) . ( $membership['meta_value']['subscription']['value'] > 1 ? __( 's', 'user-registration' ) : '' ) : $membership_cur_amount ),
 			);
+
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
+
 				foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
-					$is_new_installation = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
 
 					if ( $is_new_installation ) {
 						if ( ! urm_is_payment_gateway_configured( $key ) ) {

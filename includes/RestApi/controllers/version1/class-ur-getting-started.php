@@ -1065,8 +1065,10 @@ class UR_Getting_Started {
 			$meta['type'] = 'free';
 		} elseif ( 'one-time' === $type_input ) {
 			$meta['type'] = 'paid';
+			$meta['payment_gateways'] = get_option('ur_membership_payment_gateways');
 		} elseif ( 'subscription' === $type_input ) {
 			$meta['type']         = 'subscription';
+			$meta['payment_gateways'] = get_option('ur_membership_payment_gateways');
 			$meta['subscription'] = array(
 				'value'    => $billing_count,
 				'duration' => $billing_cycle,
