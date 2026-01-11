@@ -283,11 +283,11 @@ class MembershipService {
 
 		// Todo: make this dynamic in future
 		$data['type'] = sanitize_text_field( $data['type'] );
-		if ( isset( $data['subscription'] ) ) {
+		if ( isset( $data['subscription'] ) && is_array( $data['subscription'] ) ) {
 			$data['subscription']['value']    = isset( $data['subscription']['value'] ) ? absint( $data['subscription']['value'] ) : '';
 			$data['subscription']['duration'] = isset( $data['subscription']['duration'] ) ? sanitize_text_field( $data['subscription']['duration'] ) : '';
 			$data['trial_status']             = isset( $data['trial_status'] ) ? sanitize_text_field( $data['trial_status'] ) : '';
-			if ( 'on' === $data['trial_status'] ) {
+			if ( 'on' === $data['trial_status'] && isset( $data['trial_data'] ) && is_array( $data['trial_data'] ) ) {
 				$data['trial_data']['value']    = absint( $data['trial_data']['value'] );
 				$data['trial_data']['duration'] = sanitize_text_field( $data['trial_data']['duration'] );
 			}
@@ -297,17 +297,17 @@ class MembershipService {
 		$data['amount'] = $data['amount'] ?? 0;
 
 		if ( isset( $data['payment_gateways'] ) ) {
-			if ( isset( $data['payment_gateways']['paypal'] ) ) {
+			if ( isset( $data['payment_gateways']['paypal'] ) && is_array( $data['payment_gateways']['paypal'] ) ) {
 				$data['payment_gateways']['paypal']['status']     = sanitize_text_field( $data['payment_gateways']['paypal']['status'] );
 				$data['payment_gateways']['paypal']['email']      = sanitize_email( ! empty( $data['payment_gateways']['paypal']['email'] ) ? $data['payment_gateways']['paypal']['email'] : '' );
 				$data['payment_gateways']['paypal']['mode']       = sanitize_text_field( ! empty( $data['payment_gateways']['paypal']['mode'] ) ? $data['payment_gateways']['paypal']['mode'] : 'sandbox' );
 				$data['payment_gateways']['paypal']['cancel_url'] = esc_url( ! empty( $data['payment_gateways']['paypal']['cancel_url'] ) ? $data['payment_gateways']['paypal']['cancel_url'] : '' );
 				$data['payment_gateways']['paypal']['return_url'] = esc_url( ! empty( $data['payment_gateways']['paypal']['return_url'] ) ? $data['payment_gateways']['paypal']['return_url'] : '' );
 			}
-			if ( isset( $data['payment_gateways']['bank'] ) ) {
+			if ( isset( $data['payment_gateways']['bank'] ) && is_array( $data['payment_gateways']['bank'] ) ) {
 				$data['payment_gateways']['bank']['status'] = sanitize_text_field( $data['payment_gateways']['bank']['status'] );
 			}
-			if ( isset( $data['payment_gateways']['stripe'] ) ) {
+			if ( isset( $data['payment_gateways']['stripe'] ) && is_array( $data['payment_gateways']['stripe'] ) ) {
 				$data['payment_gateways']['stripe']['status']     = sanitize_text_field( $data['payment_gateways']['stripe']['status'] );
 				$data['payment_gateways']['stripe']['product_id'] = sanitize_text_field( $product_id );
 				$data['payment_gateways']['stripe']['price_id']   = sanitize_text_field( $price_id );
@@ -316,8 +316,12 @@ class MembershipService {
 
 		if ( isset( $data['upgrade_settings'] ) && ! empty( $data['upgrade_settings']['upgrade_action'] ) ) {
 			$data['upgrade_settings']['upgrade_action'] = absint( $data['upgrade_settings']['upgrade_action'] );
-			$data['upgrade_settings']['upgrade_path']   = sanitize_text_field( implode( ',', $data['upgrade_settings']['upgrade_path'] ) );
-			$data['upgrade_settings']['upgrade_type']   = ! empty( $data['upgrade_settings']['upgrade_type'] ) ? sanitize_text_field( $data['upgrade_settings']['upgrade_type'] ) : 'full';
+			if ( isset( $data['upgrade_settings']['upgrade_path'] ) && is_array( $data['upgrade_settings']['upgrade_path'] ) ) {
+				$data['upgrade_settings']['upgrade_path'] = sanitize_text_field( implode( ',', $data['upgrade_settings']['upgrade_path'] ) );
+			} elseif ( isset( $data['upgrade_settings']['upgrade_path'] ) ) {
+				$data['upgrade_settings']['upgrade_path'] = sanitize_text_field( $data['upgrade_settings']['upgrade_path'] );
+			}
+			$data['upgrade_settings']['upgrade_type'] = ! empty( $data['upgrade_settings']['upgrade_type'] ) ? sanitize_text_field( $data['upgrade_settings']['upgrade_type'] ) : 'full';
 		}
 
 		return $data;
