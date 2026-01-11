@@ -68,14 +68,39 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			return;
 		}
 
+		if (isMigratedCustomRule) {
+			setActionType("message");
+			if (
+				ruleActions &&
+				ruleActions.length > 0 &&
+				ruleActions[0].message &&
+				ruleActions[0].message.trim() !== ""
+			) {
+				try {
+					const decodedMessage = decodeURIComponent(ruleActions[0].message);
+					setMessage(decodedMessage);
+					setUseGlobalMessage(false);
+				} catch (e) {
+					setMessage(ruleActions[0].message);
+					setUseGlobalMessage(false);
+				}
+			} else {
+				setMessage("");
+				setUseGlobalMessage(true);
+			}
+			setRedirectUrl("");
+			setLocalPage("");
+			setUrForm("");
+			setShortcodeTag("");
+			setShortcodeArgs("");
+			return;
+		}
+
 		if (ruleActions && ruleActions.length > 0) {
 			const action = ruleActions[0];
 			let normalizedType = "message"; // Default to message
-			// For migrated custom rules, always use message type
-			if (isMigratedCustomRule) {
-				setActionType("message");
-				normalizedType = "message";
-			} else if (action.type) {
+			// For migrated custom rules, always use message type (handled above)
+			if (action.type) {
 				normalizedType =
 					action.type === "ur_form" ? "ur-form" : action.type;
 				if (normalizedType === "redirect_to_local_page") {
@@ -93,19 +118,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				return defaultMessage;
 			};
 
-			// For migrated custom rules, always load the message from action
-			if (isMigratedCustomRule) {
-				if (action.message) {
-					try {
-						const decodedMessage = decodeURIComponent(action.message);
-						setMessage(decodedMessage.trim() !== "" ? decodedMessage : "");
-					} catch (e) {
-						setMessage(action.message || "");
-					}
-				} else {
-					setMessage("");
-				}
-			} else if (action.message) {
+			if (action.message) {
 				try {
 					const decodedMessage = decodeURIComponent(action.message);
 					if (decodedMessage.trim() !== "") {
@@ -167,7 +180,6 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				setShortcodeArgs("");
 			}
 		} else {
-			// For migrated custom rules, always use message type
 			setActionType("message");
 			const defaultMessage = getURCRData(
 				"membership_default_message",
@@ -272,7 +284,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 		switch (effectiveActionType) {
 			case "message":
 				actionData.label = __("Show Message", "user-registration");
-				if (isMembershipRule && useGlobalMessage) {
+				if ((isMembershipRule || isMigratedCustomRule) && useGlobalMessage) {
 					actionData.message = "";
 				} else {
 					const defaultMessage = getURCRData(
@@ -477,7 +489,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			switch (effectiveActionType) {
 				case "message":
 					actionData.label = __("Show Message", "user-registration");
-					if (isMembershipRule && useGlobalMessage) {
+					if ((isMembershipRule || isMigratedCustomRule) && useGlobalMessage) {
 						actionData.message = "";
 					} else {
 						const defaultMessage = getURCRData(
@@ -613,6 +625,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 					message={message}
 					onMessageChange={setMessage}
 					isMembershipRule={isMembershipRule}
+					isMigratedCustomRule={isMigratedCustomRule}
 					useGlobalMessage={useGlobalMessage}
 					onUseGlobalMessageChange={setUseGlobalMessage}
 				/>

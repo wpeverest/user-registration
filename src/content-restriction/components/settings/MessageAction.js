@@ -11,6 +11,7 @@ const MessageAction = ({
 	message,
 	onMessageChange,
 	isMembershipRule,
+	isMigratedCustomRule,
 	useGlobalMessage,
 	onUseGlobalMessageChange
 }) => {
@@ -31,7 +32,7 @@ const MessageAction = ({
 	useEffect(() => {
 		const wasUsingGlobal = prevUseGlobalMessageRef.current;
 
-		if (isMembershipRule && useGlobalMessage && !wasUsingGlobal) {
+		if ((isMembershipRule || isMigratedCustomRule) && useGlobalMessage && !wasUsingGlobal) {
 			const cleanupEditor = () => {
 				if (
 					typeof wp !== "undefined" &&
@@ -55,16 +56,16 @@ const MessageAction = ({
 			};
 			cleanupEditor();
 		}
-	}, [isMembershipRule, useGlobalMessage, editorId]);
+	}, [isMembershipRule, isMigratedCustomRule, useGlobalMessage, editorId]);
 
 	useEffect(() => {
-		if (isMembershipRule && useGlobalMessage) {
+		if ((isMembershipRule || isMigratedCustomRule) && useGlobalMessage) {
 			prevUseGlobalMessageRef.current = useGlobalMessage;
 			return;
 		}
 
 		const wasUsingGlobal = prevUseGlobalMessageRef.current;
-		const switchingToCustom = isMembershipRule && !useGlobalMessage && wasUsingGlobal;
+		const switchingToCustom = (isMembershipRule || isMigratedCustomRule) && !useGlobalMessage && wasUsingGlobal;
 
 		if (editorInitializedRef.current && !switchingToCustom) {
 			prevUseGlobalMessageRef.current = useGlobalMessage;
@@ -237,7 +238,7 @@ const MessageAction = ({
 			}
 			editorInitializingRef.current = false;
 		};
-	}, [editorId, rule.id, isMembershipRule, useGlobalMessage]);
+		}, [editorId, rule.id, isMembershipRule, isMigratedCustomRule, useGlobalMessage]);
 
 	useEffect(() => {
 		return () => {
@@ -314,7 +315,7 @@ const MessageAction = ({
 
 	return (
 		<>
-			{isMembershipRule && (
+			{(isMembershipRule || isMigratedCustomRule) && (
 				<div className="urcr-label-input-pair urcr-rule-action ur-align-items-center ur-form-group">
 					<label className="urcr-label-container ur-col-4">
 						<span className="urcr-target-content-label">
@@ -364,7 +365,7 @@ const MessageAction = ({
 					</div>
 				</div>
 			)}
-			{(!isMembershipRule || !useGlobalMessage) && (
+			{((!isMembershipRule && !isMigratedCustomRule) || !useGlobalMessage) && (
 				<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-message-input-container ur-form-group">
 					<label className="urcr-label-container ur-col-4">
 						<span className="urcr-target-content-label">
