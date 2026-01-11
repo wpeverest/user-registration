@@ -1517,9 +1517,9 @@ html body[data-scroll-locked] {
 			text-align: center;
 			border-radius: 8px;
 			background-color: $color-white;
-			box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-			border: 1px solid #e5e7eb;
-			padding: $spacing-xl;
+			box-shadow: 0 6px 26px 0px rgba(10, 10, 10, 0.08);
+			border: 1px solid #f1f5f9;
+			padding: 40px;
 			height: fit-content;
 			margin-top: calc(45%);
 		}
