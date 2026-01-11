@@ -236,10 +236,12 @@ textarea.ur-input-border-red {
 			}
 
 			.ur-lost-password-message {
-				font-size: 14px;
+				font-size: 15px;
 				letter-spacing: 0.15px;
-				margin-top: 5px;
-				margin-bottom: 0;
+				margin-top: 8px;
+				margin-bottom: 14px;
+				color:#6b6b6b !important;
+				font-weight: 400;
 			}
 		}
 
@@ -263,10 +265,24 @@ textarea.ur-input-border-red {
 			margin-left: 5px;
 		}
 
+		label[for="user_login"] {
+		margin-top: 0;
+   		margin-bottom: 16px;
+    	color: #222;
+    	font-size: 15px;
+    	font-weight: 500;
+    	line-height: 19px;
+		}
+
 		#user_login {
 			border-radius: $border_radius_4;
 			border: $border_width solid #e9e9e9;
-		}
+			height: 48px;
+
+		   &::placeholder {
+  				color: transparent;
+			}
+        }
 
 		.ur-reset-password-btn {
 			border: 1px solid $primary_color;
@@ -275,6 +291,10 @@ textarea.ur-input-border-red {
 			color: $white;
 			letter-spacing: 0.15px;
 			border: 0;
+			font-size: 16px;
+			font-weight: 500;
+			padding: 14px 32px;
+			margin-top: 10px;
 
 			&:hover {
 				background: #38488e;
@@ -2377,7 +2397,6 @@ body {
 						}
 
 						.ur-lost-password-content-container {
-							margin-bottom: 24px;
 
 							.ur-lost-password-title {
 								margin: 0;
@@ -2392,18 +2411,19 @@ body {
 							display: block;
 
 							svg {
-								top: 50%;
-								transform: translateY(-50%);
-								left: 12px;
-								width: 14px;
-								height: 14px;
+								// top: 50%;
+								// transform: translateY(-50%);
+								// left: 12px;
+								// width: 14px;
+								// height: 14px;
+								display: none;
 							}
 
 							input {
 								min-height: 38px;
 								max-height: 38px;
 								margin-bottom: 0;
-								padding: 0 14px 0 36px;
+								padding: 0 14px 0 px;
 
 								&:focus {
 									border-color: $primary_color;
