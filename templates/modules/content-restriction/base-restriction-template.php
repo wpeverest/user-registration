@@ -43,12 +43,26 @@ if ( empty( $signup_url ) ) {
 	}
 	.urcr-access-card {
 		background-color: #ffffff;
+		border: 1px solid #f1f5f9;
 		border-radius: 8px;
-		padding: 40px;
+		padding: 32px;
 		max-width: 500px;
 		width: 100%;
-		box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.08);
+		box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.06);
 		margin: 20px auto;
+	}
+    .urcr-access-card h3 {
+		font-weight: 800;
+		font-size: 28px;
+		color: #1a1a1a;
+	}
+	.urcr-access-card p {
+		font-weight: 400;
+		font-size: 16px;
+		color: #6B6B6B;
+	}
+	.urcr-access-card a {
+		margin-top: 32px;
 	}
 	.urcr-access-heading {
 		font-size: 28px;
@@ -83,23 +97,9 @@ if ( empty( $signup_url ) ) {
 		margin-bottom: 12px;
 	}
 	.urcr-access-button {
-		color: #6366f1;
-		font-size: 16px;
-		font-weight: 500;
-		text-decoration: none;
-	}
-	.urcr-access-button-primary {
-		color: #475bb2;
-		text-decoration: underline;
-	}
-	.urcr-access-button-primary:hover {
-		color: #475BB2;
-		text-decoration: underline;
-	}
-	.urcr-signup-link {
 		max-width: 100%;
-		padding: 14px 32px;
-		border-radius: 5px;
+		padding: 8px 16px;
+		border-radius: 8px;
 		font-size: 16px;
 		font-weight: 600;
 		text-align: center;
@@ -107,15 +107,27 @@ if ( empty( $signup_url ) ) {
 		transition: all 0.2s ease;
 		border: none;
 		display: inline-block;
-		background-color: #475BB2;
-		color: #ffffff;
-		text-decoration: none;
-		margin-right: 20px;
 	}
-	.urcr-signup-link:hover {
-		background-color: rgb(56.4578313253, 72.3614457831, 141.5421686747);
-		color: #ffffff;
+	.urcr-access-card .urcr-access-button-primary {
+		color: #475BB2;
+		text-decoration: underline;
+	}
+	.urcr-access-card .urcr-access-button-primary:hover {
+		color: #38488e;
+		text-decoration: underline;
+	}
+	.urcr-access-card .urcr-signup-link {
+		background-color: #475bb2;
+		font-size: 16px;
+		padding: 14px 32px;
+		font-weight: 500;
+		border-radius: 4px;
+		color: #fff;
 		text-decoration: none;
+	}
+	.urcr-access-card .urcr-signup-link:hover {
+		color: #fff;
+		background: #38488e;
 	}
 	@media (max-width: 480px) {
 		.urcr-access-card {
