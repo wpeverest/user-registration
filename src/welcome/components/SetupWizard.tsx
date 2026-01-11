@@ -114,6 +114,9 @@ const SetupWizard: React.FC = () => {
 		const loadInitial = async () => {
 			try {
 				dispatch({ type: "SET_LOADING", payload: true });
+				
+				dispatch({ type: "RESET_MEMBERSHIP_DEFAULTS" });
+				
 				const wizard: any = await apiGet("");
 				const welcome: any = await apiGet("/welcome").catch(() => null);
 

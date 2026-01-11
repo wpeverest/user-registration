@@ -867,40 +867,6 @@ const MembershipStep: React.FC = () => {
 					});
 				}
 
-				const currentPlans = state.membershipPlans;
-				const hasModifiedPlans = currentPlans.some(
-					(plan) =>
-						plan.name !== "" ||
-						plan.price !== "" ||
-						plan.contentAccess.length > 0
-				);
-
-				if (
-					res.memberships &&
-					Array.isArray(res.memberships) &&
-					res.memberships.length > 0 &&
-					!hasModifiedPlans
-				) {
-					const hydratedPlans: MembershipPlan[] = res.memberships.map(
-						(m: any) => ({
-							id: String(m.id),
-							name: m.name || "",
-							type: m.type || "free",
-							price: m.price || "",
-							billingCycle: m.billingCycle || "month",
-							billingCycleCount: m.billingCycleCount || "",
-							contentAccess: m.contentAccess || [],
-							isNew: false
-						})
-					);
-
-					dispatch({
-						type: "HYDRATE_FROM_API",
-						payload: {
-							membershipPlans: hydratedPlans
-						}
-					});
-				}
 			} catch (e) {
 				console.error("Failed to load memberships data:", e);
 			} finally {
