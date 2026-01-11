@@ -56,6 +56,7 @@ class UR_Admin_Notices {
 
 		add_action( 'admin_init', array( __CLASS__, 'user_registration_install_pages_notice' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'php_deprecation_notice' ) );
+		add_action( 'admin_init', array( __CLASS__, 'same_membership_in_group' ) );
 
 		/**
 		 * Render Notice with Logo and Buttons.
@@ -313,7 +314,7 @@ class UR_Admin_Notices {
 						'message_content'       => wp_kses_post(
 							sprintf(
 								"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
-								__( "Congratulations! 👏 You've registered 20 users using our User Registration plugin, way to go! 🎉", 'user-registration' ),
+								__( "Congratulations! 👏 You've registered 20 users using our User Registration & Membership plugin, way to go! 🎉", 'user-registration' ),
 								__( 'Please share your experience with us by leaving a review. Your feedback will help us improve and serve you better. ', 'user-registration' ),
 								__(
 									'Once again, thank you for choosing us! ❤️',
@@ -373,7 +374,7 @@ class UR_Admin_Notices {
 							sprintf(
 								"<p>%s</p><p>%s</p><p class='extra-pad'>%s</p>",
 								__( '( The above word is just to draw your attention. <span class="dashicons dashicons-smiley smile-icon"></span> )', 'user-registration' ),
-								__( 'Hope you are having nice experience with <strong>User Registration</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ),
+								__( 'Hope you are having nice experience with <strong>User Registration & Membership</strong> plugin. Please provide this plugin a nice review.', 'user-registration' ),
 								__(
 									'<strong>What benefit would you have?</strong> <br>
 								Basically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class="dashicons dashicons-smiley smile-icon"></span>',
@@ -428,7 +429,7 @@ class UR_Admin_Notices {
 						'type'                  => 'survey',
 						'status'                => 'active',
 						'priority'              => '4',
-						'title'                 => __( 'User Registration Plugin Survey', 'user-registration' ),
+						'title'                 => __( 'User Registration & Membership Plugin Survey', 'user-registration' ),
 						'message_content'       => wp_kses_post(
 							sprintf(
 								"<p>%s</p><p class='extra-pad'>%s</p>",
@@ -486,50 +487,49 @@ class UR_Admin_Notices {
 							),
 						),
 					),
-					array(
-						'id'                    => 'ur_allow_usage',
-						'type'                  => 'allow-usage',
-						'status'                => 'active',
-						'priority'              => '3',
-						'title'                 => __( 'Contribute to the enhancement', 'user-registration' ),
-						'message_content'       => wp_kses_post(
-							sprintf(
-								'<p>%s</p>',
-								__(
-									'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
-									'user-registration'
-								)
-							)
-						),
-						'buttons'               => array(
-							array(
-								'title'  => __( 'Allow', 'user-registration' ),
-								'icon'   => 'dashicons-smiley',
-								'link'   => 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu',
-								'class'  => 'button-primary ur-allow-usage',
-								'target' => '_blank',
-							),
-							array(
-								'title'  => __( 'No, Thanks', 'user-registration' ),
-								'icon'   => 'dashicons-dismiss',
-								'link'   => '#',
-								'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently ur-deny-usage',
-								'target' => '',
-							),
-						),
-						'permanent_dismiss'     => false,
-						'reopen_days'           => '1',
-						'reopen_times'          => '3',
-						'conditions_to_display' => array(
-							array(
-								'operator'      => 'AND',
-								'show_notice'   => ! ur_check_notice_already_permanent_dismissed( 'allow-usage' ),
-								'updation_days' => '1',
-								'option_exists' => 'user_registration_allow_usage_tracking',
-								'option_exists' => 'user_registration_allow_usage_notice_shown',
-							),
-						),
-					),
+					// array(
+					// 'id'                    => 'ur_allow_usage',
+					// 'type'                  => 'allow-usage',
+					// 'status'                => 'active',
+					// 'priority'              => '3',
+					// 'title'                 => __( 'Contribute to the enhancement', 'user-registration' ),
+					// 'message_content'       => wp_kses_post(
+					// sprintf(
+					// '<p>%s</p>',
+					// __(
+					// 'Help us improve the plugin\'s features by sharing <a href="https://docs.wpuserregistration.com/docs/miscellaneous-settings/#1-toc-title" target="_blank">non-sensitive plugin data</a> with us.',
+					// 'user-registration'
+					// )
+					// )
+					// ),
+					// 'buttons'               => array(
+					// array(
+					// 'title'  => __( 'Allow', 'user-registration' ),
+					// 'icon'   => 'dashicons-smiley',
+					// 'link'   => 'https://forms.office.com/pages/responsepage.aspx?id=c04iBAejyEWvNQDb6GzDCILyv8m6NoBDvJVtRTCcOvBUNk5OSTA4OEs1SlRPTlhFSFZXRFA0UFEwRCQlQCN0PWcu',
+					// 'class'  => 'button-primary ur-allow-usage',
+					// 'target' => '_blank',
+					// ),
+					// array(
+					// 'title'  => __( 'No, Thanks', 'user-registration' ),
+					// 'icon'   => 'dashicons-dismiss',
+					// 'link'   => '#',
+					// 'class'  => 'button-secondary notice-dismiss notice-dismiss-permanently ur-deny-usage',
+					// 'target' => '',
+					// ),
+					// ),
+					// 'permanent_dismiss'     => false,
+					// 'reopen_days'           => '1',
+					// 'reopen_times'          => '3',
+					// 'conditions_to_display' => array(
+					// array(
+					// 'operator'      => 'AND',
+					// 'show_notice'   => ! ur_check_notice_already_permanent_dismissed( 'allow-usage' ),
+					// 'updation_days' => '1',
+					// 'option_exists' => 'user_registration_allow_usage_tracking',
+					// ),
+					// ),
+					// ),
 				)
 			);
 		}
@@ -838,7 +838,8 @@ class UR_Admin_Notices {
 
 		$first_time_activation = get_option( 'user_registration_first_time_activation_flag', false );
 
-		$onboarding_completed = true;
+		$onboarding_completed     = true;
+		$onboarding_complete_text = '';
 
 		if ( ! $first_time_activation ) {
 			$onboard_skipped           = get_option( 'user_registration_onboarding_skipped', false );
@@ -866,11 +867,73 @@ class UR_Admin_Notices {
 
 		if ( ! $onboarding_completed ) {
 			$notice  = '<div id="message" class="updated user-registration-message ur-connect">';
-			$notice .= '<p>' . wp_kses_post( 'It appears that the setup wizard was skipped. To ensure the User Registration Plugin is properly configured, please proceed with the setup wizard.', 'user-registration' ) . '</p>';
+			$notice .= '<p>' . wp_kses_post( 'It appears that the setup wizard was skipped. To ensure the User Registration & Membership Plugin is properly configured, please proceed with the setup wizard.', 'user-registration' ) . '</p>';
 			$notice .= '<div class="submit">' . wp_kses_post( $onboarding_complete_text ) . '</div>';
 			$notice .= '</div>';
 
 			echo wp_kses_post( $notice );
+		}
+	}
+
+	/**
+	 * If user have same membership in multiple groupds display the notice.
+	 */
+	public static function same_membership_in_group() {
+
+		if ( ! ur_check_module_activation( 'membership' ) ) {
+			return;
+		}
+
+		$groups = get_posts(
+			array(
+				'post_type'      => 'ur_membership_groups',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'no_found_rows'  => true,
+			)
+		);
+
+		if ( count( $groups ) < 2 ) {
+			return;
+		}
+
+		$group_memberships = array();
+
+		foreach ( $groups as $group ) {
+			$memberships = get_post_meta( $group->ID, 'urmg_memberships', true );
+
+			if ( empty( $memberships ) ) {
+				continue;
+			}
+
+			$memberships = is_string( $memberships )
+				? array_filter( array_map( 'absint', explode( ',', trim( $memberships, '[]' ) ) ) )
+				: (array) $memberships;
+
+			if ( $memberships ) {
+				$group_memberships[ $group->ID ] = $memberships;
+			}
+		}
+
+		$group_ids = array_keys( $group_memberships );
+
+		for ( $i = 0; $i < count( $group_ids ); $i++ ) {
+			for ( $j = $i + 1; $j < count( $group_ids ); $j++ ) {
+
+				if ( array_intersect(
+					$group_memberships[ $group_ids[ $i ] ],
+					$group_memberships[ $group_ids[ $j ] ]
+				) ) {
+					$message = '<strong>' . __( 'User Registration & Membership: ', 'user-registration' ) . '</strong>';
+					$message .= __(
+						'We’ve detected that a membership plan is assigned to multiple groups. Each plan must belong to only one group. Please update your settings.',
+						'user-registration'
+					);
+
+					self::add_custom_notice( 'membership_group_conflict', $message );
+					return;
+				}
+			}
 		}
 	}
 }

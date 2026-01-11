@@ -77,23 +77,22 @@ class UR_Form_Validation extends UR_Validation {
 
 		$row_datas = ! empty( $form_row_data ) ? json_decode( $form_row_data ) : array();
 
-		$repeater_fields = array();
+		$repeater_fields     = array();
 		$repeater_field_data = array();
 		foreach ( $row_datas as $individual_row_data ) {
 
 			if ( isset( $individual_row_data->repeater_id ) && isset( $individual_row_data->field_name ) ) {
 				array_push( $repeater_fields, $individual_row_data->fields );
 
-				$repeater_field_data[$individual_row_data->field_name] = $valid_form_data[$individual_row_data->field_name] ?? array();
+				$repeater_field_data[ $individual_row_data->field_name ] = $valid_form_data[ $individual_row_data->field_name ] ?? array();
 			}
 		}
 
-
 		foreach ( $form_field_data as $key => $data ) {
 			$field_name = $data->general_setting->field_name;
-			if( in_array( $field_name, $repeater_fields ) ) {
+			if ( in_array( $field_name, $repeater_fields ) ) {
 				continue;
-			} else if ( array_key_exists( $field_name, $valid_form_data ) ) {
+			} elseif ( array_key_exists( $field_name, $valid_form_data ) ) {
 				$new_form_data[ $field_name ] = $valid_form_data[ $field_name ];
 			}
 		}
@@ -723,7 +722,7 @@ class UR_Form_Validation extends UR_Validation {
 			function ( $field ) use ( $skippable_field_types ) {
 				if ( in_array( $field->field_key, $skippable_field_types, true ) ) {
 
-					if ( 'range' === $field->field_key && ! ur_string_to_bool( $field->advance_setting->enable_payment_slider ) ) {
+					if ( 'range' === $field->field_key && ( isset( $field->advance_setting->enable_payment_slider ) && ! ur_string_to_bool( $field->advance_setting->enable_payment_slider ) ) ) {
 						return false;
 					}
 

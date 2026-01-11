@@ -30,13 +30,12 @@ if ( ! class_exists( 'UR_Settings_Import_Export' ) ) :
 		 */
 		public function __construct() {
 
-			$this->id    = 'import_export';
-			$this->label = __( 'Import/Export', 'user-registration' );
+			$this->id    = 'advanced';
+			$this->label = __( 'Advanced', 'user-registration' );
 
-			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
-			add_action( 'user_registration_sections_' . $this->id, array( $this, 'output_sections' ) );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
+			add_filter( 'user_registration_get_section_parts_' . $this->id, array( $this, 'get_parts' ) );
 		}
 
 		/**
@@ -44,18 +43,17 @@ if ( ! class_exists( 'UR_Settings_Import_Export' ) ) :
 		 *
 		 * @return array
 		 */
-		public function get_sections() {
+		public function get_parts( $sections ) {
+			global $current_section;
+
+			if( 'import-export' !== $current_section ) return $sections;
+
 			$sections = array(
 				''                    => __( 'Export Users', 'user-registration' ),
 				'import-export-forms' => __( 'Import/Export Forms', 'user-registration' ),
 			);
 
-			/**
-			 * Filter to get the settings.
-			 *
-			 * @param array $settings Options Settings to be enlisted.
-			 */
-			return apply_filters( 'user_registration_get_sections_' . $this->id, $sections );
+			return $sections;
 		}
 
 		/**
@@ -64,10 +62,14 @@ if ( ! class_exists( 'UR_Settings_Import_Export' ) ) :
 		public function output() {
 
 			global $current_section;
-			if ( '' === $current_section ) {
+			global $current_section_part;
+			if( 'import-export' !== $current_section ) return;
+
+			add_filter( 'user_registration_settings_hide_save_button', '__return_true' );
+			if ( '' === $current_section_part ) {
 				$settings = array();
 				UR_Admin_Export_Users::output();
-			} elseif ( 'import-export-forms' === $current_section ) {
+			} elseif ( 'import-export-forms' === $current_section_part ) {
 				$settings = array();
 				UR_Admin_Import_Export_Forms::output();
 			} else {
@@ -83,11 +85,13 @@ if ( ! class_exists( 'UR_Settings_Import_Export' ) ) :
 		public function save() {
 
 			global $current_section;
+			global $current_section_part;
+			if ( 'import-export' !== $current_section ) return;
 			$settings = $this->get_settings();
 
-			if ( '' === $current_section ) {
+			if ( '' === $current_section_part ) {
 				$settings = array();
-			} elseif ( 'import-export-forms' === $current_section ) {
+			} elseif ( 'import-export-forms' === $current_section_part ) {
 				$settings = array();
 			} else {
 				$settings = array();

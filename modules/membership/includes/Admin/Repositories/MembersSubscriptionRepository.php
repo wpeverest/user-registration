@@ -29,12 +29,76 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 	 * @return array|false|mixed|object|\stdClass|void
 	 */
 	public function get_member_subscription( $member_id ) {
-		$result = $this->wpdb()->get_row(
+		$result = $this->wpdb()->get_results(
 			$this->wpdb()->prepare(
 				"SELECT wums.* FROM $this->users_table wpu
 		         JOIN $this->table wums ON wpu.ID = wums.user_id
 		         WHERE wpu.ID = %d",
 				$member_id
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? false : $result;
+	}
+
+	// TODO - Handle Multiple ( Remove after multiple memberships merge )
+	/**
+	 * Get members subscription by their ID
+	 *
+	 * @param $member_id
+	 *
+	 * @return array|false|mixed|object|\stdClass|void
+	 */
+	public function get_member_subscriptions( $member_id ) {
+		$result = $this->wpdb()->get_results(
+			$this->wpdb()->prepare(
+				"SELECT wums.* FROM $this->users_table wpu
+		         JOIN $this->table wums ON wpu.ID = wums.user_id
+		         WHERE wpu.ID = %d",
+				$member_id
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? false : $result;
+	}
+
+	/**
+	 * Get members subscription by their subscription ID
+	 *
+	 * @param $subscription_id
+	 *
+	 * @return array|false|mixed|object|\stdClass|void
+	 */
+	public function get_subscription_data_by_subscription_id( $subscription_id ) {
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT * FROM $this->table WHERE ID = %d",
+				$subscription_id
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? false : $result;
+	}
+
+	/**
+	 * Get members subscription by their ID and Membership ID
+	 *
+	 * @param $member_id
+	 * @param $membership_id
+	 *
+	 * @return array|false|mixed|object|\stdClass|void
+	 */
+	public function get_subscription_data_by_member_and_membership_id( $member_id, $membership_id ) {
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT wums.* FROM $this->users_table wpu
+		         JOIN $this->table wums ON wpu.ID = wums.user_id
+		         WHERE wpu.ID = %d AND wums.item_id = %d",
+				$member_id,
+				$membership_id
 			),
 			ARRAY_A
 		);
@@ -49,8 +113,8 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 	 *
 	 * @return array|false|mixed|object|\stdClass|void
 	 */
-	public function get_membership_by_subscription_id( $subscription_id , $secondary = false) {
-		$compare_id = !$secondary ? 'wpus.ID = %d' : 'wpus.subscription_id = %s';
+	public function get_membership_by_subscription_id( $subscription_id, $secondary = false ) {
+		$compare_id = ! $secondary ? 'wpus.ID = %d' : 'wpus.subscription_id = %s';
 
 		$result = $this->wpdb()->get_row(
 			$this->wpdb()->prepare(
@@ -87,7 +151,8 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 	 * @return array|object|stdClass[]
 	 */
 	public function get_about_to_expire_subscriptions( $check_date ) {
-		$sql = sprintf( "
+		$sql = sprintf(
+			"
 						SELECT wu.user_email,
 						       wu.user_login as username,
 						       wu.ID as member_id,
@@ -100,7 +165,9 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 					    LEFT JOIN $this->posts_table wp ON wums.item_id = wp.ID
 						WHERE NOT wums.status = 'canceled'
 						AND wums.next_billing_date = '%s'
-						", $check_date );
+						",
+			$check_date
+		);
 
 		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
 
@@ -115,7 +182,8 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 	 * @return array|object|stdClass[]
 	 */
 	public function get_expired_subscriptions( $check_date ) {
-		$sql = sprintf( "
+		$sql = sprintf(
+			"
 						SELECT wu.user_email,
 						       wu.user_login as username,
 						       wu.ID as member_id,
@@ -128,7 +196,9 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 					    LEFT JOIN $this->posts_table wp ON wums.item_id = wp.ID
 						WHERE wums.status = 'expired'
 						AND wums.expiry_date = '%s'
-						", $check_date );
+						",
+			$check_date
+		);
 
 		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
 
@@ -143,7 +213,8 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 	 * @return array|object|stdClass[]
 	 */
 	public function get_subscriptions_to_expire( $check_date ) {
-		$sql = sprintf( "
+		$sql = sprintf(
+			"
 						SELECT wu.user_email,
 						       wu.user_login as username,
 						       wu.ID as member_id,
@@ -157,10 +228,32 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 					    LEFT JOIN $this->posts_table wp ON wums.item_id = wp.ID
 						WHERE wums.status = 'active'
 						AND wums.expiry_date < '%s'
-						", $check_date );
+						",
+			$check_date
+		);
 
 		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
 
 		return ! $result ? array() : $result;
+	}
+
+	/**
+	 * Get subscription by subscription ID
+	 *
+	 * @param int $subscription_id The Subscription ID.
+	 *
+	 * @return array|false|mixed|object|\stdClass|void
+	 */
+	public function get_subscription_by_subscription_id( $subscription_id ) {
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT wums.* FROM $this->table wums
+		         WHERE wums.ID = %d",
+				$subscription_id
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? false : $result;
 	}
 }

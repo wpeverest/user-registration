@@ -1,17 +1,17 @@
 <?php
-$return_url         = admin_url( 'admin.php?page=user-registration-members' );
+$return_url         = admin_url( 'admin.php?page=user-registration-users' );
 $membership_details = ! empty( $member_membership ) && ! empty( $member_membership['meta_value'] ) ? json_decode( $member_membership['meta_value'], true ) : array();
 $membership         = apply_filters( 'build_membership_list_frontend', array( (array) $membership_details ) );
-$status_class       = ! empty( $member_subscription ) ? "user-registration-badge user-registration-badge--" . $member_subscription['status'] : '';
+$status_class       = ! empty( $member_subscription ) ? 'user-registration-badge user-registration-badge--' . $member_subscription['status'] : '';
 
 ?>
 <div class="ur-admin-page-topnav" id="ur-lists-page-topnav">
 	<div class="ur-page-title__wrapper">
 		<div class="ur-page-title__wrapper--left">
 			<a class="ur-text-muted ur-border-right ur-d-flex ur-mr-2 ur-pl-2 ur-pr-2"
-			   href="<?php echo esc_attr( $return_url ); ?>">
+				href="<?php echo esc_attr( $return_url ); ?>">
 				<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
-					 stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+					stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
 					<line x1="19" y1="12" x2="5" y2="12"></line>
 					<polyline points="12 19 5 12 12 5"></polyline>
 				</svg>
@@ -47,8 +47,8 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 										data-key-name="<?php echo esc_html__( 'firstname', 'user-registration' ); ?>"
 										id="ur-input-type-membership-first-name" name="ur_membership_first_name"
 										style="width: 100%"
-										value="<?php echo ! empty( $member->first_name ) ? esc_attr( $member->first_name ) : '' ?>"
-											<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
+										value="<?php echo ! empty( $member->first_name ) ? esc_attr( $member->first_name ) : ''; ?>"
+											<?php echo ( ! empty( $_GET['action'] ) && 'view' === $_GET['action'] ) ? 'disabled' : ''; ?>
 
 									>
 								</div>
@@ -64,12 +64,12 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
 								<div class="ur-field">
 									<input type="text"
-										   class="ur-membership-members-input"
-										   data-key-name="<?php echo esc_html__( 'lastname', 'user-registration' ); ?>"
-										   id="ur-input-type-membership-last-name" name="ur_membership_last_name"
-										   style="width: 100%"
-										   value="<?php echo ! empty( $member->last_name ) ? esc_attr( $member->last_name ) : '' ?>"
-										   	<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
+											class="ur-membership-members-input"
+											data-key-name="<?php echo esc_html__( 'lastname', 'user-registration' ); ?>"
+											id="ur-input-type-membership-last-name" name="ur_membership_last_name"
+											style="width: 100%"
+											value="<?php echo ! empty( $member->last_name ) ? esc_attr( $member->last_name ) : ''; ?>"
+											<?php echo ( ! empty( $_GET['action'] ) && 'view' === $_GET['action'] ) ? 'disabled' : ''; ?>
 
 									>
 								</div>
@@ -86,15 +86,15 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
 								<div class="ur-field">
 									<input type="text"
-										   autocomplete="off"
-										   class="ur-membership-members-input"
-										   data-key-name="<?php echo esc_html__( 'Username', 'user-registration' ); ?>"
-										   id="ur-input-type-membership-username" name="ur_membership_username"
-										   style="width: 100%"
-										   value="<?php echo ! empty( $member->user_login ) ? esc_attr( $member->user_login ) : '' ?>"
-										   	<?php echo !empty($_GET['action']) && "view" === $_GET["action"] ? "disabled" :"" ?>
+											autocomplete="off"
+											class="ur-membership-members-input"
+											data-key-name="<?php echo esc_html__( 'Username', 'user-registration' ); ?>"
+											id="ur-input-type-membership-username" name="ur_membership_username"
+											style="width: 100%"
+											value="<?php echo ! empty( $member->user_login ) ? esc_attr( $member->user_login ) : ''; ?>"
+											<?php echo ! empty( $_GET['action'] ) && 'view' === $_GET['action'] ? 'disabled' : ''; ?>
 
-										   required>
+											required>
 								</div>
 							</div>
 
@@ -110,19 +110,19 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 							<div class="ur-input-type-membership-email ur-admin-template" style="width: 100%">
 								<div class="ur-field">
 									<input type="email"
-										   class="ur-membership-members-input"
-										   data-key-name="<?php echo esc_html__( 'Email', 'user-registration' ); ?>"
-										   id="ur-input-type-membership-email" name="ur_membership_email"
-										   style="width: 100%"
-										   value="<?php echo ! empty( $member->user_email ) ? esc_attr( $member->user_email ) : '' ?>"
-										   	<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
+											class="ur-membership-members-input"
+											data-key-name="<?php echo esc_html__( 'Email', 'user-registration' ); ?>"
+											id="ur-input-type-membership-email" name="ur_membership_email"
+											style="width: 100%"
+											value="<?php echo ! empty( $member->user_email ) ? esc_attr( $member->user_email ) : ''; ?>"
+											<?php echo ( ! empty( $_GET['action'] ) && 'view' === $_GET['action'] ) ? 'disabled' : ''; ?>
 
-										   required>
+											required>
 								</div>
 							</div>
 						</div>
 						<?php
-						if ( empty( $_GET['member_id'] ) ):
+						if ( empty( $_GET['member_id'] ) ) :
 							?>
 							<!-- password -->
 							<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
@@ -140,7 +140,7 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 											class="ur-membership-members-input"
 											type="password"
 											id="ur-input-type-membership-password" name="ur_membership_password"
-												<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
+												<?php echo ( ! empty( $_GET['action'] ) && 'view' === $_GET['action'] ) ? 'disabled' : ''; ?>
 
 											style="width: 100%"
 											required>
@@ -156,21 +156,21 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 									</label>
 								</div>
 								<div class="ur-input-type-membership-confirm-password ur-admin-template"
-									 style="width: 100%">
+									style="width: 100%">
 									<div class="ur-field">
 										<input type="password"
-											   data-key-name="<?php echo esc_html__( 'confirm_password', 'user-registration' ); ?>"
-											   class="ur-membership-members-input"
-											   id="ur-input-type-membership-confirm-password"
-											   name="ur_membership_confirm_password"
-											   style="width: 100%"
-											   	<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
+												data-key-name="<?php echo esc_html__( 'confirm_password', 'user-registration' ); ?>"
+												class="ur-membership-members-input"
+												id="ur-input-type-membership-confirm-password"
+												name="ur_membership_confirm_password"
+												style="width: 100%"
+												<?php echo ( ! empty( $_GET['action'] ) && 'view' === $_GET['action'] ) ? 'disabled' : ''; ?>
 
-											   required>
+												required>
 									</div>
 								</div>
 							</div>
-						<?php
+							<?php
 						endif;
 						?>
 						<!--						role-->
@@ -187,16 +187,16 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 										data-key-name="<?php echo esc_html__( 'Role', 'user-registration' ); ?>"
 										id="ur-input-type-membership-member-role"
 										class="user-membership-enhanced-select2 ur-membership-members-input ur-enhanced-select"
-										<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
+										<?php echo ( ! empty( $_GET['action'] ) && 'view' === $_GET['action'] ) ? 'disabled' : ''; ?>
 									>
 										<?php
 										foreach ( $roles as $k => $role ) :
 											?>
 											<option
 												value="<?php echo esc_attr( $k ); ?>"
-												<?php echo ! empty( $member ) && ( in_array( $k, $member->roles ) ) ? 'selected="selected"' : '' ?>
+												<?php echo ! empty( $member ) && ( in_array( $k, $member->roles ) ) ? 'selected="selected"' : ''; ?>
 											><?php echo esc_html( $role ); ?></option>
-										<?php
+											<?php
 										endforeach;
 										?>
 									</select>
@@ -205,7 +205,7 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 						</div>
 					</div>
 				</div>
-				<div id="ur-member-form-right">
+				<!-- <div id="ur-member-form-right">
 					<div id="select-plan-container" class="right-container">
 						<div class="right-title">
 							<h3 class="ur-mt-2">
@@ -223,7 +223,7 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 									name="ur-membership-select"
 									id="ur-membership-select"
 									style="width: 100%"
-									<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
+									<?php echo ( ! empty( $_GET['action'] ) && 'view' === $_GET['action'] ) ? 'disabled' : ''; ?>
 								>
 									<?php
 
@@ -231,10 +231,10 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 										?>
 										<option
 											value="<?php echo esc_attr( $membership['ID'] ); ?>"
-											<?php echo ! empty( $member_membership ) && ( $membership['ID'] == $member_membership['ID'] ) ? 'selected="selected"' : '' ?>
+											<?php echo ! empty( $member_membership ) && ( $membership['ID'] == $member_membership['ID'] ) ? 'selected="selected"' : ''; ?>
 
 										><?php echo esc_html( $membership['title'] . ' (' . $membership['period'] ) . ')'; ?></option>
-									<?php
+										<?php
 									endforeach;
 									?>
 								</select>
@@ -244,7 +244,7 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 									<?php echo esc_html__( 'Start Date', 'user-registration' ); ?>
 								</label>
 								<input
-									<?php echo (!empty($_GET['action']) && "view" === $_GET["action"]) ? "disabled" :"" ?>
+									<?php echo ( ! empty( $_GET['action'] ) && 'view' === $_GET['action'] ) ? 'disabled' : ''; ?>
 									class="ur-membership-members-input"
 									data-key-name="<?php echo esc_html__( 'start_date', 'user-registration' ); ?>"
 									id="ur-membership-start-date" type="date" style="width: 100%"
@@ -262,7 +262,7 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 									<label class="ur-label">
 										<?php echo esc_html__( 'Amount', 'user-registration' ); ?>
 									</label>
-									<span  class="urm-membership-plan-amount"><?php echo ! empty( $membership_price_details['period'] ) ? $membership_price_details['period'] : 'N/A' ?></span>
+									<span  class="urm-membership-plan-amount"><?php echo ! empty( $membership_price_details['period'] ) ? $membership_price_details['period'] : 'N/A'; ?></span>
 								</div>
 								<div class="form-row ur-mt-3">
 									<label class="ur-label">
@@ -279,7 +279,7 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 										<?php echo esc_html__( 'Subscription Status', 'user-registration' ); ?>
 									</label>
 									<span class="urm-membership-subscription-status">
-										<span class="<?php echo $status_class ?>">
+										<span class="<?php echo $status_class; ?>">
 										<?php
 										echo ! empty( $member_subscription['status'] ) ? ucfirst( $member_subscription['status'] ) : 'N/A';
 										?>
@@ -288,13 +288,13 @@ $status_class       = ! empty( $member_subscription ) ? "user-registration-badge
 								</div>
 							</div>
 						</div>
-					<?php
+						<?php
 					endif;
 					?>
-				</div>
+				</div> -->
 			</div>
 			<?php
-			if ( ! empty( $_GET['action'] ) && "view" !== $_GET['action'] ):
+			if ( ! empty( $_GET['action'] ) && 'view' !== $_GET['action'] ) :
 				$save_btn_class  = 'ur-member-save-btn';
 				$create_btn_text = isset( $_GET['member_id'] ) ? esc_html__( 'Update Member', 'user-registration' ) : esc_html__( 'Create Member', 'user-registration' );
 				require __DIR__ . '/./Partials/footer-actions.php';

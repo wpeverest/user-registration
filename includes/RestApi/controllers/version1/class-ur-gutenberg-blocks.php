@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use \WPEverest\URMembership\Admin\Services\MembershipGroupService;
+use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 
 /**
  * UR_AddonsClass
@@ -67,7 +67,6 @@ class UR_Gutenberg_Blocks {
 			)
 		);
 
-
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/access-role-list',
@@ -118,6 +117,15 @@ class UR_Gutenberg_Blocks {
 			)
 		);
 
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/get-content-rules',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'ur_get_content_rules' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
 	}
 
 	/**
@@ -134,6 +142,23 @@ class UR_Gutenberg_Blocks {
 			array(
 				'success'    => true,
 				'form_lists' => $form_lists,
+			),
+			200
+		);
+	}
+
+	/**
+	 * ur_get_content_rules
+	 *
+	 * @return WP_REST_Response
+	 */
+	public static function ur_get_content_rules() {
+		$rule_lists = urcr_get_rules();
+
+		return new \WP_REST_Response(
+			array(
+				'success'    => true,
+				'rule_lists' => $rule_lists,
 			),
 			200
 		);
@@ -162,7 +187,7 @@ class UR_Gutenberg_Blocks {
 	 * @return WP_REST_Response
 	 */
 	public static function ur_verify_pages( WP_REST_Request $request ) {
-		$params = json_decode( $request->get_json_params() , true);
+		$params = json_decode( $request->get_json_params(), true );
 
 		$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
 		$response           = $membership_service->verify_page_content( sanitize_text_field( $params['type'] ), absint( $params['page_id'] ) );
@@ -228,8 +253,8 @@ class UR_Gutenberg_Blocks {
 
 		return new \WP_REST_Response(
 			array(
-				'success'     => true,
-				'role_lists'  => $all_roles,
+				'success'    => true,
+				'role_lists' => $all_roles,
 			),
 			200
 		);
@@ -265,9 +290,9 @@ class UR_Gutenberg_Blocks {
 	 */
 	public static function ur_get_access_role_list() {
 		$access_options = array(
-			'all_logged_in_users'  => 'All Logged In Users',
+			'all_logged_in_users'   => 'All Logged In Users',
 			'choose_specific_roles' => 'Choose Specific Roles',
-			'guest_users'          => 'Guest Users',
+			'guest_users'           => 'Guest Users',
 		);
 
 		if ( ur_check_module_activation( 'membership' ) ) {

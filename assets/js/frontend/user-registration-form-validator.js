@@ -220,6 +220,11 @@
 
 			$this_node.$user_registration.each(function () {
 				var $this = $(this);
+
+				if ( !$this.parent('div').hasClass('user-registration') ) {
+					return;
+				}
+
 				var validator_params = $this_node.custom_validation($this);
 				$this_node.custom_validation_messages();
 
@@ -682,6 +687,20 @@
 				return user_registration_params.message_confirm_number_field_step.replace(
 					"%qty%",
 					element.step
+				);
+			};
+
+			$.validator.messages.minlength = function (params, element) {
+				return user_registration_params.message_min_length_fields.replace(
+					"%qty%",
+					params
+				);
+			};
+
+			$.validator.messages.maxlength = function (params, element) {
+				return user_registration_params.message_max_length_fields.replace(
+					"%qty%",
+					params
 				);
 			};
 		}

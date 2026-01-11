@@ -370,6 +370,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 		$symbol                  = $currencies[ $currency ]['symbol'];
 		$new_mem                 = array();
 		$active_payment_gateways = array();
+		$is_new_installation = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
 
 		foreach ( $memberships as $k => $membership ) {
 
@@ -379,7 +380,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 			$amount                = ! empty( $membership['meta_value']['amount'] ) ? number_format( (float) $membership['meta_value']['amount'], 2 ) : 0;
 			$symbol_pos            = isset( $currencies[ $currency ]['symbol_pos'] ) ? $currencies[ $currency ]['symbol_pos'] : 'left';
 			$membership_cur_amount = ! empty( $amount ) ? ( 'right' === $symbol_pos ? $amount . $symbol : $symbol . $amount ) : '';
-			$duration_label = '';
+			$duration_label        = '';
 			if ( ! empty( $membership['meta_value']['subscription']['duration'] ) ) {
 				$duration_key    = isset( $membership['meta_value']['subscription']['duration'] ) ? strtolower( $membership['meta_value']['subscription']['duration'] ) : '';
 				$duration_labels = array(
@@ -398,19 +399,55 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				'amount'            => ! empty( $membership_meta_value ) ? $membership['meta_value']['amount'] : 0,
 				'currency_symbol'   => $symbol,
 				'calculated_amount' => 'free' === $membership_type ? 0 : ( ! empty( $membership_meta_value ) ? round( $membership_meta_value['amount'] ) : 0 ),
-				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : ( ( ! empty( $membership_meta_value ) && 'subscription' === $membership_meta_value['type'] ) ? $membership_cur_amount . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $duration_label ) . ( $membership['meta_value']['subscription']['value'] > 1 ? 's' : '' ) : $membership_cur_amount ),
+				'period'            => 'free' === $membership_type ? __( 'Free', 'user-registration' ) : ( ( ! empty( $membership_meta_value ) && 'subscription' === $membership_meta_value['type'] ) ? $membership_cur_amount . ' / ' . number_format( $membership['meta_value']['subscription']['value'] ) . ' ' . ucfirst( $duration_label ) . ( $membership['meta_value']['subscription']['value'] > 1 ? __( 's', 'user-registration' ) : '' ) : $membership_cur_amount ),
 			);
+
 			if ( isset( $membership['meta_value']['payment_gateways'] ) ) {
+
 				foreach ( $membership['meta_value']['payment_gateways'] as $key => $gateways ) {
-					if ( 'on' !== $gateways['status'] ) {
-						continue;
+
+					if ( $is_new_installation ) {
+						if ( ! urm_is_payment_gateway_configured( $key ) ) {
+							continue;
+						}
+						$active_payment_gateways[ $key ] = true;
+					} else {
+						if ( 'on' !== $gateways['status'] ) {
+							continue;
+						}
+						$active_payment_gateways[ $key ] = $gateways['status'];
 					}
-					$active_payment_gateways[ $key ] = $gateways['status'];
+
 				}
 
 				$new_mem[ $k ]['active_payment_gateways'] = ( wp_unslash( wp_json_encode( $active_payment_gateways ) ) );
 			}
 			$active_payment_gateways = array();
+		}
+
+		// Sort memberships by saved order if available
+		$saved_order = get_option( 'ur_membership_order', array() );
+		if ( ! empty( $saved_order ) && ! empty( $new_mem ) ) {
+			$order_map = array_flip( $saved_order );
+
+			$ordered_memberships   = array();
+			$unordered_memberships = array();
+
+			foreach ( $new_mem as $membership ) {
+				$membership_id = isset( $membership['ID'] ) ? (int) $membership['ID'] : 0;
+				if ( isset( $order_map[ $membership_id ] ) ) {
+					$ordered_memberships[ $order_map[ $membership_id ] ] = $membership;
+				} else {
+					// Membership is not in saved order, append at end
+					$unordered_memberships[] = $membership;
+				}
+			}
+
+			ksort( $ordered_memberships );
+
+			// Merge ordered and unordered memberships
+			$new_mem = array_values( $ordered_memberships );
+			$new_mem = array_merge( $new_mem, $unordered_memberships );
 		}
 
 		return $new_mem;
@@ -429,21 +466,21 @@ if ( ! function_exists( 'get_membership_menus' ) ) {
 				'label'  => __( 'Memberships', 'user-registration' ),
 				'url'    => admin_url( 'admin.php?page=user-registration-membership' ),
 				'active' => isset( $_GET['page'] ) &&
-							$_GET['page'] === 'user-registration-membership' &&
-							( isset( $_GET['action'] ) ? ! in_array(
-								$_GET['action'],
-								array(
-									'list_groups',
-									'add_groups',
-								)
-							) : true ),
+				            $_GET['page'] === 'user-registration-membership' &&
+				            ( isset( $_GET['action'] ) ? ! in_array(
+					            $_GET['action'],
+					            array(
+						            'list_groups',
+						            'add_groups',
+					            )
+				            ) : true ),
 			),
 			'membership_groups' => array(
 				'label'  => __( 'Membership Groups', 'user-registration' ),
 				'url'    => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
 				'active' => isset( $_GET['page'], $_GET['action'] ) &&
-							$_GET['page'] === 'user-registration-membership' &&
-							in_array( $_GET['action'], array( 'list_groups', 'add_groups' ) ),
+				            $_GET['page'] === 'user-registration-membership' &&
+				            in_array( $_GET['action'], array( 'list_groups', 'add_groups' ) ),
 			),
 			'members'           => array(
 				'label'  => __( 'Members', 'user-registration' ),
@@ -555,5 +592,478 @@ if ( ! function_exists( 'urm_get_date_at_percent_interval' ) ) {
 		$targetDate->setTimestamp( $targetTimestamp );
 
 		return $targetDate->format( 'Y-m-d 00:00:00' );
+	}
+}
+
+if ( ! function_exists( 'urm_get_plan_description' ) ) {
+	/**
+	 * Get plan description based on type and period.
+	 *
+	 * @param string $plan_type Plan type.
+	 * @param string $plan_period Plan period.
+	 *
+	 * @return string
+	 */
+	function urm_get_plan_description( $plan_type, $plan_period ) {
+		if ( 'free' === $plan_type ) {
+			return __( 'Completely Free', 'user-registration' );
+		}
+
+		$period_lower = strtolower( $plan_period );
+		if ( false !== strpos( $period_lower, 'month' ) ) {
+			return __( 'This will be billed every month', 'user-registration' );
+		}
+
+		if ( false !== strpos( $period_lower, 'lifetime' ) ) {
+			return __( 'This is a one-time payment', 'user-registration' );
+		}
+
+		return '';
+	}
+}
+
+if ( ! function_exists( 'urm_get_gateway_image_url' ) ) {
+	/**
+	 * Get payment gateway image URL.
+	 *
+	 * @param string $gateway_key Gateway key.
+	 * @param array $gateway_images Gateway images mapping.
+	 * @param string $plugin_url Plugin URL.
+	 *
+	 * @return string
+	 */
+	function urm_get_gateway_image_url( $gateway_key, $gateway_images, $plugin_url ) {
+		$image_file = isset( $gateway_images[ $gateway_key ] ) ? $gateway_images[ $gateway_key ] : '';
+
+		if ( empty( $image_file ) ) {
+			return '';
+		}
+
+		return esc_url( $plugin_url . '/assets/images/settings-icons/membership-field/' . $image_file );
+	}
+}
+
+if ( ! function_exists( 'urm_get_active_gateways_for_plan' ) ) {
+	/**
+	 * Parse active payment gateways from membership option.
+	 *
+	 * @param array $option Membership option data.
+	 * @param array $payment_gateways Available payment gateways.
+	 *
+	 * @return array
+	 */
+	function urm_get_active_gateways_for_plan( $option, $payment_gateways ) {
+		$active_gateways = array();
+
+		if ( empty( $option['active_payment_gateways'] ) ) {
+			return $active_gateways;
+		}
+
+		$gateways_json = is_string( $option['active_payment_gateways'] )
+			? json_decode( $option['active_payment_gateways'], true )
+			: $option['active_payment_gateways'];
+
+		if ( ! is_array( $gateways_json ) ) {
+			return $active_gateways;
+		}
+
+		foreach ( $gateways_json as $gateway => $status ) {
+			if ( 'on' === $status && isset( $payment_gateways[ $gateway ] ) ) {
+				$active_gateways[ $gateway ] = $payment_gateways[ $gateway ];
+			}
+		}
+
+		return $active_gateways;
+	}
+}
+
+if ( ! function_exists( 'urm_get_all_active_payment_gateways' ) ) {
+	/**
+	 * Get all payment gateways that are configured/setup.
+	 *
+	 * @param string $membership_type Optional. The membership type ('paid' or 'subscription')
+	 *
+	 * @return array
+	 */
+	function urm_get_all_active_payment_gateways( $membership_type = 'paid' ) {
+		// Get all available payment gateways.
+		$payment_gateways = get_option(
+			'ur_membership_payment_gateways',
+			array(
+				'paypal' => __( 'PayPal', 'user-registration' ),
+				'stripe' => __( 'Stripe', 'user-registration' ),
+				'bank'   => __( 'Bank', 'user-registration' ),
+			)
+		);
+
+		if ( empty( $payment_gateways ) || ! is_array( $payment_gateways ) ) {
+			return array();
+		}
+
+		$active_gateways = array();
+
+		foreach ( $payment_gateways as $gateway_key => $gateway_label ) {
+			// Check if payment gateway is configured.
+			if ( urm_is_payment_gateway_configured( $gateway_key, $membership_type ) ) {
+				$active_gateways[ $gateway_key ] = $gateway_label;
+			}
+		}
+
+		/**
+		 * Filters the list of active payment gateways.
+		 *
+		 * @param array $active_gateways Active payment gateways.
+		 * @param string $membership_type Membership type.
+		 *
+		 * @return array
+		 */
+		return apply_filters( 'urm_active_payment_gateways', $active_gateways, $membership_type );
+	}
+}
+
+if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
+	/**
+	 * Check if a payment gateway is configured (has settings).
+	 *
+	 * This function checks if a payment gateway has the required settings configured,
+	 * without validating if they are correct or complete.
+	 *
+	 * @param string $gateway_key Payment gateway key (e.g., 'paypal', 'stripe', 'bank').
+	 * @param string $membership_type Optional. Membership type for PayPal check. Default 'paid'.
+	 *
+	 * @return bool True if gateway is configured, false otherwise.
+	 */
+	function urm_is_payment_gateway_configured( $gateway_key, $membership_type = 'paid' ) {
+		$is_configured = false;
+		$is_new_installation = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
+
+		// First check if the gateway is enabled
+		$enabled_option = '';
+		switch ( $gateway_key ) {
+			case 'paypal':
+				$enabled_option = get_option( 'user_registration_paypal_enabled', '' );
+				break;
+			case 'stripe':
+				$enabled_option = get_option( 'user_registration_stripe_enabled', '' );
+				break;
+			case 'authorize':
+				$enabled_option = get_option( 'user_registration_authorize-net_enabled', '' );
+				break;
+			case 'mollie':
+				$enabled_option = get_option( 'user_registration_mollie_enabled', '' );
+				break;
+			case 'bank':
+				$enabled_option = get_option( 'user_registration_bank_enabled', '' );
+				break;
+		}
+
+
+		if ( empty( $enabled_option ) ) {
+			$is_enabled = ! $is_new_installation;
+		} else {
+			$is_enabled = ur_string_to_bool( $enabled_option );
+		}
+
+		if ( ! $is_enabled ) {
+			return false;
+		}
+
+		switch ( $gateway_key ) {
+			case 'paypal':
+				$mode = get_option('user_registration_global_paypal_mode', 'test') == "test" ? 'test' : 'live';
+				$paypal_email = get_option(sprintf('user_registration_global_paypal_%s_email_address', $mode), get_option('user_registration_global_paypal_email_address'));
+
+				if ('subscription' === $membership_type) {
+					$paypal_client_id = get_option(sprintf('user_registration_global_paypal_%s_client_id', $mode), get_option('user_registration_global_paypal_client_id'));
+					$paypal_client_secret = get_option(sprintf('user_registration_global_paypal_%s_client_secret', $mode), get_option('user_registration_global_paypal_client_secret'));
+					$is_configured = !empty($paypal_email) && !empty($paypal_client_id) && !empty($paypal_client_secret);
+				} else {
+					$is_configured = !empty($paypal_email);
+				}
+				break;
+
+			case 'stripe':
+				$mode            = get_option( 'user_registration_stripe_test_mode', false ) ? 'test' : 'live';
+				$publishable_key = get_option( sprintf( 'user_registration_stripe_%s_publishable_key', $mode ) );
+				$secret_key      = get_option( sprintf( 'user_registration_stripe_%s_secret_key', $mode ) );
+				$is_configured   = ! empty( $publishable_key ) && ! empty( $secret_key );
+				break;
+			case 'bank':
+				// For bank and other gateways, check if bank details are configured.
+				$bank_details  = get_option( 'user_registration_global_bank_details' );
+				$is_configured = ! empty( $bank_details );
+				break;
+			case 'default':
+				break;
+		}
+
+		/**
+		 * Filters whether the payment gateway is configured.
+		 *
+		 * @param bool $is_configured Whether the gateway is configured.
+		 * @param string $gateway_key Payment gateway key.
+		 * @param string $membership_type Membership type.
+		 *
+		 * @return bool
+		 */
+		return apply_filters( 'urm_is_payment_gateway_configured', $is_configured, $gateway_key, $membership_type );
+	}
+}
+
+if ( ! function_exists( 'urcr_build_migration_actions' ) ) {
+	/**
+	 * Build migration actions array.
+	 *
+	 * @param string $migration_source Migration source type ('membership' or 'content').
+	 * @param int $timestamp Optional timestamp to use for action IDs. If not provided, generates a new one.
+	 *
+	 * @return array Actions array.
+	 */
+	function urcr_build_migration_actions( $migration_source = 'content', $timestamp = null ) {
+		if ( null === $timestamp ) {
+			$timestamp = time() * 1000;
+		}
+
+		if ( $migration_source === 'membership' ) {
+			$message = '';
+		} else {
+			$default_message = '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
+<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
+<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
+<p>{{sign_up}} {{log_in}}</p>';
+			$message         = get_option( 'user_registration_content_restriction_message', $default_message );
+
+			if ( ! empty( $message ) ) {
+				$message = wp_unslash( $message );
+				$message = str_replace( array( '\\n', '\\r\\n', '\\r' ), array( "\n", "\n", "\n" ), $message );
+				$message = str_replace( array( "\r\n", "\r" ), "\n", $message );
+			}
+		}
+
+		return array(
+			array(
+				'id'             => 'x' . ( $timestamp + 200 ),
+				'type'           => 'message',
+				'label'          => 'Show Message',
+				'message'        => $message,
+				'redirect_url'   => '',
+				'access_control' => 'access',
+				'local_page'     => '',
+				'ur_form'        => '',
+				'shortcode'      => array(
+					'tag'  => '',
+					'args' => '',
+				),
+			),
+		);
+	}
+}
+
+if ( ! function_exists( 'urcr_create_membership_rule' ) ) {
+	/**
+	 * Create a default membership rule.
+	 *
+	 * @param int $membership_id The membership ID.
+	 * @param string $membership_title Optional membership title.
+	 *
+	 * @return int|false Rule ID on success, false on failure.
+	 */
+	function urcr_create_membership_rule( $membership_id, $membership_title = '' ) {
+		if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'membership' ) ) {
+			return false;
+		}
+
+		$existing_rules = get_posts(
+			array(
+				'post_type'      => 'urcr_access_rule',
+				'post_status'    => 'any',
+				'posts_per_page' => 1,
+				'meta_query'     => array(
+					array(
+						'key'   => 'urcr_membership_id',
+						'value' => $membership_id,
+					),
+				),
+			)
+		);
+
+		if ( ! empty( $existing_rules ) ) {
+			return false;
+		}
+
+		if ( empty( $membership_title ) ) {
+			$membership_post = get_post( $membership_id );
+			if ( ! $membership_post || 'ur_membership' !== $membership_post->post_type ) {
+				return false;
+			}
+			$membership_title = $membership_post->post_title;
+		}
+
+		if ( empty( $membership_title ) ) {
+			return false;
+		}
+
+		$timestamp = time() * 1000;
+
+		$condition = array(
+			'type'  => 'membership',
+			'id'    => 'x' . $timestamp,
+			'value' => array( strval( $membership_id ) ),
+		);
+
+		$logic_map = array(
+			'type'       => 'group',
+			'id'         => 'x' . ( $timestamp + 1 ),
+			'conditions' => array( $condition ),
+			'logic_gate' => 'AND',
+		);
+
+		$target_contents = array();
+
+		$rule_data = array(
+			'enabled'         => true,
+			'access_control'  => 'access',
+			'logic_map'       => $logic_map,
+			'target_contents' => $target_contents,
+			'actions'         => urcr_build_migration_actions( 'membership', $timestamp ),
+		);
+
+		$rule_title = sprintf( __( '%s Rule', 'user-registration' ), $membership_title );
+
+		$rule_post = array(
+			'post_title'   => $rule_title,
+			'post_content' => wp_json_encode( $rule_data ),
+			'post_type'    => 'urcr_access_rule',
+			'post_status'  => 'publish',
+		);
+
+		$rule_id = wp_insert_post( $rule_post );
+
+		if ( $rule_id && ! is_wp_error( $rule_id ) ) {
+			update_post_meta( $rule_id, 'urcr_rule_type', 'membership' );
+			update_post_meta( $rule_id, 'urcr_membership_id', $membership_id );
+
+			$migrated_membership_ids = get_option( 'urcr_migrated_membership_ids', array() );
+			if ( ! is_array( $migrated_membership_ids ) ) {
+				$migrated_membership_ids = array();
+			}
+			if ( ! in_array( $membership_id, $migrated_membership_ids, true ) ) {
+				$migrated_membership_ids[] = $membership_id;
+				update_option( 'urcr_migrated_membership_ids', $migrated_membership_ids );
+			}
+
+			return $rule_id;
+		}
+
+		return false;
+	}
+}
+
+if ( ! function_exists( 'urcr_create_or_update_membership_rule' ) ) {
+	/**
+	 * Create or update membership rule with data from UI.
+	 *
+	 * @param int $membership_id The membership ID.
+	 * @param array $rule_data Optional rule data from UI (access_rule_data structure).
+	 *
+	 * @return int|false Rule ID on success, false on failure.
+	 */
+	function urcr_create_or_update_membership_rule( $membership_id, $rule_data = null ) {
+		if ( ! ur_check_module_activation( 'membership' ) ) {
+			return false;
+		}
+
+		$existing_rules = get_posts(
+			array(
+				'post_type'      => 'urcr_access_rule',
+				'post_status'    => 'any',
+				'posts_per_page' => 1,
+				'meta_query'     => array(
+					array(
+						'key'   => 'urcr_membership_id',
+						'value' => $membership_id,
+					),
+				),
+			)
+		);
+
+		$existing_rule = ! empty( $existing_rules ) ? $existing_rules[0] : null;
+
+		if ( $rule_data && isset( $rule_data['access_rule_data'] ) ) {
+			$access_rule_data = $rule_data['access_rule_data'];
+
+			$membership_condition = array(
+				'type'  => 'membership',
+				'id'    => 'x' . ( time() * 1000 ),
+				'value' => array( strval( $membership_id ) ),
+			);
+
+			$existing_conditions = array();
+			if ( isset( $access_rule_data['logic_map']['conditions'] ) && is_array( $access_rule_data['logic_map']['conditions'] ) ) {
+				$existing_conditions = $access_rule_data['logic_map']['conditions'];
+			}
+
+			$has_membership_condition = false;
+			foreach ( $existing_conditions as $key => $condition ) {
+				if ( isset( $condition['type'] ) && $condition['type'] === 'membership' ) {
+					$has_membership_condition             = true;
+					$existing_conditions[ $key ]['value'] = array( strval( $membership_id ) );
+					break;
+				}
+			}
+
+			if ( ! $has_membership_condition ) {
+				array_unshift( $existing_conditions, $membership_condition );
+			}
+
+			$access_rule_data['logic_map']['conditions'] = $existing_conditions;
+
+			$membership_post  = get_post( $membership_id );
+			$membership_title = $membership_post ? $membership_post->post_title : '';
+			if ( ! empty( $membership_title ) ) {
+				$rule_title = sprintf( __( '%s Rule', 'user-registration' ), $membership_title );
+			} else {
+				$rule_title = isset( $rule_data['title'] ) && ! empty( $rule_data['title'] ) ? $rule_data['title'] : __( 'Membership Access Rule', 'user-registration' );
+			}
+
+			if ( $membership_post && ! empty( $membership_post->post_content ) ) {
+				$membership_content = json_decode( $membership_post->post_content, true );
+				if ( isset( $membership_content['status'] ) ) {
+					$access_rule_data['enabled'] = ur_string_to_bool( $membership_content['status'] );
+				}
+			}
+
+			$access_rule_data = wp_unslash( $access_rule_data );
+			$rule_content     = wp_json_encode( $access_rule_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+			$rule_content     = wp_slash( $rule_content );
+		} else {
+			return urcr_create_membership_rule( $membership_id );
+		}
+
+		if ( $existing_rule ) {
+			$rule_post = array(
+				'ID'           => $existing_rule->ID,
+				'post_title'   => $rule_title,
+				'post_content' => $rule_content,
+			);
+			$rule_id   = wp_update_post( $rule_post );
+		} else {
+			$rule_post = array(
+				'post_title'   => $rule_title,
+				'post_content' => $rule_content,
+				'post_type'    => 'urcr_access_rule',
+				'post_status'  => 'publish',
+			);
+			$rule_id   = wp_insert_post( $rule_post );
+		}
+
+		if ( $rule_id && ! is_wp_error( $rule_id ) ) {
+			update_post_meta( $rule_id, 'urcr_rule_type', 'membership' );
+			update_post_meta( $rule_id, 'urcr_membership_id', $membership_id );
+
+			return $rule_id;
+		}
+
+		return false;
 	}
 }

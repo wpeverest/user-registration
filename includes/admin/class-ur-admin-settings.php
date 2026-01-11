@@ -53,60 +53,21 @@ class UR_Admin_Settings {
 			}
 
 			$settings[] = include 'settings/class-ur-settings-general.php';
-			$settings[] = include 'settings/class-ur-settings-captcha.php';
+			$settings[] = include 'settings/class-ur-settings-membership.php';
+			$settings[] = include 'settings/class-ur-settings-payment.php';
 			$settings[] = include 'settings/class-ur-settings-email.php';
-			$settings[] = include 'settings/class-ur-settings-import-export.php';
-			$settings[] = include 'settings/class-ur-settings-misc.php';
+			$settings[] = include 'settings/class-ur-settings-registration-login.php';
+			$settings[] = include 'settings/class-ur-settings-my-account.php';
 
-			if ( UR_PRO_ACTIVE ) {
+			// $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
+			// if( $is_pro_active ) {
 				$settings[] = include 'settings/class-ur-settings-integration.php';
-			}
-
-			$modules = array();
-
-			if ( UR_PRO_ACTIVE ) {
-				if ( ur_check_module_activation( 'membership' ) ) {
-					$modules = array(
-						'class-ur-payment-settings.php',
-						'stripe/class-ur-stripe-module.php',
-						'paypal/class-ur-paypal-module.php',
-					);
-				} else {
-					if ( ur_check_module_activation( 'payments' ) ) {
-						$modules[] = 'class-ur-payment-settings.php';
-						$modules[] = 'paypal/class-ur-paypal-module.php';
-					}
-					if ( is_plugin_active( 'user-registration-stripe/user-registration-stripe.php' ) ) {
-						$modules[] = 'class-ur-payment-settings.php';
-						$modules[] = 'stripe/class-ur-stripe-module.php';
-					}
-					if ( is_plugin_active( 'user-registration-authorize-net/user-registration-authorize-net.php' ) ) {
-						$modules[] = 'class-ur-payment-settings.php';
-					}
-					if ( is_plugin_active( 'user-registration-mollie/user-registration-mollie.php' ) ) {
-						$modules[] = 'class-ur-payment-settings.php';
-					}
-				}
-			} elseif ( ur_check_module_activation( 'membership' ) ) {
-				$modules = array(
-					'class-ur-payment-settings.php',
-					'stripe/class-ur-stripe-module.php',
-					'paypal/class-ur-paypal-module.php',
-				);
-			}
-
-			foreach ( $modules as $module ) {
-				include_once UR_ABSPATH . 'modules/' . $module;
-			}
-
-			if ( ! function_exists( 'is_plugin_active' ) ) {
-				include_once ABSPATH . 'wp-admin/includes/plugin.php';
-			}
-
-			// if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
-				$settings[] = include 'settings/class-ur-settings-license.php';
 			// }
 
+			$settings[] = include 'settings/class-ur-settings-security.php';
+			$settings[] = include 'settings/class-ur-settings-advanced.php';
+			$settings[] = include 'settings/class-ur-settings-import-export.php';
+			$settings[] = include 'settings/class-ur-settings-license.php';
 			/**
 			 * Filter to retrieve settings pages
 			 *
@@ -219,11 +180,11 @@ class UR_Admin_Settings {
 	public static function show_messages() {
 		if ( count( self::$errors ) > 0 ) {
 			foreach ( self::$errors as $key => $error ) {
-				echo '<div id="message" class="error inline"><p><strong>' . wp_kses_post( $error ) . '</strong></p></div>';
+				echo '<div id="message" class="inline error"><p><strong>' . wp_kses_post( $error ) . '</strong></p></div>';
 			}
 		} elseif ( count( self::$messages ) > 0 ) {
 			foreach ( self::$messages as $message ) {
-				echo '<div id="message" class="updated inline"><p><strong>' . wp_kses_post( $message ) . '</strong></p></div>';
+				echo '<div id="message" class="inline updated"><p><strong>' . wp_kses_post( $message ) . '</strong></p></div>';
 			}
 		}
 	}
@@ -235,6 +196,7 @@ class UR_Admin_Settings {
 	 */
 	public static function output() {
 		global $current_section, $current_tab;
+		global $current_section_part;
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
@@ -242,7 +204,7 @@ class UR_Admin_Settings {
 		 * Action to output start settings
 		 */
 		do_action( 'user_registration_settings_start' );
-		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
+		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), UR_VERSION, true );
 
 		wp_enqueue_script(
 			'user-registration-settings',
@@ -260,7 +222,7 @@ class UR_Admin_Settings {
 		);
 		wp_enqueue_script( 'ur-setup' );
 		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
-			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
+			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), UR_VERSION );
 		}
 		wp_enqueue_style( 'ur-snackbar' );
 		wp_localize_script(
@@ -279,14 +241,21 @@ class UR_Admin_Settings {
 				'user_registration_membership_payment_settings_nonce' => wp_create_nonce( 'user_registration_validate_payment_settings_none' ),
 				'user_registration_membership_validate_payment_currency_nonce' => wp_create_nonce( 'user_registration_validate_payment_currency' ),
 				'user_registration_membership_captcha_settings_nonce' => wp_create_nonce( 'user_registration_validate_captcha_settings_nonce' ),
+				'user_registration_settings_nonce'     => wp_create_nonce( 'user_registration_settings_nonce' ),
 				'i18n_nav_warning'                     => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'user-registration' ),
 				'i18n'                                 => array(
+					'advanced_logic_rules_exist_error'   => esc_html__( 'Remove all rules with advance logics first before disabling.', 'user-registration' ),
+					'advanced_logic_check_error'         => esc_html__( 'An error occurred while checking for advanced logic rules.', 'user-registration' ),
+					'advanced_logic_rules_exist_error'   => esc_html__( 'Remove all rules with advance logics first before disabling.', 'user-registration' ),
+					'advanced_logic_check_error'         => esc_html__( 'An error occurred while checking for advanced logic rules.', 'user-registration' ),
 					'captcha_success'                    => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
 					'captcha_reset_title'                => esc_html__( 'Reset Keys', 'user-registration' ),
+					'payment_reset_title'                => esc_html__( 'Reset Details', 'user-registration' ),
 					'i18n_prompt_reset'                  => esc_html__( 'Reset', 'user-registration' ),
 					'i18n_prompt_cancel'                 => esc_html__( 'Cancel', 'user-registration' ),
 					'captcha_failed'                     => esc_html__( 'Some error occured. Please verify that the keys you entered are valid.', 'user-registration' ),
 					'captcha_reset_prompt'               => esc_html__( 'Are you sure you want to reset these keys? This action will clear both the Site Key and Secret Key permanently.', 'user-registration' ),
+					'payment_reset_prompt'               => esc_html__( 'Are you sure you want to reset these details? This will permanently remove the stored details from our system. This action cannot be undone.', 'user-registration' ),
 					'unsaved_changes'                    => esc_html__( 'You have some unsaved changes. Please save and try again.', 'user-registration' ),
 					'pro_feature_title'                  => esc_html__( 'is a Pro Feature', 'user-registration' ),
 					'upgrade_message'                    => esc_html__(
@@ -315,8 +284,9 @@ class UR_Admin_Settings {
 		self::get_settings_pages();
 
 		// Get current tab/section.
-		$current_tab     = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$current_section = empty( $_REQUEST['section'] ) ? '' : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$current_tab          = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$current_section      = empty( $_REQUEST['section'] ) ? apply_filters( 'user_registration_settings_' . $current_tab . '_default_section', '' ) : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$current_section_part = empty( $_GET['part'] ) ? '' : sanitize_title( wp_unslash( $_GET['part'] ) );
 		/**
 		 * Filter to save settings actions
 		 *
@@ -339,7 +309,7 @@ class UR_Admin_Settings {
 		if ( ! empty( $_GET['ur_message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			self::add_message( wp_unslash( $_GET['ur_error'] ) ); // phpcs:ignore
 		}
-
+		global $tabs;
 		/**
 		 * Filter to get tabs for settings page
 		 *
@@ -347,6 +317,7 @@ class UR_Admin_Settings {
 		 */
 		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
 
+		$GLOBALS['hide_save_button'] = false;
 		if ( 'import_export' === $current_tab ) {
 			$GLOBALS['hide_save_button'] = true;
 		}
@@ -366,7 +337,7 @@ class UR_Admin_Settings {
 
 		global $current_section;
 
-		if ( 'add-new-popup' === $current_section ) {
+		if ( 'popup' === $current_section ) {
 			return $default;
 		} else {
 			// Array value.
@@ -413,11 +384,13 @@ class UR_Admin_Settings {
 		$settings = '';
 
 		if ( is_array( $options ) && ! empty( $options ) ) {
-			$back_link      = isset( $options['back_link'] ) ? esc_url( $options['back_link'] ) : '';
-			$back_link_text = isset( $options['back_link_text'] ) ? wp_kses_post( $options['back_link_text'] ) : '';
+			$back_link       = isset( $options['back_link'] ) ? esc_url( $options['back_link'] ) : '';
+			$back_link_text  = isset( $options['back_link_text'] ) ? wp_kses_post( $options['back_link_text'] ) : '';
+			$back_link_style = isset( $options['back_link_style'] ) ? wp_kses_post( $options['back_link_style'] ) : '';
 
 			if ( isset( $options['back_link'] ) ) {
-				$settings .= '<a href="' . esc_url( $back_link ) . '" class="page-title-action">';
+				$class     = 'inline' === $back_link_style ? 'navigator-action' : 'page-title-action';
+				$settings .= '<a href="' . esc_url( $back_link ) . '" class="' . $class . '">';
 
 				if ( isset( $options['back_link_text'] ) ) {
 					$settings .= wp_kses_post( $back_link_text );
@@ -429,12 +402,14 @@ class UR_Admin_Settings {
 			if ( ! empty( $options['desc'] ) ) {
 				$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $options['desc'] ) ) . '</p>';
 			}
-			if ( isset( $options['sections'] ) ) {
+			if ( isset( $options['sections'] ) && is_array( $options[ 'sections' ] ) ) {
 
 				foreach ( $options['sections'] as $id => $section ) {
 
 					if ( ! isset( $section['type'] ) ) {
-						continue;
+						// default is card.
+						$section['type'] = 'card';
+						// continue;
 					}
 
 					if ( 'card' === $section['type'] ) {
@@ -459,12 +434,19 @@ class UR_Admin_Settings {
 								$settings .= $section['back_link']; // removed kses since the inputs are sanitized in the function ur_back_link itself
 							}
 							$settings .= '<h3 class="user-registration-card__title">';
+							$settings .= esc_html( ucwords( $section['title'] ) );
 
-							$settings .= esc_html( strtoupper( $section['title'] ) );
+							if ( isset( $section['is_premium'] ) && $section['is_premium'] && ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) || empty( get_option( 'user-registration_license_key', '' ) ) ) ) {
+								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' . '" /></div>';
+							}
 							$settings .= '</h3>';
 
 							if ( ! empty( $section['button'] ) ) {
-								$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="user_registration_smart_tags_used" style="min-width:90px;" target="_blank">' . '<span style="text-decoration: underline;">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span>' . '<span class="dashicons dashicons-external"></span>' . '</a>';
+								if ( isset( $section['button']['button_type'] ) && 'upgrade_link' === $section['button']['button_type'] ) {
+									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="ur-upgrade--link" target="_blank">' . '<span>' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span></a>';
+								} else {
+									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="user_registration_smart_tags_used" style="min-width:90px;" target="_blank">' . '<span style="text-decoration: underline;">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span>' . '<span class="dashicons dashicons-external"></span>' . '</a>';
+								}
 							}
 							$settings .= '</div>';
 						}
@@ -482,7 +464,7 @@ class UR_Admin_Settings {
 						if ( ! empty( $section['desc'] ) ) {
 							$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $section['desc'] ) ) . '</p>';
 						}
-						$settings .= '<div class="user-registration-card__body pt-0 pb-0">';
+						$settings .= '<div class="pt-0 pb-0 user-registration-card__body">';
 
 						if ( ! empty( $id ) ) {
 							/**
@@ -497,6 +479,7 @@ class UR_Admin_Settings {
 
 						$available_in      = isset( $section['available_in'] ) ? sanitize_text_field( wp_unslash( $section['available_in'] ) ) : '';
 						$is_captcha        = isset( $section['settings_type'] ) ? ' ur-captcha-settings' : '';
+						$is_payment        = in_array( $section['id'] ?? '', array( 'paypal', 'stripe', 'bank', 'mollie', 'authorize-net' ) );
 						$is_captcha_header = isset( $section['settings_type'] ) ? $is_captcha . '-header' : '';
 						$is_captcha_body   = isset( $section['settings_type'] ) ? $is_captcha . '-body' : '';
 						$is_connected      = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
@@ -513,8 +496,6 @@ class UR_Admin_Settings {
 						}
 						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion' . $is_captcha_header . '">';
 						$settings .= '<div class="integration-detail">';
-						$settings .= '<span class="integration-status ' . ( $is_connected ? 'ur-integration-account-connected' : '' ) . '">';
-						$settings .= '</span>';
 						$settings .= '<figure class="logo">';
 						$settings .= '<img src="' . UR()->plugin_url() . '/assets/images/settings-icons/' . $section['id'] . '.png" alt="' . $section['title'] . '">';
 						$settings .= '</figure>';
@@ -522,6 +503,9 @@ class UR_Admin_Settings {
 							$settings .= '<h3 class="user-registration-card__title">' . esc_html( $section['title'] );
 							$settings .= '</h3>';
 						}
+						$settings .= '<span class="ur-connection-status ' . ( $is_connected ? 'ur-connection-status--active' : '' ) . '">';
+						$settings .= '</span>';
+
 						$settings .= '</div>';
 						$settings .= '<div class="integration-action">';
 						$settings .= '<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><polyline points="6 9 12 15 18 9"></polyline></svg>';
@@ -601,6 +585,11 @@ class UR_Admin_Settings {
 							$field_description = self::get_field_description( $value );
 							extract( $field_description ); // phpcs:ignore
 
+							// Display condition/dependency handling.
+							$display_condition_data  = self::get_display_condition_attributes( $value );
+							$display_condition_attrs = $display_condition_data['attrs'];
+							$display_condition_style = $display_condition_data['initial_style'];
+
 							// Switch based on type.
 							switch ( $value['type'] ) {
 
@@ -612,7 +601,7 @@ class UR_Admin_Settings {
 								case 'date':
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
-									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label class="ur-label" for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$settings .= '<input
@@ -631,7 +620,7 @@ class UR_Admin_Settings {
 									$settings .= '</div>';
 									break;
 								case 'nonce':
-									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$settings .= '<input
 											name="' . esc_attr( $value['id'] ) . '"
@@ -646,7 +635,7 @@ class UR_Admin_Settings {
 								// Color picker.
 								case 'color':
 									$option_value = self::get_option( $value['id'], $value['default'] );
-									$settings    .= '<div class="user-registration-global-settings">';
+									$settings    .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings    .= '<div class="user-registration-global-settings--field">';
 									$settings    .= '<input
@@ -667,7 +656,7 @@ class UR_Admin_Settings {
 								case 'textarea':
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
-									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$settings .= wp_kses_post( $description );
@@ -690,7 +679,7 @@ class UR_Admin_Settings {
 								case 'multiselect':
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
-									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$multiple  = '';
@@ -730,7 +719,7 @@ class UR_Admin_Settings {
 								// Radio inputs.
 								case 'radio':
 									$option_value = self::get_option( $value['id'], $value['default'] );
-									$settings    .= '<div class="user-registration-global-settings">';
+									$settings    .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings    .= '<div class="user-registration-global-settings--field">';
 									$settings    .= '<fieldset>';
@@ -779,7 +768,7 @@ class UR_Admin_Settings {
 									if ( 'option' === $value['show_if_checked'] ) {
 										$visbility_class[] = 'show_options_if_checked';
 									}
-									$settings .= '<div class="user-registration-global-settings ' . esc_attr( implode( ' ', $visbility_class ) ) . ' ' . esc_attr( $value['row_class'] ) . '">';
+									$settings .= '<div class="user-registration-global-settings ' . esc_attr( implode( ' ', $visbility_class ) ) . ' ' . esc_attr( $value['row_class'] ) . '"' . $display_condition_attrs . $display_condition_style . '>';
 
 									if ( ! isset( $value['checkboxgroup'] ) || 'start' === $value['checkboxgroup'] ) {
 										$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
@@ -822,7 +811,18 @@ class UR_Admin_Settings {
 										$args = wp_parse_args( $value['args'], $args );
 									}
 
-									$settings .= '<div class="user-registration-global-settings single_select_page" ' . ( ( isset( $value['display'] ) && 'none' === $value['display'] ) ? 'style="display:none"' : '' ) . '>';
+									// Combine display condition style with existing display style if needed.
+									$existing_display = ( isset( $value['display'] ) && 'none' === $value['display'] ) ? 'display:none' : '';
+									if ( ! empty( $display_condition_style ) ) {
+										// Display condition style takes precedence (it already has style="...")
+										$combined_style = $display_condition_style;
+									} elseif ( ! empty( $existing_display ) ) {
+										// Only existing style exists
+										$combined_style = ' style="' . esc_attr( $existing_display ) . '"';
+									} else {
+										$combined_style = '';
+									}
+									$settings .= '<div class="user-registration-global-settings single_select_page"' . $display_condition_attrs . $combined_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$settings .= str_replace( ' id=', " data-placeholder='" . esc_attr__( 'Select a page&hellip;', 'user-registration' ) . "' style='" . esc_attr( $value['css'] ) . "' class='" . esc_attr( $value['class'] ) . "' id=", wp_dropdown_pages( $args ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -857,7 +857,12 @@ class UR_Admin_Settings {
 
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
-									$settings .= '<div class="user-registration-global-settings">';
+									// Unwrap email content if it contains wrapper HTML (for editor display).
+									if ( function_exists( 'ur_unwrap_email_body_content' ) ) {
+										$option_value = ur_unwrap_email_body_content( $option_value );
+									}
+
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$settings .= wp_kses_post( $description );
@@ -873,9 +878,11 @@ class UR_Admin_Settings {
 									break;
 
 								case 'link':
-									$settings .= '<div class="user-registration-global-settings">';
+									$align_items = isset( $value['align'] ) ? $value['align'] : '';
+
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
-									$settings .= '<div class="user-registration-global-settings--field">';
+									$settings .= '<div class="user-registration-global-settings--field"' . ( ! empty( $align_items ) ? 'style="align-items: end;"' : '' ) . '>';
 
 									if ( isset( $value['buttons'] ) && is_array( $value['buttons'] ) ) {
 										foreach ( $value['buttons'] as $button ) {
@@ -893,7 +900,7 @@ class UR_Admin_Settings {
 								case 'image':
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
-									$settings .= '<div class="user-registration-global-settings image-upload">';
+									$settings .= '<div class="user-registration-global-settings image-upload"' . $display_condition_attrs . $display_condition_style . '>';
 
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
@@ -917,7 +924,7 @@ class UR_Admin_Settings {
 								case 'radio-image':
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
-									$settings .= '<div class="user-registration-global-settings radio-image">';
+									$settings .= '<div class="user-registration-global-settings radio-image"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$settings .= '<ul>';
@@ -948,7 +955,7 @@ class UR_Admin_Settings {
 								case 'toggle':
 									$option_value = self::get_option( $value['id'], $value['default'] );
 
-									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field">';
 									$settings .= '<div class="ur-toggle-section">';
@@ -975,14 +982,14 @@ class UR_Admin_Settings {
 									$options      = isset( $value['options'] ) ? $value['options'] : array(); // $args['choices'] for backward compatibility. Modified since 1.5.7.
 
 									if ( ! empty( $options ) ) {
-										$settings .= '<div class="user-registration-global-settings">';
+										$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
 										$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 										$settings .= '<div class="user-registration-global-settings--field">';
 
 										$settings .= '<ul class="ur-radio-group-list">';
 										foreach ( $options as $option_index => $option_text ) {
 											$class     = str_replace( ' ', '-', strtolower( $option_text ) );
-											$settings .= '<li class="ur-radio-group-list--item  ' . $class . ( trim( $option_index ) === $option_value ? ' active' : '' ) . '">';
+											$settings .= '<li class="ur-radio-group-list--item ' . $class . ( trim( $option_index ) === $option_value ? ' active' : '' ) . '">';
 
 											$checked = '';
 
@@ -990,7 +997,7 @@ class UR_Admin_Settings {
 												$checked = checked( $option_value, trim( $option_index ), false );
 											}
 
-											$settings .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
+											$settings .= '<label for="' . esc_attr( isset( $args['id'] ) ? $args['id'] : '' ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
 											if ( isset( $value['radio-group-images'] ) ) {
 												$settings .= '<img src="' . $value['radio-group-images'][ $option_index ] . '" />';
@@ -1022,9 +1029,12 @@ class UR_Admin_Settings {
 									$css                   = '';
 									$field_css             = '';
 									$btn_css               = ! empty( $value['class'] ) ? $value['class'] : '';
+									$btn_slug              = ! empty( $value['attrs']['data-slug'] ) ? $value['attrs']['data-slug'] : '';
+									$btn_name              = ! empty( $value['attrs']['data-name'] ) ? $value['attrs']['data-name'] : '';
 									$is_connected          = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
+									$is_payment            = in_array( $section['id'] ?? '', array( 'paypal', 'stripe', 'bank', 'authorize-net', 'mollie' ) );
 									$is_captcha            = in_array(
-										$section['id'],
+										$section['id'] ?? '',
 										array(
 											'v2',
 											'v3',
@@ -1039,10 +1049,15 @@ class UR_Admin_Settings {
 											'v3',
 											'hCaptcha',
 											'cloudflare',
+											'paypal',
+											'stripe',
+											'bank',
+											'mollie',
+											'authorize-net',
 										)
 									) );
 									if ( in_array(
-										$section['id'],
+										$section['id'] ?? '',
 										array(
 											'stripe',
 											'paypal',
@@ -1061,26 +1076,33 @@ class UR_Admin_Settings {
 										$field_css = 'ur-align-items-end';
 									}
 
-									$settings .= '<div class="user-registration-global-settings ' . $css . '">';
+									$settings .= '<div class="user-registration-global-settings ' . $css . '"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<div class="user-registration-global-settings--field ' . $field_css . '">';
 									$settings .= '<button
-											id="' . esc_attr( $value['id'] ) . '"
+											id="' . ( esc_attr( $value['id'] ) ?? '' ) . '"
 											type="button"
 											class="button button-primary ' . esc_attr( $btn_css ) . '"
 											type="button"
-											data-id="' . esc_attr( $section['id'] ) . '"
-											/>' . $value['title'] . '</button>';
+											data-id="' . esc_attr( $section['id'] ?? '' ) . '"';
+									if ( ! empty( $btn_slug ) ) {
+										$settings .= ' data-slug="' . esc_attr( $btn_slug ) . '"';
+									}
+									if ( ! empty( $btn_name ) ) {
+										$settings .= ' data-name="' . esc_attr( $btn_name ) . '"';
+									}
+									$settings .= '>' . $value['title'] . '</button>';
 									$settings .= '</div>';
-									if ( $is_captcha ) {
+									if ( $is_captcha || $is_payment ) {
+										$classname = $is_captcha ? 'reset-captcha-keys ' : 'reset-payment-keys ';
 										$settings .= '<a
 										href="#"
-										class="reset-captcha-keys ' . ( $show_reset_key_button ? '' : 'ur-d-none' ) . '"
-										data-id="' . esc_attr( $section['id'] ) . '"
+										class="' . $classname . ( $show_reset_key_button ? '' : 'ur-d-none' ) . '"
+										data-id="' . esc_attr( $section['id'] ?? '' ) . '"
 										/>
 										<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
 			                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
 			                            </svg>
-										' . __( 'Reset Keys', 'user-registration' ) . '</a>';
+										' . ( $is_captcha ? __( 'Reset Keys', 'user-registration' ) : __( 'Reset Details', 'user-registration' ) ) . '</a>';
 									}
 									$settings .= '</div>';
 									break;
@@ -1173,6 +1195,141 @@ class UR_Admin_Settings {
 			'desc_field'   => $desc_field,
 			'tooltip_html' => $tooltip_html,
 		);
+	}
+
+	/**
+	 * Helper function to get display condition attributes for a field.
+	 *
+	 * @param array $value The form field value array.
+	 *
+	 * @return array Array with 'attrs' (HTML attributes) and 'initial_style' (inline style for initial visibility).
+	 */
+	public static function get_display_condition_attributes( $value ) {
+		$attrs         = '';
+		$initial_style = '';
+
+		if ( ! empty( $value['display_condition'] ) && is_array( $value['display_condition'] ) ) {
+			$condition = $value['display_condition'];
+
+			// Field ID to depend on.
+			if ( ! empty( $condition['field'] ) ) {
+				$attrs .= ' data-display-condition-field="' . esc_attr( $condition['field'] ) . '"';
+			}
+
+			// Operator (equals, not_equals, contains, not_contains, empty, not_empty, greater_than, less_than, in, not_in).
+			if ( ! empty( $condition['operator'] ) ) {
+				$attrs .= ' data-display-condition-operator="' . esc_attr( $condition['operator'] ) . '"';
+			} else {
+				$attrs .= ' data-display-condition-operator="equals"'; // Default operator.
+			}
+
+			// Value to compare against.
+			if ( isset( $condition['value'] ) ) {
+				$value_json = is_array( $condition['value'] ) ? wp_json_encode( $condition['value'] ) : esc_attr( $condition['value'] );
+				$attrs     .= ' data-display-condition-value="' . $value_json . '"';
+			}
+
+			// Case sensitivity (for string comparisons).
+			if ( isset( $condition['case'] ) ) {
+				$attrs .= ' data-display-condition-case="' . esc_attr( $condition['case'] ) . '"';
+			}
+
+			// Add class to identify fields with display conditions.
+			$attrs .= ' data-has-display-condition="1"';
+
+			// Check initial visibility state.
+			$should_show = self::check_display_condition_initial( $condition );
+			if ( ! $should_show ) {
+				$initial_style = ' style="display:none;"';
+			}
+		}
+
+		return array(
+			'attrs'         => $attrs,
+			'initial_style' => $initial_style,
+		);
+	}
+
+	/**
+	 * Check if a field should be visible initially based on its display condition.
+	 *
+	 * @param array $condition Display condition array.
+	 *
+	 * @return bool True if field should be visible, false otherwise.
+	 */
+	public static function check_display_condition_initial( $condition ) {
+		if ( empty( $condition['field'] ) ) {
+			return true;
+		}
+
+		$field_id        = $condition['field'];
+		$operator        = ! empty( $condition['operator'] ) ? $condition['operator'] : 'equals';
+		$condition_value = isset( $condition['value'] ) ? $condition['value'] : '';
+		$case_sensitive  = isset( $condition['case'] ) ? $condition['case'] : 'insensitive';
+
+		// Get current field value.
+		$field_value = self::get_option( $field_id, '' );
+
+		// Handle checkbox fields.
+		if ( 'yes' === $field_value || '1' === $field_value || true === $field_value ) {
+			$field_value = 'yes';
+		} elseif ( empty( $field_value ) || 'no' === $field_value || '0' === $field_value || false === $field_value ) {
+			$field_value = 'no';
+		}
+
+		// Convert to strings for comparison.
+		$field_value_str     = is_array( $field_value ) ? implode( ',', $field_value ) : (string) $field_value;
+		$condition_value_str = is_array( $condition_value ) ? implode( ',', $condition_value ) : (string) $condition_value;
+
+		// Case sensitivity handling.
+		if ( 'insensitive' === $case_sensitive || 'false' === $case_sensitive ) {
+			$field_value_str     = strtolower( $field_value_str );
+			$condition_value_str = strtolower( $condition_value_str );
+		}
+
+		// Evaluate condition.
+		switch ( $operator ) {
+			case 'equals':
+			case '==':
+				return $field_value_str === $condition_value_str;
+			case 'not_equals':
+			case '!=':
+				return $field_value_str !== $condition_value_str;
+			case 'contains':
+				return false !== strpos( $field_value_str, $condition_value_str );
+			case 'not_contains':
+				return false === strpos( $field_value_str, $condition_value_str );
+			case 'empty':
+				return empty( $field_value ) || '' === $field_value_str || ( is_array( $field_value ) && empty( $field_value ) );
+			case 'not_empty':
+				return ! empty( $field_value ) && '' !== $field_value_str && ! ( is_array( $field_value ) && empty( $field_value ) );
+			case 'greater_than':
+			case '>':
+				return is_numeric( $field_value ) && is_numeric( $condition_value ) && floatval( $field_value ) > floatval( $condition_value );
+			case 'less_than':
+			case '<':
+				return is_numeric( $field_value ) && is_numeric( $condition_value ) && floatval( $field_value ) < floatval( $condition_value );
+			case 'greater_than_or_equal':
+			case '>=':
+				return is_numeric( $field_value ) && is_numeric( $condition_value ) && floatval( $field_value ) >= floatval( $condition_value );
+			case 'less_than_or_equal':
+			case '<=':
+				return is_numeric( $field_value ) && is_numeric( $condition_value ) && floatval( $field_value ) <= floatval( $condition_value );
+			case 'in':
+				if ( is_array( $condition_value ) ) {
+					return in_array( $field_value, $condition_value, true ) || in_array( $field_value_str, $condition_value, true );
+				}
+				$values = explode( ',', $condition_value_str );
+				return in_array( $field_value_str, $values, true );
+			case 'not_in':
+				if ( is_array( $condition_value ) ) {
+					return ! in_array( $field_value, $condition_value, true ) && ! in_array( $field_value_str, $condition_value, true );
+				}
+				$values = explode( ',', $condition_value_str );
+				return ! in_array( $field_value_str, $values, true );
+			default:
+				return $field_value_str === $condition_value_str;
+		}
 	}
 
 	/**
@@ -1332,7 +1489,7 @@ class UR_Admin_Settings {
 		if ( ! empty( $settings ) ) {
 
 			foreach ( $settings as $key => $section ) {
-				if ( is_bool( $section ) || ! method_exists( $section, 'get_settings' ) ) {
+				if ( is_bool( $section ) || ( is_object( $section ) && ! method_exists( $section, 'get_settings' ) ) ) {
 					unset( $settings[ $key ] );
 					continue;
 				}
@@ -1493,6 +1650,9 @@ class UR_Admin_Settings {
 	public static function load_payment_modules() {
 		$modules = array();
 		include_once __DIR__ . '/settings/class-ur-settings-page.php';
+		// Always available.
+		include_once __DIR__ . '/settings/class-ur-settings-payment.php';
+		include_once __DIR__ . '/settings/class-ur-settings-membership.php';
 
 		if ( UR_PRO_ACTIVE ) {
 			if ( ur_check_module_activation( 'membership' ) ) {

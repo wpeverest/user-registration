@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="nav-tab-content">
 		<div class="nav-tab-inside">
 				<div class="postbox">
-					<h3 class="hndle"><?php esc_html_e( 'GENERAL', 'user-registration' ); ?></h3>
+					<h3 class="hndle"><?php esc_html_e( 'Export Users', 'user-registration' ); ?></h3>
 
 					<div class="inside">
 						<p class="help">

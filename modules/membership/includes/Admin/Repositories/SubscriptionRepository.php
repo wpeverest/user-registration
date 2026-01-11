@@ -40,7 +40,6 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 
 		$order = $this->orders_repository->get_order_by_subscription( $subscription_id );
 
-
 		$subscription_service = new SubscriptionService();
 		if ( 'canceled' === $subscription['status'] ) {
 			return array(
@@ -65,7 +64,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 				'message' => esc_html__( 'Subscription Cancelled Successfully', 'user-registration' ),
 			);
 		} else {
-			if($is_upgrade) {
+			if ( $is_upgrade ) {
 				$get_user_old_subscription = json_decode( get_user_meta( $subscription['user_id'], 'urm_previous_subscription_data', true ), true );
 
 				if ( ! empty( $get_user_old_subscription ) ) {
@@ -89,7 +88,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 
 			if ( $cancel_sub['status'] ) {
 
-				$this->update( $subscription_id, array( 'status' => 'canceled', ) );
+				$this->update( $subscription_id, array( 'status' => 'canceled' ) );
 				if ( $send_email ) {
 					$subscription_service->send_cancel_emails( $subscription_id );
 				}
@@ -102,19 +101,19 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 				return $cancel_sub;
 			}
 		}
-
 	}
+
 	public function reactivate_subscription_by_id( $subscription_id, $send_email = true ) {
 		$subscription = $this->retrieve( $subscription_id );
 
-		if( 'active' === $subscription[ 'status' ] ) {
+		if ( 'active' === $subscription['status'] ) {
 			return array(
-				'status' => false,
+				'status'  => false,
 				'message' => esc_html__( 'Subscription is already active.', 'user-registration' ),
 			);
 		}
 
-		if( 'expired' !== $subscription[ 'status' ] ) {
+		if ( 'expired' !== $subscription['status'] ) {
 			$order = $this->orders_repository->get_order_by_subscription( $subscription_id );
 
 			$subscription_service = new SubscriptionService();
@@ -125,9 +124,9 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 					'status' => 'active',
 				)
 			);
-			if( ! $result ) {
+			if ( ! $result ) {
 				return array(
-					'status' => false,
+					'status'  => false,
 					'message' => __( 'Failed to update subscription.', 'user-registration' ),
 				);
 			}
@@ -137,6 +136,136 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 		}
 		return array(
 			'status' => false,
+		);
+	}
+
+	/**
+	 * Query subscriptions.
+	 *
+	 * @param array $args {
+	 *     Optional. Array of query arguments.
+	 *
+	 *     @type int    $page           Current page number. Default 1.
+	 *     @type int    $per_page       Number of items per page. Default 20.
+	 *     @type string $orderby        Column to order by. Default 'ID'.
+	 *     @type string $order          Order direction (ASC|DESC). Default 'DESC'.
+	 *     @type string $status         Filter by status. Default empty (all).
+	 *     @type int    $user_id        Filter by user ID. Default 0 (all).
+	 *     @type int    $item_id        Filter by item ID. Default 0 (all).
+	 *     @type string $start_date     Filter by start date (from). Format: Y-m-d. Default empty.
+	 *     @type string $end_date       Filter by end date (to). Format: Y-m-d. Default empty.
+	 *     @type string $search         Search in subscription_id or email. Default empty.
+	 * }
+	 * @return array Array containing 'items' and 'total' count
+	 */
+	public function query( $args = array() ) {
+		$defaults = array(
+			'page'       => 1,
+			'per_page'   => 20,
+			'orderby'    => 'ID',
+			'order'      => 'DESC',
+			'status'     => '',
+			'user_id'    => 0,
+			'item_id'    => 0,
+			'start_date' => '',
+			'end_date'   => '',
+			'search'     => '',
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		$args['order'] = strtoupper( $args['order'] );
+		$args['order'] = in_array( $args['order'], array( 'ASC', 'DESC' ), true ) ? $args['order'] : 'DESC';
+
+		$allowed_orderby = array(
+			'ID',
+			'item_id',
+			'user_id',
+			'start_date',
+			'expiry_date',
+			'next_billing_date',
+			'billing_cycle',
+			'trial_start_date',
+			'trial_end_date',
+			'billing_amount',
+			'status',
+			'created_at',
+			'updated_at',
+		);
+
+		if ( ! in_array( $args['orderby'], $allowed_orderby, true ) ) {
+			$args['orderby'] = 'ID';
+		}
+
+		$where_clauses  = array( '1=1' );
+		$prepare_values = array();
+		$join_clause    = '';
+		$users_table    = TableList::users_table();
+
+		if ( ! empty( $args['status'] ) ) {
+			$where_clauses[]  = 'status = %s';
+			$prepare_values[] = $args['status'];
+		}
+
+		if ( ! empty( $args['user_id'] ) ) {
+			$where_clauses[]  = 'user_id = %d';
+			$prepare_values[] = absint( $args['user_id'] );
+		}
+
+		if ( ! empty( $args['item_id'] ) ) {
+			$where_clauses[]  = 'item_id = %d';
+			$prepare_values[] = absint( $args['item_id'] );
+		}
+
+		if ( ! empty( $args['start_date'] ) ) {
+			$where_clauses[]  = 'DATE(start_date) >= %s';
+			$prepare_values[] = sanitize_text_field( $args['start_date'] );
+		}
+
+		if ( ! empty( $args['end_date'] ) ) {
+			$where_clauses[]  = 'DATE(start_date) <= %s';
+			$prepare_values[] = sanitize_text_field( $args['end_date'] );
+		}
+
+		if ( ! empty( $args['search'] ) ) {
+			$join_clause      = "LEFT JOIN {$users_table} u ON {$this->table}.user_id = u.ID";
+			$where_clauses[]  = '(subscription_id LIKE %s OR u.user_email LIKE %s or u.user_login LIKE %s)';
+			$search_term      = '%' . $this->wpdb()->esc_like( $args['search'] ) . '%';
+			$prepare_values[] = $search_term;
+			$prepare_values[] = $search_term;
+		}
+
+		$where_sql = implode( ' AND ', $where_clauses );
+
+		$count_query = "SELECT COUNT(*) FROM {$this->table} {$join_clause} WHERE {$where_sql}";
+
+		if ( ! empty( $prepare_values ) ) {
+			$count_query = $this->wpdb()->prepare( $count_query, $prepare_values );
+		}
+
+		$total_items = (int) $this->wpdb()->get_var( $count_query );
+
+		$page     = max( 1, absint( $args['page'] ) );
+		$per_page = max( 1, absint( $args['per_page'] ) );
+		$offset   = ( $page - 1 ) * $per_page;
+
+		$query = "SELECT {$this->table}.* FROM {$this->table} {$join_clause}
+			WHERE {$where_sql}
+			ORDER BY {$this->table}.{$args['orderby']} {$args['order']}
+			LIMIT %d OFFSET %d";
+
+		$prepare_values[] = $per_page;
+		$prepare_values[] = $offset;
+
+		$query = $this->wpdb()->prepare( $query, $prepare_values );
+		$items = $this->wpdb()->get_results( $query );
+
+		return array(
+			'items'        => $items,
+			'total'        => $total_items,
+			'total_pages'  => ceil( $total_items / $per_page ),
+			'current_page' => $page,
+			'per_page'     => $per_page,
 		);
 	}
 }

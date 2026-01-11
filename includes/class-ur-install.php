@@ -147,8 +147,12 @@ class UR_Install {
 			update_option( 'user_registration_first_time_activation_flag', true );
 
 		}
+		if ( false === get_option( 'urm_is_new_installation' ) ) {
+			add_option( 'urm_is_new_installation', 1 );
+		}
+
 		self::create_files();
-		self::update_ur_version();
+		self::update_ur_version(); 
 		self::maybe_update_db_version();
 		self::maybe_add_installation_date();
 		self::maybe_run_migrations();
@@ -275,8 +279,8 @@ class UR_Install {
 	}
 
 		/**
-	 * Create cron jobs (clear them first).
-	 */
+		 * Create cron jobs (clear them first).
+		 */
 	private static function create_cron_jobs() {
 		wp_clear_scheduled_hook( 'user_registration_cleanup_logs' );
 		wp_clear_scheduled_hook( 'user_registration_cleanup_sessions' );
@@ -293,13 +297,18 @@ class UR_Install {
 	 */
 	private static function maybe_add_installation_date() {
 
-		$installed_date = get_option( 'user_registration_activated' );
+		$activated_date = get_option( 'user_registration_activated' );
+		$installed_date = get_option( 'user_registration_installation_date' );
 
-		if ( empty( $installed_date ) ) {
+		if ( empty( $activated_date ) ) {
 			update_option( 'user_registration_activated', current_time( 'Y-m-d' ) );
 			update_option( 'user_registration_updated_at', current_time( 'Y-m-d' ) );
 		} else {
 			update_option( 'user_registration_updated_at', current_time( 'Y-m-d' ) );
+		}
+
+		if ( empty( $installed_date ) ) {
+			update_option( 'user_registration_installation_date', current_time( 'Y-m-d' ) );
 		}
 	}
 
@@ -323,6 +332,9 @@ class UR_Install {
 			'3.2.2' => array(
 				'ur_update_322_option_migrate',
 			),
+			'5.0.0' => array(
+				'urm_update_50_option_migrate',
+			),
 		);
 
 		if ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) {
@@ -334,6 +346,9 @@ class UR_Install {
 				),
 				'4.2.0' => array(
 					'ur_pro_module_addons_migrate',
+				),
+				'6.0.0' => array(
+					'urm_update_50_option_migrate',
 				),
 			);
 
@@ -491,10 +506,13 @@ class UR_Install {
 				$subsections = array_unique( array_merge( array( '' ), array_keys( $section->get_sections() ) ) );
 
 				foreach ( $subsections as $subsection ) {
-					foreach ( $section->get_settings( $subsection ) as $value ) {
-						if ( isset( $value['default'] ) && isset( $value['id'] ) ) {
-							$autoload = isset( $value['autoload'] ) ? (bool) $value['autoload'] : true;
-							add_option( $value['id'], $value['default'], '', ( $autoload ? 'yes' : 'no' ) );
+					$subsection_settings = $section->get_settings( $subsection );
+					if ( ! empty( $subsection_settings ) ) {
+						foreach ( $section->get_settings( $subsection ) as $value ) {
+							if ( isset( $value['default'] ) && isset( $value['id'] ) ) {
+								$autoload = isset( $value['autoload'] ) ? (bool) $value['autoload'] : true;
+								add_option( $value['id'], $value['default'], '', ( $autoload ? 'yes' : 'no' ) );
+							}
 						}
 					}
 				}
@@ -516,7 +534,7 @@ class UR_Install {
 			$default_post_id = wp_insert_post(
 				array(
 					'post_type'      => 'user_registration',
-					'post_title'     => esc_html__( 'Default form', 'user-registration' ),
+					'post_title'     => esc_html__( 'Registration form', 'user-registration' ),
 					'post_content'   => $post_content,
 					'post_status'    => 'publish',
 					'comment_status' => 'closed',
@@ -741,18 +759,17 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 	 */
 	public static function create_membership_form( $group_id ) {
 		$membership_repository = new \WPEverest\URMembership\Admin\Repositories\MembershipRepository();
-		$has_posts = $membership_repository->get_membership_forms();
+		$has_posts             = $membership_repository->get_membership_forms();
 		$membership_field_name = 'membership_field_' . ur_get_random_number();
 		update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
 
-
 		if ( 0 === count( $has_posts ) ) {
-			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"' . $group_id . '","label":"Membership Field","description":"","field_name":"'.$membership_field_name.'","hide_label":"false","membership_listing_option":"all"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]';
+			$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"' . $group_id . '","label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","hide_label":"false","membership_listing_option":"all"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]';
 			// Insert default form.
 			$default_post_id = wp_insert_post(
 				array(
 					'post_type'      => 'user_registration',
-					'post_title'     => esc_html__( 'Default Membership Registration form', 'user-registration' ),
+					'post_title'     => esc_html__( 'Registration form', 'user-registration' ),
 					'post_content'   => $post_content,
 					'post_status'    => 'publish',
 					'comment_status' => 'closed',
@@ -765,8 +782,8 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 		}
 	}
 
-	public static function create_default_membership(  ) {
-		$post_content = '{"description":"Default membership.","type":"free","status":true}';
+	public static function create_default_membership() {
+		$post_content          = '{"description":"Default membership.","type":"free","status":true}';
 		$default_membership_id = wp_insert_post(
 			array(
 				'post_type'      => 'ur_membership',
@@ -777,17 +794,17 @@ CREATE TABLE {$wpdb->prefix}user_registration_sessions (
 				'ping_status'    => 'closed',
 			)
 		);
-		update_post_meta( $default_membership_id , 'ur_membership' , '{"type":"free","cancel_subscription":"immediately","role":"subscriber","amount":0}' );
+		update_post_meta( $default_membership_id, 'ur_membership', '{"type":"free","cancel_subscription":"immediately","role":"subscriber","amount":0}' );
 		return $default_membership_id;
 	}
 	public static function create_default_membership_group( $memberships ) {
 		$membership_ids = array_column( $memberships, 'ID' );
 
-		$post_content   = '{"description":"","status":true}';
+		$post_content             = '{"description":"","status":true}';
 		$membership_group_service = new \WPEverest\URMembership\Admin\Services\MembershipGroupService();
-		$default_post_id = $membership_group_service->get_default_group_id();
+		$default_post_id          = $membership_group_service->get_default_group_id();
 
-		if( ! empty( $default_post_id ) ) {
+		if ( ! empty( $default_post_id ) ) {
 			return $default_post_id;
 		}
 		// Insert default form.

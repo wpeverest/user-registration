@@ -1,3 +1,46 @@
+= 5.0.0    - 12/01/2026 =
+* Refactor - Global Settings UI.
+* Refactor - Membership upgrade and renewal process.
+* Refactor - Payment configuration in the membership creation process.
+* Refactor - Single members list table for normal and membership registrations.
+* New      - Membership Groups Module.
+* New      - Subscriptions table and entries.
+* New      - Multiple registration form module.
+* New      - Membership registration analytics.
+* New      - Content Restriction v2 Gutenberg block.
+* New      - Subscriptions and Payments tab in My Account.
+* New      - Access rules for memberships on the membership creation page.
+* Feature  - Sorting membership plans on the registration form.
+* Enhance  - My Account UI.
+* Enhance  - List table UI.
+* Enhance  - Members edit page UI.
+* Enhance  - Payment history edit UI.
+* Enhance  - Thank You block and page.
+* Enhance  - Membership listing block.
+* Enhance  - Setup wizard UI and process.
+* Enhance  - Default email template updates.
+* Enhance  - Content restriction message UI.
+* Enhance  - Default email content updates.
+* Enhance  - Membership creation process and UI.
+* Enhance  - Membership field UI on the registration form.
+* Enhance  - Main menu rearrangement for a better experience.
+* Enhance  - Centralized checkout page for registrations and membership upgrades.
+* Enhance  - Do not lock pages such as registration and login when whole-site restriction is enabled.
+* Tweak    - Updated Swaziland to Eswatini in the country list.
+* Dev      - Filter to modify profile picture maximum size.
+* Dev      - Filter to modify the expired error message text.
+* Dev      - Content rules backward compatibility for the updated UI.
+* Fix      - Character limit validation message not translatable.
+* Fix      - Repetition of restricted content on restricted pages.
+* Fix      - Validation message when adding a variable product to the cart.
+* Fix      - 3D Secure not working for Stripe on subscription memberships.
+* Fix      - Email confirmation pending message displayed on the My Account page.
+* Fix      - Self-cURL requests used to validate images, causing server load.
+* Fix      - Checkbox value not checked when using an ampersand in the value.
+* Fix      - Custom pattern validation error message not translatable in WPML.
+* Fix      - Membership smart tag and plural translation for membership duration.
+* Fix      - Admin unable to access content when restricting all content while using the Divi theme.
+
 = 4.4.9    - 08/01/2026 =
 * Security - Fixed XSS vulnerability for delete users.
 

@@ -1,12 +1,20 @@
 .user-registration,
 .ur-form-container {
+
 	button,
 	.button {
 		transition: all 0.25s ease 0s;
 		box-shadow: 0 1px 3px transparentize($color_gray_three, 0.85);
 
-		+ button,
-		+ .button {
+		@media screen and (max-width: 782px) {
+			line-height: 20px;
+			font-size: 13px;
+			min-height: 30px;
+			margin-bottom: 0;
+		}
+
+		+button,
+		+.button {
 			margin-left: 6px;
 		}
 
@@ -113,9 +121,9 @@
 		&:active,
 		&:focus {
 			color: $white;
-			background: adjust-color($red, $saturation: -15%, $lightness: -8% );
-			border-color: adjust-color($red, $saturation: -15%, $lightness: -8% );
-			box-shadow: 0 1px 0 adjust-color($red, $saturation: -15%, $lightness: -8% );
+			background: adjust-color($red, $saturation: -15%, $lightness: -8%);
+			border-color: adjust-color($red, $saturation: -15%, $lightness: -8%);
+			box-shadow: 0 1px 0 adjust-color($red, $saturation: -15%, $lightness: -8%);
 		}
 	}
 
@@ -134,7 +142,7 @@
 	display: inline-flex;
 	vertical-align: middle;
 
-	> button,
+	>button,
 	.button {
 		&:not(:first-child) {
 			margin-left: -1px;
@@ -143,7 +151,7 @@
 		}
 	}
 
-	> button,
+	>button,
 	.button {
 		&:not(:last-child) {
 			border-top-right-radius: 0;

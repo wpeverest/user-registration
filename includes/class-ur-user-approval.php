@@ -93,7 +93,7 @@ class UR_User_Approval {
 	 * If the request is approved and the user needs to receive the password, a new password will be generated and sent
 	 *
 	 * @param mixed $status Status.
-	 * @param int $user_id User ID.
+	 * @param int   $user_id User ID.
 	 * @param mixed $alert_user Alert User.
 	 */
 	public function send_notification_to_user_about_status_changing( $status, $user_id, $alert_user ) {
@@ -138,8 +138,8 @@ class UR_User_Approval {
 	 * Set the status of the user right after the registration.
 	 *
 	 * @param mixed $form_data Form Data.
-	 * @param int $form_id Form ID.
-	 * @param int $user_id User ID.
+	 * @param int   $form_id Form ID.
+	 * @param int   $user_id User ID.
 	 */
 	public function set_user_status( $form_data, $form_id, $user_id ) {
 
@@ -169,7 +169,7 @@ class UR_User_Approval {
 	/**
 	 * Check the status of an user on login.
 	 *
-	 * @param mixed $user Users.
+	 * @param mixed  $user Users.
 	 * @param string $password Password.
 	 *
 	 * @return \WP_Error
@@ -202,7 +202,6 @@ class UR_User_Approval {
 					return $check_membership;
 				}
 			}
-
 		}
 		$is_disabled = get_user_meta( $user->ID, 'ur_disable_users', true );
 
@@ -343,7 +342,7 @@ class UR_User_Approval {
 
 				$payment_method = $is_member ? $membership_payment_method : get_user_meta( $user->ID, 'ur_payment_method', true );
 
-				if ( 'paypal_standard' === $payment_method || "paypal" === $payment_method || "mollie" === $payment_method ) {
+				if ( 'paypal_standard' === $payment_method || 'paypal' === $payment_method || 'mollie' === $payment_method ) {
 
 					$user_id      = $user->ID;
 					$redirect_url = paypal_generate_redirect_url( $user_id );
@@ -353,7 +352,7 @@ class UR_User_Approval {
 						$response_data   = array(
 							'membership'      => $membership_id,
 							'subscription_id' => $membership['subscription_id'],
-							'member_id'       => $user_id
+							'member_id'       => $user_id,
 						);
 						$is_upgrading    = get_user_meta( $user_id, 'urm_is_user_upgraded', true );
 						if ( $is_upgrading ) {
@@ -384,11 +383,12 @@ class UR_User_Approval {
 		return $user;
 	}
 
-	public function check_user_membership( $membership, $user, $last_order , $login_option) {
-		switch ( $membership['status'] ) {
-			case 'pending':
+	public function check_user_membership( $membership, $user, $last_order, $login_option ) {
+		$membership_status = count( $membership ) < 2 && ! empty( $membership ) ? $membership[0]['status'] : 'active';
 
-				if ( ( $last_order['payment_method'] === "paypal" || $last_order['payment_method'] === "mollie" ) && $last_order["status"] === "pending" && 'payment' === $login_option ) {
+		switch ( $membership_status ) {
+			case 'pending':
+				if ( ( $last_order['payment_method'] === 'paypal' || $last_order['payment_method'] === 'mollie' ) && $last_order['status'] === 'pending' && 'payment' === $login_option ) {
 					break;
 				}
 				$message = '<strong>' . __( 'ERROR:', 'user-registration' ) . '</strong> ' . __( 'Your subscription is not active. Please contact administrator.', 'user-registration' );
@@ -402,7 +402,6 @@ class UR_User_Approval {
 	}
 
 	public function check_membership_payment_status( $user ) {
-
 	}
 
 	/**
@@ -481,7 +480,7 @@ class UR_User_Approval {
 	 * If the user is not approved, disalow to reset the password fom Lost Passwod form and display an error message
 	 *
 	 * @param mixed $result Result.
-	 * @param int $user_id User ID.
+	 * @param int   $user_id User ID.
 	 *
 	 * @return \WP_Error
 	 */

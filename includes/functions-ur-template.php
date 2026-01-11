@@ -23,7 +23,7 @@ function ur_template_redirect() {
 	global $wp;
 	if ( isset( $wp->query_vars['user-logout'] )
 		|| ( isset( $wp->query_vars['name'] ) && 'user-logout' === $wp->query_vars['name'] )
-		   && ! empty( $_REQUEST['_wpnonce'] )
+			&& ! empty( $_REQUEST['_wpnonce'] )
 		   && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
 		// Logout.
 		$redirect_url = str_replace( '/user-logout', '', $wp->request );
@@ -62,7 +62,7 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 	 * Returns redirect url setup in form settings.
 	 *
 	 * @param integer $form_id Form Id.
-	 * @param string $redirect_url Fallback Url.
+	 * @param string  $redirect_url Fallback Url.
 	 * @param boolean $maybe_translate Whether to translate url.
 	 *
 	 * @return string
@@ -176,13 +176,17 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 	 * Outputs a form fields on frontend.
 	 *
 	 * @param string $key Key.
-	 * @param mixed $args Arguments.
+	 * @param mixed  $args Arguments.
 	 * @param string $value (default: null).
 	 * @param string $current_row (default: empty).
 	 *
 	 * @return string
 	 */
 	function user_registration_form_field( $key, $args, $value = null, $current_row = '', $is_edit = false ) {
+		if ( isset( $args['is_checkout'] ) && $args['is_checkout'] ) {
+			return;
+		}
+
 		/* Conditional Logic codes */
 		$rules                      = array();
 		$rules['conditional_rules'] = isset( $args['conditional_rules'] ) ? $args['conditional_rules'] : '';
@@ -239,7 +243,6 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		 * @param mixed $value The value of the form field.
 		 */
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
-
 
 		if ( true === ur_string_to_bool( $args['required'] ) ) {
 			$args['class'][]                       = 'validate-required';
@@ -398,7 +401,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					}
 					$choices = isset( $image_options ) ? $image_options : array();
 
-					$field = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '>';
+					$field  = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '>';
 					$field .= $args['label'] . $required . $tooltip_html . '</label>';
 
 					$checkbox_start = 0;
@@ -423,17 +426,17 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 								$value = 'checked="checked"';
 							}
 						}
-						$field        .= '<li class="ur-checkbox-list">';
+						$field       .= '<li class="ur-checkbox-list">';
 						$choice_index = ur_sanitize_tooltip( $choice_index );
-						$field        .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '[]" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . esc_attr( $choice_index ) . '" ' . esc_attr( $value ) . '/>';
-						$field        .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '">';
+						$field       .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '[]" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . esc_attr( $choice_index ) . '" ' . esc_attr( $value ) . '/>';
+						$field       .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '">';
 						if ( ! empty( $choice_image ) ) {
 							$field .= '<span class="user-registration-image-choice">';
 							$field .= '<img src="' . esc_url( $choice_image ) . '" alt="' . esc_attr( trim( $choice_label ) ) . '" width="200px">';
 							$field .= '</span>';
 						}
 						$field .= trim( $choice_label ) . '</label> </li>';
-						++ $checkbox_start;
+						++$checkbox_start;
 					}
 					$field .= '</ul>';
 				} elseif ( isset( $options ) && array_filter( $options ) ) {
@@ -443,7 +446,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 					$choices = isset( $options ) ? $options : array();
 
-					$field = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '>';
+					$field  = '<label class="ur-label" ' . implode( ' ', $custom_attributes ) . '>';
 					$field .= $args['label'] . $required . $tooltip_html . '</label>';
 
 					$checkbox_start = 0;
@@ -458,25 +461,25 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 						$value = '';
 						if ( '' !== $default ) {
-							if ( is_array( $default ) && in_array( ur_sanitize_tooltip( trim( $choice_index ) ), $default ) ) {
+							if ( is_array( $default ) && in_array( html_entity_decode( ur_sanitize_tooltip( trim( $choice_index ) ) ), $default ) ) {
 								$value = 'checked="checked"';
 							} elseif ( $default === $choice_index ) {
 								$value = 'checked="checked"';
 							}
 						}
-						$field        .= '<li class="ur-checkbox-list">';
+						$field       .= '<li class="ur-checkbox-list">';
 						$choice_index = ur_sanitize_tooltip( $choice_index );
 
 						$field .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '[]" ' . implode( ' ', $custom_attributes ) . ' data-value="' . esc_attr( $choice_index ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '[]" id="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . '" value="' . esc_attr( $choice_index ) . '" ' . esc_attr( $value ) . '/>';
 						$field .= '<label class="ur-checkbox-label" for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $choice_index ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '">' . trim( $choice ) . '</label> </li>';
 
-						++ $checkbox_start;
+						++$checkbox_start;
 					}
 					$field .= '</ul>';
 				} else {
 					$field = '<label class="ur-label checkbox" ' . implode( ' ', $custom_attributes ) . '>
 							<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . $value . '" type="' . esc_attr( $args['type'] ) . '" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . ( '' !== $current_row ? '_' . $current_row : '' ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( $value, 1, false ) . ' /> '
-					         . $args['label'] . $required . $tooltip_html . '</label>';
+							. $args['label'] . $required . $tooltip_html . '</label>';
 				}
 				break;
 			case 'toggle':
@@ -487,7 +490,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				$choice_limit      = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
 				$choice_limit_attr = '';
 
-				$field = '<div class="ur-toggle-section ur-form-builder-toggle">';
+				$field  = '<div class="ur-toggle-section ur-form-builder-toggle">';
 				$field .= '<span class="user-registration-toggle-form">';
 				$field .= '<input data-id="' . esc_attr( $key ) . '" ' . implode( ' ', $custom_attributes ) . ' data-value="' . ur_string_to_bool( $value ) . '" type="checkbox" class="input-checkbox ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="1" ' . checked( ur_string_to_bool( $value ), 1, false ) . ' />';
 				$field .= '<span class="slider round"></span>';
@@ -540,12 +543,12 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			case 'password':
 				$extra_params_key = str_replace( 'user_registration_', 'ur_', $key ) . '_params';
 				$extra_params     = json_decode( get_user_meta( get_current_user_id(), $extra_params_key, true ) );
-				$field            .= ' <span class="input-wrapper"> ';
+				$field           .= ' <span class="input-wrapper"> ';
 
 				if ( empty( $extra_params ) ) {
 					$field_container = '<div class="form-row %1$s hide_show_password" id="%2$s" data-priority="' . esc_attr( $sort ) . '">%3$s</div>';
-					$field           .= '<span class="password-input-group input-form-field-icons">';
-					$field           .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
+					$field          .= '<span class="password-input-group input-form-field-icons">';
+					$field          .= '<input data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' />';
 					if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) && ! $is_edit ) {
 						$field .= '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title=" Show password "></a>';
 					}
@@ -567,7 +570,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					 * @param int $form_id The ID of the user registration form.
 					 * @param array $args The arguments for the form field.
 					 */
-					$field = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
+					$field  = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
 					$field .= ' </span> ';
 				}
 				break;
@@ -672,7 +675,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$field .= '</div>';
 					} else {
 
-						$disabled = ( ( ( isset( $_REQUEST['page'] ) && isset( $args['field_key'] ) && 'user-registration-users' == $_REQUEST['page'] ) && 'user_email' === $args['field_key'] ) || ( isset( $args['repeater_field'] ) && $args['repeater_field'] ) ) ? ' readonly="readonly"' : '';
+						$disabled = ( ( ( isset( $_REQUEST['page'] ) && isset( $args['field_key'] ) && 'user-registration-members' == $_REQUEST['page'] ) && 'user_email' === $args['field_key'] ) || ( isset( $args['repeater_field'] ) && $args['repeater_field'] ) ) ? ' readonly="readonly"' : '';
 
 						$field .= '<input ' . $disabled . ' data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
 					}
@@ -702,17 +705,20 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					);
 
 					if ( ! empty( $pending_email ) && time() <= $expiration ) {
-						$field .= sprintf(
-						/* translators: %s - Email Change Pending Message. */
-							'<div class="email-updated inline"><p>%s</p></div>',
-							sprintf(
-							/* translators: 1: Pending email message 2: Cancel Link */
-								__( 'There is a pending change of your email to <code>%1$s</code>. <a href="%2$s">Cancel</a>', 'user-registration' ),
-								$pending_email,
-								$cancel_url
-							)
-						);
 
+						if ( ! empty( $_REQUEST['action'] ) && 'edit' === $_REQUEST['action'] ) {
+
+							$field .= sprintf(
+							/* translators: %s - Email Change Pending Message. */
+								'<div class="email-updated inline"><p>%s</p></div>',
+								sprintf(
+								/* translators: 1: Pending email message 2: Cancel Link */
+									__( 'There is a pending change of your email to <code>%1$s</code>. <a href="%2$s">Cancel</a>', 'user-registration' ),
+									$pending_email,
+									$cancel_url
+								)
+							);
+						}
 					} else {
 						// Remove the confirmation key, pending email and expiry date.
 						UR_Form_Handler::delete_pending_email_change( $user_id );
@@ -732,7 +738,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					 * @param int $form_id The ID of the user registration form.
 					 * @param array $args The arguments for the form field.
 					 */
-					$field = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
+					$field  = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
 					$field .= ' </span> ';
 				}
 				break;
@@ -744,7 +750,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 				if ( ur_string_to_bool( $date_slot_booking ) ) {
 
 					$custom_attributes[] = 'data-enable-date-slot-booking="' . $date_slot_booking . '"';
-					$class               .= ' date-slot-booking';
+					$class              .= ' date-slot-booking';
 				}
 
 				if ( ! isset( $args['icon'] ) && empty( $args['icon'] ) ) {
@@ -880,7 +886,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$option_label = is_array( $option_text ) ? $option_text['label'] : $option_text->label;
 						$option_image = is_array( $option_text ) ? $option_text['image'] : $option_text->image;
 
-						$field   .= '<li class="ur-radio-list">';
+						$field  .= '<li class="ur-radio-list">';
 						$checked = '';
 						if ( ! empty( $value ) ) {
 							$checked = checked( $value, trim( $option_index ), false );
@@ -896,15 +902,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						}
 
 						$field .= wp_kses(
-							          trim( $option_label ),
-							          array(
-								          'a'    => array(
-									          'href'  => array(),
-									          'title' => array(),
-								          ),
-								          'span' => array(),
-							          )
-						          ) . '</label></li>';
+							trim( $option_label ),
+							array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'span' => array(),
+							)
+						) . '</label></li>';
 					}
 					$field .= '</ul>';
 				} else {
@@ -933,15 +939,15 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
 						$field .= wp_kses(
-							          trim( $option_text ),
-							          array(
-								          'a'    => array(
-									          'href'  => array(),
-									          'title' => array(),
-								          ),
-								          'span' => array(),
-							          )
-						          ) . '</label></li>';
+							trim( $option_text ),
+							array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'span' => array(),
+							)
+						) . '</label></li>';
 					}
 					$field .= '</ul>';
 				}
@@ -961,8 +967,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$default_value = $args['default'] ?? '';
 					$hidden_value  = ! empty( $value ) ? $value : $default_value;
 					$label         = $args['label'] ?? 'Hidden Field';
-					$field         .= '<label for="' . esc_attr( $key ) . '" class="ur-label">' . esc_html( $label ) . '</label>';
-					$field         .= '<span class="input-wrapper">';
+					$field        .= '<label for="' . esc_attr( $key ) . '" class="ur-label">' . esc_html( $label ) . '</label>';
+					$field        .= '<span class="input-wrapper">';
 				}
 				$field .= '<input ' . $input_type . ' data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" class="input-hidden input-text ur-frontend-field ur-edit-profile-field' . esc_attr( $custom_class ) . '" id="' . esc_attr( $args['id'] ) . '"value="' . esc_attr( $hidden_value ) . '" data-field-type="hidden"/>';
 				$field .= ( $is_edit ) ? '</span>' : '';
@@ -1012,18 +1018,18 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$field_html = '';
 			if ( $args['label'] && 'checkbox' != $args['type'] && 'toggle' != $args['type'] && 'hidden' !== $args['type'] ) {
 				$field_html .= '<label for="' . esc_attr( $label_id ) . '" class="ur-label">' . wp_kses(
-						$args['label'],
-						array(
-							'a'    => array(
-								'href'  => array(),
-								'title' => array(),
-							),
-							'span' => array(),
-						)
-					) . $required . $tooltip_html . '</label>';
+					$args['label'],
+					array(
+						'a'    => array(
+							'href'  => array(),
+							'title' => array(),
+						),
+						'span' => array(),
+					)
+				) . $required . $tooltip_html . '</label>';
 			}
 
-			$field_html      .= $field;
+			$field_html     .= $field;
 			$container_class = esc_attr( implode( ' ', $args['class'] ) );
 			$container_id    = esc_attr( $args['id'] ) . '_field';
 			$field           = sprintf( $field_container, $container_class, $container_id, $field_html );
@@ -1153,12 +1159,12 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 								break;
 
 							case 'date':
-								$date_format                                           = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
-								$min_date                                              = isset( $field->advance_setting->min_date ) ? str_replace( '/', '-', $field->advance_setting->min_date ) : '';
-								$max_date                                              = isset( $field->advance_setting->max_date ) ? str_replace( '/', '-', $field->advance_setting->max_date ) : '';
-								$set_current_date                                      = isset( $field->advance_setting->set_current_date ) ? ur_string_to_bool( $field->advance_setting->set_current_date ) : '';
-								$enable_date_range                                     = isset( $field->advance_setting->enable_date_range ) ? ur_string_to_bool( $field->advance_setting->enable_date_range ) : '';
-								$date_localization                                     = isset( $field->advance_setting->date_localization ) ? $field->advance_setting->date_localization : '';
+								$date_format       = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
+								$min_date          = isset( $field->advance_setting->min_date ) ? str_replace( '/', '-', $field->advance_setting->min_date ) : '';
+								$max_date          = isset( $field->advance_setting->max_date ) ? str_replace( '/', '-', $field->advance_setting->max_date ) : '';
+								$set_current_date  = isset( $field->advance_setting->set_current_date ) ? ur_string_to_bool( $field->advance_setting->set_current_date ) : '';
+								$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? ur_string_to_bool( $field->advance_setting->enable_date_range ) : '';
+								$date_localization = isset( $field->advance_setting->date_localization ) ? $field->advance_setting->date_localization : '';
 								$extra_params['custom_attributes']['data-date-format'] = $date_format;
 
 								if ( isset( $field->advance_setting->enable_min_max ) && ur_string_to_bool( $field->advance_setting->enable_min_max ) ) {
@@ -1194,15 +1200,15 @@ if ( ! function_exists( 'user_registration_form_data' ) ) {
 						}
 
 						if ( empty( $extra_params['default'] ) ) {
-							$user_details       = get_user_by( 'ID', $user_id );
-							$user_info          = (array) $user_details->data;
+							$user_details = get_user_by( 'ID', $user_id );
+							$user_info    = (array) $user_details->data;
 
 							$extra_params['default'] = isset( $user_info[ $field_name ] ) ? $user_info[ $field_name ] : '';
 						}
 						$user_profile_fields = ur_get_user_profile_field_only();
 
 						$is_admin_request = $_REQUEST['is_admin_user'] ?? false;
-						if ( $is_admin_request || ( isset( $_REQUEST['action'] ) && sanitize_text_field( $_REQUEST['action'] ) === 'edit' && $user_id !== get_current_user_id() ) ) {
+						if ( $is_admin_request || ( isset( $_REQUEST['action'] ) && sanitize_text_field( ( $_REQUEST['action'] ) === 'edit' || $_REQUEST['action'] === 'view' ) && $user_id !== get_current_user_id() ) ) {
 							array_push( $user_profile_fields, 'user_pass' );
 						}
 
@@ -1290,7 +1296,6 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 
 		if ( ! empty( $wp->query_vars ) ) {
 			foreach ( $wp->query_vars as $key => $value ) {
-
 				// Ignore pagename param.
 				if ( 'pagename' === $key ) {
 					continue;
@@ -1515,7 +1520,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 	 * Outputs a form fields on registration form settings.
 	 *
 	 * @param string $key Key.
-	 * @param mixed $args Arguments.
+	 * @param mixed  $args Arguments.
 	 * @param string $value (default: null).
 	 * @param string $current_row (default: empty).
 	 *
@@ -1578,7 +1583,6 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 		 * @param mixed $value The value of the form field.
 		 */
 		$args = apply_filters( 'user_registration_form_field_args', $args, $key, $value );
-
 
 		if ( true === ur_string_to_bool( $args['required'] ) ) {
 			$args['class'][]                       = 'validate-required';
@@ -1683,7 +1687,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 		$field = '';
 
 		if ( 'section' === $args['type'] ) {
-			$field = '<div class="ur-form-settings-section--field">';
+			$field  = '<div class="ur-form-settings-section--field">';
 			$field .= '<h4>' . esc_html( $args['title'] ) . '</h4>';
 			$field .= '</div>';
 		}
@@ -1734,7 +1738,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 				$choice_limit      = isset( $args['choice_limit'] ) ? $args['choice_limit'] : '';
 				$choice_limit_attr = '';
 
-				$field = '<div class="ur-toggle-section ur-form-builder-toggle">';
+				$field  = '<div class="ur-toggle-section ur-form-builder-toggle">';
 				$field .= '<label class="ur-label checkbox" for="' . esc_attr( $key ) . '">' . $args['label'] . wp_kses_post( $tooltip_html ) . '</label>';
 				$field .= '<div class="ur-settings-field">';
 				$field .= '<span class="user-registration-toggle-form">';
@@ -1751,7 +1755,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 				break;
 
 			case 'label':
-				$field = '<div class="' . esc_attr( $args['id'] ) . '">';
+				$field  = '<div class="' . esc_attr( $args['id'] ) . '">';
 				$field .= '<span class="description">' . $args['description'] . '</span>';
 				$field .= '</div>';
 				break;
@@ -1905,7 +1909,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 						$field .= '</div>';
 					} else {
 
-						$disabled = ( ( ( isset( $_REQUEST['page'] ) && isset( $args['field_key'] ) && 'user-registration-users' == $_REQUEST['page'] ) && 'user_email' === $args['field_key'] ) || ( isset( $args['repeater_field'] ) && $args['repeater_field'] ) ) ? ' readonly="readonly"' : '';
+						$disabled = ( ( ( isset( $_REQUEST['page'] ) && isset( $args['field_key'] ) && 'user-registration-members' == $_REQUEST['page'] ) && 'user_email' === $args['field_key'] ) || ( isset( $args['repeater_field'] ) && $args['repeater_field'] ) ) ? ' readonly="readonly"' : '';
 
 						$field .= '<input ' . $disabled . ' data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" type="' . esc_attr( $args['type'] ) . '" class="input-text ' . esc_attr( $timpicker_class ) . ' ' . $class . ' input-' . esc_attr( $args['type'] ) . ' ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '"  value="' . esc_attr( $value ) . '" ' . implode( ' ', $custom_attributes ) . ' ' . $attr . '/>';
 					}
@@ -1965,7 +1969,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 					 * @param int $form_id The ID of the user registration form.
 					 * @param array $args The arguments for the form field.
 					 */
-					$field = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
+					$field  = apply_filters( 'user_registration_field_icon', $field, $form_id, $args );
 					$field .= ' </span> ';
 				}
 
@@ -1985,7 +1989,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 				if ( ur_string_to_bool( $date_slot_booking ) ) {
 
 					$custom_attributes[] = 'data-enable-date-slot-booking="' . $date_slot_booking . '"';
-					$class               .= ' date-slot-booking';
+					$class              .= ' date-slot-booking';
 				}
 
 				$actual_value = $value;
@@ -2044,12 +2048,11 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 				break;
 
 			case 'select':
-
 				$default_value = isset( $args['default_value'] ) ? $args['default_value'] : ''; // Backward compatibility. Modified since 1.5.7.
 
 				$value           = ! empty( $value ) ? $value : $default_value;
 				$options         = $field .= '';
-				$field           .= '<div class="ur-settings-field">';
+				$field          .= '<div class="ur-settings-field">';
 				$backtrace       = debug_backtrace();
 				$parent_function = isset( $backtrace[1] ) ? $backtrace[1]['function'] : '';
 				$args['options'] = ( $parent_function === 'frontend_includes' ) ? apply_filters( 'override_options_for_select_field', $args['options'], $args['id'] ) : $args['options'];
@@ -2087,7 +2090,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 
 			case 'multiselect':
 				$options = $field .= '';
-				$field   .= '<div class="ur-settings-field">';
+				$field  .= '<div class="ur-settings-field">';
 
 				if ( is_serialized( $value ) ) {
 					$default_value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore;
@@ -2143,7 +2146,7 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 						$option_label = is_array( $option_text ) ? $option_text['label'] : $option_text->label;
 						$option_image = is_array( $option_text ) ? $option_text['image'] : $option_text->image;
 
-						$field   .= '<li class="ur-radio-list">';
+						$field  .= '<li class="ur-radio-list">';
 						$checked = '';
 						if ( ! empty( $value ) ) {
 							$checked = checked( $value, trim( $option_index ), false );
@@ -2159,15 +2162,15 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 						}
 
 						$field .= wp_kses(
-							          trim( $option_label ),
-							          array(
-								          'a'    => array(
-									          'href'  => array(),
-									          'title' => array(),
-								          ),
-								          'span' => array(),
-							          )
-						          ) . '</label></li>';
+							trim( $option_label ),
+							array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'span' => array(),
+							)
+						) . '</label></li>';
 					}
 					$field .= '</ul>';
 				} else {
@@ -2185,15 +2188,15 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 						$field .= '<label for="' . esc_attr( $args['id'] ) . '_' . esc_attr( $option_text ) . '" class="radio">';
 
 						$field .= wp_kses(
-							          trim( $option_text ),
-							          array(
-								          'a'    => array(
-									          'href'  => array(),
-									          'title' => array(),
-								          ),
-								          'span' => array(),
-							          )
-						          ) . '</label></li>';
+							trim( $option_text ),
+							array(
+								'a'    => array(
+									'href'  => array(),
+									'title' => array(),
+								),
+								'span' => array(),
+							)
+						) . '</label></li>';
 					}
 					$field .= '</ul>';
 				}
@@ -2244,24 +2247,23 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 				break;
 		}
 
-
 		if ( ! empty( $field ) ) {
 
 			$field_html = '';
 			if ( $args['label'] && 'checkbox' != $args['type'] && 'toggle' != $args['type'] && 'hidden' !== $args['type'] ) {
 				$field_html .= '<label for="' . esc_attr( $label_id ) . '" class="ur-label">' . wp_kses(
-						$args['label'],
-						array(
-							'a'    => array(
-								'href'  => array(),
-								'title' => array(),
-							),
-							'span' => array(),
-						)
-					) . $required . $tooltip_html . '</label>';
+					$args['label'],
+					array(
+						'a'    => array(
+							'href'  => array(),
+							'title' => array(),
+						),
+						'span' => array(),
+					)
+				) . $required . $tooltip_html . '</label>';
 			}
 
-			$field_html      .= $field;
+			$field_html     .= $field;
 			$container_class = esc_attr( implode( ' ', $args['class'] ) );
 			$container_id    = esc_attr( $args['id'] ) . '_field';
 			$field           = sprintf( $field_container, $container_class, $container_id, $field_html );

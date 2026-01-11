@@ -11,6 +11,7 @@ use WPEverest\URMembership\Admin\Services\EmailService;
 use WPEverest\URMembership\Admin\Services\OrderService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 use WPEverest\URMembership\Admin\Services\PaymentGatewayLogging;
+use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
 
 class StripeService {
 	protected $members_orders_repository, $members_subscription_repository, $membership_repository, $orders_repository;
@@ -145,10 +146,16 @@ class StripeService {
 			'type' => $payment_data['type'],
 		);
 
-		if ( isset( $payment_data['coupon'] ) && ! empty( $payment_data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
-			$coupon_details  = ur_get_coupon_details( $payment_data['coupon'] );
-			$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $amount * $coupon_details['coupon_discount'] / 100;
-			$amount          = $amount - $discount_amount;
+		if ( isset( $payment_data['upgrade'] ) && $payment_data['upgrade'] ) {
+			$amount = $payment_data['amount'];
+
+		} elseif ( isset( $payment_data['coupon'] ) && ! empty( $payment_data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
+			$coupon_details = ur_get_coupon_details( $payment_data['coupon'] );
+
+			if ( isset( $coupon_details['coupon_discount_type'] ) && isset( $coupon_details['coupon_discount'] ) ) {
+				$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $amount * $coupon_details['coupon_discount'] / 100;
+				$amount          = $amount - $discount_amount;
+			}
 		}
 
 		if ( 'JPY' === $currency ) {
@@ -240,7 +247,7 @@ class StripeService {
 					)
 				);
 
-				$intent                    = \Stripe\PaymentIntent::create(
+				$intent = \Stripe\PaymentIntent::create(
 					array(
 						'amount'               => $amount,
 						'currency'             => $currency,
@@ -248,6 +255,7 @@ class StripeService {
 						'customer'             => $customer->id,
 					)
 				);
+
 				$response['client_secret'] = $intent->client_secret;
 
 				PaymentGatewayLogging::log_transaction_success(
@@ -288,20 +296,32 @@ class StripeService {
 	}
 
 	public function update_order( $data ) {
-		$transaction_id = $data['payment_result']['paymentIntent']['id'] ?? '';
-		$payment_status = sanitize_text_field( $data['payment_status'] );
-		$member_id      = absint( $_POST['member_id'] );
-		$is_upgrading   = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_upgrading', true ) );
+		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? '';
+		$payment_status         = sanitize_text_field( $data['payment_status'] );
+		$member_id              = absint( $_POST['member_id'] );
+		$membership_process     = urm_get_membership_process( $member_id );
+		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
+		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( $_POST['current_membership_id'] ) : 0;
+		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
+		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
+		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? '';
+
+		if ( empty( $transaction_id ) ) {
+			$transaction_id = $data['payment_result']['latest_invoice']['payment_intent']['id'] ?? '';
+		}
+
+		$three_d_secure_2_source = $data['payment_result']['latest_invoice']['payment_intent']['next_action']['use_stripe_sdk']['three_d_secure_2_source'] ?? '';
 
 		PaymentGatewayLogging::log_webhook_received(
 			'stripe',
 			'Stripe payment confirmation callback received',
 			array(
-				'webhook_type'   => 'payment_confirmation',
-				'transaction_id' => $transaction_id,
-				'payment_status' => $payment_status,
-				'member_id'      => $member_id,
-				'is_upgrade'     => $is_upgrading,
+				'webhook_type'           => 'payment_confirmation',
+				'transaction_id'         => $transaction_id,
+				'payment_status'         => $payment_status,
+				'member_id'              => $member_id,
+				'is_upgrade'             => $is_upgrading,
+				'is_purchasing_multiple' => $is_purchasing_multiple,
 			)
 		);
 
@@ -331,9 +351,10 @@ class StripeService {
 		$membership_type  = $membership_metas['type'] ?? 'unknown';
 
 		if ( 'failed' === $payment_status ) {
-			$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
-			$error_msg   = __( 'Stripe Payment failed.', 'user-registration' );
-			$error_msg   = $data['payment_result']['error']['message'] ?? $error_msg;
+			$is_renewing = ! empty( $membership_process['renew'] ) && in_array( $latest_order['item_id'], $membership_process['renew'] );
+
+			$error_msg = __( 'Stripe Payment failed.', 'user-registration' );
+			$error_msg = $data['payment_result']['error']['message'] ?? $error_msg;
 
 			PaymentGatewayLogging::log_transaction_failure(
 				'stripe',
@@ -347,12 +368,13 @@ class StripeService {
 				)
 			);
 
-			if ( ! $is_upgrading && ! $is_renewing ) {
+			if ( ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
 				wp_delete_user( absint( $member_id ) );
 				$this->members_orders_repository->delete_member_order( $member_id );
 			}
 			if ( $is_renewing ) {
-				update_user_meta( $member_id, 'urm_is_member_renewing', false );
+				unset( $membership_process['upgrade'][ $latest_order['item_id'] ] );
+				update_user_meta( $member_id, 'urm_membership_process', $membership_process );
 			}
 
 			$response['message'] = $error_msg;
@@ -372,7 +394,7 @@ class StripeService {
 			$membership                     = $this->membership_repository->get_single_membership_by_ID( $member_order['item_id'] );
 			$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 			$membership_metas['post_title'] = $membership['post_title'];
-			$member_subscription            = $this->members_subscription_repository->get_member_subscription( $member_id );
+			$member_subscription            = $this->members_subscription_repository->get_subscription_data_by_member_and_membership_id( $member_id, $member_order['item_id'] );
 			$is_order_updated               = $this->members_orders_repository->update(
 				$member_order['ID'],
 				array(
@@ -381,7 +403,7 @@ class StripeService {
 				)
 			);
 
-			if ( $is_order_updated && 'paid' === $member_order['order_type'] ) {
+			if ( ( $is_order_updated && 'paid' === $member_order['order_type'] ) || ( $is_order_updated && ! empty( $three_d_secure_2_source ) && 'subscription' === $member_order['order_type'] ) ) {
 				$this->members_subscription_repository->update(
 					$member_subscription['ID'],
 					array(
@@ -437,6 +459,7 @@ class StripeService {
 					)
 				);
 			}
+
 			$response = $this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
 		}
 
@@ -450,10 +473,14 @@ class StripeService {
 		$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
 
 		$membership_metas['post_title'] = $membership['post_title'];
-		$member_subscription            = $this->members_subscription_repository->get_member_subscription( $member_id );
-		$is_automatic                   = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
-		$is_renewing                    = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
-		$membership_type                = $membership_metas['type'] ?? 'unknown';
+
+		$member_subscription = $this->members_subscription_repository->get_subscription_data_by_member_and_membership_id( $member_id, $membership['ID'] );
+		$is_automatic        = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
+
+		$membership_process = urm_get_membership_process( $member_id );
+		$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'] );
+
+		$membership_type = $membership_metas['type'] ?? 'unknown';
 
 		PaymentGatewayLogging::log_api_request(
 			'stripe',
@@ -539,6 +566,7 @@ class StripeService {
 
 			// handle coupon section
 			$order_detail = $this->orders_repository->get_order_detail( $member_order['ID'] );
+
 			if ( ! empty( $order_detail['coupon'] ) ) {
 				$coupon_details = ur_get_coupon_details( $order_detail['coupon'] );
 				if ( ! empty( $coupon_details['stripe_coupon_id'] ) ) {
@@ -567,14 +595,38 @@ class StripeService {
 						$previous_membership_metas = json_decode( wp_unslash( $previous_membership['meta_value'] ), true );
 
 						if ( isset( $previous_membership_metas['type'], $previous_membership_metas['amount'] ) && $previous_membership_metas['type'] !== 'free' ) {
-							$new_price         = isset( $membership_metas['amount'] ) ? $membership_metas['amount'] : 0;
-							$current_price     = $previous_membership_metas['amount'];
-							$first_month_price = $new_price - $current_price;
+							$new_price     = isset( $membership_metas['amount'] ) ? $membership_metas['amount'] : 0;
+							$current_price = $previous_membership_metas['amount'];
+
+							$membership_upgrade_service      = new UpgradeMembershipService();
+							$previous_membership_metas['ID'] = $previous_membership['ID'];
+							$upgrade_details                 = $membership_upgrade_service->get_upgrade_details( $previous_membership_metas );
+							$upgrade_type                    = $upgrade_details['upgrade_type'] ?? '';
+							$first_month_price               = $new_price - $current_price;
+
+							if ( 'full' === $upgrade_type ) {
+								$first_month_price = $new_price;
+							}
 
 							if ( $new_price > $current_price ) {
-								$discount_amount = $new_price - $first_month_price;
-								$currency        = get_option( 'user_registration_payment_currency', 'USD' );
-								$amount          = ( 'JPY' === $currency ) ? $discount_amount : $discount_amount * 100;
+								if ( isset( $order_detail['coupon'] ) && ! empty( $order_detail['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
+									$coupon_details  = ur_get_coupon_details( $order_detail['coupon'] );
+									$discount_amount = ( 'fixed' === $coupon_details['coupon_discount_type'] ) ? $coupon_details['coupon_discount'] : $first_month_price * $coupon_details['coupon_discount'] / 100;
+
+									if ( 'full' === $upgrade_type ) {
+										$amount = $discount_amount;
+									} else {
+										$amount = $current_price + $discount_amount;
+
+									}
+								} elseif ( 'full' === $upgrade_type ) {
+									$amount = $new_price;
+								} else {
+									$amount = $new_price - $first_month_price;
+								}
+
+								$currency = get_option( 'user_registration_payment_currency', 'USD' );
+								$amount   = ( 'JPY' === $currency ) ? $amount : $amount * 100;
 
 								PaymentGatewayLogging::log_general(
 									'stripe',
@@ -585,7 +637,7 @@ class StripeService {
 										'member_id'       => $member_id,
 										'old_price'       => $current_price,
 										'new_price'       => $new_price,
-										'discount_amount' => $discount_amount,
+										'discount_amount' => $amount,
 									)
 								);
 
@@ -672,7 +724,6 @@ class StripeService {
 
 			$subscription        = \Stripe\Subscription::create( $subscription_details );
 			$subscription_status = $subscription->status ?? '';
-
 			PaymentGatewayLogging::log_api_response(
 				'stripe',
 				'Stripe subscription created',
@@ -684,17 +735,23 @@ class StripeService {
 				)
 			);
 
-			if ( 'active' === $subscription_status || 'trialing' === $subscription_status ) {
+			$three_ds2_source = $subscription->latest_invoice->payment_intent->next_action->use_stripe_sdk->three_d_secure_2_source ?? '';
+
+			if ( 'active' === $subscription_status || 'trialing' === $subscription_status || ( 'incomplete' === $subscription_status && ! empty( $three_ds2_source ) ) ) {
+				$status = ( 'incomplete' === $subscription_status && ! empty( $three_ds2_source ) ) ? 'pending' : 'completed';
 				$this->members_orders_repository->update(
 					$member_order['ID'],
 					array(
-						'status'         => 'completed',
+						'status'         => $status,
 						'transaction_id' => $subscription->id,
 					)
 				);
 				switch ( $subscription_status ) {
 					case 'trialing':
 						$subscription_status = ( $is_upgrading && ! empty( $next_subscription['delayed_until'] ) ) ? 'active' : 'trial';
+						break;
+					case ( 'incomplete' === $subscription_status && ! empty( $three_ds2_source ) ):
+						$subscription_status = 'pending';
 						break;
 					default:
 						break;
@@ -756,11 +813,17 @@ class StripeService {
 	 * @return array
 	 */
 	public static function get_stripe_settings() {
+		$is_enabled = get_option( 'user_registration_stripe_enabled', '' );
+		$stripe_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false )) ;
+		$has_user_changed = ur_string_to_bool(get_option( 'urm_stripe_updated_connection_status', false )) ;
+		$is_stripe_enabled = ($is_enabled) ? $is_enabled : ($has_user_changed ? $stripe_default : ! $stripe_default);;
+
 		$mode            = get_option( 'user_registration_stripe_test_mode', false ) ? 'test' : 'live';
 		$publishable_key = get_option( sprintf( 'user_registration_stripe_%s_publishable_key', $mode ) );
 		$secret_key      = get_option( sprintf( 'user_registration_stripe_%s_secret_key', $mode ) );
 
 		return array(
+			'is_stipe_enabled'      => $is_stripe_enabled,
 			'mode'            => $mode,
 			'publishable_key' => $publishable_key,
 			'secret_key'      => $secret_key,
@@ -770,10 +833,10 @@ class StripeService {
 	/**
 	 * Sends an email.
 	 *
-	 * @param int   $ID The ID of the email.
+	 * @param int $ID The ID of the email.
 	 * @param mixed $member_subscription The subscription details of the member.
 	 * @param array $membership_metas Metadata related to the membership.
-	 * @param int   $member_id The ID of the member.
+	 * @param int $member_id The ID of the member.
 	 * @param array $response The response data.
 	 *
 	 * @return array The result of the email operation.
@@ -787,6 +850,7 @@ class StripeService {
 			$order_detail['coupon_discount_type'] = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount_type', true );
 
 		}
+
 		$email_data = array(
 			'subscription'     => $member_subscription,
 			'order'            => $order_detail,
@@ -836,7 +900,7 @@ class StripeService {
 			}
 		}
 		// delete coupon if new changes introduced
-		if ( $coupon_exists && ( $old_coupon_data['coupon_discount'] !== $data['post_meta_data']['coupon_discount'] || $old_coupon_data['coupon_discount_type'] !== $data['post_meta_data']['post_meta_data'] ) ) {
+		if ( $coupon_exists && ( $old_coupon_data['coupon_discount'] !== $data['post_meta_data']['coupon_discount'] || $old_coupon_data['coupon_discount_type'] !== $data['post_meta_data']['coupon_discount_type'] ) ) {
 			$coupon = \Stripe\Coupon::retrieve( $stripe_coupon_id );
 			$coupon->delete();
 		}
@@ -922,6 +986,7 @@ class StripeService {
 
 		return $response;
 	}
+
 	/**
 	 * Reactivates stripe subscription if it has been soft cancelled.
 	 *
@@ -945,6 +1010,7 @@ class StripeService {
 					$subscription_id,
 					array( 'cancel_at_period_end' => false )
 				);
+
 				return array(
 					'status'  => true,
 					'message' => __( 'Subscription reactivated successfully.', 'user-registration' ),
@@ -981,15 +1047,15 @@ class StripeService {
 	}
 
 	public function handle_webhook( $event, $subscription_id ) {
-        // Verify that the event was sent by Stripe
-		if( isset( $event[ 'id' ] ) ) {
-            try {
-				$event_id = sanitize_text_field( $event[ 'id' ] );
-                $event = (array)\Stripe\Event::retrieve( $event_id );
-            } catch( \Exception $e ) {
+		// Verify that the event was sent by Stripe
+		if ( isset( $event['id'] ) ) {
+			try {
+				$event_id = sanitize_text_field( $event['id'] );
+				$event    = (array) \Stripe\Event::retrieve( $event_id );
+			} catch ( \Exception $e ) {
 				die();
-            }
-        } else {
+			}
+		} else {
 			die();
 		}
 		switch ( $event['type'] ) {
@@ -1099,7 +1165,8 @@ class StripeService {
 				'status'            => $subscription_status,
 			)
 		);
-		$is_renewing = ur_string_to_bool( get_user_meta( $member_id, 'urm_is_member_renewing', true ) );
+		$membership_process = urm_get_membership_process( $member_id );
+		$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $membership_id, $membership_process['renew'] );
 
 		if ( $is_renewing ) {
 			$subscription_service = new SubscriptionService();
@@ -1122,7 +1189,7 @@ class StripeService {
 	public function validate_setup() {
 		$stripe_settings = self::get_stripe_settings();
 
-		return ( empty( $stripe_settings['publishable_key'] ) || empty( $stripe_settings['secret_key'] ) );
+		return ( empty( $stripe_settings['publishable_key'] ) || empty( $stripe_settings['secret_key'] ) || empty($stripe_settings['is_stipe_enabled']) );
 	}
 
 	public function refund_subscription( $subscription, $refund_amount = null, $cancel_subscription = false, $cancel_at_end_period = false ) {
@@ -1239,16 +1306,21 @@ class StripeService {
 		$refund_response = $this->refund( $last_order, $subscription );
 
 		delete_user_meta( $member_id, 'urm_previous_subscription_data' );
-		delete_user_meta( $member_id, 'urm_is_upgrading' );
-		delete_user_meta( $member_id, 'urm_is_upgrading_to' );
+		$membership_process = urm_get_membership_process( $member_id );
+
+		if ( ! empty( $membership_process ) && isset( $membership_process['upgrade'][ $_POST['current_membership_id'] ] ) ) {
+			unset( $membership_process['upgrade'][ $_POST['current_membership_id'] ] );
+			update_user_meta( $member_id, 'urm_membership_process', $membership_process );
+		}
 	}
 
 	/**
 	 * Checks if the product exists or not in stripe.
 	 *
+	 * @param string $product_id
+	 *
 	 * @since 4.4.2
 	 *
-	 * @param  string $product_id
 	 */
 	public function check_exists_product_in_stripe( $product_id ) {
 		try {
@@ -1274,9 +1346,10 @@ class StripeService {
 	/**
 	 * Checks if price id exists or not in stripe.
 	 *
+	 * @param string $price_id
+	 *
 	 * @since 4.4.2
 	 *
-	 * @param  string $price_id
 	 */
 	public function check_price_exists_in_stripe( $price_id ) {
 		try {
@@ -1297,10 +1370,11 @@ class StripeService {
 	/**
 	 * Creates price for existing product if price_id not found.
 	 *
+	 * @param string $product_id
+	 * @param array $meta_data
+	 *
 	 * @since 4.4.2
 	 *
-	 * @param  string $product_id
-	 * @param  array  $meta_data
 	 */
 	public function create_stripe_price_for_existing_product( $product_id, $meta_data ) {
 		$currency = get_option( 'user_registration_payment_currency', 'USD' );
@@ -1341,6 +1415,7 @@ class StripeService {
 					'error_message' => $e->getMessage(),
 				)
 			);
+
 			return array(
 				'success' => false,
 				'message' => $e->getMessage(),

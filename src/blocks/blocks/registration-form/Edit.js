@@ -23,7 +23,7 @@ const ServerSideRender = wp.serverSideRender
 	: wp.components.ServerSideRender;
 
 /* global _UR_BLOCKS_ */
-const { urRestApiNonce, restURL, logoUrl } =
+const { urRestApiNonce, logoUrl } =
 	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 const Edit = (props) => {
@@ -43,9 +43,7 @@ const Edit = (props) => {
 			if (!formList) {
 				try {
 					const res = await apiFetch({
-						path:
-							restURL +
-							"user-registration/v1/gutenberg-blocks/form-list",
+						path: "user-registration/v1/gutenberg-blocks/form-list",
 						method: "GET",
 						headers: {
 							"X-WP-Nonce": urRestApiNonce
@@ -68,6 +66,13 @@ const Edit = (props) => {
 		label: formList[index]
 	}));
 
+	useEffect(() => {
+		if (formId === "initial" && formOptions.length > 0) {
+			setAttributes({ formId: String(formOptions[0].value) });
+			setFormState(String(formOptions[0].value));
+		}
+	}, [formId, formOptions]);
+
 	const selectRegistrationForm = (id) => {
 		setAttributes({ formId: id });
 		setFormState(id);
@@ -79,7 +84,7 @@ const Edit = (props) => {
 				<InspectorControls key="ur-gutenberg-registration-form-inspector-controls">
 					<PanelBody
 						title={__(
-							"User Registration Forms",
+							"User Registration & Membership Forms",
 							"user-registration"
 						)}
 					>
@@ -124,7 +129,7 @@ const Edit = (props) => {
 							<Center>
 								<Heading as="h3" ml={5}>
 									{__(
-										"User Registration Forms",
+										"User Registration & Membership Forms",
 										"user-registration"
 									)}
 								</Heading>
@@ -161,13 +166,20 @@ const Edit = (props) => {
 						</CardBody>
 					</Card>
 				) : (
-					<Disabled>
-						<ServerSideRender
-							key="ur-gutenberg-registration-form-server-side-renderer"
-							block={blockName}
-							attributes={{ ...props.attributes, userState }}
-						/>
-					</Disabled>
+					<>
+						{"initial" !== props.attributes.formId && (
+							<Disabled>
+								<ServerSideRender
+									key="ur-gutenberg-registration-form-server-side-renderer"
+									block={blockName}
+									attributes={{
+										...props.attributes,
+										userState
+									}}
+								/>
+							</Disabled>
+						)}
+					</>
 				)}
 			</Box>
 		</ChakraProvider>

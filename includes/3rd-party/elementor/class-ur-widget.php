@@ -38,7 +38,7 @@ class UR_Widget extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return __( 'User Registration', 'user-registration' );
+		return __( 'User Registration & Membership', 'user-registration' );
 	}
 	/**
 	 * Get widget icon.
@@ -119,7 +119,7 @@ class UR_Widget extends Widget_Base {
 
 		$settings = $this->get_settings_for_display();
 		if ( ! $settings['user_registration_form'] ) {
-			return '<p>' . __( 'Please select a User Registration Forms.', 'user-registration' ) . '</p>';
+			return '<p>' . __( 'Please select a User Registration & Membership Forms.', 'user-registration' ) . '</p>';
 		}
 
 		$attributes = array(

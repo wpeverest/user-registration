@@ -1,14 +1,12 @@
-wpeverest/user-registration-pro@master:
+wpeverest/user-registration-pro@v6.0.0:
   - assets
   - includes
   - modules
   - src
   - templates
-  - .babelrc
   - .editorconfig
   - .gitattributes
   - .gitignore
-  - .jshintrc
   - license.txt
   - phpcs.xml
   - uninstall.php

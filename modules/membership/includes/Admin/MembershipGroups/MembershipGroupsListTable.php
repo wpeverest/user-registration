@@ -7,6 +7,7 @@
 
 namespace WPEverest\URMembership\Admin\MembershipGroups;
 
+use UR_Base_Layout;
 use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\TableList;
 
@@ -45,14 +46,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	 * No items found text.
 	 */
 	public function no_items() {
-		$image_url = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
-		?>
-		<div class="empty-list-table-container">
-			<img src="<?php echo $image_url; ?>" alt="">
-			<h3><?php echo _e( 'You don\'t have any Membership Groups yet.', 'user-registration' ); ?></h3>
-			<p><?php echo __( 'Please add a membership group and you are good to go.', 'user-registration' ); ?></p>
-		</div>
-		<?php
+		UR_Base_Layout::no_items('Membership Groups');
 	}
 
 	/**
@@ -66,7 +60,6 @@ class MembershipGroupsListTable extends \UR_List_Table {
 			'title'     => __( 'Group Name', 'user-registration' ),
 			'shortcode' => __( 'Shortcode', 'user-registration' ),
 			'status'    => __( 'Status', 'user-registration' ),
-			'action'    => __( 'Action', 'user-registration' ),
 		);
 	}
 
@@ -85,8 +78,8 @@ class MembershipGroupsListTable extends \UR_List_Table {
 		$membership_group_service = new MembershipGroupService();
 		$is_form_related          = $membership_group_service->get_group_form_id( $row->ID );
 
-		$url = 'admin.php?membership_group_id=' . $row->ID . '&action=delete&page=' . $this->page;
-		$url .= ( "" != $is_form_related ) ? "&form=" . get_the_title( $is_form_related ) : '';
+		$url  = 'admin.php?membership_group_id=' . $row->ID . '&action=delete&page=' . $this->page;
+		$url .= ( '' != $is_form_related ) ? '&form=' . get_the_title( $is_form_related ) : '';
 
 		return admin_url( $url );
 	}
@@ -103,12 +96,30 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	}
 
 	/**
-	 * @param $membership
+	 * @param $membership_group
 	 *
 	 * @return array
 	 */
-	public function get_row_actions( $membership ) {
-		return array();
+	public function get_row_actions( $membership_group ) {
+		$actions = array();
+
+		$actions['id'] = "ID: $membership_group->ID";
+
+		// Add Edit action
+		$actions['edit'] = sprintf(
+			'<a href="%s" class="ur-row-actions">%s</a>',
+			esc_url( $this->get_edit_links( $membership_group ) ),
+			__( 'Edit', 'user-registration' )
+		);
+
+		// Add Delete action
+		$actions['delete'] = sprintf(
+			'<a href="%s" class="delete-membership-groups ur-row-actions" data-membership-group-id="' . esc_attr( $membership_group->ID ) . '" aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '">%s</a>',
+			esc_url( wp_nonce_url( $this->get_delete_links( $membership_group ), 'urm_delete_nonce' ) ),
+			__( 'Delete', 'user-registration' )
+		);
+
+		return $actions;
 	}
 
 	/**
@@ -119,11 +130,23 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	public function column_status( $membership_group ) {
 		$membership_content = json_decode( $membership_group->post_content, true );
 		$enabled            = $membership_content['status'] == 'true';
-		$status_class       = $enabled ? 'user-registration-badge user-registration-badge--success-subtle' : 'user-registration-badge user-registration-badge--secondary-subtle';
-		$status_label       = $enabled ? esc_html__( 'Active', 'user-registration-content-restriction' ) : esc_html__( 'Inactive', 'user-registration-content-restriction' );
+		$actions            = '<div class="ur-status-toggle ur-d-flex ur-align-items-center visible" style="gap: 5px">';
+		$actions           .= '<div class="ur-toggle-section">';
+		$actions           .= '<span class="user-registration-toggle-form">';
+		$actions           .= '<input
+						class="ur-membership-change-status user-registration-switch__control hide-show-check enabled"
+						type="checkbox"
+						value="1"
+						' . esc_attr( checked( true, ur_string_to_bool( $enabled ), false ) ) . '
+						data-ur-membership-id="' . esc_attr( $membership_group->ID ) . '">';
+		$actions           .= '<span class="slider round"></span>';
+		$actions           .= '</span>';
+		$actions           .= '</div>';
+		$actions           .= '</div>';
 
-		return sprintf( '<span id="ur-membership-list-status-' . $membership_group->ID . '" class="%s" style="vertical-align: middle">%s</span>', $status_class, $status_label );
+		return $actions;
 	}
+
 
 	public function column_shortcode( $membership_group ) {
 
@@ -141,78 +164,20 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	}
 
 	/**
-	 * @param $membership
-	 *
-	 * @return string
-	 */
-	public function column_action( $membership_group ) {
-
-		$edit_link          = $this->get_edit_links( $membership_group );
-		$delete_link        = $this->get_delete_links( $membership_group );
-		$membership_content = json_decode( $membership_group->post_content, true );
-		$checked            = ( $membership_content['status'] == 'true' ) ? 'checked' : '';
-		$actions            = '
-		<div class="row-actions ur-d-flex ur-align-items-center visible" style="gap: 5px">
-			<div class="ur-toggle-section m1-auto">
-				<span class="user-registration-toggle-form">
-					<input
-						type="checkbox"
-						' . $checked . '
-						class="ur-membership-change-status user-registration-switch__control hide-show-check enabled"
-						data-ur-membership-id = ' . $membership_group->ID . '
-					>
-					<span class="slider round"></span>
-				</span>
-			</div>
-			&nbsp | &nbsp
-			<span class="edit">
-				<a href="' . esc_url( $edit_link ) . '">' . __( 'Edit', 'user-registration' ) . '</a>
-			</span>
-			&nbsp | &nbsp
-			<span class="delete">
-				<a class="delete-membership-groups" aria-label="' . esc_attr__( 'Delete this item', 'user-registration' ) . '" href="' . $delete_link . '">' . esc_html__( 'Delete', 'user-registration' ) . '</a>
-			</span>
-			</div>
-			';
-
-		return $actions;
-	}
-
-	/**
 	 * Render the list table page, including header, notices, status filters and table.
 	 */
 	public function display_page() {
-		$this->prepare_items();
-		if ( ! isset( $_GET['add-new-membership'] ) ) { // phpcs:ignore Standard.Category.SniffName.ErrorCode: input var okay, CSRF ok.
-			?>
-			<div id="user-registration-list-table-page">
-				<div class="user-registration-list-table-heading">
-					<h1>
-						<?php esc_html_e( 'All Membership Groups', 'user-registration' ); ?>
-					</h1>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add_groups' ) ); ?>"
-					   class="page-title-action">
-						<?php echo __( 'Add New', 'user-registration' ); ?>
-					</a>
-				</div>
-				<div id="user-registration-list-filters-row">
-
-					<?php
-					$this->display_search_box( 'membership-groups-list-search-input' );
-					?>
-				</div>
-				<hr>
-				<form id="membership-group-list" method="get">
-					<input type="hidden" name="page" value="<?php echo $this->page; ?>"/>
-					<?php
-					$this->screen->render_screen_reader_content( 'heading_list' );
-
-					$this->display();
-					?>
-				</form>
-			</div>
-			<?php
-		}
+		UR_Base_Layout::render_layout(
+			$this,
+			array(
+				'page'           => $this->page,
+				'title'          => esc_html__( 'All Membership Groups', 'user-registration' ),
+				'add_new_action' => 'add_groups',
+				'search_id'      => 'membership-groups-list-search-input',
+				'skip_query_key' => 'add-new-membership',
+				'form_id'        => 'membership-group-list',
+			)
+		);
 	}
 
 	/**
@@ -224,28 +189,17 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	 */
 	public function display_search_box( $search_id ) {
 		?>
-		<form method="get" id="user-registration-list-search-form">
-			<input type="hidden" name="page" value="user-registration-membership">
 			<input type="hidden" name="action" value="list_groups">
 			<p class="search-box">
 			</p>
-			<div>
-				<input type="search" id="<?php echo $search_id; ?>" name="s" value="<?php echo esc_attr( $_GET['s'] ?? '' ); ?>"
-					   placeholder="<?php echo esc_attr( 'Search Membership Groups',' user-registration' ); ?> ..."
-					   autocomplete="off">
-				<button type="submit" id="search-submit">
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-						<path fill="#000" fill-rule="evenodd"
-							  d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z"
-							  clip-rule="evenodd"></path>
-					</svg>
-				</button>
+			<div id="user-registration-list-search-form">
+				<?php
+				$placeholder = __( 'Search Membership Groups', 'user-registration' );
+				UR_Base_Layout::display_search_field( $search_id, $placeholder );
+				?>
 			</div>
 			<p></p>
-
-		</form>
 		<?php
-
 	}
 
 	/**
@@ -255,9 +209,70 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	 */
 	protected function get_bulk_actions() {
 		$actions = array(
-			'delete' => __( 'Delete permanently' )
+			'delete' => __( 'Delete permanently' ),
 		);
 
 		return $actions;
+	}
+
+	/**
+	 * Displays the bulk actions dropdown.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param string $which The location of the bulk actions: 'top' or 'bottom'.
+	 *                      This is designated as optional for backward compatibility.
+	 */
+	protected function bulk_actions( $which = '' ) {
+		if ( is_null( $this->_actions ) ) {
+			$this->_actions = $this->get_bulk_actions();
+
+			/**
+			 * Filters the items in the bulk actions menu of the list table.
+			 *
+			 * The dynamic portion of the hook name, `$this->screen->id`, refers
+			 * to the ID of the current screen.
+			 *
+			 * @since 3.1.0
+			 * @since 5.6.0 A bulk action can now contain an array of options in order to create an optgroup.
+			 *
+			 * @param array $actions An array of the available bulk actions.
+			 */
+			$this->_actions = apply_filters( "bulk_actions-{$this->screen->id}", $this->_actions ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+
+			$two = '';
+		} else {
+			$two = '2';
+		}
+
+		if ( empty( $this->_actions ) ) {
+			return;
+		}
+
+		echo '<label for="bulk-action-selector-' . esc_attr( $which ) . '" class="screen-reader-text">' . __( 'Select bulk action' ) . '</label>';
+		echo '<select name="bulk_action' . $two . '" id="bulk-action-selector-' . esc_attr( $which ) . "\">\n";
+		echo '<option value="-1">' . __( 'Bulk actions' ) . "</option>\n";
+
+		foreach ( $this->_actions as $key => $value ) {
+			if ( is_array( $value ) ) {
+				echo "\t" . '<optgroup label="' . esc_attr( $key ) . '">' . "\n";
+
+				foreach ( $value as $name => $title ) {
+					$class = ( 'edit' === $name ) ? ' class="hide-if-no-js"' : '';
+
+					echo "\t\t" . '<option value="' . esc_attr( $name ) . '"' . $class . '>' . $title . "</option>\n";
+				}
+				echo "\t" . "</optgroup>\n";
+			} else {
+				$class = ( 'edit' === $key ) ? ' class="hide-if-no-js"' : '';
+
+				echo "\t" . '<option value="' . esc_attr( $key ) . '"' . $class . '>' . $value . "</option>\n";
+			}
+		}
+
+		echo "</select>\n";
+
+		submit_button( __( 'Apply' ), 'action', '', false, array( 'id' => "doaction$two" ) );
+		echo "\n";
 	}
 }

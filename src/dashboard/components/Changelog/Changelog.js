@@ -14,7 +14,7 @@ import { CHANGELOG_TAG_COLORS } from "../../Constants";
 
 const Changelog = () => {
 	/* global _UR_DASHBOARD_ */
-	const { urRestApiNonce, restURL } =
+	const { urRestApiNonce } =
 		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
 	const [changelogParsed, setChangelogParsed] = useState(false);
@@ -26,7 +26,7 @@ const Changelog = () => {
 	useEffect(() => {
 		if (!changelogParsed) {
 			const data = apiFetch({
-				path: restURL + `user-registration/v1/changelog`,
+				path: `user-registration/v1/changelog`,
 				method: "GET",
 				headers: {
 					"X-WP-Nonce": urRestApiNonce

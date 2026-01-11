@@ -20,6 +20,7 @@
     }
 
     input {
+
         &[type="text"],
         &[type="password"],
         &[type="email"],
@@ -35,6 +36,7 @@
             width: 100%;
             padding: 0 $spacing_12px;
             min-height: 38px;
+            height: 38px;
             border: $border_width solid $border_color;
             border-radius: $border_radius_4;
             font-size: 14px;
@@ -43,6 +45,7 @@
             font-weight: $regular;
             margin: 0;
             box-shadow: none;
+            font-family: inherit;
 
             &::placeholder {
                 color: #bababa;
@@ -54,15 +57,26 @@
                 border-color: $primary_color;
             }
 
-            &:disabled {
-                color: $color_gray_three;
-                background: $color_gray_five;
-            }
+            // &:disabled {
+            //     color: $color_gray_three;
+            //     background: $color_gray_five;
+            // }
         }
 
         &[type="checkbox"],
         &[type="radio"] {
             z-index: 0;
+
+            @media screen and (max-width: 782px) {
+                width: 16px;
+                height: 16px;
+
+                &::before {
+                    width: 8px;
+                    height: 8px;
+                    margin: 3.2px;
+                }
+            }
         }
 
         &[type="search"] {

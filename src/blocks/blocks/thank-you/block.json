@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "title": "Thank You",
   "category": "user-registration",
-  "description": "This provides block for a thank you page.",
+  "description": "Customize and display the Membership Thank You content.",
   "keywords": [
     "user registration thank you",
     "urm thank you",
@@ -52,6 +52,34 @@
     "show_notice_2": {
       "type": "boolean",
       "default": true
+    },
+    "show_bank_details": {
+      "type": "boolean",
+      "default": true
+    },
+    "show_heading_icon": {
+      "type": "boolean",
+      "default": true
+    },
+    "show_headline": {
+      "type": "boolean",
+      "default": true
+    },
+    "headline_text": {
+      "type": "string",
+      "default": "Thank you for registering!"
+    },
+    "redirect_btn_text": {
+      "type": "string",
+      "default": "Go to my Account"
+    },
+    "show_redirect_btn": {
+      "type": "boolean",
+      "default": true
+    },
+    "redirect_page_id": {
+      "type": "number",
+      "default": 0
     }
   },
   "editorScript": "user-registration-blocks-editor",

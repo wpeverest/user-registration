@@ -49,6 +49,22 @@ jQuery(function ($) {
 				"#user_registration_user_pass_field .password-input-group"
 			).append(hide_show_password);
 		},
+		/**
+		 * toggle user edit form visibility
+		 */
+		toggle_edit_form_visibility: function (show) {
+			if (show) {
+				$(".urm-admin-edit-user").removeClass(
+					"user-registration-hidden"
+				);
+				$(".urm-admin-view-user").addClass("user-registration-hidden");
+			} else {
+				$(".urm-admin-edit-user").addClass("user-registration-hidden");
+				$(".urm-admin-view-user").removeClass(
+					"user-registration-hidden"
+				);
+			}
+		},
 
 		/**
 		 * Show Success message using snackbar.
@@ -148,6 +164,15 @@ jQuery(function ($) {
 			$(document).on("click", ".set-new-pass-btn", function () {
 				UREditUsers.toggle_password_input_visibility();
 			});
+
+			$(document).on(
+				"click",
+				"#user-registration-edit-user-link",
+				function (e) {
+					e.preventDefault();
+					UREditUsers.toggle_edit_form_visibility(true);
+				}
+			);
 		},
 		/*
 		 * Retrieves fieldwise data from a given field.
@@ -948,6 +973,9 @@ jQuery(function ($) {
 									UREditUsers.show_failure_message(
 										response.data.message
 									);
+									UREditUsers.toggle_edit_form_visibility(
+										true
+									);
 								} else {
 									UREditUsers.show_success_message(
 										response.data.message
@@ -965,12 +993,14 @@ jQuery(function ($) {
 							$(window).scrollTop(
 								$(".user-registration").position()
 							);
+							UREditUsers.toggle_edit_form_visibility(false);
 						}
 					}).fail(function () {
 						UREditUsers.show_failure_message(
 							l10n.ajax_form_submit_error
 						);
 						button.prop("disabled", false);
+						UREditUsers.toggle_edit_form_visibility(true);
 						return;
 					});
 				}

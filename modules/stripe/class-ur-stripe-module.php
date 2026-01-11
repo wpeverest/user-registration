@@ -36,6 +36,11 @@ class User_Registration_Stripe_Module {
 	 * @return array
 	 */
 	public function raw_settings() {
+		$stripe_enabled = get_option( 'user_registration_stripe_enabled', '' );
+
+		// Determine default toggle value based on urm_is_new_installation option
+		$stripe_toggle_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false ));
+
 		return array(
 			'id'           => 'stripe',
 			'title'        => __( 'Stripe Settings', 'user-registration' ),
@@ -44,6 +49,15 @@ class User_Registration_Stripe_Module {
 			'desc'         => '',
 			'is_connected' => get_option( 'urm_stripe_connection_status', false ),
 			'settings'     => array(
+				array(
+					'type'     => 'toggle',
+					'title'    => __( 'Enable Stripe', 'user-registration' ),
+					'desc'     => __( 'Enable Stripe payment gateway.', 'user-registration' ),
+					'id'       => 'user_registration_stripe_enabled',
+					'desc_tip' => true,
+					'default'  => ($stripe_enabled) ? $stripe_enabled : $stripe_toggle_default,
+					'class'    => 'urm_toggle_pg_status',
+				),
 				array(
 					'title'    => __( 'Test Publishable key', 'user-registration' ),
 					'desc'     => __( 'Stripe test publishable  key.', 'user-registration' ),
@@ -124,7 +138,9 @@ class User_Registration_Stripe_Module {
 			'status' => true,
 			'connected' => true,
 		);
-
+		if( isset( $form_data['user_registration_stripe_enabled'] ) && ! $form_data['user_registration_stripe_enabled'] ) {
+			return $response;
+		}
 		foreach ( $form_data as $k => $data ) {
 			$last_data = get_option( $k );
 			if ( $last_data !== $data ) {
@@ -137,7 +153,6 @@ class User_Registration_Stripe_Module {
 			$mode            = isset( $form_data['user_registration_stripe_test_mode'] ) ? ( ( true === $form_data['user_registration_stripe_test_mode'] ) ? 'test' : 'live' ) : 'test';
 			$publishable_key = $form_data[ sprintf( 'user_registration_stripe_%s_publishable_key', $mode ) ];
 			$secret_key      = $form_data[ sprintf( 'user_registration_stripe_%s_secret_key', $mode ) ];
-
 
 			\Stripe\Stripe::setApiKey( $secret_key ); // Replace with your actual key
 

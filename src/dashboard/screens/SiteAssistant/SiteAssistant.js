@@ -9,17 +9,18 @@ import {
 	Text
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
-import React, { useState, useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BiBulb } from "react-icons/bi";
 import * as URIcon from "../../components/Icon/Icon";
 
 // Import new components
 import {
 	DefaultFormMissing,
-	RequiredPagesMissing,
-	PaymentSetup,
-	SendTestEmail,
 	DefaultWordPressLogin,
+	MembershipField,
+	PaymentSetup,
+	RequiredPagesMissing,
+	SendTestEmail,
 	SpamProtection
 } from "./components";
 
@@ -37,9 +38,10 @@ const SiteAssistant = () => {
 		defaultForm: false,
 		requiredPages: false,
 		paymentSetup: false,
-		sendTestEmail: true,
+		sendTestEmail: false,
 		defaultWordPressLogin: false,
-		spamProtection: false
+		spamProtection: false,
+		membershipField: false
 	});
 
 	// Check if default form exists
@@ -111,6 +113,34 @@ const SiteAssistant = () => {
 		initialPaymentSetupHandled
 	);
 
+
+	const membershipEnabled =
+		typeof _UR_DASHBOARD_ !== "undefined" &&
+		_UR_DASHBOARD_.site_assistant_data &&
+		_UR_DASHBOARD_.site_assistant_data.membership_enabled;
+
+	const hasMembershipPlans =
+		typeof _UR_DASHBOARD_ !== "undefined" &&
+		_UR_DASHBOARD_.site_assistant_data &&
+		_UR_DASHBOARD_.site_assistant_data.has_membership_plans;
+
+	const initialMembershipFieldHandled =
+		typeof _UR_DASHBOARD_ !== "undefined" &&
+		_UR_DASHBOARD_.site_assistant_data &&
+		_UR_DASHBOARD_.site_assistant_data.membership_field_handled;
+
+	// State to track if membership field was handled during this session
+	const [membershipFieldHandled, setMembershipFieldHandled] = useState(
+		initialMembershipFieldHandled
+	);
+
+	// Determine if we should show the membership field notice
+	const shouldShowMembershipField =
+		hasDefaultForm &&
+		membershipEnabled &&
+		hasMembershipPlans &&
+		!membershipFieldHandled;
+
 	// State to track if all components are completed
 	const [allCompleted, setAllCompleted] = useState(false);
 
@@ -134,37 +164,61 @@ const SiteAssistant = () => {
 		setPaymentSetupHandled(true);
 	}, []);
 
-	const toggleOpen = useCallback((id) => {
-		if (typeof id === "undefined") {
-			const site_config_array = [
-				hasDefaultForm,
-				missingPagesData.length === 0,
-				testEmailSent,
-				wordPressLoginHandled,
-				spamProtectionHandled,
-				paymentSetupHandled
-			];
 
-			const openKeys = Object.keys(open);
-
-			const firstFalseIndex = site_config_array.findIndex(
-				(item) => item === false
-			);
-
-			const firstFalseKey =
-				firstFalseIndex !== -1 ? openKeys[firstFalseIndex] : null;
-			id = firstFalseKey;
-		}
-
-		setOpen((prev) => {
-			const newState = Object.keys(prev).reduce((acc, key) => {
-				acc[key] = key === id ? !prev[id] : false;
-				return acc;
-			}, {});
-
-			return newState;
-		});
+	const handleMembershipFieldHandled = useCallback(() => {
+		setMembershipFieldHandled(true);
 	}, []);
+
+	const toggleOpen = useCallback(
+		(id) => {
+			if (typeof id === "undefined") {
+				const site_config_array = [
+					hasDefaultForm,
+					missingPagesData.length === 0,
+					!shouldShowMembershipField,
+					paymentSetupHandled,
+					testEmailSent,
+					wordPressLoginHandled,
+					spamProtectionHandled
+				];
+
+				const openKeys = [
+					"defaultForm",
+					"requiredPages",
+					"membershipField",
+					"paymentSetup",
+					"sendTestEmail",
+					"defaultWordPressLogin",
+					"spamProtection"
+				];
+
+				const firstFalseIndex = site_config_array.findIndex(
+					(item) => item === false
+				);
+
+				const firstFalseKey =
+					firstFalseIndex !== -1 ? openKeys[firstFalseIndex] : null;
+				id = firstFalseKey;
+			}
+
+			setOpen((prev) => {
+				const newState = Object.keys(prev).reduce((acc, key) => {
+					acc[key] = key === id ? !prev[id] : false;
+					return acc;
+				}, {});
+				return newState;
+			});
+		},
+		[
+			hasDefaultForm,
+			missingPagesData.length,
+			shouldShowMembershipField,
+			paymentSetupHandled,
+			testEmailSent,
+			wordPressLoginHandled,
+			spamProtectionHandled
+		]
+	);
 
 	// Check if all components are completed and redirect if so
 	useEffect(() => {
@@ -172,6 +226,7 @@ const SiteAssistant = () => {
 		const allComponentsHandled =
 			hasDefaultForm &&
 			missingPagesData.length === 0 &&
+			!shouldShowMembershipField &&
 			testEmailSent &&
 			wordPressLoginHandled &&
 			spamProtectionHandled &&
@@ -191,6 +246,7 @@ const SiteAssistant = () => {
 		const site_config_array = [
 			hasDefaultForm,
 			missingPagesData.length === 0,
+			!shouldShowMembershipField,
 			testEmailSent,
 			wordPressLoginHandled,
 			spamProtectionHandled,
@@ -231,6 +287,7 @@ const SiteAssistant = () => {
 	}, [
 		hasDefaultForm,
 		missingPagesData.length,
+		shouldShowMembershipField,
 		testEmailSent,
 		wordPressLoginHandled,
 		spamProtectionHandled,
@@ -242,28 +299,6 @@ const SiteAssistant = () => {
 
 	return (
 		<Container maxW="100%" py={1} marginLeft={"10px"}>
-			<Stack align={"flex-start"} gap={4} mb={8}>
-				<Heading
-					as="h3"
-					fontSize="2xl"
-					color="gray.800"
-					mt={0}
-					css={{
-						fontWeight: "bold !important"
-					}}
-				>
-					{__(
-						"Welcome to User Registration & Membership",
-						"user-registration"
-					)}
-				</Heading>
-				<Text fontSize="18px !important" fontWeight={"light"}>
-					{__(
-						"Let's get your user registration system set up and ready to go!",
-						"user-registration"
-					)}
-				</Text>
-			</Stack>
 			<Grid
 				gridGap="5"
 				gridTemplateColumns={{
@@ -317,6 +352,16 @@ const SiteAssistant = () => {
 								isOpen={open.requiredPages}
 								onToggle={() => toggleOpen("requiredPages")}
 								missingPagesData={missingPagesData}
+								numbering={++config_number}
+							/>
+						)}
+
+				
+						{shouldShowMembershipField && (
+							<MembershipField
+								isOpen={open.membershipField}
+								onToggle={() => toggleOpen("membershipField")}
+								onHandled={handleMembershipFieldHandled}
 								numbering={++config_number}
 							/>
 						)}
@@ -377,14 +422,14 @@ const SiteAssistant = () => {
 							<URIcon.Team w="5" h="5" fill={PRIMARY_COLOR} />
 							<Heading as="h3" size="sm" fontWeight="semibold">
 								{__(
-									"User Registration Community",
+									"User Registration & Membership Community",
 									"user-registration"
 								)}
 							</Heading>
 						</HStack>
 						<Text fontSize="13px" color="gray.700">
 							{__(
-								"Join our exclusive group and connect with fellow User Registration members. Ask questions, contribute to discussions, and share feedback!",
+								"Join our exclusive group and connect with fellow User Registration & Membership members. Ask questions, contribute to discussions, and share feedback!",
 								"user-registration"
 							)}
 						</Text>
@@ -417,7 +462,7 @@ const SiteAssistant = () => {
 						</HStack>
 						<Text fontSize="13px" color="gray.700">
 							{__(
-								"Check our documentation for detailed information on User Registration features and how to use them.",
+								"Check our documentation for detailed information on User Registration & Membership features and how to use them.",
 								"user-registration"
 							)}
 						</Text>
@@ -537,7 +582,7 @@ const SiteAssistant = () => {
 						</HStack>
 						<Text fontSize="13px" color="gray.700">
 							{__(
-								"Watch our step-by-step video tutorials that'll help you get the best out of User Registration's features.",
+								"Watch our step-by-step video tutorials that'll help you get the best out of User Registration & Membership's features.",
 								"user-registration"
 							)}
 						</Text>

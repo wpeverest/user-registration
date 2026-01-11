@@ -51,7 +51,6 @@ if ( ! class_exists( 'Members' ) ) {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_action( 'manage_users_custom_column', array( $this, 'modify_user_status_column' ), 10, 3 );
-
 		}
 
 		function modify_user_status_column( $value, $column_name, $user_id ) {
@@ -80,16 +79,22 @@ if ( ! class_exists( 'Members' ) ) {
 				return;
 			}
 			$suffix = defined( 'SCRIPT_DEBUG' ) ? '' : '.min';
-			wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), '1.0.0', true );
-			wp_register_script( 'user-registration-members', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/user-registration-members-admin' . $suffix . '.js', array(
-				'jquery',
-				'ur-enhanced-select',
-				'user-registration-admin'
-			), '1.0.0', true );
+			wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), UR_VERSION, true );
+			wp_register_script(
+				'user-registration-members',
+				UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/user-registration-members-admin' . $suffix . '.js',
+				array(
+					'jquery',
+					'ur-enhanced-select',
+					'user-registration-admin',
+				),
+				UR_VERSION,
+				true
+			);
 			wp_enqueue_script( 'ur-snackbar' );
 			wp_enqueue_script( 'user-registration-members' );
 			wp_enqueue_script( 'sweetalert2' );
-			wp_register_script( 'selectWoo', UR()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), '5.0.0', false );
+			wp_register_script( 'selectWoo', UR()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', array( 'jquery' ), UR_VERSION, false );
 			wp_enqueue_script( 'selectWoo' );
 			$this->localize_scripts();
 		}
@@ -104,15 +109,15 @@ if ( ! class_exists( 'Members' ) ) {
 			if ( empty( $_GET['page'] ) || 'user-registration-members' !== $_GET['page'] ) {
 				return;
 			}
-			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), '1.0.0' );
-			wp_register_style( 'ur-core-builder-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR_MEMBERSHIP_VERSION );
-			wp_register_style( 'ur-membership-admin-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-admin.css', array(), UR_MEMBERSHIP_VERSION );
+			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), UR_VERSION );
+			wp_register_style( 'ur-core-builder-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR_VERSION );
+			wp_register_style( 'ur-membership-admin-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-admin.css', array(), UR_VERSION );
 			wp_enqueue_style( 'ur-membership-admin-style' );
 			wp_enqueue_style( 'user-registration-pro-admin-style' );
 			wp_enqueue_style( 'sweetalert2' );
 			wp_enqueue_style( 'ur-core-builder-style' );
 			wp_enqueue_style( 'ur-snackbar' );
-			wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), '4.0.6' );
+			wp_enqueue_style( 'select2', UR()->plugin_url() . '/assets/css/select2/select2.css', array(), UR_VERSION );
 		}
 
 		/**
@@ -132,14 +137,14 @@ if ( ! class_exists( 'Members' ) ) {
 				'user-registration-members',
 				'ur_members_localized_data',
 				array(
-					'_nonce'             => wp_create_nonce( 'ur_members' ),
-					'edit_members_nonce' => wp_create_nonce( 'ur_edit_members' ),
-					'member_id'          => $member_id,
-					'ajax_url'           => admin_url( 'admin-ajax.php' ),
-					'wp_roles'           => ur_membership_get_all_roles(),
-					'labels'             => $this->get_i18_labels(),
-					'members_page_url'   => admin_url( 'admin.php?page=user-registration-members' ),
-					'delete_icon'        => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
+					'_nonce'                   => wp_create_nonce( 'ur_members' ),
+					'edit_members_nonce'       => wp_create_nonce( 'ur_edit_members' ),
+					'member_id'                => $member_id,
+					'ajax_url'                 => admin_url( 'admin-ajax.php' ),
+					'wp_roles'                 => ur_membership_get_all_roles(),
+					'labels'                   => $this->get_i18_labels(),
+					'members_page_url'         => admin_url( 'admin.php?page=user-registration-members' ),
+					'delete_icon'              => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
 					'ur_membership_edit_nonce' => wp_create_nonce( 'ur_membership_edit_nonce' ),
 				)
 			);
@@ -152,18 +157,18 @@ if ( ! class_exists( 'Members' ) ) {
 		 */
 		public function get_i18_labels() {
 			return array(
-				'network_error'                                 => esc_html__( 'Network error', 'user-registration' ),
-				'i18n_error'                                    => __( 'Error', 'user-registration' ),
-				'i18n_field_is_required'                        => _x( 'field is required.', 'user registration membership', 'user-registration' ),
-				'i18n_field_email_field_validation'             => _x( 'Please enter a valid email address.', 'user registration membership', 'user-registration' ),
-				'i18n_field_password_field_validation'          => _x( 'Password does not match with confirm password.', 'user registration membership', 'user-registration' ),
+				'network_error'                        => esc_html__( 'Network error', 'user-registration' ),
+				'i18n_error'                           => __( 'Error', 'user-registration' ),
+				'i18n_field_is_required'               => _x( 'field is required.', 'user registration membership', 'user-registration' ),
+				'i18n_field_email_field_validation'    => _x( 'Please enter a valid email address.', 'user registration membership', 'user-registration' ),
+				'i18n_field_password_field_validation' => _x( 'Password does not match with confirm password.', 'user registration membership', 'user-registration' ),
 				'i18n_field_subscription_start_date_validation' => _x( 'Start date must be greater than or equal to today.', 'user registration membership', 'user-registration' ),
-				'i18n_prompt_title'                             => __( 'Delete Members', 'user-registration' ),
-				'i18n_prompt_bulk_subtitle'                     => __( 'Are you sure you want to delete these members permanently?', 'user-registration' ),
-				'i18n_prompt_single_subtitle'                   => __( 'Are you sure you want to delete this members permanently?', 'user-registration' ),
-				'i18n_prompt_delete'                            => __( 'Delete', 'user-registration' ),
-				'i18n_prompt_cancel'                            => __( 'Cancel', 'user-registration' ),
-				'i18n_prompt_no_membership_selected'            => __( 'Please select at least one member.', 'user-registration' ),
+				'i18n_prompt_title'                    => __( 'Delete Members', 'user-registration' ),
+				'i18n_prompt_bulk_subtitle'            => __( 'Are you sure you want to delete these members permanently?', 'user-registration' ),
+				'i18n_prompt_single_subtitle'          => __( 'Are you sure you want to delete this members permanently?', 'user-registration' ),
+				'i18n_prompt_delete'                   => __( 'Delete', 'user-registration' ),
+				'i18n_prompt_cancel'                   => __( 'Cancel', 'user-registration' ),
+				'i18n_prompt_no_membership_selected'   => __( 'Please select at least one member.', 'user-registration' ),
 			);
 		}
 
@@ -242,13 +247,13 @@ if ( ! class_exists( 'Members' ) ) {
 						</h1>
 					</div>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $this->page . '&action=add' ) ); ?>"
-					   id="user-registration-members-add-btn"
-					   class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
+						id="user-registration-members-add-btn"
+						class="page-title-action"><?php esc_html_e( 'Add New', 'user-registration' ); ?></a>
 				</div>
 				<div id="user-registration-list-filters-row" style="align-items: center;">
 					<div class="ur-membership-filter-container" style="display: flex;align-items: center; gap: 10px">
 						<form method="get" id="user-registration-list-search-form"
-							  style="display: flex; width: auto; gap: 20px">
+								style="display: flex; width: auto; gap: 20px">
 							<input type="hidden" name="page" value="user-registration-members"/>
 							<?php
 							$list_table->display_search_box();
@@ -298,8 +303,10 @@ if ( ! class_exists( 'Members' ) ) {
 			if ( ! empty( $member_id ) ) {
 				$subscription_repository = new MembersSubscriptionRepository();
 				$membership_repository   = new MembershipRepository();
-				$member_subscription     = $subscription_repository->get_member_subscription( $member_id );
-				$member_membership       = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
+
+				$member_subscription = $subscription_repository->get_member_subscription( $member_id );
+
+				$member_membership = $membership_repository->get_single_membership_by_ID( $member_subscription['item_id'] );
 
 				$member_membership_details['ID']           = $member_subscription['item_id'];
 				$member_membership_details['post_title']   = $member_membership['post_title'];
@@ -346,7 +353,5 @@ if ( ! class_exists( 'Members' ) ) {
 
 			return $column_headers;
 		}
-
-
 	}
 }

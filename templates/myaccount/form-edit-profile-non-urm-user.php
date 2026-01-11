@@ -16,7 +16,7 @@
  * @version 1.0.0
  */
 
-if (! defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -27,20 +27,20 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 ?>
 <div class="user-registration-MyAccount-content__body">
 	<div class="ur-frontend-form login ur-edit-profile" id="ur-frontend-form">
-	<?php if ( current_user_can( 'manage_options' ) ): ?>
+	<?php if ( current_user_can( 'manage_options' ) ) : ?>
 				<div class="user-registration-myaccount-notice-box">
 				<div class="user-registration-myaccount-notice-box--title">
 					<div class="user-registration-myaccount-notice-box--title-icon">
 						<span class="dashicons dashicons-info-outline notice-icon"></span>
 					</div>
 					<div class="user-registration-myaccount-notice-box--title-text">
-						<h2><?php echo esc_html__( "Hey! Your users see a different account page", "user-registration"); ?></h2>
+						<h2><?php echo esc_html__( 'Hey! Your users see a different account page', 'user-registration' ); ?></h2>
 					</div>
 				</div>
-				<p><?php echo esc_html__( "What you're seeing isn't the full user experience. Users who register through your form get more profile features and a better interface.", "user-registration"); ?></p>
-				<p class="pro-tip"><?php echo wp_kses_post(__( "<strong>Pro tip:</strong> Create a test user with your registration form to see how the account page really looks!", "user-registration") ); ?></p>
+				<p><?php echo esc_html__( "What you're seeing isn't the full user experience. Users who register through your form get more profile features and a better interface.", 'user-registration' ); ?></p>
+				<p class="pro-tip"><?php echo wp_kses_post( __( '<strong>Pro tip:</strong> Create a test user with your registration form to see how the account page really looks!', 'user-registration' ) ); ?></p>
 				<?php
-					$user_args = array(
+					$user_args             = array(
 						'meta_query'  => array(
 							array(
 								'key'     => 'ur_form_id',
@@ -50,14 +50,14 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 						'count_total' => true,
 						'fields'      => 'ID',
 					);
-					$user_query = new WP_User_Query( $user_args );
+					$user_query            = new WP_User_Query( $user_args );
 					$existing_non_urm_user = $user_query->get_total();
 					?>
-				<?php if ( $existing_non_urm_user >= 5 ): ?>
+				<?php if ( $existing_non_urm_user >= 5 ) : ?>
 					<p class="existing-users">
 					<strong>Existing users:</strong> Your site has <span class="highlight"><?php echo $existing_non_urm_user; ?> users</span> registered before this plugin.
 					Want them to enjoy the new profile features too? Use the
-					<a class="addon-link" href="https://wpuserregistration.com/features/profile-connect/?utm_source=my-account&utm_medium=profile-connect-addon-link&utm_campaign=<?php echo UR()->utm_campaign ?>" rel="noreferrer noopener" target="_blank">Profile Connect addon</a> to link these existing users to your new registration form.
+					<a class="addon-link" href="https://wpuserregistration.com/features/profile-connect/?utm_source=my-account&utm_medium=profile-connect-addon-link&utm_campaign=<?php echo UR()->utm_campaign; ?>" rel="noreferrer noopener" target="_blank">Profile Connect addon</a> to link these existing users to your new registration form.
 					</p>
 				<?php endif; ?>
 			</div>
@@ -74,21 +74,22 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 						?>
 						<h2>
 						<?php
-							$urm_my_account_layout = get_option( 'user_registration_my_account_layout', 'horizontal' );
+							$urm_my_account_layout = get_option( 'user_registration_my_account_layout', 'vertical' );
 
-							if('horizontal' === $urm_my_account_layout) {
-								esc_html_e(
-									/**
-									 * Filter to modify the profile detail title.
-									 *
-									 * @param string Profile detail title content.
-									 * @return string modified profile detail title.
-									 */
-									apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore
-							}
-						?></h2>
+						if ( 'horizontal' === $urm_my_account_layout ) {
+							esc_html_e(
+								/**
+								 * Filter to modify the profile detail title.
+								 *
+								 * @param string Profile detail title content.
+								 * @return string modified profile detail title.
+								 */
+								apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore
+						}
+						?>
+						</h2>
 						<?php
-						$is_profile_pic_on_form    = ! ur_option_checked( 'user_registration_disable_profile_picture', false );
+						$is_profile_pic_on_form = ! ur_option_checked( 'user_registration_disable_profile_picture', false );
 						if ( $is_profile_pic_on_form ) {
 							?>
 						<div class="user-registration-profile-header">
@@ -112,35 +113,49 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 								?>
 									<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
 
-									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( size_format( $max_upload_size ) ); ?></p>
+									<p class="user-registration-tips"><?php echo esc_html__( 'Max size: ', 'user-registration' ) . esc_attr( apply_filters( 'user_registration_profile_picture_max_upload_size', size_format( $max_upload_size ) ) ); ?></p>
 									</div>
 									<header>
-										<p><strong>
-										<?php
-										echo esc_html(
-											/**
-											 * Filter to modify the upload new profile image message.
-											 *
-											 * @param string Message content to be modified.
-											 * @return string modified message.
-											 */
-											apply_filters( 'user_registration_upload_new_profile_image_message', esc_html__( 'Upload your new profile image.', 'user-registration' ) )
-										);
-										?>
-											</strong></p>
 										<div class="button-group">
-											<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo esc_attr( $profile_picture_url ); ?>" />
-											<input type="hidden" name="profile-default-image" value="<?php echo esc_url( $gravatar_image ); ?>" />
-											<button class="button profile-pic-remove" data-attachment-id="<?php echo esc_attr( get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) ); ?>" style="<?php echo esc_attr( ( $gravatar_image === $image ) ? 'display:none;' : '' ); ?>"><?php echo esc_html__( 'Remove', 'user-registration' ); ?></php></button>
+											<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="#475bb2" height="18px" width="18px" viewBox="0 0 24 24">
+													<path d="M2 19.142V5.807a2.857 2.857 0 0 1 2.858-2.858h6.668a.953.953 0 1 1 0 1.905H4.858a.952.952 0 0 0-.953.953v13.335a.952.952 0 0 0 .953.953h13.336a.952.952 0 0 0 .952-.953v-6.667a.953.953 0 0 1 1.905 0v6.667A2.857 2.857 0 0 1 18.194 22H4.858A2.857 2.857 0 0 1 2 19.142Z"/>
+													<path d="M20.095 4.973a1.069 1.069 0 0 0-1.823-.755l-8.586 8.587a.955.955 0 0 0-.241.405l-.557 1.9 1.903-.555.112-.04a.956.956 0 0 0 .294-.2l8.585-8.587.071-.078c.156-.19.242-.43.242-.677Zm1.905 0c0 .789-.313 1.545-.87 2.102l-8.586 8.587c-.34.34-.759.587-1.22.721l.002.001-2.737.8a1.432 1.432 0 0 1-1.785-1.017c-.064-.248-.06-.51.012-.755l.8-2.737c.119-.402.324-.775.6-1.088l.123-.13 8.586-8.586.107-.102A2.973 2.973 0 0 1 22 4.973Z"/>
+												</svg>
+											</button>
+											<?php
 
-											<button type="button" class="button user_registration_profile_picture_upload hide-if-no-js" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" ><?php echo esc_html__( 'Upload Picture', 'user-registration' ); ?></button>
-											<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg,image/gif,image/png" style="display:none" />
-										</div>
-										<?php
-										if ( ! $profile_picture_url ) {
+											if ( has_action( 'uraf_profile_picture_buttons' ) ) {
+												?>
+												<div class="uraf-profile-picture-upload">
+													<p class="form-row " id="profile_pic_url_field" data-priority="">
+														<span class="uraf-profile-picture-upload-node" style="height: 0;width: 0;margin: 0;padding: 0;float: left;border: 0;overflow: hidden;">
+														<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" size="<?php echo esc_attr( $max_upload_size ); ?>" accept="<?php echo esc_attr( $edit_profile_valid_file_type ); ?>" style="<?php echo esc_attr( ( $gravatar_image !== $image ) ? 'display:none;' : '' ); ?>" data-crop-picture="<?php echo esc_attr( $crop_picture ); ?>"/>
+														<?php echo '<input type="text" class="uraf-profile-picture-input input-text ur-frontend-field" name="profile_pic_url" id="profile_pic_url" value="' . get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true ) . '" />'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+														</span>
+														<?php
+														/**
+														 * Fires to display buttons for user profile picture.
+														 *
+														 * @param array $profile_pic_args Array of buttons to be added.
+														 */
+														do_action( 'uraf_profile_picture_buttons', $profile_pic_args );
+														?>
+													</p>
+													<div style="clear:both; margin-bottom: 20px"></div>
+												</div>
+
+												<?php
+											} else {
+												?>
+												<input type="hidden" name="profile-pic-url" id="profile_pic_url" value="<?php echo esc_attr( $profile_picture_url ); ?>" />
+												<input type="hidden" name="profile-default-image" value="<?php echo esc_url( $gravatar_image ); ?>" />
+												<input type="file" id="ur-profile-pic" name="profile-pic" class="profile-pic-upload" accept="image/jpeg,image/gif,image/png" style="display:none" />
+												<?php
+											}
 											?>
-											<span><i><?php echo esc_html__( 'You can change your profile picture on', 'user-registration' ); ?> <a href="https://en.gravatar.com/"><?php esc_html_e( 'Gravatar', 'user-registration' ); ?></a></i></span>
-										<?php } ?>
+
+										</div>
 									</header>
 								</div>
 							<?php } ?>
@@ -151,7 +166,7 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 												<div class="form-row validate-required" id="user_registration_user_login_field" data-priority=""><label for="user_registration_user_login" class="ur-label"><?php _e( 'Username', 'user-registration' ); ?> <abbr class="required" title="required">*</abbr></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_user_login" type="text" class="input-text  without_icon input-text ur-edit-profile-field  user-registration-help-tip" name="user_registration_user_login" id="user_registration_user_login" placeholder="" value="<?php echo $user->user_login; ?>" readonly="readonly" title="Username can not be changed." required="required" data-default="copaturer"> </span> </div>
 											</div>
 											<div class="ur-field-item field-first_name" data-field-id="first_name" data-ref-id="user_registration_first_name">
-												<div class="form-row" id="user_registration_first_name_field" data-priority=""><label for="user_registration_first_name" class="ur-label"><?php _e( 'First Name', 'user-registration' ); ?></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_first_name" type="text" class="input-text  without_icon input-text ur-edit-profile-field" name="user_registration_first_name" id="user_registration_first_name" placeholder="" value="<?php echo esc_attr($user->first_name); ?>" data-default=""> </span> </div>
+												<div class="form-row" id="user_registration_first_name_field" data-priority=""><label for="user_registration_first_name" class="ur-label"><?php _e( 'First Name', 'user-registration' ); ?></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_first_name" type="text" class="input-text  without_icon input-text ur-edit-profile-field" name="user_registration_first_name" id="user_registration_first_name" placeholder="" value="<?php echo esc_attr( $user->first_name ); ?>" data-default=""> </span> </div>
 											</div>
 										</div>
 										<div class="ur-form-grid ur-grid-2" style="width:48%;">
@@ -159,7 +174,7 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 												<div class="form-row validate-required" id="user_registration_user_email_field" data-priority=""><label for="user_registration_user_email" class="ur-label"><?php _e( 'User Email', 'user-registration' ); ?> <abbr class="required" title="required">*</abbr></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_user_email" type="email" class="input-text  without_icon input-email ur-edit-profile-field " name="user_registration_user_email" id="user_registration_user_email" placeholder="" value="<?php echo $user->user_email; ?>" required="required" data-default="zapoda@mailinator.com"> </span> </div>
 											</div>
 											<div class="ur-field-item field-last_name" data-field-id="last_name" data-ref-id="user_registration_last_name">
-												<div class="form-row" id="user_registration_last_name_field" data-priority=""><label for="user_registration_last_name" class="ur-label"><?php _e( 'Last Name', 'user-registration' ); ?></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_last_name" type="text" class="input-text  without_icon input-text ur-edit-profile-field " name="user_registration_last_name" id="user_registration_last_name" placeholder="" value="<?php echo esc_attr($user->last_name); ?>" data-default=""> </span> </div>
+												<div class="form-row" id="user_registration_last_name_field" data-priority=""><label for="user_registration_last_name" class="ur-label"><?php _e( 'Last Name', 'user-registration' ); ?></label> <span class="input-wrapper"> <input data-rules="" data-id="user_registration_last_name" type="text" class="input-text  without_icon input-text ur-edit-profile-field " name="user_registration_last_name" id="user_registration_last_name" placeholder="" value="<?php echo esc_attr( $user->last_name ); ?>" data-default=""> </span> </div>
 											</div>
 										</div>
 									</div>
@@ -193,7 +208,7 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 								$submit_button_text = apply_filters( 'user_registration_profile_update_button', __( 'Save changes', 'user-registration' ) );
 								?>
 								<button type="submit" class="user-registration-submit-Button btn button <?php echo esc_attr( implode( ' ', $submit_btn_class ) ); ?>" name="save_account_details" ><span></span>
-									<?php echo esc_html($submit_button_text);?>
+									<?php echo esc_html( $submit_button_text ); ?>
 								</button>
 								<?php
 							} else {
@@ -225,6 +240,6 @@ $endpoint_label = isset( $args['endpoint_label'] ) ? $args['endpoint_label'] : '
 	/**
 	 * Fires after rendering the user registration edit profile form.
 	 */
-	do_action('user_registration_after_edit_profile_form');
+	do_action( 'user_registration_after_edit_profile_form' );
 	?>
 </div>

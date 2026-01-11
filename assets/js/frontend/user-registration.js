@@ -31,7 +31,32 @@
 						".user-registration-membership-notice__container .ur-toaster"
 					);
 				}
-				this.toggleNotice();
+				// this.toggleNotice();
+				this.ur_remove_cookie("urm_toast_content");
+				this.ur_remove_cookie("urm_toast_success_message");
+			},
+			show_error_message: function (message) {
+				$(".user-registration-membership-notice__container")
+					.removeClass("user-registration-membership-notice__blue")
+					.addClass("user-registration-membership-notice__red");
+				$(".user-registration-membership-notice__message").text(
+					message
+				);
+				$(".user-registration-membership-notice__container").css(
+					"display",
+					"block"
+				);
+
+				//attach near my account title.
+				if (
+					$(document).find(".user-registration-MyAccount").length ===
+					1
+				) {
+					$(
+						".user-registration-membership-notice__container .ur-toaster "
+					);
+				}
+				// this.toggleNotice();
 				this.ur_remove_cookie("urm_toast_content");
 				this.ur_remove_cookie("urm_toast_success_message");
 			},
@@ -199,9 +224,7 @@
 										);
 
 									var invite_code =
-										document.querySelector(
-											"#invite_code"
-										);
+										document.querySelector("#invite_code");
 
 									if (
 										"invite_code" === single_data.field_name
@@ -517,7 +540,11 @@
 														)
 												]
 													? "user_registration_" +
-													  $("[name='" + key + "']")
+														$(
+															"[name='" +
+																key +
+																"']"
+														)
 															.closest(
 																".ur-repeater-row"
 															)
@@ -777,15 +804,13 @@
 								'<div class="user-registration-' + type + '"/>'
 							);
 							wrapper.append(message);
-							var my_account_selector = $(
-								".user-registration"
-							).find(".user-registration-MyAccount-navigation");
-							if (my_account_selector.length) {
+
+							if ($("#user-registration").hasClass("vertical")) {
+								wrapper.insertBefore(".ur-frontend-form");
+							} else {
 								wrapper.insertBefore(
 									".user-registration-MyAccount-navigation"
 								);
-							} else {
-								wrapper.insertBefore(".ur-frontend-form");
 							}
 						} else {
 							var wrapper = $(
@@ -987,8 +1012,7 @@
 												$this
 													.find("#user_pass-error")
 													.remove();
-													console.log("hello");
-													
+
 												var error_msg_dom =
 													'<label id="user_pass-error" class="user-registration-error" for="user_pass">' +
 													ursL10n.password_strength_error +
@@ -1269,29 +1293,46 @@
 										.find("span")
 										.addClass("ur-front-spinner");
 
-									var hit_third_party_api =
-										events.wait_third_party_api($this);
-									if (hit_third_party_api) {
-										var thirdPartyHandlerPromise =
-											new Promise(function (
-												resolve,
-												reject
-											) {
-												$(document).trigger(
-													"user_registration_third_party_api_before_form_submit",
-													[
-														data,
-														$this,
-														$error_message,
-														resolve,
-														reject
-													]
-												);
-											}).then(function (val) {
-												events.ajax_form_submit(val);
-											});
+									if (
+										$registration_form
+											.find(
+												"form.register button.ur-submit-button"
+											)
+											.hasClass(
+												"urm-update-membership-button"
+											)
+									) {
+										$(document).trigger(
+											"user_registration_membership_update_before_form_submit",
+											[data, $this, $error_message]
+										);
 									} else {
-										events.ajax_form_submit(data);
+										var hit_third_party_api =
+											events.wait_third_party_api($this);
+										if (hit_third_party_api) {
+											var thirdPartyHandlerPromise =
+												new Promise(function (
+													resolve,
+													reject
+												) {
+													$(document).trigger(
+														"user_registration_third_party_api_before_form_submit",
+														[
+															data,
+															$this,
+															$error_message,
+															resolve,
+															reject
+														]
+													);
+												}).then(function (val) {
+													events.ajax_form_submit(
+														val
+													);
+												});
+										} else {
+											events.ajax_form_submit(data);
+										}
 									}
 								});
 						});
@@ -1524,10 +1565,17 @@
 											ajax_response.responseText
 										);
 
-										var timeout = response.data
-											.redirect_timeout
-											? response.data.redirect_timeout
-											: 2000;
+										var timeout =
+											response &&
+											response.data &&
+											response.data.redirect_timeout !==
+												undefined &&
+											response.data.redirect_timeout !==
+												null &&
+											response.data.redirect_timeout !==
+												""
+												? response.data.redirect_timeout
+												: 2000;
 
 										if (
 											typeof response.success !==
@@ -1599,9 +1647,10 @@
 														"</li>"
 												);
 											} else if (
-												response.data.form_login_option == "payment" &&
-												typeof response.data
-														.message !==
+												response.data
+													.form_login_option ==
+													"payment" &&
+												typeof response.data.message !==
 													"undefined"
 											) {
 												message.append(
@@ -2356,7 +2405,7 @@
 																			) ===
 																			-1
 																				? "user_registration_" +
-																				  index
+																					index
 																				: index;
 																	}
 
@@ -2857,6 +2906,18 @@
 				});
 			}
 		});
+
+		$(document).on("urm_show_action_message", function (e, data) {
+			if (data.type == "error") {
+				user_registration_frontend_utils.show_error_message(
+					data.message
+				);
+			} else {
+				user_registration_frontend_utils.show_success_message(
+					data.message
+				);
+			}
+		});
 	};
 	var update_nonce = function (all_forms_ids) {
 		$.ajax({
@@ -3205,8 +3266,8 @@ function customPasswordChecks(password) {
 //Shows the content restriction message if botiga theme is used.
 jQuery(document).ready(function ($) {
 	var urcrContentRestrictMsg = $(document).find(".urcr-restrict-msg");
-	if (urcrContentRestrictMsg.length > 0) {
-		urcrContentRestrictMsg.first().css("display", "block");
+	if (urcrContentRestrictMsg.length > 1) {
+		urcrContentRestrictMsg.hide().first().show();
 	}
 });
 
