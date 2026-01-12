@@ -4211,6 +4211,11 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Email Templates', 'user-registration' ),
 				),
+				'custom-email' => array(
+					'label'  => esc_html__( 'Custom Email', 'user-registration' ),
+					'plugin' => 'user-registration-email-custom-email',
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration - Custom Email', 'user-registration' ),
 			),
 			'registration_login' => array(
 				'social-connect'  => array(
@@ -4480,6 +4485,37 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 				$detail = $section_details;
 				if ( ! empty( $license_plan ) ) {
 					$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
+					// Check if this is the custom-email feature and handle feature activation
+					if ( 'custom-email' === $current_section ) {
+						$feature_slug = 'user-registration-custom-email';
+						$is_feature_enabled = ur_check_module_activation( 'custom-email' );
+
+						// Only show activation button if user has the right license plan and feature is not enabled
+						if ( in_array( $license_plan, $detail['plan'], true ) && ! $is_feature_enabled ) {
+							$description = esc_html__( 'Please activate the Custom Email feature to use this functionality.', 'user-registration' );
+							$button_class = 'user-registration-settings-feature-activate';
+							$button_attrs = array(
+								'data-slug' => $feature_slug,
+								'data-type' => 'feature',
+								'data-name' => $detail['name'],
+							);
+							$button_title = esc_html__( 'Activate Feature', 'user-registration' );
+
+							$settings['sections']['premium_setting_section']['before_desc'] = $description;
+							$settings['sections']['premium_setting_section']['desc']        = false;
+							$settings['sections']['premium_setting_section']['settings']    = array(
+								array(
+									'id'    => 'ur-activate-feature__button',
+									'type'  => 'button',
+									'class' => $button_class,
+									'attrs' => $button_attrs,
+									'title' => $button_title,
+								),
+							);
+							return $settings;
+						}
+					}
+
 					if ( ! in_array( $license_plan, $detail['plan'], true ) ) {
 						if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 							return array();
@@ -4492,11 +4528,13 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 					} else {
 						$plugin_name = $detail['name'];
 						$action      = '';
-						if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
+						if ( 'user-registration-email-custom-email' === $detail['plugin'] ) {
+							$action = 'Activate';
+						} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
 							if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 								$action = 'Activate';
 							} else {
-								return array();
+								return [];
 							}
 						} else {
 							$action = 'Install';
@@ -5428,7 +5466,7 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			?>
 			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
 				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
-						style="width: <?php echo esc_attr( $email_body_width ); ?>; max-width:600px; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+						style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
 					<tbody>
 					<tr>
 						<td colspan="2" style="text-align: left;">

@@ -173,30 +173,6 @@ class AJAX {
 		);
 	}
 
-	public static function approve_payment( $order_id ) {
-		$order_controller = new OrdersController();
-		$order            = $order_controller->get( $order_id );
-		$response         = $order_controller->approve( $order_id );
-
-		$order['member_id']  = $order['user_id'];
-		$order['membership'] = $order['post_id'];
-		unset( $order['user_id'], $order['post_id'] );
-
-		$email_service = new EmailService();
-		$email_service->send_email( $order, 'payment_successful' );
-
-		if ( ! $response['status'] ) {
-			return array(
-				'status'  => false,
-				'message' => $response['message'],
-				$response['code'],
-			);
-		}
-		return array(
-			'status'  => false,
-			'message' => wp_json_encode( $response ),
-		);
-	}
 	/**
 	 * Create membership orders from backend.
 	 */
@@ -519,10 +495,40 @@ class AJAX {
 			);
 		}
 
+		// Fire action hook when order status is updated (for custom email module to handle)
+		if ( 'failed' === $status ) {
+			do_action( 'ur_membership_order_status_failed', $order_id, $order, $status );
+		}
+
 		wp_send_json_success(
 			array(
 				'message' => __( 'Order updated successfully.', 'user-registration' ),
 			)
+		);
+	}
+
+	public static function approve_payment( $order_id ) {
+		$order_controller = new OrdersController();
+		$order            = $order_controller->get( $order_id );
+		$response         = $order_controller->approve( $order_id );
+
+		$order['member_id']  = $order['user_id'];
+		$order['membership'] = $order['post_id'];
+		unset( $order['user_id'], $order['post_id'] );
+
+		$email_service = new EmailService();
+		$email_service->send_email( $order, 'payment_successful' );
+
+		if ( ! $response['status'] ) {
+			return array(
+				'status'  => false,
+				'message' => $response['message'],
+				$response['code'],
+			);
+		}
+		return array(
+			'status'  => false,
+			'message' => wp_json_encode( $response ),
 		);
 	}
 }
