@@ -2,9 +2,9 @@
 Contributors: WPEverest
 Tags: user registration, membership, user profile, registration form, login form,
 Requires at least: 5.5
-Requires PHP: 7.2
+Requires PHP: 7.4
 Tested up to: 6.9
-Stable tag: 5.0.0
+Stable tag: 5.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -258,7 +258,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 5.0.0    - 12/01/2026 =
+= 5.0      - 13/01/2026 =
 * Refactor - Global Settings UI.
 * Refactor - Membership upgrade and renewal process.
 * Refactor - Payment configuration in the membership creation process.

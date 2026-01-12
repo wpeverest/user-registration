@@ -1,4 +1,4 @@
-= 5.0.0    - 12/01/2026 =
+= 5.0      - 13/01/2026 =
 * Refactor - Global Settings UI.
 * Refactor - Membership upgrade and renewal process.
 * Refactor - Payment configuration in the membership creation process.
