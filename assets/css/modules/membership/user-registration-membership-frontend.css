@@ -1668,13 +1668,11 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: none;
-  padding: 40px 20px;
-  box-sizing: border-box;
+  background: none;
 }
 
 .thank-you-page-container {
-  max-width: 680px;
+  max-width: 800px;
   width: 100%;
   text-align: center;
   background-color: #ffffff;
@@ -1713,6 +1711,8 @@ html {
 }
 .thank-you-page-container .ur-message {
   margin-bottom: 48px;
+  text-align: left;
+  font-size: 17px;
 }
 .thank-you-page-container .ur-message p {
   font-size: 16px;
@@ -1761,20 +1761,27 @@ html {
   transition: transform 0.3s ease;
 }
 .thank-you-page-container .ur-bank-details {
-  width: 100%;
-  margin: 24px 0;
+  width: auto;
+  margin: 30px 0;
   padding: 20px;
+  align-items: center;
   background-color: #F8F8FA;
   border: 1px solid #EDF2F7;
   border-radius: 6px;
   text-align: left;
+  font-size: 16px;
+  font-weight: 400;
+  color: #383838;
+  line-height: 30px;
+  gap: 12px;
 }
 .thank-you-page-container .ur-bank-details .ur-bank-details-title {
-  font-size: 20px;
-  margin: 0;
-  font-weight: 500;
-  border-bottom: 1px solid #e1e1e1;
-  padding-bottom: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #1f1f1f;
+  border-bottom: 1px solid #e9e9e9;
+  padding-bottom: 16px;
 }
 .thank-you-page-container .ur-bank-details h3,
 .thank-you-page-container .ur-bank-details h4 {
@@ -1891,7 +1898,6 @@ html {
     margin-bottom: 24px;
   }
   .thank-you-page-container .ur-button-wrapper .ur-redirect-btn {
-    width: 100%;
     padding: 12px 24px;
     font-size: 15px;
   }
@@ -1950,19 +1956,20 @@ html {
 }
 .user-registration-email__entries td {
   padding: 10px 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #EDF2F7;
   vertical-align: top;
 }
 .user-registration-email__entries-label {
   width: 35%;
   font-weight: 600;
   color: #374151;
-  background-color: #f9fafb;
+  background-color: #F8F8FA;
   white-space: nowrap;
 }
 .user-registration-email__entries-data {
   color: #111827;
   word-break: break-word;
+  background-color: #F8F8FA;
 }
 .user-registration-email__entries-tr:nth-child(even) {
   background-color: #fcfcfd;

@@ -834,7 +834,7 @@
 
 														&::before {
 															background: $primary_color;
-															margin: 3.2px;
+															// margin: 3.2px;
 														}
 													}
 												}
@@ -1152,9 +1152,7 @@
 								}
 							}
 
-							&__body {
-
-							}
+							&__body {}
 						}
 					}
 				}
@@ -1175,6 +1173,7 @@
 					}
 				}
 			}
+
 			.user-registration-payment__items {
 				border: $border_width solid $border_color;
 				border-radius: $border_radius_5;
@@ -1197,9 +1196,11 @@
 				.user-registration-switch {
 					@include form-toggle;
 				}
+
 				.ur-toggle-section {
-					flex: none!important;
+					flex: none !important;
 				}
+
 				.payment-option-body {
 					border-top: $border_width solid $border-color;
 					margin-top: $spacing_14px;

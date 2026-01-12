@@ -945,7 +945,6 @@
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio]:checked::before,
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-plan-and-price-section .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio]:checked::before {
   background: #475bb2;
-  margin: 3.2px;
 }
 @media screen and (max-width: 782px) {
   .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-main-fields .ur-membership-selection-container .ur-input-type-select .ur-field .ur-membership-types .ur-membership-type-title input[type=radio],
