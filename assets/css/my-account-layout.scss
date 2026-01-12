@@ -25,7 +25,7 @@
 				.user-registration-MyAccount-navigation-link {
 					&.is-active {
 						a {
-							border-color: $primary_color;
+							border-color: var(--ur-primary-color, $primary_color);
 						}
 					}
 				}
@@ -89,7 +89,7 @@
 				// .button-group {
 				// 	.button.user_registration_profile_picture_upload {
 				// 		background: #edeff7;
-				// 		color: $primary_color;
+				// 		color: var(--ur-primary-color, $primary_color);
 				// 		border: $border_width solid #edeff7 !important;
 				// 	}
 				// }
@@ -121,7 +121,8 @@
 				}
 			}
 
-			.user-registration-profile-fields {}
+			.user-registration-profile-fields {
+			}
 		}
 	}
 
@@ -130,7 +131,7 @@
 			padding: 36px 30px;
 		}
 
-		>h2 {
+		> h2 {
 			margin-bottom: $spacing_24px;
 		}
 
@@ -145,12 +146,12 @@
 			}
 		}
 
-		>p {
+		> p {
 			margin-bottom: $spacing_8px;
 
 			a {
 				font-weight: 500;
-				color: $primary_color;
+				color: var(--ur-primary-color, $primary_color);
 			}
 		}
 
@@ -173,7 +174,7 @@
 
 			.user-registration-EditAccountForm {
 				.ur-form-grid {
-					>p {
+					> p {
 						float: right;
 						margin-bottom: 0;
 					}
@@ -183,7 +184,7 @@
 
 			.user-registration-EditProfileForm {
 				.user-registration-profile-fields {
-					>p {
+					> p {
 						float: right;
 						margin-top: $spacing_24px;
 						margin-bottom: 0;
@@ -191,7 +192,11 @@
 						.user-registration-Button.button-primary {
 							border-radius: $border_radius_4;
 							box-shadow: none;
-							border: $border_width solid $primary_color;
+							border: $border_width solid var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
+
+							&:hover {
+								border-color: var(--ur-button-background-hover-color, var(--ur-primary-color, $primary_color));
+							}
 						}
 					}
 				}
@@ -303,7 +308,7 @@
 									appearance: none;
 									margin-right: 0;
 
-									&:checked+label {
+									&:checked + label {
 										color: #475BB2;
 										background: #EDEFF7;
 										border-color: #475BB2;
@@ -538,7 +543,7 @@
 								}
 
 								a {
-									background: $primary_color;
+									background: var(--ur-primary-color, $primary_color);
 									color: $grey-0;
 									padding: $spacing_8px $spacing_12px;
 									border-radius: $border_radius_3;
@@ -633,13 +638,12 @@
 						}
 
 						&.change-membership-button {
-							border: $border_width solid $primary_color;
-							color: $primary_color;
+							border: $border_width solid var(--ur-primary-color, $primary_color);
+							color: var(--ur-primary-color, $primary_color);
 
 							&:hover {
 								color: $white;
-								background: $primary_color;
-							}
+								background: var(--ur-primary-color, $primary_color);
 
 							.ur-front-spinner {
 								background-size: 16px 16px;
@@ -648,7 +652,7 @@
 								height: 16px;
 								margin-left: 7px;
 								float: right;
-								color: $primary_color;
+								color: var(--ur-primary-color, $primary_color);
 								display: none;
 							}
 						}
@@ -659,7 +663,7 @@
 						}
 
 						&.change-membership-button:hover {
-							background: $primary_color;
+							background: var(--ur-primary-color, $primary_color);
 							color: white;
 						}
 
@@ -724,7 +728,7 @@
 						display: flex;
 						gap: $spacing_12px;
 						background: #f7fbff;
-						border: $border_width solid $primary_color;
+						border: $border_width solid var(--ur-primary-color, $primary_color);
 						font-style: italic;
 						border-radius: $border_radius_5;
 						padding: $spacing_12px $spacing_16px;
@@ -762,15 +766,15 @@
 			width: 30px;
 			cursor: pointer;
 
-			&:checked+.slider {
-				background: $primary_color;
+			&:checked + .slider {
+				background: var(--ur-primary-color, $primary_color);
 			}
 
-			&:focus+.slider {
+			&:focus + .slider {
 				box-shadow: 0 0 1px #2196F3;
 			}
 
-			&:checked+.slider::before {
+			&:checked + .slider::before {
 				transform: translateX(14px);
 			}
 		}
@@ -887,7 +891,7 @@
 						border: 0 !important;
 					}
 
-					>a {
+					> a {
 						display: flex;
 						gap: $spacing_8px;
 
@@ -1008,7 +1012,8 @@
 								}
 							}
 
-							&.urm-profile-change-password-btn {}
+							&.urm-profile-change-password-btn {
+							}
 						}
 					}
 				}
@@ -1024,7 +1029,8 @@
 					.user-registration-profile-fields {
 						&[data-action="view"] {
 							.user-registration-profile {
-								&-header {}
+								&-header {
+								}
 
 								&-fields__field-wrapper {
 									.ur-form-grid {
@@ -1148,7 +1154,7 @@
 
 						a {
 							font-weight: $medium;
-							color: $primary_color;
+							color: var(--ur-primary-color, $primary_color);
 						}
 					}
 
@@ -1188,7 +1194,7 @@
 													background: $grey-0;
 
 													&:focus {
-														border-color: $primary_color;
+														border-color: var(--ur-primary-color, $primary_color);
 													}
 												}
 											}
@@ -1202,19 +1208,21 @@
 									}
 
 									// Save Changes Button CSS
-									>p {
+									> p {
 										float: unset;
 										margin-top: $spacing_32px;
 										text-align: right;
 
 										.user-registration-Button.button {
-											background: $primary_color;
-											border: $border_width solid $primary_color;
+											color: var(--ur-button-text-normal-color, $white);
+											background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
+											border: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
 											border-radius: $border_radius_4;
 
 											&:hover {
-												background: #38488e;
-												border-color: #38488e;
+												background: var(--ur-button-background-hover-color, #38488e);
+												border-color: var(--ur-button-background-hover-color, #38488e);
+												color: var(--ur-button-text-hover-color, $white);
 											}
 										}
 									}
@@ -1361,13 +1369,13 @@
 												&#ur_download_payment_invoice {
 													padding: 0;
 													background: none;
-													color: $primary_color;
+													color: var(--ur-primary-color, $primary_color);
 													border-radius: 0;
 													position: relative;
 
 													&::after {
 														content: "";
-														background: darken($primary_color, 5%);
+														background: var(--ur-primary-dark, darken($primary_color, 10%));
 														width: 0px;
 														height: 1.5px;
 														position: absolute;
@@ -1378,7 +1386,7 @@
 
 													&:hover {
 														background: transparent;
-														color: darken($primary_color, 5%);
+														color: var(--ur-primary-dark, darken($primary_color, 10%));
 
 														&::after {
 															width: 100%;
@@ -1692,7 +1700,7 @@
 									}
 
 									.user-registration-help-tip {
-										&::after{
+										&::after {
 											content: none;
 										}
 									}
@@ -1804,7 +1812,7 @@
 						}
 
 						header {
-							>h3 {
+							> h3 {
 								margin: 0;
 								font-size: 16px;
 								line-height: 24px;
@@ -1841,13 +1849,13 @@
 							&:hover {
 								a {
 									background: #f0f0f0;
-									color: $primary_color;
+									color: var(--ur-primary-color, $primary_color);
 								}
 							}
 
 							&.is-active {
 								a {
-									color: $primary_color;
+									color: var(--ur-primary-color, $primary_color);
 									background: $blue-50;
 								}
 							}
@@ -1885,7 +1893,7 @@
 						transition: all .3s;
 
 						&:hover {
-							color: $primary_color;
+							color: var(--ur-primary-color, $primary_color);
 							background: $blue-50;
 							border-bottom-color: $blue-50;
 						}
@@ -1893,8 +1901,8 @@
 
 					&.is-active {
 						a {
-							border-bottom: 3px solid $primary_color;
-							color: $primary_color;
+							border-bottom: 3px solid var(--ur-primary-color, $primary_color);
+							color: var(--ur-primary-color, $primary_color);
 							background: $blue-50;
 						}
 					}
