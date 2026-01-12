@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@lodder/grunt-postcss": "^3.1.1",
+    "@radix-ui/react-tabs": "^1.1.13",
     "@types/node": "^25.0.3",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.1",

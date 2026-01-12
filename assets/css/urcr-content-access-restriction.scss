@@ -2518,3 +2518,178 @@ $not-tag: #fcdddd;
 		}
 	}
 }
+/* drip-this-content.scss */
+
+.urcr-drip-this-content-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 16px;
+	font-size: 13px;
+	line-height: 1.5;
+	color: #475bb2;
+	background-color: $background-color_2;
+	border: 1px solid #475bb2;
+	border-radius: 3px;
+	cursor: pointer;
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+
+	&:hover {
+		border-color: $border-color_6;
+	}
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
+}
+
+.urcr-drip__trigger {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+
+	padding: 10px 14px;
+	border-radius: 8px;
+
+	background: #eef2ff;
+	color: #3b5bdb;
+
+	font-weight: 600;
+	font-size: 14px;
+	line-height: 1;
+
+	border: 1px solid transparent;
+	cursor: pointer;
+
+	&:hover {
+		background: #e6ecff;
+	}
+
+	&:focus {
+		outline: none;
+		box-shadow: 0 0 0 3px rgba(59, 91, 219, 0.18);
+	}
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+		line-height: 16px;
+	}
+}
+
+/* Radix Popover */
+.urcr-drip__popover {
+	width: 360px;
+	background: #fff;
+
+	border: 1px solid #eef0f3;
+	border-radius: 10px;
+
+	box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+	z-index: 100000;
+
+	overflow: hidden;
+	padding: 0;
+}
+
+/* Radix Tabs header */
+.urcr-drip__tabs {
+	display: flex;
+	flex-direction: column;
+}
+
+.urcr-drip__tabList {
+	display: flex;
+	padding: 12px 16px 0;
+	border-bottom: 1px solid #eef0f3;
+}
+
+.urcr-drip__tab {
+	flex: 1;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+
+	padding: 10px 0 12px;
+	background: transparent;
+	border: 0;
+
+	font-size: 14px;
+	font-weight: 600;
+
+	color: #6b7280;
+	border-bottom: 2px solid transparent;
+	cursor: pointer;
+
+	&:focus {
+		outline: none;
+	}
+
+	/* Radix sets data-state="active" */
+	&[data-state="active"] {
+		color: #3b5bdb;
+		border-bottom-color: #3b5bdb;
+	}
+}
+
+.urcr-drip__panels {
+	padding: 14px 16px 16px;
+}
+
+.urcr-drip__panel {
+	/* prevent layout shift in some setups */
+	outline: none;
+}
+
+/* Inputs (Chakra inputs + number field) */
+.urcr-drip__input,
+.urcr-drip__numberField {
+	height: 44px !important;
+	border-radius: 6px !important;
+
+	border: 1px solid #e5e7eb !important;
+	background: #fff !important;
+
+	font-size: 14px !important;
+	padding: 10px 44px 10px 12px !important; /* space for right icon */
+
+	box-shadow: none !important;
+
+	&::placeholder {
+		color: #9ca3af;
+	}
+
+	&:focus {
+		border-color: rgba(59, 91, 219, 0.55) !important;
+		box-shadow: 0 0 0 3px rgba(59, 91, 219, 0.12) !important;
+		outline: none;
+	}
+}
+
+/* Right icon inside input */
+.urcr-drip__rightIconWrap {
+	width: 44px !important;
+	height: 44px !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	pointer-events: none;
+}
+
+.urcr-drip__rightIcon {
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+	line-height: 18px;
+	color: #9ca3af;
+}
+
+/* Number input wrapper */
+.urcr-drip__number {
+	width: 100%;
+}

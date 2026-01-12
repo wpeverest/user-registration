@@ -6,7 +6,8 @@ import { __ } from "@wordpress/i18n";
 import ContentTypeDropdown from "../dropdowns/ContentTypeDropdown";
 import ContentValueInput from "../inputs/ContentValueInput";
 import DropdownButton from "../dropdowns/DropdownButton";
-import { isProAccess } from "../../utils/localized-data";
+import { isDripContent, isProAccess } from "../../utils/localized-data";
+import DripThisContent from "../content-drip/DripThisContent";
 
 const AccessControlSection = ({
 	accessControl = "access",
@@ -169,7 +170,7 @@ const AccessControlSection = ({
 							value: "restrict",
 							label: __("Restrict", "user-registration")
 						}
-				  ]
+					]
 				: []),
 			{ value: "access", label: __("Access", "user-registration") }
 		].map((option) => ({
@@ -241,6 +242,9 @@ const AccessControlSection = ({
 											)
 										}
 									/>
+									{isProAccess() && isDripContent() && (
+										<DripThisContent target={target} />
+									)}
 									<button
 										type="button"
 										className="button-link urcr-target-remove"
