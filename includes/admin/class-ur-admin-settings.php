@@ -1310,6 +1310,9 @@ class UR_Admin_Settings {
 											'hCaptcha',
 											'cloudflare',
 											'captcha-settings',
+											'payment-retry',
+											'invoice-business-info',
+											'invoice-settings',
 										)
 									) ) {
 										$css       = 'ur-flex-row-reverse';
