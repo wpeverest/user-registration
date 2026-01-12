@@ -1,4 +1,3 @@
-// DripThisContent.jsx
 import React from "react";
 import { __ } from "@wordpress/i18n";
 import * as Popover from "@radix-ui/react-popover";
@@ -8,12 +7,69 @@ import {
 	VStack,
 	NumberInput,
 	NumberInputField,
-	InputGroup,
-	InputRightElement
+	InputGroup
 } from "@chakra-ui/react";
 
-const DripThisContent = ({ target }) => {
+const DEFAULT_DRIP = {
+	activeType: "fixed_date",
+	value: {
+		fixed_date: { date: "", time: "" },
+		days_after: { days: 0 }
+	}
+};
+
+const DripThisContent = ({
+	target,
+	contentTargets,
+	onContentTargetsChange
+}) => {
 	if (target?.type === "whole_site") return null;
+
+	const drip = target?.drip ?? DEFAULT_DRIP;
+
+	const updateDrip = (newDrip) => {
+		onContentTargetsChange(
+			contentTargets.map((t) =>
+				t.id === target.id ? { ...t, drip: newDrip } : t
+			)
+		);
+	};
+
+	/* ---------- setters ---------- */
+
+	const setActiveType = (type) => {
+		updateDrip({
+			...drip,
+			activeType: type
+		});
+	};
+
+	const setFixedDateField = (field, value) => {
+		updateDrip({
+			...drip,
+			activeType: "fixed_date",
+			value: {
+				...drip.value,
+				fixed_date: {
+					...drip.value.fixed_date,
+					[field]: value
+				}
+			}
+		});
+	};
+
+	const setDays = (days) => {
+		updateDrip({
+			...drip,
+			activeType: "days_after",
+			value: {
+				...drip.value,
+				days_after: {
+					days: Number.isFinite(days) ? days : 0
+				}
+			}
+		});
+	};
 
 	return (
 		<Popover.Root modal={false}>
@@ -31,27 +87,24 @@ const DripThisContent = ({ target }) => {
 					align="end"
 					sideOffset={10}
 					collisionPadding={12}
-					// If you want "closeOnBlur={false}" behavior:
-					// onInteractOutside={(e) => e.preventDefault()}
-					// onEscapeKeyDown={(e) => e.preventDefault()}
 				>
-					{/* Screenshot-style: no arrow (remove if you want it) */}
 					<Popover.Arrow className="urcr-drip__arrow" />
 
-					<Tabs.Root className="urcr-drip__tabs" defaultValue="fixed">
-						<Tabs.List
-							className="urcr-drip__tabList"
-							aria-label="Drip options"
-						>
+					<Tabs.Root
+						className="urcr-drip__tabs"
+						value={drip.activeType}
+						onValueChange={setActiveType}
+					>
+						<Tabs.List className="urcr-drip__tabList">
 							<Tabs.Trigger
+								value="fixed_date"
 								className="urcr-drip__tab"
-								value="fixed"
 							>
 								{__("Fixed Date", "user-registration")}
 							</Tabs.Trigger>
 							<Tabs.Trigger
+								value="days_after"
 								className="urcr-drip__tab"
-								value="days"
 							>
 								{__("Days After", "user-registration")}
 							</Tabs.Trigger>
@@ -59,50 +112,56 @@ const DripThisContent = ({ target }) => {
 
 						<div className="urcr-drip__panels">
 							<Tabs.Content
+								forceMount
+								value="fixed_date"
+								hidden={drip.activeType !== "fixed_date"}
 								className="urcr-drip__panel"
-								value="fixed"
 							>
 								<VStack spacing="12px" align="stretch">
-									<InputGroup className="urcr-drip__inputGroup">
+									<InputGroup>
 										<Input
 											type="date"
-											fontSize="14px"
-											borderRadius="6px"
 											className="urcr-drip__input"
+											value={drip.value.fixed_date?.date}
+											onChange={(e) =>
+												setFixedDateField(
+													"date",
+													e.target.value
+												)
+											}
 										/>
-										{/* <InputRightElement className="urcr-drip__rightIconWrap">
-											<span className="dashicons dashicons-calendar-alt urcr-drip__rightIcon" />
-										</InputRightElement> */}
 									</InputGroup>
 
-									<InputGroup className="urcr-drip__inputGroup">
+									<InputGroup>
 										<Input
 											type="time"
-											fontSize="14px"
-											borderRadius="6px"
 											className="urcr-drip__input"
+											value={drip.value.fixed_date?.time}
+											onChange={(e) =>
+												setFixedDateField(
+													"time",
+													e.target.value
+												)
+											}
 										/>
-										{/* <InputRightElement className="urcr-drip__rightIconWrap">
-											<span className="dashicons dashicons-clock urcr-drip__rightIcon" />
-										</InputRightElement> */}
 									</InputGroup>
 								</VStack>
 							</Tabs.Content>
 
 							<Tabs.Content
+								forceMount
+								value="days_after"
+								hidden={drip.activeType !== "days_after"}
 								className="urcr-drip__panel"
-								value="days"
 							>
 								<NumberInput
 									min={0}
-									defaultValue={1}
-									className="urcr-drip__number"
+									value={drip.value.days_after?.days}
+									onChange={(_, valueAsNumber) =>
+										setDays(valueAsNumber)
+									}
 								>
-									<NumberInputField
-										fontSize="14px"
-										borderRadius="6px"
-										className="urcr-drip__input urcr-drip__numberField"
-									/>
+									<NumberInputField className="urcr-drip__input" />
 								</NumberInput>
 							</Tabs.Content>
 						</div>

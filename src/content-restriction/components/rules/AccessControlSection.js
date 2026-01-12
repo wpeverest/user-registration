@@ -1,7 +1,7 @@
 /**
  * External Dependencies
  */
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, act } from "react";
 import { __ } from "@wordpress/i18n";
 import ContentTypeDropdown from "../dropdowns/ContentTypeDropdown";
 import ContentValueInput from "../inputs/ContentValueInput";
@@ -26,7 +26,14 @@ const AccessControlSection = ({
 			type: option.value,
 			label: option.label,
 			value: option.value === "whole_site" ? "whole_site" : [],
-			taxonomy: option.value === "taxonomy" ? "" : undefined
+			taxonomy: option.value === "taxonomy" ? "" : undefined,
+			drip: {
+				activeType: "fixed_date",
+				value: {
+					fixed_date: { date: "", time: "" },
+					days_after: { days: 0 }
+				}
+			}
 		};
 		onContentTargetsChange([...contentTargets, newContentTarget]);
 	};
@@ -243,7 +250,13 @@ const AccessControlSection = ({
 										}
 									/>
 									{isProAccess() && isDripContent() && (
-										<DripThisContent target={target} />
+										<DripThisContent
+											onContentTargetsChange={
+												onContentTargetsChange
+											}
+											contentTargets={contentTargets}
+											target={target}
+										/>
 									)}
 									<button
 										type="button"
