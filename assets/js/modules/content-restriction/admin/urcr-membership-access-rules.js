@@ -970,6 +970,20 @@
 					'</select>' +
 					'<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' + id + '" data-content-type="taxonomy"></select>' +
 					'</div>';
+			} else if (type === 'custom_uri') {
+				try {
+					if (typeof value === 'string') {
+						value = JSON.parse(value);
+					}
+				} catch {
+					value = ['', false];
+				}
+				inputHtml = `<div style="display:flex;align-items:center;gap:4px;flex:1" data-content-type="${type}" data-target-id="${id}">
+					<input style="flex:1" type="text" class="components-text-control__input urcr-condition-value-input urcr-condition-value-text urcr-form-field-value-input" value="${value[0]}">
+					<label style="display: inline-flex; align-items: center; gap: 2px; margin: 0; width: auto">
+						<input type="checkbox" ${value[1] ? 'checked' : ''}> ${urcr_membership_access_data.hasOwnProperty('regex_label') ? urcr_membership_access_data.regex_label : 'Regex'}
+					</label>
+				</div>`;
 			} else {
 				inputHtml = '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' + id + '" data-content-type="' + type + '"></select>';
 			}
@@ -987,7 +1001,7 @@
 			var self = this;
 			var $select = $('.urcr-target-item[data-target-id="' + targetId + '"] .urcr-content-target-input');
 
-			if ($select.length && type !== 'whole_site') {
+			if ($select.length && type !== 'whole_site' && type !== 'custom_uri') {
 				var options = self.getContentTargetOptions(type);
 
 				if ($select.hasClass('select2-hidden-accessible')) {
@@ -1387,6 +1401,14 @@
 							taxonomy: taxonomy,
 							value: terms
 						};
+						break;
+					case 'custom_uri':
+						var $customUriInput = $target.find('input[type="text"]');
+						var $customUriCheckbox = $target.find('input[type="checkbox"]');
+						value = [
+							$customUriInput.val() || '',
+							$customUriCheckbox.is(':checked'),
+						];
 						break;
 					case 'pages':
 					case 'posts':
