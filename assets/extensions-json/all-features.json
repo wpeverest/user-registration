@@ -168,6 +168,41 @@
       ],
       "setting_url": "",
       "demo_video_url": ""
+    },
+     {
+      "title": "Taxes",
+      "slug": "user-registration-taxes",
+      "name": "User Registration Taxes",
+      "image": "extensions-json/sections/icons/form_restriction.png",
+      "excerpt": "Restrict access with custom conditions and optimize your website's user registration system.",
+      "category": "Membership",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-form-restriction/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan": [
+        "plus",
+        "professional",
+        "themegrill agency"
+      ],
+      "setting_url": "",
+      "demo_video_url": "G8JSFu7bFU0",
+      "released_date": "12/12/2023"
+    },
+    {
+      "title": "Local Currency",
+      "slug" : "user-registration-local-currency",
+      "name" : "User Registration Local Currency",
+      "image": "extensions-json/sections/icons/membership.png",
+      "excerpt": "Multiple Currency allows you to sell the same product in multiple currencies based on the country of the customer.",
+      "category": "Membership",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-membership/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan" : [
+        "personal",
+        "plus",
+        "professional",
+        "themegrill agency"
+      ],
+      "setting_url": "admin.php?page=user-registration-settings&tab=payment&section=local-currency",
+      "demo_video_url": "3T6AILWb7OI",
+      "released_date": "01/08/2024"
     }
   ]
 }

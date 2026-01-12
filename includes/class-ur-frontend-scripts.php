@@ -455,9 +455,16 @@ class UR_Frontend_Scripts {
 	private static function get_script_data( $handle ) {
 		switch ( $handle ) {
 			case 'user-registration':
+				$regions 				= get_option( 'user_registration_tax_price_display_option', array() );
+				$tax_calculation_method = get_option( 'user_registration_tax_calculation_method', 'price_include' );
+				$currency            	= get_option( 'user_registration_payment_currency', 'USD' );
+				$currencies           	= ur_payment_integration_get_currencies();
+				$symbol               	= $currencies[ $currency ]['symbol'];
+
 				return array(
 					'ajax_url'                          => admin_url( 'admin-ajax.php' ),
 					'user_registration_form_data_save'  => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
+					'user_registration_update_state_field' => wp_create_nonce( 'user_registration_update_state_field_nonce' ),
 					'user_registration_profile_details_save' => wp_create_nonce( 'user_registration_profile_details_save_nonce' ),
 					'user_registration_profile_picture_upload_nonce' => wp_create_nonce( 'user_registration_profile_picture_upload_nonce' ),
 					'user_registration_profile_picture_remove_nonce' => wp_create_nonce( 'user_registration_profile_picture_remove_nonce' ),
@@ -500,6 +507,10 @@ class UR_Frontend_Scripts {
 					'user_registration_checkbox_validation_message' => apply_filters( 'user_registration_checkbox_validation_message', esc_html__( 'Please select no more than {0} options.', 'user-registration' ) ),
 					'user_registration_membership_renew_plan_button_text' => apply_filters( 'user_registration_membership_renew_plan_button_text', esc_html__( 'Change', 'user-registration' ) ),
 					'network_error'                     => esc_html__( 'Network error', 'user-registration' ),
+					'tax_calculation_method'           	=> $tax_calculation_method,
+					'regions_list'                      => $regions,
+					'currency_symbol'                  	=> $symbol,
+					'currency_pos'                      => isset( $currencies[ $currency ]['symbol_pos'] ) ? $currencies[ $currency ]['symbol_pos'] : 'left',
 				);
 				break;
 

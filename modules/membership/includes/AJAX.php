@@ -85,6 +85,7 @@ class AJAX {
 			'addons_get_lists'             => false,
 			'create_subscription'          => false,
 			'update_subscription'          => false,
+			'validate_payment_currency'    => false,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -308,7 +309,7 @@ class AJAX {
 			$rule_data = is_array( $data['urcr_membership_access_rule_data'] ) ? $data['urcr_membership_access_rule_data'] : json_decode( $data['urcr_membership_access_rule_data'], true );
 		}
 
-		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && 'on' === $data['post_meta_data']['payment_gateways']['stripe']['status'];
+		$is_stripe_enabled = urm_is_payment_gateway_configured( 'stripe' );
 		$data              = $membership->prepare_membership_post_data( $data );
 
 		if ( isset( $data['status'] ) && ! $data['status'] ) {
@@ -2587,6 +2588,55 @@ class AJAX {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Something went wrong. Please refresh the page and try again.', 'user-registration' ),
+			)
+		);
+	}
+
+	/**
+	 * Valid local currency payment.
+	 *
+	 * @since 6.1.0
+	 */
+	public static function validate_payment_currency(){
+		check_ajax_referer( 'validate_local_payment_currency', 'security' );
+
+		$zone_id = ! empty( sanitize_text_field( wp_unslash( $_POST[ 'zone_id' ] ) ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'zone_id' ] ) ) : '';
+
+		error_log( print_r( $zone_id, true ) );
+		if ( empty( $zone_id ) ) {
+			wp_send_json_success(
+				array(
+					'message' => __( 'Currency is invalid.', 'user-registration' ),
+				)
+			);
+		}
+
+		$zone_data = CoreFunctions::ur_get_pricing_zone_by_id( $zone_id );
+		$currency  = $zone_data[ 'meta' ][ 'ur_local_currency' ][0];
+
+		$currency_not_supported_payment_gateways = array();
+
+		// if the currency is not supported by Paypal.
+		if ( ! in_array( $currency, paypal_supported_currencies_list() ) ) {
+			$currency_not_supported_payment_gateways[] = 'Paypal';
+		}
+
+		$currency_not_supported_payment_gateways = apply_filters( 'urm_currency_not_supported_payment_gateways', $currency_not_supported_payment_gateways, $currency );
+		if ( ! empty( $currency_not_supported_payment_gateways ) ) {
+			wp_send_json_error(
+				array(
+					'message' => sprintf(
+						__( '%1$s is not currently supported by %2$s.', 'user-registration' ),
+						$currency,
+						implode( ', ', $currency_not_supported_payment_gateways ),
+					),
+				)
+			);
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Currency is valid.', 'user-registration' ),
 			)
 		);
 	}

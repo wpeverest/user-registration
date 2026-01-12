@@ -383,8 +383,8 @@ if ( ! function_exists( 'user_registration_sanitize_amount' ) ) {
 
 		$currency      = strtoupper( $currency );
 		$currencies    = ur_payment_integration_get_currencies();
-		$thousands_sep = $currencies[ $currency ]['thousands_separator'];
-		$decimal_sep   = $currencies[ $currency ]['decimal_separator'];
+		$thousands_sep = ! empty( $currencies[ $currency ]['thousands_separator'] ) ? $currencies[ $currency ]['thousands_separator'] : ',';
+		$decimal_sep   = ! empty( $currencies[ $currency ]['decimal_separator'] ) ? $currencies[ $currency ]['decimal_separator'] : '.';
 		$is_negative   = false;
 
 		// Sanitize the amount.

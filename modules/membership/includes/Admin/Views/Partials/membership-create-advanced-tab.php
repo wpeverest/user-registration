@@ -227,6 +227,15 @@
 				<?php
 				ur_render_email_marketing_sync_settings( $membership_details );
 					endif;
+
+					/**
+					 * Local Currency Settings Render.
+					 *
+					 * @since 6.1.0
+					 */
+					if ( UR_PRO_ACTIVE && class_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions' ) ):
+						WPEverest\URMembership\Local_Currency\Admin\CoreFunctions::ur_render_local_currency_settings( $membership_details );
+					endif;
 			?>
 		</div>
 	</div>

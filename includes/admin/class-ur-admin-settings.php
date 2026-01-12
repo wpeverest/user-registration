@@ -7,6 +7,8 @@
  * @package  UserRegistration/Admin
  */
 
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -440,6 +442,13 @@ class UR_Admin_Settings {
 								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' . '" /></div>';
 							}
 							$settings .= '</h3>';
+
+							if ( 'local_currency' === $id ) {
+								$settings .= '<div class="user-registration-list-table-header" style="justify-content: end;">';
+
+								$settings .= '<a href="#" class="page-title-action ur-local-currency-add-pricing-zone" data-action="add">' . esc_html__( 'Add Pricing Zone', 'user-registration' ) . '</a>';
+								$settings .= '</div>';
+							}
 
 							if ( ! empty( $section['button'] ) ) {
 								if ( isset( $section['button']['button_type'] ) && 'upgrade_link' === $section['button']['button_type'] ) {
@@ -1106,6 +1115,17 @@ class UR_Admin_Settings {
 									}
 									$settings .= '</div>';
 									break;
+
+								case 'local_currency':
+									ob_start();
+									CoreFunctions::render_local_currencies_table();
+									$settings .= ob_get_clean();
+								break;
+
+								case 'tax_table':
+									$settings .= ur_render_tax_table( $value );
+									break;
+
 								// Default: run an action.
 								default:
 									/**
