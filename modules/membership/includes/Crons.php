@@ -24,7 +24,21 @@ class Crons {
 			add_action( 'urm_daily_membership_expiring_soon_check', array( $this, 'membership_expiring_soon_check' ), 10, 1 );
 			add_action( 'urm_daily_membership_ended_check', array( $this, 'membership_ended_check' ), 10, 1 );
 			add_action( 'urm_daily_membership_expiration_check', array( $this, 'membership_expiration_check' ), 10, 1 );
+
+			// for both membership and non membership payments.
+			add_action( 'urm_daily_payment_retry_check', array( $this, 'payment_retry_check' ), 10, 1 );
+
+			$this->payment_retry_check();
+
 		}
+	}
+
+	/**
+	 * Retry payments check for failed subscriptions.
+	 */
+	public function payment_retry_check() {
+		$subscription_service = new SubscriptionService();
+		$subscription_service->daily_payment_retry_check();
 	}
 
 	/**
