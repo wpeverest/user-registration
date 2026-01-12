@@ -1099,10 +1099,35 @@
 			var self = this;
 			var options = [];
 
-			if ( typeof urcr_membership_access_data === 'object'&& urcr_membership_access_data.hasOwnProperty( type ) ) {
-				options = Object.keys(urcr_membership_access_data[type]).map(function (key) {
-					return { id: key, text: urcr_membership_access_data[type][key] };
-				})
+			if (
+				typeof urcr_membership_access_data === 'object' &&
+				urcr_membership_access_data.hasOwnProperty(type)
+			) {
+				const data = urcr_membership_access_data[type];
+
+				if (
+					Array.isArray(data) &&
+					data.length > 0 &&
+					typeof data[0] === 'object' &&
+					data[0] !== null &&
+					'group' in data[0] &&
+					'options' in data[0] &&
+					Array.isArray(data[0].options)
+				) {
+					options = data.map((x) => ({
+						text: x.group,
+						children: x.options.map((y) => ({
+							id: y.value,
+							text: y.label,
+						})),
+					}));
+				} else {
+					options = Object.keys(urcr_membership_access_data[type]).map(
+						function (key) {
+							return { id: key, text: urcr_membership_access_data[type][key] };
+						},
+					);
+				}
 			}
 
 			return options;
