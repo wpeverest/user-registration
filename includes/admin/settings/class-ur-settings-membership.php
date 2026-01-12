@@ -118,7 +118,6 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 			$sections['user_registration_content_restriction_settings'] = array(
 				'title'    => __( 'Content Restriction', 'user-registration' ),
 				'type'     => 'card',
-				'desc'     => sprintf( __( 'The Global Restriction setting has moved. You can now manage it <a href="%1$s" target="_blank" style="text-decoration: underline;" >here.</a>', 'user-registration' ), esc_url_raw( $content_rule_url ) ),
 				'settings' => array(
 					array(
 						'title'    => __( 'Global Restriction Message', 'user-registration' ),
@@ -134,6 +133,10 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 					),
 				),
 			);
+			$is_new_installation = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
+			if( $is_new_installation ) {
+				$sections['user_registration_content_restriction_settings']['desc'] = sprintf( __( '<strong>The Global Restriction setting has moved.</strong> You can now manage it <a href="%1$s" target="_blank" style="text-decoration: underline;" >here.</a>', 'user-registration' ), esc_url_raw( $content_rule_url ) );
+			}
 
 			return apply_filters(
 				'user_registration_content_restriction_settings',
