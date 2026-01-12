@@ -241,6 +241,64 @@ $border-color_6: #475bb2;
 			width: 100% !important;
 		}
 	}
+
+	&:has(.urcr-ur-form-field-condition) {
+		align-items: flex-start !important;
+
+		.urcr-condition-value {
+			.urcr-ur-form-field-condition {
+				.urcr-form-fields-list {
+					display: flex;
+					flex-direction: column;
+					gap: 16px;
+
+					.urcr-form-field-row {
+						flex-wrap: wrap;
+
+						.urcr-form-field-name,
+						.urcr-form-field-operator,
+						.urcr-form-field-value {
+							flex: 1;
+							min-width: 47%;
+						}
+
+						.urcr-form-field-value {
+							min-width: 100% !important;
+
+							.urcr-condition-value-input {
+								width: 100% !important;
+							}
+						}
+
+						.button {
+							width: 28px !important;
+							min-width: 28px !important;
+							min-height: 26px !important;
+							background: #eeeeee !important;
+
+							&.urcr-remove-field-button {
+								margin-left: 0;
+
+								&:disabled {
+									border-color: transparent !important;
+									background: #f6f6f6 !important;
+									cursor: not-allowed;
+								}
+							}
+						}
+
+						&:has(.urcr-form-field-value) {
+
+							.urcr-form-field-name,
+							.urcr-form-field-operator {
+								min-width: 100%;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 // Target Selection Section
