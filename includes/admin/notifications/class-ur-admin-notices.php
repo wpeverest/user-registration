@@ -78,7 +78,7 @@ class UR_Admin_Notices {
 			$my_account_page = get_option( 'user_registration_myaccount_page_id', 0 );
 		}
 
-		if ( get_option( 'user_registration_onboarding_skipped', false ) ) {
+		if ( get_option( 'user_registration_onboarding_skipped', false ) && !ur_string_to_bool( get_option( 'urm_is_new_installation', false ) ) ) {
 			self::add_notice( 'continue_setup_wizard' );
 		} elseif ( ! $my_account_page && ! get_option( 'user_registration_first_time_activation_flag', false ) ) {
 			if ( get_option( 'user_registration_install_pages_notice_removed', false ) ) {
@@ -837,7 +837,6 @@ class UR_Admin_Notices {
 	public static function continue_setup_wizard_notice() {
 
 		$first_time_activation = get_option( 'user_registration_first_time_activation_flag', false );
-
 		$onboarding_completed     = true;
 		$onboarding_complete_text = '';
 

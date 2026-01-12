@@ -412,10 +412,10 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 						}
 						$active_payment_gateways[ $key ] = true;
 					} else {
-						if ( 'on' !== $gateways['status'] ) {
+						if ( isset( $gateways['status'] ) && 'on' !== $gateways['status'] ) {
 							continue;
 						}
-						$active_payment_gateways[ $key ] = $gateways['status'];
+						$active_payment_gateways[ $key ] = isset($gateways['status']) ? $gateways['status'] : 'off'; //setting users gateway to off for now if no status received.
 					}
 
 				}
