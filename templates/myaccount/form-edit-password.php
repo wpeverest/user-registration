@@ -47,6 +47,13 @@ $endpoint_label = ur_get_account_menu_items()['edit-password'];
 		<h1><?php echo wp_kses_post( $endpoint_label ); ?></h1>
 	</div>
 </div>
+
+<div class="user-registration-message-container">
+	<?php
+	ur_print_notices();
+	?>
+</div>
+
 <div class="user-registration-MyAccount-content__body">
 	<div class="ur-frontend-form login" id="ur-frontend-form">
 		<form class="user-registration-EditAccountForm edit-password" action="" method="post" data-enable-strength-password="<?php echo esc_attr( $enable_strong_password ); ?>" data-minimum-password-strength="<?php echo esc_attr( $minimum_password_strength ); ?>" >
