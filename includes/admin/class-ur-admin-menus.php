@@ -804,20 +804,9 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					77
 				);
 
-				add_submenu_page(
-					'user-registration',
-					__( 'Setup Wizard', 'user-registration' ),
-					'↳ ' . __( 'Setup Wizard', 'user-registration' ),
-					'manage_user_registration',
-					'user-registration-welcome&tab=setup-wizard',
-					array(
-						$this,
-						'status_page',
-					),
-					78
-				);
+				$is_new_installation = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
 
-				if ( get_option('is_urm_new_installation') ) {
+				if ( $is_new_installation ) {
 					add_submenu_page(
 						'user-registration',
 						__('Setup Wizard', 'user-registration'),
