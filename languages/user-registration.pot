@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-12T07:40:17+00:00\n"
+"POT-Creation-Date: 2026-01-12T15:38:20+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -514,7 +514,7 @@ msgstr ""
 #: includes/admin/class-ur-admin-settings.php:89
 #: includes/admin/class-ur-admin-status.php:171
 #: includes/admin/class-ur-admin-status.php:193
-#: includes/admin/notifications/class-ur-admin-notices.php:664
+#: includes/admin/notifications/class-ur-admin-notices.php:682
 #: includes/class-ur-email-confirmation.php:178
 #: modules/membership/includes/Admin/Membership/Membership.php:288
 msgid "Action failed. Please refresh the page and retry."
@@ -957,9 +957,9 @@ msgstr ""
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:119
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:222
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:228
-#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:161
+#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:168
 #: modules/payment-history/Admin/OrdersListTable.php:696
-#: modules/payment-history/Orders.php:372
+#: modules/payment-history/Orders.php:386
 #: src/content-restriction/components/modals/DeleteRuleModal.js:51
 msgid "Delete"
 msgstr ""
@@ -978,9 +978,9 @@ msgstr ""
 #: modules/membership/includes/Admin/Members/Members.php:170
 #: modules/membership/includes/Admin/Membership/Membership.php:957
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroups.php:73
-#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:160
+#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:167
 #: modules/membership/includes/Admin/Views/Partials/footer-actions.php:4
-#: modules/payment-history/Orders.php:373
+#: modules/payment-history/Orders.php:387
 #: modules/payment-history/Views/footer-actions.php:4
 #: templates/myaccount/membership.php:202
 #: src/content-restriction/components/modals/AddNewRuleModal.js:47
@@ -2242,48 +2242,48 @@ msgid "Upgrade To Pro"
 msgstr ""
 
 #. translators: %1$s - My account Link.
-#: includes/admin/notifications/class-ur-admin-notices.php:110
+#: includes/admin/notifications/class-ur-admin-notices.php:114
 msgid "Please choose a <strong title=\"A page with [user_registration_my_account] shortcode\">My Account</strong> page in <a href=\"%1$s\" style=\"text-decoration:none;\">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href=\"https://docs.wpuserregistration.com/docs/how-to-show-account-profile/\" style=\"text-decoration:none;\" rel=\"noreferrer noopener\" target=\"_blank\">How to setup My Account page</a>."
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:313
-#: includes/admin/notifications/class-ur-admin-notices.php:372
+#: includes/admin/notifications/class-ur-admin-notices.php:322
+#: includes/admin/notifications/class-ur-admin-notices.php:381
 msgid "Bravo! 💪 Well done."
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:317
+#: includes/admin/notifications/class-ur-admin-notices.php:326
 msgid "Congratulations! 👏 You've registered 20 users using our User Registration & Membership plugin, way to go! 🎉"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:318
+#: includes/admin/notifications/class-ur-admin-notices.php:327
 msgid "Please share your experience with us by leaving a review. Your feedback will help us improve and serve you better. "
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:319
+#: includes/admin/notifications/class-ur-admin-notices.php:328
 msgid "Once again, thank you for choosing us! ❤️"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:327
-#: includes/admin/notifications/class-ur-admin-notices.php:387
-#: includes/admin/notifications/class-ur-admin-notices.php:450
+#: includes/admin/notifications/class-ur-admin-notices.php:336
+#: includes/admin/notifications/class-ur-admin-notices.php:396
+#: includes/admin/notifications/class-ur-admin-notices.php:459
 msgid "Sure, I'd love to!"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:334
-#: includes/admin/notifications/class-ur-admin-notices.php:394
-#: includes/admin/notifications/class-ur-admin-notices.php:457
+#: includes/admin/notifications/class-ur-admin-notices.php:343
+#: includes/admin/notifications/class-ur-admin-notices.php:403
+#: includes/admin/notifications/class-ur-admin-notices.php:466
 msgid "I already did!"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:341
-#: includes/admin/notifications/class-ur-admin-notices.php:401
-#: includes/admin/notifications/class-ur-admin-notices.php:464
+#: includes/admin/notifications/class-ur-admin-notices.php:350
+#: includes/admin/notifications/class-ur-admin-notices.php:410
+#: includes/admin/notifications/class-ur-admin-notices.php:473
 msgid "Maybe later"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:348
-#: includes/admin/notifications/class-ur-admin-notices.php:408
-#: includes/admin/notifications/class-ur-admin-notices.php:471
+#: includes/admin/notifications/class-ur-admin-notices.php:357
+#: includes/admin/notifications/class-ur-admin-notices.php:417
+#: includes/admin/notifications/class-ur-admin-notices.php:480
 #: includes/class-ur-plugin-updater.php:631
 #: includes/class-ur-plugin-updater.php:654
 #: includes/functions-ur-core.php:7457
@@ -2291,56 +2291,56 @@ msgstr ""
 msgid "I have a query"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:376
+#: includes/admin/notifications/class-ur-admin-notices.php:385
 msgid "( The above word is just to draw your attention. <span class=\"dashicons dashicons-smiley smile-icon\"></span> )"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:377
+#: includes/admin/notifications/class-ur-admin-notices.php:386
 msgid "Hope you are having nice experience with <strong>User Registration & Membership</strong> plugin. Please provide this plugin a nice review."
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:378
+#: includes/admin/notifications/class-ur-admin-notices.php:387
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\r\n"
+"<strong>What benefit would you have?</strong> <br>\n"
 "\t\t\t\t\t\t\t\tBasically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class=\"dashicons dashicons-smiley smile-icon\"></span>"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:432
+#: includes/admin/notifications/class-ur-admin-notices.php:441
 msgid "User Registration & Membership Plugin Survey"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:436
+#: includes/admin/notifications/class-ur-admin-notices.php:445
 msgid ""
-"<strong>Hey there!</strong> <br>\r\n"
+"<strong>Hey there!</strong> <br>\n"
 "\t\t\t\t\t\t\t\t\tWe would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete."
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:441
+#: includes/admin/notifications/class-ur-admin-notices.php:450
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\r\n"
+"<strong>What benefit would you have?</strong> <br>\n"
 "\t\t\t\t\t\t\t\t\tWe will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class=\"dashicons dashicons-smiley smile-icon\"></span>"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:668
+#: includes/admin/notifications/class-ur-admin-notices.php:686
 #: user-registration.php:99
 #: user-registration.php:109
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
 #. translators: % s: continue wizard URL
-#: includes/admin/notifications/class-ur-admin-notices.php:857
+#: includes/admin/notifications/class-ur-admin-notices.php:882
 msgid "<a href=\"%s\" class=\"button-primary\" style=\"margin-right: 5px;\">Continue Setup Wizard</a>"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:858
+#: includes/admin/notifications/class-ur-admin-notices.php:883
 msgid "<a class=\"button-secondary skip\" href=\"%s\">Skip setup</a>"
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:926
+#: includes/admin/notifications/class-ur-admin-notices.php:954
 msgid "User Registration & Membership: "
 msgstr ""
 
-#: includes/admin/notifications/class-ur-admin-notices.php:927
+#: includes/admin/notifications/class-ur-admin-notices.php:955
 msgid "We’ve detected that a membership plan is assigned to multiple groups. Each plan must belong to only one group. Please update your settings."
 msgstr ""
 
@@ -2554,9 +2554,9 @@ msgstr ""
 #: includes/admin/settings/class-ur-members-menu.php:289
 #: includes/admin/settings/class-ur-users-menu.php:187
 #: includes/class-ur-frontend-scripts.php:490
-#: templates/myaccount/form-edit-password.php:93
-#: templates/myaccount/form-edit-password.php:105
-#: templates/myaccount/form-edit-password.php:116
+#: templates/myaccount/form-edit-password.php:100
+#: templates/myaccount/form-edit-password.php:112
+#: templates/myaccount/form-edit-password.php:123
 #: templates/myaccount/form-reset-password.php:64
 #: templates/myaccount/form-reset-password.php:75
 msgid "Show Password"
@@ -2741,7 +2741,7 @@ msgstr ""
 #: modules/membership/includes/Admin/Membership/Membership.php:944
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroups.php:64
 #: modules/membership/includes/Frontend/Frontend.php:199
-#: modules/payment-history/Orders.php:368
+#: modules/payment-history/Orders.php:382
 msgid "Network error"
 msgstr ""
 
@@ -3088,8 +3088,8 @@ msgstr ""
 #: includes/frontend/class-ur-frontend.php:353
 #: modules/class-ur-payment-settings.php:34
 #: modules/class-ur-payment-settings.php:53
-#: modules/payment-history/Orders.php:65
-#: modules/payment-history/Orders.php:66
+#: modules/payment-history/Orders.php:78
+#: modules/payment-history/Orders.php:79
 msgid "Payments"
 msgstr ""
 
@@ -3842,7 +3842,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-payment.php:186
 #: modules/membership/includes/Admin.php:418
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:77
-#: modules/payment-history/Orders.php:391
+#: modules/payment-history/Orders.php:405
 msgid "Paypal"
 msgstr ""
 
@@ -3964,7 +3964,7 @@ msgstr ""
 #: modules/membership/includes/Admin/Forms/FormFields.php:94
 #: modules/membership/includes/Admin/Forms/Views/admin-membership.php:72
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:360
-#: modules/payment-history/Orders.php:392
+#: modules/payment-history/Orders.php:406
 msgid "Stripe"
 msgstr ""
 
@@ -5618,7 +5618,7 @@ msgstr ""
 #. translators: 1: Pending email message 2: Cancel Link
 #: includes/class-ur-ajax.php:323
 #: includes/functions-ur-template.php:716
-#: includes/functions-ur-template.php:1947
+#: includes/functions-ur-template.php:1963
 msgid "There is a pending change of your email to <code>%1$s</code>. <a href=\"%2$s\">Cancel</a>"
 msgstr ""
 
@@ -6926,7 +6926,7 @@ msgstr ""
 
 #: includes/class-ur-smart-tags.php:760
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:420
-#: modules/payment-history/Orders.php:374
+#: modules/payment-history/Orders.php:388
 msgid "Completed"
 msgstr ""
 
@@ -8158,7 +8158,7 @@ msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:374
 #: includes/functions-ur-template.php:820
-#: includes/functions-ur-template.php:2067
+#: includes/functions-ur-template.php:2083
 msgid "Select a country"
 msgstr ""
 
@@ -8827,8 +8827,8 @@ msgid "Something went wrong! please try again"
 msgstr ""
 
 #: includes/frontend/class-ur-frontend.php:501
-#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:56
-#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:57
+#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:61
+#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:62
 msgid "Subscriptions"
 msgstr ""
 
@@ -9979,7 +9979,7 @@ msgid "This function should not be called before user_registration_init."
 msgstr ""
 
 #: includes/functions-ur-template.php:250
-#: includes/functions-ur-template.php:1590
+#: includes/functions-ur-template.php:1606
 msgid "required"
 msgstr ""
 
@@ -9992,7 +9992,7 @@ msgid "characters"
 msgstr ""
 
 #: includes/functions-ur-template.php:856
-#: includes/functions-ur-template.php:2109
+#: includes/functions-ur-template.php:2125
 msgid "Choose an option"
 msgstr ""
 
@@ -10027,7 +10027,7 @@ msgstr ""
 #: modules/membership/includes/Admin.php:420
 #: modules/membership/includes/Admin/Forms/FormFields.php:95
 #: modules/membership/includes/Admin/Forms/Views/admin-membership.php:73
-#: modules/payment-history/Orders.php:394
+#: modules/payment-history/Orders.php:408
 msgid "Bank"
 msgstr ""
 
@@ -10083,7 +10083,7 @@ msgstr ""
 msgid "Login | Logout"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-changelog.php:78
+#: includes/RestApi/controllers/version1/class-ur-changelog.php:84
 msgid "Failed to read changelog."
 msgstr ""
 
@@ -11972,29 +11972,29 @@ msgstr ""
 msgid "All Subscriptions"
 msgstr ""
 
-#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:153
+#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:160
 msgid "Subscription created successfully."
 msgstr ""
 
-#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:154
+#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:161
 #: modules/membership/includes/AJAX.php:2499
 msgid "Subscription updated successfully."
 msgstr ""
 
-#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:155
+#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:162
 msgid "An error occurred. Please try again."
 msgstr ""
 
-#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:156
+#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:163
 msgid "Network error. Please check your connection."
 msgstr ""
 
-#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:158
+#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:165
 #: modules/membership/includes/Admin/Views/subscription-edit.php:335
 msgid "Delete Subscription"
 msgstr ""
 
-#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:159
+#: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:166
 msgid "Are you sure you want to delete this subscription?"
 msgstr ""
 
@@ -13243,7 +13243,7 @@ msgid "Payer Email"
 msgstr ""
 
 #: modules/payment-history/Admin/OrdersListTable.php:399
-#: modules/payment-history/Orders.php:206
+#: modules/payment-history/Orders.php:220
 #: modules/payment-history/Views/header.php:10
 msgid "Payment History"
 msgstr ""
@@ -13360,31 +13360,31 @@ msgstr ""
 msgid "Order updated successfully."
 msgstr ""
 
-#: modules/payment-history/Orders.php:216
+#: modules/payment-history/Orders.php:230
 msgid "Add Manual Payment"
 msgstr ""
 
-#: modules/payment-history/Orders.php:299
+#: modules/payment-history/Orders.php:313
 msgid "Transaction Details"
 msgstr ""
 
-#: modules/payment-history/Orders.php:369
+#: modules/payment-history/Orders.php:383
 msgid "Delete Orders"
 msgstr ""
 
-#: modules/payment-history/Orders.php:370
+#: modules/payment-history/Orders.php:384
 msgid "Are you sure you want to delete these orders permanently?"
 msgstr ""
 
-#: modules/payment-history/Orders.php:371
+#: modules/payment-history/Orders.php:385
 msgid "Are you sure you want to delete this order permanently?"
 msgstr ""
 
-#: modules/payment-history/Orders.php:375
+#: modules/payment-history/Orders.php:389
 msgid "Please select at least one order."
 msgstr ""
 
-#: modules/payment-history/Orders.php:393
+#: modules/payment-history/Orders.php:407
 msgid "Stripe (Credit Card)"
 msgstr ""
 
@@ -13624,20 +13624,20 @@ msgstr ""
 msgid "Not {{display_name}}? <strong>{{sign_out_link}}</strong>"
 msgstr ""
 
-#: templates/myaccount/form-edit-password.php:88
+#: templates/myaccount/form-edit-password.php:95
 msgid "Current password"
 msgstr ""
 
-#: templates/myaccount/form-edit-password.php:100
+#: templates/myaccount/form-edit-password.php:107
 #: templates/myaccount/form-reset-password.php:59
 msgid "New password"
 msgstr ""
 
-#: templates/myaccount/form-edit-password.php:111
+#: templates/myaccount/form-edit-password.php:118
 msgid "Confirm new password"
 msgstr ""
 
-#: templates/myaccount/form-edit-password.php:149
+#: templates/myaccount/form-edit-password.php:156
 #: templates/myaccount/form-edit-profile-non-urm-user.php:208
 #: templates/myaccount/form-edit-profile-non-urm-user.php:222
 #: templates/myaccount/form-edit-profile.php:282

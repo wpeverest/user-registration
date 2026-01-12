@@ -259,47 +259,45 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 == Changelog ==
 
 = 5.0      - 13/01/2026 =
-* Refactor - Global Settings UI.
+* New      - Streamlined setup wizard with a clean, modern interface that removes unnecessary steps and focuses only on essential configuration.
+* New      - Setup wizard now supports both user registration and membership creation with clear membership access controls.
+* New      - Simplified membership creation process with three clear steps: Basic configuration for essential settings, Access Control for content protection, and Advanced options for edge cases and additional features.
+* New      - Centralized access control system for memberships, allowing you to manage content access for pages, posts, and different content types from a single screen instead of configuring each page individually
+* New      - Unified members system that combines previously separate users and members tables, making everyone a member with easier profile management, payment history, and subscription
+tracking all in one place.
+* New      - Reorganized WordPress dashboard menus to keep things simple and minimal, with additional menus appearing only when relevant add-ons are activated.
+* New      - Restructured settings area with logical organization, making it easier to find options and configurations that were previously difficult to locate.
+* New      - Completely redesigned My Account area with a clean, modern interface that includes subscriptions and payments management, providing members with easy access to all their account
+information and activities.
+* New      - Full backward compatibility with existing features maintained through legacy support, ensuring all current functionalities continue to work seamlessly with clear notices and simple one- or two-step migration instructions for users who want to upgrade to new features.
+* New      - Multiple registration form module for creating different registration forms.
 * Refactor - Membership upgrade and renewal process.
 * Refactor - Payment configuration in the membership creation process.
-* Refactor - Single members list table for normal and membership registrations.
-* New      - Membership Groups Module.
-* New      - Subscriptions table and entries.
-* New      - Multiple registration form module.
-* New      - Membership registration analytics.
-* New      - Content Restriction v2 Gutenberg block.
-* New      - Subscriptions and Payments tab in My Account.
-* New      - Access rules for memberships on the membership creation page.
-* Feature  - Sorting membership plans on the registration form.
-* Enhance  - My Account UI.
-* Enhance  - List table UI.
-* Enhance  - Members edit page UI.
-* Enhance  - Payment history edit UI.
-* Enhance  - Thank You block and page.
-* Enhance  - Membership listing block.
-* Enhance  - Setup wizard UI and process.
-* Enhance  - Default email template updates.
-* Enhance  - Content restriction message UI.
-* Enhance  - Default email content updates.
-* Enhance  - Membership creation process and UI.
-* Enhance  - Membership field UI on the registration form.
-* Enhance  - Main menu rearrangement for a better experience.
-* Enhance  - Centralized checkout page for registrations and membership upgrades.
-* Enhance  - Do not lock pages such as registration and login when whole-site restriction is enabled.
+* Feature  - Header and footer configuration for membership pages.
+* Feature  - Sorting membership plans on the registration form in your preferred order.
+* Enhance  - List table UI with a cleaner interface.
+* Enhance  - Members edit page UI for better usability.
+* Enhance  - Payment history edit UI with improved design.
+* Enhance  - Thank You block and page with better presentation.
+* Enhance  - Membership listing block with updated styling.
+* Enhance  - Default email template updates with modern design.
+* Enhance  - Content restriction message UI for better readability.
+* Enhance  - Default email content updates with clearer messaging.
+* Enhance  - Membership field UI on the registration form with improved design.
+* Enhance  - Centralized checkout page for both new registrations and membership upgrades.
+* Enhance  - Registration and login pages remain accessible even when whole-site restriction is enabled.
 * Tweak    - Updated Swaziland to Eswatini in the country list.
 * Dev      - Filter to modify profile picture maximum size.
 * Dev      - Filter to modify the expired error message text.
-* Dev      - Content rules backward compatibility for the updated UI.
 * Fix      - Character limit validation message not translatable.
 * Fix      - Repetition of restricted content on restricted pages.
 * Fix      - Validation message when adding a variable product to the cart.
-* Fix      - 3D Secure not working for Stripe on subscription memberships.
 * Fix      - Email confirmation pending message displayed on the My Account page.
 * Fix      - Self-cURL requests used to validate images, causing server load.
 * Fix      - Checkbox value not checked when using an ampersand in the value.
 * Fix      - Custom pattern validation error message not translatable in WPML.
 * Fix      - Membership smart tag and plural translation for membership duration.
-* Fix      - Admin unable to access content when restricting all content while using the Divi theme.
+* Fix      - Admin unable to access content when restricting all content while using the whole site restrict.
 
 = 4.4.9    - 08/01/2026 =
 * Security - Fixed XSS vulnerability for delete users.
@@ -923,7 +921,6 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Upgrade Notice ==
-
-= 4.0 =
-###Heads up, User Registration is now User Registration & Membership!
-This update introduces substantial changes to the plugin. We recommend backing up your site before updating and testing the update in a staging environment first.
+= 5.0 =
+##Important: Version 5.0 is a major update with significant improvements
+We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
