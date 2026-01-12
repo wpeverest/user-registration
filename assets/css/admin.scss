@@ -5262,7 +5262,13 @@ body.user-registration {
 	}
 }
 
-#user-registration-list-table-page {
+
+#user-registration-local-currency-table-page{
+	border: 0px !important;
+	padding: 0px !important;
+}
+
+#user-registration-list-table-page, #user-registration-local-currency-table-page {
 	max-width: 100%;
 	margin: $spacing_24px;
 	padding: $spacing_24px $spacing_28px;
@@ -9305,6 +9311,236 @@ body.user-registration-page {
 	}
 }
 
+.ur-tax-region-list-table{
+	.ur-tax-rate-edit-field{
+		min-height: 11px !important;
+		width: 60px !important;
+	}
+
+	.ur-tax-region-save{
+		display: none;
+		margin: 0;
+	}
+
+	.ur-tax-rate-container{
+		position: relative;
+
+		.ur-tax-rate-percentage{
+			display: none;
+			position: absolute;
+			z-index: 99;
+		}
+	}
+}
+
+.urm-hide-wrapper{
+	display: none !important;
+}
+
+.ur-tax-regions-popup-outer-wrapper {
+  padding: 10px;
+
+  .ur-tax-regions-search-outer-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    background: #f6f6f6;
+    border: 1px solid #ddd;
+    padding: 8px 10px;
+    border-radius: 6px;
+
+    span {
+      font-size: 18px;
+    }
+
+    .ur-tax-regions-search {
+      flex: 1;
+      padding: 6px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      outline: none;
+
+      &:focus {
+        border-color: #0088cc;
+      }
+    }
+  }
+
+  .ur-tax-entire-country-and-state-wrapper {
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    max-height: 330px;
+    overflow-y: auto;
+    background: #fff;
+    padding: 5px;
+
+    .ur-tax-country-and-state-outer-wrapper {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      border-bottom: 1px solid #ececec;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .ur-tax-regions-popup-country-outer-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+
+        input[type="checkbox"] {
+          margin-top: 0;
+        }
+
+        .ur-tax-regions-flag {
+          width: 24px;
+          height: auto;
+          border-radius: 3px;
+        }
+
+        span {
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
+
+      .ur-tax-regions-popup-state-outer-wrapper {
+        margin-top: 12px;
+        background: #fafafa;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #eee;
+
+        .ur-tax-regions-popup-state-entire-country-wrapper {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 10px;
+
+          .ur-tax-regions-entire-country-checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            p {
+              margin: 0;
+              font-size: 14px;
+            }
+          }
+
+          .ur-tax-regions-rate-input {
+            width: 65px;
+            height: 26px;
+            padding-right: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+          }
+
+          .urm-hide-wrapper {
+            display: none !important;
+          }
+        }
+
+        .ur-tax-state-outer-wrapper {
+          margin-top: 15px;
+
+          .ur-tax-default-tax-outer-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+
+            .ur-tax-default-tax-text-container {
+              p {
+                margin: 0;
+                font-weight: 600;
+              }
+
+              span {
+                display: block;
+                font-size: 13px;
+                color: #777;
+              }
+            }
+
+            .ur-tax-regions-default-rate {
+              width: 65px;
+              height: 26px;
+              border: 1px solid #ccc;
+              border-radius: 4px;
+              padding-right: 14px;
+            }
+          }
+
+          .ur-tax-state-lists-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            .ur-tax-state-list {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 6px 0;
+
+			  .ur-tax-state-list-inner{
+				display: flex;
+				justify-content: center;
+				align-items: center
+			  }
+
+              p {
+                margin: 0;
+                font-size: 14px;
+              }
+
+              input[type="number"] {
+                width: 65px;
+                height: 26px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                padding-right: 14px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.ur-local-currency-message {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+
+	margin-top: 12px;
+	padding: 10px 12px;
+
+	background-color: #fff7ed;
+	border: 1px solid #fed7aa;
+	border-left: 4px solid #f59e0b;
+
+	border-radius: 6px;
+
+	font-size: 13px;
+	line-height: 1.5;
+	color: #92400e;
+
+	&::before {
+		content: "⚠";
+		font-size: 14px;
+		line-height: 1.4;
+		margin-top: 1px;
+	}
+
+	&.hidden{
+		display: none;
+	}
+}
 
 /* =========================================
    Email Marketing Sync Settings
