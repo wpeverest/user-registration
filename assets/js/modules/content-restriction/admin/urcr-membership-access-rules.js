@@ -1099,18 +1099,10 @@
 			var self = this;
 			var options = [];
 
-			if (type === 'pages' && urcr_membership_access_data.pages) {
-				options = Object.keys(urcr_membership_access_data.pages).map(function (key) {
-					return { id: key, text: urcr_membership_access_data.pages[key] };
-				});
-			} else if (type === 'posts' && urcr_membership_access_data.posts) {
-				options = Object.keys(urcr_membership_access_data.posts).map(function (key) {
-					return { id: key, text: urcr_membership_access_data.posts[key] };
-				});
-			} else if (type === 'post_types' && urcr_membership_access_data.post_types) {
-				options = Object.keys(urcr_membership_access_data.post_types).map(function (key) {
-					return { id: key, text: urcr_membership_access_data.post_types[key] };
-				});
+			if ( typeof urcr_membership_access_data === 'object'&& urcr_membership_access_data.hasOwnProperty( type ) ) {
+				options = Object.keys(urcr_membership_access_data[type]).map(function (key) {
+					return { id: key, text: urcr_membership_access_data[type][key] };
+				})
 			}
 
 			return options;
