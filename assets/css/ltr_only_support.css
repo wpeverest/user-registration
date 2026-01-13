@@ -1,15 +1,1 @@
-.iti.iti--allow-dropdown,
-.iti.iti--separate-dial-code,
-.iti,
-.ur-smart-phone-field,
-input[type=tel],
-input[data-field-key*=phone],
-.field-phone input,
-.ur-field-item.field-phone input {
-  direction: ltr !important;
-  text-align: left !important;
-}
-
-.iti__flag-container {
-  direction: ltr !important;
-}
+.field-phone input,.iti,.iti.iti--allow-dropdown,.iti.iti--separate-dial-code,.ur-field-item.field-phone input,.ur-smart-phone-field,input[data-field-key*=phone],input[type=tel]{direction:ltr!important;text-align:left!important}.iti__flag-container{direction:ltr!important}

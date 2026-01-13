@@ -288,6 +288,16 @@ class URCR_Admin_Assets {
 				'type'          => 'date',
 				'operator_label' => esc_html__( 'is', 'user-registration' ),
 				'placeholder'   => '',
+				'date_type_options' => array(
+					array(
+						'value' => 'range',
+						'label' => esc_html__( 'Select date range', 'user-registration' ),
+					),
+					array(
+						'value' => 'single',
+						'label' => esc_html__( 'Pick a date', 'user-registration' ),
+					),
+				),
 			),
 			array(
 				'value'         => 'access_period',
@@ -363,15 +373,21 @@ class URCR_Admin_Assets {
 				'value' => 'local_page',
 				'label' => esc_html__( 'Redirect to a Local Page', 'user-registration' ),
 			),
-			array(
+		);
+
+		$urm_is_new_installation = get_option( 'urm_is_new_installation', false );
+		$is_old_installation = ( false === $urm_is_new_installation || ! $urm_is_new_installation );
+		
+		if ( $is_old_installation ) {
+			$action_type_options[] = array(
 				'value' => 'ur-form',
 				'label' => esc_html__( 'Show UR Form', 'user-registration' ),
-			),
-			array(
+			);
+			$action_type_options[] = array(
 				'value' => 'shortcode',
 				'label' => esc_html__( 'Render Shortcode', 'user-registration' ),
-			),
-		);
+			);
+		}
 
 		/**
 		 * Filter action type options for the action dropdown.
@@ -452,6 +468,7 @@ class URCR_Admin_Assets {
 			'has_multiple_memberships'               => $has_multiple_memberships,
 			'is_content_restriction_enabled'         => ur_check_module_activation( 'content-restriction' ),
 			'action_type_options'                    => $action_type_options,
+			'urm_is_new_installation'                => $urm_is_new_installation,
 			'smart_tags_list'                        => $smart_tags_list,
 			'show_smart_tags_button'                 => $show_smart_tags_button,
 			'smart_tags_dropdown_title'              => __( 'Smart Tags', 'user-registration' ),

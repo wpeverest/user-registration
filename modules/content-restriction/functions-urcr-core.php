@@ -376,7 +376,7 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 						$registered_date = ! empty( $user->data->user_registered ) ? $user->data->user_registered : '';
 						$date_range      = ! empty( $logic_map['value'] ) ? explode( 'to', (string) $logic_map['value'] ) : array();
 						$start_date      = ! empty( $date_range[0] ) ? trim( $date_range[0] ) : '';
-						$end_date        = ! empty( $date_range[1] ) ? trim( $date_range[1] ) : '';
+						$end_date        = ! empty( $date_range[1] ) ? trim( $date_range[1] ) : $start_date;
 
 						if ( ! empty( $start_date ) && ! empty( $end_date ) && ur_falls_in_date_range( $registered_date, $start_date, $end_date ) ) {
 							return true;

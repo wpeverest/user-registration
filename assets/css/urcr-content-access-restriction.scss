@@ -681,6 +681,19 @@ $border-left-color_3: #0073aa;
 	hr {
 		margin: 8px 0;
 	}
+	.urcr-global-migration-notice {
+		margin: 20px 0;
+		padding: 10px;
+		background-color: #f9f9f9;
+		border: 1px solid #e0e0e0;
+		border-radius: 5px;
+
+		.urcr-notice-wrap {
+			padding: 0px;
+			margin: 0px;
+		}
+	}
+
 }
 
 .urcr-settings-panel-actions {
