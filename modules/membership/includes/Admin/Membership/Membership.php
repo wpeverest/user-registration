@@ -872,6 +872,48 @@ class Membership {
 			}
 			$html .= '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' . $target_id . '" data-content-type="' . esc_attr( $type ) . '" data-field-type="' . esc_attr( $type ) . '"' . $value_attr . '></select>';
 		}
+		if ( 'whole_site' !== $type ) {
+			$drip  = isset( $target['drip'] ) ? $target['drip'] : array(
+				'activeType' => 'fixed_date',
+				'value'      => array(
+					'fixed_date' => array(
+						'date' => '',
+						'time' => '',
+					),
+					'days_after' => array( 'days' => 0 ),
+				),
+			);
+			$html .= '<div class="urcr-membership-drip" data-active_type="' . esc_attr( $drip['activeType'] ) . '"
+            data-fixed_date_date="' . esc_attr( $drip['value']['fixed_date']['date'] ) . '"
+            data-fixed_date_time="' . esc_attr( $drip['value']['fixed_date']['time'] ) . '"
+            data-days_after_days="' . esc_attr( $drip['value']['days_after']['days'] ) . '">
+          <button type="button" id="drip-trigger" class="urcr-drip__trigger">
+            <span class="dashicons dashicons-plus-alt2"></span> Drip This Content
+          </button>';
+			$html .= '<div id="drip-popover" class="urcr-drip__popover" style="display: none;">
+            <div class="urcr-drip__arrow"></div>
+
+            <div class="urcr-drip__tabs">
+                <div class="urcr-drip__tabList">
+                    <button class="urcr-drip__tab" data-value="fixed_date" data-active_type="fixed_date">Fixed Date</button>
+                    <button class="urcr-drip__tab" data-value="days_after" data-active_type="days_after">Days After</button>
+                </div>
+
+                <div class="urcr-drip__panels">
+                    <div id="fixed_date-panel" class="urcr-drip__panel">
+                        <input type="date" id="drip-date" class="urcr-drip__input" value="' . esc_attr( $drip['value']['fixed_date']['date'] ) . '" />
+                        <input type="time" id="drip-time" class="urcr-drip__input" value="' . esc_attr( $drip['value']['fixed_date']['time'] ) . '" />
+                    </div>
+
+                    <div id="days_after-panel" class="urcr-drip__panel" style="display: none;">
+                        <input type="number" id="drip-days" class="urcr-drip__input" value="' . esc_attr( $drip['value']['days_after']['days'] ) . '" min="0" />
+                    </div>
+                </div>
+            </div>
+          </div>';
+			$html .= '</div>';
+
+		}
 
 		$html .= '<button type="button" class="button button-link-delete urcr-target-remove" aria-label="' . esc_attr__( 'Remove content target', 'user-registration' ) . '">' .
 				'<span class="dashicons dashicons-no-alt"></span>' .
