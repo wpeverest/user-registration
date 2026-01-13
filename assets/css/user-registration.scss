@@ -240,7 +240,7 @@ textarea.ur-input-border-red {
 				letter-spacing: 0.15px;
 				margin-top: 8px;
 				margin-bottom: 14px;
-				color:#6b6b6b !important;
+				color: #6b6b6b !important;
 				font-weight: 400;
 			}
 		}
@@ -266,12 +266,12 @@ textarea.ur-input-border-red {
 		}
 
 		label[for="user_login"] {
-		margin-top: 0;
-   		margin-bottom: 16px;
-    	color: #222;
-    	font-size: 15px;
-    	font-weight: 500;
-    	line-height: 19px;
+			margin-top: 0;
+			margin-bottom: 16px;
+			color: #222;
+			font-size: 15px;
+			font-weight: 500;
+			line-height: 19px;
 		}
 
 		#user_login {
@@ -280,7 +280,7 @@ textarea.ur-input-border-red {
 			height: 48px;
 
 			&::placeholder {
-  				color: transparent;
+				color: transparent;
 			}
 		}
 
@@ -440,6 +440,7 @@ textarea.ur-input-border-red {
 							}
 
 							input {
+
 								&[type="checkbox"],
 								&[type="radio"] {
 									margin-top: 0px;
@@ -584,14 +585,28 @@ textarea.ur-input-border-red {
 
 			select {
 				-webkit-appearance: none;
-				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E")
-					no-repeat right 5px top 55%;
+				// background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E") no-repeat right 5px top 55%;
+				background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M19.561 7.403a1.468 1.468 0 0 1 2.02 0 1.339 1.339 0 0 1 0 1.944l-8.57 8.25a1.468 1.468 0 0 1-2.021 0l-8.572-8.25a1.339 1.339 0 0 1 0-1.944 1.468 1.468 0 0 1 2.02 0L12 14.68l7.561-7.278Z'/%3E%3C/svg%3E");
+				background-repeat: no-repeat;
+				background-position: right 12px center;
+				background-size: 14px 14px;
 				min-height: 38px;
 				max-height: 38px;
+				font-size: 14px;
+				line-height: 20px;
 				padding: 0 $spacing_12px;
 				border-radius: $border_radius_4;
 				box-shadow: none;
 				cursor: pointer;
+				color: #383838;
+				margin: 0;
+				border: $border_width solid $border-color;
+
+				&:focus {
+					border-color: $primary_color;
+					outline: none;
+					box-shadow: none;
+				}
 			}
 
 			legend,
@@ -702,6 +717,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -752,6 +768,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -801,6 +818,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					.ur-field-item,
 					.form-row {
 						margin-bottom: 0;
@@ -853,6 +871,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -916,6 +935,7 @@ textarea.ur-input-border-red {
 			form {
 				.ur-form-row {
 					.ur-form-grid {
+
 						input[type="text"],
 						input[type="email"],
 						input[type="url"],
@@ -1070,6 +1090,7 @@ textarea.ur-input-border-red {
 			}
 
 			header {
+
 				p,
 				.button-group {
 					margin-bottom: 10px;
@@ -1167,6 +1188,7 @@ textarea.ur-input-border-red {
 }
 
 .edit-post-visual-editor {
+
 	.ur-gutenberg-form-selector-wrap,
 	.user-registration-gutenberg-form-selector-wrap {
 		h2 {
@@ -1396,7 +1418,7 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page {
 	.edit-post-layout {
-		.components-notice-list > div {
+		.components-notice-list>div {
 			padding-left: 50px;
 		}
 	}
@@ -1433,7 +1455,7 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page.is-fullscreen-mode {
 	.edit-post-layout {
-		.components-notice-list > div {
+		.components-notice-list>div {
 			padding-left: 125px;
 		}
 	}
@@ -1743,8 +1765,10 @@ span.ur-shortcode-form-embed-dot {
 
 // Login Form Design ReVamped CSS
 body {
+
 	&[class*="user-registration-"],
 	&[class^="ur-"] {
+
 		/* Minimal WordPress Editor Styles */
 		.wp-editor-container {
 			border-radius: 8px !important;
@@ -1765,7 +1789,7 @@ body {
 				margin-bottom: 0 !important;
 				padding: 6px 8px !important;
 
-				&-grp > div {
+				&-grp>div {
 					padding: 0;
 				}
 
@@ -2032,7 +2056,7 @@ body {
 				display: block;
 			}
 
-			> ul {
+			>ul {
 				padding-left: 0;
 				margin: 0;
 				list-style: none;
@@ -2041,7 +2065,7 @@ body {
 	}
 
 	.user-registration-error {
-		> svg {
+		>svg {
 			display: none;
 		}
 	}
@@ -2050,6 +2074,7 @@ body {
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration {
 			&.ur-frontend-form {
+
 				&:has(.ur-grid-2),
 				&:has(.ur-grid-3) {
 					max-width: 1200px;
@@ -2068,9 +2093,11 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
+
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2104,6 +2131,7 @@ body {
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2130,9 +2158,11 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
+
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2154,9 +2184,11 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
+
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2198,9 +2230,11 @@ body {
 					.user-registration-form-login {
 						.ur-form-row {
 							.ur-form-grid {
+
 								input,
 								textarea,
 								select {
+
 									&:not([type="radio"]),
 									&:not([type="checkbox"]),
 									&:not([type="file"]) {
@@ -2447,16 +2481,19 @@ body {
 
 								input {
 									margin-bottom: 0;
-									border-radius: 4px;
+									border-radius: $border_radius_4;
 									min-height: 38px;
 									max-height: 38px;
 									font-size: 14px;
 									line-height: 20px;
-									padding: 0 14px;
+									padding: 0 $spacing_12px;
 									color: #383838;
 									box-shadow: none;
+									border: $border_width solid $border-color;
 
 									&:focus {
+										outline: none;
+										box-shadow: none;
 										border-color: $primary_color;
 									}
 
@@ -2532,7 +2569,7 @@ body {
 									}
 								}
 
-								> div {
+								>div {
 									display: block;
 									float: unset !important;
 									flex-direction: row-reverse;
@@ -2576,9 +2613,7 @@ body {
 										}
 									}
 
-									&:has(
-											.user-registration-passwordless-login
-										) {
+									&:has(.user-registration-passwordless-login) {
 										display: flex;
 										flex-direction: column-reverse;
 										gap: 16px !important;
@@ -2739,6 +2774,7 @@ body {
 										}
 
 										&.ursc_theme {
+
 											&_2,
 											&_3 {
 												.ursc-login-media {
@@ -2826,6 +2862,7 @@ body {
 					margin: 0 -10px;
 
 					.ur-field-item {
+
 						ul,
 						ol {
 							padding-left: 4px;
@@ -2833,6 +2870,7 @@ body {
 
 						.input-wrapper {
 							input {
+
 								&:not([type="checkbox"]),
 								&:not([type="radio"]) {
 									min-height: 50px;
@@ -2985,8 +3023,7 @@ body {
 
 									form {
 										.ur-login-form-setting-block {
-											padding: $spacing_20px $spacing_12px
-												$spacing_12px;
+											padding: $spacing_20px $spacing_12px $spacing_12px;
 
 											&:first-child {
 												h2 {
@@ -3049,7 +3086,7 @@ body.user-registration-page {
 		.et-l {
 			.et-fb-modules-list {
 				ul {
-					> li {
+					>li {
 						position: relative;
 
 						// Registration Form Icon
@@ -3369,7 +3406,7 @@ body.user-registration-page {
 			margin: 0;
 		}
 
-		p > input.user-registration-Button.button {
+		p>input.user-registration-Button.button {
 			background: $primary_color;
 			border: $border_width $primary_color;
 			border-radius: $border_radius_4;
@@ -3382,6 +3419,7 @@ body.user-registration-page {
 		}
 	}
 }
+
 .urcr-block-notice {
 	display: flex;
 	align-items: center;
