@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
   push:
     branches:
-      - UR-2656-custom-email
+      - v5.1.0-v2
     workflow_dispatch:
 jobs:
   sync:
