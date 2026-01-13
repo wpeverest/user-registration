@@ -10,5 +10,4 @@ wpeverest/user-registration-pro@UR-2656-custom-email:
   - license.txt
   - phpcs.xml
   - uninstall.php
-  - webpack.config.js
   - wpml-config.xml
