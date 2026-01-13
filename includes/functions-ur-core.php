@@ -2779,12 +2779,12 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		if ( isset( $form_data->extra_params['field_key'] ) && 'country' === $form_data->extra_params['field_key'] && '' !== $form_data->value ) {
 			$isJson = preg_match( '/^\{.*\}$/s', $form_data->value ) ? true : false;
 			if ( $isJson ) {
-				$country_data 	 = json_decode( $form_data->value, true );
-				$country_code 	 = isset( $country_data['country'] ) ? $country_data['country'] : '';
-				$state_code 	 = isset( $country_data['state'] ) ? $country_data['state'] : '';
+				$country_data = json_decode( $form_data->value, true );
+				$country_code = isset( $country_data['country'] ) ? $country_data['country'] : '';
+				$state_code   = isset( $country_data['state'] ) ? $country_data['state'] : '';
 
 				$form_data->value = ur_format_country_field_data( $country_code, $state_code );
-			}else{
+			} else {
 				$country_class    = ur_load_form_field_class( $form_data->extra_params['field_key'] );
 				$countries        = $country_class::get_instance()->get_country();
 				$form_data->value = isset( $countries[ $form_data->value ] ) ? $countries[ $form_data->value ] : $form_data->value;
@@ -4204,164 +4204,170 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 	function ur_premium_settings_tab() {
 
 		$premium_tabs = array(
-			'email'              => array(
-				'templates' => array(
+			'email' => array(
+				'templates'          => array(
 					'label'  => esc_html__( 'Email Templates', 'user-registration' ),
 					'plugin' => 'user-registration-email-templates',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Email Templates', 'user-registration' ),
 				),
-			),
-			'registration_login' => array(
-				'social-connect'  => array(
-					'label'  => esc_html__( 'Social Connect', 'user-registration' ),
-					'plugin' => 'user-registration-social-connect',
+				'custom-email'       => array(
+					'label'  => esc_html__( 'Custom Email', 'user-registration' ),
+					'plugin' => 'user-registration-email-custom-email',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration - Social Connect', 'user-registration' ),
+					'name'   => esc_html__( 'User Registration - Custom Email', 'user-registration' ),
 				),
-				'profile-connect' => array(
-					'label'  => esc_html__( 'Profile Connect', 'user-registration' ),
-					'plugin' => 'user-registration-profile-connect',
-					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration Profile Connect', 'user-registration' ),
-				),
-				'invite-code'     => array(
-					'label'  => esc_html__( 'Invite Codes', 'user-registration' ),
-					'plugin' => 'user-registration-invite-codes',
-					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration Invite Codes', 'user-registration' ),
-				),
-				'file-upload'     => array(
-					'label'  => esc_html__( 'File Upload', 'user-registration' ),
-					'plugin' => 'user-registration-file-upload',
-					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration - File Upload', 'user-registration' ),
-				),
-			),
-			'my_account'         => array(
-				'customize-my-account' => array(
-					'label'  => esc_html__( 'Customize My Account', 'user-registration' ),
-					'plugin' => 'user-registration-customize-my-account',
-					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration customize my account', 'user-registration' ),
-				),
-			),
-			'integration'        => array(
-				'email-marketing' => array(
-					'is_collection' => true,
-					'collections'   => array(
-						'activecampaign' => array(
-							'label'  => esc_html__( 'Active Campaign', 'user-registration' ),
-							'plugin' => 'user-registration-activecampaign',
-							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration ActiveCampaign', 'user-registration' ),
-						),
-						'brevo'          => array(
-							'label'  => esc_html__( 'Brevo', 'user-registration' ),
-							'plugin' => 'user-registration-brevo',
-							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration Brevo', 'user-registration' ),
-						),
-						'convertkit'     => array(
-							'label'  => esc_html__( 'Kit (Previously Convertkit)', 'user-registration' ),
-							'plugin' => 'user-registration-convertkit',
-							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration convertkit', 'user-registration' ),
-						),
-						'klaviyo'        => array(
-							'label'  => esc_html__( 'Klaviyo', 'user-registration' ),
-							'plugin' => 'user-registration-klaviyo',
-							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration Klaviyo', 'user-registration' ),
-						),
-						'mailchimp'      => array(
-							'label'  => esc_html__( 'Mailchimp', 'user-registration' ),
-							'plugin' => 'user-registration-mailchimp',
-							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration - Mailchimp', 'user-registration' ),
-						),
-						'mailerlite'     => array(
-							'label'  => esc_html__( 'Mailerlite', 'user-registration' ),
-							'plugin' => 'user-registration-mailerlite',
-							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration MailerLite', 'user-registration' ),
-						),
-						'mailpoet'       => array(
-							'label'  => esc_html__( 'Mailpoet', 'user-registration' ),
-							'plugin' => 'user-registration-mailpoet',
-							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration MailPoet', 'user-registration' ),
-						),
-						'zapier'         => array(
-							'label'  => esc_html__( 'Zapier', 'user-registration' ),
-							'plugin' => 'user-registration-zapier',
-							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration Zapier', 'user-registration' ),
-						),
+				'registration_login' => array(
+					'social-connect'  => array(
+						'label'  => esc_html__( 'Social Connect', 'user-registration' ),
+						'plugin' => 'user-registration-social-connect',
+						'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration - Social Connect', 'user-registration' ),
 					),
-					'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'plugin'        => '',
-				),
-				'pdf-submission'  => array(
-					'label'  => esc_html__( 'PDF Form Submission', 'user-registration' ),
-					'plugin' => 'user-registration-pdf-form-submission',
-					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration PDF Form Submission', 'user-registration' ),
-				),
-				'google-sheets'   => array(
-					'label'  => esc_html__( 'Google Sheets', 'user-registration' ),
-					'plugin' => 'user-registration-google-sheets',
-					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration Google Sheets', 'user-registration' ),
-				),
-				'salesforce'      => array(
-					'label'  => esc_html__( 'Salesforce', 'user-registration' ),
-					'plugin' => 'user-registration-salesforce',
-					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration Salesforce', 'user-registration' ),
-				),
-				'geolocation'     => array(
-					'label'  => esc_html__( 'Geolocation', 'user-registration' ),
-					'plugin' => 'user-registration-geolocation',
-					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration Geolocation', 'user-registration' ),
-				),
-				'woocommerce'     => array(
-					'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
-					'plugin' => 'user-registration-woocommerce',
-					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
-				),
-				'popup'           => array(
-					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'plugin' => 'user-registration-pro',
-				),
-				'cloud-storage'   => array(
-					'is_collection' => true,
-					'collections'   => array(
-						'google-drive' => array(
-							'label'  => esc_html__( 'Google Drive', 'user-registration' ),
-							'plugin' => 'user-registration-cloud-storage',
-							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
-						),
-						'dropbox'      => array(
-							'label'  => esc_html__( 'Dropbox', 'user-registration' ),
-							'plugin' => 'user-registration-cloud-storage',
-							'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-							'name' => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
-						)
+					'profile-connect' => array(
+						'label'  => esc_html__( 'Profile Connect', 'user-registration' ),
+						'plugin' => 'user-registration-profile-connect',
+						'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration Profile Connect', 'user-registration' ),
 					),
-					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'plugin' => 'user-registration-cloud-storage',
+					'invite-code'     => array(
+						'label'  => esc_html__( 'Invite Codes', 'user-registration' ),
+						'plugin' => 'user-registration-invite-codes',
+						'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration Invite Codes', 'user-registration' ),
+					),
+					'file-upload'     => array(
+						'label'  => esc_html__( 'File Upload', 'user-registration' ),
+						'plugin' => 'user-registration-file-upload',
+						'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration - File Upload', 'user-registration' ),
+					),
 				),
-			),
-			'security' => array(
-				'2fa' => array(
-					'label'  => esc_html__( 'Two Factor Authentication', 'user-registration' ),
-					'plugin' => 'user-registration-two-factor-authentication',
-					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration - Two Factor Authentication', 'user-registration' ),
+				'my_account'         => array(
+					'customize-my-account' => array(
+						'label'  => esc_html__( 'Customize My Account', 'user-registration' ),
+						'plugin' => 'user-registration-customize-my-account',
+						'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration customize my account', 'user-registration' ),
+					),
+				),
+				'integration'        => array(
+					'email-marketing' => array(
+						'is_collection' => true,
+						'collections'   => array(
+							'activecampaign' => array(
+								'label'  => esc_html__( 'Active Campaign', 'user-registration' ),
+								'plugin' => 'user-registration-activecampaign',
+								'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration ActiveCampaign', 'user-registration' ),
+							),
+							'brevo'          => array(
+								'label'  => esc_html__( 'Brevo', 'user-registration' ),
+								'plugin' => 'user-registration-brevo',
+								'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration Brevo', 'user-registration' ),
+							),
+							'convertkit'     => array(
+								'label'  => esc_html__( 'Kit (Previously Convertkit)', 'user-registration' ),
+								'plugin' => 'user-registration-convertkit',
+								'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration convertkit', 'user-registration' ),
+							),
+							'klaviyo'        => array(
+								'label'  => esc_html__( 'Klaviyo', 'user-registration' ),
+								'plugin' => 'user-registration-klaviyo',
+								'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration Klaviyo', 'user-registration' ),
+							),
+							'mailchimp'      => array(
+								'label'  => esc_html__( 'Mailchimp', 'user-registration' ),
+								'plugin' => 'user-registration-mailchimp',
+								'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration - Mailchimp', 'user-registration' ),
+							),
+							'mailerlite'     => array(
+								'label'  => esc_html__( 'Mailerlite', 'user-registration' ),
+								'plugin' => 'user-registration-mailerlite',
+								'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration MailerLite', 'user-registration' ),
+							),
+							'mailpoet'       => array(
+								'label'  => esc_html__( 'Mailpoet', 'user-registration' ),
+								'plugin' => 'user-registration-mailpoet',
+								'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration MailPoet', 'user-registration' ),
+							),
+							'zapier'         => array(
+								'label'  => esc_html__( 'Zapier', 'user-registration' ),
+								'plugin' => 'user-registration-zapier',
+								'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration Zapier', 'user-registration' ),
+							),
+						),
+						'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'plugin'        => '',
+					),
+					'pdf-submission'  => array(
+						'label'  => esc_html__( 'PDF Form Submission', 'user-registration' ),
+						'plugin' => 'user-registration-pdf-form-submission',
+						'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration PDF Form Submission', 'user-registration' ),
+					),
+					'google-sheets'   => array(
+						'label'  => esc_html__( 'Google Sheets', 'user-registration' ),
+						'plugin' => 'user-registration-google-sheets',
+						'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration Google Sheets', 'user-registration' ),
+					),
+					'salesforce'      => array(
+						'label'  => esc_html__( 'Salesforce', 'user-registration' ),
+						'plugin' => 'user-registration-salesforce',
+						'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration Salesforce', 'user-registration' ),
+					),
+					'geolocation'     => array(
+						'label'  => esc_html__( 'Geolocation', 'user-registration' ),
+						'plugin' => 'user-registration-geolocation',
+						'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration Geolocation', 'user-registration' ),
+					),
+					'woocommerce'     => array(
+						'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
+						'plugin' => 'user-registration-woocommerce',
+						'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
+					),
+					'popup'           => array(
+						'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'plugin' => 'user-registration-pro',
+					),
+					'cloud-storage'   => array(
+						'is_collection' => true,
+						'collections'   => array(
+							'google-drive' => array(
+								'label'  => esc_html__( 'Google Drive', 'user-registration' ),
+								'plugin' => 'user-registration-cloud-storage',
+								'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
+							),
+							'dropbox'      => array(
+								'label'  => esc_html__( 'Dropbox', 'user-registration' ),
+								'plugin' => 'user-registration-cloud-storage',
+								'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
+							),
+						),
+						'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'plugin'        => 'user-registration-cloud-storage',
+					),
+				),
+				'security'           => array(
+					'2fa' => array(
+						'label'  => esc_html__( 'Two Factor Authentication', 'user-registration' ),
+						'plugin' => 'user-registration-two-factor-authentication',
+						'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration - Two Factor Authentication', 'user-registration' ),
+					),
 				),
 			),
 		);
@@ -4480,6 +4486,37 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 				$detail = $section_details;
 				if ( ! empty( $license_plan ) ) {
 					$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
+					// Check if this is the custom-email feature and handle feature activation
+					if ( 'custom-email' === $current_section ) {
+						$feature_slug       = 'user-registration-custom-email';
+						$is_feature_enabled = ur_check_module_activation( 'custom-email' );
+
+						// Only show activation button if user has the right license plan and feature is not enabled
+						if ( in_array( $license_plan, $detail['plan'], true ) && ! $is_feature_enabled ) {
+							$description  = esc_html__( 'Please activate the Custom Email feature to use this functionality.', 'user-registration' );
+							$button_class = 'user-registration-settings-feature-activate';
+							$button_attrs = array(
+								'data-slug' => $feature_slug,
+								'data-type' => 'feature',
+								'data-name' => $detail['name'],
+							);
+							$button_title = esc_html__( 'Activate Feature', 'user-registration' );
+
+							$settings['sections']['premium_setting_section']['before_desc'] = $description;
+							$settings['sections']['premium_setting_section']['desc']        = false;
+							$settings['sections']['premium_setting_section']['settings']    = array(
+								array(
+									'id'    => 'ur-activate-feature__button',
+									'type'  => 'button',
+									'class' => $button_class,
+									'attrs' => $button_attrs,
+									'title' => $button_title,
+								),
+							);
+							return $settings;
+						}
+					}
+
 					if ( ! in_array( $license_plan, $detail['plan'], true ) ) {
 						if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 							return array();
@@ -4492,11 +4529,13 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 					} else {
 						$plugin_name = $detail['name'];
 						$action      = '';
-						if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
+						if ( 'user-registration-email-custom-email' === $detail['plugin'] ) {
+							$action = 'Activate';
+						} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
 							if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 								$action = 'Activate';
 							} else {
-								return array();
+								return [];
 							}
 						} else {
 							$action = 'Install';
@@ -5428,7 +5467,7 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			?>
 			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
 				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
-						style="width: <?php echo esc_attr( $email_body_width ); ?>; max-width:600px; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+						style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
 					<tbody>
 					<tr>
 						<td colspan="2" style="text-align: left;">
@@ -6109,15 +6148,15 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 		$form_key_list  = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$form_validator = new UR_Form_Validation();
 
-		if ( preg_match('/^country_/', $data->field_name ) && in_array( $data->field_name, $form_key_list, true ) ) {
+		if ( preg_match( '/^country_/', $data->field_name ) && in_array( $data->field_name, $form_key_list, true ) ) {
 			$field_data = array(
-				'country' => $data->value
+				'country' => $data->value,
 			);
 
 			foreach ( $form_data as $state ) {
-				switch ( $state->field_name) {
+				switch ( $state->field_name ) {
 					case $data->field_name . '_state':
-						$field_data['state'] = ! empty( $state->value ) ? $state->value : '' ;
+						$field_data['state'] = ! empty( $state->value ) ? $state->value : '';
 						break;
 
 					default:
@@ -9659,7 +9698,6 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 				$option_name = sanitize_text_field( $option_id );
 			}
 
-
 			if ( isset( $form_data[ $option_id ] ) ) {
 				$value = ur_sanitize_value_by_type( $option, $form_data[ $option_id ] );
 				if ( $option_name && $setting_name ) {
@@ -9879,17 +9917,16 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 
 		$has_membership_plans = false;
 
-			if ( post_type_exists( 'ur_membership' ) ) {
-				$has_membership_plans = (bool) get_posts(
-					array(
-						'post_type'      => 'ur_membership',
-						'post_status'    => 'publish',
-						'posts_per_page' => 1,
-						'fields'         => 'ids',
-					)
-				);
-			}
-
+		if ( post_type_exists( 'ur_membership' ) ) {
+			$has_membership_plans = (bool) get_posts(
+				array(
+					'post_type'      => 'ur_membership',
+					'post_status'    => 'publish',
+					'posts_per_page' => 1,
+					'fields'         => 'ids',
+				)
+			);
+		}
 
 		$site_assistant_data = array(
 			'has_default_form'                  => ! empty( $default_form_post ),
@@ -10796,7 +10833,7 @@ if ( ! function_exists( 'urm_is_premium_setting_section' ) ) {
 	}
 }
 
-if ( ! function_exists('urm_check_if_plus_and_above_plan') ) {
+if ( ! function_exists( 'urm_check_if_plus_and_above_plan' ) ) {
 
 	/**
 	 * Check if user's license is plus or above plan.
@@ -10806,7 +10843,7 @@ if ( ! function_exists('urm_check_if_plus_and_above_plan') ) {
 		$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
 		$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
 
-		$available_plans = array( 'plus', 'professional', 'themegrill agency');
+		$available_plans = array( 'plus', 'professional', 'themegrill agency' );
 
 		if ( in_array( $license_plan, $available_plans, true ) ) {
 			return true;
@@ -10817,34 +10854,34 @@ if ( ! function_exists('urm_check_if_plus_and_above_plan') ) {
 }
 
 
-if ( ! function_exists( 'ur_get_country_lists') ) {
+if ( ! function_exists( 'ur_get_country_lists' ) ) {
 
 	/**
 	 * Get country lists.
 	 *
 	 * @since 5.0.0
 	 */
-	function ur_get_country_lists(){
+	function ur_get_country_lists() {
 		$countries = include UR_ABSPATH . 'includes/pro/country-and-state/countries.php';
 		return $countries;
 	}
 }
 
-if ( ! function_exists( 'ur_get_state_lists') ) {
+if ( ! function_exists( 'ur_get_state_lists' ) ) {
 
 	/**
 	 * Get State lists.
 	 *
 	 * @since 5.0.0
 	 */
-	function ur_get_state_lists(){
+	function ur_get_state_lists() {
 		$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
 		$states      = json_decode( $states_json, true );
 		return $states;
 	}
 }
 
-if ( !function_exists( 'ur_get_currency_symbols' ) ) {
+if ( ! function_exists( 'ur_get_currency_symbols' ) ) {
 
 	/**
 	 * Get all available Currency symbols.
@@ -11037,7 +11074,7 @@ if ( !function_exists( 'ur_get_currency_symbols' ) ) {
 	}
 }
 
-if ( !function_exists( 'ur_get_currencies_with_symbols' ) ) {
+if ( ! function_exists( 'ur_get_currencies_with_symbols' ) ) {
 
 	/**
 	 * Get full list of currency codes with symbols.
@@ -11065,7 +11102,7 @@ if ( !function_exists( 'ur_get_currencies_with_symbols' ) ) {
 
 }
 
-if ( !function_exists( 'ur_get_currencies' ) ) {
+if ( ! function_exists( 'ur_get_currencies' ) ) {
 
 	/**
 	 * Get full list of currency codes.
@@ -11291,7 +11328,7 @@ if ( ! function_exists( 'ur_get_currency_symbol' ) ) {
 
 if ( ! function_exists( 'ur_get_currency_name_by_key' ) ) {
 
-	function ur_get_currency_name_by_key( $currency_key ){
+	function ur_get_currency_name_by_key( $currency_key ) {
 		$curreny_details = ur_get_currencies();
 
 		$name = sprintf( '%s (%s)', $curreny_details[ $currency_key ], html_entity_decode( ur_get_currency_symbol( $currency_key ) ) );
@@ -11302,7 +11339,7 @@ if ( ! function_exists( 'ur_get_currency_name_by_key' ) ) {
 
 if ( ! function_exists( 'ur_get_currency_by_key' ) ) {
 
-	function ur_get_currency_by_key( $currency_key ){
+	function ur_get_currency_by_key( $currency_key ) {
 		$curreny_details = ur_get_currencies();
 
 		$name = sprintf( '%s', $curreny_details[ $currency_key ] );

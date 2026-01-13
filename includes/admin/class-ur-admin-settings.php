@@ -91,6 +91,92 @@ class UR_Admin_Settings {
 		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
 			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), UR_VERSION );
 		}
+
+		// Add inline script for multiselect-v2
+		wp_add_inline_script(
+			'user-registration-settings',
+			"
+			(function($) {
+				'use strict';
+				// Initialize multiselect-v2 with Select2
+				function initMultiselectV2() {
+					$('.ur-multiselect-v2').each(function() {
+						var \$select = $(this);
+						// Destroy existing Select2 instance if any
+						if (\$select.hasClass('select2-hidden-accessible')) {
+							\$select.select2('destroy');
+						}
+						// Initialize Select2
+						\$select.select2({
+							dropdownAutoWidth: true,
+							containerCss: { display: 'block' },
+							width: '100%',
+							placeholder: \$select.data('placeholder') || 'Select an option...',
+							allowClear: false
+						});
+					});
+				}
+				$(document).ready(function() {
+					initMultiselectV2();
+				});
+			})(jQuery);
+			"
+		);
+
+		// Add inline styles for multiselect-v2
+		wp_add_inline_style(
+			'ur-snackbar',
+			'
+			.ur-multiselect-v2.select2-container {
+				width: 100% !important;
+			}
+			.ur-multiselect-v2.select2-container .select2-selection {
+				border: 1px solid #d0d0d0;
+				border-radius: 4px;
+				background: #f5f5f5;
+				min-height: 40px;
+				padding: 4px 8px;
+			}
+			.ur-multiselect-v2.select2-container.select2-container--focus .select2-selection {
+				border-color: #2271b1;
+				background: #fff;
+			}
+			.ur-multiselect-v2.select2-container .select2-selection__choice {
+				background: #e8e8e8;
+				border: 1px solid #c0c0c0;
+				border-radius: 3px;
+				padding: 4px 8px;
+				margin: 2px 4px 2px 0;
+				font-size: 13px;
+				color: #333;
+			}
+			.ur-multiselect-v2.select2-container .select2-selection__choice__remove {
+				color: #666;
+				margin-right: 4px;
+				font-size: 14px;
+				line-height: 1;
+			}
+			.ur-multiselect-v2.select2-container .select2-selection__choice__remove:hover {
+				color: #333;
+			}
+			.ur-multiselect-v2.select2-container .select2-selection__rendered {
+				padding: 0;
+			}
+			.ur-multiselect-v2.select2-container .select2-search--inline {
+				margin-top: 2px;
+			}
+			.ur-multiselect-v2.select2-container .select2-search--inline .select2-search__field {
+				border: none;
+				background: transparent;
+				padding: 4px 8px;
+				font-size: 14px;
+				color: #333;
+				outline: none;
+				margin: 0;
+			}
+			'
+		);
+
 		wp_enqueue_style( 'ur-snackbar' );
 		wp_localize_script(
 			'user-registration-settings',
@@ -361,9 +447,7 @@ class UR_Admin_Settings {
 				foreach ( $options['sections'] as $id => $section ) {
 
 					if ( ! isset( $section['type'] ) ) {
-						// default is card.
-						$section['type'] = 'card';
-						// continue;
+						continue;
 					}
 
 					if ( 'card' === $section['type'] ) {
@@ -390,23 +474,20 @@ class UR_Admin_Settings {
 							$settings .= '<h3 class="user-registration-card__title">';
 							$settings .= esc_html( ucwords( $section['title'] ) );
 
-							if ( isset( $section['is_premium'] ) && $section['is_premium'] && ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) || empty( get_option( 'user-registration_license_key', '' ) ) ) ) {
+							if ( isset( $section['is_premium'] ) && $section['is_premium'] ) {
 								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' . '" /></div>';
 							}
 							$settings .= '</h3>';
-
-							if ( 'local_currency' === $id ) {
-								$settings .= '<div class="user-registration-list-table-header" style="justify-content: end;">';
-
-								$settings .= '<a href="#" class="page-title-action ur-local-currency-add-pricing-zone" data-action="add">' . esc_html__( 'Add Pricing Zone', 'user-registration' ) . '</a>';
-								$settings .= '</div>';
-							}
 
 							if ( ! empty( $section['button'] ) ) {
 								if ( isset( $section['button']['button_type'] ) && 'upgrade_link' === $section['button']['button_type'] ) {
 									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="ur-upgrade--link" target="_blank">' . '<span>' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span></a>';
 								} else {
-									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="user_registration_smart_tags_used" style="min-width:90px;" target="_blank">' . '<span style="text-decoration: underline;">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span>' . '<span class="dashicons dashicons-external"></span>' . '</a>';
+									$button_class  = isset( $section['button']['button_class'] ) ? esc_attr( $section['button']['button_class'] ) : 'user_registration_smart_tags_used';
+									$button_type   = isset( $section['button']['button_type'] ) ? $section['button']['button_type'] : '';
+									$button_target = ( 'ur-add-new-custom-email' === $button_type ) ? '' : 'target="_blank"';
+									$external_icon = ( 'ur-add-new-custom-email' === $button_type ) ? '' : '<span class="dashicons dashicons-external"></span>';
+									$settings     .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="' . $button_class . '" style="min-width:90px;" ' . $button_target . '>' . '<span style="text-decoration: underline;">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span>' . $external_icon . '</a>';
 								}
 							}
 							$settings .= '</div>';
@@ -440,7 +521,6 @@ class UR_Admin_Settings {
 
 						$available_in      = isset( $section['available_in'] ) ? sanitize_text_field( wp_unslash( $section['available_in'] ) ) : '';
 						$is_captcha        = isset( $section['settings_type'] ) ? ' ur-captcha-settings' : '';
-						$is_payment        = in_array( $section['id'] ?? '', array( 'paypal', 'stripe', 'bank', 'mollie', 'authorize-net' ) );
 						$is_captcha_header = isset( $section['settings_type'] ) ? $is_captcha . '-header' : '';
 						$is_captcha_body   = isset( $section['settings_type'] ) ? $is_captcha . '-body' : '';
 						$is_connected      = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
@@ -779,6 +859,37 @@ class UR_Admin_Settings {
 									$settings .= '</div>';
 									break;
 
+								case 'multiselect-v2':
+									$option_value = self::get_option( $value['id'], $value['default'] );
+									if ( ! is_array( $option_value ) ) {
+										$option_value = array();
+									}
+
+									$settings .= '<div class="user-registration-global-settings"' . $display_condition_attrs . $display_condition_style . '>';
+									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+									$settings .= '<div class="user-registration-global-settings--field">';
+
+									$settings .= '<select
+											name="' . esc_attr( $value['id'] ) . '[]"
+											id="' . esc_attr( $value['id'] ) . '"
+											multiple="multiple"
+											class="multiple-select ur-multiselect-v2"
+											style="' . esc_attr( $value['css'] ) . '">';
+
+									foreach ( $value['options'] as $key => $val ) {
+										$selected  = selected( in_array( $key, $option_value ), true, false );
+										$settings .= '<option value="' . esc_attr( $key ) . '" ' . esc_attr( $selected ) . '>';
+										$settings .= esc_html( $val );
+										$settings .= '</option>';
+									}
+
+									$settings .= '</select>';
+
+									$settings .= wp_kses_post( $description );
+									$settings .= '</div>';
+									$settings .= '</div>';
+									break;
+
 								// Radio inputs.
 								case 'radio':
 									$option_value = self::get_option( $value['id'], $value['default'] );
@@ -789,9 +900,12 @@ class UR_Admin_Settings {
 									$settings    .= wp_kses_post( $description );
 									$settings    .= '<ul>';
 
+									$option_descriptions = isset( $value['option_descriptions'] ) ? $value['option_descriptions'] : array();
+
 									foreach ( $value['options'] as $key => $val ) {
 										$settings .= '<li>';
 										$settings .= '<label>';
+										$settings .= '<span class="ur-radio-option-wrapper">';
 										$settings .= '<input
 													name="' . esc_attr( $value['id'] ) . '"
 													value="' . esc_attr( $key ) . '"
@@ -800,7 +914,15 @@ class UR_Admin_Settings {
 													class="' . esc_attr( $value['class'] ) . '"
 													' . esc_attr( implode( ' ', $custom_attributes ) ) . '
 													' . esc_attr( checked( $key, $option_value, false ) ) . '
-													/>' . wp_kses_post( $val ) . '</label>';
+													/>' . wp_kses_post( $val );
+										$settings .= '</span>';
+
+										// Add option description if it exists
+										if ( ! empty( $option_descriptions[ $key ] ) ) {
+											$settings .= '<span class="ur-radio-option-description">' . esc_html( $option_descriptions[ $key ] ) . '</span>';
+										}
+
+										$settings .= '</label>';
 										$settings .= '</li>';
 									}
 
@@ -854,6 +976,46 @@ class UR_Admin_Settings {
 									$settings .= '</fieldset>';
 									$settings .= wp_kses_post( $description );
 									$settings .= wp_kses_post( $desc_field );
+									$settings .= '</div>';
+									$settings .= '</div>';
+									break;
+
+								// Multiple checkboxes.
+								case 'multicheckbox':
+									$option_value = self::get_option( $value['id'], $value['default'] );
+									if ( ! is_array( $option_value ) ) {
+										$option_value = array();
+									}
+
+									$settings .= '<div class="user-registration-global-settings">';
+									$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+									$settings .= '<div class="user-registration-global-settings--field">';
+									$settings .= wp_kses_post( $description );
+									$settings .= '<fieldset>';
+									$settings .= '<ul>';
+
+									if ( ! empty( $value['options'] ) && is_array( $value['options'] ) ) {
+										foreach ( $value['options'] as $key => $val ) {
+											$checked   = in_array( $key, $option_value, true ) ? 'checked="checked"' : '';
+											$settings .= '<li>';
+											$settings .= '<label>';
+											$settings .= '<input
+														name="' . esc_attr( $value['id'] ) . '[]"
+														id="' . esc_attr( $value['id'] ) . '_' . esc_attr( $key ) . '"
+														type="checkbox"
+														value="' . esc_attr( $key ) . '"
+														class="' . esc_attr( isset( $value['class'] ) ? $value['class'] : '' ) . '"
+														' . esc_attr( $checked ) . '
+														' . esc_attr( implode( ' ', $custom_attributes ) ) . '/>';
+											$settings .= esc_html( $val );
+											$settings .= '</label>';
+											$settings .= '</li>';
+										}
+									}
+
+									$settings .= '</ul>';
+									$settings .= '</fieldset>';
+									$settings .= '</div>';
 									$settings .= '</div>';
 									break;
 
@@ -1095,9 +1257,8 @@ class UR_Admin_Settings {
 									$btn_slug              = ! empty( $value['attrs']['data-slug'] ) ? $value['attrs']['data-slug'] : '';
 									$btn_name              = ! empty( $value['attrs']['data-name'] ) ? $value['attrs']['data-name'] : '';
 									$is_connected          = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
-									$is_payment            = in_array( $section['id'] ?? '', array( 'paypal', 'stripe', 'bank', 'authorize-net', 'mollie' ) );
 									$is_captcha            = in_array(
-										$section['id'] ?? '',
+										$section['id'],
 										array(
 											'v2',
 											'v3',
@@ -1112,15 +1273,10 @@ class UR_Admin_Settings {
 											'v3',
 											'hCaptcha',
 											'cloudflare',
-											'paypal',
-											'stripe',
-											'bank',
-											'mollie',
-											'authorize-net',
 										)
 									) );
 									if ( in_array(
-										$section['id'] ?? '',
+										$section['id'],
 										array(
 											'stripe',
 											'paypal',
@@ -1142,11 +1298,11 @@ class UR_Admin_Settings {
 									$settings .= '<div class="user-registration-global-settings ' . $css . '"' . $display_condition_attrs . $display_condition_style . '>';
 									$settings .= '<div class="user-registration-global-settings--field ' . $field_css . '">';
 									$settings .= '<button
-											id="' . ( esc_attr( $value['id'] ) ?? '' ) . '"
+											id="' . esc_attr( $value['id'] ) . '"
 											type="button"
 											class="button button-primary ' . esc_attr( $btn_css ) . '"
 											type="button"
-											data-id="' . esc_attr( $section['id'] ?? '' ) . '"';
+											data-id="' . esc_attr( $section['id'] ) . '"';
 									if ( ! empty( $btn_slug ) ) {
 										$settings .= ' data-slug="' . esc_attr( $btn_slug ) . '"';
 									}
@@ -1155,31 +1311,102 @@ class UR_Admin_Settings {
 									}
 									$settings .= '>' . $value['title'] . '</button>';
 									$settings .= '</div>';
-									if ( $is_captcha || $is_payment ) {
-										$classname = $is_captcha ? 'reset-captcha-keys ' : 'reset-payment-keys ';
+									if ( $is_captcha ) {
 										$settings .= '<a
 										href="#"
-										class="' . $classname . ( $show_reset_key_button ? '' : 'ur-d-none' ) . '"
-										data-id="' . esc_attr( $section['id'] ?? '' ) . '"
+										class="reset-captcha-keys ' . ( $show_reset_key_button ? '' : 'ur-d-none' ) . '"
+										data-id="' . esc_attr( $section['id'] ) . '"
 										/>
 										<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
 			                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
 			                            </svg>
-										' . ( $is_captcha ? __( 'Reset Keys', 'user-registration' ) : __( 'Reset Details', 'user-registration' ) ) . '</a>';
+										' . __( 'Reset Keys', 'user-registration' ) . '</a>';
 									}
 									$settings .= '</div>';
 									break;
-
-								case 'local_currency':
+                  
+                  	case 'local_currency':
 									ob_start();
 									CoreFunctions::render_local_currencies_table();
 									$settings .= ob_get_clean();
 									break;
+                  
+								case 'duration_input':
+									$unit_id              = isset( $value['unit_id'] ) ? $value['unit_id'] : '';
+									$value_id             = isset( $value['value_id'] ) ? $value['value_id'] : '';
+									$unit_options         = isset( $value['unit_options'] ) ? $value['unit_options'] : array();
+									$default_unit         = isset( $value['default_unit'] ) ? $value['default_unit'] : 'days';
+									$default_value        = isset( $value['default_value'] ) ? $value['default_value'] : 1;
+									$before_after_id      = isset( $value['before_after_id'] ) ? $value['before_after_id'] : '';
+									$before_after_options = isset( $value['before_after_options'] ) ? $value['before_after_options'] : array();
+									$default_before_after = isset( $value['default_before_after'] ) ? $value['default_before_after'] : 'after';
 
-								case 'tax_table':
-									$settings .= ur_render_tax_table( $value );
+									// Get saved values
+									$saved_unit         = self::get_option( $unit_id, $default_unit );
+									$saved_value        = self::get_option( $value_id, $default_value );
+									$saved_before_after = ! empty( $before_after_id ) ? self::get_option( $before_after_id, $default_before_after ) : $default_before_after;
+
+									$settings .= '<div class="user-registration-global-settings ur-duration-input-wrapper">';
+									$settings .= '<label class="ur-label" for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+									$settings .= '<div class="user-registration-global-settings--field ur-duration-input-field">';
+									$settings .= '<div class="ur-duration-rows-wrapper">';
+
+									// First row: Send label, value input, unit select
+									$settings .= '<div class="ur-duration-row ur-duration-row-1">';
+									$settings .= '<input
+											name="' . esc_attr( $value_id ) . '"
+											id="' . esc_attr( $value_id ) . '"
+											type="number"
+											class="ur-duration-value-input"
+											style="display: inline-block; width: auto; min-width: 100px;"
+											value="' . esc_attr( $saved_value ) . '"
+											min="1"
+											step="1"/>';
+									$settings .= '<select
+											name="' . esc_attr( $unit_id ) . '"
+											id="' . esc_attr( $unit_id ) . '"
+											class="ur-duration-unit-select"
+											style="display: inline-block; width: auto; min-width: 120px;">';
+
+									foreach ( $unit_options as $option_key => $option_label ) {
+										$selected  = selected( $saved_unit, $option_key, false );
+										$settings .= '<option value="' . esc_attr( $option_key ) . '" ' . $selected . '>' . esc_html( $option_label ) . '</option>';
+									}
+
+									$settings .= '</select>';
+									$settings .= '</div>';
+
+									// Second row: Before/After select
+									if ( ! empty( $before_after_id ) && ! empty( $before_after_options ) ) {
+										$settings .= '<div class="ur-duration-row ur-duration-row-2">';
+										$settings .= '<select
+												name="' . esc_attr( $before_after_id ) . '"
+												id="' . esc_attr( $before_after_id ) . '"
+												class="ur-duration-before-after-select"
+												style="display: inline-block; width: auto; min-width: 150px;">';
+
+										foreach ( $before_after_options as $option_key => $option_label ) {
+											$selected  = selected( $saved_before_after, $option_key, false );
+											$settings .= '<option value="' . esc_attr( $option_key ) . '" ' . $selected . '>' . esc_html( $option_label ) . '</option>';
+										}
+
+										$settings .= '</select>';
+										$settings .= '</div>';
+									}
+
+									// Third row: Selected trigger event display (updated by JavaScript)
+									$settings .= '<div class="ur-duration-row ur-duration-row-3 ur-trigger-event-display" style="display: none;">';
+									$settings .= '<div class="ur-trigger-event-badge">';
+									$settings .= '<span class="ur-trigger-event-icon dashicons dashicons-clock"></span>';
+									$settings .= '<span class="ur-trigger-event-text"></span>';
+									$settings .= '</div>';
+									$settings .= '</div>';
+									$settings .= '</div>';
+
+									$settings .= wp_kses_post( $description );
+									$settings .= '</div>';
+									$settings .= '</div>';
 									break;
-
 								// Default: run an action.
 								default:
 									/**
