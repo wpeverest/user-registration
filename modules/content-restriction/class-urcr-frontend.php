@@ -21,6 +21,12 @@ class URCR_Frontend {
 	 */
 	public function __construct() {
 
+		$content_restriction_enabled = ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) );
+
+		if ( ! $content_restriction_enabled ) {
+			return;
+		}
+
 		add_action( 'template_redirect', array( $this, 'run_content_restrictions' ) );
 		add_filter( 'template_include', array( $this, 'include_run_content_restrictions' ), PHP_INT_MAX );
 		add_filter( 'template_include', array( $this, 'restrict_whole_site' ), PHP_INT_MAX );
