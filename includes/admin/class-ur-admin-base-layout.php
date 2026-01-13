@@ -46,13 +46,15 @@ class UR_Base_Layout {
 			$total_items = (int) $table->get_pagination_arg( 'total_items' );
 		}
 
-		$show_search = $total_items > 10;
+		$is_searching = isset( $_GET['s'] ) && '' !== trim( wp_unslash( $_GET['s'] ) );
+
+		$show_search = ( $total_items > 10 ) || $is_searching;
 
 		$is_membership_page = isset( $_GET['page'] ) && 'user-registration-membership' === $_GET['page'] && ! isset( $_GET['action'] ) ? true : false;
 
 		?>
 		<div id="user-registration-base-list-table-page" class="<?php echo esc_attr( $data['class'] ); ?>">
-			<div class="user-registration-base-list-table-heading" style="<?php echo( ! $show_search ? 'position:relative;margin-bottom:40px;' : '' ); ?>">
+			<div class="user-registration-base-list-table-heading" style="<?php echo( ! $show_search ? 'position:relative;' : '' ); ?>">
 				<h1>
 					<?php echo esc_html( $data['title'] ); ?>
 				</h1>
@@ -101,14 +103,14 @@ class UR_Base_Layout {
 		<?php
 	}
 
-		/**
-		 * Display Search Input with button
-		 *
-		 * @param $search_id
-		 * @param $placeholder
-		 *
-		 * @return void
-		 */
+	/**
+	 * Display Search Input with button
+	 *
+	 * @param $search_id
+	 * @param $placeholder
+	 *
+	 * @return void
+	 */
 	public static function display_search_field( $search_id, $placeholder ) {
 		?>
 			<input type="search" id="<?php echo esc_attr( $search_id ); ?>" name="s"
@@ -125,9 +127,9 @@ class UR_Base_Layout {
 			<?php
 	}
 
-		/**
-		 * No items found text.
-		 */
+	/**
+	 * No items found text.
+	 */
 	public static function no_items( $type ) {
 		$image_url    = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
 		$is_searching = ! empty( $_GET['s'] );

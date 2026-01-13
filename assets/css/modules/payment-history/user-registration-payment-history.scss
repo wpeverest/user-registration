@@ -684,21 +684,16 @@ body.user-registration {
 
 	.user-registration-base-list-table-form {
 		&#ur-membership-payment-history-form {
-			#user-registration-base-list-filters-row {
-				margin-bottom:32px;
-			}
 
 			.tablenav {
 				display: flex;
 				justify-content: flex-end;
 				align-self: center;
-				margin-bottom: 32px;
 				flex-wrap: wrap;
 				justify-content: space-between;
 
 				&.top {
 					justify-content: flex-end;
-					padding-top: 40px;
 					row-gap: 16px;
 				}
 
