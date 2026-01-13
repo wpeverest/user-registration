@@ -60,17 +60,9 @@ class URCR_Admin {
 		add_filter( 'ur_membership_before_create_membership_response', array( $this, 'create_rule_for_new_membership' ), 10, 1 );
 
 		/**
-		 * Delete content access rule when a membership is deleted
+		 * Delete content access rule when a membership is deleted.
 		 */
 		add_action( 'before_delete_post', array( $this, 'delete_rule_for_membership' ), 10, 1 );
-
-		/**
-		 * Delete content access rule when a membership is deleted via AJAX (repository delete)
-		 * Hook into the AJAX action to delete rules before membership is deleted
-		 * Priority 5 ensures this runs before the actual AJAX handler
-		 */
-		add_action( 'wp_ajax_user_registration_membership_delete_membership', array( $this, 'delete_rule_before_ajax_membership_delete' ), 5 );
-		add_action( 'wp_ajax_user_registration_membership_delete_memberships', array( $this, 'delete_rules_before_ajax_bulk_delete' ), 5 );
 
 		/**
 		 * AJAX handler to get membership rule data
@@ -313,41 +305,6 @@ class URCR_Admin {
 		$this->delete_rules_for_membership( $post_id );
 	}
 
-	/**
-	 * Delete content access rule when a membership is deleted via AJAX (single delete).
-	 * This hooks into the AJAX action before the membership is deleted.
-	 * Priority 5 ensures this runs before the actual AJAX handler processes the deletion.
-	 */
-	public function delete_rule_before_ajax_membership_delete() {
-		if ( empty( $_POST['membership_id'] ) ) {
-			return;
-		}
-
-		$this->delete_rules_for_membership( absint( $_POST['membership_id'] ) );
-	}
-
-	/**
-	 * Delete content access rules when memberships are deleted via AJAX (bulk delete).
-	 * This hooks into the AJAX action before the memberships are deleted.
-	 * Priority 5 ensures this runs before the actual AJAX handler processes the deletion.
-	 */
-	public function delete_rules_before_ajax_bulk_delete() {
-		if ( empty( $_POST['membership_ids'] ) ) {
-			return;
-		}
-
-		$membership_ids = wp_unslash( $_POST['membership_ids'] );
-		$membership_ids = json_decode( $membership_ids, true );
-
-		if ( ! is_array( $membership_ids ) || empty( $membership_ids ) ) {
-			return;
-		}
-
-		// Delete rules for each membership
-		foreach ( $membership_ids as $membership_id ) {
-			$this->delete_rules_for_membership( absint( $membership_id ) );
-		}
-	}
 
 	/**
 	 * AJAX handler to get membership rule data.
