@@ -233,7 +233,7 @@
 					 *
 					 * @since 6.1.0
 					 */
-					if ( UR_PRO_ACTIVE && class_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions' ) ):
+					if ( UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) ):
 						WPEverest\URMembership\Local_Currency\Admin\CoreFunctions::ur_render_local_currency_settings( $membership_details );
 					endif;
 			?>
