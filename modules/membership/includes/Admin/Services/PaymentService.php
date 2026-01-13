@@ -86,11 +86,11 @@ class PaymentService {
 				return $this->build_stripe_response( $payment_data, $response_data );
 				break;
 			case 'paypal':
-				return $this->build_paypal_response( $payment_data, $response_data['subscription_id'], $response_data['member_id'] );
+				return $this->build_paypal_response( $payment_data, $response_data['subscription_id'], $response_data['member_id'], $response_data );
 			case 'authorize':
 				return $this->build_authorize_response( $payment_data, $response_data );
 			case 'mollie':
-				return $this->build_mollie_response( $payment_data, $response_data['subscription_id'], $response_data['member_id'] );
+				return $this->build_mollie_response( $payment_data, $response_data['subscription_id'], $response_data['member_id'], $response_data );
 			case 'bank':
 				return $this->build_direct_bank_response( $payment_data, $response_data['subscription_id'], $response_data['member_id'] );
 			default:
@@ -123,11 +123,11 @@ class PaymentService {
 	 *
 	 * @return array
 	 */
-	public function build_paypal_response( $data, $subscription_id, $member_id ) {
+	public function build_paypal_response( $data, $subscription_id, $member_id, $response_data = array() ) {
 		$paypal_service = new PaypalService();
 
 		return array(
-			'payment_url' => $paypal_service->build_url( $data, $this->membership, $this->member_email, $subscription_id, $member_id ),
+			'payment_url' => $paypal_service->build_url( $data, $this->membership, $this->member_email, $subscription_id, $member_id, $response_data ),
 		);
 	}
 
@@ -151,15 +151,15 @@ class PaymentService {
 		return $stripe_service->process_stripe_payment( $payment_data, $response_data );
 	}
 
-	public function build_mollie_response( $data, $subscription_id, $member_id ) {
+	public function build_mollie_response( $data, $subscription_id, $member_id, $response_data = array() ) {
 		$success_params    = array();
 		$data['plan_name'] = 'membership';
 		$mollie            = new MollieService();
 
-		if ( 'subscription' === $data['type'] ) {
-			$success_params = $mollie->mollie_process_subscription_payment( $data, $member_id, $success_params, true );
+		if ( "subscription" === $data['type'] ) {
+			$success_params = $mollie->mollie_process_subscription_payment( $data, $member_id, $success_params, true, $response_data );
 		} else {
-			$success_params = $mollie->mollie_process_payment( $data, $member_id, $success_params, true );
+			$success_params = $mollie->mollie_process_payment( $data, $member_id, $success_params, true, array(), $response_data );
 		}
 
 		if ( isset( $success_params['mollie_redirect'] ) ) {

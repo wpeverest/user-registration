@@ -189,13 +189,13 @@ class URCR_Admin_Assets {
 
 		// Prepare list of pages.
 
-		$pages = get_pages(
+		$pages              = get_pages(
 			array(
 				'post_status' => 'publish',
 				'numberposts' => 100,
 			)
 		);
-		$pages = wp_list_pluck( $pages, 'post_title', 'ID' );
+		$pages              = wp_list_pluck( $pages, 'post_title', 'ID' );
 		$pages_for_redirect = $pages;
 		// Filter out excluded pages
 		if ( function_exists( 'urcr_get_excluded_page_ids' ) ) {
@@ -424,6 +424,7 @@ class URCR_Admin_Assets {
 			'is_pro'                                 => defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE,
 			'content_type_options'                   => $content_type_options,
 			'condition_options'                      => $condition_options,
+			'masteriyo_courses'                      => class_exists( 'WPEverest\URM\Masteriyo\Helper' ) ? WPEverest\URM\Masteriyo\Helper::get_courses( array(), '', 'free' ) : array(),
 			'is_membership_module_enabled'           => $is_membership_module_enabled,
 			'membership_count'                       => $membership_count,
 			'has_multiple_memberships'               => $has_multiple_memberships,

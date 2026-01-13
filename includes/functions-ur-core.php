@@ -2777,9 +2777,18 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		}
 
 		if ( isset( $form_data->extra_params['field_key'] ) && 'country' === $form_data->extra_params['field_key'] && '' !== $form_data->value ) {
-			$country_class    = ur_load_form_field_class( $form_data->extra_params['field_key'] );
-			$countries        = $country_class::get_instance()->get_country();
-			$form_data->value = isset( $countries[ $form_data->value ] ) ? $countries[ $form_data->value ] : $form_data->value;
+			$isJson = preg_match( '/^\{.*\}$/s', $form_data->value ) ? true : false;
+			if ( $isJson ) {
+				$country_data = json_decode( $form_data->value, true );
+				$country_code = isset( $country_data['country'] ) ? $country_data['country'] : '';
+				$state_code   = isset( $country_data['state'] ) ? $country_data['state'] : '';
+
+				$form_data->value = ur_format_country_field_data( $country_code, $state_code );
+			} else {
+				$country_class    = ur_load_form_field_class( $form_data->extra_params['field_key'] );
+				$countries        = $country_class::get_instance()->get_country();
+				$form_data->value = isset( $countries[ $form_data->value ] ) ? $countries[ $form_data->value ] : $form_data->value;
+			}
 		}
 		/**
 		 * Filter hook allows developers to modify the parsed values for smart tags
@@ -4195,164 +4204,170 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 	function ur_premium_settings_tab() {
 
 		$premium_tabs = array(
-			'email'              => array(
-				'templates' => array(
+			'email' => array(
+				'templates'          => array(
 					'label'  => esc_html__( 'Email Templates', 'user-registration' ),
 					'plugin' => 'user-registration-email-templates',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Email Templates', 'user-registration' ),
 				),
-			),
-			'registration_login' => array(
-				'social-connect'  => array(
-					'label'  => esc_html__( 'Social Connect', 'user-registration' ),
-					'plugin' => 'user-registration-social-connect',
+				'custom-email'       => array(
+					'label'  => esc_html__( 'Custom Email', 'user-registration' ),
+					'plugin' => 'user-registration-email-custom-email',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration - Social Connect', 'user-registration' ),
+					'name'   => esc_html__( 'User Registration - Custom Email', 'user-registration' ),
 				),
-				'profile-connect' => array(
-					'label'  => esc_html__( 'Profile Connect', 'user-registration' ),
-					'plugin' => 'user-registration-profile-connect',
-					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration Profile Connect', 'user-registration' ),
-				),
-				'invite-code'     => array(
-					'label'  => esc_html__( 'Invite Codes', 'user-registration' ),
-					'plugin' => 'user-registration-invite-codes',
-					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration Invite Codes', 'user-registration' ),
-				),
-				'file-upload'     => array(
-					'label'  => esc_html__( 'File Upload', 'user-registration' ),
-					'plugin' => 'user-registration-file-upload',
-					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration - File Upload', 'user-registration' ),
-				),
-			),
-			'my_account'         => array(
-				'customize-my-account' => array(
-					'label'  => esc_html__( 'Customize My Account', 'user-registration' ),
-					'plugin' => 'user-registration-customize-my-account',
-					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration customize my account', 'user-registration' ),
-				),
-			),
-			'integration'        => array(
-				'email-marketing' => array(
-					'is_collection' => true,
-					'collections'   => array(
-						'activecampaign' => array(
-							'label'  => esc_html__( 'Active Campaign', 'user-registration' ),
-							'plugin' => 'user-registration-activecampaign',
-							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration ActiveCampaign', 'user-registration' ),
-						),
-						'brevo'          => array(
-							'label'  => esc_html__( 'Brevo', 'user-registration' ),
-							'plugin' => 'user-registration-brevo',
-							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration Brevo', 'user-registration' ),
-						),
-						'convertkit'     => array(
-							'label'  => esc_html__( 'Kit (Previously Convertkit)', 'user-registration' ),
-							'plugin' => 'user-registration-convertkit',
-							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration convertkit', 'user-registration' ),
-						),
-						'klaviyo'        => array(
-							'label'  => esc_html__( 'Klaviyo', 'user-registration' ),
-							'plugin' => 'user-registration-klaviyo',
-							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration Klaviyo', 'user-registration' ),
-						),
-						'mailchimp'      => array(
-							'label'  => esc_html__( 'Mailchimp', 'user-registration' ),
-							'plugin' => 'user-registration-mailchimp',
-							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration - Mailchimp', 'user-registration' ),
-						),
-						'mailerlite'     => array(
-							'label'  => esc_html__( 'Mailerlite', 'user-registration' ),
-							'plugin' => 'user-registration-mailerlite',
-							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration MailerLite', 'user-registration' ),
-						),
-						'mailpoet'       => array(
-							'label'  => esc_html__( 'Mailpoet', 'user-registration' ),
-							'plugin' => 'user-registration-mailpoet',
-							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration MailPoet', 'user-registration' ),
-						),
-						'zapier'         => array(
-							'label'  => esc_html__( 'Zapier', 'user-registration' ),
-							'plugin' => 'user-registration-zapier',
-							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration Zapier', 'user-registration' ),
-						),
+				'registration_login' => array(
+					'social-connect'  => array(
+						'label'  => esc_html__( 'Social Connect', 'user-registration' ),
+						'plugin' => 'user-registration-social-connect',
+						'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration - Social Connect', 'user-registration' ),
 					),
-					'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'plugin'        => '',
-				),
-				'pdf-submission'  => array(
-					'label'  => esc_html__( 'PDF Form Submission', 'user-registration' ),
-					'plugin' => 'user-registration-pdf-form-submission',
-					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration PDF Form Submission', 'user-registration' ),
-				),
-				'google-sheets'   => array(
-					'label'  => esc_html__( 'Google Sheets', 'user-registration' ),
-					'plugin' => 'user-registration-google-sheets',
-					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration Google Sheets', 'user-registration' ),
-				),
-				'salesforce'      => array(
-					'label'  => esc_html__( 'Salesforce', 'user-registration' ),
-					'plugin' => 'user-registration-salesforce',
-					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration Salesforce', 'user-registration' ),
-				),
-				'geolocation'     => array(
-					'label'  => esc_html__( 'Geolocation', 'user-registration' ),
-					'plugin' => 'user-registration-geolocation',
-					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration Geolocation', 'user-registration' ),
-				),
-				'woocommerce'     => array(
-					'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
-					'plugin' => 'user-registration-woocommerce',
-					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
-				),
-				'popup'           => array(
-					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'plugin' => 'user-registration-pro',
-				),
-				'cloud-storage'   => array(
-					'is_collection' => true,
-					'collections'   => array(
-						'google-drive' => array(
-							'label'  => esc_html__( 'Google Drive', 'user-registration' ),
-							'plugin' => 'user-registration-cloud-storage',
-							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
-						),
-						'dropbox'      => array(
-							'label'  => esc_html__( 'Dropbox', 'user-registration' ),
-							'plugin' => 'user-registration-cloud-storage',
-							'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-							'name' => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
-						)
+					'profile-connect' => array(
+						'label'  => esc_html__( 'Profile Connect', 'user-registration' ),
+						'plugin' => 'user-registration-profile-connect',
+						'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration Profile Connect', 'user-registration' ),
 					),
-					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'plugin' => 'user-registration-cloud-storage',
+					'invite-code'     => array(
+						'label'  => esc_html__( 'Invite Codes', 'user-registration' ),
+						'plugin' => 'user-registration-invite-codes',
+						'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration Invite Codes', 'user-registration' ),
+					),
+					'file-upload'     => array(
+						'label'  => esc_html__( 'File Upload', 'user-registration' ),
+						'plugin' => 'user-registration-file-upload',
+						'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration - File Upload', 'user-registration' ),
+					),
 				),
-			),
-			'security' => array(
-				'2fa' => array(
-					'label'  => esc_html__( 'Two Factor Authentication', 'user-registration' ),
-					'plugin' => 'user-registration-two-factor-authentication',
-					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'name'   => esc_html__( 'User Registration - Two Factor Authentication', 'user-registration' ),
+				'my_account'         => array(
+					'customize-my-account' => array(
+						'label'  => esc_html__( 'Customize My Account', 'user-registration' ),
+						'plugin' => 'user-registration-customize-my-account',
+						'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration customize my account', 'user-registration' ),
+					),
+				),
+				'integration'        => array(
+					'email-marketing' => array(
+						'is_collection' => true,
+						'collections'   => array(
+							'activecampaign' => array(
+								'label'  => esc_html__( 'Active Campaign', 'user-registration' ),
+								'plugin' => 'user-registration-activecampaign',
+								'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration ActiveCampaign', 'user-registration' ),
+							),
+							'brevo'          => array(
+								'label'  => esc_html__( 'Brevo', 'user-registration' ),
+								'plugin' => 'user-registration-brevo',
+								'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration Brevo', 'user-registration' ),
+							),
+							'convertkit'     => array(
+								'label'  => esc_html__( 'Kit (Previously Convertkit)', 'user-registration' ),
+								'plugin' => 'user-registration-convertkit',
+								'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration convertkit', 'user-registration' ),
+							),
+							'klaviyo'        => array(
+								'label'  => esc_html__( 'Klaviyo', 'user-registration' ),
+								'plugin' => 'user-registration-klaviyo',
+								'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration Klaviyo', 'user-registration' ),
+							),
+							'mailchimp'      => array(
+								'label'  => esc_html__( 'Mailchimp', 'user-registration' ),
+								'plugin' => 'user-registration-mailchimp',
+								'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration - Mailchimp', 'user-registration' ),
+							),
+							'mailerlite'     => array(
+								'label'  => esc_html__( 'Mailerlite', 'user-registration' ),
+								'plugin' => 'user-registration-mailerlite',
+								'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration MailerLite', 'user-registration' ),
+							),
+							'mailpoet'       => array(
+								'label'  => esc_html__( 'Mailpoet', 'user-registration' ),
+								'plugin' => 'user-registration-mailpoet',
+								'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration MailPoet', 'user-registration' ),
+							),
+							'zapier'         => array(
+								'label'  => esc_html__( 'Zapier', 'user-registration' ),
+								'plugin' => 'user-registration-zapier',
+								'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration Zapier', 'user-registration' ),
+							),
+						),
+						'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'plugin'        => '',
+					),
+					'pdf-submission'  => array(
+						'label'  => esc_html__( 'PDF Form Submission', 'user-registration' ),
+						'plugin' => 'user-registration-pdf-form-submission',
+						'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration PDF Form Submission', 'user-registration' ),
+					),
+					'google-sheets'   => array(
+						'label'  => esc_html__( 'Google Sheets', 'user-registration' ),
+						'plugin' => 'user-registration-google-sheets',
+						'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration Google Sheets', 'user-registration' ),
+					),
+					'salesforce'      => array(
+						'label'  => esc_html__( 'Salesforce', 'user-registration' ),
+						'plugin' => 'user-registration-salesforce',
+						'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration Salesforce', 'user-registration' ),
+					),
+					'geolocation'     => array(
+						'label'  => esc_html__( 'Geolocation', 'user-registration' ),
+						'plugin' => 'user-registration-geolocation',
+						'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration Geolocation', 'user-registration' ),
+					),
+					'woocommerce'     => array(
+						'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
+						'plugin' => 'user-registration-woocommerce',
+						'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
+					),
+					'popup'           => array(
+						'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'plugin' => 'user-registration-pro',
+					),
+					'cloud-storage'   => array(
+						'is_collection' => true,
+						'collections'   => array(
+							'google-drive' => array(
+								'label'  => esc_html__( 'Google Drive', 'user-registration' ),
+								'plugin' => 'user-registration-cloud-storage',
+								'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
+							),
+							'dropbox'      => array(
+								'label'  => esc_html__( 'Dropbox', 'user-registration' ),
+								'plugin' => 'user-registration-cloud-storage',
+								'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+								'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
+							),
+						),
+						'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'plugin'        => 'user-registration-cloud-storage',
+					),
+				),
+				'security'           => array(
+					'2fa' => array(
+						'label'  => esc_html__( 'Two Factor Authentication', 'user-registration' ),
+						'plugin' => 'user-registration-two-factor-authentication',
+						'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+						'name'   => esc_html__( 'User Registration - Two Factor Authentication', 'user-registration' ),
+					),
 				),
 			),
 		);
@@ -4471,6 +4486,37 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 				$detail = $section_details;
 				if ( ! empty( $license_plan ) ) {
 					$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
+					// Check if this is the custom-email feature and handle feature activation
+					if ( 'custom-email' === $current_section ) {
+						$feature_slug       = 'user-registration-custom-email';
+						$is_feature_enabled = ur_check_module_activation( 'custom-email' );
+
+						// Only show activation button if user has the right license plan and feature is not enabled
+						if ( in_array( $license_plan, $detail['plan'], true ) && ! $is_feature_enabled ) {
+							$description  = esc_html__( 'Please activate the Custom Email feature to use this functionality.', 'user-registration' );
+							$button_class = 'user-registration-settings-feature-activate';
+							$button_attrs = array(
+								'data-slug' => $feature_slug,
+								'data-type' => 'feature',
+								'data-name' => $detail['name'],
+							);
+							$button_title = esc_html__( 'Activate Feature', 'user-registration' );
+
+							$settings['sections']['premium_setting_section']['before_desc'] = $description;
+							$settings['sections']['premium_setting_section']['desc']        = false;
+							$settings['sections']['premium_setting_section']['settings']    = array(
+								array(
+									'id'    => 'ur-activate-feature__button',
+									'type'  => 'button',
+									'class' => $button_class,
+									'attrs' => $button_attrs,
+									'title' => $button_title,
+								),
+							);
+							return $settings;
+						}
+					}
+
 					if ( ! in_array( $license_plan, $detail['plan'], true ) ) {
 						if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 							return array();
@@ -4483,11 +4529,13 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 					} else {
 						$plugin_name = $detail['name'];
 						$action      = '';
-						if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
+						if ( 'user-registration-email-custom-email' === $detail['plugin'] ) {
+							$action = 'Activate';
+						} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
 							if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 								$action = 'Activate';
 							} else {
-								return array();
+								return [];
 							}
 						} else {
 							$action = 'Install';
@@ -5419,7 +5467,7 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			?>
 			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
 				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
-						style="width: <?php echo esc_attr( $email_body_width ); ?>; max-width:600px; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+						style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
 					<tbody>
 					<tr>
 						<td colspan="2" style="text-align: left;">
@@ -6100,6 +6148,24 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 		$form_key_list  = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$form_validator = new UR_Form_Validation();
 
+		if ( preg_match( '/^country_/', $data->field_name ) && in_array( $data->field_name, $form_key_list, true ) ) {
+			$field_data = array(
+				'country' => $data->value,
+			);
+
+			foreach ( $form_data as $state ) {
+				switch ( $state->field_name ) {
+					case $data->field_name . '_state':
+						$field_data['state'] = ! empty( $state->value ) ? $state->value : '';
+						break;
+
+					default:
+						break;
+				}
+			}
+			$data->value = json_encode( $field_data );
+		}
+
 		if ( in_array( $data->field_name, $form_key_list, true ) ) {
 			$form_data_index    = array_search( $data->field_name, $form_key_list, true );
 			$single_form_field  = $form_field_data[ $form_data_index ];
@@ -6446,6 +6512,10 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						continue;
 					}
 
+					if ( 'country' === $single_item->field_key && isset( $single_item->advance_setting->enable_state ) ) {
+						$field['enable_state'] = ur_string_to_bool( $single_item->advance_setting->enable_state );
+					}
+
 					// Unset multiple choice and single item.
 					if ( 'subscription_plan' === $single_item->field_key || 'multiple_choice' === $single_item->field_key || 'single_item' === $single_item->field_key || 'captcha' === $single_item->field_key || 'stripe_gateway' === $single_item->field_key ) {
 						continue;
@@ -6783,6 +6853,16 @@ if ( ! file_exists( 'user_registration_sanitize_profile_update' ) ) {
 				} else {
 					$value = '';
 				}
+				break;
+			case 'country':
+				$country_data = array();
+				if ( isset( $submitted_data[ $key ] ) ) { // phpcs:ignore
+					$country_data['country'] = sanitize_text_field( wp_unslash( $submitted_data[ $key ] ) ); // phpcs:ignore
+				}
+				if ( isset( $submitted_data[ $key . '_state' ] ) ) { // phpcs:ignore
+					$country_data['state'] = sanitize_text_field( wp_unslash( $submitted_data[ $key . '_state' ] ) ); // phpcs:ignore
+				}
+				$value = json_encode( $country_data );
 				break;
 			default:
 				$value = isset( $submitted_data[ $key ] ) ? $submitted_data[ $key ] : ''; // phpcs:ignore
@@ -9618,7 +9698,6 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 				$option_name = sanitize_text_field( $option_id );
 			}
 
-
 			if ( isset( $form_data[ $option_id ] ) ) {
 				$value = ur_sanitize_value_by_type( $option, $form_data[ $option_id ] );
 				if ( $option_name && $setting_name ) {
@@ -9784,7 +9863,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		foreach ( $required_pages as $option_name => $page_name ) {
 			$page_id = get_option( $option_name, 0 );
 			$is_page_missing = ! $page_id || ! get_post( $page_id );
-			
+
 			// For login page, also check if login redirect URL is set
 			if ( 'user_registration_login_page_id' === $option_name ) {
 				$login_redirect_url = get_option( 'user_registration_login_options_login_redirect_url', '' );
@@ -9792,7 +9871,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 					$is_page_missing = true;
 				}
 			}
-			
+
 			if ( $is_page_missing ) {
 				// Only include membership pages if membership module is activated
 				$is_membership_page = in_array(
@@ -9838,17 +9917,16 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 
 		$has_membership_plans = false;
 
-			if ( post_type_exists( 'ur_membership' ) ) {
-				$has_membership_plans = (bool) get_posts(
-					array(
-						'post_type'      => 'ur_membership',
-						'post_status'    => 'publish',
-						'posts_per_page' => 1,
-						'fields'         => 'ids',
-					)
-				);
-			}
-
+		if ( post_type_exists( 'ur_membership' ) ) {
+			$has_membership_plans = (bool) get_posts(
+				array(
+					'post_type'      => 'ur_membership',
+					'post_status'    => 'publish',
+					'posts_per_page' => 1,
+					'fields'         => 'ids',
+				)
+			);
+		}
 
 		$site_assistant_data = array(
 			'has_default_form'                  => ! empty( $default_form_post ),
@@ -10755,7 +10833,7 @@ if ( ! function_exists( 'urm_is_premium_setting_section' ) ) {
 	}
 }
 
-if ( ! function_exists('urm_check_if_plus_and_above_plan') ) {
+if ( ! function_exists( 'urm_check_if_plus_and_above_plan' ) ) {
 
 	/**
 	 * Check if user's license is plus or above plan.
@@ -10765,12 +10843,549 @@ if ( ! function_exists('urm_check_if_plus_and_above_plan') ) {
 		$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
 		$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
 
-		$available_plans = array( 'plus', 'professional', 'themegrill agency');
+		$available_plans = array( 'plus', 'professional', 'themegrill agency' );
 
 		if ( in_array( $license_plan, $available_plans, true ) ) {
 			return true;
 		}
 
 		return false;
+	}
+}
+
+
+if ( ! function_exists( 'ur_get_country_lists' ) ) {
+
+	/**
+	 * Get country lists.
+	 *
+	 * @since 5.0.0
+	 */
+	function ur_get_country_lists() {
+		$countries = include UR_ABSPATH . 'includes/pro/country-and-state/countries.php';
+		return $countries;
+	}
+}
+
+if ( ! function_exists( 'ur_get_state_lists' ) ) {
+
+	/**
+	 * Get State lists.
+	 *
+	 * @since 5.0.0
+	 */
+	function ur_get_state_lists() {
+		$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
+		$states      = json_decode( $states_json, true );
+		return $states;
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_symbols' ) ) {
+
+	/**
+	 * Get all available Currency symbols.
+	 *
+	 * Currency symbols and names should follow the Unicode CLDR recommendation (http://cldr.unicode.org/translation/currency-names)
+	 *
+	 * @since 6.0.0
+	 *
+	 * @return array
+	 */
+	function ur_get_currency_symbols() {
+		/**
+		 * Filters currency symbols.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param string[] $currency_symbols Currency code to currency symbol index array.
+		 */
+		$symbols = apply_filters(
+			'ur_currency_symbols',
+			array(
+				'AED' => '&#x62f;.&#x625;',
+				'AFN' => '&#x60b;',
+				'ALL' => 'L',
+				'AMD' => 'AMD',
+				'ANG' => '&fnof;',
+				'AOA' => 'Kz',
+				'ARS' => '&#36;',
+				'AUD' => '&#36;',
+				'AWG' => 'Afl.',
+				'AZN' => 'AZN',
+				'BAM' => 'KM',
+				'BBD' => '&#36;',
+				'BDT' => '&#2547;&nbsp;',
+				'BGN' => '&#1083;&#1074;.',
+				'BHD' => '.&#x62f;.&#x628;',
+				'BIF' => 'Fr',
+				'BMD' => '&#36;',
+				'BND' => '&#36;',
+				'BOB' => 'Bs.',
+				'BRL' => '&#82;&#36;',
+				'BSD' => '&#36;',
+				'BTC' => '&#3647;',
+				'BTN' => 'Nu.',
+				'BWP' => 'P',
+				'BYR' => 'Br',
+				'BYN' => 'Br',
+				'BZD' => '&#36;',
+				'CAD' => '&#36;',
+				'CDF' => 'Fr',
+				'CHF' => '&#67;&#72;&#70;',
+				'CLP' => '&#36;',
+				'CNY' => '&yen;',
+				'COP' => '&#36;',
+				'CRC' => '&#x20a1;',
+				'CUC' => '&#36;',
+				'CUP' => '&#36;',
+				'CVE' => '&#36;',
+				'CZK' => '&#75;&#269;',
+				'DJF' => 'Fr',
+				'DKK' => 'DKK',
+				'DOP' => 'RD&#36;',
+				'DZD' => '&#x62f;.&#x62c;',
+				'EGP' => 'EGP',
+				'ERN' => 'Nfk',
+				'ETB' => 'Br',
+				'EUR' => '&euro;',
+				'FJD' => '&#36;',
+				'FKP' => '&pound;',
+				'GBP' => '&pound;',
+				'GEL' => '&#x20be;',
+				'GGP' => '&pound;',
+				'GHS' => '&#x20b5;',
+				'GIP' => '&pound;',
+				'GMD' => 'D',
+				'GNF' => 'Fr',
+				'GTQ' => 'Q',
+				'GYD' => '&#36;',
+				'HKD' => '&#36;',
+				'HNL' => 'L',
+				'HRK' => 'kn',
+				'HTG' => 'G',
+				'HUF' => '&#70;&#116;',
+				'IDR' => 'Rp',
+				'ILS' => '&#8362;',
+				'IMP' => '&pound;',
+				'INR' => '&#8377;',
+				'IQD' => '&#x639;.&#x62f;',
+				'IRR' => '&#xfdfc;',
+				'IRT' => '&#x062A;&#x0648;&#x0645;&#x0627;&#x0646;',
+				'ISK' => 'kr.',
+				'JEP' => '&pound;',
+				'JMD' => '&#36;',
+				'JOD' => '&#x62f;.&#x627;',
+				'JPY' => '&yen;',
+				'KES' => 'KSh',
+				'KGS' => '&#x441;&#x43e;&#x43c;',
+				'KHR' => '&#x17db;',
+				'KMF' => 'Fr',
+				'KPW' => '&#x20a9;',
+				'KRW' => '&#8361;',
+				'KWD' => '&#x62f;.&#x643;',
+				'KYD' => '&#36;',
+				'KZT' => '&#8376;',
+				'LAK' => '&#8365;',
+				'LBP' => '&#x644;.&#x644;',
+				'LKR' => '&#xdbb;&#xdd4;',
+				'LRD' => '&#36;',
+				'LSL' => 'L',
+				'LYD' => '&#x644;.&#x62f;',
+				'MAD' => '&#x62f;.&#x645;.',
+				'MDL' => 'MDL',
+				'MGA' => 'Ar',
+				'MKD' => '&#x434;&#x435;&#x43d;',
+				'MMK' => 'Ks',
+				'MNT' => '&#x20ae;',
+				'MOP' => 'P',
+				'MRU' => 'UM',
+				'MUR' => '&#x20a8;',
+				'MVR' => '.&#x783;',
+				'MWK' => 'MK',
+				'MXN' => '&#36;',
+				'MYR' => '&#82;&#77;',
+				'MZN' => 'MT',
+				'NAD' => 'N&#36;',
+				'NGN' => '&#8358;',
+				'NIO' => 'C&#36;',
+				'NOK' => '&#107;&#114;',
+				'NPR' => '&#8360;',
+				'NZD' => '&#36;',
+				'OMR' => '&#x631;.&#x639;.',
+				'PAB' => 'B/.',
+				'PEN' => 'S/',
+				'PGK' => 'K',
+				'PHP' => '&#8369;',
+				'PKR' => '&#8360;',
+				'PLN' => '&#122;&#322;',
+				'PRB' => '&#x440;.',
+				'PYG' => '&#8370;',
+				'QAR' => '&#x631;.&#x642;',
+				'RMB' => '&yen;',
+				'RON' => 'lei',
+				'RSD' => '&#1088;&#1089;&#1076;',
+				'RUB' => '&#8381;',
+				'RWF' => 'Fr',
+				'SAR' => '&#x631;.&#x633;',
+				'SBD' => '&#36;',
+				'SCR' => '&#x20a8;',
+				'SDG' => '&#x62c;.&#x633;.',
+				'SEK' => '&#107;&#114;',
+				'SGD' => '&#36;',
+				'SHP' => '&pound;',
+				'SLL' => 'Le',
+				'SOS' => 'Sh',
+				'SRD' => '&#36;',
+				'SSP' => '&pound;',
+				'STN' => 'Db',
+				'SYP' => '&#x644;.&#x633;',
+				'SZL' => 'L',
+				'THB' => '&#3647;',
+				'TJS' => '&#x405;&#x41c;',
+				'TMT' => 'm',
+				'TND' => '&#x62f;.&#x62a;',
+				'TOP' => 'T&#36;',
+				'TRY' => '&#8378;',
+				'TTD' => '&#36;',
+				'TWD' => '&#78;&#84;&#36;',
+				'TZS' => 'Sh',
+				'UAH' => '&#8372;',
+				'UGX' => 'UGX',
+				'USD' => '&#36;',
+				'UYU' => '&#36;',
+				'UZS' => 'UZS',
+				'VEF' => 'Bs F',
+				'VES' => 'Bs.S',
+				'VND' => '&#8363;',
+				'VUV' => 'Vt',
+				'WST' => 'T',
+				'XAF' => 'CFA',
+				'XCD' => '&#36;',
+				'XOF' => 'CFA',
+				'XPF' => 'Fr',
+				'YER' => '&#xfdfc;',
+				'ZAR' => '&#82;',
+				'ZMW' => 'ZK',
+			)
+		);
+
+		return $symbols;
+	}
+}
+
+if ( ! function_exists( 'ur_get_currencies_with_symbols' ) ) {
+
+	/**
+	 * Get full list of currency codes with symbols.
+	 *
+	 * @since 6.0.0
+	 *
+	 * @return array
+	 */
+	function ur_get_currencies_with_symbols() {
+		$currencies = ur_get_currencies();
+
+		foreach ( $currencies as $key => $value ) {
+			$currencies[ $key ] = sprintf( '%s (%s)', $value, html_entity_decode( ur_get_currency_symbol( $key ) ) );
+		}
+
+		/**
+		 * Filters list of currency codes with symbols.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param array $currencies List of currency codes with symbols.
+		 */
+		return apply_filters( 'ur_currencies_with_symbols', $currencies );
+	}
+
+}
+
+if ( ! function_exists( 'ur_get_currencies' ) ) {
+
+	/**
+	 * Get full list of currency codes.
+	 *
+	 * Currency symbols and names should follow the Unicode CLDR recommendation (http://cldr.unicode.org/translation/currency-names)
+	 *
+	 * @since 6.0.0
+	 *
+	 * @return array
+	 */
+	function ur_get_currencies() {
+		$currencies = array_unique(
+			/**
+			 * Filters full list of currency codes.
+			 *
+			 * @since 6.0.0
+			 *
+			 * @param string[] $currencies Full list of currency codes.
+			 */
+			apply_filters(
+				'ur_currencies',
+				array(
+					'AED' => __( 'United Arab Emirates dirham', 'user-registration' ),
+					'AFN' => __( 'Afghan afghani', 'user-registration' ),
+					'ALL' => __( 'Albanian lek', 'user-registration' ),
+					'AMD' => __( 'Armenian dram', 'user-registration' ),
+					'ANG' => __( 'Netherlands Antillean guilder', 'user-registration' ),
+					'AOA' => __( 'Angolan kwanza', 'user-registration' ),
+					'ARS' => __( 'Argentine peso', 'user-registration' ),
+					'AUD' => __( 'Australian dollar', 'user-registration' ),
+					'AWG' => __( 'Aruban florin', 'user-registration' ),
+					'AZN' => __( 'Azerbaijani manat', 'user-registration' ),
+					'BAM' => __( 'Bosnia and Herzegovina convertible mark', 'user-registration' ),
+					'BBD' => __( 'Barbadian dollar', 'user-registration' ),
+					'BDT' => __( 'Bangladeshi taka', 'user-registration' ),
+					'BGN' => __( 'Bulgarian lev', 'user-registration' ),
+					'BHD' => __( 'Bahraini dinar', 'user-registration' ),
+					'BIF' => __( 'Burundian franc', 'user-registration' ),
+					'BMD' => __( 'Bermudian dollar', 'user-registration' ),
+					'BND' => __( 'Brunei dollar', 'user-registration' ),
+					'BOB' => __( 'Bolivian boliviano', 'user-registration' ),
+					'BRL' => __( 'Brazilian real', 'user-registration' ),
+					'BSD' => __( 'Bahamian dollar', 'user-registration' ),
+					'BTC' => __( 'Bitcoin', 'user-registration' ),
+					'BTN' => __( 'Bhutanese ngultrum', 'user-registration' ),
+					'BWP' => __( 'Botswana pula', 'user-registration' ),
+					'BYR' => __( 'Belarusian ruble (old)', 'user-registration' ),
+					'BYN' => __( 'Belarusian ruble', 'user-registration' ),
+					'BZD' => __( 'Belize dollar', 'user-registration' ),
+					'CAD' => __( 'Canadian dollar', 'user-registration' ),
+					'CDF' => __( 'Congolese franc', 'user-registration' ),
+					'CHF' => __( 'Swiss franc', 'user-registration' ),
+					'CLP' => __( 'Chilean peso', 'user-registration' ),
+					'CNY' => __( 'Chinese yuan', 'user-registration' ),
+					'COP' => __( 'Colombian peso', 'user-registration' ),
+					'CRC' => __( 'Costa Rican col&oacute;n', 'user-registration' ),
+					'CUC' => __( 'Cuban convertible peso', 'user-registration' ),
+					'CUP' => __( 'Cuban peso', 'user-registration' ),
+					'CVE' => __( 'Cape Verdean escudo', 'user-registration' ),
+					'CZK' => __( 'Czech koruna', 'user-registration' ),
+					'DJF' => __( 'Djiboutian franc', 'user-registration' ),
+					'DKK' => __( 'Danish krone', 'user-registration' ),
+					'DOP' => __( 'Dominican peso', 'user-registration' ),
+					'DZD' => __( 'Algerian dinar', 'user-registration' ),
+					'EGP' => __( 'Egyptian pound', 'user-registration' ),
+					'ERN' => __( 'Eritrean nakfa', 'user-registration' ),
+					'ETB' => __( 'Ethiopian birr', 'user-registration' ),
+					'EUR' => __( 'Euro', 'user-registration' ),
+					'FJD' => __( 'Fijian dollar', 'user-registration' ),
+					'FKP' => __( 'Falkland Islands pound', 'user-registration' ),
+					'GBP' => __( 'Pound sterling', 'user-registration' ),
+					'GEL' => __( 'Georgian lari', 'user-registration' ),
+					'GGP' => __( 'Guernsey pound', 'user-registration' ),
+					'GHS' => __( 'Ghana cedi', 'user-registration' ),
+					'GIP' => __( 'Gibraltar pound', 'user-registration' ),
+					'GMD' => __( 'Gambian dalasi', 'user-registration' ),
+					'GNF' => __( 'Guinean franc', 'user-registration' ),
+					'GTQ' => __( 'Guatemalan quetzal', 'user-registration' ),
+					'GYD' => __( 'Guyanese dollar', 'user-registration' ),
+					'HKD' => __( 'Hong Kong dollar', 'user-registration' ),
+					'HNL' => __( 'Honduran lempira', 'user-registration' ),
+					'HRK' => __( 'Croatian kuna', 'user-registration' ),
+					'HTG' => __( 'Haitian gourde', 'user-registration' ),
+					'HUF' => __( 'Hungarian forint', 'user-registration' ),
+					'IDR' => __( 'Indonesian rupiah', 'user-registration' ),
+					'ILS' => __( 'Israeli new shekel', 'user-registration' ),
+					'IMP' => __( 'Manx pound', 'user-registration' ),
+					'INR' => __( 'Indian rupee', 'user-registration' ),
+					'IQD' => __( 'Iraqi dinar', 'user-registration' ),
+					'IRR' => __( 'Iranian rial', 'user-registration' ),
+					'IRT' => __( 'Iranian toman', 'user-registration' ),
+					'ISK' => __( 'Icelandic kr&oacute;na', 'user-registration' ),
+					'JEP' => __( 'Jersey pound', 'user-registration' ),
+					'JMD' => __( 'Jamaican dollar', 'user-registration' ),
+					'JOD' => __( 'Jordanian dinar', 'user-registration' ),
+					'JPY' => __( 'Japanese yen', 'user-registration' ),
+					'KES' => __( 'Kenyan shilling', 'user-registration' ),
+					'KGS' => __( 'Kyrgyzstani som', 'user-registration' ),
+					'KHR' => __( 'Cambodian riel', 'user-registration' ),
+					'KMF' => __( 'Comorian franc', 'user-registration' ),
+					'KPW' => __( 'North Korean won', 'user-registration' ),
+					'KRW' => __( 'South Korean won', 'user-registration' ),
+					'KWD' => __( 'Kuwaiti dinar', 'user-registration' ),
+					'KYD' => __( 'Cayman Islands dollar', 'user-registration' ),
+					'KZT' => __( 'Kazakhstani tenge', 'user-registration' ),
+					'LAK' => __( 'Lao kip', 'user-registration' ),
+					'LBP' => __( 'Lebanese pound', 'user-registration' ),
+					'LKR' => __( 'Sri Lankan rupee', 'user-registration' ),
+					'LRD' => __( 'Liberian dollar', 'user-registration' ),
+					'LSL' => __( 'Lesotho loti', 'user-registration' ),
+					'LYD' => __( 'Libyan dinar', 'user-registration' ),
+					'MAD' => __( 'Moroccan dirham', 'user-registration' ),
+					'MDL' => __( 'Moldovan leu', 'user-registration' ),
+					'MGA' => __( 'Malagasy ariary', 'user-registration' ),
+					'MKD' => __( 'Macedonian denar', 'user-registration' ),
+					'MMK' => __( 'Burmese kyat', 'user-registration' ),
+					'MNT' => __( 'Mongolian t&ouml;gr&ouml;g', 'user-registration' ),
+					'MOP' => __( 'Macanese pataca', 'user-registration' ),
+					'MRU' => __( 'Mauritanian ouguiya', 'user-registration' ),
+					'MUR' => __( 'Mauritian rupee', 'user-registration' ),
+					'MVR' => __( 'Maldivian rufiyaa', 'user-registration' ),
+					'MWK' => __( 'Malawian kwacha', 'user-registration' ),
+					'MXN' => __( 'Mexican peso', 'user-registration' ),
+					'MYR' => __( 'Malaysian ringgit', 'user-registration' ),
+					'MZN' => __( 'Mozambican metical', 'user-registration' ),
+					'NAD' => __( 'Namibian dollar', 'user-registration' ),
+					'NGN' => __( 'Nigerian naira', 'user-registration' ),
+					'NIO' => __( 'Nicaraguan c&oacute;rdoba', 'user-registration' ),
+					'NOK' => __( 'Norwegian krone', 'user-registration' ),
+					'NPR' => __( 'Nepalese rupee', 'user-registration' ),
+					'NZD' => __( 'New Zealand dollar', 'user-registration' ),
+					'OMR' => __( 'Omani rial', 'user-registration' ),
+					'PAB' => __( 'Panamanian balboa', 'user-registration' ),
+					'PEN' => __( 'Sol', 'user-registration' ),
+					'PGK' => __( 'Papua New Guinean kina', 'user-registration' ),
+					'PHP' => __( 'Philippine peso', 'user-registration' ),
+					'PKR' => __( 'Pakistani rupee', 'user-registration' ),
+					'PLN' => __( 'Polish z&#x142;oty', 'user-registration' ),
+					'PRB' => __( 'Transnistrian ruble', 'user-registration' ),
+					'PYG' => __( 'Paraguayan guaran&iacute;', 'user-registration' ),
+					'QAR' => __( 'Qatari riyal', 'user-registration' ),
+					'RON' => __( 'Romanian leu', 'user-registration' ),
+					'RSD' => __( 'Serbian dinar', 'user-registration' ),
+					'RUB' => __( 'Russian ruble', 'user-registration' ),
+					'RWF' => __( 'Rwandan franc', 'user-registration' ),
+					'SAR' => __( 'Saudi riyal', 'user-registration' ),
+					'SBD' => __( 'Solomon Islands dollar', 'user-registration' ),
+					'SCR' => __( 'Seychellois rupee', 'user-registration' ),
+					'SDG' => __( 'Sudanese pound', 'user-registration' ),
+					'SEK' => __( 'Swedish krona', 'user-registration' ),
+					'SGD' => __( 'Singapore dollar', 'user-registration' ),
+					'SHP' => __( 'Saint Helena pound', 'user-registration' ),
+					'SLL' => __( 'Sierra Leonean leone', 'user-registration' ),
+					'SOS' => __( 'Somali shilling', 'user-registration' ),
+					'SRD' => __( 'Surinamese dollar', 'user-registration' ),
+					'SSP' => __( 'South Sudanese pound', 'user-registration' ),
+					'STN' => __( 'S&atilde;o Tom&eacute; and Pr&iacute;ncipe dobra', 'user-registration' ),
+					'SYP' => __( 'Syrian pound', 'user-registration' ),
+					'SZL' => __( 'Swazi lilangeni', 'user-registration' ),
+					'THB' => __( 'Thai baht', 'user-registration' ),
+					'TJS' => __( 'Tajikistani somoni', 'user-registration' ),
+					'TMT' => __( 'Turkmenistan manat', 'user-registration' ),
+					'TND' => __( 'Tunisian dinar', 'user-registration' ),
+					'TOP' => __( 'Tongan pa&#x2bb;anga', 'user-registration' ),
+					'TRY' => __( 'Turkish lira', 'user-registration' ),
+					'TTD' => __( 'Trinidad and Tobago dollar', 'user-registration' ),
+					'TWD' => __( 'New Taiwan dollar', 'user-registration' ),
+					'TZS' => __( 'Tanzanian shilling', 'user-registration' ),
+					'UAH' => __( 'Ukrainian hryvnia', 'user-registration' ),
+					'UGX' => __( 'Ugandan shilling', 'user-registration' ),
+					'USD' => __( 'United States (US) dollar', 'user-registration' ),
+					'UYU' => __( 'Uruguayan peso', 'user-registration' ),
+					'UZS' => __( 'Uzbekistani som', 'user-registration' ),
+					'VEF' => __( 'Venezuelan bol&iacute;var', 'user-registration' ),
+					'VES' => __( 'Bol&iacute;var soberano', 'user-registration' ),
+					'VND' => __( 'Vietnamese &#x111;&#x1ed3;ng', 'user-registration' ),
+					'VUV' => __( 'Vanuatu vatu', 'user-registration' ),
+					'WST' => __( 'Samoan t&#x101;l&#x101;', 'user-registration' ),
+					'XAF' => __( 'Central African CFA franc', 'user-registration' ),
+					'XCD' => __( 'East Caribbean dollar', 'user-registration' ),
+					'XOF' => __( 'West African CFA franc', 'user-registration' ),
+					'XPF' => __( 'CFP franc', 'user-registration' ),
+					'YER' => __( 'Yemeni rial', 'user-registration' ),
+					'ZAR' => __( 'South African rand', 'user-registration' ),
+					'ZMW' => __( 'Zambian kwacha', 'user-registration' ),
+				)
+			)
+		);
+
+		return $currencies;
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_symbol' ) ) {
+
+	/**
+	 * Get Currency symbol.
+	 *
+	 * Currency symbols and names should follow the Unicode CLDR recommendation (http://cldr.unicode.org/translation/currency-names)
+	 *
+	 * @since 6.0.0
+	 *
+	 * @param string $currency Currency. (default: '').
+	 *
+	 * @return string
+	 */
+	function ur_get_currency_symbol( $currency = '' ) {
+		$symbols = ur_get_currency_symbols();
+
+		$currency_symbol = isset( $symbols[ $currency ] ) ? $symbols[ $currency ] : '';
+
+		/**
+		 * Filters currency symbol.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param string $currency_symbol Currency symbol.
+		 * @param string $currency Currency.
+		 */
+		return apply_filters( 'ur_currency_symbol', $currency_symbol, $currency );
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_name_by_key' ) ) {
+
+	function ur_get_currency_name_by_key( $currency_key ) {
+		$curreny_details = ur_get_currencies();
+
+		$name = sprintf( '%s (%s)', $curreny_details[ $currency_key ], html_entity_decode( ur_get_currency_symbol( $currency_key ) ) );
+
+		return apply_filters( 'ur_get_currency_name_by_key', $name );
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_by_key' ) ) {
+
+	function ur_get_currency_by_key( $currency_key ) {
+		$curreny_details = ur_get_currencies();
+
+		$name = sprintf( '%s', $curreny_details[ $currency_key ] );
+
+		return apply_filters( 'ur_get_currency_by_key', $name );
+	}
+}
+
+if ( ! function_exists( 'ur_format_country_field_data' ) ) {
+
+	/**
+	 * Format country field data for display.
+	 *
+	 * @param string $country_code The country code.
+	 * @param string $state_code   The state code.
+	 *
+	 * @return string Formatted country and state name.
+	 */
+	function ur_format_country_field_data( $country_code, $state_code ) {
+		$country_list = \UR_Form_Field_Country::get_instance()->get_country();
+
+		$country_name = isset( $country_list[ $country_code ] )
+			? $country_list[ $country_code ]
+			: $country_code;
+
+		$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
+		$state_list  = json_decode( $states_json, true );
+
+		$states = isset( $state_list[ $country_code ] ) ? $state_list[ $country_code ] : [];
+
+		$state_name = isset( $states[ $state_code ] )
+			? $states[ $state_code ]
+			: $state_code;
+
+		$final = array();
+
+		if ( ! empty( $country_name ) ) {
+			$final[] = $country_name;
+		}
+
+		if ( ! empty( $state_name ) ) {
+			$final[] = $state_name;
+		}
+
+		$value = implode( ', ', $final );
+
+		return $value;
 	}
 }

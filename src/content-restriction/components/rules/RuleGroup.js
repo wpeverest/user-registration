@@ -220,8 +220,8 @@ const RuleGroup = ({
 					conditionValue = Array.isArray(conditionValue)
 						? conditionValue
 						: conditionValue
-						? [conditionValue]
-						: [];
+							? [conditionValue]
+							: [];
 				} else if (
 					cond.operator === "empty" ||
 					cond.operator === "not empty"
@@ -422,6 +422,7 @@ const RuleGroup = ({
 							onContentTargetsChange={onContentTargetsChange}
 							ruleType={ruleType}
 							rule={rule}
+							conditions={conditions}
 						/>
 					)}
 				</div>

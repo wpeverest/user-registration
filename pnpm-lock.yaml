@@ -114,6 +114,9 @@ importers:
       '@wordpress/i18n':
         specifier: ^6.10.0
         version: 6.10.0
+      '@wordpress/icons':
+        specifier: ^11.4.0
+        version: 11.4.0(react@18.3.1)
       '@wordpress/scripts':
         specifier: ^31.2.0
         version: 31.2.0(@playwright/test@1.57.0)(@types/eslint@9.6.1)(@types/node@25.0.3)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(stylelint-scss@6.14.0(stylelint@16.26.1(typescript@5.9.3)))(type-fest@4.41.0)(typescript@5.9.3)

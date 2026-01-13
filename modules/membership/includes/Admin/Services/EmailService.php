@@ -50,6 +50,10 @@ class EmailService {
 				return $this->send_user_register_admin_email( $data );
 			case 'payment_successful': // payment successful message to member.
 				return self::send_payment_successful_email( $data );
+			case 'payment_retry_failed': // payment retry failed (single retry attempt failed)
+				return self::send_payment_retry_failed_email( $data );
+			case 'payment_retry_cancel': // payment retry exhausted -> final cancellation
+				return self::send_payment_retry_cancel_email( $data );
 			case 'payment_approval': // payment approval message to member.
 				return self::send_payment_approval_email( $data );
 			case 'membership_cancellation_email_user': // membership cancellation email to member.
@@ -75,7 +79,20 @@ class EmailService {
 	 * @return bool|mixed|void
 	 */
 	public function send_user_register_email( $data ) {
-		$user_id  = absint( $data['member_id'] );
+		$user_id = absint( $data['member_id'] );
+
+		// Check if custom email should override default email
+		$membership_id = isset( $data['membership'] ) ? absint( $data['membership'] ) : 0;
+
+		// Check for all_members override
+		if ( apply_filters( 'user_registration_should_override_default_email', false, 'member_signs_up', 'all_members', $user_id, $membership_id ) ) {
+			return;
+		}
+
+		// Check for specific_memberships override
+		if ( $membership_id > 0 && apply_filters( 'user_registration_should_override_default_email', false, 'member_signs_up', 'specific_memberships', $user_id, $membership_id ) ) {
+			return;
+		}
 		$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Welcome to {{blog_info}}!', 'user-registration' ) );
 		$settings = new \UR_Settings_Successfully_Registered_Email();
 		$message  = $settings->ur_get_successfully_registered_email();
@@ -117,6 +134,11 @@ class EmailService {
 			return;
 		}
 		$user_id = absint( $data['member_id'] );
+		// Check if custom email should override default admin email
+		if ( apply_filters( 'user_registration_should_override_default_email', false, 'member_signs_up', 'admin', $user_id, 0 ) ) {
+			return;
+		}
+
 		$subject = get_option( 'user_registration_admin_email_subject', __( 'A Member registration: {{username}}', 'user-registration' ) );
 		$form_id = ur_get_form_id_by_userid( $user_id );
 
@@ -187,6 +209,66 @@ class EmailService {
 		if ( ur_string_to_bool( get_option( 'user_registration_enable_payment_success_email', true ) ) ) {
 			\UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), $template_id );
 		}
+	}
+
+	/**
+	 * Send payment retry failed email (single retry attempt failed)
+	 *
+	 * @param $data
+	 * @return mixed|void
+	 */
+	public static function send_payment_retry_failed_email( $data ) {
+		$user_id              = absint( $data['member_id'] );
+		$user                 = get_user_by( 'ID', $user_id );
+		$email                = $user->data->user_email;
+		$form_id              = ur_get_form_id_by_userid( $user_id );
+		$data['username']     = $user->user_login;
+		$data['user_email']   = $user->user_email;
+		$subscription_service = new SubscriptionService();
+		$values               = array(
+			'membership_tags' => $subscription_service->get_membership_plan_details( $data ),
+		);
+		$values               = $data + $values;
+
+		$subject  = __( 'Payment Attempt Failed – Action Required on {{blog_info}}', 'user-registration' );
+		$settings = new \UR_Settings_Payment_Retry_Failed_Email();
+		$message  = $settings->ur_get_payment_retry_failed_email();
+		$message  = get_option( 'user_registration_payment_retry_failed_email', $message );
+		$message  = \UR_Emailer::parse_smart_tags( $message, $values );
+		$subject  = \UR_Emailer::parse_smart_tags( $subject, $values );
+		$headers  = \UR_Emailer::ur_get_header();
+
+		return \UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), 0 );
+	}
+
+	/**
+	 * Send payment retry cancel email (final cancellation after retries exhausted)
+	 *
+	 * @param $data
+	 * @return mixed|void
+	 */
+	public static function send_payment_retry_cancel_email( $data ) {
+		$user_id              = absint( $data['member_id'] );
+		$user                 = get_user_by( 'ID', $user_id );
+		$email                = $user->data->user_email;
+		$form_id              = ur_get_form_id_by_userid( $user_id );
+		$data['username']     = $user->user_login;
+		$data['user_email']   = $user->user_email;
+		$subscription_service = new SubscriptionService();
+		$values               = array(
+			'membership_tags' => $subscription_service->get_membership_plan_details( $data ),
+		);
+		$values               = $data + $values;
+
+		$subject  = __( 'Payment Cancelled – Registration Cancelled on {{blog_info}}', 'user-registration' );
+		$settings = new \UR_Settings_Payment_Retry_Cancel_Email();
+		$message  = $settings->ur_get_payment_retry_cancel_email();
+		$message  = get_option( 'user_registration_payment_retry_cancel_email', $message );
+		$message  = \UR_Emailer::parse_smart_tags( $message, $values );
+		$subject  = \UR_Emailer::parse_smart_tags( $subject, $values );
+		$headers  = \UR_Emailer::ur_get_header();
+
+		return \UR_Emailer::user_registration_process_and_send_email( $email, $subject, $message, $headers, array(), 0 );
 	}
 
 	/**
@@ -320,6 +402,26 @@ class EmailService {
 		if ( ! $this->validate_email_fields( $data ) || ! self::is_membership_email_enabled( 'user_registration_enable_membership_cancellation_user_email' ) ) {
 			return false;
 		}
+
+		$user_id       = absint( $data['member_id'] );
+		$membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
+
+		// If membership_id not in data, try to get it from subscription
+		if ( $membership_id <= 0 && isset( $data['subscription'] ) && is_array( $data['subscription'] ) && isset( $data['subscription']['item_id'] ) ) {
+			$membership_id = absint( $data['subscription']['item_id'] );
+		}
+
+		// Check if custom email should override default email
+		// Check for all_members override
+		if ( apply_filters( 'user_registration_should_override_default_email', false, 'membership_cancellation', 'all_members', $user_id, $membership_id ) ) {
+			return false;
+		}
+
+		// Check for specific_memberships override (always check, function handles membership matching)
+		if ( apply_filters( 'user_registration_should_override_default_email', false, 'membership_cancellation', 'specific_memberships', $user_id, $membership_id ) ) {
+			return false;
+		}
+
 		$subject              = get_option( 'user_registration_membership_cancellation_user_email_subject', esc_html__( 'Membership Cancelled', 'user-registration' ) );
 		$user                 = get_userdata( $data['member_id'] );
 		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
@@ -374,9 +476,15 @@ class EmailService {
 		if ( ! $this->validate_email_fields( $data ) || ! self::is_membership_email_enabled( 'user_registration_enable_membership_cancellation_admin_email' ) ) {
 			return false;
 		}
-		$subject              = get_option( 'user_registration_membership_cancellation_admin_email_subject', esc_html__( 'Membership Cancelled: {{username}}', 'user-registration' ) );
+		$user_id = absint( $data['member_id'] );
+
+		// Check if custom email should override default admin email
+		if ( apply_filters( 'user_registration_should_override_default_email', false, 'membership_cancellation', 'admin', $user_id, 0 ) ) {
+			return false;
+		}
+
 		$user                 = get_userdata( $data['member_id'] );
-		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );
+		$subject              = get_option( 'user_registration_membership_cancellation_admin_email_subject', esc_html__( 'Membership Cancelled: {{username}}', 'user-registration' ) );
 		$settings             = new UR_Settings_Membership_Cancellation_Admin_Email();
 		$subscription_service = new SubscriptionService();
 		$membership_tags      = $subscription_service->get_membership_plan_details( $data );
@@ -444,6 +552,21 @@ class EmailService {
 	}
 
 	public function send_membership_ended_email( $data ) {
+
+		$user_id       = absint( $data['member_id'] );
+		$membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
+
+		// Check if custom email should override default email
+		// Check for all_members override
+		if ( apply_filters( 'user_registration_should_override_default_email', false, 'membership_expired', 'all_members', $user_id, $membership_id ) ) {
+			return;
+		}
+
+		// Check for specific_memberships override
+		if ( $membership_id > 0 && apply_filters( 'user_registration_should_override_default_email', false, 'membership_expired', 'specific_memberships', $user_id, $membership_id ) ) {
+			return;
+		}
+
 		$subject = get_option( 'user_registration_membership_ended_user_email_subject', esc_html__( 'Your Membership Has Expired', 'user-registration' ) );
 
 		$form_id              = ur_get_form_id_by_userid( $data['member_id'] );

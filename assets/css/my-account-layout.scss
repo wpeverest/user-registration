@@ -1886,8 +1886,14 @@
 				padding: $spacing_24px $spacing_24px 52px 36px;
 
 				@media screen and (max-width: 600px) {
-					padding: 28px 12px 20px;
+					padding: 28px 24px 20px;
 				}
+
+				// &__header {
+				// 	display: flex;
+				// 	justify-content: space-between;
+				// 	align-items: center;
+				// }
 			}
 		}
 	}
@@ -1929,7 +1935,7 @@
 				padding: $spacing_24px 36px 52px 36px;
 
 				@media screen and (max-width: 600px) {
-					padding: 28px 12px 20px;
+					padding: 28px 24px 20px;
 				}
 			}
 		}

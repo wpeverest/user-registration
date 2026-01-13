@@ -164,9 +164,9 @@ html {
   min-height: 40px;
   padding: 0 12px;
   border-radius: 4px;
-  border: 1px solid #475bb2;
-  background: #475bb2;
-  color: white;
+  border: 1px solid var(--ur-button-background-normal-color, var(--ur-primary-color, #475bb2));
+  background: var(--ur-button-background-normal-color, var(--ur-primary-color, #475bb2));
+  color: var(--ur-button-text-normal-color, white);
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
@@ -177,7 +177,9 @@ html {
 .user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover,
 .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover,
 #pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button:hover {
-  background: #38488e;
+  color: var(--ur-button-text-hover-color, white);
+  background: var(--ur-button-background-hover-color, #38488e);
+  border-color: var(--ur-button-background-hover-color, #38488e);
 }
 .user-registration-page .ur-membership-list-container .ur-membership-container .ur_membership_frontend_input_container.radio .membership-block,
 .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .ur_membership_frontend_input_container.radio .membership-block,
@@ -673,6 +675,11 @@ html {
 #pg-container .membership-upgrade-container #urm-total_container {
   position: relative;
   margin-top: 32px;
+  padding: 14px;
+  border-radius: 4px;
+  border: 1px dashed #475bb2;
+  background: #f8f8fa;
+  gap: 20px;
 }
 .user-registration-page .ur_membership_registration_container #urm-total_container::before,
 .user-registration-page .membership-upgrade-container #urm-total_container::before,
@@ -688,20 +695,30 @@ html {
   top: -24px;
   left: 0;
 }
-.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-total-value,
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-total-value, .user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-sub-total-value, .user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-tax-value, .user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-coupons-value,
 .user-registration-page .membership-upgrade-container #urm-total_container .urm-membership-total-value,
+.user-registration-page .membership-upgrade-container #urm-total_container .urm-membership-sub-total-value,
+.user-registration-page .membership-upgrade-container #urm-total_container .urm-membership-tax-value,
+.user-registration-page .membership-upgrade-container #urm-total_container .urm-membership-coupons-value,
 .ur-multi-device-form-preview .ur_membership_registration_container #urm-total_container .urm-membership-total-value,
+.ur-multi-device-form-preview .ur_membership_registration_container #urm-total_container .urm-membership-sub-total-value,
+.ur-multi-device-form-preview .ur_membership_registration_container #urm-total_container .urm-membership-tax-value,
+.ur-multi-device-form-preview .ur_membership_registration_container #urm-total_container .urm-membership-coupons-value,
 .ur-multi-device-form-preview .membership-upgrade-container #urm-total_container .urm-membership-total-value,
+.ur-multi-device-form-preview .membership-upgrade-container #urm-total_container .urm-membership-sub-total-value,
+.ur-multi-device-form-preview .membership-upgrade-container #urm-total_container .urm-membership-tax-value,
+.ur-multi-device-form-preview .membership-upgrade-container #urm-total_container .urm-membership-coupons-value,
 #pg-container .ur_membership_registration_container #urm-total_container .urm-membership-total-value,
-#pg-container .membership-upgrade-container #urm-total_container .urm-membership-total-value {
+#pg-container .ur_membership_registration_container #urm-total_container .urm-membership-sub-total-value,
+#pg-container .ur_membership_registration_container #urm-total_container .urm-membership-tax-value,
+#pg-container .ur_membership_registration_container #urm-total_container .urm-membership-coupons-value,
+#pg-container .membership-upgrade-container #urm-total_container .urm-membership-total-value,
+#pg-container .membership-upgrade-container #urm-total_container .urm-membership-sub-total-value,
+#pg-container .membership-upgrade-container #urm-total_container .urm-membership-tax-value,
+#pg-container .membership-upgrade-container #urm-total_container .urm-membership-coupons-value {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  padding: 14px;
-  border-radius: 4px;
-  border: 1px dashed #475bb2;
-  background: #f8f8fa;
 }
 .user-registration-page .ur_membership_registration_container #urm-total_container .ur_membership_input_label,
 .user-registration-page .membership-upgrade-container #urm-total_container .ur_membership_input_label,
@@ -1482,8 +1499,8 @@ html {
   font-size: 16px;
   line-height: 24px;
   font-weight: 600;
-  background: #475bb2;
-  color: white;
+  background: var(--ur-button-background-normal-color, var(--ur-primary-color, #475bb2));
+  color: var(--ur-button-text-normal-color, white);
   padding: 14px 0;
   border-radius: 5px;
   border: none;

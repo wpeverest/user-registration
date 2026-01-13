@@ -131,9 +131,9 @@ html {
 							min-height: 40px;
 							padding: 0 12px;
 							border-radius: 4px;
-							border: 1px solid $color_1;
-							background: $color_1;
-							color: $color_2;
+							border: 1px solid var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
+							background: var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
+							color: var(--ur-button-text-normal-color, $color_2);;
 							font-size: 14px;
 							font-weight: 500;
 							line-height: 24px;
@@ -142,7 +142,9 @@ html {
 							transition: all 0.3s ease-in-out;
 
 							&:hover {
-								background: #38488e;
+								color: var(--ur-button-text-hover-color, $color_2);
+								background: var(--ur-button-background-hover-color, #38488e);
+								border-color: var(--ur-button-background-hover-color, #38488e);
 							}
 						}
 					}
@@ -332,6 +334,11 @@ html {
 		#urm-total_container {
 			position: relative;
 			margin-top: $spacing_32px;
+			padding: $spacing_14px;
+			border-radius: $border_radius_4;
+			border: $border_width dashed $primary_color;
+			background: #f8f8fa;
+			gap: $spacing_20px;
 
 			&::before {
 				content: "";
@@ -343,15 +350,15 @@ html {
 				left: 0;
 			}
 
-			.urm-membership-total-value {
+			.urm-membership-total-value, .urm-membership-sub-total-value, .urm-membership-tax-value, .urm-membership-coupons-value {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				gap: $spacing_20px;
-				padding: $spacing_14px;
-				border-radius: $border_radius_4;
-				border: $border_width dashed $primary_color;
-				background: #f8f8fa;
+				// gap: $spacing_20px;
+				// padding: $spacing_14px;
+				// border-radius: $border_radius_4;
+				// border: $border_width dashed $primary_color;
+				// background: #f8f8fa;
 			}
 
 			.ur_membership_input_label {
@@ -452,7 +459,7 @@ html {
 						margin-left: unset;
 
 						img {
-							width:auto;
+							width: auto;
 							height: 24px;
 							margin-top: 4px;
 						}
@@ -849,8 +856,8 @@ html {
 			}
 
 			.user-registration-membership_page_user-registration-frontend-list
-				.shortcode
-				.widefat {
+			.shortcode
+			.widefat {
 				width: calc(100% - 40px);
 			}
 
@@ -1032,8 +1039,8 @@ html {
 		font-size: 16px;
 		line-height: 24px;
 		font-weight: 600;
-		background: #475bb2;
-		color: white;
+		background: var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
+		color: var(--ur-button-text-normal-color, $color_2);
 		padding: 14px 0;
 		border-radius: 5px;
 		border: none;
@@ -1244,17 +1251,17 @@ html {
 }
 
 .user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block:hover,
+.ur-membership-list-container
+.ur-membership-container
+.membership-block:hover,
 .ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block:hover,
+.ur-membership-list-container
+.ur-membership-container
+.membership-block:hover,
 #pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block:hover {
+.ur-membership-list-container
+.ur-membership-container
+.membership-block:hover {
 	background: none;
 	box-shadow: none;
 }
@@ -1262,10 +1269,10 @@ html {
 // Thankyou Page CSS
 .ur-thank-you-page {
 	width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: none;
 }
 
 .thank-you-page-container {
@@ -1279,27 +1286,27 @@ html {
 	box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.06);
 
 	.ur-success-icon {
-        width: 72px;
-        height: 72px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 24px;
-        animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		width: 72px;
+		height: 72px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0 auto 24px;
+		animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-        svg {
-            width: 80px;
-            height: 80px;
-            stroke: #ffffff;
-            fill: none;
-        }
-    }
+		svg {
+			width: 80px;
+			height: 80px;
+			stroke: #ffffff;
+			fill: none;
+		}
+	}
 
 	.ur-headline {
-        margin-bottom: 10px;
+		margin-bottom: 10px;
 
-        h1 {
+		h1 {
 			font-size: 32px;
 			font-weight: 700;
 			color: #1f1f1f;
@@ -1307,15 +1314,15 @@ html {
 			line-height: 1.2;
 			letter-spacing: -0.5px;
 			text-transform: capitalize;
-        }
-    }
+		}
+	}
 
 	.ur-message {
-        margin-bottom: 40px;
+		margin-bottom: 40px;
 		text-align: left;
 		font-size: 17px;
 
-        p {
+		p {
 			font-size: 15px;
 			text-align: center;
 			line-height: 1.6;
@@ -1323,12 +1330,12 @@ html {
 			color: #6b6b6b;
 			font-weight: 400;
 			letter-spacing: 0.15px;
-        }
+		}
 
-        ul {
-            text-align: left;
-        }
-    }
+		ul {
+			text-align: left;
+		}
+	}
 
 	.ur-button-wrapper {
 		margin-bottom: 0px;
@@ -1347,6 +1354,7 @@ html {
 			border-radius: 4px;
 			text-decoration: none;
 			cursor: pointer;
+
 			&:hover {
 				background-color: #38488e;
 			}
@@ -1364,101 +1372,101 @@ html {
 				transition: transform 0.3s ease;
 			}
 		}
-	}		
+	}
 	.ur-bank-details {
 		width: auto;
-        margin: 30px 0;
-        padding: 20px;
-        align-items: center;
-        background-color: #F8F8FA;
-        border: 1px solid #EDF2F7;
-        border-radius: 6px;
-        text-align: left;
-        font-size: 16px;
-        font-weight: 400;
-        color: #383838;
-        line-height: 30px;
-        gap: 12px;
-
-		.ur-bank-details-title{
-            font-size: 16px;
-            font-weight: 500;
-            margin: 0;
-            color: #1f1f1f;
-            border-bottom: 1px solid #e1e1e1;
-            padding-bottom: 10px;
-		}
-		}
-
-		h3,
-		h4 {
-			margin: 0 0 12px 0;
-			color: #1a1a1a;
-			font-size: 16px;
-			font-weight: 600;
-		}
-
-		p {
-			margin: 6px 0;
-			color: #495057;
-			font-size: 14px;
-			line-height: 1.5;
-		}
-
-		table {
-			width: 100%;
-			margin-top: 12px;
-			border-collapse: collapse;
-
-			th,
-			td {
-				padding: 8px;
-				text-align: left;
-				border-bottom: 1px solid #e9ecef;
-				font-size: 14px;
-			}
-
-			th {
-				font-weight: 600;
-				color: #1a1a1a;
-			}
-
-			td {
-				color: #495057;
-			}
-		}
-	}
-
-	// Transaction Info
-	.ur-transaction-info {
-		margin-bottom: 24px;
-		padding: 14px 18px;
-		background-color: #e7f3ff;
-		border-left: 4px solid #2680c2;
-		border-radius: 4px;
+		margin: 30px 0;
+		padding: 20px;
+		align-items: center;
+		background-color: #F8F8FA;
+		border: 1px solid #EDF2F7;
+		border-radius: 6px;
 		text-align: left;
+		font-size: 16px;
+		font-weight: 400;
+		color: #383838;
+		line-height: 30px;
+		gap: 12px;
 
-		p {
+		.ur-bank-details-title {
+			font-size: 16px;
+			font-weight: 500;
 			margin: 0;
+			color: #1f1f1f;
+			border-bottom: 1px solid #e1e1e1;
+			padding-bottom: 10px;
+		}
+	}
+
+	h3,
+	h4 {
+		margin: 0 0 12px 0;
+		color: #1a1a1a;
+		font-size: 16px;
+		font-weight: 600;
+	}
+
+	p {
+		margin: 6px 0;
+		color: #495057;
+		font-size: 14px;
+		line-height: 1.5;
+	}
+
+	table {
+		width: 100%;
+		margin-top: 12px;
+		border-collapse: collapse;
+
+		th,
+		td {
+			padding: 8px;
+			text-align: left;
+			border-bottom: 1px solid #e9ecef;
 			font-size: 14px;
-			color: #495057;
-			line-height: 1.5;
 		}
 
-		strong {
-			color: #2680c2;
+		th {
 			font-weight: 600;
+			color: #1a1a1a;
 		}
+
+		td {
+			color: #495057;
+		}
+	}
+}
+
+// Transaction Info
+.ur-transaction-info {
+	margin-bottom: 24px;
+	padding: 14px 18px;
+	background-color: #e7f3ff;
+	border-left: 4px solid #2680c2;
+	border-radius: 4px;
+	text-align: left;
+
+	p {
+		margin: 0;
+		font-size: 14px;
+		color: #495057;
+		line-height: 1.5;
 	}
 
-	.ur-footer {
-		p {
-			font-size: 14px;
-			color: #868e96;
-			line-height: 1.6;
-			margin: 0;
-		}
+	strong {
+		color: #2680c2;
+		font-weight: 600;
 	}
+}
+
+.ur-footer {
+	p {
+		font-size: 14px;
+		color: #868e96;
+		line-height: 1.6;
+		margin: 0;
+	}
+}
 
 @keyframes scaleIn {
 	from {
@@ -1587,7 +1595,7 @@ html {
 	}
 }
 
-.ur-show-bank-details-toggle{
+.ur-show-bank-details-toggle {
 	margin-bottom: 5px !important;
 }
 
