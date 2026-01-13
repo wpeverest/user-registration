@@ -911,6 +911,12 @@
 					padding-bottom: $spacing_16px;
 					margin-bottom: $spacing_32px;
 
+					@media screen and (max-width: 600px) {
+						flex-direction: column;
+						align-items: flex-start;
+						gap: $spacing_12px;
+					}
+
 					&-content {
 						display: flex;
 						gap: $spacing_16px;
@@ -924,6 +930,12 @@
 							align-items: center;
 							justify-content: center;
 							color: #383838;
+
+							&:focus {
+								outline: none;
+								box-shadow: none;
+								border: 0;
+							}
 
 							&::before {
 								content: "";
@@ -971,6 +983,11 @@
 						align-items: center;
 						justify-content: flex-start;
 						gap: $spacing_12px;
+
+						@media screen and (max-width: 600px) {
+							justify-content: flex-end;
+							flex-wrap: wrap;
+						}
 
 						.user-registration-Button {
 							padding: 0 $spacing_16px;
@@ -1024,8 +1041,6 @@
 					.user-registration-profile-fields {
 						&[data-action="view"] {
 							.user-registration-profile {
-								&-header {}
-
 								&-fields__field-wrapper {
 									.ur-form-grid {
 										display: flex;
@@ -1035,6 +1050,12 @@
 
 									.ur-field-item {
 										flex: 0 0 calc(50% - 16px);
+
+										@media screen and (max-width: 768px) {
+											flex: unset;
+											width: 100%;
+											margin-bottom: $spacing_8px;
+										}
 
 										.ur-label {
 											margin: 0;
@@ -1692,7 +1713,7 @@
 									}
 
 									.user-registration-help-tip {
-										&::after{
+										&::after {
 											content: none;
 										}
 									}
@@ -1836,6 +1857,11 @@
 								font-size: 14px;
 								font-weight: $medium;
 								line-height: 22px;
+
+								&:focus {
+									outline: none;
+									box-shadow: none;
+								}
 							}
 
 							&:hover {
@@ -1859,11 +1885,15 @@
 			&-content {
 				padding: $spacing_24px $spacing_24px 52px 36px;
 
-				&__header {
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
+				@media screen and (max-width: 600px) {
+					padding: 28px 24px 20px;
 				}
+
+				// &__header {
+				// 	display: flex;
+				// 	justify-content: space-between;
+				// 	align-items: center;
+				// }
 			}
 		}
 	}
@@ -1903,6 +1933,10 @@
 
 			&-content {
 				padding: $spacing_24px 36px 52px 36px;
+
+				@media screen and (max-width: 600px) {
+					padding: 28px 24px 20px;
+				}
 			}
 		}
 	}
