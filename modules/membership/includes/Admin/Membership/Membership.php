@@ -82,7 +82,7 @@ class Membership {
 
 		wp_register_script(
 			'user-registration-membership',
-			UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/user-registration-membership-admin' . $suffix . '.js',
+			UR()->plugin_url(). '/assets/js/modules/membership/admin/user-registration-membership-admin' . $suffix . '.js',
 			array(
 				'jquery',
 				'jquery-ui-sortable',
@@ -144,7 +144,7 @@ class Membership {
 		}
 		wp_enqueue_style( 'ur-snackbar' );
 		wp_enqueue_style( 'sweetalert2' );
-		wp_register_style( 'ur-membership-admin-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-admin.css', array(), UR_VERSION );
+		wp_register_style( 'ur-membership-admin-style', UR()->plugin_url(). '/assets/css/modules/membership/user-registration-membership-admin.css', array(), UR_VERSION );
 		wp_register_style( 'ur-core-builder-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR_VERSION );
 		wp_enqueue_style( 'ur-core-builder-style' );
 		wp_enqueue_style( 'ur-membership-admin-style' );
