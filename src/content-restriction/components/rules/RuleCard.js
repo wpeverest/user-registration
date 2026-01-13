@@ -32,7 +32,10 @@ const RuleCard = ({
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false);
 	const [activeTab, setActiveTab] = useState("rules");
+	const [isEditingTitle, setIsEditingTitle] = useState(false);
+	const [editedTitle, setEditedTitle] = useState(rule.title || "");
 	const menuWrapperRef = useRef(null);
+	const titleInputRef = useRef(null);
 	const isMembershipRule = rule.rule_type === "membership";
 	const isMigratedRule = Boolean(rule.is_migrated);
 	const shouldHideMenu = (!isURDev() && isMembershipRule) || isMigratedRule;
@@ -62,6 +65,46 @@ const RuleCard = ({
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, [menuOpen]);
+
+	// Update editedTitle when rule.title changes
+	useEffect(() => {
+		setEditedTitle(rule.title || "");
+	}, [rule.title]);
+
+	// Focus input when entering edit mode
+	useEffect(() => {
+		if (isEditingTitle && titleInputRef.current) {
+			titleInputRef.current.focus();
+		}
+	}, [isEditingTitle]);
+
+
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (
+				isEditingTitle &&
+				titleInputRef.current &&
+				!titleInputRef.current.contains(event.target) &&
+				!event.target.closest(".user-registration-editable-title__icon")
+			) {
+				if (onRuleUpdate) {
+					onRuleUpdate({
+						...rule,
+						title: editedTitle.trim() || rule.title,
+					});
+				}
+				setIsEditingTitle(false);
+			}
+		};
+
+		if (isEditingTitle) {
+			document.addEventListener("mousedown", handleClickOutside);
+		}
+
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [isEditingTitle, editedTitle, rule, onRuleUpdate]);
 
 	const handleToggleStatus = async () => {
 		const newStatus = !rule.enabled;
@@ -113,6 +156,38 @@ const RuleCard = ({
 		}
 	};
 
+	const handleEditTitle = (e) => {
+		e.stopPropagation();
+		if (isEditingTitle) {
+			if (titleInputRef.current) {
+				titleInputRef.current.focus();
+			}
+		} else {
+			setIsEditingTitle(true);
+		}
+	};
+
+	const handleTitleChange = (e) => {
+		setEditedTitle(e.target.value);
+	};
+
+	const handleTitleKeyDown = (e) => {
+		if (e.key === "Enter") {
+			e.preventDefault();
+			// Update rule object with new title but don't save to server
+			if (onRuleUpdate) {
+				onRuleUpdate({
+					...rule,
+					title: editedTitle.trim() || rule.title,
+				});
+			}
+			setIsEditingTitle(false);
+		} else if (e.key === "Escape") {
+			setEditedTitle(rule.title || "");
+			setIsEditingTitle(false);
+		}
+	};
+
 	const formattedId = String(rule.id).padStart(2, "0");
 	const headerClass = `user-registration-card__header ur-d-flex ur-align-items-center ur-p-5 integration-header-info accordion${
 		isExpanded ? " active" : ""
@@ -136,9 +211,25 @@ const RuleCard = ({
 				}}
 			>
 				<div className="integration-detail urcr-integration-detail">
-					<h3 className="user-registration-card__title">
-						{rule.title}
-					</h3>
+					<div className="user-registration-editable-title urcr-rule-title">
+						<input
+							ref={titleInputRef}
+							type="text"
+							className={`user-registration-editable-title__input ${
+								isEditingTitle ? "is-editing" : ""
+							}`}
+							value={editedTitle}
+							onChange={handleTitleChange}
+							onKeyDown={handleTitleKeyDown}
+							onClick={(e) => e.stopPropagation()}
+							disabled={!isEditingTitle}
+						/>
+						<span
+							className="user-registration-editable-title__icon dashicons dashicons-edit"
+							onClick={handleEditTitle}
+							style={{ cursor: "pointer" }}
+						></span>
+					</div>
 					<span className="urcr-separator"> | </span>
 					<span className="urcr-rule-id">ID: {formattedId}</span>
 					<span className="urcr-separator"> | </span>
