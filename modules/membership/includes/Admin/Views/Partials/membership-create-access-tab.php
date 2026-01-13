@@ -176,7 +176,7 @@
 								<div class="urcr-body">
 									<?php
 									$action_message = '';
-									if ( isset( $membership_rule_data['actions'][0]['message'] ) ) {
+									if ( !empty( $membership_rule_data['actions'][0]['message'] ) ) {
 										$action_message = urldecode( $membership_rule_data['actions'][0]['message'] );
 									} else {
 										$action_message = '<h3>Membership Required</h3>
