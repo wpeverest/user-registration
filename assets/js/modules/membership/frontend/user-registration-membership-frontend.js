@@ -1389,9 +1389,8 @@
 					var cleanUrl =
 						window.location.origin + window.location.pathname;
 
-					window.location.replace(
-						response.data.pg_data.thank_you_page_url
-					);
+						window.location.replace(urmf_data.thank_you_page_url);
+
 				default:
 					ur_membership_ajax_utils.show_bank_response(
 						response,

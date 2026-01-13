@@ -25,7 +25,7 @@
 				.user-registration-MyAccount-navigation-link {
 					&.is-active {
 						a {
-							border-color: var(--ur-primary-color, $primary_color);
+							border-color: $primary_color;
 						}
 					}
 				}
@@ -89,7 +89,7 @@
 				// .button-group {
 				// 	.button.user_registration_profile_picture_upload {
 				// 		background: #edeff7;
-				// 		color: var(--ur-primary-color, $primary_color);
+				// 		color: $primary_color;
 				// 		border: $border_width solid #edeff7 !important;
 				// 	}
 				// }
@@ -121,8 +121,7 @@
 				}
 			}
 
-			.user-registration-profile-fields {
-			}
+			.user-registration-profile-fields {}
 		}
 	}
 
@@ -131,7 +130,7 @@
 			padding: 36px 30px;
 		}
 
-		> h2 {
+		>h2 {
 			margin-bottom: $spacing_24px;
 		}
 
@@ -146,12 +145,12 @@
 			}
 		}
 
-		> p {
+		>p {
 			margin-bottom: $spacing_8px;
 
 			a {
 				font-weight: 500;
-				color: var(--ur-primary-color, $primary_color);
+				color: $primary_color;
 			}
 		}
 
@@ -174,7 +173,7 @@
 
 			.user-registration-EditAccountForm {
 				.ur-form-grid {
-					> p {
+					>p {
 						float: right;
 						margin-bottom: 0;
 					}
@@ -184,7 +183,7 @@
 
 			.user-registration-EditProfileForm {
 				.user-registration-profile-fields {
-					> p {
+					>p {
 						float: right;
 						margin-top: $spacing_24px;
 						margin-bottom: 0;
@@ -192,11 +191,7 @@
 						.user-registration-Button.button-primary {
 							border-radius: $border_radius_4;
 							box-shadow: none;
-							border: $border_width solid var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
-
-							&:hover {
-								border-color: var(--ur-button-background-hover-color, var(--ur-primary-color, $primary_color));
-							}
+							border: $border_width solid $primary_color;
 						}
 					}
 				}
@@ -308,7 +303,7 @@
 									appearance: none;
 									margin-right: 0;
 
-									&:checked + label {
+									&:checked+label {
 										color: #475BB2;
 										background: #EDEFF7;
 										border-color: #475BB2;
@@ -543,7 +538,7 @@
 								}
 
 								a {
-									background: var(--ur-primary-color, $primary_color);
+									background: $primary_color;
 									color: $grey-0;
 									padding: $spacing_8px $spacing_12px;
 									border-radius: $border_radius_3;
@@ -638,12 +633,13 @@
 						}
 
 						&.change-membership-button {
-							border: $border_width solid var(--ur-primary-color, $primary_color);
-							color: var(--ur-primary-color, $primary_color);
+							border: $border_width solid $primary_color;
+							color: $primary_color;
 
 							&:hover {
 								color: $white;
-								background: var(--ur-primary-color, $primary_color);
+								background: $primary_color;
+							}
 
 							.ur-front-spinner {
 								background-size: 16px 16px;
@@ -652,7 +648,7 @@
 								height: 16px;
 								margin-left: 7px;
 								float: right;
-								color: var(--ur-primary-color, $primary_color);
+								color: $primary_color;
 								display: none;
 							}
 						}
@@ -663,7 +659,7 @@
 						}
 
 						&.change-membership-button:hover {
-							background: var(--ur-primary-color, $primary_color);
+							background: $primary_color;
 							color: white;
 						}
 
@@ -728,7 +724,7 @@
 						display: flex;
 						gap: $spacing_12px;
 						background: #f7fbff;
-						border: $border_width solid var(--ur-primary-color, $primary_color);
+						border: $border_width solid $primary_color;
 						font-style: italic;
 						border-radius: $border_radius_5;
 						padding: $spacing_12px $spacing_16px;
@@ -766,15 +762,15 @@
 			width: 30px;
 			cursor: pointer;
 
-			&:checked + .slider {
-				background: var(--ur-primary-color, $primary_color);
+			&:checked+.slider {
+				background: $primary_color;
 			}
 
-			&:focus + .slider {
+			&:focus+.slider {
 				box-shadow: 0 0 1px #2196F3;
 			}
 
-			&:checked + .slider::before {
+			&:checked+.slider::before {
 				transform: translateX(14px);
 			}
 		}
@@ -891,7 +887,7 @@
 						border: 0 !important;
 					}
 
-					> a {
+					>a {
 						display: flex;
 						gap: $spacing_8px;
 
@@ -915,6 +911,12 @@
 					padding-bottom: $spacing_16px;
 					margin-bottom: $spacing_32px;
 
+					@media screen and (max-width: 600px) {
+						flex-direction: column;
+						align-items: flex-start;
+						gap: $spacing_12px;
+					}
+
 					&-content {
 						display: flex;
 						gap: $spacing_16px;
@@ -928,6 +930,12 @@
 							align-items: center;
 							justify-content: center;
 							color: #383838;
+
+							&:focus {
+								outline: none;
+								box-shadow: none;
+								border: 0;
+							}
 
 							&::before {
 								content: "";
@@ -976,6 +984,11 @@
 						justify-content: flex-start;
 						gap: $spacing_12px;
 
+						@media screen and (max-width: 600px) {
+							justify-content: flex-end;
+							flex-wrap: wrap;
+						}
+
 						.user-registration-Button {
 							padding: 0 $spacing_16px;
 							min-height: 34px;
@@ -1012,8 +1025,7 @@
 								}
 							}
 
-							&.urm-profile-change-password-btn {
-							}
+							&.urm-profile-change-password-btn {}
 						}
 					}
 				}
@@ -1029,9 +1041,6 @@
 					.user-registration-profile-fields {
 						&[data-action="view"] {
 							.user-registration-profile {
-								&-header {
-								}
-
 								&-fields__field-wrapper {
 									.ur-form-grid {
 										display: flex;
@@ -1041,6 +1050,12 @@
 
 									.ur-field-item {
 										flex: 0 0 calc(50% - 16px);
+
+										@media screen and (max-width: 768px) {
+											flex: unset;
+											width: 100%;
+											margin-bottom: $spacing_8px;
+										}
 
 										.ur-label {
 											margin: 0;
@@ -1154,7 +1169,7 @@
 
 						a {
 							font-weight: $medium;
-							color: var(--ur-primary-color, $primary_color);
+							color: $primary_color;
 						}
 					}
 
@@ -1194,7 +1209,7 @@
 													background: $grey-0;
 
 													&:focus {
-														border-color: var(--ur-primary-color, $primary_color);
+														border-color: $primary_color;
 													}
 												}
 											}
@@ -1208,21 +1223,19 @@
 									}
 
 									// Save Changes Button CSS
-									> p {
+									>p {
 										float: unset;
 										margin-top: $spacing_32px;
 										text-align: right;
 
 										.user-registration-Button.button {
-											color: var(--ur-button-text-normal-color, $white);
-											background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
-											border: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
+											background: $primary_color;
+											border: $border_width solid $primary_color;
 											border-radius: $border_radius_4;
 
 											&:hover {
-												background: var(--ur-button-background-hover-color, #38488e);
-												border-color: var(--ur-button-background-hover-color, #38488e);
-												color: var(--ur-button-text-hover-color, $white);
+												background: #38488e;
+												border-color: #38488e;
 											}
 										}
 									}
@@ -1369,13 +1382,13 @@
 												&#ur_download_payment_invoice {
 													padding: 0;
 													background: none;
-													color: var(--ur-primary-color, $primary_color);
+													color: $primary_color;
 													border-radius: 0;
 													position: relative;
 
 													&::after {
 														content: "";
-														background: var(--ur-primary-dark, darken($primary_color, 10%));
+														background: darken($primary_color, 5%);
 														width: 0px;
 														height: 1.5px;
 														position: absolute;
@@ -1386,7 +1399,7 @@
 
 													&:hover {
 														background: transparent;
-														color: var(--ur-primary-dark, darken($primary_color, 10%));
+														color: darken($primary_color, 5%);
 
 														&::after {
 															width: 100%;
@@ -1812,7 +1825,7 @@
 						}
 
 						header {
-							> h3 {
+							>h3 {
 								margin: 0;
 								font-size: 16px;
 								line-height: 24px;
@@ -1844,18 +1857,23 @@
 								font-size: 14px;
 								font-weight: $medium;
 								line-height: 22px;
+
+								&:focus {
+									outline: none;
+									box-shadow: none;
+								}
 							}
 
 							&:hover {
 								a {
 									background: #f0f0f0;
-									color: var(--ur-primary-color, $primary_color);
+									color: $primary_color;
 								}
 							}
 
 							&.is-active {
 								a {
-									color: var(--ur-primary-color, $primary_color);
+									color: $primary_color;
 									background: $blue-50;
 								}
 							}
@@ -1867,11 +1885,15 @@
 			&-content {
 				padding: $spacing_24px $spacing_24px 52px 36px;
 
-				&__header {
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
+				@media screen and (max-width: 600px) {
+					padding: 28px 24px 20px;
 				}
+
+				// &__header {
+				// 	display: flex;
+				// 	justify-content: space-between;
+				// 	align-items: center;
+				// }
 			}
 		}
 	}
@@ -1893,7 +1915,7 @@
 						transition: all .3s;
 
 						&:hover {
-							color: var(--ur-primary-color, $primary_color);
+							color: $primary_color;
 							background: $blue-50;
 							border-bottom-color: $blue-50;
 						}
@@ -1901,8 +1923,8 @@
 
 					&.is-active {
 						a {
-							border-bottom: 3px solid var(--ur-primary-color, $primary_color);
-							color: var(--ur-primary-color, $primary_color);
+							border-bottom: 3px solid $primary_color;
+							color: $primary_color;
 							background: $blue-50;
 						}
 					}
@@ -1911,6 +1933,10 @@
 
 			&-content {
 				padding: $spacing_24px 36px 52px 36px;
+
+				@media screen and (max-width: 600px) {
+					padding: 28px 24px 20px;
+				}
 			}
 		}
 	}

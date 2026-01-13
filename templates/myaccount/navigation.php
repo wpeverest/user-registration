@@ -30,30 +30,37 @@ $layout = get_option( 'user_registration_my_account_layout', 'vertical' );
 if ( 'vertical' === $layout ) {
 	?>
 	<div class="user-registration-MyAccount-navigation--wrapper">
-		<div class='user-registration-profile-header-nav'>
-			<div class='user-registration-img-container'>
-				<?php
-				$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
-				$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
-				$user_id             = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
-				if ( is_numeric( $profile_picture_url ) ) {
-					$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
-				}
-
-				$profile_picture_url = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user_id );
-				$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-				?>
-				<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" />
-			</div>
-			<header>
-				<h3>
+		<?php
+		$is_profile_pic_on_form = ! ur_option_checked( 'user_registration_disable_profile_picture', false );
+		if ( $is_profile_pic_on_form ) {
+			?>
+			<div class='user-registration-profile-header-nav'>
+				<div class='user-registration-img-container'>
 					<?php
-					$user = wp_get_current_user();
-					echo esc_html( $user->user_login );
+					$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
+					$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
+					$user_id             = ! empty( $values['user_id'] ) ? $values['user_id'] : get_current_user_id();
+					if ( is_numeric( $profile_picture_url ) ) {
+						$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
+					}
+
+					$profile_picture_url = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user_id );
+					$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
 					?>
-				</h3>
-			</header>
-		</div>
+					<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" />
+				</div>
+				<header>
+					<h3>
+						<?php
+						$user = wp_get_current_user();
+						echo esc_html( $user->user_login );
+						?>
+					</h3>
+				</header>
+			</div>
+			<?php
+		}
+		?>
 	<?php
 }
 ?>
