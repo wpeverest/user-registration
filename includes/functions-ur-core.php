@@ -9783,7 +9783,17 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 
 		foreach ( $required_pages as $option_name => $page_name ) {
 			$page_id = get_option( $option_name, 0 );
-			if ( ! $page_id || ! get_post( $page_id ) ) {
+			$is_page_missing = ! $page_id || ! get_post( $page_id );
+			
+			// For login page, also check if login redirect URL is set
+			if ( 'user_registration_login_page_id' === $option_name ) {
+				$login_redirect_url = get_option( 'user_registration_login_options_login_redirect_url', '' );
+				if ( empty( $login_redirect_url ) ) {
+					$is_page_missing = true;
+				}
+			}
+			
+			if ( $is_page_missing ) {
 				// Only include membership pages if membership module is activated
 				$is_membership_page = in_array(
 					$option_name,
