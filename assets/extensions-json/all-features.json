@@ -230,6 +230,21 @@
       ],
       "setting_url": "admin.php?page=user-registration-settings&tab=communication",
       "demo_video_url": "X2VbX1bXGxA"
+    },
+    {
+      "title": "Masteriyo",
+      "slug": "user-registration-masteriyo-course-integration",
+      "name": "User Registration Masteriyo Course Integration",
+      "image": "extensions-json/sections/icons/masteriyo.gif",
+      "excerpt": "Give the access to the selective course based on the membership.",
+      "category": "Membership",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-masteriyo-course-integration/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan": [
+        "free"
+      ],
+      "released_date": "01/01/2024",
+      "setting_url": "",
+      "demo_video_url": ""
     }
   ]
 }

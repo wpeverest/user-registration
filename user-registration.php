@@ -284,6 +284,11 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			if ( ur_check_module_activation( 'membership' ) ) {
 				/** include modules */
 				include_once UR_ABSPATH . 'modules/membership/user-registration-membership.php';
+
+				if ( ur_check_module_activation( 'masteriyo-course-integration' ) && ( is_plugin_active( 'learning-management-system/lms.php' )
+				|| is_plugin_active( 'learning-management-system-pro/lms.php' ) ) ) {
+					include_once UR_ABSPATH . 'modules/masteriyo/user-registration-masteriyo.php';
+				}
 			}
 
 			if ( ( ur_check_module_activation( 'membership' ) || ur_check_module_activation( 'payments' ) ) && ur_check_module_activation( 'payment-history' ) ) {
