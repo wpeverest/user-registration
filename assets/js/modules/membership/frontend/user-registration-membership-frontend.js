@@ -2676,7 +2676,124 @@
 					showConfirmButton: false
 				});
 			});
-		}
+
+			$(document).on('change', '#ur-local-currency-switch-currency', function(e) {
+				e.preventDefault();
+
+				var $el = $(this),
+					currency = $el.val(),
+					urmMembership = $('input[name="urm_membership"]'),
+					currencySymbols = ur_membership_frontend_localized_data.local_currencies_symbol,
+					symbol = register_events.decodeHtmlEntity( currencySymbols[currency] || '' );
+
+
+					urmMembership.each(function() {
+						var $membershipRadio = $(this),
+						localCurrencyDetails = $membershipRadio.data('urm-local-currency-details') || {},
+						calculatedAmount = parseFloat($membershipRadio.data('urm-pg-calculated-amount')) || 0,
+						discountAmount = parseFloat($membershipRadio.data("ur-discount-amount")) || 0,
+						total = discountAmount ? calculatedAmount - discountAmount : calculatedAmount,
+						membershipType = $membershipRadio.data('urm-pg-type');
+
+						if (membershipType !== 'free') {
+								if (
+									localCurrencyDetails[currency] &&
+									localCurrencyDetails[currency].hasOwnProperty('ID')
+								) {
+									$el
+									.data('urm-zone-id', localCurrencyDetails[currency].ID)
+									.attr('data-urm-zone-id', localCurrencyDetails[currency].ID);
+								}
+						var total_input = $("#ur-membership-total"),
+							$span = $membershipRadio.siblings('.ur-membership-period-span'),
+							subTotalInput = $("#ur-membership-subtotal");
+
+						var oldText = $span.text();
+						var parts = oldText.split('/');
+						var durationPart = parts[1] ? '/ ' + parts[1].trim() : '';
+
+						if (localCurrencyDetails[currency]) {
+							var newCalculatedValue = total * parseFloat(localCurrencyDetails[currency].rate);
+							var subTotalValue = newCalculatedValue;
+							newCalculatedValue = newCalculatedValue.toFixed(2);
+
+							if ( 'manual' == localCurrencyDetails[currency].pricing_method ) {
+								newCalculatedValue = localCurrencyDetails[currency].rate;
+							}
+
+							if (urmf_data.curreny_pos === "left") {
+								$span.text(symbol + newCalculatedValue + ' ' + durationPart);
+							} else {
+								$span.text(newCalculatedValue + symbol + ' ' + durationPart);
+							}
+
+							if ($membershipRadio.is(':checked')) {
+								if (urmf_data.curreny_pos === "left") {
+									total_input.text(symbol + newCalculatedValue + ' ' + durationPart);
+									subTotalInput.text(symbol + subTotalValue.toFixed(2));
+								} else {
+									total_input.text(newCalculatedValue + symbol + ' ' + durationPart);
+									subTotalInput.text(subTotalValue.toFixed(2) + symbol);
+								}
+							}
+
+							$membershipRadio.data('urm-converted-amount', newCalculatedValue);
+							$membershipRadio
+									.data('local-currency', currency )
+									.attr('data-local-currency', currency );
+						} else {
+							total = total.toFixed( 2);
+							if (urmf_data.curreny_pos === "left") {
+								$span.text(urmf_data.currency_symbol + total + ' ' + durationPart);
+								if ($membershipRadio.is(':checked')) {
+									total_input.text(urmf_data.currency_symbol + total + ' ' + durationPart);
+								}
+							} else {
+								$span.text(total + urmf_data.currency_symbol + ' ' + durationPart);
+								if ($membershipRadio.is(':checked')) {
+									total_input.text(total + urmf_data.currency_symbol + ' ' + durationPart);
+								}
+							}
+							$membershipRadio.data('urm-converted-amount', 0);
+						}
+					}
+				});
+			});
+
+		},
+		validateSwitchCurrency: function (paymentMethod) {
+
+			var $select = $('#ur-local-currency-switch-currency');
+
+			if ( !urmf_data.supported_currencies.hasOwnProperty( paymentMethod ) ) {
+				$select.find('option').show();
+				$select.val( $select.find( 'option:first' ).val() ).trigger( 'change' );
+				return;
+			}
+
+			var supportedCurrencies = urmf_data.supported_currencies[paymentMethod];
+
+			$select.find('option').each(function () {
+				var currency = $(this).val();
+
+				if (supportedCurrencies.indexOf(currency) === -1) {
+					$(this).hide();
+				} else {
+					$(this).show();
+				}
+			});
+
+			var firstVisible = $select.find('option:visible:first').val();
+			$select.val( firstVisible ).trigger( 'change' );
+		},
+		decodeHtmlEntity: function(str) {
+			var txt = document.createElement('textarea');
+			txt.innerHTML = str;
+			return txt.value;
+		},
 	};
 	register_events.init();
+	$(document).ready(function () {
+		$('#ur-local-currency-switch-currency').trigger('change');
+	});
 })(jQuery, window.ur_membership_frontend_localized_data);
