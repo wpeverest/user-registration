@@ -610,6 +610,45 @@ if ( ! function_exists( 'urm_check_user_membership_has_access' ) ) {
 	}
 }
 
+if( ! function_exists('urm_get_form_user_payments') ) {
+
+	/**
+	 * Function to get all user form payments.
+	 *
+	 * @param array $args Arguments.
+	 */
+	function urm_get_form_user_payments($args) {
+		$args['meta_key']               = 'ur_payment_status';
+		$args['meta_compare']           = 'EXISTS';
+		$args['meta_query']['relation'] = 'AND';
+
+		$user_query = new \WP_User_Query( $args );
+		$users      = $user_query->get_results();
+
+		$total_items = array();
+		if ( ! empty( $users ) ) {
+			foreach ( $users as $user ) {
+				$meta_value    = get_user_meta( $user->ID, 'ur_payment_invoices', true );
+				$total_items[] = array(
+					'user_id'        => $user->ID,
+					'display_name'   => $user->user_login,
+					'user_email'     => $user->user_email,
+					'transaction_id' => $meta_value[0]['invoice_no'] ?? '',
+					'post_title'     => $meta_value[0]['invoice_plan'] ?? '',
+					'status'         => get_user_meta( $user->ID, 'ur_payment_status', true ),
+					'created_at'     => $meta_value[0]['invoice_date'] ?? '',
+					'type'           => get_user_meta( $user->ID, 'ur_payment_type', true ),
+					'payment_method' => str_replace( '_', ' ', get_user_meta( $user->ID, 'ur_payment_method', true ) ),
+					'total_amount'   => $meta_value[0]['invoice_amount'] ?? 0,
+					'currency'       => $meta_value[0]['invoice_currency'] ?? '',
+				);
+			}
+		}
+
+		return $total_items;
+	}
+}
+
 /**
  * Deprecating function code start
  *

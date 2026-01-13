@@ -155,6 +155,47 @@
 .urcr-condition-selection-section .select2-container {
   width: 100% !important;
 }
+.urcr-condition-selection-section:has(.urcr-ur-form-field-condition) {
+  align-items: flex-start !important;
+}
+.urcr-condition-selection-section:has(.urcr-ur-form-field-condition) .urcr-condition-value .urcr-ur-form-field-condition .urcr-form-fields-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.urcr-condition-selection-section:has(.urcr-ur-form-field-condition) .urcr-condition-value .urcr-ur-form-field-condition .urcr-form-fields-list .urcr-form-field-row {
+  flex-wrap: wrap;
+}
+.urcr-condition-selection-section:has(.urcr-ur-form-field-condition) .urcr-condition-value .urcr-ur-form-field-condition .urcr-form-fields-list .urcr-form-field-row .urcr-form-field-name,
+.urcr-condition-selection-section:has(.urcr-ur-form-field-condition) .urcr-condition-value .urcr-ur-form-field-condition .urcr-form-fields-list .urcr-form-field-row .urcr-form-field-operator,
+.urcr-condition-selection-section:has(.urcr-ur-form-field-condition) .urcr-condition-value .urcr-ur-form-field-condition .urcr-form-fields-list .urcr-form-field-row .urcr-form-field-value {
+  flex: 1;
+  min-width: 47%;
+}
+.urcr-condition-selection-section:has(.urcr-ur-form-field-condition) .urcr-condition-value .urcr-ur-form-field-condition .urcr-form-fields-list .urcr-form-field-row .urcr-form-field-value {
+  min-width: 100% !important;
+}
+.urcr-condition-selection-section:has(.urcr-ur-form-field-condition) .urcr-condition-value .urcr-ur-form-field-condition .urcr-form-fields-list .urcr-form-field-row .urcr-form-field-value .urcr-condition-value-input {
+  width: 100% !important;
+}
+.urcr-condition-selection-section:has(.urcr-ur-form-field-condition) .urcr-condition-value .urcr-ur-form-field-condition .urcr-form-fields-list .urcr-form-field-row .button {
+  width: 28px !important;
+  min-width: 28px !important;
+  min-height: 26px !important;
+  background: #eeeeee !important;
+}
+.urcr-condition-selection-section:has(.urcr-ur-form-field-condition) .urcr-condition-value .urcr-ur-form-field-condition .urcr-form-fields-list .urcr-form-field-row .button.urcr-remove-field-button {
+  margin-left: 0;
+}
+.urcr-condition-selection-section:has(.urcr-ur-form-field-condition) .urcr-condition-value .urcr-ur-form-field-condition .urcr-form-fields-list .urcr-form-field-row .button.urcr-remove-field-button:disabled {
+  border-color: transparent !important;
+  background: #f6f6f6 !important;
+  cursor: not-allowed;
+}
+.urcr-condition-selection-section:has(.urcr-ur-form-field-condition) .urcr-condition-value .urcr-ur-form-field-condition .urcr-form-fields-list .urcr-form-field-row:has(.urcr-form-field-value) .urcr-form-field-name,
+.urcr-condition-selection-section:has(.urcr-ur-form-field-condition) .urcr-condition-value .urcr-ur-form-field-condition .urcr-form-fields-list .urcr-form-field-row:has(.urcr-form-field-value) .urcr-form-field-operator {
+  min-width: 100%;
+}
 
 .urcr-target-selection-section {
   display: flex;

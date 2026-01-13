@@ -59,6 +59,19 @@ class Orders {
 
 	public function add_orders_menu() {
 
+		$orders_repository = new OrdersRepository();
+		$args = array(
+			'orderby' => 'order_id',
+			'order' => 'ASC'
+		);
+
+		$total_membership_items = $orders_repository->get_all( $args );
+		$total_form_items = urm_get_form_user_payments( $args );
+
+		$total_items = array_merge( $total_membership_items, $total_form_items );
+
+		if( count($total_items) > 0 ) {
+
 		// if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
 			$orders_page = add_submenu_page(
 				'user-registration',
@@ -74,6 +87,7 @@ class Orders {
 			);
 			add_action( 'load-' . $orders_page, array( $this, 'orders_initialization' ) );
 		// }
+		}
 	}
 
 

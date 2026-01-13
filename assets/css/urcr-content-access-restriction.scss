@@ -80,11 +80,9 @@ $border-left-color_3: #0073aa;
 				cursor: pointer;
 
 				&:hover {
-					background: rgb(
-						56.4578313253,
-						72.3614457831,
-						141.5421686747
-					);
+					background: rgb(56.4578313253,
+							72.3614457831,
+							141.5421686747);
 				}
 
 				&:focus {
@@ -1697,6 +1695,7 @@ $border-left-color_3: #0073aa;
 		padding: 0 !important;
 
 		.urcr-buttons-wrapper {
+
 			.urcr-condition-dropdown-wrapper,
 			.urcr-add-group-button {
 				display: flex;
@@ -1734,7 +1733,7 @@ $not-tag: #fcdddd;
 		flex-direction: column;
 		gap: 24px;
 		flex: 1;
-		padding-right: 16px;
+		padding-right: 0;
 		box-sizing: border-box;
 
 		@media screen and (max-width: 1550px) {
@@ -1747,6 +1746,7 @@ $not-tag: #fcdddd;
 		}
 
 		&.urcr-conditional-logic-definitions {
+
 			&:has(.urcr-logic-group-rule-OR),
 			&:has(.urcr-logic-group-rule-AND),
 			&:has(.urcr-logic-group-rule-NOT) {
@@ -2415,7 +2415,7 @@ $not-tag: #fcdddd;
 			}
 		}
 
-		> .ur-d-flex {
+		>.ur-d-flex {
 			width: 100%;
 			gap: 20px;
 		}
@@ -2457,7 +2457,7 @@ $not-tag: #fcdddd;
 					width: 100%;
 				}
 
-				> select {
+				>select {
 					display: none;
 				}
 

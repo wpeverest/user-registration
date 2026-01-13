@@ -1,4 +1,5 @@
-#user-registration-review-notice, #user-registration-survey-notice {
+#user-registration-review-notice,
+#user-registration-survey-notice {
   border-left-color: #475bb2;
 }
 
@@ -9,15 +10,19 @@
 
 .user-registration-notice {
   display: flex;
-  gap: 30px;
-  padding: 16px 16px;
-  background: #f1f2f9;
-  margin: 16px 0;
+  gap: 24px;
+  padding: 20px;
+  background: #ffffff;
+  position: relative;
+  margin: 16px 0 !important;
   box-shadow: none;
   border-radius: 4px;
   border: 1px solid #e1e1e1;
   border-left-width: 4px;
   border-left-color: #475bb2;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 .user-registration-notice .notice-dismiss {
   margin-left: 2px;
@@ -35,14 +40,14 @@
   position: relative;
 }
 .user-registration-notice .user-registration-notice-thumbnail img {
-  border-radius: 5px;
+  border-radius: 4px;
   vertical-align: middle;
   width: 100%;
 }
 .user-registration-notice .user-registration-notice-text {
   flex: 1;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 6px;
   overflow: hidden;
 }
@@ -60,14 +65,21 @@
 .user-registration-notice .user-registration-notice-text .user-registration-notice-header h3 {
   font-size: 18px;
   margin: 0;
-  line-height: 1;
+  line-height: 28px;
 }
 .user-registration-notice .user-registration-notice-text .user-registration-notice-header .close-btn {
-  font-size: 30px;
-  color: darkgray;
-  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  font-size: 28px;
+  line-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a9a9a9;
   text-decoration: none;
-  position: relative;
   padding: 0;
   margin: 0;
 }
@@ -94,10 +106,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 12px;
 }
-.user-registration-notice .user-registration-notice-links a {
-  position: relative;
+.user-registration-notice .user-registration-notice-links .notice-dismiss {
+  min-height: 32px;
+  margin-left: 0;
+  padding: 0;
+  align-content: center;
+  position: unset;
   text-decoration: none;
+  font-weight: 400;
+  color: #9ca3af;
 }
 .user-registration-notice .user-registration-notice-links .user-registration-notice-ul {
   display: flex;
@@ -116,9 +135,19 @@
   gap: 6px;
   text-decoration: none;
   position: relative;
+  background: #eaeaea;
+  border-color: #eaeaea;
+  color: #4b5563;
+  font-weight: 500;
+  border-radius: 4px;
 }
 .user-registration-notice .user-registration-notice-links .user-registration-notice-ul li a span {
   margin: 0;
+}
+.user-registration-notice .user-registration-notice-links .user-registration-notice-ul li:first-child a {
+  background: #475bb2;
+  border-color: #475bb2;
+  color: #ffffff;
 }
 .user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-primary {
   background: #475bb2;
@@ -128,11 +157,6 @@
   background: #2e44a1;
   border-color: #2e44a1;
   color: #ffffff;
-}
-.user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-secondary {
-  border-color: #475bb2;
-  color: #475bb2;
-  box-shadow: none;
 }
 .user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-secondary:focus, .user-registration-notice .user-registration-notice-links .user-registration-notice-ul .button-secondary:hover {
   background: #2e44a1;

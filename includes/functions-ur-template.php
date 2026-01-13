@@ -1357,14 +1357,41 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 			}
 		}
 
-		// No endpoint found? Default to dashboard.
-		ur_get_template(
-			'myaccount/dashboard.php',
-			array(
-				'current_user'   => get_user_by( 'id', get_current_user_id() ),
-				'endpoint_label' => ur_get_account_menu_items()['dashboard'],
-			)
-		);
+		if (ur_string_to_bool( get_option('urm_is_new_installation', false) ) ) {
+			$user_id = get_current_user_id();
+			$form_id = ur_get_form_id_by_userid( $user_id );
+			$user_data = get_userdata( $user_id );
+			$user_data = $user_data->data;
+
+			$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
+
+			if ( ! empty( $form_data_array ) ) {
+				// No endpoint found? Default to dashboard.
+				ur_get_template(
+					'myaccount/form-edit-profile.php',
+					array(
+						'current_user'   => get_user_by( 'id', get_current_user_id() ),
+						'endpoint_label' => ur_get_account_menu_items()['edit-profile'],
+					)
+				);
+			} else {
+				ur_get_template(
+					'myaccount/form-edit-profile-non-urm-user.php',
+					array(
+						// 'endpoint_label' => ur_get_account_menu_items()['edit-profile'],
+					)
+				);
+			}
+		} else {
+			// No endpoint found? Default to dashboard.
+			ur_get_template(
+				'myaccount/dashboard.php',
+				array(
+					'current_user'   => get_user_by( 'id', get_current_user_id() ),
+					'endpoint_label' => ur_get_account_menu_items()['dashboard'],
+				)
+			);
+		}
 	}
 }
 
