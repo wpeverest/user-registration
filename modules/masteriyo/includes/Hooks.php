@@ -463,7 +463,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 					$text = __( 'Join Now', 'learning-management-system' );
 				}
 
-				if ( masteriyo_is_single_course_page() && ! $this->check_course_access( $course_obj ) ) {
+				if ( masteriyo_is_single_course_page() && ! Helper::check_course_access( $course_obj ) ) {
 					$text = __( 'Upgrade Now', 'learning-management-system' );
 				}
 			}

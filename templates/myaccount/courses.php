@@ -19,6 +19,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+$course_portal_page_url = '';
+
+$course_portal_page = get_page_by_path( 'course-portal' );
+
+if ( $course_portal_page ) {
+	// Get the permalink (URL) of the course_portal_page
+	$course_portal_page_url = get_permalink( $course_portal_page->ID );
+}
 
 ?>
 
@@ -33,5 +41,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 </div>
 
 <div class="urm-masteriyo-course-portal">
-<p><?php echo esc_html__( 'For more course details like quiz attempts, assignments and more, visit: ', 'user-registration' ); ?><a target="_blank" href="<?php echo esc_url( get_permalink( get_option( 'user_registration_myaccount_page_id' ) ) . 'urm-course-portal' ); ?>"><span><?php echo esc_html__( 'Course Portal', 'user-registration' ); ?></span></a></p>
+<p><?php echo esc_html__( 'For more course details like quiz attempts, assignments and more, visit: ', 'user-registration' ); ?><a target="_blank" href="<?php echo esc_url( $course_portal_page_url ); ?>"><span><?php echo esc_html__( 'Course Portal', 'user-registration' ); ?></span></a></p>
 </div>
