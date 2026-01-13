@@ -145,7 +145,7 @@
 				$converted_amount = 0;
 				$final_period     = 0;
 
-				if ( isset( $enabled_zones[ $local_currency_by_country ] ) ) {
+				if ( ! empty( $local_currency_by_country ) && isset( $enabled_zones[ $local_currency_by_country ] ) ) {
 					if ( ! empty( $enabled_zones[ $local_currency_by_country ]['pricing_method'] ) && 'manual' == $enabled_zones[ $local_currency_by_country ]['pricing_method'] ) {
 						$converted_amount = $enabled_zones[ $local_currency_by_country ]['rate'];
 					} else {

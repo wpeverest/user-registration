@@ -9863,7 +9863,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		foreach ( $required_pages as $option_name => $page_name ) {
 			$page_id = get_option( $option_name, 0 );
 			$is_page_missing = ! $page_id || ! get_post( $page_id );
-			
+
 			// For login page, also check if login redirect URL is set
 			if ( 'user_registration_login_page_id' === $option_name ) {
 				$login_redirect_url = get_option( 'user_registration_login_options_login_redirect_url', '' );
@@ -9871,7 +9871,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 					$is_page_missing = true;
 				}
 			}
-			
+
 			if ( $is_page_missing ) {
 				// Only include membership pages if membership module is activated
 				$is_membership_page = in_array(
@@ -11345,5 +11345,47 @@ if ( ! function_exists( 'ur_get_currency_by_key' ) ) {
 		$name = sprintf( '%s', $curreny_details[ $currency_key ] );
 
 		return apply_filters( 'ur_get_currency_by_key', $name );
+	}
+}
+
+if ( ! function_exists( 'ur_format_country_field_data' ) ) {
+
+	/**
+	 * Format country field data for display.
+	 *
+	 * @param string $country_code The country code.
+	 * @param string $state_code   The state code.
+	 *
+	 * @return string Formatted country and state name.
+	 */
+	function ur_format_country_field_data( $country_code, $state_code ) {
+		$country_list = \UR_Form_Field_Country::get_instance()->get_country();
+
+		$country_name = isset( $country_list[ $country_code ] )
+			? $country_list[ $country_code ]
+			: $country_code;
+
+		$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
+		$state_list  = json_decode( $states_json, true );
+
+		$states = isset( $state_list[ $country_code ] ) ? $state_list[ $country_code ] : [];
+
+		$state_name = isset( $states[ $state_code ] )
+			? $states[ $state_code ]
+			: $state_code;
+
+		$final = array();
+
+		if ( ! empty( $country_name ) ) {
+			$final[] = $country_name;
+		}
+
+		if ( ! empty( $state_name ) ) {
+			$final[] = $state_name;
+		}
+
+		$value = implode( ', ', $final );
+
+		return $value;
 	}
 }
