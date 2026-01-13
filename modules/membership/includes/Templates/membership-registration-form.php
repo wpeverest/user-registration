@@ -41,6 +41,7 @@ use WPEverest\URMembership\Local_Currency\Admin\Api;
 			?>
 		</span>
 		<?php
+		if ( is_plugin_active( 'user-registration-pro/user-registration.php' ) && ur_check_module_activation( 'local-currency' ) ) {
 			$pricing_zone        = CoreFunctions::ur_get_all_pricing_zone_data();
 			$switch_currency     = ur_string_to_bool( get_option( 'user_registration_switch_local_currency_option', 0 ) );
 			$enable_geolocation  = ur_string_to_bool( get_option( 'user_registration_local_currency_by_geolocation', '0') );
@@ -73,6 +74,7 @@ use WPEverest\URMembership\Local_Currency\Admin\Api;
 					?>
 				</select>
 			<?php
+		}
 			endif;
 		if ( ! empty( $memberships ) ) :
 			if ( is_user_logged_in() ) {
@@ -90,8 +92,8 @@ use WPEverest\URMembership\Local_Currency\Admin\Api;
 				$local_currency_details = array();
 				$enabled_zones			= array();
 				if (
-					class_exists( '\WPEverest\URMembership\Local_Currency\Admin\CoreFunctions' ) &&
-					method_exists( '\WPEverest\URMembership\Local_Currency\Admin\CoreFunctions', 'ur_get_local_currency_details_for_membership' )
+					is_plugin_active( 'user-registration-pro/user-registration.php' ) &&
+					ur_check_module_activation( 'local-currency' )
 				) {
 					$local_currency_details = CoreFunctions::ur_get_local_currency_details_for_membership( $membership['ID'] );
 
