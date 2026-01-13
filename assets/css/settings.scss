@@ -1053,6 +1053,10 @@ body {
 				margin-bottom: 0;
 			}
 
+			p.ur-p-tag:last-of-type {
+				margin-bottom: 0;
+			}
+
 			&:has(.ur-upgrade--link) {
 				p.ur-p-tag {
 					margin-bottom: 0;
@@ -2280,30 +2284,34 @@ body {
 }
 
 .ur-connection-status--active {
-  display: inline-block;
-  white-space: nowrap;
-  vertical-align: middle;
+	display: inline-block;
+	white-space: nowrap;
+	vertical-align: middle;
 
-  padding: 4px 8px;
+	padding: 4px 8px;
 
-  font-size: 14px;
-  font-weight: 400;
-  text-transform: capitalize;
+	font-size: 14px;
+	font-weight: 400;
+	text-transform: capitalize;
 
-  color: #2f855a;        /* green-600 */
-  background-color: #f0fff4; /* green-50 */
+	color: #2f855a;
+	/* green-600 */
+	background-color: #f0fff4;
+	/* green-50 */
 
-  border-radius: 6px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+	border-radius: 6px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
+
 .ur-connection-status--active::after {
-  content: 'Connected';
+	content: 'Connected';
 }
 
 .user-registration-settings-parts li {
 	padding: 2px 4px;
 	color: black !important;
 }
+
 .user-registration-settings-parts .current {
 	color: #475BB2;
 	border-bottom: 1px solid #475BB2;
