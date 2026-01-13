@@ -19,6 +19,20 @@ const ConditionRow = ({
 	const [value, setValue] = useState(condition.conditionValue || "");
 	const selectRef = useRef(null);
 
+	// Get the selected condition option to access operator_label and placeholder
+	const allOptions = getFilteredConditionOptions(
+		isMigrated,
+		ruleType,
+		isFirstCondition,
+		condition.value,
+		true
+	);
+	const selectedOption = allOptions.find(
+		(opt) => opt.value === condition.value
+	);
+	const operatorLabel = selectedOption?.operator_label || operator;
+	const placeholder = selectedOption?.placeholder || "";
+
 	useEffect(() => {
 		onUpdate({
 			...condition,
@@ -110,6 +124,9 @@ const ConditionRow = ({
 								))}
 							</select>
 						</div>
+						<div className="urcr-condition-operator ur-align-self-center">
+							<span>{operatorLabel}</span>
+						</div>
 						<div className="urcr-condition-value ur-flex-1">
 							<URFormFieldCondition
 								condition={condition}
@@ -149,11 +166,11 @@ const ConditionRow = ({
 						</select>
 					</div>
 
-					{condition.value !== "user_registered_date" && (
-						<div className="urcr-condition-operator">
-							<span>{operator}</span>
-						</div>
-					)}
+					
+					<div className="urcr-condition-operator">
+						<span>{operatorLabel}</span>
+					</div>
+					
 
 					<div className="urcr-condition-value">
 						<ConditionValueInput
@@ -164,6 +181,7 @@ const ConditionRow = ({
 							onChange={handleValueChange}
 							uniqueId={condition.id}
 							disabled={isLocked}
+							placeholder={placeholder}
 						/>
 					</div>
 				</div>

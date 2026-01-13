@@ -8,7 +8,7 @@ import CheckboxRadioInput from "./CheckboxRadioInput";
 import PeriodInput from "./PeriodInput";
 import DateRangeInput from "./DateRangeInput";
 
-const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId, disabled = false }) => {
+const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId, disabled = false, placeholder = "" }) => {
 	const urcrData = getURCRLocalizedData();
 	
 	// Normalize initial value: for checkbox, ensure it's a scalar; for multiselect, ensure it's an array
@@ -305,6 +305,9 @@ const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId,
 					className="components-text-control__input urcr-condition-value-input urcr-condition-value-number"
 					value={inputValue}
 					onChange={(e) => handleChange(e.target.value)}
+					placeholder={placeholder || __("Enter value", "user-registration")}
+					disabled={disabled}
+					min={field === "post_count" ? 0 : undefined}
 				/>
 			);
 
@@ -316,7 +319,7 @@ const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId,
 					className="components-text-control__input urcr-condition-value-input urcr-condition-value-text"
 					value={inputValue}
 					onChange={(e) => handleChange(e.target.value)}
-					placeholder={__("Enter value", "user-registration")}
+					placeholder={placeholder || __("Enter value", "user-registration")}
 					disabled={disabled}
 				/>
 			);
