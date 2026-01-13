@@ -334,6 +334,11 @@ html {
 		#urm-total_container {
 			position: relative;
 			margin-top: $spacing_32px;
+			padding: $spacing_14px;
+			border-radius: $border_radius_4;
+			border: $border_width dashed $primary_color;
+			background: #f8f8fa;
+			gap: $spacing_20px;
 
 			&::before {
 				content: "";
@@ -345,15 +350,15 @@ html {
 				left: 0;
 			}
 
-			.urm-membership-total-value {
+			.urm-membership-total-value, .urm-membership-sub-total-value, .urm-membership-tax-value, .urm-membership-coupons-value {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				gap: $spacing_20px;
-				padding: $spacing_14px;
-				border-radius: $border_radius_4;
-				border: $border_width dashed $primary_color;
-				background: #f8f8fa;
+				// gap: $spacing_20px;
+				// padding: $spacing_14px;
+				// border-radius: $border_radius_4;
+				// border: $border_width dashed $primary_color;
+				// background: #f8f8fa;
 			}
 
 			.ur_membership_input_label {
@@ -1368,7 +1373,6 @@ html {
 			}
 		}
 	}
-
 	.ur-bank-details {
 		width: auto;
 		margin: 30px 0;

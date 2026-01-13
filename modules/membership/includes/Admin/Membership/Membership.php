@@ -939,6 +939,7 @@ class Membership {
 				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
 				'update_order_nonce'  => wp_create_nonce( 'ur_membership_update_order' ),
 				'update_order_action' => 'user_registration_membership_update_membership_order',
+				'validate_payment_currency_nonce' => wp_create_nonce( 'validate_payment_currency_nonce')
 			)
 		);
 	}

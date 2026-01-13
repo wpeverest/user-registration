@@ -31,6 +31,7 @@ use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 use WPEverest\URMembership\Admin\Services\OrderService;
 use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -2598,11 +2599,8 @@ class AJAX {
 	 * @since 6.1.0
 	 */
 	public static function validate_payment_currency(){
-		check_ajax_referer( 'validate_local_payment_currency', 'security' );
-
 		$zone_id = ! empty( sanitize_text_field( wp_unslash( $_POST[ 'zone_id' ] ) ) ) ? sanitize_text_field( wp_unslash( $_POST[ 'zone_id' ] ) ) : '';
 
-		error_log( print_r( $zone_id, true ) );
 		if ( empty( $zone_id ) ) {
 			wp_send_json_success(
 				array(
