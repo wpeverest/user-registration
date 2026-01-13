@@ -1332,10 +1332,14 @@ class UR_Admin_Settings {
 									$settings .= '</div>';
 									break;
 
-                  	case 'local_currency':
+								case 'local_currency':
 									ob_start();
 									CoreFunctions::render_local_currencies_table();
 									$settings .= ob_get_clean();
+									break;
+
+								case 'tax_table':
+									$settings .= ur_render_tax_table( $value );
 									break;
 
 								case 'duration_input':
