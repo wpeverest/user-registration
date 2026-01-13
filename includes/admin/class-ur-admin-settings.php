@@ -479,6 +479,13 @@ class UR_Admin_Settings {
 							}
 							$settings .= '</h3>';
 
+							if ( 'local_currency' === $id ) {
+								$settings .= '<div class="user-registration-list-table-header" style="justify-content: end;">';
+
+								$settings .= '<a href="#" class="page-title-action ur-local-currency-add-pricing-zone" data-action="add">' . esc_html__( 'Add Pricing Zone', 'user-registration' ) . '</a>';
+								$settings .= '</div>';
+							}
+
 							if ( ! empty( $section['button'] ) ) {
 								if ( isset( $section['button']['button_type'] ) && 'upgrade_link' === $section['button']['button_type'] ) {
 									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="ur-upgrade--link" target="_blank">' . '<span>' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span></a>';
@@ -1324,13 +1331,13 @@ class UR_Admin_Settings {
 									}
 									$settings .= '</div>';
 									break;
-                  
+
                   	case 'local_currency':
 									ob_start();
 									CoreFunctions::render_local_currencies_table();
 									$settings .= ob_get_clean();
 									break;
-                  
+
 								case 'duration_input':
 									$unit_id              = isset( $value['unit_id'] ) ? $value['unit_id'] : '';
 									$value_id             = isset( $value['value_id'] ) ? $value['value_id'] : '';
