@@ -4099,6 +4099,17 @@ a.button.ur-smart-tags-list-button {
 						margin: 0;
 						border: $border_width solid transparent;
 						border-radius: 0;
+						field-sizing: content;
+
+						@media screen and (max-width: 1199px) {
+							field-sizing: unset;
+							width: 100%;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							white-space: nowrap;
+							max-width: 100%;
+							box-sizing: border-box;
+						}
 
 						&.is-editing {
 							font-size: 18px;

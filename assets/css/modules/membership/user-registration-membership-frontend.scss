@@ -403,13 +403,9 @@ html {
 
 			#payment-gateway-body {
 				.ur-membership-payment-gateway-lists {
-					// display: grid;
 					display: flex;
 					align-items: center;
 					gap: $spacing_20px;
-					// grid-template-columns: repeat(3, 1fr);
-					// grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-					// margin-top: 4px;
 
 					@media screen and (max-width: 600px) {
 						flex-direction: column;
@@ -424,9 +420,9 @@ html {
 				.ur_membership_input_label {
 					border-radius: $border_radius_4;
 					border: $border_width solid $border-color;
-					padding: $spacing_14px;
+					padding: $spacing_14px !important;
 					height: 48px;
-					margin-bottom: $spacing_20px;
+					margin-bottom: $spacing_20px !important;
 					justify-content: center;
 					flex: 1;
 					align-items: center;

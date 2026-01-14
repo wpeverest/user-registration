@@ -34,16 +34,10 @@
 
 		.user-registration-MyAccount-content {
 			flex: 1;
-
-			@media screen and (max-width: 1199px) {
-				flex: unset;
-				max-width: 76%;
-				width: 100%;
-			}
+			width: 100% !important;
 
 			@media screen and (max-width: 992px) {
 				padding: $spacing_24px;
-				max-width: 100%;
 			}
 		}
 	}
@@ -114,14 +108,14 @@
 			}
 
 			.edit-profile {
+
 				.user-registration-profile-header,
 				h2 {
 					text-align: center;
 				}
 			}
 
-			.user-registration-profile-fields {
-			}
+			.user-registration-profile-fields {}
 		}
 	}
 
@@ -130,7 +124,7 @@
 			padding: 36px 30px;
 		}
 
-		> h2 {
+		>h2 {
 			margin-bottom: $spacing_24px;
 		}
 
@@ -145,7 +139,7 @@
 			}
 		}
 
-		> p {
+		>p {
 			margin-bottom: $spacing_8px;
 
 			a {
@@ -155,7 +149,7 @@
 		}
 
 		.ur-frontend-form {
-			padding: 0 !important;
+			padding: $spacing_20px;
 
 			&:has(.user-registration-PrivacyTab) {
 				h2 {
@@ -173,7 +167,7 @@
 
 			.user-registration-EditAccountForm {
 				.ur-form-grid {
-					> p {
+					>p {
 						float: right;
 						margin-bottom: 0;
 					}
@@ -182,7 +176,7 @@
 
 			.user-registration-EditProfileForm {
 				.user-registration-profile-fields {
-					> p {
+					>p {
 						float: right;
 						margin-top: $spacing_24px;
 						margin-bottom: 0;
@@ -190,7 +184,7 @@
 						.user-registration-Button.button-primary {
 							border-radius: $border_radius_4;
 							box-shadow: none;
-							border: $border_width solid $primary_color;
+							// border: $border_width solid $primary_color;
 						}
 					}
 				}
@@ -261,8 +255,7 @@
 								label {
 									display: block;
 									border-radius: 3px;
-									padding: $spacing_8px $spacing_12px
-										$spacing_8px $spacing_34px;
+									padding: $spacing_8px $spacing_12px $spacing_8px $spacing_34px;
 									border: 1px solid #999999;
 									cursor: pointer;
 									font-size: 14px;
@@ -291,22 +284,14 @@
 										height: 0;
 										border: none;
 										transition:
-											0.1s width
-												cubic-bezier(
-													0.075,
-													0.82,
-													0.165,
-													1
-												)
-												0s,
-											0.3s width
-												cubic-bezier(
-													0.075,
-													0.82,
-													0.165,
-													2
-												)
-												0.1s;
+											0.1s width cubic-bezier(0.075,
+												0.82,
+												0.165,
+												1) 0s,
+											0.3s width cubic-bezier(0.075,
+												0.82,
+												0.165,
+												2) 0.1s;
 									}
 								}
 
@@ -319,7 +304,7 @@
 									appearance: none;
 									margin-right: 0;
 
-									&:checked + label {
+									&:checked+label {
 										color: #475bb2;
 										background: #edeff7;
 										border-color: #475bb2;
@@ -701,8 +686,7 @@
 				#membership-error-div {
 					width: 100%;
 					text-align: left;
-					padding: $spacing_8px $spacing_12px $spacing_8px
-						$spacing_16px;
+					padding: $spacing_8px $spacing_12px $spacing_8px $spacing_16px;
 					font-size: 14px;
 					font-weight: $medium;
 					display: none;
@@ -779,15 +763,15 @@
 			width: 30px;
 			cursor: pointer;
 
-			&:checked + .slider {
+			&:checked+.slider {
 				background: $primary_color;
 			}
 
-			&:focus + .slider {
+			&:focus+.slider {
 				box-shadow: 0 0 1px #2196f3;
 			}
 
-			&:checked + .slider::before {
+			&:checked+.slider::before {
 				transform: translateX(14px);
 			}
 		}
@@ -886,6 +870,7 @@
 
 // My Account Page Design Revamp CSS
 #user-registration {
+
 	&.vertical,
 	&.horizontal {
 		border-radius: $border_radius_16;
@@ -901,7 +886,7 @@
 						border: 0 !important;
 					}
 
-					> a {
+					>a {
 						display: flex;
 						gap: $spacing_8px;
 
@@ -1013,6 +998,7 @@
 							font-size: 14px;
 							line-height: 24px;
 							color: #4e4e4e;
+							background: $white;
 							font-weight: $medium;
 							box-shadow: none;
 							text-decoration: none;
@@ -1039,8 +1025,7 @@
 								}
 							}
 
-							&.urm-profile-change-password-btn {
-							}
+							&.urm-profile-change-password-btn {}
 						}
 					}
 				}
@@ -1218,13 +1203,9 @@
 
 												.input-text {
 													height: 38px;
-													padding: $spacing_8px
-														$spacing_10px
-														$spacing_8px
-														$spacing_14px;
+													padding: $spacing_8px $spacing_10px $spacing_8px $spacing_14px;
 													border-radius: $border_radius_4;
-													border: $border_width solid
-														#e1e1e1;
+													border: $border_width solid #e1e1e1;
 													background: $grey-0;
 
 													&:focus {
@@ -1242,15 +1223,14 @@
 									}
 
 									// Save Changes Button CSS
-									> p {
+									>p {
 										float: unset;
 										margin-top: $spacing_32px;
 										text-align: right;
 
 										.user-registration-Button.button {
 											background: $primary_color;
-											border: $border_width solid
-												$primary_color;
+											border: $border_width solid $primary_color;
 											border-radius: $border_radius_4;
 
 											&:hover {
@@ -1408,25 +1388,20 @@
 
 													&::after {
 														content: "";
-														background: darken(
-															$primary_color,
-															5%
-														);
+														background: darken($primary_color,
+																5%);
 														width: 0px;
 														height: 1.5px;
 														position: absolute;
 														bottom: -2px;
 														left: 0;
-														transition: all 0.3s
-															ease-in-out;
+														transition: all 0.3s ease-in-out;
 													}
 
 													&:hover {
 														background: transparent;
-														color: darken(
-															$primary_color,
-															5%
-														);
+														color: darken($primary_color,
+																5%);
 
 														&::after {
 															width: 100%;
@@ -1534,7 +1509,7 @@
 						// border-collapse: separate;
 						border-collapse: collapse;
 						border-spacing: 0;
-						// background: $white;
+						background: $white;
 						// border-radius: 8px;
 						border-radius: 0;
 						overflow: hidden;
@@ -1625,8 +1600,7 @@
 
 													.menu-trigger {
 														padding: 0;
-														border: $border_width
-															solid transparent;
+														border: $border_width solid transparent;
 														border-radius: 3px;
 														background: transparent;
 														width: 24px;
@@ -1641,8 +1615,7 @@
 															width: 18px;
 															height: 18px;
 															fill: #4e4e4e;
-															transition: all 0.3s
-																ease;
+															transition: all 0.3s ease;
 														}
 
 														&:hover {
@@ -1659,13 +1632,10 @@
 														flex-direction: column;
 														z-index: 50;
 														background: #fff;
-														border: 1px solid
-															#d1d5db;
-														box-shadow: 0 4px 16px
-															rgba(0, 0, 0, 0.12);
+														border: 1px solid #d1d5db;
+														box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 														opacity: 1;
-														transition: all 0.15s
-															ease;
+														transition: all 0.15s ease;
 														min-width: 210px;
 														border-radius: 4px;
 														padding: 8px;
@@ -1677,8 +1647,7 @@
 														a {
 															color: #4b5563;
 															text-decoration: none;
-															transition: all
-																0.15s ease;
+															transition: all 0.15s ease;
 															font-size: 14px;
 															line-height: 20px;
 															font-weight: 400;
@@ -1714,8 +1683,7 @@
 											justify-content: center;
 											text-decoration: none;
 											gap: $spacing_6px;
-											padding: 0 $spacing_16px 0
-												$spacing_14px;
+											padding: 0 $spacing_16px 0 $spacing_14px;
 											background: $white;
 											border: 1.5px solid #dee2e6;
 											border-radius: $border_radius_4;
@@ -1850,16 +1818,20 @@
 						border-bottom: $border_width solid #e2e8f0;
 
 						.user-registration-img-container {
+							width: 42px;
+							height: 42px;
+							border-radius: 50%;
+							border: 2px solid white;
+							overflow: hidden;
+
 							img {
-								width: 42px;
-								height: 42px;
-								border-radius: 50%;
-								border: 2px solid $white;
+								width: 100%;
+								height: 100%;
 							}
 						}
 
 						header {
-							> h3 {
+							>h3 {
 								margin: 0;
 								font-size: 16px;
 								line-height: 24px;
@@ -1884,8 +1856,7 @@
 							transition: all 0.3s;
 
 							a {
-								padding: $spacing_12px $spacing_12px
-									$spacing_12px $spacing_20px;
+								padding: $spacing_12px $spacing_12px $spacing_12px $spacing_20px;
 								border-radius: $border_radius_4;
 								border-left: 3px solid transparent;
 								color: #4e4e4e;
@@ -2077,74 +2048,54 @@ body {
 	text-align: left;
 }
 
-.rtl
-	#user-registration.vertical
-	.user-registration-MyAccount-content__header
-	h1,
-.rtl
-	.ur-frontend-form.login
-	.ur-form-row
-	.ur-form-grid
-	.user-registration-form-row
-	label,
+.rtl #user-registration.vertical .user-registration-MyAccount-content__header h1,
+.rtl .ur-frontend-form.login .ur-form-row .ur-form-grid .user-registration-form-row label,
 .rtl .ur-frontend-form .ur-form-row .ur-form-grid label.ur-label,
 .rtl .ur-frontend-form .ur-form-row .ur-form-grid legend.ur-label,
 .rtl .user-registration-logout-swal2-container .swal2-header .swal2-title,
-.rtl
-	.user-registration-logout-swal2-container
-	.swal2-header
-	.swal2-content
-	.swal2-content,
-.rtl
-	.user-registration-MyAccount-content
-	table.user-registration-email__entries
-	td {
+.rtl .user-registration-logout-swal2-container .swal2-header .swal2-content .swal2-content,
+.rtl .user-registration-MyAccount-content table.user-registration-email__entries td {
 	text-align: right;
 }
 
-.rtl
-	#user-registration
-	.user-registration-MyAccount-content
-	.user-registration-membership-content
-	.membership-row
-	.membership-label {
+.rtl #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row .membership-label {
 	min-width: 0px;
 }
 
 .user-registration-myaccount-notice-box {
-	background-color: #f4f6ff;
-	border: 1px solid #d6e0ff;
-	border-radius: 8px;
-	padding: 20px;
-	margin-bottom: 32px;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+	background: #f4f6ff;
+	// border: 1px solid #d6e0ff;
+	border-radius: 7px;
+	padding: $spacing_20px;
+	margin-bottom: $spacing_24px;
+	// box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 	position: relative;
 	border-left: 4px solid #6669f1;
 	text-align: left;
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
+	gap: $spacing_12px;
 
 	&--title {
 		display: flex;
 		align-items: center;
+		gap: $spacing_12px;
 
 		&-icon {
-			margin-right: 0.75rem;
+			display: flex;
 
 			.notice-icon {
 				width: 20px;
 				height: 20px;
-				flex-shrink: 0;
 				color: #6366f1;
 			}
 		}
 
 		&-text {
 			h2 {
-				margin-top: 0;
-				margin-bottom: 0.5rem !important;
+				margin: 0 !important;
 				font-size: 16px !important;
+				line-height: 26px !important;
 				font-weight: 600 !important;
 				color: #333 !important;
 			}
@@ -2154,23 +2105,30 @@ body {
 	p {
 		color: #444;
 		font-size: 15px;
-		line-height: 1.5;
+		line-height: 25px;
+		margin: 0 !important;
 
 		&.pro-tip,
 		&.existing-users {
+			display: flex;
+			align-items: center;
+			gap: $spacing_6px;
+
 			strong {
-				font-weight: bolder !important;
+				font-weight: 700 !important;
 			}
 		}
 
-		&.pro-tip::before {
-			content: "💡";
-			margin-right: 0.5rem;
+		&.pro-tip {
+			&::before {
+				content: "💡";
+			}
 		}
 
-		&.existing-users::before {
-			content: "👤";
-			margin-right: 0.5rem;
+		&.existing-users {
+			&::before {
+				content: "👤";
+			}
 		}
 	}
 
@@ -2239,7 +2197,7 @@ body {
 					position: relative;
 					width: 32px;
 					height: 32px;
-					padding: 0;
+					padding: 0 !important;
 					margin: 0;
 					border-radius: 50%;
 					border: $border_width solid #edeff7;

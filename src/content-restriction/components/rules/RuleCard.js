@@ -210,7 +210,7 @@ const RuleCard = ({
 					}
 				}}
 			>
-				<div className="integration-detail urcr-integration-detail">
+				<div className="integration-detail urcr-integration-detail">					
 					<div className="user-registration-editable-title urcr-rule-title">
 						<input
 							ref={titleInputRef}
@@ -253,9 +253,13 @@ const RuleCard = ({
 							<span className="urcr-toggle-loader spinner is-active"></span>
 						)}
 					</div>
+					
+					
+					{/* <span className="urcr-separator"> | </span> */}
+					
 				</div>
 
-				<div className="integration-action urcr-integration-action">
+				<div className="integration-action urcr-integration-action">				
 					<div className="urcr-membership-tabs">
 						<button
 							className={`urcr-tab-button ${

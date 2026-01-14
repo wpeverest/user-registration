@@ -251,6 +251,73 @@ $border-left-color_3: #0073aa;
 			urcr-highlight-pulse 2s ease-in-out 0.5s;
 		opacity: 1;
 	}
+
+	.integration-detail {
+		.user-registration-editable-title {
+			position: relative;
+			align-items: center;
+
+			&__input {
+				border: 1px solid transparent;
+				padding: 0 0 0 12px;
+				border-radius: 0 4px 4px 0;
+				field-sizing: content;
+				flex: 1;
+
+				@media screen and (max-width: 1199px) {
+					field-sizing: unset;
+					width: 100%;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					max-width: 100%;
+					box-sizing: border-box;
+				}
+
+				&.is-editing {
+					border-color: #475bb2;
+				}
+			}
+
+			&__icon {
+				width: 38px;
+				height: 38px;
+				flex: unset;
+				border-radius: 4px;
+				background: #EDEFF7;
+				transition: all .3s ease;
+
+				&::before {
+					font-size: 20px;
+					color: #646970;
+					transition: all .3s ease;
+				}
+
+				&:hover {
+					&::before {
+						color: #475bb2;
+					}
+				}
+			}
+
+			&:has(.is-editing) {
+				.user-registration-editable-title__input {
+					padding-right: 12px;
+				}
+
+				.user-registration-editable-title__icon {
+					background: #475bb2;
+					transition: all .3s ease;
+
+					&::before {
+						font-size: 20px;
+						color: #ffffff;
+						transition: all .3s ease;
+					}
+				}
+			}
+		}
+	}
 }
 
 @keyframes urcr-highlight-fade-in {
