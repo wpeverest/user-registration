@@ -374,12 +374,44 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 				case 'user_registered_date':
 					if ( $user->ID ) {
 						$registered_date = ! empty( $user->data->user_registered ) ? $user->data->user_registered : '';
-						$date_range      = ! empty( $logic_map['value'] ) ? explode( 'to', (string) $logic_map['value'] ) : array();
-						$start_date      = ! empty( $date_range[0] ) ? trim( $date_range[0] ) : '';
-						$end_date        = ! empty( $date_range[1] ) ? trim( $date_range[1] ) : $start_date;
+						
+						$date_value = '';
+						$date_type  = 'range';
+						
+						if ( ! empty( $logic_map['value'] ) ) {
+							if ( is_array( $logic_map['value'] ) && isset( $logic_map['value']['value'] ) && isset( $logic_map['value']['type'] ) ) {
+								$date_value = $logic_map['value']['value'];
+								$date_type  = $logic_map['value']['type'];
+							} else {
+								$date_value = (string) $logic_map['value'];
+								$date_type  = 'range';
+							}
+						}
+						
+						if ( empty( $date_value ) || empty( $registered_date ) ) {
+							break;
+						}
+						
+						$registered_timestamp = strtotime( $registered_date );
+						
+						if ( 'before' === $date_type ) {
+							$target_timestamp = strtotime( $date_value );
+							if ( $registered_timestamp < $target_timestamp ) {
+								return true;
+							}
+						} elseif ( 'after' === $date_type ) {
+							$target_timestamp = strtotime( $date_value );
+							if ( $registered_timestamp > $target_timestamp ) {
+								return true;
+							}
+						} else {
+							$date_range = explode( ' to ', $date_value );
+							$start_date = ! empty( $date_range[0] ) ? trim( $date_range[0] ) : '';
+							$end_date   = ! empty( $date_range[1] ) ? trim( $date_range[1] ) : $start_date;
 
 						if ( ! empty( $start_date ) && ! empty( $end_date ) && ur_falls_in_date_range( $registered_date, $start_date, $end_date ) ) {
 							return true;
+							}
 						}
 					}
 					break;
@@ -510,8 +542,9 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 					if ( $user->ID ) {
 						$registered_source = ur_get_registration_source_id( $user->ID );
 						$sources           = ! empty( $logic_map['value'] ) ? $logic_map['value'] : array();
+						$sources           = is_array( $sources ) ? $sources : ( ! empty( $sources ) ? array( $sources ) : array() );
 
-						if ( in_array( $registered_source, $sources, true ) ) {
+						if ( ! empty( $registered_source ) && in_array( $registered_source, $sources, true ) ) {
 							return true;
 						}
 					}
