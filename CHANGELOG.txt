@@ -1,3 +1,6 @@
+= 5.0.1    - 14/01/2026 =
+* Fix      - Critical error after update.
+
 = 5.0      - 14/01/2026 =
 * New      - Streamlined setup wizard with a clean, modern interface that removes unnecessary steps and focuses only on essential configuration.
 * New      - Setup wizard now supports both user registration and membership creation with clear membership access controls.

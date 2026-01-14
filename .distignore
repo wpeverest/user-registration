@@ -14,6 +14,5 @@ pnpm-lock.yaml
 tsconfig.json
 package.json
 phpcs.xml
-src/
 tests/
 phpunit.watcher.yml.dist
