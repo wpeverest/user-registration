@@ -139,7 +139,7 @@ body {
 							input {
 								border-color: $primary_color;
 
-								~ .user-registration-search-icon svg {
+								~.user-registration-search-icon svg {
 									fill: $primary_color;
 								}
 							}
@@ -328,7 +328,7 @@ body {
 					cursor: pointer;
 
 					&-label {
-						> p {
+						>p {
 							font-weight: $medium;
 							font-size: 15px;
 							margin: 0;
@@ -653,7 +653,7 @@ body {
 							height: 20px;
 						}
 
-						> span {
+						>span {
 							flex: 1;
 						}
 
@@ -716,7 +716,7 @@ body {
 						max-width: 300px;
 					}
 
-					> p {
+					>p {
 						font-size: 18px;
 						line-height: 27px;
 						font-weight: $semi-bold;
@@ -1279,7 +1279,7 @@ body {
 					padding: $spacing_20px 0 !important;
 
 					.nav-tab-inside {
-						> div {
+						>div {
 							display: block;
 						}
 					}
@@ -1448,9 +1448,10 @@ body {
 								padding: $spacing_12px $spacing_16px !important;
 								background: $primary_color;
 								color: $grey-0;
-								font-weight: $semi_bold;
-								font-size: 16px;
-								line-height: 150%;
+								// font-weight: $semi_bold;
+								font-weight: $medium;
+								font-size: 15px;
+								line-height: 25px;
 								border: $border_width solid $border-color;
 								border-top: 0;
 								border-bottom: 0;
@@ -1500,8 +1501,13 @@ body {
 									a {
 										font-weight: $regular;
 										font-size: 14px;
-										line-height: 120%;
+										line-height: 22px;
 										color: $primary_color;
+
+										&:focus {
+											outline: none;
+											box-shadow: none;
+										}
 
 										&.button {
 											border: 0;
@@ -1530,7 +1536,7 @@ body {
 										}
 									}
 
-									> label {
+									>label {
 										padding: $spacing_4px $spacing_8px;
 										border-radius: 100px;
 										font-weight: $regular !important;
@@ -2084,7 +2090,7 @@ body {
 		margin-bottom: 10px;
 	}
 
-	input[type="radio"] + img {
+	input[type="radio"]+img {
 		cursor: pointer;
 	}
 }
@@ -2290,8 +2296,10 @@ body {
 	font-weight: 400;
 	text-transform: capitalize;
 
-	color: #2f855a; /* green-600 */
-	background-color: #f0fff4; /* green-50 */
+	color: #2f855a;
+	/* green-600 */
+	background-color: #f0fff4;
+	/* green-50 */
 
 	border-radius: 6px;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -2350,6 +2358,7 @@ body {
 
 		/* Show elements when container is active */
 		&.wp-picker-active {
+
 			.iris-picker,
 			.iris-border,
 			.colorpick.wp-color-picker,
@@ -2458,6 +2467,7 @@ body {
 
 		/* Active state */
 		&.wp-picker-active {
+
 			.iris-picker,
 			.iris-border,
 			.colorpick.wp-color-picker,

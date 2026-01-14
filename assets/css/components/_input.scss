@@ -1,5 +1,7 @@
-.user-registration,
-.user-registration-page,
+// .user-registration,
+// .user-registration-page,
+.user-registration-account,
+[class*="user-registration-membership_page_"],
 .ur-multi-device-form-preview {
 	textarea {
 		width: 100%;
@@ -30,8 +32,7 @@
 		&[type="tel"],
 		&[type="time"],
 		&[type="timepicker"],
-		&[type="url"],
-		&[type="search"] {
+		&[type="url"] {
 			min-width: unset !important;
 			width: 100%;
 			padding: 0 $spacing_12px;

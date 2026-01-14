@@ -1063,12 +1063,7 @@
 										}
 
 										input {
-											min-height: 38px;
-											padding: 0 $spacing_12px;
 											margin-bottom: 0;
-											border-color: $border-color;
-											background: $white;
-											color: #383838;
 
 											&:disabled {
 												border-color: #dcdcde;
@@ -1203,9 +1198,9 @@
 
 												.input-text {
 													height: 38px;
-													padding: $spacing_8px $spacing_10px $spacing_8px $spacing_14px;
+													padding: 0 $spacing_12px;
 													border-radius: $border_radius_4;
-													border: $border_width solid #E1E1E1;
+													border: $border_width solid $border-color;
 													background: $grey-0;
 
 													&:focus {

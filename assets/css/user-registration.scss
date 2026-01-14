@@ -387,11 +387,11 @@ textarea.ur-input-border-red {
 				input.input-text {
 					margin-bottom: 0;
 					border-radius: $border_radius_4;
-					border: $border_width solid #e9e9e9;
+					border: $border_width solid $border-color;
 					min-height: 38px;
 					font-size: 14px;
 					line-height: 20px;
-					padding: 0 $spacing_14px;
+					padding: 0 $spacing_12px;
 					color: #383838;
 				}
 			}
@@ -441,6 +441,7 @@ textarea.ur-input-border-red {
 							}
 
 							input {
+
 								&[type="checkbox"],
 								&[type="radio"] {
 									margin-top: 0px;
@@ -516,14 +517,28 @@ textarea.ur-input-border-red {
 			select,
 			.__PrivateStripeElement {
 				width: 100%;
-				padding: 4px 8px;
-				border-radius: 0;
-				min-height: 36px;
+				padding: 0 $spacing_12px;
+				min-height: 38px;
+				margin: 0;
 				margin-bottom: 10px;
-				line-height: 1.5;
+				height: 38px;
+				border: $border_width solid $border-color;
+				border-radius: $border_radius_4;
+				font-size: 14px;
+				line-height: 24px;
+				color: #383838;
+				font-weight: $regular;
+				box-shadow: none;
+				font-family: inherit;
 
 				&::placeholder {
-					color: #ddd;
+					color: #bababa;
+				}
+
+				&:focus {
+					outline: none;
+					box-shadow: none;
+					border-color: var(--ur-primary-color, $primary_color);
 				}
 			}
 
@@ -616,7 +631,7 @@ textarea.ur-input-border-red {
 				padding: 10px;
 				height: 100px;
 				resize: none;
-				padding: 5px 20px;
+				padding: $spacing_6px $spacing_12px;
 
 				&:focus {
 					border-color: var(--ur-primary-color, $primary_color) !important;
@@ -702,6 +717,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -752,6 +768,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -801,6 +818,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					.ur-field-item,
 					.form-row {
 						margin-bottom: 0;
@@ -853,6 +871,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -916,6 +935,7 @@ textarea.ur-input-border-red {
 			form {
 				.ur-form-row {
 					.ur-form-grid {
+
 						input[type="text"],
 						input[type="email"],
 						input[type="url"],
@@ -1070,6 +1090,7 @@ textarea.ur-input-border-red {
 			}
 
 			header {
+
 				p,
 				.button-group {
 					margin-bottom: 10px;
@@ -1167,6 +1188,7 @@ textarea.ur-input-border-red {
 }
 
 .edit-post-visual-editor {
+
 	.ur-gutenberg-form-selector-wrap,
 	.user-registration-gutenberg-form-selector-wrap {
 		h2 {
@@ -1221,9 +1243,9 @@ textarea.ur-input-border-red {
 .ur-form-row {
 	margin-bottom: 24px;
 
-	.flatpickr-input {
-		padding-left: 32px !important;
-	}
+	// .flatpickr-input {
+	// 	padding-left: 32px !important;
+	// }
 
 	.without_icon {
 		padding-left: 10px !important;
@@ -1261,7 +1283,8 @@ span.ur-shortcode-form-embed-dot {
 	padding: 0 !important;
 	border: 0 !important;
 	border-radius: 50%;
-	background-color: $primary_color;;
+	background-color: $primary_color;
+	;
 	animation: user-registration-heartbeat 1.5s infinite !important;
 	margin: 3px 10px;
 }
@@ -1396,7 +1419,7 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page {
 	.edit-post-layout {
-		.components-notice-list > div {
+		.components-notice-list>div {
 			padding-left: 50px;
 		}
 	}
@@ -1433,7 +1456,7 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page.is-fullscreen-mode {
 	.edit-post-layout {
-		.components-notice-list > div {
+		.components-notice-list>div {
 			padding-left: 125px;
 		}
 	}
@@ -1488,18 +1511,18 @@ span.ur-shortcode-form-embed-dot {
 
 		.wp-list-table {
 			width: 100%;
-			background: #fff;
-			border: 1px solid #e1e1e1;
-			border-radius: 4px;
+			background: $white;
+			border: $border_width solid $border-color;
+			border-radius: $border_radius_4;
 
 			thead {
 				background: none;
 
 				th {
-					padding: 12px 14px;
+					padding: $spacing_12px $spacing_14px;
 					font-size: 14px;
 					font-weight: 600;
-					border-color: #e1e1e1;
+					border-color: $border-color;
 					color: #383838;
 					text-align: left;
 				}
@@ -1510,7 +1533,7 @@ span.ur-shortcode-form-embed-dot {
 					background: #f8f8fa;
 
 					td {
-						padding: 12px 14px;
+						padding: $spacing_12px $spacing_14px;
 						font-size: 13px;
 						color: #383838;
 						vertical-align: middle;
@@ -1531,14 +1554,14 @@ span.ur-shortcode-form-embed-dot {
 
 //Revamp design for message and error
 .ur-message-container {
-	border-radius: 8px;
+	border-radius: 7px;
 	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-	0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 	padding: 60px;
 
 	.user-registration-message {
 		position: relative;
-		padding: 10px;
+		padding: $spacing_10px;
 		z-index: 9999;
 		display: flex;
 		align-items: center;
@@ -1546,15 +1569,15 @@ span.ur-shortcode-form-embed-dot {
 		border-left: 4px solid #49c85f;
 		background: #f7fdf8;
 		border-top: none;
-		margin: 20px 0px;
-		padding-left: 40px;
+		margin: $spacing_20px 0px;
+		padding-left: $spacing_40px;
 	}
 
 	svg {
 		position: absolute;
 		z-index: 999999;
-		margin-top: 33px;
-		margin-left: 10px;
+		margin-top: $spacing_32px;
+		margin-left: $spacing_10px;
 	}
 }
 
@@ -1562,13 +1585,13 @@ span.ur-shortcode-form-embed-dot {
 	padding: 10px !important;
 	display: flex;
 	align-items: center;
-	border-radius: 4px;
+	border-radius: $border_radius_4;
 	border-left: 4px solid $red;
 	background: 4px solid #fde8e8;
 	border-top: none;
 
 	svg {
-		margin-right: 10px;
+		margin-right: $spacing_10px;
 	}
 }
 
@@ -1632,7 +1655,7 @@ span.ur-shortcode-form-embed-dot {
 			border-top: 1px solid #f1f1f1;
 			background: #f9f9f9;
 			box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-			0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+				0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 			clip-path: inset(0px -1px -1px -1px);
 
 			&:first-child {
@@ -1686,7 +1709,7 @@ span.ur-shortcode-form-embed-dot {
 	background: $white;
 	border-radius: $border_radius_8;
 	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-	0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 	padding: $spacing_60px;
 
 	@media screen and (max-width: 600px) {
@@ -1740,8 +1763,10 @@ span.ur-shortcode-form-embed-dot {
 
 // Login Form Design ReVamped CSS
 body {
+
 	&[class*="user-registration-"],
 	&[class^="ur-"] {
+
 		/* Minimal WordPress Editor Styles */
 		.wp-editor-container {
 			border-radius: 8px !important;
@@ -1762,7 +1787,7 @@ body {
 				margin-bottom: 0 !important;
 				padding: 6px 8px !important;
 
-				&-grp > div {
+				&-grp>div {
 					padding: 0;
 				}
 
@@ -2029,7 +2054,7 @@ body {
 				display: block;
 			}
 
-			> ul {
+			>ul {
 				padding-left: 0;
 				margin: 0;
 				list-style: none;
@@ -2038,7 +2063,7 @@ body {
 	}
 
 	.user-registration-error {
-		> svg {
+		>svg {
 			display: none;
 		}
 	}
@@ -2047,6 +2072,7 @@ body {
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration {
 			&.ur-frontend-form {
+
 				&:has(.ur-grid-2),
 				&:has(.ur-grid-3) {
 					max-width: 1200px;
@@ -2065,9 +2091,11 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
+
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2101,6 +2129,7 @@ body {
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2127,9 +2156,11 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
+
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2151,9 +2182,11 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
+
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2195,9 +2228,11 @@ body {
 					.user-registration-form-login {
 						.ur-form-row {
 							.ur-form-grid {
+
 								input,
 								textarea,
 								select {
+
 									&:not([type="radio"]),
 									&:not([type="checkbox"]),
 									&:not([type="file"]) {
@@ -2224,7 +2259,7 @@ body {
 					&.login {
 						margin: 0px auto;
 						box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-						0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+							0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 
 						.user-registration-error {
 							display: block;
@@ -2443,12 +2478,12 @@ body {
 
 								input {
 									margin-bottom: 0;
-									border-radius: 4px;
+									border-radius: $border_radius_4;
 									min-height: 38px;
 									max-height: 38px;
 									font-size: 14px;
 									line-height: 20px;
-									padding: 0 14px;
+									padding: 0 $spacing_12px;
 									color: #383838;
 									box-shadow: none;
 
@@ -2530,7 +2565,7 @@ body {
 									}
 								}
 
-								> div {
+								>div {
 									display: block;
 									float: unset !important;
 									flex-direction: row-reverse;
@@ -2574,9 +2609,7 @@ body {
 										}
 									}
 
-									&:has(
-											.user-registration-passwordless-login
-										) {
+									&:has(.user-registration-passwordless-login) {
 										display: flex;
 										flex-direction: column-reverse;
 										gap: 16px !important;
@@ -2737,6 +2770,7 @@ body {
 										}
 
 										&.ursc_theme {
+
 											&_2,
 											&_3 {
 												.ursc-login-media {
@@ -2824,6 +2858,7 @@ body {
 					margin: 0 -10px;
 
 					.ur-field-item {
+
 						ul,
 						ol {
 							padding-left: 4px;
@@ -2831,6 +2866,7 @@ body {
 
 						.input-wrapper {
 							input {
+
 								&:not([type="checkbox"]),
 								&:not([type="radio"]) {
 									min-height: 50px;
@@ -3046,7 +3082,7 @@ body.user-registration-page {
 		.et-l {
 			.et-fb-modules-list {
 				ul {
-					> li {
+					>li {
 						position: relative;
 
 						// Registration Form Icon
@@ -3366,7 +3402,7 @@ body.user-registration-page {
 			margin: 0;
 		}
 
-		p > input.user-registration-Button.button {
+		p>input.user-registration-Button.button {
 			color: var(--ur-button-text-normal-color, $white);
 			background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
 			border: $border_width var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
