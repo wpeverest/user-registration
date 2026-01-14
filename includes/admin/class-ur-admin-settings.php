@@ -1260,7 +1260,7 @@ class UR_Admin_Settings {
 												)
 											);
 
-											$settings .= '<input type="radio" name="' . esc_attr( $value['id'] ) . '" id="' . esc_attr( $value['id'] ) . '"	style="' . esc_attr( $value['css'] ) . '" class="' . esc_attr( $value['class'] ) . '" value="' . esc_attr( trim( $option_index ) ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
+											$settings .= '<input type="radio" name="' . esc_attr( $value['id'] ?? '' ) . '" id="' . esc_attr( $value['id'] ?? '' ) . '"	style="' . esc_attr( $value['css'] ) . '" class="' . esc_attr( $value['class'] ) . '" value="' . esc_attr( trim( $option_index ) ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
 											$settings .= '</label>';
 
 											$settings .= '</li>';
