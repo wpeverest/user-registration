@@ -160,7 +160,7 @@ class PaypalService {
 		if ( '_xclick-subscriptions' === $transaction ) {
 			$paypal_args['t3']          = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 			$paypal_args['p3']          = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
-			$paypal_args['a3']          = floatval( user_registration_sanitize_amount( $membership_amount ) );
+			$paypal_args['a3']          = floatval( user_registration_sanitize_amount( $final_amount ) );
 			$new_subscription_data      = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
 			$previous_subscription_data = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
 
@@ -181,8 +181,8 @@ class PaypalService {
 				$paypal_args['a1'] = '0';
 			}
 
-			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) || ( $is_upgrading && $data['chargeable_amount'] < $membership_amount ) ) {
-				$amount = $is_upgrading ? user_registration_sanitize_amount( $data['amount'] ) : ( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
+			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) || ( $is_upgrading && $data['chargeable_amount'] < $final_amount ) ) {
+				$amount = $is_upgrading ? user_registration_sanitize_amount( $data['amount'] ) : ( user_registration_sanitize_amount( $final_amount ) );
 
 				$paypal_args['t2'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 				$paypal_args['p2'] = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
