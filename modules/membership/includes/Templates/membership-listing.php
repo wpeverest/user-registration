@@ -226,6 +226,7 @@ elseif ( 'list' === $type ) :
 									type="radio"
 									name="membership_id"
 									value="<?php echo esc_attr( $membership['ID'] ); ?>"
+									data-urm-uuid="<?php echo esc_html( $uuid ); ?>"
 									data-action="<?php echo esc_attr( $intended_action ); ?>"
 									data-redirect="<?php echo esc_url( $redirect_page_url ); ?>"
 									data-thankyou="<?php echo esc_attr( $thank_you_page_id ); ?>"

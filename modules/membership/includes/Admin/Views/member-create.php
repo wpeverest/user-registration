@@ -34,7 +34,7 @@ $status_class       = ! empty( $member_subscription ) ? 'user-registration-badge
 					<div id="left-body" class="">
 						<!--						first name-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label">
 								<label
 									for="ur-input-type-membership-first-name"><?php esc_html_e( 'First Name', 'user-registration' ); ?>
 								</label>
@@ -56,7 +56,7 @@ $status_class       = ! empty( $member_subscription ) ? 'user-registration-badge
 						</div>
 						<!--						last name-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label">
 								<label
 									for="ur-input-type-membership-last-name"><?php esc_html_e( 'Last Name', 'user-registration' ); ?>
 								</label>
@@ -77,7 +77,7 @@ $status_class       = ! empty( $member_subscription ) ? 'user-registration-badge
 						</div>
 						<!--username-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label">
 								<label
 									for="ur-input-type-membership-username"><?php esc_html_e( 'Username', 'user-registration' ); ?>
 									<span style="color:red">*</span>
@@ -101,7 +101,7 @@ $status_class       = ! empty( $member_subscription ) ? 'user-registration-badge
 						</div>
 						<!--						email-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label">
 								<label
 									for="ur-input-type-membership-email"><?php echo esc_html_e( 'Email', 'user-registration' ); ?>
 									<span style="color:red">*</span>
@@ -126,7 +126,7 @@ $status_class       = ! empty( $member_subscription ) ? 'user-registration-badge
 							?>
 							<!-- password -->
 							<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-								<div class="ur-label" style="width: 30%">
+								<div class="ur-label">
 									<label
 										for="ur-input-type-membership-password"><?php esc_html_e( 'Password', 'user-registration' ); ?>
 										<span style="color:red">*</span>
@@ -149,7 +149,7 @@ $status_class       = ! empty( $member_subscription ) ? 'user-registration-badge
 							</div>
 							<!--						confirm password-->
 							<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-								<div class="ur-label" style="width: 30%">
+								<div class="ur-label">
 									<label
 										for="ur-input-type-membership-confirm-password"><?php esc_html_e( 'Confirm Password', 'user-registration' ); ?>
 										<span style="color:red">*</span>
@@ -175,7 +175,7 @@ $status_class       = ! empty( $member_subscription ) ? 'user-registration-badge
 						?>
 						<!--						role-->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label">
 								<label
 									for="ur-input-type-membership-member-role"><?php esc_html_e( 'Member Role', 'user-registration' ); ?>
 									<span style="color:red">*</span>
@@ -218,7 +218,7 @@ $status_class       = ! empty( $member_subscription ) ? 'user-registration-badge
 									<?php echo esc_html__( 'Membership', 'user-registration' ); ?>
 								</label>
 								<select
-									class="ur-membership-members-input  ur-enhanced-select user-membership-enhanced-select2"
+									class="ur-membership-members-input ur-enhanced-select user-membership-enhanced-select2"
 									data-key-name="<?php echo esc_html__( 'Membership', 'user-registration' ); ?>"
 									name="ur-membership-select"
 									id="ur-membership-select"

@@ -159,6 +159,8 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 	 * @return array Array containing 'items' and 'total' count
 	 */
 	public function query( $args = array() ) {
+		global $wpdb;
+
 		$defaults = array(
 			'page'       => 1,
 			'per_page'   => 20,
@@ -173,6 +175,20 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionInter
 		);
 
 		$args = wp_parse_args( $args, $defaults );
+
+		$table_exists = $wpdb->get_var(
+			$wpdb->prepare( 'SHOW TABLES LIKE %s', $this->table )
+		);
+
+		if ( $table_exists !== $this->table ) {
+			return array(
+				'items'        => array(),
+				'total'        => 0,
+				'total_pages'  => 0,
+				'current_page' => 1,
+				'per_page'     => absint( $args['per_page'] ),
+			);
+		}
 
 		$args['order'] = strtoupper( $args['order'] );
 		$args['order'] = in_array( $args['order'], array( 'ASC', 'DESC' ), true ) ? $args['order'] : 'DESC';

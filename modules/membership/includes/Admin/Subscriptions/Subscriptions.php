@@ -51,17 +51,24 @@ class Subscriptions {
 	}
 
 	public function add_menu() {
-		$page = add_submenu_page(
-			'user-registration',
-			__( 'Subscriptions', 'user-registration' ),
-			__( 'Subscriptions', 'user-registration' ),
-			'manage_options',
-			'user-registration-subscriptions',
-			array( $this, 'render_subscriptions_page' ),
-			6
-		);
 
-		add_action( "load-$page", array( $this, 'enqueue_scripts_styles' ) );
+		$subscription_repository = new SubscriptionRepository();
+		$result                  = $subscription_repository->query();
+
+		if( isset( $result['total'] ) && absint($result['total']) > 0 ) {
+			$page = add_submenu_page(
+				'user-registration',
+				__( 'Subscriptions', 'user-registration' ),
+				__( 'Subscriptions', 'user-registration' ),
+				'manage_options',
+				'user-registration-subscriptions',
+				array( $this, 'render_subscriptions_page' ),
+				6
+			);
+
+			add_action( "load-$page", array( $this, 'enqueue_scripts_styles' ) );
+		}
+
 	}
 
 	public function render_subscriptions_page() {

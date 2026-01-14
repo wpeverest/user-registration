@@ -47,7 +47,7 @@ var ur_membership_plans = <?php echo wp_json_encode( $membership_plans ); ?>;
 					<div class="ur-membership-main-fields">
 						<?php do_action( 'ur_membership_subscription_create_form_before_fields' ); ?>
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label">
 								<label for="ur-subscription-member">
 									<?php esc_html_e( 'User', 'user-registration' ); ?>
 									<span style="color:red">*</span>
@@ -73,7 +73,7 @@ var ur_membership_plans = <?php echo wp_json_encode( $membership_plans ); ?>;
 						</div>
 
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label">
 								<label for="ur-subscription-plan">
 									<?php esc_html_e( 'Membership Plan', 'user-registration' ); ?>
 									<span style="color:red">*</span>
@@ -99,7 +99,7 @@ var ur_membership_plans = <?php echo wp_json_encode( $membership_plans ); ?>;
 						</div>
 
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label">
 								<label for="ur-subscription-billing-amount">
 									<?php esc_html_e( 'Billing Amount', 'user-registration' ); ?>
 									<span style="color:red">*</span>
@@ -117,7 +117,7 @@ var ur_membership_plans = <?php echo wp_json_encode( $membership_plans ); ?>;
 
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px; display: none;"
 							id="ur-payment-gateway-container">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label">
 								<label for="ur-subscription-payment-gateway">
 									<?php esc_html_e( 'Payment Gateway', 'user-registration' ); ?>
 								</label>

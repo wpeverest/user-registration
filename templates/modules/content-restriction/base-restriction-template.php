@@ -42,27 +42,67 @@ if ( empty( $signup_url ) ) {
 		display: none !important;
 	}
 	.urcr-access-card {
+		display: flex;
+		flex-direction: column;
 		background-color: #ffffff;
 		border: 1px solid #f1f5f9;
-		border-radius: 8px;
+		border-radius: 7px;
 		padding: 32px;
-		max-width: 500px;
+		max-width: 500px !important;
 		width: 100%;
 		box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.06);
-		margin: 20px auto;
+		margin: 24px auto !important;
+		box-sizing: border-box;
 	}
     .urcr-access-card h3 {
-		font-weight: 800;
+		font-weight: 700;
 		font-size: 28px;
+		line-height: 36px;
 		color: #1a1a1a;
+		margin: 0 0 20px;
 	}
 	.urcr-access-card p {
 		font-weight: 400;
 		font-size: 16px;
+		line-height: 24px;
 		color: #6B6B6B;
+		margin: 0 0 12px;
 	}
-	.urcr-access-card a {
-		margin-top: 32px;
+	.urcr-access-card p:last-child {
+		margin: 12px 0 0;
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 8px 20px;
+	}
+	.urcr-access-card p > a {
+		font-size: 16px;
+		line-height: 24px;
+		padding: 14px 32px;
+		font-weight: 500;
+		border-radius: 4px;
+		text-decoration: none;
+		margin: 0;
+		cursor: pointer;
+		background: transparent;
+		color: #4e4e4e;
+		transition: all .3s ease;
+	}
+	.urcr-access-card p > a.urcr-signup-link {
+		background: #475bb2;
+		color: #ffffff;
+	}
+	.urcr-access-card p > a.urcr-signup-link:hover {
+		background: #38488e;
+		color: #ffffff;
+	}
+	.urcr-access-card p > a.urcr-access-button {
+		background: transparent;
+		text-decoration: underline;
+		padding: 14px 16px;
+	}
+	.urcr-access-card p > a.urcr-access-button:hover {
+		color: #475bb2;
 	}
 	.urcr-access-heading {
 		font-size: 28px;
@@ -93,54 +133,23 @@ if ( empty( $signup_url ) ) {
 		display: block;
 		text-align: left;
 	}
-	.urcr-actions .urcr-access-button {
-		margin-bottom: 12px;
-	}
-	.urcr-access-button {
-		max-width: 100%;
-		padding: 8px 16px;
-		border-radius: 8px;
-		font-size: 16px;
-		font-weight: 600;
-		text-align: center;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		border: none;
-		display: inline-block;
-	}
-	.urcr-access-card .urcr-access-button-primary {
-		color: #475BB2;
-		text-decoration: underline;
-	}
-	.urcr-access-card .urcr-access-button-primary:hover {
-		color: #38488e;
-		text-decoration: underline;
-	}
-	.urcr-access-card .urcr-signup-link {
-		background-color: #475bb2;
-		font-size: 16px;
-		padding: 14px 32px;
-		font-weight: 500;
-		border-radius: 4px;
-		color: #fff;
-		text-decoration: none;
-	}
-	.urcr-access-card .urcr-signup-link:hover {
-		color: #fff;
-		background: #38488e;
-	}
 	@media (max-width: 480px) {
 		.urcr-access-card {
-			padding: 32px 24px;
+			padding: 24px;
+		}
+		.urcr-access-card h3 {
+			font-size: 22px;
+			line-height: 30px;
+		}
+		.urcr-access-card p {
+			font-size: 15px;
+			line-height: 25px;
 		}
 		.urcr-access-heading {
 			font-size: 24px;
 		}
-		.urcr-access-button {
-			width: 100%;
-		}
 	}
 </style>
 <div class="urcr-access-card">
-	<?php echo wp_kses_post( $message ); ?>
+	<?php echo $message; ?>
 </div>

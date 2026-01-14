@@ -5275,8 +5275,9 @@ body.user-registration {
 	.user-registration-list-table-heading {
 		display: flex;
 		align-items: center;
+		gap: $spacing_16px;
 		margin-bottom: $spacing_24px;
-		justify-content: space-between;
+		// justify-content: space-between;
 
 		h1 {
 			margin: 0;
@@ -8517,7 +8518,8 @@ body.user-registration-page {
 	}
 }
 
-.reset-captcha-keys, .reset-payment-keys {
+.reset-captcha-keys,
+.reset-payment-keys {
 	display: flex;
 	align-items: center;
 	gap: 6px;
@@ -9368,7 +9370,7 @@ body.user-registration-page {
 		gap: 12px;
 		flex-direction: column;
 
-		.user-registration-notice{
+		.user-registration-notice {
 			margin: 0px;
 			gap: 2px;
 			padding: 9px;
@@ -9537,7 +9539,7 @@ body.user-registration-page {
 	}
 }
 
-.ur-activate-dependent-module{
+.ur-activate-dependent-module {
 	&.ui-add-disabled {
 		opacity: 0.5;
 		cursor: not-allowed;

@@ -363,7 +363,7 @@ class UR_Install
 				'4.2.0' => array(
 					'ur_pro_module_addons_migrate',
 				),
-				'6.0.0' => array(
+				'6.0' => array(
 					'urm_update_50_option_migrate',
 				),
 			);

@@ -1,14 +1,14 @@
 wpeverest/user-registration-pro@master:
-  - assets
-  - includes
-  - modules
-  - src
-  - templates
-  - .editorconfig
-  - .gitattributes
-  - .gitignore
-  - license.txt
-  - phpcs.xml
-  - uninstall.php
-  - webpack.config.js
-  - wpml-config.xml
+    - assets
+    - includes
+    - modules
+    - src
+    - templates
+    - .editorconfig
+    - .gitattributes
+    - .gitignore
+    - license.txt
+    - phpcs.xml
+    - uninstall.php
+    - webpack.config.js
+    - wpml-config.xml

@@ -3,7 +3,7 @@
 *.zip
 *.lock
 bin/
-build/
+/build/
 composer.*
 Gruntfile.js
 webpack.config.js
@@ -14,6 +14,5 @@ pnpm-lock.yaml
 tsconfig.json
 package.json
 phpcs.xml
-src/
-tests/
+/tests/
 phpunit.watcher.yml.dist

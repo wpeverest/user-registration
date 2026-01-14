@@ -315,6 +315,11 @@ class UR_Modules {
 				update_option( 'urm_group_module_installation_flag', true );
 			}
 		}
+
+		if ( $slug === 'user-registration-content-restriction' ) {
+			update_option( 'user_registration_content_restriction_enable', true );
+		}
+
 		$enabled_features[] = $slug;
 		update_option( 'user_registration_enabled_features', $enabled_features );
 
@@ -424,6 +429,11 @@ class UR_Modules {
 				return array( 'success' => false );
 			}
 		}
+
+		if ( $slug === 'user-registration-content-restriction' ) {
+			update_option( 'user_registration_content_restriction_enable', false );
+		}
+
 		update_option( 'user_registration_enabled_features', $enabled_features );
 
 		return in_array( $slug, $enabled_features, true ) ? array( 'success' => false ) : array( 'success' => true );
@@ -542,6 +552,10 @@ class UR_Modules {
 
 		foreach ( $feature_data as $slug => $name ) {
 			array_push( $enabled_features, $slug );
+
+			if ( $slug === 'user-registration-content-restriction' ) {
+				update_option( 'user_registration_content_restriction_enable', true );
+			}
 		}
 
 		update_option( 'user_registration_enabled_features', $enabled_features );
@@ -639,6 +653,11 @@ class UR_Modules {
 		// Logic to enable Feature.
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
 		$enabled_features = array_values( array_diff( $enabled_features, $feature_slugs ) );
+
+		if ( in_array( 'user-registration-content-restriction', $feature_slugs, true ) ) {
+			update_option( 'user_registration_content_restriction_enable', false );
+		}
+
 		update_option( 'user_registration_enabled_features', $enabled_features );
 
 		return count( $feature_slugs );
