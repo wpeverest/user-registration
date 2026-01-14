@@ -296,7 +296,7 @@ class StripeService {
 	}
 
 	public function update_order( $data ) {
-		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? '';
+		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? $data['payment_result']['id'] ?? '';
 		$payment_status         = sanitize_text_field( $data['payment_status'] );
 		$member_id              = absint( $_POST['member_id'] );
 		$membership_process     = urm_get_membership_process( $member_id );
@@ -403,7 +403,7 @@ class StripeService {
 				)
 			);
 
-			if ( ( $is_order_updated && 'paid' === $member_order['order_type'] ) || ( $is_order_updated && ! empty( $three_d_secure_2_source ) && 'subscription' === $member_order['order_type'] ) ) {
+			if ( $is_order_updated && in_array( $member_order['order_type'], array( 'paid', 'subscription' ), true ) ) {
 				$this->members_subscription_repository->update(
 					$member_subscription['ID'],
 					array(
@@ -778,8 +778,34 @@ class StripeService {
 				);
 
 				$this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
+
 				$response['subscription'] = $subscription;
 				$response['message']      = __( 'New member has been successfully created with successful stripe subscription.' );
+				$response['status']       = true;
+			} elseif ( 'incomplete' === $subscription_status ) {
+				PaymentGatewayLogging::log_general(
+					'stripe',
+					'Stripe subscription requires 3D Secure verification',
+					'notice',
+					array(
+						'subscription_id'     => $subscription->id,
+						'subscription_status' => $subscription_status,
+						'member_id'           => $member_id,
+						'membership_type'     => $membership_type,
+						'requires_action'     => true,
+					)
+				);
+
+				$this->members_subscription_repository->update(
+					$member_order['subscription_id'],
+					array(
+						'subscription_id' => sanitize_text_field( $subscription->id ),
+						'status'          => 'pending',
+					)
+				);
+
+				$response['subscription'] = $subscription;
+				$response['message']      = __( 'Payment requires additional verification.', 'user-registration' );
 				$response['status']       = true;
 			}
 
@@ -813,30 +839,30 @@ class StripeService {
 	 * @return array
 	 */
 	public static function get_stripe_settings() {
-		$is_enabled = get_option( 'user_registration_stripe_enabled', '' );
-		$stripe_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false )) ;
-		$has_user_changed = ur_string_to_bool(get_option( 'urm_stripe_updated_connection_status', false )) ;
-		$is_stripe_enabled = ($is_enabled) ? $is_enabled : ($has_user_changed ? $stripe_default : ! $stripe_default);;
+		$is_enabled        = get_option( 'user_registration_stripe_enabled', '' );
+		$stripe_default    = ur_string_to_bool( get_option( 'urm_is_new_installation', false ) );
+		$has_user_changed  = ur_string_to_bool( get_option( 'urm_stripe_updated_connection_status', false ) );
+		$is_stripe_enabled = ( $is_enabled ) ? $is_enabled : ( $has_user_changed ? $stripe_default : ! $stripe_default );
 
 		$mode            = get_option( 'user_registration_stripe_test_mode', false ) ? 'test' : 'live';
 		$publishable_key = get_option( sprintf( 'user_registration_stripe_%s_publishable_key', $mode ) );
 		$secret_key      = get_option( sprintf( 'user_registration_stripe_%s_secret_key', $mode ) );
 
 		return array(
-			'is_stipe_enabled'      => $is_stripe_enabled,
-			'mode'            => $mode,
-			'publishable_key' => $publishable_key,
-			'secret_key'      => $secret_key,
+			'is_stipe_enabled' => $is_stripe_enabled,
+			'mode'             => $mode,
+			'publishable_key'  => $publishable_key,
+			'secret_key'       => $secret_key,
 		);
 	}
 
 	/**
 	 * Sends an email.
 	 *
-	 * @param int $ID The ID of the email.
+	 * @param int   $ID The ID of the email.
 	 * @param mixed $member_subscription The subscription details of the member.
 	 * @param array $membership_metas Metadata related to the membership.
-	 * @param int $member_id The ID of the member.
+	 * @param int   $member_id The ID of the member.
 	 * @param array $response The response data.
 	 *
 	 * @return array The result of the email operation.
@@ -1189,7 +1215,7 @@ class StripeService {
 	public function validate_setup() {
 		$stripe_settings = self::get_stripe_settings();
 
-		return ( empty( $stripe_settings['publishable_key'] ) || empty( $stripe_settings['secret_key'] ) || empty($stripe_settings['is_stipe_enabled']) );
+		return ( empty( $stripe_settings['publishable_key'] ) || empty( $stripe_settings['secret_key'] ) || empty( $stripe_settings['is_stipe_enabled'] ) );
 	}
 
 	public function refund_subscription( $subscription, $refund_amount = null, $cancel_subscription = false, $cancel_at_end_period = false ) {
@@ -1320,7 +1346,6 @@ class StripeService {
 	 * @param string $product_id
 	 *
 	 * @since 4.4.2
-	 *
 	 */
 	public function check_exists_product_in_stripe( $product_id ) {
 		try {
@@ -1349,7 +1374,6 @@ class StripeService {
 	 * @param string $price_id
 	 *
 	 * @since 4.4.2
-	 *
 	 */
 	public function check_price_exists_in_stripe( $price_id ) {
 		try {
@@ -1371,10 +1395,9 @@ class StripeService {
 	 * Creates price for existing product if price_id not found.
 	 *
 	 * @param string $product_id
-	 * @param array $meta_data
+	 * @param array  $meta_data
 	 *
 	 * @since 4.4.2
-	 *
 	 */
 	public function create_stripe_price_for_existing_product( $product_id, $meta_data ) {
 		$currency = get_option( 'user_registration_payment_currency', 'USD' );

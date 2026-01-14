@@ -400,7 +400,7 @@ class AJAX {
 		$is_stripe_enabled = urm_is_payment_gateway_configured( 'stripe' );
 		$is_mollie_enabled = urm_is_payment_gateway_configured( 'mollie' );
 
-		$data                                       = $membership->prepare_membership_post_data( $data );
+		$data = $membership->prepare_membership_post_data( $data );
 		if ( isset( $data['status'] ) && ! $data['status'] ) {
 			wp_send_json_error(
 				array(
@@ -1120,7 +1120,13 @@ class AJAX {
 		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id, $is_upgrading );
 
 		if ( $stripe_subscription['status'] ) {
-			if ( ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $form_response['auto_login'] ) {
+			$subscription_status = isset( $stripe_subscription['subscription']->status )
+				? $stripe_subscription['subscription']->status
+				: '';
+
+			$subscription_is_active = in_array( $subscription_status, array( 'active', 'trialing' ), true );
+
+			if ( $subscription_is_active && ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $form_response['auto_login'] ) {
 				$members_service = new MembersService();
 				$logged_in       = $members_service->login_member( $member_id, true );
 				if ( ! $logged_in ) {

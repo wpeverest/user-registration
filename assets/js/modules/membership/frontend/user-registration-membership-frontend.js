@@ -29,6 +29,67 @@
 			return false;
 		},
 
+		
+		/**
+		 * Shows a full-page payment processing overlay.
+		 * Used during Stripe 3D Secure verification to indicate payment is in progress.
+		 *
+		 * @param {string} title - The title text to display (optional)
+		 * @param {string} message - The message text to display (optional)
+		 */
+		show_payment_processing_overlay: function (title, message) {
+			title = title || urmf_data.labels.i18n_payment_processing_title || 'Processing Payment';
+			message = message || urmf_data.labels.i18n_payment_processing_message || 'Please wait while we securely process your payment. Do not close this page.';
+
+			this.hide_payment_processing_overlay();
+
+			var overlayHtml = '<div class="urm-payment-processing-overlay">' +
+				'<div class="urm-payment-processing-content">' +
+				'<div class="urm-payment-spinner"></div>' +
+				'<h3 class="urm-payment-title">' + title + '</h3>' +
+				'<p class="urm-payment-message">' + message + '</p>' +
+				'<div class="urm-payment-progress"><div class="urm-payment-progress-bar"></div></div>' +
+				'</div>' +
+				'</div>';
+
+			$('body').append(overlayHtml);
+
+			setTimeout(function () {
+				$('.urm-payment-processing-overlay').addClass('active');
+			}, 10);
+		},
+
+		/**
+		 * Hides and removes the payment processing overlay.
+		 */
+		hide_payment_processing_overlay: function () {
+			var $overlay = $('.urm-payment-processing-overlay');
+			if ($overlay.length) {
+				$overlay.removeClass('active');
+				setTimeout(function () {
+					$overlay.remove();
+				}, 300);
+			}
+		},
+
+		/**
+		 * Updates the payment processing overlay with new title and message.
+		 *
+		 * @param {string} title - The new title text
+		 * @param {string} message - The new message text
+		 */
+		update_payment_processing_overlay: function (title, message) {
+			var $overlay = $('.urm-payment-processing-overlay');
+			if ($overlay.length) {
+				if (title) {
+					$overlay.find('.urm-payment-title').text(title);
+				}
+				if (message) {
+					$overlay.find('.urm-payment-message').text(message);
+				}
+			}
+		},
+
 		/**
 		 * A function that converts an object to an array by taking its values, excluding the first two, and preserving the original order.
 		 *
@@ -1487,6 +1548,8 @@
 			prepare_members_data,
 			form_response
 		) {
+			ur_membership_frontend_utils.show_payment_processing_overlay();
+
 			if (response.data.pg_data.type === "paid") {
 				this.handle_one_time_payment(
 					response,
@@ -1518,6 +1581,8 @@
 			prepare_members_data,
 			form_response
 		) {
+			ur_membership_frontend_utils.hide_payment_processing_overlay();
+
 			return elements.stripe
 				.confirmCardPayment(response.data.pg_data.client_secret, {
 					payment_method: {
@@ -1525,6 +1590,11 @@
 					}
 				})
 				.then(function (result) {
+					ur_membership_frontend_utils.show_payment_processing_overlay(
+						urmf_data.labels.i18n_payment_completing_title || 'Completing Payment',
+						urmf_data.labels.i18n_payment_completing_message || 'Your payment has been verified. Please wait while we complete your registration.'
+					);
+
 					var button = $(".membership_register_button");
 					ur_membership_frontend_utils.toggleSaveButtons(
 						true,
@@ -1589,12 +1659,17 @@
 									urmf_data.thank_you_page_url,
 									{
 										username: prepare_members_data.username,
-										transaction_id: result.paymentIntent.id
+										transaction_id:
+											result.paymentIntent &&
+											result.paymentIntent.id
+												? result.paymentIntent.id
+												: result.id	
 									}
 								);
 							}
 							//first show successful toast
 						} else {
+							ur_membership_frontend_utils.hide_payment_processing_overlay();
 							stripe_settings.show_stripe_error(
 								response.data.message
 							);
@@ -1602,6 +1677,7 @@
 						}
 					},
 					failure: function (xhr, statusText) {
+						ur_membership_frontend_utils.hide_payment_processing_overlay();
 						ur_membership_frontend_utils.show_failure_message(
 							urmf_data.labels.i18n_error +
 								"(" +
@@ -1638,6 +1714,7 @@
 				.then(stripe_settings.handleCustomerActionRequired)
 				.then(stripe_settings.handleOnComplete)
 				.catch(function (message, error) {
+					ur_membership_frontend_utils.hide_payment_processing_overlay();
 					stripe_settings.update_order_status(
 						{ error: {} },
 						response,
@@ -1781,6 +1858,8 @@
 
 				if ("trialing" !== data.subscription.status) {
 					if ("requires_action" === paymentIntent.status) {
+						ur_membership_frontend_utils.hide_payment_processing_overlay();
+
 						data.paymentElements.stripe
 							.confirmCardPayment(paymentIntent.client_secret, {
 								payment_method: data.paymentMethodId
@@ -1795,13 +1874,17 @@
 								if (
 									"succeeded" === result.paymentIntent.status
 								) {
+									ur_membership_frontend_utils.show_payment_processing_overlay(
+									urmf_data.labels.i18n_payment_completing_title || 'Completing Payment',
+									urmf_data.labels.i18n_payment_completing_message || 'Your payment has been verified. Please wait while we complete your registration.'
+									);
+
 									data.subscription.status = "active";
 									resolve({
 										subscription: data.subscription,
 										form_id: data.form_response.form_id,
 										response_data: data.response_data,
-										prepare_members_data:
-											data.prepare_members_data,
+										prepare_members_data: data.prepare_members_data,
 										form_response: data.form_response,
 										three_d_secure: true
 									});
@@ -1859,7 +1942,8 @@
 					data.subscription.status === "trialing") &&
 				!is_upgrading &&
 				!is_renewing &&
-				!is_purchasing_multiple
+				!is_purchasing_multiple &&
+				!data.three_d_secure
 			) {
 				ur_membership_frontend_utils.show_form_success_message(
 					data.form_response,
