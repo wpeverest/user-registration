@@ -1,4 +1,4 @@
-= 5.0      - 13/01/2026 =
+= 5.0      - 14/01/2026 =
 * New      - Streamlined setup wizard with a clean, modern interface that removes unnecessary steps and focuses only on essential configuration.
 * New      - Setup wizard now supports both user registration and membership creation with clear membership access controls.
 * New      - Simplified membership creation process with three clear steps: Basic configuration for essential settings, Access Control for content protection, and Advanced options for edge cases and additional features.
