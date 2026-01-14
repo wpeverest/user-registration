@@ -2329,74 +2329,103 @@
 			];
 		},
 		dripInit: function () {
-			const activeType = $(".urcr-membership-drip").data("active_type");
-
-			// Set the initial active tab based on the activeType value
-			setActiveType(activeType);
-
-			// Show/hide popover when the button is clicked
-			$("#drip-trigger").on("click", function (e) {
-				e.preventDefault();
-				e.stopPropagation(); // Prevent the click event from bubbling up to the document
-				$("#drip-popover").fadeToggle(); // fadeToggle will handle both show and hide
+			// init each row
+			$(".urcr-membership-drip").each(function () {
+				const $wrap = $(this);
+				const activeType = $wrap.data("active_type") || "fixed_date";
+				setActiveType($wrap, activeType);
 			});
+
+			// open/close popover (per row)
+			$(document).on(
+				"click",
+				".urcr-membership-drip .urcr-drip__trigger",
+				function (e) {
+					e.preventDefault();
+					e.stopPropagation();
+
+					$(".urcr-drip__popover").fadeOut();
+
+					const $wrap = $(this).closest(".urcr-membership-drip");
+					$wrap.find(".urcr-drip__popover").fadeToggle();
+				}
+			);
+
+			// click outside closes all
 			$(document).on("click", function (e) {
 				if (!$(e.target).closest(".urcr-membership-drip").length) {
-					$("#drip-popover").fadeOut(); // Close the popover if the user clicks outside
+					$(".urcr-drip__popover").fadeOut();
 				}
 			});
-			// Tab switching (Fixed Date / Days After)
-			$(".urcr-drip__tab").on("click", function (e) {
-				e.preventDefault();
 
-				$(".urcr-drip__tab").removeClass("active");
-				$(this).addClass("active");
-				const type = $(this).data("value");
-				$(".urcr-membership-drip").data("active_type", type);
+			$(document).on(
+				"click",
+				".urcr-membership-drip .urcr-drip__tab",
+				function (e) {
+					e.preventDefault();
 
-				setActiveType(type);
-			});
+					var $wrap = $(this).closest(".urcr-membership-drip");
+					var type = $(this).data("value");
 
-			// Set active type (Fixed Date or Days After)
-			function setActiveType(type) {
+					$wrap.data("active_type", type);
+					$wrap.attr("data-active_type", type);
+
+					setActiveType($wrap, type);
+				}
+			);
+
+			function setActiveType($wrap, type) {
+				$wrap.find(".urcr-drip__tab").removeClass("active");
+				$wrap
+					.find('.urcr-drip__tab[data-value="' + type + '"]')
+					.addClass("active");
+
 				if (type === "fixed_date") {
-					$("#fixed_date-panel").show();
-					$("#days_after-panel").hide();
+					$wrap.find(".fixed_date-panel").show();
+					$wrap.find(".days_after-panel").hide();
 				} else {
-					$("#fixed_date-panel").hide();
-					$("#days_after-panel").show();
+					$wrap.find(".fixed_date-panel").hide();
+					$wrap.find(".days_after-panel").show();
 				}
-
-				$(".urcr-drip__tab").each(function () {
-					if ($(this).data("value") === type) {
-						$(this).addClass("active");
-					}
-				});
 			}
 
-			// Handle Fixed Date inputs
-			$("#drip-date").on("change", function () {
-				setFixedDateField("date", $(this).val());
-			});
+			$(document).on(
+				"change",
+				".urcr-membership-drip .drip-date",
+				function () {
+					var $wrap = $(this).closest(".urcr-membership-drip");
+					var v = $(this).val();
 
-			$("#drip-time").on("change", function () {
-				setFixedDateField("time", $(this).val());
-			});
+					$wrap.attr("data-fixed_date_date", v);
+					$wrap.data("fixed_date_date", v);
+				}
+			);
 
-			function setFixedDateField(field, value) {
-				drip.value.fixed_date[field] = value;
-			}
+			$(document).on(
+				"change",
+				".urcr-membership-drip .drip-time",
+				function () {
+					var $wrap = $(this).closest(".urcr-membership-drip");
+					var v = $(this).val();
 
-			// Handle Days After input
-			$("#drip-days").on("change", function () {
-				setDays($(this).val());
-			});
+					$wrap.attr("data-fixed_date_time", v);
+					$wrap.data("fixed_date_time", v);
+					$wrap.data("fixed_date_time", $(this).val());
+				}
+			);
 
-			function setDays(days) {
-				drip.value.days_after.days = Number.isFinite(Number(days))
-					? Number(days)
-					: 0;
-			}
+			$(document).on(
+				"change",
+				".urcr-membership-drip .drip-days",
+				function () {
+					var $wrap = $(this).closest(".urcr-membership-drip");
+
+					var v = $(this).val();
+
+					$wrap.attr("data-days_after_days", v);
+					$wrap.data("days_after_days", v);
+				}
+			);
 		}
 	};
 
