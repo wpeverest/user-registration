@@ -3316,7 +3316,10 @@
 		var total_input = $( "#ur-membership-total" );
 
 		let membershipPrice = parseFloat( membershipData.total );
-		let taxAmount = ( membershipPrice * taxRate ) / 100;
+		let taxAmount = 0;
+		if ( user_registration_params.is_tax_calculation_activated ) {
+			taxAmount = ( membershipPrice * taxRate ) / 100;
+		}
 		let totalPrice = membershipPrice + taxAmount;
 		let total = parseFloat( totalPrice ).toFixed( 2 );
 

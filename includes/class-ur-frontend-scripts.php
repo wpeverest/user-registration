@@ -543,6 +543,7 @@ class UR_Frontend_Scripts {
 			case 'user-registration':
 				$regions                = get_option( 'user_registration_tax_regions_and_rates', array() );
 				$tax_calculation_method = get_option( 'user_registration_tax_calculation_method', 'price_include' );
+				$is_tax_calculation_enabled = ur_check_module_activation( 'taxes' );
 				$currency               = get_option( 'user_registration_payment_currency', 'USD' );
 				$currencies             = ur_payment_integration_get_currencies();
 				$symbol                 = $currencies[ $currency ]['symbol'];
@@ -597,6 +598,7 @@ class UR_Frontend_Scripts {
 					'regions_list'                         => $regions,
 					'currency_symbol'                      => $symbol,
 					'currency_pos'                         => isset( $currencies[ $currency ]['symbol_pos'] ) ? $currencies[ $currency ]['symbol_pos'] : 'left',
+					'is_tax_calculation_activated'		   => ur_string_to_bool( $is_tax_calculation_enabled ),
 				);
 				break;
 
