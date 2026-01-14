@@ -15,12 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * URCR_Frontend Class
  */
 class URCR_Frontend {
-	/**
-	 * Cache for access rules to prevent multiple DB queries and recursion loops.
-	 *
-	 * @var array
-	 */
-	private $access_rules = null;
+
 
 	/**
 	 * Hook in tabs.
@@ -62,24 +57,14 @@ class URCR_Frontend {
 	 * @return array List of access rule posts.
 	 */
 	private function get_all_access_rules() {
-		if ( is_null( $this->access_rules ) ) {
-			if ( UR_PRO_ACTIVE ) {
-				remove_action( 'woocommerce_product_query', array( $this, 'urcr_woocommerce_product_query' ), 9999 );
-			}
-
-			$this->access_rules = get_posts(
-				array(
-					'numberposts' => -1,
-					'post_status' => 'publish',
-					'post_type'   => 'urcr_access_rule',
-				)
-			);
-
-			if ( UR_PRO_ACTIVE ) {
-				add_action( 'woocommerce_product_query', array( $this, 'urcr_woocommerce_product_query' ), 9999, 1 );
-			}
-		}
-		return $this->access_rules;
+		global $wpdb;
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s",
+				'urcr_access_rule',
+				'publish'
+			)
+		);
 	}
 
 	/**
