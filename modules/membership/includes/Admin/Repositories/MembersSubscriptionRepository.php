@@ -9,7 +9,7 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 	/**
 	 * @var string
 	 */
-	protected $table, $users_table, $posts_table, $posts_meta_table;
+	protected $table, $users_table, $posts_table, $posts_meta_table, $orders_table;
 
 	/**
 	 * Constructor of this class
