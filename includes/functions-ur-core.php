@@ -4226,7 +4226,7 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 				'templates' => array(
 					'label'  => esc_html__( 'Email Templates', 'user-registration' ),
 					'plugin' => 'user-registration-email-templates',
-					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Email Templates', 'user-registration' ),
 				),
 			),
