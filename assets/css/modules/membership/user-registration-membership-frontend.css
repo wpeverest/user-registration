@@ -326,7 +326,6 @@ html {
   border: 1px solid #e1e1e1;
   padding: 14px;
   gap: 8px;
-  margin-bottom: 12px;
   color: #222222;
   font-size: 15px;
   font-weight: 500;
@@ -416,7 +415,7 @@ html {
   width: 14px;
   height: 14px;
   min-height: unset;
-  accent-color: #475bb2;
+  accent-color: var(--ur-primary-color, #475bb2);
 }
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label input[type=radio]:checked,
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label input[type=radio]:checked,
@@ -442,8 +441,8 @@ html {
 #pg-container .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label input[type=radio]:checked,
 #pg-container .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label input[type=radio]:checked,
 #pg-container .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label input[type=radio]:checked {
-  border-color: #475bb2;
-  background: #475bb2;
+  border-color: var(--ur-primary-color, #475bb2);
+  background: var(--ur-primary-color, #475bb2);
 }
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label:has(input[type=radio]:checked),
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label:has(input[type=radio]:checked),
@@ -469,7 +468,7 @@ html {
 #pg-container .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label:has(input[type=radio]:checked),
 #pg-container .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label:has(input[type=radio]:checked),
 #pg-container .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label:has(input[type=radio]:checked) {
-  border-color: #475bb2;
+  border-color: var(--ur-primary-color, #475bb2);
 }
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label .ur-membership-duration,
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label .ur-membership-duration,
@@ -837,7 +836,7 @@ html {
 .ur-multi-device-form-preview .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:hover,
 #pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:hover,
 #pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:hover {
-  border-color: #475bb2;
+  border-color: var(--ur-primary-color, #475bb2);
 }
 .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label[for=ur-membership-stripe] .ur-membership-duration,
 .user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label[for=ur-membership-stripe] .ur-membership-duration,
@@ -862,7 +861,7 @@ html {
 #pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:has(input[type=radio]:checked),
 #pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:has(input[type=radio]:checked) {
   background: rgb(250.7108433735, 251.1927710843, 253.2891566265);
-  border-color: #475bb2;
+  border-color: var(--ur-primary-color, #475bb2);
 }
 .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration,
 .user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration,
@@ -943,12 +942,18 @@ html {
   width: 200px;
   cursor: pointer;
   font-size: 14px;
-  background: #475bb2;
-  color: white;
+  background: var(--ur-button-background-normal-color, #475bb2);
+  color: var(--ur-button-text-normal-color, #ffffff);
   padding: 10px 0;
   border-radius: 5px;
   border: none;
   font-family: inherit;
+}
+.user-registration-page .membership-footer .membership-signup-button:hover,
+.ur-multi-device-form-preview .membership-footer .membership-signup-button:hover,
+#pg-container .membership-footer .membership-signup-button:hover {
+  background: var(--ur-button-background-hover-color, #38488e);
+  color: var(--ur-button-text-hover-color, #ffffff);
 }
 .user-registration-page .membership-amount,
 .ur-multi-device-form-preview .membership-amount,
@@ -1449,7 +1454,7 @@ html {
   border-color: #475bb2;
 }
 .ur-membership-container.layout-list .membership-block .ur-frontend-field {
-  accent-color: #475bb2;
+  accent-color: var(--ur-primary-color, #475bb2);
 }
 .ur-membership-container.layout-list .membership-block .ur-frontend-field:focus {
   outline: none;
@@ -1457,7 +1462,7 @@ html {
   vertical-align: center;
 }
 .ur-membership-container.layout-list .membership-block:has(.ur-frontend-field:checked) {
-  border-color: #475bb2;
+  border-color: var(--ur-primary-color, #475bb2);
 }
 .ur-membership-container.layout-list .membership-block .ur-membership-title-wrapper {
   display: flex;
@@ -1631,8 +1636,8 @@ html {
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;
-  background: #475bb2;
-  color: white;
+  background: var(--ur-button-background-normal-color, #475bb2);
+  color: var(--ur-button-text-normal-color, #ffffff);
   padding: 12px 0;
   margin-top: 20px;
   border-radius: 5px;
@@ -1640,7 +1645,8 @@ html {
   font-family: inherit;
 }
 .user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .membership-signup-button:hover {
-  background: #38488e;
+  background: var(--ur-button-background-hover-color, #475bb2);
+  color: var(--ur-button-text-hover-color, #ffffff);
 }
 .user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .left-container {
   flex: 1;
@@ -1754,9 +1760,9 @@ html {
   justify-content: center;
   gap: 8px;
   padding: 14px 32px;
-  background-color: #475bb2;
-  color: #ffffff;
+  background: var(--ur-button-background-normal-color, #475bb2);
   font-size: 16px;
+  color: var(--ur-button-text-normal-color, #ffffff);
   font-weight: 600;
   border: none;
   border-radius: 4px;
@@ -1764,7 +1770,8 @@ html {
   cursor: pointer;
 }
 .thank-you-page-container .ur-button-wrapper .ur-redirect-btn:hover {
-  background-color: #38488e;
+  background: var(--ur-button-background-hover-color, #38488e);
+  color: var(--ur-button-text-hover-color, #ffffff);
 }
 .thank-you-page-container .ur-button-wrapper .ur-redirect-btn:focus {
   outline: 2px solid #475bb2;

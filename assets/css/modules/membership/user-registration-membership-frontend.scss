@@ -228,7 +228,7 @@ html {
 				border: $border_width solid $border-color;
 				padding: $spacing_14px;
 				gap: $spacing_8px;
-				margin-bottom: $spacing_12px;
+				//margin-bottom: $spacing_12px;
 				color: #222222;
 				font-size: 15px;
 				font-weight: 500;
@@ -251,16 +251,16 @@ html {
 					width: 14px;
 					height: 14px;
 					min-height: unset;
-					accent-color: $primary_color;
+					accent-color: var(--ur-primary-color, $primary_color);
 
 					&:checked {
-						border-color: $primary_color;
-						background: $primary_color;
+						border-color: var(--ur-primary-color, $primary_color);
+						background: var(--ur-primary-color, $primary_color);
 					}
 				}
 
 				&:has(input[type="radio"]:checked) {
-					border-color: $primary_color;
+					border-color: var(--ur-primary-color, $primary_color);
 				}
 
 				.ur-membership-duration {
@@ -437,7 +437,7 @@ html {
 					transition: all 0.3s ease;
 
 					&:hover {
-						border-color: $primary_color;
+						border-color: var(--ur-primary-color, $primary_color);
 					}
 
 					&[for="ur-membership-stripe"] {
@@ -452,7 +452,7 @@ html {
 
 					&:has(input[type="radio"]:checked) {
 						background: lighten($primary_color, 50%);
-						border-color: $primary_color;
+						border-color: var(--ur-primary-color, $primary_color);
 					}
 
 					.ur-membership-duration {
@@ -508,12 +508,17 @@ html {
 			width: 200px;
 			cursor: pointer;
 			font-size: 14px;
-			background: #475bb2;
-			color: $color_2;
+			background: var(--ur-button-background-normal-color, $primary_color);
+			color: var(--ur-button-text-normal-color, $white);
 			padding: 10px 0;
 			border-radius: 5px;
 			border: none;
 			font-family: inherit;
+
+			&:hover {
+				background: var(--ur-button-background-hover-color, #38488e);
+				color: var(--ur-button-text-hover-color, $white);
+			}
 		}
 	}
 
@@ -979,7 +984,7 @@ html {
 			}
 
 			.ur-frontend-field {
-				accent-color: #475bb2;
+				accent-color: var(--ur-primary-color, $primary_color);
 
 				&:focus {
 					outline: none;
@@ -989,7 +994,7 @@ html {
 			}
 
 			&:has(.ur-frontend-field:checked) {
-				border-color: #475bb2;
+				border-color: var(--ur-primary-color, $primary_color);
 			}
 
 			.ur-membership-title-wrapper {
@@ -1195,8 +1200,8 @@ html {
 						font-size: 16px;
 						font-weight: 600;
 						line-height: 24px;
-						background: #475bb2;
-						color: white;
+						background: var(--ur-button-background-normal-color, $primary_color);
+						color: var(--ur-button-text-normal-color, $white);
 						padding: 12px 0;
 						margin-top: 20px;
 						border-radius: 5px;
@@ -1204,7 +1209,9 @@ html {
 						font-family: inherit;
 
 						&:hover {
-							background: #38488e;
+							background: var(--ur-button-background-hover-color, $primary_color);
+							//border-color: #38488e;
+							color: var(--ur-button-text-hover-color, $white);
 						}
 					}
 
@@ -1346,9 +1353,9 @@ html {
 			justify-content: center;
 			gap: 8px;
 			padding: 14px 32px;
-			background-color: #475bb2;
-			color: #ffffff;
+			background: var(--ur-button-background-normal-color, #475bb2);
 			font-size: 16px;
+			color: var(--ur-button-text-normal-color, #ffffff);
 			font-weight: 600;
 			border: none;
 			border-radius: 4px;
@@ -1356,7 +1363,9 @@ html {
 			cursor: pointer;
 
 			&:hover {
-				background-color: #38488e;
+				background: var(--ur-button-background-hover-color, #38488e);
+				//border-color: #38488e;
+				color: var(--ur-button-text-hover-color, #ffffff);
 			}
 
 			&:focus {
@@ -1373,6 +1382,7 @@ html {
 			}
 		}
 	}
+
 	.ur-bank-details {
 		width: auto;
 		margin: 30px 0;

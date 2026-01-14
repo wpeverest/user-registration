@@ -25,7 +25,7 @@
 				.user-registration-MyAccount-navigation-link {
 					&.is-active {
 						a {
-							border-color: $primary_color;
+							border-color: var(--ur-primary-color, $primary_color);
 						}
 					}
 				}
@@ -121,7 +121,8 @@
 				}
 			}
 
-			.user-registration-profile-fields {}
+			.user-registration-profile-fields {
+			}
 		}
 	}
 
@@ -130,7 +131,7 @@
 			padding: 36px 30px;
 		}
 
-		>h2 {
+		> h2 {
 			margin-bottom: $spacing_24px;
 		}
 
@@ -145,7 +146,7 @@
 			}
 		}
 
-		>p {
+		> p {
 			margin-bottom: $spacing_8px;
 
 			a {
@@ -173,7 +174,7 @@
 
 			.user-registration-EditAccountForm {
 				.ur-form-grid {
-					>p {
+					> p {
 						float: right;
 						margin-bottom: 0;
 					}
@@ -183,7 +184,7 @@
 
 			.user-registration-EditProfileForm {
 				.user-registration-profile-fields {
-					>p {
+					> p {
 						float: right;
 						margin-top: $spacing_24px;
 						margin-bottom: 0;
@@ -191,7 +192,7 @@
 						.user-registration-Button.button-primary {
 							border-radius: $border_radius_4;
 							box-shadow: none;
-							border: $border_width solid $primary_color;
+							//border: $border_width solid $primary_color;
 						}
 					}
 				}
@@ -303,7 +304,7 @@
 									appearance: none;
 									margin-right: 0;
 
-									&:checked+label {
+									&:checked + label {
 										color: #475BB2;
 										background: #EDEFF7;
 										border-color: #475BB2;
@@ -762,15 +763,15 @@
 			width: 30px;
 			cursor: pointer;
 
-			&:checked+.slider {
+			&:checked + .slider {
 				background: $primary_color;
 			}
 
-			&:focus+.slider {
+			&:focus + .slider {
 				box-shadow: 0 0 1px #2196F3;
 			}
 
-			&:checked+.slider::before {
+			&:checked + .slider::before {
 				transform: translateX(14px);
 			}
 		}
@@ -887,7 +888,7 @@
 						border: 0 !important;
 					}
 
-					>a {
+					> a {
 						display: flex;
 						gap: $spacing_8px;
 
@@ -1016,16 +1017,19 @@
 							}
 
 							&.urm-profile-action-toggle {
-								color: $white;
-								background: $primary_color;
-								border-color: $primary_color;
+								color: var(--ur-button-text-normal-color, $white);
+								background: var(--ur-button-background-normal-color, $primary_color);
+								border-color: var(--ur-button-background-normal-color, $primary_color);
 
 								&:hover {
-									background: darken($primary_color, 5%);
+									color: var(--ur-button-text-hover-color, $white);
+									background: var(--ur-button-background-hover-color, darken($primary_color, 5%));
+									border-color: var(--ur-button-background-hover-color, $primary_color);
 								}
 							}
 
-							&.urm-profile-change-password-btn {}
+							&.urm-profile-change-password-btn {
+							}
 						}
 					}
 				}
@@ -1142,11 +1146,12 @@
 								line-height: 25px;
 								border-radius: $border_radius_4;
 								border: 0;
-								background: $primary_color;
-								color: $white;
+								background: var(--ur-button-background-normal-color, $primary_color);
+								color: var(--ur-button-text-normal-color, $white);
 
 								&:hover {
-									background: darken($primary_color, 5%);
+									background: var(--ur-button-background-hover-color, $primary_color);
+									color: var(--ur-button-text-hover-color, $white);
 								}
 							}
 						}
@@ -1223,7 +1228,7 @@
 									}
 
 									// Save Changes Button CSS
-									>p {
+									> p {
 										float: unset;
 										margin-top: $spacing_32px;
 										text-align: right;
@@ -1825,7 +1830,7 @@
 						}
 
 						header {
-							>h3 {
+							> h3 {
 								margin: 0;
 								font-size: 16px;
 								line-height: 24px;
@@ -1867,14 +1872,14 @@
 							&:hover {
 								a {
 									background: #f0f0f0;
-									color: $primary_color;
+									color: var(--ur-primary-color, $primary_color);
 								}
 							}
 
 							&.is-active {
 								a {
-									color: $primary_color;
-									background: $blue-50;
+									color: var(--ur-primary-color, $primary_color);
+									background: var(--ur-primary-light, $blue-50);
 								}
 							}
 						}

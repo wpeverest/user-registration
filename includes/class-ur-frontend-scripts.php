@@ -662,7 +662,7 @@ class UR_Frontend_Scripts {
 		// Primary color + variants.
 		if ( ! empty( $primary_color ) ) {
 			$primary_dark  = self::adjust_brightness( $primary_color, -10 );
-			$primary_light = self::adjust_brightness( $primary_color, 40 );
+			$primary_light = self::adjust_brightness( $primary_color, 1000 );
 
 			$css_props[] = sprintf( '--ur-primary-color: %s;', esc_attr( $primary_color ) );
 			$css_props[] = sprintf( '--ur-primary-dark: %s;', esc_attr( $primary_dark ) );
