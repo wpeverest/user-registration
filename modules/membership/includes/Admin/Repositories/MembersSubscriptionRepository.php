@@ -19,6 +19,7 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 		$this->users_table      = TableList::users_table();
 		$this->posts_table      = TableList::posts_table();
 		$this->posts_meta_table = TableList::posts_meta_table();
+		$this->orders_table     = TableList::orders_table();
 	}
 
 	/**
