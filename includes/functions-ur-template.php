@@ -1330,7 +1330,7 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 					'myaccount/form-edit-profile.php',
 					array(
 						'current_user'   => get_user_by( 'id', get_current_user_id() ),
-						'endpoint_label' => ur_get_account_menu_items()['edit-profile'],
+						'endpoint_label' => ur_get_account_menu_items()['edit-profile'] ?? '',
 					)
 				);
 			} else {
