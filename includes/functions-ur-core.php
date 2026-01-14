@@ -1915,17 +1915,44 @@ function check_username( $username ) {
  *
  * @return array
  */
-function ur_get_all_user_registration_form( $post_count = - 1 ) {
-	$args        = array(
+function ur_get_all_user_registration_form( $post_count = -1 ) {
+	$all_forms = array();
+
+	$args = array(
 		'status'      => 'publish',
 		'numberposts' => $post_count,
 		'order'       => 'ASC',
 	);
-	$posts_array = UR()->form->get_form( '', $args );
-	$all_forms   = array();
 
-	foreach ( $posts_array as $post ) {
-		$all_forms[ $post->ID ] = esc_html( $post->post_title );
+	if ( isset( UR()->form ) && method_exists( UR()->form, 'get_form' ) ) {
+		$posts_array = UR()->form->get_form( '', $args );
+
+		if ( ! empty( $posts_array ) && is_array( $posts_array ) ) {
+			foreach ( $posts_array as $post ) {
+				if ( isset( $post->ID, $post->post_title ) ) {
+					$all_forms[ $post->ID ] = esc_html( $post->post_title );
+				}
+			}
+		}
+	}
+
+	if ( empty( $all_forms ) ) {
+		$fallback_args = array(
+			'post_type'      => 'user_registration',
+			'post_status'    => 'publish',
+			'posts_per_page' => $post_count,
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
+			'no_found_rows'  => true,
+		);
+
+		$posts = get_posts( $fallback_args );
+
+		if ( ! empty( $posts ) ) {
+			foreach ( $posts as $post ) {
+				$all_forms[ $post->ID ] = esc_html( $post->post_title );
+			}
+		}
 	}
 
 	return $all_forms;
@@ -9784,7 +9811,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		foreach ( $required_pages as $option_name => $page_name ) {
 			$page_id = get_option( $option_name, 0 );
 			$is_page_missing = ! $page_id || ! get_post( $page_id );
-			
+
 			// For login page, also check if login redirect URL is set
 			if ( 'user_registration_login_page_id' === $option_name ) {
 				$login_redirect_url = get_option( 'user_registration_login_options_login_redirect_url', '' );
@@ -9792,7 +9819,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 					$is_page_missing = true;
 				}
 			}
-			
+
 			if ( $is_page_missing ) {
 				// Only include membership pages if membership module is activated
 				$is_membership_page = in_array(
