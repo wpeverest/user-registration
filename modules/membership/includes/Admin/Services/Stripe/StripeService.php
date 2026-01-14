@@ -157,11 +157,7 @@ class StripeService {
 		$local_currency = ! empty( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
 		$ur_zone_id     = ! empty( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
 
-		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && (
-				class_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions' ) &&
-				method_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions', 'ur_get_pricing_zone_by_id' )
-			)
-		) {
+		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) ) {
 			$currency            = $local_currency;
 			$pricing_data        = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
 			$local_currency_data = ! empty( $payment_data['local_currency'] ) ? $payment_data['local_currency'] : array();
@@ -270,6 +266,7 @@ class StripeService {
 			);
 			$response['stripe_cus_id'] = $customer->id;
 
+			error_log( print_r( $response, true ) );
 			PaymentGatewayLogging::log_api_response(
 				'stripe',
 				'Stripe customer created successfully',
