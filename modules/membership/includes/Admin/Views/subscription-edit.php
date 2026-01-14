@@ -2,6 +2,7 @@
 /**
  * Subscription Edit
  */
+use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -71,6 +72,10 @@ if ( ! empty( $trial_end_date ) ) {
 $orders_repository  = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
 $subscription_order = $orders_repository->get_order_by_subscription( $subscription['ID'] );
 $order_id           = ! empty( $subscription_order ) && isset( $subscription_order['ID'] ) ? $subscription_order['ID'] : '';
+
+$order_repository = new OrdersRepository();
+$order_meta_data = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
+$tax_data 		 = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data[ 'meta_value' ], true ) : array();
 
 $delete_url = wp_nonce_url(
 	admin_url( 'admin.php?page=user-registration-subscriptions&action=delete&id=' . $subscription['ID'] ),
@@ -186,7 +191,13 @@ $delete_url = wp_nonce_url(
 								<div class="ur-subscription__table-head">
 									<div><?php esc_html_e( 'Item', 'user-registration' ); ?></div>
 									<div><?php esc_html_e( 'Recurring', 'user-registration' ); ?></div>
+									<?php if ( ! empty( $tax_data ) ) : ?>
+									<div><?php esc_html_e( 'Tax Rate', 'user-registration' ); ?></div>
+									<?php endif; ?>
 									<div><?php esc_html_e( 'Price', 'user-registration' ); ?></div>
+									<?php if ( ! empty( $tax_data ) ) : ?>
+									<div><?php esc_html_e( 'Total', 'user-registration' ); ?></div>
+									<?php endif; ?>
 								</div>
 								<div class="ur-subscription__table-body">
 									<div>
@@ -200,9 +211,19 @@ $delete_url = wp_nonce_url(
 										<?php endif; ?>
 									</div>
 									<div><?php echo esc_html( $billing_cycle_label ); ?></div>
+									<?php if ( ! empty( $tax_data ) ) : ?>
+										<div class="ur-subscription__table-tax_rate">
+											<?php echo esc_html( $tax_data['tax_rate'] . '%' ); ?>
+										</div>
+									<?php endif; ?>
 									<div class="ur-subscription__table-price">
 										<?php echo esc_html( $symbol . number_format( $product_amount, 2 ) ); ?>
 									</div>
+									<?php if ( ! empty( $tax_data ) ) : ?>
+										<div class="ur-subscription__table-total">
+											<?php echo esc_html( $symbol . number_format( $tax_data['total_with_tax'], 2 ) ); ?>
+										</div>
+									<?php endif; ?>
 								</div>
 							</div>
 						</div>
