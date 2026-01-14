@@ -1,3 +1,6 @@
+= 5.0.2    - 14/01/2026 =
+* Fix      - Critical error after update.
+
 = 5.0.1    - 14/01/2026 =
 * Fix      - Critical error after update.
 
