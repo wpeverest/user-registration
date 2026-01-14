@@ -766,11 +766,11 @@
 			if ("left" === urmf_data.curreny_pos) {
 				total_input.text(currency + total);
 				subTotalInput.text(currency + subTotal);
-				taxInput.text(currency + taxAmount.toFixed(2));
+				// taxInput.text(currency + taxAmount.toFixed(2));
 			} else {
 				total_input.text(total + currency);
 				subTotalInput.text(subTotal + currency);
-				taxInput.text(taxAmount.toFixed(2) + currency);
+				// taxInput.text(taxAmount.toFixed(2) + currency);
 			}
 		},
 		upgrade_membership: function (
