@@ -541,7 +541,7 @@ class UR_Frontend_Scripts {
 	private static function get_script_data( $handle ) {
 		switch ( $handle ) {
 			case 'user-registration':
-				$regions                = get_option( 'user_registration_tax_price_display_option', array() );
+				$regions                = get_option( 'user_registration_tax_regions_and_rates', array() );
 				$tax_calculation_method = get_option( 'user_registration_tax_calculation_method', 'price_include' );
 				$currency               = get_option( 'user_registration_payment_currency', 'USD' );
 				$currencies             = ur_payment_integration_get_currencies();

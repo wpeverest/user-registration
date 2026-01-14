@@ -156,7 +156,7 @@ class Frontend {
 		$symbol               = $currencies[ $currency ]['symbol'];
 		$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
 
-		$regions 				= get_option( 'user_registration_tax_price_display_option', array() );
+		$regions 				= get_option( 'user_registration_tax_regions_and_rates', array() );
 		$tax_calculation_method = get_option( 'user_registration_tax_calculation_method', 'price_include' );
 
 		$redirect_page_url = get_permalink( $registration_page_id );
