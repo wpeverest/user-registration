@@ -16,7 +16,6 @@ defined( 'ABSPATH' ) || exit;
  */
 class URCR_Frontend {
 
-
 	/**
 	 * Hook in tabs.
 	 */
