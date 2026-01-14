@@ -413,7 +413,6 @@ class StripeService {
 				)
 			);
 
-			// Update order status to fail
 			$this->members_orders_repository->update(
 				$latest_order['ID'],
 				array(
@@ -421,7 +420,6 @@ class StripeService {
 				)
 			);
 
-			// Fire action hook for order status failed (for custom email module)
 			do_action( 'ur_membership_order_status_failed', $latest_order['ID'], $latest_order, 'failed' );
 
 			if ( ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
@@ -432,7 +430,6 @@ class StripeService {
 				unset( $membership_process['upgrade'][ $latest_order['item_id'] ] );
 				update_user_meta( $member_id, 'urm_membership_process', $membership_process );
 
-				// Fire action hook for membership renewal failed (for custom email module)
 				do_action( 'user_registration_membership_renewal_failed', $member_id, $latest_order['item_id'] );
 			}
 

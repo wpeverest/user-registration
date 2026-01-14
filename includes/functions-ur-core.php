@@ -4486,12 +4486,10 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 				$detail = $section_details;
 				if ( ! empty( $license_plan ) ) {
 					$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
-					// Check if this is the custom-email feature and handle feature activation
 					if ( 'custom-email' === $current_section ) {
 						$feature_slug       = 'user-registration-custom-email';
 						$is_feature_enabled = ur_check_module_activation( 'custom-email' );
 
-						// Only show activation button if user has the right license plan and feature is not enabled
 						if ( in_array( $license_plan, $detail['plan'], true ) && ! $is_feature_enabled ) {
 							$description  = esc_html__( 'Please activate the Custom Email feature to use this functionality.', 'user-registration' );
 							$button_class = 'user-registration-settings-feature-activate';
@@ -9861,7 +9859,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		$missing_pages_data = array();
 
 		foreach ( $required_pages as $option_name => $page_name ) {
-			$page_id = get_option( $option_name, 0 );
+			$page_id         = get_option( $option_name, 0 );
 			$is_page_missing = ! $page_id || ! get_post( $page_id );
 
 			// For login page, also check if login redirect URL is set

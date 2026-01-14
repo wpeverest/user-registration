@@ -235,9 +235,8 @@ class UR_Emailer {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
 		} elseif ( ( 'default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status ) ) && ! $is_membership_form ) {
-			// Check if custom email should override default email
+
 			if ( UR_PRO_ACTIVE && class_exists( '\Custom_Email_Sender' ) ) {
-				// Check for all_members override
 				if ( \Custom_Email_Sender::should_override_default_email( 'member_signs_up', 'all_members', $user_id, 0 ) ) {
 					return;
 				}
@@ -527,7 +526,6 @@ class UR_Emailer {
 				return;
 			}
 
-			// Check if custom email should override default admin email
 			if ( UR_PRO_ACTIVE && class_exists( '\Custom_Email_Sender' ) ) {
 				if ( \Custom_Email_Sender::should_override_default_email( 'member_signs_up', 'admin', $user_id, 0 ) ) {
 					return;

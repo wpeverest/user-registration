@@ -495,7 +495,6 @@ class AJAX {
 			);
 		}
 
-		// Fire action hook when order status is updated (for custom email module to handle)
 		if ( 'failed' === $status ) {
 			do_action( 'ur_membership_order_status_failed', $order_id, $order, $status );
 		}
