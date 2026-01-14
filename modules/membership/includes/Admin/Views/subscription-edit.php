@@ -240,6 +240,9 @@ $delete_url = wp_nonce_url(
 									<div class="ur-subscription__section-label">
 										<?php esc_html_e( 'Amount', 'user-registration' ); ?>
 									</div>
+									<?php
+									$product_amount = ! empty( $tax_data['total_with_tax'] ) ? $tax_data['total_with_tax'] : $product_amount;
+									?>
 									<div class="ur-subscription__section-value">
 										<?php echo esc_html( $symbol . number_format( $product_amount, 2 ) ); ?>
 									</div>
