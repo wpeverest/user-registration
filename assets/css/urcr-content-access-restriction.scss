@@ -681,6 +681,7 @@ $border-left-color_3: #0073aa;
 	hr {
 		margin: 8px 0;
 	}
+
 	.urcr-global-migration-notice {
 		margin: 20px 0;
 		padding: 10px;
@@ -1342,6 +1343,7 @@ $border-left-color_3: #0073aa;
 		.urcr-condition-selection-section {
 			width: 100%;
 			gap: 12px;
+			align-items: flex-start !important;
 
 			// @media screen and (max-width: 1550px) {
 			// 	flex-direction: column;
@@ -1376,15 +1378,16 @@ $border-left-color_3: #0073aa;
 					}
 				}
 			}
+
+			.urcr-condition-operator {
+				margin-top: 10px;
+				align-self: unset !important;
+			}
 		}
 
 		.urcr-target-selection-section {
 			align-items: flex-start;
 			gap: 20px;
-
-			// .urcr-access-select {
-			// 	width: 150px;
-			// }
 
 			.urcr-arrow-icon {
 				display: inline-block;
