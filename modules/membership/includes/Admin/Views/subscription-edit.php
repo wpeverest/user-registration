@@ -238,7 +238,7 @@ $delete_url = wp_nonce_url(
 									<div class="ur-subscription__section-value">
 										<?php if ( ! empty( $order_id ) ) : ?>
 										<a
-											href="<?php echo esc_url( admin_url( "admin.php?page=user-registration-payment-history&action=view&id={$order_id}" ) ); ?>">
+											href="<?php echo esc_url( admin_url( "admin.php?page=member-payment-history&action=view&id={$order_id}" ) ); ?>">
 											#<?php echo esc_html( $order_id ); ?>
 										</a>
 										<?php else : ?>
