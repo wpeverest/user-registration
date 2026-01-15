@@ -1845,7 +1845,7 @@ class UR_Admin_Settings {
 				}
 
 				// Get posted value.
-				if ( null !== $option['id'] ) {
+				if ( isset( $option['id'] ) && null !== $option['id'] ) {
 					if ( strstr( $option['id'], '[' ) ) {
 						parse_str( $option['id'], $option_name_array );
 						$option_name = sanitize_text_field( current( array_keys( $option_name_array ) ) );

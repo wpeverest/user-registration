@@ -252,7 +252,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						'user_login'      => $row['user_login'],
 						'user_email'      => $row['user_email'],
 						'user_registered' => $row['user_registered'],
-						'payment_method'  => $row['payment_method'],
+						'payment_method'  => $row['payment_method'] ?? '',
 						'subscriptions'   => array(),
 					);
 				}

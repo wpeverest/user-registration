@@ -285,8 +285,15 @@ textarea.ur-input-border-red {
 		}
 
 		.ur-reset-password-btn {
-			border: 1px solid var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
-			background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
+			border: 1px solid
+				var(
+					--ur-button-background-normal-color,
+					var(--ur-primary-color, $primary_color)
+				);
+			background: var(
+				--ur-button-background-normal-color,
+				var(--ur-primary-color, $primary_color)
+			);
 			width: 100%;
 			color: var(--ur-button-text-normal-color, $white);
 			letter-spacing: 0.15px;
@@ -312,7 +319,8 @@ textarea.ur-input-border-red {
 				.btn-primary {
 					min-height: 34px;
 					background: var(--ur-primary-color, $primary_color);
-					border: $border_width solid var(--ur-primary-color, $primary_color);
+					border: $border_width solid
+						var(--ur-primary-color, $primary_color);
 					color: $white;
 					border-radius: $border_radius_4;
 					font-size: 14px;
@@ -441,7 +449,6 @@ textarea.ur-input-border-red {
 							}
 
 							input {
-
 								&[type="checkbox"],
 								&[type="radio"] {
 									margin-top: 0px;
@@ -485,7 +492,10 @@ textarea.ur-input-border-red {
 							border-radius: $border_radius_4;
 
 							&--focus {
-								border-color: var(--ur-primary-color, $primary_color);
+								border-color: var(
+									--ur-primary-color,
+									$primary_color
+								);
 								border-radius: $border_radius_4;
 							}
 
@@ -600,13 +610,27 @@ textarea.ur-input-border-red {
 
 			select {
 				-webkit-appearance: none;
-				background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E") no-repeat right 5px top 55%;
+				background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M19.561 7.403a1.468 1.468 0 0 1 2.02 0 1.339 1.339 0 0 1 0 1.944l-8.57 8.25a1.468 1.468 0 0 1-2.021 0l-8.572-8.25a1.339 1.339 0 0 1 0-1.944 1.468 1.468 0 0 1 2.02 0L12 14.68l7.561-7.278Z'/%3E%3C/svg%3E");
+				background-repeat: no-repeat;
+				background-position: right 12px center;
+				background-size: 14px 14px;
 				min-height: 38px;
 				max-height: 38px;
+				font-size: 14px;
+				line-height: 20px;
 				padding: 0 $spacing_12px;
 				border-radius: $border_radius_4;
 				box-shadow: none;
 				cursor: pointer;
+				color: #383838;
+				margin: 0;
+				border: $border_width solid $border-color;
+
+				&:focus {
+					border-color: $primary_color;
+					outline: none;
+					box-shadow: none;
+				}
 			}
 
 			legend,
@@ -634,7 +658,10 @@ textarea.ur-input-border-red {
 				padding: $spacing_6px $spacing_12px;
 
 				&:focus {
-					border-color: var(--ur-primary-color, $primary_color) !important;
+					border-color: var(
+						--ur-primary-color,
+						$primary_color
+					) !important;
 				}
 			}
 
@@ -717,7 +744,6 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
-
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -768,7 +794,6 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
-
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -818,7 +843,6 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
-
 					.ur-field-item,
 					.form-row {
 						margin-bottom: 0;
@@ -871,7 +895,6 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
-
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -935,7 +958,6 @@ textarea.ur-input-border-red {
 			form {
 				.ur-form-row {
 					.ur-form-grid {
-
 						input[type="text"],
 						input[type="email"],
 						input[type="url"],
@@ -1090,7 +1112,6 @@ textarea.ur-input-border-red {
 			}
 
 			header {
-
 				p,
 				.button-group {
 					margin-bottom: 10px;
@@ -1188,7 +1209,6 @@ textarea.ur-input-border-red {
 }
 
 .edit-post-visual-editor {
-
 	.ur-gutenberg-form-selector-wrap,
 	.user-registration-gutenberg-form-selector-wrap {
 		h2 {
@@ -1284,7 +1304,6 @@ span.ur-shortcode-form-embed-dot {
 	border: 0 !important;
 	border-radius: 50%;
 	background-color: $primary_color;
-	;
 	animation: user-registration-heartbeat 1.5s infinite !important;
 	margin: 3px 10px;
 }
@@ -1419,7 +1438,7 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page {
 	.edit-post-layout {
-		.components-notice-list>div {
+		.components-notice-list > div {
 			padding-left: 50px;
 		}
 	}
@@ -1456,7 +1475,7 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page.is-fullscreen-mode {
 	.edit-post-layout {
-		.components-notice-list>div {
+		.components-notice-list > div {
 			padding-left: 125px;
 		}
 	}
@@ -1555,7 +1574,8 @@ span.ur-shortcode-form-embed-dot {
 //Revamp design for message and error
 .ur-message-container {
 	border-radius: 7px;
-	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+	box-shadow:
+		0px 4px 16px 0px rgba(17, 17, 26, 0.05),
 		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 	padding: 60px;
 
@@ -1654,7 +1674,8 @@ span.ur-shortcode-form-embed-dot {
 			border-radius: 8px 0 0 0;
 			border-top: 1px solid #f1f1f1;
 			background: #f9f9f9;
-			box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+			box-shadow:
+				0px 4px 16px 0px rgba(17, 17, 26, 0.05),
 				0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 			clip-path: inset(0px -1px -1px -1px);
 
@@ -1708,7 +1729,8 @@ span.ur-shortcode-form-embed-dot {
 .user-registration.ur-frontend-form {
 	background: $white;
 	border-radius: $border_radius_8;
-	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+	box-shadow:
+		0px 4px 16px 0px rgba(17, 17, 26, 0.05),
 		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 	padding: $spacing_60px;
 
@@ -1763,10 +1785,8 @@ span.ur-shortcode-form-embed-dot {
 
 // Login Form Design ReVamped CSS
 body {
-
 	&[class*="user-registration-"],
 	&[class^="ur-"] {
-
 		/* Minimal WordPress Editor Styles */
 		.wp-editor-container {
 			border-radius: 8px !important;
@@ -1787,7 +1807,7 @@ body {
 				margin-bottom: 0 !important;
 				padding: 6px 8px !important;
 
-				&-grp>div {
+				&-grp > div {
 					padding: 0;
 				}
 
@@ -2054,7 +2074,7 @@ body {
 				display: block;
 			}
 
-			>ul {
+			> ul {
 				padding-left: 0;
 				margin: 0;
 				list-style: none;
@@ -2063,7 +2083,7 @@ body {
 	}
 
 	.user-registration-error {
-		>svg {
+		> svg {
 			display: none;
 		}
 	}
@@ -2072,7 +2092,6 @@ body {
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration {
 			&.ur-frontend-form {
-
 				&:has(.ur-grid-2),
 				&:has(.ur-grid-3) {
 					max-width: 1200px;
@@ -2091,11 +2110,9 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
-
 									input,
 									textarea,
 									select {
-
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2129,7 +2146,6 @@ body {
 									input,
 									textarea,
 									select {
-
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2156,11 +2172,9 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
-
 									input,
 									textarea,
 									select {
-
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2182,11 +2196,9 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
-
 									input,
 									textarea,
 									select {
-
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2228,11 +2240,9 @@ body {
 					.user-registration-form-login {
 						.ur-form-row {
 							.ur-form-grid {
-
 								input,
 								textarea,
 								select {
-
 									&:not([type="radio"]),
 									&:not([type="checkbox"]),
 									&:not([type="file"]) {
@@ -2258,7 +2268,8 @@ body {
 				.ur-frontend-form {
 					&.login {
 						margin: 0px auto;
-						box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+						box-shadow:
+							0px 4px 16px 0px rgba(17, 17, 26, 0.05),
 							0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 
 						.user-registration-error {
@@ -2295,7 +2306,10 @@ body {
 									}
 
 									.ur-submit-button {
-										background: var(--ur-primary-color, $primary_color);
+										background: var(
+											--ur-primary-color,
+											$primary_color
+										);
 										border-radius: 4px;
 									}
 								}
@@ -2458,7 +2472,10 @@ body {
 								padding: 0 14px 0 0;
 
 								&:focus {
-									border-color: var(--ur-primary-color, $primary_color);
+									border-color: var(
+										--ur-primary-color,
+										$primary_color
+									);
 								}
 							}
 						}
@@ -2486,9 +2503,15 @@ body {
 									padding: 0 $spacing_12px;
 									color: #383838;
 									box-shadow: none;
+									border: $border_width solid $border-color;
 
 									&:focus {
-										border-color: var(--ur-primary-color, $primary_color);
+										border-color: var(
+											--ur-primary-color,
+											$primary_color
+										);
+										outline: none;
+										box-shadow: none;
 									}
 
 									&::placeholder {
@@ -2516,14 +2539,27 @@ body {
 						font-weight: $medium;
 						line-height: 24px;
 						letter-spacing: 0.15px;
-						border: $border_width solid var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
+						border: $border_width solid
+							var(
+								--ur-button-background-normal-color,
+								var(--ur-primary-color, $primary_color)
+							);
 						margin-right: 0;
-						background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
+						background: var(
+							--ur-button-background-normal-color,
+							var(--ur-primary-color, $primary_color)
+						);
 
 						&:hover {
 							color: var(--ur-button-text-hover-color, $white);
-							background: var(--ur-button-background-hover-color, #38488e);
-							border-color: var(--ur-button-background-hover-color, #38488e);
+							background: var(
+								--ur-button-background-hover-color,
+								#38488e
+							);
+							border-color: var(
+								--ur-button-background-hover-color,
+								#38488e
+							);
 						}
 					}
 
@@ -2531,7 +2567,8 @@ body {
 						margin-left: 0;
 						background: transparent;
 						color: var(--ur-primary-color, $primary_color);
-						border: $border_width solid var(--ur-primary-color, $primary_color);
+						border: $border_width solid
+							var(--ur-primary-color, $primary_color);
 
 						&:hover {
 							background: var(--ur-primary-color, $primary_color);
@@ -2565,7 +2602,7 @@ body {
 									}
 								}
 
-								>div {
+								> div {
 									display: block;
 									float: unset !important;
 									flex-direction: row-reverse;
@@ -2591,7 +2628,10 @@ body {
 										padding: 10px 24px;
 										font-size: 15px;
 										line-height: 25px;
-										background: var(--ur-primary-color, $primary_color);
+										background: var(
+											--ur-primary-color,
+											$primary_color
+										);
 
 										&.ur-disabled-btn {
 											cursor: not-allowed;
@@ -2609,7 +2649,9 @@ body {
 										}
 									}
 
-									&:has(.user-registration-passwordless-login) {
+									&:has(
+										.user-registration-passwordless-login
+									) {
 										display: flex;
 										flex-direction: column-reverse;
 										gap: 16px !important;
@@ -2671,7 +2713,10 @@ body {
 
 										a {
 											text-underline-offset: 4px;
-											color: var(--ur-primary-color, $primary_color);
+											color: var(
+												--ur-primary-color,
+												$primary_color
+											);
 										}
 									}
 								}
@@ -2685,7 +2730,10 @@ body {
 
 									a {
 										text-underline-offset: 4px;
-										color: var(--ur-primary-color, $primary_color);
+										color: var(
+											--ur-primary-color,
+											$primary_color
+										);
 									}
 								}
 
@@ -2770,7 +2818,6 @@ body {
 										}
 
 										&.ursc_theme {
-
 											&_2,
 											&_3 {
 												.ursc-login-media {
@@ -2858,7 +2905,6 @@ body {
 					margin: 0 -10px;
 
 					.ur-field-item {
-
 						ul,
 						ol {
 							padding-left: 4px;
@@ -2866,7 +2912,6 @@ body {
 
 						.input-wrapper {
 							input {
-
 								&:not([type="checkbox"]),
 								&:not([type="radio"]) {
 									min-height: 50px;
@@ -2946,13 +2991,19 @@ body {
 										padding: $spacing_10px $spacing_24px;
 										border: none;
 										background: #edeff7;
-										color: var(--ur-primary-color, $primary_color);
+										color: var(
+											--ur-primary-color,
+											$primary_color
+										);
 										display: block;
 										margin: $spacing_32px 0 0;
 										transition: all 0.3s ease-in-out;
 
 										&:hover {
-											background: var(--ur-primary-color, $primary_color);
+											background: var(
+												--ur-primary-color,
+												$primary_color
+											);
 											color: $white;
 										}
 									}
@@ -3019,7 +3070,8 @@ body {
 
 									form {
 										.ur-login-form-setting-block {
-											padding: $spacing_20px $spacing_12px $spacing_12px;
+											padding: $spacing_20px $spacing_12px
+												$spacing_12px;
 
 											&:first-child {
 												h2 {
@@ -3082,7 +3134,7 @@ body.user-registration-page {
 		.et-l {
 			.et-fb-modules-list {
 				ul {
-					>li {
+					> li {
 						position: relative;
 
 						// Registration Form Icon
@@ -3402,10 +3454,17 @@ body.user-registration-page {
 			margin: 0;
 		}
 
-		p>input.user-registration-Button.button {
+		p > input.user-registration-Button.button {
 			color: var(--ur-button-text-normal-color, $white);
-			background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
-			border: $border_width var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
+			background: var(
+				--ur-button-background-normal-color,
+				var(--ur-primary-color, $primary_color)
+			);
+			border: $border_width
+				var(
+					--ur-button-background-normal-color,
+					var(--ur-primary-color, $primary_color)
+				);
 			border-radius: $border_radius_4;
 			border-style: inherit;
 

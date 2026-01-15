@@ -158,7 +158,7 @@ class URCR_Frontend {
 
 			foreach ( $access_rule_posts as $access_rule_post ) {
 				$access_rule = json_decode( $access_rule_post->post_content, true );
-				
+
 				// Verify if required params are available.
 				if ( ur_string_to_bool( $access_rule['enabled'] ) && ! empty( $access_rule['target_contents'] ) ) {
 					$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
@@ -167,7 +167,7 @@ class URCR_Frontend {
 					}
 				}
 			}
-			
+
 			$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
 
 			if ( $is_whole_site_restriction ) {
@@ -277,7 +277,7 @@ class URCR_Frontend {
 				}
 			}
 		}
-		
+
 		return $template;
 	}
 
@@ -993,7 +993,7 @@ class URCR_Frontend {
 
 			foreach ( $access_rule_posts as $access_rule_post ) {
 				$access_rule = json_decode( $access_rule_post->post_content, true );
-				
+
 				// Verify if required params are available.
 				if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
 					continue;
@@ -1008,9 +1008,9 @@ class URCR_Frontend {
 				}
 
 				if ( urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule ) ) {
-					
+
 					$is_target = urcr_is_target_post( $access_rule['target_contents'], $post );
-					
+
 					if ( true === $is_target ) {
 						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
 
@@ -1024,12 +1024,12 @@ class URCR_Frontend {
 					}
 				}
 			}
-			
-			
+
+
 			if ( $access_granted ) {
 				continue;
 			}
-			
+
 			if ( null !== $restriction_rule ) {
 				do_action( 'urcr_pre_content_restriction_applied', $restriction_rule, $post );
 
@@ -1041,7 +1041,7 @@ class URCR_Frontend {
 				do_action( 'urcr_post_content_restriction_applied', $restriction_rule, $post );
 			}
 		}
-	
+
 		return $is_restriction_applied;
 	}
 

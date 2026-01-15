@@ -697,8 +697,14 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				);
 			}
 
-			$members_obj = new \User_Registration_Members_Menu();
-			$members_obj->add_members_menu_tab();
+			if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
+				require_once UR_ABSPATH . 'includes/admin/settings/class-ur-members-menu.php';
+			}
+
+			if ( class_exists( 'User_Registration_Members_Menu' ) ) {
+				$members_obj = new \User_Registration_Members_Menu();
+				$members_obj->add_members_menu_tab();
+			}
 
 			if ( UR_PRO_ACTIVE && class_exists( 'WPEverest\URPrivateNotes\UserRegistrationPrivateNotes' ) && version_compare( UR_PRIVATE_NOTES_VERSION, '1.0.12', '>' ) ) {
 				$private_notes_obj = new Admin();
