@@ -1,15 +1,15 @@
 /**
  * External Dependencies
  */
-import React, { useState, useEffect, useRef } from "react";
 import { __ } from "@wordpress/i18n";
+import { useEffect, useRef, useState } from "react";
 import { toggleRuleStatus } from "../../api/content-access-rules-api";
-import SettingsPanel from "../settings/SettingsPanel";
-import RuleContentDisplay from "./RuleContentDisplay";
+import { isURDev } from "../../utils/localized-data";
+import { showError, showSuccess } from "../../utils/notifications";
 import DeleteRuleModal from "../modals/DeleteRuleModal";
 import DuplicateRuleModal from "../modals/DuplicateRuleModal";
-import { showSuccess, showError } from "../../utils/notifications";
-import { isURDev } from "../../utils/localized-data";
+import SettingsPanel from "../settings/SettingsPanel";
+import RuleContentDisplay from "./RuleContentDisplay";
 
 /* global _URCR_DASHBOARD_ */
 const { adminURL } =
@@ -210,7 +210,7 @@ const RuleCard = ({
 					}
 				}}
 			>
-				<div className="integration-detail urcr-integration-detail">					
+				<div className="integration-detail urcr-integration-detail">
 					<div className="user-registration-editable-title urcr-rule-title">
 						<input
 							ref={titleInputRef}
@@ -224,11 +224,13 @@ const RuleCard = ({
 							onClick={(e) => e.stopPropagation()}
 							disabled={!isEditingTitle}
 						/>
-						<span
-							className="user-registration-editable-title__icon dashicons dashicons-edit"
-							onClick={handleEditTitle}
-							style={{ cursor: "pointer" }}
-						></span>
+						{!isMembershipRule && (
+							<span
+								className="user-registration-editable-title__icon dashicons dashicons-edit"
+								onClick={handleEditTitle}
+								style={{ cursor: "pointer" }}
+							></span>
+						)}
 					</div>
 					<span className="urcr-separator"> | </span>
 					<span className="urcr-rule-id">ID: {formattedId}</span>
@@ -253,13 +255,11 @@ const RuleCard = ({
 							<span className="urcr-toggle-loader spinner is-active"></span>
 						)}
 					</div>
-					
-					
+
 					{/* <span className="urcr-separator"> | </span> */}
-					
 				</div>
 
-				<div className="integration-action urcr-integration-action">				
+				<div className="integration-action urcr-integration-action">
 					<div className="urcr-membership-tabs">
 						<button
 							className={`urcr-tab-button ${
