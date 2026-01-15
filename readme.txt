@@ -263,6 +263,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix      - Members menu class not found.
 * Fix      - get_form function not working.
 * Fix      - Content rules edit title design.
+* Fix      - Post editor margins removed after update.
 * Fix      - Warnings due to payment_method not defined.
 * Fix      - View payment link not working form subscription editor.
 

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-15T06:30:25+00:00\n"
+"POT-Creation-Date: 2026-01-15T08:27:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -3132,7 +3132,7 @@ msgstr ""
 #: modules/membership/includes/Admin.php:534
 #: templates/myaccount/membership.php:42
 #: templates/myaccount/payments.php:51
-#: src/content-restriction/components/settings/SettingsPanel.js:581
+#: src/content-restriction/components/settings/SettingsPanel.js:607
 msgid "Action"
 msgstr ""
 
@@ -3253,7 +3253,7 @@ msgstr ""
 #: modules/stripe/class-ur-stripe-module.php:106
 #: templates/myaccount/form-reset-password.php:95
 #: src/content-restriction/components/rules/RuleContentDisplay.js:323
-#: src/content-restriction/components/settings/SettingsPanel.js:706
+#: src/content-restriction/components/settings/SettingsPanel.js:729
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:296
 msgid "Save"
 msgstr ""
@@ -10219,9 +10219,9 @@ msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:1277
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:334
-#: src/content-restriction/components/settings/SettingsPanel.js:286
-#: src/content-restriction/components/settings/SettingsPanel.js:491
-#: src/content-restriction/components/settings/SettingsPanel.js:600
+#: src/content-restriction/components/settings/SettingsPanel.js:306
+#: src/content-restriction/components/settings/SettingsPanel.js:514
+#: src/content-restriction/components/settings/SettingsPanel.js:626
 #: src/content-restriction/utils/rule-save-helper.js:40
 msgid "Show Message"
 msgstr ""
@@ -10634,30 +10634,30 @@ msgid "Payment Status"
 msgstr ""
 
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:338
-#: src/content-restriction/components/settings/SettingsPanel.js:302
-#: src/content-restriction/components/settings/SettingsPanel.js:507
-#: src/content-restriction/components/settings/SettingsPanel.js:603
+#: src/content-restriction/components/settings/SettingsPanel.js:325
+#: src/content-restriction/components/settings/SettingsPanel.js:533
+#: src/content-restriction/components/settings/SettingsPanel.js:629
 msgid "Redirect"
 msgstr ""
 
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:342
-#: src/content-restriction/components/settings/SettingsPanel.js:311
-#: src/content-restriction/components/settings/SettingsPanel.js:516
-#: src/content-restriction/components/settings/SettingsPanel.js:606
+#: src/content-restriction/components/settings/SettingsPanel.js:334
+#: src/content-restriction/components/settings/SettingsPanel.js:542
+#: src/content-restriction/components/settings/SettingsPanel.js:632
 msgid "Redirect to a Local Page"
 msgstr ""
 
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:346
-#: src/content-restriction/components/settings/SettingsPanel.js:324
-#: src/content-restriction/components/settings/SettingsPanel.js:529
-#: src/content-restriction/components/settings/SettingsPanel.js:612
+#: src/content-restriction/components/settings/SettingsPanel.js:347
+#: src/content-restriction/components/settings/SettingsPanel.js:555
+#: src/content-restriction/components/settings/SettingsPanel.js:638
 msgid "Show UR Form"
 msgstr ""
 
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:350
-#: src/content-restriction/components/settings/SettingsPanel.js:332
-#: src/content-restriction/components/settings/SettingsPanel.js:537
-#: src/content-restriction/components/settings/SettingsPanel.js:615
+#: src/content-restriction/components/settings/SettingsPanel.js:355
+#: src/content-restriction/components/settings/SettingsPanel.js:563
+#: src/content-restriction/components/settings/SettingsPanel.js:641
 msgid "Render Shortcode"
 msgstr ""
 
@@ -14127,7 +14127,7 @@ msgid "No group data to save"
 msgstr ""
 
 #: src/content-restriction/components/rules/RuleContentDisplay.js:322
-#: src/content-restriction/components/settings/SettingsPanel.js:705
+#: src/content-restriction/components/settings/SettingsPanel.js:728
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:292
 msgid "Saving..."
 msgstr ""
@@ -14192,15 +14192,15 @@ msgstr ""
 msgid "Custom message"
 msgstr ""
 
-#: src/content-restriction/components/settings/SettingsPanel.js:586
+#: src/content-restriction/components/settings/SettingsPanel.js:612
 msgid "Action to perform for restricting the specified contents"
 msgstr ""
 
-#: src/content-restriction/components/settings/SettingsPanel.js:668
+#: src/content-restriction/components/settings/SettingsPanel.js:691
 msgid "Advanced Logic"
 msgstr ""
 
-#: src/content-restriction/components/settings/SettingsPanel.js:673
+#: src/content-restriction/components/settings/SettingsPanel.js:696
 msgid "Enable advanced logic gates (OR, NOT) and nested groups for complex condition rules"
 msgstr ""
 

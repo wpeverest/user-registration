@@ -1,18 +1,17 @@
 /**
  * External Dependencies
  */
-import React, { useState, useEffect, useRef } from "react";
 import { __ } from "@wordpress/i18n";
-import { getURCRLocalizedData, getURCRData, isProAccess } from "../../utils/localized-data";
-import { showError } from "../../utils/notifications";
-import { saveRuleWithCollectiveData } from "../../utils/rule-save-helper";
+import { useEffect, useRef, useState } from "react";
 import { hasAdvancedLogic } from "../../utils/advanced-logic-helper";
+import { getURCRData, isProAccess } from "../../utils/localized-data";
+import { saveRuleWithCollectiveData } from "../../utils/rule-save-helper";
+import AdvancedLogicWarningModal from "../modals/AdvancedLogicWarningModal";
+import LocalPageAction from "./LocalPageAction";
 import MessageAction from "./MessageAction";
 import RedirectAction from "./RedirectAction";
-import LocalPageAction from "./LocalPageAction";
-import URFormAction from "./URFormAction";
 import ShortcodeAction from "./ShortcodeAction";
-import AdvancedLogicWarningModal from "../modals/AdvancedLogicWarningModal";
+import URFormAction from "./URFormAction";
 
 /* global wp */
 
@@ -49,7 +48,9 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				ruleActions[0].message.trim() !== ""
 			) {
 				try {
-					const decodedMessage = decodeURIComponent(ruleActions[0].message);
+					const decodedMessage = decodeURIComponent(
+						ruleActions[0].message
+					);
 					setMessage(decodedMessage);
 					setUseGlobalMessage(false);
 				} catch (e) {
@@ -77,7 +78,9 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				ruleActions[0].message.trim() !== ""
 			) {
 				try {
-					const decodedMessage = decodeURIComponent(ruleActions[0].message);
+					const decodedMessage = decodeURIComponent(
+						ruleActions[0].message
+					);
 					setMessage(decodedMessage);
 					setUseGlobalMessage(false);
 				} catch (e) {
@@ -126,7 +129,9 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 					} else {
 						// If message is empty and action type is message, show default message
 						setMessage(
-							normalizedType === "message" ? getDefaultMessage() : ""
+							normalizedType === "message"
+								? getDefaultMessage()
+								: ""
 						);
 					}
 				} catch (e) {
@@ -135,7 +140,9 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 					} else {
 						// If message is empty and action type is message, show default message
 						setMessage(
-							normalizedType === "message" ? getDefaultMessage() : ""
+							normalizedType === "message"
+								? getDefaultMessage()
+								: ""
 						);
 					}
 				}
@@ -192,18 +199,28 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			setShortcodeTag("");
 			setShortcodeArgs("");
 		}
-	}, [rule.id, rule.content, rule.actions, isMembershipRule, isMigratedCustomRule]);
+	}, [
+		rule.id,
+		rule.content,
+		rule.actions,
+		isMembershipRule,
+		isMigratedCustomRule
+	]);
 
 	useEffect(() => {
-		setIsAdvancedLogicEnabled(Boolean(rule.is_advanced_logic_enabled || false));
+		setIsAdvancedLogicEnabled(
+			Boolean(rule.is_advanced_logic_enabled || false)
+		);
 	}, [rule.id, rule.is_advanced_logic_enabled]);
 
 	useEffect(() => {
-		if ((isMembershipRule || isMigratedCustomRule) && actionType !== "message") {
+		if (
+			(isMembershipRule || isMigratedCustomRule) &&
+			actionType !== "message"
+		) {
 			setActionType("message");
 		}
 	}, [isMembershipRule, isMigratedCustomRule, actionType]);
-
 
 	const handleActionTypeChange = (e) => {
 		if (isMembershipRule || isMigratedCustomRule) {
@@ -217,7 +234,10 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 		const newValue = e.target.checked;
 
 		if (!newValue) {
-			const logicMap = rule.logic_map || (rule.content && rule.content.logic_map) || null;
+			const logicMap =
+				rule.logic_map ||
+				(rule.content && rule.content.logic_map) ||
+				null;
 			if (hasAdvancedLogic(logicMap)) {
 				setShowWarningModal(true);
 				return;
@@ -232,7 +252,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				is_advanced_logic_enabled: newValue,
 				content: {
 					...(rule.content || {}),
-					is_advanced_logic_enabled: newValue,
+					is_advanced_logic_enabled: newValue
 				}
 			};
 			onRuleUpdate(updatedRule);
@@ -284,7 +304,10 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 		switch (effectiveActionType) {
 			case "message":
 				actionData.label = __("Show Message", "user-registration");
-				if ((isMembershipRule || isMigratedCustomRule) && useGlobalMessage) {
+				if (
+					(isMembershipRule || isMigratedCustomRule) &&
+					useGlobalMessage
+				) {
 					actionData.message = "";
 				} else {
 					const defaultMessage = getURCRData(
@@ -489,7 +512,10 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			switch (effectiveActionType) {
 				case "message":
 					actionData.label = __("Show Message", "user-registration");
-					if ((isMembershipRule || isMigratedCustomRule) && useGlobalMessage) {
+					if (
+						(isMembershipRule || isMigratedCustomRule) &&
+						useGlobalMessage
+					) {
 						actionData.message = "";
 					} else {
 						const defaultMessage = getURCRData(
@@ -555,7 +581,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 					is_advanced_logic_enabled: isAdvancedLogicEnabled,
 					content: {
 						...(rule.content || {}),
-						is_advanced_logic_enabled: isAdvancedLogicEnabled,
+						is_advanced_logic_enabled: isAdvancedLogicEnabled
 					}
 				},
 				onRuleUpdate,
@@ -646,10 +672,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			)}
 
 			{(actionType === "ur-form" || actionType === "ur_form") && (
-				<URFormAction
-					urForm={urForm}
-					onUrFormChange={setUrForm}
-				/>
+				<URFormAction urForm={urForm} onUrFormChange={setUrForm} />
 			)}
 
 			{actionType === "shortcode" && (
