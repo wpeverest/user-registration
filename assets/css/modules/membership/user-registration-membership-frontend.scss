@@ -131,9 +131,16 @@ html {
 							min-height: 40px;
 							padding: 0 12px;
 							border-radius: 4px;
-							border: 1px solid var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
-							background: var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
-							color: var(--ur-button-text-normal-color, $color_2);;
+							border: 1px solid
+								var(
+									--ur-button-background-normal-color,
+									var(--ur-primary-color, $color_1)
+								);
+							background: var(
+								--ur-button-background-normal-color,
+								var(--ur-primary-color, $color_1)
+							);
+							color: var(--ur-button-text-normal-color, $color_2);
 							font-size: 14px;
 							font-weight: 500;
 							line-height: 24px;
@@ -142,9 +149,18 @@ html {
 							transition: all 0.3s ease-in-out;
 
 							&:hover {
-								color: var(--ur-button-text-hover-color, $color_2);
-								background: var(--ur-button-background-hover-color, #38488e);
-								border-color: var(--ur-button-background-hover-color, #38488e);
+								color: var(
+									--ur-button-text-hover-color,
+									$color_2
+								);
+								background: var(
+									--ur-button-background-hover-color,
+									#38488e
+								);
+								border-color: var(
+									--ur-button-background-hover-color,
+									#38488e
+								);
 							}
 						}
 					}
@@ -306,7 +322,6 @@ html {
 			}
 
 			.notice {
-
 				&_red,
 				&_blue {
 					&:empty {
@@ -351,7 +366,10 @@ html {
 				left: 0;
 			}
 
-			.urm-membership-total-value, .urm-membership-sub-total-value, .urm-membership-tax-value, .urm-membership-coupons-value {
+			.urm-membership-total-value,
+			.urm-membership-sub-total-value,
+			.urm-membership-tax-value,
+			.urm-membership-coupons-value {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
@@ -604,7 +622,6 @@ html {
 
 	.notice-container {
 		.notice {
-
 			&_red,
 			&_blue {
 				&:empty {
@@ -856,8 +873,8 @@ html {
 			}
 
 			.user-registration-membership_page_user-registration-frontend-list
-			.shortcode
-			.widefat {
+				.shortcode
+				.widefat {
 				width: calc(100% - 40px);
 			}
 
@@ -909,7 +926,7 @@ html {
 
 .user-registration {
 	.membership-upgrade-container {
-		>span {
+		> span {
 			display: block;
 			margin-bottom: 20px;
 			font-size: 16px;
@@ -1039,7 +1056,10 @@ html {
 		font-size: 16px;
 		line-height: 24px;
 		font-weight: 600;
-		background: var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
+		background: var(
+			--ur-button-background-normal-color,
+			var(--ur-primary-color, $color_1)
+		);
 		color: var(--ur-button-text-normal-color, $color_2);
 		padding: 14px 0;
 		border-radius: 5px;
@@ -1250,9 +1270,18 @@ html {
 	}
 }
 
-.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block:hover,
-.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block:hover,
-#pg-container .ur-membership-list-container .ur-membership-container .membership-block:hover {
+.user-registration-page
+	.ur-membership-list-container
+	.ur-membership-container
+	.membership-block:hover,
+.ur-multi-device-form-preview
+	.ur-membership-list-container
+	.ur-membership-container
+	.membership-block:hover,
+#pg-container
+	.ur-membership-list-container
+	.ur-membership-container
+	.membership-block:hover {
 	background: none;
 	box-shadow: none;
 }
@@ -1272,7 +1301,7 @@ html {
 		background-color: #ffffff;
 		padding: 48px;
 		border-radius: 7px;
-		border: 1px solid #F1F5F9;
+		border: 1px solid #f1f5f9;
 		box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.06);
 
 		@media screen and (max-width: 600px) {
@@ -1327,115 +1356,141 @@ html {
 		}
 
 		.ur-message {
-		margin-bottom: $spacing_32px;
-
-		@media screen and (max-width: 420px) {
-			margin-bottom: $spacing_28px;
-		}
-
-		p {
-			font-size: 16px;
-			line-height: 24px;
-			margin: 0;
-			color: #6b6b6b;
-			font-weight: 400;
-			text-align: center;
-			letter-spacing: 0.15px;
-			text-wrap: unset;
+			margin-bottom: $spacing_32px;
 
 			@media screen and (max-width: 420px) {
-				font-size: 15px;
-				line-height: 25px;
+				margin-bottom: $spacing_28px;
+			}
+
+			p {
+				font-size: 16px;
+				line-height: 24px;
+				margin: 0;
+				color: #6b6b6b;
+				font-weight: 400;
+				text-align: center;
+				letter-spacing: 0.15px;
+				text-wrap: unset;
+
+				@media screen and (max-width: 420px) {
+					font-size: 15px;
+					line-height: 25px;
+				}
+			}
+
+			ul {
+				text-align: left;
 			}
 		}
 
-		ul {
-			text-align: left;
+		.ur-button-wrapper {
+			margin-bottom: 0px;
+
+			.ur-redirect-btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				padding: $spacing_14px $spacing_32px;
+				background: #475bb2;
+				color: #ffffff;
+				font-size: 16px;
+				font-weight: 500;
+				border: none;
+				border-radius: 4px;
+				text-decoration: none;
+				cursor: pointer;
+
+				@media screen and (max-width: 420px) {
+					font-size: 15px;
+					line-height: 25px;
+					padding: $spacing_12px $spacing_24px;
+				}
+
+				&:hover {
+					background: #38488e;
+				}
+
+				&:focus {
+					outline: none;
+					box-shadow: none;
+				}
+
+				svg {
+					width: 16px;
+					height: 16px;
+					stroke: #ffffff;
+					fill: none;
+					transition: transform 0.3s ease;
+
+					@media screen and (max-width: 420px) {
+						display: none;
+					}
+				}
+			}
 		}
-	}
 
-	.ur-button-wrapper {
-		margin-bottom: 0px;
-
-		.ur-redirect-btn {
-			display: inline-flex;
+		.ur-bank-details {
+			width: auto;
+			margin: 30px 0;
+			padding: 20px;
 			align-items: center;
-			justify-content: center;
-			gap: 8px;
-			padding: 14px 32px;
-			background: #475bb2;
-			color: #ffffff;
-			font-size: 16px;
-			font-weight: 600;
-			border: none;
-			border-radius: 4px;
-			text-decoration: none;
-			cursor: pointer;
-
-
-		}
-	}
-
-	.ur-bank-details {
-		width: auto;
-		margin: 30px 0;
-		padding: 20px;
-		align-items: center;
-		background-color: #F8F8FA;
-		border: 1px solid #EDF2F7;
-		border-radius: 6px;
-		text-align: left;
-		font-size: 16px;
-		font-weight: 400;
-		color: #383838;
-		line-height: 30px;
-		gap: 12px;
-
-		.ur-bank-details-title {
-			font-size: 16px;
-			font-weight: 500;
-			margin: 0;
-			color: #1f1f1f;
-			border-bottom: 1px solid #e1e1e1;
-			padding-bottom: 10px;
-		}
-	}
-
-	h3,
-	h4 {
-		margin: 0 0 12px 0;
-		color: #1a1a1a;
-		font-size: 16px;
-		font-weight: 600;
-	}
-
-	p {
-		margin: 6px 0;
-		color: #495057;
-		font-size: 14px;
-		line-height: 1.5;
-	}
-
-	table {
-		width: 100%;
-		margin-top: 12px;
-		border-collapse: collapse;
-
-		th,
-		td {
-			padding: 8px;
+			background-color: #f8f8fa;
+			border: 1px solid #edf2f7;
+			border-radius: 6px;
 			text-align: left;
-			border-bottom: 1px solid #e9ecef;
-			font-size: 14px;
+			font-size: 16px;
+			font-weight: 400;
+			color: #383838;
+			line-height: 30px;
+			gap: 12px;
+
+			.ur-bank-details-title {
+				font-size: 16px;
+				font-weight: 500;
+				margin: 0;
+				color: #1f1f1f;
+				border-bottom: 1px solid #e1e1e1;
+				padding-bottom: 10px;
+			}
 		}
 
-		th {
-			font-weight: 600;
+		h3,
+		h4 {
+			margin: 0 0 12px 0;
 			color: #1a1a1a;
+			font-size: 16px;
+			font-weight: 600;
 		}
 
-		td {
+		p {
+			margin: 6px 0;
 			color: #495057;
+			font-size: 14px;
+			line-height: 1.5;
+		}
+
+		table {
+			width: 100%;
+			margin-top: 12px;
+			border-collapse: collapse;
+
+			th,
+			td {
+				padding: 8px;
+				text-align: left;
+				border-bottom: 1px solid #e9ecef;
+				font-size: 14px;
+			}
+
+			th {
+				font-weight: 600;
+				color: #1a1a1a;
+			}
+
+			td {
+				color: #495057;
+			}
 		}
 	}
 }
@@ -1522,7 +1577,7 @@ html {
 
 	td {
 		padding: 10px 12px;
-		border: 1px solid #EDF2F7;
+		border: 1px solid #edf2f7;
 		vertical-align: top;
 	}
 
@@ -1530,14 +1585,14 @@ html {
 		width: 35%;
 		font-weight: 600;
 		color: #374151;
-		background-color: #F8F8FA;
+		background-color: #f8f8fa;
 		white-space: nowrap;
 	}
 
 	&-data {
 		color: #111827;
 		word-break: break-word;
-		background-color: #F8F8FA;
+		background-color: #f8f8fa;
 	}
 
 	&-tr:nth-child(even) {

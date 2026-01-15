@@ -695,7 +695,10 @@ html {
   top: -24px;
   left: 0;
 }
-.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-total-value, .user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-sub-total-value, .user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-tax-value, .user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-coupons-value,
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-total-value,
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-sub-total-value,
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-tax-value,
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-coupons-value,
 .user-registration-page .membership-upgrade-container #urm-total_container .urm-membership-total-value,
 .user-registration-page .membership-upgrade-container #urm-total_container .urm-membership-sub-total-value,
 .user-registration-page .membership-upgrade-container #urm-total_container .urm-membership-tax-value,
@@ -1693,7 +1696,7 @@ html {
   background-color: #ffffff;
   padding: 48px;
   border-radius: 7px;
-  border: 1px solid #F1F5F9;
+  border: 1px solid #f1f5f9;
   box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.06);
 }
 @media screen and (max-width: 600px) {
@@ -1824,8 +1827,8 @@ html {
   margin: 30px 0;
   padding: 20px;
   align-items: center;
-  background-color: #F8F8FA;
-  border: 1px solid #EDF2F7;
+  background-color: #f8f8fa;
+  border: 1px solid #edf2f7;
   border-radius: 6px;
   text-align: left;
   font-size: 16px;
@@ -1943,20 +1946,20 @@ html {
 }
 .user-registration-email__entries td {
   padding: 10px 12px;
-  border: 1px solid #EDF2F7;
+  border: 1px solid #edf2f7;
   vertical-align: top;
 }
 .user-registration-email__entries-label {
   width: 35%;
   font-weight: 600;
   color: #374151;
-  background-color: #F8F8FA;
+  background-color: #f8f8fa;
   white-space: nowrap;
 }
 .user-registration-email__entries-data {
   color: #111827;
   word-break: break-word;
-  background-color: #F8F8FA;
+  background-color: #f8f8fa;
 }
 .user-registration-email__entries-tr:nth-child(even) {
   background-color: #fcfcfd;
