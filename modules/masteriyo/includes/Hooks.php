@@ -167,7 +167,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 								<div class="ur-membership-amount-wrapper">
 									<span
 										class="membership-amount">
-										- <?php echo esc_html( sprintf( '%s%.2f', $symbol, $membership['amount'] ) ); ?>
+										<?php echo esc_html( sprintf( '%s%.2f', $symbol, $membership['amount'] ) ); ?>
 									</span>
 									<span class="ur-membership-duration">
 										<?php
@@ -337,7 +337,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 				if ( 'membership' !== $user_registration_source ) {
 
 					if ( masteriyo_is_single_course_page() ) {
-						$url = Helper::get_checkout_page_url();
+						$url = Helper::get_membership_upgrade_url();
 					} else {
 						$url = $course->get_permalink();
 					}
@@ -364,7 +364,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 					if ( empty( $compare_data['status'] ) || ! in_array( 'active', $compare_data['status'], true ) ) {
 
 						if ( masteriyo_is_single_course_page() ) {
-							$url = Helper::get_checkout_page_url();
+							$url = Helper::get_membership_upgrade_url();
 						} else {
 							$url = $course->get_permalink();
 						}
@@ -375,7 +375,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 						$url = in_array( (string) $course_id, $access_course, true )
 							? $url
-							: ( masteriyo_is_single_course_page() ? Helper::get_checkout_page_url() : $course->get_permalink() );
+							: ( masteriyo_is_single_course_page() ? Helper::get_membership_upgrade_url() : $course->get_permalink() );
 					}
 				}
 			} elseif ( ! masteriyo_is_single_course_page() ) {
