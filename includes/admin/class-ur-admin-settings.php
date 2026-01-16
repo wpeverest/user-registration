@@ -715,14 +715,11 @@ class UR_Admin_Settings {
 									$settings     .= '</div>';
 									break;
 
-								// Color group picker (normal, active, hover, focus).
 								case 'color-group':
 									$base_id = $value['id'];
 
-									// Get states from settings, or use default states (normal and hover)
 									$states_config = isset( $value['states'] ) && is_array( $value['states'] ) ? $value['states'] : array( 'normal', 'hover' );
 
-									// Default labels mapping
 									$default_labels = array(
 										'normal' => __( 'Normal', 'user-registration' ),
 										'active' => __( 'Active', 'user-registration' ),
@@ -730,26 +727,20 @@ class UR_Admin_Settings {
 										'focus'  => __( 'Focus', 'user-registration' ),
 									);
 
-									// Build color states array dynamically
 									$color_states = array();
 									foreach ( $states_config as $state_key => $state ) {
-										// Handle different input formats
 										if ( is_numeric( $state_key ) && is_string( $state ) ) {
-											// Simple array format: array('normal', 'active')
 											$state_key = $state;
 											$state     = array();
 										} elseif ( is_array( $state ) && isset( $state['key'] ) ) {
-											// Structured format: array('key' => 'normal', 'label' => 'Normal')
 											$state_key = $state['key'];
 										} elseif ( is_string( $state ) ) {
-											// Associative array format: array('normal' => 'Normal Label')
 											$state = array( 'label' => $state );
 										}
 
 										$state_label   = '';
 										$state_default = '';
 
-										// Get label
 										if ( is_array( $state ) && isset( $state['label'] ) ) {
 											$state_label = $state['label'];
 										} elseif ( isset( $value['labels'][ $state_key ] ) ) {
@@ -758,7 +749,6 @@ class UR_Admin_Settings {
 											$state_label = isset( $default_labels[ $state_key ] ) ? $default_labels[ $state_key ] : ucfirst( $state_key );
 										}
 
-										// Get default value
 										if ( is_array( $state ) && isset( $state['default'] ) ) {
 											$state_default = $state['default'];
 										} elseif ( isset( $value['default'][ $state_key ] ) ) {
@@ -777,7 +767,6 @@ class UR_Admin_Settings {
 									$settings .= '<label>' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 									$settings .= '<div class="user-registration-global-settings--field user-registration-color-group-field">';
 
-									// Get saved values as array from base_id option
 									$saved_colors = self::get_option( $base_id, array() );
 									if ( ! is_array( $saved_colors ) ) {
 										$saved_colors = array();
@@ -785,7 +774,6 @@ class UR_Admin_Settings {
 
 									foreach ( $color_states as $state => $state_data ) {
 										$state_id = $base_id . '_' . $state;
-										// Get value from array structure: id['normal'], id['hover'], etc.
 										$option_value  = isset( $saved_colors[ $state ] ) ? $saved_colors[ $state ] : ( isset( $state_data['default'] ) ? $state_data['default'] : '' );
 										$default_value = isset( $state_data['default'] ) ? $state_data['default'] : '';
 

@@ -139,7 +139,7 @@ body {
 							input {
 								border-color: $primary_color;
 
-								~.user-registration-search-icon svg {
+								~ .user-registration-search-icon svg {
 									fill: $primary_color;
 								}
 							}
@@ -328,7 +328,7 @@ body {
 					cursor: pointer;
 
 					&-label {
-						>p {
+						> p {
 							font-weight: $medium;
 							font-size: 15px;
 							margin: 0;
@@ -653,7 +653,7 @@ body {
 							height: 20px;
 						}
 
-						>span {
+						> span {
 							flex: 1;
 						}
 
@@ -716,7 +716,7 @@ body {
 						max-width: 300px;
 					}
 
-					>p {
+					> p {
 						font-size: 18px;
 						line-height: 27px;
 						font-weight: $semi-bold;
@@ -1050,7 +1050,6 @@ body {
 			position: relative;
 
 
-
 			border-radius: 7px;
 			// padding: 28px 32px 32px;
 
@@ -1295,7 +1294,7 @@ body {
 					padding: $spacing_20px 0 !important;
 
 					.nav-tab-inside {
-						>div {
+						> div {
 							display: block;
 						}
 					}
@@ -1552,7 +1551,7 @@ body {
 										}
 									}
 
-									>label {
+									> label {
 										padding: $spacing_4px $spacing_8px;
 										border-radius: 100px;
 										font-weight: $regular !important;
@@ -2106,7 +2105,7 @@ body {
 		margin-bottom: 10px;
 	}
 
-	input[type="radio"]+img {
+	input[type="radio"] + img {
 		cursor: pointer;
 	}
 }
@@ -2481,6 +2480,18 @@ body {
 			display: none !important;
 		}
 
+		/* Hide default button by default */
+		.wp-picker-default {
+			display: none !important;
+			visibility: hidden !important;
+			opacity: 0 !important;
+			width: 0 !important;
+			height: 0 !important;
+			position: absolute !important;
+			left: -9999px !important;
+			pointer-events: none !important;
+		}
+
 		/* Active state */
 		&.wp-picker-active {
 
@@ -2490,6 +2501,36 @@ body {
 			.wp-picker-holder {
 				display: block !important;
 			}
+
+			.wp-picker-default {
+				display: inline-block !important;
+				visibility: visible !important;
+				opacity: 1 !important;
+				width: auto !important;
+				height: auto !important;
+				padding: 0 8px !important;
+				margin: 0 !important;
+				border: 1px solid #ccc !important;
+				position: relative !important;
+				left: auto !important;
+				pointer-events: auto !important;
+			}
+		}
+
+		/* Show default button when color result has wp-picker-open class */
+		.wp-color-result.wp-picker-open ~ .wp-picker-default,
+		.wp-color-result.wp-picker-open + .wp-picker-default {
+			display: inline-block !important;
+			visibility: visible !important;
+			opacity: 1 !important;
+			width: auto !important;
+			height: auto !important;
+			padding: 0 8px !important;
+			margin: 0 !important;
+			border: 1px solid #ccc !important;
+			position: relative !important;
+			left: auto !important;
+			pointer-events: auto !important;
 		}
 	}
 
