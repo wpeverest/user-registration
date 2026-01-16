@@ -61,7 +61,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 			add_action( 'masteriyo_single_course_sidebar_content', array( $this, 'add_single_course_sidebar_content' ), 9 );
 			add_action( 'masteriyo_single_course_sidebar_content_after_progress', array( $this, 'add_single_course_sidebar_content' ), 9 );
-
+			add_action( 'masteriyo_template_enroll_button', array( $this, 'add_single_course_sidebar_content' ), 9 );
 			add_action(
 				'init',
 				function () {
