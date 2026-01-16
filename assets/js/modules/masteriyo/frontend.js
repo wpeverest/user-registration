@@ -8,14 +8,13 @@
 				var checkoutUrl = $(
 					".masteriyo-single-course--btn.masteriyo-enroll-btn"
 				).attr("href");
-				console.log("hi", checkoutUrl);
 
 				if (checkoutUrl) {
 					$(
 						".masteriyo-single-course--btn.masteriyo-enroll-btn"
 					).attr(
 						"href",
-						checkoutUrl + "?membership_id=" + $(this).val()
+						checkoutUrl + "&membership_id=" + $(this).val()
 					);
 				}
 			}
