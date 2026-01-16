@@ -1214,7 +1214,7 @@
 													background: $grey-0;
 
 													&:focus {
-														border-color: $primary_color;
+														border-color: var(--ur-primary-color, $primary_color);
 													}
 												}
 											}
@@ -1234,13 +1234,13 @@
 										text-align: right;
 
 										.user-registration-Button.button {
-											background: $primary_color;
-											border: $border_width solid $primary_color;
+											background: var(--ur-button-background-normal-color, $primary_color);
+											border: $border_width solid var(--ur-button-background-normal-color, $primary_color);
 											border-radius: $border_radius_4;
 
 											&:hover {
-												background: #38488e;
-												border-color: #38488e;
+												background: var(--ur-button-background-hover-color, #38488e);
+												border-color: var(--ur-button-background-hover-color, #38488e);
 											}
 										}
 									}

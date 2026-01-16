@@ -393,6 +393,10 @@ textarea.ur-input-border-red {
 					line-height: 20px;
 					padding: 0 $spacing_14px;
 					color: #383838;
+
+					&:focus {
+						border-color: var(--ur-primary-color, $primary_color) !important;
+					}
 				}
 			}
 
