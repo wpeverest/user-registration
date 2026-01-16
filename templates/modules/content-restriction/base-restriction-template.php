@@ -2,19 +2,19 @@
 defined( 'ABSPATH' ) || exit;
 
 // Set default values if not provided
-$message = isset( $message ) ? $message : '';
-$login_url = isset( $login_url ) ? $login_url : '';
+$message    = isset( $message ) ? $message : '';
+$login_url  = isset( $login_url ) ? $login_url : '';
 $signup_url = isset( $signup_url ) ? $signup_url : '';
 
 // Get URLs if not provided
 if ( empty( $login_url ) ) {
 	$login_page_id = get_option( 'user_registration_login_page_id' );
-	$login_url = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
+	$login_url     = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
 }
 
 if ( empty( $signup_url ) ) {
 	$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
-	$signup_url = $registration_page_id ? get_permalink( $registration_page_id ) : ( isset( $login_page_id ) && $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url() );
+	$signup_url           = $registration_page_id ? get_permalink( $registration_page_id ) : ( isset( $login_page_id ) && $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url() );
 
 	if ( ! $registration_page_id ) {
 		$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
@@ -54,7 +54,7 @@ if ( empty( $signup_url ) ) {
 		margin: 24px auto !important;
 		box-sizing: border-box;
 	}
-    .urcr-access-card h3 {
+	.urcr-access-card h3 {
 		font-weight: 700;
 		font-size: 28px;
 		line-height: 36px;
@@ -89,12 +89,12 @@ if ( empty( $signup_url ) ) {
 		transition: all .3s ease;
 	}
 	.urcr-access-card p > a.urcr-signup-link {
-		background: #475bb2;
-		color: #ffffff;
+		background: var(--ur-button-background-normal-color, #475bb2);
+		color: var(--ur-button-text-normal-color, #ffffff);
 	}
 	.urcr-access-card p > a.urcr-signup-link:hover {
-		background: #38488e;
-		color: #ffffff;
+		background: var(--ur-button-background-hover-color, #38488e);
+		color: var(--ur-button-text-hover-color, #ffffff);
 	}
 	.urcr-access-card p > a.urcr-access-button {
 		background: transparent;

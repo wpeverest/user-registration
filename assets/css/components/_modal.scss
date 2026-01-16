@@ -366,7 +366,7 @@
 				}
 
 				.swal2-html-container {
-					>div {
+					> div {
 						border-radius: $spacing_4px;
 						// overflow: hidden;
 
@@ -431,8 +431,9 @@
 				}
 
 				.swal2-confirm {
-					background: $primary_color;
-					border-color: $primary_color;
+					color: var(--ur-button-text-normal-color, $white) !important;
+					background: var(--ur-button-background-normal-color, $primary_color);
+					border: $border_width solid var(--ur-button-background-normal-color, $primary_color);
 				}
 
 				.swal2-cancel {

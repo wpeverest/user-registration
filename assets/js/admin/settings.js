@@ -50,8 +50,6 @@
 			$input.data("alpha") === true ||
 			$input.attr("data-alpha") === "true";
 
-		// Get current value from input (saved value) - read BEFORE any manipulation
-		// Read directly from the DOM element's value attribute first (most reliable)
 		var domElement = $input[0];
 		var currentValue =
 			(domElement && domElement.value) ||
@@ -60,15 +58,12 @@
 			$input.data("current-value") ||
 			$input.attr("data-current-value") ||
 			"";
-		// Get default value from data attribute
 		var defaultValue =
 			$input.data("default-value") ||
 			$input.attr("data-default-value") ||
 			"";
-		// Use current value if available, otherwise use default
 		var initialValue = currentValue || defaultValue;
 
-		// Trim whitespace and ensure it's a valid color value
 		if (initialValue) {
 			initialValue = initialValue.toString().trim();
 			// If empty after trim, set to empty string
@@ -77,8 +72,6 @@
 			}
 		}
 
-		// Ensure the input has the value set before initializing color picker
-		// Set both val() and attr() to be sure
 		if (initialValue) {
 			$input.val(initialValue);
 			$input.attr("value", initialValue);
@@ -87,7 +80,6 @@
 			}
 		}
 
-		// Initialize color picker with defaultColor option
 		var colorPickerOptions = {
 			change: function (event, ui) {
 				$(this)
@@ -107,7 +99,6 @@
 			mode: alphaEnabled ? "rgba" : "hex"
 		};
 
-		// Add defaultColor if we have an initial value
 		if (initialValue) {
 			colorPickerOptions.defaultColor = initialValue;
 			colorPickerOptions.color = initialValue;
@@ -115,8 +106,6 @@
 
 		$input.wpColorPicker(colorPickerOptions);
 
-		// After color picker initializes, ensure the color is displayed correctly
-		// Use multiple timeouts to ensure it works even if initialization is delayed
 		var applyColor = function () {
 			if (!initialValue) {
 				$input.css("display", "none");
@@ -125,27 +114,23 @@
 
 			var $container = $input.closest(".wp-picker-container");
 			if (!$container.length) {
-				return; // Container not ready yet
+				return;
 			}
 
 			var $colorResult = $container.find(".wp-color-result");
 			if (!$colorResult.length) {
-				return; // Color result not ready yet
+				return;
 			}
 
-			// Set the input value first
 			$input.val(initialValue);
 
-			// Update color result button background - this is what users see
 			$colorResult.css("background-color", initialValue);
 
-			// Update the color span inside the button (the actual color display)
 			var $colorSpan = $colorResult.find("span");
 			if ($colorSpan.length) {
 				$colorSpan.css("background-color", initialValue);
 			}
 
-			// Try to set iris color
 			try {
 				if ($input.data("wp-wpColorPicker")) {
 					var picker = $input.data("wp-wpColorPicker");
@@ -153,47 +138,36 @@
 						picker.iris._color = initialValue;
 					}
 				}
-				// Also try the iris method
 				if (typeof $input.iris === "function") {
 					$input.iris("color", initialValue);
 				}
-			} catch (e) {
-				// Ignore errors, visual update is more important
-			}
+			} catch (e) {}
 
-			// Hide input field AFTER color picker is initialized and color is set
 			$input.css("display", "none");
 		};
 
-		// Try multiple times with increasing delays
 		setTimeout(applyColor, 50);
 		setTimeout(applyColor, 200);
 		setTimeout(applyColor, 500);
 
-		// Ensure input wrap stays inside holder, fix positioning, and add border radius
 		setTimeout(function () {
 			var $container = $input.closest(".wp-picker-container");
 			if ($container.length) {
 				var $holder = $container.find(".wp-picker-holder");
 				var $inputWrap = $container.find(".wp-picker-input-wrap");
-				// Get default value again in this scope
 				var inputDefaultValue =
 					$input.data("default-value") ||
 					$input.attr("data-default-value") ||
 					"";
 
-				// Ensure input field is hidden on load
 				$input.css("display", "none");
 
-				// Ensure input wrap is inside the holder
 				if ($holder.length && $inputWrap.length) {
-					// If input wrap is not inside holder, move it there
 					if (!$holder.find($inputWrap).length) {
 						$inputWrap.appendTo($holder);
 					}
 				}
 
-				// Ensure holder is positioned absolutely and doesn't take space when hidden
 				if ($holder.length) {
 					$holder.css({
 						position: "absolute",
@@ -203,14 +177,12 @@
 						marginTop: "2px"
 					});
 
-					// Show/hide iris-picker, iris-border, and input field based on active state
 					var $irisPicker = $container.find(".iris-picker");
 					var $irisBorder = $container.find(".iris-border");
 					var $colorInput = $container.find(
 						".colorpick.wp-color-picker"
 					);
 
-					// Function to toggle visibility based on active state
 					function togglePickerVisibility() {
 						setTimeout(function () {
 							if ($container.hasClass("wp-picker-active")) {
@@ -229,14 +201,12 @@
 						}, 10);
 					}
 
-					// Watch for active state changes
 					$container.on(
 						"click",
 						".wp-color-result",
 						togglePickerVisibility
 					);
 
-					// Also watch for class changes using MutationObserver
 					var observer = new MutationObserver(function (mutations) {
 						mutations.forEach(function (mutation) {
 							if (
@@ -254,12 +224,10 @@
 					});
 				}
 
-				// Add border radius to color result button
 				$container.find(".wp-color-result").css({
 					borderRadius: "4px"
 				});
 
-				// Set tooltip for color-group items
 				var $colorGroupItem = $container.closest(
 					".user-registration-color-group-item"
 				);
@@ -276,7 +244,6 @@
 		}, 50);
 	});
 
-	// Color group tooltip functionality (for dynamically added elements)
 	$(document).on(
 		"mouseenter",
 		".user-registration-color-group-item .wp-color-result",
@@ -319,7 +286,6 @@
 		event.stopPropagation();
 	});
 
-	// Edit prompt
 	$(function () {
 		var changed = false;
 
@@ -342,7 +308,6 @@
 		});
 	});
 
-	// Select all/none
 	$(".user-registration").on("click", ".select_all", function () {
 		$(this)
 			.closest("td")
