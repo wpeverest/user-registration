@@ -130,7 +130,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 	public function column_status( $membership_group ) {
 		$membership_content = json_decode( $membership_group->post_content, true );
 		$enabled            = $membership_content['status'] == 'true';
-		$actions            = '<div class="ur-status-toggle ur-d-flex ur-align-items-center visible" style="gap: 5px">';
+		$actions            = '<div class="visible ur-status-toggle ur-d-flex ur-align-items-center" style="gap: 5px">';
 		$actions           .= '<div class="ur-toggle-section">';
 		$actions           .= '<span class="user-registration-toggle-form">';
 		$actions           .= '<input
@@ -194,7 +194,7 @@ class MembershipGroupsListTable extends \UR_List_Table {
 			</p>
 			<div id="user-registration-list-search-form">
 				<?php
-				$placeholder = __( 'Search Membership Groups', 'user-registration' );
+				$placeholder = __( 'Search Membership Group', 'user-registration' );
 				UR_Base_Layout::display_search_field( $search_id, $placeholder );
 				?>
 			</div>

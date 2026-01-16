@@ -592,7 +592,7 @@ body {
 
 			&__header {
 				border-bottom: $border_width solid #e1e1e1;
-				padding-bottom: $spacing-16px;
+				padding-bottom: $spacing_16px;
 
 				h3 {
 					color: $grey-500;
@@ -1040,14 +1040,19 @@ body {
 
 		// General Settings
 		.user-registration-card {
-			padding: $spacing_20px $spacing_20px $spacing_22px;
+			padding: $spacing_20px $spacing_24px $spacing_22px;
 			background: $grey-0;
-			border: $border_width solid $border_color !important;
-			border-radius: $border_radius_7;
+			border: $border_width solid $border-color !important;
+			// border-radius: $border_radius_7;
 			background: $white;
 			margin-top: 0 !important;
 			max-width: 100%;
 			position: relative;
+
+
+
+			border-radius: 7px;
+			// padding: 28px 32px 32px;
 
 			&:last-child {
 				margin-bottom: 0;
@@ -1116,11 +1121,18 @@ body {
 				}
 			}
 
+			&__title {
+				font-size: 18px;
+				line-height: 26px;
+				font-weight: $semi-bold;
+				color: #383838;
+			}
+
 			&__header {
 				margin-bottom: $spacing_24px;
 				padding: 0 0 $spacing_16px;
 				position: relative;
-				border-bottom: $border_width solid $border_color !important;
+				border-bottom: $border_width solid $border-color !important;
 
 				&-wrapper {
 					display: flex;

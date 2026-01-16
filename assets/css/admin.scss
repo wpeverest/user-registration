@@ -3030,11 +3030,12 @@ body {
 			width: 40px;
 
 			&:checked+.slider {
-				background-color: $primary_color;
+				// background-color: $primary_color;
 			}
 
 			&:focus+.slider {
-				box-shadow: 0 0 1px #2196f3;
+				// box-shadow: 0 0 1px #2196f3;
+				box-shadow: none;
 			}
 
 			&:checked+.slider::before {
@@ -3046,7 +3047,7 @@ body {
 			position: absolute;
 			cursor: pointer;
 			inset: 0;
-			background-color: #dfe1ea;
+			background: #dfe1ea;
 			transition: 0.4s;
 
 			&.round {
@@ -4632,10 +4633,11 @@ a.button.ur-smart-tags-list-button {
 
 									.clickable-login-fields {
 										position: relative;
-										padding: 15px;
-										margin: 0 0 10px;
+										padding: $spacing_16px $spacing_18px;
+										margin: 0 0 $spacing_8px;
 										border: 1px solid transparent;
-										border-radius: 5px;
+										border-radius: $border_radius_4;
+										font-size: 14px;
 										line-height: 21px;
 										cursor: pointer;
 										transition: all 0.2s ease;
@@ -4649,17 +4651,17 @@ a.button.ur-smart-tags-list-button {
 										&[data-field="username"] label,
 										&[data-field="password"] label {
 											display: block;
-											margin-bottom: 10px;
+											margin-bottom: $spacing_8px;
 										}
 
 										&.active {
 											background-color: #f8f8fa;
-											border-color: #475bb2;
+											border-color: $primary_color;
 										}
 
 										&:hover {
 											background-color: #f8f8fa;
-											border: 1px dashed #475bb2;
+											border: $border_width dashed $primary_color;
 
 											&::before {
 												content: "";
@@ -5171,7 +5173,7 @@ body.user-registration {
 				.user-registration-toggle-form {
 					input {
 						&:checked+.slider {
-							background-color: $green !important;
+							background-color: $green;
 						}
 					}
 				}

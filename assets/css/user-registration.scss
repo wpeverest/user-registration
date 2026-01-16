@@ -2689,7 +2689,7 @@ body {
 									justify-content: space-between;
 									gap: 12px;
 									flex-direction: row;
-									margin-top: -4px;
+									margin: $spacing_8px 0;
 									float: unset;
 
 									label {
@@ -2727,6 +2727,8 @@ body {
 									padding-top: 16px;
 									justify-content: center;
 									margin-bottom: 0;
+									font-size: 14px;
+									line-height: 21px;
 
 									a {
 										text-underline-offset: 4px;
