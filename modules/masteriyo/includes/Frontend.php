@@ -68,7 +68,7 @@ class Frontend {
 
 		$course_portal_page = get_page_by_path( 'course-portal' );
 
-		if ( ! $course_portal_page instanceof WP_Post ) {
+		if ( ! $course_portal_page ) {
 			return;
 		}
 

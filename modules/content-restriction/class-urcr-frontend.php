@@ -51,6 +51,22 @@ class URCR_Frontend {
 	}
 
 	/**
+	 * Get all access rules with caching and recursion protection.
+	 *
+	 * @return array List of access rule posts.
+	 */
+	private function get_all_access_rules() {
+		global $wpdb;
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s",
+				'urcr_access_rule',
+				'publish'
+			)
+		);
+	}
+
+	/**
 	 * Disable Elementor element caching to ensure dynamic content works
 	 */
 	public function disable_elementor_element_cache() {
@@ -148,13 +164,7 @@ class URCR_Frontend {
 
 		if ( ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
 
-			$access_rule_posts         = get_posts(
-				array(
-					'numberposts' => -1,
-					'post_status' => 'publish',
-					'post_type'   => 'urcr_access_rule',
-				)
-			);
+			$access_rule_posts         = $this->get_all_access_rules();
 			$is_whole_site_restriction = false;
 
 			foreach ( $access_rule_posts as $access_rule_post ) {
@@ -446,13 +456,7 @@ class URCR_Frontend {
 			$post_id = absint( $post['ID'] );
 		}
 
-		$access_rule_posts         = get_posts(
-			array(
-				'numberposts' => -1,
-				'post_status' => 'publish',
-				'post_type'   => 'urcr_access_rule',
-			)
-		);
+		$access_rule_posts         = $this->get_all_access_rules();
 		$is_whole_site_restriction = false;
 
 		foreach ( $access_rule_posts as $access_rule_post ) {
@@ -539,13 +543,7 @@ class URCR_Frontend {
 		if ( function_exists( 'is_shop' ) ) {
 			$shop_id = is_shop() ? wc_get_page_id( 'shop' ) : 0;
 		}
-		$access_rule_posts = get_posts(
-			array(
-				'numberposts' => -1,
-				'post_status' => 'publish',
-				'post_type'   => 'urcr_access_rule',
-			)
-		);
+		$access_rule_posts = $this->get_all_access_rules();
 		$post_content      = isset( $access_rule_posts[0]->post_content ) ? json_decode( $access_rule_posts[0]->post_content ) : '';
 		if ( ! $post_content ) {
 			return;
@@ -836,14 +834,9 @@ class URCR_Frontend {
 	 * @since 4.0
 	 */
 	function wc_advanced_restriction_with_access_rule( $product_id ) {
-		$can_view_purchase         = true;
-		$access_rule_posts         = get_posts(
-			array(
-				'numberposts' => -1,
-				'post_status' => 'publish',
-				'post_type'   => 'urcr_access_rule',
-			)
-		);
+		$can_view_purchase = true;
+		$access_rule_posts = $this->get_all_access_rules();
+
 		$is_whole_site_restriction = false;
 
 		foreach ( $access_rule_posts as $access_rule_post ) {
@@ -967,13 +960,7 @@ class URCR_Frontend {
 	public function advanced_restriction_with_access_rules() {
 
 		global $wp_query;
-		$access_rule_posts = get_posts(
-			array(
-				'numberposts' => -1,
-				'post_status' => 'publish',
-				'post_type'   => 'urcr_access_rule',
-			)
-		);
+		$access_rule_posts = $this->get_all_access_rules();
 
 		$posts                  = $wp_query->posts;
 		$posts_length           = empty( $posts ) ? 0 : count( $posts );
@@ -1048,13 +1035,7 @@ class URCR_Frontend {
 	 */
 	public function check_access_with_access_rules() {
 		global $wp_query;
-		$access_rule_posts = get_posts(
-			array(
-				'numberposts' => -1,
-				'post_status' => 'publish',
-				'post_type'   => 'urcr_access_rule',
-			)
-		);
+		$access_rule_posts = $this->get_all_access_rules();
 
 		$posts           = $wp_query->posts;
 		$posts_length    = empty( $posts ) ? 0 : count( $posts );

@@ -117,13 +117,15 @@ class URCR_Admin_Assets {
 		// Prepare user registration sources.
 
 		$ur_forms = ur_get_all_user_registration_form();
-
-		$networks                = array(
-			'facebook' => esc_html__( 'Facebook', 'user-registration' ),
-			'linkedin' => esc_html__( 'LinkedIn', 'user-registration' ),
-			'google'   => esc_html__( 'Google', 'user-registration' ),
-			'twitter'  => esc_html__( 'Twitter', 'user-registration' ),
-		);
+		$networks = array();
+		if( ur_check_module_activation('social-connect') ) {
+			$networks = array(
+				'facebook' => esc_html__( 'Facebook', 'user-registration' ),
+				'linkedin' => esc_html__( 'LinkedIn', 'user-registration' ),
+				'google'   => esc_html__( 'Google', 'user-registration' ),
+				'twitter'  => esc_html__( 'Twitter', 'user-registration' ),
+			);
+		}
 		$registration_source_ids = array_merge( array_keys( $ur_forms ), array_keys( $networks ) );
 		$registration_sources    = array_combine( $registration_source_ids, array_merge( $ur_forms, $networks ) );
 
@@ -332,14 +334,7 @@ class URCR_Admin_Assets {
 				'placeholder'   => '',
 			),
 			array(
-				'value'         => 'registration_source',
-				'label'         => esc_html__( 'URM Source', 'user-registration' ),
-				'type'          => 'multiselect',
-				'operator_label' => esc_html__( 'is', 'user-registration' ),
-				'placeholder'   => '',
-			),
-			array(
-				'value'         => 'ur_form_field',
+				'value'         => 'urm',
 				'label'         => esc_html__( 'URM', 'user-registration' ),
 				'type'          => 'multiselect',
 				'operator_label' => esc_html__( 'is', 'user-registration' ),
@@ -381,7 +376,7 @@ class URCR_Admin_Assets {
 
 		$urm_is_new_installation = get_option( 'urm_is_new_installation', false );
 		$is_old_installation = ( false === $urm_is_new_installation || ! $urm_is_new_installation );
-		
+
 		if ( $is_old_installation ) {
 			$action_type_options[] = array(
 				'value' => 'ur-form',

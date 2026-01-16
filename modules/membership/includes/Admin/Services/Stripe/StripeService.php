@@ -635,6 +635,23 @@ class StripeService {
 			return $response;
 		}
 
+		$currency = get_option( 'user_registration_payment_currency', 'USD' );
+
+		$total_amount = ! empty( $member_order[ 'total_amount' ] ) ? $member_order[ 'total_amount' ] : '0.1';
+		$total_amount = ( 'JPY' === $currency ) ? $total_amount : $total_amount * 100;
+
+		$dynamic_price = \Stripe\Price::create([
+			'unit_amount' => $total_amount,
+			'currency' => $currency,
+			'recurring' => [
+				'interval' => $membership_metas['subscription']['duration'],
+				'interval_count' => intval( $membership_metas['subscription']['value'] ),
+			],
+			'product' => $stripe_product_details['product_id'],
+		]);
+
+		$stripe_product_details[ 'price_id' ] = ! empty( $dynamic_price->id ) ? $dynamic_price->id : $stripe_product_details['price_id'];
+
 		try {
 			$customer       = \Stripe\Customer::retrieve( $customer_id );
 			$payment_method = \Stripe\PaymentMethod::retrieve( $payment_method_id );

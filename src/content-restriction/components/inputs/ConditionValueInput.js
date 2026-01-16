@@ -175,6 +175,16 @@ const ConditionValueInput = ({ type, field, value, operator, onChange, uniqueId,
 					label: label || id,
 				}));
 
+			case "urm":
+				// URM combines registration sources and forms
+				const urmForms = getURCRData("ur_forms", {});
+				const urmSources = getURCRData("registration_sources", {});
+				const urmAllOptions = { ...urmForms, ...urmSources };
+				return Object.entries(urmAllOptions).map(([id, label]) => ({
+					value: id,
+					label: label || id,
+				}));
+
 			case "payment_status":
 				const paymentStatus = getURCRData("payment_status", {});
 				return Object.entries(paymentStatus).map(([id, label]) => ({

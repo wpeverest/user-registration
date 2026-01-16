@@ -1316,6 +1316,32 @@ class UR_Smart_Tags {
 	private function handle_invoices_tags( $tag, $content, $values, $key ) {
 		global $wpdb;
 		$detail = '';
+		$tag_processed = false;
+		
+		// List of invoice-related tags that this method handles
+		$invoice_tags = array(
+			'business_name',
+			'business_address_line_1',
+			'business_address_line_2',
+			'business_address_city',
+			'business_address_state',
+			'business_address_postal',
+			'business_email',
+			'business_phone',
+			'invoice_title',
+			'invoice_short_desc',
+			'invoice_period',
+			'invoice_amount',
+			'total_amount',
+			'tax_amount',
+			'invoice_status',
+		);
+		
+		// Only process if this is an invoice tag
+		if ( ! in_array( $tag, $invoice_tags, true ) ) {
+			return $content;
+		}
+		
 		$membership_enabled = get_user_meta( get_current_user_id(), 'ur_registration_source', true );
 		if ( $membership_enabled ) {
 			$transaction_id = $_GET[ 'transaction_id' ]; //one time payment.
@@ -1334,14 +1360,17 @@ class UR_Smart_Tags {
 			case 'business_phone':
 				$detail = get_option( 'urm_' . $tag, '' );
 				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				$tag_processed = true;
 				break;
 			case 'invoice_title':
 				$detail = $membership[ 'post_title' ] ?? '';
 				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				$tag_processed = true;
 				break;
 			case 'invoice_short_desc':
 				$detail = $membership[ 'post_description' ] ?? '';
 				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				$tag_processed = true;
 				break;
 			case 'invoice_period':
 			case 'invoice_amount':
@@ -1349,12 +1378,17 @@ class UR_Smart_Tags {
 			case 'tax_amount':
 				$detail = get_user_meta( $order_detail[ 'user_id' ], "urm_$tag", true ) ?? '';
 				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				$tag_processed = true;
 				break;
 			case 'invoice_status':
 				$content = str_replace( '{{' . $tag . '}}', $order_detail[ 'status' ], $content);
+				$tag_processed = true;
 				break;
 		}
-		$content = str_replace( '{{' . $tag . '}}', '', $content );
+		// Only remove invoice tags that weren't processed (shouldn't happen, but safety check)
+		if ( ! $tag_processed ) {
+			$content = str_replace( '{{' . $tag . '}}', '', $content );
+		}
 		return $content;
 	}
 }

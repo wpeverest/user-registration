@@ -61,7 +61,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 			add_action( 'masteriyo_single_course_sidebar_content', array( $this, 'add_single_course_sidebar_content' ), 9 );
 			add_action( 'masteriyo_single_course_sidebar_content_after_progress', array( $this, 'add_single_course_sidebar_content' ), 9 );
-
+			add_action( 'masteriyo_template_enroll_button', array( $this, 'add_single_course_sidebar_content' ), 9 );
 			add_action(
 				'init',
 				function () {
@@ -91,7 +91,16 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 			$page = get_page_by_path( 'course-portal' );
 
-			$account_page_id = $post && $page && $page->ID === $post->ID;
+			if ( ! $page ) {
+				return $is_account_page;
+			}
+
+			if ( ! $post ) {
+
+				return $account_page_id;
+			}
+
+			$account_page_id = $page->ID === $post->ID;
 
 			return $account_page_id;
 		}

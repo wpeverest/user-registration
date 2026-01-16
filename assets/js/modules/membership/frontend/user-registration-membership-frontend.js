@@ -306,6 +306,27 @@
 			coupon_data.membership_id = $(
 				'input[name="urm_membership"]:checked'
 			).val();
+			var membership_input = $('input[name="urm_membership"]:checked');
+
+			 var taxDetails = $( document ).find("#ur-tax-details");
+
+				if ( taxDetails.length > 0 ) {
+					coupon_data.tax_rate       = taxDetails.data("tax-rate");
+					coupon_data.tax_calculation_method = taxDetails.data("tax-calculation-method");
+				}
+
+				var localCurrency = membership_input.data( 'local-currency' ),
+					geoZoneId     = membership_input.data( 'zone-id' );
+					if ( localCurrency && geoZoneId ) {
+						coupon_data.switched_currency = localCurrency;
+						coupon_data.urm_zone_id		= geoZoneId;
+					}
+
+				if ( $( '#ur-local-currency-switch-currency' ).length ) {
+					coupon_data.switched_currency = $( '#ur-local-currency-switch-currency' ).val();
+					coupon_data.urm_zone_id       = $( '#ur-local-currency-switch-currency' ).data( 'urm-zone-id' );
+				}
+
 			return coupon_data;
 		},
 		/**
@@ -560,6 +581,8 @@
 						"urm-pg-calculated-amount"
 					);
 				}
+
+				console.log('data',data);
 
 				this.send_data(data, {
 					success: function (response) {

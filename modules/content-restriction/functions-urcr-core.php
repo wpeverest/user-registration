@@ -550,6 +550,89 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 					}
 					break;
 
+				case 'urm':
+					if ( $user->ID ) {
+						$urm_value = ! empty( $logic_map['value'] ) ? $logic_map['value'] : '';
+						
+						if ( is_array( $urm_value ) && ! empty( $urm_value ) && ! isset( $urm_value['form_id'] ) ) {
+							$urm_value = $urm_value[0];
+						}
+						
+						if ( is_array( $urm_value ) && isset( $urm_value['form_id'] ) ) {
+							$form_id = $urm_value['form_id'];
+							$form_fields = isset( $urm_value['form_fields'] ) && is_array( $urm_value['form_fields'] ) 
+								? $urm_value['form_fields'] 
+								: array();
+							
+							$registered_source = ur_get_registration_source_id( $user->ID );
+							if ( empty( $registered_source ) || $registered_source != $form_id ) {
+								return false;
+							}
+							
+							if ( ! empty( $form_fields ) ) {
+								$user_form_id = ur_get_form_id_by_userid( $user->ID );
+								if ( $form_id == $user_form_id ) {
+									$flag = array();
+									
+									foreach ( $form_fields as $key => $data ) {
+										$field_name = str_replace( 'user_registration_', '', $data['field_name'] );
+										$field_name = ur_get_field_name_with_prefix_usermeta( $field_name );
+										
+										switch ( $field_name ) {
+											case 'user_login':
+												$user_field_value = $user->user_login;
+												break;
+											case 'user_nicename':
+												$user_field_value = $user->user_nicename;
+												break;
+											case 'user_email':
+												$user_field_value = $user->user_email;
+												break;
+											case 'user_url':
+												$user_field_value = $user->user_url;
+												break;
+											case 'display_name':
+												$user_field_value = $user->display_name;
+												break;
+											
+											default:
+												$user_field_value = get_user_meta( $user->ID, $field_name, true );
+												break;
+										}
+										
+										$user_field_value = is_array( $user_field_value ) ? implode( ',', $user_field_value ) : strval( $user_field_value );
+										
+										if ( 'is' == $data['operator'] && $user_field_value === $data['value'] ) {
+											array_push( $flag, true );
+										} elseif ( 'is not' == $data['operator'] && $user_field_value !== $data['value'] ) {
+											array_push( $flag, true );
+										} elseif ( 'empty' === $data['operator'] && empty( $user_field_value ) ) {
+											array_push( $flag, true );
+										} elseif ( 'not empty' === $data['operator'] && ! empty( $user_field_value ) ) {
+											array_push( $flag, true );
+										}
+									}
+									
+									if ( count( $flag ) === count( $form_fields ) ) {
+										return true;
+									}
+								}
+								return false;
+							} else {
+								return true;
+							}
+						} else {
+							$form_id = is_string( $urm_value ) ? $urm_value : '';
+							if ( ! empty( $form_id ) ) {
+								$registered_source = ur_get_registration_source_id( $user->ID );
+								if ( ! empty( $registered_source ) && $registered_source == $form_id ) {
+									return true;
+								}
+							}
+						}
+					}
+					break;
+
 				case 'payment_status':
 					if ( $user->ID ) {
 						$payment_status = get_user_meta( $user->ID, 'ur_payment_status', true );
