@@ -750,7 +750,7 @@ class MembershipService {
 					);
 				}
 			} else {
-				$intended_membership_id = absint( $data['membership_id'] );
+				$intended_membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
 				$user_membership_id     = 0;
 
 				foreach ( $user_memberships as $membership ) {
