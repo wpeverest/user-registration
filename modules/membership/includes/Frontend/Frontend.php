@@ -159,6 +159,8 @@ class Frontend {
 		$regions 				= get_option( 'user_registration_tax_regions_and_rates', array() );
 		$tax_calculation_method = get_option( 'user_registration_tax_calculation_method', 'price_include' );
 
+		$is_tax_calculation_enabled		  = ur_check_module_activation( 'taxes' );
+
 		$redirect_page_url = get_permalink( $registration_page_id );
 
 		$thank_you_page          = urm_get_thank_you_page();
@@ -209,6 +211,7 @@ class Frontend {
 				'local_currencies'				   => ur_get_currencies(),
 				'local_currencies_symbol' 		   => ur_get_currency_symbols(),
 				'supported_currencies'			   => $supported_currencies,
+				'is_tax_calculation_enabled'	   => $is_tax_calculation_enabled
 			),
 		);
 	}
