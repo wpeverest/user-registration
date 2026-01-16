@@ -48,7 +48,7 @@ if ( empty( $signup_url ) ) {
 		border: 1px solid #f1f5f9;
 		border-radius: 7px;
 		padding: 32px;
-		max-width: 500px !important;
+		max-width: 800px !important;
 		width: 100%;
 		box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.06);
 		margin: 24px auto !important;
