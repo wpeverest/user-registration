@@ -1959,6 +1959,37 @@ function ur_get_all_user_registration_form( $post_count = -1 ) {
 }
 
 /**
+ * Get all User Registration Membership titles with respective IDs.
+ *
+ * @param int $post_count Post count.
+ *
+ * @since x.x.x
+ *
+ * @return array
+ */
+function ur_get_all_user_registration_memberships( $post_count = -1 ) {
+
+	$args = array(
+		'post_type'      => 'ur_membership',
+		'post_status'    => 'publish',
+		'posts_per_page' => $post_count,
+		'orderby'        => 'title',
+		'order'          => 'ASC',
+	);
+
+	$posts_array = get_posts( $args );
+	$memberships = array();
+
+	if ( ! empty( $posts_array ) ) {
+		foreach ( $posts_array as $post ) {
+			$memberships[ $post->ID ] = esc_html( $post->post_title );
+		}
+	}
+
+	return $memberships;
+}
+
+/**
  * Get the node to display google reCaptcha
  *
  * @param string $context Recaptcha context.
