@@ -62,9 +62,17 @@ if ( ! class_exists( 'Hooks' ) ) :
 			add_action( 'masteriyo_single_course_sidebar_content', array( $this, 'add_single_course_sidebar_content' ), 9 );
 			add_action( 'masteriyo_single_course_sidebar_content_after_progress', array( $this, 'add_single_course_sidebar_content' ), 9 );
 
-			if ( masteriyo_string_to_bool( masteriyo_get_setting( 'course_archive.filters_and_sorting.enable_price_filter' ) ) ) {
-				masteriyo_set_setting( 'course_archive.filters_and_sorting.enable_price_filter', false );
-			}
+			add_action(
+				'init',
+				function () {
+					if ( function_exists( 'masteriyo_get_setting' ) && function_exists( 'masteriyo_set_setting' ) ) {
+						if ( masteriyo_string_to_bool( masteriyo_get_setting( 'course_archive.filters_and_sorting.enable_price_filter' ) ) ) {
+							masteriyo_set_setting( 'course_archive.filters_and_sorting.enable_price_filter', false );
+						}
+					}
+				},
+				99
+			);
 
 			add_filter( 'masteriyo_rest_response_user_course_data', array( $this, 'filter_user_courses' ), 10, 4 );
 			add_filter( 'masteriyo_is_account_page', array( $this, 'override_account_page' ), 10, 3 );
@@ -310,7 +318,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 			if ( is_user_logged_in() && current_user_can( 'manage_options' ) ) {
 				$url = $course->get_permalink();
 
-				if ( masteriyo_is_single_course_page() && ! $this->check_course_access( $course ) ) {
+				if ( masteriyo_is_single_course_page() && ! Helper::check_course_access( $course ) ) {
 					$url = Helper::get_checkout_page_url();
 				}
 

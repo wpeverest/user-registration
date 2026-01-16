@@ -394,7 +394,7 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 	$new_shortcode = '';
 	$wp_version    = '5.0';
 	if ( version_compare( $GLOBALS['wp_version'], $wp_version, '>=' ) ) {
-		if ( is_object( $post ) ) {
+		if ( is_object( $post ) && ! empty( $post->post_content ) ) {
 			$blocks = parse_blocks( $post->post_content );
 			foreach ( $blocks as $block ) {
 
@@ -4560,7 +4560,7 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 							if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 								$action = 'Activate';
 							} else {
-								return [];
+								return array();
 							}
 						} else {
 							$action = 'Install';
@@ -11393,7 +11393,7 @@ if ( ! function_exists( 'ur_format_country_field_data' ) ) {
 		$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
 		$state_list  = json_decode( $states_json, true );
 
-		$states = isset( $state_list[ $country_code ] ) ? $state_list[ $country_code ] : [];
+		$states = isset( $state_list[ $country_code ] ) ? $state_list[ $country_code ] : array();
 
 		$state_name = isset( $states[ $state_code ] )
 			? $states[ $state_code ]

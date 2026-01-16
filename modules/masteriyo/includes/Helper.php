@@ -132,6 +132,10 @@ if ( ! class_exists( 'Helper' ) ) :
 					$membership_title = get_the_title( $membership_id );
 					$target_contents  = isset( $rule['target_contents'] ) ? $rule['target_contents'] : array();
 
+					if ( empty( $rule['membership_meta'] ) ) {
+						continue;
+					}
+
 					$membership_meta = json_decode( $rule['membership_meta'], true );
 
 					$time = '';
