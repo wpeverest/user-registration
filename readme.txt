@@ -258,7 +258,22 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 5.0      - 13/01/2026 =
+= 5.0.3    - 15/01/2026 =
+* Fix      - My Account responsive design.
+* Fix      - Members menu class not found.
+* Fix      - get_form function not working.
+* Fix      - Content rules edit title design.
+* Fix      - Post editor margins removed after update.
+* Fix      - Warnings due to payment_method not defined.
+* Fix      - View payment link not working form subscription editor.
+
+= 5.0.2    - 14/01/2026 =
+* Fix      - Critical error after update.
+
+= 5.0.1    - 14/01/2026 =
+* Fix      - Critical error after update.
+
+= 5.0      - 14/01/2026 =
 * New      - Streamlined setup wizard with a clean, modern interface that removes unnecessary steps and focuses only on essential configuration.
 * New      - Setup wizard now supports both user registration and membership creation with clear membership access controls.
 * New      - Simplified membership creation process with three clear steps: Basic configuration for essential settings, Access Control for content protection, and Advanced options for edge cases and additional features.
@@ -921,6 +936,22 @@ information and activities.
 
 
 == Upgrade Notice ==
+= 5.0.3 =
+##Important: Version 5.0 is a major update with significant improvements
+We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
+Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)
+
+= 5.0.2 =
+##Important: Version 5.0 is a major update with significant improvements
+We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
+Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)
+
+= 5.0.1 =
+##Important: Version 5.0 is a major update with significant improvements
+We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
+Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)
+
 = 5.0 =
 ##Important: Version 5.0 is a major update with significant improvements
 We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
+Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)

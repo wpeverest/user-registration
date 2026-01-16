@@ -80,7 +80,7 @@ class FormFields {
 		}
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) ? '' : '.min';
-		wp_register_script( 'user-registration-membership-groups', UR_MEMBERSHIP_JS_ASSETS_URL . '/admin/membership-groups' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
+		wp_register_script( 'user-registration-membership-groups', UR()->plugin_url(). '/assets/js/modules/membership/admin/membership-groups' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_enqueue_script( 'user-registration-membership-groups' );
 		$this->localize_scripts();
 	}

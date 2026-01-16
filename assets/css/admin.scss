@@ -39,13 +39,6 @@
 	@include loader();
 }
 
-// body {
-// 	&.user-registration,
-// 	&.user-registration-page {
-// 		font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-// 	}
-// }
-
 body {
 
 	&.user-registration,
@@ -3037,11 +3030,12 @@ body {
 			width: 40px;
 
 			&:checked+.slider {
-				background-color: $primary_color;
+				// background-color: $primary_color;
 			}
 
 			&:focus+.slider {
-				box-shadow: 0 0 1px #2196f3;
+				// box-shadow: 0 0 1px #2196f3;
+				box-shadow: none;
 			}
 
 			&:checked+.slider::before {
@@ -3053,7 +3047,7 @@ body {
 			position: absolute;
 			cursor: pointer;
 			inset: 0;
-			background-color: #dfe1ea;
+			background: #dfe1ea;
 			transition: 0.4s;
 
 			&.round {
@@ -4099,6 +4093,17 @@ a.button.ur-smart-tags-list-button {
 						margin: 0;
 						border: $border_width solid transparent;
 						border-radius: 0;
+						field-sizing: content;
+
+						@media screen and (max-width: 1199px) {
+							field-sizing: unset;
+							width: 100%;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							white-space: nowrap;
+							max-width: 100%;
+							box-sizing: border-box;
+						}
 
 						&.is-editing {
 							font-size: 18px;
@@ -4628,10 +4633,11 @@ a.button.ur-smart-tags-list-button {
 
 									.clickable-login-fields {
 										position: relative;
-										padding: 15px;
-										margin: 0 0 10px;
+										padding: $spacing_16px $spacing_18px;
+										margin: 0 0 $spacing_8px;
 										border: 1px solid transparent;
-										border-radius: 5px;
+										border-radius: $border_radius_4;
+										font-size: 14px;
 										line-height: 21px;
 										cursor: pointer;
 										transition: all 0.2s ease;
@@ -4645,17 +4651,17 @@ a.button.ur-smart-tags-list-button {
 										&[data-field="username"] label,
 										&[data-field="password"] label {
 											display: block;
-											margin-bottom: 10px;
+											margin-bottom: $spacing_8px;
 										}
 
 										&.active {
 											background-color: #f8f8fa;
-											border-color: #475bb2;
+											border-color: $primary_color;
 										}
 
 										&:hover {
 											background-color: #f8f8fa;
-											border: 1px dashed #475bb2;
+											border: $border_width dashed $primary_color;
 
 											&::before {
 												content: "";
@@ -5167,7 +5173,7 @@ body.user-registration {
 				.user-registration-toggle-form {
 					input {
 						&:checked+.slider {
-							background-color: $green !important;
+							background-color: $green;
 						}
 					}
 				}
@@ -5263,12 +5269,13 @@ body.user-registration {
 }
 
 
-#user-registration-local-currency-table-page{
+#user-registration-local-currency-table-page {
 	border: 0px !important;
 	padding: 0px !important;
 }
 
-#user-registration-list-table-page, #user-registration-local-currency-table-page {
+#user-registration-list-table-page,
+#user-registration-local-currency-table-page {
 	max-width: 100%;
 	margin: $spacing_24px;
 	padding: $spacing_24px $spacing_28px;
@@ -5281,8 +5288,9 @@ body.user-registration {
 	.user-registration-list-table-heading {
 		display: flex;
 		align-items: center;
+		gap: $spacing_16px;
 		margin-bottom: $spacing_24px;
-		justify-content: space-between;
+		// justify-content: space-between;
 
 		h1 {
 			margin: 0;
@@ -6834,6 +6842,26 @@ body {
 
 			.ur-builder-wrapper {
 				.ur-selected-inputs {
+					#ur-field-settings {
+						#ur-field-all-settings {
+							.user-registration-login-form-global-settings {
+								label {
+									max-width: 300px;
+									width: 100%;
+									flex: auto;
+									font-size: 14px;
+									line-height: 24px;
+									color: #383838;
+									margin-bottom: 0;
+								}
+
+								&--field {
+									flex: 1;
+								}
+							}
+						}
+					}
+
 					.button-style-customizer {
 						position: absolute;
 						top: 60px;
@@ -8523,7 +8551,8 @@ body.user-registration-page {
 	}
 }
 
-.reset-captcha-keys, .reset-payment-keys {
+.reset-captcha-keys,
+.reset-payment-keys {
 	display: flex;
 	align-items: center;
 	gap: 6px;
@@ -8891,7 +8920,7 @@ body.user-registration-page {
 					}
 				}
 
-				&:nth-child(odd){
+				&:nth-child(odd) {
 					background: #F8F8FA;
 				}
 
@@ -8998,22 +9027,23 @@ body.user-registration-page {
 				}
 			}
 
-			&.bottom, &.top{
+			&.bottom,
+			&.top {
 				display: flex;
 				justify-content: space-between;
 				flex-wrap: wrap;
 			}
 
-			&.top{
+			&.top {
 				margin-bottom: 0;
 			}
 
-			&.top:has(div){
+			&.top:has(div) {
 				margin-top: 32px;
 			}
 
-			.bulkactions{
-				input[type=submit]{
+			.bulkactions {
+				input[type=submit] {
 					align-self: stretch;
 					padding: 8px 14px;
 					font-size: 14px;
@@ -9023,7 +9053,8 @@ body.user-registration-page {
 					background: #F6F7F7;
 					font-weight: 500;
 				}
-				select{
+
+				select {
 					min-height: 38px;
 					padding: 0 12px;
 					background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M19.561 7.403a1.468 1.468 0 0 1 2.02 0 1.339 1.339 0 0 1 0 1.944l-8.57 8.25a1.468 1.468 0 0 1-2.021 0l-8.572-8.25a1.339 1.339 0 0 1 0-1.944 1.468 1.468 0 0 1 2.02 0L12 14.68l7.561-7.278Z'/%3E%3C/svg%3E");
@@ -9150,14 +9181,14 @@ body.user-registration-page {
 			}
 		}
 
-		.wp-list-table{
+		.wp-list-table {
 			tbody {
 				tr {
 					td {
 						font-size: 14px;
 						line-height: 24px;
 						color: #383838;
-						font-weight:400;
+						font-weight: 400;
 
 						&.membership_type {
 							.user-registration-badge {
@@ -9180,19 +9211,23 @@ body.user-registration-page {
 	font-weight: 500;
 }
 
-.user-subscription-secondary, .user-payment-secondary {
+.user-subscription-secondary,
+.user-payment-secondary {
 	color: $color_gray-light;
 }
 
-.user-subscription-active, .user-payment-completed {
+.user-subscription-active,
+.user-payment-completed {
 	color: $approve_user;
 }
 
-.user-subscription-pending, .user-payment-pending {
+.user-subscription-pending,
+.user-payment-pending {
 	color: $pending_user;
 }
 
-.user-subscription-expired, .user-payment-failed {
+.user-subscription-expired,
+.user-payment-failed {
 	color: $deny_color;
 }
 
@@ -9386,255 +9421,258 @@ body.user-registration-page {
 	}
 }
 
-.urm-hide-wrapper{
+.urm-hide-wrapper {
 	display: none !important;
 }
 
 .user-registration-membership_page_user-registration-settings {
-  .user-registration-swal2-tax-regions-container {
-    .swal2-popup {
-		width: 420px;
-        .swal2-header {
-            margin-bottom: 0;
-            padding-bottom: 16px;
-            flex-direction: row;
-            border: 0;
+	.user-registration-swal2-tax-regions-container {
+		.swal2-popup {
+			width: 420px;
 
-            .swal2-title {
-            font-size: 18px;
-            padding-bottom: 16px;
-            color: #1f1f1f;
-            border-bottom: 1px solid #e1e1e1;
-            }
-        }
+			.swal2-header {
+				margin-bottom: 0;
+				padding-bottom: 16px;
+				flex-direction: row;
+				border: 0;
 
-        .swal2-content {
-            padding: 0 0 0 20px;
-        }
+				.swal2-title {
+					font-size: 18px;
+					padding-bottom: 16px;
+					color: #1f1f1f;
+					border-bottom: 1px solid #e1e1e1;
+				}
+			}
 
-        .swal2-html-container {
-            max-height: 350px;
-            overflow-y: auto;
-            overflow-x: hidden;
+			.swal2-content {
+				padding: 0 0 0 20px;
+			}
 
-            .ur-tax-regions-search-outer-container {
-                padding: 0 20px 20px 0;
+			.swal2-html-container {
+				max-height: 350px;
+				overflow-y: auto;
+				overflow-x: hidden;
 
-                span {
-                    display: none;
-                }
-            }
+				.ur-tax-regions-search-outer-container {
+					padding: 0 20px 20px 0;
 
-            .ur-tax-entire-country-and-state-wrapper {
-                padding-right: 20px;
-                .ur-tax-country-and-state-outer-wrapper {
-                    padding: 12px;
-                    margin-bottom: 20px;
-                    border: 1px solid #e1e1e1;
-                    border-radius: 4px;
+					span {
+						display: none;
+					}
+				}
 
-                    &:has(input[type="checkbox"]:checked) {
-                        border-color: #475bb2;
-                    }
+				.ur-tax-entire-country-and-state-wrapper {
+					padding-right: 20px;
 
-                    .ur-tax-regions-popup-country-outer-wrapper {
-                        display: flex;
-                        align-items: center;
-                        gap: 8px;
-                        position: relative;
+					.ur-tax-country-and-state-outer-wrapper {
+						padding: 12px;
+						margin-bottom: 20px;
+						border: 1px solid #e1e1e1;
+						border-radius: 4px;
 
-                        input[type="checkbox"] {
-                        position: absolute;
-                        top: 8px;
-                        left: 1px;
-                        opacity: 0;
-                        z-index: 2;
-                        }
+						&:has(input[type="checkbox"]:checked) {
+							border-color: #475bb2;
+						}
 
-                        .ur-tax-regions-flag {
-                        margin-right: 0 !important;
-                        }
+						.ur-tax-regions-popup-country-outer-wrapper {
+							display: flex;
+							align-items: center;
+							gap: 8px;
+							position: relative;
 
-                        &::before {
-                        content: "";
-                        width: 16px;
-                        height: 16px;
-                        border: 1px solid #e1e1e1;
-                        border-radius: 4px;
-                        background: transparent;
-                        }
+							input[type="checkbox"] {
+								position: absolute;
+								top: 8px;
+								left: 1px;
+								opacity: 0;
+								z-index: 2;
+							}
 
-                        &::after {
-                        content: "";
-                        width: 12px;
-                        height: 12px;
-                        position: absolute;
-                        top: 6px;
-                        left: 3px;
-                        opacity: 0;
-                        background-position: center;
-                        background-size: 100%;
-                        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 24 24'%3E%3Cpath d='M20.103 5.315a1.136 1.136 0 0 1 1.572 0c.433.421.433 1.103 0 1.523L9.452 18.685c-.434.42-1.137.42-1.571 0L2.325 13.3a1.054 1.054 0 0 1 0-1.523 1.136 1.136 0 0 1 1.572 0l4.77 4.623z'/%3E%3C/svg%3E");
-                        }
+							.ur-tax-regions-flag {
+								margin-right: 0 !important;
+							}
 
-                        &:has(input[type="checkbox"]:checked) {
-                        &::before {
-                            background: #4755b2;
-                        }
+							&::before {
+								content: "";
+								width: 16px;
+								height: 16px;
+								border: 1px solid #e1e1e1;
+								border-radius: 4px;
+								background: transparent;
+							}
 
-                        &::after {
-                            opacity: 1;
-                        }
-                        }
-                    }
+							&::after {
+								content: "";
+								width: 12px;
+								height: 12px;
+								position: absolute;
+								top: 6px;
+								left: 3px;
+								opacity: 0;
+								background-position: center;
+								background-size: 100%;
+								background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 24 24'%3E%3Cpath d='M20.103 5.315a1.136 1.136 0 0 1 1.572 0c.433.421.433 1.103 0 1.523L9.452 18.685c-.434.42-1.137.42-1.571 0L2.325 13.3a1.054 1.054 0 0 1 0-1.523 1.136 1.136 0 0 1 1.572 0l4.77 4.623z'/%3E%3C/svg%3E");
+							}
 
-                    .ur-tax-regions-popup-state-outer-wrapper {
-                        .ur-tax-regions-popup-state-entire-country-wrapper {
-                            .ur-tax-regions-entire-country-checkbox-wrapper {
-                                display: flex;
-                                align-items: center;
-                                padding: 8px 0;
-                                position:relative;
+							&:has(input[type="checkbox"]:checked) {
+								&::before {
+									background: #4755b2;
+								}
 
+								&::after {
+									opacity: 1;
+								}
+							}
+						}
 
-                                .ur-tax-entire-country-checkbox {
-                                    &[type="checkbox"] {
-                                        position: absolute;
-                                        top: 50%;
-                                        left: 0;
-                                        width: 16px;
-                                        height: 16px;
-                                        opacity: 0;
-                                        z-index: 2;
-                                        margin: 0;
-                                    }
-                                }
-
-                                &:has(.ur-tax-entire-country-checkbox){
-                                    &::before {
-                                        content: "";
-                                        width: 16px;
-                                        height: 16px;
-                                        border: 1px solid #e1e1e1;
-                                        border-radius: 4px;
-                                        position: absolute;
-                                        top: 50%;
-                                        left: 0;
-                                        transform: translateY(-50%);
-                                    }
-
-                                    &::after {
-                                        content: "";
-                                        width: 12px;
-                                        height: 12px;
-                                        position: absolute;
-                                        top: 50%;
-                                        left: 3px;
-                                        opacity:0;
-                                        transform: translateY(-50%);
-                                        background-position: center;
-                                        background-size: 100%;
-                                        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%234755b2' viewBox='0 0 24 24'%3E%3Cpath d='M20.103 5.315a1.136 1.136 0 0 1 1.572 0c.433.421.433 1.103 0 1.523L9.452 18.685c-.434.42-1.137.42-1.571 0L2.325 13.3a1.054 1.054 0 0 1 0-1.523 1.136 1.136 0 0 1 1.572 0l4.77 4.623z'/%3E%3C/svg%3E");
-                                    }
-                                     p {
-                                        margin-left: 24px;
-                                        font-size: 14px;
-                                    }
-                                }
+						.ur-tax-regions-popup-state-outer-wrapper {
+							.ur-tax-regions-popup-state-entire-country-wrapper {
+								.ur-tax-regions-entire-country-checkbox-wrapper {
+									display: flex;
+									align-items: center;
+									padding: 8px 0;
+									position: relative;
 
 
-                                &:has(.ur-tax-entire-country-checkbox:checked) {
-                                    &::before {
-                                        background: none;
-                                        border-color: #4755b2;
-                                    }
+									.ur-tax-entire-country-checkbox {
+										&[type="checkbox"] {
+											position: absolute;
+											top: 50%;
+											left: 0;
+											width: 16px;
+											height: 16px;
+											opacity: 0;
+											z-index: 2;
+											margin: 0;
+										}
+									}
 
-                                    &::after {
-                                     opacity: 1;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+									&:has(.ur-tax-entire-country-checkbox) {
+										&::before {
+											content: "";
+											width: 16px;
+											height: 16px;
+											border: 1px solid #e1e1e1;
+											border-radius: 4px;
+											position: absolute;
+											top: 50%;
+											left: 0;
+											transform: translateY(-50%);
+										}
 
-        }
-    }
-}
+										&::after {
+											content: "";
+											width: 12px;
+											height: 12px;
+											position: absolute;
+											top: 50%;
+											left: 3px;
+											opacity: 0;
+											transform: translateY(-50%);
+											background-position: center;
+											background-size: 100%;
+											background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%234755b2' viewBox='0 0 24 24'%3E%3Cpath d='M20.103 5.315a1.136 1.136 0 0 1 1.572 0c.433.421.433 1.103 0 1.523L9.452 18.685c-.434.42-1.137.42-1.571 0L2.325 13.3a1.054 1.054 0 0 1 0-1.523 1.136 1.136 0 0 1 1.572 0l4.77 4.623z'/%3E%3C/svg%3E");
+										}
+
+										p {
+											margin-left: 24px;
+											font-size: 14px;
+										}
+									}
+
+
+									&:has(.ur-tax-entire-country-checkbox:checked) {
+										&::before {
+											background: none;
+											border-color: #4755b2;
+										}
+
+										&::after {
+											opacity: 1;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+			}
+		}
+	}
 }
 
 .ur-tax-state-list {
-  display: grid;
-  grid-template-columns: 60% 40%;
-  align-items: center;
-  padding: 8px 0;
+	display: grid;
+	grid-template-columns: 60% 40%;
+	align-items: center;
+	padding: 8px 0;
 
-  .ur-tax-state-list-inner {
-    display: flex;
-    gap: 4px;
-    padding: 10px 0;
-    align-items: center;
-    position: relative;
-    padding-left: 26px;
+	.ur-tax-state-list-inner {
+		display: flex;
+		gap: 4px;
+		padding: 10px 0;
+		align-items: center;
+		position: relative;
+		padding-left: 26px;
 
-    input[type="checkbox"] {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      width: 16px;
-      height: 16px;
-      opacity: 0;
-      z-index: 2;
-      margin: 0;
-    }
+		input[type="checkbox"] {
+			position: absolute;
+			top: 50%;
+			left: 0;
+			width: 16px;
+			height: 16px;
+			opacity: 0;
+			z-index: 2;
+			margin: 0;
+		}
 
-    &::before {
-      content: "";
-      width: 16px;
-      height: 16px;
-      border: 1px solid #e1e1e1;
-      border-radius: 4px;
-      background: white;
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
-    }
+		&::before {
+			content: "";
+			width: 16px;
+			height: 16px;
+			border: 1px solid #e1e1e1;
+			border-radius: 4px;
+			background: white;
+			position: absolute;
+			top: 50%;
+			left: 0;
+			transform: translateY(-50%);
+		}
 
-    &::after {
-      content: "";
-      width: 12px;
-      height: 12px;
-      opacity: 0;
-      position: absolute;
-      top: 50%;
-      left: 3px;
-      transform: translateY(-50%);
-      background-position: center;
-      background-size: 100%;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23475bb2' viewBox='0 0 24 24'%3E%3Cpath d='M20.103 5.315a1.136 1.136 0 0 1 1.572 0c.433.421.433 1.103 0 1.523L9.452 18.685c-.434.42-1.137.42-1.571 0L2.325 13.3a1.054 1.054 0 0 1 0-1.523 1.136 1.136 0 0 1 1.572 0l4.77 4.623z'/%3E%3C/svg%3E");
-    }
+		&::after {
+			content: "";
+			width: 12px;
+			height: 12px;
+			opacity: 0;
+			position: absolute;
+			top: 50%;
+			left: 3px;
+			transform: translateY(-50%);
+			background-position: center;
+			background-size: 100%;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23475bb2' viewBox='0 0 24 24'%3E%3Cpath d='M20.103 5.315a1.136 1.136 0 0 1 1.572 0c.433.421.433 1.103 0 1.523L9.452 18.685c-.434.42-1.137.42-1.571 0L2.325 13.3a1.054 1.054 0 0 1 0-1.523 1.136 1.136 0 0 1 1.572 0l4.77 4.623z'/%3E%3C/svg%3E");
+		}
 
-    &:has(input[type="checkbox"]:checked) {
-      &::before {
-        background: none;
-        border-color: #4755b2;
-      }
+		&:has(input[type="checkbox"]:checked) {
+			&::before {
+				background: none;
+				border-color: #4755b2;
+			}
 
-      &::after {
-        opacity: 1;
-      }
-    }
-  }
+			&::after {
+				opacity: 1;
+			}
+		}
+	}
 
-  .ur-tax-state-rate-input {
-    border: 1px solid #e1e1e1;
-  }
+	.ur-tax-state-rate-input {
+		border: 1px solid #e1e1e1;
+	}
 }
 
 .ur-tax-default-tax-text-container {
-  padding: 10px 0;
+	padding: 10px 0;
 }
 
 
@@ -9664,7 +9702,7 @@ body.user-registration-page {
 		margin-top: 1px;
 	}
 
-	&.hidden{
+	&.hidden {
 		display: none;
 	}
 }
@@ -9731,7 +9769,7 @@ body.user-registration-page {
 		gap: 12px;
 		flex-direction: column;
 
-		.user-registration-notice{
+		.user-registration-notice {
 			margin: 0px;
 			gap: 2px;
 			padding: 9px;
@@ -9900,7 +9938,7 @@ body.user-registration-page {
 	}
 }
 
-.ur-activate-dependent-module{
+.ur-activate-dependent-module {
 	&.ui-add-disabled {
 		opacity: 0.5;
 		cursor: not-allowed;

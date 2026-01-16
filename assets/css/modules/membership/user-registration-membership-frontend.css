@@ -326,6 +326,7 @@ html {
   border: 1px solid #e1e1e1;
   padding: 14px;
   gap: 8px;
+  margin-bottom: 12px;
   color: #222222;
   font-size: 15px;
   font-weight: 500;
@@ -415,7 +416,7 @@ html {
   width: 14px;
   height: 14px;
   min-height: unset;
-  accent-color: var(--ur-primary-color, #475bb2);
+  accent-color: #475bb2;
 }
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label input[type=radio]:checked,
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label input[type=radio]:checked,
@@ -441,8 +442,8 @@ html {
 #pg-container .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label input[type=radio]:checked,
 #pg-container .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label input[type=radio]:checked,
 #pg-container .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label input[type=radio]:checked {
-  border-color: var(--ur-primary-color, #475bb2);
-  background: var(--ur-primary-color, #475bb2);
+  border-color: #475bb2;
+  background: #475bb2;
 }
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label:has(input[type=radio]:checked),
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label:has(input[type=radio]:checked),
@@ -468,7 +469,7 @@ html {
 #pg-container .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label:has(input[type=radio]:checked),
 #pg-container .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label:has(input[type=radio]:checked),
 #pg-container .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label:has(input[type=radio]:checked) {
-  border-color: var(--ur-primary-color, #475bb2);
+  border-color: #475bb2;
 }
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label .ur-membership-duration,
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label .ur-membership-duration,
@@ -694,7 +695,10 @@ html {
   top: -24px;
   left: 0;
 }
-.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-total-value, .user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-sub-total-value, .user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-tax-value, .user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-coupons-value,
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-total-value,
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-sub-total-value,
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-tax-value,
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-coupons-value,
 .user-registration-page .membership-upgrade-container #urm-total_container .urm-membership-total-value,
 .user-registration-page .membership-upgrade-container #urm-total_container .urm-membership-sub-total-value,
 .user-registration-page .membership-upgrade-container #urm-total_container .urm-membership-tax-value,
@@ -789,11 +793,9 @@ html {
 .ur-multi-device-form-preview .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists,
 #pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists,
 #pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists {
-  display: grid;
+  display: flex;
   align-items: center;
   gap: 20px;
-  grid-template-columns: repeat(3, 1fr);
-  margin-top: 4px;
 }
 @media screen and (max-width: 600px) {
   .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists,
@@ -805,12 +807,12 @@ html {
     flex-direction: column;
     gap: 0;
   }
-  .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists l .ur_membership_input_label,
-  .user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists l .ur_membership_input_label,
-  .ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists l .ur_membership_input_label,
-  .ur-multi-device-form-preview .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists l .ur_membership_input_label,
-  #pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists l .ur_membership_input_label,
-  #pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists l .ur_membership_input_label {
+  .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label,
+  .user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label,
+  .ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label,
+  .ur-multi-device-form-preview .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label,
+  #pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label,
+  #pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists .ur_membership_input_label {
     width: 100%;
   }
 }
@@ -822,9 +824,9 @@ html {
 #pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label {
   border-radius: 4px;
   border: 1px solid #e1e1e1;
-  padding: 14px;
+  padding: 14px !important;
   height: 48px;
-  margin-bottom: 20px;
+  margin-bottom: 20px !important;
   justify-content: center;
   flex: 1;
   align-items: center;
@@ -836,7 +838,7 @@ html {
 .ur-multi-device-form-preview .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:hover,
 #pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:hover,
 #pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:hover {
-  border-color: var(--ur-primary-color, #475bb2);
+  border-color: #475bb2;
 }
 .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label[for=ur-membership-stripe] .ur-membership-duration,
 .user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label[for=ur-membership-stripe] .ur-membership-duration,
@@ -861,7 +863,7 @@ html {
 #pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:has(input[type=radio]:checked),
 #pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:has(input[type=radio]:checked) {
   background: rgb(250.7108433735, 251.1927710843, 253.2891566265);
-  border-color: var(--ur-primary-color, #475bb2);
+  border-color: #475bb2;
 }
 .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration,
 .user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration,
@@ -942,18 +944,12 @@ html {
   width: 200px;
   cursor: pointer;
   font-size: 14px;
-  background: var(--ur-button-background-normal-color, #475bb2);
-  color: var(--ur-button-text-normal-color, #ffffff);
+  background: #475bb2;
+  color: white;
   padding: 10px 0;
   border-radius: 5px;
   border: none;
   font-family: inherit;
-}
-.user-registration-page .membership-footer .membership-signup-button:hover,
-.ur-multi-device-form-preview .membership-footer .membership-signup-button:hover,
-#pg-container .membership-footer .membership-signup-button:hover {
-  background: var(--ur-button-background-hover-color, #38488e);
-  color: var(--ur-button-text-hover-color, #ffffff);
 }
 .user-registration-page .membership-amount,
 .ur-multi-device-form-preview .membership-amount,
@@ -1454,7 +1450,7 @@ html {
   border-color: #475bb2;
 }
 .ur-membership-container.layout-list .membership-block .ur-frontend-field {
-  accent-color: var(--ur-primary-color, #475bb2);
+  accent-color: #475bb2;
 }
 .ur-membership-container.layout-list .membership-block .ur-frontend-field:focus {
   outline: none;
@@ -1462,7 +1458,7 @@ html {
   vertical-align: center;
 }
 .ur-membership-container.layout-list .membership-block:has(.ur-frontend-field:checked) {
-  border-color: var(--ur-primary-color, #475bb2);
+  border-color: #475bb2;
 }
 .ur-membership-container.layout-list .membership-block .ur-membership-title-wrapper {
   display: flex;
@@ -1636,8 +1632,8 @@ html {
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;
-  background: var(--ur-button-background-normal-color, #475bb2);
-  color: var(--ur-button-text-normal-color, #ffffff);
+  background: #475bb2;
+  color: white;
   padding: 12px 0;
   margin-top: 20px;
   border-radius: 5px;
@@ -1645,8 +1641,7 @@ html {
   font-family: inherit;
 }
 .user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .membership-signup-button:hover {
-  background: var(--ur-button-background-hover-color, #475bb2);
-  color: var(--ur-button-text-hover-color, #ffffff);
+  background: #38488e;
 }
 .user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .left-container {
   flex: 1;
@@ -1689,108 +1684,151 @@ html {
 }
 
 .ur-thank-you-page {
+  max-width: 600px !important;
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
+  margin: 24px auto;
+  box-sizing: border-box;
 }
-
-.thank-you-page-container {
-  max-width: 800px;
-  width: 100%;
-  text-align: center;
+.ur-thank-you-page .thank-you-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background-color: #ffffff;
-  padding: 60px 60px;
-  border-radius: 8px;
-  border: 1px solid #F1F5F9;
+  padding: 48px;
+  border-radius: 7px;
+  border: 1px solid #f1f5f9;
   box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.06);
 }
-.thank-you-page-container .ur-success-icon {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 24px;
-  animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+@media screen and (max-width: 600px) {
+  .ur-thank-you-page .thank-you-page-container {
+    padding: 40px;
+  }
 }
-.thank-you-page-container .ur-success-icon svg {
+@media screen and (max-width: 420px) {
+  .ur-thank-you-page .thank-you-page-container {
+    padding: 30px;
+  }
+}
+.ur-thank-you-page .thank-you-page-container .ur-success-icon {
   width: 80px;
   height: 80px;
-  stroke: #ffffff;
-  fill: none;
+  margin-bottom: 20px;
+  animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.thank-you-page-container .ur-headline {
-  margin-bottom: 10px;
+@media screen and (max-width: 420px) {
+  .ur-thank-you-page .thank-you-page-container .ur-success-icon {
+    width: 60px;
+    height: 60px;
+  }
 }
-.thank-you-page-container .ur-headline h1 {
-  font-size: 32px;
+.ur-thank-you-page .thank-you-page-container .ur-success-icon svg {
+  width: 80px;
+  height: 80px;
+}
+@media screen and (max-width: 420px) {
+  .ur-thank-you-page .thank-you-page-container .ur-success-icon svg {
+    width: 60px;
+    height: 60px;
+  }
+}
+.ur-thank-you-page .thank-you-page-container .ur-headline {
+  margin-bottom: 16px;
+}
+.ur-thank-you-page .thank-you-page-container .ur-headline h1 {
+  font-size: 28px;
   font-weight: 700;
   color: #1f1f1f;
   margin: 0;
-  line-height: 1.2;
+  line-height: 36px;
   letter-spacing: -0.5px;
   text-transform: capitalize;
-}
-.thank-you-page-container .ur-message {
-  margin-bottom: 40px;
-  text-align: left;
-  font-size: 17px;
-}
-.thank-you-page-container .ur-message p {
-  font-size: 15px;
+  text-wrap: unset;
   text-align: center;
-  line-height: 1.6;
+}
+@media screen and (max-width: 420px) {
+  .ur-thank-you-page .thank-you-page-container .ur-headline h1 {
+    font-size: 22px;
+    line-height: 30px;
+  }
+}
+.ur-thank-you-page .thank-you-page-container .ur-message {
+  margin-bottom: 32px;
+}
+@media screen and (max-width: 420px) {
+  .ur-thank-you-page .thank-you-page-container .ur-message {
+    margin-bottom: 28px;
+  }
+}
+.ur-thank-you-page .thank-you-page-container .ur-message p {
+  font-size: 16px;
+  line-height: 24px;
   margin: 0;
   color: #6b6b6b;
   font-weight: 400;
+  text-align: center;
   letter-spacing: 0.15px;
+  text-wrap: unset;
 }
-.thank-you-page-container .ur-message ul {
+@media screen and (max-width: 420px) {
+  .ur-thank-you-page .thank-you-page-container .ur-message p {
+    font-size: 15px;
+    line-height: 25px;
+  }
+}
+.ur-thank-you-page .thank-you-page-container .ur-message ul {
   text-align: left;
 }
-.thank-you-page-container .ur-button-wrapper {
+.ur-thank-you-page .thank-you-page-container .ur-button-wrapper {
   margin-bottom: 0px;
 }
-.thank-you-page-container .ur-button-wrapper .ur-redirect-btn {
+.ur-thank-you-page .thank-you-page-container .ur-button-wrapper .ur-redirect-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   padding: 14px 32px;
-  background: var(--ur-button-background-normal-color, #475bb2);
+  background: #475bb2;
+  color: #ffffff;
   font-size: 16px;
-  color: var(--ur-button-text-normal-color, #ffffff);
-  font-weight: 600;
+  font-weight: 500;
   border: none;
   border-radius: 4px;
   text-decoration: none;
   cursor: pointer;
 }
-.thank-you-page-container .ur-button-wrapper .ur-redirect-btn:hover {
-  background: var(--ur-button-background-hover-color, #38488e);
-  color: var(--ur-button-text-hover-color, #ffffff);
+@media screen and (max-width: 420px) {
+  .ur-thank-you-page .thank-you-page-container .ur-button-wrapper .ur-redirect-btn {
+    font-size: 15px;
+    line-height: 25px;
+    padding: 12px 24px;
+  }
 }
-.thank-you-page-container .ur-button-wrapper .ur-redirect-btn:focus {
-  outline: 2px solid #475bb2;
-  outline-offset: 2px;
+.ur-thank-you-page .thank-you-page-container .ur-button-wrapper .ur-redirect-btn:hover {
+  background: #38488e;
 }
-.thank-you-page-container .ur-button-wrapper .ur-redirect-btn svg {
+.ur-thank-you-page .thank-you-page-container .ur-button-wrapper .ur-redirect-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+.ur-thank-you-page .thank-you-page-container .ur-button-wrapper .ur-redirect-btn svg {
   width: 16px;
   height: 16px;
   stroke: #ffffff;
   fill: none;
   transition: transform 0.3s ease;
 }
-.thank-you-page-container .ur-bank-details {
+@media screen and (max-width: 420px) {
+  .ur-thank-you-page .thank-you-page-container .ur-button-wrapper .ur-redirect-btn svg {
+    display: none;
+  }
+}
+.ur-thank-you-page .thank-you-page-container .ur-bank-details {
   width: auto;
   margin: 30px 0;
   padding: 20px;
   align-items: center;
-  background-color: #F8F8FA;
-  border: 1px solid #EDF2F7;
+  background-color: #f8f8fa;
+  border: 1px solid #edf2f7;
   border-radius: 6px;
   text-align: left;
   font-size: 16px;
@@ -1799,7 +1837,7 @@ html {
   line-height: 30px;
   gap: 12px;
 }
-.thank-you-page-container .ur-bank-details .ur-bank-details-title {
+.ur-thank-you-page .thank-you-page-container .ur-bank-details .ur-bank-details-title {
   font-size: 16px;
   font-weight: 500;
   margin: 0;
@@ -1807,36 +1845,36 @@ html {
   border-bottom: 1px solid #e1e1e1;
   padding-bottom: 10px;
 }
-.thank-you-page-container h3,
-.thank-you-page-container h4 {
+.ur-thank-you-page .thank-you-page-container h3,
+.ur-thank-you-page .thank-you-page-container h4 {
   margin: 0 0 12px 0;
   color: #1a1a1a;
   font-size: 16px;
   font-weight: 600;
 }
-.thank-you-page-container p {
+.ur-thank-you-page .thank-you-page-container p {
   margin: 6px 0;
   color: #495057;
   font-size: 14px;
   line-height: 1.5;
 }
-.thank-you-page-container table {
+.ur-thank-you-page .thank-you-page-container table {
   width: 100%;
   margin-top: 12px;
   border-collapse: collapse;
 }
-.thank-you-page-container table th,
-.thank-you-page-container table td {
+.ur-thank-you-page .thank-you-page-container table th,
+.ur-thank-you-page .thank-you-page-container table td {
   padding: 8px;
   text-align: left;
   border-bottom: 1px solid #e9ecef;
   font-size: 14px;
 }
-.thank-you-page-container table th {
+.ur-thank-you-page .thank-you-page-container table th {
   font-weight: 600;
   color: #1a1a1a;
 }
-.thank-you-page-container table td {
+.ur-thank-you-page .thank-you-page-container table td {
   color: #495057;
 }
 
@@ -1876,80 +1914,6 @@ html {
     opacity: 1;
   }
 }
-@media (max-width: 768px) {
-  .thank-you-page-container {
-    padding: 50px 32px;
-  }
-  .thank-you-page-container .ur-headline h1 {
-    font-size: 28px;
-  }
-  .thank-you-page-container .ur-message p {
-    font-size: 15px;
-  }
-  .thank-you-page-container .ur-button-wrapper .ur-redirect-btn {
-    padding: 13px 28px;
-    font-size: 15px;
-  }
-}
-@media (max-width: 640px) {
-  .ur-thank-you-page {
-    padding: 20px 16px;
-  }
-  .thank-you-page-container {
-    padding: 40px 24px;
-    border-radius: 6px;
-  }
-  .thank-you-page-container .ur-success-icon {
-    width: 70px;
-    height: 70px;
-    margin-bottom: 28px;
-  }
-  .thank-you-page-container .ur-success-icon svg {
-    width: 40px;
-    height: 40px;
-  }
-  .thank-you-page-container .ur-headline {
-    margin-bottom: 16px;
-  }
-  .thank-you-page-container .ur-headline h1 {
-    font-size: 24px;
-  }
-  .thank-you-page-container .ur-message {
-    margin-bottom: 28px;
-  }
-  .thank-you-page-container .ur-message p {
-    font-size: 15px;
-  }
-  .thank-you-page-container .ur-button-wrapper {
-    margin-bottom: 24px;
-  }
-  .thank-you-page-container .ur-button-wrapper .ur-redirect-btn {
-    padding: 12px 24px;
-    font-size: 15px;
-  }
-  .thank-you-page-container .ur-bank-details {
-    padding: 16px;
-    margin-bottom: 20px;
-  }
-  .thank-you-page-container .ur-transaction-info {
-    padding: 12px 16px;
-    margin-bottom: 20px;
-  }
-  .thank-you-page-container .ur-footer p {
-    font-size: 13px;
-  }
-}
-@media (max-width: 480px) {
-  .thank-you-page-container {
-    padding: 32px 20px;
-  }
-  .thank-you-page-container .ur-headline h1 {
-    font-size: 22px;
-  }
-  .thank-you-page-container .ur-message p {
-    font-size: 14px;
-  }
-}
 @media print {
   .ur-thank-you-page {
     background-color: #ffffff;
@@ -1982,20 +1946,20 @@ html {
 }
 .user-registration-email__entries td {
   padding: 10px 12px;
-  border: 1px solid #EDF2F7;
+  border: 1px solid #edf2f7;
   vertical-align: top;
 }
 .user-registration-email__entries-label {
   width: 35%;
   font-weight: 600;
   color: #374151;
-  background-color: #F8F8FA;
+  background-color: #f8f8fa;
   white-space: nowrap;
 }
 .user-registration-email__entries-data {
   color: #111827;
   word-break: break-word;
-  background-color: #F8F8FA;
+  background-color: #f8f8fa;
 }
 .user-registration-email__entries-tr:nth-child(even) {
   background-color: #fcfcfd;

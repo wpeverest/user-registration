@@ -913,16 +913,10 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 		$all_forms = ur_get_all_user_registration_form();
 		$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';
 
-		$membership_groups_repository = new MembershipGroupRepository();
-		$membership_groups            = $membership_groups_repository->get_all_membership_groups();
-
 		$membership_rules_count = 0;
 		if ( function_exists( 'ur_get_membership_rules_count' ) ) {
 			$membership_rules_count = ur_get_membership_rules_count();
 		}
-
-		$subscription_repository = new SubscriptionRepository();
-		$result                  = $subscription_repository->query();
 
 		$all_forms = ur_get_all_user_registration_form();
 

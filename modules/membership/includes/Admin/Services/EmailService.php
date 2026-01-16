@@ -81,15 +81,12 @@ class EmailService {
 	public function send_user_register_email( $data ) {
 		$user_id = absint( $data['member_id'] );
 
-		// Check if custom email should override default email
 		$membership_id = isset( $data['membership'] ) ? absint( $data['membership'] ) : 0;
 
-		// Check for all_members override
 		if ( apply_filters( 'user_registration_should_override_default_email', false, 'member_signs_up', 'all_members', $user_id, $membership_id ) ) {
 			return;
 		}
 
-		// Check for specific_memberships override
 		if ( $membership_id > 0 && apply_filters( 'user_registration_should_override_default_email', false, 'member_signs_up', 'specific_memberships', $user_id, $membership_id ) ) {
 			return;
 		}
@@ -134,7 +131,6 @@ class EmailService {
 			return;
 		}
 		$user_id = absint( $data['member_id'] );
-		// Check if custom email should override default admin email
 		if ( apply_filters( 'user_registration_should_override_default_email', false, 'member_signs_up', 'admin', $user_id, 0 ) ) {
 			return;
 		}
@@ -406,18 +402,14 @@ class EmailService {
 		$user_id       = absint( $data['member_id'] );
 		$membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
 
-		// If membership_id not in data, try to get it from subscription
 		if ( $membership_id <= 0 && isset( $data['subscription'] ) && is_array( $data['subscription'] ) && isset( $data['subscription']['item_id'] ) ) {
 			$membership_id = absint( $data['subscription']['item_id'] );
 		}
 
-		// Check if custom email should override default email
-		// Check for all_members override
 		if ( apply_filters( 'user_registration_should_override_default_email', false, 'membership_cancellation', 'all_members', $user_id, $membership_id ) ) {
 			return false;
 		}
 
-		// Check for specific_memberships override (always check, function handles membership matching)
 		if ( apply_filters( 'user_registration_should_override_default_email', false, 'membership_cancellation', 'specific_memberships', $user_id, $membership_id ) ) {
 			return false;
 		}
@@ -478,7 +470,6 @@ class EmailService {
 		}
 		$user_id = absint( $data['member_id'] );
 
-		// Check if custom email should override default admin email
 		if ( apply_filters( 'user_registration_should_override_default_email', false, 'membership_cancellation', 'admin', $user_id, 0 ) ) {
 			return false;
 		}
@@ -556,13 +547,10 @@ class EmailService {
 		$user_id       = absint( $data['member_id'] );
 		$membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
 
-		// Check if custom email should override default email
-		// Check for all_members override
 		if ( apply_filters( 'user_registration_should_override_default_email', false, 'membership_expired', 'all_members', $user_id, $membership_id ) ) {
 			return;
 		}
 
-		// Check for specific_memberships override
 		if ( $membership_id > 0 && apply_filters( 'user_registration_should_override_default_email', false, 'membership_expired', 'specific_memberships', $user_id, $membership_id ) ) {
 			return;
 		}

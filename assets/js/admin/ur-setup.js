@@ -420,7 +420,6 @@ jQuery(function ($) {
 				ur_setup_actions.install_addon_from_settings($(this));
 			});
 
-			// Settings feature activate actions.
 			$(document).on(
 				"click",
 				".user-registration-settings-feature-activate",
@@ -702,7 +701,6 @@ jQuery(function ($) {
 				.closest("button")
 				.prop("disabled", true);
 
-			// Use REST API URL and nonce from localized script
 			var restUrl =
 				(ur_setup_params.rest_url || "").replace(/\/$/, "") +
 				"/modules/activate";
@@ -761,7 +759,6 @@ jQuery(function ($) {
 				error: function (xhr, status, error) {
 					var errorMessage = ur_setup_params.download_failed;
 
-					// Try to get error message from response
 					if (xhr.responseJSON && xhr.responseJSON.message) {
 						errorMessage = xhr.responseJSON.message;
 					} else if (

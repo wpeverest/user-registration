@@ -92,7 +92,6 @@ class UR_Admin_Settings {
 			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), UR_VERSION );
 		}
 
-		// Add inline script for multiselect-v2
 		wp_add_inline_script(
 			'user-registration-settings',
 			"
@@ -123,7 +122,6 @@ class UR_Admin_Settings {
 			"
 		);
 
-		// Add inline styles for multiselect-v2
 		wp_add_inline_style(
 			'ur-snackbar',
 			'
@@ -938,7 +936,6 @@ class UR_Admin_Settings {
 													/>' . wp_kses_post( $val );
 										$settings .= '</span>';
 
-										// Add option description if it exists
 										if ( ! empty( $option_descriptions[ $key ] ) ) {
 											$settings .= '<span class="ur-radio-option-description">' . esc_html( $option_descriptions[ $key ] ) . '</span>';
 										}
@@ -1001,7 +998,6 @@ class UR_Admin_Settings {
 									$settings .= '</div>';
 									break;
 
-								// Multiple checkboxes.
 								case 'multicheckbox':
 									$option_value = self::get_option( $value['id'], $value['default'] );
 									if ( ! is_array( $option_value ) ) {
@@ -1260,7 +1256,7 @@ class UR_Admin_Settings {
 												)
 											);
 
-											$settings .= '<input type="radio" name="' . esc_attr( $value['id'] ) . '" id="' . esc_attr( $value['id'] ) . '"	style="' . esc_attr( $value['css'] ) . '" class="' . esc_attr( $value['class'] ) . '" value="' . esc_attr( trim( $option_index ) ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
+											$settings .= '<input type="radio" name="' . esc_attr( $value['id'] ?? '' ) . '" id="' . esc_attr( $value['id'] ?? '' ) . '"	style="' . esc_attr( $value['css'] ) . '" class="' . esc_attr( $value['class'] ) . '" value="' . esc_attr( trim( $option_index ) ) . '" ' . implode( ' ', $custom_attributes ) . ' / ' . $checked . ' /> ';
 											$settings .= '</label>';
 
 											$settings .= '</li>';
@@ -1278,8 +1274,9 @@ class UR_Admin_Settings {
 									$btn_slug              = ! empty( $value['attrs']['data-slug'] ) ? $value['attrs']['data-slug'] : '';
 									$btn_name              = ! empty( $value['attrs']['data-name'] ) ? $value['attrs']['data-name'] : '';
 									$is_connected          = isset( $section['is_connected'] ) ? $section['is_connected'] : false;
+									$section_id            = isset( $section['id'] ) ? $section['id'] : '';
 									$is_captcha            = in_array(
-										$section['id'],
+										$section_id,
 										array(
 											'v2',
 											'v3',
@@ -1288,7 +1285,7 @@ class UR_Admin_Settings {
 										)
 									);
 									$show_reset_key_button = ( $is_connected && in_array(
-										$section['id'],
+										$section_id,
 										array(
 											'v2',
 											'v3',
@@ -1297,7 +1294,7 @@ class UR_Admin_Settings {
 										)
 									) );
 									if ( in_array(
-										$section['id'],
+										$section_id,
 										array(
 											'stripe',
 											'paypal',
@@ -1310,6 +1307,9 @@ class UR_Admin_Settings {
 											'hCaptcha',
 											'cloudflare',
 											'captcha-settings',
+											'payment-retry',
+											'invoice-business-info',
+											'invoice-settings',
 										)
 									) ) {
 										$css       = 'ur-flex-row-reverse';
@@ -1323,7 +1323,7 @@ class UR_Admin_Settings {
 											type="button"
 											class="button button-primary ' . esc_attr( $btn_css ) . '"
 											type="button"
-											data-id="' . esc_attr( $section['id'] ) . '"';
+											data-id="' . esc_attr( $section_id ) . '"';
 									if ( ! empty( $btn_slug ) ) {
 										$settings .= ' data-slug="' . esc_attr( $btn_slug ) . '"';
 									}
@@ -1336,7 +1336,7 @@ class UR_Admin_Settings {
 										$settings .= '<a
 										href="#"
 										class="reset-captcha-keys ' . ( $show_reset_key_button ? '' : 'ur-d-none' ) . '"
-										data-id="' . esc_attr( $section['id'] ) . '"
+										data-id="' . esc_attr( $section_id ) . '"
 										/>
 										<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
 			                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
@@ -1353,7 +1353,7 @@ class UR_Admin_Settings {
 									break;
 
 								case 'tax_table':
-									$settings .='<div class="user-registration-list-table-container user-registration-list-tax-region-table-container">';
+									$settings .= '<div class="user-registration-list-table-container user-registration-list-tax-region-table-container">';
 									$settings .= ur_render_tax_table();
 									$settings .= '</div>';
 									break;
@@ -1368,7 +1368,6 @@ class UR_Admin_Settings {
 									$before_after_options = isset( $value['before_after_options'] ) ? $value['before_after_options'] : array();
 									$default_before_after = isset( $value['default_before_after'] ) ? $value['default_before_after'] : 'after';
 
-									// Get saved values
 									$saved_unit         = self::get_option( $unit_id, $default_unit );
 									$saved_value        = self::get_option( $value_id, $default_value );
 									$saved_before_after = ! empty( $before_after_id ) ? self::get_option( $before_after_id, $default_before_after ) : $default_before_after;
@@ -1378,7 +1377,6 @@ class UR_Admin_Settings {
 									$settings .= '<div class="user-registration-global-settings--field ur-duration-input-field">';
 									$settings .= '<div class="ur-duration-rows-wrapper">';
 
-									// First row: Send label, value input, unit select
 									$settings .= '<div class="ur-duration-row ur-duration-row-1">';
 									$settings .= '<input
 											name="' . esc_attr( $value_id ) . '"
@@ -1403,7 +1401,6 @@ class UR_Admin_Settings {
 									$settings .= '</select>';
 									$settings .= '</div>';
 
-									// Second row: Before/After select
 									if ( ! empty( $before_after_id ) && ! empty( $before_after_options ) ) {
 										$settings .= '<div class="ur-duration-row ur-duration-row-2">';
 										$settings .= '<select
@@ -1421,7 +1418,6 @@ class UR_Admin_Settings {
 										$settings .= '</div>';
 									}
 
-									// Third row: Selected trigger event display (updated by JavaScript)
 									$settings .= '<div class="ur-duration-row ur-duration-row-3 ur-trigger-event-display" style="display: none;">';
 									$settings .= '<div class="ur-trigger-event-badge">';
 									$settings .= '<span class="ur-trigger-event-icon dashicons dashicons-clock"></span>';
@@ -1850,7 +1846,7 @@ class UR_Admin_Settings {
 				}
 
 				// Get posted value.
-				if ( null !== $option['id'] ) {
+				if ( isset( $option['id'] ) && null !== $option['id'] ) {
 					if ( strstr( $option['id'], '[' ) ) {
 						parse_str( $option['id'], $option_name_array );
 						$option_name = sanitize_text_field( current( array_keys( $option_name_array ) ) );
