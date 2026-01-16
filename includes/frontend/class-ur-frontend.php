@@ -121,7 +121,8 @@ class UR_Frontend {
 		if ( $user_id > 0 ) {
 			$user_meta    = get_userdata( $user_id );
 			$user_roles   = $user_meta->roles;
-			$option_roles = get_option( 'user_registration_general_setting_disabled_user_roles', array() );
+			$option_roles = get_option( 'user_registration_general_setting_disabled_user_roles', array('subscriber') );
+
 			if ( ! is_array( $option_roles ) ) {
 				$option_roles = array();
 			}
