@@ -110,7 +110,7 @@
 								if ( 'automatic' == $ur_local_currencies_conversion_type ) {
 									$all_exchange_rates = Api::ur_get_exchange_rate();
 
-									if ( $base_currency == $all_exchange_rates['base']
+									if ( ! empty( $all_exchange_rates['base'] ) && $base_currency == $all_exchange_rates['base']
 									) {
 										$exchange_rates = $all_exchange_rates['rates'];
 									}
@@ -124,7 +124,7 @@
 										: ''
 									);
 
-									if ( 'automatic' == $ur_local_currencies_conversion_type ) {
+									if ( 'automatic' == $ur_local_currencies_conversion_type && ! empty( $exchange_rates[ $pricing_zone[ $zone_id ]['meta']['ur_local_currency'][0] ] ) ) {
 										$rate = $exchange_rates[ $pricing_zone[ $zone_id ]['meta']['ur_local_currency'][0] ];
 									}
 								}
