@@ -91,7 +91,16 @@ if ( ! class_exists( 'Hooks' ) ) :
 
 			$page = get_page_by_path( 'course-portal' );
 
-			$account_page_id = $post && $page && $page->ID === $post->ID;
+			if ( ! $page ) {
+				return $is_account_page;
+			}
+
+			if ( ! $post ) {
+
+				return $account_page_id;
+			}
+
+			$account_page_id = $page->ID === $post->ID;
 
 			return $account_page_id;
 		}
