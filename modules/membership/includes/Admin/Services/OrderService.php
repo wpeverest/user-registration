@@ -57,11 +57,7 @@ class OrderService {
 			$local_currency  = ! empty( $data['local_currency_details']['switched_currency' ] ) ? $data['local_currency_details']['switched_currency' ] : '';
 			$ur_zone_id 	 = ! empty( $data['local_currency_details']['urm_zone_id' ] ) ? $data['local_currency_details']['urm_zone_id' ] : '';
 
-			if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && (
-					class_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions' ) &&
-					method_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions', 'ur_get_pricing_zone_by_id' )
-				)
-			) {
+			if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) ) {
 				$currency = $local_currency;
 				$pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
 				$local_currency_data = ! empty( $membership_meta['local_currency'] ) ? $membership_meta['local_currency'] : array();

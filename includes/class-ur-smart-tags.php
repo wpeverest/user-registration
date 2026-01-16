@@ -244,6 +244,8 @@ class UR_Smart_Tags {
 			foreach ( $other_tags[1] as $key => $tag ) {
 				$other_tag = explode( ' ', $tag )[0];
 
+				$content = $this->handle_invoices_tags( $other_tag, $content, $values, $key );
+
 				switch ( $other_tag ) {
 					case 'updated_new_user_email':
 						if ( ! empty( $values['user_pending_email'] ) ) {
@@ -1308,6 +1310,52 @@ class UR_Smart_Tags {
 			$payment_date = current_time( 'mysql' );
 			update_user_meta( $user_id, 'user_registration_single_item_payment_date', $payment_date );
 		}
+	}
+
+	
+	private function handle_invoices_tags( $tag, $content, $values, $key ) {
+		global $wpdb;
+		$detail = '';
+		$membership_enabled = get_user_meta( get_current_user_id(), 'ur_registration_source', true );
+		if ( $membership_enabled ) {
+			$transaction_id = $_GET[ 'transaction_id' ]; //one time payment.
+			$order_detail = $wpdb->get_row( $wpdb->prepare( "SELECT ID, item_id, updated_at, status  FROM {$wpdb->prefix}ur_membership_orders WHERE user_id=%d AND transaction_id=%s", get_current_user_id(), $transaction_id ), ARRAY_A );
+			$membership = get_post( $order_detail[ 'item_id' ], ARRAY_A );
+		}
+		switch( $tag ) {
+			//merchant details:
+			case 'business_name':
+			case 'business_address_line_1':
+			case 'business_address_line_2':
+			case 'business_address_city':
+			case 'business_address_state':
+			case 'business_address_postal':
+			case 'business_email':
+			case 'business_phone':
+				$detail = get_option( 'urm_' . $tag, '' );
+				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				break;
+			case 'invoice_title':
+				$detail = $membership[ 'post_title' ] ?? '';
+				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				break;
+			case 'invoice_short_desc':
+				$detail = $membership[ 'post_description' ] ?? '';
+				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				break;
+			case 'invoice_period':
+			case 'invoice_amount':
+			case 'total_amount':
+			case 'tax_amount':
+				$detail = get_user_meta( $order_detail[ 'user_id' ], "urm_$tag", true ) ?? '';
+				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				break;
+			case 'invoice_status':
+				$content = str_replace( '{{' . $tag . '}}', $order_detail[ 'status' ], $content);
+				break;
+		}
+		$content = str_replace( '{{' . $tag . '}}', '', $content );
+		return $content;
 	}
 }
 

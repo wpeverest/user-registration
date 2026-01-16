@@ -129,11 +129,11 @@ class Frontend {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		wp_enqueue_script( 'sweetalert2' );
 
-		wp_register_script( 'user-registration-membership-frontend-script', UR_MEMBERSHIP_JS_ASSETS_URL . '/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
+		wp_register_script( 'user-registration-membership-frontend-script', UR()->plugin_url(). '/assets/js/modules/membership/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_enqueue_script( 'user-registration-membership-stripe-v3', 'https://js.stripe.com/v3/', array() );
 		wp_enqueue_script( 'user-registration-membership-frontend-script' );
 		// Enqueue frontend styles here.
-		wp_register_style( 'user-registration-membership-frontend-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-frontend.css', array(), UR_VERSION );
+		wp_register_style( 'user-registration-membership-frontend-style', UR()->plugin_url(). '/assets/css/modules/membership/user-registration-membership-frontend.css', array(), UR_VERSION );
 		wp_enqueue_style( 'user-registration-membership-frontend-style' );
 		$this->localize_scripts();
 	}
@@ -156,8 +156,10 @@ class Frontend {
 		$symbol               = $currencies[ $currency ]['symbol'];
 		$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
 
-		$regions 				= get_option( 'user_registration_tax_price_display_option', array() );
+		$regions 				= get_option( 'user_registration_tax_regions_and_rates', array() );
 		$tax_calculation_method = get_option( 'user_registration_tax_calculation_method', 'price_include' );
+
+		$is_tax_calculation_enabled		  = ur_check_module_activation( 'taxes' );
 
 		$redirect_page_url = get_permalink( $registration_page_id );
 
@@ -209,6 +211,7 @@ class Frontend {
 				'local_currencies'				   => ur_get_currencies(),
 				'local_currencies_symbol' 		   => ur_get_currency_symbols(),
 				'supported_currencies'			   => $supported_currencies,
+				'is_tax_calculation_enabled'	   => $is_tax_calculation_enabled
 			),
 		);
 	}

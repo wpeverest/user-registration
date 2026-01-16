@@ -147,7 +147,8 @@ class URCR_Frontend {
 		$current_post_id = get_queried_object_id();
 
 		// Get the current post object properly
-		if ( empty( $post ) || ! is_object( $post ) ) {
+		if ( ( empty( $post ) || ! is_object( $post ) ) && ! ( is_plugin_active( 'learning-management-system/lms.php' )
+				|| is_plugin_active( 'learning-management-system-pro/lms.php' ) ) ) {
 			$post = get_queried_object();
 			if ( ! is_object( $post ) && $current_post_id ) {
 				$post = get_post( $current_post_id );

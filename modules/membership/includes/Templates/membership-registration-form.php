@@ -13,6 +13,7 @@
 	use WPEverest\URMembership\Local_Currency\Admin\Api;
 
 	$is_coupon_addon_activated        = ur_check_module_activation( 'coupon' );
+	$is_tax_calculation_enabled		  = ur_check_module_activation( 'taxes' );
 	$membership_ids_link_with_coupons = array();
 	if ( $is_coupon_addon_activated && function_exists( 'ur_get_membership_ids_link_with_coupons' ) ) :
 		$membership_ids_link_with_coupons = ur_get_membership_ids_link_with_coupons();
@@ -109,7 +110,7 @@
 								if ( 'automatic' == $ur_local_currencies_conversion_type ) {
 									$all_exchange_rates = Api::ur_get_exchange_rate();
 
-									if ( $base_currency == $all_exchange_rates['base']
+									if ( ! empty( $all_exchange_rates['base'] ) && $base_currency == $all_exchange_rates['base']
 									) {
 										$exchange_rates = $all_exchange_rates['rates'];
 									}
@@ -123,7 +124,7 @@
 										: ''
 									);
 
-									if ( 'automatic' == $ur_local_currencies_conversion_type ) {
+									if ( 'automatic' == $ur_local_currencies_conversion_type && ! empty( $exchange_rates[ $pricing_zone[ $zone_id ]['meta']['ur_local_currency'][0] ] ) ) {
 										$rate = $exchange_rates[ $pricing_zone[ $zone_id ]['meta']['ur_local_currency'][0] ];
 									}
 								}
@@ -222,7 +223,6 @@
 	</div>
 	<!--	coupon container-->
 	<?php
-	$is_coupon_addon_activated = ur_check_module_activation( 'coupon' );
 
 	if ( $is_coupon_addon_activated ) :
 		?>
@@ -256,39 +256,45 @@
 	<!--	total container-->
 	<div id="urm-total_container"
 		class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
-		<div class="urm-membership-sub-total-value">
-			<label class="ur_membership_input_label ur-label"
-					for="ur-membership-subtotal"><?php echo esc_html__( 'Sub Total', 'user-registration' ); ?></label>
-			<span class="ur_membership_input_class"
-					id="ur-membership-subtotal"
-					data-key-name="<?php echo esc_html__( 'Sub Total', 'user-registration' ); ?>"
-					disabled
-			>
+		<?php if( $is_coupon_addon_activated || $is_tax_calculation_enabled ): ?>
+			<div class="urm-membership-sub-total-value">
+				<label class="ur_membership_input_label ur-label"
+				for="ur-membership-subtotal"><?php echo esc_html__( 'Sub Total', 'user-registration' ); ?></label>
+				<span class="ur_membership_input_class"
+				id="ur-membership-subtotal"
+				data-key-name="<?php echo esc_html__( 'Sub Total', 'user-registration' ); ?>"
+				disabled
+				>
 				<?php echo ceil( 0 ); ?>
 			</span>
 		</div>
-		<div class="urm-membership-tax-value">
-			<label class="ur_membership_input_label ur-label"
-					for="ur-membership-tax"><?php echo esc_html__( 'Tax', 'user-registration' ); ?></label>
-			<span class="ur_membership_input_class"
-					id="ur-membership-tax"
-					data-key-name="<?php echo esc_html__( 'Tax', 'user-registration' ); ?>"
-					disabled
-			>
+		<?php endif; ?>
+		<?php if( $is_tax_calculation_enabled ): ?>
+			<div class="urm-membership-tax-value">
+				<label class="ur_membership_input_label ur-label"
+				for="ur-membership-tax"><?php echo esc_html__( 'Tax', 'user-registration' ); ?></label>
+				<span class="ur_membership_input_class"
+				id="ur-membership-tax"
+				data-key-name="<?php echo esc_html__( 'Tax', 'user-registration' ); ?>"
+				disabled
+				>
 				<?php echo ceil( 0 ); ?>
 			</span>
 		</div>
-		<div class="urm-membership-coupons-value">
-			<label class="ur_membership_input_label ur-label"
-					for="ur-membership-coupons"><?php echo esc_html__( 'Coupons', 'user-registration' ); ?></label>
-			<span class="ur_membership_input_class"
-					id="ur-membership-coupons"
-					data-key-name="<?php echo esc_html__( 'Coupons', 'user-registration' ); ?>"
-					disabled
-			>
+		<?php endif; ?>
+		<?php if( $is_coupon_addon_activated ): ?>
+			<div class="urm-membership-coupons-value">
+				<label class="ur_membership_input_label ur-label"
+				for="ur-membership-coupons"><?php echo esc_html__( 'Coupons', 'user-registration' ); ?></label>
+				<span class="ur_membership_input_class"
+				id="ur-membership-coupons"
+				data-key-name="<?php echo esc_html__( 'Coupons', 'user-registration' ); ?>"
+				disabled
+				>
 				<?php echo ceil( 0 ); ?>
 			</span>
 		</div>
+		<?php endif; ?>
 		<div class="urm-membership-total-value">
 			<label class="ur_membership_input_label ur-label"
 					for="ur-membership-total"><?php echo esc_html__( 'Total', 'user-registration' ); ?></label>

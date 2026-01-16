@@ -1152,9 +1152,7 @@
 								}
 							}
 
-							&__body {
-
-							}
+							&__body {}
 						}
 					}
 				}
@@ -1175,6 +1173,7 @@
 					}
 				}
 			}
+
 			.user-registration-payment__items {
 				border: $border_width solid $border_color;
 				border-radius: $border_radius_5;
@@ -1197,9 +1196,11 @@
 				.user-registration-switch {
 					@include form-toggle;
 				}
+
 				.ur-toggle-section {
-					flex: none!important;
+					flex: none !important;
 				}
+
 				.payment-option-body {
 					border-top: $border_width solid $border-color;
 					margin-top: $spacing_14px;
@@ -1612,6 +1613,26 @@
 			text-decoration: underline;
 		}
 	}
+
+	.user-registration-card {
+		.user_registration-card__body {
+			.ur-membership-input-container {
+				.ur-label {
+					max-width: 300px;
+					width: 100%;
+					margin-bottom: 0;
+					color: #383838;
+					font-size: 14px;
+					font-weight: 500;
+					line-height: 22px;
+				}
+
+				.ur-admin-template {
+					flex: 1;
+				}
+			}
+		}
+	}
 }
 
 #ur-membership-create-form {
@@ -1649,6 +1670,8 @@
 							align-items: center;
 
 							.ur-label {
+								max-width: 300px;
+								width: 100%;
 								margin-bottom: 0;
 
 								label {
@@ -1657,6 +1680,10 @@
 									font-weight: 500;
 									line-height: 22px;
 								}
+							}
+
+							.ur-input-type-membership-name {
+								flex: 1;
 							}
 
 							.user-registration-switch {

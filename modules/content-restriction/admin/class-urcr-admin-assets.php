@@ -290,12 +290,16 @@ class URCR_Admin_Assets {
 				'placeholder'   => '',
 				'date_type_options' => array(
 					array(
-						'value' => 'range',
-						'label' => esc_html__( 'Select date range', 'user-registration' ),
+						'value' => 'before',
+						'label' => esc_html__( 'Before', 'user-registration' ),
 					),
 					array(
-						'value' => 'single',
-						'label' => esc_html__( 'Pick a date', 'user-registration' ),
+						'value' => 'after',
+						'label' => esc_html__( 'After', 'user-registration' ),
+					),
+					array(
+						'value' => 'range',
+						'label' => esc_html__( 'Range', 'user-registration' ),
 					),
 				),
 			),

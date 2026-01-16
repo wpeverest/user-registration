@@ -1,4 +1,4 @@
-/* global user_registration_settings_params, ur_login_form_params, UR_Snackbar */
+/* global user_registration_settings_params, user_registration_settings_params, UR_Snackbar */
 (function ($) {
 	if (UR_Snackbar) {
 		var snackbar = new UR_Snackbar();
@@ -41,6 +41,8 @@
 		})
 		.trigger("change");
 
+
+		
 	// Color picker
 	$(".colorpick").each(function () {
 		var $input = $(this);
@@ -48,8 +50,6 @@
 			$input.data("alpha") === true ||
 			$input.attr("data-alpha") === "true";
 
-		// Get current value from input (saved value) - read BEFORE any manipulation
-		// Read directly from the DOM element's value attribute first (most reliable)
 		var domElement = $input[0];
 		var currentValue =
 			(domElement && domElement.value) ||
@@ -58,15 +58,12 @@
 			$input.data("current-value") ||
 			$input.attr("data-current-value") ||
 			"";
-		// Get default value from data attribute
 		var defaultValue =
 			$input.data("default-value") ||
 			$input.attr("data-default-value") ||
 			"";
-		// Use current value if available, otherwise use default
 		var initialValue = currentValue || defaultValue;
 
-		// Trim whitespace and ensure it's a valid color value
 		if (initialValue) {
 			initialValue = initialValue.toString().trim();
 			// If empty after trim, set to empty string
@@ -75,8 +72,6 @@
 			}
 		}
 
-		// Ensure the input has the value set before initializing color picker
-		// Set both val() and attr() to be sure
 		if (initialValue) {
 			$input.val(initialValue);
 			$input.attr("value", initialValue);
@@ -85,7 +80,6 @@
 			}
 		}
 
-		// Initialize color picker with defaultColor option
 		var colorPickerOptions = {
 			change: function (event, ui) {
 				$(this)
@@ -105,7 +99,6 @@
 			mode: alphaEnabled ? "rgba" : "hex"
 		};
 
-		// Add defaultColor if we have an initial value
 		if (initialValue) {
 			colorPickerOptions.defaultColor = initialValue;
 			colorPickerOptions.color = initialValue;
@@ -113,8 +106,6 @@
 
 		$input.wpColorPicker(colorPickerOptions);
 
-		// After color picker initializes, ensure the color is displayed correctly
-		// Use multiple timeouts to ensure it works even if initialization is delayed
 		var applyColor = function () {
 			if (!initialValue) {
 				$input.css("display", "none");
@@ -123,27 +114,23 @@
 
 			var $container = $input.closest(".wp-picker-container");
 			if (!$container.length) {
-				return; // Container not ready yet
+				return;
 			}
 
 			var $colorResult = $container.find(".wp-color-result");
 			if (!$colorResult.length) {
-				return; // Color result not ready yet
+				return;
 			}
 
-			// Set the input value first
 			$input.val(initialValue);
 
-			// Update color result button background - this is what users see
 			$colorResult.css("background-color", initialValue);
 
-			// Update the color span inside the button (the actual color display)
 			var $colorSpan = $colorResult.find("span");
 			if ($colorSpan.length) {
 				$colorSpan.css("background-color", initialValue);
 			}
 
-			// Try to set iris color
 			try {
 				if ($input.data("wp-wpColorPicker")) {
 					var picker = $input.data("wp-wpColorPicker");
@@ -151,47 +138,36 @@
 						picker.iris._color = initialValue;
 					}
 				}
-				// Also try the iris method
 				if (typeof $input.iris === "function") {
 					$input.iris("color", initialValue);
 				}
-			} catch (e) {
-				// Ignore errors, visual update is more important
-			}
+			} catch (e) {}
 
-			// Hide input field AFTER color picker is initialized and color is set
 			$input.css("display", "none");
 		};
 
-		// Try multiple times with increasing delays
 		setTimeout(applyColor, 50);
 		setTimeout(applyColor, 200);
 		setTimeout(applyColor, 500);
 
-		// Ensure input wrap stays inside holder, fix positioning, and add border radius
 		setTimeout(function () {
 			var $container = $input.closest(".wp-picker-container");
 			if ($container.length) {
 				var $holder = $container.find(".wp-picker-holder");
 				var $inputWrap = $container.find(".wp-picker-input-wrap");
-				// Get default value again in this scope
 				var inputDefaultValue =
 					$input.data("default-value") ||
 					$input.attr("data-default-value") ||
 					"";
 
-				// Ensure input field is hidden on load
 				$input.css("display", "none");
 
-				// Ensure input wrap is inside the holder
 				if ($holder.length && $inputWrap.length) {
-					// If input wrap is not inside holder, move it there
 					if (!$holder.find($inputWrap).length) {
 						$inputWrap.appendTo($holder);
 					}
 				}
 
-				// Ensure holder is positioned absolutely and doesn't take space when hidden
 				if ($holder.length) {
 					$holder.css({
 						position: "absolute",
@@ -201,14 +177,12 @@
 						marginTop: "2px"
 					});
 
-					// Show/hide iris-picker, iris-border, and input field based on active state
 					var $irisPicker = $container.find(".iris-picker");
 					var $irisBorder = $container.find(".iris-border");
 					var $colorInput = $container.find(
 						".colorpick.wp-color-picker"
 					);
 
-					// Function to toggle visibility based on active state
 					function togglePickerVisibility() {
 						setTimeout(function () {
 							if ($container.hasClass("wp-picker-active")) {
@@ -227,14 +201,12 @@
 						}, 10);
 					}
 
-					// Watch for active state changes
 					$container.on(
 						"click",
 						".wp-color-result",
 						togglePickerVisibility
 					);
 
-					// Also watch for class changes using MutationObserver
 					var observer = new MutationObserver(function (mutations) {
 						mutations.forEach(function (mutation) {
 							if (
@@ -252,12 +224,10 @@
 					});
 				}
 
-				// Add border radius to color result button
 				$container.find(".wp-color-result").css({
 					borderRadius: "4px"
 				});
 
-				// Set tooltip for color-group items
 				var $colorGroupItem = $container.closest(
 					".user-registration-color-group-item"
 				);
@@ -274,7 +244,6 @@
 		}, 50);
 	});
 
-	// Color group tooltip functionality (for dynamically added elements)
 	$(document).on(
 		"mouseenter",
 		".user-registration-color-group-item .wp-color-result",
@@ -289,13 +258,14 @@
 		}
 	);
 
-	$(".colorpickpreview")
+	// Color picker
+	$(".colorpick, .colorpickpreview")
 		.iris({
 			change: function (event, ui) {
 				$(this)
 					.parent()
 					.find(".colorpickpreview")
-					.css({ backgroundColor: ui.color.toString() });
+					.css({backgroundColor: ui.color.toString()});
 			},
 			hide: true,
 			border: true
@@ -316,7 +286,6 @@
 		event.stopPropagation();
 	});
 
-	// Edit prompt
 	$(function () {
 		var changed = false;
 
@@ -339,7 +308,6 @@
 		});
 	});
 
-	// Select all/none
 	$(".user-registration").on("click", ".select_all", function () {
 		$(this)
 			.closest("td")
@@ -468,8 +436,8 @@
 					)
 					.append(
 						'<div class="error inline" style="padding:10px;">' +
-							ur_login_form_params.user_registration_membership_redirect_default_page_message +
-							"</div>"
+						user_registration_settings_params.user_registration_membership_redirect_default_page_message +
+						"</div>"
 					);
 			} else {
 				$(wpbody_class)
@@ -499,8 +467,8 @@
 				.closest(".user-registration-login-form-global-settings--field")
 				.append(
 					'<div class="error inline" style="padding:10px;">' +
-						ur_login_form_params.user_registration_membership_redirect_default_page_message +
-						"</div>"
+					user_registration_settings_params.user_registration_membership_redirect_default_page_message +
+					"</div>"
 				);
 
 			$redirect.prop("required", true);
@@ -698,7 +666,7 @@
 			data = {
 				action: "user_registration_my_account_selection_validator",
 				security:
-					user_registration_settings_params.user_registration_my_account_selection_validator_nonce
+				user_registration_settings_params.user_registration_my_account_selection_validator_nonce
 			};
 
 		data.user_registration_selected_my_account_page = $this.val();
@@ -723,8 +691,66 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-								response.responseJSON.data.message +
-								"</div>"
+							response.responseJSON.data.message +
+							"</div>"
+						);
+					$this.css("border", "1px solid red");
+					$this
+						.closest("form")
+						.find("input[name='save']")
+						.prop("disabled", true);
+				} else {
+					$this
+						.closest("form")
+						.find("input[name='save']")
+						.prop("disabled", false);
+					$this
+						.closest(".user-registration-global-settings")
+						.find(".error inline")
+						.remove();
+				}
+				$this.prop("disabled", false);
+
+				$this
+					.closest(".user-registration-global-settings")
+					.find(".ur-spinner")
+					.remove();
+			}
+		});
+	});
+
+	$("#user_registration_login_page_id").on("change", function () {
+		var $this = $(this),
+			data = {
+				action: "user_registration_my_account_selection_validator",
+				security:
+				user_registration_settings_params.user_registration_my_account_selection_validator_nonce
+			};
+
+		data.user_registration_selected_my_account_page = $this.val();
+
+		$this.prop("disabled", true);
+		$this.css("border", "1px solid #e1e1e1");
+		$this
+			.closest(".user-registration-global-settings--field")
+			.find(".error.inline")
+			.remove();
+		$this
+			.closest(".user-registration-global-settings")
+			.append('<div class="ur-spinner is-active"></div>');
+
+		$.ajax({
+			url: user_registration_settings_params.ajax_url,
+			data: data,
+			type: "POST",
+			complete: function (response) {
+				if (response.responseJSON.success === false) {
+					$this
+						.closest(".user-registration-global-settings--field")
+						.append(
+							"<div id='message' class='error inline' style='padding:10px;'>" +
+							response.responseJSON.data.message +
+							"</div>"
 						);
 					$this.css("border", "1px solid red");
 					$this
@@ -757,7 +783,7 @@
 			data = {
 				action: "user_registration_lost_password_selection_validator",
 				security:
-					ur_login_form_params.user_registration_lost_password_selection_validator_nonce
+				user_registration_settings_params.user_registration_lost_password_selection_validator_nonce
 			};
 
 		data.user_registration_selected_lost_password_page = $this.val();
@@ -771,7 +797,7 @@
 			.remove();
 
 		$.ajax({
-			url: ur_login_form_params.ajax_url,
+			url: user_registration_settings_params.ajax_url,
 			data: data,
 			type: "POST",
 			complete: function (response) {
@@ -789,8 +815,8 @@
 							)
 							.append(
 								"<div id='message' class='error inline' style='padding:10px;'>" +
-									response.responseJSON.data.message +
-									"</div>"
+								response.responseJSON.data.message +
+								"</div>"
 							);
 					}
 					$this.css("border", "1px solid red");
@@ -892,7 +918,6 @@
 			}
 		);
 	});
-
 	/**
 	 * Open collapsed menu on search input clicked.
 	 */
@@ -995,7 +1020,7 @@
 			heightAuto: false,
 			width: "575px",
 			confirmButtonText:
-				user_registration_settings_params.i18n.upgrade_plan
+			user_registration_settings_params.i18n.upgrade_plan
 		}).then(function (result) {
 			if (result.isConfirmed) {
 				window.open(
@@ -1100,8 +1125,8 @@
 				.is(":checked");
 			if (is_enabled) {
 				$(this)
-					.find(".ur-captcha-settings-header .integration-status")
-					.addClass("ur-integration-account-connected");
+					.find(".ur-captcha-settings-header .ur-connection-status")
+					.addClass("ur-connection-status--active");
 			}
 		});
 	}
@@ -1187,7 +1212,7 @@
 			data: {
 				action: "user_registration_save_payment_settings",
 				security:
-					user_registration_settings_params.user_registration_membership_payment_settings_nonce,
+				user_registration_settings_params.user_registration_membership_payment_settings_nonce,
 				setting_id: setting_id,
 				section_data: JSON.stringify(section_data)
 			},
@@ -1196,9 +1221,18 @@
 				$this.find(".ur-spinner").remove();
 				if (response.responseJSON.success) {
 					show_success_message(response.responseJSON.data.message);
-					settings_container
-						.find(".integration-status")
-						.addClass("ur-integration-account-connected");
+					if(response.responseJSON.data.is_connected) {
+						settings_container
+							.find(".ur-connection-status")
+							.addClass("ur-connection-status--active");
+						settings_container
+							.find(".reset-payment-keys")
+							.removeClass("ur-d-none");
+					} else {
+						settings_container
+							.find(".ur-connection-status")
+							.removeClass("ur-connection-status--active");
+					}
 				} else {
 					show_failure_message(response.responseJSON.data.message);
 				}
@@ -1217,7 +1251,7 @@
 			data: {
 				action: "user_registration_save_captcha_settings",
 				security:
-					user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
+				user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
 				setting_id: setting_id,
 				section_data: JSON.stringify(section_data)
 			},
@@ -1226,8 +1260,8 @@
 				if (response.success) {
 					var successMessage = response.data.message;
 					settings_container
-						.find(".integration-status")
-						.addClass("ur-integration-account-connected");
+						.find(".ur-connection-status")
+						.addClass("ur-connection-status--active");
 					settings_container
 						.find(".reset-captcha-keys")
 						.removeClass("ur-d-none");
@@ -1272,7 +1306,7 @@
 				type: type,
 				value: val,
 				security:
-					user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
+				user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
 			},
 			type: "POST",
 			complete: function (response) {
@@ -1281,8 +1315,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-								response.responseJSON.message +
-								"</div>"
+							response.responseJSON.message +
+							"</div>"
 						);
 
 					$this
@@ -1328,8 +1362,7 @@
 
 		var section_data = {};
 
-		settings_container
-			.find("input, select, textarea")
+		$("input, select, textarea", settings_container[0] || settings_container)
 			.each(function (key, item) {
 				var $item = $(item);
 				var name = $item.attr("name");
@@ -1373,7 +1406,7 @@
 			data: {
 				action: "user_registration_validate_payment_currency",
 				security:
-					user_registration_settings_params.user_registration_membership_validate_payment_currency_nonce,
+				user_registration_settings_params.user_registration_membership_validate_payment_currency_nonce,
 				currency: currency
 			},
 			type: "POST",
@@ -1387,8 +1420,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='warning inline' style='padding:10px;'>" +
-								response.responseJSON.data.message +
-								"</div>"
+							response.responseJSON.data.message +
+							"</div>"
 						);
 				} else {
 					$this
@@ -1602,9 +1635,9 @@
 				"</p>",
 			showCancelButton: true,
 			confirmButtonText:
-				user_registration_settings_params.i18n.i18n_prompt_reset,
+			user_registration_settings_params.i18n.i18n_prompt_reset,
 			cancelButtonText:
-				user_registration_settings_params.i18n.i18n_prompt_cancel,
+			user_registration_settings_params.i18n.i18n_prompt_cancel,
 			allowOutsideClick: false,
 			preConfirm: function () {
 				var btn = $(".swal2-confirm");
@@ -1613,6 +1646,36 @@
 				}
 				btn.append('<span class="ur-spinner"></span>');
 				reset_captcha_keys($this, btn);
+				return false;
+			}
+		});
+	});
+
+	$(".reset-payment-keys").on("click", function () {
+		var $this = $(this);
+		Swal.fire({
+			title:
+				'<img src="' +
+				user_registration_settings_params.reset_keys_icon +
+				'">' +
+				user_registration_settings_params.i18n.payment_reset_title,
+			html:
+				'<p id="html_1">' +
+				user_registration_settings_params.i18n.payment_reset_prompt +
+				"</p>",
+			showCancelButton: true,
+			confirmButtonText:
+			user_registration_settings_params.i18n.i18n_prompt_reset,
+			cancelButtonText:
+			user_registration_settings_params.i18n.i18n_prompt_cancel,
+			allowOutsideClick: false,
+			preConfirm: function () {
+				var btn = $(".swal2-confirm");
+				if (btn.find(".ur-spinner").length > 0) {
+					return;
+				}
+				btn.append('<span class="ur-spinner"></span>');
+				reset_payment_keys($this, btn);
 				return false;
 			}
 		});
@@ -1652,7 +1715,7 @@
 			data: {
 				action: "user_registration_reset_captcha_keys",
 				security:
-					user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
+				user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
 				setting_id: setting_id
 			},
 			type: "POST",
@@ -1660,19 +1723,19 @@
 				if (response.success) {
 					show_success_message(
 						response.data.message ||
-							user_registration_settings_params.i18n
-								.captcha_keys_reset_success
+						user_registration_settings_params.i18n
+							.captcha_keys_reset_success
 					);
 					settings_container
-						.find(".integration-status")
-						.removeClass("ur-integration-account-connected");
+						.find(".ur-connection-status")
+						.removeClass("ur-connection-status--active");
 					settings_container.find('input[type="text"]').val("");
 
 					// Remove captcha node after successful reset
 					var urm_recaptcha_node = $(
 						'.ur-captcha-test-container[data-captcha-type="' +
-							setting_id +
-							'"] .ur-captcha-node'
+						setting_id +
+						'"] .ur-captcha-node'
 					);
 
 					if (urm_recaptcha_node.length !== 0) {
@@ -1692,8 +1755,8 @@
 				} else {
 					show_failure_message(
 						response.data.message ||
-							user_registration_settings_params.i18n
-								.captcha_keys_reset_error
+						user_registration_settings_params.i18n
+							.captcha_keys_reset_error
 					);
 				}
 			},
@@ -1703,7 +1766,63 @@
 					user_registration_settings_params.i18n
 						.captcha_keys_reset_error;
 				show_failure_message(errorMessage);
-				reject({ data: { message: errorMessage } });
+				reject({data: {message: errorMessage}});
+			},
+			complete: function (response) {
+				btn.find(".ur-spinner").remove();
+				Swal.close();
+			}
+		});
+	}
+
+	function reset_payment_keys($this, btn) {
+		var setting_id = $this.data("id"),
+			settings_container = $this.closest("#" + setting_id);
+		$.ajax({
+			url: user_registration_settings_params.ajax_url,
+			data: {
+				action: "user_registration_reset_payment_keys",
+				security:
+				user_registration_settings_params.user_registration_membership_payment_settings_nonce,
+				setting_id: setting_id
+			},
+			type: "POST",
+			success: function (response) {
+				if (response.success) {
+					show_success_message(
+						response.data.message ||
+						user_registration_settings_params.i18n
+							.payment_keys_reset_success
+					);
+					settings_container
+						.find(".ur-connection-status")
+						.removeClass("ur-connection-status--active");
+					settings_container.find('input[type="text"]').val("");
+					settings_container.find("input[type='checkbox']").prop("checked", false);
+
+					settings_container.find('textarea').each(function () {
+						let editor = $(this).attr('id');
+						if (editor && tinymce.get(editor)) {
+							tinymce.get(editor).setContent('');
+						}
+					});
+					// Hide reset button after successful reset
+					$this.addClass("ur-d-none");
+				} else {
+					show_failure_message(
+						response.data.message ||
+						user_registration_settings_params.i18n
+							.payment_keys_reset_error
+					);
+				}
+			},
+			error: function (xhr, status, error) {
+				var errorMessage =
+					error ||
+					user_registration_settings_params.i18n
+						.payment_keys_reset_error;
+				show_failure_message(errorMessage);
+				reject({data: {message: errorMessage}});
 			},
 			complete: function (response) {
 				btn.find(".ur-spinner").remove();
@@ -1719,8 +1838,8 @@
 		var matches = document.cookie.match(
 			new RegExp(
 				"(?:^|; )" +
-					cookie_key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
-					"=([^;]*)"
+				cookie_key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+				"=([^;]*)"
 			)
 		);
 		return matches ? decodeURIComponent(matches[1]) : undefined;
@@ -1732,4 +1851,350 @@
 	function ur_remove_cookie(cookie_key) {
 		document.cookie = cookie_key + "=; Max-Age=-99999999; path=/";
 	}
+
+	$(document).on("click", ".user-registration-options-header__burger", function () {
+		$(".user-registration-header").addClass("user-registration-header--open");
+		$(".user-registration-settings-container").addClass("user-registration-settings-container--dimmed");
+		$(this).addClass(".user-registration-header__burger--hidden");
+		$(".user-registration-header__close").removeClass("user-registration-header__close--hidden");
+	});
+	$(document).on("click", ".user-registration-header__close", function () {
+		$(".user-registration-header").removeClass("user-registration-header--open");
+		$(".user-registration-settings-container").removeClass("user-registration-settings-container--dimmed");
+		$(this).addClass("user-registration-header__close--hidden");
+		$(".user-registration-options-header__burger").removeClass("user-registration-header__close--hidden");
+	});
+
+	/**
+	 * Handle display conditions/dependencies for settings fields.
+	 */
+	function handleDisplayConditions() {
+		// Find all fields with display conditions.
+		$('[data-has-display-condition="1"]').each(function () {
+			var $field = $(this);
+			var conditionField = $field.data("display-condition-field");
+			var operator =
+				$field.data("display-condition-operator") || "equals";
+			var conditionValue = $field.data("display-condition-value");
+			var caseSensitive =
+				$field.data("display-condition-case") || "insensitive";
+
+			if (!conditionField) {
+				return;
+			}
+
+			// Parse condition value if it's JSON (for arrays).
+			if (
+				typeof conditionValue === "string" &&
+				conditionValue.startsWith("[")
+			) {
+				try {
+					conditionValue = JSON.parse(conditionValue);
+				} catch (e) {
+					// If parsing fails, use as string.
+				}
+			}
+
+			// Function to check condition and show/hide field.
+			var checkCondition = function (useAnimation) {
+				var $conditionField = $("#" + conditionField);
+				var fieldValue = "";
+
+				// Get field value based on field type.
+				if ($conditionField.length === 0) {
+					return;
+				}
+
+				if ($conditionField.is(":checkbox")) {
+					fieldValue = $conditionField.is(":checked") ? "yes" : "no";
+				} else if ($conditionField.is(":radio")) {
+					fieldValue = $conditionField.filter(":checked").val() || "";
+				} else if ($conditionField.is("select")) {
+					fieldValue = $conditionField.val() || "";
+					// Handle multiselect.
+					if ($conditionField.attr("multiple")) {
+						fieldValue = $conditionField.val() || [];
+					}
+				} else {
+					fieldValue = $conditionField.val() || "";
+				}
+
+				// Convert fieldValue to string for comparison if needed.
+				var fieldValueStr = Array.isArray(fieldValue)
+					? fieldValue.join(",")
+					: String(fieldValue);
+				var conditionValueStr = Array.isArray(conditionValue)
+					? conditionValue.join(",")
+					: String(conditionValue);
+
+				// Case sensitivity handling.
+				if (
+					caseSensitive === "insensitive" ||
+					caseSensitive === "false"
+				) {
+					fieldValueStr = fieldValueStr.toLowerCase();
+					conditionValueStr = conditionValueStr.toLowerCase();
+				}
+
+				var shouldShow = false;
+
+				// Evaluate condition based on operator.
+				switch (operator) {
+					case "equals":
+					case "==":
+						shouldShow = fieldValueStr === conditionValueStr;
+						break;
+					case "not_equals":
+					case "!=":
+						shouldShow = fieldValueStr !== conditionValueStr;
+						break;
+					case "contains":
+						shouldShow =
+							fieldValueStr.indexOf(conditionValueStr) !== -1;
+						break;
+					case "not_contains":
+						shouldShow =
+							fieldValueStr.indexOf(conditionValueStr) === -1;
+						break;
+					case "empty":
+						shouldShow =
+							!fieldValue ||
+							fieldValueStr === "" ||
+							(Array.isArray(fieldValue) &&
+								fieldValue.length === 0);
+						break;
+					case "not_empty":
+						shouldShow =
+							fieldValue &&
+							fieldValueStr !== "" &&
+							!(
+								Array.isArray(fieldValue) &&
+								fieldValue.length === 0
+							);
+						break;
+					case "greater_than":
+					case ">":
+						shouldShow =
+							parseFloat(fieldValue) > parseFloat(conditionValue);
+						break;
+					case "less_than":
+					case "<":
+						shouldShow =
+							parseFloat(fieldValue) < parseFloat(conditionValue);
+						break;
+					case "greater_than_or_equal":
+					case ">=":
+						shouldShow =
+							parseFloat(fieldValue) >=
+							parseFloat(conditionValue);
+						break;
+					case "less_than_or_equal":
+					case "<=":
+						shouldShow =
+							parseFloat(fieldValue) <=
+							parseFloat(conditionValue);
+						break;
+					case "in":
+						if (Array.isArray(conditionValue)) {
+							shouldShow =
+								conditionValue.indexOf(fieldValue) !== -1 ||
+								conditionValue.indexOf(fieldValueStr) !== -1;
+						} else {
+							shouldShow =
+								String(conditionValue)
+									.split(",")
+									.indexOf(fieldValueStr) !== -1;
+						}
+						break;
+					case "not_in":
+						if (Array.isArray(conditionValue)) {
+							shouldShow =
+								conditionValue.indexOf(fieldValue) === -1 &&
+								conditionValue.indexOf(fieldValueStr) === -1;
+						} else {
+							shouldShow =
+								String(conditionValue)
+									.split(",")
+									.indexOf(fieldValueStr) === -1;
+						}
+						break;
+					default:
+						shouldShow = fieldValueStr === conditionValueStr;
+				}
+
+				// Show or hide field based on condition.
+				// Use instant show/hide for initial load, animation for subsequent changes.
+				if (shouldShow) {
+					if (useAnimation !== false) {
+						$field.slideDown(200);
+					} else {
+						$field.show();
+					}
+				} else {
+					if (useAnimation !== false) {
+						$field.slideUp(200);
+					} else {
+						$field.hide();
+					}
+				}
+			};
+
+			// Initial check without animation (instant).
+			checkCondition(false);
+
+			// Listen for changes on the condition field.
+			var $conditionField = $("#" + conditionField);
+			if ($conditionField.length > 0) {
+				// Handle different field types.
+				if (
+					$conditionField.is(":checkbox") ||
+					$conditionField.is(":radio")
+				) {
+					$conditionField.on("change", function () {
+						checkCondition(true); // Use animation for user interactions.
+					});
+				} else {
+					$conditionField.on("change keyup", function () {
+						checkCondition(true); // Use animation for user interactions.
+					});
+				}
+			}
+		});
+	}
+
+	// Initialize display conditions immediately when DOM is ready.
+	$(function () {
+		handleDisplayConditions();
+	});
+
+	// Also run immediately if DOM is already loaded (for inline scripts).
+	if (
+		document.readyState === "complete" ||
+		document.readyState === "interactive"
+	) {
+		setTimeout(handleDisplayConditions, 1);
+	}
+
+	// Re-initialize after AJAX updates (if needed).
+	$(document).on("ur_settings_updated", function () {
+		handleDisplayConditions();
+	});
+
+	$(document).on("change", "#user_registration_stripe_test_mode", function () {
+		if ($("#user_registration_stripe_test_mode").is(":checked")) {
+			$("#user_registration_stripe_test_publishable_key").closest(".user-registration-global-settings").show();
+			$("#user_registration_stripe_test_secret_key").closest(".user-registration-global-settings").show();
+
+			$("#user_registration_stripe_live_publishable_key").closest(".user-registration-global-settings").hide();
+			$("#user_registration_stripe_live_secret_key").closest(".user-registration-global-settings").hide();
+
+		} else {
+			$("#user_registration_stripe_test_publishable_key").closest(".user-registration-global-settings").hide();
+			$("#user_registration_stripe_test_secret_key").closest(".user-registration-global-settings").hide();
+
+			$("#user_registration_stripe_live_publishable_key").closest(".user-registration-global-settings").show();
+			$("#user_registration_stripe_live_secret_key").closest(".user-registration-global-settings").show();
+		}
+	});
+	$(document).on("change", "#user_registration_mollie_global_test_mode", function () {
+		if ($("#user_registration_mollie_global_test_mode").is(":checked")) {
+			$("#user_registration_mollie_global_test_publishable_key").closest(".user-registration-global-settings").show();
+			$("#user_registration_mollie_global_live_publishable_key").closest(".user-registration-global-settings").hide();
+		} else {
+			$("#user_registration_mollie_global_live_publishable_key").closest(".user-registration-global-settings").show();
+			$("#user_registration_mollie_global_test_publishable_key").closest(".user-registration-global-settings").hide();
+		}
+	});
+	$(document).on("change", "#user_registration_authorize_net_test_mode", function () {
+		if ($("#user_registration_authorize_net_test_mode").is(":checked")) {
+			$("#user_registration_authorize_net_test_publishable_key").closest(".user-registration-global-settings").show();
+			$("#user_registration_authorize_net_test_secret_key").closest(".user-registration-global-settings").show();
+
+			$("#user_registration_authorize_net_live_publishable_key").closest(".user-registration-global-settings").hide();
+			$("#user_registration_authorize_net_live_secret_key").closest(".user-registration-global-settings").hide();
+
+		} else {
+			$("#user_registration_authorize_net_test_publishable_key").closest(".user-registration-global-settings").hide();
+			$("#user_registration_authorize_net_test_secret_key").closest(".user-registration-global-settings").hide();
+
+			$("#user_registration_authorize_net_live_publishable_key").closest(".user-registration-global-settings").show();
+			$("#user_registration_authorize_net_live_secret_key").closest(".user-registration-global-settings").show();
+		}
+	});
+	$(document).on("change", "#user_registration_global_paypal_mode", function () {
+		if ($(this).val() && "test" === $(this).val()) {
+			$("#user_registration_global_paypal_test_email_address").closest(".user-registration-global-settings").show();
+			$("#user_registration_global_paypal_test_client_id").closest(".user-registration-global-settings").show();
+			$("#user_registration_global_paypal_test_client_secret").closest(".user-registration-global-settings").show();
+
+			$("#user_registration_global_paypal_live_email_address").closest(".user-registration-global-settings").hide();
+			$("#user_registration_global_paypal_live_client_id").closest(".user-registration-global-settings").hide();
+			$("#user_registration_global_paypal_live_client_secret").closest(".user-registration-global-settings").hide();
+		} else {
+			$("#user_registration_global_paypal_live_email_address").closest(".user-registration-global-settings").show();
+			$("#user_registration_global_paypal_live_client_id").closest(".user-registration-global-settings").show();
+			$("#user_registration_global_paypal_live_client_secret").closest(".user-registration-global-settings").show();
+
+			$("#user_registration_global_paypal_test_email_address").closest(".user-registration-global-settings").hide();
+			$("#user_registration_global_paypal_test_client_id").closest(".user-registration-global-settings").hide();
+			$("#user_registration_global_paypal_test_client_secret").closest(".user-registration-global-settings").hide();
+		}
+	});
+
+	// Function to trigger payment gateway mode changes
+	function trigger_payment_gateway_mode_changes(gatewayToggleId) {
+		// Mapping of gateway toggle IDs to their mode selectors
+		var gatewayMap = {
+			'user_registration_paypal_enabled': '#user_registration_global_paypal_mode',
+			'user_registration_stripe_enabled': '#user_registration_stripe_test_mode',
+			'user_registration_authorize_net_enabled': '#user_registration_authorize_net_test_mode',
+			'user_registration_mollie_enabled': '#user_registration_mollie_global_test_mode'
+		};
+		if (gatewayToggleId && gatewayMap[gatewayToggleId]) {
+			var $modeSelector = $(gatewayMap[gatewayToggleId]);
+
+			if ($modeSelector.length > 0) {
+				if (gatewayToggleId === 'user_registration_paypal_enabled') {
+					$modeSelector.val('test');
+				}
+				setTimeout(function() {
+					$modeSelector.trigger("change");
+				}, 0);
+			}
+		} else {
+			if ($("#user_registration_authorize_net_test_mode").length > 0) {
+				$("#user_registration_authorize_net_test_mode").trigger("change");
+			}
+			if ($("#user_registration_mollie_global_test_mode").length > 0) {
+				$("#user_registration_mollie_global_test_mode").trigger("change");
+			}
+			if ($("#user_registration_stripe_test_mode").length > 0) {
+				$("#user_registration_stripe_test_mode").trigger("change");
+			}
+			if ($("#user_registration_global_paypal_mode").length > 0) {
+				$("#user_registration_global_paypal_mode").trigger("change");
+			}
+		}
+	}
+	trigger_payment_gateway_mode_changes();
+
+
+	$(document).on("change", ".urm_toggle_pg_status", function () {
+		var $toggle = $(this);
+		var isChecked = $toggle.is(":checked");
+		var $allSiblings = $toggle.closest(".user-registration-global-settings").siblings(".user-registration-global-settings");
+		var $siblingsExcludingLast = $allSiblings.not(":last");
+		if (isChecked) {
+			$siblingsExcludingLast.show();
+			if($toggle.attr('id') !== 'user_registration_bank_enabled') {
+				trigger_payment_gateway_mode_changes($toggle.attr('id'));
+			}
+		} else {
+			$siblingsExcludingLast.hide();
+		}
+	});
+	$(document).ready(function () {
+		$('.urm_toggle_pg_status').trigger("change");
+	});
+
 })(jQuery);

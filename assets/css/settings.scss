@@ -139,7 +139,7 @@ body {
 							input {
 								border-color: $primary_color;
 
-								~ .user-registration-search-icon svg {
+								~.user-registration-search-icon svg {
 									fill: $primary_color;
 								}
 							}
@@ -328,7 +328,7 @@ body {
 					cursor: pointer;
 
 					&-label {
-						> p {
+						>p {
 							font-weight: $medium;
 							font-size: 15px;
 							margin: 0;
@@ -592,7 +592,7 @@ body {
 
 			&__header {
 				border-bottom: $border_width solid #e1e1e1;
-				padding-bottom: $spacing-16px;
+				padding-bottom: $spacing_16px;
 
 				h3 {
 					color: $grey-500;
@@ -653,7 +653,7 @@ body {
 							height: 20px;
 						}
 
-						> span {
+						>span {
 							flex: 1;
 						}
 
@@ -716,7 +716,7 @@ body {
 						max-width: 300px;
 					}
 
-					> p {
+					>p {
 						font-size: 18px;
 						line-height: 27px;
 						font-weight: $semi-bold;
@@ -1040,18 +1040,27 @@ body {
 
 		// General Settings
 		.user-registration-card {
-			padding: $spacing_20px $spacing_20px $spacing_22px;
+			padding: $spacing_20px $spacing_24px $spacing_22px;
 			background: $grey-0;
-			border: $border_width solid $border_color !important;
-			border-radius: $border_radius_7;
+			border: $border_width solid $border-color !important;
+			// border-radius: $border_radius_7;
 			background: $white;
 			margin-top: 0 !important;
 			max-width: 100%;
 			position: relative;
 
+
+
+			border-radius: 7px;
+			// padding: 28px 32px 32px;
+
 			&:last-child {
 				margin-bottom: 0;
 			}
+
+			// p.ur-p-tag:last-of-type {
+			// 	margin-bottom: 0;
+			// }
 
 			&:has(.ur-upgrade--link) {
 				p.ur-p-tag {
@@ -1112,11 +1121,18 @@ body {
 				}
 			}
 
+			&__title {
+				font-size: 18px;
+				line-height: 26px;
+				font-weight: $semi-bold;
+				color: #383838;
+			}
+
 			&__header {
 				margin-bottom: $spacing_24px;
 				padding: 0 0 $spacing_16px;
 				position: relative;
-				border-bottom: $border_width solid $border_color !important;
+				border-bottom: $border_width solid $border-color !important;
 
 				&-wrapper {
 					display: flex;
@@ -1279,7 +1295,7 @@ body {
 					padding: $spacing_20px 0 !important;
 
 					.nav-tab-inside {
-						> div {
+						>div {
 							display: block;
 						}
 					}
@@ -1448,9 +1464,10 @@ body {
 								padding: $spacing_12px $spacing_16px !important;
 								background: $primary_color;
 								color: $grey-0;
-								font-weight: $semi_bold;
-								font-size: 16px;
-								line-height: 150%;
+								// font-weight: $semi_bold;
+								font-weight: $medium;
+								font-size: 15px;
+								line-height: 25px;
 								border: $border_width solid $border-color;
 								border-top: 0;
 								border-bottom: 0;
@@ -1500,8 +1517,13 @@ body {
 									a {
 										font-weight: $regular;
 										font-size: 14px;
-										line-height: 120%;
+										line-height: 22px;
 										color: $primary_color;
+
+										&:focus {
+											outline: none;
+											box-shadow: none;
+										}
 
 										&.button {
 											border: 0;
@@ -1530,7 +1552,7 @@ body {
 										}
 									}
 
-									> label {
+									>label {
 										padding: $spacing_4px $spacing_8px;
 										border-radius: 100px;
 										font-weight: $regular !important;
@@ -2084,7 +2106,7 @@ body {
 		margin-bottom: 10px;
 	}
 
-	input[type="radio"] + img {
+	input[type="radio"]+img {
 		cursor: pointer;
 	}
 }
@@ -2290,8 +2312,10 @@ body {
 	font-weight: 400;
 	text-transform: capitalize;
 
-	color: #2f855a; /* green-600 */
-	background-color: #f0fff4; /* green-50 */
+	color: #2f855a;
+	/* green-600 */
+	background-color: #f0fff4;
+	/* green-50 */
 
 	border-radius: 6px;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -2350,6 +2374,7 @@ body {
 
 		/* Show elements when container is active */
 		&.wp-picker-active {
+
 			.iris-picker,
 			.iris-border,
 			.colorpick.wp-color-picker,
@@ -2458,6 +2483,7 @@ body {
 
 		/* Active state */
 		&.wp-picker-active {
+
 			.iris-picker,
 			.iris-border,
 			.colorpick.wp-color-picker,

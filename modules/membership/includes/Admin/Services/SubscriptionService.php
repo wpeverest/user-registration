@@ -870,7 +870,6 @@ class SubscriptionService {
 			unset( $membership_process['renew'][ array_search( $member_subscription['item_id'], $membership_process['renew'], true ) ] );
 			update_user_meta( $member_subscription['user_id'], 'urm_membership_process', $membership_process );
 
-			// Fire action hook for membership renewal completion
 			do_action( 'user_registration_membership_renewed', $member_subscription['user_id'], $member_subscription['item_id'] );
 		}
 	}

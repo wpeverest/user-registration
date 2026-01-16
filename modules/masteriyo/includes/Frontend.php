@@ -66,9 +66,17 @@ class Frontend {
 			true
 		);
 
-		$page = get_page_by_path( 'course-portal' );
+		$course_portal_page = get_page_by_path( 'course-portal' );
 
-		if ( ( $post && $page && $page->ID === $post->ID ) || masteriyo_is_single_course_page() ) {
+		if ( ! $course_portal_page ) {
+			return;
+		}
+
+		if ( ! $post || ! $course_portal_page ) {
+			return;
+		}
+
+		if ( ( $course_portal_page->ID === $post->ID ) || masteriyo_is_single_course_page() ) {
 			wp_enqueue_style( 'urm-masteriyo-frontend-style' );
 			wp_enqueue_script( 'urm-masteriyo-frontend-script' );
 			return;
@@ -87,8 +95,10 @@ class Frontend {
 
 		$page = get_page_by_path( $page_slug );
 
-		if ( ! $page ) {
-			$page = wp_insert_post(
+		if ( $page ) {
+			$page_id = $page->ID;
+		} else {
+			$page_id = wp_insert_post(
 				array(
 					'post_title'     => $page_title,
 					'post_name'      => $page_slug,
@@ -99,19 +109,19 @@ class Frontend {
 					'ping_status'    => 'closed',
 				)
 			);
+
+			if ( is_wp_error( $page_id ) || ! $page_id ) {
+				return;
+			}
 		}
 
 		$account_page_id = masteriyo_get_setting( 'general.pages.account_page_id' );
 
-		if ( ! $page ) {
+		if ( intval( $account_page_id ) === intval( $page_id ) ) {
 			return;
 		}
 
-		if ( $account_page_id === $page->ID ) {
-			return;
-		}
-
-		masteriyo_set_setting( 'general.pages.account_page_id', $page->ID );
+		masteriyo_set_setting( 'general.pages.account_page_id', $page_id );
 	}
 
 	/**

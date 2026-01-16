@@ -30,12 +30,12 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 
 						<!-- Member -->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label" style="max-width: 300px; width: 100%;">
 								<label for="ur-input-type-member"><?php esc_html_e( 'Member', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 								</label>
 							</div>
-							<div class="ur-input-type-member-name ur-admin-template" style="width: 100%">
+							<div class="ur-input-type-member-name ur-admin-template" style="flex: 1; width: 100%">
 								<div class="ur-field">
 									<select
 										data-key-name="<?php echo esc_html__( 'Member', 'user-registration' ); ?>"
@@ -65,11 +65,11 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 
 						<!-- Membership Plan -->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label" style="max-width: 300px; width: 100%;">
 								<label for="ur-input-type-membership-plan"><?php esc_html_e( 'Membership Plan', 'user-registration' ); ?>
 								</label>
 							</div>
-							<div class="ur-text-muted ur-membership-plan-name ur-admin-template" style="width: 100%">
+							<div class="ur-text-muted ur-membership-plan-name ur-admin-template" style="flex: 1; width: 100%">
 								<?php echo esc_html__( 'Select a member to view their membership plan.', 'user-registration' ); ?>
 
 							</div>
@@ -99,12 +99,12 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 
 						<!-- Amount -->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label" style="max-width: 300px; width: 100%;">
 								<label for="ur-input-type-membership-amount"><?php esc_html_e( 'Amount', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 								</label>
 							</div>
-							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
+							<div class="ur-input-type-membership-name ur-admin-template" style="flex: 1; width: 100%">
 								<div class="ur-field">
 									<input type="text"
 										autocomplete="off"
@@ -118,12 +118,12 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 						</div>
 						<!-- Payment Method -->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label" style="max-width: 300px; width: 100%;">
 								<label for="ur-input-type-transaction-status"><?php esc_html_e( 'Payment Method', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 								</label>
 							</div>
-							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
+							<div class="ur-input-type-membership-name ur-admin-template" style="flex: 1; width: 100%">
 								<div class="ur-field">
 									<select
 										data-key-name="<?php echo esc_html__( 'Payment Method', 'user-registration' ); ?>"
@@ -143,12 +143,12 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 
 						<!-- Payment Date -->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label" style="max-width: 300px; width: 100%;">
 								<label for="ur-input-type-payment-date"><?php esc_html_e( 'Payment Date', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 								</label>
 							</div>
-							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
+							<div class="ur-input-type-membership-name ur-admin-template" style="flex: 1; width: 100%">
 								<div class="ur-field">
 									<input type="date"
 										autocomplete="off"
@@ -164,12 +164,12 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 
 						<!-- Transaction Status -->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label" style="max-width: 300px; width: 100%;">
 								<label for="ur-input-type-transaction-status"><?php esc_html_e( 'Transaction Status', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 								</label>
 							</div>
-							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
+							<div class="ur-input-type-membership-name ur-admin-template" style="flex: 1; width: 100%">
 								<div class="ur-field">
 									<select
 										data-key-name="<?php echo esc_html__( 'Transaction Status', 'user-registration' ); ?>"
@@ -193,11 +193,11 @@ $return_url = admin_url( 'admin.php?page=member-payment-history' );
 						</div>
 						<!-- Payment Notes -->
 						<div class="ur-membership-input-container ur-d-flex ur-p-3" style="gap:20px;">
-							<div class="ur-label" style="width: 30%">
+							<div class="ur-label" style="max-width: 300px; width: 100%;">
 								<label for="ur-input-type-payment-notes"><?php esc_html_e( 'Payment Notes', 'user-registration' ); ?>
 								</label>
 							</div>
-							<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
+							<div class="ur-input-type-membership-name ur-admin-template" style="flex: 1; width: 100%">
 								<div class="ur-field">
 									<textarea
 										class="ur-payment-notes"

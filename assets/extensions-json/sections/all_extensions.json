@@ -66,7 +66,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=account&section=customize-my-account",
+      "setting_url": "admin.php?page=user-registration-settings&tab=my_account&section=customize-my-account",
       "demo_video_url": "xOeV8JkE_es",
       "released_date": "09/04/2020"
     },

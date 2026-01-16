@@ -92,6 +92,20 @@ if ( ! class_exists( 'Helper' ) ) :
 		}
 
 		/**
+		 * Get checkout page URL with upgrade params.
+		 *
+		 * @return string
+		 */
+		public static function get_membership_upgrade_url() {
+			$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
+			$thankyou_page_id     = get_option( 'user_registration_thank_you_page_id' );
+
+			$url = get_permalink( $registration_page_id ) . '?action=upgrade&thank_you=' . $thankyou_page_id;
+
+			return $url;
+		}
+
+		/**
 		 * Get courses based on membership ID.
 		 *
 		 * @param int $membership_id Membership ID.
@@ -131,6 +145,10 @@ if ( ! class_exists( 'Helper' ) ) :
 					$membership_id    = $rule['membership_id'];
 					$membership_title = get_the_title( $membership_id );
 					$target_contents  = isset( $rule['target_contents'] ) ? $rule['target_contents'] : array();
+
+					if ( empty( $rule['membership_meta'] ) ) {
+						continue;
+					}
 
 					$membership_meta = json_decode( $rule['membership_meta'], true );
 

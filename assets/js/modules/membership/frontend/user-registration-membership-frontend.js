@@ -710,40 +710,43 @@
 				var regions = urmf_data.regions_list.regions[country];
 				var tax_calculation_method = urmf_data.tax_calculation_method;
 
-				if ( regions ) {
-					if ( regions.hasOwnProperty( 'states' ) && '' !== state ) {
+				if ( urmf_data.is_tax_calculation_enabled ) {
 
-						if ( regions.states.hasOwnProperty( state ) ) {
-							taxRate = regions.states[state];
+					if ( regions ) {
+						if ( regions.hasOwnProperty( 'states' ) && '' !== state ) {
+
+							if ( regions.states.hasOwnProperty( state ) ) {
+								taxRate = regions.states[state];
+							} else {
+								taxRate = regions.rate;
+							}
+
 						} else {
 							taxRate = regions.rate;
 						}
 
-					} else {
-						taxRate = regions.rate;
-					}
-
-					if ( taxRate > 0 ) {
-						if ( 'calculate_tax' === tax_calculation_method ) {
-							taxAmount = ( total * taxRate ) / 100;
-							total = parseFloat( total ) + parseFloat( taxAmount );
-						} else {
-							// Price include tax
+						if ( taxRate > 0 ) {
+							if ( 'calculate_tax' === tax_calculation_method ) {
+								taxAmount = ( total * taxRate ) / 100;
+								total = parseFloat( total ) + parseFloat( taxAmount );
+							} else {
+								// Price include tax
+							}
 						}
 					}
+
+					$( "#ur-tax-details" ).remove();
+
+					var taxDetailsInput =
+						'<input type="hidden" ' +
+						'id="ur-tax-details" ' +
+						'name="ur_tax_details" ' +
+						'data-tax-rate="' + taxRate + '" ' +
+						'data-tax-calculation-method="' + tax_calculation_method + '" ' +
+						'data-total="' + total + '">' ;
+
+					total_input.after( taxDetailsInput );
 				}
-
-				$( "#ur-tax-details" ).remove();
-
-				var taxDetailsInput =
-					'<input type="hidden" ' +
-					'id="ur-tax-details" ' +
-					'name="ur_tax_details" ' +
-					'data-tax-rate="' + taxRate + '" ' +
-					'data-tax-calculation-method="' + tax_calculation_method + '" ' +
-					'data-total="' + total + '">' ;
-
-				total_input.after( taxDetailsInput );
 			}
 
 			var total_label = $(".urm-membership-total-value").find(
@@ -2003,7 +2006,7 @@
 						"urm-d-none"
 					);
 					$('#ur-local-currency-switch-currency').trigger('change');
-					$('.ur-field-address-country').trigger('change');
+					// $('.ur-field-address-country').trigger('change');
 					// clear coupon total notice
 					$("#total-input-notice").text("");
 

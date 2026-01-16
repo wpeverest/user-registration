@@ -17,18 +17,38 @@ const DateRangeInput = ({ value, onChange, disabled = false }) => {
 	);
 	const dateTypeOptions =
 		userRegisteredDateOption?.date_type_options || [
-			{ value: "range", label: __("Select date range", "user-registration") },
-			{ value: "single", label: __("Pick a date", "user-registration") },
+			{ value: "before", label: __("Before", "user-registration") },
+			{ value: "after", label: __("After", "user-registration") },
+			{ value: "range", label: __("Range", "user-registration") },
 		];
 
-	const getInitialDateType = (val) => {
-		if (!val || typeof val !== "string") {
-			return "range";
+	const parseValue = (val) => {
+		if (!val) {
+			return { value: "", type: "range" };
 		}
-		return val.includes(" to ") ? "range" : "single";
+		
+		if (typeof val === "string") {
+			return { value: val, type: "range" };
+		}
+		
+		if (typeof val === "object" && val.value !== undefined && val.type !== undefined) {
+			return { value: val.value || "", type: val.type || "range" };
+		}
+		
+		return { value: "", type: "range" };
 	};
 
-	const [dateType, setDateType] = useState(() => getInitialDateType(value));
+	const getInitialState = (val) => {
+		const parsed = parseValue(val);
+		return {
+			dateType: parsed.type,
+			dateValue: parsed.value
+		};
+	};
+
+	const initialState = getInitialState(value);
+	const [dateType, setDateType] = useState(initialState.dateType);
+	const [dateValue, setDateValue] = useState(initialState.dateValue);
 
 	useEffect(() => {
 		dateTypeRef.current = dateType;
@@ -41,15 +61,24 @@ const DateRangeInput = ({ value, onChange, disabled = false }) => {
 		return `${year}-${month}-${day}`;
 	};
 
-	const parseValue = (val, type) => {
+	const parseDateValue = (val, type) => {
 		if (!val || typeof val !== "string") {
 			return [];
 		}
-		if (type === "single") {
+		if (type === "range") {
+			const parts = val.split(" to ");
+			return parts.filter((p) => p.trim());
+		} else {
 			return val.trim() ? [val.trim()] : [];
 		}
-		const parts = val.split(" to ");
-		return parts.filter((p) => p.trim());
+	};
+
+	const updateValue = (newDateValue, newDateType) => {
+		const newValue = {
+			value: newDateValue || "",
+			type: newDateType || "range"
+		};
+		onChangeRef.current(newValue);
 	};
 
 	useEffect(() => {
@@ -57,9 +86,10 @@ const DateRangeInput = ({ value, onChange, disabled = false }) => {
 	}, [onChange]);
 
 	useEffect(() => {
-		const newDateType = getInitialDateType(value);
-		if (newDateType !== dateType) {
-			setDateType(newDateType);
+		const parsed = parseValue(value);
+		if (parsed.type !== dateType || parsed.value !== dateValue) {
+			setDateType(parsed.type);
+			setDateValue(parsed.value);
 		}
 	}, [value]);
 
@@ -79,29 +109,35 @@ const DateRangeInput = ({ value, onChange, disabled = false }) => {
 				flatpickrInstanceRef.current = null;
 			}
 
-			const valueToUse = pendingValueRef.current !== null ? pendingValueRef.current : value;
+			const currentParsed = parseValue(value);
+			const valueToUse = pendingValueRef.current !== null 
+				? (typeof pendingValueRef.current === "string" ? pendingValueRef.current : pendingValueRef.current.value)
+				: currentParsed.value;
+			const typeToUse = pendingValueRef.current !== null && typeof pendingValueRef.current === "object"
+				? pendingValueRef.current.type
+				: dateType;
 			const hadPendingValue = pendingValueRef.current !== null;
 
-			const initialDates = parseValue(valueToUse, dateType);
+			const initialDates = parseDateValue(valueToUse, typeToUse);
 
 			flatpickrInstanceRef.current = window.flatpickr(inputRef.current, {
-				mode: dateType === "single" ? "single" : "range",
+				mode: typeToUse === "range" ? "range" : "single",
 				dateFormat: "Y-m-d",
 				disableMobile: true,
 				defaultDate: initialDates.length > 0 ? initialDates : null,
 				onChange: (selectedDates) => {
 					const currentDateType = dateTypeRef.current;
-					if (currentDateType === "single") {
-						if (selectedDates.length === 1) {
-							const date = formatDate(selectedDates[0]);
-							onChangeRef.current(date);
+					if (currentDateType === "range") {
+					if (selectedDates.length === 2) {
+						const fromDate = formatDate(selectedDates[0]);
+						const toDate = formatDate(selectedDates[1]);
+							updateValue(`${fromDate} to ${toDate}`, "range");
+							savedRangeValueRef.current = null;
 						}
 					} else {
-						if (selectedDates.length === 2) {
-							const fromDate = formatDate(selectedDates[0]);
-							const toDate = formatDate(selectedDates[1]);
-							onChangeRef.current(`${fromDate} to ${toDate}`);
-							savedRangeValueRef.current = null;
+						if (selectedDates.length === 1) {
+							const date = formatDate(selectedDates[0]);
+							updateValue(date, currentDateType);
 						}
 					}
 				},
@@ -141,10 +177,11 @@ const DateRangeInput = ({ value, onChange, disabled = false }) => {
 
 	const handleDateTypeChange = (e) => {
 		const newDateType = e.target.value;
-		const currentValue = value || "";
+		const currentParsed = parseValue(value);
+		const currentValue = currentParsed.value;
 		
 		let convertedValue = "";
-		if (newDateType === "single" && currentValue && currentValue.includes(" to ")) {
+		if ((newDateType === "before" || newDateType === "after") && currentValue && currentValue.includes(" to ")) {
 			savedRangeValueRef.current = currentValue;
 			const parts = currentValue.split(" to ");
 			if (parts.length > 0 && parts[0].trim()) {
@@ -164,13 +201,15 @@ const DateRangeInput = ({ value, onChange, disabled = false }) => {
 			convertedValue = currentValue;
 		}
 		
-		pendingValueRef.current = convertedValue;
+		pendingValueRef.current = {
+			value: convertedValue,
+			type: newDateType
+		};
 		
 		setDateType(newDateType);
+		setDateValue(convertedValue);
 		
-		if (convertedValue !== currentValue) {
-			onChangeRef.current(convertedValue);
-		}
+		updateValue(convertedValue, newDateType);
 	};
 
 	useEffect(() => {
@@ -183,7 +222,8 @@ const DateRangeInput = ({ value, onChange, disabled = false }) => {
 			return;
 		}
 
-		const dates = parseValue(value, dateType);
+		const parsed = parseValue(value);
+		const dates = parseDateValue(parsed.value, parsed.type);
 		if (dates.length > 0) {
 			flatpickrInstanceRef.current.setDate(dates, false);
 		} else {
@@ -223,17 +263,19 @@ const DateRangeInput = ({ value, onChange, disabled = false }) => {
 					</option>
 				))}
 			</select>
-			<input
-				ref={inputRef}
-				type="text"
-				className="urcr-date-range-input urcr-condition-value-input urcr-condition-value-date"
-				readOnly
-				disabled={disabled || !isReady}
-				style={{ pointerEvents: isReady ? "auto" : "none" }}
+		<input
+			ref={inputRef}
+			type="text"
+			className="urcr-date-range-input urcr-condition-value-input urcr-condition-value-date"
+			readOnly
+			disabled={disabled || !isReady}
+			style={{ pointerEvents: isReady ? "auto" : "none" }}
 				placeholder={
-					dateType === "single"
-						? __("Pick a date", "user-registration")
-						: __("Select date range", "user-registration")
+					dateType === "range"
+						? __("Select date range", "user-registration")
+						: dateType === "before"
+						? __("Select date (before)", "user-registration")
+						: __("Select date (after)", "user-registration")
 				}
 			/>
 		</div>

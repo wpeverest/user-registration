@@ -223,7 +223,7 @@ html {
 				// align-items: center;
 				align-items: flex-start;
 				margin-top: 0;
-				margin-bottom: $spacing_16px;
+				//margin-bottom: $spacing_16px;
 				border-radius: $border_radius_4;
 				border: $border_width solid $border-color;
 				padding: $spacing_14px;
@@ -254,13 +254,13 @@ html {
 					accent-color: $primary_color;
 
 					&:checked {
-						border-color: $primary_color;
-						background: $primary_color;
+						border-color: var(--ur-primary-color, $primary_color);
+						background: var(--ur-primary-color, $primary_color);
 					}
 				}
 
 				&:has(input[type="radio"]:checked) {
-					border-color: $primary_color;
+					border-color: var(--ur-primary-color, $primary_color);
 				}
 
 				.ur-membership-duration {
@@ -278,7 +278,7 @@ html {
 						font-size: 15px;
 						font-weight: 600;
 						line-height: 18px;
-						margin-left: auto;
+						//margin-left: auto;
 						flex: unset;
 						margin-left: 8px;
 					}
@@ -385,7 +385,6 @@ html {
 				border: 0;
 				border-radius: 0;
 				background: transparent;
-				border-radius: 0;
 				text-align: right;
 				color: #383838;
 				font-size: 18px;
@@ -409,17 +408,15 @@ html {
 
 			#payment-gateway-body {
 				.ur-membership-payment-gateway-lists {
-					display: grid;
+					display: flex;
 					align-items: center;
 					gap: $spacing_20px;
-					grid-template-columns: repeat(3, 1fr);
-					margin-top: 4px;
 
 					@media screen and (max-width: 600px) {
 						flex-direction: column;
 						gap: 0;
 
-						l .ur_membership_input_label {
+						.ur_membership_input_label {
 							width: 100%;
 						}
 					}
@@ -428,16 +425,16 @@ html {
 				.ur_membership_input_label {
 					border-radius: $border_radius_4;
 					border: $border_width solid $border-color;
-					padding: $spacing_14px;
+					padding: $spacing_14px !important;
 					height: 48px;
-					margin-bottom: $spacing_20px;
+					margin-bottom: $spacing_20px !important;
 					justify-content: center;
 					flex: 1;
 					align-items: center;
 					transition: all 0.3s ease;
 
 					&:hover {
-						border-color: $primary_color;
+						border-color: var(--ur-primary-color, $primary_color);
 					}
 
 					&[for="ur-membership-stripe"] {
@@ -452,7 +449,7 @@ html {
 
 					&:has(input[type="radio"]:checked) {
 						background: lighten($primary_color, 50%);
-						border-color: $primary_color;
+						border-color: var(--ur-primary-color, $primary_color);
 					}
 
 					.ur-membership-duration {
@@ -508,12 +505,17 @@ html {
 			width: 200px;
 			cursor: pointer;
 			font-size: 14px;
-			background: #475bb2;
-			color: $color_2;
+			background: var(--ur-button-background-normal-color, $primary_color);
+			color: var(--ur-button-text-normal-color, $white);
 			padding: 10px 0;
 			border-radius: 5px;
 			border: none;
 			font-family: inherit;
+
+			&:hover {
+				background: var(--ur-button-background-hover-color, #38488e);
+				color: var(--ur-button-text-hover-color, $white);
+			}
 		}
 	}
 
@@ -541,10 +543,10 @@ html {
 		position: relative;
 		width: max-content;
 		cursor: pointer;
-		font-size: 14px;
+		//font-size: 14px;
 		background: $color_1;
 		color: $color_2;
-		padding: 10px 0;
+		//padding: 10px 0;
 		border-radius: 4px;
 		border: none;
 		display: flex;
@@ -979,7 +981,7 @@ html {
 			}
 
 			.ur-frontend-field {
-				accent-color: #475bb2;
+				accent-color: var(--ur-primary-color, $primary_color);
 
 				&:focus {
 					outline: none;
@@ -989,7 +991,7 @@ html {
 			}
 
 			&:has(.ur-frontend-field:checked) {
-				border-color: #475bb2;
+				border-color: var(--ur-primary-color, $primary_color);
 			}
 
 			.ur-membership-title-wrapper {
@@ -1076,7 +1078,6 @@ html {
 				box-sizing: border-box;
 				transition: all 0.3s ease-in-out;
 				margin-bottom: 0;
-				border-radius: 8px;
 				border: 1px solid var(--Grey-grey-50, #e9e9e9);
 
 				.ur-membership-amount-wrapper {
@@ -1165,7 +1166,6 @@ html {
 					box-sizing: border-box;
 					transition: all 0.3s ease-in-out;
 					margin-bottom: 0;
-					border-radius: 8px;
 					border: 1px solid var(--Grey-grey-50, #e9e9e9);
 					align-items: center;
 
@@ -1195,8 +1195,8 @@ html {
 						font-size: 16px;
 						font-weight: 600;
 						line-height: 24px;
-						background: #475bb2;
-						color: white;
+						background: var(--ur-button-background-normal-color, $primary_color);
+						color: var(--ur-button-text-normal-color, $white);
 						padding: 12px 0;
 						margin-top: 20px;
 						border-radius: 5px;
@@ -1204,7 +1204,8 @@ html {
 						font-family: inherit;
 
 						&:hover {
-							background: #38488e;
+							background: var(--ur-button-background-hover-color, $primary_color);
+							color: var(--ur-button-text-hover-color, $white);
 						}
 					}
 
@@ -1268,171 +1269,211 @@ html {
 
 // Thankyou Page CSS
 .ur-thank-you-page {
+	max-width: 800px !important;
 	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background: none;
-}
+	margin: 24px auto;
+	box-sizing: border-box;
 
-.thank-you-page-container {
-	max-width: 800px;
-	width: 100%;
-	text-align: center;
-	background-color: #ffffff;
-	padding: 60px 60px;
-	border-radius: 8px;
-	border: 1px solid #F1F5F9;
-	box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.06);
-
-	.ur-success-icon {
-		width: 72px;
-		height: 72px;
-		border-radius: 50%;
+	.thank-you-page-container {
 		display: flex;
+		flex-direction: column;
 		align-items: center;
-		justify-content: center;
-		margin: 0 auto 24px;
-		animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		// text-align: center;
+		background-color: #ffffff;
+		padding: 48px;
+		border-radius: 7px;
+		border: 1px solid #f1f5f9;
+		box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.06);
 
-		svg {
+		@media screen and (max-width: 600px) {
+			padding: $spacing_40px;
+		}
+
+		@media screen and (max-width: 420px) {
+			padding: $spacing_30px;
+		}
+
+		.ur-success-icon {
 			width: 80px;
 			height: 80px;
-			stroke: #ffffff;
-			fill: none;
-		}
-	}
+			margin-bottom: $spacing_20px;
+			animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-	.ur-headline {
-		margin-bottom: 10px;
+			@media screen and (max-width: 420px) {
+				width: 60px;
+				height: 60px;
+			}
 
-		h1 {
-			font-size: 32px;
-			font-weight: 700;
-			color: #1f1f1f;
-			margin: 0;
-			line-height: 1.2;
-			letter-spacing: -0.5px;
-			text-transform: capitalize;
-		}
-	}
+			svg {
+				width: 80px;
+				height: 80px;
 
-	.ur-message {
-		margin-bottom: 40px;
-		text-align: left;
-		font-size: 17px;
-
-		p {
-			font-size: 15px;
-			text-align: center;
-			line-height: 1.6;
-			margin: 0;
-			color: #6b6b6b;
-			font-weight: 400;
-			letter-spacing: 0.15px;
+				@media screen and (max-width: 420px) {
+					width: 60px;
+					height: 60px;
+				}
+			}
 		}
 
-		ul {
-			text-align: left;
-		}
-	}
+		.ur-headline {
+			margin-bottom: $spacing_16px;
 
-	.ur-button-wrapper {
-		margin-bottom: 0px;
+			h1 {
+				font-size: 28px;
+				font-weight: 700;
+				color: #1f1f1f;
+				margin: 0;
+				line-height: 36px;
+				letter-spacing: -0.5px;
+				text-transform: capitalize;
+				text-wrap: unset;
+				text-align: center;
+
+				@media screen and (max-width: 420px) {
+					font-size: 22px;
+					line-height: 30px;
+				}
+			}
+		}
+
+		.ur-message {
+			margin-bottom: $spacing_32px;
+
+			@media screen and (max-width: 420px) {
+				margin-bottom: $spacing_28px;
+			}
+
+			p {
+				font-size: 16px;
+				line-height: 24px;
+				margin: 0;
+				color: #6b6b6b;
+				font-weight: 400;
+				text-align: center;
+				letter-spacing: 0.15px;
+				text-wrap: unset;
+
+				@media screen and (max-width: 420px) {
+					font-size: 15px;
+					line-height: 25px;
+				}
+			}
+
+			ul {
+				text-align: left;
+			}
+		}
+
+		.ur-button-wrapper {
+			margin-bottom: 0px;
 
 		.ur-redirect-btn {
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
 			gap: 8px;
-			padding: 14px 32px;
-			background-color: #475bb2;
-			color: #ffffff;
+			padding: $spacing_14px $spacing_32px;
+			background: var(--ur-button-background-normal-color, #475bb2);
+			color: var(--ur-button-text-normal-color, #ffffff);
 			font-size: 16px;
-			font-weight: 600;
+			font-weight: 500;
 			border: none;
 			border-radius: 4px;
 			text-decoration: none;
 			cursor: pointer;
 
-			&:hover {
-				background-color: #38488e;
-			}
+				@media screen and (max-width: 420px) {
+					font-size: 15px;
+					line-height: 25px;
+					padding: $spacing_12px $spacing_24px;
+				}
 
-			&:focus {
-				outline: 2px solid #475bb2;
-				outline-offset: 2px;
-			}
+				&:hover {
+					background: var(--ur-button-background-hover-color, #38488e);
+					color: var(--ur-button-text-hover-color, #ffffff);
+				}
 
-			svg {
-				width: 16px;
-				height: 16px;
-				stroke: #ffffff;
-				fill: none;
-				transition: transform 0.3s ease;
+				&:focus {
+					outline: none;
+					box-shadow: none;
+				}
+
+				svg {
+					width: 16px;
+					height: 16px;
+					stroke: #ffffff;
+					fill: none;
+					transition: transform 0.3s ease;
+
+					@media screen and (max-width: 420px) {
+						display: none;
+					}
+				}
 			}
 		}
-	}
+
+
 	.ur-bank-details {
 		width: auto;
 		margin: 30px 0;
 		padding: 20px;
 		align-items: center;
-		background-color: #F8F8FA;
-		border: 1px solid #EDF2F7;
-		border-radius: 6px;
-		text-align: left;
-		font-size: 16px;
-		font-weight: 400;
-		color: #383838;
-		line-height: 30px;
-		gap: 12px;
-
-		.ur-bank-details-title {
-			font-size: 16px;
-			font-weight: 500;
-			margin: 0;
-			color: #1f1f1f;
-			border-bottom: 1px solid #e1e1e1;
-			padding-bottom: 10px;
-		}
-	}
-
-	h3,
-	h4 {
-		margin: 0 0 12px 0;
-		color: #1a1a1a;
-		font-size: 16px;
-		font-weight: 600;
-	}
-
-	p {
-		margin: 6px 0;
-		color: #495057;
-		font-size: 14px;
-		line-height: 1.5;
-	}
-
-	table {
-		width: 100%;
-		margin-top: 12px;
-		border-collapse: collapse;
-
-		th,
-		td {
-			padding: 8px;
+		background-color: #f8f8fa;
+			border: 1px solid #edf2f7;
+			border-radius: 6px;
 			text-align: left;
-			border-bottom: 1px solid #e9ecef;
-			font-size: 14px;
+			font-size: 16px;
+			font-weight: 400;
+			color: #383838;
+			line-height: 30px;
+			gap: 12px;
+
+			.ur-bank-details-title {
+				font-size: 16px;
+				font-weight: 500;
+				margin: 0;
+				color: #1f1f1f;
+				border-bottom: 1px solid #e1e1e1;
+				padding-bottom: 10px;
+			}
 		}
 
-		th {
-			font-weight: 600;
+		h3,
+		h4 {
+			margin: 0 0 12px 0;
 			color: #1a1a1a;
+			font-size: 16px;
+			font-weight: 600;
 		}
 
-		td {
+		p {
+			margin: 6px 0;
 			color: #495057;
+			font-size: 14px;
+			line-height: 1.5;
+		}
+
+		table {
+			width: 100%;
+			margin-top: 12px;
+			border-collapse: collapse;
+
+			th,
+			td {
+				padding: 8px;
+				text-align: left;
+				border-bottom: 1px solid #e9ecef;
+				font-size: 14px;
+			}
+
+			th {
+				font-weight: 600;
+				color: #1a1a1a;
+			}
+
+			td {
+				color: #495057;
+			}
 		}
 	}
 }
@@ -1480,99 +1521,99 @@ html {
 	}
 }
 
-@media (max-width: 768px) {
-	.thank-you-page-container {
-		padding: 50px 32px;
-
-		.ur-headline h1 {
-			font-size: 28px;
-		}
-
-		.ur-message p {
-			font-size: 15px;
-		}
-
-		.ur-button-wrapper .ur-redirect-btn {
-			padding: 13px 28px;
-			font-size: 15px;
-		}
-	}
-}
-
-@media (max-width: 640px) {
-	.ur-thank-you-page {
-		padding: 20px 16px;
-	}
-
-	.thank-you-page-container {
-		padding: 40px 24px;
-		border-radius: 6px;
-
-		.ur-success-icon {
-			width: 70px;
-			height: 70px;
-			margin-bottom: 28px;
-
-			svg {
-				width: 40px;
-				height: 40px;
-			}
-		}
-
-		.ur-headline {
-			margin-bottom: 16px;
-
-			h1 {
-				font-size: 24px;
-			}
-		}
-
-		.ur-message {
-			margin-bottom: 28px;
-
-			p {
-				font-size: 15px;
-			}
-		}
-
-		.ur-button-wrapper {
-			margin-bottom: 24px;
-
-			.ur-redirect-btn {
-				padding: 12px 24px;
-				font-size: 15px;
-			}
-		}
-
-		.ur-bank-details {
-			padding: 16px;
-			margin-bottom: 20px;
-		}
-
-		.ur-transaction-info {
-			padding: 12px 16px;
-			margin-bottom: 20px;
-		}
-
-		.ur-footer p {
-			font-size: 13px;
-		}
-	}
-}
-
-@media (max-width: 480px) {
-	.thank-you-page-container {
-		padding: 32px 20px;
-
-		.ur-headline h1 {
-			font-size: 22px;
-		}
-
-		.ur-message p {
-			font-size: 14px;
-		}
-	}
-}
+//@media (max-width: 768px) {
+//	.thank-you-page-container {
+//		padding: 50px 32px;
+//
+//		.ur-headline h1 {
+//			font-size: 28px;
+//		}
+//
+//		.ur-message p {
+//			font-size: 15px;
+//		}
+//
+//		.ur-button-wrapper .ur-redirect-btn {
+//			padding: 13px 28px;
+//			font-size: 15px;
+//		}
+//	}
+//}
+//
+//@media (max-width: 640px) {
+//	.ur-thank-you-page {
+//		padding: 20px 16px;
+//	}
+//
+//	.thank-you-page-container {
+//		padding: 40px 24px;
+//		border-radius: 6px;
+//
+//		.ur-success-icon {
+//			width: 70px;
+//			height: 70px;
+//			margin-bottom: 28px;
+//
+//			svg {
+//				width: 40px;
+//				height: 40px;
+//			}
+//		}
+//
+//		.ur-headline {
+//			margin-bottom: 16px;
+//
+//			h1 {
+//				font-size: 24px;
+//			}
+//		}
+//
+//		.ur-message {
+//			margin-bottom: 28px;
+//
+//			p {
+//				font-size: 15px;
+//			}
+//		}
+//
+//		.ur-button-wrapper {
+//			margin-bottom: 24px;
+//
+//			.ur-redirect-btn {
+//				padding: 12px 24px;
+//				font-size: 15px;
+//			}
+//		}
+//
+//		.ur-bank-details {
+//			padding: 16px;
+//			margin-bottom: 20px;
+//		}
+//
+//		.ur-transaction-info {
+//			padding: 12px 16px;
+//			margin-bottom: 20px;
+//		}
+//
+//		.ur-footer p {
+//			font-size: 13px;
+//		}
+//	}
+//}
+//
+//@media (max-width: 480px) {
+//	.thank-you-page-container {
+//		padding: 32px 20px;
+//
+//		.ur-headline h1 {
+//			font-size: 22px;
+//		}
+//
+//		.ur-message p {
+//			font-size: 14px;
+//		}
+//	}
+//}
 
 @media print {
 	.ur-thank-you-page {
