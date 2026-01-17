@@ -31,6 +31,22 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	 * @return array|object|\stdClass[]
 	 */
 	public function get_all( $args ) {
+		global $wpdb;
+
+		$table_exists = $wpdb->get_var(
+			$wpdb->prepare( 'SHOW TABLES LIKE %s', $this->table )
+		);
+
+		if ( $table_exists !== $this->table ) {
+			return array(
+				'items'        => array(),
+				'total'        => 0,
+				'total_pages'  => 0,
+				'current_page' => 1,
+				'per_page'     => absint( $args['per_page'] ?? 20),
+			);
+		}
+
 		$sql = "
 					SELECT urmo.ID AS order_id,
 						wpp.ID as post_id,
