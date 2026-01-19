@@ -173,6 +173,9 @@ class UR_Admin_Assets {
 			);
 		}
 
+		wp_register_script( 'popper', UR()->plugin_url() . "/assets/js/popper/popper$suffix.js", [], UR_VERSION, true );
+		wp_register_script( 'tippy', UR()->plugin_url() . "/assets/js/tippy/tippy$suffix.js", [ 'popper' ], UR_VERSION, true );
+
 		wp_register_script( 'jquery-blockui', UR()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_register_script( 'tooltipster', UR()->plugin_url() . '/assets/js/tooltipster/tooltipster.bundle' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_register_script( 'jquery-confirm', UR()->plugin_url() . '/assets/js/jquery-confirm/jquery-confirm' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
