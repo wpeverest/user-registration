@@ -17,10 +17,23 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 
 	/** Parse preset color */
 	private function parse_preset_color( $value ) {
+		if ( empty( $value ) ) {
+			return '';
+		}
+
 		if ( strpos( $value, 'var:preset|color|' ) !== false ) {
 			$slug = str_replace( 'var:preset|color|', '', $value );
 			return 'var(--wp--preset--color--' . $slug . ')';
 		}
+
+		if ( strpos( $value, '#' ) === false &&
+		strpos( $value, 'rgb' ) === false &&
+		strpos( $value, 'hsl' ) === false &&
+		strpos( $value, 'var(' ) === false ) {
+
+			return 'var(--wp--preset--color--' . $value . ')';
+		}
+
 		return $value;
 	}
 
@@ -71,7 +84,6 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 			$button_classes .= ' ' . $attr['className'];
 		}
 
-
 		$text_color_raw = '';
 		if ( isset( $attr['textColor'] ) && ! empty( $attr['textColor'] ) ) {
 			$text_color_raw = $attr['textColor'];
@@ -79,7 +91,6 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 			$text_color_raw = $style['elements']['link']['color']['text'];
 		}
 		$text_color = $this->parse_preset_color( $text_color_raw );
-
 
 		$background_raw = '';
 		if ( isset( $attr['backgroundColor'] ) && ! empty( $attr['backgroundColor'] ) ) {
@@ -89,10 +100,8 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 		}
 		$background = $this->parse_preset_color( $background_raw );
 
-
 		$text_hover_color    = isset( $attr['hoverTextColor'] ) ? $attr['hoverTextColor'] : '';
 		$text_hover_bg_color = isset( $attr['hoverBgColor'] ) ? $attr['hoverBgColor'] : '';
-
 
 		$border_color_raw = '';
 		if ( isset( $attr['borderColor'] ) && ! empty( $attr['borderColor'] ) ) {
@@ -101,7 +110,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 			$border_color_raw = $style['border']['color'];
 		}
 		$border_color = $this->parse_preset_color( $border_color_raw );
-
+		error_log( print_r( $border_color, true ) );
 
 		$border_width = '';
 		if ( isset( $attr['borderWidth'] ) && ! empty( $attr['borderWidth'] ) ) {
@@ -110,9 +119,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 			$border_width = $style['border']['width'];
 		}
 
-
 		$border_style = isset( $attr['borderStyle'] ) ? $attr['borderStyle'] : 'solid';
-
 
 		if ( isset( $attr['borderRadius'] ) && ! empty( $attr['borderRadius'] ) ) {
 

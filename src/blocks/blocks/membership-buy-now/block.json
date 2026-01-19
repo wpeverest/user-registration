@@ -109,7 +109,8 @@
       "type": "string"
     },
     "backgroundColor": {
-      "type": "string"
+      "type": "string",
+      "default": "#475bb2"
     },
     "borderWidth": {
       "type": "string"
@@ -130,7 +131,7 @@
     },
     "hoverBgColor": {
       "type": "string",
-      "default": ""
+      "default": "#3a4a8f"
     }
   },
   "editorScript": "user-registration-blocks-editor",

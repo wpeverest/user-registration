@@ -13,8 +13,7 @@ import {
 	TextControl,
 	ToggleControl,
 	__experimentalToggleGroupControl as ToggleGroupControl,
-	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
-	__experimentalUnitControl as UnitControl
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption
 } from "@wordpress/components";
 
 import {
@@ -33,6 +32,7 @@ const ServerSideRender = wp.serverSideRender
 
 const { urRestApiNonce } = typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
+
 const buildHoverCss = ({ blockId, hoverTextColor, hoverBgColor }) => {
 	if (!blockId) return "";
 
@@ -48,6 +48,7 @@ const buildHoverCss = ({ blockId, hoverTextColor, hoverBgColor }) => {
 	return css;
 };
 
+// Component - OK to be outside
 const ColorControl = ({ label, colorValue, onChange, themeColors }) => (
 	<div
 		data-wp-component="ToolsPanelItem"
@@ -132,11 +133,10 @@ const Edit = (props) => {
 	// Theme colors
 	const [themeColors] = useSettings("color.palette.theme");
 
-	// Detect current block style (fill or outline)
 	const isOutlineStyle =
 		blockProps.className?.includes("is-style-outline") || false;
 
-	// Fetch membership list
+
 	const fetchData = async () => {
 		try {
 			const res = await apiFetch({
@@ -160,13 +160,40 @@ const Edit = (props) => {
 		fetchData();
 	}, []);
 
-	// ensure stable clientId is saved in attributes
+
 	useEffect(() => {
 		if (!attributes.clientId && clientId) {
 			setAttributes({ clientId });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [clientId]);
+
+
+	useEffect(() => {
+		if (isOutlineStyle) {
+			if (backgroundColor || hoverBgColor) {
+				setAttributes({
+					backgroundColor: "",
+					hoverBgColor: ""
+				});
+			}
+		} else {
+			const updates = {};
+
+			if (!backgroundColor) {
+				updates.backgroundColor = "#475bb2";
+			}
+			if (!hoverBgColor) {
+				updates.hoverBgColor = "#475bb2";
+			}
+
+			if (Object.keys(updates).length > 0) {
+				setAttributes(updates);
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isOutlineStyle]);
+
 
 	const membershipOptions = useMemo(() => {
 		if (!membershipList) return [];
@@ -297,59 +324,6 @@ const Edit = (props) => {
 					/>
 				)}
 			</InspectorControls>
-
-			{isOutlineStyle && (
-				<InspectorControls group="border">
-					<ColorControl
-						label={__("Border Color", "user-registration")}
-						colorValue={borderColor}
-						onChange={(c) => setAttributes({ borderColor: c })}
-						themeColors={themeColors}
-					/>
-
-					<UnitControl
-						label={__("Border Width", "user-registration")}
-						value={borderWidth}
-						onChange={(value) =>
-							setAttributes({ borderWidth: value })
-						}
-					/>
-
-					<SelectControl
-						label={__("Border Style", "user-registration")}
-						value={borderStyle}
-						options={[
-							{
-								label: __("Solid", "user-registration"),
-								value: "solid"
-							},
-							{
-								label: __("Dashed", "user-registration"),
-								value: "dashed"
-							},
-							{
-								label: __("Dotted", "user-registration"),
-								value: "dotted"
-							},
-							{
-								label: __("Double", "user-registration"),
-								value: "double"
-							}
-						]}
-						onChange={(value) =>
-							setAttributes({ borderStyle: value })
-						}
-					/>
-
-					<UnitControl
-						label={__("Border Radius", "user-registration")}
-						value={borderRadius}
-						onChange={(value) =>
-							setAttributes({ borderRadius: value })
-						}
-					/>
-				</InspectorControls>
-			)}
 
 			{!!hoverCss && <style>{hoverCss}</style>}
 
