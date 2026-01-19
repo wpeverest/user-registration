@@ -266,7 +266,6 @@ class StripeService {
 			);
 			$response['stripe_cus_id'] = $customer->id;
 
-			error_log( print_r( $response, true ) );
 			PaymentGatewayLogging::log_api_response(
 				'stripe',
 				'Stripe customer created successfully',

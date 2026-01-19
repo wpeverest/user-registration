@@ -5272,6 +5272,11 @@ body.user-registration {
 #user-registration-local-currency-table-page {
 	border: 0px !important;
 	padding: 0px !important;
+
+	#user-registration-list-filters-row{
+		display: none !important;
+	}
+
 }
 
 #user-registration-list-table-page,
