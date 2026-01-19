@@ -1038,7 +1038,7 @@ class URCR_Frontend {
 			}
 		}
 
-		if ( ! $is_restriction_applied ) {
+		if ( ! $is_restriction_applied && UR_PRO_ACTIVE && ur_check_module_activation( 'content-drip' ) ) {
 			//apply content dripping.
 			return urcr_apply_content_drip();
 		}
