@@ -9,12 +9,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-16T05:08:01+00:00\n"
+"POT-Creation-Date: 2026-01-16T16:30:32+05:45\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
 
 #. Plugin Name of the plugin
+#: user-registration.php
 #: includes/3rd-party/elementor/class-ur-elementor.php:76
 #: includes/3rd-party/elementor/class-ur-widget.php:41
 #: includes/3rd-party/oxygen/class-ur-oxygen.php:52
@@ -26,18 +27,22 @@ msgid "User Registration & Membership"
 msgstr ""
 
 #. Plugin URI of the plugin
+#: user-registration.php
 msgid "https://wpuserregistration.com/"
 msgstr ""
 
 #. Description of the plugin
+#: user-registration.php
 msgid "The most flexible User Registration and Membership plugin for WordPress."
 msgstr ""
 
 #. Author of the plugin
+#: user-registration.php
 msgid "WPEverest"
 msgstr ""
 
 #. Author URI of the plugin
+#: user-registration.php
 msgid "https://wpuserregistration.com"
 msgstr ""
 
@@ -517,6 +522,7 @@ msgstr ""
 
 #. translators: %s: Error message
 #: includes/abstracts/abstract-ur-list-table.php:144
+#, php-format
 msgid "The bulk action %s does not have a callback method"
 msgstr ""
 
@@ -564,6 +570,7 @@ msgstr ""
 
 #. translators: %s - Human readable time
 #: includes/abstracts/abstract-ur-list-table.php:585
+#, php-format
 msgid "%s ago"
 msgstr ""
 
@@ -775,11 +782,13 @@ msgstr ""
 
 #. translators: %field%: Field Label
 #: includes/admin/class-ur-admin-assets.php:376
+#, php-format
 msgid "%field% field is Locked."
 msgstr ""
 
 #. translators: %field%: Field Label
 #: includes/admin/class-ur-admin-assets.php:378
+#, php-format
 msgid "%field% field can be used only one time in the form."
 msgstr ""
 
@@ -793,6 +802,7 @@ msgstr ""
 
 #. translators: %field%: Field Text
 #: includes/admin/class-ur-admin-assets.php:382
+#, php-format
 msgid "%field% setting is disabled."
 msgstr ""
 
@@ -937,6 +947,7 @@ msgstr ""
 
 #. translators: %field%: Field Label %plan%: License Plan.
 #: includes/admin/class-ur-admin-assets.php:488
+#, php-format
 msgid "%field% field is locked. Upgrade to <strong>%plan%</strong> to unlock this field."
 msgstr ""
 
@@ -1109,6 +1120,7 @@ msgstr ""
 
 #. translators: %field%: Field Label
 #: includes/admin/class-ur-admin-assets.php:616
+#, php-format
 msgctxt "user registration admin"
 msgid "%field% cannot be added to repeater row"
 msgstr ""
@@ -1359,11 +1371,13 @@ msgid "Invalid minimum length count for"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:678
+#, php-format
 msgctxt "user registration admin"
 msgid "The max and min length limit mode for %field% must be same."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:679
+#, php-format
 msgctxt "user registration admin"
 msgid "The max length limit for %field% must be greater than min length."
 msgstr ""
@@ -1395,16 +1409,19 @@ msgstr ""
 
 #. translators: %s: search term
 #: includes/admin/class-ur-admin-base-layout.php:142
+#, php-format
 msgid "Sorry no results found for <i>%s</i>."
 msgstr ""
 
 #. translators: %s: type
 #: includes/admin/class-ur-admin-base-layout.php:148
+#, php-format
 msgid "You don’t have any %s yet."
 msgstr ""
 
 #. translators: %s: type
 #: includes/admin/class-ur-admin-base-layout.php:154
+#, php-format
 msgid "Please add %s and you’re good to go."
 msgstr ""
 
@@ -1620,6 +1637,7 @@ msgstr ""
 #: includes/admin/class-ur-admin-menus.php:679
 #: includes/admin/functions-ur-admin.php:969
 #: includes/admin/functions-ur-admin.php:980
+#, php-format
 msgid "Registration %s"
 msgstr ""
 
@@ -1825,6 +1843,7 @@ msgstr ""
 #. translators: %d: Item id
 #: includes/admin/class-ur-admin-registrations-table-list.php:97
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:233
+#, php-format
 msgid "ID: %d"
 msgstr ""
 
@@ -1875,7 +1894,7 @@ msgid "Search Registration"
 msgstr ""
 
 #: includes/admin/class-ur-admin-registrations-table-list.php:248
-msgid "Search Forms ..."
+msgid "Search Form"
 msgstr ""
 
 #: includes/admin/class-ur-admin-settings.php:196
@@ -1897,7 +1916,7 @@ msgid "Captcha Test Successful !"
 msgstr ""
 
 #: includes/admin/class-ur-admin-settings.php:203
-#: includes/admin/class-ur-admin-settings.php:1343
+#: includes/admin/class-ur-admin-settings.php:1344
 msgid "Reset Keys"
 msgstr ""
 
@@ -2031,11 +2050,11 @@ msgstr ""
 msgid "Remove Image"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:1770
+#: includes/admin/class-ur-admin-settings.php:1771
 msgid "Your settings has not been saved. Send Before days cannot be less than or equal to 0."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:1996
+#: includes/admin/class-ur-admin-settings.php:1997
 msgid "No Search result found !"
 msgstr ""
 
@@ -2079,6 +2098,7 @@ msgstr ""
 
 #. translators: %s: number of existing users
 #: includes/admin/class-ur-admin-user-list-manager.php:266
+#, php-format
 msgid "Your site has %s users registered before this plugin."
 msgstr ""
 
@@ -2096,11 +2116,13 @@ msgstr ""
 
 #. translators: %s - Number of users approved.
 #: includes/admin/class-ur-admin-user-list-manager.php:307
+#, php-format
 msgid "User Approved: %s users approved."
 msgstr ""
 
 #. translators: %s - Number of users denied.
 #: includes/admin/class-ur-admin-user-list-manager.php:310
+#, php-format
 msgid "User Denied: %s users denied."
 msgstr ""
 
@@ -2256,6 +2278,7 @@ msgstr ""
 
 #. translators: 1: Page Title
 #: includes/admin/class-ur-admin.php:309
+#, php-format
 msgid "URM %s Page"
 msgstr ""
 
@@ -2265,6 +2288,7 @@ msgstr ""
 
 #. translators: 1: Newly registered user count 2: User
 #: includes/admin/class-ur-admin.php:518
+#, php-format
 msgid "%1$d new %2$s registered."
 msgstr ""
 
@@ -2328,6 +2352,7 @@ msgid "Free vs Pro"
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:1071
+#, php-format
 msgid "You are currently using User Registration & Membership %1$s v%2$s"
 msgstr ""
 
@@ -2338,6 +2363,7 @@ msgstr ""
 
 #. translators: %1$s - My account Link.
 #: includes/admin/notifications/class-ur-admin-notices.php:114
+#, php-format
 msgid "Please choose a <strong title=\"A page with [user_registration_my_account] shortcode\">My Account</strong> page in <a href=\"%1$s\" style=\"text-decoration:none;\">General Settings</a>. <br/><strong>Got Stuck? Read</strong> <a href=\"https://docs.wpuserregistration.com/docs/how-to-show-account-profile/\" style=\"text-decoration:none;\" rel=\"noreferrer noopener\" target=\"_blank\">How to setup My Account page</a>."
 msgstr ""
 
@@ -2396,7 +2422,7 @@ msgstr ""
 
 #: includes/admin/notifications/class-ur-admin-notices.php:387
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\r\n"
+"<strong>What benefit would you have?</strong> <br>\n"
 "\t\t\t\t\t\t\t\tBasically, it would encourage us to release updates regularly with new features & bug fixes so that you can keep on using the plugin without any issues and also to provide free support like we have been doing. <span class=\"dashicons dashicons-smiley smile-icon\"></span>"
 msgstr ""
 
@@ -2406,13 +2432,13 @@ msgstr ""
 
 #: includes/admin/notifications/class-ur-admin-notices.php:445
 msgid ""
-"<strong>Hey there!</strong> <br>\r\n"
+"<strong>Hey there!</strong> <br>\n"
 "\t\t\t\t\t\t\t\t\tWe would be grateful if you could spare a moment and help us fill this survey. This survey will take approximately 4 minutes to complete."
 msgstr ""
 
 #: includes/admin/notifications/class-ur-admin-notices.php:450
 msgid ""
-"<strong>What benefit would you have?</strong> <br>\r\n"
+"<strong>What benefit would you have?</strong> <br>\n"
 "\t\t\t\t\t\t\t\t\tWe will take your feedback from the survey and use that information to make the plugin better. As a result, you will have a better plugin as you wanted. <span class=\"dashicons dashicons-smiley smile-icon\"></span>"
 msgstr ""
 
@@ -2424,10 +2450,12 @@ msgstr ""
 
 #. translators: % s: continue wizard URL
 #: includes/admin/notifications/class-ur-admin-notices.php:882
+#, php-format
 msgid "<a href=\"%s\" class=\"button-primary\" style=\"margin-right: 5px;\">Continue Setup Wizard</a>"
 msgstr ""
 
 #: includes/admin/notifications/class-ur-admin-notices.php:883
+#, php-format
 msgid "<a class=\"button-secondary skip\" href=\"%s\">Skip setup</a>"
 msgstr ""
 
@@ -2445,6 +2473,7 @@ msgid "Dismiss"
 msgstr ""
 
 #: includes/admin/notifications/views/html-notice-deactivation.php:23
+#, php-format
 msgid "Before we deactivate User Registration & Membership, would you care to <a href=\"%1$s\" rel=\"noreferrer noopener\" target=\"_blank\">let us know why</a> so we can improve it for you? <a href=\"%2$s\">No, deactivate now</a>."
 msgstr ""
 
@@ -2458,16 +2487,19 @@ msgstr ""
 
 #. translators: %s - Link to logout.
 #: includes/admin/notifications/views/html-notice-key-activated.php:17
+#, php-format
 msgid "Your licence for <strong>%s</strong> has been activated. Thanks!"
 msgstr ""
 
 #. translators: %s - Plugin Name.
 #: includes/admin/notifications/views/html-notice-key-deactivated.php:18
+#, php-format
 msgid "Your licence for <strong>%s</strong> has been deactivated."
 msgstr ""
 
 #. translators: 1: License Page 2: Plugin Name
 #: includes/admin/notifications/views/html-notice-key-unvalidated.php:16
+#, php-format
 msgid "%1$s Please enter your license key%2$s to get updates for <strong>%3$s</strong> Add-Ons."
 msgstr ""
 
@@ -2586,9 +2618,8 @@ msgid "Custom Range"
 msgstr ""
 
 #: includes/admin/settings/class-ur-members-list-table.php:1004
-#: modules/membership/includes/Admin/Members/MembersListTable.php:287
 #: modules/payment-history/Admin/OrdersListTable.php:485
-msgid "Search Members ..."
+msgid "Search Member"
 msgstr ""
 
 #: includes/admin/settings/class-ur-members-list-table.php:1067
@@ -2962,36 +2993,42 @@ msgstr ""
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:813
 #: includes/admin/settings/class-ur-users-menu.php:1711
+#, php-format
 msgid "Reset password email sent %s successfully."
 msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:819
 #: includes/admin/settings/class-ur-users-menu.php:1717
+#, php-format
 msgid "Roles updated for %s users successfully."
 msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:826
 #: includes/admin/settings/class-ur-users-menu.php:1724
+#, php-format
 msgid "%s approved successfully."
 msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:833
 #: includes/admin/settings/class-ur-users-menu.php:1731
+#, php-format
 msgid "Verification email sent to %s successfully."
 msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:840
 #: includes/admin/settings/class-ur-users-menu.php:1738
+#, php-format
 msgid "%s denied successfully."
 msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:847
 #: includes/admin/settings/class-ur-users-menu.php:1745
+#, php-format
 msgid "%s deleted successfully."
 msgstr ""
 
@@ -3005,11 +3042,13 @@ msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:862
+#, php-format
 msgid "%s enabled successfully."
 msgstr ""
 
 #. translators: Count message
 #: includes/admin/settings/class-ur-members-menu.php:865
+#, php-format
 msgid "%s disabled successfully."
 msgstr ""
 
@@ -3377,6 +3416,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-registration-login.php:292
 #: includes/admin/settings/class-ur-settings-registration-login.php:314
 #: includes/admin/settings/class-ur-settings-registration-login.php:363
+#, php-format
 msgid "Get site key from google %1$s reCAPTCHA %2$s."
 msgstr ""
 
@@ -3392,6 +3432,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-registration-login.php:303
 #: includes/admin/settings/class-ur-settings-registration-login.php:326
 #: includes/admin/settings/class-ur-settings-registration-login.php:375
+#, php-format
 msgid "Get secret key from google %1$s reCAPTCHA %2$s."
 msgstr ""
 
@@ -3444,6 +3485,7 @@ msgstr ""
 #. translators: %1$s - hCaptcha docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:357
 #: includes/admin/settings/class-ur-settings-registration-login.php:415
+#, php-format
 msgid "Get site key from %1$s hCaptcha %2$s."
 msgstr ""
 
@@ -3455,6 +3497,7 @@ msgstr ""
 #. translators: %1$s - hCaptcha docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:369
 #: includes/admin/settings/class-ur-settings-registration-login.php:427
+#, php-format
 msgid "Get secret key from %1$s hCaptcha %2$s."
 msgstr ""
 
@@ -3466,6 +3509,7 @@ msgstr ""
 #. translators: %1$s - Cloudflare Turnstile docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:396
 #: includes/admin/settings/class-ur-settings-registration-login.php:454
+#, php-format
 msgid "Get site key from %1$s Cloudflare Turnstile %2$s."
 msgstr ""
 
@@ -3477,6 +3521,7 @@ msgstr ""
 #. translators: %1$s - Cloudflare Turnstile docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:409
 #: includes/admin/settings/class-ur-settings-registration-login.php:467
+#, php-format
 msgid "Get secret key from %1$s Cloudflare Turnstile %2$s."
 msgstr ""
 
@@ -3492,6 +3537,7 @@ msgstr ""
 #. translators: %1$s - Cloudflare Turnstile docs url
 #: includes/admin/settings/class-ur-settings-captcha.php:421
 #: includes/admin/settings/class-ur-settings-registration-login.php:479
+#, php-format
 msgid "Please select theme mode for your Cloudflare Turnstile. <a href=\"%1$s\" rel=\"noreferrer noopener\" target=\"_blank\">Learn More</a>"
 msgstr ""
 
@@ -3629,6 +3675,7 @@ msgid "Registration Page"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:66
+#, php-format
 msgid "Displays the registration form where new users can sign up. Add the Registration Form block or [%s] shortcode to this page."
 msgstr ""
 
@@ -3640,6 +3687,7 @@ msgid "Login Page"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:77
+#, php-format
 msgid "Displays the login form where existing users can access their account. Add the Login Form block or [%s] shortcode to this page. "
 msgstr ""
 
@@ -3649,6 +3697,7 @@ msgid "My Account Page"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:87
+#, php-format
 msgid "Member dashboard for managing account details, subscriptions, and profile information. Add the My Account block or [%s] shortcode to this page."
 msgstr ""
 
@@ -3659,6 +3708,7 @@ msgid "Lost Password Page"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:97
+#, php-format
 msgid "Allows users to reset their password if forgotten. A password reset link will be sent to their registered email address. Add the [%s] shortcode to this page."
 msgstr ""
 
@@ -3667,6 +3717,7 @@ msgid "Membership Pricing Page"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:108
+#, php-format
 msgid "Displays all available membership plans and pricing options. Users can view and select which membership to purchase. Add the Membership Pricing block or [%s] shortcode to this page."
 msgstr ""
 
@@ -3676,6 +3727,7 @@ msgid "Thank You Page"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:119
+#, php-format
 msgid "Confirmation page shown after successful registration or membership purchase. Use it to welcome new members and provide next steps. Add the Thank You block or [%s] shortcode to this page."
 msgstr ""
 
@@ -3801,6 +3853,7 @@ msgid "License Expiry Date"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-membership.php:72
+#, php-format
 msgid "<strong>Membership page setting has moved.</strong> Configure your membership page <a href=\"%s\">here</a>."
 msgstr ""
 
@@ -3825,7 +3878,7 @@ msgstr ""
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:665
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:480
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:527
-#: modules/content-restriction/class-urcr-frontend.php:1473
+#: modules/content-restriction/class-urcr-frontend.php:1454
 msgid "Membership Required"
 msgstr ""
 
@@ -3834,7 +3887,7 @@ msgstr ""
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:666
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:481
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:528
-#: modules/content-restriction/class-urcr-frontend.php:1474
+#: modules/content-restriction/class-urcr-frontend.php:1455
 msgid "This content is available to members only."
 msgstr ""
 
@@ -3843,7 +3896,7 @@ msgstr ""
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:667
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:482
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:529
-#: modules/content-restriction/class-urcr-frontend.php:1475
+#: modules/content-restriction/class-urcr-frontend.php:1456
 msgid "Sign up to unlock access or log in if you already have an account."
 msgstr ""
 
@@ -3856,6 +3909,7 @@ msgid " Default message for all restricted content."
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-membership.php:138
+#, php-format
 msgid "<strong>The Global Restriction setting has moved.</strong> You can now manage it <a href=\"%1$s\" target=\"_blank\" style=\"text-decoration: underline;\" >here.</a>"
 msgstr ""
 
@@ -3880,6 +3934,7 @@ msgid "Endpoints"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-my-account.php:88
+#, php-format
 msgid "<strong>My Account page setting has moved.</strong> Configure your my account page <a href=\"%s\">here</a>."
 msgstr ""
 
@@ -4550,32 +4605,32 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:143
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tHi Admin,\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tA new member has been registered.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p>\r\n"
-"\t\t\t\t\t<strong>Member Details:</strong>\r\n"
-"\t\t\t\t\t<ul>\r\n"
-"\t\t\t\t\t<li style=\"margin-bottom:10px;\">\r\n"
-"\t\t\t\t\t\t<b>Name</b>: {{username}}\r\n"
-"\t\t\t\t\t</li>\r\n"
-"\t\t\t\t\t<li style=\"margin-bottom:10px;\">\r\n"
-"\t\t\t\t\t\t<b>Email</b>: {{email}}\r\n"
-"\t\t\t\t\t</li>\r\n"
-"\t\t\t\t\t</ul>\r\n"
-"\t\t\t\t\t</p>\r\n"
-"\t\t\t\t\t<p>\r\n"
-"\t\t\t\t\t{{membership_plan_details}}\r\n"
-"\t\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tView and manage this member in your <b>User Registration and Membership</b> dashboard under <b>Members</b>.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tThanks\r\n"
-"\t\t\t\t</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tHi Admin,\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tA new member has been registered.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p>\n"
+"\t\t\t\t\t<strong>Member Details:</strong>\n"
+"\t\t\t\t\t<ul>\n"
+"\t\t\t\t\t<li style=\"margin-bottom:10px;\">\n"
+"\t\t\t\t\t\t<b>Name</b>: {{username}}\n"
+"\t\t\t\t\t</li>\n"
+"\t\t\t\t\t<li style=\"margin-bottom:10px;\">\n"
+"\t\t\t\t\t\t<b>Email</b>: {{email}}\n"
+"\t\t\t\t\t</li>\n"
+"\t\t\t\t\t</ul>\n"
+"\t\t\t\t\t</p>\n"
+"\t\t\t\t\t<p>\n"
+"\t\t\t\t\t{{membership_plan_details}}\n"
+"\t\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tView and manage this member in your <b>User Registration and Membership</b> dashboard under <b>Members</b>.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tThanks\n"
+"\t\t\t\t</p>\n"
 "\t\t\t\t"
 msgstr ""
 
@@ -4623,35 +4678,35 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-approval-link-email.php:142
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tHi Admin,\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tA new user has registered and requires your approval.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; font-weight:600; line-height: 1.6;\">\r\n"
-"\t\t\t\t\t<b>Member Details:</b>\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<ul>\r\n"
-"\t\t\t\t\t<li style=\"margin: 0 0 10px 20px; font-weight:500; color: #000000; font-size: 15px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\t\t<b>Name:</b> {{username}}\r\n"
-"\t\t\t\t\t</li>\r\n"
-"\t\t\t\t\t<li style=\"margin: 0 0 10px 20px; font-weight:500; color: #000000; font-size: 15px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\t\t<b>Email:</b> {{email}}\r\n"
-"\t\t\t\t\t</li>\r\n"
-"\t\t\t\t</ul>\r\n"
-"\t\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tPlease review and approve or deny this registration:\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 10px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tApprove User: {{approval_link}}\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tDeny User: {{denial_link}}\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tThanks\r\n"
-"\t\t\t\t</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tHi Admin,\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tA new user has registered and requires your approval.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; font-weight:600; line-height: 1.6;\">\n"
+"\t\t\t\t\t<b>Member Details:</b>\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<ul>\n"
+"\t\t\t\t\t<li style=\"margin: 0 0 10px 20px; font-weight:500; color: #000000; font-size: 15px; line-height: 1.6;\">\n"
+"\t\t\t\t\t\t<b>Name:</b> {{username}}\n"
+"\t\t\t\t\t</li>\n"
+"\t\t\t\t\t<li style=\"margin: 0 0 10px 20px; font-weight:500; color: #000000; font-size: 15px; line-height: 1.6;\">\n"
+"\t\t\t\t\t\t<b>Email:</b> {{email}}\n"
+"\t\t\t\t\t</li>\n"
+"\t\t\t\t</ul>\n"
+"\t\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tPlease review and approve or deny this registration:\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 10px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tApprove User: {{approval_link}}\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tDeny User: {{denial_link}}\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tThanks\n"
+"\t\t\t\t</p>\n"
 "\t\t\t\t"
 msgstr ""
 
@@ -4678,19 +4733,19 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-awaiting-admin-approval-email.php:138
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tHi {{username}},\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tThank you for registering at <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a>!\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tYour registration is currently awaiting approval from our team. We will send you an email as soon as your account is approved.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tIf you have questions, feel free to reach out.</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tThanks</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tHi {{username}},\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tThank you for registering at <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a>!\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tYour registration is currently awaiting approval from our team. We will send you an email as soon as your account is approved.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tIf you have questions, feel free to reach out.</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tThanks</p>\n"
 "\t\t\t\t"
 msgstr ""
 
@@ -4717,21 +4772,21 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-confirm-email-address-change-email.php:127
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tHi {{display_name}},\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tYou recently requested to change the email associated with your account from {{email}} to {{updated_new_user_email}}.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tTo confirm this change, please click the link below: {{email_change_confirmation_link}}\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tThis link will remain active for 24 hours. If you did not request this change, please contact us immediately at {{admin_email}}.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tThanks\r\n"
-"\t\t\t\t</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tHi {{display_name}},\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tYou recently requested to change the email associated with your account from {{email}} to {{updated_new_user_email}}.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tTo confirm this change, please click the link below: {{email_change_confirmation_link}}\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tThis link will remain active for 24 hours. If you did not request this change, please contact us immediately at {{admin_email}}.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tThanks\n"
+"\t\t\t\t</p>\n"
 "\t\t\t"
 msgstr ""
 
@@ -4754,24 +4809,24 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-email-confirmation.php:132
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tHi {{username}},\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tThank you for registering at <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a>!\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tTo complete your registration, please confirm your email address by clicking the link below:\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\t<a href=\"{{home_url}}/{{ur_login}}?ur_token={{email_token}}\" style=\"color: #4A90E2; text-decoration: none;\">Click Here</a>\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tThis verification link is valid for 24 hours. If you need assistance, we're here to help.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tThanks\r\n"
-"\t\t\t\t</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tHi {{username}},\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tThank you for registering at <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a>!\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tTo complete your registration, please confirm your email address by clicking the link below:\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\t<a href=\"{{home_url}}/{{ur_login}}?ur_token={{email_token}}\" style=\"color: #4A90E2; text-decoration: none;\">Click Here</a>\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tThis verification link is valid for 24 hours. If you need assistance, we're here to help.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tThanks\n"
+"\t\t\t\t</p>\n"
 "\t\t\t\t"
 msgstr ""
 
@@ -4798,33 +4853,33 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-payment-success-admin-email.php:139
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tHi Admin,\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tYou have received a payment.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p>\r\n"
-"\t\t\t\t\t<b>Payment Details:</b>\r\n"
-"\t\t\t\t\t<ul>\r\n"
-"\t\t\t\t\t<li style=\"margin-bottom:10px;\">\r\n"
-"\t\t\t\t\t\t<b>Member:</b> {{username}}\r\n"
-"\t\t\t\t\t</li>\r\n"
-"\t\t\t\t\t<li style=\"margin-bottom:10px;\">\r\n"
-"\t\t\t\t\t\t<b>Amount:</b> {{payment_amount}}\r\n"
-"\t\t\t\t\t</li>\r\n"
-"\t\t\t\t\t<li style=\"margin-bottom:10px;\">\r\n"
-"\t\t\t\t\t\t<b>Payment Date:</b> {{payment_date}}\r\n"
-"\t\t\t\t\t</li>\r\n"
-"\t\t\t\t\t</ul>\r\n"
-"\t\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tView full payment details: <br>\r\n"
-"\t\t\t\t\t<a href=\"{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}\" style=\"color: #4A90E2; text-decoration: none;\">Click Here</a>\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tThanks\r\n"
-"</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tHi Admin,\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tYou have received a payment.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p>\n"
+"\t\t\t\t\t<b>Payment Details:</b>\n"
+"\t\t\t\t\t<ul>\n"
+"\t\t\t\t\t<li style=\"margin-bottom:10px;\">\n"
+"\t\t\t\t\t\t<b>Member:</b> {{username}}\n"
+"\t\t\t\t\t</li>\n"
+"\t\t\t\t\t<li style=\"margin-bottom:10px;\">\n"
+"\t\t\t\t\t\t<b>Amount:</b> {{payment_amount}}\n"
+"\t\t\t\t\t</li>\n"
+"\t\t\t\t\t<li style=\"margin-bottom:10px;\">\n"
+"\t\t\t\t\t\t<b>Payment Date:</b> {{payment_date}}\n"
+"\t\t\t\t\t</li>\n"
+"\t\t\t\t\t</ul>\n"
+"\t\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tView full payment details: <br>\n"
+"\t\t\t\t\t<a href=\"{{home_url}}/wp-admin/user-edit.php?user_id={{user_id}}\" style=\"color: #4A90E2; text-decoration: none;\">Click Here</a>\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tThanks\n"
+"</p>\n"
 "\t\t\t\t"
 msgstr ""
 
@@ -4847,22 +4902,22 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-payment-success-email.php:129
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tHi {{username}},\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tYour payment for {{membership_plan_name}} at <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a> is complete!\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tView your payment receipt: <br>\r\n"
-"\t\t\t\t\t{{payment_invoice}}\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tAccess your member dashboard: {{my_account_link}}\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tThanks\r\n"
-"\t\t\t\t</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tHi {{username}},\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tYour payment for {{membership_plan_name}} at <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a> is complete!\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tView your payment receipt: <br>\n"
+"\t\t\t\t\t{{payment_invoice}}\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tAccess your member dashboard: {{my_account_link}}\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tThanks\n"
+"\t\t\t\t</p>\n"
 "\t\t\t\t"
 msgstr ""
 
@@ -4887,26 +4942,26 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-changed-email.php:149
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tHi Admin,\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tA member has updated their profile information.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<ul>\r\n"
-"\t\t\t\t\t<li style=\"margin-bottom:10px\">\r\n"
-"\t\t\t\t\t<b>Member</b>: {{username}}\r\n"
-"\t\t\t\t\t</li>\r\n"
-"\t\t\t\t\t<li style=\"margin-bottom:10px\">\r\n"
-"\t\t\t\t\t<b>Updated</b>: {{update_date}}\r\n"
-"\t\t\t\t\t</li>\r\n"
-"\t\t\t\t\t</ul>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tView and manage this member in your <b>User Registration and Membership</b> dashboard under <b>Members</b>.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tThanks\r\n"
-"\t\t\t\t</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tHi Admin,\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tA member has updated their profile information.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<ul>\n"
+"\t\t\t\t\t<li style=\"margin-bottom:10px\">\n"
+"\t\t\t\t\t<b>Member</b>: {{username}}\n"
+"\t\t\t\t\t</li>\n"
+"\t\t\t\t\t<li style=\"margin-bottom:10px\">\n"
+"\t\t\t\t\t<b>Updated</b>: {{update_date}}\n"
+"\t\t\t\t\t</li>\n"
+"\t\t\t\t\t</ul>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tView and manage this member in your <b>User Registration and Membership</b> dashboard under <b>Members</b>.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tThanks\n"
+"\t\t\t\t</p>\n"
 "\t\t\t\t"
 msgstr ""
 
@@ -4929,18 +4984,18 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-profile-details-updated-email.php:138
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tHi {{username}},\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tYour profile has been updated at <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a>.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tIf you did not make these changes, please contact us immediately at {{admin_email}}.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tThanks\r\n"
-"\t\t\t\t</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tHi {{username}},\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tYour profile has been updated at <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a>.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tIf you did not make these changes, please contact us immediately at {{admin_email}}.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tThanks\n"
+"\t\t\t\t</p>\n"
 "\t\t\t\t"
 msgstr ""
 
@@ -4968,18 +5023,18 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-denied-email.php:139
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tHi {{username}},\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tWe are unable to approve your registration at <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a> at this time.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tIf you believe this is an error or have questions, please contact us at {{admin_email}}.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tThanks\r\n"
-"\t\t\t\t</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tHi {{username}},\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tWe are unable to approve your registration at <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a> at this time.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tIf you believe this is an error or have questions, please contact us at {{admin_email}}.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tThanks\n"
+"\t\t\t\t</p>\n"
 "\t\t\t"
 msgstr ""
 
@@ -5005,17 +5060,17 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-registration-pending-email.php:141
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tHi {{username}},\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tYour registration on <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a> is now marked as pending.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tWe apologize for the inconvenience. You will be notified once your registration has been approved.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tThank you for your patience!\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tHi {{username}},\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tYour registration on <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a> is now marked as pending.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tWe apologize for the inconvenience. You will be notified once your registration has been approved.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tThank you for your patience!\n"
 "\t\t\t\t</p>"
 msgstr ""
 
@@ -5039,27 +5094,27 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-reset-password-email.php:138
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tHi {{username}},\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tWe received a password reset request for your account at <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a>\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tIf you did not request this, you can safely ignore this email.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tIf you like to proceed, click the link below to reset your password:\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\t<a href=\"{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}\" style=\"color: #4A90E2; text-decoration: none;\" rel=\"noreferrer noopener\" target=\"_blank\">Click Here</a>\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\t This link is valid for 24 hours.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\t Thanks\r\n"
-"\t\t\t\t</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tHi {{username}},\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tWe received a password reset request for your account at <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a>\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tIf you did not request this, you can safely ignore this email.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tIf you like to proceed, click the link below to reset your password:\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\t<a href=\"{{home_url}}/{{ur_reset_pass_slug}}?action=rp&key={{key}}&login={{username}}\" style=\"color: #4A90E2; text-decoration: none;\" rel=\"noreferrer noopener\" target=\"_blank\">Click Here</a>\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\t This link is valid for 24 hours.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\t Thanks\n"
+"\t\t\t\t</p>\n"
 "\t\t\t\t"
 msgstr ""
 
@@ -5085,34 +5140,36 @@ msgstr ""
 
 #: includes/admin/settings/emails/class-ur-settings-successfully-registered-email.php:139
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tHi {{username}},\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tWelcome to <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a>! Your registration is complete.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\t{{membership_plan_details}}\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tGet started by visiting your account dashboard:\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t{{my_account_link}}\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tThanks\r\n"
-"\t\t\t\t</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tHi {{username}},\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tWelcome to <a href=\"{{home_url}}\" style=\"color: #4A90E2; text-decoration: none;\">{{blog_info}}</a>! Your registration is complete.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\t{{membership_plan_details}}\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tGet started by visiting your account dashboard:\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t{{my_account_link}}\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tThanks\n"
+"\t\t\t\t</p>\n"
 "\t\t\t\t"
 msgstr ""
 
 #. translators: 1: Plugin Name, 2: Changelog Link, 3: New Version, 4: Link Close
 #: includes/admin/updater/class-ur-addon-updater.php:313
+#, php-format
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
 
 #. translators: 1: Plugin Name, 2: Changelog Link, 3: New Version, 4: Link Close, 5: Upgrade Plugin Link, 6: Link Close
 #: includes/admin/updater/class-ur-addon-updater.php:322
+#, php-format
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s or %5$supdate now%6$s."
 msgstr ""
 
@@ -5180,7 +5237,7 @@ msgstr ""
 #: includes/Functions/CoreFunctions.php:402
 #: includes/RestApi/controllers/version1/class-ur-modules.php:142
 #: includes/RestApi/controllers/version1/class-ur-modules.php:174
-#: modules/masteriyo/includes/Hooks.php:184
+#: modules/masteriyo/includes/Hooks.php:193
 #: modules/membership/includes/Admin/Members/MembersListTable.php:330
 #: modules/membership/includes/Admin/Views/Partials/membership-create-basics-tab.php:88
 #: modules/membership/includes/Templates/membership-listing.php:97
@@ -5212,6 +5269,7 @@ msgstr ""
 
 #. translators: %s: Template title
 #: includes/admin/views/html-admin-page-form-templates.php:98
+#, php-format
 msgctxt "Template name"
 msgid "%s template"
 msgstr ""
@@ -5224,21 +5282,25 @@ msgstr ""
 
 #. translators: %s: Number of plugins
 #: includes/admin/views/html-admin-page-form-templates.php:154
+#, php-format
 msgid "%s plugin successfully installed."
 msgstr ""
 
 #. translators: %s: Number of plugins
 #: includes/admin/views/html-admin-page-form-templates.php:161
+#, php-format
 msgid "%s plugins successfully installed."
 msgstr ""
 
 #. translators: %s: Number of failed installs
 #: includes/admin/views/html-admin-page-form-templates.php:171
+#, php-format
 msgid "%s install failed."
 msgstr ""
 
 #. translators: %s: Number of failed installs
 #: includes/admin/views/html-admin-page-form-templates.php:176
+#, php-format
 msgid "%s installs failed."
 msgstr ""
 
@@ -5568,6 +5630,7 @@ msgstr ""
 
 #. translators: %1$s HTML span tag. translators: %2$s HTML span closing tag.
 #: includes/admin/views/html-deactivation-popup.php:42
+#, php-format
 msgid "Could you please share why you are deactivating %1$sUser Registration%2$s plugin?"
 msgstr ""
 
@@ -5683,6 +5746,7 @@ msgstr ""
 
 #. Translators: 1: Block name
 #: includes/blocks/block-types/class-ur-block-abstract.php:74
+#, php-format
 msgid "Metadata file for %s block does not exist."
 msgstr ""
 
@@ -5777,6 +5841,7 @@ msgstr ""
 #: includes/class-ur-ajax.php:307
 #: includes/class-ur-form-handler.php:133
 #: includes/class-ur-form-handler.php:269
+#, php-format
 msgid "Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email."
 msgstr ""
 
@@ -5784,6 +5849,7 @@ msgstr ""
 #: includes/class-ur-ajax.php:324
 #: includes/functions-ur-template.php:726
 #: includes/functions-ur-template.php:2015
+#, php-format
 msgid "There is a pending change of your email to <code>%1$s</code>. <a href=\"%2$s\">Cancel</a>"
 msgstr ""
 
@@ -5814,6 +5880,7 @@ msgstr ""
 
 #. translators: %s - WP mail from name
 #: includes/class-ur-ajax.php:538
+#, php-format
 msgid "Test email from %s"
 msgstr ""
 
@@ -5822,6 +5889,7 @@ msgid "Test email was sent successfully! Please check your inbox to make sure it
 msgstr ""
 
 #: includes/class-ur-ajax.php:558
+#, php-format
 msgid "Test email was unsuccessful!. %s"
 msgstr ""
 
@@ -5934,6 +6002,7 @@ msgstr ""
 
 #. translators: %s - Integration tab url
 #: includes/class-ur-ajax.php:1405
+#, php-format
 msgid "Seems like you haven't added the reCAPTCHA Keys. <a href=\"%s\" >Add Now.</a>"
 msgstr ""
 
@@ -5990,6 +6059,7 @@ msgid "Insufficient Data"
 msgstr ""
 
 #: includes/class-ur-ajax.php:1871
+#, php-format
 msgid "Payment Setting for %s has been saved successfully."
 msgstr ""
 
@@ -5998,6 +6068,7 @@ msgid "You do not have permission to edit captcha settings."
 msgstr ""
 
 #: includes/class-ur-ajax.php:1909
+#, php-format
 msgid "Captcha Setting for %s has been saved successfully."
 msgstr ""
 
@@ -6017,6 +6088,7 @@ msgid "Invalid payment method."
 msgstr ""
 
 #: includes/class-ur-ajax.php:2002
+#, php-format
 msgid "Payment method settings for %s have been reset successfully."
 msgstr ""
 
@@ -6025,6 +6097,7 @@ msgid "Invalid captcha type."
 msgstr ""
 
 #: includes/class-ur-ajax.php:2090
+#, php-format
 msgid "Captcha keys for %s have been reset successfully."
 msgstr ""
 
@@ -6043,6 +6116,7 @@ msgstr ""
 
 #: includes/class-ur-ajax.php:2178
 #: modules/membership/includes/AJAX.php:2627
+#, php-format
 msgid "%1$s is not currently supported by %2$s."
 msgstr ""
 
@@ -6140,34 +6214,42 @@ msgid "Page validation successful."
 msgstr ""
 
 #: includes/class-ur-cache-helper.php:87
+#, php-format
 msgid "In order for <strong>database caching</strong> to work with User Registration you must add %1$s to the \"Ignored Query Strings\" option in <a href=\"%2$s\">W3 Total Cache settings</a>."
 msgstr ""
 
 #: includes/class-ur-captcha-conflict-manager.php:148
+#, php-format
 msgid "Removing WPForms captcha script: %s"
 msgstr ""
 
 #: includes/class-ur-captcha-conflict-manager.php:169
+#, php-format
 msgid "Removing Contact Form 7 captcha script: %s"
 msgstr ""
 
 #: includes/class-ur-captcha-conflict-manager.php:191
+#, php-format
 msgid "Removing Contact Form 7 Simple reCAPTCHA script: %s"
 msgstr ""
 
 #: includes/class-ur-captcha-conflict-manager.php:212
+#, php-format
 msgid "Removing Gravity Forms captcha script: %s"
 msgstr ""
 
 #: includes/class-ur-captcha-conflict-manager.php:233
+#, php-format
 msgid "Removing WooCommerce captcha script: %s"
 msgstr ""
 
 #: includes/class-ur-captcha-conflict-manager.php:254
+#, php-format
 msgid "Removing Elementor captcha script: %s"
 msgstr ""
 
 #: includes/class-ur-captcha-conflict-manager.php:290
+#, php-format
 msgid "Removing generic captcha script: %s (src: %s)"
 msgstr ""
 
@@ -6250,6 +6332,7 @@ msgstr ""
 #: includes/class-ur-email-confirmation.php:453
 #: includes/class-ur-user-approval.php:272
 #: includes/class-ur-user-approval.php:316
+#, php-format
 msgid "Your account is still pending approval. Verify your email by clicking on the link sent to your email. %s"
 msgstr ""
 
@@ -6384,27 +6467,33 @@ msgid "Thanks for confirming your erasure request."
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:96
+#, php-format
 msgid "The password must have minimum length of %d characters"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:103
+#, php-format
 msgid "and contain at least %d uppercase letters"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:113
 #: includes/class-ur-frontend-scripts.php:114
+#, php-format
 msgid "and contain at least %d number"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:124
+#, php-format
 msgid "and contain at least %d special character"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:125
+#, php-format
 msgid "and contain at least %d special characters"
 msgstr ""
 
 #: includes/class-ur-frontend-scripts.php:134
+#, php-format
 msgid "and should only have %d repetitive letters at max"
 msgstr ""
 
@@ -6519,11 +6608,13 @@ msgid "Default Group"
 msgstr ""
 
 #: includes/class-ur-logger.php:62
+#, php-format
 msgid "The provided handler <code>%1$s</code> does not implement UR_Log_Handler_Interface."
 msgstr ""
 
 #. translators: %s - Log Level
 #: includes/class-ur-logger.php:160
+#, php-format
 msgid "UR_Logger::log was called with an invalid level \"%s\"."
 msgstr ""
 
@@ -6532,31 +6623,37 @@ msgid "Deactivate License Key"
 msgstr ""
 
 #: includes/class-ur-plugin-updater.php:367
+#, php-format
 msgid "The provided license key expired on %1$s. Please <a href=\"%2$s\" rel=\"noreferrer noopener\" target=\"_blank\">renew your license key</a>."
 msgstr ""
 
 #. translators: %s: Contact Support URL
 #: includes/class-ur-plugin-updater.php:372
+#, php-format
 msgid "The provided license key has been disabled. Please <a href=\"%s\" rel=\"noreferrer noopener\" target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
 #. translators: %s: Account Page URL
 #: includes/class-ur-plugin-updater.php:377
+#, php-format
 msgid "The provided license is invalid. Please <a href=\"%s\" rel=\"noreferrer noopener\" target=\"_blank\">visit your account page</a> and verify it."
 msgstr ""
 
 #. translators: %s: Account Page URL
 #: includes/class-ur-plugin-updater.php:383
+#, php-format
 msgid "The provided license is not active for this URL. Please <a href=\"%s\" rel=\"noreferrer noopener\" target=\"_blank\">visit your account page</a> to manage your license key URLs."
 msgstr ""
 
 #. translators: %s: Plugin Name
 #: includes/class-ur-plugin-updater.php:389
+#, php-format
 msgid "This appears to be an invalid license key for <strong>%s</strong>."
 msgstr ""
 
 #. translators: %s: Pricing Page URL
 #: includes/class-ur-plugin-updater.php:394
+#, php-format
 msgid "The provided license key has reached its activation limit. Please <a href=\"%s\" rel=\"noreferrer noopener\" target=\"_blank\">View possible upgrades</a> now."
 msgstr ""
 
@@ -6566,11 +6663,13 @@ msgstr ""
 
 #. translators: %s: Contact Support URL
 #: includes/class-ur-plugin-updater.php:403
+#, php-format
 msgid "The provided license key could not be found. Please <a href=\"%s\" rel=\"noreferrer noopener\" target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
 #. translators: %s: Error Message
 #: includes/class-ur-plugin-updater.php:408
+#, php-format
 msgid "<strong>Activation error:</strong> %s"
 msgstr ""
 
@@ -6690,6 +6789,7 @@ msgstr ""
 
 #. translators: %s - Form name.
 #: includes/class-ur-preview.php:125
+#, php-format
 msgid "%s &ndash; Preview"
 msgstr ""
 
@@ -6896,11 +6996,13 @@ msgstr ""
 
 #. translators: %s - Link to login form.
 #: includes/class-ur-shortcodes.php:205
+#, php-format
 msgid "Please Login to edit password. <a href=\"%s\">Login Here?</a>"
 msgstr ""
 
 #. translators: %s - Link to login form.
 #: includes/class-ur-shortcodes.php:255
+#, php-format
 msgid "Please Login to edit profile. <a href=\"%s\">Login Here?</a>"
 msgstr ""
 
@@ -6909,6 +7011,7 @@ msgstr ""
 #: includes/class-ur-shortcodes.php:317
 #: includes/class-ur-shortcodes.php:438
 #: includes/functions-ur-core.php:5125
+#, php-format
 msgid "You are currently logged in as %1$1s. %2$2s"
 msgstr ""
 
@@ -7267,6 +7370,7 @@ msgstr ""
 
 #. translators: %s - Redirect URL.
 #: includes/class-ur-user-approval.php:367
+#, php-format
 msgid "Your account is still pending payment. Process the payment by clicking on this: <a id=\"payment-link\" href=\"%s\">link</a>"
 msgstr ""
 
@@ -7313,6 +7417,7 @@ msgstr ""
 
 #. translators: %s - validation message
 #: includes/form/class-ur-form-field-checkbox.php:103
+#, php-format
 msgid "Only %d options can be selected."
 msgstr ""
 
@@ -8341,11 +8446,13 @@ msgstr ""
 
 #. translators: %s - validation message
 #: includes/form/class-ur-form-field-date.php:176
+#, php-format
 msgid "Please select a date after %s."
 msgstr ""
 
 #. translators: %s - validation message
 #: includes/form/class-ur-form-field-date.php:206
+#, php-format
 msgid "Please select a date before %s"
 msgstr ""
 
@@ -8362,6 +8469,7 @@ msgstr ""
 #: includes/form/class-ur-form-field-nickname.php:83
 #: includes/form/class-ur-form-field-text.php:94
 #: includes/form/class-ur-form-field-textarea.php:84
+#, php-format
 msgid "Please enter a value of length less than %d."
 msgstr ""
 
@@ -8373,6 +8481,7 @@ msgstr ""
 #: includes/form/class-ur-form-field-nickname.php:98
 #: includes/form/class-ur-form-field-text.php:109
 #: includes/form/class-ur-form-field-textarea.php:99
+#, php-format
 msgid "Please enter number of words less than %d."
 msgstr ""
 
@@ -8384,6 +8493,7 @@ msgstr ""
 #: includes/form/class-ur-form-field-nickname.php:123
 #: includes/form/class-ur-form-field-text.php:134
 #: includes/form/class-ur-form-field-textarea.php:124
+#, php-format
 msgid "Please enter a value of length at least %d."
 msgstr ""
 
@@ -8395,6 +8505,7 @@ msgstr ""
 #: includes/form/class-ur-form-field-nickname.php:138
 #: includes/form/class-ur-form-field-text.php:149
 #: includes/form/class-ur-form-field-textarea.php:139
+#, php-format
 msgid "Please enter number of words at least %d."
 msgstr ""
 
@@ -8425,16 +8536,19 @@ msgstr ""
 
 #. translators: %s - validation message
 #: includes/form/class-ur-form-field-number.php:81
+#, php-format
 msgid "Please enter a value less than %d"
 msgstr ""
 
 #. translators: %s - validation message
 #: includes/form/class-ur-form-field-number.php:101
+#, php-format
 msgid "Please enter a value greater than %d"
 msgstr ""
 
 #. translators: %s - validation message
 #: includes/form/class-ur-form-field-number.php:121
+#, php-format
 msgid "Please enter multiple of %d"
 msgstr ""
 
@@ -8445,6 +8559,7 @@ msgstr ""
 
 #. translators: %s - validation message
 #: includes/form/class-ur-form-field-password.php:80
+#, php-format
 msgid "Please enter a password of length less than %d"
 msgstr ""
 
@@ -8974,6 +9089,7 @@ msgid "User insertion failed"
 msgstr ""
 
 #: includes/frontend/class-ur-frontend-form-handler.php:142
+#, php-format
 msgid "%s"
 msgstr ""
 
@@ -9376,6 +9492,7 @@ msgstr ""
 
 #. translators: 1: Link tag open 2:: Link content 3:: Link tag close
 #: includes/functions-ur-core.php:1454
+#, php-format
 msgid "Enable %1$s %2$s Captcha %3$s Support"
 msgstr ""
 
@@ -9487,6 +9604,7 @@ msgstr ""
 
 #. translators: %s: Class
 #: includes/functions-ur-core.php:1838
+#, php-format
 msgid "The class <code>%s</code> provided by user_registration_logging_class filter must implement <code>UR_Logger_Interface</code>."
 msgstr ""
 
@@ -9518,6 +9636,7 @@ msgstr ""
 #: includes/functions-ur-core.php:3245
 #: includes/functions-ur-core.php:3250
 #: includes/functions-ur-core.php:3263
+#, php-format
 msgid "<strong>Activation error:</strong> %1$s"
 msgstr ""
 
@@ -9665,17 +9784,20 @@ msgstr ""
 #. translators: %s: License Plan Name.
 #: includes/functions-ur-core.php:4450
 #: includes/functions-ur-core.php:4550
+#, php-format
 msgid "You have been subscribed to %s plan. Please upgrade to higher plans to use this feature."
 msgstr ""
 
 #. translators: %s: Addon Name.
 #: includes/functions-ur-core.php:4470
 #: includes/functions-ur-core.php:4569
+#, php-format
 msgid "Please %1$s %2$s addon to use this feature."
 msgstr ""
 
 #: includes/functions-ur-core.php:4480
 #: includes/functions-ur-core.php:4579
+#, php-format
 msgid "%s Addon"
 msgstr ""
 
@@ -9709,6 +9831,7 @@ msgstr ""
 
 #: includes/functions-ur-core.php:4640
 #: includes/functions-ur-core.php:8526
+#, php-format
 msgid "The password you entered for the %label% %email% is incorrect."
 msgstr ""
 
@@ -9843,6 +9966,7 @@ msgstr ""
 
 #. translators: %s: Status Log URL
 #: includes/functions-ur-core.php:7509
+#, php-format
 msgid "Please check the `ur_mail_logs` log under <a target=\"_blank\" href= \"%s\"> Status Log </a> section."
 msgstr ""
 
@@ -10081,6 +10205,7 @@ msgid "Enable Captcha"
 msgstr ""
 
 #: includes/functions-ur-core.php:8656
+#, php-format
 msgid "Enable %1$s %2$s Captcha %3$s support"
 msgstr ""
 
@@ -10887,6 +11012,7 @@ msgstr ""
 
 #: includes/Functions/CoreFunctions.php:931
 #: includes/Functions/CoreFunctions.php:1024
+#, php-format
 msgid "%s Rule"
 msgstr ""
 
@@ -10896,6 +11022,7 @@ msgid "Membership Access Rule"
 msgstr ""
 
 #: includes/libraries/wp-background-process.php:430
+#, php-format
 msgid "Every %d minutes"
 msgstr ""
 
@@ -11029,6 +11156,7 @@ msgid " Page"
 msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:680
+#, php-format
 msgid "Form Id: %s"
 msgstr ""
 
@@ -11061,6 +11189,7 @@ msgid "Please provide at least one membership."
 msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:913
+#, php-format
 msgid "Invalid membership type: %1$s. Only %2$s memberships are allowed based on your selection."
 msgstr ""
 
@@ -11155,7 +11284,7 @@ msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-gutenberg-blocks.php:304
 #: modules/content-restriction/admin/class-urcr-admin-meta-boxes.php:235
-#: modules/content-restriction/class-urcr-frontend.php:1283
+#: modules/content-restriction/class-urcr-frontend.php:1264
 #: modules/content-restriction/class-urcr-shortcodes.php:55
 msgid "This content is restricted!"
 msgstr ""
@@ -11211,6 +11340,7 @@ msgstr ""
 
 #. translators: 1: Failed Addon Names
 #: includes/RestApi/controllers/version1/class-ur-modules.php:490
+#, php-format
 msgid "%1$s activation failed. Please try again sometime later."
 msgstr ""
 
@@ -11251,10 +11381,12 @@ msgid "Please enter the valid license key."
 msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-plugin-status.php:273
+#, php-format
 msgid "%1$s cannot be activated at the moment. %2$s"
 msgstr ""
 
 #: includes/RestApi/controllers/version1/class-ur-plugin-status.php:284
+#, php-format
 msgid "%1$s activated successfully."
 msgstr ""
 
@@ -11266,6 +11398,7 @@ msgstr ""
 #. translators: %s - Link to logout.
 #: includes/shortcodes/class-ur-shortcode-login.php:91
 #: modules/membership/includes/Admin/Views/Shortcode/MemberRegistrationFormShortcode.php:65
+#, php-format
 msgid "You are already logged in. <a href=\"%s\">Log out?</a>"
 msgstr ""
 
@@ -11311,31 +11444,38 @@ msgstr ""
 
 #. translators: %s - Field Label
 #: includes/validation/class-ur-form-validation.php:476
+#, php-format
 msgid "<strong>%s</strong> is a required field."
 msgstr ""
 
 #: includes/validation/class-ur-setting-validation.php:209
+#, php-format
 msgid "Please enter a value greater than 0 for %s."
 msgstr ""
 
 #: includes/validation/class-ur-setting-validation.php:210
+#, php-format
 msgid "Please enter an integer value for %s."
 msgstr ""
 
 #: includes/validation/class-ur-setting-validation.php:211
+#, php-format
 msgid "Please enter a numeric value for %s."
 msgstr ""
 
 #: includes/validation/class-ur-setting-validation.php:212
+#, php-format
 msgid "Please enter a valid url or path for %s."
 msgstr ""
 
 #: includes/validation/class-ur-setting-validation.php:213
+#, php-format
 msgid "Please enter a valid email for %s."
 msgstr ""
 
 #. translators: %s: Field Label.
 #: includes/validation/class-ur-setting-validation.php:236
+#, php-format
 msgid "Please enter a valid value for %s."
 msgstr ""
 
@@ -11365,21 +11505,25 @@ msgstr ""
 
 #. translators: %d - Size
 #: includes/validation/class-ur-validation.php:148
+#, php-format
 msgid "Please enter value of length less than %d"
 msgstr ""
 
 #. translators: %d - Size
 #: includes/validation/class-ur-validation.php:166
+#, php-format
 msgid "Please enter value of length at least %d"
 msgstr ""
 
 #. translators: %d - Size
 #: includes/validation/class-ur-validation.php:184
+#, php-format
 msgid "Please enter number of words less than %d"
 msgstr ""
 
 #. translators: %d - Size
 #: includes/validation/class-ur-validation.php:202
+#, php-format
 msgid "Please enter number of words at least %d"
 msgstr ""
 
@@ -11674,6 +11818,7 @@ msgid "Membership ID is required"
 msgstr ""
 
 #: modules/content-restriction/admin/settings/class-urcr-settings-file.php:65
+#, php-format
 msgid "Go to <a href=\"%s\">Content Rules page</a> for advanced restrictions"
 msgstr ""
 
@@ -11682,6 +11827,7 @@ msgid "Global Restriction Settings"
 msgstr ""
 
 #: modules/content-restriction/admin/settings/class-urcr-settings-file.php:86
+#, php-format
 msgid "These settings affect whole site restriction as well as individual page/post restriction if enabled. <a href=\"%1$s\" target=\"_blank\" style=\"text-decoration: underline;\" >Learn More.</a>"
 msgstr ""
 
@@ -11863,6 +12009,7 @@ msgid "Untitled Rule"
 msgstr ""
 
 #: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:421
+#, php-format
 msgid "Successfully %s the Access Rule."
 msgstr ""
 
@@ -12054,15 +12201,15 @@ msgstr ""
 msgid "Masteriyo Courses"
 msgstr ""
 
-#: modules/masteriyo/includes/Frontend.php:143
+#: modules/masteriyo/includes/Frontend.php:153
 msgid "My Courses"
 msgstr ""
 
-#: modules/masteriyo/includes/Helper.php:143
+#: modules/masteriyo/includes/Helper.php:157
 msgid "Lifetime"
 msgstr ""
 
-#: modules/masteriyo/includes/Hooks.php:197
+#: modules/masteriyo/includes/Hooks.php:206
 msgid "This course is not associated with any membership."
 msgstr ""
 
@@ -12324,7 +12471,12 @@ msgstr ""
 
 #. translators: Hidden accessibility text. %s: User login.
 #: modules/membership/includes/Admin/Members/MembersListTable.php:183
+#, php-format
 msgid "Select %s"
+msgstr ""
+
+#: modules/membership/includes/Admin/Members/MembersListTable.php:287
+msgid "Search Members ..."
 msgstr ""
 
 #: modules/membership/includes/Admin/Members/MembersListTable.php:301
@@ -12571,7 +12723,7 @@ msgid "Group Name"
 msgstr ""
 
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:197
-msgid "Search Membership Groups"
+msgid "Search Membership Group"
 msgstr ""
 
 #: modules/membership/includes/Admin/Repositories/SubscriptionRepository.php:47
@@ -12609,6 +12761,7 @@ msgid "Payment Approved!"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:286
+#, php-format
 msgid "Hi <b><i>%1$s</i></b>, Your payment of amount %2$s for the membership: <b>%3$s</b> has been approved by admin."
 msgstr ""
 
@@ -12647,14 +12800,17 @@ msgid "Congratulations! Registration completed"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:588
+#, php-format
 msgid "Hi, %s"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:589
+#, php-format
 msgid "Account created successfully under membership <b><i>%s</i></b>."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/EmailService.php:590
+#, php-format
 msgid "<b>Username: </b><i>%1$s</i> <b>Password: </b><i>%2$s</i> "
 msgstr ""
 
@@ -12696,17 +12852,21 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Services/MembershipService.php:734
 #: modules/membership/includes/Admin/Services/MembershipService.php:795
+#, php-format
 msgid "You already have a membership plan upgrade initiated from %1$s to %2$s. Please complete the process and try again."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/MembershipService.php:749
-#: modules/membership/includes/Admin/Services/MembershipService.php:804
-msgid "You cannot upgrade to selected membership plan. Please contact site administrator."
+msgid "You aren’t eligible to upgrade to this membership tier. Please contact site administrator"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/MembershipService.php:770
 #: modules/membership/includes/Admin/Services/MembershipService.php:869
 msgid "You already have purchased this membership plan."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/MembershipService.php:804
+msgid "You aren’t eligible to upgrade to this membership tier. Please contact site administrator."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/MembershipService.php:840
@@ -12757,10 +12917,12 @@ msgid "Invalid membership type (Free)."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/OrderService.php:74
+#, php-format
 msgid "%s created order for %s of %s"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/OrderService.php:76
+#, php-format
 msgid "%s created order for %s"
 msgstr ""
 
@@ -12839,40 +13001,41 @@ msgstr ""
 msgid "Stripe subscription failed, price or product not found"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1040
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1050
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1057
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1067
 msgid "Subscription reactivated successfully."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1075
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1092
 msgid "Error reactivating the stripe subscription."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1169
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1186
 msgid "Generated with stripe webhook"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1479
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1496
 msgid "Subscription ID not found"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1508
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1525
 msgid "Subscription not found in Stripe"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1545
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1562
 msgid "Subscription payment retried successfully"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1574
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1591
 msgid "Subscription retry did not resolve the issue"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1590
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1607
 msgid "Subscription is already active"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1601
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1618
+#, php-format
 msgid "Subscription status is %s and cannot be retried"
 msgstr ""
 
@@ -12920,14 +13083,17 @@ msgid "No memberships found to expire for date: "
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:973
+#, php-format
 msgid "Membership expired for user %1$s (ID: %2$d) - Subscription ID: %3$d"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:995
+#, php-format
 msgid "Failed to expire membership for user %1$s (ID: %2$d) - Subscription ID: %3$d"
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:1007
+#, php-format
 msgid "Membership expiration check completed. %1$d memberships expired for users: %2$s"
 msgstr ""
 
@@ -12952,7 +13118,7 @@ msgid "Created At"
 msgstr ""
 
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:217
-msgid "Search by id or email or username"
+msgid "Search Subscription"
 msgstr ""
 
 #: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:160
@@ -13276,6 +13442,7 @@ msgstr ""
 
 #. translators: %d Subscription id
 #: modules/membership/includes/Admin/Views/subscription-edit.php:102
+#, php-format
 msgid "Edit Subscription #%d"
 msgstr ""
 
@@ -13291,16 +13458,19 @@ msgstr ""
 
 #. translators: %1$d: number of days, %2$s: formatted date
 #: modules/membership/includes/Admin/Views/subscription-edit.php:152
+#, php-format
 msgid "%1$d days remaining. Converts to paid on %2$s"
 msgstr ""
 
 #. translators: %s: formatted date
 #: modules/membership/includes/Admin/Views/subscription-edit.php:159
+#, php-format
 msgid "Trial ended. Converts to paid on %s"
 msgstr ""
 
 #. translators: %d Subscription id
 #: modules/membership/includes/Admin/Views/subscription-edit.php:177
+#, php-format
 msgid "Subscription #%d"
 msgstr ""
 
@@ -13703,11 +13873,13 @@ msgstr ""
 
 #. translators: %s: Current user display name
 #: modules/membership/includes/AJAX.php:2323
+#, php-format
 msgid "Recurring subscription created by %s"
 msgstr ""
 
 #. translators: %s: Current user display name
 #: modules/membership/includes/AJAX.php:2328
+#, php-format
 msgid "One-time membership created by %s"
 msgstr ""
 
@@ -13799,35 +13971,35 @@ msgstr ""
 
 #: modules/membership/includes/Emails/Admin/UR_Settings_Membership_Cancellation_Admin_Email.php:117
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tHi Admin,\r\n"
-"\t\t\t</p>\r\n"
-"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tA member has cancelled their membership.\r\n"
-"\t\t\t</p>\r\n"
-"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t<strong>Member Details:</strong>\r\n"
-"\t\t\t\t<ul>\r\n"
-"\t\t\t\t<li style=\"margin-bottom: 10px;\">\r\n"
-"\t\t\t\t\t<strong>Name</strong>: {{username}}\r\n"
-"\t\t\t\t</li>\r\n"
-"\t\t\t\t<li style=\"margin-bottom: 10px;\">\r\n"
-"\t\t\t\t\t<strong>Email</strong>: {{email}}\r\n"
-"\t\t\t\t</li>\r\n"
-"\t\t\t\t<li style=\"margin-bottom: 10px;\">\r\n"
-"\t\t\t\t\t<strong>Membership Plan</strong>: {{membership_plan_name}}\r\n"
-"\t\t\t\t</li>\r\n"
-"\t\t\t\t<li style=\"margin-bottom: 10px;\">\r\n"
-"\t\t\t\t\t<strong>Cancellation Date</strong>: {{membership_cancellation_date}}\r\n"
-"\t\t\t\t</li>\r\n"
-"\t\t\t\t<li style=\"margin-bottom: 10px;\">\r\n"
-"\t\t\t\t\t<strong>Access Expires</strong>: {{membership_end_date}}\r\n"
-"\t\t\t\t</li>\r\n"
-"\t\t\t\t</ul>\r\n"
-"\t\t\t</p>\r\n"
-"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\tThanks\r\n"
-"\t\t\t</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tHi Admin,\n"
+"\t\t\t</p>\n"
+"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tA member has cancelled their membership.\n"
+"\t\t\t</p>\n"
+"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t<strong>Member Details:</strong>\n"
+"\t\t\t\t<ul>\n"
+"\t\t\t\t<li style=\"margin-bottom: 10px;\">\n"
+"\t\t\t\t\t<strong>Name</strong>: {{username}}\n"
+"\t\t\t\t</li>\n"
+"\t\t\t\t<li style=\"margin-bottom: 10px;\">\n"
+"\t\t\t\t\t<strong>Email</strong>: {{email}}\n"
+"\t\t\t\t</li>\n"
+"\t\t\t\t<li style=\"margin-bottom: 10px;\">\n"
+"\t\t\t\t\t<strong>Membership Plan</strong>: {{membership_plan_name}}\n"
+"\t\t\t\t</li>\n"
+"\t\t\t\t<li style=\"margin-bottom: 10px;\">\n"
+"\t\t\t\t\t<strong>Cancellation Date</strong>: {{membership_cancellation_date}}\n"
+"\t\t\t\t</li>\n"
+"\t\t\t\t<li style=\"margin-bottom: 10px;\">\n"
+"\t\t\t\t\t<strong>Access Expires</strong>: {{membership_end_date}}\n"
+"\t\t\t\t</li>\n"
+"\t\t\t\t</ul>\n"
+"\t\t\t</p>\n"
+"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\tThanks\n"
+"\t\t\t</p>\n"
 "\t\t\t"
 msgstr ""
 
@@ -13846,23 +14018,23 @@ msgstr ""
 
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Cancellation_User_Email.php:117
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tHi {{username}},</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tYour {{membership_plan_name}} membership has been cancelled as requested.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tYou'll continue to have access to your member benefits until {{membership_end_date}}.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tIf you change your mind, you can reactivate your membership anytime from your user dashboard.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\tWe're sorry to see you go, but you're always welcome back.\r\n"
-"\t\t\t\t</p>\r\n"
-"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tThanks\r\n"
-"\t\t\t\t</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tHi {{username}},</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tYour {{membership_plan_name}} membership has been cancelled as requested.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tYou'll continue to have access to your member benefits until {{membership_end_date}}.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tIf you change your mind, you can reactivate your membership anytime from your user dashboard.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\tWe're sorry to see you go, but you're always welcome back.\n"
+"\t\t\t\t</p>\n"
+"\t\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tThanks\n"
+"\t\t\t\t</p>\n"
 "\t\t\t\t"
 msgstr ""
 
@@ -13892,13 +14064,13 @@ msgstr ""
 
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Ended_User_Email.php:117
 msgid ""
-"<p style=\"margin:0 0 20px 0; color:#000000; font-size:16px; line-height:1.6;\">Hi {{username}},</p>\r\n"
-"\t\t\t<p style=\"margin:0 0 20px 0; color:#000000; font-size:16px; line-height:1.6;\">Your {{membership_plan_name}} membership expired on <strong>{{membership_end_date}}</strong>.</p>\r\n"
-"\t\t\t<p style=\"margin:0 0 20px 0; color:#000000; font-size:16px; line-height:1.6;\">To restore your access and continue enjoying your member benefits, renew your membership: <br>{{membership_renewal_link}}</p>\r\n"
-"\t\t\t<p style=\"margin:0 0 20px 0; color:#000000; font-size:16px; line-height:1.6;\">If you have questions or need assistance, please let us know.</p>\r\n"
-"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tThanks\r\n"
-"\t\t\t\t</p>\r\n"
+"<p style=\"margin:0 0 20px 0; color:#000000; font-size:16px; line-height:1.6;\">Hi {{username}},</p>\n"
+"\t\t\t<p style=\"margin:0 0 20px 0; color:#000000; font-size:16px; line-height:1.6;\">Your {{membership_plan_name}} membership expired on <strong>{{membership_end_date}}</strong>.</p>\n"
+"\t\t\t<p style=\"margin:0 0 20px 0; color:#000000; font-size:16px; line-height:1.6;\">To restore your access and continue enjoying your member benefits, renew your membership: <br>{{membership_renewal_link}}</p>\n"
+"\t\t\t<p style=\"margin:0 0 20px 0; color:#000000; font-size:16px; line-height:1.6;\">If you have questions or need assistance, please let us know.</p>\n"
+"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tThanks\n"
+"\t\t\t\t</p>\n"
 "\t\t\t"
 msgstr ""
 
@@ -13958,16 +14130,16 @@ msgstr ""
 
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Expiring_Soon_User_Email.php:148
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">Hi {{username}},</p>\r\n"
-"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">Your {{membership_plan_name}} membership expires on <strong>{{membership_end_date}}</strong>. </p>\r\n"
-"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">To continue accessing your member benefits, renew your membership:\r\n"
-"\t\t\t<br>\r\n"
-"\t\t\t<a href=\"{{renewal_link}}\" rel=\"noreferrer noopener\" target=\"_blank\" style=\"color: #4A90E2; text-decoration: none; font-size: 16px;\">Renew Now</a>\r\n"
-"\t\t\t</p>\r\n"
-"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">If you have questions about renewal, we're here to help. </p>\r\n"
-"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t\t\t\tThanks\r\n"
-"\t\t\t\t</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">Hi {{username}},</p>\n"
+"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">Your {{membership_plan_name}} membership expires on <strong>{{membership_end_date}}</strong>. </p>\n"
+"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">To continue accessing your member benefits, renew your membership:\n"
+"\t\t\t<br>\n"
+"\t\t\t<a href=\"{{renewal_link}}\" rel=\"noreferrer noopener\" target=\"_blank\" style=\"color: #4A90E2; text-decoration: none; font-size: 16px;\">Renew Now</a>\n"
+"\t\t\t</p>\n"
+"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">If you have questions about renewal, we're here to help. </p>\n"
+"\t\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t\t\t\tThanks\n"
+"\t\t\t\t</p>\n"
 "\t\t\t"
 msgstr ""
 
@@ -13990,27 +14162,27 @@ msgstr ""
 
 #: modules/membership/includes/Emails/User/UR_Settings_Membership_Renewal_Reminder_User_Email.php:148
 msgid ""
-"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">Hi {{username}},</p>\r\n"
-"\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">Your {{membership_plan_name}} membership will renew automatically on {{renewal_date}}.</p>\r\n"
-"\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\"><strong>Renewal Details:</strong>\r\n"
-"\t\t<ul>\r\n"
-"\t\t<li style=\"margin-bottom: 10px;\">\r\n"
-"\t\t<strong>Amount</strong>: {{renewal_amount}}\r\n"
-"\t\t</li>\r\n"
-"\t\t<li style=\"margin-bottom: 10px;\">\r\n"
-"\t\t<strong>Payment Method</strong>: {{payment_method_last}}\r\n"
-"\t\t</li>\r\n"
-"\t\t</ul>\r\n"
-"\t\t</p>\r\n"
-"\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\t<strong>Note:</strong> Automatic renewal does not apply to bank transfer payments. In such cases, manual renewal is required.\r\n"
-"\t\t</p>\r\n"
-"\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">To update your payment method or manage your membership:<br>\r\n"
-"\t\t{{manage_membership_link}}\r\n"
-"\t\t</p>\r\n"
-"\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\r\n"
-"\t\tThanks\r\n"
-"\t\t</p>\r\n"
+"<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">Hi {{username}},</p>\n"
+"\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">Your {{membership_plan_name}} membership will renew automatically on {{renewal_date}}.</p>\n"
+"\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\"><strong>Renewal Details:</strong>\n"
+"\t\t<ul>\n"
+"\t\t<li style=\"margin-bottom: 10px;\">\n"
+"\t\t<strong>Amount</strong>: {{renewal_amount}}\n"
+"\t\t</li>\n"
+"\t\t<li style=\"margin-bottom: 10px;\">\n"
+"\t\t<strong>Payment Method</strong>: {{payment_method_last}}\n"
+"\t\t</li>\n"
+"\t\t</ul>\n"
+"\t\t</p>\n"
+"\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\t<strong>Note:</strong> Automatic renewal does not apply to bank transfer payments. In such cases, manual renewal is required.\n"
+"\t\t</p>\n"
+"\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">To update your payment method or manage your membership:<br>\n"
+"\t\t{{manage_membership_link}}\n"
+"\t\t</p>\n"
+"\t\t<p style=\"margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;\">\n"
+"\t\tThanks\n"
+"\t\t</p>\n"
 "\t\t"
 msgstr ""
 
@@ -14322,6 +14494,7 @@ msgstr ""
 
 #. translators: %d: User id
 #: modules/payment-history/AJAX.php:276
+#, php-format
 msgid "Cannot find user with id %d."
 msgstr ""
 
@@ -14336,6 +14509,7 @@ msgstr ""
 
 #. translators: %d: Order id
 #: modules/payment-history/AJAX.php:327
+#, php-format
 msgid "Cannot find record of %d order id."
 msgstr ""
 
@@ -14361,6 +14535,7 @@ msgstr ""
 
 #. translators: %s: trial duration
 #: modules/payment-history/AJAX.php:418
+#, php-format
 msgid "Trial period cannot exceed %s."
 msgstr ""
 
@@ -14457,11 +14632,13 @@ msgstr ""
 
 #. translators: %d Order id
 #: modules/payment-history/Views/payment-edit.php:133
+#, php-format
 msgid "Edit Payment #%d"
 msgstr ""
 
 #. translators: %d Order id
 #: modules/payment-history/Views/payment-edit.php:166
+#, php-format
 msgid "Payment #%d"
 msgstr ""
 
@@ -14581,15 +14758,18 @@ msgstr ""
 
 #. translators: %s: Form Status.
 #: templates/form-registration.php:120
+#, php-format
 msgid "The form is in %s. Please contact your site administrator."
 msgstr ""
 
 #. translators: %s - registration Title.
 #: templates/form-registration.php:134
+#, php-format
 msgid "<span class=\"user-registration-registration-title\"> %s </span> </br>"
 msgstr ""
 
 #: templates/form-registration.php:135
+#, php-format
 msgid "<p class=\"user-registration-registration-description\"> %s </p>"
 msgstr ""
 
@@ -14736,10 +14916,12 @@ msgstr ""
 
 #. translators: %s - Login Title.
 #: templates/myaccount/form-login.php:171
+#, php-format
 msgid "<span class=\"user-registration-login-title\"> %s </span> </br>"
 msgstr ""
 
 #: templates/myaccount/form-login.php:172
+#, php-format
 msgid "<p class=\"user-registration-login-description\"> %s </p>"
 msgstr ""
 
@@ -14817,6 +14999,7 @@ msgstr ""
 
 #. translators: 1: error message 2: file name and path 3: line number
 #: user-registration.php:148
+#, php-format
 msgid "%1$s in %2$s on line %3$s"
 msgstr ""
 
@@ -16551,11 +16734,13 @@ msgstr ""
 
 #: chunks/dashboard.js:280
 #: src/dashboard/components/common/UsePluginInstallActivate.js:115
+#, js-format
 msgid "%s plugin installed and activated successfully"
 msgstr ""
 
 #: chunks/dashboard.js:280
 #: src/dashboard/components/common/UsePluginInstallActivate.js:65
+#, js-format
 msgid "%s plugin activated successfully"
 msgstr ""
 
@@ -16582,11 +16767,13 @@ msgstr ""
 
 #: chunks/dashboard.js:280
 #: src/dashboard/screens/Products/components/ProductCard.js:169
+#, js-format
 msgid "Are you sure? You want to activate %s plugin."
 msgstr ""
 
 #: chunks/dashboard.js:280
 #: src/dashboard/screens/Products/components/ProductCard.js:176
+#, js-format
 msgid "Are you sure? You want to install and activate %s plugin."
 msgstr ""
 
@@ -16639,11 +16826,13 @@ msgstr ""
 
 #: chunks/form_templates.js:1
 #: src/form-templates/components/PluginStatus.js:168
+#, js-format
 msgid "Failed to activate plugin: %s."
 msgstr ""
 
 #: chunks/form_templates.js:1
 #: src/form-templates/components/PluginStatus.js:186
+#, js-format
 msgid "Unable to activate %s."
 msgstr ""
 
@@ -16681,11 +16870,13 @@ msgstr ""
 
 #: chunks/form_templates.js:1
 #: src/form-templates/components/TemplateList.js:629
+#, js-format
 msgid "%s Requires License Upgrade"
 msgstr ""
 
 #: chunks/form_templates.js:1
 #: src/form-templates/components/TemplateList.js:636
+#, js-format
 msgid "%s is a Premium Template"
 msgstr ""
 
@@ -16887,6 +17078,7 @@ msgid "Next"
 msgstr ""
 
 #: src/dashboard/components/Header/Header.js:148
+#, js-format
 msgid "You are currently using User Registration & Membership %s"
 msgstr ""
 
