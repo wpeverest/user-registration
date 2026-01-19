@@ -254,6 +254,11 @@ class Frontend {
 			'i18n_close'                                   => __( 'Close', 'user-registration' ),
 			'i18n_cancel_membership_subtitle'              => __( 'Are you sure you want to cancel this membership permanently?', 'user-registration' ),
 			'i18n_sending_text'                            => __( 'Sending ...', 'user-registration' ),
+			// Payment processing overlay labels
+			'i18n_payment_processing_title'                => __( 'Processing Payment', 'user-registration' ),
+			'i18n_payment_processing_message'              => __( 'Please wait while we securely process your payment. Do not close this page.', 'user-registration' ),
+			'i18n_payment_completing_title'                => __( 'Completing Payment', 'user-registration' ),
+			'i18n_payment_completing_message'              => __( 'Your payment has been verified. Please wait while we complete your registration.', 'user-registration' ),
 		);
 	}
 

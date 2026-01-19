@@ -339,7 +339,7 @@ class StripeService {
 	}
 
 	public function update_order( $data ) {
-		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? '';
+		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? $data['payment_result']['id'] ?? '';
 		$payment_status         = sanitize_text_field( $data['payment_status'] );
 		$member_id              = absint( $_POST['member_id'] );
 		$membership_process     = urm_get_membership_process( $member_id );
@@ -458,7 +458,7 @@ class StripeService {
 				)
 			);
 
-			if ( ( $is_order_updated && 'paid' === $member_order['order_type'] ) || ( $is_order_updated && ! empty( $three_d_secure_2_source ) && 'subscription' === $member_order['order_type'] ) ) {
+			if ( $is_order_updated && in_array( $member_order['order_type'], array( 'paid', 'subscription' ), true ) ) {
 				$this->members_subscription_repository->update(
 					$member_subscription['ID'],
 					array(
@@ -916,8 +916,34 @@ class StripeService {
 				);
 
 				$this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
+
 				$response['subscription'] = $subscription;
 				$response['message']      = __( 'New member has been successfully created with successful stripe subscription.' );
+				$response['status']       = true;
+			} elseif ( 'incomplete' === $subscription_status ) {
+				PaymentGatewayLogging::log_general(
+					'stripe',
+					'Stripe subscription requires 3D Secure verification',
+					'notice',
+					array(
+						'subscription_id'     => $subscription->id,
+						'subscription_status' => $subscription_status,
+						'member_id'           => $member_id,
+						'membership_type'     => $membership_type,
+						'requires_action'     => true,
+					)
+				);
+
+				$this->members_subscription_repository->update(
+					$member_order['subscription_id'],
+					array(
+						'subscription_id' => sanitize_text_field( $subscription->id ),
+						'status'          => 'pending',
+					)
+				);
+
+				$response['subscription'] = $subscription;
+				$response['message']      = __( 'Payment requires additional verification.', 'user-registration' );
 				$response['status']       = true;
 			}
 
@@ -1386,7 +1412,6 @@ class StripeService {
 	 * @param string $product_id
 	 *
 	 * @since 4.4.2
-	 *
 	 */
 	public function check_exists_product_in_stripe( $product_id ) {
 		try {
@@ -1415,7 +1440,6 @@ class StripeService {
 	 * @param string $price_id
 	 *
 	 * @since 4.4.2
-	 *
 	 */
 	public function check_price_exists_in_stripe( $price_id ) {
 		try {
@@ -1437,10 +1461,9 @@ class StripeService {
 	 * Creates price for existing product if price_id not found.
 	 *
 	 * @param string $product_id
-	 * @param array $meta_data
+	 * @param array  $meta_data
 	 *
 	 * @since 4.4.2
-	 *
 	 */
 	public function create_stripe_price_for_existing_product( $product_id, $meta_data ) {
 		$currency = get_option( 'user_registration_payment_currency', 'USD' );
