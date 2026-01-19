@@ -344,14 +344,17 @@
 
 						if (listSelect.length) {
 							email_marketing_sync[val].integration_list_id =
-							listSelect.val();
+								listSelect.val();
 						}
 
-						if ( 'mailchimp' === val ) {
-							var tagSelect = form.find( "#ur_sync_email_marketing_mailchimp_tag_id" );
+						if ("mailchimp" === val) {
+							var tagSelect = form.find(
+								"#ur_sync_email_marketing_mailchimp_tag_id"
+							);
 
-							if ( tagSelect.length ) {
-								email_marketing_sync[val].list_tags = tagSelect.val();
+							if (tagSelect.length) {
+								email_marketing_sync[val].list_tags =
+									tagSelect.val();
 							}
 						}
 					}
@@ -1596,13 +1599,19 @@
 
 						$listContainer.append(response.data.html);
 
-						if ('mailchimp' === addon && response.data?.tag_html) {
+						if ("mailchimp" === addon && response.data?.tag_html) {
 							var $tagContainer = $(
-								".urmc-sync-email-marketing-" + addon + "-list-tag-wrap"
+								".urmc-sync-email-marketing-" +
+									addon +
+									"-list-tag-wrap"
 							);
 
 							$tagContainer.find("select").each(function () {
-								if ($(this).hasClass("select2-hidden-accessible")) {
+								if (
+									$(this).hasClass(
+										"select2-hidden-accessible"
+									)
+								) {
 									$(this).select2("destroy");
 								}
 							});
@@ -1611,11 +1620,13 @@
 
 							$tagContainer.append(response.data.tag_html);
 
-							$tagContainer.find("select.ur-enhanced-select").select2({
-								width: "100%",
-								placeholder: "Select Tags",
-								allowClear: true
-							});
+							$tagContainer
+								.find("select.ur-enhanced-select")
+								.select2({
+									width: "100%",
+									placeholder: "Select Tags",
+									allowClear: true
+								});
 						}
 					}
 
@@ -1629,4 +1640,24 @@
 			});
 		}
 	);
+
+	const $popoverTemplate = $("[data-gate-content]");
+
+	if ($popoverTemplate.length && typeof window.tippy !== "undefined") {
+		tippy.setDefaultProps({ maxWidth: "280px" });
+		tippy("[data-gate-content]", {
+			content(ref) {
+				const id = ref.getAttribute("data-gate-content");
+				const template = document.getElementById(id);
+				const div = document.createElement("div");
+				div.appendChild(template.content.cloneNode(true));
+				return div.innerHTML;
+			},
+			allowHTML: true,
+			interactive: true,
+			placement: "right",
+			inertia: true,
+			theme: "ur-gate"
+		});
+	}
 })(jQuery, window.ur_membership_localized_data);
