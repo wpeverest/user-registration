@@ -257,10 +257,6 @@ class URCR_Admin {
 	 * @param int $membership_id The membership ID.
 	 */
 	private function delete_rules_for_membership( $membership_id ) {
-		// Check if content restriction module is active
-		if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'content-restriction' ) ) {
-			return;
-		}
 
 		$membership_id = absint( $membership_id );
 

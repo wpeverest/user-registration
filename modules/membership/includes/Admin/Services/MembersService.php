@@ -107,6 +107,23 @@ class MembersService {
 		$response         = array();
 		$response['role'] = isset( $data['role'] ) ? sanitize_text_field( $data['role'] ) : 'subscriber';
 
+		if ( isset( $data['tax_rate'] ) && ! empty( $data['tax_rate'] ) ) {
+			$tax_details = array(
+				'tax_rate'       		 => floatval( $data['tax_rate'] ),
+				'tax_calculation_method' => sanitize_text_field( $data['tax_calculation_method'] ),
+				);
+			$response['tax_data'] = $tax_details;
+		}
+
+		if ( isset( $data['switched_currency'] ) && ! empty( $data[ 'switched_currency'] ) ) {
+			$local_currency_details = array(
+				'switched_currency' => sanitize_text_field( $data[ 'switched_currency' ] ),
+				'urm_zone_id'		=> ! empty( $data[ 'urm_zone_id' ] ) ? $data[ 'urm_zone_id' ] : '',
+			);
+			$response['local_currency_details'] = $local_currency_details;
+		}
+
+
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$response['coupon_data'] = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
 		}

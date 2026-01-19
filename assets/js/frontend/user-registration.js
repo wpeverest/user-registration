@@ -1240,6 +1240,14 @@
 											.val();
 									}
 
+									// Append tax details if available
+									var taxDetails = $( document ).find( "#ur-tax-details" );
+
+									if ( taxDetails.length > 0 ) {
+										form_data.tax_rate       = taxDetails.data("tax-rate");
+										form_data.tax_calculation_method = taxDetails.data("tax-calculation-method");
+									}
+
 									var data = {
 										action: "user_registration_user_form_submit",
 										security:
@@ -3133,6 +3141,224 @@
 			}
 		}
 	);
+
+	$( document ).on( 'change', '.ur-field-address-country', function ( e ) {
+		e.stopPropagation();
+		e.preventDefault();
+
+		var $el = $(this);
+		var fieldId = $el.data('id');
+		var country = $el.val();
+
+		var data = {
+			action: 'user_registration_update_state_field',
+			security: user_registration_params.user_registration_update_state_field,
+			country: country
+		};
+
+		$.ajax({
+			type: "POST",
+			url: user_registration_params.ajax_url,
+			data: data,
+			beforeSend: function(){
+				$el.before('<span class="ur-front-spinner"></span>');
+			},
+			success: function (response) {
+
+				var $stateWrapper = $el.siblings('.ur-field-address-state-outer-wrapper');
+				$stateWrapper.empty();
+
+				var html = '';
+
+				if (response.success && response.data.has_state && '' !== response.data.state) {
+					html += '<select class="ur-field-address-state select ur-frontend-field" name="' + fieldId + '_state">';
+					html += response.data.state;
+					html += '</select>';
+				} else {
+					html += '<input type="text" class="ur-field-address-state input-text ur-frontend-field" name="' + fieldId + '_state"/>';
+				}
+
+				$( document ).find( '.ur-front-spinner' ).remove();
+				var $stateElement = $( html );
+
+				$stateWrapper.append( $stateElement );
+				var tax_calculation_method 	= user_registration_params.tax_calculation_method;
+
+				if ( 'calculate_tax' === tax_calculation_method ) {
+					apply_tax_calculation( $el, country, response.data.has_state, $stateElement );
+				}
+			}
+		});
+	});
+
+	/**
+	 * On change of state field
+	 *
+	 * @since 5.0.0
+	 */
+	$( document ).on( 'change', '.ur-field-address-state', function ( e ) {
+		e.stopPropagation();
+		e.preventDefault();
+
+		var $el = $(this);
+		var $countryElement = $el.closest( '.form-row' ).find( '.ur-field-address-country' );
+		var country = $countryElement.val();
+		var tax_calculation_method 	= user_registration_params.tax_calculation_method;
+		if ( 'calculate_tax' === tax_calculation_method ) {
+			apply_tax_calculation( $el, country, false, $el );
+		}
+
+	});
+
+	/**
+	 * Apply tax calculation
+	 *
+	 * @param $el
+	 * @param country
+	 * @param country_change
+	 * @param $stateElement
+	 *
+	 * @since 5.0.0
+	 */
+	function apply_tax_calculation( $el, country, country_change, $stateElement ) {
+
+		var state 					= '';
+		var regions 				= user_registration_params.regions_list.regions[country];
+		var defaultRate             = (regions && regions.rate != null) ? regions.rate : 0;
+		var membershipData  		= {};
+
+		if ( $( document ).find( '#urm-membership-list' ).length ) {
+			membershipData = getMembershipData();
+		}else{
+			membershipData.total = $('.ur-total-amount[type="hidden"]').val();
+		}
+
+		if ( country_change ) {
+			state = $stateElement.find('option:first').val();
+		} else {
+			state = $stateElement.val();
+		}
+
+		/**
+		 * Check if country exists in regions list
+		 * then check for states
+		 * else apply default rate
+		 */
+		if ( user_registration_params.regions_list.regions.hasOwnProperty( country ) ) {
+
+			if ( regions.hasOwnProperty( 'states' ) && '' !== state ) {
+				var states  = regions.states;
+
+				if ( states.hasOwnProperty( state ) ) {
+					let taxRate = states[state];
+						calculate_total( membershipData, taxRate );
+				}else{
+					if ( defaultRate !== undefined && defaultRate !== '' ) {
+						calculate_total( membershipData, defaultRate );
+					}
+				}
+			} else {
+				calculate_total( membershipData, defaultRate );
+			}
+		}else{
+			calculate_total( membershipData, defaultRate );
+		}
+		$('#ur-local-currency-switch-currency').trigger('change');
+	}
+
+	/**
+	 * Get membership data
+	 *
+	 * @returns {{}}
+	 *
+	 * @since 5.0.0
+	 */
+	function getMembershipData(){
+		var user_data = {};
+		var form_inputs = $("#ur-membership-registration").find("input.ur_membership_input_class");
+
+		form_inputs = convert_to_array(form_inputs);
+
+		form_inputs.forEach(function (item) {
+			var $this = $(item);
+
+			if ($this.attr("name") !== undefined) {
+				var name = $this.attr("name").toLowerCase().replace("urm_", "");
+				user_data[name] = $this.val();
+			}
+		});
+
+		var membership_input = $('input[name="urm_membership"]:checked');
+		user_data.membership = membership_input.val();
+		user_data.payment_method = "free";
+		user_data.total = membership_input.data( "urm-pg-calculated-amount" );
+		if (membership_input.data("urm-pg-type") !== "free") {
+			user_data.payment_method = $(
+				'input[name="urm_payment_method"]:checked:visible'
+			).val();
+		}
+		var date = new Date();
+		user_data.start_date =
+			date.getFullYear() +
+			"-" +
+			(date.getMonth() + 1) +
+			"-" +
+			date.getDate();
+
+		return user_data;
+	}
+
+	/**
+	 * Calculate total with tax
+	 *
+	 * @param membershipData
+	 * @param taxRate
+	 *
+	 * @since 5.0.0
+	 */
+	function calculate_total ( membershipData, taxRate ) {
+		var total_input = $( "#ur-membership-total" );
+
+		let membershipPrice = parseFloat( membershipData.total );
+		let taxAmount = 0;
+		if ( user_registration_params.is_tax_calculation_activated ) {
+			taxAmount = ( membershipPrice * taxRate ) / 100;
+		}
+		let totalPrice = membershipPrice + taxAmount;
+		let total = parseFloat( totalPrice ).toFixed( 2 );
+
+		$( '.urm-membership-tax-value' ).find( '.ur_membership_input_label' ).text( taxRate + '% Tax' );
+			var subTotalInput 		 = $( "#ur-membership-subtotal" );
+			var taxInput 		 	 = $( "#ur-membership-tax" );
+
+		if ( total_input.length ) {
+			if( 'left' === user_registration_params.currency_pos ) {
+				total_input.text(user_registration_params.currency_symbol + total);
+				subTotalInput.text( user_registration_params.currency_symbol + membershipPrice.toFixed(2) );
+				taxInput.text( user_registration_params.currency_symbol + taxAmount.toFixed(2) );
+			} else {
+				total_input.text( total + user_registration_params.currency_symbol );
+				subTotalInput.text( membershipPrice.toFixed(2) + user_registration_params.currency_symbol);
+				taxInput.text( taxAmount.toFixed(2) + user_registration_params.currency_symbol );
+			}
+		}else{
+			total_input = $( ".ur-total-amount[type='hidden']" );
+			total_input.val( total );
+			$( document ).find( 'span.ur-total-amount' ).text( total );
+		}
+
+		$( "#ur-tax-details" ).remove();
+
+		var taxDetailsInput =
+			'<input type="hidden" ' +
+			'id="ur-tax-details" ' +
+			'name="ur_tax_details" ' +
+			'data-tax-rate="' + taxRate + '" ' +
+			'data-tax-calculation-method="' + user_registration_params.tax_calculation_method + '" ' +
+			'data-total="' + total + '">' ;
+
+		total_input.after(taxDetailsInput);
+	}
 })(jQuery);
 
 function ur_includes(arr, item) {
@@ -3301,3 +3527,13 @@ jQuery(document).ready(function ($) {
 		e.preventDefault();
 	});
 });
+
+/**
+ * A function that converts an object to an array by taking its values, excluding the first two, and preserving the original order.
+ *
+ * @param {jQuery} $object - The jQuery object to be converted to an array.
+ * @return {Array} The array with values from the object, excluding the first two, and in the original order.
+ */
+function convert_to_array($object) {
+	return Object.values($object).reverse().slice(2).reverse();
+}

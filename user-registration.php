@@ -37,7 +37,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '5.0.2';
+		public $version = '5.1';
 
 		/**
 		 * Session instance.
@@ -261,6 +261,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-login-logout-menu.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-membership-listing.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-thank-you.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-membership-buy-now.php';
+
 			/**
 			 * Navigation menu item classes.
 			 */
@@ -282,6 +284,11 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			if ( ur_check_module_activation( 'membership' ) ) {
 				/** include modules */
 				include_once UR_ABSPATH . 'modules/membership/user-registration-membership.php';
+
+				if ( ur_check_module_activation( 'masteriyo-course-integration' ) && ( is_plugin_active( 'learning-management-system/lms.php' )
+				|| is_plugin_active( 'learning-management-system-pro/lms.php' ) ) ) {
+					include_once UR_ABSPATH . 'modules/masteriyo/user-registration-masteriyo.php';
+				}
 			}
 
 			if ( ( ur_check_module_activation( 'membership' ) || ur_check_module_activation( 'payments' ) ) && ur_check_module_activation( 'payment-history' ) ) {

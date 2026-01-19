@@ -316,6 +316,16 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 			$args['custom_attributes']['data-default'] = $args['default'];
 		}
 
+		if ( isset( $args['field_key'] ) && 'country' === $args['field_key'] ) {
+			if ( isset( $args['default'] ) && ! empty( $args['default'] ) ) {
+				$is_json = preg_match( '/^\{.*\}$/s', $args['default'] ) ? true : false;
+				if ( $is_json ) {
+					$args['default'] = json_decode( $args['default'], true );
+				}
+				$args['custom_attributes']['data-default'] = is_array( $args['default'] ) ? $args['default']['country'] : $args['default'];
+			}
+		}
+
 		if ( ! empty( $args['custom_attributes'] ) && is_array( $args['custom_attributes'] ) ) {
 			foreach ( $args['custom_attributes'] as $attribute => $attribute_value ) {
 				$attribute_value     = is_array( $attribute_value ) ? json_encode( $attribute_value ) : $attribute_value;
@@ -821,18 +831,49 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					}
 
 					$custom_attributes[] = 'data-allow_clear="true"';
+					$is_json             = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
+					if ( $is_json ) {
+						$value = json_decode( $value, true );
+					}
+					$country = is_array( $value ) ? $value['country'] : $value;
+
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$selected_attribute = '';
 
 						if ( '' !== $value ) {
-							$selected_attribute = selected( $value, trim( $option_key ), false );
+							$selected_attribute = selected( $country, trim( $option_key ), false );
 						}
 						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . $selected_attribute . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
 
-					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
-							' . $options . '
-						</select>';
+					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="ur-field-address-country select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
+					' . $options . '
+					</select>';
+
+					$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
+					$state_list  = json_decode( $states_json, true );
+
+					$states = isset( $state_list[ $country ] ) ? $state_list[ $country ] : '';
+
+					if ( ! empty( $args['enable_state'] ) && '1' == $args['enable_state'] ) {
+						$field .= '<label for="' . $args['id'] . '" class="ur-label">' . __( 'State', 'user-registration' ) . '</label>';
+						$field .= '<span class="input-wrapper ur-field-address-state-outer-wrapper">';
+						if ( isset( $value['state'], $states[ $value['state'] ] ) ) {
+							$field .= '<select id="' . esc_attr( $args['id'] ) . '_state" class="ur-field-address-state select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . $args['id'] . '_state">';
+							foreach ( $states as $state_key => $state_name ) {
+								$state_selected_attribute = '';
+								if ( '' !== $value['state'] ) {
+									$state_selected_attribute = selected( $value['state'], trim( $state_key ), false );
+								}
+								$field .= '<option value="' . esc_attr( trim( $state_key ) ) . '" ' . $state_selected_attribute . '>' . esc_attr( trim( $state_name ) ) . '</option>';
+							}
+							$field .= '</select>';
+						} else {
+							$field .= '<input type="text" class="ur-field-address-state input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . $args['id'] . '_state" value="' . esc_attr( ! empty( $value['state'] ) ? $value['state'] : '' ) . '" />';
+						}
+
+						$field .= '</span>';
+					}
 				}
 				break;
 
@@ -1316,9 +1357,9 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 			}
 		}
 
-		if (ur_string_to_bool( get_option('urm_is_new_installation', false) ) ) {
-			$user_id = get_current_user_id();
-			$form_id = ur_get_form_id_by_userid( $user_id );
+		if ( ur_string_to_bool( get_option( 'urm_is_new_installation', false ) ) ) {
+			$user_id   = get_current_user_id();
+			$form_id   = ur_get_form_id_by_userid( $user_id );
 			$user_data = get_userdata( $user_id );
 			$user_data = $user_data->data;
 
@@ -1330,7 +1371,7 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 					'myaccount/form-edit-profile.php',
 					array(
 						'current_user'   => get_user_by( 'id', get_current_user_id() ),
-						'endpoint_label' => ur_get_account_menu_items()['edit-profile'],
+						'endpoint_label' => ur_get_account_menu_items()['edit-profile'] ?? '',
 					)
 				);
 			} else {

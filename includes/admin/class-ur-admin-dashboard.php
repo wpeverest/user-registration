@@ -103,6 +103,8 @@ class UR_Admin_Dashboard {
 				),
 				'urm_is_new_installation' => get_option( 'urm_is_new_installation', '' ),
 				'urcr_custom_rules_count' => $custom_rules_count,
+				'isMasteriyoActive'       => is_plugin_active( 'learning-management-system/lms.php' )
+				|| is_plugin_active( 'learning-management-system-pro/lms.php' ),
 			)
 		);
 

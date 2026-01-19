@@ -1429,6 +1429,9 @@
 				'.urcr-target-item[data-target-id="' + targetId + '"]'
 			);
 			self.dripInit($newTarget);
+
+			$(".urcr-target-type-group").append(targetHtml);
+
 			self.initContentTargetSelect2(targetId, type, value);
 
 			self.contentTargets.push({
@@ -1468,6 +1471,20 @@
 					id +
 					'" data-content-type="taxonomy"></select>' +
 					"</div>";
+			} else if (type === "custom_uri") {
+				try {
+					if (typeof value === "string") {
+						value = JSON.parse(value);
+					}
+				} catch {
+					value = ["", false];
+				}
+				inputHtml = `<div style="display:flex;align-items:center;gap:4px;flex:1" data-content-type="${type}" data-target-id="${id}">
+					<input style="flex:1" type="text" class="components-text-control__input urcr-condition-value-input urcr-condition-value-text urcr-form-field-value-input" value="${value[0]}">
+					<label style="display: inline-flex; align-items: center; gap: 2px; margin: 0; width: auto">
+						<input type="checkbox" ${value[1] ? "checked" : ""}> ${urcr_membership_access_data.hasOwnProperty("regex_label") ? urcr_membership_access_data.regex_label : "Regex"}
+					</label>
+				</div>`;
 			} else {
 				inputHtml =
 					'<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' +
@@ -1555,7 +1572,11 @@
 					'"] .urcr-content-target-input'
 			);
 
-			if ($select.length && type !== "whole_site") {
+			if (
+				$select.length &&
+				type !== "whole_site" &&
+				type !== "custom_uri"
+			) {
 				var options = self.getContentTargetOptions(type);
 
 				if ($select.hasClass("select2-hidden-accessible")) {
@@ -1705,36 +1726,38 @@
 			var self = this;
 			var options = [];
 
-			if (type === "pages" && urcr_membership_access_data.pages) {
-				options = Object.keys(urcr_membership_access_data.pages).map(
-					function (key) {
-						return {
-							id: key,
-							text: urcr_membership_access_data.pages[key]
-						};
-					}
-				);
-			} else if (type === "posts" && urcr_membership_access_data.posts) {
-				options = Object.keys(urcr_membership_access_data.posts).map(
-					function (key) {
-						return {
-							id: key,
-							text: urcr_membership_access_data.posts[key]
-						};
-					}
-				);
-			} else if (
-				type === "post_types" &&
-				urcr_membership_access_data.post_types
+			if (
+				typeof urcr_membership_access_data === "object" &&
+				urcr_membership_access_data.hasOwnProperty(type)
 			) {
-				options = Object.keys(
-					urcr_membership_access_data.post_types
-				).map(function (key) {
-					return {
-						id: key,
-						text: urcr_membership_access_data.post_types[key]
-					};
-				});
+				const data = urcr_membership_access_data[type];
+
+				if (
+					Array.isArray(data) &&
+					data.length > 0 &&
+					typeof data[0] === "object" &&
+					data[0] !== null &&
+					"group" in data[0] &&
+					"options" in data[0] &&
+					Array.isArray(data[0].options)
+				) {
+					options = data.map((x) => ({
+						text: x.group,
+						children: x.options.map((y) => ({
+							id: y.value,
+							text: y.label
+						}))
+					}));
+				} else {
+					options = Object.keys(
+						urcr_membership_access_data[type]
+					).map(function (key) {
+						return {
+							id: key,
+							text: urcr_membership_access_data[type][key]
+						};
+					});
+				}
 			}
 
 			return options;
@@ -1766,11 +1789,17 @@
 			var contentTypes = isPro
 				? allContentTypes
 				: allContentTypes.filter(function (ct) {
-						return (
+						var filtercase =
 							ct.value === "posts" ||
 							ct.value === "pages" ||
-							ct.value === "whole_site"
-						);
+							ct.value === "whole_site";
+						if (
+							urcr_membership_access_data.is_membership_module_enabled
+						) {
+							filtercase =
+								filtercase || ct.value === "masteriyo_courses";
+						}
+						return filtercase;
 					});
 			var $wrapper = $button.closest(".urcr-content-dropdown-wrapper");
 
@@ -2067,6 +2096,17 @@
 							taxonomy: taxonomy,
 							value: terms
 						};
+						break;
+					case "custom_uri":
+						var $customUriInput =
+							$target.find('input[type="text"]');
+						var $customUriCheckbox = $target.find(
+							'input[type="checkbox"]'
+						);
+						value = [
+							$customUriInput.val() || "",
+							$customUriCheckbox.is(":checked")
+						];
 						break;
 					case "pages":
 					case "posts":

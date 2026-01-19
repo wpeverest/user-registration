@@ -54,7 +54,7 @@ class UR_Base_Layout {
 
 		?>
 		<div id="user-registration-base-list-table-page" class="<?php echo esc_attr( $data['class'] ); ?>">
-			<div class="user-registration-base-list-table-heading" style="<?php echo( ! $show_search ? 'position:relative;margin-bottom:40px;' : '' ); ?>">
+			<div class="user-registration-base-list-table-heading" style="<?php echo( ! $show_search ? 'position:relative;' : '' ); ?>">
 				<h1>
 					<?php echo esc_html( $data['title'] ); ?>
 				</h1>
@@ -103,14 +103,14 @@ class UR_Base_Layout {
 		<?php
 	}
 
-		/**
-		 * Display Search Input with button
-		 *
-		 * @param $search_id
-		 * @param $placeholder
-		 *
-		 * @return void
-		 */
+	/**
+	 * Display Search Input with button
+	 *
+	 * @param $search_id
+	 * @param $placeholder
+	 *
+	 * @return void
+	 */
 	public static function display_search_field( $search_id, $placeholder ) {
 		?>
 			<input type="search" id="<?php echo esc_attr( $search_id ); ?>" name="s"
@@ -127,9 +127,9 @@ class UR_Base_Layout {
 			<?php
 	}
 
-		/**
-		 * No items found text.
-		 */
+	/**
+	 * No items found text.
+	 */
 	public static function no_items( $type ) {
 		$image_url    = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
 		$is_searching = ! empty( $_GET['s'] );

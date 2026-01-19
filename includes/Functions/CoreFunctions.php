@@ -1043,7 +1043,7 @@ if ( ! function_exists( 'urcr_create_or_update_membership_rule' ) ) {
 		if ( $existing_rule ) {
 			$rule_post = array(
 				'ID'           => $existing_rule->ID,
-				'post_title'   => $rule_title,
+				'post_title'   => $existing_rule->post_title, 
 				'post_content' => $rule_content,
 			);
 			$rule_id   = wp_update_post( $rule_post );

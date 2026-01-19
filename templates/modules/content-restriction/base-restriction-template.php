@@ -89,12 +89,12 @@ if ( empty( $signup_url ) ) {
 		transition: all .3s ease;
 	}
 	.urcr-access-card p > a.urcr-signup-link {
-		background: #475bb2;
-		color: #ffffff;
+		background: var(--ur-button-background-normal-color, #475bb2);
+		color: var(--ur-button-text-normal-color, #ffffff);
 	}
 	.urcr-access-card p > a.urcr-signup-link:hover {
-		background: #38488e;
-		color: #ffffff;
+		background: var(--ur-button-background-hover-color, #38488e);
+		color: var(--ur-button-text-hover-color, #ffffff);
 	}
 	.urcr-access-card p > a.urcr-access-button {
 		background: transparent;

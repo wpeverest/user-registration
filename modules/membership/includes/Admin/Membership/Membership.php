@@ -794,12 +794,16 @@ class Membership {
 			$type = 'posts';
 		}
 
-		$type_labels = array(
-			'pages'      => isset( $localized_data['labels']['pages'] ) ? $localized_data['labels']['pages'] : __( 'Pages', 'user-registration' ),
-			'posts'      => isset( $localized_data['labels']['posts'] ) ? $localized_data['labels']['posts'] : __( 'Posts', 'user-registration' ),
-			'post_types' => isset( $localized_data['labels']['post_types'] ) ? $localized_data['labels']['post_types'] : __( 'Post Types', 'user-registration' ),
-			'taxonomy'   => isset( $localized_data['labels']['taxonomy'] ) ? $localized_data['labels']['taxonomy'] : __( 'Taxonomy', 'user-registration' ),
-			'whole_site' => isset( $localized_data['labels']['whole_site'] ) ? $localized_data['labels']['whole_site'] : __( 'Whole Site', 'user-registration' ),
+		$type_labels = apply_filters(
+			'urcr_type_labels',
+			array(
+				'pages'      => isset( $localized_data['labels']['pages'] ) ? $localized_data['labels']['pages'] : __( 'Pages', 'user-registration' ),
+				'posts'      => isset( $localized_data['labels']['posts'] ) ? $localized_data['labels']['posts'] : __( 'Posts', 'user-registration' ),
+				'post_types' => isset( $localized_data['labels']['post_types'] ) ? $localized_data['labels']['post_types'] : __( 'Post Types', 'user-registration' ),
+				'taxonomy'   => isset( $localized_data['labels']['taxonomy'] ) ? $localized_data['labels']['taxonomy'] : __( 'Taxonomy', 'user-registration' ),
+				'whole_site' => isset( $localized_data['labels']['whole_site'] ) ? $localized_data['labels']['whole_site'] : __( 'Whole Site', 'user-registration' ),
+			),
+			$localized_data
 		);
 
 		$type_label = isset( $type_labels[ $type ] ) ? $type_labels[ $type ] : $type;
@@ -870,7 +874,13 @@ class Membership {
 			if ( is_array( $value ) && ! empty( $value ) ) {
 				$value_attr = ' data-value="' . esc_attr( wp_json_encode( $value ) ) . '"';
 			}
-			$html .= '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' . $target_id . '" data-content-type="' . esc_attr( $type ) . '" data-field-type="' . esc_attr( $type ) . '"' . $value_attr . '></select>';
+			$html .= apply_filters(
+				'urcr_default_content_target_html',
+				'<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' . $target_id . '" data-content-type="' . esc_attr( $type ) . '" data-field-type="' . esc_attr( $type ) . '"' . $value_attr . '></select>',
+				$target_id,
+				$type,
+				$value
+			);
 		}
 		if ( 'whole_site' !== $type ) {
 			$drip  = isset( $target['drip'] ) ? $target['drip'] : array(
@@ -974,6 +984,7 @@ class Membership {
 				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
 				'update_order_nonce'  => wp_create_nonce( 'ur_membership_update_order' ),
 				'update_order_action' => 'user_registration_membership_update_membership_order',
+				'validate_payment_currency_nonce' => wp_create_nonce( 'validate_payment_currency_nonce')
 			)
 		);
 	}

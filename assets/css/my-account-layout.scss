@@ -25,7 +25,10 @@
 				.user-registration-MyAccount-navigation-link {
 					&.is-active {
 						a {
-							border-color: $primary_color;
+							border-color: var(
+								--ur-primary-color,
+								$primary_color
+							);
 						}
 					}
 				}
@@ -34,16 +37,10 @@
 
 		.user-registration-MyAccount-content {
 			flex: 1;
-
-			@media screen and (max-width: 1199px) {
-				flex: unset;
-				max-width: 76%;
-				width: 100%;
-			}
+			width: 100% !important;
 
 			@media screen and (max-width: 992px) {
 				padding: $spacing_24px;
-				max-width: 100%;
 			}
 		}
 	}
@@ -155,7 +152,7 @@
 		}
 
 		.ur-frontend-form {
-			padding: 0 !important;
+			padding: $spacing_20px;
 
 			&:has(.user-registration-PrivacyTab) {
 				h2 {
@@ -190,7 +187,7 @@
 						.user-registration-Button.button-primary {
 							border-radius: $border_radius_4;
 							box-shadow: none;
-							border: $border_width solid $primary_color;
+							// border: $border_width solid $primary_color;
 						}
 					}
 				}
@@ -1013,6 +1010,7 @@
 							font-size: 14px;
 							line-height: 24px;
 							color: #4e4e4e;
+							background: $white;
 							font-weight: $medium;
 							box-shadow: none;
 							text-decoration: none;
@@ -1030,12 +1028,32 @@
 							}
 
 							&.urm-profile-action-toggle {
-								color: $white;
-								background: $primary_color;
-								border-color: $primary_color;
+								color: var(
+									--ur-button-text-normal-color,
+									$white
+								);
+								background: var(
+									--ur-button-background-normal-color,
+									$primary_color
+								);
+								border-color: var(
+									--ur-button-background-normal-color,
+									$primary_color
+								);
 
 								&:hover {
-									background: darken($primary_color, 5%);
+									color: var(
+										--ur-button-text-hover-color,
+										$white
+									);
+									background: var(
+										--ur-button-background-hover-color,
+										darken($primary_color, 5%)
+									);
+									border-color: var(
+										--ur-button-background-hover-color,
+										$primary_color
+									);
 								}
 							}
 
@@ -1078,12 +1096,7 @@
 										}
 
 										input {
-											min-height: 38px;
-											padding: 0 $spacing_12px;
 											margin-bottom: 0;
-											border-color: $border-color;
-											background: $white;
-											color: #383838;
 
 											&:disabled {
 												border-color: #dcdcde;
@@ -1157,11 +1170,24 @@
 								line-height: 25px;
 								border-radius: $border_radius_4;
 								border: 0;
-								background: $primary_color;
-								color: $white;
+								background: var(
+									--ur-button-background-normal-color,
+									$primary_color
+								);
+								color: var(
+									--ur-button-text-normal-color,
+									$white
+								);
 
 								&:hover {
-									background: darken($primary_color, 5%);
+									background: var(
+										--ur-button-background-hover-color,
+										$primary_color
+									);
+									color: var(
+										--ur-button-text-hover-color,
+										$white
+									);
 								}
 							}
 						}
@@ -1218,17 +1244,17 @@
 
 												.input-text {
 													height: 38px;
-													padding: $spacing_8px
-														$spacing_10px
-														$spacing_8px
-														$spacing_14px;
+													padding: 0 $spacing_12px;
 													border-radius: $border_radius_4;
 													border: $border_width solid
 														#e1e1e1;
 													background: $grey-0;
 
 													&:focus {
-														border-color: $primary_color;
+														border-color: var(
+															--ur-primary-color,
+															$primary_color
+														);
 													}
 												}
 											}
@@ -1248,14 +1274,26 @@
 										text-align: right;
 
 										.user-registration-Button.button {
-											background: $primary_color;
+											background: var(
+												--ur-button-background-normal-color,
+												$primary_color
+											);
 											border: $border_width solid
-												$primary_color;
+												var(
+													--ur-button-background-normal-color,
+													$primary_color
+												);
 											border-radius: $border_radius_4;
 
 											&:hover {
-												background: #38488e;
-												border-color: #38488e;
+												background: var(
+													--ur-button-background-hover-color,
+													#38488e
+												);
+												border-color: var(
+													--ur-button-background-hover-color,
+													#38488e
+												);
 											}
 										}
 									}
@@ -1534,7 +1572,7 @@
 						// border-collapse: separate;
 						border-collapse: collapse;
 						border-spacing: 0;
-						// background: $white;
+						background: $white;
 						// border-radius: 8px;
 						border-radius: 0;
 						overflow: hidden;
@@ -1608,6 +1646,8 @@
 											border-radius: 4px !important;
 											font-weight: 500;
 											text-transform: capitalize;
+											font-size: 14px;
+											line-height: 20px;
 
 											&.btn-active,
 											&.btn-completed {
@@ -1728,7 +1768,6 @@
 											transition: all 0.3s;
 
 											&:hover {
-												background: #1a1a1a;
 												background: #f8f9fa;
 												border-color: #adb5bd;
 												color: #1a1a1a;
@@ -1850,11 +1889,15 @@
 						border-bottom: $border_width solid #e2e8f0;
 
 						.user-registration-img-container {
+							width: 42px;
+							height: 42px;
+							border-radius: 50%;
+							border: 2px solid white;
+							overflow: hidden;
+
 							img {
-								width: 42px;
-								height: 42px;
-								border-radius: 50%;
-								border: 2px solid $white;
+								width: 100%;
+								height: 100%;
 							}
 						}
 
@@ -1902,14 +1945,23 @@
 							&:hover {
 								a {
 									background: #f0f0f0;
-									color: $primary_color;
+									color: var(
+										--ur-primary-color,
+										$primary_color
+									);
 								}
 							}
 
 							&.is-active {
 								a {
-									color: $primary_color;
-									background: $blue-50;
+									color: var(
+										--ur-primary-color,
+										$primary_color
+									);
+									background: var(
+										--ur-primary-light,
+										$blue-50
+									);
 								}
 							}
 						}
@@ -1921,8 +1973,14 @@
 				padding: $spacing_24px $spacing_24px 52px 36px;
 
 				@media screen and (max-width: 600px) {
-					padding: 28px 12px 20px;
+					padding: 28px 24px 20px;
 				}
+
+				// &__header {
+				// 	display: flex;
+				// 	justify-content: space-between;
+				// 	align-items: center;
+				// }
 			}
 		}
 	}
@@ -1964,7 +2022,7 @@
 				padding: $spacing_24px 36px 52px 36px;
 
 				@media screen and (max-width: 600px) {
-					padding: 28px 12px 20px;
+					padding: 28px 24px 20px;
 				}
 			}
 		}
@@ -2112,39 +2170,39 @@ body {
 }
 
 .user-registration-myaccount-notice-box {
-	background-color: #f4f6ff;
-	border: 1px solid #d6e0ff;
-	border-radius: 8px;
-	padding: 20px;
-	margin-bottom: 32px;
-	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+	background: #f4f6ff;
+	// border: 1px solid #d6e0ff;
+	border-radius: 7px;
+	padding: $spacing_20px;
+	margin-bottom: $spacing_24px;
+	// box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 	position: relative;
 	border-left: 4px solid #6669f1;
 	text-align: left;
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
+	gap: $spacing_12px;
 
 	&--title {
 		display: flex;
 		align-items: center;
+		gap: $spacing_12px;
 
 		&-icon {
-			margin-right: 0.75rem;
+			display: flex;
 
 			.notice-icon {
 				width: 20px;
 				height: 20px;
-				flex-shrink: 0;
 				color: #6366f1;
 			}
 		}
 
 		&-text {
 			h2 {
-				margin-top: 0;
-				margin-bottom: 0.5rem !important;
+				margin: 0 !important;
 				font-size: 16px !important;
+				line-height: 26px !important;
 				font-weight: 600 !important;
 				color: #333 !important;
 			}
@@ -2154,23 +2212,30 @@ body {
 	p {
 		color: #444;
 		font-size: 15px;
-		line-height: 1.5;
+		line-height: 25px;
+		margin: 0 !important;
 
 		&.pro-tip,
 		&.existing-users {
+			display: flex;
+			align-items: center;
+			gap: $spacing_6px;
+
 			strong {
-				font-weight: bolder !important;
+				font-weight: 700 !important;
 			}
 		}
 
-		&.pro-tip::before {
-			content: "💡";
-			margin-right: 0.5rem;
+		&.pro-tip {
+			&::before {
+				content: "💡";
+			}
 		}
 
-		&.existing-users::before {
-			content: "👤";
-			margin-right: 0.5rem;
+		&.existing-users {
+			&::before {
+				content: "👤";
+			}
 		}
 	}
 
@@ -2239,7 +2304,7 @@ body {
 					position: relative;
 					width: 32px;
 					height: 32px;
-					padding: 0;
+					padding: 0 !important;
 					margin: 0;
 					border-radius: 50%;
 					border: $border_width solid #edeff7;

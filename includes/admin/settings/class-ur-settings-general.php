@@ -45,6 +45,7 @@ if ( ! class_exists( 'UR_Settings_General' ) ) {
 		 */
 		public function get_sections_callback( $sections ) {
 			$sections['pages'] = __( 'Pages', 'user-registration' );
+			$sections['style'] = __( 'Style', 'user-registration' );
 			return $sections;
 		}
 		/**
@@ -72,14 +73,14 @@ if ( ! class_exists( 'UR_Settings_General' ) ) {
 									'desc_tip' => true,
 								),
 								array(
-									'title' => __( 'Login Page', 'user-registration' ),
-									'desc' => sprintf( __( 'Displays the login form where existing users can access their account. Add the Login Form block or [%s] shortcode to this page. ', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_login' ) ),
+									'title'    => __( 'Login Page', 'user-registration' ),
+									'desc'     => sprintf( __( 'Displays the login form where existing users can access their account. Add the Login Form block or [%s] shortcode to this page. ', 'user-registration' ), apply_filters( 'user_registration_myaccount_shortcode_tag', 'user_registration_login' ) ),
 									'desc_tip' => true,
-									'css' => '',
-									'class' => 'ur-enhanced-select-nostd',
-									'default' => '',
-									'type' => 'single_select_page',
-									'id' => 'user_registration_login_page_id',
+									'css'      => '',
+									'class'    => 'ur-enhanced-select-nostd',
+									'default'  => '',
+									'type'     => 'single_select_page',
+									'id'       => 'user_registration_login_page_id',
 								),
 								array(
 									'title'    => __( 'My Account Page', 'user-registration' ),
@@ -127,6 +128,59 @@ if ( ! class_exists( 'UR_Settings_General' ) ) {
 							),
 						),
 					),
+				);
+			}
+
+			if ( 'style' === $current_section ) {
+				$settings = apply_filters(
+					'user_registration_style_settings',
+					array(
+						'title'    => '',
+						'sections' => array(
+							'style_settings' => array(
+								'title'    => __( 'Style', 'user-registration' ),
+								'type'     => 'card',
+								'desc'     => '',
+								'settings' => array(
+									array(
+										'title'    => __( 'Primary', 'user-registration' ),
+										'desc'     => __( 'Choose color to match your brand or site', 'user-registration' ),
+										'id'       => 'user_registration_style_setting_primary_color',
+										'default'  => '',
+										'type'     => 'color',
+										'class'    => '',
+										'css'      => '',
+										'desc_tip' => true,
+									),
+									array(
+										'id'       => 'user_registration_style_setting_button_text_colors',
+										'type'     => 'color-group',
+										'desc'     => __( 'Choose color to match your brand or site', 'user-registration' ),
+										'title'    => __( 'Button Text', 'user-registration' ),
+										'states'   => array( 'normal', 'hover' ),
+										'desc_tip' => true,
+										'default'  => array(
+											'normal' => '#FFFFFF',
+											'hover'  => '#FFFFFF',
+										),
+									),
+									array(
+										'id'       => 'user_registration_style_setting_button_background_colors',
+										'type'     => 'color-group',
+										'desc'     => __( 'Choose color to match your brand or site', 'user-registration' ),
+										'title'    => __( 'Button Background', 'user-registration' ),
+										'states'   => array( 'normal', 'hover' ),
+										'desc_tip' => true,
+										'default'  => array(
+											'normal' => '#475bb2',
+											'hover'  => '#38488e',
+										),
+									),
+
+								),
+							),
+						),
+					)
 				);
 			}
 			return $settings;
