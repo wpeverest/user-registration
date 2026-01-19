@@ -143,9 +143,9 @@
       "demo_video_url": "pTGPvYvU_Ig"
     },
     {
-      "title": "Frontend Listing",
+      "title": "Member Directory",
       "slug": "user-registration-frontend-listing",
-      "name": "User Registration Frontend Listing",
+      "name": "User Registration Member Directory",
       "image": "extensions-json/sections/icons/frontend_listing.png",
       "excerpt": "Display users registered on the site as a directory (for community sites or directories).",
       "category": "User Management",
