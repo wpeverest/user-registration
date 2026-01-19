@@ -71,29 +71,62 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 			$button_classes .= ' ' . $attr['className'];
 		}
 
-		// Colors
-		$text_color_raw = isset( $style['elements']['link']['color']['text'] )
-			? $style['elements']['link']['color']['text'] : '';
 
+		$text_color_raw = '';
+		if ( isset( $attr['textColor'] ) && ! empty( $attr['textColor'] ) ) {
+			$text_color_raw = $attr['textColor'];
+		} elseif ( isset( $style['elements']['link']['color']['text'] ) ) {
+			$text_color_raw = $style['elements']['link']['color']['text'];
+		}
 		$text_color = $this->parse_preset_color( $text_color_raw );
 
-		$background = isset( $style['color']['background'] ) ? $style['color']['background'] : '';
+
+		$background_raw = '';
+		if ( isset( $attr['backgroundColor'] ) && ! empty( $attr['backgroundColor'] ) ) {
+			$background_raw = $attr['backgroundColor'];
+		} elseif ( isset( $style['color']['background'] ) ) {
+			$background_raw = $style['color']['background'];
+		}
+		$background = $this->parse_preset_color( $background_raw );
+
 
 		$text_hover_color    = isset( $attr['hoverTextColor'] ) ? $attr['hoverTextColor'] : '';
 		$text_hover_bg_color = isset( $attr['hoverBgColor'] ) ? $attr['hoverBgColor'] : '';
 
-		// Border
-		$border_color = isset( $style['border']['color'] ) ? $style['border']['color'] : '';
-		$border_width = isset( $style['border']['width'] ) ? $style['border']['width'] : '';
-		$radius       = isset( $style['border']['radius'] ) ? $style['border']['radius'] : array();
 
-		$border_radius = sprintf(
-			'%s %s %s %s',
-			isset( $radius['topLeft'] ) ? $radius['topLeft'] : '0',
-			isset( $radius['topRight'] ) ? $radius['topRight'] : '0',
-			isset( $radius['bottomRight'] ) ? $radius['bottomRight'] : '0',
-			isset( $radius['bottomLeft'] ) ? $radius['bottomLeft'] : '0'
-		);
+		$border_color_raw = '';
+		if ( isset( $attr['borderColor'] ) && ! empty( $attr['borderColor'] ) ) {
+			$border_color_raw = $attr['borderColor'];
+		} elseif ( isset( $style['border']['color'] ) ) {
+			$border_color_raw = $style['border']['color'];
+		}
+		$border_color = $this->parse_preset_color( $border_color_raw );
+
+
+		$border_width = '';
+		if ( isset( $attr['borderWidth'] ) && ! empty( $attr['borderWidth'] ) ) {
+			$border_width = $attr['borderWidth'];
+		} elseif ( isset( $style['border']['width'] ) ) {
+			$border_width = $style['border']['width'];
+		}
+
+
+		$border_style = isset( $attr['borderStyle'] ) ? $attr['borderStyle'] : 'solid';
+
+
+		if ( isset( $attr['borderRadius'] ) && ! empty( $attr['borderRadius'] ) ) {
+
+			$border_radius_value = $attr['borderRadius'];
+			$radius              = array(
+				'topLeft'     => $border_radius_value,
+				'topRight'    => $border_radius_value,
+				'bottomRight' => $border_radius_value,
+				'bottomLeft'  => $border_radius_value,
+			);
+		} else {
+
+			$radius = isset( $style['border']['radius'] ) ? $style['border']['radius'] : array();
+		}
 
 		// Spacing
 		$padding = isset( $style['spacing']['padding'] ) ? $style['spacing']['padding'] : array();
@@ -116,7 +149,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 		// Build BUTTON inline style
 		$button_style = 'width:100%;';
 
-		// Style variations
+		// Style variations - default styles
 		if ( strpos( $button_classes, 'is-style-fill' ) !== false ) {
 			$button_style .= 'background:#000;color:#fff;';
 		}
@@ -125,6 +158,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 			$button_style .= 'background:transparent;border:1px solid #000;color:#000;';
 		}
 
+		// Apply custom colors
 		if ( $text_color ) {
 			$button_style .= 'color:' . $text_color . ';';
 		}
@@ -135,7 +169,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 			$button_style .= 'border-color:' . $border_color . ';';
 		}
 		if ( $border_width ) {
-			$button_style .= 'border-width:' . $border_width . ';border-style:solid;';
+			$button_style .= 'border-width:' . $border_width . ';border-style:' . $border_style . ';';
 		}
 
 		// Padding
@@ -152,6 +186,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 			$button_style .= 'padding-right:' . $padding_right . ';';
 		}
 
+		// Border Radius
 		if ( ! empty( $radius['topLeft'] ) ) {
 			$button_style .= 'border-top-left-radius:' . $radius['topLeft'] . ';';
 		}

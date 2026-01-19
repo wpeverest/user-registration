@@ -1,19 +1,20 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { __ } from "@wordpress/i18n";
+import { useEffect, useMemo, useState } from "react";
 import metadata from "./block.json";
 
 import {
-	TextControl,
-	SelectControl,
-	PanelBody,
-	__experimentalToggleGroupControl as ToggleGroupControl,
-	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+	Button,
 	ColorPalette,
 	Dropdown,
-	Button,
 	Flex,
 	FlexItem,
-	ToggleControl
+	PanelBody,
+	SelectControl,
+	TextControl,
+	ToggleControl,
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+	__experimentalUnitControl as UnitControl
 } from "@wordpress/components";
 
 import {
@@ -47,7 +48,7 @@ const buildHoverCss = ({ blockId, hoverTextColor, hoverBgColor }) => {
 	return css;
 };
 
-const HoverColorControl = ({ label, colorValue, onChange, themeColors }) => (
+const ColorControl = ({ label, colorValue, onChange, themeColors }) => (
 	<div
 		data-wp-component="ToolsPanelItem"
 		className="components-tools-panel-item block-editor-tools-panel-color-gradient-settings__item urm-custom-hover-tool-panel"
@@ -90,35 +91,15 @@ const HoverColorControl = ({ label, colorValue, onChange, themeColors }) => (
 				</Button>
 			)}
 			renderContent={({ onClose }) => (
-				<div
-					style={{ padding: "16px", width: "240px" }}
-					onClick={(e) => e.stopPropagation()}
-					onMouseDown={(e) => e.stopPropagation()}
-				>
+				<div style={{ padding: "16px", width: "240px" }}>
 					<ColorPalette
-						enableCustomColor
 						value={colorValue}
 						onChange={onChange}
-						colors={[]}
+						colors={themeColors || []}
 						clearable={true}
 						enableAlpha={true}
 						__experimentalIsRenderedInSidebar={true}
 					/>
-
-					{themeColors?.length > 0 && (
-						<>
-							<span className="ur-hover-color-picker__title">
-								{__("Theme", "user-registration")}
-							</span>
-							<ColorPalette
-								colors={themeColors}
-								value={colorValue}
-								onChange={onChange}
-								clearable={false}
-								disableCustomColors={true}
-							/>
-						</>
-					)}
 				</div>
 			)}
 		/>
@@ -136,6 +117,12 @@ const Edit = (props) => {
 		width,
 		hoverTextColor,
 		hoverBgColor,
+		backgroundColor,
+		textColor,
+		borderColor,
+		borderRadius,
+		borderWidth,
+		borderStyle,
 		openInNewTab
 	} = attributes;
 
@@ -144,6 +131,10 @@ const Edit = (props) => {
 
 	// Theme colors
 	const [themeColors] = useSettings("color.palette.theme");
+
+	// Detect current block style (fill or outline)
+	const isOutlineStyle =
+		blockProps.className?.includes("is-style-outline") || false;
 
 	// Fetch membership list
 	const fetchData = async () => {
@@ -187,38 +178,17 @@ const Edit = (props) => {
 
 	const blockId = attributes.clientId || clientId;
 
-	const [localHover, setLocalHover] = useState({
-		hoverTextColor: hoverTextColor || "",
-		hoverBgColor: hoverBgColor || ""
-	});
-
-	// sync local state for undo/redo, etc.
-	useEffect(() => {
-		setLocalHover({
-			hoverTextColor: hoverTextColor || "",
-			hoverBgColor: hoverBgColor || ""
-		});
-	}, [hoverTextColor, hoverBgColor]);
-
-	const commitHover = useCallback(
-		(key) => {
-			setAttributes({ [key]: localHover[key] });
-		},
-		[localHover, setAttributes]
-	);
-
 	const hoverCss = useMemo(() => {
 		return buildHoverCss({
 			blockId,
-			hoverTextColor: localHover.hoverTextColor,
-			hoverBgColor: localHover.hoverBgColor
+			hoverTextColor,
+			hoverBgColor
 		});
-	}, [blockId, localHover.hoverTextColor, localHover.hoverBgColor]);
+	}, [blockId, hoverTextColor, hoverBgColor]);
 
 	const ssrAttributes = useMemo(() => {
-		const { hoverTextColor, hoverBgColor, ...rest } = attributes;
 		return {
-			...rest,
+			...attributes,
 			clientId: blockId
 		};
 	}, [attributes, blockId]);
@@ -234,7 +204,10 @@ const Edit = (props) => {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title="" initialOpen={true}>
+				<PanelBody
+					title={__("Settings", "user-registration")}
+					initialOpen={true}
+				>
 					<SelectControl
 						key="urm-select-membership-type"
 						label={__("Membership Plan", "user-registration")}
@@ -271,7 +244,7 @@ const Edit = (props) => {
 					/>
 
 					<ToggleGroupControl
-						label="Width"
+						label={__("Width", "user-registration")}
 						value={width}
 						onChange={(value) => setAttributes({ width: value })}
 						isBlock
@@ -292,22 +265,91 @@ const Edit = (props) => {
 			</InspectorControls>
 
 			<InspectorControls group="color">
-				<>
-					<HoverColorControl
-						label={__("Text Hover", "user-registration")}
-						colorValue={localHover.hoverTextColor}
-						onChange={(c) => setAttributes({ hoverTextColor: c })}
+				<ColorControl
+					label={__("Text Color", "user-registration")}
+					colorValue={textColor}
+					onChange={(c) => setAttributes({ textColor: c })}
+					themeColors={themeColors}
+				/>
+
+				{!isOutlineStyle && (
+					<ColorControl
+						label={__("Background Color", "user-registration")}
+						colorValue={backgroundColor}
+						onChange={(c) => setAttributes({ backgroundColor: c })}
 						themeColors={themeColors}
 					/>
+				)}
 
-					<HoverColorControl
+				<ColorControl
+					label={__("Text Hover", "user-registration")}
+					colorValue={hoverTextColor}
+					onChange={(c) => setAttributes({ hoverTextColor: c })}
+					themeColors={themeColors}
+				/>
+
+				{!isOutlineStyle && (
+					<ColorControl
 						label={__("Background Hover", "user-registration")}
-						colorValue={localHover.hoverBgColor}
+						colorValue={hoverBgColor}
 						onChange={(c) => setAttributes({ hoverBgColor: c })}
 						themeColors={themeColors}
 					/>
-				</>
+				)}
 			</InspectorControls>
+
+			{isOutlineStyle && (
+				<InspectorControls group="border">
+					<ColorControl
+						label={__("Border Color", "user-registration")}
+						colorValue={borderColor}
+						onChange={(c) => setAttributes({ borderColor: c })}
+						themeColors={themeColors}
+					/>
+
+					<UnitControl
+						label={__("Border Width", "user-registration")}
+						value={borderWidth}
+						onChange={(value) =>
+							setAttributes({ borderWidth: value })
+						}
+					/>
+
+					<SelectControl
+						label={__("Border Style", "user-registration")}
+						value={borderStyle}
+						options={[
+							{
+								label: __("Solid", "user-registration"),
+								value: "solid"
+							},
+							{
+								label: __("Dashed", "user-registration"),
+								value: "dashed"
+							},
+							{
+								label: __("Dotted", "user-registration"),
+								value: "dotted"
+							},
+							{
+								label: __("Double", "user-registration"),
+								value: "double"
+							}
+						]}
+						onChange={(value) =>
+							setAttributes({ borderStyle: value })
+						}
+					/>
+
+					<UnitControl
+						label={__("Border Radius", "user-registration")}
+						value={borderRadius}
+						onChange={(value) =>
+							setAttributes({ borderRadius: value })
+						}
+					/>
+				</InspectorControls>
+			)}
 
 			{!!hoverCss && <style>{hoverCss}</style>}
 
