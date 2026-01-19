@@ -189,13 +189,13 @@ class URCR_Admin_Assets {
 
 		// Prepare list of pages.
 
-		$pages = get_pages(
+		$pages              = get_pages(
 			array(
 				'post_status' => 'publish',
 				'numberposts' => 100,
 			)
 		);
-		$pages = wp_list_pluck( $pages, 'post_title', 'ID' );
+		$pages              = wp_list_pluck( $pages, 'post_title', 'ID' );
 		$pages_for_redirect = $pages;
 		// Filter out excluded pages
 		if ( function_exists( 'urcr_get_excluded_page_ids' ) ) {
@@ -448,6 +448,7 @@ class URCR_Admin_Assets {
 				'membership'              => __( 'Membership', 'user-registration' ),
 				'membership_rule_title'   => __( 'Membership Access Rule', 'user-registration' ),
 				'all_content_types_added' => __( 'All content types have been added', 'user-registration' ),
+				'ajax_all_forms_nonce'    => wp_create_nonce( 'all-forms-ajax-nonce' ),
 			),
 		);
 
