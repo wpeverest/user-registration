@@ -874,7 +874,7 @@ function ur_get_registered_form_fields_with_default_labels() {
 			'user_confirm_email'    => __( 'User Confirm Email', 'user-registration' ),
 			'user_pass'             => __( 'User Pass', 'user-registration' ),
 			'user_confirm_password' => __( 'User Confirm Password', 'user-registration' ),
-			'user_login'            => __( 'User Login', 'user-registration' ),
+			'user_login'            => __( 'User Name', 'user-registration' ),
 			'nickname'              => __( 'Nickname', 'user-registration' ),
 			'first_name'            => __( 'First Name', 'user-registration' ),
 			'last_name'             => __( 'Last Name', 'user-registration' ),

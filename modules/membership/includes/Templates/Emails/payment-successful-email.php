@@ -1,4 +1,7 @@
 <?php
+
+use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
+
 $user_id    = absint( ! empty( $invoice_details['user_id'] ) ? $invoice_details['user_id'] : get_current_user_id() );
 $currencies = ur_payment_integration_get_currencies();
 $currency   = get_user_meta( $user_id, 'ur_payment_currency', true );
@@ -8,6 +11,14 @@ $symbol     = $currencies[ $currency ]['symbol'] ?? '$';
 $trial_status = isset( $invoice_details['membership_plan_trial_status'] ) ? $invoice_details['membership_plan_trial_status'] : 'off';
 $trial_amount = $trial_status === 'On' ? ( isset( $invoice_details['membership_plan_trial_amount'] ) ? $invoice_details['membership_plan_trial_amount'] : 'N/A' ) : $symbol . '0.00';
 $total_amount = $trial_status === 'On' ? $symbol . '0.00' : ( isset( $invoice_details['membership_plan_total'] ) ? $invoice_details['membership_plan_total'] : 'N/A' );
+
+$order_id = ! empty( $values['order']['order_id'] ) ? $values['order']['order_id'] : '';
+
+$order_repository = new OrdersRepository();
+$order_meta_data  = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
+$tax_data 		  = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data[ 'meta_value' ], true ) : array();
+$tax_amount       = ! empty( $tax_data['tax_amount'] ) ? $symbol . $tax_data['tax_amount'] : 0;
+
 if ( $invoice_details['is_membership'] ) :
 
 	// Define label–key pairs for membership rows
@@ -22,6 +33,7 @@ if ( $invoice_details['is_membership'] ) :
 		__( 'Payment Method', 'user-registration' )    => $invoice_details['membership_plan_payment_method'],
 		__( 'Amount', 'user-registration' )            => $invoice_details['membership_plan_payment_amount'],
 		__( 'Trial Amount', 'user-registration' )      => $trial_amount,
+		__( 'Tax Amount', 'user-registration' )		   => $tax_amount,
 	];
 
 	// Add coupon details if they exist
