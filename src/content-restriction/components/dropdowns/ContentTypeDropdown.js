@@ -9,36 +9,36 @@ import DropdownMenu from "./DropdownMenu";
 const ContentTypeDropdown = ({ onSelect, existingContentTypes = [] }) => {
 	// Get content type options from localized data
 	const allOptions = getURCRData("content_type_options", [
+		{ value: "whole_site", label: __("Whole Site", "user-registration") },
 		{ value: "pages", label: __("Pages", "user-registration") },
 		{ value: "posts", label: __("Posts", "user-registration") },
 		{ value: "post_types", label: __("Post Type", "user-registration") },
-		{ value: "taxonomy", label: __("Taxonomy", "user-registration") },
-		{ value: "whole_site", label: __("Whole Site", "user-registration") },
+		{ value: "taxonomy", label: __("Taxonomy", "user-registration") }
 	]);
 
 	// Filter options based on pro access
 	// For free users, only show posts and pages
 	const filteredOptions = isProAccess()
 		? allOptions
-		: allOptions.filter(option => option.value === "posts" || option.value === "pages" || option.value === "whole_site");
+		: allOptions.map((x) => ({
+				...x,
+				locked: "taxonomy" === x.value && !isProAccess()
+			}));
 
 	// Check if a content type already exists
 	const isContentTypeExists = (contentType) => {
-		return existingContentTypes.some((target) => target.type === contentType);
+		return existingContentTypes.some(
+			(target) => target.type === contentType
+		);
 	};
 
 	// Map options with disabled state
-	const options = filteredOptions.map(option => ({
+	const options = filteredOptions.map((option) => ({
 		...option,
 		disabled: isContentTypeExists(option.value)
 	}));
 
-	return (
-		<DropdownMenu
-			options={options}
-			onSelect={onSelect}
-		/>
-	);
+	return <DropdownMenu options={options} onSelect={onSelect} />;
 };
 
 export default ContentTypeDropdown;
