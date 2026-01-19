@@ -158,6 +158,7 @@ const Edit = (props) => {
 		fetchData();
 	}, []);
 
+	// ensure stable clientId is saved in attributes
 	useEffect(() => {
 		if (!attributes.clientId && clientId) {
 			setAttributes({ clientId });
@@ -165,6 +166,7 @@ const Edit = (props) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [clientId]);
 
+	// Reset/restore colors when switching styles
 	useEffect(() => {
 		if (isOutlineStyle) {
 			const updates = {};
@@ -190,6 +192,7 @@ const Edit = (props) => {
 			if (!hoverBgColor) {
 				updates.hoverBgColor = "#3a4a8f";
 			}
+
 			if (borderColor) {
 				updates.borderColor = "";
 			}
@@ -199,6 +202,27 @@ const Edit = (props) => {
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isOutlineStyle]);
+
+	// Hide/show border panel based on style
+	useEffect(() => {
+		const editorWrapper = document.querySelector(
+			".interface-interface-skeleton"
+		);
+
+		if (editorWrapper) {
+			if (isOutlineStyle) {
+				editorWrapper.classList.remove("urm-hide-border-panel");
+			} else {
+				editorWrapper.classList.add("urm-hide-border-panel");
+			}
+		}
+
+		return () => {
+			if (editorWrapper) {
+				editorWrapper.classList.remove("urm-hide-border-panel");
+			}
+		};
 	}, [isOutlineStyle]);
 
 	const membershipOptions = useMemo(() => {
@@ -342,6 +366,6 @@ const Edit = (props) => {
 			</div>
 		</>
 	);
-};
+};;;;;;;;;;
 
 export default Edit;

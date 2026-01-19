@@ -39,6 +39,17 @@
         "text": false
       }
     },
+    "__experimentalBorder": {
+      "color": true,
+      "radius": true,
+      "width": true,
+      "__experimentalSkipSerialization": true,
+      "__experimentalDefaultControls": {
+        "color": true,
+        "radius": true,
+        "width": true
+      }
+    },
     "typography": {
       "__experimentalSkipSerialization": [
         "fontSize",
@@ -68,17 +79,6 @@
       "margin": true,
       "__experimentalDefaultControls": {
         "padding": true
-      }
-    },
-    "__experimentalBorder": {
-      "color": true,
-      "radius": true,
-      "width": true,
-      "__experimentalSkipSerialization": true,
-      "__experimentalDefaultControls": {
-        "color": true,
-        "radius": true,
-        "width": true
       }
     }
   },
