@@ -13,8 +13,8 @@
 			margin-bottom: 0;
 		}
 
-		+ button,
-		+ .button {
+		+button,
+		+.button {
 			margin-left: 6px;
 		}
 
@@ -63,17 +63,17 @@
 	}
 
 	.button-primary {
-		background: var(--ur-button-background-normal-color, $primary_color);;
-		border-color: $primary_color;
-		box-shadow: 0 1px 0 $primary_color;
-		text-shadow: none;
+		background: var(--ur-button-background-normal-color, $primary_color) !important;
+		border-color: $primary_color !important;
+		// box-shadow: 0 1px 0 $primary_color;
+		// text-shadow: none;
 
 		&:hover,
 		&:active,
 		&:focus {
-			background: var(--ur-button-background-normal-color, $primary_color);;
-			border-color: $primary_dark;
-			box-shadow: 0 1px 0 $primary_dark;
+			background: var(--ur-button-background-normal-color, $primary_color) !important;
+			border-color: $primary_dark !important;
+			// box-shadow: 0 1px 0 $primary_dark;
 		}
 
 		&:disabled {
@@ -142,7 +142,7 @@
 	display: inline-flex;
 	vertical-align: middle;
 
-	> button,
+	>button,
 	.button {
 		&:not(:first-child) {
 			margin-left: -1px;
@@ -151,7 +151,7 @@
 		}
 	}
 
-	> button,
+	>button,
 	.button {
 		&:not(:last-child) {
 			border-top-right-radius: 0;
