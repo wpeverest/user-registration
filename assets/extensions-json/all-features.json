@@ -16,6 +16,21 @@
       "released_date": "01/08/2024"
     },
     {
+      "title": "File Downloads",
+      "slug": "user-registration-file-downloads",
+      "name": "User Registration File Downloads",
+      "image": "extensions-json/sections/icons/file_downloads.png",
+      "excerpt": "Upload files and restrict access by membership level or user-defined conditions.",
+      "category": "File Downloads",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-file-downloads/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan": [
+        "personal",
+        "plus",
+        "professional",
+        "themegrill agency"
+      ]
+    },
+    {
       "title": "Multiple Registration",
       "slug": "user-registration-multiple-registration",
       "name": "User Registration-Multiple Registration",
