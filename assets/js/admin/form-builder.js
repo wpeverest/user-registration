@@ -263,6 +263,16 @@
 						}
 					}
 				);
+				$( document ).on( 'change', '.ur-settings-enable-state', function( e ){
+					var checked = $( this ).is( ':checked' );
+					var $wrapper = $( document ).find( '.ur-selected-item.ur-item-active' );
+
+					if ( checked ) {
+						$wrapper.find( '.ur-state-container-wrapper' ).show();
+					}else{
+						$wrapper.find( '.ur-state-container-wrapper' ).hide();
+					}
+				});
 			},
 			init_user_profile_modal: function () {
 				var user_profile_modal = {
@@ -2546,6 +2556,7 @@
 								this.manage_required_fields();
 								this.manage_label_hidden_fields();
 								this.manage_image_choice_class();
+								this.manage_state_fields();
 							},
 							single_row: function () {
 								if (
@@ -3074,6 +3085,23 @@
 									);
 									return;
 								});
+							},
+							manage_state_fields: function(){
+								$('input[data-advance-field="enable_state"]').each(
+									function () {
+										if ($(this).is(":checked")) {
+											$(this)
+												.closest(".ur-selected-item")
+												.find(".ur-state-container-wrapper")
+												.show();
+										} else {
+											$(this)
+												.closest(".ur-selected-item")
+												.find(".ur-state-container-wrapper")
+												.hide();
+										}
+									}
+								);
 							}
 						};
 						var events = {

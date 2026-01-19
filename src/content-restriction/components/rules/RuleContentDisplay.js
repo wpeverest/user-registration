@@ -76,7 +76,8 @@ const RuleContentDisplay = ({ rule, onRuleUpdate }) => {
 						id: target.id || `x${Date.now()}`,
 						type: type,
 						label: getTypeLabel(type),
-						value: value
+						value: value,
+						drip: target.drip
 					};
 				});
 				setContentTargets(convertedTargets);
@@ -162,7 +163,8 @@ const RuleContentDisplay = ({ rule, onRuleUpdate }) => {
 
 			const targetData = {
 				id: target.id || `x${Date.now()}`,
-				type: type
+				type: type,
+				drip: target.drip
 			};
 
 			if (type === "taxonomy") {

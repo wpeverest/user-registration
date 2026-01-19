@@ -10,6 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use WPEverest\URMembership\Admin\Services\MembershipGroupService;
+use WPEverest\URMembership\Admin\Services\MembershipService;
 
 /**
  * UR_AddonsClass
@@ -93,6 +94,16 @@ class UR_Gutenberg_Blocks {
 			array(
 				'methods'             => 'GET',
 				'callback'            => array( __CLASS__, 'ur_get_active_groups' ),
+				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/membership-list',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( __CLASS__, 'ur_get_active_memberships' ),
 				'permission_callback' => array( __CLASS__, 'check_admin_permissions' ),
 			)
 		);
@@ -202,6 +213,26 @@ class UR_Gutenberg_Blocks {
 				200
 			);
 		}
+	}
+
+	/**
+	 * Get active membership Lists.
+	 *
+	 * @return WP_REST_Response Groups lists.
+	 * @since xx.xx.xx
+	 *
+	 */
+	public static function ur_get_active_memberships() {
+		$service         = new MembershipService();
+		$membership_list = $service->list_active_memberships();
+
+		return new \WP_REST_Response(
+			array(
+				'success'         => true,
+				'membership_list' => $membership_list,
+			),
+			200
+		);
 	}
 
 	/**

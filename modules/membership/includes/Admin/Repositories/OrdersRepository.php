@@ -230,4 +230,26 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 		$result = $this->wpdb()->delete( $this->orders_meta_table, $conditions );
 		return ! $result ? array() : $result;
 	}
+
+	public function get_order_meta_by_order_id_and_meta_key( $order_id, $meta_key ) {
+		$ordermeta_table = $this->wpdb()->prefix . 'ur_membership_ordermeta';
+
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"
+				SELECT *
+				FROM {$ordermeta_table}
+				WHERE order_id = %d
+				AND meta_key = %s
+				LIMIT 1
+				",
+				$order_id,
+				$meta_key
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? array() : $result;
+	}
+
 }

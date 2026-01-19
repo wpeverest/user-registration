@@ -4,7 +4,7 @@
  * Plugin Name: User Registration & Membership
  * Plugin URI: https://wpuserregistration.com/
  * Description: The most flexible User Registration and Membership plugin for WordPress.
- * Version: 5.0.2
+ * Version: 5.1
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -13,15 +13,15 @@
  * @package UserRegistration
  */
 
-if (! defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/autoload.php';
 }
 
-if (! class_exists('UserRegistration')) :
+if ( ! class_exists( 'UserRegistration' ) ) :
 
 	/**
 	 * Main UserRegistration Class.
@@ -29,15 +29,15 @@ if (! class_exists('UserRegistration')) :
 	 * @class   UserRegistration
 	 * @version 1.0.0
 	 */
-	final class UserRegistration
-	{
+	final class UserRegistration {
+
 
 		/**
 		 * Plugin version.
 		 *
 		 * @var string
 		 */
-		public $version = '5.0.2';
+		public $version = '5.1';
 
 		/**
 		 * Session instance.
@@ -79,10 +79,9 @@ if (! class_exists('UserRegistration')) :
 		 *
 		 * @return object A single instance of this class.
 		 */
-		public static function instance()
-		{
+		public static function instance() {
 			// If the single instance hasn't been set, set it now.
-			if (is_null(self::$_instance)) {
+			if ( is_null( self::$_instance ) ) {
 				self::$_instance = new self();
 			}
 
@@ -94,9 +93,8 @@ if (! class_exists('UserRegistration')) :
 		 *
 		 * @since 1.0
 		 */
-		public function __clone()
-		{
-			_doing_it_wrong(__FUNCTION__, __('Cheatin&#8217; huh?', 'user-registration'), '1.0'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		public function __clone() {
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'user-registration' ), '1.0' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		/**
@@ -104,38 +102,35 @@ if (! class_exists('UserRegistration')) :
 		 *
 		 * @since 1.0
 		 */
-		public function __wakeup()
-		{
-			_doing_it_wrong(__FUNCTION__, __('Cheatin&#8217; huh?', 'user-registration'), '1.0'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		public function __wakeup() {
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'user-registration' ), '1.0' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		/**
 		 * UserRegistration Constructor.
 		 */
-		public function __construct()
-		{
+		public function __construct() {
 			$this->define_constants();
 			$this->includes();
 			$this->init_hooks();
-			add_action('plugins_loaded', array($this, 'objects'), 1);
-			add_action('in_plugin_update_message-' . UR_PLUGIN_BASENAME, array(__CLASS__, 'in_plugin_update_message'), 10, 2);
+			add_action( 'plugins_loaded', array( $this, 'objects' ), 1 );
+			add_action( 'in_plugin_update_message-' . UR_PLUGIN_BASENAME, array( __CLASS__, 'in_plugin_update_message' ), 10, 2 );
 
-			do_action('user_registration_loaded');
+			do_action( 'user_registration_loaded' );
 		}
 
 		/**
 		 * Hook into actions and filters.
 		 */
-		private function init_hooks()
-		{
-			register_activation_hook(__FILE__, array('UR_Install', 'install'));
-			register_shutdown_function(array($this, 'log_errors'));
-			add_action('after_setup_theme', array($this, 'include_template_functions'), 11);
-			add_action('init', array($this, 'init'), 0);
-			add_action('init', array('UR_Shortcodes', 'init'));
+		private function init_hooks() {
+			register_activation_hook( __FILE__, array( 'UR_Install', 'install' ) );
+			register_shutdown_function( array( $this, 'log_errors' ) );
+			add_action( 'after_setup_theme', array( $this, 'include_template_functions' ), 11 );
+			add_action( 'init', array( $this, 'init' ), 0 );
+			add_action( 'init', array( 'UR_Shortcodes', 'init' ) );
 
-			add_filter('plugin_action_links_' . UR_PLUGIN_BASENAME, array(__CLASS__, 'plugin_action_links'));
-			add_filter('plugin_row_meta', array(__CLASS__, 'plugin_row_meta'), 10, 2);
+			add_filter( 'plugin_action_links_' . UR_PLUGIN_BASENAME, array( __CLASS__, 'plugin_action_links' ) );
+			add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 		}
 
 		/**
@@ -143,15 +138,14 @@ if (! class_exists('UserRegistration')) :
 		 *
 		 * @since 3.0.5
 		 */
-		public function log_errors()
-		{
+		public function log_errors() {
 			$error = error_get_last();
 
-			if ($error && in_array($error['type'], array(E_ERROR, E_PARSE, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR), true)) {
+			if ( $error && in_array( $error['type'], array( E_ERROR, E_PARSE, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR ), true ) ) {
 				$logger = ur_get_logger();
 				$logger->critical(
 					/* translators: 1: error message 2: file name and path 3: line number */
-					sprintf(__('%1$s in %2$s on line %3$s', 'user-registration'), $error['message'], $error['file'], $error['line']) . PHP_EOL,
+					sprintf( __( '%1$s in %2$s on line %3$s', 'user-registration' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
 					array(
 						'source' => 'fatal-errors',
 					)
@@ -162,24 +156,23 @@ if (! class_exists('UserRegistration')) :
 		/**
 		 * Define FT Constants.
 		 */
-		private function define_constants()
-		{
-			$upload_dir = apply_filters('user_registration_upload_dir', wp_upload_dir());
-			$this->define('UR_LOG_DIR', $upload_dir['basedir'] . '/ur-logs/');
-			$this->define('UR_UPLOAD_PATH', $upload_dir['basedir'] . '/user_registration_uploads/');
-			$this->define('UR_UPLOAD_URL', $upload_dir['baseurl'] . '/user_registration_uploads/');
-			$this->define('UR_DS', DIRECTORY_SEPARATOR);
-			$this->define('UR_PLUGIN_FILE', __FILE__);
-			$this->define('UR_PLUGIN_URL', plugin_dir_url(__FILE__));
-			$this->define('UR_ASSETS_URL', UR_PLUGIN_URL . 'assets');
-			$this->define('UR_ABSPATH', __DIR__ . UR_DS);
-			$this->define('UR_PLUGIN_BASENAME', plugin_basename(__FILE__));
-			$this->define('UR_VERSION', $this->version);
-			$this->define('UR_TEMPLATE_DEBUG_MODE', false);
-			$this->define('UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS);
-			$this->define('UR_SESSION_CACHE_GROUP', 'ur_session_id');
-			$this->define('UR_PRO_ACTIVE', false);
-			$this->define('UR_DEV', false);
+		private function define_constants() {
+			$upload_dir = apply_filters( 'user_registration_upload_dir', wp_upload_dir() );
+			$this->define( 'UR_LOG_DIR', $upload_dir['basedir'] . '/ur-logs/' );
+			$this->define( 'UR_UPLOAD_PATH', $upload_dir['basedir'] . '/user_registration_uploads/' );
+			$this->define( 'UR_UPLOAD_URL', $upload_dir['baseurl'] . '/user_registration_uploads/' );
+			$this->define( 'UR_DS', DIRECTORY_SEPARATOR );
+			$this->define( 'UR_PLUGIN_FILE', __FILE__ );
+			$this->define( 'UR_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+			$this->define( 'UR_ASSETS_URL', UR_PLUGIN_URL . 'assets' );
+			$this->define( 'UR_ABSPATH', __DIR__ . UR_DS );
+			$this->define( 'UR_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+			$this->define( 'UR_VERSION', $this->version );
+			$this->define( 'UR_TEMPLATE_DEBUG_MODE', false );
+			$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
+			$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
+			$this->define( 'UR_PRO_ACTIVE', false );
+			$this->define( 'UR_DEV', false );
 		}
 
 		/**
@@ -188,10 +181,9 @@ if (! class_exists('UserRegistration')) :
 		 * @param string      $name Name.
 		 * @param string|bool $value Value.
 		 */
-		private function define($name, $value)
-		{
-			if (! defined($name)) {
-				define($name, $value);
+		private function define( $name, $value ) {
+			if ( ! defined( $name ) ) {
+				define( $name, $value );
 			}
 		}
 
@@ -201,25 +193,23 @@ if (! class_exists('UserRegistration')) :
 		 * @param  string $type admin, ajax, cron or frontend.
 		 * @return bool
 		 */
-		private function is_request($type)
-		{
-			switch ($type) {
+		private function is_request( $type ) {
+			switch ( $type ) {
 				case 'admin':
 					return is_admin();
 				case 'ajax':
-					return defined('DOING_AJAX');
+					return defined( 'DOING_AJAX' );
 				case 'cron':
-					return defined('DOING_CRON');
+					return defined( 'DOING_CRON' );
 				case 'frontend':
-					return (! is_admin() || defined('DOING_AJAX')) && ! defined('DOING_CRON');
+					return ( ! is_admin() || defined( 'DOING_AJAX' ) ) && ! defined( 'DOING_CRON' );
 			}
 		}
 
 		/**
 		 * Includes.
 		 */
-		private function includes()
-		{
+		private function includes() {
 
 			/**
 			 * Class autoloader.
@@ -271,6 +261,8 @@ if (! class_exists('UserRegistration')) :
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-login-logout-menu.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-membership-listing.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-thank-you.php';
+			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-membership-buy-now.php';
+
 			/**
 			 * Navigation menu item classes.
 			 */
@@ -289,40 +281,43 @@ if (! class_exists('UserRegistration')) :
 			 */
 			include_once UR_ABSPATH . 'includes/admin/class-ur-config.php';
 
-			if (ur_check_module_activation('membership')) {
+			if ( ur_check_module_activation( 'membership' ) ) {
 				/** include modules */
 				include_once UR_ABSPATH . 'modules/membership/user-registration-membership.php';
+
+				if ( ur_check_module_activation( 'masteriyo-course-integration' ) && ( is_plugin_active( 'learning-management-system/lms.php' )
+				|| is_plugin_active( 'learning-management-system-pro/lms.php' ) ) ) {
+					include_once UR_ABSPATH . 'modules/masteriyo/user-registration-masteriyo.php';
+				}
 			}
 
-			if ((ur_check_module_activation('membership') || ur_check_module_activation('payments')) && ur_check_module_activation('payment-history')) {
+			if ( ( ur_check_module_activation( 'membership' ) || ur_check_module_activation( 'payments' ) ) && ur_check_module_activation( 'payment-history' ) ) {
 				include_once UR_ABSPATH . 'modules/payment-history/Orders.php';
 			}
 
 			// Check if there are membership rules (>= 2)
 			$membership_rules_count = 0;
-			if (function_exists('ur_get_membership_rules_count')) {
+			if ( function_exists( 'ur_get_membership_rules_count' ) ) {
 				$membership_rules_count = ur_get_membership_rules_count();
 			}
-
 
 			include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
 
-
 			/**
 			 * Elementor classes.
 			 */
-			if (class_exists('\Elementor\Plugin')) {
+			if ( class_exists( '\Elementor\Plugin' ) ) {
 				include_once UR_ABSPATH . 'includes/3rd-party/elementor/class-ur-elementor.php';
 			}
 			/**
 			 * Oxygen classes.
 			 */
-			if (in_array('oxygen/functions.php', get_option('active_plugins', array()), true)) {
+			if ( in_array( 'oxygen/functions.php', get_option( 'active_plugins', array() ), true ) ) {
 				include_once UR_ABSPATH . 'includes/3rd-party/oxygen/class-ur-oxygen.php';
 			}
 			// Divi builder compatiblity.
-			if (class_exists('WPEverest\URM\DiviBuilder\Builder')) {
+			if ( class_exists( 'WPEverest\URM\DiviBuilder\Builder' ) ) {
 				WPEverest\URM\DiviBuilder\Builder::init();
 			}
 
@@ -331,18 +326,18 @@ if (! class_exists('UserRegistration')) :
 			 */
 			include_once UR_ABSPATH . 'includes/class-ur-plugin-updater.php';
 
-			if ($this->is_request('admin')) {
+			if ( $this->is_request( 'admin' ) ) {
 				include_once UR_ABSPATH . 'includes/admin/class-ur-admin.php';
 				include_once UR_ABSPATH . 'includes/abstracts/abstract-ur-meta-boxes.php';
 
 				include_once UR_ABSPATH . 'includes/admin/class-ur-admin-embed-wizard.php';
 			}
 
-			if ($this->is_request('frontend')) {
+			if ( $this->is_request( 'frontend' ) ) {
 				$this->frontend_includes();
 			}
 
-			if ($this->is_request('frontend') || $this->is_request('cron')) {
+			if ( $this->is_request( 'frontend' ) || $this->is_request( 'cron' ) ) {
 				include_once UR_ABSPATH . 'includes/class-ur-session-handler.php';
 			}
 			include_once UR_ABSPATH . 'includes/class-ur-cron.php';
@@ -352,7 +347,7 @@ if (! class_exists('UserRegistration')) :
 
 			$this->query = new UR_Query();
 
-			if (class_exists('WPEverest\URM\Analytics\Analytics')) {
+			if ( class_exists( 'WPEverest\URM\Analytics\Analytics' ) ) {
 				WPEverest\URM\Analytics\Analytics::get_instance();
 			}
 		}
@@ -360,8 +355,7 @@ if (! class_exists('UserRegistration')) :
 		/**
 		 * Include required frontend files.
 		 */
-		public function frontend_includes()
-		{
+		public function frontend_includes() {
 			include_once UR_ABSPATH . 'includes/functions-ur-notice.php';
 			include_once UR_ABSPATH . 'includes/class-ur-form-handler.php';                   // Form Handlers.
 			include_once UR_ABSPATH . 'includes/class-ur-frontend-scripts.php';               // Frontend Scripts.
@@ -372,8 +366,7 @@ if (! class_exists('UserRegistration')) :
 		/**
 		 * Function used to Init UserRegistration Template Functions - This makes them pluggable by plugins and themes.
 		 */
-		public function include_template_functions()
-		{
+		public function include_template_functions() {
 			include_once UR_ABSPATH . 'includes/functions-ur-template.php';
 		}
 
@@ -382,12 +375,11 @@ if (! class_exists('UserRegistration')) :
 		 *
 		 * @since 1.7.2
 		 */
-		public function objects()
-		{
+		public function objects() {
 			$this->form = new UR_Form_Handler();
 
 			// Initialize captcha conflict manager only on frontend
-			if ($this->is_request('frontend')) {
+			if ( $this->is_request( 'frontend' ) ) {
 				new UR_Captcha_Conflict_Manager();
 			}
 		}
@@ -395,22 +387,21 @@ if (! class_exists('UserRegistration')) :
 		/**
 		 * Init UserRegistration when WordPress Initialises.
 		 */
-		public function init()
-		{
+		public function init() {
 			// Before init action.
-			do_action('before_user_registration_init');
+			do_action( 'before_user_registration_init' );
 
 			// Set up localisation.
 			$this->load_plugin_textdomain();
 
 			// Session class, handles session data for users - can be overwritten if custom handler is needed.
-			if ($this->is_request('frontend') || $this->is_request('cron') || $this->is_request('admin')) {
-				$session_class = apply_filters('user_registration_session_handler', 'UR_Session_Handler');
+			if ( $this->is_request( 'frontend' ) || $this->is_request( 'cron' ) || $this->is_request( 'admin' ) ) {
+				$session_class = apply_filters( 'user_registration_session_handler', 'UR_Session_Handler' );
 				$this->session = new $session_class();
 			}
 
 			// Init action.
-			do_action('user_registration_init');
+			do_action( 'user_registration_init' );
 		}
 
 		/**
@@ -422,14 +413,13 @@ if (! class_exists('UserRegistration')) :
 		 *      - WP_LANG_DIR/user-registration/user-registration-LOCALE.mo
 		 *      - WP_LANG_DIR/plugins/user-registration-LOCALE.mo
 		 */
-		public function load_plugin_textdomain()
-		{
-			$locale = is_admin() && function_exists('get_user_locale') ? get_user_locale() : get_locale();
-			$locale = apply_filters('plugin_locale', $locale, 'user-registration');
+		public function load_plugin_textdomain() {
+			$locale = is_admin() && function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
+			$locale = apply_filters( 'plugin_locale', $locale, 'user-registration' );
 
-			unload_textdomain('user-registration', true);
-			load_textdomain('user-registration', WP_LANG_DIR . '/user-registration/user-registration-' . $locale . '.mo');
-			load_plugin_textdomain('user-registration', false, plugin_basename(__DIR__) . '/languages');
+			unload_textdomain( 'user-registration', true );
+			load_textdomain( 'user-registration', WP_LANG_DIR . '/user-registration/user-registration-' . $locale . '.mo' );
+			load_plugin_textdomain( 'user-registration', false, plugin_basename( __DIR__ ) . '/languages' );
 		}
 
 		/**
@@ -437,9 +427,8 @@ if (! class_exists('UserRegistration')) :
 		 *
 		 * @return string
 		 */
-		public function plugin_url()
-		{
-			return untrailingslashit(plugins_url('/', __FILE__));
+		public function plugin_url() {
+			return untrailingslashit( plugins_url( '/', __FILE__ ) );
 		}
 
 		/**
@@ -447,9 +436,8 @@ if (! class_exists('UserRegistration')) :
 		 *
 		 * @return string
 		 */
-		public function plugin_path()
-		{
-			return untrailingslashit(plugin_dir_path(__FILE__));
+		public function plugin_path() {
+			return untrailingslashit( plugin_dir_path( __FILE__ ) );
 		}
 
 		/**
@@ -457,9 +445,8 @@ if (! class_exists('UserRegistration')) :
 		 *
 		 * @return string
 		 */
-		public function template_path()
-		{
-			return apply_filters('user_registration_template_path', 'user-registration/');
+		public function template_path() {
+			return apply_filters( 'user_registration_template_path', 'user-registration/' );
 		}
 
 		/**
@@ -467,9 +454,8 @@ if (! class_exists('UserRegistration')) :
 		 *
 		 * @return string
 		 */
-		public function ajax_url()
-		{
-			return admin_url('admin-ajax.php', 'relative');
+		public function ajax_url() {
+			return admin_url( 'admin-ajax.php', 'relative' );
 		}
 
 		/**
@@ -478,13 +464,12 @@ if (! class_exists('UserRegistration')) :
 		 * @param  array $actions Plugin Action links.
 		 * @return array
 		 */
-		public static function plugin_action_links($actions)
-		{
+		public static function plugin_action_links( $actions ) {
 			$new_actions = array(
-				'settings' => '<a href="' . admin_url('admin.php?page=user-registration-settings') . '" aria-label="' . esc_attr__('View User Registration & Membership settings', 'user-registration') . '">' . esc_html__('Settings', 'user-registration') . '</a>',
+				'settings' => '<a href="' . admin_url( 'admin.php?page=user-registration-settings' ) . '" aria-label="' . esc_attr__( 'View User Registration & Membership settings', 'user-registration' ) . '">' . esc_html__( 'Settings', 'user-registration' ) . '</a>',
 			);
 
-			return array_merge($new_actions, $actions);
+			return array_merge( $new_actions, $actions );
 		}
 
 		/**
@@ -494,15 +479,14 @@ if (! class_exists('UserRegistration')) :
 		 * @param  string $plugin_file Plugin Row Meta.
 		 * @return array
 		 */
-		public static function plugin_row_meta($plugin_meta, $plugin_file)
-		{
-			if (UR_PLUGIN_BASENAME === $plugin_file) {
+		public static function plugin_row_meta( $plugin_meta, $plugin_file ) {
+			if ( UR_PLUGIN_BASENAME === $plugin_file ) {
 				$new_plugin_meta = array(
-					'docs'    => '<a href="' . esc_url(apply_filters('user_registration_docs_url', 'https://docs.wpuserregistration.com/')) . '" area-label="' . esc_attr__('View User Registration & Membership documentation', 'user-registration') . '">' . esc_html__('Docs', 'user-registration') . '</a>',
-					'support' => '<a href="' . esc_url(apply_filters('user_registration_support_url', 'https://wpuserregistration.com/support/')) . '" area-label="' . esc_attr__('Visit free customer support', 'user-registration') . '">' . __('Free support', 'user-registration') . '</a>',
+					'docs'    => '<a href="' . esc_url( apply_filters( 'user_registration_docs_url', 'https://docs.wpuserregistration.com/' ) ) . '" area-label="' . esc_attr__( 'View User Registration & Membership documentation', 'user-registration' ) . '">' . esc_html__( 'Docs', 'user-registration' ) . '</a>',
+					'support' => '<a href="' . esc_url( apply_filters( 'user_registration_support_url', 'https://wpuserregistration.com/support/' ) ) . '" area-label="' . esc_attr__( 'Visit free customer support', 'user-registration' ) . '">' . __( 'Free support', 'user-registration' ) . '</a>',
 				);
 
-				return array_merge($plugin_meta, $new_plugin_meta);
+				return array_merge( $plugin_meta, $new_plugin_meta );
 			}
 
 			return (array) $plugin_meta;
@@ -514,26 +498,25 @@ if (! class_exists('UserRegistration')) :
 		 *
 		 * @param array $args Plugin args.
 		 */
-		public static function in_plugin_update_message($plugin_data, $response)
-		{
-			if (empty($response) || empty($response->new_version)) {
+		public static function in_plugin_update_message( $plugin_data, $response ) {
+			if ( empty( $response ) || empty( $response->new_version ) ) {
 				return;
 			}
 			$new_version = (string) $response->new_version;
 
 			$transient_name = 'ur_upgrade_notice_' . $new_version;
-			$upgrade_notice = get_transient($transient_name);
+			$upgrade_notice = get_transient( $transient_name );
 
-			if (false === $upgrade_notice) {
-				$http_response = wp_safe_remote_get('https://plugins.svn.wordpress.org/user-registration/trunk/readme.txt');
+			if ( false === $upgrade_notice ) {
+				$http_response = wp_safe_remote_get( 'https://plugins.svn.wordpress.org/user-registration/trunk/readme.txt' );
 
-				if (! is_wp_error($http_response) && ! empty($http_response['body'])) {
-					$upgrade_notice = self::parse_update_notice($http_response['body'], $new_version);
-					set_transient($transient_name, $upgrade_notice, 3 * DAY_IN_SECONDS);
+				if ( ! is_wp_error( $http_response ) && ! empty( $http_response['body'] ) ) {
+					$upgrade_notice = self::parse_update_notice( $http_response['body'], $new_version );
+					set_transient( $transient_name, $upgrade_notice, 3 * DAY_IN_SECONDS );
 				}
 			}
 
-			echo wp_kses_post($upgrade_notice);
+			echo wp_kses_post( $upgrade_notice );
 		}
 
 		/**
@@ -542,30 +525,29 @@ if (! class_exists('UserRegistration')) :
 		 * @param string $content Readme content.
 		 * @param string $new_version New version.
 		 */
-		private static function parse_update_notice($content, $new_version)
-		{
+		private static function parse_update_notice( $content, $new_version ) {
 			$upgrade_notice = '';
 
 			// Match all version blocks under "== Upgrade Notice =="
 			$blocks_regex = '~=\s*([\d\.]+)\s*=(.*?)(?==\s*[\d\.]+\s*=|$)~s';
-			if (preg_match_all($blocks_regex, $content, $matches, PREG_SET_ORDER)) {
-				foreach ($matches as $match) {
-					$version_line = trim($match[1]);
-					$block_text   = trim($match[2]);
+			if ( preg_match_all( $blocks_regex, $content, $matches, PREG_SET_ORDER ) ) {
+				foreach ( $matches as $match ) {
+					$version_line = trim( $match[1] );
+					$block_text   = trim( $match[2] );
 
 					// Only process the block if it matches $new_version
-					if ($version_line !== $new_version) {
+					if ( $version_line !== $new_version ) {
 						continue;
 					}
 
-					$notices = (array) preg_split('~[\r\n]+~', $block_text);
+					$notices = (array) preg_split( '~[\r\n]+~', $block_text );
 
 					$upgrade_notice .= '<div class="ur_plugin_upgrade_notice">';
 					$upgrade_notice .= '<div class="ur_plugin_upgrade_notice_body">';
 
-					foreach ($notices as $line) {
-						$line = trim($line);
-						if (empty($line)) {
+					foreach ( $notices as $line ) {
+						$line = trim( $line );
+						if ( empty( $line ) ) {
 							continue;
 						}
 
@@ -576,15 +558,15 @@ if (! class_exists('UserRegistration')) :
 						);
 
 						// Convert headings
-						if (preg_match('~^###\s*(.*)~', $line, $heading)) {
+						if ( preg_match( '~^###\s*(.*)~', $line, $heading ) ) {
 							$line = '<p class="upgrade-title" style="font-size:13px;font-weight:600;">' . $heading[1] . '</p>';
-						} elseif (preg_match('~^##\s*(.*)~', $line, $heading)) {
+						} elseif ( preg_match( '~^##\s*(.*)~', $line, $heading ) ) {
 							$line = '<p class="upgrade-heading" style="font-size:14px;font-weight:600;">' . $heading[1] . '</p>';
 						} else {
 							$line = '<p style="font-size:12px;">' . $line . '</p>';
 						}
 
-						$upgrade_notice .= wp_kses_post($line);
+						$upgrade_notice .= wp_kses_post( $line );
 					}
 
 					$upgrade_notice .= '</div>';
@@ -594,7 +576,7 @@ if (! class_exists('UserRegistration')) :
 				}
 			}
 
-			return wp_kses_post($upgrade_notice);
+			return wp_kses_post( $upgrade_notice );
 		}
 	}
 
@@ -606,7 +588,7 @@ endif;
  * @since 2.0.4
  */
 
-if (! function_exists('UR')) {
+if ( ! function_exists( 'UR' ) ) {
 
 	/**
 	 * Main instance of UserRegistration.
@@ -616,98 +598,92 @@ if (! function_exists('UR')) {
 	 * @since  1.0.0
 	 * @return UserRegistration
 	 */
-	function UR()
-	{
+	function UR() {
 		return UserRegistration::instance();
 	}
 } else {
 
-	if (! function_exists('user_registration_pro_activated')) {
+	if ( ! function_exists( 'user_registration_pro_activated' ) ) {
 		/**
 		 * When Pro version is activated, deactivate free version.
 		 */
-		function user_registration_pro_activated()
-		{
-			set_transient('user_registration_pro_activated', true);
+		function user_registration_pro_activated() {
+			set_transient( 'user_registration_pro_activated', true );
 			user_registration_free_deactivate();
 		}
 	}
-	add_action('activate_user-registration-pro/user-registration.php', 'user_registration_pro_activated');
+	add_action( 'activate_user-registration-pro/user-registration.php', 'user_registration_pro_activated' );
 
-	if (! function_exists('user_registration_free_activated')) {
+	if ( ! function_exists( 'user_registration_free_activated' ) ) {
 		/**
 		 * When user activates free version, set the value that is to be used to handle both Free and Pro activation conflict.
 		 */
-		function user_registration_free_activated()
-		{
+		function user_registration_free_activated() {
 
-			set_transient('user_registration_free_activated', true);
+			set_transient( 'user_registration_free_activated', true );
 		}
 	}
-	add_action('activate_user-registration/user-registration.php', 'user_registration_free_activated');
+	add_action( 'activate_user-registration/user-registration.php', 'user_registration_free_activated' );
 
-	if (! function_exists('user_registration_free_deactivated')) {
+	if ( ! function_exists( 'user_registration_free_deactivated' ) ) {
 		/**
 		 * When user deactivates free version, remove the value that was used to handle both Free and Pro activation conflict.
 		 */
-		function user_registration_free_deactivated()
-		{
+		function user_registration_free_deactivated() {
 
 			global $user_registration_free_activated, $user_registration_free_deactivated;
 
-			$user_registration_free_activated   = (bool) get_transient('user_registration_free_activated');
+			$user_registration_free_activated   = (bool) get_transient( 'user_registration_free_activated' );
 			$user_registration_free_deactivated = true;
 
-			delete_transient('user_registration_free_activated');
+			delete_transient( 'user_registration_free_activated' );
 		}
 	}
-	add_action('deactivate_user-registration/user-registration.php', 'user_registration_free_deactivated');
+	add_action( 'deactivate_user-registration/user-registration.php', 'user_registration_free_deactivated' );
 
-	if (! function_exists('user_registration_free_deactivate')) {
+	if ( ! function_exists( 'user_registration_free_deactivate' ) ) {
 		/**
 		 * Deactivate Free version if Pro is already activated.
 		 *
 		 * @since 1.0.0
 		 */
-		function user_registration_free_deactivate()
-		{
+		function user_registration_free_deactivate() {
 
 			$plugin = 'user-registration/user-registration.php';
 
-			deactivate_plugins($plugin);
-			do_action('user_registration_free_deactivate', $plugin);
-			delete_transient('user_registration_pro_activated');
+			deactivate_plugins( $plugin );
+			do_action( 'user_registration_free_deactivate', $plugin );
+			delete_transient( 'user_registration_pro_activated' );
 		}
 	}
 
-	add_action('admin_init', 'user_registration_free_deactivate');
+	add_action( 'admin_init', 'user_registration_free_deactivate' );
 
-	if (! function_exists('user_registration_free_notice')) {
+	if ( ! function_exists( 'user_registration_free_notice' ) ) {
 		/**
 		 * When user wants to activate Free version alongside Pro, then display the message.
 		 */
-		function user_registration_free_notice()
-		{
+		function user_registration_free_notice() {
 
 			global $user_registration_free_activated, $user_registration_free_deactivated;
 
 			if (
-				empty($user_registration_free_activated) ||
-				empty($user_registration_free_deactivated)
+				empty( $user_registration_free_activated ) ||
+				empty( $user_registration_free_deactivated )
 			) {
 				return;
 			}
 
-			echo '<div class="notice-warning notice is-dismissible"><p>' . wp_kses_post(__('As <strong>User Registration & Membership Pro</strong> is active, <strong>User Registration & Membership Free</strong> is now not needed.', 'user-registration')) . '</p></div>';
+			echo '<div class="notice-warning notice is-dismissible"><p>' . wp_kses_post( __( 'As <strong>User Registration & Membership Pro</strong> is active, <strong>User Registration & Membership Free</strong> is now not needed.', 'user-registration' ) ) . '</p></div>';
 
-			if (isset($_GET['activate'])) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				unset($_GET['activate']); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( isset( $_GET['activate'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				unset( $_GET['activate'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 
-			unset($user_registration_free_activated, $user_registration_free_deactivated);
+			unset( $user_registration_free_activated, $user_registration_free_deactivated );
 		}
 	}
-	add_action('admin_notices', 'user_registration_free_notice');
+	add_action( 'admin_notices', 'user_registration_free_notice' );
 
 	// Do not process the plugin code further.
 	return;
@@ -716,10 +692,10 @@ if (! function_exists('UR')) {
  * Development: Hot reload support for webpack dev server.
  * Enable by setting SCRIPT_DEBUG to true in wp-config.php
  */
-if (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) {
+if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 	add_filter(
 		'script_loader_src',
-		function ($src, $handle) {
+		function ( $src, $handle ) {
 			$dev_scripts = array(
 				'user-registration-welcome',
 				'user-registration-dashboard',
@@ -729,7 +705,7 @@ if (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) {
 				'user-registration-content-access-rules',
 			);
 
-			if (in_array($handle, $dev_scripts, true)) {
+			if ( in_array( $handle, $dev_scripts, true ) ) {
 				$src = str_replace(
 					UR_PLUGIN_URL . 'chunks/',
 					'http://localhost:3000/',

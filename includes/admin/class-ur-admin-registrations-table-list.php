@@ -245,7 +245,7 @@ class UR_Admin_Registrations_Table_List extends UR_List_Table {
 		?>
 			<div id="user-registration-list-search-form">
 				<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
-				<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" placeholder="<?php esc_html_e( 'Search Forms ...', 'user-registration' ); ?>" />
+				<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" placeholder="<?php esc_html_e( 'Search Form', 'user-registration' ); ?>" />
 				<button type="submit" id="search-submit">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 						<path fill="#000" fill-rule="evenodd" d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z" clip-rule="evenodd"/>

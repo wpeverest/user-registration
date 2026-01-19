@@ -199,7 +199,7 @@
 						style="gap:20px;">
 						<div class="ur-label" style="width: 30%">
 							<label class="ur-membership-enable-email-marketing-sync-action"
-									for="ur-membership-email-marketing-sync-action"><?php esc_html_e( 'Override Email marketing Setting :', 'user-registration' ); ?>
+									for="ur-membership-email-marketing-sync-action"><?php esc_html_e( 'Override Email Marketing Setting :', 'user-registration' ); ?>
 							</label>
 						</div>
 						<div class="ur-toggle-section m1-auto" style="width: 100%">
@@ -226,6 +226,15 @@
 
 				<?php
 				ur_render_email_marketing_sync_settings( $membership_details );
+					endif;
+
+					/**
+					 * Local Currency Settings Render.
+					 *
+					 * @since 6.1.0
+					 */
+					if ( UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) ):
+						WPEverest\URMembership\Local_Currency\Admin\CoreFunctions::ur_render_local_currency_settings( $membership_details );
 					endif;
 			?>
 		</div>

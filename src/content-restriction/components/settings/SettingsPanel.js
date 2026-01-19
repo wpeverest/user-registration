@@ -1,18 +1,17 @@
 /**
  * External Dependencies
  */
-import React, { useState, useEffect, useRef } from "react";
 import { __ } from "@wordpress/i18n";
-import { getURCRLocalizedData, getURCRData, isProAccess } from "../../utils/localized-data";
-import { showError } from "../../utils/notifications";
-import { saveRuleWithCollectiveData } from "../../utils/rule-save-helper";
+import { useEffect, useRef, useState } from "react";
 import { hasAdvancedLogic } from "../../utils/advanced-logic-helper";
+import { getURCRData, isProAccess } from "../../utils/localized-data";
+import { saveRuleWithCollectiveData } from "../../utils/rule-save-helper";
+import AdvancedLogicWarningModal from "../modals/AdvancedLogicWarningModal";
+import LocalPageAction from "./LocalPageAction";
 import MessageAction from "./MessageAction";
 import RedirectAction from "./RedirectAction";
-import LocalPageAction from "./LocalPageAction";
-import URFormAction from "./URFormAction";
 import ShortcodeAction from "./ShortcodeAction";
-import AdvancedLogicWarningModal from "../modals/AdvancedLogicWarningModal";
+import URFormAction from "./URFormAction";
 
 /* global wp */
 
@@ -49,7 +48,9 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				ruleActions[0].message.trim() !== ""
 			) {
 				try {
-					const decodedMessage = decodeURIComponent(ruleActions[0].message);
+					const decodedMessage = decodeURIComponent(
+						ruleActions[0].message
+					);
 					setMessage(decodedMessage);
 					setUseGlobalMessage(false);
 				} catch (e) {
@@ -77,7 +78,9 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				ruleActions[0].message.trim() !== ""
 			) {
 				try {
-					const decodedMessage = decodeURIComponent(ruleActions[0].message);
+					const decodedMessage = decodeURIComponent(
+						ruleActions[0].message
+					);
 					setMessage(decodedMessage);
 					setUseGlobalMessage(false);
 				} catch (e) {
@@ -118,32 +121,52 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				return defaultMessage;
 			};
 
-			if (action.message) {
-				try {
-					const decodedMessage = decodeURIComponent(action.message);
-					if (decodedMessage.trim() !== "") {
-						setMessage(decodedMessage);
-					} else {
-						// If message is empty and action type is message, show default message
-						setMessage(
-							normalizedType === "message" ? getDefaultMessage() : ""
-						);
+			// For regular custom rules with message action, handle global/custom message option
+			if (normalizedType === "message") {
+				if (action.message) {
+					try {
+						const decodedMessage = decodeURIComponent(action.message);
+						if (decodedMessage.trim() !== "") {
+							setMessage(decodedMessage);
+							setUseGlobalMessage(false);
+						} else {
+							setMessage("");
+							setUseGlobalMessage(true);
+						}
+					} catch (e) {
+						if (action.message.trim() !== "") {
+							setMessage(action.message);
+							setUseGlobalMessage(false);
+						} else {
+							setMessage("");
+							setUseGlobalMessage(true);
+						}
 					}
-				} catch (e) {
-					if (action.message.trim() !== "") {
-						setMessage(action.message);
-					} else {
-						// If message is empty and action type is message, show default message
-						setMessage(
-							normalizedType === "message" ? getDefaultMessage() : ""
-						);
-					}
+				} else {
+					setMessage("");
+					setUseGlobalMessage(true);
 				}
 			} else {
-				// If message is not set and action type is message, show default message
-				setMessage(
-					normalizedType === "message" ? getDefaultMessage() : ""
-				);
+				// For non-message actions, reset useGlobalMessage
+				setUseGlobalMessage(true);
+				if (action.message) {
+					try {
+						const decodedMessage = decodeURIComponent(action.message);
+						if (decodedMessage.trim() !== "") {
+							setMessage(decodedMessage);
+						} else {
+							setMessage("");
+						}
+					} catch (e) {
+						if (action.message.trim() !== "") {
+							setMessage(action.message);
+						} else {
+							setMessage("");
+						}
+					}
+				} else {
+					setMessage("");
+				}
 			}
 			if (action.redirect_url) {
 				setRedirectUrl(action.redirect_url);
@@ -181,29 +204,46 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			}
 		} else {
 			setActionType("message");
-			const defaultMessage = getURCRData(
-				"membership_default_message",
-				""
-			);
-			setMessage(defaultMessage);
+			setMessage("");
+			setUseGlobalMessage(true);
 			setRedirectUrl("");
 			setLocalPage("");
 			setUrForm("");
 			setShortcodeTag("");
 			setShortcodeArgs("");
 		}
-	}, [rule.id, rule.content, rule.actions, isMembershipRule, isMigratedCustomRule]);
+	}, [
+		rule.id,
+		rule.content,
+		rule.actions,
+		isMembershipRule,
+		isMigratedCustomRule
+	]);
 
 	useEffect(() => {
-		setIsAdvancedLogicEnabled(Boolean(rule.is_advanced_logic_enabled || false));
+		setIsAdvancedLogicEnabled(
+			Boolean(rule.is_advanced_logic_enabled || false)
+		);
 	}, [rule.id, rule.is_advanced_logic_enabled]);
 
 	useEffect(() => {
-		if ((isMembershipRule || isMigratedCustomRule) && actionType !== "message") {
+		if (
+			(isMembershipRule || isMigratedCustomRule) &&
+			actionType !== "message"
+		) {
 			setActionType("message");
 		}
-	}, [isMembershipRule, isMigratedCustomRule, actionType]);
-
+		// For regular custom rules, when action type changes to message, initialize useGlobalMessage
+		if (!isMembershipRule && !isMigratedCustomRule && actionType === "message") {
+			const ruleData = rule.content || rule;
+			const ruleActions = ruleData.actions || rule.actions || [];
+			if (ruleActions && ruleActions.length > 0 && ruleActions[0].message && ruleActions[0].message.trim() !== "") {
+				setUseGlobalMessage(false);
+			} else {
+				setUseGlobalMessage(true);
+			}
+		}
+	}, [isMembershipRule, isMigratedCustomRule, actionType, rule.content, rule.actions]);
 
 	const handleActionTypeChange = (e) => {
 		if (isMembershipRule || isMigratedCustomRule) {
@@ -217,7 +257,10 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 		const newValue = e.target.checked;
 
 		if (!newValue) {
-			const logicMap = rule.logic_map || (rule.content && rule.content.logic_map) || null;
+			const logicMap =
+				rule.logic_map ||
+				(rule.content && rule.content.logic_map) ||
+				null;
 			if (hasAdvancedLogic(logicMap)) {
 				setShowWarningModal(true);
 				return;
@@ -232,7 +275,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				is_advanced_logic_enabled: newValue,
 				content: {
 					...(rule.content || {}),
-					is_advanced_logic_enabled: newValue,
+					is_advanced_logic_enabled: newValue
 				}
 			};
 			onRuleUpdate(updatedRule);
@@ -284,7 +327,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 		switch (effectiveActionType) {
 			case "message":
 				actionData.label = __("Show Message", "user-registration");
-				if ((isMembershipRule || isMigratedCustomRule) && useGlobalMessage) {
+				if ((isMembershipRule || isMigratedCustomRule || (!isMembershipRule && !isMigratedCustomRule)) && useGlobalMessage) {
 					actionData.message = "";
 				} else {
 					const defaultMessage = getURCRData(
@@ -321,7 +364,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			case "ur-form":
 			case "ur_form":
 				actionData.type = "ur-form";
-				actionData.label = __("Show UR Form", "user-registration");
+				actionData.label = __("Show UR Form (Legacy)", "user-registration");
 				actionData.message = "";
 				actionData.redirect_url = "";
 				actionData.local_page = "";
@@ -329,7 +372,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				actionData.shortcode = { tag: "", args: "" };
 				break;
 			case "shortcode":
-				actionData.label = __("Render Shortcode", "user-registration");
+				actionData.label = __("Render Shortcode (Legacy)", "user-registration");
 				actionData.message = "";
 				actionData.redirect_url = "";
 				actionData.local_page = "";
@@ -489,7 +532,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			switch (effectiveActionType) {
 				case "message":
 					actionData.label = __("Show Message", "user-registration");
-					if ((isMembershipRule || isMigratedCustomRule) && useGlobalMessage) {
+					if ((isMembershipRule || isMigratedCustomRule || (!isMembershipRule && !isMigratedCustomRule)) && useGlobalMessage) {
 						actionData.message = "";
 					} else {
 						const defaultMessage = getURCRData(
@@ -526,7 +569,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 				case "ur-form":
 				case "ur_form":
 					actionData.type = "ur-form";
-					actionData.label = __("Show UR Form", "user-registration");
+					actionData.label = __("Show UR Form (Legacy)", "user-registration");
 					actionData.message = "";
 					actionData.redirect_url = "";
 					actionData.local_page = "";
@@ -535,7 +578,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 					break;
 				case "shortcode":
 					actionData.label = __(
-						"Render Shortcode",
+						"Render Shortcode (Legacy)",
 						"user-registration"
 					);
 					actionData.message = "";
@@ -555,7 +598,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 					is_advanced_logic_enabled: isAdvancedLogicEnabled,
 					content: {
 						...(rule.content || {}),
-						is_advanced_logic_enabled: isAdvancedLogicEnabled,
+						is_advanced_logic_enabled: isAdvancedLogicEnabled
 					}
 				},
 				onRuleUpdate,
@@ -596,24 +639,20 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 							onChange={handleActionTypeChange}
 							style={{ width: "100%" }}
 						>
-							<option value="message">
-								{__("Show Message", "user-registration")}
-							</option>
-							<option value="redirect">
-								{__("Redirect", "user-registration")}
-							</option>
-							<option value="local_page">
-								{__(
-									"Redirect to a Local Page",
-									"user-registration"
-								)}
-							</option>
-							<option value="ur-form">
-								{__("Show UR Form", "user-registration")}
-							</option>
-							<option value="shortcode">
-								{__("Render Shortcode", "user-registration")}
-							</option>
+							{(() => {
+								const actionTypeOptions = getURCRData("action_type_options", []);
+								return actionTypeOptions.map((option) => {
+									const isLegacy = option.value === "ur-form" || option.value === "shortcode";
+									const label = isLegacy
+										? `${option.label} (Legacy)`
+										: option.label;
+									return (
+										<option key={option.value} value={option.value}>
+											{label}
+										</option>
+									);
+								});
+							})()}
 						</select>
 					</div>
 				</div>
@@ -646,10 +685,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			)}
 
 			{(actionType === "ur-form" || actionType === "ur_form") && (
-				<URFormAction
-					urForm={urForm}
-					onUrFormChange={setUrForm}
-				/>
+				<URFormAction urForm={urForm} onUrFormChange={setUrForm} />
 			)}
 
 			{actionType === "shortcode" && (

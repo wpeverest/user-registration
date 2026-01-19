@@ -14,6 +14,7 @@ use WPEverest\URMembership\Admin\Services\MembersService;
 use WPEverest\URMembership\Admin\Services\OrderService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 use WPEverest\URMembership\Admin\Services\PaymentGatewayLogging;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 
 class PaypalService {
 	/**
@@ -43,7 +44,7 @@ class PaypalService {
 	 *
 	 * @return array|string|string[]
 	 */
-	public function build_url( $data, $membership, $member_email, $subscription_id, $member_id ) {
+	public function build_url( $data, $membership, $member_email, $subscription_id, $member_id, $response_data = array() ) {
 
 		$is_upgrading                 = ! empty( $data['upgrade'] ) ? $data['upgrade'] : false;
 		$paypal_options               = is_array( $data['payment_gateways']['paypal'] ) ? $data['payment_gateways']['paypal'] : array();
@@ -74,6 +75,20 @@ class PaypalService {
 		$discount_amount    = 0;
 		$membership_process = urm_get_membership_process( $member_id );
 		$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $data['current_membership_id'], $membership_process['renew'] );
+
+		$local_currency  = ! empty( $response_data['switched_currency' ] ) ? $response_data['switched_currency' ] : '';
+		$ur_zone_id 	 = ! empty( $response_data['urm_zone_id' ] ) ? $response_data['urm_zone_id' ] : '';
+		$currency 		 = get_option( 'user_registration_payment_currency', 'USD' );
+
+		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) ) {
+			$currency = $local_currency;
+			$pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
+			$local_currency_data = ! empty( $data['local_currency'] ) ? $data['local_currency'] : array();
+
+			if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data[ 'is_enable'] ) ) {
+				$membership_amount = CoreFunctions::ur_get_amount_after_conversion( $membership_amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+			}
+		}
 
 		$final_amount    = $membership_amount;
 		$is_automatic    = 'automatic' === get_option( 'user_registration_renewal_behaviour', 'automatic' );
@@ -106,6 +121,12 @@ class PaypalService {
 			)
 		);
 
+		if ( ! empty( $response_data['tax_rate' ] ) && ! empty( $response_data['tax_calculation_method'] ) && 'calculate_tax' === $response_data['tax_calculation_method'] ) {
+			$tax_rate           	= floatval( $response_data['tax_rate'] );
+			$tax_amount 			= $final_amount * $tax_rate / 100;
+			$final_amount = $final_amount + $tax_amount;
+		}
+
 		// Build item name with pricing information
 		$item_name = $membership_data['post_title'];
 		if ( ! empty( $data['subscription'] ) ) {
@@ -122,7 +143,7 @@ class PaypalService {
 			'cbt'           => $membership_data['post_title'],
 			'charset'       => get_bloginfo( 'charset' ),
 			'cmd'           => $transaction,
-			'currency_code' => get_option( 'user_registration_payment_currency', 'USD' ),
+			'currency_code' => $currency,
 			'custom'        => $membership . '-' . $member_id . '-' . $data['current_membership_id'] . '-' . $subscription_id,
 			'return'        => $return_url,
 			'rm'            => '2',
@@ -139,7 +160,7 @@ class PaypalService {
 		if ( '_xclick-subscriptions' === $transaction ) {
 			$paypal_args['t3']          = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 			$paypal_args['p3']          = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;
-			$paypal_args['a3']          = floatval( user_registration_sanitize_amount( $membership_amount ) );
+			$paypal_args['a3']          = floatval( user_registration_sanitize_amount( $final_amount ) );
 			$new_subscription_data      = json_decode( get_user_meta( $member_id, 'urm_next_subscription_data', true ), true );
 			$previous_subscription_data = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
 
@@ -160,8 +181,8 @@ class PaypalService {
 				$paypal_args['a1'] = '0';
 			}
 
-			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) || ( $is_upgrading && $data['chargeable_amount'] < $membership_amount ) ) {
-				$amount = $is_upgrading ? user_registration_sanitize_amount( $data['amount'] ) : ( user_registration_sanitize_amount( $membership_amount ) - $discount_amount );
+			if ( ! empty( $coupon_details ) || ( $is_upgrading && ! empty( $new_subscription_data ) && ! empty( $new_subscription_data['delayed_until'] ) ) || ( $is_upgrading && $data['chargeable_amount'] < $final_amount ) ) {
+				$amount = $is_upgrading ? user_registration_sanitize_amount( $data['amount'] ) : ( user_registration_sanitize_amount( $final_amount ) );
 
 				$paypal_args['t2'] = ! empty( $data ['subscription'] ) ? strtoupper( substr( $data['subscription']['duration'], 0, 1 ) ) : '';
 				$paypal_args['p2'] = ! empty( $data ['subscription']['value'] ) ? $data ['subscription']['value'] : 1;

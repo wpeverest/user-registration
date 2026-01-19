@@ -12,6 +12,7 @@ use WPEverest\URMembership\Admin\Services\OrderService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
 use WPEverest\URMembership\Admin\Services\PaymentGatewayLogging;
 use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 
 class StripeService {
 	protected $members_orders_repository, $members_subscription_repository, $membership_repository, $orders_repository;
@@ -31,6 +32,29 @@ class StripeService {
 
 		// Set your secret key
 		\Stripe\Stripe::setApiKey( $stripe_settings['secret_key'] );
+	}
+
+	/**
+	 * get_stripe_settings
+	 *
+	 * @return array
+	 */
+	public static function get_stripe_settings() {
+		$is_enabled        = get_option( 'user_registration_stripe_enabled', '' );
+		$stripe_default    = ur_string_to_bool( get_option( 'urm_is_new_installation', false ) );
+		$has_user_changed  = ur_string_to_bool( get_option( 'urm_stripe_updated_connection_status', false ) );
+		$is_stripe_enabled = ( $is_enabled ) ? $is_enabled : ( $has_user_changed ? $stripe_default : ! $stripe_default );
+
+		$mode            = get_option( 'user_registration_stripe_test_mode', false ) ? 'test' : 'live';
+		$publishable_key = get_option( sprintf( 'user_registration_stripe_%s_publishable_key', $mode ) );
+		$secret_key      = get_option( sprintf( 'user_registration_stripe_%s_secret_key', $mode ) );
+
+		return array(
+			'is_stipe_enabled' => $is_stripe_enabled,
+			'mode'             => $mode,
+			'publishable_key'  => $publishable_key,
+			'secret_key'       => $secret_key,
+		);
 	}
 
 	public function create_stripe_product_and_price( $post_data, $meta_data, $should_create_new_price ) {
@@ -129,6 +153,25 @@ class StripeService {
 		$member_id       = $response_data['member_id'];
 		$username        = ! empty( $response_data['username'] ) ? $response_data['username'] : '';
 		$membership_type = $payment_data['type'] ?? 'unknown';
+
+		$local_currency = ! empty( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
+		$ur_zone_id     = ! empty( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
+
+		if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) ) {
+			$currency            = $local_currency;
+			$pricing_data        = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
+			$local_currency_data = ! empty( $payment_data['local_currency'] ) ? $payment_data['local_currency'] : array();
+
+			if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data['is_enable'] ) ) {
+				$amount = CoreFunctions::ur_get_amount_after_conversion( $amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+			}
+		}
+
+		if ( ! empty( $response_data['tax_rate'] ) && ! empty( $response_data['tax_calculation_method'] ) && 'calculate_tax' === $response_data['tax_calculation_method'] ) {
+			$tax_rate   = floatval( $response_data['tax_rate'] );
+			$tax_amount = $amount * $tax_rate / 100;
+			$amount     = $amount + $tax_amount;
+		}
 
 		PaymentGatewayLogging::log_transaction_start(
 			'stripe',
@@ -365,8 +408,18 @@ class StripeService {
 					'member_id'       => $member_id,
 					'transaction_id'  => $transaction_id,
 					'membership_type' => $membership_type,
+					'is_renewing'     => $is_renewing,
 				)
 			);
+
+			$this->members_orders_repository->update(
+				$latest_order['ID'],
+				array(
+					'status' => 'failed',
+				)
+			);
+
+			do_action( 'ur_membership_order_status_failed', $latest_order['ID'], $latest_order, 'failed' );
 
 			if ( ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
 				wp_delete_user( absint( $member_id ) );
@@ -375,6 +428,8 @@ class StripeService {
 			if ( $is_renewing ) {
 				unset( $membership_process['upgrade'][ $latest_order['item_id'] ] );
 				update_user_meta( $member_id, 'urm_membership_process', $membership_process );
+
+				do_action( 'user_registration_membership_renewal_failed', $member_id, $latest_order['item_id'] );
 			}
 
 			$response['message'] = $error_msg;
@@ -466,6 +521,55 @@ class StripeService {
 		return $response;
 	}
 
+	/**
+	 * Sends an email.
+	 *
+	 * @param int $ID The ID of the email.
+	 * @param mixed $member_subscription The subscription details of the member.
+	 * @param array $membership_metas Metadata related to the membership.
+	 * @param int $member_id The ID of the member.
+	 * @param array $response The response data.
+	 *
+	 * @return array The result of the email operation.
+	 */
+	public function sendEmail( int $ID, $member_subscription, array $membership_metas, int $member_id, array $response, $is_upgrading = false ): array {
+		$email_service = new EmailService();
+		$order_detail  = $this->orders_repository->get_order_detail( $ID );
+
+		if ( ! empty( $order_detail['coupon'] ) ) {
+			$order_detail['coupon_discount']      = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount', true );
+			$order_detail['coupon_discount_type'] = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount_type', true );
+
+		}
+
+		$email_data = array(
+			'subscription'     => $member_subscription,
+			'order'            => $order_detail,
+			'membership_metas' => $membership_metas,
+			'member_id'        => $member_id,
+			'membership'       => $member_subscription['item_id'],
+		);
+
+		$mail_send = $email_service->send_email( $email_data, 'payment_successful' );
+
+		if ( ! $mail_send ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Payment email could not be sent',
+				array(
+					'error_code' => 'EMAIL_SEND_FAILED',
+					'member_id'  => $member_id,
+					'order_id'   => $ID,
+				)
+			);
+		}
+
+		return array(
+			'message' => $is_upgrading ? __( 'Membership upgraded successfully.', 'user-registration' ) : __( 'New member has been successfully created with successful stripe payment.', 'user-registration' ),
+			'status'  => true,
+		);
+	}
+
 	public function create_subscription( $customer_id, $payment_method_id, $member_id, $is_upgrading ) {
 
 		$member_order     = $this->members_orders_repository->get_member_orders( $member_id );
@@ -529,8 +633,41 @@ class StripeService {
 
 			return $response;
 		}
-
 		try {
+
+			$order_detail     = $this->orders_repository->get_order_detail( $member_order['ID'] );
+			$order_repository = new OrdersRepository();
+			$local_currency   = $order_repository
+			->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' );
+
+			$currency = ! empty( $local_currency['meta_value'] )
+			? strtoupper( $local_currency['meta_value'] )
+			: strtoupper( get_option( 'user_registration_payment_currency', 'USD' ) );
+
+			$total_amount = ! empty( $member_order['total_amount'] )
+			? (float) $member_order['total_amount']
+			: 0.0;
+
+			if ( in_array( $currency, array( 'JPY', 'KRW', 'VND', 'CLP', 'IDR' ), true ) ) {
+				$total_amount = (int) round( $total_amount );
+			} else {
+				$total_amount = (int) round( $total_amount * 100 );
+			}
+
+			$dynamic_price = \Stripe\Price::create(
+				array(
+					'unit_amount' => $total_amount,
+					'currency'    => $currency,
+					'recurring'   => array(
+						'interval'       => $membership_metas['subscription']['duration'],
+						'interval_count' => intval( $membership_metas['subscription']['value'] ),
+					),
+					'product'     => $stripe_product_details['product_id'],
+				)
+			);
+
+			$stripe_product_details['price_id'] = ! empty( $dynamic_price->id ) ? $dynamic_price->id : $stripe_product_details['price_id'];
+
 			$customer       = \Stripe\Customer::retrieve( $customer_id );
 			$payment_method = \Stripe\PaymentMethod::retrieve( $payment_method_id );
 			$payment_method->attach(
@@ -565,7 +702,7 @@ class StripeService {
 			}
 
 			// handle coupon section
-			$order_detail = $this->orders_repository->get_order_detail( $member_order['ID'] );
+			// $order_detail = $this->orders_repository->get_order_detail( $member_order['ID'] );
 
 			if ( ! empty( $order_detail['coupon'] ) ) {
 				$coupon_details = ur_get_coupon_details( $order_detail['coupon'] );
@@ -746,6 +883,7 @@ class StripeService {
 						'transaction_id' => $subscription->id,
 					)
 				);
+
 				switch ( $subscription_status ) {
 					case 'trialing':
 						$subscription_status = ( $is_upgrading && ! empty( $next_subscription['delayed_until'] ) ) ? 'active' : 'trial';
@@ -831,78 +969,6 @@ class StripeService {
 
 			wp_send_json_error( $e->getMessage() );
 		}
-	}
-
-	/**
-	 * get_stripe_settings
-	 *
-	 * @return array
-	 */
-	public static function get_stripe_settings() {
-		$is_enabled        = get_option( 'user_registration_stripe_enabled', '' );
-		$stripe_default    = ur_string_to_bool( get_option( 'urm_is_new_installation', false ) );
-		$has_user_changed  = ur_string_to_bool( get_option( 'urm_stripe_updated_connection_status', false ) );
-		$is_stripe_enabled = ( $is_enabled ) ? $is_enabled : ( $has_user_changed ? $stripe_default : ! $stripe_default );
-
-		$mode            = get_option( 'user_registration_stripe_test_mode', false ) ? 'test' : 'live';
-		$publishable_key = get_option( sprintf( 'user_registration_stripe_%s_publishable_key', $mode ) );
-		$secret_key      = get_option( sprintf( 'user_registration_stripe_%s_secret_key', $mode ) );
-
-		return array(
-			'is_stipe_enabled' => $is_stripe_enabled,
-			'mode'             => $mode,
-			'publishable_key'  => $publishable_key,
-			'secret_key'       => $secret_key,
-		);
-	}
-
-	/**
-	 * Sends an email.
-	 *
-	 * @param int   $ID The ID of the email.
-	 * @param mixed $member_subscription The subscription details of the member.
-	 * @param array $membership_metas Metadata related to the membership.
-	 * @param int   $member_id The ID of the member.
-	 * @param array $response The response data.
-	 *
-	 * @return array The result of the email operation.
-	 */
-	public function sendEmail( int $ID, $member_subscription, array $membership_metas, int $member_id, array $response, $is_upgrading = false ): array {
-		$email_service = new EmailService();
-		$order_detail  = $this->orders_repository->get_order_detail( $ID );
-
-		if ( ! empty( $order_detail['coupon'] ) ) {
-			$order_detail['coupon_discount']      = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount', true );
-			$order_detail['coupon_discount_type'] = get_user_meta( $order_detail['user_id'], 'ur_coupon_discount_type', true );
-
-		}
-
-		$email_data = array(
-			'subscription'     => $member_subscription,
-			'order'            => $order_detail,
-			'membership_metas' => $membership_metas,
-			'member_id'        => $member_id,
-			'membership'       => $member_subscription['item_id'],
-		);
-
-		$mail_send = $email_service->send_email( $email_data, 'payment_successful' );
-
-		if ( ! $mail_send ) {
-			PaymentGatewayLogging::log_error(
-				'stripe',
-				'Payment email could not be sent',
-				array(
-					'error_code' => 'EMAIL_SEND_FAILED',
-					'member_id'  => $member_id,
-					'order_id'   => $ID,
-				)
-			);
-		}
-
-		return array(
-			'message' => $is_upgrading ? __( 'Membership upgraded successfully.', 'user-registration' ) : __( 'New member has been successfully created with successful stripe payment.', 'user-registration' ),
-			'status'  => true,
-		);
 	}
 
 	/**
@@ -1218,6 +1284,49 @@ class StripeService {
 		return ( empty( $stripe_settings['publishable_key'] ) || empty( $stripe_settings['secret_key'] ) || empty( $stripe_settings['is_stipe_enabled'] ) );
 	}
 
+	/**
+	 * extracted
+	 *
+	 * @param int $member_id
+	 *
+	 * @return void
+	 */
+	public function revert_subscription( int $member_id ): void {
+		$last_subscription = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
+		$subscription_id   = $last_subscription['ID'];
+		unset( $last_subscription['ID'] );
+		$last_order   = $this->members_orders_repository->get_member_orders( $member_id );
+		$subscription = $this->members_subscription_repository->retrieve( $subscription_id );
+
+		$this->members_subscription_repository->update( $subscription_id, $last_subscription );
+		$this->members_orders_repository->delete_member_order( $member_id, false );
+		$refund_response = $this->refund( $last_order, $subscription );
+
+		delete_user_meta( $member_id, 'urm_previous_subscription_data' );
+		$membership_process = urm_get_membership_process( $member_id );
+
+		if ( ! empty( $membership_process ) && isset( $membership_process['upgrade'][ $_POST['current_membership_id'] ] ) ) {
+			unset( $membership_process['upgrade'][ $_POST['current_membership_id'] ] );
+			update_user_meta( $member_id, 'urm_membership_process', $membership_process );
+		}
+	}
+
+	public function refund( $order, $subscription ) {
+		$response = array(
+			'status' => false,
+		);
+		if ( 'stripe' !== $order['payment_method'] || 0 === absint( $order['total_amount'] ) ) {
+			return $response;
+		}
+		if ( 'subscription' === $order['order_type'] ) {
+
+			return $this->refund_subscription( $subscription, null, true );
+
+		} else {
+			$this->refund_transaction( $order['transaction_id'] );
+		}
+	}
+
 	public function refund_subscription( $subscription, $refund_amount = null, $cancel_subscription = false, $cancel_at_end_period = false ) {
 		try {
 			$response        = array(
@@ -1294,49 +1403,6 @@ class StripeService {
 				'success' => false,
 				'error'   => $e->getMessage(),
 			);
-		}
-	}
-
-	public function refund( $order, $subscription ) {
-		$response = array(
-			'status' => false,
-		);
-		if ( 'stripe' !== $order['payment_method'] || 0 === absint( $order['total_amount'] ) ) {
-			return $response;
-		}
-		if ( 'subscription' === $order['order_type'] ) {
-
-			return $this->refund_subscription( $subscription, null, true );
-
-		} else {
-			$this->refund_transaction( $order['transaction_id'] );
-		}
-	}
-
-	/**
-	 * extracted
-	 *
-	 * @param int $member_id
-	 *
-	 * @return void
-	 */
-	public function revert_subscription( int $member_id ): void {
-		$last_subscription = json_decode( get_user_meta( $member_id, 'urm_previous_subscription_data', true ), true );
-		$subscription_id   = $last_subscription['ID'];
-		unset( $last_subscription['ID'] );
-		$last_order   = $this->members_orders_repository->get_member_orders( $member_id );
-		$subscription = $this->members_subscription_repository->retrieve( $subscription_id );
-
-		$this->members_subscription_repository->update( $subscription_id, $last_subscription );
-		$this->members_orders_repository->delete_member_order( $member_id, false );
-		$refund_response = $this->refund( $last_order, $subscription );
-
-		delete_user_meta( $member_id, 'urm_previous_subscription_data' );
-		$membership_process = urm_get_membership_process( $member_id );
-
-		if ( ! empty( $membership_process ) && isset( $membership_process['upgrade'][ $_POST['current_membership_id'] ] ) ) {
-			unset( $membership_process['upgrade'][ $_POST['current_membership_id'] ] );
-			update_user_meta( $member_id, 'urm_membership_process', $membership_process );
 		}
 	}
 
@@ -1443,6 +1509,169 @@ class StripeService {
 				'success' => false,
 				'message' => $e->getMessage(),
 			);
+		}
+	}
+
+
+	/**
+	 * Retries subscription for Stripe subscription payments.
+	 */
+	public function retry_subscription( $subscription ) {
+		$response = array(
+			'status'  => false,
+			'message' => '',
+		);
+
+		if ( empty( $subscription['sub_id'] ) ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Stripe subscription ID not found for retry',
+				array(
+					'error_code' => 'MISSING_SUBSCRIPTION_ID',
+				)
+			);
+
+			$response['message'] = __( 'Subscription ID not found', 'user-registration' );
+
+			return $response;
+		}
+
+		PaymentGatewayLogging::log_general(
+			'stripe',
+			'Retrying Stripe subscription payment',
+			'notice',
+			array(
+				'event_type'      => 'retry_initiated',
+				'subscription_id' => $subscription['sub_id'],
+				'user_id'         => $subscription['user_id'] ?? 'unknown',
+				'item_id'         => $subscription['item_id'] ?? 'unknown',
+			)
+		);
+
+		try {
+			$stripe_subscription = \Stripe\Subscription::retrieve( $subscription['sub_id'] );
+
+			if ( ! $stripe_subscription ) {
+				PaymentGatewayLogging::log_error(
+					'stripe',
+					'Stripe subscription not found for retry',
+					array(
+						'subscription_id' => $subscription['sub_id'],
+					)
+				);
+
+				$response['message'] = __( 'Subscription not found in Stripe', 'user-registration' );
+
+				return $response;
+			}
+
+			if ( in_array( $stripe_subscription->status, array( 'past_due', 'unpaid' ) ) ) {
+				// Update subscription to retry payment
+				$updated_subscription = \Stripe\Subscription::update(
+					$subscription['sub_id'],
+					array(
+						'default_payment_method' => $stripe_subscription->default_payment_method,
+						'off_session'            => true,
+					)
+				);
+
+				PaymentGatewayLogging::log_api_response(
+					'stripe',
+					'Stripe subscription updated for retry',
+					array(
+						'subscription_id' => $subscription['sub_id'],
+						'old_status'      => $stripe_subscription->status,
+						'new_status'      => $updated_subscription->status,
+					)
+				);
+
+				if ( 'active' === $updated_subscription->status || 'trialing' === $updated_subscription->status ) {
+					PaymentGatewayLogging::log_transaction_success(
+						'stripe',
+						'Subscription payment retry successful',
+						array(
+							'subscription_id' => $subscription['sub_id'],
+							'user_id'         => $subscription['user_id'] ?? 'unknown',
+							'status'          => $updated_subscription->status,
+						)
+					);
+
+					$response['status']  = true;
+					$response['message'] = __( 'Subscription payment retried successfully', 'user-registration' );
+				} else {
+					PaymentGatewayLogging::log_error(
+						'stripe',
+						'Subscription payment retry - Unexpected status',
+						array(
+							'subscription_id' => $subscription['sub_id'],
+							'status'          => $updated_subscription->status,
+						)
+					);
+
+					// Notify user via email about a failed retry attempt
+					$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $subscription['sub_id'], true );
+					if ( ! empty( $current_subscription ) ) {
+						$member_id = $current_subscription['user_id'];
+
+						if ( 1 === intval( get_user_meta( $member_id, 'urm_is_payment_retrying', true ) ) ) {
+							$latest_order     = $this->members_orders_repository->get_member_orders( $member_id );
+							$membership       = $this->membership_repository->get_single_membership_by_ID( $current_subscription['item_id'] );
+							$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
+							$email_service    = new EmailService();
+							$email_data       = array(
+								'subscription'     => $current_subscription,
+								'order'            => $latest_order,
+								'membership_metas' => $membership_metas,
+								'member_id'        => $member_id,
+							);
+							$email_service->send_email( $email_data, 'payment_retry_failed' );
+						}
+						$response['message'] = __( 'Subscription retry did not resolve the issue', 'user-registration' );
+					}
+				}
+			} elseif ( 'active' === $stripe_subscription->status || 'trialing' === $stripe_subscription->status ) {
+				//Scenario: if automatic retry is enabled in stripe dashboard, it might be already active via smart retry.
+				PaymentGatewayLogging::log_general(
+					'stripe',
+					'Subscription is already active - no retry needed',
+					'notice',
+					array(
+						'subscription_id' => $subscription['sub_id'],
+						'status'          => $stripe_subscription->status,
+						'user_id'         => $subscription['user_id'] ?? 'unknown',
+					)
+				);
+				$response['status']  = true;
+				$response['message'] = __( 'Subscription is already active', 'user-registration' );
+			} else {
+				PaymentGatewayLogging::log_error(
+					'stripe',
+					'Subscription cannot be recovered.',
+					array(
+						'subscription_id' => $subscription['sub_id'],
+						'status'          => $stripe_subscription->status,
+					)
+				);
+
+				$response['message'] = sprintf( __( 'Subscription status is %s and cannot be retried', 'user-registration' ), $stripe_subscription->status );
+			}
+
+			return $response;
+		} catch ( ApiErrorException $e ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Stripe subscription retry failed',
+				array(
+					'error_code'      => $e->getStripeCode(),
+					'error_message'   => $e->getMessage(),
+					'subscription_id' => $subscription['subscription_id'],
+					'user_id'         => $subscription['user_id'] ?? 'unknown',
+				)
+			);
+
+			$response['message'] = $e->getMessage();
+
+			return $response;
 		}
 	}
 }

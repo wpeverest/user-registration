@@ -202,18 +202,29 @@ body.user-registration {
 // ============================================ Payment history edit ============================================
 
 .ur-payments__form {
-	display: grid;
+	display: flex;
 	gap: 24px;
-	margin-top: 20px;
-	grid-template-columns: 3fr 1fr;
+
+	@media screen and (max-width: 1199px) {
+		flex-direction: column;
+	}
 }
 
 .ur-payments__form--left {
-	min-width: 0;
+	flex: 1;
 }
 
 .ur-payments__form--right {
-	min-width: 0;
+	max-width: 400px;
+	width: 100%;
+
+	@media screen and (max-width: 1399px) {
+		max-width: 280px;
+	}
+
+	@media screen and (max-width: 1199px) {
+		max-width: 100%;
+	}
 
 	>div {
 		&:not(:last-of-type) {
@@ -232,9 +243,9 @@ body.user-registration {
 
 .ur-payments__main-content-wrapper {
 	background: #fff;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-	padding: 24px;
-	border-radius: 8px;
+	padding: 20px 24px;
+	border-radius: 7px;
+	border: 1px solid #e1e1e1;
 }
 
 .ur-payments__summary-payment-wrapper {
@@ -242,31 +253,57 @@ body.user-registration {
 	grid-column: 2/3;
 }
 
-.ur-payments__table {
-	width: 100%;
-	border-collapse: collapse;
+.ur-payments__section-content--wrapper {
 	margin-bottom: 20px;
+	border: 1px solid #e1e1e1;
+	border-radius: 7px;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	width: 100%;
+}
+
+.ur-payments__table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	overflow: hidden;
+	width: 100%;
+	border: 0;
+	border-radius: 0;
+
+	@media screen and (max-width: 1399px) {
+		min-width: 650px;
+	}
 
 	thead {
 		th {
-			padding: 12px 15px;
+			padding: 12px 16px;
 			text-align: left;
-			border-bottom: 1px solid #ccd0d4;
-			font-weight: 600;
-			font-size: 13px;
-			color: #1d2327;
-			background: #f6f7f7;
+			font-size: 15px;
+			line-height: 25px;
+			font-family: inherit;
+			font-weight: 500;
+			color: #ffffff;
+			background: #475bb2;
 		}
 	}
 
 	tbody {
 		td {
-			padding: 15px;
+			padding: 14px;
 			text-align: left;
 			border-bottom: 1px solid #f0f0f1;
-			font-size: 13px;
+			font-size: 14px;
+			line-height: 24px;
 			color: #50575e;
 			vertical-align: top;
+			font-weight: 400;
+
+			.ur-payments__table-item-link {
+				&:focus {
+					outline: none;
+					box-shadow: none;
+				}
+			}
 		}
 
 		tr {
@@ -298,36 +335,34 @@ body.user-registration {
 
 .ur-payments__badge {
 	display: inline-block;
-	padding: 4px 8px;
+	padding: 6px 12px;
 	border-radius: 4px;
-	font-size: 11px;
-	font-weight: 600;
-	text-transform: uppercase;
-	border: 1px solid #2271b1;
-}
+	font-weight: 500;
+	text-transform: capitalize;
+	border: 0;
+	font-size: 14px;
+	line-height: 20px;
 
-.ur-payments__badge--status {
-	border: 1px solid #2271b1;
-}
+	&--status-active,
+	&--status-completed {
+		color: #3aa530;
+		background: #def8db;
+	}
 
-.ur-payments__badge--status-completed {
-	color: #00a32a;
-	border-color: #00a32a;
-}
+	&--status-pending {
+		color: #ee9936;
+		background: #fff3e7;
+	}
 
-.ur-payments__badge--status-pending {
-	color: #f0b849;
-	border-color: #f0b849;
-}
+	&--status-failed {
+		color: #d63638;
+		background: #fcefef;
+	}
 
-.ur-payments__badge--status-failed {
-	color: #d63638;
-	border-color: #d63638;
-}
-
-.ur-payments__badge--status-refunded {
-	color: #8c8f94;
-	border-color: #8c8f94;
+	&--status-refunded {
+		color: #8c8f94;
+		background: #f5f5f5;
+	}
 }
 
 .ur-payments__badge--trial {
@@ -360,21 +395,27 @@ body.user-registration {
 
 .ur-payments__fields {
 	background: #fff;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	// box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	padding: 24px;
 	border-radius: 8px;
+	border: 1px solid #e1e1e1;
 }
 
 .ur-payments__fields-header {
-	margin-bottom: 15px;
 	font-weight: 600;
-	font-size: 14px;
+	font-size: 18px;
+	line-height: 26px;
+	color: #383838;
+	margin: 0;
+	margin: 0 0 24px;
+	padding: 0 0 16px;
+	border-bottom: 1px solid #e1e1e1;
 }
 
 .ur-payments__fields-content {
 	>div {
 		&:not(:last-of-type) {
-			margin-bottom: 24px;
+			margin-bottom: 30px;
 		}
 	}
 }
@@ -382,33 +423,54 @@ body.user-registration {
 .ur-payments__field-row {
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
 }
 
 .ur-payments__field-label {
 	font-weight: 600;
-	font-size: 13px;
-	color: #1d2327;
+	font-size: 18px;
+	line-height: 26px;
+	color: #383838;
+	margin: 0;
+	margin: 0 0 20px;
+	padding: 0 0 16px;
+	border-bottom: 1px solid #e1e1e1;
 }
 
 .ur-payments__field-input {
 	width: 100%;
 
-	input[type="text"] {
+	input {
+		min-height: 38px;
+		padding: 0 12px;
+		border: 1px solid #e1e1e1;
+		font-size: 14px;
+		line-height: 24px;
+		color: #383838;
+		border-radius: 4px;
 		width: 100%;
-		padding: 6px 8px;
-		border: 1px solid #8c8f94;
-		border-radius: 3px;
-		font-size: 13px;
+
+		&:focus {
+			outline: none;
+			box-shadow: none;
+			border-color: #475bb2;
+		}
 	}
 
-	input[type^="date"] {
-		width: 100%;
-		padding: 6px 8px;
-		border: 1px solid #8c8f94;
-		border-radius: 3px;
-		font-size: 13px;
-	}
+	// input[type="text"] {
+	// 	width: 100%;
+	// 	padding: 6px 8px;
+	// 	border: 1px solid #8c8f94;
+	// 	border-radius: 3px;
+	// 	font-size: 13px;
+	// }
+
+	// input[type^="date"] {
+	// 	width: 100%;
+	// 	padding: 6px 8px;
+	// 	border: 1px solid #8c8f94;
+	// 	border-radius: 3px;
+	// 	font-size: 13px;
+	// }
 
 	select {
 		width: 100%;
@@ -453,9 +515,17 @@ body.user-registration {
 
 .ur-payments__coupon-title {
 	font-weight: 600;
-	font-size: 13px;
-	color: #1d2327;
-	margin-bottom: 10px;
+	font-size: 14px;
+	line-height: 24px;
+	color: #383838;
+	margin-bottom: 8px;
+}
+
+.ur-payments__coupon-code {
+	font-size: 14px;
+	line-height: 24px;
+	font-weight: 400;
+	color: #383838;
 }
 
 .ur-payments__coupon-input {
@@ -478,7 +548,8 @@ body.user-registration {
 
 	td {
 		padding: 8px 12px;
-		font-size: 13px;
+		font-size: 14px;
+		line-height: 24px;
 	}
 }
 
@@ -507,11 +578,20 @@ body.user-registration {
 
 	tbody {
 		display: table-row-group;
+
+		tr {
+			&:last-child {
+				td {
+					padding-top: 0;
+				}
+			}
+		}
 	}
 
 	td {
 		padding: 8px 12px;
-		font-size: 13px;
+		font-size: 14px;
+		line-height: 24px;
 	}
 }
 
@@ -541,13 +621,16 @@ body.user-registration {
 	justify-content: space-between;
 	align-items: center;
 	gap: 16px;
-	margin-bottom: 15px;
+	margin: 0 0 24px;
+	padding: 0 0 16px;
+	border-bottom: 1px solid #e1e1e1;
 }
 
 .ur-payments__section-title {
 	font-weight: 600;
-	font-size: 14px;
-	color: #1d2327;
+	font-size: 18px;
+	line-height: 26px;
+	color: #383838;
 	margin: 0;
 }
 
@@ -561,13 +644,12 @@ body.user-registration {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 24px;
-	padding-top: 15px;
 }
 
 .ur-payments__section-column {
 	>div {
 		&:not(:last-of-type) {
-			margin-bottom: 16px;
+			margin-bottom: 20px;
 		}
 	}
 }
@@ -575,7 +657,6 @@ body.user-registration {
 .ur-payments__section-item {
 	display: flex;
 	flex-direction: column;
-	gap: 6px;
 
 	>div {
 		&:not(:last-of-type) {
@@ -585,73 +666,80 @@ body.user-registration {
 }
 
 .ur-payments__section-label {
-	font-size: 12px;
+	font-size: 15px;
+	line-height: 25px;
 	color: #646970;
 	font-weight: 500;
 }
 
 .ur-payments__section-value {
-	font-size: 13px;
-	color: #1d2327;
+	font-size: 15px;
+	line-height: 25px;
+	color: #383838;
 	font-weight: 400;
 }
 
 .ur-payments__section-link {
-	color: #2271b1;
-	text-decoration: underline;
-	font-size: 13px;
-	margin-top: 4px;
-
-	&:hover {
-		color: #135e96;
-	}
+	color: #475bb2;
+	text-decoration: none;
+	font-size: 14px;
+	line-height: 24px;
+	margin: 0;
 }
 
 .ur-payments__section-id {
-	background-color: #f6f7f7;
-	border: 1px solid #dcdcde;
-	border-radius: 3px;
-	padding: 8px 12px;
-	font-size: 13px;
-	color: #1d2327;
-	font-family: monospace;
+	background: #f6f7f7;
+	border: 1px solid #e1e1e1;
+	border-radius: 4px;
+	padding: 0 12px;
+	font-size: 14px;
+	line-height: 24px;
+	min-height: 38px;
+	color: #383838;
+	align-content: center;
 	word-break: break-all;
 }
 
 .ur-payments__payment-actions {
 	display: flex;
-	flex-direction: column;
+	gap: 12px;
+	flex-wrap: wrap;
 
-	.button {
-		text-align: center;
-		background-color: white;
-		border-color: #475bb2;
-		color: #475bb2;
-		min-height: 40px;
-		display: inline-grid;
-		place-items: center;
-
-		&:hover {
-			border-color: #475bb2;
-			color: #475bb2;
-			background-color: white;
-		}
-
-		+ {
-			.button.delete {
-				margin-left: 0;
-				margin-top: 8px;
-			}
-		}
+	@media screen and (min-width: 1200px) and (max-width: 1399px) {
+		flex-direction: column;
 	}
 
-	.delete {
-		border-color: #d63638;
-		color: #d63638;
+	.action {
+		&.button {
+			text-align: center;
+			background: #ffffff;
+			border-color: #475bb2;
+			color: #475bb2;
+			min-height: 34px;
+			display: inline-grid;
+			place-items: center;
+			flex: 1;
+			margin: 0 !important;
+			font-size: 14px;
+			line-height: 20px;
+			font-family: inherit;
 
-		&:hover {
-			border-color: #d63638;
-			color: #d63638;
+			&:hover {
+				background: #475bb2;
+				border-color: #475bb2;
+				color: #ffffff;
+			}
+		}
+
+		&.delete {
+			border-color: #f25656;
+			color: #f25656;
+
+			&:hover {
+				background: #f25656;
+				border-color: #f25656;
+				color: #ffffff;
+			}
 		}
 	}
 }
@@ -665,7 +753,9 @@ body.user-registration {
 
 .ur-payments__user-avatar {
 	margin-bottom: 20px;
-	border-radius: 999px;
+	border-radius: 50%;
+	width: 100px;
+	height: 100px;
 }
 
 .ur-payments__user-name {
@@ -684,21 +774,16 @@ body.user-registration {
 
 	.user-registration-base-list-table-form {
 		&#ur-membership-payment-history-form {
-			#user-registration-base-list-filters-row {
-				margin-bottom:32px;
-			}
 
 			.tablenav {
 				display: flex;
 				justify-content: flex-end;
 				align-self: center;
-				margin-bottom: 32px;
 				flex-wrap: wrap;
 				justify-content: space-between;
 
 				&.top {
 					justify-content: flex-end;
-					padding-top: 40px;
 					row-gap: 16px;
 				}
 
@@ -719,7 +804,7 @@ body.user-registration {
 					flex-wrap: wrap;
 					gap: 16px;
 
-					select{
+					select {
 						width: auto !important;
 						max-width: max-content !important;
 						min-width: auto !important;
@@ -751,9 +836,9 @@ body.user-registration {
 				padding-top: 0;
 			}
 
-			.wp-list-table.orders{
-				tbody{
-					tr{
+			.wp-list-table.orders {
+				tbody {
+					tr {
 						&:nth-child(odd) {
 							background: #F8F8FA;
 						}
@@ -770,5 +855,3 @@ body.user-registration {
 		}
 	}
 }
-
-

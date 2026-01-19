@@ -1,12 +1,13 @@
 /**
  * External Dependencies
  */
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, act } from "react";
 import { __ } from "@wordpress/i18n";
 import ContentTypeDropdown from "../dropdowns/ContentTypeDropdown";
 import ContentValueInput from "../inputs/ContentValueInput";
 import DropdownButton from "../dropdowns/DropdownButton";
-import { isProAccess } from "../../utils/localized-data";
+import { isDripContent, isProAccess } from "../../utils/localized-data";
+import DripThisContent from "../content-drip/DripThisContent";
 
 const AccessControlSection = ({
 	accessControl = "access",
@@ -14,7 +15,8 @@ const AccessControlSection = ({
 	contentTargets = [],
 	onContentTargetsChange,
 	ruleType = null,
-	rule = null
+	rule = null,
+	conditions
 }) => {
 	const conditionValueInputWrapperRef = useRef(null);
 	const lastRuleTypeRef = useRef(null);
@@ -25,7 +27,14 @@ const AccessControlSection = ({
 			type: option.value,
 			label: option.label,
 			value: option.value === "whole_site" ? "whole_site" : [],
-			taxonomy: option.value === "taxonomy" ? "" : undefined
+			taxonomy: option.value === "taxonomy" ? "" : undefined,
+			drip: {
+				activeType: "fixed_date",
+				value: {
+					fixed_date: { date: "", time: "" },
+					days_after: { days: 0 }
+				}
+			}
 		};
 		onContentTargetsChange([...contentTargets, newContentTarget]);
 	};
@@ -169,7 +178,7 @@ const AccessControlSection = ({
 							value: "restrict",
 							label: __("Restrict", "user-registration")
 						}
-				  ]
+					]
 				: []),
 			{ value: "access", label: __("Access", "user-registration") }
 		].map((option) => ({
@@ -229,7 +238,7 @@ const AccessControlSection = ({
 									className="urcr-target-item"
 								>
 									<span className="urcr-target-type-label">
-										{displayLabel}:
+										{displayLabel.replace(/_/g, " ")}:
 									</span>
 									<ContentValueInput
 										contentType={target.type}
@@ -241,6 +250,17 @@ const AccessControlSection = ({
 											)
 										}
 									/>
+									{isProAccess() &&
+										isDripContent() &&
+										"membership" === ruleType && (
+											<DripThisContent
+												onContentTargetsChange={
+													onContentTargetsChange
+												}
+												contentTargets={contentTargets}
+												target={target}
+											/>
+										)}
 									<button
 										type="button"
 										className="button-link urcr-target-remove"
@@ -276,6 +296,8 @@ const AccessControlSection = ({
 						<ContentTypeDropdown
 							onSelect={handleAfterContentTypeSelection}
 							existingContentTypes={contentTargets}
+							conditions={conditions}
+							accessControl={accessControl}
 						/>
 					)}
 				/>

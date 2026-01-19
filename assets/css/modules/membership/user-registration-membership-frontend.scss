@@ -131,9 +131,16 @@ html {
 							min-height: 40px;
 							padding: 0 12px;
 							border-radius: 4px;
-							border: 1px solid $color_1;
-							background: $color_1;
-							color: $color_2;
+							border: 1px solid
+								var(
+									--ur-button-background-normal-color,
+									var(--ur-primary-color, $color_1)
+								);
+							background: var(
+								--ur-button-background-normal-color,
+								var(--ur-primary-color, $color_1)
+							);
+							color: var(--ur-button-text-normal-color, $color_2);
 							font-size: 14px;
 							font-weight: 500;
 							line-height: 24px;
@@ -142,7 +149,18 @@ html {
 							transition: all 0.3s ease-in-out;
 
 							&:hover {
-								background: #38488e;
+								color: var(
+									--ur-button-text-hover-color,
+									$color_2
+								);
+								background: var(
+									--ur-button-background-hover-color,
+									#38488e
+								);
+								border-color: var(
+									--ur-button-background-hover-color,
+									#38488e
+								);
 							}
 						}
 					}
@@ -221,7 +239,7 @@ html {
 				// align-items: center;
 				align-items: flex-start;
 				margin-top: 0;
-				margin-bottom: $spacing_16px;
+				//margin-bottom: $spacing_16px;
 				border-radius: $border_radius_4;
 				border: $border_width solid $border-color;
 				padding: $spacing_14px;
@@ -252,13 +270,13 @@ html {
 					accent-color: $primary_color;
 
 					&:checked {
-						border-color: $primary_color;
-						background: $primary_color;
+						border-color: var(--ur-primary-color, $primary_color);
+						background: var(--ur-primary-color, $primary_color);
 					}
 				}
 
 				&:has(input[type="radio"]:checked) {
-					border-color: $primary_color;
+					border-color: var(--ur-primary-color, $primary_color);
 				}
 
 				.ur-membership-duration {
@@ -276,7 +294,7 @@ html {
 						font-size: 15px;
 						font-weight: 600;
 						line-height: 18px;
-						margin-left: auto;
+						//margin-left: auto;
 						flex: unset;
 						margin-left: 8px;
 					}
@@ -304,7 +322,6 @@ html {
 			}
 
 			.notice {
-
 				&_red,
 				&_blue {
 					&:empty {
@@ -333,6 +350,11 @@ html {
 		#urm-total_container {
 			position: relative;
 			margin-top: $spacing_32px;
+			padding: $spacing_14px;
+			border-radius: $border_radius_4;
+			border: $border_width dashed $primary_color;
+			background: #f8f8fa;
+			gap: $spacing_20px;
 
 			&::before {
 				content: "";
@@ -344,15 +366,18 @@ html {
 				left: 0;
 			}
 
-			.urm-membership-total-value {
+			.urm-membership-total-value,
+			.urm-membership-sub-total-value,
+			.urm-membership-tax-value,
+			.urm-membership-coupons-value {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				gap: $spacing_20px;
-				padding: $spacing_14px;
-				border-radius: $border_radius_4;
-				border: $border_width dashed $primary_color;
-				background: #f8f8fa;
+				// gap: $spacing_20px;
+				// padding: $spacing_14px;
+				// border-radius: $border_radius_4;
+				// border: $border_width dashed $primary_color;
+				// background: #f8f8fa;
 			}
 
 			.ur_membership_input_label {
@@ -379,7 +404,6 @@ html {
 				border: 0;
 				border-radius: 0;
 				background: transparent;
-				border-radius: 0;
 				text-align: right;
 				color: #383838;
 				font-size: 18px;
@@ -403,13 +427,9 @@ html {
 
 			#payment-gateway-body {
 				.ur-membership-payment-gateway-lists {
-					// display: grid;
 					display: flex;
 					align-items: center;
 					gap: $spacing_20px;
-					// grid-template-columns: repeat(3, 1fr);
-					// grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-					// margin-top: 4px;
 
 					@media screen and (max-width: 600px) {
 						flex-direction: column;
@@ -424,16 +444,16 @@ html {
 				.ur_membership_input_label {
 					border-radius: $border_radius_4;
 					border: $border_width solid $border-color;
-					padding: $spacing_14px;
+					padding: $spacing_14px !important;
 					height: 48px;
-					margin-bottom: $spacing_20px;
+					margin-bottom: $spacing_20px !important;
 					justify-content: center;
 					flex: 1;
 					align-items: center;
 					transition: all 0.3s ease;
 
 					&:hover {
-						border-color: $primary_color;
+						border-color: var(--ur-primary-color, $primary_color);
 					}
 
 					&[for="ur-membership-stripe"] {
@@ -448,7 +468,7 @@ html {
 
 					&:has(input[type="radio"]:checked) {
 						background: lighten($primary_color, 50%);
-						border-color: $primary_color;
+						border-color: var(--ur-primary-color, $primary_color);
 					}
 
 					.ur-membership-duration {
@@ -504,12 +524,20 @@ html {
 			width: 200px;
 			cursor: pointer;
 			font-size: 14px;
-			background: #475bb2;
-			color: $color_2;
+			background: var(
+				--ur-button-background-normal-color,
+				$primary_color
+			);
+			color: var(--ur-button-text-normal-color, $white);
 			padding: 10px 0;
 			border-radius: 5px;
 			border: none;
 			font-family: inherit;
+
+			&:hover {
+				background: var(--ur-button-background-hover-color, #38488e);
+				color: var(--ur-button-text-hover-color, $white);
+			}
 		}
 	}
 
@@ -537,10 +565,10 @@ html {
 		position: relative;
 		width: max-content;
 		cursor: pointer;
-		font-size: 14px;
+		//font-size: 14px;
 		background: $color_1;
 		color: $color_2;
-		padding: 10px 0;
+		//padding: 10px 0;
 		border-radius: 4px;
 		border: none;
 		display: flex;
@@ -601,7 +629,6 @@ html {
 
 	.notice-container {
 		.notice {
-
 			&_red,
 			&_blue {
 				&:empty {
@@ -852,7 +879,9 @@ html {
 				margin-right: 0;
 			}
 
-			.user-registration-membership_page_user-registration-frontend-list .shortcode .widefat {
+			.user-registration-membership_page_user-registration-frontend-list
+				.shortcode
+				.widefat {
 				width: calc(100% - 40px);
 			}
 
@@ -904,7 +933,7 @@ html {
 
 .user-registration {
 	.membership-upgrade-container {
-		>span {
+		> span {
 			display: block;
 			margin-bottom: 20px;
 			font-size: 16px;
@@ -974,7 +1003,7 @@ html {
 			}
 
 			.ur-frontend-field {
-				accent-color: #475bb2;
+				accent-color: var(--ur-primary-color, $primary_color);
 
 				&:focus {
 					outline: none;
@@ -984,7 +1013,7 @@ html {
 			}
 
 			&:has(.ur-frontend-field:checked) {
-				border-color: #475bb2;
+				border-color: var(--ur-primary-color, $primary_color);
 			}
 
 			.ur-membership-title-wrapper {
@@ -1034,8 +1063,11 @@ html {
 		font-size: 16px;
 		line-height: 24px;
 		font-weight: 600;
-		background: #475bb2;
-		color: white;
+		background: var(
+			--ur-button-background-normal-color,
+			var(--ur-primary-color, $color_1)
+		);
+		color: var(--ur-button-text-normal-color, $color_2);
 		padding: 14px 0;
 		border-radius: 5px;
 		border: none;
@@ -1071,7 +1103,6 @@ html {
 				box-sizing: border-box;
 				transition: all 0.3s ease-in-out;
 				margin-bottom: 0;
-				border-radius: 8px;
 				border: 1px solid var(--Grey-grey-50, #e9e9e9);
 
 				.ur-membership-amount-wrapper {
@@ -1160,7 +1191,6 @@ html {
 					box-sizing: border-box;
 					transition: all 0.3s ease-in-out;
 					margin-bottom: 0;
-					border-radius: 8px;
 					border: 1px solid var(--Grey-grey-50, #e9e9e9);
 					align-items: center;
 
@@ -1190,8 +1220,11 @@ html {
 						font-size: 16px;
 						font-weight: 600;
 						line-height: 24px;
-						background: #475bb2;
-						color: white;
+						background: var(
+							--ur-button-background-normal-color,
+							$primary_color
+						);
+						color: var(--ur-button-text-normal-color, $white);
 						padding: 12px 0;
 						margin-top: 20px;
 						border-radius: 5px;
@@ -1199,7 +1232,11 @@ html {
 						font-family: inherit;
 
 						&:hover {
-							background: #38488e;
+							background: var(
+								--ur-button-background-hover-color,
+								$primary_color
+							);
+							color: var(--ur-button-text-hover-color, $white);
 						}
 					}
 
@@ -1245,16 +1282,25 @@ html {
 	}
 }
 
-.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block:hover,
-.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block:hover,
-#pg-container .ur-membership-list-container .ur-membership-container .membership-block:hover {
+.user-registration-page
+	.ur-membership-list-container
+	.ur-membership-container
+	.membership-block:hover,
+.ur-multi-device-form-preview
+	.ur-membership-list-container
+	.ur-membership-container
+	.membership-block:hover,
+#pg-container
+	.ur-membership-list-container
+	.ur-membership-container
+	.membership-block:hover {
 	background: none;
 	box-shadow: none;
 }
 
 // Thankyou Page CSS
 .ur-thank-you-page {
-	max-width: 600px !important;
+	max-width: 800px !important;
 	width: 100%;
 	margin: 24px auto;
 	box-sizing: border-box;
@@ -1267,7 +1313,7 @@ html {
 		background-color: #ffffff;
 		padding: 48px;
 		border-radius: 7px;
-		border: 1px solid #F1F5F9;
+		border: 1px solid #f1f5f9;
 		box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.06);
 
 		@media screen and (max-width: 600px) {
@@ -1358,8 +1404,8 @@ html {
 				justify-content: center;
 				gap: 8px;
 				padding: $spacing_14px $spacing_32px;
-				background: #475bb2;
-				color: #ffffff;
+				background: var(--ur-button-background-normal-color, #475bb2);
+				color: var(--ur-button-text-normal-color, #ffffff);
 				font-size: 16px;
 				font-weight: 500;
 				border: none;
@@ -1374,7 +1420,11 @@ html {
 				}
 
 				&:hover {
-					background: #38488e;
+					background: var(
+						--ur-button-background-hover-color,
+						#38488e
+					);
+					color: var(--ur-button-text-hover-color, #ffffff);
 				}
 
 				&:focus {
@@ -1401,8 +1451,8 @@ html {
 			margin: 30px 0;
 			padding: 20px;
 			align-items: center;
-			background-color: #F8F8FA;
-			border: 1px solid #EDF2F7;
+			background-color: #f8f8fa;
+			border: 1px solid #edf2f7;
 			border-radius: 6px;
 			text-align: left;
 			font-size: 16px;
@@ -1504,6 +1554,100 @@ html {
 	}
 }
 
+//@media (max-width: 768px) {
+//	.thank-you-page-container {
+//		padding: 50px 32px;
+//
+//		.ur-headline h1 {
+//			font-size: 28px;
+//		}
+//
+//		.ur-message p {
+//			font-size: 15px;
+//		}
+//
+//		.ur-button-wrapper .ur-redirect-btn {
+//			padding: 13px 28px;
+//			font-size: 15px;
+//		}
+//	}
+//}
+//
+//@media (max-width: 640px) {
+//	.ur-thank-you-page {
+//		padding: 20px 16px;
+//	}
+//
+//	.thank-you-page-container {
+//		padding: 40px 24px;
+//		border-radius: 6px;
+//
+//		.ur-success-icon {
+//			width: 70px;
+//			height: 70px;
+//			margin-bottom: 28px;
+//
+//			svg {
+//				width: 40px;
+//				height: 40px;
+//			}
+//		}
+//
+//		.ur-headline {
+//			margin-bottom: 16px;
+//
+//			h1 {
+//				font-size: 24px;
+//			}
+//		}
+//
+//		.ur-message {
+//			margin-bottom: 28px;
+//
+//			p {
+//				font-size: 15px;
+//			}
+//		}
+//
+//		.ur-button-wrapper {
+//			margin-bottom: 24px;
+//
+//			.ur-redirect-btn {
+//				padding: 12px 24px;
+//				font-size: 15px;
+//			}
+//		}
+//
+//		.ur-bank-details {
+//			padding: 16px;
+//			margin-bottom: 20px;
+//		}
+//
+//		.ur-transaction-info {
+//			padding: 12px 16px;
+//			margin-bottom: 20px;
+//		}
+//
+//		.ur-footer p {
+//			font-size: 13px;
+//		}
+//	}
+//}
+//
+//@media (max-width: 480px) {
+//	.thank-you-page-container {
+//		padding: 32px 20px;
+//
+//		.ur-headline h1 {
+//			font-size: 22px;
+//		}
+//
+//		.ur-message p {
+//			font-size: 14px;
+//		}
+//	}
+//}
+
 @media print {
 	.ur-thank-you-page {
 		background-color: #ffffff;
@@ -1543,7 +1687,7 @@ html {
 
 	td {
 		padding: 10px 12px;
-		border: 1px solid #EDF2F7;
+		border: 1px solid #edf2f7;
 		vertical-align: top;
 	}
 
@@ -1551,14 +1695,14 @@ html {
 		width: 35%;
 		font-weight: 600;
 		color: #374151;
-		background-color: #F8F8FA;
+		background-color: #f8f8fa;
 		white-space: nowrap;
 	}
 
 	&-data {
 		color: #111827;
 		word-break: break-word;
-		background-color: #F8F8FA;
+		background-color: #f8f8fa;
 	}
 
 	&-tr:nth-child(even) {

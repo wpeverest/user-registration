@@ -82,7 +82,7 @@ class Membership {
 
 		wp_register_script(
 			'user-registration-membership',
-			UR()->plugin_url(). '/assets/js/modules/membership/admin/user-registration-membership-admin' . $suffix . '.js',
+			UR()->plugin_url() . '/assets/js/modules/membership/admin/user-registration-membership-admin' . $suffix . '.js',
 			array(
 				'jquery',
 				'jquery-ui-sortable',
@@ -144,7 +144,7 @@ class Membership {
 		}
 		wp_enqueue_style( 'ur-snackbar' );
 		wp_enqueue_style( 'sweetalert2' );
-		wp_register_style( 'ur-membership-admin-style', UR()->plugin_url(). '/assets/css/modules/membership/user-registration-membership-admin.css', array(), UR_VERSION );
+		wp_register_style( 'ur-membership-admin-style', UR()->plugin_url() . '/assets/css/modules/membership/user-registration-membership-admin.css', array(), UR_VERSION );
 		wp_register_style( 'ur-core-builder-style', UR()->plugin_url() . '/assets/css/admin.css', array(), UR_VERSION );
 		wp_enqueue_style( 'ur-core-builder-style' );
 		wp_enqueue_style( 'ur-membership-admin-style' );
@@ -794,12 +794,16 @@ class Membership {
 			$type = 'posts';
 		}
 
-		$type_labels = array(
-			'pages'      => isset( $localized_data['labels']['pages'] ) ? $localized_data['labels']['pages'] : __( 'Pages', 'user-registration' ),
-			'posts'      => isset( $localized_data['labels']['posts'] ) ? $localized_data['labels']['posts'] : __( 'Posts', 'user-registration' ),
-			'post_types' => isset( $localized_data['labels']['post_types'] ) ? $localized_data['labels']['post_types'] : __( 'Post Types', 'user-registration' ),
-			'taxonomy'   => isset( $localized_data['labels']['taxonomy'] ) ? $localized_data['labels']['taxonomy'] : __( 'Taxonomy', 'user-registration' ),
-			'whole_site' => isset( $localized_data['labels']['whole_site'] ) ? $localized_data['labels']['whole_site'] : __( 'Whole Site', 'user-registration' ),
+		$type_labels = apply_filters(
+			'urcr_type_labels',
+			array(
+				'pages'      => isset( $localized_data['labels']['pages'] ) ? $localized_data['labels']['pages'] : __( 'Pages', 'user-registration' ),
+				'posts'      => isset( $localized_data['labels']['posts'] ) ? $localized_data['labels']['posts'] : __( 'Posts', 'user-registration' ),
+				'post_types' => isset( $localized_data['labels']['post_types'] ) ? $localized_data['labels']['post_types'] : __( 'Post Types', 'user-registration' ),
+				'taxonomy'   => isset( $localized_data['labels']['taxonomy'] ) ? $localized_data['labels']['taxonomy'] : __( 'Taxonomy', 'user-registration' ),
+				'whole_site' => isset( $localized_data['labels']['whole_site'] ) ? $localized_data['labels']['whole_site'] : __( 'Whole Site', 'user-registration' ),
+			),
+			$localized_data
 		);
 
 		$type_label = isset( $type_labels[ $type ] ) ? $type_labels[ $type ] : $type;
@@ -870,7 +874,58 @@ class Membership {
 			if ( is_array( $value ) && ! empty( $value ) ) {
 				$value_attr = ' data-value="' . esc_attr( wp_json_encode( $value ) ) . '"';
 			}
-			$html .= '<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' . $target_id . '" data-content-type="' . esc_attr( $type ) . '" data-field-type="' . esc_attr( $type ) . '"' . $value_attr . '></select>';
+			$html .= apply_filters(
+				'urcr_default_content_target_html',
+				'<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' . $target_id . '" data-content-type="' . esc_attr( $type ) . '" data-field-type="' . esc_attr( $type ) . '"' . $value_attr . '></select>',
+				$target_id,
+				$type,
+				$value
+			);
+		}
+		if ( 'whole_site' !== $type ) {
+			$drip  = isset( $target['drip'] ) ? $target['drip'] : array(
+				'activeType' => 'fixed_date',
+				'value'      => array(
+					'fixed_date' => array(
+						'date' => '',
+						'time' => '',
+					),
+					'days_after' => array( 'days' => 0 ),
+				),
+			);
+			$html .= '<div class="urcr-membership-drip" data-active_type="' . esc_attr( $drip['activeType'] ) . '"
+	data-fixed_date_date="' . esc_attr( $drip['value']['fixed_date']['date'] ) . '"
+	data-fixed_date_time="' . esc_attr( $drip['value']['fixed_date']['time'] ) . '"
+	data-days_after_days="' . esc_attr( $drip['value']['days_after']['days'] ) . '">
+
+	<button type="button" class="urcr-drip__trigger">
+		<span class="dashicons dashicons-plus-alt2"></span> Drip This Content
+	</button>';
+
+			$html .= '<div class="urcr-drip__popover" style="display:none;">
+	<div class="urcr-drip__arrow"></div>
+
+	<div class="urcr-drip__tabs">
+		<div class="urcr-drip__tabList">
+			<button type="button" class="urcr-drip__tab" data-value="fixed_date">Fixed Date</button>
+			<button type="button" class="urcr-drip__tab" data-value="days_after">Days After</button>
+		</div>
+
+		<div class="urcr-drip__panels">
+			<div class="urcr-drip__panel fixed_date-panel">
+				<input type="date" class="urcr-drip__input drip-date" value="' . esc_attr( $drip['value']['fixed_date']['date'] ) . '" />
+				<input type="time" class="urcr-drip__input drip-time" value="' . esc_attr( $drip['value']['fixed_date']['time'] ) . '" />
+			</div>
+
+			<div class="urcr-drip__panel days_after-panel" style="display:none;">
+				<input type="number" class="urcr-drip__input drip-days" value="' . esc_attr( $drip['value']['days_after']['days'] ) . '" min="0" />
+			</div>
+		</div>
+	</div>
+</div>';
+
+			$html .= '</div>';
+
 		}
 
 		$html .= '<button type="button" class="button button-link-delete urcr-target-remove" aria-label="' . esc_attr__( 'Remove content target', 'user-registration' ) . '">' .
@@ -918,17 +973,18 @@ class Membership {
 			'user-registration-membership',
 			'ur_membership_localized_data',
 			array(
-				'_nonce'              => wp_create_nonce( 'ur_membership' ),
-				'membership_id'       => $membership_id,
-				'membership_content'  => $membership_content,
-				'ajax_url'            => admin_url( 'admin-ajax.php' ),
-				'wp_roles'            => ur_membership_get_all_roles(),
-				'posts'               => $posts,
-				'labels'              => $this->get_i18_labels(),
-				'membership_page_url' => admin_url( 'admin.php?page=user-registration-membership' ),
-				'delete_icon'         => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
-				'update_order_nonce'  => wp_create_nonce( 'ur_membership_update_order' ),
-				'update_order_action' => 'user_registration_membership_update_membership_order',
+				'_nonce'                          => wp_create_nonce( 'ur_membership' ),
+				'membership_id'                   => $membership_id,
+				'membership_content'              => $membership_content,
+				'ajax_url'                        => admin_url( 'admin-ajax.php' ),
+				'wp_roles'                        => ur_membership_get_all_roles(),
+				'posts'                           => $posts,
+				'labels'                          => $this->get_i18_labels(),
+				'membership_page_url'             => admin_url( 'admin.php?page=user-registration-membership' ),
+				'delete_icon'                     => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
+				'update_order_nonce'              => wp_create_nonce( 'ur_membership_update_order' ),
+				'update_order_action'             => 'user_registration_membership_update_membership_order',
+				'validate_payment_currency_nonce' => wp_create_nonce( 'validate_payment_currency_nonce' ),
 			)
 		);
 	}

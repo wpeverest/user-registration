@@ -4,7 +4,7 @@ Tags: user registration, membership, user profile, registration form, login form
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 6.9
-Stable tag: 5.0.2
+Stable tag: 5.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,15 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 5.0.3    - 15/01/2026 =
+* Fix      - My Account responsive design.
+* Fix      - Members menu class not found.
+* Fix      - get_form function not working.
+* Fix      - Content rules edit title design.
+* Fix      - Post editor margins removed after update.
+* Fix      - Warnings due to payment_method not defined.
+* Fix      - View payment link not working form subscription editor.
 
 = 5.0.2    - 14/01/2026 =
 * Fix      - Critical error after update.
@@ -927,6 +936,11 @@ information and activities.
 
 
 == Upgrade Notice ==
+= 5.0.3 =
+##Important: Version 5.0 is a major update with significant improvements
+We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
+Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)
+
 = 5.0.2 =
 ##Important: Version 5.0 is a major update with significant improvements
 We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.

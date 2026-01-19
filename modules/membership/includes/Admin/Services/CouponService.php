@@ -3,6 +3,7 @@
 namespace WPEverest\URMembership\Admin\Services;
 
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 use WPEverest\URMembership\TableList;
 
 class CouponService {
@@ -109,6 +110,28 @@ class CouponService {
 			'membership_meta' => $membership_meta,
 		);
 		$amount                          = $membership_amount - $discount_amount;
+
+		if ( ! empty( $data['tax_rate'] ) ) {
+			$tax_rate  = floatval( $data['tax_rate'] );
+			$tax_amount  = $amount * $tax_rate / 100;
+			$amount     = $amount + $tax_amount;
+		}
+
+		if ( ! empty( $data['switched_currency' ] ) && ! empty( $data['urm_zone_id'] ) ) {
+			$local_currency  = ! empty( $data['switched_currency' ] ) ? $data['switched_currency' ] : '';
+			$ur_zone_id 	 = ! empty( $data['urm_zone_id' ] ) ? $data['urm_zone_id' ] : '';
+
+			if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) ) {
+				$currency = $local_currency;
+				$pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
+				$local_currency_data = ! empty( $membership_meta['local_currency'] ) ? $membership_meta['local_currency'] : array();
+
+				if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data[ 'is_enable'] ) ) {
+					$amount = CoreFunctions::ur_get_amount_after_conversion( $amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+				}
+			}
+		}
+
 		$message                         = 'Coupon applied successfully.';
 		$final_data['discounted_amount'] = $amount;
 		$final_data['discount_amount']   = $discount_amount;

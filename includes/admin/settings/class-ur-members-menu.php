@@ -320,6 +320,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 						'delete_label'           => __( 'Delete', 'user-registration' ),
 						'cancel_label'           => __( 'Cancel', 'user-registration' ),
 					),
+					'user_registration_update_state_field' => wp_create_nonce( 'user_registration_update_state_field_nonce' ),
 				)
 			);
 			$this->localize_admin_script_data();
@@ -979,7 +980,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 			echo user_registration_plugin_main_header();
 			$base_data = array(
 				'page'       => $this->page,
-				'title'      => esc_html__( 'All Members', 'user-registration' ),
+				'title'      => esc_html__( 'Members', 'user-registration' ),
 				'search_id'  => 'user-registration-users-search-input',
 				'form_id'    => 'user-registration-members-list-form',
 				'class'      => 'user-registration-users-page',

@@ -1,0 +1,86 @@
+#masteriyo-account-page {
+	li:last-child {
+		display: none;
+	}
+
+	li {
+		a[href="#/order-history"],
+		a[href="#/user/profile"] {
+			display: none;
+		}
+	}
+}
+
+.urm-masteriyo-membership-list {
+	margin-bottom: 0px !important;
+	padding-bottom: 0px !important;
+	border-bottom: none !important;
+}
+
+.urm-membership-titles {
+	.membership-block {
+		display: flex;
+		margin-bottom: 20px;
+		border-width: 1px;
+		border-style: solid;
+		border-color: rgb(225, 225, 225);
+		border-image: initial;
+		border-radius: 4px;
+		padding: 16px;
+
+		.ur_membership_input_label {
+			display: flex;
+			gap: 4px;
+			width: 100%;
+		}
+
+		.ur-frontend-field {
+			accent-color: #475bb2;
+
+			&:focus {
+				outline: none;
+				box-shadow: none;
+				vertical-align: center;
+			}
+		}
+
+		&:has(.ur-frontend-field:checked) {
+			border-color: #475bb2;
+		}
+
+		.ur-membership-title-wrapper {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+
+			.ur-membership-title {
+				color: #1f1f1f;
+				font-weight: 600;
+				display: inline-block;
+				vertical-align: middle;
+				font-size: 16px;
+				text-align: left;
+			}
+
+			.ur-membership-amount-wrapper {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 4px;
+
+				.membership-amount {
+					font-weight: 700;
+					font-size: 16px;
+					color: #1f1f1f;
+				}
+			}
+		}
+	}
+
+	.ur-membership-duration {
+		color: #6b6b6b;
+		font-size: 13px;
+		font-weight: 400;
+	}
+}
