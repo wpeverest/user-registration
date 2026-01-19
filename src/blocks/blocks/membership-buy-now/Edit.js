@@ -32,7 +32,6 @@ const ServerSideRender = wp.serverSideRender
 
 const { urRestApiNonce } = typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
-
 const buildHoverCss = ({ blockId, hoverTextColor, hoverBgColor }) => {
 	if (!blockId) return "";
 
@@ -136,7 +135,6 @@ const Edit = (props) => {
 	const isOutlineStyle =
 		blockProps.className?.includes("is-style-outline") || false;
 
-
 	const fetchData = async () => {
 		try {
 			const res = await apiFetch({
@@ -160,7 +158,6 @@ const Edit = (props) => {
 		fetchData();
 	}, []);
 
-
 	useEffect(() => {
 		if (!attributes.clientId && clientId) {
 			setAttributes({ clientId });
@@ -168,14 +165,21 @@ const Edit = (props) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [clientId]);
 
-
 	useEffect(() => {
 		if (isOutlineStyle) {
+			const updates = {};
+
 			if (backgroundColor || hoverBgColor) {
-				setAttributes({
-					backgroundColor: "",
-					hoverBgColor: ""
-				});
+				updates.backgroundColor = "";
+				updates.hoverBgColor = "";
+			}
+
+			if (!borderColor) {
+				updates.borderColor = "#000000";
+			}
+
+			if (Object.keys(updates).length > 0) {
+				setAttributes(updates);
 			}
 		} else {
 			const updates = {};
@@ -184,7 +188,10 @@ const Edit = (props) => {
 				updates.backgroundColor = "#475bb2";
 			}
 			if (!hoverBgColor) {
-				updates.hoverBgColor = "#475bb2";
+				updates.hoverBgColor = "#3a4a8f";
+			}
+			if (borderColor) {
+				updates.borderColor = "";
 			}
 
 			if (Object.keys(updates).length > 0) {
@@ -193,7 +200,6 @@ const Edit = (props) => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isOutlineStyle]);
-
 
 	const membershipOptions = useMemo(() => {
 		if (!membershipList) return [];
