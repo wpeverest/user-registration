@@ -1,0 +1,26 @@
+(function ($) {
+	$(document).ready(function () {
+		// Masteriyo Course Portal Membership Selection
+		$(document).on(
+			"click",
+			".urm-masteriyo-membership-list .membership-block input[type='radio']",
+			function () {
+				var checkoutUrl = $(
+					".masteriyo-single-course--btn.masteriyo-enroll-btn"
+				).attr("href");
+
+				if (checkoutUrl) {
+					$(
+						".masteriyo-single-course--btn.masteriyo-enroll-btn"
+					).attr(
+						"href",
+						checkoutUrl +
+							(checkoutUrl.includes("?") ? "&" : "?") +
+							"membership_id=" +
+							$(this).val()
+					);
+				}
+			}
+		);
+	});
+})(jQuery);

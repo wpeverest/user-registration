@@ -25,7 +25,7 @@
 				.user-registration-MyAccount-navigation-link {
 					&.is-active {
 						a {
-							border-color: $primary_color;
+							border-color: var(--ur-primary-color, $primary_color);
 						}
 					}
 				}
@@ -108,7 +108,6 @@
 			}
 
 			.edit-profile {
-
 				.user-registration-profile-header,
 				h2 {
 					text-align: center;
@@ -124,7 +123,7 @@
 			padding: 36px 30px;
 		}
 
-		>h2 {
+		> h2 {
 			margin-bottom: $spacing_24px;
 		}
 
@@ -139,7 +138,7 @@
 			}
 		}
 
-		>p {
+		> p {
 			margin-bottom: $spacing_8px;
 
 			a {
@@ -167,7 +166,7 @@
 
 			.user-registration-EditAccountForm {
 				.ur-form-grid {
-					>p {
+					> p {
 						float: right;
 						margin-bottom: 0;
 					}
@@ -176,7 +175,7 @@
 
 			.user-registration-EditProfileForm {
 				.user-registration-profile-fields {
-					>p {
+					> p {
 						float: right;
 						margin-top: $spacing_24px;
 						margin-bottom: 0;
@@ -261,7 +260,7 @@
 									font-size: 14px;
 									font-weight: 500;
 									line-height: 150%;
-									color: #6b6b6b;
+									color: #6B6B6B;
 									margin: 0;
 
 									&::before,
@@ -283,15 +282,7 @@
 										width: 0;
 										height: 0;
 										border: none;
-										transition:
-											0.1s width cubic-bezier(0.075,
-												0.82,
-												0.165,
-												1) 0s,
-											0.3s width cubic-bezier(0.075,
-												0.82,
-												0.165,
-												2) 0.1s;
+										transition: 0.1s width cubic-bezier(0.075, 0.82, 0.165, 1) 0s, 0.3s width cubic-bezier(0.075, 0.82, 0.165, 2) 0.1s;
 									}
 								}
 
@@ -304,7 +295,7 @@
 									appearance: none;
 									margin-right: 0;
 
-									&:checked+label {
+									&:checked + label {
 										color: #475bb2;
 										background: #edeff7;
 										border-color: #475bb2;
@@ -342,7 +333,7 @@
 								font-weight: 600;
 								font-size: 18px;
 								line-height: 24px;
-								color: #6b6b6b;
+								color: #6B6B6B;
 								margin-bottom: 12px;
 							}
 
@@ -350,7 +341,7 @@
 								font-weight: 400;
 								font-size: 15px;
 								line-height: 23px;
-								color: #6b6b6b;
+								color: #6B6B6B;
 								margin-bottom: 0;
 							}
 
@@ -363,16 +354,16 @@
 
 								.ur-button {
 									padding: 10px 16px;
-									background: #0170b9;
-									border: 1px solid #0170b9;
+									background: #0170B9;
+									border: 1px solid #0170B9;
 									border-radius: 3px;
 									font-weight: 500;
 									font-size: 14px;
 									line-height: 150%;
-									color: #ffffff;
+									color: #FFFFFF;
 									text-decoration: none;
-									transition: all 0.3s ease-in-out;
-									letter-spacing: 0.2px;
+									transition: all .3s ease-in-out;
+									letter-spacing: .2px;
 
 									&:hover {
 										background: #004c7d;
@@ -385,12 +376,12 @@
 									font-size: 14px;
 									line-height: 150%;
 									text-decoration-line: underline;
-									color: #6b6b6b;
-									letter-spacing: 0.1px;
-									transition: all 0.3s ease-in-out;
+									color: #6B6B6B;
+									letter-spacing: .1px;
+									transition: all .3s ease-in-out;
 
 									&:hover {
-										color: #0170b9;
+										color: #0170B9;
 									}
 								}
 
@@ -399,12 +390,12 @@
 									font-size: 14px;
 									line-height: 150%;
 									text-decoration-line: underline;
-									color: #6b6b6b;
-									letter-spacing: 0.1px;
-									transition: all 0.3s ease-in-out;
+									color: #6B6B6B;
+									letter-spacing: .1px;
+									transition: all .3s ease-in-out;
 
 									&:hover {
-										color: #0170b9;
+										color: #0170B9;
 									}
 								}
 							}
@@ -419,7 +410,7 @@
 								label {
 									font-weight: 400;
 									font-size: 15px;
-									color: #6b6b6b;
+									color: #6B6B6B;
 									line-height: 150%;
 									margin-top: 0;
 									margin-bottom: 16px;
@@ -430,21 +421,21 @@
 
 									input[type="password"] {
 										padding: 8px 14px;
-										background: #ffffff;
-										border: 1px solid #e1e1e1;
+										background: #FFFFFF;
+										border: 1px solid #E1E1E1;
 										border-radius: 4px;
 
 										&::placeholder {
-											color: #bababa;
+											color: #BABABA;
 										}
 									}
 
 									.ur-field-error {
-										background: #fff4f4;
+										background: #FFF4F4;
 										padding: 8px 12px 8px 16px;
-										color: #f25656;
+										color: #F25656;
 										font-weight: 500;
-										border-left: 3px solid #f25656;
+										border-left: 3px solid #F25656;
 										margin-top: 8px;
 										font-size: 14px;
 										display: flex;
@@ -468,17 +459,17 @@
 									font-weight: 500;
 									font-size: 14px;
 									line-height: 150%;
-									color: #ffffff;
+									color: #FFFFFF;
 									padding: 10px 16px;
-									background: #0170b9;
-									border: 1px solid #0170b9;
+									background: #0170B9;
+									border: 1px solid #0170B9;
 									border-radius: 3px;
 									letter-spacing: 0.2px;
-									transition: all 0.3s ease-in-out;
+									transition: all .3s ease-in-out;
 
 									&:hover {
-										background: #004c7d;
-										border-color: #004c7d;
+										background: #004C7D;
+										border-color: #004C7D;
 									}
 								}
 							}
@@ -496,14 +487,14 @@
 								line-height: 24px;
 								color: $white;
 								padding: 0 $spacing_12px;
-								background: #0170b9;
-								border: 1px solid #0170b9;
+								background: #0170B9;
+								border: 1px solid #0170B9;
 								border-radius: $border_radius_4;
-								transition: all 0.3s ease-in-out;
+								transition: all .3s ease-in-out;
 
 								&:hover {
-									background: #004c7d;
-									border-color: #004c7d;
+									background: #004C7D;
+									border-color: #004C7D;
 								}
 							}
 						}
@@ -528,13 +519,13 @@
 					tbody {
 						tr {
 							th {
-								background: #f1f5f9;
+								background: #F1F5F9;
 								font-weight: $semi_bold;
 							}
 
 							td {
 								&:last-child {
-									color: #59b259;
+									color: #59B259;
 									text-transform: capitalize;
 								}
 
@@ -644,7 +635,7 @@
 
 							.ur-front-spinner {
 								background-size: 16px 16px;
-								opacity: 0.7;
+								opacity: .7;
 								width: 16px;
 								height: 16px;
 								margin-left: 7px;
@@ -767,11 +758,11 @@
 				background: $primary_color;
 			}
 
-			&:focus+.slider {
+			&:focus + .slider {
 				box-shadow: 0 0 1px #2196f3;
 			}
 
-			&:checked+.slider::before {
+			&:checked + .slider::before {
 				transform: translateX(14px);
 			}
 		}
@@ -780,8 +771,8 @@
 			position: absolute;
 			cursor: pointer;
 			inset: 0;
-			background: #dfe1ea;
-			transition: 0.4s;
+			background: #DFE1EA;
+			transition: .4s;
 
 			&.round {
 				border-radius: 30px;
@@ -799,7 +790,7 @@
 				left: 2px;
 				bottom: 2px;
 				background-color: #fff;
-				transition: 0.4s;
+				transition: .4s;
 				border-radius: 100%;
 			}
 		}
@@ -870,7 +861,6 @@
 
 // My Account Page Design Revamp CSS
 #user-registration {
-
 	&.vertical,
 	&.horizontal {
 		border-radius: $border_radius_16;
@@ -886,7 +876,7 @@
 						border: 0 !important;
 					}
 
-					>a {
+					> a {
 						display: flex;
 						gap: $spacing_8px;
 
@@ -906,7 +896,7 @@
 				&__header {
 					display: flex;
 					justify-content: space-between;
-					border-bottom: $border_width solid #f4f4f4;
+					border-bottom: $border_width solid #F4F4F4;
 					padding-bottom: $spacing_16px;
 					margin-bottom: $spacing_32px;
 
@@ -948,11 +938,11 @@
 								z-index: 0;
 								transform: translate(-50%, -50%);
 								opacity: 0;
-								transition: all 0.3s ease-in-out;
+								transition: all .3s ease-in-out;
 							}
 
 							&:hover {
-								color: #475bb2;
+								color: #475BB2;
 
 								&::before {
 									opacity: 1;
@@ -969,7 +959,7 @@
 						h1 {
 							margin: 0;
 							text-align: left;
-							color: #16181a;
+							color: #16181A;
 							font-size: 20px;
 							font-weight: 500;
 							line-height: 30px;
@@ -1002,7 +992,7 @@
 							font-weight: $medium;
 							box-shadow: none;
 							text-decoration: none;
-							transition: all 0.3s ease;
+							transition: all .3s ease;
 
 							&:focus {
 								outline: none;
@@ -1016,16 +1006,19 @@
 							}
 
 							&.urm-profile-action-toggle {
-								color: $white;
-								background: $primary_color;
-								border-color: $primary_color;
+								color: var(--ur-button-text-normal-color, $white);
+								background: var(--ur-button-background-normal-color, $primary_color);
+								border-color: var(--ur-button-background-normal-color, $primary_color);
 
 								&:hover {
-									background: darken($primary_color, 5%);
+									color: var(--ur-button-text-hover-color, $white);
+									background: var(--ur-button-background-hover-color, darken($primary_color, 5%));
+									border-color: var(--ur-button-background-hover-color, $primary_color);
 								}
 							}
 
-							&.urm-profile-change-password-btn {}
+							&.urm-profile-change-password-btn {
+							}
 						}
 					}
 				}
@@ -1063,12 +1056,7 @@
 										}
 
 										input {
-											min-height: 38px;
-											padding: 0 $spacing_12px;
 											margin-bottom: 0;
-											border-color: $border-color;
-											background: $white;
-											color: #383838;
 
 											&:disabled {
 												border-color: #dcdcde;
@@ -1142,11 +1130,12 @@
 								line-height: 25px;
 								border-radius: $border_radius_4;
 								border: 0;
-								background: $primary_color;
-								color: $white;
+								background: var(--ur-button-background-normal-color, $primary_color);
+								color: var(--ur-button-text-normal-color, $white);
 
 								&:hover {
-									background: darken($primary_color, 5%);
+									background: var(--ur-button-background-hover-color, $primary_color);
+									color: var(--ur-button-text-hover-color, $white);
 								}
 							}
 						}
@@ -1203,13 +1192,13 @@
 
 												.input-text {
 													height: 38px;
-													padding: $spacing_8px $spacing_10px $spacing_8px $spacing_14px;
+													padding: 0 $spacing_12px;
 													border-radius: $border_radius_4;
-													border: $border_width solid #e1e1e1;
+													border: $border_width solid #E1E1E1;
 													background: $grey-0;
 
 													&:focus {
-														border-color: $primary_color;
+														border-color: var(--ur-primary-color, $primary_color);
 													}
 												}
 											}
@@ -1223,19 +1212,20 @@
 									}
 
 									// Save Changes Button CSS
-									>p {
+									> p {
 										float: unset;
 										margin-top: $spacing_32px;
 										text-align: right;
 
 										.user-registration-Button.button {
-											background: $primary_color;
-											border: $border_width solid $primary_color;
+											background: var(--ur-button-background-normal-color, $primary_color);
+											border: $border_width solid
+												var(--ur-button-background-normal-color, $primary_color);
 											border-radius: $border_radius_4;
 
 											&:hover {
-												background: #38488e;
-												border-color: #38488e;
+												background: var(--ur-button-background-hover-color, #38488e);
+												border-color: var(--ur-button-background-hover-color, #38488e);
 											}
 										}
 									}
@@ -1268,7 +1258,7 @@
 										width: 100%;
 
 										.cancel-membership-button {
-											background: #f25656;
+											background: #F25656;
 											padding: $spacing_8px $spacing_16px;
 											display: flex;
 											gap: 6px;
@@ -1299,7 +1289,7 @@
 
 							.user-registration-pn-display-detail-area {
 								border-radius: 0px 8px 8px 0px;
-								border: 1px solid #f1f1f1;
+								border: 1px solid #F1F1F1;
 								background: $grey-0;
 								border-left: 0;
 							}
@@ -1347,7 +1337,7 @@
 								tbody {
 									tr {
 										&:has(th) {
-											background: #edeff7 !important;
+											background: #EDEFF7 !important;
 											border-radius: 6px !important;
 										}
 
@@ -1388,20 +1378,18 @@
 
 													&::after {
 														content: "";
-														background: darken($primary_color,
-																5%);
+														background: darken($primary_color, 5%);
 														width: 0px;
 														height: 1.5px;
 														position: absolute;
 														bottom: -2px;
 														left: 0;
-														transition: all 0.3s ease-in-out;
+														transition: all .3s ease-in-out;
 													}
 
 													&:hover {
 														background: transparent;
-														color: darken($primary_color,
-																5%);
+														color: darken($primary_color, 5%);
 
 														&::after {
 															width: 100%;
@@ -1583,6 +1571,8 @@
 											border-radius: 4px !important;
 											font-weight: 500;
 											text-transform: capitalize;
+											font-size: 14px;
+											line-height: 20px;
 
 											&.btn-active,
 											&.btn-completed {
@@ -1615,7 +1605,7 @@
 															width: 18px;
 															height: 18px;
 															fill: #4e4e4e;
-															transition: all 0.3s ease;
+															transition: all .3s ease;
 														}
 
 														&:hover {
@@ -1633,9 +1623,9 @@
 														z-index: 50;
 														background: #fff;
 														border: 1px solid #d1d5db;
-														box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+														box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
 														opacity: 1;
-														transition: all 0.15s ease;
+														transition: all .15s ease;
 														min-width: 210px;
 														border-radius: 4px;
 														padding: 8px;
@@ -1647,7 +1637,7 @@
 														a {
 															color: #4b5563;
 															text-decoration: none;
-															transition: all 0.15s ease;
+															transition: all .15s ease;
 															font-size: 14px;
 															line-height: 20px;
 															font-weight: 400;
@@ -1693,10 +1683,9 @@
 											font-weight: $medium;
 											cursor: pointer;
 											min-height: 34px;
-											transition: all 0.3s;
+											transition: all .3s;
 
 											&:hover {
-												background: #1a1a1a;
 												background: #f8f9fa;
 												border-color: #adb5bd;
 												color: #1a1a1a;
@@ -1795,7 +1784,7 @@
 			&-navigation {
 				&--wrapper {
 					border-radius: $border_radius_10;
-					background: #f8f8fa;
+					background: #F8F8FA;
 					max-width: 260px;
 					width: 100%;
 					padding: $spacing_26px $spacing_20px $spacing_16px;
@@ -1815,7 +1804,7 @@
 						align-items: center;
 						margin-bottom: $spacing_24px;
 						padding-bottom: $spacing_24px;
-						border-bottom: $border_width solid #e2e8f0;
+						border-bottom: $border_width solid #E2E8F0;
 
 						.user-registration-img-container {
 							width: 42px;
@@ -1831,7 +1820,7 @@
 						}
 
 						header {
-							>h3 {
+							> h3 {
 								margin: 0;
 								font-size: 16px;
 								line-height: 24px;
@@ -1853,13 +1842,13 @@
 						gap: 2px;
 
 						.user-registration-MyAccount-navigation-link {
-							transition: all 0.3s;
+							transition: all .3s;
 
 							a {
 								padding: $spacing_12px $spacing_12px $spacing_12px $spacing_20px;
 								border-radius: $border_radius_4;
 								border-left: 3px solid transparent;
-								color: #4e4e4e;
+								color: #4E4E4E;
 								font-size: 14px;
 								font-weight: $medium;
 								line-height: 22px;
@@ -1873,14 +1862,14 @@
 							&:hover {
 								a {
 									background: #f0f0f0;
-									color: $primary_color;
+									color: var(--ur-primary-color, $primary_color);
 								}
 							}
 
 							&.is-active {
 								a {
-									color: $primary_color;
-									background: $blue-50;
+									color: var(--ur-primary-color, $primary_color);
+									background: var(--ur-primary-light, $blue-50);
 								}
 							}
 						}
@@ -1892,8 +1881,14 @@
 				padding: $spacing_24px $spacing_24px 52px 36px;
 
 				@media screen and (max-width: 600px) {
-					padding: 28px 12px 20px;
+					padding: 28px 24px 20px;
 				}
+
+				// &__header {
+				// 	display: flex;
+				// 	justify-content: space-between;
+				// 	align-items: center;
+				// }
 			}
 		}
 	}
@@ -1910,9 +1905,9 @@
 						font-size: 14px;
 						font-weight: 500;
 						line-height: 22px;
-						color: #4e4e4e;
+						color: #4E4E4E;
 						border-bottom: 3px solid $grey-0;
-						transition: all 0.3s;
+						transition: all .3s;
 
 						&:hover {
 							color: $primary_color;
@@ -1935,7 +1930,7 @@
 				padding: $spacing_24px 36px 52px 36px;
 
 				@media screen and (max-width: 600px) {
-					padding: 28px 12px 20px;
+					padding: 28px 24px 20px;
 				}
 			}
 		}
@@ -1957,7 +1952,7 @@
 
 			h2 {
 				font-family: inherit;
-				border-bottom: $border_width solid #d3d3d3;
+				border-bottom: $border_width solid #D3D3D3;
 				padding-bottom: $spacing_16px;
 				width: 100%;
 				text-align: left;
@@ -1985,7 +1980,7 @@
 			gap: $spacing_16px;
 			margin-top: $spacing_20px;
 			border-radius: 0 0 5px 5px;
-			background: #f4f4f4;
+			background: #F4F4F4;
 
 			button {
 				font-family: inherit;
@@ -2273,7 +2268,7 @@ body {
 	h1 {
 		margin: 0;
 		text-align: left;
-		color: #16181a;
+		color: #16181A;
 		font-size: 20px;
 		font-weight: 500;
 		line-height: 30px;

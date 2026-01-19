@@ -117,13 +117,15 @@ class URCR_Admin_Assets {
 		// Prepare user registration sources.
 
 		$ur_forms = ur_get_all_user_registration_form();
-
-		$networks                = array(
-			'facebook' => esc_html__( 'Facebook', 'user-registration' ),
-			'linkedin' => esc_html__( 'LinkedIn', 'user-registration' ),
-			'google'   => esc_html__( 'Google', 'user-registration' ),
-			'twitter'  => esc_html__( 'Twitter', 'user-registration' ),
-		);
+		$networks = array();
+		if( ur_check_module_activation('social-connect') ) {
+			$networks = array(
+				'facebook' => esc_html__( 'Facebook', 'user-registration' ),
+				'linkedin' => esc_html__( 'LinkedIn', 'user-registration' ),
+				'google'   => esc_html__( 'Google', 'user-registration' ),
+				'twitter'  => esc_html__( 'Twitter', 'user-registration' ),
+			);
+		}
 		$registration_source_ids = array_merge( array_keys( $ur_forms ), array_keys( $networks ) );
 		$registration_sources    = array_combine( $registration_source_ids, array_merge( $ur_forms, $networks ) );
 
@@ -189,13 +191,13 @@ class URCR_Admin_Assets {
 
 		// Prepare list of pages.
 
-		$pages = get_pages(
+		$pages              = get_pages(
 			array(
 				'post_status' => 'publish',
 				'numberposts' => 100,
 			)
 		);
-		$pages = wp_list_pluck( $pages, 'post_title', 'ID' );
+		$pages              = wp_list_pluck( $pages, 'post_title', 'ID' );
 		$pages_for_redirect = $pages;
 		// Filter out excluded pages
 		if ( function_exists( 'urcr_get_excluded_page_ids' ) ) {
@@ -262,59 +264,88 @@ class URCR_Admin_Assets {
 		// Prepare condition options.
 		$condition_options = array(
 			array(
-				'value' => 'membership',
-				'label' => esc_html__( 'Membership', 'user-registration' ),
-				'type'  => 'multiselect',
+				'value'         => 'membership',
+				'label'         => esc_html__( 'Membership', 'user-registration' ),
+				'type'          => 'multiselect',
+				'operator_label' => esc_html__( 'is', 'user-registration' ),
+				'placeholder'   => '',
 			),
 			array(
-				'value' => 'roles',
-				'label' => esc_html__( 'Roles', 'user-registration' ),
-				'type'  => 'multiselect',
+				'value'         => 'user_state',
+				'label'         => esc_html__( 'Logged in Status', 'user-registration' ),
+				'type'          => 'checkbox',
+				'operator_label' => esc_html__( 'is', 'user-registration' ),
+				'placeholder'   => '',
 			),
 			array(
-				'value' => 'user_registered_date',
-				'label' => esc_html__( 'User Registered Date', 'user-registration' ),
-				'type'  => 'date',
+				'value'         => 'roles',
+				'label'         => esc_html__( 'Roles', 'user-registration' ),
+				'type'          => 'multiselect',
+				'operator_label' => esc_html__( 'is', 'user-registration' ),
+				'placeholder'   => '',
 			),
 			array(
-				'value' => 'access_period',
-				'label' => esc_html__( 'Period after Registration', 'user-registration' ),
-				'type'  => 'period',
+				'value'         => 'user_registered_date',
+				'label'         => esc_html__( 'User Registered Date', 'user-registration' ),
+				'type'          => 'date',
+				'operator_label' => esc_html__( 'is', 'user-registration' ),
+				'placeholder'   => '',
+				'date_type_options' => array(
+					array(
+						'value' => 'before',
+						'label' => esc_html__( 'Before', 'user-registration' ),
+					),
+					array(
+						'value' => 'after',
+						'label' => esc_html__( 'After', 'user-registration' ),
+					),
+					array(
+						'value' => 'range',
+						'label' => esc_html__( 'Range', 'user-registration' ),
+					),
+				),
 			),
 			array(
-				'value' => 'user_state',
-				'label' => esc_html__( 'User State', 'user-registration' ),
-				'type'  => 'checkbox',
+				'value'         => 'access_period',
+				'label'         => esc_html__( 'Registration Period', 'user-registration' ),
+				'type'          => 'period',
+				'operator_label' => esc_html__( 'is', 'user-registration' ),
+				'placeholder'   => '',
 			),
 			array(
-				'value' => 'email_domain',
-				'label' => esc_html__( 'Email Domain', 'user-registration' ),
-				'type'  => 'text',
+				'value'         => 'email_domain',
+				'label'         => esc_html__( 'Email Domain', 'user-registration' ),
+				'type'          => 'text',
+				'operator_label' => esc_html__( 'is', 'user-registration' ),
+				'placeholder'   => esc_html__( 'example.com, gmail.com, yahoo.com', 'user-registration' ),
 			),
 			array(
-				'value' => 'post_count',
-				'label' => esc_html__( 'Minimum Public Posts Count', 'user-registration' ),
-				'type'  => 'number',
+				'value'         => 'post_count',
+				'label'         => esc_html__( 'Min. Public Posts', 'user-registration' ),
+				'type'          => 'number',
+				'operator_label' => esc_html__( 'is', 'user-registration' ),
+				'placeholder'   => esc_html__( '10', 'user-registration' ),
 			),
 			array(
-				'value' => 'capabilities',
-				'label' => esc_html__( 'Capabilities', 'user-registration' ),
-				'type'  => 'multiselect',
+				'value'         => 'capabilities',
+				'label'         => esc_html__( 'Capabilities', 'user-registration' ),
+				'type'          => 'multiselect',
+				'operator_label' => esc_html__( 'is', 'user-registration' ),
+				'placeholder'   => '',
 			),
 			array(
-				'value' => 'registration_source',
-				'label' => esc_html__( 'User Registration Source', 'user-registration' ),
-				'type'  => 'multiselect',
+				'value'         => 'urm',
+				'label'         => esc_html__( 'URM', 'user-registration' ),
+				'type'          => 'multiselect',
+				'operator_label' => esc_html__( 'is', 'user-registration' ),
+				'placeholder'   => '',
 			),
 			array(
-				'value' => 'ur_form_field',
-				'label' => esc_html__( 'UR Form Field', 'user-registration' ),
-				'type'  => 'multiselect',
-			),
-			array(
-				'value' => 'payment_status',
-				'label' => esc_html__( 'Payment Status', 'user-registration' ),
-				'type'  => 'multiselect',
+				'value'         => 'payment_status',
+				'label'         => esc_html__( 'Payment Status', 'user-registration' ),
+				'type'          => 'multiselect',
+				'operator_label' => esc_html__( 'is', 'user-registration' ),
+				'placeholder'   => '',
 			),
 		);
 
@@ -341,15 +372,21 @@ class URCR_Admin_Assets {
 				'value' => 'local_page',
 				'label' => esc_html__( 'Redirect to a Local Page', 'user-registration' ),
 			),
-			array(
+		);
+
+		$urm_is_new_installation = get_option( 'urm_is_new_installation', false );
+		$is_old_installation = ( false === $urm_is_new_installation || ! $urm_is_new_installation );
+
+		if ( $is_old_installation ) {
+			$action_type_options[] = array(
 				'value' => 'ur-form',
 				'label' => esc_html__( 'Show UR Form', 'user-registration' ),
-			),
-			array(
+			);
+			$action_type_options[] = array(
 				'value' => 'shortcode',
 				'label' => esc_html__( 'Render Shortcode', 'user-registration' ),
-			),
-		);
+			);
+		}
 
 		/**
 		 * Filter action type options for the action dropdown.
@@ -424,11 +461,13 @@ class URCR_Admin_Assets {
 			'is_pro'                                 => defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE,
 			'content_type_options'                   => $content_type_options,
 			'condition_options'                      => $condition_options,
+			'masteriyo_courses'                      => class_exists( 'WPEverest\URM\Masteriyo\Helper' ) ? WPEverest\URM\Masteriyo\Helper::get_courses( array(), '', 'free' ) : array(),
 			'is_membership_module_enabled'           => $is_membership_module_enabled,
 			'membership_count'                       => $membership_count,
 			'has_multiple_memberships'               => $has_multiple_memberships,
 			'is_content_restriction_enabled'         => ur_check_module_activation( 'content-restriction' ),
 			'action_type_options'                    => $action_type_options,
+			'urm_is_new_installation'                => $urm_is_new_installation,
 			'smart_tags_list'                        => $smart_tags_list,
 			'show_smart_tags_button'                 => $show_smart_tags_button,
 			'smart_tags_dropdown_title'              => __( 'Smart Tags', 'user-registration' ),

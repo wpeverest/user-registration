@@ -5,6 +5,8 @@
  * @package
  */
 
+use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
+
 defined( 'ABSPATH' ) || exit;
 
 $order_id        = isset( $order['order_id'] ) ? $order['order_id'] : 0;
@@ -15,6 +17,11 @@ $plan_details    = ! empty( $order['plan_details'] ) ? json_decode( $order['plan
 $post_content    = isset( $order['post_content'] ) ? json_decode( wp_unslash( $order['post_content'] ), true ) : array();
 $membership_type = isset( $post_content['type'] ) ? $post_content['type'] : '';
 $trial_status    = isset( $order['trial_status'] ) ? $order['trial_status'] : 'off';
+
+$order_repository = new OrdersRepository();
+$order_meta_data  = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
+$tax_data 		  = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data[ 'meta_value' ], true ) : array();
+$tax_amount       = ! empty( $tax_data['tax_amount'] ) ? $symbol . $tax_data['tax_amount'] : 0;
 
 if ( $is_form_payment ) {
 	$order['post_id']         = isset( $order['post_id'] ) ? $order['post_id'] : 0;
@@ -89,7 +96,7 @@ if ( 0 === $coupon_discount && ! empty( $order['coupon'] ) && $user_id > 0 ) {
 $items_subtotal = $product_amount;
 $order_total    = $items_subtotal - $coupon_discount;
 $paid_amount    = ( 'on' === $trial_status ) ? 0 : $order_total;
-
+$paid_amount    = ! empty( $tax_data['total_with_tax'] ) ? $tax_data['total_with_tax'] : $paid_amount;
 $recurring_label = '-';
 if ( 'subscription' === $membership_type ) {
 	if ( isset( $plan_details['subscription']['duration'] ) ) {
@@ -280,6 +287,15 @@ if ( $first_name || $last_name ) {
 													<td width="1%"></td>
 													<td class="ur-payments__summary-total">
 														<?php echo esc_html( $symbol . number_format( $order_total, 2 ) ); ?>
+													</td>
+												</tr>
+												<tr>
+													<td class="ur-payments__summary-label">
+														<?php esc_html_e( 'Tax Amount:', 'user-registration' ); ?>
+													</td>
+													<td width="1%"></td>
+													<td class="ur-payments__summary-total">
+														<?php echo esc_html( $symbol . number_format( $tax_amount, 2 ) ); ?>
 													</td>
 												</tr>
 											</tbody>

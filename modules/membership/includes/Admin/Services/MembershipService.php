@@ -746,11 +746,11 @@ class MembershipService {
 				if ( empty( $memberships ) ) {
 					return array(
 						'status'  => false,
-						'message' => esc_html__( 'You cannot upgrade to selected membership plan. Please contact site administrator.', 'user-registration' ),
+						'message' => esc_html__( 'You aren’t eligible to upgrade to this membership tier. Please contact site administrator', 'user-registration' ),
 					);
 				}
 			} else {
-				$intended_membership_id = absint( $data['membership_id'] );
+				$intended_membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
 				$user_membership_id     = 0;
 
 				foreach ( $user_memberships as $membership ) {
@@ -801,7 +801,7 @@ class MembershipService {
 				} else {
 					return array(
 						'status'  => false,
-						'message' => esc_html__( 'You cannot upgrade to selected membership plan. Please contact site administrator.', 'user-registration' ),
+						'message' => esc_html__( 'You aren’t eligible to upgrade to this membership tier. Please contact site administrator.', 'user-registration' ),
 					);
 				}
 			}

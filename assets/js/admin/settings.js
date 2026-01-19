@@ -1,10 +1,57 @@
 /* global user_registration_settings_params, user_registration_settings_params, UR_Snackbar */
+// Hide default buttons immediately on page load (before jQuery is ready)
+(function () {
+	function hideDefaultButtonsImmediately() {
+		if (document.querySelectorAll) {
+			var buttons = document.querySelectorAll(
+				".wp-picker-default, .button.button-small.wp-picker-default"
+			);
+			buttons.forEach(function (btn) {
+				if (btn && btn.style) {
+					btn.style.display = "none";
+					btn.style.visibility = "hidden";
+					btn.style.opacity = "0";
+					btn.style.width = "0";
+					btn.style.height = "0";
+					btn.style.padding = "0";
+					btn.style.margin = "0";
+					btn.style.border = "0";
+					btn.style.position = "absolute";
+					btn.style.left = "-9999px";
+					btn.style.pointerEvents = "none";
+				}
+			});
+		}
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener(
+			"DOMContentLoaded",
+			hideDefaultButtonsImmediately
+		);
+	} else {
+		hideDefaultButtonsImmediately();
+	}
+
+	hideDefaultButtonsImmediately();
+
+	if (
+		document.head &&
+		!document.getElementById("ur-hide-default-button-style")
+	) {
+		var style = document.createElement("style");
+		style.id = "ur-hide-default-button-style";
+		style.textContent =
+			".wp-picker-default, .button.button-small.wp-picker-default{display:none!important;visibility:hidden!important;opacity:0!important;width:0!important;height:0!important;padding:0!important;margin:0!important;border:0!important;position:absolute!important;left:-9999px!important;pointer-events:none!important}";
+		document.head.appendChild(style);
+	}
+})();
+
 (function ($) {
 	if (UR_Snackbar) {
 		var snackbar = new UR_Snackbar();
 	}
 
-	// Allowed Screens
 	$("select#user_registration_allowed_screens")
 		.on("change", function () {
 			if ("specific" === $(this).val()) {
@@ -41,14 +88,483 @@
 		})
 		.trigger("change");
 
-	// Color picker
+	$(".colorpick").each(function () {
+		var $input = $(this);
+		var alphaEnabled =
+			$input.data("alpha") === true ||
+			$input.attr("data-alpha") === "true";
+
+		var domElement = $input[0];
+		var currentValue =
+			(domElement && domElement.value) ||
+			$input.attr("value") ||
+			$input.val() ||
+			$input.data("current-value") ||
+			$input.attr("data-current-value") ||
+			"";
+		var defaultValue =
+			$input.data("default-value") ||
+			$input.attr("data-default-value") ||
+			"";
+		var initialValue = currentValue || defaultValue;
+
+		if (initialValue) {
+			initialValue = initialValue.toString().trim();
+			if (!initialValue) {
+				initialValue = "";
+			}
+		}
+
+		if (initialValue) {
+			$input.val(initialValue);
+			$input.attr("value", initialValue);
+			if (domElement) {
+				domElement.value = initialValue;
+			}
+		}
+
+		var colorPickerOptions = {
+			change: function (event, ui) {
+				$(this)
+					.parent()
+					.find(".colorpickpreview")
+					.css({ backgroundColor: ui.color.toString() });
+			},
+			clear: function () {
+				$(this)
+					.parent()
+					.find(".colorpickpreview")
+					.css({ backgroundColor: "" });
+			},
+			hide: true,
+			border: true,
+			width: 255,
+			mode: alphaEnabled ? "rgba" : "hex"
+		};
+
+		if (initialValue) {
+			colorPickerOptions.defaultColor = initialValue;
+			colorPickerOptions.color = initialValue;
+		}
+
+		$input.wpColorPicker(colorPickerOptions);
+
+		var hideDefaultButton = function () {
+			var $container = $input.closest(".wp-picker-container");
+			if ($container.length) {
+				var $defaultButton = $container.find(
+					".button.button-small.wp-picker-default, .wp-picker-default"
+				);
+				$defaultButton.css({
+					display: "none",
+					visibility: "hidden",
+					opacity: "0",
+					width: "0",
+					height: "0",
+					padding: "0",
+					margin: "0",
+					border: "0",
+					position: "absolute",
+					left: "-9999px",
+					"pointer-events": "none"
+				});
+			}
+		};
+
+		hideDefaultButton();
+		setTimeout(hideDefaultButton, 0);
+		setTimeout(hideDefaultButton, 10);
+		setTimeout(hideDefaultButton, 50);
+		setTimeout(hideDefaultButton, 100);
+
+		var applyColor = function () {
+			if (!initialValue) {
+				$input.css("display", "none");
+				return;
+			}
+
+			var $container = $input.closest(".wp-picker-container");
+			if (!$container.length) {
+				return;
+			}
+
+			var $colorResult = $container.find(".wp-color-result");
+			if (!$colorResult.length) {
+				return;
+			}
+
+			$input.val(initialValue);
+
+			$colorResult.css("background-color", initialValue);
+
+			var $colorSpan = $colorResult.find("span");
+			if ($colorSpan.length) {
+				$colorSpan.css("background-color", initialValue);
+			}
+
+			try {
+				if ($input.data("wp-wpColorPicker")) {
+					var picker = $input.data("wp-wpColorPicker");
+					if (picker.iris && picker.iris._color) {
+						picker.iris._color = initialValue;
+					}
+				}
+				if (typeof $input.iris === "function") {
+					$input.iris("color", initialValue);
+				}
+			} catch (e) {}
+
+			$input.css("display", "none");
+		};
+
+		setTimeout(applyColor, 50);
+		setTimeout(applyColor, 200);
+		setTimeout(applyColor, 500);
+
+		setTimeout(function () {
+			var $container = $input.closest(".wp-picker-container");
+			if ($container.length) {
+				var $holder = $container.find(".wp-picker-holder");
+				var $inputWrap = $container.find(".wp-picker-input-wrap");
+				var inputDefaultValue =
+					$input.data("default-value") ||
+					$input.attr("data-default-value") ||
+					"";
+
+				$input.css("display", "none");
+
+				if ($holder.length && $inputWrap.length) {
+					if (!$holder.find($inputWrap).length) {
+						$inputWrap.appendTo($holder);
+					}
+				}
+
+				if ($holder.length) {
+					$holder.css({
+						position: "absolute",
+						top: "100%",
+						left: "0",
+						zIndex: "100",
+						marginTop: "2px"
+					});
+
+					var $irisPicker = $container.find(".iris-picker");
+					var $irisBorder = $container.find(".iris-border");
+					var $colorInput = $container.find(
+						".colorpick.wp-color-picker"
+					);
+
+					var $defaultButton = $container.find(
+						".button.button-small.wp-picker-default, .wp-picker-default"
+					);
+					$defaultButton.css({
+						display: "none",
+						visibility: "hidden",
+						width: "0",
+						height: "0",
+						position: "absolute",
+						left: "-9999px",
+						"pointer-events": "none"
+					});
+
+					function togglePickerVisibility() {
+						setTimeout(function () {
+							var $colorResult =
+								$container.find(".wp-color-result");
+							var isOpen =
+								$container.hasClass("wp-picker-active") ||
+								$colorResult.hasClass("wp-picker-open");
+							var $defaultButton = $container
+								.find(".wp-picker-default")
+								.add(
+									$container.find(
+										".button.button-small.wp-picker-default"
+									)
+								)
+								.add($container.find("input.wp-picker-default"))
+								.add(
+									$container.find("button.wp-picker-default")
+								);
+
+							if (isOpen) {
+								$holder.show();
+								$irisPicker.show();
+								$irisBorder.show();
+								$colorInput.show();
+								$inputWrap.show();
+								if ($defaultButton.length) {
+									$defaultButton.each(function () {
+										var btn = this;
+										var $btn = $(btn);
+										if (btn.style) {
+											btn.style.setProperty(
+												"display",
+												"inline-block",
+												"important"
+											);
+											btn.style.setProperty(
+												"visibility",
+												"visible",
+												"important"
+											);
+											btn.style.setProperty(
+												"opacity",
+												"1",
+												"important"
+											);
+											btn.style.setProperty(
+												"width",
+												"auto",
+												"important"
+											);
+											btn.style.setProperty(
+												"height",
+												"auto",
+												"important"
+											);
+											btn.style.setProperty(
+												"position",
+												"relative",
+												"important"
+											);
+											btn.style.setProperty(
+												"left",
+												"auto",
+												"important"
+											);
+											btn.style.setProperty(
+												"pointer-events",
+												"auto",
+												"important"
+											);
+											btn.style.setProperty(
+												"padding",
+												"",
+												"important"
+											);
+											btn.style.setProperty(
+												"margin",
+												"",
+												"important"
+											);
+											btn.style.setProperty(
+												"border",
+												"",
+												"important"
+											);
+										}
+									});
+								}
+							} else {
+								$holder.hide();
+								$irisPicker.hide();
+								$irisBorder.hide();
+								$colorInput.hide();
+								$inputWrap.hide();
+								$defaultButton.css({
+									display: "none",
+									visibility: "hidden",
+									opacity: "0",
+									width: "0",
+									height: "0",
+									padding: "0",
+									margin: "0",
+									border: "0",
+									position: "absolute",
+									left: "-9999px",
+									"pointer-events": "none"
+								});
+							}
+						}, 10);
+					}
+
+					$container.on(
+						"click",
+						".wp-color-result",
+						togglePickerVisibility
+					);
+
+					var observer = new MutationObserver(function (mutations) {
+						mutations.forEach(function (mutation) {
+							if (
+								mutation.type === "attributes" &&
+								mutation.attributeName === "class"
+							) {
+								togglePickerVisibility();
+							}
+						});
+					});
+
+					observer.observe($container[0], {
+						attributes: true,
+						attributeFilter: ["class"]
+					});
+
+					var $colorResult = $container.find(".wp-color-result");
+					if ($colorResult.length) {
+						var colorResultObserver = new MutationObserver(
+							function (mutations) {
+								mutations.forEach(function (mutation) {
+									if (
+										mutation.type === "attributes" &&
+										mutation.attributeName === "class"
+									) {
+										togglePickerVisibility();
+									}
+								});
+							}
+						);
+
+						colorResultObserver.observe($colorResult[0], {
+							attributes: true,
+							attributeFilter: ["class"]
+						});
+					}
+
+					setTimeout(function () {
+						togglePickerVisibility();
+					}, 100);
+					setTimeout(function () {
+						togglePickerVisibility();
+					}, 300);
+				}
+
+				$container.find(".wp-color-result").css({
+					borderRadius: "4px"
+				});
+
+				var $colorGroupItem = $container.closest(
+					".user-registration-color-group-item"
+				);
+				if ($colorGroupItem.length) {
+					var $label = $colorGroupItem.find(".ur-color-state-label");
+					var labelText = $label.text();
+					if (labelText) {
+						$container
+							.find(".wp-color-result")
+							.attr("title", labelText);
+					}
+				}
+			}
+		}, 50);
+	});
+
+	$(document).on(
+		"mouseenter",
+		".user-registration-color-group-item .wp-color-result",
+		function () {
+			var $item = $(this).closest(".user-registration-color-group-item");
+			var $label = $item.find(".ur-color-state-label");
+			var labelText = $label.text();
+
+			if (labelText && !$(this).attr("title")) {
+				$(this).attr("title", labelText);
+			}
+		}
+	);
+
+	$(document).ready(function () {
+		function hideAllDefaultButtons() {
+			$(".wp-picker-default, .button.button-small.wp-picker-default").css(
+				{
+					display: "none",
+					visibility: "hidden",
+					opacity: "0",
+					width: "0",
+					height: "0",
+					padding: "0",
+					margin: "0",
+					border: "0",
+					position: "absolute",
+					left: "-9999px",
+					"pointer-events": "none"
+				}
+			);
+		}
+
+		hideAllDefaultButtons();
+		setTimeout(hideAllDefaultButtons, 0);
+		setTimeout(hideAllDefaultButtons, 10);
+		setTimeout(hideAllDefaultButtons, 50);
+		setTimeout(hideAllDefaultButtons, 100);
+		setTimeout(hideAllDefaultButtons, 200);
+
+		if (typeof MutationObserver !== "undefined") {
+			var buttonObserver = new MutationObserver(function (mutations) {
+				mutations.forEach(function (mutation) {
+					if (mutation.addedNodes && mutation.addedNodes.length) {
+						for (var i = 0; i < mutation.addedNodes.length; i++) {
+							var node = mutation.addedNodes[i];
+							if (node.nodeType === 1) {
+								if (
+									node.classList &&
+									(node.classList.contains(
+										"wp-picker-default"
+									) ||
+										(node.classList.contains("button") &&
+											node.classList.contains(
+												"button-small"
+											) &&
+											node.classList.contains(
+												"wp-picker-default"
+											)))
+								) {
+									$(node).css({
+										display: "none",
+										visibility: "hidden",
+										opacity: "0",
+										width: "0",
+										height: "0",
+										padding: "0",
+										margin: "0",
+										border: "0",
+										position: "absolute",
+										left: "-9999px",
+										"pointer-events": "none"
+									});
+								}
+								if (node.querySelectorAll) {
+									var buttons = node.querySelectorAll(
+										".wp-picker-default, .button.button-small.wp-picker-default"
+									);
+									buttons.forEach(function (btn) {
+										$(btn).css({
+											display: "none",
+											visibility: "hidden",
+											opacity: "0",
+											width: "0",
+											height: "0",
+											padding: "0",
+											margin: "0",
+											border: "0",
+											position: "absolute",
+											left: "-9999px",
+											"pointer-events": "none"
+										});
+									});
+								}
+							}
+						}
+					}
+				});
+			});
+
+			if (document.body) {
+				buttonObserver.observe(document.body, {
+					childList: true,
+					subtree: true
+				});
+			}
+		}
+	});
+
 	$(".colorpick, .colorpickpreview")
 		.iris({
 			change: function (event, ui) {
 				$(this)
 					.parent()
 					.find(".colorpickpreview")
-					.css({backgroundColor: ui.color.toString()});
+					.css({ backgroundColor: ui.color.toString() });
 			},
 			hide: true,
 			border: true
@@ -69,7 +585,6 @@
 		event.stopPropagation();
 	});
 
-	// Edit prompt
 	$(function () {
 		var changed = false;
 
@@ -92,7 +607,6 @@
 		});
 	});
 
-	// Select all/none
 	$(".user-registration").on("click", ".select_all", function () {
 		$(this)
 			.closest("td")
@@ -108,7 +622,6 @@
 		return false;
 	});
 
-	// reCaptcha version selection
 	var recaptchav2_invisible_input_value = $(".user-registration")
 		.find("#user_registration_captcha_setting_invisible_recaptcha_v2")
 		.is(":checked");
@@ -221,8 +734,8 @@
 					)
 					.append(
 						'<div class="error inline" style="padding:10px;">' +
-						user_registration_settings_params.user_registration_membership_redirect_default_page_message +
-						"</div>"
+							user_registration_settings_params.user_registration_membership_redirect_default_page_message +
+							"</div>"
 					);
 			} else {
 				$(wpbody_class)
@@ -242,7 +755,6 @@
 			$redirect.prop("required", true);
 		}
 
-		// Handling the "clear" button click event for Select2.
 		$(
 			'select[name="user_registration_login_options_login_redirect_url"]'
 		).on("select2:unselect", function () {
@@ -252,8 +764,8 @@
 				.closest(".user-registration-login-form-global-settings--field")
 				.append(
 					'<div class="error inline" style="padding:10px;">' +
-					user_registration_settings_params.user_registration_membership_redirect_default_page_message +
-					"</div>"
+						user_registration_settings_params.user_registration_membership_redirect_default_page_message +
+						"</div>"
 				);
 
 			$redirect.prop("required", true);
@@ -274,7 +786,6 @@
 			);
 		}
 	);
-	// Display the sync profile picture settings when the disable profile picture is checked and advanced fields is active.
 	$("#user_registration_disable_profile_picture").on("change", function () {
 		var is_advanced_fields_active = parseInt(
 			user_registration_settings_params.is_advanced_field_active
@@ -290,7 +801,6 @@
 				.css("display", "none");
 		}
 	});
-	// If not checked on load hide the sync profile picture settings.
 	$("#user_registration_sync_profile_picture").ready(function () {
 		$this = $("#user_registration_sync_profile_picture");
 		if ($this.prop("checked")) {
@@ -313,7 +823,6 @@
 		}
 	});
 
-	// Change span with file name when user selects a file.
 	$(".user-registration-custom-file__input").on("change", function () {
 		var file = $(".user-registration-custom-file__input").prop("files")[0];
 
@@ -329,16 +838,12 @@
 					type: ["image"]
 				},
 				title: ur_uploader.upload_file,
-				// multiple: true if you want to upload multiple files at once
 				multiple: false
 			})
 			.open()
 			.on("select", function (e) {
-				// This will return the selected image from the Media Uploader, the result is an object
 				var uploaded_image = image.state().get("selection").first();
-				// We convert uploaded_image to a JSON object to make accessing it easier
 				var image_url = uploaded_image.toJSON().url;
-				// Let's assign the url value to the input field
 				ur_uploader.attr("src", image_url);
 				if (ur_uploader.hasClass("ur-button")) {
 					ur_uploader.siblings("img").show();
@@ -368,7 +873,6 @@
 		ur_remover.siblings("img").hide();
 	});
 
-	// Handles radio images option click.
 	$(".radio-image")
 		.find("input")
 		.each(function () {
@@ -388,10 +892,8 @@
 		}
 	});
 
-	// Set up the autocomplete feature
 	$(".user-registration #ur-search-settings").autocomplete({
 		source: function (request, response) {
-			// Make an AJAX call to the PHP script with the search query as data
 			var search_string = request.term;
 			var form_data = new FormData();
 			form_data.append("search_string", search_string);
@@ -451,7 +953,7 @@
 			data = {
 				action: "user_registration_my_account_selection_validator",
 				security:
-				user_registration_settings_params.user_registration_my_account_selection_validator_nonce
+					user_registration_settings_params.user_registration_my_account_selection_validator_nonce
 			};
 
 		data.user_registration_selected_my_account_page = $this.val();
@@ -476,8 +978,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-							response.responseJSON.data.message +
-							"</div>"
+								response.responseJSON.data.message +
+								"</div>"
 						);
 					$this.css("border", "1px solid red");
 					$this
@@ -509,7 +1011,7 @@
 			data = {
 				action: "user_registration_my_account_selection_validator",
 				security:
-				user_registration_settings_params.user_registration_my_account_selection_validator_nonce
+					user_registration_settings_params.user_registration_my_account_selection_validator_nonce
 			};
 
 		data.user_registration_selected_my_account_page = $this.val();
@@ -534,8 +1036,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-							response.responseJSON.data.message +
-							"</div>"
+								response.responseJSON.data.message +
+								"</div>"
 						);
 					$this.css("border", "1px solid red");
 					$this
@@ -568,7 +1070,7 @@
 			data = {
 				action: "user_registration_lost_password_selection_validator",
 				security:
-				user_registration_settings_params.user_registration_lost_password_selection_validator_nonce
+					user_registration_settings_params.user_registration_lost_password_selection_validator_nonce
 			};
 
 		data.user_registration_selected_lost_password_page = $this.val();
@@ -600,8 +1102,8 @@
 							)
 							.append(
 								"<div id='message' class='error inline' style='padding:10px;'>" +
-								response.responseJSON.data.message +
-								"</div>"
+									response.responseJSON.data.message +
+									"</div>"
 							);
 					}
 					$this.css("border", "1px solid red");
@@ -805,7 +1307,7 @@
 			heightAuto: false,
 			width: "575px",
 			confirmButtonText:
-			user_registration_settings_params.i18n.upgrade_plan
+				user_registration_settings_params.i18n.upgrade_plan
 		}).then(function (result) {
 			if (result.isConfirmed) {
 				window.open(
@@ -997,7 +1499,7 @@
 			data: {
 				action: "user_registration_save_payment_settings",
 				security:
-				user_registration_settings_params.user_registration_membership_payment_settings_nonce,
+					user_registration_settings_params.user_registration_membership_payment_settings_nonce,
 				setting_id: setting_id,
 				section_data: JSON.stringify(section_data)
 			},
@@ -1006,7 +1508,7 @@
 				$this.find(".ur-spinner").remove();
 				if (response.responseJSON.success) {
 					show_success_message(response.responseJSON.data.message);
-					if(response.responseJSON.data.is_connected) {
+					if (response.responseJSON.data.is_connected) {
 						settings_container
 							.find(".ur-connection-status")
 							.addClass("ur-connection-status--active");
@@ -1036,7 +1538,7 @@
 			data: {
 				action: "user_registration_save_captcha_settings",
 				security:
-				user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
+					user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
 				setting_id: setting_id,
 				section_data: JSON.stringify(section_data)
 			},
@@ -1091,7 +1593,7 @@
 				type: type,
 				value: val,
 				security:
-				user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
+					user_registration_settings_params.user_registration_membership_pages_selection_validator_nonce
 			},
 			type: "POST",
 			complete: function (response) {
@@ -1100,8 +1602,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='error inline' style='padding:10px;'>" +
-							response.responseJSON.message +
-							"</div>"
+								response.responseJSON.message +
+								"</div>"
 						);
 
 					$this
@@ -1147,26 +1649,28 @@
 
 		var section_data = {};
 
-		$("input, select, textarea", settings_container[0] || settings_container)
-			.each(function (key, item) {
-				var $item = $(item);
-				var name = $item.attr("name");
-				if (!name) return;
+		$(
+			"input, select, textarea",
+			settings_container[0] || settings_container
+		).each(function (key, item) {
+			var $item = $(item);
+			var name = $item.attr("name");
+			if (!name) return;
 
-				var value;
-				if ($item.attr("type") === "checkbox") {
-					value = $item.is(":checked");
-				} else if (
-					$item.is("textarea") &&
-					typeof tinymce !== "undefined" &&
-					tinymce.get(name)
-				) {
-					value = tinymce.get(name).getContent();
-				} else {
-					value = $item.val();
-				}
-				section_data[name] = value;
-			});
+			var value;
+			if ($item.attr("type") === "checkbox") {
+				value = $item.is(":checked");
+			} else if (
+				$item.is("textarea") &&
+				typeof tinymce !== "undefined" &&
+				tinymce.get(name)
+			) {
+				value = tinymce.get(name).getContent();
+			} else {
+				value = $item.val();
+			}
+			section_data[name] = value;
+		});
 
 		update_payment_section_settings(
 			setting_id,
@@ -1191,7 +1695,7 @@
 			data: {
 				action: "user_registration_validate_payment_currency",
 				security:
-				user_registration_settings_params.user_registration_membership_validate_payment_currency_nonce,
+					user_registration_settings_params.user_registration_membership_validate_payment_currency_nonce,
 				currency: currency
 			},
 			type: "POST",
@@ -1205,8 +1709,8 @@
 						.closest(".user-registration-global-settings--field")
 						.append(
 							"<div id='message' class='warning inline' style='padding:10px;'>" +
-							response.responseJSON.data.message +
-							"</div>"
+								response.responseJSON.data.message +
+								"</div>"
 						);
 				} else {
 					$this
@@ -1420,9 +1924,9 @@
 				"</p>",
 			showCancelButton: true,
 			confirmButtonText:
-			user_registration_settings_params.i18n.i18n_prompt_reset,
+				user_registration_settings_params.i18n.i18n_prompt_reset,
 			cancelButtonText:
-			user_registration_settings_params.i18n.i18n_prompt_cancel,
+				user_registration_settings_params.i18n.i18n_prompt_cancel,
 			allowOutsideClick: false,
 			preConfirm: function () {
 				var btn = $(".swal2-confirm");
@@ -1450,9 +1954,9 @@
 				"</p>",
 			showCancelButton: true,
 			confirmButtonText:
-			user_registration_settings_params.i18n.i18n_prompt_reset,
+				user_registration_settings_params.i18n.i18n_prompt_reset,
 			cancelButtonText:
-			user_registration_settings_params.i18n.i18n_prompt_cancel,
+				user_registration_settings_params.i18n.i18n_prompt_cancel,
 			allowOutsideClick: false,
 			preConfirm: function () {
 				var btn = $(".swal2-confirm");
@@ -1500,7 +2004,7 @@
 			data: {
 				action: "user_registration_reset_captcha_keys",
 				security:
-				user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
+					user_registration_settings_params.user_registration_membership_captcha_settings_nonce,
 				setting_id: setting_id
 			},
 			type: "POST",
@@ -1508,8 +2012,8 @@
 				if (response.success) {
 					show_success_message(
 						response.data.message ||
-						user_registration_settings_params.i18n
-							.captcha_keys_reset_success
+							user_registration_settings_params.i18n
+								.captcha_keys_reset_success
 					);
 					settings_container
 						.find(".ur-connection-status")
@@ -1519,8 +2023,8 @@
 					// Remove captcha node after successful reset
 					var urm_recaptcha_node = $(
 						'.ur-captcha-test-container[data-captcha-type="' +
-						setting_id +
-						'"] .ur-captcha-node'
+							setting_id +
+							'"] .ur-captcha-node'
 					);
 
 					if (urm_recaptcha_node.length !== 0) {
@@ -1540,8 +2044,8 @@
 				} else {
 					show_failure_message(
 						response.data.message ||
-						user_registration_settings_params.i18n
-							.captcha_keys_reset_error
+							user_registration_settings_params.i18n
+								.captcha_keys_reset_error
 					);
 				}
 			},
@@ -1551,7 +2055,7 @@
 					user_registration_settings_params.i18n
 						.captcha_keys_reset_error;
 				show_failure_message(errorMessage);
-				reject({data: {message: errorMessage}});
+				reject({ data: { message: errorMessage } });
 			},
 			complete: function (response) {
 				btn.find(".ur-spinner").remove();
@@ -1568,7 +2072,7 @@
 			data: {
 				action: "user_registration_reset_payment_keys",
 				security:
-				user_registration_settings_params.user_registration_membership_payment_settings_nonce,
+					user_registration_settings_params.user_registration_membership_payment_settings_nonce,
 				setting_id: setting_id
 			},
 			type: "POST",
@@ -1576,19 +2080,21 @@
 				if (response.success) {
 					show_success_message(
 						response.data.message ||
-						user_registration_settings_params.i18n
-							.payment_keys_reset_success
+							user_registration_settings_params.i18n
+								.payment_keys_reset_success
 					);
 					settings_container
 						.find(".ur-connection-status")
 						.removeClass("ur-connection-status--active");
 					settings_container.find('input[type="text"]').val("");
-					settings_container.find("input[type='checkbox']").prop("checked", false);
+					settings_container
+						.find("input[type='checkbox']")
+						.prop("checked", false);
 
-					settings_container.find('textarea').each(function () {
-						let editor = $(this).attr('id');
+					settings_container.find("textarea").each(function () {
+						let editor = $(this).attr("id");
 						if (editor && tinymce.get(editor)) {
-							tinymce.get(editor).setContent('');
+							tinymce.get(editor).setContent("");
 						}
 					});
 					// Hide reset button after successful reset
@@ -1596,8 +2102,8 @@
 				} else {
 					show_failure_message(
 						response.data.message ||
-						user_registration_settings_params.i18n
-							.payment_keys_reset_error
+							user_registration_settings_params.i18n
+								.payment_keys_reset_error
 					);
 				}
 			},
@@ -1607,7 +2113,7 @@
 					user_registration_settings_params.i18n
 						.payment_keys_reset_error;
 				show_failure_message(errorMessage);
-				reject({data: {message: errorMessage}});
+				reject({ data: { message: errorMessage } });
 			},
 			complete: function (response) {
 				btn.find(".ur-spinner").remove();
@@ -1623,8 +2129,8 @@
 		var matches = document.cookie.match(
 			new RegExp(
 				"(?:^|; )" +
-				cookie_key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
-				"=([^;]*)"
+					cookie_key.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+					"=([^;]*)"
 			)
 		);
 		return matches ? decodeURIComponent(matches[1]) : undefined;
@@ -1637,17 +2143,33 @@
 		document.cookie = cookie_key + "=; Max-Age=-99999999; path=/";
 	}
 
-	$(document).on("click", ".user-registration-options-header__burger", function () {
-		$(".user-registration-header").addClass("user-registration-header--open");
-		$(".user-registration-settings-container").addClass("user-registration-settings-container--dimmed");
-		$(this).addClass(".user-registration-header__burger--hidden");
-		$(".user-registration-header__close").removeClass("user-registration-header__close--hidden");
-	});
+	$(document).on(
+		"click",
+		".user-registration-options-header__burger",
+		function () {
+			$(".user-registration-header").addClass(
+				"user-registration-header--open"
+			);
+			$(".user-registration-settings-container").addClass(
+				"user-registration-settings-container--dimmed"
+			);
+			$(this).addClass(".user-registration-header__burger--hidden");
+			$(".user-registration-header__close").removeClass(
+				"user-registration-header__close--hidden"
+			);
+		}
+	);
 	$(document).on("click", ".user-registration-header__close", function () {
-		$(".user-registration-header").removeClass("user-registration-header--open");
-		$(".user-registration-settings-container").removeClass("user-registration-settings-container--dimmed");
+		$(".user-registration-header").removeClass(
+			"user-registration-header--open"
+		);
+		$(".user-registration-settings-container").removeClass(
+			"user-registration-settings-container--dimmed"
+		);
 		$(this).addClass("user-registration-header__close--hidden");
-		$(".user-registration-options-header__burger").removeClass("user-registration-header__close--hidden");
+		$(".user-registration-options-header__burger").removeClass(
+			"user-registration-header__close--hidden"
+		);
 	});
 
 	/**
@@ -1865,93 +2387,183 @@
 		handleDisplayConditions();
 	});
 
-	$(document).on("change", "#user_registration_stripe_test_mode", function () {
-		if ($("#user_registration_stripe_test_mode").is(":checked")) {
-			$("#user_registration_stripe_test_publishable_key").closest(".user-registration-global-settings").show();
-			$("#user_registration_stripe_test_secret_key").closest(".user-registration-global-settings").show();
+	$(document).on(
+		"change",
+		"#user_registration_stripe_test_mode",
+		function () {
+			if ($("#user_registration_stripe_test_mode").is(":checked")) {
+				$("#user_registration_stripe_test_publishable_key")
+					.closest(".user-registration-global-settings")
+					.show();
+				$("#user_registration_stripe_test_secret_key")
+					.closest(".user-registration-global-settings")
+					.show();
 
-			$("#user_registration_stripe_live_publishable_key").closest(".user-registration-global-settings").hide();
-			$("#user_registration_stripe_live_secret_key").closest(".user-registration-global-settings").hide();
+				$("#user_registration_stripe_live_publishable_key")
+					.closest(".user-registration-global-settings")
+					.hide();
+				$("#user_registration_stripe_live_secret_key")
+					.closest(".user-registration-global-settings")
+					.hide();
+			} else {
+				$("#user_registration_stripe_test_publishable_key")
+					.closest(".user-registration-global-settings")
+					.hide();
+				$("#user_registration_stripe_test_secret_key")
+					.closest(".user-registration-global-settings")
+					.hide();
 
-		} else {
-			$("#user_registration_stripe_test_publishable_key").closest(".user-registration-global-settings").hide();
-			$("#user_registration_stripe_test_secret_key").closest(".user-registration-global-settings").hide();
-
-			$("#user_registration_stripe_live_publishable_key").closest(".user-registration-global-settings").show();
-			$("#user_registration_stripe_live_secret_key").closest(".user-registration-global-settings").show();
+				$("#user_registration_stripe_live_publishable_key")
+					.closest(".user-registration-global-settings")
+					.show();
+				$("#user_registration_stripe_live_secret_key")
+					.closest(".user-registration-global-settings")
+					.show();
+			}
 		}
-	});
-	$(document).on("change", "#user_registration_mollie_global_test_mode", function () {
-		if ($("#user_registration_mollie_global_test_mode").is(":checked")) {
-			$("#user_registration_mollie_global_test_publishable_key").closest(".user-registration-global-settings").show();
-			$("#user_registration_mollie_global_live_publishable_key").closest(".user-registration-global-settings").hide();
-		} else {
-			$("#user_registration_mollie_global_live_publishable_key").closest(".user-registration-global-settings").show();
-			$("#user_registration_mollie_global_test_publishable_key").closest(".user-registration-global-settings").hide();
+	);
+	$(document).on(
+		"change",
+		"#user_registration_mollie_global_test_mode",
+		function () {
+			if (
+				$("#user_registration_mollie_global_test_mode").is(":checked")
+			) {
+				$("#user_registration_mollie_global_test_publishable_key")
+					.closest(".user-registration-global-settings")
+					.show();
+				$("#user_registration_mollie_global_live_publishable_key")
+					.closest(".user-registration-global-settings")
+					.hide();
+			} else {
+				$("#user_registration_mollie_global_live_publishable_key")
+					.closest(".user-registration-global-settings")
+					.show();
+				$("#user_registration_mollie_global_test_publishable_key")
+					.closest(".user-registration-global-settings")
+					.hide();
+			}
 		}
-	});
-	$(document).on("change", "#user_registration_authorize_net_test_mode", function () {
-		if ($("#user_registration_authorize_net_test_mode").is(":checked")) {
-			$("#user_registration_authorize_net_test_publishable_key").closest(".user-registration-global-settings").show();
-			$("#user_registration_authorize_net_test_secret_key").closest(".user-registration-global-settings").show();
+	);
+	$(document).on(
+		"change",
+		"#user_registration_authorize_net_test_mode",
+		function () {
+			if (
+				$("#user_registration_authorize_net_test_mode").is(":checked")
+			) {
+				$("#user_registration_authorize_net_test_publishable_key")
+					.closest(".user-registration-global-settings")
+					.show();
+				$("#user_registration_authorize_net_test_secret_key")
+					.closest(".user-registration-global-settings")
+					.show();
 
-			$("#user_registration_authorize_net_live_publishable_key").closest(".user-registration-global-settings").hide();
-			$("#user_registration_authorize_net_live_secret_key").closest(".user-registration-global-settings").hide();
+				$("#user_registration_authorize_net_live_publishable_key")
+					.closest(".user-registration-global-settings")
+					.hide();
+				$("#user_registration_authorize_net_live_secret_key")
+					.closest(".user-registration-global-settings")
+					.hide();
+			} else {
+				$("#user_registration_authorize_net_test_publishable_key")
+					.closest(".user-registration-global-settings")
+					.hide();
+				$("#user_registration_authorize_net_test_secret_key")
+					.closest(".user-registration-global-settings")
+					.hide();
 
-		} else {
-			$("#user_registration_authorize_net_test_publishable_key").closest(".user-registration-global-settings").hide();
-			$("#user_registration_authorize_net_test_secret_key").closest(".user-registration-global-settings").hide();
-
-			$("#user_registration_authorize_net_live_publishable_key").closest(".user-registration-global-settings").show();
-			$("#user_registration_authorize_net_live_secret_key").closest(".user-registration-global-settings").show();
+				$("#user_registration_authorize_net_live_publishable_key")
+					.closest(".user-registration-global-settings")
+					.show();
+				$("#user_registration_authorize_net_live_secret_key")
+					.closest(".user-registration-global-settings")
+					.show();
+			}
 		}
-	});
-	$(document).on("change", "#user_registration_global_paypal_mode", function () {
-		if ($(this).val() && "test" === $(this).val()) {
-			$("#user_registration_global_paypal_test_email_address").closest(".user-registration-global-settings").show();
-			$("#user_registration_global_paypal_test_client_id").closest(".user-registration-global-settings").show();
-			$("#user_registration_global_paypal_test_client_secret").closest(".user-registration-global-settings").show();
+	);
+	$(document).on(
+		"change",
+		"#user_registration_global_paypal_mode",
+		function () {
+			if ($(this).val() && "test" === $(this).val()) {
+				$("#user_registration_global_paypal_test_email_address")
+					.closest(".user-registration-global-settings")
+					.show();
+				$("#user_registration_global_paypal_test_client_id")
+					.closest(".user-registration-global-settings")
+					.show();
+				$("#user_registration_global_paypal_test_client_secret")
+					.closest(".user-registration-global-settings")
+					.show();
 
-			$("#user_registration_global_paypal_live_email_address").closest(".user-registration-global-settings").hide();
-			$("#user_registration_global_paypal_live_client_id").closest(".user-registration-global-settings").hide();
-			$("#user_registration_global_paypal_live_client_secret").closest(".user-registration-global-settings").hide();
-		} else {
-			$("#user_registration_global_paypal_live_email_address").closest(".user-registration-global-settings").show();
-			$("#user_registration_global_paypal_live_client_id").closest(".user-registration-global-settings").show();
-			$("#user_registration_global_paypal_live_client_secret").closest(".user-registration-global-settings").show();
+				$("#user_registration_global_paypal_live_email_address")
+					.closest(".user-registration-global-settings")
+					.hide();
+				$("#user_registration_global_paypal_live_client_id")
+					.closest(".user-registration-global-settings")
+					.hide();
+				$("#user_registration_global_paypal_live_client_secret")
+					.closest(".user-registration-global-settings")
+					.hide();
+			} else {
+				$("#user_registration_global_paypal_live_email_address")
+					.closest(".user-registration-global-settings")
+					.show();
+				$("#user_registration_global_paypal_live_client_id")
+					.closest(".user-registration-global-settings")
+					.show();
+				$("#user_registration_global_paypal_live_client_secret")
+					.closest(".user-registration-global-settings")
+					.show();
 
-			$("#user_registration_global_paypal_test_email_address").closest(".user-registration-global-settings").hide();
-			$("#user_registration_global_paypal_test_client_id").closest(".user-registration-global-settings").hide();
-			$("#user_registration_global_paypal_test_client_secret").closest(".user-registration-global-settings").hide();
+				$("#user_registration_global_paypal_test_email_address")
+					.closest(".user-registration-global-settings")
+					.hide();
+				$("#user_registration_global_paypal_test_client_id")
+					.closest(".user-registration-global-settings")
+					.hide();
+				$("#user_registration_global_paypal_test_client_secret")
+					.closest(".user-registration-global-settings")
+					.hide();
+			}
 		}
-	});
+	);
 
 	// Function to trigger payment gateway mode changes
 	function trigger_payment_gateway_mode_changes(gatewayToggleId) {
 		// Mapping of gateway toggle IDs to their mode selectors
 		var gatewayMap = {
-			'user_registration_paypal_enabled': '#user_registration_global_paypal_mode',
-			'user_registration_stripe_enabled': '#user_registration_stripe_test_mode',
-			'user_registration_authorize_net_enabled': '#user_registration_authorize_net_test_mode',
-			'user_registration_mollie_enabled': '#user_registration_mollie_global_test_mode'
+			user_registration_paypal_enabled:
+				"#user_registration_global_paypal_mode",
+			user_registration_stripe_enabled:
+				"#user_registration_stripe_test_mode",
+			user_registration_authorize_net_enabled:
+				"#user_registration_authorize_net_test_mode",
+			user_registration_mollie_enabled:
+				"#user_registration_mollie_global_test_mode"
 		};
 		if (gatewayToggleId && gatewayMap[gatewayToggleId]) {
 			var $modeSelector = $(gatewayMap[gatewayToggleId]);
 
 			if ($modeSelector.length > 0) {
-				if (gatewayToggleId === 'user_registration_paypal_enabled') {
-					$modeSelector.val('test');
+				if (gatewayToggleId === "user_registration_paypal_enabled") {
+					$modeSelector.val("test");
 				}
-				setTimeout(function() {
+				setTimeout(function () {
 					$modeSelector.trigger("change");
 				}, 0);
 			}
 		} else {
 			if ($("#user_registration_authorize_net_test_mode").length > 0) {
-				$("#user_registration_authorize_net_test_mode").trigger("change");
+				$("#user_registration_authorize_net_test_mode").trigger(
+					"change"
+				);
 			}
 			if ($("#user_registration_mollie_global_test_mode").length > 0) {
-				$("#user_registration_mollie_global_test_mode").trigger("change");
+				$("#user_registration_mollie_global_test_mode").trigger(
+					"change"
+				);
 			}
 			if ($("#user_registration_stripe_test_mode").length > 0) {
 				$("#user_registration_stripe_test_mode").trigger("change");
@@ -1961,25 +2573,26 @@
 			}
 		}
 	}
-	trigger_payment_gateway_mode_changes();
 
+	trigger_payment_gateway_mode_changes();
 
 	$(document).on("change", ".urm_toggle_pg_status", function () {
 		var $toggle = $(this);
 		var isChecked = $toggle.is(":checked");
-		var $allSiblings = $toggle.closest(".user-registration-global-settings").siblings(".user-registration-global-settings");
+		var $allSiblings = $toggle
+			.closest(".user-registration-global-settings")
+			.siblings(".user-registration-global-settings");
 		var $siblingsExcludingLast = $allSiblings.not(":last");
 		if (isChecked) {
 			$siblingsExcludingLast.show();
-			if($toggle.attr('id') !== 'user_registration_bank_enabled') {
-				trigger_payment_gateway_mode_changes($toggle.attr('id'));
+			if ($toggle.attr("id") !== "user_registration_bank_enabled") {
+				trigger_payment_gateway_mode_changes($toggle.attr("id"));
 			}
 		} else {
 			$siblingsExcludingLast.hide();
 		}
 	});
 	$(document).ready(function () {
-		$('.urm_toggle_pg_status').trigger("change");
+		$(".urm_toggle_pg_status").trigger("change");
 	});
-
 })(jQuery);

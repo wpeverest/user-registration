@@ -1,7 +1,7 @@
 {
   "name": "user-registration",
   "title": "User Registration",
-  "version": "5.0.3",
+  "version": "5.1.0",
   "homepage": "https://wpuserregistration.com/",
   "repository": {
     "type": "git",
@@ -41,6 +41,7 @@
     "@wordpress/blocks": "^15.10.0",
     "@wordpress/components": "^31.0.0",
     "@wordpress/i18n": "^6.10.0",
+    "@wordpress/icons": "^11.4.0",
     "@wordpress/scripts": "^31.2.0",
     "@wordpress/server-side-render": "^6.13.0",
     "autoprefixer": "^10.4.23",

@@ -13,32 +13,45 @@ const URFormAction = ({ urForm, onUrFormChange }) => {
 	}));
 
 	return (
-		<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-ur-form-input-container ur-form-group">
-			<label className="urcr-label-container ur-col-4">
-				<span className="urcr-target-content-label">
+		<>
+			<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-ur-form-input-container ur-form-group">
+				<label className="urcr-label-container ur-col-4">
+					<span className="urcr-target-content-label">
+						{__(
+							"Display User Registration & Membership Form",
+							"user-registration"
+						)}
+					</span>
+				</label>
+				<div className="urcr-body">
+					<select
+						className="urcr-input"
+						value={urForm || ""}
+						onChange={(e) => onUrFormChange(e.target.value)}
+					>
+						<option value="">
+							{__("Select a form", "user-registration")}
+						</option>
+						{formOptions.map((form) => (
+							<option key={form.value} value={form.value}>
+								{form.label}
+							</option>
+						))}
+					</select>
+				</div>
+			</div>
+			<div className="urcr-global-migration-notice">
+				<p className="urcr-notice-wrap">
+					<span style={{ fontWeight: "bold" }}>
+						{__("Note:", "user-registration")}
+					</span>
 					{__(
-						"Display User Registration & Membership Form",
+						" This setting `Select A Form` is a legacy setting and will be removed in our future version. You can use the `Show Message` option and use the editor directly to add any shortcodes.",
 						"user-registration"
 					)}
-				</span>
-			</label>
-			<div className="urcr-body">
-				<select
-					className="urcr-input"
-					value={urForm || ""}
-					onChange={(e) => onUrFormChange(e.target.value)}
-				>
-					<option value="">
-						{__("Select a form", "user-registration")}
-					</option>
-					{formOptions.map((form) => (
-						<option key={form.value} value={form.value}>
-							{form.label}
-						</option>
-					))}
-				</select>
+				</p>	
 			</div>
-		</div>
+		</>
 	);
 };
 

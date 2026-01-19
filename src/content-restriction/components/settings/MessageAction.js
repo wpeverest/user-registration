@@ -29,10 +29,15 @@ const MessageAction = ({
 		onMessageChangeRef.current = onMessageChange;
 	}, [onMessageChange]);
 
+	// Determine if we should show global/custom message option
+	// Show for membership rules, migrated custom rules, and regular custom rules
+	// Since MessageAction is only rendered when actionType === "message", we show it for all rule types
+	const shouldShowGlobalMessageOption = true;
+
 	useEffect(() => {
 		const wasUsingGlobal = prevUseGlobalMessageRef.current;
 
-		if ((isMembershipRule || isMigratedCustomRule) && useGlobalMessage && !wasUsingGlobal) {
+		if (shouldShowGlobalMessageOption && useGlobalMessage && !wasUsingGlobal) {
 			const cleanupEditor = () => {
 				if (
 					typeof wp !== "undefined" &&
@@ -56,16 +61,16 @@ const MessageAction = ({
 			};
 			cleanupEditor();
 		}
-	}, [isMembershipRule, isMigratedCustomRule, useGlobalMessage, editorId]);
+	}, [shouldShowGlobalMessageOption, useGlobalMessage, editorId]);
 
 	useEffect(() => {
-		if ((isMembershipRule || isMigratedCustomRule) && useGlobalMessage) {
+		if (shouldShowGlobalMessageOption && useGlobalMessage) {
 			prevUseGlobalMessageRef.current = useGlobalMessage;
 			return;
 		}
 
 		const wasUsingGlobal = prevUseGlobalMessageRef.current;
-		const switchingToCustom = (isMembershipRule || isMigratedCustomRule) && !useGlobalMessage && wasUsingGlobal;
+		const switchingToCustom = shouldShowGlobalMessageOption && !useGlobalMessage && wasUsingGlobal;
 
 		if (editorInitializedRef.current && !switchingToCustom) {
 			prevUseGlobalMessageRef.current = useGlobalMessage;
@@ -238,7 +243,7 @@ const MessageAction = ({
 			}
 			editorInitializingRef.current = false;
 		};
-		}, [editorId, rule.id, isMembershipRule, isMigratedCustomRule, useGlobalMessage]);
+		}, [editorId, rule.id, shouldShowGlobalMessageOption, useGlobalMessage]);
 
 	useEffect(() => {
 		return () => {
@@ -315,7 +320,7 @@ const MessageAction = ({
 
 	return (
 		<>
-			{(isMembershipRule || isMigratedCustomRule) && (
+			{shouldShowGlobalMessageOption && (
 				<div className="urcr-label-input-pair urcr-rule-action ur-align-items-center ur-form-group">
 					<label className="urcr-label-container ur-col-4">
 						<span className="urcr-target-content-label">
@@ -365,7 +370,7 @@ const MessageAction = ({
 					</div>
 				</div>
 			)}
-			{((!isMembershipRule && !isMigratedCustomRule) || !useGlobalMessage) && (
+			{!useGlobalMessage && (
 				<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-message-input-container ur-form-group">
 					<label className="urcr-label-container ur-col-4">
 						<span className="urcr-target-content-label">

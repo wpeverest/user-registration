@@ -277,6 +277,27 @@
 				(date.getMonth() + 1) +
 				"-" +
 				date.getDate();
+
+				// Append tax details if available
+				 var taxDetails = $( document ).find("#ur-tax-details");
+
+				if ( taxDetails.length > 0 ) {
+					user_data.tax_rate       = taxDetails.data("tax-rate");
+					user_data.tax_calculation_method = taxDetails.data("tax-calculation-method");
+				}
+
+				var localCurrency = membership_input.data( 'local-currency' ),
+					geoZoneId     = membership_input.data( 'zone-id' );
+					if ( localCurrency && geoZoneId ) {
+						user_data.switched_currency = localCurrency;
+						user_data.urm_zone_id		= geoZoneId;
+					}
+
+				if ( $( '#ur-local-currency-switch-currency' ).length ) {
+					user_data.switched_currency = $( '#ur-local-currency-switch-currency' ).val();
+					user_data.urm_zone_id       = $( '#ur-local-currency-switch-currency' ).data( 'urm-zone-id' );
+				}
+
 			return user_data;
 		},
 		prepare_coupons_apply_data: function () {
@@ -285,6 +306,27 @@
 			coupon_data.membership_id = $(
 				'input[name="urm_membership"]:checked'
 			).val();
+			var membership_input = $('input[name="urm_membership"]:checked');
+
+			 var taxDetails = $( document ).find("#ur-tax-details");
+
+				if ( taxDetails.length > 0 ) {
+					coupon_data.tax_rate       = taxDetails.data("tax-rate");
+					coupon_data.tax_calculation_method = taxDetails.data("tax-calculation-method");
+				}
+
+				var localCurrency = membership_input.data( 'local-currency' ),
+					geoZoneId     = membership_input.data( 'zone-id' );
+					if ( localCurrency && geoZoneId ) {
+						coupon_data.switched_currency = localCurrency;
+						coupon_data.urm_zone_id		= geoZoneId;
+					}
+
+				if ( $( '#ur-local-currency-switch-currency' ).length ) {
+					coupon_data.switched_currency = $( '#ur-local-currency-switch-currency' ).val();
+					coupon_data.urm_zone_id       = $( '#ur-local-currency-switch-currency' ).data( 'urm-zone-id' );
+				}
+
 			return coupon_data;
 		},
 		/**
@@ -540,6 +582,8 @@
 					);
 				}
 
+				console.log('data',data);
+
 				this.send_data(data, {
 					success: function (response) {
 						if (response.success) {
@@ -656,6 +700,25 @@
 
 		calculate_total: function ($this) {
 			var urm_calculated_total = $this.data("urm-pg-calculated-amount");
+			var countryField 		 = $( document ).find( '.ur-field-address-country' );
+			var stateField 		 	 = $( document ).find( '.ur-field-address-state' );
+			var subTotalInput 		 = $( "#ur-membership-subtotal" );
+			var taxInput 		 	 = $( "#ur-membership-tax" );
+			var taxRate 			 = 0;
+			var taxAmount 			 = 0;
+			var localCurrency 		 = '';
+			var currency 			 = urmf_data.currency_symbol;
+
+			if ( $this.data( 'urm-converted-amount' ) ) {
+				urm_calculated_total = $this.data( 'urm-converted-amount' );
+			}
+			subTotal = urm_calculated_total;
+
+			if ( $this.data( 'local-currency' ) ) {
+				localCurrency = $this.data( 'local-currency' );
+				currency = register_events.decodeHtmlEntity( urmf_data.local_currencies_symbol[ localCurrency ] || currency ) ;
+			}
+
 			var total_input = $("#ur-membership-total"),
 				discount_amount = $this.data("ur-discount-amount"),
 				total =
@@ -663,6 +726,51 @@
 						? urm_calculated_total - discount_amount
 						: urm_calculated_total,
 				upgrade_type = $this.data("urm-upgrade-type");
+
+				if ( countryField.length ) {
+				var country = countryField.val();
+				var state = stateField.val();
+				var regions = urmf_data.regions_list.regions[country];
+				var tax_calculation_method = urmf_data.tax_calculation_method;
+
+				if ( urmf_data.is_tax_calculation_enabled ) {
+
+					if ( regions ) {
+						if ( regions.hasOwnProperty( 'states' ) && '' !== state ) {
+
+							if ( regions.states.hasOwnProperty( state ) ) {
+								taxRate = regions.states[state];
+							} else {
+								taxRate = regions.rate;
+							}
+
+						} else {
+							taxRate = regions.rate;
+						}
+
+						if ( taxRate > 0 ) {
+							if ( 'calculate_tax' === tax_calculation_method ) {
+								taxAmount = ( total * taxRate ) / 100;
+								total = parseFloat( total ) + parseFloat( taxAmount );
+							} else {
+								// Price include tax
+							}
+						}
+					}
+
+					$( "#ur-tax-details" ).remove();
+
+					var taxDetailsInput =
+						'<input type="hidden" ' +
+						'id="ur-tax-details" ' +
+						'name="ur_tax_details" ' +
+						'data-tax-rate="' + taxRate + '" ' +
+						'data-tax-calculation-method="' + tax_calculation_method + '" ' +
+						'data-total="' + total + '">' ;
+
+					total_input.after( taxDetailsInput );
+				}
+			}
 
 			var total_label = $(".urm-membership-total-value").find(
 				".ur_membership_input_label"
@@ -679,11 +787,16 @@
 				);
 			}
 
+			$( '.urm-membership-tax-value' ).find( '.ur_membership_input_label' ).text( taxRate + '% Tax' );
 			total = parseFloat(total).toFixed(2);
 			if ("left" === urmf_data.curreny_pos) {
-				total_input.text(urmf_data.currency_symbol + total);
+				total_input.text(currency + total);
+				subTotalInput.text(currency + subTotal);
+				taxInput.text(currency + taxAmount.toFixed(2));
 			} else {
-				total_input.text(total + urmf_data.currency_symbol);
+				total_input.text(total + currency);
+				subTotalInput.text(subTotal + currency);
+				taxInput.text(taxAmount.toFixed(2) + currency);
 			}
 		},
 		upgrade_membership: function (
@@ -1879,6 +1992,8 @@
 					stripe_container = $(".stripe-container"),
 					stripe_error_container = $("#stripe-errors");
 
+				register_events.validateSwitchCurrency( selected_method );
+
 				var authorize_container = $(".authorize-net-container");
 				var authorize_error_container = $("#authorize-errors");
 
@@ -1913,6 +2028,8 @@
 					$(".ur_membership_registration_container").removeClass(
 						"urm-d-none"
 					);
+					$('#ur-local-currency-switch-currency').trigger('change');
+					// $('.ur-field-address-country').trigger('change');
 					// clear coupon total notice
 					$("#total-input-notice").text("");
 
@@ -2584,7 +2701,124 @@
 					showConfirmButton: false
 				});
 			});
-		}
+
+			$(document).on('change', '#ur-local-currency-switch-currency', function(e) {
+				e.preventDefault();
+
+				var $el = $(this),
+					currency = $el.val(),
+					urmMembership = $('input[name="urm_membership"]'),
+					currencySymbols = ur_membership_frontend_localized_data.local_currencies_symbol,
+					symbol = register_events.decodeHtmlEntity( currencySymbols[currency] || '' );
+
+
+					urmMembership.each(function() {
+						var $membershipRadio = $(this),
+						localCurrencyDetails = $membershipRadio.data('urm-local-currency-details') || {},
+						calculatedAmount = parseFloat($membershipRadio.data('urm-pg-calculated-amount')) || 0,
+						discountAmount = parseFloat($membershipRadio.data("ur-discount-amount")) || 0,
+						total = discountAmount ? calculatedAmount - discountAmount : calculatedAmount,
+						membershipType = $membershipRadio.data('urm-pg-type');
+
+						if (membershipType !== 'free') {
+								if (
+									localCurrencyDetails[currency] &&
+									localCurrencyDetails[currency].hasOwnProperty('ID')
+								) {
+									$el
+									.data('urm-zone-id', localCurrencyDetails[currency].ID)
+									.attr('data-urm-zone-id', localCurrencyDetails[currency].ID);
+								}
+						var total_input = $("#ur-membership-total"),
+							$span = $membershipRadio.siblings('.ur-membership-period-span'),
+							subTotalInput = $("#ur-membership-subtotal");
+
+						var oldText = $span.text();
+						var parts = oldText.split('/');
+						var durationPart = parts[1] ? '/ ' + parts[1].trim() : '';
+
+						if (localCurrencyDetails[currency]) {
+							var newCalculatedValue = total * parseFloat(localCurrencyDetails[currency].rate);
+							var subTotalValue = newCalculatedValue;
+							newCalculatedValue = newCalculatedValue.toFixed(2);
+
+							if ( 'manual' == localCurrencyDetails[currency].pricing_method ) {
+								newCalculatedValue = localCurrencyDetails[currency].rate;
+							}
+
+							if (urmf_data.curreny_pos === "left") {
+								$span.text(symbol + newCalculatedValue + ' ' + durationPart);
+							} else {
+								$span.text(newCalculatedValue + symbol + ' ' + durationPart);
+							}
+
+							if ($membershipRadio.is(':checked')) {
+								if (urmf_data.curreny_pos === "left") {
+									total_input.text(symbol + newCalculatedValue + ' ' + durationPart);
+									subTotalInput.text(symbol + subTotalValue.toFixed(2));
+								} else {
+									total_input.text(newCalculatedValue + symbol + ' ' + durationPart);
+									subTotalInput.text(subTotalValue.toFixed(2) + symbol);
+								}
+							}
+
+							$membershipRadio.data('urm-converted-amount', newCalculatedValue);
+							$membershipRadio
+									.data('local-currency', currency )
+									.attr('data-local-currency', currency );
+						} else {
+							total = total.toFixed( 2);
+							if (urmf_data.curreny_pos === "left") {
+								$span.text(urmf_data.currency_symbol + total + ' ' + durationPart);
+								if ($membershipRadio.is(':checked')) {
+									total_input.text(urmf_data.currency_symbol + total + ' ' + durationPart);
+								}
+							} else {
+								$span.text(total + urmf_data.currency_symbol + ' ' + durationPart);
+								if ($membershipRadio.is(':checked')) {
+									total_input.text(total + urmf_data.currency_symbol + ' ' + durationPart);
+								}
+							}
+							$membershipRadio.data('urm-converted-amount', 0);
+						}
+					}
+				});
+			});
+
+		},
+		validateSwitchCurrency: function (paymentMethod) {
+
+			var $select = $('#ur-local-currency-switch-currency');
+
+			if ( !urmf_data.supported_currencies.hasOwnProperty( paymentMethod ) ) {
+				$select.find('option').show();
+				$select.val( $select.find( 'option:first' ).val() ).trigger( 'change' );
+				return;
+			}
+
+			var supportedCurrencies = urmf_data.supported_currencies[paymentMethod];
+
+			$select.find('option').each(function () {
+				var currency = $(this).val();
+
+				if (supportedCurrencies.indexOf(currency) === -1) {
+					$(this).hide();
+				} else {
+					$(this).show();
+				}
+			});
+
+			var firstVisible = $select.find('option:visible:first').val();
+			$select.val( firstVisible ).trigger( 'change' );
+		},
+		decodeHtmlEntity: function(str) {
+			var txt = document.createElement('textarea');
+			txt.innerHTML = str;
+			return txt.value;
+		},
 	};
 	register_events.init();
+	$(document).ready(function () {
+		$('#ur-local-currency-switch-currency').trigger('change');
+	});
 })(jQuery, window.ur_membership_frontend_localized_data);
