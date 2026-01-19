@@ -981,4 +981,30 @@ class MembershipService {
 
 		return $intended_action;
 	}
+
+
+	/**
+	 * Retrieve the membership title and description.
+	 *
+	 * Fetches the post title and the `ur_membership_description` post meta
+	 * for the given membership post ID.
+	 *
+	 * @param int $membership_id The membership post ID.
+	 *
+	 * @return array {
+	 *     An associative array containing the membership details.
+	 *
+	 *     @type string $item_title       The membership post title.
+	 *     @type string $item_description The membership description meta value.
+	 * }
+	 */
+	public function get_membership_title_and_description( $membership_id ) {
+		$membership = get_post( $membership_id );
+		$membership_title = $membership->post_title;
+		$membership_description = get_post_meta( $membership_id, 'ur_membership_description', true );
+		return array(
+			'item_title' => $membership_title,
+			'item_description' => $membership_description
+		);
+	}
 }
