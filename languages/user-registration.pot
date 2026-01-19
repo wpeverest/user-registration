@@ -2,7 +2,11 @@
 # This file is distributed under the same license as the User Registration & Membership plugin.
 msgid ""
 msgstr ""
+<<<<<<< HEAD
 "Project-Id-Version: User Registration & Membership 5.0.1\n"
+=======
+"Project-Id-Version: User Registration & Membership 5.1\n"
+>>>>>>> master
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -10,8 +14,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 <<<<<<< HEAD
+<<<<<<< HEAD
 "POT-Creation-Date: 2026-01-14T03:40:35+00:00\n"
 =======
+=======
+>>>>>>> master
 "POT-Creation-Date: 2026-01-16T16:30:32+05:45\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 #. Plugin Name of the plugin
@@ -144,8 +151,13 @@ msgstr ""
 #: includes/admin/class-ur-admin-menus.php:689
 #: includes/admin/class-ur-admin-menus.php:690
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/admin/functions-ur-admin.php:994
 #: includes/admin/functions-ur-admin.php:1010
+=======
+#: includes/admin/functions-ur-admin.php:973
+#: includes/admin/functions-ur-admin.php:984
+>>>>>>> master
 =======
 #: includes/admin/functions-ur-admin.php:973
 #: includes/admin/functions-ur-admin.php:984
@@ -991,7 +1003,13 @@ msgstr ""
 #: includes/admin/class-ur-admin-registrations-table-list.php:108
 #: modules/payment-history/Admin/OrdersListTable.php:277
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: src/content-restriction/components/rules/RuleCard.js:314
+=======
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/RuleCard.js:318
+>>>>>>> master
 =======
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -1013,12 +1031,15 @@ msgstr ""
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroups.php:71
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:119
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:222
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:228
 #: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:168
 #: modules/payment-history/Admin/OrdersListTable.php:696
 #: modules/payment-history/Orders.php:386
 =======
+=======
+>>>>>>> master
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:237
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:243
 #: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:168
@@ -1026,6 +1047,9 @@ msgstr ""
 #: modules/payment-history/Orders.php:386
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 #: src/content-restriction/components/modals/DeleteRuleModal.js:51
 msgid "Delete"
@@ -1427,6 +1451,10 @@ msgstr ""
 #. translators: %s: search term
 #: includes/admin/class-ur-admin-base-layout.php:142
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+#, php-format
+>>>>>>> master
 =======
 #, php-format
 >>>>>>> master
@@ -1436,6 +1464,10 @@ msgstr ""
 #. translators: %s: type
 #: includes/admin/class-ur-admin-base-layout.php:148
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+#, php-format
+>>>>>>> master
 =======
 #, php-format
 >>>>>>> master
@@ -1445,6 +1477,10 @@ msgstr ""
 #. translators: %s: type
 #: includes/admin/class-ur-admin-base-layout.php:154
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+#, php-format
+>>>>>>> master
 =======
 #, php-format
 >>>>>>> master
@@ -1642,7 +1678,11 @@ msgstr ""
 #: includes/admin/class-ur-admin-menus.php:633
 #: includes/admin/class-ur-admin-user-list-manager.php:475
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/admin/functions-ur-admin.php:986
+=======
+#: includes/admin/functions-ur-admin.php:965
+>>>>>>> master
 =======
 #: includes/admin/functions-ur-admin.php:965
 >>>>>>> master
@@ -1666,8 +1706,14 @@ msgstr ""
 #: includes/admin/class-ur-admin-menus.php:653
 #: includes/admin/class-ur-admin-menus.php:679
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/admin/functions-ur-admin.php:990
 #: includes/admin/functions-ur-admin.php:1003
+=======
+#: includes/admin/functions-ur-admin.php:969
+#: includes/admin/functions-ur-admin.php:980
+#, php-format
+>>>>>>> master
 =======
 #: includes/admin/functions-ur-admin.php:969
 #: includes/admin/functions-ur-admin.php:980
@@ -1681,9 +1727,15 @@ msgid "User Registration settings"
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/admin/class-ur-admin-menus.php:746
 #: includes/admin/functions-ur-admin.php:1039
 #: includes/functions-ur-core.php:5866
+=======
+#: includes/admin/class-ur-admin-menus.php:752
+#: includes/admin/functions-ur-admin.php:990
+#: includes/functions-ur-core.php:5939
+>>>>>>> master
 =======
 #: includes/admin/class-ur-admin-menus.php:752
 #: includes/admin/functions-ur-admin.php:990
@@ -1739,8 +1791,14 @@ msgid "User Registration Dashboard"
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/admin/class-ur-admin-menus.php:837
 #: includes/admin/functions-ur-admin.php:927
+=======
+#: includes/admin/class-ur-admin-menus.php:843
+#: includes/admin/functions-ur-admin.php:927
+#: chunks/dashboard.js:280
+>>>>>>> master
 =======
 #: includes/admin/class-ur-admin-menus.php:843
 #: includes/admin/functions-ur-admin.php:927
@@ -1761,8 +1819,13 @@ msgid "User Registration extensions"
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/admin/class-ur-admin-menus.php:934
 #: includes/admin/functions-ur-admin.php:1065
+=======
+#: includes/admin/class-ur-admin-menus.php:940
+#: includes/admin/functions-ur-admin.php:996
+>>>>>>> master
 =======
 #: includes/admin/class-ur-admin-menus.php:940
 #: includes/admin/functions-ur-admin.php:996
@@ -1929,7 +1992,11 @@ msgstr ""
 #: chunks/dashboard.js:1
 #: src/content-restriction/components/modals/DuplicateRuleModal.js:51
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: src/content-restriction/components/rules/RuleCard.js:325
+=======
+#: src/content-restriction/components/rules/RuleCard.js:329
+>>>>>>> master
 =======
 #: src/content-restriction/components/rules/RuleCard.js:329
 >>>>>>> master
@@ -2391,6 +2458,11 @@ msgstr ""
 #: modules/content-restriction/admin/class-urcr-admin.php:141
 #: modules/content-restriction/admin/class-urcr-admin.php:142
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+>>>>>>> master
 =======
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -2400,7 +2472,12 @@ msgid "Content Rules"
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/admin/functions-ur-admin.php:1146
+=======
+#: includes/admin/functions-ur-admin.php:1059
+#: chunks/dashboard.js:280
+>>>>>>> master
 =======
 #: includes/admin/functions-ur-admin.php:1059
 #: chunks/dashboard.js:280
@@ -2409,6 +2486,7 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: includes/admin/functions-ur-admin.php:1153
 msgid "Free vs Pro"
@@ -2431,6 +2509,18 @@ msgstr ""
 
 #: includes/admin/functions-ur-admin.php:1077
 >>>>>>> master
+=======
+#: includes/admin/functions-ur-admin.php:1066
+msgid "Free vs Pro"
+msgstr ""
+
+#: includes/admin/functions-ur-admin.php:1071
+#, php-format
+msgid "You are currently using User Registration & Membership %1$s v%2$s"
+msgstr ""
+
+#: includes/admin/functions-ur-admin.php:1077
+>>>>>>> master
 #: src/dashboard/components/Header/Header.js:140
 msgid "Upgrade To Pro"
 msgstr ""
@@ -2438,6 +2528,10 @@ msgstr ""
 #. translators: %1$s - My account Link.
 #: includes/admin/notifications/class-ur-admin-notices.php:114
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+#, php-format
+>>>>>>> master
 =======
 #, php-format
 >>>>>>> master
@@ -2521,8 +2615,13 @@ msgstr ""
 
 #: includes/admin/notifications/class-ur-admin-notices.php:686
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: user-registration.php:99
 #: user-registration.php:109
+=======
+#: user-registration.php:97
+#: user-registration.php:106
+>>>>>>> master
 =======
 #: user-registration.php:97
 #: user-registration.php:106
@@ -2533,6 +2632,10 @@ msgstr ""
 #. translators: % s: continue wizard URL
 #: includes/admin/notifications/class-ur-admin-notices.php:882
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+#, php-format
+>>>>>>> master
 =======
 #, php-format
 >>>>>>> master
@@ -2541,6 +2644,10 @@ msgstr ""
 
 #: includes/admin/notifications/class-ur-admin-notices.php:883
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+#, php-format
+>>>>>>> master
 =======
 #, php-format
 >>>>>>> master
@@ -2769,7 +2876,11 @@ msgstr ""
 #: includes/admin/settings/class-ur-members-menu.php:289
 #: includes/admin/settings/class-ur-users-menu.php:187
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/class-ur-frontend-scripts.php:490
+=======
+#: includes/class-ur-frontend-scripts.php:584
+>>>>>>> master
 =======
 #: includes/class-ur-frontend-scripts.php:584
 >>>>>>> master
@@ -2961,7 +3072,11 @@ msgstr ""
 #: modules/membership/includes/Admin/Membership/Membership.php:955
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroups.php:64
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: modules/membership/includes/Frontend/Frontend.php:199
+=======
+#: modules/membership/includes/Frontend/Frontend.php:227
+>>>>>>> master
 =======
 #: modules/membership/includes/Frontend/Frontend.php:227
 >>>>>>> master
@@ -3297,7 +3412,13 @@ msgstr ""
 #: templates/myaccount/membership.php:39
 #: templates/myaccount/payments.php:46
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: src/content-restriction/components/rules/RuleCard.js:237
+=======
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+#: src/content-restriction/components/rules/RuleCard.js:239
+>>>>>>> master
 =======
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -3327,13 +3448,19 @@ msgstr ""
 #: modules/class-ur-payment-settings.php:34
 #: modules/class-ur-payment-settings.php:53
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: modules/payment-history/Orders.php:78
 #: modules/payment-history/Orders.php:79
 =======
+=======
+>>>>>>> master
 #: modules/payment-history/Admin/OrdersListTable.php:407
 #: modules/payment-history/Orders.php:78
 #: modules/payment-history/Orders.php:79
 #: chunks/welcome.js:280
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 msgid "Payments"
 msgstr ""
@@ -3982,9 +4109,15 @@ msgstr ""
 #: includes/Functions/CoreFunctions.php:830
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:665
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:436
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:483
 #: modules/content-restriction/class-urcr-frontend.php:1470
+=======
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:480
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:527
+#: modules/content-restriction/class-urcr-frontend.php:1454
+>>>>>>> master
 =======
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:480
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:527
@@ -3997,9 +4130,15 @@ msgstr ""
 #: includes/Functions/CoreFunctions.php:831
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:666
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:437
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:484
 #: modules/content-restriction/class-urcr-frontend.php:1471
+=======
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:481
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:528
+#: modules/content-restriction/class-urcr-frontend.php:1455
+>>>>>>> master
 =======
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:481
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:528
@@ -4012,9 +4151,15 @@ msgstr ""
 #: includes/Functions/CoreFunctions.php:832
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:667
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:438
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:485
 #: modules/content-restriction/class-urcr-frontend.php:1472
+=======
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:482
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:529
+#: modules/content-restriction/class-urcr-frontend.php:1456
+>>>>>>> master
 =======
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:482
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:529
@@ -4165,6 +4310,10 @@ msgstr ""
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:77
 #: modules/payment-history/Orders.php:405
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+#: chunks/welcome.js:280
+>>>>>>> master
 =======
 #: chunks/welcome.js:280
 >>>>>>> master
@@ -4297,6 +4446,10 @@ msgstr ""
 #: modules/membership/includes/Admin/Views/Partials/membership-admin-payments.php:360
 #: modules/payment-history/Orders.php:406
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+#: chunks/welcome.js:280
+>>>>>>> master
 =======
 #: chunks/welcome.js:280
 >>>>>>> master
@@ -5976,14 +6129,20 @@ msgstr ""
 
 #. translators: 1: Pending email message 2: Cancel Link
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/class-ur-ajax.php:323
 #: includes/functions-ur-template.php:716
 #: includes/functions-ur-template.php:1974
 =======
+=======
+>>>>>>> master
 #: includes/class-ur-ajax.php:324
 #: includes/functions-ur-template.php:726
 #: includes/functions-ur-template.php:2015
 #, php-format
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 msgid "There is a pending change of your email to <code>%1$s</code>. <a href=\"%2$s\">Cancel</a>"
 msgstr ""
@@ -6151,8 +6310,13 @@ msgid "Sorry, you are not allowed to install plugins on this site."
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/class-ur-ajax.php:1513
 #: includes/functions-ur-core.php:3219
+=======
+#: includes/class-ur-ajax.php:1514
+#: includes/functions-ur-core.php:3255
+>>>>>>> master
 =======
 #: includes/class-ur-ajax.php:1514
 #: includes/functions-ur-core.php:3255
@@ -6246,8 +6410,13 @@ msgid "Form ID is missing!"
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/class-ur-ajax.php:2112
 #: includes/functions-ur-core.php:10427
+=======
+#: includes/class-ur-ajax.php:2113
+#: includes/functions-ur-core.php:10530
+>>>>>>> master
 =======
 #: includes/class-ur-ajax.php:2113
 #: includes/functions-ur-core.php:10530
@@ -7342,8 +7511,13 @@ msgid "Subscription"
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/class-ur-smart-tags.php:760
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:420
+=======
+#: includes/class-ur-smart-tags.php:762
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:462
+>>>>>>> master
 =======
 #: includes/class-ur-smart-tags.php:762
 #: modules/content-restriction/admin/class-urcr-admin-assets.php:462
@@ -8575,8 +8749,13 @@ msgstr ""
 
 #: includes/form/class-ur-form-field-country.php:374
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/functions-ur-template.php:820
 #: includes/functions-ur-template.php:2094
+=======
+#: includes/functions-ur-template.php:830
+#: includes/functions-ur-template.php:2135
+>>>>>>> master
 =======
 #: includes/functions-ur-template.php:830
 #: includes/functions-ur-template.php:2135
@@ -9282,6 +9461,10 @@ msgstr ""
 
 #: includes/frontend/class-ur-frontend.php:501
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+#: modules/membership/includes/Admin/Subscriptions/ListTable.php:196
+>>>>>>> master
 =======
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:196
 >>>>>>> master
@@ -11117,7 +11300,11 @@ msgstr ""
 
 #: includes/functions-ur-template.php:250
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/functions-ur-template.php:1617
+=======
+#: includes/functions-ur-template.php:1658
+>>>>>>> master
 =======
 #: includes/functions-ur-template.php:1658
 >>>>>>> master
@@ -11133,8 +11320,13 @@ msgid "characters"
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/functions-ur-template.php:856
 #: includes/functions-ur-template.php:2136
+=======
+#: includes/functions-ur-template.php:897
+#: includes/functions-ur-template.php:2177
+>>>>>>> master
 =======
 #: includes/functions-ur-template.php:897
 #: includes/functions-ur-template.php:2177
@@ -11452,7 +11644,11 @@ msgstr ""
 #: includes/RestApi/controllers/version1/class-ur-gutenberg-blocks.php:304
 #: modules/content-restriction/admin/class-urcr-admin-meta-boxes.php:235
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: modules/content-restriction/class-urcr-frontend.php:1286
+=======
+#: modules/content-restriction/class-urcr-frontend.php:1264
+>>>>>>> master
 =======
 #: modules/content-restriction/class-urcr-frontend.php:1264
 >>>>>>> master
@@ -11512,6 +11708,10 @@ msgstr ""
 #. translators: 1: Failed Addon Names
 #: includes/RestApi/controllers/version1/class-ur-modules.php:490
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+#, php-format
+>>>>>>> master
 =======
 #, php-format
 >>>>>>> master
@@ -11984,11 +12184,19 @@ msgid "Content Restriction - Content Rules"
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: modules/content-restriction/admin/class-urcr-admin.php:316
 msgid "Permission denied"
 msgstr ""
 
 #: modules/content-restriction/admin/class-urcr-admin.php:322
+=======
+#: modules/content-restriction/admin/class-urcr-admin.php:312
+msgid "Permission denied"
+msgstr ""
+
+#: modules/content-restriction/admin/class-urcr-admin.php:318
+>>>>>>> master
 =======
 #: modules/content-restriction/admin/class-urcr-admin.php:312
 msgid "Permission denied"
@@ -13109,6 +13317,7 @@ msgid "%s created order for %s"
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:404
 msgid "Paypal subscription cancellation failed"
 msgstr ""
@@ -13147,6 +13356,46 @@ msgid "Subscription successfully reactivated from paypal."
 msgstr ""
 
 #: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1074
+=======
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:425
+msgid "Paypal subscription cancellation failed"
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:480
+msgid "Membership Upgraded successfully"
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:772
+msgid "Payment failed: recipient emails do not match"
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:775
+msgid "Payment failed: payment amounts do not match "
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:940
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1039
+msgid "Invalid response from paypal, check Client ID or Secret."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:950
+msgid "Paypal Subscription ID not present, please contact your administrator."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1000
+msgid "Subscription successfully canceled from paypal."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1016
+msgid "Subscription cancellation failed from Paypal."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1088
+msgid "Subscription successfully reactivated from paypal."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1095
+>>>>>>> master
 =======
 #: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:425
 msgid "Paypal subscription cancellation failed"
@@ -13350,7 +13599,11 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:161
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: modules/membership/includes/AJAX.php:2499
+=======
+#: modules/membership/includes/AJAX.php:2501
+>>>>>>> master
 =======
 #: modules/membership/includes/AJAX.php:2501
 >>>>>>> master
@@ -13367,7 +13620,11 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:165
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: modules/membership/includes/Admin/Views/subscription-edit.php:335
+=======
+#: modules/membership/includes/Admin/Views/subscription-edit.php:359
+>>>>>>> master
 =======
 #: modules/membership/includes/Admin/Views/subscription-edit.php:359
 >>>>>>> master
@@ -13522,13 +13779,19 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Views/Partials/membership-create-access-tab.php:131
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: src/content-restriction/components/rules/RuleCard.js:43
 #: src/content-restriction/components/settings/MessageAction.js:322
 =======
+=======
+>>>>>>> master
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: src/content-restriction/components/rules/RuleCard.js:43
 #: src/content-restriction/components/settings/MessageAction.js:327
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 msgid "Restriction Message"
 msgstr ""
@@ -14677,6 +14940,7 @@ msgid "Payer Email"
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: modules/payment-history/Admin/OrdersListTable.php:399
 #: modules/payment-history/Orders.php:220
 #: modules/payment-history/Views/header.php:10
@@ -14684,6 +14948,9 @@ msgid "Payment History"
 msgstr ""
 
 #: modules/payment-history/Admin/OrdersListTable.php:501
+=======
+#: modules/payment-history/Admin/OrdersListTable.php:509
+>>>>>>> master
 =======
 #: modules/payment-history/Admin/OrdersListTable.php:509
 >>>>>>> master
@@ -14802,12 +15069,18 @@ msgid "Order updated successfully."
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 #: modules/payment-history/Orders.php:220
 #: modules/payment-history/Views/header.php:10
 msgid "Payment History"
 msgstr ""
 
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 #: modules/payment-history/Orders.php:230
 msgid "Add Manual Payment"
@@ -15640,6 +15913,7 @@ msgid "Background Hover"
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: src/content-restriction/components/inputs/TaxonomyTermsSelect.js:118
 msgid "No terms available"
 msgstr ""
@@ -15684,6 +15958,11 @@ msgstr ""
 
 #: src/content-restriction/components/modals/AdvancedLogicWarningModal.js:27
 msgid "You're currently using OR, NOT, or subgroups for this rule. Please remove these first, then you can disable Advanced Logic. When disabled, only AND will be used for multiple conditions"
+=======
+#: chunks/blocks.js:280
+#: src/blocks/blocks/membership-buy-now/Edit.js:229
+msgid "Loading memberships…"
+>>>>>>> master
 =======
 #: chunks/blocks.js:280
 #: src/blocks/blocks/membership-buy-now/Edit.js:229
@@ -15762,6 +16041,7 @@ msgstr ""
 msgid "Are you sure you want to duplicate this rule? A copy will be created with the same settings."
 msgstr ""
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: src/content-restriction/components/rules/AdvancedLogicGates.js:22
 msgid "Add Logic:"
@@ -15893,6 +16173,10 @@ msgstr ""
 msgid "No rules found"
 msgstr ""
 
+=======
+#: chunks/content-access-rules.js:1
+#: chunks/dashboard.js:1
+>>>>>>> master
 =======
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1

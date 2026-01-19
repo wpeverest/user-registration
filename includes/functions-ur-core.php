@@ -9896,7 +9896,9 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 					$is_page_missing = true;
 				}
 			}
+
 			if ( $is_page_missing ) {
+				// Only include membership pages if membership module is activated
 				$is_membership_page = in_array(
 					$option_name,
 					array(

@@ -8,12 +8,13 @@
 <div id="ur-membership-registration" class="ur_membership_registration_container ur-form-container">
 	<?php
 
+	$base_currency = get_option( 'user_registration_payment_currency', 'USD' );
 	use GeoIp2\WebService\Client;
 	use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 	use WPEverest\URMembership\Local_Currency\Admin\Api;
 
 	$is_coupon_addon_activated        = ur_check_module_activation( 'coupon' );
-	$is_tax_calculation_enabled		  = ur_check_module_activation( 'taxes' );
+	$is_tax_calculation_enabled       = ur_check_module_activation( 'taxes' );
 	$membership_ids_link_with_coupons = array();
 	if ( $is_coupon_addon_activated && function_exists( 'ur_get_membership_ids_link_with_coupons' ) ) :
 		$membership_ids_link_with_coupons = ur_get_membership_ids_link_with_coupons();
@@ -46,7 +47,6 @@
 			$pricing_zone       = CoreFunctions::ur_get_all_pricing_zone_data();
 			$switch_currency    = ur_string_to_bool( get_option( 'user_registration_switch_local_currency_option', 0 ) );
 			$enable_geolocation = ur_string_to_bool( get_option( 'user_registration_local_currency_by_geolocation', '0' ) );
-			$base_currency      = get_option( 'user_registration_payment_currency', 'USD' );
 
 			$currency_data = Api::ur_get_local_currency_by_geolocation( $enable_geolocation );
 
@@ -60,6 +60,8 @@
 				class="ur-label ur_membership_local_currency"><?php echo __( 'Switch Currency', 'user-registration' ); ?></label>
 				<select id="ur-local-currency-switch-currency" name="ur_local_currency_switch_currency">
 					<?php
+
+					echo '<option value="' . $base_currency . '">' . ur_get_currency_name_by_key( $base_currency ) . '</option>';
 					foreach ( $pricing_zone as $key => $zone ) {
 						if ( empty( $zone['meta']['ur_local_currency'] ) ) {
 							continue;
@@ -256,7 +258,7 @@
 	<!--	total container-->
 	<div id="urm-total_container"
 		class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
-		<?php if( $is_coupon_addon_activated || $is_tax_calculation_enabled ): ?>
+		<?php if ( $is_coupon_addon_activated || $is_tax_calculation_enabled ) : ?>
 			<div class="urm-membership-sub-total-value">
 				<label class="ur_membership_input_label ur-label"
 				for="ur-membership-subtotal"><?php echo esc_html__( 'Sub Total', 'user-registration' ); ?></label>
@@ -269,7 +271,7 @@
 			</span>
 		</div>
 		<?php endif; ?>
-		<?php if( $is_tax_calculation_enabled ): ?>
+		<?php if ( $is_tax_calculation_enabled ) : ?>
 			<div class="urm-membership-tax-value">
 				<label class="ur_membership_input_label ur-label"
 				for="ur-membership-tax"><?php echo esc_html__( 'Tax', 'user-registration' ); ?></label>
@@ -282,7 +284,7 @@
 			</span>
 		</div>
 		<?php endif; ?>
-		<?php if( $is_coupon_addon_activated ): ?>
+		<?php if ( $is_coupon_addon_activated ) : ?>
 			<div class="urm-membership-coupons-value">
 				<label class="ur_membership_input_label ur-label"
 				for="ur-membership-coupons"><?php echo esc_html__( 'Coupons', 'user-registration' ); ?></label>
