@@ -1,6 +1,6 @@
-@import 'utility/mixins';
-@import './../../variables/variables';
-@import './../../components/button';
+@import "utility/mixins";
+@import "./../../variables/variables";
+@import "./../../components/button";
 
 #payment-detail-modal {
 	h2 {
@@ -123,7 +123,7 @@
 			color: white !important;
 			font-size: 14px !important;
 			border-radius: 4px;
-			transition: all .3s;
+			transition: all 0.3s;
 
 			&:hover {
 				background: #128b15;
@@ -132,14 +132,11 @@
 			&:after {
 				content: none;
 			}
-
-
 		}
 	}
 
 	a {
 		text-decoration: none !important;
-		;
 	}
 }
 
@@ -192,7 +189,6 @@
 	margin: 20px 0;
 }
 
-
 // Membership Admin Side Design Fix
 .user-registration {
 	.ur-membership-header {
@@ -210,14 +206,14 @@
 				img {
 					max-width: 36px !important;
 					padding: 18px 24px 18px 0;
-					border-right: 1px solid #E2E8F0;
+					border-right: 1px solid #e2e8f0;
 					margin-right: 28px;
 				}
 
 				a {
 					font-size: 16px !important;
 					line-height: 26px;
-					color: #64748B;
+					color: #64748b;
 					position: relative;
 					padding: 23px 20px;
 
@@ -229,11 +225,11 @@
 						position: absolute;
 						bottom: 0;
 						left: 0;
-						transition: all .3s;
+						transition: all 0.3s;
 					}
 
 					&.row-title {
-						color: #475BB2;
+						color: #475bb2;
 
 						&:after {
 							width: 100%;
@@ -260,11 +256,11 @@
 					font-size: 16px;
 					line-height: 26px;
 					font-weight: 500;
-					color: #64748B;
-					transition: all .3s;
+					color: #64748b;
+					transition: all 0.3s;
 
 					&:hover {
-						color: #475BB2;
+						color: #475bb2;
 					}
 				}
 			}
@@ -290,15 +286,15 @@
 
 			.ur-button-primary {
 				border-radius: 3px;
-				border-color: #475BB2;
-				background: #475BB2;
+				border-color: #475bb2;
+				background: #475bb2;
 				color: #ffffff;
 				padding: 8px 20px 8px 16px;
 				color: #ffffff;
 				font-size: 14px;
 				font-weight: 400;
 				line-height: 24px;
-				transition: all .3s;
+				transition: all 0.3s;
 
 				&:hover {
 					background: #38488e;
@@ -311,11 +307,11 @@
 			form {
 				gap: $spacing_16px;
 
-				>p {
+				> p {
 					display: none;
 				}
 
-				>div {
+				> div {
 					position: relative;
 
 					select {
@@ -337,7 +333,7 @@
 						&:focus {
 							box-shadow: none;
 							outline: none;
-							border-color: #475BB2;
+							border-color: #475bb2;
 						}
 					}
 
@@ -352,9 +348,9 @@
 					padding: 8px 14px;
 					font-size: 14px;
 					line-height: 20px;
-					color: #475BB2;
-					border-color: #475BB2;
-					background: #F6F7F7;
+					color: #475bb2;
+					border-color: #475bb2;
+					background: #f6f7f7;
 					font-weight: 500;
 				}
 			}
@@ -455,7 +451,7 @@
 				tbody {
 					tr {
 						&:nth-child(odd) {
-							background: #F8F8FA;
+							background: #f8f8fa;
 						}
 
 						td {
@@ -524,7 +520,7 @@
 									}
 
 									p {
-										color: #6B6B6B;
+										color: #6b6b6b;
 										font-size: 14px;
 										font-weight: 400;
 										line-height: 24px;
@@ -537,7 +533,6 @@
 
 				tfoot {
 					tr {
-
 						td,
 						th {
 							border-top: $border_width solid $border_color;
@@ -590,7 +585,7 @@
 									}
 
 									p {
-										color: #6B6B6B;
+										color: #6b6b6b;
 										font-size: 14px;
 										font-weight: 400;
 										line-height: 24px;
@@ -803,7 +798,7 @@
 										margin-bottom: 0;
 										border-radius: 4px;
 										border: 1px solid #e1e1e1;
-										background: #FFF;
+										background: #fff;
 										padding: 12px 14px;
 										cursor: pointer;
 
@@ -875,7 +870,6 @@
 								}
 							}
 						}
-
 					}
 
 					#ur-membership-plan-and-price-section {
@@ -901,7 +895,7 @@
 										margin-bottom: 0;
 										border-radius: 4px;
 										border: 1px solid #e1e1e1;
-										background: #FFF;
+										background: #fff;
 										padding: 12px 14px;
 										cursor: pointer;
 
@@ -962,7 +956,8 @@
 										max-width: 220px;
 										margin-bottom: 0;
 										border-radius: $border_radius_4;
-										border: $border_width solid $border-color;
+										border: $border_width solid
+											$border-color;
 										background: $white;
 										padding: $spacing_16px;
 										cursor: pointer;
@@ -1012,7 +1007,6 @@
 											cursor: not-allowed;
 
 											.ur-membership-type-title {
-
 												input[type="radio"],
 												.ur-membership-upgrade-type-full--label {
 													cursor: not-allowed;
@@ -1042,7 +1036,7 @@
 							}
 						}
 
-						>.user-registration-card {
+						> .user-registration-card {
 							padding: 0;
 							border: 0;
 							margin-top: 80px;
@@ -1052,7 +1046,6 @@
 					#ur-membership-upgrade-action:checked {
 						background: $primary_color;
 						border-color: $primary_color;
-
 					}
 
 					#paid-plan-container {
@@ -1111,7 +1104,6 @@
 
 						.trial-container {
 							&--wrapper {
-
 								.ur-label {
 									margin-bottom: 0;
 
@@ -1141,7 +1133,6 @@
 
 					#payment-gateway-container,
 					#ur-sync-to-email-marketing-container {
-
 						.user-registration-card {
 							border-radius: $border_radius_7;
 
@@ -1152,7 +1143,8 @@
 								}
 							}
 
-							&__body {}
+							&__body {
+							}
 						}
 					}
 				}
@@ -1178,7 +1170,7 @@
 				border: $border_width solid $border_color;
 				border-radius: $border_radius_5;
 				padding: $spacing_16px $spacing_20px;
-				transition: all .3s ease-in-out;
+				transition: all 0.3s ease-in-out;
 				cursor: pointer;
 				width: 100%;
 
@@ -1272,14 +1264,14 @@
 						}
 					}
 
-					&-sync-container {}
+					&-sync-container {
+					}
 				}
 			}
 		}
 	}
 
 	#user-registration-base-list-table-page {
-
 		.user-registration-base-list-table-form {
 			.tablenav {
 				&-pages {
@@ -1295,21 +1287,18 @@
 							&.status {
 								.ur-toggle-section {
 									.user-registration-toggle-form {
-
 										input {
-
-											&:checked+.slider {
+											&:checked + .slider {
 												background-color: $green;
 											}
 										}
-
 									}
 								}
 							}
 						}
 
 						&:nth-child(odd) {
-							background: #F8F8FA;
+							background: #f8f8fa;
 						}
 
 						&.no-items {
@@ -1337,7 +1326,7 @@
 									}
 
 									p {
-										color: #6B6B6B;
+										color: #6b6b6b;
 										font-size: 14px;
 										font-weight: 400;
 										line-height: 24px;
@@ -1353,7 +1342,6 @@
 				thead {
 					tr {
 						th {
-
 							&#title,
 							&#membership_price,
 							&#membership_type,
@@ -1365,7 +1353,6 @@
 							&#draggable {
 								width: 1%;
 							}
-
 						}
 					}
 				}
@@ -1373,7 +1360,7 @@
 				tbody {
 					tr {
 						&:nth-child(odd) {
-							background: #F8F8FA;
+							background: #f8f8fa;
 						}
 
 						td {
@@ -1442,7 +1429,7 @@
 									}
 
 									p {
-										color: #6B6B6B;
+										color: #6b6b6b;
 										font-size: 14px;
 										font-weight: 400;
 										line-height: 24px;
@@ -1455,7 +1442,6 @@
 
 				tfoot {
 					tr {
-
 						td,
 						th {
 							border-top: $border_width solid $border_color;
@@ -1508,9 +1494,9 @@
 							padding: 8px 14px;
 							font-size: 14px;
 							line-height: 20px;
-							color: #475BB2;
-							border-color: #475BB2;
-							background: #F6F7F7;
+							color: #475bb2;
+							border-color: #475bb2;
+							background: #f6f7f7;
 							font-weight: 500;
 						}
 					}
@@ -1571,7 +1557,7 @@
 										}
 
 										p {
-											color: #6B6B6B;
+											color: #6b6b6b;
 											font-size: 14px;
 											font-weight: 400;
 											line-height: 24px;
@@ -1722,7 +1708,7 @@
 						border: $border_width solid $border-color;
 
 						&#select-plan-container {
-							background: #F8F8FA;
+							background: #f8f8fa;
 						}
 
 						&#plan-detail-container {
@@ -1857,7 +1843,6 @@
 		}
 	}
 }
-
 
 .user-registration-switch {
 	gap: 10px;
@@ -2134,7 +2119,6 @@
 				&#status {
 					width: 20%;
 				}
-
 			}
 
 			tbody {
@@ -2147,9 +2131,7 @@
 						}
 					}
 				}
-
 			}
-
 		}
 	}
 
@@ -2167,7 +2149,6 @@
 					.select2-search__field {
 						width: 100% !important;
 					}
-
 				}
 			}
 		}
@@ -2175,15 +2156,14 @@
 }
 
 .tooltipster-base.tooltipster-bottom {
-	margin-top: -30px
-		/* Adjust gap for bottom-positioned tooltips */
+	margin-top: -30px;
+	/* Adjust gap for bottom-positioned tooltips */
 }
 
 .wp-list-table {
 	&.memberships {
 		tfoot {
 			tr {
-
 				th,
 				td {
 					border-top: none;
@@ -2325,7 +2305,6 @@
 }
 
 .ur-membership-upgrade-container {
-
 	.ur-membership-upgrade-paths-info {
 		font-size: 13px;
 		color: #646970;
@@ -2372,5 +2351,50 @@
 		height: 42px;
 		background: #f0f0f0;
 		border: 1px dashed #ccc;
+	}
+}
+
+.tippy-box[data-theme="ur-gate"] {
+	background-color: white;
+	box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.08);
+	color: black;
+	.tippy-arrow {
+		color: white;
+	}
+}
+
+.ur-feature {
+	padding: 12px;
+	&__btn {
+		display: inline-flex;
+		flex-shrink: 0;
+		gap: 0.5rem;
+		justify-content: center;
+		align-items: center;
+		border-radius: 4px;
+		outline-style: none;
+		font-size: 12px;
+		line-height: 1.25rem;
+		font-weight: 500;
+		white-space: nowrap;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		background: #ff8c39;
+		color: #fff;
+		border: none;
+		padding: 4px 8px;
+		cursor: pointer;
+		margin-top: 4px;
+
+		&:hover {
+			color: white;
+		}
+
+		svg {
+			pointer-events: none;
+			width: 16px;
+			height: 16px;
+			flex-shrink: 0;
+			fill: white;
+		}
 	}
 }
