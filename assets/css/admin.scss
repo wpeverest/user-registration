@@ -9470,10 +9470,9 @@ body.user-registration-page {
 						border: 1px solid #e1e1e1;
 						border-radius: 4px;
 
-						&:has(input[type="checkbox"]:checked) {
-							border-color: #475bb2;
-						}
-
+						&:has(.ur-tax-country-checkbox[type="checkbox"]:checked) {
+                        border-color: #475bb2;
+                    }
 						.ur-tax-regions-popup-country-outer-wrapper {
 							display: flex;
 							align-items: center;
