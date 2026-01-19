@@ -1235,6 +1235,65 @@ html body[data-scroll-locked] {
 			height: 12px;
 		}
 	}
+
+	&__MetricGroup-Pro {
+		// .UR-UI-Select-Label {
+		// 	display: flex;
+		// 	align-items: center;
+		// 	gap: 4px;
+		// 	background-color: rgba(255, 140, 57, 0.3);
+		// 	margin-inline: -0.25rem;
+		// 	font-size: 14px;
+		// 	font-weight: 500;
+		// 	color: #111;
+
+		// 	> :last-child {
+		// 		width: 18px;
+		// 		height: 18px;
+		// 		display: inline-flex;
+		// 		align-items: center;
+		// 		justify-content: center;
+		// 		background-color: #ff8c39;
+		// 		color: white;
+		// 		border-radius: 4px;
+
+		// 		svg {
+		// 			width: 12px;
+		// 			height: 12px;
+		// 			fill: white;
+		// 		}
+		// 	}
+		// }
+
+		margin-inline: -0.25rem;
+
+		.UR-UI-Select-Item[data-disabled] {
+			opacity: 1;
+		}
+
+		.UR-UI-Select-Item {
+			&:hover {
+				background-color: rgba(255, 140, 57, 0.05);
+			}
+			.UR-Analytics-Metrics__Crown {
+				width: 18px;
+				height: 18px;
+				border-radius: 4px;
+				background-color: #ff8c39;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				color: white;
+
+				svg {
+					width: 12px;
+					height: 12px;
+					fill: white;
+					stroke: white;
+				}
+			}
+		}
+	}
 }
 
 .UR-Progress-Indicator {
@@ -1548,8 +1607,14 @@ html body[data-scroll-locked] {
 
 		&-Btn {
 			margin-top: 4px;
+			background-color: #ff8c39;
+
+			svg {
+				fill: white;
+			}
 
 			&:hover {
+				background-color: #ff8c39;
 				color: white;
 			}
 		}
