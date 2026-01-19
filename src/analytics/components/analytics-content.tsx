@@ -20,6 +20,24 @@ import {
 	Plugin
 } from "chart.js";
 import { Button } from "./ui/button";
+import {
+	Select,
+	SelectTrigger,
+	SelectContent,
+	SelectItem,
+	SelectValue,
+	SelectLabel,
+	SelectGroup,
+	SelectSeparator
+} from "./ui/select";
+import { useState } from "react";
+import useLocalStorage from "../hooks/use-local-storage";
+
+declare global {
+	interface Window {
+		Swal: typeof import("sweetalert2").default;
+	}
+}
 
 const createLegendItem = (
 	item: any,
@@ -108,7 +126,10 @@ interface AnalyticsContentProps {
 	overviewData: OverviewApiResponse;
 }
 
-const SUMMARY_OPTIONS = !!window?.__UR_ANALYTICS__?.memberships?.length
+const SUMMARY_OPTIONS: Array<{
+	id: string;
+	title: string;
+}> = !!window?.__UR_ANALYTICS__?.memberships?.length
 	? [
 			{
 				id: "total_revenue",
@@ -473,6 +494,75 @@ function getWeekNumber(d: Date): number {
 	);
 }
 
+const PRO_SUMMARY_OPTIONS = [
+	{
+		id: "new_payments_revenue",
+		title: __("New Payments Revenue", "user-registration")
+	},
+	{
+		id: "new_subscription_revenue",
+		title: __("New Subscription Revenue", "user-registration")
+	},
+	{
+		id: "mrr",
+		title: __("Monthly Recurring Revenue (MRR)", "user-registration")
+	},
+	{
+		id: "arr",
+		title: __("Annual Recurring Revenue (ARR)", "user-registration")
+	},
+	{
+		id: "new-orders",
+		title: __("New Orders/Payments", "user-registration")
+	},
+	{
+		id: "new-subscriptions",
+		title: __("New Subscriptions", "user-registration")
+	},
+	{
+		id: "refunds",
+		title: __("Refunds", "user-registration")
+	}
+];
+
+// async function firePricingPopup() {
+// 	await window.Swal.fire({
+// 		title: "",
+// 		html: `
+// 		<div class="ur-feature">
+// 		<p >
+// 		${__(
+// 			"Get powerful analytics with revenue tracking, member insights, recurring revenue analysis, and advanced visualizations.",
+// 			"user-registration"
+// 		)}</p>
+// 		<a href="https://wpuserregistration.com/upgrade/?utm_source=ur-analytics&utm_medium=upgrade-link&utm_campaign=lite-version">
+// 			<svg
+// 				xmlns="http://www.w3.org/2000/svg"
+// 				width="24"
+// 				height="24"
+// 				viewBox="0 0 24 24"
+// 				fill="none"
+// 				stroke="currentColor"
+// 				stroke-width="2"
+// 				stroke-linecap="round"
+// 				stroke-linejoin="round"
+// 			>
+// 				<path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z" />
+// 				<path d="M5 21h14" />
+// 			</svg>
+// 			<span>
+// 				${__("Upgrade to Pro", "user-registration")}
+// 			</span>
+// 		</a>
+// 		</div>`,
+// 		showCloseButton: true,
+// 		showConfirmButton: false,
+// 		customClass: {
+// 			container: "UR-Feature-Gate-Popover"
+// 		}
+// 	});
+// }
+
 export const AnalyticsContent = ({ overviewData }: AnalyticsContentProps) => {
 	const { filters } = useAnalyticsFilters();
 	const { dateFrom, dateTo, unit } = filters;
@@ -484,12 +574,21 @@ export const AnalyticsContent = ({ overviewData }: AnalyticsContentProps) => {
 		dateTo ? new Date(dateTo) : new Date(),
 		unit ?? "day"
 	);
+
+	const [metricsState, setMetricsState] = useLocalStorage(
+		"analytics-metrics",
+		SUMMARY_OPTIONS.map((x) => x.id)
+	);
+
 	return (
 		<div className="UR-Analytics-Content">
 			<div className="UR-Analytics-Metrics">
-				{SUMMARY_OPTIONS.map((metric) => {
+				{SUMMARY_OPTIONS.map((metric, i) => {
 					const data =
-						overviewData?.[metric.id as keyof OverviewApiResponse];
+						overviewData?.[
+							metricsState[i] as keyof OverviewApiResponse
+						];
+
 					if (!data) return null;
 
 					const isPositive = data.count > data.previous;
@@ -501,9 +600,89 @@ export const AnalyticsContent = ({ overviewData }: AnalyticsContentProps) => {
 							className={"UR-Analytics-Metric"}
 						>
 							<div className="UR-Analytics-Metric__Header">
-								<span className="UR-Analytics-Metric__MetricTitle">
-									{metric.title}
-								</span>
+								<Select
+									value={metricsState[i]}
+									onValueChange={(v) => {
+										if (
+											SUMMARY_OPTIONS.some(
+												(x) => x.id === v
+											)
+										) {
+											setMetricsState((prev) => {
+												const newMetrics = [...prev];
+												newMetrics[i] = v;
+												return newMetrics;
+											});
+										} else {
+											// firePricingPopup();
+										}
+									}}
+								>
+									<SelectTrigger className="UR-Analytics-Metric__MetricSelector">
+										<SelectValue />
+									</SelectTrigger>
+									<SelectContent
+										align="start"
+										collisionPadding={32}
+										className="UR-UI-Select-Content"
+									>
+										{SUMMARY_OPTIONS.map((s) => (
+											<SelectItem key={s.id} value={s.id}>
+												{s.title}
+											</SelectItem>
+										))}
+										<SelectSeparator />
+										<SelectGroup className="UR-Analytics-Metric__MetricGroup-Pro">
+											{/* <SelectLabel>
+												<span>{__("More in Pro")}</span>
+												<span>
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														width="24"
+														height="24"
+														viewBox="0 0 24 24"
+														fill="none"
+														stroke="currentColor"
+														strokeWidth="2"
+														strokeLinecap="round"
+														strokeLinejoin="round"
+													>
+														<path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z" />
+														<path d="M5 21h14" />
+													</svg>
+												</span>
+											</SelectLabel> */}
+											{PRO_SUMMARY_OPTIONS.map((x) => (
+												<SelectItem
+													key={x.id}
+													value={x.id}
+													title={__(
+														"Available in Pro",
+														"user-registration"
+													)}
+												>
+													<span>{x.title}</span>
+													<span className="UR-Analytics-Metrics__Crown">
+														<svg
+															xmlns="http://www.w3.org/2000/svg"
+															width="24"
+															height="24"
+															viewBox="0 0 24 24"
+															fill="none"
+															stroke="currentColor"
+															strokeWidth="2"
+															strokeLinecap="round"
+															strokeLinejoin="round"
+														>
+															<path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z" />
+															<path d="M5 21h14" />
+														</svg>
+													</span>
+												</SelectItem>
+											))}
+										</SelectGroup>
+									</SelectContent>
+								</Select>
 							</div>
 							<div className="UR-Analytics-Metric__Content">
 								<div className="UR-Analytics-Metric__Value">
