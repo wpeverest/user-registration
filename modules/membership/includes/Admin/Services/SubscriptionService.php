@@ -258,6 +258,13 @@ class SubscriptionService {
 		$total                          = $order['total_amount'];
 		$membership_tab_url             = esc_url( ur_get_my_account_url() . 'ur-membership' );
 
+
+		$order_repository = new OrdersRepository();
+		$local_currency = $order_repository->get_order_meta_by_order_id_and_meta_key( $order['order_id'], 'local_currency' );
+
+		$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
+		$symbol = ur_get_currency_symbol( $currency );
+
 		if ( ! empty( $data['context'] ) && 'thank_you_page' == $data['context'] ) {
 			$data['payment_method'] = ! empty( $member_order['payment_method'] ) ? $member_order['payment_method'] : '';
 			$data['transaction_id'] = ! empty( $member_order['transaction_id'] ) ? $member_order['transaction_id'] : '';
