@@ -3160,6 +3160,9 @@
 			type: "POST",
 			url: user_registration_params.ajax_url,
 			data: data,
+			beforeSend: function(){
+				$el.before('<span class="ur-front-spinner"></span>');
+			},
 			success: function (response) {
 
 				var $stateWrapper = $el.siblings('.ur-field-address-state-outer-wrapper');
@@ -3167,7 +3170,7 @@
 
 				var html = '';
 
-				if (response.success && response.data.has_state) {
+				if (response.success && response.data.has_state && '' !== response.data.state) {
 					html += '<select class="ur-field-address-state select ur-frontend-field" name="' + fieldId + '_state">';
 					html += response.data.state;
 					html += '</select>';
@@ -3175,6 +3178,7 @@
 					html += '<input type="text" class="ur-field-address-state input-text ur-frontend-field" name="' + fieldId + '_state"/>';
 				}
 
+				$( document ).find( '.ur-front-spinner' ).remove();
 				var $stateElement = $( html );
 
 				$stateWrapper.append( $stateElement );
