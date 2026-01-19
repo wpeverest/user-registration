@@ -285,7 +285,6 @@ textarea.ur-input-border-red {
 		}
 
 		.ur-reset-password-btn {
-<<<<<<< HEAD
 			border: 1px solid
 				var(
 					--ur-button-background-normal-color,
@@ -295,10 +294,6 @@ textarea.ur-input-border-red {
 				--ur-button-background-normal-color,
 				var(--ur-primary-color, $primary_color)
 			);
-=======
-			border: 1px solid var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
-			background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
->>>>>>> master
 			width: 100%;
 			color: var(--ur-button-text-normal-color, $white);
 			letter-spacing: 0.15px;
@@ -324,12 +319,8 @@ textarea.ur-input-border-red {
 				.btn-primary {
 					min-height: 34px;
 					background: var(--ur-primary-color, $primary_color);
-<<<<<<< HEAD
 					border: $border_width solid
 						var(--ur-primary-color, $primary_color);
-=======
-					border: $border_width solid var(--ur-primary-color, $primary_color);
->>>>>>> master
 					color: $white;
 					border-radius: $border_radius_4;
 					font-size: 14px;
@@ -412,14 +403,10 @@ textarea.ur-input-border-red {
 					color: #383838;
 
 					&:focus {
-<<<<<<< HEAD
 						border-color: var(
 							--ur-primary-color,
 							$primary_color
 						) !important;
-=======
-						border-color: var(--ur-primary-color, $primary_color) !important;
->>>>>>> master
 					}
 				}
 			}
@@ -512,14 +499,10 @@ textarea.ur-input-border-red {
 							border-radius: $border_radius_4;
 
 							&--focus {
-<<<<<<< HEAD
 								border-color: var(
 									--ur-primary-color,
 									$primary_color
 								);
-=======
-								border-color: var(--ur-primary-color, $primary_color);
->>>>>>> master
 								border-radius: $border_radius_4;
 							}
 
@@ -651,11 +634,7 @@ textarea.ur-input-border-red {
 				border: $border_width solid $border-color;
 
 				&:focus {
-<<<<<<< HEAD
 					border-color: var(--ur-primary-color, $primary_color);
-=======
-					border-color: var(--ur-primary-color,$primary_color);
->>>>>>> master
 					outline: none;
 					box-shadow: none;
 				}
@@ -685,14 +664,10 @@ textarea.ur-input-border-red {
 				padding: $spacing_6px $spacing_12px;
 
 				&:focus {
-<<<<<<< HEAD
 					border-color: var(
 						--ur-primary-color,
 						$primary_color
 					) !important;
-=======
-					border-color: var(--ur-primary-color, $primary_color) !important;
->>>>>>> master
 				}
 			}
 
@@ -1334,11 +1309,7 @@ span.ur-shortcode-form-embed-dot {
 	padding: 0 !important;
 	border: 0 !important;
 	border-radius: 50%;
-<<<<<<< HEAD
 	background-color: var(--ur-primary-color, $primary_color);
-=======
-	background-color: var(--ur-primary-color,$primary_color);
->>>>>>> master
 	animation: user-registration-heartbeat 1.5s infinite !important;
 	margin: 3px 10px;
 }
@@ -1709,8 +1680,9 @@ span.ur-shortcode-form-embed-dot {
 			border-radius: 8px 0 0 0;
 			border-top: 1px solid #f1f1f1;
 			background: #f9f9f9;
-			box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-			0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+			box-shadow:
+				0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+				0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 			clip-path: inset(0px -1px -1px -1px);
 
 			&:first-child {
@@ -1763,8 +1735,9 @@ span.ur-shortcode-form-embed-dot {
 .user-registration.ur-frontend-form {
 	background: $white;
 	border-radius: $border_radius_8;
-	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-	0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+	box-shadow:
+		0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 	padding: $spacing_60px;
 
 	@media screen and (max-width: 600px) {
@@ -2301,8 +2274,9 @@ body {
 				.ur-frontend-form {
 					&.login {
 						margin: 0px auto;
-						box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-						0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+						box-shadow:
+							0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+							0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 
 						.user-registration-error {
 							display: block;
@@ -2338,14 +2312,10 @@ body {
 									}
 
 									.ur-submit-button {
-<<<<<<< HEAD
 										background: var(
 											--ur-primary-color,
 											$primary_color
 										);
-=======
-										background: var(--ur-primary-color, $primary_color);
->>>>>>> master
 										border-radius: 4px;
 									}
 								}
@@ -2508,14 +2478,10 @@ body {
 								padding: 0 14px 0 0;
 
 								&:focus {
-<<<<<<< HEAD
 									border-color: var(
 										--ur-primary-color,
 										$primary_color
 									);
-=======
-									border-color: var(--ur-primary-color, $primary_color);
->>>>>>> master
 								}
 							}
 						}
@@ -2579,7 +2545,6 @@ body {
 						font-weight: $medium;
 						line-height: 24px;
 						letter-spacing: 0.15px;
-<<<<<<< HEAD
 						border: $border_width solid
 							var(
 								--ur-button-background-normal-color,
@@ -2601,16 +2566,6 @@ body {
 								--ur-button-background-hover-color,
 								#38488e
 							);
-=======
-						border: $border_width solid var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
-						margin-right: 0;
-						background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
-
-						&:hover {
-							color: var(--ur-button-text-hover-color, $white);
-							background: var(--ur-button-background-hover-color, #38488e);
-							border-color: var(--ur-button-background-hover-color, #38488e);
->>>>>>> master
 						}
 					}
 
@@ -2618,12 +2573,8 @@ body {
 						margin-left: 0;
 						background: transparent;
 						color: var(--ur-primary-color, $primary_color);
-<<<<<<< HEAD
 						border: $border_width solid
 							var(--ur-primary-color, $primary_color);
-=======
-						border: $border_width solid var(--ur-primary-color, $primary_color);
->>>>>>> master
 
 						&:hover {
 							background: var(--ur-primary-color, $primary_color);
@@ -2683,7 +2634,6 @@ body {
 										padding: 10px 24px;
 										font-size: 15px;
 										line-height: 25px;
-<<<<<<< HEAD
 										background: var(
 											--ur-button-background-normal-color,
 											$primary_color
@@ -2692,10 +2642,6 @@ body {
 											--ur-button-text-normal-color,
 											$white
 										);
-=======
-										background: var(--ur-button-background-normal-color, $primary_color);
-										color: var(--ur-button-text-normal-color, $white);
->>>>>>> master
 
 										&.ur-disabled-btn {
 											cursor: not-allowed;
@@ -2707,7 +2653,6 @@ body {
 										}
 
 										&:hover {
-<<<<<<< HEAD
 											background: var(
 												--ur-button-background-hover-color,
 												$primary_color
@@ -2723,15 +2668,6 @@ body {
 									&:has(
 										.user-registration-passwordless-login
 									) {
-=======
-											background: var(--ur-button-background-hover-color, $primary_color);
-											//border-color: #38488e;
-											color: var(--ur-button-text-hover-color, $white);
-										}
-									}
-
-									&:has(.user-registration-passwordless-login) {
->>>>>>> master
 										display: flex;
 										flex-direction: column-reverse;
 										gap: 16px !important;
@@ -2793,14 +2729,10 @@ body {
 
 										a {
 											text-underline-offset: 4px;
-<<<<<<< HEAD
 											color: var(
 												--ur-primary-color,
 												$primary_color
 											);
-=======
-											color: var(--ur-primary-color, $primary_color);
->>>>>>> master
 										}
 									}
 								}
@@ -2816,14 +2748,10 @@ body {
 
 									a {
 										text-underline-offset: 4px;
-<<<<<<< HEAD
 										color: var(
 											--ur-primary-color,
 											$primary_color
 										);
-=======
-										color: var(--ur-primary-color, $primary_color);
->>>>>>> master
 									}
 								}
 
@@ -3081,27 +3009,19 @@ body {
 										padding: $spacing_10px $spacing_24px;
 										border: none;
 										background: #edeff7;
-<<<<<<< HEAD
 										color: var(
 											--ur-primary-color,
 											$primary_color
 										);
-=======
-										color: var(--ur-primary-color, $primary_color);
->>>>>>> master
 										display: block;
 										margin: $spacing_32px 0 0;
 										transition: all 0.3s ease-in-out;
 
 										&:hover {
-<<<<<<< HEAD
 											background: var(
 												--ur-primary-color,
 												$primary_color
 											);
-=======
-											background: var(--ur-primary-color, $primary_color);
->>>>>>> master
 											color: $white;
 										}
 									}
@@ -3168,7 +3088,8 @@ body {
 
 									form {
 										.ur-login-form-setting-block {
-											padding: $spacing_20px $spacing_12px $spacing_12px;
+											padding: $spacing_20px $spacing_12px
+												$spacing_12px;
 
 											&:first-child {
 												h2 {
@@ -3553,7 +3474,6 @@ body.user-registration-page {
 
 		p > input.user-registration-Button.button {
 			color: var(--ur-button-text-normal-color, $white);
-<<<<<<< HEAD
 			background: var(
 				--ur-button-background-normal-color,
 				var(--ur-primary-color, $primary_color)
@@ -3563,10 +3483,6 @@ body.user-registration-page {
 					--ur-button-background-normal-color,
 					var(--ur-primary-color, $primary_color)
 				);
-=======
-			background: var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
-			border: $border_width var(--ur-button-background-normal-color, var(--ur-primary-color, $primary_color));
->>>>>>> master
 			border-radius: $border_radius_4;
 			border-style: inherit;
 
@@ -3599,19 +3515,10 @@ body.user-registration-page {
 	line-height: 1;
 }
 
-<<<<<<< HEAD
 .ur-state-label {
 	margin-top: 16px !important;
 }
 
 #ur-local-currency-switch-currency {
 	margin-bottom: 16px !important;
-=======
-.ur-state-label{
-	margin-top: 16px !important;
-}
-
-#ur-local-currency-switch-currency{
-	margin-bottom: 16px !important
->>>>>>> master
 }

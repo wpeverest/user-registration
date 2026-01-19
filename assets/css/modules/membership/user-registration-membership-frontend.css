@@ -44,327 +44,120 @@
  * scss-docs-start container-max-widths
  **/
 html {
-	scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 @keyframes spin {
-	0% {
-		transform: rotate(0deg);
-	}
-	100% {
-		transform: rotate(360deg);
-	}
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 .user-registration-page .ur-membership-list-container,
 .ur-multi-device-form-preview .ur-membership-list-container,
 #pg-container .ur-membership-list-container {
-	max-width: 100% !important;
-	display: flex;
-	flex-direction: column;
-	gap: 40px;
+  max-width: 100% !important;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.membership-list-notice-div
-	.membership-title,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.membership-list-notice-div
-	.membership-title,
-#pg-container
-	.ur-membership-list-container
-	.membership-list-notice-div
-	.membership-title {
-	padding-top: 0;
-	margin-bottom: 16px;
-	color: #222222;
+.user-registration-page .ur-membership-list-container .membership-list-notice-div .membership-title,
+.ur-multi-device-form-preview .ur-membership-list-container .membership-list-notice-div .membership-title,
+#pg-container .ur-membership-list-container .membership-list-notice-div .membership-title {
+  padding-top: 0;
+  margin-bottom: 16px;
+  color: #222222;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.membership-list-notice-div
-	.subscription-message,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.membership-list-notice-div
-	.subscription-message,
-#pg-container
-	.ur-membership-list-container
-	.membership-list-notice-div
-	.subscription-message {
-	padding: 14px 24px;
-	border-left: 3px solid #17a2b8;
-	background: #f4fcfd;
+.user-registration-page .ur-membership-list-container .membership-list-notice-div .subscription-message,
+.ur-multi-device-form-preview .ur-membership-list-container .membership-list-notice-div .subscription-message,
+#pg-container .ur-membership-list-container .membership-list-notice-div .subscription-message {
+  padding: 14px 24px;
+  border-left: 3px solid #17a2b8;
+  background: #f4fcfd;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.membership-list-notice-div
-	.subscription-message
-	p,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.membership-list-notice-div
-	.subscription-message
-	p,
-#pg-container
-	.ur-membership-list-container
-	.membership-list-notice-div
-	.subscription-message
-	p {
-	margin: 0;
-	color: #17a2b8;
-	font-size: 15px;
-	font-weight: 400;
-	line-height: 25px;
+.user-registration-page .ur-membership-list-container .membership-list-notice-div .subscription-message p,
+.ur-multi-device-form-preview .ur-membership-list-container .membership-list-notice-div .subscription-message p,
+#pg-container .ur-membership-list-container .membership-list-notice-div .subscription-message p {
+  margin: 0;
+  color: #17a2b8;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 25px;
 }
 .user-registration-page .ur-membership-list-container .ur-membership-container,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container,
+.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container,
 #pg-container .ur-membership-list-container .ur-membership-container {
-	display: flex;
-	gap: 30px;
-	margin: 0;
-	justify-items: center;
+  display: flex;
+  gap: 30px;
+  margin: 0;
+  justify-items: center;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block,
-#pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block {
-	display: flex;
-	flex-direction: column;
-	padding: 32px;
-	gap: 12px;
-	width: 33.3333%;
-	background: #f9f9f9;
-	border-radius: 8px;
-	text-align: center;
-	box-sizing: border-box;
-	transition: all 0.3s ease-in-out;
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block,
+.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block,
+#pg-container .ur-membership-list-container .ur-membership-container .membership-block {
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  gap: 12px;
+  width: 33.3333%;
+  background: #f9f9f9;
+  border-radius: 8px;
+  text-align: center;
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block:hover,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block:hover,
-#pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block:hover {
-	background: white;
-	box-shadow: 0px 6px 18px 0px rgba(10, 10, 10, 0.06);
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block:hover,
+.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block:hover,
+#pg-container .ur-membership-list-container .ur-membership-container .membership-block:hover {
+  background: white;
+  box-shadow: 0px 6px 18px 0px rgba(10, 10, 10, 0.06);
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-title,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-title,
-#pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-title {
-	padding: 0;
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-title,
+.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-title,
+#pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-title {
+  padding: 0;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-title
-	span,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-title
-	span,
-#pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-title
-	span {
-	color: #383838;
-	font-size: 24px;
-	font-weight: 600;
-	line-height: 36px;
-	padding-top: 0;
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-title span,
+.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-title span,
+#pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-title span {
+  color: #383838;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 36px;
+  padding-top: 0;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-body,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-body,
-#pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-body {
-	padding: 0;
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-body,
+.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-body,
+#pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-body {
+  padding: 0;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-body
-	.membership-description
-	p,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-body
-	.membership-description
-	p,
-#pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-body
-	.membership-description
-	p {
-	margin: 0;
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-body .membership-description p,
+.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-body .membership-description p,
+#pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-body .membership-description p {
+  margin: 0;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-description,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-description,
-#pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-description {
-	color: #6b6b6b;
-	text-align: center;
-	font-size: 15px;
-	font-weight: 400;
-	line-height: 25px;
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-description,
+.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-description,
+#pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-description {
+  color: #6b6b6b;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 25px;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-footer,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-footer,
-#pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-footer {
-	padding: 0;
-	gap: 20px;
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer,
+.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer,
+#pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-footer {
+  padding: 0;
+  gap: 20px;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-footer
-	.membership-amount,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-footer
-	.membership-amount,
-#pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-footer
-	.membership-amount {
-	line-height: 34px;
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-amount,
+.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-amount,
+#pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-amount {
+  line-height: 34px;
 }
-<<<<<<< HEAD
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-footer
-	.membership-signup-button,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-footer
-	.membership-signup-button,
-#pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-footer
-	.membership-signup-button {
-	min-height: 40px;
-	padding: 0 12px;
-	border-radius: 4px;
-	border: 1px solid
-		var(
-			--ur-button-background-normal-color,
-			var(--ur-primary-color, #475bb2)
-		);
-	background: var(
-		--ur-button-background-normal-color,
-		var(--ur-primary-color, #475bb2)
-	);
-	color: var(--ur-button-text-normal-color, white);
-	font-size: 14px;
-	font-weight: 500;
-	line-height: 24px;
-	cursor: pointer;
-	width: 100%;
-	transition: all 0.3s ease-in-out;
-}
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-footer
-	.membership-signup-button:hover,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-footer
-	.membership-signup-button:hover,
-#pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block
-	.membership-footer
-	.membership-signup-button:hover {
-	color: var(--ur-button-text-hover-color, white);
-	background: var(--ur-button-background-hover-color, #38488e);
-	border-color: var(--ur-button-background-hover-color, #38488e);
-=======
 .user-registration-page .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button,
 .ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button,
 #pg-container .ur-membership-list-container .ur-membership-container .membership-block .membership-footer .membership-signup-button {
@@ -387,54 +180,30 @@ html {
   color: var(--ur-button-text-hover-color, white);
   background: var(--ur-button-background-hover-color, #38488e);
   border-color: var(--ur-button-background-hover-color, #38488e);
->>>>>>> master
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.ur_membership_frontend_input_container.radio
-	.membership-block,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.ur_membership_frontend_input_container.radio
-	.membership-block,
-#pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.ur_membership_frontend_input_container.radio
-	.membership-block {
-	width: 100%;
+.user-registration-page .ur-membership-list-container .ur-membership-container .ur_membership_frontend_input_container.radio .membership-block,
+.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .ur_membership_frontend_input_container.radio .membership-block,
+#pg-container .ur-membership-list-container .ur-membership-container .ur_membership_frontend_input_container.radio .membership-block {
+  width: 100%;
 }
-.user-registration-page .ur-membership-list-container [data-layout="block"],
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	[data-layout="block"],
-#pg-container .ur-membership-list-container [data-layout="block"] {
-	display: flex;
-	flex-wrap: wrap;
+.user-registration-page .ur-membership-list-container [data-layout=block],
+.ur-multi-device-form-preview .ur-membership-list-container [data-layout=block],
+#pg-container .ur-membership-list-container [data-layout=block] {
+  display: flex;
+  flex-wrap: wrap;
 }
-.user-registration-page .ur-membership-list-container [data-layout="row"],
-.ur-multi-device-form-preview .ur-membership-list-container [data-layout="row"],
-#pg-container .ur-membership-list-container [data-layout="row"] {
-	display: flex;
-	flex-direction: column;
+.user-registration-page .ur-membership-list-container [data-layout=row],
+.ur-multi-device-form-preview .ur-membership-list-container [data-layout=row],
+#pg-container .ur-membership-list-container [data-layout=row] {
+  display: flex;
+  flex-direction: column;
 }
-.user-registration-page
-	.ur-membership-list-container
-	[data-layout="row"]
-	.membership-block,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	[data-layout="row"]
-	.membership-block,
-#pg-container
-	.ur-membership-list-container
-	[data-layout="row"]
-	.membership-block {
-	display: flex;
-	flex-direction: row;
-	width: 100%;
+.user-registration-page .ur-membership-list-container [data-layout=row] .membership-block,
+.ur-multi-device-form-preview .ur-membership-list-container [data-layout=row] .membership-block,
+#pg-container .ur-membership-list-container [data-layout=row] .membership-block {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 }
 .user-registration-page .ur_membership_registration_container,
 .user-registration-page .membership-upgrade-container,
@@ -442,335 +211,89 @@ html {
 .ur-multi-device-form-preview .membership-upgrade-container,
 #pg-container .ur_membership_registration_container,
 #pg-container .membership-upgrade-container {
-	margin: 0 auto;
-	border-radius: 10px;
+  margin: 0 auto;
+  border-radius: 10px;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_title,
+.user-registration-page .ur_membership_registration_container .ur_membership_title,
 .user-registration-page .membership-upgrade-container .ur_membership_title,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_title,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_title,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_title,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_title,
 #pg-container .ur_membership_registration_container .ur_membership_title,
 #pg-container .membership-upgrade-container .ur_membership_title {
-	color: #222222;
-	font-size: 22px;
-	font-weight: 700;
-	line-height: 32px;
-	margin: 0;
+  color: #222222;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 32px;
+  margin: 0;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_divider,
+.user-registration-page .ur_membership_registration_container .ur_membership_divider,
 .user-registration-page .membership-upgrade-container .ur_membership_divider,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_divider,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_divider,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_divider,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_divider,
 #pg-container .ur_membership_registration_container .ur_membership_divider,
 #pg-container .membership-upgrade-container .ur_membership_divider {
-	margin: 16px 0 24px;
-	background: #e1e1e1;
-	border: 0;
-	height: 1px;
+  margin: 16px 0 24px;
+  background: #e1e1e1;
+  border: 0;
+  height: 1px;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container,
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container,
 .user-registration-page .membership-upgrade-container .upgrade-plan-container,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container,
 #pg-container .ur_membership_registration_container .upgrade-plan-container,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container,
 #pg-container .membership-upgrade-container .upgrade-plan-container {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.description,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.description,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.description,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.description,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.description,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.description,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.description,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.description,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.description,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.description,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.description,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.description {
-	margin-bottom: 10px;
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .description,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .description,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .description,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .description,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .description,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .description,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .description,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .description,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .description,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .description,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .description,
+#pg-container .membership-upgrade-container .upgrade-plan-container .description {
+  margin-bottom: 10px;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container:last-child,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container:last-child,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container:last-child,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container:last-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container:last-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container:last-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container:last-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container:last-child,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container:last-child,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container:last-child,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container:last-child,
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container:last-child,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container:last-child,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container:last-child,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container:last-child,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container:last-child,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container:last-child,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container:last-child,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container:last-child,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container:last-child,
+#pg-container .ur_membership_registration_container .upgrade-plan-container:last-child,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container:last-child,
 #pg-container .membership-upgrade-container .upgrade-plan-container:last-child {
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.stripe-container
-	button,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.stripe-container
-	button,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.stripe-container
-	button,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.stripe-container
-	button,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.stripe-container
-	button,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.stripe-container
-	button,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.stripe-container
-	button,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.stripe-container
-	button,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.stripe-container
-	button,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.stripe-container
-	button,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.stripe-container
-	button,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.stripe-container
-	button {
-	display: none;
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .stripe-container button,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .stripe-container button,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .stripe-container button,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .stripe-container button,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .stripe-container button,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .stripe-container button,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .stripe-container button,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .stripe-container button,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .stripe-container button,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .stripe-container button,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .stripe-container button,
+#pg-container .membership-upgrade-container .upgrade-plan-container .stripe-container button {
+  display: none;
 }
-<<<<<<< HEAD
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label,
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label {
-	display: flex;
-	align-items: flex-start;
-	margin-top: 0;
-	border-radius: 4px;
-	border: 1px solid #e1e1e1;
-	padding: 14px;
-	gap: 8px;
-	margin-bottom: 12px;
-	color: #222222;
-	font-size: 15px;
-	font-weight: 500;
-	line-height: 19px;
-=======
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label,
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label,
 .user-registration-page .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label,
@@ -807,556 +330,93 @@ html {
   font-size: 15px;
   font-weight: 500;
   line-height: 19px;
->>>>>>> master
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:first-child,
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:first-child,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label:first-child,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label:first-child,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:first-child,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:first-child,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label:first-child,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label:first-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:first-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:first-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label:first-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label:first-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:first-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:first-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label:first-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label:first-child,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:first-child,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:first-child,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label:first-child,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label:first-child,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:first-child,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:first-child,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label:first-child,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label:first-child {
-	padding: 0;
-	border-radius: 0px;
-	border: 0;
-	margin-bottom: 8px;
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label:first-child,
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label:first-child,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label:first-child,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .upgrade-membership-label:first-child,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_label:first-child,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label:first-child,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label:first-child,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label:first-child,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label:first-child,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label:first-child,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label:first-child,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .upgrade-membership-label:first-child,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_label:first-child,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label:first-child,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label:first-child,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label:first-child,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label:first-child,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label:first-child,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label:first-child,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .upgrade-membership-label:first-child,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_label:first-child,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label:first-child,
+#pg-container .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label:first-child,
+#pg-container .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label:first-child {
+  padding: 0;
+  border-radius: 0px;
+  border: 0;
+  margin-bottom: 8px;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:last-child,
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:last-child,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label:last-child,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label:last-child,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:last-child,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:last-child,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label:last-child,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label:last-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:last-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:last-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label:last-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label:last-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:last-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:last-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label:last-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label:last-child,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:last-child,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:last-child,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label:last-child,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label:last-child,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:last-child,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:last-child,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label:last-child,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label:last-child {
-	margin-bottom: 0;
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label:last-child,
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label:last-child,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label:last-child,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .upgrade-membership-label:last-child,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_label:last-child,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label:last-child,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label:last-child,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label:last-child,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label:last-child,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label:last-child,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label:last-child,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .upgrade-membership-label:last-child,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_label:last-child,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label:last-child,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label:last-child,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label:last-child,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label:last-child,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label:last-child,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label:last-child,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .upgrade-membership-label:last-child,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_label:last-child,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label:last-child,
+#pg-container .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label:last-child,
+#pg-container .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label:last-child {
+  margin-bottom: 0;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	input[type="radio"],
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	input[type="radio"],
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	input[type="radio"],
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	input[type="radio"],
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	input[type="radio"],
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	input[type="radio"],
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	input[type="radio"],
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	input[type="radio"],
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	input[type="radio"],
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	input[type="radio"],
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	input[type="radio"],
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	input[type="radio"],
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	input[type="radio"],
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	input[type="radio"],
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	input[type="radio"],
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	input[type="radio"],
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	input[type="radio"],
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	input[type="radio"],
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	input[type="radio"],
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	input[type="radio"],
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	input[type="radio"],
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	input[type="radio"],
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	input[type="radio"],
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	input[type="radio"] {
-	margin: 0;
-	margin-top: 2px;
-	width: 14px;
-	height: 14px;
-	min-height: unset;
-	accent-color: #475bb2;
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label input[type=radio],
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label input[type=radio],
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label input[type=radio],
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .upgrade-membership-label input[type=radio],
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_label input[type=radio],
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label input[type=radio],
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label input[type=radio],
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label input[type=radio],
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label input[type=radio],
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label input[type=radio],
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label input[type=radio],
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .upgrade-membership-label input[type=radio],
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_label input[type=radio],
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label input[type=radio],
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label input[type=radio],
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label input[type=radio],
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label input[type=radio],
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label input[type=radio],
+#pg-container .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label input[type=radio],
+#pg-container .ur_membership_registration_container .upgrade-plan-container .upgrade-membership-label input[type=radio],
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_label input[type=radio],
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label input[type=radio],
+#pg-container .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label input[type=radio],
+#pg-container .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label input[type=radio] {
+  margin: 0;
+  margin-top: 2px;
+  width: 14px;
+  height: 14px;
+  min-height: unset;
+  accent-color: #475bb2;
 }
-<<<<<<< HEAD
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	input[type="radio"]:checked,
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	input[type="radio"]:checked,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	input[type="radio"]:checked,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	input[type="radio"]:checked,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	input[type="radio"]:checked,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	input[type="radio"]:checked,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	input[type="radio"]:checked,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	input[type="radio"]:checked,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	input[type="radio"]:checked,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	input[type="radio"]:checked,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	input[type="radio"]:checked,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	input[type="radio"]:checked,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	input[type="radio"]:checked,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	input[type="radio"]:checked,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	input[type="radio"]:checked,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	input[type="radio"]:checked,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	input[type="radio"]:checked,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	input[type="radio"]:checked,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	input[type="radio"]:checked,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	input[type="radio"]:checked,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	input[type="radio"]:checked,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	input[type="radio"]:checked,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	input[type="radio"]:checked,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	input[type="radio"]:checked {
-	border-color: var(--ur-primary-color, #475bb2);
-	background: var(--ur-primary-color, #475bb2);
-}
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:has(input[type="radio"]:checked),
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label:has(input[type="radio"]:checked),
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:has(input[type="radio"]:checked),
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label:has(input[type="radio"]:checked),
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:has(input[type="radio"]:checked),
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label:has(input[type="radio"]:checked),
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:has(input[type="radio"]:checked),
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label:has(input[type="radio"]:checked),
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:has(input[type="radio"]:checked),
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label:has(input[type="radio"]:checked),
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label:has(input[type="radio"]:checked),
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label:has(input[type="radio"]:checked) {
-	border-color: var(--ur-primary-color, #475bb2);
-=======
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label input[type=radio]:checked,
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label input[type=radio]:checked,
 .user-registration-page .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label input[type=radio]:checked,
@@ -1409,264 +469,39 @@ html {
 #pg-container .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label:has(input[type=radio]:checked),
 #pg-container .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label:has(input[type=radio]:checked) {
   border-color: var(--ur-primary-color, #475bb2);
->>>>>>> master
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	.ur-membership-duration,
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	.ur-membership-duration,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	.ur-membership-duration,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	.ur-membership-duration,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	.ur-membership-duration,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	.ur-membership-duration,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	.ur-membership-duration,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	.ur-membership-duration,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	.ur-membership-duration,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	.ur-membership-duration,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	.ur-membership-duration,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	.ur-membership-duration,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	.ur-membership-duration,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	.ur-membership-duration,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	.ur-membership-duration,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	.ur-membership-duration,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	.ur-membership-duration,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	.ur-membership-duration,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	.ur-membership-duration,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	.ur-membership-duration,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	.ur-membership-duration,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	.ur-membership-duration,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	.ur-membership-duration,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	.ur-membership-duration {
-	margin: 0;
-	color: #1f1f1f;
-	font-family: inherit;
-	font-size: 14px;
-	font-weight: 500;
-	line-height: 18px;
-	flex: 1;
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label .ur-membership-duration,
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label .ur-membership-duration,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label .ur-membership-duration,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .upgrade-membership-label .ur-membership-duration,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_label .ur-membership-duration,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label .ur-membership-duration,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label .ur-membership-duration,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label .ur-membership-duration,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label .ur-membership-duration,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label .ur-membership-duration,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label .ur-membership-duration,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .upgrade-membership-label .ur-membership-duration,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_label .ur-membership-duration,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label .ur-membership-duration,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label .ur-membership-duration,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label .ur-membership-duration,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label .ur-membership-duration,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label .ur-membership-duration,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label .ur-membership-duration,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .upgrade-membership-label .ur-membership-duration,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_label .ur-membership-duration,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .upgrade-membership-label .ur-membership-duration,
+#pg-container .membership-upgrade-container .upgrade-plan-container .ur_membership_input_label .ur-membership-duration,
+#pg-container .membership-upgrade-container .upgrade-plan-container .upgrade-membership-label .ur-membership-duration {
+  margin: 0;
+  color: #1f1f1f;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  flex: 1;
 }
-<<<<<<< HEAD
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	.ur-membership-duration:last-child,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	.ur-membership-duration:last-child,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	.ur-membership-duration:last-child,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	.ur-membership-duration:last-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	.ur-membership-duration:last-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	.ur-membership-duration:last-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	.ur-membership-duration:last-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	.ur-membership-duration:last-child,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	.ur-membership-duration:last-child,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	.ur-membership-duration:last-child,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.upgrade-membership-label
-	.ur-membership-duration:last-child,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.upgrade-membership-label
-	.ur-membership-duration:last-child {
-	color: #1f1f1f;
-	font-size: 15px;
-	font-weight: 600;
-	line-height: 18px;
-	flex: unset;
-	margin-left: 8px;
-=======
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label .ur-membership-duration:last-child,
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label .ur-membership-duration:last-child,
 .user-registration-page .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_label .ur-membership-duration:last-child,
@@ -1697,520 +532,145 @@ html {
   line-height: 18px;
   flex: unset;
   margin-left: 8px;
->>>>>>> master
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list) {
-	height: 38px;
-	padding: 0 14px;
-	border-radius: 4px;
-	border: 1px solid #e1e1e1;
-	background: white;
-	color: #383838;
-	margin-bottom: 0;
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
+#pg-container .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list),
+#pg-container .membership-upgrade-container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list) {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 4px;
+  border: 1px solid #e1e1e1;
+  background: white;
+  color: #383838;
+  margin-bottom: 0;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(
-		.ur_membership_radio_input,
-		.pg-list
-	)::placeholder,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(
-		.ur_membership_radio_input,
-		.pg-list
-	)::placeholder,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(
-		.ur_membership_radio_input,
-		.pg-list
-	)::placeholder,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(
-		.ur_membership_radio_input,
-		.pg-list
-	)::placeholder,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(
-		.ur_membership_radio_input,
-		.pg-list
-	)::placeholder,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(
-		.ur_membership_radio_input,
-		.pg-list
-	)::placeholder,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(
-		.ur_membership_radio_input,
-		.pg-list
-	)::placeholder,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(
-		.ur_membership_radio_input,
-		.pg-list
-	)::placeholder,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(
-		.ur_membership_radio_input,
-		.pg-list
-	)::placeholder,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(
-		.ur_membership_radio_input,
-		.pg-list
-	)::placeholder,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(
-		.ur_membership_radio_input,
-		.pg-list
-	)::placeholder,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(
-		.ur_membership_radio_input,
-		.pg-list
-	)::placeholder {
-	color: #b5b5b5;
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder,
+#pg-container .membership-upgrade-container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder {
+  color: #b5b5b5;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus {
-	border-color: #475bb2;
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus,
+#pg-container .membership-upgrade-container .upgrade-plan-container .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus {
+  border-color: #475bb2;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_red:empty,
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_blue:empty,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_red:empty,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_blue:empty,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_red:empty,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_blue:empty,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_red:empty,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_blue:empty,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_red:empty,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_blue:empty,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_red:empty,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_blue:empty,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_red:empty,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_blue:empty,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_red:empty,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_blue:empty,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_red:empty,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_blue:empty,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_red:empty,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_blue:empty,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_red:empty,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_blue:empty,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_red:empty,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_blue:empty {
-	padding: 0;
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red:empty, .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue:empty,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .notice_red:empty,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .notice_blue:empty,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .notice_red:empty,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .notice_blue:empty,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .notice_red:empty,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .notice_blue:empty,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red:empty,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue:empty,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .notice_red:empty,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .notice_blue:empty,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .notice_red:empty,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .notice_blue:empty,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .notice_red:empty,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .notice_blue:empty,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red:empty,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue:empty,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .notice_red:empty,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .notice_blue:empty,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .notice_red:empty,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .notice_blue:empty,
+#pg-container .membership-upgrade-container .upgrade-plan-container .notice_red:empty,
+#pg-container .membership-upgrade-container .upgrade-plan-container .notice_blue:empty {
+  padding: 0;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_red,
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_blue,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_red,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_blue,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_red,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_blue,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_red,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_blue,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_red,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_blue,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_red,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_blue,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_red,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_blue,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_red,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_blue,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_red,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_blue,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_red,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_blue,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_red,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_blue,
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red, .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .notice_red,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .notice_blue,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .notice_red,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .notice_blue,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .notice_red,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .notice_blue,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .notice_red,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .notice_blue,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .notice_red,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .notice_blue,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .notice_red,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .notice_blue,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .notice_red,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .notice_blue,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .notice_red,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .notice_blue,
 #pg-container .membership-upgrade-container .upgrade-plan-container .notice_red,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_blue {
-	padding: 10px 12px;
-	font-size: 14px;
-	line-height: 22px;
+#pg-container .membership-upgrade-container .upgrade-plan-container .notice_blue {
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 22px;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_red,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_red,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_red,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_red,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_red,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_red,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_red,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_red,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_red,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_red,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_red,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_red {
-	background: #fdd9d9;
-	border-left: 3px solid #dc3545;
-	word-wrap: break-word;
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .notice_red,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .notice_red,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .notice_red,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .notice_red,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .notice_red,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .notice_red,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_red,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .notice_red,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .notice_red,
+#pg-container .membership-upgrade-container .upgrade-plan-container .notice_red {
+  background: #fdd9d9;
+  border-left: 3px solid #dc3545;
+  word-wrap: break-word;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_blue,
-.user-registration-page
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_blue,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_blue,
-.user-registration-page
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_blue,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_blue,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_blue,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_blue,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_blue,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_frontend_input_container
-	.notice_blue,
-#pg-container
-	.ur_membership_registration_container
-	.upgrade-plan-container
-	.notice_blue,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_frontend_input_container
-	.notice_blue,
-#pg-container
-	.membership-upgrade-container
-	.upgrade-plan-container
-	.notice_blue {
-	border-left: 3px solid #007bff;
-	background: #e2e2fd;
-	word-wrap: break-word;
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .notice_blue,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .notice_blue,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .notice_blue,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .notice_blue,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .notice_blue,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .notice_blue,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .notice_blue,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .notice_blue,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .notice_blue,
+#pg-container .membership-upgrade-container .upgrade-plan-container .notice_blue {
+  border-left: 3px solid #007bff;
+  background: #e2e2fd;
+  word-wrap: break-word;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	#urm-total_container,
+.user-registration-page .ur_membership_registration_container #urm-total_container,
 .user-registration-page .membership-upgrade-container #urm-total_container,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	#urm-total_container,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	#urm-total_container,
+.ur-multi-device-form-preview .ur_membership_registration_container #urm-total_container,
+.ur-multi-device-form-preview .membership-upgrade-container #urm-total_container,
 #pg-container .ur_membership_registration_container #urm-total_container,
 #pg-container .membership-upgrade-container #urm-total_container {
-<<<<<<< HEAD
-	position: relative;
-	margin-top: 32px;
-	padding: 14px;
-	border-radius: 4px;
-	border: 1px dashed #475bb2;
-	background: #f8f8fa;
-	gap: 20px;
-=======
   position: relative;
   margin-top: 32px;
   padding: 14px;
@@ -2218,134 +678,25 @@ html {
   border: 1px dashed #475bb2;
   background: #f8f8fa;
   gap: 20px;
->>>>>>> master
 }
-.user-registration-page
-	.ur_membership_registration_container
-	#urm-total_container::before,
-.user-registration-page
-	.membership-upgrade-container
-	#urm-total_container::before,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	#urm-total_container::before,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	#urm-total_container::before,
-#pg-container
-	.ur_membership_registration_container
-	#urm-total_container::before,
+.user-registration-page .ur_membership_registration_container #urm-total_container::before,
+.user-registration-page .membership-upgrade-container #urm-total_container::before,
+.ur-multi-device-form-preview .ur_membership_registration_container #urm-total_container::before,
+.ur-multi-device-form-preview .membership-upgrade-container #urm-total_container::before,
+#pg-container .ur_membership_registration_container #urm-total_container::before,
 #pg-container .membership-upgrade-container #urm-total_container::before {
-	content: "";
-	position: absolute;
-	background: #e1e1e1;
-	width: 100%;
-	height: 1px;
-	top: -24px;
-	left: 0;
+  content: "";
+  position: absolute;
+  background: #e1e1e1;
+  width: 100%;
+  height: 1px;
+  top: -24px;
+  left: 0;
 }
-<<<<<<< HEAD
-.user-registration-page
-	.ur_membership_registration_container
-	#urm-total_container
-	.urm-membership-total-value,
-.user-registration-page
-	.ur_membership_registration_container
-	#urm-total_container
-	.urm-membership-sub-total-value,
-.user-registration-page
-	.ur_membership_registration_container
-	#urm-total_container
-	.urm-membership-tax-value,
-.user-registration-page
-	.ur_membership_registration_container
-	#urm-total_container
-	.urm-membership-coupons-value,
-.user-registration-page
-	.membership-upgrade-container
-	#urm-total_container
-	.urm-membership-total-value,
-.user-registration-page
-	.membership-upgrade-container
-	#urm-total_container
-	.urm-membership-sub-total-value,
-.user-registration-page
-	.membership-upgrade-container
-	#urm-total_container
-	.urm-membership-tax-value,
-.user-registration-page
-	.membership-upgrade-container
-	#urm-total_container
-	.urm-membership-coupons-value,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	#urm-total_container
-	.urm-membership-total-value,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	#urm-total_container
-	.urm-membership-sub-total-value,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	#urm-total_container
-	.urm-membership-tax-value,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	#urm-total_container
-	.urm-membership-coupons-value,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	#urm-total_container
-	.urm-membership-total-value,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	#urm-total_container
-	.urm-membership-sub-total-value,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	#urm-total_container
-	.urm-membership-tax-value,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	#urm-total_container
-	.urm-membership-coupons-value,
-#pg-container
-	.ur_membership_registration_container
-	#urm-total_container
-	.urm-membership-total-value,
-#pg-container
-	.ur_membership_registration_container
-	#urm-total_container
-	.urm-membership-sub-total-value,
-#pg-container
-	.ur_membership_registration_container
-	#urm-total_container
-	.urm-membership-tax-value,
-#pg-container
-	.ur_membership_registration_container
-	#urm-total_container
-	.urm-membership-coupons-value,
-#pg-container
-	.membership-upgrade-container
-	#urm-total_container
-	.urm-membership-total-value,
-#pg-container
-	.membership-upgrade-container
-	#urm-total_container
-	.urm-membership-sub-total-value,
-#pg-container
-	.membership-upgrade-container
-	#urm-total_container
-	.urm-membership-tax-value,
-#pg-container
-	.membership-upgrade-container
-	#urm-total_container
-	.urm-membership-coupons-value {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-=======
-.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-total-value, .user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-sub-total-value, .user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-tax-value, .user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-coupons-value,
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-total-value,
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-sub-total-value,
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-tax-value,
+.user-registration-page .ur_membership_registration_container #urm-total_container .urm-membership-coupons-value,
 .user-registration-page .membership-upgrade-container #urm-total_container .urm-membership-total-value,
 .user-registration-page .membership-upgrade-container #urm-total_container .urm-membership-sub-total-value,
 .user-registration-page .membership-upgrade-container #urm-total_container .urm-membership-tax-value,
@@ -2369,114 +720,34 @@ html {
   display: flex;
   align-items: center;
   justify-content: space-between;
->>>>>>> master
 }
-.user-registration-page
-	.ur_membership_registration_container
-	#urm-total_container
-	.ur_membership_input_label,
-.user-registration-page
-	.membership-upgrade-container
-	#urm-total_container
-	.ur_membership_input_label,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	#urm-total_container
-	.ur_membership_input_label,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	#urm-total_container
-	.ur_membership_input_label,
-#pg-container
-	.ur_membership_registration_container
-	#urm-total_container
-	.ur_membership_input_label,
-#pg-container
-	.membership-upgrade-container
-	#urm-total_container
-	.ur_membership_input_label {
-	margin-bottom: 0;
-	color: #383838;
-	font-size: 16px;
-	font-weight: 600;
-	line-height: 24px;
+.user-registration-page .ur_membership_registration_container #urm-total_container .ur_membership_input_label,
+.user-registration-page .membership-upgrade-container #urm-total_container .ur_membership_input_label,
+.ur-multi-device-form-preview .ur_membership_registration_container #urm-total_container .ur_membership_input_label,
+.ur-multi-device-form-preview .membership-upgrade-container #urm-total_container .ur_membership_input_label,
+#pg-container .ur_membership_registration_container #urm-total_container .ur_membership_input_label,
+#pg-container .membership-upgrade-container #urm-total_container .ur_membership_input_label {
+  margin-bottom: 0;
+  color: #383838;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	#urm-total_container
-	.ur_membership_input_label
-	.user-registration-badge,
-.user-registration-page
-	.membership-upgrade-container
-	#urm-total_container
-	.ur_membership_input_label
-	.user-registration-badge,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	#urm-total_container
-	.ur_membership_input_label
-	.user-registration-badge,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	#urm-total_container
-	.ur_membership_input_label
-	.user-registration-badge,
-#pg-container
-	.ur_membership_registration_container
-	#urm-total_container
-	.ur_membership_input_label
-	.user-registration-badge,
-#pg-container
-	.membership-upgrade-container
-	#urm-total_container
-	.ur_membership_input_label
-	.user-registration-badge {
-	background: #def8db;
-	text-transform: capitalize;
-	font-size: 13px;
-	font-weight: 500;
-	line-height: 18px;
-	border-radius: 30px;
-	padding: 4px 12px;
-	color: #3aa530;
+.user-registration-page .ur_membership_registration_container #urm-total_container .ur_membership_input_label .user-registration-badge,
+.user-registration-page .membership-upgrade-container #urm-total_container .ur_membership_input_label .user-registration-badge,
+.ur-multi-device-form-preview .ur_membership_registration_container #urm-total_container .ur_membership_input_label .user-registration-badge,
+.ur-multi-device-form-preview .membership-upgrade-container #urm-total_container .ur_membership_input_label .user-registration-badge,
+#pg-container .ur_membership_registration_container #urm-total_container .ur_membership_input_label .user-registration-badge,
+#pg-container .membership-upgrade-container #urm-total_container .ur_membership_input_label .user-registration-badge {
+  background: #def8db;
+  text-transform: capitalize;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  border-radius: 30px;
+  padding: 4px 12px;
+  color: #3aa530;
 }
-<<<<<<< HEAD
-.user-registration-page
-	.ur_membership_registration_container
-	#urm-total_container
-	.ur_membership_input_class,
-.user-registration-page
-	.membership-upgrade-container
-	#urm-total_container
-	.ur_membership_input_class,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	#urm-total_container
-	.ur_membership_input_class,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	#urm-total_container
-	.ur_membership_input_class,
-#pg-container
-	.ur_membership_registration_container
-	#urm-total_container
-	.ur_membership_input_class,
-#pg-container
-	.membership-upgrade-container
-	#urm-total_container
-	.ur_membership_input_class {
-	padding: 0;
-	border: 0;
-	border-radius: 0;
-	background: transparent;
-	text-align: right;
-	color: #383838;
-	font-size: 18px;
-	font-weight: 700;
-	line-height: 24px;
-	min-height: unset;
-	height: unset;
-=======
 .user-registration-page .ur_membership_registration_container #urm-total_container .ur_membership_input_class,
 .user-registration-page .membership-upgrade-container #urm-total_container .ur_membership_input_class,
 .ur-multi-device-form-preview .ur_membership_registration_container #urm-total_container .ur_membership_input_class,
@@ -2494,242 +765,25 @@ html {
   line-height: 24px;
   min-height: unset;
   height: unset;
->>>>>>> master
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	.ur_membership_divider,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	.ur_membership_divider,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	.ur_membership_divider,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	.ur_membership_divider,
-#pg-container
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	.ur_membership_divider,
-#pg-container
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	.ur_membership_divider {
-	margin: 24px 0 16px;
+.user-registration-page .ur_membership_registration_container .ur_payment_gateway_container .ur_membership_divider,
+.user-registration-page .membership-upgrade-container .ur_payment_gateway_container .ur_membership_divider,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container .ur_membership_divider,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_payment_gateway_container .ur_membership_divider,
+#pg-container .ur_membership_registration_container .ur_payment_gateway_container .ur_membership_divider,
+#pg-container .membership-upgrade-container .ur_payment_gateway_container .ur_membership_divider {
+  margin: 24px 0 16px;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	.ur_membership_input_label,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	.ur_membership_input_label,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	.ur_membership_input_label,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	.ur_membership_input_label,
-#pg-container
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	.ur_membership_input_label,
-#pg-container
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	.ur_membership_input_label {
-	padding: 0;
-	border: 0;
-	border-radius: 0;
+.user-registration-page .ur_membership_registration_container .ur_payment_gateway_container .ur_membership_input_label,
+.user-registration-page .membership-upgrade-container .ur_payment_gateway_container .ur_membership_input_label,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container .ur_membership_input_label,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_payment_gateway_container .ur_membership_input_label,
+#pg-container .ur_membership_registration_container .ur_payment_gateway_container .ur_membership_input_label,
+#pg-container .membership-upgrade-container .ur_payment_gateway_container .ur_membership_input_label {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
 }
-<<<<<<< HEAD
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur-membership-payment-gateway-lists,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur-membership-payment-gateway-lists,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur-membership-payment-gateway-lists,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur-membership-payment-gateway-lists,
-#pg-container
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur-membership-payment-gateway-lists,
-#pg-container
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur-membership-payment-gateway-lists {
-	display: flex;
-	align-items: center;
-	gap: 20px;
-}
-@media screen and (max-width: 600px) {
-	.user-registration-page
-		.ur_membership_registration_container
-		.ur_payment_gateway_container
-		#payment-gateway-body
-		.ur-membership-payment-gateway-lists,
-	.user-registration-page
-		.membership-upgrade-container
-		.ur_payment_gateway_container
-		#payment-gateway-body
-		.ur-membership-payment-gateway-lists,
-	.ur-multi-device-form-preview
-		.ur_membership_registration_container
-		.ur_payment_gateway_container
-		#payment-gateway-body
-		.ur-membership-payment-gateway-lists,
-	.ur-multi-device-form-preview
-		.membership-upgrade-container
-		.ur_payment_gateway_container
-		#payment-gateway-body
-		.ur-membership-payment-gateway-lists,
-	#pg-container
-		.ur_membership_registration_container
-		.ur_payment_gateway_container
-		#payment-gateway-body
-		.ur-membership-payment-gateway-lists,
-	#pg-container
-		.membership-upgrade-container
-		.ur_payment_gateway_container
-		#payment-gateway-body
-		.ur-membership-payment-gateway-lists {
-		flex-direction: column;
-		gap: 0;
-	}
-	.user-registration-page
-		.ur_membership_registration_container
-		.ur_payment_gateway_container
-		#payment-gateway-body
-		.ur-membership-payment-gateway-lists
-		.ur_membership_input_label,
-	.user-registration-page
-		.membership-upgrade-container
-		.ur_payment_gateway_container
-		#payment-gateway-body
-		.ur-membership-payment-gateway-lists
-		.ur_membership_input_label,
-	.ur-multi-device-form-preview
-		.ur_membership_registration_container
-		.ur_payment_gateway_container
-		#payment-gateway-body
-		.ur-membership-payment-gateway-lists
-		.ur_membership_input_label,
-	.ur-multi-device-form-preview
-		.membership-upgrade-container
-		.ur_payment_gateway_container
-		#payment-gateway-body
-		.ur-membership-payment-gateway-lists
-		.ur_membership_input_label,
-	#pg-container
-		.ur_membership_registration_container
-		.ur_payment_gateway_container
-		#payment-gateway-body
-		.ur-membership-payment-gateway-lists
-		.ur_membership_input_label,
-	#pg-container
-		.membership-upgrade-container
-		.ur_payment_gateway_container
-		#payment-gateway-body
-		.ur-membership-payment-gateway-lists
-		.ur_membership_input_label {
-		width: 100%;
-	}
-}
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label,
-#pg-container
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label,
-#pg-container
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label {
-	border-radius: 4px;
-	border: 1px solid #e1e1e1;
-	padding: 14px !important;
-	height: 48px;
-	margin-bottom: 20px !important;
-	justify-content: center;
-	flex: 1;
-	align-items: center;
-	transition: all 0.3s ease;
-}
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label:hover,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label:hover,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label:hover,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label:hover,
-#pg-container
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label:hover,
-#pg-container
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label:hover {
-	border-color: var(--ur-primary-color, #475bb2);
-=======
 .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists,
 .user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists,
 .ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur-membership-payment-gateway-lists,
@@ -2782,118 +836,23 @@ html {
 #pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:hover,
 #pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:hover {
   border-color: var(--ur-primary-color, #475bb2);
->>>>>>> master
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label[for="ur-membership-stripe"]
-	.ur-membership-duration,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label[for="ur-membership-stripe"]
-	.ur-membership-duration,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label[for="ur-membership-stripe"]
-	.ur-membership-duration,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label[for="ur-membership-stripe"]
-	.ur-membership-duration,
-#pg-container
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label[for="ur-membership-stripe"]
-	.ur-membership-duration,
-#pg-container
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label[for="ur-membership-stripe"]
-	.ur-membership-duration {
-	color: #635bff;
+.user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label[for=ur-membership-stripe] .ur-membership-duration,
+.user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label[for=ur-membership-stripe] .ur-membership-duration,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label[for=ur-membership-stripe] .ur-membership-duration,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label[for=ur-membership-stripe] .ur-membership-duration,
+#pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label[for=ur-membership-stripe] .ur-membership-duration,
+#pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label[for=ur-membership-stripe] .ur-membership-duration {
+  color: #635bff;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	input[type="radio"],
-.user-registration-page
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	input[type="radio"],
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	input[type="radio"],
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	input[type="radio"],
-#pg-container
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	input[type="radio"],
-#pg-container
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	input[type="radio"] {
-	display: none;
+.user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label input[type=radio],
+.user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label input[type=radio],
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label input[type=radio],
+.ur-multi-device-form-preview .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label input[type=radio],
+#pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label input[type=radio],
+#pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label input[type=radio] {
+  display: none;
 }
-<<<<<<< HEAD
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-.user-registration-page
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-#pg-container
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label:has(input[type="radio"]:checked),
-#pg-container
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label:has(input[type="radio"]:checked) {
-	background: rgb(250.7108433735, 251.1927710843, 253.2891566265);
-	border-color: var(--ur-primary-color, #475bb2);
-=======
 .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:has(input[type=radio]:checked),
 .user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:has(input[type=radio]:checked),
 .ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:has(input[type=radio]:checked),
@@ -2902,93 +861,15 @@ html {
 #pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label:has(input[type=radio]:checked) {
   background: rgb(250.7108433735, 251.1927710843, 253.2891566265);
   border-color: var(--ur-primary-color, #475bb2);
->>>>>>> master
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	.ur-membership-duration,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	.ur-membership-duration,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	.ur-membership-duration,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	.ur-membership-duration,
-#pg-container
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	.ur-membership-duration,
-#pg-container
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	.ur-membership-duration {
-	margin-left: unset;
+.user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration,
+.user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration,
+#pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration,
+#pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration {
+  margin-left: unset;
 }
-<<<<<<< HEAD
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	.ur-membership-duration
-	img,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	.ur-membership-duration
-	img,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	.ur-membership-duration
-	img,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	.ur-membership-duration
-	img,
-#pg-container
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	.ur-membership-duration
-	img,
-#pg-container
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	.ur_membership_input_label
-	.ur-membership-duration
-	img {
-	width: auto;
-	height: 24px;
-	margin-top: 4px;
-=======
 .user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration img,
 .user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration img,
 .ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body .ur_membership_input_label .ur-membership-duration img,
@@ -2998,171 +879,65 @@ html {
   width: auto;
   height: 24px;
   margin-top: 4px;
->>>>>>> master
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	#payment-gateway-notice:empty,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	#payment-gateway-notice:empty,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	#payment-gateway-notice:empty,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	#payment-gateway-notice:empty,
-#pg-container
-	.ur_membership_registration_container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	#payment-gateway-notice:empty,
-#pg-container
-	.membership-upgrade-container
-	.ur_payment_gateway_container
-	#payment-gateway-body
-	#payment-gateway-notice:empty {
-	display: none;
+.user-registration-page .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body #payment-gateway-notice:empty,
+.user-registration-page .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body #payment-gateway-notice:empty,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body #payment-gateway-notice:empty,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body #payment-gateway-notice:empty,
+#pg-container .ur_membership_registration_container .ur_payment_gateway_container #payment-gateway-body #payment-gateway-notice:empty,
+#pg-container .membership-upgrade-container .ur_payment_gateway_container #payment-gateway-body #payment-gateway-notice:empty {
+  display: none;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_input_label,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_input_label,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_input_label,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_input_label,
+.user-registration-page .ur_membership_registration_container .ur_membership_input_label,
+.user-registration-page .membership-upgrade-container .ur_membership_input_label,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_input_label,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_input_label,
 #pg-container .ur_membership_registration_container .ur_membership_input_label,
 #pg-container .membership-upgrade-container .ur_membership_input_label {
-	display: flex;
-	align-items: center;
+  display: flex;
+  align-items: center;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_input_label
-	input[type="radio"],
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_input_label
-	input[type="radio"],
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_input_label
-	input[type="radio"],
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_input_label
-	input[type="radio"],
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_input_label
-	input[type="radio"],
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_input_label
-	input[type="radio"] {
-	margin-right: 8px;
+.user-registration-page .ur_membership_registration_container .ur_membership_input_label input[type=radio],
+.user-registration-page .membership-upgrade-container .ur_membership_input_label input[type=radio],
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_input_label input[type=radio],
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_input_label input[type=radio],
+#pg-container .ur_membership_registration_container .ur_membership_input_label input[type=radio],
+#pg-container .membership-upgrade-container .ur_membership_input_label input[type=radio] {
+  margin-right: 8px;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_input_label
-	.ur-membership-duration,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_input_label
-	.ur-membership-duration,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_input_label
-	.ur-membership-duration,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_input_label
-	.ur-membership-duration,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_input_label
-	.ur-membership-duration,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_input_label
-	.ur-membership-duration {
-	margin-top: 0;
-	margin-right: 6px;
+.user-registration-page .ur_membership_registration_container .ur_membership_input_label .ur-membership-duration,
+.user-registration-page .membership-upgrade-container .ur_membership_input_label .ur-membership-duration,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_input_label .ur-membership-duration,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_input_label .ur-membership-duration,
+#pg-container .ur_membership_registration_container .ur_membership_input_label .ur-membership-duration,
+#pg-container .membership-upgrade-container .ur_membership_input_label .ur-membership-duration {
+  margin-top: 0;
+  margin-right: 6px;
 }
-.user-registration-page
-	.ur_membership_registration_container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-.user-registration-page
-	.membership-upgrade-container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-.ur-multi-device-form-preview
-	.ur_membership_registration_container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-#pg-container
-	.ur_membership_registration_container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child,
-#pg-container
-	.membership-upgrade-container
-	.ur_membership_input_label
-	.ur-membership-duration:last-child {
-	margin-right: 0;
+.user-registration-page .ur_membership_registration_container .ur_membership_input_label .ur-membership-duration:last-child,
+.user-registration-page .membership-upgrade-container .ur_membership_input_label .ur-membership-duration:last-child,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_input_label .ur-membership-duration:last-child,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_input_label .ur-membership-duration:last-child,
+#pg-container .ur_membership_registration_container .ur_membership_input_label .ur-membership-duration:last-child,
+#pg-container .membership-upgrade-container .ur_membership_input_label .ur-membership-duration:last-child {
+  margin-right: 0;
 }
 .user-registration-page .membership-body,
 .ur-multi-device-form-preview .membership-body,
 #pg-container .membership-body {
-	padding: 20px;
+  padding: 20px;
 }
 .user-registration-page .membership-footer,
 .ur-multi-device-form-preview .membership-footer,
 #pg-container .membership-footer {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-	padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 0;
 }
 .user-registration-page .membership-footer .membership-signup-button,
 .ur-multi-device-form-preview .membership-footer .membership-signup-button,
 #pg-container .membership-footer .membership-signup-button {
-<<<<<<< HEAD
-	width: 200px;
-	cursor: pointer;
-	font-size: 14px;
-	background: var(--ur-button-background-normal-color, #475bb2);
-	color: var(--ur-button-text-normal-color, #ffffff);
-	padding: 10px 0;
-	border-radius: 5px;
-	border: none;
-	font-family: inherit;
-}
-.user-registration-page .membership-footer .membership-signup-button:hover,
-.ur-multi-device-form-preview
-	.membership-footer
-	.membership-signup-button:hover,
-#pg-container .membership-footer .membership-signup-button:hover {
-	background: var(--ur-button-background-hover-color, #38488e);
-	color: var(--ur-button-text-hover-color, #ffffff);
-=======
   width: 200px;
   cursor: pointer;
   font-size: 14px;
@@ -3172,7 +947,6 @@ html {
   border-radius: 5px;
   border: none;
   font-family: inherit;
->>>>>>> master
 }
 .user-registration-page .membership-footer .membership-signup-button:hover,
 .ur-multi-device-form-preview .membership-footer .membership-signup-button:hover,
@@ -3183,47 +957,29 @@ html {
 .user-registration-page .membership-amount,
 .ur-multi-device-form-preview .membership-amount,
 #pg-container .membership-amount {
-	color: #475bb2;
-	font-weight: bold;
-	font-size: x-large;
+  color: #475bb2;
+  font-weight: bold;
+  font-size: x-large;
 }
 .user-registration-page .membership-title,
 .ur-multi-device-form-preview .membership-title,
 #pg-container .membership-title {
-	font-weight: bold;
-	font-size: x-large;
-	padding: 20px 0 0 0;
+  font-weight: bold;
+  font-size: x-large;
+  padding: 20px 0 0 0;
 }
 .user-registration-page .ur-membership-duration,
 .ur-multi-device-form-preview .ur-membership-duration,
 #pg-container .ur-membership-duration {
-	font-weight: normal;
-	color: #545050;
-	display: inline-block;
-	vertical-align: middle;
-	margin-top: 2px;
+  font-weight: normal;
+  color: #545050;
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: 2px;
 }
 .user-registration-page .membership-primary-btn,
 .ur-multi-device-form-preview .membership-primary-btn,
 #pg-container .membership-primary-btn {
-<<<<<<< HEAD
-	position: relative;
-	width: max-content;
-	cursor: pointer;
-	background: #475bb2;
-	color: white;
-	border-radius: 4px;
-	border: none;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 10px;
-	padding: 8px 16px;
-	font-size: 15px;
-	font-weight: 500;
-	line-height: 25px;
-	transition: all 0.3s;
-=======
   position: relative;
   width: max-content;
   cursor: pointer;
@@ -3240,793 +996,506 @@ html {
   font-weight: 500;
   line-height: 25px;
   transition: all 0.3s;
->>>>>>> master
 }
 .user-registration-page .membership-primary-btn:hover,
 .ur-multi-device-form-preview .membership-primary-btn:hover,
 #pg-container .membership-primary-btn:hover {
-	color: white;
-	background: #38488e;
+  color: white;
+  background: #38488e;
 }
 .user-registration-page .membership-primary-btn:disabled,
 .ur-multi-device-form-preview .membership-primary-btn:disabled,
 #pg-container .membership-primary-btn:disabled {
-	background: #818286;
-	color: white;
-	cursor: not-allowed;
+  background: #818286;
+  color: white;
+  cursor: not-allowed;
 }
 .user-registration-page .urm-spinner,
 .ur-multi-device-form-preview .urm-spinner,
 #pg-container .urm-spinner {
-	display: inline-block;
-	width: 10px;
-	height: 10px;
-	border: 3px solid rgba(0, 0, 0, 0.14);
-	border-radius: 50%;
-	border-top-color: #ffffff;
-	animation: spin 1s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border: 3px solid rgba(0, 0, 0, 0.14);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: spin 1s cubic-bezier(0.65, 0.05, 0.36, 1) infinite;
 }
 .user-registration-page .user-registration-membership-content .urm-spinner,
-.ur-multi-device-form-preview
-	.user-registration-membership-content
-	.urm-spinner,
+.ur-multi-device-form-preview .user-registration-membership-content .urm-spinner,
 #pg-container .user-registration-membership-content .urm-spinner {
-	width: 15px;
-	height: 15px;
-	border-radius: 50%;
-	margin-left: 5px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-left: 5px;
 }
-.user-registration-page
-	.user-registration-membership-content
-	span.urm-help-tip::before,
-.ur-multi-device-form-preview
-	.user-registration-membership-content
-	span.urm-help-tip::before,
+.user-registration-page .user-registration-membership-content span.urm-help-tip::before,
+.ur-multi-device-form-preview .user-registration-membership-content span.urm-help-tip::before,
 #pg-container .user-registration-membership-content span.urm-help-tip::before {
-	content: "";
-	background-image: url(../../../images/settings-icons/information.svg) !important;
-	background-repeat: no-repeat !important;
-	background-size: 100% !important;
-	display: block;
-	width: 12px;
-	height: 12px;
-	cursor: pointer;
-	padding: 4px;
-	background: 0 0;
-	border-radius: 3px;
-	transform: rotate(26deg);
+  content: "";
+  background-image: url(../../../images/settings-icons/information.svg) !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% !important;
+  display: block;
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+  padding: 4px;
+  background: 0 0;
+  border-radius: 3px;
+  transform: rotate(26deg);
 }
-.user-registration-page .notice-container .notice_red:empty,
-.user-registration-page .notice-container .notice_blue:empty,
+.user-registration-page .notice-container .notice_red:empty, .user-registration-page .notice-container .notice_blue:empty,
 .ur-multi-device-form-preview .notice-container .notice_red:empty,
 .ur-multi-device-form-preview .notice-container .notice_blue:empty,
 #pg-container .notice-container .notice_red:empty,
 #pg-container .notice-container .notice_blue:empty {
-	padding: 0;
+  padding: 0;
 }
-.user-registration-page .notice-container .notice_red,
-.user-registration-page .notice-container .notice_blue,
+.user-registration-page .notice-container .notice_red, .user-registration-page .notice-container .notice_blue,
 .ur-multi-device-form-preview .notice-container .notice_red,
 .ur-multi-device-form-preview .notice-container .notice_blue,
 #pg-container .notice-container .notice_red,
 #pg-container .notice-container .notice_blue {
-	padding: 10px 12px;
-	font-size: 14px;
-	line-height: 22px;
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 22px;
 }
 .user-registration-page .notice-container .notice_red,
 .ur-multi-device-form-preview .notice-container .notice_red,
 #pg-container .notice-container .notice_red {
-	background: #fdd9d9;
-	border-left: 3px solid #dc3545;
-	word-wrap: break-word;
+  background: #fdd9d9;
+  border-left: 3px solid #dc3545;
+  word-wrap: break-word;
 }
 .user-registration-page .notice-container .notice_red::before,
 .ur-multi-device-form-preview .notice-container .notice_red::before,
 #pg-container .notice-container .notice_red::before {
-	content: "\f534";
+  content: "\f534";
 }
 .user-registration-page .notice-container .notice_blue,
 .ur-multi-device-form-preview .notice-container .notice_blue,
 #pg-container .notice-container .notice_blue {
-	border-left: 3px solid #007bff;
-	background: #e2e2fd;
-	word-wrap: break-word;
+  border-left: 3px solid #007bff;
+  background: #e2e2fd;
+  word-wrap: break-word;
 }
 .user-registration-page .notice-container,
 .ur-multi-device-form-preview .notice-container,
 #pg-container .notice-container {
-	position: fixed;
-	top: 50px;
-	right: -700px;
-	z-index: 9999;
-	transition: right 0.5s ease;
+  position: fixed;
+  top: 50px;
+  right: -700px;
+  z-index: 9999;
+  transition: right 0.5s ease;
 }
 .user-registration-page .close_notice,
 .ur-multi-device-form-preview .close_notice,
 #pg-container .close_notice {
-	color: red;
-	cursor: pointer;
-	font-weight: bold;
+  color: red;
+  cursor: pointer;
+  font-weight: bold;
 }
 .user-registration-page .notice-container.active,
 .ur-multi-device-form-preview .notice-container.active,
 #pg-container .notice-container.active {
-	right: 20px;
+  right: 20px;
 }
 .user-registration-page .urm-d-none,
 .ur-multi-device-form-preview .urm-d-none,
 #pg-container .urm-d-none {
-	display: none !important;
+  display: none !important;
 }
 .user-registration-page #ur-payment-gateway-body,
 .ur-multi-device-form-preview #ur-payment-gateway-body,
 #pg-container #ur-payment-gateway-body {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 .user-registration-page #ur-payment-gateway-body input,
 .ur-multi-device-form-preview #ur-payment-gateway-body input,
 #pg-container #ur-payment-gateway-body input {
-	cursor: pointer;
+  cursor: pointer;
 }
 .user-registration-page label,
 .ur-multi-device-form-preview label,
 #pg-container label {
-	cursor: pointer;
+  cursor: pointer;
 }
 .user-registration-page .message-section,
 .ur-multi-device-form-preview .message-section,
 #pg-container .message-section {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 .user-registration-page .coupon-input-area,
 .ur-multi-device-form-preview .coupon-input-area,
 #pg-container .coupon-input-area {
-	display: flex;
-	justify-content: space-between;
-	gap: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
 }
 .user-registration-page .coupon-input-area .input_with_clear_btn,
 .ur-multi-device-form-preview .coupon-input-area .input_with_clear_btn,
 #pg-container .coupon-input-area .input_with_clear_btn {
-	display: flex;
-	position: relative;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 .user-registration-page .coupon-input-area .input_with_clear_btn input,
 .ur-multi-device-form-preview .coupon-input-area .input_with_clear_btn input,
 #pg-container .coupon-input-area .input_with_clear_btn input {
-	width: 100%;
-	padding: 10px 30px 10px 10px;
+  width: 100%;
+  padding: 10px 30px 10px 10px;
 }
 .user-registration-page .coupon-input-area button,
 .ur-multi-device-form-preview .coupon-input-area button,
 #pg-container .coupon-input-area button {
-	width: 50%;
+  width: 50%;
 }
 .user-registration-page .coupon-input-area span,
 .ur-multi-device-form-preview .coupon-input-area span,
 #pg-container .coupon-input-area span {
-	position: absolute;
-	right: 10px;
-	cursor: pointer;
-	font-weight: 600;
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  font-weight: 600;
 }
 .user-registration-page #total-input-notice,
 .ur-multi-device-form-preview #total-input-notice,
 #pg-container #total-input-notice {
-	font-style: italic;
-	font-size: x-small;
+  font-style: italic;
+  font-size: x-small;
 }
 .user-registration-page .stripe-card-indicator,
 .ur-multi-device-form-preview .stripe-card-indicator,
 #pg-container .stripe-card-indicator {
-	background: #475bb2;
-	color: #fff;
-	border-radius: 4px 4px 0 0;
-	border: none;
-	padding: 8px 16px;
-	font-size: 15px;
-	font-weight: 500;
+  background: #475bb2;
+  color: #fff;
+  border-radius: 4px 4px 0 0;
+  border: none;
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 500;
 }
-.user-registration-page
-	.user-registration-upgrade-membership-swal2-container.swal2-modal,
-.ur-multi-device-form-preview
-	.user-registration-upgrade-membership-swal2-container.swal2-modal,
-#pg-container
-	.user-registration-upgrade-membership-swal2-container.swal2-modal {
-	padding: 0px !important;
-	font-size: large;
+.user-registration-page .user-registration-upgrade-membership-swal2-container.swal2-modal,
+.ur-multi-device-form-preview .user-registration-upgrade-membership-swal2-container.swal2-modal,
+#pg-container .user-registration-upgrade-membership-swal2-container.swal2-modal {
+  padding: 0px !important;
+  font-size: large;
 }
-.user-registration-page
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-header,
-.ur-multi-device-form-preview
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-header,
-#pg-container
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-header {
-	padding: 20px;
-	align-items: baseline;
+.user-registration-page .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-header,
+.ur-multi-device-form-preview .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-header,
+#pg-container .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-header {
+  padding: 20px;
+  align-items: baseline;
 }
-.user-registration-page
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-header
-	h2,
-.ur-multi-device-form-preview
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-header
-	h2,
-#pg-container
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-header
-	h2 {
-	border-bottom: 1px solid #d3d3d3;
-	padding-bottom: 16px;
-	width: 100%;
-	text-align: left;
-	margin-bottom: 0;
-	color: #3d3d3d;
-	font-size: 20px;
-	font-weight: 600;
-	line-height: 24px;
-	font-family: inherit;
+.user-registration-page .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-header h2,
+.ur-multi-device-form-preview .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-header h2,
+#pg-container .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-header h2 {
+  border-bottom: 1px solid #d3d3d3;
+  padding-bottom: 16px;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 0;
+  color: #3d3d3d;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  font-family: inherit;
 }
-.user-registration-page
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-content,
-.ur-multi-device-form-preview
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-content,
-#pg-container
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-content {
-	text-align: left;
-	color: #383838;
-	font-size: 14px;
-	font-weight: 400;
-	line-height: 24px;
+.user-registration-page .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-content,
+.ur-multi-device-form-preview .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-content,
+#pg-container .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-content {
+  text-align: left;
+  color: #383838;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
 }
-.user-registration-page
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-content
-	.ur_membership_registration_container,
-.ur-multi-device-form-preview
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-content
-	.ur_membership_registration_container,
-#pg-container
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-content
-	.ur_membership_registration_container {
-	margin: 0;
+.user-registration-page .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-content .ur_membership_registration_container,
+.ur-multi-device-form-preview .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-content .ur_membership_registration_container,
+#pg-container .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-content .ur_membership_registration_container {
+  margin: 0;
 }
-.user-registration-page
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions,
-.ur-multi-device-form-preview
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions,
-#pg-container
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions {
-	display: flex;
-	flex-direction: row-reverse;
-	justify-content: end;
-	padding: 18px 20px;
-	gap: 10px;
-	margin-top: 10px;
-	border-radius: 0 0 5px 5px;
+.user-registration-page .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions,
+.ur-multi-device-form-preview .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions,
+#pg-container .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: end;
+  padding: 18px 20px;
+  gap: 10px;
+  margin-top: 10px;
+  border-radius: 0 0 5px 5px;
 }
-.user-registration-page
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions
-	button,
-.ur-multi-device-form-preview
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions
-	button,
-#pg-container
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions
-	button {
-	width: 30%;
-	color: #383838;
-	font-size: 14px;
-	font-weight: 400;
-	line-height: 24px;
-	margin: 0;
-	padding: 6px 12px;
+.user-registration-page .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button,
+.ur-multi-device-form-preview .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button,
+#pg-container .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button {
+  width: 30%;
+  color: #383838;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  margin: 0;
+  padding: 6px 12px;
 }
-.user-registration-page
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions
-	button:focus,
-.ur-multi-device-form-preview
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions
-	button:focus,
-#pg-container
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions
-	button:focus {
-	border: 0;
-	outline: none;
-	box-shadow: none;
+.user-registration-page .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button:focus,
+.ur-multi-device-form-preview .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button:focus,
+#pg-container .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button:focus {
+  border: 0;
+  outline: none;
+  box-shadow: none;
 }
-.user-registration-page
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions
-	button.swal2-confirm,
-.ur-multi-device-form-preview
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions
-	button.swal2-confirm,
-#pg-container
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions
-	button.swal2-confirm {
-	color: #ffffff;
-	display: flex !important;
-	align-items: center;
-	gap: 5px;
-	justify-content: center;
+.user-registration-page .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button.swal2-confirm,
+.ur-multi-device-form-preview .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button.swal2-confirm,
+#pg-container .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button.swal2-confirm {
+  color: #ffffff;
+  display: flex !important;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
 }
-.user-registration-page
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions
-	button.swal2-cancel,
-.ur-multi-device-form-preview
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions
-	button.swal2-cancel,
-#pg-container
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions
-	button.swal2-cancel {
-	color: #383838;
-	background: #ffffff !important;
+.user-registration-page .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button.swal2-cancel,
+.ur-multi-device-form-preview .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button.swal2-cancel,
+#pg-container .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions button.swal2-cancel {
+  color: #383838;
+  background: #ffffff !important;
 }
-.user-registration-page
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions.swal2-loading,
-.ur-multi-device-form-preview
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions.swal2-loading,
-#pg-container
-	.user-registration-upgrade-membership-swal2-container.swal2-modal
-	.swal2-actions.swal2-loading {
-	display: flex;
-	justify-content: center;
-	margin-top: 0;
+.user-registration-page .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions.swal2-loading,
+.ur-multi-device-form-preview .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions.swal2-loading,
+#pg-container .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-actions.swal2-loading {
+  display: flex;
+  justify-content: center;
+  margin-top: 0;
 }
 .user-registration-page #pg-container,
 .ur-multi-device-form-preview #pg-container,
 #pg-container #pg-container {
-	display: none;
+  display: none;
 }
 .user-registration-page .membership-upgrade-container .StripeElement,
 .ur-multi-device-form-preview .membership-upgrade-container .StripeElement,
 #pg-container .membership-upgrade-container .StripeElement {
-	padding: 0px 12px;
-	border: 1px solid #e1e1e1;
-	border-radius: 4px;
+  padding: 0px 12px;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
 }
-.user-registration-page
-	.membership-upgrade-container
-	.StripeElement
-	.__PrivateStripeElement,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.StripeElement
-	.__PrivateStripeElement,
-#pg-container
-	.membership-upgrade-container
-	.StripeElement
-	.__PrivateStripeElement {
-	width: 100%;
-	padding: 4px 8px;
-	border-radius: 0;
-	min-height: 36px;
-	margin-bottom: 10px;
-	line-height: 1.5;
-	height: 38px;
+.user-registration-page .membership-upgrade-container .StripeElement .__PrivateStripeElement,
+.ur-multi-device-form-preview .membership-upgrade-container .StripeElement .__PrivateStripeElement,
+#pg-container .membership-upgrade-container .StripeElement .__PrivateStripeElement {
+  width: 100%;
+  padding: 4px 8px;
+  border-radius: 0;
+  min-height: 36px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  height: 38px;
 }
-.user-registration-page
-	.membership-upgrade-container
-	.StripeElement
-	.__PrivateStripeElement
-	iframe,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.StripeElement
-	.__PrivateStripeElement
-	iframe,
-#pg-container
-	.membership-upgrade-container
-	.StripeElement
-	.__PrivateStripeElement
-	iframe {
-	position: absolute;
-	top: 12px;
+.user-registration-page .membership-upgrade-container .StripeElement .__PrivateStripeElement iframe,
+.ur-multi-device-form-preview .membership-upgrade-container .StripeElement .__PrivateStripeElement iframe,
+#pg-container .membership-upgrade-container .StripeElement .__PrivateStripeElement iframe {
+  position: absolute;
+  top: 12px;
 }
 .user-registration-page .membership-upgrade-container .authorize-net-container,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.authorize-net-container,
+.ur-multi-device-form-preview .membership-upgrade-container .authorize-net-container,
 #pg-container .membership-upgrade-container .authorize-net-container {
-	width: 90%;
+  width: 90%;
 }
-.user-registration-page
-	.membership-upgrade-container
-	.authorize-net-container
-	label,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.authorize-net-container
-	label,
+.user-registration-page .membership-upgrade-container .authorize-net-container label,
+.ur-multi-device-form-preview .membership-upgrade-container .authorize-net-container label,
 #pg-container .membership-upgrade-container .authorize-net-container label {
-	margin-top: 0px;
-	margin-bottom: 16px;
-	color: rgb(34, 34, 34);
-	font-size: 15px;
-	font-weight: 500;
-	line-height: 19px;
+  margin-top: 0px;
+  margin-bottom: 16px;
+  color: rgb(34, 34, 34);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 19px;
 }
-.user-registration-page
-	.membership-upgrade-container
-	.authorize-net-container
-	.ur-error,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.authorize-net-container
-	.ur-error,
+.user-registration-page .membership-upgrade-container .authorize-net-container .ur-error,
+.ur-multi-device-form-preview .membership-upgrade-container .authorize-net-container .ur-error,
 #pg-container .membership-upgrade-container .authorize-net-container .ur-error {
-	color: #d63638;
-	font-size: 15px;
+  color: #d63638;
+  font-size: 15px;
 }
-.user-registration-page
-	.membership-upgrade-container
-	.authorize-net-container
-	.user-registration-one-half,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.authorize-net-container
-	.user-registration-one-half,
-#pg-container
-	.membership-upgrade-container
-	.authorize-net-container
-	.user-registration-one-half {
-	float: left;
-	width: 49%;
-	margin-right: 2%;
+.user-registration-page .membership-upgrade-container .authorize-net-container .user-registration-one-half,
+.ur-multi-device-form-preview .membership-upgrade-container .authorize-net-container .user-registration-one-half,
+#pg-container .membership-upgrade-container .authorize-net-container .user-registration-one-half {
+  float: left;
+  width: 49%;
+  margin-right: 2%;
 }
-.user-registration-page
-	.membership-upgrade-container
-	.authorize-net-container
-	.user-registration-one-half:nth-child(2),
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.authorize-net-container
-	.user-registration-one-half:nth-child(2),
-#pg-container
-	.membership-upgrade-container
-	.authorize-net-container
-	.user-registration-one-half:nth-child(2) {
-	margin-right: 0;
+.user-registration-page .membership-upgrade-container .authorize-net-container .user-registration-one-half:nth-child(2),
+.ur-multi-device-form-preview .membership-upgrade-container .authorize-net-container .user-registration-one-half:nth-child(2),
+#pg-container .membership-upgrade-container .authorize-net-container .user-registration-one-half:nth-child(2) {
+  margin-right: 0;
 }
-.user-registration-page
-	.membership-upgrade-container
-	.authorize-net-container
-	.user-registration-membership_page_user-registration-frontend-list
-	.shortcode
-	.widefat,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.authorize-net-container
-	.user-registration-membership_page_user-registration-frontend-list
-	.shortcode
-	.widefat,
-#pg-container
-	.membership-upgrade-container
-	.authorize-net-container
-	.user-registration-membership_page_user-registration-frontend-list
-	.shortcode
-	.widefat {
-	width: calc(100% - 40px);
+.user-registration-page .membership-upgrade-container .authorize-net-container .user-registration-membership_page_user-registration-frontend-list .shortcode .widefat,
+.ur-multi-device-form-preview .membership-upgrade-container .authorize-net-container .user-registration-membership_page_user-registration-frontend-list .shortcode .widefat,
+#pg-container .membership-upgrade-container .authorize-net-container .user-registration-membership_page_user-registration-frontend-list .shortcode .widefat {
+  width: calc(100% - 40px);
 }
-.user-registration-page
-	.membership-upgrade-container
-	.authorize-net-container
-	.clearfix::before,
-.user-registration-page
-	.membership-upgrade-container
-	.authorize-net-container
-	.clearfix::after,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.authorize-net-container
-	.clearfix::before,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.authorize-net-container
-	.clearfix::after,
-#pg-container
-	.membership-upgrade-container
-	.authorize-net-container
-	.clearfix::before,
-#pg-container
-	.membership-upgrade-container
-	.authorize-net-container
-	.clearfix::after {
-	content: " ";
-	display: table;
+.user-registration-page .membership-upgrade-container .authorize-net-container .clearfix::before,
+.user-registration-page .membership-upgrade-container .authorize-net-container .clearfix::after,
+.ur-multi-device-form-preview .membership-upgrade-container .authorize-net-container .clearfix::before,
+.ur-multi-device-form-preview .membership-upgrade-container .authorize-net-container .clearfix::after,
+#pg-container .membership-upgrade-container .authorize-net-container .clearfix::before,
+#pg-container .membership-upgrade-container .authorize-net-container .clearfix::after {
+  content: " ";
+  display: table;
 }
-.user-registration-page
-	.membership-upgrade-container
-	.authorize-net-container
-	.clearfix::after,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.authorize-net-container
-	.clearfix::after,
-#pg-container
-	.membership-upgrade-container
-	.authorize-net-container
-	.clearfix::after {
-	clear: both;
+.user-registration-page .membership-upgrade-container .authorize-net-container .clearfix::after,
+.ur-multi-device-form-preview .membership-upgrade-container .authorize-net-container .clearfix::after,
+#pg-container .membership-upgrade-container .authorize-net-container .clearfix::after {
+  clear: both;
 }
-.user-registration-page
-	.membership-upgrade-container
-	.authorize-net-container
-	abbr.required,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.authorize-net-container
-	abbr.required,
-#pg-container
-	.membership-upgrade-container
-	.authorize-net-container
-	abbr.required {
-	color: red;
+.user-registration-page .membership-upgrade-container .authorize-net-container abbr.required,
+.ur-multi-device-form-preview .membership-upgrade-container .authorize-net-container abbr.required,
+#pg-container .membership-upgrade-container .authorize-net-container abbr.required {
+  color: red;
 }
-.user-registration-page
-	.membership-upgrade-container
-	.authorize-net-container
-	abbr[title],
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.authorize-net-container
-	abbr[title],
-#pg-container
-	.membership-upgrade-container
-	.authorize-net-container
-	abbr[title] {
-	text-decoration: none;
+.user-registration-page .membership-upgrade-container .authorize-net-container abbr[title],
+.ur-multi-device-form-preview .membership-upgrade-container .authorize-net-container abbr[title],
+#pg-container .membership-upgrade-container .authorize-net-container abbr[title] {
+  text-decoration: none;
 }
-.user-registration-page
-	.membership-upgrade-container
-	.authorize-net-container
-	.ur-field-row
-	input,
-.user-registration-page
-	.membership-upgrade-container
-	.authorize-net-container
-	.ur-field-row
-	select,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.authorize-net-container
-	.ur-field-row
-	input,
-.ur-multi-device-form-preview
-	.membership-upgrade-container
-	.authorize-net-container
-	.ur-field-row
-	select,
-#pg-container
-	.membership-upgrade-container
-	.authorize-net-container
-	.ur-field-row
-	input,
-#pg-container
-	.membership-upgrade-container
-	.authorize-net-container
-	.ur-field-row
-	select {
-	width: 100%;
-	min-height: 36px;
-	margin-bottom: 10px;
-	line-height: 1.5;
-	padding: 4px 8px;
-	border-radius: 0px;
+.user-registration-page .membership-upgrade-container .authorize-net-container .ur-field-row input,
+.user-registration-page .membership-upgrade-container .authorize-net-container .ur-field-row select,
+.ur-multi-device-form-preview .membership-upgrade-container .authorize-net-container .ur-field-row input,
+.ur-multi-device-form-preview .membership-upgrade-container .authorize-net-container .ur-field-row select,
+#pg-container .membership-upgrade-container .authorize-net-container .ur-field-row input,
+#pg-container .membership-upgrade-container .authorize-net-container .ur-field-row select {
+  width: 100%;
+  min-height: 36px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  padding: 4px 8px;
+  border-radius: 0px;
 }
 .user-registration-page .upgrade-plan-container #upgradable-plans,
 .ur-multi-device-form-preview .upgrade-plan-container #upgradable-plans,
 #pg-container .upgrade-plan-container #upgradable-plans {
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
-	text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
 }
-.user-registration-page
-	.upgrade-plan-container
-	#upgradable-plans
-	.upgrade-membership-label,
-.ur-multi-device-form-preview
-	.upgrade-plan-container
-	#upgradable-plans
-	.upgrade-membership-label,
-#pg-container
-	.upgrade-plan-container
-	#upgradable-plans
-	.upgrade-membership-label {
-	display: flex;
-	gap: 5px;
-	align-items: center;
+.user-registration-page .upgrade-plan-container #upgradable-plans .upgrade-membership-label,
+.ur-multi-device-form-preview .upgrade-plan-container #upgradable-plans .upgrade-membership-label,
+#pg-container .upgrade-plan-container #upgradable-plans .upgrade-membership-label {
+  display: flex;
+  gap: 5px;
+  align-items: center;
 }
 
 .user-registration .membership-upgrade-container > span {
-	display: block;
-	margin-bottom: 20px;
-	font-size: 16px;
-	color: #6b6b6b;
+  display: block;
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #6b6b6b;
 }
 .user-registration .ur-upgrade-label {
-	display: block;
-	margin-bottom: 10px;
-	font-weight: 600;
-	font-size: 17px;
-	color: #1f1f1f;
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 17px;
+  color: #1f1f1f;
 }
 .user-registration .notice_red,
 .user-registration #upgrade-membership-notice {
-	margin-top: 10px;
-	font-size: 14px;
-	color: #ef4444;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #ef4444;
 }
 
 .ur-membership-container.layout-list .membership-block {
-	display: flex;
-	margin-bottom: 20px;
-	border-width: 1px;
-	border-style: solid;
-	border-color: rgb(225, 225, 225);
-	border-image: initial;
-	border-radius: 4px;
-	padding: 16px;
+  display: flex;
+  margin-bottom: 20px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(225, 225, 225);
+  border-image: initial;
+  border-radius: 4px;
+  padding: 16px;
 }
-.ur-membership-container.layout-list
-	.membership-block
-	.ur_membership_input_label {
-	width: 100%;
-	display: flex;
-	align-items: center;
-	color: #383838;
-	font-size: 14px;
-	font-weight: 700;
-	line-height: 25px;
-	margin-bottom: 0;
-	margin-top: 0;
-	gap: 8px;
+.ur-membership-container.layout-list .membership-block .ur_membership_input_label {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  color: #383838;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 25px;
+  margin-bottom: 0;
+  margin-top: 0;
+  gap: 8px;
 }
-.ur-membership-container.layout-list
-	.membership-block
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list) {
-	height: 38px;
-	padding: 0 14px;
-	border-radius: 4px;
-	border: 1px solid #e9e9e9;
-	background: white;
-	color: #383838;
-	margin-bottom: 0;
+.ur-membership-container.layout-list .membership-block .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list) {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 4px;
+  border: 1px solid #e9e9e9;
+  background: white;
+  color: #383838;
+  margin-bottom: 0;
 }
-.ur-membership-container.layout-list
-	.membership-block
-	.ur_membership_input_class:not(
-		.ur_membership_radio_input,
-		.pg-list
-	)::placeholder {
-	color: #b5b5b5;
+.ur-membership-container.layout-list .membership-block .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list)::placeholder {
+  color: #b5b5b5;
 }
-.ur-membership-container.layout-list
-	.membership-block
-	.ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus {
-	border-color: #475bb2;
+.ur-membership-container.layout-list .membership-block .ur_membership_input_class:not(.ur_membership_radio_input, .pg-list):focus {
+  border-color: #475bb2;
 }
 .ur-membership-container.layout-list .membership-block .ur-frontend-field {
-<<<<<<< HEAD
-	accent-color: var(--ur-primary-color, #475bb2);
-=======
   accent-color: var(--ur-primary-color, #475bb2);
->>>>>>> master
 }
-.ur-membership-container.layout-list
-	.membership-block
-	.ur-frontend-field:focus {
-	outline: none;
-	box-shadow: none;
-	vertical-align: center;
+.ur-membership-container.layout-list .membership-block .ur-frontend-field:focus {
+  outline: none;
+  box-shadow: none;
+  vertical-align: center;
 }
-<<<<<<< HEAD
-.ur-membership-container.layout-list
-	.membership-block:has(.ur-frontend-field:checked) {
-	border-color: var(--ur-primary-color, #475bb2);
-=======
 .ur-membership-container.layout-list .membership-block:has(.ur-frontend-field:checked) {
   border-color: var(--ur-primary-color, #475bb2);
->>>>>>> master
 }
-.ur-membership-container.layout-list
-	.membership-block
-	.ur-membership-title-wrapper {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	width: 100%;
+.ur-membership-container.layout-list .membership-block .ur-membership-title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
-.ur-membership-container.layout-list
-	.membership-block
-	.ur-membership-title-wrapper
-	.ur-membership-title {
-	color: #1f1f1f;
-	font-weight: 600;
-	display: inline-block;
-	vertical-align: middle;
-	font-size: 16px;
-	text-align: left;
+.ur-membership-container.layout-list .membership-block .ur-membership-title-wrapper .ur-membership-title {
+  color: #1f1f1f;
+  font-weight: 600;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 16px;
+  text-align: left;
 }
-.ur-membership-container.layout-list
-	.membership-block
-	.ur-membership-title-wrapper
-	.ur-membership-amount-wrapper {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 4px;
+.ur-membership-container.layout-list .membership-block .ur-membership-title-wrapper .ur-membership-amount-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
-.ur-membership-container.layout-list
-	.membership-block
-	.ur-membership-title-wrapper
-	.ur-membership-amount-wrapper
-	.membership-amount {
-	font-weight: 700;
-	font-size: 16px;
-	color: #1f1f1f;
+.ur-membership-container.layout-list .membership-block .ur-membership-title-wrapper .ur-membership-amount-wrapper .membership-amount {
+  font-weight: 700;
+  font-size: 16px;
+  color: #1f1f1f;
 }
 .ur-membership-container.layout-list .ur-membership-duration {
-	color: #6b6b6b;
-	font-size: 13px;
-	font-weight: 400;
+  color: #6b6b6b;
+  font-size: 13px;
+  font-weight: 400;
 }
 
 .membership-footer {
-	padding: 0px;
+  padding: 0px;
 }
 .membership-footer .membership-signup-button {
-<<<<<<< HEAD
-	width: 200px;
-	cursor: pointer;
-	font-size: 16px;
-	line-height: 24px;
-	font-weight: 600;
-	background: var(
-		--ur-button-background-normal-color,
-		var(--ur-primary-color, #475bb2)
-	);
-	color: var(--ur-button-text-normal-color, white);
-	padding: 14px 0;
-	border-radius: 5px;
-	border: none;
-	font-family: inherit;
-=======
   width: 200px;
   cursor: pointer;
   font-size: 16px;
@@ -4038,37 +1507,20 @@ html {
   border-radius: 5px;
   border: none;
   font-family: inherit;
->>>>>>> master
 }
 
 .ur-membership-list-container .ur-membership-container.layout-block {
-	display: grid;
+  display: grid;
 }
 .ur-membership-list-container .ur-membership-container.layout-block.column-4 {
-	grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 }
 .ur-membership-list-container .ur-membership-container.layout-block.column-3 {
-	grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 }
 .ur-membership-list-container .ur-membership-container.layout-block.column-2 {
-	grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 }
-<<<<<<< HEAD
-.ur-membership-list-container
-	.ur-membership-container.layout-block
-	.membership-block {
-	flex-direction: column;
-	padding: 32px;
-	gap: 12px;
-	width: 100%;
-	background: none;
-	border-radius: 8px;
-	text-align: left;
-	box-sizing: border-box;
-	transition: all 0.3s ease-in-out;
-	margin-bottom: 0;
-	border: 1px solid var(--Grey-grey-50, #e9e9e9);
-=======
 .ur-membership-list-container .ur-membership-container.layout-block .membership-block {
   flex-direction: column;
   padding: 32px;
@@ -4081,127 +1533,67 @@ html {
   transition: all 0.3s ease-in-out;
   margin-bottom: 0;
   border: 1px solid var(--Grey-grey-50, #e9e9e9);
->>>>>>> master
 }
-.ur-membership-list-container
-	.ur-membership-container.layout-block
-	.membership-block
-	.ur-membership-amount-wrapper {
-	display: flex;
-	align-items: center;
-	gap: 4px;
+.ur-membership-list-container .ur-membership-container.layout-block .membership-block .ur-membership-amount-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
-.ur-membership-list-container
-	.ur-membership-container.layout-block
-	.membership-block
-	.ur-membership-amount-wrapper
-	.membership-amount {
-	color: #1f1f1f;
-	font-weight: 700;
-	font-size: 32px;
-	text-align: left;
+.ur-membership-list-container .ur-membership-container.layout-block .membership-block .ur-membership-amount-wrapper .membership-amount {
+  color: #1f1f1f;
+  font-weight: 700;
+  font-size: 32px;
+  text-align: left;
 }
-.ur-membership-list-container
-	.ur-membership-container.layout-block
-	.membership-block
-	.ur-membership-amount-wrapper
-	.ur-membership-duration {
-	color: #6b6b6b;
-	font-size: 15px;
-	font-weight: 400;
-	margin-top: 8px;
+.ur-membership-list-container .ur-membership-container.layout-block .membership-block .ur-membership-amount-wrapper .ur-membership-duration {
+  color: #6b6b6b;
+  font-size: 15px;
+  font-weight: 400;
+  margin-top: 8px;
 }
-.ur-membership-list-container
-	.ur-membership-container.layout-block
-	.membership-block
-	.membership-title {
-	color: #1f1f1f;
-	font-size: 22px;
-	font-weight: 800;
-	padding-top: 0;
-	text-align: left;
+.ur-membership-list-container .ur-membership-container.layout-block .membership-block .membership-title {
+  color: #1f1f1f;
+  font-size: 22px;
+  font-weight: 800;
+  padding-top: 0;
+  text-align: left;
 }
-.ur-membership-list-container
-	.ur-membership-container.layout-block
-	.membership-block
-	.membership-body
-	.membership-signup-button {
-	width: 100%;
-	cursor: pointer;
-	font-size: 16px;
-	font-weight: 600;
-	margin-top: 16px;
-	line-height: 24px;
-	background: #475bb2;
-	color: white;
-	padding: 12px 0;
-	border-radius: 5px;
-	border: none;
-	font-family: inherit;
+.ur-membership-list-container .ur-membership-container.layout-block .membership-block .membership-body .membership-signup-button {
+  width: 100%;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 16px;
+  line-height: 24px;
+  background: #475bb2;
+  color: white;
+  padding: 12px 0;
+  border-radius: 5px;
+  border: none;
+  font-family: inherit;
 }
-.ur-membership-list-container
-	.ur-membership-container.layout-block
-	.membership-block
-	.membership-footer {
-	display: flex;
-	flex-direction: column;
+.ur-membership-list-container .ur-membership-container.layout-block .membership-block .membership-footer {
+  display: flex;
+  flex-direction: column;
 }
-.ur-membership-list-container
-	.ur-membership-container.layout-block
-	.membership-block
-	.membership-footer
-	.membership-description {
-	padding-top: 10px;
-	margin-top: 20px;
-	border-top: 1px solid #e9e9e9;
-	text-align: left;
-	color: #383838;
+.ur-membership-list-container .ur-membership-container.layout-block .membership-block .membership-footer .membership-description {
+  padding-top: 10px;
+  margin-top: 20px;
+  border-top: 1px solid #e9e9e9;
+  text-align: left;
+  color: #383838;
 }
-.ur-membership-list-container
-	.ur-membership-container.layout-block
-	.membership-block
-	.membership-footer
-	.membership-description:not(:has(*:not(:empty))) {
-	display: none;
+.ur-membership-list-container .ur-membership-container.layout-block .membership-block .membership-footer .membership-description:not(:has(*:not(:empty))) {
+  display: none;
 }
-.ur-membership-list-container
-	.ur-membership-container.layout-block
-	.membership-block
-	.membership-footer
-	.membership-description
-	ul,
-.ur-membership-list-container
-	.ur-membership-container.layout-block
-	.membership-block
-	.membership-footer
-	.membership-description
-	ol {
-	padding-left: 20px;
+.ur-membership-list-container .ur-membership-container.layout-block .membership-block .membership-footer .membership-description ul,
+.ur-membership-list-container .ur-membership-container.layout-block .membership-block .membership-footer .membership-description ol {
+  padding-left: 20px;
 }
 
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container.layout-row {
-	align-items: center;
+.user-registration-page .ur-membership-list-container .ur-membership-container.layout-row {
+  align-items: center;
 }
-<<<<<<< HEAD
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container.layout-row
-	.membership-block {
-	flex-direction: row;
-	padding: 0;
-	gap: 12px;
-	width: 60%;
-	background: none;
-	border-radius: 8px;
-	text-align: left;
-	box-sizing: border-box;
-	transition: all 0.3s ease-in-out;
-	margin-bottom: 0;
-	border: 1px solid var(--Grey-grey-50, #e9e9e9);
-	align-items: center;
-=======
 .user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block {
   flex-direction: row;
   padding: 0;
@@ -4215,66 +1607,24 @@ html {
   margin-bottom: 0;
   border: 1px solid var(--Grey-grey-50, #e9e9e9);
   align-items: center;
->>>>>>> master
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container.layout-row
-	.membership-block
-	.ur-membership-amount-wrapper {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 4px;
+.user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .ur-membership-amount-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container.layout-row
-	.membership-block
-	.ur-membership-amount-wrapper
-	.membership-amount {
-	color: #1f1f1f;
-	font-size: 28px;
-	font-weight: 700;
+.user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .ur-membership-amount-wrapper .membership-amount {
+  color: #1f1f1f;
+  font-size: 28px;
+  font-weight: 700;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container.layout-row
-	.membership-block
-	.ur-membership-amount-wrapper
-	.ur-membership-duration {
-	color: #6b6b6b;
-	font-size: 15px;
-	font-weight: 400;
-	margin-top: 8px;
+.user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .ur-membership-amount-wrapper .ur-membership-duration {
+  color: #6b6b6b;
+  font-size: 15px;
+  font-weight: 400;
+  margin-top: 8px;
 }
-<<<<<<< HEAD
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container.layout-row
-	.membership-block
-	.membership-signup-button {
-	width: 100%;
-	cursor: pointer;
-	font-size: 16px;
-	font-weight: 600;
-	line-height: 24px;
-	background: var(--ur-button-background-normal-color, #475bb2);
-	color: var(--ur-button-text-normal-color, #ffffff);
-	padding: 12px 0;
-	margin-top: 20px;
-	border-radius: 5px;
-	border: none;
-	font-family: inherit;
-}
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container.layout-row
-	.membership-block
-	.membership-signup-button:hover {
-	background: var(--ur-button-background-hover-color, #475bb2);
-	color: var(--ur-button-text-hover-color, #ffffff);
-=======
 .user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .membership-signup-button {
   width: 100%;
   cursor: pointer;
@@ -4292,343 +1642,48 @@ html {
 .user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .membership-signup-button:hover {
   background: var(--ur-button-background-hover-color, #475bb2);
   color: var(--ur-button-text-hover-color, #ffffff);
->>>>>>> master
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container.layout-row
-	.membership-block
-	.left-container {
-	flex: 1;
-	padding: 32px;
-	justify-content: center;
-	border-right: 1px solid #e9e9e9;
-	height: stretch;
-	align-content: center;
+.user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .left-container {
+  flex: 1;
+  padding: 32px;
+  justify-content: center;
+  border-right: 1px solid #e9e9e9;
+  height: stretch;
+  align-content: center;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container.layout-row
-	.membership-block
-	.left-container
-	.membership-title {
-	color: #1f1f1f;
-	font-size: 22px;
-	font-weight: 700;
-	line-height: 36px;
-	padding-top: 0;
-	text-align: left;
+.user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .left-container .membership-title {
+  color: #1f1f1f;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 36px;
+  padding-top: 0;
+  text-align: left;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container.layout-row
-	.membership-block
-	.left-container
-	.membership-description {
-	text-align: left;
-	color: #383838;
+.user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .left-container .membership-description {
+  text-align: left;
+  color: #383838;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container.layout-row
-	.membership-block
-	.left-container
-	.membership-description
-	ul,
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container.layout-row
-	.membership-block
-	.left-container
-	.membership-description
-	ol {
-	padding-left: 20px;
+.user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .left-container .membership-description ul,
+.user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .left-container .membership-description ol {
+  padding-left: 20px;
 }
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container.layout-row
-	.membership-block
-	.right-container {
-	max-width: 250px;
-	width: 100%;
-	padding: 32px;
-	align-items: center;
-	text-align: center;
-	justify-content: center;
+.user-registration-page .ur-membership-list-container .ur-membership-container.layout-row .membership-block .right-container {
+  max-width: 250px;
+  width: 100%;
+  padding: 32px;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
 }
 
-.user-registration-page
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block:hover,
-.ur-multi-device-form-preview
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block:hover,
-#pg-container
-	.ur-membership-list-container
-	.ur-membership-container
-	.membership-block:hover {
-	background: none;
-	box-shadow: none;
+.user-registration-page .ur-membership-list-container .ur-membership-container .membership-block:hover,
+.ur-multi-device-form-preview .ur-membership-list-container .ur-membership-container .membership-block:hover,
+#pg-container .ur-membership-list-container .ur-membership-container .membership-block:hover {
+  background: none;
+  box-shadow: none;
 }
 
 .ur-thank-you-page {
-<<<<<<< HEAD
-	max-width: 800px !important;
-	width: 100%;
-	margin: 24px auto;
-	box-sizing: border-box;
-}
-.ur-thank-you-page .thank-you-page-container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	background-color: #ffffff;
-	padding: 48px;
-	border-radius: 7px;
-	border: 1px solid #f1f5f9;
-	box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.06);
-}
-@media screen and (max-width: 600px) {
-	.ur-thank-you-page .thank-you-page-container {
-		padding: 40px;
-	}
-}
-@media screen and (max-width: 420px) {
-	.ur-thank-you-page .thank-you-page-container {
-		padding: 30px;
-	}
-}
-.ur-thank-you-page .thank-you-page-container .ur-success-icon {
-	width: 80px;
-	height: 80px;
-	margin-bottom: 20px;
-	animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-@media screen and (max-width: 420px) {
-	.ur-thank-you-page .thank-you-page-container .ur-success-icon {
-		width: 60px;
-		height: 60px;
-	}
-}
-.ur-thank-you-page .thank-you-page-container .ur-success-icon svg {
-	width: 80px;
-	height: 80px;
-}
-@media screen and (max-width: 420px) {
-	.ur-thank-you-page .thank-you-page-container .ur-success-icon svg {
-		width: 60px;
-		height: 60px;
-	}
-}
-.ur-thank-you-page .thank-you-page-container .ur-headline {
-	margin-bottom: 16px;
-}
-.ur-thank-you-page .thank-you-page-container .ur-headline h1 {
-	font-size: 28px;
-	font-weight: 700;
-	color: #1f1f1f;
-	margin: 0;
-	line-height: 36px;
-	letter-spacing: -0.5px;
-	text-transform: capitalize;
-	text-wrap: unset;
-	text-align: center;
-}
-@media screen and (max-width: 420px) {
-	.ur-thank-you-page .thank-you-page-container .ur-headline h1 {
-		font-size: 22px;
-		line-height: 30px;
-	}
-}
-.ur-thank-you-page .thank-you-page-container .ur-message {
-	margin-bottom: 32px;
-}
-@media screen and (max-width: 420px) {
-	.ur-thank-you-page .thank-you-page-container .ur-message {
-		margin-bottom: 28px;
-	}
-}
-.ur-thank-you-page .thank-you-page-container .ur-message p {
-	font-size: 16px;
-	line-height: 24px;
-	margin: 0;
-	color: #6b6b6b;
-	font-weight: 400;
-	text-align: center;
-	letter-spacing: 0.15px;
-	text-wrap: unset;
-}
-@media screen and (max-width: 420px) {
-	.ur-thank-you-page .thank-you-page-container .ur-message p {
-		font-size: 15px;
-		line-height: 25px;
-	}
-}
-.ur-thank-you-page .thank-you-page-container .ur-message ul {
-	text-align: left;
-}
-.ur-thank-you-page .thank-you-page-container .ur-button-wrapper {
-	margin-bottom: 0px;
-}
-.ur-thank-you-page
-	.thank-you-page-container
-	.ur-button-wrapper
-	.ur-redirect-btn {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	gap: 8px;
-	padding: 14px 32px;
-	background: var(--ur-button-background-normal-color, #475bb2);
-	color: var(--ur-button-text-normal-color, #ffffff);
-	font-size: 16px;
-	font-weight: 500;
-	border: none;
-	border-radius: 4px;
-	text-decoration: none;
-	cursor: pointer;
-}
-@media screen and (max-width: 420px) {
-	.ur-thank-you-page
-		.thank-you-page-container
-		.ur-button-wrapper
-		.ur-redirect-btn {
-		font-size: 15px;
-		line-height: 25px;
-		padding: 12px 24px;
-	}
-}
-.ur-thank-you-page
-	.thank-you-page-container
-	.ur-button-wrapper
-	.ur-redirect-btn:hover {
-	background: var(--ur-button-background-hover-color, #38488e);
-	color: var(--ur-button-text-hover-color, #ffffff);
-}
-.ur-thank-you-page
-	.thank-you-page-container
-	.ur-button-wrapper
-	.ur-redirect-btn:focus {
-	outline: none;
-	box-shadow: none;
-}
-.ur-thank-you-page
-	.thank-you-page-container
-	.ur-button-wrapper
-	.ur-redirect-btn
-	svg {
-	width: 16px;
-	height: 16px;
-	stroke: #ffffff;
-	fill: none;
-	transition: transform 0.3s ease;
-}
-@media screen and (max-width: 420px) {
-	.ur-thank-you-page
-		.thank-you-page-container
-		.ur-button-wrapper
-		.ur-redirect-btn
-		svg {
-		display: none;
-	}
-}
-.ur-thank-you-page .thank-you-page-container .ur-bank-details {
-	width: auto;
-	margin: 30px 0;
-	padding: 20px;
-	align-items: center;
-	background-color: #f8f8fa;
-	border: 1px solid #edf2f7;
-	border-radius: 6px;
-	text-align: left;
-	font-size: 16px;
-	font-weight: 400;
-	color: #383838;
-	line-height: 30px;
-	gap: 12px;
-}
-.ur-thank-you-page
-	.thank-you-page-container
-	.ur-bank-details
-	.ur-bank-details-title {
-	font-size: 16px;
-	font-weight: 500;
-	margin: 0;
-	color: #1f1f1f;
-	border-bottom: 1px solid #e1e1e1;
-	padding-bottom: 10px;
-}
-.ur-thank-you-page .thank-you-page-container h3,
-.ur-thank-you-page .thank-you-page-container h4 {
-	margin: 0 0 12px 0;
-	color: #1a1a1a;
-	font-size: 16px;
-	font-weight: 600;
-}
-.ur-thank-you-page .thank-you-page-container p {
-	margin: 6px 0;
-	color: #495057;
-	font-size: 14px;
-	line-height: 1.5;
-}
-.ur-thank-you-page .thank-you-page-container table {
-	width: 100%;
-	margin-top: 12px;
-	border-collapse: collapse;
-}
-.ur-thank-you-page .thank-you-page-container table th,
-.ur-thank-you-page .thank-you-page-container table td {
-	padding: 8px;
-	text-align: left;
-	border-bottom: 1px solid #e9ecef;
-	font-size: 14px;
-}
-.ur-thank-you-page .thank-you-page-container table th {
-	font-weight: 600;
-	color: #1a1a1a;
-}
-.ur-thank-you-page .thank-you-page-container table td {
-	color: #495057;
-}
-
-.ur-transaction-info {
-	margin-bottom: 24px;
-	padding: 14px 18px;
-	background-color: #e7f3ff;
-	border-left: 4px solid #2680c2;
-	border-radius: 4px;
-	text-align: left;
-}
-.ur-transaction-info p {
-	margin: 0;
-	font-size: 14px;
-	color: #495057;
-	line-height: 1.5;
-}
-.ur-transaction-info strong {
-	color: #2680c2;
-	font-weight: 600;
-}
-
-.ur-footer p {
-	font-size: 14px;
-	color: #868e96;
-	line-height: 1.6;
-	margin: 0;
-}
-
-@keyframes scaleIn {
-	from {
-		transform: scale(0);
-		opacity: 0;
-	}
-	to {
-		transform: scale(1);
-		opacity: 1;
-	}
-=======
   max-width: 800px !important;
   width: 100%;
   margin: 24px auto;
@@ -4859,69 +1914,68 @@ html {
     transform: scale(1);
     opacity: 1;
   }
->>>>>>> master
 }
 @media print {
-	.ur-thank-you-page {
-		background-color: #ffffff;
-		min-height: auto;
-		padding: 0;
-	}
-	.thank-you-page-container {
-		box-shadow: none;
-		padding: 20px;
-	}
-	.thank-you-page-container .ur-button-wrapper {
-		display: none;
-	}
-	.thank-you-page-container .ur-success-icon {
-		box-shadow: none;
-	}
+  .ur-thank-you-page {
+    background-color: #ffffff;
+    min-height: auto;
+    padding: 0;
+  }
+  .thank-you-page-container {
+    box-shadow: none;
+    padding: 20px;
+  }
+  .thank-you-page-container .ur-button-wrapper {
+    display: none;
+  }
+  .thank-you-page-container .ur-success-icon {
+    box-shadow: none;
+  }
 }
 .ur-show-bank-details-toggle {
-	margin-bottom: 5px !important;
+  margin-bottom: 5px !important;
 }
 
 .user-registration-email__entries {
-	width: 100%;
-	border-collapse: collapse;
-	margin: 12px 0;
-	font-size: 14px;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 14px;
 }
 .user-registration-email__entries-tr:empty {
-	display: none;
+  display: none;
 }
 .user-registration-email__entries td {
-	padding: 10px 12px;
-	border: 1px solid #edf2f7;
-	vertical-align: top;
+  padding: 10px 12px;
+  border: 1px solid #edf2f7;
+  vertical-align: top;
 }
 .user-registration-email__entries-label {
-	width: 35%;
-	font-weight: 600;
-	color: #374151;
-	background-color: #f8f8fa;
-	white-space: nowrap;
+  width: 35%;
+  font-weight: 600;
+  color: #374151;
+  background-color: #f8f8fa;
+  white-space: nowrap;
 }
 .user-registration-email__entries-data {
-	color: #111827;
-	word-break: break-word;
-	background-color: #f8f8fa;
+  color: #111827;
+  word-break: break-word;
+  background-color: #f8f8fa;
 }
 .user-registration-email__entries-tr:nth-child(even) {
-	background-color: #fcfcfd;
+  background-color: #fcfcfd;
 }
 @media (max-width: 600px) {
-	.user-registration-email__entries td {
-		display: block;
-		width: 100%;
-		border-bottom: none;
-	}
-	.user-registration-email__entries-label {
-		border-bottom: 0;
-		padding-bottom: 4px;
-	}
-	.user-registration-email__entries-data {
-		padding-top: 0;
-	}
+  .user-registration-email__entries td {
+    display: block;
+    width: 100%;
+    border-bottom: none;
+  }
+  .user-registration-email__entries-label {
+    border-bottom: 0;
+    padding-bottom: 4px;
+  }
+  .user-registration-email__entries-data {
+    padding-top: 0;
+  }
 }
