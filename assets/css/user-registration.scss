@@ -456,6 +456,7 @@ textarea.ur-input-border-red {
 							}
 
 							input {
+
 								&[type="checkbox"],
 								&[type="radio"] {
 									margin-top: 0px;
@@ -475,6 +476,16 @@ textarea.ur-input-border-red {
 
 				.form-row {
 					display: block;
+
+					.btn-primary.set-new-pass-btn {
+						align-content: center;
+						min-height: 36px;
+						font-size: 14px;
+						line-height: 20px;
+						padding: 0 12px;
+						color: $primary_color;
+						border-color: $primary_color;
+					}
 				}
 
 				.stripe-container {
@@ -750,6 +761,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -800,6 +812,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -849,6 +862,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					.ur-field-item,
 					.form-row {
 						margin-bottom: 0;
@@ -901,6 +915,7 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
+
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -964,6 +979,7 @@ textarea.ur-input-border-red {
 			form {
 				.ur-form-row {
 					.ur-form-grid {
+
 						input[type="text"],
 						input[type="email"],
 						input[type="url"],
@@ -1118,6 +1134,7 @@ textarea.ur-input-border-red {
 			}
 
 			header {
+
 				p,
 				.button-group {
 					margin-bottom: 10px;
@@ -1215,6 +1232,7 @@ textarea.ur-input-border-red {
 }
 
 .edit-post-visual-editor {
+
 	.ur-gutenberg-form-selector-wrap,
 	.user-registration-gutenberg-form-selector-wrap {
 		h2 {
@@ -1444,7 +1462,7 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page {
 	.edit-post-layout {
-		.components-notice-list > div {
+		.components-notice-list>div {
 			padding-left: 50px;
 		}
 	}
@@ -1481,7 +1499,7 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page.is-fullscreen-mode {
 	.edit-post-layout {
-		.components-notice-list > div {
+		.components-notice-list>div {
 			padding-left: 125px;
 		}
 	}
@@ -1680,8 +1698,12 @@ span.ur-shortcode-form-embed-dot {
 			border-radius: 8px 0 0 0;
 			border-top: 1px solid #f1f1f1;
 			background: #f9f9f9;
+<<<<<<< Updated upstream
 			box-shadow:
 				0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+=======
+			box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+>>>>>>> Stashed changes
 				0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 			clip-path: inset(0px -1px -1px -1px);
 
@@ -1735,8 +1757,12 @@ span.ur-shortcode-form-embed-dot {
 .user-registration.ur-frontend-form {
 	background: $white;
 	border-radius: $border_radius_8;
+<<<<<<< Updated upstream
 	box-shadow:
 		0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+=======
+	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+>>>>>>> Stashed changes
 		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 	padding: $spacing_60px;
 
@@ -1791,8 +1817,10 @@ span.ur-shortcode-form-embed-dot {
 
 // Login Form Design ReVamped CSS
 body {
+
 	&[class*="user-registration-"],
 	&[class^="ur-"] {
+
 		/* Minimal WordPress Editor Styles */
 		.wp-editor-container {
 			border-radius: 8px !important;
@@ -1813,7 +1841,7 @@ body {
 				margin-bottom: 0 !important;
 				padding: 6px 8px !important;
 
-				&-grp > div {
+				&-grp>div {
 					padding: 0;
 				}
 
@@ -2080,7 +2108,7 @@ body {
 				display: block;
 			}
 
-			> ul {
+			>ul {
 				padding-left: 0;
 				margin: 0;
 				list-style: none;
@@ -2089,7 +2117,7 @@ body {
 	}
 
 	.user-registration-error {
-		> svg {
+		>svg {
 			display: none;
 		}
 	}
@@ -2098,6 +2126,7 @@ body {
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration {
 			&.ur-frontend-form {
+
 				&:has(.ur-grid-2),
 				&:has(.ur-grid-3) {
 					max-width: 1200px;
@@ -2116,9 +2145,11 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
+
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2152,6 +2183,7 @@ body {
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2178,9 +2210,11 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
+
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2202,9 +2236,11 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
+
 									input,
 									textarea,
 									select {
+
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2246,9 +2282,11 @@ body {
 					.user-registration-form-login {
 						.ur-form-row {
 							.ur-form-grid {
+
 								input,
 								textarea,
 								select {
+
 									&:not([type="radio"]),
 									&:not([type="checkbox"]),
 									&:not([type="file"]) {
@@ -2274,8 +2312,12 @@ body {
 				.ur-frontend-form {
 					&.login {
 						margin: 0px auto;
+<<<<<<< Updated upstream
 						box-shadow:
 							0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+=======
+						box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+>>>>>>> Stashed changes
 							0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 
 						.user-registration-error {
@@ -2512,10 +2554,8 @@ body {
 									border: $border_width solid $border-color;
 
 									&:focus {
-										border-color: var(
-											--ur-primary-color,
-											$primary_color
-										);
+										border-color: var(--ur-primary-color,
+												$primary_color);
 										outline: none;
 										box-shadow: none;
 									}
@@ -2608,7 +2648,7 @@ body {
 									}
 								}
 
-								> div {
+								>div {
 									display: block;
 									float: unset !important;
 									flex-direction: row-reverse;
@@ -2836,6 +2876,7 @@ body {
 										}
 
 										&.ursc_theme {
+
 											&_2,
 											&_3 {
 												.ursc-login-media {
@@ -2923,6 +2964,7 @@ body {
 					margin: 0 -10px;
 
 					.ur-field-item {
+
 						ul,
 						ol {
 							padding-left: 4px;
@@ -2930,6 +2972,7 @@ body {
 
 						.input-wrapper {
 							input {
+
 								&:not([type="checkbox"]),
 								&:not([type="radio"]) {
 									min-height: 50px;
@@ -3152,7 +3195,7 @@ body.user-registration-page {
 		.et-l {
 			.et-fb-modules-list {
 				ul {
-					> li {
+					>li {
 						position: relative;
 
 						// Registration Form Icon
@@ -3472,7 +3515,7 @@ body.user-registration-page {
 			margin: 0;
 		}
 
-		p > input.user-registration-Button.button {
+		p>input.user-registration-Button.button {
 			color: var(--ur-button-text-normal-color, $white);
 			background: var(
 				--ur-button-background-normal-color,
@@ -3520,5 +3563,10 @@ body.user-registration-page {
 }
 
 #ur-local-currency-switch-currency {
+<<<<<<< Updated upstream
 	margin-bottom: 16px !important;
 }
+=======
+	margin-bottom: 16px !important
+}
+>>>>>>> Stashed changes

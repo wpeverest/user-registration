@@ -78,6 +78,10 @@
 		&[type="search"] {
 			padding-right: $spacing_32px;
 		}
+
+		&[readonly] {
+			background: #ffffff;
+		}
 	}
 }
 

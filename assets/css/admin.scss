@@ -47,6 +47,7 @@ body {
 
 			.ur-admin-page-topnav,
 			.memberships,
+			.ur-registered-from,
 			div[class*="user-registration-"],
 			div[id*="user-registration-"],
 			table th,
@@ -634,6 +635,7 @@ body {
 			input {
 				&.code {
 					width: 280px;
+					height: 34px;
 					background: #fafafa;
 				}
 			}
@@ -3735,11 +3737,11 @@ a.button.ur-smart-tags-list-button {
 							background-position: center;
 							background-size: 100%;
 							display: block;
-							top: -1px;
-							left: 1px;
+							top: 0;
+							left: 0;
 							position: relative;
-							width: 19px;
-							height: 19px;
+							width: 18px;
+							height: 18px;
 						}
 					}
 
@@ -3826,6 +3828,7 @@ a.button.ur-smart-tags-list-button {
 
 	#nav-menu-header {
 		padding-right: $spacing_30px;
+		font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 
 		.ur-form-title {
 			font-weight: $semi_bold;
@@ -4187,8 +4190,7 @@ a.button.ur-smart-tags-list-button {
 				}
 
 				.form-row {
-					width: 100%;
-					max-width: 100%;
+					gap: $spacing_30px;
 					margin-bottom: $spacing_24px;
 
 					&.ur-enhanced-select,
@@ -4201,6 +4203,10 @@ a.button.ur-smart-tags-list-button {
 						margin-bottom: 0;
 					}
 
+					.ur-form-builder-toggle {
+						gap: $spacing_30px;
+					}
+
 					.ur-label {
 						font-size: 14px;
 						line-height: 24px;
@@ -4208,7 +4214,9 @@ a.button.ur-smart-tags-list-button {
 						display: flex;
 						align-items: center;
 						gap: $spacing_4px;
-						flex: 0 0 40%;
+						// flex: 0 0 40%;
+						max-width: 300px;
+						width: 100%;
 
 						&.checkbox {
 							font-size: 14px;
@@ -5273,7 +5281,7 @@ body.user-registration {
 	border: 0px !important;
 	padding: 0px !important;
 
-	#user-registration-list-filters-row{
+	#user-registration-list-filters-row {
 		display: none !important;
 	}
 
@@ -7460,22 +7468,25 @@ body.user-registration {
 
 #user-registration-pro-single-user-view {
 	display: flex;
+	flex-direction: row-reverse;
 	gap: 24px;
-	max-width: 1280px;
-	margin: 0px auto;
-	padding: $spacing_12px;
+	max-width: 100%;
+	margin: $spacing_24px;
+	// padding: $spacing_12px;
 
 	#user-registration-user-sidebar {
-		padding: $spacing_24px $spacing_24px $spacing_32px $spacing_24px;
-		max-width: 250px;
-		min-width: 250px;
 		display: flex;
 		align-items: center;
 		flex-direction: column;
 		gap: $spacing_24px;
 		border-radius: $border_radius_7;
-		background-color: $grey-0;
 		height: fit-content;
+		max-width: 360px;
+		width: 100%;
+		box-sizing: border-box;
+		padding: $spacing_24px;
+		background: $white;
+		border: $border_width solid $border-color;
 
 		@media (max-width: 991px) {
 			min-width: 200px;
@@ -7504,8 +7515,9 @@ body.user-registration {
 					text-align: center;
 
 					img {
-						width: 120px;
-						height: 120px;
+						width: 100px;
+						height: 100px;
+						border: $border_width solid $white;
 						border-radius: 50%;
 						margin: 0 auto;
 					}
@@ -7711,15 +7723,15 @@ body.user-registration {
 		display: flex;
 		flex-direction: column;
 		gap: $spacing_24px;
+		flex: 1;
 
 		.urm-admin-user-content-container {
 			display: flex;
 			flex-direction: column;
-			gap: $spacing-24px;
+			border: $border_width solid $border-color;
 			border-radius: $border_radius_7;
-			padding: $spacing-24px;
-			height: fit-content;
-			background-color: $grey-0;
+			padding: $spacing_24px;
+			background: $white;
 
 			&.user-registration-hidden {
 				display: none;
@@ -7729,11 +7741,17 @@ body.user-registration {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
+				gap: $spacing_16px;
+				margin: 0 0 $spacing_24px;
+				padding: 0 0 $spacing_16px;
+				border-bottom: $border_width solid $border-color;
 
 				h3 {
 					font-size: 18px;
-					font-weight: 500;
-					color: $grey-500;
+					line-height: 26px;
+					color: #383838;
+					margin: 0;
+					font-weight: $semi_bold;
 				}
 
 				#user-registration-edit-user-link {
@@ -8880,6 +8898,10 @@ body.user-registration-page {
 
 		tbody {
 			tr {
+				th {
+					padding-top: $spacing_18px;
+				}
+
 				td {
 					height: 38px;
 					align-content: flex-start;
@@ -9476,8 +9498,9 @@ body.user-registration-page {
 						border-radius: 4px;
 
 						&:has(.ur-tax-country-checkbox[type="checkbox"]:checked) {
-                        border-color: #475bb2;
-                    }
+							border-color: #475bb2;
+						}
+
 						.ur-tax-regions-popup-country-outer-wrapper {
 							display: flex;
 							align-items: center;
