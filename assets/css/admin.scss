@@ -9481,11 +9481,18 @@ body.user-registration-page {
 				overflow-x: hidden;
 
 				.ur-tax-regions-search-outer-container {
-					padding: 0 20px 20px 0;
+					padding: 0 34px 20px 0;
+					position: sticky;
+					top: 0;
+					z-index: 10;
 
 					span {
 						display: none;
 					}
+					.ur-tax-regions-search {
+						width: 100%;
+					}
+
 				}
 
 				.ur-tax-entire-country-and-state-wrapper {
