@@ -633,11 +633,26 @@ class StripeService {
 
 			return $response;
 		}
+		try {
 
-		$currency = get_option( 'user_registration_payment_currency', 'USD' );
+		$order_detail     = $this->orders_repository->get_order_detail( $member_order['ID'] );
+		$order_repository = new OrdersRepository();
+		$local_currency   = $order_repository
+			->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' );
 
-		$total_amount = ! empty( $member_order[ 'total_amount' ] ) ? $member_order[ 'total_amount' ] : '0.1';
-		$total_amount = ( 'JPY' === $currency ) ? $total_amount : $total_amount * 100;
+		$currency = ! empty( $local_currency['meta_value'] )
+			? strtoupper( $local_currency['meta_value'] )
+			: strtoupper( get_option( 'user_registration_payment_currency', 'USD' ) );
+
+		$total_amount = ! empty( $member_order['total_amount'] )
+			? (float) $member_order['total_amount']
+			: 0.0;
+
+		if ( in_array( $currency, array( 'JPY', 'KRW', 'VND', 'CLP', 'IDR' ), true ) ) {
+			$total_amount = (int) round( $total_amount );
+		} else {
+			$total_amount = (int) round( $total_amount * 100 );
+		}
 
 		$dynamic_price = \Stripe\Price::create([
 			'unit_amount' => $total_amount,
@@ -651,7 +666,6 @@ class StripeService {
 
 		$stripe_product_details[ 'price_id' ] = ! empty( $dynamic_price->id ) ? $dynamic_price->id : $stripe_product_details['price_id'];
 
-		try {
 			$customer       = \Stripe\Customer::retrieve( $customer_id );
 			$payment_method = \Stripe\PaymentMethod::retrieve( $payment_method_id );
 			$payment_method->attach(
@@ -686,7 +700,7 @@ class StripeService {
 			}
 
 			// handle coupon section
-			$order_detail = $this->orders_repository->get_order_detail( $member_order['ID'] );
+			// $order_detail = $this->orders_repository->get_order_detail( $member_order['ID'] );
 
 			if ( ! empty( $order_detail['coupon'] ) ) {
 				$coupon_details = ur_get_coupon_details( $order_detail['coupon'] );

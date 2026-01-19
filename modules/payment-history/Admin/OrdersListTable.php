@@ -364,6 +364,13 @@ class OrdersListTable extends \UR_List_Table {
 		$decimals            = isset( $currency_info['decimals'] ) ? (int) $currency_info['decimals'] : 2;
 		$coupon_discount     = 0;
 
+		$order_detail     = $this->orders_repository->get_order_detail( $item['order_id'] );
+		$order_repository = new OrdersRepository();
+		$local_currency   = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' );
+
+		$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
+		$symbol = ur_get_currency_symbol( $currency );
+
 		if ( isset( $item['subscription_id'] ) ) {
 			$subscription = ( new MembersSubscriptionRepository() )->get_subscription_by_subscription_id( absint( $item['subscription_id'] ) );
 			if ( ! empty( $subscription ) && ! empty( $subscription['coupon'] ) ) {

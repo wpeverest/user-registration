@@ -8,6 +8,7 @@
 <div id="ur-membership-registration" class="ur_membership_registration_container ur-form-container">
 	<?php
 
+	$base_currency      = get_option( 'user_registration_payment_currency', 'USD' );
 	use GeoIp2\WebService\Client;
 	use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 	use WPEverest\URMembership\Local_Currency\Admin\Api;
@@ -46,7 +47,6 @@
 			$pricing_zone       = CoreFunctions::ur_get_all_pricing_zone_data();
 			$switch_currency    = ur_string_to_bool( get_option( 'user_registration_switch_local_currency_option', 0 ) );
 			$enable_geolocation = ur_string_to_bool( get_option( 'user_registration_local_currency_by_geolocation', '0' ) );
-			$base_currency      = get_option( 'user_registration_payment_currency', 'USD' );
 
 			$currency_data = Api::ur_get_local_currency_by_geolocation( $enable_geolocation );
 
@@ -60,6 +60,8 @@
 				class="ur-label ur_membership_local_currency"><?php echo __( 'Switch Currency', 'user-registration' ); ?></label>
 				<select id="ur-local-currency-switch-currency" name="ur_local_currency_switch_currency">
 					<?php
+
+					echo '<option value="' . $base_currency . '">' . ur_get_currency_name_by_key( $base_currency ) . '</option>';
 					foreach ( $pricing_zone as $key => $zone ) {
 						if ( empty( $zone['meta']['ur_local_currency'] ) ) {
 							continue;
