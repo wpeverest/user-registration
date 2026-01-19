@@ -833,22 +833,60 @@ function urcr_apply_content_drip() {
 
 						$active_type = $drip['activeType'];
 						$value       = $drip['value'];
-						if ( 'fixed_date' === $active_type ) {
-							$date = isset( $value['fixed_date']['date'] ) ? $value['fixed_date']['date'] : '';
-							$time = isset( $value['fixed_date']['time'] ) ? $value['fixed_date']['time'] : '';
+						$user_id     = get_current_user_id();
 
-							$drip_timestamp = strtotime( $date . ' ' . $time );
+						$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
+						$memberships        = $members_repository->get_member_membership_by_id( $user_id );
+
+						if ( ! empty( $memberships ) ) {
 
 							$current_timestamp = current_time( 'timestamp' );
 
-							if ( $current_timestamp <= $drip_timestamp ) {
+							$earliest_drip_timestamp = null;
+
+							foreach ( $memberships as $membership ) {
+
+								$start_date = $membership['start_date']; // e.g. "2026-01-16 00:00:00"
+								if ( 'fixed_date' === $active_type ) {
+
+									$date = isset( $value['fixed_date']['date'] ) ? $value['fixed_date']['date'] : '';
+									$time = isset( $value['fixed_date']['time'] ) ? $value['fixed_date']['time'] : '';
+
+									if ( ! empty( $date ) && ! empty( $time ) ) {
+										$drip_timestamp = strtotime( $date . ' ' . $time );
+									} else {
+										continue; // skip if date/time missing
+									}
+
+									// Set earliest fixed-date drip time across memberships
+									if ( is_null( $earliest_drip_timestamp ) || $drip_timestamp < $earliest_drip_timestamp ) {
+										$earliest_drip_timestamp = $drip_timestamp;
+									}
+								} elseif ( 'days_after' === $active_type ) {
+
+									$days_after       = isset( $value['days_after']['days'] ) ? $value['days_after']['days'] : 0;
+									$enroll_timestamp = strtotime( $start_date );
+									$drip_timestamp   = strtotime( "+{$days_after} days", $enroll_timestamp );
+
+									// Pick earliest drip time across memberships
+									if ( is_null( $earliest_drip_timestamp ) || $drip_timestamp < $earliest_drip_timestamp ) {
+										$earliest_drip_timestamp = $drip_timestamp;
+									}
+								}
+							}
+
+							if ( ! is_null( $earliest_drip_timestamp ) && $current_timestamp < $earliest_drip_timestamp ) {
+
+								// calculate remaining days ONCE here
+								$diff           = $earliest_drip_timestamp - $current_timestamp;
+								$remaining_days = (int) ceil( $diff / DAY_IN_SECONDS );
+
+								// pass it to drip args
+								$drip['remaining_days'] = $remaining_days;
+
 								$waiting = urcr_show_content_drip_message( $drip, $post );
-								break;
 							}
 						}
-						// elseif ( 'days_after' === $active_type ) {
-						//  //calculate days
-						// }
 					}
 				}
 			}

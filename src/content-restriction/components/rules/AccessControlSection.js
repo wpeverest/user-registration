@@ -249,15 +249,17 @@ const AccessControlSection = ({
 											)
 										}
 									/>
-									{isProAccess() && isDripContent() && (
-										<DripThisContent
-											onContentTargetsChange={
-												onContentTargetsChange
-											}
-											contentTargets={contentTargets}
-											target={target}
-										/>
-									)}
+									{isProAccess() &&
+										isDripContent() &&
+										"membership" === ruleType && (
+											<DripThisContent
+												onContentTargetsChange={
+													onContentTargetsChange
+												}
+												contentTargets={contentTargets}
+												target={target}
+											/>
+										)}
 									<button
 										type="button"
 										className="button-link urcr-target-remove"
