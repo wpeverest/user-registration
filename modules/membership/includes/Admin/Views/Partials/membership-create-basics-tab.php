@@ -20,11 +20,11 @@
 			<div class="ur-input-type-membership-name ur-admin-template" style="width: 100%">
 				<div class="ur-field" data-field-key="membership_name">
 					<input type="text" data-key-name="Membership Name"
-						   id="ur-input-type-membership-name" name="ur_membership_name"
-						   style="width: 100%"
-						   autocomplete="off"
-						   value="<?php echo isset( $membership->post_title ) && ! empty( $membership->post_title ) ? esc_html( $membership->post_title ) : ''; ?>"
-						   required>
+							id="ur-input-type-membership-name" name="ur_membership_name"
+							style="width: 100%"
+							autocomplete="off"
+							value="<?php echo isset( $membership->post_title ) && ! empty( $membership->post_title ) ? esc_html( $membership->post_title ) : ''; ?>"
+							required>
 				</div>
 			</div>
 		</div>
@@ -78,12 +78,12 @@
 					<label class="ur-membership-types" for="ur-membership-free-type">
 						<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
 							<input data-key-name="Type" id="ur-membership-free-type"
-								   type="radio" value="free"
-								   name="ur_membership_type"
-								   style="margin: 0"
-								   checked
+									type="radio" value="free"
+									name="ur_membership_type"
+									style="margin: 0"
+									checked
 								<?php echo isset( $membership_details['type'] ) && 'free' === $membership_details['type'] ? 'checked' : ''; ?>
-								   required>
+									required>
 							<label class="ur-p-2" for="ur-membership-free-type">
 								<b class="user-registration-image-label"><?php esc_html_e( 'Free', 'user-registration' ); ?></b>
 							</label>
@@ -93,7 +93,7 @@
 					<label class="ur-membership-types" for="ur-membership-paid-type">
 						<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
 							<input data-key-name="Type" id="ur-membership-paid-type" type="radio" style="margin: 0"
-								   value="paid" name="ur_membership_type" class="ur_membership_paid_type"
+									value="paid" name="ur_membership_type" class="ur_membership_paid_type"
 								<?php echo isset( $membership_details['type'] ) && 'paid' === $membership_details['type'] ? 'checked' : ''; ?>>
 							<label class="ur-p-2" for="ur-membership-paid-type">
 								<b class="user-registration-image-label"><?php esc_html_e( 'One-Time Payment', 'user-registration' ); ?></b>
@@ -102,11 +102,11 @@
 					</label>
 					<!-- Subscription Type -->
 					<label class="ur-membership-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>"
-						   for="ur-membership-subscription-type">
+							for="ur-membership-subscription-type" <?php echo ! UR_PRO_ACTIVE ? 'data-feature-gate="tooltip" data-gate-placement="right" data-gate-interactive="true" data-gate-content="ur-pro-subscription-content"' : ''; ?>>
 						<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
 							<input data-key-name="Type" id="ur-membership-subscription-type" style="margin: 0"
-								   type="radio" value="subscription" name="ur_membership_type"
-								   class="ur_membership_paid_type"
+									type="radio" value="subscription" name="ur_membership_type"
+									class="ur_membership_paid_type"
 								<?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'subscription' ? 'checked' : ''; ?>
 								<?php echo ! UR_PRO_ACTIVE ? 'disabled' : ''; ?>>
 							<label class="ur-p-2" for="ur-membership-subscription-type">
@@ -114,16 +114,37 @@
 							</label>
 						</div>
 					</label>
+					<?php if ( ! UR_PRO_ACTIVE ) : ?>
+					<template id="ur-pro-subscription-content">
+						<div class="ur-feature">
+							<div class="ur-feature__title">
+								<?php esc_html_e( 'Subscription-based memberships are available in Pro.', 'user-registration' ); ?>
+							</div>
+						<a class="ur-feature__btn" href="https://wpuserregistration.com/upgrade/?utm_source=ur-membership-create&utm_medium=upgrade-link&utm-campaign=lite-version">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>
+							<?php esc_html_e( 'Upgrade to Pro', 'user-registration' ); ?>
+						</a>
+						</div>
+					</template>
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>
 
 		<!-- Paid Plan Fields -->
 		<div id="paid-plan-container"
-			 class="<?php echo isset( $membership_details['type'] ) && in_array( $membership_details['type'], array(
-				 'paid',
-				 'subscription'
-			 ), true ) ? '' : 'ur-d-none'; ?>">
+			class="
+			<?php
+			echo isset( $membership_details['type'] ) && in_array(
+				$membership_details['type'],
+				array(
+					'paid',
+					'subscription',
+				),
+				true
+			) ? '' : 'ur-d-none';
+			?>
+			">
 			<!-- Membership Amount and Duration -->
 			<div class="ur-membership-input-container ur-d-flex ur-p-1" style="gap:20px;">
 				<div class="ur-label" style="width: 30%">
@@ -139,8 +160,8 @@
 						$currencies = ur_payment_integration_get_currencies();
 						?>
 						<input data-key-name="Amount" type="number" id="ur-membership-amount"
-							   value="<?php echo esc_attr( $membership_details['amount'] ?? "" ); ?>"
-							   name="ur_membership_amount" style="width: 80%" min="0" required>
+								value="<?php echo esc_attr( $membership_details['amount'] ?? '' ); ?>"
+								name="ur_membership_amount" style="width: 80%" min="0" required>
 						<span class="ur-currency"><?php echo esc_html( $currency ); ?></span>
 					</div>
 				</div>
@@ -157,11 +178,11 @@
 					</label>
 				</div>
 				<div class="ur-field ur-d-flex ur-align-items-center" data-field-key="membership_duration"
-					 style="gap: 20px;">
+					style="gap: 20px;">
 					<input data-key-name="Duration Value"
-						   value="<?php echo isset( $membership_details['subscription'] ) ? esc_attr( $membership_details['subscription']['value'] ) : ""; ?>"
-						   class="" type="number" name="ur_membership[duration]_value"
-						   autocomplete="off" id="ur-membership-duration-value" min="1">
+							value="<?php echo isset( $membership_details['subscription'] ) ? esc_attr( $membership_details['subscription']['value'] ) : ''; ?>"
+							class="" type="number" name="ur_membership[duration]_value"
+							autocomplete="off" id="ur-membership-duration-value" min="1">
 				</div>
 				<select id="ur-membership-duration" data-key-name="Duration"
 						class="ur-subscription-fields <?php echo isset( $membership_details['type'] ) && 'subscription' === $membership_details['type'] ? '' : 'ur-d-none'; ?>"
@@ -187,23 +208,31 @@
 
 			<!-- Payment Settings Notice -->
 			<div id="ur-membership-payment-settings-notice"
-				 class="<?php echo isset( $membership_details['type'] ) && in_array( $membership_details['type'], array(
-					 'paid',
-					 'subscription'
-				 ), true ) && empty( urm_get_all_active_payment_gateways( $membership_details['type'] ) ) ? '' : 'ur-d-none'; ?>"
-				 data-paid-configured="<?php echo empty( urm_get_all_active_payment_gateways( 'paid' ) ) ? '0' : '1'; ?>"
-				 data-subscription-configured="<?php echo empty( urm_get_all_active_payment_gateways( 'subscription' ) ) ? '0' : '1'; ?>">
+				class="
+				<?php
+				echo isset( $membership_details['type'] ) && in_array(
+					$membership_details['type'],
+					array(
+						'paid',
+						'subscription',
+					),
+					true
+				) && empty( urm_get_all_active_payment_gateways( $membership_details['type'] ) ) ? '' : 'ur-d-none';
+				?>
+				"
+				data-paid-configured="<?php echo empty( urm_get_all_active_payment_gateways( 'paid' ) ) ? '0' : '1'; ?>"
+				data-subscription-configured="<?php echo empty( urm_get_all_active_payment_gateways( 'subscription' ) ) ? '0' : '1'; ?>">
 				<p>
-					<?php esc_html_e( 'The payment setup is not configured yet. Please configure payment settings before proceeding.', 'user-registration' ) ?>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=payment' ) ) ?>"
-					   target="_blank"><?php esc_html_e( 'Configure', 'user-registration' ); ?></a>
+					<?php esc_html_e( 'The payment setup is not configured yet. Please configure payment settings before proceeding.', 'user-registration' ); ?>
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=payment' ) ); ?>"
+						target="_blank"><?php esc_html_e( 'Configure', 'user-registration' ); ?></a>
 				</p>
 			</div>
 		</div>
 
 		<?php
 		$is_new_installation = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
-		if ( ! $is_new_installation ):
+		if ( ! $is_new_installation ) :
 			require __DIR__ . '/membership-admin-payments.php';
 		endif;
 		?>
