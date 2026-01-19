@@ -3178,8 +3178,11 @@
 				var $stateElement = $( html );
 
 				$stateWrapper.append( $stateElement );
+				var tax_calculation_method 	= user_registration_params.tax_calculation_method;
 
-				apply_tax_calculation( $el, country, response.data.has_state, $stateElement );
+				if ( 'calculate_tax' === tax_calculation_method ) {
+					apply_tax_calculation( $el, country, response.data.has_state, $stateElement );
+				}
 			}
 		});
 	});
@@ -3196,8 +3199,10 @@
 		var $el = $(this);
 		var $countryElement = $el.closest( '.form-row' ).find( '.ur-field-address-country' );
 		var country = $countryElement.val();
-
-		apply_tax_calculation( $el, country, false, $el );
+		var tax_calculation_method 	= user_registration_params.tax_calculation_method;
+		if ( 'calculate_tax' === tax_calculation_method ) {
+			apply_tax_calculation( $el, country, false, $el );
+		}
 
 	});
 
@@ -3215,7 +3220,6 @@
 
 		var state 					= '';
 		var regions 				= user_registration_params.regions_list.regions[country];
-		var tax_calculation_method 	= user_registration_params.tax_calculation_method;
 		var defaultRate             = (regions && regions.rate != null) ? regions.rate : 0;
 		var membershipData  		= {};
 
@@ -3243,12 +3247,7 @@
 
 				if ( states.hasOwnProperty( state ) ) {
 					let taxRate = states[state];
-
-					if ( 'calculate_tax' === tax_calculation_method ) {
 						calculate_total( membershipData, taxRate );
-					}else{
-
-					}
 				}else{
 					if ( defaultRate !== undefined && defaultRate !== '' ) {
 						calculate_total( membershipData, defaultRate );
@@ -3260,6 +3259,7 @@
 		}else{
 			calculate_total( membershipData, defaultRate );
 		}
+		$('#ur-local-currency-switch-currency').trigger('change');
 	}
 
 	/**
