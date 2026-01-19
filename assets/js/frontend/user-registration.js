@@ -3330,12 +3330,12 @@
 		if ( total_input.length ) {
 			if( 'left' === user_registration_params.currency_pos ) {
 				total_input.text(user_registration_params.currency_symbol + total);
-				subTotalInput.text( user_registration_params.currency_symbol + membershipPrice );
-				taxInput.text( user_registration_params.currency_symbol + taxAmount );
+				subTotalInput.text( user_registration_params.currency_symbol + membershipPrice.toFixed(2) );
+				taxInput.text( user_registration_params.currency_symbol + taxAmount.toFixed(2) );
 			} else {
 				total_input.text( total + user_registration_params.currency_symbol );
-				subTotalInput.text( membershipPrice + user_registration_params.currency_symbol);
-				taxInput.text( taxAmount+ user_registration_params.currency_symbol );
+				subTotalInput.text( membershipPrice.toFixed(2) + user_registration_params.currency_symbol);
+				taxInput.text( taxAmount.toFixed(2) + user_registration_params.currency_symbol );
 			}
 		}else{
 			total_input = $( ".ur-total-amount[type='hidden']" );

@@ -791,11 +791,11 @@
 			total = parseFloat(total).toFixed(2);
 			if ("left" === urmf_data.curreny_pos) {
 				total_input.text(currency + total);
-				subTotalInput.text(currency + subTotal);
+				subTotalInput.text(currency + subTotal.toFixed(2));
 				taxInput.text(currency + taxAmount.toFixed(2));
 			} else {
 				total_input.text(total + currency);
-				subTotalInput.text(subTotal + currency);
+				subTotalInput.text(subTotal.toFixed(2) + currency);
 				taxInput.text(taxAmount.toFixed(2) + currency);
 			}
 		},
