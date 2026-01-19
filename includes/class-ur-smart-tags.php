@@ -836,7 +836,20 @@ class UR_Smart_Tags {
 						$first_name = get_user_meta( $user_id, 'first_name', true );
 						$content    = str_replace( '{{' . $other_tag . '}}', $first_name, $content );
 						break;
-
+					case 'first_name':
+						$username   = $values['username'] ?? $values['membership_tags']['username'] ?? null;
+						$user       = get_user_by( 'login', $username );
+						$user_id    = isset( $user->ID ) ? $user->ID : get_current_user_id();
+						$first_name = get_user_meta( $user_id, 'first_name', true );
+						$content    = str_replace( '{{' . $other_tag . '}}', $first_name, $content );
+						break;
+					case 'last_name':
+						$username   = $values[ 'username' ] ?? $values[ 'membership_tags' ][ 'username' ] ?? null;
+						$user       = get_user_by( 'login', $username );
+						$user_id    = isset( $user->ID ) ? $user->ID : get_current_user_id();
+						$last_name = get_user_meta( $user_id, 'last_name', true );
+						$content    = str_replace( '{{' . $other_tag . '}}', $last_name, $content ); 
+						break;
 					case 'membership_end_date':
 						$membership_end_date = ( isset( $values['membership_tags'] ) && isset( $values['membership_tags']['membership_plan_expiry_date'] ) ) ? $values['membership_tags']['membership_plan_expiry_date'] : '';
 						$content             = str_replace( '{{' . $tag . '}}', $membership_end_date, $content );
