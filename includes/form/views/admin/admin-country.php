@@ -10,7 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $instance = UR_Form_Field_Country::get_instance();
-error_log( print_r( $instance, true ) );
 ?>
 <div class="ur-input-type-country ur-admin-template">
 	<div class="ur-label">
