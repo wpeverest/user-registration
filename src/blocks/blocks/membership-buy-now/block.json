@@ -64,24 +64,18 @@
     "spacing": {
       "__experimentalSkipSerialization": true,
       "margin": true,
-      "padding": true,
-      "blockGap": true,
       "__experimentalDefaultControls": {
-        "padding": true,
-        "blockGap": true,
-        "margin": true
+        "padding": true
       }
     },
     "__experimentalBorder": {
       "color": true,
       "radius": true,
-      "style": true,
       "width": true,
       "__experimentalSkipSerialization": true,
       "__experimentalDefaultControls": {
         "color": true,
         "radius": true,
-        "style": true,
         "width": true
       }
     },
