@@ -3,6 +3,7 @@
  */
 import React from "react";
 import { __ } from "@wordpress/i18n";
+import { RawHTML } from "@wordpress/element";
 import { getURCRData } from "../../utils/localized-data";
 
 const ShortcodeAction = ({
@@ -52,17 +53,16 @@ const ShortcodeAction = ({
 					</div>
 				</div>
 			</div>
-			
+
 			<div className="urcr-global-migration-notice">
 				<p className="urcr-notice-wrap">
-					<span style={{ fontWeight: "bold" }}>
-						{__("Note:", "user-registration")}
-					</span>
-					{__(
-						" This setting `Select A Form` is a legacy setting and will be removed in our future version. You can use the `Show Message` option and use the editor directly to add any shortcodes.",
-						"user-registration"
-					)}
-				</p>	
+					<RawHTML>
+						{__(
+							"<strong>Note:</strong> This setting <strong>Render Shortcode</strong> is a legacy setting and will be removed in our future version. You can use the <strong>Show Message</strong> option and use the editor directly to add any shortcodes.",
+							"user-registration"
+						)}
+					</RawHTML>
+				</p>
 			</div>
 		</>
 	);
