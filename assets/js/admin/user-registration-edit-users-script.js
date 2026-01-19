@@ -9,6 +9,7 @@ jQuery(function ($) {
 	var UREditUsers = {
 		init: function () {
 			UREditUsers.initUIBindings();
+			UREditUsers.switchCountry();
 			//load password toggle if password field is available
 			if (
 				$(
@@ -20,6 +21,47 @@ jQuery(function ($) {
 			//add mask to all input mask classes
 			$(".ur-masked-input").inputmask("mask") ||
 				$(".ur-masked-input").inputmask();
+		},
+		switchCountry: function(){
+				$( document ).on( 'change', '.ur-field-address-country', function ( e ) {
+					e.stopPropagation();
+					e.preventDefault();
+
+					var $el = $(this);
+					var fieldId = $el.data('id');
+					var country = $el.val();
+
+					var data = {
+						action: 'user_registration_update_state_field',
+						security: l10n.user_registration_update_state_field,
+						country: country
+					};
+
+					$.ajax({
+						type: "POST",
+						url: l10n.ajax_url,
+						data: data,
+						success: function (response) {
+
+							var $stateWrapper = $el.siblings('.ur-field-address-state-outer-wrapper');
+							$stateWrapper.empty();
+
+							var html = '';
+
+							if (response.success && response.data.has_state) {
+								html += '<select class="ur-field-address-state select ur-frontend-field" name="' + fieldId + '_state">';
+								html += response.data.state;
+								html += '</select>';
+							} else {
+								html += '<input type="text" class="ur-field-address-state input-text ur-frontend-field" name="' + fieldId + '_state"/>';
+							}
+
+							var $stateElement = $( html );
+
+							$stateWrapper.append( $stateElement );
+						}
+					});
+				});
 		},
 		/**
 		 * Load password toggle in password input

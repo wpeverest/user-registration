@@ -6815,7 +6815,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						 * Embed the current country value to allow to remove it if it's not allowed.
 						 */
 						if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
-							printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( $value ), esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $value ] ) );
+							// printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( $value ), esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $value ] ) );
 						}
 						?>
 					</div>

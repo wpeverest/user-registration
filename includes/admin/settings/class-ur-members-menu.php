@@ -320,6 +320,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 						'delete_label'           => __( 'Delete', 'user-registration' ),
 						'cancel_label'           => __( 'Cancel', 'user-registration' ),
 					),
+					'user_registration_update_state_field' => wp_create_nonce( 'user_registration_update_state_field_nonce' ),
 				)
 			);
 			$this->localize_admin_script_data();
