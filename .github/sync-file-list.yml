@@ -10,5 +10,4 @@ wpeverest/user-registration-pro@v6.1.0-v2:
     - license.txt
     - phpcs.xml
     - uninstall.php
-    - webpack.config.js
     - wpml-config.xml
