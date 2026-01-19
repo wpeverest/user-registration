@@ -135,7 +135,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 		public function output_sections() {
 			global $current_section;
 
-			$sections = $this->get_sections( );
+			$sections = $this->get_sections();
 
 			if ( empty( $sections ) ) {
 				return;
@@ -152,26 +152,26 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 				$premium_tabs      = ur_premium_settings_tab();
 				$premium_tab       = urm_array_key_exists_recursive( $id, $premium_tabs );
 				$show_premium_icon = false;
-				$show_section = true;
+				$show_section      = true;
 				if ( ! empty( $premium_tab ) ) {
 					$license_data = ur_get_license_plan();
 					$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
 					$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
 
 					if ( ! empty( $premium_tab[ $id ]['plan'] ) ) {
-						$id_bc = str_replace('-', '_', $id );
+						$id_bc = str_replace( '-', '_', $id );
 
-						if( isset( $premium_tab[ $id ][ 'plugin' ] ) && is_plugin_active( $premium_tab[ $id ][ 'plugin' ] . '/' . $premium_tab[ $id ][ 'plugin' ] . '.php' ) && ( in_array( $premium_tab[ $id ][ 'plugin' ], $tab_slugs ) || in_array( $id, $tab_slugs ) || in_array( $id_bc, $tab_slugs ) ) ) {
+						if ( isset( $premium_tab[ $id ]['plugin'] ) && is_plugin_active( $premium_tab[ $id ]['plugin'] . '/' . $premium_tab[ $id ]['plugin'] . '.php' ) && ( in_array( $premium_tab[ $id ]['plugin'], $tab_slugs ) || in_array( $id, $tab_slugs ) || in_array( $id_bc, $tab_slugs ) ) ) {
 							$show_section = false;
 						}
 						//woocommerce compatibility.
-						if( 'woocommerce' === $id && ! is_plugin_active('woocommerce/woocommerce.php') ) {
+						if ( 'woocommerce' === $id && ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 							$show_section = false;
 						}
 
 						if ( in_array( $license_plan, $premium_tab[ $id ]['plan'], true ) ) {
 							$show_premium_icon = false;
-						} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $premium_tab[ $id ]['plugin'] ) && is_plugin_active( $premium_tab[ $id ][ 'plugin' ] . '/' . $premium_tab[ $id ]['plugin'] . '.php' ) ) {
+						} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $premium_tab[ $id ]['plugin'] ) && is_plugin_active( $premium_tab[ $id ]['plugin'] . '/' . $premium_tab[ $id ]['plugin'] . '.php' ) ) {
 							$show_premium_icon = false;
 						} else {
 							$show_premium_icon = true;
@@ -211,7 +211,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			global $current_section;
 			global $current_section_part;
 			$sections = $this->get_section_parts();
-			if( empty( $sections ) ) {
+			if ( empty( $sections ) ) {
 				return;
 			}
 			echo '<ul class="subsubsub user-registration-settings-parts" style="display: flex;">';
@@ -229,7 +229,6 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			}
 
 			echo '</ul>';
-
 		}
 		/**
 		 * Output the settings.

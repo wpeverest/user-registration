@@ -171,7 +171,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_TEMPLATE_DEBUG_MODE', false );
 			$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
 			$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
-			$this->define( 'UR_PRO_ACTIVE', false );
+			$this->define( 'UR_PRO_ACTIVE', true );
 			$this->define( 'UR_DEV', false );
 		}
 
@@ -302,6 +302,11 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			}
 
 			include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';
+
+			if ( ur_check_module_activation( 'membership' ) && ur_check_module_activation( 'content-restriction' ) && ur_check_module_activation( 'content-drip' ) ) {
+				include_once UR_ABSPATH . 'modules/content-drip/user-registration-content-drip.php';
+			}
+
 			include_once UR_ABSPATH . 'includes/blocks/block-types/class-ur-block-content-restriction.php';
 
 			/**

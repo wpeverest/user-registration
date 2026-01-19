@@ -16,7 +16,8 @@
       "WPEverest\\URMembership\\Payment\\": "modules/payment-history/",
       "WPEverest\\URM\\DiviBuilder\\": "includes/3rd-party/DiviBuilder",
       "WPEverest\\URM\\Masteriyo\\": "modules/masteriyo/includes/",
-      "WPEverest\\URM\\Analytics\\": "includes/Analytics"
+      "WPEverest\\URM\\Analytics\\": "includes/Analytics",
+      "WPEverest\\URM\\ContentDrip\\": "modules/content-drip/includes"
     }
   },
   "authors": [
