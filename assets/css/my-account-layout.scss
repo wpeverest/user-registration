@@ -25,7 +25,10 @@
 				.user-registration-MyAccount-navigation-link {
 					&.is-active {
 						a {
-							border-color: var(--ur-primary-color, $primary_color);
+							border-color: var(
+								--ur-primary-color,
+								$primary_color
+							);
 						}
 					}
 				}
@@ -114,7 +117,8 @@
 				}
 			}
 
-			.user-registration-profile-fields {}
+			.user-registration-profile-fields {
+			}
 		}
 	}
 
@@ -254,13 +258,14 @@
 								label {
 									display: block;
 									border-radius: 3px;
-									padding: $spacing_8px $spacing_12px $spacing_8px $spacing_34px;
+									padding: $spacing_8px $spacing_12px
+										$spacing_8px $spacing_34px;
 									border: 1px solid #999999;
 									cursor: pointer;
 									font-size: 14px;
 									font-weight: 500;
 									line-height: 150%;
-									color: #6B6B6B;
+									color: #6b6b6b;
 									margin: 0;
 
 									&::before,
@@ -282,7 +287,23 @@
 										width: 0;
 										height: 0;
 										border: none;
-										transition: 0.1s width cubic-bezier(0.075, 0.82, 0.165, 1) 0s, 0.3s width cubic-bezier(0.075, 0.82, 0.165, 2) 0.1s;
+										transition:
+											0.1s width
+												cubic-bezier(
+													0.075,
+													0.82,
+													0.165,
+													1
+												)
+												0s,
+											0.3s width
+												cubic-bezier(
+													0.075,
+													0.82,
+													0.165,
+													2
+												)
+												0.1s;
 									}
 								}
 
@@ -333,7 +354,7 @@
 								font-weight: 600;
 								font-size: 18px;
 								line-height: 24px;
-								color: #6B6B6B;
+								color: #6b6b6b;
 								margin-bottom: 12px;
 							}
 
@@ -341,7 +362,7 @@
 								font-weight: 400;
 								font-size: 15px;
 								line-height: 23px;
-								color: #6B6B6B;
+								color: #6b6b6b;
 								margin-bottom: 0;
 							}
 
@@ -354,16 +375,16 @@
 
 								.ur-button {
 									padding: 10px 16px;
-									background: #0170B9;
-									border: 1px solid #0170B9;
+									background: #0170b9;
+									border: 1px solid #0170b9;
 									border-radius: 3px;
 									font-weight: 500;
 									font-size: 14px;
 									line-height: 150%;
-									color: #FFFFFF;
+									color: #ffffff;
 									text-decoration: none;
-									transition: all .3s ease-in-out;
-									letter-spacing: .2px;
+									transition: all 0.3s ease-in-out;
+									letter-spacing: 0.2px;
 
 									&:hover {
 										background: #004c7d;
@@ -376,12 +397,12 @@
 									font-size: 14px;
 									line-height: 150%;
 									text-decoration-line: underline;
-									color: #6B6B6B;
-									letter-spacing: .1px;
-									transition: all .3s ease-in-out;
+									color: #6b6b6b;
+									letter-spacing: 0.1px;
+									transition: all 0.3s ease-in-out;
 
 									&:hover {
-										color: #0170B9;
+										color: #0170b9;
 									}
 								}
 
@@ -390,12 +411,12 @@
 									font-size: 14px;
 									line-height: 150%;
 									text-decoration-line: underline;
-									color: #6B6B6B;
-									letter-spacing: .1px;
-									transition: all .3s ease-in-out;
+									color: #6b6b6b;
+									letter-spacing: 0.1px;
+									transition: all 0.3s ease-in-out;
 
 									&:hover {
-										color: #0170B9;
+										color: #0170b9;
 									}
 								}
 							}
@@ -410,7 +431,7 @@
 								label {
 									font-weight: 400;
 									font-size: 15px;
-									color: #6B6B6B;
+									color: #6b6b6b;
 									line-height: 150%;
 									margin-top: 0;
 									margin-bottom: 16px;
@@ -421,21 +442,21 @@
 
 									input[type="password"] {
 										padding: 8px 14px;
-										background: #FFFFFF;
-										border: 1px solid #E1E1E1;
+										background: #ffffff;
+										border: 1px solid #e1e1e1;
 										border-radius: 4px;
 
 										&::placeholder {
-											color: #BABABA;
+											color: #bababa;
 										}
 									}
 
 									.ur-field-error {
-										background: #FFF4F4;
+										background: #fff4f4;
 										padding: 8px 12px 8px 16px;
-										color: #F25656;
+										color: #f25656;
 										font-weight: 500;
-										border-left: 3px solid #F25656;
+										border-left: 3px solid #f25656;
 										margin-top: 8px;
 										font-size: 14px;
 										display: flex;
@@ -459,17 +480,17 @@
 									font-weight: 500;
 									font-size: 14px;
 									line-height: 150%;
-									color: #FFFFFF;
+									color: #ffffff;
 									padding: 10px 16px;
-									background: #0170B9;
-									border: 1px solid #0170B9;
+									background: #0170b9;
+									border: 1px solid #0170b9;
 									border-radius: 3px;
 									letter-spacing: 0.2px;
-									transition: all .3s ease-in-out;
+									transition: all 0.3s ease-in-out;
 
 									&:hover {
-										background: #004C7D;
-										border-color: #004C7D;
+										background: #004c7d;
+										border-color: #004c7d;
 									}
 								}
 							}
@@ -487,14 +508,14 @@
 								line-height: 24px;
 								color: $white;
 								padding: 0 $spacing_12px;
-								background: #0170B9;
-								border: 1px solid #0170B9;
+								background: #0170b9;
+								border: 1px solid #0170b9;
 								border-radius: $border_radius_4;
-								transition: all .3s ease-in-out;
+								transition: all 0.3s ease-in-out;
 
 								&:hover {
-									background: #004C7D;
-									border-color: #004C7D;
+									background: #004c7d;
+									border-color: #004c7d;
 								}
 							}
 						}
@@ -519,13 +540,13 @@
 					tbody {
 						tr {
 							th {
-								background: #F1F5F9;
+								background: #f1f5f9;
 								font-weight: $semi_bold;
 							}
 
 							td {
 								&:last-child {
-									color: #59B259;
+									color: #59b259;
 									text-transform: capitalize;
 								}
 
@@ -635,7 +656,7 @@
 
 							.ur-front-spinner {
 								background-size: 16px 16px;
-								opacity: .7;
+								opacity: 0.7;
 								width: 16px;
 								height: 16px;
 								margin-left: 7px;
@@ -677,7 +698,8 @@
 				#membership-error-div {
 					width: 100%;
 					text-align: left;
-					padding: $spacing_8px $spacing_12px $spacing_8px $spacing_16px;
+					padding: $spacing_8px $spacing_12px $spacing_8px
+						$spacing_16px;
 					font-size: 14px;
 					font-weight: $medium;
 					display: none;
@@ -754,7 +776,7 @@
 			width: 30px;
 			cursor: pointer;
 
-			&:checked+.slider {
+			&:checked + .slider {
 				background: $primary_color;
 			}
 
@@ -771,8 +793,8 @@
 			position: absolute;
 			cursor: pointer;
 			inset: 0;
-			background: #DFE1EA;
-			transition: .4s;
+			background: #dfe1ea;
+			transition: 0.4s;
 
 			&.round {
 				border-radius: 30px;
@@ -790,7 +812,7 @@
 				left: 2px;
 				bottom: 2px;
 				background-color: #fff;
-				transition: .4s;
+				transition: 0.4s;
 				border-radius: 100%;
 			}
 		}
@@ -896,7 +918,7 @@
 				&__header {
 					display: flex;
 					justify-content: space-between;
-					border-bottom: $border_width solid #F4F4F4;
+					border-bottom: $border_width solid #f4f4f4;
 					padding-bottom: $spacing_16px;
 					margin-bottom: $spacing_32px;
 
@@ -938,11 +960,11 @@
 								z-index: 0;
 								transform: translate(-50%, -50%);
 								opacity: 0;
-								transition: all .3s ease-in-out;
+								transition: all 0.3s ease-in-out;
 							}
 
 							&:hover {
-								color: #475BB2;
+								color: #475bb2;
 
 								&::before {
 									opacity: 1;
@@ -959,7 +981,7 @@
 						h1 {
 							margin: 0;
 							text-align: left;
-							color: #16181A;
+							color: #16181a;
 							font-size: 20px;
 							font-weight: 500;
 							line-height: 30px;
@@ -992,7 +1014,7 @@
 							font-weight: $medium;
 							box-shadow: none;
 							text-decoration: none;
-							transition: all .3s ease;
+							transition: all 0.3s ease;
 
 							&:focus {
 								outline: none;
@@ -1006,14 +1028,32 @@
 							}
 
 							&.urm-profile-action-toggle {
-								color: var(--ur-button-text-normal-color, $white);
-								background: var(--ur-button-background-normal-color, $primary_color);
-								border-color: var(--ur-button-background-normal-color, $primary_color);
+								color: var(
+									--ur-button-text-normal-color,
+									$white
+								);
+								background: var(
+									--ur-button-background-normal-color,
+									$primary_color
+								);
+								border-color: var(
+									--ur-button-background-normal-color,
+									$primary_color
+								);
 
 								&:hover {
-									color: var(--ur-button-text-hover-color, $white);
-									background: var(--ur-button-background-hover-color, darken($primary_color, 5%));
-									border-color: var(--ur-button-background-hover-color, $primary_color);
+									color: var(
+										--ur-button-text-hover-color,
+										$white
+									);
+									background: var(
+										--ur-button-background-hover-color,
+										darken($primary_color, 5%)
+									);
+									border-color: var(
+										--ur-button-background-hover-color,
+										$primary_color
+									);
 								}
 							}
 
@@ -1130,12 +1170,24 @@
 								line-height: 25px;
 								border-radius: $border_radius_4;
 								border: 0;
-								background: var(--ur-button-background-normal-color, $primary_color);
-								color: var(--ur-button-text-normal-color, $white);
+								background: var(
+									--ur-button-background-normal-color,
+									$primary_color
+								);
+								color: var(
+									--ur-button-text-normal-color,
+									$white
+								);
 
 								&:hover {
-									background: var(--ur-button-background-hover-color, $primary_color);
-									color: var(--ur-button-text-hover-color, $white);
+									background: var(
+										--ur-button-background-hover-color,
+										$primary_color
+									);
+									color: var(
+										--ur-button-text-hover-color,
+										$white
+									);
 								}
 							}
 						}
@@ -1194,11 +1246,15 @@
 													height: 38px;
 													padding: 0 $spacing_12px;
 													border-radius: $border_radius_4;
-													border: $border_width solid #E1E1E1;
+													border: $border_width solid
+														#e1e1e1;
 													background: $grey-0;
 
 													&:focus {
-														border-color: var(--ur-primary-color, $primary_color);
+														border-color: var(
+															--ur-primary-color,
+															$primary_color
+														);
 													}
 												}
 											}
@@ -1218,14 +1274,26 @@
 										text-align: right;
 
 										.user-registration-Button.button {
-											background: var(--ur-button-background-normal-color, $primary_color);
+											background: var(
+												--ur-button-background-normal-color,
+												$primary_color
+											);
 											border: $border_width solid
-												var(--ur-button-background-normal-color, $primary_color);
+												var(
+													--ur-button-background-normal-color,
+													$primary_color
+												);
 											border-radius: $border_radius_4;
 
 											&:hover {
-												background: var(--ur-button-background-hover-color, #38488e);
-												border-color: var(--ur-button-background-hover-color, #38488e);
+												background: var(
+													--ur-button-background-hover-color,
+													#38488e
+												);
+												border-color: var(
+													--ur-button-background-hover-color,
+													#38488e
+												);
 											}
 										}
 									}
@@ -1258,7 +1326,7 @@
 										width: 100%;
 
 										.cancel-membership-button {
-											background: #F25656;
+											background: #f25656;
 											padding: $spacing_8px $spacing_16px;
 											display: flex;
 											gap: 6px;
@@ -1289,7 +1357,7 @@
 
 							.user-registration-pn-display-detail-area {
 								border-radius: 0px 8px 8px 0px;
-								border: 1px solid #F1F1F1;
+								border: 1px solid #f1f1f1;
 								background: $grey-0;
 								border-left: 0;
 							}
@@ -1337,7 +1405,7 @@
 								tbody {
 									tr {
 										&:has(th) {
-											background: #EDEFF7 !important;
+											background: #edeff7 !important;
 											border-radius: 6px !important;
 										}
 
@@ -1378,18 +1446,25 @@
 
 													&::after {
 														content: "";
-														background: darken($primary_color, 5%);
+														background: darken(
+															$primary_color,
+															5%
+														);
 														width: 0px;
 														height: 1.5px;
 														position: absolute;
 														bottom: -2px;
 														left: 0;
-														transition: all .3s ease-in-out;
+														transition: all 0.3s
+															ease-in-out;
 													}
 
 													&:hover {
 														background: transparent;
-														color: darken($primary_color, 5%);
+														color: darken(
+															$primary_color,
+															5%
+														);
 
 														&::after {
 															width: 100%;
@@ -1590,7 +1665,8 @@
 
 													.menu-trigger {
 														padding: 0;
-														border: $border_width solid transparent;
+														border: $border_width
+															solid transparent;
 														border-radius: 3px;
 														background: transparent;
 														width: 24px;
@@ -1605,7 +1681,8 @@
 															width: 18px;
 															height: 18px;
 															fill: #4e4e4e;
-															transition: all .3s ease;
+															transition: all 0.3s
+																ease;
 														}
 
 														&:hover {
@@ -1622,10 +1699,13 @@
 														flex-direction: column;
 														z-index: 50;
 														background: #fff;
-														border: 1px solid #d1d5db;
-														box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
+														border: 1px solid
+															#d1d5db;
+														box-shadow: 0 4px 16px
+															rgba(0, 0, 0, 0.12);
 														opacity: 1;
-														transition: all .15s ease;
+														transition: all 0.15s
+															ease;
 														min-width: 210px;
 														border-radius: 4px;
 														padding: 8px;
@@ -1637,7 +1717,8 @@
 														a {
 															color: #4b5563;
 															text-decoration: none;
-															transition: all .15s ease;
+															transition: all
+																0.15s ease;
 															font-size: 14px;
 															line-height: 20px;
 															font-weight: 400;
@@ -1673,7 +1754,8 @@
 											justify-content: center;
 											text-decoration: none;
 											gap: $spacing_6px;
-											padding: 0 $spacing_16px 0 $spacing_14px;
+											padding: 0 $spacing_16px 0
+												$spacing_14px;
 											background: $white;
 											border: 1.5px solid #dee2e6;
 											border-radius: $border_radius_4;
@@ -1683,7 +1765,7 @@
 											font-weight: $medium;
 											cursor: pointer;
 											min-height: 34px;
-											transition: all .3s;
+											transition: all 0.3s;
 
 											&:hover {
 												background: #f8f9fa;
@@ -1784,7 +1866,7 @@
 			&-navigation {
 				&--wrapper {
 					border-radius: $border_radius_10;
-					background: #F8F8FA;
+					background: #f8f8fa;
 					max-width: 260px;
 					width: 100%;
 					padding: $spacing_26px $spacing_20px $spacing_16px;
@@ -1804,7 +1886,7 @@
 						align-items: center;
 						margin-bottom: $spacing_24px;
 						padding-bottom: $spacing_24px;
-						border-bottom: $border_width solid #E2E8F0;
+						border-bottom: $border_width solid #e2e8f0;
 
 						.user-registration-img-container {
 							width: 42px;
@@ -1842,13 +1924,14 @@
 						gap: 2px;
 
 						.user-registration-MyAccount-navigation-link {
-							transition: all .3s;
+							transition: all 0.3s;
 
 							a {
-								padding: $spacing_12px $spacing_12px $spacing_12px $spacing_20px;
+								padding: $spacing_12px $spacing_12px
+									$spacing_12px $spacing_20px;
 								border-radius: $border_radius_4;
 								border-left: 3px solid transparent;
-								color: #4E4E4E;
+								color: #4e4e4e;
 								font-size: 14px;
 								font-weight: $medium;
 								line-height: 22px;
@@ -1862,14 +1945,23 @@
 							&:hover {
 								a {
 									background: #f0f0f0;
-									color: var(--ur-primary-color, $primary_color);
+									color: var(
+										--ur-primary-color,
+										$primary_color
+									);
 								}
 							}
 
 							&.is-active {
 								a {
-									color: var(--ur-primary-color, $primary_color);
-									background: var(--ur-primary-light, $blue-50);
+									color: var(
+										--ur-primary-color,
+										$primary_color
+									);
+									background: var(
+										--ur-primary-light,
+										$blue-50
+									);
 								}
 							}
 						}
@@ -1905,9 +1997,9 @@
 						font-size: 14px;
 						font-weight: 500;
 						line-height: 22px;
-						color: #4E4E4E;
+						color: #4e4e4e;
 						border-bottom: 3px solid $grey-0;
-						transition: all .3s;
+						transition: all 0.3s;
 
 						&:hover {
 							color: $primary_color;
@@ -1952,7 +2044,7 @@
 
 			h2 {
 				font-family: inherit;
-				border-bottom: $border_width solid #D3D3D3;
+				border-bottom: $border_width solid #d3d3d3;
 				padding-bottom: $spacing_16px;
 				width: 100%;
 				text-align: left;
@@ -1980,7 +2072,7 @@
 			gap: $spacing_16px;
 			margin-top: $spacing_20px;
 			border-radius: 0 0 5px 5px;
-			background: #F4F4F4;
+			background: #f4f4f4;
 
 			button {
 				font-family: inherit;
@@ -2043,17 +2135,37 @@ body {
 	text-align: left;
 }
 
-.rtl #user-registration.vertical .user-registration-MyAccount-content__header h1,
-.rtl .ur-frontend-form.login .ur-form-row .ur-form-grid .user-registration-form-row label,
+.rtl
+	#user-registration.vertical
+	.user-registration-MyAccount-content__header
+	h1,
+.rtl
+	.ur-frontend-form.login
+	.ur-form-row
+	.ur-form-grid
+	.user-registration-form-row
+	label,
 .rtl .ur-frontend-form .ur-form-row .ur-form-grid label.ur-label,
 .rtl .ur-frontend-form .ur-form-row .ur-form-grid legend.ur-label,
 .rtl .user-registration-logout-swal2-container .swal2-header .swal2-title,
-.rtl .user-registration-logout-swal2-container .swal2-header .swal2-content .swal2-content,
-.rtl .user-registration-MyAccount-content table.user-registration-email__entries td {
+.rtl
+	.user-registration-logout-swal2-container
+	.swal2-header
+	.swal2-content
+	.swal2-content,
+.rtl
+	.user-registration-MyAccount-content
+	table.user-registration-email__entries
+	td {
 	text-align: right;
 }
 
-.rtl #user-registration .user-registration-MyAccount-content .user-registration-membership-content .membership-row .membership-label {
+.rtl
+	#user-registration
+	.user-registration-MyAccount-content
+	.user-registration-membership-content
+	.membership-row
+	.membership-label {
 	min-width: 0px;
 }
 
@@ -2268,7 +2380,7 @@ body {
 	h1 {
 		margin: 0;
 		text-align: left;
-		color: #16181A;
+		color: #16181a;
 		font-size: 20px;
 		font-weight: 500;
 		line-height: 30px;

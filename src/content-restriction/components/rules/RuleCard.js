@@ -78,7 +78,6 @@ const RuleCard = ({
 		}
 	}, [isEditingTitle]);
 
-
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (
@@ -90,7 +89,7 @@ const RuleCard = ({
 				if (onRuleUpdate) {
 					onRuleUpdate({
 						...rule,
-						title: editedTitle.trim() || rule.title,
+						title: editedTitle.trim() || rule.title
 					});
 				}
 				setIsEditingTitle(false);
@@ -178,7 +177,7 @@ const RuleCard = ({
 			if (onRuleUpdate) {
 				onRuleUpdate({
 					...rule,
-					title: editedTitle.trim() || rule.title,
+					title: editedTitle.trim() || rule.title
 				});
 			}
 			setIsEditingTitle(false);

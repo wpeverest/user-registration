@@ -248,20 +248,38 @@
     },
     {
       "title": "PDF Invoice",
-      "slug" : "user-registration-pdf-invoice",
-      "name" : "User Registration - PDF Invoices",
+      "slug": "user-registration-pdf-invoice",
+      "name": "User Registration - PDF Invoices",
       "image": "extensions-json/sections/icons/content_restriction.png",
       "excerpt": "Allows payment invoice download for each successful payments right through your customer's account.",
       "category": "E-Commerce",
       "link": "https://docs.wpuserregistration.com/docs/content-restriction/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "19/01/2026",
-      "plan" : [
+      "plan": [
         "personal",
         "plus",
         "professional",
         "themegrill agency"
       ],
       "setting_url": "admin.php?page=user-registration-settings&tab=payment&section=invoice",
+      "demo_video_url": "pTGPvYvU_Ig"
+    },
+    {
+      "title": "Content Drip",
+      "slug": "user-registration-content-drip",
+      "name": "User Registration - Content Drip",
+      "image": "extensions-json/sections/icons/content_restriction.png",
+      "excerpt": "Drip content access over time, tailored to each user’s data and behavior.",
+      "category": "Membership",
+      "link": "https://docs.wpuserregistration.com/docs/content-drip/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "released_date": "22/09/2017",
+      "plan": [
+        "plus",
+        "personal",
+        "professional",
+        "themegrill agency"
+      ],
+      "setting_url": "admin.php?page=user-registration-content-restriction",
       "demo_video_url": "pTGPvYvU_Ig"
     }
   ]

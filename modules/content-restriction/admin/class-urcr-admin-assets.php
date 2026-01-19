@@ -488,6 +488,7 @@ class URCR_Admin_Assets {
 				'membership_rule_title'   => __( 'Membership Access Rule', 'user-registration' ),
 				'all_content_types_added' => __( 'All content types have been added', 'user-registration' ),
 			),
+			'is_drip_content'                        => ur_check_module_activation( 'content-drip' ),
 		);
 
 		/**

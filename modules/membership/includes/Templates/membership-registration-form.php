@@ -8,13 +8,13 @@
 <div id="ur-membership-registration" class="ur_membership_registration_container ur-form-container">
 	<?php
 
-	$base_currency      = get_option( 'user_registration_payment_currency', 'USD' );
+	$base_currency = get_option( 'user_registration_payment_currency', 'USD' );
 	use GeoIp2\WebService\Client;
 	use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 	use WPEverest\URMembership\Local_Currency\Admin\Api;
 
 	$is_coupon_addon_activated        = ur_check_module_activation( 'coupon' );
-	$is_tax_calculation_enabled		  = ur_check_module_activation( 'taxes' );
+	$is_tax_calculation_enabled       = ur_check_module_activation( 'taxes' );
 	$membership_ids_link_with_coupons = array();
 	if ( $is_coupon_addon_activated && function_exists( 'ur_get_membership_ids_link_with_coupons' ) ) :
 		$membership_ids_link_with_coupons = ur_get_membership_ids_link_with_coupons();
@@ -258,7 +258,7 @@
 	<!--	total container-->
 	<div id="urm-total_container"
 		class="ur_membership_frontend_input_container urm-d-none urm_hidden_payment_container">
-		<?php if( $is_coupon_addon_activated || $is_tax_calculation_enabled ): ?>
+		<?php if ( $is_coupon_addon_activated || $is_tax_calculation_enabled ) : ?>
 			<div class="urm-membership-sub-total-value">
 				<label class="ur_membership_input_label ur-label"
 				for="ur-membership-subtotal"><?php echo esc_html__( 'Sub Total', 'user-registration' ); ?></label>
@@ -271,7 +271,7 @@
 			</span>
 		</div>
 		<?php endif; ?>
-		<?php if( $is_tax_calculation_enabled ): ?>
+		<?php if ( $is_tax_calculation_enabled ) : ?>
 			<div class="urm-membership-tax-value">
 				<label class="ur_membership_input_label ur-label"
 				for="ur-membership-tax"><?php echo esc_html__( 'Tax', 'user-registration' ); ?></label>
@@ -284,7 +284,7 @@
 			</span>
 		</div>
 		<?php endif; ?>
-		<?php if( $is_coupon_addon_activated ): ?>
+		<?php if ( $is_coupon_addon_activated ) : ?>
 			<div class="urm-membership-coupons-value">
 				<label class="ur_membership_input_label ur-label"
 				for="ur-membership-coupons"><?php echo esc_html__( 'Coupons', 'user-registration' ); ?></label>

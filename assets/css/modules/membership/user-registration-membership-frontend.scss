@@ -131,9 +131,16 @@ html {
 							min-height: 40px;
 							padding: 0 12px;
 							border-radius: 4px;
-							border: 1px solid var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
-							background: var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
-							color: var(--ur-button-text-normal-color, $color_2);;
+							border: 1px solid
+								var(
+									--ur-button-background-normal-color,
+									var(--ur-primary-color, $color_1)
+								);
+							background: var(
+								--ur-button-background-normal-color,
+								var(--ur-primary-color, $color_1)
+							);
+							color: var(--ur-button-text-normal-color, $color_2);
 							font-size: 14px;
 							font-weight: 500;
 							line-height: 24px;
@@ -142,9 +149,18 @@ html {
 							transition: all 0.3s ease-in-out;
 
 							&:hover {
-								color: var(--ur-button-text-hover-color, $color_2);
-								background: var(--ur-button-background-hover-color, #38488e);
-								border-color: var(--ur-button-background-hover-color, #38488e);
+								color: var(
+									--ur-button-text-hover-color,
+									$color_2
+								);
+								background: var(
+									--ur-button-background-hover-color,
+									#38488e
+								);
+								border-color: var(
+									--ur-button-background-hover-color,
+									#38488e
+								);
 							}
 						}
 					}
@@ -350,7 +366,10 @@ html {
 				left: 0;
 			}
 
-			.urm-membership-total-value, .urm-membership-sub-total-value, .urm-membership-tax-value, .urm-membership-coupons-value {
+			.urm-membership-total-value,
+			.urm-membership-sub-total-value,
+			.urm-membership-tax-value,
+			.urm-membership-coupons-value {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
@@ -505,7 +524,10 @@ html {
 			width: 200px;
 			cursor: pointer;
 			font-size: 14px;
-			background: var(--ur-button-background-normal-color, $primary_color);
+			background: var(
+				--ur-button-background-normal-color,
+				$primary_color
+			);
 			color: var(--ur-button-text-normal-color, $white);
 			padding: 10px 0;
 			border-radius: 5px;
@@ -858,8 +880,8 @@ html {
 			}
 
 			.user-registration-membership_page_user-registration-frontend-list
-			.shortcode
-			.widefat {
+				.shortcode
+				.widefat {
 				width: calc(100% - 40px);
 			}
 
@@ -1041,7 +1063,10 @@ html {
 		font-size: 16px;
 		line-height: 24px;
 		font-weight: 600;
-		background: var(--ur-button-background-normal-color, var(--ur-primary-color, $color_1));
+		background: var(
+			--ur-button-background-normal-color,
+			var(--ur-primary-color, $color_1)
+		);
 		color: var(--ur-button-text-normal-color, $color_2);
 		padding: 14px 0;
 		border-radius: 5px;
@@ -1195,7 +1220,10 @@ html {
 						font-size: 16px;
 						font-weight: 600;
 						line-height: 24px;
-						background: var(--ur-button-background-normal-color, $primary_color);
+						background: var(
+							--ur-button-background-normal-color,
+							$primary_color
+						);
 						color: var(--ur-button-text-normal-color, $white);
 						padding: 12px 0;
 						margin-top: 20px;
@@ -1204,7 +1232,10 @@ html {
 						font-family: inherit;
 
 						&:hover {
-							background: var(--ur-button-background-hover-color, $primary_color);
+							background: var(
+								--ur-button-background-hover-color,
+								$primary_color
+							);
 							color: var(--ur-button-text-hover-color, $white);
 						}
 					}
@@ -1252,17 +1283,17 @@ html {
 }
 
 .user-registration-page
-.ur-membership-list-container
-.ur-membership-container
-.membership-block:hover,
+	.ur-membership-list-container
+	.ur-membership-container
+	.membership-block:hover,
 .ur-multi-device-form-preview
-.ur-membership-list-container
-.ur-membership-container
-.membership-block:hover,
+	.ur-membership-list-container
+	.ur-membership-container
+	.membership-block:hover,
 #pg-container
-.ur-membership-list-container
-.ur-membership-container
-.membership-block:hover {
+	.ur-membership-list-container
+	.ur-membership-container
+	.membership-block:hover {
 	background: none;
 	box-shadow: none;
 }
@@ -1367,20 +1398,20 @@ html {
 		.ur-button-wrapper {
 			margin-bottom: 0px;
 
-		.ur-redirect-btn {
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			gap: 8px;
-			padding: $spacing_14px $spacing_32px;
-			background: var(--ur-button-background-normal-color, #475bb2);
-			color: var(--ur-button-text-normal-color, #ffffff);
-			font-size: 16px;
-			font-weight: 500;
-			border: none;
-			border-radius: 4px;
-			text-decoration: none;
-			cursor: pointer;
+			.ur-redirect-btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				padding: $spacing_14px $spacing_32px;
+				background: var(--ur-button-background-normal-color, #475bb2);
+				color: var(--ur-button-text-normal-color, #ffffff);
+				font-size: 16px;
+				font-weight: 500;
+				border: none;
+				border-radius: 4px;
+				text-decoration: none;
+				cursor: pointer;
 
 				@media screen and (max-width: 420px) {
 					font-size: 15px;
@@ -1389,7 +1420,10 @@ html {
 				}
 
 				&:hover {
-					background: var(--ur-button-background-hover-color, #38488e);
+					background: var(
+						--ur-button-background-hover-color,
+						#38488e
+					);
 					color: var(--ur-button-text-hover-color, #ffffff);
 				}
 
@@ -1412,13 +1446,12 @@ html {
 			}
 		}
 
-
-	.ur-bank-details {
-		width: auto;
-		margin: 30px 0;
-		padding: 20px;
-		align-items: center;
-		background-color: #f8f8fa;
+		.ur-bank-details {
+			width: auto;
+			margin: 30px 0;
+			padding: 20px;
+			align-items: center;
+			background-color: #f8f8fa;
 			border: 1px solid #edf2f7;
 			border-radius: 6px;
 			text-align: left;
@@ -1654,7 +1687,7 @@ html {
 
 	td {
 		padding: 10px 12px;
-		border: 1px solid #EDF2F7;
+		border: 1px solid #edf2f7;
 		vertical-align: top;
 	}
 
@@ -1662,14 +1695,14 @@ html {
 		width: 35%;
 		font-weight: 600;
 		color: #374151;
-		background-color: #F8F8FA;
+		background-color: #f8f8fa;
 		white-space: nowrap;
 	}
 
 	&-data {
 		color: #111827;
 		word-break: break-word;
-		background-color: #F8F8FA;
+		background-color: #f8f8fa;
 	}
 
 	&-tr:nth-child(even) {

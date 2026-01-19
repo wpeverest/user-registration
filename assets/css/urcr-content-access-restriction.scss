@@ -80,9 +80,11 @@ $border-left-color_3: #0073aa;
 				cursor: pointer;
 
 				&:hover {
-					background: rgb(56.4578313253,
-							72.3614457831,
-							141.5421686747);
+					background: rgb(
+						56.4578313253,
+						72.3614457831,
+						141.5421686747
+					);
 				}
 
 				&:focus {
@@ -284,13 +286,13 @@ $border-left-color_3: #0073aa;
 				height: 38px;
 				flex: unset;
 				border-radius: 4px;
-				background: #EDEFF7;
-				transition: all .3s ease;
+				background: #edeff7;
+				transition: all 0.3s ease;
 
 				&::before {
 					font-size: 20px;
 					color: #646970;
-					transition: all .3s ease;
+					transition: all 0.3s ease;
 				}
 
 				&:hover {
@@ -307,12 +309,12 @@ $border-left-color_3: #0073aa;
 
 				.user-registration-editable-title__icon {
 					background: #475bb2;
-					transition: all .3s ease;
+					transition: all 0.3s ease;
 
 					&::before {
 						font-size: 20px;
 						color: #ffffff;
-						transition: all .3s ease;
+						transition: all 0.3s ease;
 					}
 				}
 			}
@@ -761,7 +763,6 @@ $border-left-color_3: #0073aa;
 			margin: 0px;
 		}
 	}
-
 }
 
 .urcr-settings-panel-actions {
@@ -1778,7 +1779,6 @@ $border-left-color_3: #0073aa;
 		padding: 0 !important;
 
 		.urcr-buttons-wrapper {
-
 			.urcr-condition-dropdown-wrapper,
 			.urcr-add-group-button {
 				display: flex;
@@ -1829,7 +1829,6 @@ $not-tag: #fcdddd;
 		}
 
 		&.urcr-conditional-logic-definitions {
-
 			&:has(.urcr-logic-group-rule-OR),
 			&:has(.urcr-logic-group-rule-AND),
 			&:has(.urcr-logic-group-rule-NOT) {
@@ -2498,7 +2497,7 @@ $not-tag: #fcdddd;
 			}
 		}
 
-		>.ur-d-flex {
+		> .ur-d-flex {
 			width: 100%;
 			gap: 20px;
 		}
@@ -2540,7 +2539,7 @@ $not-tag: #fcdddd;
 					width: 100%;
 				}
 
-				>select {
+				> select {
 					display: none;
 				}
 

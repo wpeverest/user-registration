@@ -945,7 +945,6 @@ class URCR_Frontend {
 		if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
 			return;
 		}
-
 		$urcr_meta_override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', true );
 		if ( $urcr_meta_override_global_settings ) {
 			$this->basic_restrictions();
@@ -1010,7 +1009,6 @@ class URCR_Frontend {
 					}
 				}
 			}
-
 			if ( $access_granted ) {
 				continue;
 			}
@@ -1025,6 +1023,11 @@ class URCR_Frontend {
 
 				do_action( 'urcr_post_content_restriction_applied', $restriction_rule, $post );
 			}
+		}
+
+		if ( ! $is_restriction_applied && UR_PRO_ACTIVE && ur_check_module_activation( 'content-drip' ) ) {
+			//apply content dripping.
+			return urcr_apply_content_drip();
 		}
 
 		return $is_restriction_applied;

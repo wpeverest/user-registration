@@ -63,6 +63,8 @@
 			self.initActionSection();
 
 			self.initialized = true;
+
+			self.dripInit();
 		},
 
 		initializeEmptyRule: function () {
@@ -1422,6 +1424,11 @@
 				typeLabel,
 				value || ""
 			);
+			$(".urcr-target-type-group").append(targetHtml);
+			var $newTarget = $(
+				'.urcr-target-item[data-target-id="' + targetId + '"]'
+			);
+			self.dripInit($newTarget);
 
 			$(".urcr-target-type-group").append(targetHtml);
 
@@ -1486,6 +1493,60 @@
 					type +
 					'"></select>';
 			}
+			var contentDrip = "";
+
+			if (
+				type !== "whole_site" &&
+				urcr_membership_access_data.is_pro &&
+				urcr_membership_access_data.is_drip_content
+			) {
+				let drip = {
+					activeType: "fixed_date",
+					value: {
+						fixed_date: { date: "", time: "" },
+						days_after: { days: 0 }
+					}
+				};
+
+				contentDrip += `
+    <div class="urcr-membership-drip"
+        data-active_type="${drip.activeType}"
+        data-fixed_date_date="${drip.value.fixed_date.date}"
+        data-fixed_date_time="${drip.value.fixed_date.time}"
+        data-days_after_days="${drip.value.days_after.days}">
+
+        <button type="button" class="urcr-drip__trigger">
+            <span class="dashicons dashicons-plus-alt2"></span> Drip This Content
+        </button>
+
+        <div class="urcr-drip__popover" style="display:none;">
+            <div class="urcr-drip__arrow"></div>
+
+            <div class="urcr-drip__tabs">
+                <div class="urcr-drip__tabList">
+                    <button type="button" class="urcr-drip__tab" data-value="fixed_date">Fixed Date</button>
+                    <button type="button" class="urcr-drip__tab" data-value="days_after">Days After</button>
+                </div>
+
+                <div class="urcr-drip__panels">
+                    <div class="urcr-drip__panel fixed_date-panel">
+                        <input type="date" class="urcr-drip__input drip-date"
+                            min="${urcr_membership_access_data.today}"
+                            value="${drip.value.fixed_date.date}" />
+
+                        <input type="time" class="urcr-drip__input drip-time"
+                            value="${drip.value.fixed_date.time}" />
+                    </div>
+
+                    <div class="urcr-drip__panel days_after-panel" style="display:none;">
+                        <input type="number" class="urcr-drip__input drip-days"
+                            value="${drip.value.days_after.days}" min="0" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+			}
 
 			return (
 				'<div class="urcr-target-item" data-target-id="' +
@@ -1495,6 +1556,7 @@
 				displayLabel +
 				":</span>" +
 				inputHtml +
+				contentDrip +
 				'<button type="button" class="button-link urcr-target-remove" aria-label="Remove">' +
 				'<span class="dashicons dashicons-no-alt"></span>' +
 				"</button>" +
@@ -2104,9 +2166,18 @@
 						break;
 				}
 
+				var defaultDrip = {
+					activeType: "fixed_date",
+					value: {
+						fixed_date: { date: "", time: "" },
+						days_after: { days: 0 }
+					}
+				};
+
 				var targetData = {
 					id: targetId,
-					type: type
+					type: type,
+					drip: dripData
 				};
 				// Only add value field if type is not whole_site
 				if (type !== "whole_site") {
@@ -2353,6 +2424,122 @@
 					}
 				}
 			];
+		},
+		dripInit: function (context) {
+			var self = this;
+
+			var $scope = context ? $(context) : $(document);
+
+			$scope.find(".urcr-membership-drip").each(function () {
+				var $wrap = $(this);
+
+				// avoid re-initializing the same row again
+				if ($wrap.data("drip-initialized")) {
+					return;
+				}
+
+				var activeType = $wrap.data("active_type") || "fixed_date";
+				setActiveType($wrap, activeType);
+
+				$wrap.data("drip-initialized", true);
+			});
+
+			if (!self.dripEventsBound) {
+				self.dripEventsBound = true;
+
+				// open/close popover (per row)
+				$(document).on(
+					"click",
+					".urcr-membership-drip .urcr-drip__trigger",
+					function (e) {
+						e.preventDefault();
+						e.stopPropagation();
+
+						$(".urcr-drip__popover").fadeOut();
+
+						var $wrap = $(this).closest(".urcr-membership-drip");
+						$wrap.find(".urcr-drip__popover").fadeToggle();
+					}
+				);
+
+				// click outside closes all
+				$(document).on("click", function (e) {
+					if (!$(e.target).closest(".urcr-membership-drip").length) {
+						$(".urcr-drip__popover").fadeOut();
+					}
+				});
+
+				// tab click
+				$(document).on(
+					"click",
+					".urcr-membership-drip .urcr-drip__tab",
+					function (e) {
+						e.preventDefault();
+
+						var $wrap = $(this).closest(".urcr-membership-drip");
+						var type = $(this).data("value");
+
+						$wrap.data("active_type", type);
+						$wrap.attr("data-active_type", type);
+
+						setActiveType($wrap, type);
+					}
+				);
+
+				// date change
+				$(document).on(
+					"change",
+					".urcr-membership-drip .drip-date",
+					function () {
+						var $wrap = $(this).closest(".urcr-membership-drip");
+						var v = $(this).val();
+
+						$wrap.attr("data-fixed_date_date", v);
+						$wrap.data("fixed_date_date", v);
+					}
+				);
+
+				// time change
+				$(document).on(
+					"change",
+					".urcr-membership-drip .drip-time",
+					function () {
+						var $wrap = $(this).closest(".urcr-membership-drip");
+						var v = $(this).val();
+
+						$wrap.attr("data-fixed_date_time", v);
+						$wrap.data("fixed_date_time", v);
+					}
+				);
+
+				// days change
+				$(document).on(
+					"change",
+					".urcr-membership-drip .drip-days",
+					function () {
+						var $wrap = $(this).closest(".urcr-membership-drip");
+						var v = $(this).val();
+
+						$wrap.attr("data-days_after_days", v);
+						$wrap.data("days_after_days", v);
+					}
+				);
+			}
+
+			function setActiveType($wrap, type) {
+				$wrap.find(".urcr-drip__tab").removeClass("active");
+				$wrap
+					.find('.urcr-drip__tab[data-value="' + type + '"]')
+					.addClass("active");
+
+				if (type === "fixed_date") {
+					$wrap.find(".fixed_date-panel").show();
+					$wrap.find(".days_after-panel").hide();
+				} else {
+					$wrap.find(".fixed_date-panel").hide();
+					$wrap.find(".days_after-panel").show();
+				}
+			}
 		}
 	};
 
