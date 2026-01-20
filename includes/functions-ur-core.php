@@ -10278,6 +10278,16 @@ if ( ! function_exists( 'urm_process_profile_fields' ) ) {
 					break;
 			}
 		}
+			if ( 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
+				$single_field[ $key ] = json_encode(
+					array(
+						'country' => sanitize_text_field( $single_field[ $key ] ),
+						'state'   => sanitize_text_field(
+							isset( $single_field[ $key . '_state' ] ) ? $single_field[ $key . '_state' ] : ''
+						),
+					)
+				);
+			}
 
 		/**
 		 * Action hook to perform validation of edit profile form.

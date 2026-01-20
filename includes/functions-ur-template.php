@@ -856,12 +856,17 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$states = isset( $state_list[ $country ] ) ? $state_list[ $country ] : '';
 
 					if ( ! empty( $args['enable_state'] ) && '1' == $args['enable_state'] ) {
-						$field .= '<label for="' . $args['id'] . '" class="ur-label ur-state-label">' . __( 'State', 'user-registration' ) . '</label>';
+						$field .= '<label for="' . $args['id'] . '" class="ur-label">' . __( 'State', 'user-registration' ) . '</label>';
 						$field .= '<span class="input-wrapper ur-field-address-state-outer-wrapper">';
-						if ( isset( $value['state'], $states[ $value['state'] ] ) ) {
-							$field                           .= '<select id="' . esc_attr( $args['id'] ) . '_state" class="ur-field-address-state select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . $args['id'] . '_state">';
+						if ( isset($value['state'], $states[ $value['state']  ] ) ) {
+							$field .= '<select id="' . esc_attr( $args['id'] ) . '_state" class="ur-field-address-state select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . $args['id'] . '_state">';
+							foreach ( $states as $state_key => $state_name ) {
+								$state_selected_attribute = '';
+								if ( '' !== $value['state'] ) {
 									$state_selected_attribute = selected( $value['state'], trim( $state_key ), false );
-								$field                       .= '<option value="' . esc_attr( trim( $state_key ) ) . '" ' . $state_selected_attribute . '>' . esc_attr( trim( $state_name ) ) . '</option>';
+								}
+								$field .= '<option value="' . esc_attr( trim( $state_key ) ) . '" ' . $state_selected_attribute . '>' . esc_attr( trim( $state_name ) ) . '</option>';
+							}
 							$field .= '</select>';
 						}else {
 							$field .= '<input type="text" class="ur-field-address-state input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . $args['id'] . '_state" value="' . esc_attr( ! empty( $value['state'] ) ? $value['state'] : '' ) . '" />';

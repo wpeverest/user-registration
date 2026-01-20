@@ -136,7 +136,7 @@ class OrderService {
 			$orders_meta[] = [
 				'meta_key'   => 'tax_data',
 				'meta_value' => json_encode( $tax_details )
-			]
+			];
 		}
 
 		if ( ! empty( $currency ) ) {
