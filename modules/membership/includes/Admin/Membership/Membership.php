@@ -883,6 +883,9 @@ class Membership {
 			);
 		}
 		if ( 'whole_site' !== $type ) {
+
+			$content_drip = ur_check_module_activation( 'content-drip' );
+
 			$drip            = isset( $target['drip'] ) ? $target['drip'] : array(
 				'activeType' => 'fixed_date',
 				'value'      => array(
@@ -897,7 +900,7 @@ class Membership {
 			$fixed_date_time = isset( $drip['value']['fixed_date']['time'] ) ? $drip['value']['fixed_date']['time'] : '';
 			$days_after_days = isset( $drip['value']['days_after']['days'] ) ? $drip['value']['days_after']['days'] : '';
 
-			$html .= '<div class="urcr-membership-drip" data-active_type="' . esc_attr( $drip['activeType'] ) . '"
+			$html .= '<div style="' . ( $content_drip ? '' : 'display:none;' ) . '" class="urcr-membership-drip" data-active_type="' . esc_attr( $drip['activeType'] ) . '"
 	data-fixed_date_date="' . esc_attr( $fixed_date_date ) . '"
 	data-fixed_date_time="' . esc_attr( $fixed_date_time ) . '"
 	data-days_after_days="' . esc_attr( $days_after_days ) . '">

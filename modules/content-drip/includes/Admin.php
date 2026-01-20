@@ -71,7 +71,7 @@ if ( ! class_exists( 'Admin' ) ) :
 			$sections = array();
 
 			$default_message = '<h3>' . __( 'Content Locked', 'user-registration' ) . '</h3>
-<p>' . __( 'This content will be available on {{urm_drip_time}}', 'user-registration' ) . '</p>
+<p>' . __( 'This content will be available {{urm_drip_time}}', 'user-registration' ) . '</p>
 <p>Please check back later!</p>';
 
 			$sections['user_registration_content_drip_settings'] = array(
