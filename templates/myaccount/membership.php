@@ -196,6 +196,9 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 												?>
 
 												<?php
+												//Provide manual renew in case of failed payment attempts exhausted via payment retry engine.
+												$can_renew = $can_renew || ( ur_string_to_bool( get_option( 'user_registration_payment_retry_enabled', false ) ) && intval( get_user_meta( $user_id, 'urm_is_payment_retrying', true ) ) >= intval( get_option( 'user_registration_payment_retry_count', 999 ) ) ); 
+
 												if ( $can_renew && $date_to_renew <= date( 'Y-m-d 00:00:00' ) && 'canceled' !== $membership['status'] ) {
 													$buttons[] = '<a class="ur-account-action-link membership-tab-btn renew-membership-button" href="' . esc_url( $redirect_page_url ) . '" data-pg-gateways="' . ( isset( $membership['active_gateways'] ) ? implode( ',', array_keys( $membership['active_gateways'] ) ) : '' ) . '" data-id="' . esc_attr( $membership['post_id'] ?? '' ) . '" data-team-id="' . esc_attr( $team_id ) . '"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
   <path d="M2 12A10 10 0 0 1 12 2h.004l.519.015a10.75 10.75 0 0 1 6.53 2.655l.394.363 2.26 2.26a1 1 0 1 1-1.414 1.414l-2.248-2.248-.31-.286A8.75 8.75 0 0 0 11.996 4 8 8 0 0 0 4 12a1 1 0 1 1-2 0Z"/>
