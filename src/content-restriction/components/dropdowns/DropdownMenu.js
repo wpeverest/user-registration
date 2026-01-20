@@ -47,7 +47,12 @@ const DropdownMenu = ({
 
 	const renderOptionItem = (option) => {
 		if (renderOption) {
-			return renderOption(option, handleOptionClick, handleKeyDown, selectedValue);
+			return renderOption(
+				option,
+				handleOptionClick,
+				handleKeyDown,
+				selectedValue
+			);
 		}
 
 		const isSelected = selectedValue === option.value;
@@ -57,10 +62,10 @@ const DropdownMenu = ({
 			<span
 				key={option.value}
 				role="button"
-				tabIndex={isDisabled ? -1 : 0}
+				// tabIndex={isDisabled ? -1 : 0}
 				className={`urcr-dropdown-option ${
 					isSelected ? "is-selected" : ""
-				} ${isDisabled ? "is-disabled" : ""}`}
+				} `}
 				onClick={(e) => handleOptionClick(option, e)}
 				onKeyDown={(e) => handleKeyDown(option, e)}
 			>
@@ -72,13 +77,22 @@ const DropdownMenu = ({
 	if (grouped) {
 		// Options are grouped: [{group: "Group Name", options: [...]}, ...]
 		return (
-			<div className={`urcr-dropdown-menu urcr-condition-field-dropdown-menu ${className}`}>
+			<div
+				className={`urcr-dropdown-menu urcr-condition-field-dropdown-menu ${className}`}
+			>
 				{options.map((group, groupIndex) => (
-					<div key={groupIndex} className="urcr-dropdown-group urcr-condition-field-dropdown-group">
+					<div
+						key={groupIndex}
+						className="urcr-dropdown-group urcr-condition-field-dropdown-group"
+					>
 						{group.group && (
-							<div className="urcr-dropdown-group-label urcr-condition-field-dropdown-group-label">{group.group}</div>
+							<div className="urcr-dropdown-group-label urcr-condition-field-dropdown-group-label">
+								{group.group}
+							</div>
 						)}
-						{group.options.map((option) => renderOptionItem(option, true))}
+						{group.options.map((option) =>
+							renderOptionItem(option, true)
+						)}
 					</div>
 				))}
 			</div>

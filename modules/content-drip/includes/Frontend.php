@@ -81,9 +81,14 @@ class Frontend {
 				continue;
 			}
 
+			// Validate against empty variables.
+			if ( empty( $access_rule['logic_map']['conditions'] ) || empty( $access_rule['logic_map']['conditions'] ) ) {
+				continue;
+			}
+
 			if ( urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule ) ) {
 				for ( $i = 0; $i < $posts_length; $i++ ) {
-					$post = $posts[ $i ];
+					$target_post = $posts[ $i ];
 					//Filtering the type = whole site.
 					$target_contents = array_filter(
 						$access_rule['target_contents'],
@@ -91,8 +96,7 @@ class Frontend {
 							return 'whole_site' !== $target_content['type'] || empty( $target_content['drip'] );
 						}
 					);
-
-					$is_target = urcr_is_target_post( $target_contents, $post );
+					$is_target       = self::is_target_post( $target_contents, $target_post );
 
 					if ( $is_target ) {
 
@@ -181,7 +185,7 @@ class Frontend {
 
 		ob_start();
 		urcr_get_template(
-			'base-content-drip-template.php',
+			'../content-drip/base-content-drip-template.php',
 			$drip
 		);
 		$styled_content = ob_get_clean();
@@ -202,5 +206,115 @@ class Frontend {
 		);
 
 		return true;
+	}
+
+	/**
+	 * See if the post is in the provided targets list.
+	 *
+	 * @param array $targets Targets list.
+	 * @param object|null $target_post Post to check against.
+	 *
+	 * @return bool
+	 * @since 2.0.0
+	 */
+	public static function is_target_post( $targets = array(), $target_post = null ) {
+
+		if ( is_array( $targets ) ) {
+			foreach ( $targets as $target ) {
+				if ( isset( $target['type'] ) && ! empty( $target['value'] ) ) {
+
+					$result = apply_filters(
+						'urmdrip_match_target_type',
+						null,
+						$target,
+						$target_post
+					);
+
+					if ( true === $result ) {
+						return true;
+					}
+
+					if ( false === $result ) {
+						continue;
+					}
+
+					switch ( $target['type'] ) {
+						case 'wp_posts':
+							$post_id         = ( 'object' === gettype( $target_post ) && $target_post->ID ) ? strval( $target_post->ID ) : '0';
+							$target_post_ids = (array) $target['value'];
+
+							if ( in_array( $post_id, $target_post_ids, true ) ) {
+								return true;
+							}
+							break;
+
+						case 'wp_pages':
+							$page_id         = ( 'object' === gettype( $target_post ) && $target_post->ID ) ? strval( $target_post->ID ) : '0';
+							$target_page_ids = (array) $target['value'];
+
+							if ( in_array( $page_id, $target_page_ids, true ) ) {
+								return true;
+							}
+							break;
+
+						case 'post_types':
+							$post_type         = ( 'object' === gettype( $target_post ) && $target_post->post_type ) ? strval( $target_post->post_type ) : '';
+							$post_type         = ( is_singular( 'product' ) && is_array( $target_post ) ) ? $target_post[0]->post_type : $post_type;
+							$target_post_types = (array) $target['value'];
+
+							if ( in_array( $post_type, $target_post_types, true ) ) {
+								return true;
+							}
+							$products_page_id = intval( get_option( 'woocommerce_shop_page_id' ) );
+							if ( is_object( $target_post ) && (int) $products_page_id === $target_post->ID ) {
+								return true;
+							}
+
+							break;
+
+						case 'taxonomy':
+							if ( ! empty( $target['taxonomy'] ) && ! empty( $target['value'] ) ) {
+								$products_page_id = intval( get_option( 'woocommerce_shop_page_id' ) );
+								$post_taxonomies  = get_post_taxonomies( $target_post );
+								if ( is_numeric( $target_post ) && $target_post == $products_page_id ) {
+									return true;
+								}
+
+								if ( ! in_array( $target['taxonomy'], (array) $post_taxonomies ) ) {
+									return - 1;
+								}
+
+								/**
+								 * Filter to modify the post taxonomy status.
+								 *
+								 * @since xx.xx.xx
+								 */
+								$post_status = apply_filters( 'user_registration_membership_post_taxonomy_status', '' );
+
+								if ( ! empty( $post_status ) && isset( $target_post->post_status ) && $target_post->post_status === $post_status ) {
+									return - 1;
+								}
+
+								$terms = get_the_terms( $target_post, $target['taxonomy'] );
+
+								if ( empty( $terms ) || is_wp_error( $terms ) ) {
+									return - 1;
+								}
+
+								foreach ( $terms as $term ) {
+									if ( in_array( $term->term_id, $target['value'] ) ) {
+										return true;
+									}
+								}
+							}
+							break;
+						default:
+							break;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 }

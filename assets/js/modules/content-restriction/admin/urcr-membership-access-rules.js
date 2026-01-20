@@ -428,12 +428,12 @@
 
 			$(document).on("click", ".urcr-content-type-option", function (e) {
 				e.preventDefault();
-				if (
-					$(this).hasClass("urcr-dropdown-option-disabled") ||
-					$(this).attr("aria-disabled") === "true"
-				) {
-					return;
-				}
+				// if (
+				// 	$(this).hasClass("urcr-dropdown-option-disabled") ||
+				// 	$(this).attr("aria-disabled") === "true"
+				// ) {
+				// 	return;
+				// }
 				var contentType = $(this).data("content-type");
 				self.addContentTarget(contentType);
 				$(".urcr-content-type-dropdown-menu")
@@ -445,12 +445,12 @@
 				"keydown",
 				".urcr-content-type-option",
 				function (e) {
-					if (
-						$(this).hasClass("urcr-dropdown-option-disabled") ||
-						$(this).attr("aria-disabled") === "true"
-					) {
-						return;
-					}
+					// if (
+					// 	$(this).hasClass("urcr-dropdown-option-disabled") ||
+					// 	$(this).attr("aria-disabled") === "true"
+					// ) {
+					// 	return;
+					// }
 					if (e.key === "Enter" || e.key === " ") {
 						e.preventDefault();
 						var contentType = $(this).data("content-type");
@@ -1837,11 +1837,9 @@
 					'<span role="button" tabindex="' +
 						tabIndex +
 						'" class="urcr-dropdown-option urcr-content-type-option ' +
-						disabledClass +
 						'" data-content-type="' +
 						ct.value +
 						'" ' +
-						disabledAttr +
 						">" +
 						ct.label +
 						"</span>"

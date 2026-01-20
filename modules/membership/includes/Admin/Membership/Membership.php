@@ -120,6 +120,7 @@ class Membership {
 		$localized_data['membership_id'] = $membership_id;
 		$localized_data['ajax_url']      = admin_url( 'admin-ajax.php' );
 		$localized_data['nonce']         = wp_create_nonce( 'urcr_manage_content_access_rule' );
+		$localized_data['today']         = date( 'Y-m-d' );
 
 		wp_localize_script(
 			'urcr-membership-access-rules',
@@ -898,7 +899,7 @@ class Membership {
 	data-days_after_days="' . esc_attr( $drip['value']['days_after']['days'] ) . '">
 
 	<button type="button" class="urcr-drip__trigger">
-		<span class="dashicons dashicons-plus-alt2"></span> Drip This Content
+		<span class="dashicons dashicons-plus-alt2"></span> ' . esc_html__( 'Drip This Content', 'user-registration' ) . '
 	</button>';
 
 			$html .= '<div class="urcr-drip__popover" style="display:none;">
@@ -912,7 +913,7 @@ class Membership {
 
 		<div class="urcr-drip__panels">
 			<div class="urcr-drip__panel fixed_date-panel">
-				<input type="date" class="urcr-drip__input drip-date" value="' . esc_attr( $drip['value']['fixed_date']['date'] ) . '" />
+				<input type="date" class="urcr-drip__input drip-date" min="' . esc_attr( date( 'Y-m-d' ) ) . '" value="' . esc_attr( $drip['value']['fixed_date']['date'] ) . '" />
 				<input type="time" class="urcr-drip__input drip-time" value="' . esc_attr( $drip['value']['fixed_date']['time'] ) . '" />
 			</div>
 
