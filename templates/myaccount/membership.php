@@ -45,6 +45,7 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 				<tbody class="ur-account-table__body">
 					<?php
 					foreach ( $membership_data as $data ) :
+						$subscription_service        = new \WPEverest\URMembership\Admin\Services\SubscriptionService();
 						$membership      = isset( $data['membership'] ) ? $data['membership'] : array();
 						$is_upgraded     = ! empty( $_GET['is_upgraded'] ) ? absint( ur_string_to_bool( $_GET['is_upgraded'] ) ) : false;
 						$message         = ! empty( $_GET['message'] ) ? esc_html( $_GET['message'] ) : '';
@@ -52,7 +53,7 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 						$is_delayed      = ! empty( $data['delayed_until'] );
 						$user_id         = get_current_user_id();
 						$is_renewing     = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_member_renewing', true ) );
-
+						$is_membership_expired = $subscription_service->is_user_membership_expired( $user_id, $membership['subscription_id'] );
 						$team_id             = '';
 						$is_user_team_member = false;
 						if ( ! empty( $data['team'] ) && ! empty( $data['team']['meta']['urm_team_data']['team_plan_type'] ) ) {
@@ -116,12 +117,12 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 								<td class="ur-account-table__cell ur-account-table__cell--status">
 									<?php
 									$status = '';
+
 									if ( isset( $membership['status'] ) && ! empty( $membership ) ) {
 										$status = 'inactive';
 										$status = ( '' != $membership['status'] ) ? $membership['status'] : $status;
 										if ( 'inactive' !== $status && 'free' !== $membership['post_content']['type'] && 'paid' !== $membership['post_content']['type'] && ! empty( $membership['billing_cycle'] ) ) {
-											$expiry_date = new DateTime( $membership['expiry_date'] );
-											if ( date( 'Y-m-d' ) > $expiry_date->format( 'Y-m-d' ) ) {
+											if ($is_membership_expired ) {
 												$status = 'expired';
 											}
 										}
@@ -207,7 +208,7 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 											endif;
 											?>
 											<?php
-											if ( 'canceled' !== $membership['status'] ) {
+											if ( 'canceled' !== $membership['status'] && !$is_membership_expired ) {
 												$buttons[] = '<a class="ur-account-action-link membership-tab-btn cancel-membership-button" data-id="' . esc_attr( $membership['subscription_id'] ?? '' ) . '"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
   <path d="M18.05 4.335a1.143 1.143 0 1 1 1.615 1.616L5.951 19.665a1.143 1.143 0 1 1-1.616-1.616L18.049 4.335Z"/>
   <path d="M4.335 4.335a1.143 1.143 0 0 1 1.616 0l13.714 13.714a1.143 1.143 0 1 1-1.616 1.616L4.335 5.951a1.143 1.143 0 0 1 0-1.616Z"/>

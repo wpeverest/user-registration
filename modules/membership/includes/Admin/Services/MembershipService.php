@@ -898,12 +898,14 @@ class MembershipService {
 				$remaining_subscription_value = isset( $selected_membership_details['subscription']['value'] ) ? $selected_membership_details['subscription']['value'] : '';
 				$delayed_until                = '';
 
-				$chargeable_amount    = $upgrade_service->calculate_chargeable_amount(
-					$selected_membership_amount,
-					$current_membership_amount,
-					$upgrade_type
-				);
-				$membership['amount'] = $chargeable_amount;
+				if( $subscription_service->is_user_membership_expired( $current_user_id, $current_membership_id ) ) {
+					$chargeable_amount    = $upgrade_service->calculate_chargeable_amount(
+						$selected_membership_amount,
+						$current_membership_amount,
+						$upgrade_type
+					);
+					$membership['amount'] = $chargeable_amount;
+				}
 			}
 			unset( $membership );
 		} elseif ( isset( $data['action'] ) && 'multiple' === $data['action'] ) {
