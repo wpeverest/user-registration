@@ -259,7 +259,8 @@ $border-left-color_3: #0073aa;
 
 			&__input {
 				border: 1px solid transparent;
-				padding: 0 0 0 12px;
+				// padding: 0 0 0 12px;
+				padding: 0;
 				border-radius: 0 4px 4px 0;
 				field-sizing: content;
 				flex: 1;
@@ -302,7 +303,7 @@ $border-left-color_3: #0073aa;
 
 			&:has(.is-editing) {
 				.user-registration-editable-title__input {
-					padding-right: 12px;
+					padding: 0 12px;
 				}
 
 				.user-registration-editable-title__icon {
@@ -313,6 +314,16 @@ $border-left-color_3: #0073aa;
 						font-size: 20px;
 						color: #ffffff;
 						transition: all 0.3s ease;
+					}
+				}
+			}
+
+			&:has(.user-registration-editable-title__icon) {
+				.user-registration-editable-title__input {
+					padding: 0 0 0 12px;
+
+					&.is-editing {
+						padding-right: 12px;
 					}
 				}
 			}
