@@ -16,9 +16,7 @@ const getConditionType = (conditionType) => {
 		membership: "multiselect",
 		capabilities: "multiselect",
 		registration_source: "multiselect",
-		payment_status: "multiselect",
 		ur_form_field: "multiselect",
-		urm: "multiselect",
 		user_state: "checkbox",
 		user_registered_date: "date",
 		access_period: "period",
@@ -50,147 +48,110 @@ const RuleGroup = ({
 
 	useEffect(() => {
 		if (group.conditions && group.conditions.length > 0) {
-			const registrationSourceCond = group.conditions.find(c => c.type === "registration_source");
-			const urFormFieldCond = group.conditions.find(c => c.type === "ur_form_field");
-			
-			let mergedConditions = [];
-			let hasMerged = false;
-			
-			if (registrationSourceCond && urFormFieldCond) {
-				const sourceFormIds = Array.isArray(registrationSourceCond.value) 
-					? registrationSourceCond.value 
-					: (registrationSourceCond.value ? [registrationSourceCond.value] : []);
-				const formId = sourceFormIds.length > 0 ? sourceFormIds[0] : "";
-				
-				let formFields = [];
-				if (urFormFieldCond.value && typeof urFormFieldCond.value === "object" && urFormFieldCond.value.form_fields) {
-					formFields = Array.isArray(urFormFieldCond.value.form_fields) 
-						? urFormFieldCond.value.form_fields 
-						: [];
-				}
-				
-				mergedConditions.push({
-					type: "condition",
-					id: registrationSourceCond.id || `x${Date.now()}`,
-					value: "urm",
-					label: "URM",
-					inputType: "multiselect",
-					operator: "is",
-					conditionValue: formFields.length > 0 
-						? { form_id: formId, form_fields: formFields }
-						: formId
-				});
-				hasMerged = true;
-			}
-			
-			const initialConditions = group.conditions
-				.filter(cond => {
-					if (hasMerged && (cond.type === "registration_source" || cond.type === "ur_form_field")) {
-						return false;
-					}
-					return true;
-				})
-				.map((cond) => {
-					if (cond.type === "group") {
-						return {
-							type: "group",
-							id: cond.id,
-							group: cond
-						};
-					} else {
-						let conditionValue = cond.value;
-						const conditionType = getConditionType(cond.type);
+			const initialConditions = group.conditions.map((cond) => {
+				if (cond.type === "group") {
+					return {
+						type: "group",
+						id: cond.id,
+						group: cond
+					};
+				} else {
+					let conditionValue = cond.value;
+					const conditionType = getConditionType(cond.type);
 
-						if (cond.type === "registration_source") {
-							const sourceFormIds = Array.isArray(conditionValue) 
-								? conditionValue 
-								: (conditionValue ? [conditionValue] : []);
-							const formId = sourceFormIds.length > 0 ? sourceFormIds[0] : "";
-							conditionValue = formId;
-							return {
-								type: "condition",
-								id: cond.id || `x${Date.now()}`,
-								value: "urm",
-								label: "URM",
-								inputType: "multiselect",
-								operator: "is",
-								conditionValue: conditionValue
-							};
+					if (cond.type === "registration_source") {
+						// Keep registration_source as is, normalize value to array
+						if (Array.isArray(conditionValue)) {
+							conditionValue = conditionValue;
+						} else if (conditionValue) {
+							conditionValue = [conditionValue];
+						} else {
+							conditionValue = [];
 						}
-
-						if (cond.type === "ur_form_field") {
-							if (
-								conditionValue &&
-								typeof conditionValue === "object" &&
-								conditionValue.form_id
-							) {
-								conditionValue = {
-									form_id: conditionValue.form_id || "",
-									form_fields: Array.isArray(
-										conditionValue.form_fields
-									)
-										? conditionValue.form_fields
-										: []
-								};
-							} else {
-								conditionValue = { form_id: "", form_fields: [] };
-							}
-							return {
-								type: "condition",
-								id: cond.id || `x${Date.now()}`,
-								value: "urm",
-								label: "URM",
-								inputType: "multiselect",
-								operator: "is",
-								conditionValue: conditionValue
-							};
-						}
-
-						if (cond.type === "urm") {
-							if (typeof conditionValue === "string" && conditionValue) {
-								conditionValue = conditionValue;
-							} else if (conditionValue && typeof conditionValue === "object") {
-								if (conditionValue.form_id) {
-									conditionValue = {
-										form_id: conditionValue.form_id || "",
-										form_fields: Array.isArray(conditionValue.form_fields) 
-											? conditionValue.form_fields 
-											: []
-									};
-								} else {
-									conditionValue = "";
-								}
-							} else {
-								conditionValue = "";
-							}
-						} else if (cond.type === "user_state") {
-							if (Array.isArray(conditionValue)) {
-								conditionValue = conditionValue[0] || "";
-							}
-							if (conditionValue === "logged_in") {
-								conditionValue = "logged-in";
-							} else if (conditionValue === "logged_out") {
-								conditionValue = "logged-out";
-							}
-						} else if (!conditionValue) {
-							conditionValue =
-								conditionType === "multiselect" ? [] : "";
-						}
-
 						return {
 							type: "condition",
 							id: cond.id || `x${Date.now()}`,
-							value: cond.type,
-							label: cond.type,
-							inputType: conditionType,
+							value: "registration_source",
+							label: "registration_source",
+							inputType: "multiselect",
 							operator: "is",
 							conditionValue: conditionValue
 						};
 					}
-				});
+
+					if (cond.type === "ur_form_field") {
+						// Keep ur_form_field as is
+						if (
+							conditionValue &&
+							typeof conditionValue === "object" &&
+							conditionValue.form_id
+						) {
+							conditionValue = {
+								form_id: conditionValue.form_id || "",
+								form_fields: Array.isArray(
+									conditionValue.form_fields
+								)
+									? conditionValue.form_fields
+									: []
+							};
+						} else {
+							conditionValue = { form_id: "", form_fields: [] };
+						}
+						return {
+							type: "condition",
+							id: cond.id || `x${Date.now()}`,
+							value: "ur_form_field",
+							label: "ur_form_field",
+							inputType: "multiselect",
+							operator: "is",
+							conditionValue: conditionValue
+						};
+					}
+
+					if (cond.type === "urm") {
+						if (typeof conditionValue === "string" && conditionValue) {
+							conditionValue = conditionValue;
+						} else if (conditionValue && typeof conditionValue === "object") {
+							if (conditionValue.form_id) {
+								conditionValue = {
+									form_id: conditionValue.form_id || "",
+									form_fields: Array.isArray(conditionValue.form_fields) 
+										? conditionValue.form_fields 
+										: []
+								};
+							} else {
+								conditionValue = "";
+							}
+						} else {
+							conditionValue = "";
+						}
+					} else if (cond.type === "user_state") {
+						if (Array.isArray(conditionValue)) {
+							conditionValue = conditionValue[0] || "";
+						}
+						if (conditionValue === "logged_in") {
+							conditionValue = "logged-in";
+						} else if (conditionValue === "logged_out") {
+							conditionValue = "logged-out";
+						}
+					} else if (!conditionValue) {
+						conditionValue =
+							conditionType === "multiselect" ? [] : "";
+					}
+
+					return {
+						type: "condition",
+						id: cond.id || `x${Date.now()}`,
+						value: cond.type,
+						label: cond.type,
+						inputType: conditionType,
+						operator: "is",
+						conditionValue: conditionValue
+					};
+				}
+			});
 			
-			const finalConditions = hasMerged ? [...mergedConditions, ...initialConditions] : initialConditions;
-			setConditions(finalConditions);
+			setConditions(initialConditions);
 		} else {
 			setConditions([]);
 		}
@@ -211,8 +172,8 @@ const RuleGroup = ({
 
 	const handleAfterConditionSelection = (option) => {
 		let initialValue = "";
-		if (option.value === "urm") {
-			initialValue = ""; // Start with empty, user will select form
+		if (option.value === "ur_form_field") {
+			initialValue = { form_id: "", form_fields: [] };
 		} else if (option.type === "multiselect") {
 			initialValue = [];
 		} else if (
@@ -303,6 +264,13 @@ const RuleGroup = ({
 					} else {
 						conditionValue = "";
 					}
+				} else if (cond.value === "registration_source") {
+					// Serialize registration_source as array
+					conditionValue = Array.isArray(conditionValue)
+						? conditionValue
+						: conditionValue
+							? [conditionValue]
+							: [];
 				} else if (
 					cond.value === "ur_form_field" &&
 					typeof conditionValue === "object"
