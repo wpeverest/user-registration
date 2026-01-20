@@ -299,6 +299,21 @@
       ],
       "setting_url": "",
       "demo_video_url": ""
+    },
+    {
+      "title": "File Downloads",
+      "slug": "user-registration-file-downloads",
+      "name": "User Registration File Downloads",
+      "image": "extensions-json/sections/icons/file_downloads.png",
+      "excerpt": "Upload files and restrict access by membership level or user-defined conditions.",
+      "category": "Membership",
+      "link": "https://docs.wpuserregistration.com/docs/user-registration-file-downloads/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
+      "plan": [
+        "plus",
+        "personal",
+        "professional",
+        "themegrill agency"
+      ]
     }
   ]
 }
