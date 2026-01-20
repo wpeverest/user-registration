@@ -285,14 +285,13 @@
       "title": "Team Membership",
       "slug": "user-registration-team",
       "name": "User Registration Team Membership",
-      "image": "extensions-json/sections/icons/membership.png",
+      "image": "extensions-json/sections/icons/team_membership.png",
       "excerpt": "Sell and manage team memberships with flexible seat control and pricing tiers.",
       "category": "Membership",
       "link": "https://docs.wpuserregistration.com/docs/user-registration-membership/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "19/01/2026",
       "plan": [
         "plus",
-        "personal",
         "professional",
         "themegrill agency"
       ],
