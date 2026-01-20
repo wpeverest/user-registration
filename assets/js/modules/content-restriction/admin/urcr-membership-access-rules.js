@@ -1478,9 +1478,6 @@
 				}
 				inputHtml = `<div style="display:flex;align-items:center;gap:4px;flex:1" data-content-type="${type}" data-target-id="${id}">
 					<input style="flex:1" type="text" class="components-text-control__input urcr-condition-value-input urcr-condition-value-text urcr-form-field-value-input" value="${value[0]}">
-					<label style="display: inline-flex; align-items: center; gap: 2px; margin: 0; width: auto">
-						<input type="checkbox" ${value[1] ? "checked" : ""}> ${urcr_membership_access_data.hasOwnProperty("regex_label") ? urcr_membership_access_data.regex_label : "Regex"}
-					</label>
 				</div>`;
 			} else {
 				inputHtml =
