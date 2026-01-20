@@ -119,6 +119,7 @@ function ur_get_screen_ids() {
 		$ur_screen_id . '_page_member-payment-history',
 		$ur_screen_id . '_page_user-registration-users',
 		$ur_screen_id . '_page_user-registration-members',
+		$ur_screen_id . '_page_user-registration-team',
 		'profile',
 		'user-edit',
 	);

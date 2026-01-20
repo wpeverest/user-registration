@@ -207,6 +207,10 @@
 			require __DIR__ . '/membership-admin-payments.php';
 		endif;
 		?>
+
+		<?php
+			do_action( 'ur_membership_team_membership', $membership, $membership_details );
+		?>
 	</div>
 </div>
 

@@ -374,10 +374,10 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 				case 'user_registered_date':
 					if ( $user->ID ) {
 						$registered_date = ! empty( $user->data->user_registered ) ? $user->data->user_registered : '';
-						
+
 						$date_value = '';
 						$date_type  = 'range';
-						
+
 						if ( ! empty( $logic_map['value'] ) ) {
 							if ( is_array( $logic_map['value'] ) && isset( $logic_map['value']['value'] ) && isset( $logic_map['value']['type'] ) ) {
 								$date_value = $logic_map['value']['value'];
@@ -387,13 +387,13 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 								$date_type  = 'range';
 							}
 						}
-						
+
 						if ( empty( $date_value ) || empty( $registered_date ) ) {
 							break;
 						}
-						
+
 						$registered_timestamp = strtotime( $registered_date );
-						
+
 						if ( 'before' === $date_type ) {
 							$target_timestamp = strtotime( $date_value );
 							if ( $registered_timestamp < $target_timestamp ) {
@@ -553,31 +553,31 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 				case 'urm':
 					if ( $user->ID ) {
 						$urm_value = ! empty( $logic_map['value'] ) ? $logic_map['value'] : '';
-						
+
 						if ( is_array( $urm_value ) && ! empty( $urm_value ) && ! isset( $urm_value['form_id'] ) ) {
 							$urm_value = $urm_value[0];
 						}
-						
+
 						if ( is_array( $urm_value ) && isset( $urm_value['form_id'] ) ) {
 							$form_id = $urm_value['form_id'];
-							$form_fields = isset( $urm_value['form_fields'] ) && is_array( $urm_value['form_fields'] ) 
-								? $urm_value['form_fields'] 
+							$form_fields = isset( $urm_value['form_fields'] ) && is_array( $urm_value['form_fields'] )
+								? $urm_value['form_fields']
 								: array();
-							
+
 							$registered_source = ur_get_registration_source_id( $user->ID );
 							if ( empty( $registered_source ) || $registered_source != $form_id ) {
 								return false;
 							}
-							
+
 							if ( ! empty( $form_fields ) ) {
 								$user_form_id = ur_get_form_id_by_userid( $user->ID );
 								if ( $form_id == $user_form_id ) {
 									$flag = array();
-									
+
 									foreach ( $form_fields as $key => $data ) {
 										$field_name = str_replace( 'user_registration_', '', $data['field_name'] );
 										$field_name = ur_get_field_name_with_prefix_usermeta( $field_name );
-										
+
 										switch ( $field_name ) {
 											case 'user_login':
 												$user_field_value = $user->user_login;
@@ -594,14 +594,14 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 											case 'display_name':
 												$user_field_value = $user->display_name;
 												break;
-											
+
 											default:
 												$user_field_value = get_user_meta( $user->ID, $field_name, true );
 												break;
 										}
-										
+
 										$user_field_value = is_array( $user_field_value ) ? implode( ',', $user_field_value ) : strval( $user_field_value );
-										
+
 										if ( 'is' == $data['operator'] && $user_field_value === $data['value'] ) {
 											array_push( $flag, true );
 										} elseif ( 'is not' == $data['operator'] && $user_field_value !== $data['value'] ) {
@@ -612,7 +612,7 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 											array_push( $flag, true );
 										}
 									}
-									
+
 									if ( count( $flag ) === count( $form_fields ) ) {
 										return true;
 									}
@@ -649,6 +649,41 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 						$user_membership    = $members_repository->get_member_membership_by_id( $user->ID );
 
 						$sources = ! empty( $logic_map['value'] ) ? $logic_map['value'] : array();
+
+						$team_ids = get_user_meta( $user->ID, 'urm_team_ids', true );
+
+						if ( ! empty( $team_ids ) ) {
+							if ( ! is_array( $team_ids ) ) {
+								$team_ids = array( $team_ids );
+							}
+
+							foreach ( $team_ids as $team_id ) {
+								$team_membership_id = get_post_meta( $team_id, 'urm_membership_id', true );
+								$team_members_ids   = get_post_meta( $team_id, 'urm_member_ids', true );
+
+								if ( ! empty( $team_membership_id ) && ! empty( $team_members_ids ) && is_array( $team_members_ids ) && in_array( $user->ID, $team_members_ids, true ) ) {
+									$lead_id = get_post_meta( $team_id, 'urm_team_leader_id', true );
+
+									if ( ! empty( $lead_id ) ) {
+										$leader_membership = $members_repository->get_member_membership_by_id( $lead_id );
+
+										if ( ! empty( $leader_membership ) && is_array( $leader_membership ) ) {
+											foreach ( $leader_membership as $membership ) {
+												if (
+													! empty( $membership['post_id'] ) &&
+													(int) $membership['post_id'] === (int) $team_membership_id &&
+													! empty( $membership['status'] ) &&
+													'active' === $membership['status'] &&
+													in_array( $membership['post_id'], $sources, true )
+												) {
+													return true;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
 
 						if ( ! empty( $user_membership ) && is_array( $user_membership ) ) {
 							foreach ( $user_membership as $membership ) {

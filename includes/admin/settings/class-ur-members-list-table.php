@@ -8,6 +8,9 @@
  * @since 4.5.0
  */
 
+use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
+use WPEverest\URTeamMembership\Admin\TeamRepository;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -207,9 +210,10 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			$total_users = $wp_user_search->total_users;
 
 			if ( ur_check_module_activation( 'membership' ) ) {
-				$user_ids_in  = implode( ',', array_map( 'intval', $user_ids ) );
-				$orders_table = $wpdb->prefix . 'ur_membership_orders';
-				$posts_table  = $wpdb->posts;
+				$user_ids_in    = implode( ',', array_map( 'intval', $user_ids ) );
+				$orders_table   = $wpdb->prefix . 'ur_membership_orders';
+				$posts_table    = $wpdb->posts;
+				$usermeta_table = $wpdb->usermeta;
 
 				$sql = "
 					SELECT wpu.ID,
@@ -221,7 +225,8 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						wums.billing_cycle,
 						wpu.user_registered,
 						wums.expiry_date,
-						wumo_latest.payment_method
+						wumo_latest.payment_method,
+						wum_team.meta_value AS team_ids
 					FROM {$wpdb->users} wpu
 					LEFT JOIN {$subscription_table} wums
 						ON wpu.ID = wums.user_id
@@ -234,6 +239,9 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 							LIMIT 1
 						)
 					LEFT JOIN {$posts_table} wpp ON wums.item_id = wpp.ID  AND wpp.post_status = 'publish'
+					LEFT JOIN {$usermeta_table} wum_team
+						ON wpu.ID = wum_team.user_id
+						AND wum_team.meta_key = 'urm_team_ids'
 					WHERE wpu.ID IN ($user_ids_in)
 					ORDER BY FIELD(wpu.ID, $user_ids_in)
 				";
@@ -265,6 +273,46 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						'expiry_date'      => $row['expiry_date'],
 						'billing_cycle'    => $row['billing_cycle'],
 					);
+				}
+
+				if ( ! empty( $row['team_ids'] ) ) {
+					$row['team_ids'] = maybe_unserialize( $row['team_ids'] );
+					$team_name       = '';
+					$subscription_id = '';
+					$team_repository = new TeamRepository();
+					foreach ( $row['team_ids'] as $team_id ) {
+						$team = $team_repository->get_single_team_by_ID( $team_id );
+						if ( $team ) {
+							$team_name                              = $team['team_name'] ?? '';
+							$subscription_id                        = $team['meta']['urm_subscription_id'];
+							$user_id_indexed[ $user_id ]['teams'][] = $team_name;
+
+							if ( $user_id !== $team['meta']['urm_team_leader_id'] ) {
+								if ( $subscription_id ) {
+									$subscription_repository = new MembersSubscriptionRepository();
+									$subscription            = $subscription_repository->get_subscription_by_subscription_id( $subscription_id );
+									if ( $subscription ) {
+										$membership       = $subscription_repository->get_membership_by_subscription_id( $subscription_id );
+										$membership_title = '';
+										if ( $membership ) {
+											$membership_title = $membership['post_title'];
+										}
+										$status        = $subscription['status'];
+										$expiry_date   = $subscription['expiry_date'];
+										$billing_cycle = $subscription['billing_cycle'];
+
+										$user_id_indexed[ $user_id ]['subscriptions'][] = array(
+											'subscription_id' => $subscription_id,
+											'membership_title' => $membership_title,
+											'status'      => $status,
+											'expiry_date' => $expiry_date,
+											'billing_cycle' => $billing_cycle,
+										);
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 
@@ -483,6 +531,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			$new_user_object->filter        = 'display';
 			$email                          = $new_user_object->user_email;
 			$new_user_object->subscriptions = $user_object['subscriptions'] ?? '';
+			$new_user_object->teams = $user_object['teams'] ?? '';
 
 			$user_manager = new UR_Admin_User_Manager( $new_user_object );
 
@@ -829,6 +878,14 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 								$row .= sprintf( '<span id="" class="user-subscription-status %s">%s</span>', $status_class, ucfirst( $status ) );
 							}
 
+							break;
+						case 'team':
+							$teams = is_array( $new_user_object->teams ) ? $new_user_object->teams : [];
+
+							if ( ! empty( $teams ) ) {
+								$escaped_teams = array_map( 'esc_html', $teams );
+								$row          .= implode( ', ', $escaped_teams );
+							}
 							break;
 						default:
 							/**

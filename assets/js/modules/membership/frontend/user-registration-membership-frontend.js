@@ -29,7 +29,7 @@
 			return false;
 		},
 
-		
+
 		/**
 		 * Shows a full-page payment processing overlay.
 		 * Used during Stripe 3D Secure verification to indicate payment is in progress.
@@ -359,6 +359,26 @@
 					user_data.urm_zone_id       = $( '#ur-local-currency-switch-currency' ).data( 'urm-zone-id' );
 				}
 
+			var container = membership_input.closest(".urm-team-pricing-card");
+			var selected_team = container.find(
+				".urm-team-pricing-tier.selected"
+			);
+			if (selected_team.length > 0) {
+				user_data.team = selected_team.data("team");
+				var seat_model = selected_team.data("seat-model");
+				if ("variable" === seat_model) {
+					user_data.no_of_seats = selected_team
+						.find('input[name="no_of_seats"]')
+						.val();
+					var pricing_model = selected_team.data("pricing-model");
+					if ("tier" === pricing_model) {
+						var selected_tier =
+							selected_team.data("selected-tier");
+						user_data.tier = selected_tier;
+					}
+				}
+			}
+
 			return user_data;
 		},
 		prepare_coupons_apply_data: function () {
@@ -399,7 +419,9 @@
 				is_upgrade = false;
 			}
 			var no_errors = true,
-				pg_inputs = $('input[name="urm_payment_method"]:visible');
+				pg_inputs = $('input[name="urm_payment_method"]:visible'),
+				selected_tier = $(".urm-team-pricing-tier.selected"),
+				seat_input = selected_tier.find(".ur-team-tier-seats-input");
 
 			if (pg_inputs.length > 0) {
 				pg_inputs.each(function () {
@@ -425,6 +447,53 @@
 						}
 					}
 				});
+			}
+			// seats validation if less than min seats, set the seat input to min seats and if greater than max seats, set the seat input to max seats and calculate total.
+			if (seat_input.length > 0) {
+				var no_of_seats = parseInt(seat_input.val(), 10);
+				var pricing_model = selected_tier.data("pricing-model");
+				var min_seats = parseInt(
+					selected_tier.data("minimum-seats"),
+					10
+				);
+				var max_seats = parseInt(
+					selected_tier.data("maximum-seats"),
+					10
+				);
+				var amount = 0;
+
+				if (isNaN(no_of_seats) || no_of_seats < min_seats) {
+					seat_input.val(min_seats);
+					no_of_seats = min_seats;
+				}
+				if (no_of_seats > max_seats) {
+					seat_input.val(max_seats);
+					no_of_seats = max_seats;
+				}
+
+				if ("per_seat" === pricing_model) {
+					amount = selected_tier.data("per-seat-price");
+				} else {
+					var tiers = selected_tier.data("price-tiers");
+					$.each(tiers, function (index, tierItem) {
+						var from = parseInt(tierItem.tier_from, 10);
+						var to = parseInt(tierItem.tier_to, 10);
+
+						if (no_of_seats >= from && no_of_seats <= to) {
+							amount = tierItem.tier_per_seat_price;
+							return false;
+						}
+					});
+				}
+				if (no_of_seats >= min_seats && no_of_seats <= max_seats) {
+					var container = selected_tier.closest(
+						".urm-team-pricing-card"
+					);
+					var radio = container.find('input[type="radio"]');
+					var total = no_of_seats * amount;
+					radio.data("urm-pg-calculated-amount", total);
+					ur_membership_ajax_utils.calculate_total(radio);
+				}
 			}
 			if (no_errors) {
 				ur_membership_frontend_utils.clear_validation_error();
@@ -1006,13 +1075,14 @@
 				);
 			}
 		},
-		renew_membership: function (selected_pg, btn, membership_id) {
+		renew_membership: function (selected_pg, btn, membership_id, team_id) {
 			this.send_data(
 				{
 					_wpnonce: urmf_data.renew_membership_nonce,
 					action: "user_registration_membership_renew_membership",
 					selected_pg: selected_pg,
-					membership_id: membership_id
+					membership_id: membership_id,
+					team_id: team_id
 				},
 				{
 					success: function (response) {
@@ -1776,7 +1846,7 @@
 											result.paymentIntent &&
 											result.paymentIntent.id
 												? result.paymentIntent.id
-												: result.id	
+												: result.id
 									}
 								);
 							}
@@ -2681,6 +2751,7 @@
 					selected_pg = "free",
 					pg_gateways = $this.data("pg-gateways").split(","),
 					membership_id = $this.data("id"),
+					team_id = $this.data("team-id"),
 					html =
 						ur_membership_ajax_utils.prepare_renew_membership_html(
 							pg_gateways
@@ -2730,7 +2801,8 @@
 						ur_membership_ajax_utils.renew_membership(
 							selected_pg,
 							btn,
-							membership_id
+							membership_id,
+							team_id
 						);
 						return false;
 					},
@@ -2868,6 +2940,151 @@
 					}
 				});
 			});
+
+				$(".ur-label.ur-has-team-pricing").on("click", function (e) {
+				var label = $(this);
+				var membership_id = $(this).data("membership-id");
+				var teamContainer = $(
+					"#urm-team-pricing-container-" + membership_id
+				);
+				var radio = teamContainer.find('input[type="radio"]');
+
+				$(this).hide();
+				teamContainer.show();
+				radio.prop("checked", true).trigger("change");
+
+				label.hide();
+				teamContainer.show();
+
+				// Hide all other team containers and show their regular labels
+				$(".urm-team-pricing-container").not(teamContainer).hide();
+				$(".ur-label.ur-has-team-pricing").not(label).show();
+
+				e.preventDefault();
+			});
+
+			$(".ur-label.ur-normal-pricing").on("click", function () {
+				var label = $(this);
+				var radio = label.find('input[type="radio"]');
+
+				radio.prop("checked", true).trigger("change");
+
+				// Hide all team containers and show their regular labels
+				$(".urm-team-pricing-container").hide();
+				$(".ur-label.ur-has-team-pricing").show();
+			});
+
+			$(".ur-team-pricing-label").on("click", function (e) {
+				var label = $(this);
+				var radio = label.find('input[type="radio"]');
+
+				radio.prop("checked", true).trigger("change");
+
+				e.preventDefault();
+			});
+
+			$(".ur-membership-price").on("click", function () {
+				$(this).addClass("ur-membership-price-selected");
+				var container = $(this).closest(".urm-team-pricing-card");
+				var radio = container.find('input[type="radio"]');
+				container
+					.find(".urm-team-pricing-tier")
+					.removeClass("selected");
+				container.find(".ur-team-tier-seats-wrapper").hide();
+				radio.data("urm-pg-calculated-amount", $(this).data("price"));
+				ur_membership_ajax_utils.calculate_total(radio);
+			});
+
+			$(".urm-team-pricing-tier").on("click", function () {
+				var tier = $(this);
+				var container = tier.closest(".urm-team-pricing-card");
+				var singlePrice = container.find(
+					".ur-membership-price-selected"
+				);
+				var radio = container.find('input[type="radio"]');
+				var seat_input = tier.find('input[name="no_of_seats"]');
+
+				$(".urm-team-pricing-tier").removeClass("selected");
+				$(".ur-team-tier-seats-wrapper").hide();
+
+				tier.addClass("selected");
+				singlePrice.removeClass("ur-membership-price-selected");
+				tier.find(".ur-team-tier-seats-wrapper").show();
+
+				seat_input.prop("disabled", false);
+
+				var seat_model = tier.data("seat-model");
+				var no_of_seats = parseInt(seat_input.val(), 10);
+
+				//reset and disable all other number of seats input
+				$('input[name="no_of_seats"]')
+					.not(seat_input)
+					.each(function () {
+						var defaultValue =
+							$(this).attr("min") ||
+							$(this).attr("placeholder") ||
+							"";
+						$(this).val(defaultValue);
+						$(this).prop("disabled", true);
+						$(this).removeClass("ur-input-border-red");
+						$(this).removeAttr("aria-invalid");
+					});
+
+				// validation fix
+				$("#no_of_seats-error").remove();
+
+				//calculate total amount according to seat model and no of seats
+				var amount = 0;
+				if (seat_model) {
+					if ("fixed" === seat_model) {
+						amount = tier.data("fixed-price");
+						var team_size = tier.data("team-size");
+						radio.data("urm-pg-calculated-amount", amount);
+						ur_membership_ajax_utils.calculate_total(radio);
+					} else {
+						var pricing_model = tier.data("pricing-model");
+						var min_seats = parseInt(
+							tier.data("minimum-seats"),
+							10
+						);
+						var max_seats = parseInt(
+							tier.data("maximum-seats"),
+							10
+						);
+						if ("per_seat" === pricing_model) {
+							amount = tier.data("per-seat-price");
+						} else {
+							var tiers = tier.data("price-tiers");
+							$.each(tiers, function (index, tierItem) {
+								var from = parseInt(tierItem.tier_from, 10);
+								var to = parseInt(tierItem.tier_to, 10);
+
+								if (no_of_seats >= from && no_of_seats <= to) {
+									amount = tierItem.tier_per_seat_price;
+									tier.attr("data-selected-tier", index);
+									return false;
+								}
+							});
+						}
+						if (
+							no_of_seats >= min_seats &&
+							no_of_seats <= max_seats
+						) {
+							var total = no_of_seats * amount;
+							radio.data("urm-pg-calculated-amount", total);
+							ur_membership_ajax_utils.calculate_total(radio);
+						}
+					}
+				}
+			});
+
+			$(document).on(
+				"input",
+				'.urm-team-pricing-tier.selected input[name="no_of_seats"]',
+				function () {
+					$(this).closest(".urm-team-pricing-tier").trigger("click");
+				}
+			);
 
 		},
 		validateSwitchCurrency: function (paymentMethod) {

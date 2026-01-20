@@ -423,6 +423,9 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 				$new_mem[ $k ]['active_payment_gateways'] = ( wp_unslash( wp_json_encode( $active_payment_gateways ) ) );
 			}
 			$active_payment_gateways = array();
+			if ( isset( $membership['meta_value']['team_pricing'] ) ) {
+				$new_mem[ $k ]['team_pricing'] = $membership['meta_value']['team_pricing'];
+			}
 		}
 
 		// Sort memberships by saved order if available
@@ -1043,7 +1046,7 @@ if ( ! function_exists( 'urcr_create_or_update_membership_rule' ) ) {
 		if ( $existing_rule ) {
 			$rule_post = array(
 				'ID'           => $existing_rule->ID,
-				'post_title'   => $existing_rule->post_title, 
+				'post_title'   => $existing_rule->post_title,
 				'post_content' => $rule_content,
 			);
 			$rule_id   = wp_update_post( $rule_post );
@@ -1065,5 +1068,31 @@ if ( ! function_exists( 'urcr_create_or_update_membership_rule' ) ) {
 		}
 
 		return false;
+	}
+
+	if ( ! function_exists( 'ur_check_if_membership_is_team' ) ) {
+
+		/**
+		 * ur_check_if_membership_is_team
+		 *
+		 * @return mixed|null
+		 */
+		function ur_check_if_membership_is_team( $membership_id ) {
+			$membership = get_post_meta( $membership_id, 'ur_membership', true );
+			if ( empty( $membership ) ) {
+				return false;
+			}
+
+			$membership_data = json_decode( $membership, true );
+			if ( ! is_array( $membership_data ) ) {
+				return false;
+			}
+
+			if ( ! empty( $membership_data['team_pricing'] ) && is_array( $membership_data['team_pricing'] ) ) {
+				return true;
+			}
+
+			return false;
+		}
 	}
 }

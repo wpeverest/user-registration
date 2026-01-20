@@ -7,6 +7,7 @@ use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Payment\Admin\OrdersListTable;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\TableList;
+use WPEverest\URTeamMembership\Admin\TeamRepository;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -165,7 +166,8 @@ class Orders {
 				$id   = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 				$type = isset( $_GET['type'] ) ? sanitize_text_field( $_GET['type'] ) : 'order';
 
-				$order = array();
+				$order            = array();
+				$order_repository = new OrdersRepository();
 
 				if ( 'form' === $type ) {
 					$order_service            = new \WPEverest\URMembership\Payment\Admin\OrderService();
@@ -173,12 +175,18 @@ class Orders {
 					$order['order_id']        = 0;
 					$order['is_form_payment'] = true;
 				} else {
-					$order_repository         = new OrdersRepository();
 					$order                    = $order_repository->get_order_detail( $id );
 					$order['is_form_payment'] = false;
 				}
 
-				$order = apply_filters( 'ur_membership_payment_history_order', $order );
+				$order   = apply_filters( 'ur_membership_payment_history_order', $order );
+				$order_meta_data = ! empty( $order['order_id'] ) ? $order_repository->get_order_meta_by_order_id_and_meta_key( $order['order_id'], 'urm_team_id' ) : '';
+				$team_id 		 = ! empty( $order_meta_data['meta_value'] ) ? $order_meta_data[ 'meta_value' ] : '';
+				$team    = '';
+				if ( $team_id ) {
+					$team_repository = new TeamRepository();
+					$team            = $team_repository->get_single_team_by_ID( $team_id );
+				}
 
 				if ( ! empty( $order ) ) {
 					include_once __DIR__ . '/Views/payment-edit.php';

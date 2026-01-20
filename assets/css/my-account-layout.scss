@@ -1828,6 +1828,103 @@
 						}
 					}
 
+					.team-row-btn-container{
+						.ur-account-action-link {
+							background: transparent !important;
+							border: none !important;
+							&.edit-team-btn{
+								padding-left: 0 !important;
+								padding-right: $spacing_8px !important;
+							}
+							&.delete-team-btn{
+								padding-left: $spacing_8px !important;
+								padding-right: 0 !important;
+							}
+						}
+					}
+
+					.ur-edit-team{
+						.ur-form-row{
+							text-align: left;
+							.ur-add-member-wrapper{
+								display: flex;
+								align-items: center;
+								input{
+									margin-bottom: 0;
+								}
+								button{
+									font-size: 20px;
+									padding: 8px 16px;
+									background-color: $primary_color;
+									color: white;
+									&:disabled{
+										opacity: 0.4;
+										cursor: not-allowed;
+									}
+								}
+							}
+							.ur-member-list-wrapper{
+								color: #222222;
+								font-size: 15px;
+								font-weight: 500;
+								line-height: 21px;
+								.ur-account-table{
+									th{
+										padding: 10px 20px;
+									}
+									.ur-account-table__cell{
+										font-weight: 400;
+									}
+								}
+
+							}
+							.ur-invited-email-wrapper{
+								display: flex;
+								align-items:center;
+								gap: 10px;
+								background: #F8F8FA;
+								padding: 12px;
+								margin-top: 8px;
+								border-radius: 8px;
+								.ur-invited-email-item{
+									display: inline-flex;
+									align-items: center;
+									gap: 6px;
+									padding: 8px;
+									background: white;
+									font-size: 14px;
+									border-radius: 6px;
+									color: #4A5568;
+									.dashicons-no-alt{
+										cursor: pointer;
+										color: #999999;
+									}
+								}
+							}
+							.ur-max-seats-reached-error{
+								color: $deny_color;
+								font-size: 14px;
+							}
+							.ur-form-grid{
+								padding: 0;
+							}
+						}
+
+						.user-registration-message-container{
+							margin-bottom: $spacing_20px;
+
+							.user-registration-error{
+								li{
+									text-align: left;
+								}
+							}
+						}
+
+						&.ur-frontend-form{
+							padding: 0;
+						}
+					}
+
 					// .ur-account-action-link {
 					// 	color: $primary_color;
 					// 	font-weight: 500;

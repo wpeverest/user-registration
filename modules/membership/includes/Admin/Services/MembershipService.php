@@ -13,7 +13,7 @@ use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
 use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\Paypal\PaypalService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
-
+use WPEverest\URMembership\TableList;
 
 class MembershipService {
 	private $membership_repository, $members_repository, $members_service, $subscription_repository, $orders_repository, $logger;
@@ -95,6 +95,51 @@ class MembershipService {
 			$order = $this->orders_repository->create( $orders_data );
 			if ( $subscription && $order ) {
 				$this->logger->info( 'Subscription and order created successfully for ' . $data['username'] . '.', array( 'source' => 'urm-registration-logs' ) );
+					if ( ! empty( $members_data['team'] ) ) {
+					$team_id = wp_insert_post(
+						[
+							'post_type'   => 'ur_membership_team',
+							'post_title'  => $members_data['team']['team_name'] . ' created for Order #' . $order['ID'],
+							'post_status' => 'publish',
+						]
+					);
+
+					if ( 0 === $team_id ) {
+						throw new \Exception( 'Failed to create team post' );
+					}
+					update_post_meta( $team_id, 'urm_team_data', $members_data['team'] );
+					if ( ! empty( $members_data['tier'] ) ) {
+						update_post_meta(
+							$team_id,
+							'urm_tier_info',
+							$members_data['tier']
+						);
+					}
+					update_post_meta( $team_id, 'urm_team_seats', $members_data['team_seats'] );
+					update_post_meta( $team_id, 'urm_used_seats', 1 );
+					update_post_meta( $team_id, 'urm_order_id', $order['ID'] );
+					update_post_meta( $team_id, 'urm_subscription_id', $subscription['ID'] );
+					update_post_meta( $team_id, 'urm_team_leader_id', $member->ID );
+					update_post_meta( $team_id, 'urm_member_emails', array( $member->user_email ) );
+					update_post_meta( $team_id, 'urm_member_ids', array( $member->ID ) );
+					update_post_meta( $team_id, 'urm_membership_id', $subscription_data['item_id'] );
+					$team_ids = get_user_meta( $member->ID, 'urm_team_ids', true );
+
+					if ( ! is_array( $team_ids ) ) {
+						$team_ids = empty( $team_ids ) ? array() : array( $team_ids );
+					}
+
+					$team_ids[] = $team_id;
+
+					update_user_meta( $member->ID, 'urm_team_ids', $team_ids );
+					$this->orders_repository->update_order_meta(
+						array(
+							'order_id'   => $order['ID'],
+							'meta_key'   => 'urm_team_id',
+							'meta_value' => $team_id,
+						)
+					);
+				}
 				$this->members_repository->wpdb()->query( 'COMMIT' );
 
 				$payload = array(
@@ -136,7 +181,7 @@ class MembershipService {
 			}
 		} catch ( Exception $e ) {
 			// Rollback the transaction if any operation fails.
-			$this->members->wpdb()->query( 'ROLLBACK' );
+			$this->members_repository->wpdb()->query( 'ROLLBACK' );
 			$data = array(
 				'message' => $e->getMessage(),
 				'status'  => false,

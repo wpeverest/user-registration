@@ -15,6 +15,7 @@
 
 	$is_coupon_addon_activated        = ur_check_module_activation( 'coupon' );
 	$is_tax_calculation_enabled       = ur_check_module_activation( 'taxes' );
+	$is_team_addon_activated          = ur_check_module_activation( 'team' );
 	$membership_ids_link_with_coupons = array();
 	if ( $is_coupon_addon_activated && function_exists( 'ur_get_membership_ids_link_with_coupons' ) ) :
 		$membership_ids_link_with_coupons = ur_get_membership_ids_link_with_coupons();
@@ -167,9 +168,11 @@
 				}
 
 				$urm_default_pg = apply_filters( 'user_registration_membership_default_payment_gateway', '' );
+				$has_team_pricing = $is_team_addon_activated && ! empty( $membership['team_pricing'] );
 				?>
-				<label class="ur_membership_input_label ur-label"
-						for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>">
+				<label class="ur_membership_input_label ur-label <?php echo $has_team_pricing ? 'ur-has-team-pricing' : 'ur-normal-pricing'; ?>"
+						for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
+						data-membership-id="<?php echo esc_attr( $membership['ID'] ); ?>">
 					<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field"
 							data-key-name="ur-membership-id"
 							id="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
@@ -213,6 +216,178 @@
 					<span
 						class="ur-membership-duration ur-membership-period-span"><?php echo esc_html__( ( ! empty( $final_period ) ? $final_period : $membership['period'] ), 'user-registration' ); ?></span>
 				</label>
+				<!--	team pricing container-->
+				<?php if ( $has_team_pricing ) : ?>
+				<div class="urm-team-pricing-container" id="urm-team-pricing-container-<?php echo esc_attr( $membership['ID'] ); ?>" style="display: none;">
+					<div class="urm-team-pricing-card">
+						<div class="urm-team-pricing-card__body">
+							<label class="ur_membership_input_label ur-label ur-team-pricing-label"
+								for="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>">
+								<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field"
+										data-key-name="ur-membership-id"
+										id="ur-membership-select-membership-<?php echo esc_attr( $membership['ID'] ); ?>"
+										type="radio"
+										name="urm_membership"
+										data-name=<?php echo esc_attr( $attributes['field_name'] ); ?>
+										data-label=<?php echo esc_attr( $attributes['type'] ); ?>
+										required="required"
+										value="<?php echo esc_attr( $membership['ID'] ); ?>"
+										data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
+										data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
+										data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['amount'] ); ?>"
+										data-has-coupon-link="<?php echo esc_attr( in_array( $membership['ID'], $membership_ids_link_with_coupons ) ? 'yes' : 'no' ); ?>"
+										data-urm-default-pg="<?php echo $urm_default_pg; ?>"
+									<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>
+								>
+								<span
+									class="ur-membership-duration ur-membership-title">
+									<?php echo esc_html__( $membership['title'], 'user-registration' ); ?>
+								</span>
+							</label>
+							<div class="urm-team-pricing-details">
+								<div style="font-size:16px" class="ur-membership-duration ur-membership-price ur-membership-price-selected" data-price="<?php esc_attr_e( $membership['amount'] ); ?>"><?php echo esc_html__( $membership['period'], 'user-registration' ); ?></div>
+								<div class="urm-team-pricing-btn">
+									<span class="urm-or-separator"><?php echo esc_html__( 'OR', 'user-registration' ); ?></span>
+									<div class="urm-team-pricing-tiers">
+										<?php
+										foreach ( $membership['team_pricing'] as $index => $team ) :
+											$size             = 0;
+											$price            = 0;
+											$min_price        = 0;
+											$max_price        = 0;
+											$show_seats_input = false;
+											$show_tiers       = false;
+
+											$team_plan_type       = $team['team_plan_type'] ?? 'one-time';
+											$team_price          = $team['team_price'] ?? 0;
+											$team_duration_value  = $team['team_duration_value'] ?? 0;
+											$team_duration_period = $team['team_duration_period'] ?? 'week';
+											if ( $team_duration_value > 1 ) {
+												$team_duration_period = $team_duration_period . 's';
+											} elseif ( $team_duration_value == 1 ) {
+												$team_duration_value = 'a';
+											}
+											$per_seat_price = $team['per_seat_price'] ?? 0;
+											if ( 'fixed' === $team['seat_model'] ) {
+												$size = $team['team_size'];
+												if ( 'subscription' === $team_plan_type ) {
+													$price = sprintf(
+														esc_html__( '%1$s / %2$s %3$s', 'user-registration' ),
+														$membership['currency_symbol'] . $team_price,
+														$team_duration_value,
+														$team_duration_period
+													);
+												} else {
+													$price = $membership['currency_symbol'] . $team_price;
+												}
+											} else {
+												$size = $team['minimum_seats'] . ' - ' . $team['maximum_seats'];
+												if ( 'per_seat' === $team['pricing_model'] ) {
+													if ( 'subscription' === $team_plan_type ) {
+														$price = sprintf(
+															esc_html__( '%1$s / seat for %2$s %3$s', 'user-registration' ),
+															$membership['currency_symbol'] . $per_seat_price,
+															$team_duration_value,
+															$team_duration_period
+														);
+													} else {
+														$price = sprintf(
+															esc_html__( '%s / seat', 'user-registration' ),
+															$membership['currency_symbol'] . $per_seat_price
+														);
+													}
+												} else {
+													$tiers = $team['tiers'];
+													if ( ! empty( $team['tiers'] ) ) {
+														$prices     = array_column( $tiers, 'tier_per_seat_price' );
+														$min_price  = min( $prices );
+														$max_price  = max( $prices );
+														$show_tiers = true;
+													}
+													$price = $membership['currency_symbol'] . $min_price . ' - ' . $membership['currency_symbol'] . $max_price;
+												}
+
+												$show_seats_input = true;
+											}
+
+											?>
+											<div class="urm-team-pricing-tier"
+												data-team="<?php echo esc_attr( $index ); ?>"
+												data-seat-model="<?php echo esc_attr( $team['seat_model'] ?? '' ); ?>"
+												data-team-size="<?php echo esc_attr( $team['team_size'] ?? '' ); ?>"
+												data-fixed-price="<?php echo esc_attr( $team['team_price'] ?? '' ); ?>"
+												data-minimum-seats="<?php echo esc_attr( $team['minimum_seats'] ?? '' ); ?>"
+												data-maximum-seats="<?php echo esc_attr( $team['maximum_seats'] ?? '' ); ?>"
+												data-pricing-model="<?php echo esc_attr( $team['pricing_model'] ?? '' ); ?>"
+												data-per-seat-price="<?php echo esc_attr( $team['per_seat_price'] ?? '' ); ?>"
+												data-price-tiers="<?php echo esc_attr( wp_json_encode( $team['tiers'] ?? [] ) ); ?>"
+												>
+												<div class="urm-team-pricing-tier-details">
+													<div>
+														<p><?php echo esc_html( $team['team_name'] ?? 'Tier' ); ?></p>
+														<span class="ur-team-seats">
+															<span class="dashicons dashicons-groups"></span>
+															<?php
+															echo esc_html(
+																sprintf(
+																	__( '%s seats included', 'user-registration' ),
+																	$size
+																)
+															);
+															?>
+														</span>
+													</div>
+													<div style="font-size: 16px;">
+														<?php echo $price; ?>
+													</div>
+												</div>
+												<?php if ( $show_seats_input ) : ?>
+													<div class="ur-team-tier-seats-wrapper" style="display:none;">
+														<hr>
+														<div class="ur-team-tier-seats-input-wrapper">
+															<label style="width:100%;margin-bottom:0"><?php esc_html_e( 'Number of seats', 'user-registration' ); ?></label>
+															<input type="number" name="no_of_seats" placeholder="<?php esc_attr_e( 'No. of seats', 'user-registration' ); ?>" class="ur-team-tier-seats-input" min="<?php esc_attr_e( $team['minimum_seats'] ); ?>" value="<?php esc_attr_e( $team['minimum_seats'] ); ?>" max="<?php esc_attr_e( $team['maximum_seats'] ); ?>">
+														</div>
+														<?php if ( $show_tiers ) : ?>
+															<div class="ur-team-tier-seats-tier">
+																<?php
+																foreach ( $tiers as $tier ) :
+																	$tier_seat = sprintf(
+																		esc_html__( '%1$d - %2$d seats', 'user-registration' ),
+																		$tier['tier_from'],
+																		$tier['tier_to']
+																	);
+																	if ( 'subscription' === $team_plan_type ) {
+																		$tier_price = sprintf(
+																			esc_html__( '%1$s / seat for %2$s %3$s', 'user-registration' ),
+																			$membership['currency_symbol'] . $tier['tier_per_seat_price'],
+																			$team_duration_value,
+																			$team_duration_period
+																		);
+																	} else {
+																		$tier_price = sprintf(
+																			esc_html__( '%s / seat', 'user-registration' ),
+																			$membership['currency_symbol'] . $tier['tier_per_seat_price']
+																		);
+																	}
+																	?>
+																<p>
+																	<?php echo esc_html( $tier_seat ) . ' : ' . esc_html( $tier_price ); ?>
+																</p>
+																<?php endforeach; ?>
+															</div>
+														<?php endif; ?>
+													</div>
+												<?php endif; ?>
+											</div>
+										<?php endforeach; ?>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<?php endif; ?>
 				<?php
 			endforeach;
 		else :

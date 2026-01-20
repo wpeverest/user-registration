@@ -606,6 +606,11 @@ class UR_Frontend {
 						$data['period'] = $amount;
 					}
 
+					$subscription_last_order = $orders_repository->get_order_by_subscription($membership['subscription_id']);
+					if ( ! empty( $subscription_last_order ) && $subscription_last_order['status'] === 'completed' ) {
+						$data = apply_filters('user_registration_membership_add_team_data_if_exists',$data, $subscription_last_order );
+					}
+
 					array_push( $membership_data, $data );
 				}
 			}

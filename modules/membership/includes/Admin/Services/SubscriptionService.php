@@ -45,7 +45,58 @@ class SubscriptionService {
 		$membership_meta = json_decode( wp_unslash( get_post_meta( $membership['ID'], 'ur_membership', true ) ), true );
 		$status          = 'pending';
 
-		if ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trail date
+		$is_team_membership   = false;
+		$is_team_subscription = false;
+		$is_team_one_time     = false;
+		$team_duration_value  = null;
+		$team_duration_period = null;
+		$billing_amount       = $membership_meta['amount'] ?? 0;
+
+		if ( isset( $data['team'] ) && ! empty( $data['team'] ) ) {
+			$team_data      = $data['team'];
+			$team_plan_type = isset( $team_data['team_plan_type'] ) ? $team_data['team_plan_type'] : null;
+
+			if ( 'subscription' === $team_plan_type || 'one-time' === $team_plan_type ) {
+				$is_team_membership      = true;
+				$is_team_subscription    = ( 'subscription' === $team_plan_type );
+				$is_team_one_time        = ( 'one-time' === $team_plan_type );
+				$team_duration_value_raw = isset( $team_data['team_duration_value'] ) ? $team_data['team_duration_value'] : null;
+				if ( null !== $team_duration_value_raw && '' !== trim( (string) $team_duration_value_raw ) ) {
+					$team_duration_value = absint( $team_duration_value_raw );
+					$team_duration_value = ( 0 !== $team_duration_value ) ? $team_duration_value : null;
+				} else {
+					$team_duration_value = null;
+				}
+				$team_duration_period = isset( $team_data['team_duration_period'] ) ? sanitize_text_field( $team_data['team_duration_period'] ) : null;
+
+				$seat_model = isset( $team_data['seat_model'] ) ? $team_data['seat_model'] : 'fixed';
+
+				if ( 'fixed' === $seat_model ) {
+					$billing_amount = isset( $team_data['team_price'] ) ? floatval( $team_data['team_price'] ) : 0;
+				} else {
+					$pricing_model = isset( $team_data['pricing_model'] ) ? $team_data['pricing_model'] : 'per_seat';
+					$team_seats    = isset( $data['team_seats'] ) ? absint( $data['team_seats'] ) : 0;
+
+					if ( 'per_seat' === $pricing_model ) {
+						$per_seat_price = isset( $team_data['per_seat_price'] ) ? floatval( $team_data['per_seat_price'] ) : 0;
+						$billing_amount = $team_seats * $per_seat_price;
+					} elseif ( 'tier' === $pricing_model ) {
+						if ( isset( $data['tier'] ) && isset( $data['tier']['tier_per_seat_price'] ) ) {
+							$tier_per_seat_price = floatval( $data['tier']['tier_per_seat_price'] );
+							$billing_amount      = $team_seats * $tier_per_seat_price;
+						}
+					}
+				}
+			}
+		}
+
+		if ( $is_team_subscription && $team_duration_value && $team_duration_period ) {
+			$expiry_date = self::get_expiry_date( $data['membership_data']['start_date'], $team_duration_period, $team_duration_value );
+			$status      = 'pending';
+		} elseif ( $is_team_one_time ) {
+			$expiry_date = '';
+			$status      = 'pending';
+		} elseif ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trail date
 			$expiry_date = self::get_expiry_date( $data['membership_data']['start_date'], $membership_meta['subscription']['duration'], $membership_meta['subscription']['value'] );
 			$status      = 'on' === $membership_meta['trial_status'] ? 'trial' : 'pending';
 		}
@@ -62,7 +113,13 @@ class SubscriptionService {
 			}
 		}
 
-		$billing_cycle = ( 'subscription' === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] : '';
+		if ( $is_team_subscription && $team_duration_period ) {
+			$billing_cycle = $team_duration_period;
+		} elseif ( $is_team_one_time ) {
+			$billing_cycle = '';
+		} else {
+			$billing_cycle = ( 'subscription' === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] : '';
+		}
 
 		$subscription_data = array(
 			'user_id'           => $member->ID,
@@ -70,7 +127,7 @@ class SubscriptionService {
 			'start_date'        => $data['membership_data']['start_date'],
 			'expiry_date'       => $expiry_date ?? '',
 			'next_billing_date' => $expiry_date ?? '',
-			'billing_amount'    => $membership_meta['amount'] ?? 0,
+			'billing_amount'    => $billing_amount,
 			'status'            => $status,
 			'cancel_sub'        => $membership_meta['cancel_subscription'] ?? 'immediately',
 			'billing_cycle'     => $billing_cycle,
@@ -87,9 +144,16 @@ class SubscriptionService {
 				'trial_end_date'   => self::get_expiry_date( date( 'Y-m-d' ), $membership_meta['trial_data']['duration'], $membership_meta['trial_data']['value'] ),
 			);
 
-			$subscription_data                      = array_merge( $subscription_data, $trial_data );
-			$subscription_data['start_date']        = $trial_data['trial_end_date'];
-			$subscription_data['expiry_date']       = self::get_expiry_date( $trial_data['trial_end_date'], $membership_meta['subscription']['duration'], $membership_meta['subscription']['value'] );
+			$subscription_data               = array_merge( $subscription_data, $trial_data );
+			$subscription_data['start_date'] = $trial_data['trial_end_date'];
+
+			if ( $is_team_one_time ) {
+				$subscription_data['expiry_date'] = '';
+			} elseif ( $is_team_subscription && $team_duration_value && $team_duration_period ) {
+				$subscription_data['expiry_date'] = self::get_expiry_date( $trial_data['trial_end_date'], $team_duration_period, $team_duration_value );
+			} else {
+				$subscription_data['expiry_date'] = self::get_expiry_date( $trial_data['trial_end_date'], $membership_meta['subscription']['duration'], $membership_meta['subscription']['value'] );
+			}
 			$subscription_data['next_billing_date'] = $subscription_data['expiry_date'];
 		}
 
@@ -292,7 +356,27 @@ class SubscriptionService {
 		$trial_end_date    = 'subscription' === $membership_metas['type'] && 'on' === $order['trial_status'] && ! empty( $subscription['trial_end_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_end_date'] ) ) : 'N/A';
 		$membership_type   = ucwords( $membership_metas['type'] ) == 'Paid' ? __( 'One-Time Payment', 'user-registration' ) : ucwords( $membership_metas['type'] );
 
-		return array(
+		$team_data  = null;
+		$team_seats = null;
+		$tier_info  = null;
+		if ( ! empty( $member_order['ID'] ) ) {
+			$ordermeta_table = $this->orders_repository->wpdb()->prefix . 'ur_membership_ordermeta';
+			$team_id         = $this->orders_repository->wpdb()->get_var(
+				$this->orders_repository->wpdb()->prepare(
+					"SELECT meta_value FROM {$ordermeta_table} WHERE meta_key=%s AND order_id=%d LIMIT 1",
+					'urm_team_id',
+					$member_order['ID']
+				)
+			);
+
+			if ( ! empty( $team_id ) ) {
+				$team_data  = get_post_meta( $team_id, 'urm_team_data', true );
+				$team_seats = get_post_meta( $team_id, 'urm_team_seats', true );
+				$tier_info  = get_post_meta( $team_id, 'urm_tier_info', true );
+			}
+		}
+
+		$return_array = array(
 			'username'                          => esc_html( ucwords( isset( $data['username'] ) ? $data['username'] : '' ) ),
 			'membership_plan_name'              => esc_html( ucwords( $membership_metas['post_title'] ) ),
 			'membership_plan_type'              => esc_html( $membership_type ),
@@ -331,6 +415,18 @@ class SubscriptionService {
 			'membership_renewal_link'           => "<a href=$membership_tab_url>" . __( 'Renew Now', 'user-registration' ) . '</a>',
 			'membership_plan_transaction_id'    => ! empty( $data['transaction_id'] ) ? $data['transaction_id'] : '',
 		);
+
+		if ( ! empty( $team_data ) ) {
+			$return_array['team'] = $team_data;
+		}
+		if ( ! empty( $team_seats ) ) {
+			$return_array['team_seats'] = $team_seats;
+		}
+		if ( ! empty( $tier_info ) ) {
+			$return_array['tier'] = $tier_info;
+		}
+
+		return $return_array;
 	}
 
 	/**
@@ -417,7 +513,6 @@ class SubscriptionService {
 			$members_data['role'] = ! empty( $membership_details['role'] ) ? $membership_details['role'] : 'subscriber';
 		}
 
-		// Update user meta and membership role here.
 		$member_service = new MembersService();
 		$member_service->update_user_meta( $members_data, $user->ID );
 
@@ -777,7 +872,7 @@ class SubscriptionService {
 		return $subscription_data;
 	}
 
-	public function renew_membership( $user, $selected_pg, $membership_id ) {
+	public function renew_membership( $user, $selected_pg, $membership_id, $team_id ) {
 		$member_id                            = $user->ID;
 		$username                             = $user->user_login;
 		$member_subscription                  = $this->members_subscription_repository->get_subscription_data_by_member_and_membership_id( $member_id, $membership_id );
@@ -821,7 +916,15 @@ class SubscriptionService {
 
 		if ( isset( $renew_response['payment_url'] ) || isset( $renew_response['data'] ) || 'stripe' === $selected_pg ) {
 			$renew_response['status'] = true;
-
+			if ( $team_id ) {
+				$this->orders_repository->update_order_meta(
+					array(
+						'order_id'   => $order['ID'],
+						'meta_key'   => 'urm_team_id',
+						'meta_value' => $team_id,
+					)
+				);
+			}
 		} else {
 			$this->orders_repository->delete( $order['ID'] );
 		}

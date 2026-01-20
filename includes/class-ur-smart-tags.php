@@ -130,6 +130,7 @@ class UR_Smart_Tags {
 			'{{manage_membership_link}}' => esc_html__( 'Manage Membership Link', 'user-registration' ),
 			'{{payment_amount}}'         => esc_html__( 'Payment Amount', 'user-registration' ),
 			'{{reactivation_link}}'      => esc_html__( 'Membership Reactivation Link', 'user-registration' ),
+			'{{team_name}}'              => esc_html__( 'Team Name', 'user-registration' ),
 		);
 
 		/**
@@ -848,7 +849,7 @@ class UR_Smart_Tags {
 						$user       = get_user_by( 'login', $username );
 						$user_id    = isset( $user->ID ) ? $user->ID : get_current_user_id();
 						$last_name = get_user_meta( $user_id, 'last_name', true );
-						$content    = str_replace( '{{' . $other_tag . '}}', $last_name, $content ); 
+						$content    = str_replace( '{{' . $other_tag . '}}', $last_name, $content );
 						break;
 					case 'membership_end_date':
 						$membership_end_date = ( isset( $values['membership_tags'] ) && isset( $values['membership_tags']['membership_plan_expiry_date'] ) ) ? $values['membership_tags']['membership_plan_expiry_date'] : '';
@@ -1127,6 +1128,20 @@ class UR_Smart_Tags {
 						}
 						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $payment_amount ), $content );
 						break;
+
+					case 'team_name':
+						$team_name = ! empty( $values['team_name'] ) ? $values['team_name'] : '';
+						$content   = str_replace( '{{' . $other_tag . '}}', $team_name, $content );
+						break;
+
+					case 'password':
+						if ( ! empty( $values['password'] ) ) {
+							$password = $values['password'];
+						} else {
+							$password = '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', $password, $content );
+						break;
 				}
 			}
 		}
@@ -1325,12 +1340,12 @@ class UR_Smart_Tags {
 		}
 	}
 
-	
+
 	private function handle_invoices_tags( $tag, $content, $values, $key ) {
 		global $wpdb;
 		$detail = '';
 		$tag_processed = false;
-		
+
 		// List of invoice-related tags that this method handles
 		$invoice_tags = array(
 			'business_name',
@@ -1349,12 +1364,12 @@ class UR_Smart_Tags {
 			'tax_amount',
 			'invoice_status',
 		);
-		
+
 		// Only process if this is an invoice tag
 		if ( ! in_array( $tag, $invoice_tags, true ) ) {
 			return $content;
 		}
-		
+
 		$membership_enabled = get_user_meta( get_current_user_id(), 'ur_registration_source', true );
 		if ( $membership_enabled ) {
 			$transaction_id = $_GET[ 'transaction_id' ]; //one time payment.

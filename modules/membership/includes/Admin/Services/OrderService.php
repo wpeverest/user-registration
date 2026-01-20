@@ -30,7 +30,42 @@ class OrderService {
 		if ( 'bank' == $data['membership_data']['payment_method'] ) {
 			$transaction_id = str_replace( '-', '', wp_generate_uuid4() );
 		}
-		$total = number_format( $membership_meta['amount'], 2, '.', '' );
+		$order_type = '';
+		$total      = 0;
+
+		if ( isset( $data['team'] ) && ! empty( $data['team'] ) ) {
+			$team_data      = $data['team'];
+			$team_plan_type = isset( $team_data['team_plan_type'] ) ? $team_data['team_plan_type'] : null;
+			if ( $team_plan_type ){
+				if ( 'subscription' === $team_plan_type ) {
+					$order_type = 'subscription';
+				} else {
+					$order_type = 'paid';
+				}
+			}
+			$seat_model = isset( $team_data['seat_model'] ) ? $team_data['seat_model'] : 'fixed';
+			if ( 'fixed' === $seat_model ) {
+				$total = isset( $team_data['team_price'] ) ? floatval( $team_data['team_price'] ) : 0;
+			} else {
+				$pricing_model = isset( $team_data['pricing_model'] ) ? $team_data['pricing_model'] : 'per_seat';
+				$team_seats    = isset( $data['team_seats'] ) ? absint( $data['team_seats'] ) : 0;
+
+				if ( 'per_seat' === $pricing_model ) {
+					// Per seat pricing: team_seats × per_seat_price
+					$per_seat_price = isset( $team_data['per_seat_price'] ) ? floatval( $team_data['per_seat_price'] ) : 0;
+					$total = $team_seats * $per_seat_price;
+				} elseif ( 'tier' === $pricing_model ) {
+					// Tier pricing: team_seats × tier_per_seat_price (from selected tier)
+					if ( isset( $data['tier'] ) && isset( $data['tier']['tier_per_seat_price'] ) ) {
+						$tier_per_seat_price = floatval( $data['tier']['tier_per_seat_price'] );
+						$total      = $team_seats * $tier_per_seat_price;
+					}
+				}
+			}
+		}else{
+			$order_type = sanitize_text_field( $membership_meta['type'] );
+			$total = number_format( $membership_meta['amount'], 2, '.', '' );
+		}
 
 		if ( isset( $membership_meta['trial_status'] ) && 'on' == $membership_meta['trial_status'] ) {
 			$total = 0;
@@ -85,7 +120,7 @@ class OrderService {
 			'payment_method'  => ( $data['membership_data']['payment_method'] ) ? sanitize_text_field( $data['membership_data']['payment_method'] ) : '',
 			'total_amount'    => ! empty( $upgrade_details ) ? $upgrade_details['chargeable_amount'] : $total,
 			'status'          => ( 'free' === $membership_meta['type'] || $is_admin ) ? 'completed' : 'pending',
-			'order_type'      => sanitize_text_field( $membership_meta['type'] ),
+			'order_type'      => $order_type,
 			'trial_status'    => ( ! empty( $upgrade_details ) && ( "on" === $upgrade_details['trial_status'] ) ) ? 'on' : ( isset( $membership_meta['trial_status'] ) ? sanitize_text_field( $membership_meta['trial_status'] ) : 'off' ),
 			'notes'           => $note,
 		);

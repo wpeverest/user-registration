@@ -15,7 +15,6 @@ $is_form_payment = isset( $order['is_form_payment'] ) ? $order['is_form_payment'
 
 $plan_details    = ! empty( $order['plan_details'] ) ? json_decode( $order['plan_details'], true ) : array();
 $post_content    = isset( $order['post_content'] ) ? json_decode( wp_unslash( $order['post_content'] ), true ) : array();
-$membership_type = isset( $post_content['type'] ) ? $post_content['type'] : '';
 $trial_status    = isset( $order['trial_status'] ) ? $order['trial_status'] : 'off';
 
 $order_repository = new OrdersRepository();
@@ -32,9 +31,18 @@ if ( $is_form_payment ) {
 	$trial_status             = 'off';
 }
 
-$plan_has_trial  = isset( $plan_details['trial_status'] ) && 'on' === $plan_details['trial_status'];
-$order_has_trial = isset( $order['trial_status'] ) && 'on' === $order['trial_status'];
-$supports_trial  = ( 'subscription' === $membership_type ) && ( $plan_has_trial || $order_has_trial );
+$plan_has_trial  = false;
+$order_has_trial = false;
+$supports_trial  = false;
+
+if ( $team ) {
+	$membership_type = ! empty( $team['meta']['urm_team_data']['team_plan_type'] ) ? $team['meta']['urm_team_data']['team_plan_type'] : '';
+} else {
+	$membership_type = isset( $post_content['type'] ) ? $post_content['type'] : '';
+	$plan_has_trial  = isset( $plan_details['trial_status'] ) && 'on' === $plan_details['trial_status'];
+	$order_has_trial = isset( $order['trial_status'] ) && 'on' === $order['trial_status'];
+	$supports_trial  = ( 'subscription' === $membership_type ) && ( $plan_has_trial || $order_has_trial );
+}
 
 $currency   = get_option( 'user_registration_payment_currency', 'USD' );
 $currencies = ur_payment_integration_get_currencies();
@@ -43,7 +51,11 @@ $symbol     = isset( $currencies[ $currency ]['symbol'] ) ? $currencies[ $curren
 $status_options = array( 'completed', 'pending', 'failed', 'refunded' );
 
 $product_amount = 0;
-if ( isset( $plan_details['amount'] ) ) {
+if ( $team ) {
+	if ( isset( $order['billing_amount'] ) ) {
+		$product_amount = (float) $order['billing_amount'];
+	}
+} elseif ( isset( $plan_details['amount'] ) ) {
 	$product_amount = (float) $plan_details['amount'];
 } elseif ( isset( $order['billing_amount'] ) ) {
 	$product_amount = (float) $order['billing_amount'];
@@ -99,7 +111,9 @@ $paid_amount    = ( 'on' === $trial_status ) ? 0 : $order_total;
 $paid_amount    = ! empty( $tax_data['total_with_tax'] ) ? $tax_data['total_with_tax'] : $paid_amount;
 $recurring_label = '-';
 if ( 'subscription' === $membership_type ) {
-	if ( isset( $plan_details['subscription']['duration'] ) ) {
+	if ( $team ) {
+		$recurring_label = ! empty( $team['meta']['urm_team_data']['team_duration_period'] ) ? ( 'day' === $team['meta']['urm_team_data']['team_duration_period'] ? 'Daily' : ucfirst( $team['meta']['urm_team_data']['team_duration_period'] ) . 'ly' ) : '';
+	} elseif ( isset( $plan_details['subscription']['duration'] ) ) {
 		$recurring_label = ucfirst( $plan_details['subscription']['duration'] ) . 'ly';
 	} else {
 		$recurring_label = __( 'Recurring', 'user-registration' );
