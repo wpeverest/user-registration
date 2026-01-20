@@ -775,8 +775,8 @@
 		 * @param $this
 		 */
 		create_membership: function ($this) {
-			// ur_membership_utils.toggleSaveButtons(true);
-			// ur_membership_utils.append_spinner($this);
+			ur_membership_utils.toggleSaveButtons(true);
+			ur_membership_utils.append_spinner($this);
 
 			if (this.validate_membership_form()) {
 				// Prepare access rules data before creating membership
@@ -1160,6 +1160,7 @@
 			);
 			return;
 		}
+
 		if (
 			ur_membership_data.membership_id &&
 			ur_membership_data.membership_id !== ""

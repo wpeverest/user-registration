@@ -286,13 +286,13 @@ textarea.ur-input-border-red {
 
 		.ur-reset-password-btn {
 			border: 1px solid
-				var(
+			var(
 					--ur-button-background-normal-color,
 					var(--ur-primary-color, $primary_color)
-				);
+			);
 			background: var(
-				--ur-button-background-normal-color,
-				var(--ur-primary-color, $primary_color)
+					--ur-button-background-normal-color,
+					var(--ur-primary-color, $primary_color)
 			);
 			width: 100%;
 			color: var(--ur-button-text-normal-color, $white);
@@ -320,7 +320,7 @@ textarea.ur-input-border-red {
 					min-height: 34px;
 					background: var(--ur-primary-color, $primary_color);
 					border: $border_width solid
-						var(--ur-primary-color, $primary_color);
+					var(--ur-primary-color, $primary_color);
 					color: $white;
 					border-radius: $border_radius_4;
 					font-size: 14px;
@@ -404,8 +404,8 @@ textarea.ur-input-border-red {
 
 					&:focus {
 						border-color: var(
-							--ur-primary-color,
-							$primary_color
+								--ur-primary-color,
+								$primary_color
 						) !important;
 					}
 				}
@@ -511,8 +511,8 @@ textarea.ur-input-border-red {
 
 							&--focus {
 								border-color: var(
-									--ur-primary-color,
-									$primary_color
+										--ur-primary-color,
+										$primary_color
 								);
 								border-radius: $border_radius_4;
 							}
@@ -676,8 +676,8 @@ textarea.ur-input-border-red {
 
 				&:focus {
 					border-color: var(
-						--ur-primary-color,
-						$primary_color
+							--ur-primary-color,
+							$primary_color
 					) !important;
 				}
 			}
@@ -1698,13 +1698,8 @@ span.ur-shortcode-form-embed-dot {
 			border-radius: 8px 0 0 0;
 			border-top: 1px solid #f1f1f1;
 			background: #f9f9f9;
-<<<<<<< Updated upstream
-			box-shadow:
-				0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-=======
 			box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
->>>>>>> Stashed changes
-				0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+			0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 			clip-path: inset(0px -1px -1px -1px);
 
 			&:first-child {
@@ -1757,12 +1752,8 @@ span.ur-shortcode-form-embed-dot {
 .user-registration.ur-frontend-form {
 	background: $white;
 	border-radius: $border_radius_8;
-<<<<<<< Updated upstream
 	box-shadow:
 		0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-=======
-	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
->>>>>>> Stashed changes
 		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 	padding: $spacing_60px;
 
@@ -2312,13 +2303,8 @@ body {
 				.ur-frontend-form {
 					&.login {
 						margin: 0px auto;
-<<<<<<< Updated upstream
-						box-shadow:
-							0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-=======
 						box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
->>>>>>> Stashed changes
-							0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+						0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 
 						.user-registration-error {
 							display: block;
@@ -2355,8 +2341,8 @@ body {
 
 									.ur-submit-button {
 										background: var(
-											--ur-primary-color,
-											$primary_color
+												--ur-primary-color,
+												$primary_color
 										);
 										border-radius: 4px;
 									}
@@ -2521,8 +2507,8 @@ body {
 
 								&:focus {
 									border-color: var(
-										--ur-primary-color,
-										$primary_color
+											--ur-primary-color,
+											$primary_color
 									);
 								}
 							}
@@ -2555,7 +2541,7 @@ body {
 
 									&:focus {
 										border-color: var(--ur-primary-color,
-												$primary_color);
+											$primary_color);
 										outline: none;
 										box-shadow: none;
 									}
@@ -2586,25 +2572,25 @@ body {
 						line-height: 24px;
 						letter-spacing: 0.15px;
 						border: $border_width solid
-							var(
+						var(
 								--ur-button-background-normal-color,
 								var(--ur-primary-color, $primary_color)
-							);
+						);
 						margin-right: 0;
 						background: var(
-							--ur-button-background-normal-color,
-							var(--ur-primary-color, $primary_color)
+								--ur-button-background-normal-color,
+								var(--ur-primary-color, $primary_color)
 						);
 
 						&:hover {
 							color: var(--ur-button-text-hover-color, $white);
 							background: var(
-								--ur-button-background-hover-color,
-								#38488e
+									--ur-button-background-hover-color,
+									#38488e
 							);
 							border-color: var(
-								--ur-button-background-hover-color,
-								#38488e
+									--ur-button-background-hover-color,
+									#38488e
 							);
 						}
 					}
@@ -2614,7 +2600,7 @@ body {
 						background: transparent;
 						color: var(--ur-primary-color, $primary_color);
 						border: $border_width solid
-							var(--ur-primary-color, $primary_color);
+						var(--ur-primary-color, $primary_color);
 
 						&:hover {
 							background: var(--ur-primary-color, $primary_color);
@@ -2675,12 +2661,12 @@ body {
 										font-size: 15px;
 										line-height: 25px;
 										background: var(
-											--ur-button-background-normal-color,
-											$primary_color
+												--ur-button-background-normal-color,
+												$primary_color
 										);
 										color: var(
-											--ur-button-text-normal-color,
-											$white
+												--ur-button-text-normal-color,
+												$white
 										);
 
 										&.ur-disabled-btn {
@@ -2694,13 +2680,13 @@ body {
 
 										&:hover {
 											background: var(
-												--ur-button-background-hover-color,
-												$primary_color
+													--ur-button-background-hover-color,
+													$primary_color
 											);
 											//border-color: #38488e;
 											color: var(
-												--ur-button-text-hover-color,
-												$white
+													--ur-button-text-hover-color,
+													$white
 											);
 										}
 									}
@@ -2770,8 +2756,8 @@ body {
 										a {
 											text-underline-offset: 4px;
 											color: var(
-												--ur-primary-color,
-												$primary_color
+													--ur-primary-color,
+													$primary_color
 											);
 										}
 									}
@@ -2789,8 +2775,8 @@ body {
 									a {
 										text-underline-offset: 4px;
 										color: var(
-											--ur-primary-color,
-											$primary_color
+												--ur-primary-color,
+												$primary_color
 										);
 									}
 								}
@@ -3053,8 +3039,8 @@ body {
 										border: none;
 										background: #edeff7;
 										color: var(
-											--ur-primary-color,
-											$primary_color
+												--ur-primary-color,
+												$primary_color
 										);
 										display: block;
 										margin: $spacing_32px 0 0;
@@ -3062,8 +3048,8 @@ body {
 
 										&:hover {
 											background: var(
-												--ur-primary-color,
-												$primary_color
+													--ur-primary-color,
+													$primary_color
 											);
 											color: $white;
 										}
@@ -3132,7 +3118,7 @@ body {
 									form {
 										.ur-login-form-setting-block {
 											padding: $spacing_20px $spacing_12px
-												$spacing_12px;
+											$spacing_12px;
 
 											&:first-child {
 												h2 {
@@ -3518,14 +3504,14 @@ body.user-registration-page {
 		p>input.user-registration-Button.button {
 			color: var(--ur-button-text-normal-color, $white);
 			background: var(
-				--ur-button-background-normal-color,
-				var(--ur-primary-color, $primary_color)
-			);
-			border: $border_width
-				var(
 					--ur-button-background-normal-color,
 					var(--ur-primary-color, $primary_color)
-				);
+			);
+			border: $border_width
+			var(
+					--ur-button-background-normal-color,
+					var(--ur-primary-color, $primary_color)
+			);
 			border-radius: $border_radius_4;
 			border-style: inherit;
 
@@ -3563,10 +3549,5 @@ body.user-registration-page {
 }
 
 #ur-local-currency-switch-currency {
-<<<<<<< Updated upstream
 	margin-bottom: 16px !important;
 }
-=======
-	margin-bottom: 16px !important
-}
->>>>>>> Stashed changes
