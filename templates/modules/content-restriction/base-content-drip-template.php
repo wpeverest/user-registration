@@ -22,9 +22,14 @@ $active_type    = isset( $args['activeType'] ) ? $args['activeType'] : 'fixed_da
 $value          = isset( $args['value'] ) && is_array( $args['value'] ) ? $args['value'] : array();
 $remaining_days = isset( $args['remaining_days'] ) ? absint( $args['remaining_days'] ) : 0;
 
-$d_title = __( 'Content Locked', 'user-registration' );
-$message = __( 'This content isn’t available yet.', 'user-registration' );
-$meta    = '';
+$message = get_option(
+	'user_registration_content_drip_global_message',
+	'<h3>' . __( 'Content Locked', 'user-registration' ) . '</h3>
+<p>' . __( 'This content will be available on {{urm_drip_time}}', 'user-registration' ) . '</p>
+<p>Please check back later!</p>'
+);
+
+$meta = '';
 
 if ( 'fixed_date' === $active_type ) {
 	$date = isset( $value['fixed_date']['date'] ) ? $value['fixed_date']['date'] : '';
@@ -40,8 +45,7 @@ if ( 'fixed_date' === $active_type ) {
 				$timestamp
 			);
 
-			$message = __( 'This content will unlock on:', 'user-registration' );
-			$meta    = $formatted;
+			$meta = $formatted;
 		}
 	}
 } elseif ( 'days_after' === $active_type ) {
@@ -58,6 +62,9 @@ if ( 'fixed_date' === $active_type ) {
 		$message = __( 'This content will be available very soon.', 'user-registration' );
 	}
 }
+
+$message = str_replace( '{{urm_drip_time}}', $meta, $message );
+
 ?>
 
 <style>
@@ -191,19 +198,7 @@ if ( 'fixed_date' === $active_type ) {
 	}
 </style>
 <div class="urcr-access-card">
-	<strong class="urcr-content-drip__title"><?php echo esc_html( $d_title ); ?></strong>
 
-	<div class="urcr-content-drip__body">
-		<div class="main-message-body">
-			<p class="urcr-content-drip__message"><?php echo esc_html( $message ); ?></p>
+	<?php echo apply_filters( 'user_registration_process_smart_tags', $message ); ?>
 
-			<?php if ( $meta ) : ?>
-				<p class="urcr-content-drip__meta"><?php echo wp_kses_post( $meta ); ?></p>
-			<?php endif; ?>
-		</div>
-
-		<p class="urcr-content-drip__note">
-			<?php echo esc_html__( 'Please check back later.', 'user-registration' ); ?>
-		</p>
-	</div>
 </div>
