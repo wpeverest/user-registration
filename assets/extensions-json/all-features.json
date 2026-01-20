@@ -268,7 +268,7 @@
       "title": "Content Drip",
       "slug": "user-registration-content-drip",
       "name": "User Registration - Content Drip",
-      "image": "extensions-json/sections/icons/content_restriction.png",
+      "image": "extensions-json/sections/icons/content_drip.png",
       "excerpt": "Drip content access over time, tailored to each user’s data and behavior.",
       "category": "Membership",
       "link": "https://docs.wpuserregistration.com/docs/content-drip/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
