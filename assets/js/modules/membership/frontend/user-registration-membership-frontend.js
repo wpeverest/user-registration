@@ -921,7 +921,7 @@
 				currency = $localCurrencyEl.val(),
 				currencySymbols = ur_membership_frontend_localized_data.local_currencies_symbol,
 				symbol = register_events.decodeHtmlEntity( currencySymbols[currency] || '' ),
-				discount_amount = (typeof discount_amount !== 'undefined' ? discount_amount : 0 );
+				discount_amount = (typeof discount_amount !== 'undefined' ? parseInt( discount_amount ) : 0 );
 
 				totalDetails.total = total;
 				totalDetails.taxAmount = 0;
