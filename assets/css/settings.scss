@@ -139,7 +139,7 @@ body {
 							input {
 								border-color: $primary_color;
 
-								~ .user-registration-search-icon svg {
+								~.user-registration-search-icon svg {
 									fill: $primary_color;
 								}
 							}
@@ -328,7 +328,7 @@ body {
 					cursor: pointer;
 
 					&-label {
-						> p {
+						>p {
 							font-weight: $medium;
 							font-size: 15px;
 							margin: 0;
@@ -653,7 +653,7 @@ body {
 							height: 20px;
 						}
 
-						> span {
+						>span {
 							flex: 1;
 						}
 
@@ -716,7 +716,7 @@ body {
 						max-width: 300px;
 					}
 
-					> p {
+					>p {
 						font-size: 18px;
 						line-height: 27px;
 						font-weight: $semi-bold;
@@ -1143,9 +1143,11 @@ body {
 					align-items: center;
 					gap: 6px;
 					padding: 4px 10px;
-					min-width: 90px;
+					// min-width: 90px;
 					border: 1px solid transparent;
 					border-radius: 6px;
+					font-size: 14px;
+					line-height: 20px;
 					text-decoration: none;
 					transition: all 0.2s ease;
 					color: #383838;
@@ -1294,7 +1296,7 @@ body {
 					padding: $spacing_20px 0 !important;
 
 					.nav-tab-inside {
-						> div {
+						>div {
 							display: block;
 						}
 					}
@@ -1463,14 +1465,13 @@ body {
 								padding: $spacing_12px $spacing_16px !important;
 								background: $primary_color;
 								color: $grey-0;
-								// font-weight: $semi_bold;
 								font-weight: $medium;
 								font-size: 15px;
 								line-height: 25px;
-								border: $border_width solid $border-color;
-								border-top: 0;
-								border-bottom: 0;
-								border-left: 0;
+								// border: $border_width solid $border-color;
+								// border-top: 0;
+								// border-bottom: 0;
+								// border-left: 0;
 								letter-spacing: 0.03px;
 
 								&:first-child {
@@ -1551,7 +1552,7 @@ body {
 										}
 									}
 
-									> label {
+									>label {
 										padding: $spacing_4px $spacing_8px;
 										border-radius: 100px;
 										font-weight: $regular !important;
@@ -2105,7 +2106,7 @@ body {
 		margin-bottom: 10px;
 	}
 
-	input[type="radio"] + img {
+	input[type="radio"]+img {
 		cursor: pointer;
 	}
 }
@@ -2518,8 +2519,8 @@ body {
 		}
 
 		/* Show default button when color result has wp-picker-open class */
-		.wp-color-result.wp-picker-open ~ .wp-picker-default,
-		.wp-color-result.wp-picker-open + .wp-picker-default {
+		.wp-color-result.wp-picker-open~.wp-picker-default,
+		.wp-color-result.wp-picker-open+.wp-picker-default {
 			display: inline-block !important;
 			visibility: visible !important;
 			opacity: 1 !important;

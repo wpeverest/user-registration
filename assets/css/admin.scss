@@ -50,18 +50,28 @@ body {
 			.ur-registered-from,
 			div[class*="user-registration-"],
 			div[id*="user-registration-"],
-			table th,
-			table td,
-			h1,
-			h2,
-			h3,
-			h4,
-			h5,
-			h6,
-			p,
-			small,
-			label {
+			div[class*="urfl-"] {
 				font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+				table {
+
+					th,
+					td {
+						font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+					}
+				}
+
+				h1,
+				h2,
+				h3,
+				h4,
+				h5,
+				h6,
+				p,
+				small,
+				label {
+					font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+				}
 			}
 		}
 	}
@@ -9489,6 +9499,7 @@ body.user-registration-page {
 					span {
 						display: none;
 					}
+
 					.ur-tax-regions-search {
 						width: 100%;
 					}
