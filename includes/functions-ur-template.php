@@ -856,7 +856,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					$states = isset( $state_list[ $country ] ) ? $state_list[ $country ] : '';
 
 					if ( ! empty( $args['enable_state'] ) && '1' == $args['enable_state'] ) {
-						$field .= '<label for="' . $args['id'] . '" class="ur-label">' . __( 'State', 'user-registration' ) . '</label>';
+						$field .= '<label for="' . $args['id'] . '" class="ur-label ur-state-label">' . __( 'State', 'user-registration' ) . '</label>';
 						$field .= '<span class="input-wrapper ur-field-address-state-outer-wrapper">';
 						if ( isset($value['state'], $states[ $value['state']  ] ) ) {
 							$field .= '<select id="' . esc_attr( $args['id'] ) . '_state" class="ur-field-address-state select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . $args['id'] . '_state">';
