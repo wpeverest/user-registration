@@ -108,7 +108,7 @@ if ( 0 === $coupon_discount && ! empty( $order['coupon'] ) && $user_id > 0 ) {
 $items_subtotal = $product_amount;
 $order_total    = $items_subtotal - $coupon_discount;
 $paid_amount    = ( 'on' === $trial_status ) ? 0 : $order_total;
-$paid_amount    = ! empty( $tax_data['total_with_tax'] ) ? $tax_data['total_with_tax'] : $paid_amount;
+$paid_amount    = ! empty( $tax_data['total_after_tax'] ) ? $tax_data['total_after_tax'] : $paid_amount;
 $recurring_label = '-';
 if ( 'subscription' === $membership_type ) {
 	if ( $team ) {

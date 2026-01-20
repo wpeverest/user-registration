@@ -266,7 +266,7 @@ $delete_url = wp_nonce_url(
 									</div>
 									<?php if ( ! empty( $tax_data ) ) : ?>
 										<div class="ur-subscription__table-total">
-											<?php echo esc_html( $symbol . number_format( $tax_data['total_with_tax'], 2 ) ); ?>
+											<?php echo esc_html( $symbol . number_format( $tax_data['total_after_tax'], 2 ) ); ?>
 										</div>
 									<?php endif; ?>
 								</div>
@@ -399,7 +399,7 @@ $delete_url = wp_nonce_url(
 										<?php esc_html_e( 'Amount', 'user-registration' ); ?>
 									</div>
 									<?php
-									$product_amount = ! empty( $tax_data['total_with_tax'] ) ? $tax_data['total_with_tax'] : $product_amount;
+									$product_amount = ! empty( $tax_data['total_after_tax'] ) ? $tax_data['total_after_tax'] : $product_amount;
 									?>
 									<div class="ur-subscription__section-value">
 										<?php echo esc_html( $symbol . number_format( $product_amount, 2 ) ); ?>

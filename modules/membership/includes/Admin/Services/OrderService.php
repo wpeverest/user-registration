@@ -84,8 +84,8 @@ class OrderService {
 			$tax_amount  = $total * $tax_rate / 100;
 			$total     = $total + $tax_amount;
 
-			$tax_details['tax_amount']     = number_format( $tax_amount, 2, '.', '' );
-			$tax_details['total_with_tax'] = number_format( $total, 2, '.', '' );
+			$tax_details['tax_amount']      = number_format( $tax_amount, 2, '.', '' );
+			$tax_details['total_after_tax'] = number_format( $total, 2, '.', '' );
 		}
 
 		if ( ! empty( $data['local_currency_details'] ) ) {
@@ -129,12 +129,15 @@ class OrderService {
 			array(
 				'meta_key'   => 'is_admin_created',
 				'meta_value' => $is_admin,
-			),
-			array(
-				'meta_key'   => 'tax_data',
-				'meta_value' => json_encode( $tax_details ),
 			)
 		);
+
+		if ( ! empty( $tax_details ) ) {
+			$orders_meta[] = [
+				'meta_key'   => 'tax_data',
+				'meta_value' => json_encode( $tax_details )
+			]
+		}
 
 		if ( ! empty( $currency ) ) {
 			$orders_meta[] = [
