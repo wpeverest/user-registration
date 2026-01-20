@@ -24,9 +24,9 @@ const DropdownMenu = ({
 }) => {
 	const handleOptionClick = (option, e) => {
 		e.stopPropagation();
-		if (option.disabled) {
-			return;
-		}
+		// if (option.disabled) {
+		// 	return;
+		// }
 		if (onSelect) {
 			onSelect(option);
 		}
