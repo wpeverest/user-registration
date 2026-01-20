@@ -153,7 +153,7 @@ class Frontend {
 		$new_items['urm-courses'] = __( 'My Courses', 'user-registration' );
 		$items                    = array_merge( $items, $new_items );
 
-		return $this->delete_account_insert_before_helper( $items, $new_items, 'user-logout' );
+		return $this->delete_account_insert_before_helper( $items, $new_items, 'urm-payments' );
 	}
 
 	/**
@@ -167,6 +167,10 @@ class Frontend {
 	public function delete_account_insert_before_helper( $items, $new_items, $before ) {
 
 		$position = array_search( $before, array_keys( $items ), true );
+
+		if ( false === $position ) {
+			return array_merge( $items, $new_items );
+		}
 
 		$return_items  = array_slice( $items, 0, $position, true );
 		$return_items += $new_items;
