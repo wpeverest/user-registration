@@ -50,8 +50,6 @@ if ( 'fixed_date' === $active_type ) {
 	}
 } elseif ( 'days_after' === $active_type ) {
 
-	$message = __( 'This content will unlock after:', 'user-registration' );
-
 	if ( $remaining_days > 0 ) {
 		$meta = sprintf(
 			/* translators: %d: number of days */

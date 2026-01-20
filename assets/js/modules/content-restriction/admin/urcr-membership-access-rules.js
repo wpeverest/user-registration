@@ -2075,7 +2075,10 @@
 						);
 						var terms = [];
 
-						if ($termSelect.hasClass("select2-hidden-accessible") || $termSelect.hasClass("urcr-enhanced-select2")) {
+						if (
+							$termSelect.hasClass("select2-hidden-accessible") ||
+							$termSelect.hasClass("urcr-enhanced-select2")
+						) {
 							terms = $termSelect.val() || [];
 							if (!Array.isArray(terms)) {
 								terms = terms ? [terms] : [];
@@ -2119,10 +2122,17 @@
 						);
 						var selectedValues = [];
 
-						if ($contentSelect.hasClass("select2-hidden-accessible") || $contentSelect.hasClass("urcr-enhanced-select2")) {
+						if (
+							$contentSelect.hasClass(
+								"select2-hidden-accessible"
+							) ||
+							$contentSelect.hasClass("urcr-enhanced-select2")
+						) {
 							selectedValues = $contentSelect.val() || [];
 							if (!Array.isArray(selectedValues)) {
-								selectedValues = selectedValues ? [selectedValues] : [];
+								selectedValues = selectedValues
+									? [selectedValues]
+									: [];
 							}
 						} else {
 							var contentData = $contentSelect.attr("data-value");
@@ -2149,11 +2159,17 @@
 						);
 						var defaultValue = [];
 
-					
-						if ($contentSelect.hasClass("select2-hidden-accessible") || $contentSelect.hasClass("urcr-enhanced-select2")) {
+						if (
+							$contentSelect.hasClass(
+								"select2-hidden-accessible"
+							) ||
+							$contentSelect.hasClass("urcr-enhanced-select2")
+						) {
 							defaultValue = $contentSelect.val() || [];
 							if (!Array.isArray(defaultValue)) {
-								defaultValue = defaultValue ? [defaultValue] : [];
+								defaultValue = defaultValue
+									? [defaultValue]
+									: [];
 							}
 						} else {
 							var defaultData = $contentSelect.attr("data-value");
@@ -2193,11 +2209,39 @@
 					}
 				};
 
+				var dripData = {};
+
+				if ("whote_site" !== type) {
+					var dripThisContent = $target.find(".urcr-membership-drip");
+
+					if (dripThisContent) {
+						dripData = {
+							activeType: dripThisContent.data("active_type"),
+							value: {
+								fixed_date: {
+									date: dripThisContent.data(
+										"fixed_date_date"
+									),
+									time: dripThisContent.data(
+										"fixed_date_time"
+									)
+								},
+								days_after: {
+									days: dripThisContent.data(
+										"days_after_days"
+									)
+								}
+							}
+						};
+					}
+				}
+
 				var targetData = {
 					id: targetId,
 					type: type,
-					drip: {}
+					drip: dripData ?? defaultDrip
 				};
+
 				// Only add value field if type is not whole_site
 				if (type !== "whole_site") {
 					targetData.value = value;
