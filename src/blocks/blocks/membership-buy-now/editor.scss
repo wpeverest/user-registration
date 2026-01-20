@@ -2,7 +2,6 @@
 	text-transform: capitalize;
 }
 
-/* In your editor.css */
 .urm-custom-hover-tool-panel {
 	grid-column: 1 / -1;
 }
@@ -49,6 +48,7 @@
 .urm-buynow-open-new-tab {
 	margin: 12px 0px 12px 0px !important;
 }
+
 .wp-block-user-registration-membership-buy-now .buynow-link .urm-buy-now-btn {
 	display: flex;
 	justify-content: center;
@@ -63,4 +63,10 @@
 	border-radius: 5px;
 	border: none;
 	font-family: inherit;
+}
+
+.urm-hide-border-panel {
+	.border-block-support-panel {
+		display: none !important;
+	}
 }
