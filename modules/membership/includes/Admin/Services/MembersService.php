@@ -154,6 +154,30 @@ class MembersService {
 			}
 		}
 
+		$team       = array();
+		$tier       = array();
+		$team_seats = '';
+		if ( isset( $data['team'] ) ) {
+			$team_index = absint( $data['team'] );
+			$team       = $membership_meta['team_pricing'][ $team_index ];
+			if ( isset( $data['tier'] ) ) {
+				$tier_index = absint( $data['tier'] );
+				$tier       = $membership_meta['team_pricing'][ $data['team'] ]['tiers'][ $tier_index ];
+			}
+			if ( 'fixed' === $team['seat_model'] ) {
+				$team_seats = isset( $team['team_size'] ) ? $team['team_size'] : '';
+			} else {
+				$no_of_seats = isset( $data['no_of_seats'] ) ? absint( $data['no_of_seats'] ) : '';
+				if ( $no_of_seats >= 1 ) {
+					$team_seats = $no_of_seats;
+				}
+			}
+		}
+
+		$response['team']       = $team;
+		$response['tier']       = $tier;
+		$response['team_seats'] = $team_seats;
+
 		return $response;
 	}
 

@@ -252,4 +252,10 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 		return ! $result ? array() : $result;
 	}
 
+	public function update_order_meta( $order_meta ) {
+		$this->wpdb()->insert(
+			TableList::order_meta_table(),
+			$order_meta
+		);
+	}
 }

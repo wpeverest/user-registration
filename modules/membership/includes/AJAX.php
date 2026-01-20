@@ -2296,6 +2296,7 @@ class AJAX {
 		$subscription_service = new SubscriptionService();
 		$selected_pg          = sanitize_text_field( $_POST['selected_pg'] );
 		$membership_id        = absint( $_POST['membership_id'] );
+		$team_id              = ! empty( $_POST['team_id'] ) ? absint( $_POST['team_id'] ) : 0;
 
 		// Get membership type for logging
 		$members_subscription_repo = new MembersSubscriptionRepository();
@@ -2341,7 +2342,7 @@ class AJAX {
 			);
 		}
 
-		$renew_membership = $subscription_service->renew_membership( $user, $selected_pg, $membership_id );
+		$renew_membership = $subscription_service->renew_membership( $user, $selected_pg, $membership_id, $team_id );
 
 		$response = $renew_membership['response'];
 		if ( $response['status'] ) {

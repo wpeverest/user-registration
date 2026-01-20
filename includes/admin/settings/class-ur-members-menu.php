@@ -909,16 +909,21 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 		 */
 		public function get_column_headers() {
 			if ( ur_check_module_activation( 'membership' ) ) {
-				$column_headers = apply_filters(
+				$headers = array(
+					'cb'                  => '<input type="checkbox" />',
+					'username'            => __( 'Username', 'user-registration' ),
+					'email'               => __( 'Email', 'user-registration' ),
+					'membership'          => __( 'Membership', 'user-registration' ),
+					'subscription_status' => __( 'Subscription Status', 'user-registration' ),
+				);
+
+				if ( ur_check_module_activation( 'team' ) ) {
+					$headers['team'] = __( 'Team', 'user-registration' );
+				}
+				$headers['user_registered'] = __( 'Registered On', 'user-registration' );
+				$column_headers             = apply_filters(
 					'user_registration_users_table_column_headers',
-					array(
-						'cb'                  => '<input type="checkbox" />',
-						'username'            => __( 'Username', 'user-registration' ),
-						'email'               => __( 'Email', 'user-registration' ),
-						'membership'          => __( 'Membership', 'user-registration' ),
-						'subscription_status' => __( 'Subscription Status', 'user-registration' ),
-						'user_registered'     => __( 'Registered On', 'user-registration' ),
-					)
+					$headers
 				);
 			} else {
 				$column_headers = apply_filters(

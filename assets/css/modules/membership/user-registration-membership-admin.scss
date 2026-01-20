@@ -1155,6 +1155,20 @@
 							&__body {}
 						}
 					}
+
+					#ur-membership-team-fields{
+						.ur-label {
+							margin-bottom: 0;
+
+							label {
+								margin-bottom: 0;
+								color: $grey-400;
+								font-size: 15px;
+								font-weight: 500;
+								line-height: 21px;
+							}
+						}
+					}
 				}
 
 				hr {
@@ -1274,6 +1288,24 @@
 
 					&-sync-container {}
 				}
+			}
+		}
+		.ur-team-membership-content{
+			#user-registration-base-list-table-page{
+				margin: 0;
+				padding: 0;
+				background: transparent;
+				border: none;
+
+				#membership-team-list{
+					.wp-list-table{
+						margin: 0;
+					}
+				}
+			}
+
+			hr{
+				display: block !important;
 			}
 		}
 	}
@@ -1571,6 +1603,66 @@
 					#user-registration-base-list-filters-row {
 						display: block;
 						margin-top: 50px;
+					}
+				}
+			}
+
+			.wp-list-table.teams{
+				th{
+					&.column-team_leader{
+						width: 20%;
+					}
+
+					&.column-members{
+						width: 10%;
+					}
+					&.column-date{
+						width: 20%;
+					}
+				}
+				tbody {
+					tr {
+						&.no-items {
+							background: #ffffff;
+
+							td {
+								padding: 0;
+
+								.empty-list-table-container {
+									text-align: center;
+									margin-top: 30px;
+									margin-bottom: 30px;
+
+									img {
+										width: 300px;
+									}
+
+									h3 {
+										margin-top: 16px;
+										margin-bottom: 8px;
+										color: #222222;
+										font-size: 22px;
+										font-weight: 600;
+										line-height: 32px;
+									}
+
+									p {
+										color: #6B6B6B;
+										font-size: 14px;
+										font-weight: 400;
+										line-height: 24px;
+									}
+								}
+							}
+						}
+						td{
+							.row-actions{
+								align-items: center;
+								span{
+									font-size: 12px;
+								}
+							}
+						}
 					}
 				}
 			}
@@ -2184,6 +2276,89 @@
 				margin: 7px 0 5px;
 			}
 		}
+	}
+}
+
+#ur-team-pricing-container{
+	.ur-team-toggle-tabs {
+		display: inline-flex;
+		border-radius: 4px;
+		overflow: hidden;
+		background:$grey-25;
+		padding: 4px;
+
+		label {
+			padding: 10px;
+			cursor: pointer;
+			font-size: 14px;
+			user-select: none;
+			margin-bottom: 0;
+			border-radius: 4px;
+			text-align: center;
+			background: transparent;
+			color: #000;
+			transition: background 0.3s, color 0.3s;
+		}
+
+		input[type="radio"] {
+			display: none;
+		}
+
+		input[type="radio"]:checked + label {
+			background: $primary_color;
+			color: #fff;
+		}
+
+	}
+
+	#ur-add-team-pricing-btn, .ur-add-tier-btn{
+		padding: 6px 16px;
+		font-size: 14px;
+
+		&:focus{
+			color: #2d3559;
+			background: rgb(222.4984029851, 224.3717109905, 232.8015970149);
+			border-color: rgb(222.4984029851, 224.3717109905, 232.8015970149);
+			box-shadow: 0 1px 0 rgb(222.4984029851, 224.3717109905, 232.8015970149);
+		}
+
+		&:hover{
+			background: transparent;
+			border-color: $primary_color;
+			color: $grey-400;
+		}
+	}
+
+	#ur-add-tier-btn{
+		padding: 0 10px;
+	}
+
+
+	.ur-remove-team-pricing-btn, .ur-remove-tier-btn{
+		width: 34px;
+    	height: 34px;
+		border: 1px solid #ffffff;
+		border-radius: 4px;
+		background: $grey-25;
+		box-shadow: none;
+		transition: all 0.3s ease-in-out;
+
+		span{
+			color: #949494;
+		}
+
+		&:hover{
+			background: $redLight;
+			border-color: $deny_color;
+			span{
+				color: $deny_color;
+			}
+		}
+	}
+
+	.ur-remove-tier-btn{
+		width: 40px;
+    	height: 40px;
 	}
 }
 

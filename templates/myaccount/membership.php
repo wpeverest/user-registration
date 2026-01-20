@@ -53,10 +53,22 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 						$user_id         = get_current_user_id();
 						$is_renewing     = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_member_renewing', true ) );
 
-						$can_renew     = ! $is_renewing && isset( $membership['post_content']['type'] ) && 'automatic' !== $data['renewal_behaviour'] && 'subscription' == $membership['post_content']['type'];
+						$team_id             = '';
+						$is_user_team_member = false;
+						if ( ! empty( $data['team'] ) && ! empty( $data['team']['meta']['urm_team_data']['team_plan_type'] ) ) {
+							$team_id      = $data['team']['ID'];
+							$team_members = get_post_meta( $team_id, 'urm_member_ids', true );
+							if ( is_array( $team_members ) && in_array( $user_id, $team_members, true ) ) {
+								$is_user_team_member = true;
+							}
+							$membership_type = $data['team']['meta']['urm_team_data']['team_plan_type'];
+						} else {
+							$membership_type = $membership['post_content']['type'];
+						}
+						$can_renew     = ! $is_renewing && isset( $membership['post_content']['type'] ) && 'automatic' !== $data['renewal_behaviour'] && 'subscription' == $membership_type;
 						$date_to_renew = '';
 
-						if ( 'subscription' == $membership['post_content']['type'] ) {
+						if ( 'subscription' == $membership_type ) {
 							$start_date    = $data['subscription_data']['start_date'];
 							$expiry_date   = $data['subscription_data']['expiry_date'];
 							$date_to_renew = urm_get_date_at_percent_interval( $start_date, $expiry_date, apply_filters( 'urm_show_membership_renewal_btn_in_percent', 80 ) ); // keeping this static for now can be changed to a setting in future
@@ -171,7 +183,7 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 												$upgradable_plans = $membership_service->get_upgradable_membership( $membership['post_id'] );
 												?>
 												<?php
-												if ( 'canceled' !== $membership['status'] && ! empty( $upgradable_plans ) ) :
+												if ( 'canceled' !== $membership['status'] && ! empty( $upgradable_plans ) && ! $is_user_team_member ) :
 													$buttons[] = '<a class="ur-account-action-link membership-tab-btn change-membership-button" href="' . esc_url_raw( $redirect_page_url ) . '" data-id="' . esc_attr( $membership['post_id'] ?? '' ) . '">' . esc_html__( 'Change Plan', 'user-registration' ) . '</a>';
 													?>
 											<?php endif; ?>
@@ -184,7 +196,7 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 
 												<?php
 												if ( $can_renew && $date_to_renew <= date( 'Y-m-d 00:00:00' ) && 'canceled' !== $membership['status'] ) {
-													$buttons[] = '<a class="ur-account-action-link membership-tab-btn renew-membership-button" href="' . esc_url( $redirect_page_url ) . '" data-pg-gateways="' . ( isset( $membership['active_gateways'] ) ? implode( ',', array_keys( $membership['active_gateways'] ) ) : '' ) . '" data-id="' . esc_attr( $membership['post_id'] ?? '' ) . '"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+													$buttons[] = '<a class="ur-account-action-link membership-tab-btn renew-membership-button" href="' . esc_url( $redirect_page_url ) . '" data-pg-gateways="' . ( isset( $membership['active_gateways'] ) ? implode( ',', array_keys( $membership['active_gateways'] ) ) : '' ) . '" data-id="' . esc_attr( $membership['post_id'] ?? '' ) . '" data-team-id="' . esc_attr( $team_id ) . '"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
   <path d="M2 12A10 10 0 0 1 12 2h.004l.519.015a10.75 10.75 0 0 1 6.53 2.655l.394.363 2.26 2.26a1 1 0 1 1-1.414 1.414l-2.248-2.248-.31-.286A8.75 8.75 0 0 0 11.996 4 8 8 0 0 0 4 12a1 1 0 1 1-2 0Z"/>
   <path d="M20 3a1 1 0 1 1 2 0v5a1 1 0 0 1-1 1h-5a1 1 0 1 1 0-2h4V3Zm0 9a1 1 0 1 1 2 0 10 10 0 0 1-10 10h-.004a10.75 10.75 0 0 1-7.05-2.67l-.393-.363-2.26-2.26a1 1 0 1 1 1.414-1.414l2.248 2.248.31.286A8.749 8.749 0 0 0 12.003 20 7.999 7.999 0 0 0 20 12Z"/>
   <path d="M2 21v-5a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2H4v4a1 1 0 1 1-2 0Z"/>
