@@ -1720,6 +1720,7 @@ class UR_Getting_Started {
 					continue;
 				}
 					$post_data = array(
+						'ID'           => $membership_id,
 						'post_title'   => $post->post_title,
 						'post_content' => $post->post_content,
 					);
@@ -1728,9 +1729,9 @@ class UR_Getting_Started {
 					$stripe_result  = $stripe_service->create_stripe_product_and_price( $post_data, $meta, false );
 
 					if ( isset( $stripe_result['success'] ) && ur_string_to_bool( $stripe_result['success'] ) ) {
+							$meta['payment_gateways']['stripe']               = array();
 							$meta['payment_gateways']['stripe']['product_id'] = $stripe_result['price']->product;
 							$meta['payment_gateways']['stripe']['price_id']   = $stripe_result['price']->id;
-
 							update_post_meta( $membership_id, 'ur_membership', wp_json_encode( $meta ) );
 					}
 			}
