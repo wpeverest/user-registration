@@ -883,7 +883,7 @@ class Membership {
 			);
 		}
 		if ( 'whole_site' !== $type ) {
-			$drip  = isset( $target['drip'] ) ? $target['drip'] : array(
+			$drip            = isset( $target['drip'] ) ? $target['drip'] : array(
 				'activeType' => 'fixed_date',
 				'value'      => array(
 					'fixed_date' => array(
@@ -893,10 +893,14 @@ class Membership {
 					'days_after' => array( 'days' => 0 ),
 				),
 			);
+			$fixed_date_date = isset( $drip['value']['fixed_date']['date'] ) ? $drip['value']['fixed_date']['date'] : '';
+			$fixed_date_time = isset( $drip['value']['fixed_date']['time'] ) ? $drip['value']['fixed_date']['time'] : '';
+			$days_after_days = isset( $drip['value']['days_after']['days'] ) ? $drip['value']['days_after']['days'] : '';
+
 			$html .= '<div class="urcr-membership-drip" data-active_type="' . esc_attr( $drip['activeType'] ) . '"
-	data-fixed_date_date="' . esc_attr( $drip['value']['fixed_date']['date'] ) . '"
-	data-fixed_date_time="' . esc_attr( $drip['value']['fixed_date']['time'] ) . '"
-	data-days_after_days="' . esc_attr( $drip['value']['days_after']['days'] ) . '">
+	data-fixed_date_date="' . esc_attr( $fixed_date_date ) . '"
+	data-fixed_date_time="' . esc_attr( $fixed_date_time ) . '"
+	data-days_after_days="' . esc_attr( $days_after_days ) . '">
 
 	<button type="button" class="urcr-drip__trigger">
 		<span class="dashicons dashicons-plus-alt2"></span> ' . esc_html__( 'Drip This Content', 'user-registration' ) . '
@@ -913,12 +917,12 @@ class Membership {
 
 		<div class="urcr-drip__panels">
 			<div class="urcr-drip__panel fixed_date-panel">
-				<input type="date" class="urcr-drip__input drip-date" min="' . esc_attr( date( 'Y-m-d' ) ) . '" value="' . esc_attr( $drip['value']['fixed_date']['date'] ) . '" />
-				<input type="time" class="urcr-drip__input drip-time" value="' . esc_attr( $drip['value']['fixed_date']['time'] ) . '" />
+				<input type="date" class="urcr-drip__input drip-date" min="' . esc_attr( date( 'Y-m-d' ) ) . '" value="' . esc_attr( $fixed_date_date ) . '" />
+				<input type="time" class="urcr-drip__input drip-time" value="' . esc_attr( $fixed_date_time ) . '" />
 			</div>
 
 			<div class="urcr-drip__panel days_after-panel" style="display:none;">
-				<input type="number" class="urcr-drip__input drip-days" value="' . esc_attr( $drip['value']['days_after']['days'] ) . '" min="0" />
+				<input type="number" class="urcr-drip__input drip-days" value="' . esc_attr( $days_after_days ) . '" min="0" />
 			</div>
 		</div>
 	</div>
