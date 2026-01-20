@@ -95,11 +95,19 @@ class MembershipService {
 			$order = $this->orders_repository->create( $orders_data );
 			if ( $subscription && $order ) {
 				$this->logger->info( 'Subscription and order created successfully for ' . $data['username'] . '.', array( 'source' => 'urm-registration-logs' ) );
-					if ( ! empty( $members_data['team'] ) ) {
+				if ( ! empty( $members_data['team'] ) ) {
+					$first_name      = get_user_meta( $member->ID, 'first_name', true );
+					$team_post_count = wp_count_posts( 'ur_membership_team' );
+					$team_index      = (int) ( $team_post_count->publish ?? 0 ) + 1;
+					if ( $first_name ) {
+						$team_name = $first_name . '-Team-#' . $team_index;
+					} else {
+						$team_name = 'Team-#' . $team_index;
+					}
 					$team_id = wp_insert_post(
 						[
 							'post_type'   => 'ur_membership_team',
-							'post_title'  => $members_data['team']['team_name'] . ' created for Order #' . $order['ID'],
+							'post_title'  => $team_name,
 							'post_status' => 'publish',
 						]
 					);
@@ -1044,12 +1052,12 @@ class MembershipService {
 	 * }
 	 */
 	public function get_membership_title_and_description( $membership_id ) {
-		$membership = get_post( $membership_id );
-		$membership_title = $membership->post_title;
+		$membership             = get_post( $membership_id );
+		$membership_title       = $membership->post_title;
 		$membership_description = get_post_meta( $membership_id, 'ur_membership_description', true );
 		return array(
-			'item_title' => $membership_title,
-			'item_description' => $membership_description
+			'item_title'       => $membership_title,
+			'item_description' => $membership_description,
 		);
 	}
 }
