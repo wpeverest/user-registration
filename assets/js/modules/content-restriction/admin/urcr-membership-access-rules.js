@@ -1493,7 +1493,7 @@
 			var contentDrip = "";
 
 			if (
-				type !== "whole_site" &&
+				!["whole_site", "masteriyo_courses"].includes(type) &&
 				urcr_membership_access_data.is_pro &&
 				urcr_membership_access_data.is_drip_content
 			) {
@@ -2209,7 +2209,7 @@
 
 				var dripData = {};
 
-				if ("whote_site" !== type) {
+				if (!["whole_site", "masteriyo_courses"].includes(type)) {
 					var dripThisContent = $target.find(".urcr-membership-drip");
 
 					if (dripThisContent) {

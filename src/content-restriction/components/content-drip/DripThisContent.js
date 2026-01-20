@@ -23,7 +23,7 @@ const DripThisContent = ({
 	contentTargets,
 	onContentTargetsChange
 }) => {
-	if (target?.type === "whole_site") return null;
+	if (["whole_site", "masteriyo_courses"].includes(target?.type)) return null;
 
 	const drip = target?.drip ?? DEFAULT_DRIP;
 

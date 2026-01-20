@@ -885,7 +885,7 @@ class Membership {
 				$value
 			);
 		}
-		if ( 'whole_site' !== $type ) {
+		if ( ! in_array( $type, array( 'whole_site', 'masteriyo_courses' ), true ) ) {
 
 			$content_drip = ur_check_module_activation( 'content-drip' );
 
