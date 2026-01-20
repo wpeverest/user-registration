@@ -125,19 +125,23 @@ if ( ! class_exists( 'Hooks' ) ) :
 				$access_courses = $this->get_current_user_access_course();
 			}
 
-			$course_id   = $data['course']['id'];
+			$access_courses = array_map( 'intval', (array) $access_courses );
+
+			$course_id   = isset( $data['course']['id'] ) ? (int) $data['course']['id'] : 0;
 			$access_mode = get_post_meta( $course_id, '_access_mode', true );
+			$access_mode = is_string( $access_mode ) ? strtolower( $access_mode ) : $access_mode;
 
-			if ( CourseAccessMode::OPEN === $access_mode ) {
+			if ( CourseAccessMode::OPEN === $access_mode || 'open' === $access_mode ) {
 				return $data;
 			}
 
-			if ( CourseAccessMode::NEED_REGISTRATION === $access_mode && in_array( $course_id, $access_courses, true ) ) {
-				return $data;
+			if ( CourseAccessMode::NEED_REGISTRATION === $access_mode || 'need_registration' === $access_mode ) {
+				return in_array( $course_id, $access_courses, true ) ? $data : array();
 			}
 
-			return array();
+			return $data;
 		}
+
 
 		/**
 		 * Adds membership block text inside the course sidebar.
