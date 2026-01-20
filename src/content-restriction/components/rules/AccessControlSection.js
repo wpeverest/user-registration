@@ -257,40 +257,45 @@ const AccessControlSection = ({
 											)}
 										:
 									</span>
-									<ContentValueInput
-										contentType={target.type}
-										value={target.value}
-										onChange={(newValue) =>
-											handleContentTargetUpdate(
-												target.id,
-												newValue
-											)
-										}
-									/>
-									{isProAccess() &&
-										isDripContent() &&
-										"membership" === ruleType && (
-											<DripThisContent
-												onContentTargetsChange={
-													onContentTargetsChange
+									<div className="urcr-target-item--content-wrapper">
+										<ContentValueInput
+											contentType={target.type}
+											value={target.value}
+											onChange={(newValue) =>
+												handleContentTargetUpdate(
+													target.id,
+													newValue
+												)
+											}
+										/>
+										<div className="urcr-target-item--content-buttons">
+											{isProAccess() &&
+												isDripContent() &&
+												"membership" === ruleType && (
+													<DripThisContent
+														onContentTargetsChange={
+															onContentTargetsChange
+														}
+														contentTargets={contentTargets}
+														target={target}
+													/>
+												)}
+																						
+											<button
+												type="button"
+												className="button-link urcr-target-remove"
+												onClick={() =>
+													handleContentTargetRemove(target.id)
 												}
-												contentTargets={contentTargets}
-												target={target}
-											/>
-										)}
-									<button
-										type="button"
-										className="button-link urcr-target-remove"
-										onClick={() =>
-											handleContentTargetRemove(target.id)
-										}
-										aria-label={__(
-											"Remove",
-											"user-registration"
-										)}
-									>
-										<span className="dashicons dashicons-no-alt"></span>
-									</button>
+												aria-label={__(
+													"Remove",
+													"user-registration"
+												)}
+											>
+												<span className="dashicons dashicons-no-alt"></span>
+											</button>
+										</div>
+									</div>
 								</div>
 							);
 						})}
