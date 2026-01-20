@@ -37,6 +37,11 @@ export const isDripContent = () => {
 	);
 };
 
+export const isMasteriyo = () => {
+	const isMasteriyo = getURCRData("is_masteriyo", false);
+	return isMasteriyo === true || isMasteriyo === "1" || isMasteriyo === 1;
+};
+
 // Check if UR_DEV is enabled
 export const isURDev = () => {
 	const urDev = getURCRData("UR_DEV", false);

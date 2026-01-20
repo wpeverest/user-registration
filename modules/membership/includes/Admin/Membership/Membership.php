@@ -794,21 +794,24 @@ class Membership {
 			$type = 'posts';
 		}
 
+		$show_masteriyo_course = 'masteriyo_courses' === $type && ! ur_check_module_activation( 'masteriyo-course-integration' );
+
 		$type_labels = apply_filters(
 			'urcr_type_labels',
 			array(
-				'pages'      => isset( $localized_data['labels']['pages'] ) ? $localized_data['labels']['pages'] : __( 'Pages', 'user-registration' ),
-				'posts'      => isset( $localized_data['labels']['posts'] ) ? $localized_data['labels']['posts'] : __( 'Posts', 'user-registration' ),
-				'post_types' => isset( $localized_data['labels']['post_types'] ) ? $localized_data['labels']['post_types'] : __( 'Post Types', 'user-registration' ),
-				'taxonomy'   => isset( $localized_data['labels']['taxonomy'] ) ? $localized_data['labels']['taxonomy'] : __( 'Taxonomy', 'user-registration' ),
-				'whole_site' => isset( $localized_data['labels']['whole_site'] ) ? $localized_data['labels']['whole_site'] : __( 'Whole Site', 'user-registration' ),
+				'pages'             => isset( $localized_data['labels']['pages'] ) ? $localized_data['labels']['pages'] : __( 'Pages', 'user-registration' ),
+				'posts'             => isset( $localized_data['labels']['posts'] ) ? $localized_data['labels']['posts'] : __( 'Posts', 'user-registration' ),
+				'post_types'        => isset( $localized_data['labels']['post_types'] ) ? $localized_data['labels']['post_types'] : __( 'Post Types', 'user-registration' ),
+				'taxonomy'          => isset( $localized_data['labels']['taxonomy'] ) ? $localized_data['labels']['taxonomy'] : __( 'Taxonomy', 'user-registration' ),
+				'whole_site'        => isset( $localized_data['labels']['whole_site'] ) ? $localized_data['labels']['whole_site'] : __( 'Whole Site', 'user-registration' ),
+				'masteriyo_courses' => isset( $localized_data['labels']['masteriyo_courses'] ) ? $localized_data['labels']['masteriyo_courses'] : __( 'Masteriyo Courses', 'user-registration' ),
 			),
 			$localized_data
 		);
 
 		$type_label = isset( $type_labels[ $type ] ) ? $type_labels[ $type ] : $type;
 
-		$html = '<div class="urcr-target-item ur-d-flex ur-align-items-center ur-mt-2" data-target-id="' . $target_id . '">';
+		$html = '<div style="' . ( $show_masteriyo_course ? 'display:none !important;' : '' ) . '" class="urcr-target-item ur-d-flex ur-align-items-center ur-mt-2" data-target-id="' . $target_id . '">';
 
 		$display_label = ( $type === 'whole_site' ) ? __( 'Includes', 'user-registration' ) : $type_label;
 		$html         .= '<span class="urcr-target-type-label">' . esc_html( $display_label ) . ':</span>';

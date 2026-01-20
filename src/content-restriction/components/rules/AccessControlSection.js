@@ -6,7 +6,11 @@ import { __ } from "@wordpress/i18n";
 import ContentTypeDropdown from "../dropdowns/ContentTypeDropdown";
 import ContentValueInput from "../inputs/ContentValueInput";
 import DropdownButton from "../dropdowns/DropdownButton";
-import { isDripContent, isProAccess } from "../../utils/localized-data";
+import {
+	isDripContent,
+	isMasteriyo,
+	isProAccess
+} from "../../utils/localized-data";
 import DripThisContent from "../content-drip/DripThisContent";
 
 const AccessControlSection = ({
@@ -236,9 +240,22 @@ const AccessControlSection = ({
 								<div
 									key={target.id}
 									className="urcr-target-item"
+									style={{
+										display:
+											target.type ===
+												"masteriyo_courses" &&
+											!isMasteriyo()
+												? "none"
+												: ""
+									}}
 								>
 									<span className="urcr-target-type-label">
-										{displayLabel.replace(/_/g, " ")}:
+										{displayLabel
+											.replace(/_/g, " ")
+											.replace(/\b\w/g, (char) =>
+												char.toUpperCase()
+											)}
+										:
 									</span>
 									<ContentValueInput
 										contentType={target.type}
