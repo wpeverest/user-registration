@@ -1429,9 +1429,6 @@
 				'.urcr-target-item[data-target-id="' + targetId + '"]'
 			);
 			self.dripInit($newTarget);
-
-			$(".urcr-target-type-group").append(targetHtml);
-
 			self.initContentTargetSelect2(targetId, type, value);
 
 			self.contentTargets.push({
@@ -2078,15 +2075,22 @@
 						);
 						var terms = [];
 
-						var termsData = $termSelect.attr("data-value");
-						if (termsData) {
-							try {
-								terms = JSON.parse(termsData);
-							} catch (e) {
-								terms = [];
+						if ($termSelect.hasClass("select2-hidden-accessible") || $termSelect.hasClass("urcr-enhanced-select2")) {
+							terms = $termSelect.val() || [];
+							if (!Array.isArray(terms)) {
+								terms = terms ? [terms] : [];
 							}
 						} else {
-							terms = $termSelect.val() || [];
+							var termsData = $termSelect.attr("data-value");
+							if (termsData) {
+								try {
+									terms = JSON.parse(termsData);
+								} catch (e) {
+									terms = [];
+								}
+							} else {
+								terms = $termSelect.val() || [];
+							}
 						}
 
 						if (!Array.isArray(terms)) {
@@ -2115,15 +2119,22 @@
 						);
 						var selectedValues = [];
 
-						var contentData = $contentSelect.attr("data-value");
-						if (contentData) {
-							try {
-								selectedValues = JSON.parse(contentData);
-							} catch (e) {
-								selectedValues = [];
+						if ($contentSelect.hasClass("select2-hidden-accessible") || $contentSelect.hasClass("urcr-enhanced-select2")) {
+							selectedValues = $contentSelect.val() || [];
+							if (!Array.isArray(selectedValues)) {
+								selectedValues = selectedValues ? [selectedValues] : [];
 							}
 						} else {
-							selectedValues = $contentSelect.val() || [];
+							var contentData = $contentSelect.attr("data-value");
+							if (contentData) {
+								try {
+									selectedValues = JSON.parse(contentData);
+								} catch (e) {
+									selectedValues = [];
+								}
+							} else {
+								selectedValues = $contentSelect.val() || [];
+							}
 						}
 
 						value = Array.isArray(selectedValues)
@@ -2138,15 +2149,23 @@
 						);
 						var defaultValue = [];
 
-						var defaultData = $contentSelect.attr("data-value");
-						if (defaultData) {
-							try {
-								defaultValue = JSON.parse(defaultData);
-							} catch (e) {
-								defaultValue = [];
+					
+						if ($contentSelect.hasClass("select2-hidden-accessible") || $contentSelect.hasClass("urcr-enhanced-select2")) {
+							defaultValue = $contentSelect.val() || [];
+							if (!Array.isArray(defaultValue)) {
+								defaultValue = defaultValue ? [defaultValue] : [];
 							}
 						} else {
-							defaultValue = $contentSelect.val() || [];
+							var defaultData = $contentSelect.attr("data-value");
+							if (defaultData) {
+								try {
+									defaultValue = JSON.parse(defaultData);
+								} catch (e) {
+									defaultValue = [];
+								}
+							} else {
+								defaultValue = $contentSelect.val() || [];
+							}
 						}
 
 						if (!Array.isArray(defaultValue)) {
@@ -2177,7 +2196,7 @@
 				var targetData = {
 					id: targetId,
 					type: type,
-					drip: dripData
+					drip: {}
 				};
 				// Only add value field if type is not whole_site
 				if (type !== "whole_site") {
