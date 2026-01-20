@@ -31,63 +31,37 @@
 
 
 		/**
-		 * Shows a full-page payment processing overlay.
-		 * Used during Stripe 3D Secure verification to indicate payment is in progress.
-		 *
-		 * @param {string} title - The title text to display (optional)
-		 * @param {string} message - The message text to display (optional)
+		 * Shows the payment processing spinner on the button container.
+		 * Used during Stripe payment processing to indicate payment is in progress.
 		 */
-		show_payment_processing_overlay: function (title, message) {
-			title = title || urmf_data.labels.i18n_payment_processing_title || 'Processing Payment';
-			message = message || urmf_data.labels.i18n_payment_processing_message || 'Please wait while we securely process your payment. Do not close this page.';
+		show_payment_processing_overlay: function () {
+			var $form = $('.ur-frontend-form').find('form.register');
+			var $buttonContainer = $form.find('.ur-button-container');
+			var $submitButton = $buttonContainer.find('.ur-submit-button');
 
-			this.hide_payment_processing_overlay();
-
-			var overlayHtml = '<div class="urm-payment-processing-overlay">' +
-				'<div class="urm-payment-processing-content">' +
-				'<div class="urm-payment-spinner"></div>' +
-				'<h3 class="urm-payment-title">' + title + '</h3>' +
-				'<p class="urm-payment-message">' + message + '</p>' +
-				'<div class="urm-payment-progress"><div class="urm-payment-progress-bar"></div></div>' +
-				'</div>' +
-				'</div>';
-
-			$('body').append(overlayHtml);
-
-			setTimeout(function () {
-				$('.urm-payment-processing-overlay').addClass('active');
-			}, 10);
+			$submitButton.prop('disabled', true);
+			if (!$submitButton.find('span.ur-front-spinner').length) {
+				$submitButton.find('span').addClass('ur-front-spinner');
+			}
 		},
 
 		/**
 		 * Hides and removes the payment processing overlay.
 		 */
 		hide_payment_processing_overlay: function () {
-			var $overlay = $('.urm-payment-processing-overlay');
-			if ($overlay.length) {
-				$overlay.removeClass('active');
-				setTimeout(function () {
-					$overlay.remove();
-				}, 300);
-			}
+			var $form = $('.ur-frontend-form').find('form.register');
+			var $buttonContainer = $form.find('.ur-button-container');
+			var $submitButton = $buttonContainer.find('.ur-submit-button');
+
+			$submitButton.find('span').removeClass('ur-front-spinner');
 		},
 
 		/**
-		 * Updates the payment processing overlay with new title and message.
-		 *
-		 * @param {string} title - The new title text
-		 * @param {string} message - The new message text
+		 * Updates the payment processing state (kept for API compatibility).
+		 * Since we're using the button spinner, this just ensures spinner is shown.
 		 */
-		update_payment_processing_overlay: function (title, message) {
-			var $overlay = $('.urm-payment-processing-overlay');
-			if ($overlay.length) {
-				if (title) {
-					$overlay.find('.urm-payment-title').text(title);
-				}
-				if (message) {
-					$overlay.find('.urm-payment-message').text(message);
-				}
-			}
+		update_payment_processing_overlay: function () {
+			this.show_payment_processing_overlay();
 		},
 
 		/**
@@ -708,11 +682,6 @@
 					);
 				}
 
-<<<<<<< Updated upstream
-=======
-				console.log('data', data);
-
->>>>>>> Stashed changes
 				this.send_data(data, {
 					success: function (response) {
 						if (response.success) {
@@ -1813,7 +1782,7 @@
 			prepare_members_data,
 			form_response
 		) {
-			ur_membership_frontend_utils.hide_payment_processing_overlay();
+			ur_membership_frontend_utils.show_payment_processing_overlay();
 
 			return elements.stripe
 				.confirmCardPayment(response.data.pg_data.client_secret, {
@@ -1822,10 +1791,6 @@
 					}
 				})
 				.then(function (result) {
-					ur_membership_frontend_utils.show_payment_processing_overlay(
-						urmf_data.labels.i18n_payment_completing_title || 'Completing Payment',
-						urmf_data.labels.i18n_payment_completing_message || 'Your payment has been verified. Please wait while we complete your registration.'
-					);
 
 					var button = $(".membership_register_button");
 					ur_membership_frontend_utils.toggleSaveButtons(
@@ -1839,6 +1804,7 @@
 						prepare_members_data,
 						form_response
 					);
+					ur_membership_frontend_utils.hide_payment_processing_overlay();
 				});
 		},
 		update_order_status: function (
@@ -2070,6 +2036,8 @@
 		 *
 		 */
 		handleCustomerActionRequired: function (data) {
+			ur_membership_frontend_utils.show_payment_processing_overlay();
+
 			return new Promise(function (resolve, reject) {
 				if (
 					data.subscription &&
@@ -2083,6 +2051,7 @@
 						prepare_members_data: data.prepare_members_data,
 						form_response: data.form_response
 					});
+					ur_membership_frontend_utils.hide_payment_processing_overlay();
 				}
 
 				var paymentIntent =
@@ -2090,7 +2059,6 @@
 
 				if ("trialing" !== data.subscription.status) {
 					if ("requires_action" === paymentIntent.status) {
-						ur_membership_frontend_utils.hide_payment_processing_overlay();
 
 						data.paymentElements.stripe
 							.confirmCardPayment(paymentIntent.client_secret, {
@@ -2106,11 +2074,6 @@
 								if (
 									"succeeded" === result.paymentIntent.status
 								) {
-									ur_membership_frontend_utils.show_payment_processing_overlay(
-									urmf_data.labels.i18n_payment_completing_title || 'Completing Payment',
-									urmf_data.labels.i18n_payment_completing_message || 'Your payment has been verified. Please wait while we complete your registration.'
-									);
-
 									data.subscription.status = "active";
 									resolve({
 										subscription: data.subscription,
@@ -2125,6 +2088,7 @@
 										"Unable to complete the payment.";
 									reject(message, data);
 								}
+								ur_membership_frontend_utils.hide_payment_processing_overlay();
 							});
 					}
 				}
