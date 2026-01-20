@@ -356,28 +356,34 @@ class UR_Frontend {
 		$mask = Ur()->query->get_endpoints_mask();
 		add_rewrite_endpoint( 'ur-membership', $mask );
 
-		return $this->delete_account_insert_before_helper( $items, $new_items, 'user-logout' );
+		return $this->insert_after_helper( $items, $new_items, 'edit-profile' );
 	}
 
 	/**
-	 * Delete Account insert after helper.
+	 * Insert after helper.
 	 *
 	 * @param mixed $items Items.
 	 * @param mixed $new_items New items.
 	 * @param mixed $before Before item.
 	 */
-	public function delete_account_insert_before_helper( $items, $new_items, $before ) {
+	public function insert_after_helper( $items, $new_items, $after ) {
 
-		// Search for the item position.
-		$position = array_search( $before, array_keys( $items ), true );
+		$keys     = array_keys( $items );
+		$position = array_search( $after, $keys, true );
 
-		// Insert the new item.
+		if ( false === $position ) {
+			return array_merge( $items, $new_items );
+		}
+
+		$position++;
+
 		$return_items  = array_slice( $items, 0, $position, true );
 		$return_items += $new_items;
-		$return_items += array_slice( $items, $position, count( $items ) - $position, true );
+		$return_items += array_slice( $items, $position, null, true );
 
 		return $return_items;
 	}
+
 
 	/**
 	 * Membership tab content.
@@ -501,7 +507,7 @@ class UR_Frontend {
 		$new_items['ur-membership'] = __( 'Subscriptions', 'user-registration' );
 		$items                      = array_merge( $items, $new_items );
 
-		return $this->delete_account_insert_before_helper( $items, $new_items, 'user-logout' );
+		return $this->insert_after_helper( $items, $new_items, 'edit-profile' );
 	}
 
 	/**
