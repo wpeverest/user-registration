@@ -45,7 +45,7 @@ if ( 'fixed_date' === $active_type ) {
 				$timestamp
 			);
 
-			$meta = $formatted;
+			$meta = 'on ' + $formatted;
 		}
 	}
 } elseif ( 'days_after' === $active_type ) {
@@ -53,7 +53,7 @@ if ( 'fixed_date' === $active_type ) {
 	if ( $remaining_days > 0 ) {
 		$meta = sprintf(
 			/* translators: %d: number of days */
-			_n( '%d day', '%d days', $remaining_days, 'user-registration' ),
+			_n( 'in %d day', '%d days', $remaining_days, 'user-registration' ),
 			$remaining_days
 		);
 	} else {
