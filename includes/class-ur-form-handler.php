@@ -246,7 +246,7 @@ class UR_Form_Handler {
 								} elseif ( isset( $field['type'] ) && 'repeater' === $field['type'] ) {
 									update_user_meta( $user_id, $update_key, $form_data[ $key ]->value ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 								}
-							} elseif ( 'checkbox' === $field['field_key'] ) {
+							} elseif ( isset( $field['field_key'] ) &&'checkbox' === $field['field_key'] ) {
 								update_user_meta( $user_id, $update_key, '' );
 							}
 						}

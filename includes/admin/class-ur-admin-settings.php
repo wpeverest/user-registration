@@ -485,7 +485,6 @@ class UR_Admin_Settings {
 							}
 							if ( 'tax_table' === $id ) {
 								$regions = get_option( 'user_registration_tax_regions_and_rates', array() );
-								error_log( print_r( $regions, true ) );
 								$btn_title = __( 'Manage Tax Regions', 'user-registration' );
 
 								if ( empty( $regions['regions'] ) ) {
@@ -1765,7 +1764,7 @@ class UR_Admin_Settings {
 
 		// Loop options and get values to save.
 		foreach ( $options['sections'] as $id => $section ) {
-			if ( ! isset( $id ) || ! isset( $section['type'] ) ) {
+			if ( ! isset( $id ) || ! isset( $section['type'] ) || ! isset( $section['settings'] ) ) {
 				continue;
 			}
 

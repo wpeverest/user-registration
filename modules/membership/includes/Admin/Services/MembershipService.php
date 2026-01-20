@@ -735,10 +735,11 @@ class MembershipService {
 		if ( $current_user_id ) {
 
 			$user_memberships    = $members_repository->get_member_membership_by_id( $current_user_id );
+
 			$user_membership_ids = array_filter(
 				array_map(
 					function ( $user_memberships ) {
-											return $user_memberships['post_id'];
+						return $user_memberships['post_id'];
 					},
 					$user_memberships
 				)
@@ -956,6 +957,12 @@ class MembershipService {
 					'message' => esc_html__( 'You cannot purchase this membership.', 'user-registration' ),
 				);
 			}
+		} else if ( isset( $data['action'] ) && 'register' === $data['action'] ) {
+			$membership_id    = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
+			$memberships      = $membership_repository->get_single_membership_by_ID( $membership_id );
+			$memberships      = $this->prepare_single_membership_data( $memberships );
+			$memberships      = apply_filters( 'build_membership_list_frontend', array( (array) $memberships ) )[0];
+			$memberships      = array( $memberships );
 		}
 
 		if ( empty( $memberships ) ) {
@@ -986,6 +993,10 @@ class MembershipService {
 		$membership_group_service    = new MembershipGroupService();
 		$current_membership_group    = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
 		$user_membership_group_ids   = array();
+
+		if( empty($user_membership_ids ) ) {
+			return 'register';
+		}
 
 		foreach ( $user_membership_ids as $user_membership_id ) {
 			$user_membership_group_id = $membership_group_repository->get_membership_group_by_membership_id( $user_membership_id );
