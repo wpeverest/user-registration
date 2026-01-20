@@ -1855,6 +1855,51 @@ class AJAX {
 				$single_field[ 'user_registration_' . $data->field_name ] = isset( $data->value ) ? $data->value : '';
 			}
 
+			// Skip validationd for fields ignored in checkout.
+			add_filter(
+				'user_registration_update_profile_validation_skip_fields',
+				function ( $skippable_fields, $form_data ) {
+					$skippable_field_types = apply_filters(
+						'user_registration_ignorable_checkout_fields',
+						array(
+							'user_pass',
+							'user_confirm_password',
+							'user_confirm_email',
+							'profile_picture',
+							'wysiwyg',
+							'select2',
+							'multi_select2',
+							'range',
+							'file',
+						)
+					);
+
+					$form_skippable_fields = array_filter(
+						$form_data,
+						function ( $field ) use ( $skippable_field_types ) {
+							if ( in_array( $field->field_key, $skippable_field_types, true ) ) {
+
+								if ( 'range' === $field->field_key && ( isset( $field->advance_setting->enable_payment_slider ) && ! ur_string_to_bool( $field->advance_setting->enable_payment_slider ) ) ) {
+									return false;
+								}
+
+								return true;
+							}
+
+							return false;
+						}
+					);
+
+					$form_skippable_fields             = wp_list_pluck( wp_list_pluck( $form_skippable_fields, 'general_setting' ), 'field_name' );
+
+					return array_unique(
+						array_merge( $skippable_fields, $form_skippable_fields )
+					);
+				},
+				10,
+				2
+			);
+
 			[ $profile, $single_field ] = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, false );
 			$user                       = get_userdata( $user_id );
 			urm_update_user_profile_data( $user, $profile, $single_field, $form_id );
@@ -2361,6 +2406,73 @@ class AJAX {
 				$membership_metas = json_decode( $membership['meta_value'], true );
 				$membership_type  = $membership_metas['type'] ?? 'unknown';
 			}
+		}
+
+		if ( isset( $_POST['form_data'] ) && ! empty( $_POST['form_data'] ) ) {
+			$single_field = array();
+			$form_data    = json_decode( wp_unslash( $_POST['form_data'] ) );
+			$user_id      = get_current_user_id();
+			$form_id      = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : ur_get_form_id_by_userid( $user_id );
+			$profile      = user_registration_form_data( $user_id, $form_id );
+
+			foreach ( $form_data as $data ) {
+				$single_field[ 'user_registration_' . $data->field_name ] = isset( $data->value ) ? $data->value : '';
+			}
+
+			// Skip validationd for fields ignored in checkout.
+			add_filter(
+				'user_registration_update_profile_validation_skip_fields',
+				function ( $skippable_fields, $form_data ) {
+					$skippable_field_types = apply_filters(
+						'user_registration_ignorable_checkout_fields',
+						array(
+							'user_pass',
+							'user_confirm_password',
+							'user_confirm_email',
+							'profile_picture',
+							'wysiwyg',
+							'select2',
+							'multi_select2',
+							'range',
+							'file',
+						)
+					);
+
+					$form_skippable_fields = array_filter(
+						$form_data,
+						function ( $field ) use ( $skippable_field_types ) {
+							if ( in_array( $field->field_key, $skippable_field_types, true ) ) {
+
+								if ( 'range' === $field->field_key && ( isset( $field->advance_setting->enable_payment_slider ) && ! ur_string_to_bool( $field->advance_setting->enable_payment_slider ) ) ) {
+									return false;
+								}
+
+								return true;
+							}
+
+							return false;
+						}
+					);
+
+					$form_skippable_fields             = wp_list_pluck( wp_list_pluck( $form_skippable_fields, 'general_setting' ), 'field_name' );
+
+					return array_unique(
+						array_merge( $skippable_fields, $form_skippable_fields )
+					);
+				},
+				10,
+				2
+			);
+
+			[ $profile, $single_field ] = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, false );
+			$user                       = get_userdata( $user_id );
+			urm_update_user_profile_data( $user, $profile, $single_field, $form_id );
+
+			$logger = ur_get_logger();
+			$logger->info(
+				__( 'User details added while renewing.', 'user-registration' ),
+				array( 'source' => 'form-save' )
+			);
 		}
 
 		// Log session start with divider

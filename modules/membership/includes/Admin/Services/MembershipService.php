@@ -973,7 +973,15 @@ class MembershipService {
 			$memberships      = $this->prepare_single_membership_data( $memberships );
 			$memberships      = apply_filters( 'build_membership_list_frontend', array( (array) $memberships ) )[0];
 			$memberships      = array( $memberships );
+		} else if ( isset( $data['action'] ) && 'renew' === $data['action'] ) {
+			$membership_id    = isset( $data['current'] ) ? absint( $data['current'] ) : 0;
+			$memberships      = $membership_repository->get_single_membership_by_ID( $membership_id );
+			$memberships      = $this->prepare_single_membership_data( $memberships );
+			$memberships      = apply_filters( 'build_membership_list_frontend', array( (array) $memberships ) )[0];
+			$memberships      = array( $memberships );
 		}
+
+		error_log( print_r( $memberships, true ) );
 
 		if ( empty( $memberships ) ) {
 			return array(

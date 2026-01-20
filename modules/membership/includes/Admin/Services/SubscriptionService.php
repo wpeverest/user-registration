@@ -935,6 +935,7 @@ class SubscriptionService {
 				'username'                 => $username,
 				'transaction_id'           => $orders_data['orders_data']['transaction_id'],
 				'updated_membership_title' => $membership['post_title'],
+				'order_id'   => $order['ID'],
 			),
 			'response' => $renew_response,
 		);
