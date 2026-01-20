@@ -33,7 +33,7 @@ class Frontend {
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ), 10, 2 );
 		add_action( 'init', array( $this, 'urm_create_course_portal_page' ) );
 		add_action( 'wp_loaded', array( $this, 'add_masteriyo_course_tab_endpoint' ) );
-		add_filter( 'user_registration_account_menu_items', array( $this, 'membership_tab' ), 10, 1 );
+		add_filter( 'user_registration_account_menu_items', array( $this, 'masteriyo_course_tab' ), 10, 1 );
 
 		add_action(
 			'user_registration_account_urm-courses_endpoint',
@@ -137,7 +137,7 @@ class Frontend {
 	 * @param array $items Existing menu items.
 	 * @return array
 	 */
-	public function membership_tab( $items ) {
+	public function masteriyo_course_tab( $items ) {
 		$current_user_id = get_current_user_id();
 		$user_source     = get_user_meta( $current_user_id, 'ur_registration_source', true );
 
@@ -153,7 +153,7 @@ class Frontend {
 		$new_items['urm-courses'] = __( 'My Courses', 'user-registration' );
 		$items                    = array_merge( $items, $new_items );
 
-		return $this->delete_account_insert_before_helper( $items, $new_items, 'urm-payments' );
+		return $this->insert_after_edit_profile( $items, $new_items, 'edit-profile' );
 	}
 
 	/**
@@ -164,17 +164,20 @@ class Frontend {
 	 * @param string $before    Key to insert before.
 	 * @return array
 	 */
-	public function delete_account_insert_before_helper( $items, $new_items, $before ) {
+	public function insert_after_edit_profile( $items, $new_items, $after ) {
 
-		$position = array_search( $before, array_keys( $items ), true );
+		$keys     = array_keys( $items );
+		$position = array_search( $after, $keys, true );
 
 		if ( false === $position ) {
 			return array_merge( $items, $new_items );
 		}
 
+		++$position;
+
 		$return_items  = array_slice( $items, 0, $position, true );
 		$return_items += $new_items;
-		$return_items += array_slice( $items, $position, count( $items ) - $position, true );
+		$return_items += array_slice( $items, $position, null, true );
 
 		return $return_items;
 	}
