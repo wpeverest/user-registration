@@ -620,7 +620,7 @@ class StripeService {
 		if ( ! isset( $stripe_product_details['price_id'] ) || ! isset( $stripe_product_details['product_id'] ) ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
-				'Stripe subscription failed - Price or product not configured',
+				'Price or product not configured - New product is creating.',
 				array(
 					'error_code'      => 'MISSING_STRIPE_CONFIG',
 					'member_id'       => $member_id,
@@ -628,10 +628,24 @@ class StripeService {
 				)
 			);
 
-			$response['status']  = false;
-			$response['message'] = __( 'Stripe subscription failed, price or product not found', 'user-registration' );
+			$product = \Stripe\Product::create(
+				array(
+					'name'        => $membership['post_title'],
+					'description' => 'N/A',
+					'metadata'    => array(
+						'membership_id' => $membership['ID'],
+					),
+				)
+			);
 
-			return $response;
+			$stripe_product_details['product_id'] = $product->id;
+			$membership_metas['payment_gateways']['stripe']['product_id'] = $stripe_product_details['product_id'];
+			update_post_meta( $membership['ID'], 'ur_membership', wp_json_encode( $membership_metas ) );
+
+			// $response['status']  = false;
+			// $response['message'] = __( 'Stripe subscription failed, price or product not found', 'user-registration' );
+
+			// return $response;
 		}
 		try {
 
