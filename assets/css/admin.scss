@@ -71,7 +71,9 @@ body {
 				h6,
 				p,
 				small,
-				label {
+				label,
+				input,
+				select {
 					font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 				}
 			}
