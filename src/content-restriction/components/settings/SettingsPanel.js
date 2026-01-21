@@ -3,6 +3,7 @@
  */
 import { __ } from "@wordpress/i18n";
 import { useEffect, useRef, useState } from "react";
+import { RawHTML } from "@wordpress/element";
 import { hasAdvancedLogic } from "../../utils/advanced-logic-helper";
 import { getURCRData, isProAccess } from "../../utils/localized-data";
 import { saveRuleWithCollectiveData } from "../../utils/rule-save-helper";
@@ -15,7 +16,7 @@ import URFormAction from "./URFormAction";
 
 /* global wp */
 
-const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
+const SettingsPanel = ({ rule, onRuleUpdate, onGoBack, isToggling = false, onSavingChange }) => {
 	const isMembershipRule = rule.rule_type === "membership";
 	const isMigratedRule = Boolean(rule.is_migrated);
 	const isMigratedCustomRule = isMigratedRule && !isMembershipRule;
@@ -225,6 +226,13 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 			Boolean(rule.is_advanced_logic_enabled || false)
 		);
 	}, [rule.id, rule.is_advanced_logic_enabled]);
+
+	// Notify parent when saving state changes
+	useEffect(() => {
+		if (onSavingChange) {
+			onSavingChange(isSaving);
+		}
+	}, [isSaving, onSavingChange]);
 
 	useEffect(() => {
 		if (
@@ -654,6 +662,28 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 								});
 							})()}
 						</select>
+						{(actionType === "ur-form" || actionType === "ur_form" || actionType === "shortcode") && (() => {
+							const actionTypeOptions = getURCRData("action_type_options", []);
+							const currentAction = actionTypeOptions.find(
+								(option) => option.value === actionType || 
+								(actionType === "ur_form" && option.value === "ur-form")
+							);
+							const dynamicLabel = currentAction ? currentAction.label : 
+								(actionType === "shortcode" ? "Render Shortcode" : "Show UR Form");
+							
+							return (
+								<div className="urcr-global-migration-notice">
+									<p className="urcr-notice-wrap">
+										<RawHTML>
+											{__(
+												`This legacy <code>${dynamicLabel}</code> setting will be removed in a future version. Please use 'Show Message' and add any shortcodes directly in the editor.`,
+												"user-registration"
+											)}
+										</RawHTML>
+									</p>
+								</div>
+							);
+						})()}
 					</div>
 				</div>
 			)}
@@ -735,7 +765,7 @@ const SettingsPanel = ({ rule, onRuleUpdate, onGoBack }) => {
 					type="button"
 					className="button button-primary"
 					onClick={handleSave}
-					disabled={isSaving}
+					disabled={isSaving || isToggling}
 				>
 					{isSaving
 						? __("Saving...", "user-registration")

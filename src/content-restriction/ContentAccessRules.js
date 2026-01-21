@@ -239,7 +239,16 @@ const ContentAccessRules = () => {
 	const handleRuleStatusUpdate = (ruleId, enabled) => {
 		setRules((prevRules) =>
 			prevRules.map((rule) =>
-				rule.id === ruleId ? { ...rule, enabled } : rule
+				rule.id === ruleId
+					? {
+							...rule,
+							enabled,
+							content: {
+								...(rule.content || {}),
+								enabled
+							}
+						}
+					: rule
 			)
 		);
 	};

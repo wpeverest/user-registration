@@ -28,6 +28,7 @@ const RuleCard = ({
 	onRuleDuplicate
 }) => {
 	const [isToggling, setIsToggling] = useState(false);
+	const [isSaving, setIsSaving] = useState(false);
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false);
@@ -106,6 +107,9 @@ const RuleCard = ({
 	}, [isEditingTitle, editedTitle, rule, onRuleUpdate]);
 
 	const handleToggleStatus = async () => {
+		if (isToggling || isSaving) {
+			return;
+		}
 		const newStatus = !rule.enabled;
 		setIsToggling(true);
 		try {
@@ -246,7 +250,7 @@ const RuleCard = ({
 								type="checkbox"
 								checked={rule.enabled}
 								onChange={handleToggleStatus}
-								disabled={isToggling}
+								disabled={isToggling || isSaving}
 							/>
 							<span className="slider round"></span>
 						</span>
@@ -371,10 +375,11 @@ const RuleCard = ({
 							: "urcr-tab-content"
 					}
 				>
-					<RuleContentDisplay
-						rule={rule}
-						onRuleUpdate={onRuleUpdate}
-					/>
+				<RuleContentDisplay
+					rule={rule}
+					onRuleUpdate={onRuleUpdate}
+					isToggling={isToggling}
+				/>
 				</div>
 				<div
 					className={
@@ -383,11 +388,13 @@ const RuleCard = ({
 							: "urcr-tab-content"
 					}
 				>
-					<SettingsPanel
-						rule={rule}
-						onRuleUpdate={onRuleUpdate}
-						onGoBack={() => setActiveTab("rules")}
-					/>
+				<SettingsPanel
+					rule={rule}
+					onRuleUpdate={onRuleUpdate}
+					onGoBack={() => setActiveTab("rules")}
+					isToggling={isToggling}
+					onSavingChange={setIsSaving}
+				/>
 				</div>
 			</div>
 

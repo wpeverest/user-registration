@@ -165,10 +165,10 @@ export const saveRuleWithCollectiveData = async ({
 
 		const accessRuleData = {
 			enabled:
-				ruleData.enabled !== undefined
-					? ruleData.enabled
-					: rule.enabled !== undefined
-						? rule.enabled
+				rule.enabled !== undefined
+					? rule.enabled
+					: ruleData.enabled !== undefined
+						? ruleData.enabled
 						: true,
 			access_control: accessControl,
 			logic_map: logicMap,
@@ -193,6 +193,7 @@ export const saveRuleWithCollectiveData = async ({
 			const updatedRule = {
 				...rule,
 				title: data.title,
+				enabled: accessRuleData.enabled,
 				access_control: accessControl,
 				logic_map: logicMap,
 				target_contents: targetContents,

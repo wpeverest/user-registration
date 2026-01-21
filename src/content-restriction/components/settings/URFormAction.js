@@ -41,16 +41,6 @@ const URFormAction = ({ urForm, onUrFormChange }) => {
 					</select>
 				</div>
 			</div>
-			<div className="urcr-global-migration-notice">
-				<p className="urcr-notice-wrap">
-					<RawHTML>
-						{__(
-							"<strong>Note:</strong> This setting <strong>Select A Form</strong> is a legacy setting and will be removed in our future version. You can use the <strong>Show Message</strong> option and use the editor directly to add any shortcodes.",
-							"user-registration"
-						)}
-					</RawHTML>
-				</p>	
-			</div>
 		</>
 	);
 };

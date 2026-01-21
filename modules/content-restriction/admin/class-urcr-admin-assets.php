@@ -317,7 +317,7 @@ class URCR_Admin_Assets {
 				'label'          => esc_html__( 'Email Domain', 'user-registration' ),
 				'type'           => 'text',
 				'operator_label' => esc_html__( 'is', 'user-registration' ),
-				'placeholder'    => esc_html__( 'example.com, gmail.com, yahoo.com', 'user-registration' ),
+				'placeholder'    => esc_html__( 'gmail.com, outlook.com', 'user-registration' ),
 			),
 			array(
 				'value'          => 'post_count',
