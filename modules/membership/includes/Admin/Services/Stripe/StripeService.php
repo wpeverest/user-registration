@@ -616,8 +616,9 @@ class StripeService {
 		}
 
 		$stripe_product_details = $membership_metas['payment_gateways']['stripe'] ?? array();
-
-		if ( ! isset( $stripe_product_details['price_id'] ) || ! isset( $stripe_product_details['product_id'] ) ) {
+		
+		$products      = \Stripe\Product::all();
+		if ( ! isset( $stripe_product_details['price_id'] ) || ! isset( $stripe_product_details['product_id'] ) || empty( $products->data ) ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
 				'Price or product not configured - New product is creating.',
