@@ -1490,7 +1490,15 @@
 			var contentDrip = "";
 
 			if (
-				!["whole_site", "masteriyo_courses"].includes(type) &&
+				![
+					"whole_site",
+					"masteriyo_courses",
+					"whole_site",
+					"masteriyo_courses",
+					"menu_items",
+					"files",
+					"custom_uri"
+				].includes(type) &&
 				urcr_membership_access_data.is_pro &&
 				urcr_membership_access_data.is_drip_content
 			) {
