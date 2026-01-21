@@ -70,9 +70,7 @@ if ( ! class_exists( 'Admin' ) ) :
 			// Build sections array
 			$sections = array();
 
-			$default_message = '<h3>' . __( 'Content Locked', 'user-registration' ) . '</h3>
-<p>' . __( 'This content will be available {{urm_drip_time}}', 'user-registration' ) . '</p>
-<p>Please check back later!</p>';
+			$default_message = Helper::global_default_message();
 
 			$sections['user_registration_content_drip_settings'] = array(
 				'title'    => __( 'Content Drip', 'user-registration' ),

@@ -269,7 +269,7 @@
       "slug": "user-registration-content-drip",
       "name": "User Registration - Content Drip",
       "image": "extensions-json/sections/icons/content_drip.png",
-      "excerpt": "Drip content access over time, tailored to each user’s data and behavior.",
+      "excerpt": "Drip content access over time, based on either a fixed date or days after the membership purchase.",
       "category": "Membership",
       "link": "https://docs.wpuserregistration.com/docs/content-drip/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
       "released_date": "22/09/2017",

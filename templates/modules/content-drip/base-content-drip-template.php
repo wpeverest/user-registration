@@ -12,6 +12,8 @@
  * ]
  */
 
+use WPEverest\URM\ContentDrip\Helper;
+
 defined( 'ABSPATH' ) || exit;
 
 if ( empty( $args ) || ! is_array( $args ) ) {
@@ -22,9 +24,8 @@ $active_type    = isset( $args['activeType'] ) ? $args['activeType'] : 'fixed_da
 $value          = isset( $args['value'] ) && is_array( $args['value'] ) ? $args['value'] : array();
 $remaining_days = isset( $args['remaining_days'] ) ? absint( $args['remaining_days'] ) : 0;
 
-$default_message = '<h3>' . __( 'Content Locked', 'user-registration' ) . '</h3>
-<p>' . __( 'This content will be available {{urm_drip_time}}', 'user-registration' ) . '</p>
-<p>Please check back later!</p>';
+
+$default_message = Helper::global_default_message();
 
 $message = get_option(
 	'user_registration_content_drip_global_message',
