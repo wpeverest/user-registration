@@ -169,11 +169,11 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
             if ( false === get_option( 'urm_global_paypal_settings_migrated_', false ) ) {
                 //runs for backward compatibility, could be removed in future versions.
                 if( 'test' === $paypal_mode ) {
-                    $test_admin_email   = get_option( 'admin_email', '' );
+                    $test_admin_email   = get_option( 'user_registration_global_paypal_email_address', '' );
                     $test_client_id     = get_option( 'user_registration_global_paypal_client_id', '' );
                     $test_client_secret = get_option( 'user_registration_global_paypal_client_secret', '' );
                 } else {
-                    $live_admin_email   = get_option( 'admin_email', '' );
+                    $live_admin_email   = get_option( 'user_registration_global_paypal_email_address', '' );
                     $live_client_id     = get_option( 'user_registration_global_paypal_client_id', '' );
                     $live_client_secret = get_option( 'user_registration_global_paypal_client_secret', '' );
                 }
