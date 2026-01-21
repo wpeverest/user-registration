@@ -13,8 +13,8 @@ jobs:
       - name: Check Release Type and Branch
         id: check_release
         run: |
-         if [[ "${{ github.ref }}" != "refs/heads/master" && "${{ github.event.release.prerelease }}" == "true" ]]; then
-            echo "Branch is not master, and release type is prerelease. Skipping deployment."
+         if [[ "${{ github.ref }}" != "refs/heads/patch" && "${{ github.event.release.prerelease }}" == "true" ]]; then
+            echo "Branch is not patch, and release type is prerelease. Skipping deployment."
             exit 0
           fi
       - name: Set env

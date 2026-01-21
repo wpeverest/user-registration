@@ -344,14 +344,17 @@
 
 						if (listSelect.length) {
 							email_marketing_sync[val].integration_list_id =
-							listSelect.val();
+								listSelect.val();
 						}
 
-						if ( 'mailchimp' === val ) {
-							var tagSelect = form.find( "#ur_sync_email_marketing_mailchimp_tag_id" );
+						if ("mailchimp" === val) {
+							var tagSelect = form.find(
+								"#ur_sync_email_marketing_mailchimp_tag_id"
+							);
 
-							if ( tagSelect.length ) {
-								email_marketing_sync[val].list_tags = tagSelect.val();
+							if (tagSelect.length) {
+								email_marketing_sync[val].list_tags =
+									tagSelect.val();
 							}
 						}
 					}
@@ -1500,6 +1503,7 @@
 	$(".ur-membership-save-btn").on("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
+
 		var $this = $(this);
 		if ($(this).find(".ur-spinner.is-active").length) {
 			ur_membership_utils.show_failure_message(

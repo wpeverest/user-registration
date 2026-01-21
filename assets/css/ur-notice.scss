@@ -6,7 +6,7 @@
 #user-registration-upgrade-notice {
 	strong {
 		font-weight: 700;
-		color: #1F1F1F;
+		color: #1f1f1f;
 	}
 }
 
@@ -65,7 +65,7 @@
 
 		.ur-email-send-failed-log {
 			border-left: 2px solid #72aee6;
-			background: #F0FFFF;
+			background: #f0ffff;
 			padding: 10px;
 			width: fit-content;
 		}
@@ -117,8 +117,6 @@
 			&:hover {
 				text-decoration: underline;
 			}
-
-
 		}
 	}
 
@@ -135,12 +133,15 @@
 		.notice-dismiss {
 			min-height: 32px;
 			margin-left: 0;
-			padding: 0;
 			align-content: center;
 			position: unset;
 			text-decoration: none;
 			font-weight: 400;
 			color: #9ca3af;
+
+			&.notice-nsa {
+				padding: 0;
+			}
 		}
 
 		.user-registration-notice-ul {
@@ -178,7 +179,6 @@
 						color: #ffffff;
 					}
 				}
-
 			}
 
 			.button-primary {
@@ -260,7 +260,6 @@
 		font-weight: 500;
 		font-size: 14px;
 	}
-
 
 	.ur-notice-subtitle {
 		color: #6b6b6b;

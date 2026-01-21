@@ -49,7 +49,7 @@ class PaypalService {
 
 		$is_upgrading                 = ! empty( $data['upgrade'] ) ? $data['upgrade'] : false;
 		$paypal_options               = is_array( $data['payment_gateways']['paypal'] ) ? $data['payment_gateways']['paypal'] : array();
-		$mode                         = get_option( 'user_registration_global_paypal_mode', 'test' ) == "test" ? 'test' : 'live';
+		$mode                         = get_option( 'user_registration_global_paypal_mode', 'test' ) == "test" ? 'test' : 'production';
 		$paypal_options['mode']       = $mode;
 		$paypal_options['email']      = get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address', $paypal_options['email'] ?? '' ) );
 		$paypal_options['cancel_url'] = get_option( 'user_registration_global_paypal_cancel_url', home_url() );

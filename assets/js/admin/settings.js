@@ -2547,8 +2547,9 @@
 			var $modeSelector = $(gatewayMap[gatewayToggleId]);
 
 			if ($modeSelector.length > 0) {
-				if (gatewayToggleId === "user_registration_paypal_enabled") {
-					$modeSelector.val("test");
+				if (gatewayToggleId === 'user_registration_paypal_enabled') {
+					var value =  $("#user_registration_global_paypal_mode").length > 0 && $("#user_registration_global_paypal_mode").val() ? $("#user_registration_global_paypal_mode").val() : 'test';
+					$modeSelector.val( value );
 				}
 				setTimeout(function () {
 					$modeSelector.trigger("change");
