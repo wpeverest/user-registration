@@ -45,7 +45,7 @@ if ( 'fixed_date' === $active_type ) {
 				$timestamp
 			);
 
-			$meta = 'on ' + $formatted;
+			$meta = 'on ' . $formatted;
 		}
 	}
 } elseif ( 'days_after' === $active_type ) {
