@@ -133,11 +133,11 @@ html {
 							border-radius: 4px;
 							border: 1px solid var(
 									--ur-button-background-normal-color,
-									var(--ur-primary-color, $color_1)
+									$color_1
 							);
 							background: var(
 									--ur-button-background-normal-color,
-									var(--ur-primary-color, $color_1)
+									$color_1
 							);
 							color: var(--ur-button-text-normal-color, $color_2);
 							font-size: 14px;
@@ -1215,7 +1215,7 @@ html {
 		font-weight: 600;
 		background: var(
 				--ur-button-background-normal-color,
-				var(--ur-primary-color, $color_1)
+				$color_1
 		);
 		color: var(--ur-button-text-normal-color, $color_2);
 		padding: 14px 0;
