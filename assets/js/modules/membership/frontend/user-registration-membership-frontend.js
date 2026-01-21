@@ -1021,9 +1021,22 @@
 			var taxAmount = 0;
 
 			if (countryField.length) {
-				var country = countryField.val();
-				var state = stateField.val();
-				var regions = urmf_data.regions_list.regions[country];
+				var country = countryField.val() || '';
+				var state   = stateField.val() || '';
+
+				var regions = null;
+
+				if (
+					typeof urmf_data !== 'undefined' &&
+					urmf_data.regions_list &&
+					urmf_data.regions_list.regions &&
+					country &&
+					urmf_data.regions_list.regions.hasOwnProperty(country)
+				) {
+					regions = urmf_data.regions_list.regions[country];
+				}
+
+
 				var tax_calculation_method = urmf_data.tax_calculation_method;
 				var total_input = $('#ur-membership-total');
 
