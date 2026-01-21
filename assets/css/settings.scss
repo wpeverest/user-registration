@@ -1455,9 +1455,10 @@ body {
 					}
 
 					&.ur_emails {
-						border-radius: $border_radius_5;
-						overflow: hidden;
-						border-color: $border-color;
+						// border-radius: $border_radius_5;
+						// overflow: hidden;
+						// border-color: $border-color;
+						border: 0;
 
 						thead {
 							th {
@@ -1467,10 +1468,6 @@ body {
 								font-weight: $medium;
 								font-size: 15px;
 								line-height: 25px;
-								// border: $border_width solid $border-color;
-								// border-top: 0;
-								// border-bottom: 0;
-								// border-left: 0;
 								letter-spacing: 0.03px;
 
 								&:first-child {
@@ -1893,6 +1890,12 @@ body {
 						}
 					}
 				}
+
+				&:has(>.ur_emails) {
+					border: $border_width solid $border-color;
+					border-radius: $border_radius_5;
+					overflow: hidden;
+				}
 			}
 		}
 
@@ -1901,9 +1904,9 @@ body {
 			margin: 0;
 
 			a {
-				color: #475bb2;
-				border: 1px solid #475bb2;
-				font-weight: 500;
+				color: $primary_color;
+				border: $border_width solid $primary_color;
+				font-weight: $medium;
 				height: 38px;
 				align-content: center;
 			}
