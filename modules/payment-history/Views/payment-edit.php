@@ -20,7 +20,7 @@ $trial_status    = isset( $order['trial_status'] ) ? $order['trial_status'] : 'o
 $order_repository = new OrdersRepository();
 $order_meta_data  = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
 $tax_data 		  = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data[ 'meta_value' ], true ) : array();
-$tax_amount       = ! empty( $tax_data['tax_amount'] ) ? $symbol . $tax_data['tax_amount'] : 0;
+$tax_amount       = ! empty( $tax_data['tax_amount'] ) ? $tax_data['tax_amount'] : 0;
 
 if ( $is_form_payment ) {
 	$order['post_id']         = isset( $order['post_id'] ) ? $order['post_id'] : 0;
@@ -48,6 +48,11 @@ $currency   = get_option( 'user_registration_payment_currency', 'USD' );
 $currencies = ur_payment_integration_get_currencies();
 $symbol     = isset( $currencies[ $currency ]['symbol'] ) ? $currencies[ $currency ]['symbol'] : '$';
 
+$local_currency   = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency' );
+
+$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
+$symbol = ur_get_currency_symbol( $currency );
+
 $status_options = array( 'completed', 'pending', 'failed', 'refunded' );
 
 $product_amount = 0;
@@ -64,6 +69,10 @@ if ( $team ) {
 } elseif ( isset( $order['product_amount'] ) ) {
 	$product_amount = (float) $order['product_amount'];
 }
+
+$local_currency_converted_amount = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency_converted_amount' );
+
+$product_amount = ! empty( $local_currency_converted_amount['meta_value'] ) ? $local_currency_converted_amount['meta_value'] : $product_amount;
 
 $coupon               = ! empty( $order['coupon'] ) ? ur_get_coupon_details( $order['coupon'] ) : null;
 $coupon_discount      = 0;
