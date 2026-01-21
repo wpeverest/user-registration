@@ -1518,7 +1518,10 @@
         data-days_after_days="${drip.value.days_after.days}">
 
         <button type="button" class="urcr-drip__trigger">
-            <span class="dashicons dashicons-plus-alt2"></span> Drip This Content
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+				<path d="M11.09 6.545a.91.91 0 1 1 1.82 0v4.893l3.133 1.567a.91.91 0 0 1-.813 1.626l-3.637-1.818a.91.91 0 0 1-.502-.813V6.545Z"/>
+				<path d="M20.182 12a8.182 8.182 0 1 0-16.364 0 8.182 8.182 0 0 0 16.364 0ZM22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10Z"/>
+			</svg> ${urcr_membership_access_data.drip_content_label.drip_this_content}
         </button>
 
         <div class="urcr-drip__popover" style="display:none;">
@@ -1526,8 +1529,8 @@
 
             <div class="urcr-drip__tabs">
                 <div class="urcr-drip__tabList">
-                    <button type="button" class="urcr-drip__tab" data-value="fixed_date">Fixed Date</button>
-                    <button type="button" class="urcr-drip__tab" data-value="days_after">Days After</button>
+                    <button type="button" class="urcr-drip__tab" data-value="fixed_date">${urcr_membership_access_data.drip_content_label.fixed_date}</button>
+                    <button type="button" class="urcr-drip__tab" data-value="days_after">${urcr_membership_access_data.drip_content_label.days_after}</button>
                 </div>
 
                 <div class="urcr-drip__panels">

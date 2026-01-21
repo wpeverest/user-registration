@@ -117,10 +117,15 @@ class Membership {
 		if ( class_exists( '\URCR_Admin_Assets' ) ) {
 			$localized_data = \URCR_Admin_Assets::get_localized_data();
 		}
-		$localized_data['membership_id'] = $membership_id;
-		$localized_data['ajax_url']      = admin_url( 'admin-ajax.php' );
-		$localized_data['nonce']         = wp_create_nonce( 'urcr_manage_content_access_rule' );
-		$localized_data['today']         = date( 'Y-m-d' );
+		$localized_data['membership_id']      = $membership_id;
+		$localized_data['ajax_url']           = admin_url( 'admin-ajax.php' );
+		$localized_data['nonce']              = wp_create_nonce( 'urcr_manage_content_access_rule' );
+		$localized_data['today']              = date( 'Y-m-d' );
+		$localized_data['drip_content_label'] = array(
+			'drip_this_content' => __( 'Drip This Content', 'user-registration' ),
+			'fixed_date'        => __( 'Fixed Date', 'user-registration' ),
+			'days_after'        => __( 'Days After', 'user-registration' ),
+		);
 
 		wp_localize_script(
 			'urcr-membership-access-rules',
@@ -911,7 +916,10 @@ class Membership {
 			data-days_after_days="' . esc_attr( $days_after_days ) . '">
 
 			<button type="button" class="urcr-drip__trigger">
-				<span class="dashicons dashicons-plus-alt2"></span> ' . esc_html__( 'Drip This Content', 'user-registration' ) . '
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+				<path d="M11.09 6.545a.91.91 0 1 1 1.82 0v4.893l3.133 1.567a.91.91 0 0 1-.813 1.626l-3.637-1.818a.91.91 0 0 1-.502-.813V6.545Z"/>
+				<path d="M20.182 12a8.182 8.182 0 1 0-16.364 0 8.182 8.182 0 0 0 16.364 0ZM22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10Z"/>
+				</svg>' . esc_html__( 'Drip This Content', 'user-registration' ) . '
 			</button>';
 
 			$html .= '<div class="urcr-drip__popover" style="display:none;">
