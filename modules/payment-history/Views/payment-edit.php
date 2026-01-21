@@ -211,52 +211,54 @@ if ( $first_name || $last_name ) {
 								</div>
 							</div>
 							<div class="ur-payments__section-content">
-								<table class="ur-payments__table">
-									<thead>
-										<tr>
-											<th><?php esc_html_e( 'Item', 'user-registration' ); ?></th>
-											<th><?php esc_html_e( 'Recurring', 'user-registration' ); ?></th>
-											<th><?php esc_html_e( 'Price', 'user-registration' ); ?></th>
-											<th><?php esc_html_e( 'Qty', 'user-registration' ); ?></th>
-											<th><?php esc_html_e( 'Total', 'user-registration' ); ?></th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>
-												<?php if ( ! $is_form_payment && ! empty( $order['post_id'] ) ) : ?>
-												<a href="<?php echo esc_url( admin_url( "admin.php?post_id={$order['post_id']}&action=add_new_membership&page=user-registration-membership" ) ); ?>"
-													class="ur-payments__table-item-link">
-													<?php
-													$item_title = isset( $order['post_title'] ) ? $order['post_title'] : __( 'N/A', 'user-registration' );
-													echo esc_html( $item_title );
-													?>
-												</a>
-												<?php else : ?>
-													<?php
-													$item_title = isset( $order['post_title'] ) ? $order['post_title'] : __( 'N/A', 'user-registration' );
-													echo esc_html( $item_title );
-													?>
-												<?php endif; ?>
-											</td>
-											<td><?php echo esc_html( $recurring_label ); ?></td>
-											<td class="ur-payments__table-price">
-												<?php echo esc_html( $symbol . number_format( $product_amount, 2 ) ); ?>
-											</td>
-											<td><?php esc_html_e( 'x 1', 'user-registration' ); ?></td>
-											<td>
-												<div class="ur-payments__table-price">
-													<?php echo esc_html( $symbol . number_format( $order_total, 2 ) ); ?>
-												</div>
-												<?php if ( $coupon_discount > 0 ) : ?>
-												<div class="ur-payments__table-discount">
-													<?php echo esc_html( $symbol . number_format( $coupon_discount, 2 ) . ' ' . __( 'discount', 'user-registration' ) ); ?>
-												</div>
-												<?php endif; ?>
-											</td>
-										</tr>
-									</tbody>
-								</table>
+								<div class="ur-payments__section-content--table-wrapper">
+									<table class="ur-payments__table">
+										<thead>
+											<tr>
+												<th><?php esc_html_e( 'Item', 'user-registration' ); ?></th>
+												<th><?php esc_html_e( 'Recurring', 'user-registration' ); ?></th>
+												<th><?php esc_html_e( 'Price', 'user-registration' ); ?></th>
+												<th><?php esc_html_e( 'Qty', 'user-registration' ); ?></th>
+												<th><?php esc_html_e( 'Total', 'user-registration' ); ?></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>
+													<?php if ( ! $is_form_payment && ! empty( $order['post_id'] ) ) : ?>
+													<a href="<?php echo esc_url( admin_url( "admin.php?post_id={$order['post_id']}&action=add_new_membership&page=user-registration-membership" ) ); ?>"
+														class="ur-payments__table-item-link">
+														<?php
+														$item_title = isset( $order['post_title'] ) ? $order['post_title'] : __( 'N/A', 'user-registration' );
+														echo esc_html( $item_title );
+														?>
+													</a>
+													<?php else : ?>
+														<?php
+														$item_title = isset( $order['post_title'] ) ? $order['post_title'] : __( 'N/A', 'user-registration' );
+														echo esc_html( $item_title );
+														?>
+													<?php endif; ?>
+												</td>
+												<td><?php echo esc_html( $recurring_label ); ?></td>
+												<td class="ur-payments__table-price">
+													<?php echo esc_html( $symbol . number_format( $product_amount, 2 ) ); ?>
+												</td>
+												<td><?php esc_html_e( 'x 1', 'user-registration' ); ?></td>
+												<td>
+													<div class="ur-payments__table-price">
+														<?php echo esc_html( $symbol . number_format( $order_total, 2 ) ); ?>
+													</div>
+													<?php if ( $coupon_discount > 0 ) : ?>
+													<div class="ur-payments__table-discount">
+														<?php echo esc_html( $symbol . number_format( $coupon_discount, 2 ) . ' ' . __( 'discount', 'user-registration' ) ); ?>
+													</div>
+													<?php endif; ?>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 
 								<div class="ur-payments__data">
 									<!-- Coupons Section -->
