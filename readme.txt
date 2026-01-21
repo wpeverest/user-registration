@@ -4,7 +4,7 @@ Tags: user registration, membership, user profile, registration form, login form
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 6.9
-Stable tag: 5.0.3
+Stable tag: 5.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -258,6 +258,13 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 5.0.4    - 21/01/2026 =
+* Fix      - Orders table not found.
+* Fix      - Production mode not working in paypal.
+* Fix      - Content restricted message container width.
+* Fix      - Disable the publish membership button after click.
+* Fix      - Default value for prevent dashboard access not set.
+
 = 5.0.3    - 15/01/2026 =
 * Fix      - My Account responsive design.
 * Fix      - Members menu class not found.
@@ -268,10 +275,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix      - View payment link not working form subscription editor.
 
 = 5.0.2    - 14/01/2026 =
-* Fix      - Critical error after update.
+* Fix      - Plugin update package build issue.
 
 = 5.0.1    - 14/01/2026 =
-* Fix      - Critical error after update.
+* Fix      - Minor update compatibility issue.
 
 = 5.0      - 14/01/2026 =
 * New      - Streamlined setup wizard with a clean, modern interface that removes unnecessary steps and focuses only on essential configuration.
@@ -936,6 +943,11 @@ information and activities.
 
 
 == Upgrade Notice ==
+= 5.0.4 =
+##Important: Version 5.0 is a major update with significant improvements
+We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
+Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)
+
 = 5.0.3 =
 ##Important: Version 5.0 is a major update with significant improvements
 We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.

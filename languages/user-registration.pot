@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration & Membership plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration & Membership 5.0.3\n"
+"Project-Id-Version: User Registration & Membership 5.0.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-15T08:27:30+00:00\n"
+"POT-Creation-Date: 2026-01-21T08:29:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -974,7 +974,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-users-menu.php:218
 #: includes/admin/settings/class-ur-users-menu.php:232
 #: includes/class-ur-frontend-scripts.php:499
-#: includes/frontend/class-ur-frontend.php:677
+#: includes/frontend/class-ur-frontend.php:678
 #: modules/membership/includes/Admin/Members/Members.php:170
 #: modules/membership/includes/Admin/Membership/Membership.php:957
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroups.php:73
@@ -3085,7 +3085,7 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-members-menu.php:1913
 #: includes/class-ur-privacy.php:81
-#: includes/frontend/class-ur-frontend.php:353
+#: includes/frontend/class-ur-frontend.php:354
 #: modules/class-ur-payment-settings.php:34
 #: modules/class-ur-payment-settings.php:53
 #: modules/payment-history/Orders.php:78
@@ -8826,29 +8826,29 @@ msgstr ""
 msgid "Something went wrong! please try again"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:501
+#: includes/frontend/class-ur-frontend.php:502
 #: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:61
 #: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:62
 msgid "Subscriptions"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:561
+#: includes/frontend/class-ur-frontend.php:562
 msgid "Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your upgraded membership will be activated. Kindly wait for the admin's confirmation."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:562
+#: includes/frontend/class-ur-frontend.php:563
 msgid "Please complete the payment using the bank details provided by the admin. <br> Your membership will be renewed once the payment is verified. Kindly wait for the admin's confirmation."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:563
+#: includes/frontend/class-ur-frontend.php:564
 msgid "Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your new membership will be activated. Kindly wait for the admin's confirmation."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:675
+#: includes/frontend/class-ur-frontend.php:676
 msgid "Reactivate"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:679
+#: includes/frontend/class-ur-frontend.php:680
 msgid "Change Payment"
 msgstr ""
 
