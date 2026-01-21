@@ -46,21 +46,21 @@ export const saveRuleWithCollectiveData = async ({
 				actions = ruleData.actions;
 			}
 
-			if (actions.length === 0) {
+			const hasValidActions = actions.length > 0 && actions.some(
+				(action) => action.type && action.type.trim() !== ""
+			);
+
+			if (!hasValidActions) {
 				const currentAccessControl =
 					contentData?.accessControl ||
 					rule.access_control ||
 					"access";
-				const defaultMessage = getURCRData(
-					"membership_default_message",
-					""
-				);
 				actions = [
 					{
 						id: `x${Date.now()}`,
 						type: "message",
 						label: __("Show Message", "user-registration"),
-						message: defaultMessage,
+						message: "",
 						redirect_url: "",
 						access_control: currentAccessControl,
 						local_page: "",

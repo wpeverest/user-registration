@@ -131,8 +131,12 @@ class URCR_Admin_Assets {
 
 		foreach ( $ur_forms as $form_id => $label ) {
 			$form_data   = ur_pro_get_form_fields( $form_id );
+
 			$form_fields = array();
 			foreach ( $form_data as $field_name => $data ) {
+				if( !empty($data['field_key']) && "membership" === $data['field_key'] ) {
+					continue;
+				}
 				$form_fields[ $field_name ] = $data['label'];
 			}
 			$ur_forms[ $form_id ] = $form_fields;
