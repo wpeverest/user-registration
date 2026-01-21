@@ -42,7 +42,7 @@ class Frontend {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 	}
 
-	public static function apply_content_drip() {
+	public function apply_content_drip() {
 		global $wp_query;
 		$access_rule_posts = get_posts(
 			array(
@@ -81,7 +81,7 @@ class Frontend {
 							return 'whole_site' !== $target_content['type'] || empty( $target_content['drip'] );
 						}
 					);
-					$is_target       = self::is_target_post( $target_contents, $target_post );
+					$is_target       = $this->is_target_post( $target_contents, $target_post );
 
 					if ( $is_target ) {
 
@@ -150,7 +150,7 @@ class Frontend {
 									// pass it to drip args
 									$drip['remaining_days'] = $remaining_days;
 
-									$waiting = self::show_content_drip_message( $drip, $post );
+									$waiting = $this->show_content_drip_message( $drip, $post );
 								}
 							}
 						}

@@ -25,12 +25,11 @@ $remaining_days = isset( $args['remaining_days'] ) ? absint( $args['remaining_da
 $message = get_option(
 	'user_registration_content_drip_global_message',
 	'<h3>' . __( 'Content Locked', 'user-registration' ) . '</h3>
-<p>' . __( 'This content will be available on {{urm_drip_time}}', 'user-registration' ) . '</p>
+<p>' . __( 'This content will be available {{urm_drip_time}}', 'user-registration' ) . '</p>
 <p>Please check back later!</p>'
 );
 
 $meta = '';
-
 if ( 'fixed_date' === $active_type ) {
 	$date = isset( $value['fixed_date']['date'] ) ? $value['fixed_date']['date'] : '';
 	$time = isset( $value['fixed_date']['time'] ) ? $value['fixed_date']['time'] : '';
@@ -53,7 +52,7 @@ if ( 'fixed_date' === $active_type ) {
 	if ( $remaining_days > 0 ) {
 		$meta = sprintf(
 			/* translators: %d: number of days */
-			_n( 'in %d day', '%d days', $remaining_days, 'user-registration' ),
+			_n( 'in %d day', 'in %d days', $remaining_days, 'user-registration' ),
 			$remaining_days
 		);
 	} else {

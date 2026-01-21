@@ -1026,8 +1026,10 @@ class URCR_Frontend {
 		}
 
 		if ( ! $is_restriction_applied && UR_PRO_ACTIVE && ur_check_module_activation( 'content-drip' ) ) {
+
 			//apply content dripping.
-			return WPEverest\URM\ContentDrip\Frontend::apply_content_drip();
+			$frontend = new WPEverest\URM\ContentDrip\Frontend();
+			return $frontend->apply_content_drip();
 		}
 
 		return $is_restriction_applied;
