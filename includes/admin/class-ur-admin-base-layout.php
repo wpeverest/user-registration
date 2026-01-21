@@ -59,10 +59,10 @@ class UR_Base_Layout {
 					<?php echo esc_html( $data['title'] ); ?>
 				</h1>
 				<?php
-					$external_class = '';
+						$external_class = '';
+					$inline_attr   	    = '';
 
 					if ( ! empty( $data['add_new_action'] ) ) {
-						error_log( print_r( $data[ 'add_new_action'], true ) );
 						switch ( $data['add_new_action'] ) {
 							case 'manage_tax':
 								$external_class = 'urm-manage-tax-region-btn';
@@ -70,15 +70,16 @@ class UR_Base_Layout {
 
 							case 'manage_pricing_zone':
 								$external_class = 'ur-local-currency-add-pricing-zone';
+								$inline_attr 			= 'data-action="add"';
 								break;
-								
+
 							default:
 								$external_class = '';
 								break;
 						}
 					}
 				if ( ! empty( $data['add_new_action'] ) ) : ?>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $data['page'] . '&action=' . $data['add_new_action'] ) ); ?>" class="page-title-action <?php echo esc_attr( $external_class ); ?>">
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $data['page'] . '&action=' . $data['add_new_action'] ) ); ?>" class="page-title-action <?php echo esc_attr( $external_class ); ?>" <?php echo $inline_attr; ?> >
 					<?php echo esc_html( $data['add_new_label'] ); ?>
 				</a>
 				<?php endif; ?>
