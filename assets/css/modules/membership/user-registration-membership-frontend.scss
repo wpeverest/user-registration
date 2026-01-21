@@ -1458,7 +1458,7 @@ html {
 	.thank-you-page-container {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
+		// align-items: center;
 		// text-align: center;
 		background-color: #ffffff;
 		padding: 48px;
@@ -1494,6 +1494,12 @@ html {
 					height: 60px;
 				}
 			}
+		}
+
+		.ur-thank-you-headline-wrapper{
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 
 		.ur-headline {
