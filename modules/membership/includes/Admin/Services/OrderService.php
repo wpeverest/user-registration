@@ -77,6 +77,8 @@ class OrderService {
 			}
 		}
 
+		$local_currency_converted_amount = 0;
+
 		if ( ! empty( $data['local_currency_details'] ) ) {
 			$local_currency  = ! empty( $data['local_currency_details']['switched_currency' ] ) ? $data['local_currency_details']['switched_currency' ] : '';
 			$ur_zone_id 	 = ! empty( $data['local_currency_details']['urm_zone_id' ] ) ? $data['local_currency_details']['urm_zone_id' ] : '';
@@ -88,6 +90,7 @@ class OrderService {
 
 				if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data[ 'is_enable'] ) ) {
 					$total = CoreFunctions::ur_get_amount_after_conversion( $total, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+					$local_currency_converted_amount = CoreFunctions::ur_get_amount_after_conversion( $membership_meta['amount'], $currency, $pricing_data, $local_currency_data, $ur_zone_id );
 				}
 			}
 		}
@@ -132,7 +135,6 @@ class OrderService {
 			)
 		);
 
-		error_log( print_r( $tax_details, true ) );
 		if ( ! empty( $tax_details ) ) {
 			$orders_meta[] = [
 				'meta_key'   => 'tax_data',
@@ -144,6 +146,14 @@ class OrderService {
 			$orders_meta[] = [
 				'meta_key'   => 'local_currency',
 				'meta_value' => $currency,
+				];
+		}
+
+		if ( ! empty( $local_currency_converted_amount ) ) {
+			$orders_meta[] = [
+				'meta_key'   => 'local_currency_converted_amount',
+				'meta_value' => $local_currency_converted_amount,
+
 			];
 		}
 

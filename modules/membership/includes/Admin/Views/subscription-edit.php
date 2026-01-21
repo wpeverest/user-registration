@@ -72,6 +72,18 @@ $orders_repository  = new \WPEverest\URMembership\Admin\Repositories\OrdersRepos
 $subscription_order = $orders_repository->get_order_by_subscription( $subscription['ID'] );
 $order_id           = ! empty( $subscription_order ) && isset( $subscription_order['ID'] ) ? $subscription_order['ID'] : '';
 
+$order_meta_data = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
+$tax_data 		 = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data[ 'meta_value' ], true ) : array();
+
+$local_currency   = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency' );
+
+$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
+$symbol = ur_get_currency_symbol( $currency );
+
+$local_currency_converted_amount = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency_converted_amount' );
+
+$product_amount = ! empty( $local_currency_converted_amount['meta_value'] ) ? $local_currency_converted_amount['meta_value'] : $product_amount;
+
 $team_data      = null;
 $team_name     = '';
 $team_size     = '';
@@ -117,10 +129,6 @@ if ( ! empty( $order_id ) ) {
 		}
 	}
 }
-
-$order_repository = new OrdersRepository();
-$order_meta_data = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
-$tax_data 		 = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data[ 'meta_value' ], true ) : array();
 
 $delete_url = wp_nonce_url(
 	admin_url( 'admin.php?page=user-registration-subscriptions&action=delete&id=' . $subscription['ID'] ),
