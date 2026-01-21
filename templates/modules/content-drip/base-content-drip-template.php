@@ -12,6 +12,8 @@
  * ]
  */
 
+use WPEverest\URM\ContentDrip\Helper;
+
 defined( 'ABSPATH' ) || exit;
 
 if ( empty( $args ) || ! is_array( $args ) ) {
@@ -22,15 +24,15 @@ $active_type    = isset( $args['activeType'] ) ? $args['activeType'] : 'fixed_da
 $value          = isset( $args['value'] ) && is_array( $args['value'] ) ? $args['value'] : array();
 $remaining_days = isset( $args['remaining_days'] ) ? absint( $args['remaining_days'] ) : 0;
 
+
+$default_message = Helper::global_default_message();
+
 $message = get_option(
 	'user_registration_content_drip_global_message',
-	'<h3>' . __( 'Content Locked', 'user-registration' ) . '</h3>
-<p>' . __( 'This content will be available on {{urm_drip_time}}', 'user-registration' ) . '</p>
-<p>Please check back later!</p>'
+	$default_message
 );
 
 $meta = '';
-
 if ( 'fixed_date' === $active_type ) {
 	$date = isset( $value['fixed_date']['date'] ) ? $value['fixed_date']['date'] : '';
 	$time = isset( $value['fixed_date']['time'] ) ? $value['fixed_date']['time'] : '';
@@ -45,17 +47,15 @@ if ( 'fixed_date' === $active_type ) {
 				$timestamp
 			);
 
-			$meta = $formatted;
+			$meta = 'on ' . $formatted;
 		}
 	}
 } elseif ( 'days_after' === $active_type ) {
 
-	$message = __( 'This content will unlock after:', 'user-registration' );
-
 	if ( $remaining_days > 0 ) {
 		$meta = sprintf(
 			/* translators: %d: number of days */
-			_n( '%d day', '%d days', $remaining_days, 'user-registration' ),
+			_n( 'in %d day', 'in %d days', $remaining_days, 'user-registration' ),
 			$remaining_days
 		);
 	} else {

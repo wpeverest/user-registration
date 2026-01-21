@@ -380,6 +380,12 @@
                     border: $border_width solid $border_color;
                 }
 
+                .button-primary {
+                    background: $primary_color;
+                    border-color: $primary_color;
+                    color: $white;
+                }
+
                 a {
                     order: 1;
 

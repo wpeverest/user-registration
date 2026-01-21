@@ -111,11 +111,7 @@ class CouponService {
 		);
 		$amount                          = $membership_amount - $discount_amount;
 
-		if ( ! empty( $data['tax_rate'] ) ) {
-			$tax_rate  = floatval( $data['tax_rate'] );
-			$tax_amount  = $amount * $tax_rate / 100;
-			$amount     = $amount + $tax_amount;
-		}
+		$currency = get_option( 'user_registration_payment_currency', 'USD' );
 
 		if ( ! empty( $data['switched_currency' ] ) && ! empty( $data['urm_zone_id'] ) ) {
 			$local_currency  = ! empty( $data['switched_currency' ] ) ? $data['switched_currency' ] : '';
@@ -128,13 +124,24 @@ class CouponService {
 
 				if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data[ 'is_enable'] ) ) {
 					$amount = CoreFunctions::ur_get_amount_after_conversion( $amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+					if ( $coupon_details['coupon_discount_type'] === 'fixed' ) {
+						$coupon_details['coupon_discount'] = CoreFunctions::ur_get_amount_after_conversion( $coupon_details['coupon_discount'], $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+					}
 				}
 			}
+		}
+
+		if ( ! empty( $data['tax_rate'] ) ) {
+			$tax_rate  = floatval( $data['tax_rate'] );
+			$tax_amount  = $amount * $tax_rate / 100;
+			$amount     = $amount + $tax_amount;
 		}
 
 		$message                         = 'Coupon applied successfully.';
 		$final_data['discounted_amount'] = $amount;
 		$final_data['discount_amount']   = $discount_amount;
+
+		$final_data['coupon_details']['coupon_discount'] = ( $coupon_details['coupon_discount_type'] === 'fixed' ) ? html_entity_decode( ur_get_currency_symbol( $currency ) ) . $coupon_details['coupon_discount'] : $coupon_details['coupon_discount'];
 
 		if ( 'subscription' === $membership_meta['type'] ) {
 			return $this->set_coupon_response( true, 200, $message, $final_data );

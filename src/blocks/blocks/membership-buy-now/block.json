@@ -39,6 +39,17 @@
         "text": false
       }
     },
+    "__experimentalBorder": {
+      "color": true,
+      "radius": true,
+      "width": true,
+      "__experimentalSkipSerialization": true,
+      "__experimentalDefaultControls": {
+        "color": true,
+        "radius": true,
+        "width": true
+      }
+    },
     "typography": {
       "__experimentalSkipSerialization": [
         "fontSize",
@@ -69,17 +80,6 @@
       "__experimentalDefaultControls": {
         "padding": true
       }
-    },
-    "__experimentalBorder": {
-      "color": true,
-      "radius": true,
-      "width": true,
-      "__experimentalSkipSerialization": true,
-      "__experimentalDefaultControls": {
-        "color": true,
-        "radius": true,
-        "width": true
-      }
     }
   },
   "attributes": {
@@ -109,7 +109,8 @@
       "type": "string"
     },
     "backgroundColor": {
-      "type": "string"
+      "type": "string",
+      "default": "#475bb2"
     },
     "borderWidth": {
       "type": "string"
@@ -129,6 +130,14 @@
       "default": ""
     },
     "hoverBgColor": {
+      "type": "string",
+      "default": "#3a4a8f"
+    },
+    "savedBackgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "savedHoverBgColor": {
       "type": "string",
       "default": ""
     }

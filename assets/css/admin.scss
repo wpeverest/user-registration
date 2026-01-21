@@ -49,19 +49,31 @@ body {
 			.memberships,
 			.ur-registered-from,
 			div[class*="user-registration-"],
+			div[class*="ur-subscription"],
+			div[class*="ur-payments"],
 			div[id*="user-registration-"],
-			table th,
-			table td,
-			h1,
-			h2,
-			h3,
-			h4,
-			h5,
-			h6,
-			p,
-			small,
-			label {
+			div[class*="urfl-"] {
 				font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+				table {
+
+					th,
+					td {
+						font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+					}
+				}
+
+				h1,
+				h2,
+				h3,
+				h4,
+				h5,
+				h6,
+				p,
+				small,
+				label {
+					font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+				}
 			}
 		}
 	}
@@ -1685,7 +1697,7 @@ body {
 				right: 0;
 				z-index: 1;
 				opacity: 0;
-				transition: all 0.2s ease-in;
+				transition: all 0.3s ease-in;
 
 				button {
 					display: flex;
@@ -1796,7 +1808,7 @@ body {
 				justify-content: center;
 				border: 1px solid transparent;
 				border-radius: 4px;
-				transition: all 0.2s ease-in;
+				transition: all 0.3s ease-in;
 				border-left: 0;
 
 				.ur-grid-list-item {
@@ -1807,7 +1819,7 @@ body {
 					flex: 1;
 					border: 1px solid transparent;
 					border-radius: 4px;
-					transition: all 0.2s ease-in;
+					transition: all 0.3s ease-in;
 
 					.ur-selected-item {
 						margin-bottom: 5px;
@@ -4648,7 +4660,7 @@ a.button.ur-smart-tags-list-button {
 										font-size: 14px;
 										line-height: 21px;
 										cursor: pointer;
-										transition: all 0.2s ease;
+										transition: all 0.3s ease;
 
 										input,
 										label {
@@ -7583,7 +7595,7 @@ body.user-registration {
 					&:has(a) {
 						padding: 0;
 						text-decoration: none;
-						transition: all 0.2s ease-in-out;
+						transition: all 0.3s ease-in-out;
 						position: relative;
 						z-index: 1;
 						border-radius: $border_radius_3;
@@ -7594,7 +7606,7 @@ body.user-registration {
 							align-items: flex-start;
 							gap: $spacing_8px;
 							text-decoration: none;
-							transition: all 0.2s ease-in-out;
+							transition: all 0.3s ease-in-out;
 							position: relative;
 							z-index: 1;
 							width: 100%;
@@ -7622,7 +7634,8 @@ body.user-registration {
 								&:hover {
 									background-color: $redLight;
 
-									&::before {
+									&::before,
+									&::after {
 										background: $redLight;
 										opacity: 1;
 									}
@@ -7633,18 +7646,26 @@ body.user-registration {
 								}
 							}
 
-							&::before {
+							&::before,
+							&::after {
 								content: "";
 								background: $blue-25;
 								position: absolute;
 								width: 24px;
 								height: 100%;
-								left: -12px;
 								top: 0;
 								opacity: 0;
 								z-index: -1;
 								border-radius: $border_radius_3 0 0 $border_radius_3;
-								transition: all 0.2s ease-in-out;
+								transition: all 0.3s ease-in-out;
+							}
+
+							&::before {
+								left: -12px;
+							}
+
+							&::after {
+								right: -12px;
 							}
 
 							&:focus {
@@ -7656,18 +7677,19 @@ body.user-registration {
 								&:hover {
 									background: $blue-25;
 
-									&::before {
+									&::before,
+									&::after {
 										opacity: 1;
 									}
 
 									svg {
 										path {
-											fill: #475bb2;
+											fill: $primary_color;
 										}
 									}
 
 									p {
-										color: #475bb2;
+										color: $primary_color;
 									}
 								}
 							}
@@ -8584,7 +8606,7 @@ body.user-registration-page {
 	font-weight: $medium;
 	cursor: pointer;
 	text-decoration: none;
-	transition: color 0.2s;
+	transition: color 0.3s;
 	margin-bottom: 20px;
 
 	&:hover {
@@ -9489,6 +9511,7 @@ body.user-registration-page {
 					span {
 						display: none;
 					}
+
 					.ur-tax-regions-search {
 						width: 100%;
 					}

@@ -19,6 +19,14 @@ if ( ! class_exists( 'Helper' ) ) :
 	 *
 	 */
 	class Helper {
+		public static function global_default_message() {
+			$default_message = '<h3>' . __( 'Unlocking Soon...', 'user-registration' ) . '</h3>
+<p>' . __(
+				'This content is not available yet. It will unlock {{urm_drip_time}}.',
+				'user-registration'
+			) . '</p><p>' . __( 'Please check back later to continue.', 'user-registration' ) . '</p>';
 
+			return $default_message;
+		}
 	}
 endif;

@@ -596,14 +596,6 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					admin_url( 'users.php?action=delete' )
 				);
 
-				$actions['view'] = sprintf(
-					'<a href="%s" rel="noreferrer noopener" target="_blank" aria-label="%s" class="ur-row-actions">%s</a>',
-					esc_url( $view_link ),
-					/* translators: %s: Author's display name. */
-					esc_attr( sprintf( __( 'View details for %s' ), $new_user_object->display_name ) ),
-					__( 'View', 'user-registration' )
-				);
-
 				if ( current_user_can( 'edit_user', $new_user_object->ID ) ) {
 					$actions['edit'] = '<a href="' . $edit_link . '" rel="noreferrer noopener" target="_blank" class="ur-row-actions">' . __( 'Edit', 'user-registration' ) . '</a>';
 				}

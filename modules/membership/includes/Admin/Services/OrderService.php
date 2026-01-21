@@ -77,16 +77,7 @@ class OrderService {
 			}
 		}
 
-		$tax_details = isset( $data['tax_data'] ) ? $data['tax_data'] : array();
-
-		if ( ! empty( $data['tax_data']['tax_rate'] ) ) {
-			$tax_rate  = floatval( $data['tax_data']['tax_rate'] );
-			$tax_amount  = $total * $tax_rate / 100;
-			$total     = $total + $tax_amount;
-
-			$tax_details['tax_amount']     = number_format( $tax_amount, 2, '.', '' );
-			$tax_details['total_with_tax'] = number_format( $total, 2, '.', '' );
-		}
+		$local_currency_converted_amount = 0;
 
 		if ( ! empty( $data['local_currency_details'] ) ) {
 			$local_currency  = ! empty( $data['local_currency_details']['switched_currency' ] ) ? $data['local_currency_details']['switched_currency' ] : '';
@@ -99,8 +90,20 @@ class OrderService {
 
 				if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data[ 'is_enable'] ) ) {
 					$total = CoreFunctions::ur_get_amount_after_conversion( $total, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+					$local_currency_converted_amount = CoreFunctions::ur_get_amount_after_conversion( $membership_meta['amount'], $currency, $pricing_data, $local_currency_data, $ur_zone_id );
 				}
 			}
+		}
+
+		$tax_details = isset( $data['tax_data'] ) ? $data['tax_data'] : array();
+
+		if ( ! empty( $data['tax_data']['tax_rate'] ) ) {
+			$tax_rate  = floatval( $data['tax_data']['tax_rate'] );
+			$tax_amount  = $total * $tax_rate / 100;
+			$total     = $total + $tax_amount;
+
+			$tax_details['tax_amount']      = number_format( $tax_amount, 2, '.', '' );
+			$tax_details['total_after_tax'] = number_format( $total, 2, '.', '' );
 		}
 
 		$creator = $is_admin ? 'admin' : 'member';
@@ -129,17 +132,28 @@ class OrderService {
 			array(
 				'meta_key'   => 'is_admin_created',
 				'meta_value' => $is_admin,
-			),
-			array(
-				'meta_key'   => 'tax_data',
-				'meta_value' => json_encode( $tax_details ),
 			)
 		);
+
+		if ( ! empty( $tax_details ) ) {
+			$orders_meta[] = [
+				'meta_key'   => 'tax_data',
+				'meta_value' => json_encode( $tax_details )
+			];
+		}
 
 		if ( ! empty( $currency ) ) {
 			$orders_meta[] = [
 				'meta_key'   => 'local_currency',
 				'meta_value' => $currency,
+				];
+		}
+
+		if ( ! empty( $local_currency_converted_amount ) ) {
+			$orders_meta[] = [
+				'meta_key'   => 'local_currency_converted_amount',
+				'meta_value' => $local_currency_converted_amount,
+
 			];
 		}
 

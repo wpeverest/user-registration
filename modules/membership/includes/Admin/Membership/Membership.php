@@ -117,9 +117,15 @@ class Membership {
 		if ( class_exists( '\URCR_Admin_Assets' ) ) {
 			$localized_data = \URCR_Admin_Assets::get_localized_data();
 		}
-		$localized_data['membership_id'] = $membership_id;
-		$localized_data['ajax_url']      = admin_url( 'admin-ajax.php' );
-		$localized_data['nonce']         = wp_create_nonce( 'urcr_manage_content_access_rule' );
+		$localized_data['membership_id']      = $membership_id;
+		$localized_data['ajax_url']           = admin_url( 'admin-ajax.php' );
+		$localized_data['nonce']              = wp_create_nonce( 'urcr_manage_content_access_rule' );
+		$localized_data['today']              = date( 'Y-m-d' );
+		$localized_data['drip_content_label'] = array(
+			'drip_this_content' => __( 'Drip This Content', 'user-registration' ),
+			'fixed_date'        => __( 'Fixed Date', 'user-registration' ),
+			'days_after'        => __( 'Days After', 'user-registration' ),
+		);
 
 		wp_localize_script(
 			'urcr-membership-access-rules',
@@ -793,21 +799,24 @@ class Membership {
 			$type = 'posts';
 		}
 
+		$show_masteriyo_course = 'masteriyo_courses' === $type && ! ur_check_module_activation( 'masteriyo-course-integration' );
+
 		$type_labels = apply_filters(
 			'urcr_type_labels',
 			array(
-				'pages'      => isset( $localized_data['labels']['pages'] ) ? $localized_data['labels']['pages'] : __( 'Pages', 'user-registration' ),
-				'posts'      => isset( $localized_data['labels']['posts'] ) ? $localized_data['labels']['posts'] : __( 'Posts', 'user-registration' ),
-				'post_types' => isset( $localized_data['labels']['post_types'] ) ? $localized_data['labels']['post_types'] : __( 'Post Types', 'user-registration' ),
-				'taxonomy'   => isset( $localized_data['labels']['taxonomy'] ) ? $localized_data['labels']['taxonomy'] : __( 'Taxonomy', 'user-registration' ),
-				'whole_site' => isset( $localized_data['labels']['whole_site'] ) ? $localized_data['labels']['whole_site'] : __( 'Whole Site', 'user-registration' ),
+				'pages'             => isset( $localized_data['labels']['pages'] ) ? $localized_data['labels']['pages'] : __( 'Pages', 'user-registration' ),
+				'posts'             => isset( $localized_data['labels']['posts'] ) ? $localized_data['labels']['posts'] : __( 'Posts', 'user-registration' ),
+				'post_types'        => isset( $localized_data['labels']['post_types'] ) ? $localized_data['labels']['post_types'] : __( 'Post Types', 'user-registration' ),
+				'taxonomy'          => isset( $localized_data['labels']['taxonomy'] ) ? $localized_data['labels']['taxonomy'] : __( 'Taxonomy', 'user-registration' ),
+				'whole_site'        => isset( $localized_data['labels']['whole_site'] ) ? $localized_data['labels']['whole_site'] : __( 'Whole Site', 'user-registration' ),
+				'masteriyo_courses' => isset( $localized_data['labels']['masteriyo_courses'] ) ? $localized_data['labels']['masteriyo_courses'] : __( 'Masteriyo Courses', 'user-registration' ),
 			),
 			$localized_data
 		);
 
 		$type_label = isset( $type_labels[ $type ] ) ? $type_labels[ $type ] : $type;
 
-		$html = '<div class="urcr-target-item ur-d-flex ur-align-items-center ur-mt-2" data-target-id="' . $target_id . '">';
+		$html = '<div style="' . ( $show_masteriyo_course ? 'display:none !important;' : '' ) . '" class="urcr-target-item ur-d-flex ur-align-items-center ur-mt-2" data-target-id="' . $target_id . '">';
 
 		$display_label = ( $type === 'whole_site' ) ? __( 'Includes', 'user-registration' ) : $type_label;
 		$html         .= '<span class="urcr-target-type-label">' . esc_html( $display_label ) . ':</span>';
@@ -881,8 +890,11 @@ class Membership {
 				$value
 			);
 		}
-		if ( 'whole_site' !== $type ) {
-			$drip  = isset( $target['drip'] ) ? $target['drip'] : array(
+		if ( ! in_array( $type, array( 'whole_site', 'masteriyo_courses', 'menu_items', 'files', 'custom_uri' ), true ) ) {
+
+			$content_drip = ur_check_module_activation( 'content-drip' );
+
+			$drip            = isset( $target['drip'] ) ? $target['drip'] : array(
 				'activeType' => 'fixed_date',
 				'value'      => array(
 					'fixed_date' => array(
@@ -892,36 +904,45 @@ class Membership {
 					'days_after' => array( 'days' => 0 ),
 				),
 			);
-			$html .= '<div class="urcr-membership-drip" data-active_type="' . esc_attr( $drip['activeType'] ) . '"
-	data-fixed_date_date="' . esc_attr( $drip['value']['fixed_date']['date'] ) . '"
-	data-fixed_date_time="' . esc_attr( $drip['value']['fixed_date']['time'] ) . '"
-	data-days_after_days="' . esc_attr( $drip['value']['days_after']['days'] ) . '">
+			$fixed_date_date = isset( $drip['value']['fixed_date']['date'] ) ? $drip['value']['fixed_date']['date'] : '';
+			$fixed_date_time = isset( $drip['value']['fixed_date']['time'] ) ? $drip['value']['fixed_date']['time'] : '';
+			$days_after_days = isset( $drip['value']['days_after']['days'] ) ? $drip['value']['days_after']['days'] : '';
 
-	<button type="button" class="urcr-drip__trigger">
-		<span class="dashicons dashicons-plus-alt2"></span> Drip This Content
-	</button>';
+			$drip_active_type = isset( $drip['activeType'] ) ? $drip['activeType'] : 'fixed_date';
+
+			$html .= '<div style="' . ( $content_drip ? '' : 'display:none;' ) . '" class="urcr-membership-drip" data-active_type="' . esc_attr( $drip_active_type ) . '"
+			data-fixed_date_date="' . esc_attr( $fixed_date_date ) . '"
+			data-fixed_date_time="' . esc_attr( $fixed_date_time ) . '"
+			data-days_after_days="' . esc_attr( $days_after_days ) . '">
+
+			<button type="button" class="urcr-drip__trigger">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+				<path d="M11.09 6.545a.91.91 0 1 1 1.82 0v4.893l3.133 1.567a.91.91 0 0 1-.813 1.626l-3.637-1.818a.91.91 0 0 1-.502-.813V6.545Z"/>
+				<path d="M20.182 12a8.182 8.182 0 1 0-16.364 0 8.182 8.182 0 0 0 16.364 0ZM22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10Z"/>
+				</svg>' . esc_html__( 'Drip This Content', 'user-registration' ) . '
+			</button>';
 
 			$html .= '<div class="urcr-drip__popover" style="display:none;">
-	<div class="urcr-drip__arrow"></div>
+				<div class="urcr-drip__arrow"></div>
 
-	<div class="urcr-drip__tabs">
-		<div class="urcr-drip__tabList">
-			<button type="button" class="urcr-drip__tab" data-value="fixed_date">Fixed Date</button>
-			<button type="button" class="urcr-drip__tab" data-value="days_after">Days After</button>
-		</div>
+				<div class="urcr-drip__tabs">
+					<div class="urcr-drip__tabList">
+						<button type="button" class="urcr-drip__tab" data-value="fixed_date">Fixed Date</button>
+						<button type="button" class="urcr-drip__tab" data-value="days_after">Days After</button>
+					</div>
 
-		<div class="urcr-drip__panels">
-			<div class="urcr-drip__panel fixed_date-panel">
-				<input type="date" class="urcr-drip__input drip-date" value="' . esc_attr( $drip['value']['fixed_date']['date'] ) . '" />
-				<input type="time" class="urcr-drip__input drip-time" value="' . esc_attr( $drip['value']['fixed_date']['time'] ) . '" />
-			</div>
+					<div class="urcr-drip__panels">
+						<div class="urcr-drip__panel fixed_date-panel">
+							<input type="date" class="urcr-drip__input drip-date" min="' . esc_attr( date( 'Y-m-d' ) ) . '" value="' . esc_attr( $fixed_date_date ) . '" />
+							<input type="time" class="urcr-drip__input drip-time" value="' . esc_attr( $fixed_date_time ) . '" />
+						</div>
 
-			<div class="urcr-drip__panel days_after-panel" style="display:none;">
-				<input type="number" class="urcr-drip__input drip-days" value="' . esc_attr( $drip['value']['days_after']['days'] ) . '" min="0" />
-			</div>
-		</div>
-	</div>
-</div>';
+						<div class="urcr-drip__panel days_after-panel" style="display:none;">
+							<input type="number" class="urcr-drip__input drip-days" value="' . esc_attr( $days_after_days ) . '" min="0" />
+						</div>
+					</div>
+				</div>
+			</div>';
 
 			$html .= '</div>';
 

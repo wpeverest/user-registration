@@ -118,7 +118,7 @@ class URCR_Admin_Assets {
 
 		$ur_forms = ur_get_all_user_registration_form();
 		$networks = array();
-		if( ur_check_module_activation('social-connect') ) {
+		if ( ur_check_module_activation( 'social-connect' ) ) {
 			$networks = array(
 				'facebook' => esc_html__( 'Facebook', 'user-registration' ),
 				'linkedin' => esc_html__( 'LinkedIn', 'user-registration' ),
@@ -264,32 +264,32 @@ class URCR_Admin_Assets {
 		// Prepare condition options.
 		$condition_options = array(
 			array(
-				'value'         => 'membership',
-				'label'         => esc_html__( 'Membership', 'user-registration' ),
-				'type'          => 'multiselect',
+				'value'          => 'membership',
+				'label'          => esc_html__( 'Membership', 'user-registration' ),
+				'type'           => 'multiselect',
 				'operator_label' => esc_html__( 'is', 'user-registration' ),
-				'placeholder'   => '',
+				'placeholder'    => '',
 			),
 			array(
-				'value'         => 'user_state',
-				'label'         => esc_html__( 'Logged in Status', 'user-registration' ),
-				'type'          => 'checkbox',
+				'value'          => 'user_state',
+				'label'          => esc_html__( 'Login Status', 'user-registration' ),
+				'type'           => 'checkbox',
 				'operator_label' => esc_html__( 'is', 'user-registration' ),
-				'placeholder'   => '',
+				'placeholder'    => '',
 			),
 			array(
-				'value'         => 'roles',
-				'label'         => esc_html__( 'Roles', 'user-registration' ),
-				'type'          => 'multiselect',
+				'value'          => 'roles',
+				'label'          => esc_html__( 'Roles', 'user-registration' ),
+				'type'           => 'multiselect',
 				'operator_label' => esc_html__( 'is', 'user-registration' ),
-				'placeholder'   => '',
+				'placeholder'    => '',
 			),
 			array(
-				'value'         => 'user_registered_date',
-				'label'         => esc_html__( 'User Registered Date', 'user-registration' ),
-				'type'          => 'date',
-				'operator_label' => esc_html__( 'is', 'user-registration' ),
-				'placeholder'   => '',
+				'value'             => 'user_registered_date',
+				'label'             => esc_html__( 'User Registered Date', 'user-registration' ),
+				'type'              => 'date',
+				'operator_label'    => esc_html__( 'is', 'user-registration' ),
+				'placeholder'       => '',
 				'date_type_options' => array(
 					array(
 						'value' => 'before',
@@ -306,46 +306,46 @@ class URCR_Admin_Assets {
 				),
 			),
 			array(
-				'value'         => 'access_period',
-				'label'         => esc_html__( 'Registration Period', 'user-registration' ),
-				'type'          => 'period',
+				'value'          => 'access_period',
+				'label'          => esc_html__( 'Registration Period', 'user-registration' ),
+				'type'           => 'period',
 				'operator_label' => esc_html__( 'is', 'user-registration' ),
-				'placeholder'   => '',
+				'placeholder'    => '',
 			),
 			array(
-				'value'         => 'email_domain',
-				'label'         => esc_html__( 'Email Domain', 'user-registration' ),
-				'type'          => 'text',
+				'value'          => 'email_domain',
+				'label'          => esc_html__( 'Email Domain', 'user-registration' ),
+				'type'           => 'text',
 				'operator_label' => esc_html__( 'is', 'user-registration' ),
-				'placeholder'   => esc_html__( 'example.com, gmail.com, yahoo.com', 'user-registration' ),
+				'placeholder'    => esc_html__( 'gmail.com, outlook.com', 'user-registration' ),
 			),
 			array(
-				'value'         => 'post_count',
-				'label'         => esc_html__( 'Min. Public Posts', 'user-registration' ),
-				'type'          => 'number',
+				'value'          => 'post_count',
+				'label'          => esc_html__( 'Min. Public Posts', 'user-registration' ),
+				'type'           => 'number',
 				'operator_label' => esc_html__( 'is', 'user-registration' ),
-				'placeholder'   => esc_html__( '10', 'user-registration' ),
+				'placeholder'    => esc_html__( '10', 'user-registration' ),
 			),
 			array(
-				'value'         => 'capabilities',
-				'label'         => esc_html__( 'Capabilities', 'user-registration' ),
-				'type'          => 'multiselect',
+				'value'          => 'capabilities',
+				'label'          => esc_html__( 'Capabilities', 'user-registration' ),
+				'type'           => 'multiselect',
 				'operator_label' => esc_html__( 'is', 'user-registration' ),
-				'placeholder'   => '',
+				'placeholder'    => '',
 			),
 			array(
-				'value'         => 'urm',
-				'label'         => esc_html__( 'URM', 'user-registration' ),
-				'type'          => 'multiselect',
-				'operator_label' => esc_html__( 'is', 'user-registration' ),
-				'placeholder'   => '',
+				'value'          => 'registration_source',
+				'label'          => esc_html__( 'Registration Source', 'user-registration' ),
+				'type'           => 'multiselect',
+				'operator_label' => esc_html__( 'via', 'user-registration' ),
+				'placeholder'    => '',
 			),
 			array(
-				'value'         => 'payment_status',
-				'label'         => esc_html__( 'Payment Status', 'user-registration' ),
-				'type'          => 'multiselect',
+				'value'          => 'ur_form_field',
+				'label'          => esc_html__( 'URM Form Field', 'user-registration' ),
+				'type'           => 'multiselect',
 				'operator_label' => esc_html__( 'is', 'user-registration' ),
-				'placeholder'   => '',
+				'placeholder'    => '',
 			),
 		);
 
@@ -375,7 +375,7 @@ class URCR_Admin_Assets {
 		);
 
 		$urm_is_new_installation = get_option( 'urm_is_new_installation', false );
-		$is_old_installation = ( false === $urm_is_new_installation || ! $urm_is_new_installation );
+		$is_old_installation     = ( false === $urm_is_new_installation || ! $urm_is_new_installation );
 
 		if ( $is_old_installation ) {
 			$action_type_options[] = array(
@@ -452,11 +452,6 @@ class URCR_Admin_Assets {
 			'ur_form_data'                           => $ur_forms,
 			'shortcodes'                             => $shortcodes_list,
 			'content_rule_url'                       => admin_url( 'admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule' ),
-			'payment_status'                         => array(
-				'pending'   => __( 'Pending', 'user-registration' ),
-				'completed' => __( 'Completed', 'user-registration' ),
-				'failed'    => __( 'Failed', 'user-registration' ),
-			),
 			'memberships'                            => $formatted_memberships,
 			'is_pro'                                 => defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE,
 			'content_type_options'                   => $content_type_options,
@@ -489,6 +484,8 @@ class URCR_Admin_Assets {
 				'all_content_types_added' => __( 'All content types have been added', 'user-registration' ),
 			),
 			'is_drip_content'                        => ur_check_module_activation( 'content-drip' ),
+			'is_masteriyo'                           => ur_check_module_activation( 'masteriyo-course-integration' ),
+
 		);
 
 		/**

@@ -15,6 +15,8 @@
  * @version 1.0.0
  */
 
+use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -66,10 +68,15 @@ $is_invoice_active = ur_check_module_activation( 'pdf-invoice' );
 						$currency   = get_user_meta( $user_id, 'ur_payment_currency', true );
 						$currency   = empty( $currency ) ? get_option( 'user_registration_payment_currency', 'USD' ) : $currency;
 
+						$order_repository = new OrdersRepository();
+						$local_currency   = $order_repository->get_order_meta_by_order_id_and_meta_key( $user_order['ID'], 'local_currency' );
+
+						$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
+						$symbol = ur_get_currency_symbol( $currency );
 						if ( isset( $currencies[ $currency ]['symbol_pos'] ) && 'right' === $currencies[ $currency ]['symbol_pos'] ) {
-							$total_amount = $total_amount . '' . $currencies[ $currency ]['symbol'];
+							$total_amount = $total_amount . '' . $symbol;
 						} else {
-							$total_amount = $currencies[ $currency ]['symbol'] . '' . $total_amount;
+							$total_amount = $symbol . '' . $total_amount;
 						}
 
 						?>

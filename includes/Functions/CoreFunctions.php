@@ -370,7 +370,7 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 		$symbol                  = $currencies[ $currency ]['symbol'];
 		$new_mem                 = array();
 		$active_payment_gateways = array();
-		$is_new_installation = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
+		$is_new_installation     = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
 
 		foreach ( $memberships as $k => $membership ) {
 
@@ -415,9 +415,8 @@ if ( ! function_exists( 'build_membership_list_frontend' ) ) {
 						if ( isset( $gateways['status'] ) && 'on' !== $gateways['status'] ) {
 							continue;
 						}
-						$active_payment_gateways[ $key ] = isset($gateways['status']) ? $gateways['status'] : 'off'; //setting users gateway to off for now if no status received.
+						$active_payment_gateways[ $key ] = isset( $gateways['status'] ) ? $gateways['status'] : 'off'; //setting users gateway to off for now if no status received.
 					}
-
 				}
 
 				$new_mem[ $k ]['active_payment_gateways'] = ( wp_unslash( wp_json_encode( $active_payment_gateways ) ) );
@@ -469,21 +468,21 @@ if ( ! function_exists( 'get_membership_menus' ) ) {
 				'label'  => __( 'Memberships', 'user-registration' ),
 				'url'    => admin_url( 'admin.php?page=user-registration-membership' ),
 				'active' => isset( $_GET['page'] ) &&
-				            $_GET['page'] === 'user-registration-membership' &&
-				            ( isset( $_GET['action'] ) ? ! in_array(
-					            $_GET['action'],
-					            array(
-						            'list_groups',
-						            'add_groups',
-					            )
-				            ) : true ),
+							$_GET['page'] === 'user-registration-membership' &&
+							( isset( $_GET['action'] ) ? ! in_array(
+								$_GET['action'],
+								array(
+									'list_groups',
+									'add_groups',
+								)
+							) : true ),
 			),
 			'membership_groups' => array(
 				'label'  => __( 'Membership Groups', 'user-registration' ),
 				'url'    => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
 				'active' => isset( $_GET['page'], $_GET['action'] ) &&
-				            $_GET['page'] === 'user-registration-membership' &&
-				            in_array( $_GET['action'], array( 'list_groups', 'add_groups' ) ),
+							$_GET['page'] === 'user-registration-membership' &&
+							in_array( $_GET['action'], array( 'list_groups', 'add_groups' ) ),
 			),
 			'members'           => array(
 				'label'  => __( 'Members', 'user-registration' ),
@@ -737,7 +736,7 @@ if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
 	 * @return bool True if gateway is configured, false otherwise.
 	 */
 	function urm_is_payment_gateway_configured( $gateway_key, $membership_type = 'paid' ) {
-		$is_configured = false;
+		$is_configured       = false;
 		$is_new_installation = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
 
 		// First check if the gateway is enabled
@@ -760,7 +759,6 @@ if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
 				break;
 		}
 
-
 		if ( empty( $enabled_option ) ) {
 			$is_enabled = ! $is_new_installation;
 		} else {
@@ -773,15 +771,15 @@ if ( ! function_exists( 'urm_is_payment_gateway_configured' ) ) {
 
 		switch ( $gateway_key ) {
 			case 'paypal':
-				$mode = get_option('user_registration_global_paypal_mode', 'test') == "test" ? 'test' : 'live';
-				$paypal_email = get_option(sprintf('user_registration_global_paypal_%s_email_address', $mode), get_option('user_registration_global_paypal_email_address'));
+				$mode         = get_option( 'user_registration_global_paypal_mode', 'test' ) == 'test' ? 'test' : 'live';
+				$paypal_email = get_option( sprintf( 'user_registration_global_paypal_%s_email_address', $mode ), get_option( 'user_registration_global_paypal_email_address' ) );
 
-				if ('subscription' === $membership_type) {
-					$paypal_client_id = get_option(sprintf('user_registration_global_paypal_%s_client_id', $mode), get_option('user_registration_global_paypal_client_id'));
-					$paypal_client_secret = get_option(sprintf('user_registration_global_paypal_%s_client_secret', $mode), get_option('user_registration_global_paypal_client_secret'));
-					$is_configured = !empty($paypal_email) && !empty($paypal_client_id) && !empty($paypal_client_secret);
+				if ( 'subscription' === $membership_type ) {
+					$paypal_client_id     = get_option( sprintf( 'user_registration_global_paypal_%s_client_id', $mode ), get_option( 'user_registration_global_paypal_client_id' ) );
+					$paypal_client_secret = get_option( sprintf( 'user_registration_global_paypal_%s_client_secret', $mode ), get_option( 'user_registration_global_paypal_client_secret' ) );
+					$is_configured        = ! empty( $paypal_email ) && ! empty( $paypal_client_id ) && ! empty( $paypal_client_secret );
 				} else {
-					$is_configured = !empty($paypal_email);
+					$is_configured = ! empty( $paypal_email );
 				}
 				break;
 
@@ -1090,6 +1088,34 @@ if ( ! function_exists( 'urcr_create_or_update_membership_rule' ) ) {
 
 			if ( ! empty( $membership_data['team_pricing'] ) && is_array( $membership_data['team_pricing'] ) ) {
 				return true;
+			}
+
+			return false;
+		}
+	}
+
+	if ( ! function_exists( 'ur_check_if_member_is_team_leader' ) ) {
+
+		/**
+		 * ur_check_if_member_is_team_leader
+		 *
+		 * @return mixed|null
+		 */
+		function ur_check_if_member_is_team_leader( $membership_id ) {
+
+			// Check if current user is a team leader for this membership
+			$current_user_id = get_current_user_id();
+			$teams_id        = get_user_meta( $current_user_id, 'urm_team_ids', true );
+
+			if ( ! empty( $teams_id ) && is_array( $teams_id ) ) {
+				foreach ( $teams_id as $team_id ) {
+					$team_data = get_post_meta( $team_id, 'urm_team_leader_id', true );
+					if ( $team_data ) {
+						if ( $team_data == $current_user_id ) {
+							return true;
+						}
+					}
+				}
 			}
 
 			return false;

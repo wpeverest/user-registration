@@ -3182,32 +3182,8 @@
 				var $stateElement = $( html );
 
 				$stateWrapper.append( $stateElement );
-				var tax_calculation_method 	= user_registration_params.tax_calculation_method;
-
-				if ( 'calculate_tax' === tax_calculation_method ) {
-					apply_tax_calculation( $el, country, response.data.has_state, $stateElement );
-				}
 			}
 		});
-	});
-
-	/**
-	 * On change of state field
-	 *
-	 * @since 5.0.0
-	 */
-	$( document ).on( 'change', '.ur-field-address-state', function ( e ) {
-		e.stopPropagation();
-		e.preventDefault();
-
-		var $el = $(this);
-		var $countryElement = $el.closest( '.form-row' ).find( '.ur-field-address-country' );
-		var country = $countryElement.val();
-		var tax_calculation_method 	= user_registration_params.tax_calculation_method;
-		if ( 'calculate_tax' === tax_calculation_method ) {
-			apply_tax_calculation( $el, country, false, $el );
-		}
-
 	});
 
 	/**

@@ -14,21 +14,6 @@ export function CustomURIInput({ value, onChange }) {
 				onChange={(e) => onChange([e.target.value, regex])}
 				style={{ flex: 1 }}
 			/>
-			<label
-				style={{
-					display: "inline-flex",
-					alignItems: "center",
-					gap: 2
-				}}
-			>
-				<input
-					type="checkbox"
-					checked={regex}
-					onChange={(e) => onChange([uri, e.target.checked])}
-				/>
-				Regex
-			</label>
 		</div>
 	);
-	return null;
 }

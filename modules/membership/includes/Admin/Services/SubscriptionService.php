@@ -935,6 +935,7 @@ class SubscriptionService {
 				'username'                 => $username,
 				'transaction_id'           => $orders_data['orders_data']['transaction_id'],
 				'updated_membership_title' => $membership['post_title'],
+				'order_id'   => $order['ID'],
 			),
 			'response' => $renew_response,
 		);
@@ -1163,5 +1164,42 @@ class SubscriptionService {
 				do_action( 'urm_handle_failed_payment_retry', $subscription );
 				break;
 		}
+	}
+
+	/**
+	 * Check if user membership expired.
+	 *
+	 * @param int $user_id User ID.
+	 * @param int $subscription_id Subscription ID.
+	 * @return boolean
+	 */
+	public function is_user_membership_expired($user_id, $subscription_id) {
+		$subscription = $this->members_subscription_repository->retrieve( $subscription_id );
+
+		if ( empty( $subscription ) || $subscription['user_id'] != $user_id ) {
+			return false;
+		}
+
+		if( $subscription['status'] === 'expired' ) {
+			return true;
+		}
+
+		if (empty($subscription['expiry_date'])) {
+			return false;
+		}
+
+		if( empty( $subscription['billing_cycle'] ) ) {
+			return false;
+		}
+
+		try {
+			$expiry_date = new \DateTime($subscription['expiry_date']);
+		} catch (\Exception $e) {
+			return false;
+		}
+
+		$today       = new \DateTime( 'today' );
+
+		return $expiry_date <= $today;
 	}
 }

@@ -2,7 +2,6 @@
 @import "mixins/mixins";
 @import "components/button", "components/typography", "components/toggle";
 
-
 // User Registration Global Settings CSS
 * {
 	box-sizing: border-box;
@@ -24,7 +23,7 @@ body {
 		background-color: $grey-0 !important;
 		// max-width: 220px;
 		max-width: 100%;
-		box-shadow: 0px 6px 24px 0px rgba(10, 10, 10, 0.10);
+		box-shadow: 0px 6px 24px 0px rgba(10, 10, 10, 0.1);
 		padding: $spacing_16px $spacing_18px;
 
 		.tooltipster-content {
@@ -119,7 +118,7 @@ body {
 						input {
 							padding: 0;
 							cursor: pointer;
-							transition: all .3s ease-in-out;
+							transition: all 0.3s ease-in-out;
 
 							&::placeholder {
 								font-size: 0;
@@ -131,7 +130,7 @@ body {
 								right: unset;
 								left: 50%;
 								transform: translate(-50%, -50%);
-								transition: all .3s ease-in-out;
+								transition: all 0.3s ease-in-out;
 							}
 						}
 
@@ -139,7 +138,7 @@ body {
 							input {
 								border-color: $primary_color;
 
-								~ .user-registration-search-icon svg {
+								~.user-registration-search-icon svg {
 									fill: $primary_color;
 								}
 							}
@@ -261,7 +260,7 @@ body {
 									top: 0;
 									right: -$spacing_4px;
 									opacity: 1;
-									transition: all .3s ease-in-out;
+									transition: all 0.3s ease-in-out;
 								}
 
 								&.ur-scroll-ui__items {
@@ -328,7 +327,7 @@ body {
 					cursor: pointer;
 
 					&-label {
-						> p {
+						>p {
 							font-weight: $medium;
 							font-size: 15px;
 							margin: 0;
@@ -358,7 +357,7 @@ body {
 						top: 0;
 						left: 0;
 						opacity: 0;
-						transition: all .3s ease-in-out;
+						transition: all 0.3s ease-in-out;
 					}
 
 					svg {
@@ -412,13 +411,13 @@ body {
 							position: absolute;
 							padding: $spacing_16px $spacing_18px;
 							border-radius: $border_radius_4;
-							box-shadow: 0px 6px 24px 0px rgba(10, 10, 10, 0.10);
+							box-shadow: 0px 6px 24px 0px rgba(10, 10, 10, 0.1);
 							background: $grey-0;
 							color: $grey-500;
 							font-size: 14px;
 							line-height: 20px;
 							text-align: center;
-							transition: .3s opacity;
+							transition: 0.3s opacity;
 							width: 200px;
 							white-space: pre-line;
 							text-align: left;
@@ -448,7 +447,7 @@ body {
 								color: $grey-0;
 								font-weight: $regular;
 								letter-spacing: 0.3px;
-								transition: all .3s ease-in-out;
+								transition: all 0.3s ease-in-out;
 
 								&:hover {
 									background: $primary_color;
@@ -556,7 +555,7 @@ body {
 		gap: $spacing_32px;
 		flex-direction: column;
 		padding: $spacing_24px 0 $spacing_26px 0;
-		transition: all .3s;
+		transition: all 0.3s;
 		width: 340px;
 		max-width: 100%;
 		border-left: $border_width solid $border_color;
@@ -653,7 +652,7 @@ body {
 							height: 20px;
 						}
 
-						> span {
+						>span {
 							flex: 1;
 						}
 
@@ -669,10 +668,10 @@ body {
 							font-weight: $medium;
 							line-height: 24px;
 							text-decoration: none;
-							letter-spacing: .05px;
+							letter-spacing: 0.05px;
 							width: max-content;
 							margin: $spacing_20px 0;
-							transition: all .3s;
+							transition: all 0.3s;
 
 							&:hover {
 								background: #2e44a1;
@@ -704,7 +703,7 @@ body {
 				gap: 32px;
 
 				&--card {
-					background-color: #6969DE;
+					background-color: #6969de;
 					padding: $spacing_40px;
 					border-radius: 12px;
 					display: flex;
@@ -716,7 +715,7 @@ body {
 						max-width: 300px;
 					}
 
-					> p {
+					>p {
 						font-size: 18px;
 						line-height: 27px;
 						font-weight: $semi-bold;
@@ -745,9 +744,9 @@ body {
 						text-decoration: none;
 						padding: 0 $spacing_12px;
 						background: $white;
-						color: #3F4D8A;
+						color: #3f4d8a;
 						font-weight: $semi-bold;
-						transition: all .3s;
+						transition: all 0.3s;
 						width: 100%;
 						text-align: center;
 						border-radius: $border_radius_5;
@@ -877,7 +876,7 @@ body {
 			line-height: 22px;
 			font-style: normal;
 			border-left: 4px solid $primary_color;
-			background: #F1F2F9;
+			background: #f1f2f9;
 
 			strong {
 				font-weight: $semi_bold;
@@ -931,7 +930,6 @@ body {
 			}
 		}
 
-
 		.user-registration-integrations {
 			border-radius: $border_radius_3;
 			background: #fafafa;
@@ -981,11 +979,11 @@ body {
 
 				&.ur-integration-account-connected {
 					&::before {
-						background: #4CC741;
+						background: #4cc741;
 					}
 
 					&::after {
-						border-color: #4CC741;
+						border-color: #4cc741;
 					}
 				}
 			}
@@ -1028,13 +1026,13 @@ body {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			transition: all .3s ease-in-out;
+			transition: all 0.3s ease-in-out;
 
 			svg {
 				stroke: $grey-300;
 				width: 22px;
 				height: 22px;
-				transition: all .3s ease-in-out;
+				transition: all 0.3s ease-in-out;
 			}
 		}
 
@@ -1048,7 +1046,6 @@ body {
 			margin-top: 0 !important;
 			max-width: 100%;
 			position: relative;
-
 
 			border-radius: 7px;
 			// padding: 28px 32px 32px;
@@ -1105,7 +1102,7 @@ body {
 			}
 
 			&.pro-options {
-				opacity: .4;
+				opacity: 0.4;
 
 				&::after {
 					content: "+";
@@ -1143,9 +1140,11 @@ body {
 					align-items: center;
 					gap: 6px;
 					padding: 4px 10px;
-					min-width: 90px;
+					// min-width: 90px;
 					border: 1px solid transparent;
 					border-radius: 6px;
+					font-size: 14px;
+					line-height: 20px;
 					text-decoration: none;
 					transition: all 0.2s ease;
 					color: #383838;
@@ -1154,7 +1153,9 @@ body {
 						text-decoration: none !important;
 						font-weight: 500;
 						opacity: 0.8;
-						transition: color 0.2s ease, opacity 0.2s ease;
+						transition:
+							color 0.2s ease,
+							opacity 0.2s ease;
 					}
 
 					&:focus,
@@ -1294,7 +1295,7 @@ body {
 					padding: $spacing_20px 0 !important;
 
 					.nav-tab-inside {
-						> div {
+						>div {
 							display: block;
 						}
 					}
@@ -1424,12 +1425,12 @@ body {
 
 								.disconnect {
 									padding: $spacing_10px $spacing_14px;
-									background: #DC3545;
-									border: $border_width solid #DC3545;
+									background: #dc3545;
+									border: $border_width solid #dc3545;
 									border-radius: $border_radius_3;
 									color: $grey-0;
 									letter-spacing: 0.2px;
-									transition: all .3s ease-in-out;
+									transition: all 0.3s ease-in-out;
 
 									&:hover {
 										background: #b31b2a;
@@ -1454,23 +1455,19 @@ body {
 					}
 
 					&.ur_emails {
-						border-radius: $border_radius_5;
-						overflow: hidden;
-						border-color: $border-color;
+						// border-radius: $border_radius_5;
+						// overflow: hidden;
+						// border-color: $border-color;
+						border: 0;
 
 						thead {
 							th {
 								padding: $spacing_12px $spacing_16px !important;
 								background: $primary_color;
 								color: $grey-0;
-								// font-weight: $semi_bold;
 								font-weight: $medium;
 								font-size: 15px;
 								line-height: 25px;
-								border: $border_width solid $border-color;
-								border-top: 0;
-								border-bottom: 0;
-								border-left: 0;
 								letter-spacing: 0.03px;
 
 								&:first-child {
@@ -1551,7 +1548,7 @@ body {
 										}
 									}
 
-									> label {
+									>label {
 										padding: $spacing_4px $spacing_8px;
 										border-radius: 100px;
 										font-weight: $regular !important;
@@ -1566,7 +1563,7 @@ body {
 										}
 
 										&.ur-email-status {
-											background: #4CC741;
+											background: #4cc741;
 										}
 
 										&.ur-email-receiver {
@@ -1581,7 +1578,7 @@ body {
 
 										&::after {
 											content: "";
-											background-image: url('../images/settings-icons/information.svg') !important;
+											background-image: url("../images/settings-icons/information.svg") !important;
 										}
 									}
 
@@ -1644,13 +1641,12 @@ body {
 						font-weight: $medium;
 						color: $grey-400;
 						font-size: 14px;
-						// flex: 0 0 38%;
 						max-width: 300px;
 						width: 100%;
 						margin-bottom: 0;
 
 						span {
-							color: #BABABA;
+							// color: #bababa;
 
 							&.user-registration-help-tip {
 								font-size: 16px;
@@ -1659,7 +1655,7 @@ body {
 
 								&::after {
 									content: "";
-									background-image: url('../images/settings-icons/information.svg') !important;
+									background-image: url("../images/settings-icons/information.svg") !important;
 									background-repeat: no-repeat !important;
 									background-size: 100% !important;
 									background-position: center;
@@ -1687,7 +1683,6 @@ body {
 						gap: $spacing_12px;
 						line-height: 1.3;
 						vertical-align: middle;
-						// flex: 0 0 60%;
 						flex: 1;
 
 						@media (max-width: 1199px) {
@@ -1770,11 +1765,11 @@ body {
 
 								&.active {
 									label {
-										color: #475BB2;
+										color: #475bb2;
 										opacity: 1;
 									}
 
-									border-color: #475BB2;
+									border-color: #475bb2;
 								}
 
 								label {
@@ -1788,7 +1783,6 @@ body {
 										display: none;
 									}
 								}
-
 							}
 						}
 
@@ -1832,6 +1826,15 @@ body {
 								#ur-smart-tags-selector {
 									margin-left: auto;
 								}
+							}
+						}
+
+						#wp-user_registration_content_drip_global_message-media-buttons {
+							display: flex;
+							align-items: center;
+
+							#ur-smart-tags-selector {
+								margin-left: auto;
 							}
 						}
 					}
@@ -1886,8 +1889,12 @@ body {
 							}
 						}
 					}
+				}
 
-
+				&:has(>.ur_emails) {
+					border: $border_width solid $border-color;
+					border-radius: $border_radius_5;
+					overflow: hidden;
 				}
 			}
 		}
@@ -1897,9 +1904,9 @@ body {
 			margin: 0;
 
 			a {
-				color: #475bb2;
-				border: 1px solid #475bb2;
-				font-weight: 500;
+				color: $primary_color;
+				border: $border_width solid $primary_color;
+				font-weight: $medium;
 				height: 38px;
 				align-content: center;
 			}
@@ -1985,7 +1992,7 @@ body {
 
 			#selected-export-user-form {
 				&::hover {
-					background-color: #475BB2;
+					background-color: #475bb2;
 				}
 			}
 		}
@@ -1999,7 +2006,7 @@ body {
 		#urm-popup-table,
 		#urm-invite-codes-list-table {
 			background-color: #ffffff;
-			border: 1px solid #EDF2F7;
+			border: 1px solid #edf2f7;
 			border-radius: $border_radius_7;
 			padding: 20px 20px 22px;
 
@@ -2010,7 +2017,6 @@ body {
 
 			#popups-list {
 				margin-top: 16px;
-
 
 				.ur-list-table-wrapper {
 					width: 100%;
@@ -2045,11 +2051,10 @@ body {
 		padding: 0;
 
 		.button-primary {
-			transition: all .3s ease-in-out;
+			transition: all 0.3s ease-in-out;
 		}
 	}
 }
-
 
 .user-registration-ui-autocomplete {
 	font-size: 12px !important;
@@ -2091,7 +2096,6 @@ body {
 	color: rgba(57, 57, 57, 0.35);
 }
 
-
 // Radio Image Setting
 .user-registration-global-settings.radio-image {
 	ul {
@@ -2105,7 +2109,7 @@ body {
 		margin-bottom: 10px;
 	}
 
-	input[type="radio"] + img {
+	input[type="radio"]+img {
 		cursor: pointer;
 	}
 }
@@ -2153,7 +2157,7 @@ body {
 .ur-install-urm-pro-p-tag {
 	margin-bottom: 24px;
 	padding: 10px 12px 10px 16px;
-	background: rgba(71, 91, 178, .04);
+	background: rgba(71, 91, 178, 0.04);
 	border: 1px solid #475bb2;
 	font-weight: 400;
 	color: #383838;
@@ -2168,7 +2172,6 @@ body {
 		margin-bottom: 24px;
 	}
 }
-
 
 .ur-nav__tab-item {
 	display: flex;
@@ -2187,7 +2190,7 @@ body {
 }
 
 .ur-scroll-ui__items::before {
-	content: '';
+	content: "";
 	position: absolute;
 	left: 0;
 	top: 16px;
@@ -2202,7 +2205,7 @@ body {
 }
 
 .ur-scroll-ui__items li::before {
-	content: '';
+	content: "";
 	position: absolute;
 	top: calc(16px - 2px);
 	left: -15px;
@@ -2321,7 +2324,7 @@ body {
 }
 
 .ur-connection-status--active::after {
-	content: 'Connected';
+	content: "Connected";
 }
 
 .user-registration-settings-parts li {
@@ -2330,8 +2333,8 @@ body {
 }
 
 .user-registration-settings-parts .current {
-	color: #475BB2;
-	border-bottom: 1px solid #475BB2;
+	color: #475bb2;
+	border-bottom: 1px solid #475bb2;
 }
 
 /* Color picker styling */
@@ -2518,8 +2521,8 @@ body {
 		}
 
 		/* Show default button when color result has wp-picker-open class */
-		.wp-color-result.wp-picker-open ~ .wp-picker-default,
-		.wp-color-result.wp-picker-open + .wp-picker-default {
+		.wp-color-result.wp-picker-open~.wp-picker-default,
+		.wp-color-result.wp-picker-open+.wp-picker-default {
 			display: inline-block !important;
 			visibility: visible !important;
 			opacity: 1 !important;

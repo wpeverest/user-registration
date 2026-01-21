@@ -13,7 +13,7 @@ import { saveRuleWithCollectiveData } from "../../utils/rule-save-helper";
 const { adminURL } =
 	typeof _URCR_DASHBOARD_ !== "undefined" && _URCR_DASHBOARD_;
 
-const RuleContentDisplay = ({ rule, onRuleUpdate }) => {
+const RuleContentDisplay = ({ rule, onRuleUpdate, isToggling = false }) => {
 	const [isSaving, setIsSaving] = useState(false);
 	const [rootGroup, setRootGroup] = useState(null);
 	const [accessControl, setAccessControl] = useState(
@@ -317,7 +317,7 @@ const RuleContentDisplay = ({ rule, onRuleUpdate }) => {
 					className="urcr-save-rule-btn button button-primary"
 					type="button"
 					onClick={handleSave}
-					disabled={isSaving}
+					disabled={isSaving || isToggling}
 					data-rule-id={rule.id}
 				>
 					{isSaving

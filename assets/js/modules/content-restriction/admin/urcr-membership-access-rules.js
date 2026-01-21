@@ -428,12 +428,12 @@
 
 			$(document).on("click", ".urcr-content-type-option", function (e) {
 				e.preventDefault();
-				if (
-					$(this).hasClass("urcr-dropdown-option-disabled") ||
-					$(this).attr("aria-disabled") === "true"
-				) {
-					return;
-				}
+				// if (
+				// 	$(this).hasClass("urcr-dropdown-option-disabled") ||
+				// 	$(this).attr("aria-disabled") === "true"
+				// ) {
+				// 	return;
+				// }
 				var contentType = $(this).data("content-type");
 				self.addContentTarget(contentType);
 				$(".urcr-content-type-dropdown-menu")
@@ -445,12 +445,12 @@
 				"keydown",
 				".urcr-content-type-option",
 				function (e) {
-					if (
-						$(this).hasClass("urcr-dropdown-option-disabled") ||
-						$(this).attr("aria-disabled") === "true"
-					) {
-						return;
-					}
+					// if (
+					// 	$(this).hasClass("urcr-dropdown-option-disabled") ||
+					// 	$(this).attr("aria-disabled") === "true"
+					// ) {
+					// 	return;
+					// }
 					if (e.key === "Enter" || e.key === " ") {
 						e.preventDefault();
 						var contentType = $(this).data("content-type");
@@ -1478,9 +1478,6 @@
 				}
 				inputHtml = `<div style="display:flex;align-items:center;gap:4px;flex:1" data-content-type="${type}" data-target-id="${id}">
 					<input style="flex:1" type="text" class="components-text-control__input urcr-condition-value-input urcr-condition-value-text urcr-form-field-value-input" value="${value[0]}">
-					<label style="display: inline-flex; align-items: center; gap: 2px; margin: 0; width: auto">
-						<input type="checkbox" ${value[1] ? "checked" : ""}> ${urcr_membership_access_data.hasOwnProperty("regex_label") ? urcr_membership_access_data.regex_label : "Regex"}
-					</label>
 				</div>`;
 			} else {
 				inputHtml =
@@ -1493,7 +1490,15 @@
 			var contentDrip = "";
 
 			if (
-				type !== "whole_site" &&
+				![
+					"whole_site",
+					"masteriyo_courses",
+					"whole_site",
+					"masteriyo_courses",
+					"menu_items",
+					"files",
+					"custom_uri"
+				].includes(type) &&
 				urcr_membership_access_data.is_pro &&
 				urcr_membership_access_data.is_drip_content
 			) {
@@ -1513,7 +1518,10 @@
         data-days_after_days="${drip.value.days_after.days}">
 
         <button type="button" class="urcr-drip__trigger">
-            <span class="dashicons dashicons-plus-alt2"></span> Drip This Content
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+				<path d="M11.09 6.545a.91.91 0 1 1 1.82 0v4.893l3.133 1.567a.91.91 0 0 1-.813 1.626l-3.637-1.818a.91.91 0 0 1-.502-.813V6.545Z"/>
+				<path d="M20.182 12a8.182 8.182 0 1 0-16.364 0 8.182 8.182 0 0 0 16.364 0ZM22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10Z"/>
+			</svg> ${urcr_membership_access_data.drip_content_label.drip_this_content}
         </button>
 
         <div class="urcr-drip__popover" style="display:none;">
@@ -1521,8 +1529,8 @@
 
             <div class="urcr-drip__tabs">
                 <div class="urcr-drip__tabList">
-                    <button type="button" class="urcr-drip__tab" data-value="fixed_date">Fixed Date</button>
-                    <button type="button" class="urcr-drip__tab" data-value="days_after">Days After</button>
+                    <button type="button" class="urcr-drip__tab" data-value="fixed_date">${urcr_membership_access_data.drip_content_label.fixed_date}</button>
+                    <button type="button" class="urcr-drip__tab" data-value="days_after">${urcr_membership_access_data.drip_content_label.days_after}</button>
                 </div>
 
                 <div class="urcr-drip__panels">
@@ -1837,11 +1845,9 @@
 					'<span role="button" tabindex="' +
 						tabIndex +
 						'" class="urcr-dropdown-option urcr-content-type-option ' +
-						disabledClass +
 						'" data-content-type="' +
 						ct.value +
 						'" ' +
-						disabledAttr +
 						">" +
 						ct.label +
 						"</span>"
@@ -2075,7 +2081,10 @@
 						);
 						var terms = [];
 
-						if ($termSelect.hasClass("select2-hidden-accessible") || $termSelect.hasClass("urcr-enhanced-select2")) {
+						if (
+							$termSelect.hasClass("select2-hidden-accessible") ||
+							$termSelect.hasClass("urcr-enhanced-select2")
+						) {
 							terms = $termSelect.val() || [];
 							if (!Array.isArray(terms)) {
 								terms = terms ? [terms] : [];
@@ -2119,10 +2128,17 @@
 						);
 						var selectedValues = [];
 
-						if ($contentSelect.hasClass("select2-hidden-accessible") || $contentSelect.hasClass("urcr-enhanced-select2")) {
+						if (
+							$contentSelect.hasClass(
+								"select2-hidden-accessible"
+							) ||
+							$contentSelect.hasClass("urcr-enhanced-select2")
+						) {
 							selectedValues = $contentSelect.val() || [];
 							if (!Array.isArray(selectedValues)) {
-								selectedValues = selectedValues ? [selectedValues] : [];
+								selectedValues = selectedValues
+									? [selectedValues]
+									: [];
 							}
 						} else {
 							var contentData = $contentSelect.attr("data-value");
@@ -2149,11 +2165,17 @@
 						);
 						var defaultValue = [];
 
-					
-						if ($contentSelect.hasClass("select2-hidden-accessible") || $contentSelect.hasClass("urcr-enhanced-select2")) {
+						if (
+							$contentSelect.hasClass(
+								"select2-hidden-accessible"
+							) ||
+							$contentSelect.hasClass("urcr-enhanced-select2")
+						) {
 							defaultValue = $contentSelect.val() || [];
 							if (!Array.isArray(defaultValue)) {
-								defaultValue = defaultValue ? [defaultValue] : [];
+								defaultValue = defaultValue
+									? [defaultValue]
+									: [];
 							}
 						} else {
 							var defaultData = $contentSelect.attr("data-value");
@@ -2193,11 +2215,39 @@
 					}
 				};
 
+				var dripData = {};
+
+				if (!["whole_site", "masteriyo_courses"].includes(type)) {
+					var dripThisContent = $target.find(".urcr-membership-drip");
+
+					if (dripThisContent) {
+						dripData = {
+							activeType: dripThisContent.data("active_type"),
+							value: {
+								fixed_date: {
+									date: dripThisContent.data(
+										"fixed_date_date"
+									),
+									time: dripThisContent.data(
+										"fixed_date_time"
+									)
+								},
+								days_after: {
+									days: dripThisContent.data(
+										"days_after_days"
+									)
+								}
+							}
+						};
+					}
+				}
+
 				var targetData = {
 					id: targetId,
 					type: type,
-					drip: {}
+					drip: dripData ?? defaultDrip
 				};
+
 				// Only add value field if type is not whole_site
 				if (type !== "whole_site") {
 					targetData.value = value;

@@ -6,7 +6,11 @@ import { __ } from "@wordpress/i18n";
 import ContentTypeDropdown from "../dropdowns/ContentTypeDropdown";
 import ContentValueInput from "../inputs/ContentValueInput";
 import DropdownButton from "../dropdowns/DropdownButton";
-import { isDripContent, isProAccess } from "../../utils/localized-data";
+import {
+	isDripContent,
+	isMasteriyo,
+	isProAccess
+} from "../../utils/localized-data";
 import DripThisContent from "../content-drip/DripThisContent";
 
 const AccessControlSection = ({
@@ -236,44 +240,62 @@ const AccessControlSection = ({
 								<div
 									key={target.id}
 									className="urcr-target-item"
+									style={{
+										display:
+											target.type ===
+												"masteriyo_courses" &&
+											!isMasteriyo()
+												? "none"
+												: ""
+									}}
 								>
 									<span className="urcr-target-type-label">
-										{displayLabel.replace(/_/g, " ")}:
+										{displayLabel
+											.replace(/_/g, " ")
+											.replace(/\b\w/g, (char) =>
+												char.toUpperCase()
+											)}
+										:
 									</span>
-									<ContentValueInput
-										contentType={target.type}
-										value={target.value}
-										onChange={(newValue) =>
-											handleContentTargetUpdate(
-												target.id,
-												newValue
-											)
-										}
-									/>
-									{isProAccess() &&
-										isDripContent() &&
-										"membership" === ruleType && (
-											<DripThisContent
-												onContentTargetsChange={
-													onContentTargetsChange
+									<div className="urcr-target-item--content-wrapper">
+										<ContentValueInput
+											contentType={target.type}
+											value={target.value}
+											onChange={(newValue) =>
+												handleContentTargetUpdate(
+													target.id,
+													newValue
+												)
+											}
+										/>
+										<div className="urcr-target-item--content-buttons">
+											{isProAccess() &&
+												isDripContent() &&
+												"membership" === ruleType && (
+													<DripThisContent
+														onContentTargetsChange={
+															onContentTargetsChange
+														}
+														contentTargets={contentTargets}
+														target={target}
+													/>
+												)}
+																						
+											<button
+												type="button"
+												className="button-link urcr-target-remove"
+												onClick={() =>
+													handleContentTargetRemove(target.id)
 												}
-												contentTargets={contentTargets}
-												target={target}
-											/>
-										)}
-									<button
-										type="button"
-										className="button-link urcr-target-remove"
-										onClick={() =>
-											handleContentTargetRemove(target.id)
-										}
-										aria-label={__(
-											"Remove",
-											"user-registration"
-										)}
-									>
-										<span className="dashicons dashicons-no-alt"></span>
-									</button>
+												aria-label={__(
+													"Remove",
+													"user-registration"
+												)}
+											>
+												<span className="dashicons dashicons-no-alt"></span>
+											</button>
+										</div>
+									</div>
 								</div>
 							);
 						})}

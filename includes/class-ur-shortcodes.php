@@ -325,6 +325,10 @@ class UR_Shortcodes {
 						$user_id = get_current_user_id();
 						$form_id = get_user_meta( $user_id, 'ur_form_id', true );
 
+						if ( check_membership_field_in_form($form_id ) === false ) {
+							$form_id = $atts['id'] ?? 0;
+						}
+
 						$form_fields = ur_get_form_fields( $form_id );
 
 						foreach ( $form_fields as $field ) {
