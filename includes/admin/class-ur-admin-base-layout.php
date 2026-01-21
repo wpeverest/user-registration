@@ -58,8 +58,27 @@ class UR_Base_Layout {
 				<h1>
 					<?php echo esc_html( $data['title'] ); ?>
 				</h1>
-				<?php if ( ! empty( $data['add_new_action'] ) ) : ?>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $data['page'] . '&action=' . $data['add_new_action'] ) ); ?>" class="page-title-action">
+				<?php
+					$external_class = '';
+
+					if ( ! empty( $data['add_new_action'] ) ) {
+						error_log( print_r( $data[ 'add_new_action'], true ) );
+						switch ( $data['add_new_action'] ) {
+							case 'manage_tax':
+								$external_class = 'urm-manage-tax-region-btn';
+								break;
+
+							case 'manage_pricing_zone':
+								$external_class = 'ur-local-currency-add-pricing-zone';
+								break;
+								
+							default:
+								$external_class = '';
+								break;
+						}
+					}
+				if ( ! empty( $data['add_new_action'] ) ) : ?>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $data['page'] . '&action=' . $data['add_new_action'] ) ); ?>" class="page-title-action <?php echo esc_attr( $external_class ); ?>">
 					<?php echo esc_html( $data['add_new_label'] ); ?>
 				</a>
 				<?php endif; ?>

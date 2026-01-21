@@ -477,25 +477,7 @@ class UR_Admin_Settings {
 							}
 							$settings .= '</h3>';
 
-							if ( 'local_currency' === $id ) {
-								$settings .= '<div class="user-registration-list-table-header" style="justify-content: end;">';
-
-								$settings .= '<a href="#" class="page-title-action ur-local-currency-add-pricing-zone" data-action="add">' . esc_html__( 'Add Pricing Zone', 'user-registration' ) . '</a>';
-								$settings .= '</div>';
-							}
-							if ( 'tax_table' === $id ) {
-								$regions = get_option( 'user_registration_tax_regions_and_rates', array() );
-								$btn_title = __( 'Manage Tax Regions', 'user-registration' );
-
-								if ( empty( $regions['regions'] ) ) {
-									$btn_title = __( 'Add Tax Regions', 'user-registration' );
-								}
-
-								$settings .= '<div class="user-registration-list-table-header" style="justify-content: end;">';
-
-								$settings .= '<a href="#" class="page-title-action urm-manage-tax-region-btn" data-action="add">' . esc_html( $btn_title ) . '</a>';
-								$settings .= '</div>';
-							}
+					
 
 							if ( ! empty( $section['button'] ) ) {
 								if ( isset( $section['button']['button_type'] ) && 'upgrade_link' === $section['button']['button_type'] ) {
