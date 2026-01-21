@@ -5289,18 +5289,25 @@ body.user-registration {
 }
 
 
-#user-registration-local-currency-table-page {
-	border: 0px !important;
-	padding: 0px !important;
-
+#user-registration-local-currency-table-page, #user-registration-tax-regions-table-page {
 	#user-registration-list-filters-row {
 		display: none !important;
 	}
 
+	#user-registration-base-list-table-page{
+		margin: 0 !important;
+		padding: 0 !important;
+		border: none !important;
+		.tablenav{
+			&.top{
+				margin-top: 24px;
+			}
+		}
+	}
+
 }
 
-#user-registration-list-table-page,
-#user-registration-local-currency-table-page {
+#user-registration-list-table-page {
 	max-width: 100%;
 	margin: $spacing_24px;
 	padding: $spacing_24px $spacing_28px;
