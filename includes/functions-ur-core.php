@@ -4232,7 +4232,7 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 
 		$premium_tabs = array(
 			'email'              => array(
-				'templates'    => array(
+				'templates' => array(
 					'label'  => esc_html__( 'Email Templates', 'user-registration' ),
 					'plugin' => 'user-registration-email-templates',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
@@ -4243,15 +4243,22 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 							'Choose from 6 ready-made email templates',
 							'Customize layout, colors, and content',
 						),
-						'feature_link' => 'https://wpuserregistration.com/features/email-templates/',
+						'feature_link' => 'https://wpuserregistration.com/features/email-templates/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
 					)
-
 				),
-				'custom-email' => array(
+				'custom-email'       => array(
 					'label'  => esc_html__( 'Custom Email', 'user-registration' ),
 					'plugin' => 'user-registration-email-custom-email',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration - Custom Email', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Customize and manage email notifications for key membership and registration events.',
+						'description' => array(
+							'Configure scheduled emails for members',
+							'Choose recipients and personalize email content',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/email-notifications/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 			),
 			'registration_login' => array(
@@ -4260,24 +4267,57 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 					'plugin' => 'user-registration-social-connect',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration - Social Connect', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Allow users to sign up or log in using social accounts.',
+						'description' => array(
+							'Supports 5 major platforms, including Facebook and Google ',
+							'Configure each social platform individually',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/social-connect/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 				'profile-connect' => array(
 					'label'  => esc_html__( 'Profile Connect', 'user-registration' ),
 					'plugin' => 'user-registration-profile-connect',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Profile Connect', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Import users from existing registrations into URM.',
+						'description' => array(
+							'Select which forms or sources to import users from',
+							'Map fields to keep user data consistent',
+						),
+						'feature_link' => ' https://wpuserregistration.com/features/profile-connect/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 				'invite-code'     => array(
 					'label'  => esc_html__( 'Invite Codes', 'user-registration' ),
 					'plugin' => 'user-registration-invite-codes',
 					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Invite Codes', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Enable invite-only signups using custom codes.',
+						'description' => array(
+							'Customize popup content and appearance',
+							'Customize layout, colors, and content',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/invite-codes/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 				'file-upload'     => array(
 					'label'  => esc_html__( 'File Upload', 'user-registration' ),
 					'plugin' => 'user-registration-file-upload',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration - File Upload', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Let users upload files during registration.',
+						'description' => array(
+							'Collect profile photos or verification documents',
+							'Support 10+ file types, including PDF and PNG',
+							'Set upload size limits for better control'
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/file-upload/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 			),
 			'my_account'         => array(
@@ -4286,6 +4326,15 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 					'plugin' => 'user-registration-customize-my-account',
 					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration customize my account', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Personalize the user dashboard to fit your site.',
+						'description' => array(
+							'Edit or replace default dashboard content',
+							'Add custom links and account sections',
+							'Style individual dashboard elements',
+						),
+						'feature_link' => ' https://wpuserregistration.com/features/customize-my-account/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 			),
 			'integration'        => array(
@@ -4297,48 +4346,114 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 							'plugin' => 'user-registration-activecampaign',
 							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration ActiveCampaign', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Sync members with ActiveCampaign for advanced email automation.',
+								'description' => array(
+									'Automatically subscribe users to ActiveCampaign lists upon registration',
+									'Auto-update subscriber details when members edit their profiles',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/activecampaign/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
 						),
 						'brevo'          => array(
 							'label'  => esc_html__( 'Brevo', 'user-registration' ),
 							'plugin' => 'user-registration-brevo',
 							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration Brevo', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Connect members with Brevo (formerly Sendinblue) for email campaigns.',
+								'description' => array(
+									'Sync member data to Brevo contact lists automatically',
+									'Use conditional logic for targeted list segmentation',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/brevo/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
 						),
 						'convertkit'     => array(
 							'label'  => esc_html__( 'Kit (Previously Convertkit)', 'user-registration' ),
 							'plugin' => 'user-registration-convertkit',
 							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration convertkit', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Grow your email list with Kit integration.',
+								'description' => array(
+									'Map signup form fields to Kit custom fields',
+									'Subscribe users to specific Kit forms, tags, or sequences',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/kit/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
 						),
 						'klaviyo'        => array(
 							'label'  => esc_html__( 'Klaviyo', 'user-registration' ),
 							'plugin' => 'user-registration-klaviyo',
 							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration Klaviyo', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Power your email marketing with Klaviyo integration.',
+								'description' => array(
+									'Auto-sync member details when profiles are updated',
+									'Automatically unsubscribe deleted users from Klaviyo',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/klaviyo/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
 						),
 						'mailchimp'      => array(
 							'label'  => esc_html__( 'Mailchimp', 'user-registration' ),
 							'plugin' => 'user-registration-mailchimp',
 							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration - Mailchimp', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Automatically sync users to Mailchimp audiences upon registration.',
+								'description' => array(
+									'Add custom tags to segment your membership lists',
+									'Map User Registration fields to Mailchimp merge tags',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/mailchimp/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
+
 						),
 						'mailerlite'     => array(
 							'label'  => esc_html__( 'Mailerlite', 'user-registration' ),
 							'plugin' => 'user-registration-mailerlite',
 							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration MailerLite', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => ' Integrate with MailerLite for streamlined email marketing.',
+								'description' => array(
+									'Auto-sync member profile updates to MailerLite',
+									'Create multiple connections for different campaigns',
+								),
+								'feature_link' => ' https://wpuserregistration.com/features/mailerlite/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
 						),
 						'mailpoet'       => array(
 							'label'  => esc_html__( 'Mailpoet', 'user-registration' ),
 							'plugin' => 'user-registration-mailpoet',
 							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration MailPoet', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Connect member signup forms with MailPoet subscriber lists.',
+								'description' => array(
+									'Use conditional logic for targeted list building',
+									'Perfect for WordPress-native email marketing',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/mailpoet/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
 						),
 						'zapier'         => array(
 							'label'  => esc_html__( 'Zapier', 'user-registration' ),
 							'plugin' => 'user-registration-zapier',
 							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration Zapier', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Connect with 1,500+ apps through Zapier automation.',
+								'description' => array(
+									'Transfer registration data to Google Docs, Trello, Slack, HubSpot, and more',
+									'Trigger actions on user signup, profile update, or deletion',
+									'Create automated workflows without coding ',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/zapier/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
 						),
 					),
 					'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
@@ -4349,34 +4464,83 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 					'plugin' => 'user-registration-pdf-form-submission',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration PDF Form Submission', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Generate and download registration data in PDF format.',
+						'description' => array(
+							'Automatically attach PDF files to admin and user emails on form submission',
+							'Customize PDF templates with header logos and branding',
+						),
+						'feature_link' => ' https://wpuserregistration.com/features/pdf-form-submission/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 				'google-sheets'   => array(
 					'label'  => esc_html__( 'Google Sheets', 'user-registration' ),
 					'plugin' => 'user-registration-google-sheets',
 					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Google Sheets', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Store and manage form data in spreadsheet format in Google Sheets.',
+						'description' => array(
+							'Map User Registration fields to Google Sheets columns',
+							'Use conditional logic to filter which submissions sync',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/google-sheets/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 				'salesforce'      => array(
 					'label'  => esc_html__( 'Salesforce', 'user-registration' ),
 					'plugin' => 'user-registration-salesforce',
 					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Salesforce', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Sync member data with Salesforce CRM automatically.',
+						'description' => array(
+							'Map registration form fields to Salesforce fields',
+							'Support for multiple Salesforce account connections',
+						),
+						'feature_link' => ' https://wpuserregistration.com/features/salesforce/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
+
 				),
 				'geolocation'     => array(
 					'label'  => esc_html__( 'Geolocation', 'user-registration' ),
 					'plugin' => 'user-registration-geolocation',
 					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Geolocation', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Capture geolocation data automatically when users register.',
+						'description' => array(
+							'View user location data in admin dashboard',
+							'Add Google Maps as address field in registration forms',
+							'Send geolocation data via smart tags in emails',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/geolocation/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 				'woocommerce'     => array(
 					'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
 					'plugin' => 'user-registration-woocommerce',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Add WooCommerce billing and shipping fields to signup form.',
+						'description' => array(
+							'View and edit WooCommerce-related details in one place',
+							'Let users view their order history right from their account page.',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/woocommerce-integration/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					),
 				),
 				'popup'           => array(
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'plugin' => 'user-registration-pro',
+					'upsell' => array(
+						'excerpt' => 'Display registration or login forms in popups.',
+						'description' => array(
+							'Customize popup content and appearance',
+							'Control where the popup shows up',
+						),
+					),
 				),
 				'cloud-storage'   => array(
 					'is_collection' => true,
@@ -4386,24 +4550,48 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 							'plugin' => 'user-registration-cloud-storage',
 							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Store user-uploaded files directly in your preferred cloud storage service.',
+								'description' => array(
+									'Connect signup forms to Dropbox or Google Drive',
+									'Keep your WordPress server clean by offloading storage',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/cloud-storage-integration/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							),
 						),
 						'dropbox'      => array(
 							'label'  => esc_html__( 'Dropbox', 'user-registration' ),
 							'plugin' => 'user-registration-cloud-storage',
-							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-							'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
-						),
+							'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+							'name' => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Store user-uploaded files directly in your preferred cloud storage service.',
+								'description' => array(
+									'Connect signup forms to Dropbox or Google Drive',
+									'Keep your WordPress server clean by offloading storage',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/cloud-storage-integration/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							),
+						)
 					),
-					'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-					'plugin'        => 'user-registration-cloud-storage',
+					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'plugin' => 'user-registration-cloud-storage',
 				),
 			),
-			'security'           => array(
+			'security' => array(
 				'2fa' => array(
 					'label'  => esc_html__( 'Two Factor Authentication', 'user-registration' ),
 					'plugin' => 'user-registration-two-factor-authentication',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration - Two Factor Authentication', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Verify user logins with one-time passwords.',
+						'description' => array(
+							'Send OTPs via email or SMS',
+							'Configure verification limits and rules',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/two-factor-authentication',
+					)
 				),
 			),
 		);
@@ -4606,6 +4794,11 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 					$description = esc_html__( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
 					$settings['sections']['premium_setting_section']['title']       = $detail['label'];
 					$settings['sections']['premium_setting_section']['before_desc'] = $description;
+
+					if( ! empty( $detail[ 'upsell' ] ) ) {
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'before_desc' ] = '';
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'upsell' ]      = $detail[ 'upsell' ];
+					}
 				}
 			}
 			return $settings;
@@ -5465,11 +5658,13 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 	function user_registration_process_email_content( $email_content, $template = '' ) {
 
 		if ( UR_PRO_ACTIVE ) {
+			// Delegate to pro function if available to use header/footer wrapper.
 			if ( function_exists( 'ur_pro_user_registration_process_email_content' ) ) {
 				return ur_pro_user_registration_process_email_content( $email_content, $template );
 			}
 		}
 
+		// Check if email template is selected.
 		if ( '' !== $template && 'none' !== $template ) {
 			/**
 			 * Filters the email template message.
@@ -5526,6 +5721,8 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 	 * @return string Wrapped email content.
 	 */
 	function ur_wrap_email_body_content( $body_content ) {
+		// Check if we're in editor context - exclude CSS when displaying editor on settings page.
+		// Include CSS for preview, email sending, cron, CLI, and AJAX email actions.
 		$is_preview       = isset( $_GET['ur_email_preview'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$current_screen   = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		$is_settings_page = $current_screen && 'user-registration_page_user-registration-settings' === $current_screen->id;
@@ -5534,13 +5731,16 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 			strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		);
 
+		// Only exclude CSS when on settings page displaying editor (not when sending emails).
 		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action &&
 							! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
 							! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
 
+		// Responsive CSS styles for email template - only include when not in editor context.
 		$responsive_styles = '';
 		if ( ! $is_editor_context ) {
 			$responsive_styles = '<style type="text/css">
+	/* Responsive Email Styles - Scoped to email wrapper only */
 	@media only screen and (max-width: 600px) {
 		.email-wrapper-outer {
 			padding: 20px 0 !important;
@@ -5600,6 +5800,7 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 </style>';
 		}
 
+		// Check if this is a preview and set width to 600px.
 		$is_preview  = isset( $_GET['ur_email_preview'] ) && 'email_template_option' === sanitize_text_field( wp_unslash( $_GET['ur_email_preview'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$email_width = $is_preview ? '600px' : 'unset';
 		$max_width   = $is_preview ? '600px' : '600px'; // Max width for better readability on all devices.
@@ -5627,21 +5828,29 @@ if ( ! function_exists( 'ur_unwrap_email_body_content' ) ) {
 
 		$content = $wrapped_content;
 
+		// Remove style tags (including those with type="text/css").
 		$content = preg_replace( '/<style[^>]*>.*?<\/style>/is', '', $content );
 
+		// Check if content contains email wrapper structure.
 		if ( strpos( $content, 'email-wrapper-outer' ) !== false || strpos( $content, 'email-body' ) !== false ) {
+			// Pattern to match: <div...class="...email-body...">CONTENT</div> followed by closing divs
+			// Use a pattern that matches the email-body div and extracts its content.
 			if ( preg_match( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>(.*)<\/div>\s*<\/div>\s*<\/div>/is', $content, $matches ) ) {
 				$content = $matches[1];
 			} elseif ( preg_match( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>(.*?)<\/div>/is', $content, $matches ) ) {
+				// Fallback: just get content from email-body div (may have nested divs).
 				$content = $matches[1];
 			} else {
+				// Last resort: Remove wrapper divs manually.
 				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-wrapper-outer[^"\']*["\'][^>]*>/is', '', $content );
 				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-wrapper-inner[^"\']*["\'][^>]*>/is', '', $content );
 				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>/is', '', $content );
+				// Remove closing divs at the end (up to 3 closing divs).
 				$content = preg_replace( '/(<\/div>\s*){1,3}\s*$/is', '', $content );
 			}
 		}
 
+		// Clean up any extra whitespace.
 		$content = trim( $content );
 
 		return $content;
@@ -10271,16 +10480,16 @@ if ( ! function_exists( 'urm_process_profile_fields' ) ) {
 					break;
 			}
 		}
-		if ( 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
-			$single_field[ $key ] = json_encode(
-				array(
-					'country' => sanitize_text_field( $single_field[ $key ] ),
-					'state'   => sanitize_text_field(
-						isset( $single_field[ $key . '_state' ] ) ? $single_field[ $key . '_state' ] : ''
-					),
-				)
-			);
-		}
+			if ( 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
+				$single_field[ $key ] = json_encode(
+					array(
+						'country' => sanitize_text_field( $single_field[ $key ] ),
+						'state'   => sanitize_text_field(
+							isset( $single_field[ $key . '_state' ] ) ? $single_field[ $key . '_state' ] : ''
+						),
+					)
+				);
+			}
 
 		/**
 		 * Action hook to perform validation of edit profile form.
