@@ -75,6 +75,8 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 							$date_to_renew = urm_get_date_at_percent_interval( $start_date, $expiry_date, apply_filters( 'urm_show_membership_renewal_btn_in_percent', 80 ) ); // keeping this static for now can be changed to a setting in future
 						}
 
+						$currency               = get_option( 'user_registration_payment_currency', 'USD' );
+
 						$current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' ) ) . 'ur-membership/';
 
 						$orders_repository  = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();

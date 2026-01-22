@@ -51,6 +51,7 @@ body {
 			div[class*="user-registration-"],
 			div[class*="ur-subscription"],
 			div[class*="ur-payments"],
+			div[class*="urcr-"],
 			div[id*="user-registration-"],
 			div[class*="urfl-"] {
 				font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
@@ -5291,17 +5292,19 @@ body.user-registration {
 }
 
 
-#user-registration-local-currency-table-page, #user-registration-tax-regions-table-page {
+#user-registration-local-currency-table-page,
+#user-registration-tax-regions-table-page {
 	#user-registration-list-filters-row {
 		display: none !important;
 	}
 
-	#user-registration-base-list-table-page{
+	#user-registration-base-list-table-page {
 		margin: 0 !important;
 		padding: 0 !important;
 		border: none !important;
-		.tablenav{
-			&.top{
+
+		.tablenav {
+			&.top {
 				margin-top: 24px;
 			}
 		}
