@@ -2174,13 +2174,13 @@
 		var $toggle = $('#ur-membership-local-currency-action');
 		var $cards  = $('.ur-local-currency-card');
 
-		if ( 'free' === $( 'input:radio[name=ur_membership_type]' ).val() && '' === load ) {
+		if ( 'free' === $( 'input:radio[name=ur_membership_type]:checked' ).val() && '' === load ) {
 			$toggle.prop( 'checked', false );
 			ur_membership_utils.show_failure_message(
 						ur_membership_data.local_currency_not_support_msg
 					);
 		}
-		
+
 		if ($toggle.is(':checked')) {
 			$cards.show();
 		} else {
