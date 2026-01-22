@@ -62,7 +62,7 @@ const DripThisContent = ({
 			value: {
 				...drip.value,
 				fixed_date: {
-					...drip.value.fixed_date,
+					...drip?.value?.fixed_date,
 					[field]: value
 				}
 			}
@@ -74,7 +74,7 @@ const DripThisContent = ({
 			...drip,
 			activeType: "days_after",
 			value: {
-				...drip.value,
+				...drip?.value,
 				days_after: {
 					days: Number.isFinite(days) ? days : 0
 				}
@@ -151,7 +151,9 @@ const DripThisContent = ({
 											type="date"
 											min={todayString()}
 											className="urcr-drip__input"
-											value={drip.value.fixed_date?.date}
+											value={
+												drip?.value?.fixed_date?.date
+											}
 											onChange={(e) =>
 												setFixedDateField(
 													"date",
@@ -165,7 +167,9 @@ const DripThisContent = ({
 										<Input
 											type="time"
 											className="urcr-drip__input"
-											value={drip.value.fixed_date?.time}
+											value={
+												drip?.value?.fixed_date?.time
+											}
 											onChange={(e) =>
 												setFixedDateField(
 													"time",
@@ -185,7 +189,7 @@ const DripThisContent = ({
 							>
 								<NumberInput
 									min={0}
-									value={drip.value.days_after?.days}
+									value={drip?.value?.days_after?.days}
 									onChange={(_, valueAsNumber) =>
 										setDays(valueAsNumber)
 									}
