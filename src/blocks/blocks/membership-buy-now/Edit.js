@@ -8,7 +8,13 @@ import {
 	Dropdown,
 	Flex,
 	FlexItem,
-	PanelBody
+	PanelBody,
+	SelectControl,
+	TextControl,
+	ToggleControl,
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+	__experimentalUnitControl as UnitControl
 } from "@wordpress/components";
 
 import {
@@ -18,6 +24,7 @@ import {
 } from "@wordpress/block-editor";
 
 import apiFetch from "@wordpress/api-fetch";
+import JustifyControl from "./components/JustifyContentControl";
 import "./editor.scss";
 
 const ServerSideRender = wp.serverSideRender
@@ -27,18 +34,18 @@ const ServerSideRender = wp.serverSideRender
 const { urRestApiNonce } = typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 const buildHoverCss = ({ blockId, hoverTextColor, hoverBgColor }) => {
-  if (!blockId) return "";
+	if (!blockId) return "";
 
-  const selector = `.urm-${blockId}:hover`;
-  let css = "";
+	const selector = `.urm-${blockId}:hover`;
+	let css = "";
 
-  if (hoverTextColor) {
+	if (hoverTextColor) {
 		css += `${selector}{color:${hoverTextColor} !important;}\n`;
-  }
-  if (hoverBgColor) {
+	}
+	if (hoverBgColor) {
 		css += `${selector}{background-color:${hoverBgColor} !important;}\n`;
-  }
-  return css;
+	}
+	return css;
 };
 
 const ColorControl = ({ label, colorValue, onChange, themeColors }) => (
@@ -100,11 +107,11 @@ const ColorControl = ({ label, colorValue, onChange, themeColors }) => (
 );
 
 const Edit = (props) => {
-  const blockName = metadata.name;
+	const blockName = metadata.name;
 
-  const { attributes, setAttributes, clientId } = props;
+	const { attributes, setAttributes, clientId } = props;
 
-  const {
+	const {
 		membershipType,
 		text,
 		width,
@@ -119,20 +126,19 @@ const Edit = (props) => {
 		openInNewTab,
 		savedBackgroundColor,
 		savedHoverBgColor
-  } = attributes;
+	} = attributes;
 
-  const [membershipList, setMembershipList] = useState(null);
-  const blockProps = useBlockProps();
+	const [membershipList, setMembershipList] = useState(null);
+	const blockProps = useBlockProps();
 
-  const [themeColors] = useSettings("color.palette.theme");
+	const [themeColors] = useSettings("color.palette.theme");
 
-  const isOutlineStyle =
+	const isOutlineStyle =
 		blockProps.className?.includes("is-style-outline") || false;
 
+	const prevIsOutlineRef = useRef(isOutlineStyle);
 
-  const prevIsOutlineRef = useRef(isOutlineStyle);
-
-  const fetchData = async () => {
+	const fetchData = async () => {
 		try {
 			const res = await apiFetch({
 				path: `user-registration/v1/gutenberg-blocks/membership-list`,
@@ -149,23 +155,21 @@ const Edit = (props) => {
 			console.error("Error fetching data:", error);
 			setMembershipList({});
 		}
-  };
+	};
 
-  useEffect(() => {
+	useEffect(() => {
 		fetchData();
-  }, []);
+	}, []);
 
-  useEffect(() => {
+	useEffect(() => {
 		if (!attributes.clientId && clientId) {
 			setAttributes({ clientId });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clientId]);
+	}, [clientId]);
 
-
-  useEffect(() => {
+	useEffect(() => {
 		if (prevIsOutlineRef.current === isOutlineStyle) return;
-
 
 		if (isOutlineStyle) {
 			const updates = {};
@@ -189,7 +193,6 @@ const Edit = (props) => {
 			}
 		}
 
-
 		if (!isOutlineStyle) {
 			const updates = {};
 
@@ -212,10 +215,9 @@ const Edit = (props) => {
 
 		prevIsOutlineRef.current = isOutlineStyle;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOutlineStyle]);
+	}, [isOutlineStyle]);
 
-  
-  useEffect(() => {
+	useEffect(() => {
 		const editorWrapper = document.querySelector(
 			".interface-interface-skeleton"
 		);
@@ -233,50 +235,95 @@ const Edit = (props) => {
 				editorWrapper.classList.remove("urm-hide-border-panel");
 			}
 		};
-  }, [isOutlineStyle]);
+	}, [isOutlineStyle]);
 
-  const membershipOptions = useMemo(() => {
+	const membershipOptions = useMemo(() => {
 		if (!membershipList) return [];
 		return Object.values(membershipList).map((member, index) => ({
 			value: index,
 			label: member.title
 		}));
-  }, [membershipList]);
+	}, [membershipList]);
 
-  const blockId = attributes.clientId || clientId;
+	const blockId = attributes.clientId || clientId;
 
-  const hoverCss = useMemo(() => {
+	const hoverCss = useMemo(() => {
 		return buildHoverCss({
 			blockId,
 			hoverTextColor,
 			hoverBgColor
 		});
-  }, [blockId, hoverTextColor, hoverBgColor]);
+	}, [blockId, hoverTextColor, hoverBgColor]);
 
-  const ssrAttributes = useMemo(() => {
+	const ssrAttributes = useMemo(() => {
 		return {
 			...attributes,
 			clientId: blockId
 		};
-  }, [attributes, blockId]);
+	}, [attributes, blockId]);
 
-  if (!membershipList) {
+	if (!membershipList) {
 		return (
 			<div {...blockProps}>
 				{__("Loading memberships…", "user-registration")}
 			</div>
 		);
-  }
+	}
 
-  return (
+	return (
 		<>
 			<InspectorControls>
 				<PanelBody
 					title={__("Settings", "user-registration")}
 					initialOpen={true}
+				></PanelBody>
+				<SelectControl
+					key="urm-select-membership-type"
+					label={__("Membership Plan", "user-registration")}
+					value={membershipType}
+					options={[
+						{
+							label: __(
+								"Select a membership...",
+								"user-registration"
+							),
+							value: ""
+						},
+						...membershipOptions
+					]}
+					onChange={(type) => setAttributes({ membershipType: type })}
+				/>
+
+				<ToggleControl
+					className="urm-buynow-open-new-tab"
+					__nextHasNoMarginBottom
+					label={__("Open in a new tab", "user-registration")}
+					checked={openInNewTab}
+					onChange={(value) => setAttributes({ openInNewTab: value })}
+				/>
+
+				<TextControl
+					label={__("Button Text", "user-registration")}
+					value={text}
+					onChange={(value) => setAttributes({ text: value })}
+				/>
+
+				<ToggleGroupControl
+					label={__("Width", "user-registration")}
+					value={width}
+					onChange={(value) => setAttributes({ width: value })}
+					isBlock
 				>
-					{/* ... your existing inspector controls ... */}
-				</PanelBody>
+					<ToggleGroupControlOption value="25%" label="25%" />
+					<ToggleGroupControlOption value="50%" label="50%" />
+					<ToggleGroupControlOption value="75%" label="75%" />
+					<ToggleGroupControlOption value="100%" label="100%" />
+				</ToggleGroupControl>
+
+				<JustifyControl
+					value={attributes.justifyContent}
+					onChange={(val) => setAttributes({ justifyContent: val })}
+				/>
 			</InspectorControls>
 
 			<InspectorControls group="color">
@@ -323,7 +370,7 @@ const Edit = (props) => {
 				/>
 			</div>
 		</>
-  );
+	);
 };
 
 export default Edit;
