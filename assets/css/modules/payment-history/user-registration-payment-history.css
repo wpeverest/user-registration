@@ -187,7 +187,7 @@ body.user-registration #ur-membership-order-create-form .user_registration-card_
   grid-column: 2/3;
 }
 
-.ur-payments__section-content--wrapper {
+.ur-payments__section-content--table-wrapper {
   margin-bottom: 20px;
   border: 1px solid #e1e1e1;
   border-radius: 7px;

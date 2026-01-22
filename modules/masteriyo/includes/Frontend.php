@@ -81,10 +81,9 @@ class Frontend {
 		}
 
 		$membership_service = new MembershipService();
-		$membership         = $membership_service->get_membership_details( $membership_id );
+		$membership         = (array) get_post( $membership_id );
 
-		$intended_action = $membership_service->fetch_intended_action( '', $membership, $user_membership_ids );
-
+		$intended_action = $membership_service->fetch_intended_action( 'upgrade', $membership, $user_membership_ids );
 		if ( $intended_action ) {
 
 			$registration_page_id = (int) get_option( 'user_registration_member_registration_page_id' );

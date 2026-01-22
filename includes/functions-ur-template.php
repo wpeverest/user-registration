@@ -845,8 +845,8 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						}
 						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . $selected_attribute . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
-
-					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="ur-field-address-country select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
+					$state_enabled = ! empty( $args['enable_state'] ) && '1' == $args['enable_state'];
+					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="ur-field-address-country select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '" data-state-enabled="' . $state_enabled . '">
 					' . $options . '
 					</select>';
 
@@ -855,7 +855,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 
 					$states = isset( $state_list[ $country ] ) ? $state_list[ $country ] : '';
 
-					if ( ! empty( $args['enable_state'] ) && '1' == $args['enable_state'] ) {
+					if ( $state_enabled ) {
 						$field .= '<label for="' . $args['id'] . '" class="ur-label ur-state-label">' . __( 'State', 'user-registration' ) . '</label>';
 						$field .= '<span class="input-wrapper ur-field-address-state-outer-wrapper">';
 						if ( isset($value['state'], $states[ $value['state']  ] ) ) {

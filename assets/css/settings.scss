@@ -138,7 +138,7 @@ body {
 							input {
 								border-color: $primary_color;
 
-								~.user-registration-search-icon svg {
+								~ .user-registration-search-icon svg {
 									fill: $primary_color;
 								}
 							}
@@ -245,7 +245,8 @@ body {
 							border-left: 4px solid $primary_color;
 
 							.subsubsub {
-								padding: $spacing_12px $spacing_14px $spacing_12px 52px;
+								padding: $spacing_12px $spacing_14px
+									$spacing_12px 52px;
 								margin: 0;
 								gap: $spacing_4px;
 								background: #f4f4f4;
@@ -327,7 +328,7 @@ body {
 					cursor: pointer;
 
 					&-label {
-						>p {
+						> p {
 							font-weight: $medium;
 							font-size: 15px;
 							margin: 0;
@@ -518,7 +519,9 @@ body {
 					&:hover {
 						.ur-nav-icon {
 							img {
-								filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(324deg) brightness(96%) contrast(104%);
+								filter: invert(0%) sepia(0%) saturate(0%)
+									hue-rotate(324deg) brightness(96%)
+									contrast(104%);
 							}
 						}
 
@@ -652,7 +655,7 @@ body {
 							height: 20px;
 						}
 
-						>span {
+						> span {
 							flex: 1;
 						}
 
@@ -715,7 +718,7 @@ body {
 						max-width: 300px;
 					}
 
-					>p {
+					> p {
 						font-size: 18px;
 						line-height: 27px;
 						font-weight: $semi-bold;
@@ -1295,7 +1298,7 @@ body {
 					padding: $spacing_20px 0 !important;
 
 					.nav-tab-inside {
-						>div {
+						> div {
 							display: block;
 						}
 					}
@@ -1342,7 +1345,8 @@ body {
 									.ur-input {
 										padding: $spacing_8px $spacing_10px;
 										background: $grey-0;
-										border: $border_width solid $border-color;
+										border: $border_width solid
+											$border-color;
 										border-radius: $border_radius_3;
 										height: 38px;
 
@@ -1370,7 +1374,8 @@ body {
 							}
 
 							&:last-child {
-								border-radius: 0 0 $border_radius_7 $border_radius_7;
+								border-radius: 0 0 $border_radius_7
+									$border_radius_7;
 							}
 
 							@media (max-width: 767px) {
@@ -1538,7 +1543,8 @@ body {
 											}
 
 											&:hover {
-												border: $border_width solid $primary_color;
+												border: $border_width solid
+													$primary_color;
 												background: $blue-50;
 
 												span {
@@ -1548,7 +1554,7 @@ body {
 										}
 									}
 
-									>label {
+									> label {
 										padding: $spacing_4px $spacing_8px;
 										border-radius: 100px;
 										font-weight: $regular !important;
@@ -1670,7 +1676,10 @@ body {
 
 								&:hover {
 									&::after {
-										filter: brightness(0) saturate(100%) invert(33%) sepia(19%) saturate(2330%) hue-rotate(195deg) brightness(100%) contrast(87%);
+										filter: brightness(0) saturate(100%)
+											invert(33%) sepia(19%)
+											saturate(2330%) hue-rotate(195deg)
+											brightness(100%) contrast(87%);
 									}
 								}
 							}
@@ -1891,7 +1900,7 @@ body {
 					}
 				}
 
-				&:has(>.ur_emails) {
+				&:has(> .ur_emails) {
 					border: $border_width solid $border-color;
 					border-radius: $border_radius_5;
 					overflow: hidden;
@@ -1969,7 +1978,6 @@ body {
 						}
 
 						.ur-export-custom-fields {
-
 							.ur-form-fields-container,
 							.ur-form-additional-fields-container,
 							select[name="export_format"] {
@@ -2030,7 +2038,6 @@ body {
 							tr {
 								th {
 									&.column {
-
 										&-shortcode,
 										&-author,
 										&-date {
@@ -2109,7 +2116,7 @@ body {
 		margin-bottom: 10px;
 	}
 
-	input[type="radio"]+img {
+	input[type="radio"] + img {
 		cursor: pointer;
 	}
 }
@@ -2259,7 +2266,6 @@ body {
 
 /* auto hides on bigger screen */
 @media screen and (min-width: 1140px) {
-
 	.user-registration-options-header__burger,
 	.user-registration-header__close {
 		display: none;
@@ -2376,7 +2382,6 @@ body {
 
 		/* Show elements when container is active */
 		&.wp-picker-active {
-
 			.iris-picker,
 			.iris-border,
 			.colorpick.wp-color-picker,
@@ -2497,7 +2502,6 @@ body {
 
 		/* Active state */
 		&.wp-picker-active {
-
 			.iris-picker,
 			.iris-border,
 			.colorpick.wp-color-picker,
@@ -2521,8 +2525,8 @@ body {
 		}
 
 		/* Show default button when color result has wp-picker-open class */
-		.wp-color-result.wp-picker-open~.wp-picker-default,
-		.wp-color-result.wp-picker-open+.wp-picker-default {
+		.wp-color-result.wp-picker-open ~ .wp-picker-default,
+		.wp-color-result.wp-picker-open + .wp-picker-default {
 			display: inline-block !important;
 			visibility: visible !important;
 			opacity: 1 !important;
@@ -2616,4 +2620,89 @@ body {
 			border-radius: 8px;
 		}
 	}
+}
+
+.user-registration-upsell {
+	&__description-list {
+		margin: 0 0 $spacing_12px;
+		padding-left: $spacing_2px;
+
+		&-item {
+			display: flex;
+			align-items: center;
+			gap: $spacing_10px;
+			font-size: 14px;
+			line-height: 24px;
+			color: #2c3338;
+			margin-bottom: $spacing_6px;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+
+			&::before {
+				content: "";
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%234cc741'%3E%3Cpath d='M20.1034 5.31543C20.5373 4.89486 21.2406 4.89486 21.6746 5.31543C22.1085 5.736 22.1085 6.41771 21.6746 6.83828L9.45224 18.6846C9.01832 19.1051 8.31496 19.1051 7.88104 18.6846L2.32544 13.2999C1.89152 12.8793 1.89152 12.1976 2.32544 11.777C2.75936 11.3565 3.46271 11.3565 3.89663 11.777L8.66664 16.4003L20.1034 5.31543Z'/%3E%3C/svg%3E");
+				background-repeat: no-repeat;
+				background-position: center;
+				background-size: 100%;
+				display: block;
+				width: 20px;
+				height: 20px;
+			}
+		}
+	}
+
+	&__feature-link {
+		min-height: 34px;
+		height: 34px;
+		padding: 0 $spacing_16px;
+		background: $primary_color;
+		color: $white;
+		text-decoration: none;
+		align-content: center;
+		border-radius: $border_radius_4;
+		margin: $spacing_8px 0 $spacing_28px;
+		font-size: 14px;
+		line-height: 20px;
+		display: inline-block;
+		transition: all 0.3s ease-in-out;
+
+		&:focus {
+			outline: none;
+			box-shadow: none;
+			color: $white;
+		}
+
+		&:hover {
+			background: darken($primary_color, 5%);
+			color: $white;
+		}
+
+		&:active {
+			background: darken($primary_color, 8%);
+			color: $white;
+		}
+	}
+}
+
+.user-registration-upsell__notice {
+	font-size: 13px;
+	color: #50575e;
+	margin: 8px 0;
+}
+
+.user-registration-upsell__cta {
+	font-size: 14px;
+	font-weight: 500;
+	margin: 0;
+}
+
+.user-registration-upsell__cta a {
+	color: #2271b1;
+	text-decoration: none;
+}
+
+.user-registration-upsell__cta a:hover {
+	text-decoration: underline;
 }

@@ -440,6 +440,7 @@ class UR_Admin_Settings {
 			if ( ! empty( $options['desc'] ) ) {
 				$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $options['desc'] ) ) . '</p>';
 			}
+
 			if ( isset( $options['sections'] ) && is_array( $options['sections'] ) ) {
 
 				foreach ( $options['sections'] as $id => $section ) {
@@ -477,8 +478,6 @@ class UR_Admin_Settings {
 							}
 							$settings .= '</h3>';
 
-					
-
 							if ( ! empty( $section['button'] ) ) {
 								if ( isset( $section['button']['button_type'] ) && 'upgrade_link' === $section['button']['button_type'] ) {
 									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="ur-upgrade--link" target="_blank">' . '<span>' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span></a>';
@@ -498,9 +497,11 @@ class UR_Admin_Settings {
 						}
 
 						$settings .= '</div>';
+
 						//Show upsell texts.
 						if( ! empty( $section[ 'upsell' ] ) ) {
 							$upsell_section = $section[ 'upsell' ];
+							$settings .= '<div class="user-registration-upsell">';
 							//excerpt.
 							if( ! empty( $upsell_section[ 'excerpt' ] ) ) {
 								$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $upsell_section['excerpt'] ) ) . '</p>';
@@ -514,19 +515,23 @@ class UR_Admin_Settings {
 									foreach( $upsell_section[ 'description' ] as $description_text ) {
 										$settings .= '<li class="user-registration-upsell__description-list-item">' . $description_text . '</li>';
 									}
+									$settings .= '</ul>';
 								}
 							}
 							if( ! empty( $upsell_section[ 'feature_link' ] ) ) {
-								$settings .= '<a href="' . esc_url( $upsell_section[ 'feature_link' ] ) . '" class="user-registration-upsell__feature-link">Learn More</a>';
+								$settings .= '<a href="' . esc_url( $upsell_section[ 'feature_link' ] ) . '" class="user-registration-upsell__feature-link" target="_blank">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>';
 							}
-							if ( ! empty( $section['before_desc'] ) ) {
-								$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $section['before_desc'] ) ) . '</p>';
-							}
-
-							if ( ! empty( $section['desc'] ) ) {
-								$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $section['desc'] ) ) . '</p>';
-							}
+							$settings .= '</div>';
 						}
+
+						if ( ! empty( $section['before_desc'] ) ) {
+							$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $section['before_desc'] ) ) . '</p>';
+						}
+
+						if ( ! empty( $section['desc'] ) ) {
+							$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $section['desc'] ) ) . '</p>';
+						}
+
 
 						$settings .= '<div class="pt-0 pb-0 user-registration-card__body">';
 

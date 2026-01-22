@@ -164,8 +164,8 @@ html {
   min-height: 40px;
   padding: 0 12px;
   border-radius: 4px;
-  border: 1px solid var(--ur-button-background-normal-color, var(--ur-primary-color, #475bb2));
-  background: var(--ur-button-background-normal-color, var(--ur-primary-color, #475bb2));
+  border: 1px solid var(--ur-button-background-normal-color, #475bb2);
+  background: var(--ur-button-background-normal-color, #475bb2);
   color: var(--ur-button-text-normal-color, white);
   font-size: 14px;
   font-weight: 500;
@@ -415,7 +415,7 @@ html {
   width: 14px;
   height: 14px;
   min-height: unset;
-  accent-color: #475bb2;
+  accent-color: var(--ur-primary-color, #475bb2);
 }
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .ur_membership_input_label input[type=radio]:checked,
 .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .upgrade-membership-label input[type=radio]:checked,
@@ -664,6 +664,392 @@ html {
   border-left: 3px solid #007bff;
   background: #e2e2fd;
   word-wrap: break-word;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container {
+  margin: 0 0 20px;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card {
+  border: 1px solid #e1e1e1;
+  padding: 16px;
+  border-radius: 4px;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card .ur-label,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card .ur-label,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card .ur-label,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card .ur-label,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card .ur-label,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card .ur-label,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card .ur-label,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card .ur-label,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card .ur-label,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card .ur-label,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card .ur-label,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card .ur-label {
+  padding: 14px;
+  margin-bottom: 0 !important;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card .ur-label .ur-membership-duration,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card .ur-label .ur-membership-duration,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card .ur-label .ur-membership-duration,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card .ur-label .ur-membership-duration,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card .ur-label .ur-membership-duration,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card .ur-label .ur-membership-duration,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card .ur-label .ur-membership-duration,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card .ur-label .ur-membership-duration,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card .ur-label .ur-membership-duration,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card .ur-label .ur-membership-duration,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-card .ur-label .ur-membership-duration,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-card .ur-label .ur-membership-duration {
+  margin: 0;
+  color: #1f1f1f;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500 !important;
+  line-height: 18px;
+  text-transform: capitalize;
+  flex: 1 !important;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details {
+  margin-top: 16px;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration {
+  display: block;
+  text-align: center;
+  margin: 0;
+  margin-bottom: 20px;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price {
+  padding: 18px 20px;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price:hover,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price:hover,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price:hover,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price:hover,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price:hover,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price:hover,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price:hover,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price:hover,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price:hover,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price:hover,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price:hover,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price:hover {
+  border-color: var(--ur-primary-color, #475bb2);
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price-selected,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price-selected,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price-selected,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price-selected,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price-selected,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price-selected,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price-selected,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price-selected,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price-selected,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price-selected,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price-selected,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .ur-membership-duration.ur-membership-price-selected {
+  border-color: var(--ur-primary-color, #475bb2);
+  background-color: #f9f9f9;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator {
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 500;
+  color: #7a7a7a;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::before, .user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::after,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::before,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::after,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::before,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::after,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::before,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::after,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::before,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::after,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::before,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::after,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::before,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::after,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::before,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::after,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::before,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::after,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::before,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::after,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::before,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::after,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::before,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-or-separator::after {
+  content: "";
+  background: #e1e1e1;
+  width: 100%;
+  height: 1px;
+  display: block;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier {
+  padding: 18px 20px;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details p,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details p,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details p,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details p,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details p,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details p,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details p,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details p,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details p,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details p,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details p,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details p {
+  margin-top: 0;
+  margin-bottom: 4px;
+  color: #1f1f1f;
+  font-size: 16px;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #9e9e9e;
+  font-size: 13px;
+  font-weight: 400;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats .dashicons,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats .dashicons,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats .dashicons,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats .dashicons,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats .dashicons,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats .dashicons,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats .dashicons,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats .dashicons,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats .dashicons,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats .dashicons,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats .dashicons,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .urm-team-pricing-tier-details .ur-team-seats .dashicons {
+  font-size: 18px;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier:hover,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier:hover,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier:hover,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier:hover,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier:hover,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier:hover,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier:hover,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier:hover,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier:hover,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier:hover,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier:hover,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier:hover {
+  border-color: var(--ur-primary-color, #475bb2);
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier.selected,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier.selected,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier.selected,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier.selected,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier.selected,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier.selected,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier.selected,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier.selected,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier.selected,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier.selected,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier.selected,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier.selected {
+  border-color: var(--ur-primary-color, #475bb2);
+  background-color: #f9f9f9;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier hr,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier hr,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier hr,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier hr,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier hr,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier hr,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier hr,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier hr,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier hr,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier hr,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier hr,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier hr {
+  margin: 16px 0;
+  color: #e1e1e1;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper .ur-team-tier-seats-input,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper .ur-team-tier-seats-input,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper .ur-team-tier-seats-input,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper .ur-team-tier-seats-input,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper .ur-team-tier-seats-input,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper .ur-team-tier-seats-input,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper .ur-team-tier-seats-input,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper .ur-team-tier-seats-input,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper .ur-team-tier-seats-input,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper .ur-team-tier-seats-input,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper .ur-team-tier-seats-input,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-input-wrapper .ur-team-tier-seats-input {
+  margin-bottom: 0;
+  width: auto;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier {
+  margin-top: 16px;
+}
+.user-registration-page .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier p,
+.user-registration-page .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier p,
+.user-registration-page .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier p,
+.user-registration-page .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier p,
+.ur-multi-device-form-preview .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier p,
+.ur-multi-device-form-preview .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier p,
+.ur-multi-device-form-preview .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier p,
+.ur-multi-device-form-preview .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier p,
+#pg-container .ur_membership_registration_container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier p,
+#pg-container .ur_membership_registration_container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier p,
+#pg-container .membership-upgrade-container .ur_membership_frontend_input_container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier p,
+#pg-container .membership-upgrade-container .upgrade-plan-container .urm-team-pricing-container .urm-team-pricing-details .urm-team-pricing-btn .urm-team-pricing-tiers .urm-team-pricing-tier .ur-team-tier-seats-tier p {
+  font-size: 14px;
+  color: #9e9e9e;
+  margin: 0;
 }
 .user-registration-page .ur_membership_registration_container #urm-total_container,
 .user-registration-page .membership-upgrade-container #urm-total_container,
@@ -1211,6 +1597,7 @@ html {
 .user-registration-page .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-content,
 .ur-multi-device-form-preview .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-content,
 #pg-container .user-registration-upgrade-membership-swal2-container.swal2-modal .swal2-content {
+  padding-bottom: 20px;
   text-align: left;
   color: #383838;
   font-size: 14px;
@@ -1501,7 +1888,7 @@ html {
   font-size: 16px;
   line-height: 24px;
   font-weight: 600;
-  background: var(--ur-button-background-normal-color, var(--ur-primary-color, #475bb2));
+  background: var(--ur-button-background-normal-color, #475bb2);
   color: var(--ur-button-text-normal-color, white);
   padding: 14px 0;
   border-radius: 5px;
@@ -1692,7 +2079,6 @@ html {
 .ur-thank-you-page .thank-you-page-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
   background-color: #ffffff;
   padding: 48px;
   border-radius: 7px;
@@ -1710,29 +2096,16 @@ html {
   }
 }
 .ur-thank-you-page .thank-you-page-container .ur-success-icon {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-@media screen and (max-width: 420px) {
-  .ur-thank-you-page .thank-you-page-container .ur-success-icon {
-    width: 60px;
-    height: 60px;
-  }
-}
-.ur-thank-you-page .thank-you-page-container .ur-success-icon svg {
-  width: 80px;
-  height: 80px;
-}
-@media screen and (max-width: 420px) {
-  .ur-thank-you-page .thank-you-page-container .ur-success-icon svg {
-    width: 60px;
-    height: 60px;
-  }
-}
-.ur-thank-you-page .thank-you-page-container .ur-headline {
-  margin-bottom: 16px;
+.ur-thank-you-page .thank-you-page-container .ur-thank-you-headline-wrapper {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding-bottom: 24px;
 }
 .ur-thank-you-page .thank-you-page-container .ur-headline h1 {
   font-size: 28px;
@@ -1763,9 +2136,8 @@ html {
   font-size: 16px;
   line-height: 24px;
   margin: 0;
-  color: #6b6b6b;
+  color: #000000;
   font-weight: 400;
-  text-align: center;
   letter-spacing: 0.15px;
   text-wrap: unset;
 }
@@ -1777,6 +2149,7 @@ html {
 }
 .ur-thank-you-page .thank-you-page-container .ur-message ul {
   text-align: left;
+  font-size: 16px;
 }
 .ur-thank-you-page .thank-you-page-container .ur-button-wrapper {
   margin-bottom: 0px;
@@ -1928,9 +2301,6 @@ html {
   .thank-you-page-container .ur-button-wrapper {
     display: none;
   }
-  .thank-you-page-container .ur-success-icon {
-    box-shadow: none;
-  }
 }
 .ur-show-bank-details-toggle {
   margin-bottom: 5px !important;
@@ -1953,12 +2323,12 @@ html {
 .user-registration-email__entries-label {
   width: 35%;
   font-weight: 600;
-  color: #374151;
+  color: rgba(0, 0, 0, 0);
   background-color: #f8f8fa;
   white-space: nowrap;
 }
 .user-registration-email__entries-data {
-  color: #111827;
+  color: rgba(0, 0, 0, 0);
   word-break: break-word;
   background-color: #f8f8fa;
 }

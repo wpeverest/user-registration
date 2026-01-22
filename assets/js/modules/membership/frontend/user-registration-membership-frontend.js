@@ -825,19 +825,15 @@
 
 			total = parseFloat(total).toFixed(2);
 			if ('left' === urmf_data.curreny_pos) {
-				if ( totalDetails.total ) {
-					total_input.text(currency + totalDetails.total.toFixed(2));
-					subTotalInput.text(currency + totalDetails.subTotal.toFixed(2));
-					taxInput.text(currency + totalDetails.taxAmount.toFixed(2));
-					couponInput.text(currency + totalDetails.discountAmount.toFixed(2));
-				}
+				total_input.text(currency + parseFloat( totalDetails.total ).toFixed(2));
+				subTotalInput.text(currency + parseFloat( totalDetails.subTotal ).toFixed(2));
+				taxInput.text(currency + parseFloat( totalDetails.taxAmount ).toFixed(2));
+				couponInput.text(currency + parseFloat( totalDetails.discountAmount ).toFixed(2));
 			} else {
-				if ( totalDetails.total ) {
-					total_input.text(totalDetails.total.toFixed(2) + currency);
-					subTotalInput.text(totalDetails.subTotal.toFixed(2) + currency);
-					taxInput.text(totalDetails.taxAmount.toFixed(2) + currency);
-					couponInput.text(totalDetails.discountAmount.toFixed(2) + currency);
-				}
+				total_input.text( parseFloat( totalDetails.total ).toFixed(2) + currency);
+				subTotalInput.text( parseFloat( totalDetails.subTotal ).toFixed(2) + currency);
+				taxInput.text( parseFloat( totalDetails.taxAmount ).toFixed(2) + currency);
+				couponInput.text( parseFloat( totalDetails.discountAmount ).toFixed(2) + currency);
 			}
 		},
 		upgrade_membership: function (
