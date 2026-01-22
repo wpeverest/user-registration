@@ -275,7 +275,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 					);
 				}
 
-				if ( ! empty( $row['team_ids'] ) ) {
+				if ( ! empty( $row['team_ids'] ) && UR_PRO_ACTIVE && ur_check_module_activation( 'team' ) ) {
 					$row['team_ids'] = maybe_unserialize( $row['team_ids'] );
 					$team_name       = '';
 					$subscription_id = '';
@@ -531,7 +531,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			$new_user_object->filter        = 'display';
 			$email                          = $new_user_object->user_email;
 			$new_user_object->subscriptions = $user_object['subscriptions'] ?? '';
-			$new_user_object->teams = $user_object['teams'] ?? '';
+			$new_user_object->teams         = $user_object['teams'] ?? '';
 
 			$user_manager = new UR_Admin_User_Manager( $new_user_object );
 
@@ -1414,18 +1414,18 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 		 * @return void
 		 */
 		// protected function footer_text() {
-		// 	$total_items    = $this->_pagination_args['total_items'];
-		// 	$current        = $this->get_pagenum();
-		// 	$users_per_page = $this->_pagination_args['per_page'];
+		//  $total_items    = $this->_pagination_args['total_items'];
+		//  $current        = $this->get_pagenum();
+		//  $users_per_page = $this->_pagination_args['per_page'];
 
-		// 	echo esc_html(
-		// 		sprintf(
-		// 			'Showing results %d-%d of %d users',
-		// 			( ( $current - 1 ) * $users_per_page ) + 1,
-		// 			min( ( $current ) * $users_per_page, $total_items ),
-		// 			$total_items
-		// 		)
-		// 	);
+		//  echo esc_html(
+		//      sprintf(
+		//          'Showing results %d-%d of %d users',
+		//          ( ( $current - 1 ) * $users_per_page ) + 1,
+		//          min( ( $current ) * $users_per_page, $total_items ),
+		//          $total_items
+		//      )
+		//  );
 		// }
 
 		public function output_custom_column_data( $output, $column_name, $user_id ) {

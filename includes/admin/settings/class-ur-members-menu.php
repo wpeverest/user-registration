@@ -271,16 +271,16 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 				'user-registration-pro-users',
 				'urUsersl10n',
 				array(
-					'user_registration_form_data_save'  => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
+					'user_registration_form_data_save'     => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
 					'user_registration_profile_details_save' => wp_create_nonce( 'user_registration_profile_details_save_nonce' ),
 					'user_registration_profile_picture_upload_nonce' => wp_create_nonce( 'user_registration_profile_picture_upload_nonce' ),
 					'user_registration_profile_picture_remove_nonce' => wp_create_nonce( 'user_registration_profile_picture_remove_nonce' ),
-					'login_option'                      => get_option( 'user_registration_general_setting_login_options' ),
-					'recaptcha_type'                    => get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
+					'login_option'                         => get_option( 'user_registration_general_setting_login_options' ),
+					'recaptcha_type'                       => get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
 					'user_registration_profile_picture_uploading' => esc_html__( 'Uploading...', 'user-registration' ),
 					'user_registration_profile_picture_removing' => esc_html__( 'Removing...', 'user-registration' ),
-					'ajax_submission_on_edit_profile'   => ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ),
-					'ursL10n'                           => array(
+					'ajax_submission_on_edit_profile'      => ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ),
+					'ursL10n'                              => array(
 						'user_successfully_saved'     => get_option( 'user_registration_successful_form_submission_message_manual_registation', esc_html__( 'User successfully registered.', 'user-registration' ) ),
 						'user_under_approval'         => get_option( 'user_registration_successful_form_submission_message_admin_approval', esc_html__( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),
 						'user_email_pending'          => get_option( 'user_registration_successful_form_submission_message_email_confirmation', esc_html__( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ) ),
@@ -291,26 +291,26 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 						'i18n_discount_total_zero'    => esc_html__( 'Discounted amount cannot be less than or equals to Zero. Please adjust your coupon code.', 'user-registration' ),
 						'password_strength_error'     => esc_html__( 'Password strength is not strong enough', 'user-registration' ),
 					),
-					'ajax_form_submit_error'            => esc_html__( 'Something went wrong while submitting form through AJAX request. Please contact site administrator.', 'user-registration' ),
-					'ajax_url'                          => admin_url( 'admin-ajax.php' ),
-					'change_column_nonce'               => wp_create_nonce( 'ur-users-column-change' ),
-					'user_registration_edit_user_nonce' => wp_create_nonce( 'user_registration_profile_details_save_nonce' ),
-					'message_required_fields'           => get_option( 'user_registration_form_submission_error_message_required_fields', esc_html__( 'This field is required.', 'user-registration' ) ),
-					'message_email_fields'              => get_option( 'user_registration_form_submission_error_message_email', esc_html__( 'Please enter a valid email address.', 'user-registration' ) ),
-					'message_url_fields'                => get_option( 'user_registration_form_submission_error_message_website_URL', esc_html__( 'Please enter a valid URL.', 'user-registration' ) ),
-					'message_number_fields'             => get_option( 'user_registration_form_submission_error_message_number', esc_html__( 'Please enter a valid number.', 'user-registration' ) ),
-					'message_confirm_password_fields'   => get_option( 'user_registration_form_submission_error_message_confirm_password', esc_html__( 'Password and confirm password not matched.', 'user-registration' ) ),
-					'message_min_words_fields'          => get_option( 'user_registration_form_submission_error_message_min_words', esc_html__( 'Please enter at least %qty% words.', 'user-registration' ) ),
-					'message_validate_phone_number'     => get_option( 'user_registration_form_submission_error_message_phone_number', esc_html__( 'Please enter a valid phone number.', 'user-registration' ) ),
-					'message_username_character_fields' => get_option( 'user_registration_form_submission_error_message_disallow_username_character', esc_html__( 'Please enter a valid username.', 'user-registration' ) ),
-					'message_confirm_email_fields'      => get_option( 'user_registration_form_submission_error_message_confirm_email', esc_html__( 'Email and confirm email not matched.', 'user-registration' ) ),
-					'message_confirm_number_field_max'  => esc_html__( 'Please enter a value less than or equal to %qty%.', 'user-registration' ),
-					'message_confirm_number_field_min'  => esc_html__( 'Please enter a value greater than or equal to %qty%.', 'user-registration' ),
-					'message_confirm_number_field_step' => esc_html__( 'Please enter a multiple of %qty%.', 'user-registration' ),
-					'form_required_fields'              => ur_get_required_fields(),
-					'edit_user_set_new_password'        => esc_html__( 'Set New Password', 'user-registration' ),
-					'is_payment_compatible'             => true,
-					'delete_prompt'                     => array(
+					'ajax_form_submit_error'               => esc_html__( 'Something went wrong while submitting form through AJAX request. Please contact site administrator.', 'user-registration' ),
+					'ajax_url'                             => admin_url( 'admin-ajax.php' ),
+					'change_column_nonce'                  => wp_create_nonce( 'ur-users-column-change' ),
+					'user_registration_edit_user_nonce'    => wp_create_nonce( 'user_registration_profile_details_save_nonce' ),
+					'message_required_fields'              => get_option( 'user_registration_form_submission_error_message_required_fields', esc_html__( 'This field is required.', 'user-registration' ) ),
+					'message_email_fields'                 => get_option( 'user_registration_form_submission_error_message_email', esc_html__( 'Please enter a valid email address.', 'user-registration' ) ),
+					'message_url_fields'                   => get_option( 'user_registration_form_submission_error_message_website_URL', esc_html__( 'Please enter a valid URL.', 'user-registration' ) ),
+					'message_number_fields'                => get_option( 'user_registration_form_submission_error_message_number', esc_html__( 'Please enter a valid number.', 'user-registration' ) ),
+					'message_confirm_password_fields'      => get_option( 'user_registration_form_submission_error_message_confirm_password', esc_html__( 'Password and confirm password not matched.', 'user-registration' ) ),
+					'message_min_words_fields'             => get_option( 'user_registration_form_submission_error_message_min_words', esc_html__( 'Please enter at least %qty% words.', 'user-registration' ) ),
+					'message_validate_phone_number'        => get_option( 'user_registration_form_submission_error_message_phone_number', esc_html__( 'Please enter a valid phone number.', 'user-registration' ) ),
+					'message_username_character_fields'    => get_option( 'user_registration_form_submission_error_message_disallow_username_character', esc_html__( 'Please enter a valid username.', 'user-registration' ) ),
+					'message_confirm_email_fields'         => get_option( 'user_registration_form_submission_error_message_confirm_email', esc_html__( 'Email and confirm email not matched.', 'user-registration' ) ),
+					'message_confirm_number_field_max'     => esc_html__( 'Please enter a value less than or equal to %qty%.', 'user-registration' ),
+					'message_confirm_number_field_min'     => esc_html__( 'Please enter a value greater than or equal to %qty%.', 'user-registration' ),
+					'message_confirm_number_field_step'    => esc_html__( 'Please enter a multiple of %qty%.', 'user-registration' ),
+					'form_required_fields'                 => ur_get_required_fields(),
+					'edit_user_set_new_password'           => esc_html__( 'Set New Password', 'user-registration' ),
+					'is_payment_compatible'                => true,
+					'delete_prompt'                        => array(
 						'icon'                   => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
 						'warning_message'        => __( 'All the member data and files will be permanently deleted.', 'user-registration' ),
 						'title'                  => __( 'Delete Member', 'user-registration' ),
@@ -917,7 +917,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 					'subscription_status' => __( 'Subscription Status', 'user-registration' ),
 				);
 
-				if ( ur_check_module_activation( 'team' ) ) {
+				if ( UR_PRO_ACTIVE && ur_check_module_activation( 'team' ) ) {
 					$headers['team'] = __( 'Team', 'user-registration' );
 				}
 				$headers['user_registered'] = __( 'Registered On', 'user-registration' );

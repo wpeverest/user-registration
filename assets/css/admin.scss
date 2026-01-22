@@ -8856,6 +8856,25 @@ body.user-registration-page {
 					}
 				}
 			}
+
+			input[type="search"]{
+				min-width: unset !important;
+				width: 100%;
+				padding: 0px 35px 0 12px;
+				min-height: 38px;
+				height: 38px;
+				border: 1px solid #e1e1e1;
+				border-radius: 4px;
+				font-size: 14px;
+				line-height: 24px;
+				color: #383838;
+				font-weight: 400;
+				margin: 0;
+				box-shadow: none;
+				&::placeholder{
+					color: #bababa;
+				}
+			}
 		}
 
 		form {
@@ -9063,6 +9082,9 @@ body.user-registration-page {
 					&:focus {
 						box-shadow: none;
 						border: $border_width solid $primary_color;
+					}
+					&#bulk-action-selector-top{
+						width: 220px;
 					}
 				}
 
