@@ -64,7 +64,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 			$layout = masteriyo_get_setting( 'single_course.display.template.layout' );
 
 			add_action( 'masteriyo_single_course_minimal_sidebar_content', array( $this, 'add_single_course_sidebar_content' ), 9 );
-			add_action( 'masteriyo_layout_1_single_course_aside_content', array( $this, 'add_single_course_sidebar_content' ), 9 );
+			add_action( 'masteriyo_template_enroll_button', array( $this, 'add_single_course_sidebar_content1' ), 9 );
 
 			add_action(
 				'init',
@@ -142,7 +142,20 @@ if ( ! class_exists( 'Hooks' ) ) :
 			return $data;
 		}
 
+		/**
+		 * Adds membership block text inside the course sidebar.
+		 *
+		 * @return void
+		 */
+		public function add_single_course_sidebar_content1( $course ) {
 
+			$layout = masteriyo_get_setting( 'single_course.display.template.layout' ) ?? 'default';
+			if ( masteriyo_is_single_course_page() && 'layout1' === $layout ) {
+				$this->add_single_course_sidebar_content( $course );
+			}
+
+			return '';
+		}
 		/**
 		 * Adds membership block text inside the course sidebar.
 		 *
