@@ -6061,6 +6061,22 @@ body.user-registration {
 									}
 								}
 							}
+
+							.ur-coupon-selection-container {
+								padding: 0 !important;
+
+								.ur-label {
+									margin-bottom: 0;
+
+									label {
+										margin-bottom: 0;
+										color: #383838;
+										font-size: 15px;
+										font-weight: $medium;
+										line-height: 21px;
+									}
+								}
+							}
 						}
 					}
 				}
