@@ -4696,14 +4696,17 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 							continue;
 						}
 						$description                               = esc_html__( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
-						$settings['sections'][ $detail['plugin'] ] = array(
-							'type'        => 'card',
-							'is_premium'  => true,
-							'title'       => $detail['label'],
-							'before_desc' => $description,
-							'desc'        => 'To unlock this setting, consider upgrading to <a href="https://wpuserregistration.com/upgrade/?utm_source=ur-settings-desc&utm_medium=upgrade-link&utm-campaign=lite-version">Pro</a>.',
-							'class'       => 'ur-upgrade--link',
-						);
+						$current_section_detail = $detail ? array_merge(
+								array(
+									'type'        => 'card',
+									'is_premium'  => true,
+									'title'       => $detail['label'],
+									'class'       => 'ur-upgrade--link',
+								),
+								$detail
+							) : array();
+
+						$settings['sections'][ str_replace( 'user-registration-', '', $detail['plugin'] ) ] = $current_section_detail ?? array();
 					}
 				}
 			} else { // scalar section.
