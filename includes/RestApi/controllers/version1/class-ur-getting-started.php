@@ -1678,7 +1678,7 @@ class UR_Getting_Started {
 		update_option( 'user_registration_global_paypal_test_email_address', $paypal_test_email );
 		update_option( 'user_registration_global_paypal_test_client_id', $paypal_test_client_id );
 		update_option( 'user_registration_global_paypal_test_client_secret', $paypal_test_client_secret );
-		update_option( 'user_registration_global_paypal_live_admin_email', $paypal_production_email );
+		update_option( 'user_registration_global_paypal_live_email_address', $paypal_production_email );
 		update_option( 'user_registration_global_paypal_live_client_id', $paypal_production_client_id );
 		update_option( 'user_registration_global_paypal_live_client_secret', $paypal_production_client_secret );
 
