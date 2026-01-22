@@ -10,6 +10,8 @@
 namespace WPEverest\URM\Masteriyo;
 
 use Masteriyo\Constants;
+use WPEverest\URMembership\Admin\Repositories\MembersRepository;
+use WPEverest\URMembership\Admin\Services\MembershipService;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -39,7 +41,77 @@ class Frontend {
 			'user_registration_account_urm-courses_endpoint',
 			array( $this, 'tab_endpoint_content' )
 		);
+
+		add_action(
+			'wp_ajax_urm_masteriyo_single_membership_redirect',
+			array( $this, 'single_membership_redirect_intent' )
+		);
+
+		add_action(
+			'wp_ajax_nopriv_urm_masteriyo_single_membership_redirect',
+			array( $this, 'single_membership_redirect_intent' )
+		);
 	}
+
+	public function single_membership_redirect_intent() {
+		$membership_id = isset( $_POST['membership_id'] ) ? absint( $_POST['membership_id'] ) : 0;
+
+		if ( ! $membership_id ) {
+			wp_send_json_error( __( 'Invalid membership ID', 'masteriyo' ) );
+		}
+
+		$user_membership_ids = array();
+
+		if ( is_user_logged_in() ) {
+
+			$current_user_id    = get_current_user_id();
+			$members_repository = new MembersRepository();
+
+			if ( $current_user_id ) {
+				$user_memberships    = $members_repository->get_member_membership_by_id( $current_user_id );
+				$user_membership_ids = array_filter(
+					array_map(
+						function ( $user_memberships ) {
+							return $user_memberships['post_id'];
+						},
+						$user_memberships
+					)
+				);
+			}
+		}
+
+		$membership_service = new MembershipService();
+		$membership         = $membership_service->get_membership_details( $membership_id );
+
+		$intended_action = $membership_service->fetch_intended_action( '', $membership, $user_membership_ids );
+
+		if ( $intended_action ) {
+
+			$registration_page_id = (int) get_option( 'user_registration_member_registration_page_id' );
+			$thankyou_page_id     = (int) get_option( 'user_registration_thank_you_page_id' );
+
+			if ( $registration_page_id ) {
+				$base_url = get_permalink( $registration_page_id );
+
+				$full_url = add_query_arg(
+					array(
+						'action'    => $intended_action,
+						'thank_you' => $thankyou_page_id,
+					),
+					$base_url
+				);
+
+				wp_send_json_success(
+					array(
+						'redirect_url' => esc_url_raw( $full_url ),
+					)
+				);
+			}
+		}
+
+		wp_send_json_error( __( 'Invalid membership ID', 'masteriyo' ) );
+	}
+
 
 	/**
 	 * Enqueue styles for the course portal page.
@@ -78,6 +150,14 @@ class Frontend {
 
 		if ( ( $course_portal_page->ID === $post->ID ) || masteriyo_is_single_course_page() ) {
 			wp_enqueue_style( 'urm-masteriyo-frontend-style' );
+			wp_localize_script(
+				'urm-masteriyo-frontend-script',
+				'ur_members_localized_data',
+				array(
+					'ajax_url' => admin_url( 'admin-ajax.php' ),
+					'nonce'    => wp_create_nonce( 'urm_masteriyo_nonce' ),
+				)
+			);
 			wp_enqueue_script( 'urm-masteriyo-frontend-script' );
 			return;
 		}

@@ -184,7 +184,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 					<div class="membership-block">
 						<label class="ur_membership_input_label ur-label"
 								for="ur-membership-select-membership-<?php echo esc_attr( $id ); ?>">
-							<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field"
+							<input class="ur_membership_input_class ur_membership_radio_input ur-frontend-field urm-masteriyo-single-membership-radio"
 									id="ur-membership-select-membership-<?php echo esc_attr( $id ); ?>"
 									type="radio"
 									name="membership_id"
