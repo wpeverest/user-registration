@@ -13,7 +13,7 @@ use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
 use WPEverest\URMembership\Admin\Services\MembershipGroupService;
 use WPEverest\URMembership\Admin\Services\Paypal\PaypalService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
-
+use WPEverest\URMembership\TableList;
 
 class MembershipService {
 	private $membership_repository, $members_repository, $members_service, $subscription_repository, $orders_repository, $logger;
@@ -92,9 +92,63 @@ class MembershipService {
 			$order_service        = new OrderService();
 			$orders_data          = $order_service->prepare_orders_data( $members_data, $member->ID, $subscription ); // prepare data for orders table.
 
-			$order = $this->orders_repository->create( $orders_data );
+			$order   = $this->orders_repository->create( $orders_data );
+			$team_id = '';
 			if ( $subscription && $order ) {
 				$this->logger->info( 'Subscription and order created successfully for ' . $data['username'] . '.', array( 'source' => 'urm-registration-logs' ) );
+				if ( ! empty( $members_data['team'] ) && ur_check_module_activation( 'team' ) ) {
+					$first_name      = get_user_meta( $member->ID, 'first_name', true );
+					$team_post_count = wp_count_posts( 'ur_membership_team' );
+					$team_index      = (int) ( $team_post_count->publish ?? 0 ) + 1;
+					if ( $first_name ) {
+						$team_name = $first_name . '-Team-#' . $team_index;
+					} else {
+						$team_name = 'Team-#' . $team_index;
+					}
+					$team_id = wp_insert_post(
+						[
+							'post_type'   => 'ur_membership_team',
+							'post_title'  => $team_name,
+							'post_status' => 'publish',
+						]
+					);
+
+					if ( 0 === $team_id ) {
+						throw new \Exception( 'Failed to create team post' );
+					}
+					update_post_meta( $team_id, 'urm_team_data', $members_data['team'] );
+					if ( ! empty( $members_data['tier'] ) ) {
+						update_post_meta(
+							$team_id,
+							'urm_tier_info',
+							$members_data['tier']
+						);
+					}
+					update_post_meta( $team_id, 'urm_team_seats', $members_data['team_seats'] );
+					update_post_meta( $team_id, 'urm_used_seats', 1 );
+					update_post_meta( $team_id, 'urm_order_id', $order['ID'] );
+					update_post_meta( $team_id, 'urm_subscription_id', $subscription['ID'] );
+					update_post_meta( $team_id, 'urm_team_leader_id', $member->ID );
+					update_post_meta( $team_id, 'urm_member_emails', array( $member->user_email ) );
+					update_post_meta( $team_id, 'urm_member_ids', array( $member->ID ) );
+					update_post_meta( $team_id, 'urm_membership_id', $subscription_data['item_id'] );
+					$team_ids = get_user_meta( $member->ID, 'urm_team_ids', true );
+
+					if ( ! is_array( $team_ids ) ) {
+						$team_ids = empty( $team_ids ) ? array() : array( $team_ids );
+					}
+
+					$team_ids[] = $team_id;
+
+					update_user_meta( $member->ID, 'urm_team_ids', $team_ids );
+					$this->orders_repository->update_order_meta(
+						array(
+							'order_id'   => $order['ID'],
+							'meta_key'   => 'urm_team_id',
+							'meta_value' => $team_id,
+						)
+					);
+				}
 				$this->members_repository->wpdb()->query( 'COMMIT' );
 
 				$payload = array(
@@ -132,11 +186,12 @@ class MembershipService {
 					'subscription_id' => $subscription['ID'],
 					'transaction_id'  => $orders_data['orders_data']['transaction_id'],
 					'status'          => true,
+					'team_id'         => $team_id,
 				);
 			}
 		} catch ( Exception $e ) {
 			// Rollback the transaction if any operation fails.
-			$this->members->wpdb()->query( 'ROLLBACK' );
+			$this->members_repository->wpdb()->query( 'ROLLBACK' );
 			$data = array(
 				'message' => $e->getMessage(),
 				'status'  => false,
@@ -689,11 +744,12 @@ class MembershipService {
 
 		if ( $current_user_id ) {
 
-			$user_memberships    = $members_repository->get_member_membership_by_id( $current_user_id );
+			$user_memberships = $members_repository->get_member_membership_by_id( $current_user_id );
+
 			$user_membership_ids = array_filter(
 				array_map(
 					function ( $user_memberships ) {
-											return $user_memberships['post_id'];
+						return $user_memberships['post_id'];
 					},
 					$user_memberships
 				)
@@ -746,11 +802,11 @@ class MembershipService {
 				if ( empty( $memberships ) ) {
 					return array(
 						'status'  => false,
-						'message' => esc_html__( 'You cannot upgrade to selected membership plan. Please contact site administrator.', 'user-registration' ),
+						'message' => esc_html__( 'You aren’t eligible to upgrade to this membership tier. Please contact site administrator', 'user-registration' ),
 					);
 				}
 			} else {
-				$intended_membership_id = absint( $data['membership_id'] );
+				$intended_membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
 				$user_membership_id     = 0;
 
 				foreach ( $user_memberships as $membership ) {
@@ -801,7 +857,7 @@ class MembershipService {
 				} else {
 					return array(
 						'status'  => false,
-						'message' => esc_html__( 'You cannot upgrade to selected membership plan. Please contact site administrator.', 'user-registration' ),
+						'message' => esc_html__( 'You aren’t eligible to upgrade to this membership tier. Please contact site administrator.', 'user-registration' ),
 					);
 				}
 			}
@@ -844,12 +900,14 @@ class MembershipService {
 				$remaining_subscription_value = isset( $selected_membership_details['subscription']['value'] ) ? $selected_membership_details['subscription']['value'] : '';
 				$delayed_until                = '';
 
-				$chargeable_amount    = $upgrade_service->calculate_chargeable_amount(
-					$selected_membership_amount,
-					$current_membership_amount,
-					$upgrade_type
-				);
-				$membership['amount'] = $chargeable_amount;
+				if ( $subscription_service->is_user_membership_expired( $current_user_id, $current_membership_id ) ) {
+					$chargeable_amount    = $upgrade_service->calculate_chargeable_amount(
+						$selected_membership_amount,
+						$current_membership_amount,
+						$upgrade_type
+					);
+					$membership['amount'] = $chargeable_amount;
+				}
 			}
 			unset( $membership );
 		} elseif ( isset( $data['action'] ) && 'multiple' === $data['action'] ) {
@@ -911,6 +969,18 @@ class MembershipService {
 					'message' => esc_html__( 'You cannot purchase this membership.', 'user-registration' ),
 				);
 			}
+		} elseif ( isset( $data['action'] ) && 'register' === $data['action'] ) {
+			$membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
+			$memberships   = $membership_repository->get_single_membership_by_ID( $membership_id );
+			$memberships   = $this->prepare_single_membership_data( $memberships );
+			$memberships   = apply_filters( 'build_membership_list_frontend', array( (array) $memberships ) )[0];
+			$memberships   = array( $memberships );
+		} elseif ( isset( $data['action'] ) && 'renew' === $data['action'] ) {
+			$membership_id = isset( $data['current'] ) ? absint( $data['current'] ) : 0;
+			$memberships   = $membership_repository->get_single_membership_by_ID( $membership_id );
+			$memberships   = $this->prepare_single_membership_data( $memberships );
+			$memberships   = apply_filters( 'build_membership_list_frontend', array( (array) $memberships ) )[0];
+			$memberships   = array( $memberships );
 		}
 
 		if ( empty( $memberships ) ) {
@@ -941,6 +1011,10 @@ class MembershipService {
 		$membership_group_service    = new MembershipGroupService();
 		$current_membership_group    = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
 		$user_membership_group_ids   = array();
+
+		if ( empty( $user_membership_ids ) ) {
+			return 'register';
+		}
 
 		foreach ( $user_membership_ids as $user_membership_id ) {
 			$user_membership_group_id = $membership_group_repository->get_membership_group_by_membership_id( $user_membership_id );
@@ -980,5 +1054,31 @@ class MembershipService {
 		}
 
 		return $intended_action;
+	}
+
+
+	/**
+	 * Retrieve the membership title and description.
+	 *
+	 * Fetches the post title and the `ur_membership_description` post meta
+	 * for the given membership post ID.
+	 *
+	 * @param int $membership_id The membership post ID.
+	 *
+	 * @return array {
+	 *     An associative array containing the membership details.
+	 *
+	 *     @type string $item_title       The membership post title.
+	 *     @type string $item_description The membership description meta value.
+	 * }
+	 */
+	public function get_membership_title_and_description( $membership_id ) {
+		$membership             = get_post( $membership_id );
+		$membership_title       = $membership->post_title;
+		$membership_description = get_post_meta( $membership_id, 'ur_membership_description', true );
+		return array(
+			'item_title'       => $membership_title,
+			'item_description' => $membership_description,
+		);
 	}
 }

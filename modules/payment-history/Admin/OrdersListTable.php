@@ -300,9 +300,17 @@ class OrdersListTable extends \UR_List_Table {
 	 */
 	public function show_column_status( $order ) {
 
-		$order_id = $order['order_id'] ?? $order['user_id'];
+		$order_id     = $order['order_id'] ?? $order['user_id'];
+		$status_class = 'user-payment-secondary';
+		if ( 'completed' === $order['status'] ) {
+			$status_class = 'user-payment-completed';
+		} elseif ( 'pending' === $order['status'] ) {
+			$status_class = 'user-payment-pending';
+		} elseif ( 'failed' === $order['status'] ) {
+			$status_class = 'user-subscription-failed';
+		}
 
-		return sprintf( '<span id="ur-order-%d"  class="payment-status-btn %s">%s</span>', absint( $order_id ), $order['status'], esc_html( ucfirst( $order['status'] ) ) );
+		return sprintf( '<span id="ur-order-%d"  class="payment-status-btn %s">%s</span>', absint( $order_id ), $status_class, esc_html( ucfirst( $order['status'] ) ) );
 	}
 
 	/**
@@ -356,6 +364,13 @@ class OrdersListTable extends \UR_List_Table {
 		$decimals            = isset( $currency_info['decimals'] ) ? (int) $currency_info['decimals'] : 2;
 		$coupon_discount     = 0;
 
+		$order_detail     = $this->orders_repository->get_order_detail( $item['order_id'] ?? 0 );
+		$order_repository = new OrdersRepository();
+		$local_currency   = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' );
+
+		$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
+		$symbol = ur_get_currency_symbol( $currency );
+
 		if ( isset( $item['subscription_id'] ) ) {
 			$subscription = ( new MembersSubscriptionRepository() )->get_subscription_by_subscription_id( absint( $item['subscription_id'] ) );
 			if ( ! empty( $subscription ) && ! empty( $subscription['coupon'] ) ) {
@@ -396,7 +411,7 @@ class OrdersListTable extends \UR_List_Table {
 			$this,
 			array(
 				'page'           => $this->page,
-				'title'          => esc_html__( 'Payment History', 'user-registration' ),
+				'title' 		 => esc_html__( 'Payments', 'user-registration' ),
 				'add_new_action' => 'add_new_payment',
 				'search_id'      => 'user-registration-payment-history-search',
 				'skip_query_key' => 'add-new-membership',
@@ -474,7 +489,7 @@ class OrdersListTable extends \UR_List_Table {
 	public function display_search_box( $input_id ) {
 		?>
 			<div id="user-registration-list-search-form">
-				<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" placeholder="<?php esc_html_e( 'Search Members ...', 'user-registration' ); ?>" />
+				<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" placeholder="<?php esc_html_e( 'Search Member', 'user-registration' ); ?>" />
 				<button type="submit" id="search-submit">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 						<path fill="#000" fill-rule="evenodd" d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z" clip-rule="evenodd"/>
@@ -576,9 +591,16 @@ class OrdersListTable extends \UR_List_Table {
 				?>
 			</select>
 		</div>
-		<button type="submit" name="ur_users_filter" id="user-registration-users-filter-btn" class="button ur-button-primary">
+		<div class="user-registration-users-filter-btns">
+			<button type="submit" name="ur_users_filter" id="user-registration-users-filter-btn" class="button ur-button-primary">
 				<?php esc_html_e( 'Filter', 'user-registration' ); ?>
-		</button>
+			</button>
+			<button type="reset"  id="user-registration-payments-filter-reset-btn" class="" title="<?php _e( 'Reset', 'user-registration' ); ?>">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+					<path fill="#000" fill-rule="evenodd" d="M12 2h-.004a10.75 10.75 0 0 0-7.431 3.021l-.012.012L4 5.586V3a1 1 0 1 0-2 0v5a.997.997 0 0 0 1 1h5a1 1 0 0 0 0-2H5.414l.547-.547A8.75 8.75 0 0 1 12.001 4 8 8 0 1 1 4 12a1 1 0 1 0-2 0A10 10 0 1 0 12 2Z" clip-rule="evenodd"/>
+				</svg>
+			</button>
+		</div>
 		<?php
 	}
 
@@ -701,5 +723,161 @@ class OrdersListTable extends \UR_List_Table {
 
 	public function column_cb( $item ) {
 		return sprintf( '<input type="checkbox" name="order_id[]" value="%1$s" data-user-id="%2$s" /><span class="spinner"></span>', esc_attr( $item['order_id'] ?? '' ), esc_attr( $item['user_id'] ?? '' ) );
+	}
+
+	/**
+	 * Displays the pagination.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param string $which The location of the pagination: Either 'top' or 'bottom'.
+	 */
+	protected function pagination( $which ) {
+		if ( empty( $this->_pagination_args['total_items'] ) ) {
+			return;
+		}
+
+		$total_items     = $this->_pagination_args['total_items'];
+		$total_pages     = $this->_pagination_args['total_pages'];
+		$infinite_scroll = false;
+		if ( isset( $this->_pagination_args['infinite_scroll'] ) ) {
+			$infinite_scroll = $this->_pagination_args['infinite_scroll'];
+		}
+
+		if ( 'top' === $which && $total_pages > 1 ) {
+			$this->screen->render_screen_reader_content( 'heading_pagination' );
+		}
+
+		$current              = $this->get_pagenum();
+		$removable_query_args = wp_removable_query_args();
+
+		$current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+
+		$current_url = remove_query_arg( $removable_query_args, $current_url );
+
+		$page_links = array();
+
+		$total_pages_before = '<span class="paging-input">';
+		$total_pages_after  = '</span></span>';
+
+		$disable_first = false;
+		$disable_last  = false;
+		$disable_prev  = false;
+		$disable_next  = false;
+
+		if ( 1 === $current ) {
+			$disable_first = true;
+			$disable_prev  = true;
+		}
+		if ( $total_pages === $current ) {
+			$disable_last = true;
+			$disable_next = true;
+		}
+
+		if ( $disable_first ) {
+			$page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&laquo;</span>';
+		} else {
+			$page_links[] = sprintf(
+				"<a class='first-page button' href='%s'>" .
+					"<span class='screen-reader-text'>%s</span>" .
+					"<span aria-hidden='true'>%s</span>" .
+				'</a>',
+				esc_url( remove_query_arg( 'paged', $current_url ) ),
+				/* translators: Hidden accessibility text. */
+				__( 'First page' ),
+				'&laquo;'
+			);
+		}
+
+		if ( $disable_prev ) {
+			$page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&lsaquo;</span>';
+		} else {
+			$page_links[] = sprintf(
+				"<a class='prev-page button' href='%s'>" .
+					"<span class='screen-reader-text'>%s</span>" .
+					"<span aria-hidden='true'>%s</span>" .
+				'</a>',
+				esc_url( add_query_arg( 'paged', max( 1, $current - 1 ), $current_url ) ),
+				/* translators: Hidden accessibility text. */
+				__( 'Previous page' ),
+				'&lsaquo;'
+			);
+		}
+
+		if ( 'bottom' === $which ) {
+			$html_current_page  = $current;
+			$total_pages_before = sprintf(
+				'<span class="screen-reader-text">%s</span>' .
+				'<span id="table-paging" class="paging-input">' .
+				'<span class="tablenav-paging-text">',
+				/* translators: Hidden accessibility text. */
+				__( 'Current Page' )
+			);
+		} else {
+			$html_current_page = sprintf(
+				'<label for="current-page-selector" class="screen-reader-text">%s</label>' .
+				"<input class='current-page' id='current-page-selector' type='text'
+					name='paged' value='%s' size='%d' aria-describedby='table-paging' />" .
+				"<span class='tablenav-paging-text'>",
+				/* translators: Hidden accessibility text. */
+				__( 'Current Page' ),
+				$current,
+				strlen( $total_pages )
+			);
+		}
+
+		$html_total_pages = sprintf( "<span class='total-pages'>%s</span>", number_format_i18n( $total_pages ) );
+
+		$page_links[] = $total_pages_before . sprintf(
+			/* translators: 1: Current page, 2: Total pages. */
+			_x( '%1$s of %2$s', 'paging' ),
+			$html_current_page,
+			$html_total_pages
+		) . $total_pages_after;
+
+		if ( $disable_next ) {
+			$page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&rsaquo;</span>';
+		} else {
+			$page_links[] = sprintf(
+				"<a class='next-page button' href='%s'>" .
+					"<span class='screen-reader-text'>%s</span>" .
+					"<span aria-hidden='true'>%s</span>" .
+				'</a>',
+				esc_url( add_query_arg( 'paged', min( $total_pages, $current + 1 ), $current_url ) ),
+				/* translators: Hidden accessibility text. */
+				__( 'Next page' ),
+				'&rsaquo;'
+			);
+		}
+
+		if ( $disable_last ) {
+			$page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&raquo;</span>';
+		} else {
+			$page_links[] = sprintf(
+				"<a class='last-page button' href='%s'>" .
+					"<span class='screen-reader-text'>%s</span>" .
+					"<span aria-hidden='true'>%s</span>" .
+				'</a>',
+				esc_url( add_query_arg( 'paged', $total_pages, $current_url ) ),
+				/* translators: Hidden accessibility text. */
+				__( 'Last page' ),
+				'&raquo;'
+			);
+		}
+
+		$pagination_links_class = 'pagination-links';
+		if ( ! empty( $infinite_scroll ) ) {
+			$pagination_links_class .= ' hide-if-js';
+		}
+		$output = "\n<span class='$pagination_links_class'>" . implode( "\n", $page_links ) . '</span>';
+
+		if ( $total_pages ) {
+			$page_class = $total_pages < 2 ? ' one-page' : '';
+		} else {
+			$page_class = ' no-pages';
+		}
+		$this->_pagination = "<div class='tablenav-pages{$page_class}'>$output</div>";
+
+		echo $this->_pagination;
 	}
 }

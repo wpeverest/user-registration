@@ -135,7 +135,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 		public function output_sections() {
 			global $current_section;
 
-			$sections = $this->get_sections( );
+			$sections = $this->get_sections();
 
 			if ( empty( $sections ) ) {
 				return;
@@ -152,26 +152,26 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 				$premium_tabs      = ur_premium_settings_tab();
 				$premium_tab       = urm_array_key_exists_recursive( $id, $premium_tabs );
 				$show_premium_icon = false;
-				$show_section = true;
+				$show_section      = true;
 				if ( ! empty( $premium_tab ) ) {
 					$license_data = ur_get_license_plan();
 					$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
 					$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
 
 					if ( ! empty( $premium_tab[ $id ]['plan'] ) ) {
-						$id_bc = str_replace('-', '_', $id );
+						$id_bc = str_replace( '-', '_', $id );
 
-						if( isset( $premium_tab[ $id ][ 'plugin' ] ) && is_plugin_active( $premium_tab[ $id ][ 'plugin' ] . '/' . $premium_tab[ $id ][ 'plugin' ] . '.php' ) && ( in_array( $premium_tab[ $id ][ 'plugin' ], $tab_slugs ) || in_array( $id, $tab_slugs ) || in_array( $id_bc, $tab_slugs ) ) ) {
+						if ( isset( $premium_tab[ $id ]['plugin'] ) && is_plugin_active( $premium_tab[ $id ]['plugin'] . '/' . $premium_tab[ $id ]['plugin'] . '.php' ) && ( in_array( $premium_tab[ $id ]['plugin'], $tab_slugs ) || in_array( $id, $tab_slugs ) || in_array( $id_bc, $tab_slugs ) ) ) {
 							$show_section = false;
 						}
 						//woocommerce compatibility.
-						if( 'woocommerce' === $id && ! is_plugin_active('woocommerce/woocommerce.php') ) {
+						if ( 'woocommerce' === $id && ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 							$show_section = false;
 						}
 
 						if ( in_array( $license_plan, $premium_tab[ $id ]['plan'], true ) ) {
 							$show_premium_icon = false;
-						} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $premium_tab[ $id ]['plugin'] ) && is_plugin_active( $premium_tab[ $id ][ 'plugin' ] . '/' . $premium_tab[ $id ]['plugin'] . '.php' ) ) {
+						} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $premium_tab[ $id ]['plugin'] ) && is_plugin_active( $premium_tab[ $id ]['plugin'] . '/' . $premium_tab[ $id ]['plugin'] . '.php' ) ) {
 							$show_premium_icon = false;
 						} else {
 							$show_premium_icon = true;
@@ -211,7 +211,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			global $current_section;
 			global $current_section_part;
 			$sections = $this->get_section_parts();
-			if( empty( $sections ) ) {
+			if ( empty( $sections ) ) {
 				return;
 			}
 			echo '<ul class="subsubsub user-registration-settings-parts" style="display: flex;">';
@@ -229,7 +229,6 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			}
 
 			echo '</ul>';
-
 		}
 		/**
 		 * Output the settings.
@@ -246,35 +245,40 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			$title   = ucwords( str_replace( '-', ' ', $current_section ?? '' ) );
 			$setting = ucwords( str_replace( '_', ' ', $current_tab ?? '' ) );
 
-			// in case of integration, list all email marketing addons.
-			$args = array();
-			if ( 'integration' === $current_tab && 'email-marketing' === $current_section ) {
-				$args[] = array();
-			} elseif ( 'integration' === $current_section && 'pdf-submission' === $current_section ) {
-				$args[] = array(
-					'id'   => 'pdf-form-submission',
-					'slug' => 'user-registration-pdf-form-submission',
-					'name' => 'PDF Form Submission',
-				);
-			} elseif ( 'security' === $current_tab && '2fa' === $current_section ) {
-				$args[] = array(
-					'id'   => 'two-factor-authentication',
-					'slug' => 'user-registration-two-factor-authentication',
-					'name' => 'Two Factor Authentication',
-				);
-			} else {
-				$args[] = array(
-					'id'   => $current_section,
-					'slug' => 'user-registration-' . $current_section,
-					'name' => 'User Registration - ' . $title,
-				);
+
+			$default = array(
+				'title'    => '',
+				'sections' => array(),
+			);
+
+			$premium_settings_sections = array(
+				'premium_setting_section' => array(
+					'type'        => 'card',
+					'is_premium'  => true,
+					'title'       => $title,
+					'class'       => 'ur-upgrade--link',
+
+				),
+			);
+
+			$premium_tab_settings = ur_premium_settings_tab();
+
+			foreach( $premium_tab_settings as $tab_key => $tab_value ) {
+				if ( isset( $tab_value[ $current_section ]['is_collection'] ) ) {
+					foreach( $tab_value[ $current_section ]['collections'] as $current_tab_key => $current_tab_value ) {
+						$default['sections'][$current_tab_key] = array_merge( $premium_settings_sections['premium_setting_section'] , $current_tab_value );
+					}
+				} else {
+					foreach( $tab_value as $section_key => $section_value ) {
+						if ( $section_key === $current_section ) {
+							$default['sections'][$section_key] = array_merge( $premium_settings_sections['premium_setting_section'] , $section_value );
+						}
+					}
+				}
 			}
 
-			return apply_filters(
-				'user_registration_upgrade_to_pro_setting',
-				array(
-					'title'    => '',
-					'sections' => array(
+			if( empty( $default['sections'] ) ) {
+				$default['sections'] = array_merge( $default['sections'], array(
 						'premium_setting_section' => array(
 							'type'        => 'card',
 							'is_premium'  => true,
@@ -282,13 +286,17 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 							'before_desc' => "$setting > $title is only available in User Registration & Membership Pro.",
 							'desc'        => 'To unlock this setting, consider upgrading to <a href="https://wpuserregistration.com/upgrade/?utm_source=ur-settings-desc&utm_medium=upgrade-link&utm-campaign=lite-version">Pro</a>.',
 							'class'       => 'ur-upgrade--link',
-
 						),
-					),
-				),
-				$args
+					)
+				);
+			}
+
+			$settings =  apply_filters(
+				'user_registration_upgrade_to_pro_setting',
+				$default
 			);
-			return apply_filters( 'user_registration_upgrade_to_pro_setting', array(), $args );
+
+			return $settings;
 		}
 
 		/**

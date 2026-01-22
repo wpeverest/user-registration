@@ -24,9 +24,9 @@ const DropdownMenu = ({
 }) => {
 	const handleOptionClick = (option, e) => {
 		e.stopPropagation();
-		if (option.disabled) {
-			return;
-		}
+		// if (option.disabled) {
+		// 	return;
+		// }
 		if (onSelect) {
 			onSelect(option);
 		}
@@ -65,7 +65,7 @@ const DropdownMenu = ({
 			<Tag
 				key={option.value}
 				role="button"
-				tabIndex={isDisabled ? -1 : 0}
+				// tabIndex={isDisabled ? -1 : 0}
 				className={`urcr-dropdown-option ${
 					isSelected ? "is-selected" : ""
 				} ${isDisabled ? "is-disabled" : ""} ${isLocked ? "is-locked" : ""}`}

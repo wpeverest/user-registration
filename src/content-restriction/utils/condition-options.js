@@ -31,9 +31,8 @@ export const getFilteredConditionOptions = (
 		{value: "email_domain", label: __("Email Domain", "user-registration"), type: "text"},
 		{value: "post_count", label: __("Minimum Public Posts Count", "user-registration"), type: "number"},
 		{value: "capabilities", label: __("Capabilities", "user-registration"), type: "multiselect"},
-		{value: "registration_source", label: __("User Registration Source", "user-registration"), type: "multiselect"},
+		{value: "registration_source", label: __("Registration Source", "user-registration"), type: "multiselect"},
 		{value: "ur_form_field", label: __("UR Form Field", "user-registration"), type: "multiselect"},
-		{value: "payment_status", label: __("Payment Status", "user-registration"), type: "multiselect"},
 	]);
 
 	// Filter options based on pro access and migration status

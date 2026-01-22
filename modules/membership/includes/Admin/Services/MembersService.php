@@ -107,6 +107,22 @@ class MembersService {
 		$response         = array();
 		$response['role'] = isset( $data['role'] ) ? sanitize_text_field( $data['role'] ) : 'subscriber';
 
+		if ( isset( $data['tax_rate'] ) && ! empty( $data['tax_rate'] ) ) {
+			$tax_details = array(
+				'tax_rate'       		 => floatval( $data['tax_rate'] ),
+				'tax_calculation_method' =>  ur_string_to_bool( sanitize_text_field( $data['tax_calculation_method'] ) ),
+				);
+			$response['tax_data'] = $tax_details;
+		}
+
+		if ( isset( $data['switched_currency'] ) && ! empty( $data['switched_currency'] ) ) {
+			$local_currency_details             = array(
+				'switched_currency' => sanitize_text_field( $data['switched_currency'] ),
+				'urm_zone_id'       => ! empty( $data['urm_zone_id'] ) ? $data['urm_zone_id'] : '',
+			);
+			$response['local_currency_details'] = $local_currency_details;
+		}
+
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) && ur_check_module_activation( 'coupon' ) ) {
 			$response['coupon_data'] = ur_get_coupon_details( sanitize_text_field( $data['coupon'] ) );
 		}
@@ -136,6 +152,61 @@ class MembersService {
 				$response['is_purchasing_multiple'] = $data['is_purchasing_multiple'];
 			}
 		}
+
+		$team       = array();
+		$tier       = array();
+		$team_seats = '';
+		if ( isset( $data['team'] ) ) {
+			if ( ! isset( $membership_meta ) ) {
+				if ( ! isset( $data['membership'] ) ) {
+					throw new \Exception( __( 'Membership is required for team pricing.', 'user-registration' ) );
+				}
+				$membership_details = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
+				$membership_meta    = json_decode( $membership_details['meta_value'], true );
+			}
+			$team_index = absint( $data['team'] );
+			if ( ! isset( $membership_meta['team_pricing'][ $team_index ] ) ) {
+				throw new \Exception( __( 'Invalid team pricing selection.', 'user-registration' ) );
+			}
+
+			$team = $membership_meta['team_pricing'][ $team_index ];
+			if ( isset( $data['tier'] ) ) {
+				$tier_index = absint( $data['tier'] );
+				if ( ! isset( $team['tiers'] ) || ! is_array( $team['tiers'] ) || ! isset( $team['tiers'][ $tier_index ] ) ) {
+					throw new \Exception( __( 'Invalid tier selection.', 'user-registration' ) );
+				}
+
+				$tier = $team['tiers'][ $tier_index ];
+
+				if ( isset( $data['no_of_seats'] ) && ! empty( $data['no_of_seats'] ) ) {
+					$no_of_seats = absint( $data['no_of_seats'] );
+					$tier_from   = isset( $tier['tier_from'] ) ? absint( $tier['tier_from'] ) : 0;
+					$tier_to     = isset( $tier['tier_to'] ) ? absint( $tier['tier_to'] ) : 0;
+
+					if ( $no_of_seats < $tier_from || $no_of_seats > $tier_to ) {
+						throw new \Exception(
+							sprintf(
+								__( 'Number of seats must be between %1$d and %2$d for the selected tier.', 'user-registration' ),
+								esc_html( $tier_from ),
+								esc_html( $tier_to )
+							)
+						);
+					}
+				}
+			}
+			if ( 'fixed' === $team['seat_model'] ) {
+				$team_seats = isset( $team['team_size'] ) ? $team['team_size'] : '';
+			} else {
+				$no_of_seats = isset( $data['no_of_seats'] ) ? absint( $data['no_of_seats'] ) : '';
+				if ( $no_of_seats >= 1 ) {
+					$team_seats = $no_of_seats;
+				}
+			}
+		}
+
+		$response['team']       = $team;
+		$response['tier']       = $tier;
+		$response['team_seats'] = $team_seats;
 
 		return $response;
 	}

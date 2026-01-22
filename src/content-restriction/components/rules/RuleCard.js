@@ -1,15 +1,15 @@
 /**
  * External Dependencies
  */
-import React, { useState, useEffect, useRef } from "react";
 import { __ } from "@wordpress/i18n";
+import { useEffect, useRef, useState } from "react";
 import { toggleRuleStatus } from "../../api/content-access-rules-api";
-import SettingsPanel from "../settings/SettingsPanel";
-import RuleContentDisplay from "./RuleContentDisplay";
+import { isURDev } from "../../utils/localized-data";
+import { showError, showSuccess } from "../../utils/notifications";
 import DeleteRuleModal from "../modals/DeleteRuleModal";
 import DuplicateRuleModal from "../modals/DuplicateRuleModal";
-import { showSuccess, showError } from "../../utils/notifications";
-import { isURDev } from "../../utils/localized-data";
+import SettingsPanel from "../settings/SettingsPanel";
+import RuleContentDisplay from "./RuleContentDisplay";
 
 /* global _URCR_DASHBOARD_ */
 const { adminURL } =
@@ -28,6 +28,7 @@ const RuleCard = ({
 	onRuleDuplicate
 }) => {
 	const [isToggling, setIsToggling] = useState(false);
+	const [isSaving, setIsSaving] = useState(false);
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false);
@@ -78,7 +79,6 @@ const RuleCard = ({
 		}
 	}, [isEditingTitle]);
 
-
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (
@@ -90,7 +90,7 @@ const RuleCard = ({
 				if (onRuleUpdate) {
 					onRuleUpdate({
 						...rule,
-						title: editedTitle.trim() || rule.title,
+						title: editedTitle.trim() || rule.title
 					});
 				}
 				setIsEditingTitle(false);
@@ -107,6 +107,9 @@ const RuleCard = ({
 	}, [isEditingTitle, editedTitle, rule, onRuleUpdate]);
 
 	const handleToggleStatus = async () => {
+		if (isToggling || isSaving) {
+			return;
+		}
 		const newStatus = !rule.enabled;
 		setIsToggling(true);
 		try {
@@ -178,7 +181,7 @@ const RuleCard = ({
 			if (onRuleUpdate) {
 				onRuleUpdate({
 					...rule,
-					title: editedTitle.trim() || rule.title,
+					title: editedTitle.trim() || rule.title
 				});
 			}
 			setIsEditingTitle(false);
@@ -224,11 +227,13 @@ const RuleCard = ({
 							onClick={(e) => e.stopPropagation()}
 							disabled={!isEditingTitle}
 						/>
-						<span
-							className="user-registration-editable-title__icon dashicons dashicons-edit"
-							onClick={handleEditTitle}
-							style={{ cursor: "pointer" }}
-						></span>
+						{!isMembershipRule && (
+							<span
+								className="user-registration-editable-title__icon dashicons dashicons-edit"
+								onClick={handleEditTitle}
+								style={{ cursor: "pointer" }}
+							></span>
+						)}
 					</div>
 					<span className="urcr-separator"> | </span>
 					<span className="urcr-rule-id">ID: {formattedId}</span>
@@ -245,7 +250,7 @@ const RuleCard = ({
 								type="checkbox"
 								checked={rule.enabled}
 								onChange={handleToggleStatus}
-								disabled={isToggling}
+								disabled={isToggling || isSaving}
 							/>
 							<span className="slider round"></span>
 						</span>
@@ -253,6 +258,8 @@ const RuleCard = ({
 							<span className="urcr-toggle-loader spinner is-active"></span>
 						)}
 					</div>
+
+					{/* <span className="urcr-separator"> | </span> */}
 				</div>
 
 				<div className="integration-action urcr-integration-action">
@@ -310,7 +317,12 @@ const RuleCard = ({
 											handleDeleteClick();
 										}}
 									>
-										<span className="dashicons dashicons-trash"></span>
+										<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+											<path d="M9.3 16.546V11.09c0-.502.403-.91.9-.91s.9.408.9.91v5.455a.905.905 0 0 1-.9.909.905.905 0 0 1-.9-.91Zm3.6 0V11.09c0-.502.403-.91.9-.91s.9.408.9.91v5.455a.905.905 0 0 1-.9.909.905.905 0 0 1-.9-.91Z"/>
+											<path d="M4.8 19.273V6.545c0-.502.403-.909.9-.909s.9.407.9.91v12.727c0 .24.095.472.264.643.168.17.397.266.636.266h9a.895.895 0 0 0 .636-.266.914.914 0 0 0 .264-.643V6.545c0-.502.403-.909.9-.909s.9.407.9.91v12.727c0 .723-.285 1.416-.791 1.928A2.686 2.686 0 0 1 16.5 22h-9a2.686 2.686 0 0 1-1.909-.799 2.741 2.741 0 0 1-.791-1.928Z"/>
+											<path d="M20.1 5.636c.497 0 .9.407.9.91a.905.905 0 0 1-.9.909H3.9a.905.905 0 0 1-.9-.91c0-.502.403-.909.9-.909h16.2Z"/>
+											<path d="M14.7 6.545V4.727a.914.914 0 0 0-.264-.642.895.895 0 0 0-.636-.267h-3.6a.895.895 0 0 0-.636.267.914.914 0 0 0-.264.642v1.818c0 .503-.403.91-.9.91a.905.905 0 0 1-.9-.91V4.727c0-.723.285-1.417.791-1.928A2.686 2.686 0 0 1 10.2 2h3.6c.716 0 1.403.288 1.909.799.506.511.791 1.205.791 1.928v1.818c0 .503-.403.91-.9.91a.905.905 0 0 1-.9-.91Z"/>
+										</svg>
 										{__("Trash", "user-registration")}
 									</button>
 									<button
@@ -321,7 +333,12 @@ const RuleCard = ({
 											handleDuplicateClick();
 										}}
 									>
-										<span className="dashicons dashicons-admin-page"></span>
+										<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+											<path d="M13.818 17.454V12a.91.91 0 1 1 1.818 0v5.454a.91.91 0 1 1-1.818 0Z"/>
+											<path d="M17.454 13.818a.91.91 0 1 1 0 1.818H12a.91.91 0 1 1 0-1.818h5.454Z"/>
+											<path d="M20.182 10.182a.91.91 0 0 0-.91-.91h-9.09a.91.91 0 0 0-.91.91v9.09c0 .503.408.91.91.91h9.09a.91.91 0 0 0 .91-.91v-9.09ZM22 19.272A2.727 2.727 0 0 1 19.273 22h-9.091a2.727 2.727 0 0 1-2.727-2.727v-9.091a2.727 2.727 0 0 1 2.727-2.727h9.09A2.727 2.727 0 0 1 22 10.182v9.09Z"/>
+											<path d="M14.727 4.727a.914.914 0 0 0-.909-.909h-9.09a.914.914 0 0 0-.91.91v9.09c0 .498.411.91.91.91a.91.91 0 1 1 0 1.818A2.733 2.733 0 0 1 2 13.818v-9.09A2.733 2.733 0 0 1 4.727 2h9.091a2.733 2.733 0 0 1 2.728 2.727.91.91 0 0 1-1.819 0Z"/>
+										</svg>
 										{__("Duplicate", "user-registration")}
 									</button>
 								</div>
@@ -368,10 +385,11 @@ const RuleCard = ({
 							: "urcr-tab-content"
 					}
 				>
-					<RuleContentDisplay
-						rule={rule}
-						onRuleUpdate={onRuleUpdate}
-					/>
+				<RuleContentDisplay
+					rule={rule}
+					onRuleUpdate={onRuleUpdate}
+					isToggling={isToggling}
+				/>
 				</div>
 				<div
 					className={
@@ -380,11 +398,13 @@ const RuleCard = ({
 							: "urcr-tab-content"
 					}
 				>
-					<SettingsPanel
-						rule={rule}
-						onRuleUpdate={onRuleUpdate}
-						onGoBack={() => setActiveTab("rules")}
-					/>
+				<SettingsPanel
+					rule={rule}
+					onRuleUpdate={onRuleUpdate}
+					onGoBack={() => setActiveTab("rules")}
+					isToggling={isToggling}
+					onSavingChange={setIsSaving}
+				/>
 				</div>
 			</div>
 

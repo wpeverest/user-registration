@@ -156,10 +156,31 @@ class Frontend {
 		$symbol               = $currencies[ $currency ]['symbol'];
 		$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
 
+		$regions 				= get_option( 'user_registration_tax_regions_and_rates', array() );
+		$tax_calculation_method = get_option( 'user_registration_tax_calculation_during_checkout', 'no' );
+
+		$is_tax_calculation_enabled		  = ur_check_module_activation( 'taxes' );
+
 		$redirect_page_url = get_permalink( $registration_page_id );
 
 		$thank_you_page          = urm_get_thank_you_page();
 		$stripe_settings         = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
+
+		$urm_authorize_net_supported_currencies = function_exists( 'urm_authorize_net_supported_currencies' ) ? urm_authorize_net_supported_currencies() : array();
+		$paypal_supported_currencies_list = function_exists( 'paypal_supported_currencies_list' ) ? paypal_supported_currencies_list() : array();
+		$mollie_supported_currencies_list = (
+				class_exists( '\WPEverest\URM\Mollie\Functions\CoreFunctions' ) &&
+				method_exists( '\WPEverest\URM\Mollie\Functions\CoreFunctions', 'mollie_supported_currencies_list' )
+			)
+				? \WPEverest\URM\Mollie\Functions\CoreFunctions::mollie_supported_currencies_list()
+				: array();
+
+		$supported_currencies = array(
+			'authorize' => $urm_authorize_net_supported_currencies,
+			'paypal'    => $paypal_supported_currencies_list,
+			'mollie'	=> $mollie_supported_currencies_list
+		);
+
 		$membership_endpoint_url = ur_get_my_account_url() . '/ur-membership';
 
 		wp_localize_script(
@@ -184,6 +205,13 @@ class Frontend {
 				'gateways_configured'              => urm_get_all_active_payment_gateways( 'paid' ),
 				'isEditor'                         => current_user_can( 'edit_post', get_the_ID() ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'],
 				'membership_selection_message'     => __( 'Please select at least one membership plan', 'user-registration' ),
+				'tax_calculation_method'           => ur_string_to_bool( $tax_calculation_method ),
+				'regions_list'                     => $regions,
+				'gateways_configured'              => urm_get_all_active_payment_gateways('paid'),
+				'local_currencies'				   => ur_get_currencies(),
+				'local_currencies_symbol' 		   => ur_get_currency_symbols(),
+				'supported_currencies'			   => $supported_currencies,
+				'is_tax_calculation_enabled'	   => $is_tax_calculation_enabled
 			),
 		);
 	}
@@ -226,6 +254,11 @@ class Frontend {
 			'i18n_close'                                   => __( 'Close', 'user-registration' ),
 			'i18n_cancel_membership_subtitle'              => __( 'Are you sure you want to cancel this membership permanently?', 'user-registration' ),
 			'i18n_sending_text'                            => __( 'Sending ...', 'user-registration' ),
+			// Payment processing overlay labels
+			'i18n_payment_processing_title'                => __( 'Processing Payment', 'user-registration' ),
+			'i18n_payment_processing_message'              => __( 'Please wait while we securely process your payment. Do not close this page.', 'user-registration' ),
+			'i18n_payment_completing_title'                => __( 'Completing Payment', 'user-registration' ),
+			'i18n_payment_completing_message'              => __( 'Your payment has been verified. Please wait while we complete your registration.', 'user-registration' ),
 		);
 	}
 

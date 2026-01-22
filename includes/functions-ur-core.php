@@ -394,7 +394,7 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 	$new_shortcode = '';
 	$wp_version    = '5.0';
 	if ( version_compare( $GLOBALS['wp_version'], $wp_version, '>=' ) ) {
-		if ( is_object( $post ) ) {
+		if ( is_object( $post ) && ! empty( $post->post_content ) ) {
 			$blocks = parse_blocks( $post->post_content );
 			foreach ( $blocks as $block ) {
 
@@ -874,7 +874,7 @@ function ur_get_registered_form_fields_with_default_labels() {
 			'user_confirm_email'    => __( 'User Confirm Email', 'user-registration' ),
 			'user_pass'             => __( 'User Pass', 'user-registration' ),
 			'user_confirm_password' => __( 'User Confirm Password', 'user-registration' ),
-			'user_login'            => __( 'User Login', 'user-registration' ),
+			'user_login'            => __( 'User Name', 'user-registration' ),
 			'nickname'              => __( 'Nickname', 'user-registration' ),
 			'first_name'            => __( 'First Name', 'user-registration' ),
 			'last_name'             => __( 'Last Name', 'user-registration' ),
@@ -1915,17 +1915,44 @@ function check_username( $username ) {
  *
  * @return array
  */
-function ur_get_all_user_registration_form( $post_count = - 1 ) {
-	$args        = array(
+function ur_get_all_user_registration_form( $post_count = -1 ) {
+	$all_forms = array();
+
+	$args = array(
 		'status'      => 'publish',
 		'numberposts' => $post_count,
 		'order'       => 'ASC',
 	);
-	$posts_array = UR()->form->get_form( '', $args );
-	$all_forms   = array();
 
-	foreach ( $posts_array as $post ) {
-		$all_forms[ $post->ID ] = esc_html( $post->post_title );
+	if ( isset( UR()->form ) && method_exists( UR()->form, 'get_form' ) ) {
+		$posts_array = UR()->form->get_form( '', $args );
+
+		if ( ! empty( $posts_array ) && is_array( $posts_array ) ) {
+			foreach ( $posts_array as $post ) {
+				if ( isset( $post->ID, $post->post_title ) ) {
+					$all_forms[ $post->ID ] = esc_html( $post->post_title );
+				}
+			}
+		}
+	}
+
+	if ( empty( $all_forms ) ) {
+		$fallback_args = array(
+			'post_type'      => 'user_registration',
+			'post_status'    => 'publish',
+			'posts_per_page' => $post_count,
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
+			'no_found_rows'  => true,
+		);
+
+		$posts = get_posts( $fallback_args );
+
+		if ( ! empty( $posts ) ) {
+			foreach ( $posts as $post ) {
+				$all_forms[ $post->ID ] = esc_html( $post->post_title );
+			}
+		}
 	}
 
 	return $all_forms;
@@ -2777,9 +2804,18 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		}
 
 		if ( isset( $form_data->extra_params['field_key'] ) && 'country' === $form_data->extra_params['field_key'] && '' !== $form_data->value ) {
-			$country_class    = ur_load_form_field_class( $form_data->extra_params['field_key'] );
-			$countries        = $country_class::get_instance()->get_country();
-			$form_data->value = isset( $countries[ $form_data->value ] ) ? $countries[ $form_data->value ] : $form_data->value;
+			$isJson = preg_match( '/^\{.*\}$/s', $form_data->value ) ? true : false;
+			if ( $isJson ) {
+				$country_data = json_decode( $form_data->value, true );
+				$country_code = isset( $country_data['country'] ) ? $country_data['country'] : '';
+				$state_code   = isset( $country_data['state'] ) ? $country_data['state'] : '';
+
+				$form_data->value = ur_format_country_field_data( $country_code, $state_code );
+			} else {
+				$country_class    = ur_load_form_field_class( $form_data->extra_params['field_key'] );
+				$countries        = $country_class::get_instance()->get_country();
+				$form_data->value = isset( $countries[ $form_data->value ] ) ? $countries[ $form_data->value ] : $form_data->value;
+			}
 		}
 		/**
 		 * Filter hook allows developers to modify the parsed values for smart tags
@@ -4201,6 +4237,28 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 					'plugin' => 'user-registration-email-templates',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Email Templates', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Create emails branded that look professional and consistent.',
+						'description' => array(
+							'Choose from 6 ready-made email templates',
+							'Customize layout, colors, and content',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/email-templates/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
+				),
+				'custom-email'       => array(
+					'label'  => esc_html__( 'Custom Email', 'user-registration' ),
+					'plugin' => 'user-registration-email-custom-email',
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration - Custom Email', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Customize and manage email notifications for key membership and registration events.',
+						'description' => array(
+							'Configure scheduled emails for members',
+							'Choose recipients and personalize email content',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/email-notifications/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 			),
 			'registration_login' => array(
@@ -4209,24 +4267,57 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 					'plugin' => 'user-registration-social-connect',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration - Social Connect', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Allow users to sign up or log in using social accounts.',
+						'description' => array(
+							'Supports 5 major platforms, including Facebook and Google ',
+							'Configure each social platform individually',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/social-connect/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 				'profile-connect' => array(
 					'label'  => esc_html__( 'Profile Connect', 'user-registration' ),
 					'plugin' => 'user-registration-profile-connect',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Profile Connect', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Import users from existing registrations into URM.',
+						'description' => array(
+							'Select which forms or sources to import users from',
+							'Map fields to keep user data consistent',
+						),
+						'feature_link' => ' https://wpuserregistration.com/features/profile-connect/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 				'invite-code'     => array(
 					'label'  => esc_html__( 'Invite Codes', 'user-registration' ),
 					'plugin' => 'user-registration-invite-codes',
 					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Invite Codes', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Enable invite-only signups using custom codes.',
+						'description' => array(
+							'Customize popup content and appearance',
+							'Customize layout, colors, and content',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/invite-codes/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 				'file-upload'     => array(
 					'label'  => esc_html__( 'File Upload', 'user-registration' ),
 					'plugin' => 'user-registration-file-upload',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration - File Upload', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Let users upload files during registration.',
+						'description' => array(
+							'Collect profile photos or verification documents',
+							'Support 10+ file types, including PDF and PNG',
+							'Set upload size limits for better control'
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/file-upload/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 			),
 			'my_account'         => array(
@@ -4235,6 +4326,15 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 					'plugin' => 'user-registration-customize-my-account',
 					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration customize my account', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Personalize the user dashboard to fit your site.',
+						'description' => array(
+							'Edit or replace default dashboard content',
+							'Add custom links and account sections',
+							'Style individual dashboard elements',
+						),
+						'feature_link' => ' https://wpuserregistration.com/features/customize-my-account/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 			),
 			'integration'        => array(
@@ -4246,48 +4346,114 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 							'plugin' => 'user-registration-activecampaign',
 							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration ActiveCampaign', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Sync members with ActiveCampaign for advanced email automation.',
+								'description' => array(
+									'Automatically subscribe users to ActiveCampaign lists upon registration',
+									'Auto-update subscriber details when members edit their profiles',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/activecampaign/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
 						),
 						'brevo'          => array(
 							'label'  => esc_html__( 'Brevo', 'user-registration' ),
 							'plugin' => 'user-registration-brevo',
 							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration Brevo', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Connect members with Brevo (formerly Sendinblue) for email campaigns.',
+								'description' => array(
+									'Sync member data to Brevo contact lists automatically',
+									'Use conditional logic for targeted list segmentation',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/brevo/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
 						),
 						'convertkit'     => array(
 							'label'  => esc_html__( 'Kit (Previously Convertkit)', 'user-registration' ),
 							'plugin' => 'user-registration-convertkit',
 							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration convertkit', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Grow your email list with Kit integration.',
+								'description' => array(
+									'Map signup form fields to Kit custom fields',
+									'Subscribe users to specific Kit forms, tags, or sequences',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/kit/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
 						),
 						'klaviyo'        => array(
 							'label'  => esc_html__( 'Klaviyo', 'user-registration' ),
 							'plugin' => 'user-registration-klaviyo',
 							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration Klaviyo', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Power your email marketing with Klaviyo integration.',
+								'description' => array(
+									'Auto-sync member details when profiles are updated',
+									'Automatically unsubscribe deleted users from Klaviyo',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/klaviyo/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
 						),
 						'mailchimp'      => array(
 							'label'  => esc_html__( 'Mailchimp', 'user-registration' ),
 							'plugin' => 'user-registration-mailchimp',
 							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration - Mailchimp', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Automatically sync users to Mailchimp audiences upon registration.',
+								'description' => array(
+									'Add custom tags to segment your membership lists',
+									'Map User Registration fields to Mailchimp merge tags',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/mailchimp/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
+
 						),
 						'mailerlite'     => array(
 							'label'  => esc_html__( 'Mailerlite', 'user-registration' ),
 							'plugin' => 'user-registration-mailerlite',
 							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration MailerLite', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => ' Integrate with MailerLite for streamlined email marketing.',
+								'description' => array(
+									'Auto-sync member profile updates to MailerLite',
+									'Create multiple connections for different campaigns',
+								),
+								'feature_link' => ' https://wpuserregistration.com/features/mailerlite/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
 						),
 						'mailpoet'       => array(
 							'label'  => esc_html__( 'Mailpoet', 'user-registration' ),
 							'plugin' => 'user-registration-mailpoet',
 							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration MailPoet', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Connect member signup forms with MailPoet subscriber lists.',
+								'description' => array(
+									'Use conditional logic for targeted list building',
+									'Perfect for WordPress-native email marketing',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/mailpoet/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
 						),
 						'zapier'         => array(
 							'label'  => esc_html__( 'Zapier', 'user-registration' ),
 							'plugin' => 'user-registration-zapier',
 							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration Zapier', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Connect with 1,500+ apps through Zapier automation.',
+								'description' => array(
+									'Transfer registration data to Google Docs, Trello, Slack, HubSpot, and more',
+									'Trigger actions on user signup, profile update, or deletion',
+									'Create automated workflows without coding ',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/zapier/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
 						),
 					),
 					'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
@@ -4298,34 +4464,83 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 					'plugin' => 'user-registration-pdf-form-submission',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration PDF Form Submission', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Generate and download registration data in PDF format.',
+						'description' => array(
+							'Automatically attach PDF files to admin and user emails on form submission',
+							'Customize PDF templates with header logos and branding',
+						),
+						'feature_link' => ' https://wpuserregistration.com/features/pdf-form-submission/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 				'google-sheets'   => array(
 					'label'  => esc_html__( 'Google Sheets', 'user-registration' ),
 					'plugin' => 'user-registration-google-sheets',
 					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Google Sheets', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Store and manage form data in spreadsheet format in Google Sheets.',
+						'description' => array(
+							'Map User Registration fields to Google Sheets columns',
+							'Use conditional logic to filter which submissions sync',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/google-sheets/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 				'salesforce'      => array(
 					'label'  => esc_html__( 'Salesforce', 'user-registration' ),
 					'plugin' => 'user-registration-salesforce',
 					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Salesforce', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Sync member data with Salesforce CRM automatically.',
+						'description' => array(
+							'Map registration form fields to Salesforce fields',
+							'Support for multiple Salesforce account connections',
+						),
+						'feature_link' => ' https://wpuserregistration.com/features/salesforce/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
+
 				),
 				'geolocation'     => array(
 					'label'  => esc_html__( 'Geolocation', 'user-registration' ),
 					'plugin' => 'user-registration-geolocation',
 					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Geolocation', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Capture geolocation data automatically when users register.',
+						'description' => array(
+							'View user location data in admin dashboard',
+							'Add Google Maps as address field in registration forms',
+							'Send geolocation data via smart tags in emails',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/geolocation/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
 				),
 				'woocommerce'     => array(
 					'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
 					'plugin' => 'user-registration-woocommerce',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Add WooCommerce billing and shipping fields to signup form.',
+						'description' => array(
+							'View and edit WooCommerce-related details in one place',
+							'Let users view their order history right from their account page.',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/woocommerce-integration/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					),
 				),
 				'popup'           => array(
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'plugin' => 'user-registration-pro',
+					'upsell' => array(
+						'excerpt' => 'Display registration or login forms in popups.',
+						'description' => array(
+							'Customize popup content and appearance',
+							'Control where the popup shows up',
+						),
+					),
 				),
 				'cloud-storage'   => array(
 					'is_collection' => true,
@@ -4335,12 +4550,28 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 							'plugin' => 'user-registration-cloud-storage',
 							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Store user-uploaded files directly in your preferred cloud storage service.',
+								'description' => array(
+									'Connect signup forms to Dropbox or Google Drive',
+									'Keep your WordPress server clean by offloading storage',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/cloud-storage-integration/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							),
 						),
 						'dropbox'      => array(
 							'label'  => esc_html__( 'Dropbox', 'user-registration' ),
 							'plugin' => 'user-registration-cloud-storage',
 							'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 							'name' => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Store user-uploaded files directly in your preferred cloud storage service.',
+								'description' => array(
+									'Connect signup forms to Dropbox or Google Drive',
+									'Keep your WordPress server clean by offloading storage',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/cloud-storage-integration/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							),
 						)
 					),
 					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
@@ -4353,6 +4584,14 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 					'plugin' => 'user-registration-two-factor-authentication',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration - Two Factor Authentication', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Verify user logins with one-time passwords.',
+						'description' => array(
+							'Send OTPs via email or SMS',
+							'Configure verification limits and rules',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/two-factor-authentication',
+					)
 				),
 			),
 		);
@@ -4457,20 +4696,52 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 							continue;
 						}
 						$description                               = esc_html__( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
-						$settings['sections'][ $detail['plugin'] ] = array(
-							'type'        => 'card',
-							'is_premium'  => true,
-							'title'       => $detail['label'],
-							'before_desc' => $description,
-							'desc'        => 'To unlock this setting, consider upgrading to <a href="https://wpuserregistration.com/upgrade/?utm_source=ur-settings-desc&utm_medium=upgrade-link&utm-campaign=lite-version">Pro</a>.',
-							'class'       => 'ur-upgrade--link',
-						);
+						$current_section_detail = $detail ? array_merge(
+								array(
+									'type'        => 'card',
+									'is_premium'  => true,
+									'title'       => $detail['label'],
+									'class'       => 'ur-upgrade--link',
+								),
+								$detail
+							) : array();
+
+						$settings['sections'][ str_replace( 'user-registration-', '', $detail['plugin'] ) ] = $current_section_detail ?? array();
 					}
 				}
 			} else { // scalar section.
 				$detail = $section_details;
 				if ( ! empty( $license_plan ) ) {
 					$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
+					if ( 'custom-email' === $current_section ) {
+						$feature_slug       = 'user-registration-custom-email';
+						$is_feature_enabled = ur_check_module_activation( 'custom-email' );
+
+						if ( in_array( $license_plan, $detail['plan'], true ) && ! $is_feature_enabled ) {
+							$description  = esc_html__( 'Please activate the Custom Email feature to use this functionality.', 'user-registration' );
+							$button_class = 'user-registration-settings-feature-activate';
+							$button_attrs = array(
+								'data-slug' => $feature_slug,
+								'data-type' => 'feature',
+								'data-name' => $detail['name'],
+							);
+							$button_title = esc_html__( 'Activate Feature', 'user-registration' );
+
+							$settings['sections']['premium_setting_section']['before_desc'] = $description;
+							$settings['sections']['premium_setting_section']['desc']        = false;
+							$settings['sections']['premium_setting_section']['settings']    = array(
+								array(
+									'id'    => 'ur-activate-feature__button',
+									'type'  => 'button',
+									'class' => $button_class,
+									'attrs' => $button_attrs,
+									'title' => $button_title,
+								),
+							);
+							return $settings;
+						}
+					}
+
 					if ( ! in_array( $license_plan, $detail['plan'], true ) ) {
 						if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 							return array();
@@ -4483,7 +4754,9 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 					} else {
 						$plugin_name = $detail['name'];
 						$action      = '';
-						if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
+						if ( 'user-registration-email-custom-email' === $detail['plugin'] ) {
+							$action = 'Activate';
+						} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
 							if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
 								$action = 'Activate';
 							} else {
@@ -4524,6 +4797,11 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 					$description = esc_html__( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
 					$settings['sections']['premium_setting_section']['title']       = $detail['label'];
 					$settings['sections']['premium_setting_section']['before_desc'] = $description;
+
+					if( ! empty( $detail[ 'upsell' ] ) ) {
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'before_desc' ] = '';
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'upsell' ]      = $detail[ 'upsell' ];
+					}
 				}
 			}
 			return $settings;
@@ -5419,7 +5697,7 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			?>
 			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
 				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
-						style="width: <?php echo esc_attr( $email_body_width ); ?>; max-width:600px; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+						style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
 					<tbody>
 					<tr>
 						<td colspan="2" style="text-align: left;">
@@ -6100,6 +6378,24 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 		$form_key_list  = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$form_validator = new UR_Form_Validation();
 
+		if ( preg_match( '/^country_/', $data->field_name ) && in_array( $data->field_name, $form_key_list, true ) ) {
+			$field_data = array(
+				'country' => $data->value,
+			);
+
+			foreach ( $form_data as $state ) {
+				switch ( $state->field_name ) {
+					case $data->field_name . '_state':
+						$field_data['state'] = ! empty( $state->value ) ? $state->value : '';
+						break;
+
+					default:
+						break;
+				}
+			}
+			$data->value = json_encode( $field_data );
+		}
+
 		if ( in_array( $data->field_name, $form_key_list, true ) ) {
 			$form_data_index    = array_search( $data->field_name, $form_key_list, true );
 			$single_form_field  = $form_field_data[ $form_data_index ];
@@ -6446,6 +6742,10 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						continue;
 					}
 
+					if ( 'country' === $single_item->field_key && isset( $single_item->advance_setting->enable_state ) ) {
+						$field['enable_state'] = ur_string_to_bool( $single_item->advance_setting->enable_state );
+					}
+
 					// Unset multiple choice and single item.
 					if ( 'subscription_plan' === $single_item->field_key || 'multiple_choice' === $single_item->field_key || 'single_item' === $single_item->field_key || 'captcha' === $single_item->field_key || 'stripe_gateway' === $single_item->field_key ) {
 						continue;
@@ -6720,7 +7020,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						 * Embed the current country value to allow to remove it if it's not allowed.
 						 */
 						if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
-							printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( $value ), esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $value ] ) );
+							// printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( $value ), esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $value ] ) );
 						}
 						?>
 					</div>
@@ -6783,6 +7083,16 @@ if ( ! file_exists( 'user_registration_sanitize_profile_update' ) ) {
 				} else {
 					$value = '';
 				}
+				break;
+			case 'country':
+				$country_data = array();
+				if ( isset( $submitted_data[ $key ] ) ) { // phpcs:ignore
+					$country_data['country'] = sanitize_text_field( wp_unslash( $submitted_data[ $key ] ) ); // phpcs:ignore
+				}
+				if ( isset( $submitted_data[ $key . '_state' ] ) ) { // phpcs:ignore
+					$country_data['state'] = sanitize_text_field( wp_unslash( $submitted_data[ $key . '_state' ] ) ); // phpcs:ignore
+				}
+				$value = json_encode( $country_data );
 				break;
 			default:
 				$value = isset( $submitted_data[ $key ] ) ? $submitted_data[ $key ] : ''; // phpcs:ignore
@@ -9618,7 +9928,6 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 				$option_name = sanitize_text_field( $option_id );
 			}
 
-
 			if ( isset( $form_data[ $option_id ] ) ) {
 				$value = ur_sanitize_value_by_type( $option, $form_data[ $option_id ] );
 				if ( $option_name && $setting_name ) {
@@ -9782,9 +10091,9 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		$missing_pages_data = array();
 
 		foreach ( $required_pages as $option_name => $page_name ) {
-			$page_id = get_option( $option_name, 0 );
+			$page_id         = get_option( $option_name, 0 );
 			$is_page_missing = ! $page_id || ! get_post( $page_id );
-			
+
 			// For login page, also check if login redirect URL is set
 			if ( 'user_registration_login_page_id' === $option_name ) {
 				$login_redirect_url = get_option( 'user_registration_login_options_login_redirect_url', '' );
@@ -9792,7 +10101,7 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 					$is_page_missing = true;
 				}
 			}
-			
+
 			if ( $is_page_missing ) {
 				// Only include membership pages if membership module is activated
 				$is_membership_page = in_array(
@@ -9838,17 +10147,16 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 
 		$has_membership_plans = false;
 
-			if ( post_type_exists( 'ur_membership' ) ) {
-				$has_membership_plans = (bool) get_posts(
-					array(
-						'post_type'      => 'ur_membership',
-						'post_status'    => 'publish',
-						'posts_per_page' => 1,
-						'fields'         => 'ids',
-					)
-				);
-			}
-
+		if ( post_type_exists( 'ur_membership' ) ) {
+			$has_membership_plans = (bool) get_posts(
+				array(
+					'post_type'      => 'ur_membership',
+					'post_status'    => 'publish',
+					'posts_per_page' => 1,
+					'fields'         => 'ids',
+				)
+			);
+		}
 
 		$site_assistant_data = array(
 			'has_default_form'                  => ! empty( $default_form_post ),
@@ -10175,6 +10483,16 @@ if ( ! function_exists( 'urm_process_profile_fields' ) ) {
 					break;
 			}
 		}
+			if ( 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
+				$single_field[ $key ] = json_encode(
+					array(
+						'country' => sanitize_text_field( $single_field[ $key ] ),
+						'state'   => sanitize_text_field(
+							isset( $single_field[ $key . '_state' ] ) ? $single_field[ $key . '_state' ] : ''
+						),
+					)
+				);
+			}
 
 		/**
 		 * Action hook to perform validation of edit profile form.
@@ -10755,7 +11073,7 @@ if ( ! function_exists( 'urm_is_premium_setting_section' ) ) {
 	}
 }
 
-if ( ! function_exists('urm_check_if_plus_and_above_plan') ) {
+if ( ! function_exists( 'urm_check_if_plus_and_above_plan' ) ) {
 
 	/**
 	 * Check if user's license is plus or above plan.
@@ -10765,12 +11083,549 @@ if ( ! function_exists('urm_check_if_plus_and_above_plan') ) {
 		$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
 		$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
 
-		$available_plans = array( 'plus', 'professional', 'themegrill agency');
+		$available_plans = array( 'plus', 'professional', 'themegrill agency' );
 
 		if ( in_array( $license_plan, $available_plans, true ) ) {
 			return true;
 		}
 
 		return false;
+	}
+}
+
+
+if ( ! function_exists( 'ur_get_country_lists' ) ) {
+
+	/**
+	 * Get country lists.
+	 *
+	 * @since 5.0.0
+	 */
+	function ur_get_country_lists() {
+		$countries = include UR_ABSPATH . 'includes/pro/country-and-state/countries.php';
+		return $countries;
+	}
+}
+
+if ( ! function_exists( 'ur_get_state_lists' ) ) {
+
+	/**
+	 * Get State lists.
+	 *
+	 * @since 5.0.0
+	 */
+	function ur_get_state_lists() {
+		$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
+		$states      = json_decode( $states_json, true );
+		return $states;
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_symbols' ) ) {
+
+	/**
+	 * Get all available Currency symbols.
+	 *
+	 * Currency symbols and names should follow the Unicode CLDR recommendation (http://cldr.unicode.org/translation/currency-names)
+	 *
+	 * @since 6.0.0
+	 *
+	 * @return array
+	 */
+	function ur_get_currency_symbols() {
+		/**
+		 * Filters currency symbols.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param string[] $currency_symbols Currency code to currency symbol index array.
+		 */
+		$symbols = apply_filters(
+			'ur_currency_symbols',
+			array(
+				'AED' => '&#x62f;.&#x625;',
+				'AFN' => '&#x60b;',
+				'ALL' => 'L',
+				'AMD' => 'AMD',
+				'ANG' => '&fnof;',
+				'AOA' => 'Kz',
+				'ARS' => '&#36;',
+				'AUD' => '&#36;',
+				'AWG' => 'Afl.',
+				'AZN' => 'AZN',
+				'BAM' => 'KM',
+				'BBD' => '&#36;',
+				'BDT' => '&#2547;&nbsp;',
+				'BGN' => '&#1083;&#1074;.',
+				'BHD' => '.&#x62f;.&#x628;',
+				'BIF' => 'Fr',
+				'BMD' => '&#36;',
+				'BND' => '&#36;',
+				'BOB' => 'Bs.',
+				'BRL' => '&#82;&#36;',
+				'BSD' => '&#36;',
+				'BTC' => '&#3647;',
+				'BTN' => 'Nu.',
+				'BWP' => 'P',
+				'BYR' => 'Br',
+				'BYN' => 'Br',
+				'BZD' => '&#36;',
+				'CAD' => '&#36;',
+				'CDF' => 'Fr',
+				'CHF' => '&#67;&#72;&#70;',
+				'CLP' => '&#36;',
+				'CNY' => '&yen;',
+				'COP' => '&#36;',
+				'CRC' => '&#x20a1;',
+				'CUC' => '&#36;',
+				'CUP' => '&#36;',
+				'CVE' => '&#36;',
+				'CZK' => '&#75;&#269;',
+				'DJF' => 'Fr',
+				'DKK' => 'DKK',
+				'DOP' => 'RD&#36;',
+				'DZD' => '&#x62f;.&#x62c;',
+				'EGP' => 'EGP',
+				'ERN' => 'Nfk',
+				'ETB' => 'Br',
+				'EUR' => '&euro;',
+				'FJD' => '&#36;',
+				'FKP' => '&pound;',
+				'GBP' => '&pound;',
+				'GEL' => '&#x20be;',
+				'GGP' => '&pound;',
+				'GHS' => '&#x20b5;',
+				'GIP' => '&pound;',
+				'GMD' => 'D',
+				'GNF' => 'Fr',
+				'GTQ' => 'Q',
+				'GYD' => '&#36;',
+				'HKD' => '&#36;',
+				'HNL' => 'L',
+				'HRK' => 'kn',
+				'HTG' => 'G',
+				'HUF' => '&#70;&#116;',
+				'IDR' => 'Rp',
+				'ILS' => '&#8362;',
+				'IMP' => '&pound;',
+				'INR' => '&#8377;',
+				'IQD' => '&#x639;.&#x62f;',
+				'IRR' => '&#xfdfc;',
+				'IRT' => '&#x062A;&#x0648;&#x0645;&#x0627;&#x0646;',
+				'ISK' => 'kr.',
+				'JEP' => '&pound;',
+				'JMD' => '&#36;',
+				'JOD' => '&#x62f;.&#x627;',
+				'JPY' => '&yen;',
+				'KES' => 'KSh',
+				'KGS' => '&#x441;&#x43e;&#x43c;',
+				'KHR' => '&#x17db;',
+				'KMF' => 'Fr',
+				'KPW' => '&#x20a9;',
+				'KRW' => '&#8361;',
+				'KWD' => '&#x62f;.&#x643;',
+				'KYD' => '&#36;',
+				'KZT' => '&#8376;',
+				'LAK' => '&#8365;',
+				'LBP' => '&#x644;.&#x644;',
+				'LKR' => '&#xdbb;&#xdd4;',
+				'LRD' => '&#36;',
+				'LSL' => 'L',
+				'LYD' => '&#x644;.&#x62f;',
+				'MAD' => '&#x62f;.&#x645;.',
+				'MDL' => 'MDL',
+				'MGA' => 'Ar',
+				'MKD' => '&#x434;&#x435;&#x43d;',
+				'MMK' => 'Ks',
+				'MNT' => '&#x20ae;',
+				'MOP' => 'P',
+				'MRU' => 'UM',
+				'MUR' => '&#x20a8;',
+				'MVR' => '.&#x783;',
+				'MWK' => 'MK',
+				'MXN' => '&#36;',
+				'MYR' => '&#82;&#77;',
+				'MZN' => 'MT',
+				'NAD' => 'N&#36;',
+				'NGN' => '&#8358;',
+				'NIO' => 'C&#36;',
+				'NOK' => '&#107;&#114;',
+				'NPR' => '&#8360;',
+				'NZD' => '&#36;',
+				'OMR' => '&#x631;.&#x639;.',
+				'PAB' => 'B/.',
+				'PEN' => 'S/',
+				'PGK' => 'K',
+				'PHP' => '&#8369;',
+				'PKR' => '&#8360;',
+				'PLN' => '&#122;&#322;',
+				'PRB' => '&#x440;.',
+				'PYG' => '&#8370;',
+				'QAR' => '&#x631;.&#x642;',
+				'RMB' => '&yen;',
+				'RON' => 'lei',
+				'RSD' => '&#1088;&#1089;&#1076;',
+				'RUB' => '&#8381;',
+				'RWF' => 'Fr',
+				'SAR' => '&#x631;.&#x633;',
+				'SBD' => '&#36;',
+				'SCR' => '&#x20a8;',
+				'SDG' => '&#x62c;.&#x633;.',
+				'SEK' => '&#107;&#114;',
+				'SGD' => '&#36;',
+				'SHP' => '&pound;',
+				'SLL' => 'Le',
+				'SOS' => 'Sh',
+				'SRD' => '&#36;',
+				'SSP' => '&pound;',
+				'STN' => 'Db',
+				'SYP' => '&#x644;.&#x633;',
+				'SZL' => 'L',
+				'THB' => '&#3647;',
+				'TJS' => '&#x405;&#x41c;',
+				'TMT' => 'm',
+				'TND' => '&#x62f;.&#x62a;',
+				'TOP' => 'T&#36;',
+				'TRY' => '&#8378;',
+				'TTD' => '&#36;',
+				'TWD' => '&#78;&#84;&#36;',
+				'TZS' => 'Sh',
+				'UAH' => '&#8372;',
+				'UGX' => 'UGX',
+				'USD' => '&#36;',
+				'UYU' => '&#36;',
+				'UZS' => 'UZS',
+				'VEF' => 'Bs F',
+				'VES' => 'Bs.S',
+				'VND' => '&#8363;',
+				'VUV' => 'Vt',
+				'WST' => 'T',
+				'XAF' => 'CFA',
+				'XCD' => '&#36;',
+				'XOF' => 'CFA',
+				'XPF' => 'Fr',
+				'YER' => '&#xfdfc;',
+				'ZAR' => '&#82;',
+				'ZMW' => 'ZK',
+			)
+		);
+
+		return $symbols;
+	}
+}
+
+if ( ! function_exists( 'ur_get_currencies_with_symbols' ) ) {
+
+	/**
+	 * Get full list of currency codes with symbols.
+	 *
+	 * @since 6.0.0
+	 *
+	 * @return array
+	 */
+	function ur_get_currencies_with_symbols() {
+		$currencies = ur_get_currencies();
+
+		foreach ( $currencies as $key => $value ) {
+			$currencies[ $key ] = sprintf( '%s (%s)', $value, html_entity_decode( ur_get_currency_symbol( $key ) ) );
+		}
+
+		/**
+		 * Filters list of currency codes with symbols.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param array $currencies List of currency codes with symbols.
+		 */
+		return apply_filters( 'ur_currencies_with_symbols', $currencies );
+	}
+
+}
+
+if ( ! function_exists( 'ur_get_currencies' ) ) {
+
+	/**
+	 * Get full list of currency codes.
+	 *
+	 * Currency symbols and names should follow the Unicode CLDR recommendation (http://cldr.unicode.org/translation/currency-names)
+	 *
+	 * @since 6.0.0
+	 *
+	 * @return array
+	 */
+	function ur_get_currencies() {
+		$currencies = array_unique(
+			/**
+			 * Filters full list of currency codes.
+			 *
+			 * @since 6.0.0
+			 *
+			 * @param string[] $currencies Full list of currency codes.
+			 */
+			apply_filters(
+				'ur_currencies',
+				array(
+					'AED' => __( 'United Arab Emirates dirham', 'user-registration' ),
+					'AFN' => __( 'Afghan afghani', 'user-registration' ),
+					'ALL' => __( 'Albanian lek', 'user-registration' ),
+					'AMD' => __( 'Armenian dram', 'user-registration' ),
+					'ANG' => __( 'Netherlands Antillean guilder', 'user-registration' ),
+					'AOA' => __( 'Angolan kwanza', 'user-registration' ),
+					'ARS' => __( 'Argentine peso', 'user-registration' ),
+					'AUD' => __( 'Australian dollar', 'user-registration' ),
+					'AWG' => __( 'Aruban florin', 'user-registration' ),
+					'AZN' => __( 'Azerbaijani manat', 'user-registration' ),
+					'BAM' => __( 'Bosnia and Herzegovina convertible mark', 'user-registration' ),
+					'BBD' => __( 'Barbadian dollar', 'user-registration' ),
+					'BDT' => __( 'Bangladeshi taka', 'user-registration' ),
+					'BGN' => __( 'Bulgarian lev', 'user-registration' ),
+					'BHD' => __( 'Bahraini dinar', 'user-registration' ),
+					'BIF' => __( 'Burundian franc', 'user-registration' ),
+					'BMD' => __( 'Bermudian dollar', 'user-registration' ),
+					'BND' => __( 'Brunei dollar', 'user-registration' ),
+					'BOB' => __( 'Bolivian boliviano', 'user-registration' ),
+					'BRL' => __( 'Brazilian real', 'user-registration' ),
+					'BSD' => __( 'Bahamian dollar', 'user-registration' ),
+					'BTC' => __( 'Bitcoin', 'user-registration' ),
+					'BTN' => __( 'Bhutanese ngultrum', 'user-registration' ),
+					'BWP' => __( 'Botswana pula', 'user-registration' ),
+					'BYR' => __( 'Belarusian ruble (old)', 'user-registration' ),
+					'BYN' => __( 'Belarusian ruble', 'user-registration' ),
+					'BZD' => __( 'Belize dollar', 'user-registration' ),
+					'CAD' => __( 'Canadian dollar', 'user-registration' ),
+					'CDF' => __( 'Congolese franc', 'user-registration' ),
+					'CHF' => __( 'Swiss franc', 'user-registration' ),
+					'CLP' => __( 'Chilean peso', 'user-registration' ),
+					'CNY' => __( 'Chinese yuan', 'user-registration' ),
+					'COP' => __( 'Colombian peso', 'user-registration' ),
+					'CRC' => __( 'Costa Rican col&oacute;n', 'user-registration' ),
+					'CUC' => __( 'Cuban convertible peso', 'user-registration' ),
+					'CUP' => __( 'Cuban peso', 'user-registration' ),
+					'CVE' => __( 'Cape Verdean escudo', 'user-registration' ),
+					'CZK' => __( 'Czech koruna', 'user-registration' ),
+					'DJF' => __( 'Djiboutian franc', 'user-registration' ),
+					'DKK' => __( 'Danish krone', 'user-registration' ),
+					'DOP' => __( 'Dominican peso', 'user-registration' ),
+					'DZD' => __( 'Algerian dinar', 'user-registration' ),
+					'EGP' => __( 'Egyptian pound', 'user-registration' ),
+					'ERN' => __( 'Eritrean nakfa', 'user-registration' ),
+					'ETB' => __( 'Ethiopian birr', 'user-registration' ),
+					'EUR' => __( 'Euro', 'user-registration' ),
+					'FJD' => __( 'Fijian dollar', 'user-registration' ),
+					'FKP' => __( 'Falkland Islands pound', 'user-registration' ),
+					'GBP' => __( 'Pound sterling', 'user-registration' ),
+					'GEL' => __( 'Georgian lari', 'user-registration' ),
+					'GGP' => __( 'Guernsey pound', 'user-registration' ),
+					'GHS' => __( 'Ghana cedi', 'user-registration' ),
+					'GIP' => __( 'Gibraltar pound', 'user-registration' ),
+					'GMD' => __( 'Gambian dalasi', 'user-registration' ),
+					'GNF' => __( 'Guinean franc', 'user-registration' ),
+					'GTQ' => __( 'Guatemalan quetzal', 'user-registration' ),
+					'GYD' => __( 'Guyanese dollar', 'user-registration' ),
+					'HKD' => __( 'Hong Kong dollar', 'user-registration' ),
+					'HNL' => __( 'Honduran lempira', 'user-registration' ),
+					'HRK' => __( 'Croatian kuna', 'user-registration' ),
+					'HTG' => __( 'Haitian gourde', 'user-registration' ),
+					'HUF' => __( 'Hungarian forint', 'user-registration' ),
+					'IDR' => __( 'Indonesian rupiah', 'user-registration' ),
+					'ILS' => __( 'Israeli new shekel', 'user-registration' ),
+					'IMP' => __( 'Manx pound', 'user-registration' ),
+					'INR' => __( 'Indian rupee', 'user-registration' ),
+					'IQD' => __( 'Iraqi dinar', 'user-registration' ),
+					'IRR' => __( 'Iranian rial', 'user-registration' ),
+					'IRT' => __( 'Iranian toman', 'user-registration' ),
+					'ISK' => __( 'Icelandic kr&oacute;na', 'user-registration' ),
+					'JEP' => __( 'Jersey pound', 'user-registration' ),
+					'JMD' => __( 'Jamaican dollar', 'user-registration' ),
+					'JOD' => __( 'Jordanian dinar', 'user-registration' ),
+					'JPY' => __( 'Japanese yen', 'user-registration' ),
+					'KES' => __( 'Kenyan shilling', 'user-registration' ),
+					'KGS' => __( 'Kyrgyzstani som', 'user-registration' ),
+					'KHR' => __( 'Cambodian riel', 'user-registration' ),
+					'KMF' => __( 'Comorian franc', 'user-registration' ),
+					'KPW' => __( 'North Korean won', 'user-registration' ),
+					'KRW' => __( 'South Korean won', 'user-registration' ),
+					'KWD' => __( 'Kuwaiti dinar', 'user-registration' ),
+					'KYD' => __( 'Cayman Islands dollar', 'user-registration' ),
+					'KZT' => __( 'Kazakhstani tenge', 'user-registration' ),
+					'LAK' => __( 'Lao kip', 'user-registration' ),
+					'LBP' => __( 'Lebanese pound', 'user-registration' ),
+					'LKR' => __( 'Sri Lankan rupee', 'user-registration' ),
+					'LRD' => __( 'Liberian dollar', 'user-registration' ),
+					'LSL' => __( 'Lesotho loti', 'user-registration' ),
+					'LYD' => __( 'Libyan dinar', 'user-registration' ),
+					'MAD' => __( 'Moroccan dirham', 'user-registration' ),
+					'MDL' => __( 'Moldovan leu', 'user-registration' ),
+					'MGA' => __( 'Malagasy ariary', 'user-registration' ),
+					'MKD' => __( 'Macedonian denar', 'user-registration' ),
+					'MMK' => __( 'Burmese kyat', 'user-registration' ),
+					'MNT' => __( 'Mongolian t&ouml;gr&ouml;g', 'user-registration' ),
+					'MOP' => __( 'Macanese pataca', 'user-registration' ),
+					'MRU' => __( 'Mauritanian ouguiya', 'user-registration' ),
+					'MUR' => __( 'Mauritian rupee', 'user-registration' ),
+					'MVR' => __( 'Maldivian rufiyaa', 'user-registration' ),
+					'MWK' => __( 'Malawian kwacha', 'user-registration' ),
+					'MXN' => __( 'Mexican peso', 'user-registration' ),
+					'MYR' => __( 'Malaysian ringgit', 'user-registration' ),
+					'MZN' => __( 'Mozambican metical', 'user-registration' ),
+					'NAD' => __( 'Namibian dollar', 'user-registration' ),
+					'NGN' => __( 'Nigerian naira', 'user-registration' ),
+					'NIO' => __( 'Nicaraguan c&oacute;rdoba', 'user-registration' ),
+					'NOK' => __( 'Norwegian krone', 'user-registration' ),
+					'NPR' => __( 'Nepalese rupee', 'user-registration' ),
+					'NZD' => __( 'New Zealand dollar', 'user-registration' ),
+					'OMR' => __( 'Omani rial', 'user-registration' ),
+					'PAB' => __( 'Panamanian balboa', 'user-registration' ),
+					'PEN' => __( 'Sol', 'user-registration' ),
+					'PGK' => __( 'Papua New Guinean kina', 'user-registration' ),
+					'PHP' => __( 'Philippine peso', 'user-registration' ),
+					'PKR' => __( 'Pakistani rupee', 'user-registration' ),
+					'PLN' => __( 'Polish z&#x142;oty', 'user-registration' ),
+					'PRB' => __( 'Transnistrian ruble', 'user-registration' ),
+					'PYG' => __( 'Paraguayan guaran&iacute;', 'user-registration' ),
+					'QAR' => __( 'Qatari riyal', 'user-registration' ),
+					'RON' => __( 'Romanian leu', 'user-registration' ),
+					'RSD' => __( 'Serbian dinar', 'user-registration' ),
+					'RUB' => __( 'Russian ruble', 'user-registration' ),
+					'RWF' => __( 'Rwandan franc', 'user-registration' ),
+					'SAR' => __( 'Saudi riyal', 'user-registration' ),
+					'SBD' => __( 'Solomon Islands dollar', 'user-registration' ),
+					'SCR' => __( 'Seychellois rupee', 'user-registration' ),
+					'SDG' => __( 'Sudanese pound', 'user-registration' ),
+					'SEK' => __( 'Swedish krona', 'user-registration' ),
+					'SGD' => __( 'Singapore dollar', 'user-registration' ),
+					'SHP' => __( 'Saint Helena pound', 'user-registration' ),
+					'SLL' => __( 'Sierra Leonean leone', 'user-registration' ),
+					'SOS' => __( 'Somali shilling', 'user-registration' ),
+					'SRD' => __( 'Surinamese dollar', 'user-registration' ),
+					'SSP' => __( 'South Sudanese pound', 'user-registration' ),
+					'STN' => __( 'S&atilde;o Tom&eacute; and Pr&iacute;ncipe dobra', 'user-registration' ),
+					'SYP' => __( 'Syrian pound', 'user-registration' ),
+					'SZL' => __( 'Swazi lilangeni', 'user-registration' ),
+					'THB' => __( 'Thai baht', 'user-registration' ),
+					'TJS' => __( 'Tajikistani somoni', 'user-registration' ),
+					'TMT' => __( 'Turkmenistan manat', 'user-registration' ),
+					'TND' => __( 'Tunisian dinar', 'user-registration' ),
+					'TOP' => __( 'Tongan pa&#x2bb;anga', 'user-registration' ),
+					'TRY' => __( 'Turkish lira', 'user-registration' ),
+					'TTD' => __( 'Trinidad and Tobago dollar', 'user-registration' ),
+					'TWD' => __( 'New Taiwan dollar', 'user-registration' ),
+					'TZS' => __( 'Tanzanian shilling', 'user-registration' ),
+					'UAH' => __( 'Ukrainian hryvnia', 'user-registration' ),
+					'UGX' => __( 'Ugandan shilling', 'user-registration' ),
+					'USD' => __( 'United States (US) dollar', 'user-registration' ),
+					'UYU' => __( 'Uruguayan peso', 'user-registration' ),
+					'UZS' => __( 'Uzbekistani som', 'user-registration' ),
+					'VEF' => __( 'Venezuelan bol&iacute;var', 'user-registration' ),
+					'VES' => __( 'Bol&iacute;var soberano', 'user-registration' ),
+					'VND' => __( 'Vietnamese &#x111;&#x1ed3;ng', 'user-registration' ),
+					'VUV' => __( 'Vanuatu vatu', 'user-registration' ),
+					'WST' => __( 'Samoan t&#x101;l&#x101;', 'user-registration' ),
+					'XAF' => __( 'Central African CFA franc', 'user-registration' ),
+					'XCD' => __( 'East Caribbean dollar', 'user-registration' ),
+					'XOF' => __( 'West African CFA franc', 'user-registration' ),
+					'XPF' => __( 'CFP franc', 'user-registration' ),
+					'YER' => __( 'Yemeni rial', 'user-registration' ),
+					'ZAR' => __( 'South African rand', 'user-registration' ),
+					'ZMW' => __( 'Zambian kwacha', 'user-registration' ),
+				)
+			)
+		);
+
+		return $currencies;
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_symbol' ) ) {
+
+	/**
+	 * Get Currency symbol.
+	 *
+	 * Currency symbols and names should follow the Unicode CLDR recommendation (http://cldr.unicode.org/translation/currency-names)
+	 *
+	 * @since 6.0.0
+	 *
+	 * @param string $currency Currency. (default: '').
+	 *
+	 * @return string
+	 */
+	function ur_get_currency_symbol( $currency = '' ) {
+		$symbols = ur_get_currency_symbols();
+
+		$currency_symbol = isset( $symbols[ $currency ] ) ? $symbols[ $currency ] : '';
+
+		/**
+		 * Filters currency symbol.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param string $currency_symbol Currency symbol.
+		 * @param string $currency Currency.
+		 */
+		return apply_filters( 'ur_currency_symbol', $currency_symbol, $currency );
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_name_by_key' ) ) {
+
+	function ur_get_currency_name_by_key( $currency_key ) {
+		$curreny_details = ur_get_currencies();
+
+		$name = sprintf( '%s (%s)', $curreny_details[ $currency_key ], html_entity_decode( ur_get_currency_symbol( $currency_key ) ) );
+
+		return apply_filters( 'ur_get_currency_name_by_key', $name );
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_by_key' ) ) {
+
+	function ur_get_currency_by_key( $currency_key ) {
+		$curreny_details = ur_get_currencies();
+
+		$name = sprintf( '%s', $curreny_details[ $currency_key ] );
+
+		return apply_filters( 'ur_get_currency_by_key', $name );
+	}
+}
+
+if ( ! function_exists( 'ur_format_country_field_data' ) ) {
+
+	/**
+	 * Format country field data for display.
+	 *
+	 * @param string $country_code The country code.
+	 * @param string $state_code   The state code.
+	 *
+	 * @return string Formatted country and state name.
+	 */
+	function ur_format_country_field_data( $country_code, $state_code ) {
+		$country_list = \UR_Form_Field_Country::get_instance()->get_country();
+
+		$country_name = isset( $country_list[ $country_code ] )
+			? $country_list[ $country_code ]
+			: $country_code;
+
+		$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
+		$state_list  = json_decode( $states_json, true );
+
+		$states = isset( $state_list[ $country_code ] ) ? $state_list[ $country_code ] : array();
+
+		$state_name = isset( $states[ $state_code ] )
+			? $states[ $state_code ]
+			: $state_code;
+
+		$final = array();
+
+		if ( ! empty( $country_name ) ) {
+			$final[] = $country_name;
+		}
+
+		if ( ! empty( $state_name ) ) {
+			$final[] = $state_name;
+		}
+
+		$value = implode( ', ', $final );
+
+		return $value;
 	}
 }

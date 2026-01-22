@@ -98,6 +98,7 @@ class UR_AJAX {
 			'login_settings_page_validation'       => false,
 			'activate_dependent_module'            => false,
 			'add_membership_field_to_default_form' => false,
+			'update_state_field'				   => true,
 
 		);
 
@@ -2560,6 +2561,36 @@ class UR_AJAX {
 		}
 
 		wp_send_json_success();
+	}
+
+	/* Update state fields when country is changed.
+	 *
+	 * @since 6.1.0
+	 */
+	public static function update_state_field(){
+		check_ajax_referer( 'user_registration_update_state_field_nonce', 'security' );
+
+		$country = $_POST['country'];
+
+		$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
+		$state_list = json_decode( $states_json, true );
+
+		$states 	= isset( $state_list[ $country ] ) ? $state_list[ $country ] : '';
+		$option 	= '';
+		$has_state 	= false;
+		if ( is_array( $states ) ) {
+			foreach ( $states as $state_key => $state ) {
+				$option .= '<option value="' . $state_key . '">' . esc_html( $state ) . '</option>';
+			}
+			$has_state = true;
+		}
+
+		wp_send_json_success(
+			array(
+				'state' 	=> $option,
+				'has_state' => $has_state
+			)
+		);
 	}
 }
 

@@ -1,23 +1,22 @@
-
 /**
  * Imports
  */
- @import 'variables/variables';
- @import 'mixins/mixins';
+@import 'variables/variables';
+@import 'mixins/mixins';
 
- *,
- *::before,
- *::after {
-   margin: 0;
-   box-sizing: border-box;
- }
+*,
+*::before,
+*::after {
+	margin: 0;
+	box-sizing: border-box;
+}
 
- body {
+body {
 	position: relative;
 	margin: 0;
 	font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", "Roboto", "Oxygen",
-		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-		"Poppins", sans-serif;
+	"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+	"Poppins", sans-serif;
 	font-size: 13px;
 	line-height: 1.8;
 	font-weight: 400;
@@ -28,8 +27,8 @@
 	&.user-registration-welcome {
 		background-color: #ECEFF3;
 		height: 100vh;
-	 }
- }
+	}
+}
 
 #user-registration-welcome {
 	text-align: center;
@@ -222,11 +221,10 @@
 
 				img {
 					margin-top: 1.75em;
-					fill: $primary_color;
+					fill: var(--ur-primary-color, $primary_color);
 					height: 70px;
 				}
 			}
-
 
 
 			.user-registration-welcome-video {
@@ -288,7 +286,7 @@
 						left: 50%;
 						transform: translate(-50%, -50%);
 						color: $grey-0;
-						background: $primary_color;
+						background: var(--ur-primary-color, $primary_color);
 						display: flex;
 						align-items: center;
 						justify-content: center;
@@ -299,7 +297,7 @@
 							animation-duration: 2s;
 							animation-iteration-count: infinite;
 							animation-timing-function: linear;
-							background-color: rgba(75,83,188,.471);
+							background-color: rgba(75, 83, 188, .471);
 							animation-name: pulseAnimate;
 							border-radius: 50%;
 							bottom: 0;
@@ -326,7 +324,7 @@
 							animation-duration: 3s;
 							animation-iteration-count: infinite;
 							animation-timing-function: linear;
-							background-color: rgba(84,92,207,.47);
+							background-color: rgba(84, 92, 207, .47);
 						}
 
 						.dashicons-controls-play {
@@ -352,7 +350,7 @@
 						}
 
 						&:hover {
-							transform: translate(-50%,-50%) scale(1.1);
+							transform: translate(-50%, -50%) scale(1.1);
 						}
 					}
 
@@ -362,6 +360,7 @@
 						opacity: 0;
 						border-radius: 9px;
 					}
+
 					@keyframes user-registration-welcome-video__button {
 						0% {
 							box-shadow: 0 0 0 15px #ced5f3;
@@ -407,8 +406,8 @@
 					padding: 14px 19px 14px 22px;
 					height: auto;
 					border-radius: 3px;
-					border: 1px solid $primary_color;
-					background: $primary_color;
+					border: 1px solid var(--ur-primary-color, $primary_color);
+					background: var(--ur-primary-color, $primary_color);
 					margin-left: 0;
 					margin-right: 0;
 
@@ -449,8 +448,7 @@
 					}
 
 					&:hover {
-						box-shadow: 0 2px 20px 0
-							transparentize($gray_base, 0.85);
+						box-shadow: 0 2px 20px 0 transparentize($gray_base, 0.85);
 					}
 				}
 			}
@@ -547,6 +545,7 @@
 					line-height: 31px;
 					margin-left: 20px;
 				}
+
 				img {
 					width: 70px;
 				}
@@ -590,6 +589,7 @@
 				&#center-line-step-2 {
 					flex-grow: 0.75;
 				}
+
 				&.done {
 					background-color: #475BB2;
 				}
@@ -603,7 +603,7 @@
 			color: #2D3559;
 			margin-top: 42px;
 
-			.ur-setup-wizard-tool-tip{
+			.ur-setup-wizard-tool-tip {
 				margin-bottom: 8px !important;
 
 				&::after {
@@ -669,7 +669,7 @@
 				}
 			}
 
-			&--right{
+			&--right {
 				justify-content: flex-end;
 			}
 

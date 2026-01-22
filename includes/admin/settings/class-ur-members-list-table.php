@@ -8,6 +8,9 @@
  * @since 4.5.0
  */
 
+use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
+use WPEverest\URTeamMembership\Admin\TeamRepository;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -207,9 +210,10 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			$total_users = $wp_user_search->total_users;
 
 			if ( ur_check_module_activation( 'membership' ) ) {
-				$user_ids_in  = implode( ',', array_map( 'intval', $user_ids ) );
-				$orders_table = $wpdb->prefix . 'ur_membership_orders';
-				$posts_table  = $wpdb->posts;
+				$user_ids_in    = implode( ',', array_map( 'intval', $user_ids ) );
+				$orders_table   = $wpdb->prefix . 'ur_membership_orders';
+				$posts_table    = $wpdb->posts;
+				$usermeta_table = $wpdb->usermeta;
 
 				$sql = "
 					SELECT wpu.ID,
@@ -221,7 +225,8 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						wums.billing_cycle,
 						wpu.user_registered,
 						wums.expiry_date,
-						wumo_latest.payment_method
+						wumo_latest.payment_method,
+						wum_team.meta_value AS team_ids
 					FROM {$wpdb->users} wpu
 					LEFT JOIN {$subscription_table} wums
 						ON wpu.ID = wums.user_id
@@ -234,6 +239,9 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 							LIMIT 1
 						)
 					LEFT JOIN {$posts_table} wpp ON wums.item_id = wpp.ID  AND wpp.post_status = 'publish'
+					LEFT JOIN {$usermeta_table} wum_team
+						ON wpu.ID = wum_team.user_id
+						AND wum_team.meta_key = 'urm_team_ids'
 					WHERE wpu.ID IN ($user_ids_in)
 					ORDER BY FIELD(wpu.ID, $user_ids_in)
 				";
@@ -252,7 +260,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						'user_login'      => $row['user_login'],
 						'user_email'      => $row['user_email'],
 						'user_registered' => $row['user_registered'],
-						'payment_method'  => $row['payment_method'],
+						'payment_method'  => $row['payment_method'] ?? '',
 						'subscriptions'   => array(),
 					);
 				}
@@ -265,6 +273,46 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						'expiry_date'      => $row['expiry_date'],
 						'billing_cycle'    => $row['billing_cycle'],
 					);
+				}
+
+				if ( ! empty( $row['team_ids'] ) && UR_PRO_ACTIVE && ur_check_module_activation( 'team' ) ) {
+					$row['team_ids'] = maybe_unserialize( $row['team_ids'] );
+					$team_name       = '';
+					$subscription_id = '';
+					$team_repository = new TeamRepository();
+					foreach ( $row['team_ids'] as $team_id ) {
+						$team = $team_repository->get_single_team_by_ID( $team_id );
+						if ( $team ) {
+							$team_name                              = $team['team_name'] ?? '';
+							$subscription_id                        = $team['meta']['urm_subscription_id'];
+							$user_id_indexed[ $user_id ]['teams'][] = $team_name;
+
+							if ( $user_id !== $team['meta']['urm_team_leader_id'] ) {
+								if ( $subscription_id ) {
+									$subscription_repository = new MembersSubscriptionRepository();
+									$subscription            = $subscription_repository->get_subscription_by_subscription_id( $subscription_id );
+									if ( $subscription ) {
+										$membership       = $subscription_repository->get_membership_by_subscription_id( $subscription_id );
+										$membership_title = '';
+										if ( $membership ) {
+											$membership_title = $membership['post_title'];
+										}
+										$status        = $subscription['status'];
+										$expiry_date   = $subscription['expiry_date'];
+										$billing_cycle = $subscription['billing_cycle'];
+
+										$user_id_indexed[ $user_id ]['subscriptions'][] = array(
+											'subscription_id' => $subscription_id,
+											'membership_title' => $membership_title,
+											'status'      => $status,
+											'expiry_date' => $expiry_date,
+											'billing_cycle' => $billing_cycle,
+										);
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 
@@ -483,6 +531,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			$new_user_object->filter        = 'display';
 			$email                          = $new_user_object->user_email;
 			$new_user_object->subscriptions = $user_object['subscriptions'] ?? '';
+			$new_user_object->teams         = $user_object['teams'] ?? '';
 
 			$user_manager = new UR_Admin_User_Manager( $new_user_object );
 
@@ -545,14 +594,6 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 						'_wpnonce' => wp_create_nonce( 'bulk_users' ),
 					),
 					admin_url( 'users.php?action=delete' )
-				);
-
-				$actions['view'] = sprintf(
-					'<a href="%s" rel="noreferrer noopener" target="_blank" aria-label="%s" class="ur-row-actions">%s</a>',
-					esc_url( $view_link ),
-					/* translators: %s: Author's display name. */
-					esc_attr( sprintf( __( 'View details for %s' ), $new_user_object->display_name ) ),
-					__( 'View', 'user-registration' )
 				);
 
 				if ( current_user_can( 'edit_user', $new_user_object->ID ) ) {
@@ -830,6 +871,14 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 							}
 
 							break;
+						case 'team':
+							$teams = is_array( $new_user_object->teams ) ? $new_user_object->teams : [];
+
+							if ( ! empty( $teams ) ) {
+								$escaped_teams = array_map( 'esc_html', $teams );
+								$row          .= implode( ', ', $escaped_teams );
+							}
+							break;
 						default:
 							/**
 							 * Filters the display output of custom columns in the Users list table.
@@ -1001,7 +1050,7 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 			}
 			?>
 				<div id="user-registration-list-search-form">
-					<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" placeholder="<?php esc_html_e( 'Search Members ...', 'user-registration' ); ?>" />
+					<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" placeholder="<?php esc_html_e( 'Search Member', 'user-registration' ); ?>" />
 					<button type="submit" id="search-submit">
 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 							<path fill="#000" fill-rule="evenodd" d="M4 11a7 7 0 1 1 12.042 4.856 1.012 1.012 0 0 0-.186.186A7 7 0 0 1 4 11Zm12.618 7.032a9 9 0 1 1 1.414-1.414l3.675 3.675a1 1 0 0 1-1.414 1.414l-3.675-3.675Z" clip-rule="evenodd"/>
@@ -1364,20 +1413,20 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 		 *
 		 * @return void
 		 */
-		protected function footer_text() {
-			$total_items    = $this->_pagination_args['total_items'];
-			$current        = $this->get_pagenum();
-			$users_per_page = $this->_pagination_args['per_page'];
+		// protected function footer_text() {
+		//  $total_items    = $this->_pagination_args['total_items'];
+		//  $current        = $this->get_pagenum();
+		//  $users_per_page = $this->_pagination_args['per_page'];
 
-			echo esc_html(
-				sprintf(
-					'Showing results %d-%d of %d users',
-					( ( $current - 1 ) * $users_per_page ) + 1,
-					min( ( $current ) * $users_per_page, $total_items ),
-					$total_items
-				)
-			);
-		}
+		//  echo esc_html(
+		//      sprintf(
+		//          'Showing results %d-%d of %d users',
+		//          ( ( $current - 1 ) * $users_per_page ) + 1,
+		//          min( ( $current ) * $users_per_page, $total_items ),
+		//          $total_items
+		//      )
+		//  );
+		// }
 
 		public function output_custom_column_data( $output, $column_name, $user_id ) {
 			$meta_key = 'user_registration_' . $column_name;
@@ -1432,5 +1481,162 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 
 			remove_action( 'pre_user_query', $this );
 		}
+
+		/**
+		 * Displays the pagination.
+		 *
+		 * @since 3.1.0
+		 *
+		 * @param string $which The location of the pagination: Either 'top' or 'bottom'.
+		 */
+		protected function pagination( $which ) {
+			if ( empty( $this->_pagination_args['total_items'] ) ) {
+				return;
+			}
+
+			$total_items     = $this->_pagination_args['total_items'];
+			$total_pages     = $this->_pagination_args['total_pages'];
+			$infinite_scroll = false;
+			if ( isset( $this->_pagination_args['infinite_scroll'] ) ) {
+				$infinite_scroll = $this->_pagination_args['infinite_scroll'];
+			}
+
+			if ( 'top' === $which && $total_pages > 1 ) {
+				$this->screen->render_screen_reader_content( 'heading_pagination' );
+			}
+
+			$current              = $this->get_pagenum();
+			$removable_query_args = wp_removable_query_args();
+
+			$current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+
+			$current_url = remove_query_arg( $removable_query_args, $current_url );
+
+			$page_links = array();
+
+			$total_pages_before = '<span class="paging-input">';
+			$total_pages_after  = '</span></span>';
+
+			$disable_first = false;
+			$disable_last  = false;
+			$disable_prev  = false;
+			$disable_next  = false;
+
+			if ( 1 === $current ) {
+				$disable_first = true;
+				$disable_prev  = true;
+			}
+			if ( $total_pages === $current ) {
+				$disable_last = true;
+				$disable_next = true;
+			}
+
+			if ( $disable_first ) {
+				$page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&laquo;</span>';
+			} else {
+				$page_links[] = sprintf(
+					"<a class='first-page button' href='%s'>" .
+					"<span class='screen-reader-text'>%s</span>" .
+					"<span aria-hidden='true'>%s</span>" .
+					'</a>',
+					esc_url( remove_query_arg( 'paged', $current_url ) ),
+					/* translators: Hidden accessibility text. */
+					__( 'First page' ),
+					'&laquo;'
+				);
+			}
+
+			if ( $disable_prev ) {
+				$page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&lsaquo;</span>';
+			} else {
+				$page_links[] = sprintf(
+					"<a class='prev-page button' href='%s'>" .
+					"<span class='screen-reader-text'>%s</span>" .
+					"<span aria-hidden='true'>%s</span>" .
+					'</a>',
+					esc_url( add_query_arg( 'paged', max( 1, $current - 1 ), $current_url ) ),
+					/* translators: Hidden accessibility text. */
+					__( 'Previous page' ),
+					'&lsaquo;'
+				);
+			}
+
+			if ( 'bottom' === $which ) {
+				$html_current_page  = $current;
+				$total_pages_before = sprintf(
+					'<span class="screen-reader-text">%s</span>' .
+					'<span id="table-paging" class="paging-input">' .
+					'<span class="tablenav-paging-text">',
+					/* translators: Hidden accessibility text. */
+					__( 'Current Page' )
+				);
+			} else {
+				$html_current_page = sprintf(
+					'<label for="current-page-selector" class="screen-reader-text">%s</label>' .
+					"<input class='current-page' id='current-page-selector' type='text'
+					name='paged' value='%s' size='%d' aria-describedby='table-paging' />" .
+					"<span class='tablenav-paging-text'>",
+					/* translators: Hidden accessibility text. */
+					__( 'Current Page' ),
+					$current,
+					strlen( $total_pages )
+				);
+			}
+
+			$html_total_pages = sprintf( "<span class='total-pages'>%s</span>", number_format_i18n( $total_pages ) );
+
+			$page_links[] = $total_pages_before . sprintf(
+			/* translators: 1: Current page, 2: Total pages. */
+				_x( '%1$s of %2$s', 'paging' ),
+				$html_current_page,
+				$html_total_pages
+			) . $total_pages_after;
+
+			if ( $disable_next ) {
+				$page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&rsaquo;</span>';
+			} else {
+				$page_links[] = sprintf(
+					"<a class='next-page button' href='%s'>" .
+					"<span class='screen-reader-text'>%s</span>" .
+					"<span aria-hidden='true'>%s</span>" .
+					'</a>',
+					esc_url( add_query_arg( 'paged', min( $total_pages, $current + 1 ), $current_url ) ),
+					/* translators: Hidden accessibility text. */
+					__( 'Next page' ),
+					'&rsaquo;'
+				);
+			}
+
+			if ( $disable_last ) {
+				$page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&raquo;</span>';
+			} else {
+				$page_links[] = sprintf(
+					"<a class='last-page button' href='%s'>" .
+					"<span class='screen-reader-text'>%s</span>" .
+					"<span aria-hidden='true'>%s</span>" .
+					'</a>',
+					esc_url( add_query_arg( 'paged', $total_pages, $current_url ) ),
+					/* translators: Hidden accessibility text. */
+					__( 'Last page' ),
+					'&raquo;'
+				);
+			}
+
+			$pagination_links_class = 'pagination-links';
+			if ( ! empty( $infinite_scroll ) ) {
+				$pagination_links_class .= ' hide-if-js';
+			}
+			$output = "\n<span class='$pagination_links_class'>" . implode( "\n", $page_links ) . '</span>';
+
+			if ( $total_pages ) {
+				$page_class = $total_pages < 2 ? ' one-page' : '';
+			} else {
+				$page_class = ' no-pages';
+			}
+			$this->_pagination = "<div class='tablenav-pages{$page_class}'>$output</div>";
+
+			echo $this->_pagination;
+		}
 	}
+
 }

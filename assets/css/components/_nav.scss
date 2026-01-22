@@ -10,12 +10,12 @@
 
 	&:hover {
 		color: $nav-link-hover-color !important;
-		text-decoration: none !important;
-		background: transparent !important;
-		text-decoration-color: none !important;
-
 	}
 
+	&:focus {
+		outline: none;
+		box-shadow: none;
+	}
 }
 
 .ur-upgrade--link,
@@ -62,13 +62,32 @@
 .ur-free-vs-pro--link {
 	&::after {
 		content: "";
-		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3E%3Cpath fill='%23475bb2' d='M1.333 12.667V3.333a2 2 0 0 1 2-2h4a.667.667 0 0 1 0 1.334h-4a.666.666 0 0 0-.666.666v9.334a.666.666 0 0 0 .666.666h9.334a.666.666 0 0 0 .666-.666v-4a.667.667 0 0 1 1.334 0v4a2 2 0 0 1-2 2H3.333a2 2 0 0 1-2-2'/%3E%3Cpath fill='%23475bb2' d='M13.528 1.528a.667.667 0 0 1 .944.944l-6 6a.667.667 0 0 1-.944-.944z'/%3E%3Cpath fill='%23475bb2' d='M13.333 6V2.667H10a.667.667 0 0 1 0-1.334h4c.368 0 .667.299.667.667v4a.667.667 0 0 1-1.334 0'/%3E%3C/svg%3E");
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3E%3Cpath fill='%232d3559' d='M1.333 12.667V3.333a2 2 0 0 1 2-2h4a.667.667 0 0 1 0 1.334h-4a.666.666 0 0 0-.666.666v9.334a.666.666 0 0 0 .666.666h9.334a.666.666 0 0 0 .666-.666v-4a.667.667 0 0 1 1.334 0v4a2 2 0 0 1-2 2H3.333a2 2 0 0 1-2-2'/%3E%3Cpath fill='%232d3559' d='M13.528 1.528a.667.667 0 0 1 .944.944l-6 6a.667.667 0 0 1-.944-.944z'/%3E%3Cpath fill='%232d3559' d='M13.333 6V2.667H10a.667.667 0 0 1 0-1.334h4c.368 0 .667.299.667.667v4a.667.667 0 0 1-1.334 0'/%3E%3C/svg%3E");
 		width: 16px;
 		height: 16px;
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: 100%;
 		display: block;
+	}
+
+	&:hover {
+		text-decoration: underline;
+		text-decoration-style: solid;
+		text-underline-offset: 5px;
+		text-decoration-color: #475bb2;
+		text-decoration-thickness: 1px;
+		background: transparent !important;
+
+		&::after {
+			// filter: brightness(0) saturate(100%) invert(34%) sepia(69%) saturate(519%) hue-rotate(190deg) brightness(93%) contrast(95%);
+			filter: brightness(0) saturate(100%) invert(35%) sepia(65%) saturate(774%) hue-rotate(195deg) brightness(85%) contrast(87%);
+		}
+	}
+
+	&:focus {
+		outline: none;
+		box-shadow: none;
 	}
 }
 

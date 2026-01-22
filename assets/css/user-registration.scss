@@ -99,9 +99,9 @@
 	display: block;
 	margin: 0 0 10px;
 	padding: 10px 15px;
-	background-color: lighten($primary_color, 47%);
+	background-color: var(--ur-primary-light, lighten($primary_color, 47%));
 	color: $color_gray_one;
-	border-top: 3px solid $primary_color;
+	border-top: 3px solid var(--ur-primary-color, $primary_color);
 	list-style: none outside;
 	@include clearfix();
 	width: auto;
@@ -285,20 +285,27 @@ textarea.ur-input-border-red {
 		}
 
 		.ur-reset-password-btn {
-			border: 1px solid $primary_color;
-			background: $primary_color;
+			border: 1px solid var(
+					--ur-button-background-normal-color,
+					$primary_color
+			);
+			background: var(
+					--ur-button-background-normal-color,
+					$primary_color
+			);
 			width: 100%;
-			color: $white;
+			color: var(--ur-button-text-normal-color, $white);
 			letter-spacing: 0.15px;
-			border: 0;
+			//border: 0;
 			font-size: 16px;
 			font-weight: 500;
 			padding: 14px 32px;
 			margin-top: 10px;
 
 			&:hover {
-				background: #38488e;
-				border-color: #38488e;
+				color: var(--ur-button-text-hover-color, $white);
+				background: var(--ur-button-background-hover-color, #38488e);
+				border-color: var(--ur-button-background-hover-color, #38488e);
 			}
 		}
 
@@ -310,8 +317,8 @@ textarea.ur-input-border-red {
 			.ur-form-row.edit-user-save-btn-container {
 				.btn-primary {
 					min-height: 34px;
-					background: $primary_color;
-					border: $border_width solid $primary_color;
+					background: var(--ur-primary-color, $primary_color);
+					border: $border_width solid var(--ur-primary-color, $primary_color);
 					color: $white;
 					border-radius: $border_radius_4;
 					font-size: 14px;
@@ -386,12 +393,19 @@ textarea.ur-input-border-red {
 				input.input-text {
 					margin-bottom: 0;
 					border-radius: $border_radius_4;
-					border: $border_width solid #e9e9e9;
+					border: $border_width solid $border-color;
 					min-height: 38px;
 					font-size: 14px;
 					line-height: 20px;
-					padding: 0 $spacing_14px;
+					padding: 0 $spacing_12px;
 					color: #383838;
+
+					&:focus {
+						border-color: var(
+								--ur-primary-color,
+								$primary_color
+						) !important;
+					}
 				}
 			}
 
@@ -440,7 +454,6 @@ textarea.ur-input-border-red {
 							}
 
 							input {
-
 								&[type="checkbox"],
 								&[type="radio"] {
 									margin-top: 0px;
@@ -460,6 +473,16 @@ textarea.ur-input-border-red {
 
 				.form-row {
 					display: block;
+
+					.btn-primary.set-new-pass-btn {
+						align-content: center;
+						min-height: 36px;
+						font-size: 14px;
+						line-height: 20px;
+						padding: 0 12px;
+						color: $primary_color;
+						border-color: $primary_color;
+					}
 				}
 
 				.stripe-container {
@@ -468,7 +491,7 @@ textarea.ur-input-border-red {
 						line-height: 20px;
 						font-weight: $medium;
 						background: #ebedf7;
-						color: $primary_color;
+						color: var(--ur-primary-color, $primary_color);
 						border-radius: $border_radius_4 $border_radius_4 0 0;
 						pointer-events: none;
 						padding: $spacing_8px $spacing_16px;
@@ -484,7 +507,10 @@ textarea.ur-input-border-red {
 							border-radius: $border_radius_4;
 
 							&--focus {
-								border-color: $primary_color;
+								border-color: var(
+										--ur-primary-color,
+										$primary_color
+								);
 								border-radius: $border_radius_4;
 							}
 
@@ -516,14 +542,28 @@ textarea.ur-input-border-red {
 			select,
 			.__PrivateStripeElement {
 				width: 100%;
-				padding: 4px 8px;
-				border-radius: 0;
-				min-height: 36px;
+				padding: 0 $spacing_12px;
+				min-height: 38px;
+				margin: 0;
 				margin-bottom: 10px;
-				line-height: 1.5;
+				height: 38px;
+				border: $border_width solid $border-color;
+				border-radius: $border_radius_4;
+				font-size: 14px;
+				line-height: 24px;
+				color: #383838;
+				font-weight: $regular;
+				box-shadow: none;
+				font-family: inherit;
 
 				&::placeholder {
-					color: #ddd;
+					color: #bababa;
+				}
+
+				&:focus {
+					outline: none;
+					box-shadow: none;
+					border-color: var(--ur-primary-color, $primary_color);
 				}
 			}
 
@@ -585,7 +625,6 @@ textarea.ur-input-border-red {
 
 			select {
 				-webkit-appearance: none;
-				// background: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E") no-repeat right 5px top 55%;
 				background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23737373' viewBox='0 0 24 24'%3E%3Cpath d='M19.561 7.403a1.468 1.468 0 0 1 2.02 0 1.339 1.339 0 0 1 0 1.944l-8.57 8.25a1.468 1.468 0 0 1-2.021 0l-8.572-8.25a1.339 1.339 0 0 1 0-1.944 1.468 1.468 0 0 1 2.02 0L12 14.68l7.561-7.278Z'/%3E%3C/svg%3E");
 				background-repeat: no-repeat;
 				background-position: right 12px center;
@@ -603,7 +642,7 @@ textarea.ur-input-border-red {
 				border: $border_width solid $border-color;
 
 				&:focus {
-					border-color: $primary_color;
+					border-color: var(--ur-primary-color, $primary_color);
 					outline: none;
 					box-shadow: none;
 				}
@@ -628,13 +667,15 @@ textarea.ur-input-border-red {
 			}
 
 			textarea {
-				padding: 10px;
 				height: 100px;
 				resize: none;
-				padding: 5px 20px;
+				padding: $spacing_6px $spacing_12px;
 
 				&:focus {
-					border-color: $primary_color !important;
+					border-color: var(
+							--ur-primary-color,
+							$primary_color
+					) !important;
 				}
 			}
 
@@ -717,7 +758,6 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
-
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -768,7 +808,6 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
-
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -818,7 +857,6 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
-
 					.ur-field-item,
 					.form-row {
 						margin-bottom: 0;
@@ -871,7 +909,6 @@ textarea.ur-input-border-red {
 		form {
 			.ur-form-row {
 				.ur-form-grid {
-
 					input[type="text"],
 					input[type="email"],
 					input[type="url"],
@@ -935,7 +972,6 @@ textarea.ur-input-border-red {
 			form {
 				.ur-form-row {
 					.ur-form-grid {
-
 						input[type="text"],
 						input[type="email"],
 						input[type="url"],
@@ -1090,7 +1126,6 @@ textarea.ur-input-border-red {
 			}
 
 			header {
-
 				p,
 				.button-group {
 					margin-bottom: 10px;
@@ -1188,7 +1223,6 @@ textarea.ur-input-border-red {
 }
 
 .edit-post-visual-editor {
-
 	.ur-gutenberg-form-selector-wrap,
 	.user-registration-gutenberg-form-selector-wrap {
 		h2 {
@@ -1243,9 +1277,9 @@ textarea.ur-input-border-red {
 .ur-form-row {
 	margin-bottom: 24px;
 
-	.flatpickr-input {
-		padding-left: 32px !important;
-	}
+	// .flatpickr-input {
+	// 	padding-left: 32px !important;
+	// }
 
 	.without_icon {
 		padding-left: 10px !important;
@@ -1283,7 +1317,7 @@ span.ur-shortcode-form-embed-dot {
 	padding: 0 !important;
 	border: 0 !important;
 	border-radius: 50%;
-	background-color: #475bb2;
+	background-color: var(--ur-primary-color, $primary_color);
 	animation: user-registration-heartbeat 1.5s infinite !important;
 	margin: 3px 10px;
 }
@@ -1377,7 +1411,7 @@ span.ur-shortcode-form-embed-dot {
 			letter-spacing: 0px;
 			padding: 7px 18px;
 			border: none;
-			background-color: #475bb2;
+			background-color: $primary_color;
 			color: #ffffff;
 			display: block;
 			margin: 15px auto 0;
@@ -1387,7 +1421,7 @@ span.ur-shortcode-form-embed-dot {
 				opacity: 0.5;
 
 				&:hover {
-					background-color: #475bb2;
+					background-color: $primary_color;
 				}
 			}
 		}
@@ -1418,7 +1452,7 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page {
 	.edit-post-layout {
-		.components-notice-list>div {
+		.components-notice-list > div {
 			padding-left: 50px;
 		}
 	}
@@ -1455,7 +1489,7 @@ span.ur-shortcode-form-embed-dot {
 
 .block-editor-page.is-fullscreen-mode {
 	.edit-post-layout {
-		.components-notice-list>div {
+		.components-notice-list > div {
 			padding-left: 125px;
 		}
 	}
@@ -1510,18 +1544,18 @@ span.ur-shortcode-form-embed-dot {
 
 		.wp-list-table {
 			width: 100%;
-			background: #fff;
-			border: 1px solid #e1e1e1;
-			border-radius: 4px;
+			background: $white;
+			border: $border_width solid $border-color;
+			border-radius: $border_radius_4;
 
 			thead {
 				background: none;
 
 				th {
-					padding: 12px 14px;
+					padding: $spacing_12px $spacing_14px;
 					font-size: 14px;
 					font-weight: 600;
-					border-color: #e1e1e1;
+					border-color: $border-color;
 					color: #383838;
 					text-align: left;
 				}
@@ -1532,7 +1566,7 @@ span.ur-shortcode-form-embed-dot {
 					background: #f8f8fa;
 
 					td {
-						padding: 12px 14px;
+						padding: $spacing_12px $spacing_14px;
 						font-size: 13px;
 						color: #383838;
 						vertical-align: middle;
@@ -1553,15 +1587,14 @@ span.ur-shortcode-form-embed-dot {
 
 //Revamp design for message and error
 .ur-message-container {
-	border-radius: 8px;
-	box-shadow:
-		0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+	border-radius: 7px;
+	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+	0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 	padding: 60px;
 
 	.user-registration-message {
 		position: relative;
-		padding: 10px;
+		padding: $spacing_10px;
 		z-index: 9999;
 		display: flex;
 		align-items: center;
@@ -1569,15 +1602,15 @@ span.ur-shortcode-form-embed-dot {
 		border-left: 4px solid #49c85f;
 		background: #f7fdf8;
 		border-top: none;
-		margin: 20px 0px;
-		padding-left: 40px;
+		margin: $spacing_20px 0px;
+		padding-left: $spacing_40px;
 	}
 
 	svg {
 		position: absolute;
 		z-index: 999999;
-		margin-top: 33px;
-		margin-left: 10px;
+		margin-top: $spacing_32px;
+		margin-left: $spacing_10px;
 	}
 }
 
@@ -1585,13 +1618,13 @@ span.ur-shortcode-form-embed-dot {
 	padding: 10px !important;
 	display: flex;
 	align-items: center;
-	border-radius: 4px;
+	border-radius: $border_radius_4;
 	border-left: 4px solid $red;
-	background: 4px solid #fde8e8;
+	//background: 4px solid #fde8e8;
 	border-top: none;
 
 	svg {
-		margin-right: 10px;
+		margin-right: $spacing_10px;
 	}
 }
 
@@ -1600,7 +1633,7 @@ span.ur-shortcode-form-embed-dot {
 	justify-content: space-between;
 
 	.user-registration-LostPassword {
-		color: #475bb2;
+		color: $primary_color;
 	}
 }
 
@@ -1608,9 +1641,9 @@ span.ur-shortcode-form-embed-dot {
 .user-registration-Button,
 .ur-submit-button {
 	width: 100%;
-	background: $primary_color;
+	background: var(--ur-primary-color, $primary_color);
 	border-radius: $border_radius_4;
-	border: 1px solid $primary_color;
+	border: 1px solid var(--ur-primary-color, $primary_color);
 	color: $white;
 
 	&:hover {
@@ -1654,9 +1687,8 @@ span.ur-shortcode-form-embed-dot {
 			border-radius: 8px 0 0 0;
 			border-top: 1px solid #f1f1f1;
 			background: #f9f9f9;
-			box-shadow:
-				0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-				0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+			box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+			0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 			clip-path: inset(0px -1px -1px -1px);
 
 			&:first-child {
@@ -1709,9 +1741,8 @@ span.ur-shortcode-form-embed-dot {
 .user-registration.ur-frontend-form {
 	background: $white;
 	border-radius: $border_radius_8;
-	box-shadow:
-		0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-		0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+	box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+	0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 	padding: $spacing_60px;
 
 	@media screen and (max-width: 600px) {
@@ -1765,10 +1796,8 @@ span.ur-shortcode-form-embed-dot {
 
 // Login Form Design ReVamped CSS
 body {
-
 	&[class*="user-registration-"],
 	&[class^="ur-"] {
-
 		/* Minimal WordPress Editor Styles */
 		.wp-editor-container {
 			border-radius: 8px !important;
@@ -1789,7 +1818,7 @@ body {
 				margin-bottom: 0 !important;
 				padding: 6px 8px !important;
 
-				&-grp>div {
+				&-grp > div {
 					padding: 0;
 				}
 
@@ -2056,7 +2085,7 @@ body {
 				display: block;
 			}
 
-			>ul {
+			> ul {
 				padding-left: 0;
 				margin: 0;
 				list-style: none;
@@ -2065,7 +2094,7 @@ body {
 	}
 
 	.user-registration-error {
-		>svg {
+		> svg {
 			display: none;
 		}
 	}
@@ -2074,7 +2103,6 @@ body {
 	&.user-registration-membership_page_user-registration-login-forms {
 		.user-registration {
 			&.ur-frontend-form {
-
 				&:has(.ur-grid-2),
 				&:has(.ur-grid-3) {
 					max-width: 1200px;
@@ -2093,11 +2121,9 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
-
 									input,
 									textarea,
 									select {
-
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2131,7 +2157,6 @@ body {
 									input,
 									textarea,
 									select {
-
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2158,11 +2183,9 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
-
 									input,
 									textarea,
 									select {
-
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2184,11 +2207,9 @@ body {
 						form {
 							.ur-form-row {
 								.ur-form-grid {
-
 									input,
 									textarea,
 									select {
-
 										&:not([type="radio"]),
 										&:not([type="checkbox"]),
 										&:not([type="file"]) {
@@ -2230,11 +2251,9 @@ body {
 					.user-registration-form-login {
 						.ur-form-row {
 							.ur-form-grid {
-
 								input,
 								textarea,
 								select {
-
 									&:not([type="radio"]),
 									&:not([type="checkbox"]),
 									&:not([type="file"]) {
@@ -2260,9 +2279,8 @@ body {
 				.ur-frontend-form {
 					&.login {
 						margin: 0px auto;
-						box-shadow:
-							0px 4px 16px 0px rgba(17, 17, 26, 0.05),
-							0px 8px 32px 0px rgba(17, 17, 26, 0.05);
+						box-shadow: 0px 4px 16px 0px rgba(17, 17, 26, 0.05),
+						0px 8px 32px 0px rgba(17, 17, 26, 0.05);
 
 						.user-registration-error {
 							display: block;
@@ -2298,7 +2316,10 @@ body {
 									}
 
 									.ur-submit-button {
-										background: $primary_color;
+										background: var(
+												--ur-primary-color,
+												$primary_color
+										);
 										border-radius: 4px;
 									}
 								}
@@ -2461,7 +2482,10 @@ body {
 								padding: 0 14px 0 0;
 
 								&:focus {
-									border-color: $primary_color;
+									border-color: var(
+											--ur-primary-color,
+											$primary_color
+									);
 								}
 							}
 						}
@@ -2492,9 +2516,12 @@ body {
 									border: $border_width solid $border-color;
 
 									&:focus {
+										border-color: var(
+												--ur-primary-color,
+												$primary_color
+										);
 										outline: none;
 										box-shadow: none;
-										border-color: $primary_color;
 									}
 
 									&::placeholder {
@@ -2517,28 +2544,42 @@ body {
 						width: max-content;
 						border: 0;
 						padding: 10px 24px;
-						color: #ffffff;
+						color: var(--ur-button-text-normal-color, $white);
 						font-size: 15px;
 						font-weight: $medium;
 						line-height: 24px;
 						letter-spacing: 0.15px;
-						border: $border_width solid $primary_color;
+						border: $border_width solid var(
+								--ur-button-background-normal-color,
+								$primary_color
+						);
 						margin-right: 0;
-						background: $primary_color;
+						background: var(
+								--ur-button-background-normal-color,
+								$primary_color
+						);
 
 						&:hover {
-							border-color: #38488e;
+							color: var(--ur-button-text-hover-color, $white);
+							background: var(
+									--ur-button-background-hover-color,
+									#38488e
+							);
+							border-color: var(
+									--ur-button-background-hover-color,
+									#38488e
+							);
 						}
 					}
 
 					.user-registration-save-and-continue-button {
 						margin-left: 0;
 						background: transparent;
-						color: $primary_color;
-						border: $border_width solid $primary_color;
+						color: var(--ur-primary-color, $primary_color);
+						border: $border_width solid var(--ur-primary-color, $primary_color);
 
 						&:hover {
-							background: $primary_color;
+							background: var(--ur-primary-color, $primary_color);
 							color: $white;
 						}
 					}
@@ -2569,7 +2610,7 @@ body {
 									}
 								}
 
-								>div {
+								> div {
 									display: block;
 									float: unset !important;
 									flex-direction: row-reverse;
@@ -2582,8 +2623,8 @@ body {
 										font-weight: 400;
 										line-height: 24px;
 										letter-spacing: 0.15px;
-										background: #475bb2;
-										border: 1px solid #475bb2;
+										background: $primary_color;
+										//border: 1px solid $primary_color;
 
 										&:hover {
 											background: #38488e;
@@ -2595,7 +2636,14 @@ body {
 										padding: 10px 24px;
 										font-size: 15px;
 										line-height: 25px;
-										background: $primary_color;
+										background: var(
+												--ur-button-background-normal-color,
+												$primary_color
+										);
+										color: var(
+												--ur-button-text-normal-color,
+												$white
+										);
 
 										&.ur-disabled-btn {
 											cursor: not-allowed;
@@ -2607,13 +2655,21 @@ body {
 										}
 
 										&:hover {
-											background: #38488e;
-											border-color: #38488e;
-											color: $white;
+											background: var(
+													--ur-button-background-hover-color,
+													$primary_color
+											);
+											//border-color: #38488e;
+											color: var(
+													--ur-button-text-hover-color,
+													$white
+											);
 										}
 									}
 
-									&:has(.user-registration-passwordless-login) {
+									&:has(
+										.user-registration-passwordless-login
+									) {
 										display: flex;
 										flex-direction: column-reverse;
 										gap: 16px !important;
@@ -2637,8 +2693,8 @@ body {
 											transition: all 0.3s;
 
 											&:hover {
-												background: #475bb2;
-												border-color: #475bb2;
+												background: $primary_color;
+												border-color: $primary_color;
 												color: #ffffff;
 											}
 										}
@@ -2651,7 +2707,7 @@ body {
 									justify-content: space-between;
 									gap: 12px;
 									flex-direction: row;
-									margin-top: -4px;
+									margin: $spacing_8px 0;
 									float: unset;
 
 									label {
@@ -2675,7 +2731,10 @@ body {
 
 										a {
 											text-underline-offset: 4px;
-											color: $primary_color;
+											color: var(
+													--ur-primary-color,
+													$primary_color
+											);
 										}
 									}
 								}
@@ -2686,10 +2745,15 @@ body {
 									padding-top: 16px;
 									justify-content: center;
 									margin-bottom: 0;
+									font-size: 14px;
+									line-height: 21px;
 
 									a {
 										text-underline-offset: 4px;
-										color: $primary_color;
+										color: var(
+												--ur-primary-color,
+												$primary_color
+										);
 									}
 								}
 
@@ -2774,7 +2838,6 @@ body {
 										}
 
 										&.ursc_theme {
-
 											&_2,
 											&_3 {
 												.ursc-login-media {
@@ -2862,7 +2925,6 @@ body {
 					margin: 0 -10px;
 
 					.ur-field-item {
-
 						ul,
 						ol {
 							padding-left: 4px;
@@ -2870,7 +2932,6 @@ body {
 
 						.input-wrapper {
 							input {
-
 								&:not([type="checkbox"]),
 								&:not([type="radio"]) {
 									min-height: 50px;
@@ -2950,13 +3011,19 @@ body {
 										padding: $spacing_10px $spacing_24px;
 										border: none;
 										background: #edeff7;
-										color: $primary_color;
+										color: var(
+												--ur-primary-color,
+												$primary_color
+										);
 										display: block;
 										margin: $spacing_32px 0 0;
 										transition: all 0.3s ease-in-out;
 
 										&:hover {
-											background: $primary_color;
+											background: var(
+													--ur-primary-color,
+													$primary_color
+											);
 											color: $white;
 										}
 									}
@@ -2966,7 +3033,7 @@ body {
 										opacity: 0.5;
 
 										&:hover {
-											background-color: #475bb2;
+											background-color: $primary_color;
 										}
 									}
 								}
@@ -3086,7 +3153,7 @@ body.user-registration-page {
 		.et-l {
 			.et-fb-modules-list {
 				ul {
-					>li {
+					> li {
 						position: relative;
 
 						// Registration Form Icon
@@ -3224,15 +3291,15 @@ body.user-registration-page {
 			display: flex;
 		}
 
-		label {
-			font-size: 14px;
-			flex: 0 0 40%;
-			color: #383838;
-		}
+		// label {
+		// 	font-size: 14px;
+		// 	flex: 0 0 40%;
+		// 	color: #383838;
+		// }
 
-		&--field {
-			width: 100%;
-		}
+		// &--field {
+		// 	width: 100%;
+		// }
 
 		.user-registration-help-tip {
 			top: 3px;
@@ -3406,15 +3473,23 @@ body.user-registration-page {
 			margin: 0;
 		}
 
-		p>input.user-registration-Button.button {
-			background: $primary_color;
-			border: $border_width $primary_color;
+		p > input.user-registration-Button.button {
+			color: var(--ur-button-text-normal-color, $white);
+			background: var(
+					--ur-button-background-normal-color,
+					$primary_color
+			);
+			border: $border_width var(
+					--ur-button-background-normal-color,
+					$primary_color
+			);
 			border-radius: $border_radius_4;
 			border-style: inherit;
 
 			&:hover {
-				background: #38488e;
-				border-color: #38488e;
+				color: var(--ur-button-text-hover-color, $white);
+				background: var(--ur-button-background-hover-color, #38488e);
+				border-color: var(--ur-button-background-hover-color, #38488e);
 			}
 		}
 	}
@@ -3438,4 +3513,411 @@ body.user-registration-page {
 .urcr-block-notice .dashicons {
 	font-size: 16px;
 	line-height: 1;
+}
+
+.ur-state-label {
+	margin-top: 16px !important;
+}
+
+#ur-local-currency-switch-currency {
+	margin-bottom: 16px !important;
+}
+
+.urm-courses-container {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	margin: 2rem 0;
+}
+
+.urm-course-card {
+	display: flex;
+	align-items: center;
+	gap: 2rem;
+	padding: 2rem;
+	background: #ffffff;
+	border-radius: 12px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	transition: box-shadow 0.3s ease;
+
+	&:hover {
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+	}
+
+	&__illustration {
+		flex-shrink: 0;
+		width: 200px;
+		height: 160px;
+		overflow: hidden;
+		border-radius: 8px;
+		background: #f3f4f6;
+
+		a {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+			transition: transform 0.3s ease;
+		}
+
+		&:hover img {
+			transform: scale(1.05);
+		}
+	}
+
+	&__content {
+		flex: 1;
+		min-width: 0;
+		text-align: left;
+	}
+
+	&__title {
+		font-size: 1.25rem;
+		font-weight: 600;
+		color: #1f2937;
+		margin: 0 0 0.5rem 0;
+		line-height: 1.4;
+	}
+
+	&__meta {
+		font-size: 0.875rem;
+		color: #6b7280;
+	}
+
+	&__progress {
+		flex-shrink: 0;
+		width: 280px;
+
+		.masteriyo-single-course-stats {
+			width: 100%;
+		}
+
+		.course-progress-box {
+			background: transparent !important;
+			padding: 0 !important;
+		}
+
+		.progress-header {
+			display: flex !important;
+			align-items: center !important;
+			justify-content: space-between !important;
+			gap: 1rem !important;
+			margin-bottom: 0.75rem !important;
+		}
+
+		.progress-component {
+			display: flex !important;
+			align-items: baseline !important;
+			gap: 0.5rem !important;
+			flex-direction: row !important;
+		}
+
+		.progress-percent {
+			font-size: 1.5rem !important;
+			font-weight: 700 !important;
+			color: #1f2937 !important;
+			order: -1 !important;
+			line-height: 1 !important;
+			margin: 0 !important;
+		}
+
+		.progress-label {
+			font-size: 1rem !important;
+			font-weight: 400 !important;
+			color: #6b7280 !important;
+			margin: 0 !important;
+			order: 0 !important;
+			line-height: 1 !important;
+		}
+
+		.completed-component {
+			display: flex !important;
+			align-items: center !important;
+			gap: 0.5rem !important;
+		}
+
+		.progress-icon {
+			display: flex !important;
+			align-items: center !important;
+			color: #9ca3af !important;
+			cursor: pointer;
+			transition: color 0.2s ease;
+
+			&:hover {
+				color: #4f46e5 !important;
+			}
+
+			svg {
+				width: 18px !important;
+				height: 18px !important;
+				fill: currentColor !important;
+			}
+		}
+
+		.completed-info {
+			font-size: 0.75rem !important;
+			color: #6b7280 !important;
+		}
+
+		.masteriyo-progress-bar-container {
+			width: 100% !important;
+			height: 8px !important;
+			background: #e5e7eb !important;
+			border-radius: 999px !important;
+			overflow: hidden !important;
+			margin-bottom: 1rem !important;
+		}
+
+		.masteriyo-progress-bar {
+			width: 100% !important;
+			height: 100% !important;
+			position: relative !important;
+		}
+
+		.masteriyo-progress-fill {
+			height: 100% !important;
+			width: var(--value, 0%) !important;
+			background: linear-gradient(
+					90deg,
+					#4f46e5 0%,
+					#6366f1 100%
+			) !important;
+			border-radius: 999px !important;
+			transition: width 0.6s ease !important;
+
+			&.animate {
+				transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
+			}
+		}
+
+		.masteriyo-hidden {
+			display: none !important;
+		}
+	}
+}
+
+.urm-continue-course-btn {
+	display: block !important;
+	width: 100% !important;
+	padding: 0.75rem 1.5rem !important;
+	font-size: 0.9375rem !important;
+	font-weight: 600 !important;
+	color: #ffffff !important;
+	background: #4f46e5 !important;
+	border: none !important;
+	border-radius: 8px !important;
+	text-align: center !important;
+	text-decoration: none !important;
+	cursor: pointer !important;
+	transition: background 0.2s ease !important;
+	margin-top: 0.5rem !important;
+
+	&:hover {
+		background: #4338ca !important;
+		color: #ffffff !important;
+		text-decoration: none !important;
+	}
+
+	&:active {
+		background: #3730a3 !important;
+	}
+
+	&:focus {
+		outline: 2px solid #4f46e5 !important;
+		outline-offset: 2px !important;
+	}
+}
+
+.urm-masteriyo-course-portal {
+	margin-top: 2rem;
+	padding: 1rem;
+	background: #f9fafb;
+	border-radius: 8px;
+	text-align: center;
+
+	p {
+		margin: 0;
+		font-size: 0.875rem;
+		color: #6b7280;
+	}
+
+	a {
+		color: #4f46e5;
+		font-weight: 600;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+
+		span {
+			color: inherit;
+		}
+	}
+}
+
+// Responsive Design
+@media (max-width: 968px) {
+	.urm-course-card {
+		gap: 1.5rem;
+
+		&__illustration {
+			width: 160px;
+			height: 130px;
+		}
+
+		&__progress {
+			width: 220px;
+
+			.progress-percent {
+				font-size: 1.25rem !important;
+			}
+
+			.progress-label {
+				font-size: 0.875rem !important;
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	.urm-course-card {
+		flex-wrap: wrap;
+		padding: 1.5rem;
+		gap: 1.5rem;
+
+		&__illustration {
+			display: none;
+		}
+
+		&__content {
+			flex: 1;
+			min-width: 200px;
+			text-align: left;
+		}
+
+		&__title {
+			font-size: 1.125rem !important;
+			margin-bottom: 0.375rem !important;
+		}
+
+		&__meta {
+			font-size: 0.813rem !important;
+		}
+
+		&__progress {
+			flex: 1;
+			min-width: 200px;
+			width: auto;
+
+			.progress-header {
+				justify-content: flex-start !important;
+			}
+
+			.progress-percent {
+				font-size: 1.25rem !important;
+			}
+
+			.progress-label {
+				font-size: 0.875rem !important;
+			}
+		}
+	}
+}
+
+@media (max-width: 480px) {
+	.urm-course-card {
+		padding: 1rem;
+		gap: 1rem;
+
+		&__content {
+			width: 100%;
+			min-width: 0;
+		}
+
+		&__title {
+			font-size: 1rem !important;
+		}
+
+		&__meta {
+			font-size: 0.75rem !important;
+		}
+
+		&__progress {
+			width: 100%;
+			min-width: 0;
+
+			.progress-component {
+				gap: 0.375rem !important;
+			}
+
+			.progress-percent {
+				font-size: 1.125rem !important;
+			}
+
+			.progress-label {
+				font-size: 0.813rem !important;
+			}
+		}
+	}
+
+	.urm-continue-course-btn {
+		padding: 0.625rem 1rem !important;
+		font-size: 0.875rem !important;
+	}
+
+	.urm-masteriyo-course-portal {
+		padding: 0.875rem;
+
+		p {
+			font-size: 0.75rem;
+		}
+	}
+}
+
+@media (max-width: 360px) {
+	.urm-course-card {
+		&__title {
+			font-size: 0.938rem !important;
+		}
+
+		&__progress {
+			.progress-percent {
+				font-size: 1rem !important;
+			}
+
+			.progress-label {
+				font-size: 0.75rem !important;
+			}
+		}
+	}
+}
+
+// Print styles
+@media print {
+	.urm-course-card {
+		box-shadow: none;
+		border: 1px solid #e5e7eb;
+		page-break-inside: avoid;
+	}
+
+	.urm-continue-course-btn {
+		display: none !important;
+	}
+}
+
+.ur-field-address-state-outer-wrapper{
+	    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+	.ur-front-spinner{
+		margin-left: 0 !important;
+		margin-right: -26px;
+	}
 }

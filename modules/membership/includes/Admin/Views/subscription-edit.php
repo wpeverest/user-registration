@@ -2,6 +2,7 @@
 /**
  * Subscription Edit
  */
+use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -67,10 +68,67 @@ if ( ! empty( $trial_end_date ) ) {
 	}
 }
 
-// Get order from orders table
 $orders_repository  = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
 $subscription_order = $orders_repository->get_order_by_subscription( $subscription['ID'] );
 $order_id           = ! empty( $subscription_order ) && isset( $subscription_order['ID'] ) ? $subscription_order['ID'] : '';
+
+$order_meta_data = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
+$tax_data 		 = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data[ 'meta_value' ], true ) : array();
+
+$local_currency   = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency' );
+
+$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
+$symbol = ur_get_currency_symbol( $currency );
+
+$local_currency_converted_amount = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency_converted_amount' );
+
+$product_amount = ! empty( $local_currency_converted_amount['meta_value'] ) ? $local_currency_converted_amount['meta_value'] : $product_amount;
+
+$team_data      = null;
+$team_name     = '';
+$team_size     = '';
+$per_seat_price = '';
+$team_seats     = '';
+$pricing_model  = '';
+$tier_info      = null;
+$tier_range     = '';
+if ( ! empty( $order_id ) ) {
+	$ordermeta_table = $orders_repository->wpdb()->prefix . 'ur_membership_ordermeta';
+	$team_id         = $orders_repository->wpdb()->get_var(
+		$orders_repository->wpdb()->prepare(
+			"SELECT meta_value FROM {$ordermeta_table} WHERE meta_key=%s AND order_id=%d LIMIT 1",
+			'urm_team_id',
+			$order_id
+		)
+	);
+
+	if ( ! empty( $team_id ) ) {
+		$team_data = get_post_meta( $team_id, 'urm_team_data', true );
+		if ( ! empty( $team_data ) ) {
+			$team_name     = isset( $team_data['team_name'] ) ? $team_data['team_name'] : '';
+			$team_size     = isset( $team_data['team_size'] ) ? $team_data['team_size'] : '';
+			$pricing_model  = isset( $team_data['pricing_model'] ) ? $team_data['pricing_model'] : '';
+			$per_seat_price = isset( $team_data['per_seat_price'] ) ? $team_data['per_seat_price'] : '';
+		}
+		$team_seats = get_post_meta( $team_id, 'urm_team_seats', true );
+		$tier_info  = get_post_meta( $team_id, 'urm_tier_info', true );
+
+		if ( 'tier' === $pricing_model && ! empty( $tier_info ) && isset( $tier_info['tier_per_seat_price'] ) ) {
+			$per_seat_price = $tier_info['tier_per_seat_price'];
+		}
+
+		$tier_range = '';
+		if ( 'tier' === $pricing_model && ! empty( $tier_info ) ) {
+			$tier_from = isset( $tier_info['tier_from'] ) ? $tier_info['tier_from'] : '';
+			$tier_to   = isset( $tier_info['tier_to'] ) ? $tier_info['tier_to'] : '';
+			if ( ! empty( $tier_from ) && ! empty( $tier_to ) ) {
+				$tier_range = $tier_from . '-' . $tier_to;
+			} elseif ( ! empty( $tier_from ) ) {
+				$tier_range = $tier_from . '+';
+			}
+		}
+	}
+}
 
 $delete_url = wp_nonce_url(
 	admin_url( 'admin.php?page=user-registration-subscriptions&action=delete&id=' . $subscription['ID'] ),
@@ -186,7 +244,13 @@ $delete_url = wp_nonce_url(
 								<div class="ur-subscription__table-head">
 									<div><?php esc_html_e( 'Item', 'user-registration' ); ?></div>
 									<div><?php esc_html_e( 'Recurring', 'user-registration' ); ?></div>
+									<?php if ( ! empty( $tax_data ) ) : ?>
+									<div><?php esc_html_e( 'Tax Rate', 'user-registration' ); ?></div>
+									<?php endif; ?>
 									<div><?php esc_html_e( 'Price', 'user-registration' ); ?></div>
+									<?php if ( ! empty( $tax_data ) ) : ?>
+									<div><?php esc_html_e( 'Total', 'user-registration' ); ?></div>
+									<?php endif; ?>
 								</div>
 								<div class="ur-subscription__table-body">
 									<div>
@@ -200,10 +264,133 @@ $delete_url = wp_nonce_url(
 										<?php endif; ?>
 									</div>
 									<div><?php echo esc_html( $billing_cycle_label ); ?></div>
+									<?php if ( ! empty( $tax_data ) ) : ?>
+										<div class="ur-subscription__table-tax_rate">
+											<?php echo esc_html( $tax_data['tax_rate'] . '%' ); ?>
+										</div>
+									<?php endif; ?>
 									<div class="ur-subscription__table-price">
 										<?php echo esc_html( $symbol . number_format( $product_amount, 2 ) ); ?>
 									</div>
+									<?php if ( ! empty( $tax_data ) ) : ?>
+										<div class="ur-subscription__table-total">
+											<?php echo esc_html( $symbol . number_format( $tax_data['total_after_tax'], 2 ) ); ?>
+										</div>
+									<?php endif; ?>
 								</div>
+								<?php
+								$number_of_seats = ! empty( $team_seats ) ? (int) $team_seats : ( ! empty( $team_size ) ? (int) $team_size : 1 );
+								$items_subtotal  = 0;
+								$order_total     = 0;
+								$paid_amount     = $product_amount;
+
+								if ( ! empty( $per_seat_price ) && $number_of_seats > 0 ) {
+									$items_subtotal = (float) $per_seat_price * $number_of_seats;
+									$order_total    = $items_subtotal;
+									$paid_amount    = $order_total;
+								} else {
+									$items_subtotal = $product_amount;
+									$order_total    = $product_amount;
+								}
+
+								$payment_date = '';
+								if ( ! empty( $subscription['start_date'] ) ) {
+									$date_format  = get_option( 'date_format' );
+									$payment_date = date_i18n( $date_format, strtotime( $subscription['start_date'] ) );
+								}
+								?>
+								<?php if ( ! empty( $team_name ) || ! empty( $per_seat_price ) ) : ?>
+								<div class="ur-subscription__fields" style="padding: 20px 14px;">
+									<div class="ur-subscription__fields-content">
+										<div class="ur-payments__data" style="display: flex; justify-content: space-between;">
+											<!-- team Name Section -->
+											<?php if ( ! empty( $team_name ) ) : ?>
+											<div class="ur-payments__coupon-section">
+												<div class="ur-payments__coupon-title" style="font-weight: 600; margin-bottom: 10px;">
+													<?php esc_html_e( 'Team Name', 'user-registration' ); ?>
+												</div>
+												<a href="<?php echo esc_url( admin_url( "admin.php?post_id={$team_id}&action=edit&page=user-registration-team" ) ); ?>">
+													<?php echo esc_html( $team_name ); ?>
+												</a>
+											</div>
+											<?php endif; ?>
+
+											<!-- Summary and Payment Tables -->
+											<div class="ur-payments__summary-payment-wrapper">
+												<!-- Order Summary Table -->
+												<table class="ur-payments__summary-table">
+													<tbody>
+														<tr>
+															<td class="ur-payments__summary-label">
+																<?php esc_html_e( 'Items Subtotal:', 'user-registration' ); ?>
+															</td>
+															<td width="1%"></td>
+															<td class="ur-payments__summary-total">
+																<?php echo esc_html( $symbol . number_format( $items_subtotal, 2 ) ); ?>
+															</td>
+														</tr>
+														<?php if ( ! empty( $number_of_seats ) && $number_of_seats > 0 ) : ?>
+														<tr>
+															<td class="ur-payments__summary-label">
+																<?php esc_html_e( 'Seat', 'user-registration' ); ?>:
+															</td>
+															<td width="1%"></td>
+															<td class="ur-payments__summary-total">
+																<?php echo esc_html( $number_of_seats ); ?>
+															</td>
+														</tr>
+														<?php endif; ?>
+														<?php if ( ! empty( $per_seat_price ) ) : ?>
+														<tr>
+															<td class="ur-payments__summary-label">
+																<?php
+																if ( 'tier' === $pricing_model && ! empty( $tier_range ) ) {
+																	printf(
+																		/* translators: %1$s: tier range */
+																		esc_html__( 'Per seat (tier %1$s)', 'user-registration' ),
+																		esc_html( $tier_range )
+																	);
+																} elseif ( 'tier' === $pricing_model ) {
+																	esc_html_e( 'Per seat (tier pricing)', 'user-registration' );
+																} else {
+																	esc_html_e( 'Per seat', 'user-registration' );
+																}
+																?>
+																:
+															</td>
+															<td width="1%"></td>
+															<td class="ur-payments__summary-total">
+																<?php echo esc_html( $symbol . number_format( (float) $per_seat_price, 2 ) ); ?>
+															</td>
+														</tr>
+														<?php endif; ?>
+														<tr>
+															<td class="ur-payments__payment-label ur-payments__payment-label-highlight">
+																<?php esc_html_e( 'Paid:', 'user-registration' ); ?><br>
+															</td>
+															<td width="1%"></td>
+															<td class="ur-payments__payment-total">
+																<?php echo esc_html( $symbol . number_format( $paid_amount, 2 ) ); ?>
+															</td>
+														</tr>
+														<?php if ( ! empty( $payment_date ) ) : ?>
+														<tr>
+															<td>
+																<span class="ur-payments__payment-description">
+																	<?php echo esc_html( $payment_date ); ?>
+																</span>
+															</td>
+															<td colspan="2"></td>
+														</tr>
+														<?php endif; ?>
+													</tbody>
+												</table>
+
+											</div>
+										</div>
+									</div>
+								</div>
+								<?php endif; ?>
 							</div>
 						</div>
 					</div>
@@ -219,6 +406,9 @@ $delete_url = wp_nonce_url(
 									<div class="ur-subscription__section-label">
 										<?php esc_html_e( 'Amount', 'user-registration' ); ?>
 									</div>
+									<?php
+									$product_amount = ! empty( $tax_data['total_after_tax'] ) ? $tax_data['total_after_tax'] : $product_amount;
+									?>
 									<div class="ur-subscription__section-value">
 										<?php echo esc_html( $symbol . number_format( $product_amount, 2 ) ); ?>
 									</div>
@@ -238,7 +428,7 @@ $delete_url = wp_nonce_url(
 									<div class="ur-subscription__section-value">
 										<?php if ( ! empty( $order_id ) ) : ?>
 										<a
-											href="<?php echo esc_url( admin_url( "admin.php?page=user-registration-payment-history&action=view&id={$order_id}" ) ); ?>">
+											href="<?php echo esc_url( admin_url( "admin.php?page=member-payment-history&action=view&id={$order_id}" ) ); ?>">
 											#<?php echo esc_html( $order_id ); ?>
 										</a>
 										<?php else : ?>

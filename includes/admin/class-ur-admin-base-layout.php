@@ -29,6 +29,9 @@ class UR_Base_Layout {
 			'skip_query_key' => '',
 			'form_id'        => '',
 			'class'          => '',
+			'add_page_key'   => '',
+			'add_new_class'  => '',
+			'add_new_attr'   => '',
 		);
 
 		$data        = wp_parse_args( $args, $defaults );
@@ -54,12 +57,42 @@ class UR_Base_Layout {
 
 		?>
 		<div id="user-registration-base-list-table-page" class="<?php echo esc_attr( $data['class'] ); ?>">
-			<div class="user-registration-base-list-table-heading" style="<?php echo( ! $show_search ? 'position:relative;margin-bottom:40px;' : '' ); ?>">
+			<div class="user-registration-base-list-table-heading" style="<?php echo( ! $show_search ? 'position:relative;' : '' ); ?>">
 				<h1>
 					<?php echo esc_html( $data['title'] ); ?>
 				</h1>
-				<?php if ( ! empty( $data['add_new_action'] ) ) : ?>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $data['page'] . '&action=' . $data['add_new_action'] ) ); ?>" class="page-title-action">
+				<?php
+					$external_class = '';
+					$inline_attr    = '';
+
+				if ( ! empty( $data['add_new_action'] ) ) {
+					switch ( $data['add_new_action'] ) {
+						case 'manage_tax':
+							$external_class = 'urm-manage-tax-region-btn';
+							break;
+
+						case 'manage_pricing_zone':
+							$external_class = 'ur-local-currency-add-pricing-zone';
+							$inline_attr    = 'data-action="add"';
+							break;
+
+						default:
+							$external_class = '';
+							break;
+					}
+				}
+
+				if ( ! empty( $data['add_page_key'] ) ) :
+					$external_class = ! empty( $data['add_new_class'] ) ? $data['add_new_class'] : '';
+					$inline_attr    = ! empty( $data['add_new_attr'] ) ? $data['add_new_attr'] : '';
+					?>
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $data['add_page_key'] ) ); ?>" class="page-title-action <?php echo esc_attr( $external_class ); ?>" <?php echo $inline_attr; ?> >
+					<?php echo esc_html( $data['add_new_label'] ); ?>
+				</a>
+					<?php
+				elseif ( ! empty( $data['add_new_action'] ) ) :
+					?>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $data['page'] . '&action=' . $data['add_new_action'] ) ); ?>" class="page-title-action <?php echo esc_attr( $external_class ); ?>" <?php echo $inline_attr; ?> >
 					<?php echo esc_html( $data['add_new_label'] ); ?>
 				</a>
 				<?php endif; ?>
@@ -103,14 +136,14 @@ class UR_Base_Layout {
 		<?php
 	}
 
-		/**
-		 * Display Search Input with button
-		 *
-		 * @param $search_id
-		 * @param $placeholder
-		 *
-		 * @return void
-		 */
+	/**
+	 * Display Search Input with button
+	 *
+	 * @param $search_id
+	 * @param $placeholder
+	 *
+	 * @return void
+	 */
 	public static function display_search_field( $search_id, $placeholder ) {
 		?>
 			<input type="search" id="<?php echo esc_attr( $search_id ); ?>" name="s"
@@ -127,9 +160,9 @@ class UR_Base_Layout {
 			<?php
 	}
 
-		/**
-		 * No items found text.
-		 */
+	/**
+	 * No items found text.
+	 */
 	public static function no_items( $type ) {
 		$image_url    = esc_url( plugin_dir_url( UR_PLUGIN_FILE ) . 'assets/images/empty-table.png' );
 		$is_searching = ! empty( $_GET['s'] );

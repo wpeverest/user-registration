@@ -31,6 +31,22 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	 * @return array|object|\stdClass[]
 	 */
 	public function get_all( $args ) {
+		global $wpdb;
+
+		$table_exists = $wpdb->get_var(
+			$wpdb->prepare( 'SHOW TABLES LIKE %s', $this->table )
+		);
+
+		if ( $table_exists !== $this->table ) {
+			return array(
+				'items'        => array(),
+				'total'        => 0,
+				'total_pages'  => 0,
+				'current_page' => 1,
+				'per_page'     => absint( $args['per_page'] ?? 20),
+			);
+		}
+
 		$sql = "
 					SELECT urmo.ID AS order_id,
 						wpp.ID as post_id,
@@ -229,5 +245,33 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	public function delete_order_meta( $conditions ) {
 		$result = $this->wpdb()->delete( $this->orders_meta_table, $conditions );
 		return ! $result ? array() : $result;
+	}
+
+	public function get_order_meta_by_order_id_and_meta_key( $order_id, $meta_key ) {
+		$ordermeta_table = $this->wpdb()->prefix . 'ur_membership_ordermeta';
+
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"
+				SELECT *
+				FROM {$ordermeta_table}
+				WHERE order_id = %d
+				AND meta_key = %s
+				LIMIT 1
+				",
+				$order_id,
+				$meta_key
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? array() : $result;
+	}
+
+	public function update_order_meta( $order_meta ) {
+		$this->wpdb()->insert(
+			TableList::order_meta_table(),
+			$order_meta
+		);
 	}
 }

@@ -45,7 +45,58 @@ class SubscriptionService {
 		$membership_meta = json_decode( wp_unslash( get_post_meta( $membership['ID'], 'ur_membership', true ) ), true );
 		$status          = 'pending';
 
-		if ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trail date
+		$is_team_membership   = false;
+		$is_team_subscription = false;
+		$is_team_one_time     = false;
+		$team_duration_value  = null;
+		$team_duration_period = null;
+		$billing_amount       = $membership_meta['amount'] ?? 0;
+
+		if ( isset( $data['team'] ) && ! empty( $data['team'] ) ) {
+			$team_data      = $data['team'];
+			$team_plan_type = isset( $team_data['team_plan_type'] ) ? $team_data['team_plan_type'] : null;
+
+			if ( 'subscription' === $team_plan_type || 'one-time' === $team_plan_type ) {
+				$is_team_membership      = true;
+				$is_team_subscription    = ( 'subscription' === $team_plan_type );
+				$is_team_one_time        = ( 'one-time' === $team_plan_type );
+				$team_duration_value_raw = isset( $team_data['team_duration_value'] ) ? $team_data['team_duration_value'] : null;
+				if ( null !== $team_duration_value_raw && '' !== trim( (string) $team_duration_value_raw ) ) {
+					$team_duration_value = absint( $team_duration_value_raw );
+					$team_duration_value = ( 0 !== $team_duration_value ) ? $team_duration_value : null;
+				} else {
+					$team_duration_value = null;
+				}
+				$team_duration_period = isset( $team_data['team_duration_period'] ) ? sanitize_text_field( $team_data['team_duration_period'] ) : null;
+
+				$seat_model = isset( $team_data['seat_model'] ) ? $team_data['seat_model'] : 'fixed';
+
+				if ( 'fixed' === $seat_model ) {
+					$billing_amount = isset( $team_data['team_price'] ) ? floatval( $team_data['team_price'] ) : 0;
+				} else {
+					$pricing_model = isset( $team_data['pricing_model'] ) ? $team_data['pricing_model'] : 'per_seat';
+					$team_seats    = isset( $data['team_seats'] ) ? absint( $data['team_seats'] ) : 0;
+
+					if ( 'per_seat' === $pricing_model ) {
+						$per_seat_price = isset( $team_data['per_seat_price'] ) ? floatval( $team_data['per_seat_price'] ) : 0;
+						$billing_amount = $team_seats * $per_seat_price;
+					} elseif ( 'tier' === $pricing_model ) {
+						if ( isset( $data['tier'] ) && isset( $data['tier']['tier_per_seat_price'] ) ) {
+							$tier_per_seat_price = floatval( $data['tier']['tier_per_seat_price'] );
+							$billing_amount      = $team_seats * $tier_per_seat_price;
+						}
+					}
+				}
+			}
+		}
+
+		if ( $is_team_subscription && $team_duration_value && $team_duration_period ) {
+			$expiry_date = self::get_expiry_date( $data['membership_data']['start_date'], $team_duration_period, $team_duration_value );
+			$status      = 'pending';
+		} elseif ( $is_team_one_time ) {
+			$expiry_date = '';
+			$status      = 'pending';
+		} elseif ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trail date
 			$expiry_date = self::get_expiry_date( $data['membership_data']['start_date'], $membership_meta['subscription']['duration'], $membership_meta['subscription']['value'] );
 			$status      = 'on' === $membership_meta['trial_status'] ? 'trial' : 'pending';
 		}
@@ -62,7 +113,13 @@ class SubscriptionService {
 			}
 		}
 
-		$billing_cycle = ( 'subscription' === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] : '';
+		if ( $is_team_subscription && $team_duration_period ) {
+			$billing_cycle = $team_duration_period;
+		} elseif ( $is_team_one_time ) {
+			$billing_cycle = '';
+		} else {
+			$billing_cycle = ( 'subscription' === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] : '';
+		}
 
 		$subscription_data = array(
 			'user_id'           => $member->ID,
@@ -70,7 +127,7 @@ class SubscriptionService {
 			'start_date'        => $data['membership_data']['start_date'],
 			'expiry_date'       => $expiry_date ?? '',
 			'next_billing_date' => $expiry_date ?? '',
-			'billing_amount'    => $membership_meta['amount'] ?? 0,
+			'billing_amount'    => $billing_amount,
 			'status'            => $status,
 			'cancel_sub'        => $membership_meta['cancel_subscription'] ?? 'immediately',
 			'billing_cycle'     => $billing_cycle,
@@ -87,9 +144,16 @@ class SubscriptionService {
 				'trial_end_date'   => self::get_expiry_date( date( 'Y-m-d' ), $membership_meta['trial_data']['duration'], $membership_meta['trial_data']['value'] ),
 			);
 
-			$subscription_data                      = array_merge( $subscription_data, $trial_data );
-			$subscription_data['start_date']        = $trial_data['trial_end_date'];
-			$subscription_data['expiry_date']       = self::get_expiry_date( $trial_data['trial_end_date'], $membership_meta['subscription']['duration'], $membership_meta['subscription']['value'] );
+			$subscription_data               = array_merge( $subscription_data, $trial_data );
+			$subscription_data['start_date'] = $trial_data['trial_end_date'];
+
+			if ( $is_team_one_time ) {
+				$subscription_data['expiry_date'] = '';
+			} elseif ( $is_team_subscription && $team_duration_value && $team_duration_period ) {
+				$subscription_data['expiry_date'] = self::get_expiry_date( $trial_data['trial_end_date'], $team_duration_period, $team_duration_value );
+			} else {
+				$subscription_data['expiry_date'] = self::get_expiry_date( $trial_data['trial_end_date'], $membership_meta['subscription']['duration'], $membership_meta['subscription']['value'] );
+			}
 			$subscription_data['next_billing_date'] = $subscription_data['expiry_date'];
 		}
 
@@ -258,6 +322,13 @@ class SubscriptionService {
 		$total                          = $order['total_amount'];
 		$membership_tab_url             = esc_url( ur_get_my_account_url() . 'ur-membership' );
 
+
+		$order_repository = new OrdersRepository();
+		$local_currency = $order_repository->get_order_meta_by_order_id_and_meta_key( $order['order_id'], 'local_currency' );
+
+		$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
+		$symbol = ur_get_currency_symbol( $currency );
+
 		if ( ! empty( $data['context'] ) && 'thank_you_page' == $data['context'] ) {
 			$data['payment_method'] = ! empty( $member_order['payment_method'] ) ? $member_order['payment_method'] : '';
 			$data['transaction_id'] = ! empty( $member_order['transaction_id'] ) ? $member_order['transaction_id'] : '';
@@ -285,7 +356,27 @@ class SubscriptionService {
 		$trial_end_date    = 'subscription' === $membership_metas['type'] && 'on' === $order['trial_status'] && ! empty( $subscription['trial_end_date'] ) ? date( 'Y, F d', strtotime( $subscription['trial_end_date'] ) ) : 'N/A';
 		$membership_type   = ucwords( $membership_metas['type'] ) == 'Paid' ? __( 'One-Time Payment', 'user-registration' ) : ucwords( $membership_metas['type'] );
 
-		return array(
+		$team_data  = null;
+		$team_seats = null;
+		$tier_info  = null;
+		if ( ! empty( $member_order['ID'] ) ) {
+			$ordermeta_table = $this->orders_repository->wpdb()->prefix . 'ur_membership_ordermeta';
+			$team_id         = $this->orders_repository->wpdb()->get_var(
+				$this->orders_repository->wpdb()->prepare(
+					"SELECT meta_value FROM {$ordermeta_table} WHERE meta_key=%s AND order_id=%d LIMIT 1",
+					'urm_team_id',
+					$member_order['ID']
+				)
+			);
+
+			if ( ! empty( $team_id ) ) {
+				$team_data  = get_post_meta( $team_id, 'urm_team_data', true );
+				$team_seats = get_post_meta( $team_id, 'urm_team_seats', true );
+				$tier_info  = get_post_meta( $team_id, 'urm_tier_info', true );
+			}
+		}
+
+		$return_array = array(
 			'username'                          => esc_html( ucwords( isset( $data['username'] ) ? $data['username'] : '' ) ),
 			'membership_plan_name'              => esc_html( ucwords( $membership_metas['post_title'] ) ),
 			'membership_plan_type'              => esc_html( $membership_type ),
@@ -324,6 +415,18 @@ class SubscriptionService {
 			'membership_renewal_link'           => "<a href=$membership_tab_url>" . __( 'Renew Now', 'user-registration' ) . '</a>',
 			'membership_plan_transaction_id'    => ! empty( $data['transaction_id'] ) ? $data['transaction_id'] : '',
 		);
+
+		if ( ! empty( $team_data ) ) {
+			$return_array['team'] = $team_data;
+		}
+		if ( ! empty( $team_seats ) ) {
+			$return_array['team_seats'] = $team_seats;
+		}
+		if ( ! empty( $tier_info ) ) {
+			$return_array['tier'] = $tier_info;
+		}
+
+		return $return_array;
 	}
 
 	/**
@@ -410,7 +513,6 @@ class SubscriptionService {
 			$members_data['role'] = ! empty( $membership_details['role'] ) ? $membership_details['role'] : 'subscriber';
 		}
 
-		// Update user meta and membership role here.
 		$member_service = new MembersService();
 		$member_service->update_user_meta( $members_data, $user->ID );
 
@@ -540,65 +642,6 @@ class SubscriptionService {
 			'remaining_subscription_value' => ! empty( $result['remaining_subscription_value'] ) ? $result['remaining_subscription_value'] : 0,
 			'delayed_until'                => ! empty( $result['delayed_until'] ) ? $result['delayed_until'] : '',
 		);
-	}
-
-	/**
-	 * Prepares subscription data for upgrading a membership.
-	 *
-	 * This method retrieves and processes the membership data for a given member,
-	 * calculates the expiry and trial dates based on the membership type, and
-	 * constructs an array of subscription data including user ID, membership ID,
-	 * start date, expiry date, next billing date, billing amount, and status.
-	 *
-	 * @param int   $membership_id The ID of the membership to be upgraded.
-	 * @param int   $member_id The ID of the member for whom the subscription is being upgraded.
-	 * @param array $extra_data Additional data required for preparing the subscription, such as
-	 *                          remaining subscription days, trial status, and total used trial days.
-	 *
-	 * @return array The prepared subscription data including trial information if applicable.
-	 * @throws \Exception
-	 */
-	public function prepare_upgrade_subscription_data( $membership_id, $member_id, $extra_data ) {
-		$current_subscription         = $extra_data['subscription_data'];
-		$remaining_subscription_value = $extra_data['remaining_subscription_value'];
-		$membership                   = get_post( $membership_id, ARRAY_A );
-		$membership_meta              = json_decode( wp_unslash( get_post_meta( $membership['ID'], 'ur_membership', true ) ), true );
-		$expiry_date                  = '';
-		if ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trial date
-			$expiry_date = self::get_expiry_date( date( 'Y-m-d' ), $membership_meta['subscription']['duration'], $remaining_subscription_value );
-		}
-		$billing_cycle = ( 'subscription' === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] : '';
-
-		$subscription_data = array(
-			'user_id'           => $member_id,
-			'item_id'           => $membership['ID'],
-			'start_date'        => date( 'Y-m-d 00:00:00' ),
-			'expiry_date'       => $expiry_date,
-			'next_billing_date' => $expiry_date,
-			'billing_amount'    => $membership_meta['amount'] ?? 0,
-			'status'            => 'free' === $membership_meta['type'] ? 'active' : 'pending',
-			'billing_cycle'     => $billing_cycle,
-		);
-
-		if ( isset( $extra_data['coupon'] ) && ! empty( $extra_data['coupon'] ) ) {
-			$subscription_data['coupon'] = $extra_data['coupon'];
-		}
-
-		if ( isset( $membership_meta['trial_status'] ) && 'on' === $membership_meta['trial_status'] ) {
-			$remaining_trial_days          = $membership_meta['trial_data']['value'];
-			$dont_calculate_trial_end_date = ! empty( $current_subscription['trial_end_date'] ) && $current_subscription['trial_end_date'] > date( 'Y-m-d 00:00:00' );
-			$trial_data                    = array(
-				'trial_start_date' => date( 'Y-m-d' ),
-				'trial_end_date'   => ! $dont_calculate_trial_end_date ? self::get_expiry_date( date( 'Y-m-d' ), $membership_meta['trial_data']['duration'], $remaining_trial_days ) : $current_subscription['trial_end_date'],
-			);
-
-			$subscription_data                      = array_merge( $subscription_data, $trial_data );
-			$subscription_data['start_date']        = $trial_data['trial_end_date'];
-			$subscription_data['expiry_date']       = self::get_expiry_date( $trial_data['trial_end_date'], $membership_meta['subscription']['duration'], $remaining_subscription_value );
-			$subscription_data['next_billing_date'] = $subscription_data['expiry_date'];
-		}
-
-		return $subscription_data;
 	}
 
 	/**
@@ -770,7 +813,66 @@ class SubscriptionService {
 		ur_get_logger()->notice( __( 'Subscription updated for ' . implode( ',', $updated_subscription_for_users ), 'user-registration' ), array( 'source' => 'urm-membership-crons' ) );
 	}
 
-	public function renew_membership( $user, $selected_pg, $membership_id ) {
+	/**
+	 * Prepares subscription data for upgrading a membership.
+	 *
+	 * This method retrieves and processes the membership data for a given member,
+	 * calculates the expiry and trial dates based on the membership type, and
+	 * constructs an array of subscription data including user ID, membership ID,
+	 * start date, expiry date, next billing date, billing amount, and status.
+	 *
+	 * @param int   $membership_id The ID of the membership to be upgraded.
+	 * @param int   $member_id The ID of the member for whom the subscription is being upgraded.
+	 * @param array $extra_data Additional data required for preparing the subscription, such as
+	 *                          remaining subscription days, trial status, and total used trial days.
+	 *
+	 * @return array The prepared subscription data including trial information if applicable.
+	 * @throws \Exception
+	 */
+	public function prepare_upgrade_subscription_data( $membership_id, $member_id, $extra_data ) {
+		$current_subscription         = $extra_data['subscription_data'];
+		$remaining_subscription_value = $extra_data['remaining_subscription_value'];
+		$membership                   = get_post( $membership_id, ARRAY_A );
+		$membership_meta              = json_decode( wp_unslash( get_post_meta( $membership['ID'], 'ur_membership', true ) ), true );
+		$expiry_date                  = '';
+		if ( 'subscription' == $membership_meta['type'] ) { // TODO: calculate with trial date
+			$expiry_date = self::get_expiry_date( date( 'Y-m-d' ), $membership_meta['subscription']['duration'], $remaining_subscription_value );
+		}
+		$billing_cycle = ( 'subscription' === $membership_meta['type'] ) ? $membership_meta['subscription']['duration'] : '';
+
+		$subscription_data = array(
+			'user_id'           => $member_id,
+			'item_id'           => $membership['ID'],
+			'start_date'        => date( 'Y-m-d 00:00:00' ),
+			'expiry_date'       => $expiry_date,
+			'next_billing_date' => $expiry_date,
+			'billing_amount'    => $membership_meta['amount'] ?? 0,
+			'status'            => 'free' === $membership_meta['type'] ? 'active' : 'pending',
+			'billing_cycle'     => $billing_cycle,
+		);
+
+		if ( isset( $extra_data['coupon'] ) && ! empty( $extra_data['coupon'] ) ) {
+			$subscription_data['coupon'] = $extra_data['coupon'];
+		}
+
+		if ( isset( $membership_meta['trial_status'] ) && 'on' === $membership_meta['trial_status'] ) {
+			$remaining_trial_days          = $membership_meta['trial_data']['value'];
+			$dont_calculate_trial_end_date = ! empty( $current_subscription['trial_end_date'] ) && $current_subscription['trial_end_date'] > date( 'Y-m-d 00:00:00' );
+			$trial_data                    = array(
+				'trial_start_date' => date( 'Y-m-d' ),
+				'trial_end_date'   => ! $dont_calculate_trial_end_date ? self::get_expiry_date( date( 'Y-m-d' ), $membership_meta['trial_data']['duration'], $remaining_trial_days ) : $current_subscription['trial_end_date'],
+			);
+
+			$subscription_data                      = array_merge( $subscription_data, $trial_data );
+			$subscription_data['start_date']        = $trial_data['trial_end_date'];
+			$subscription_data['expiry_date']       = self::get_expiry_date( $trial_data['trial_end_date'], $membership_meta['subscription']['duration'], $remaining_subscription_value );
+			$subscription_data['next_billing_date'] = $subscription_data['expiry_date'];
+		}
+
+		return $subscription_data;
+	}
+
+	public function renew_membership( $user, $selected_pg, $membership_id, $team_id ) {
 		$member_id                            = $user->ID;
 		$username                             = $user->user_login;
 		$member_subscription                  = $this->members_subscription_repository->get_subscription_data_by_member_and_membership_id( $member_id, $membership_id );
@@ -814,7 +916,15 @@ class SubscriptionService {
 
 		if ( isset( $renew_response['payment_url'] ) || isset( $renew_response['data'] ) || 'stripe' === $selected_pg ) {
 			$renew_response['status'] = true;
-
+			if ( $team_id ) {
+				$this->orders_repository->update_order_meta(
+					array(
+						'order_id'   => $order['ID'],
+						'meta_key'   => 'urm_team_id',
+						'meta_value' => $team_id,
+					)
+				);
+			}
 		} else {
 			$this->orders_repository->delete( $order['ID'] );
 		}
@@ -825,6 +935,7 @@ class SubscriptionService {
 				'username'                 => $username,
 				'transaction_id'           => $orders_data['orders_data']['transaction_id'],
 				'updated_membership_title' => $membership['post_title'],
+				'order_id'   => $order['ID'],
 			),
 			'response' => $renew_response,
 		);
@@ -869,6 +980,8 @@ class SubscriptionService {
 		if ( ! empty( $membership_process ) && in_array( $member_subscription['item_id'], $membership_process['renew'] ) ) {
 			unset( $membership_process['renew'][ array_search( $member_subscription['item_id'], $membership_process['renew'], true ) ] );
 			update_user_meta( $member_subscription['user_id'], 'urm_membership_process', $membership_process );
+
+			do_action( 'user_registration_membership_renewed', $member_subscription['user_id'], $member_subscription['item_id'] );
 		}
 	}
 
@@ -952,6 +1065,7 @@ class SubscriptionService {
 		foreach ( $subscriptions as $subscription ) {
 			$subscription_id = $subscription['subscription_id'];
 			$user_id         = $subscription['member_id'];
+			$membership_id   = isset( $subscription['membership'] ) ? absint( $subscription['membership'] ) : 0;
 			$last_order      = $this->members_orders_repository->get_member_orders( $user_id );
 
 			if ( $last_order['order_type'] !== 'subscription' ) {
@@ -980,6 +1094,9 @@ class SubscriptionService {
 					'subscription_id' => $subscription_id,
 					'member_id'       => $user_id,
 					'event_type'      => 'expired',
+					'meta'            => array(
+						'membership_id' => $membership_id,
+					),
 				);
 
 				do_action( 'ur_membership_subscription_event_triggered', $payload );
@@ -1004,5 +1121,85 @@ class SubscriptionService {
 			),
 			array( 'source' => 'urm-membership-expiration' )
 		);
+	}
+
+
+	/**
+	 * Callback for payment retry check.
+	 */
+	public function daily_payment_retry_check() {
+
+		$subscriptions = $this->members_subscription_repository->get_subscriptions_to_retry();
+		$expired_count = 0;
+		$expired_users = array();
+		foreach ( $subscriptions as $subscription ) {
+			//only handle the subscription case.
+			if ( $subscription['order_type'] !== 'subscription' ) {
+				continue;
+			}
+
+			// Update subscription status to expired
+			// $update_result = $this->members_subscription_repository->update( $subscription_id, array( 'status' => 'expired' ) );
+			$this->failed_payment_retry_callback( $subscription );
+		}
+	}
+
+	/**
+	 * Payment retry callback for a failed attempt.
+	 */
+	public function failed_payment_retry_callback( $subscription ) {
+		//update the counter for failed payment retry.
+		$retry_count = (int) get_user_meta( $subscription['member_id'], 'urm_is_payment_retrying', true );
+		update_user_meta( $subscription['member_id'], 'urm_is_payment_retrying', $retry_count + 1 );
+		switch ( $subscription['payment_method'] ) {
+			case 'paypal':
+				$paypal_service = new PaypalService();
+				$paypal_service->retry_subscription( $subscription );
+				break;
+			case 'stripe':
+				$stripe_service = new StripeService();
+				$stripe_service->retry_subscription( $subscription );
+				break;
+			default:
+				do_action( 'urm_handle_failed_payment_retry', $subscription );
+				break;
+		}
+	}
+
+	/**
+	 * Check if user membership expired.
+	 *
+	 * @param int $user_id User ID.
+	 * @param int $subscription_id Subscription ID.
+	 * @return boolean
+	 */
+	public function is_user_membership_expired($user_id, $subscription_id) {
+		$subscription = $this->members_subscription_repository->retrieve( $subscription_id );
+
+		if ( empty( $subscription ) || $subscription['user_id'] != $user_id ) {
+			return false;
+		}
+
+		if( $subscription['status'] === 'expired' ) {
+			return true;
+		}
+
+		if (empty($subscription['expiry_date'])) {
+			return false;
+		}
+
+		if( empty( $subscription['billing_cycle'] ) ) {
+			return false;
+		}
+
+		try {
+			$expiry_date = new \DateTime($subscription['expiry_date']);
+		} catch (\Exception $e) {
+			return false;
+		}
+
+		$today       = new \DateTime( 'today' );
+
+		return $expiry_date <= $today;
 	}
 }

@@ -5,6 +5,8 @@
  * @package
  */
 
+use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
+
 defined( 'ABSPATH' ) || exit;
 
 $order_id        = isset( $order['order_id'] ) ? $order['order_id'] : 0;
@@ -13,8 +15,12 @@ $is_form_payment = isset( $order['is_form_payment'] ) ? $order['is_form_payment'
 
 $plan_details    = ! empty( $order['plan_details'] ) ? json_decode( $order['plan_details'], true ) : array();
 $post_content    = isset( $order['post_content'] ) ? json_decode( wp_unslash( $order['post_content'] ), true ) : array();
-$membership_type = isset( $post_content['type'] ) ? $post_content['type'] : '';
 $trial_status    = isset( $order['trial_status'] ) ? $order['trial_status'] : 'off';
+
+$order_repository = new OrdersRepository();
+$order_meta_data  = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
+$tax_data 		  = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data[ 'meta_value' ], true ) : array();
+$tax_amount       = ! empty( $tax_data['tax_amount'] ) ? $tax_data['tax_amount'] : 0;
 
 if ( $is_form_payment ) {
 	$order['post_id']         = isset( $order['post_id'] ) ? $order['post_id'] : 0;
@@ -25,18 +31,36 @@ if ( $is_form_payment ) {
 	$trial_status             = 'off';
 }
 
-$plan_has_trial  = isset( $plan_details['trial_status'] ) && 'on' === $plan_details['trial_status'];
-$order_has_trial = isset( $order['trial_status'] ) && 'on' === $order['trial_status'];
-$supports_trial  = ( 'subscription' === $membership_type ) && ( $plan_has_trial || $order_has_trial );
+$plan_has_trial  = false;
+$order_has_trial = false;
+$supports_trial  = false;
+
+if ( $team ) {
+	$membership_type = ! empty( $team['meta']['urm_team_data']['team_plan_type'] ) ? $team['meta']['urm_team_data']['team_plan_type'] : '';
+} else {
+	$membership_type = isset( $post_content['type'] ) ? $post_content['type'] : '';
+	$plan_has_trial  = isset( $plan_details['trial_status'] ) && 'on' === $plan_details['trial_status'];
+	$order_has_trial = isset( $order['trial_status'] ) && 'on' === $order['trial_status'];
+	$supports_trial  = ( 'subscription' === $membership_type ) && ( $plan_has_trial || $order_has_trial );
+}
 
 $currency   = get_option( 'user_registration_payment_currency', 'USD' );
 $currencies = ur_payment_integration_get_currencies();
 $symbol     = isset( $currencies[ $currency ]['symbol'] ) ? $currencies[ $currency ]['symbol'] : '$';
 
+$local_currency   = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency' );
+
+$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
+$symbol = ur_get_currency_symbol( $currency );
+
 $status_options = array( 'completed', 'pending', 'failed', 'refunded' );
 
 $product_amount = 0;
-if ( isset( $plan_details['amount'] ) ) {
+if ( $team ) {
+	if ( isset( $order['billing_amount'] ) ) {
+		$product_amount = (float) $order['billing_amount'];
+	}
+} elseif ( isset( $plan_details['amount'] ) ) {
 	$product_amount = (float) $plan_details['amount'];
 } elseif ( isset( $order['billing_amount'] ) ) {
 	$product_amount = (float) $order['billing_amount'];
@@ -45,6 +69,10 @@ if ( isset( $plan_details['amount'] ) ) {
 } elseif ( isset( $order['product_amount'] ) ) {
 	$product_amount = (float) $order['product_amount'];
 }
+
+$local_currency_converted_amount = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency_converted_amount' );
+
+$product_amount = ! empty( $local_currency_converted_amount['meta_value'] ) ? $local_currency_converted_amount['meta_value'] : $product_amount;
 
 $coupon               = ! empty( $order['coupon'] ) ? ur_get_coupon_details( $order['coupon'] ) : null;
 $coupon_discount      = 0;
@@ -89,10 +117,12 @@ if ( 0 === $coupon_discount && ! empty( $order['coupon'] ) && $user_id > 0 ) {
 $items_subtotal = $product_amount;
 $order_total    = $items_subtotal - $coupon_discount;
 $paid_amount    = ( 'on' === $trial_status ) ? 0 : $order_total;
-
+$paid_amount    = ! empty( $tax_data['total_after_tax'] ) ? $tax_data['total_after_tax'] : $paid_amount;
 $recurring_label = '-';
 if ( 'subscription' === $membership_type ) {
-	if ( isset( $plan_details['subscription']['duration'] ) ) {
+	if ( $team ) {
+		$recurring_label = ! empty( $team['meta']['urm_team_data']['team_duration_period'] ) ? ( 'day' === $team['meta']['urm_team_data']['team_duration_period'] ? 'Daily' : ucfirst( $team['meta']['urm_team_data']['team_duration_period'] ) . 'ly' ) : '';
+	} elseif ( isset( $plan_details['subscription']['duration'] ) ) {
 		$recurring_label = ucfirst( $plan_details['subscription']['duration'] ) . 'ly';
 	} else {
 		$recurring_label = __( 'Recurring', 'user-registration' );
@@ -181,52 +211,54 @@ if ( $first_name || $last_name ) {
 								</div>
 							</div>
 							<div class="ur-payments__section-content">
-								<table class="ur-payments__table">
-									<thead>
-										<tr>
-											<th><?php esc_html_e( 'Item', 'user-registration' ); ?></th>
-											<th><?php esc_html_e( 'Recurring', 'user-registration' ); ?></th>
-											<th><?php esc_html_e( 'Price', 'user-registration' ); ?></th>
-											<th><?php esc_html_e( 'Qty', 'user-registration' ); ?></th>
-											<th><?php esc_html_e( 'Total', 'user-registration' ); ?></th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>
-												<?php if ( ! $is_form_payment && ! empty( $order['post_id'] ) ) : ?>
-												<a href="<?php echo esc_url( admin_url( "admin.php?post_id={$order['post_id']}&action=add_new_membership&page=user-registration-membership" ) ); ?>"
-													class="ur-payments__table-item-link">
-													<?php
-													$item_title = isset( $order['post_title'] ) ? $order['post_title'] : __( 'N/A', 'user-registration' );
-													echo esc_html( $item_title );
-													?>
-												</a>
-												<?php else : ?>
-													<?php
-													$item_title = isset( $order['post_title'] ) ? $order['post_title'] : __( 'N/A', 'user-registration' );
-													echo esc_html( $item_title );
-													?>
-												<?php endif; ?>
-											</td>
-											<td><?php echo esc_html( $recurring_label ); ?></td>
-											<td class="ur-payments__table-price">
-												<?php echo esc_html( $symbol . number_format( $product_amount, 2 ) ); ?>
-											</td>
-											<td><?php esc_html_e( 'x 1', 'user-registration' ); ?></td>
-											<td>
-												<div class="ur-payments__table-price">
-													<?php echo esc_html( $symbol . number_format( $order_total, 2 ) ); ?>
-												</div>
-												<?php if ( $coupon_discount > 0 ) : ?>
-												<div class="ur-payments__table-discount">
-													<?php echo esc_html( $symbol . number_format( $coupon_discount, 2 ) . ' ' . __( 'discount', 'user-registration' ) ); ?>
-												</div>
-												<?php endif; ?>
-											</td>
-										</tr>
-									</tbody>
-								</table>
+								<div class="ur-payments__section-content--table-wrapper">
+									<table class="ur-payments__table">
+										<thead>
+											<tr>
+												<th><?php esc_html_e( 'Item', 'user-registration' ); ?></th>
+												<th><?php esc_html_e( 'Recurring', 'user-registration' ); ?></th>
+												<th><?php esc_html_e( 'Price', 'user-registration' ); ?></th>
+												<th><?php esc_html_e( 'Qty', 'user-registration' ); ?></th>
+												<th><?php esc_html_e( 'Total', 'user-registration' ); ?></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>
+													<?php if ( ! $is_form_payment && ! empty( $order['post_id'] ) ) : ?>
+													<a href="<?php echo esc_url( admin_url( "admin.php?post_id={$order['post_id']}&action=add_new_membership&page=user-registration-membership" ) ); ?>"
+														class="ur-payments__table-item-link">
+														<?php
+														$item_title = isset( $order['post_title'] ) ? $order['post_title'] : __( 'N/A', 'user-registration' );
+														echo esc_html( $item_title );
+														?>
+													</a>
+													<?php else : ?>
+														<?php
+														$item_title = isset( $order['post_title'] ) ? $order['post_title'] : __( 'N/A', 'user-registration' );
+														echo esc_html( $item_title );
+														?>
+													<?php endif; ?>
+												</td>
+												<td><?php echo esc_html( $recurring_label ); ?></td>
+												<td class="ur-payments__table-price">
+													<?php echo esc_html( $symbol . number_format( $product_amount, 2 ) ); ?>
+												</td>
+												<td><?php esc_html_e( 'x 1', 'user-registration' ); ?></td>
+												<td>
+													<div class="ur-payments__table-price">
+														<?php echo esc_html( $symbol . number_format( $order_total, 2 ) ); ?>
+													</div>
+													<?php if ( $coupon_discount > 0 ) : ?>
+													<div class="ur-payments__table-discount">
+														<?php echo esc_html( $symbol . number_format( $coupon_discount, 2 ) . ' ' . __( 'discount', 'user-registration' ) ); ?>
+													</div>
+													<?php endif; ?>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 
 								<div class="ur-payments__data">
 									<!-- Coupons Section -->
@@ -280,6 +312,15 @@ if ( $first_name || $last_name ) {
 													<td width="1%"></td>
 													<td class="ur-payments__summary-total">
 														<?php echo esc_html( $symbol . number_format( $order_total, 2 ) ); ?>
+													</td>
+												</tr>
+												<tr>
+													<td class="ur-payments__summary-label">
+														<?php esc_html_e( 'Tax Amount:', 'user-registration' ); ?>
+													</td>
+													<td width="1%"></td>
+													<td class="ur-payments__summary-total">
+														<?php echo esc_html( $symbol . number_format( $tax_amount, 2 ) ); ?>
 													</td>
 												</tr>
 											</tbody>

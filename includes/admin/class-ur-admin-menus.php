@@ -15,6 +15,8 @@ use WPEverest\URMembership\Payment\Orders;
 use WPEverest\URMembership\Coupons\Coupons;
 use WPEverest\URPrivateNotes\UserRegistrationPrivateNotes;
 use WPEverest\URPrivateNotes\Admin\Admin;
+use WPEverest\URTeamMembership\Admin\Admin as URTeamMembershipAdmin;
+use WPEverest\URTeamMembership\TeamMembership;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -697,8 +699,19 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				);
 			}
 
-			$members_obj = new \User_Registration_Members_Menu();
-			$members_obj->add_members_menu_tab();
+			if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
+				require_once UR_ABSPATH . 'includes/admin/settings/class-ur-members-menu.php';
+			}
+
+			if ( class_exists( 'User_Registration_Members_Menu' ) ) {
+				$members_obj = new \User_Registration_Members_Menu();
+				$members_obj->add_members_menu_tab();
+			}
+
+			if ( UR_PRO_ACTIVE && class_exists( 'WPEverest\URMembership\Admin\Membership\Membership' ) && ur_check_module_activation( 'membership' ) && ur_check_module_activation( 'team' ) && class_exists( 'WPEverest\URTeamMembership\Admin\Admin' ) ) {
+				$team_obj = new URTeamMembershipAdmin();
+				$team_obj->add_teams_menu();
+			}
 
 			if ( UR_PRO_ACTIVE && class_exists( 'WPEverest\URPrivateNotes\UserRegistrationPrivateNotes' ) && version_compare( UR_PRIVATE_NOTES_VERSION, '1.0.12', '>' ) ) {
 				$private_notes_obj = new Admin();

@@ -287,9 +287,9 @@ class UR_Shortcodes {
 				$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 				do_action( 'wp_enqueue_membership_scripts' );
 				wp_enqueue_script( 'user-registration' );
-				wp_register_script( 'user-registration-membership-frontend-script', UR()->plugin_url(). '/assets/js/modules/membership/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
+				wp_register_script( 'user-registration-membership-frontend-script', UR()->plugin_url() . '/assets/js/modules/membership/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 				wp_enqueue_script( 'user-registration-membership-frontend-script' );
-				wp_register_style( 'user-registration-membership-frontend-style', UR()->plugin_url(). '/assets/css/modules/membership/user-registration-membership-frontend.css', array(), UR_VERSION );
+				wp_register_style( 'user-registration-membership-frontend-style', UR()->plugin_url() . '/assets/css/modules/membership/user-registration-membership-frontend.css', array(), UR_VERSION );
 				wp_register_style( 'user-registration-general', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
 				wp_enqueue_style( 'user-registration-membership-frontend-style' );
 				wp_enqueue_style( 'user-registration-general' );
@@ -324,6 +324,10 @@ class UR_Shortcodes {
 					if ( isset( $fetched_data['status'] ) && $fetched_data['status'] ) {
 						$user_id = get_current_user_id();
 						$form_id = get_user_meta( $user_id, 'ur_form_id', true );
+
+						if ( check_membership_field_in_form($form_id ) === false ) {
+							$form_id = $atts['id'] ?? 0;
+						}
 
 						$form_fields = ur_get_form_fields( $form_id );
 

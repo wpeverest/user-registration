@@ -16,7 +16,6 @@ const getConditionType = (conditionType) => {
 		membership: "multiselect",
 		capabilities: "multiselect",
 		registration_source: "multiselect",
-		payment_status: "multiselect",
 		ur_form_field: "multiselect",
 		user_state: "checkbox",
 		user_registered_date: "date",
@@ -60,7 +59,28 @@ const RuleGroup = ({
 					let conditionValue = cond.value;
 					const conditionType = getConditionType(cond.type);
 
+					if (cond.type === "registration_source") {
+						// Keep registration_source as is, normalize value to array
+						if (Array.isArray(conditionValue)) {
+							conditionValue = conditionValue;
+						} else if (conditionValue) {
+							conditionValue = [conditionValue];
+						} else {
+							conditionValue = [];
+						}
+						return {
+							type: "condition",
+							id: cond.id || `x${Date.now()}`,
+							value: "registration_source",
+							label: "registration_source",
+							inputType: "multiselect",
+							operator: "is",
+							conditionValue: conditionValue
+						};
+					}
+
 					if (cond.type === "ur_form_field") {
+						// Keep ur_form_field as is
 						if (
 							conditionValue &&
 							typeof conditionValue === "object" &&
@@ -76,6 +96,34 @@ const RuleGroup = ({
 							};
 						} else {
 							conditionValue = { form_id: "", form_fields: [] };
+						}
+						return {
+							type: "condition",
+							id: cond.id || `x${Date.now()}`,
+							value: "ur_form_field",
+							label: "ur_form_field",
+							inputType: "multiselect",
+							operator: "is",
+							conditionValue: conditionValue
+						};
+					}
+
+					if (cond.type === "urm") {
+						if (typeof conditionValue === "string" && conditionValue) {
+							conditionValue = conditionValue;
+						} else if (conditionValue && typeof conditionValue === "object") {
+							if (conditionValue.form_id) {
+								conditionValue = {
+									form_id: conditionValue.form_id || "",
+									form_fields: Array.isArray(conditionValue.form_fields) 
+										? conditionValue.form_fields 
+										: []
+								};
+							} else {
+								conditionValue = "";
+							}
+						} else {
+							conditionValue = "";
 						}
 					} else if (cond.type === "user_state") {
 						if (Array.isArray(conditionValue)) {
@@ -102,6 +150,7 @@ const RuleGroup = ({
 					};
 				}
 			});
+			
 			setConditions(initialConditions);
 		} else {
 			setConditions([]);
@@ -123,7 +172,9 @@ const RuleGroup = ({
 
 	const handleAfterConditionSelection = (option) => {
 		let initialValue = "";
-		if (option.type === "multiselect") {
+		if (option.value === "ur_form_field") {
+			initialValue = { form_id: "", form_fields: [] };
+		} else if (option.type === "multiselect") {
 			initialValue = [];
 		} else if (
 			option.type === "checkbox" &&
@@ -192,7 +243,35 @@ const RuleGroup = ({
 				return cond.group;
 			} else {
 				let conditionValue = cond.conditionValue;
-				if (
+				
+				// Handle urm type - can be string (form_id only) or object (form_id + form_fields)
+				if (cond.value === "urm") {
+					if (typeof conditionValue === "object" && conditionValue !== null) {
+						if (conditionValue.form_id && Array.isArray(conditionValue.form_fields)) {
+							conditionValue = {
+								form_id: conditionValue.form_id,
+								form_fields: conditionValue.form_fields.filter(
+									(field) => field.field_name && field.operator
+								)
+							};
+						} else if (conditionValue.form_id) {
+							conditionValue = conditionValue.form_id;
+						} else {
+							conditionValue = "";
+						}
+					} else if (typeof conditionValue === "string") {
+						conditionValue = conditionValue;
+					} else {
+						conditionValue = "";
+					}
+				} else if (cond.value === "registration_source") {
+					// Serialize registration_source as array
+					conditionValue = Array.isArray(conditionValue)
+						? conditionValue
+						: conditionValue
+							? [conditionValue]
+							: [];
+				} else if (
 					cond.value === "ur_form_field" &&
 					typeof conditionValue === "object"
 				) {
@@ -220,8 +299,8 @@ const RuleGroup = ({
 					conditionValue = Array.isArray(conditionValue)
 						? conditionValue
 						: conditionValue
-						? [conditionValue]
-						: [];
+							? [conditionValue]
+							: [];
 				} else if (
 					cond.operator === "empty" ||
 					cond.operator === "not empty"
@@ -422,6 +501,7 @@ const RuleGroup = ({
 							onContentTargetsChange={onContentTargetsChange}
 							ruleType={ruleType}
 							rule={rule}
+							conditions={conditions}
 						/>
 					)}
 				</div>

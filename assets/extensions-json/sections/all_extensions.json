@@ -66,7 +66,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=account&section=customize-my-account",
+      "setting_url": "admin.php?page=user-registration-settings&tab=my_account&section=customize-my-account",
       "demo_video_url": "xOeV8JkE_es",
       "released_date": "09/04/2020"
     },
@@ -692,9 +692,9 @@
       "demo_video_url": ""
     },
     {
-      "title": "Frontend Listing",
+      "title": "Member Directory",
       "slug": "user-registration-frontend-listing",
-      "name": "User Registration Frontend Listing",
+      "name": "User Registration Member Directory",
       "image": "extensions-json/sections/icons/frontend_listing.png",
       "excerpt": "Display users registered on the site as a directory (for community sites or directories).",
       "category": "User Management",

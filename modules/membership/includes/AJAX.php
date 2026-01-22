@@ -29,8 +29,8 @@ use WPEverest\URMembership\Admin\Services\PaymentGatewayLogging;
 use WPEverest\URMembership\Admin\Services\PaymentService;
 use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 use WPEverest\URMembership\Admin\Services\SubscriptionService;
-use WPEverest\URMembership\Admin\Services\OrderService;
 use WPEverest\URMembership\Admin\Services\UpgradeMembershipService;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -85,6 +85,7 @@ class AJAX {
 			'addons_get_lists'             => false,
 			'create_subscription'          => false,
 			'update_subscription'          => false,
+			'validate_payment_currency'    => false,
 		);
 		foreach ( $ajax_events as $ajax_event => $nopriv ) {
 			add_action( 'wp_ajax_user_registration_membership_' . $ajax_event, array( __CLASS__, $ajax_event ) );
@@ -228,8 +229,11 @@ class AJAX {
 		$transaction_id          = isset( $response['transaction_id'] ) ? $response['transaction_id'] : 0;
 		$data['member_id']       = $member_id;
 		$data['subscription_id'] = isset( $response['subscription_id'] ) ? $response['subscription_id'] : 0;
-		$data['email']           = $response['member_email'];
-		$pg_data                 = array();
+		if ( ur_check_module_activation( 'team' ) ) {
+			$data['team_id'] = ! empty( $response['team_id'] ) ? $response['team_id'] : 0;
+		}
+		$data['email'] = $response['member_email'];
+		$pg_data       = array();
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
 			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
 
@@ -264,6 +268,9 @@ class AJAX {
 					'message'        => esc_html__( 'New member has been successfully created.', 'user-registration' ),
 				)
 			);
+			if ( ur_check_module_activation( 'team' ) ) {
+				$response['team_id'] = absint( $data['team_id'] );
+			}
 			if ( 'free' !== $data['payment_method'] ) {
 				$response['pg_data'] = $pg_data;
 			}
@@ -308,7 +315,7 @@ class AJAX {
 			$rule_data = is_array( $data['urcr_membership_access_rule_data'] ) ? $data['urcr_membership_access_rule_data'] : json_decode( $data['urcr_membership_access_rule_data'], true );
 		}
 
-		$is_stripe_enabled = isset( $data['post_meta_data']['payment_gateways']['stripe'] ) && 'on' === $data['post_meta_data']['payment_gateways']['stripe']['status'];
+		$is_stripe_enabled = urm_is_payment_gateway_configured( 'stripe' );
 		$data              = $membership->prepare_membership_post_data( $data );
 
 		if ( isset( $data['status'] ) && ! $data['status'] ) {
@@ -400,7 +407,7 @@ class AJAX {
 		$is_stripe_enabled = urm_is_payment_gateway_configured( 'stripe' );
 		$is_mollie_enabled = urm_is_payment_gateway_configured( 'mollie' );
 
-		$data                                       = $membership->prepare_membership_post_data( $data );
+		$data = $membership->prepare_membership_post_data( $data );
 		if ( isset( $data['status'] ) && ! $data['status'] ) {
 			wp_send_json_error(
 				array(
@@ -526,6 +533,74 @@ class AJAX {
 				)
 			);
 		}
+	}
+
+	/**
+	 * Get membership details for a given membership ID.
+	 *
+	 * @since 5.0.0
+	 */
+	public static function get_membership_details() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to view membership details.', 'user-registration' ) ) );
+		}
+
+		$membership_id = isset( $_POST['membership_id'] ) ? sanitize_text_field( wp_unslash( $_POST['membership_id'] ) ) : '';
+
+		if ( empty( $membership_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Membership ID is missing.', 'user-registration' ) ) );
+		}
+
+		$membership_details = ur_get_membership_details();
+
+		if ( is_wp_error( $membership_details ) ) {
+			wp_send_json_error( array( 'message' => __( 'Something went wrong.', 'user-registration' ) ) );
+		}
+
+		$membership_detail = array();
+		foreach ( $membership_details as $details ) {
+			if ( isset( $details['ID'] ) && $membership_id === $details['ID'] ) {
+				$date = explode( ' ', $details['period'] );
+
+				$value  = isset( $date[2] ) && is_numeric( $date[2] ) ? (int) $date[2] : '';
+				$period = isset( $date[3] ) ? trim( $date[3] ) : '';
+
+				$list_of_period = array(
+					'Day'    => 'D',
+					'Days'   => 'D',
+					'Week'   => 'W',
+					'Weeks'  => 'W',
+					'Month'  => 'M',
+					'Months' => 'M',
+					'Year'   => 'Y',
+					'Years'  => 'Y',
+				);
+
+				$expiration_on = 'N/A';
+
+				if ( ! empty( $period ) && ! empty( $value ) && isset( $list_of_period[ $period ] ) ) {
+					$start_date = new \DateTime( date( 'Y-m-d' ) ?? '' );
+
+					$intervalSpec = 'P' . $value . $list_of_period[ $period ];
+
+					$interval = new \DateInterval( $intervalSpec );
+					$start_date->add( $interval );
+					$expiration_on = $start_date->format( 'F j, Y' );
+				}
+
+				$membership_detail['amount']              = html_entity_decode( $details['period'] );
+				$membership_detail['subscription_status'] = __( 'Pending', 'user-registration' );
+				$membership_detail['expiration_on']       = $expiration_on;
+
+				break;
+			}
+		}
+
+		wp_send_json_success(
+			array(
+				'membership_detail' => $membership_detail,
+			)
+		);
 	}
 
 	/**
@@ -663,7 +738,6 @@ class AJAX {
 			)
 		);
 	}
-
 
 	/**
 	 * Delete multiple Memberships
@@ -988,7 +1062,7 @@ class AJAX {
 		$membership_process     = urm_get_membership_process( $member_id );
 		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
 		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( $_POST['current_membership_id'] ) : 0;
-		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
+		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] ) && empty( absint( $_POST['team_id'] ) );
 		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
 		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $current_membership_id, $membership_process['renew'] );
 
@@ -1085,64 +1159,6 @@ class AJAX {
 			),
 			500
 		);
-	}
-
-	public static function create_stripe_subscription() {
-		ur_membership_verify_nonce( 'urm_confirm_payment' );
-		$customer_id       = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
-		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
-		$member_id         = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$is_user_created   = get_user_meta( $member_id, 'urm_user_just_created' );
-
-		$membership_process     = urm_get_membership_process( $member_id );
-		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
-		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( $_POST['current_membership_id'] ) : 0;
-		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
-		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
-		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $current_membership_id, $membership_process['renew'] );
-
-		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
-					wp_send_json_error(
-						array(
-							'message' => __( 'Invalid Request.', 'user-registration' ),
-						)
-					);
-		}
-		if ( is_user_logged_in() && ! current_user_can( 'edit_user', $member_id ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
-				)
-			);
-		}
-		$stripe_service      = new StripeService();
-		$form_response       = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id, $is_upgrading );
-
-		if ( $stripe_subscription['status'] ) {
-			if ( ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $form_response['auto_login'] ) {
-				$members_service = new MembersService();
-				$logged_in       = $members_service->login_member( $member_id, true );
-				if ( ! $logged_in ) {
-					wp_send_json_error(
-						array(
-							'message' => __( 'Invalid User', 'user-registration' ),
-						)
-					);
-				}
-			}
-			wp_send_json_success( $stripe_subscription );
-		} else {
-			if ( ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
-				wp_delete_user( absint( $member_id ) );
-			}
-
-			wp_send_json_error(
-				array(
-					'message' => __( 'Something went wrong when updating users payment status' ),
-				)
-			);
-		}
 	}
 
 	/**
@@ -1263,6 +1279,224 @@ class AJAX {
 
 		}
 	}
+
+	public static function create_stripe_subscription() {
+		ur_membership_verify_nonce( 'urm_confirm_payment' );
+		$customer_id       = isset( $_POST['customer_id'] ) ? $_POST['customer_id'] : '';
+		$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : '';
+		$member_id         = absint( wp_unslash( $_POST['member_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$is_user_created   = get_user_meta( $member_id, 'urm_user_just_created' );
+
+		$membership_process     = urm_get_membership_process( $member_id );
+		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
+		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( $_POST['current_membership_id'] ) : 0;
+		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
+		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] ) && empty( absint( $_POST['team_id'] ) );
+		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $current_membership_id, $membership_process['renew'] );
+		$team_id                = ! empty( $_POST['team_id'] ) ? absint( $_POST['team_id'] ) : 0;
+
+		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Invalid Request.', 'user-registration' ),
+						)
+					);
+		}
+		if ( is_user_logged_in() && ! current_user_can( 'edit_user', $member_id ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'You are not allowed to edit this user.', 'user-registration' ),
+				)
+			);
+		}
+		$stripe_service      = new StripeService();
+		$form_response       = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
+		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id, $is_upgrading, $team_id );
+
+		if ( $stripe_subscription['status'] ) {
+			$subscription_status = isset( $stripe_subscription['subscription']->status )
+				? $stripe_subscription['subscription']->status
+				: '';
+
+			$subscription_is_active = in_array( $subscription_status, array( 'active', 'trialing' ), true );
+
+			if ( $subscription_is_active && ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $form_response['auto_login'] ) {
+				$members_service = new MembersService();
+				$logged_in       = $members_service->login_member( $member_id, true );
+				if ( ! $logged_in ) {
+					wp_send_json_error(
+						array(
+							'message' => __( 'Invalid User', 'user-registration' ),
+						)
+					);
+				}
+			}
+			wp_send_json_success( $stripe_subscription );
+		} else {
+			if ( ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
+				wp_delete_user( absint( $member_id ) );
+			}
+
+			wp_send_json_error(
+				array(
+					'message' => __( 'Something went wrong when updating users payment status' ),
+				)
+			);
+		}
+	}
+
+	public static function create_subscription() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Sorry, you do not have permission to create subscription', 'user-registration' ),
+				)
+			);
+		}
+
+		ur_membership_verify_nonce( 'ur_membership_subscription' );
+
+		$subscription_data = $_POST;  // phpcs:ignore WordPress.Security.NonceVerification.Missing -- L:750
+
+		if ( empty( $subscription_data['member'] ) || empty( $subscription_data['plan'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Please fill in all required fields.', 'user-registration' ),
+				)
+			);
+		}
+
+		$subscription_repository = new SubscriptionRepository();
+
+		$membership_id   = absint( $subscription_data['plan'] );
+		$membership      = get_post( $membership_id );
+		$membership_meta = json_decode( wp_unslash( get_post_meta( $membership_id, 'ur_membership', true ) ), true );
+
+		if ( ! $membership || empty( $membership_meta ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Invalid membership plan selected.', 'user-registration' ),
+				)
+			);
+		}
+
+		$is_recurring = isset( $membership_meta['type'] ) && 'subscription' === $membership_meta['type'];
+		if ( $is_recurring ) {
+			if ( empty( $subscription_data['expiry_date'] ) ) {
+				wp_send_json_error(
+					array(
+						'message' => __( 'Expiry date is required for recurring subscription plans.', 'user-registration' ),
+					)
+				);
+			}
+		}
+
+		$start_date     = ! empty( $subscription_data['start_date'] ) ? sanitize_text_field( $subscription_data['start_date'] ) : current_time( 'Y-m-d' );
+		$status         = isset( $subscription_data['status'] ) ? sanitize_text_field( $subscription_data['status'] ) : 'pending';
+		$billing_amount = isset( $subscription_data['billing_amount'] ) ? floatval( $subscription_data['billing_amount'] ) : ( $membership_meta['amount'] ?? 0 );
+
+		if ( $is_recurring ) {
+			$expiry_date   = ! empty( $subscription_data['expiry_date'] ) ? sanitize_text_field( $subscription_data['expiry_date'] ) : null;
+			$billing_cycle = isset( $subscription_data['billing_cycle'] ) && ! empty( $subscription_data['billing_cycle'] ) ? sanitize_text_field( $subscription_data['billing_cycle'] ) : ( $membership_meta['subscription']['duration'] ?? 'month' );
+		} else {
+			$expiry_date   = null;
+			$billing_cycle = '';
+		}
+
+		$data = array(
+			'user_id'           => absint( $subscription_data['member'] ),
+			'item_id'           => $membership_id,
+			'start_date'        => $start_date,
+			'expiry_date'       => $expiry_date,
+			'next_billing_date' => $expiry_date,
+			'billing_cycle'     => $billing_cycle,
+			'billing_amount'    => $billing_amount,
+			'status'            => $status,
+			'cancel_sub'        => $membership_meta['cancel_subscription'] ?? 'immediately',
+		);
+
+		if ( ! empty( $subscription_data['subscription_id'] ) ) {
+			$data['subscription_id'] = sanitize_text_field( $subscription_data['subscription_id'] );
+		}
+
+		$subscription = $subscription_repository->create( $data );
+
+		if ( false === $subscription ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Failed to create subscription.', 'user-registration' ),
+				)
+			);
+		}
+
+		$orders_repository = new OrdersRepository();
+		$current_user      = wp_get_current_user();
+		$transaction_id    = ! empty( $subscription_data['subscription_id'] ) ? sanitize_text_field( $subscription_data['subscription_id'] ) : 'sub_' . $subscription['ID'] . '_' . time();
+		$payment_gateway   = isset( $subscription_data['payment_gateway'] ) && ! empty( $subscription_data['payment_gateway'] ) ? sanitize_text_field( $subscription_data['payment_gateway'] ) : 'manual';
+
+		$order_type = $is_recurring ? 'subscription' : 'one-time';
+		$notes_text = $is_recurring
+			? sprintf(
+				/* translators: %s: Current user display name */
+				__( 'Recurring subscription created by %s', 'user-registration' ),
+				$current_user->display_name
+			)
+			: sprintf(
+				/* translators: %s: Current user display name */
+				__( 'One-time membership created by %s', 'user-registration' ),
+				$current_user->display_name
+			);
+
+		$order_data = array(
+			'orders_data'      => array(
+				'user_id'         => absint( $subscription_data['member'] ),
+				'item_id'         => $membership_id,
+				'subscription_id' => $subscription['ID'],
+				'created_by'      => $current_user->ID,
+				'transaction_id'  => $transaction_id,
+				'payment_method'  => $payment_gateway,
+				'total_amount'    => $billing_amount,
+				'status'          => 'pending',
+				'order_type'      => $order_type,
+				'trial_status'    => 'off',
+				'notes'           => $notes_text,
+			),
+			'orders_meta_data' => array(
+				array(
+					'meta_key'   => 'is_admin_created',
+					'meta_value' => true,
+				),
+			),
+		);
+
+		$order = $orders_repository->create( $order_data );
+
+		if ( $is_recurring ) {
+			$success_message         = __( 'Recurring subscription and order created successfully.', 'user-registration' );
+			$partial_success_message = __( 'Recurring subscription created successfully, but order creation failed.', 'user-registration' );
+		} else {
+			$success_message         = __( 'One-time membership and order created successfully.', 'user-registration' );
+			$partial_success_message = __( 'One-time membership created successfully, but order creation failed.', 'user-registration' );
+		}
+
+		if ( false === $order ) {
+			wp_send_json_success(
+				array(
+					'id'      => $subscription['ID'],
+					'message' => $partial_success_message,
+				)
+			);
+		} else {
+			wp_send_json_success(
+				array(
+					'id'      => $subscription['ID'],
+					'message' => $success_message,
+				)
+			);
+		}
+		wp_die();
+	}
+
 	/**
 	 * Reactivate membership.
 	 */
@@ -1628,8 +1862,53 @@ class AJAX {
 				$single_field[ 'user_registration_' . $data->field_name ] = isset( $data->value ) ? $data->value : '';
 			}
 
-			list( $profile, $single_field ) = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, false );
-			$user                           = get_userdata( $user_id );
+			// Skip validationd for fields ignored in checkout.
+			add_filter(
+				'user_registration_update_profile_validation_skip_fields',
+				function ( $skippable_fields, $form_data ) {
+					$skippable_field_types = apply_filters(
+						'user_registration_ignorable_checkout_fields',
+						array(
+							'user_pass',
+							'user_confirm_password',
+							'user_confirm_email',
+							'profile_picture',
+							'wysiwyg',
+							'select2',
+							'multi_select2',
+							'range',
+							'file',
+						)
+					);
+
+					$form_skippable_fields = array_filter(
+						$form_data,
+						function ( $field ) use ( $skippable_field_types ) {
+							if ( in_array( $field->field_key, $skippable_field_types, true ) ) {
+
+								if ( 'range' === $field->field_key && ( isset( $field->advance_setting->enable_payment_slider ) && ! ur_string_to_bool( $field->advance_setting->enable_payment_slider ) ) ) {
+									return false;
+								}
+
+								return true;
+							}
+
+							return false;
+						}
+					);
+
+					$form_skippable_fields = wp_list_pluck( wp_list_pluck( $form_skippable_fields, 'general_setting' ), 'field_name' );
+
+					return array_unique(
+						array_merge( $skippable_fields, $form_skippable_fields )
+					);
+				},
+				10,
+				2
+			);
+
+			[ $profile, $single_field ] = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, false );
+			$user                       = get_userdata( $user_id );
 			urm_update_user_profile_data( $user, $profile, $single_field, $form_id );
 
 			$logger = ur_get_logger();
@@ -1812,14 +2091,63 @@ class AJAX {
 			$form_data    = json_decode( wp_unslash( $_POST['form_data'] ) );
 			$user_id      = get_current_user_id();
 			$form_id      = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : ur_get_form_id_by_userid( $user_id );
-			$profile      = user_registration_form_data( $user_id, $form_id );
+
+			if ( isset( $_POST['type'] ) && 'register' === sanitize_text_field( $_POST['type'] ) ) {
+				update_user_meta( $user_id, 'ur_form_id', $form_id );
+			}
+
+			$profile = user_registration_form_data( $user_id, $form_id );
 
 			foreach ( $form_data as $data ) {
 				$single_field[ 'user_registration_' . $data->field_name ] = isset( $data->value ) ? $data->value : '';
 			}
 
-			list( $profile, $single_field ) = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, false );
-			$user                           = get_userdata( $user_id );
+			// Skip validationd for fields ignored in checkout.
+			add_filter(
+				'user_registration_update_profile_validation_skip_fields',
+				function ( $skippable_fields, $form_data ) {
+					$skippable_field_types = apply_filters(
+						'user_registration_ignorable_checkout_fields',
+						array(
+							'user_pass',
+							'user_confirm_password',
+							'user_confirm_email',
+							'profile_picture',
+							'wysiwyg',
+							'select2',
+							'multi_select2',
+							'range',
+							'file',
+						)
+					);
+
+					$form_skippable_fields = array_filter(
+						$form_data,
+						function ( $field ) use ( $skippable_field_types ) {
+							if ( in_array( $field->field_key, $skippable_field_types, true ) ) {
+
+								if ( 'range' === $field->field_key && ( isset( $field->advance_setting->enable_payment_slider ) && ! ur_string_to_bool( $field->advance_setting->enable_payment_slider ) ) ) {
+									return false;
+								}
+
+								return true;
+							}
+
+							return false;
+						}
+					);
+
+					$form_skippable_fields = wp_list_pluck( wp_list_pluck( $form_skippable_fields, 'general_setting' ), 'field_name' );
+
+					return array_unique(
+						array_merge( $skippable_fields, $form_skippable_fields )
+					);
+				},
+				10,
+				2
+			);
+			[ $profile, $single_field ] = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, false );
+			$user                       = get_userdata( $user_id );
 			urm_update_user_profile_data( $user, $profile, $single_field, $form_id );
 
 			$logger = ur_get_logger();
@@ -1858,15 +2186,17 @@ class AJAX {
 			$data['coupon'] = sanitize_text_field( $_POST['coupon'] );
 		}
 
-		$subscription_service = new SubscriptionService();
-		$status               = $subscription_service->can_purchase_multiple( $data );
+		if ( isset( $_POST['type'] ) && 'multiple' === sanitize_text_field( $_POST['type'] ) ) {
+			$subscription_service = new SubscriptionService();
+			$status               = $subscription_service->can_purchase_multiple( $data );
 
-		if ( ! $status['status'] ) {
-			wp_send_json_error(
-				array(
-					'message' => $status['message'],
-				)
-			);
+			if ( ! $status['status'] ) {
+				wp_send_json_error(
+					array(
+						'message' => $status['message'],
+					)
+				);
+			}
 		}
 
 		// Get membership type for logging
@@ -2069,6 +2399,7 @@ class AJAX {
 		$subscription_service = new SubscriptionService();
 		$selected_pg          = sanitize_text_field( $_POST['selected_pg'] );
 		$membership_id        = absint( $_POST['membership_id'] );
+		$team_id              = ! empty( $_POST['team_id'] ) ? absint( $_POST['team_id'] ) : 0;
 
 		// Get membership type for logging
 		$members_subscription_repo = new MembersSubscriptionRepository();
@@ -2081,6 +2412,73 @@ class AJAX {
 				$membership_metas = json_decode( $membership['meta_value'], true );
 				$membership_type  = $membership_metas['type'] ?? 'unknown';
 			}
+		}
+
+		if ( isset( $_POST['form_data'] ) && ! empty( $_POST['form_data'] ) ) {
+			$single_field = array();
+			$form_data    = json_decode( wp_unslash( $_POST['form_data'] ) );
+			$user_id      = get_current_user_id();
+			$form_id      = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : ur_get_form_id_by_userid( $user_id );
+			$profile      = user_registration_form_data( $user_id, $form_id );
+
+			foreach ( $form_data as $data ) {
+				$single_field[ 'user_registration_' . $data->field_name ] = isset( $data->value ) ? $data->value : '';
+			}
+
+			// Skip validationd for fields ignored in checkout.
+			add_filter(
+				'user_registration_update_profile_validation_skip_fields',
+				function ( $skippable_fields, $form_data ) {
+					$skippable_field_types = apply_filters(
+						'user_registration_ignorable_checkout_fields',
+						array(
+							'user_pass',
+							'user_confirm_password',
+							'user_confirm_email',
+							'profile_picture',
+							'wysiwyg',
+							'select2',
+							'multi_select2',
+							'range',
+							'file',
+						)
+					);
+
+					$form_skippable_fields = array_filter(
+						$form_data,
+						function ( $field ) use ( $skippable_field_types ) {
+							if ( in_array( $field->field_key, $skippable_field_types, true ) ) {
+
+								if ( 'range' === $field->field_key && ( isset( $field->advance_setting->enable_payment_slider ) && ! ur_string_to_bool( $field->advance_setting->enable_payment_slider ) ) ) {
+									return false;
+								}
+
+								return true;
+							}
+
+							return false;
+						}
+					);
+
+					$form_skippable_fields = wp_list_pluck( wp_list_pluck( $form_skippable_fields, 'general_setting' ), 'field_name' );
+
+					return array_unique(
+						array_merge( $skippable_fields, $form_skippable_fields )
+					);
+				},
+				10,
+				2
+			);
+
+			[ $profile, $single_field ] = urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, false );
+			$user                       = get_userdata( $user_id );
+			urm_update_user_profile_data( $user, $profile, $single_field, $form_id );
+
+			$logger = ur_get_logger();
+			$logger->info(
+				__( 'User details added while renewing.', 'user-registration' ),
+				array( 'source' => 'form-save' )
+			);
 		}
 
 		// Log session start with divider
@@ -2114,7 +2512,7 @@ class AJAX {
 			);
 		}
 
-		$renew_membership = $subscription_service->renew_membership( $user, $selected_pg, $membership_id );
+		$renew_membership = $subscription_service->renew_membership( $user, $selected_pg, $membership_id, $team_id );
 
 		$response = $renew_membership['response'];
 		if ( $response['status'] ) {
@@ -2155,226 +2553,6 @@ class AJAX {
 				'message' => __( 'Something went wrong while cancelling membership.', 'user-registration' ),
 			)
 		);
-	}
-
-	/**
-	 * Get membership details for a given membership ID.
-	 *
-	 * @since 5.0.0
-	 */
-	public static function get_membership_details() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'You do not have permission to view membership details.', 'user-registration' ) ) );
-		}
-
-		$membership_id = isset( $_POST['membership_id'] ) ? sanitize_text_field( wp_unslash( $_POST['membership_id'] ) ) : '';
-
-		if ( empty( $membership_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Membership ID is missing.', 'user-registration' ) ) );
-		}
-
-		$membership_details = ur_get_membership_details();
-
-		if ( is_wp_error( $membership_details ) ) {
-			wp_send_json_error( array( 'message' => __( 'Something went wrong.', 'user-registration' ) ) );
-		}
-
-		$membership_detail = array();
-		foreach ( $membership_details as $details ) {
-			if ( isset( $details['ID'] ) && $membership_id === $details['ID'] ) {
-				$date = explode( ' ', $details['period'] );
-
-				$value  = isset( $date[2] ) && is_numeric( $date[2] ) ? (int) $date[2] : '';
-				$period = isset( $date[3] ) ? trim( $date[3] ) : '';
-
-				$list_of_period = array(
-					'Day'    => 'D',
-					'Days'   => 'D',
-					'Week'   => 'W',
-					'Weeks'  => 'W',
-					'Month'  => 'M',
-					'Months' => 'M',
-					'Year'   => 'Y',
-					'Years'  => 'Y',
-				);
-
-				$expiration_on = 'N/A';
-
-				if ( ! empty( $period ) && ! empty( $value ) && isset( $list_of_period[ $period ] ) ) {
-					$start_date = new \DateTime( date( 'Y-m-d' ) ?? '' );
-
-					$intervalSpec = 'P' . $value . $list_of_period[ $period ];
-
-					$interval = new \DateInterval( $intervalSpec );
-					$start_date->add( $interval );
-					$expiration_on = $start_date->format( 'F j, Y' );
-				}
-
-				$membership_detail['amount']              = html_entity_decode( $details['period'] );
-				$membership_detail['subscription_status'] = __( 'Pending', 'user-registration' );
-				$membership_detail['expiration_on']       = $expiration_on;
-
-				break;
-			}
-		}
-
-		wp_send_json_success(
-			array(
-				'membership_detail' => $membership_detail,
-			)
-		);
-	}
-
-	public static function create_subscription() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Sorry, you do not have permission to create subscription', 'user-registration' ),
-				)
-			);
-		}
-
-		ur_membership_verify_nonce( 'ur_membership_subscription' );
-
-		$subscription_data = $_POST;  // phpcs:ignore WordPress.Security.NonceVerification.Missing -- L:750
-
-		if ( empty( $subscription_data['member'] ) || empty( $subscription_data['plan'] ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Please fill in all required fields.', 'user-registration' ),
-				)
-			);
-		}
-
-		$subscription_repository = new SubscriptionRepository();
-
-		$membership_id   = absint( $subscription_data['plan'] );
-		$membership      = get_post( $membership_id );
-		$membership_meta = json_decode( wp_unslash( get_post_meta( $membership_id, 'ur_membership', true ) ), true );
-
-		if ( ! $membership || empty( $membership_meta ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Invalid membership plan selected.', 'user-registration' ),
-				)
-			);
-		}
-
-		$is_recurring = isset( $membership_meta['type'] ) && 'subscription' === $membership_meta['type'];
-		if ( $is_recurring ) {
-			if ( empty( $subscription_data['expiry_date'] ) ) {
-				wp_send_json_error(
-					array(
-						'message' => __( 'Expiry date is required for recurring subscription plans.', 'user-registration' ),
-					)
-				);
-			}
-		}
-
-		$start_date     = ! empty( $subscription_data['start_date'] ) ? sanitize_text_field( $subscription_data['start_date'] ) : current_time( 'Y-m-d' );
-		$status         = isset( $subscription_data['status'] ) ? sanitize_text_field( $subscription_data['status'] ) : 'pending';
-		$billing_amount = isset( $subscription_data['billing_amount'] ) ? floatval( $subscription_data['billing_amount'] ) : ( $membership_meta['amount'] ?? 0 );
-
-		if ( $is_recurring ) {
-			$expiry_date   = ! empty( $subscription_data['expiry_date'] ) ? sanitize_text_field( $subscription_data['expiry_date'] ) : null;
-			$billing_cycle = isset( $subscription_data['billing_cycle'] ) && ! empty( $subscription_data['billing_cycle'] ) ? sanitize_text_field( $subscription_data['billing_cycle'] ) : ( $membership_meta['subscription']['duration'] ?? 'month' );
-		} else {
-			$expiry_date   = null;
-			$billing_cycle = '';
-		}
-
-		$data = array(
-			'user_id'           => absint( $subscription_data['member'] ),
-			'item_id'           => $membership_id,
-			'start_date'        => $start_date,
-			'expiry_date'       => $expiry_date,
-			'next_billing_date' => $expiry_date,
-			'billing_cycle'     => $billing_cycle,
-			'billing_amount'    => $billing_amount,
-			'status'            => $status,
-			'cancel_sub'        => $membership_meta['cancel_subscription'] ?? 'immediately',
-		);
-
-		if ( ! empty( $subscription_data['subscription_id'] ) ) {
-			$data['subscription_id'] = sanitize_text_field( $subscription_data['subscription_id'] );
-		}
-
-		$subscription = $subscription_repository->create( $data );
-
-		if ( false === $subscription ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Failed to create subscription.', 'user-registration' ),
-				)
-			);
-		}
-
-		$orders_repository = new OrdersRepository();
-		$current_user      = wp_get_current_user();
-		$transaction_id    = ! empty( $subscription_data['subscription_id'] ) ? sanitize_text_field( $subscription_data['subscription_id'] ) : 'sub_' . $subscription['ID'] . '_' . time();
-		$payment_gateway   = isset( $subscription_data['payment_gateway'] ) && ! empty( $subscription_data['payment_gateway'] ) ? sanitize_text_field( $subscription_data['payment_gateway'] ) : 'manual';
-
-		$order_type = $is_recurring ? 'subscription' : 'one-time';
-		$notes_text = $is_recurring
-			? sprintf(
-				/* translators: %s: Current user display name */
-				__( 'Recurring subscription created by %s', 'user-registration' ),
-				$current_user->display_name
-			)
-			: sprintf(
-				/* translators: %s: Current user display name */
-				__( 'One-time membership created by %s', 'user-registration' ),
-				$current_user->display_name
-			);
-
-		$order_data = array(
-			'orders_data'      => array(
-				'user_id'         => absint( $subscription_data['member'] ),
-				'item_id'         => $membership_id,
-				'subscription_id' => $subscription['ID'],
-				'created_by'      => $current_user->ID,
-				'transaction_id'  => $transaction_id,
-				'payment_method'  => $payment_gateway,
-				'total_amount'    => $billing_amount,
-				'status'          => 'pending',
-				'order_type'      => $order_type,
-				'trial_status'    => 'off',
-				'notes'           => $notes_text,
-			),
-			'orders_meta_data' => array(
-				array(
-					'meta_key'   => 'is_admin_created',
-					'meta_value' => true,
-				),
-			),
-		);
-
-		$order = $orders_repository->create( $order_data );
-
-		if ( $is_recurring ) {
-			$success_message         = __( 'Recurring subscription and order created successfully.', 'user-registration' );
-			$partial_success_message = __( 'Recurring subscription created successfully, but order creation failed.', 'user-registration' );
-		} else {
-			$success_message         = __( 'One-time membership and order created successfully.', 'user-registration' );
-			$partial_success_message = __( 'One-time membership created successfully, but order creation failed.', 'user-registration' );
-		}
-
-		if ( false === $order ) {
-			wp_send_json_success(
-				array(
-					'id'      => $subscription['ID'],
-					'message' => $partial_success_message,
-				)
-			);
-		} else {
-			wp_send_json_success(
-				array(
-					'id'      => $subscription['ID'],
-					'message' => $success_message,
-				)
-			);
-		}
-		wp_die();
 	}
 
 	public static function update_subscription() {
@@ -2484,6 +2662,19 @@ class AJAX {
 			$update_data['trial_end_date'] = ! empty( $subscription_data['trial_end_date'] ) ? sanitize_text_field( $subscription_data['trial_end_date'] ) : null;
 		}
 
+		$expiry_date_changed = false;
+		if ( isset( $update_data['expiry_date'] ) ) {
+			$new_expiry_date = $update_data['expiry_date'];
+			$old_expiry_date = isset( $existing_subscription['expiry_date'] ) ? $existing_subscription['expiry_date'] : '';
+
+			$new_expiry_normalized = ! empty( $new_expiry_date ) ? date( 'Y-m-d', strtotime( $new_expiry_date ) ) : '';
+			$old_expiry_normalized = ! empty( $old_expiry_date ) ? date( 'Y-m-d', strtotime( $old_expiry_date ) ) : '';
+
+			if ( $new_expiry_normalized !== $old_expiry_normalized ) {
+				$expiry_date_changed = true;
+			}
+		}
+
 		$result = $subscription_repository->update( $subscription_id, $update_data );
 
 		if ( false === $result ) {
@@ -2493,6 +2684,18 @@ class AJAX {
 				)
 			);
 		} else {
+			if ( $expiry_date_changed && ! empty( $existing_subscription['user_id'] ) && ! empty( $existing_subscription['item_id'] ) ) {
+				$user_id         = absint( $existing_subscription['user_id'] );
+				$membership_id   = absint( $existing_subscription['item_id'] );
+				$new_expiry_date = isset( $update_data['expiry_date'] ) ? $update_data['expiry_date'] : '';
+
+				if ( ! empty( $new_expiry_date ) ) {
+					update_user_meta( $user_id, 'ur_membership_expiry_date', $new_expiry_date );
+				}
+
+				do_action( 'ur_membership_expiry_date_manually_updated', $user_id, $membership_id, $new_expiry_date );
+			}
+
 			wp_send_json_success(
 				array(
 					'id'      => $subscription_id,
@@ -2587,6 +2790,52 @@ class AJAX {
 		wp_send_json_error(
 			array(
 				'message' => __( 'Something went wrong. Please refresh the page and try again.', 'user-registration' ),
+			)
+		);
+	}
+
+	/**
+	 * Valid local currency payment.
+	 *
+	 * @since 6.1.0
+	 */
+	public static function validate_payment_currency() {
+		$zone_id = ! empty( sanitize_text_field( wp_unslash( $_POST['zone_id'] ) ) ) ? sanitize_text_field( wp_unslash( $_POST['zone_id'] ) ) : '';
+
+		if ( empty( $zone_id ) ) {
+			wp_send_json_success(
+				array(
+					'message' => __( 'Currency is invalid.', 'user-registration' ),
+				)
+			);
+		}
+
+		$zone_data = CoreFunctions::ur_get_pricing_zone_by_id( $zone_id );
+		$currency  = $zone_data['meta']['ur_local_currency'][0];
+
+		$currency_not_supported_payment_gateways = array();
+
+		// if the currency is not supported by Paypal.
+		if ( ! in_array( $currency, paypal_supported_currencies_list() ) ) {
+			$currency_not_supported_payment_gateways[] = 'Paypal';
+		}
+
+		$currency_not_supported_payment_gateways = apply_filters( 'urm_currency_not_supported_payment_gateways', $currency_not_supported_payment_gateways, $currency );
+		if ( ! empty( $currency_not_supported_payment_gateways ) ) {
+			wp_send_json_error(
+				array(
+					'message' => sprintf(
+						__( '%1$s is not currently supported by %2$s.', 'user-registration' ),
+						$currency,
+						implode( ', ', $currency_not_supported_payment_gateways ),
+					),
+				)
+			);
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => __( 'Currency is valid.', 'user-registration' ),
 			)
 		);
 	}

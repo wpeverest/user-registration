@@ -226,7 +226,7 @@ jQuery(function ($) {
 		var name = $this.data("name");
 		var slug = $this.data("slug");
 
-		if ( !slug ) {
+		if (!slug) {
 			return;
 		}
 
@@ -258,21 +258,24 @@ jQuery(function ($) {
 					dataType: "json",
 					data: {
 						action: "user_registration_activate_dependent_module",
-						security: user_registration_all_forms.ajax_all_forms_nonce,
+						security:
+							user_registration_all_forms.ajax_all_forms_nonce,
 						plan: plan,
 						slug: slug,
 						name: name
 					}
 				})
-				.then(function (response) {
-					if (!response.success) {
-						throw new Error(response.data || "Activation failed");
-					}
-					return response;
-				})
-				.fail(function () {
-					Swal.showValidationMessage("Something went wrong");
-				});
+					.then(function (response) {
+						if (!response.success) {
+							throw new Error(
+								response.data || "Activation failed"
+							);
+						}
+						return response;
+					})
+					.fail(function () {
+						Swal.showValidationMessage("Something went wrong");
+					});
 			}
 		}).then(function (result) {
 			if (result.isConfirmed) {
@@ -280,7 +283,6 @@ jQuery(function ($) {
 			}
 		});
 	});
-
 
 	// Adjust builder width
 	$(window).on("resize orientationchange", function () {
@@ -1660,13 +1662,30 @@ jQuery(function ($) {
 
 	$(document.body).on("click", "#ur-smart-tags-selector", function () {
 		var $this = $(this),
-		is_urcr_rule_editor = $this.closest("#wp-urcr-membership-action-message-media-buttons").length > 0,
-			is_urcr_global_editor = $this.closest("#wp-user_registration_content_restriction_message-media-buttons").length > 0;
+			is_urcr_rule_editor =
+				$this.closest(
+					"#wp-urcr-membership-action-message-media-buttons"
+				).length > 0,
+			is_urcr_global_editor =
+				$this.closest(
+					"#wp-user_registration_content_restriction_message-media-buttons"
+				).length > 0,
+			is_drip_editor =
+				$this.closest(
+					"#wp-user_registration_content_drip_global_message-media-buttons"
+				).length > 0;
+
 		$(this)
 			.siblings("#select-smart-tags")
 			.select2({
 				placeholder: "",
-				dropdownCssClass: "ur-select2-dropdown" + ((is_urcr_rule_editor || is_urcr_global_editor) ? " urcr-editor-select2-dropdown" : ""),
+				dropdownCssClass:
+					"ur-select2-dropdown" +
+					(is_urcr_rule_editor ||
+					is_urcr_global_editor ||
+					is_drip_editor
+						? " urcr-editor-select2-dropdown"
+						: ""),
 				templateResult: function (data, container) {
 					if ($this.siblings(".ur_advance_setting").length > 0) {
 						if (data.element) {
@@ -1690,9 +1709,7 @@ jQuery(function ($) {
 			.show();
 
 		var buttonOffset = $(this).offset(),
-			buttonOffsetTop = Math.round(
-				buttonOffset.top
-			),
+			buttonOffsetTop = Math.round(buttonOffset.top),
 			buttonOffsetRight = Math.round(buttonOffset.left);
 		var select2_container = $(
 			".select2-container--open:not(.ur-hide-select2)"

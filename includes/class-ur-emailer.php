@@ -235,6 +235,12 @@ class UR_Emailer {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
 			}
 		} elseif ( ( 'default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status ) ) && ! $is_membership_form ) {
+
+			if ( UR_PRO_ACTIVE && class_exists( '\Custom_Email_Sender' ) ) {
+				if ( \Custom_Email_Sender::should_override_default_email( 'member_signs_up', 'all_members', $user_id, 0 ) ) {
+					return;
+				}
+			}
 			$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Welcome to {{blog_info}}!', 'user-registration' ) );
 			$settings = new UR_Settings_Successfully_Registered_Email();
 			$message  = $settings->ur_get_successfully_registered_email();
@@ -519,6 +525,13 @@ class UR_Emailer {
 			if ( $is_membership_form ) {
 				return;
 			}
+
+			if ( UR_PRO_ACTIVE && class_exists( '\Custom_Email_Sender' ) ) {
+				if ( \Custom_Email_Sender::should_override_default_email( 'member_signs_up', 'admin', $user_id, 0 ) ) {
+					return;
+				}
+			}
+
 			foreach ( $admin_email as $email ) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );
 			}

@@ -760,18 +760,18 @@ class UR_Getting_Started {
 
 		$post_content = $is_membership
 		? '[[[' .
-			'{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"},' .
-			'{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"},' .
-			'{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"},' .
-			'{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}' .
+		'{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"},' .
+		'{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"},' .
+		'{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"},' .
+		'{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}' .
 		'],[' .
-			'{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","required":"false","hide_label":"false","membership_listing_option":"all","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}' .
+		'{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","required":"false","hide_label":"false","membership_listing_option":"all","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}' .
 		']]]'
 		: '[[[' .
-			'{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"},' .
-			'{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"},' .
-			'{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"},' .
-			'{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}' .
+		'{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"},' .
+		'{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"},' .
+		'{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"},' .
+		'{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}' .
 		']]]';
 
 		$title = esc_html__( 'Registration Form', 'user-registration' );
@@ -892,9 +892,7 @@ class UR_Getting_Started {
 			);
 		}
 
-		$allowed_types = ( 'paid_membership' === $membership_type )
-			? array( 'free', 'one-time', 'subscription' )
-			: array( 'free' );
+		$allowed_types = array( 'free', 'one-time', 'subscription' );
 
 		$results = array(
 			'created' => array(),
@@ -1000,9 +998,9 @@ class UR_Getting_Started {
 		}
 
 		$membership_field_json =
-			'{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' .
-			$membership_field_name .
-			'","required":"false","hide_label":"false","membership_listing_option":"all","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}';
+		'{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' .
+		$membership_field_name .
+		'","required":"false","hide_label":"false","membership_listing_option":"all","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}';
 
 		if ( substr( $content, -3 ) === ']]]' ) {
 			$content = substr( $content, 0, -3 ) . '],[' . $membership_field_json . ']]]';
@@ -1064,12 +1062,12 @@ class UR_Getting_Started {
 		if ( 'free' === $type_input ) {
 			$meta['type'] = 'free';
 		} elseif ( 'one-time' === $type_input ) {
-			$meta['type'] = 'paid';
-			$meta['payment_gateways'] = get_option('ur_membership_payment_gateways');
+			$meta['type']             = 'paid';
+			$meta['payment_gateways'] = get_option( 'ur_membership_payment_gateways' );
 		} elseif ( 'subscription' === $type_input ) {
-			$meta['type']         = 'subscription';
-			$meta['payment_gateways'] = get_option('ur_membership_payment_gateways');
-			$meta['subscription'] = array(
+			$meta['type']             = 'subscription';
+			$meta['payment_gateways'] = get_option( 'ur_membership_payment_gateways' );
+			$meta['subscription']     = array(
 				'value'    => $billing_count,
 				'duration' => $billing_cycle,
 			);
@@ -1525,18 +1523,18 @@ class UR_Getting_Started {
 				'bank_details' => get_option( 'user_registration_global_bank_details', '' ),
 			),
 			array(
-				'id'                           => 'paypal',
-				'label'                        => __( 'PayPal', 'user-registration' ),
-				'description'                  => __( 'Accept payments via PayPal.', 'user-registration' ),
-				'enabled'                      => self::get_bool_option( 'urm_paypal_connection_status' ),
-				'configured'                   => self::is_gateway_configured( 'paypal' ),
-				'settings_url'                 => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
-				'paypal_mode'                  => get_option( 'user_registration_global_paypal_mode', 'test' ),
-				'paypal_test_email'            => get_option( 'user_registration_global_paypal_test_email_address', get_option( 'user_registration_global_paypal_email_address', '' ) ),
-				'paypal_test_client_id'         => get_option( 'user_registration_global_paypal_test_client_id', get_option( 'user_registration_global_paypal_client_id', '' ) ),
-				'paypal_test_client_secret'    => get_option( 'user_registration_global_paypal_test_client_secret', get_option( 'user_registration_global_paypal_client_secret', '' ) ),
-				'paypal_production_email'      => get_option( 'user_registration_global_paypal_live_email_address', get_option( 'user_registration_global_paypal_live_admin_email', get_option( 'user_registration_global_paypal_email_address', '' ) ) ),
-				'paypal_production_client_id'   => get_option( 'user_registration_global_paypal_live_client_id', get_option( 'user_registration_global_paypal_client_id', '' ) ),
+				'id'                              => 'paypal',
+				'label'                           => __( 'PayPal', 'user-registration' ),
+				'description'                     => __( 'Accept payments via PayPal.', 'user-registration' ),
+				'enabled'                         => self::get_bool_option( 'urm_paypal_connection_status' ),
+				'configured'                      => self::is_gateway_configured( 'paypal' ),
+				'settings_url'                    => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
+				'paypal_mode'                     => get_option( 'user_registration_global_paypal_mode', 'test' ),
+				'paypal_test_email'               => get_option( 'user_registration_global_paypal_test_email_address', get_option( 'user_registration_global_paypal_email_address', '' ) ),
+				'paypal_test_client_id'           => get_option( 'user_registration_global_paypal_test_client_id', get_option( 'user_registration_global_paypal_client_id', '' ) ),
+				'paypal_test_client_secret'       => get_option( 'user_registration_global_paypal_test_client_secret', get_option( 'user_registration_global_paypal_client_secret', '' ) ),
+				'paypal_production_email'         => get_option( 'user_registration_global_paypal_live_email_address', get_option( 'user_registration_global_paypal_live_admin_email', get_option( 'user_registration_global_paypal_email_address', '' ) ) ),
+				'paypal_production_client_id'     => get_option( 'user_registration_global_paypal_live_client_id', get_option( 'user_registration_global_paypal_client_id', '' ) ),
 				'paypal_production_client_secret' => get_option( 'user_registration_global_paypal_live_client_secret', get_option( 'user_registration_global_paypal_client_secret', '' ) ),
 			),
 			array(
@@ -1594,20 +1592,20 @@ class UR_Getting_Started {
 		$paypal          = isset( $request['paypal'] ) ? (bool) $request['paypal'] : false;
 		$stripe          = isset( $request['stripe'] ) ? (bool) $request['stripe'] : false;
 
-		$currency                    = isset( $request['currency'] ) ? sanitize_text_field( $request['currency'] ) : 'USD';
-		$bank_details                = isset( $request['bank_details'] ) ? sanitize_textarea_field( $request['bank_details'] ) : '';
-		$paypal_mode                 = isset( $request['paypal_mode'] ) ? sanitize_text_field( $request['paypal_mode'] ) : 'test';
-		$paypal_test_email           = isset( $request['paypal_test_email'] ) ? sanitize_email( $request['paypal_test_email'] ) : '';
-		$paypal_test_client_id       = isset( $request['paypal_test_client_id'] ) ? sanitize_text_field( $request['paypal_test_client_id'] ) : '';
-		$paypal_test_client_secret   = isset( $request['paypal_test_client_secret'] ) ? sanitize_text_field( $request['paypal_test_client_secret'] ) : '';
-		$paypal_production_email     = isset( $request['paypal_production_email'] ) ? sanitize_email( $request['paypal_production_email'] ) : '';
-		$paypal_production_client_id = isset( $request['paypal_production_client_id'] ) ? sanitize_text_field( $request['paypal_production_client_id'] ) : '';
+		$currency                        = isset( $request['currency'] ) ? sanitize_text_field( $request['currency'] ) : 'USD';
+		$bank_details                    = isset( $request['bank_details'] ) ? sanitize_textarea_field( $request['bank_details'] ) : '';
+		$paypal_mode                     = isset( $request['paypal_mode'] ) ? sanitize_text_field( $request['paypal_mode'] ) : 'test';
+		$paypal_test_email               = isset( $request['paypal_test_email'] ) ? sanitize_email( $request['paypal_test_email'] ) : '';
+		$paypal_test_client_id           = isset( $request['paypal_test_client_id'] ) ? sanitize_text_field( $request['paypal_test_client_id'] ) : '';
+		$paypal_test_client_secret       = isset( $request['paypal_test_client_secret'] ) ? sanitize_text_field( $request['paypal_test_client_secret'] ) : '';
+		$paypal_production_email         = isset( $request['paypal_production_email'] ) ? sanitize_email( $request['paypal_production_email'] ) : '';
+		$paypal_production_client_id     = isset( $request['paypal_production_client_id'] ) ? sanitize_text_field( $request['paypal_production_client_id'] ) : '';
 		$paypal_production_client_secret = isset( $request['paypal_production_client_secret'] ) ? sanitize_text_field( $request['paypal_production_client_secret'] ) : '';
-		$stripe_test_mode            = isset( $request['stripe_test_mode'] ) ? (bool) $request['stripe_test_mode'] : false;
-		$stripe_test_publishable_key = isset( $request['stripe_test_publishable_key'] ) ? sanitize_text_field( $request['stripe_test_publishable_key'] ) : '';
-		$stripe_test_secret_key      = isset( $request['stripe_test_secret_key'] ) ? sanitize_text_field( $request['stripe_test_secret_key'] ) : '';
-		$stripe_live_publishable_key = isset( $request['stripe_live_publishable_key'] ) ? sanitize_text_field( $request['stripe_live_publishable_key'] ) : '';
-		$stripe_live_secret_key      = isset( $request['stripe_live_secret_key'] ) ? sanitize_text_field( $request['stripe_live_secret_key'] ) : '';
+		$stripe_test_mode                = isset( $request['stripe_test_mode'] ) ? (bool) $request['stripe_test_mode'] : false;
+		$stripe_test_publishable_key     = isset( $request['stripe_test_publishable_key'] ) ? sanitize_text_field( $request['stripe_test_publishable_key'] ) : '';
+		$stripe_test_secret_key          = isset( $request['stripe_test_secret_key'] ) ? sanitize_text_field( $request['stripe_test_secret_key'] ) : '';
+		$stripe_live_publishable_key     = isset( $request['stripe_live_publishable_key'] ) ? sanitize_text_field( $request['stripe_live_publishable_key'] ) : '';
+		$stripe_live_secret_key          = isset( $request['stripe_live_secret_key'] ) ? sanitize_text_field( $request['stripe_live_secret_key'] ) : '';
 
 		update_option( 'user_registration_payment_currency', $currency );
 
@@ -1680,7 +1678,7 @@ class UR_Getting_Started {
 		update_option( 'user_registration_global_paypal_test_email_address', $paypal_test_email );
 		update_option( 'user_registration_global_paypal_test_client_id', $paypal_test_client_id );
 		update_option( 'user_registration_global_paypal_test_client_secret', $paypal_test_client_secret );
-		update_option( 'user_registration_global_paypal_live_admin_email', $paypal_production_email );
+		update_option( 'user_registration_global_paypal_live_email_address', $paypal_production_email );
 		update_option( 'user_registration_global_paypal_live_client_id', $paypal_production_client_id );
 		update_option( 'user_registration_global_paypal_live_client_secret', $paypal_production_client_secret );
 
@@ -1690,6 +1688,82 @@ class UR_Getting_Started {
 			update_option( 'user_registration_stripe_test_secret_key', $stripe_test_secret_key );
 			update_option( 'user_registration_stripe_live_publishable_key', $stripe_live_publishable_key );
 			update_option( 'user_registration_stripe_live_secret_key', $stripe_live_secret_key );
+
+			try {
+
+				$stripe_service = new \WPEverest\URMembership\Admin\Services\Stripe\StripeService();
+
+				$is_valid = $stripe_service->validate_credentials();
+
+				if ( ! $is_valid ) {
+					throw new \Exception( __( 'Invalid Stripe API credentials. Please verify your keys.', 'user-registration' ) );
+				}
+
+				$membership_ids = (array) get_option( 'urm_onboarding_membership_ids', array() );
+
+				foreach ( $membership_ids as $membership_id ) {
+					$membership_id = absint( $membership_id );
+					if ( ! $membership_id ) {
+						continue;
+					}
+
+					$meta_raw = get_post_meta( $membership_id, 'ur_membership', true );
+					if ( empty( $meta_raw ) ) {
+						continue;
+					}
+
+					$meta = json_decode( wp_unslash( $meta_raw ), true );
+					if ( empty( $meta ) || empty( $meta['type'] ) || 'free' === $meta['type'] ) {
+						continue;
+					}
+
+					$product_id = $meta['payment_gateways']['stripe']['product_id'] ?? '';
+					$price_id   = $meta['payment_gateways']['stripe']['price_id'] ?? '';
+
+					if ( ! empty( $product_id ) && ! empty( $price_id ) ) {
+						continue;
+					}
+
+					$post = get_post( $membership_id );
+					if ( ! $post ) {
+						continue;
+					}
+
+					try {
+						$post_data = array(
+							'ID'           => $membership_id,
+							'post_title'   => $post->post_title,
+							'post_content' => $post->post_content,
+						);
+
+						$stripe_result = $stripe_service->create_stripe_product_and_price( $post_data, $meta, false );
+
+						if ( isset( $stripe_result['success'] ) && ur_string_to_bool( $stripe_result['success'] ) ) {
+							$meta['payment_gateways']['stripe']               = array();
+							$meta['payment_gateways']['stripe']['product_id'] = $stripe_result['price']->product;
+							$meta['payment_gateways']['stripe']['price_id']   = $stripe_result['price']->id;
+							update_post_meta( $membership_id, 'ur_membership', wp_json_encode( $meta ) );
+						}
+					} catch ( \Exception $e ) {
+						continue;
+					}
+				}
+			} catch ( \Exception $e ) {
+
+				$configuration_needed[] = array(
+					'gateway'      => 'stripe',
+					'message'      => $e->getMessage(),
+					'settings_url' => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
+				);
+
+				$stripe_enabled = false;
+				update_option( 'urm_stripe_connection_status', false );
+				update_option( 'user_registration_stripe_enabled', false );
+				update_option( 'user_registration_stripe_test_publishable_key', '' );
+				update_option( 'user_registration_stripe_test_secret_key', '' );
+				update_option( 'user_registration_stripe_live_publishable_key', '' );
+				update_option( 'user_registration_stripe_live_secret_key', '' );
+			}
 		}
 
 		$enabled_gateways = array();
@@ -1722,7 +1796,6 @@ class UR_Getting_Started {
 			200
 		);
 	}
-
 
 	/**
 	 * Check if a payment gateway is configured.
@@ -1946,7 +2019,6 @@ class UR_Getting_Started {
 		);
 	}
 
-
 	/**
 	 * Navigate to a specific step (back navigation).
 	 *
@@ -2108,7 +2180,6 @@ class UR_Getting_Started {
 		return $reg_page_id > 0 ? get_permalink( $reg_page_id ) : null;
 	}
 
-
 	/**
 	 * Build onboarding snapshot data.
 	 *
@@ -2175,8 +2246,6 @@ class UR_Getting_Started {
 			false
 		);
 	}
-
-
 
 	/**
 	 * Permission callback for all getting started endpoints.

@@ -121,7 +121,8 @@ class UR_Frontend {
 		if ( $user_id > 0 ) {
 			$user_meta    = get_userdata( $user_id );
 			$user_roles   = $user_meta->roles;
-			$option_roles = get_option( 'user_registration_general_setting_disabled_user_roles', array() );
+			$option_roles = get_option( 'user_registration_general_setting_disabled_user_roles', array('subscriber') );
+
 			if ( ! is_array( $option_roles ) ) {
 				$option_roles = array();
 			}
@@ -356,28 +357,34 @@ class UR_Frontend {
 		$mask = Ur()->query->get_endpoints_mask();
 		add_rewrite_endpoint( 'ur-membership', $mask );
 
-		return $this->delete_account_insert_before_helper( $items, $new_items, 'user-logout' );
+		return $this->insert_after_helper( $items, $new_items, 'edit-profile' );
 	}
 
 	/**
-	 * Delete Account insert after helper.
+	 * Insert after helper.
 	 *
 	 * @param mixed $items Items.
 	 * @param mixed $new_items New items.
 	 * @param mixed $before Before item.
 	 */
-	public function delete_account_insert_before_helper( $items, $new_items, $before ) {
+	public function insert_after_helper( $items, $new_items, $after ) {
 
-		// Search for the item position.
-		$position = array_search( $before, array_keys( $items ), true );
+		$keys     = array_keys( $items );
+		$position = array_search( $after, $keys, true );
 
-		// Insert the new item.
+		if ( false === $position ) {
+			return array_merge( $items, $new_items );
+		}
+
+		$position++;
+
 		$return_items  = array_slice( $items, 0, $position, true );
 		$return_items += $new_items;
-		$return_items += array_slice( $items, $position, count( $items ) - $position, true );
+		$return_items += array_slice( $items, $position, null, true );
 
 		return $return_items;
 	}
+
 
 	/**
 	 * Membership tab content.
@@ -455,19 +462,34 @@ class UR_Frontend {
 		}
 
 		$meta_value = get_user_meta( $user_id, 'ur_payment_invoices', true );
-
-		if ( 'membership' !== $user_source && ! empty( $meta_value ) && is_array( $meta_value ) ) {
-			foreach ( $meta_value as $values ) {
+		if ( 'membership' !== $user_source  ) {
+			if( ! empty( $meta_value ) && is_array( $meta_value ) ) {
+				foreach ( $meta_value as $values ) {
+					$total_items[] = array(
+						'user_id'        => $user_id,
+						'transaction_id' => $values['invoice_no'] ?? '',
+						'post_title'     => $values['invoice_plan'] ?? '',
+						'status'         => get_user_meta( $user_id, 'ur_payment_status', true ),
+						'created_at'     => $values['invoice_date'] ?? '',
+						'type'           => get_user_meta( $user_id, 'ur_payment_type', true ),
+						'payment_method' => str_replace( '_', ' ', get_user_meta( $user_id, 'ur_payment_method', true ) ),
+						'total_amount'   => ( $values['invoice_amount'] ?? '' ),
+						'currency'       => ( $values['invoice_currency'] ?? '' ),
+					);
+				}
+			} else {
+				$u_data            = get_userdata($user_id);
+				$user_registered       = $u_data->user_registered;
 				$total_items[] = array(
 					'user_id'        => $user_id,
-					'transaction_id' => $values['invoice_no'] ?? '',
-					'post_title'     => $values['invoice_plan'] ?? '',
+					'transaction_id' => '',
+					'post_title'     => __( 'Product/Service', 'user-registration' ),
 					'status'         => get_user_meta( $user_id, 'ur_payment_status', true ),
-					'created_at'     => $values['invoice_date'] ?? '',
-					'type'           => get_user_meta( $user_id, 'ur_payment_type', true ),
+					'created_at'     => date( 'Y-m-d', strtotime( $user_registered ) ),
+					'type'           => 'paid',
 					'payment_method' => str_replace( '_', ' ', get_user_meta( $user_id, 'ur_payment_method', true ) ),
-					'total_amount'   => ( $values['invoice_amount'] ?? '' ),
-					'currency'       => ( $values['invoice_currency'] ?? '' ),
+					'total_amount'   => get_user_meta( $user_id, 'ur_payment_total_amount', true),
+					'currency'       => get_user_meta( $user_id, 'ur_payment_currency', true),
 				);
 			}
 		}
@@ -501,7 +523,7 @@ class UR_Frontend {
 		$new_items['ur-membership'] = __( 'Subscriptions', 'user-registration' );
 		$items                      = array_merge( $items, $new_items );
 
-		return $this->delete_account_insert_before_helper( $items, $new_items, 'user-logout' );
+		return $this->insert_after_helper( $items, $new_items, 'edit-profile' );
 	}
 
 	/**
@@ -600,6 +622,11 @@ class UR_Frontend {
 						$data['period'] = $amount;
 					}
 
+					$subscription_last_order = $orders_repository->get_order_by_subscription($membership['subscription_id']);
+					if ( ! empty( $subscription_last_order ) && $subscription_last_order['status'] === 'completed' ) {
+						$data = apply_filters('user_registration_membership_add_team_data_if_exists',$data, $subscription_last_order );
+					}
+
 					array_push( $membership_data, $data );
 				}
 			}
@@ -689,7 +716,14 @@ class UR_Frontend {
 
 			if ( ! empty( $payment_details ) ) {
 				$payment_details['form_type'] = 'normal';
-				array_push( $membership_data, $payment_details );
+
+				if ( 'paypal_standard' === $payment_method ) {
+					if( ur_string_to_bool( get_user_meta( $user_id, 'ur_payment_subscription', true ) ) ) {
+						array_push( $membership_data, $payment_details );
+						}
+					} else {
+					array_push( $membership_data, $payment_details );
+				}
 			}
 		}
 

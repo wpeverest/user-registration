@@ -374,12 +374,44 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 				case 'user_registered_date':
 					if ( $user->ID ) {
 						$registered_date = ! empty( $user->data->user_registered ) ? $user->data->user_registered : '';
-						$date_range      = ! empty( $logic_map['value'] ) ? explode( 'to', (string) $logic_map['value'] ) : array();
-						$start_date      = ! empty( $date_range[0] ) ? trim( $date_range[0] ) : '';
-						$end_date        = ! empty( $date_range[1] ) ? trim( $date_range[1] ) : '';
 
-						if ( ! empty( $start_date ) && ! empty( $end_date ) && ur_falls_in_date_range( $registered_date, $start_date, $end_date ) ) {
-							return true;
+						$date_value = '';
+						$date_type  = 'range';
+
+						if ( ! empty( $logic_map['value'] ) ) {
+							if ( is_array( $logic_map['value'] ) && isset( $logic_map['value']['value'] ) && isset( $logic_map['value']['type'] ) ) {
+								$date_value = $logic_map['value']['value'];
+								$date_type  = $logic_map['value']['type'];
+							} else {
+								$date_value = (string) $logic_map['value'];
+								$date_type  = 'range';
+							}
+						}
+
+						if ( empty( $date_value ) || empty( $registered_date ) ) {
+							break;
+						}
+
+						$registered_timestamp = strtotime( $registered_date );
+
+						if ( 'before' === $date_type ) {
+							$target_timestamp = strtotime( $date_value );
+							if ( $registered_timestamp < $target_timestamp ) {
+								return true;
+							}
+						} elseif ( 'after' === $date_type ) {
+							$target_timestamp = strtotime( $date_value );
+							if ( $registered_timestamp > $target_timestamp ) {
+								return true;
+							}
+						} else {
+							$date_range = explode( ' to ', $date_value );
+							$start_date = ! empty( $date_range[0] ) ? trim( $date_range[0] ) : '';
+							$end_date   = ! empty( $date_range[1] ) ? trim( $date_range[1] ) : $start_date;
+
+							if ( ! empty( $start_date ) && ! empty( $end_date ) && ur_falls_in_date_range( $registered_date, $start_date, $end_date ) ) {
+								return true;
+							}
 						}
 					}
 					break;
@@ -510,29 +542,55 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 					if ( $user->ID ) {
 						$registered_source = ur_get_registration_source_id( $user->ID );
 						$sources           = ! empty( $logic_map['value'] ) ? $logic_map['value'] : array();
+						$sources           = is_array( $sources ) ? $sources : ( ! empty( $sources ) ? array( $sources ) : array() );
 
-						if ( in_array( $registered_source, $sources, true ) ) {
+						if ( ! empty( $registered_source ) && in_array( $registered_source, $sources, true ) ) {
 							return true;
 						}
 					}
 					break;
 
-				case 'payment_status':
-					if ( $user->ID ) {
-						$payment_status = get_user_meta( $user->ID, 'ur_payment_status', true );
-						$sources        = ! empty( $logic_map['value'] ) ? $logic_map['value'] : array();
-
-						if ( in_array( $payment_status, $sources, true ) ) {
-							return true;
-						}
-					}
-					break;
 				case 'membership':
 					if ( $user->ID && ur_check_module_activation( 'membership' ) ) {
 						$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
 						$user_membership    = $members_repository->get_member_membership_by_id( $user->ID );
 
 						$sources = ! empty( $logic_map['value'] ) ? $logic_map['value'] : array();
+
+						$team_ids = get_user_meta( $user->ID, 'urm_team_ids', true );
+
+						if ( ! empty( $team_ids ) ) {
+							if ( ! is_array( $team_ids ) ) {
+								$team_ids = array( $team_ids );
+							}
+
+							foreach ( $team_ids as $team_id ) {
+								$team_membership_id = get_post_meta( $team_id, 'urm_membership_id', true );
+								$team_members_ids   = get_post_meta( $team_id, 'urm_member_ids', true );
+
+								if ( ! empty( $team_membership_id ) && ! empty( $team_members_ids ) && is_array( $team_members_ids ) && in_array( $user->ID, $team_members_ids, true ) ) {
+									$lead_id = get_post_meta( $team_id, 'urm_team_leader_id', true );
+
+									if ( ! empty( $lead_id ) ) {
+										$leader_membership = $members_repository->get_member_membership_by_id( $lead_id );
+
+										if ( ! empty( $leader_membership ) && is_array( $leader_membership ) ) {
+											foreach ( $leader_membership as $membership ) {
+												if (
+													! empty( $membership['post_id'] ) &&
+													(int) $membership['post_id'] === (int) $team_membership_id &&
+													! empty( $membership['status'] ) &&
+													'active' === $membership['status'] &&
+													in_array( $membership['post_id'], $sources, true )
+												) {
+													return true;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
 
 						if ( ! empty( $user_membership ) && is_array( $user_membership ) ) {
 							foreach ( $user_membership as $membership ) {

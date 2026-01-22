@@ -1,0 +1,155 @@
+{
+  "$schema": "https://schemas.wp.org/block-json/1.1",
+  "apiVersion": 3,
+  "name": "user-registration/membership-buy-now",
+  "version": "1.0.0",
+  "title": "Membership Buy Now",
+  "category": "user-registration",
+  "description": "The block allows users to purchase a membership.",
+  "keywords": [
+    "user registration membership buy now",
+    "button",
+    "buy now"
+  ],
+  "textdomain": "user-registration",
+  "styles": [
+    {
+      "name": "fill",
+      "label": "Fill",
+      "isDefault": true
+    },
+    {
+      "name": "outline",
+      "label": "Outline"
+    }
+  ],
+  "supports": {
+    "className": true,
+    "align": [
+      "wide",
+      "full"
+    ],
+    "color": {
+      "__experimentalSkipSerialization": true,
+      "gradients": false,
+      "background": false,
+      "text": false,
+      "__experimentalDefaultControls": {
+        "background": false,
+        "text": false
+      }
+    },
+    "__experimentalBorder": {
+      "color": true,
+      "radius": true,
+      "width": true,
+      "__experimentalSkipSerialization": true,
+      "__experimentalDefaultControls": {
+        "color": true,
+        "radius": true,
+        "width": true
+      }
+    },
+    "typography": {
+      "__experimentalSkipSerialization": [
+        "fontSize",
+        "lineHeight",
+        "fontFamily",
+        "fontWeight",
+        "fontStyle",
+        "textTransform",
+        "textDecoration",
+        "letterSpacing"
+      ],
+      "fontSize": true,
+      "lineHeight": true,
+      "__experimentalFontFamily": true,
+      "__experimentalFontWeight": true,
+      "__experimentalFontStyle": true,
+      "__experimentalTextTransform": true,
+      "__experimentalTextDecoration": true,
+      "__experimentalLetterSpacing": true,
+      "__experimentalWritingMode": true,
+      "__experimentalDefaultControls": {
+        "fontSize": true
+      }
+    },
+    "spacing": {
+      "__experimentalSkipSerialization": true,
+      "margin": true,
+      "__experimentalDefaultControls": {
+        "padding": true
+      }
+    }
+  },
+  "attributes": {
+    "clientId": {
+      "type": "string"
+    },
+    "membershipType": {
+      "type": "string"
+    },
+    "openInNewTab": {
+      "type": "boolean",
+      "default": true
+    },
+    "text": {
+      "type": "string",
+      "default": "Buy Now"
+    },
+    "width": {
+      "type": "string",
+      "default": ""
+    },
+    "justifyContent": {
+      "type": "string",
+      "default": "flex-start"
+    },
+    "textColor": {
+      "type": "string"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#475bb2"
+    },
+    "borderWidth": {
+      "type": "string"
+    },
+    "borderColor": {
+      "type": "string"
+    },
+    "borderStyle": {
+      "type": "string",
+      "default": "solid"
+    },
+    "borderRadius": {
+      "type": "string"
+    },
+    "hoverTextColor": {
+      "type": "string",
+      "default": ""
+    },
+    "hoverBgColor": {
+      "type": "string",
+      "default": "#3a4a8f"
+    },
+    "savedBackgroundColor": {
+      "type": "string",
+      "default": ""
+    },
+    "savedHoverBgColor": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "editorScript": "user-registration-blocks-editor",
+  "editorStyle": "user-registration-blocks-editor",
+  "selectors": {
+    "root": ".wp-block-user-registration-membership-buy-now .urm-buy-now-btn",
+    "color": ".wp-block-user-registration-membership-buy-now .urm-buy-now-btn",
+    "typography": {
+      "root": ".wp-block-user-registration-membership-buy-now .urm-buy-now-btn",
+      "writingMode": ".urm-buy-now-btn"
+    }
+  }
+}

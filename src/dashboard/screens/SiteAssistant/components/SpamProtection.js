@@ -1,19 +1,18 @@
 import {
-	Button,
+	Box,
 	Collapse,
+	Flex,
 	HStack,
 	Heading,
 	Icon,
 	IconButton,
+	Link,
 	Stack,
 	Text,
-	Flex,
-	Link,
-	Box,
 	useToast
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
-import React, { useState } from "react";
+import { useState } from "react";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 
 const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
@@ -24,14 +23,20 @@ const SpamProtection = ({ isOpen, onToggle, onSkipped, numbering }) => {
 		const settingsURL =
 			window._UR_DASHBOARD_?.settingsURL ||
 			`${window.location.origin}/wp-admin/admin.php?page=user-registration-settings`;
-		window.open(`${settingsURL}&tab=captcha&method=v2`, "_blank");
+		window.open(
+			`${settingsURL}&tab=registration_login&section=captcha&method=v2`,
+			"_blank"
+		);
 	};
 
 	const handleOtherSpamFeatures = () => {
 		const settingsURL =
 			window._UR_DASHBOARD_?.settingsURL ||
 			`${window.location.origin}/wp-admin/admin.php?page=user-registration-settings`;
-		window.open(`${settingsURL}&tab=captcha`, "_blank");
+		window.open(
+			`${settingsURL}&tab=registration_login&section=captcha`,
+			"_blank"
+		);
 	};
 
 	const handleSkip = async () => {

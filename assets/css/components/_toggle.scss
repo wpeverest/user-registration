@@ -24,8 +24,8 @@
                 }
 
                 &:checked {
-                    + .slider {
-                        background: $primary_color;
+                    +.slider {
+                        background: $green;
 
                         &::before {
                             transform: translateX(14px);

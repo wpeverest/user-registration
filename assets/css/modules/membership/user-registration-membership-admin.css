@@ -104,7 +104,7 @@
 }
 .user-registration .button-primary,
 .ur-form-container .button-primary {
-  background: #475bb2;
+  background: var(--ur-button-background-normal-color, #475bb2);
   border-color: #475bb2;
   box-shadow: 0 1px 0 #475bb2;
   text-shadow: none;
@@ -113,7 +113,7 @@
 .ur-form-container .button-primary:hover,
 .ur-form-container .button-primary:active,
 .ur-form-container .button-primary:focus {
-  background: rgb(56.4578313253, 72.3614457831, 141.5421686747);
+  background: var(--ur-button-background-normal-color, #475bb2);
   border-color: rgb(56.4578313253, 72.3614457831, 141.5421686747);
   box-shadow: 0 1px 0 rgb(56.4578313253, 72.3614457831, 141.5421686747);
 }
@@ -1196,6 +1196,16 @@
   font-size: 20px;
   line-height: 30px;
 }
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-team-fields .ur-label {
+  margin-bottom: 0;
+}
+.user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card__body #ur-membership-team-fields .ur-label label {
+  margin-bottom: 0;
+  color: #383838;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 21px;
+}
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper .user-registration-card hr {
   display: none;
 }
@@ -1351,6 +1361,18 @@
   align-items: center;
   gap: 10px;
 }
+.user-registration .ur-membership .ur-team-membership-content #user-registration-base-list-table-page {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+.user-registration .ur-membership .ur-team-membership-content #user-registration-base-list-table-page #membership-team-list .wp-list-table {
+  margin: 0;
+}
+.user-registration .ur-membership .ur-team-membership-content hr {
+  display: block !important;
+}
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .tablenav-pages {
   margin-top: 5px;
   margin-bottom: 0;
@@ -1403,13 +1425,6 @@
   line-height: 24px;
   color: #383838;
 }
-.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td strong {
-  margin: 0;
-}
-.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td strong .ur-edit-title a {
-  line-height: 24px;
-  font-weight: 400;
-}
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td.draggable {
   display: flex;
   align-items: flex-start;
@@ -1420,14 +1435,6 @@
   height: 20px;
   fill: #a0a0a0;
   margin-top: 2px;
-}
-.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr td.membership_type .user-registration-badge {
-  padding: 0;
-  background: none;
-  font-size: 14px;
-  text-transform: capitalize;
-  color: #383838;
-  font-weight: 500;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items {
   background: #ffffff;
@@ -1476,20 +1483,15 @@
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#membership-list .tablenav.top {
   display: none;
 }
-.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#user-registration-members-list-form #user-registration-base-list-filters-row {
-  margin-bottom: 32px;
-}
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#user-registration-members-list-form .tablenav {
   display: flex;
   justify-content: flex-end;
   align-self: center;
-  margin-bottom: 32px;
   flex-wrap: wrap;
   justify-content: space-between;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#user-registration-members-list-form .tablenav.top {
   justify-content: flex-end;
-  padding-top: 40px;
   row-gap: 16px;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#user-registration-members-list-form .tablenav .bulkactions input[type=submit] {
@@ -1558,6 +1560,49 @@
     display: block;
     margin-top: 50px;
   }
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.teams th.column-team_leader {
+  width: 20%;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.teams th.column-members {
+  width: 10%;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.teams th.column-date {
+  width: 20%;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.teams tbody tr.no-items {
+  background: #ffffff;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.teams tbody tr.no-items td {
+  padding: 0;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.teams tbody tr.no-items td .empty-list-table-container {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.teams tbody tr.no-items td .empty-list-table-container img {
+  width: 300px;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.teams tbody tr.no-items td .empty-list-table-container h3 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  color: #222222;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 32px;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.teams tbody tr.no-items td .empty-list-table-container p {
+  color: #6B6B6B;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.teams tbody tr td .row-actions {
+  align-items: center;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.teams tbody tr td .row-actions span {
+  font-size: 12px;
 }
 
 .ur-membership-tab-contents-wrapper {
@@ -1942,6 +1987,74 @@
 }
 .wp-list-table.users td p {
   margin: 7px 0 5px;
+}
+
+#ur-team-pricing-container .ur-team-toggle-tabs {
+  display: inline-flex;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f4f4f4;
+  padding: 4px;
+}
+#ur-team-pricing-container .ur-team-toggle-tabs label {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  user-select: none;
+  margin-bottom: 0;
+  border-radius: 4px;
+  text-align: center;
+  background: transparent;
+  color: #000;
+  transition: background 0.3s, color 0.3s;
+}
+#ur-team-pricing-container .ur-team-toggle-tabs input[type=radio] {
+  display: none;
+}
+#ur-team-pricing-container .ur-team-toggle-tabs input[type=radio]:checked + label {
+  background: #475bb2;
+  color: #fff;
+}
+#ur-team-pricing-container #ur-add-team-pricing-btn, #ur-team-pricing-container .ur-add-tier-btn {
+  padding: 6px 16px;
+  font-size: 14px;
+}
+#ur-team-pricing-container #ur-add-team-pricing-btn:focus, #ur-team-pricing-container .ur-add-tier-btn:focus {
+  color: #2d3559;
+  background: rgb(222.4984029851, 224.3717109905, 232.8015970149);
+  border-color: rgb(222.4984029851, 224.3717109905, 232.8015970149);
+  box-shadow: 0 1px 0 rgb(222.4984029851, 224.3717109905, 232.8015970149);
+}
+#ur-team-pricing-container #ur-add-team-pricing-btn:hover, #ur-team-pricing-container .ur-add-tier-btn:hover {
+  background: transparent;
+  border-color: #475bb2;
+  color: #383838;
+}
+#ur-team-pricing-container #ur-add-tier-btn {
+  padding: 0 10px;
+}
+#ur-team-pricing-container .ur-remove-team-pricing-btn, #ur-team-pricing-container .ur-remove-tier-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+  background: #f4f4f4;
+  box-shadow: none;
+  transition: all 0.3s ease-in-out;
+}
+#ur-team-pricing-container .ur-remove-team-pricing-btn span, #ur-team-pricing-container .ur-remove-tier-btn span {
+  color: #949494;
+}
+#ur-team-pricing-container .ur-remove-team-pricing-btn:hover, #ur-team-pricing-container .ur-remove-tier-btn:hover {
+  background: #fff4f4;
+  border-color: #F25656;
+}
+#ur-team-pricing-container .ur-remove-team-pricing-btn:hover span, #ur-team-pricing-container .ur-remove-tier-btn:hover span {
+  color: #F25656;
+}
+#ur-team-pricing-container .ur-remove-tier-btn {
+  width: 40px;
+  height: 40px;
 }
 
 #membership-list tbody#the-list .ur-membership-sortable-row {

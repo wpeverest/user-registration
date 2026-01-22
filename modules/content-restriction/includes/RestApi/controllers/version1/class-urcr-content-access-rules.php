@@ -222,6 +222,7 @@ class URCR_Content_Access_Rules {
 		$access_rule_data = isset( $request['access_rule_data'] ) ? $request['access_rule_data'] : array();
 
 		if ( empty( $access_rule_data ) ) {
+			$timestamp = time() * 1000;
 			$access_rule_data = array(
 				'enabled'         => true,
 				'logic_map'       => array(
@@ -230,8 +231,18 @@ class URCR_Content_Access_Rules {
 				'target_contents' => array(),
 				'actions'         => array(
 					array(
+						'id'             => 'x' . $timestamp,
+						'type'           => 'message',
+						'label'          => __( 'Show Message', 'user-registration' ),
+						'message'        => '',
+						'redirect_url'   => '',
 						'access_control' => 'access',
-						'type'           => '',
+						'local_page'     => '',
+						'ur_form'        => '',
+						'shortcode'      => array(
+							'tag'  => '',
+							'args' => '',
+						),
 					),
 				),
 			);

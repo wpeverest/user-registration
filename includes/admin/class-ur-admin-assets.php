@@ -225,6 +225,8 @@ class UR_Admin_Assets {
 			'ur_setup_params',
 			array(
 				'ajax_url'                     => admin_url( 'admin-ajax.php' ),
+				'rest_url'                     => esc_url_raw( rest_url( 'user-registration/v1/' ) ),
+				'rest_nonce'                   => wp_create_nonce( 'wp_rest' ),
 				'create_form_nonce'            => wp_create_nonce( 'user_registration_create_form' ),
 				'template_licence_check_nonce' => wp_create_nonce( 'user_registration_template_licence_check' ),
 				'captcha_setup_check_nonce'    => wp_create_nonce( 'user_registration_captcha_setup_check' ),

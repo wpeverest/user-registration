@@ -176,7 +176,7 @@ function ur_get_account_menu_item_classes( $endpoint ) {
 
 	// Set current item class.
 	$current = isset( $wp->query_vars[ $endpoint ] );
-	if ( 'dashboard' === $endpoint && ( isset( $wp->query_vars['page'] ) || empty( $wp->query_vars ) ) ) {
+	if ( 'edit-profile' === $endpoint && ( isset( $wp->query_vars['page'] ) || empty( $wp->query_vars ) ) ) {
 		$current = true; // Dashboard is not an endpoint, so needs a custom check.
 	}
 

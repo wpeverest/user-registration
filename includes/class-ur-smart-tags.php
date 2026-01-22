@@ -130,6 +130,7 @@ class UR_Smart_Tags {
 			'{{manage_membership_link}}' => esc_html__( 'Manage Membership Link', 'user-registration' ),
 			'{{payment_amount}}'         => esc_html__( 'Payment Amount', 'user-registration' ),
 			'{{reactivation_link}}'      => esc_html__( 'Membership Reactivation Link', 'user-registration' ),
+			'{{team_name}}'              => esc_html__( 'Team Name', 'user-registration' ),
 		);
 
 		/**
@@ -243,6 +244,8 @@ class UR_Smart_Tags {
 		if ( ! empty( $other_tags[1] ) ) {
 			foreach ( $other_tags[1] as $key => $tag ) {
 				$other_tag = explode( ' ', $tag )[0];
+
+				$content = $this->handle_invoices_tags( $other_tag, $content, $values, $key );
 
 				switch ( $other_tag ) {
 					case 'updated_new_user_email':
@@ -834,7 +837,20 @@ class UR_Smart_Tags {
 						$first_name = get_user_meta( $user_id, 'first_name', true );
 						$content    = str_replace( '{{' . $other_tag . '}}', $first_name, $content );
 						break;
-
+					case 'first_name':
+						$username   = $values['username'] ?? $values['membership_tags']['username'] ?? null;
+						$user       = get_user_by( 'login', $username );
+						$user_id    = isset( $user->ID ) ? $user->ID : get_current_user_id();
+						$first_name = get_user_meta( $user_id, 'first_name', true );
+						$content    = str_replace( '{{' . $other_tag . '}}', $first_name, $content );
+						break;
+					case 'last_name':
+						$username   = $values[ 'username' ] ?? $values[ 'membership_tags' ][ 'username' ] ?? null;
+						$user       = get_user_by( 'login', $username );
+						$user_id    = isset( $user->ID ) ? $user->ID : get_current_user_id();
+						$last_name = get_user_meta( $user_id, 'last_name', true );
+						$content    = str_replace( '{{' . $other_tag . '}}', $last_name, $content );
+						break;
 					case 'membership_end_date':
 						$membership_end_date = ( isset( $values['membership_tags'] ) && isset( $values['membership_tags']['membership_plan_expiry_date'] ) ) ? $values['membership_tags']['membership_plan_expiry_date'] : '';
 						$content             = str_replace( '{{' . $tag . '}}', $membership_end_date, $content );
@@ -1112,6 +1128,20 @@ class UR_Smart_Tags {
 						}
 						$content = str_replace( '{{' . $other_tag . '}}', sanitize_text_field( $payment_amount ), $content );
 						break;
+
+					case 'team_name':
+						$team_name = ! empty( $values['team_name'] ) ? $values['team_name'] : '';
+						$content   = str_replace( '{{' . $other_tag . '}}', $team_name, $content );
+						break;
+
+					case 'password':
+						if ( ! empty( $values['password'] ) ) {
+							$password = $values['password'];
+						} else {
+							$password = '';
+						}
+						$content = str_replace( '{{' . $other_tag . '}}', $password, $content );
+						break;
 				}
 			}
 		}
@@ -1308,6 +1338,86 @@ class UR_Smart_Tags {
 			$payment_date = current_time( 'mysql' );
 			update_user_meta( $user_id, 'user_registration_single_item_payment_date', $payment_date );
 		}
+	}
+
+
+	private function handle_invoices_tags( $tag, $content, $values, $key ) {
+		global $wpdb;
+		$detail = '';
+		$tag_processed = false;
+
+		// List of invoice-related tags that this method handles
+		$invoice_tags = array(
+			'business_name',
+			'business_address_line_1',
+			'business_address_line_2',
+			'business_address_city',
+			'business_address_state',
+			'business_address_postal',
+			'business_email',
+			'business_phone',
+			'invoice_title',
+			'invoice_short_desc',
+			'invoice_period',
+			'invoice_amount',
+			'total_amount',
+			'tax_amount',
+			'invoice_status',
+		);
+
+		// Only process if this is an invoice tag
+		if ( ! in_array( $tag, $invoice_tags, true ) ) {
+			return $content;
+		}
+
+		$membership_enabled = get_user_meta( get_current_user_id(), 'ur_registration_source', true );
+		if ( $membership_enabled ) {
+			$transaction_id = $_GET[ 'transaction_id' ]; //one time payment.
+			$order_detail = $wpdb->get_row( $wpdb->prepare( "SELECT ID, item_id, updated_at, status  FROM {$wpdb->prefix}ur_membership_orders WHERE user_id=%d AND transaction_id=%s", get_current_user_id(), $transaction_id ), ARRAY_A );
+			$membership = get_post( $order_detail[ 'item_id' ], ARRAY_A );
+		}
+		switch( $tag ) {
+			//merchant details:
+			case 'business_name':
+			case 'business_address_line_1':
+			case 'business_address_line_2':
+			case 'business_address_city':
+			case 'business_address_state':
+			case 'business_address_postal':
+			case 'business_email':
+			case 'business_phone':
+				$detail = get_option( 'urm_' . $tag, '' );
+				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				$tag_processed = true;
+				break;
+			case 'invoice_title':
+				$detail = $membership[ 'post_title' ] ?? '';
+				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				$tag_processed = true;
+				break;
+			case 'invoice_short_desc':
+				$detail = $membership[ 'post_description' ] ?? '';
+				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				$tag_processed = true;
+				break;
+			case 'invoice_period':
+			case 'invoice_amount':
+			case 'total_amount':
+			case 'tax_amount':
+				$detail = get_user_meta( $order_detail[ 'user_id' ], "urm_$tag", true ) ?? '';
+				$content = str_replace( '{{' . $tag . '}}', $detail, $content );
+				$tag_processed = true;
+				break;
+			case 'invoice_status':
+				$content = str_replace( '{{' . $tag . '}}', $order_detail[ 'status' ], $content);
+				$tag_processed = true;
+				break;
+		}
+		// Only remove invoice tags that weren't processed (shouldn't happen, but safety check)
+		if ( ! $tag_processed ) {
+			$content = str_replace( '{{' . $tag . '}}', '', $content );
+		}
+		return $content;
 	}
 }
 

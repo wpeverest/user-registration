@@ -19,6 +19,20 @@ const ConditionRow = ({
 	const [value, setValue] = useState(condition.conditionValue || "");
 	const selectRef = useRef(null);
 
+	// Get the selected condition option to access operator_label and placeholder
+	const allOptions = getFilteredConditionOptions(
+		isMigrated,
+		ruleType,
+		isFirstCondition,
+		condition.value,
+		true
+	);
+	const selectedOption = allOptions.find(
+		(opt) => opt.value === condition.value
+	);
+	const operatorLabel = selectedOption?.operator_label || operator;
+	const placeholder = selectedOption?.placeholder || "";
+
 	useEffect(() => {
 		onUpdate({
 			...condition,
@@ -61,22 +75,24 @@ const ConditionRow = ({
 		);
 
 		if (selectedOption) {
+			let initialValue = "";
+			if (selectedOption.value === "ur_form_field") {
+				initialValue = { form_id: "", form_fields: [] };
+			} else if (selectedOption.type === "multiselect") {
+				initialValue = [];
+			} else {
+				initialValue = "";
+			}
+			
 			const updatedCondition = {
 				...condition,
 				value: selectedOption.value,
 				label: selectedOption.label,
 				inputType: selectedOption.type,
 				type: condition.type || "condition",
-				conditionValue:
-					selectedOption.value === "ur_form_field"
-						? { form_id: "", form_fields: [] }
-						: ""
+				conditionValue: initialValue
 			};
-			setValue(
-				selectedOption.value === "ur_form_field"
-					? { form_id: "", form_fields: [] }
-					: ""
-			);
+			setValue(initialValue);
 			onUpdate(updatedCondition);
 		}
 	};
@@ -109,6 +125,9 @@ const ConditionRow = ({
 									</option>
 								))}
 							</select>
+						</div>
+						<div className="urcr-condition-operator ur-align-self-center">
+							<span>{operatorLabel}</span>
 						</div>
 						<div className="urcr-condition-value ur-flex-1">
 							<URFormFieldCondition
@@ -149,11 +168,11 @@ const ConditionRow = ({
 						</select>
 					</div>
 
-					{condition.value !== "user_registered_date" && (
-						<div className="urcr-condition-operator">
-							<span>{operator}</span>
-						</div>
-					)}
+					
+					<div className="urcr-condition-operator">
+						<span>{operatorLabel}</span>
+					</div>
+					
 
 					<div className="urcr-condition-value">
 						<ConditionValueInput
@@ -164,6 +183,7 @@ const ConditionRow = ({
 							onChange={handleValueChange}
 							uniqueId={condition.id}
 							disabled={isLocked}
+							placeholder={placeholder}
 						/>
 					</div>
 				</div>

@@ -188,7 +188,6 @@ const Edit = (props) => {
 										  bold italic underline strikethrough |
 										  forecolor backcolor |
 										  hr |
-										  alignleft aligncenter alignright alignjustify |
 										  bullist numlist outdent indent |
 										  link image emoticons charmap |
 										  removeformat

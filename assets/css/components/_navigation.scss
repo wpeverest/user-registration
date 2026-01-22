@@ -380,6 +380,12 @@
                     border: $border_width solid $border_color;
                 }
 
+                .button-primary {
+                    background: $primary_color;
+                    border-color: $primary_color;
+                    color: $white;
+                }
+
                 a {
                     order: 1;
 
@@ -461,7 +467,6 @@
 
             input[type="text"].code {
                 min-height: 36px;
-                font-size: 13px;
                 line-height: 20px;
             }
 
@@ -477,15 +482,23 @@
                 }
 
                 &.button-icon {
-                    width: 38px;
+                    width: 34px;
+                    height: 34px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    border-color: #d1d5db;
+                    // border-color: #d1d5db;
                     background: #edeff7;
 
                     .dashicons {
+                        width: 18px;
+                        height: 18px;
+
                         &::before {
+                            width: 18px;
+                            height: 18px;
+                            top: 0;
+                            left: 0;
                             transition: all .3s ease-in-out;
                         }
                     }
