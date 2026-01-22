@@ -892,9 +892,7 @@ class UR_Getting_Started {
 			);
 		}
 
-		$allowed_types = ( 'paid_membership' === $membership_type )
-		? array( 'free', 'one-time', 'subscription' )
-		: array( 'free' );
+		$allowed_types = array( 'free', 'one-time', 'subscription' );
 
 		$results = array(
 			'created' => array(),
