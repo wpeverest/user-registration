@@ -30,6 +30,11 @@ jQuery(function ($) {
 					var $el = $(this);
 					var fieldId = $el.data('id');
 					var country = $el.val();
+					var stateEnable = $el.data( 'state-enabled' );
+
+					if ( ! stateEnable ) {
+						return;
+					}
 
 					var data = {
 						action: 'user_registration_update_state_field',
