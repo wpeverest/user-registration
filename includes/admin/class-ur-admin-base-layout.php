@@ -52,7 +52,6 @@ class UR_Base_Layout {
 		$is_searching = isset( $_GET['s'] ) && '' !== trim( wp_unslash( $_GET['s'] ) );
 
 		$show_search = ( $total_items > 10 ) || $is_searching;
-		$show_search = true;
 
 		$is_membership_page = isset( $_GET['page'] ) && 'user-registration-membership' === $_GET['page'] && ! isset( $_GET['action'] ) ? true : false;
 
