@@ -15,7 +15,7 @@
 
 	$is_coupon_addon_activated        = ur_check_module_activation( 'coupon' );
 	$is_tax_calculation_enabled       = ur_check_module_activation( 'taxes' );
-	$is_team_addon_activated          = ur_check_module_activation( 'team' );
+	$is_team_addon_activated          = UR_PRO_ACTIVE && ur_check_module_activation( 'team' );
 	$membership_ids_link_with_coupons = array();
 	if ( $is_coupon_addon_activated && function_exists( 'ur_get_membership_ids_link_with_coupons' ) ) :
 		$membership_ids_link_with_coupons = ur_get_membership_ids_link_with_coupons();
@@ -167,7 +167,7 @@
 					$final_period = $currency_symbol . $converted_amount . ' ' . $duration;
 				}
 
-				$urm_default_pg = apply_filters( 'user_registration_membership_default_payment_gateway', '' );
+				$urm_default_pg   = apply_filters( 'user_registration_membership_default_payment_gateway', '' );
 				$has_team_pricing = $is_team_addon_activated && ! empty( $membership['team_pricing'] );
 				?>
 				<label class="ur_membership_input_label ur-label <?php echo $has_team_pricing ? 'ur-has-team-pricing' : 'ur-normal-pricing'; ?>"
@@ -259,7 +259,7 @@
 											$show_tiers       = false;
 
 											$team_plan_type       = $team['team_plan_type'] ?? 'one-time';
-											$team_price          = $team['team_price'] ?? 0;
+											$team_price           = $team['team_price'] ?? 0;
 											$team_duration_value  = $team['team_duration_value'] ?? 0;
 											$team_duration_period = $team['team_duration_period'] ?? 'week';
 											if ( $team_duration_value > 1 ) {
@@ -341,6 +341,45 @@
 														<?php echo $price; ?>
 													</div>
 												</div>
+												<?php if ( $show_tiers && ! empty( $tiers ) ) : ?>
+													<div class="ur-team-tier-seats-tier" style="margin-top: 15px;display:none">
+														<p style="margin-bottom:6px">Select a tier</p>
+														<?php
+														$tier_radio_name = 'tier_selection_' . esc_attr( $index );
+														foreach ( $tiers as $tier_index => $tier ) :
+															$tier_seat = sprintf(
+																esc_html__( '%1$d - %2$d seats', 'user-registration' ),
+																$tier['tier_from'],
+																$tier['tier_to']
+															);
+															if ( 'subscription' === $team_plan_type ) {
+																$tier_price = sprintf(
+																	esc_html__( '%1$s / seat for %2$s %3$s', 'user-registration' ),
+																	$membership['currency_symbol'] . $tier['tier_per_seat_price'],
+																	$team_duration_value,
+																	$team_duration_period
+																);
+															} else {
+																$tier_price = sprintf(
+																	esc_html__( '%s / seat', 'user-registration' ),
+																	$membership['currency_symbol'] . $tier['tier_per_seat_price']
+																);
+															}
+															?>
+															<label style="display: block; margin-bottom: 10px; cursor: pointer;">
+																<input type="radio"
+																	name="<?php echo esc_attr( $tier_radio_name ); ?>"
+																	value="<?php echo esc_attr( $tier_index ); ?>"
+																	class="ur-tier-radio-input"
+																	data-tier-from="<?php echo esc_attr( $tier['tier_from'] ); ?>"
+																	data-tier-to="<?php echo esc_attr( $tier['tier_to'] ); ?>"
+																	data-tier-price="<?php echo esc_attr( $tier['tier_per_seat_price'] ); ?>"
+																	style="margin-right: 8px;">
+																<span><?php echo esc_html( $tier_seat ) . ' : ' . esc_html( $tier_price ); ?></span>
+															</label>
+														<?php endforeach; ?>
+													</div>
+												<?php endif; ?>
 												<?php if ( $show_seats_input ) : ?>
 													<div class="ur-team-tier-seats-wrapper" style="display:none;">
 														<hr>
@@ -348,35 +387,6 @@
 															<label style="width:100%;margin-bottom:0"><?php esc_html_e( 'Number of seats', 'user-registration' ); ?></label>
 															<input type="number" name="no_of_seats" placeholder="<?php esc_attr_e( 'No. of seats', 'user-registration' ); ?>" class="ur-team-tier-seats-input" min="<?php esc_attr_e( $team['minimum_seats'] ); ?>" value="<?php esc_attr_e( $team['minimum_seats'] ); ?>" max="<?php esc_attr_e( $team['maximum_seats'] ); ?>">
 														</div>
-														<?php if ( $show_tiers ) : ?>
-															<div class="ur-team-tier-seats-tier">
-																<?php
-																foreach ( $tiers as $tier ) :
-																	$tier_seat = sprintf(
-																		esc_html__( '%1$d - %2$d seats', 'user-registration' ),
-																		$tier['tier_from'],
-																		$tier['tier_to']
-																	);
-																	if ( 'subscription' === $team_plan_type ) {
-																		$tier_price = sprintf(
-																			esc_html__( '%1$s / seat for %2$s %3$s', 'user-registration' ),
-																			$membership['currency_symbol'] . $tier['tier_per_seat_price'],
-																			$team_duration_value,
-																			$team_duration_period
-																		);
-																	} else {
-																		$tier_price = sprintf(
-																			esc_html__( '%s / seat', 'user-registration' ),
-																			$membership['currency_symbol'] . $tier['tier_per_seat_price']
-																		);
-																	}
-																	?>
-																<p>
-																	<?php echo esc_html( $tier_seat ) . ' : ' . esc_html( $tier_price ); ?>
-																</p>
-																<?php endforeach; ?>
-															</div>
-														<?php endif; ?>
 													</div>
 												<?php endif; ?>
 											</div>

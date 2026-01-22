@@ -1802,6 +1802,7 @@
 					response_data: response,
 					prepare_members_data: prepare_members_data,
 					form_response: form_response,
+					team_id: response.data.team_id ? response.data.team_id : ''
 				})
 					.then(function () {
 						ur_membership_frontend_utils.show_success_message(
@@ -1862,6 +1863,7 @@
 					current_membership_id: response.data.current_membership_id
 						? response.data.current_membership_id
 						: '',
+					team_id: response.data.team_id? response.data.team_id : ''
 				},
 				{
 					success: function (response) {
@@ -2002,6 +2004,7 @@
 						current_membership_id: data.current_membership_id
 							? data.current_membership_id
 							: '',
+						team_id: data.team_id ? data.team_id : ''
 					},
 					{
 						success: function (response) {
@@ -2908,28 +2911,63 @@
 				ur_membership_ajax_utils.calculate_total(radio);
 			});
 
-			$('.urm-team-pricing-tier').on('click', function () {
-				var tier = $(this);
-				var container = tier.closest('.urm-team-pricing-card');
-				var singlePrice = container.find('.ur-membership-price-selected');
-				var radio = container.find('input[type="radio"]');
-				var seat_input = tier.find('input[name="no_of_seats"]');
+			function calculatePrice(tier) {
+				var radio = tier.closest(".urm-team-pricing-card")
+					.find('input[name="urm_membership"]');
 
-				$('.urm-team-pricing-tier').removeClass('selected');
-				$('.ur-team-tier-seats-wrapper').hide();
+				var seatInput = tier.find('input[name="no_of_seats"]');
+				var seats = parseInt(seatInput.val(), 10) || 0;
 
-				tier.addClass('selected');
-				singlePrice.removeClass('ur-membership-price-selected');
-				tier.find('.ur-team-tier-seats-wrapper').show();
+				var seatModel = tier.data("seat-model");
+				var pricingModel = tier.data("pricing-model");
 
-				seat_input.prop('disabled', false);
+				var amount = 0;
 
-				var seat_model = tier.data('seat-model');
-				var no_of_seats = parseInt(seat_input.val(), 10);
+				if (seatModel === "fixed") {
+					amount = tier.data("fixed-price") || 0;
+				}
 
-				//reset and disable all other number of seats input
+				if (seatModel === "variable" && pricingModel === "per_seat") {
+					var perSeat = tier.data("per-seat-price") || 0;
+					amount = seats * perSeat;
+				}
+
+				if (seatModel === "variable" && pricingModel === "tier") {
+					var selectedTierRadio = tier.find(".ur-tier-radio-input:checked");
+					if (!selectedTierRadio.length) return;
+
+					var tierPrice = parseFloat(selectedTierRadio.data("tier-price")) || 0;
+					amount = seats * tierPrice;
+				}
+
+				radio.data("urm-pg-calculated-amount", amount);
+				ur_membership_ajax_utils.calculate_total(radio);
+			}
+
+			$(document).on("click", ".urm-team-pricing-tier", function (e) {
+				if ($(e.target).is(".ur-tier-radio-input") || $(e.target).is("input[name='no_of_seats']")) return;
+
+    			var tier = $(this);
+				var container = tier.closest(".urm-team-pricing-card");
+				var singlePrice = container.find(
+					".ur-membership-price-selected"
+				);
+				$(".urm-team-pricing-tier").removeClass("selected");
+				$(".ur-team-tier-seats-wrapper").hide();
+				$(".ur-team-tier-seats-tier").hide();
+
+				tier.addClass("selected");
+				singlePrice.removeClass("ur-membership-price-selected");
+				$(".ur-tier-radio-input").prop("checked", false);
+				tier.find(".ur-tier-radio-input").prop("disabled", false);
+    			$(".ur-tier-radio-input").not(tier.find(".ur-tier-radio-input")).prop("disabled", true);
+
+				var seatModel = tier.data("seat-model");
+				var pricingModel = tier.data("pricing-model");
+				var seatInput = tier.find('input[name="no_of_seats"]');
+
 				$('input[name="no_of_seats"]')
-					.not(seat_input)
+					.not(seatInput)
 					.each(function () {
 						var defaultValue =
 							$(this).attr('min') || $(this).attr('placeholder') || '';
@@ -2938,53 +2976,56 @@
 						$(this).removeClass('ur-input-border-red');
 						$(this).removeAttr('aria-invalid');
 					});
-
 				// validation fix
 				$('#no_of_seats-error').remove();
 
-				//calculate total amount according to seat model and no of seats
-				var amount = 0;
-				if (seat_model) {
-					if ('fixed' === seat_model) {
-						amount = tier.data('fixed-price');
-						var team_size = tier.data('team-size');
-						radio.data('urm-pg-calculated-amount', amount);
-						ur_membership_ajax_utils.calculate_total(radio);
-					} else {
-						var pricing_model = tier.data('pricing-model');
-						var min_seats = parseInt(tier.data('minimum-seats'), 10);
-						var max_seats = parseInt(tier.data('maximum-seats'), 10);
-						if ('per_seat' === pricing_model) {
-							amount = tier.data('per-seat-price');
-						} else {
-							var tiers = tier.data('price-tiers');
-							$.each(tiers, function (index, tierItem) {
-								var from = parseInt(tierItem.tier_from, 10);
-								var to = parseInt(tierItem.tier_to, 10);
-
-								if (no_of_seats >= from && no_of_seats <= to) {
-									amount = tierItem.tier_per_seat_price;
-									tier.attr('data-selected-tier', index);
-									return false;
-								}
-							});
-						}
-						if (no_of_seats >= min_seats && no_of_seats <= max_seats) {
-							var total = no_of_seats * amount;
-							radio.data('urm-pg-calculated-amount', total);
-							ur_membership_ajax_utils.calculate_total(radio);
-						}
-					}
+				if (seatModel === "variable" && pricingModel === "per_seat") {
+					tier.find(".ur-team-tier-seats-wrapper").show();
+					seatInput.prop("disabled", false).val(seatInput.attr("min") || 1);
+					calculatePrice(tier);
 				}
+
+				if (seatModel === "fixed") {
+					calculatePrice(tier);
+				}
+
+				if (seatModel === "variable" && pricingModel === "tier") {
+					var tier_range_wrapper = tier.find('.ur-team-tier-seats-tier');
+					tier_range_wrapper.show();
+					tier.find(".ur-team-tier-seats-wrapper").hide();
+					seatInput.prop("disabled", true);
+					}
 			});
 
 			$(document).on(
 				'input',
 				'.urm-team-pricing-tier.selected input[name="no_of_seats"]',
 				function () {
-					$(this).closest('.urm-team-pricing-tier').trigger('click');
-				},
+					calculatePrice($(this).closest(".urm-team-pricing-tier"));
+				}
 			);
+
+			$(document).on("change", ".ur-tier-radio-input", function (e) {
+				var radio = $(this);
+    			var tier = radio.closest(".urm-team-pricing-tier");
+				if (!tier.hasClass('selected')) {
+					e.preventDefault();
+					e.stopImmediatePropagation();
+					radio.prop("checked", false);
+					return;
+				}
+
+				var seatInput = tier.find('input[name="no_of_seats"]');
+				var from = parseInt(radio.data("tier-from"), 10);
+				var to = parseInt(radio.data("tier-to"), 10);
+
+				tier.attr("data-selected-tier", radio.val());
+				$(".ur-team-tier-seats-wrapper").hide();
+    			tier.find(".ur-team-tier-seats-wrapper").show();
+				seatInput.attr({ min: from, max: to }).val(from).prop("disabled", false);
+				seatInput.trigger('input');
+				$('input[name="no_of_seats"]').not(seatInput).prop("disabled", true);
+			});
 		},
 		validateSwitchCurrency: function (paymentMethod) {
 			var $select = $('#ur-local-currency-switch-currency');
