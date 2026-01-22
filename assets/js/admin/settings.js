@@ -127,12 +127,12 @@
 			change: function (event, ui) {
 				var $input = $(this);
 				var colorValue = ui.color.toString();
-				
+
 				$input
 					.parent()
 					.find(".colorpickpreview")
 					.css({ backgroundColor: colorValue });
-				
+
 				var $container = $input.closest(".wp-picker-container");
 				if ($container.length) {
 					var $colorResult = $container.find(".wp-color-result");
@@ -147,12 +147,12 @@
 			},
 			clear: function () {
 				var $input = $(this);
-				
+
 				$input
 					.parent()
 					.find(".colorpickpreview")
 					.css({ backgroundColor: "" });
-				
+
 				var $container = $input.closest(".wp-picker-container");
 				if ($container.length) {
 					var $colorResult = $container.find(".wp-color-result");
@@ -178,7 +178,7 @@
 
 		$input.wpColorPicker(colorPickerOptions);
 
-		$input.on("change", function() {
+		$input.on("change", function () {
 			var colorValue = $(this).val();
 			var $container = $(this).closest(".wp-picker-container");
 			if ($container.length) {
@@ -607,12 +607,12 @@
 			change: function (event, ui) {
 				var $input = $(this);
 				var colorValue = ui.color.toString();
-				
+
 				$input
 					.parent()
 					.find(".colorpickpreview")
 					.css({ backgroundColor: colorValue });
-				
+
 				var $container = $input.closest(".wp-picker-container");
 				if ($container.length) {
 					var $colorResult = $container.find(".wp-color-result");
@@ -649,16 +649,6 @@
 
 		$("input, textarea, select, checkbox").on("change", function () {
 			changed = true;
-		});
-
-		$(".ur-nav-tab-wrapper a").on("click", function () {
-			if (changed) {
-				window.onbeforeunload = function () {
-					return user_registration_settings_params.i18n_nav_warning;
-				};
-			} else {
-				window.onbeforeunload = "";
-			}
 		});
 
 		$(".submit input").on("click", function () {
@@ -1436,7 +1426,6 @@
 			}
 		);
 
-		disableFormChangeModal();
 		init_accordion_settings();
 	});
 
