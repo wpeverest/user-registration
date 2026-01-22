@@ -825,15 +825,19 @@
 
 			total = parseFloat(total).toFixed(2);
 			if ('left' === urmf_data.curreny_pos) {
-				total_input.text(currency + totalDetails.total.toFixed(2));
-				subTotalInput.text(currency + totalDetails.subTotal.toFixed(2));
-				taxInput.text(currency + totalDetails.taxAmount.toFixed(2));
-				couponInput.text(currency + totalDetails.discountAmount.toFixed(2));
+				if ( totalDetails.total ) {
+					total_input.text(currency + totalDetails.total.toFixed(2));
+					subTotalInput.text(currency + totalDetails.subTotal.toFixed(2));
+					taxInput.text(currency + totalDetails.taxAmount.toFixed(2));
+					couponInput.text(currency + totalDetails.discountAmount.toFixed(2));
+				}
 			} else {
-				total_input.text(totalDetails.total.toFixed(2) + currency);
-				subTotalInput.text(totalDetails.subTotal.toFixed(2) + currency);
-				taxInput.text(totalDetails.taxAmount.toFixed(2) + currency);
-				couponInput.text(totalDetails.discountAmount.toFixed(2) + currency);
+				if ( totalDetails.total ) {
+					total_input.text(totalDetails.total.toFixed(2) + currency);
+					subTotalInput.text(totalDetails.subTotal.toFixed(2) + currency);
+					taxInput.text(totalDetails.taxAmount.toFixed(2) + currency);
+					couponInput.text(totalDetails.discountAmount.toFixed(2) + currency);
+				}
 			}
 		},
 		upgrade_membership: function (
@@ -980,12 +984,14 @@
 				} else {
 					$membershipRadio.data('urm-converted-amount', 0);
 					if (urmf_data.curreny_pos === 'left') {
-						$span.text(
-							urmf_data.currency_symbol +
-								subTotal.toFixed(2) +
-								' ' +
-								durationPart,
-						);
+						if ( subTotal ) {
+							$span.text(
+								urmf_data.currency_symbol +
+									subTotal.toFixed(2) +
+									' ' +
+									durationPart,
+							);
+						}
 						if ($membershipRadio.is(':checked')) {
 							taxAmount = ur_membership_ajax_utils.calculate_tax_amount(total);
 
@@ -2909,6 +2915,9 @@
 				container.find('.ur-team-tier-seats-wrapper').hide();
 				radio.data('urm-pg-calculated-amount', $(this).data('price'));
 				ur_membership_ajax_utils.calculate_total(radio);
+				$('.ur-membership-payment-gateway-lists label[for="ur-membership-mollie"]').show();
+				$('.ur-membership-payment-gateway-lists label[for="ur-membership-authorize"]').show();
+				$('.ur-team-tier-seats-tier').hide();
 			});
 
 			function calculatePrice(tier) {
@@ -2955,6 +2964,8 @@
 				$(".urm-team-pricing-tier").removeClass("selected");
 				$(".ur-team-tier-seats-wrapper").hide();
 				$(".ur-team-tier-seats-tier").hide();
+				$('.ur-membership-payment-gateway-lists label[for="ur-membership-mollie"]').hide();
+				$('.ur-membership-payment-gateway-lists label[for="ur-membership-authorize"]').hide();
 
 				tier.addClass("selected");
 				singlePrice.removeClass("ur-membership-price-selected");
@@ -2994,7 +3005,7 @@
 					tier_range_wrapper.show();
 					tier.find(".ur-team-tier-seats-wrapper").hide();
 					seatInput.prop("disabled", true);
-					}
+				}
 			});
 
 			$(document).on(

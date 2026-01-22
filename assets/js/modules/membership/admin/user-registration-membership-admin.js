@@ -1514,6 +1514,9 @@
 				plan_container.removeClass("ur-d-none");
 				team_pricing_container.addClass('ur-d-flex');
 				team_pricing_container.removeClass('ur-d-none');
+			}else{
+				$('input[name="ur_membership_local_currency"]').prop('checked', false);
+				$('input[name="ur_membership_local_currency"]').trigger( 'change' );
 			}
 		}
 	);
@@ -2167,9 +2170,16 @@
 		urHandleLocalCurrencyPricingMethod($(this));
 	});
 
-	function urToggleLocalCurrencyCards() {
+	function urToggleLocalCurrencyCards( load = '' ) {
 		var $toggle = $('#ur-membership-local-currency-action');
 		var $cards  = $('.ur-local-currency-card');
+
+		if ( 'free' === $( 'input:radio[name=ur_membership_type]:checked' ).val() && '' === load ) {
+			$toggle.prop( 'checked', false );
+			ur_membership_utils.show_failure_message(
+						ur_membership_data.local_currency_not_support_msg
+					);
+		}
 
 		if ($toggle.is(':checked')) {
 			$cards.show();
@@ -2182,7 +2192,7 @@
 		urToggleLocalCurrencyCards();
 	});
 
-	urToggleLocalCurrencyCards();
+	urToggleLocalCurrencyCards( 'load' );
 
 	$(document).on(
 		"change",

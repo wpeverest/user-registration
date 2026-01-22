@@ -498,14 +498,36 @@ class UR_Admin_Settings {
 						}
 
 						$settings .= '</div>';
+						//Show upsell texts.
+						if( ! empty( $section[ 'upsell' ] ) ) {
+							$upsell_section = $section[ 'upsell' ];
+							//excerpt.
+							if( ! empty( $upsell_section[ 'excerpt' ] ) ) {
+								$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $upsell_section['excerpt'] ) ) . '</p>';
+							}
+							//descriptions.
+							if( ! empty( $upsell_section[ 'description' ] ) ) {
+								if( is_string( $upsell_section[ 'description'] ) ) {
+									$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $upsell_section['excerpt'] ) ) . '</p>';
+								} elseif( is_array( $upsell_section[ 'description' ] ) ) {
+									$settings .= '<ul class="user-registration-upsell__description-list">';
+									foreach( $upsell_section[ 'description' ] as $description_text ) {
+										$settings .= '<li class="user-registration-upsell__description-list-item">' . $description_text . '</li>';
+									}
+								}
+							}
+							if( ! empty( $upsell_section[ 'feature_link' ] ) ) {
+								$settings .= '<a href="' . esc_url( $upsell_section[ 'feature_link' ] ) . '" class="user-registration-upsell__feature-link">Learn More</a>';
+							}
+							if ( ! empty( $section['before_desc'] ) ) {
+								$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $section['before_desc'] ) ) . '</p>';
+							}
 
-						if ( ! empty( $section['before_desc'] ) ) {
-							$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $section['before_desc'] ) ) . '</p>';
+							if ( ! empty( $section['desc'] ) ) {
+								$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $section['desc'] ) ) . '</p>';
+							}
 						}
 
-						if ( ! empty( $section['desc'] ) ) {
-							$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $section['desc'] ) ) . '</p>';
-						}
 						$settings .= '<div class="pt-0 pb-0 user-registration-card__body">';
 
 						if ( ! empty( $id ) ) {

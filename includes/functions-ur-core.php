@@ -4237,6 +4237,15 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 					'plugin' => 'user-registration-email-templates',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration Email Templates', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Create emails branded that look professional and consistent.',
+						'description' => array(
+							'Choose from 6 ready-made email templates',
+							'Customize layout, colors, and content',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/email-templates/',
+					)
+
 				),
 				'custom-email' => array(
 					'label'  => esc_html__( 'Custom Email', 'user-registration' ),

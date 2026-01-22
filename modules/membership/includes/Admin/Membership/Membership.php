@@ -1005,6 +1005,7 @@ class Membership {
 				'update_order_nonce'              => wp_create_nonce( 'ur_membership_update_order' ),
 				'update_order_action'             => 'user_registration_membership_update_membership_order',
 				'validate_payment_currency_nonce' => wp_create_nonce( 'validate_payment_currency_nonce' ),
+				'local_currency_not_support_msg'  => __( 'Free membership plan does not support local currency.' , 'user-registration' )
 			)
 		);
 	}

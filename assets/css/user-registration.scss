@@ -3911,3 +3911,13 @@ body.user-registration-page {
 		display: none !important;
 	}
 }
+
+.ur-field-address-state-outer-wrapper{
+	    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+	.ur-front-spinner{
+		margin-left: 0 !important;
+		margin-right: -26px;
+	}
+}
