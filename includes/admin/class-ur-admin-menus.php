@@ -708,6 +708,11 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$members_obj->add_members_menu_tab();
 			}
 
+			if ( UR_PRO_ACTIVE && class_exists( 'WPEverest\URFrontendListing\Admin\Admin' ) && ur_check_module_activation( 'frontend-listing' ) ) {
+				$members_dir_obj = new \WPEverest\URFrontendListing\Admin\Admin();
+				$members_dir_obj->user_list_menu();
+			}
+
 			if ( UR_PRO_ACTIVE && class_exists( 'WPEverest\URMembership\Admin\Membership\Membership' ) && ur_check_module_activation( 'membership' ) && ur_check_module_activation( 'team' ) && class_exists( 'WPEverest\URTeamMembership\Admin\Admin' ) ) {
 				$team_obj = new URTeamMembershipAdmin();
 				$team_obj->add_teams_menu();
@@ -822,8 +827,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				if ( $is_new_installation ) {
 					add_submenu_page(
 						'user-registration',
-						__('Setup Wizard', 'user-registration'),
-						'↳ ' . __('Setup Wizard', 'user-registration'),
+						__( 'Setup Wizard', 'user-registration' ),
+						'↳ ' . __( 'Setup Wizard', 'user-registration' ),
 						'manage_user_registration',
 						'user-registration-welcome&tab=setup-wizard',
 						array(

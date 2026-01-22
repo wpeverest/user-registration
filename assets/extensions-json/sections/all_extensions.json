@@ -276,7 +276,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=registration_login&section=2fa",
+      "setting_url": "admin.php?page=user-registration-settings&tab=security&section=2fa",
       "demo_video_url": "yjWR0IwbtOQ",
       "released_date": "10/11/2022"
     },
@@ -293,7 +293,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=registration_login&section=import-export",
+      "setting_url": "admin.php?page=user-registration-settings&tab=advanced&section=import-export&part=import-users",
       "demo_video_url": "1acA7OBPxQs",
       "released_date": "15/10/2020"
     },
@@ -705,7 +705,6 @@
         "themegrill agency"
       ],
       "released_date": "01/01/2024",
-      "setting_url": "admin.php?page=user-registration-settings&tab=general&section=pages",
       "demo_video_url": ""
     },
     {
@@ -722,7 +721,6 @@
         "themegrill agency"
       ],
       "released_date": "01/01/2024",
-      "setting_url": "admin.php?page=user-registration-settings&tab=calculations",
       "demo_video_url": ""
     },
     {

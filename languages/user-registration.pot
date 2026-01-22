@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the User Registration & Membership plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: User Registration & Membership 5.1\n"
+"Project-Id-Version: User Registration & Membership 5.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-registration\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-21T10:27:04+00:00\n"
+"POT-Creation-Date: 2026-01-22T11:37:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -19,8 +19,8 @@ msgstr ""
 #: includes/3rd-party/elementor/class-ur-widget.php:41
 #: includes/3rd-party/oxygen/class-ur-oxygen.php:52
 #: includes/admin/views/html-admin-page-system-info.php:146
-#: includes/functions-ur-core.php:7923
-#: includes/functions-ur-core.php:7932
+#: includes/functions-ur-core.php:8128
+#: includes/functions-ur-core.php:8137
 #: templates/dashboard-widget.php:27
 msgid "User Registration & Membership"
 msgstr ""
@@ -79,14 +79,14 @@ msgstr ""
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-edit-password.php:38
 #: includes/3rd-party/oxygen/widgets/class-ur-oxygen-widget-editpassword.php:12
 #: includes/3rd-party/oxygen/widgets/class-ur-oxygen-widget-editpassword.php:33
-#: includes/functions-ur-core.php:7929
+#: includes/functions-ur-core.php:8134
 msgid "Edit Password"
 msgstr ""
 
 #: includes/3rd-party/DiviBuilder/Modules/EditPassword.php:58
 #: includes/3rd-party/DiviBuilder/Modules/EditProfile.php:57
 #: includes/3rd-party/DiviBuilder/Modules/MembershipThankYou.php:58
-#: includes/admin/class-ur-admin-registrations-table-list.php:128
+#: includes/admin/class-ur-admin-registrations-table-list.php:132
 #: includes/admin/settings/class-ur-settings-email.php:363
 #: includes/admin/settings/class-ur-settings-email.php:394
 #: includes/admin/settings/emails/class-ur-settings-admin-email.php:79
@@ -142,15 +142,15 @@ msgstr ""
 #: includes/admin/functions-ur-admin.php:985
 #: includes/admin/views/html-login-page-forms-new.php:24
 #: includes/admin/views/html-login-page-forms.php:30
-#: includes/functions-ur-core.php:7895
+#: includes/functions-ur-core.php:8100
 msgid "Login Form"
 msgstr ""
 
 #: includes/3rd-party/DiviBuilder/Modules/LoginForm.php:56
 #: includes/3rd-party/DiviBuilder/Modules/MyAccount.php:56
 #: includes/functions-ur-core.php:1575
-#: includes/functions-ur-core.php:7878
-#: includes/functions-ur-core.php:7903
+#: includes/functions-ur-core.php:8083
+#: includes/functions-ur-core.php:8108
 #: chunks/blocks.js:280
 #: src/blocks/blocks/myaccount/Edit.js:46
 msgid "Redirect URL"
@@ -188,7 +188,7 @@ msgstr ""
 #: includes/3rd-party/DiviBuilder/Modules/LoginForm.php:81
 #: includes/3rd-party/DiviBuilder/Modules/MyAccount.php:81
 #: includes/3rd-party/DiviBuilder/Modules/RegistrationForm.php:77
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:480
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:484
 #: modules/membership/includes/Admin/Membership/Membership.php:746
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -200,7 +200,7 @@ msgstr ""
 #: includes/3rd-party/DiviBuilder/Modules/LoginForm.php:82
 #: includes/3rd-party/DiviBuilder/Modules/MyAccount.php:82
 #: includes/3rd-party/DiviBuilder/Modules/RegistrationForm.php:78
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:481
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:485
 #: modules/membership/includes/Admin/Membership/Membership.php:747
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -224,8 +224,9 @@ msgstr ""
 
 #: includes/3rd-party/DiviBuilder/Modules/MembershipGroups.php:77
 #: includes/admin/settings/class-ur-settings-general.php:159
-#: includes/functions-ur-core.php:8469
+#: includes/functions-ur-core.php:8674
 #: chunks/blocks.js:280
+#: src/blocks/blocks/membership-buy-now/Edit.js:306
 #: src/blocks/blocks/membership-listing/Edit.js:476
 #: src/blocks/blocks/membership-listing/Edit.js:486
 msgid "Button Text"
@@ -234,7 +235,7 @@ msgstr ""
 #: includes/3rd-party/DiviBuilder/Modules/MembershipGroups.php:81
 #: includes/admin/class-ur-admin-form-modal.php:243
 #: includes/class-ur-smart-tags.php:89
-#: includes/class-ur-smart-tags.php:688
+#: includes/class-ur-smart-tags.php:691
 #: modules/membership/includes/Admin/Views/Shortcode/MembershipListingShortcode.php:88
 msgid "Sign Up"
 msgstr ""
@@ -272,7 +273,7 @@ msgstr ""
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-registration.php:35
 #: includes/admin/class-ur-admin-menus.php:680
 #: includes/class-ur-ajax.php:2261
-#: includes/functions-ur-core.php:7852
+#: includes/functions-ur-core.php:8057
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:677
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:777
 msgid "Registration Form"
@@ -291,7 +292,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-members-menu.php:1467
 #: includes/admin/settings/class-ur-users-menu.php:786
 #: includes/class-ur-form-block.php:74
-#: includes/functions-ur-core.php:7860
+#: includes/functions-ur-core.php:8065
 msgid "Form"
 msgstr ""
 
@@ -308,7 +309,7 @@ msgstr ""
 
 #: includes/3rd-party/elementor/class-ur-widget.php:159
 #: includes/3rd-party/elementor/widgets/class-ur-widgets-registration.php:134
-#: includes/functions-ur-core.php:7831
+#: includes/functions-ur-core.php:8036
 msgid "You have not created a form, Please Create a form first"
 msgstr ""
 
@@ -323,7 +324,7 @@ msgstr ""
 #: includes/3rd-party/oxygen/widgets/class-ur-oxygen-widget-editprofile.php:12
 #: includes/3rd-party/oxygen/widgets/class-ur-oxygen-widget-editprofile.php:33
 #: includes/admin/settings/class-ur-settings-my-account.php:169
-#: includes/functions-ur-core.php:7920
+#: includes/functions-ur-core.php:8125
 #: templates/myaccount/form-edit-profile.php:60
 #: templates/myaccount/form-edit-profile.php:73
 msgid "Edit Profile"
@@ -333,10 +334,10 @@ msgstr ""
 #: includes/3rd-party/oxygen/widgets/class-ur-oxygen-widget-myaccount.php:33
 #: includes/admin/class-ur-admin.php:300
 #: includes/admin/settings/class-ur-settings-my-account.php:24
-#: includes/class-ur-smart-tags.php:624
+#: includes/class-ur-smart-tags.php:627
 #: includes/functions-ur-core.php:3533
-#: includes/functions-ur-core.php:7870
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1847
+#: includes/functions-ur-core.php:8075
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1876
 msgid "My Account"
 msgstr ""
 
@@ -411,7 +412,7 @@ msgstr ""
 #: includes/3rd-party/oxygen/widgets/class-ur-oxygen-widgets.php:203
 #: includes/3rd-party/oxygen/widgets/class-ur-oxygen-widgets.php:305
 #: chunks/blocks.js:280
-#: src/blocks/blocks/membership-buy-now/Edit.js:292
+#: src/blocks/blocks/membership-buy-now/Edit.js:339
 msgid "Background Color"
 msgstr ""
 
@@ -455,7 +456,7 @@ msgstr ""
 
 #: includes/3rd-party/oxygen/widgets/class-ur-oxygen-widgets.php:268
 #: chunks/blocks.js:280
-#: src/blocks/blocks/membership-buy-now/Edit.js:284
+#: src/blocks/blocks/membership-buy-now/Edit.js:331
 msgid "Text Color"
 msgstr ""
 
@@ -468,7 +469,7 @@ msgid "Submit Button"
 msgstr ""
 
 #: includes/3rd-party/oxygen/widgets/class-ur-oxygen-widgets.php:300
-#: includes/class-ur-smart-tags.php:1226
+#: includes/class-ur-smart-tags.php:1229
 msgid "Color"
 msgstr ""
 
@@ -477,6 +478,7 @@ msgid "Hover Color"
 msgstr ""
 
 #: includes/3rd-party/oxygen/widgets/class-ur-oxygen-widgets.php:315
+#: src/blocks/blocks/membership-buy-now/Edit.js:312
 msgid "Width"
 msgstr ""
 
@@ -505,12 +507,12 @@ msgid "Advanced Settings"
 msgstr ""
 
 #: includes/abstracts/abstract-ur-list-table.php:131
-#: includes/admin/class-ur-admin-registrations-table-list.php:106
+#: includes/admin/class-ur-admin-registrations-table-list.php:110
 msgid "Restore"
 msgstr ""
 
 #: includes/abstracts/abstract-ur-list-table.php:132
-#: includes/admin/class-ur-admin-registrations-table-list.php:111
+#: includes/admin/class-ur-admin-registrations-table-list.php:115
 msgid "Delete permanently"
 msgstr ""
 
@@ -589,40 +591,40 @@ msgid "All"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:230
-#: includes/admin/class-ur-admin-menus.php:1153
+#: includes/admin/class-ur-admin-menus.php:1158
 msgid "Give it a name."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:231
-#: includes/admin/class-ur-admin-menus.php:1154
+#: includes/admin/class-ur-admin-menus.php:1159
 msgid "You must provide a Form name"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:232
-#: includes/admin/class-ur-admin-menus.php:1155
+#: includes/admin/class-ur-admin-menus.php:1160
 msgid "Activate Plugins"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:233
-#: includes/admin/class-ur-admin-menus.php:1156
+#: includes/admin/class-ur-admin-menus.php:1161
 msgid "Activating"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:234
-#: includes/admin/class-ur-admin-menus.php:1158
+#: includes/admin/class-ur-admin-menus.php:1163
 #: chunks/form_templates.js:1
 #: src/form-templates/components/PluginStatus.js:94
 msgid "Install & Activate"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:235
-#: includes/admin/class-ur-admin-menus.php:1159
+#: includes/admin/class-ur-admin-menus.php:1164
 msgid "Installing"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:236
 #: includes/admin/class-ur-admin-assets.php:657
-#: includes/admin/class-ur-admin-menus.php:1160
+#: includes/admin/class-ur-admin-menus.php:1165
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: chunks/form_templates.js:1
@@ -633,27 +635,27 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:244
 #: includes/admin/class-ur-admin-assets.php:666
-#: includes/admin/class-ur-admin-menus.php:1168
+#: includes/admin/class-ur-admin-menus.php:1173
 #: includes/admin/class-ur-admin-settings.php:226
 #: includes/class-ur-ajax.php:1681
-#: includes/functions-ur-core.php:4451
+#: includes/functions-ur-core.php:4648
 #: chunks/form_templates.js:1
 #: src/form-templates/components/TemplateList.js:690
 msgid "Upgrade Plan"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:245
-#: includes/admin/class-ur-admin-menus.php:1169
+#: includes/admin/class-ur-admin-menus.php:1174
 msgid "This template requires premium addons. Please upgrade to the Premium plan to unlock all these awesome Templates."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:246
-#: includes/admin/class-ur-admin-menus.php:1170
+#: includes/admin/class-ur-admin-menus.php:1175
 msgid "is a Premium Template"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:247
-#: includes/admin/class-ur-admin-menus.php:1171
+#: includes/admin/class-ur-admin-menus.php:1176
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: chunks/form_templates.js:1
@@ -664,24 +666,24 @@ msgid "Continue"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:248
-#: includes/admin/class-ur-admin-menus.php:1172
+#: includes/admin/class-ur-admin-menus.php:1177
 msgid "Untitled Form"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:249
-#: includes/admin/class-ur-admin-menus.php:1173
+#: includes/admin/class-ur-admin-menus.php:1178
 #: chunks/form_templates.js:1
 #: src/form-templates/components/TemplateList.js:712
 msgid "Uplift your form experience to the next level."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:250
-#: includes/admin/class-ur-admin-menus.php:1174
+#: includes/admin/class-ur-admin-menus.php:1179
 msgid "Download Failed. Please download and activate addon manually."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:251
-#: includes/admin/class-ur-admin-menus.php:1175
+#: includes/admin/class-ur-admin-menus.php:1180
 msgid "Installation Successful."
 msgstr ""
 
@@ -690,12 +692,12 @@ msgid "Addons have been Installed and Activated. You have to reload the page."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:253
-#: includes/admin/class-ur-admin-menus.php:1177
+#: includes/admin/class-ur-admin-menus.php:1182
 msgid "Save Changes and Reload"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:254
-#: includes/admin/class-ur-admin-menus.php:1179
+#: includes/admin/class-ur-admin-menus.php:1184
 msgid "Just Reload"
 msgstr ""
 
@@ -812,7 +814,7 @@ msgid "Publish form"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:387
-#: includes/admin/class-ur-admin-menus.php:1129
+#: includes/admin/class-ur-admin-menus.php:1134
 msgid "Update form"
 msgstr ""
 
@@ -839,11 +841,10 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:396
 #: includes/admin/class-ur-admin-base-layout.php:26
-#: includes/admin/class-ur-admin-menus.php:893
-#: includes/admin/class-ur-admin-menus.php:894
-#: includes/admin/class-ur-admin-menus.php:1525
-#: includes/admin/class-ur-admin-registrations-table-list.php:197
-#: includes/functions-ur-core.php:5930
+#: includes/admin/class-ur-admin-menus.php:898
+#: includes/admin/class-ur-admin-menus.php:899
+#: includes/admin/class-ur-admin-menus.php:1530
+#: includes/functions-ur-core.php:6135
 #: modules/membership/includes/Admin.php:315
 #: modules/membership/includes/Admin.php:365
 #: modules/membership/includes/Admin/Members/Members.php:251
@@ -907,7 +908,7 @@ msgid "Please choose at least one form to export."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:463
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:468
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:472
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: chunks/dashboard.js:280
@@ -917,7 +918,7 @@ msgid "Smart Tags"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:464
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:469
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:473
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: src/content-restriction/components/settings/SmartTagsButton.js:18
@@ -975,7 +976,7 @@ msgid "Clone"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:576
-#: includes/admin/class-ur-admin-registrations-table-list.php:108
+#: includes/admin/class-ur-admin-registrations-table-list.php:112
 #: modules/payment-history/Admin/OrdersListTable.php:277
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -984,7 +985,7 @@ msgid "Trash"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:598
-#: includes/admin/class-ur-admin-menus.php:1096
+#: includes/admin/class-ur-admin-menus.php:1101
 #: includes/admin/settings/class-ur-members-list-table.php:607
 #: includes/admin/settings/class-ur-members-menu.php:320
 #: includes/admin/settings/class-ur-members-menu.php:366
@@ -992,7 +993,7 @@ msgstr ""
 #: modules/membership/includes/Admin/Members/Members.php:169
 #: modules/membership/includes/Admin/Members/MembersListTable.php:448
 #: modules/membership/includes/Admin/Membership/ListTable.php:119
-#: modules/membership/includes/Admin/Membership/Membership.php:1032
+#: modules/membership/includes/Admin/Membership/Membership.php:1033
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroups.php:71
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:119
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:237
@@ -1009,7 +1010,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:599
 #: includes/admin/class-ur-admin-form-modal.php:217
-#: includes/admin/class-ur-admin-menus.php:1097
+#: includes/admin/class-ur-admin-menus.php:1102
 #: includes/admin/class-ur-admin-settings.php:206
 #: includes/admin/settings/class-ur-members-menu.php:321
 #: includes/admin/settings/class-ur-members-menu.php:337
@@ -1017,15 +1018,15 @@ msgstr ""
 #: includes/admin/settings/class-ur-users-menu.php:218
 #: includes/admin/settings/class-ur-users-menu.php:233
 #: includes/class-ur-frontend-scripts.php:593
-#: includes/frontend/class-ur-frontend.php:689
+#: includes/frontend/class-ur-frontend.php:704
 #: modules/membership/includes/Admin/Members/Members.php:170
-#: modules/membership/includes/Admin/Membership/Membership.php:1033
+#: modules/membership/includes/Admin/Membership/Membership.php:1034
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroups.php:73
 #: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:167
 #: modules/membership/includes/Admin/Views/Partials/footer-actions.php:4
 #: modules/payment-history/Orders.php:395
 #: modules/payment-history/Views/footer-actions.php:4
-#: templates/myaccount/membership.php:222
+#: templates/myaccount/membership.php:239
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: chunks/dashboard.js:280
@@ -1123,61 +1124,61 @@ msgid "Form successfully saved."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:618
-#: includes/admin/class-ur-admin-menus.php:1098
-#: includes/admin/class-ur-admin-menus.php:1111
+#: includes/admin/class-ur-admin-menus.php:1103
+#: includes/admin/class-ur-admin-menus.php:1116
 msgctxt "user registration admin"
 msgid "Success"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:619
-#: includes/admin/class-ur-admin-menus.php:1099
-#: includes/admin/class-ur-admin-menus.php:1112
+#: includes/admin/class-ur-admin-menus.php:1104
+#: includes/admin/class-ur-admin-menus.php:1117
 msgctxt "user registration admin"
 msgid "Error"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:620
-#: includes/admin/class-ur-admin-menus.php:1100
+#: includes/admin/class-ur-admin-menus.php:1105
 msgid "Confirm Deletion"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:621
-#: includes/admin/class-ur-admin-menus.php:1101
+#: includes/admin/class-ur-admin-menus.php:1106
 msgid "Embed in Page"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:622
-#: includes/admin/class-ur-admin-menus.php:1102
+#: includes/admin/class-ur-admin-menus.php:1107
 msgid "We can help embed your form with just a few clicks!"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:623
-#: includes/admin/class-ur-admin-menus.php:1103
+#: includes/admin/class-ur-admin-menus.php:1108
 msgid "Select Existing Page"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:624
-#: includes/admin/class-ur-admin-menus.php:1104
+#: includes/admin/class-ur-admin-menus.php:1109
 msgid "Create New Page"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:625
-#: includes/admin/class-ur-admin-menus.php:1105
+#: includes/admin/class-ur-admin-menus.php:1110
 msgid "Select the page to embed your form in."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:626
-#: includes/admin/class-ur-admin-menus.php:1106
+#: includes/admin/class-ur-admin-menus.php:1111
 msgid "Go Back"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:627
-#: includes/admin/class-ur-admin-menus.php:1107
+#: includes/admin/class-ur-admin-menus.php:1112
 msgid "Let's Go!"
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:628
-#: includes/admin/class-ur-admin-menus.php:1108
+#: includes/admin/class-ur-admin-menus.php:1113
 msgid "What would you like to call the new page?"
 msgstr ""
 
@@ -1212,7 +1213,7 @@ msgid "Empty form name."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:635
-#: modules/membership/includes/Admin/Membership/Membership.php:1044
+#: modules/membership/includes/Admin/Membership/Membership.php:1045
 msgctxt "user registration admin"
 msgid "Previous save action on going."
 msgstr ""
@@ -1304,6 +1305,7 @@ msgid " is required."
 msgstr ""
 
 #: includes/admin/class-ur-admin-assets.php:655
+#: includes/admin/class-ur-admin-settings.php:522
 #: includes/admin/notifications/views/html-notice-php-deprecation.php:28
 #: includes/blocks/class-ur-blocks.php:163
 #: chunks/dashboard.js:280
@@ -1393,22 +1395,22 @@ msgstr ""
 msgid "Membership Field does not require any additional payment fields. Please remove any/all payment's field to continue."
 msgstr ""
 
-#: includes/admin/class-ur-admin-base-layout.php:159
+#: includes/admin/class-ur-admin-base-layout.php:172
 msgid "Oops, No results found."
 msgstr ""
 
 #. translators: %s: search term
-#: includes/admin/class-ur-admin-base-layout.php:162
+#: includes/admin/class-ur-admin-base-layout.php:175
 msgid "Sorry no results found for <i>%s</i>."
 msgstr ""
 
 #. translators: %s: type
-#: includes/admin/class-ur-admin-base-layout.php:168
+#: includes/admin/class-ur-admin-base-layout.php:181
 msgid "You don’t have any %s yet."
 msgstr ""
 
 #. translators: %s: type
-#: includes/admin/class-ur-admin-base-layout.php:174
+#: includes/admin/class-ur-admin-base-layout.php:187
 msgid "Please add %s and you’re good to go."
 msgstr ""
 
@@ -1509,12 +1511,12 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-form-modal.php:244
 #: includes/class-ur-smart-tags.php:90
-#: includes/class-ur-smart-tags.php:710
+#: includes/class-ur-smart-tags.php:713
 msgid "Log In"
 msgstr ""
 
 #: includes/admin/class-ur-admin-form-modal.php:256
-#: includes/class-ur-smart-tags.php:1176
+#: includes/class-ur-smart-tags.php:1179
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: src/content-restriction/components/settings/SmartTagsButton.js:116
@@ -1549,12 +1551,12 @@ msgid "Please select json file to import form data."
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:92
-#: includes/functions-ur-core.php:4270
+#: includes/functions-ur-core.php:4311
 msgid "User Registration - File Upload"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:102
-#: includes/functions-ur-core.php:4264
+#: includes/functions-ur-core.php:4297
 msgid "User Registration Invite Codes"
 msgstr ""
 
@@ -1573,7 +1575,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:223
 #: includes/admin/class-ur-admin-menus.php:310
-#: includes/functions-ur-core.php:4365
+#: includes/functions-ur-core.php:4524
 msgid "User Registration - WooCommerce"
 msgstr ""
 
@@ -1605,7 +1607,7 @@ msgstr ""
 #: includes/admin/functions-ur-admin.php:966
 #: includes/admin/settings/class-ur-members-list-table.php:1072
 #: includes/admin/settings/class-ur-users-list-table.php:821
-#: includes/functions-ur-core.php:5921
+#: includes/functions-ur-core.php:6126
 #: modules/payment-history/Admin/OrdersListTable.php:551
 #: chunks/analytics.js:1
 #: chunks/form_templates.js:1
@@ -1616,6 +1618,7 @@ msgid "All Forms"
 msgstr ""
 
 #: includes/admin/class-ur-admin-menus.php:654
+#: includes/admin/class-ur-admin-registrations-table-list.php:193
 #: includes/admin/views/html-login-page-forms-new.php:23
 msgid "Registration Forms"
 msgstr ""
@@ -1627,13 +1630,13 @@ msgstr ""
 msgid "Registration %s"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:758
+#: includes/admin/class-ur-admin-menus.php:763
 msgid "User Registration settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:759
+#: includes/admin/class-ur-admin-menus.php:764
 #: includes/admin/functions-ur-admin.php:991
-#: includes/functions-ur-core.php:5939
+#: includes/functions-ur-core.php:6144
 #: includes/Functions/CoreFunctions.php:493
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:304
 #: modules/membership/includes/Admin.php:283
@@ -1646,142 +1649,142 @@ msgstr ""
 #: chunks/dashboard.js:1
 #: chunks/dashboard.js:280
 #: src/blocks/blocks/content-restriction-enhanced/Edit.js:132
-#: src/blocks/blocks/membership-buy-now/Edit.js:275
+#: src/blocks/blocks/membership-buy-now/Edit.js:277
 #: src/content-restriction/components/rules/RuleCard.js:45
 #: src/dashboard/Constants/index.js:30
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:249
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:775
+#: includes/admin/class-ur-admin-menus.php:780
 msgid "User Registration Tools"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:776
+#: includes/admin/class-ur-admin-menus.php:781
 msgid "Tools"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:796
-#: includes/admin/class-ur-admin-menus.php:797
+#: includes/admin/class-ur-admin-menus.php:801
+#: includes/admin/class-ur-admin-menus.php:802
 #: includes/admin/views/html-admin-page-status.php:15
 msgid "Logs"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:809
-#: includes/admin/class-ur-admin-menus.php:810
+#: includes/admin/class-ur-admin-menus.php:814
+#: includes/admin/class-ur-admin-menus.php:815
 #: includes/admin/views/html-admin-page-status.php:16
 #: includes/admin/views/html-admin-page-system-info.php:30
 msgid "System Info"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:825
-#: includes/admin/class-ur-admin-menus.php:826
+#: includes/admin/class-ur-admin-menus.php:830
+#: includes/admin/class-ur-admin-menus.php:831
 #: includes/admin/views/html-admin-page-status.php:17
 msgid "Setup Wizard"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:847
+#: includes/admin/class-ur-admin-menus.php:852
 msgid "User Registration Dashboard"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:850
+#: includes/admin/class-ur-admin-menus.php:855
 #: includes/admin/functions-ur-admin.php:928
 #: chunks/dashboard.js:280
 #: src/dashboard/Constants/index.js:21
 msgid "Site Assistant"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:930
-#: includes/admin/class-ur-admin-menus.php:933
+#: includes/admin/class-ur-admin-menus.php:935
+#: includes/admin/class-ur-admin-menus.php:938
 #: chunks/analytics.js:1
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:946
+#: includes/admin/class-ur-admin-menus.php:951
 msgid "User Registration extensions"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:947
+#: includes/admin/class-ur-admin-menus.php:952
 #: includes/admin/functions-ur-admin.php:997
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:276
 msgid "Addons"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:968
-#: includes/admin/class-ur-admin-menus.php:980
+#: includes/admin/class-ur-admin-menus.php:973
+#: includes/admin/class-ur-admin-menus.php:985
 #: includes/admin/settings/class-ur-settings-license.php:123
 #: includes/class-ur-ajax.php:1678
 #: includes/class-ur-plugin-updater.php:328
 msgid "Activate License"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1049
+#: includes/admin/class-ur-admin-menus.php:1054
 msgid "Seems like you are trying to enable the captcha feature, but the captcha keys are empty. Please click"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1060
+#: includes/admin/class-ur-admin-menus.php:1065
 msgid "Please select a page for redirection"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1110
+#: includes/admin/class-ur-admin-menus.php:1115
 msgctxt "user registration admin"
 msgid "Settings successfully saved."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1127
+#: includes/admin/class-ur-admin-menus.php:1132
 msgid "Create Form"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1157
+#: includes/admin/class-ur-admin-menus.php:1162
 msgid "Please wait until the plugin is being activated"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1176
+#: includes/admin/class-ur-admin-menus.php:1181
 msgid "Addons have been installed and Activated. You have to reload the page."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1178
+#: includes/admin/class-ur-admin-menus.php:1183
 msgid "Save changes before activating the plugin"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1235
+#: includes/admin/class-ur-admin-menus.php:1240
 msgid "URM Menus"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1259
+#: includes/admin/class-ur-admin-menus.php:1264
 #: includes/class-ur-query.php:78
 msgid "Lost password"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1303
+#: includes/admin/class-ur-admin-menus.php:1308
 #: includes/functions-ur-template.php:423
 #: includes/functions-ur-template.php:468
 msgid "Select All"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1308
+#: includes/admin/class-ur-admin-menus.php:1313
 msgid "Add to menu"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1363
+#: includes/admin/class-ur-admin-menus.php:1368
 msgid "Row data not found"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1375
+#: includes/admin/class-ur-admin-menus.php:1380
 #: includes/admin/views/html-admin-page-forms.php:162
 #: modules/membership/includes/Admin/Membership/Membership.php:967
 msgid "Untitled"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1439
+#: includes/admin/class-ur-admin-menus.php:1444
 msgid "Repeater Row"
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1513
+#: includes/admin/class-ur-admin-menus.php:1518
 msgid "Drag your first form item here."
 msgstr ""
 
-#: includes/admin/class-ur-admin-menus.php:1543
+#: includes/admin/class-ur-admin-menus.php:1548
 msgid "Empty form data"
 msgstr ""
 
@@ -1799,25 +1802,21 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:40
-msgid "No user registration found."
-msgstr ""
-
-#: includes/admin/class-ur-admin-registrations-table-list.php:51
+#: includes/admin/class-ur-admin-registrations-table-list.php:55
 msgid "Title"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:52
+#: includes/admin/class-ur-admin-registrations-table-list.php:56
 #: includes/admin/views/html-login-page-forms-new.php:87
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroupsListTable.php:61
 msgid "Shortcode"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:53
+#: includes/admin/class-ur-admin-registrations-table-list.php:57
 msgid "Author"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:54
+#: includes/admin/class-ur-admin-registrations-table-list.php:58
 #: includes/admin/settings/class-ur-members-menu.php:1468
 #: includes/admin/settings/class-ur-users-menu.php:793
 #: includes/form/class-ur-form-field-date.php:46
@@ -1828,12 +1827,12 @@ msgstr ""
 
 #. Translators: %d is a placeholder for the Post ID.
 #. translators: %d: Item id
-#: includes/admin/class-ur-admin-registrations-table-list.php:97
+#: includes/admin/class-ur-admin-registrations-table-list.php:101
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:233
 msgid "ID: %d"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:101
+#: includes/admin/class-ur-admin-registrations-table-list.php:105
 #: includes/admin/settings/class-ur-members-list-table.php:600
 #: includes/admin/settings/class-ur-members-menu.php:1520
 #: includes/class-ur-post-types.php:62
@@ -1847,20 +1846,20 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:106
+#: includes/admin/class-ur-admin-registrations-table-list.php:110
 msgid "Restore this item from the Trash"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:108
+#: includes/admin/class-ur-admin-registrations-table-list.php:112
 msgid "Move this item to the Trash"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:111
+#: includes/admin/class-ur-admin-registrations-table-list.php:115
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:237
 msgid "Delete this item permanently"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:132
+#: includes/admin/class-ur-admin-registrations-table-list.php:136
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: src/content-restriction/components/modals/DuplicateRuleModal.js:51
@@ -1868,20 +1867,13 @@ msgstr ""
 msgid "Duplicate"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:136
+#: includes/admin/class-ur-admin-registrations-table-list.php:140
 msgid "Locate"
 msgstr ""
 
-#: includes/admin/class-ur-admin-registrations-table-list.php:178
-msgid "All Registration Forms"
-msgstr ""
-
-#: includes/admin/class-ur-admin-registrations-table-list.php:206
-msgid "Search Registration"
-msgstr ""
-
-#: includes/admin/class-ur-admin-registrations-table-list.php:248
-msgid "Search Form"
+#: includes/admin/class-ur-admin-registrations-table-list.php:229
+#: includes/admin/class-ur-admin-registrations-table-list.php:230
+msgid "Search Registration Form"
 msgstr ""
 
 #: includes/admin/class-ur-admin-settings.php:196
@@ -1903,7 +1895,7 @@ msgid "Captcha Test Successful !"
 msgstr ""
 
 #: includes/admin/class-ur-admin-settings.php:203
-#: includes/admin/class-ur-admin-settings.php:1313
+#: includes/admin/class-ur-admin-settings.php:1340
 msgid "Reset Keys"
 msgstr ""
 
@@ -1982,54 +1974,54 @@ msgstr ""
 msgid "Your settings has not been saved. Please select valid pages for the fields."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:705
+#: includes/admin/class-ur-admin-settings.php:732
 #: chunks/blocks.js:280
 #: src/blocks/blocks/membership-listing/Edit.js:672
 msgid "Normal"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:706
-#: includes/class-ur-smart-tags.php:776
+#: includes/admin/class-ur-admin-settings.php:733
+#: includes/class-ur-smart-tags.php:779
 #: modules/membership/includes/Admin/Views/subscription-edit.php:544
-#: templates/myaccount/membership.php:138
+#: templates/myaccount/membership.php:155
 #: chunks/dashboard.js:280
 #: src/dashboard/screens/Products/components/ProductCard.js:142
 msgid "Active"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:707
+#: includes/admin/class-ur-admin-settings.php:734
 msgid "Hover"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:708
+#: includes/admin/class-ur-admin-settings.php:735
 msgid "Focus"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:1039
-#: includes/functions-ur-core.php:9135
+#: includes/admin/class-ur-admin-settings.php:1066
+#: includes/functions-ur-core.php:9340
 msgid "Select a page&hellip;"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:1118
-#: includes/functions-ur-core.php:9205
+#: includes/admin/class-ur-admin-settings.php:1145
+#: includes/functions-ur-core.php:9410
 msgid "Header Logo"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:1119
-#: includes/functions-ur-core.php:9206
+#: includes/admin/class-ur-admin-settings.php:1146
+#: includes/functions-ur-core.php:9411
 msgid "Upload Image"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:1120
-#: includes/functions-ur-core.php:9207
+#: includes/admin/class-ur-admin-settings.php:1147
+#: includes/functions-ur-core.php:9412
 msgid "Remove Image"
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:1740
+#: includes/admin/class-ur-admin-settings.php:1767
 msgid "Your settings has not been saved. Send Before days cannot be less than or equal to 0."
 msgstr ""
 
-#: includes/admin/class-ur-admin-settings.php:1966
+#: includes/admin/class-ur-admin-settings.php:1993
 msgid "No Search result found !"
 msgstr ""
 
@@ -2180,7 +2172,7 @@ msgid "approved"
 msgstr ""
 
 #: includes/admin/class-ur-admin-user-manager.php:469
-#: modules/membership/includes/Admin/Services/MembershipService.php:678
+#: modules/membership/includes/Admin/Services/MembershipService.php:680
 msgid "pending"
 msgstr ""
 
@@ -2212,8 +2204,8 @@ msgstr ""
 #: includes/admin/class-ur-admin.php:294
 #: includes/blocks/block-types/class-ur-block-login-logout-menu.php:42
 #: includes/functions-ur-core.php:3509
-#: includes/functions-ur-core.php:8475
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1841
+#: includes/functions-ur-core.php:8680
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1870
 #: templates/form-login-registration.php:45
 #: templates/myaccount/form-login.php:73
 msgid "Login"
@@ -2231,8 +2223,8 @@ msgstr ""
 
 #: includes/admin/class-ur-admin.php:297
 #: includes/class-ur-post-types.php:58
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1823
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1834
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1852
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1863
 #: templates/form-login-registration.php:46
 msgid "Registration"
 msgstr ""
@@ -2244,7 +2236,7 @@ msgstr ""
 
 #: includes/admin/class-ur-admin.php:301
 #: includes/functions-ur-core.php:3539
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1828
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1857
 msgid "Membership Pricing"
 msgstr ""
 
@@ -2288,8 +2280,8 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-my-account.php:85
 #: includes/admin/settings/class-ur-settings-security.php:46
 #: includes/admin/settings/class-ur-settings-security.php:91
-#: includes/functions-ur-core.php:8336
-#: includes/functions-ur-core.php:8569
+#: includes/functions-ur-core.php:8541
+#: includes/functions-ur-core.php:8774
 msgid "General"
 msgstr ""
 
@@ -2375,8 +2367,8 @@ msgstr ""
 #: includes/admin/notifications/class-ur-admin-notices.php:480
 #: includes/class-ur-plugin-updater.php:631
 #: includes/class-ur-plugin-updater.php:654
-#: includes/functions-ur-core.php:7562
-#: includes/functions-ur-core.php:7678
+#: includes/functions-ur-core.php:7767
+#: includes/functions-ur-core.php:7883
 msgid "I have a query"
 msgstr ""
 
@@ -2529,10 +2521,10 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-members-list-table.php:941
 #: includes/admin/settings/class-ur-users-list-table.php:672
-#: includes/class-ur-smart-tags.php:765
-#: includes/class-ur-smart-tags.php:775
+#: includes/class-ur-smart-tags.php:768
+#: includes/class-ur-smart-tags.php:778
 #: modules/membership/includes/Admin/Views/subscription-edit.php:545
-#: modules/membership/includes/AJAX.php:586
+#: modules/membership/includes/AJAX.php:592
 msgid "Pending"
 msgstr ""
 
@@ -2621,8 +2613,8 @@ msgstr ""
 #: includes/admin/settings/class-ur-users-menu.php:185
 #: includes/class-ur-form-handler.php:668
 #: includes/class-ur-frontend-scripts.php:582
-#: includes/functions-ur-core.php:4722
-#: includes/functions-ur-core.php:5081
+#: includes/functions-ur-core.php:4927
+#: includes/functions-ur-core.php:5286
 msgid "Captcha code error, please try again."
 msgstr ""
 
@@ -2820,7 +2812,7 @@ msgstr ""
 #: includes/class-ur-frontend-scripts.php:596
 #: modules/membership/includes/Admin/Forms/FormFields.php:134
 #: modules/membership/includes/Admin/Members/Members.php:160
-#: modules/membership/includes/Admin/Membership/Membership.php:1020
+#: modules/membership/includes/Admin/Membership/Membership.php:1021
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroups.php:64
 #: modules/membership/includes/Frontend/Frontend.php:227
 #: modules/payment-history/Orders.php:390
@@ -2841,7 +2833,7 @@ msgstr ""
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:93
 #: src/dashboard/screens/SiteAssistant/components/RequiredPagesMissing.js:67
 #: src/dashboard/screens/SiteAssistant/components/SendTestEmail.js:117
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:82
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:87
 #: src/form-templates/components/PluginStatus.js:47
 #: src/form-templates/components/PluginStatus.js:60
 #: src/form-templates/components/PluginStatus.js:174
@@ -2856,7 +2848,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-members-menu.php:359
 #: modules/membership/includes/Admin/Forms/FormFields.php:135
 #: modules/membership/includes/Admin/Members/Members.php:162
-#: modules/membership/includes/Admin/Membership/Membership.php:1021
+#: modules/membership/includes/Admin/Membership/Membership.php:1022
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroups.php:65
 msgctxt "user registration membership"
 msgid "field is required."
@@ -2938,9 +2930,9 @@ msgstr ""
 #: includes/class-ur-ajax.php:374
 #: includes/class-ur-ajax.php:504
 #: includes/class-ur-ajax.php:1274
-#: includes/functions-ur-core.php:4987
-#: includes/functions-ur-core.php:5088
-#: includes/functions-ur-core.php:5091
+#: includes/functions-ur-core.php:5192
+#: includes/functions-ur-core.php:5293
+#: includes/functions-ur-core.php:5296
 msgid "Nonce error, please reload."
 msgstr ""
 
@@ -3032,7 +3024,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-users-menu.php:1155
 #: includes/blocks/class-ur-blocks.php:87
 #: includes/class-ur-smart-tags.php:113
-#: includes/class-ur-smart-tags.php:1236
+#: includes/class-ur-smart-tags.php:1239
 #: includes/functions-ur-core.php:1642
 #: modules/membership/includes/Admin/Members/Members.php:346
 #: modules/membership/includes/Admin/Views/member-create.php:106
@@ -3044,8 +3036,8 @@ msgstr ""
 #: includes/admin/settings/class-ur-members-menu.php:916
 #: includes/admin/settings/class-ur-settings-membership.php:26
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:296
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:268
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:482
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:272
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:486
 #: modules/membership/includes/Admin.php:312
 #: modules/membership/includes/Admin/Forms/class-ur-form-field-membership.php:49
 #: modules/membership/includes/Admin/Members/Members.php:347
@@ -3104,13 +3096,13 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-members-menu.php:1241
 #: includes/admin/settings/class-ur-users-menu.php:593
-#: includes/class-ur-smart-tags.php:536
+#: includes/class-ur-smart-tags.php:539
 msgid "Approve User"
 msgstr ""
 
 #: includes/admin/settings/class-ur-members-menu.php:1253
 #: includes/admin/settings/class-ur-users-menu.php:605
-#: includes/class-ur-smart-tags.php:568
+#: includes/class-ur-smart-tags.php:571
 msgid "Deny User"
 msgstr ""
 
@@ -3234,7 +3226,7 @@ msgid "Action"
 msgstr ""
 
 #: includes/admin/settings/class-ur-members-menu.php:1951
-#: includes/class-ur-smart-tags.php:768
+#: includes/class-ur-smart-tags.php:771
 #: modules/membership/includes/Admin.php:551
 #: modules/membership/includes/Admin.php:558
 #: modules/membership/includes/Admin/Views/subscription-edit.php:263
@@ -3246,10 +3238,10 @@ msgstr ""
 #: modules/payment-history/Views/payment-edit.php:232
 #: modules/payment-history/Views/payment-edit.php:238
 #: templates/myaccount/edit-team.php:133
-#: templates/myaccount/membership.php:113
-#: templates/myaccount/membership.php:150
-#: templates/myaccount/membership.php:154
-#: templates/myaccount/membership.php:155
+#: templates/myaccount/membership.php:130
+#: templates/myaccount/membership.php:167
+#: templates/myaccount/membership.php:171
+#: templates/myaccount/membership.php:172
 #: templates/myaccount/team.php:71
 msgid "N/A"
 msgstr ""
@@ -3265,7 +3257,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-misc.php:49
 #: includes/admin/settings/class-ur-settings-misc.php:77
 #: includes/functions-ur-core.php:1275
-#: includes/functions-ur-core.php:8631
+#: includes/functions-ur-core.php:8836
 #: modules/content-restriction/admin/settings/class-urcr-settings-file.php:76
 #: modules/membership/includes/Admin/Membership/Membership.php:595
 msgid "Advanced"
@@ -3534,7 +3526,7 @@ msgid "Templates"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-email.php:58
-#: includes/functions-ur-core.php:4242
+#: includes/functions-ur-core.php:4250
 msgid "Custom Email"
 msgstr ""
 
@@ -3607,8 +3599,8 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:47
 #: includes/admin/settings/class-ur-settings-general.php:62
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:239
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:475
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:243
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:479
 #: modules/membership/includes/Admin/Membership/Membership.php:807
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -3655,7 +3647,7 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-general.php:96
 #: includes/admin/views/html-admin-page-system-info.php:386
-#: includes/functions-ur-core.php:8359
+#: includes/functions-ur-core.php:8564
 msgid "Lost Password Page"
 msgstr ""
 
@@ -3717,7 +3709,7 @@ msgid "PDF Submission"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-integration.php:55
-#: includes/functions-ur-core.php:4344
+#: includes/functions-ur-core.php:4477
 msgid "Google Sheets"
 msgstr ""
 
@@ -3726,19 +3718,19 @@ msgid "Cloud Storage"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-integration.php:57
-#: includes/functions-ur-core.php:4350
-#: includes/functions-ur-core.php:8063
+#: includes/functions-ur-core.php:4491
+#: includes/functions-ur-core.php:8268
 msgid "Salesforce"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-integration.php:58
-#: includes/functions-ur-core.php:4356
+#: includes/functions-ur-core.php:4506
 msgid "Geolocation"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-integration.php:59
 #: includes/class-ur-preview.php:386
-#: includes/functions-ur-core.php:4362
+#: includes/functions-ur-core.php:4521
 msgid "WooCommerce"
 msgstr ""
 
@@ -3824,8 +3816,8 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-membership.php:106
 #: includes/Functions/CoreFunctions.php:831
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:665
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:470
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:520
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:474
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:524
 #: modules/content-restriction/class-urcr-frontend.php:1459
 msgid "Membership Required"
 msgstr ""
@@ -3833,8 +3825,8 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-membership.php:107
 #: includes/Functions/CoreFunctions.php:832
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:666
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:471
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:521
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:475
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:525
 #: modules/content-restriction/class-urcr-frontend.php:1460
 msgid "This content is available to members only."
 msgstr ""
@@ -3842,8 +3834,8 @@ msgstr ""
 #: includes/admin/settings/class-ur-settings-membership.php:108
 #: includes/Functions/CoreFunctions.php:833
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:667
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:472
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:522
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:476
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:526
 #: modules/content-restriction/class-urcr-frontend.php:1461
 msgid "Sign up to unlock access or log in if you already have an account."
 msgstr ""
@@ -3871,7 +3863,7 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-my-account.php:48
 #: includes/class-ur-preview.php:387
-#: includes/functions-ur-core.php:4275
+#: includes/functions-ur-core.php:4325
 msgid "Customize My Account"
 msgstr ""
 
@@ -4110,7 +4102,7 @@ msgstr ""
 
 #: includes/admin/settings/class-ur-settings-payment.php:301
 #: includes/Functions/CoreFunctions.php:696
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1544
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1542
 #: modules/membership/includes/Admin.php:419
 #: modules/membership/includes/Admin/Forms/FormFields.php:94
 #: modules/membership/includes/Admin/Forms/Views/admin-membership.php:72
@@ -4202,12 +4194,12 @@ msgid "Messages"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-registration-login.php:48
-#: includes/functions-ur-core.php:4249
+#: includes/functions-ur-core.php:4266
 msgid "Social Connect"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-registration-login.php:49
-#: includes/functions-ur-core.php:4255
+#: includes/functions-ur-core.php:4280
 msgid "Profile Connect"
 msgstr ""
 
@@ -4216,13 +4208,13 @@ msgid "Popups"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-registration-login.php:51
-#: includes/functions-ur-core.php:4261
+#: includes/functions-ur-core.php:4294
 msgid "Invite Codes"
 msgstr ""
 
 #: includes/admin/settings/class-ur-settings-registration-login.php:52
 #: includes/class-ur-preview.php:388
-#: includes/functions-ur-core.php:4267
+#: includes/functions-ur-core.php:4308
 msgid "File Upload"
 msgstr ""
 
@@ -5178,17 +5170,17 @@ msgstr ""
 
 #: includes/admin/views/html-admin-page-form-templates.php:50
 #: includes/admin/views/html-admin-page-system-info.php:91
-#: includes/class-ur-smart-tags.php:759
+#: includes/class-ur-smart-tags.php:762
 #: includes/Functions/CoreFunctions.php:402
 #: includes/RestApi/controllers/version1/class-ur-modules.php:142
 #: includes/RestApi/controllers/version1/class-ur-modules.php:174
-#: modules/masteriyo/includes/Hooks.php:201
+#: modules/masteriyo/includes/Hooks.php:214
 #: modules/membership/includes/Admin/Members/MembersListTable.php:330
 #: modules/membership/includes/Admin/Views/Partials/membership-create-basics-tab.php:88
 #: modules/membership/includes/Templates/membership-listing.php:97
 #: modules/membership/includes/Templates/membership-listing.php:180
 #: modules/membership/includes/Templates/membership-listing.php:255
-#: templates/myaccount/membership.php:135
+#: templates/myaccount/membership.php:152
 #: chunks/form_templates.js:280
 #: chunks/welcome.js:280
 #: src/dashboard/screens/FreeVsPro/FreeVsPro.js:354
@@ -5318,7 +5310,7 @@ msgid "Quick navigation keys"
 msgstr ""
 
 #: includes/admin/views/html-admin-page-forms.php:220
-#: includes/functions-ur-core.php:5957
+#: includes/functions-ur-core.php:6162
 msgid "Documentation"
 msgstr ""
 
@@ -5694,7 +5686,7 @@ msgstr ""
 #: includes/class-ur-shortcodes.php:317
 #: includes/class-ur-shortcodes.php:442
 #: includes/functions-ur-account.php:133
-#: includes/functions-ur-core.php:5125
+#: includes/functions-ur-core.php:5330
 msgid "Logout"
 msgstr ""
 
@@ -5762,10 +5754,10 @@ msgid "User Registration and Membership"
 msgstr ""
 
 #: includes/class-ur-ajax.php:247
-#: modules/membership/includes/AJAX.php:1073
-#: modules/membership/includes/AJAX.php:1189
-#: modules/membership/includes/AJAX.php:1301
-#: modules/membership/includes/AJAX.php:1517
+#: modules/membership/includes/AJAX.php:1079
+#: modules/membership/includes/AJAX.php:1195
+#: modules/membership/includes/AJAX.php:1308
+#: modules/membership/includes/AJAX.php:1524
 msgid "You are not allowed to edit this user."
 msgstr ""
 
@@ -5847,7 +5839,7 @@ msgid "Saved"
 msgstr ""
 
 #: includes/class-ur-ajax.php:688
-#: includes/functions-ur-core.php:4971
+#: includes/functions-ur-core.php:5176
 msgid "Checking permissions."
 msgstr ""
 
@@ -6036,7 +6028,7 @@ msgid "Form ID is missing!"
 msgstr ""
 
 #: includes/class-ur-ajax.php:2113
-#: includes/functions-ur-core.php:10540
+#: includes/functions-ur-core.php:10745
 msgid "Form not found!"
 msgstr ""
 
@@ -6045,12 +6037,12 @@ msgid "Nonce could not be updated"
 msgstr ""
 
 #: includes/class-ur-ajax.php:2178
-#: modules/membership/includes/AJAX.php:2822
+#: modules/membership/includes/AJAX.php:2828
 msgid "%1$s is not currently supported by %2$s."
 msgstr ""
 
 #: includes/class-ur-ajax.php:2188
-#: modules/membership/includes/AJAX.php:2832
+#: modules/membership/includes/AJAX.php:2838
 msgid "Currency is valid."
 msgstr ""
 
@@ -6240,12 +6232,12 @@ msgstr ""
 #: includes/class-ur-user-approval.php:341
 #: includes/class-ur-user-approval.php:367
 #: includes/class-ur-user-approval.php:394
-#: includes/functions-ur-core.php:4697
-#: includes/functions-ur-core.php:4712
-#: includes/functions-ur-core.php:4718
-#: includes/functions-ur-core.php:4722
-#: includes/functions-ur-core.php:4770
-#: includes/functions-ur-core.php:4774
+#: includes/functions-ur-core.php:4902
+#: includes/functions-ur-core.php:4917
+#: includes/functions-ur-core.php:4923
+#: includes/functions-ur-core.php:4927
+#: includes/functions-ur-core.php:4975
+#: includes/functions-ur-core.php:4979
 msgid "ERROR:"
 msgstr ""
 
@@ -6349,19 +6341,19 @@ msgid "Password changed successfully."
 msgstr ""
 
 #: includes/class-ur-form-handler.php:631
-#: includes/functions-ur-core.php:4697
-#: includes/functions-ur-core.php:5038
+#: includes/functions-ur-core.php:4902
+#: includes/functions-ur-core.php:5243
 msgid "Error on hCaptcha. Contact your site administrator."
 msgstr ""
 
 #: includes/class-ur-form-handler.php:647
-#: includes/functions-ur-core.php:5057
+#: includes/functions-ur-core.php:5262
 msgid "Error on Cloudflare Turnstile. Contact your site administrator."
 msgstr ""
 
 #: includes/class-ur-form-handler.php:663
-#: includes/functions-ur-core.php:4718
-#: includes/functions-ur-core.php:5072
+#: includes/functions-ur-core.php:4923
+#: includes/functions-ur-core.php:5277
 msgid "Error on google reCaptcha. Contact your site administrator."
 msgstr ""
 
@@ -6687,7 +6679,7 @@ msgid "Parent registration"
 msgstr ""
 
 #: includes/class-ur-preview.php:69
-#: includes/functions-ur-core.php:5903
+#: includes/functions-ur-core.php:6108
 msgid "Edit Form"
 msgstr ""
 
@@ -6911,7 +6903,7 @@ msgstr ""
 #. translators: %1$1s - Link to logout.
 #: includes/class-ur-shortcodes.php:317
 #: includes/class-ur-shortcodes.php:442
-#: includes/functions-ur-core.php:5125
+#: includes/functions-ur-core.php:5330
 msgid "You are currently logged in as %1$1s. %2$2s"
 msgstr ""
 
@@ -6919,7 +6911,7 @@ msgstr ""
 #. translators: %1$1s - Link to logout.
 #: includes/class-ur-shortcodes.php:317
 #: includes/class-ur-shortcodes.php:442
-#: includes/functions-ur-core.php:5125
+#: includes/functions-ur-core.php:5330
 msgid "Log out of this account."
 msgstr ""
 
@@ -7066,191 +7058,191 @@ msgstr ""
 msgid "Team Name"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:553
+#: includes/class-ur-smart-tags.php:556
 msgid "confirm link"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:605
+#: includes/class-ur-smart-tags.php:608
 msgid "profile details"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:610
+#: includes/class-ur-smart-tags.php:613
 msgid "edit your password"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:615
+#: includes/class-ur-smart-tags.php:618
 msgid "Sign out"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:629
+#: includes/class-ur-smart-tags.php:632
 msgid "Manage Membership"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:635
-#: templates/myaccount/membership.php:194
+#: includes/class-ur-smart-tags.php:638
+#: templates/myaccount/membership.php:211
 msgid "Reactivate Membership"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:758
+#: includes/class-ur-smart-tags.php:761
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:357
 #: modules/membership/includes/Admin/Views/Partials/membership-create-basics-tab.php:99
 #: chunks/welcome.js:280
 msgid "One-Time Payment"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:760
+#: includes/class-ur-smart-tags.php:763
 #: modules/membership/includes/Admin/Members/MembersListTable.php:332
 msgid "Subscription"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:763
+#: includes/class-ur-smart-tags.php:766
 #: modules/payment-history/Orders.php:396
 msgid "Completed"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:764
+#: includes/class-ur-smart-tags.php:767
 msgid "Failed"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:769
+#: includes/class-ur-smart-tags.php:772
 #: modules/membership/includes/Admin/Views/subscription-edit.php:37
 msgid "Daily"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:770
+#: includes/class-ur-smart-tags.php:773
 #: modules/membership/includes/Admin/Views/subscription-edit.php:38
 msgid "Weekly"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:771
+#: includes/class-ur-smart-tags.php:774
 #: modules/membership/includes/Admin/Views/subscription-edit.php:39
 msgid "Monthly"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:772
+#: includes/class-ur-smart-tags.php:775
 #: modules/membership/includes/Admin/Views/subscription-edit.php:40
 msgid "Yearly"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:777
+#: includes/class-ur-smart-tags.php:780
 #: modules/membership/includes/Admin/Views/subscription-edit.php:547
-#: templates/myaccount/membership.php:137
+#: templates/myaccount/membership.php:154
 msgid "Expired"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1224
+#: includes/class-ur-smart-tags.php:1227
 msgid "Alpha"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1225
+#: includes/class-ur-smart-tags.php:1228
 msgid "Alphanumeric"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1227
+#: includes/class-ur-smart-tags.php:1230
 msgid "Country Code (2 Character)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1228
+#: includes/class-ur-smart-tags.php:1231
 msgid "Country Code (3 Character)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1229
+#: includes/class-ur-smart-tags.php:1232
 msgid "Date (mm/dd)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1230
+#: includes/class-ur-smart-tags.php:1233
 msgid "Date (dd/mm)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1231
+#: includes/class-ur-smart-tags.php:1234
 msgid "Date (mm.dd.yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1232
+#: includes/class-ur-smart-tags.php:1235
 msgid "Date (dd.mm.yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1233
+#: includes/class-ur-smart-tags.php:1236
 msgid "Date (yyyy-mm-dd)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1234
+#: includes/class-ur-smart-tags.php:1237
 msgid "Date (mm/dd/yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1235
+#: includes/class-ur-smart-tags.php:1238
 msgid "Date (dd/mm/yyyy)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1237
+#: includes/class-ur-smart-tags.php:1240
 msgid "IP (Version 4)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1238
+#: includes/class-ur-smart-tags.php:1241
 msgid "IP (Version 6)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1239
+#: includes/class-ur-smart-tags.php:1242
 msgid "ISBN"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1240
+#: includes/class-ur-smart-tags.php:1243
 msgid "Latitude or Longitude"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1241
+#: includes/class-ur-smart-tags.php:1244
 msgid "Numeric"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1242
+#: includes/class-ur-smart-tags.php:1245
 msgid "Password (Numeric, lower, upper)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1243
+#: includes/class-ur-smart-tags.php:1246
 msgid "Password (Numeric, lower, upper, min 8)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1244
+#: includes/class-ur-smart-tags.php:1247
 msgid "Phone - General"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1245
+#: includes/class-ur-smart-tags.php:1248
 msgid "Phone - UK"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1246
+#: includes/class-ur-smart-tags.php:1249
 msgid "Phone - US: 123-456-7890"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1247
+#: includes/class-ur-smart-tags.php:1250
 msgid "Phone - US: (123)456-7890"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1248
+#: includes/class-ur-smart-tags.php:1251
 msgid "Phone - US: Flexible"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1249
+#: includes/class-ur-smart-tags.php:1252
 msgid "Postal Code (UK)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1250
+#: includes/class-ur-smart-tags.php:1253
 msgid "Price (1.23)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1251
+#: includes/class-ur-smart-tags.php:1254
 msgid "Slug"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1252
+#: includes/class-ur-smart-tags.php:1255
 msgid "Time (hh:mm:ss)"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1253
+#: includes/class-ur-smart-tags.php:1256
 msgid "URL"
 msgstr ""
 
-#: includes/class-ur-smart-tags.php:1254
+#: includes/class-ur-smart-tags.php:1257
 msgid "Zip Code"
 msgstr ""
 
@@ -9017,30 +9009,34 @@ msgstr ""
 msgid "Something went wrong! please try again"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:508
+#: includes/frontend/class-ur-frontend.php:486
+msgid "Product/Service"
+msgstr ""
+
+#: includes/frontend/class-ur-frontend.php:523
 #: modules/membership/includes/Admin/Subscriptions/ListTable.php:196
 #: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:61
 #: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:62
 msgid "Subscriptions"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:568
+#: includes/frontend/class-ur-frontend.php:583
 msgid "Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your upgraded membership will be activated. Kindly wait for the admin's confirmation."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:569
+#: includes/frontend/class-ur-frontend.php:584
 msgid "Please complete the payment using the bank details provided by the admin. <br> Your membership will be renewed once the payment is verified. Kindly wait for the admin's confirmation."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:570
+#: includes/frontend/class-ur-frontend.php:585
 msgid "Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your new membership will be activated. Kindly wait for the admin's confirmation."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:687
+#: includes/frontend/class-ur-frontend.php:702
 msgid "Reactivate"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:691
+#: includes/frontend/class-ur-frontend.php:706
 msgid "Change Payment"
 msgstr ""
 
@@ -9091,7 +9087,7 @@ msgid "Text"
 msgstr ""
 
 #: includes/functions-ur-core.php:885
-#: includes/functions-ur-core.php:8495
+#: includes/functions-ur-core.php:8700
 #: modules/membership/includes/Admin/Views/member-create.php:131
 #: modules/membership/includes/Admin/Views/member-create.php:139
 #: templates/myaccount/form-login.php:71
@@ -9104,10 +9100,10 @@ msgstr ""
 
 #: includes/functions-ur-core.php:913
 #: includes/functions-ur-core.php:915
-#: includes/functions-ur-core.php:8399
-#: includes/functions-ur-core.php:8459
-#: includes/functions-ur-core.php:8479
-#: includes/functions-ur-core.php:8489
+#: includes/functions-ur-core.php:8604
+#: includes/functions-ur-core.php:8664
+#: includes/functions-ur-core.php:8684
+#: includes/functions-ur-core.php:8694
 msgid "Label"
 msgstr ""
 
@@ -9121,8 +9117,8 @@ msgstr ""
 
 #: includes/functions-ur-core.php:932
 #: includes/functions-ur-core.php:934
-#: includes/functions-ur-core.php:8409
-#: includes/functions-ur-core.php:8499
+#: includes/functions-ur-core.php:8614
+#: includes/functions-ur-core.php:8704
 msgid "Placeholder"
 msgstr ""
 
@@ -9135,8 +9131,8 @@ msgid "Make this field required, so the form can’t be submitted without it."
 msgstr ""
 
 #: includes/functions-ur-core.php:951
-#: includes/functions-ur-core.php:8390
-#: includes/functions-ur-core.php:8450
+#: includes/functions-ur-core.php:8595
+#: includes/functions-ur-core.php:8655
 msgid "Hide Label"
 msgstr ""
 
@@ -9158,17 +9154,17 @@ msgid "Options"
 msgstr ""
 
 #: includes/functions-ur-core.php:1142
-#: includes/functions-ur-core.php:8550
+#: includes/functions-ur-core.php:8755
 msgid "Select Enabled Captcha"
 msgstr ""
 
 #: includes/functions-ur-core.php:1154
-#: includes/functions-ur-core.php:8574
+#: includes/functions-ur-core.php:8779
 msgid "Form Style"
 msgstr ""
 
 #: includes/functions-ur-core.php:1161
-#: includes/functions-ur-core.php:8583
+#: includes/functions-ur-core.php:8788
 #: chunks/blocks.js:280
 #: src/blocks/blocks/membership-listing/Edit.js:642
 #: src/blocks/blocks/membership-listing/Edit.js:668
@@ -9176,22 +9172,22 @@ msgid "Default"
 msgstr ""
 
 #: includes/functions-ur-core.php:1162
-#: includes/functions-ur-core.php:8584
+#: includes/functions-ur-core.php:8789
 msgid "Bordered"
 msgstr ""
 
 #: includes/functions-ur-core.php:1163
-#: includes/functions-ur-core.php:8585
+#: includes/functions-ur-core.php:8790
 msgid "Flat"
 msgstr ""
 
 #: includes/functions-ur-core.php:1164
-#: includes/functions-ur-core.php:8586
+#: includes/functions-ur-core.php:8791
 msgid "Rounded"
 msgstr ""
 
 #: includes/functions-ur-core.php:1165
-#: includes/functions-ur-core.php:8587
+#: includes/functions-ur-core.php:8792
 msgid "Rounded Edge"
 msgstr ""
 
@@ -9388,7 +9384,7 @@ msgid "Turn on Captcha to prevent spam registration attempts."
 msgstr ""
 
 #: includes/functions-ur-core.php:1468
-#: includes/functions-ur-core.php:8662
+#: includes/functions-ur-core.php:8867
 msgid "Select Captcha Type"
 msgstr ""
 
@@ -9417,28 +9413,28 @@ msgid "Redirect After Registration"
 msgstr ""
 
 #: includes/functions-ur-core.php:1531
-#: includes/functions-ur-core.php:8738
-#: includes/functions-ur-core.php:8783
+#: includes/functions-ur-core.php:8943
+#: includes/functions-ur-core.php:8988
 msgid "No Redirection"
 msgstr ""
 
 #: includes/functions-ur-core.php:1532
-#: includes/functions-ur-core.php:8739
-#: includes/functions-ur-core.php:8784
+#: includes/functions-ur-core.php:8944
+#: includes/functions-ur-core.php:8989
 msgid "Internal Page"
 msgstr ""
 
 #: includes/functions-ur-core.php:1533
-#: includes/functions-ur-core.php:8740
-#: includes/functions-ur-core.php:8759
-#: includes/functions-ur-core.php:8785
-#: includes/functions-ur-core.php:8804
+#: includes/functions-ur-core.php:8945
+#: includes/functions-ur-core.php:8964
+#: includes/functions-ur-core.php:8990
+#: includes/functions-ur-core.php:9009
 msgid "External URL"
 msgstr ""
 
 #: includes/functions-ur-core.php:1534
-#: includes/functions-ur-core.php:8741
-#: includes/functions-ur-core.php:8786
+#: includes/functions-ur-core.php:8946
+#: includes/functions-ur-core.php:8991
 msgid "Previous Page"
 msgstr ""
 
@@ -9483,7 +9479,7 @@ msgid "Auto approval after email confirmation"
 msgstr ""
 
 #: includes/functions-ur-core.php:1640
-#: includes/functions-ur-core.php:8405
+#: includes/functions-ur-core.php:8610
 #: templates/myaccount/form-login.php:70
 #: templates/myaccount/form-lost-password.php:95
 msgid "Username or Email"
@@ -9533,1296 +9529,1296 @@ msgstr ""
 msgid "User Registration Email Templates"
 msgstr ""
 
-#: includes/functions-ur-core.php:4245
+#: includes/functions-ur-core.php:4253
 msgid "User Registration - Custom Email"
 msgstr ""
 
-#: includes/functions-ur-core.php:4252
+#: includes/functions-ur-core.php:4269
 msgid "User Registration - Social Connect"
 msgstr ""
 
-#: includes/functions-ur-core.php:4258
+#: includes/functions-ur-core.php:4283
 msgid "User Registration Profile Connect"
 msgstr ""
 
-#: includes/functions-ur-core.php:4278
+#: includes/functions-ur-core.php:4328
 msgid "User Registration customize my account"
 msgstr ""
 
-#: includes/functions-ur-core.php:4286
+#: includes/functions-ur-core.php:4345
 msgid "Active Campaign"
 msgstr ""
 
-#: includes/functions-ur-core.php:4289
-#: includes/functions-ur-core.php:7974
+#: includes/functions-ur-core.php:4348
+#: includes/functions-ur-core.php:8179
 msgid "User Registration ActiveCampaign"
 msgstr ""
 
-#: includes/functions-ur-core.php:4292
-#: includes/functions-ur-core.php:8051
+#: includes/functions-ur-core.php:4359
+#: includes/functions-ur-core.php:8256
 msgid "Brevo"
 msgstr ""
 
-#: includes/functions-ur-core.php:4295
-#: includes/functions-ur-core.php:8058
+#: includes/functions-ur-core.php:4362
+#: includes/functions-ur-core.php:8263
 msgid "User Registration Brevo"
 msgstr ""
 
-#: includes/functions-ur-core.php:4298
+#: includes/functions-ur-core.php:4373
 msgid "Kit (Previously Convertkit)"
 msgstr ""
 
-#: includes/functions-ur-core.php:4301
+#: includes/functions-ur-core.php:4376
 msgid "User Registration convertkit"
 msgstr ""
 
-#: includes/functions-ur-core.php:4304
-#: includes/functions-ur-core.php:7991
+#: includes/functions-ur-core.php:4387
+#: includes/functions-ur-core.php:8196
 msgid "Klaviyo"
 msgstr ""
 
-#: includes/functions-ur-core.php:4307
-#: includes/functions-ur-core.php:7998
+#: includes/functions-ur-core.php:4390
+#: includes/functions-ur-core.php:8203
 msgid "User Registration Klaviyo"
 msgstr ""
 
-#: includes/functions-ur-core.php:4310
-#: includes/functions-ur-core.php:8003
+#: includes/functions-ur-core.php:4401
+#: includes/functions-ur-core.php:8208
 msgid "Mailchimp"
 msgstr ""
 
-#: includes/functions-ur-core.php:4313
-#: includes/functions-ur-core.php:8010
+#: includes/functions-ur-core.php:4404
+#: includes/functions-ur-core.php:8215
 msgid "User Registration - Mailchimp"
 msgstr ""
 
-#: includes/functions-ur-core.php:4316
+#: includes/functions-ur-core.php:4416
 msgid "Mailerlite"
 msgstr ""
 
-#: includes/functions-ur-core.php:4319
-#: includes/functions-ur-core.php:7986
+#: includes/functions-ur-core.php:4419
+#: includes/functions-ur-core.php:8191
 msgid "User Registration MailerLite"
 msgstr ""
 
-#: includes/functions-ur-core.php:4322
+#: includes/functions-ur-core.php:4430
 msgid "Mailpoet"
 msgstr ""
 
-#: includes/functions-ur-core.php:4325
-#: includes/functions-ur-core.php:8034
+#: includes/functions-ur-core.php:4433
+#: includes/functions-ur-core.php:8239
 msgid "User Registration MailPoet"
 msgstr ""
 
-#: includes/functions-ur-core.php:4328
-#: includes/functions-ur-core.php:8015
+#: includes/functions-ur-core.php:4444
+#: includes/functions-ur-core.php:8220
 msgid "Zapier"
 msgstr ""
 
-#: includes/functions-ur-core.php:4331
-#: includes/functions-ur-core.php:8022
+#: includes/functions-ur-core.php:4447
+#: includes/functions-ur-core.php:8227
 msgid "User Registration Zapier"
 msgstr ""
 
-#: includes/functions-ur-core.php:4338
+#: includes/functions-ur-core.php:4463
 msgid "PDF Form Submission"
 msgstr ""
 
-#: includes/functions-ur-core.php:4341
+#: includes/functions-ur-core.php:4466
 msgid "User Registration PDF Form Submission"
 msgstr ""
 
-#: includes/functions-ur-core.php:4347
+#: includes/functions-ur-core.php:4480
 msgid "User Registration Google Sheets"
 msgstr ""
 
-#: includes/functions-ur-core.php:4353
-#: includes/functions-ur-core.php:8070
+#: includes/functions-ur-core.php:4494
+#: includes/functions-ur-core.php:8275
 msgid "User Registration Salesforce"
 msgstr ""
 
-#: includes/functions-ur-core.php:4359
+#: includes/functions-ur-core.php:4509
 msgid "User Registration Geolocation"
 msgstr ""
 
-#: includes/functions-ur-core.php:4375
+#: includes/functions-ur-core.php:4549
 msgid "Google Drive"
 msgstr ""
 
-#: includes/functions-ur-core.php:4378
-#: includes/functions-ur-core.php:4384
+#: includes/functions-ur-core.php:4552
+#: includes/functions-ur-core.php:4566
 msgid "User Registration Cloud Storage"
 msgstr ""
 
-#: includes/functions-ur-core.php:4381
+#: includes/functions-ur-core.php:4563
 msgid "Dropbox"
 msgstr ""
 
-#: includes/functions-ur-core.php:4393
+#: includes/functions-ur-core.php:4583
 msgid "Two Factor Authentication"
 msgstr ""
 
-#: includes/functions-ur-core.php:4396
+#: includes/functions-ur-core.php:4586
 msgid "User Registration - Two Factor Authentication"
 msgstr ""
 
 #. translators: %s: License Plan Name.
-#: includes/functions-ur-core.php:4450
-#: includes/functions-ur-core.php:4550
+#: includes/functions-ur-core.php:4647
+#: includes/functions-ur-core.php:4750
 msgid "You have been subscribed to %s plan. Please upgrade to higher plans to use this feature."
 msgstr ""
 
 #. translators: %s: Addon Name.
-#: includes/functions-ur-core.php:4470
-#: includes/functions-ur-core.php:4569
+#: includes/functions-ur-core.php:4667
+#: includes/functions-ur-core.php:4769
 msgid "Please %1$s %2$s addon to use this feature."
 msgstr ""
 
-#: includes/functions-ur-core.php:4480
-#: includes/functions-ur-core.php:4579
+#: includes/functions-ur-core.php:4677
+#: includes/functions-ur-core.php:4779
 msgid "%s Addon"
 msgstr ""
 
-#: includes/functions-ur-core.php:4501
-#: includes/functions-ur-core.php:4597
+#: includes/functions-ur-core.php:4698
+#: includes/functions-ur-core.php:4797
 msgid "You are currently using the free version of our plugin. Please upgrade to premium version to use this feature."
 msgstr ""
 
-#: includes/functions-ur-core.php:4521
+#: includes/functions-ur-core.php:4721
 msgid "Please activate the Custom Email feature to use this functionality."
 msgstr ""
 
-#: includes/functions-ur-core.php:4528
+#: includes/functions-ur-core.php:4728
 msgid "Activate Feature"
 msgstr ""
 
-#: includes/functions-ur-core.php:4633
-#: includes/functions-ur-core.php:8446
+#: includes/functions-ur-core.php:4838
+#: includes/functions-ur-core.php:8651
 msgid "Username is required."
 msgstr ""
 
-#: includes/functions-ur-core.php:4636
-#: includes/functions-ur-core.php:4790
-#: includes/functions-ur-core.php:4814
+#: includes/functions-ur-core.php:4841
+#: includes/functions-ur-core.php:4995
+#: includes/functions-ur-core.php:5019
 msgid "A user could not be found with this email address."
 msgstr ""
 
-#: includes/functions-ur-core.php:4639
+#: includes/functions-ur-core.php:4844
 msgid "Sorry! You are disabled.Please Contact Your Administrator."
 msgstr ""
 
-#: includes/functions-ur-core.php:4640
-#: includes/functions-ur-core.php:8526
+#: includes/functions-ur-core.php:4845
+#: includes/functions-ur-core.php:8731
 msgid "The password you entered for the %label% %email% is incorrect."
 msgstr ""
 
-#: includes/functions-ur-core.php:4712
+#: includes/functions-ur-core.php:4917
 msgid "Error on Cloudflare. Contact your site administrator."
 msgstr ""
 
-#: includes/functions-ur-core.php:4793
-#: includes/functions-ur-core.php:4817
-#: includes/functions-ur-core.php:4870
+#: includes/functions-ur-core.php:4998
+#: includes/functions-ur-core.php:5022
+#: includes/functions-ur-core.php:5075
 msgid "ERROR: "
 msgstr ""
 
-#: includes/functions-ur-core.php:4834
-#: includes/functions-ur-core.php:4837
-#: includes/functions-ur-core.php:4840
-#: includes/functions-ur-core.php:4843
-#: includes/functions-ur-core.php:4846
-#: includes/functions-ur-core.php:4849
-#: includes/functions-ur-core.php:4862
+#: includes/functions-ur-core.php:5039
+#: includes/functions-ur-core.php:5042
+#: includes/functions-ur-core.php:5045
+#: includes/functions-ur-core.php:5048
+#: includes/functions-ur-core.php:5051
+#: includes/functions-ur-core.php:5054
+#: includes/functions-ur-core.php:5067
 msgid "ERROR"
 msgstr ""
 
-#: includes/functions-ur-core.php:4854
+#: includes/functions-ur-core.php:5059
 msgid "email address"
 msgstr ""
 
-#: includes/functions-ur-core.php:4856
+#: includes/functions-ur-core.php:5061
 msgid "username"
 msgstr ""
 
-#: includes/functions-ur-core.php:4975
+#: includes/functions-ur-core.php:5180
 msgid "User is already logged in and lacks permission."
 msgstr ""
 
-#: includes/functions-ur-core.php:4978
+#: includes/functions-ur-core.php:5183
 msgid "You are already logged in."
 msgstr ""
 
-#: includes/functions-ur-core.php:4984
+#: includes/functions-ur-core.php:5189
 msgid "Nonce verification failed."
 msgstr ""
 
-#: includes/functions-ur-core.php:4994
+#: includes/functions-ur-core.php:5199
 msgid "Processing form submission."
 msgstr ""
 
-#: includes/functions-ur-core.php:5035
+#: includes/functions-ur-core.php:5240
 msgid "Error on hCaptcha."
 msgstr ""
 
-#: includes/functions-ur-core.php:5054
+#: includes/functions-ur-core.php:5259
 msgid "Error on Cloudflare Turnstile"
 msgstr ""
 
-#: includes/functions-ur-core.php:5069
+#: includes/functions-ur-core.php:5274
 msgid "Error on google reCaptcha."
 msgstr ""
 
-#: includes/functions-ur-core.php:5078
+#: includes/functions-ur-core.php:5283
 msgid "Captcha code error."
 msgstr ""
 
-#: includes/functions-ur-core.php:5134
+#: includes/functions-ur-core.php:5339
 msgid "Form data receiving"
 msgstr ""
 
-#: includes/functions-ur-core.php:5138
+#: includes/functions-ur-core.php:5343
 msgid "Form data received"
 msgstr ""
 
-#: includes/functions-ur-core.php:5140
+#: includes/functions-ur-core.php:5345
 msgid "Form submission processed successfully."
 msgstr ""
 
-#: includes/functions-ur-core.php:5870
-#: includes/functions-ur-core.php:7855
-#: includes/functions-ur-core.php:7873
-#: includes/functions-ur-core.php:7898
+#: includes/functions-ur-core.php:6075
+#: includes/functions-ur-core.php:8060
+#: includes/functions-ur-core.php:8078
+#: includes/functions-ur-core.php:8103
 msgid "User Registration"
 msgstr ""
 
-#: includes/functions-ur-core.php:6430
+#: includes/functions-ur-core.php:6635
 msgid "Email field is not editable."
 msgstr ""
 
-#: includes/functions-ur-core.php:6434
+#: includes/functions-ur-core.php:6639
 msgid "Email already exists"
 msgstr ""
 
-#: includes/functions-ur-core.php:7154
-#: includes/functions-ur-core.php:7174
+#: includes/functions-ur-core.php:7359
+#: includes/functions-ur-core.php:7379
 msgid "Warning:-"
 msgstr ""
 
-#: includes/functions-ur-core.php:7155
+#: includes/functions-ur-core.php:7360
 msgid " This feature is inactive because"
 msgstr ""
 
-#: includes/functions-ur-core.php:7156
-#: includes/functions-ur-core.php:7166
-#: includes/functions-ur-core.php:7176
+#: includes/functions-ur-core.php:7361
+#: includes/functions-ur-core.php:7371
+#: includes/functions-ur-core.php:7381
 msgid "Akismet"
 msgstr ""
 
-#: includes/functions-ur-core.php:7157
+#: includes/functions-ur-core.php:7362
 msgid "plugin has not been installed. For more"
 msgstr ""
 
-#: includes/functions-ur-core.php:7158
-#: includes/functions-ur-core.php:7168
-#: includes/functions-ur-core.php:7178
+#: includes/functions-ur-core.php:7363
+#: includes/functions-ur-core.php:7373
+#: includes/functions-ur-core.php:7383
 msgid "information."
 msgstr ""
 
-#: includes/functions-ur-core.php:7164
+#: includes/functions-ur-core.php:7369
 msgid "Warning:- "
 msgstr ""
 
-#: includes/functions-ur-core.php:7165
-#: includes/functions-ur-core.php:7175
+#: includes/functions-ur-core.php:7370
+#: includes/functions-ur-core.php:7380
 msgid "This feature is inactive because"
 msgstr ""
 
-#: includes/functions-ur-core.php:7167
+#: includes/functions-ur-core.php:7372
 msgid "plugin is not activated. For more"
 msgstr ""
 
-#: includes/functions-ur-core.php:7177
+#: includes/functions-ur-core.php:7382
 msgid "plugin has not been properly configured. For more"
 msgstr ""
 
 #. translators: %s: Status Log URL
-#: includes/functions-ur-core.php:7509
+#: includes/functions-ur-core.php:7714
 msgid "Please check the `ur_mail_logs` log under <a target=\"_blank\" href= \"%s\"> Status Log </a> section."
 msgstr ""
 
-#: includes/functions-ur-core.php:7552
+#: includes/functions-ur-core.php:7757
 msgid "User Registration & Membership Email Send Error"
 msgstr ""
 
-#: includes/functions-ur-core.php:7556
+#: includes/functions-ur-core.php:7761
 msgid "The last emails sent from User Registration & Membership Plugin was not delivered to the user. "
 msgstr ""
 
-#: includes/functions-ur-core.php:7569
-#: includes/functions-ur-core.php:7685
+#: includes/functions-ur-core.php:7774
+#: includes/functions-ur-core.php:7890
 msgid "Visit Documentation"
 msgstr ""
 
-#: includes/functions-ur-core.php:7661
+#: includes/functions-ur-core.php:7866
 msgid "Unusual User Registrations Detected"
 msgstr ""
 
-#: includes/functions-ur-core.php:7665
+#: includes/functions-ur-core.php:7870
 msgid "A significant number of users have registered on your site from sources other than the User Registration & Membership plugin's form."
 msgstr ""
 
-#: includes/functions-ur-core.php:7666
+#: includes/functions-ur-core.php:7871
 msgid "These registrations may be suspicious. Please review and disable any other methods that allow user registrations if they are not intended. Additionally, consider enabling spam protection measures in the User Registration & Membership to safeguard your site."
 msgstr ""
 
-#: includes/functions-ur-core.php:7671
+#: includes/functions-ur-core.php:7876
 msgid "It was a false alarm"
 msgstr ""
 
-#: includes/functions-ur-core.php:7856
+#: includes/functions-ur-core.php:8061
 msgid "Registration Form widget for WPBakery."
 msgstr ""
 
-#: includes/functions-ur-core.php:7863
+#: includes/functions-ur-core.php:8068
 msgid "Select Form."
 msgstr ""
 
-#: includes/functions-ur-core.php:7874
+#: includes/functions-ur-core.php:8079
 msgid "My Account widget for WPBakery."
 msgstr ""
 
-#: includes/functions-ur-core.php:7881
-#: includes/functions-ur-core.php:7906
+#: includes/functions-ur-core.php:8086
+#: includes/functions-ur-core.php:8111
 msgid "Enter redirect url after login."
 msgstr ""
 
-#: includes/functions-ur-core.php:7885
-#: includes/functions-ur-core.php:7910
+#: includes/functions-ur-core.php:8090
+#: includes/functions-ur-core.php:8115
 #: chunks/blocks.js:280
 #: src/blocks/blocks/myaccount/Edit.js:52
 msgid "Logout URL"
 msgstr ""
 
-#: includes/functions-ur-core.php:7888
-#: includes/functions-ur-core.php:7913
+#: includes/functions-ur-core.php:8093
+#: includes/functions-ur-core.php:8118
 msgid "Enter url which redirect after logout."
 msgstr ""
 
-#: includes/functions-ur-core.php:7899
+#: includes/functions-ur-core.php:8104
 msgid "Login Form widget for WPBakery."
 msgstr ""
 
-#: includes/functions-ur-core.php:7924
+#: includes/functions-ur-core.php:8129
 msgid "Edit Profile widget for WPBakery."
 msgstr ""
 
-#: includes/functions-ur-core.php:7933
+#: includes/functions-ur-core.php:8138
 msgid "Edit Password widget for WPBakery."
 msgstr ""
 
-#: includes/functions-ur-core.php:7956
-#: includes/functions-ur-core.php:7962
+#: includes/functions-ur-core.php:8161
+#: includes/functions-ur-core.php:8167
 msgid "Twilio"
 msgstr ""
 
-#: includes/functions-ur-core.php:7967
+#: includes/functions-ur-core.php:8172
 msgid "ActiveCampaign"
 msgstr ""
 
-#: includes/functions-ur-core.php:7979
+#: includes/functions-ur-core.php:8184
 msgid "MailerLite"
 msgstr ""
 
-#: includes/functions-ur-core.php:8027
+#: includes/functions-ur-core.php:8232
 msgid "MailPoet"
 msgstr ""
 
-#: includes/functions-ur-core.php:8039
+#: includes/functions-ur-core.php:8244
 msgid "ConvertKit"
 msgstr ""
 
-#: includes/functions-ur-core.php:8046
+#: includes/functions-ur-core.php:8251
 msgid "User Registration ConvertKit"
 msgstr ""
 
-#: includes/functions-ur-core.php:8341
+#: includes/functions-ur-core.php:8546
 msgid "Enable Remember Me"
 msgstr ""
 
-#: includes/functions-ur-core.php:8344
+#: includes/functions-ur-core.php:8549
 msgid "Keep users logged in on their browser."
 msgstr ""
 
-#: includes/functions-ur-core.php:8350
+#: includes/functions-ur-core.php:8555
 msgid "Enable Password Reset Link"
 msgstr ""
 
-#: includes/functions-ur-core.php:8353
+#: includes/functions-ur-core.php:8558
 msgid "Allow users to reset their password if they forget it."
 msgstr ""
 
-#: includes/functions-ur-core.php:8360
+#: includes/functions-ur-core.php:8565
 msgid "Select the page where your password reset form is placed."
 msgstr ""
 
-#: includes/functions-ur-core.php:8370
+#: includes/functions-ur-core.php:8575
 msgid "Registration URL"
 msgstr ""
 
-#: includes/functions-ur-core.php:8371
+#: includes/functions-ur-core.php:8576
 msgid "Set the URL of the registration page users should be sent to."
 msgstr ""
 
-#: includes/functions-ur-core.php:8380
+#: includes/functions-ur-core.php:8585
 msgid "Registration URL Label"
 msgstr ""
 
-#: includes/functions-ur-core.php:8381
+#: includes/functions-ur-core.php:8586
 msgid "Customize the label shown for your registration link."
 msgstr ""
 
-#: includes/functions-ur-core.php:8386
+#: includes/functions-ur-core.php:8591
 #: includes/stats/class-ur-stats.php:605
 #: templates/myaccount/form-login.php:342
 msgid "Not a member yet? Register now."
 msgstr ""
 
-#: includes/functions-ur-core.php:8419
+#: includes/functions-ur-core.php:8624
 msgid "Invalid Username Message"
 msgstr ""
 
-#: includes/functions-ur-core.php:8425
+#: includes/functions-ur-core.php:8630
 #: includes/shortcodes/class-ur-shortcode-my-account.php:451
 #: includes/shortcodes/class-ur-shortcode-my-account.php:454
 msgid "Invalid username or email."
 msgstr ""
 
-#: includes/functions-ur-core.php:8430
+#: includes/functions-ur-core.php:8635
 msgid "Invalid Email Message"
 msgstr ""
 
-#: includes/functions-ur-core.php:8440
-#: includes/functions-ur-core.php:8509
+#: includes/functions-ur-core.php:8645
+#: includes/functions-ur-core.php:8714
 msgid "Required Message"
 msgstr ""
 
-#: includes/functions-ur-core.php:8465
+#: includes/functions-ur-core.php:8670
 #: templates/myaccount/form-login.php:72
 msgid "Remember Me"
 msgstr ""
 
-#: includes/functions-ur-core.php:8485
+#: includes/functions-ur-core.php:8690
 #: templates/myaccount/form-login.php:74
 msgid "Lost your password?"
 msgstr ""
 
-#: includes/functions-ur-core.php:8515
+#: includes/functions-ur-core.php:8720
 msgid "The password field is empty."
 msgstr ""
 
-#: includes/functions-ur-core.php:8520
+#: includes/functions-ur-core.php:8725
 msgid "Invalid Password"
 msgstr ""
 
-#: includes/functions-ur-core.php:8575
+#: includes/functions-ur-core.php:8780
 msgid "Choose how your login form looks."
 msgstr ""
 
-#: includes/functions-ur-core.php:8591
+#: includes/functions-ur-core.php:8796
 msgid "Login Methods"
 msgstr ""
 
-#: includes/functions-ur-core.php:8592
+#: includes/functions-ur-core.php:8797
 msgid "Let users log in with email, username, or both."
 msgstr ""
 
-#: includes/functions-ur-core.php:8602
+#: includes/functions-ur-core.php:8807
 msgid "Enable Login Title"
 msgstr ""
 
-#: includes/functions-ur-core.php:8606
+#: includes/functions-ur-core.php:8811
 msgid "Check to enable login title in login form."
 msgstr ""
 
-#: includes/functions-ur-core.php:8611
+#: includes/functions-ur-core.php:8816
 msgid "Login Form Title"
 msgstr ""
 
-#: includes/functions-ur-core.php:8612
+#: includes/functions-ur-core.php:8817
 msgid "This text will appear as the login form title"
 msgstr ""
 
-#: includes/functions-ur-core.php:8617
+#: includes/functions-ur-core.php:8822
 #: includes/RestApi/controllers/version1/class-ur-getting-started.php:292
 #: includes/stats/class-ur-stats.php:621
 #: templates/myaccount/form-login.php:146
 msgid "Welcome"
 msgstr ""
 
-#: includes/functions-ur-core.php:8620
+#: includes/functions-ur-core.php:8825
 msgid "Login Form Description"
 msgstr ""
 
-#: includes/functions-ur-core.php:8621
+#: includes/functions-ur-core.php:8826
 msgid "This text will appear as the login form description"
 msgstr ""
 
-#: includes/functions-ur-core.php:8626
+#: includes/functions-ur-core.php:8831
 #: templates/myaccount/form-login.php:161
 msgid "Please enter your details to access your account."
 msgstr ""
 
-#: includes/functions-ur-core.php:8636
+#: includes/functions-ur-core.php:8841
 msgid "Enable Ajax Login"
 msgstr ""
 
-#: includes/functions-ur-core.php:8640
+#: includes/functions-ur-core.php:8845
 msgid "Check to enable Ajax login i.e login without page reload on submission."
 msgstr ""
 
-#: includes/functions-ur-core.php:8653
+#: includes/functions-ur-core.php:8858
 msgid "Enable Captcha"
 msgstr ""
 
-#: includes/functions-ur-core.php:8656
+#: includes/functions-ur-core.php:8861
 msgid "Enable %1$s %2$s Captcha %3$s support"
 msgstr ""
 
-#: includes/functions-ur-core.php:8663
+#: includes/functions-ur-core.php:8868
 msgid "Choose which Captcha type to show on the login form."
 msgstr ""
 
-#: includes/functions-ur-core.php:8672
+#: includes/functions-ur-core.php:8877
 #: chunks/dashboard.js:280
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:260
 msgid "Disable Default WordPress Login Screen"
 msgstr ""
 
-#: includes/functions-ur-core.php:8676
+#: includes/functions-ur-core.php:8881
 msgid "Default WordPress login page wp-login.php will  be disabled."
 msgstr ""
 
-#: includes/functions-ur-core.php:8679
+#: includes/functions-ur-core.php:8884
 msgid "Please make sure that you have created a login or my-account page which has a login form before enabling this option. Learn how to create a login form <a href=\"https://docs.wpuserregistration.com/docs/how-to-show-login-form/\" rel=\"noreferrer noopener\" target=\"_blank\">here</a>."
 msgstr ""
 
-#: includes/functions-ur-core.php:8682
+#: includes/functions-ur-core.php:8887
 msgid "Redirect Default WordPress Login URL"
 msgstr ""
 
-#: includes/functions-ur-core.php:8683
+#: includes/functions-ur-core.php:8888
 msgid "Select the custom page users are redirected to instead of wp-login.php."
 msgstr ""
 
-#: includes/functions-ur-core.php:8692
+#: includes/functions-ur-core.php:8897
 msgid "Account Pending Approval Message"
 msgstr ""
 
-#: includes/functions-ur-core.php:8693
+#: includes/functions-ur-core.php:8898
 msgid "Message shown when the account is waiting for approval."
 msgstr ""
 
-#: includes/functions-ur-core.php:8702
+#: includes/functions-ur-core.php:8907
 msgid "Account Denied Message"
 msgstr ""
 
-#: includes/functions-ur-core.php:8703
+#: includes/functions-ur-core.php:8908
 msgid "Message shown if the user’s account has been denied."
 msgstr ""
 
-#: includes/functions-ur-core.php:8712
+#: includes/functions-ur-core.php:8917
 msgid "Enable Custom Redirect"
 msgstr ""
 
-#: includes/functions-ur-core.php:8716
+#: includes/functions-ur-core.php:8921
 msgid "Custom redirection settings after login or logout."
 msgstr ""
 
-#: includes/functions-ur-core.php:8722
+#: includes/functions-ur-core.php:8927
 msgid "Redirect After Login"
 msgstr ""
 
-#: includes/functions-ur-core.php:8723
+#: includes/functions-ur-core.php:8928
 msgid "Select the option in which users are redirected to after login"
 msgstr ""
 
-#: includes/functions-ur-core.php:8745
+#: includes/functions-ur-core.php:8950
 msgid "Decide where users go after completing login."
 msgstr ""
 
-#: includes/functions-ur-core.php:8751
-#: includes/functions-ur-core.php:8796
+#: includes/functions-ur-core.php:8956
+#: includes/functions-ur-core.php:9001
 #: chunks/blocks.js:280
 #: src/blocks/blocks/thank-you/Edit.js:157
 msgid "Redirect Page"
 msgstr ""
 
-#: includes/functions-ur-core.php:8767
+#: includes/functions-ur-core.php:8972
 msgid "Redirect After Logout"
 msgstr ""
 
-#: includes/functions-ur-core.php:8768
+#: includes/functions-ur-core.php:8973
 msgid "Select the option in which users are redirected to after logout"
 msgstr ""
 
-#: includes/functions-ur-core.php:8790
+#: includes/functions-ur-core.php:8995
 msgid "Decide where users go after completing logout."
 msgstr ""
 
-#: includes/functions-ur-core.php:9530
+#: includes/functions-ur-core.php:9735
 msgid "Hi {{username}}, <br> Your One  Time Password (OTP) is : {{sms_otp}} <br> Enter this code to login to your account. <br> Note: This code expires in {{sms_otp_validity}} minutes. <br> Thank You!"
 msgstr ""
 
-#: includes/functions-ur-core.php:11163
+#: includes/functions-ur-core.php:11368
 msgid "United Arab Emirates dirham"
 msgstr ""
 
-#: includes/functions-ur-core.php:11164
+#: includes/functions-ur-core.php:11369
 msgid "Afghan afghani"
 msgstr ""
 
-#: includes/functions-ur-core.php:11165
+#: includes/functions-ur-core.php:11370
 msgid "Albanian lek"
 msgstr ""
 
-#: includes/functions-ur-core.php:11166
+#: includes/functions-ur-core.php:11371
 msgid "Armenian dram"
 msgstr ""
 
-#: includes/functions-ur-core.php:11167
+#: includes/functions-ur-core.php:11372
 msgid "Netherlands Antillean guilder"
 msgstr ""
 
-#: includes/functions-ur-core.php:11168
+#: includes/functions-ur-core.php:11373
 msgid "Angolan kwanza"
 msgstr ""
 
-#: includes/functions-ur-core.php:11169
+#: includes/functions-ur-core.php:11374
 msgid "Argentine peso"
 msgstr ""
 
-#: includes/functions-ur-core.php:11170
+#: includes/functions-ur-core.php:11375
 msgid "Australian dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11171
+#: includes/functions-ur-core.php:11376
 msgid "Aruban florin"
 msgstr ""
 
-#: includes/functions-ur-core.php:11172
+#: includes/functions-ur-core.php:11377
 msgid "Azerbaijani manat"
 msgstr ""
 
-#: includes/functions-ur-core.php:11173
+#: includes/functions-ur-core.php:11378
 msgid "Bosnia and Herzegovina convertible mark"
 msgstr ""
 
-#: includes/functions-ur-core.php:11174
+#: includes/functions-ur-core.php:11379
 msgid "Barbadian dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11175
+#: includes/functions-ur-core.php:11380
 msgid "Bangladeshi taka"
 msgstr ""
 
-#: includes/functions-ur-core.php:11176
+#: includes/functions-ur-core.php:11381
 msgid "Bulgarian lev"
 msgstr ""
 
-#: includes/functions-ur-core.php:11177
+#: includes/functions-ur-core.php:11382
 msgid "Bahraini dinar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11178
+#: includes/functions-ur-core.php:11383
 msgid "Burundian franc"
 msgstr ""
 
-#: includes/functions-ur-core.php:11179
+#: includes/functions-ur-core.php:11384
 msgid "Bermudian dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11180
+#: includes/functions-ur-core.php:11385
 msgid "Brunei dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11181
+#: includes/functions-ur-core.php:11386
 msgid "Bolivian boliviano"
 msgstr ""
 
-#: includes/functions-ur-core.php:11182
+#: includes/functions-ur-core.php:11387
 msgid "Brazilian real"
 msgstr ""
 
-#: includes/functions-ur-core.php:11183
+#: includes/functions-ur-core.php:11388
 msgid "Bahamian dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11184
+#: includes/functions-ur-core.php:11389
 msgid "Bitcoin"
 msgstr ""
 
-#: includes/functions-ur-core.php:11185
+#: includes/functions-ur-core.php:11390
 msgid "Bhutanese ngultrum"
 msgstr ""
 
-#: includes/functions-ur-core.php:11186
+#: includes/functions-ur-core.php:11391
 msgid "Botswana pula"
 msgstr ""
 
-#: includes/functions-ur-core.php:11187
+#: includes/functions-ur-core.php:11392
 msgid "Belarusian ruble (old)"
 msgstr ""
 
-#: includes/functions-ur-core.php:11188
+#: includes/functions-ur-core.php:11393
 msgid "Belarusian ruble"
 msgstr ""
 
-#: includes/functions-ur-core.php:11189
+#: includes/functions-ur-core.php:11394
 msgid "Belize dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11190
+#: includes/functions-ur-core.php:11395
 msgid "Canadian dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11191
+#: includes/functions-ur-core.php:11396
 msgid "Congolese franc"
 msgstr ""
 
-#: includes/functions-ur-core.php:11192
+#: includes/functions-ur-core.php:11397
 msgid "Swiss franc"
 msgstr ""
 
-#: includes/functions-ur-core.php:11193
+#: includes/functions-ur-core.php:11398
 msgid "Chilean peso"
 msgstr ""
 
-#: includes/functions-ur-core.php:11194
+#: includes/functions-ur-core.php:11399
 msgid "Chinese yuan"
 msgstr ""
 
-#: includes/functions-ur-core.php:11195
+#: includes/functions-ur-core.php:11400
 msgid "Colombian peso"
 msgstr ""
 
-#: includes/functions-ur-core.php:11196
+#: includes/functions-ur-core.php:11401
 msgid "Costa Rican col&oacute;n"
 msgstr ""
 
-#: includes/functions-ur-core.php:11197
+#: includes/functions-ur-core.php:11402
 msgid "Cuban convertible peso"
 msgstr ""
 
-#: includes/functions-ur-core.php:11198
+#: includes/functions-ur-core.php:11403
 msgid "Cuban peso"
 msgstr ""
 
-#: includes/functions-ur-core.php:11199
+#: includes/functions-ur-core.php:11404
 msgid "Cape Verdean escudo"
 msgstr ""
 
-#: includes/functions-ur-core.php:11200
+#: includes/functions-ur-core.php:11405
 msgid "Czech koruna"
 msgstr ""
 
-#: includes/functions-ur-core.php:11201
+#: includes/functions-ur-core.php:11406
 msgid "Djiboutian franc"
 msgstr ""
 
-#: includes/functions-ur-core.php:11202
+#: includes/functions-ur-core.php:11407
 msgid "Danish krone"
 msgstr ""
 
-#: includes/functions-ur-core.php:11203
+#: includes/functions-ur-core.php:11408
 msgid "Dominican peso"
 msgstr ""
 
-#: includes/functions-ur-core.php:11204
+#: includes/functions-ur-core.php:11409
 msgid "Algerian dinar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11205
+#: includes/functions-ur-core.php:11410
 msgid "Egyptian pound"
 msgstr ""
 
-#: includes/functions-ur-core.php:11206
+#: includes/functions-ur-core.php:11411
 msgid "Eritrean nakfa"
 msgstr ""
 
-#: includes/functions-ur-core.php:11207
+#: includes/functions-ur-core.php:11412
 msgid "Ethiopian birr"
 msgstr ""
 
-#: includes/functions-ur-core.php:11208
+#: includes/functions-ur-core.php:11413
 #: modules/functions-ur-modules.php:61
 msgid "Euro"
 msgstr ""
 
-#: includes/functions-ur-core.php:11209
+#: includes/functions-ur-core.php:11414
 msgid "Fijian dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11210
+#: includes/functions-ur-core.php:11415
 msgid "Falkland Islands pound"
 msgstr ""
 
-#: includes/functions-ur-core.php:11211
+#: includes/functions-ur-core.php:11416
 msgid "Pound sterling"
 msgstr ""
 
-#: includes/functions-ur-core.php:11212
+#: includes/functions-ur-core.php:11417
 msgid "Georgian lari"
 msgstr ""
 
-#: includes/functions-ur-core.php:11213
+#: includes/functions-ur-core.php:11418
 msgid "Guernsey pound"
 msgstr ""
 
-#: includes/functions-ur-core.php:11214
+#: includes/functions-ur-core.php:11419
 msgid "Ghana cedi"
 msgstr ""
 
-#: includes/functions-ur-core.php:11215
+#: includes/functions-ur-core.php:11420
 msgid "Gibraltar pound"
 msgstr ""
 
-#: includes/functions-ur-core.php:11216
+#: includes/functions-ur-core.php:11421
 msgid "Gambian dalasi"
 msgstr ""
 
-#: includes/functions-ur-core.php:11217
+#: includes/functions-ur-core.php:11422
 msgid "Guinean franc"
 msgstr ""
 
-#: includes/functions-ur-core.php:11218
+#: includes/functions-ur-core.php:11423
 msgid "Guatemalan quetzal"
 msgstr ""
 
-#: includes/functions-ur-core.php:11219
+#: includes/functions-ur-core.php:11424
 msgid "Guyanese dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11220
+#: includes/functions-ur-core.php:11425
 msgid "Hong Kong dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11221
+#: includes/functions-ur-core.php:11426
 msgid "Honduran lempira"
 msgstr ""
 
-#: includes/functions-ur-core.php:11222
+#: includes/functions-ur-core.php:11427
 msgid "Croatian kuna"
 msgstr ""
 
-#: includes/functions-ur-core.php:11223
+#: includes/functions-ur-core.php:11428
 msgid "Haitian gourde"
 msgstr ""
 
-#: includes/functions-ur-core.php:11224
+#: includes/functions-ur-core.php:11429
 msgid "Hungarian forint"
 msgstr ""
 
-#: includes/functions-ur-core.php:11225
+#: includes/functions-ur-core.php:11430
 msgid "Indonesian rupiah"
 msgstr ""
 
-#: includes/functions-ur-core.php:11226
+#: includes/functions-ur-core.php:11431
 msgid "Israeli new shekel"
 msgstr ""
 
-#: includes/functions-ur-core.php:11227
+#: includes/functions-ur-core.php:11432
 msgid "Manx pound"
 msgstr ""
 
-#: includes/functions-ur-core.php:11228
+#: includes/functions-ur-core.php:11433
 msgid "Indian rupee"
 msgstr ""
 
-#: includes/functions-ur-core.php:11229
+#: includes/functions-ur-core.php:11434
 msgid "Iraqi dinar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11230
+#: includes/functions-ur-core.php:11435
 msgid "Iranian rial"
 msgstr ""
 
-#: includes/functions-ur-core.php:11231
+#: includes/functions-ur-core.php:11436
 msgid "Iranian toman"
 msgstr ""
 
-#: includes/functions-ur-core.php:11232
+#: includes/functions-ur-core.php:11437
 msgid "Icelandic kr&oacute;na"
 msgstr ""
 
-#: includes/functions-ur-core.php:11233
+#: includes/functions-ur-core.php:11438
 msgid "Jersey pound"
 msgstr ""
 
-#: includes/functions-ur-core.php:11234
+#: includes/functions-ur-core.php:11439
 msgid "Jamaican dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11235
+#: includes/functions-ur-core.php:11440
 msgid "Jordanian dinar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11236
+#: includes/functions-ur-core.php:11441
 msgid "Japanese yen"
 msgstr ""
 
-#: includes/functions-ur-core.php:11237
+#: includes/functions-ur-core.php:11442
 msgid "Kenyan shilling"
 msgstr ""
 
-#: includes/functions-ur-core.php:11238
+#: includes/functions-ur-core.php:11443
 msgid "Kyrgyzstani som"
 msgstr ""
 
-#: includes/functions-ur-core.php:11239
+#: includes/functions-ur-core.php:11444
 msgid "Cambodian riel"
 msgstr ""
 
-#: includes/functions-ur-core.php:11240
+#: includes/functions-ur-core.php:11445
 msgid "Comorian franc"
 msgstr ""
 
-#: includes/functions-ur-core.php:11241
+#: includes/functions-ur-core.php:11446
 msgid "North Korean won"
 msgstr ""
 
-#: includes/functions-ur-core.php:11242
+#: includes/functions-ur-core.php:11447
 msgid "South Korean won"
 msgstr ""
 
-#: includes/functions-ur-core.php:11243
+#: includes/functions-ur-core.php:11448
 msgid "Kuwaiti dinar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11244
+#: includes/functions-ur-core.php:11449
 msgid "Cayman Islands dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11245
+#: includes/functions-ur-core.php:11450
 msgid "Kazakhstani tenge"
 msgstr ""
 
-#: includes/functions-ur-core.php:11246
+#: includes/functions-ur-core.php:11451
 msgid "Lao kip"
 msgstr ""
 
-#: includes/functions-ur-core.php:11247
+#: includes/functions-ur-core.php:11452
 msgid "Lebanese pound"
 msgstr ""
 
-#: includes/functions-ur-core.php:11248
+#: includes/functions-ur-core.php:11453
 msgid "Sri Lankan rupee"
 msgstr ""
 
-#: includes/functions-ur-core.php:11249
+#: includes/functions-ur-core.php:11454
 msgid "Liberian dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11250
+#: includes/functions-ur-core.php:11455
 msgid "Lesotho loti"
 msgstr ""
 
-#: includes/functions-ur-core.php:11251
+#: includes/functions-ur-core.php:11456
 msgid "Libyan dinar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11252
+#: includes/functions-ur-core.php:11457
 msgid "Moroccan dirham"
 msgstr ""
 
-#: includes/functions-ur-core.php:11253
+#: includes/functions-ur-core.php:11458
 msgid "Moldovan leu"
 msgstr ""
 
-#: includes/functions-ur-core.php:11254
+#: includes/functions-ur-core.php:11459
 msgid "Malagasy ariary"
 msgstr ""
 
-#: includes/functions-ur-core.php:11255
+#: includes/functions-ur-core.php:11460
 msgid "Macedonian denar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11256
+#: includes/functions-ur-core.php:11461
 msgid "Burmese kyat"
 msgstr ""
 
-#: includes/functions-ur-core.php:11257
+#: includes/functions-ur-core.php:11462
 msgid "Mongolian t&ouml;gr&ouml;g"
 msgstr ""
 
-#: includes/functions-ur-core.php:11258
+#: includes/functions-ur-core.php:11463
 msgid "Macanese pataca"
 msgstr ""
 
-#: includes/functions-ur-core.php:11259
+#: includes/functions-ur-core.php:11464
 msgid "Mauritanian ouguiya"
 msgstr ""
 
-#: includes/functions-ur-core.php:11260
+#: includes/functions-ur-core.php:11465
 msgid "Mauritian rupee"
 msgstr ""
 
-#: includes/functions-ur-core.php:11261
+#: includes/functions-ur-core.php:11466
 msgid "Maldivian rufiyaa"
 msgstr ""
 
-#: includes/functions-ur-core.php:11262
+#: includes/functions-ur-core.php:11467
 msgid "Malawian kwacha"
 msgstr ""
 
-#: includes/functions-ur-core.php:11263
+#: includes/functions-ur-core.php:11468
 msgid "Mexican peso"
 msgstr ""
 
-#: includes/functions-ur-core.php:11264
+#: includes/functions-ur-core.php:11469
 msgid "Malaysian ringgit"
 msgstr ""
 
-#: includes/functions-ur-core.php:11265
+#: includes/functions-ur-core.php:11470
 msgid "Mozambican metical"
 msgstr ""
 
-#: includes/functions-ur-core.php:11266
+#: includes/functions-ur-core.php:11471
 msgid "Namibian dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11267
+#: includes/functions-ur-core.php:11472
 msgid "Nigerian naira"
 msgstr ""
 
-#: includes/functions-ur-core.php:11268
+#: includes/functions-ur-core.php:11473
 msgid "Nicaraguan c&oacute;rdoba"
 msgstr ""
 
-#: includes/functions-ur-core.php:11269
+#: includes/functions-ur-core.php:11474
 msgid "Norwegian krone"
 msgstr ""
 
-#: includes/functions-ur-core.php:11270
+#: includes/functions-ur-core.php:11475
 msgid "Nepalese rupee"
 msgstr ""
 
-#: includes/functions-ur-core.php:11271
+#: includes/functions-ur-core.php:11476
 msgid "New Zealand dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11272
+#: includes/functions-ur-core.php:11477
 msgid "Omani rial"
 msgstr ""
 
-#: includes/functions-ur-core.php:11273
+#: includes/functions-ur-core.php:11478
 msgid "Panamanian balboa"
 msgstr ""
 
-#: includes/functions-ur-core.php:11274
+#: includes/functions-ur-core.php:11479
 msgid "Sol"
 msgstr ""
 
-#: includes/functions-ur-core.php:11275
+#: includes/functions-ur-core.php:11480
 msgid "Papua New Guinean kina"
 msgstr ""
 
-#: includes/functions-ur-core.php:11276
+#: includes/functions-ur-core.php:11481
 msgid "Philippine peso"
 msgstr ""
 
-#: includes/functions-ur-core.php:11277
+#: includes/functions-ur-core.php:11482
 msgid "Pakistani rupee"
 msgstr ""
 
-#: includes/functions-ur-core.php:11278
+#: includes/functions-ur-core.php:11483
 msgid "Polish z&#x142;oty"
 msgstr ""
 
-#: includes/functions-ur-core.php:11279
+#: includes/functions-ur-core.php:11484
 msgid "Transnistrian ruble"
 msgstr ""
 
-#: includes/functions-ur-core.php:11280
+#: includes/functions-ur-core.php:11485
 msgid "Paraguayan guaran&iacute;"
 msgstr ""
 
-#: includes/functions-ur-core.php:11281
+#: includes/functions-ur-core.php:11486
 msgid "Qatari riyal"
 msgstr ""
 
-#: includes/functions-ur-core.php:11282
+#: includes/functions-ur-core.php:11487
 msgid "Romanian leu"
 msgstr ""
 
-#: includes/functions-ur-core.php:11283
+#: includes/functions-ur-core.php:11488
 msgid "Serbian dinar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11284
+#: includes/functions-ur-core.php:11489
 msgid "Russian ruble"
 msgstr ""
 
-#: includes/functions-ur-core.php:11285
+#: includes/functions-ur-core.php:11490
 msgid "Rwandan franc"
 msgstr ""
 
-#: includes/functions-ur-core.php:11286
+#: includes/functions-ur-core.php:11491
 msgid "Saudi riyal"
 msgstr ""
 
-#: includes/functions-ur-core.php:11287
+#: includes/functions-ur-core.php:11492
 msgid "Solomon Islands dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11288
+#: includes/functions-ur-core.php:11493
 msgid "Seychellois rupee"
 msgstr ""
 
-#: includes/functions-ur-core.php:11289
+#: includes/functions-ur-core.php:11494
 msgid "Sudanese pound"
 msgstr ""
 
-#: includes/functions-ur-core.php:11290
+#: includes/functions-ur-core.php:11495
 msgid "Swedish krona"
 msgstr ""
 
-#: includes/functions-ur-core.php:11291
+#: includes/functions-ur-core.php:11496
 msgid "Singapore dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11292
+#: includes/functions-ur-core.php:11497
 msgid "Saint Helena pound"
 msgstr ""
 
-#: includes/functions-ur-core.php:11293
+#: includes/functions-ur-core.php:11498
 msgid "Sierra Leonean leone"
 msgstr ""
 
-#: includes/functions-ur-core.php:11294
+#: includes/functions-ur-core.php:11499
 msgid "Somali shilling"
 msgstr ""
 
-#: includes/functions-ur-core.php:11295
+#: includes/functions-ur-core.php:11500
 msgid "Surinamese dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11296
+#: includes/functions-ur-core.php:11501
 msgid "South Sudanese pound"
 msgstr ""
 
-#: includes/functions-ur-core.php:11297
+#: includes/functions-ur-core.php:11502
 msgid "S&atilde;o Tom&eacute; and Pr&iacute;ncipe dobra"
 msgstr ""
 
-#: includes/functions-ur-core.php:11298
+#: includes/functions-ur-core.php:11503
 msgid "Syrian pound"
 msgstr ""
 
-#: includes/functions-ur-core.php:11299
+#: includes/functions-ur-core.php:11504
 msgid "Swazi lilangeni"
 msgstr ""
 
-#: includes/functions-ur-core.php:11300
+#: includes/functions-ur-core.php:11505
 msgid "Thai baht"
 msgstr ""
 
-#: includes/functions-ur-core.php:11301
+#: includes/functions-ur-core.php:11506
 msgid "Tajikistani somoni"
 msgstr ""
 
-#: includes/functions-ur-core.php:11302
+#: includes/functions-ur-core.php:11507
 msgid "Turkmenistan manat"
 msgstr ""
 
-#: includes/functions-ur-core.php:11303
+#: includes/functions-ur-core.php:11508
 msgid "Tunisian dinar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11304
+#: includes/functions-ur-core.php:11509
 msgid "Tongan pa&#x2bb;anga"
 msgstr ""
 
-#: includes/functions-ur-core.php:11305
+#: includes/functions-ur-core.php:11510
 msgid "Turkish lira"
 msgstr ""
 
-#: includes/functions-ur-core.php:11306
+#: includes/functions-ur-core.php:11511
 msgid "Trinidad and Tobago dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11307
+#: includes/functions-ur-core.php:11512
 msgid "New Taiwan dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11308
+#: includes/functions-ur-core.php:11513
 msgid "Tanzanian shilling"
 msgstr ""
 
-#: includes/functions-ur-core.php:11309
+#: includes/functions-ur-core.php:11514
 msgid "Ukrainian hryvnia"
 msgstr ""
 
-#: includes/functions-ur-core.php:11310
+#: includes/functions-ur-core.php:11515
 msgid "Ugandan shilling"
 msgstr ""
 
-#: includes/functions-ur-core.php:11311
+#: includes/functions-ur-core.php:11516
 msgid "United States (US) dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11312
+#: includes/functions-ur-core.php:11517
 msgid "Uruguayan peso"
 msgstr ""
 
-#: includes/functions-ur-core.php:11313
+#: includes/functions-ur-core.php:11518
 msgid "Uzbekistani som"
 msgstr ""
 
-#: includes/functions-ur-core.php:11314
+#: includes/functions-ur-core.php:11519
 msgid "Venezuelan bol&iacute;var"
 msgstr ""
 
-#: includes/functions-ur-core.php:11315
+#: includes/functions-ur-core.php:11520
 msgid "Bol&iacute;var soberano"
 msgstr ""
 
-#: includes/functions-ur-core.php:11316
+#: includes/functions-ur-core.php:11521
 msgid "Vietnamese &#x111;&#x1ed3;ng"
 msgstr ""
 
-#: includes/functions-ur-core.php:11317
+#: includes/functions-ur-core.php:11522
 msgid "Vanuatu vatu"
 msgstr ""
 
-#: includes/functions-ur-core.php:11318
+#: includes/functions-ur-core.php:11523
 msgid "Samoan t&#x101;l&#x101;"
 msgstr ""
 
-#: includes/functions-ur-core.php:11319
+#: includes/functions-ur-core.php:11524
 msgid "Central African CFA franc"
 msgstr ""
 
-#: includes/functions-ur-core.php:11320
+#: includes/functions-ur-core.php:11525
 msgid "East Caribbean dollar"
 msgstr ""
 
-#: includes/functions-ur-core.php:11321
+#: includes/functions-ur-core.php:11526
 msgid "West African CFA franc"
 msgstr ""
 
-#: includes/functions-ur-core.php:11322
+#: includes/functions-ur-core.php:11527
 msgid "CFP franc"
 msgstr ""
 
-#: includes/functions-ur-core.php:11323
+#: includes/functions-ur-core.php:11528
 msgid "Yemeni rial"
 msgstr ""
 
-#: includes/functions-ur-core.php:11324
+#: includes/functions-ur-core.php:11529
 msgid "South African rand"
 msgstr ""
 
-#: includes/functions-ur-core.php:11325
+#: includes/functions-ur-core.php:11530
 msgid "Zambian kwacha"
 msgstr ""
 
@@ -10875,7 +10871,7 @@ msgid "This is a one-time payment"
 msgstr ""
 
 #: includes/Functions/CoreFunctions.php:695
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1529
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1527
 #: modules/membership/includes/Admin/Forms/FormFields.php:93
 #: modules/membership/includes/Admin/Forms/Views/admin-membership.php:71
 msgid "PayPal"
@@ -10895,7 +10891,7 @@ msgid "%s Rule"
 msgstr ""
 
 #: includes/Functions/CoreFunctions.php:1027
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:483
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:487
 msgid "Membership Access Rule"
 msgstr ""
 
@@ -11064,25 +11060,26 @@ msgstr ""
 msgid "Please provide at least one membership."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:913
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:911
 msgid "Invalid membership type: %1$s. Only %2$s memberships are allowed based on your selection."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:950
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:948
 msgid "Memberships saved successfully."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1050
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1048
 msgid "Membership name is required."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1094
-#: modules/membership/includes/Admin/Services/MembershipService.php:625
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1092
+#: modules/membership/includes/Admin/Services/MembershipService.php:627
 msgid "Invalid membership data."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1277
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:365
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1275
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:369
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:236
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: src/content-restriction/components/settings/SettingsPanel.js:337
@@ -11091,69 +11088,73 @@ msgstr ""
 msgid "Show Message"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1520
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1518
 #: chunks/welcome.js:280
 msgid "Offline Payment"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1521
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1519
 msgid "Accept payments manually via bank transfer, check, or cash."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1530
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1528
 msgid "Accept payments via PayPal."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1545
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1543
 msgid "Accept credit card payments via Stripe."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1622
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1620
 msgid "Offline payment requires bank details."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1639
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1637
 msgid "PayPal requires an email address, client ID, and client secret."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1657
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1655
 msgid "Stripe requires test API keys configuration."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1658
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1656
 msgid "Stripe requires live API keys configuration."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1762
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1699
+msgid "Invalid Stripe API credentials. Please verify your keys."
+msgstr ""
+
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1791
 msgid "Payment settings saved successfully."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1875
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1904
 #: chunks/welcome.js:280
 msgid "Create Membership"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1880
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1909
 msgid "Visit Registration"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1945
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1974
 msgid "Success! You're all set!"
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:1985
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:2014
 msgid "Step skipped."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:2010
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:2039
 msgid "This step is not accessible with current settings."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:2020
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:2049
 msgid "Cannot skip ahead to incomplete steps."
 msgstr ""
 
-#: includes/RestApi/controllers/version1/class-ur-getting-started.php:2031
+#: includes/RestApi/controllers/version1/class-ur-getting-started.php:2060
 msgid "Navigation successful."
 msgstr ""
 
@@ -11444,8 +11445,8 @@ msgstr ""
 msgid "Twitter"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:235
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:479
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:239
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:483
 #: modules/membership/includes/Admin/Membership/Membership.php:811
 #: modules/membership/includes/Admin/Membership/Membership.php:825
 #: chunks/content-access-rules.js:1
@@ -11457,8 +11458,8 @@ msgstr ""
 msgid "Whole Site"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:243
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:476
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:247
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:480
 #: modules/membership/includes/Admin/Membership/Membership.php:808
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -11468,15 +11469,15 @@ msgstr ""
 msgid "Posts"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:247
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:251
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: src/content-restriction/components/dropdowns/ContentTypeDropdown.js:19
 msgid "Post Type"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:251
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:478
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:255
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:482
 #: modules/membership/includes/Admin/Membership/Membership.php:810
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -11485,15 +11486,15 @@ msgstr ""
 msgid "Taxonomy"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:270
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:277
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:284
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:291
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:312
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:319
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:326
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:333
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:347
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:274
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:281
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:288
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:295
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:316
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:323
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:330
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:337
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:351
 #: modules/membership/includes/Admin/Membership/Membership.php:675
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -11501,11 +11502,11 @@ msgstr ""
 msgid "is"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:275
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:279
 msgid "Login Status"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:282
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:286
 #: templates/modules/content-restriction/conditional-logic-group-template.php:24
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -11513,7 +11514,7 @@ msgstr ""
 msgid "Roles"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:289
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:293
 #: templates/modules/content-restriction/conditional-logic-group-template.php:26
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -11521,14 +11522,14 @@ msgstr ""
 msgid "User Registered Date"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:296
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:300
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: src/content-restriction/components/inputs/DateRangeInput.js:20
 msgid "Before"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:300
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:304
 #: modules/membership/includes/Admin/Membership/Membership.php:764
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -11537,18 +11538,18 @@ msgstr ""
 msgid "After"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:304
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:308
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: src/content-restriction/components/inputs/DateRangeInput.js:22
 msgid "Range"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:310
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:314
 msgid "Registration Period"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:317
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:321
 #: templates/modules/content-restriction/conditional-logic-group-template.php:38
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -11556,19 +11557,19 @@ msgstr ""
 msgid "Email Domain"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:320
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:324
 msgid "gmail.com, outlook.com"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:324
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:328
 msgid "Min. Public Posts"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:327
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:331
 msgid "10"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:331
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:335
 #: templates/modules/content-restriction/conditional-logic-group-template.php:44
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -11576,22 +11577,22 @@ msgstr ""
 msgid "Capabilities"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:338
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:342
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: src/content-restriction/utils/condition-options.js:34
 msgid "Registration Source"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:340
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:344
 msgid "via"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:345
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:349
 msgid "URM Form Field"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:369
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:373
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: src/content-restriction/components/settings/SettingsPanel.js:353
@@ -11599,7 +11600,7 @@ msgstr ""
 msgid "Redirect"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:373
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:377
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
 #: src/content-restriction/components/settings/SettingsPanel.js:362
@@ -11607,15 +11608,15 @@ msgstr ""
 msgid "Redirect to a Local Page"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:383
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:387
 msgid "Show UR Form"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:387
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:391
 msgid "Render Shortcode"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:477
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:481
 #: modules/membership/includes/Admin/Membership/Membership.php:809
 #: chunks/content-access-rules.js:1
 #: chunks/dashboard.js:1
@@ -11623,7 +11624,7 @@ msgstr ""
 msgid "Post Types"
 msgstr ""
 
-#: modules/content-restriction/admin/class-urcr-admin-assets.php:484
+#: modules/content-restriction/admin/class-urcr-admin-assets.php:488
 msgid "All content types have been added"
 msgstr ""
 
@@ -11733,12 +11734,12 @@ msgid "Nonce error. You might wanna refresh the page."
 msgstr ""
 
 #: modules/content-restriction/class-urcr-ajax.php:100
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:293
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:304
 msgid "Successfully created an Access Rule."
 msgstr ""
 
 #: modules/content-restriction/class-urcr-ajax.php:107
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:310
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:321
 msgid "Sorry! There was an unexpected error while creating the Content Access Rule."
 msgstr ""
 
@@ -11748,8 +11749,8 @@ msgstr ""
 
 #: modules/content-restriction/class-urcr-ajax.php:150
 #: modules/content-restriction/class-urcr-ajax.php:451
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:500
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:556
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:511
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:567
 msgid "Successfully saved the Access Rule."
 msgstr ""
 
@@ -11781,9 +11782,9 @@ msgstr ""
 #: modules/content-restriction/class-urcr-ajax.php:306
 #: modules/content-restriction/class-urcr-ajax.php:377
 #: modules/content-restriction/class-urcr-ajax.php:457
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:429
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:517
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:564
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:440
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:528
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:575
 msgid "Sorry! There was an unexpected error while saving the Content Access Rule."
 msgstr ""
 
@@ -11794,11 +11795,11 @@ msgstr ""
 
 #: modules/content-restriction/class-urcr-ajax.php:353
 #: modules/content-restriction/class-urcr-ajax.php:417
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:334
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:396
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:454
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:589
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:682
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:345
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:407
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:465
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:600
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:693
 msgid "Invalid rule ID."
 msgstr ""
 
@@ -11892,31 +11893,31 @@ msgstr ""
 msgid "Untitled Rule"
 msgstr ""
 
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:421
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:432
 msgid "Successfully %s the Access Rule."
 msgstr ""
 
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:600
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:611
 msgid "Membership rules cannot be duplicated."
 msgstr ""
 
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:634
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:645
 msgid "Rule duplicated successfully."
 msgstr ""
 
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:642
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:653
 msgid "Sorry! There was an unexpected error while duplicating the rule."
 msgstr ""
 
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:693
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:704
 msgid "Membership rules cannot be deleted."
 msgstr ""
 
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:713
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:724
 msgid "Rule deleted successfully."
 msgstr ""
 
-#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:721
+#: modules/content-restriction/includes/RestApi/controllers/version1/class-urcr-content-access-rules.php:732
 msgid "Sorry! There was an unexpected error while deleting the rule."
 msgstr ""
 
@@ -12085,7 +12086,7 @@ msgstr ""
 msgid "Masteriyo Courses"
 msgstr ""
 
-#: modules/masteriyo/includes/Frontend.php:153
+#: modules/masteriyo/includes/Frontend.php:233
 msgid "My Courses"
 msgstr ""
 
@@ -12093,7 +12094,7 @@ msgstr ""
 msgid "Lifetime"
 msgstr ""
 
-#: modules/masteriyo/includes/Hooks.php:214
+#: modules/masteriyo/includes/Hooks.php:227
 msgid "This course is not associated with any membership."
 msgstr ""
 
@@ -12333,7 +12334,7 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Forms/Views/admin-membership.php:170
 #: modules/membership/includes/Admin/Views/subscription-create.php:130
-#: modules/membership/includes/Templates/membership-registration-form.php:495
+#: modules/membership/includes/Templates/membership-registration-form.php:505
 msgid "Select Payment Gateway"
 msgstr ""
 
@@ -12372,7 +12373,7 @@ msgid "All Plans"
 msgstr ""
 
 #: modules/membership/includes/Admin/Members/MembersListTable.php:331
-#: templates/myaccount/membership.php:134
+#: templates/myaccount/membership.php:151
 msgid "Paid"
 msgstr ""
 
@@ -12505,101 +12506,105 @@ msgstr ""
 msgid "Remove content target"
 msgstr ""
 
-#: modules/membership/includes/Admin/Membership/Membership.php:1022
-msgctxt "user registration membership"
-msgid "Please enter a valid url for"
+#: modules/membership/includes/Admin/Membership/Membership.php:1008
+msgid "Free membership plan does not support local currency."
 msgstr ""
 
 #: modules/membership/includes/Admin/Membership/Membership.php:1023
 msgctxt "user registration membership"
-msgid "Invalid Price. The amount must be greater than 0."
+msgid "Please enter a valid url for"
 msgstr ""
 
 #: modules/membership/includes/Admin/Membership/Membership.php:1024
 msgctxt "user registration membership"
-msgid "Input Field Amount must be greater than 0."
+msgid "Invalid Price. The amount must be greater than 0."
 msgstr ""
 
 #: modules/membership/includes/Admin/Membership/Membership.php:1025
 msgctxt "user registration membership"
-msgid "Trial period must be less than subscription period."
+msgid "Input Field Amount must be greater than 0."
 msgstr ""
 
 #: modules/membership/includes/Admin/Membership/Membership.php:1026
+msgctxt "user registration membership"
+msgid "Trial period must be less than subscription period."
+msgstr ""
+
+#: modules/membership/includes/Admin/Membership/Membership.php:1027
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroups.php:66
 msgctxt "user registration membership"
 msgid "Error"
 msgstr ""
 
-#: modules/membership/includes/Admin/Membership/Membership.php:1027
+#: modules/membership/includes/Admin/Membership/Membership.php:1028
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroups.php:67
 msgctxt "user registration membership"
 msgid "Save"
 msgstr ""
 
-#: modules/membership/includes/Admin/Membership/Membership.php:1028
+#: modules/membership/includes/Admin/Membership/Membership.php:1029
 msgid "Delete Membership Plan"
 msgstr ""
 
-#: modules/membership/includes/Admin/Membership/Membership.php:1029
+#: modules/membership/includes/Admin/Membership/Membership.php:1030
 msgid "Are you sure you want to delete these memberships permanently?"
 msgstr ""
 
-#: modules/membership/includes/Admin/Membership/Membership.php:1030
+#: modules/membership/includes/Admin/Membership/Membership.php:1031
 msgid "Are you sure you want to delete this membership permanently?"
 msgstr ""
 
-#: modules/membership/includes/Admin/Membership/Membership.php:1031
+#: modules/membership/includes/Admin/Membership/Membership.php:1032
 msgid "Ok"
 msgstr ""
 
-#: modules/membership/includes/Admin/Membership/Membership.php:1034
+#: modules/membership/includes/Admin/Membership/Membership.php:1035
 msgid "Please select at least one membership."
 msgstr ""
 
-#: modules/membership/includes/Admin/Membership/Membership.php:1035
-msgid "Please select at least one payment gateway."
-msgstr ""
-
 #: modules/membership/includes/Admin/Membership/Membership.php:1036
-msgctxt "user registration membership"
-msgid "Trial period must atleast be of 1 day."
+msgid "Please select at least one payment gateway."
 msgstr ""
 
 #: modules/membership/includes/Admin/Membership/Membership.php:1037
 msgctxt "user registration membership"
-msgid "Subscription period must atleast be of 1 day."
+msgid "Trial period must atleast be of 1 day."
 msgstr ""
 
 #: modules/membership/includes/Admin/Membership/Membership.php:1038
-msgid "Paypal "
+msgctxt "user registration membership"
+msgid "Subscription period must atleast be of 1 day."
 msgstr ""
 
 #: modules/membership/includes/Admin/Membership/Membership.php:1039
-msgid "Stripe "
+msgid "Paypal "
 msgstr ""
 
 #: modules/membership/includes/Admin/Membership/Membership.php:1040
-msgid "Incomplete Stripe Gateway setup please update stripe payment settings before continuing."
+msgid "Stripe "
 msgstr ""
 
 #: modules/membership/includes/Admin/Membership/Membership.php:1041
-msgid "Incomplete Paypal Gateway setup please update paypal payment settings before continuing."
+msgid "Incomplete Stripe Gateway setup please update stripe payment settings before continuing."
 msgstr ""
 
 #: modules/membership/includes/Admin/Membership/Membership.php:1042
-msgid "Incomplete Bank Transfer setup please update bank transfer payment settings before continuing."
+msgid "Incomplete Paypal Gateway setup please update paypal payment settings before continuing."
 msgstr ""
 
 #: modules/membership/includes/Admin/Membership/Membership.php:1043
+msgid "Incomplete Bank Transfer setup please update bank transfer payment settings before continuing."
+msgstr ""
+
+#: modules/membership/includes/Admin/Membership/Membership.php:1044
 msgid "Settings for client_id and client_secret is incomplete."
 msgstr ""
 
-#: modules/membership/includes/Admin/Membership/Membership.php:1045
+#: modules/membership/includes/Admin/Membership/Membership.php:1046
 msgid "Update Order"
 msgstr ""
 
-#: modules/membership/includes/Admin/Membership/Membership.php:1059
+#: modules/membership/includes/Admin/Membership/Membership.php:1060
 msgid "Payment before login"
 msgstr ""
 
@@ -12650,7 +12655,7 @@ msgid "Subscription is already active."
 msgstr ""
 
 #: modules/membership/includes/Admin/Repositories/SubscriptionRepository.php:130
-#: modules/membership/includes/AJAX.php:2677
+#: modules/membership/includes/AJAX.php:2683
 msgid "Failed to update subscription."
 msgstr ""
 
@@ -12720,63 +12725,63 @@ msgstr ""
 msgid "Field upgrade type is required."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/MembershipService.php:399
+#: modules/membership/includes/Admin/Services/MembershipService.php:401
 msgid "Subscription type is a paid feature."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/MembershipService.php:440
+#: modules/membership/includes/Admin/Services/MembershipService.php:442
 msgid "No page selected."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/MembershipService.php:561
+#: modules/membership/includes/Admin/Services/MembershipService.php:563
 msgid "Incomplete "
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/MembershipService.php:637
+#: modules/membership/includes/Admin/Services/MembershipService.php:639
 msgid "Failed to create membership."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/MembershipService.php:677
+#: modules/membership/includes/Admin/Services/MembershipService.php:679
 msgid "active"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/MembershipService.php:679
+#: modules/membership/includes/Admin/Services/MembershipService.php:681
 msgid "trial"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/MembershipService.php:684
+#: modules/membership/includes/Admin/Services/MembershipService.php:686
 msgid "You cannot delete a membership plan if it has active users assigned to it with any of the following statuses:"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/MembershipService.php:690
+#: modules/membership/includes/Admin/Services/MembershipService.php:692
 msgid "To proceed, update all memberships to Expired or Cancelled, or assign users to a different plan . Once no active users remain, the plan can be deleted"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/MembershipService.php:788
-#: modules/membership/includes/Admin/Services/MembershipService.php:849
+#: modules/membership/includes/Admin/Services/MembershipService.php:790
+#: modules/membership/includes/Admin/Services/MembershipService.php:851
 msgid "You already have a membership plan upgrade initiated from %1$s to %2$s. Please complete the process and try again."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/MembershipService.php:803
+#: modules/membership/includes/Admin/Services/MembershipService.php:805
 msgid "You aren’t eligible to upgrade to this membership tier. Please contact site administrator"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/MembershipService.php:824
-#: modules/membership/includes/Admin/Services/MembershipService.php:925
+#: modules/membership/includes/Admin/Services/MembershipService.php:826
+#: modules/membership/includes/Admin/Services/MembershipService.php:927
 msgid "You already have purchased this membership plan."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/MembershipService.php:858
+#: modules/membership/includes/Admin/Services/MembershipService.php:860
 msgid "You aren’t eligible to upgrade to this membership tier. Please contact site administrator."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/MembershipService.php:894
+#: modules/membership/includes/Admin/Services/MembershipService.php:896
 msgid "Membership upgrade is not enabled for this plan."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/MembershipService.php:953
-#: modules/membership/includes/Admin/Services/MembershipService.php:960
-#: modules/membership/includes/Admin/Services/MembershipService.php:967
+#: modules/membership/includes/Admin/Services/MembershipService.php:955
+#: modules/membership/includes/Admin/Services/MembershipService.php:962
+#: modules/membership/includes/Admin/Services/MembershipService.php:969
 msgid "You cannot purchase this membership."
 msgstr ""
 
@@ -12817,6 +12822,22 @@ msgstr ""
 msgid "Invalid membership type (Free)."
 msgstr ""
 
+#: modules/membership/includes/Admin/Services/MembersService.php:162
+msgid "Membership is required for team pricing."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/MembersService.php:169
+msgid "Invalid team pricing selection."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/MembersService.php:176
+msgid "Invalid tier selection."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/MembersService.php:189
+msgid "Number of seats must be between %1$d and %2$d for the selected tier."
+msgstr ""
+
 #: modules/membership/includes/Admin/Services/OrderService.php:112
 msgid "%s created order for %s of %s"
 msgstr ""
@@ -12825,142 +12846,154 @@ msgstr ""
 msgid "%s created order for %s"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:426
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:105
+msgid "Paypal Payment stopped, Invalid team seats."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:129
+msgid "Paypal Payment stopped, Invalid pricing tier."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:508
 msgid "Paypal subscription cancellation failed"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:481
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:563
 msgid "Membership Upgraded successfully"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:773
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:855
 msgid "Payment failed: recipient emails do not match"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:776
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:858
 msgid "Payment failed: payment amounts do not match "
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:953
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1052
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1035
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1134
 msgid "Invalid response from paypal, check Client ID or Secret."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:963
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1045
 msgid "Paypal Subscription ID not present, please contact your administrator."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1013
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1095
 msgid "Subscription successfully canceled from paypal."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1029
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1111
 msgid "Subscription cancellation failed from Paypal."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1101
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1183
 msgid "Subscription successfully reactivated from paypal."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1108
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1190
 msgid "Subscription reactivation failed from Paypal."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1222
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1534
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1304
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1700
 msgid "Subscription ID not found"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1242
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1324
 msgid "Invalid response from PayPal, check Client ID or Secret."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1283
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1369
 msgid "Connection error with PayPal"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1312
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1398
 msgid "Subscription not found in PayPal"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1381
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1469
 msgid "Subscription payment retried and reactivated successfully"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1395
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1483
 msgid "Subscription reactivation failed"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1412
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1645
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1500
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1811
 msgid "Subscription is already active"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1426
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1656
+#: modules/membership/includes/Admin/Services/Paypal/PaypalService.php:1514
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1822
 msgid "Subscription status is %s and cannot be retried"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:225
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:199
+msgid "Stripe Payment stopped, Invalid team seats."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:226
+msgid "Stripe Payment stopped, Invalid pricing tier."
+msgstr ""
+
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:311
 msgid "Stripe Payment stopped, Total amount after discount cannot be less than One."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:245
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:331
 msgid "Stripe Payment stopped, Invalid/Empty amount"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:335
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:421
 msgid "Stripe Payment stopped, Incomplete Stripe setup."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:387
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:474
 msgid "Order not found for  "
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:399
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:503
 msgid "Stripe Payment failed."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:443
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:568
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:547
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:672
 msgid "Membership upgraded successfully."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:443
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:568
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:547
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:672
 msgid "New member has been successfully created with successful stripe payment."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:632
-msgid "Stripe subscription failed, price or product not found"
-msgstr ""
-
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:946
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1112
 msgid "Payment requires additional verification."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1098
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1108
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1264
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1274
 msgid "Subscription reactivated successfully."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1133
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1299
 msgid "Error reactivating the stripe subscription."
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1227
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1393
 msgid "Generated with stripe webhook"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1563
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1729
 msgid "Subscription not found in Stripe"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1600
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1766
 msgid "Subscription payment retried successfully"
 msgstr ""
 
-#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1629
+#: modules/membership/includes/Admin/Services/Stripe/StripeService.php:1795
 msgid "Subscription retry did not resolve the issue"
 msgstr ""
 
@@ -12970,7 +13003,7 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:464
 #: modules/membership/includes/Admin/Services/SubscriptionService.php:474
-#: modules/membership/includes/AJAX.php:1996
+#: modules/membership/includes/AJAX.php:2003
 msgid "Membership upgrade process already initiated."
 msgstr ""
 
@@ -13048,7 +13081,7 @@ msgid "Subscription created successfully."
 msgstr ""
 
 #: modules/membership/includes/Admin/Subscriptions/Subscriptions.php:161
-#: modules/membership/includes/AJAX.php:2696
+#: modules/membership/includes/AJAX.php:2702
 msgid "Subscription updated successfully."
 msgstr ""
 
@@ -13339,6 +13372,7 @@ msgstr ""
 #: modules/membership/includes/Admin/Views/subscription-create.php:78
 #: modules/payment-history/Views/orders-create.php:69
 #: modules/payment-history/Views/orders-create.php:77
+#: src/blocks/blocks/membership-buy-now/Edit.js:282
 msgid "Membership Plan"
 msgstr ""
 
@@ -13356,7 +13390,7 @@ msgid "Payment Gateway"
 msgstr ""
 
 #: modules/membership/includes/Admin/Views/subscription-edit.php:12
-#: modules/membership/includes/AJAX.php:2580
+#: modules/membership/includes/AJAX.php:2586
 msgid "Subscription not found."
 msgstr ""
 
@@ -13407,8 +13441,8 @@ msgstr ""
 
 #: modules/membership/includes/Admin/Views/subscription-edit.php:252
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:113
-#: modules/membership/includes/Templates/membership-registration-form.php:477
-#: modules/membership/includes/Templates/membership-registration-form.php:480
+#: modules/membership/includes/Templates/membership-registration-form.php:487
+#: modules/membership/includes/Templates/membership-registration-form.php:490
 #: modules/payment-history/Admin/OrdersListTable.php:227
 #: modules/payment-history/Views/payment-edit.php:222
 #: templates/dashboard-widget.php:57
@@ -13498,390 +13532,390 @@ msgstr ""
 msgid "Payment method is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:251
-#: modules/membership/includes/AJAX.php:1322
+#: modules/membership/includes/AJAX.php:254
+#: modules/membership/includes/AJAX.php:1329
 msgid "Invalid User"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:265
+#: modules/membership/includes/AJAX.php:268
 msgid "New member has been successfully created."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:276
+#: modules/membership/includes/AJAX.php:282
 msgid "Sorry! There was an unexpected error while registering the user . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:294
+#: modules/membership/includes/AJAX.php:300
 msgid "Sorry, You do not have permission to create membership"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:355
+#: modules/membership/includes/AJAX.php:361
 msgid "Successfully created the membership . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:363
-#: modules/membership/includes/AJAX.php:526
-#: modules/membership/includes/AJAX.php:857
+#: modules/membership/includes/AJAX.php:369
+#: modules/membership/includes/AJAX.php:532
+#: modules/membership/includes/AJAX.php:863
 msgid "Sorry! There was an unexpected error while saving the membership data . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:378
-#: modules/membership/includes/AJAX.php:620
+#: modules/membership/includes/AJAX.php:384
+#: modules/membership/includes/AJAX.php:626
 msgid "Field membership_id is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:385
-#: modules/membership/includes/AJAX.php:834
+#: modules/membership/includes/AJAX.php:391
+#: modules/membership/includes/AJAX.php:840
 msgid "Sorry, You do not have permission to edit membership"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:518
+#: modules/membership/includes/AJAX.php:524
 msgid "Successfully updated the membership data."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:539
+#: modules/membership/includes/AJAX.php:545
 msgid "You do not have permission to view membership details."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:545
+#: modules/membership/includes/AJAX.php:551
 msgid "Membership ID is missing."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:551
+#: modules/membership/includes/AJAX.php:557
 msgid "Something went wrong."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:610
-#: modules/membership/includes/AJAX.php:652
-#: modules/membership/includes/AJAX.php:695
-#: modules/membership/includes/AJAX.php:746
-#: modules/membership/includes/AJAX.php:792
+#: modules/membership/includes/AJAX.php:616
+#: modules/membership/includes/AJAX.php:658
+#: modules/membership/includes/AJAX.php:701
+#: modules/membership/includes/AJAX.php:752
+#: modules/membership/includes/AJAX.php:798
 msgid "Permission not allowed."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:632
+#: modules/membership/includes/AJAX.php:638
 msgid "Membership deleted successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:661
+#: modules/membership/includes/AJAX.php:667
 msgid "Field membership_ids is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:674
+#: modules/membership/includes/AJAX.php:680
 msgid "Memberships deleted successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:680
+#: modules/membership/includes/AJAX.php:686
 msgid "Sorry! There was an unexpected error while deleting the memberships."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:705
+#: modules/membership/includes/AJAX.php:711
 msgid "Field membership_group_id is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:716
-#: modules/membership/includes/AJAX.php:731
+#: modules/membership/includes/AJAX.php:722
+#: modules/membership/includes/AJAX.php:737
 msgid "Sorry! There was an unexpected error while deleting the membership group."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:725
+#: modules/membership/includes/AJAX.php:731
 msgid "Membership Group deleted successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:755
+#: modules/membership/includes/AJAX.php:761
 msgid "Field membership_group_ids is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:772
+#: modules/membership/includes/AJAX.php:778
 msgid "Memberships Groups deleted successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:778
+#: modules/membership/includes/AJAX.php:784
 msgid "Sorry! There was an unexpected error while deleting the membership groups."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:801
+#: modules/membership/includes/AJAX.php:807
 msgid "Field members_ids is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:813
+#: modules/membership/includes/AJAX.php:819
 msgid "Members deleted successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:819
+#: modules/membership/includes/AJAX.php:825
 msgid "Sorry! There was an unexpected error while deleting the selected members."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:851
+#: modules/membership/includes/AJAX.php:857
 msgid "Successfully updated the membership status . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:872
+#: modules/membership/includes/AJAX.php:878
 msgid "Sorry, You do not have permission to update membership order"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:881
+#: modules/membership/includes/AJAX.php:887
 msgid "Security check failed. Please refresh the page and try again."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:890
+#: modules/membership/includes/AJAX.php:896
 msgid "Invalid membership order data."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:910
+#: modules/membership/includes/AJAX.php:916
 msgid "No valid membership IDs provided."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:921
+#: modules/membership/includes/AJAX.php:927
 msgid "Membership order updated successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:927
+#: modules/membership/includes/AJAX.php:933
 msgid "Failed to update membership order."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:943
-#: modules/membership/includes/AJAX.php:980
+#: modules/membership/includes/AJAX.php:949
+#: modules/membership/includes/AJAX.php:986
 msgid "Sorry, You do not have permission to create users"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:957
+#: modules/membership/includes/AJAX.php:963
 msgid "New member has been successfully created. "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:961
+#: modules/membership/includes/AJAX.php:967
 msgid "Sorry! There was an unexpected error while saving the members data . "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:994
+#: modules/membership/includes/AJAX.php:1000
 msgid "Member has been successfully updated. "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:998
+#: modules/membership/includes/AJAX.php:1004
 msgid "Sorry! There was an unexpected error while updating the members data. "
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1042
+#: modules/membership/includes/AJAX.php:1048
 msgid "Field member_id is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1049
+#: modules/membership/includes/AJAX.php:1055
 msgid "Field form_response is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1066
-#: modules/membership/includes/AJAX.php:1294
+#: modules/membership/includes/AJAX.php:1072
+#: modules/membership/includes/AJAX.php:1301
 msgid "Invalid Request."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1120
+#: modules/membership/includes/AJAX.php:1126
 msgid "Membership upgraded successfully"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1126
+#: modules/membership/includes/AJAX.php:1132
 msgid "Membership purchased successfully"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1132
+#: modules/membership/includes/AJAX.php:1138
 msgid "Membership has been successfully renewed."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1170
-#: modules/membership/includes/AJAX.php:1505
-#: modules/membership/includes/AJAX.php:1595
-#: modules/membership/includes/AJAX.php:1681
-#: modules/membership/includes/AJAX.php:1684
-#: modules/membership/includes/AJAX.php:1718
+#: modules/membership/includes/AJAX.php:1176
+#: modules/membership/includes/AJAX.php:1512
+#: modules/membership/includes/AJAX.php:1602
+#: modules/membership/includes/AJAX.php:1688
+#: modules/membership/includes/AJAX.php:1691
+#: modules/membership/includes/AJAX.php:1725
 msgid "Wrong request."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1180
+#: modules/membership/includes/AJAX.php:1186
 msgid "User's subscription not found."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1267
+#: modules/membership/includes/AJAX.php:1273
 msgid "Something went wrong while cancelling your subscription. Please contact support"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1345
+#: modules/membership/includes/AJAX.php:1352
 msgid "Sorry, you do not have permission to create subscription"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1357
+#: modules/membership/includes/AJAX.php:1364
 msgid "Please fill in all required fields."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1371
+#: modules/membership/includes/AJAX.php:1378
 msgid "Invalid membership plan selected."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1381
+#: modules/membership/includes/AJAX.php:1388
 msgid "Expiry date is required for recurring subscription plans."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1420
+#: modules/membership/includes/AJAX.php:1427
 msgid "Failed to create subscription."
 msgstr ""
 
 #. translators: %s: Current user display name
-#: modules/membership/includes/AJAX.php:1434
+#: modules/membership/includes/AJAX.php:1441
 msgid "Recurring subscription created by %s"
 msgstr ""
 
 #. translators: %s: Current user display name
-#: modules/membership/includes/AJAX.php:1439
+#: modules/membership/includes/AJAX.php:1446
 msgid "One-time membership created by %s"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1468
+#: modules/membership/includes/AJAX.php:1475
 msgid "Recurring subscription and order created successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1469
+#: modules/membership/includes/AJAX.php:1476
 msgid "Recurring subscription created successfully, but order creation failed."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1471
+#: modules/membership/includes/AJAX.php:1478
 msgid "One-time membership and order created successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1472
+#: modules/membership/includes/AJAX.php:1479
 msgid "One-time membership created successfully, but order creation failed."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1541
-#: modules/membership/includes/AJAX.php:1560
+#: modules/membership/includes/AJAX.php:1548
+#: modules/membership/includes/AJAX.php:1567
 msgid "Membership reactivated successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1564
+#: modules/membership/includes/AJAX.php:1571
 msgid "Failed to reactivate membership."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1574
+#: modules/membership/includes/AJAX.php:1581
 msgid "Membership details not found. Please contact site administrator."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1581
+#: modules/membership/includes/AJAX.php:1588
 msgid "Cannot reactivate this membership. Please contact site administrator."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1598
+#: modules/membership/includes/AJAX.php:1605
 msgid "Field list type is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1613
+#: modules/membership/includes/AJAX.php:1620
 msgid "No membership is available for the selected group."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1634
-#: modules/membership/includes/AJAX.php:1675
-#: modules/membership/includes/AJAX.php:1712
+#: modules/membership/includes/AJAX.php:1641
+#: modules/membership/includes/AJAX.php:1682
+#: modules/membership/includes/AJAX.php:1719
 msgid "Sorry, You do not have permission to create membership groups."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1641
+#: modules/membership/includes/AJAX.php:1648
 msgid "Field membership_groups_data is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1660
+#: modules/membership/includes/AJAX.php:1667
 msgid "Membership Groups saved successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1693
+#: modules/membership/includes/AJAX.php:1700
 msgid "Invalid post type"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1742
-#: modules/membership/includes/AJAX.php:1796
+#: modules/membership/includes/AJAX.php:1749
+#: modules/membership/includes/AJAX.php:1803
 msgid "Membership does not exist"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1771
+#: modules/membership/includes/AJAX.php:1778
 msgid "No upgradable Memberships."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1813
+#: modules/membership/includes/AJAX.php:1820
 msgid "Selected membership details not found."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1835
+#: modules/membership/includes/AJAX.php:1842
 msgid "Field current_subscription_id is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1842
-#: modules/membership/includes/AJAX.php:2077
+#: modules/membership/includes/AJAX.php:1849
+#: modules/membership/includes/AJAX.php:2084
 msgid "Field selected_membership_id is required"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:1909
+#: modules/membership/includes/AJAX.php:1916
 msgid "User details added while upgrading."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2057
+#: modules/membership/includes/AJAX.php:2064
 msgid "Something went wrong while upgrading membership."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2148
+#: modules/membership/includes/AJAX.php:2155
 msgid "User details added while purchasing membership."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2312
+#: modules/membership/includes/AJAX.php:2318
 msgid "Membership purchase process already initiated."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2347
+#: modules/membership/includes/AJAX.php:2353
 msgid "Something went wrong while purchasing membership."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2373
+#: modules/membership/includes/AJAX.php:2379
 msgid "Scheduled membership has been cancelled successfully."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2379
-#: modules/membership/includes/AJAX.php:2547
+#: modules/membership/includes/AJAX.php:2385
+#: modules/membership/includes/AJAX.php:2553
 msgid "Something went wrong while cancelling membership."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2473
+#: modules/membership/includes/AJAX.php:2479
 msgid "User details added while renewing."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2556
+#: modules/membership/includes/AJAX.php:2562
 msgid "Sorry, you do not have permission to update subscription"
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2569
+#: modules/membership/includes/AJAX.php:2575
 msgid "Subscription ID is required."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2607
+#: modules/membership/includes/AJAX.php:2613
 msgid "Trial start date cannot be after trial end date."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2620
+#: modules/membership/includes/AJAX.php:2626
 msgid "Trial end date cannot exceed expiry date."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2633
+#: modules/membership/includes/AJAX.php:2639
 msgid "Expiry date cannot be less than trial start date."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2708
-#: modules/membership/includes/AJAX.php:2712
+#: modules/membership/includes/AJAX.php:2714
+#: modules/membership/includes/AJAX.php:2718
 msgid "You do not have permission to change membership details."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2750
-#: modules/membership/includes/AJAX.php:2760
+#: modules/membership/includes/AJAX.php:2756
+#: modules/membership/includes/AJAX.php:2766
 msgid "Please select memberships."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2786
+#: modules/membership/includes/AJAX.php:2792
 msgid "Something went wrong. Please refresh the page and try again."
 msgstr ""
 
-#: modules/membership/includes/AJAX.php:2802
+#: modules/membership/includes/AJAX.php:2808
 msgid "Currency is invalid."
 msgstr ""
 
@@ -14215,7 +14249,7 @@ msgid "Purchase Membership"
 msgstr ""
 
 #: modules/membership/includes/Frontend/Frontend.php:249
-#: templates/myaccount/membership.php:211
+#: templates/myaccount/membership.php:228
 msgid "Renew Membership"
 msgstr ""
 
@@ -14287,8 +14321,8 @@ msgid "Tax Amount"
 msgstr ""
 
 #: modules/membership/includes/Templates/Emails/payment-successful-email.php:73
-#: modules/membership/includes/Templates/membership-registration-form.php:410
-#: modules/membership/includes/Templates/membership-registration-form.php:418
+#: modules/membership/includes/Templates/membership-registration-form.php:420
+#: modules/membership/includes/Templates/membership-registration-form.php:428
 msgid "Coupon"
 msgstr ""
 
@@ -14343,12 +14377,12 @@ msgid "%1$s / %2$s %3$s"
 msgstr ""
 
 #: modules/membership/includes/Templates/membership-registration-form.php:288
-#: modules/membership/includes/Templates/membership-registration-form.php:362
+#: modules/membership/includes/Templates/membership-registration-form.php:357
 msgid "%1$s / seat for %2$s %3$s"
 msgstr ""
 
 #: modules/membership/includes/Templates/membership-registration-form.php:295
-#: modules/membership/includes/Templates/membership-registration-form.php:369
+#: modules/membership/includes/Templates/membership-registration-form.php:364
 msgid "%s / seat"
 msgstr ""
 
@@ -14356,46 +14390,46 @@ msgstr ""
 msgid "%s seats included"
 msgstr ""
 
-#: modules/membership/includes/Templates/membership-registration-form.php:348
-msgid "Number of seats"
-msgstr ""
-
-#: modules/membership/includes/Templates/membership-registration-form.php:349
-msgid "No. of seats"
-msgstr ""
-
-#: modules/membership/includes/Templates/membership-registration-form.php:356
+#: modules/membership/includes/Templates/membership-registration-form.php:351
 msgid "%1$d - %2$d seats"
 msgstr ""
 
-#: modules/membership/includes/Templates/membership-registration-form.php:394
+#: modules/membership/includes/Templates/membership-registration-form.php:387
+msgid "Number of seats"
+msgstr ""
+
+#: modules/membership/includes/Templates/membership-registration-form.php:388
+msgid "No. of seats"
+msgstr ""
+
+#: modules/membership/includes/Templates/membership-registration-form.php:404
 msgid "No membership's group selected."
 msgstr ""
 
-#: modules/membership/includes/Templates/membership-registration-form.php:415
+#: modules/membership/includes/Templates/membership-registration-form.php:425
 msgid "coupon"
 msgstr ""
 
-#: modules/membership/includes/Templates/membership-registration-form.php:425
+#: modules/membership/includes/Templates/membership-registration-form.php:435
 msgid "Apply Coupon"
 msgstr ""
 
-#: modules/membership/includes/Templates/membership-registration-form.php:439
-#: modules/membership/includes/Templates/membership-registration-form.php:442
+#: modules/membership/includes/Templates/membership-registration-form.php:449
+#: modules/membership/includes/Templates/membership-registration-form.php:452
 msgid "Sub Total"
 msgstr ""
 
-#: modules/membership/includes/Templates/membership-registration-form.php:452
-#: modules/membership/includes/Templates/membership-registration-form.php:455
+#: modules/membership/includes/Templates/membership-registration-form.php:462
+#: modules/membership/includes/Templates/membership-registration-form.php:465
 msgid "Tax"
 msgstr ""
 
-#: modules/membership/includes/Templates/membership-registration-form.php:465
-#: modules/membership/includes/Templates/membership-registration-form.php:468
+#: modules/membership/includes/Templates/membership-registration-form.php:475
+#: modules/membership/includes/Templates/membership-registration-form.php:478
 msgid "Coupons"
 msgstr ""
 
-#: modules/membership/includes/Templates/membership-registration-form.php:535
+#: modules/membership/includes/Templates/membership-registration-form.php:545
 msgid "Credit Card"
 msgstr ""
 
@@ -15007,15 +15041,15 @@ msgstr ""
 msgid "Terms"
 msgstr ""
 
-#: templates/myaccount/membership.php:96
+#: templates/myaccount/membership.php:113
 msgid "View Bank Info"
 msgstr ""
 
-#: templates/myaccount/membership.php:136
+#: templates/myaccount/membership.php:153
 msgid "In Active"
 msgstr ""
 
-#: templates/myaccount/membership.php:188
+#: templates/myaccount/membership.php:205
 msgid "Change Plan"
 msgstr ""
 
@@ -15254,6 +15288,7 @@ msgid "Configure groups from here"
 msgstr ""
 
 #: chunks/blocks.js:280
+#: src/blocks/blocks/membership-buy-now/Edit.js:300
 #: src/blocks/blocks/membership-listing/Edit.js:397
 msgid "Open in a new tab"
 msgstr ""
@@ -15411,17 +15446,17 @@ msgid "Footer Content"
 msgstr ""
 
 #: chunks/blocks.js:280
-#: src/blocks/blocks/membership-buy-now/Edit.js:300
+#: src/blocks/blocks/membership-buy-now/Edit.js:347
 msgid "Text Hover"
 msgstr ""
 
 #: chunks/blocks.js:280
-#: src/blocks/blocks/membership-buy-now/Edit.js:308
+#: src/blocks/blocks/membership-buy-now/Edit.js:355
 msgid "Background Hover"
 msgstr ""
 
 #: chunks/blocks.js:280
-#: src/blocks/blocks/membership-buy-now/Edit.js:266
+#: src/blocks/blocks/membership-buy-now/Edit.js:268
 msgid "Loading memberships…"
 msgstr ""
 
@@ -15909,7 +15944,7 @@ msgstr ""
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:129
 #: src/dashboard/screens/SiteAssistant/components/MembershipField.js:104
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:72
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:60
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:65
 msgid "Skipped"
 msgstr ""
 
@@ -15926,14 +15961,14 @@ msgstr ""
 #: chunks/dashboard.js:280
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:308
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:298
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:222
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:227
 msgid "Skipping..."
 msgstr ""
 
 #: chunks/dashboard.js:280
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:309
 #: src/dashboard/screens/SiteAssistant/components/PaymentSetup.js:299
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:223
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:228
 msgid "Skip Setup"
 msgstr ""
 
@@ -16029,47 +16064,47 @@ msgstr ""
 
 #: chunks/dashboard.js:280
 #: src/dashboard/screens/SiteAssistant/components/DefaultWordPressLogin.js:154
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:85
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:90
 msgid "Failed to skip settings. Please try again."
 msgstr ""
 
 #: chunks/dashboard.js:280
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:124
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:129
 msgid "Spam Protection"
 msgstr ""
 
 #: chunks/dashboard.js:280
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:147
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:152
 msgid "Set up protection against spam registrations. We recommend enabling reCaptcha v2."
 msgstr ""
 
 #: chunks/dashboard.js:280
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:173
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:178
 msgid "reCaptcha v2"
 msgstr ""
 
 #: chunks/dashboard.js:280
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:176
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:181
 msgid "Enable Google reCaptcha protection"
 msgstr ""
 
 #: chunks/dashboard.js:280
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:188
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:193
 msgid "Configure Settings"
 msgstr ""
 
 #: chunks/dashboard.js:280
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:196
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:201
 msgid "You can also set up other spam protection features from "
 msgstr ""
 
 #: chunks/dashboard.js:280
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:206
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:211
 msgid "here"
 msgstr ""
 
 #: chunks/dashboard.js:280
-#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:63
+#: src/dashboard/screens/SiteAssistant/components/SpamProtection.js:68
 msgid "Spam protection setting has been acknowledged and skipped."
 msgstr ""
 
@@ -17091,6 +17126,10 @@ msgstr ""
 
 #: src/blocks/blocks/membership-buy-now/components/JustifyContentControl.jsx:23
 msgid "JUSTIFICATION"
+msgstr ""
+
+#: src/blocks/blocks/membership-buy-now/Edit.js:286
+msgid "Select a membership..."
 msgstr ""
 
 #: src/dashboard/components/Header/Header.js:148
