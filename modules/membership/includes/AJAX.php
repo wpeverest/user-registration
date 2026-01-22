@@ -229,8 +229,11 @@ class AJAX {
 		$transaction_id          = isset( $response['transaction_id'] ) ? $response['transaction_id'] : 0;
 		$data['member_id']       = $member_id;
 		$data['subscription_id'] = isset( $response['subscription_id'] ) ? $response['subscription_id'] : 0;
-		$data['email']           = $response['member_email'];
-		$pg_data                 = array();
+		if ( ur_check_module_activation( 'team' ) ) {
+			$data['team_id'] = ! empty( $response['team_id'] ) ? $response['team_id'] : 0;
+		}
+		$data['email'] = $response['member_email'];
+		$pg_data       = array();
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
 			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
 
@@ -265,6 +268,9 @@ class AJAX {
 					'message'        => esc_html__( 'New member has been successfully created.', 'user-registration' ),
 				)
 			);
+			if ( ur_check_module_activation( 'team' ) ) {
+				$response['team_id'] = absint( $data['team_id'] );
+			}
 			if ( 'free' !== $data['payment_method'] ) {
 				$response['pg_data'] = $pg_data;
 			}
@@ -1056,7 +1062,7 @@ class AJAX {
 		$membership_process     = urm_get_membership_process( $member_id );
 		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
 		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( $_POST['current_membership_id'] ) : 0;
-		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
+		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] ) && empty( absint( $_POST['team_id'] ) );
 		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
 		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $current_membership_id, $membership_process['renew'] );
 
@@ -1285,8 +1291,9 @@ class AJAX {
 		$selected_membership_id = isset( $_POST['selected_membership_id'] ) && '' !== $_POST['selected_membership_id'] ? absint( $_POST['selected_membership_id'] ) : 0;
 		$current_membership_id  = isset( $_POST['current_membership_id'] ) && '' !== $_POST['current_membership_id'] ? absint( $_POST['current_membership_id'] ) : 0;
 		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
-		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
+		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] ) && empty( absint( $_POST['team_id'] ) );
 		$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $current_membership_id, $membership_process['renew'] );
+		$team_id                = ! empty( $_POST['team_id'] ) ? absint( $_POST['team_id'] ) : 0;
 
 		if ( ! $is_user_created && ! $is_upgrading && ! $is_renewing && ! $is_purchasing_multiple ) {
 					wp_send_json_error(
@@ -1304,7 +1311,7 @@ class AJAX {
 		}
 		$stripe_service      = new StripeService();
 		$form_response       = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id, $is_upgrading );
+		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id, $is_upgrading, $team_id );
 
 		if ( $stripe_subscription['status'] ) {
 			$subscription_status = isset( $stripe_subscription['subscription']->status )
@@ -1890,7 +1897,7 @@ class AJAX {
 						}
 					);
 
-					$form_skippable_fields             = wp_list_pluck( wp_list_pluck( $form_skippable_fields, 'general_setting' ), 'field_name' );
+					$form_skippable_fields = wp_list_pluck( wp_list_pluck( $form_skippable_fields, 'general_setting' ), 'field_name' );
 
 					return array_unique(
 						array_merge( $skippable_fields, $form_skippable_fields )
@@ -2085,11 +2092,11 @@ class AJAX {
 			$user_id      = get_current_user_id();
 			$form_id      = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : ur_get_form_id_by_userid( $user_id );
 
-			if( isset( $_POST['type']) && 'register' === sanitize_text_field( $_POST['type'] ) ){
+			if ( isset( $_POST['type'] ) && 'register' === sanitize_text_field( $_POST['type'] ) ) {
 				update_user_meta( $user_id, 'ur_form_id', $form_id );
 			}
 
-			$profile      = user_registration_form_data( $user_id, $form_id );
+			$profile = user_registration_form_data( $user_id, $form_id );
 
 			foreach ( $form_data as $data ) {
 				$single_field[ 'user_registration_' . $data->field_name ] = isset( $data->value ) ? $data->value : '';
@@ -2130,7 +2137,7 @@ class AJAX {
 						}
 					);
 
-					$form_skippable_fields             = wp_list_pluck( wp_list_pluck( $form_skippable_fields, 'general_setting' ), 'field_name' );
+					$form_skippable_fields = wp_list_pluck( wp_list_pluck( $form_skippable_fields, 'general_setting' ), 'field_name' );
 
 					return array_unique(
 						array_merge( $skippable_fields, $form_skippable_fields )
@@ -2179,7 +2186,7 @@ class AJAX {
 			$data['coupon'] = sanitize_text_field( $_POST['coupon'] );
 		}
 
-		if( isset( $_POST['type']) && 'multiple' === sanitize_text_field( $_POST['type'] ) ){
+		if ( isset( $_POST['type'] ) && 'multiple' === sanitize_text_field( $_POST['type'] ) ) {
 			$subscription_service = new SubscriptionService();
 			$status               = $subscription_service->can_purchase_multiple( $data );
 
@@ -2191,7 +2198,6 @@ class AJAX {
 				);
 			}
 		}
-
 
 		// Get membership type for logging
 		$membership_repository = new MembershipRepository();
@@ -2454,7 +2460,7 @@ class AJAX {
 						}
 					);
 
-					$form_skippable_fields             = wp_list_pluck( wp_list_pluck( $form_skippable_fields, 'general_setting' ), 'field_name' );
+					$form_skippable_fields = wp_list_pluck( wp_list_pluck( $form_skippable_fields, 'general_setting' ), 'field_name' );
 
 					return array_unique(
 						array_merge( $skippable_fields, $form_skippable_fields )
@@ -2679,8 +2685,8 @@ class AJAX {
 			);
 		} else {
 			if ( $expiry_date_changed && ! empty( $existing_subscription['user_id'] ) && ! empty( $existing_subscription['item_id'] ) ) {
-				$user_id       = absint( $existing_subscription['user_id'] );
-				$membership_id = absint( $existing_subscription['item_id'] );
+				$user_id         = absint( $existing_subscription['user_id'] );
+				$membership_id   = absint( $existing_subscription['item_id'] );
 				$new_expiry_date = isset( $update_data['expiry_date'] ) ? $update_data['expiry_date'] : '';
 
 				if ( ! empty( $new_expiry_date ) ) {

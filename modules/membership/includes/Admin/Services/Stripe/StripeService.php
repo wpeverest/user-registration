@@ -147,12 +147,81 @@ class StripeService {
 	}
 
 	public function process_stripe_payment( $payment_data, $response_data ) {
-		$currency        = get_option( 'user_registration_payment_currency', 'USD' );
-		$amount          = $payment_data['amount'];
-		$user_email      = $response_data['email'];
-		$member_id       = $response_data['member_id'];
-		$username        = ! empty( $response_data['username'] ) ? $response_data['username'] : '';
-		$membership_type = $payment_data['type'] ?? 'unknown';
+		$currency   = get_option( 'user_registration_payment_currency', 'USD' );
+		$user_email = $response_data['email'];
+		$member_id  = $response_data['member_id'];
+		$username   = ! empty( $response_data['username'] ) ? $response_data['username'] : '';
+		$amount     = 0;
+		$team_id    = $payment_data['team_id'] ?? 0;
+		if ( $team_id && ! empty( $payment_data['team_data'] ) ) {
+			$team_data  = $payment_data['team_data'];
+			$seat_model = $team_data['seat_model'] ?? '';
+
+			if ( 'fixed' === $seat_model ) {
+				$amount = (float) $team_data['team_price'];
+			} else {
+				$team_seats = absint( $team_data['team_seats'] ?? 0 );
+				if ( $team_seats <= 0 ) {
+					PaymentGatewayLogging::log_error(
+						'stripe',
+						'Payment stopped - Invalid team seats',
+						array(
+							'error_code' => 'INVALID_TEAM_SEATS',
+							'amount'     => $amount,
+							'member_id'  => $member_id,
+						)
+					);
+					if ( empty( $payment_data['upgrade'] ) ) {
+						wp_delete_user( absint( $member_id ) );
+						if ( $team_id ) {
+							wp_delete_post( absint( $team_id ) );
+						}
+					}
+					wp_send_json_error(
+						array(
+							'message' => __( 'Stripe Payment stopped, Invalid team seats.', 'user-registration' ),
+						)
+					);
+				}
+				$pricing_model = $team_data['pricing_model'] ?? '';
+				if ( 'per_seat' === $pricing_model ) {
+					$amount = $team_seats * (float) $team_data['per_seat_price'];
+				} else {
+					$tier = $payment_data['team_tier_info'] ?? '';
+					if ( ! $tier ) {
+						PaymentGatewayLogging::log_error(
+							'stripe',
+							'Payment stopped - Invalid pricing tier',
+							array(
+								'error_code' => 'INVALID_TIER',
+								'amount'     => $amount,
+								'member_id'  => $member_id,
+							)
+						);
+						if ( empty( $payment_data['upgrade'] ) ) {
+							wp_delete_user( absint( $member_id ) );
+							if ( $team_id ) {
+								wp_delete_post( absint( $team_id ) );
+							}
+						}
+						wp_send_json_error(
+							array(
+								'message' => __( 'Stripe Payment stopped, Invalid pricing tier.', 'user-registration' ),
+							)
+						);
+					}
+					$amount = $team_seats * (float) $payment_data['team_tier_info']['tier_per_seat_price'];
+				}
+			}
+
+			$membership_type = $team_data['team_plan_type'] ?? 'unknown';
+			if ( 'one-time' === $membership_type ) {
+				$membership_type = 'paid';
+			}
+		} else {
+			$amount          = $payment_data['amount'];
+			$membership_type = $payment_data['type'] ?? 'unknown';
+		}
 
 		$local_currency = ! empty( $response_data['switched_currency'] ) ? $response_data['switched_currency'] : '';
 		$ur_zone_id     = ! empty( $response_data['urm_zone_id'] ) ? $response_data['urm_zone_id'] : '';
@@ -186,7 +255,7 @@ class StripeService {
 		);
 
 		$response = array(
-			'type' => $payment_data['type'],
+			'type' => $membership_type,
 		);
 
 		if ( isset( $payment_data['upgrade'] ) && $payment_data['upgrade'] ) {
@@ -278,7 +347,7 @@ class StripeService {
 			if ( ! empty( $customer ) ) {
 				update_user_meta( $member_id, 'ur_payment_customer', $customer->id );
 			}
-			if ( 'paid' === $payment_data['type'] ) {
+			if ( 'paid' === $membership_type ) {
 				PaymentGatewayLogging::log_api_request(
 					'stripe',
 					'Creating payment intent',
@@ -348,6 +417,7 @@ class StripeService {
 		$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $selected_membership_id, $membership_process['multiple'] );
 		$is_upgrading           = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $current_membership_id ] );
 		$transaction_id         = $data['payment_result']['paymentIntent']['id'] ?? '';
+		$team_id                = isset( $_POST['team_id'] ) && '' !== $_POST['team_id'] ? absint( $_POST['team_id'] ) : 0;
 
 		if ( empty( $transaction_id ) ) {
 			$transaction_id = $data['payment_result']['latest_invoice']['payment_intent']['id'] ?? '';
@@ -391,7 +461,24 @@ class StripeService {
 
 		$membership       = $this->membership_repository->get_single_membership_by_ID( $latest_order['item_id'] );
 		$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
-		$membership_type  = $membership_metas['type'] ?? 'unknown';
+		if ( $team_id ) {
+			$team_data = get_post_meta( $team_id, 'urm_team_data', true );
+			if ( ! $team_data ) {
+				PaymentGatewayLogging::log_error(
+					'stripe',
+					'Invalid team data',
+					array(
+						'error_code' => 'INVALID_TEAM_DATA',
+						'member_id'  => $member_id,
+					)
+				);
+
+				return $response;
+			}
+			$membership_type = $team_data['team_plan_type'] ?? 'unknown';
+		} else {
+			$membership_type = $membership_metas['type'] ?? 'unknown';
+		}
 
 		if ( 'failed' === $payment_status ) {
 			$is_renewing = ! empty( $membership_process['renew'] ) && in_array( $latest_order['item_id'], $membership_process['renew'] );
@@ -570,7 +657,7 @@ class StripeService {
 		);
 	}
 
-	public function create_subscription( $customer_id, $payment_method_id, $member_id, $is_upgrading ) {
+	public function create_subscription( $customer_id, $payment_method_id, $member_id, $is_upgrading, $team_id ) {
 
 		$member_order     = $this->members_orders_repository->get_member_orders( $member_id );
 		$membership       = $this->membership_repository->get_single_membership_by_ID( $member_order['item_id'] );
@@ -584,7 +671,46 @@ class StripeService {
 		$membership_process = urm_get_membership_process( $member_id );
 		$is_renewing        = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'] );
 
-		$membership_type = $membership_metas['type'] ?? 'unknown';
+		$response = array(
+			'status' => false,
+		);
+
+		if ( $team_id ) {
+			$team_data = get_post_meta( $team_id, 'urm_team_data', true );
+			if ( ! $team_data ) {
+				PaymentGatewayLogging::log_error(
+					'stripe',
+					'Invalid team data',
+					array(
+						'error_code' => 'INVALID_TEAM_DATA',
+						'member_id'  => $member_id,
+					)
+				);
+
+				return $response;
+			}
+			$membership_type = $team_data['team_plan_type'] ?? 'unknown';
+			if ( 'one-time' === $membership_type ) {
+				$membership_type = 'paid';
+				PaymentGatewayLogging::log_error(
+					'stripe',
+					'Not a subscription membership',
+					array(
+						'error_code' => 'NOT_SUBSCRIPTION',
+						'member_id'  => $member_id,
+					)
+				);
+
+				return $response;
+			} else {
+				$subscription_value    = $team_data['team_duration_value'];
+				$subscription_duration = $team_data['team_duration_period'];
+			}
+		} else {
+			$membership_type       = $membership_metas['type'] ?? 'unknown';
+			$subscription_value    = $membership_metas['subscription']['value'];
+			$subscription_duration = $membership_metas['subscription']['duration'];
+		}
 
 		PaymentGatewayLogging::log_api_request(
 			'stripe',
@@ -596,10 +722,6 @@ class StripeService {
 				'is_upgrading'      => $is_upgrading,
 				'membership_type'   => $membership_type,
 			)
-		);
-
-		$response = array(
-			'status' => false,
 		);
 
 		if ( empty( $member_subscription ) ) {
@@ -616,8 +738,8 @@ class StripeService {
 		}
 
 		$stripe_product_details = $membership_metas['payment_gateways']['stripe'] ?? array();
-		
-		$products      = \Stripe\Product::all();
+
+		$products = \Stripe\Product::all();
 		if ( ! isset( $stripe_product_details['price_id'] ) || ! isset( $stripe_product_details['product_id'] ) || empty( $products->data ) ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
@@ -639,7 +761,7 @@ class StripeService {
 				)
 			);
 
-			$stripe_product_details['product_id'] = $product->id;
+			$stripe_product_details['product_id']                         = $product->id;
 			$membership_metas['payment_gateways']['stripe']['product_id'] = $stripe_product_details['product_id'];
 			update_post_meta( $membership['ID'], 'ur_membership', wp_json_encode( $membership_metas ) );
 
@@ -674,8 +796,8 @@ class StripeService {
 					'unit_amount' => $total_amount,
 					'currency'    => $currency,
 					'recurring'   => array(
-						'interval'       => $membership_metas['subscription']['duration'],
-						'interval_count' => intval( $membership_metas['subscription']['value'] ),
+						'interval'       => $subscription_duration,
+						'interval_count' => intval( $subscription_value ),
 					),
 					'product'     => $stripe_product_details['product_id'],
 				)
@@ -709,7 +831,7 @@ class StripeService {
 			);
 			// handle trial period
 
-			if ( isset( $membership_metas['trial_status'] ) && 'on' === $membership_metas['trial_status'] ) {
+			if ( isset( $membership_metas['trial_status'] ) && 'on' === $membership_metas['trial_status'] && ! $team_id ) {
 				$trail_period                      = strtotime( date( 'Y-m-d H:i:s', strtotime( '+' . $membership_metas['trial_data']['value'] . ' ' . $membership_metas['trial_data']['duration'] ) ) );
 				$subscription_details['trial_end'] = $trail_period;
 			} else {
@@ -844,8 +966,8 @@ class StripeService {
 			}
 
 			if ( ( ! $is_automatic && ! $is_upgrading ) || $is_renewing ) {
-				$value    = $membership_metas['subscription']['value'];
-				$duration = $membership_metas['subscription']['duration'];
+				$value    = $subscription_value;
+				$duration = $subscription_duration;
 
 				$subscription_details['cancel_at'] = ( new \DateTime( "+ $value $duration" ) )->getTimestamp();
 				if ( $is_renewing ) {

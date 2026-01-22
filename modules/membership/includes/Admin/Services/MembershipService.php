@@ -92,10 +92,11 @@ class MembershipService {
 			$order_service        = new OrderService();
 			$orders_data          = $order_service->prepare_orders_data( $members_data, $member->ID, $subscription ); // prepare data for orders table.
 
-			$order = $this->orders_repository->create( $orders_data );
+			$order   = $this->orders_repository->create( $orders_data );
+			$team_id = '';
 			if ( $subscription && $order ) {
 				$this->logger->info( 'Subscription and order created successfully for ' . $data['username'] . '.', array( 'source' => 'urm-registration-logs' ) );
-				if ( ! empty( $members_data['team'] ) ) {
+				if ( ! empty( $members_data['team'] ) && ur_check_module_activation( 'team' ) ) {
 					$first_name      = get_user_meta( $member->ID, 'first_name', true );
 					$team_post_count = wp_count_posts( 'ur_membership_team' );
 					$team_index      = (int) ( $team_post_count->publish ?? 0 ) + 1;
@@ -185,6 +186,7 @@ class MembershipService {
 					'subscription_id' => $subscription['ID'],
 					'transaction_id'  => $orders_data['orders_data']['transaction_id'],
 					'status'          => true,
+					'team_id'         => $team_id,
 				);
 			}
 		} catch ( Exception $e ) {
@@ -742,7 +744,7 @@ class MembershipService {
 
 		if ( $current_user_id ) {
 
-			$user_memberships    = $members_repository->get_member_membership_by_id( $current_user_id );
+			$user_memberships = $members_repository->get_member_membership_by_id( $current_user_id );
 
 			$user_membership_ids = array_filter(
 				array_map(
@@ -898,7 +900,7 @@ class MembershipService {
 				$remaining_subscription_value = isset( $selected_membership_details['subscription']['value'] ) ? $selected_membership_details['subscription']['value'] : '';
 				$delayed_until                = '';
 
-				if( $subscription_service->is_user_membership_expired( $current_user_id, $current_membership_id ) ) {
+				if ( $subscription_service->is_user_membership_expired( $current_user_id, $current_membership_id ) ) {
 					$chargeable_amount    = $upgrade_service->calculate_chargeable_amount(
 						$selected_membership_amount,
 						$current_membership_amount,
@@ -967,21 +969,19 @@ class MembershipService {
 					'message' => esc_html__( 'You cannot purchase this membership.', 'user-registration' ),
 				);
 			}
-		} else if ( isset( $data['action'] ) && 'register' === $data['action'] ) {
-			$membership_id    = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
-			$memberships      = $membership_repository->get_single_membership_by_ID( $membership_id );
-			$memberships      = $this->prepare_single_membership_data( $memberships );
-			$memberships      = apply_filters( 'build_membership_list_frontend', array( (array) $memberships ) )[0];
-			$memberships      = array( $memberships );
-		} else if ( isset( $data['action'] ) && 'renew' === $data['action'] ) {
-			$membership_id    = isset( $data['current'] ) ? absint( $data['current'] ) : 0;
-			$memberships      = $membership_repository->get_single_membership_by_ID( $membership_id );
-			$memberships      = $this->prepare_single_membership_data( $memberships );
-			$memberships      = apply_filters( 'build_membership_list_frontend', array( (array) $memberships ) )[0];
-			$memberships      = array( $memberships );
+		} elseif ( isset( $data['action'] ) && 'register' === $data['action'] ) {
+			$membership_id = isset( $data['membership_id'] ) ? absint( $data['membership_id'] ) : 0;
+			$memberships   = $membership_repository->get_single_membership_by_ID( $membership_id );
+			$memberships   = $this->prepare_single_membership_data( $memberships );
+			$memberships   = apply_filters( 'build_membership_list_frontend', array( (array) $memberships ) )[0];
+			$memberships   = array( $memberships );
+		} elseif ( isset( $data['action'] ) && 'renew' === $data['action'] ) {
+			$membership_id = isset( $data['current'] ) ? absint( $data['current'] ) : 0;
+			$memberships   = $membership_repository->get_single_membership_by_ID( $membership_id );
+			$memberships   = $this->prepare_single_membership_data( $memberships );
+			$memberships   = apply_filters( 'build_membership_list_frontend', array( (array) $memberships ) )[0];
+			$memberships   = array( $memberships );
 		}
-
-		error_log( print_r( $memberships, true ) );
 
 		if ( empty( $memberships ) ) {
 			return array(
@@ -1012,7 +1012,7 @@ class MembershipService {
 		$current_membership_group    = $membership_group_repository->get_membership_group_by_membership_id( $membership['ID'] );
 		$user_membership_group_ids   = array();
 
-		if( empty($user_membership_ids ) ) {
+		if ( empty( $user_membership_ids ) ) {
 			return 'register';
 		}
 

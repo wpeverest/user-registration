@@ -866,6 +866,8 @@
 								tierWrappers.each(function (tierIndex) {
 									var tierWrapper = $(this);
 									var currentTierIndex = tierIndex + 1;
+									var isFirstTier = tierIndex === 0;
+									var isLastTier = tierIndex === tierWrappers.length - 1;
 
 									// from, to and per_seat_price validation
 									var tier_from = tierWrapper.find(
@@ -930,9 +932,35 @@
 												tier_from.data('key-name'),
 										);
 										tier_to.addClass('ur-membership-error');
-									}
-
-									if (seatPriceVal <= 0) {
+									}else if (isFirstTier && fromVal !== minVal) {
+										no_errors = false;
+										basic_error = true;
+										ur_membership_utils.show_failure_message(
+											ur_membership_data.labels.i18n_error +
+												'! Team ' +
+												currentIndex +
+												' Tier 1: ' +
+												tier_from.data('key-name') +
+												' must be equal to ' +
+												minimum_seat.data('key-name'),
+										);
+										tier_from.addClass('ur-membership-error');
+									}else if (isLastTier && toVal !== maxVal) {
+										no_errors = false;
+										basic_error = true;
+										ur_membership_utils.show_failure_message(
+											ur_membership_data.labels.i18n_error +
+												'! Team ' +
+												currentIndex +
+												' Tier ' +
+												currentTierIndex +
+												': ' +
+												tier_to.data('key-name') +
+												' must be equal to ' +
+												maximum_seat.data('key-name'),
+										);
+										tier_to.addClass('ur-membership-error');
+									}else if (seatPriceVal <= 0) {
 										no_errors = false;
 										basic_error = true;
 										ur_membership_utils.show_failure_message(
@@ -948,6 +976,10 @@
 													.i18n_valid_amount_field_validation,
 										);
 										seat_price.addClass('ur-membership-error');
+									}
+
+									if(! no_errors){
+										return no_errors;
 									}
 								});
 							}
