@@ -2909,6 +2909,9 @@
 				container.find('.ur-team-tier-seats-wrapper').hide();
 				radio.data('urm-pg-calculated-amount', $(this).data('price'));
 				ur_membership_ajax_utils.calculate_total(radio);
+				$('.ur-membership-payment-gateway-lists label[for="ur-membership-mollie"]').show();
+				$('.ur-membership-payment-gateway-lists label[for="ur-membership-authorize"]').show();
+				$('.ur-team-tier-seats-tier').hide();
 			});
 
 			function calculatePrice(tier) {
@@ -2955,6 +2958,8 @@
 				$(".urm-team-pricing-tier").removeClass("selected");
 				$(".ur-team-tier-seats-wrapper").hide();
 				$(".ur-team-tier-seats-tier").hide();
+				$('.ur-membership-payment-gateway-lists label[for="ur-membership-mollie"]').hide();
+				$('.ur-membership-payment-gateway-lists label[for="ur-membership-authorize"]').hide();
 
 				tier.addClass("selected");
 				singlePrice.removeClass("ur-membership-price-selected");
