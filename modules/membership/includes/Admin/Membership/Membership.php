@@ -910,7 +910,7 @@ class Membership {
 
 			$drip_active_type = isset( $drip['activeType'] ) ? $drip['activeType'] : 'fixed_date';
 
-			$html .= '<div style="' . ( $content_drip ? '' : 'display:none;' ) . '" class="urcr-membership-drip" data-active_type="' . esc_attr( $drip_active_type ) . '"
+			$html .= '<div style="' . ( $content_drip && UR_PRO_ACTIVE ? '' : 'display:none;' ) . '" class="urcr-membership-drip" data-active_type="' . esc_attr( $drip_active_type ) . '"
 			data-fixed_date_date="' . esc_attr( $fixed_date_date ) . '"
 			data-fixed_date_time="' . esc_attr( $fixed_date_time ) . '"
 			data-days_after_days="' . esc_attr( $days_after_days ) . '">
