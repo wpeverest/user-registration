@@ -956,8 +956,7 @@
 										max-width: 220px;
 										margin-bottom: 0;
 										border-radius: $border_radius_4;
-										border: $border_width solid
-											$border-color;
+										border: $border_width solid $border-color;
 										background: $white;
 										padding: $spacing_16px;
 										cursor: pointer;
@@ -1148,7 +1147,7 @@
 						}
 					}
 
-					#ur-membership-team-fields{
+					#ur-membership-team-fields {
 						.ur-label {
 							margin-bottom: 0;
 
@@ -1283,21 +1282,22 @@
 				}
 			}
 		}
-		.ur-team-membership-content{
-			#user-registration-base-list-table-page{
+
+		.ur-team-membership-content {
+			#user-registration-base-list-table-page {
 				margin: 0;
 				padding: 0;
 				background: transparent;
 				border: none;
 
-				#membership-team-list{
-					.wp-list-table{
+				#membership-team-list {
+					.wp-list-table {
 						margin: 0;
 					}
 				}
 			}
 
-			hr{
+			hr {
 				display: block !important;
 			}
 		}
@@ -1593,19 +1593,21 @@
 				}
 			}
 
-			.wp-list-table.teams{
-				th{
-					&.column-team_leader{
+			.wp-list-table.teams {
+				th {
+					&.column-team_leader {
 						width: 20%;
 					}
 
-					&.column-members{
+					&.column-members {
 						width: 10%;
 					}
-					&.column-date{
+
+					&.column-date {
 						width: 20%;
 					}
 				}
+
 				tbody {
 					tr {
 						&.no-items {
@@ -1641,10 +1643,12 @@
 								}
 							}
 						}
-						td{
-							.row-actions{
+
+						td {
+							.row-actions {
 								align-items: center;
-								span{
+
+								span {
 									font-size: 12px;
 								}
 							}
@@ -1947,7 +1951,7 @@
 	.ur-membership-type-title,
 	label,
 	.ur-membership-type-description {
-		opacity: 0.5;
+		opacity: 0.7;
 	}
 
 	&::before {
@@ -2259,12 +2263,12 @@
 	}
 }
 
-#ur-team-pricing-container{
+#ur-team-pricing-container {
 	.ur-team-toggle-tabs {
 		display: inline-flex;
 		border-radius: 4px;
 		overflow: hidden;
-		background:$grey-25;
+		background: $grey-25;
 		padding: 4px;
 
 		label {
@@ -2291,54 +2295,55 @@
 
 	}
 
-	#ur-add-team-pricing-btn, .ur-add-tier-btn{
+	#ur-add-team-pricing-btn, .ur-add-tier-btn {
 		padding: 6px 16px;
 		font-size: 14px;
 
-		&:focus{
+		&:focus {
 			color: #2d3559;
 			background: rgb(222.4984029851, 224.3717109905, 232.8015970149);
 			border-color: rgb(222.4984029851, 224.3717109905, 232.8015970149);
 			box-shadow: 0 1px 0 rgb(222.4984029851, 224.3717109905, 232.8015970149);
 		}
 
-		&:hover{
+		&:hover {
 			background: transparent;
 			border-color: $primary_color;
 			color: $grey-400;
 		}
 	}
 
-	#ur-add-tier-btn{
+	#ur-add-tier-btn {
 		padding: 0 10px;
 	}
 
 
-	.ur-remove-team-pricing-btn, .ur-remove-tier-btn{
+	.ur-remove-team-pricing-btn, .ur-remove-tier-btn {
 		width: 34px;
-    	height: 34px;
+		height: 34px;
 		border: 1px solid #ffffff;
 		border-radius: 4px;
 		background: $grey-25;
 		box-shadow: none;
 		transition: all 0.3s ease-in-out;
 
-		span{
+		span {
 			color: #949494;
 		}
 
-		&:hover{
+		&:hover {
 			background: $redLight;
 			border-color: $deny_color;
-			span{
+
+			span {
 				color: $deny_color;
 			}
 		}
 	}
 
-	.ur-remove-tier-btn{
+	.ur-remove-tier-btn {
 		width: 40px;
-    	height: 40px;
+		height: 40px;
 	}
 }
 
@@ -2517,6 +2522,7 @@
 	background-color: white;
 	box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.08);
 	color: black;
+
 	.tippy-arrow {
 		color: white;
 	}
@@ -2524,6 +2530,7 @@
 
 .ur-feature {
 	padding: 12px;
+
 	&__btn {
 		display: inline-flex;
 		flex-shrink: 0;

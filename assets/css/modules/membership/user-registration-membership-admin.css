@@ -1899,7 +1899,7 @@
 #upgrade-settings-container .upgradable-type .ur-membership-type-title,
 #upgrade-settings-container .upgradable-type label,
 #upgrade-settings-container .upgradable-type .ur-membership-type-description {
-  opacity: 0.5;
+  opacity: 0.7;
 }
 #ur-membership-main-fields .upgradable-type::before,
 #upgrade-settings-container .upgradable-type::before {
