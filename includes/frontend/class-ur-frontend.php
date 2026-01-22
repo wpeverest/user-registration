@@ -462,19 +462,34 @@ class UR_Frontend {
 		}
 
 		$meta_value = get_user_meta( $user_id, 'ur_payment_invoices', true );
-
-		if ( 'membership' !== $user_source && ! empty( $meta_value ) && is_array( $meta_value ) ) {
-			foreach ( $meta_value as $values ) {
+		if ( 'membership' !== $user_source  ) {
+			if( ! empty( $meta_value ) && is_array( $meta_value ) ) {
+				foreach ( $meta_value as $values ) {
+					$total_items[] = array(
+						'user_id'        => $user_id,
+						'transaction_id' => $values['invoice_no'] ?? '',
+						'post_title'     => $values['invoice_plan'] ?? '',
+						'status'         => get_user_meta( $user_id, 'ur_payment_status', true ),
+						'created_at'     => $values['invoice_date'] ?? '',
+						'type'           => get_user_meta( $user_id, 'ur_payment_type', true ),
+						'payment_method' => str_replace( '_', ' ', get_user_meta( $user_id, 'ur_payment_method', true ) ),
+						'total_amount'   => ( $values['invoice_amount'] ?? '' ),
+						'currency'       => ( $values['invoice_currency'] ?? '' ),
+					);
+				}
+			} else {
+				$u_data            = get_userdata($user_id);
+				$user_registered       = $u_data->user_registered;
 				$total_items[] = array(
 					'user_id'        => $user_id,
-					'transaction_id' => $values['invoice_no'] ?? '',
-					'post_title'     => $values['invoice_plan'] ?? '',
+					'transaction_id' => '',
+					'post_title'     => __( 'Product/Service', 'user-registration' ),
 					'status'         => get_user_meta( $user_id, 'ur_payment_status', true ),
-					'created_at'     => $values['invoice_date'] ?? '',
-					'type'           => get_user_meta( $user_id, 'ur_payment_type', true ),
+					'created_at'     => date( 'Y-m-d', strtotime( $user_registered ) ),
+					'type'           => 'paid',
 					'payment_method' => str_replace( '_', ' ', get_user_meta( $user_id, 'ur_payment_method', true ) ),
-					'total_amount'   => ( $values['invoice_amount'] ?? '' ),
-					'currency'       => ( $values['invoice_currency'] ?? '' ),
+					'total_amount'   => get_user_meta( $user_id, 'ur_payment_total_amount', true),
+					'currency'       => get_user_meta( $user_id, 'ur_payment_currency', true),
 				);
 			}
 		}
@@ -701,7 +716,14 @@ class UR_Frontend {
 
 			if ( ! empty( $payment_details ) ) {
 				$payment_details['form_type'] = 'normal';
-				array_push( $membership_data, $payment_details );
+
+				if ( 'paypal_standard' === $payment_method ) {
+					if( ur_string_to_bool( get_user_meta( $user_id, 'ur_payment_subscription', true ) ) ) {
+						array_push( $membership_data, $payment_details );
+						}
+					} else {
+					array_push( $membership_data, $payment_details );
+				}
 			}
 		}
 
