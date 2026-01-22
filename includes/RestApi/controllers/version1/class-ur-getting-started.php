@@ -1689,49 +1689,80 @@ class UR_Getting_Started {
 			update_option( 'user_registration_stripe_live_publishable_key', $stripe_live_publishable_key );
 			update_option( 'user_registration_stripe_live_secret_key', $stripe_live_secret_key );
 
-			$membership_ids = (array) get_option( 'urm_onboarding_membership_ids', array() );
-			foreach ( $membership_ids as $membership_id ) {
-				$membership_id = absint( $membership_id );
-				if ( ! $membership_id ) {
-					continue;
+			try {
+
+				$stripe_service = new \WPEverest\URMembership\Admin\Services\Stripe\StripeService();
+
+				$is_valid = $stripe_service->validate_credentials();
+
+				if ( ! $is_valid ) {
+					throw new \Exception( __( 'Invalid Stripe API credentials. Please verify your keys.', 'user-registration' ) );
 				}
 
-				$meta_raw = get_post_meta( $membership_id, 'ur_membership', true );
-				if ( empty( $meta_raw ) ) {
-					continue;
-				}
+				$membership_ids = (array) get_option( 'urm_onboarding_membership_ids', array() );
 
-				$meta = json_decode( wp_unslash( $meta_raw ), true );
-				if ( empty( $meta ) || empty( $meta['type'] ) || 'free' === $meta['type'] ) {
-					continue;
-				}
+				foreach ( $membership_ids as $membership_id ) {
+					$membership_id = absint( $membership_id );
+					if ( ! $membership_id ) {
+						continue;
+					}
 
-				$product_id = $meta['payment_gateways']['stripe']['product_id'] ?? '';
-				$price_id   = $meta['payment_gateways']['stripe']['price_id'] ?? '';
+					$meta_raw = get_post_meta( $membership_id, 'ur_membership', true );
+					if ( empty( $meta_raw ) ) {
+						continue;
+					}
 
-				if ( ! empty( $product_id ) && ! empty( $price_id ) ) {
-					continue;
-				}
+					$meta = json_decode( wp_unslash( $meta_raw ), true );
+					if ( empty( $meta ) || empty( $meta['type'] ) || 'free' === $meta['type'] ) {
+						continue;
+					}
 
-				$post = get_post( $membership_id );
-				if ( ! $post ) {
-					continue;
-				}
-					$post_data = array(
-						'ID'           => $membership_id,
-						'post_title'   => $post->post_title,
-						'post_content' => $post->post_content,
-					);
+					$product_id = $meta['payment_gateways']['stripe']['product_id'] ?? '';
+					$price_id   = $meta['payment_gateways']['stripe']['price_id'] ?? '';
 
-					$stripe_service = new \WPEverest\URMembership\Admin\Services\Stripe\StripeService();
-					$stripe_result  = $stripe_service->create_stripe_product_and_price( $post_data, $meta, false );
+					if ( ! empty( $product_id ) && ! empty( $price_id ) ) {
+						continue;
+					}
 
-					if ( isset( $stripe_result['success'] ) && ur_string_to_bool( $stripe_result['success'] ) ) {
+					$post = get_post( $membership_id );
+					if ( ! $post ) {
+						continue;
+					}
+
+					try {
+						$post_data = array(
+							'ID'           => $membership_id,
+							'post_title'   => $post->post_title,
+							'post_content' => $post->post_content,
+						);
+
+						$stripe_result = $stripe_service->create_stripe_product_and_price( $post_data, $meta, false );
+
+						if ( isset( $stripe_result['success'] ) && ur_string_to_bool( $stripe_result['success'] ) ) {
 							$meta['payment_gateways']['stripe']               = array();
 							$meta['payment_gateways']['stripe']['product_id'] = $stripe_result['price']->product;
 							$meta['payment_gateways']['stripe']['price_id']   = $stripe_result['price']->id;
 							update_post_meta( $membership_id, 'ur_membership', wp_json_encode( $meta ) );
+						}
+					} catch ( \Exception $e ) {
+						continue;
 					}
+				}
+			} catch ( \Exception $e ) {
+
+				$configuration_needed[] = array(
+					'gateway'      => 'stripe',
+					'message'      => $e->getMessage(),
+					'settings_url' => admin_url( 'admin.php?page=user-registration-settings&tab=ur_membership&section=payment_settings' ),
+				);
+
+				$stripe_enabled = false;
+				update_option( 'urm_stripe_connection_status', false );
+				update_option( 'user_registration_stripe_enabled', false );
+				update_option( 'user_registration_stripe_test_publishable_key', '' );
+				update_option( 'user_registration_stripe_test_secret_key', '' );
+				update_option( 'user_registration_stripe_live_publishable_key', '' );
+				update_option( 'user_registration_stripe_live_secret_key', '' );
 			}
 		}
 
