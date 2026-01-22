@@ -81,7 +81,7 @@ class Frontend {
 		}
 
 		$membership_service = new MembershipService();
-		$membership         = $membership_service->get_membership_details( $membership_id );
+		$membership         = (array) get_post( $membership_id );
 
 		$intended_action = $membership_service->fetch_intended_action( '', $membership, $user_membership_ids );
 
