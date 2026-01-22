@@ -521,15 +521,15 @@ class UR_Admin_Settings {
 							if( ! empty( $upsell_section[ 'feature_link' ] ) ) {
 								$settings .= '<a href="' . esc_url( $upsell_section[ 'feature_link' ] ) . '" class="user-registration-upsell__feature-link" target="_blank">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>';
 							}
-
-							if ( ! empty( $section['before_desc'] ) ) {
-								$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $section['before_desc'] ) ) . '</p>';
-							}
-
-							if ( ! empty( $section['desc'] ) ) {
-								$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $section['desc'] ) ) . '</p>';
-							}
 							$settings .= '</div>';
+						}
+
+						if ( ! empty( $section['before_desc'] ) ) {
+							$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $section['before_desc'] ) ) . '</p>';
+						}
+
+						if ( ! empty( $section['desc'] ) ) {
+							$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $section['desc'] ) ) . '</p>';
 						}
 
 
