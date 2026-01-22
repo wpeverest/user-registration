@@ -739,8 +739,20 @@ class StripeService {
 
 		$stripe_product_details = $membership_metas['payment_gateways']['stripe'] ?? array();
 
-		$products = \Stripe\Product::all();
-		if ( ! isset( $stripe_product_details['price_id'] ) || ! isset( $stripe_product_details['product_id'] ) || empty( $products->data ) ) {
+		$products      = \Stripe\Product::all();
+		$membership_id = $membership['ID'];
+
+		$product_exists = array_filter(
+			$products->data,
+			function ( $item, $key ) use ( $membership_id ) {
+				if ( isset( $item['metadata']['membership_id'] ) ) {
+					return $item['metadata']['membership_id'] == $membership_id;
+				}
+			},
+			ARRAY_FILTER_USE_BOTH
+		);
+
+		if ( ! isset( $stripe_product_details['price_id'] ) || ! isset( $stripe_product_details['product_id'] ) || count( $product_exists ) <= 0 ) {
 			PaymentGatewayLogging::log_error(
 				'stripe',
 				'Price or product not configured - New product is creating.',
