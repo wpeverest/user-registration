@@ -95,8 +95,9 @@ class Frontend {
 
 				$full_url = add_query_arg(
 					array(
-						'action'    => $intended_action,
-						'thank_you' => $thankyou_page_id,
+						'action'        => $intended_action,
+						'thank_you'     => $thankyou_page_id,
+						'membership_id' => $membership_id,
 					),
 					$base_url
 				);
