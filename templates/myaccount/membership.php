@@ -76,6 +76,23 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 						}
 
 						$current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' ) ) . 'ur-membership/';
+
+						$orders_repository  = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
+						$subscription_order = $orders_repository->get_order_by_subscription( $data['subscription_data']['ID'] );
+						$order_id           = ! empty( $subscription_order ) && isset( $subscription_order['ID'] ) ? $subscription_order['ID'] : '';
+
+						$order_meta_data = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
+						$tax_data 		 = ! empty( $order_meta_data['meta_value'] ) ? json_decode( $order_meta_data[ 'meta_value' ], true ) : array();
+
+						$local_currency   = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency' );
+
+						$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
+						$symbol = ur_get_currency_symbol( $currency );
+
+						$local_currency_converted_amount = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'local_currency_converted_amount' );
+
+						$data['period'] = ! empty( $local_currency_converted_amount['meta_value'] ) ?  preg_replace('#^[^/]+#', $symbol . $local_currency_converted_amount['meta_value'], $data['period']) : $data['period'];
+
 						?>
 							<tr class="ur-account-table__row">
 								<td class="ur-account-table__cell ur-account-table__cell--membership-type">
@@ -197,7 +214,7 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 
 												<?php
 												//Provide manual renew in case of failed payment attempts exhausted via payment retry engine.
-												$can_renew = $can_renew || ( ur_string_to_bool( get_option( 'user_registration_payment_retry_enabled', false ) ) && intval( get_user_meta( $user_id, 'urm_is_payment_retrying', true ) ) >= intval( get_option( 'user_registration_payment_retry_count', 999 ) ) ); 
+												$can_renew = $can_renew || ( ur_string_to_bool( get_option( 'user_registration_payment_retry_enabled', false ) ) && intval( get_user_meta( $user_id, 'urm_is_payment_retrying', true ) ) >= intval( get_option( 'user_registration_payment_retry_count', 999 ) ) );
 
 												if ( $can_renew && $date_to_renew <= date( 'Y-m-d 00:00:00' ) && 'canceled' !== $membership['status'] ) {
 													$redirect_link_builder['action'] = 'renew';

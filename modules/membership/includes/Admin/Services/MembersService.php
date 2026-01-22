@@ -108,10 +108,10 @@ class MembersService {
 		$response['role'] = isset( $data['role'] ) ? sanitize_text_field( $data['role'] ) : 'subscriber';
 
 		if ( isset( $data['tax_rate'] ) && ! empty( $data['tax_rate'] ) ) {
-			$tax_details          = array(
-				'tax_rate'               => floatval( $data['tax_rate'] ),
-				'tax_calculation_method' => sanitize_text_field( $data['tax_calculation_method'] ),
-			);
+			$tax_details = array(
+				'tax_rate'       		 => floatval( $data['tax_rate'] ),
+				'tax_calculation_method' =>  ur_string_to_bool( sanitize_text_field( $data['tax_calculation_method'] ) ),
+				);
 			$response['tax_data'] = $tax_details;
 		}
 

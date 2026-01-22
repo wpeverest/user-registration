@@ -157,7 +157,7 @@ class Frontend {
 		$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
 
 		$regions 				= get_option( 'user_registration_tax_regions_and_rates', array() );
-		$tax_calculation_method = get_option( 'user_registration_tax_calculation_method', 'price_include' );
+		$tax_calculation_method = get_option( 'user_registration_tax_calculation_during_checkout', 'no' );
 
 		$is_tax_calculation_enabled		  = ur_check_module_activation( 'taxes' );
 
@@ -205,7 +205,7 @@ class Frontend {
 				'gateways_configured'              => urm_get_all_active_payment_gateways( 'paid' ),
 				'isEditor'                         => current_user_can( 'edit_post', get_the_ID() ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'],
 				'membership_selection_message'     => __( 'Please select at least one membership plan', 'user-registration' ),
-				'tax_calculation_method'           => $tax_calculation_method,
+				'tax_calculation_method'           => ur_string_to_bool( $tax_calculation_method ),
 				'regions_list'                     => $regions,
 				'gateways_configured'              => urm_get_all_active_payment_gateways('paid'),
 				'local_currencies'				   => ur_get_currencies(),

@@ -186,7 +186,7 @@ class PaypalService {
 			)
 		);
 
-		if ( ! empty( $response_data['tax_rate'] ) && ! empty( $response_data['tax_calculation_method'] ) && 'calculate_tax' === $response_data['tax_calculation_method'] ) {
+		if ( ! empty( $response_data['tax_rate' ] ) && ! empty( $response_data['tax_calculation_method'] ) && ur_string_to_bool( $response_data['tax_calculation_method'] ) ) {
 			$tax_rate     = floatval( $response_data['tax_rate'] );
 			$tax_amount   = $final_amount * $tax_rate / 100;
 			$final_amount = $final_amount + $tax_amount;

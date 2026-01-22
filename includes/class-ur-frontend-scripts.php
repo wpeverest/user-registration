@@ -542,7 +542,7 @@ class UR_Frontend_Scripts {
 		switch ( $handle ) {
 			case 'user-registration':
 				$regions                = get_option( 'user_registration_tax_regions_and_rates', array() );
-				$tax_calculation_method = get_option( 'user_registration_tax_calculation_method', 'price_include' );
+				$tax_calculation_method = get_option( 'user_registration_tax_calculation_during_checkout', 'no' );
 				$is_tax_calculation_enabled = ur_check_module_activation( 'taxes' );
 				$currency               = get_option( 'user_registration_payment_currency', 'USD' );
 				$currencies             = ur_payment_integration_get_currencies();
@@ -594,7 +594,7 @@ class UR_Frontend_Scripts {
 					'user_registration_checkbox_validation_message' => apply_filters( 'user_registration_checkbox_validation_message', esc_html__( 'Please select no more than {0} options.', 'user-registration' ) ),
 					'user_registration_membership_renew_plan_button_text' => apply_filters( 'user_registration_membership_renew_plan_button_text', esc_html__( 'Change', 'user-registration' ) ),
 					'network_error'                        => esc_html__( 'Network error', 'user-registration' ),
-					'tax_calculation_method'               => $tax_calculation_method,
+					'tax_calculation_method'               => ur_string_to_bool( $tax_calculation_method ),
 					'regions_list'                         => $regions,
 					'currency_symbol'                      => $symbol,
 					'currency_pos'                         => isset( $currencies[ $currency ]['symbol_pos'] ) ? $currencies[ $currency ]['symbol_pos'] : 'left',

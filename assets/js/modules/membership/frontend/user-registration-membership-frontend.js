@@ -1053,7 +1053,7 @@
 						}
 
 						if (taxRate > 0) {
-							if ('calculate_tax' === tax_calculation_method) {
+							if ( tax_calculation_method ) {
 								taxAmount = (total * taxRate) / 100;
 								total = parseFloat(total) + parseFloat(taxAmount);
 							} else {
