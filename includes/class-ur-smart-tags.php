@@ -233,6 +233,9 @@ class UR_Smart_Tags {
 					if ( empty( $value ) ) {
 						$value = '';
 					} else {
+						if ( isset( $value['team'] ) && is_array( $value['team'] ) ) {
+							unset( $value['team'] );
+						}
 						$value = implode( ', ', $value );
 					}
 					$content = str_replace( '{{' . $key . '}}', $value, $content );
