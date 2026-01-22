@@ -3154,25 +3154,23 @@
 		if ( ! stateEnable ) {
 			return;
 		}
-
 		var data = {
 			action: 'user_registration_update_state_field',
 			security: user_registration_params.user_registration_update_state_field,
 			country: country
 		};
+		var $stateWrapper = $el.siblings('.ur-field-address-state-outer-wrapper');
 
 		$.ajax({
 			type: "POST",
 			url: user_registration_params.ajax_url,
 			data: data,
 			beforeSend: function(){
-				$el.before('<span class="ur-front-spinner"></span>');
+				$stateWrapper.empty();
+				$stateWrapper.append('<span class="ur-front-spinner"></span>');
+
 			},
 			success: function (response) {
-
-				var $stateWrapper = $el.siblings('.ur-field-address-state-outer-wrapper');
-				$stateWrapper.empty();
-
 				var html = '';
 
 				if (response.success && response.data.has_state && '' !== response.data.state) {
