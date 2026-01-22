@@ -5518,95 +5518,19 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 	 *
 	 * @return string Wrapped email content.
 	 */
-	function ur_wrap_email_body_content( $body_content ) {
-		// Check if we're in editor context - exclude CSS when displaying editor on settings page.
-		// Include CSS for preview, email sending, cron, CLI, and AJAX email actions.
-		$is_preview       = isset( $_GET['ur_email_preview'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$current_screen   = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		$is_settings_page = $current_screen && 'user-registration_page_user-registration-settings' === $current_screen->id;
-		$is_email_action  = isset( $_REQUEST['action'] ) && (
-			'ur_send_test_email' === $_REQUEST['action'] ||
-			strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		);
+		function ur_wrap_email_body_content( $body_content ) {
+		$is_preview_mode = isset( $_GET['ur_email_preview'] ) && 'email_template_option' === sanitize_text_field( wp_unslash( $_GET['ur_email_preview'] ) );
+		$inner_width     = $is_preview_mode ? '600px' : 'auto';
 
-		// Only exclude CSS when on settings page displaying editor (not when sending emails).
-		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action &&
-							! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
-							! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
-
-		// Responsive CSS styles for email template - only include when not in editor context.
-		$responsive_styles = '';
-		if ( ! $is_editor_context ) {
-			$responsive_styles = '<style type="text/css">
-	/* Responsive Email Styles - Scoped to email wrapper only */
-	@media only screen and (max-width: 600px) {
-		.email-wrapper-outer {
-			padding: 20px 0 !important;
-		}
-		.email-wrapper-inner {
-			width: 100% !important;
-			max-width: 100% !important;
-			margin: 0 !important;
-			border-radius: 0 !important;
-		}
-		.email-header {
-			padding: 20px 15px !important;
-			border-radius: 0 !important;
-		}
-		.email-body {
-			padding: 25px 15px !important;
-		}
-		.email-footer {
-			padding: 20px 15px !important;
-		}
-		.email-logo img {
-			max-width: 150px !important;
-			max-height: 50px !important;
-		}
-		.email-header-text {
-			font-size: 16px !important;
-			margin-top: 10px !important;
-		}
-		.email-footer p {
-			font-size: 12px !important;
-		}
-		.email-footer a {
-			font-size: 13px !important;
-		}
-	}
-	@media only screen and (max-width: 480px) {
-		.email-wrapper-outer {
-			padding: 10px 0 !important;
-		}
-		.email-header {
-			padding: 15px 10px !important;
-		}
-		.email-body {
-			padding: 20px 10px !important;
-		}
-		.email-footer {
-			padding: 15px 10px !important;
-		}
-		.email-logo img {
-			max-width: 120px !important;
-			max-height: 40px !important;
-		}
-		.email-header-text {
-			font-size: 14px !important;
-		}
-	}
-</style>';
-		}
-
-		// Check if this is a preview and set width to 600px.
-		$is_preview  = isset( $_GET['ur_email_preview'] ) && 'email_template_option' === sanitize_text_field( wp_unslash( $_GET['ur_email_preview'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$email_width = $is_preview ? '600px' : 'unset';
-		$max_width   = $is_preview ? '600px' : '600px'; // Max width for better readability on all devices.
-
-		return $responsive_styles . '
-	<div class="email-wrapper-outer" style="font-family: Arial, sans-serif; padding: 100px 0;">
-	<div class="email-wrapper-inner" style="width: ' . esc_attr( $email_width ) . '; max-width: ' . esc_attr( $max_width ) . '; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
-	<div class="email-body" style="padding: 30px; background-color: #ffffff;">' . $body_content . '</div></div></div>';
+		return '<div style="margin: 0; padding: 0; width: 100%; background-color: #f4f4f4; font-family: Arial, Helvetica, sans-serif;">
+	<div style="width: 100%; padding: 40px 10px; box-sizing: border-box;">
+		<div style="width: ' . esc_attr( $inner_width ) . '; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
+			<div style="padding: 30px; background-color: #ffffff; font-size: 14px; line-height: 1.6; color: #333333; box-sizing: border-box;">
+				' . $body_content . '
+			</div>
+		</div>
+	</div>
+</div>';
 	}
 }
 
