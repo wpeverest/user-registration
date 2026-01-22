@@ -4,7 +4,7 @@ Tags: user registration, membership, user profile, registration form, login form
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 6.9
-Stable tag: 5.1
+Stable tag: 5.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,11 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 5.1.0    - 26/01/2026 =
+* Feature  - Buy now button block.
+* Feature  - Masteriyo Integration.
+* Feature  - Global style configuration.
 
 = 5.0.4    - 21/01/2026 =
 * Fix      - Orders table not found.
