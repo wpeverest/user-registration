@@ -28,10 +28,27 @@ class StripeService {
 		if ( ! class_exists( 'Stripe\Stripe' ) ) {
 			require_once plugin_dir_path( __FILE__ ) . 'lib/stripe-php/init.php';
 		}
-		$stripe_settings = self::get_stripe_settings();
 
-		// Set your secret key
-		\Stripe\Stripe::setApiKey( $stripe_settings['secret_key'] );
+		try {
+			$stripe_settings = self::get_stripe_settings();
+
+			if ( empty( $stripe_settings['secret_key'] ) ) {
+				throw new \Exception( 'Stripe secret key is not configured' );
+			}
+
+			// Set your secret key
+			\Stripe\Stripe::setApiKey( $stripe_settings['secret_key'] );
+
+		} catch ( \Exception $e ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Failed to initialize Stripe service',
+				array(
+					'error_code'    => 'INITIALIZATION_FAILED',
+					'error_message' => $e->getMessage(),
+				)
+			);
+		}
 	}
 
 	/**
@@ -236,7 +253,7 @@ class StripeService {
 			}
 		}
 
-		if ( ! empty( $response_data['tax_rate' ] ) && ! empty( $response_data['tax_calculation_method'] ) && ur_string_to_bool( $response_data['tax_calculation_method'] ) ) {
+		if ( ! empty( $response_data['tax_rate'] ) && ! empty( $response_data['tax_calculation_method'] ) && ur_string_to_bool( $response_data['tax_calculation_method'] ) ) {
 			$tax_rate   = floatval( $response_data['tax_rate'] );
 			$tax_amount = $amount * $tax_rate / 100;
 			$amount     = $amount + $tax_amount;
@@ -611,10 +628,10 @@ class StripeService {
 	/**
 	 * Sends an email.
 	 *
-	 * @param int $ID The ID of the email.
+	 * @param int   $ID The ID of the email.
 	 * @param mixed $member_subscription The subscription details of the member.
 	 * @param array $membership_metas Metadata related to the membership.
-	 * @param int $member_id The ID of the member.
+	 * @param int   $member_id The ID of the member.
 	 * @param array $response The response data.
 	 *
 	 * @return array The result of the email operation.
@@ -1779,7 +1796,7 @@ class StripeService {
 					}
 				}
 			} elseif ( 'active' === $stripe_subscription->status || 'trialing' === $stripe_subscription->status ) {
-				//Scenario: if automatic retry is enabled in stripe dashboard, it might be already active via smart retry.
+				// Scenario: if automatic retry is enabled in stripe dashboard, it might be already active via smart retry.
 				PaymentGatewayLogging::log_general(
 					'stripe',
 					'Subscription is already active - no retry needed',
@@ -1821,6 +1838,50 @@ class StripeService {
 			$response['message'] = $e->getMessage();
 
 			return $response;
+		}
+	}
+
+	/**
+	 * Validate Stripe API credentials.
+	 *
+	 * @return bool True if credentials are valid, false otherwise.
+	 */
+	public function validate_credentials() {
+		try {
+			\Stripe\Account::retrieve();
+			PaymentGatewayLogging::log_general(
+				'stripe',
+				'Stripe credentials validated successfully',
+				'success',
+				array(
+					'event_type' => 'credential_validation',
+				)
+			);
+
+			return true;
+		} catch ( \Stripe\Exception\AuthenticationException $e ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Stripe authentication failed - Invalid credentials',
+				array(
+					'error_code'    => 'AUTHENTICATION_FAILED',
+					'error_message' => $e->getMessage(),
+				)
+			);
+
+			return false;
+		} catch ( \Exception $e ) {
+
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Stripe credential validation failed',
+				array(
+					'error_code'    => 'VALIDATION_ERROR',
+					'error_message' => $e->getMessage(),
+				)
+			);
+
+			return false;
 		}
 	}
 }

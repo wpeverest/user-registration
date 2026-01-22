@@ -250,7 +250,7 @@
       "title": "PDF Invoice",
       "slug": "user-registration-pdf-invoice",
       "name": "User Registration - PDF Invoices",
-      "image": "extensions-json/sections/icons/content_restriction.png",
+      "image": "extensions-json/sections/icons/pdf_invoice.png",
       "excerpt": "Allows payment invoice download for each successful payments right through your customer's account.",
       "category": "E-Commerce",
       "link": "https://docs.wpuserregistration.com/docs/content-restriction/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",

@@ -23,50 +23,52 @@ jQuery(function ($) {
 				$(".ur-masked-input").inputmask();
 		},
 		switchCountry: function(){
-				$( document ).on( 'change', '.ur-field-address-country', function ( e ) {
-					e.stopPropagation();
-					e.preventDefault();
+			$( document ).on( 'change', '.ur-field-address-country', function ( e ) {
+				e.stopPropagation();
+				e.preventDefault();
 
-					var $el = $(this);
-					var fieldId = $el.data('id');
-					var country = $el.val();
-					var stateEnable = $el.data( 'state-enabled' );
+				var $el = $(this);
+				var fieldId = $el.data('id');
+				var country = $el.val();
+				var stateEnable = $el.data( 'state-enabled' );
 
-					if ( ! stateEnable ) {
-						return;
-					}
+				if ( ! stateEnable ) {
+					return;
+				}
+				var data = {
+					action: 'user_registration_update_state_field',
+					security: user_registration_params.user_registration_update_state_field,
+					country: country
+				};
+				var $stateWrapper = $el.siblings('.ur-field-address-state-outer-wrapper');
 
-					var data = {
-						action: 'user_registration_update_state_field',
-						security: l10n.user_registration_update_state_field,
-						country: country
-					};
+				$.ajax({
+					type: "POST",
+					url: user_registration_params.ajax_url,
+					data: data,
+					beforeSend: function(){
+						$stateWrapper.empty();
+						$stateWrapper.append('<span class="ur-front-spinner"></span>');
 
-					$.ajax({
-						type: "POST",
-						url: l10n.ajax_url,
-						data: data,
-						success: function (response) {
+					},
+					success: function (response) {
+						var html = '';
 
-							var $stateWrapper = $el.siblings('.ur-field-address-state-outer-wrapper');
-							$stateWrapper.empty();
-
-							var html = '';
-
-							if (response.success && response.data.has_state) {
-								html += '<select class="ur-field-address-state select ur-frontend-field" name="' + fieldId + '_state">';
-								html += response.data.state;
-								html += '</select>';
-							} else {
-								html += '<input type="text" class="ur-field-address-state input-text ur-frontend-field" name="' + fieldId + '_state"/>';
-							}
-
-							var $stateElement = $( html );
-
-							$stateWrapper.append( $stateElement );
+						if (response.success && response.data.has_state && '' !== response.data.state) {
+							html += '<select class="ur-field-address-state select ur-frontend-field" name="' + fieldId + '_state">';
+							html += response.data.state;
+							html += '</select>';
+						} else {
+							html += '<input type="text" class="ur-field-address-state input-text ur-frontend-field" name="' + fieldId + '_state"/>';
 						}
-					});
+
+						$( document ).find( '.ur-front-spinner' ).remove();
+						var $stateElement = $( html );
+
+						$stateWrapper.append( $stateElement );
+					}
 				});
+			});
 		},
 		/**
 		 * Load password toggle in password input

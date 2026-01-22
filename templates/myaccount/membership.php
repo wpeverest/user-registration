@@ -80,7 +80,7 @@ $current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' 
 						$current_url = get_permalink( get_option( 'user_registration_myaccount_page_id' ) ) . 'ur-membership/';
 
 						$orders_repository  = new \WPEverest\URMembership\Admin\Repositories\OrdersRepository();
-						$subscription_order = $orders_repository->get_order_by_subscription( $data['subscription_data']['ID'] );
+						$subscription_order = $orders_repository->get_order_by_subscription( $data['subscription_data']['ID'] ?? 0 );
 						$order_id           = ! empty( $subscription_order ) && isset( $subscription_order['ID'] ) ? $subscription_order['ID'] : '';
 
 						$order_meta_data = $orders_repository->get_order_meta_by_order_id_and_meta_key( $order_id, 'tax_data' );
