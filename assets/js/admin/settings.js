@@ -125,16 +125,45 @@
 
 		var colorPickerOptions = {
 			change: function (event, ui) {
-				$(this)
+				var $input = $(this);
+				var colorValue = ui.color.toString();
+				
+				$input
 					.parent()
 					.find(".colorpickpreview")
-					.css({ backgroundColor: ui.color.toString() });
+					.css({ backgroundColor: colorValue });
+				
+				var $container = $input.closest(".wp-picker-container");
+				if ($container.length) {
+					var $colorResult = $container.find(".wp-color-result");
+					if ($colorResult.length) {
+						$colorResult.css("background-color", colorValue);
+						var $colorSpan = $colorResult.find("span");
+						if ($colorSpan.length) {
+							$colorSpan.css("background-color", colorValue);
+						}
+					}
+				}
 			},
 			clear: function () {
-				$(this)
+				var $input = $(this);
+				
+				$input
 					.parent()
 					.find(".colorpickpreview")
 					.css({ backgroundColor: "" });
+				
+				var $container = $input.closest(".wp-picker-container");
+				if ($container.length) {
+					var $colorResult = $container.find(".wp-color-result");
+					if ($colorResult.length) {
+						$colorResult.css("background-color", "");
+						var $colorSpan = $colorResult.find("span");
+						if ($colorSpan.length) {
+							$colorSpan.css("background-color", "");
+						}
+					}
+				}
 			},
 			hide: true,
 			border: true,
@@ -148,6 +177,21 @@
 		}
 
 		$input.wpColorPicker(colorPickerOptions);
+
+		$input.on("change", function() {
+			var colorValue = $(this).val();
+			var $container = $(this).closest(".wp-picker-container");
+			if ($container.length) {
+				var $colorResult = $container.find(".wp-color-result");
+				if ($colorResult.length) {
+					$colorResult.css("background-color", colorValue);
+					var $colorSpan = $colorResult.find("span");
+					if ($colorSpan.length) {
+						$colorSpan.css("background-color", colorValue);
+					}
+				}
+			}
+		});
 
 		var hideDefaultButton = function () {
 			var $container = $input.closest(".wp-picker-container");
@@ -561,10 +605,25 @@
 	$(".colorpick, .colorpickpreview")
 		.iris({
 			change: function (event, ui) {
-				$(this)
+				var $input = $(this);
+				var colorValue = ui.color.toString();
+				
+				$input
 					.parent()
 					.find(".colorpickpreview")
-					.css({ backgroundColor: ui.color.toString() });
+					.css({ backgroundColor: colorValue });
+				
+				var $container = $input.closest(".wp-picker-container");
+				if ($container.length) {
+					var $colorResult = $container.find(".wp-color-result");
+					if ($colorResult.length) {
+						$colorResult.css("background-color", colorValue);
+						var $colorSpan = $colorResult.find("span");
+						if ($colorSpan.length) {
+							$colorSpan.css("background-color", colorValue);
+						}
+					}
+				}
 			},
 			hide: true,
 			border: true
