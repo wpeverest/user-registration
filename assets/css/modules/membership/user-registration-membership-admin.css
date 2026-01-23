@@ -642,7 +642,7 @@
   margin-bottom: 30px;
 }
 .user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container img {
-  width: 300px;
+  width: 270px;
 }
 .user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container h3 {
   margin-top: 16px;
@@ -686,7 +686,7 @@
   margin-bottom: 30px;
 }
 .user-registration #user-registration-list-table-page #user-registration-members-list-form .wp-list-table.users tbody tr.no-items td .empty-list-table-container img {
-  width: 300px;
+  width: 270px;
 }
 .user-registration #user-registration-list-table-page #user-registration-members-list-form .wp-list-table.users tbody tr.no-items td .empty-list-table-container h3 {
   margin-top: 16px;
@@ -701,6 +701,20 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 24px;
+}
+.user-registration #user-registration-list-table-page #user-registration-members-list-form .wp-list-table.users tbody tr.no-items td .empty-list-table-container a {
+  border: 1px solid red;
+  color: #6b6b6b;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  border-radius: 2px;
+}
+.user-registration #user-registration-list-table-page #user-registration-members-list-form .wp-list-table.users tbody tr.no-items td .empty-list-table-container .empty-list-table-subtext {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
 }
 .user-registration .ur-membership .ur-membership-tab-contents-wrapper {
   background-color: unset;
@@ -1395,7 +1409,7 @@
   margin-bottom: 30px;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table tbody tr.no-items td .empty-list-table-container img {
-  width: 300px;
+  width: 270px;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table tbody tr.no-items td .empty-list-table-container h3 {
   margin-top: 16px;
@@ -1448,7 +1462,7 @@
   margin-bottom: 30px;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container img {
-  width: 300px;
+  width: 270px;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container h3 {
   margin-top: 16px;
@@ -1463,6 +1477,37 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 24px;
+  margin: 0;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  color: #6b6b6b;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 17px;
+  border-radius: 4px;
+  border: 1px solid #e1e1e1;
+  padding: 4px 10px;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container a:focus {
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container a svg {
+  width: 14px;
+  height: 14px;
+  stroke: #6b6b6b;
+}
+.user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container .empty-list-table-subtext {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tfoot tr td,
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tfoot tr th {
@@ -1539,7 +1584,7 @@
   margin-bottom: 30px;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#user-registration-members-list-form .wp-list-table.users tbody tr.no-items td .empty-list-table-container img {
-  width: 300px;
+  width: 270px;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form#user-registration-members-list-form .wp-list-table.users tbody tr.no-items td .empty-list-table-container h3 {
   margin-top: 16px;
@@ -1582,7 +1627,7 @@
   margin-bottom: 30px;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.teams tbody tr.no-items td .empty-list-table-container img {
-  width: 300px;
+  width: 270px;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.teams tbody tr.no-items td .empty-list-table-container h3 {
   margin-top: 16px;
