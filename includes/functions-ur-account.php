@@ -139,7 +139,7 @@ function ur_get_account_menu_items() {
 	$profile = user_registration_form_data( $user_id, $form_id );
 
 	// if ( count( $profile ) < 1 ) {
-	// 	unset( $items['edit-profile'] );
+	// unset( $items['edit-profile'] );
 	// }
 
 	// Remove missing endpoints.
@@ -176,7 +176,7 @@ function ur_get_account_menu_item_classes( $endpoint ) {
 
 	// Set current item class.
 	$current = isset( $wp->query_vars[ $endpoint ] );
-	if ( 'dashboard' === $endpoint && ( isset( $wp->query_vars['page'] ) || empty( $wp->query_vars ) ) ) {
+	if ( 'edit-profile' === $endpoint && ( isset( $wp->query_vars['page'] ) || empty( $wp->query_vars ) ) ) {
 		$current = true; // Dashboard is not an endpoint, so needs a custom check.
 	}
 
@@ -261,8 +261,18 @@ function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt
 
 	$profile_picture_url = get_user_meta( $user->ID, 'user_registration_profile_pic_url', true );
 
+	// Track if we've already validated the image (optimization for attachment IDs).
+	$is_valid_image = false;
+
 	if ( is_numeric( $profile_picture_url ) ) {
-		$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
+		// Profile picture is stored as attachment ID - validate it directly here.
+		$attachment_id = absint( $profile_picture_url );
+		if ( wp_attachment_is_image( $attachment_id ) ) {
+			$profile_picture_url = wp_get_attachment_url( $attachment_id );
+			$is_valid_image      = true; // Skip ur_check_url_is_image() call later.
+		} else {
+			$profile_picture_url = ''; // Invalid attachment, clear it.
+		}
 	}
 	$profile_picture_url = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user->ID );
 
@@ -280,7 +290,7 @@ function ur_replace_gravatar_image( $avatar, $id_or_email, $size, $default, $alt
 		}
 	}
 
-	if ( $profile_picture_url && ur_check_url_is_image( $profile_picture_url ) ) {
+	if ( $profile_picture_url && ( $is_valid_image || ur_check_url_is_image( $profile_picture_url ) ) ) {
 		$avatar = sprintf(
 			"<img alt='%s' src='%s' srcset='%s' class='%s' height='%d' width='%d' %s/>",
 			esc_attr( $args['alt'] ),

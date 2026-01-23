@@ -17,7 +17,7 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	public function __construct() {
 		$this->table               = TableList::orders_table();
 		$this->posts_table         = TableList::posts_table();
-		$this->post_meta_table         = TableList::posts_meta_table();
+		$this->post_meta_table     = TableList::posts_meta_table();
 		$this->users_table         = TableList::users_table();
 		$this->subscriptions_table = TableList::subscriptions_table();
 		$this->orders_meta_table   = TableList::order_meta_table();
@@ -31,6 +31,22 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	 * @return array|object|\stdClass[]
 	 */
 	public function get_all( $args ) {
+		global $wpdb;
+
+		$table_exists = $wpdb->get_var(
+			$wpdb->prepare( 'SHOW TABLES LIKE %s', $this->table )
+		);
+
+		if ( $table_exists !== $this->table ) {
+			return array(
+				'items'        => array(),
+				'total'        => 0,
+				'total_pages'  => 0,
+				'current_page' => 1,
+				'per_page'     => absint( $args['per_page'] ?? 20),
+			);
+		}
+
 		$sql = "
 					SELECT urmo.ID AS order_id,
 						wpp.ID as post_id,
@@ -41,7 +57,9 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 						urmo.payment_method,
 						wpu.user_email,
 						urmo.status,
-						urmo.created_at
+						urmo.total_amount,
+						urmo.created_at,
+						urmo.subscription_id
 					FROM $this->table urmo
 					JOIN $this->posts_table wpp ON urmo.item_id = wpp.ID
 					JOIN $this->users_table wpu ON urmo.user_id = wpu.ID
@@ -144,7 +162,7 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 		);
 
 		$orders_meta_table = TableList::order_meta_table();
-		$payment_date = $this->wpdb()->get_var(
+		$payment_date      = $this->wpdb()->get_var(
 			$this->wpdb()->prepare(
 				"SELECT meta_value FROM {$orders_meta_table} WHERE meta_key=%s AND order_id=%d LIMIT 1",
 				'payment_date',
@@ -152,8 +170,8 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 			)
 		);
 
-		if( ! empty( $payment_date ) ) {
-			$result[ 'created_at' ] = $payment_date;
+		if ( ! empty( $payment_date ) ) {
+			$result['created_at'] = $payment_date;
 		}
 
 		return ! $result ? array() : $result;
@@ -205,7 +223,8 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	}
 
 	public function get_all_delayed_orders( $date ) {
-		$sql = sprintf( "
+		$sql = sprintf(
+			"
 					SELECT
 					       wpum.meta_value as sub_data
 					FROM wp_ur_membership_orders urmo
@@ -214,7 +233,9 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 					WHERE wpom.meta_key = 'delayed_until'
 					  AND wpom.meta_value = '%s'
 					  AND wpum.meta_key = 'urm_next_subscription_data'
-				", $date );
+				",
+			$date
+		);
 
 		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
 
@@ -222,8 +243,35 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 	}
 
 	public function delete_order_meta( $conditions ) {
-		$result = $this->wpdb()->delete( $this->orders_meta_table , $conditions );
+		$result = $this->wpdb()->delete( $this->orders_meta_table, $conditions );
 		return ! $result ? array() : $result;
 	}
 
+	public function get_order_meta_by_order_id_and_meta_key( $order_id, $meta_key ) {
+		$ordermeta_table = $this->wpdb()->prefix . 'ur_membership_ordermeta';
+
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"
+				SELECT *
+				FROM {$ordermeta_table}
+				WHERE order_id = %d
+				AND meta_key = %s
+				LIMIT 1
+				",
+				$order_id,
+				$meta_key
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? array() : $result;
+	}
+
+	public function update_order_meta( $order_meta ) {
+		$this->wpdb()->insert(
+			TableList::order_meta_table(),
+			$order_meta
+		);
+	}
 }

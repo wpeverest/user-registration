@@ -128,8 +128,8 @@ wp_enqueue_style( 'ur-frontend-small-screen' );
 			<?php
 			$is_title_description_enabled = ur_string_to_bool( ur_get_single_post_meta( $form_id, 'user_registration_enable_form_title_description', false ) );
 			if ( $is_title_description_enabled ) {
-				$registration_title_label       = esc_html__(ur_get_single_post_meta( $form_id, 'user_registration_form_title' ), 'user-registration');
-				$registration_title_description = esc_html__(ur_get_single_post_meta( $form_id, 'user_registration_form_description' ), 'user-registration');
+				$registration_title_label       = esc_html__( ur_get_single_post_meta( $form_id, 'user_registration_form_title' ), 'user-registration' );
+				$registration_title_description = esc_html__( ur_get_single_post_meta( $form_id, 'user_registration_form_description' ), 'user-registration' );
 				/* translators: %s - registration Title. */
 				echo wp_kses_post( sprintf( __( '<span class="user-registration-registration-title"> %s </span> </br>', 'user-registration' ), $registration_title_label ) );
 				echo wp_kses_post( sprintf( __( '<p class="user-registration-registration-description"> %s </p>', 'user-registration' ), $registration_title_description ) );
@@ -155,7 +155,7 @@ wp_enqueue_style( 'ur-frontend-small-screen' );
 				 */
 				do_action( 'user_registration_before_form_fields', $form_data_array, $form_id );
 
-				if( is_iterable( $form_data_array ) ) {
+				if ( is_iterable( $form_data_array ) ) {
 					foreach ( $form_data_array as $index => $data ) {
 						$row_id = ( ! empty( $row_ids[ $index ] ) ) ? absint( $row_ids[ $index ] ) : $index;
 
@@ -222,7 +222,7 @@ wp_enqueue_style( 'ur-frontend-small-screen' );
 										}
 									}
 									?>
-									<div <?php echo $cl_props; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> data-field-id="<?php echo esc_attr( $field_id ); ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>" data-ref-id="<?php echo esc_attr( $field_id ); ?>" data-field-pattern-enabled="<?php echo esc_attr( ! empty( $single_item->advance_setting->enable_pattern ) ? $single_item->advance_setting->enable_pattern  : 0 ); ?>" data-field-pattern-value="<?php echo esc_attr( ! empty( $single_item->advance_setting->pattern_value ) ? $single_item->advance_setting->pattern_value  : " " ); ?>" data-field-pattern-message="<?php echo esc_attr( ! empty( $single_item->advance_setting->pattern_message ) ? $single_item->advance_setting->pattern_message  : " " ); ?>">
+									<div <?php echo $cl_props; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> data-field-id="<?php echo esc_attr( $field_id ); ?>" class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>" data-ref-id="<?php echo esc_attr( $field_id ); ?>" data-field-pattern-enabled="<?php echo esc_attr( ! empty( $single_item->advance_setting->enable_pattern ) ? $single_item->advance_setting->enable_pattern : 0 ); ?>" data-field-pattern-value="<?php echo esc_attr( ! empty( $single_item->advance_setting->pattern_value ) ? $single_item->advance_setting->pattern_value : ' ' ); ?>" data-field-pattern-message="<?php echo esc_attr( ! empty( $single_item->advance_setting->pattern_message ) ? ur_string_translation( $form_id, 'user_registration_' . $field_id . '_pattern_message', $single_item->advance_setting->pattern_message ) : ' ' ); ?>">
 										<?php
 										$grid_data =
 										/**

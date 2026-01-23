@@ -5,8 +5,11 @@
   "version": "1.0.0",
   "title": "Registration Form",
   "category": "user-registration",
-  "description": "The block lets the user choose the required user registration directly.",
-  "keywords": ["user registration form", "registration form"],
+  "description": "Display the custom URM Registration Form.",
+  "keywords": [
+    "user registration form",
+    "registration form"
+  ],
   "textdomain": "user-registration",
   "example": {
     "attributes": {}
@@ -19,7 +22,7 @@
   "attributes": {
     "formId": {
       "type": "string",
-      "default": ""
+      "default": "initial"
     },
     "userState": {
       "type": "string"

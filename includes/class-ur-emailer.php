@@ -88,55 +88,6 @@ class UR_Emailer {
 		return 'text/html';
 	}
 
-
-	/**
-	 * Sender's Email address
-	 *
-	 * @return string sender's email
-	 */
-	public static function ur_sender_email() {
-		$sender_email = get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) );
-		return $sender_email;
-	}
-
-	/**
-	 * Sender's name.
-	 *
-	 * @return string sender's name
-	 */
-	public static function ur_sender_name() {
-		$sender_name = get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) );
-		return $sender_name;
-	}
-
-	/**
-	 * Emails Headers.
-	 *
-	 * @return string email header
-	 */
-	public static function ur_get_header() {
-		$header       = array(
-			'From:' . self::ur_sender_name() . ' <' . self::ur_sender_email() . '>',
-			'Reply-To:' . self::ur_sender_email(),
-			'Content-Type:text/html; charset=UTF-8',
-		);
-		$sender_email = self::ur_sender_email();
-		$sender_name  = self::ur_sender_name();
-
-		/**
-		 * Hook to modify user email header such as from name, reply to etc.
-		 *
-		 * @param array $header Default Header.
-		 * @param string $sender_email Sender Email.
-		 * @param string $sender_name Sender Name.
-		 *
-		 * @return array $header
-		 */
-		$header = apply_filters( 'user_registration_modify_user_email_header', $header, $sender_email, $sender_name );
-
-		return $header;
-	}
-
 	/**
 	 * Email sending process after registration hook.
 	 *
@@ -148,7 +99,7 @@ class UR_Emailer {
 	public static function ur_after_register_mail( $valid_form_data, $form_id, $user_id ) {
 		$valid_form_data = ur_array_clone( $valid_form_data );
 
-		$login_option    = ur_get_user_login_option( $user_id );
+		$login_option = ur_get_user_login_option( $user_id );
 
 		if ( ( 'email_confirmation' !== $login_option || 'admin_approval_after_email_confirmation' !== $login_option ) && ur_option_checked( 'user_registration_email_setting_disable_email' ) ) {
 			return;
@@ -193,6 +144,397 @@ class UR_Emailer {
 			 * Action to do after the email send.
 			 */
 			do_action( 'user_registration_email_send_after' );
+		}
+	}
+
+	/**
+	 * Trigger the user email.
+	 *
+	 * @param  string $email Email of the user.
+	 * @param  string $username   Username of the user.
+	 * @param  int    $user_id       User id.
+	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
+	 * @param  array  $name_value Array to replace with extra fields smart tag.
+	 * @param  array  $attachments Email Attachment.
+	 * @param  int    $template_id Email Template Identifier.
+	 * @return void
+	 */
+	public static function send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id ) {
+
+		$form_id      = ur_get_form_id_by_userid( $user_id );
+		$login_option = ur_get_user_login_option( $user_id );
+		$attachment   = isset( $attachments['user'] ) ? $attachments['user'] : '';
+		$status       = ur_get_user_approval_status( $user_id );
+		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
+		$email_status = ! metadata_exists( 'user', $user_id, 'ur_confirm_email' ) ? true : $email_status;
+		$email_token  = get_user_meta( $user_id, 'ur_confirm_email_token', true );
+
+		// Get User Status when admin approval after email confirmation login option enabled in form.
+		if ( 'admin_approval_after_email_confirmation' === $login_option ) {
+			$user_status = get_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', true );
+		}
+		$values = array(
+			'user_id'     => $user_id,
+			'username'    => $username,
+			'email'       => $email,
+			'all_fields'  => $data_html,
+			'email_token' => $email_token,
+			'form_id'     => $form_id,
+		);
+
+		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
+		if ( empty( $current_language ) ) {
+			$current_language = ur_get_current_language();
+		}
+		$is_membership_form = check_membership_field_in_form( $form_id );
+
+		if ( '0' === $email_status ) {
+			$subject  = get_option( 'user_registration_email_confirmation_subject', __( 'Confirm Your Email Address', 'user-registration' ) );
+			$settings = new UR_Settings_Email_Confirmation();
+			$message  = $settings->ur_get_email_confirmation();
+			$message  = get_option( 'user_registration_email_confirmation', $message );
+
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = ur_get_translated_string( 'admin_texts_user_registration_email_confirmation', $message, $current_language, 'user_registration_email_confirmation' );
+			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_email_confirmation_subject', $subject, $current_language, 'user_registration_email_confirmation_subject' );
+
+			$message = self::parse_smart_tags( $message, $values, $name_value );
+			$subject = self::parse_smart_tags( $subject, $values, $name_value );
+
+			if ( ur_option_checked( 'user_registration_enable_email_confirmation', true ) ) {
+				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
+			}
+		} elseif ( 0 === intval( $status ) || ( '1' === $email_status && isset( $user_status ) && ! ur_string_to_bool( $user_status ) ) ) {
+			$subject                   = get_option( 'user_registration_awaiting_admin_approval_email_subject', __( 'Your Registration is Pending Approval', 'user-registration' ) );
+			$settings                  = new UR_Settings_Awaiting_Admin_Approval_Email();
+			$message                   = $settings->ur_get_awaiting_admin_approval_email();
+			$message                   = get_option( 'user_registration_awaiting_admin_approval_email', $message );
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = ur_get_translated_string( 'admin_texts_user_registration_awaiting_admin_approval_email', $message, $current_language, 'user_registration_awaiting_admin_approval_email' );
+			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_awaiting_admin_approval_email_subject', $subject, $current_language, 'user_registration_awaiting_admin_approval_email_subject' );
+
+			$message = self::parse_smart_tags( $message, $values, $name_value );
+			$subject = self::parse_smart_tags( $subject, $values, $name_value );
+
+			if ( ur_option_checked( 'user_registration_enable_awaiting_admin_approval_email', true ) ) {
+				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
+			}
+		} elseif ( -1 === intval( $status ) ) {
+			$subject                   = get_option( 'user_registration_registration_denied_email_subject', __( 'Registration Status Update', 'user-registration' ) );
+			$settings                  = new UR_Settings_Registration_Denied_Email();
+			$message                   = $settings->ur_get_registration_denied_email();
+			$message                   = get_option( 'user_registration_registration_denied_email', $message );
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = ur_get_translated_string( 'admin_texts_user_registration_registration_denied_email', $message, $current_language, 'user_registration_registration_denied_email' );
+			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_registration_denied_email_subject', $subject, $current_language, 'user_registration_registration_denied_email_subject' );
+
+			$message = self::parse_smart_tags( $message, $values, $name_value );
+			$subject = self::parse_smart_tags( $subject, $values, $name_value );
+
+			if ( ur_option_checked( 'user_registration_enable_registration_denied_email', true ) ) {
+				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
+			}
+		} elseif ( ( 'default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status ) ) && ! $is_membership_form ) {
+
+			if ( UR_PRO_ACTIVE && class_exists( '\Custom_Email_Sender' ) ) {
+				if ( \Custom_Email_Sender::should_override_default_email( 'member_signs_up', 'all_members', $user_id, 0 ) ) {
+					return;
+				}
+			}
+			$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Welcome to {{blog_info}}!', 'user-registration' ) );
+			$settings = new UR_Settings_Successfully_Registered_Email();
+			$message  = $settings->ur_get_successfully_registered_email();
+
+			$message = get_option( 'user_registration_successfully_registered_email', $message );
+
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email', $message, $current_language, 'user_registration_successfully_registered_email' );
+			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email_subject', $subject, $current_language, 'user_registration_successfully_registered_email_subject' );
+			$message                   = self::parse_smart_tags( $message, $values, $name_value );
+			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
+
+			if ( ur_option_checked( 'user_registration_enable_successfully_registered_email', true ) ) {
+				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
+			}
+		}
+	}
+
+	/**
+	 * Parse Smart tags for emails.
+	 *
+	 * @param string $content Contents.
+	 * @param array  $values Data values.
+	 * @param array  $name_value  Extra values.
+	 */
+	public static function parse_smart_tags( $content = '', $values = array(), $name_value = array() ) {
+		/**
+		 * Hook to process the smart tags.
+		 *
+		 * @param string $content The message content.
+		 * @param int $values The values.
+		 * @param int $name_values The name values.
+		 *
+		 * @return string $content
+		 */
+		$content = apply_filters( 'user_registration_process_smart_tags', $content, $values, $name_value );
+		return $content;
+	}
+
+	/**
+	 * user_registration_process_and_send_email
+	 *
+	 * @param  string $email Email of the user.
+	 * @param  string $subject Subject of the email.
+	 * @param  string $message  The body of the email.
+	 * @param  mixed  $header The header of the email.
+	 * @param  array  $attachment Email Attachment.
+	 * @param  int    $template_id Email Template Identifier.
+	 *
+	 * @return bool|mixed
+	 */
+	public static function user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id ) {
+
+		$message = user_registration_process_email_content( $message, $template_id );
+		$status  = wp_mail( $email, $subject, $message, $header, $attachment, $template_id );
+
+		$mail_error_notice_dismissed = get_option( 'user_registration_info_ur_email_send_failed_notice_dismissed_temporarily', false );
+		$mail_error_notice_dismissed = ! $mail_error_notice_dismissed ? get_option( 'user_registration_info_ur_email_send_failed_notice_dismissed', false ) : $mail_error_notice_dismissed;
+		$logger                      = ur_get_logger();
+		$logger->info( __( 'Email Sending', 'user-registration' ), array( 'source' => 'ur_mail_logs' ) );
+		if ( ! $status && ! $mail_error_notice_dismissed ) {
+			$logger->info( __( 'Email Sending failed', 'user-registration' ), array( 'source' => 'ur_mail_logs' ) );
+			$error_message = apply_filters( 'user_registration_email_send_failed_message', '' );
+			$failed_data   = get_transient( 'user_registration_mail_send_failed_count' );
+			$failed_count  = $failed_data && isset( $failed_data['failed_count'] ) ? $failed_data['failed_count'] : 0;
+			++$failed_count;
+			set_transient(
+				'user_registration_mail_send_failed_count',
+				array(
+					'failed_count'  => $failed_count,
+					'error_message' => $error_message,
+				)
+			);
+			return $status;
+		} else {
+			$logger->info( __( 'Email Send Successfully', 'user-registration' ), array( 'source' => 'ur_mail_logs' ) );
+			return $status;
+		}
+	}
+
+	/**
+	 * Emails Headers.
+	 *
+	 * @return string email header
+	 */
+	public static function ur_get_header() {
+		$header       = array(
+			'From:' . self::ur_sender_name() . ' <' . self::ur_sender_email() . '>',
+			'Reply-To:' . self::ur_sender_email(),
+			'Content-Type:text/html; charset=UTF-8',
+		);
+		$sender_email = self::ur_sender_email();
+		$sender_name  = self::ur_sender_name();
+
+		/**
+		 * Hook to modify user email header such as from name, reply to etc.
+		 *
+		 * @param array $header Default Header.
+		 * @param string $sender_email Sender Email.
+		 * @param string $sender_name Sender Name.
+		 *
+		 * @return array $header
+		 */
+		$header = apply_filters( 'user_registration_modify_user_email_header', $header, $sender_email, $sender_name );
+
+		return $header;
+	}
+
+	/**
+	 * Sender's name.
+	 *
+	 * @return string sender's name
+	 */
+	public static function ur_sender_name() {
+		$sender_name = get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) );
+		return $sender_name;
+	}
+
+	/**
+	 * Sender's Email address
+	 *
+	 * @return string sender's email
+	 */
+	public static function ur_sender_email() {
+		$sender_email = get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) );
+		return $sender_email;
+	}
+
+	/**
+	 * Trigger the approval link in email.
+	 *
+	 * @param  string $user_email Email of the user.
+	 * @param  string $username   Username of the user.
+	 * @param  int    $user_id       User id.
+	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
+	 * @param  array  $name_value Array to replace with extra fields smart tag.
+	 * @param  array  $attachments Email Attachement.
+	 * @param  mixed  $template_id Email Template Id.
+	 * @return void
+	 */
+	public static function send_approve_link_in_email( $user_email, $username, $user_id, $data_html, $name_value, $attachments, $template_id ) {
+
+		$header = array(
+			'Reply-To:' . $user_email,
+			'Content-Type: text/html; charset=UTF-8',
+		);
+
+		/**
+		 * Hook to modify admin email header.
+		 *
+		 * @param array $header Default Header.
+		 * @param string $user_email User Email.
+		 *
+		 * @return array $header
+		 */
+		$header = apply_filters( 'user_registration_modify_admin_email_header', $header, $user_email );
+
+		$attachment  = isset( $attachments['admin'] ) ? $attachments['admin'] : '';
+		$admin_email = get_option( 'user_registration_approval_link_email_receipents', get_option( 'admin_email' ) );
+		$admin_email = explode( ',', $admin_email );
+		$admin_email = array_map( 'trim', $admin_email );
+
+		$subject  = get_option( 'user_registration_approval_link_email_subject', __( 'Approval Needed: New Member Registration', 'user-registration' ) );
+		$settings = new UR_Settings_Approval_Link_Email();
+
+		$form_id = ur_get_form_id_by_userid( $user_id );
+
+		$message = $settings->ur_get_approval_link_email();
+		$message = get_option( 'user_registration_approval_link_email', $message );
+
+		$values = array(
+			'username'   => $username,
+			'email'      => $user_email,
+			'all_fields' => $data_html,
+			'user_id'    => $user_id,
+			'form_id'    => $form_id,
+		);
+
+		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
+		if ( empty( $current_language ) ) {
+			$current_language = ur_get_current_language();
+		}
+
+		$login_option = ur_get_user_login_option( $user_id );
+
+		// If enabled approval via email setting.
+		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
+			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
+			$values['denial_token']   = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
+			$values['approval_link']  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
+			$values['denial_link']    = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $values['denial_token'] . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
+		}
+
+		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
+		$message                   = ur_get_translated_string( 'admin_texts_user_registration_approval_link_email', $message, $current_language, 'user_registration_approval_link_email' );
+		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_approval_link_email_subject', $subject, $current_language, 'user_registration_approval_link_email_subject' );
+
+		$message = self::parse_smart_tags( $message, $values, $name_value );
+		$subject = self::parse_smart_tags( $subject, $values, $name_value );
+
+		if ( ur_option_checked( 'user_registration_enable_approval_link_email', true ) ) {
+			foreach ( $admin_email as $email ) {
+				self::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );
+			}
+		}
+	}
+
+	/**
+	 * Trigger the admin email.
+	 *
+	 * @param  string $user_email Email of the user.
+	 * @param  string $username   Username of the user.
+	 * @param  int    $user_id       User id.
+	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
+	 * @param  array  $name_value Array to replace with extra fields smart tag.
+	 * @param  array  $attachments Email Attachement.
+	 * @param  mixed  $template_id Email Template Id.
+	 * @return void
+	 */
+	public static function send_mail_to_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments, $template_id ) {
+
+		$header = array(
+			'Reply-To:' . $user_email,
+			'Content-Type: text/html; charset=UTF-8',
+		);
+
+		/**
+		 * Hook to modify admin email header.
+		 *
+		 * @param array $header Default Header.
+		 * @param string $user_email User Email.
+		 *
+		 * @return array $header
+		 */
+		$header = apply_filters( 'user_registration_modify_admin_email_header', $header, $user_email );
+
+		$attachment  = isset( $attachments['admin'] ) ? $attachments['admin'] : '';
+		$admin_email = get_option( 'user_registration_admin_email_receipents', get_option( 'admin_email' ) );
+		$admin_email = explode( ',', $admin_email );
+		$admin_email = array_map( 'trim', $admin_email );
+
+		$subject = get_option( 'user_registration_admin_email_subject', __( 'A Member registration: {{username}} ', 'user-registration' ) );
+
+		$settings = new UR_Settings_Admin_Email();
+
+		$form_id = ur_get_form_id_by_userid( $user_id );
+		$message = $settings->ur_get_admin_email();
+		$message = get_option( 'user_registration_admin_email', $message );
+
+		$values = array(
+			'username'   => $username,
+			'email'      => $user_email,
+			'all_fields' => $data_html,
+			'user_id'    => $user_id,
+			'form_id'    => $form_id,
+		);
+
+		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
+		if ( empty( $current_language ) ) {
+			$current_language = ur_get_current_language();
+		}
+
+		$login_option = ur_get_user_login_option( $user_id );
+
+		// If enabled approval via email setting.
+		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
+			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
+			$values['denial_token']   = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
+			$values['approval_link']  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
+			$values['denial_link']    = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $values['denial_token'] . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
+		}
+
+		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
+		$message                   = ur_get_translated_string( 'admin_texts_user_registration_admin_email', $message, $current_language, 'user_registration_admin_email' );
+		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_admin_email_subject', $subject, $current_language, 'user_registration_admin_email_subject' );
+
+		$message = self::parse_smart_tags( $message, $values, $name_value );
+		$subject = self::parse_smart_tags( $subject, $values, $name_value );
+
+		if ( ur_option_checked( 'user_registration_enable_admin_email', true ) ) {
+			$is_membership_form = check_membership_field_in_form( $form_id );
+			if ( $is_membership_form ) {
+				return;
+			}
+
+			if ( UR_PRO_ACTIVE && class_exists( '\Custom_Email_Sender' ) ) {
+				if ( \Custom_Email_Sender::should_override_default_email( 'member_signs_up', 'admin', $user_id, 0 ) ) {
+					return;
+				}
+			}
+
+			foreach ( $admin_email as $email ) {
+				self::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );
+			}
 		}
 	}
 
@@ -333,115 +675,8 @@ class UR_Emailer {
 		}
 	}
 
-
 	/**
-	 * Trigger the user email.
-	 *
-	 * @param  string $email Email of the user.
-	 * @param  string $username   Username of the user.
-	 * @param  int    $user_id       User id.
-	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
-	 * @param  array  $name_value Array to replace with extra fields smart tag.
-	 * @param  array  $attachments Email Attachment.
-	 * @param  int    $template_id Email Template Identifier.
-	 * @return void
-	 */
-	public static function send_mail_to_user( $email, $username, $user_id, $data_html, $name_value, $attachments, $template_id ) {
-
-		$form_id      = ur_get_form_id_by_userid( $user_id );
-		$login_option = ur_get_user_login_option( $user_id );
-		$attachment   = isset( $attachments['user'] ) ? $attachments['user'] : '';
-		$status       = ur_get_user_approval_status( $user_id );
-		$email_status = get_user_meta( $user_id, 'ur_confirm_email', true );
-		$email_status = ! metadata_exists( 'user', $user_id, 'ur_confirm_email' ) ? true : $email_status;
-		$email_token  = get_user_meta( $user_id, 'ur_confirm_email_token', true );
-
-		// Get User Status when admin approval after email confirmation login option enabled in form.
-		if ( 'admin_approval_after_email_confirmation' === $login_option ) {
-			$user_status = get_user_meta( $user_id, 'ur_admin_approval_after_email_confirmation', true );
-		}
-		$values = array(
-			'user_id'     => $user_id,
-			'username'    => $username,
-			'email'       => $email,
-			'all_fields'  => $data_html,
-			'email_token' => $email_token,
-			'form_id'     => $form_id,
-		);
-
-		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
-		if ( empty( $current_language ) ) {
-			$current_language = ur_get_current_language();
-		}
-		$is_membership_form = check_membership_field_in_form($form_id);
-
-		if ( '0' === $email_status ) {
-			$subject  = get_option( 'user_registration_email_confirmation_subject', __( 'Please confirm your registration on {{blog_info}}', 'user-registration' ) );
-			$settings = new UR_Settings_Email_Confirmation();
-			$message  = $settings->ur_get_email_confirmation();
-			$message  = get_option( 'user_registration_email_confirmation', $message );
-
-			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-			$message                   = ur_get_translated_string( 'admin_texts_user_registration_email_confirmation', $message, $current_language, 'user_registration_email_confirmation' );
-			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_email_confirmation_subject', $subject, $current_language, 'user_registration_email_confirmation_subject' );
-
-			$message = self::parse_smart_tags( $message, $values, $name_value );
-			$subject = self::parse_smart_tags( $subject, $values, $name_value );
-
-			if( ur_option_checked( 'user_registration_enable_email_confirmation', true ) ) {
-				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
-			}
-		} elseif ( 0 === intval( $status ) || ( '1' === $email_status && isset( $user_status ) && ! ur_string_to_bool( $user_status ) ) ) {
-			$subject                   = get_option( 'user_registration_awaiting_admin_approval_email_subject', __( 'Thank you for registration on {{blog_info}}', 'user-registration' ) );
-			$settings                  = new UR_Settings_Awaiting_Admin_Approval_Email();
-			$message                   = $settings->ur_get_awaiting_admin_approval_email();
-			$message                   = get_option( 'user_registration_awaiting_admin_approval_email', $message );
-			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-			$message                   = ur_get_translated_string( 'admin_texts_user_registration_awaiting_admin_approval_email', $message, $current_language, 'user_registration_awaiting_admin_approval_email' );
-			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_awaiting_admin_approval_email_subject', $subject, $current_language, 'user_registration_awaiting_admin_approval_email_subject' );
-
-			$message = self::parse_smart_tags( $message, $values, $name_value );
-			$subject = self::parse_smart_tags( $subject, $values, $name_value );
-
-			if ( ur_option_checked( 'user_registration_enable_awaiting_admin_approval_email', true ) ) {
-				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
-			}
-		} elseif ( -1 === intval( $status ) ) {
-			$subject                   = get_option( 'user_registration_registration_denied_email_subject', __( 'Sorry! Registration denied on {{blog_info}}', 'user-registration' ) );
-			$settings                  = new UR_Settings_Registration_Denied_Email();
-			$message                   = $settings->ur_get_registration_denied_email();
-			$message                   = get_option( 'user_registration_registration_denied_email', $message );
-			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-			$message                   = ur_get_translated_string( 'admin_texts_user_registration_registration_denied_email', $message, $current_language, 'user_registration_registration_denied_email' );
-			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_registration_denied_email_subject', $subject, $current_language, 'user_registration_registration_denied_email_subject' );
-
-			$message = self::parse_smart_tags( $message, $values, $name_value );
-			$subject = self::parse_smart_tags( $subject, $values, $name_value );
-
-			if ( ur_option_checked( 'user_registration_enable_registration_denied_email', true ) ) {
-				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
-			}
-		} elseif ( ('default' === $login_option || 'auto_login' === $login_option || ur_string_to_bool( $email_status )) && !$is_membership_form  ) {
-			$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Congratulations! Registration Complete on {{blog_info}}', 'user-registration' ) );
-			$settings = new UR_Settings_Successfully_Registered_Email();
-			$message  = $settings->ur_get_successfully_registered_email();
-
-			$message  = get_option( 'user_registration_successfully_registered_email', $message );
-
-			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-			$message                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email', $message, $current_language, 'user_registration_successfully_registered_email' );
-			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email_subject', $subject, $current_language, 'user_registration_successfully_registered_email_subject' );
-			$message = self::parse_smart_tags( $message, $values, $name_value );
-			$subject = self::parse_smart_tags( $subject, $values, $name_value );
-
-			if ( ur_option_checked( 'user_registration_enable_successfully_registered_email', true )) {
-				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), $attachment, $template_id );
-			}
-		}
-	}
-
-	/**
-	 * Trigger the admin email.
+	 * Trigger the admin email after profile details changed by user.
 	 *
 	 * @param  string $user_email Email of the user.
 	 * @param  string $username   Username of the user.
@@ -449,16 +684,15 @@ class UR_Emailer {
 	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
 	 * @param  array  $name_value Array to replace with extra fields smart tag.
 	 * @param  array  $attachments Email Attachement.
-	 * @param  mixed  $template_id Email Template Id.
 	 * @return void
+	 * @since 1.6.3
 	 */
-	public static function send_mail_to_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments, $template_id ) {
+	public static function send_profile_changed_email_to_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments ) {
 
 		$header = array(
 			'Reply-To:' . $user_email,
 			'Content-Type: text/html; charset=UTF-8',
 		);
-
 		/**
 		 * Hook to modify admin email header.
 		 *
@@ -470,61 +704,44 @@ class UR_Emailer {
 		$header = apply_filters( 'user_registration_modify_admin_email_header', $header, $user_email );
 
 		$attachment  = isset( $attachments['admin'] ) ? $attachments['admin'] : '';
-		$admin_email = get_option( 'user_registration_admin_email_receipents', get_option( 'admin_email' ) );
+		$admin_email = get_option( 'user_registration_edit_profile_email_receipents', get_option( 'admin_email' ) );
 		$admin_email = explode( ',', $admin_email );
 		$admin_email = array_map( 'trim', $admin_email );
 
-		$subject  = get_option( 'user_registration_admin_email_subject', __( 'A New User Registered', 'user-registration' ) );
-
-		$settings = new UR_Settings_Admin_Email();
-
-		$form_id = ur_get_form_id_by_userid( $user_id );
-		$message = $settings->ur_get_admin_email();
-		$message = get_option( 'user_registration_admin_email', $message );
-
-		$values = array(
-			'username'   => $username,
-			'email'      => $user_email,
-			'all_fields' => $data_html,
-			'user_id'    => $user_id,
-			'form_id'    => $form_id,
-		);
+		$subject  = get_option( 'user_registration_profile_details_changed_email_subject', esc_html__( 'Profile Updated: {{username}}', 'user-registration' ) );
+		$settings = new UR_Settings_Profile_Details_Changed_Email();
+		$message  = $settings->ur_get_profile_details_changed_email();
+		$message  = get_option( 'user_registration_profile_details_changed_email', $message );
+		$form_id  = ur_get_form_id_by_userid( $user_id );
 
 		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
 		if ( empty( $current_language ) ) {
 			$current_language = ur_get_current_language();
 		}
+		$values = array(
+			'username'   => $username,
+			'email'      => $user_email,
+			'all_fields' => $data_html,
+			'form_id'    => $form_id,
+		);
 
-		$login_option = ur_get_user_login_option( $user_id );
-
-		// If enabled approval via email setting.
-		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
-			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
-			$values['denial_token']   = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
-			$values['approval_link']  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
-			$values['denial_link']    = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $values['denial_token'] . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
-		}
-
-		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
-		$message                   = ur_get_translated_string( 'admin_texts_user_registration_admin_email', $message, $current_language, 'user_registration_admin_email' );
-		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_admin_email_subject', $subject, $current_language, 'user_registration_admin_email_subject' );
+		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+		$message                   = ur_get_translated_string( 'admin_texts_user_registration_profile_details_changed_email', $message, $current_language, 'user_registration_profile_details_changed_email' );
+		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_profile_details_changed_email_subject', $subject, $current_language, 'user_registration_profile_details_changed_email_subject' );
 
 		$message = self::parse_smart_tags( $message, $values, $name_value );
 		$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
-		if ( ur_option_checked( 'user_registration_enable_admin_email', true ) ) {
-			$is_membership_form = check_membership_field_in_form($form_id);
-			if( $is_membership_form ) {
-				return;
-			}
+		if ( ur_option_checked( 'user_registration_enable_profile_details_changed_email', true ) ) {
 			foreach ( $admin_email as $email ) {
+				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 				self::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );
 			}
 		}
 	}
 
 	/**
-	 * Trigger the approval link in email.
+	 * Trigger the email after profile details changed by user.
 	 *
 	 * @param  string $user_email Email of the user.
 	 * @param  string $username   Username of the user.
@@ -532,44 +749,27 @@ class UR_Emailer {
 	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
 	 * @param  array  $name_value Array to replace with extra fields smart tag.
 	 * @param  array  $attachments Email Attachement.
-	 * @param  mixed  $template_id Email Template Id.
 	 * @return void
+	 * @since 3.0.5
 	 */
-	public static function send_approve_link_in_email( $user_email, $username, $user_id, $data_html, $name_value, $attachments, $template_id ) {
+	public static function send_profile_changed_email_to_user( $user_email, $username, $user_id, $data_html, $name_value, $attachments ) {
 
 		$header = array(
 			'Reply-To:' . $user_email,
 			'Content-Type: text/html; charset=UTF-8',
 		);
 
-		/**
-		 * Hook to modify admin email header.
-		 *
-		 * @param array $header Default Header.
-		 * @param string $user_email User Email.
-		 *
-		 * @return array $header
-		 */
-		$header = apply_filters( 'user_registration_modify_admin_email_header', $header, $user_email );
-
-		$attachment  = isset( $attachments['admin'] ) ? $attachments['admin'] : '';
-		$admin_email = get_option( 'user_registration_approval_link_email_receipents', get_option( 'admin_email' ) );
-		$admin_email = explode( ',', $admin_email );
-		$admin_email = array_map( 'trim', $admin_email );
-
-		$subject  = get_option( 'user_registration_approval_link_email_subject', __( 'Approval Link For New User Registration & Membership', 'user-registration' ) );
-		$settings = new UR_Settings_Approval_Link_Email();
-
-		$form_id = ur_get_form_id_by_userid( $user_id );
-
-		$message = $settings->ur_get_approval_link_email();
-		$message = get_option( 'user_registration_approval_link_email', $message );
+		$attachment = isset( $attachments['user'] ) ? $attachments['user'] : '';
+		$subject    = get_option( 'user_registration_profile_details_updated_email_subject', esc_html__( 'Profile Updated Successfully', 'user-registration' ) );
+		$settings   = new UR_Settings_Profile_Details_Updated_Email();
+		$message    = $settings->ur_get_profile_details_updated_email();
+		$message    = get_option( 'user_registration_profile_details_Updated_email', $message );
+		$form_id    = ur_get_form_id_by_userid( $user_id );
 
 		$values = array(
 			'username'   => $username,
 			'email'      => $user_email,
 			'all_fields' => $data_html,
-			'user_id'    => $user_id,
 			'form_id'    => $form_id,
 		);
 
@@ -578,27 +778,16 @@ class UR_Emailer {
 			$current_language = ur_get_current_language();
 		}
 
-		$login_option = ur_get_user_login_option( $user_id );
-
-		// If enabled approval via email setting.
-		if ( ( 'admin_approval' === $login_option || 'admin_approval_after_email_confirmation' === $login_option ) ) {
-			$values['approval_token'] = get_user_meta( $user_id, 'ur_confirm_approval_token', true );
-			$values['denial_token']   = get_user_meta( $user_id, 'ur_confirm_denial_token', true );
-			$values['approval_link']  = '<a href="' . admin_url( '/' ) . '?ur_approval_token=' . $values['approval_token'] . '">' . esc_html__( 'Approve Now', 'user-registration' ) . '</a><br />';
-			$values['denial_link']    = '<a href="' . admin_url( '/' ) . '?ur_denial_token=' . $values['denial_token'] . '">' . esc_html__( 'Deny Now', 'user-registration' ) . '</a><br />';
-		}
-
-		list( $message, $subject ) = user_registration_email_content_overrider( ur_get_form_id_by_userid( $user_id ), $settings, $message, $subject );
-		$message                   = ur_get_translated_string( 'admin_texts_user_registration_approval_link_email', $message, $current_language, 'user_registration_approval_link_email' );
-		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_approval_link_email_subject', $subject, $current_language, 'user_registration_approval_link_email_subject' );
+		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+		$message                   = ur_get_translated_string( 'admin_texts_user_registration_profile_details_updated_email', $message, $current_language, 'user_registration_profile_details_updated_email' );
+		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_profile_details_updated_email_subject', $subject, $current_language, 'user_registration_profile_details_updated_email_subject' );
 
 		$message = self::parse_smart_tags( $message, $values, $name_value );
 		$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
-		if ( ur_option_checked( 'user_registration_enable_approval_link_email', true ) ) {
-			foreach ( $admin_email as $email ) {
-				self::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );
-			}
+		if ( ur_option_checked( 'user_registration_enable_profile_details_updated_email', true ) ) {
+			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+			self::user_registration_process_and_send_email( $user_email, $subject, $message, $header, $attachment, $template_id );
 		}
 	}
 
@@ -648,13 +837,13 @@ class UR_Emailer {
 			$subject = self::parse_smart_tags( $subject, $values, $name_value );
 
 			if ( ur_option_checked( 'user_registration_enable_registration_pending_email', true ) ) {
-				if ( "user_registration_user_form_submit" !== $user_action ) {
+				if ( 'user_registration_user_form_submit' !== $user_action ) {
 					self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), '', $template_id );
 				}
 			}
 		} elseif ( -1 === intval( $status ) ) {
 
-			$subject                   = get_option( 'user_registration_registration_denied_email_subject', __( 'Sorry! Registration denied on {{blog_info}}', 'user-registration' ) );
+			$subject                   = get_option( 'user_registration_registration_denied_email_subject', __( 'Registration Status Update', 'user-registration' ) );
 			$settings                  = new UR_Settings_Registration_Denied_Email();
 			$message                   = $settings->ur_get_registration_denied_email();
 			$message                   = get_option( 'user_registration_registration_denied_email', $message );
@@ -669,22 +858,58 @@ class UR_Emailer {
 			}
 		} else {
 
-			$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Congratulations! Registration Complete on {{blog_info}}', 'user-registration' ) );
+			$subject  = get_option( 'user_registration_successfully_registered_email_subject', __( 'Welcome to {{blog_info}}!', 'user-registration' ) );
 			$settings = new UR_Settings_Successfully_Registered_Email();
 			$message  = $settings->ur_get_successfully_registered_email();
 
-			$message  = get_option( 'user_registration_successfully_registered_email', $message );
+			$message = get_option( 'user_registration_successfully_registered_email', $message );
 
 			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
 			$message                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email', $message, $current_language, 'user_registration_successfully_registered_email' );
 			$subject                   = ur_get_translated_string( 'admin_texts_user_registration_successfully_registered_email_subject', $subject, $current_language, 'user_registration_successfully_registered_email_subject' );
-			$message = self::parse_smart_tags( $message, $values, $name_value );
-			$subject = self::parse_smart_tags( $subject, $values, $name_value );
+			$message                   = self::parse_smart_tags( $message, $values, $name_value );
+			$subject                   = self::parse_smart_tags( $subject, $values, $name_value );
 
-			if ( ur_option_checked( 'user_registration_enable_successfully_registered_email', true )) {
+			if ( ur_option_checked( 'user_registration_enable_successfully_registered_email', true ) ) {
 				self::user_registration_process_and_send_email( $email, $subject, $message, self::ur_get_header(), array(), $template_id );
 			}
 		}
+	}
+
+	/**
+	 * Process smart tags for status change emails.
+	 *
+	 * @param  string $email User Email.
+	 * @since  1.5.0
+	 * @return array smart tag key value pair.
+	 */
+	public static function user_data_smart_tags( $email ) {
+		$name_value = array();
+		$user       = get_user_by( 'email', $email );
+		$user_id    = isset( $user->ID ) ? absint( $user->ID ) : 0;
+
+		$user_fields = ur_get_user_table_fields();
+
+		foreach ( $user_fields as $field ) {
+			$name_value[ $field ] = isset( $user->data->$field ) ? $user->data->$field : '';
+		}
+
+		$user_meta_fields = ur_get_registered_user_meta_fields();
+
+		// Use name_value for smart tag to replace.
+		foreach ( $user_meta_fields as $field ) {
+			$name_value[ $field ] = get_user_meta( $user_id, $field, true );
+		}
+
+		$user_extra_fields = ur_get_user_extra_fields( $user_id );
+		$name_value        = array_merge( $name_value, $user_extra_fields );
+		/**
+		 * Hook to process the smart tag for status change emails.
+		 *
+		 * @param array $name_value The name values.
+		 * @param string $email The email.
+		 */
+		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
 	}
 
 	/**
@@ -712,7 +937,7 @@ class UR_Emailer {
 			$current_language = ur_get_current_language();
 		}
 
-		$subject  = get_option( 'user_registration_reset_password_email_subject', __( 'Password Reset Email: {{blog_info}}', 'user-registration' ) );
+		$subject  = get_option( 'user_registration_reset_password_email_subject', __( 'Password Reset Request', 'user-registration' ) );
 		$settings = new UR_Settings_Reset_Password_Email();
 		$message  = $settings->ur_get_reset_password_email();
 		$message  = get_option( 'user_registration_reset_password_email', $message );
@@ -808,7 +1033,7 @@ class UR_Emailer {
 			return false;
 		}
 
-		$subject  = get_option( 'user_registration_reset_password_email_subject', __( 'Password Reset Email: {{blog_info}}', 'user-registration' ) );
+		$subject  = get_option( 'user_registration_reset_password_email_subject', __( 'Password Reset Request', 'user-registration' ) );
 		$settings = new UR_Settings_Reset_Password_Email();
 
 		$values = array(
@@ -821,123 +1046,6 @@ class UR_Emailer {
 		$subject = self::parse_smart_tags( $subject, $values );
 
 		return $subject;
-	}
-
-
-	/**
-	 * Trigger the admin email after profile details changed by user.
-	 *
-	 * @param  string $user_email Email of the user.
-	 * @param  string $username   Username of the user.
-	 * @param  int    $user_id       User id.
-	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
-	 * @param  array  $name_value Array to replace with extra fields smart tag.
-	 * @param  array  $attachments Email Attachement.
-	 * @return void
-	 * @since 1.6.3
-	 */
-	public static function send_profile_changed_email_to_admin( $user_email, $username, $user_id, $data_html, $name_value, $attachments ) {
-
-		$header = array(
-			'Reply-To:' . $user_email,
-			'Content-Type: text/html; charset=UTF-8',
-		);
-		/**
-		 * Hook to modify admin email header.
-		 *
-		 * @param array $header Default Header.
-		 * @param string $user_email User Email.
-		 *
-		 * @return array $header
-		 */
-		$header = apply_filters( 'user_registration_modify_admin_email_header', $header, $user_email );
-
-		$attachment  = isset( $attachments['admin'] ) ? $attachments['admin'] : '';
-		$admin_email = get_option( 'user_registration_edit_profile_email_receipents', get_option( 'admin_email' ) );
-		$admin_email = explode( ',', $admin_email );
-		$admin_email = array_map( 'trim', $admin_email );
-
-		$subject  = get_option( 'user_registration_profile_details_changed_email_subject', esc_html__( 'Profile Details Changed Email: {{blog_info}}', 'user-registration' ) );
-		$settings = new UR_Settings_Profile_Details_Changed_Email();
-		$message  = $settings->ur_get_profile_details_changed_email();
-		$message  = get_option( 'user_registration_profile_details_changed_email', $message );
-		$form_id  = ur_get_form_id_by_userid( $user_id );
-
-		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
-		if ( empty( $current_language ) ) {
-			$current_language = ur_get_current_language();
-		}
-		$values = array(
-			'username'   => $username,
-			'email'      => $user_email,
-			'all_fields' => $data_html,
-			'form_id'    => $form_id,
-		);
-
-		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-		$message                   = ur_get_translated_string( 'admin_texts_user_registration_profile_details_changed_email', $message, $current_language, 'user_registration_profile_details_changed_email' );
-		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_profile_details_changed_email_subject', $subject, $current_language, 'user_registration_profile_details_changed_email_subject' );
-
-		$message = self::parse_smart_tags( $message, $values, $name_value );
-		$subject = self::parse_smart_tags( $subject, $values, $name_value );
-
-		if ( ur_option_checked( 'user_registration_enable_profile_details_changed_email', true ) ) {
-			foreach ( $admin_email as $email ) {
-				$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
-				self::user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id );
-			}
-		}
-	}
-
-	/**
-	 * Trigger the email after profile details changed by user.
-	 *
-	 * @param  string $user_email Email of the user.
-	 * @param  string $username   Username of the user.
-	 * @param  int    $user_id       User id.
-	 * @param  string $data_html  String replaced with {{all_fields}} smart tag.
-	 * @param  array  $name_value Array to replace with extra fields smart tag.
-	 * @param  array  $attachments Email Attachement.
-	 * @return void
-	 * @since 3.0.5
-	 */
-	public static function send_profile_changed_email_to_user( $user_email, $username, $user_id, $data_html, $name_value, $attachments ) {
-
-		$header = array(
-			'Reply-To:' . $user_email,
-			'Content-Type: text/html; charset=UTF-8',
-		);
-
-		$attachment = isset( $attachments['user'] ) ? $attachments['user'] : '';
-		$subject    = get_option( 'user_registration_profile_details_updated_email_subject', esc_html__( 'Profile Details Updated Email: {{blog_info}}', 'user-registration' ) );
-		$settings   = new UR_Settings_Profile_Details_Updated_Email();
-		$message    = $settings->ur_get_profile_details_updated_email();
-		$message    = get_option( 'user_registration_profile_details_Updated_email', $message );
-		$form_id    = ur_get_form_id_by_userid( $user_id );
-
-		$values = array(
-			'username'   => $username,
-			'email'      => $user_email,
-			'all_fields' => $data_html,
-			'form_id'    => $form_id,
-		);
-
-		$current_language = get_user_meta( $user_id, 'ur_registered_language' );
-		if ( empty( $current_language ) ) {
-			$current_language = ur_get_current_language();
-		}
-
-		list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-		$message                   = ur_get_translated_string( 'admin_texts_user_registration_profile_details_updated_email', $message, $current_language, 'user_registration_profile_details_updated_email' );
-		$subject                   = ur_get_translated_string( 'admin_texts_user_registration_profile_details_updated_email_subject', $subject, $current_language, 'user_registration_profile_details_updated_email_subject' );
-
-		$message = self::parse_smart_tags( $message, $values, $name_value );
-		$subject = self::parse_smart_tags( $subject, $values, $name_value );
-
-		if ( ur_option_checked( 'user_registration_enable_profile_details_updated_email', true ) ) {
-			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
-			self::user_registration_process_and_send_email( $user_email, $subject, $message, $header, $attachment, $template_id );
-		}
 	}
 
 	/**
@@ -988,103 +1096,6 @@ class UR_Emailer {
 		if ( ur_option_checked( 'user_registration_enable_confirm_email_address_change_email', true ) ) {
 			$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
 			self::user_registration_process_and_send_email( $user_email, $subject, $message, $header, $attachment, $template_id );
-		}
-	}
-
-	/**
-	 * Process smart tags for status change emails.
-	 *
-	 * @param  string $email User Email.
-	 * @since  1.5.0
-	 * @return array smart tag key value pair.
-	 */
-	public static function user_data_smart_tags( $email ) {
-		$name_value = array();
-		$user       = get_user_by( 'email', $email );
-		$user_id    = isset( $user->ID ) ? absint( $user->ID ) : 0;
-
-		$user_fields = ur_get_user_table_fields();
-
-		foreach ( $user_fields as $field ) {
-			$name_value[ $field ] = isset( $user->data->$field ) ? $user->data->$field : '';
-		}
-
-		$user_meta_fields = ur_get_registered_user_meta_fields();
-
-		// Use name_value for smart tag to replace.
-		foreach ( $user_meta_fields as $field ) {
-			$name_value[ $field ] = get_user_meta( $user_id, $field, true );
-		}
-
-		$user_extra_fields = ur_get_user_extra_fields( $user_id );
-		$name_value        = array_merge( $name_value, $user_extra_fields );
-		/**
-		 * Hook to process the smart tag for status change emails.
-		 *
-		 * @param array $name_value The name values.
-		 * @param string $email The email.
-		 */
-		return apply_filters( 'user_registration_process_smart_tag_for_status_change_emails', $name_value, $email );
-	}
-	/**
-	 * Parse Smart tags for emails.
-	 *
-	 * @param string $content Contents.
-	 * @param array  $values Data values.
-	 * @param array  $name_value  Extra values.
-	 */
-	public static function parse_smart_tags( $content = '', $values = array(), $name_value = array() ) {
-		/**
-		 * Hook to process the smart tags.
-		 *
-		 * @param string $content The message content.
-		 * @param int $values The values.
-		 * @param int $name_values The name values.
-		 *
-		 * @return string $content
-		 */
-		$content = apply_filters( 'user_registration_process_smart_tags', $content, $values, $name_value );
-		return $content;
-	}
-
-	/**
-	 * user_registration_process_and_send_email
-	 *
-	 * @param  string $email Email of the user.
-	 * @param  string $subject Subject of the email.
-	 * @param  string $message  The body of the email.
-	 * @param  mixed  $header The header of the email.
-	 * @param  array  $attachment Email Attachment.
-	 * @param  int    $template_id Email Template Identifier.
-	 *
-	 * @return bool|mixed
-	 */
-	public static function user_registration_process_and_send_email( $email, $subject, $message, $header, $attachment, $template_id ) {
-
-		$message                     = user_registration_process_email_content( $message, $template_id );
-		$status                      = wp_mail( $email, $subject, $message, $header, $attachment, $template_id );
-
-		$mail_error_notice_dismissed = get_option( 'user_registration_info_ur_email_send_failed_notice_dismissed_temporarily', false );
-		$mail_error_notice_dismissed = ! $mail_error_notice_dismissed ? get_option( 'user_registration_info_ur_email_send_failed_notice_dismissed', false ) : $mail_error_notice_dismissed;
-		$logger = ur_get_logger();
-		$logger->info( __( 'Email Sending', 'user-registration' ), array( 'source' => 'ur_mail_logs' ) );
-		if ( ! $status && ! $mail_error_notice_dismissed ) {
-			$logger->info( __( 'Email Sending failed', 'user-registration' ), array( 'source' => 'ur_mail_logs' ) );
-			$error_message = apply_filters( 'user_registration_email_send_failed_message', '' );
-			$failed_data   = get_transient( 'user_registration_mail_send_failed_count' );
-			$failed_count  = $failed_data && isset( $failed_data['failed_count'] ) ? $failed_data['failed_count'] : 0;
-			++$failed_count;
-			set_transient(
-				'user_registration_mail_send_failed_count',
-				array(
-					'failed_count'  => $failed_count,
-					'error_message' => $error_message,
-				)
-			);
-			return $status;
-		} else {
-			$logger->info( __( 'Email Send Successfully', 'user-registration' ), array( 'source' => 'ur_mail_logs' ) );
-			return $status;
 		}
 	}
 }

@@ -180,9 +180,9 @@ class UR_Plugin_Status {
 		$new_product = (object) array(
 			'products' => array(
 				(object) array(
-					'title'          => 'User Registration PRO',
+					'title'          => 'User Registration & Membership PRO',
 					'slug'           => 'user-registration-pro',
-					'name'           => 'User Registration PRO',
+					'name'           => 'User Registration & Membership PRO',
 					'image'          => '',
 					'excerpt'        => '',
 					'link'           => '',

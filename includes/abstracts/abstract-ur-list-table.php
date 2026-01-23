@@ -263,26 +263,34 @@ abstract class UR_List_Table extends WP_List_Table {
 
 				case 'bulk_trash':
 				case 'trash':
+					check_admin_referer( 'bulk-' . $this->_args['plural'] );
+
 					if ( ! current_user_can( 'delete_posts' ) ) {
 						wp_die( esc_html__( 'You do not have permission to trash posts!', 'user-registration' ) );
 					} else {
 						$post_ids = isset( $_REQUEST[ $this->_args['singular'] ] ) ? array_map( 'absint', (array) $_REQUEST[ $this->_args['singular'] ] ) : '';
 						$this->bulk_trash( $post_ids );
 					}
+
 					break;
 
 				case 'bulk_untrash':
 				case 'untrash':
+					check_admin_referer( 'bulk-' . $this->_args['plural'] );
+
 					if ( ! current_user_can( 'edit_posts' ) ) {
 						wp_die( esc_html__( 'You do not have permission to untrash posts!', 'user-registration' ) );
 					} else {
 						$post_ids = isset( $_REQUEST[ $this->_args['singular'] ] ) ? array_map( 'absint', (array) $_REQUEST[ $this->_args['singular'] ] ) : '';
 						$this->bulk_untrash( $post_ids );
 					}
+
 					break;
 
 				case 'bulk_delete':
 				case 'delete':
+					check_admin_referer( 'bulk-' . $this->_args['plural'] );
+
 					if ( ! current_user_can( 'delete_posts' ) ) {
 						wp_die( esc_html__( 'You do not have permission to delete posts!', 'user-registration' ) );
 					} else {

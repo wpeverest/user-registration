@@ -32,7 +32,6 @@ class MemberRegistrationFormShortcode {
 	public static function display_form( $attributes ) {
 		global $wp, $post;
 		$allow = ( is_user_logged_in() && $attributes['preview'] ) || ! is_user_logged_in();
-
 		if ( $allow ) {
 			$group_id = isset( $attributes['membership_group'] ) ? $attributes['membership_group'] : 0;
 			$group_status = true;

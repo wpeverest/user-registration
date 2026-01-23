@@ -17,16 +17,16 @@
 				//Initialize Form Builder.
 				URFormBuilder.init_form_builder();
 				//Field option tab
-				$(document).on(
-					"click",
-					'ul.ur-tab-lists li[aria-controls="ur-tab-field-options"]',
-					function () {
-						// Hide the form settings in fields panel.
-						$(".ur-selected-inputs")
-							.find("form#ur-field-settings")
-							.hide();
-					}
-				);
+				// $(document).on(
+				// 	"click",
+				// 	'ul.ur-tab-lists li[aria-controls="ur-tab-field-options"]',
+				// 	function () {
+				// 		// Hide the form settings in fields panel.
+				// 		$(".ur-selected-inputs")
+				// 			.find("form#ur-field-settings")
+				// 			.hide();
+				// 	}
+				// );
 				// Handle the field settings when a field is selected in the form builder.
 				$(document).on("click", ".ur-selected-item", function () {
 					URFormBuilder.handle_selected_item($(this));
@@ -263,6 +263,16 @@
 						}
 					}
 				);
+				$( document ).on( 'change', '.ur-settings-enable-state', function( e ){
+					var checked = $( this ).is( ':checked' );
+					var $wrapper = $( document ).find( '.ur-selected-item.ur-item-active' );
+
+					if ( checked ) {
+						$wrapper.find( '.ur-state-container-wrapper' ).show();
+					}else{
+						$wrapper.find( '.ur-state-container-wrapper' ).hide();
+					}
+				});
 			},
 			init_user_profile_modal: function () {
 				var user_profile_modal = {
@@ -2546,6 +2556,7 @@
 								this.manage_required_fields();
 								this.manage_label_hidden_fields();
 								this.manage_image_choice_class();
+								this.manage_state_fields();
 							},
 							single_row: function () {
 								if (
@@ -3074,6 +3085,23 @@
 									);
 									return;
 								});
+							},
+							manage_state_fields: function(){
+								$('input[data-advance-field="enable_state"]').each(
+									function () {
+										if ($(this).is(":checked")) {
+											$(this)
+												.closest(".ur-selected-item")
+												.find(".ur-state-container-wrapper")
+												.show();
+										} else {
+											$(this)
+												.closest(".ur-selected-item")
+												.find(".ur-state-container-wrapper")
+												.hide();
+										}
+									}
+								);
 							}
 						};
 						var events = {
@@ -6651,7 +6679,7 @@
 			handle_add_image_captcha_group: function ($this, $wrapper) {
 				var this_index = parseInt($this.attr("data-last-group")),
 					next_index = this_index + 1;
-				(captcha_unique = $this
+				((captcha_unique = $this
 					.closest("ul")
 					.attr("data-unique-captcha")),
 					(cloning_element = $this
@@ -6659,7 +6687,7 @@
 						.find('li[data-group="' + this_index + '"]')
 						.clone(true, true)),
 					(cloning_element_icons =
-						cloning_element.find(".icon-wrap"));
+						cloning_element.find(".icon-wrap")));
 
 				cloning_element.attr("data-group", next_index);
 				cloning_element

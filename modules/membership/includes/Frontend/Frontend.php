@@ -10,12 +10,8 @@
 
 namespace WPEverest\URMembership\Frontend;
 
-use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
-use WPEverest\URMembership\Admin\Repositories\MembersRepository;
-use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
-use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Services\MembershipService;
-use WPEverest\URMembership\Admin\Services\SubscriptionService;
+use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -41,37 +37,9 @@ class Frontend {
 	 */
 	private function init_hooks() {
 		add_action( 'wp_enqueue_membership_scripts', array( $this, 'load_scripts' ), 10, 2 );
-		add_action( 'wp_loaded', array( $this, 'ur_add_membership_tab_endpoint' ) );
-		add_filter( 'user_registration_account_menu_items', array( $this, 'ur_membership_tab' ), 10, 1 );
-		add_action(
-			'user_registration_account_ur-membership_endpoint',
-			array(
-				$this,
-				'user_registration_membership_tab_endpoint_content',
-			)
-		);
 
 		add_action( 'template_redirect', array( $this, 'set_thank_you_transient' ) );
 		add_action( 'wp_loaded', array( $this, 'clear_upgrade_data' ) );
-	}
-
-	/**
-	 * Add the item to $items array.
-	 *
-	 * @param array $items Items.
-	 */
-	public function ur_membership_tab( $items ) {
-		$current_user_id = get_current_user_id();
-		$user_source     = get_user_meta( $current_user_id, 'ur_registration_source', true );
-
-		if ( 'membership' !== $user_source ) {
-			return $items;
-		}
-		$new_items                  = array();
-		$new_items['ur-membership'] = __( 'Membership', 'user-registration' );
-		$items                      = array_merge( $items, $new_items );
-
-		return $this->delete_account_insert_before_helper( $items, $new_items, 'user-logout' );
 	}
 
 	/**
@@ -87,7 +55,7 @@ class Frontend {
 		$position = array_search( $before, array_keys( $items ), true );
 
 		// Insert the new item.
-		$return_items = array_slice( $items, 0, $position, true );
+		$return_items  = array_slice( $items, 0, $position, true );
 		$return_items += $new_items;
 		$return_items += array_slice( $items, $position, count( $items ) - $position, true );
 
@@ -97,78 +65,57 @@ class Frontend {
 	/**
 	 * Membership tab content.
 	 */
-	public function user_registration_membership_tab_endpoint_content() {
-		$user_id = get_current_user_id();
-		$this->load_scripts();
-		$membership_repositories         = new MembersRepository();
-		$members_order_repository        = new MembersOrderRepository();
-		$members_subscription_repository = new MembersSubscriptionRepository();
-		$orders_repository               = new OrdersRepository();
-		$membership                      = $membership_repositories->get_member_membership_by_id( $user_id );
-		if( ! empty( $membership['post_content'] ) ) {
-			$membership['post_content'] = json_decode( $membership['post_content'], true );
-		}
-		$membership_service              = new MembershipService();
-		$membership_details = ( is_array( $membership ) && ! empty( $membership['post_id'] ) ) ? $membership_service->get_membership_details( $membership['post_id'] ) : array();
-		$active_gateways                 = array();
+	public function user_registration_membership_tab_endpoint_content( $membership_data ) {
 
-		if ( ! empty( $membership_details['payment_gateways'] ) ) {
-			$active_gateways = array_filter( $membership_details['payment_gateways'], function ( $item, $key ) {
-				return "on" == $item["status"] && in_array($key, array('paypal', 'stripe', 'bank'));
-			}, ARRAY_FILTER_USE_BOTH );
+		if ( ur_check_module_activation( 'membership' ) ) {
+			$this->load_scripts();
 		}
 
-		$membership['active_gateways'] = $active_gateways;
-		$is_upgrading                  = ur_string_to_bool( get_user_meta( $user_id, 'urm_is_upgrading', true ) );
-		$last_order                    = $members_order_repository->get_member_orders( $user_id );
-		$bank_data                     = array();
-		if ( ! empty( $last_order ) && $last_order['status'] == 'pending' && $last_order['payment_method'] === 'bank' ) {
-			$bank_data = array(
-				'show_bank_notice' => true,
-				'bank_data'        => get_option( 'user_registration_global_bank_details', '' ),
-				'notice_1'         => apply_filters( 'urm_bank_info_notice_1_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your upgraded membership will be activated. Kindly wait for the admin\'s confirmation.', 'user-registration' ) ),
-				'notice_2'         => apply_filters( 'urm_bank_info_notice_2_filter', __( 'Please complete the payment using the bank details provided by the admin. <br> Your membership will be renewed once the payment is verified. Kindly wait for the admin\'s confirmation.', 'user-registration' ) )
-			);
-		}
-		$subscription_data = $members_subscription_repository->get_member_subscription( $user_id );
+		$current_page = 1;
 
-		$membership_data = array(
-			'user'              => get_user_by( 'id', get_current_user_id() ),
-			'membership'        => $membership,
-			'is_upgrading'      => $is_upgrading,
-			'bank_data'         => $bank_data,
-			'renewal_behaviour' => get_option( 'user_registration_renewal_behaviour', 'automatic' ),
-			'subscription_data' => $subscription_data
-		);
+		if ( isset( $_GET['paged'] ) && intval( $_GET['paged'] ) > 0 ) {
+			$current_page = intval( $_GET['paged'] );
+		} else {
+			$request_path = trim( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), '/' );
+			$segments     = explode( '/', $request_path );
 
-		if ( ! empty( $last_order ) ) {
-			$order_meta = $orders_repository->get_order_metas( $last_order['ID'] );
-			if ( ! empty( $order_meta ) ) {
-				$membership_data['delayed_until'] = $order_meta['meta_value'];
+			$page_index = array_search( 'page', $segments );
+			if ( false !== $page_index && isset( $segments[ $page_index + 1 ] ) ) {
+				$current_page = max( 1, intval( $segments[ $page_index + 1 ] ) );
 			}
 		}
 
+		$per_page = 10;
+
+		$total_count = count( $membership_data );
+		$page        = max( 1, intval( $current_page ) );
+		$per_page    = max( 1, intval( $per_page ) );
+		$offset      = ( $page - 1 ) * $per_page;
+		$items       = array_slice( $membership_data, $offset, $per_page );
+
+		$layout = get_option( 'user_registration_my_account_layout', 'vertical' );
+
+		if ( 'vertical' === $layout && isset( ur_get_account_menu_items()['ur-membership'] ) ) {
+			?>
+			<div class="user-registration-MyAccount-content__header">
+				<h1><?php echo wp_kses_post( ur_get_account_menu_items()['ur-membership'] ); ?></h1>
+			</div>
+			<?php
+		}
+
+		$membership_service = new MembershipService();
+
 		ur_get_template(
 			'myaccount/membership.php',
-			$membership_data
+			array(
+				'membership_data'    => $items,
+				'membership_service' => $membership_service,
+				'total_items'        => $total_count,
+				'page'               => $page,
+				'per_page'           => $per_page,
+				'total_pages'        => ( $per_page > 0 ) ? (int) ceil( $total_count / $per_page ) : 1,
+			)
 		);
-	}
-
-	/**
-	 * Add Membership tab endpoint.
-	 */
-	public function ur_add_membership_tab_endpoint() {
-
-		$current_user_id = get_current_user_id();
-		$user_source     = get_user_meta( $current_user_id, 'ur_registration_source', true );
-
-		if ( 'membership' !== $user_source ) {
-			return;
-		}
-		$mask = Ur()->query->get_endpoints_mask();
-
-		add_rewrite_endpoint( 'ur-membership', $mask );
-		flush_rewrite_rules();
 	}
 
 	/**
@@ -182,11 +129,11 @@ class Frontend {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		wp_enqueue_script( 'sweetalert2' );
 
-		wp_register_script( 'user-registration-membership-frontend-script', UR_MEMBERSHIP_JS_ASSETS_URL . '/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
+		wp_register_script( 'user-registration-membership-frontend-script', UR()->plugin_url(). '/assets/js/modules/membership/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 		wp_enqueue_script( 'user-registration-membership-stripe-v3', 'https://js.stripe.com/v3/', array() );
 		wp_enqueue_script( 'user-registration-membership-frontend-script' );
 		// Enqueue frontend styles here.
-		wp_register_style( 'user-registration-membership-frontend-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-frontend.css', array(), UR_MEMBERSHIP_VERSION );
+		wp_register_style( 'user-registration-membership-frontend-style', UR()->plugin_url(). '/assets/css/modules/membership/user-registration-membership-frontend.css', array(), UR_VERSION );
 		wp_enqueue_style( 'user-registration-membership-frontend-style' );
 		$this->localize_scripts();
 	}
@@ -209,11 +156,32 @@ class Frontend {
 		$symbol               = $currencies[ $currency ]['symbol'];
 		$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
 
+		$regions 				= get_option( 'user_registration_tax_regions_and_rates', array() );
+		$tax_calculation_method = get_option( 'user_registration_tax_calculation_during_checkout', 'no' );
+
+		$is_tax_calculation_enabled		  = ur_check_module_activation( 'taxes' );
+
 		$redirect_page_url = get_permalink( $registration_page_id );
 
-		$thank_you_page  = urm_get_thank_you_page();
-		$stripe_settings = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
+		$thank_you_page          = urm_get_thank_you_page();
+		$stripe_settings         = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::get_stripe_settings();
 
+		$urm_authorize_net_supported_currencies = function_exists( 'urm_authorize_net_supported_currencies' ) ? urm_authorize_net_supported_currencies() : array();
+		$paypal_supported_currencies_list = function_exists( 'paypal_supported_currencies_list' ) ? paypal_supported_currencies_list() : array();
+		$mollie_supported_currencies_list = (
+				class_exists( '\WPEverest\URM\Mollie\Functions\CoreFunctions' ) &&
+				method_exists( '\WPEverest\URM\Mollie\Functions\CoreFunctions', 'mollie_supported_currencies_list' )
+			)
+				? \WPEverest\URM\Mollie\Functions\CoreFunctions::mollie_supported_currencies_list()
+				: array();
+
+		$supported_currencies = array(
+			'authorize' => $urm_authorize_net_supported_currencies,
+			'paypal'    => $paypal_supported_currencies_list,
+			'mollie'	=> $mollie_supported_currencies_list
+		);
+
+		$membership_endpoint_url = ur_get_my_account_url() . '/ur-membership';
 
 		wp_localize_script(
 			'user-registration-membership-frontend-script',
@@ -230,10 +198,21 @@ class Frontend {
 				'curreny_pos'                      => isset( $currencies[ $currency ]['symbol_pos'] ) ? $currencies[ $currency ]['symbol_pos'] : 'left',
 				'membership_registration_page_url' => $redirect_page_url,
 				'thank_you_page_url'               => $thank_you_page,
+				'membership_endpoint_url'          => $membership_endpoint_url,
 				'stripe_publishable_key'           => $stripe_settings['publishable_key'],
 				'membership_gateways'              => get_option( 'ur_membership_payment_gateways', array() ),
 				'urm_hide_stripe_card_postal_code' => apply_filters( 'user_registration_membership_disable_stripe_card_postal_code', false ),
-			)
+				'gateways_configured'              => urm_get_all_active_payment_gateways( 'paid' ),
+				'isEditor'                         => current_user_can( 'edit_post', get_the_ID() ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'],
+				'membership_selection_message'     => __( 'Please select at least one membership plan', 'user-registration' ),
+				'tax_calculation_method'           => ur_string_to_bool( $tax_calculation_method ),
+				'regions_list'                     => $regions,
+				'gateways_configured'              => urm_get_all_active_payment_gateways('paid'),
+				'local_currencies'				   => ur_get_currencies(),
+				'local_currencies_symbol' 		   => ur_get_currency_symbols(),
+				'supported_currencies'			   => $supported_currencies,
+				'is_tax_calculation_enabled'	   => $is_tax_calculation_enabled
+			),
 		);
 	}
 
@@ -266,6 +245,7 @@ class Frontend {
 			'i18n_incomplete_stripe_setup_error'           => __( 'Stripe Payment stopped. Incomplete Stripe setup.', 'user-registration' ),
 			'i18n_bank_details_title'                      => __( 'Bank Details.', 'user-registration' ),
 			'i18n_change_membership_title'                 => __( 'Change Membership', 'user-registration' ),
+			'i18n_purchasing_multiple_membership_title'    => __( 'Purchase Membership', 'user-registration' ),
 			'i18n_change_renew_title'                      => __( 'Renew Membership', 'user-registration' ),
 			'i18n_change_plan_required'                    => __( 'At least one Plan must be selected', 'user-registration' ),
 			'i18n_error'                                   => __( 'Error', 'user-registration' ),
@@ -274,6 +254,11 @@ class Frontend {
 			'i18n_close'                                   => __( 'Close', 'user-registration' ),
 			'i18n_cancel_membership_subtitle'              => __( 'Are you sure you want to cancel this membership permanently?', 'user-registration' ),
 			'i18n_sending_text'                            => __( 'Sending ...', 'user-registration' ),
+			// Payment processing overlay labels
+			'i18n_payment_processing_title'                => __( 'Processing Payment', 'user-registration' ),
+			'i18n_payment_processing_message'              => __( 'Please wait while we securely process your payment. Do not close this page.', 'user-registration' ),
+			'i18n_payment_completing_title'                => __( 'Completing Payment', 'user-registration' ),
+			'i18n_payment_completing_message'              => __( 'Your payment has been verified. Please wait while we complete your registration.', 'user-registration' ),
 		);
 	}
 
@@ -286,12 +271,12 @@ class Frontend {
 		delete_transient( $transient_id );
 		$thank_you_page = get_permalink( absint( $_GET['thank_you'] ) );
 		set_transient( $transient_id, $thank_you_page, 15 * MINUTE_IN_SECONDS );
-
 	}
 
 	/**
 	 * clear_upgrade_data
 	 * If Paypal payment fails then clear meta's so user can try again
+	 *
 	 * @return void
 	 */
 	public function clear_upgrade_data() {
@@ -302,11 +287,17 @@ class Frontend {
 			return;
 		}
 		$next_subscription_data = json_decode( get_user_meta( $user_id, 'urm_next_subscription_data', true ), true );
+		$prev_subscription_data = json_decode( get_user_meta( $user_id, 'urm_previous_subscription_data', true ), true );
 
-		if ( ! empty( $next_subscription_data ) && empty( $next_subscription_data['delayed_until'] ) && ! empty( $next_subscription_data['payment_method'] ) && ( "paypal" === $next_subscription_data['payment_method'] ) ) {
-			if ( $user_subscription['status'] === 'active' ) {
-				delete_user_meta( $user_id, 'urm_is_upgrading' );
-				delete_user_meta( $user_id, 'urm_is_upgrading_to' );
+		if ( ! empty( $next_subscription_data ) && empty( $next_subscription_data['delayed_until'] ) && ! empty( $next_subscription_data['payment_method'] ) && ( 'paypal' === $next_subscription_data['payment_method'] ) ) {
+
+			if ( $prev_subscription_data['status'] === 'active' ) {
+				$membership_process = urm_get_membership_process( $user_id );
+
+				if ( ! empty( $membership_process ) && isset( $membership_process['upgrade'][ $prev_subscription_data['item_id'] ] ) ) {
+					unset( $membership_process['upgrade'][ $prev_subscription_data['item_id'] ] );
+					update_user_meta( $user_id, 'urm_membership_process', $membership_process );
+				}
 			}
 		}
 	}

@@ -17,13 +17,13 @@ const UsePluginInstallActivate = ({
 	onClose,
 	slug,
 	isPluginStatusLoading,
-	setIsPluginStatusLoading,
+	setIsPluginStatusLoading
 }) => {
 	const toast = useToast();
 	const [{ pluginsStatus }, dispatch] = useStateValue();
 
 	/* global _UR_DASHBOARD_ */
-	const { urRestApiNonce, restURL } =
+	const { urRestApiNonce } =
 		typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
 	const successCallback = (closeFunction) => {
@@ -42,21 +42,21 @@ const UsePluginInstallActivate = ({
 		setIsPluginStatusLoading(true);
 		try {
 			const data = await apiFetch({
-				path: restURL + `wp/v2/plugins/${slug}`,
+				path: `wp/v2/plugins/${slug}`,
 				method: "POST",
 				headers: {
-					"X-WP-Nonce": urRestApiNonce,
+					"X-WP-Nonce": urRestApiNonce
 				},
 				data: {
 					plugin: file.replace(".php", ""),
-					status: "active",
-				},
+					status: "active"
+				}
 			});
 
 			pluginsStatus[`${data.plugin}.php`] = data.status;
 			dispatch({
 				type: actionTypes.GET_PLUGINS_STATUS,
-				pluginsStatus: pluginsStatus,
+				pluginsStatus: pluginsStatus
 			});
 
 			toast({
@@ -67,7 +67,7 @@ const UsePluginInstallActivate = ({
 				),
 				status: "success",
 				duration: 5000,
-				isClosable: true,
+				isClosable: true
 			});
 
 			successCallback(onClose);
@@ -78,7 +78,7 @@ const UsePluginInstallActivate = ({
 					e.message || __("An error occurred", "user-registration"),
 				status: "error",
 				duration: 5000,
-				isClosable: true,
+				isClosable: true
 			});
 
 			errorCallback(onClose);
@@ -93,21 +93,21 @@ const UsePluginInstallActivate = ({
 
 		try {
 			const data = await apiFetch({
-				path: restURL + "wp/v2/plugins",
+				path: "wp/v2/plugins",
 				method: "POST",
 				headers: {
-					"X-WP-Nonce": urRestApiNonce,
+					"X-WP-Nonce": urRestApiNonce
 				},
 				data: {
 					slug: slug,
-					status: "active",
-				},
+					status: "active"
+				}
 			});
 
 			pluginsStatus[`${data.plugin}.php`] = data.status;
 			dispatch({
 				type: actionTypes.GET_PLUGINS_STATUS,
-				pluginsStatus: pluginsStatus,
+				pluginsStatus: pluginsStatus
 			});
 			toast({
 				title: "Success",
@@ -120,7 +120,7 @@ const UsePluginInstallActivate = ({
 				),
 				status: "success",
 				duration: 9000,
-				isClosable: true,
+				isClosable: true
 			});
 			successCallback(onClose);
 		} catch (e) {
@@ -129,7 +129,7 @@ const UsePluginInstallActivate = ({
 				description: e.message || "An error occurred",
 				status: "error",
 				duration: 9000,
-				isClosable: true,
+				isClosable: true
 			});
 			errorCallback(onClose);
 		} finally {
@@ -146,7 +146,7 @@ const UsePluginInstallActivate = ({
 		} else if (pluginsStatus[slug] === "inactive") {
 			activatePlugin({
 				slug: pluginSlug,
-				file: slug,
+				file: slug
 			});
 		}
 	};

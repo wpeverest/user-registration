@@ -21,14 +21,15 @@ class ShortCodes {
 	 */
 	public static function init() {
 		$shortcodes = array(
-//			'user_registration_membership_member_registration_form' => __CLASS__ . '::member_registration_form',
-			'user_registration_groups'               => __CLASS__ . '::membership_listing',
-			'user_registration_membership_thank_you' => __CLASS__ . '::thank_you',
-			'user_registration_membership_listing'   => __CLASS__ . '::membership_listing',
+			//          'user_registration_membership_member_registration_form' => __CLASS__ . '::member_registration_form',
+							'user_registration_groups' => __CLASS__ . '::membership_listing',
+			'user_registration_membership_thank_you'   => __CLASS__ . '::thank_you',
+			'user_registration_membership_listing'     => __CLASS__ . '::membership_listing',
 		);
 
 		foreach ( $shortcodes as $shortcode => $function ) {
-			add_shortcode( apply_filters( "{$shortcode}_shortcode_tag", $shortcode ),
+			add_shortcode(
+				apply_filters( "{$shortcode}_shortcode_tag", $shortcode ),
 				self::get_shortcode_callback( $function, $shortcode )
 			);
 		}
@@ -50,7 +51,9 @@ class ShortCodes {
 	 * @return string
 	 */
 	public static function shortcode_wrapper(
-		$function = array(), $attributes = array(), $shortcode = ''
+		$function = array(),
+		$attributes = array(),
+		$shortcode = ''
 	) {
 		ob_start();
 		call_user_func( $function, $attributes, $shortcode );

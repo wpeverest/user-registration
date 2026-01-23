@@ -190,7 +190,7 @@ class UR_Admin_User_List_Manager {
 		// Remove previously set filter to get exact pending users count.
 		remove_filter( 'pre_get_users', array( $this, 'filter_users_by_approval_status' ) );
 		$prefix = $wpdb->prefix;
-		if (is_multisite()) {
+		if ( is_multisite() ) {
 			$prefix = $wpdb->base_prefix;
 		}
 
@@ -221,7 +221,7 @@ class UR_Admin_User_List_Manager {
 		// Check if Users are Pending and display pending users notice in UR and Users.
 		if ( count( $users ) > 0 && in_array( $current_screen->id, $ur_pages ) ) {
 			$admin_url = admin_url( '', 'admin' ) . 'users.php?s&action=-1&new_role&ur_user_approval_status=pending&ur_user_filter_action=Filter&paged=1&action2=-1&new_role2&ur_user_approval_status2&ur_specific_form_user2';
-			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'User Registration:', 'user-registration' ) . '</strong> ' . esc_html( count( $users ) ) . ' <a href="' . esc_url( $admin_url ) . '">' . ( ( count( $users ) === 1 ) ? esc_html__( 'User', 'user-registration' ) : esc_html__( 'Users', 'user-registration' ) ) . '</a> ' . esc_html__( 'pending approval.', 'user-registration' ) . '</p></div>';
+			echo '<div id="user-approvation-result" class="notice notice-success is-dismissible"><p><strong>' . esc_html__( 'User Registration & Membership:', 'user-registration' ) . '</strong> ' . esc_html( count( $users ) ) . ' <a href="' . esc_url( $admin_url ) . '">' . ( ( count( $users ) === 1 ) ? esc_html__( 'User', 'user-registration' ) : esc_html__( 'Users', 'user-registration' ) ) . '</a> ' . esc_html__( 'pending approval.', 'user-registration' ) . '</p></div>';
 		}
 	}
 	/**
@@ -233,33 +233,33 @@ class UR_Admin_User_List_Manager {
 
 		$urm_dismissed_notices = get_user_meta( $current_user_id, 'urm_dismissed_notices', true );
 
-		if( is_array( $urm_dismissed_notices ) && isset( $urm_dismissed_notices[ 'non_urm_users_notice' ] ) ) {
-			$closed_count = isset( $urm_dismissed_notices[ 'non_urm_users_notice' ][ 'dismiss_count' ] ) ?: 0;
-			$last_closed = isset( $urm_dismissed_notices[ 'non_urm_users_notice' ][ 'last_dismissed_at' ] ) ?: 0;
+		if ( is_array( $urm_dismissed_notices ) && isset( $urm_dismissed_notices['non_urm_users_notice'] ) ) {
+			$closed_count = isset( $urm_dismissed_notices['non_urm_users_notice']['dismiss_count'] ) ?: 0;
+			$last_closed  = isset( $urm_dismissed_notices['non_urm_users_notice']['last_dismissed_at'] ) ?: 0;
 			// if it was closed twice in a row, don't show again.
-			if( $closed_count >= 2 ) {
+			if ( $closed_count >= 2 ) {
 				return;
 			}
-			//Don't show if it has been closed recently(within past 24 hours).
-			if( $last_closed && ( time() - $last_closed ) < DAY_IN_SECONDS ) {
+			// Don't show if it has been closed recently(within past 24 hours).
+			if ( $last_closed && ( time() - $last_closed ) < DAY_IN_SECONDS ) {
 				return;
 			}
 		}
-		$users = get_transient( 'urm_users_not_from_urm_forms' );
+		$users          = get_transient( 'urm_users_not_from_urm_forms' );
 		$current_screen = get_current_screen();
-		$ur_pages = ur_get_screen_ids();
+		$ur_pages       = ur_get_screen_ids();
 		array_push( $ur_pages, 'users' );
 
 		$existing_non_urm_users = $users ? $users : 0;
-		if( $existing_non_urm_users >= 5 && in_array( $current_screen->id, $ur_pages ) ) {
+		if ( $existing_non_urm_users >= 5 && in_array( $current_screen->id, $ur_pages ) ) {
 			$utm_url = esc_url(
-            	'https://wpuserregistration.com/features/profile-connect/?utm_source=admin-notices&utm_medium=profile-connect-addon-link&utm_campaign=' . UR()->utm_campaign
-        	);
+				'https://wpuserregistration.com/features/profile-connect/?utm_source=admin-notices&utm_medium=profile-connect-addon-link&utm_campaign=' . UR()->utm_campaign
+			);
 
-        ?>
+			?>
 			<div class="notice notice-info is-dismissible urm-per-user-notice urm-non-urm-users-notice" data-notice-id="non_urm_users_notice" data-notice-type="urm-admin-notice">
 				<p>
-					<strong><?php esc_html_e( 'User Registration:', 'user-registration' ); ?></strong>
+					<strong><?php esc_html_e( 'User Registration & Membership:', 'user-registration' ); ?></strong>
 					<?php
 					printf(
 						/* translators: %s: number of existing users */
@@ -274,7 +274,7 @@ class UR_Admin_User_List_Manager {
 					<?php esc_html_e( 'to link these existing users to your new registration form.', 'user-registration' ); ?>
 				</p>
 			</div>
-        <?php
+			<?php
 		}
 	}
 	/**

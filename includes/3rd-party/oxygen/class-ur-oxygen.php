@@ -40,7 +40,6 @@ class UR_OXYGEN {
 		add_action( 'oxygen_add_plus_user-registration_section_content', array( $this, 'register_add_plus_subsections' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'custom_init' ) );
 
-
 		$this->register_widgets();
 	}
 
@@ -50,14 +49,14 @@ class UR_OXYGEN {
 	 * @since 3.3.5
 	 */
 	public function add_accordion_section() {
-		$brand_name = __( 'User Registration', 'user-registration' );
+		$brand_name = __( 'User Registration & Membership', 'user-registration' );
 		\CT_Toolbar::oxygen_add_plus_accordion_section( 'user-registration', $brand_name );
 	}
 
 	/**
 	 * Enqueue the styles.
 	 *
-	 * @since 3.3.5 
+	 * @since 3.3.5
 	 */
 	public function custom_init() {
 		wp_register_style( 'user-registration-general', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );

@@ -1,8 +1,13 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { __ } from "@wordpress/i18n";
 import { Box } from "@chakra-ui/react";
 
-import {TextControl, SelectControl, PanelBody, Disabled} from "@wordpress/components";
+import {
+	TextControl,
+	SelectControl,
+	PanelBody,
+	Disabled
+} from "@wordpress/components";
 import { InspectorControls, useBlockProps } from "@wordpress/block-editor";
 import metadata from "./block.json";
 
@@ -15,8 +20,8 @@ const Edit = (props) => {
 	const blockName = metadata.name;
 
 	const {
-		attributes: { redirectUrl, logoutUrl },
-		setAttributes,
+		attributes: { redirectUrl, logoutUrl, userState },
+		setAttributes
 	} = props;
 
 	const setRedirectUrl = (url) => {
@@ -26,17 +31,15 @@ const Edit = (props) => {
 		setAttributes({ logoutUrl: url });
 	};
 
-	const [userState, setUserState] = useState("logged_out");
-
+	const setUserState = (state) => {
+		setAttributes({ userState: state });
+	};
 
 	return (
 		<>
 			<InspectorControls key="ur-gutenberg-myaccount-inspector-controls">
 				<PanelBody
-					title={__(
-						"Myaccount Settings",
-						"user-registration",
-					)}
+					title={__("Myaccount Settings", "user-registration")}
 				>
 					<TextControl
 						key="ur-gutenberg-myaccount-redirect-url"
@@ -56,7 +59,7 @@ const Edit = (props) => {
 						value={userState}
 						options={[
 							{ label: "Logged In", value: "logged_in" },
-							{ label: "Logged Out", value: "logged_out" },
+							{ label: "Logged Out", value: "logged_out" }
 						]}
 						onChange={setUserState}
 					/>
@@ -67,7 +70,7 @@ const Edit = (props) => {
 					<ServerSideRender
 						key="ur-gutenberg-myaccount-server-side-renderer"
 						block={blockName}
-						attributes={{...props.attributes, userState  }}
+						attributes={{ ...props.attributes, userState }}
 					/>
 				</Disabled>
 			</Box>

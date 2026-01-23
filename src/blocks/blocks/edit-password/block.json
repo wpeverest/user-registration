@@ -5,8 +5,11 @@
   "version": "1.0.0",
   "title": "Edit Password",
   "category": "user-registration",
-  "description": "The block give the edit password interface.",
-  "keywords": ["user registration edit password", "edit password"],
+  "description": "Display the password reset fields to logged in users.",
+  "keywords": [
+    "user registration edit password",
+    "edit password"
+  ],
   "textdomain": "user-registration",
   "example": {
     "attributes": {}

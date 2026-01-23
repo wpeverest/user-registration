@@ -15,8 +15,10 @@ use WPEverest\URMembership\Admin\Forms\FormFields;
 use WPEverest\URMembership\Admin\Members\Members;
 use WPEverest\URMembership\Admin\Membership\Membership;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
+use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Services\MembershipService;
 use WPEverest\URMembership\Admin\Services\PaymentGatewaysWebhookActions;
+use WPEverest\URMembership\Admin\Subscriptions\Subscriptions;
 use WPEverest\URMembership\Frontend\Frontend;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -45,7 +47,7 @@ if ( ! class_exists( 'Admin' ) ) :
 		 *
 		 * @var string
 		 */
-		const VERSION = UR_MEMBERSHIP_VERSION;
+		const VERSION = UR_VERSION;
 
 		/**
 		 * Admin class instance
@@ -124,38 +126,54 @@ if ( ! class_exists( 'Admin' ) ) :
 			add_action( 'init', array( 'WPEverest\URMembership\ShortCodes', 'init' ) );
 			add_action( 'init', array( $this, 'add_membership_options' ) );
 			add_action( 'plugins_loaded', array( $this, 'include_membership_payment_files' ) );
-			add_filter( 'user_registration_get_settings_pages', array( $this, 'add_membership_settings_page' ), 10, 1 );
+			// add_filter( 'user_registration_get_settings_pages', array( $this, 'add_membership_settings_page' ), 10, 1 );
 
-			add_filter( 'user_registration_form_redirect_url', array(
-				$this,
-				'update_redirect_url_for_membership'
-			), 10, 2 );
-			add_filter( 'user_registration_success_params_before_send_json', array(
-				$this,
-				'update_success_params_for_membership'
-			), 10, 4 );
+			add_filter(
+				'user_registration_form_redirect_url',
+				array(
+					$this,
+					'update_redirect_url_for_membership',
+				),
+				10,
+				2
+			);
+			add_filter(
+				'user_registration_success_params_before_send_json',
+				array(
+					$this,
+					'update_success_params_for_membership',
+				),
+				10,
+				4
+			);
 
 			register_deactivation_hook( UR_MEMBERSHIP_PLUGIN_FILE, array( $this, 'on_deactivation' ) );
 			register_activation_hook( UR_MEMBERSHIP_PLUGIN_FILE, array( $this, 'on_activation' ) );
-			add_filter( 'user_registration_content_restriction_settings', array(
-				$this,
-				'add_memberships_in_urcr_settings'
-			), 10, 1 );
+			add_filter(
+				'user_registration_content_restriction_settings',
+				array(
+					$this,
+					'add_memberships_in_urcr_settings',
+				),
+				10,
+				1
+			);
 			add_action( 'admin_enqueue_scripts', array( $this, 'register_membership_admin_scripts' ) );
+			add_action( 'plugins_loaded', array( __CLASS__, 'ur_membership_maybe_run_migrations' ), 20 );
 
+			add_action( 'user_registration_single_user_details_content', array( $this, 'render_user_membership_details' ), 10, 2 );
 		}
 
 		public function register_membership_admin_scripts() {
-			if(isset($_GET['post']) && isset($_GET['action']) && 'edit' === $_GET['action']) {
+			if ( isset( $_GET['post'] ) && isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 				// Enqueue frontend scripts here.
 				$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-				wp_register_script( 'user-registration-membership-frontend-script', UR_MEMBERSHIP_JS_ASSETS_URL . '/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), '1.0.0', true );
+				wp_register_script( 'user-registration-membership-frontend-script', UR()->plugin_url(). '/assets/js/modules/membership/frontend/user-registration-membership-frontend' . $suffix . '.js', array( 'jquery' ), UR_VERSION, true );
 				wp_enqueue_script( 'user-registration-membership-frontend-script' );
 				// Enqueue frontend styles here.
-				wp_register_style( 'user-registration-membership-frontend-style', UR_MEMBERSHIP_CSS_ASSETS_URL . '/user-registration-membership-frontend.css', array(), UR_MEMBERSHIP_VERSION );
+				wp_register_style( 'user-registration-membership-frontend-style', UR()->plugin_url(). '/assets/css/modules/membership/user-registration-membership-frontend.css', array(), UR_VERSION );
 				wp_enqueue_style( 'user-registration-membership-frontend-style' );
 			}
-
 		}
 
 		public function add_memberships_in_urcr_settings( $settings ) {
@@ -171,7 +189,7 @@ if ( ! class_exists( 'Admin' ) ) :
 					'css'       => 'min-width: 350px; ' . ( '3' != get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) ? 'display:none;' : '',
 					'desc_tip'  => true,
 					'options'   => $options,
-				)
+				),
 			);
 			$just_settings       = $settings['sections']['user_registration_content_restriction_settings']['settings'];
 
@@ -229,8 +247,8 @@ if ( ! class_exists( 'Admin' ) ) :
 		public function includes() {
 			$this->ajax = new AJAX();
 			if ( $this->is_admin() ) {
-				$this->admin   = new Membership();
-				$this->members = new Members();
+				$this->admin = new Membership();
+				// $this->members = new Members();
 			} else {
 				// require file.
 				$this->frontend = new Frontend();
@@ -394,11 +412,14 @@ if ( ! class_exists( 'Admin' ) ) :
 			/**
 			 * Filters that holds the list of payment gateways to be stored in ur_membership_payment_gateways option.
 			 */
-			$membership_payment_gateways = apply_filters( 'user_registration_membership_payment_gateways', array(
-				'paypal' => __( 'Paypal', 'user-registration' ),
-				'stripe' => __( 'Stripe', 'user-registration' ),
-				'bank'   => __( 'Bank', 'user-registration' ),
-			) );
+			$membership_payment_gateways = apply_filters(
+				'user_registration_membership_payment_gateways',
+				array(
+					'paypal' => __( 'Paypal', 'user-registration' ),
+					'stripe' => __( 'Stripe', 'user-registration' ),
+					'bank'   => __( 'Bank', 'user-registration' ),
+				)
+			);
 			update_option(
 				'ur_membership_payment_gateways',
 				$membership_payment_gateways
@@ -454,6 +475,100 @@ if ( ! class_exists( 'Admin' ) ) :
 			return $settings;
 		}
 
+		/**
+		 * Maybe run database migrations.
+		 *
+		 * @return void
+		 */
+		public static function ur_membership_maybe_run_migrations() {
+			if ( ! is_admin() || wp_doing_ajax() || wp_doing_cron() ) {
+				return;
+			}
 
+			$installed_version = get_option( 'ur_membership_db_version', '0.0.0' );
+
+			if ( version_compare( $installed_version, '1.0.0', '<' ) ) {
+				if ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) {
+					self::on_activation();
+					update_option( 'ur_membership_db_version', '1.0.0' );
+				}
+			}
+		}
+
+		public function render_user_membership_details( $user_id, $form_id ) {
+
+			if ( ur_check_module_activation( 'membership' ) === false ) {
+				return;
+			}
+
+			$members_repository = new MembersRepository();
+			$memberships        = $members_repository->get_member_memberships_by_id( $user_id );
+
+			if ( empty( $memberships ) ) {
+				return;
+			}
+
+			ob_start();
+			?>
+			<div class="urm-admin-user-content-container">
+				<div id="urm-admin-user-content-header" >
+					<h3>
+						<?php
+						if ( count( $memberships ) > 1 ) {
+							esc_html_e( 'Membership Details', 'user-registration' );
+						} else {
+							esc_html_e( 'Membership Detail', 'user-registration' );
+						}
+						?>
+					</h3>
+				</div>
+				<div class="user-registration-user-form-details">
+					<table class="wp-list-table widefat fixed striped users">
+						<thead>
+							<tr>
+								<th><?php esc_html_e( 'Plan Type', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Amount', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Status', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Starts On', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Expires On', 'user-registration' ); ?></th>
+								<th><?php esc_html_e( 'Action', 'user-registration' ); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							foreach ( $memberships as $membership ) {
+								$plan_details = json_decode( $membership['post_content'], true );
+								$amount       = $membership['billing_amount'];
+								$currencies   = ur_payment_integration_get_currencies();
+								$currency     = get_option( 'user_registration_payment_currency', 'USD' );
+
+								$symbol = $currencies[ $currency ]['symbol'];
+								$amount = ( ! empty( $currencies[ $currency ]['symbol_pos'] ) && 'left' === $currencies[ $currency ]['symbol_pos'] ) ? $symbol . number_format( $amount, 2 ) : number_format( $amount, 2 ) . $symbol;
+
+								if ( isset( $plan_details['type'] ) && 'subscription' === $plan_details['type'] ) {
+									$amount = $amount . ' / ' . $membership['billing_cycle'];
+								}
+								$expiry_date = 'subscription' === $plan_details['type'] && ! empty( $membership['expiry_date'] ) ? date_i18n( 'Y-m-d', strtotime( $membership['expiry_date'] ) ) : __( 'N/A', 'user-registration' );
+
+								?>
+								<tr>
+									<td><?php echo esc_html( $membership['post_title'] ); ?></td>
+									<td><?php echo esc_html( $amount ); ?></td>
+									<td class="status-<?php echo esc_attr( $membership['status'] ); ?>"><?php echo esc_html( ucfirst( $membership['status'] ) ); ?></td>
+									<td><?php echo ! empty( $membership['start_date'] ) ? esc_html( date_i18n( 'Y-m-d', strtotime( $membership['start_date'] ) ) ) : __( 'N/A', 'user-registration' ); ?></td>
+									<td><?php echo esc_html( $expiry_date ); ?></td>
+									<td><a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-subscriptions&action=edit&id=' . ( $membership['subscription_id'] ?? 0 ) ) ); ?>"><?php esc_html_e( 'View', 'user-registration' ); ?></a></td>
+								</tr>
+								<?php
+							}
+							?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<?php
+
+			echo ob_get_clean(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
 	}
 endif;

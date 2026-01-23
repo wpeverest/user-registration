@@ -54,17 +54,95 @@ class UR_Blocks {
 			$enqueue_script,
 			UR_VERSION
 		);
+
+		wp_register_style(
+			'user-registration-blocks-editor-style',
+			UR()->plugin_url() . '/chunks/blocks.css',
+			array(),
+			UR_VERSION
+		);
+
+		wp_enqueue_style( 'user-registration-blocks-editor-style' );
+
+		if ( ur_check_module_activation( 'membership' ) ) {
+
+			wp_register_style( 'user-registration-membership-frontend-style', UR()->plugin_url(). '/assets/css/modules/membership/user-registration-membership-frontend.css', array(), UR_VERSION );
+			wp_enqueue_style( 'user-registration-membership-frontend-style' );
+		}
+
+		$smart_tag = array(
+			array(
+				'text'  => esc_html__( 'Membership Plan Details', 'user-registration' ),
+				'value' => '{{membership_plan_details}}',
+			),
+			array(
+				'text'  => esc_html__( 'All Fields', 'user-registration' ),
+				'value' => '{{all_fields}}',
+			),
+			array(
+				'text'  => esc_html__( 'User Name', 'user-registration' ),
+				'value' => '{{username}}',
+			),
+			array(
+				'text'  => esc_html__( 'Email', 'user-registration' ),
+				'value' => '{{email}}',
+			),
+			array(
+				'text'  => esc_html__( 'First Name', 'user-registration' ),
+				'value' => '{{first_name}}',
+			),
+			array(
+				'text'  => esc_html__( 'Last Name', 'user-registration' ),
+				'value' => '{{last_name}}',
+			),
+			array(
+				'text'  => esc_html__( 'User Display Name', 'user-registration' ),
+				'value' => '{{display_name}}',
+			),
+		);
+
+		$smart_tag = apply_filters( 'user_registration_thank_you_page_smart_tags', $smart_tag );
+
+		$pages        = get_pages();
+		$page_options = array(
+			array(
+				'label' => __( 'Select a page', 'user-registration' ),
+				'value' => 0,
+			),
+		);
+
+		foreach ( $pages as $page ) {
+			$page_options[] = array(
+				'label' => $page->post_title,
+				'value' => $page->ID,
+			);
+		}
+
 		wp_localize_script(
 			'user-registration-blocks-editor',
 			'_UR_BLOCKS_',
 			array(
-				'logoUrl'              => UR()->plugin_url() . '/assets/images/logo.png',
-				'urRestApiNonce'       => wp_create_nonce( 'wp_rest' ),
-				'restURL'              => rest_url(),
-				'isPro'                => is_plugin_active( 'user-registration-pro/user-registration.php' ),
-				'iscRestrictionActive' => ur_check_module_activation( 'content-restriction' ),
-				'pages' 			   => array_map( function( $page ) { return [ 'label' => $page->post_title, 'value' => $page->ID ]; }, get_pages() ),
-				'login_page_id'		   => get_option('user_registration_login_page_id')
+				'logoUrl'                     => UR()->plugin_url() . '/assets/images/logo.png',
+				'urRestApiNonce'              => wp_create_nonce( 'wp_rest' ),
+				'isPro'                       => is_plugin_active( 'user-registration-pro/user-registration.php' ),
+				'iscRestrictionActive'        => ur_check_module_activation( 'content-restriction' ),
+				'pages'                       => array_map(
+					function ( $page ) {
+						return array(
+							'label' => $page->post_title,
+							'value' => $page->ID,
+						); },
+					get_pages()
+				),
+				'login_page_id'               => get_option( 'user_registration_login_page_id' ),
+				'urcrConfigurl'               => ur_check_module_activation( 'content-restriction' ) ? admin_url( 'admin.php?page=user-registration-content-restriction' ) : '',
+				'urcrGlobalRestrictionMsgUrl' => ur_check_module_activation( 'content-restriction' ) ? admin_url( 'admin.php?page=user-registration-settings&tab=membership&section=content-rules' ) : '',
+				'isProActive'                 => UR_PRO_ACTIVE,
+				'smart_tags'                  => $smart_tag,
+				'pages_array'                 => $page_options,
+				'membership_all_plan_url'     => admin_url( 'admin.php?page=user-registration-membership' ),
+				'membership_group_url'        => admin_url( 'admin.php?page=user-registration-membership&action=list_groups' ),
+				'bank_details_settings'       => admin_url( 'admin.php?page=user-registration-settings&tab=payment' ),
 			)
 		);
 		wp_register_script(
@@ -82,7 +160,7 @@ class UR_Blocks {
 				'user_registration_blocks_editor_prams',
 				array(
 					'i18n_add_a_block'     => esc_html__( 'Add a block', 'user-registration' ),
-					'i18n_add_a_block_tip' => sprintf( '%s %s', esc_html__( 'Click the plus button, search for User Registration, click the block to embed it. ', 'user-registration' ), '<a href="#" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>' ),
+					'i18n_add_a_block_tip' => sprintf( '%s %s', esc_html__( 'Click the plus button, search for User Registration & Membership, click the block to embed it. ', 'user-registration' ), '<a href="#" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>' ),
 					'i18n_done_btn'        => esc_html__( 'Done', 'user-registration' ),
 				)
 			);
@@ -101,7 +179,7 @@ class UR_Blocks {
 			array(
 				array(
 					'slug'  => 'user-registration',
-					'title' => esc_html__( 'User Registration', 'user-registration' ),
+					'title' => esc_html__( 'User Registration and Membership', 'user-registration' ),
 				),
 			),
 			$block_categories
@@ -140,7 +218,8 @@ class UR_Blocks {
 		}
 		if ( ur_check_module_activation( 'membership' ) ) {
 			$ur_blocks_classes[] = UR_Block_Membership_Listing::class;
-			$ur_blocks_classes[] = 	UR_Block_Thank_You::class;
+			$ur_blocks_classes[] = UR_Block_Thank_You::class;
+			$ur_blocks_classes[] = UR_Block_Membership_Buy_Now::class;
 		}
 
 		return apply_filters(

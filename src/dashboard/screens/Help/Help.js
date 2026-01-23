@@ -33,7 +33,8 @@ const PRIMARY_COLOR = "#475bb2";
 const docURL = "https://docs.wpuserregistration.com/";
 const facebookGroup = "https://www.facebook.com/groups/userregistration";
 const featureRequestURL = "https://wpuserregistration.com/feature-requests/";
-const submitReviewUrl = "https://wordpress.org/support/plugin/user-registration/reviews/?rate=5#new-post";
+const submitReviewUrl =
+	"https://wordpress.org/support/plugin/user-registration/reviews/?rate=5#new-post";
 const ticketUrl = "https://wpuserregistration.com/support/";
 
 const Help = () => {
@@ -79,7 +80,7 @@ const Help = () => {
 				) : (
 					<>
 						{/* Welcome Section and Video Section - Combined in Single Container */}
-						<Box
+						{/* <Box
 							p="6"
 							borderRadius="base"
 							border="1px"
@@ -97,7 +98,7 @@ const Help = () => {
 								h="100%"
 							>
 								{/* Welcome Section - Left */}
-								<Stack gap="4" justify="center">
+						{/* <Stack gap="4" justify="center">
 									<Heading
 										as="h2"
 										fontSize="2xl"
@@ -150,10 +151,10 @@ const Help = () => {
 											{__("View all forms", "user-registration")}
 										</Button>
 									</Stack>
-								</Stack>
+								</Stack> */}
 
-								{/* Video Section - Right */}
-								<Box>
+						{/* Video Section - Right */}
+						{/* <Box>
 									<AspectRatio ratio={16 / 9}>
 										<iframe
 											src="https://www.youtube.com/embed/ZOXVbfBTNPQ?si=82Q2iOOE2iUF7M02&autoplay=1&mute=1&rel=0"
@@ -168,8 +169,125 @@ const Help = () => {
 										></iframe>
 									</AspectRatio>
 								</Box>
-							</Grid>
-						</Box>
+							</Grid> */}
+						{/* </Box>  */}
+
+						{/* Getting started and support */}
+						<Grid
+							gridTemplateColumns={{
+								sm: "1fr",
+								md: "1fr 1fr"
+							}}
+							gridGap="5"
+						>
+							<Stack
+								px="6"
+								py="8"
+								align="center"
+								gap="3"
+								bgColor="white"
+								borderRadius="base"
+								fontSize="14px"
+								fontWeight="normal"
+							>
+							<URIcon.DocsLines
+								w="5"
+								h="5"
+								fill={PRIMARY_COLOR}
+							/>
+								<Heading
+									as="h3"
+									size="sm"
+									fontWeight="semibold"
+								>
+									{__(
+										"Getting  Started",
+										"user-registration"
+									)}
+								</Heading>
+								<Text fontSize="13px" color="gray.700">
+									{__(
+										"Check our documentation for detailed information on User Registration & Membership features and how to use them.",
+										"user-registration"
+									)}
+								</Text>
+								<Button
+									mt="10"
+									variant="outline"
+									color="#475bb2"
+									borderColor="#475bb2"
+									borderRadius="base"
+									fontSize="14px"
+									fontWeight="normal"
+								>
+									<Link
+										href={docURL}
+										isExternal
+										textDecoration="none"
+										_hover={{ textDecoration: "none" }}
+										fontSize="13px"
+										fontWeight="normal"
+									>
+										{__(
+											"View Documentation",
+											"user-registration"
+										)}
+									</Link>
+								</Button>
+							</Stack>
+							<Stack
+								px="6"
+								py="8"
+								align="center"
+								gap="3"
+								bgColor="white"
+								borderRadius="base"
+								fontSize="14px"
+								fontWeight="normal"
+							>
+							<URIcon.Headphones
+									w="5"
+									h="5"
+									fill={PRIMARY_COLOR}
+								/>
+								<Heading
+									as="h3"
+									size="sm"
+									fontWeight="semibold"
+								>
+									{__(
+										"Support",
+										"user-registration"
+									)}
+								</Heading>
+								<Text fontSize="13px" color="gray.700">
+									{__(
+										"Submit a ticket for encountered issues and get help from our support team instantly.",
+										"user-registration"
+									)}
+								</Text>
+							<Button
+									mt="10"
+									variant="outline"
+									color="#475bb2"
+									borderColor="#475bb2"
+									borderRadius="base"
+									fontSize="14px"
+									fontWeight="normal"
+								>
+								<Link
+									href={ticketUrl}
+									isExternal
+									textDecoration="none"
+									_hover={{ textDecoration: "none" }}
+									fontSize="13px"
+									fontWeight="normal"
+								>
+									{__("Create a Ticket", "user-registration")}
+								</Link>
+							</Button>
+						</Stack>
+						</Grid>
 
 						{/* Shortcodes and Smart Tags Section */}
 						<Grid
@@ -179,80 +297,91 @@ const Help = () => {
 							}}
 							gridGap="5"
 						>
-						<Stack
-							px="6"
-							py="8"
-							align="center"
-							gap="3"
-							bgColor="white"
-							borderRadius="base"
-							border="1px"
-							borderColor="gray.100"
-							textAlign="center"
-						>
-							<Icon.Shortcode w="8" h="8" fill="#475bb2" />
-							<Heading as="h3" size="sm" fontWeight="semibold">
-								{__("Shortcodes", "user-registration")}
-							</Heading>
-							<Text fontSize="13px" color="gray.700">
-								{__(
-									"Find the complete list of shortcodes with their usage information and parameter details.",
-									"user-registration"
-								)}
-							</Text>
-							<Button
-								mt="10"
-								variant="outline"
-								color="#475bb2"
-								borderColor="#475bb2"
+							<Stack
+								px="6"
+								py="8"
+								align="center"
+								gap="3"
+								bgColor="white"
 								borderRadius="base"
-								fontSize="14px"
-								fontWeight="normal"
-								onClick={() => {
-									setIsListViewerOpen(true);
-									setListViewerType("shortcodes");
-								}}
+								border="1px"
+								borderColor="gray.100"
+								textAlign="center"
 							>
-								{__("View all Shortcodes", "user-registration")}
-							</Button>
-						</Stack>
-						<Stack
-							px="6"
-							py="8"
-							align="center"
-							gap="3"
-							bgColor="white"
-							borderRadius="base"
-							border="1px"
-							borderColor="gray.100"
-							textAlign="center"
-						>
-							<Icon.SmartTag w="8" h="8" fill="#475bb2" />
-							<Heading as="h3" size="sm" fontWeight="semibold">
-								{__("Smart Tags", "user-registration")}
-							</Heading>
-							<Text fontSize="13px" color="gray.700">
-								{__(
-									"Find the complete list of smart tags with their usage information and parameter details.",
-									"user-registration"
-								)}
-							</Text>
-							<Button
-								mt="10"
-								variant="outline"
-								color="#475bb2"
-								borderColor="#475bb2"
+								<Icon.Shortcode w="8" h="8" fill="#475bb2" />
+								<Heading
+									as="h3"
+									size="sm"
+									fontWeight="semibold"
+								>
+									{__("Shortcodes", "user-registration")}
+								</Heading>
+								<Text fontSize="13px" color="gray.700">
+									{__(
+										"Find the complete list of shortcodes with their usage information and parameter details.",
+										"user-registration"
+									)}
+								</Text>
+								<Button
+									mt="10"
+									variant="outline"
+									color="#475bb2"
+									borderColor="#475bb2"
+									borderRadius="base"
+									fontSize="14px"
+									fontWeight="normal"
+									onClick={() => {
+										setIsListViewerOpen(true);
+										setListViewerType("shortcodes");
+									}}
+								>
+									{__(
+										"View all Shortcodes",
+										"user-registration"
+									)}
+								</Button>
+							</Stack>
+							<Stack
+								px="6"
+								py="8"
+								align="center"
+								gap="3"
+								bgColor="white"
 								borderRadius="base"
-								fontSize="14px"
-								fontWeight="normal"
-								onClick={() => {
-									setIsListViewerOpen(true);
-									setListViewerType("smartTags");
-								}}
+								border="1px"
+								borderColor="gray.100"
+								textAlign="center"
 							>
-								{__("View Tags", "user-registration")}
-							</Button>
-						</Stack>
+								<Icon.SmartTag w="8" h="8" fill="#475bb2" />
+								<Heading
+									as="h3"
+									size="sm"
+									fontWeight="semibold"
+								>
+									{__("Smart Tags", "user-registration")}
+								</Heading>
+								<Text fontSize="13px" color="gray.700">
+									{__(
+										"Find the complete list of smart tags with their usage information and parameter details.",
+										"user-registration"
+									)}
+								</Text>
+								<Button
+									mt="10"
+									variant="outline"
+									color="#475bb2"
+									borderColor="#475bb2"
+									borderRadius="base"
+									fontSize="14px"
+									fontWeight="normal"
+									onClick={() => {
+										setIsListViewerOpen(true);
+										setListViewerType("smartTags");
+									}}
+								>
+									{__("View Tags", "user-registration")}
+								</Button>
+							</Stack>
 						</Grid>
 					</>
 				)}
@@ -276,17 +405,21 @@ const Help = () => {
 						boxShadow="sm"
 						h="100%"
 					>
-						<Box
-							p="6"
-							textAlign="center"
-							position="relative"
-						>
+						<Box p="6" textAlign="center" position="relative">
 							<Image src={facebook} />
 						</Box>
 						<Stack p="6" gap="3" flex="1" justify="space-between">
 							<Stack gap="3">
-								<Heading as="h3" size="sm" fontWeight="semibold" color="gray.800">
-									{__("Facebook Community", "user-registration")}
+								<Heading
+									as="h3"
+									size="sm"
+									fontWeight="semibold"
+									color="gray.800"
+								>
+									{__(
+										"Facebook Community",
+										"user-registration"
+									)}
 								</Heading>
 								<Text fontSize="13px" color="gray.700">
 									{__(
@@ -324,16 +457,17 @@ const Help = () => {
 						boxShadow="sm"
 						h="100%"
 					>
-						<Box
-							p="6"
-							textAlign="center"
-							position="relative"
-						>
+						<Box p="6" textAlign="center" position="relative">
 							<Image src={x} />
 						</Box>
 						<Stack p="6" gap="3" flex="1" justify="space-between">
 							<Stack gap="3">
-								<Heading as="h3" size="sm" fontWeight="semibold" color="gray.800">
+								<Heading
+									as="h3"
+									size="sm"
+									fontWeight="semibold"
+									color="gray.800"
+								>
 									{__("X ( Twitter )", "user-registration")}
 								</Heading>
 								<Text fontSize="13px" color="gray.700">
@@ -372,16 +506,17 @@ const Help = () => {
 						boxShadow="sm"
 						h="100%"
 					>
-						<Box
-							p="6"
-							textAlign="center"
-							position="relative"
-						>
+						<Box p="6" textAlign="center" position="relative">
 							<Image src={youtube} />
 						</Box>
 						<Stack p="6" gap="3" flex="1" justify="space-between">
 							<Stack gap="3">
-								<Heading as="h3" size="sm" fontWeight="semibold" color="gray.800">
+								<Heading
+									as="h3"
+									size="sm"
+									fontWeight="semibold"
+									color="gray.800"
+								>
 									{__("YouTube", "user-registration")}
 								</Heading>
 								<Text fontSize="13px" color="gray.700">
@@ -412,7 +547,7 @@ const Help = () => {
 				</Grid>
 			</Stack>
 			<Stack gap="5">
-				<Stack
+				{/* <Stack
 					p="6"
 					gap="3"
 					bgColor="white"
@@ -443,8 +578,8 @@ const Help = () => {
 					>
 						{__("Join our Facebook Group", "user-registration")}
 					</Link>
-				</Stack>
-				<Stack
+				</Stack> */}
+				{/* <Stack
 					p="6"
 					gap="3"
 					bgColor="white"
@@ -476,8 +611,8 @@ const Help = () => {
 					>
 						{__("View Documentation", "user-registration")}
 					</Link>
-				</Stack>
-				<Stack
+				</Stack> */}
+				{/* <Stack
 					p="6"
 					gap="3"
 					bgColor="white"
@@ -509,7 +644,7 @@ const Help = () => {
 					>
 						{__("Create a Ticket", "user-registration")}
 					</Link>
-				</Stack>
+				</Stack> */}
 				<Stack
 					p="6"
 					gap="3"
@@ -584,7 +719,7 @@ const Help = () => {
 					</HStack>
 					<Text fontSize="13px" color="gray.700">
 						{__(
-							"Watch our step-by-step video tutorials that'll help you get the best out of User Registration's features.",
+							"Watch our step-by-step video tutorials that'll help you get the best out of User Registration & Membership's features.",
 							"user-registration"
 						)}
 					</Text>
