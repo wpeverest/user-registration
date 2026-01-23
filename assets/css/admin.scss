@@ -39,6 +39,12 @@
 	@include loader();
 }
 
+[class*="user-registration-membership_page"] {
+	.select2-container {
+		font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	}
+}
+
 body {
 
 	&.user-registration,
@@ -1533,6 +1539,7 @@ body {
 
 						a {
 							color: #b8b8b8;
+							pointer-events: none;
 						}
 					}
 				}
@@ -8636,20 +8643,26 @@ body.user-registration-page {
 	.user-registration-settings {
 		.user-registration-settings-container {
 			.urm_license_setting_notice.urm_install_pro_notice {
-				border: 1px solid $primary_color;
-				border-left-width: 4px;
-				border-radius: 2px;
-				padding: 12px 16px;
-				margin-bottom: 32px;
+				border: $border_width solid transparent;
+				border-left: 4px solid $primary_color;
+				border-radius: $border_radius_4;
+				padding: $spacing_20px;
+				background: #F1F2F9;
+				margin-bottom: $spacing_24px;
 
 				.install_pro_version_button {
 					font-weight: $medium;
 					background: $primary_color;
 					color: $white;
-				}
 
-				.install_pro_version_button:hover {
-					border-color: $primary_color;
+					&:hover {
+						border-color: $primary_color;
+					}
+
+					&:focus {
+						outline: none;
+						box-shadow: none;
+					}
 				}
 
 				.notice-icon {
