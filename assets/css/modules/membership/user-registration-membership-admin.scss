@@ -953,7 +953,7 @@
 
 									.ur-membership-upgrade-types {
 										width: 100%;
-										max-width: 220px;
+										max-width: 222px;
 										margin-bottom: 0;
 										border-radius: $border_radius_4;
 										border: $border_width solid $border-color;
@@ -1935,6 +1935,36 @@
 		&.expand {
 			transform: rotate(-90deg);
 		}
+	}
+}
+
+.ur-membership-sync-to-email-marketing-addons {
+	&.upgradable-type {
+		.user-registration-toggle-form {
+			position: relative;
+
+			&::before {
+				opacity: 1;
+				content: "";
+				background-image: url("../../../images/icons/ur-pro-icon.png");
+				background-repeat: no-repeat;
+				background-position: center;
+				background-size: 100%;
+				// position: absolute;
+				// right: $spacing_12px;
+				display: block;
+				border-radius: $border_radius_2;
+				width: 18px;
+				height: 18px;
+				margin-left: -24px;
+				margin-top: -2px;
+			}
+
+			.slider {
+				cursor: default !important;
+			}
+		}
+
 	}
 }
 
