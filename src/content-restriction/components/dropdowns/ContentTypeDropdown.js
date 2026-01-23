@@ -52,7 +52,21 @@ const ContentTypeDropdown = ({
 		disabled: isContentTypeExists(option.value)
 	}));
 
-	return <DropdownMenu options={options} onSelect={onSelect} />;
+	// Pro options to show when pro is not active
+	const proOptions = [
+		{ value: "post-type", label: __("Post Type", "user-registration") },
+		{ value: "taxonomy", label: __("Taxonomy", "user-registration") },
+		{ value: "file_downloads", label: __("File Downloads", "user-registration") }
+	];
+
+	return (
+		<DropdownMenu
+			options={options}
+			onSelect={onSelect}
+			showProOptions={true}
+			proOptions={proOptions}
+		/>
+	);
 };
 
 export default ContentTypeDropdown;

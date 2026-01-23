@@ -2,6 +2,13 @@
  * External Dependencies
  */
 import React from "react";
+import { isProAccess } from "../../utils/localized-data";
+
+/* global _URCR_DASHBOARD_ */
+const { assetsURL } =
+	typeof _URCR_DASHBOARD_ !== "undefined" && _URCR_DASHBOARD_
+		? _URCR_DASHBOARD_
+		: {};
 
 /**
  * Reusable Dropdown Menu Component
@@ -13,6 +20,8 @@ import React from "react";
  * @param {string} props.className - Additional CSS class name
  * @param {boolean} props.grouped - Whether options are grouped
  * @param {Function} props.renderOption - Custom render function for options
+ * @param {boolean} props.showProOptions - Whether to show pro options when pro is not active
+ * @param {Array} props.proOptions - Array of pro option objects with {value, label}
  */
 const DropdownMenu = ({
 	options = [],
@@ -20,8 +29,38 @@ const DropdownMenu = ({
 	onSelect,
 	className = "",
 	grouped = false,
-	renderOption
+	renderOption,
+	showProOptions = false,
+	proOptions = []
 }) => {
+	const isPro = isProAccess();
+
+	const getProIconUrl = () => {
+		if (assetsURL) {
+			return `${assetsURL}images/icons/ur-pro-icon.png`;
+		}
+
+		if (typeof window === "undefined") {
+			return "";
+		}
+		const scripts = document.getElementsByTagName("script");
+		for (let i = 0; i < scripts.length; i++) {
+			if (
+				scripts[i].src &&
+				scripts[i].src.indexOf("urcr-membership-access-rules") !== -1
+			) {
+				const index = scripts[i].src.indexOf("assets/js");
+				if (index !== -1) {
+					let pluginUrl = scripts[i].src.substring(0, index);
+					if (pluginUrl && !pluginUrl.endsWith("/")) {
+						pluginUrl += "/";
+					}
+					return `${pluginUrl}assets/images/icons/ur-pro-icon.png`;
+				}
+			}
+		}
+		return "";
+	};
 	const handleOptionClick = (option, e) => {
 		e.stopPropagation();
 		// if (option.disabled) {
@@ -104,6 +143,42 @@ const DropdownMenu = ({
 		);
 	};
 
+	const renderProOptions = () => {
+		if (
+			!showProOptions ||
+			isPro ||
+			!proOptions ||
+			proOptions.length === 0
+		) {
+			return null;
+		}
+
+		const proIconUrl = getProIconUrl();
+
+		return (
+			<>
+				<div className="urcr-dropdown-pro-title">
+					<span>More in Pro </span>
+					<img
+						src={proIconUrl}
+						alt="Pro"
+						width="14"
+						height="14"
+					/>
+				</div>
+				{proOptions.map((proOpt) => (
+					<span
+						key={proOpt.value}
+						className="urcr-dropdown-option urcr-content-type-option urcr-pro-option urcr-pro-option-disabled"
+						data-content-type={proOpt.value}
+					>
+						{proOpt.label}
+					</span>
+				))}
+			</>
+		);
+	};
+
 	if (grouped) {
 		// Options are grouped: [{group: "Group Name", options: [...]}, ...]
 		return (
@@ -125,6 +200,7 @@ const DropdownMenu = ({
 						)}
 					</div>
 				))}
+				{renderProOptions()}
 			</div>
 		);
 	}
@@ -132,6 +208,7 @@ const DropdownMenu = ({
 	return (
 		<div className={`urcr-dropdown-menu ${className}`}>
 			{options.map((option) => renderOptionItem(option, false))}
+			{renderProOptions()}
 		</div>
 	);
 };

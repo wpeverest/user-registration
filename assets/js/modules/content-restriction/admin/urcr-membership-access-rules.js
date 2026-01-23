@@ -1,4 +1,4 @@
-(function($) {
+(function ($) {
 	"use strict";
 
 	var URCRMembershipAccess = {
@@ -11,7 +11,7 @@
 		ruleData: null,
 		initialized: false,
 
-		init: function() {
+		init: function () {
 			var self = this;
 
 			if (typeof urcr_membership_access_data === "undefined") {
@@ -67,7 +67,7 @@
 			self.dripInit();
 		},
 
-		initializeEmptyRule: function() {
+		initializeEmptyRule: function () {
 			var self = this;
 			if (self.membershipId > 0) {
 				self.addCondition("membership", true, [
@@ -76,10 +76,10 @@
 			}
 		},
 
-		syncFromExistingHTML: function() {
+		syncFromExistingHTML: function () {
 			var self = this;
 
-			$(".urcr-condition-wrapper").each(function() {
+			$(".urcr-condition-wrapper").each(function () {
 				var $wrapper = $(this);
 				var conditionId = $wrapper.data("condition-id");
 				var $fieldSelect = $wrapper.find(
@@ -91,7 +91,7 @@
 				var inputType = "multiselect";
 
 				var conditionOptions = self.getConditionOptions();
-				var selectedOption = conditionOptions.find(function(opt) {
+				var selectedOption = conditionOptions.find(function (opt) {
 					return opt.value === type;
 				});
 				if (selectedOption) {
@@ -112,7 +112,7 @@
 					}
 				} else if (inputType === "checkbox") {
 					value =
-						$valueInput.find("input[type=\"radio\"]:checked").val() ||
+						$valueInput.find('input[type="radio"]:checked').val() ||
 						"logged-in";
 				} else if (
 					inputType === "date" ||
@@ -122,10 +122,10 @@
 					value = $valueInput.val() || "";
 				} else if (inputType === "period") {
 					var select =
-						$valueInput.find("[data-period-part=\"select\"]").val() ||
+						$valueInput.find('[data-period-part="select"]').val() ||
 						"During";
 					var input =
-						$valueInput.find("[data-period-part=\"input\"]").val() ||
+						$valueInput.find('[data-period-part="input"]').val() ||
 						"";
 					value = { select: select, input: input };
 				}
@@ -142,7 +142,7 @@
 				}
 			});
 
-			$(".urcr-target-item").each(function() {
+			$(".urcr-target-item").each(function () {
 				var $target = $(this);
 				var targetId = $target.data("target-id");
 				var $label = $target.find(".urcr-target-type-label");
@@ -220,14 +220,14 @@
 				});
 
 				if (type !== "whole_site") {
-					setTimeout(function() {
+					setTimeout(function () {
 						self.initContentTargetSelect2(targetId, type, value);
 					}, 100);
 				}
 			});
 		},
 
-		populateRuleData: function(ruleData) {
+		populateRuleData: function (ruleData) {
 			var self = this;
 
 			$(".urcr-conditions-list").empty();
@@ -250,13 +250,13 @@
 			) {
 				var conditions = ruleData.logic_map.conditions;
 
-				conditions.sort(function(a, b) {
+				conditions.sort(function (a, b) {
 					if (a.type === "membership") return -1;
 					if (b.type === "membership") return 1;
 					return 0;
 				});
 
-				conditions.forEach(function(condition, index) {
+				conditions.forEach(function (condition, index) {
 					var firstCondition = conditions[0];
 					var isFirstMembership =
 						firstCondition &&
@@ -292,7 +292,7 @@
 				ruleData.target_contents &&
 				ruleData.target_contents.length > 0
 			) {
-				ruleData.target_contents.forEach(function(target) {
+				ruleData.target_contents.forEach(function (target) {
 					var type = target.type;
 					if (type === "wp_pages") type = "pages";
 					if (type === "wp_posts") type = "posts";
@@ -334,10 +334,10 @@
 			}
 		},
 
-		bindEvents: function() {
+		bindEvents: function () {
 			var self = this;
 
-			$(document).on("click", ".urcr-add-condition-button", function(e) {
+			$(document).on("click", ".urcr-add-condition-button", function (e) {
 				e.preventDefault();
 				self.addCondition("roles", false, "");
 			});
@@ -345,7 +345,7 @@
 			$(document).on(
 				"keydown",
 				".urcr-add-condition-button",
-				function(e) {
+				function (e) {
 					if (e.key === "Enter" || e.key === " ") {
 						e.preventDefault();
 						self.addCondition("roles", false, "");
@@ -353,7 +353,7 @@
 				}
 			);
 
-			$(document).on("click", ".urcr-condition-remove", function(e) {
+			$(document).on("click", ".urcr-condition-remove", function (e) {
 				e.preventDefault();
 				var $wrapper = $(this).closest(".urcr-condition-wrapper");
 				var conditionId = $wrapper.data("condition-id");
@@ -363,7 +363,7 @@
 			$(document).on(
 				"change",
 				".urcr-condition-field-select",
-				function() {
+				function () {
 					var $wrapper = $(this).closest(".urcr-condition-wrapper");
 					var conditionId = $wrapper.data("condition-id");
 					var newType = $(this).val();
@@ -374,7 +374,7 @@
 			$(document).on(
 				"change",
 				".urcr-condition-value-input",
-				function() {
+				function () {
 					var $wrapper = $(this).closest(".urcr-condition-wrapper");
 					if ($wrapper.length) {
 						var conditionId = $wrapper.data("condition-id");
@@ -386,7 +386,7 @@
 			$(document).on(
 				"change",
 				".urcr-period-input-group input, .urcr-period-input-group select",
-				function() {
+				function () {
 					var $wrapper = $(this).closest(".urcr-condition-wrapper");
 					if ($wrapper.length) {
 						var conditionId = $wrapper.data("condition-id");
@@ -394,17 +394,17 @@
 							".urcr-period-input-group"
 						);
 						var select = $periodContainer
-							.find("[data-period-part=\"select\"]")
+							.find('[data-period-part="select"]')
 							.val();
 						var input = $periodContainer
-							.find("[data-period-part=\"input\"]")
+							.find('[data-period-part="input"]')
 							.val();
 						var periodValue = {
 							select: select || "During",
 							input: input || ""
 						};
 
-						var condition = self.conditions.find(function(c) {
+						var condition = self.conditions.find(function (c) {
 							return c.id === conditionId;
 						});
 						if (condition) {
@@ -414,19 +414,19 @@
 				}
 			);
 
-			$(document).on("click", ".urcr-add-content-button", function(e) {
+			$(document).on("click", ".urcr-add-content-button", function (e) {
 				e.preventDefault();
 				self.showContentTypeDropdown($(this));
 			});
 
-			$(document).on("click", ".urcr-target-remove", function(e) {
+			$(document).on("click", ".urcr-target-remove", function (e) {
 				e.preventDefault();
 				var $target = $(this).closest(".urcr-target-item");
 				var targetId = $target.data("target-id");
 				self.removeContentTarget(targetId);
 			});
 
-			$(document).on("click", ".urcr-content-type-option", function(e) {
+			$(document).on("click", ".urcr-content-type-option", function (e) {
 				// Prevent clicks on disabled options or Pro options
 				if (
 					$(this).hasClass("urcr-dropdown-option-disabled") ||
@@ -448,7 +448,7 @@
 			$(document).on(
 				"keydown",
 				".urcr-content-type-option",
-				function(e) {
+				function (e) {
 					// Prevent keyboard interaction on disabled options or Pro options
 					if (
 						$(this).hasClass("urcr-dropdown-option-disabled") ||
@@ -468,7 +468,7 @@
 				}
 			);
 
-			$(document).on("click", function(e) {
+			$(document).on("click", function (e) {
 				if (
 					!$(e.target).closest(".urcr-content-dropdown-wrapper")
 						.length &&
@@ -480,21 +480,21 @@
 				}
 			});
 
-			$(document).on("change", ".urcr-action-type-select", function() {
+			$(document).on("change", ".urcr-action-type-select", function () {
 				var actionType = $(this).val() || "message";
 				self.handleActionTypeChange(actionType);
 			});
 
 			$(document).on(
 				"change",
-				"input[name=\"urcr-membership-message-type\"]",
-				function() {
+				'input[name="urcr-membership-message-type"]',
+				function () {
 					var messageType = $(this).val();
 					var $messageContainer = $(
 						".urcrra-message-input-container"
 					);
 					var $radioOptions = $(
-						"input[name=\"urcr-membership-message-type\"]"
+						'input[name="urcr-membership-message-type"]'
 					).closest(".urcr-checkbox-radio-option");
 
 					$radioOptions.removeClass("is-checked");
@@ -543,7 +543,7 @@
 							var defaultMessage = "";
 							if (
 								typeof urcr_membership_access_data !==
-								"undefined" &&
+									"undefined" &&
 								urcr_membership_access_data.membership_default_message
 							) {
 								defaultMessage =
@@ -551,7 +551,7 @@
 							}
 
 							if (defaultMessage) {
-								setTimeout(function() {
+								setTimeout(function () {
 									if ($editorField.length) {
 										var editor =
 											window.tinymce &&
@@ -577,7 +577,7 @@
 			);
 		},
 
-		addCondition: function(type, isLocked, value, conditionId) {
+		addCondition: function (type, isLocked, value, conditionId) {
 			var self = this;
 
 			if (!type) {
@@ -597,7 +597,7 @@
 				return;
 			}
 
-			var selectedOption = conditionOptions.find(function(opt) {
+			var selectedOption = conditionOptions.find(function (opt) {
 				return opt.value === type;
 			});
 
@@ -635,7 +635,7 @@
 			});
 		},
 
-		getConditionRowHtml: function(
+		getConditionRowHtml: function (
 			id,
 			type,
 			label,
@@ -649,22 +649,22 @@
 
 			if (!isLocked) {
 				removeButton =
-					"<button type=\"button\" class=\"button button-link-delete urcr-condition-remove\" aria-label=\"Remove condition\">" +
-					"<span class=\"dashicons dashicons-no-alt\"></span>" +
+					'<button type="button" class="button button-link-delete urcr-condition-remove" aria-label="Remove condition">' +
+					'<span class="dashicons dashicons-no-alt"></span>' +
 					"</button>";
 			}
 
 			var disabledAttr = isLocked ? " disabled" : "";
 			var fieldSelect =
-				"<select class=\"urcr-condition-field-select urcr-condition-value-input\"" +
+				'<select class="urcr-condition-field-select urcr-condition-value-input"' +
 				disabledAttr +
 				">";
-			conditionOptions.forEach(function(option) {
+			conditionOptions.forEach(function (option) {
 				var selected = option.value === type ? "selected" : "";
 				fieldSelect +=
-					"<option value=\"" +
+					'<option value="' +
 					option.value +
-					"\" " +
+					'" ' +
 					selected +
 					">" +
 					option.label +
@@ -681,17 +681,17 @@
 			);
 
 			return (
-				"<div class=\"urcr-condition-wrapper\" data-condition-id=\"" +
+				'<div class="urcr-condition-wrapper" data-condition-id="' +
 				id +
-				"\">" +
-				"<div class=\"urcr-condition-row ur-d-flex ur-mt-2 ur-align-items-start\">" +
-				"<div class=\"urcr-condition-only ur-d-flex ur-align-items-start\">" +
-				"<div class=\"urcr-condition-selection-section ur-d-flex ur-align-items-center ur-g-4\">" +
-				"<div class=\"urcr-condition-field-name\">" +
+				'">' +
+				'<div class="urcr-condition-row ur-d-flex ur-mt-2 ur-align-items-start">' +
+				'<div class="urcr-condition-only ur-d-flex ur-align-items-start">' +
+				'<div class="urcr-condition-selection-section ur-d-flex ur-align-items-center ur-g-4">' +
+				'<div class="urcr-condition-field-name">' +
 				fieldSelect +
 				"</div>" +
-				"<div class=\"urcr-condition-operator\"><span>is</span></div>" +
-				"<div class=\"urcr-condition-value\">" +
+				'<div class="urcr-condition-operator"><span>is</span></div>' +
+				'<div class="urcr-condition-value">' +
 				valueInput +
 				"</div>" +
 				"</div>" +
@@ -702,7 +702,7 @@
 			);
 		},
 
-		getConditionValueInputHtml: function(
+		getConditionValueInputHtml: function (
 			id,
 			inputType,
 			fieldType,
@@ -722,31 +722,31 @@
 				}
 				var valueJson = value
 					? JSON.stringify(value)
-					: "{\"form_id\":\"\",\"form_fields\":[]}";
+					: '{"form_id":"","form_fields":[]}';
 				var valueAttr =
-					" data-value=\"" + $("<div>").text(valueJson).html() + "\"";
+					' data-value="' + $("<div>").text(valueJson).html() + '"';
 				var urForms = urcr_membership_access_data.ur_forms || {};
 
 				html =
-					"<div class=\"urcr-ur-form-field-condition\" data-condition-id=\"" +
+					'<div class="urcr-ur-form-field-condition" data-condition-id="' +
 					id +
-					"\"" +
+					'"' +
 					valueAttr +
 					">";
 				html +=
-					"<div class=\"urcr-form-selection ur-d-flex ur-align-items-center ur-g-4 ur-mb-2\">";
+					'<div class="urcr-form-selection ur-d-flex ur-align-items-center ur-g-4 ur-mb-2">';
 				html +=
-					"<select class=\"urcr-form-select components-select-control__input urcr-condition-value-input\"" +
+					'<select class="urcr-form-select components-select-control__input urcr-condition-value-input"' +
 					disabledAttr +
 					">";
-				html += "<option value=\"\">Select a form</option>";
+				html += '<option value="">Select a form</option>';
 				for (var formIdKey in urForms) {
 					if (urForms.hasOwnProperty(formIdKey)) {
 						var selected = formIdKey === formId ? "selected" : "";
 						html +=
-							"<option value=\"" +
+							'<option value="' +
 							formIdKey +
-							"\" " +
+							'" ' +
 							selected +
 							">" +
 							urForms[formIdKey] +
@@ -755,15 +755,15 @@
 				}
 				html += "</select>";
 				html += "</div>";
-				html += "<div class=\"urcr-form-fields-list\"></div>";
+				html += '<div class="urcr-form-fields-list"></div>';
 				html += "</div>";
 			} else if (inputType === "multiselect") {
 				html =
-					"<select class=\"urcr-enhanced-select2 urcr-condition-value-input\" multiple data-condition-id=\"" +
+					'<select class="urcr-enhanced-select2 urcr-condition-value-input" multiple data-condition-id="' +
 					id +
-					"\" data-field-type=\"" +
+					'" data-field-type="' +
 					fieldType +
-					"\" " +
+					'" ' +
 					disabledAttr +
 					"></select>";
 			} else if (inputType === "checkbox") {
@@ -778,10 +778,10 @@
 						? "checked"
 						: "";
 				html =
-					"<div class=\"urcr-checkbox-radio-input\">" +
-					"<label><input type=\"radio\" name=\"condition_" +
+					'<div class="urcr-checkbox-radio-input">' +
+					'<label><input type="radio" name="condition_' +
 					id +
-					"_user_state\" value=\"logged-in\" " +
+					'_user_state" value="logged-in" ' +
 					checkedLoggedIn +
 					" " +
 					disabledAttr +
@@ -789,9 +789,9 @@
 					(urcr_membership_access_data.labels.logged_in ||
 						"Logged In") +
 					"</label>" +
-					"<label><input type=\"radio\" name=\"condition_" +
+					'<label><input type="radio" name="condition_' +
 					id +
-					"_user_state\" value=\"logged-out\" " +
+					'_user_state" value="logged-out" ' +
 					checkedLoggedOut +
 					" " +
 					disabledAttr +
@@ -802,13 +802,13 @@
 					"</div>";
 			} else if (inputType === "date") {
 				html =
-					"<input type=\"date\" class=\"urcr-condition-value-input\" data-condition-id=\"" +
+					'<input type="date" class="urcr-condition-value-input" data-condition-id="' +
 					id +
-					"\" data-field-type=\"" +
+					'" data-field-type="' +
 					fieldType +
-					"\" value=\"" +
+					'" value="' +
 					(value || "") +
-					"\" " +
+					'" ' +
 					disabledAttr +
 					">";
 			} else if (inputType === "period") {
@@ -822,62 +822,62 @@
 					periodSelect = "During";
 				}
 				html =
-					"<div class=\"urcr-period-input-group ur-d-flex ur-align-items-center\" style=\"gap: 8px;\">" +
-					"<select class=\"urcr-period-select urcr-condition-value-input\" data-condition-id=\"" +
+					'<div class="urcr-period-input-group ur-d-flex ur-align-items-center" style="gap: 8px;">' +
+					'<select class="urcr-period-select urcr-condition-value-input" data-condition-id="' +
 					id +
-					"\" data-field-type=\"" +
+					'" data-field-type="' +
 					fieldType +
-					"\" data-period-part=\"select\" " +
+					'" data-period-part="select" ' +
 					disabledAttr +
 					">" +
-					"<option value=\"During\" " +
+					'<option value="During" ' +
 					(periodSelect === "During" ? "selected" : "") +
 					">During</option>" +
-					"<option value=\"After\" " +
+					'<option value="After" ' +
 					(periodSelect === "After" ? "selected" : "") +
 					">After</option>" +
 					"</select>" +
-					"<input type=\"number\" class=\"urcr-period-number urcr-condition-value-input\" data-condition-id=\"" +
+					'<input type="number" class="urcr-period-number urcr-condition-value-input" data-condition-id="' +
 					id +
-					"\" data-field-type=\"" +
+					'" data-field-type="' +
 					fieldType +
-					"\" data-period-part=\"input\" value=\"" +
+					'" data-period-part="input" value="' +
 					periodInput +
-					"\" min=\"0\" placeholder=\"Days\" " +
+					'" min="0" placeholder="Days" ' +
 					disabledAttr +
 					">" +
 					"</div>";
 			} else if (inputType === "number") {
 				html =
-					"<input type=\"number\" class=\"urcr-condition-value-input\" data-condition-id=\"" +
+					'<input type="number" class="urcr-condition-value-input" data-condition-id="' +
 					id +
-					"\" data-field-type=\"" +
+					'" data-field-type="' +
 					fieldType +
-					"\" value=\"" +
+					'" value="' +
 					(value || "") +
-					"\" " +
+					'" ' +
 					disabledAttr +
 					">";
 			} else if (inputType === "text") {
 				html =
-					"<input type=\"text\" class=\"urcr-condition-value-input\" data-condition-id=\"" +
+					'<input type="text" class="urcr-condition-value-input" data-condition-id="' +
 					id +
-					"\" data-field-type=\"" +
+					'" data-field-type="' +
 					fieldType +
-					"\" value=\"" +
+					'" value="' +
 					(value || "") +
-					"\" " +
+					'" ' +
 					disabledAttr +
 					">";
 			} else {
 				html =
-					"<input type=\"text\" class=\"urcr-condition-value-input\" data-condition-id=\"" +
+					'<input type="text" class="urcr-condition-value-input" data-condition-id="' +
 					id +
-					"\" data-field-type=\"" +
+					'" data-field-type="' +
 					fieldType +
-					"\" value=\"" +
+					'" value="' +
 					(value || "") +
-					"\" " +
+					'" ' +
 					disabledAttr +
 					">";
 			}
@@ -885,20 +885,20 @@
 			return html;
 		},
 
-		initConditionSelect2: function(conditionId, inputType, value) {
+		initConditionSelect2: function (conditionId, inputType, value) {
 			var self = this;
 			var $select = $(
-				".urcr-condition-wrapper[data-condition-id=\"" +
-				conditionId +
-				"\"] .urcr-enhanced-select2"
+				'.urcr-condition-wrapper[data-condition-id="' +
+					conditionId +
+					'"] .urcr-enhanced-select2'
 			);
 
 			if (
 				inputType === "ur_form_field" ||
 				$(
-					".urcr-condition-wrapper[data-condition-id=\"" +
-					conditionId +
-					"\"] .urcr-ur-form-field-condition"
+					'.urcr-condition-wrapper[data-condition-id="' +
+						conditionId +
+						'"] .urcr-ur-form-field-condition'
 				).length
 			) {
 				self.initURFormFieldCondition(conditionId, value);
@@ -913,7 +913,7 @@
 					$select.select2("destroy");
 				}
 
-				setTimeout(function() {
+				setTimeout(function () {
 					$select.select2({
 						data: options,
 						multiple: true,
@@ -943,12 +943,12 @@
 			}
 		},
 
-		initURFormFieldCondition: function(conditionId, value) {
+		initURFormFieldCondition: function (conditionId, value) {
 			var self = this;
 			var $container = $(
-				".urcr-condition-wrapper[data-condition-id=\"" +
-				conditionId +
-				"\"] .urcr-ur-form-field-condition"
+				'.urcr-condition-wrapper[data-condition-id="' +
+					conditionId +
+					'"] .urcr-ur-form-field-condition'
 			);
 			if (!$container.length) return;
 
@@ -984,7 +984,7 @@
 				);
 			}
 
-			$formSelect.off("change").on("change", function() {
+			$formSelect.off("change").on("change", function () {
 				var selectedFormId = $(this).val();
 				if (selectedFormId) {
 					self.renderFormFields(
@@ -1001,7 +1001,7 @@
 			});
 		},
 
-		renderFormFields: function(
+		renderFormFields: function (
 			$container,
 			formId,
 			formFields,
@@ -1034,7 +1034,7 @@
 				formFields = [{ field_name: "", operator: "is", value: "" }];
 			}
 
-			formFields.forEach(function(field, index) {
+			formFields.forEach(function (field, index) {
 				self.renderFormFieldRow(
 					$container,
 					field,
@@ -1045,7 +1045,7 @@
 			});
 		},
 
-		renderFormFieldRow: function(
+		renderFormFieldRow: function (
 			$container,
 			field,
 			index,
@@ -1058,16 +1058,16 @@
 			var fieldValue = field.value || "";
 
 			var rowHtml =
-				"<div class=\"urcr-form-field-row ur-d-flex ur-align-items-center ur-mb-2\">" +
-				"<div class=\"urcr-form-field-name\">" +
-				"<select class=\"components-select-control__input urcr-condition-value-input urcr-form-field-select\">" +
-				"<option value=\"\">Select field</option>";
-			fieldOptions.forEach(function(opt) {
+				'<div class="urcr-form-field-row ur-d-flex ur-align-items-center ur-mb-2">' +
+				'<div class="urcr-form-field-name">' +
+				'<select class="components-select-control__input urcr-condition-value-input urcr-form-field-select">' +
+				'<option value="">Select field</option>';
+			fieldOptions.forEach(function (opt) {
 				var selected = opt.value === fieldName ? "selected" : "";
 				rowHtml +=
-					"<option value=\"" +
+					'<option value="' +
 					opt.value +
-					"\" " +
+					'" ' +
 					selected +
 					">" +
 					opt.label +
@@ -1075,36 +1075,36 @@
 			});
 			rowHtml +=
 				"</select></div>" +
-				"<div class=\"urcr-form-field-operator\">" +
-				"<select class=\"components-select-control__input urcr-condition-value-input urcr-form-field-operator-select\">" +
-				"<option value=\"is\"" +
+				'<div class="urcr-form-field-operator">' +
+				'<select class="components-select-control__input urcr-condition-value-input urcr-form-field-operator-select">' +
+				'<option value="is"' +
 				(operator === "is" ? " selected" : "") +
 				">is</option>" +
-				"<option value=\"is not\"" +
+				'<option value="is not"' +
 				(operator === "is not" ? " selected" : "") +
 				">is not</option>" +
-				"<option value=\"empty\"" +
+				'<option value="empty"' +
 				(operator === "empty" ? " selected" : "") +
 				">empty</option>" +
-				"<option value=\"not empty\"" +
+				'<option value="not empty"' +
 				(operator === "not empty" ? " selected" : "") +
 				">not empty</option>" +
 				"</select></div>";
 
 			if (operator !== "empty" && operator !== "not empty") {
 				rowHtml +=
-					"<div class=\"urcr-form-field-value ur-flex-1\">" +
-					"<input type=\"text\" class=\"components-text-control__input urcr-condition-value-input urcr-condition-value-text urcr-form-field-value-input\" value=\"" +
+					'<div class="urcr-form-field-value ur-flex-1">' +
+					'<input type="text" class="components-text-control__input urcr-condition-value-input urcr-condition-value-text urcr-form-field-value-input" value="' +
 					(fieldValue || "") +
-					"\" placeholder=\"Enter value\">" +
+					'" placeholder="Enter value">' +
 					"</div>";
 			}
 
 			rowHtml +=
-				"<button type=\"button\" class=\"button urcr-add-field-button\" aria-label=\"Add field\">" +
-				"<span class=\"dashicons dashicons-plus-alt2\"></span></button>" +
-				"<button type=\"button\" class=\"button urcr-remove-field-button\" aria-label=\"Remove field\">" +
-				"<span class=\"dashicons dashicons-minus\"></span></button>" +
+				'<button type="button" class="button urcr-add-field-button" aria-label="Add field">' +
+				'<span class="dashicons dashicons-plus-alt2"></span></button>' +
+				'<button type="button" class="button urcr-remove-field-button" aria-label="Remove field">' +
+				'<span class="dashicons dashicons-minus"></span></button>' +
 				"</div>";
 
 			$container.append(rowHtml);
@@ -1114,26 +1114,26 @@
 				".urcr-form-field-select, .urcr-form-field-operator-select, .urcr-form-field-value-input"
 			)
 				.off("change input")
-				.on("change input", function() {
+				.on("change input", function () {
 					self.updateURFormFieldValue(conditionId);
 				});
 
 			$row.find(".urcr-form-field-operator-select")
 				.off("change")
-				.on("change", function() {
+				.on("change", function () {
 					var op = $(this).val();
 					var $valueContainer = $row.find(".urcr-form-field-value");
 					if (op === "empty" || op === "not empty") {
 						$valueContainer.remove();
 					} else if (!$valueContainer.length) {
 						$row.find(".urcr-form-field-operator").after(
-							"<div class=\"urcr-form-field-value ur-flex-1\">" +
-							"<input type=\"text\" class=\"components-text-control__input urcr-condition-value-input urcr-condition-value-text urcr-form-field-value-input\" placeholder=\"Enter value\">" +
-							"</div>"
+							'<div class="urcr-form-field-value ur-flex-1">' +
+								'<input type="text" class="components-text-control__input urcr-condition-value-input urcr-condition-value-text urcr-form-field-value-input" placeholder="Enter value">' +
+								"</div>"
 						);
 						$row.find(".urcr-form-field-value-input")
 							.off("input")
-							.on("input", function() {
+							.on("input", function () {
 								self.updateURFormFieldValue(conditionId);
 							});
 					}
@@ -1142,7 +1142,7 @@
 
 			$row.find(".urcr-add-field-button")
 				.off("click")
-				.on("click", function(e) {
+				.on("click", function (e) {
 					e.preventDefault();
 					e.stopPropagation();
 					var newField = {
@@ -1165,7 +1165,7 @@
 
 			$row.find(".urcr-remove-field-button")
 				.off("click")
-				.on("click", function(e) {
+				.on("click", function (e) {
 					e.preventDefault();
 					e.stopPropagation();
 					var $allRows = $container.find(".urcr-form-field-row");
@@ -1189,19 +1189,19 @@
 				.prop("disabled", shouldDisable);
 		},
 
-		updateURFormFieldValue: function(conditionId) {
+		updateURFormFieldValue: function (conditionId) {
 			var self = this;
 			var $container = $(
-				".urcr-condition-wrapper[data-condition-id=\"" +
-				conditionId +
-				"\"] .urcr-ur-form-field-condition"
+				'.urcr-condition-wrapper[data-condition-id="' +
+					conditionId +
+					'"] .urcr-ur-form-field-condition'
 			);
 			if (!$container.length) return;
 
 			var formId = $container.find(".urcr-form-select").val() || "";
 			var formFields = [];
 
-			$container.find(".urcr-form-field-row").each(function() {
+			$container.find(".urcr-form-field-row").each(function () {
 				var fieldName =
 					$(this).find(".urcr-form-field-select").val() || "";
 				var operator =
@@ -1229,7 +1229,7 @@
 				form_fields: formFields
 			};
 
-			var condition = self.conditions.find(function(c) {
+			var condition = self.conditions.find(function (c) {
 				return c.id === conditionId;
 			});
 			if (condition) {
@@ -1237,7 +1237,7 @@
 			}
 		},
 
-		getSelect2Options: function(fieldType) {
+		getSelect2Options: function (fieldType) {
 			var self = this;
 			var options = [];
 
@@ -1245,7 +1245,7 @@
 				if (urcr_membership_access_data.wp_roles) {
 					options = Object.keys(
 						urcr_membership_access_data.wp_roles
-					).map(function(key) {
+					).map(function (key) {
 						return {
 							id: key,
 							text: urcr_membership_access_data.wp_roles[key]
@@ -1259,12 +1259,12 @@
 						urcr_membership_access_data.memberships &&
 						urcr_membership_access_data.memberships[
 							self.membershipId
-							]
+						]
 					) {
 						membershipTitle =
 							urcr_membership_access_data.memberships[
 								self.membershipId
-								];
+							];
 					}
 					options = [
 						{
@@ -1275,7 +1275,7 @@
 				} else if (urcr_membership_access_data.memberships) {
 					options = Object.keys(
 						urcr_membership_access_data.memberships
-					).map(function(key) {
+					).map(function (key) {
 						return {
 							id: key,
 							text: urcr_membership_access_data.memberships[key]
@@ -1286,12 +1286,12 @@
 				if (urcr_membership_access_data.wp_capabilities) {
 					options = Object.keys(
 						urcr_membership_access_data.wp_capabilities
-					).map(function(key) {
+					).map(function (key) {
 						return {
 							id: key,
 							text: urcr_membership_access_data.wp_capabilities[
 								key
-								]
+							]
 						};
 					});
 				}
@@ -1299,7 +1299,7 @@
 				if (urcr_membership_access_data.registration_sources) {
 					options = Object.keys(
 						urcr_membership_access_data.registration_sources
-					).map(function(key) {
+					).map(function (key) {
 						return {
 							id: key,
 							text: urcr_membership_access_data
@@ -1313,12 +1313,12 @@
 				if (urcr_membership_access_data.payment_status) {
 					options = Object.keys(
 						urcr_membership_access_data.payment_status
-					).map(function(key) {
+					).map(function (key) {
 						return {
 							id: key,
 							text: urcr_membership_access_data.payment_status[
 								key
-								]
+							]
 						};
 					});
 				}
@@ -1327,30 +1327,30 @@
 			return options;
 		},
 
-		removeCondition: function(conditionId) {
+		removeCondition: function (conditionId) {
 			var self = this;
 			$(
-				".urcr-condition-wrapper[data-condition-id=\"" +
-				conditionId +
-				"\"]"
+				'.urcr-condition-wrapper[data-condition-id="' +
+					conditionId +
+					'"]'
 			).remove();
-			self.conditions = self.conditions.filter(function(cond) {
+			self.conditions = self.conditions.filter(function (cond) {
 				return cond.id !== conditionId;
 			});
 		},
 
-		updateConditionType: function(conditionId, newType) {
+		updateConditionType: function (conditionId, newType) {
 			var self = this;
 			var conditionOptions = self.getConditionOptions();
-			var selectedOption = conditionOptions.find(function(opt) {
+			var selectedOption = conditionOptions.find(function (opt) {
 				return opt.value === newType;
 			});
 
 			if (selectedOption) {
 				var $wrapper = $(
-					".urcr-condition-wrapper[data-condition-id=\"" +
-					conditionId +
-					"\"]"
+					'.urcr-condition-wrapper[data-condition-id="' +
+						conditionId +
+						'"]'
 				);
 				var $valueContainer = $wrapper.find(".urcr-condition-value");
 				var newInputHtml = self.getConditionValueInputHtml(
@@ -1364,7 +1364,7 @@
 				$valueContainer.html(newInputHtml);
 				self.initConditionSelect2(conditionId, selectedOption.type, "");
 
-				var condition = self.conditions.find(function(c) {
+				var condition = self.conditions.find(function (c) {
 					return c.id === conditionId;
 				});
 				if (condition) {
@@ -1374,14 +1374,14 @@
 			}
 		},
 
-		updateConditionValue: function(conditionId, $input) {
+		updateConditionValue: function (conditionId, $input) {
 			var self = this;
 			var value = "";
 
 			var $container = $(
-				".urcr-condition-wrapper[data-condition-id=\"" +
-				conditionId +
-				"\"] .urcr-ur-form-field-condition"
+				'.urcr-condition-wrapper[data-condition-id="' +
+					conditionId +
+					'"] .urcr-ur-form-field-condition'
 			);
 			if ($container.length) {
 				self.updateURFormFieldValue(conditionId);
@@ -1394,21 +1394,21 @@
 				} else {
 					value = $input.val() || "";
 				}
-			} else if ($input.is("input[type=\"radio\"]")) {
+			} else if ($input.is('input[type="radio"]')) {
 				var $wrapper = $input.closest(".urcr-condition-wrapper");
 				value =
-					$wrapper.find("input[type=\"radio\"]:checked").val() || "";
+					$wrapper.find('input[type="radio"]:checked').val() || "";
 			} else if (
-				$input.is("input[type=\"number\"]") ||
-				$input.is("input[type=\"text\"]") ||
-				$input.is("input[type=\"date\"]")
+				$input.is('input[type="number"]') ||
+				$input.is('input[type="text"]') ||
+				$input.is('input[type="date"]')
 			) {
 				value = $input.val() || "";
 			} else {
 				value = $input.val() || "";
 			}
 
-			var condition = self.conditions.find(function(c) {
+			var condition = self.conditions.find(function (c) {
 				return c.id === conditionId;
 			});
 			if (condition) {
@@ -1416,7 +1416,7 @@
 			}
 		},
 
-		addContentTarget: function(type, value, targetId) {
+		addContentTarget: function (type, value, targetId) {
 			var self = this;
 
 			if (!targetId) {
@@ -1432,7 +1432,7 @@
 			);
 			$(".urcr-target-type-group").append(targetHtml);
 			var $newTarget = $(
-				".urcr-target-item[data-target-id=\"" + targetId + "\"]"
+				'.urcr-target-item[data-target-id="' + targetId + '"]'
 			);
 			self.dripInit($newTarget);
 			self.initContentTargetSelect2(targetId, type, value);
@@ -1444,7 +1444,7 @@
 			});
 		},
 
-		getContentTargetHtml: function(id, type, label, value) {
+		getContentTargetHtml: function (id, type, label, value) {
 			var self = this;
 			var inputHtml = "";
 			var displayLabel = type === "whole_site" ? "Includes" : label;
@@ -1452,27 +1452,27 @@
 			if (type === "whole_site") {
 				var wholeSiteValue = label || "Whole Site";
 				inputHtml =
-					"<span data-content-type=\"whole_site\" data-field-type=\"whole_site\">" +
+					'<span data-content-type="whole_site" data-field-type="whole_site">' +
 					wholeSiteValue +
 					"</span>";
 			} else if (type === "pages" || type === "posts") {
 				inputHtml =
-					"<select class=\"urcr-enhanced-select2 urcr-content-target-input\" multiple data-target-id=\"" +
+					'<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' +
 					id +
-					"\" data-content-type=\"" +
+					'" data-content-type="' +
 					type +
-					"\"></select>";
+					'"></select>';
 			} else if (type === "taxonomy") {
 				inputHtml =
-					"<div class=\"urcr-taxonomy-select-group\">" +
-					"<select class=\"urcr-taxonomy-select\" data-target-id=\"" +
+					'<div class="urcr-taxonomy-select-group">' +
+					'<select class="urcr-taxonomy-select" data-target-id="' +
 					id +
-					"\">" +
-					"<option value=\"\">Select Taxonomy</option>" +
+					'">' +
+					'<option value="">Select Taxonomy</option>' +
 					"</select>" +
-					"<select class=\"urcr-enhanced-select2 urcr-content-target-input\" multiple data-target-id=\"" +
+					'<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' +
 					id +
-					"\" data-content-type=\"taxonomy\"></select>" +
+					'" data-content-type="taxonomy"></select>' +
 					"</div>";
 			} else if (type === "custom_uri") {
 				try {
@@ -1487,11 +1487,11 @@
 				</div>`;
 			} else {
 				inputHtml =
-					"<select class=\"urcr-enhanced-select2 urcr-content-target-input\" multiple data-target-id=\"" +
+					'<select class="urcr-enhanced-select2 urcr-content-target-input" multiple data-target-id="' +
 					id +
-					"\" data-content-type=\"" +
+					'" data-content-type="' +
 					type +
-					"\"></select>";
+					'"></select>';
 			}
 			var contentDrip = "";
 
@@ -1560,27 +1560,27 @@
 			}
 
 			return (
-				"<div class=\"urcr-target-item\" data-target-id=\"" +
+				'<div class="urcr-target-item" data-target-id="' +
 				id +
-				"\">" +
-				"<span class=\"urcr-target-type-label\">" +
+				'">' +
+				'<span class="urcr-target-type-label">' +
 				displayLabel +
 				":</span>" +
 				inputHtml +
 				contentDrip +
-				"<button type=\"button\" class=\"button-link urcr-target-remove\" aria-label=\"Remove\">" +
-				"<span class=\"dashicons dashicons-no-alt\"></span>" +
+				'<button type="button" class="button-link urcr-target-remove" aria-label="Remove">' +
+				'<span class="dashicons dashicons-no-alt"></span>' +
 				"</button>" +
 				"</div>"
 			);
 		},
 
-		initContentTargetSelect2: function(targetId, type, value) {
+		initContentTargetSelect2: function (targetId, type, value) {
 			var self = this;
 			var $select = $(
-				".urcr-target-item[data-target-id=\"" +
-				targetId +
-				"\"] .urcr-content-target-input"
+				'.urcr-target-item[data-target-id="' +
+					targetId +
+					'"] .urcr-content-target-input'
 			);
 
 			if (
@@ -1600,7 +1600,7 @@
 					width: "100%"
 				});
 
-				setTimeout(function() {
+				setTimeout(function () {
 					if (value && Array.isArray(value) && value.length > 0) {
 						$select.val(value).trigger("change");
 					} else if (
@@ -1626,17 +1626,17 @@
 			}
 		},
 
-		initTaxonomySelect: function(targetId, value) {
+		initTaxonomySelect: function (targetId, value) {
 			var self = this;
 			var $taxonomySelect = $(
-				".urcr-target-item[data-target-id=\"" +
-				targetId +
-				"\"] .urcr-taxonomy-select"
+				'.urcr-target-item[data-target-id="' +
+					targetId +
+					'"] .urcr-taxonomy-select'
 			);
 			var $termSelect = $(
-				".urcr-target-item[data-target-id=\"" +
-				targetId +
-				"\"] .urcr-content-target-input"
+				'.urcr-target-item[data-target-id="' +
+					targetId +
+					'"] .urcr-content-target-input'
 			);
 
 			if (
@@ -1645,15 +1645,15 @@
 			) {
 				if ($taxonomySelect.find("option").length <= 1) {
 					Object.keys(urcr_membership_access_data.taxonomies).forEach(
-						function(taxKey) {
+						function (taxKey) {
 							$taxonomySelect.append(
-								"<option value=\"" +
-								taxKey +
-								"\">" +
-								urcr_membership_access_data.taxonomies[
-									taxKey
+								'<option value="' +
+									taxKey +
+									'">' +
+									urcr_membership_access_data.taxonomies[
+										taxKey
 									] +
-								"</option>"
+									"</option>"
 							);
 						}
 					);
@@ -1686,19 +1686,19 @@
 					self.updateTaxonomyTerms(targetId, taxonomy, terms);
 				}
 
-				$taxonomySelect.off("change").on("change", function() {
+				$taxonomySelect.off("change").on("change", function () {
 					var selectedTaxonomy = $(this).val();
 					self.updateTaxonomyTerms(targetId, selectedTaxonomy, []);
 				});
 			}
 		},
 
-		updateTaxonomyTerms: function(targetId, taxonomy, selectedTerms) {
+		updateTaxonomyTerms: function (targetId, taxonomy, selectedTerms) {
 			var self = this;
 			var $termSelect = $(
-				".urcr-target-item[data-target-id=\"" +
-				targetId +
-				"\"] .urcr-content-target-input"
+				'.urcr-target-item[data-target-id="' +
+					targetId +
+					'"] .urcr-content-target-input'
 			);
 
 			if (
@@ -1708,7 +1708,7 @@
 				urcr_membership_access_data.terms_list[taxonomy]
 			) {
 				var terms = urcr_membership_access_data.terms_list[taxonomy];
-				var options = Object.keys(terms).map(function(termId) {
+				var options = Object.keys(terms).map(function (termId) {
 					return { id: termId, text: terms[termId] };
 				});
 
@@ -1723,8 +1723,8 @@
 				});
 
 				if (selectedTerms && selectedTerms.length > 0) {
-					setTimeout(function() {
-						var termIds = selectedTerms.map(function(term) {
+					setTimeout(function () {
+						var termIds = selectedTerms.map(function (term) {
 							return String(term);
 						});
 						$termSelect.val(termIds).trigger("change");
@@ -1733,7 +1733,7 @@
 			}
 		},
 
-		getContentTargetOptions: function(type) {
+		getContentTargetOptions: function (type) {
 			var self = this;
 			var options = [];
 
@@ -1762,7 +1762,7 @@
 				} else {
 					options = Object.keys(
 						urcr_membership_access_data[type]
-					).map(function(key) {
+					).map(function (key) {
 						return {
 							id: key,
 							text: urcr_membership_access_data[type][key]
@@ -1774,23 +1774,23 @@
 			return options;
 		},
 
-		removeContentTarget: function(targetId) {
+		removeContentTarget: function (targetId) {
 			var self = this;
 			var $target = $(
-				".urcr-target-item[data-target-id=\"" + targetId + "\"]"
+				'.urcr-target-item[data-target-id="' + targetId + '"]'
 			);
 			if ($target.length) {
 				$target.removeClass("ur-d-flex").addClass("ur-d-none");
 				$target.remove();
 			}
-			self.contentTargets = self.contentTargets.filter(function(target) {
+			self.contentTargets = self.contentTargets.filter(function (target) {
 				return target.id !== targetId;
 			});
 		},
 
-		showContentTypeDropdown: function($button) {
+		showContentTypeDropdown: function ($button) {
 			var self = this;
-			var existingTypes = self.contentTargets.map(function(t) {
+			var existingTypes = self.contentTargets.map(function (t) {
 				return t.type;
 			});
 			var isPro = urcr_membership_access_data.is_pro || false;
@@ -1799,19 +1799,19 @@
 
 			var contentTypes = isPro
 				? allContentTypes
-				: allContentTypes.filter(function(ct) {
-					var filtercase =
-						ct.value === "posts" ||
-						ct.value === "pages" ||
-						ct.value === "whole_site";
-					if (
-						urcr_membership_access_data.is_membership_module_enabled
-					) {
-						filtercase =
-							filtercase || ct.value === "masteriyo_courses";
-					}
-					return filtercase;
-				});
+				: allContentTypes.filter(function (ct) {
+						var filtercase =
+							ct.value === "posts" ||
+							ct.value === "pages" ||
+							ct.value === "whole_site";
+						if (
+							urcr_membership_access_data.is_membership_module_enabled
+						) {
+							filtercase =
+								filtercase || ct.value === "masteriyo_courses";
+						}
+						return filtercase;
+					});
 			var $wrapper = $button.closest(".urcr-content-dropdown-wrapper");
 
 			if ($wrapper.length === 0) {
@@ -1834,34 +1834,32 @@
 
 			if ($dropdown.length === 0) {
 				$dropdown = $(
-					"<div class=\"urcr-content-type-dropdown-menu urcr-dropdown-menu\"></div>"
+					'<div class="urcr-content-type-dropdown-menu urcr-dropdown-menu"></div>'
 				);
 				$wrapper.append($dropdown);
 			}
 
 			$dropdown.empty();
-			contentTypes.forEach(function(ct) {
+			contentTypes.forEach(function (ct) {
 				var isDisabled = existingTypes.indexOf(ct.value) !== -1;
 				var disabledClass = isDisabled
 					? "urcr-dropdown-option-disabled"
 					: "";
-				var disabledAttr = isDisabled ? "aria-disabled=\"true\"" : "";
+				var disabledAttr = isDisabled ? 'aria-disabled="true"' : "";
 				var tabIndex = isDisabled ? "-1" : "0";
 
 				$dropdown.append(
-					"<span role=\"button\" tabindex=\"" +
-					tabIndex +
-					"\" class=\"urcr-dropdown-option urcr-content-type-option " +
-					"\" data-content-type=\"" +
-					ct.value +
-					"\" " +
-					">" +
-					ct.label +
-					"</span>"
+					'<span role="button" tabindex="' +
+						tabIndex +
+						'" class="urcr-dropdown-option urcr-content-type-option ' +
+						'" data-content-type="' +
+						ct.value +
+						'" ' +
+						">" +
+						ct.label +
+						"</span>"
 				);
 			});
-
-			console.log(isPro);
 
 			if (!isPro) {
 				var pluginUrl = "";
@@ -1881,26 +1879,27 @@
 					}
 				}
 				$dropdown.append(
-					"<div class=\"urcr-dropdown-pro-title\">" +
-					"<span>More in Pro </span>" +
-					"<img src=\"" +
-					pluginUrl +
-					"assets/images/icons/ur-pro-icon.png\" alt=\"Pro\" width=\"14\" height=\"14\" />" +
-					"</div>"
+					'<div class="urcr-dropdown-pro-title">' +
+						"<span>More in Pro </span>" +
+						'<img src="' +
+						pluginUrl +
+						'assets/images/icons/ur-pro-icon.png" alt="Pro" width="14" height="14" />' +
+						"</div>"
 				);
 
 				var proOptions = [
+					{ value: "post-type", label: "Post Type" },
 					{ value: "taxonomy", label: "Taxonomy" },
 					{ value: "file_downloads", label: "File Downloads" }
 				];
 
-				proOptions.forEach(function(proOpt) {
+				proOptions.forEach(function (proOpt) {
 					$dropdown.append(
-						"<span class=\"urcr-dropdown-option urcr-content-type-option urcr-pro-option urcr-pro-option-disabled\" data-content-type=\"" +
-						proOpt.value +
-						"\">" +
-						proOpt.label +
-						"</span>"
+						'<span class="urcr-dropdown-option urcr-content-type-option urcr-pro-option urcr-pro-option-disabled" data-content-type="' +
+							proOpt.value +
+							'">' +
+							proOpt.label +
+							"</span>"
 					);
 				});
 			}
@@ -1912,25 +1911,25 @@
 			}
 		},
 
-		updateAccessControlClass: function() {
+		updateAccessControlClass: function () {
 			var self = this;
 			var $wrapper = $(".urcr-condition-value-input-wrapper");
 			$wrapper.removeClass("urcr-restrict-content");
 			$wrapper.addClass("urcr-access-content");
 		},
 
-		initSelect2: function() {
+		initSelect2: function () {
 			var self = this;
 		},
 
-		getConditionOptions: function() {
+		getConditionOptions: function () {
 			var self = this;
 			var allOptions =
 				urcr_membership_access_data.condition_options || [];
 			var isPro = urcr_membership_access_data.is_pro || false;
 
 			if (!isPro) {
-				allOptions = allOptions.filter(function(opt) {
+				allOptions = allOptions.filter(function (opt) {
 					return (
 						opt.value === "membership" ||
 						opt.value === "roles" ||
@@ -1939,14 +1938,14 @@
 				});
 			}
 
-			allOptions = allOptions.filter(function(opt) {
+			allOptions = allOptions.filter(function (opt) {
 				return opt.value !== "membership";
 			});
 
 			return allOptions;
 		},
 
-		getContentTypeLabel: function(type) {
+		getContentTypeLabel: function (type) {
 			var contentTypeOptions =
 				urcr_membership_access_data.content_type_options || [];
 
@@ -1959,12 +1958,12 @@
 			return type;
 		},
 
-		prepareRuleData: function() {
+		prepareRuleData: function () {
 			var self = this;
 
 			var $membershipIdInput = $("#ur-input-type-membership-name")
 				.closest("form")
-				.find("input[name=\"membership_id\"]");
+				.find('input[name="membership_id"]');
 			if ($membershipIdInput.length && $membershipIdInput.val()) {
 				self.membershipId = parseInt($membershipIdInput.val(), 10);
 			}
@@ -1978,7 +1977,7 @@
 			}
 
 			var hasMembershipCondition = false;
-			$(".urcr-condition-wrapper").each(function() {
+			$(".urcr-condition-wrapper").each(function () {
 				var type = $(this).find(".urcr-condition-field-select").val();
 				if (type === "membership") {
 					hasMembershipCondition = true;
@@ -1987,14 +1986,14 @@
 			});
 
 			var conditions = [];
-			$(".urcr-condition-wrapper").each(function() {
+			$(".urcr-condition-wrapper").each(function () {
 				var $wrapper = $(this);
 				var conditionId = $wrapper.data("condition-id");
 				var type = $wrapper.find(".urcr-condition-field-select").val();
 				var value = "";
 
 				if (type === "ur_form_field") {
-					var condition = self.conditions.find(function(c) {
+					var condition = self.conditions.find(function (c) {
 						return c.id === conditionId;
 					});
 					if (
@@ -2010,7 +2009,7 @@
 						if ($container.length) {
 							self.updateURFormFieldValue(conditionId);
 							var updatedCondition = self.conditions.find(
-								function(c) {
+								function (c) {
 									return c.id === conditionId;
 								}
 							);
@@ -2041,10 +2040,10 @@
 								: selectedValues
 									? [selectedValues]
 									: [];
-						} else if ($valueInput.is("input[type=\"radio\"]")) {
+						} else if ($valueInput.is('input[type="radio"]')) {
 							value =
 								$wrapper
-									.find("input[type=\"radio\"]:checked")
+									.find('input[type="radio"]:checked')
 									.val() || "";
 						} else if (
 							$wrapper.find(".urcr-period-input-group").length
@@ -2053,10 +2052,10 @@
 								".urcr-period-input-group"
 							);
 							var periodSelect = $periodContainer
-								.find("[data-period-part=\"select\"]")
+								.find('[data-period-part="select"]')
 								.val();
 							var periodInput = $periodContainer
-								.find("[data-period-part=\"input\"]")
+								.find('[data-period-part="input"]')
 								.val();
 							value = {
 								select: periodSelect || "During",
@@ -2088,7 +2087,7 @@
 			}
 
 			var targetContents = [];
-			$(".urcr-target-item").each(function() {
+			$(".urcr-target-item").each(function () {
 				var $target = $(this);
 				var targetId = $target.data("target-id");
 
@@ -2163,9 +2162,9 @@
 						break;
 					case "custom_uri":
 						var $customUriInput =
-							$target.find("input[type=\"text\"]");
+							$target.find('input[type="text"]');
 						var $customUriCheckbox = $target.find(
-							"input[type=\"checkbox\"]"
+							'input[type="checkbox"]'
 						);
 						value = [
 							$customUriInput.val() || "",
@@ -2335,7 +2334,7 @@
 			return ruleData;
 		},
 
-		initActionSection: function() {
+		initActionSection: function () {
 			var self = this;
 			var $actionTypeSelect = $("#urcr-membership-action-type");
 
@@ -2346,7 +2345,7 @@
 			if ($actionTypeSelect.length) {
 				$(
 					".urcr-action-local-page, .urcr-action-ur-form, .urcr-action-shortcode-tag"
-				).each(function() {
+				).each(function () {
 					if (!$(this).hasClass("select2-hidden-accessible")) {
 						$(this).select2({
 							width: "100%"
@@ -2359,17 +2358,17 @@
 			}
 
 			var $messageTypeRadio = $(
-				"input[name=\"urcr-membership-message-type\"]"
+				'input[name="urcr-membership-message-type"]'
 			);
 			if ($messageTypeRadio.length) {
 				var $checkedRadio = $messageTypeRadio.filter(":checked");
 
 				if (!$checkedRadio.length) {
 					$messageTypeRadio
-						.filter("[value=\"global\"]")
+						.filter('[value="global"]')
 						.prop("checked", true);
 					$checkedRadio =
-						$messageTypeRadio.filter("[value=\"global\"]");
+						$messageTypeRadio.filter('[value="global"]');
 				}
 
 				$checkedRadio.trigger("change");
@@ -2384,7 +2383,7 @@
 			}
 		},
 
-		handleActionTypeChange: function(actionType) {
+		handleActionTypeChange: function (actionType) {
 			$(".urcr-action-input-container")
 				.removeClass("ur-d-flex")
 				.addClass("ur-d-none");
@@ -2421,7 +2420,7 @@
 			}
 		},
 
-		getActionsFromForm: function() {
+		getActionsFromForm: function () {
 			var self = this;
 			var $actionTypeSelect = $("#urcr-membership-action-type");
 
@@ -2441,7 +2440,7 @@
 				case "message":
 					actionData.label = "Show Message";
 					var $messageTypeRadio = $(
-						"input[name=\"urcr-membership-message-type\"]:checked"
+						'input[name="urcr-membership-message-type"]:checked'
 					);
 					var messageType = $messageTypeRadio.length
 						? $messageTypeRadio.val()
@@ -2526,7 +2525,7 @@
 			return [actionData];
 		},
 
-		getDefaultActions: function() {
+		getDefaultActions: function () {
 			return [
 				{
 					id: "x" + Date.now(),
@@ -2545,12 +2544,12 @@
 				}
 			];
 		},
-		dripInit: function(context) {
+		dripInit: function (context) {
 			var self = this;
 
 			var $scope = context ? $(context) : $(document);
 
-			$scope.find(".urcr-membership-drip").each(function() {
+			$scope.find(".urcr-membership-drip").each(function () {
 				var $wrap = $(this);
 
 				// avoid re-initializing the same row again
@@ -2571,7 +2570,7 @@
 				$(document).on(
 					"click",
 					".urcr-membership-drip .urcr-drip__trigger",
-					function(e) {
+					function (e) {
 						e.preventDefault();
 						e.stopPropagation();
 
@@ -2583,7 +2582,7 @@
 				);
 
 				// click outside closes all
-				$(document).on("click", function(e) {
+				$(document).on("click", function (e) {
 					if (!$(e.target).closest(".urcr-membership-drip").length) {
 						$(".urcr-drip__popover").fadeOut();
 					}
@@ -2593,7 +2592,7 @@
 				$(document).on(
 					"click",
 					".urcr-membership-drip .urcr-drip__tab",
-					function(e) {
+					function (e) {
 						e.preventDefault();
 
 						var $wrap = $(this).closest(".urcr-membership-drip");
@@ -2610,7 +2609,7 @@
 				$(document).on(
 					"change",
 					".urcr-membership-drip .drip-date",
-					function() {
+					function () {
 						var $wrap = $(this).closest(".urcr-membership-drip");
 						var v = $(this).val();
 
@@ -2623,7 +2622,7 @@
 				$(document).on(
 					"change",
 					".urcr-membership-drip .drip-time",
-					function() {
+					function () {
 						var $wrap = $(this).closest(".urcr-membership-drip");
 						var v = $(this).val();
 
@@ -2636,7 +2635,7 @@
 				$(document).on(
 					"change",
 					".urcr-membership-drip .drip-days",
-					function() {
+					function () {
 						var $wrap = $(this).closest(".urcr-membership-drip");
 						var v = $(this).val();
 
@@ -2649,7 +2648,7 @@
 			function setActiveType($wrap, type) {
 				$wrap.find(".urcr-drip__tab").removeClass("active");
 				$wrap
-					.find(".urcr-drip__tab[data-value=\"" + type + "\"]")
+					.find('.urcr-drip__tab[data-value="' + type + '"]')
 					.addClass("active");
 
 				if (type === "fixed_date") {
@@ -2663,9 +2662,9 @@
 		}
 	};
 
-	$(document).ready(function() {
+	$(document).ready(function () {
 		if ($("#ur-membership-access-section").length === 0) {
-			setTimeout(function() {
+			setTimeout(function () {
 				if ($("#ur-membership-access-section").length > 0) {
 					URCRMembershipAccess.init();
 				}
