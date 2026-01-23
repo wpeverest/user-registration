@@ -451,19 +451,15 @@
 
 .ur-subscription__table {
 	width: 100%;
-	overflow: hidden;
+	overflow-x: auto;
 	border: 1px solid #E1E1E1;
 	border-radius: 5px;
 	margin-bottom: 0;
 
-	@media screen and (max-width: 1280px) {
-		display: flex;
-		align-items: center;
-		padding: 0;
-	}
-
-	// @media screen and (max-width: 1399px) {
-	// 	min-width: 650px;
+	// @media screen and (max-width: 1280px) {
+	// 	display: flex;
+	// 	align-items: center;
+	// 	padding: 0;
 	// }
 
 	&-head {
@@ -471,34 +467,32 @@
 		background: #475bb2;
 		color: #ffffff;
 
-		@media screen and (max-width: 1280px) {
-			max-width: 140px;
-			width: 100%;
-			display: flex;
-			flex-direction: column;
-			background: transparent;
-			color: #383838;
-			padding: 0;
-		}
+		// @media screen and (max-width: 1280px) {
+		// 	max-width: 140px;
+		// 	width: 100%;
+		// 	display: flex;
+		// 	flex-direction: column;
+		// 	background: transparent;
+		// 	color: #383838;
+		// 	padding: 0;
+		// }
 	}
 
 	&-body {
 		color: #383838;
 		font-weight: 400;
 
-		@media screen and (max-width: 1280px) {
-			flex: 1;
-			padding: 0;
-		}
+		// @media screen and (max-width: 1280px) {
+		// 	flex: 1;
+		// 	padding: 0;
+		// }
 	}
 
 	&-head,
 	&-body {
 		display: grid;
-		// grid-template-columns: repeat(12, minmax(0, 1fr));
 		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 		gap: 16px;
-		// padding: 16px 20px;
 		padding: 12px 16px;
 		font-size: 14px;
 		line-height: 20px;
@@ -506,20 +500,53 @@
 		margin-bottom: 0;
 		font-family: inherit;
 
-		@media screen and (max-width: 1280px) {
-			display: flex;
-			flex-direction: column;
-			gap: 0;
-			padding: 0;
-
-			>div {
-				padding: 12px 16px;
-
-				&:nth-child(even) {
-					background: #f4f4f4;
-				}
-			}
+		@media screen and (max-width: 1199px) {
+			min-width: 650px;
 		}
+
+		&:has(:nth-child(2):last-child) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		&:has(:nth-child(3):last-child) {
+			grid-template-columns: repeat(3, 1fr);
+		}
+
+		&:has(:nth-child(4):last-child) {
+			grid-template-columns: repeat(4, 1fr);
+		}
+
+		&:has(:nth-child(5):last-child) {
+			grid-template-columns: repeat(5, 1fr);
+		}
+
+		&:has(:nth-child(6):last-child) {
+			grid-template-columns: repeat(6, 1fr);
+		}
+
+		&:has(:nth-child(7):last-child) {
+			grid-template-columns: repeat(7, 1fr);
+		}
+
+		&:has(:nth-child(8):last-child) {
+			grid-template-columns: repeat(8, 1fr);
+		}
+
+
+		// @media screen and (max-width: 1280px) {
+		// 	display: flex;
+		// 	flex-direction: column;
+		// 	gap: 0;
+		// 	padding: 0;
+
+		// 	>div {
+		// 		padding: 12px 16px;
+
+		// 		&:nth-child(even) {
+		// 			background: #f4f4f4;
+		// 		}
+		// 	}
+		// }
 
 		// >div:nth-of-type(1) {
 		// 	grid-column: span 6 / span 6;
@@ -529,7 +556,7 @@
 		// 	grid-column: span 3 / span 3;
 		// }
 
-		// > div:last-of-type {
+		// >div:last-of-type {
 		// 	text-align: right;
 		// }
 	}

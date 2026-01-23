@@ -2550,6 +2550,25 @@ body {
 			flex: 1 0 27%;
 		}
 	}
+
+	.ur-builder-wrapper {
+		.ur-selected-inputs {
+			&:has(.ur-login-form-wrapper) {
+				@media screen and (max-width: 1199px) {
+
+					.user-registration-login-form-global-settings {
+						flex-direction: column;
+					}
+
+					.user-registration-login-form-toggle-option {
+						flex-direction: column;
+					}
+				}
+			}
+		}
+	}
+
+	&:has(.collapsed) {}
 }
 
 /**
@@ -4205,7 +4224,7 @@ a.button.ur-smart-tags-list-button {
 				}
 
 				.form-row {
-					gap: $spacing_30px;
+					gap: $spacing_20px;
 					margin-bottom: $spacing_24px;
 
 					&.ur-enhanced-select,
@@ -4561,11 +4580,8 @@ a.button.ur-smart-tags-list-button {
 						border-bottom: 1px solid #e1e1e1;
 
 						.ur-builder-wrapper {
-							position: relative;
-							flex: 1;
-							height: calc(100vh - 89px);
-							border-left: $border_width solid $border_color;
-							background: #F4F4F4;
+							// height: calc(100vh - 89px);
+							height: auto;
 
 							.ur-selected-inputs {
 								background: transparent;
@@ -5230,7 +5246,7 @@ body.user-registration {
 
 		a {
 			.ur-button-primary {
-				border-radius: $border_radius_3;
+				border-radius: $border_radius_4;
 				background: $primary_color;
 				padding: $spacing_6px $spacing_12px;
 				font-size: 14px;
@@ -5955,11 +5971,16 @@ body.user-registration {
 							flex-direction: column;
 							gap: 24px;
 
-							.ur-coupon-input-container {
+							.ur-coupon-input-container,
+							.ur-coupon-selection-container {
 								padding: 0 !important;
+								gap: 20px !important;
 
 								.ur-label {
+									max-width: 300px;
+									width: 100% !important;
 									margin-bottom: 0;
+									margin-top: 8px;
 
 									label {
 										margin-bottom: 0;
@@ -5971,6 +5992,8 @@ body.user-registration {
 								}
 
 								.ur-admin-template {
+									flex: 1;
+
 									&.ur-input-type-coupon-discount-type {
 										.ur-field {
 											justify-content: flex-start !important;
@@ -6032,6 +6055,18 @@ body.user-registration {
 												}
 											}
 										}
+
+										.ur-coupon-input {
+											min-height: 38px;
+											height: 38px;
+											padding: 0 12px;
+
+											&:focus {
+												outline: none;
+												box-shadow: none;
+												border-color: $primary_color;
+											}
+										}
 									}
 								}
 
@@ -6089,15 +6124,21 @@ body.user-registration {
 					margin-top: 30px;
 
 					.button {
+
+						&-primary,
 						&-secondary {
-							border-radius: 4px;
+							min-height: 34px;
+							height: 34px;
+							padding: 0 $spacing_16px;
+							border-radius: $border_radius_4;
 							box-shadow: none;
-							padding: 8px 16px;
-							color: #ffffff;
 							font-size: 14px;
 							font-weight: $regular;
 							line-height: 24px;
-							border: 0;
+						}
+
+						&-secondary {
+							color: #ffffff;
 							background: transparent;
 							border: 1px solid #bababa;
 
@@ -6107,14 +6148,9 @@ body.user-registration {
 						}
 
 						&-primary {
-							border-radius: 4px;
-							box-shadow: none;
-							padding: 8px 16px;
 							color: #ffffff;
-							font-size: 14px;
-							font-weight: $regular;
-							line-height: 24px;
 							border: 0;
+							background: $primary_color;
 						}
 					}
 				}
@@ -6825,12 +6861,13 @@ body {
 			.ur-registered-from {
 				.ur-login-form-settings {
 					max-width: 360px;
-					width: 100% !important;
+					width: 100%;
+					height: calc(100svh + 270px);
 
 					.nav-tab-wrapper {
-						height: calc(100vh - 88px);
+						// height: calc(100vh - 88px);
 						position: relative;
-						overflow-y: auto;
+						// overflow-y: auto;
 
 						.ur-tab-contents {
 							height: 100%;
@@ -8876,7 +8913,7 @@ body.user-registration-page {
 				}
 			}
 
-			input[type="search"]{
+			input[type="search"] {
 				min-width: unset !important;
 				width: 100%;
 				padding: 0px 35px 0 12px;
@@ -8890,7 +8927,8 @@ body.user-registration-page {
 				font-weight: 400;
 				margin: 0;
 				box-shadow: none;
-				&::placeholder{
+
+				&::placeholder {
 					color: #bababa;
 				}
 			}
@@ -9102,7 +9140,8 @@ body.user-registration-page {
 						box-shadow: none;
 						border: $border_width solid $primary_color;
 					}
-					&#bulk-action-selector-top{
+
+					&#bulk-action-selector-top {
 						width: 220px;
 					}
 				}
