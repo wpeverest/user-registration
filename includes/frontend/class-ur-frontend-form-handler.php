@@ -145,6 +145,7 @@ class UR_Frontend_Form_Handler {
 			}
 
 			$filtered_form_data = apply_filters( 'user_registration_before_user_meta_update', self::$valid_form_data, $user_id, $form_id );
+
 			$logger->info( __( 'Inserting user meta data', 'user-registration' ), array( 'source' => 'form-submission' ) );
 			self::ur_update_user_meta( $user_id, $filtered_form_data, $form_id ); // Insert user data in usermeta table.
 			$logger->info( __( 'User meta data updated', 'user-registration' ), array( 'source' => 'form-submission' ) );
@@ -329,7 +330,9 @@ class UR_Frontend_Form_Handler {
 		$current_language = isset( $_POST['registration_language'] ) ? ur_clean( $_POST['registration_language'] ) : $current_language; //phpcs:ignore.
 		update_user_meta( $user_id, 'ur_registered_language', $current_language );
 		$login_option   = ur_get_user_login_option( $user_id );
-		update_user_meta( $user_id, 'urm_user_just_created', 'yes' );
+		if( !empty( $_POST['membership_type'] ) ) {
+			update_user_meta( $user_id, 'urm_user_just_created', 'yes' );
+		}
 	}
 }
 
