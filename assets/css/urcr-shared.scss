@@ -61,9 +61,8 @@ $border-color_6: #475bb2;
 	font-size: 13px;
 	font-weight: 400;
 	color: $color_4;
-	transition:
-		background-color 0.15s ease,
-		color 0.15s ease;
+	transition: background-color 0.15s ease,
+	color 0.15s ease;
 	margin: 0;
 	box-sizing: border-box;
 
@@ -110,6 +109,44 @@ $border-color_6: #475bb2;
 			background-color: $background-color_5;
 			color: $color_12;
 		}
+	}
+}
+
+.urcr-dropdown-separator {
+	height: 1px;
+	background-color: #e1e1e1;
+	margin: 8px 0;
+}
+
+.urcr-dropdown-pro-title {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 8px 12px;
+	background-color: #FFF4EC;
+	border-radius: 2px;
+	cursor: default;
+
+	span {
+		font-size: 13px;
+		font-weight: 600;
+		color: #383838;
+	}
+}
+
+.urcr-pro-option {
+	// Pro options styling can be customized here if needed
+}
+
+.urcr-pro-option-disabled {
+	cursor: default !important;
+	pointer-events: none !important;
+	opacity: 0.8;
+	color: $color_12 !important;
+
+	&:hover {
+		background-color: transparent !important;
+		color: $color_12 !important;
 	}
 }
 
@@ -416,9 +453,8 @@ $border-color_6: #475bb2;
 	cursor: pointer;
 	color: $color_3;
 	border-radius: 3px;
-	transition:
-		background-color 0.2s ease,
-		color 0.2s ease;
+	transition: background-color 0.2s ease,
+	color 0.2s ease;
 
 	&:hover {
 		background: #f0f0f1;
@@ -444,9 +480,8 @@ $border-color_6: #475bb2;
 	border: 1px solid #8c8f94;
 	border-radius: 3px;
 	cursor: pointer;
-	transition:
-		border-color 0.2s ease,
-		box-shadow 0.2s ease;
+	transition: border-color 0.2s ease,
+	box-shadow 0.2s ease;
 
 	&:hover {
 		border-color: $border-color_6;
@@ -525,9 +560,8 @@ $border-color_6: #475bb2;
 	cursor: pointer;
 	color: $color_3;
 	border-radius: 3px;
-	transition:
-		background-color 0.2s ease,
-		color 0.2s ease;
+	transition: background-color 0.2s ease,
+	color 0.2s ease;
 
 	&:hover {
 		background: #f0f0f1;
@@ -946,9 +980,8 @@ $border-color_6: #475bb2;
 				cursor: pointer;
 				font-size: 13px;
 				color: #383838;
-				transition:
-					background-color 0.15s ease,
-					color 0.15s ease;
+				transition: background-color 0.15s ease,
+				color 0.15s ease;
 				margin: 0;
 				margin-left: 0 !important;
 				box-shadow: none;

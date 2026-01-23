@@ -19,7 +19,6 @@ const ContentTypeDropdown = ({
 		{ value: "posts", label: __("Posts", "user-registration") },
 		{ value: "post_types", label: __("Post Type", "user-registration") },
 		{ value: "taxonomy", label: __("Taxonomy", "user-registration") },
-		{ value: "whole_site", label: __("Whole Site", "user-registration") },
 		{
 			value: "masteriyo_courses",
 			label: __("Courses", "user-registration")
