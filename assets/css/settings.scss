@@ -245,8 +245,7 @@ body {
 							border-left: 4px solid $primary_color;
 
 							.subsubsub {
-								padding: $spacing_12px $spacing_14px
-									$spacing_12px 52px;
+								padding: $spacing_12px $spacing_14px $spacing_12px 52px;
 								margin: 0;
 								gap: $spacing_4px;
 								background: #f4f4f4;
@@ -519,9 +518,7 @@ body {
 					&:hover {
 						.ur-nav-icon {
 							img {
-								filter: invert(0%) sepia(0%) saturate(0%)
-									hue-rotate(324deg) brightness(96%)
-									contrast(104%);
+								filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(324deg) brightness(96%) contrast(104%);
 							}
 						}
 
@@ -1156,9 +1153,8 @@ body {
 						text-decoration: none !important;
 						font-weight: 500;
 						opacity: 0.8;
-						transition:
-							color 0.2s ease,
-							opacity 0.2s ease;
+						transition: color 0.2s ease,
+						opacity 0.2s ease;
 					}
 
 					&:focus,
@@ -1345,8 +1341,7 @@ body {
 									.ur-input {
 										padding: $spacing_8px $spacing_10px;
 										background: $grey-0;
-										border: $border_width solid
-											$border-color;
+										border: $border_width solid $border-color;
 										border-radius: $border_radius_3;
 										height: 38px;
 
@@ -1374,8 +1369,7 @@ body {
 							}
 
 							&:last-child {
-								border-radius: 0 0 $border_radius_7
-									$border_radius_7;
+								border-radius: 0 0 $border_radius_7 $border_radius_7;
 							}
 
 							@media (max-width: 767px) {
@@ -1543,8 +1537,7 @@ body {
 											}
 
 											&:hover {
-												border: $border_width solid
-													$primary_color;
+												border: $border_width solid $primary_color;
 												background: $blue-50;
 
 												span {
@@ -1676,10 +1669,7 @@ body {
 
 								&:hover {
 									&::after {
-										filter: brightness(0) saturate(100%)
-											invert(33%) sepia(19%)
-											saturate(2330%) hue-rotate(195deg)
-											brightness(100%) contrast(87%);
+										filter: brightness(0) saturate(100%) invert(33%) sepia(19%) saturate(2330%) hue-rotate(195deg) brightness(100%) contrast(87%);
 									}
 								}
 							}
@@ -2705,4 +2695,41 @@ body {
 
 .user-registration-upsell__cta a:hover {
 	text-decoration: underline;
+}
+
+#free-mollie, #free-authorize-net {
+	.integration-detail {
+		position: relative;
+
+		&::before {
+			opacity: 1;
+			content: "";
+			background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAJrSURBVHgB7ZhPTxNBGId/M0VL0t2KIRF7EPEPejAaq4lhSdQ2MR7VEx4MhkTviPELeDNGIk305gE+iRsPpkfOQGJPauBiK01K2e4w79IW6G5hll3CJPQ5tNuZ2XefeWemuzsMTcTn3ACc+hsw8VD+zOFYYIvg7hx7W1xol8CTGxuBy75DYAQ6wFACF3k2UyxtC85av7SRa+FJJrMJMTs2BcGmoB8DgFPjEHwauiJYjsvP29AXEtSbnmBUTpZgY/AynMxNxEmsghs3nmFz2EKcxCpI2atfe4Q4iU1w86IF1xiCOG3EOszqgncn9q2uj+5krpZ9sW9bjL+CKuqCd54Dk/Ip6EzGV+WaQ14GWziZWzKTKX+MpAlMfAWu3Ef8gqsrwLlReYEvPknnvH9Id2fUg855OQ9cyMrVtI74Bcu/t7/T8kKT88DVB+0qWr2d7M6o15bOSTc7troMVfqUW1b+7BzTUD39APz8hsaS7f3/dULDTIul79I9wOqYcyEyqC4YFHT8NdzrjwObM8YgnshOGGf9lWtLUEVdcG0lsPjU4DDMRgPVahWu63plnHOkUikkEongWLWjmIO1/12rSMQwDE+sddxVjqj8hSqHm4MBkJxpmt4xDW+UWHviIgwHBCaxA+XK6nJEOMGy+tB0pXKUgiGDBxKyk0x8sgQ0Rn2REPnpPXeQQ7H8A7ALys3DCdIdJJ1BJJJmqObav5NoPwd7r51R6QlGhQRt6IrAIpfr2IauMDHHwfsL0rQE3ZBO7F1xgbMZ+x8ckddKklzICc1d/nb5R7lfzRltCR/TrqucbkyuiUp/gb2XiZNsAa/Vql0vesTTAAAAAElFTkSuQmCC);
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: 100%;
+			display: block;
+			border-radius: $border_radius_2;
+			width: 18px;
+			height: 18px;
+			position: absolute;
+			right: -16px;
+		}
+	}
+
+	.integration-body-info {
+		position: relative;
+
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			display: grid;
+			place-items: center;
+			background: rgba(255, 255, 255, .01);
+			backdrop-filter: blur(1px);
+			border-width: 0 !important;
+			z-index: 999;
+		}
+	}
 }

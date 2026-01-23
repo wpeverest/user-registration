@@ -419,6 +419,8 @@ class UR_Admin_Settings {
 	 * @param array $options Opens array to output.
 	 */
 	public static function output_fields( $options ) {
+
+		error_log( print_r( $options, true ) );
 		$settings = '';
 
 		if ( is_array( $options ) && ! empty( $options ) ) {
@@ -499,27 +501,27 @@ class UR_Admin_Settings {
 						$settings .= '</div>';
 
 						//Show upsell texts.
-						if( ! empty( $section[ 'upsell' ] ) ) {
-							$upsell_section = $section[ 'upsell' ];
-							$settings .= '<div class="user-registration-upsell">';
+						if ( ! empty( $section['upsell'] ) ) {
+							$upsell_section = $section['upsell'];
+							$settings      .= '<div class="user-registration-upsell">';
 							//excerpt.
-							if( ! empty( $upsell_section[ 'excerpt' ] ) ) {
+							if ( ! empty( $upsell_section['excerpt'] ) ) {
 								$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $upsell_section['excerpt'] ) ) . '</p>';
 							}
 							//descriptions.
-							if( ! empty( $upsell_section[ 'description' ] ) ) {
-								if( is_string( $upsell_section[ 'description'] ) ) {
+							if ( ! empty( $upsell_section['description'] ) ) {
+								if ( is_string( $upsell_section['description'] ) ) {
 									$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $upsell_section['excerpt'] ) ) . '</p>';
-								} elseif( is_array( $upsell_section[ 'description' ] ) ) {
+								} elseif ( is_array( $upsell_section['description'] ) ) {
 									$settings .= '<ul class="user-registration-upsell__description-list">';
-									foreach( $upsell_section[ 'description' ] as $description_text ) {
+									foreach ( $upsell_section['description'] as $description_text ) {
 										$settings .= '<li class="user-registration-upsell__description-list-item">' . $description_text . '</li>';
 									}
 									$settings .= '</ul>';
 								}
 							}
-							if( ! empty( $upsell_section[ 'feature_link' ] ) ) {
-								$settings .= '<a href="' . esc_url( $upsell_section[ 'feature_link' ] ) . '" class="user-registration-upsell__feature-link" target="_blank">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>';
+							if ( ! empty( $upsell_section['feature_link'] ) ) {
+								$settings .= '<a href="' . esc_url( $upsell_section['feature_link'] ) . '" class="user-registration-upsell__feature-link" target="_blank">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>';
 							}
 							$settings .= '</div>';
 						}
@@ -531,7 +533,6 @@ class UR_Admin_Settings {
 						if ( ! empty( $section['desc'] ) ) {
 							$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $section['desc'] ) ) . '</p>';
 						}
-
 
 						$settings .= '<div class="pt-0 pb-0 user-registration-card__body">';
 
@@ -562,6 +563,8 @@ class UR_Admin_Settings {
 						} else {
 							$settings .= '<div class="user-registration-card ur-mb-2' . $is_captcha . '" ' . esc_attr( $section_id ) . '>';
 						}
+
+						error_log( print_r( $settings, true ) );
 						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion' . $is_captcha_header . '">';
 						$settings .= '<div class="integration-detail">';
 						$settings .= '<figure class="logo">';
@@ -781,7 +784,7 @@ class UR_Admin_Settings {
 									}
 
 									foreach ( $color_states as $state => $state_data ) {
-										$state_id = $base_id . '_' . $state;
+										$state_id      = $base_id . '_' . $state;
 										$option_value  = isset( $saved_colors[ $state ] ) ? $saved_colors[ $state ] : ( isset( $state_data['default'] ) ? $state_data['default'] : '' );
 										$default_value = isset( $state_data['default'] ) ? $state_data['default'] : '';
 
@@ -1297,6 +1300,8 @@ class UR_Admin_Settings {
 											'bank',
 											'payment-settings',
 											'mollie',
+											'free-mollie',
+											'free-authorize-net',
 											'authorize-net',
 											'v2',
 											'v3',

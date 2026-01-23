@@ -658,6 +658,34 @@
   font-weight: 400;
   line-height: 24px;
 }
+.user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  color: #6b6b6b;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 17px;
+  border-radius: 4px;
+  border: 1px solid #e1e1e1;
+  padding: 4px 10px;
+}
+.user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container a:focus {
+  outline: none;
+  box-shadow: none;
+}
+.user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container a svg {
+  width: 14px;
+  height: 14px;
+  stroke: #6b6b6b;
+}
+.user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container .empty-list-table-subtext {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
 .user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships tfoot tr td,
 .user-registration #user-registration-list-table-page #membership-list .wp-list-table.memberships tfoot tr th {
   border-top: 1px solid #e1e1e1;
@@ -1494,8 +1522,6 @@
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container a:focus {
   outline: none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
   box-shadow: none;
 }
 .user-registration #user-registration-base-list-table-page .user-registration-base-list-table-form .wp-list-table.memberships tbody tr.no-items td .empty-list-table-container a svg {
@@ -1942,7 +1968,7 @@
   border-radius: 2px;
   width: 18px;
   height: 18px;
-  margin-left: -24px;
+  margin-left: -38px;
   margin-top: -2px;
 }
 .ur-membership-sync-to-email-marketing-addons.upgradable-type .user-registration-toggle-form .slider {
