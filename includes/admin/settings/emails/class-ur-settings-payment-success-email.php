@@ -91,22 +91,22 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Email', false ) ) :
 									'desc'     => __( 'The email subject you want to customize.', 'user-registration' ),
 									'id'       => 'user_registration_payment_success_email_subject',
 									'type'     => 'text',
-									'default'  => __( 'Payment Success – Registration Payment Complete on {{blog_info}}', 'user-registration' ),
+									'default'  => __( 'Payment Confirmed', 'user-registration' ),
 									'css'      => '',
 									'desc_tip' => true,
 								),
-							array(
-								'title'    => __( 'Email Content', 'user-registration' ),
-								'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
-								'id'       => 'user_registration_payment_success_email',
-								'type'     => 'tinymce',
-								'default'  => $this->ur_get_payment_success_email(),
-								'css'      => '',
-								'desc_tip' => true,
-								'show-ur-registration-form-button' => false,
-								'show-smart-tags-button' => true,
-								'show-reset-content-button' => true,
-							),
+								array(
+									'title'    => __( 'Email Content', 'user-registration' ),
+									'desc'     => __( 'The email content you want to customize.', 'user-registration' ),
+									'id'       => 'user_registration_payment_success_email',
+									'type'     => 'tinymce',
+									'default'  => $this->ur_get_payment_success_email(),
+									'css'      => '',
+									'desc_tip' => true,
+									'show-ur-registration-form-button' => false,
+									'show-smart-tags-button' => true,
+									'show-reset-content-button' => true,
+								),
 							),
 						),
 					),
@@ -121,20 +121,43 @@ if ( ! class_exists( 'UR_Settings_Payment_Success_Email', false ) ) :
 		 */
 		public static function ur_get_payment_success_email() {
 
-			$message = apply_filters(
-				'user_registration_payment_email_message',
-				sprintf(
-					__(
-						'Hi {{username}}, <br/><br/>
-						Congratulations! Your payment for registration on {{blog_info}} has been successfully completed. <br/><br/>
-						
-						You can view your payment invoice here:<br/><br/>
-						{{payment_invoice}}<br/><br/>
-						Thank You!',
-						'user-registration'
-					)
-				)
+			/**
+			 * Filter to overwrite the payment success email.
+			 *
+			 * @param string Message content to overwrite the existing email content.
+			 */
+			$body_content = __(
+				'<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Hi {{username}},
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Your payment for {{membership_plan_name}} at <a href="{{home_url}}" style="color: #4A90E2; text-decoration: none;">{{blog_info}}</a> is complete!
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					View your payment receipt: <br>
+					{{payment_invoice}}
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+				Access your member dashboard: {{my_account_link}}
+				</p>
+				<p style="margin: 0 0 16px 0; color: #000000; font-size: 16px; line-height: 1.6;">
+					Thanks
+				</p>
+				',
+				'user-registration'
 			);
+			$body_content = ur_wrap_email_body_content( $body_content );
+
+			if ( UR_PRO_ACTIVE && function_exists( 'ur_get_email_template_wrapper' ) ) {
+				$body_content = ur_get_email_template_wrapper( $body_content, false );
+			}
+
+			/**
+			 * Filter to modify the payment success email message content.
+			 *
+			 * @param string $body_content Message content for payment success email to be overridden.
+			 */
+			$message = apply_filters( 'user_registration_payment_email_message', $body_content );
 
 			return $message;
 		}

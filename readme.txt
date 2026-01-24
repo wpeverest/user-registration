@@ -2,9 +2,9 @@
 Contributors: WPEverest
 Tags: user registration, membership, user profile, registration form, login form,
 Requires at least: 5.5
-Requires PHP: 7.2
-Tested up to: 6.8.3
-Stable tag: 4.4.6
+Requires PHP: 7.4
+Tested up to: 6.9
+Stable tag: 5.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -257,6 +257,88 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 5.1.0    - 26/01/2026 =
+* Feature  - Buy now button block.
+* Feature  - Masteriyo Integration.
+* Feature  - Global style configuration.
+
+= 5.0.4    - 21/01/2026 =
+* Fix      - Orders table not found.
+* Fix      - Production mode not working in paypal.
+* Fix      - Content restricted message container width.
+* Fix      - Disable the publish membership button after click.
+* Fix      - Default value for prevent dashboard access not set.
+
+= 5.0.3    - 15/01/2026 =
+* Fix      - My Account responsive design.
+* Fix      - Members menu class not found.
+* Fix      - get_form function not working.
+* Fix      - Content rules edit title design.
+* Fix      - Post editor margins removed after update.
+* Fix      - Warnings due to payment_method not defined.
+* Fix      - View payment link not working form subscription editor.
+
+= 5.0.2    - 14/01/2026 =
+* Fix      - Plugin update package build issue.
+
+= 5.0.1    - 14/01/2026 =
+* Fix      - Minor update compatibility issue.
+
+= 5.0      - 14/01/2026 =
+* New      - Streamlined setup wizard with a clean, modern interface that removes unnecessary steps and focuses only on essential configuration.
+* New      - Setup wizard now supports both user registration and membership creation with clear membership access controls.
+* New      - Simplified membership creation process with three clear steps: Basic configuration for essential settings, Access Control for content protection, and Advanced options for edge cases and additional features.
+* New      - Centralized access control system for memberships, allowing you to manage content access for pages, posts, and different content types from a single screen instead of configuring each page individually
+* New      - Unified members system that combines previously separate users and members tables, making everyone a member with easier profile management, payment history, and subscription
+tracking all in one place.
+* New      - Reorganized WordPress dashboard menus to keep things simple and minimal, with additional menus appearing only when relevant add-ons are activated.
+* New      - Restructured settings area with logical organization, making it easier to find options and configurations that were previously difficult to locate.
+* New      - Completely redesigned My Account area with a clean, modern interface that includes subscriptions and payments management, providing members with easy access to all their account
+information and activities.
+* New      - Full backward compatibility with existing features maintained through legacy support, ensuring all current functionalities continue to work seamlessly with clear notices and simple one- or two-step migration instructions for users who want to upgrade to new features.
+* New      - Multiple registration form module for creating different registration forms.
+* Refactor - Membership upgrade and renewal process.
+* Refactor - Payment configuration in the membership creation process.
+* Feature  - Header and footer configuration for membership pages.
+* Feature  - Sorting membership plans on the registration form in your preferred order.
+* Enhance  - List table UI with a cleaner interface.
+* Enhance  - Members edit page UI for better usability.
+* Enhance  - Payment history edit UI with improved design.
+* Enhance  - Thank You block and page with better presentation.
+* Enhance  - Membership listing block with updated styling.
+* Enhance  - Default email template updates with modern design.
+* Enhance  - Content restriction message UI for better readability.
+* Enhance  - Default email content updates with clearer messaging.
+* Enhance  - Membership field UI on the registration form with improved design.
+* Enhance  - Centralized checkout page for both new registrations and membership upgrades.
+* Enhance  - Registration and login pages remain accessible even when whole-site restriction is enabled.
+* Tweak    - Updated Swaziland to Eswatini in the country list.
+* Dev      - Filter to modify profile picture maximum size.
+* Dev      - Filter to modify the expired error message text.
+* Fix      - Character limit validation message not translatable.
+* Fix      - Repetition of restricted content on restricted pages.
+* Fix      - Validation message when adding a variable product to the cart.
+* Fix      - Email confirmation pending message displayed on the My Account page.
+* Fix      - Self-cURL requests used to validate images, causing server load.
+* Fix      - Checkbox value not checked when using an ampersand in the value.
+* Fix      - Custom pattern validation error message not translatable in WPML.
+* Fix      - Membership smart tag and plural translation for membership duration.
+* Fix      - Admin unable to access content when restricting all content while using the whole site restrict.
+
+= 4.4.9    - 08/01/2026 =
+* Security - Fixed XSS vulnerability for delete users.
+
+= 4.4.8    - 07/12/2025 =
+* Tweak    - Fixed empty sdk url.
+
+= 4.4.7    - 05/12/2025 =
+* Security - Fixed missing paypal redirect response validation.
+* Security - Fixed XSS vulnerability in membership shortcodes.
+* Security - Added stripe webhook validation.
+* Fix      - Site assistant page creation mismatch in lost password.
+* Tweak    - SDK Logs Refinement.
+
 
 = 4.4.6    - 13/11/2025 =
 * Enhance  - Added required pages in system info.
@@ -866,7 +948,27 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 
 == Upgrade Notice ==
+= 5.0.4 =
+##Important: Version 5.0 is a major update with significant improvements
+We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
+Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)
 
-= 4.0 =
-###Heads up, User Registration is now User Registration & Membership!
-This update introduces substantial changes to the plugin. We recommend backing up your site before updating and testing the update in a staging environment first.
+= 5.0.3 =
+##Important: Version 5.0 is a major update with significant improvements
+We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
+Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)
+
+= 5.0.2 =
+##Important: Version 5.0 is a major update with significant improvements
+We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
+Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)
+
+= 5.0.1 =
+##Important: Version 5.0 is a major update with significant improvements
+We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
+Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)
+
+= 5.0 =
+##Important: Version 5.0 is a major update with significant improvements
+We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
+Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)

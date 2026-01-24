@@ -39,6 +39,32 @@ class User_Registration_Paypal_Module {
 	 * @return array
 	 */
 	public function raw_settings() {
+		$test_admin_email = get_option( 'user_registration_global_paypal_test_admin_email', '' );
+		$test_client_id = get_option( 'user_registration_global_paypal_test_client_id', '' );
+		$test_client_secret = get_option( 'user_registration_global_paypal_test_client_secret', '' );
+
+		$live_admin_email = get_option( 'user_registration_global_paypal_live_admin_email', '' );
+		$live_client_id = get_option( 'user_registration_global_paypal_live_client_id', '' );
+		$live_client_secret = get_option( 'user_registration_global_paypal_live_client_secret', '' );
+
+		$paypal_mode = get_option( 'user_registration_global_paypal_mode', '' );
+		$paypal_enabled = get_option( 'user_registration_paypal_enabled', '' );
+
+		if ( false === get_option( 'urm_global_paypal_settings_migrated_', false ) ) {
+			//runs for backward compatibility, could be removed in future versions.
+			if( 'test' === $paypal_mode ) {
+				$test_admin_email   = get_option( 'admin_email', '' );
+				$test_client_id     = get_option( 'user_registration_global_paypal_client_id', '' );
+				$test_client_secret = get_option( 'user_registration_global_paypal_client_secret', '' );
+			} else {
+				$live_admin_email   = get_option( 'admin_email', '' );
+				$live_client_id     = get_option( 'user_registration_global_paypal_client_id', '' );
+				$live_client_secret = get_option( 'user_registration_global_paypal_client_secret', '' );
+			}
+		}
+		$paypal_enabled = get_option( 'user_registration_paypal_enabled', '' );
+		$paypal_toggle_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false )) ;
+
 		return array(
 			'title'        => __( 'Paypal Settings', 'user-registration' ),
 			'type'         => 'accordian',
@@ -46,6 +72,15 @@ class User_Registration_Paypal_Module {
 			'desc'         => '',
 			'is_connected' => get_option( 'urm_paypal_connection_status', false ),
 			'settings'     => array(
+				array(
+					'type'     => 'toggle',
+					'title'    => __( 'Enable PayPal', 'user-registration' ),
+					'desc'     => __( 'Enable PayPal payment gateway.', 'user-registration' ),
+					'id'       => 'user_registration_paypal_enabled',
+					'desc_tip' => true,
+					'default'  => ($paypal_enabled) ? $paypal_enabled : $paypal_toggle_default,
+					'class'    => 'urm_toggle_pg_status',
+				),
 				array(
 					'id'       => 'user_registration_global_paypal_mode',
 					'type'     => 'select',
@@ -57,17 +92,7 @@ class User_Registration_Paypal_Module {
 						'test'       => __( 'Test/Sandbox', 'user-registration' ),
 					),
 					'class'    => 'ur-enhanced-select',
-					'default'  => get_option( 'user_registration_global_paypal_mode', 'test' ),
-				),
-				array(
-					'type'        => 'text',
-					'title'       => __( 'PayPal Email Address', 'user-registration' ),
-					'desc'        => __( 'Enter you PayPal email address.', 'user-registration' ),
-					'desc_tip'    => true,
-					'required'    => true,
-					'id'          => 'user_registration_global_paypal_email_address',
-					'default'     => get_option( 'user_registration_global_paypal_email_address' ),
-					'placeholder' => get_option( 'admin_email' ),
+					'default'  => $paypal_mode,
 				),
 				array(
 					'type'        => 'text',
@@ -88,20 +113,56 @@ class User_Registration_Paypal_Module {
 					'placeholder' => esc_url( wp_login_url() ),
 				),
 				array(
+					'type'        => 'text',
+					'title'       => __( 'PayPal Email Address', 'user-registration' ),
+					'desc'        => __( 'Enter your PayPal email address in sandbox/test mode.', 'user-registration' ),
+					'desc_tip'    => true,
+					'required'    => true,
+					'id'          => 'user_registration_global_paypal_test_email_address',
+					'default'     => $test_admin_email,
+					'placeholder' => $test_admin_email
+				),
+				array(
+					'type'     => 'text',
+					'title'    => __( 'Client ID', 'user-registration' ),
+					'desc'     => __( 'Client ID for PayPal in sandbox/test mode.', 'user-registration' ),
+					'desc_tip' => true,
+					'id'       => 'user_registration_global_paypal_test_client_id',
+					'default'  => $test_client_id,
+				),
+				array(
+					'type'     => 'text',
+					'title'    => __( 'Client Secret', 'user-registration' ),
+					'desc'     => __( 'Client Secret for PayPal in sandbox/test mode.', 'user-registration' ),
+					'desc_tip' => true,
+					'id'       => 'user_registration_global_paypal_test_client_secret',
+					'default'  => $test_client_secret,
+				),
+				array(
+					'type'        => 'text',
+					'title'       => __( 'PayPal Email Address', 'user-registration' ),
+					'desc'        => __( 'Enter your PayPal email address.', 'user-registration' ),
+					'desc_tip'    => true,
+					'required'    => true,
+					'id'          => 'user_registration_global_paypal_live_email_address',
+					'default'     => $live_admin_email,
+					'placeholder' => $live_admin_email,
+				),
+				array(
 					'type'     => 'text',
 					'title'    => __( 'Client ID', 'user-registration' ),
 					'desc'     => __( 'Your client_id, Required for subscription related operations.', 'user-registration' ),
 					'desc_tip' => true,
-					'id'       => 'user_registration_global_paypal_client_id',
-					'default'  => get_option( 'user_registration_global_paypal_client_id' ),
+					'id'       => 'user_registration_global_paypal_live_client_id',
+					'default'  => $live_client_id,
 				),
 				array(
 					'type'     => 'text',
 					'title'    => __( 'Client Secret', 'user-registration' ),
 					'desc'     => __( 'Your client_secret, Required for subscription related operations.', 'user-registration' ),
 					'desc_tip' => true,
-					'id'       => 'user_registration_global_paypal_client_secret',
-					'default'  => get_option( 'user_registration_global_paypal_client_secret' ),
+					'id'       => 'user_registration_global_paypal_live_client_secret',
+					'default'  => $live_client_secret,
 				),
 				array(
 					'title' => __( 'Save', 'user-registration' ),
@@ -119,8 +180,8 @@ class User_Registration_Paypal_Module {
 	 * @param array $settings settings.
 	 */
 	public function get_paypal_settings( $settings ) {
-		$stripe_settings                        = $this->raw_settings();
-		$settings['sections']['paypal_options'] = $stripe_settings;
+		$paypal_settings                        = $this->raw_settings();
+		$settings['sections']['paypal_options'] = $paypal_settings;
 
 		return $settings;
 	}
@@ -134,10 +195,14 @@ class User_Registration_Paypal_Module {
 	 * @throws \Stripe\Exception\ApiErrorException
 	 */
 	public function validate_paypal_section( $form_data ) {
+
 		$changed  = false;
 		$response = array(
 			'status' => true,
 		);
+		if( isset($form_data['user_registration_paypal_enabled']) && ! $form_data['user_registration_paypal_enabled'] ) {
+			return $response;
+		}
 		//these value should not be empty
 		if ( empty( $form_data['user_registration_global_paypal_cancel_url'] ) ) {
 			$response['status']  = false;
@@ -176,23 +241,24 @@ class User_Registration_Paypal_Module {
 				break;
 			}
 		}
-
+		$mode = $form_data['user_registration_global_paypal_mode'] == "production" ? "live" : "test";
 //		if client secret is filled then client id is required and vice versa
-		if ( ! empty( $form_data['user_registration_global_paypal_client_id'] ) && empty( $form_data['user_registration_global_paypal_client_secret'] ) ) {
+		if ( ! empty( $form_data['user_registration_global_paypal_'.$mode.'_client_id'] ) && empty( $form_data['user_registration_global_paypal_'.$mode.'_client_secret'] ) ) {
 			$response['status']  = false;
 			$response['message'] = 'Field client secret is required with client id';
 
 			return $response;
 		}
-		if ( ! empty( $form_data['user_registration_global_paypal_client_secret'] ) && empty( $form_data['user_registration_global_paypal_client_id'] ) ) {
+		if ( ! empty( $form_data['user_registration_global_paypal_'.$mode.'_client_secret'] ) && empty( $form_data['user_registration_global_paypal_'.$mode.'_client_id'] ) ) {
 			$response['status']  = false;
 			$response['message'] = 'Field client id is required with client secret';
 
 			return $response;
 		}
-		if ( ! empty( $form_data['user_registration_global_paypal_client_id'] ) && ! empty( $form_data['user_registration_global_paypal_client_secret'] ) && $changed ) {
-			$client_id      = $form_data['user_registration_global_paypal_client_id'];
-			$client_secret  = $form_data['user_registration_global_paypal_client_secret'];
+
+		if ( ! empty( $form_data['user_registration_global_paypal_'.$mode.'_client_id'] ) && ! empty( $form_data['user_registration_global_paypal_'.$mode.'_client_secret'] ) && $changed ) {
+			$client_id      = $form_data['user_registration_global_paypal_'.$mode.'_client_id'];
+			$client_secret  = $form_data['user_registration_global_paypal_'.$mode.'_client_secret'];
 			$url            = ( 'production' === $form_data['user_registration_global_paypal_mode'] ) ? 'https://api-m.paypal.com/' : 'https://api-m.sandbox.paypal.com/';
 			$paypal_service = new \WPEverest\URMembership\Admin\Services\Paypal\PaypalService();
 			$request        = $paypal_service->login_paypal( $url, $client_id, $client_secret );
@@ -203,7 +269,6 @@ class User_Registration_Paypal_Module {
 				return $response;
 			}
 		}
-
 		return $response;
 	}
 

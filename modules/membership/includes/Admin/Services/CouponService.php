@@ -3,6 +3,7 @@
 namespace WPEverest\URMembership\Admin\Services;
 
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
+use WPEverest\URMembership\Local_Currency\Admin\CoreFunctions;
 use WPEverest\URMembership\TableList;
 
 class CouponService {
@@ -25,7 +26,7 @@ class CouponService {
 	 * @param $status
 	 * @param $code
 	 * @param $message
-	 * @param array   $data
+	 * @param array $data
 	 *
 	 * @return array
 	 */
@@ -66,7 +67,10 @@ class CouponService {
 			return $this->set_coupon_response( false, 422, 'Coupon is Inactive' );
 		}
 
-		if ( isset( $coupon_details['coupon_end_date'] ) && $coupon_details['coupon_end_date'] < date( 'Y-m-d' ) ) {
+		$current_date	= current_time( 'timestamp' );
+		$end_date     	= ! empty ( $coupon_details['coupon_end_date'] ) ? strtotime( $coupon_details['coupon_end_date'] ) : 'never';
+
+		if ( 'never' !== $end_date && $end_date < $current_date ) {
 			return $this->set_coupon_response( false, 422, 'Coupon expired.' );
 		}
 
@@ -79,7 +83,7 @@ class CouponService {
 			return $this->set_coupon_response( false, 422, 'Coupon cannot be applied for the selected membership.' );
 		}
 
-		if ( $coupon_details['coupon_start_date'] > date( 'Y-m-d' ) ) {
+		if ( strtotime( $coupon_details['coupon_start_date'] ) > $current_date ) {
 			return $this->set_coupon_response( false, 422, 'Coupon is not valid until ' . date_i18n( get_option( 'date_format' ), strtotime( $coupon_details['coupon_start_date'] ) ) . '.', );
 		}
 		$membership_details = $this->membership_repository->get_single_membership_by_ID( $membership_id );
@@ -90,6 +94,10 @@ class CouponService {
 		}
 
 		$membership_amount = $membership_meta['amount'];
+
+		if ( ! empty( $data['upgrade_amount'] ) ) {
+			$membership_amount = $data['upgrade_amount'];
+		}
 
 		$discount_amount = ( $coupon_details['coupon_discount_type'] === 'fixed' ) ? $coupon_details['coupon_discount'] : $membership_amount * $coupon_details['coupon_discount'] / 100;
 
@@ -102,9 +110,38 @@ class CouponService {
 			'membership_meta' => $membership_meta,
 		);
 		$amount                          = $membership_amount - $discount_amount;
+
+		$currency = get_option( 'user_registration_payment_currency', 'USD' );
+
+		if ( ! empty( $data['switched_currency' ] ) && ! empty( $data['urm_zone_id'] ) ) {
+			$local_currency  = ! empty( $data['switched_currency' ] ) ? $data['switched_currency' ] : '';
+			$ur_zone_id 	 = ! empty( $data['urm_zone_id' ] ) ? $data['urm_zone_id' ] : '';
+
+			if ( ! empty( $local_currency ) && ! empty( $ur_zone_id ) && ur_check_module_activation( 'local-currency' ) ) {
+				$currency = $local_currency;
+				$pricing_data = CoreFunctions::ur_get_pricing_zone_by_id( $ur_zone_id );
+				$local_currency_data = ! empty( $membership_meta['local_currency'] ) ? $membership_meta['local_currency'] : array();
+
+				if ( ! empty( $local_currency_data ) && ur_string_to_bool( $local_currency_data[ 'is_enable'] ) ) {
+					$amount = CoreFunctions::ur_get_amount_after_conversion( $amount, $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+					if ( $coupon_details['coupon_discount_type'] === 'fixed' ) {
+						$coupon_details['coupon_discount'] = CoreFunctions::ur_get_amount_after_conversion( $coupon_details['coupon_discount'], $currency, $pricing_data, $local_currency_data, $ur_zone_id );
+					}
+				}
+			}
+		}
+
+		if ( ! empty( $data['tax_rate'] ) ) {
+			$tax_rate  = floatval( $data['tax_rate'] );
+			$tax_amount  = $amount * $tax_rate / 100;
+			$amount     = $amount + $tax_amount;
+		}
+
 		$message                         = 'Coupon applied successfully.';
 		$final_data['discounted_amount'] = $amount;
 		$final_data['discount_amount']   = $discount_amount;
+
+		$final_data['coupon_details']['coupon_discount'] = ( $coupon_details['coupon_discount_type'] === 'fixed' ) ? html_entity_decode( ur_get_currency_symbol( $currency ) ) . $coupon_details['coupon_discount'] : $coupon_details['coupon_discount'];
 
 		if ( 'subscription' === $membership_meta['type'] ) {
 			return $this->set_coupon_response( true, 200, $message, $final_data );
@@ -113,6 +150,5 @@ class CouponService {
 		}
 
 		return $this->set_coupon_response( true, 200, array(), array() );
-
 	}
 }

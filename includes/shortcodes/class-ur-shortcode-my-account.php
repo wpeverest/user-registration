@@ -241,8 +241,6 @@ class UR_Shortcode_My_Account {
 			}
 
 			include_once UR_ABSPATH . 'includes/functions-ur-notice.php';
-			$notices = ur_get_notices();
-			ur_print_notices();
 
 			ur_get_template(
 				'myaccount/form-edit-profile.php',
@@ -330,6 +328,7 @@ class UR_Shortcode_My_Account {
 				'user'                      => get_user_by( 'id', get_current_user_id() ),
 				'enable_strong_password'    => $enable_strong_password,
 				'minimum_password_strength' => $minimum_password_strength,
+				'endpoint_label'            => ur_get_account_menu_items()['edit-password'],
 			)
 		);
 	}

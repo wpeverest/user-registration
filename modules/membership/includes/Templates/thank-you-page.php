@@ -1,92 +1,90 @@
 <?php
 
-$bank_data        = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post_deep( $_GET['info'] ) : '';
-$transaction_id   = ( isset( $_GET['transaction_id'] ) && ! empty( $_GET['transaction_id'] ) ) ? wp_kses_post( $_GET['transaction_id'] ) : '';
-$username         = ( isset( $_GET['username'] ) && ! empty( $_GET['username'] ) ) ? wp_kses_post( $_GET['username'] ) : '';
-$header            = ! empty( $attributes['header'] ) ? $attributes['header'] : sprintf(
+$bank_data         = ( isset( $_GET['info'] ) && ! empty( $_GET['info'] ) ) ? wp_kses_post( $_GET['info'] ) : '';
+$transaction_id    = ( isset( $_GET['transaction_id'] ) && ! empty( $_GET['transaction_id'] ) ) ? wp_kses_post( $_GET['transaction_id'] ) : '';
+$username          = ( isset( $_GET['username'] ) && ! empty( $_GET['username'] ) ) ? wp_kses_post( $_GET['username'] ) : '';
+$main_content      = ! empty( $attributes['header'] ) ? wp_kses_post( $attributes['header'] ) : sprintf(
 	__( 'Thank You! Your registration was completed successfully.', 'user-registration' ),
 	esc_html( $username )
 );
-$footer           = ! empty( $attributes['footer'] ) ? $attributes['footer'] : "";
-$notice_message   = ! empty( $attributes['notice_message'] ) ? $attributes['notice_message'] : __("For paid memberships there might be a delay of few minutes for your subscription status to be updated by the payment gateways.", 'user-registration' );
-$transaction_info = ! empty( $attributes['transaction_info'] ) ? $attributes['transaction_info'] : __("Please use this transaction/order id for support regarding payments if needed.", 'user-registration' );
-$is_preview       = ! empty( $attributes['is_preview'] ) ? $attributes['is_preview'] : false;
-$show_notice_1    = isset( $attributes['show_notice_1'] ) ? $attributes['show_notice_1'] : true;
-$show_notice_2    = isset( $attributes['show_notice_2'] ) ? $attributes['show_notice_2'] : true;
+$footer            = ! empty( $attributes['footer'] ) ? wp_kses_post( $attributes['footer'] ) : '';
+$notice_message    = ! empty( $attributes['notice_message'] ) ? esc_html( $attributes['notice_message'] ) : __( 'For paid memberships there might be a delay of few minutes for your subscription status to be updated by the payment gateways.', 'user-registration' );
+$transaction_info  = ! empty( $attributes['transaction_info'] ) ? esc_html( $attributes['transaction_info'] ) : __( 'Please use this transaction/order id for support regarding payments if needed.', 'user-registration' );
+$is_preview        = ! empty( $attributes['is_preview'] ) ? $attributes['is_preview'] : false;
+$show_notice_1     = isset( $attributes['show_notice_1'] ) ? $attributes['show_notice_1'] : true;
+$show_notice_2     = isset( $attributes['show_notice_2'] ) ? $attributes['show_notice_2'] : true;
+$show_heading_icon = isset( $attributes['show_heading_icon'] ) ? $attributes['show_heading_icon'] : true;
+$show_headline     = isset( $attributes['show_headline'] ) ? $attributes['show_headline'] : true;
+$headline_text     = ! empty( $attributes['headline_text'] ) ? esc_html( $attributes['headline_text'] ) : __( 'Thank You For Your Purchase!', 'user-registration' );
+$show_redirect_btn = isset( $attributes['show_redirect_btn'] ) ? $attributes['show_redirect_btn'] : true;
+$show_bank_details = isset( $attributes['show_bank_details'] ) ? $attributes['show_bank_details'] : true;
+$redirect_btn_text = ! empty( $attributes['redirect_btn_text'] ) ? esc_html( $attributes['redirect_btn_text'] ) : __( 'Go to My Account', 'user-registration' );
+$redirect_page_id  = ! empty( $attributes['redirect_page_id'] )
+	? absint( $attributes['redirect_page_id'] )
+	: ur_get_page_id( 'myaccount' );
+$redirect_btn_url  = ! empty( $attributes['redirect_page_id'] )
+	? get_permalink( absint( $attributes['redirect_page_id'] ) )
+	: ur_get_page_permalink( 'myaccount' );
 
 ?>
-<!--order successful section-->
-<div id="order-complete-section" class="thank-you-page-container">
-	<div class="message-section">
-		<div class="header-section">
-			<p><?php echo __( $header, 'user-registration' ); ?></p>
-		</div>
-		<?php
-		$is_payment_done = ( isset( $_GET['payment_type'] ) && ! empty( $_GET['payment_type'] ) && 'paid' === $_GET['payment_type'] );
-		if ( $is_preview || $is_payment_done || $show_notice_1) :
-			?>
-			<?php
-			if ( $show_notice_1 || $is_payment_done ):
-				?>
-				<p class="thank-you-notice info">
-					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="22" viewBox="0 0 18 22" fill="none">
-						<g clip-path="url(#clip0_4801_13369)">
-							<path d="M9 20.5C13.1421 20.5 16.5 17.1421 16.5 13C16.5 8.85786 13.1421 5.5 9 5.5C4.85786 5.5 1.5 8.85786 1.5 13C1.5 17.1421 4.85786 20.5 9 20.5Z" stroke="#475BB2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-							<path d="M9 13V16" stroke="#475BB2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-							<path d="M9 10H9.00875" stroke="#475BB2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-						</g>
-						<defs>
-							<clipPath id="clip0_4801_13369">
-								<rect width="18" height="18" fill="white" transform="translate(0 4)"/>
-							</clipPath>
-						</defs>
-					</svg>
-					<?php echo __( $notice_message, 'user-registration' ); ?>
-				</p>
-			<?php
-			endif;
-			?>
-		<?php
-		endif;
-		?>
-	</div>
-	<div class="data-section <?php echo empty( $bank_data ) ? 'urm-d-none' : ''; ?>">
-		<?php
-		echo $bank_data;
-		?>
-	</div>
-	<?php
-	if ( ! empty( $transaction_id ) || $is_preview ) :
-		?>
-		<?php
-		if ( $show_notice_2 ):
-			?>
-			<div class="thank-you-notice info">
-				<svg xmlns="http://www.w3.org/2000/svg" width="18" height="22" viewBox="0 0 18 22" fill="none">
-					<g clip-path="url(#clip0_4801_13369)">
-						<path d="M9 20.5C13.1421 20.5 16.5 17.1421 16.5 13C16.5 8.85786 13.1421 5.5 9 5.5C4.85786 5.5 1.5 8.85786 1.5 13C1.5 17.1421 4.85786 20.5 9 20.5Z" stroke="#475BB2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-						<path d="M9 13V16" stroke="#475BB2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-						<path d="M9 10H9.00875" stroke="#475BB2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-					</g>
-					<defs>
-						<clipPath id="clip0_4801_13369">
-							<rect width="18" height="18" fill="white" transform="translate(0 4)"/>
-						</clipPath>
-					</defs>
-				</svg>
-				<div>
-					<?php echo __( $transaction_info, 'user-registration' ); ?>
-					<?php echo __( "Transaction ID : ", "user-registration" ) ?>
-					<b><i><?php echo $transaction_id; ?></i></b>
-				</div>
+<!-- Thank You Page Section -->
+<div id="order-complete-section" class="ur-thank-you-page">
+	<div class="thank-you-page-container">
+	<div class="ur-thank-you-headline-wrapper">
+		<?php if ( $show_heading_icon ) : ?>
+			<div class="ur-success-icon">
+				<svg width="50px" height="50px" viewBox="-102.4 -102.4 1228.80 1228.80" xmlns="http://www.w3.org/2000/svg" fill="#000000" stroke="#000000" transform="matrix(1, 0, 0, 1, 0, 0)" stroke-width="0.01024"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="2.048"></g><g id="SVGRepo_iconCarrier"><path fill="#00a32a" d="M512 64a448 448 0 1 1 0 896 448 448 0 0 1 0-896zm-55.808 536.384-99.52-99.584a38.4 38.4 0 1 0-54.336 54.336l126.72 126.72a38.272 38.272 0 0 0 54.336 0l262.4-262.464a38.4 38.4 0 1 0-54.272-54.336L456.192 600.384z"></path></g></svg>
 			</div>
-		<?php
-		endif;
-		?>
-	<?php
-	endif;
-	?>
-	<div class="footer-section">
-		<?php echo __( $footer, 'user-registration' ); ?>
+		<?php endif; ?>
+
+		<?php if ( $show_headline ) : ?>
+			<div class="ur-headline">
+				<h1><?php echo $headline_text; ?></h1>
+			</div>
+		<?php endif; ?>
+	</div>
+
+		<div class="ur-message">
+			<p>
+			<?php
+				$username = isset( $_GET['username'] ) ? $_GET['username'] : '';
+
+				$values = array();
+
+			if ( ! empty( $username ) ) {
+				$user                = get_user_by( 'login', sanitize_text_field( $username ) );
+				$values['member_id'] = $user->ID;
+				$values['email']     = $user->user_email;
+				$values['context']   = 'thank_you_page';
+
+				$main_content = apply_filters( 'user_registration_process_smart_tags', $main_content, $values );
+			}
+				echo $main_content;
+			?>
+			</p>
+
+			<?php if ( $show_bank_details && ! empty( $bank_data ) ) : ?>
+				<div class="ur-bank-details">
+					<p class="ur-bank-details-title" ><?php echo __( 'Bank Details :') ?></p>
+					<?php echo $bank_data; ?>
+				</div>
+			<?php endif; ?>
+		</div>
+
+		<?php if ( $show_redirect_btn ) : ?>
+			<div class="ur-button-wrapper">
+				<a href="<?php echo $redirect_btn_url; ?>" class="ur-redirect-btn">
+					<?php echo $redirect_btn_text; ?>
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
+						<path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</a>
+			</div>
+		<?php endif; ?>
+
+		<div class="ur-footer">
+			<p><?php echo $footer; ?></p>
+		</div>
+
 	</div>
 </div>

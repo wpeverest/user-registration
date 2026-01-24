@@ -8,6 +8,8 @@
  * @version 1.2.0
  */
 
+use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -399,5 +401,54 @@ function ur_update_322_option_migrate() {
 
 	if ( $activation_date && $current_date >= $days_to_validate ) {
 		update_option( 'user_registration_quick_setup_completed', true );
+	}
+}
+
+/**
+ * URM v5.0 migration functions.
+ *
+ * @return void
+ */
+function urm_update_50_option_migrate() {
+
+	$args      = array(
+		'order'         => 'ASC',
+		'numberposts'   => -1,
+		'status'        => 'publish',
+		'post_type'     => array( 'user_registration' ),
+		'orderby'       => 'ID',
+		'order'         => 'DESC',
+		'no_found_rows' => true,
+		'nopaging'      => true,
+	);
+	$all_forms = get_posts( $args );
+
+	if ( count( $all_forms ) > 1 ) {
+		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+		if ( ! isset( $enabled_features['user-registration-multiple-registration'] ) ) {
+			$enabled_features[] = 'user-registration-multiple-registration';
+			update_option( 'user_registration_enabled_features', $enabled_features );
+		}
+	}
+
+	$group_args = array(
+		'order'         => 'ASC',
+		'numberposts'   => -1,
+		'status'        => 'publish',
+		'post_type'     => array( 'ur_membership_groups' ),
+		'orderby'       => 'ID',
+		'order'         => 'DESC',
+		'no_found_rows' => true,
+		'nopaging'      => true,
+	);
+
+	$all_groups = get_posts( $group_args );
+
+	if ( count( $all_groups ) > 0 ) {
+		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+		if ( ! isset( $enabled_features['user-registration-membership-groups'] ) ) {
+			$enabled_features[] = 'user-registration-membership-groups';
+			update_option( 'user_registration_enabled_features', $enabled_features );
+		}
 	}
 }

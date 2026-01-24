@@ -1,0 +1,72 @@
+.components-input-control__label {
+	text-transform: capitalize;
+}
+
+.urm-custom-hover-tool-panel {
+	grid-column: 1 / -1;
+}
+.block-editor-panel-color-gradient-settings__dropdown:hover {
+	background: #f0f0f0;
+}
+
+.block-editor-panel-color-gradient-settings__color-name {
+	font-size: 13px;
+	font-weight: 500;
+	color: #1e1e1e;
+}
+
+.custom-component-color-indicator {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 1px solid #ddd;
+	background-color: transparent;
+}
+
+.block-editor-panel-color-gradient-settings__dropdown-content {
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+	border-radius: 4px;
+	background: #fff;
+}
+
+.ur-hover-color-picker__title {
+	display: block;
+	color: #757575;
+	font-size: 11px;
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin: 16px 0 12px;
+	padding: 0;
+
+	&:first-child {
+		margin-top: 0;
+	}
+}
+
+.urm-buynow-open-new-tab {
+	margin: 12px 0px 12px 0px !important;
+}
+
+.wp-block-user-registration-membership-buy-now .buynow-link .urm-buy-now-btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	font-size: 16px;
+	line-height: 24px;
+	font-weight: 600;
+	background: #475bb2;
+	color: white;
+	padding: 14px 26px;
+	border-radius: 5px;
+	border: none;
+	font-family: inherit;
+}
+
+.urm-hide-border-panel {
+	.border-block-support-panel {
+		display: none !important;
+	}
+}

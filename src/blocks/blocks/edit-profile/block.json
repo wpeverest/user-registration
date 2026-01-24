@@ -5,8 +5,11 @@
   "version": "1.0.0",
   "title": "Edit Profile",
   "category": "user-registration",
-  "description": "The block give edit profile interface.",
-  "keywords": ["user registration edit profile", "edit profile"],
+  "description": "Display the profile edit area to logged in users.",
+  "keywords": [
+    "user registration edit profile",
+    "edit profile"
+  ],
   "textdomain": "user-registration",
   "example": {
     "attributes": {}

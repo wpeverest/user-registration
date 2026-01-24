@@ -1,0 +1,119 @@
+/* In your editor.css */
+.urm-custom-hover-tool-panel {
+	grid-column: 1 / -1;
+}
+.block-editor-panel-color-gradient-settings__dropdown:hover {
+	background: #f0f0f0;
+}
+
+.block-editor-panel-color-gradient-settings__color-name {
+	font-size: 13px;
+	font-weight: 500;
+	color: #1e1e1e;
+}
+
+.custom-component-color-indicator {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 1px solid #ddd;
+	background-color: transparent;
+}
+
+.block-editor-panel-color-gradient-settings__dropdown-content {
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+	border-radius: 4px;
+	background: #fff;
+}
+
+.ur-hover-color-picker__title {
+	display: block;
+	color: #757575;
+	font-size: 11px;
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin: 16px 0 12px;
+	padding: 0;
+
+	&:first-child {
+		margin-top: 0;
+	}
+}
+
+.color-block-support-panel__inner-wrapper {
+	.first.last {
+		display: none;
+	}
+}
+
+.color-block-support-panel__inner-wrapper:nth-child(2) {
+	border-top: 1px solid #ddd;
+}
+
+/* Typography Panel */
+.ur-button-typography-panel,
+.ur-button-dimensions-panel {
+	border-top: 1px solid #e0e0e0;
+	padding-top: 16px;
+	margin-top: 16px;
+
+	.components-tools-panel-header {
+		padding: 0;
+		margin-bottom: 16px;
+	}
+
+	.components-tools-panel-item {
+		margin-bottom: 16px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
+/* Font Size Control */
+.ur-fontsize-control {
+	width: 100%;
+}
+
+.ur-fontsize-control__header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 8px;
+}
+
+.ur-fontsize-control__label {
+	font-size: 11px;
+	text-transform: uppercase;
+	font-weight: 500;
+	color: #1e1e1e;
+}
+
+.ur-fontsize-control .components-unit-control-wrapper {
+	max-width: 90px;
+}
+
+.ur-fontsize-control .components-range-control {
+	margin-bottom: 0;
+}
+
+/* BoxControl styling */
+.ur-button-dimensions-panel .components-box-control {
+	width: 100%;
+}
+
+.ur-button-dimensions-panel .components-box-control__header {
+	margin-bottom: 8px;
+}
+.ur-membership-listing-config-link {
+	margin-bottom: 10px;
+}
+
+// .block-editor-block-list__layout.is-root-container
+// 	> :where(:not(.alignleft):not(.alignright):not(.alignfull)) {
+// 	max-width: none !important;
+// }
+

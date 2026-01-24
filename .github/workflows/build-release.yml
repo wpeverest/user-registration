@@ -20,11 +20,15 @@ jobs:
       - name: Set env
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF:10}
+      - name: Setup Pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: pnpm install
       - name: Build
         id: build
-        uses: wpeverest/action-build@4.0.0
+        uses: wpeverest/action-build@4.0.2
         with:
           generate-zip: true
       - name: WordPress Plugin Deploy

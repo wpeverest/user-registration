@@ -1,34 +1,33 @@
 /**
  *  External Dependencies
  */
-import React, { useState, useEffect } from "react";
+import { CopyIcon } from "@chakra-ui/icons";
 import {
-	Box,
 	Accordion,
-	AccordionItem,
 	AccordionButton,
+	AccordionItem,
 	AccordionPanel,
-	Stack,
-	Text,
+	Box,
 	Button,
+	HStack,
+	IconButton,
+	Stack,
 	Table,
 	Tbody,
 	Td,
-	Tr,
+	Text,
 	Thead,
-	HStack,
-	IconButton,
-	Tooltip,
+	Tr,
 	useClipboard,
 	useToast
 } from "@chakra-ui/react";
 import { __ } from "@wordpress/i18n";
-import { CopyIcon } from "@chakra-ui/icons";
+import { useEffect, useState } from "react";
 
 /**
  *  Internal Dependencies
  */
-import { ArrowLeftFill, Add, Minus } from "../../../../components/Icon/Icon";
+import { Add, ArrowLeftFill, Minus } from "../../../../components/Icon/Icon";
 
 const ShortcodesLists = ({ setIsListViewerOpen }) => {
 	const ShortcodeList = [
@@ -86,7 +85,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					example_name:
 						'[user_registration_login redirect_url="https://wpuserregistration.com"]',
 					example_description: __(
-						"Redirects to User Registration website after login.",
+						"Redirects to User Registration & Membership website after login.",
 						"user-registration"
 					)
 				}
@@ -141,7 +140,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 					example_name:
 						'[user_registration_my_account redirect_url="https://wpuserregistration.com" logout_redirect="https://everestforms.net"]',
 					example_description: __(
-						"Redirects to the User Registration website on login and redirects to the Everest Forms website after user logout.",
+						"Redirects to the User Registration & Membership website on login and redirects to the Everest Forms website after user logout.",
 						"user-registration"
 					)
 				}
@@ -168,7 +167,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				"user-registration"
 			),
 			requires: __(
-				"Requires User Registration Pro to be activated.",
+				"Requires User Registration & Membership Pro to be activated.",
 				"user-registration"
 			)
 		},
@@ -199,7 +198,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				{
 					example_name: '[user_registration_popup id="1"]',
 					example_description: __(
-						"Displays user registration popup with id 1",
+						"Displays User Registration & Membership popup with id 1",
 						"user-registration"
 					)
 				},
@@ -212,7 +211,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				}
 			],
 			requires: __(
-				"Requires User Registration Pro to be activated.",
+				"Requires User Registration & Membership Pro to be activated.",
 				"user-registration"
 			)
 		},
@@ -242,7 +241,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				}
 			],
 			requires: __(
-				"Requires User Registration Pro to be activated.",
+				"Requires User Registration & Membership Pro to be activated.",
 				"user-registration"
 			)
 		},
@@ -272,7 +271,37 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				}
 			],
 			requires: __(
-				"Requires User Registration Pro to be activated.",
+				"Requires User Registration & Membership Pro to be activated.",
+				"user-registration"
+			)
+		},
+		{
+			id: "[user_registration_member_directory]",
+			description: __(
+				"Displays member directories in the front end.",
+				"user-registration"
+			),
+			params: [
+				{
+					param_name: "id",
+					param_description: __(
+						"Frontend Listing ID to render.",
+						"user-registration"
+					),
+					required: true
+				}
+			],
+			example: [
+				{
+					example_name: '[user_registration_member_directory id="1"]',
+					example_description: __(
+						"Displays user listing with ID 1 in the front end.",
+						"user-registration"
+					)
+				}
+			],
+			requires: __(
+				"Requires User Registration & Membership Pro to be activated.",
 				"user-registration"
 			)
 		},
@@ -283,7 +312,7 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 				"user-registration"
 			),
 			requires: __(
-				"Requires User Registration Pro and User Registration PDF Form Submission add-on to be activated.",
+				"Requires User Registration & Membership Pro and PDF Form Submission add-on to be activated.",
 				"user-registration"
 			)
 		},
@@ -333,13 +362,6 @@ const ShortcodesLists = ({ setIsListViewerOpen }) => {
 			id: "[user_registration_lost_password]",
 			description: __(
 				"Displays a section for recovering a lost password.",
-				"user-registration"
-			)
-		},
-		{
-			id: "[user_registration_reset_password_form]",
-			description: __(
-				"Provides a section for users to reset their password after email verification.",
 				"user-registration"
 			)
 		}

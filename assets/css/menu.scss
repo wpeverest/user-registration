@@ -146,15 +146,21 @@
 
 #toplevel_page_user-registration ul li {
 	&:not(.is-sub-menu) {
-		a[href="admin.php?page=user-registration"] {
-			// Show border when dashboard is visible (body has dashboard-visible class)
-			body.dashboard-visible & {
-				border-top: 1px solid hsla(0, 0%, 100%, 0.2) !important;
-				margin-top: 5px !important;
-				padding-top: 8px !important;
-			}
+		a[href="admin.php?page=user-registration-membership"] {
+			border-top: 1px solid hsla(0, 0%, 100%, 0.2);
+			margin-top: 5px;
+			padding-top: 8px;
 		}
-		a[href="admin.php?page=user-registration-membership"],
+		a[href="admin.php?page=user-registration"] {
+			border-top: 1px solid hsla(0, 0%, 100%, 0.2);
+			margin-top: 5px;
+			padding-top: 8px;
+		}
+		a[href="admin.php?page=user-registration-users"] {
+			border-top: 1px solid hsla(0, 0%, 100%, 0.2);
+			margin-top: 5px;
+			padding-top: 8px;
+		}
 		a[href="admin.php?page=user-registration-settings"] {
 			border-top: 1px solid hsla(0, 0%, 100%, 0.2);
 			margin-top: 5px;

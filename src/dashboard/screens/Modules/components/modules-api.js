@@ -2,10 +2,10 @@ import { select } from "@wordpress/data";
 import apiFetch from "@wordpress/api-fetch";
 
 /* global _UR_DASHBOARD_ */
-const { urRestApiNonce, restURL } =
+const { urRestApiNonce } =
 	typeof _UR_DASHBOARD_ !== "undefined" && _UR_DASHBOARD_;
 
-const base = restURL + "user-registration/v1/";
+const base = "user-registration/v1/";
 const urls = {
 	modules: base + "modules",
 	activateModule: base + "modules/activate",

@@ -1,0 +1,18 @@
+// Force LTR for specific fields
+// This ensures phone numbers are always displayed and entered left-to-right
+
+.iti.iti--allow-dropdown,
+.iti.iti--separate-dial-code,
+.iti,
+.ur-smart-phone-field,
+input[type="tel"],
+input[data-field-key*="phone"],
+.field-phone input,
+.ur-field-item.field-phone input {
+	direction: ltr !important;
+	text-align: left !important;
+}
+
+.iti__flag-container {
+	direction: ltr !important;
+}

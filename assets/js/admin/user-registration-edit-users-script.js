@@ -9,6 +9,7 @@ jQuery(function ($) {
 	var UREditUsers = {
 		init: function () {
 			UREditUsers.initUIBindings();
+			UREditUsers.switchCountry();
 			//load password toggle if password field is available
 			if (
 				$(
@@ -20,6 +21,54 @@ jQuery(function ($) {
 			//add mask to all input mask classes
 			$(".ur-masked-input").inputmask("mask") ||
 				$(".ur-masked-input").inputmask();
+		},
+		switchCountry: function(){
+			$( document ).on( 'change', '.ur-field-address-country', function ( e ) {
+				e.stopPropagation();
+				e.preventDefault();
+
+				var $el = $(this);
+				var fieldId = $el.data('id');
+				var country = $el.val();
+				var stateEnable = $el.data( 'state-enabled' );
+
+				if ( ! stateEnable ) {
+					return;
+				}
+				var data = {
+					action: 'user_registration_update_state_field',
+					security: user_registration_params.user_registration_update_state_field,
+					country: country
+				};
+				var $stateWrapper = $el.siblings('.ur-field-address-state-outer-wrapper');
+
+				$.ajax({
+					type: "POST",
+					url: user_registration_params.ajax_url,
+					data: data,
+					beforeSend: function(){
+						$stateWrapper.empty();
+						$stateWrapper.append('<span class="ur-front-spinner"></span>');
+
+					},
+					success: function (response) {
+						var html = '';
+
+						if (response.success && response.data.has_state && '' !== response.data.state) {
+							html += '<select class="ur-field-address-state select ur-frontend-field" name="' + fieldId + '_state">';
+							html += response.data.state;
+							html += '</select>';
+						} else {
+							html += '<input type="text" class="ur-field-address-state input-text ur-frontend-field" name="' + fieldId + '_state"/>';
+						}
+
+						$( document ).find( '.ur-front-spinner' ).remove();
+						var $stateElement = $( html );
+
+						$stateWrapper.append( $stateElement );
+					}
+				});
+			});
 		},
 		/**
 		 * Load password toggle in password input
@@ -48,6 +97,22 @@ jQuery(function ($) {
 			$(
 				"#user_registration_user_pass_field .password-input-group"
 			).append(hide_show_password);
+		},
+		/**
+		 * toggle user edit form visibility
+		 */
+		toggle_edit_form_visibility: function (show) {
+			if (show) {
+				$(".urm-admin-edit-user").removeClass(
+					"user-registration-hidden"
+				);
+				$(".urm-admin-view-user").addClass("user-registration-hidden");
+			} else {
+				$(".urm-admin-edit-user").addClass("user-registration-hidden");
+				$(".urm-admin-view-user").removeClass(
+					"user-registration-hidden"
+				);
+			}
 		},
 
 		/**
@@ -148,6 +213,15 @@ jQuery(function ($) {
 			$(document).on("click", ".set-new-pass-btn", function () {
 				UREditUsers.toggle_password_input_visibility();
 			});
+
+			$(document).on(
+				"click",
+				"#user-registration-edit-user-link",
+				function (e) {
+					e.preventDefault();
+					UREditUsers.toggle_edit_form_visibility(true);
+				}
+			);
 		},
 		/*
 		 * Retrieves fieldwise data from a given field.
@@ -948,6 +1022,9 @@ jQuery(function ($) {
 									UREditUsers.show_failure_message(
 										response.data.message
 									);
+									UREditUsers.toggle_edit_form_visibility(
+										true
+									);
 								} else {
 									UREditUsers.show_success_message(
 										response.data.message
@@ -965,12 +1042,14 @@ jQuery(function ($) {
 							$(window).scrollTop(
 								$(".user-registration").position()
 							);
+							UREditUsers.toggle_edit_form_visibility(false);
 						}
 					}).fail(function () {
 						UREditUsers.show_failure_message(
 							l10n.ajax_form_submit_error
 						);
 						button.prop("disabled", false);
+						UREditUsers.toggle_edit_form_visibility(true);
 						return;
 					});
 				}

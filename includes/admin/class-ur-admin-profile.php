@@ -348,7 +348,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 																		value="<?php echo esc_attr( $option ); ?>"
 																		class="<?php echo esc_attr( $field['class'] ); ?>"
 																						<?php
-																						if ( is_array( $value ) && in_array( $option, $value ) ) {
+																						if ( is_array( $value ) && in_array( html_entity_decode ( ur_sanitize_tooltip ( trim( $option ) ) ) , $value )) {
 																							echo 'checked="checked"';
 																						} elseif ( $value == $option ) {
 																							echo 'checked="checked"';
@@ -567,7 +567,7 @@ if ( ! class_exists( 'UR_Admin_Profile', false ) ) :
 			 * @param string $key_prefix Prefix.
 			 * @return array
 			 */
-		protected function get_user_meta_by_prefix( $user_id, $key_prefix ) {
+		public function get_user_meta_by_prefix( $user_id, $key_prefix ) {
 
 			$values        = get_user_meta( $user_id );
 			$return_values = array();

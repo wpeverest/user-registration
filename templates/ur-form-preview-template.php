@@ -8,7 +8,7 @@ wp_head();
 					<meta name="viewport" content="width=device-width"/>
 					<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 					<title>
-						<?php esc_html_e( 'User Registration - Setup Wizard', 'user-registration' ); ?>
+						<?php esc_html_e( 'User Registration & Membership - Setup Wizard', 'user-registration' ); ?>
 					</title>
 					<?php
 						wp_print_head_scripts();

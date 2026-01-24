@@ -6,6 +6,9 @@
  * @version  1.0.0
  */
 
+use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
+use WPEverest\URMembership\Admin\Repositories\SubscriptionRepository;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -116,6 +119,7 @@ function ur_get_screen_ids() {
 		$ur_screen_id . '_page_member-payment-history',
 		$ur_screen_id . '_page_user-registration-users',
 		$ur_screen_id . '_page_user-registration-members',
+		$ur_screen_id . '_page_user-registration-team',
 		'profile',
 		'user-edit',
 	);
@@ -614,7 +618,7 @@ function promotional_notice_links( $notice_target_links, $is_permanent_dismiss )
 	if ( $is_permanent_dismiss ) {
 
 		?>
-			<a href="#" class="notice-dismiss notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
+			<a href="#" class="notice-dismiss notice-nsa notice-dismiss-permanently"><?php esc_html_e( 'Never show again', 'user-registration' ); ?></a>
 		<?php
 	}
 }
@@ -910,6 +914,13 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 		$all_forms = ur_get_all_user_registration_form();
 		$postfix   = count( $all_forms ) > 1 ? 'Forms' : 'Form';
 
+		$membership_rules_count = 0;
+		if ( function_exists( 'ur_get_membership_rules_count' ) ) {
+			$membership_rules_count = ur_get_membership_rules_count();
+		}
+
+		$all_forms = ur_get_all_user_registration_form();
+
 		// Only include Site Assistant if there are unhandled options
 		$site_assistant_item = ur_should_show_site_assistant_menu() ? array(
 			'dashboard' => array(
@@ -922,54 +933,58 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 			'user_registration_plugin_main_header_items',
 			array_merge(
 				$site_assistant_item,
-				UR_PRO_ACTIVE ? array(
+				array(
 					'analytics' => array(
 						'page_slug' => 'user-registration-analytics',
 						'label'     => esc_html__( 'Analytics', 'user-registration' ),
 					),
+				),
+				ur_check_module_activation( 'membership' ) ? array(
+					'membership' => array(
+						'page_slug' => 'user-registration-membership',
+						'label'     => esc_html__( 'Memberships', 'user-registration' ),
+					),
 				) : array(),
+				// ( ur_check_module_activation( 'membership-groups' ) || ! empty( $membership_groups ) ) ?
+				// array(
+				// 	'groups' => array(
+				// 		'page_slug' => 'user-registration-membership&action=list_groups',
+				// 		'label' 	=> esc_html__( 'Groups', 'user-registration' )
+				// 	)
+				// ) : array(),
+				( ur_check_module_activation( 'content-restriction' ) || $membership_rules_count >= 2 ) ?
 				array(
-					'all-forms' => array(
-						'page_slug' => 'user-registration',
-						'label'     => esc_html__( 'All Forms', 'user-registration' ),
-						'sub_menu'  => array(
-							'registration-form' => array(
-								'page_slug' => 'user-registration',
-								'label'     => sprintf( esc_html__( 'Registration %s', 'user-registration' ), $postfix ),
+					'content-rules' => array(
+						'page_slug' => 'user-registration-content-restriction',
+						'label' 	=> esc_html__( 'Content Rules', 'user-registration' )
+					)
+				) : array(),
+				( count( $all_forms ) > 1 || ur_check_module_activation( 'multiple-registration' ) ) ?
+					array(
+						'all-forms' => array(
+							'page_slug' => 'user-registration',
+							'label'     => esc_html__( 'All Forms', 'user-registration' ),
+							'sub_menu'  => array(
+								'registration-form' => array(
+									'page_slug' => 'user-registration',
+									'label'     => sprintf( esc_html__( 'Registration %s', 'user-registration' ), $postfix ),
 							),
 							'login-form'        => array(
 								'page_slug' => 'user-registration-login-forms',
 								'label'     => esc_html__( 'Login Form', 'user-registration' ),
 							),
 						),
-					),
-				),
-				array(
-					'users' => array(
-						'page_slug' => 'user-registration-users',
-						'label'     => esc_html__( 'Users', 'user-registration' ),
-					),
-				),
-				ur_check_module_activation( 'membership' ) ? array(
-					'membership' => array(
-						'page_slug' => 'user-registration-membership',
-						'label'     => esc_html__( 'Membership', 'user-registration' ),
-						'sub_menu'  => array(
-							'all-plans' => array(
-								'page_slug' => 'user-registration-membership',
-								'label'     => esc_html__( 'All Plans', 'user-registration' ),
-							),
-							'groups'    => array(
-								'page_slug' => 'user-registration-membership&action=list_groups',
-								'label'     => esc_html__( 'Groups', 'user-registration' ),
-							),
-							'members'   => array(
-								'page_slug' => 'user-registration-members',
-								'label'     => esc_html__( 'Members', 'user-registration' ),
-							),
+						),
+					) : array(
+						'registration-form' => array(
+							'page_slug' => 'user-registration',
+							'label'     => sprintf( esc_html__( 'Registration %s', 'user-registration' ), $postfix ),
+						),
+						'login-form'   => array(
+							'page_slug' => 'user-registration-login-forms',
+							'label'     => esc_html__( 'Login Form', 'user-registration' ),
 						),
 					),
-				) : array(),
 				array(
 					'settings' => array(
 						'page_slug' => 'user-registration-settings',
@@ -982,24 +997,6 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 						'label'     => esc_html__( 'Addons', 'user-registration' ),
 					),
 				),
-				array(
-					'help' => array(
-						'page_slug' => 'user-registration-dashboard#help',
-						'label'     => esc_html__( 'Help', 'user-registration' ),
-					),
-				),
-				UR_PRO_ACTIVE ? array() : array(
-					'free-vs-pro' => array(
-						'page_slug' => 'user-registration-dashboard#free-vs-pro',
-						'label'     => esc_html__( 'Free vs Pro', 'user-registration' ),
-					),
-				),
-				array(
-					'products' => array(
-						'page_slug' => 'user-registration-dashboard#products',
-						'label'     => esc_html__( 'Other Products', 'user-registration' ),
-					),
-				)
 			)
 		);
 
@@ -1058,12 +1055,26 @@ if ( ! function_exists( 'user_registration_plugin_main_header' ) ) {
 					</div>
 				</div>
 				<div class="ur-page-title__wrapper--right">
+					<div class="ur-version-tag-separator" bis_skin_checked="1"><hr></div>
+						<a target="" rel="noopener" class="ur-help--link" href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-dashboard#help' ) ); ?>">
+							<?php esc_html_e( 'Help', 'user-registration' ); ?>
+						</a>
+					<?php
+					if ( ! UR_PRO_ACTIVE ) {
+						?>
+							<div class="ur-version-tag-separator" bis_skin_checked="1"><hr></div>
+							<a target="_blank" rel="noopener" class="ur-free-vs-pro--link" href="https://wpuserregistration.com/free-vs-pro/?utm_campaign=lite-version&utm_source=header&utm_medium=top-menu-link">
+								<?php esc_html_e( 'Free vs Pro', 'user-registration' ); ?>
+							</a>
+						<?php
+					}
+					?>
 					<span class="ur-version-tag tips" data-tip="<?php printf( __( 'You are currently using User Registration & Membership %1$s v%2$s', 'user-registration' ), UR_PRO_ACTIVE ? 'Pro' : '', UR()->version ); ?>" >v<?php echo UR()->version; ?></span>
 					<?php
 					if ( ! UR_PRO_ACTIVE ) {
 						?>
 							<div class="ur-version-tag-separator" bis_skin_checked="1"><hr></div>
-							<a target="_blank" rel="noopener" class="" href="https://wpuserregistration.com/upgrade/?utm_campaign=lite-version&utm_source=header&utm_medium=top-menu-link">
+							<a target="_blank" rel="noopener" class="ur-upgrade--link" href="https://wpuserregistration.com/upgrade/?utm_campaign=lite-version&utm_source=header&utm_medium=top-menu-link">
 								<?php esc_html_e( 'Upgrade To Pro', 'user-registration' ); ?>
 							</a>
 						<?php

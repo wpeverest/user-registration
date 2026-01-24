@@ -213,6 +213,77 @@ jQuery(function ($) {
 		}
 	});
 
+	$(document).on("click", ".ur-activate-dependent-module", function (e) {
+		e.preventDefault();
+		e.stopImmediatePropagation();
+
+		var $this = $(this);
+
+		var icon =
+			'<i class="dashicons dashicons-lock" style="color:#72aee6; border-color: #72aee6;"></i>';
+
+		var plan = $this.data("plan");
+		var name = $this.data("name");
+		var slug = $this.data("slug");
+
+		if (!slug) {
+			return;
+		}
+
+		Swal.fire({
+			title: icon + " Install dependent addon",
+			html:
+				"To add multiple forms you need to install <strong>" +
+				name +
+				"</strong> module.",
+			customClass:
+				"user-registration-swal2-modal user-registration-swal2-modal--centered user-registration-locked-field",
+			showCloseButton: true,
+			showConfirmButton: true,
+			confirmButtonText: "Activate Module",
+			showLoaderOnConfirm: true,
+			allowOutsideClick: function () {
+				return !Swal.isLoading();
+			},
+			allowEscapeKey: function () {
+				return !Swal.isLoading();
+			},
+			heightAuto: false,
+			width: "575px",
+
+			preConfirm: function () {
+				return $.ajax({
+					url: user_registration_all_forms.ajax_url,
+					type: "POST",
+					dataType: "json",
+					data: {
+						action: "user_registration_activate_dependent_module",
+						security:
+							user_registration_all_forms.ajax_all_forms_nonce,
+						plan: plan,
+						slug: slug,
+						name: name
+					}
+				})
+					.then(function (response) {
+						if (!response.success) {
+							throw new Error(
+								response.data || "Activation failed"
+							);
+						}
+						return response;
+					})
+					.fail(function () {
+						Swal.showValidationMessage("Something went wrong");
+					});
+			}
+		}).then(function (result) {
+			if (result.isConfirmed) {
+				window.location.reload();
+			}
+		});
+	});
+
 	// Adjust builder width
 	$(window).on("resize orientationchange", function () {
 		var resizeTimer;
@@ -786,7 +857,7 @@ jQuery(function ($) {
 					.show()
 					.css("display", "block");
 				$("#user_registration_reset_password_page_id")
-					.closest('.user-registration-login-form-global-settings')
+					.closest(".user-registration-login-form-global-settings")
 					.css("display", "block");
 				$("#user_registration_label_lost_your_password")
 					.closest(".user-registration-login-form-global-settings")
@@ -797,7 +868,7 @@ jQuery(function ($) {
 					.closest(".user-registration-login-form-global-settings")
 					.hide();
 				$("#user_registration_reset_password_page_id")
-					.closest('.user-registration-login-form-global-settings')
+					.closest(".user-registration-login-form-global-settings")
 					.hide();
 				$("#user_registration_label_lost_your_password")
 					.closest(".user-registration-login-form-global-settings")
@@ -1187,8 +1258,10 @@ jQuery(function ($) {
 
 	var check_email_confirmation_disabled = function () {
 		var email_confirmation_disabled =
-			(typeof ur_login_form_params !== 'undefined' && ur_login_form_params.email_confirmation_disabled) ||
-			(typeof user_registration_form_builder_data !== 'undefined' && user_registration_form_builder_data.email_confirmation_disabled);
+			(typeof ur_login_form_params !== "undefined" &&
+				ur_login_form_params.email_confirmation_disabled) ||
+			(typeof user_registration_form_builder_data !== "undefined" &&
+				user_registration_form_builder_data.email_confirmation_disabled);
 		if (email_confirmation_disabled === "yes") {
 			var login_options = $(
 				"#user_registration_form_setting_login_options"
@@ -1588,13 +1661,31 @@ jQuery(function ($) {
 	}
 
 	$(document.body).on("click", "#ur-smart-tags-selector", function () {
-		var $this = $(this);
+		var $this = $(this),
+			is_urcr_rule_editor =
+				$this.closest(
+					"#wp-urcr-membership-action-message-media-buttons"
+				).length > 0,
+			is_urcr_global_editor =
+				$this.closest(
+					"#wp-user_registration_content_restriction_message-media-buttons"
+				).length > 0,
+			is_drip_editor =
+				$this.closest(
+					"#wp-user_registration_content_drip_global_message-media-buttons"
+				).length > 0;
 
 		$(this)
 			.siblings("#select-smart-tags")
 			.select2({
 				placeholder: "",
-				dropdownCssClass: "ur-select2-dropdown",
+				dropdownCssClass:
+					"ur-select2-dropdown" +
+					(is_urcr_rule_editor ||
+					is_urcr_global_editor ||
+					is_drip_editor
+						? " urcr-editor-select2-dropdown"
+						: ""),
 				templateResult: function (data, container) {
 					if ($this.siblings(".ur_advance_setting").length > 0) {
 						if (data.element) {
@@ -1618,11 +1709,8 @@ jQuery(function ($) {
 			.show();
 
 		var buttonOffset = $(this).offset(),
-			buttonOffsetTop = Math.round(
-				buttonOffset.top + $(this).innerHeight()
-			),
+			buttonOffsetTop = Math.round(buttonOffset.top),
 			buttonOffsetRight = Math.round(buttonOffset.left);
-
 		var select2_container = $(
 			".select2-container--open:not(.ur-hide-select2)"
 		);
@@ -1921,6 +2009,47 @@ jQuery(function ($) {
 			}
 		});
 	});
+
+	window.addEventListener("hashchange", function () {
+		updateMenuActiveHighlight();
+	});
+
+	updateMenuActiveHighlight();
+
+	function updateMenuActiveHighlight() {
+		var params = new URLSearchParams(window.location.search);
+		var page = params.get("page");
+		if (page !== "user-registration-dashboard") {
+			return;
+		}
+
+		var $menu = $("#toplevel_page_user-registration");
+
+		$menu
+			.find("li.current, li.current-submenu")
+			.removeClass("current current-submenu");
+
+		$menu.find("a").removeClass("current");
+
+		if (window.location.hash === "#features") {
+			$menu
+				.find('.wp-submenu a[href$="#features"]')
+				.closest("li")
+				.addClass("current");
+		} else if (window.location.hash === "#help") {
+			$menu
+				.find('.wp-submenu a[href$="#help"]')
+				.closest("li")
+				.addClass("current");
+		} else {
+			$menu
+				.find(
+					'.wp-submenu a[href="admin.php?page=user-registration-dashboard"]'
+				)
+				.closest("li")
+				.addClass("current");
+		}
+	}
 });
 
 (function ($, user_registration_admin_data) {
@@ -2119,7 +2248,8 @@ jQuery(function ($) {
 	$(".ur-admin-page-topnav").on("click", ".ur-nav-link", function () {
 		setTimeout(updateActive, 0);
 	});
-	$('li.toplevel_page_user-registration > a').attr('href', 'admin.php?page=user-registration');
-
+	$("li.toplevel_page_user-registration > a").attr(
+		"href",
+		"admin.php?page=user-registration"
+	);
 });
-
