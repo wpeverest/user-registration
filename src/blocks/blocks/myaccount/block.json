@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "title": "Myaccount",
   "category": "user-registration",
-  "description": "The block give the myaccount form for registered users.",
+  "description": "Display My Account area to logged in users & a login form to Logged out users.",
   "keywords": [
     "user registration myaccount",
     "myaccount"

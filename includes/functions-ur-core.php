@@ -21,7 +21,7 @@ require UR_ABSPATH . 'includes/functions-ur-deprecated.php';
 /**
  * Define a constant if it is not already defined.
  *
- * @param string $name  Constant name.
+ * @param string $name Constant name.
  * @param string $value Value.
  */
 function ur_maybe_define_constant( $name, $value ) {
@@ -137,7 +137,7 @@ if ( ! function_exists( 'is_ur_lost_password_page' ) ) {
  * Clean variables using sanitize_text_field. Arrays are cleaned recursively.
  * Non-scalar values are ignored.
  *
- * @param  string|array $var Variable.
+ * @param string|array $var Variable.
  *
  * @return string|array
  */
@@ -152,11 +152,10 @@ function ur_clean( $var ) {
 /**
  * Sanitize a string destined to be a tooltip.
  *
- * @since  1.0.0  Tooltips are encoded with htmlspecialchars to prevent XSS. Should not be used in conjunction with esc_attr()
- *
- * @param  string $var Value to sanitize.
+ * @param string $var Value to sanitize.
  *
  * @return string
+ * @since  1.0.0  Tooltips are encoded with htmlspecialchars to prevent XSS. Should not be used in conjunction with esc_attr()
  */
 function ur_sanitize_tooltip( $var ) {
 	return htmlspecialchars(
@@ -180,10 +179,11 @@ function ur_sanitize_tooltip( $var ) {
 /**
  * Format dimensions for display.
  *
- * @since  1.7.0
- * @param  array $dimensions Array of dimensions.
- * @param  array $unit Unit, defaults to 'px'.
+ * @param array $dimensions Array of dimensions.
+ * @param array $unit Unit, defaults to 'px'.
+ *
  * @return string
+ * @since  1.7.0
  */
 function ur_sanitize_dimension_unit( $dimensions = array(), $unit = 'px' ) {
 	return ur_array_to_string( ur_suffix_array( $dimensions, $unit ) );
@@ -192,32 +192,37 @@ function ur_sanitize_dimension_unit( $dimensions = array(), $unit = 'px' ) {
 /**
  * Add a suffix into an array.
  *
- * @since  1.7.0
- * @param  array  $array  Raw array data.
- * @param  string $suffix Suffix to be added.
+ * @param array  $array Raw array data.
+ * @param string $suffix Suffix to be added.
+ *
  * @return array Modified array with suffix added.
+ * @since  1.7.0
  */
 function ur_suffix_array( $array = array(), $suffix = '' ) {
 	return preg_filter( '/$/', $suffix, $array );
 }
+
 /**
  * Implode an array into a string by $glue and remove empty values.
  *
- * @since  1.7.0
- * @param  array  $array Array to convert.
- * @param  string $glue  Glue, defaults to ' '.
+ * @param array  $array Array to convert.
+ * @param string $glue Glue, defaults to ' '.
+ *
  * @return string
+ * @since  1.7.0
  */
 function ur_array_to_string( $array = array(), $glue = ' ' ) {
 	return is_string( $array ) ? $array : implode( $glue, array_filter( $array ) );
 }
+
 /**
  * Explode a string into an array by $delimiter and remove empty values.
  *
- * @since  1.7.0
- * @param  string $string    String to convert.
- * @param  string $delimiter Delimiter, defaults to ','.
+ * @param string $string String to convert.
+ * @param string $delimiter Delimiter, defaults to ','.
+ *
  * @return array
+ * @since  1.7.0
  */
 function ur_string_to_array( $string, $delimiter = ',' ) {
 	return is_array( $string ) ? $string : array_filter( explode( $delimiter, $string ) );
@@ -227,6 +232,7 @@ function ur_string_to_array( $string, $delimiter = ',' ) {
  * Converts a string (e.g. 'yes' or 'no') to a bool.
  *
  * @param string $string String to convert.
+ *
  * @return bool
  */
 function ur_string_to_bool( $string ) {
@@ -237,12 +243,14 @@ function ur_string_to_bool( $string ) {
  * Converts a bool to a 'yes' or 'no'.
  *
  * @param bool $bool String to convert.
+ *
  * @return string
  */
 function ur_bool_to_string( $bool ) {
 	if ( ! is_bool( $bool ) ) {
 		$bool = ur_string_to_bool( $bool );
 	}
+
 	return true === $bool ? 'yes' : 'no';
 }
 
@@ -252,7 +260,7 @@ function ur_bool_to_string( $bool ) {
  * @param string $template_name Template Name.
  * @param array  $args Extra arguments(default: array()).
  * @param string $template_path Path of template provided (default: '').
- * @param string $default_path  Default path of template provided(default: '').
+ * @param string $default_path Default path of template provided(default: '').
  */
 function ur_get_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
 	if ( ! empty( $args ) && is_array( $args ) ) {
@@ -265,9 +273,9 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
 	 *
 	 * @param string $located Template locate.
 	 * @param string $template_name Template Name.
-	 * @param array  $args Extra arguments(default: array()).
+	 * @param array $args Extra arguments(default: array()).
 	 * @param string $template_path Path of template provided (default: '').
-	 * @param string $default_path  Default path of template provided(default: '').
+	 * @param string $default_path Default path of template provided(default: '').
 	 */
 	$located = apply_filters( 'ur_get_template', $located, $template_name, $args, $template_path, $default_path );
 
@@ -319,7 +327,7 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
  *
  * @param string $template_name Template Name.
  * @param string $template_path Path of template provided (default: '').
- * @param string $default_path  Default path of template provided(default: '').
+ * @param string $default_path Default path of template provided(default: '').
  *
  * @return string
  */
@@ -348,9 +356,9 @@ function ur_locate_template( $template_name, $template_path = '', $default_path 
 	/**
 	 * Filters the located template file path before including it.
 	 *
-	 * @param string $template       The located template file path.
-	 * @param string $template_name  The name of the template file.
-	 * @param string $template_path  The path to the template file.
+	 * @param string $template The located template file path.
+	 * @param string $template_name The name of the template file.
+	 * @param string $template_path The path to the template file.
 	 */
 	return apply_filters( 'user_registration_locate_template', $template, $template_name, $template_path );
 }
@@ -358,8 +366,8 @@ function ur_locate_template( $template_name, $template_path = '', $default_path 
 /**
  * Display a UserRegistration help tip.
  *
- * @param  string $tip        Help tip text.
- * @param  bool   $allow_html Allow sanitized HTML if true or escape.
+ * @param string $tip Help tip text.
+ * @param bool   $allow_html Allow sanitized HTML if true or escape.
  * @param string $classname Classname.
  *
  * @return string
@@ -377,7 +385,7 @@ function ur_help_tip( $tip, $allow_html = false, $classname = 'user-registration
 /**
  * Checks whether the content passed contains a specific short code.
  *
- * @param  string $tag Shortcode tag to check.
+ * @param string $tag Shortcode tag to check.
  *
  * @return bool
  */
@@ -386,7 +394,7 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 	$new_shortcode = '';
 	$wp_version    = '5.0';
 	if ( version_compare( $GLOBALS['wp_version'], $wp_version, '>=' ) ) {
-		if ( is_object( $post ) ) {
+		if ( is_object( $post ) && ! empty( $post->post_content ) ) {
 			$blocks = parse_blocks( $post->post_content );
 			foreach ( $blocks as $block ) {
 
@@ -397,6 +405,7 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 				}
 			}
 		}
+
 		return ( is_singular() || is_front_page() ) && is_a( $post, 'WP_Post' ) && has_shortcode( $new_shortcode, $tag );
 	} else {
 		return ( is_singular() || is_front_page() ) && is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, $tag );
@@ -406,11 +415,11 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 /**
  * Wrapper for ur_doing_it_wrong.
  *
- * @since  1.0.0
+ * @param string $function Callback function name.
+ * @param string $message Message to display.
+ * @param string $version Version of the plugin.
  *
- * @param  string $function Callback function name.
- * @param  string $message Message to display.
- * @param  string $version Version of the plugin.
+ * @since  1.0.0
  */
 function ur_doing_it_wrong( $function, $message, $version ) {
 	$message .= ' Backtrace: ' . wp_debug_backtrace_summary();
@@ -433,10 +442,10 @@ function ur_doing_it_wrong( $function, $message, $version ) {
 /**
  * Set a cookie - wrapper for setcookie using WP constants.
  *
- * @param  string  $name   Name of the cookie being set.
- * @param  string  $value  Value of the cookie.
- * @param  integer $expire Expiry of the cookie.
- * @param  string  $secure Whether the cookie should be served only over https.
+ * @param string  $name Name of the cookie being set.
+ * @param string  $value Value of the cookie.
+ * @param integer $expire Expiry of the cookie.
+ * @param string  $secure Whether the cookie should be served only over https.
  */
 function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
 	if ( ! headers_sent() ) {
@@ -450,11 +459,10 @@ function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
 /**
  * Read in UserRegistration headers when reading plugin headers.
  *
- * @since  1.1.0
- *
- * @param  array $headers header.
+ * @param array $headers header.
  *
  * @return array $headers
+ * @since  1.1.0
  */
 function ur_enable_ur_plugin_headers( $headers ) {
 	if ( ! class_exists( 'UR_Plugin_Updates', false ) ) {
@@ -472,7 +480,8 @@ add_filter( 'extra_plugin_headers', 'ur_enable_ur_plugin_headers' );
 /**
  * Set field type for all registrered field keys
  *
- * @param  string $field_key field's field key.
+ * @param string $field_key field's field key.
+ *
  * @return string $field_type
  */
 function ur_get_field_type( $field_key ) {
@@ -539,11 +548,12 @@ function ur_get_field_type( $field_key ) {
 				break;
 		}
 	}
+
 	/**
 	 * Filters the field keys before rendering or processing.
 	 *
 	 * @param string $field_type The type of the user registration field.
-	 * @param string $field_key  The key identifying the specific field.
+	 * @param string $field_key The key identifying the specific field.
 	 */
 	return apply_filters( 'user_registration_field_keys', $field_type, $field_key );
 }
@@ -599,6 +609,7 @@ function ur_get_required_fields() {
  */
 function ur_get_one_time_draggable_fields() {
 	$form_fields = ur_get_user_field_only();
+
 	/**
 	 * Filters the list of one-time draggable form fields during user registration.
 	 *
@@ -627,6 +638,7 @@ function ur_exclude_profile_details_fields() {
 		// Push profile_picture field to fields_to_exclude array.
 		array_push( $fields_to_exclude, 'profile_picture' );
 	}
+
 	/**
 	 * Filters the list of profile fields to be excluded during user registration.
 	 *
@@ -676,8 +688,8 @@ function ur_readonly_profile_details_fields() {
 /**
  * Get profile detail fields.
  *
- * @deprecated 1.4.1
  * @return void
+ * @deprecated 1.4.1
  */
 function ur_get_account_details_fields() {
 	ur_deprecated_function( 'ur_get_account_details_fields', '1.4.1', 'ur_exclude_profile_details_fields' );
@@ -690,6 +702,7 @@ function ur_get_account_details_fields() {
  */
 function ur_get_user_profile_field_only() {
 	$user_fields = array_diff( ur_get_registered_form_fields(), ur_exclude_profile_details_fields() );
+
 	/**
 	 * Filters the list of user profile fields during user registration.
 	 *
@@ -705,6 +718,7 @@ function ur_get_user_profile_field_only() {
  */
 function ur_get_fields_without_prefix() {
 	$fields = ur_get_user_field_only();
+
 	/**
 	 * Filters the list of user registration fields without the field prefix.
 	 *
@@ -751,6 +765,7 @@ function ur_get_other_form_fields() {
 	$registered  = ur_get_registered_form_fields();
 	$user_fields = ur_get_user_field_only();
 	$result      = array_diff( $registered, $user_fields );
+
 	/**
 	 * Filters the list of other form fields during user registration.
 	 *
@@ -794,6 +809,7 @@ if ( ! function_exists( 'ur_get_field_name_with_prefix_usermeta' ) ) {
 		if ( ! in_array( $field_name, $default_fields ) ) {
 			$field_name = 'user_registration_' . $field_name;
 		}
+
 		return $field_name;
 	}
 }
@@ -858,7 +874,7 @@ function ur_get_registered_form_fields_with_default_labels() {
 			'user_confirm_email'    => __( 'User Confirm Email', 'user-registration' ),
 			'user_pass'             => __( 'User Pass', 'user-registration' ),
 			'user_confirm_password' => __( 'User Confirm Password', 'user-registration' ),
-			'user_login'            => __( 'User Login', 'user-registration' ),
+			'user_login'            => __( 'User Name', 'user-registration' ),
 			'nickname'              => __( 'Nickname', 'user-registration' ),
 			'first_name'            => __( 'First Name', 'user-registration' ),
 			'last_name'             => __( 'Last Name', 'user-registration' ),
@@ -885,6 +901,7 @@ function ur_get_registered_form_fields_with_default_labels() {
  * General settings for each fields
  *
  * @param string $id id for each field.
+ *
  * @return mixed|array
  */
 function ur_get_general_settings( $id ) {
@@ -1002,12 +1019,13 @@ function ur_get_general_settings( $id ) {
 			'required'    => true,
 		);
 	}
+
 	/**
 	 * Filters the general settings for a specific field type during user registration.
 	 *
 	 * @param array $general_settings An array of general settings/options for a specific
 	 *                                field type during user registration.
-	 * @param string $id              The identifier for the specific field type.
+	 * @param string $id The identifier for the specific field type.
 	 */
 	return apply_filters( 'user_registration_field_options_general_settings', $general_settings, $id );
 }
@@ -1015,12 +1033,12 @@ function ur_get_general_settings( $id ) {
 /**
  * Insert in between the indexes in multidimensional array.
  *
- * @since  1.5.7
- * @param  array  $items      An array of items.
- * @param  array  $new_items  New items to insert inbetween.
- * @param  string $after      Index to insert after.
+ * @param array  $items An array of items.
+ * @param array  $new_items New items to insert inbetween.
+ * @param string $after Index to insert after.
  *
  * @return array              Ordered array of items.
+ * @since  1.5.7
  */
 function ur_insert_after_helper( $items, $new_items, $after ) {
 
@@ -1050,7 +1068,7 @@ function ur_load_form_field_class( $class_key ) {
 	 * Dynamic portion of hook name, $class_key.
 	 *
 	 * @param string $class_path The path to the form field class file.
-	 * @param string $class_key  The key identifying the form field class.
+	 * @param string $class_key The key identifying the form field class.
 	 */
 	$class_path = apply_filters( 'user_registration_form_field_' . $class_key . '_path', $class_path );
 	/* Backward Compat since 1.4.0 */
@@ -1060,7 +1078,9 @@ function ur_load_form_field_class( $class_key ) {
 			include_once $class_path;
 		}
 	}
+
 	/* Backward compat end*/
+
 	return $class_name;
 }
 
@@ -1086,6 +1106,7 @@ function ur_get_default_admin_roles() {
 	foreach ( $roles as $role_key => $role ) {
 		$all_roles[ $role_key ] = $role['name'];
 	}
+
 	/**
 	 * Filters the default user roles available.
 	 *
@@ -1107,11 +1128,10 @@ function ur_get_random_number() {
 /**
  * General Form settings
  *
- * @param int $form_id  Form ID.
- *
- * @since 1.0.1
+ * @param int $form_id Form ID.
  *
  * @return array Form settings.
+ * @since 1.0.1
  */
 function ur_admin_form_settings_fields( $form_id ) {
 
@@ -1147,6 +1167,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_template', ucwords( str_replace( '_', ' ', get_option( 'user_registration_form_template', 'default' ) ) ) ),
 				'tip'               => __( 'Choose how your registration form looks.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'toggle',
@@ -1194,7 +1215,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'label'             => __( 'User Approval And Login Option', 'user-registration' ),
 				'description'       => '',
 				'id'                => 'user_registration_form_setting_login_options',
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', 'default' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_login_options', get_option( 'user_registration_general_setting_login_options' ) ),
 				'default_value'     => 'default',
 				'type'              => 'select',
 				'class'             => array( 'ur-enhanced-select' ),
@@ -1227,7 +1248,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_sms_verification_msg', ur_get_sms_verification_default_message_content() ),
 				'default_value'     => ur_get_sms_verification_default_message_content(),
 				'type'              => 'textarea',
-				'class'             => array('ur-input-field'),
+				'class'             => array( 'ur-input-field' ),
 				'custom_attributes' => array(),
 				'input_class'       => array(),
 				'required'          => false,
@@ -1250,10 +1271,11 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
-				'type'              => 'section',
-				'title'             => __( 'Advanced', 'user-registration' ),
-				'id'                => 'user_registration_form_setting_general_advanced',
-				'class'				=> array( 'ur-form-settings-section')
+				'type'    => 'section',
+				'title'   => __( 'Advanced', 'user-registration' ),
+				'id'      => 'user_registration_form_setting_general_advanced',
+				'class'   => array( 'ur-form-settings-section' ),
+				'product' => 'user-registration/user-registration.php',
 			),
 			array(
 				'type'              => 'toggle',
@@ -1264,9 +1286,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'class'             => array(),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', ur_string_to_bool( get_option( 'user_registration_form_setting_enable_strong_password', 1 ) ) ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_strong_password', ur_string_to_bool( get_option( 'user_registration_form_setting_enable_strong_password', 0 ) ) ),
 				'tip'               => __( 'Make sure users create a password that’s harder to guess.', 'user-registration' ),
-				'default_value'     => ur_string_to_bool( get_option( 'user_registration_form_setting_enable_strong_password', 1 ) ),
+				'default_value'     => ur_string_to_bool( get_option( 'user_registration_form_setting_enable_strong_password', 0 ) ),
 				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
@@ -1390,6 +1412,8 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'custom_attributes' => array(),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_form_submit_label', 'Submit' ),
 				'tip'               => __( 'The label shown on the form’s submit button.', 'user-registration' ),
+				'product'           => 'user-registration/user-registration.php',
+
 			),
 			array(
 				'type'              => 'text',
@@ -1427,7 +1451,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			array(
 				'type'              => 'toggle',
 				/* translators: 1: Link tag open 2:: Link content 3:: Link tag close */
-				'label'             => sprintf( __( 'Enable %1$s %2$s Captcha %3$s Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
+				'label'             => sprintf( __( 'Enable %1$s %2$s Captcha %3$s Support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=registration_login&section=captcha" rel="noreferrer noopener" target="_blank">', '</a>' ),
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_enable_recaptcha_support',
@@ -1522,7 +1546,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'description'       => '',
 				'required'          => false,
 				'id'                => 'user_registration_form_setting_redirect_after',
-				'class'             => array('ur-input-field'),
+				'class'             => array( 'ur-input-field' ),
 				'input_class'       => array(),
 				'custom_attributes' => array(),
 				'min'               => '0',
@@ -1627,9 +1651,8 @@ function ur_login_option_with() {
  * @param string $meta_key Meta Key.
  * @param mixed  $default Default Value.
  *
- * @since 1.0.1
- *
  * @return mixed
+ * @since 1.0.1
  */
 function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 
@@ -1642,6 +1665,7 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 		) {
 			$post_meta[0] = ur_string_to_bool( $post_meta[0] );
 		}
+
 		return $post_meta[0];
 	}
 
@@ -1655,9 +1679,8 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
  * @param string $meta_key Meta Key.
  * @param mixed  $default Default Value.
  *
- * @since 1.0.1
- *
  * @return mixed
+ * @since 1.0.1
  */
 function ur_get_form_setting_by_key( $form_id, $meta_key, $default = '' ) {
 
@@ -1679,6 +1702,7 @@ function ur_get_form_setting_by_key( $form_id, $meta_key, $default = '' ) {
  * Get user status in case of admin approval login option
  *
  * @param int $user_id User ID.
+ *
  * @return int
  */
 function ur_get_user_approval_status( $user_id ) {
@@ -1742,11 +1766,10 @@ function ur_get_form_data_by_key( $form_data, $key = null ) {
 /**
  * Get a log file path.
  *
- * @since 1.0.5
- *
  * @param string $handle name.
  *
  * @return string the log file path.
+ * @since 1.0.5
  */
 function ur_get_log_file_path( $handle ) {
 	return UR_Log_Handler_File::get_log_file_path( $handle );
@@ -1755,11 +1778,10 @@ function ur_get_log_file_path( $handle ) {
 /**
  * Registers the default log handler.
  *
- * @since 1.0.5
- *
  * @param array $handlers Log handlers.
  *
  * @return array
+ * @since 1.0.5
  */
 function ur_register_default_log_handler( $handlers ) {
 
@@ -1786,9 +1808,9 @@ add_filter( 'user_registration_register_log_handlers', 'ur_register_default_log_
  *     - an instance which will be used directly as the logger
  * In either case, the class or instance *must* implement UR_Logger_Interface.
  *
- * @see UR_Logger_Interface
- * @since 1.1.0
  * @return UR_Logger
+ * @since 1.1.0
+ * @see UR_Logger_Interface
  */
 function ur_get_logger() {
 	static $logger = null;
@@ -1796,9 +1818,9 @@ function ur_get_logger() {
 		/**
 		 * Applies the 'user_registration_logging_class' filter to customize the logger class.
 		 *
-		 * @since 1.1.0
-		 *
 		 * @param string|object $class The class name or an instance of the logger.
+		 *
+		 * @since 1.1.0
 		 */
 		$class      = apply_filters( 'user_registration_logging_class', 'UR_Logger' );
 		$implements = class_implements( $class );
@@ -1812,7 +1834,7 @@ function ur_get_logger() {
 			ur_doing_it_wrong(
 				__FUNCTION__,
 				sprintf(
-					/* translators: %s: Class */
+				/* translators: %s: Class */
 					__( 'The class <code>%s</code> provided by user_registration_logging_class filter must implement <code>UR_Logger_Interface</code>.', 'user-registration' ),
 					esc_html( is_object( $class ) ? get_class( $class ) : $class )
 				),
@@ -1858,7 +1880,8 @@ function ur_addon_updater( $file, $item_id, $addon_version, $beta = false ) {
  * Check if username already exists in case of optional username
  * And while stripping through email address and incremet last number by 1.
  *
- * @param  string $username Username.
+ * @param string $username Username.
+ *
  * @return string
  */
 function check_username( $username ) {
@@ -1889,19 +1912,47 @@ function check_username( $username ) {
  * Get all user registration forms title with respective id.
  *
  * @param int $post_count Post Count.
+ *
  * @return array
  */
 function ur_get_all_user_registration_form( $post_count = -1 ) {
-	$args        = array(
+	$all_forms = array();
+
+	$args = array(
 		'status'      => 'publish',
 		'numberposts' => $post_count,
 		'order'       => 'ASC',
 	);
-	$posts_array = UR()->form->get_form( '', $args );
-	$all_forms   = array();
 
-	foreach ( $posts_array as $post ) {
-		$all_forms[ $post->ID ] = esc_html($post->post_title);
+	if ( isset( UR()->form ) && method_exists( UR()->form, 'get_form' ) ) {
+		$posts_array = UR()->form->get_form( '', $args );
+
+		if ( ! empty( $posts_array ) && is_array( $posts_array ) ) {
+			foreach ( $posts_array as $post ) {
+				if ( isset( $post->ID, $post->post_title ) ) {
+					$all_forms[ $post->ID ] = esc_html( $post->post_title );
+				}
+			}
+		}
+	}
+
+	if ( empty( $all_forms ) ) {
+		$fallback_args = array(
+			'post_type'      => 'user_registration',
+			'post_status'    => 'publish',
+			'posts_per_page' => $post_count,
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
+			'no_found_rows'  => true,
+		);
+
+		$posts = get_posts( $fallback_args );
+
+		if ( ! empty( $posts ) ) {
+			foreach ( $posts as $post ) {
+				$all_forms[ $post->ID ] = esc_html( $post->post_title );
+			}
+		}
 	}
 
 	return $all_forms;
@@ -1912,6 +1963,7 @@ function ur_get_all_user_registration_form( $post_count = -1 ) {
  *
  * @param string $context Recaptcha context.
  * @param string $recaptcha_enabled Is Recaptcha enabled.
+ *
  * @return string
  */
 function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id = 0 ) {
@@ -1931,7 +1983,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 	} elseif ( 'test_captcha' === $context && false !== $recaptcha_enabled ) {
 		$recaptcha_type = $recaptcha_enabled;
 	} elseif ( 'lost_password' === $context ) {
-		//Same recaptcha type as login.
+		// Same recaptcha type as login.
 		$recaptcha_type = get_option( 'user_registration_login_options_configured_captcha_type', $recaptcha_type );
 		$recaptcha_type = apply_filters( 'user_registration_lost_password_captcha_type', $recaptcha_type );
 
@@ -1965,7 +2017,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 		$empty_credentials = true;
 	}
 
-	//Exit early if recaptcha is not enabled in global settings or has messing credentials.
+	// Exit early if recaptcha is not enabled in global settings or has messing credentials.
 	if ( $empty_credentials ) {
 		return '';
 	}
@@ -1978,29 +2030,28 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 			wp_enqueue_script( $enqueue_script );
 		}
 
-	$ur_recaptcha_code = array(
-		'site_key'          => $recaptcha_site_key,
-		'is_captcha_enable' => true,
-		'version'           => $recaptcha_type,
-		'is_invisible'      => $invisible_recaptcha,
-		'theme_mode'        => $theme_mod,
-	);
-	$ur_recaptcha_slug = "ur_" . strtolower($recaptcha_type) . "_recaptcha_code";
-	if ( $recaptcha_type === "v2" ) {
-		$ur_recaptcha_slug = "ur_recaptcha_code";
-	}
+		$ur_recaptcha_code = array(
+			'site_key'          => $recaptcha_site_key,
+			'is_captcha_enable' => true,
+			'version'           => $recaptcha_type,
+			'is_invisible'      => $invisible_recaptcha,
+			'theme_mode'        => $theme_mod,
+		);
+		$ur_recaptcha_slug = 'ur_' . strtolower( $recaptcha_type ) . '_recaptcha_code';
+		if ( $recaptcha_type === 'v2' ) {
+			$ur_recaptcha_slug = 'ur_recaptcha_code';
+		}
 
-
-	if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
-		?>
-		<script id="<?php echo esc_attr( $enqueue_script ); ?>_<?php echo $rc_counter; ?>">
-			const <?php echo $ur_recaptcha_slug; ?> = <?php echo wp_json_encode( $ur_recaptcha_code ); ?>
-		</script>
-		<?php
-	} else {
-		wp_localize_script( $enqueue_script, $ur_recaptcha_slug, $ur_recaptcha_code );
-	}
-		$rc_counter++;
+		if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+			?>
+			<script id="<?php echo esc_attr( $enqueue_script ); ?>_<?php echo $rc_counter; ?>">
+				const <?php echo $ur_recaptcha_slug; ?> = <?php echo wp_json_encode( $ur_recaptcha_code ); ?>
+			</script>
+			<?php
+		} else {
+			wp_localize_script( $enqueue_script, $ur_recaptcha_slug, $ur_recaptcha_code );
+		}
+		++$rc_counter;
 
 		if ( 'v3' === $recaptcha_type ) {
 			if ( 'login' === $context ) {
@@ -2069,9 +2120,10 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 /**
  * Get meta key label pair by form id
  *
- * @param  int $form_id Form ID.
- * @since  1.5.0
+ * @param int $form_id Form ID.
+ *
  * @return array
+ * @since  1.5.0
  */
 function ur_get_meta_key_label( $form_id ) {
 
@@ -2088,12 +2140,13 @@ function ur_get_meta_key_label( $form_id ) {
 			}
 		}
 	}
+
 	/**
 	 * Filters the label for a meta key.
 	 *
-	 * @param string $key_label          The label for the meta key.
-	 * @param int    $form_id            The ID of the user registration form.
-	 * @param array  $post_content_array An array containing the post content for the form.
+	 * @param string $key_label The label for the meta key.
+	 * @param int $form_id The ID of the user registration form.
+	 * @param array $post_content_array An array containing the post content for the form.
 	 */
 	return apply_filters( 'user_registration_meta_key_label', $key_label, $form_id, $post_content_array );
 }
@@ -2101,19 +2154,74 @@ function ur_get_meta_key_label( $form_id ) {
 /**
  * Get all user registration fields of the user by querying to database.
  *
- * @param  int $user_id    User ID.
- * @since  1.5.0
+ * @param int $user_id User ID.
+ *
  * @return array
+ * @since  1.5.0
  */
-function ur_get_user_extra_fields( $user_id ) {
+function ur_get_user_extra_fields( $user_id, $action = '' ) {
 	$name_value = array();
 
 	$admin_profile = new UR_Admin_Profile();
 	$extra_data    = $admin_profile->get_user_meta_by_form_fields( $user_id );
-	$form_fields   = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array(); //phpcs:ignore.
+	$form_id       = ur_get_form_id_by_userid( $user_id );
+
+	if ( 'export_users' === $action ) {
+
+		$all_meta_for_user = $admin_profile->get_user_meta_by_prefix( $user_id, 'user_registration_' );
+		$form_row_data     = get_post_meta( $form_id, 'user_registration_form_row_data', true );
+		$row_datas         = ! empty( $form_row_data ) ? json_decode( $form_row_data ) : array();
+
+		$repeaters = array();
+		if ( ! empty( $row_datas ) ) {
+			foreach ( $row_datas as $row_data ) {
+				if ( isset( $row_data->type ) && 'repeater' === $row_data->type ) {
+
+					if ( array_key_exists( 'user_registration_' . $row_data->field_name, $all_meta_for_user ) ) {
+						$repeater_rows = maybe_unserialize(
+							$all_meta_for_user[ 'user_registration_' .
+												$row_data->field_name ]
+						);
+
+						if ( ! empty( $repeater_rows ) ) {
+							foreach ( $repeater_rows as $fields ) {
+								foreach ( $fields as $field ) {
+									$field_value = $field->value;
+									$field_type  = isset( $field->field_type ) ? $field->field_type : '';
+
+									if ( in_array( $field_type, array( 'checkbox', 'multi-select' ), true ) ) {
+										$field_value = json_decode( $field_value, true );
+									}
+
+									$field_name  = $field->field_name;
+									$field_value = is_array( $field_value ) ? array( implode( ', ', $field_value ) ) : $field_value;
+
+									$field_key = 'user_registration_' . $field_name;
+
+									if ( array_key_exists( $field_key, $all_meta_for_user ) ) {
+										$all_meta_for_user[ $field_key ] = is_array( $all_meta_for_user[ $field_key ] ) ? array_merge( $all_meta_for_user[ $field_key ], $field_value ) : ( $all_meta_for_user[ $field_key ] . ' - ' . $field_value );
+									} else {
+										$all_meta_for_user[ $field_key ] = $field_value;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	$form_fields = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array(); //phpcs:ignore.
 	if ( ! empty( $form_fields ) ) {
 		foreach ( $form_fields as $field_key => $field_data ) {
-			$value     = get_user_meta( $user_id, $field_key, true );
+			// For repeator export
+			if ( 'export_users' === $action ) {
+				$value = isset( $all_meta_for_user[ $field_key ] ) ? $all_meta_for_user[ $field_key ] : get_user_meta( $user_id, $field_key, true );
+			} else {
+				$value = get_user_meta( $user_id, $field_key, true );
+			}
+
 			$field_key = str_replace( 'user_registration_', '', $field_key );
 
 			if ( is_serialized( $value ) ) {
@@ -2129,11 +2237,12 @@ function ur_get_user_extra_fields( $user_id ) {
 			$name_value[ $field_key ] = $value;
 		}
 	}
+
 	/**
 	 * Filters extra fields associated with a user.
 	 *
 	 * @param array $name_value An array of name-value pairs representing extra fields.
-	 * @param int   $user_id    The user ID associated with the registration process.
+	 * @param int $user_id The user ID associated with the registration process.
 	 */
 	return apply_filters( 'user_registration_user_extra_fields', $name_value, $user_id );
 }
@@ -2141,8 +2250,8 @@ function ur_get_user_extra_fields( $user_id ) {
 /**
  * Get User status like approved, pending.
  *
- * @param  string $user_status Admin approval status of user.
- * @param  string $user_email_status Email confirmation status of user.
+ * @param string $user_status Admin approval status of user.
+ * @param string $user_email_status Email confirmation status of user.
  */
 function ur_get_user_status( $user_status, $user_email_status ) {
 	$status = array();
@@ -2155,14 +2264,15 @@ function ur_get_user_status( $user_status, $user_email_status ) {
 	} else {
 		array_push( $status, 'Approved' );
 	}
+
 	return $status;
 }
 
 /**
  * Get link for back button used on email settings.
  *
- * @param  string $label Label.
- * @param  string $url URL.
+ * @param string $label Label.
+ * @param string $url URL.
  */
 function ur_back_link( $label, $url ) {
 	return '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '">
@@ -2187,9 +2297,10 @@ if ( ! function_exists( 'wp_doing_ajax' ) ) {
 /**
  * Checks if the string is json or not
  *
- * @param  string $str String to check.
- * @since  1.4.2
+ * @param string $str String to check.
+ *
  * @return mixed
+ * @since  1.4.2
  */
 function ur_is_json( $str ) {
 	if ( ! is_string( $str ) ) {
@@ -2197,16 +2308,18 @@ function ur_is_json( $str ) {
 	}
 
 	$json = json_decode( $str );
+
 	return $json && $str != $json && json_last_error() == JSON_ERROR_NONE;
 }
 
 /**
  * Checks if the form contains a date field or not.
  *
- * @deprecated 3.1.3
- * @param  int $form_id     Form ID.
- * @since  1.5.3
+ * @param int $form_id Form ID.
+ *
  * @return void
+ * @since  1.5.3
+ * @deprecated 3.1.3
  */
 function ur_has_date_field( $form_id ) {
 	ur_deprecated_function( 'ur_has_date_field', '3.1.3', 'ur_has_flatpickr_field' );
@@ -2215,9 +2328,10 @@ function ur_has_date_field( $form_id ) {
 /**
  * Checks if the form contains a date and time field or not.
  *
- * @param  int $form_id     Form ID.
- * @since  1.5.3
+ * @param int $form_id Form ID.
+ *
  * @return boolean
+ * @since  1.5.3
  */
 function ur_has_flatpickr_field( $form_id ) {
 
@@ -2241,7 +2355,8 @@ function ur_has_flatpickr_field( $form_id ) {
 /**
  * Get attributes from the shortcode content.
  *
- * @param  string $content     Shortcode content.
+ * @param string $content Shortcode content.
+ *
  * @return array        Array of attributes within the shortcode.
  *
  * @since  1.6.0
@@ -2312,13 +2427,14 @@ function ur_print_js() {
 		unset( $ur_queued_js );
 	}
 }
+
 /**
  * Enqueue UR js.
  *
+ * @param string $code Code to enqueue.
+ *
  * @since 1.1.2
  * Queue some JavaScript code to be output in the footer.
- *
- * @param string $code Code to enqueue.
  */
 function ur_enqueue_js( $code ) {
 	global $ur_queued_js;
@@ -2339,8 +2455,8 @@ function ur_enqueue_js( $code ) {
  *
  * Based on code inside core's upgrade_network() function.
  *
- * @since  1.2.0
  * @return int Number of transients that were cleared.
+ * @since  1.2.0
  */
 function ur_delete_expired_transients() {
 	global $wpdb;
@@ -2373,45 +2489,43 @@ function ur_delete_expired_transients() {
 
 	return absint( $rows + $rows2 );
 }
+
 add_action( 'user_registration_installed', 'ur_delete_expired_transients' );
 
 /**
  * String translation function.
  *
- * @since 1.7.3
- *
  * @param int    $form_id Form ID.
  * @param string $field_id Field ID.
  * @param mixed  $variable To be translated for WPML compatibility.
+ *
+ * @since 1.7.3
  */
 function ur_string_translation( $form_id, $field_id, $variable ) {
-    $context = ( isset( $form_id ) && 0 !== $form_id )
-        ? 'user_registration_' . absint( $form_id )
-        : 'user-registration';
-    $name    = isset( $field_id ) ? $field_id : '';
+	$context = ( isset( $form_id ) && 0 !== $form_id )
+		? 'user_registration_' . absint( $form_id )
+		: 'user-registration';
+	$name    = isset( $field_id ) ? $field_id : '';
 
-    // For handling translation in WPML.
-    if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+	// For handling translation in WPML.
+	if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
 		if ( function_exists( 'icl_register_string' ) ) {
 			icl_register_string( $context, $name, $variable );
 			if ( function_exists( 'icl_t' ) ) {
 				$variable = icl_t( $context, $name, $variable );
 			}
-
 		}
-    }
-
-    // For handling translation in Polylang.
-    elseif ( defined( 'POLYLANG_VERSION' ) ) {
+	} // For handling translation in Polylang.
+	elseif ( defined( 'POLYLANG_VERSION' ) ) {
 		if ( function_exists( 'pll_register_string' ) ) {
 			pll_register_string( $name, $variable, $context );
 			if ( function_exists( 'pll__' ) ) {
 				$variable = pll__( $variable );
 			}
 		}
-    }
+	}
 
-    return $variable;
+	return $variable;
 }
 
 
@@ -2429,17 +2543,17 @@ function ur_get_form_id_by_userid( $user_id ) {
 	if ( isset( $form_id_array[0] ) ) {
 		$form_id = $form_id_array[0];
 	}
+
 	return $form_id;
 }
 
 /**
  * Get source ID through which the given user was supposedly registered.
  *
- * @since 1.9.0
- *
  * @param int $user_id User ID.
  *
  * @return mixed
+ * @since 1.9.0
  */
 function ur_get_registration_source_id( $user_id ) {
 	$user_metas = get_user_meta( $user_id );
@@ -2463,13 +2577,12 @@ function ur_get_registration_source_id( $user_id ) {
 /**
  * Check if a datetime falls in a range of time.
  *
- * @since 1.9.0
- *
  * @param string      $target_date Target date.
  * @param string|null $start_date Start date.
  * @param string|null $end_date End date.
  *
  * @return bool
+ * @since 1.9.0
  */
 function ur_falls_in_date_range( $target_date, $start_date = null, $end_date = null ) {
 	$start_ts       = strtotime( $start_date );
@@ -2499,17 +2612,16 @@ function ur_falls_in_date_range( $target_date, $start_date = null, $end_date = n
 /**
  * Get Post Content By Form ID.
  *
- * @param int $form_id Form Id.
+ * @param int    $form_id Form Id.
  * @param string $form_status The form status.
  *
  * @return array|mixed|null|object
  */
-
-function ur_get_post_content( $form_id, $form_status='publish' ) {
+function ur_get_post_content( $form_id, $form_status = 'publish' ) {
 	$args      = array(
 		'post_type'   => 'user_registration',
 		'post_status' => $form_status,
-		'post__in' => array( $form_id ),
+		'post__in'    => array( $form_id ),
 	);
 	$post_data = get_posts( $args );
 
@@ -2529,8 +2641,8 @@ function ur_get_post_content( $form_id, $form_status='publish' ) {
  *
  * @since 1.9.0
  *
- * @param array $args       Value to merge with $defaults.
- * @param array $defaults   Array that serves as the defaults.
+ * @param array $args Value to merge with $defaults.
+ * @param array $defaults Array that serves as the defaults.
  *
  * @return array    Merged user defined values with defaults.
  */
@@ -2545,6 +2657,7 @@ function ur_parse_args( &$args, $defaults ) {
 			$result[ $k ] = $v;
 		}
 	}
+
 	return $result;
 }
 
@@ -2575,6 +2688,7 @@ function user_registration_email_content_overrider( $form_id, $settings, $messag
 			}
 		}
 	}
+
 	return array( $message, $subject );
 }
 
@@ -2610,7 +2724,6 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 						$seperator = 0 < $key ? ',' : '';
 
 						if ( wp_http_validate_url( $file ) ) {
-
 							$attachment_ids = $attachment_ids . '' . $seperator . '' . attachment_url_to_postid( $file );
 						}
 					}
@@ -2639,6 +2752,7 @@ function ur_get_valid_form_data_format( $new_string, $post_key, $profile, $value
 			'field_key' => $new_string,
 		);
 	}
+
 	return $valid_form_data;
 }
 
@@ -2656,6 +2770,7 @@ function ur_resolve_conflicting_shortcodes_with_aioseo( $conflict_shortcodes ) {
 	);
 
 	$conflict_shortcodes = array_merge( $conflict_shortcodes, $ur_shortcodes );
+
 	return $conflict_shortcodes;
 }
 
@@ -2664,13 +2779,12 @@ add_filter( 'aioseo_conflicting_shortcodes', 'ur_resolve_conflicting_shortcodes_
 /**
  * Parse name values and smart tags
  *
- * @param  int   $user_id User ID.
- * @param  int   $form_id Form ID.
- * @param  array $valid_form_data Form filled data.
- *
- * @since 1.9.6
+ * @param int   $user_id User ID.
+ * @param int   $form_id Form ID.
+ * @param array $valid_form_data Form filled data.
  *
  * @return array
+ * @since 1.9.6
  */
 function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_data ) {
 
@@ -2690,9 +2804,18 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		}
 
 		if ( isset( $form_data->extra_params['field_key'] ) && 'country' === $form_data->extra_params['field_key'] && '' !== $form_data->value ) {
-			$country_class    = ur_load_form_field_class( $form_data->extra_params['field_key'] );
-			$countries        = $country_class::get_instance()->get_country();
-			$form_data->value = isset( $countries[ $form_data->value ] ) ? $countries[ $form_data->value ] : $form_data->value;
+			$isJson = preg_match( '/^\{.*\}$/s', $form_data->value ) ? true : false;
+			if ( $isJson ) {
+				$country_data = json_decode( $form_data->value, true );
+				$country_code = isset( $country_data['country'] ) ? $country_data['country'] : '';
+				$state_code   = isset( $country_data['state'] ) ? $country_data['state'] : '';
+
+				$form_data->value = ur_format_country_field_data( $country_code, $state_code );
+			} else {
+				$country_class    = ur_load_form_field_class( $form_data->extra_params['field_key'] );
+				$countries        = $country_class::get_instance()->get_country();
+				$form_data->value = isset( $countries[ $form_data->value ] ) ? $countries[ $form_data->value ] : $form_data->value;
+			}
 		}
 		/**
 		 * Filter hook allows developers to modify the parsed values for smart tags
@@ -2703,21 +2826,20 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		 */
 		$form_data = apply_filters( 'user_registration_parse_values_for_smart_tags', $form_data );
 
-		if( is_array ( $form_data ) ) {
-			$label = isset( $form_data['label']) ? $form_data['label'] : '';
+		if ( is_array( $form_data ) ) {
+			$label      = isset( $form_data['label'] ) ? $form_data['label'] : '';
 			$field_name = isset( $form_data['field_key'] ) ? $form_data['field_key'] : '';
 			$value      = isset( $form_data['default'] ) ? $form_data['default'] : '';
-			if( 'checkbox' === $field_name && !empty($value)) {
-				$unserialized_value = unserialize($form_data['default'] );
+			if ( 'checkbox' === $field_name && ! empty( $value ) ) {
+				$unserialized_value = unserialize( $form_data['default'] );
 
-				if (is_array($unserialized_value)) {
-					$value = implode(", ", $unserialized_value);
+				if ( is_array( $unserialized_value ) ) {
+					$value = implode( ', ', $unserialized_value );
 				} else {
 					$value = (string) $unserialized_value;
 				}
 			}
-
-		} else{
+		} else {
 			$label      = isset( $form_data->extra_params['label'] ) ? $form_data->extra_params['label'] : '';
 			$field_name = isset( $form_data->field_name ) ? $form_data->field_name : '';
 			$value      = isset( $form_data->value ) ? $form_data->value : '';
@@ -2732,14 +2854,14 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 			$value = ! isset( $value['row_1'] ) ? implode( ',', $value ) : '';
 		}
 
-		$data_html .= '<tr>';
+		$data_html .= '<tr class="user-registration-email__entries-tr">';
 
 		if ( isset( $form_data->field_type ) && 'repeater' === $form_data->field_type ) {
-			$data_html .= '<td>' . $value . '</td></tr>';
+			$data_html .= '<td class="user-registration-email__entries-data">' . $value . '</td></tr>';
 		} elseif ( isset( $form_data->extra_params['field_key'] ) && 'signature' === $form_data->extra_params['field_key'] ) {
-				$data_html .= '<tr><td>' . $label . ' : </td><td><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
+			$data_html .= '<tr class="user-registration-email__entries-tr"><td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data"><img class="profile-preview" alt="Signature" width="50px" height="50px" src="' . ( is_numeric( $value ) ? esc_url( wp_get_attachment_url( $value ) ) : esc_url( $value ) ) . '" /></td></tr>';
 		} else {
-			$data_html .= '<tr><td>' . $label . ' : </td><td>' . $value . '</td></tr>';
+			$data_html .= '<tr class="user-registration-email__entries-tr"><td class="user-registration-email__entries-label">' . $label . ' : </td><td class="user-registration-email__entries-data">' . $value . '</td></tr>';
 		}
 
 		$name_value[ $field_name ] = $value;
@@ -2749,10 +2871,10 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 	/**
 	 * Filters the processed values for a smart tag.
 	 *
-	 * @param array $name_value       An array of name-value pairs representing the smart tag.
-	 * @param array $valid_form_data  An array of valid form data used in the registration process.
-	 * @param int   $form_id          The ID of the user registration form.
-	 * @param int   $user_id          The user ID associated with the registration process.
+	 * @param array $name_value An array of name-value pairs representing the smart tag.
+	 * @param array $valid_form_data An array of valid form data used in the registration process.
+	 * @param int $form_id The ID of the user registration form.
+	 * @param int $user_id The user ID associated with the registration process.
 	 */
 	$name_value = apply_filters( 'user_registration_process_smart_tag', $name_value, $valid_form_data, $form_id, $user_id );
 
@@ -2787,6 +2909,7 @@ function ur_get_field_data_by_field_name( $form_id, $field_name ) {
 			}
 		}
 	}
+
 	return $field_data;
 }
 
@@ -2806,6 +2929,7 @@ if ( ! function_exists( 'user_registration_get_form_fields_for_dropdown' ) ) {
 				}
 			}
 		}
+
 		return $field_array;
 	}
 }
@@ -2820,7 +2944,7 @@ if ( ! function_exists( 'user_registration_pro_get_conditional_fields_by_form_id
 	function user_registration_pro_get_conditional_fields_by_form_id( $form_id, $selected_field_key ) {
 		$args      = array(
 			'post_type'   => 'user_registration',
-			'post_status' => array('publish', 'draft'),
+			'post_status' => array( 'publish', 'draft' ),
 			'post__in'    => array( $form_id ),
 		);
 		$post_data = get_posts( $args );
@@ -2866,6 +2990,7 @@ if ( ! function_exists( 'user_registration_pro_get_conditional_fields_by_form_id
 		}
 		// Unset selected meta key.
 		unset( $fields[ $selected_field_key ] );
+
 		return $fields;
 	}
 }
@@ -2877,10 +3002,12 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 	 * @param array  $connection Connection Data.
 	 * @param string $integration Integration.
 	 * @param int    $form_id Form ID.
+	 *
 	 * @return string
 	 */
 	function user_registration_pro_render_conditional_logic( $connection, $integration, $form_id ) {
-		$output = '<div class="form-row ur-form-settings-section ur-form-settings-' . $integration . '-section">';
+		$output  = '<div class="ur_conditional_logic_container">';
+		$output .= '<div class="form-row ur-form-settings-section ur-form-settings-' . $integration . '-section">';
 		$output .= '<div class="ur-form-settings-section--field">';
 		$output .= '<h4>' . esc_html__( 'Conditional Logic', 'user-registration' ) . '</h4>';
 		$output .= '</div>';
@@ -2902,7 +3029,7 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		$output .= '</div>';
 
 		$output                .= '<div class="form-row ur_conditional_logic_wrapper" data-source="' . esc_attr( $integration ) . '">';
-		$output .= '<label class="ur-label checkbox">' . esc_html__( 'Conditional Rules', 'user-registration' ) . '</label>';
+		$output                .= '<label class="ur-label checkbox">' . esc_html__( 'Conditional Rules', 'user-registration' ) . '</label>';
 		$output                .= '<div class="ur-logic"><p>' . esc_html__( 'Send data only if the following matches.', 'user-registration' ) . '</p></div>';
 		$output                .= '<div class="ur-conditional-wrapper">';
 		$output                .= '<select class="ur_conditional_field" name="ur_conditional_field">';
@@ -2950,6 +3077,8 @@ if ( ! function_exists( 'user_registration_pro_render_conditional_logic' ) ) {
 		}
 		$output .= '</div>';
 		$output .= '</div>';
+		$output .= '</div>';
+
 		return $output;
 	}
 }
@@ -2961,6 +3090,7 @@ if ( ! function_exists( 'user_registration_pro_get_checkbox_choices' ) ) {
 	 *
 	 * @param int    $form_id Form ID.
 	 * @param string $field_name Field Name.
+	 *
 	 * @return array $choices
 	 */
 	function user_registration_pro_get_checkbox_choices( $form_id, $field_name ) {
@@ -2993,8 +3123,9 @@ if ( ! function_exists( 'user_registration_pro_get_field_data' ) ) {
 	/**
 	 * Get all fields data
 	 *
-	 * @param  int    $form_id    Form ID.
-	 * @param  string $field_name Field Name.
+	 * @param int    $form_id Form ID.
+	 * @param string $field_name Field Name.
+	 *
 	 * @return array    $field_data.
 	 */
 	function user_registration_pro_get_field_data( $form_id, $field_name ) {
@@ -3028,6 +3159,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 	 *
 	 * @param [string] $name Name of the extension.
 	 * @param [string] $slug Slug of the extension.
+	 *
 	 * @throws Exception Extension Download and activation unsuccessful message.
 	 */
 	function ur_install_extensions( $name, $slug ) {
@@ -3076,7 +3208,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 					array(
 						'license'   => get_option( 'user-registration_license_key' ),
 						'item_name' => $name,
-						'item_id'  => 167196,
+						'item_id'   => 167196,
 					)
 				)
 			);
@@ -3135,10 +3267,10 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 
 			if ( current_user_can( 'activate_plugin', $install_status['file'] ) ) {
 				if ( is_plugin_inactive( $install_status['file'] ) ) {
-					if( $install_status['file'] === 'user-registration-pro/user-registration.php' ) {
+					if ( $install_status['file'] === 'user-registration-pro/user-registration.php' ) {
 						$status['plugin'] = 'user-registration-pro/user-registration.php';
-						if( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
-							setcookie('urm_license_status', 'pro_activated', time() + 300, '/', '', false, false);
+						if ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
+							setcookie( 'urm_license_status', 'pro_activated', time() + 300, '/', '', false, false );
 						}
 						activate_plugin( $install_status['file'] );
 					}
@@ -3354,6 +3486,7 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 	 * Generate required pages based on missing page options.
 	 *
 	 * @param string $missing_pages JSON string of missing page options.
+	 *
 	 * @return array|WP_Error Array of created pages or WP_Error on failure.
 	 */
 	function ur_generate_required_pages( $missing_pages ) {
@@ -3371,46 +3504,40 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 
 		// Define page configurations
 		$page_configs = array(
-			'user_registration_login_page_id' => array(
-				'name' => 'login',
-				'title' => __( 'Login', 'user-registration' ),
-				'content' => '[user_registration_login]',
+			'user_registration_login_page_id'              => array(
+				'name'                => 'login',
+				'title'               => __( 'Login', 'user-registration' ),
+				'content'             => '[user_registration_login]',
 				'requires_membership' => false,
 			),
-			'user_registration_lost_password_page_id' => array(
-				'name' => 'lost-password',
-				'title' => __( 'Lost Password', 'user-registration' ),
-				'content' => '[user_registration_reset_password_form]',
-				'requires_membership' => false,
-			),
-			'user_registration_reset_password_page_id' => array(
-				'name' => 'reset-password',
-				'title' => __( 'Reset Password', 'user-registration' ),
-				'content' => '[user_registration_reset_password_form]',
+			'user_registration_lost_password_page_id'      => array(
+				'name'                => 'lost-password',
+				'title'               => __( 'Lost Password', 'user-registration' ),
+				'content'             => '[user_registration_lost_password]',
 				'requires_membership' => false,
 			),
 			'user_registration_member_registration_page_id' => array(
-				'name' => 'membership-registration',
-				'title' => __( 'Membership Registration', 'user-registration' ),
-				'content' => '[user_registration_form id="' . get_option( 'user_registration_default_form_page_id', 0 ) . '"]',
+				'name'                => 'membership-registration',
+				'title'               => __( 'Membership Registration', 'user-registration' ),
+				'content'             => '[user_registration_form id="' . get_option( 'user_registration_default_form_page_id', 0 ) . '"]',
 				'requires_membership' => true,
 			),
-			'user_registration_thank_you_page_id' => array(
-				'name' => 'membership-thankyou',
-				'title' => __( 'Membership Thank You', 'user-registration' ),
-				'content' => '[user_registration_membership_thank_you]',
+			'user_registration_thank_you_page_id'          => array(
+				'name'                => 'membership-thankyou',
+				'title'               => __( 'Membership Thank You', 'user-registration' ),
+				'content'             => '[user_registration_membership_thank_you]',
 				'requires_membership' => true,
 			),
-			'user_registration_myaccount_page_id' => array(
-				'name' => 'my-account',
-				'title' => __( 'My Account', 'user-registration' ),
-				'content' => '[user_registration_my_account]',
+			'user_registration_myaccount_page_id'          => array(
+				'name'                => 'my-account',
+				'title'               => __( 'My Account', 'user-registration' ),
+				'content'             => '[user_registration_my_account]',
 				'requires_membership' => false,
 			),
 			'user_registration_membership_pricing_page_id' => array(
-				'name' => 'membership-pricing',
-				'title' => __( 'Membership Pricing', 'user-registration' ),
-				'content' => '[user_registration_groups]',
+				'name'                => 'membership-pricing',
+				'title'               => __( 'Membership Pricing', 'user-registration' ),
+				'content'             => '[user_registration_groups]',
 				'requires_membership' => true,
 			),
 		);
@@ -3439,10 +3566,10 @@ if ( ! function_exists( 'ur_generate_required_pages' ) ) {
 
 			if ( $page_id ) {
 				$created_pages[] = array(
-					'option' => $page_option,
+					'option'  => $page_option,
 					'page_id' => $page_id,
-					'title' => $config['title'],
-					'url' => get_permalink( $page_id )
+					'title'   => $config['title'],
+					'url'     => get_permalink( $page_id ),
 				);
 			}
 		}
@@ -3526,6 +3653,7 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 	 * Find My Account Shortcode.
 	 *
 	 * @param int $login_page_id Login Page ID.
+	 *
 	 * @return int If matched then 1 else 0.
 	 * @since  2.2.7
 	 */
@@ -3546,8 +3674,8 @@ if ( ! function_exists( 'ur_find_my_account_in_page' ) ) {
 		/**
 		 * Filters the result of finding "My Account" in a page.
 		 *
-		 * @param bool  $matched         The result of finding "My Account" in a page.
-		 * @param int   $login_page_id   The ID of the associated login page.
+		 * @param bool $matched The result of finding "My Account" in a page.
+		 * @param int $login_page_id The ID of the associated login page.
 		 */
 		$matched = apply_filters( 'user_registration_find_my_account_in_page', $matched, $login_page_id );
 
@@ -3561,6 +3689,7 @@ if ( ! function_exists( 'ur_find_lost_password_in_page' ) ) {
 	 * Find Lost Password Shortcode.
 	 *
 	 * @param int $lost_password_page_id Lost Password Page ID.
+	 *
 	 * @return int If matched then 1 else 0.
 	 * @since  4.0
 	 */
@@ -3581,8 +3710,8 @@ if ( ! function_exists( 'ur_find_lost_password_in_page' ) ) {
 		/**
 		 * Filters the result of finding "Lost Password" in a page.
 		 *
-		 * @param bool  $matched         The result of finding "Lost Password" in a page.
-		 * @param int   $lost_password_page_id   The ID of the associated lost password page.
+		 * @param bool $matched The result of finding "Lost Password" in a page.
+		 * @param int $lost_password_page_id The ID of the associated lost password page.
 		 */
 		$matched = apply_filters( 'user_registration_find_lost_password_in_page', $matched, $lost_password_page_id );
 
@@ -3633,7 +3762,7 @@ if ( ! function_exists( 'ur_find_reset_password_in_page' ) ) {
 		 * Filters whether the reset password form was found in this page.
 		 *
 		 * @param bool $matched Whether the "Reset Password" form was found in the page.
-		 * @param int  $reset_password_page_id The ID of the associated reset password page.
+		 * @param int $reset_password_page_id The ID of the associated reset password page.
 		 */
 		$matched = apply_filters( 'user_registration_find_reset_password_in_page', $matched, $reset_password_page_id );
 
@@ -3690,12 +3819,14 @@ if ( ! function_exists( 'ur_get_json_file_contents' ) ) {
 	 *
 	 * @param mixed $file File path.
 	 * @param mixed $to_array Returned data in array.
+	 *
 	 * @since  2.2.4
 	 */
 	function ur_get_json_file_contents( $file, $to_array = false ) {
 		if ( $to_array ) {
 			return json_decode( ur_file_get_contents( $file ), true );
 		}
+
 		return json_decode( ur_file_get_contents( $file ) );
 	}
 }
@@ -3728,6 +3859,7 @@ if ( ! function_exists( 'ur_file_get_contents' ) ) {
 	 * UR file get contents.
 	 *
 	 * @param mixed $file File path.
+	 *
 	 * @since  2.2.4
 	 */
 	function ur_file_get_contents( $file ) {
@@ -3740,9 +3872,11 @@ if ( ! function_exists( 'ur_file_get_contents' ) ) {
 
 			if ( $wp_filesystem->exists( $local_file ) ) {
 				$response = $wp_filesystem->get_contents( $local_file );
+
 				return $response;
 			}
 		}
+
 		return;
 	}
 }
@@ -3752,8 +3886,9 @@ if ( ! function_exists( 'crypt_the_string' ) ) {
 	 * Encrypt/Decrypt the provided string.
 	 * Encrypt while setting token and updating to database, decrypt while comparing the stored token.
 	 *
-	 * @param  string $string String to encrypt/decrypt.
-	 * @param  string $action Encrypt/decrypt action. 'e' for encrypt and 'd' for decrypt.
+	 * @param string $string String to encrypt/decrypt.
+	 * @param string $action Encrypt/decrypt action. 'e' for encrypt and 'd' for decrypt.
+	 *
 	 * @return string Encrypted/Decrypted string.
 	 */
 	function crypt_the_string( $string, $action = 'e' ) {
@@ -3799,6 +3934,7 @@ if ( ! function_exists( 'ur_generate_random_key' ) ) {
 		$length              = 32;
 		$allow_special_chars = true;
 		$key                 = wp_generate_password( $length, $allow_special_chars );
+
 		return $key;
 	}
 }
@@ -3817,6 +3953,7 @@ if ( ! function_exists( 'ur_clean_tmp_files' ) ) {
 		 * Filters the lifespan of temporary files cleanup.
 		 *
 		 * @param int $lifespan The default lifespan of temporary files cleanup in seconds.
+		 *
 		 * @return int Modified lifespan for temporary files cleanup in seconds.
 		 */
 		$lifespan = (int) apply_filters( 'user_registration_clean_tmp_files_lifespan', DAY_IN_SECONDS );
@@ -3980,6 +4117,7 @@ if ( ! function_exists( 'ur_is_valid_url' ) ) {
 	 * Checks if url is valid.
 	 *
 	 * @param [string] $url URL.
+	 *
 	 * @return bool
 	 */
 	function ur_is_valid_url( $url ) {
@@ -4004,6 +4142,7 @@ if ( ! function_exists( 'ur_option_checked' ) ) {
 	 *
 	 * @param string $option_name Option Name.
 	 * @param string $default Default Value.
+	 *
 	 * @return boolean
 	 */
 	function ur_option_checked( $option_name = '', $default = '' ) {
@@ -4092,25 +4231,371 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 	function ur_premium_settings_tab() {
 
 		$premium_tabs = array(
-			'woocommerce'                            => array(
-				'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
-				'plugin' => 'user-registration-woocommerce',
-				'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-				'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
+			'email'              => array(
+				'templates' => array(
+					'label'  => esc_html__( 'Email Templates', 'user-registration' ),
+					'plugin' => 'user-registration-email-templates',
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration Email Templates', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Create emails branded that look professional and consistent.',
+						'description' => array(
+							'Choose from 6 ready-made email templates',
+							'Customize layout, colors, and content',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/email-templates/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
+				),
+				'custom-email'       => array(
+					'label'  => esc_html__( 'Custom Email', 'user-registration' ),
+					'plugin' => 'user-registration-email-custom-email',
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration - Custom Email', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Customize and manage email notifications for key membership and registration events.',
+						'description' => array(
+							'Configure scheduled emails for members',
+							'Choose recipients and personalize email content',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/email-notifications/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
+				),
 			),
-			'file_upload'                            => array(
-				'label'  => esc_html__( 'File Uploads', 'user-registration' ),
-				'plugin' => 'user-registration-file-upload',
-				'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
-				'name'   => esc_html__( 'User Registration - File Upload', 'user-registration' ),
+			'registration_login' => array(
+				'social-connect'  => array(
+					'label'  => esc_html__( 'Social Connect', 'user-registration' ),
+					'plugin' => 'user-registration-social-connect',
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration - Social Connect', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Allow users to sign up or log in using social accounts.',
+						'description' => array(
+							'Supports 5 major platforms, including Facebook and Google ',
+							'Configure each social platform individually',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/social-connect/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
+				),
+				'profile-connect' => array(
+					'label'  => esc_html__( 'Profile Connect', 'user-registration' ),
+					'plugin' => 'user-registration-profile-connect',
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration Profile Connect', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Import users from existing registrations into URM.',
+						'description' => array(
+							'Select which forms or sources to import users from',
+							'Map fields to keep user data consistent',
+						),
+						'feature_link' => ' https://wpuserregistration.com/features/profile-connect/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
+				),
+				'invite-code'     => array(
+					'label'  => esc_html__( 'Invite Codes', 'user-registration' ),
+					'plugin' => 'user-registration-invite-codes',
+					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration Invite Codes', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Enable invite-only signups using custom codes.',
+						'description' => array(
+							'Customize popup content and appearance',
+							'Customize layout, colors, and content',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/invite-codes/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
+				),
+				'file-upload'     => array(
+					'label'  => esc_html__( 'File Upload', 'user-registration' ),
+					'plugin' => 'user-registration-file-upload',
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration - File Upload', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Let users upload files during registration.',
+						'description' => array(
+							'Collect profile photos or verification documents',
+							'Support 10+ file types, including PDF and PNG',
+							'Set upload size limits for better control'
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/file-upload/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
+				),
 			),
-			'user-registration-customize-my-account' => array(
-				'label'  => esc_html__( 'Customize My Account', 'user-registration' ),
-				'plugin' => 'user-registration-customize-my-account',
-				'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
-				'name'   => esc_html__( 'User Registration customize my account', 'user-registration' ),
+			'my_account'         => array(
+				'customize-my-account' => array(
+					'label'  => esc_html__( 'Customize My Account', 'user-registration' ),
+					'plugin' => 'user-registration-customize-my-account',
+					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration customize my account', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Personalize the user dashboard to fit your site.',
+						'description' => array(
+							'Edit or replace default dashboard content',
+							'Add custom links and account sections',
+							'Style individual dashboard elements',
+						),
+						'feature_link' => ' https://wpuserregistration.com/features/customize-my-account/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
+				),
+			),
+			'integration'        => array(
+				'email-marketing' => array(
+					'is_collection' => true,
+					'collections'   => array(
+						'activecampaign' => array(
+							'label'  => esc_html__( 'Active Campaign', 'user-registration' ),
+							'plugin' => 'user-registration-activecampaign',
+							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration ActiveCampaign', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Sync members with ActiveCampaign for advanced email automation.',
+								'description' => array(
+									'Automatically subscribe users to ActiveCampaign lists upon registration',
+									'Auto-update subscriber details when members edit their profiles',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/activecampaign/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
+						),
+						'brevo'          => array(
+							'label'  => esc_html__( 'Brevo', 'user-registration' ),
+							'plugin' => 'user-registration-brevo',
+							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration Brevo', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Connect members with Brevo (formerly Sendinblue) for email campaigns.',
+								'description' => array(
+									'Sync member data to Brevo contact lists automatically',
+									'Use conditional logic for targeted list segmentation',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/brevo/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
+						),
+						'convertkit'     => array(
+							'label'  => esc_html__( 'Kit (Previously Convertkit)', 'user-registration' ),
+							'plugin' => 'user-registration-convertkit',
+							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration convertkit', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Grow your email list with Kit integration.',
+								'description' => array(
+									'Map signup form fields to Kit custom fields',
+									'Subscribe users to specific Kit forms, tags, or sequences',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/kit/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
+						),
+						'klaviyo'        => array(
+							'label'  => esc_html__( 'Klaviyo', 'user-registration' ),
+							'plugin' => 'user-registration-klaviyo',
+							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration Klaviyo', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Power your email marketing with Klaviyo integration.',
+								'description' => array(
+									'Auto-sync member details when profiles are updated',
+									'Automatically unsubscribe deleted users from Klaviyo',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/klaviyo/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
+						),
+						'mailchimp'      => array(
+							'label'  => esc_html__( 'Mailchimp', 'user-registration' ),
+							'plugin' => 'user-registration-mailchimp',
+							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration - Mailchimp', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Automatically sync users to Mailchimp audiences upon registration.',
+								'description' => array(
+									'Add custom tags to segment your membership lists',
+									'Map User Registration fields to Mailchimp merge tags',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/mailchimp/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
+
+						),
+						'mailerlite'     => array(
+							'label'  => esc_html__( 'Mailerlite', 'user-registration' ),
+							'plugin' => 'user-registration-mailerlite',
+							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration MailerLite', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => ' Integrate with MailerLite for streamlined email marketing.',
+								'description' => array(
+									'Auto-sync member profile updates to MailerLite',
+									'Create multiple connections for different campaigns',
+								),
+								'feature_link' => ' https://wpuserregistration.com/features/mailerlite/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
+						),
+						'mailpoet'       => array(
+							'label'  => esc_html__( 'Mailpoet', 'user-registration' ),
+							'plugin' => 'user-registration-mailpoet',
+							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration MailPoet', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Connect member signup forms with MailPoet subscriber lists.',
+								'description' => array(
+									'Use conditional logic for targeted list building',
+									'Perfect for WordPress-native email marketing',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/mailpoet/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
+						),
+						'zapier'         => array(
+							'label'  => esc_html__( 'Zapier', 'user-registration' ),
+							'plugin' => 'user-registration-zapier',
+							'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration Zapier', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Connect with 1,500+ apps through Zapier automation.',
+								'description' => array(
+									'Transfer registration data to Google Docs, Trello, Slack, HubSpot, and more',
+									'Trigger actions on user signup, profile update, or deletion',
+									'Create automated workflows without coding ',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/zapier/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							)
+						),
+					),
+					'plan'          => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'plugin'        => '',
+				),
+				'pdf-submission'  => array(
+					'label'  => esc_html__( 'PDF Form Submission', 'user-registration' ),
+					'plugin' => 'user-registration-pdf-form-submission',
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration PDF Form Submission', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Generate and download registration data in PDF format.',
+						'description' => array(
+							'Automatically attach PDF files to admin and user emails on form submission',
+							'Customize PDF templates with header logos and branding',
+						),
+						'feature_link' => ' https://wpuserregistration.com/features/pdf-form-submission/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
+				),
+				'google-sheets'   => array(
+					'label'  => esc_html__( 'Google Sheets', 'user-registration' ),
+					'plugin' => 'user-registration-google-sheets',
+					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration Google Sheets', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Store and manage form data in spreadsheet format in Google Sheets.',
+						'description' => array(
+							'Map User Registration fields to Google Sheets columns',
+							'Use conditional logic to filter which submissions sync',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/google-sheets/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
+				),
+				'salesforce'      => array(
+					'label'  => esc_html__( 'Salesforce', 'user-registration' ),
+					'plugin' => 'user-registration-salesforce',
+					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration Salesforce', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Sync member data with Salesforce CRM automatically.',
+						'description' => array(
+							'Map registration form fields to Salesforce fields',
+							'Support for multiple Salesforce account connections',
+						),
+						'feature_link' => ' https://wpuserregistration.com/features/salesforce/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
+
+				),
+				'geolocation'     => array(
+					'label'  => esc_html__( 'Geolocation', 'user-registration' ),
+					'plugin' => 'user-registration-geolocation',
+					'plan'   => array( 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration Geolocation', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Capture geolocation data automatically when users register.',
+						'description' => array(
+							'View user location data in admin dashboard',
+							'Add Google Maps as address field in registration forms',
+							'Send geolocation data via smart tags in emails',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/geolocation/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					)
+				),
+				'woocommerce'     => array(
+					'label'  => esc_html__( 'WooCommerce', 'user-registration' ),
+					'plugin' => 'user-registration-woocommerce',
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration - WooCommerce', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Add WooCommerce billing and shipping fields to signup form.',
+						'description' => array(
+							'View and edit WooCommerce-related details in one place',
+							'Let users view their order history right from their account page.',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/woocommerce-integration/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					),
+				),
+				'popup'           => array(
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'plugin' => 'user-registration-pro',
+					'upsell' => array(
+						'excerpt' => 'Display registration or login forms in popups.',
+						'description' => array(
+							'Customize popup content and appearance',
+							'Control where the popup shows up',
+						),
+					),
+				),
+				'cloud-storage'   => array(
+					'is_collection' => true,
+					'collections'   => array(
+						'google-drive' => array(
+							'label'  => esc_html__( 'Google Drive', 'user-registration' ),
+							'plugin' => 'user-registration-cloud-storage',
+							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+							'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Store user-uploaded files directly in your preferred cloud storage service.',
+								'description' => array(
+									'Connect signup forms to Dropbox or Google Drive',
+									'Keep your WordPress server clean by offloading storage',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/cloud-storage-integration/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							),
+						),
+						'dropbox'      => array(
+							'label'  => esc_html__( 'Dropbox', 'user-registration' ),
+							'plugin' => 'user-registration-cloud-storage',
+							'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+							'name' => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
+							'upsell' => array(
+								'excerpt' => 'Store user-uploaded files directly in your preferred cloud storage service.',
+								'description' => array(
+									'Connect signup forms to Dropbox or Google Drive',
+									'Keep your WordPress server clean by offloading storage',
+								),
+								'feature_link' => 'https://wpuserregistration.com/features/cloud-storage-integration/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+							),
+						)
+					),
+					'plan' => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'plugin' => 'user-registration-cloud-storage',
+				),
+			),
+			'security' => array(
+				'2fa' => array(
+					'label'  => esc_html__( 'Two Factor Authentication', 'user-registration' ),
+					'plugin' => 'user-registration-two-factor-authentication',
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration - Two Factor Authentication', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Verify user logins with one-time passwords.',
+						'description' => array(
+							'Send OTPs via email or SMS',
+							'Configure verification limits and rules',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/two-factor-authentication',
+					)
+				),
 			),
 		);
+
 		/**
 		 * Filters the premium settings tabs for customization or extension.
 		 *
@@ -4125,87 +4610,203 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 	}
 }
 
-add_action( 'user_registration_settings_tabs', 'ur_display_premium_settings_tab' );
+add_filter( 'user_registration_upgrade_to_pro_setting', 'ur_get_premium_settings_tab' );
 
-if ( ! function_exists( 'ur_display_premium_settings_tab' ) ) {
+if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 
 	/**
-	 * Method to display premium settings tabs.
+	 * Premium settings tabs.
 	 *
-	 * @since 3.0
+	 * @since 5.0
 	 */
-	function ur_display_premium_settings_tab() {
-		$license_data    = ur_get_license_plan();
-		$license_plan    = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
-		$premium_tabs    = ur_premium_settings_tab();
-		$tabs_to_display = array();
-		$tab_html        = '';
+	function ur_get_premium_settings_tab( $settings ) {
+		global $current_tab;
+		global $current_section;
 
-		foreach ( $premium_tabs as $tab => $detail ) {
-			$tooltip_html = '';
-			$button       = '';
-			if ( 'woocommerce' === $tab && ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
-				continue;
-			}
+		$license_data = ur_get_license_plan();
+		$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
+		$premium_tabs = ur_premium_settings_tab();
 
-			if ( ! empty( $license_plan ) ) {
-				$license_plan = trim( str_replace('lifetime', '', strtolower( $license_plan ) ) );
-				if ( ! in_array( $license_plan, $detail['plan'], true ) ) {
-					if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
-						continue;
-					}
-
-					/* translators: %s: License Plan Name. */
-					$tooltip_html = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
-					$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/upgrade/?utm_source=settings-sidebar-right&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade Plan', 'user-registration' ) . '</a>';
-					array_push( $tabs_to_display, $tab );
-				} else {
-					$plugin_name = $detail['name'];
-					$action      = '';
-
-					if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
-						if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
-							$action = 'Activate';
-						} else {
-							continue;
-						}
-					} else {
-						$action = 'Install';
-					}
-
-					/* translators: %s: Addon Name. */
-					$tooltip_html = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, ucwords( str_replace( '-', ' ', $detail['plugin'] ) ) );
-
-					/* translators: %s: Action Name. */
-					$button = '<a href="#" class="user-registration-settings-addon-' . strtolower( $action ) . '" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . sprintf( esc_html__( '%s Addon', 'user-registration' ), $action ) . '</a>';
-					array_push( $tabs_to_display, $tab );
-				}
-			} else {
-
-				if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
-					continue;
-				}
-
-				$tooltip_html = __( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
-				$button       = '<a rel="noreferrer noopener" target="_blank" href="https://wpuserregistration.com/upgrade/?utm_source=settings-sidebar-right&utm_medium=premium-addon-tooltip&utm_campaign=' . UR()->utm_campaign . '">' . esc_html__( 'Upgrade to Pro', 'user-registration' ) . '</a>';
-				array_push( $tabs_to_display, $tab );
-			}
-
-			if ( in_array( $tab, $tabs_to_display, true ) ) {
-				$tab_html .= '<button class="nav-tab ur-nav__link ur-nav-premium" disabled>';
-				$tab_html .= '<span class="ur-tooltip">' . esc_html( $tooltip_html ) . wp_kses_post( $button ) . '</span>';
-				$tab_html .= '<span class="ur-nav__link-icon">';
-				$tab_html .= ur_file_get_contents( '/assets/images/settings-icons/' . $tab . '.svg' );
-				$tab_html .= '</span>';
-				$tab_html .= '<span class="ur-nav__link-label">';
-				$tab_html .= '<p>' . esc_html( $detail['label'] ) . '</p>';
-				$tab_html .= '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="19" height="19" rx="2.5" fill="#5462FF" stroke="#5462FF"/><path d="M10 5L13 13H7L10 5Z" fill="#EFEFEF"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5 7L5.71429 13H14.2857L15 7L10 11.125L5 7ZM14.2857 13.5714H5.71427V15H14.2857V13.5714Z" fill="white"/></svg>';
-				$tab_html .= '</span>';
-				$tab_html .= '</button>';
-			}
+		if ( ! isset( $current_section ) ) {
+			$current_section = apply_filters( 'user_registration_settings_' . $current_tab . '_default_section', '' );
 		}
 
-		echo $tab_html; // phpcs:ignore.WordPress.Security.EscapeOutput.OutputNotEscaped
+		$is_upgradable_section = isset( $premium_tabs[ $current_tab ] [ $current_section ] );
+		if ( $is_upgradable_section ) {
+			$section_details = $premium_tabs[ $current_tab ][ $current_section ];
+			if ( isset( $section_details['is_collection'] ) && ur_string_to_bool( $section_details['is_collection'] ) ) {
+				$settings['sections'] = array();
+				foreach ( $section_details['collections'] as $detail ) {
+					if ( ! empty( $license_plan ) ) {
+						$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
+						if ( ! in_array( $license_plan, $detail['plan'], true ) ) {
+							if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+								continue;
+							}
+							/* translators: %s: License Plan Name. */
+							$description = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
+							$button_text = esc_html__( 'Upgrade Plan', 'user-registration' );
+
+							$settings['sections'][ $detail['plugin'] ] = array(
+								'title'       => $detail['label'],
+								'before_desc' => $description,
+							);
+						} else {
+							$plugin_name = $detail['name'];
+							$action      = '';
+							if ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
+								if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+									$action = 'Activate';
+								} else {
+									continue;
+								}
+							} else {
+								$action = 'Install';
+							}
+							/* translators: %s: Addon Name. */
+							$description = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, ucwords( str_replace( '-', ' ', $detail['plugin'] ) ) );
+
+							/*
+							translators: %s: Action Name. */
+							// $button = '<a href="#" class="user-registration-settings-addon-' . strtolower( $action ) . '" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . sprintf( esc_html__( '%s Addon', 'user-registration' ), $action ) . '</a>';
+							$button_class = 'user-registration-settings-addon-' . strtolower( $action );
+							$button_attrs = array(
+								'data-slug' => $detail['plugin'],
+								'data-name' => $plugin_name,
+							);
+							$button_title = sprintf( esc_html__( '%s Addon', 'user-registration' ), $action );
+
+							$settings['sections'][ $detail['plugin'] ] = array(
+								'is_premium'  => false,
+								'title'       => $detail['label'],
+								'before_desc' => $description,
+								'settings'    => array(
+									array(
+										'id'    => 'ur-install-addon__button',
+										'type'  => 'button',
+										'class' => $button_class,
+										'attrs' => $button_attrs,
+										'title' => $button_title,
+									),
+								),
+							);
+						}
+					} else {
+						if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+							continue;
+						}
+						$description                               = esc_html__( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
+						$current_section_detail = $detail ? array_merge(
+								array(
+									'type'        => 'card',
+									'is_premium'  => true,
+									'title'       => $detail['label'],
+									'class'       => 'ur-upgrade--link',
+								),
+								$detail
+							) : array();
+
+						$settings['sections'][ str_replace( 'user-registration-', '', $detail['plugin'] ) ] = $current_section_detail ?? array();
+					}
+				}
+			} else { // scalar section.
+				$detail = $section_details;
+				if ( ! empty( $license_plan ) ) {
+					$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
+					if ( 'custom-email' === $current_section ) {
+						$feature_slug       = 'user-registration-custom-email';
+						$is_feature_enabled = ur_check_module_activation( 'custom-email' );
+
+						if ( in_array( $license_plan, $detail['plan'], true ) && ! $is_feature_enabled ) {
+							$description  = esc_html__( 'Please activate the Custom Email feature to use this functionality.', 'user-registration' );
+							$button_class = 'user-registration-settings-feature-activate';
+							$button_attrs = array(
+								'data-slug' => $feature_slug,
+								'data-type' => 'feature',
+								'data-name' => $detail['name'],
+							);
+							$button_title = esc_html__( 'Activate Feature', 'user-registration' );
+
+							$settings['sections']['premium_setting_section']['before_desc'] = $description;
+							$settings['sections']['premium_setting_section']['desc']        = false;
+							$settings['sections']['premium_setting_section']['settings']    = array(
+								array(
+									'id'    => 'ur-activate-feature__button',
+									'type'  => 'button',
+									'class' => $button_class,
+									'attrs' => $button_attrs,
+									'title' => $button_title,
+								),
+							);
+							return $settings;
+						}
+					}
+
+					if ( ! in_array( $license_plan, $detail['plan'], true ) ) {
+						if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+							return array();
+						}
+						/* translators: %s: License Plan Name. */
+						$description = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
+						$settings['sections']['premium_setting_section']['before_desc'] = $description;
+						$upgradable_plans                                        = implode( 'plan, ', $detail['plan'] );
+						$settings['sections']['premium_setting_section']['desc'] = sprintf( __( 'To unlock this setting, consider upgrading to %s', 'user-registration ' ), $upgradable_plans );
+					} else {
+						$plugin_name = $detail['name'];
+						$action      = '';
+						if ( 'user-registration-email-custom-email' === $detail['plugin'] ) {
+							$action = 'Activate';
+						} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
+							if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+								$action = 'Activate';
+							} else {
+								return array();
+							}
+						} else {
+							$action = 'Install';
+						}
+						/* translators: %s: Addon Name. */
+						$description = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, ucwords( str_replace( '-', ' ', $detail['plugin'] ) ) );
+
+						/*
+						translators: %s: Action Name. */
+						// $button = '<a href="#" class="user-registration-settings-addon-' . strtolower( $action ) . '" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . sprintf( esc_html__( '%s Addon', 'user-registration' ), $action ) . '</a>';
+						$button_class = 'user-registration-settings-addon-' . strtolower( $action );
+						$button_attrs = array(
+							'data-slug' => $detail['plugin'],
+							'data-name' => $plugin_name,
+						);
+						$button_title = sprintf( esc_html__( '%s Addon', 'user-registration' ), $action );
+
+						$settings['sections']['premium_setting_section']['before_desc'] = $description;
+						$settings['sections']['premium_setting_section']['desc']        = false;
+						$settings['sections']['premium_setting_section']['settings']    = array(
+							array(
+								'id'    => 'ur-install-addon__button',
+								'type'  => 'button',
+								'class' => $button_class,
+								'attrs' => $button_attrs,
+								'title' => $button_title,
+							),
+						);
+					}
+				} else {
+					if ( is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
+						return array();
+					}
+					$description = esc_html__( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
+					$settings['sections']['premium_setting_section']['title']       = $detail['label'];
+					$settings['sections']['premium_setting_section']['before_desc'] = $description;
+
+					if( ! empty( $detail[ 'upsell' ] ) ) {
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'before_desc' ] = '';
+						$settings[ 'sections' ][ 'premium_setting_section' ][ 'upsell' ]      = $detail[ 'upsell' ];
+					}
+				}
+			}
+			return $settings;
+		}
+		return $settings;
 	}
 }
 
@@ -4225,6 +4826,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 	 * Process the login form.
 	 *
 	 * @param string $nonce_value Nonce.
+	 *
 	 * @throws Exception Login errors.
 	 *
 	 * @since 3.0
@@ -4233,13 +4835,13 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 		try {
 			// Custom error messages.
 			$messages = array(
-				'empty_username'   => get_option( 'user_registration_message_username_required', esc_html__( 'Username is required.', 'user-registration' ) ),
-				'empty_password'   => get_option( 'user_registration_message_empty_password', null ),
-				'invalid_username' => get_option( 'user_registration_message_invalid_username', null ),
-				'unknown_email'    => get_option( 'user_registration_message_unknown_email', esc_html__( 'A user could not be found with this email address.', 'user-registration' ) ),
-				'pending_approval' => get_option( 'user_registration_message_pending_approval', null ),
-				'denied_access'    => get_option( 'user_registration_message_denied_account', null ),
-				'user_disabled'    => esc_html__( 'Sorry! You are disabled.Please Contact Your Administrator.', 'user-registration' ),
+				'empty_username'     => get_option( 'user_registration_message_username_required', esc_html__( 'Username is required.', 'user-registration' ) ),
+				'empty_password'     => get_option( 'user_registration_message_empty_password', null ),
+				'invalid_username'   => get_option( 'user_registration_message_invalid_username', null ),
+				'unknown_email'      => get_option( 'user_registration_message_unknown_email', esc_html__( 'A user could not be found with this email address.', 'user-registration' ) ),
+				'pending_approval'   => get_option( 'user_registration_message_pending_approval', null ),
+				'denied_access'      => get_option( 'user_registration_message_denied_account', null ),
+				'user_disabled'      => esc_html__( 'Sorry! You are disabled.Please Contact Your Administrator.', 'user-registration' ),
 				'incorrect_password' => get_option( 'user_registration_message_incorrect_password', esc_html__( 'The password you entered for the %label% %email% is incorrect.', 'user-registration' ) ),
 			);
 
@@ -4335,7 +4937,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					$roles = isset( $user_details->roles ) ? (array) $user_details->roles : array();
 
 					if ( 0 !== $page_id && in_array( $role, $roles ) ) {
-						$redirect_url = get_permalink( $page_id );
+						$redirect_url     = get_permalink( $page_id );
 						$post['redirect'] = $redirect_url;
 					}
 				}
@@ -4364,8 +4966,8 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			 * based on the original validation error, username, and password submitted.
 			 *
 			 * @param WP_Error $validation_error The original validation error object.
-			 * @param string   $username         The sanitized username submitted during registration.
-			 * @param string   $password         The sanitized password submitted during registration.
+			 * @param string $username The sanitized username submitted during registration.
+			 * @param string $password The sanitized password submitted during registration.
 			 */
 			$validation_error = apply_filters( 'user_registration_process_login_errors', $validation_error, sanitize_user( wp_unslash( $post['username'] ) ), sanitize_user( $post['password'] ) );
 
@@ -4374,7 +4976,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 			}
 
 			if ( empty( $username ) ) {
-				throw new Exception( '<strong>' . esc_html__( 'ERROR:',  'user-registration' ) . '</strong>' . $messages['empty_username'] );
+				throw new Exception( '<strong>' . esc_html__( 'ERROR:', 'user-registration' ) . '</strong>' . $messages['empty_username'] );
 			}
 
 			if ( is_email( $username ) && apply_filters( 'user_registration_get_username_from_email', true ) ) {
@@ -4411,9 +5013,9 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 
 			// To check the specific login.
 			if ( 'email' === get_option( 'user_registration_general_setting_login_options_with', array() ) ) {
-				$user_data                = get_user_by( 'email', $username );
+				$user_data = get_user_by( 'email', $username );
 				if ( empty( $user_data ) ) {
-					if( empty( $messages['unknown_email'] ) ) {
+					if ( empty( $messages['unknown_email'] ) ) {
 						$messages['unknown_email'] = esc_html__( 'A user could not be found with this email address.', 'user-registration' );
 					}
 
@@ -4440,7 +5042,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					$user->errors['empty_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['empty_password'] );
 				}
 				if ( ! empty( $user->errors['invalid_username'] ) && ! empty( $messages['invalid_username'] ) ) {
-					$user->errors['invalid_username'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['invalid_username']);
+					$user->errors['invalid_username'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['invalid_username'] );
 				}
 				if ( ! empty( $user->errors['invalid_email'] ) && ! empty( $messages['unknown_email'] ) ) {
 					$user->errors['invalid_email'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['unknown_email'] );
@@ -4460,7 +5062,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					}
 
 					$messages['incorrect_password'] = str_replace( '%label%', $label, $messages['incorrect_password'] );
-					$messages['incorrect_password'] = str_replace( "%email%", $login_data['user_login'], $messages['incorrect_password'] );
+					$messages['incorrect_password'] = str_replace( '%email%', $login_data['user_login'], $messages['incorrect_password'] );
 
 					$user->errors['incorrect_password'][0] = sprintf( '<strong>%s:</strong> %s', __( 'ERROR', 'user-registration' ), $messages['incorrect_password'] );
 				}
@@ -4469,8 +5071,8 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				$message = str_replace( '<strong>' . esc_html( $login_data['user_login'] ) . '</strong>', '<strong>' . esc_html( $username ) . '</strong>', $message );
 				throw new Exception( $message );
 			} elseif ( isset( $user->ID ) && $is_disabled = get_user_meta( $user->ID, 'ur_disable_users', true ) ) {
-					wp_logout();
-					throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['user_disabled'] );
+				wp_logout();
+				throw new Exception( '<strong>' . esc_html__( 'ERROR: ', 'user-registration' ) . '</strong>' . $messages['user_disabled'] );
 
 			} else {
 
@@ -4479,7 +5081,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				} elseif ( ! empty( $post['redirect'] ) ) {
 					$redirect = esc_url_raw( wp_unslash( $post['redirect'] ) );
 				} elseif ( wp_get_raw_referer() ) {
-					if( get_permalink( get_option( 'user_registration_login_page_id' ) ) === wp_get_raw_referer() || '/login/' === wp_get_raw_referer() ) {
+					if ( get_permalink( get_option( 'user_registration_login_page_id' ) ) === wp_get_raw_referer() || '/login/' === wp_get_raw_referer() ) {
 						$redirect = ur_get_my_account_url();
 					} else {
 						$redirect = wp_get_raw_referer();
@@ -4491,8 +5093,8 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				/**
 				 * Filters the login redirection.
 				 *
-				 * @param string   $redirect The original redirect URL after successful login.
-				 * @param WP_User  $user     The user object representing the newly registered user.
+				 * @param string $redirect The original redirect URL after successful login.
+				 * @param WP_User $user The user object representing the newly registered user.
 				 */
 				$redirect = apply_filters( 'user_registration_login_redirect', $redirect, $user );
 
@@ -4527,29 +5129,32 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				 *
 				 * @param string $message The original error message displayed on the login screen.
 				 */
-				add_filter( "user_registration_passwordless_login_notice", function( $err_msg ) use ($message) {
+				add_filter(
+					'user_registration_passwordless_login_notice',
+					function ( $err_msg ) use ( $message ) {
 						return $message;
-				}, 10, 1 );
+					},
+					10,
+					1
+				);
 			} else {
 
 				if ( ur_is_ajax_login_enabled() && empty( $_POST['resubmitted'] ) ) {
-                    wp_send_json_error(
+					wp_send_json_error(
 						array(
 							'message' => apply_filters( 'login_errors', $message ),
 						)
 					);
 				}
 
-
 				$error_message = apply_filters( 'login_errors', $message );
-				$error_key = 'ur_login_error_' . uniqid();
+				$error_key     = 'ur_login_error_' . uniqid();
 				set_transient( $error_key, $error_message, 300 ); // 5 minutes
 
 				/**
 				 * Triggered when a user fails to log in during the user registration process.
 				 */
 				do_action( 'user_registration_login_failed' );
-
 
 				$redirect_url = wp_get_raw_referer() ? wp_get_raw_referer() : ur_get_my_account_url();
 				$redirect_url = add_query_arg( 'urm_error', $error_key, $redirect_url );
@@ -4562,7 +5167,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 }
 
 if ( ! function_exists( 'ur_process_registration' ) ) {
-	function ur_process_registration($nonce_value) {
+	function ur_process_registration( $nonce_value ) {
 		/**
 		 * Filter to modify user capability.
 		 * Default value is 'create_users'.
@@ -4580,9 +5185,9 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 			);
 		}
 
-		if ( ! check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) && empty($_POST['ur_fallback_submit']) ) {
+		if ( ! check_ajax_referer( 'user_registration_form_data_save_nonce', 'security', false ) && empty( $_POST['ur_fallback_submit'] ) ) {
 			$logger->error( __( 'Nonce verification failed.', 'user-registration' ), array( 'source' => 'form-submission' ) );
-            wp_send_json_error(
+			wp_send_json_error(
 				array(
 					'message' => __( 'Nonce error, please reload.', 'user-registration' ),
 				)
@@ -4590,13 +5195,16 @@ if ( ! function_exists( 'ur_process_registration' ) ) {
 		}
 
 		$form_id = isset( $_POST['form_id'] ) ? absint( $_POST['form_id'] ) : 0;
-		$logger->info( __( 'Processing form submission.', 'user-registration' ), array(
-			'source'  => 'form-submission',
-			'form_id' => $form_id
-		) );
-		$nonce               = $nonce_value;
-		$captcha_response    = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
-		$flag                = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
+		$logger->info(
+			__( 'Processing form submission.', 'user-registration' ),
+			array(
+				'source'  => 'form-submission',
+				'form_id' => $form_id,
+			)
+		);
+		$nonce            = $nonce_value;
+		$captcha_response = isset( $_POST['captchaResponse'] ) ? ur_clean( wp_unslash( $_POST['captchaResponse'] ) ) : ''; //phpcs:ignore
+		$flag             = wp_verify_nonce( $nonce, 'ur_frontend_form_id-' . $form_id );
 
 		$recaptcha_enabled   = ur_string_to_bool( ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false ) );
 		$recaptcha_type      = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
@@ -4742,7 +5350,8 @@ if ( ! function_exists( 'paypal_generate_redirect_url' ) ) {
 	/**
 	 * Regenerate PayPal redirect URL to pay after
 	 *
-	 * @param  int $user_id User Id.
+	 * @param int $user_id User Id.
+	 *
 	 * @return string redirect url
 	 */
 	function paypal_generate_redirect_url( $user_id ) {
@@ -4925,6 +5534,7 @@ if ( ! function_exists( 'ur_generate_onetime_token' ) ) {
 	 * @param string $action The action for which to generate the token.
 	 * @param int    $key_length The length of the random key to be generated. Defaults to 32.
 	 * @param int    $expiration_time The duration of the token's validity in minutes. Defaults to 60.
+	 *
 	 * @return string The generated one-time token.
 	 */
 	function ur_generate_onetime_token( $user_id = 0, $action = '', $key_length = 32, $expiration_time = 60 ) {
@@ -5013,9 +5623,10 @@ if ( ! function_exists( 'ur_get_ip_address' ) ) {
 			// Proxy servers can send through this header like this: X-Forwarded-For: client1, proxy1, proxy2
 			// Make sure we always only send through the first IP in the list which should always be the client IP.
 			return (string) rest_is_ip_address( trim( current( preg_split( '/[,:]/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ) ); // WPCS: input var ok, CSRF ok.
-		} elseif (isset($_SERVER['REMOTE_ADDR'])) { // @codingStandardsIgnoreLine
-			return sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])); // @codingStandardsIgnoreLine
+		} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) { // @codingStandardsIgnoreLine
+			return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ); // @codingStandardsIgnoreLine
 		}
+
 		return '';
 	}
 }
@@ -5048,6 +5659,14 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 	 * @param string $template Email Template id.
 	 */
 	function user_registration_process_email_content( $email_content, $template = '' ) {
+
+		if ( UR_PRO_ACTIVE ) {
+			// Delegate to pro function if available to use header/footer wrapper.
+			if ( function_exists( 'ur_pro_user_registration_process_email_content' ) ) {
+				return ur_pro_user_registration_process_email_content( $email_content, $template );
+			}
+		}
+
 		// Check if email template is selected.
 		if ( '' !== $template && 'none' !== $template ) {
 			/**
@@ -5058,7 +5677,7 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			 * an opportunity to customize the email content based on the original content and the template.
 			 *
 			 * @param string $email_content The original content of the email template.
-			 * @param string $template      The template being used for the email.
+			 * @param string $template The template being used for the email.
 			 */
 			$email_content = apply_filters( 'user_registration_email_template_message', $email_content, $template );
 		} else {
@@ -5076,18 +5695,18 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			$email_body_width = apply_filters( 'user_registration_email_body_width', $default_width );
 			ob_start();
 			?>
-<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
-	<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
-		style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
-		<tbody>
-			<tr>
-				<td colspan="2" style="text-align: left;">
-					<?php echo wp_kses_post( $email_content ); ?>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-</div>
+			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
+				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
+						style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+					<tbody>
+					<tr>
+						<td colspan="2" style="text-align: left;">
+							<?php echo wp_kses_post( $email_content ); ?>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
 			<?php
 			$email_content = wp_kses_post( ob_get_clean() );
 		}
@@ -5096,13 +5715,158 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
+	/**
+	 * Wrap email body content with responsive email wrapper.
+	 *
+	 * @param string $body_content Email body content to wrap.
+	 *
+	 * @return string Wrapped email content.
+	 */
+	function ur_wrap_email_body_content( $body_content ) {
+		// Check if we're in editor context - exclude CSS when displaying editor on settings page.
+		// Include CSS for preview, email sending, cron, CLI, and AJAX email actions.
+		$is_preview       = isset( $_GET['ur_email_preview'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$current_screen   = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		$is_settings_page = $current_screen && 'user-registration_page_user-registration-settings' === $current_screen->id;
+		$is_email_action  = isset( $_REQUEST['action'] ) && (
+			'ur_send_test_email' === $_REQUEST['action'] ||
+			strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		);
+
+		// Only exclude CSS when on settings page displaying editor (not when sending emails).
+		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action &&
+							! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
+							! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
+
+		// Responsive CSS styles for email template - only include when not in editor context.
+		$responsive_styles = '';
+		if ( ! $is_editor_context ) {
+			$responsive_styles = '<style type="text/css">
+	/* Responsive Email Styles - Scoped to email wrapper only */
+	@media only screen and (max-width: 600px) {
+		.email-wrapper-outer {
+			padding: 20px 0 !important;
+		}
+		.email-wrapper-inner {
+			width: 100% !important;
+			max-width: 100% !important;
+			margin: 0 !important;
+			border-radius: 0 !important;
+		}
+		.email-header {
+			padding: 20px 15px !important;
+			border-radius: 0 !important;
+		}
+		.email-body {
+			padding: 25px 15px !important;
+		}
+		.email-footer {
+			padding: 20px 15px !important;
+		}
+		.email-logo img {
+			max-width: 150px !important;
+			max-height: 50px !important;
+		}
+		.email-header-text {
+			font-size: 16px !important;
+			margin-top: 10px !important;
+		}
+		.email-footer p {
+			font-size: 12px !important;
+		}
+		.email-footer a {
+			font-size: 13px !important;
+		}
+	}
+	@media only screen and (max-width: 480px) {
+		.email-wrapper-outer {
+			padding: 10px 0 !important;
+		}
+		.email-header {
+			padding: 15px 10px !important;
+		}
+		.email-body {
+			padding: 20px 10px !important;
+		}
+		.email-footer {
+			padding: 15px 10px !important;
+		}
+		.email-logo img {
+			max-width: 120px !important;
+			max-height: 40px !important;
+		}
+		.email-header-text {
+			font-size: 14px !important;
+		}
+	}
+</style>';
+		}
+
+		// Check if this is a preview and set width to 600px.
+		$is_preview  = isset( $_GET['ur_email_preview'] ) && 'email_template_option' === sanitize_text_field( wp_unslash( $_GET['ur_email_preview'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$email_width = $is_preview ? '600px' : 'unset';
+		$max_width   = $is_preview ? '600px' : '600px'; // Max width for better readability on all devices.
+
+		return $responsive_styles . '
+	<div class="email-wrapper-outer" style="font-family: Arial, sans-serif; padding: 100px 0;">
+	<div class="email-wrapper-inner" style="width: ' . esc_attr( $email_width ) . '; max-width: ' . esc_attr( $max_width ) . '; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+	<div class="email-body" style="padding: 30px; background-color: #ffffff;">' . $body_content . '</div></div></div>';
+	}
+}
+
+if ( ! function_exists( 'ur_unwrap_email_body_content' ) ) {
+	/**
+	 * Unwrap email body content by removing wrapper HTML and style tags.
+	 * Used when loading email content into the editor.
+	 *
+	 * @param string $wrapped_content Wrapped email content.
+	 *
+	 * @return string Unwrapped email content.
+	 */
+	function ur_unwrap_email_body_content( $wrapped_content ) {
+		if ( empty( $wrapped_content ) ) {
+			return $wrapped_content;
+		}
+
+		$content = $wrapped_content;
+
+		// Remove style tags (including those with type="text/css").
+		$content = preg_replace( '/<style[^>]*>.*?<\/style>/is', '', $content );
+
+		// Check if content contains email wrapper structure.
+		if ( strpos( $content, 'email-wrapper-outer' ) !== false || strpos( $content, 'email-body' ) !== false ) {
+			// Pattern to match: <div...class="...email-body...">CONTENT</div> followed by closing divs
+			// Use a pattern that matches the email-body div and extracts its content.
+			if ( preg_match( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>(.*)<\/div>\s*<\/div>\s*<\/div>/is', $content, $matches ) ) {
+				$content = $matches[1];
+			} elseif ( preg_match( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>(.*?)<\/div>/is', $content, $matches ) ) {
+				// Fallback: just get content from email-body div (may have nested divs).
+				$content = $matches[1];
+			} else {
+				// Last resort: Remove wrapper divs manually.
+				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-wrapper-outer[^"\']*["\'][^>]*>/is', '', $content );
+				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-wrapper-inner[^"\']*["\'][^>]*>/is', '', $content );
+				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>/is', '', $content );
+				// Remove closing divs at the end (up to 3 closing divs).
+				$content = preg_replace( '/(<\/div>\s*){1,3}\s*$/is', '', $content );
+			}
+		}
+
+		// Clean up any extra whitespace.
+		$content = trim( $content );
+
+		return $content;
+	}
+}
+
 if ( ! function_exists( 'ur_email_preview_link' ) ) {
 
 	/**
 	 * Get link for preview email button used on email settings.
 	 *
-	 * @param  string $label Label.
-	 * @param  string $email_id Email id.
+	 * @param string $label Label.
+	 * @param string $email_id Email id.
 	 */
 	function ur_email_preview_link( $label, $email_id ) {
 		$url = add_query_arg(
@@ -5154,7 +5918,7 @@ if ( ! function_exists( 'ur_parse_and_update_hidden_field' ) ) {
 					 * of the smart tags.
 					 *
 					 * @param string $content The original content containing smart tags.
-					 * @param array  $values  The values of smart tags processed during registration.
+					 * @param array $values The values of smart tags processed during registration.
 					 */
 					$content = apply_filters( 'user_registration_process_smart_tags', $content, $values );
 					update_user_meta( $user_id, $field_name, $content );
@@ -5180,8 +5944,10 @@ if ( ! function_exists( 'ur_maybe_unserialize' ) ) {
 		if ( is_serialized( $data ) ) {
 			if ( version_compare( PHP_VERSION, '7.1.0', '>=' ) ) {
 				$options = wp_parse_args( $options, array( 'allowed_classes' => false ) );
+
 				return @unserialize( trim( $data ), $options ); //phpcs:ignore.
 			}
+
 			return @unserialize( trim( $data ) ); //phpcs:ignore.
 		}
 
@@ -5196,6 +5962,7 @@ if ( ! function_exists( 'user_registration_conditional_user_meta_filter' ) ) {
 	 * @param array $valid_form_data Form Data.
 	 * @param int   $user_id User Id.
 	 * @param int   $form_id Form Id.
+	 *
 	 * @return array array of form data.
 	 *
 	 * @since 3.0.4
@@ -5214,7 +5981,7 @@ if ( ! function_exists( 'user_registration_conditional_user_meta_filter' ) ) {
 
 		$hidden_array_field = json_decode( stripslashes( $hidden_field ) );
 
-		if ( isset( $_POST['action'] ) && 'user_registration_user_form_submit' ===  $_POST['action'] ) { //phpcs:ignore.
+		if ( isset( $_POST['action'] ) && 'user_registration_user_form_submit' === $_POST['action'] ) { //phpcs:ignore.
 			foreach ( $hidden_array_field as $field ) {
 				$field_name = $field;
 				if ( in_array( $field_name, array_keys( $valid_form_data ) ) ) {
@@ -5250,9 +6017,10 @@ if ( ! function_exists( 'ur_get_ip_address' ) ) {
 			// Proxy servers can send through this header like this: X-Forwarded-For: client1, proxy1, proxy2.
 			// Make sure we always only send through the first IP in the list which should always be the client IP.
 			return (string) rest_is_ip_address( trim( current( preg_split( '/[,:]/', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) ) ); // WPCS: input var ok, CSRF ok.
-		} elseif (isset($_SERVER['REMOTE_ADDR'])) { // @codingStandardsIgnoreLine
-			return sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])); // @codingStandardsIgnoreLine
+		} elseif ( isset( $_SERVER['REMOTE_ADDR'] ) ) { // @codingStandardsIgnoreLine
+			return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ); // @codingStandardsIgnoreLine
 		}
+
 		return '';
 	}
 }
@@ -5264,7 +6032,7 @@ if ( ! function_exists( 'ur_get_all_page_slugs' ) ) {
 	function ur_get_all_page_slugs() {
 		$args = array(
 			'post_type'      => 'page',
-			'posts_per_page' => -1,
+			'posts_per_page' => - 1,
 		);
 
 		$pages = get_pages( $args );
@@ -5284,6 +6052,7 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 	 * Add plugin specific links to the admin bar menu.
 	 *
 	 * @param [WP_Admin_Bar] $wp_admin_bar Admin Bar.
+	 *
 	 * @return void
 	 */
 	function ur_add_links_to_top_nav( $wp_admin_bar ) {
@@ -5303,7 +6072,8 @@ if ( ! function_exists( 'ur_add_links_to_top_nav' ) ) {
 				'id'     => 'user-registration-menu',
 				'parent' => null,
 				'group'  => null,
-				'title'  => __( 'User Registration', 'user-registration' ), // you can use img tag with image link. it will show the image icon Instead of the title.
+				'title'  => __( 'User Registration', 'user-registration' ),
+				// you can use img tag with image link. it will show the image icon Instead of the title.
 				'href'   => admin_url( 'admin.php?page=user-registration' ),
 			)
 		);
@@ -5412,9 +6182,9 @@ if ( ! function_exists( 'ur_array_clone' ) ) {
 	/**
 	 * Clone Array or Object
 	 *
-	 * @since 3.0.5
-	 *
 	 * @param  [mixed] $array Array to clone.
+	 *
+	 * @since 3.0.5
 	 */
 	function ur_array_clone( $array ) {
 		if ( is_object( $array ) ) {
@@ -5423,6 +6193,7 @@ if ( ! function_exists( 'ur_array_clone' ) ) {
 		if ( ! is_array( $array ) ) {
 			return $array;
 		}
+
 		return array_map(
 			function ( $element ) {
 				return ( ( is_array( $element ) )
@@ -5436,6 +6207,7 @@ if ( ! function_exists( 'ur_array_clone' ) ) {
 			$array
 		);
 	}
+
 	if ( ! function_exists( 'ur_unlink_user_profile_pictures' ) ) {
 		/**
 		 * Remove user uploaded profile pictures and related thumbnail.
@@ -5500,9 +6272,9 @@ if ( ! function_exists( 'ur_automatic_user_login' ) ) {
 	/**
 	 * Automatically login users.
 	 *
-	 * @since 3.1.5
-	 *
 	 * @param object $user The user.
+	 *
+	 * @since 3.1.5
 	 */
 	function ur_automatic_user_login( $user ) {
 		wp_clear_auth_cookie();
@@ -5512,8 +6284,8 @@ if ( ! function_exists( 'ur_automatic_user_login' ) ) {
 		/**
 		 * Filters the login redirection.
 		 *
-		 * @param string   $redirect The original redirect URL after successful login.
-		 * @param WP_User  $user     The user object representing the newly registered user.
+		 * @param string $redirect The original redirect URL after successful login.
+		 * @param WP_User $user The user object representing the newly registered user.
 		 */
 		$redirect = apply_filters( 'user_registration_login_redirect', ur_get_my_account_url(), $user );
 		if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) {
@@ -5533,9 +6305,9 @@ if ( ! function_exists( 'ur_resend_verification_email' ) ) {
 	/**
 	 * This function will send email verification email to the user.
 	 *
-	 * @since 3.1.5
-	 *
 	 * @param int $user_id User ID.
+	 *
+	 * @since 3.1.5
 	 */
 	function ur_resend_verification_email( $user_id ) {
 		$user    = get_user_by( 'id', $user_id );
@@ -5562,12 +6334,12 @@ if ( ! function_exists( 'ur_merge_translations' ) ) {
 	/**
 	 * Merge Addons Translation in Pro text domain.
 	 *
-	 * @since 4.1.5
-	 *
 	 * @param string $source_dir Addon Language Source Directory.
 	 * @param string $destination_dir Pro Language Directory.
 	 * @param string $file_extension File Extentions.
 	 * @param string $text_domain Existing Text Domain/ Addon slug.
+	 *
+	 * @since 4.1.5
 	 */
 	function ur_merge_translations( $source_dir, $destination_dir, $file_extension, $text_domain ) {
 		$source_files = glob( $source_dir . '/*.' . $file_extension );
@@ -5606,12 +6378,30 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 		$form_key_list  = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 		$form_validator = new UR_Form_Validation();
 
+		if ( preg_match( '/^country_/', $data->field_name ) && in_array( $data->field_name, $form_key_list, true ) ) {
+			$field_data = array(
+				'country' => $data->value,
+			);
+
+			foreach ( $form_data as $state ) {
+				switch ( $state->field_name ) {
+					case $data->field_name . '_state':
+						$field_data['state'] = ! empty( $state->value ) ? $state->value : '';
+						break;
+
+					default:
+						break;
+				}
+			}
+			$data->value = json_encode( $field_data );
+		}
+
 		if ( in_array( $data->field_name, $form_key_list, true ) ) {
 			$form_data_index    = array_search( $data->field_name, $form_key_list, true );
 			$single_form_field  = $form_field_data[ $form_data_index ];
 			$general_setting    = isset( $single_form_field->general_setting ) ? $single_form_field->general_setting : new stdClass();
 			$single_field_key   = $single_form_field->field_key;
-			$single_field_label = isset( $general_setting->label ) ? ur_string_translation( $form_id, 'user_registration_single_field_label', $general_setting->label) : '';
+			$single_field_label = isset( $general_setting->label ) ? ur_string_translation( $form_id, 'user_registration_single_field_label', $general_setting->label ) : '';
 			$single_field_value = isset( $data->value ) ? $data->value : '';
 			$data->extra_params = array(
 				'field_key' => $single_field_key,
@@ -5668,7 +6458,7 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 				/**
 				 * Action validate email whitelist.
 				 *
-				 * @param array $data->value The data value.
+				 * @param array $data ->value The data value.
 				 * @param string $filter_hook The dynamic Filter hook.
 				 * @param array $single_form_field The single form field.
 				 * @param int $form_id The form ID.
@@ -5735,6 +6525,7 @@ if ( ! function_exists( 'user_registration_validate_form_field_data' ) ) {
 			}
 			remove_all_filters( $filter_hook );
 		}
+
 		return array( $response_array, $valid_form_data );
 	}
 }
@@ -5756,7 +6547,7 @@ if ( ! function_exists( 'user_registration_validate_edit_profile_form_field_data
 		$skippable_fields = $form_validator->get_update_profile_validation_skippable_fields( $form_field_data );
 		$form_key_list    = wp_list_pluck( wp_list_pluck( $form_field_data, 'general_setting' ), 'field_name' );
 
-		$single_field_name = strpos( $data->field_name, 'user_registration_' ) !== -1 ? trim( str_replace( 'user_registration_', '', $data->field_name ) ) : $data->field_name;
+		$single_field_name = strpos( $data->field_name, 'user_registration_' ) !== - 1 ? trim( str_replace( 'user_registration_', '', $data->field_name ) ) : $data->field_name;
 
 		if ( ! in_array( $single_field_name, $skippable_fields, true ) && in_array( $single_field_name, $form_key_list, true ) ) {
 			$form_data_index   = array_search( $single_field_name, $form_key_list, true );
@@ -5878,7 +6669,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 		$user_id = ! empty( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : get_current_user_id();
 		$form_id = ur_get_form_id_by_userid( $user_id );
 		$width   = floor( 100 / count( $data ) ) - count( $data );
-		$is_edit = isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'edit' && $user_id !== get_current_user_id();
+		$is_edit = isset( $_REQUEST['action'] ) && ( $_REQUEST['action'] === 'edit' || $_REQUEST['action'] === 'view' ) && $user_id !== get_current_user_id();
 
 		foreach ( $data as $grid_key => $grid_data ) {
 			$found_field = false;
@@ -5899,7 +6690,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 
 			if ( $found_field ) {
 				?>
-			<div class="ur-form-grid ur-grid-<?php echo esc_attr( ( $grid_key + 1 ) ); ?>" style="width:<?php echo esc_attr( $width ); ?>%;">
+				<div class="ur-form-grid ur-grid-<?php echo esc_attr( ( $grid_key + 1 ) ); ?>" style="width:<?php echo esc_attr( $width ); ?>%;">
 				<?php
 			}
 
@@ -5951,279 +6742,295 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 						continue;
 					}
 
+					if ( 'country' === $single_item->field_key && isset( $single_item->advance_setting->enable_state ) ) {
+						$field['enable_state'] = ur_string_to_bool( $single_item->advance_setting->enable_state );
+					}
+
 					// Unset multiple choice and single item.
 					if ( 'subscription_plan' === $single_item->field_key || 'multiple_choice' === $single_item->field_key || 'single_item' === $single_item->field_key || 'captcha' === $single_item->field_key || 'stripe_gateway' === $single_item->field_key ) {
 						continue;
 					}
 
 					?>
-					<div class="ur-field-item field-<?php echo esc_attr( $single_item->field_key );?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>"  <?php echo $cl_props; //PHPCS:ignore?> data-field-id="<?php echo esc_attr( $field_id ); ?>" data-ref-id="<?php echo esc_attr( $key ); ?>">
-					<?php
-					$readonly_fields = ur_readonly_profile_details_fields();
-					if ( $is_edit ) {
-						unset( $readonly_fields['user_pass'] );
-					}
-					if ( isset( $field['field_key'] ) && array_key_exists( $field['field_key'], $readonly_fields ) ) {
-						$field['custom_attributes']['readonly'] = 'readonly';
-						if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {
-							$field['value'] = $readonly_fields[ $field['field_key'] ] ['value'];
-						}
-						if ( isset( $readonly_fields[ $field['field_key'] ] ['message'] ) ) {
-							$field['custom_attributes']['title'] = $readonly_fields[ $field['field_key'] ] ['message'];
-							$field['input_class'][]              = 'user-registration-help-tip';
-						}
-					}
-
-					if ( 'number' === $single_item->field_key ) {
-						$field['min']  = isset( $advance_data['advance_setting']->min ) ? $advance_data['advance_setting']->min : '';
-						$field['max']  = isset( $advance_data['advance_setting']->max ) ? $advance_data['advance_setting']->max : '';
-						$field['step'] = isset( $advance_data['advance_setting']->step ) ? $advance_data['advance_setting']->step : '';
-					}
-					$length_validation_fields = array( 'text', 'textarea' , 'display_name', 'first_name','last_name','description','nickname');
-					if ( in_array( $single_item->field_key, $length_validation_fields, true ) ) {
-						if ( isset( $advance_data['advance_setting']->limit_length ) && $advance_data['advance_setting']->limit_length ) {
-							if ( isset( $advance_data['advance_setting']->limit_length_limit_count ) && isset( $advance_data['advance_setting']->limit_length_limit_mode ) ) {
-								if ( 'characters' === $advance_data['advance_setting']->limit_length_limit_mode ) {
-									$field['max-characters'] = $advance_data['advance_setting']->limit_length_limit_count;
-								} elseif ( 'words' === $advance_data['advance_setting']->limit_length_limit_mode ) {
-									$field['max-words'] = $advance_data['advance_setting']->limit_length_limit_count;
-								}
-							}
-						}
-
-						if ( isset( $advance_data['advance_setting']->minimum_length ) && $advance_data['advance_setting']->minimum_length ) {
-							if ( isset( $advance_data['advance_setting']->minimum_length_limit_count ) && isset( $advance_data['advance_setting']->minimum_length_limit_mode ) ) {
-								if ( 'characters' === $advance_data['advance_setting']->minimum_length_limit_mode ) {
-									$field['min-characters'] = $advance_data['advance_setting']->minimum_length_limit_count;
-								} elseif ( 'words' === $advance_data['advance_setting']->minimum_length_limit_mode ) {
-									$field['min-words'] = $advance_data['advance_setting']->minimum_length_limit_count;
-								}
-							}
-						}
-					}
-
-					if ( 'range' === $single_item->field_key ) {
-						$field['range_min']             = ( isset( $advance_data['advance_setting']->range_min ) && '' !== $advance_data['advance_setting']->range_min ) ? $advance_data['advance_setting']->range_min : '0';
-						$field['range_max']             = ( isset( $advance_data['advance_setting']->range_max ) && '' !== $advance_data['advance_setting']->range_max ) ? $advance_data['advance_setting']->range_max : '10';
-						$field['range_step']            = isset( $advance_data['advance_setting']->range_step ) ? $advance_data['advance_setting']->range_step : '1';
-						$field['enable_payment_slider'] = isset( $advance_data['advance_setting']->enable_payment_slider ) ? $advance_data['advance_setting']->enable_payment_slider : 'false';
-
-						if ( ur_string_to_bool( $advance_data['advance_setting']->enable_prefix_postfix ) ) {
-							if ( ur_string_to_bool( $advance_data['advance_setting']->enable_text_prefix_postfix ) ) {
-								$field['range_prefix']  = isset( $advance_data['advance_setting']->range_prefix ) ? $advance_data['advance_setting']->range_prefix : '';
-								$field['range_postfix'] = isset( $advance_data['advance_setting']->range_postfix ) ? $advance_data['advance_setting']->range_postfix : '';
-							} else {
-								$field['range_prefix']  = $field['range_min'];
-								$field['range_postfix'] = $field['range_max'];
-							}
-						}
-
-						// to hide the range as payment slider in edit profile.
-						if ( ur_string_to_bool( $field['enable_payment_slider'] ) ) {
-							continue;
-						}
-					}
-
-					if ( 'phone' === $single_item->field_key ) {
-						$field['phone_format'] = $single_item->general_setting->phone_format;
-						if ( 'smart' === $field['phone_format'] ) {
-							unset( $field['input_mask'] );
-						}
-					}
-
-					if ( 'password' === $single_item->field_key ) {
-						$field['size'] = $advance_data['advance_setting']->size;
-					}
-
-					if ( isset( $single_item->general_setting->hide_label ) ) {
-						if ( ur_string_to_bool( $single_item->general_setting->hide_label ) ) {
-							unset( $field['label'] );
-						}
-					}
-
-					if ( 'select' === $single_item->field_key ) {
-						$option_data         = isset( $advance_data['advance_setting']->options ) ? explode( ',', $advance_data['advance_setting']->options ) : array();
-						$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $option_data;
-						$options             = array();
-
-						if ( is_array( $option_advance_data ) ) {
-							foreach ( $option_advance_data as $index_data => $option ) {
-								$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
-							}
-							$field['options'] = $options;
-						}
-
-						$field['placeholder'] = $single_item->general_setting->placeholder;
-
-					}
-
-					if ( 'radio' === $single_item->field_key ) {
-						if ( isset( $advance_data['general_setting']->image_choice ) && ur_string_to_bool( $advance_data['general_setting']->image_choice ) ) {
-							$option_advance_data = isset( $advance_data['general_setting']->image_options ) ? $advance_data['general_setting']->image_options : array();
-							$options             = array();
-							if ( is_array( $option_advance_data ) ) {
-								foreach ( $option_advance_data as $index_data => $option ) {
-									$options[ $option->label ] = array(
-										'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->label ),
-										'image' => $option->image,
-									);
-								}
-								$field['image_options'] = $options;
-							}
-						} else {
-							$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : array();
-							$options             = array();
-
-							if ( is_array( $option_advance_data ) ) {
-								foreach ( $option_advance_data as $index_data => $option ) {
-									$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
-								}
-								$field['options'] = $options;
-							}
-						}
-					}
-
-					if ( 'file' === $single_item->field_key ) {
-						if ( isset( $single_item->general_setting->max_files ) ) {
-							$field['max_files'] = $single_item->general_setting->max_files;
-						} else {
-							$field['max_files'] = 1;
-						}
-
-						if ( isset( $advance_data['advance_setting']->max_upload_size ) ) {
-							$field['max_upload_size'] = $advance_data['advance_setting']->max_upload_size;
-						}
-
-						if ( isset( $advance_data['advance_setting']->valid_file_type ) ) {
-							$field['valid_file_type'] = $advance_data['advance_setting']->valid_file_type;
-						}
-
-						// Remove files attachment id from user meta if file is deleted by admin.
-						if ( isset( $field['value'] ) && '' !== $field['value'] ) {
-							$attachment_ids = is_array( $field['value'] ) ? $field['value'] : explode( ',', $field['value'] );
-
-							foreach ( $attachment_ids as $attachment_key => $attachment_id ) {
-								$attachment_url = get_attached_file( $attachment_id );
-
-								// Check to see if file actually exists or not.
-								if ( '' !== $attachment_url && file_exists( $attachment_url ) ) {
-									continue;
-								}
-								unset( $attachment_ids[ $attachment_key ] );
-							}
-
-							$field['value'] = ! empty( $attachment_ids ) ? implode( ',', $attachment_ids ) : '';
-							update_user_meta( get_current_user_id(), 'user_registration_' . $single_item->general_setting->field_name, $field['value'] );
-						}
-					}
-
-					if ( isset( $advance_data['general_setting']->required ) ) {
-						if ( in_array( $single_item->field_key, ur_get_required_fields() )
-						|| ur_string_to_bool( $advance_data['general_setting']->required ) ) {
-							$field['required']                      = true;
-							$field['custom_attributes']['required'] = 'required';
-						}
-					}
-
-					// Add choice_limit setting valur in order to limit choice fields.
-					if ( 'checkbox' === $single_item->field_key || 'multi_select2' === $single_item->field_key ) {
-						if ( isset( $advance_data['general_setting']->image_choice ) && ur_string_to_bool( $advance_data['general_setting']->image_choice ) ) {
-							$option_data = isset( $advance_data['general_setting']->image_options ) ? $advance_data['general_setting']->image_options : array();
-							$options     = array();
-
-							if ( is_array( $option_data ) ) {
-								foreach ( $option_data as $index_data => $option ) {
-									$options[ $option->label ] = array(
-										'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->label ),
-										'image' => $option->image,
-									);
-								}
-								$field['image_options'] = $options;
-							}
-						} else {
-							$option_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : array();
-							$options     = array();
-
-							if ( is_array( $option_data ) ) {
-								foreach ( $option_data as $index_data => $option ) {
-									$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
-								}
-
-								$field['options'] = $options;
-							}
-						}
-
-						if ( isset( $advance_data['advance_setting']->choice_limit ) ) {
-							$field['choice_limit'] = $advance_data['advance_setting']->choice_limit;
-						}
-						if ( isset( $advance_data['advance_setting']->select_all ) ) {
-							$field['select_all'] = ur_string_to_bool( $advance_data['advance_setting']->select_all );
-						}
-					}
-
-					if ( 'timepicker' === $single_item->field_key ) {
-						$field['current_time']  = isset( $advance_data['advance_setting']->current_time ) ? $advance_data['advance_setting']->current_time : '';
-						$field['time_interval'] = isset( $advance_data['advance_setting']->time_interval ) ? $advance_data['advance_setting']->time_interval : '';
-						$field['time_format']   = isset( $advance_data['advance_setting']->time_format ) ? $advance_data['advance_setting']->time_format : '';
-						$field['time_range']    = isset( $advance_data['advance_setting']->time_range ) ? $advance_data['advance_setting']->time_range : '';
-						$field['time_min']      = ( isset( $advance_data['advance_setting']->time_min ) && '' !== $advance_data['advance_setting']->time_min ) ? $advance_data['advance_setting']->time_min : '';
-						$field['time_max']      = ( isset( $advance_data['advance_setting']->time_max ) && '' !== $advance_data['advance_setting']->time_max ) ? $advance_data['advance_setting']->time_max : '';
-						$timemin                = isset( $field['time_min'] ) ? strtolower( substr( $field['time_min'], -2 ) ) : '';
-						$timemax                = isset( $field['time_max'] ) ? strtolower( substr( $field['time_max'], -2 ) ) : '';
-						$minampm                = intval( $field['time_min'] ) <= 12 ? 'AM' : 'PM';
-						$maxampm                = intval( $field['time_max'] ) <= 12 ? 'AM' : 'PM';
-						// For slot booking.
-						$field['enable_time_slot_booking'] = isset( $advance_data['advance_setting']->enable_time_slot_booking ) ? $advance_data['advance_setting']->enable_time_slot_booking : '';
-						$field['target_date_field']        = isset( $advance_data['advance_setting']->target_date_field ) ? $advance_data['advance_setting']->target_date_field : '';
-							// Handles the time format.
-						if ( 'am' === $timemin || 'pm' === $timemin ) {
-							$field['time_min'] = $field['time_min'];
-						} else {
-							$field['time_min'] = $field['time_min'] . '' . $minampm;
-						}
-
-						if ( 'am' === $timemax || 'pm' === $timemax ) {
-							$field['time_max'] = $field['time_max'];
-						} else {
-							$field['time_max'] = $field['time_max'] . '' . $maxampm;
-						}
-					}
-
-					if ( 'date' === $single_item->field_key ) {
-						// For slot booking.
-						$field['enable_date_slot_booking'] = isset( $advance_data['advance_setting']->enable_date_slot_booking ) ? $advance_data['advance_setting']->enable_date_slot_booking : false;
-					}
-					$field['form_id'] = $form_id;
-					$filter_data = array(
-						'form_data' => $field,
-						'data'      => $advance_data,
-					);
-
-					$field_key       = isset( $field['field_key'] ) ? $field['field_key'] : '';
-					$form_data_array = apply_filters( 'user_registration_' . $field_key . '_frontend_form_data', $filter_data, true );
-					$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
-					$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : ( isset( $field['value'] ) ? $field['value'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-
-					if ( isset( $field['field_key'] ) ) {
-						$row_count_to_send = '' === $row_count ? $current_row : $row_count;
-						$field             = user_registration_form_field( $key, $field, $value, $row_count_to_send, $is_edit );
-					}
-
-					/**
-					 * Embed the current country value to allow to remove it if it's not allowed.
-					 */
-					if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
-						printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( $value ), esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $value ] ) );
-					}
-					?>
-					</div>
-					<?php } ?>
-				<?php } ?>
-
-					<?php if ( $found_field ) { ?>
-				</div>
+					<div
+						class="ur-field-item field-<?php echo esc_attr( $single_item->field_key ); ?> <?php echo esc_attr( ! empty( $single_item->advance_setting->custom_class ) ? $single_item->advance_setting->custom_class : '' ); ?>" <?php echo $cl_props; //PHPCS:ignore?>
+						data-field-id="<?php echo esc_attr( $field_id ); ?>"
+						data-ref-id="<?php echo esc_attr( $key ); ?>">
 						<?php
-					}
+						$readonly_fields = ur_readonly_profile_details_fields();
+						if ( $is_edit ) {
+							unset( $readonly_fields['user_pass'] );
+						}
+
+						if ( isset( $field['field_key'] ) && array_key_exists( $field['field_key'], $readonly_fields ) ) {
+							$field['custom_attributes']['readonly'] = 'readonly';
+							if ( isset( $readonly_fields[ $field['field_key'] ] ['value'] ) ) {
+								$field['value'] = $readonly_fields[ $field['field_key'] ] ['value'];
+							}
+							if ( isset( $readonly_fields[ $field['field_key'] ] ['message'] ) ) {
+								$field['custom_attributes']['title'] = $readonly_fields[ $field['field_key'] ] ['message'];
+								$field['input_class'][]              = 'user-registration-help-tip';
+							}
+						}
+
+						if ( 'number' === $single_item->field_key ) {
+							$field['min']  = isset( $advance_data['advance_setting']->min ) ? $advance_data['advance_setting']->min : '';
+							$field['max']  = isset( $advance_data['advance_setting']->max ) ? $advance_data['advance_setting']->max : '';
+							$field['step'] = isset( $advance_data['advance_setting']->step ) ? $advance_data['advance_setting']->step : '';
+						}
+						$length_validation_fields = array(
+							'text',
+							'textarea',
+							'display_name',
+							'first_name',
+							'last_name',
+							'description',
+							'nickname',
+						);
+						if ( in_array( $single_item->field_key, $length_validation_fields, true ) ) {
+							if ( isset( $advance_data['advance_setting']->limit_length ) && $advance_data['advance_setting']->limit_length ) {
+								if ( isset( $advance_data['advance_setting']->limit_length_limit_count ) && isset( $advance_data['advance_setting']->limit_length_limit_mode ) ) {
+									if ( 'characters' === $advance_data['advance_setting']->limit_length_limit_mode ) {
+										$field['max-characters'] = $advance_data['advance_setting']->limit_length_limit_count;
+									} elseif ( 'words' === $advance_data['advance_setting']->limit_length_limit_mode ) {
+										$field['max-words'] = $advance_data['advance_setting']->limit_length_limit_count;
+									}
+								}
+							}
+
+							if ( isset( $advance_data['advance_setting']->minimum_length ) && $advance_data['advance_setting']->minimum_length ) {
+								if ( isset( $advance_data['advance_setting']->minimum_length_limit_count ) && isset( $advance_data['advance_setting']->minimum_length_limit_mode ) ) {
+									if ( 'characters' === $advance_data['advance_setting']->minimum_length_limit_mode ) {
+										$field['min-characters'] = $advance_data['advance_setting']->minimum_length_limit_count;
+									} elseif ( 'words' === $advance_data['advance_setting']->minimum_length_limit_mode ) {
+										$field['min-words'] = $advance_data['advance_setting']->minimum_length_limit_count;
+									}
+								}
+							}
+						}
+
+						if ( 'range' === $single_item->field_key ) {
+							$field['range_min']             = ( isset( $advance_data['advance_setting']->range_min ) && '' !== $advance_data['advance_setting']->range_min ) ? $advance_data['advance_setting']->range_min : '0';
+							$field['range_max']             = ( isset( $advance_data['advance_setting']->range_max ) && '' !== $advance_data['advance_setting']->range_max ) ? $advance_data['advance_setting']->range_max : '10';
+							$field['range_step']            = isset( $advance_data['advance_setting']->range_step ) ? $advance_data['advance_setting']->range_step : '1';
+							$field['enable_payment_slider'] = isset( $advance_data['advance_setting']->enable_payment_slider ) ? $advance_data['advance_setting']->enable_payment_slider : 'false';
+
+							if ( ur_string_to_bool( $advance_data['advance_setting']->enable_prefix_postfix ) ) {
+								if ( ur_string_to_bool( $advance_data['advance_setting']->enable_text_prefix_postfix ) ) {
+									$field['range_prefix']  = isset( $advance_data['advance_setting']->range_prefix ) ? $advance_data['advance_setting']->range_prefix : '';
+									$field['range_postfix'] = isset( $advance_data['advance_setting']->range_postfix ) ? $advance_data['advance_setting']->range_postfix : '';
+								} else {
+									$field['range_prefix']  = $field['range_min'];
+									$field['range_postfix'] = $field['range_max'];
+								}
+							}
+
+							// to hide the range as payment slider in edit profile.
+							if ( ur_string_to_bool( $field['enable_payment_slider'] ) ) {
+								continue;
+							}
+						}
+
+						if ( 'phone' === $single_item->field_key ) {
+							$field['phone_format'] = $single_item->general_setting->phone_format;
+							if ( 'smart' === $field['phone_format'] ) {
+								unset( $field['input_mask'] );
+							}
+						}
+
+						if ( 'password' === $single_item->field_key ) {
+							$field['size'] = $advance_data['advance_setting']->size;
+						}
+
+						if ( isset( $single_item->general_setting->hide_label ) ) {
+							if ( ur_string_to_bool( $single_item->general_setting->hide_label ) ) {
+								unset( $field['label'] );
+							}
+						}
+
+						if ( 'select' === $single_item->field_key ) {
+							$option_data         = isset( $advance_data['advance_setting']->options ) ? explode( ',', $advance_data['advance_setting']->options ) : array();
+							$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : $option_data;
+							$options             = array();
+
+							if ( is_array( $option_advance_data ) ) {
+								foreach ( $option_advance_data as $index_data => $option ) {
+									$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+								}
+								$field['options'] = $options;
+							}
+
+							$field['placeholder'] = $single_item->general_setting->placeholder;
+
+						}
+
+						if ( 'radio' === $single_item->field_key ) {
+							if ( isset( $advance_data['general_setting']->image_choice ) && ur_string_to_bool( $advance_data['general_setting']->image_choice ) ) {
+								$option_advance_data = isset( $advance_data['general_setting']->image_options ) ? $advance_data['general_setting']->image_options : array();
+								$options             = array();
+								if ( is_array( $option_advance_data ) ) {
+									foreach ( $option_advance_data as $index_data => $option ) {
+										$options[ $option->label ] = array(
+											'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->label ),
+											'image' => $option->image,
+										);
+									}
+									$field['image_options'] = $options;
+								}
+							} else {
+								$option_advance_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : array();
+								$options             = array();
+
+								if ( is_array( $option_advance_data ) ) {
+									foreach ( $option_advance_data as $index_data => $option ) {
+										$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+									}
+									$field['options'] = $options;
+								}
+							}
+						}
+
+						if ( 'file' === $single_item->field_key ) {
+							if ( isset( $single_item->general_setting->max_files ) ) {
+								$field['max_files'] = $single_item->general_setting->max_files;
+							} else {
+								$field['max_files'] = 1;
+							}
+
+							if ( isset( $advance_data['advance_setting']->max_upload_size ) ) {
+								$field['max_upload_size'] = $advance_data['advance_setting']->max_upload_size;
+							}
+
+							if ( isset( $advance_data['advance_setting']->valid_file_type ) ) {
+								$field['valid_file_type'] = $advance_data['advance_setting']->valid_file_type;
+							}
+
+							// Remove files attachment id from user meta if file is deleted by admin.
+							if ( isset( $field['value'] ) && '' !== $field['value'] ) {
+								$attachment_ids = is_array( $field['value'] ) ? $field['value'] : explode( ',', $field['value'] );
+
+								foreach ( $attachment_ids as $attachment_key => $attachment_id ) {
+									$attachment_url = get_attached_file( $attachment_id );
+
+									// Check to see if file actually exists or not.
+									if ( '' !== $attachment_url && file_exists( $attachment_url ) ) {
+										continue;
+									}
+									unset( $attachment_ids[ $attachment_key ] );
+								}
+
+								$field['value'] = ! empty( $attachment_ids ) ? implode( ',', $attachment_ids ) : '';
+								update_user_meta( get_current_user_id(), 'user_registration_' . $single_item->general_setting->field_name, $field['value'] );
+							}
+						}
+
+						if ( isset( $advance_data['general_setting']->required ) ) {
+							if ( in_array( $single_item->field_key, ur_get_required_fields() )
+								|| ur_string_to_bool( $advance_data['general_setting']->required ) ) {
+								$field['required']                      = true;
+								$field['custom_attributes']['required'] = 'required';
+							}
+						}
+
+						// Add choice_limit setting valur in order to limit choice fields.
+						if ( 'checkbox' === $single_item->field_key || 'multi_select2' === $single_item->field_key ) {
+							if ( isset( $advance_data['general_setting']->image_choice ) && ur_string_to_bool( $advance_data['general_setting']->image_choice ) ) {
+								$option_data = isset( $advance_data['general_setting']->image_options ) ? $advance_data['general_setting']->image_options : array();
+								$options     = array();
+
+								if ( is_array( $option_data ) ) {
+									foreach ( $option_data as $index_data => $option ) {
+										$options[ $option->label ] = array(
+											'label' => ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option->label ),
+											'image' => $option->image,
+										);
+									}
+									$field['image_options'] = $options;
+								}
+							} else {
+								$option_data = isset( $advance_data['general_setting']->options ) ? $advance_data['general_setting']->options : array();
+								$options     = array();
+
+								if ( is_array( $option_data ) ) {
+									foreach ( $option_data as $index_data => $option ) {
+										$options[ $option ] = ur_string_translation( $form_id, 'user_registration_' . $advance_data['general_setting']->field_name . '_option_' . ( ++$index_data ), $option );
+									}
+
+									$field['options'] = $options;
+								}
+							}
+
+							if ( isset( $advance_data['advance_setting']->choice_limit ) ) {
+								$field['choice_limit'] = $advance_data['advance_setting']->choice_limit;
+							}
+							if ( isset( $advance_data['advance_setting']->select_all ) ) {
+								$field['select_all'] = ur_string_to_bool( $advance_data['advance_setting']->select_all );
+							}
+						}
+
+						if ( 'timepicker' === $single_item->field_key ) {
+							$field['current_time']  = isset( $advance_data['advance_setting']->current_time ) ? $advance_data['advance_setting']->current_time : '';
+							$field['time_interval'] = isset( $advance_data['advance_setting']->time_interval ) ? $advance_data['advance_setting']->time_interval : '';
+							$field['time_format']   = isset( $advance_data['advance_setting']->time_format ) ? $advance_data['advance_setting']->time_format : '';
+							$field['time_range']    = isset( $advance_data['advance_setting']->time_range ) ? $advance_data['advance_setting']->time_range : '';
+							$field['time_min']      = ( isset( $advance_data['advance_setting']->time_min ) && '' !== $advance_data['advance_setting']->time_min ) ? $advance_data['advance_setting']->time_min : '';
+							$field['time_max']      = ( isset( $advance_data['advance_setting']->time_max ) && '' !== $advance_data['advance_setting']->time_max ) ? $advance_data['advance_setting']->time_max : '';
+							$timemin                = isset( $field['time_min'] ) ? strtolower( substr( $field['time_min'], - 2 ) ) : '';
+							$timemax                = isset( $field['time_max'] ) ? strtolower( substr( $field['time_max'], - 2 ) ) : '';
+							$minampm                = intval( $field['time_min'] ) <= 12 ? 'AM' : 'PM';
+							$maxampm                = intval( $field['time_max'] ) <= 12 ? 'AM' : 'PM';
+							// For slot booking.
+							$field['enable_time_slot_booking'] = isset( $advance_data['advance_setting']->enable_time_slot_booking ) ? $advance_data['advance_setting']->enable_time_slot_booking : '';
+							$field['target_date_field']        = isset( $advance_data['advance_setting']->target_date_field ) ? $advance_data['advance_setting']->target_date_field : '';
+							// Handles the time format.
+							if ( 'am' === $timemin || 'pm' === $timemin ) {
+								$field['time_min'] = $field['time_min'];
+							} else {
+								$field['time_min'] = $field['time_min'] . '' . $minampm;
+							}
+
+							if ( 'am' === $timemax || 'pm' === $timemax ) {
+								$field['time_max'] = $field['time_max'];
+							} else {
+								$field['time_max'] = $field['time_max'] . '' . $maxampm;
+							}
+						}
+
+						if ( 'date' === $single_item->field_key ) {
+							// For slot booking.
+							$field['enable_date_slot_booking'] = isset( $advance_data['advance_setting']->enable_date_slot_booking ) ? $advance_data['advance_setting']->enable_date_slot_booking : false;
+						}
+						$field['form_id'] = $form_id;
+						$filter_data      = array(
+							'form_data' => $field,
+							'data'      => $advance_data,
+						);
+
+						$field_key       = isset( $field['field_key'] ) ? $field['field_key'] : '';
+						$form_data_array = apply_filters( 'user_registration_' . $field_key . '_frontend_form_data', $filter_data, true );
+						$field           = isset( $form_data_array['form_data'] ) ? $form_data_array['form_data'] : $field;
+						$value           = ! empty( $_POST[ $key ] ) ? ur_clean( wp_unslash( $_POST[ $key ] ) ) : ( isset( $field['value'] ) ? $field['value'] : '' ); // phpcs:ignore WordPress.Security.NonceVerification, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+						if ( isset( $field['field_key'] ) ) {
+							$row_count_to_send = '' === $row_count ? $current_row : $row_count;
+							$field             = user_registration_form_field( $key, $field, $value, $row_count_to_send, $is_edit );
+						}
+
+						/**
+						 * Embed the current country value to allow to remove it if it's not allowed.
+						 */
+						if ( 'country' === $single_item->field_key && ! empty( $value ) ) {
+							// printf( '<span hidden class="ur-data-holder" data-option-value="%s" data-option-html="%s"></span>', esc_attr( $value ), esc_attr( UR_Form_Field_Country::get_instance()->get_country()[ $value ] ) );
+						}
+						?>
+					</div>
+				<?php } ?>
+			<?php } ?>
+
+			<?php if ( $found_field ) { ?>
+				</div>
+				<?php
+			}
 		}
 		if ( ! $is_edit ) {
 			echo apply_filters( 'user_registration_frontend_form_row_end', '', $form_id, $current_row ); // phpcs:ignore
@@ -6277,6 +7084,16 @@ if ( ! file_exists( 'user_registration_sanitize_profile_update' ) ) {
 					$value = '';
 				}
 				break;
+			case 'country':
+				$country_data = array();
+				if ( isset( $submitted_data[ $key ] ) ) { // phpcs:ignore
+					$country_data['country'] = sanitize_text_field( wp_unslash( $submitted_data[ $key ] ) ); // phpcs:ignore
+				}
+				if ( isset( $submitted_data[ $key . '_state' ] ) ) { // phpcs:ignore
+					$country_data['state'] = sanitize_text_field( wp_unslash( $submitted_data[ $key . '_state' ] ) ); // phpcs:ignore
+				}
+				$value = json_encode( $country_data );
+				break;
 			default:
 				$value = isset( $submitted_data[ $key ] ) ? $submitted_data[ $key ] : ''; // phpcs:ignore
 				break;
@@ -6290,9 +7107,9 @@ if ( ! function_exists( 'ur_get_coupon_details' ) ) {
 	/**
 	 * This function will send email verification email to the user.
 	 *
-	 * @since 3.1.5
-	 *
 	 * @param int $user_id User ID.
+	 *
+	 * @since 3.1.5
 	 */
 	function ur_get_coupon_details( $coupon ) {
 
@@ -6314,6 +7131,7 @@ if ( ! function_exists( 'ur_get_coupon_details' ) ) {
 			$posts_meta               = get_post_meta( $posts->post->ID, 'ur_coupon_meta', true );
 			$coupon_data              = json_decode( $posts_meta, true );
 			$coupon_data['coupon_id'] = $posts->post->ID;
+
 			return $coupon_data;
 		}
 
@@ -6326,9 +7144,9 @@ if ( ! function_exists( 'ur_get_registration_field_value_by_field_name' ) ) {
 	/**
 	 * Get Field value by field name while registration.
 	 *
-	 * @since 0
+	 * @param string $field_name Field Name.
 	 *
-	 * @param  string $field_name Field Name.
+	 * @since 0
 	 */
 	function ur_get_registration_field_value_by_field_name( $field_name ) {
 		$field_value = '';
@@ -6345,6 +7163,7 @@ if ( ! function_exists( 'ur_get_registration_field_value_by_field_name' ) ) {
 				$field_value = $single_data->value;
 			}
 		}
+
 		return $field_value;
 	}
 }
@@ -6354,13 +7173,13 @@ if ( ! function_exists( 'ur_get_translated_string' ) ) {
 	/**
 	 * Function to get translated string using WPML
 	 *
-	 * @since 4.2.1
+	 * @param string $domain Domain.
+	 * @param string $string String Value.
+	 * @param string $language_code Language Code.
+	 * @param string $field_key Field Key.
+	 * @param string $form_id Form ID.
 	 *
-	 * @param  string $domain Domain.
-	 * @param  string $string String Value.
-	 * @param  string $language_code Language Code.
-	 * @param  string $field_key Field Key.
-	 * @param  string $form_id Form ID.
+	 * @since 4.2.1
 	 */
 	function ur_get_translated_string( $domain, $string, $language_code, $field_key, $form_id = 0 ) {
 		if ( function_exists( 'icl_translate' ) ) {
@@ -6423,25 +7242,38 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	function ur_check_is_inactive() {
 		if ( ! ur_check_module_activation( 'membership' ) ||
 			current_user_can( 'manage_options' ) ||
-			 ( ! empty( $_POST['action'] ) && in_array( $_POST['action'], array(
-					"user_registration_membership_confirm_payment",
-					"user_registration_membership_create_stripe_subscription"
-				) ) )
+			( ! empty( $_POST['action'] ) && in_array(
+				$_POST['action'],
+				array(
+					'user_registration_membership_confirm_payment',
+					'user_registration_membership_create_stripe_subscription',
+				)
+			) )
 		) {
 			return;
 		}
 		$members_repository = new \WPEverest\URMembership\Admin\Repositories\MembersRepository();
 
-		$membership = $members_repository->get_member_membership_by_id( get_current_user_id() );
+		$user_memberships = $members_repository->get_member_membership_by_id( get_current_user_id() );
 
-		if ( empty( $membership ) ) {
+		if ( empty( $user_memberships ) ) {
 			return;
 		}
 
-		if ( in_array( $membership['status'], array( 'pending', 'inactive' ) ) ) {
+		$active_memberships = array_filter(
+			array_map(
+				function ( $user_memberships ) {
+					if ( ! empty( $user_memberships['status'] ) && ! in_array( $user_memberships['status'], array( 'pending', 'inactive' ) ) ) {
+						return $user_memberships['post_id'];
+					}
+				},
+				$user_memberships
+			)
+		);
+
+		if ( count( $active_memberships ) < 1 ) {
 			wp_logout();
 		}
-
 	}
 }
 
@@ -6459,7 +7291,7 @@ if ( ! function_exists( 'ur_backwards_compatibility_urm_enable_no_conflict' ) ) 
 		}
 
 		$option_value = get_option( 'urm_enable_no_conflict', null );
-		if ( null === $option_value  ) {
+		if ( null === $option_value ) {
 			update_option( 'urm_enable_no_conflict', false );
 		}
 
@@ -6486,6 +7318,7 @@ if ( ! function_exists( 'ur_check_is_auto_enable_user' ) ) {
 		if ( strtotime( $is_auto_enable ) < strtotime( date( 'Y-m-d H:i:s' ) ) ) {
 			delete_user_meta( $user_id, 'ur_auto_enable_time' );
 			delete_user_meta( $user_id, 'ur_disable_users' );
+
 			return;
 		}
 	}
@@ -6559,9 +7392,8 @@ if ( ! function_exists( 'ur_is_akismet_configured' ) ) {
 	/**
 	 * Has the Akismet plugin been configured wih a valid API key?
 	 *
-	 * @since 4.2.1.2
-	 *
 	 * @return bool
+	 * @since 4.2.1.2
 	 */
 	function ur_is_akismet_configured() {
 
@@ -6595,7 +7427,7 @@ if ( ! function_exists( 'ur_get_akismet_validate' ) ) {
 	 * necessary data for the validation request and sends it to Akismet's 'registration-check' endpoint.
 	 *
 	 * @param int   $form_id The form_id to check if to validate.
-	 * @param array $form_data  values to validate.
+	 * @param array $form_data values to validate.
 	 *
 	 * @return bool
 	 *   - true if the form_data is potentially spam according to Akismet.
@@ -6618,7 +7450,8 @@ if ( ! function_exists( 'ur_get_akismet_validate' ) ) {
 			$request = array(
 				'blog'                 => home_url(),
 				'user_ip'              => ur_get_ip_address(),
-				'user_agent'           => isset( $_SERVER['HTTP_USER_AGENT'] ) ? wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) : null, // phpcs:ignore
+				'user_agent'           => isset( $_SERVER['HTTP_USER_AGENT'] ) ? wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) : null,
+				// phpcs:ignore
 				'referrer'             => wp_get_referer() ? wp_get_referer() : null,
 				'permalink'            => ur_current_url(),
 				'comment_type'         => 'registration',
@@ -6631,6 +7464,7 @@ if ( ! function_exists( 'ur_get_akismet_validate' ) ) {
 			);
 
 			$response = Akismet::http_post( build_query( $request ), 'comment-check' );
+
 			return ! empty( $response ) && isset( $response[1] ) && 'true' === trim( $response[1] );
 		}
 
@@ -6678,6 +7512,7 @@ if ( ! function_exists( 'ur_get_form_data_for_akismet' ) ) {
 		if ( ! empty( $other_content ) ) {
 			$form_content['other_content'] = implode( ' ', $other_content );
 		}
+
 		return $form_content;
 	}
 }
@@ -6698,6 +7533,7 @@ if ( ! function_exists( 'ur_get_allowed_field_for_akisment' ) ) {
 			'wysiwyg',
 			'description',
 		);
+
 		return $field_type_allowlist;
 	}
 }
@@ -6706,9 +7542,8 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 	/**
 	 * Get the current URL.
 	 *
-	 * @since 3.2.0
-	 *
 	 * @return string
+	 * @since 3.2.0
 	 */
 	function ur_current_url() {
 
@@ -6727,85 +7562,25 @@ if ( ! function_exists( 'ur_current_url' ) ) {
 	}
 }
 
-add_filter( 'body_class', function( $classes ) {
-	$is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string_to_bool( sanitize_text_field( wp_unslash( $_COOKIE['isSidebarEnabled'] ) ) ) : true;
-	$body_class = !$is_settings_sidebar_enabled ? 'ur-settings-sidebar-hidden': 'ur-settings-sidebar-show';
-	return array_merge( $classes, array ( $body_class ) );
-});
+add_filter(
+	'body_class',
+	function ( $classes ) {
+		$is_settings_sidebar_enabled = isset( $_COOKIE['isSidebarEnabled'] ) ? ur_string_to_bool( sanitize_text_field( wp_unslash( $_COOKIE['isSidebarEnabled'] ) ) ) : true;
+		$body_class                  = ! $is_settings_sidebar_enabled ? 'ur-settings-sidebar-hidden' : 'ur-settings-sidebar-show';
 
-if ( ! function_exists( 'ur_quick_settings_tab_content' ) ) {
-
-	/**
-	 * Quick settings tab content.
-	 */
-	function ur_quick_settings_tab_content() {
-		$default_form_page_id      = get_option( 'user_registration_default_form_page_id', false );
-		$registration_form_page_id = get_option( 'user_registration_registration_page_id', false );
-		$my_account_page_id        = get_option( 'user_registration_myaccount_page_id', false );
-		$prevent_core_login        = get_option( 'user_registration_login_options_prevent_core_login', false );
-		$captcha_setup             = get_option( 'user_registration_captcha_setting_recaptcha_version', false );
-
-		$lists = array(
-			array(
-				'text'          => esc_html__( 'Create a registration form.', 'user-registration' ),
-				'completed'     => $default_form_page_id ? true : false,
-				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-create-a-user-registration-form/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
-			),
-			array(
-				'text'          => esc_html__( 'Create registration and my account page.', 'user-registration' ),
-				'completed'     => $registration_form_page_id || $my_account_page_id ? true : false,
-				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-show-account-profile/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
-			),
-			array(
-				'text'          => esc_html__( 'Disable WordPress default registration and login page.', 'user-registration' ),
-				'completed'     => $prevent_core_login ? ur_string_to_bool( $prevent_core_login ) : false,
-				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-hide-the-wordpress-default-login-page-and-use-user-registration-login-page/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
-			),
-			array(
-				'text'          => esc_html__( 'Setup spam protection mechanisms.', 'user-registration' ),
-				'completed'     => $captcha_setup ? true : false,
-				'documentation' => esc_url_raw( "https://docs.wpuserregistration.com/docs/how-to-integrate-google-recaptcha/?utm_source=settings-sidebar-right&utm_medium=quick-setup-card&utm_campaign='" . UR()->utm_campaign . "'" ),
-			),
-		);
-
-		$completed_count = 0;
-
-		foreach ( $lists as $list ) {
-			if ( isset( $list['completed'] ) && $list['completed'] ) {
-				++$completed_count;
-			}
-		}
-
-		if ( $completed_count === count( $lists ) ) {
-			update_option( 'user_registration_quick_setup_completed', true );
-		}
-
-		$activation_date   = get_option( 'user_registration_activated' );
-		$installation_date = get_option( 'user_registration_installation_date', $activation_date );
-
-		$days_to_validate = strtotime( $installation_date );
-		$days_to_validate = strtotime( '+15 day', $days_to_validate );
-		$days_to_validate = date_i18n( 'Y-m-d', $days_to_validate );
-
-		$current_date = date_i18n( 'Y-m-d' );
-
-		if ( $current_date > $days_to_validate ) {
-			update_option( 'user_registration_quick_setup_completed', true );
-		}
-
-		return $lists;
+		return array_merge( $classes, array( $body_class ) );
 	}
-}
+);
 
 add_filter( 'user_registration_settings_text_format', 'ur_settings_text_format', 10 );
 if ( ! function_exists( 'ur_settings_text_format' ) ) {
 	/**
 	 * Settings text format.
 	 *
-	 * @since 3.3.1
-	 *
 	 * @param array $args
+	 *
 	 * @return array
+	 * @since 3.3.1
 	 */
 	function ur_settings_text_format( $args ) {
 		// Group similar text format fields.
@@ -6817,7 +7592,7 @@ if ( ! function_exists( 'ur_settings_text_format' ) ) {
 			}
 
 			if ( isset( $arg['label'] ) ) {
-				if( strpos($arg['label'], 'CSS') < 0 ) {
+				if ( strpos( $arg['label'], 'CSS' ) < 0 ) {
 					$arg['label'] = ur_get_capitalized_words( $arg['label'] );
 				}
 			}
@@ -6858,15 +7633,17 @@ if ( ! function_exists( 'ur_format_sentence_case' ) ) {
 	 * Capitalizes the first letter of the initial word and each word after a period.
 	 *
 	 * @param string $string
+	 *
 	 * @return string
 	 */
 	function ur_format_sentence_case( $string ) {
-		$sentences = preg_split( '/(\.\s+)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE );
+		$sentences = preg_split( '/(\.\s+)/', $string, - 1, PREG_SPLIT_DELIM_CAPTURE );
 		foreach ( $sentences as &$sentence ) {
-			if (trim($sentence) !== '' && $sentence !== '.' && !preg_match('/^\.\s*$/', $sentence)) {
-				$sentence = ucfirst(ltrim($sentence));
+			if ( trim( $sentence ) !== '' && $sentence !== '.' && ! preg_match( '/^\.\s*$/', $sentence ) ) {
+				$sentence = ucfirst( ltrim( $sentence ) );
 			}
 		}
+
 		return implode( '', $sentences );
 	}
 }
@@ -6875,10 +7652,10 @@ if ( ! function_exists( 'ur_get_capitalized_words' ) ) {
 	/**
 	 * Get form data.
 	 *
-	 *  @since 3.3.1
-	 *
 	 * @param string $label
+	 *
 	 * @return array
+	 * @since 3.3.1
 	 */
 	function ur_get_capitalized_words( $label ) {
 		$prepositions = array( 'at', 'by', 'for', 'in', 'on', 'to', 'or' );
@@ -6977,11 +7754,11 @@ if ( ! function_exists( 'ur_email_send_failed_notice' ) ) {
 				'type'                  => 'info',
 				'status'                => 'active',
 				'priority'              => '1',
-				'title'                 => __( 'User Registration Email Send Error', 'user-registration' ),
+				'title'                 => __( 'User Registration & Membership Email Send Error', 'user-registration' ),
 				'message_content'       => wp_kses_post(
 					sprintf(
 						'<p>%s</p><p class="ur-email-send-failed-log">%s</p>',
-						__( 'The last emails sent from User Registration Plugin was not delivered to the user. ', 'user-registration' ),
+						__( 'The last emails sent from User Registration & Membership Plugin was not delivered to the user. ', 'user-registration' ),
 						$error_message
 					)
 				),
@@ -7090,8 +7867,8 @@ if ( ! function_exists( 'ur_spam_users_detected' ) ) {
 				'message_content'       => wp_kses_post(
 					sprintf(
 						'<p>%s</p><p>%s</p>',
-						__( 'A significant number of users have registered on your site from sources other than the User Registration plugin\'s form.', 'user-registration' ),
-						__( 'These registrations may be suspicious. Please review and disable any other methods that allow user registrations if they are not intended. Additionally, consider enabling spam protection measures in the User Registration plugin to safeguard your site.', 'user-registration' ),
+						__( 'A significant number of users have registered on your site from sources other than the User Registration & Membership plugin\'s form.', 'user-registration' ),
+						__( 'These registrations may be suspicious. Please review and disable any other methods that allow user registrations if they are not intended. Additionally, consider enabling spam protection measures in the User Registration & Membership to safeguard your site.', 'user-registration' ),
 					)
 				),
 				'buttons'               => array(
@@ -7185,9 +7962,8 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 	/**
 	 * Handel error when default login screen is disabled but redirect login poage is not selected.
 	 *
-	 * @since 3.3.1
-	 *
 	 * @return @mixed
+	 * @since 3.3.1
 	 */
 	function ur_prevent_default_login( $data ) {
 
@@ -7217,7 +7993,7 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 				$membership_service = new \WPEverest\URMembership\Admin\Services\MembershipService();
 				$pages              = array(
 					'user_registration_member_registration_page_id',
-					'user_registration_thank_you_page_id'
+					'user_registration_thank_you_page_id',
 				);
 				$has_invalid_page   = false;
 				foreach ( $pages as $k => $page ) {
@@ -7227,16 +8003,16 @@ if ( ! function_exists( 'ur_prevent_default_login' ) ) {
 					}
 				}
 
-				if($has_invalid_page) {
+				if ( $has_invalid_page ) {
 					return 'invalid_membership_pages';
 				}
 			}
-		}
-		elseif(isset($data['user_registration_membership_renewal_reminder_days_before'])) {
-			if($data['user_registration_membership_renewal_reminder_days_before'] <= 0) {
+		} elseif ( isset( $data['user_registration_membership_renewal_reminder_days_before'] ) ) {
+			if ( $data['user_registration_membership_renewal_reminder_days_before'] <= 0 ) {
 				return 'invalid_renewal_period';
 			}
 		}
+
 		return true;
 	}
 }
@@ -7349,7 +8125,7 @@ function create_wpbakery_widget_category() {
 			'name'        => esc_html__( 'Edit Profile', 'user-registration' ),
 			'base'        => 'user_registration_edit_profile',
 			'icon'        => 'icon-wpb-vc_user_registration',
-			'category'    => esc_html__( 'User Registration', 'user-registration' ),
+			'category'    => esc_html__( 'User Registration & Membership', 'user-registration' ),
 			'description' => esc_html__( 'Edit Profile widget for WPBakery.', 'user-registration' ),
 		),
 	);
@@ -7358,7 +8134,7 @@ function create_wpbakery_widget_category() {
 			'name'        => esc_html__( 'Edit Password', 'user-registration' ),
 			'base'        => 'user_registration_edit_password',
 			'icon'        => 'icon-wpb-vc_user_registration',
-			'category'    => esc_html__( 'User Registration', 'user-registration' ),
+			'category'    => esc_html__( 'User Registration & Membership', 'user-registration' ),
 			'description' => esc_html__( 'Edit Password widget for WPBakery.', 'user-registration' ),
 		),
 	);
@@ -7368,18 +8144,18 @@ function create_wpbakery_widget_category() {
 	 */
 	do_action( 'user_registration_add_wpbakery_widget' );
 }
+
 if ( ! function_exists( 'ur_integration_addons' ) ) {
 	/**
 	 * List of integrations.
 	 *
-	 * @since 3.3.1
-	 *
 	 * @return array
+	 * @since 3.3.1
 	 */
 	function ur_integration_addons() {
 
 		$integration_list = array(
-			'UR_Settings_SMS_Integration' => array(
+			'UR_Settings_SMS_Integration'  => array(
 				'id'           => 'sms_integration',
 				'type'         => 'accordian',
 				'title'        => esc_html__( 'Twilio', 'user-registration' ),
@@ -7388,7 +8164,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'activated'    => ur_check_module_activation( 'sms-integration' ),
 				'display'      => array( 'settings' ),
 				'connected'    => ! empty( get_option( 'ur_sms_integration_accounts', array() ) ) ? true : false,
-				'plugin_name' => esc_html__( 'Twilio', 'user-registration' ),
+				'plugin_name'  => esc_html__( 'Twilio', 'user-registration' ),
 			),
 			$integration['UR_Settings_ActiveCampaign'] = array(
 				'id'           => 'activecampaign',
@@ -7400,7 +8176,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'activated'    => is_plugin_active( 'user-registration-activecampaign/user-registration-activecampaign.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => ! empty( get_option( 'ur_activecampaign_accounts', array() ) ) ? true : false,
-				'plugin_name' => esc_html__( 'User Registration ActiveCampaign', 'user-registration' ),
+				'plugin_name'  => esc_html__( 'User Registration ActiveCampaign', 'user-registration' ),
 			),
 			$integration['UR_Settings_MailerLite'] = array(
 				'id'           => 'mailerlite',
@@ -7412,7 +8188,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'activated'    => is_plugin_active( 'user-registration-mailerlite/user-registration-mailerlite.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => ! empty( get_option( 'ur_mailerlite_accounts', array() ) ) ? true : false,
-				'plugin_name' => esc_html__( 'User Registration MailerLite', 'user-registration' ),
+				'plugin_name'  => esc_html__( 'User Registration MailerLite', 'user-registration' ),
 			),
 			$integration['UR_Settings_klaviyo'] = array(
 				'id'           => 'klaviyo',
@@ -7424,7 +8200,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'activated'    => is_plugin_active( 'user-registration-klaviyo/user-registration-klaviyo.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => ! empty( get_option( 'ur_klaviyo_accounts', array() ) ) ? true : false,
-				'plugin_name' => esc_html__( 'User Registration Klaviyo', 'user-registration' ),
+				'plugin_name'  => esc_html__( 'User Registration Klaviyo', 'user-registration' ),
 			),
 			$integration['UR_Settings_Mailchimp'] = array(
 				'id'           => 'mailchimp',
@@ -7436,9 +8212,9 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'activated'    => is_plugin_active( 'user-registration-mailchimp/user-registration-mailchimp.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => ! empty( get_option( 'ur_mailchimp_accounts', array() ) ) ? true : false,
-				'plugin_name' => esc_html__( 'User Registration - Mailchimp', 'user-registration' ),
+				'plugin_name'  => esc_html__( 'User Registration - Mailchimp', 'user-registration' ),
 			),
-			'User_Registration_Zapier'    => array(
+			'User_Registration_Zapier'     => array(
 				'id'           => 'zapier',
 				'type'         => 'accordian',
 				'title'        => esc_html__( 'Zapier', 'user-registration' ),
@@ -7448,9 +8224,9 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'activated'    => is_plugin_active( 'user-registration-zapier/user-registration-zapier.php' ),
 				'display'      => array( 'form_settings' ),
 				'connected'    => ! empty( get_option( 'ur_zapier_accounts', array() ) ) ? true : false,
-				'plugin_name' => esc_html__( 'User Registration Zapier', 'user-registration' ),
+				'plugin_name'  => esc_html__( 'User Registration Zapier', 'user-registration' ),
 			),
-			'WPEverest\URMailPoet'        => array(
+			'WPEverest\URMailPoet'         => array(
 				'id'           => 'mailpoet',
 				'type'         => 'accordian',
 				'title'        => esc_html__( 'MailPoet', 'user-registration' ),
@@ -7460,9 +8236,9 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'activated'    => is_plugin_active( 'user-registration-mailpoet/user-registration-mailpoet.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => ur_string_to_bool( get_option( 'user_registration_integrations_mailpoet_connection', false ) ),
-				'plugin_name' => esc_html__( 'User Registration MailPoet', 'user-registration' ),
+				'plugin_name'  => esc_html__( 'User Registration MailPoet', 'user-registration' ),
 			),
-			'WPEverest\URConvertKit'      => array(
+			'WPEverest\URConvertKit'       => array(
 				'id'           => 'convertkit',
 				'type'         => 'accordian',
 				'title'        => esc_html__( 'ConvertKit', 'user-registration' ),
@@ -7472,9 +8248,9 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'activated'    => is_plugin_active( 'user-registration-convertkit/user-registration-convertkit.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => is_plugin_active( 'user-registration-convertkit/user-registration-convertkit.php' ) && ! empty( get_option( 'ur_convertkit_accounts', array() ) ) ? true : false,
-				'plugin_name' => esc_html__( 'User Registration ConvertKit', 'user-registration' ),
+				'plugin_name'  => esc_html__( 'User Registration ConvertKit', 'user-registration' ),
 			),
-			'User_Registration_Brevo'     => array(
+			'User_Registration_Brevo'      => array(
 				'id'           => 'brevo',
 				'type'         => 'accordian',
 				'title'        => esc_html__( 'Brevo', 'user-registration' ),
@@ -7484,7 +8260,7 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'activated'    => is_plugin_active( 'user-registration-brevo/user-registration-brevo.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => is_plugin_active( 'user-registration-brevo/user-registration-brevo.php' ) && ur_string_to_bool( get_option( 'user_registration_integrations_brevo_connection', false ) ),
-				'plugin_name' => esc_html__( 'User Registration Brevo', 'user-registration' ),
+				'plugin_name'  => esc_html__( 'User Registration Brevo', 'user-registration' ),
 			),
 			'User_Registration_Salesforce' => array(
 				'id'           => 'salesforce',
@@ -7496,21 +8272,21 @@ if ( ! function_exists( 'ur_integration_addons' ) ) {
 				'activated'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ),
 				'display'      => array( 'settings', 'form_settings' ),
 				'connected'    => is_plugin_active( 'user-registration-salesforce/user-registration-salesforce.php' ) && ! empty( get_option( 'ur_salesforce_accounts', array() ) ) ? true : false,
-				'plugin_name' => esc_html__( 'User Registration Salesforce', 'user-registration' ),
+				'plugin_name'  => esc_html__( 'User Registration Salesforce', 'user-registration' ),
 			),
 		);
 
 		usort(
 			$integration_list,
 			function ( $a, $b ) {
-			return $b['activated'] <=> $a['activated']; //phpcs:ignore;
+				return $b['activated'] <=> $a['activated']; //phpcs:ignore;
 			}
 		);
 
 		usort(
 			$integration_list,
 			function ( $a, $b ) {
-			return $b['connected'] <=> $a['connected']; //phpcs:ignore;
+				return $b['connected'] <=> $a['connected']; //phpcs:ignore;
 			}
 		);
 
@@ -7522,10 +8298,10 @@ if ( ! function_exists( 'ur_list_top_integrations' ) ) {
 	/**
 	 * List top integrations.
 	 *
-	 * @since 3.3.1
-	 *
 	 * @param array $integrations Integrations.
+	 *
 	 * @return array
+	 * @since 3.3.1
 	 */
 	function ur_list_top_integrations( $integrations ) {
 		$is_free = is_plugin_active( 'user-registration/user-registration.php' );
@@ -7538,6 +8314,7 @@ if ( ! function_exists( 'ur_list_top_integrations' ) ) {
 
 				$integration[ $key ] = $addon;
 			}
+
 			return $integration;
 		}
 	}
@@ -7548,9 +8325,8 @@ if ( ! function_exists( 'ur_get_captcha_integrations' ) ) {
 	/**
 	 * List top captchas.
 	 *
-	 * @since 3.3.4
-	 *
 	 * @return array
+	 * @since 3.3.4
 	 */
 	function ur_get_captcha_integrations() {
 		return apply_filters(
@@ -7576,6 +8352,7 @@ add_action(
 			'user_registration_params',
 			function ( $data ) use ( $recaptcha_type ) {
 				$data['recaptcha_type'] = $recaptcha_type;
+
 				return $data;
 			}
 		);
@@ -7583,43 +8360,6 @@ add_action(
 	10,
 	1
 );
-
-
-add_action( 'user_registration_init', 'ur_captcha_settings_migration_script' );
-
-if ( ! function_exists( 'ur_captcha_settings_migration_script' ) ) {
-
-	/**
-	 * Update Captcha Settings for all forms and global settings.
-	 *
-	 * @since 3.3.4.
-	 */
-	function ur_captcha_settings_migration_script() {
-
-		if ( ! get_option( 'ur_captcha_settings_migrated', false ) ) {
-
-			$all_forms              = ur_get_all_user_registration_form();
-			$enabled_recaptcha_type = get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' );
-
-			foreach ( $all_forms as $key => $value ) {
-
-				$form_id = $key;
-
-				$form_captcha_enabled = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_enable_recaptcha_support', false );
-				if ( $form_captcha_enabled ) {
-					update_post_meta( $form_id, 'user_registration_form_setting_configured_captcha_type', $enabled_recaptcha_type );
-				}
-			}
-
-			if ( get_option( 'user_registration_login_options_enable_recaptcha', false ) ) {
-				update_option( 'user_registration_login_options_configured_captcha_type', $enabled_recaptcha_type );
-			}
-			update_option( 'user_registration_captcha_setting_recaptcha_enable_' . $enabled_recaptcha_type, true );
-
-			update_option( 'ur_captcha_settings_migrated', true );
-		}
-	}
-}
 
 // Hook the end setup wizard to admin_init
 add_action(
@@ -7659,39 +8399,63 @@ if ( ! function_exists( 'ur_get_exclude_text_format_settings' ) ) {
 if ( ! function_exists( 'ur_check_url_is_image' ) ) {
 
 	/**
-	 * ur_check_is_image
+	 * Check if a URL points to a valid image.
 	 *
-	 * @param string $url
+	 * This function first checks if the URL belongs to a local WordPress attachment
+	 * to avoid self-referential HTTP requests which can cause heavy server load.
+	 * Only falls back to cURL for truly remote URLs (e.g., social login profile pictures).
 	 *
-	 * @return bool
+	 * @param string $url The URL to check.
+	 *
+	 * @return bool True if the URL points to a valid image, false otherwise.
+	 * @since x.x.x (updated)
 	 */
 	function ur_check_url_is_image( $url ) {
-		$ch       = curl_init();
-		$headers  = array(
-			'Accept: application/json',
-			'Content-Type: application/json',
-
-		);
-		curl_setopt( $ch, CURLOPT_URL, $url );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false); //used for sites that have ssl disabled
-
-		curl_setopt( $ch, CURLOPT_NOBODY, true );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		curl_setopt( $ch, CURLOPT_HEADER, true );
-		curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
-
-		curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
-		curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'GET' );
-
-		$response = curl_exec( $ch );
-
-		if ( false === $response ) {
-			curl_close( $ch );
+		if ( empty( $url ) || ! is_string( $url ) ) {
 			return false;
 		}
 
-		$contentType = curl_getinfo( $ch, CURLINFO_CONTENT_TYPE );
-		return str_contains( $contentType, 'image/' );
+		$attachment_id = attachment_url_to_postid( $url );
+		if ( $attachment_id > 0 ) {
+			return wp_attachment_is_image( $attachment_id );
+		}
+
+		$site_url = get_site_url();
+		if ( strpos( $url, $site_url ) === 0 ) {
+			$allowed_image_extensions = array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'ico', 'svg' );
+			$parsed_url               = wp_parse_url( $url );
+			if ( ! empty( $parsed_url['path'] ) ) {
+				$extension = strtolower( pathinfo( $parsed_url['path'], PATHINFO_EXTENSION ) );
+				if ( in_array( $extension, $allowed_image_extensions, true ) ) {
+					$upload_dir = wp_upload_dir();
+					if ( strpos( $url, $upload_dir['baseurl'] ) === 0 ) {
+						$file_path = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $url );
+
+						return file_exists( $file_path );
+					}
+
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		$response = wp_remote_head(
+			$url,
+			array(
+				'timeout'   => 5,
+				'sslverify' => false,
+			)
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return false;
+		}
+
+		$content_type = wp_remote_retrieve_header( $response, 'content-type' );
+
+		return ! empty( $content_type ) && strpos( $content_type, 'image/' ) !== false;
 	}
 
 
@@ -7703,9 +8467,8 @@ if ( ! function_exists( 'ur_get_user_registered_source' ) ) {
 	 *
 	 * @param [int] $user_id User Id.
 	 *
-	 * @since 4.1
-	 *
 	 * @return string
+	 * @since 4.1
 	 */
 	function ur_get_user_registered_source( $user_id ) {
 		$user_metas = get_user_meta( $user_id );
@@ -7755,7 +8518,7 @@ if ( ! function_exists( 'ur_return_social_profile_pic' ) ) {
 	}
 }
 
-add_filter( 'user_registration_profile_picture_url',  'ur_return_social_profile_pic' , 10, 2 );
+add_filter( 'user_registration_profile_picture_url', 'ur_return_social_profile_pic', 10, 2 );
 
 if ( ! function_exists( 'get_login_field_settings' ) ) {
 	/**
@@ -7774,99 +8537,88 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 			array(
 				'title'    => '',
 				'sections' => array(
-					'login_options_settings'           => array(
+					'login_options_settings' => array(
 						'title'    => __( 'General', 'user-registration' ),
 						'type'     => 'card',
 						'desc'     => '',
 						'settings' => array(
 							array(
-								'title'    => __( 'Enable Remember Me', 'user-registration' ),
-								'id'       => 'user_registration_login_options_remember_me',
-								'type'     => 'toggle',
-								'desc_tip' => __( 'Keep users logged in on their browser.', 'user-registration' ),
-								'css'      => '',
-								'default'  => 'yes',
-								'field-key'=> 'remember-me'
+								'title'     => __( 'Enable Remember Me', 'user-registration' ),
+								'id'        => 'user_registration_login_options_remember_me',
+								'type'      => 'toggle',
+								'desc_tip'  => __( 'Keep users logged in on their browser.', 'user-registration' ),
+								'css'       => '',
+								'default'   => 'yes',
+								'field-key' => 'remember-me',
 							),
 							array(
-								'title'    => __( 'Enable Password Reset Link', 'user-registration' ),
-								'id'       => 'user_registration_login_options_lost_password',
-								'type'     => 'toggle',
-								'desc_tip' => __( 'Allow users to reset their password if they forget it.', 'user-registration' ),
-								'css'      => '',
-								'default'  => 'yes',
-								'field-key'=> 'lost-password'
+								'title'     => __( 'Enable Password Reset Link', 'user-registration' ),
+								'id'        => 'user_registration_login_options_lost_password',
+								'type'      => 'toggle',
+								'desc_tip'  => __( 'Allow users to reset their password if they forget it.', 'user-registration' ),
+								'css'       => '',
+								'default'   => 'yes',
+								'field-key' => 'lost-password',
 							),
 							array(
-								'title'    => __( 'Lost Password Page', 'user-registration' ),
-								'desc'     => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
-								'id'       => 'user_registration_lost_password_page_id',
-								'type'     => 'single_select_page',
-								'default'  => '',
-								'class'    => 'ur-enhanced-select-nostd',
-								'css'      => '',
-								'desc_tip' => true,
-								'field-key'=> 'lost-password'
+								'title'     => __( 'Lost Password Page', 'user-registration' ),
+								'desc'      => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
+								'id'        => 'user_registration_lost_password_page_id',
+								'type'      => 'single_select_page',
+								'default'   => '',
+								'class'     => 'ur-enhanced-select-nostd',
+								'css'       => '',
+								'desc_tip'  => true,
+								'field-key' => 'lost-password',
 							),
 							array(
-								'title'    => __( 'Reset Password Page', 'user-registration' ),
-								'desc'     => __( 'Select the page where your password reset form is placed.', 'user-registration' ),
-								'id'       => 'user_registration_reset_password_page_id',
-								'type'     => 'single_select_page',
-								'default'  => '',
-								'class'    => 'ur-enhanced-select-nostd',
-								'css'      => '',
-								'desc_tip' => true,
-								'field-key'=> 'lost-password'
+								'title'     => __( 'Registration URL', 'user-registration' ),
+								'desc'      => __( 'Set the URL of the registration page users should be sent to.', 'user-registration' ),
+								'id'        => 'user_registration_general_setting_registration_url_options',
+								'type'      => 'text',
+								'desc_tip'  => true,
+								'css'       => '',
+								'default'   => get_permalink( get_option( 'user_registration_registration_page_id' ) ),
+								'field-key' => 'registration-setting',
 							),
 							array(
-								'title'    => __( 'Registration URL', 'user-registration' ),
-								'desc'     => __( 'Set the URL of the registration page users should be sent to.', 'user-registration' ),
-								'id'       => 'user_registration_general_setting_registration_url_options',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => get_permalink(get_option( 'user_registration_registration_page_id' )),
-								'field-key'=> 'registration-setting'
+								'title'     => __( 'Registration URL Label', 'user-registration' ),
+								'desc'      => __( 'Customize the label shown for your registration link.', 'user-registration' ),
+								'id'        => 'user_registration_general_setting_registration_label',
+								'type'      => 'text',
+								'desc_tip'  => true,
+								'css'       => '',
+								'default'   => __( 'Not a member yet? Register now.', 'user-registration' ),
+								'field-key' => 'registration-setting',
 							),
 							array(
-								'title'    => __( 'Registration URL Label', 'user-registration' ),
-								'desc'     => __( 'Customize the label shown for your registration link.', 'user-registration' ),
-								'id'       => 'user_registration_general_setting_registration_label',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => __( 'Not a member yet? Register now.', 'user-registration' ),
-								'field-key'=> 'registration-setting'
+								'title'     => __( 'Hide Label', 'user-registration' ),
+								'desc'      => '',
+								'id'        => 'user_registration_hide_label_username_or_email',
+								'type'      => 'toggle',
+								'css'       => '',
+								'default'   => false,
+								'field-key' => 'username',
 							),
 							array(
-								'title'    => __( 'Hide Label', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_hide_label_username_or_email',
-								'type'     => 'toggle',
-								'css'      => '',
-								'default'  => false,
-								'field-key'=> 'username'
+								'title'     => __( 'Label', 'user-registration' ),
+								'desc'      => '',
+								'id'        => 'user_registration_label_username_or_email',
+								'type'      => 'text',
+								'desc_tip'  => true,
+								'css'       => '',
+								'default'   => __( 'Username or Email', 'user-registration' ),
+								'field-key' => 'username',
 							),
 							array(
-								'title'    => __( 'Label', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_label_username_or_email',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => __( 'Username or Email', 'user-registration' ),
-								'field-key'=> 'username'
-							),
-							array(
-								'title'    => __( 'Placeholder', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_placeholder_username_or_email',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => '',
-								'field-key'=> 'username'
+								'title'     => __( 'Placeholder', 'user-registration' ),
+								'desc'      => '',
+								'id'        => 'user_registration_placeholder_username_or_email',
+								'type'      => 'text',
+								'desc_tip'  => true,
+								'css'       => '',
+								'default'   => '',
+								'field-key' => 'username',
 							),
 							array(
 								'title'       => __( 'Invalid Username Message', 'user-registration' ),
@@ -7877,86 +8629,86 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'css'         => '',
 								'default'     => __( 'Invalid username or email.', 'user-registration' ),
 								'placeholder' => 'Default message from WordPress',
-								'field-key'   => 'username'
+								'field-key'   => 'username',
 							),
 							array(
-								'title'    => __( 'Invalid Email Message', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_message_unknown_email',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => 'A user could not be found with this email address.',
-								'field-key'=> 'username'
+								'title'     => __( 'Invalid Email Message', 'user-registration' ),
+								'desc'      => '',
+								'id'        => 'user_registration_message_unknown_email',
+								'type'      => 'text',
+								'desc_tip'  => true,
+								'css'       => '',
+								'default'   => 'A user could not be found with this email address.',
+								'field-key' => 'username',
 							),
 							array(
-								'title'    => __( 'Required Message', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_message_username_required',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => esc_html__( 'Username is required.', 'user-registration' ),
-								'field-key'=> 'username'
+								'title'     => __( 'Required Message', 'user-registration' ),
+								'desc'      => '',
+								'id'        => 'user_registration_message_username_required',
+								'type'      => 'text',
+								'desc_tip'  => true,
+								'css'       => '',
+								'default'   => esc_html__( 'Username is required.', 'user-registration' ),
+								'field-key' => 'username',
 							),
 							array(
-								'title'    => __( 'Hide Label', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_hide_label_password',
-								'type'     => 'toggle',
-								'css'      => '',
-								'default'  => false,
-								'field-key'=> 'password'
+								'title'     => __( 'Hide Label', 'user-registration' ),
+								'desc'      => '',
+								'id'        => 'user_registration_hide_label_password',
+								'type'      => 'toggle',
+								'css'       => '',
+								'default'   => false,
+								'field-key' => 'password',
 							),
 							array(
-								'title'    => __( 'Label', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_label_remember_me',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => __( 'Remember Me', 'user-registration' ),
-								'field-key'=> 'remember-me'
+								'title'     => __( 'Label', 'user-registration' ),
+								'desc'      => '',
+								'id'        => 'user_registration_label_remember_me',
+								'type'      => 'text',
+								'desc_tip'  => true,
+								'css'       => '',
+								'default'   => __( 'Remember Me', 'user-registration' ),
+								'field-key' => 'remember-me',
 							),
 							array(
-								'title'    => __( 'Button Text', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_label_login',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => __( 'Login', 'user-registration' ),
-								'field-key'=> 'login-button'
+								'title'     => __( 'Button Text', 'user-registration' ),
+								'desc'      => '',
+								'id'        => 'user_registration_label_login',
+								'type'      => 'text',
+								'desc_tip'  => true,
+								'css'       => '',
+								'default'   => __( 'Login', 'user-registration' ),
+								'field-key' => 'login-button',
 							),
 							array(
-								'title'    => __( 'Label', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_label_lost_your_password',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => __( 'Lost your password?', 'user-registration' ),
-								'field-key'=> 'lost-password'
+								'title'     => __( 'Label', 'user-registration' ),
+								'desc'      => '',
+								'id'        => 'user_registration_label_lost_your_password',
+								'type'      => 'text',
+								'desc_tip'  => true,
+								'css'       => '',
+								'default'   => __( 'Lost your password?', 'user-registration' ),
+								'field-key' => 'lost-password',
 							),
 							array(
-								'title'    => __( 'Label', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_label_password',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => __( 'Password', 'user-registration' ),
-								'field-key'=> 'password'
+								'title'     => __( 'Label', 'user-registration' ),
+								'desc'      => '',
+								'id'        => 'user_registration_label_password',
+								'type'      => 'text',
+								'desc_tip'  => true,
+								'css'       => '',
+								'default'   => __( 'Password', 'user-registration' ),
+								'field-key' => 'password',
 							),
 							array(
-								'title'    => __( 'Placeholder', 'user-registration' ),
-								'desc'     => '',
-								'id'       => 'user_registration_placeholder_password',
-								'type'     => 'text',
-								'desc_tip' => true,
-								'css'      => '',
-								'default'  => '',
-								'field-key'=> 'password'
+								'title'     => __( 'Placeholder', 'user-registration' ),
+								'desc'      => '',
+								'id'        => 'user_registration_placeholder_password',
+								'type'      => 'text',
+								'desc_tip'  => true,
+								'css'       => '',
+								'default'   => '',
+								'field-key' => 'password',
 							),
 							array(
 								'title'       => __( 'Required Message', 'user-registration' ),
@@ -7965,9 +8717,9 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'type'        => 'text',
 								'desc_tip'    => true,
 								'css'         => '',
-								'default'     => esc_html__( 'The password field is empty.', 'user-registration'),
+								'default'     => esc_html__( 'The password field is empty.', 'user-registration' ),
 								'placeholder' => 'Default message from WordPress',
-								'field-key'   => 'password'
+								'field-key'   => 'password',
 							),
 							array(
 								'title'       => __( 'Invalid Password', 'user-registration' ),
@@ -7978,10 +8730,10 @@ if ( ! function_exists( 'get_login_field_settings' ) ) {
 								'css'         => '',
 								'default'     => esc_html__( 'The password you entered for the %label% %email% is incorrect.', 'user-registration' ),
 								'placeholder' => 'Default message from WordPress',
-								'field-key'   => 'password'
+								'field-key'   => 'password',
 							),
 						),
-					)
+					),
 				),
 			)
 		);
@@ -8000,7 +8752,7 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 
 		$ur_captchas         = ur_get_captcha_integrations();
 		$ur_enabled_captchas = array(
-			'' => __( "Select Enabled Captcha", 'user-registration' )
+			'' => __( 'Select Enabled Captcha', 'user-registration' ),
 		);
 
 		foreach ( $ur_captchas as $key => $value ) {
@@ -8018,7 +8770,7 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 			array(
 				'title'    => '',
 				'sections' => array(
-					'login_options_settings' => array(
+					'login_options_settings'          => array(
 						'title'    => __( 'General', 'user-registration' ),
 						'type'     => 'card',
 						'desc'     => '',
@@ -8067,7 +8819,7 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'type'     => 'text',
 								'desc_tip' => true,
 								'css'      => '',
-								'default' => __( 'Welcome', 'user-registration' ),
+								'default'  => __( 'Welcome', 'user-registration' ),
 							),
 							array(
 								'title'    => __( 'Login Form Description', 'user-registration' ),
@@ -8077,7 +8829,7 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'desc_tip' => true,
 								'css'      => '',
 								'default'  => __( 'Please enter your details to access your account.', 'user-registration' ),
-							)
+							),
 						),
 					),
 					'login_options_settings_advanced' => array(
@@ -8094,19 +8846,20 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'css'      => '',
 								'default'  => 'no',
 							),
-//							array(
-//								'title'    => __( 'Hide Field Labels', 'user-registration' ),
-//								'id'       => 'user_registration_login_options_hide_labels',
-//								'type'     => 'toggle',
-//								'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
-//								'css'      => '',
-//								'default'  => 'no',
-//							),
+							// array(
+							// 'title'    => __( 'Hide Field Labels', 'user-registration' ),
+							// 'id'       => 'user_registration_login_options_hide_labels',
+							// 'type'     => 'toggle',
+							// 'desc_tip' => __( 'Hide input labels for a cleaner, minimal login form.', 'user-registration' ),
+							// 'css'      => '',
+							// 'default'  => 'no',
+							// ),
 							array(
 								'title'    => __( 'Enable Captcha', 'user-registration' ),
 								'id'       => 'user_registration_login_options_enable_recaptcha',
 								'type'     => 'toggle',
-								'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" rel="noreferrer noopener" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ), //phpcs:ignore
+								'desc_tip' => sprintf( __( 'Enable %1$s %2$s Captcha %3$s support', 'user-registration' ), '<a title="', 'Please make sure the site key and secret are not empty in setting page." href="' . admin_url() . 'admin.php?page=user-registration-settings&tab=captcha" rel="noreferrer noopener" target="_blank" style="color: #9ef01a;text-decoration:none;">', '</a>' ),
+								//phpcs:ignore
 								'css'      => '',
 								'default'  => 'no',
 							),
@@ -8161,18 +8914,18 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'placeholder' => 'Default message from WordPress',
 							),
 							array(
-								'title'      => __( 'Enable Custom Redirect', 'user-registration' ),
-								'desc'       => '',
-								'id'         => 'user_registration_login_options_enable_custom_redirect',
-								'type'       => 'toggle',
-								'desc_tip'   => __( 'Custom redirection settings after login or logout.', 'user-registration' ),
-								'css'        => '',
-								'default'    => 'no',
+								'title'    => __( 'Enable Custom Redirect', 'user-registration' ),
+								'desc'     => '',
+								'id'       => 'user_registration_login_options_enable_custom_redirect',
+								'type'     => 'toggle',
+								'desc_tip' => __( 'Custom redirection settings after login or logout.', 'user-registration' ),
+								'css'      => '',
+								'default'  => 'no',
 							),
 							array(
 								'type'              => 'select',
 								'title'             => __( 'Redirect After Login', 'user-registration' ),
-								'desc_tip'              => __( 'Select the option in which users are redirected to after login', 'user-registration' ),
+								'desc_tip'          => __( 'Select the option in which users are redirected to after login', 'user-registration' ),
 								'required'          => false,
 								'id'                => 'user_registration_login_options_redirect_after_login',
 								'class'             => 'ur-enhanced-select',
@@ -8200,24 +8953,24 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'product'           => 'user-registration/user-registration.php',
 							),
 							array(
-								'title'    => __( 'Redirect Page', 'user-registration' ),
-								'id'       => 'user_registration_login_options_after_login_redirect_page',
-								'type'     => 'single_select_page',
-								'class'    => 'ur-enhanced-select-nostd',
-								'css'      => '',
-								'default'  => '',
-				),
+								'title'   => __( 'Redirect Page', 'user-registration' ),
+								'id'      => 'user_registration_login_options_after_login_redirect_page',
+								'type'    => 'single_select_page',
+								'class'   => 'ur-enhanced-select-nostd',
+								'css'     => '',
+								'default' => '',
+							),
 							array(
-								'title'    => __( 'External URL', 'user-registration' ),
-								'id'       => 'user_registration_login_options_after_login_redirect_external_url',
-								'type'     => 'text',
-								'css'      => '',
-								'default'  => '',
+								'title'   => __( 'External URL', 'user-registration' ),
+								'id'      => 'user_registration_login_options_after_login_redirect_external_url',
+								'type'    => 'text',
+								'css'     => '',
+								'default' => '',
 							),
 							array(
 								'type'              => 'select',
 								'title'             => __( 'Redirect After Logout', 'user-registration' ),
-								'desc_tip'              => __( 'Select the option in which users are redirected to after logout', 'user-registration' ),
+								'desc_tip'          => __( 'Select the option in which users are redirected to after logout', 'user-registration' ),
 								'required'          => false,
 								'id'                => 'user_registration_login_options_redirect_after_logout',
 								'class'             => 'ur-enhanced-select',
@@ -8245,19 +8998,19 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 								'product'           => 'user-registration/user-registration.php',
 							),
 							array(
-								'title'    => __( 'Redirect Page', 'user-registration' ),
-								'id'       => 'user_registration_login_options_after_logout_redirect_page',
-								'type'     => 'single_select_page',
-								'class'    => 'ur-enhanced-select-nostd',
-								'css'      => '',
-								'default'  => '',
-				),
+								'title'   => __( 'Redirect Page', 'user-registration' ),
+								'id'      => 'user_registration_login_options_after_logout_redirect_page',
+								'type'    => 'single_select_page',
+								'class'   => 'ur-enhanced-select-nostd',
+								'css'     => '',
+								'default' => '',
+							),
 							array(
-								'title'    => __( 'External URL', 'user-registration' ),
-								'id'       => 'user_registration_login_options_after_logout_redirect_external_url',
-								'type'     => 'text',
-								'css'      => '',
-								'default'  => '',
+								'title'   => __( 'External URL', 'user-registration' ),
+								'id'      => 'user_registration_login_options_after_logout_redirect_external_url',
+								'type'    => 'text',
+								'css'     => '',
+								'default' => '',
 							),
 
 						),
@@ -8274,21 +9027,27 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 if ( ! function_exists( 'render_login_option_settings' ) ) {
 
 	function render_login_option_settings( $section ) {
-		$settings = '';
-		$section_settings = $section[ 'settings' ];
-		$repositionable_settings = array_filter( $section_settings, function( $setting ) {
-			return isset( $setting[ 'item_position' ] );
-		});
-		$section_settings = array_filter( $section_settings, function( $setting ) {
-			return ! isset( $setting[ 'item_position' ] );
-		});
-		foreach( $repositionable_settings as $setting ) {
-			[ $position, $setting_id ] = $setting[ 'item_position' ];
-			$offset = array_search( $setting_id, array_column( $section_settings, 'id' ) );
-			if( 'before' === $position ) {
+		$settings                = '';
+		$section_settings        = $section['settings'];
+		$repositionable_settings = array_filter(
+			$section_settings,
+			function ( $setting ) {
+				return isset( $setting['item_position'] );
+			}
+		);
+		$section_settings        = array_filter(
+			$section_settings,
+			function ( $setting ) {
+				return ! isset( $setting['item_position'] );
+			}
+		);
+		foreach ( $repositionable_settings as $setting ) {
+			[ $position, $setting_id ] = $setting['item_position'];
+			$offset                    = array_search( $setting_id, array_column( $section_settings, 'id' ) );
+			if ( 'before' === $position ) {
 				array_splice( $section_settings, $offset, 0, array( $setting ) );
 			}
-			if( 'after' === $position ) {
+			if ( 'after' === $position ) {
 				array_splice( $section_settings, $offset + 1, 0, array( $setting ) );
 			}
 		}
@@ -8368,10 +9127,10 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 				case 'password':
 				case 'date':
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
-					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';
-					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
-					$settings .= '<div class="user-registration-login-form-global-settings--field">';
-					$settings .= '<input
+					$settings    .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
+					$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
+					$settings    .= '<div class="user-registration-login-form-global-settings--field">';
+					$settings    .= '<input
 							name="' . esc_attr( $value['id'] ) . '"
 							id="' . esc_attr( $value['id'] ) . '"
 							type="' . esc_attr( $value['type'] ) . '"
@@ -8380,11 +9139,11 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 							class="' . esc_attr( $value['class'] ) . '"
 							placeholder="' . esc_attr( $value['placeholder'] ) . '"
 							' . esc_attr( implode( ' ', $custom_attributes ) ) . ' ' . wp_kses_post( $description ) . '/>';
-					$settings .= '</div>';
-					$settings .= '</div>';
+					$settings    .= '</div>';
+					$settings    .= '</div>';
 					break;
 				case 'nonce':
-					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';
+					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 					$settings .= '<input
 							name="' . esc_attr( $value['id'] ) . '"
@@ -8399,7 +9158,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 				// Color picker.
 				case 'color':
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
-					$settings    .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';
+					$settings    .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
 					$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings    .= '<div class="user-registration-login-form-global-settings--field">';
 					$settings    .= '<input
@@ -8420,7 +9179,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 				case 'textarea':
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
 
-					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';
+					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 					$settings .= wp_kses_post( $description );
@@ -8433,7 +9192,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 							cols="' . esc_attr( $value['cols'] ) . '"
 							placeholder="' . esc_attr( $value['placeholder'] ) . '"
 							' . esc_html( implode( ' ', $custom_attributes ) ) . '>'
-							. esc_textarea( $option_value ) . '</textarea>';
+								. esc_textarea( $option_value ) . '</textarea>';
 					$settings .= '</div>';
 					$settings .= '</div>';
 					break;
@@ -8443,7 +9202,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 				case 'multiselect':
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
 
-					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';
+					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 					$multiple  = '';
@@ -8483,7 +9242,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 				// Radio inputs.
 				case 'radio':
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
-					$settings    .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';
+					$settings    .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
 					$settings    .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings    .= '<div class="user-registration-login-form-global-settings--field">';
 					$settings    .= '<fieldset>';
@@ -8532,7 +9291,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					if ( 'option' === $value['show_if_checked'] ) {
 						$visbility_class[] = 'show_options_if_checked';
 					}
-					$settings .= '<div class="user-registration-login-form-global-settings ' . esc_attr( implode( ' ', $visbility_class ) ) . ' ' . esc_attr( $value['row_class'] ) . '" data-field-key="'.esc_attr( $value['field-key'] ).'">';
+					$settings .= '<div class="user-registration-login-form-global-settings ' . esc_attr( implode( ' ', $visbility_class ) ) . ' ' . esc_attr( $value['row_class'] ) . '" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
 
 					if ( ! isset( $value['checkboxgroup'] ) || 'start' === $value['checkboxgroup'] ) {
 						$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
@@ -8575,7 +9334,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 						$args = wp_parse_args( $value['args'], $args );
 					}
 
-					$settings .= '<div class="user-registration-login-form-global-settings single_select_page form-row" ' . ( ( isset( $value['display'] ) && 'none' === $value['display'] ) ? 'style="display:none"' : '' ) . ' data-field-key="'.esc_attr( $value['field-key'] ).'">';
+					$settings .= '<div class="user-registration-login-form-global-settings single_select_page form-row" ' . ( ( isset( $value['display'] ) && 'none' === $value['display'] ) ? 'style="display:none"' : '' ) . ' data-field-key="' . esc_attr( $value['field-key'] ) . '">';
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 					$settings .= str_replace( ' id=', " data-placeholder='" . esc_attr__( 'Select a page&hellip;', 'user-registration' ) . "' style='" . esc_attr( $value['css'] ) . "' class='" . esc_attr( $value['class'] ) . "' id=", wp_dropdown_pages( $args ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -8586,23 +9345,29 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 
 				case 'tinymce':
 					$editor_settings = array(
-						'name'       => esc_attr( $value['id'] ),
-						'id'         => esc_attr( $value['id'] ),
-						'style'      => esc_attr( $value['css'] ),
-						'default'    => esc_attr( $value['default'] ),
-						'class'      => esc_attr( $value['class'] ),
-						'quicktags'  => array( 'buttons' => 'em,strong,link' ),
-						'show-ur-registration-form-button' => false, // Hide Add Registration button for login form settings
-						'tinymce'    => array(
+						'name'                             => esc_attr( $value['id'] ),
+						'id'                               => esc_attr( $value['id'] ),
+						'style'                            => esc_attr( $value['css'] ),
+						'default'                          => esc_attr( $value['default'] ),
+						'class'                            => esc_attr( $value['class'] ),
+						'quicktags'                        => array( 'buttons' => 'em,strong,link' ),
+						'show-ur-registration-form-button' => false,
+						// Hide Add Registration button for login form settings
+						'tinymce'                          => array(
 							'theme_advanced_buttons1' => 'bold,italic,strikethrough,separator,bullist,numlist,separator,blockquote,separator,justifyleft,justifycenter,justifyright,separator,link,unlink,separator,undo,redo,separator',
 							'theme_advanced_buttons2' => '',
 						),
-						'editor_css' => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
+						'editor_css'                       => '<style>#wp-excerpt-editor-container .wp-editor-area{height:175px; width:100%;}</style>',
 					);
 
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
 
-					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';
+					// Unwrap email content if it contains wrapper HTML (for editor display).
+					if ( function_exists( 'ur_unwrap_email_body_content' ) ) {
+						$option_value = ur_unwrap_email_body_content( $option_value );
+					}
+
+					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 					$settings .= wp_kses_post( $description );
@@ -8618,7 +9383,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					break;
 
 				case 'link':
-					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';
+					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_attr( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 
@@ -8693,7 +9458,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 				case 'toggle':
 					$option_value = UR_Admin_Settings::get_option( $value['id'], $value['default'] );
 
-					$settings .= '<div class="user-registration-login-form-global-settings form-row ur-toggle-setting" data-field-key="'.esc_attr( $value['field-key'] ).'">';
+					$settings .= '<div class="user-registration-login-form-global-settings form-row ur-toggle-setting" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
 					$settings .= '<div class="user-registration-login-form-toggle-option">';
 					$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
@@ -8722,7 +9487,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					$options      = isset( $value['options'] ) ? $value['options'] : array(); // $args['choices'] for backward compatibility. Modified since 1.5.7.
 
 					if ( ! empty( $options ) ) {
-						$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';
+						$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
 						$settings .= '<label for="' . esc_attr( $value['id'] ) . '">' . esc_html( $value['title'] ) . ' ' . wp_kses_post( $tooltip_html ) . '</label>';
 						$settings .= '<div class="user-registration-login-form-global-settings--field">';
 
@@ -8747,7 +9512,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 								trim( $option_text ),
 								array(
 									'a'    => array(
-										'href' => array(),
+										'href'  => array(),
 										'title' => array(),
 									),
 									'span' => array(),
@@ -8767,8 +9532,8 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					break;
 				// Default: run an action.
 				case 'html':
-					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="'.esc_attr( $value['field-key'] ).'">';
-					$settings .= '<label for=' . esc_attr( $value[ 'id' ] ) . '>' . esc_html( $value[ 'title' ] ) . '</label>';
+					$settings .= '<div class="user-registration-login-form-global-settings form-row" data-field-key="' . esc_attr( $value['field-key'] ) . '">';
+					$settings .= '<label for=' . esc_attr( $value['id'] ) . '>' . esc_html( $value['title'] ) . '</label>';
 					$settings .= '<div class="user-registration-login-form-global-settings--field">';
 					$settings .= $value['html_content'];
 					$settings .= '</div>';
@@ -8789,7 +9554,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 	}
 }
 
-add_filter('user_registration_find_my_account_in_page', 'ur_find_my_account_in_custom_template', 10, 2);
+add_filter( 'user_registration_find_my_account_in_page', 'ur_find_my_account_in_custom_template', 10, 2 );
 
 if ( ! function_exists( 'ur_find_my_account_in_custom_template' ) ) {
 	/**
@@ -8814,7 +9579,7 @@ if ( ! function_exists( 'ur_find_my_account_in_custom_template' ) ) {
 
 		$content = ur_file_get_contents( $template_path );
 
-		if ( empty( $content ) || !is_string( $content ) ) {
+		if ( empty( $content ) || ! is_string( $content ) ) {
 			return $value;
 		}
 
@@ -8838,9 +9603,9 @@ if ( ! function_exists( 'ur_find_my_account_in_custom_template' ) ) {
 	}
 }
 
-add_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url' , 10, 4 );
+add_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 10, 4 );
 
-if( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
+if ( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 	/**
 	 * Filter the endpoint URL for WPML compatibility.
 	 *
@@ -8848,18 +9613,16 @@ if( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 	 * and localization of URLs. It removes the filter temporarily to avoid infinite loops,
 	 * translates the endpoint, converts the URL using WPML's convert_url method, and then
 	 * re-adds the filter.
- *
 	 *
-	 * @param string $url       The endpoint URL.
-	 * @param string $endpoint  The endpoint slug.
-	 * @param mixed  $value     The value to add to the URL.
+	 * @param string $url The endpoint URL.
+	 * @param string $endpoint The endpoint slug.
+	 * @param mixed  $value The value to add to the URL.
 	 * @param string $permalink The permalink URL.
 	 *
 	 * @return string Modified URL if WPML is active, original urk if WPML is not active.
 	 */
-
 	function ur_filter_get_endpoint_url( $url, $endpoint, $value, $permalink ) {
-		//Return early WPML is not active
+		// Return early WPML is not active
 		if ( ! class_exists( 'SitePress' ) ) {
 			return $url;
 		}
@@ -8867,13 +9630,14 @@ if( ! function_exists( 'ur_filter_get_endpoint_url' ) ) {
 		remove_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 10 );
 
 		$translated_endpoint = ur_get_endpoint_translation( $endpoint );
-		$url = ur_get_endpoint_url( $translated_endpoint, $value, $site_press->convert_url( $permalink ) );
+		$url                 = ur_get_endpoint_url( $translated_endpoint, $value, $site_press->convert_url( $permalink ) );
 		add_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 10, 4 );
+
 		return $url;
 	}
 }
 
-if( ! function_exists( 'ur_get_endpoint_translation' ) ) {
+if ( ! function_exists( 'ur_get_endpoint_translation' ) ) {
 	/**
 	 * Get the translated endpoint
 	 *
@@ -8881,47 +9645,46 @@ if( ! function_exists( 'ur_get_endpoint_translation' ) ) {
 	 *
 	 * @return string
 	 */
-	 function ur_get_endpoint_translation( $endpoint ,$language = null ) {
+	function ur_get_endpoint_translation( $endpoint, $language = null ) {
 
 		return apply_filters( 'wpml_get_endpoint_translation', $endpoint, $endpoint, $language );
 	}
 }
 
-add_filter('user_registration_get_endpoint_url',  'ur_filter_get_endpoint_url', 10, 4);
+add_filter( 'user_registration_get_endpoint_url', 'ur_filter_get_endpoint_url', 10, 4 );
 
-if( ! function_exists( 'ur_register_endpoints_translations') ) {
+if ( ! function_exists( 'ur_register_endpoints_translations' ) ) {
 
-	function ur_register_endpoints_translations(){
+	function ur_register_endpoints_translations() {
 		/**
 		 * Register the endpoint translations
 		 */
-    	 if(  is_admin() || ! defined('ICL_SITEPRESS_VERSION') || ICL_PLUGIN_INACTIVE){
+		if ( is_admin() || ! defined( 'ICL_SITEPRESS_VERSION' ) || ICL_PLUGIN_INACTIVE ) {
 			return false;
 		}
 
 		$ur_vars = UR()->query->query_vars;
 
-		 if (! empty($ur_vars)) {
+		if ( ! empty( $ur_vars ) ) {
 			$query_vars = array(
 
 				// My account actions.
-				'edit-profile'       => get_endpoint_translation('edit-profile', $ur_vars['edit-profile'], $language),
-				'change-password'       => get_endpoint_translation('change-password', $ur_vars['change-password'], $language),
-				'lost-password'      => get_endpoint_translation('lost-password', $ur_vars['lost-password'], $language),
-				'user-logout'    => get_endpoint_translation('user-logout', $ur_vars['user-logout'], $language),
+				'edit-profile'    => get_endpoint_translation( 'edit-profile', $ur_vars['edit-profile'], $language ),
+				'change-password' => get_endpoint_translation( 'change-password', $ur_vars['change-password'], $language ),
+				'lost-password'   => get_endpoint_translation( 'lost-password', $ur_vars['lost-password'], $language ),
+				'user-logout'     => get_endpoint_translation( 'user-logout', $ur_vars['user-logout'], $language ),
 			);
-			$query_vars = apply_filters('wcml_register_endpoints_query_vars', $query_vars, $ur_vars, $this);
+			$query_vars = apply_filters( 'wcml_register_endpoints_query_vars', $query_vars, $ur_vars, $this );
 
-			$query_vars             = array_merge($ur_vars, $query_vars);
+			$query_vars             = array_merge( $ur_vars, $query_vars );
 			UR()->query->query_vars = $query_vars;
 		}
 
 		return UR()->query->query_vars;
-
 	}
 }
 
-if( ! function_exists( 'get_endpoint_translation' ) ) {
+if ( ! function_exists( 'get_endpoint_translation' ) ) {
 	/**
 	 * Get the translated endpoint
 	 *
@@ -8931,10 +9694,10 @@ if( ! function_exists( 'get_endpoint_translation' ) ) {
 	 */
 	function get_endpoint_translation( $endpoint, $value, $language = null ) {
 
-		if (function_exists('icl_t')) {
-			$trnsl = apply_filters('wpml_translate_single_string', $endpoint, 'UserRegistration Endpoints', $key, $language);
+		if ( function_exists( 'icl_t' ) ) {
+			$trnsl = apply_filters( 'wpml_translate_single_string', $endpoint, 'UserRegistration Endpoints', $key, $language );
 
-			if (! empty($trnsl)) {
+			if ( ! empty( $trnsl ) ) {
 				return $trnsl;
 			} else {
 				return $endpoint;
@@ -8965,11 +9728,11 @@ if ( ! function_exists( 'ur_get_sms_verification_default_message_content' ) ) {
 	/**
 	 * Get sms verification message content .
 	 *
-	 * @since 4.2.1
 	 * @return array
+	 * @since 4.2.1
 	 */
 	function ur_get_sms_verification_default_message_content() {
-		$message = sprintf(__("Hi {{username}}, <br> Your One  Time Password (OTP) is : {{sms_otp}} <br> Enter this code to login to your account. <br> Note: This code expires in {{sms_otp_validity}} minutes. <br> Thank You!", 'user-registration'));
+		$message = sprintf( __( 'Hi {{username}}, <br> Your One  Time Password (OTP) is : {{sms_otp}} <br> Enter this code to login to your account. <br> Note: This code expires in {{sms_otp_validity}} minutes. <br> Thank You!', 'user-registration' ) );
 
 		return $message;
 	}
@@ -8987,31 +9750,34 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
 	 */
 	function ur_setting_keys() {
 		return array(
-            'user-registration/user-registration.php' => array(
-                array( 'user_registration_general_setting_disabled_user_roles', '["subscriber"]' ),
-                array( 'user_registration_login_option_hide_show_password', false ),
-                array( 'user_registration_myaccount_page_id', '' ),
-                array( 'user_registration_my_account_layout', 'horizontal' ),
-                array( 'user_registration_ajax_form_submission_on_edit_profile', false ),
-                array( 'user_registration_disable_profile_picture', false ),
-                array( 'user_registration_disable_logout_confirmation', apply_filters('user_registration_disable_logout_confirmation_status', true) ),
-                array( 'user_registration_login_options_form_template', 'default' ),
-                array( 'user_registration_general_setting_login_options_with', 'default' ),
-                array( 'user_registration_login_title', false ),
-                array( 'ur_login_ajax_submission', false ),
-                array( 'user_registration_login_options_remember_me', true ),
-                array( 'user_registration_login_options_lost_password', true ),
-                array( 'user_registration_login_options_hide_labels', false ),
-                array( 'user_registration_login_options_enable_recaptcha', false ),
-                array( 'user_registration_general_setting_registration_url_options', '' ),
-                array( 'user_registration_login_options_prevent_core_login', false ),
-                array( 'user_registration_login_options_login_redirect_url', '' ),
-                array( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
-                array( 'user_registration_login_options_configured_captcha_type', 'v2' ),
-                array( 'user_registration_general_setting_uninstall_option', false ),
-                array( 'user_registration_allow_usage_tracking', false ),
-                array( 'user_registration_hide_label_password', false ),
-                array( 'user_registration_hide_label_username_or_email', false ),
+			'user-registration/user-registration.php'     => array(
+				array( 'user_registration_general_setting_disabled_user_roles', '["subscriber"]' ),
+				array( 'user_registration_login_option_hide_show_password', false ),
+				array( 'user_registration_myaccount_page_id', '' ),
+				array( 'user_registration_my_account_layout', 'vertical' ),
+				array( 'user_registration_ajax_form_submission_on_edit_profile', false ),
+				array( 'user_registration_disable_profile_picture', false ),
+				array(
+					'user_registration_disable_logout_confirmation',
+					apply_filters( 'user_registration_disable_logout_confirmation_status', true ),
+				),
+				array( 'user_registration_login_options_form_template', 'default' ),
+				array( 'user_registration_general_setting_login_options_with', 'default' ),
+				array( 'user_registration_login_title', false ),
+				array( 'ur_login_ajax_submission', false ),
+				array( 'user_registration_login_options_remember_me', true ),
+				array( 'user_registration_login_options_lost_password', true ),
+				array( 'user_registration_login_options_hide_labels', false ),
+				array( 'user_registration_login_options_enable_recaptcha', false ),
+				array( 'user_registration_general_setting_registration_url_options', '' ),
+				array( 'user_registration_login_options_prevent_core_login', false ),
+				array( 'user_registration_login_options_login_redirect_url', '' ),
+				array( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
+				array( 'user_registration_login_options_configured_captcha_type', 'v2' ),
+				array( 'user_registration_general_setting_uninstall_option', false ),
+				array( 'user_registration_allow_usage_tracking', false ),
+				array( 'user_registration_hide_label_password', false ),
+				array( 'user_registration_hide_label_username_or_email', false ),
 			),
 			'user-registration-pro/user-registration.php' => array(
 				array( 'user_registration_pro_general_setting_delete_account', 'disable' ),
@@ -9024,11 +9790,11 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
 				array( 'user_registration_pro_role_based_redirection', false ),
 				array( 'user_registration_payment_currency', 'USD' ),
 				array( 'user_registration_content_restriction_enable', true ),
-                array( 'user_registration_content_restriction_allow_to_roles', '["administrator"]' )
+				array( 'user_registration_content_restriction_allow_to_roles', '["administrator"]' ),
 			),
 			'user-registration-file-upload/user-registration-file-upload.php' => array(
 				array( 'user_registration_file_upload_setting_valid_file_type', '["pdf"]' ),
-                array( 'user_registration_file_upload_setting_max_file_size', '1024' )
+				array( 'user_registration_file_upload_setting_max_file_size', '1024' ),
 			),
 			'user-registration-pdf-submission/user-registration-pdf-submission.php' => array(
 				array( 'user_registration_pdf_template', 'default' ),
@@ -9046,7 +9812,7 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
 				array( 'user_registration_pdf_multiple_column', false ),
 				array( 'user_registration_pdf_rtl', false ),
 				array( 'user_registration_pdf_print_user_default_fields', false ),
-                array( 'user_registration_pdf_hide_empty_fields', false )
+				array( 'user_registration_pdf_hide_empty_fields', false ),
 			),
 			'user-registration-social-connect/user-registration-social-connect.php' => array(
 				array( 'user_registration_social_setting_enable_facebook_connect', '' ),
@@ -9057,7 +9823,7 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
 				array( 'user_registration_social_setting_display_social_buttons_in_registration', false ),
 				array( 'user_registration_social_setting_default_user_role', 'subscriber' ),
 				array( 'user_registration_social_login_position', 'bottom' ),
-                array( 'user_registration_social_login_template', 'ursc_theme_4' )
+				array( 'user_registration_social_login_template', 'ursc_theme_4' ),
 			),
 			'user-registration-two-factor-authentication/user-registration-two-factor-authentication.php' => array(
 				array( 'user_registration_tfa_enable_disable', false ),
@@ -9066,7 +9832,7 @@ if ( ! function_exists( 'ur_setting_keys' ) ) {
 				array( 'user_registration_tfa_otp_expiry_time', '10' ),
 				array( 'user_registration_tfa_otp_resend_limit', '3' ),
 				array( 'user_registration_tfa_incorrect_otp_limit', '5' ),
-                array( 'user_registration_tfa_login_hold_period', '60' )
+				array( 'user_registration_tfa_login_hold_period', '60' ),
 			),
 		);
 	}
@@ -9083,16 +9849,17 @@ function ur_cleanup_logs() {
 		$logger->clear_expired_logs();
 	}
 }
+
 add_action( 'user_registration_cleanup_logs', 'ur_cleanup_logs' );
 
 if ( ! function_exists( 'ur_sanitize_value_by_type' ) ) {
 	/**
 	 * Get sms verification message content .
 	 *
-	 * @since 4.2.1
 	 * @return array
+	 * @since 4.2.1
 	 */
-	function ur_sanitize_value_by_type($option, $raw_value) {
+	function ur_sanitize_value_by_type( $option, $raw_value ) {
 
 		// Format the value based on option type.
 		switch ( $option['type'] ) {
@@ -9124,6 +9891,7 @@ if ( ! function_exists( 'ur_sanitize_value_by_type' ) ) {
 				$value = ur_clean( $raw_value );
 				break;
 		}
+
 		return $value;
 	}
 }
@@ -9139,15 +9907,14 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 	 *
 	 * @return void
 	 */
-	function ur_save_settings_options($section, $form_data) {
+	function ur_save_settings_options( $section, $form_data ) {
 		$update_options = array();
-
 		foreach ( $section['settings'] as $option ) {
 			if ( empty( $option['id'] ) ) {
 				continue;
 			}
 
-			$option_id = $option['id'];
+			$option_id    = $option['id'];
 			$option_name  = '';
 			$setting_name = '';
 
@@ -9165,7 +9932,7 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 				$value = ur_sanitize_value_by_type( $option, $form_data[ $option_id ] );
 				if ( $option_name && $setting_name ) {
 					if ( ! isset( $update_options[ $option_name ] ) || ! is_array( $update_options[ $option_name ] ) ) {
-						$existing = get_option( $option_name, array() );
+						$existing                       = get_option( $option_name, array() );
 						$update_options[ $option_name ] = is_array( $existing ) ? $existing : array();
 					}
 					$update_options[ $option_name ][ $setting_name ] = $value;
@@ -9174,12 +9941,11 @@ if ( ! function_exists( 'ur_save_settings_options' ) ) {
 				}
 			}
 		}
-
 		foreach ( $update_options as $name => $value ) {
 			update_option( $name, $value );
 		}
 	}
-};
+}
 
 if ( ! function_exists( 'user_registration_profile_details_form_fields' ) ) {
 
@@ -9188,6 +9954,7 @@ if ( ! function_exists( 'user_registration_profile_details_form_fields' ) ) {
 	 *
 	 * @param int   $form_id Id of the form through which user was registered.
 	 * @param array $fields_to_include Fields to include.
+	 *
 	 * @return array
 	 */
 	function user_registration_profile_details_form_fields( $form_id, $fields_to_include = array() ) {
@@ -9226,6 +9993,7 @@ if ( ! function_exists( 'user_registration_profile_details_form_field_datas' ) )
 	 * @param array $user_data All the datas of the user.
 	 * @param array $form_field_data_array All the fields to be included in profile details page.
 	 * @param array $field_to_include Field to include.
+	 *
 	 * @return array
 	 */
 	function user_registration_profile_details_form_field_datas( $form_id, $user_data, $form_field_data_array, $field_to_include = array() ) {
@@ -9247,7 +10015,17 @@ if ( ! function_exists( 'user_registration_profile_details_form_field_datas' ) )
 
 			}
 
-			$fields_to_exclude = array_merge( ur_exclude_profile_details_fields(), apply_filters( 'user_registration_pro_excluded_fields_in_view_details_page', array( 'profile_picture', 'privacy_policy', 'password' ) ) );
+			$fields_to_exclude = array_merge(
+				ur_exclude_profile_details_fields(),
+				apply_filters(
+					'user_registration_pro_excluded_fields_in_view_details_page',
+					array(
+						'profile_picture',
+						'privacy_policy',
+						'password',
+					)
+				)
+			);
 
 			if ( isset( $user_data_to_show[ $key ]['field_key'] ) ) {
 				if ( 'file' === $user_data_to_show[ $key ]['field_key'] && '' !== $user_data_to_show[ $key ]['value'] ) {
@@ -9257,7 +10035,7 @@ if ( ! function_exists( 'user_registration_profile_details_form_field_datas' ) )
 					foreach ( $file_data as $attachment_key => $attachment_id ) {
 						$file      = isset( $attachment_id ) ? wp_get_attachment_url( $attachment_id ) : '';
 						$file_link = '<a href="' . esc_url( $file ) . '" rel="noreferrer noopener" target="_blank" >' . esc_html( basename( get_attached_file( $attachment_id ) ) ) . '</a>';
-						$file_link = apply_filters('user_registration_membership_frontend_listing_file_link', $file_link, $attachment_id);
+						$file_link = apply_filters( 'user_registration_membership_frontend_listing_file_link', $file_link, $attachment_id );
 						array_push( $upload_data, $file_link );
 					}
 					// Check if value contains array.
@@ -9299,13 +10077,12 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 	function ur_get_site_assistant_data() {
 		// Check for required pages
 		$required_pages = array(
-			'user_registration_login_page_id'               => 'Login Page',
-			'user_registration_lost_password_page_id'       => 'Lost Password Page',
-			'user_registration_reset_password_page_id'      => 'Reset Password Page',
+			'user_registration_login_page_id'              => 'Login Page',
+			'user_registration_lost_password_page_id'      => 'Lost Password Page',
 			'user_registration_member_registration_page_id' => 'Membership Registration Page',
-			'user_registration_thank_you_page_id'           => 'Membership Thank You Page',
-			'user_registration_myaccount_page_id'           => 'My Account Page',
-			'user_registration_membership_pricing_page_id'  => 'Membership Pricing Page',
+			'user_registration_thank_you_page_id'          => 'Membership Thank You Page',
+			'user_registration_myaccount_page_id'          => 'My Account Page',
+			'user_registration_membership_pricing_page_id' => 'Membership Pricing Page',
 		);
 
 		// Check if membership module is activated
@@ -9314,14 +10091,28 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 		$missing_pages_data = array();
 
 		foreach ( $required_pages as $option_name => $page_name ) {
-			$page_id = get_option( $option_name, 0 );
-			if ( ! $page_id || ! get_post( $page_id ) ) {
+			$page_id         = get_option( $option_name, 0 );
+			$is_page_missing = ! $page_id || ! get_post( $page_id );
+
+			// For login page, also check if login redirect URL is set
+			if ( 'user_registration_login_page_id' === $option_name ) {
+				$login_redirect_url = get_option( 'user_registration_login_options_login_redirect_url', '' );
+				if ( empty( $login_redirect_url ) ) {
+					$is_page_missing = true;
+				}
+			}
+
+			if ( $is_page_missing ) {
 				// Only include membership pages if membership module is activated
-				$is_membership_page = in_array( $option_name, array(
-					'user_registration_member_registration_page_id',
-					'user_registration_thank_you_page_id',
-					'user_registration_membership_pricing_page_id'
-				), true );
+				$is_membership_page = in_array(
+					$option_name,
+					array(
+						'user_registration_member_registration_page_id',
+						'user_registration_thank_you_page_id',
+						'user_registration_membership_pricing_page_id',
+					),
+					true
+				);
 
 				if ( ! $is_membership_page || $is_membership_activated ) {
 					$missing_pages_data[] = array(
@@ -9337,15 +10128,48 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 
 		// Get payment connection statuses
 		$payment_connections = ur_get_payment_connection_statuses();
+		$enabled_features    = (array) get_option( 'user_registration_enabled_features', array() );
+		$membership_enabled  = in_array( 'user-registration-membership', $enabled_features, true );
+
+		$default_form_id = (int) get_option( 'user_registration_default_form_page_id', 0 );
+		if ( ! $default_form_id ) {
+			$default_form_id = (int) get_option( 'user_registration_registration_form', 0 );
+		}
+
+		$default_form_post    = $default_form_id ? get_post( $default_form_id ) : null;
+		$default_form_content = $default_form_post ? (string) $default_form_post->post_content : '';
+
+		$default_form_has_membership = false !== strpos( $default_form_content, '"field_key":"membership"' );
+
+		$membership_field_skipped = (bool) get_option( 'user_registration_membership_field_skipped', false );
+
+		$membership_field_handled = ( ! $membership_enabled ) || $default_form_has_membership || $membership_field_skipped;
+
+		$has_membership_plans = false;
+
+		if ( post_type_exists( 'ur_membership' ) ) {
+			$has_membership_plans = (bool) get_posts(
+				array(
+					'post_type'      => 'ur_membership',
+					'post_status'    => 'publish',
+					'posts_per_page' => 1,
+					'fields'         => 'ids',
+				)
+			);
+		}
 
 		$site_assistant_data = array(
-			'has_default_form'        => ! empty( get_post( get_option( 'user_registration_default_form_page_id', '' ) ) ),
-			'missing_pages'           => $missing_pages_data,
-			'test_email_sent'         => get_option( 'user_registration_successful_test_mail', false ),
-			'wordpress_login_handled' => ( get_option( 'user_registration_login_options_prevent_core_login', false ) == true ) || ( get_option( 'user_registration_default_wordpress_login_skipped', false ) == true ),
-			'spam_protection_handled' => ur_string_to_bool( get_option( 'user_registration_captcha_setting_v2_connection_status', false ) ) || ur_string_to_bool( get_option( 'user_registration_spam_protection_skipped', false ) ),
-			'payment_setup_handled'   => $payment_setup_handled,
-			'payment_connections'     => $payment_connections,
+			'has_default_form'                  => ! empty( $default_form_post ),
+			'missing_pages'                     => $missing_pages_data,
+			'test_email_sent'                   => get_option( 'user_registration_successful_test_mail', false ),
+			'wordpress_login_handled'           => ( get_option( 'user_registration_login_options_prevent_core_login', false ) == true ) || ( get_option( 'user_registration_default_wordpress_login_skipped', false ) == true ),
+			'spam_protection_handled'           => ur_string_to_bool( get_option( 'user_registration_captcha_setting_v2_connection_status', false ) ) || ur_string_to_bool( get_option( 'user_registration_spam_protection_skipped', false ) ),
+			'payment_setup_handled'             => $payment_setup_handled,
+			'payment_connections'               => $payment_connections,
+			'membership_enabled'                => $membership_enabled,
+			'default_form_has_membership_field' => $default_form_has_membership,
+			'membership_field_handled'          => $membership_field_handled,
+			'has_membership_plans'              => $has_membership_plans,
 		);
 
 		return apply_filters( 'ur_site_assistant_data', $site_assistant_data );
@@ -9421,6 +10245,7 @@ if ( ! function_exists( 'ur_get_payment_connection_statuses' ) ) {
 if ( ! function_exists( 'ur_get_login_page_url' ) ) {
 	/**
 	 * Get the appropriate login page URL based on User Registration settings.
+	 *
 	 * @return string|false The login page URL or false if none found
 	 */
 	function ur_get_login_page_url() {
@@ -9475,13 +10300,13 @@ if ( ! function_exists( 'ur_find_pages_with_login_functionality' ) ) {
 		// Search for pages with login shortcodes and blocks
 		$patterns = array(
 			'%[user_registration_login]%',
-			'%<!-- wp:user-registration/login-form%'
+			'%<!-- wp:user-registration/login-form%',
 		);
 
 		// Build the SQL query
 		$pattern_conditions = array();
 		foreach ( $patterns as $pattern ) {
-			$pattern_conditions[] = "post_content LIKE " . $wpdb->prepare( '%s', $pattern );
+			$pattern_conditions[] = 'post_content LIKE ' . $wpdb->prepare( '%s', $pattern );
 		}
 
 		$where_clause = implode( ' OR ', $pattern_conditions );
@@ -9498,7 +10323,7 @@ if ( ! function_exists( 'ur_find_pages_with_login_functionality' ) ) {
 		$results = $wpdb->get_results( $query );
 
 		// Merge and deduplicate results
-		$all_results = array_merge( $results );
+		$all_results  = array_merge( $results );
 		$unique_pages = array();
 
 		foreach ( $all_results as $page ) {
@@ -9519,16 +10344,16 @@ if ( ! function_exists( 'ur_get_login_page_info' ) ) {
 	 */
 	function ur_get_login_page_info() {
 		$info = array(
-			'login_redirect_url' => get_option( 'user_registration_login_options_login_redirect_url' ),
-			'login_page_id' => get_option( 'user_registration_login_page_id' ),
+			'login_redirect_url'             => get_option( 'user_registration_login_options_login_redirect_url' ),
+			'login_page_id'                  => get_option( 'user_registration_login_page_id' ),
 			'login_pages_with_functionality' => ur_find_pages_with_login_functionality(),
-			'recommended_login_page_url' => ur_get_login_page_url()
+			'recommended_login_page_url'     => ur_get_login_page_url(),
 		);
 
 		// Add additional context
 		$info['login_redirect_url_set'] = ! empty( $info['login_redirect_url'] );
-		$info['login_page_id_set'] = ! empty( $info['login_page_id'] );
-		$info['has_login_pages'] = ! empty( $info['login_pages_with_functionality'] );
+		$info['login_page_id_set']      = ! empty( $info['login_page_id'] );
+		$info['has_login_pages']        = ! empty( $info['login_pages_with_functionality'] );
 
 		return $info;
 	}
@@ -9566,31 +10391,1241 @@ if ( ! function_exists( 'ur_site_assistant_config_count' ) ) {
 	function ur_site_assistant_config_count() {
 		$site_assistant_data = ur_get_site_assistant_data();
 
-		$checks = [
+		$checks = array(
 			! $site_assistant_data['has_default_form'],
 			! empty( $site_assistant_data['missing_pages'] ),
 			! $site_assistant_data['test_email_sent'],
 			! $site_assistant_data['wordpress_login_handled'],
 			! $site_assistant_data['spam_protection_handled'],
 			! $site_assistant_data['payment_setup_handled'],
-		];
+		);
 
 		$count = count( array_filter( $checks ) );
+
 		return $count;
 	}
 }
 
-if( ! function_exists( 'ur_get_membership_details') ) {
+if ( ! function_exists( 'ur_get_membership_details' ) ) {
 	/**
 	 * Get membership details.
 	 *
-	 * @since xx.xx.xx
-	 *
 	 * @return array
-	 */	function ur_get_membership_details() {
+	 * @since 5.0.0
+	 */
+	function ur_get_membership_details() {
 		$membership_service = new MembershipService();
 		$memberships        = $membership_service->list_active_memberships();
 
 		return $memberships;
+	}
+}
+
+if ( ! function_exists( 'urm_process_profile_fields' ) ) {
+	/**
+	 * Helper function for profile fields processing.
+	 *
+	 * @param array $profile User profile data.
+	 * @param array $single_field Single field data.
+	 * @param array $form_data The form data.
+	 * @param int   $form_id The form ID.
+	 * @param int   $user_id The user id.
+	 * @param bool  $is_admin_user Whether the user is an admin.
+	 */
+	function urm_process_profile_fields( $profile, $single_field, $form_data, $form_id, $user_id, $is_admin_user = false ) {
+
+		foreach ( $profile as $key => $field ) {
+
+			if ( ! isset( $field['type'] ) ) {
+				$field['type'] = 'text';
+			}
+			// Unset hidden field value.
+			if ( ( isset( $field['field_key'] ) && 'hidden' === $field['field_key'] ) || ( 'range' === $field['type'] && ur_string_to_bool( $field['enable_payment_slider'] ) ) ) {
+				$key = array_search( $field, $profile, true );
+
+				if ( false !== ( $key ) ) {
+					unset( $profile[ $key ] );
+				}
+			}
+			if ( ! $is_admin_user && 'hidden' === $field['type'] ) {
+				$key = array_search( $field, $profile, true );
+
+				if ( false !== ( $key ) ) {
+					unset( $profile[ $key ] );
+				}
+			}
+			// Get Value.
+			switch ( $field['type'] ) {
+				case 'checkbox':
+					if ( isset( $single_field[ $key ] ) ) {
+						// Serialize values fo checkbox field.
+						$single_field[ $key ] = ( json_decode( $single_field[ $key ] ) !== null ) ? json_decode( $single_field[ $key ] ) : sanitize_text_field( $single_field[ $key ] );
+					}
+					break;
+				case 'wysiwyg':
+					if ( isset( $single_field[ $key ] ) ) {
+						$single_field[ $key ] = sanitize_text_field( htmlentities( $single_field[ $key ] ) );
+					} else {
+						$single_field[ $key ] = '';
+					}
+					break;
+				case 'signature':
+					if ( isset( $single_field[ $key ] ) ) {
+						$single_field[ $key ] = apply_filters( 'user_registration_process_signature_field_data', $single_field[ $key ] );
+					} else {
+						$single_field[ $key ] = $field['default'];
+					}
+					break;
+				default:
+					if ( 'repeater' !== $field['type'] ) {
+						$single_field[ $key ] = isset( $single_field[ $key ] ) ? $single_field[ $key ] : '';
+					}
+					break;
+			}
+		}
+			if ( 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
+				$single_field[ $key ] = json_encode(
+					array(
+						'country' => sanitize_text_field( $single_field[ $key ] ),
+						'state'   => sanitize_text_field(
+							isset( $single_field[ $key . '_state' ] ) ? $single_field[ $key . '_state' ] : ''
+						),
+					)
+				);
+			}
+
+		/**
+		 * Action hook to perform validation of edit profile form.
+		 *
+		 * @param array $profile User profile data.
+		 * @param array $form_data The form data.
+		 * @param int $form_id The form ID.
+		 * @param int $user_id The user id.
+		 */
+		do_action( 'user_registration_validate_profile_update', $profile, $form_data, $form_id, $user_id );
+		/**
+		 * Action after the save profile validation.
+		 *
+		 * @param int The user ID.
+		 * @param array The profile data.
+		 */
+		do_action( 'user_registration_after_save_profile_validation', $user_id, $profile );
+
+		return array( $profile, $single_field );
+	}
+}
+
+
+if ( ! function_exists( 'urm_update_user_profile_data' ) ) {
+	/**
+	 * Helper function to update user profile data.
+	 *
+	 * @param object $user The user object.
+	 * @param array  $profile User profile data.
+	 * @param array  $single_field Single field data.
+	 * @param int    $form_id The form ID.
+	 */
+	function urm_update_user_profile_data( $user, $profile, $single_field, $form_id ) {
+
+		$user_data = array();
+		/**
+		 * Filter to modify the email change confirmation.
+		 * Default vallue is 'true'.
+		 */
+		$is_email_change_confirmation = (bool) apply_filters( 'user_registration_email_change_confirmation', true );
+		$email_updated                = false;
+		$pending_email                = '';
+		$user_id                      = $user->ID;
+		/**
+		 * Filter to modify the field settings.
+		 *
+		 * The dynamic portion of the hook name, $value->field_key.
+		 *
+		 * @param array $value The field value.
+		 */
+		$profile = apply_filters( 'user_registration_before_save_profile_details', $profile, $user_id, $form_id );
+
+		foreach ( $profile as $key => $field ) {
+			$new_key = str_replace( 'user_registration_', '', $key );
+
+			if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
+				if ( $user ) {
+					if ( sanitize_email( wp_unslash( $single_field[ $key ] ) ) !== $user->user_email ) {
+						$email_updated = true;
+						$pending_email = sanitize_email( wp_unslash( $single_field[ $key ] ) );
+					}
+					continue;
+				}
+			}
+
+			if ( in_array( $new_key, ur_get_user_table_fields() ) ) {
+				if ( 'display_name' === $new_key ) {
+					$user_data['display_name'] = sanitize_text_field( ( $single_field[ $key ] ) );
+				} else {
+					$user_data[ $new_key ] = sanitize_text_field( $single_field[ $key ] );
+				}
+			} else {
+				$update_key = $key;
+
+				if ( in_array( $new_key, ur_get_registered_user_meta_fields() ) ) {
+					$update_key = str_replace( 'user_', '', $new_key );
+				}
+				$disabled = isset( $field['custom_attributes']['disabled'] ) ? $field['custom_attributes']['disabled'] : '';
+
+				if ( 'disabled' !== $disabled ) {
+					update_user_meta( $user_id, $update_key, $single_field[ $key ] );
+				}
+			}
+		}
+
+		if ( count( $user_data ) > 0 ) {
+			$user_data['ID'] = $user_id;
+			wp_update_user( $user_data );
+		}
+
+		return array( $email_updated, $pending_email );
+	}
+}
+
+if ( ! function_exists( 'ur_pro_get_form_fields' ) ) {
+	/**
+	 * Get form fields.
+	 *
+	 * @param int $form_id Registration Form ID.
+	 *
+	 * @return array|WP_Error
+	 */
+	function ur_pro_get_form_fields( $form_id ) {
+		$form   = get_post( $form_id );
+		$fields = array();
+
+		if ( $form && 'user_registration' === $form->post_type ) {
+			$form_field_array = json_decode( $form->post_content );
+
+			if ( $form_field_array ) {
+
+				foreach ( $form_field_array as $post_content_row ) {
+					foreach ( $post_content_row as $post_content_grid ) {
+						foreach ( $post_content_grid as $field ) {
+							if ( isset( $field->field_key ) && ! in_array( $field->field_key, ur_pro_get_excluded_fields() ) ) {
+								$field_name        = isset( $field->general_setting->field_name ) ? $field->general_setting->field_name : '';
+								$field_label       = isset( $field->general_setting->label ) ? $field->general_setting->label : '';
+								$field_description = isset( $field->general_setting->description ) ? $field->general_setting->description : '';
+								$placeholder       = isset( $field->general_setting->placeholder ) ? $field->general_setting->placeholder : '';
+								$options           = isset( $field->general_setting->options ) ? $field->general_setting->options : array();
+								$field_key         = isset( $field->field_key ) ? ( $field->field_key ) : '';
+								$field_type        = isset( $field->field_key ) ? ur_get_field_type( $field_key ) : '';
+								$required          = isset( $field->general_setting->required ) ? $field->general_setting->required : '';
+								$required          = ur_string_to_bool( $required );
+								$enable_cl         = isset( $field->advance_setting->enable_conditional_logic ) && ur_string_to_bool( $field->advance_setting->enable_conditional_logic );
+								$cl_map            = isset( $field->advance_setting->cl_map ) ? $field->advance_setting->cl_map : '';
+								$custom_attributes = isset( $field->general_setting->custom_attributes ) ? $field->general_setting->custom_attributes : array();
+								$default           = '';
+
+								if ( isset( $field->general_setting->default_value ) ) {
+									$default = $field->general_setting->default_value;
+								} elseif ( isset( $field->advance_setting->default_value ) ) {
+									$default = $field->advance_setting->default_value;
+								}
+
+								if ( empty( $field_label ) ) {
+									$field_label_array = explode( '_', $field_name );
+									$field_label       = join( ' ', array_map( 'ucwords', $field_label_array ) );
+								}
+
+								if ( ! empty( $field_name ) ) {
+									$extra_params = array();
+
+									switch ( $field_key ) {
+
+										case 'radio':
+										case 'select':
+											$advanced_options        = isset( $field->advance_setting->options ) ? $field->advance_setting->options : '';
+											$advanced_options        = explode( ',', $advanced_options );
+											$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
+											$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
+
+											$extra_params['options'] = array_combine( $extra_params['options'], $extra_params['options'] );
+
+											break;
+
+										case 'checkbox':
+											$advanced_options        = isset( $field->advance_setting->choices ) ? $field->advance_setting->choices : '';
+											$advanced_options        = explode( ',', $advanced_options );
+											$extra_params['options'] = ! empty( $options ) ? $options : $advanced_options;
+											$extra_params['options'] = array_map( 'trim', $extra_params['options'] );
+
+											$extra_params['options'] = array_combine( $extra_params['options'], $extra_params['options'] );
+
+											break;
+
+										case 'date':
+											$date_format       = isset( $field->advance_setting->date_format ) ? $field->advance_setting->date_format : '';
+											$min_date          = isset( $field->advance_setting->min_date ) ? str_replace( '/', '-', $field->advance_setting->min_date ) : '';
+											$max_date          = isset( $field->advance_setting->max_date ) ? str_replace( '/', '-', $field->advance_setting->max_date ) : '';
+											$set_current_date  = isset( $field->advance_setting->set_current_date ) ? $field->advance_setting->set_current_date : '';
+											$enable_date_range = isset( $field->advance_setting->enable_date_range ) ? $field->advance_setting->enable_date_range : '';
+											$extra_params['custom_attributes']['data-date-format'] = $date_format;
+
+											if ( isset( $field->advance_setting->enable_min_max ) && ur_string_to_bool( $field->advance_setting->enable_min_max ) ) {
+												$extra_params['custom_attributes']['data-min-date'] = '' !== $min_date ? date_i18n( $date_format, strtotime( $min_date ) ) : '';
+												$extra_params['custom_attributes']['data-max-date'] = '' !== $max_date ? date_i18n( $date_format, strtotime( $max_date ) ) : '';
+											}
+											$extra_params['custom_attributes']['data-default-date'] = $set_current_date;
+											$extra_params['custom_attributes']['data-mode']         = $enable_date_range;
+											break;
+
+										case 'country':
+											$class_name              = ur_load_form_field_class( $field_key );
+											$extra_params['options'] = $class_name::get_instance()->get_selected_countries( $form_id, $field_name );
+											break;
+
+										case 'file':
+											$extra_params['max_files'] = isset( $field->general_setting->max_files ) ? $field->general_setting->max_files : '';
+											break;
+
+										case 'phone':
+											$extra_params['phone_format'] = isset( $field->general_setting->phone_format ) ? $field->general_setting->phone_format : '';
+											break;
+										case 'learndash_course':
+											$extra_params['learndash_field_type'] = isset( $field->general_setting->learndash_field_type ) ? $field->general_setting->learndash_field_type : '';
+											if ( isset( $field->advance_setting->enroll_type ) ) {
+												if ( 'courses' === $field->advance_setting->enroll_type ) {
+													$extra_params['options'] = function_exists( 'get_courses_list' ) ? get_courses_list() : array();
+												} else {
+													$extra_params['options'] = function_exists( 'get_groups_list' ) ? get_groups_list() : array();
+												}
+											}
+											break;
+
+										default:
+											break;
+									}
+
+									$extra_params['default'] = $default;
+
+									$fields[ 'user_registration_' . $field_name ] = array(
+										'label'       => ur_string_translation( $form_id, 'user_registration_' . $field_name . '_label', $field_label ),
+										'description' => ur_string_translation( $form_id, 'user_registration_' . $field_name . '_description', $field_description ),
+										'type'        => $field_type,
+										'placeholder' => ur_string_translation( $form_id, 'user_registration_' . $field_name . '_placeholder', $placeholder ),
+										'field_key'   => $field_key,
+										'required'    => $required,
+									);
+
+									if ( true === $enable_cl ) {
+										$fields[ 'user_registration_' . $field_name ]['enable_conditional_logic'] = $enable_cl;
+										$fields[ 'user_registration_' . $field_name ]['cl_map']                   = $cl_map;
+									}
+
+									if ( count( $custom_attributes ) > 0 ) {
+										$extra_params['custom_attributes'] = $custom_attributes;
+									}
+
+									if ( isset( $fields[ 'user_registration_' . $field_name ] ) && count( $extra_params ) > 0 ) {
+										$fields[ 'user_registration_' . $field_name ] = array_merge( $fields[ 'user_registration_' . $field_name ], $extra_params );
+									}
+									$filter_data = array(
+										'fields'     => $fields,
+										'field'      => $field,
+										'field_name' => $field_name,
+									);
+
+									$filtered_data_array = apply_filters( 'user_registration_profile_account_filter_' . $field_key, $filter_data, $form_id );
+									if ( isset( $filtered_data_array['fields'] ) ) {
+										$fields = $filtered_data_array['fields'];
+									}
+								}// End if().
+							}
+						}// End foreach().
+					}// End foreach().
+				}// End foreach().
+			}
+		} else {
+			return new WP_Error( 'form-not-found', __( 'Form not found!', 'user-registration' ) );
+		}
+
+		return apply_filters( 'user_registration_pro_form_field_list', $fields );
+	}
+}
+
+if ( ! function_exists( 'ur_pro_get_excluded_fields' ) ) {
+	/**
+	 * Get Excluded fields.
+	 */
+	function ur_pro_get_excluded_fields() {
+		$excluded_fields = array(
+			'user_confirm_password',
+			'user_confirm_email',
+			'section_title',
+		);
+
+		return apply_filters( 'user_registration_pro_excluded_fields', $excluded_fields );
+	}
+}
+
+/**
+ * Get the count of membership rules.
+ * This function checks for content access rules with rule_type = 'membership'.
+ *
+ * @return int The count of membership rules.
+ * @since 4.4.8
+ */
+if ( ! function_exists( 'ur_get_membership_rules_count' ) ) {
+	function ur_get_membership_rules_count() {
+		// Check if membership module is active
+		if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'membership' ) ) {
+			return 0;
+		}
+
+		// Check if post type exists, if not query directly from database
+		if ( post_type_exists( 'urcr_access_rule' ) ) {
+			$membership_rules = get_posts(
+				array(
+					'post_type'      => 'urcr_access_rule',
+					'post_status'    => 'any',
+					'posts_per_page' => - 1,
+					'meta_query'     => array(
+						array(
+							'key'   => 'urcr_rule_type',
+							'value' => 'membership',
+						),
+					),
+				)
+			);
+
+			return is_array( $membership_rules ) ? count( $membership_rules ) : 0;
+		} else {
+			// Post type not registered yet, query directly from database
+			global $wpdb;
+			$count = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(DISTINCT p.ID)
+					FROM {$wpdb->posts} p
+					INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
+					WHERE p.post_type = %s
+					AND pm.meta_key = %s
+					AND pm.meta_value = %s",
+					'urcr_access_rule',
+					'urcr_rule_type',
+					'membership'
+				)
+			);
+
+			return absint( $count );
+		}
+	}
+
+	if ( ! function_exists( 'ur_get_coupon_meta_by_code' ) ) {
+
+		/**
+		 * Fetch coupon meta using coupon code stored in post_content
+		 *
+		 * @param string $coupon_code
+		 *
+		 * @return array|bool
+		 *
+		 * @since xx.xx.xx
+		 */
+		function ur_get_coupon_meta_by_code( $coupon_code ) {
+			global $wpdb;
+
+			$post_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID
+				FROM {$wpdb->posts}
+				WHERE post_type = %s
+				AND post_content = %s
+				LIMIT 1",
+					'ur_coupons',
+					$coupon_code
+				)
+			);
+
+			if ( empty( $post_id ) ) {
+				return false;
+			}
+
+			$coupon_meta = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT meta_value
+				FROM {$wpdb->postmeta}
+				WHERE post_id = %d
+				AND meta_key = %s
+				LIMIT 1",
+					$post_id,
+					'ur_coupon_meta'
+				)
+			);
+
+			if ( empty( $coupon_meta ) ) {
+				return false;
+			}
+
+			return json_decode( ur_maybe_unserialize( $coupon_meta ) );
+		}
+	}
+
+	if ( ! function_exists( 'ur_get_coupon_meta_by_code' ) ) {
+
+		/**
+		 * Fetch coupon meta using coupon code stored in post_content
+		 *
+		 * @param string $coupon_code
+		 *
+		 * @return array|bool
+		 *
+		 * @since xx.xx.xx
+		 */
+		function ur_get_coupon_meta_by_code( $coupon_code ) {
+			global $wpdb;
+
+			$post_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT ID
+				FROM {$wpdb->posts}
+				WHERE post_type = %s
+				AND post_content = %s
+				LIMIT 1",
+					'ur_coupons',
+					$coupon_code
+				)
+			);
+
+			if ( empty( $post_id ) ) {
+				return false;
+			}
+
+			$coupon_meta = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT meta_value
+				FROM {$wpdb->postmeta}
+				WHERE post_id = %d
+				AND meta_key = %s
+				LIMIT 1",
+					$post_id,
+					'ur_coupon_meta'
+				)
+			);
+
+			if ( empty( $coupon_meta ) ) {
+				return false;
+			}
+
+			return json_decode( ur_maybe_unserialize( $coupon_meta ) );
+		}
+	}
+}
+
+
+if ( ! function_exists( 'ur_get_linked_membership_form_id' ) ) {
+
+	/**
+	 * Get linked membership form id.
+	 *
+	 * @since 5.0.0
+	 */
+	function ur_get_linked_membership_form_id() {
+		$page_id    = get_option( 'user_registration_member_registration_page_id' );
+		$post_by_id = get_post( $page_id );
+		$matches    = array();
+
+		preg_match_all( '/\[user_registration_form\s+id="(\d+)"\]/', $post_by_id->post_content, $matches );
+		$membership_form_id = $matches[1][0];
+
+		return $membership_form_id;
+	}
+}
+
+if ( ! function_exists( 'urcr_get_custom_rules_count' ) ) {
+
+	/**
+	 * Get count of content restriction rules.
+	 *
+	 * @param array|string $types Rule types to count. Options: 'custom', 'membership', 'migrated'. Can be array of types or single string. Empty array/string counts all rules.
+	 *
+	 * @return int Count of rules.
+	 * @since 1.0.0
+	 */
+	function urcr_get_custom_rules_count( $types = array() ) {
+		// Check if content restriction post type exists
+		if ( ! post_type_exists( 'urcr_access_rule' ) ) {
+			return 0;
+		}
+
+		// Get all content access rules
+		$all_rules = get_posts(
+			array(
+				'post_type'      => 'urcr_access_rule',
+				'post_status'    => 'any',
+				'posts_per_page' => - 1,
+				'fields'         => 'ids',
+			)
+		);
+
+		if ( empty( $all_rules ) ) {
+			return 0;
+		}
+
+		// Convert string to array for backward compatibility
+		if ( is_string( $types ) ) {
+			$types = empty( $types ) ? array() : array( $types );
+		}
+
+		// Ensure $types is an array
+		if ( ! is_array( $types ) ) {
+			$types = array();
+		}
+
+		// If types array is empty, return count of all rules
+		if ( empty( $types ) ) {
+			return count( $all_rules );
+		}
+
+		// Count rules based on types (rules matching any of the provided types)
+		$rules_count = 0;
+		foreach ( $all_rules as $rule_id ) {
+			$rule_type     = get_post_meta( $rule_id, 'urcr_rule_type', true );
+			$membership_id = get_post_meta( $rule_id, 'urcr_membership_id', true );
+			$is_migrated   = get_post_meta( $rule_id, 'urcr_is_migrated', true );
+
+			$matches = false;
+
+			foreach ( $types as $type ) {
+				switch ( $type ) {
+					case 'custom':
+						// Count rules that are NOT membership rules
+						if ( 'membership' !== $rule_type && empty( $membership_id ) ) {
+							$matches = true;
+							break 2; // Break out of switch and foreach
+						}
+						break;
+
+					case 'membership':
+						// Count rules that ARE membership rules
+						if ( 'membership' === $rule_type || ! empty( $membership_id ) ) {
+							$matches = true;
+							break 2; // Break out of switch and foreach
+						}
+						break;
+
+					case 'migrated':
+						// Count rules that are migrated
+						if ( ! empty( $is_migrated ) ) {
+							$matches = true;
+							break 2; // Break out of switch and foreach
+						}
+						break;
+				}
+			}
+
+			if ( $matches ) {
+				++$rules_count;
+			}
+		}
+
+		return $rules_count;
+	}
+}
+
+
+if ( ! function_exists( 'urm_array_key_exists_recursive' ) ) {
+
+	function urm_array_key_exists_recursive( $needle, array $haystack ) {
+		foreach ( $haystack as $key => $value ) {
+			if ( $key === $needle ) {
+				return $value;
+			}
+
+			if ( is_array( $value ) && urm_array_key_exists_recursive( $needle, $value ) ) {
+				return $value;
+			}
+		}
+
+		return false;
+	}
+}
+
+if ( ! function_exists( 'urm_is_premium_setting_section' ) ) {
+	function urm_is_premium_setting_section( $id ) {
+		$premium_tabs      = ur_premium_settings_tab();
+		$premium_tab       = urm_array_key_exists_recursive( $id, $premium_tabs );
+		$show_premium_icon = false;
+
+		if ( ! empty( $premium_tab ) ) {
+			$license_data = ur_get_license_plan();
+			$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
+			$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
+
+			if ( ! empty( $premium_tab[ $id ]['plan'] ) ) {
+				if ( in_array( $license_plan, $premium_tab[ $id ]['plan'], true ) ) {
+					$show_premium_icon = false;
+				} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $premium_tab[ $id ]['plugin'] ) && is_plugin_active( $premium_tab[ $id ]['plugin'] . '/' . $premium_tab[ $id ]['plugin'] . '.php' ) ) {
+					$show_premium_icon = false;
+				} else {
+					$show_premium_icon = true;
+				}
+			} else {
+				$show_premium_icon = $premium_tab ? true : false;
+			}
+		}
+		return $show_premium_icon;
+	}
+}
+
+if ( ! function_exists( 'urm_check_if_plus_and_above_plan' ) ) {
+
+	/**
+	 * Check if user's license is plus or above plan.
+	 */
+	function urm_check_if_plus_and_above_plan() {
+		$license_data = ur_get_license_plan();
+		$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
+		$license_plan = trim( str_replace( 'lifetime', '', strtolower( $license_plan ) ) );
+
+		$available_plans = array( 'plus', 'professional', 'themegrill agency' );
+
+		if ( in_array( $license_plan, $available_plans, true ) ) {
+			return true;
+		}
+
+		return false;
+	}
+}
+
+
+if ( ! function_exists( 'ur_get_country_lists' ) ) {
+
+	/**
+	 * Get country lists.
+	 *
+	 * @since 5.0.0
+	 */
+	function ur_get_country_lists() {
+		$countries = include UR_ABSPATH . 'includes/pro/country-and-state/countries.php';
+		return $countries;
+	}
+}
+
+if ( ! function_exists( 'ur_get_state_lists' ) ) {
+
+	/**
+	 * Get State lists.
+	 *
+	 * @since 5.0.0
+	 */
+	function ur_get_state_lists() {
+		$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
+		$states      = json_decode( $states_json, true );
+		return $states;
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_symbols' ) ) {
+
+	/**
+	 * Get all available Currency symbols.
+	 *
+	 * Currency symbols and names should follow the Unicode CLDR recommendation (http://cldr.unicode.org/translation/currency-names)
+	 *
+	 * @since 6.0.0
+	 *
+	 * @return array
+	 */
+	function ur_get_currency_symbols() {
+		/**
+		 * Filters currency symbols.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param string[] $currency_symbols Currency code to currency symbol index array.
+		 */
+		$symbols = apply_filters(
+			'ur_currency_symbols',
+			array(
+				'AED' => '&#x62f;.&#x625;',
+				'AFN' => '&#x60b;',
+				'ALL' => 'L',
+				'AMD' => 'AMD',
+				'ANG' => '&fnof;',
+				'AOA' => 'Kz',
+				'ARS' => '&#36;',
+				'AUD' => '&#36;',
+				'AWG' => 'Afl.',
+				'AZN' => 'AZN',
+				'BAM' => 'KM',
+				'BBD' => '&#36;',
+				'BDT' => '&#2547;&nbsp;',
+				'BGN' => '&#1083;&#1074;.',
+				'BHD' => '.&#x62f;.&#x628;',
+				'BIF' => 'Fr',
+				'BMD' => '&#36;',
+				'BND' => '&#36;',
+				'BOB' => 'Bs.',
+				'BRL' => '&#82;&#36;',
+				'BSD' => '&#36;',
+				'BTC' => '&#3647;',
+				'BTN' => 'Nu.',
+				'BWP' => 'P',
+				'BYR' => 'Br',
+				'BYN' => 'Br',
+				'BZD' => '&#36;',
+				'CAD' => '&#36;',
+				'CDF' => 'Fr',
+				'CHF' => '&#67;&#72;&#70;',
+				'CLP' => '&#36;',
+				'CNY' => '&yen;',
+				'COP' => '&#36;',
+				'CRC' => '&#x20a1;',
+				'CUC' => '&#36;',
+				'CUP' => '&#36;',
+				'CVE' => '&#36;',
+				'CZK' => '&#75;&#269;',
+				'DJF' => 'Fr',
+				'DKK' => 'DKK',
+				'DOP' => 'RD&#36;',
+				'DZD' => '&#x62f;.&#x62c;',
+				'EGP' => 'EGP',
+				'ERN' => 'Nfk',
+				'ETB' => 'Br',
+				'EUR' => '&euro;',
+				'FJD' => '&#36;',
+				'FKP' => '&pound;',
+				'GBP' => '&pound;',
+				'GEL' => '&#x20be;',
+				'GGP' => '&pound;',
+				'GHS' => '&#x20b5;',
+				'GIP' => '&pound;',
+				'GMD' => 'D',
+				'GNF' => 'Fr',
+				'GTQ' => 'Q',
+				'GYD' => '&#36;',
+				'HKD' => '&#36;',
+				'HNL' => 'L',
+				'HRK' => 'kn',
+				'HTG' => 'G',
+				'HUF' => '&#70;&#116;',
+				'IDR' => 'Rp',
+				'ILS' => '&#8362;',
+				'IMP' => '&pound;',
+				'INR' => '&#8377;',
+				'IQD' => '&#x639;.&#x62f;',
+				'IRR' => '&#xfdfc;',
+				'IRT' => '&#x062A;&#x0648;&#x0645;&#x0627;&#x0646;',
+				'ISK' => 'kr.',
+				'JEP' => '&pound;',
+				'JMD' => '&#36;',
+				'JOD' => '&#x62f;.&#x627;',
+				'JPY' => '&yen;',
+				'KES' => 'KSh',
+				'KGS' => '&#x441;&#x43e;&#x43c;',
+				'KHR' => '&#x17db;',
+				'KMF' => 'Fr',
+				'KPW' => '&#x20a9;',
+				'KRW' => '&#8361;',
+				'KWD' => '&#x62f;.&#x643;',
+				'KYD' => '&#36;',
+				'KZT' => '&#8376;',
+				'LAK' => '&#8365;',
+				'LBP' => '&#x644;.&#x644;',
+				'LKR' => '&#xdbb;&#xdd4;',
+				'LRD' => '&#36;',
+				'LSL' => 'L',
+				'LYD' => '&#x644;.&#x62f;',
+				'MAD' => '&#x62f;.&#x645;.',
+				'MDL' => 'MDL',
+				'MGA' => 'Ar',
+				'MKD' => '&#x434;&#x435;&#x43d;',
+				'MMK' => 'Ks',
+				'MNT' => '&#x20ae;',
+				'MOP' => 'P',
+				'MRU' => 'UM',
+				'MUR' => '&#x20a8;',
+				'MVR' => '.&#x783;',
+				'MWK' => 'MK',
+				'MXN' => '&#36;',
+				'MYR' => '&#82;&#77;',
+				'MZN' => 'MT',
+				'NAD' => 'N&#36;',
+				'NGN' => '&#8358;',
+				'NIO' => 'C&#36;',
+				'NOK' => '&#107;&#114;',
+				'NPR' => '&#8360;',
+				'NZD' => '&#36;',
+				'OMR' => '&#x631;.&#x639;.',
+				'PAB' => 'B/.',
+				'PEN' => 'S/',
+				'PGK' => 'K',
+				'PHP' => '&#8369;',
+				'PKR' => '&#8360;',
+				'PLN' => '&#122;&#322;',
+				'PRB' => '&#x440;.',
+				'PYG' => '&#8370;',
+				'QAR' => '&#x631;.&#x642;',
+				'RMB' => '&yen;',
+				'RON' => 'lei',
+				'RSD' => '&#1088;&#1089;&#1076;',
+				'RUB' => '&#8381;',
+				'RWF' => 'Fr',
+				'SAR' => '&#x631;.&#x633;',
+				'SBD' => '&#36;',
+				'SCR' => '&#x20a8;',
+				'SDG' => '&#x62c;.&#x633;.',
+				'SEK' => '&#107;&#114;',
+				'SGD' => '&#36;',
+				'SHP' => '&pound;',
+				'SLL' => 'Le',
+				'SOS' => 'Sh',
+				'SRD' => '&#36;',
+				'SSP' => '&pound;',
+				'STN' => 'Db',
+				'SYP' => '&#x644;.&#x633;',
+				'SZL' => 'L',
+				'THB' => '&#3647;',
+				'TJS' => '&#x405;&#x41c;',
+				'TMT' => 'm',
+				'TND' => '&#x62f;.&#x62a;',
+				'TOP' => 'T&#36;',
+				'TRY' => '&#8378;',
+				'TTD' => '&#36;',
+				'TWD' => '&#78;&#84;&#36;',
+				'TZS' => 'Sh',
+				'UAH' => '&#8372;',
+				'UGX' => 'UGX',
+				'USD' => '&#36;',
+				'UYU' => '&#36;',
+				'UZS' => 'UZS',
+				'VEF' => 'Bs F',
+				'VES' => 'Bs.S',
+				'VND' => '&#8363;',
+				'VUV' => 'Vt',
+				'WST' => 'T',
+				'XAF' => 'CFA',
+				'XCD' => '&#36;',
+				'XOF' => 'CFA',
+				'XPF' => 'Fr',
+				'YER' => '&#xfdfc;',
+				'ZAR' => '&#82;',
+				'ZMW' => 'ZK',
+			)
+		);
+
+		return $symbols;
+	}
+}
+
+if ( ! function_exists( 'ur_get_currencies_with_symbols' ) ) {
+
+	/**
+	 * Get full list of currency codes with symbols.
+	 *
+	 * @since 6.0.0
+	 *
+	 * @return array
+	 */
+	function ur_get_currencies_with_symbols() {
+		$currencies = ur_get_currencies();
+
+		foreach ( $currencies as $key => $value ) {
+			$currencies[ $key ] = sprintf( '%s (%s)', $value, html_entity_decode( ur_get_currency_symbol( $key ) ) );
+		}
+
+		/**
+		 * Filters list of currency codes with symbols.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param array $currencies List of currency codes with symbols.
+		 */
+		return apply_filters( 'ur_currencies_with_symbols', $currencies );
+	}
+
+}
+
+if ( ! function_exists( 'ur_get_currencies' ) ) {
+
+	/**
+	 * Get full list of currency codes.
+	 *
+	 * Currency symbols and names should follow the Unicode CLDR recommendation (http://cldr.unicode.org/translation/currency-names)
+	 *
+	 * @since 6.0.0
+	 *
+	 * @return array
+	 */
+	function ur_get_currencies() {
+		$currencies = array_unique(
+			/**
+			 * Filters full list of currency codes.
+			 *
+			 * @since 6.0.0
+			 *
+			 * @param string[] $currencies Full list of currency codes.
+			 */
+			apply_filters(
+				'ur_currencies',
+				array(
+					'AED' => __( 'United Arab Emirates dirham', 'user-registration' ),
+					'AFN' => __( 'Afghan afghani', 'user-registration' ),
+					'ALL' => __( 'Albanian lek', 'user-registration' ),
+					'AMD' => __( 'Armenian dram', 'user-registration' ),
+					'ANG' => __( 'Netherlands Antillean guilder', 'user-registration' ),
+					'AOA' => __( 'Angolan kwanza', 'user-registration' ),
+					'ARS' => __( 'Argentine peso', 'user-registration' ),
+					'AUD' => __( 'Australian dollar', 'user-registration' ),
+					'AWG' => __( 'Aruban florin', 'user-registration' ),
+					'AZN' => __( 'Azerbaijani manat', 'user-registration' ),
+					'BAM' => __( 'Bosnia and Herzegovina convertible mark', 'user-registration' ),
+					'BBD' => __( 'Barbadian dollar', 'user-registration' ),
+					'BDT' => __( 'Bangladeshi taka', 'user-registration' ),
+					'BGN' => __( 'Bulgarian lev', 'user-registration' ),
+					'BHD' => __( 'Bahraini dinar', 'user-registration' ),
+					'BIF' => __( 'Burundian franc', 'user-registration' ),
+					'BMD' => __( 'Bermudian dollar', 'user-registration' ),
+					'BND' => __( 'Brunei dollar', 'user-registration' ),
+					'BOB' => __( 'Bolivian boliviano', 'user-registration' ),
+					'BRL' => __( 'Brazilian real', 'user-registration' ),
+					'BSD' => __( 'Bahamian dollar', 'user-registration' ),
+					'BTC' => __( 'Bitcoin', 'user-registration' ),
+					'BTN' => __( 'Bhutanese ngultrum', 'user-registration' ),
+					'BWP' => __( 'Botswana pula', 'user-registration' ),
+					'BYR' => __( 'Belarusian ruble (old)', 'user-registration' ),
+					'BYN' => __( 'Belarusian ruble', 'user-registration' ),
+					'BZD' => __( 'Belize dollar', 'user-registration' ),
+					'CAD' => __( 'Canadian dollar', 'user-registration' ),
+					'CDF' => __( 'Congolese franc', 'user-registration' ),
+					'CHF' => __( 'Swiss franc', 'user-registration' ),
+					'CLP' => __( 'Chilean peso', 'user-registration' ),
+					'CNY' => __( 'Chinese yuan', 'user-registration' ),
+					'COP' => __( 'Colombian peso', 'user-registration' ),
+					'CRC' => __( 'Costa Rican col&oacute;n', 'user-registration' ),
+					'CUC' => __( 'Cuban convertible peso', 'user-registration' ),
+					'CUP' => __( 'Cuban peso', 'user-registration' ),
+					'CVE' => __( 'Cape Verdean escudo', 'user-registration' ),
+					'CZK' => __( 'Czech koruna', 'user-registration' ),
+					'DJF' => __( 'Djiboutian franc', 'user-registration' ),
+					'DKK' => __( 'Danish krone', 'user-registration' ),
+					'DOP' => __( 'Dominican peso', 'user-registration' ),
+					'DZD' => __( 'Algerian dinar', 'user-registration' ),
+					'EGP' => __( 'Egyptian pound', 'user-registration' ),
+					'ERN' => __( 'Eritrean nakfa', 'user-registration' ),
+					'ETB' => __( 'Ethiopian birr', 'user-registration' ),
+					'EUR' => __( 'Euro', 'user-registration' ),
+					'FJD' => __( 'Fijian dollar', 'user-registration' ),
+					'FKP' => __( 'Falkland Islands pound', 'user-registration' ),
+					'GBP' => __( 'Pound sterling', 'user-registration' ),
+					'GEL' => __( 'Georgian lari', 'user-registration' ),
+					'GGP' => __( 'Guernsey pound', 'user-registration' ),
+					'GHS' => __( 'Ghana cedi', 'user-registration' ),
+					'GIP' => __( 'Gibraltar pound', 'user-registration' ),
+					'GMD' => __( 'Gambian dalasi', 'user-registration' ),
+					'GNF' => __( 'Guinean franc', 'user-registration' ),
+					'GTQ' => __( 'Guatemalan quetzal', 'user-registration' ),
+					'GYD' => __( 'Guyanese dollar', 'user-registration' ),
+					'HKD' => __( 'Hong Kong dollar', 'user-registration' ),
+					'HNL' => __( 'Honduran lempira', 'user-registration' ),
+					'HRK' => __( 'Croatian kuna', 'user-registration' ),
+					'HTG' => __( 'Haitian gourde', 'user-registration' ),
+					'HUF' => __( 'Hungarian forint', 'user-registration' ),
+					'IDR' => __( 'Indonesian rupiah', 'user-registration' ),
+					'ILS' => __( 'Israeli new shekel', 'user-registration' ),
+					'IMP' => __( 'Manx pound', 'user-registration' ),
+					'INR' => __( 'Indian rupee', 'user-registration' ),
+					'IQD' => __( 'Iraqi dinar', 'user-registration' ),
+					'IRR' => __( 'Iranian rial', 'user-registration' ),
+					'IRT' => __( 'Iranian toman', 'user-registration' ),
+					'ISK' => __( 'Icelandic kr&oacute;na', 'user-registration' ),
+					'JEP' => __( 'Jersey pound', 'user-registration' ),
+					'JMD' => __( 'Jamaican dollar', 'user-registration' ),
+					'JOD' => __( 'Jordanian dinar', 'user-registration' ),
+					'JPY' => __( 'Japanese yen', 'user-registration' ),
+					'KES' => __( 'Kenyan shilling', 'user-registration' ),
+					'KGS' => __( 'Kyrgyzstani som', 'user-registration' ),
+					'KHR' => __( 'Cambodian riel', 'user-registration' ),
+					'KMF' => __( 'Comorian franc', 'user-registration' ),
+					'KPW' => __( 'North Korean won', 'user-registration' ),
+					'KRW' => __( 'South Korean won', 'user-registration' ),
+					'KWD' => __( 'Kuwaiti dinar', 'user-registration' ),
+					'KYD' => __( 'Cayman Islands dollar', 'user-registration' ),
+					'KZT' => __( 'Kazakhstani tenge', 'user-registration' ),
+					'LAK' => __( 'Lao kip', 'user-registration' ),
+					'LBP' => __( 'Lebanese pound', 'user-registration' ),
+					'LKR' => __( 'Sri Lankan rupee', 'user-registration' ),
+					'LRD' => __( 'Liberian dollar', 'user-registration' ),
+					'LSL' => __( 'Lesotho loti', 'user-registration' ),
+					'LYD' => __( 'Libyan dinar', 'user-registration' ),
+					'MAD' => __( 'Moroccan dirham', 'user-registration' ),
+					'MDL' => __( 'Moldovan leu', 'user-registration' ),
+					'MGA' => __( 'Malagasy ariary', 'user-registration' ),
+					'MKD' => __( 'Macedonian denar', 'user-registration' ),
+					'MMK' => __( 'Burmese kyat', 'user-registration' ),
+					'MNT' => __( 'Mongolian t&ouml;gr&ouml;g', 'user-registration' ),
+					'MOP' => __( 'Macanese pataca', 'user-registration' ),
+					'MRU' => __( 'Mauritanian ouguiya', 'user-registration' ),
+					'MUR' => __( 'Mauritian rupee', 'user-registration' ),
+					'MVR' => __( 'Maldivian rufiyaa', 'user-registration' ),
+					'MWK' => __( 'Malawian kwacha', 'user-registration' ),
+					'MXN' => __( 'Mexican peso', 'user-registration' ),
+					'MYR' => __( 'Malaysian ringgit', 'user-registration' ),
+					'MZN' => __( 'Mozambican metical', 'user-registration' ),
+					'NAD' => __( 'Namibian dollar', 'user-registration' ),
+					'NGN' => __( 'Nigerian naira', 'user-registration' ),
+					'NIO' => __( 'Nicaraguan c&oacute;rdoba', 'user-registration' ),
+					'NOK' => __( 'Norwegian krone', 'user-registration' ),
+					'NPR' => __( 'Nepalese rupee', 'user-registration' ),
+					'NZD' => __( 'New Zealand dollar', 'user-registration' ),
+					'OMR' => __( 'Omani rial', 'user-registration' ),
+					'PAB' => __( 'Panamanian balboa', 'user-registration' ),
+					'PEN' => __( 'Sol', 'user-registration' ),
+					'PGK' => __( 'Papua New Guinean kina', 'user-registration' ),
+					'PHP' => __( 'Philippine peso', 'user-registration' ),
+					'PKR' => __( 'Pakistani rupee', 'user-registration' ),
+					'PLN' => __( 'Polish z&#x142;oty', 'user-registration' ),
+					'PRB' => __( 'Transnistrian ruble', 'user-registration' ),
+					'PYG' => __( 'Paraguayan guaran&iacute;', 'user-registration' ),
+					'QAR' => __( 'Qatari riyal', 'user-registration' ),
+					'RON' => __( 'Romanian leu', 'user-registration' ),
+					'RSD' => __( 'Serbian dinar', 'user-registration' ),
+					'RUB' => __( 'Russian ruble', 'user-registration' ),
+					'RWF' => __( 'Rwandan franc', 'user-registration' ),
+					'SAR' => __( 'Saudi riyal', 'user-registration' ),
+					'SBD' => __( 'Solomon Islands dollar', 'user-registration' ),
+					'SCR' => __( 'Seychellois rupee', 'user-registration' ),
+					'SDG' => __( 'Sudanese pound', 'user-registration' ),
+					'SEK' => __( 'Swedish krona', 'user-registration' ),
+					'SGD' => __( 'Singapore dollar', 'user-registration' ),
+					'SHP' => __( 'Saint Helena pound', 'user-registration' ),
+					'SLL' => __( 'Sierra Leonean leone', 'user-registration' ),
+					'SOS' => __( 'Somali shilling', 'user-registration' ),
+					'SRD' => __( 'Surinamese dollar', 'user-registration' ),
+					'SSP' => __( 'South Sudanese pound', 'user-registration' ),
+					'STN' => __( 'S&atilde;o Tom&eacute; and Pr&iacute;ncipe dobra', 'user-registration' ),
+					'SYP' => __( 'Syrian pound', 'user-registration' ),
+					'SZL' => __( 'Swazi lilangeni', 'user-registration' ),
+					'THB' => __( 'Thai baht', 'user-registration' ),
+					'TJS' => __( 'Tajikistani somoni', 'user-registration' ),
+					'TMT' => __( 'Turkmenistan manat', 'user-registration' ),
+					'TND' => __( 'Tunisian dinar', 'user-registration' ),
+					'TOP' => __( 'Tongan pa&#x2bb;anga', 'user-registration' ),
+					'TRY' => __( 'Turkish lira', 'user-registration' ),
+					'TTD' => __( 'Trinidad and Tobago dollar', 'user-registration' ),
+					'TWD' => __( 'New Taiwan dollar', 'user-registration' ),
+					'TZS' => __( 'Tanzanian shilling', 'user-registration' ),
+					'UAH' => __( 'Ukrainian hryvnia', 'user-registration' ),
+					'UGX' => __( 'Ugandan shilling', 'user-registration' ),
+					'USD' => __( 'United States (US) dollar', 'user-registration' ),
+					'UYU' => __( 'Uruguayan peso', 'user-registration' ),
+					'UZS' => __( 'Uzbekistani som', 'user-registration' ),
+					'VEF' => __( 'Venezuelan bol&iacute;var', 'user-registration' ),
+					'VES' => __( 'Bol&iacute;var soberano', 'user-registration' ),
+					'VND' => __( 'Vietnamese &#x111;&#x1ed3;ng', 'user-registration' ),
+					'VUV' => __( 'Vanuatu vatu', 'user-registration' ),
+					'WST' => __( 'Samoan t&#x101;l&#x101;', 'user-registration' ),
+					'XAF' => __( 'Central African CFA franc', 'user-registration' ),
+					'XCD' => __( 'East Caribbean dollar', 'user-registration' ),
+					'XOF' => __( 'West African CFA franc', 'user-registration' ),
+					'XPF' => __( 'CFP franc', 'user-registration' ),
+					'YER' => __( 'Yemeni rial', 'user-registration' ),
+					'ZAR' => __( 'South African rand', 'user-registration' ),
+					'ZMW' => __( 'Zambian kwacha', 'user-registration' ),
+				)
+			)
+		);
+
+		return $currencies;
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_symbol' ) ) {
+
+	/**
+	 * Get Currency symbol.
+	 *
+	 * Currency symbols and names should follow the Unicode CLDR recommendation (http://cldr.unicode.org/translation/currency-names)
+	 *
+	 * @since 6.0.0
+	 *
+	 * @param string $currency Currency. (default: '').
+	 *
+	 * @return string
+	 */
+	function ur_get_currency_symbol( $currency = '' ) {
+		$symbols = ur_get_currency_symbols();
+
+		$currency_symbol = isset( $symbols[ $currency ] ) ? $symbols[ $currency ] : '';
+
+		/**
+		 * Filters currency symbol.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param string $currency_symbol Currency symbol.
+		 * @param string $currency Currency.
+		 */
+		return apply_filters( 'ur_currency_symbol', $currency_symbol, $currency );
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_name_by_key' ) ) {
+
+	function ur_get_currency_name_by_key( $currency_key ) {
+		$curreny_details = ur_get_currencies();
+
+		$name = sprintf( '%s (%s)', $curreny_details[ $currency_key ], html_entity_decode( ur_get_currency_symbol( $currency_key ) ) );
+
+		return apply_filters( 'ur_get_currency_name_by_key', $name );
+	}
+}
+
+if ( ! function_exists( 'ur_get_currency_by_key' ) ) {
+
+	function ur_get_currency_by_key( $currency_key ) {
+		$curreny_details = ur_get_currencies();
+
+		$name = sprintf( '%s', $curreny_details[ $currency_key ] );
+
+		return apply_filters( 'ur_get_currency_by_key', $name );
+	}
+}
+
+if ( ! function_exists( 'ur_format_country_field_data' ) ) {
+
+	/**
+	 * Format country field data for display.
+	 *
+	 * @param string $country_code The country code.
+	 * @param string $state_code   The state code.
+	 *
+	 * @return string Formatted country and state name.
+	 */
+	function ur_format_country_field_data( $country_code, $state_code ) {
+		$country_list = \UR_Form_Field_Country::get_instance()->get_country();
+
+		$country_name = isset( $country_list[ $country_code ] )
+			? $country_list[ $country_code ]
+			: $country_code;
+
+		$states_json = ur_file_get_contents( '/assets/extensions-json/states.json' );
+		$state_list  = json_decode( $states_json, true );
+
+		$states = isset( $state_list[ $country_code ] ) ? $state_list[ $country_code ] : array();
+
+		$state_name = isset( $states[ $state_code ] )
+			? $states[ $state_code ]
+			: $state_code;
+
+		$final = array();
+
+		if ( ! empty( $country_name ) ) {
+			$final[] = $country_name;
+		}
+
+		if ( ! empty( $state_name ) ) {
+			$final[] = $state_name;
+		}
+
+		$value = implode( ', ', $final );
+
+		return $value;
 	}
 }

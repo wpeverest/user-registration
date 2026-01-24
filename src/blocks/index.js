@@ -2,11 +2,13 @@ import registerBlocks from "./blocks";
 import "./editor.scss";
 import "./style.scss";
 
-const { isPro } = typeof _UR_PRO_BLOCKS_ !== "undefined" && _UR_PRO_BLOCKS_;
+const isProEnabled =
+	process.env.UR_PRO === "true" || process.env.UR_PRO === true;
 
 //Register the blocks.
 registerBlocks();
-if (isPro) {
+
+if (isProEnabled) {
 	let registerProBlocks;
 
 	try {

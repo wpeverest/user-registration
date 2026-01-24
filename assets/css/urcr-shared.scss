@@ -1,0 +1,1150 @@
+// Shared styles for Content Restriction components
+// Used by both Content Rules page and Membership Access tab
+
+$color_1: #fff;
+$color_2: #d63638;
+$color_3: #646970;
+$color_4: #383838;
+$color_5: #475bb2;
+$color_6: #1d2327;
+$color_7: #ff4f55;
+$color_12: #8c8f94;
+$background-color_1: #ccc;
+$background-color_2: #fff;
+$background-color_3: #00a32a;
+$background-color_4: #f0f0f1;
+$background-color_5: transparent;
+$border-color_6: #475bb2;
+
+// Base Dropdown Classes
+.urcr-dropdown-wrapper {
+	position: relative;
+	display: inline-block;
+}
+
+.urcr-dropdown-menu {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	padding: 8px;
+	margin-top: 0;
+	background: #ffffff;
+	border: 1px solid #d1d5db;
+	border-radius: 4px;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+	z-index: 999;
+	transition: all 0.15s ease;
+	animation: urcr-dropdown-fade-in 0.15s ease-out;
+}
+
+@keyframes urcr-dropdown-fade-in {
+	from {
+		opacity: 0;
+		transform: translateY(-4px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.urcr-dropdown-option {
+	display: block;
+	width: 100%;
+	padding: 8px 12px;
+	text-align: left;
+	border: none;
+	background: 0 0;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 400;
+	color: $color_4;
+	transition:
+		background-color 0.15s ease,
+		color 0.15s ease;
+	margin: 0;
+	box-sizing: border-box;
+
+	&:hover {
+		&:not(.is-disabled) {
+			background: #f9fafb;
+			color: #475bb2;
+		}
+	}
+
+	&:focus {
+		&:not(.is-disabled) {
+			outline: 0;
+			box-shadow: none;
+			border: 0;
+		}
+	}
+
+	&.is-selected {
+		// background-color: $background-color_4;
+		// color: $color_6;
+		background: #f9fafb;
+		color: #475bb2;
+	}
+
+	&.is-disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+		color: $color_12;
+
+		&:hover {
+			background-color: $background-color_5;
+			color: $color_12;
+		}
+	}
+
+	&.urcr-dropdown-option-disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+		color: $color_12;
+		pointer-events: none;
+
+		&:hover {
+			background-color: $background-color_5;
+			color: $color_12;
+		}
+	}
+}
+
+.urcr-dropdown-button {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	border: 0;
+	background-color: transparent;
+	cursor: pointer;
+	text-align: left;
+	transition: all 0.15s ease;
+
+	&:focus {
+		outline: 0;
+		box-shadow: none;
+	}
+
+	.urcr-dropdown-button-text {
+		display: block;
+		width: 50px;
+	}
+
+	.urcr-dropdown-button-arrow {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+		// margin-left: 8px;
+		transition: transform 0.15s ease;
+	}
+
+	// &:hover .urcr-dropdown-button-arrow {
+	// 	transform: translateY(1px);
+	// }
+}
+
+// Dropdown Groups
+.urcr-dropdown-group {
+	margin: 0;
+	padding: 0;
+}
+
+.urcr-dropdown-group-label {
+	padding: 8px 12px 4px;
+	font-weight: 600;
+	font-size: 13px;
+	color: $color_6;
+	text-transform: none;
+	letter-spacing: 0;
+}
+
+// Content Dropdown (extends base)
+.urcr-content-dropdown-wrapper {
+	@extend .urcr-dropdown-wrapper;
+	margin-top: 0;
+	width: 100%;
+}
+
+.urcr-content-type-dropdown-menu {
+	@extend .urcr-dropdown-menu;
+	min-width: 200px;
+}
+
+.urcr-content-type-dropdown-option {
+	@extend .urcr-dropdown-option;
+}
+
+// Access Control Dropdown (extends base)
+.urcr-access-control-dropdown-wrapper {
+	@extend .urcr-dropdown-wrapper;
+	width: 100%;
+}
+
+.urcr-access-control-button {
+	@extend .urcr-dropdown-button;
+	padding: 12px 24px;
+	border-radius: 5px 5px 0 0;
+	font-size: 14px;
+	font-weight: 400;
+
+	// .urcr-access-control-button-text {
+	// 	@extend .urcr-dropdown-button-text;
+	// }
+
+	.urcr-access-control-button-arrow {
+		@extend .urcr-dropdown-button-arrow;
+	}
+}
+
+.urcr-access-control-dropdown-menu {
+	@extend .urcr-dropdown-menu;
+	min-width: 150px;
+}
+
+.urcr-access-control-dropdown-option {
+	@extend .urcr-dropdown-option;
+}
+
+// Condition Field Dropdown (extends base)
+.urcr-condition-dropdown-wrapper {
+	@extend .urcr-dropdown-wrapper;
+}
+
+.urcr-condition-field-dropdown-menu {
+	@extend .urcr-dropdown-menu;
+	min-width: 260px;
+	max-height: 300px;
+	box-sizing: border-box;
+	overflow-y: auto;
+}
+
+.urcr-condition-field-dropdown-group {
+	@extend .urcr-dropdown-group;
+}
+
+.urcr-condition-field-dropdown-group-label {
+	@extend .urcr-dropdown-group-label;
+}
+
+.urcr-condition-field-dropdown-option {
+	@extend .urcr-dropdown-option;
+	padding: 6px 12px 6px 24px;
+}
+
+.urcr-condition-selection-section {
+	.select2 {
+		&-container {
+			width: 100% !important;
+		}
+	}
+
+	&:has(.urcr-ur-form-field-condition) {
+		align-items: flex-start !important;
+
+		.urcr-condition-value {
+			.urcr-ur-form-field-condition {
+				.urcr-form-fields-list {
+					display: flex;
+					flex-direction: column;
+					gap: 16px;
+
+					.urcr-form-field-row {
+						flex-wrap: wrap;
+
+						.urcr-form-field-name,
+						.urcr-form-field-operator,
+						.urcr-form-field-value {
+							flex: 1;
+							min-width: 47%;
+						}
+
+						.urcr-form-field-value {
+							min-width: 100% !important;
+
+							.urcr-condition-value-input {
+								width: 100% !important;
+							}
+						}
+
+						.button {
+							width: 28px !important;
+							min-width: 28px !important;
+							min-height: 26px !important;
+							background: #eeeeee !important;
+
+							&.urcr-remove-field-button {
+								margin-left: 0;
+
+								&:disabled {
+									border-color: transparent !important;
+									background: #f6f6f6 !important;
+									cursor: not-allowed;
+								}
+							}
+						}
+
+						&:has(.urcr-form-field-value) {
+
+							.urcr-form-field-name,
+							.urcr-form-field-operator {
+								min-width: 100%;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// Target Selection Section
+.urcr-target-selection-section {
+	display: flex;
+	align-items: start;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+.urcr-target-selection-wrapper {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+
+	.urcr-target-type-group {
+		.urcr-target-item {
+			&:last-child {
+				margin-bottom: 20px;
+			}
+		}
+	}
+}
+
+.urcr-condition-value-input-wrapper {
+	position: relative;
+	flex-shrink: 0;
+
+	// &.urcr-access-content {
+	// 	.urcr-access-control-button {
+	// 		background-color: #e5f5fa;
+	// 		color: #0073aa;
+	// 	}
+	// }
+
+	// &.urcr-restrict-content {
+	// 	.urcr-access-control-button {
+	// 		background-color: #fcf0f1;
+	// 		color: #dc3232;
+	// 	}
+	// }
+}
+
+.urcr-arrow-icon {
+	display: inline-block;
+	margin: 0 8px;
+	color: $color_4;
+	font-size: 16px;
+	flex-shrink: 0;
+	align-self: center;
+
+	&::before {
+		content: "→";
+	}
+}
+
+.urcr-target-type-group {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	flex: 1;
+}
+
+// .urcr-target-item {
+// 	display: flex;
+// 	align-items: flex-start;
+// 	gap: 12px;
+// 	padding: 8px 12px;
+// 	background: #f6f7f7;
+// 	border-radius: 4px;
+// 	border: 1px solid #e0e0e0;
+// 	flex-wrap: wrap;
+
+// 	&.urcr-taxonomy-item {
+// 		align-items: flex-start;
+// 	}
+// }
+
+.urcr-target-type-label {
+	font-weight: 500;
+	font-size: 13px;
+	color: $color_4;
+	min-width: 80px;
+}
+
+.urcr-taxonomy-select-group {
+	display: flex;
+	gap: 8px;
+	// flex: 1;
+	min-width: unset !important;
+	max-width: unset !important;
+
+	@media screen and (max-width: 768px) {
+		flex-direction: column;
+	}
+
+	.urcr-taxonomy-select {
+		width: 100%;
+		flex: 1;
+		padding: 0 12px;
+		border: 1px solid #e1e1e1;
+		border-radius: 3px;
+		font-size: 13px;
+		min-height: 38px;
+	}
+
+	.select2-container {
+		width: 100% !important;
+	}
+}
+
+.urcr-target-remove {
+	padding: 4px;
+	border: none;
+	background: 0 0;
+	cursor: pointer;
+	color: $color_3;
+	border-radius: 3px;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
+
+	&:hover {
+		background: #f0f0f1;
+		color: $color_2;
+	}
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
+}
+
+.urcr-add-content-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 16px;
+	font-size: 13px;
+	line-height: 1.5;
+	color: $color_4;
+	background-color: $background-color_2;
+	border: 1px solid #8c8f94;
+	border-radius: 3px;
+	cursor: pointer;
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+
+	&:hover {
+		border-color: $border-color_6;
+	}
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
+}
+
+// Rule Group Styles
+.urcr-rule-group {
+	background: #f6f7f7;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	padding: 16px;
+	margin-bottom: 16px;
+}
+
+.urcr-group-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 16px;
+}
+
+.urcr-group-conditions {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+// .urcr-condition-row {
+// 	display: flex;
+// 	align-items: center;
+// 	gap: 12px;
+// 	flex-wrap: wrap;
+// 	padding: 12px;
+// 	background: #fff;
+// 	border: 1px solid #e0e0e0;
+// 	border-radius: 4px;
+// }
+
+.urcr-add-condition-button,
+.urcr-add-group-button {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 16px;
+	font-size: 13px;
+	color: $color_5;
+	background: transparent;
+	border: 1px dashed $border-color_6;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background: #f0f4ff;
+		border-color: $color_5;
+	}
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
+}
+
+.urcr-condition-remove {
+	padding: 4px;
+	border: none;
+	background: 0 0;
+	cursor: pointer;
+	color: $color_3;
+	border-radius: 3px;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
+
+	&:hover {
+		background: #f0f0f1;
+		color: $color_2;
+	}
+
+	.dashicons {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
+}
+
+// Loading and Error States
+.urcr-loading-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 400px;
+
+	.spinner {
+		float: none;
+		margin: 0;
+	}
+}
+
+.urcr-error-container {
+	text-align: center;
+	padding: 40px 0;
+
+	p {
+		font-size: 16px;
+		color: $color_2;
+		margin-bottom: 16px;
+	}
+}
+
+// Action Section Styles
+.urcr-action-section {
+	margin-top: 24px;
+}
+
+.urcr-label-input-pair,
+.urcr-title-body-pair {
+	display: flex;
+	align-items: center;
+	margin-bottom: 28px;
+	gap: 20px;
+
+	@media screen and (max-width: 600px) {
+		flex-direction: column;
+		align-items: flex-start !important;
+		gap: 8px;
+	}
+
+	&.urcr-align-items-center {
+		align-items: center;
+	}
+
+	&.urcr-align-items-start {
+		align-items: flex-start;
+	}
+
+	// Ensure label container maintains width
+	.urcr-label-container {
+		max-width: 300px;
+		width: 100%;
+		// flex: 0 0 38%;
+	}
+
+	// Ensure input/body containers take remaining space
+	.urcr-body,
+	.urcr-input-container {
+		// flex: 0 0 60%;
+		flex: 1;
+	}
+}
+
+.urcr-title-body-pair {
+	align-items: flex-start;
+
+	&:has(.wp-editor-wrap) {
+		align-items: flex-start;
+
+		.urcr-label-container {
+			margin-bottom: 10px;
+		}
+	}
+}
+
+// Ensure form groups within action section follow the same pattern
+.urcr-action-section {
+	.ur-form-group {
+		display: flex !important;
+		align-items: center;
+		margin-bottom: 28px;
+
+		@media screen and (max-width: 600px) {
+			flex-direction: column;
+			align-items: flex-start !important;
+			gap: 8px;
+		}
+
+		&:has(.wp-editor-wrap) {
+			align-items: flex-start;
+
+			.urcr-label-container {
+				margin-bottom: 10px;
+			}
+		}
+
+		&.urcr-label-input-pair.urcr-rule-action {
+			align-items: flex-start !important;
+
+			@media screen and (max-width: 992px) {
+				flex-direction: column;
+			}
+
+			.urcr-label-container {
+				margin-top: 10px;
+			}
+		}
+
+		// Ensure label and body containers work correctly
+		.urcr-label-container {
+			// flex: 0 0 38% !important;
+			max-width: 300px;
+			width: 100% !important;
+			margin-bottom: 0;
+			font-size: 14px;
+			line-height: 20px;
+		}
+
+		.urcr-body,
+		.urcr-input-container {
+			flex: 1;
+
+			.urcr-checkbox-radio-group {
+				gap: 16px;
+
+				@media screen and (max-width: 600px) {
+					flex-direction: column;
+				}
+
+				.urcr-checkbox-radio-option {
+					display: flex;
+					// align-items: flex-start;
+					align-items: center;
+					gap: 8px;
+					max-width: 100%;
+					width: 100%;
+					padding: 12px 14px;
+					margin-bottom: 0;
+
+					@media screen and (min-width: 601px) {
+						max-width: 285px;
+					}
+
+					.urcr-checkbox-radio {
+						&--content {
+							display: flex;
+							flex-direction: column;
+							gap: 4px;
+
+							.urcr-checkbox-radio-label {
+								font-size: 14px;
+								line-height: 20px;
+								color: #383838;
+								font-weight: 500;
+							}
+						}
+
+						&--desc {
+							font-size: 13px;
+							line-height: 18px;
+							font-weight: 400;
+							color: #6b7280;
+						}
+					}
+
+					.urcr-checkbox-radio-input {
+						margin-right: 0;
+						margin-top: 0;
+					}
+				}
+			}
+		}
+	}
+
+	// Ensure title-body-pair maintains horizontal layout even with ur-form-group
+	.urcr-title-body-pair {
+		&.ur-form-group {
+			display: flex !important;
+			align-items: flex-start;
+		}
+
+		&.urcrra-message-input-container {
+			@media screen and (max-width: 992px) {
+				.urcr-label-container {
+					&:has(.urcr-target-content-label:empty) {
+						display: none !important;
+					}
+				}
+			}
+		}
+	}
+}
+
+.urcr-rule-action-input-container {
+	display: none; // Hidden by default, shown by JS based on action type
+}
+
+.urcr-action-inputs {
+	// Container for all action inputs
+	margin-top: 0;
+}
+
+.urcr-action-input-container {
+	display: none !important; // Hidden by default, shown by JS using ur-d-flex class
+}
+
+.urcr-action-input-container.ur-d-flex {
+	display: flex !important; // Shown when ur-d-flex class is added - utility class handles display: flex !important
+}
+
+.urcr-hidden {
+	display: none !important;
+}
+
+.urcr-label-container {
+	position: relative;
+	vertical-align: top;
+	line-height: 24px;
+	font-weight: 500;
+	color: $color_4;
+	font-size: 14px;
+	// flex: 0 0 38%;
+	max-width: 300px;
+	width: 100% !important;
+	margin-bottom: 0;
+	padding: 0;
+
+	@media screen and (max-width: 600px) {
+		flex: unset;
+		max-width: 100%;
+		width: 100%;
+	}
+
+	.user-registration-help-tip {
+		font-size: 16px;
+		top: 3px;
+		left: 4px;
+
+		&::after {
+			height: 8px;
+		}
+	}
+}
+
+.urcr-input-container {
+	flex: 1;
+	width: 100%;
+
+	@media screen and (max-width: 600px) {
+		width: 100%;
+	}
+
+	// Ensure selects and inputs take full width
+	select,
+	input {
+		width: 100%;
+	}
+}
+
+.urcr-body {
+	flex: 1;
+	width: 100%;
+
+	@media screen and (max-width: 600px) {
+		width: 100%;
+	}
+
+	.wp-media-buttons {
+		display: flex !important;
+		align-items: center;
+		justify-content: space-between !important;
+		gap: 10px;
+		width: 100%;
+
+		.button {
+			&[data-editor="urcr-membership-action-message"] {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				margin: 0;
+
+				.wp-media-buttons-icon {
+					margin: 0;
+				}
+
+				.dashicons {
+					&::before {
+						line-height: 22px;
+					}
+				}
+			}
+		}
+
+		#ur-smart-tags-selector {
+			margin-left: auto;
+		}
+	}
+
+	// Ensure inputs within body take full width
+	.urcr-input,
+	select.urcr-input,
+	input[type="url"].urcr-input,
+	input[type="text"].urcr-input {
+		width: 100%;
+	}
+}
+
+// Higher specificity to ensure styles apply
+.wp-media-buttons {
+	display: flex !important;
+	justify-content: flex-end !important;
+
+	.urcr-smart-tags-button-wrapper {
+		position: relative !important;
+		display: inline-block !important;
+		margin-left: auto !important;
+	}
+}
+
+.urcr-smart-tags-button-wrapper {
+	position: relative !important;
+	display: inline-block !important;
+	margin-left: auto !important;
+
+	.urcr-smart-tags-button {
+		display: inline-flex !important;
+		align-items: center !important;
+		gap: 4px;
+		padding: 6px 12px !important;
+		background: transparent !important;
+		border: none !important;
+		color: #6b6b6b !important;
+		font-size: 13px !important;
+		cursor: pointer !important;
+		text-decoration: underline !important;
+		transition: color 0.15s ease;
+
+		&:hover {
+			color: #475bb2;
+		}
+	}
+
+	.urcr-smart-tags-dropdown {
+		position: absolute;
+		top: 100%;
+		right: 0;
+		margin-top: 5px;
+		width: 180px;
+		background: #fff;
+		border: 1px solid #d1d5db;
+		border-radius: 4px;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+		z-index: 10000;
+		overflow: hidden;
+
+		.urcr-smart-tags-dropdown-title {
+			padding: 6px 8px;
+			background-color: #f4f4f4;
+			border-bottom: 1px solid #ccc;
+
+			p {
+				margin: 0;
+				font-size: 13px;
+				font-weight: 600;
+				color: #383838;
+			}
+		}
+
+		.urcr-smart-tags-search {
+			position: relative;
+			padding: 8px;
+			border-bottom: 1px solid #ccc;
+
+			.urcr-smart-tags-search-icon {
+				position: absolute;
+				left: 16px;
+				top: 19px;
+				color: #999;
+			}
+
+			input {
+				width: 100%;
+				padding: 6px 12px 6px 28px;
+				border: 1px solid #e1e1e1;
+				border-radius: 4px;
+				font-size: 13px;
+			}
+		}
+
+		.urcr-smart-tags-list {
+			max-height: 250px;
+			overflow-y: auto;
+
+			.urcr-smart-tags-item {
+				display: block;
+				width: 100%;
+				padding: 8px 12px;
+				text-align: left;
+				border: none;
+				background: transparent;
+				cursor: pointer;
+				font-size: 13px;
+				color: #383838;
+				transition: background-color 0.15s ease, color 0.15s ease;
+				margin: 0;
+				margin-left: 0 !important;
+				box-shadow: none;
+
+				&:hover {
+					background-color: #f8f8fa;
+					color: #475bb2;
+				}
+			}
+
+			.urcr-smart-tags-empty {
+				padding: 12px;
+				text-align: center;
+				color: #8c8f94;
+				font-size: 13px;
+			}
+		}
+	}
+}
+
+.urcr-buttons-wrapper {
+	display: flex;
+	gap: 10px;
+	margin-top: 16px;
+}
+
+.urcr-action-section {
+	// border-top: 1px solid #e1e1e1;
+	// margin-top: 30px;
+	// padding-top: 28px;
+	// background: #fafafa;
+	background: #f7f7f7;
+	border-radius: 7px;
+	padding: 30px;
+	margin-top: 40px;
+}
+
+.urcr-buttons-wrapper,
+.urcr-content-dropdown-wrapper {
+	.button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		width: max-content;
+		background: 0 0;
+		border: 1px solid transparent;
+		border-radius: 4px;
+		font-size: 13px;
+		color: #383838;
+		font-weight: 600;
+		line-height: 20px;
+		box-shadow: none;
+		outline: 0;
+		min-height: 30px;
+		border-color: #f8f8fa;
+		background: #edeff7;
+		color: #475bb2;
+
+		&:hover {
+			border-color: #f8f8fa;
+			background: #edeff7;
+			color: #475bb2;
+		}
+
+		&:focus {
+			outline: none;
+			box-shadow: none;
+			border-color: transparent;
+		}
+
+		.dashicons {
+			display: flex;
+			width: 14px;
+			height: 14px;
+
+			&::before {
+				font-size: 14px;
+			}
+		}
+	}
+}
+
+.urcr-ur-form-field-condition {
+	.urcr-form-field-row {
+		gap: 12px;
+	}
+
+	.urcr-form-field-name {
+		flex: 1 1 auto;
+		min-width: 150px;
+
+		select {
+			width: 100%;
+		}
+	}
+
+	.urcr-form-field-operator {
+		flex: 0 0 auto;
+		min-width: 110px;
+
+		select {
+			width: 100%;
+		}
+	}
+
+	.urcr-add-field-button,
+	.urcr-remove-field-button {
+		width: 32px;
+		min-width: 32px;
+		padding: 0;
+		flex-shrink: 0;
+	}
+}
+
+// Label and Field Width CSS
+.ur-membership {
+	.user-registration-card {
+		&--form-step {
+			.user-registration-card__body {
+				.ur-label {
+					// flex: 0 0 38%;
+					max-width: 300px;
+					width: 100% !important;
+				}
+
+				.ur-input-type-membership-name,
+				.ur-input-type-select,
+				.ur-toggle-section,
+				.ur-field {
+					// flex: 0 0 60%;
+					flex: 1;
+				}
+
+				.ur-field {
+					&.field-amount {
+						flex: unset !important;
+					}
+
+					&[data-field-key="membership_duration"] {
+						flex: unset !important;
+						width: max-content !important;
+					}
+
+					.select2 {
+						&-container {
+							width: 100% !important;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.urcr-membership-tabs {
+	display: flex;
+	gap: 2px;
+	align-items: center;
+	margin-right: 4px;
+	// background: #f7f7f7;
+	// background: #F8F8FA;
+	background: #F3F4F6;
+	border-radius: 5px;
+	padding: 4px;
+
+	.urcr-tab-button {
+		border: 0;
+		background: transparent;
+		margin: 0;
+		box-shadow: none;
+		border-radius: 4px;
+		padding: 6px 16px;
+		font-weight: 500;
+		font-size: 13px;
+		color: $color_3;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+		line-height: 20px;
+
+		&:hover {
+			color: $color_5;
+		}
+
+		&.urcr-tab-active {
+			color: $color_5;
+			background: #FFF;
+			box-shadow: 0 4px 24px 0 rgba(10, 10, 10, 0.06);
+		}
+	}
+}
+
+.urcr-tab-content {
+	display: none !important;
+
+	&.urcr-tab-content-active {
+		display: block !important;
+	}
+}

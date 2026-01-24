@@ -31,7 +31,32 @@
 						".user-registration-membership-notice__container .ur-toaster"
 					);
 				}
-				this.toggleNotice();
+				// this.toggleNotice();
+				this.ur_remove_cookie("urm_toast_content");
+				this.ur_remove_cookie("urm_toast_success_message");
+			},
+			show_error_message: function (message) {
+				$(".user-registration-membership-notice__container")
+					.removeClass("user-registration-membership-notice__blue")
+					.addClass("user-registration-membership-notice__red");
+				$(".user-registration-membership-notice__message").text(
+					message
+				);
+				$(".user-registration-membership-notice__container").css(
+					"display",
+					"block"
+				);
+
+				//attach near my account title.
+				if (
+					$(document).find(".user-registration-MyAccount").length ===
+					1
+				) {
+					$(
+						".user-registration-membership-notice__container .ur-toaster "
+					);
+				}
+				// this.toggleNotice();
 				this.ur_remove_cookie("urm_toast_content");
 				this.ur_remove_cookie("urm_toast_success_message");
 			},
@@ -199,9 +224,7 @@
 										);
 
 									var invite_code =
-										document.querySelector(
-											"#invite_code"
-										);
+										document.querySelector("#invite_code");
 
 									if (
 										"invite_code" === single_data.field_name
@@ -517,7 +540,11 @@
 														)
 												]
 													? "user_registration_" +
-													  $("[name='" + key + "']")
+														$(
+															"[name='" +
+																key +
+																"']"
+														)
 															.closest(
 																".ur-repeater-row"
 															)
@@ -777,15 +804,13 @@
 								'<div class="user-registration-' + type + '"/>'
 							);
 							wrapper.append(message);
-							var my_account_selector = $(
-								".user-registration"
-							).find(".user-registration-MyAccount-navigation");
-							if (my_account_selector.length) {
+
+							if ($("#user-registration").hasClass("vertical")) {
+								wrapper.insertBefore(".ur-frontend-form");
+							} else {
 								wrapper.insertBefore(
 									".user-registration-MyAccount-navigation"
 								);
-							} else {
-								wrapper.insertBefore(".ur-frontend-form");
 							}
 						} else {
 							var wrapper = $(
@@ -985,11 +1010,11 @@
 													.val() != ""
 											) {
 												$this
-													.find("#user_pass_error")
+													.find("#user_pass-error")
 													.remove();
 
 												var error_msg_dom =
-													'<label id="user_pass_error" class="user-registration-error" for="user_pass">' +
+													'<label id="user_pass-error" class="user-registration-error" for="user_pass">' +
 													ursL10n.password_strength_error +
 													".</label>";
 												$this
@@ -1215,6 +1240,14 @@
 											.val();
 									}
 
+									// Append tax details if available
+									var taxDetails = $( document ).find( "#ur-tax-details" );
+
+									if ( taxDetails.length > 0 ) {
+										form_data.tax_rate       = taxDetails.data("tax-rate");
+										form_data.tax_calculation_method = taxDetails.data("tax-calculation-method");
+									}
+
 									var data = {
 										action: "user_registration_user_form_submit",
 										security:
@@ -1268,29 +1301,46 @@
 										.find("span")
 										.addClass("ur-front-spinner");
 
-									var hit_third_party_api =
-										events.wait_third_party_api($this);
-									if (hit_third_party_api) {
-										var thirdPartyHandlerPromise =
-											new Promise(function (
-												resolve,
-												reject
-											) {
-												$(document).trigger(
-													"user_registration_third_party_api_before_form_submit",
-													[
-														data,
-														$this,
-														$error_message,
-														resolve,
-														reject
-													]
-												);
-											}).then(function (val) {
-												events.ajax_form_submit(val);
-											});
+									if (
+										$registration_form
+											.find(
+												"form.register button.ur-submit-button"
+											)
+											.hasClass(
+												"urm-update-membership-button"
+											)
+									) {
+										$(document).trigger(
+											"user_registration_membership_update_before_form_submit",
+											[data, $this, $error_message]
+										);
 									} else {
-										events.ajax_form_submit(data);
+										var hit_third_party_api =
+											events.wait_third_party_api($this);
+										if (hit_third_party_api) {
+											var thirdPartyHandlerPromise =
+												new Promise(function (
+													resolve,
+													reject
+												) {
+													$(document).trigger(
+														"user_registration_third_party_api_before_form_submit",
+														[
+															data,
+															$this,
+															$error_message,
+															resolve,
+															reject
+														]
+													);
+												}).then(function (val) {
+													events.ajax_form_submit(
+														val
+													);
+												});
+										} else {
+											events.ajax_form_submit(data);
+										}
 									}
 								});
 						});
@@ -1523,10 +1573,17 @@
 											ajax_response.responseText
 										);
 
-										var timeout = response.data
-											.redirect_timeout
-											? response.data.redirect_timeout
-											: 2000;
+										var timeout =
+											response &&
+											response.data &&
+											response.data.redirect_timeout !==
+												undefined &&
+											response.data.redirect_timeout !==
+												null &&
+											response.data.redirect_timeout !==
+												""
+												? response.data.redirect_timeout
+												: 2000;
 
 										if (
 											typeof response.success !==
@@ -1598,9 +1655,10 @@
 														"</li>"
 												);
 											} else if (
-												response.data.form_login_option == "payment" &&
-												typeof response.data
-														.message !==
+												response.data
+													.form_login_option ==
+													"payment" &&
+												typeof response.data.message !==
 													"undefined"
 											) {
 												message.append(
@@ -2355,7 +2413,7 @@
 																			) ===
 																			-1
 																				? "user_registration_" +
-																				  index
+																					index
 																				: index;
 																	}
 
@@ -2767,12 +2825,12 @@
 							if (strength < minimum_password_strength) {
 								if ($this.val() !== "") {
 									wrapper
-										.find("#" + this_data_id + "_error")
+										.find("#" + this_data_id + "-error")
 										.remove();
 									var error_msg_dom =
 										'<label id="' +
 										this_data_id +
-										'_error" class="user-registration-error" for="' +
+										'-error" class="user-registration-error" for="' +
 										this_name +
 										'">' +
 										ursL10n.password_strength_error +
@@ -2854,6 +2912,18 @@
 						});
 					}
 				});
+			}
+		});
+
+		$(document).on("urm_show_action_message", function (e, data) {
+			if (data.type == "error") {
+				user_registration_frontend_utils.show_error_message(
+					data.message
+				);
+			} else {
+				user_registration_frontend_utils.show_success_message(
+					data.message
+				);
 			}
 		});
 	};
@@ -3071,6 +3141,203 @@
 			}
 		}
 	);
+
+	$( document ).on( 'change', '.ur-field-address-country', function ( e ) {
+		e.stopPropagation();
+		e.preventDefault();
+
+		var $el = $(this);
+		var fieldId = $el.data('id');
+		var country = $el.val();
+		var stateEnable = $el.data( 'state-enabled' );
+
+		if ( ! stateEnable ) {
+			return;
+		}
+		var data = {
+			action: 'user_registration_update_state_field',
+			security: user_registration_params.user_registration_update_state_field,
+			country: country
+		};
+		var $stateWrapper = $el.siblings('.ur-field-address-state-outer-wrapper');
+
+		$.ajax({
+			type: "POST",
+			url: user_registration_params.ajax_url,
+			data: data,
+			beforeSend: function(){
+				$stateWrapper.empty();
+				$stateWrapper.append('<span class="ur-front-spinner"></span>');
+
+			},
+			success: function (response) {
+				var html = '';
+
+				if (response.success && response.data.has_state && '' !== response.data.state) {
+					html += '<select class="ur-field-address-state select ur-frontend-field" name="' + fieldId + '_state">';
+					html += response.data.state;
+					html += '</select>';
+				} else {
+					html += '<input type="text" class="ur-field-address-state input-text ur-frontend-field" name="' + fieldId + '_state"/>';
+				}
+
+				$( document ).find( '.ur-front-spinner' ).remove();
+				var $stateElement = $( html );
+
+				$stateWrapper.append( $stateElement );
+			}
+		});
+	});
+
+	/**
+	 * Apply tax calculation
+	 *
+	 * @param $el
+	 * @param country
+	 * @param country_change
+	 * @param $stateElement
+	 *
+	 * @since 5.0.0
+	 */
+	function apply_tax_calculation( $el, country, country_change, $stateElement ) {
+
+		var state 					= '';
+		var regions 				= user_registration_params.regions_list.regions[country];
+		var defaultRate             = (regions && regions.rate != null) ? regions.rate : 0;
+		var membershipData  		= {};
+
+		if ( $( document ).find( '#urm-membership-list' ).length ) {
+			membershipData = getMembershipData();
+		}else{
+			membershipData.total = $('.ur-total-amount[type="hidden"]').val();
+		}
+
+		if ( country_change ) {
+			state = $stateElement.find('option:first').val();
+		} else {
+			state = $stateElement.val();
+		}
+
+		/**
+		 * Check if country exists in regions list
+		 * then check for states
+		 * else apply default rate
+		 */
+		if ( user_registration_params.regions_list.regions.hasOwnProperty( country ) ) {
+
+			if ( regions.hasOwnProperty( 'states' ) && '' !== state ) {
+				var states  = regions.states;
+
+				if ( states.hasOwnProperty( state ) ) {
+					let taxRate = states[state];
+						calculate_total( membershipData, taxRate );
+				}else{
+					if ( defaultRate !== undefined && defaultRate !== '' ) {
+						calculate_total( membershipData, defaultRate );
+					}
+				}
+			} else {
+				calculate_total( membershipData, defaultRate );
+			}
+		}else{
+			calculate_total( membershipData, defaultRate );
+		}
+		$('#ur-local-currency-switch-currency').trigger('change');
+	}
+
+	/**
+	 * Get membership data
+	 *
+	 * @returns {{}}
+	 *
+	 * @since 5.0.0
+	 */
+	function getMembershipData(){
+		var user_data = {};
+		var form_inputs = $("#ur-membership-registration").find("input.ur_membership_input_class");
+
+		form_inputs = convert_to_array(form_inputs);
+
+		form_inputs.forEach(function (item) {
+			var $this = $(item);
+
+			if ($this.attr("name") !== undefined) {
+				var name = $this.attr("name").toLowerCase().replace("urm_", "");
+				user_data[name] = $this.val();
+			}
+		});
+
+		var membership_input = $('input[name="urm_membership"]:checked');
+		user_data.membership = membership_input.val();
+		user_data.payment_method = "free";
+		user_data.total = membership_input.data( "urm-pg-calculated-amount" );
+		if (membership_input.data("urm-pg-type") !== "free") {
+			user_data.payment_method = $(
+				'input[name="urm_payment_method"]:checked:visible'
+			).val();
+		}
+		var date = new Date();
+		user_data.start_date =
+			date.getFullYear() +
+			"-" +
+			(date.getMonth() + 1) +
+			"-" +
+			date.getDate();
+
+		return user_data;
+	}
+
+	/**
+	 * Calculate total with tax
+	 *
+	 * @param membershipData
+	 * @param taxRate
+	 *
+	 * @since 5.0.0
+	 */
+	function calculate_total ( membershipData, taxRate ) {
+		var total_input = $( "#ur-membership-total" );
+
+		let membershipPrice = parseFloat( membershipData.total );
+		let taxAmount = 0;
+		if ( user_registration_params.is_tax_calculation_activated ) {
+			taxAmount = ( membershipPrice * taxRate ) / 100;
+		}
+		let totalPrice = membershipPrice + taxAmount;
+		let total = parseFloat( totalPrice ).toFixed( 2 );
+
+		$( '.urm-membership-tax-value' ).find( '.ur_membership_input_label' ).text( taxRate + '% Tax' );
+			var subTotalInput 		 = $( "#ur-membership-subtotal" );
+			var taxInput 		 	 = $( "#ur-membership-tax" );
+
+		if ( total_input.length ) {
+			if( 'left' === user_registration_params.currency_pos ) {
+				total_input.text(user_registration_params.currency_symbol + total);
+				subTotalInput.text( user_registration_params.currency_symbol + membershipPrice.toFixed(2) );
+				taxInput.text( user_registration_params.currency_symbol + taxAmount.toFixed(2) );
+			} else {
+				total_input.text( total + user_registration_params.currency_symbol );
+				subTotalInput.text( membershipPrice.toFixed(2) + user_registration_params.currency_symbol);
+				taxInput.text( taxAmount.toFixed(2) + user_registration_params.currency_symbol );
+			}
+		}else{
+			total_input = $( ".ur-total-amount[type='hidden']" );
+			total_input.val( total );
+			$( document ).find( 'span.ur-total-amount' ).text( total );
+		}
+
+		$( "#ur-tax-details" ).remove();
+
+		var taxDetailsInput =
+			'<input type="hidden" ' +
+			'id="ur-tax-details" ' +
+			'name="ur_tax_details" ' +
+			'data-tax-rate="' + taxRate + '" ' +
+			'data-tax-calculation-method="' + user_registration_params.tax_calculation_method + '" ' +
+			'data-total="' + total + '">' ;
+
+		total_input.after(taxDetailsInput);
+	}
 })(jQuery);
 
 function ur_includes(arr, item) {
@@ -3204,8 +3471,8 @@ function customPasswordChecks(password) {
 //Shows the content restriction message if botiga theme is used.
 jQuery(document).ready(function ($) {
 	var urcrContentRestrictMsg = $(document).find(".urcr-restrict-msg");
-	if (urcrContentRestrictMsg.length > 0) {
-		urcrContentRestrictMsg.first().css("display", "block");
+	if (urcrContentRestrictMsg.length > 1) {
+		urcrContentRestrictMsg.hide().first().show();
 	}
 });
 
@@ -3234,3 +3501,18 @@ jQuery(document).ready(function ($) {
 		}, 50);
 	});
 });
+jQuery(document).ready(function ($) {
+	$(".ur-submit-button.ur-disabled-btn").on("click", function (e) {
+		e.preventDefault();
+	});
+});
+
+/**
+ * A function that converts an object to an array by taking its values, excluding the first two, and preserving the original order.
+ *
+ * @param {jQuery} $object - The jQuery object to be converted to an array.
+ * @return {Array} The array with values from the object, excluding the first two, and in the original order.
+ */
+function convert_to_array($object) {
+	return Object.values($object).reverse().slice(2).reverse();
+}

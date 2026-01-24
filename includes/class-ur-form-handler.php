@@ -91,11 +91,10 @@ class UR_Form_Handler {
 
 			$user = wp_get_current_user();
 
-
 			// upload the profile picture if it is set.
-			$profile_pic_url = isset( $_POST['profile-pic-url'] ) ? sanitize_text_field( wp_unslash( $_POST['profile-pic-url'] ) ) : '';
-			$valid_form_data = array();
-			$valid_form_data['profile_pic_url'] = new stdClass();
+			$profile_pic_url                           = isset( $_POST['profile-pic-url'] ) ? sanitize_text_field( wp_unslash( $_POST['profile-pic-url'] ) ) : '';
+			$valid_form_data                           = array();
+			$valid_form_data['profile_pic_url']        = new stdClass();
 			$valid_form_data['profile_pic_url']->value = $profile_pic_url;
 
 			ur_upload_profile_pic( $valid_form_data, $user_id );
@@ -105,17 +104,20 @@ class UR_Form_Handler {
 				'last_name',
 			);
 
-			$userdata = array_combine( $fields_to_update, array_map(
-				function( $field ) {
-					return sanitize_text_field( $_POST[ 'user_registration_' . $field ] );
-				},
-				$fields_to_update
-			) );
+			$userdata = array_combine(
+				$fields_to_update,
+				array_map(
+					function ( $field ) {
+						return sanitize_text_field( $_POST[ 'user_registration_' . $field ] );
+					},
+					$fields_to_update
+				)
+			);
 
 			wp_update_user( array_merge( array( 'ID' => $user->ID ), $userdata ) );
 
-			$new_email = sanitize_email( $_POST[ 'user_registration_user_email' ] );
-			if( $user->user_email !== $new_email ) {
+			$new_email = sanitize_email( $_POST['user_registration_user_email'] );
+			if ( $user->user_email !== $new_email ) {
 				update_user_meta( $user->ID, '__pending_email', $new_email );
 				$email_updated = true;
 			}
@@ -137,7 +139,7 @@ class UR_Form_Handler {
 			wp_safe_redirect( ur_get_account_endpoint_url( $profile_endpoint ) );
 			exit;
 		} else {
-			$profile = user_registration_form_data( $user_id, $form_id );
+			$profile         = user_registration_form_data( $user_id, $form_id );
 			$form_field_data = ur_get_form_field_data( $form_id );
 			$fields          = array();
 
@@ -211,9 +213,9 @@ class UR_Form_Handler {
 					if ( $is_email_change_confirmation && 'user_email' === $new_key ) {
 
 						if ( $user ) {
-							if ( sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) { // phpcs:ignore
+							if ( !empty($_POST[ $key ]) && sanitize_email( wp_unslash( $_POST[ $key ] ) ) !== $user->user_email ) { // phpcs:ignore
 								$email_updated = true;
-								$pending_email = sanitize_email( wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore
+								$pending_email = !empty($_POST[ $key ]) ? sanitize_email( wp_unslash( $_POST[ $key ] ) ) : ''; // phpcs:ignore
 							}
 							continue;
 						}
@@ -244,7 +246,7 @@ class UR_Form_Handler {
 								} elseif ( isset( $field['type'] ) && 'repeater' === $field['type'] ) {
 									update_user_meta( $user_id, $update_key, $form_data[ $key ]->value ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 								}
-							} elseif ( 'checkbox' === $field['field_key'] ) {
+							} elseif ( isset( $field['field_key'] ) &&'checkbox' === $field['field_key'] ) {
 								update_user_meta( $user_id, $update_key, '' );
 							}
 						}
@@ -255,30 +257,103 @@ class UR_Form_Handler {
 					$user_data['ID'] = get_current_user_id();
 					wp_update_user( $user_data );
 				}
+
+				/**
+				 * Filter to modify the profile update success message.
+				 */
+				$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
+
+				if ( $email_updated ) {
+					self::send_confirmation_email( $user, $pending_email, $form_id );
+					/* translators: user_email */
+					$user_email_update_message = sprintf( __( 'Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email.', 'user-registration' ), $pending_email );
+					ur_add_notice( $user_email_update_message, 'notice' );
+				}
+
+				ur_add_notice( $message );
+				/**
+				 * Action save profile details.
+				 *
+				 * @param int $user_id The user ID.
+				 * @param int $form_id The form ID.
+				 */
+				do_action( 'user_registration_save_profile_details', $user_id, $form_id );
+
+				if ( 'country' === $field['field_key'] ) {
+					foreach ( $fields as $field_key => $field_value ) {
+						if ( $field_value->field_type === 'country' ) {
+							update_user_meta( $user_id, 'user_registration_' . $field_value->field_name, $field_value->value );
+						}
+					}
+				}
+				wp_safe_redirect( ur_get_account_endpoint_url( $profile_endpoint ) );
+				exit;
 			}
-			/**
-			 * Filter to modify the profile update success message.
-			 */
-			$message = apply_filters( 'user_registration_profile_update_success_message', __( 'User profile updated successfully.', 'user-registration' ) );
+		}
+	}
 
-			if ( $email_updated ) {
-				self::send_confirmation_email( $user, $pending_email, $form_id );
-				/* translators: user_email */
-				$user_email_update_message = sprintf( __( 'Your email address has not been updated yet. Please check your inbox at <strong>%s</strong> for a confirmation email.', 'user-registration' ), $pending_email );
-				ur_add_notice( $user_email_update_message, 'notice' );
-			}
+	/**
+	 * Send confirmation email.
+	 *
+	 * @param object $user User.
+	 * @param email  $new_email Email.
+	 * @param int    $form_id FormId.
+	 * @return void
+	 */
+	public static function send_confirmation_email( $user, $new_email, $form_id ) {
 
-			ur_add_notice( $message );
-			/**
-			 * Action save profile details.
-			 *
-			 * @param int $user_id The user ID.
-			 * @param int $form_id The form ID.
-			 */
-			do_action( 'user_registration_save_profile_details', $user_id, $form_id );
+		$from_name    = apply_filters( 'wp_mail_from_name', get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
+		$sender_email = apply_filters( 'wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
+		$to           = $new_email;
+		$template_id  = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+		$settings     = new UR_Settings_Confirm_Email_Address_Change_Email();
+		$subject      = get_option( 'user_registration_confirm_email_address_change_email_subject', __( 'Confirm Your New Email Address', 'user-registration' ) );
 
-			wp_safe_redirect( ur_get_account_endpoint_url( $profile_endpoint ) );
-			exit;
+		$username  = isset( $user->data->user_login ) ? sanitize_text_field( $user->data->user_login ) : '';
+		$data_html = '<table class="user-registration-email__entries" cellpadding="0" cellspacing="0"><tbody>';
+		$user_id   = isset( $user->ID ) ? sanitize_text_field( $user->ID ) : '';
+		$form_id   = ur_get_form_id_by_userid( $user_id );
+
+		$values = array(
+			'username'           => $username,
+			'user_email'         => $user->user_email,
+			'all_fields'         => $data_html,
+			'form_id'            => $form_id,
+			'user_id'            => $user_id,
+			'user_pending_email' => $new_email,
+		);
+
+		$name_value = array();
+
+		$message     = $settings->ur_get_confirm_email_address_change_email();
+		$message     = get_option( 'user_registration_confirm_email_address_change_email', $message );
+		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
+		/**
+		 * Filter to modify the change email content.
+		 *
+		 * @param string $message The message.
+		 */
+		$message = apply_filters( 'user_registration_email_change_email_content', $message );
+		$message = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
+		$subject = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
+
+		$headers = array(
+			'From:' . $from_name . ' <' . $sender_email . '>',
+			'Content-Type:text/html; charset=UTF-8',
+		);
+
+		$attachment = '';
+
+		update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
+		update_user_meta( $user->ID, 'user_registration_pending_email_expiration', time() + DAY_IN_SECONDS );
+		if ( ur_option_checked( 'uret_override_confirm_email_address_change_email', true ) ) {
+			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
+			$message                   = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
+			$subject                   = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
+
+			UR_Emailer::user_registration_process_and_send_email( $to, $subject, $message, $headers, $attachment, $template_id );
+		} else {
+			UR_Emailer::user_registration_process_and_send_email( $to, $subject, $message, $headers, $attachment, $template_id );
 		}
 	}
 
@@ -367,71 +442,6 @@ class UR_Form_Handler {
 	}
 
 	/**
-	 * Send confirmation email.
-	 *
-	 * @param object $user User.
-	 * @param email  $new_email Email.
-	 * @param int    $form_id FormId.
-	 * @return void
-	 */
-	public static function send_confirmation_email( $user, $new_email, $form_id ) {
-
-		$from_name    = apply_filters( 'wp_mail_from_name', get_option( 'user_registration_email_from_name', esc_attr( get_bloginfo( 'name', 'display' ) ) ) );
-		$sender_email = apply_filters( 'wp_mail_from', get_option( 'user_registration_email_from_address', get_option( 'admin_email' ) ) );
-		$to           = $new_email;
-		$template_id  = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
-		$settings     = new UR_Settings_Confirm_Email_Address_Change_Email();
-		$subject      = get_option( 'user_registration_confirm_email_address_change_email_subject', __( 'Confirm Your Email Address Change', 'user-registration' ) );
-
-		$username  = isset( $user->data->user_login ) ? sanitize_text_field( $user->data->user_login ) : '';
-		$data_html = '<table class="user-registration-email__entries" cellpadding="0" cellspacing="0"><tbody>';
-		$user_id   = isset( $user->ID ) ? sanitize_text_field( $user->ID ) : '';
-		$form_id   = ur_get_form_id_by_userid( $user_id );
-
-		$values = array(
-			'username'           => $username,
-			'user_email'         => $user->user_email,
-			'all_fields'         => $data_html,
-			'form_id'            => $form_id,
-			'user_id'            => $user_id,
-			'user_pending_email' => $new_email,
-		);
-
-		$name_value = array();
-
-		$message     = $settings->ur_get_confirm_email_address_change_email();
-		$message     = get_option( 'user_registration_confirm_email_address_change_email', $message );
-		$template_id = ur_get_single_post_meta( $form_id, 'user_registration_select_email_template' );
-		/**
-		 * Filter to modify the change email content.
-		 *
-		 * @param string $message The message.
-		 */
-		$message = apply_filters( 'user_registration_email_change_email_content', $message );
-		$message = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
-		$subject = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
-
-		$headers = array(
-			'From:' . $from_name . ' <' . $sender_email . '>',
-			'Content-Type:text/html; charset=UTF-8',
-		);
-
-		$attachment = '';
-
-		update_user_meta( $user->ID, 'user_registration_pending_email', $new_email );
-		update_user_meta( $user->ID, 'user_registration_pending_email_expiration', time() + DAY_IN_SECONDS );
-		if ( ur_option_checked( 'uret_override_confirm_email_address_change_email', true ) ) {
-			list( $message, $subject ) = user_registration_email_content_overrider( $form_id, $settings, $message, $subject );
-			$message                   = UR_Emailer::parse_smart_tags( $message, $values, $name_value );
-			$subject                   = UR_Emailer::parse_smart_tags( $subject, $values, $name_value );
-
-			UR_Emailer::user_registration_process_and_send_email( $to, $subject, $message, $headers, $attachment, $template_id );
-		} else {
-			UR_Emailer::user_registration_process_and_send_email( $to, $subject, $message, $headers, $attachment, $template_id );
-		}
-	}
-
-	/**
 	 * Delete a pending email change.
 	 *
 	 * @param integer $user_id User ID.
@@ -441,17 +451,6 @@ class UR_Form_Handler {
 		delete_user_meta( $user_id, 'user_registration_email_confirm_key' );
 		delete_user_meta( $user_id, 'user_registration_pending_email' );
 		delete_user_meta( $user_id, 'user_registration_pending_email_expiration' );
-	}
-
-	/**
-	 * Save Account Details.
-	 *
-	 * @deprecated 1.4.1
-	 * @param int $user_id User ID.
-	 * @return void
-	 */
-	public function save_account_details( $user_id ) {
-		ur_deprecated_function( 'UR_Form_Handler::save_account_details', '1.4.1', 'UR_Form_Handler::save_change_password' );
 	}
 
 	/**
@@ -544,7 +543,7 @@ class UR_Form_Handler {
 			 */
 			if ( $force_logout ) {
 				do_action( 'user_registration_force_logout_all_devices', $user->ID );
-			}else{
+			} else {
 				ur_add_notice( __( 'Password changed successfully.', 'user-registration' ) );
 				do_action( 'user_registration_save_account_details', $user->ID );
 				wp_safe_redirect( ur_get_page_permalink( 'myaccount' ) );
@@ -566,6 +565,7 @@ class UR_Form_Handler {
 			ur_process_login( $nonce_value );
 		}
 	}
+
 	/**
 	 * Process the login form.
 	 *
@@ -577,10 +577,11 @@ class UR_Form_Handler {
 		$nonce_value = isset( $_POST['ur_frontend_form_nonce'] ) ? sanitize_key( $_POST['ur_frontend_form_nonce'] ) : $nonce_value;
 
 		if ( ! empty( $_POST['ur_fallback_submit'] ) ) {
-			$_POST['form_data'] = urldecode($_POST['form_data']);
+			$_POST['form_data'] = urldecode( $_POST['form_data'] );
 			ur_process_registration( $nonce_value );
 		}
 	}
+
 	/**
 	 * Handle lost password form.
 	 */
@@ -826,6 +827,99 @@ class UR_Form_Handler {
 	}
 
 	/**
+	 * Update the user's IP address in form data if not already present.
+	 *
+	 * @since  3.0.4.1
+	 *
+	 * @param int $user_id The ID of the User.
+	 * @param int $form_id   The ID of the form.
+	 */
+	public static function ur_update_user_ip_after_profile_update( $user_id, $form_id ) {
+		$user_ip = ur_get_ip_address();
+		update_user_meta( $user_id, 'ur_user_ip', $user_ip );
+	}
+
+	/**
+	 * Force logout all devices for a user.
+	 *
+	 * @param int $user_id The ID of the user.
+	 */
+	public static function ur_force_logout_all_devices( $user_id ) {
+
+		if ( class_exists( 'WP_Session_Tokens' ) ) {
+			$session_tokens = WP_Session_Tokens::get_instance( $user_id );
+			$session_tokens->destroy_all();
+			$url = ur_get_page_permalink( 'myaccount' );
+			$url = add_query_arg(
+				array(
+					'force-logout' => 'true',
+
+				),
+				$url
+			);
+			wp_safe_redirect( esc_url( $url ) );
+
+		}
+	}
+
+	/**
+	 * Save Account Details.
+	 *
+	 * @deprecated 1.4.1
+	 * @param int $user_id User ID.
+	 * @return void
+	 */
+	public function save_account_details( $user_id ) {
+		ur_deprecated_function( 'UR_Form_Handler::save_account_details', '1.4.1', 'UR_Form_Handler::save_change_password' );
+	}
+
+	/**
+	 * Create and return a dictionary of field_id->field_label for all form fields.
+	 *
+	 * @param [int] $form_id Form Id.
+	 * @param array $args Extra arguments.
+	 * @return array
+	 *
+	 * @since 2.2.3
+	 */
+	public function get_form_fields( $form_id, $args = array() ) {
+		$hide_fields = array(
+			'user_confirm_password',
+			'user_confirm_email',
+		);
+
+		$fields_dict = array();
+
+		if ( is_numeric( $form_id ) ) {
+
+			$form_data = $this->get_form( $form_id, $args );
+
+			foreach ( $form_data as $sec ) {
+				foreach ( $sec as $fields ) {
+					foreach ( $fields as $field ) {
+						if ( ! isset( $field->general_setting->field_name ) ) {
+							continue;
+						}
+
+						$field_id    = $field->general_setting->field_name;
+						$field_label = $field->general_setting->label;
+						if ( ! in_array( $field_id, $hide_fields, true ) ) {
+							$fields_dict[ $field_id ] = $field_label;
+						}
+					}
+				}
+			}
+
+			if ( isset( $args['hide_fields'] ) && true === $args['hide_fields'] ) {
+				foreach ( $hide_fields as $hide_field ) {
+					unset( $fields_dict[ $hide_field ] );
+				}
+			}
+		}
+		return $fields_dict;
+	}
+
+	/**
 	 * Get Form data.
 	 *
 	 * @param int   $id Form ID.
@@ -875,53 +969,6 @@ class UR_Form_Handler {
 
 		return $forms;
 	}
-
-	/**
-	 * Create and return a dictionary of field_id->field_label for all form fields.
-	 *
-	 * @param [int] $form_id Form Id.
-	 * @param array $args Extra arguments.
-	 * @return array
-	 *
-	 * @since 2.2.3
-	 */
-	public function get_form_fields( $form_id, $args = array() ) {
-		$hide_fields = array(
-			'user_confirm_password',
-			'user_confirm_email',
-		);
-
-		$fields_dict = array();
-
-		if ( is_numeric( $form_id ) ) {
-
-			$form_data = $this->get_form( $form_id, $args );
-
-			foreach ( $form_data as $sec ) {
-				foreach ( $sec as $fields ) {
-					foreach ( $fields as $field ) {
-						if ( ! isset( $field->general_setting->field_name ) ) {
-							continue;
-						}
-
-						$field_id    = $field->general_setting->field_name;
-						$field_label = $field->general_setting->label;
-						if ( ! in_array( $field_id, $hide_fields, true ) ) {
-							$fields_dict[ $field_id ] = $field_label;
-						}
-					}
-				}
-			}
-
-			if ( isset( $args['hide_fields'] ) && true === $args['hide_fields'] ) {
-				foreach ( $hide_fields as $hide_field ) {
-					unset( $fields_dict[ $hide_field ] );
-				}
-			}
-		}
-		return $fields_dict;
-	}
-
 
 	/**
 	 * Create new form.
@@ -1040,39 +1087,6 @@ class UR_Form_Handler {
 		do_action( 'user_registration_create_form', $form_id, $form_data, $data );
 
 		return $form_id;
-	}
-
-	/**
-	 * Update the user's IP address in form data if not already present.
-	 *
-	 * @since  3.0.4.1
-	 *
-	 * @param int $user_id The ID of the User.
-	 * @param int $form_id   The ID of the form.
-	 */
-	public static function ur_update_user_ip_after_profile_update( $user_id, $form_id ) {
-		$user_ip = ur_get_ip_address();
-		update_user_meta( $user_id, 'ur_user_ip', $user_ip );
-	}
-
-	/**
-	 * Force logout all devices for a user.
-	 *
-	 * @param int $user_id The ID of the user.
-	 */
-	public static function ur_force_logout_all_devices( $user_id ) {
-
-		if ( class_exists( 'WP_Session_Tokens' ) ) {
-			$session_tokens = WP_Session_Tokens::get_instance( $user_id );
-			$session_tokens->destroy_all();
-			$url = ur_get_page_permalink( 'myaccount' );
-			$url = add_query_arg( array(
-				'force-logout' => 'true',
-
-			), $url );
-			wp_safe_redirect( esc_url( $url ) );
-
-		}
 	}
 }
 

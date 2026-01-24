@@ -58,7 +58,7 @@ ur_print_notices(); ?>
 				<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
 					<label for="password_1"><?php esc_html_e( 'New password', 'user-registration' ); ?> <span class="required">*</span></label>
 					<span class="password-input-group">
-					<input type="password" class="user-registration-Input user-registration-Input--text input-text" name="password_1" id="password_1" />
+					<input type="password" class="user-registration-Input user-registration-Input--text input-text" name="password_1" id="password_1" required />
 					<?php
 					if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
 						echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';
@@ -69,7 +69,7 @@ ur_print_notices(); ?>
 				<p class="user-registration-form-row user-registration-form-row--wide form-row form-row-wide hide_show_password">
 					<label for="password_2"><?php esc_html_e( 'Re-enter new password', 'user-registration' ); ?> <span class="required">*</span></label>
 					<span class="password-input-group">
-					<input type="password" class="user-registration-Input user-registration-Input--text input-text" name="password_2" id="password_2" />
+					<input type="password" class="user-registration-Input user-registration-Input--text input-text" name="password_2" id="password_2" required />
 					<?php
 					if ( ur_option_checked( 'user_registration_login_option_hide_show_password', false ) ) {
 						echo '<a href="javaScript:void(0)" class="password_preview dashicons dashicons-hidden" title="' . esc_attr__( 'Show Password', 'user-registration' ) . '"></a>';

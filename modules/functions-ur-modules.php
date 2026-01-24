@@ -23,7 +23,7 @@ if ( ! function_exists( 'ur_check_module_activation' ) ) {
 	function ur_check_module_activation( $module ) {
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
 
-		if( is_array( $enabled_features ) ) {
+		if ( is_array( $enabled_features ) ) {
 			return in_array( 'user-registration-' . $module, $enabled_features, true ) ? true : false;
 		} else {
 			return false;
@@ -383,8 +383,8 @@ if ( ! function_exists( 'user_registration_sanitize_amount' ) ) {
 
 		$currency      = strtoupper( $currency );
 		$currencies    = ur_payment_integration_get_currencies();
-		$thousands_sep = $currencies[ $currency ]['thousands_separator'];
-		$decimal_sep   = $currencies[ $currency ]['decimal_separator'];
+		$thousands_sep = ! empty( $currencies[ $currency ]['thousands_separator'] ) ? $currencies[ $currency ]['thousands_separator'] : ',';
+		$decimal_sep   = ! empty( $currencies[ $currency ]['decimal_separator'] ) ? $currencies[ $currency ]['decimal_separator'] : '.';
 		$is_negative   = false;
 
 		// Sanitize the amount.
@@ -428,19 +428,19 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 		$membership_field_name = 'membership_field_' . ur_get_random_number();
 		update_option( 'ur_membership_default_membership_field_name', $membership_field_name );
 
-		$membership_id       = UR_Install::create_default_membership();
-//		$membership_group_id =  ::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ) );
+		$membership_id = UR_Install::create_default_membership();
+		// $membership_group_id =  ::create_default_membership_group( array( array( 'ID' => "$membership_id" ) ) );
 
 		$pages                = apply_filters( 'user_registration_create_pages', array() );
 		$default_form_page_id = 0;
 
-		$post_content          = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"0","label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","hide_label":"false","membership_listing_option":"all"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]';
+		$post_content = '[[[{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"}],[{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"}]],[[{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"}],[{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}]],[[{"field_key":"membership","general_setting":{"membership_group":"0","label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","hide_label":"false","membership_listing_option":"all"},"advance_setting":{},"icon":"ur-icon ur-icon-membership-field"}]]]';
 
 		// Insert default form.
 		$default_form_page_id = wp_insert_post(
 			array(
 				'post_type'      => 'user_registration',
-				'post_title'     => esc_html__( 'Default Membership Registration Form', 'user-registration' ),
+				'post_title'     => esc_html__( ' Registration Form', 'user-registration' ),
 				'post_content'   => $post_content,
 				'post_status'    => 'publish',
 				'comment_status' => 'closed',
@@ -459,7 +459,7 @@ if ( ! function_exists( 'ur_membership_install_required_pages' ) ) {
 			'name'    => _x( 'membership-pricing', 'Page slug', 'user-registration' ),
 			'title'   => _x( 'Membership Pricing', 'Page title', 'user-registration' ),
 			'content' => '[user_registration_groups]',
-			'option'  => ''
+			'option'  => '',
 		);
 		$pages['membership_thankyou'] = array(
 			'name'    => _x( 'membership-thankyou', 'Page slug', 'user-registration' ),
@@ -520,7 +520,7 @@ if ( ! function_exists( 'check_membership_field_in_form' ) ) {
 	 *
 	 * @return bool
 	 */
-	function check_membership_field_in_form($form_id) {
+	function check_membership_field_in_form( $form_id ) {
 
 		$payment_fields       = ur_get_form_fields( $form_id );
 		$has_membership_field = false;
@@ -531,6 +531,121 @@ if ( ! function_exists( 'check_membership_field_in_form' ) ) {
 		}
 
 		return $has_membership_field;
+	}
+}
+
+if ( ! function_exists( 'urm_get_membership_process' ) ) {
+	/**
+	 * Get or initialize the membership process structure for a user.
+	 *
+	 * @param int $user_id
+	 * @return array
+	 */
+	function urm_get_membership_process( $user_id ) {
+		$process = get_user_meta( $user_id, 'urm_membership_process', true );
+
+		// If nothing is stored, initialize fresh structure
+		if ( empty( $process ) || ! is_array( $process ) ) {
+			$process = array(
+				'upgrade'  => array(),
+				'renew'    => array(),
+				'multiple' => array(),
+			);
+			update_user_meta( $user_id, 'urm_membership_process', $process );
+			return $process;
+		}
+
+		// Ensure all keys exist
+		if ( ! isset( $process['upgrade'] ) || ! is_array( $process['upgrade'] ) ) {
+			$process['upgrade'] = array();
+		}
+
+		if ( ! isset( $process['renew'] ) || ! is_array( $process['renew'] ) ) {
+			$process['renew'] = array();
+		}
+
+		if ( ! isset( $process['multiple'] ) || ! is_array( $process['multiple'] ) ) {
+			$process['multiple'] = array();
+		}
+
+		update_user_meta( $user_id, 'urm_membership_process', $process );
+
+		return $process;
+	}
+}
+
+
+if ( ! function_exists( 'urm_check_user_membership_has_access' ) ) {
+	/**
+	 * Function to check if user has active membership that is required by restriction rule.
+	 *
+	 * @param array $allowed_memberships Allowed memberships for access.
+	 */
+	function urm_check_user_membership_has_access( $allowed_memberships ) {
+		$members_subscription = new \WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository();
+
+		if ( ! is_user_logged_in() ) {
+			return false;
+		}
+
+		$user_memberships = $members_subscription->get_member_subscription( wp_get_current_user()->ID );
+
+		if ( empty( $user_memberships ) ) {
+			return false;
+		}
+
+		$active_memberships = array_filter(
+			array_map(
+				function ( $user_memberships ) {
+					if ( ! empty( $user_memberships['status'] ) && 'active' === $user_memberships['status'] ) {
+						return $user_memberships['item_id'];
+					}
+				},
+				$user_memberships
+			)
+		);
+
+		$common = array_intersect( $allowed_memberships, $active_memberships );
+		return ! empty( $common );
+	}
+}
+
+if( ! function_exists('urm_get_form_user_payments') ) {
+
+	/**
+	 * Function to get all user form payments.
+	 *
+	 * @param array $args Arguments.
+	 */
+	function urm_get_form_user_payments($args) {
+		$args['meta_key']               = 'ur_payment_status';
+		$args['meta_compare']           = 'EXISTS';
+		$args['meta_query']['relation'] = 'AND';
+
+		$user_query = new \WP_User_Query( $args );
+		$users      = $user_query->get_results();
+
+		$total_items = array();
+		if ( ! empty( $users ) ) {
+			foreach ( $users as $user ) {
+				$meta_value    = get_user_meta( $user->ID, 'ur_payment_invoices', true );
+				$total_items[] = array(
+					'user_id'        => $user->ID,
+					'display_name'   => $user->user_login,
+					'user_email'     => $user->user_email,
+					'transaction_id' => $meta_value[0]['invoice_no'] ?? '',
+					'post_title'     => $meta_value[0]['invoice_plan'] ?? '',
+					'status'         => get_user_meta( $user->ID, 'ur_payment_status', true ),
+					'created_at'     => $meta_value[0]['invoice_date'] ?? '',
+					'type'           => get_user_meta( $user->ID, 'ur_payment_type', true ),
+					'payment_method' => str_replace( '_', ' ', get_user_meta( $user->ID, 'ur_payment_method', true ) ),
+					'total_amount'   => $meta_value[0]['invoice_amount'] ?? 0,
+					'currency'       => $meta_value[0]['invoice_currency'] ?? '',
+				);
+			}
+		}
+
+		return $total_items;
 	}
 }
 
@@ -550,7 +665,7 @@ $modules = array(
 foreach ( $modules as $module_key => $function_name ) {
 	if ( ! function_exists( $function_name ) ) {
 		eval(
-		"
+			"
 		        function $function_name() {
 		            return ur_check_module_activation('$module_key');
 		        }

@@ -31,10 +31,8 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 		 * Constructor.
 		 */
 		public function __construct() {
-			$this->id    = 'content_restriction';
+			$this->id    = 'membership';
 			$this->label = __( 'Content Restriction', 'user-registration' );
-			add_filter( 'user_registration_settings_tabs_array', array( $this, 'add_settings_page' ), 20 );
-			add_action( 'user_registration_sections_' . $this->id, array( $this, 'output_sections' ) );
 			add_action( 'user_registration_settings_' . $this->id, array( $this, 'output' ) );
 			add_action( 'user_registration_settings_save_' . $this->id, array( $this, 'save' ) );
 			add_filter( 'show_user_registration_setting_message', array( $this, 'urcr_setting_message_show' ) );
@@ -66,78 +64,46 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 			$access_rules_list_link = admin_url( 'admin.php?page=user-registration-content-restriction' );
 			$link_html              = sprintf( __( 'Go to <a href="%s">Content Rules page</a> for advanced restrictions', 'user-registration' ), $access_rules_list_link );
 
-			$access_options = array( 'All Logged In Users', 'Choose Specific Roles', 'Guest Users' );
+			// Build settings array for Advanced section
+			$advanced_settings = array();
 
-			if ( ur_check_module_activation( 'membership' ) ) {
-				$access_options[] = 'Memberships';
+			// Build sections array
+			$sections = array();
+
+			// Only include Advanced section if it has settings (i.e., if Pro is active)
+			if ( ! empty( $advanced_settings ) ) {
+				$sections['user_registration_site_restriction_settings'] = array(
+					'title'    => __( 'Advanced', 'user-registration' ),
+					'type'     => 'card',
+					'desc'     => '',
+					'settings' => $advanced_settings,
+				);
 			}
+
+			$sections['user_registration_content_restriction_settings'] = array(
+				'title'    => __( 'Global Restriction Settings', 'user-registration' ),
+				'type'     => 'card',
+				'desc'     => sprintf( __( 'These settings affect whole site restriction as well as individual page/post restriction if enabled. <a href="%1$s" target="_blank" style="text-decoration: underline;" >Learn More.</a>', 'user-registration' ), esc_url_raw( 'https://docs.wpuserregistration.com/docs/content-restriction/' ) ),
+				'settings' => array(
+					array(
+						'title'    => __( 'Restricted Content Message', 'user-registration' ),
+						'desc'     => __( 'The message you would like to display in restricted content.', 'user-registration' ),
+						'id'       => 'user_registration_content_restriction_message',
+						'type'     => 'tinymce',
+						'default'  => 'This content is restricted!',
+						'css'      => '',
+						'show-smart-tags-button' => false,
+						'desc_tip' => true,
+					),
+				),
+			);
 
 			return apply_filters(
 				'user_registration_content_restriction_settings',
 				array(
 					'title'    => __( 'Content Restriction Settings', 'user-registration' ),
 					'desc'     => UR_PRO_ACTIVE ? $link_html : '',
-					'sections' => array(
-						'user_registration_site_restriction_settings' => array(
-							'title'    => __( 'Whole Site Restriction', 'user-registration' ),
-							'type'     => 'card',
-							'desc'     => '',
-							'settings' => array(
-								array(
-									'row_class' => 'urcr_enable_disable urcr_whole_site_access_enable',
-									'title'     => __( 'Enable Whole Site Restriction', 'user-registration' ),
-									'desc'      => __( 'Check this option to restrict your whole site. ', 'user-registration' ),
-									'id'        => 'user_registration_content_restriction_whole_site_access',
-									'default'   => 'no',
-									'desc_tip'  => true,
-									'type'      => 'toggle',
-									'autoload'  => false,
-								),
-							),
-						),
-						'user_registration_content_restriction_settings' => array(
-							'title'    => __( 'Global Restriction Settings', 'user-registration' ),
-							'type'     => 'card',
-							'desc'     => sprintf( __( 'These settings affect whole site restriction as well as individual page/post restriction if enabled. <a href="%1$s" target="_blank" style="text-decoration: underline;" >Learn More.</a>', 'user-registration' ), esc_url_raw( 'https://docs.wpuserregistration.com/docs/content-restriction/' ) ),
-							'settings' => array(
-								array(
-									'row_class' => 'urcr_content_restriction_allow_access_to',
-									'title'     => __( 'Allow Access To', 'user-registration' ),
-									'desc'      => __( 'Select Option To Allow Access To', 'user-registration' ),
-									'id'        => 'user_registration_content_restriction_allow_access_to',
-									'type'      => 'select',
-									'class'     => 'ur-enhanced-select',
-									'css'       => '',
-									'desc_tip'  => true,
-								    'options'   => $access_options,
-								),
-
-								array(
-									'row_class' => 'urcr_content_restriction_allow_access_to_roles',
-									'title'     => __( 'Select Roles', 'user-registration' ),
-									'desc'      => __( 'The roles selected here will have access to restricted content.', 'user-registration' ),
-									'id'        => 'user_registration_content_restriction_allow_to_roles',
-									'default'   => array( 'administrator' ),
-									'type'      => 'multiselect',
-									'class'     => 'ur-enhanced-select',
-									'css'       => 'min-width: 350px; ' . ( '1' != get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) ? 'display:none;' : '',
-									'desc_tip'  => true,
-									'options'   => ur_get_all_roles(),
-								),
-
-								array(
-									'title'    => __( 'Restricted Content Message', 'user-registration' ),
-									'desc'     => __( 'The message you would like to display in restricted content.', 'user-registration' ),
-									'id'       => 'user_registration_content_restriction_message',
-									'type'     => 'tinymce',
-									'default'  => 'This content is restricted!',
-									'css'      => '',
-									'show-smart-tags-button' => false,
-									'desc_tip' => true,
-								),
-							),
-						),
-					),
+					'sections' => $sections,
 				)
 			);
 		}
@@ -147,6 +113,8 @@ if ( ! class_exists( 'URCR_Settings_File ' ) ) :
 			wp_enqueue_script( 'custom-js' );
 
 			global $current_section;
+
+			if ( 'content-rules' !== $current_section ) return;
 
 			$settings = $this->get_settings( $current_section );
 

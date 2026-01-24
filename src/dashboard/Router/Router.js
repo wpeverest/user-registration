@@ -14,7 +14,8 @@ import {
 	Settings,
 	Modules,
 	FreeVsPro,
-	SiteAssistant
+	SiteAssistant,
+	ContentAccessRules
 } from "../screens";
 
 const Router = () => {
@@ -28,7 +29,8 @@ const Router = () => {
 			<Route path="/settings" element={<Settings to={settingsURL} />} />
 			<Route path="/features" element={<Modules />} />
 			<Route path="/products" element={<Products />} />
-			{!isPro && <Route path="/free-vs-pro" element={<FreeVsPro />} />}
+			<Route path="/content-access-rules" element={<ContentAccessRules />} />
+			{/* {!isPro && <Route path="/free-vs-pro" element={<FreeVsPro />} />} */}
 			<Route path="/help" element={<Help />} />
 			<Route path="*" element={<SiteAssistant />} />
 		</Routes>

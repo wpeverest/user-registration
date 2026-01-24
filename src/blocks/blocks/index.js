@@ -10,9 +10,10 @@ import * as loginLogoutMenu from "./login-logout-menu";
 import * as contentRestrictionEnhanced from "./content-restriction-enhanced";
 import * as membershipListing from "./membership-listing";
 import * as thankYou from "./thank-you";
+import * as membershipBuyNow from "./membership-buy-now";
 
 /* global _UR_BLOCKS_ */
-const { iscRestrictionActive } =
+const { iscRestrictionActive, isProActive } =
 	typeof _UR_BLOCKS_ !== "undefined" && _UR_BLOCKS_;
 
 let blocks = [
@@ -23,7 +24,8 @@ let blocks = [
 	editPassword,
 	loginLogoutMenu,
 	membershipListing,
-	thankYou
+	thankYou,
+	membershipBuyNow
 ];
 
 if (iscRestrictionActive) {

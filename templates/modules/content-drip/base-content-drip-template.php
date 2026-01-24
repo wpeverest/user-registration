@@ -1,0 +1,204 @@
+<?php
+/**
+ * Content Drip message template.
+ *
+ * Expected $args:
+ * [
+ *   'activeType' => 'fixed_date'|'days_after',
+ *   'value' => [
+ *     'fixed_date' => ['date' => 'Y-m-d', 'time' => 'H:i'],
+ *     'days_after' => ['days' => int],
+ *   ],
+ * ]
+ */
+
+use WPEverest\URM\ContentDrip\Helper;
+
+defined( 'ABSPATH' ) || exit;
+
+if ( empty( $args ) || ! is_array( $args ) ) {
+	return;
+}
+
+$active_type    = isset( $args['activeType'] ) ? $args['activeType'] : 'fixed_date';
+$value          = isset( $args['value'] ) && is_array( $args['value'] ) ? $args['value'] : array();
+$remaining_days = isset( $args['remaining_days'] ) ? absint( $args['remaining_days'] ) : 0;
+
+
+$default_message = Helper::global_default_message();
+
+$message = get_option(
+	'user_registration_content_drip_global_message',
+	$default_message
+);
+
+$meta = '';
+if ( 'fixed_date' === $active_type ) {
+	$date = isset( $value['fixed_date']['date'] ) ? $value['fixed_date']['date'] : '';
+	$time = isset( $value['fixed_date']['time'] ) ? $value['fixed_date']['time'] : '';
+
+	if ( $date ) {
+		$time      = isset( $time ) && '' !== $time ? $time : '00:00';
+		$timestamp = strtotime( $date . ' ' . $time );
+
+		if ( $timestamp ) {
+			$formatted = date_i18n(
+				get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+				$timestamp
+			);
+
+			$meta = 'on ' . $formatted;
+		}
+	}
+} elseif ( 'days_after' === $active_type ) {
+
+	if ( $remaining_days > 0 ) {
+		$meta = sprintf(
+			/* translators: %d: number of days */
+			_n( 'in %d day', 'in %d days', $remaining_days, 'user-registration' ),
+			$remaining_days
+		);
+	} else {
+		$message = __( 'This content will be available very soon.', 'user-registration' );
+	}
+}
+
+$message = str_replace( '{{urm_drip_time}}', $meta, $message );
+
+?>
+
+<style>
+	/* Hide page d_ for whole site restrictions */
+	body.urcr-hide-page-title .wp-block-post-title,
+	body.urcr-hide-page-title .entry-header,
+	body.urcr-hide-page-title .page-header,
+	body.urcr-hide-page-title .entry-title,
+	body.urcr-hide-page-title .page-title,
+	body.urcr-hide-page-title h1.entry-title,
+	body.urcr-hide-page-title h1.page-title,
+	body.urcr-hide-page-title .post-title,
+	body.urcr-hide-page-title .single-post-title,
+	body.urcr-hide-page-title .single-page-title,
+	body.urcr-hide-page-title article header.entry-header,
+	body.urcr-hide-page-title article .entry-title {
+		display: none !important;
+	}
+	.urcr-access-card {
+		display: flex;
+		flex-direction: column;
+		background-color: #ffffff;
+		border: 1px solid #f1f5f9;
+		border-radius: 7px;
+		padding: 32px;
+		max-width: 800px !important;
+		width: 100%;
+		box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.06);
+		margin: 24px auto !important;
+		box-sizing: border-box;
+	}
+
+	.urcr-access-card > .main-message-body{
+		display: flex;
+		gap: 2px;
+	}
+	.urcr-access-card h3 {
+		font-weight: 700;
+		font-size: 28px;
+		line-height: 36px;
+		color: #1a1a1a;
+		margin: 0 0 20px;
+	}
+	.urcr-access-card p {
+		font-weight: 400;
+		font-size: 16px;
+		line-height: 24px;
+		color: #6B6B6B;
+		margin: 0 0 12px;
+	}
+	.urcr-access-card p:last-child {
+		margin: 12px 0 0;
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 8px 20px;
+	}
+	.urcr-access-card p > a {
+		font-size: 16px;
+		line-height: 24px;
+		padding: 14px 32px;
+		font-weight: 500;
+		border-radius: 4px;
+		text-decoration: none;
+		margin: 0;
+		cursor: pointer;
+		background: transparent;
+		color: #4e4e4e;
+		transition: all .3s ease;
+	}
+	.urcr-access-card p > a.urcr-signup-link {
+		background: #475bb2;
+		color: #ffffff;
+	}
+	.urcr-access-card p > a.urcr-signup-link:hover {
+		background: #38488e;
+		color: #ffffff;
+	}
+	.urcr-access-card p > a.urcr-access-button {
+		background: transparent;
+		text-decoration: underline;
+		padding: 14px 16px;
+	}
+	.urcr-access-card p > a.urcr-access-button:hover {
+		color: #475bb2;
+	}
+	.urcr-access-heading {
+		font-size: 28px;
+		font-weight: 700;
+		color: #1a1a1a;
+		margin: 0 0 16px 0;
+		line-height: 1.2;
+	}
+	.urcr-access-description {
+		font-size: 16px;
+		color: #6B6B6B;
+		margin: 0 0 40px 0;
+		line-height: 1.5;
+	}
+	.urcr-access-description br {
+		display: none;
+	}
+	.urcr-actions {
+		display: block;
+		text-align: center;
+	}
+	.urcr-actions br {
+		display: none;
+	}
+	.urcr-actions a {
+		text-decoration: none;
+		margin: 0;
+		display: block;
+		text-align: left;
+	}
+	@media (max-width: 480px) {
+		.urcr-access-card {
+			padding: 24px;
+		}
+		.urcr-access-card h3 {
+			font-size: 22px;
+			line-height: 30px;
+		}
+		.urcr-access-card p {
+			font-size: 15px;
+			line-height: 25px;
+		}
+		.urcr-access-heading {
+			font-size: 24px;
+		}
+	}
+</style>
+<div class="urcr-access-card">
+
+	<?php echo apply_filters( 'user_registration_process_smart_tags', $message ); ?>
+
+</div>

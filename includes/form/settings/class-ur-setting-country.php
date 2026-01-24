@@ -67,6 +67,17 @@ class UR_Setting_Country extends UR_Field_Settings {
 				'options'  => UR_Form_Field_Country::get_instance()->get_country(),
 				'tip'      => __( 'Select the countries that will be available as options in the dropdown.', 'user-registration' ),
 			),
+				'enable_state' => array(
+				'label'       => __( 'Enable State', 'user-registration' ),
+				'data-id'     => $this->field_id . '_enable_state',
+				'name'        => $this->field_id . '[enable_state]',
+				'class'       => $this->default_class . ' ur-settings-enable-state',
+				'type'        => 'toggle',
+				'required'    => false,
+				'default'     => 'no',
+				'placeholder' => '',
+				'tip'         => __( 'Enable State.', 'user-registration' ),
+			),
 			'default_value'      => array(
 				'label'    => __( 'Default Value', 'user-registration' ),
 				'data-id'  => $this->field_id . '_default_value',

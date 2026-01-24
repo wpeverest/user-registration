@@ -3,9 +3,9 @@
   "apiVersion": 3,
   "name": "user-registration/content-restriction-enhanced",
   "version": "1.0.0",
-  "title": "Content Restriction",
+  "title": "Content Restriction (Legacy)",
   "category": "user-registration",
-  "description": "The block restricts the content.",
+  "description": "This block is no longer maintained, please use the new content restriction block from the block inserter. It will work as it is but please use the new block for better features.",
   "keywords": [
     "user registration content restriction",
     "content restriction"
@@ -17,7 +17,8 @@
   "supports": {
     "className": false,
     "customClassName": false,
-    "reusable": false
+    "reusable": false,
+    "inserter": false
   },
   "attributes": {
     "accessAllRoles": {

@@ -35,7 +35,9 @@ class UR_Admin_Embed_Wizard {
 	 */
 	public static function set_embed_page_title( $post_title, $post ) {
 		$meta = self::get_meta();
-		self::delete_meta();
+		if ( isset( $meta['is_login'] ) && ! ur_string_to_bool( $meta['is_login'] ) ) {
+			self::delete_meta();
+		}
 		return empty( $meta['embed_page_title'] ) ? $post_title : $meta['embed_page_title'];
 	}
 
@@ -51,10 +53,15 @@ class UR_Admin_Embed_Wizard {
 
 		$form_id = ! empty( $meta['form_id'] ) ? $meta['form_id'] : 0;
 		$page_id = ! empty( $meta['embed_page'] ) ? $meta['embed_page'] : 0;
-
-		if ( ! empty( $page_id ) || empty( $form_id ) ) {
+		$is_login = ur_string_to_bool( ! empty( $meta['is_login'] ) ? $meta[ 'is_login'] : 'no' );
+		if ( ! empty( $page_id ) || ( empty( $form_id ) && ! $is_login ) ) {
 			return $post_content;
 		}
+
+		if( $is_login ) {
+			return '[user_registration_login]';
+		}
+
 		$pattern = '[user_registration_form id="%d"]';
 
 		return sprintf( $pattern, absint( $form_id ) );
@@ -92,7 +99,6 @@ class UR_Admin_Embed_Wizard {
 	 * @since 3.2.1.3
 	 */
 	public static function delete_meta() {
-
 		delete_user_meta( get_current_user_id(), 'user-registration_form_embed' );
 	}
 }

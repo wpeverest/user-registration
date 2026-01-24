@@ -41,11 +41,29 @@ class PaymentService {
 		if ( isset( $data['coupon'] ) && ! empty( $data['coupon'] ) ) {
 			$membership_meta['coupon'] = $data['coupon'];
 		}
-		if ( isset( $data["upgrade"] ) && $data["upgrade"] ) {
-			$membership_meta['amount']                       = $data["chargeable_amount"];
+		if ( isset( $data['upgrade'] ) && $data['upgrade'] && empty( $data['team_id'] ) ) {
+			$membership_meta['amount']                       = $data['chargeable_amount'];
 			$membership_meta['upgrade']                      = true;
 			$membership_meta['remaining_subscription_value'] = $data['remaining_subscription_value'];
-			$membership_meta['trial_status']                 = ( isset( $data["trial_status"] ) && "on" == ( $data['trial_status'] ) ) ? $data['trial_status'] : ( isset( $membership_meta['trial_status'] ) ? $membership_meta['trial_status'] : '' );
+			$membership_meta['trial_status']                 = ( isset( $data['trial_status'] ) && 'on' == ( $data['trial_status'] ) ) ? $data['trial_status'] : ( isset( $membership_meta['trial_status'] ) ? $membership_meta['trial_status'] : '' );
+		}
+		if ( isset( $data['team_id'] ) && ! empty( $data['team_id'] ) ) {
+			$team_id    = $data['team_id'];
+			$team_data  = get_post_meta( $team_id, 'urm_team_data', true );
+			$team_seats = get_post_meta( $team_id, 'urm_team_seats', true );
+			if ( $team_data ) {
+				$membership_meta['team_data'] = $team_data;
+				if ( $team_seats ) {
+					$membership_meta['team_data']['team_seats'] = $team_seats;
+				}
+				if ( isset( $team_data['pricing_model'] ) && 'tier' === $team_data['pricing_model'] ) {
+					$tier_info = get_post_meta( $team_id, 'urm_tier_info', true );
+					if ( $tier_info ) {
+						$membership_meta['team_tier_info'] = $tier_info;
+					}
+				}
+			}
+			$membership_meta['team_id'] = $data['team_id'];
 		}
 		return $membership_meta;
 	}
@@ -60,17 +78,17 @@ class PaymentService {
 	public function build_response( $response_data ) {
 		$payment_data = $this->get_payment_data( $response_data );
 
-		if ( isset( $payment_data['upgrade'] ) && $payment_data["upgrade"] ) {
-			$subscription_service       = new SubscriptionService();
-			$subscription_repository    = new SubscriptionRepository();
-			$previous_subscription_data = $response_data['subscription_data'];
+		if ( isset( $payment_data['upgrade'] ) && $payment_data['upgrade'] ) {
+			$subscription_service            = new SubscriptionService();
+			$subscription_repository         = new SubscriptionRepository();
+			$previous_subscription_data      = $response_data['subscription_data'];
 			$response_data['payment_method'] = $this->payment_method;
 			update_user_meta( $response_data['member_id'], 'urm_previous_subscription_data', json_encode( $previous_subscription_data ) );
 			$subscription_data = $subscription_service->prepare_upgrade_subscription_data( $response_data['membership'], $response_data['member_id'], $response_data );
 
-			if ( "bank" === $this->payment_method || ! empty( $response_data['delayed_until'] ) ) {
+			if ( 'bank' === $this->payment_method || ! empty( $response_data['delayed_until'] ) ) {
 				update_user_meta( $response_data['member_id'], 'urm_next_subscription_data', json_encode( $response_data ) );
-			} else if ( "paypal" === $this->payment_method ) {
+			} elseif ( 'paypal' === $this->payment_method ) {
 				update_user_meta( $response_data['member_id'], 'urm_next_subscription_data', json_encode( $response_data ) );
 			} else {
 				$subscription_repository->update( $response_data['subscription_id'], $subscription_data );
@@ -78,16 +96,19 @@ class PaymentService {
 			unset( $response_data['subscription_data'] );
 		}
 
+		$payment_data['item_id']                = isset( $response_data['membership'] ) ? $response_data['membership'] : 0;
+		$payment_data['selected_membership_id'] = isset( $response_data['selected_membership_id'] ) ? $response_data['selected_membership_id'] : 0;
+		$payment_data['current_membership_id']  = isset( $response_data['current_membership_id'] ) ? $response_data['current_membership_id'] : 0;
 		switch ( $this->payment_method ) {
 			case 'stripe':
 				return $this->build_stripe_response( $payment_data, $response_data );
 				break;
 			case 'paypal':
-				return $this->build_paypal_response( $payment_data, $response_data['subscription_id'], $response_data['member_id'] );
+				return $this->build_paypal_response( $payment_data, $response_data['subscription_id'], $response_data['member_id'], $response_data );
 			case 'authorize':
 				return $this->build_authorize_response( $payment_data, $response_data );
 			case 'mollie':
-				return $this->build_mollie_response( $payment_data, $response_data['subscription_id'], $response_data['member_id'] );
+				return $this->build_mollie_response( $payment_data, $response_data['subscription_id'], $response_data['member_id'], $response_data );
 			case 'bank':
 				return $this->build_direct_bank_response( $payment_data, $response_data['subscription_id'], $response_data['member_id'] );
 			default:
@@ -107,9 +128,8 @@ class PaymentService {
 	public function build_free_upgrade_response() {
 
 		return array(
-			'thank_you_page_url' => urm_get_thank_you_page()
+			'thank_you_page_url' => urm_get_thank_you_page(),
 		);
-
 	}
 
 	/**
@@ -121,13 +141,12 @@ class PaymentService {
 	 *
 	 * @return array
 	 */
-	public function build_paypal_response( $data, $subscription_id, $member_id ) {
+	public function build_paypal_response( $data, $subscription_id, $member_id, $response_data = array() ) {
 		$paypal_service = new PaypalService();
 
 		return array(
-			'payment_url' => $paypal_service->build_url( $data, $this->membership, $this->member_email, $subscription_id, $member_id ),
+			'payment_url' => $paypal_service->build_url( $data, $this->membership, $this->member_email, $subscription_id, $member_id, $response_data ),
 		);
-
 	}
 
 	/**
@@ -148,19 +167,17 @@ class PaymentService {
 		$stripe_service = new StripeService();
 
 		return $stripe_service->process_stripe_payment( $payment_data, $response_data );
-
 	}
 
-	public function build_mollie_response( $data, $subscription_id, $member_id ) {
+	public function build_mollie_response( $data, $subscription_id, $member_id, $response_data = array() ) {
 		$success_params    = array();
 		$data['plan_name'] = 'membership';
 		$mollie            = new MollieService();
 
-
-		if ( "subscription" === $data['type'] ) {
-			$success_params = $mollie->mollie_process_subscription_payment( $data, $member_id, $success_params, true );
+		if ( 'subscription' === $data['type'] ) {
+			$success_params = $mollie->mollie_process_subscription_payment( $data, $member_id, $success_params, true, $response_data );
 		} else {
-			$success_params = $mollie->mollie_process_payment( $data, $member_id, $success_params, true );
+			$success_params = $mollie->mollie_process_payment( $data, $member_id, $success_params, true, array(), $response_data );
 		}
 
 		if ( isset( $success_params['mollie_redirect'] ) ) {
@@ -171,9 +188,8 @@ class PaymentService {
 	}
 
 	public function build_authorize_response( $payment_data, $response_data ) {
-		include_once UR_AUTHORIZE_NET_DIR . "includes/class-user-registration-authorize-net-service.php";
+		include_once UR_AUTHORIZE_NET_DIR . 'includes/class-user-registration-authorize-net-service.php';
 		$authorize = new \User_Registration_Authorize_Net_Service();
 		$authorize->process_authorize_payment( $payment_data, $response_data );
 	}
-
 }

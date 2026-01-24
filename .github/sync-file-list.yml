@@ -1,16 +1,13 @@
-wpeverest/user-registration-pro@UR-3112-fix-stripe-coupon-and-decimal-pricing-for-membership:
-  - assets
-  - includes
-  - modules
-  - src
-  - templates
-  - .babelrc
-  - .editorconfig
-  - .gitattributes
-  - .gitignore
-  - .jshintrc
-  - license.txt
-  - phpcs.xml
-  - uninstall.php
-  - webpack.config.js
-  - wpml-config.xml
+wpeverest/user-registration-pro@master:
+    - assets
+    - includes
+    - modules
+    - src
+    - templates
+    - .editorconfig
+    - .gitattributes
+    - .gitignore
+    - license.txt
+    - phpcs.xml
+    - uninstall.php
+    - wpml-config.xml

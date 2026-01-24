@@ -1,9 +1,17 @@
 .user-registration,
 .ur-form-container {
+
 	button,
 	.button {
 		transition: all 0.25s ease 0s;
 		box-shadow: 0 1px 3px transparentize($color_gray_three, 0.85);
+
+		@media screen and (max-width: 782px) {
+			line-height: 20px;
+			font-size: 13px;
+			min-height: 30px;
+			margin-bottom: 0;
+		}
 
 		+ button,
 		+ .button {
@@ -55,7 +63,7 @@
 	}
 
 	.button-primary {
-		background: $primary_color;
+		background: var(--ur-button-background-normal-color, $primary_color);;
 		border-color: $primary_color;
 		box-shadow: 0 1px 0 $primary_color;
 		text-shadow: none;
@@ -63,7 +71,7 @@
 		&:hover,
 		&:active,
 		&:focus {
-			background: $primary_dark;
+			background: var(--ur-button-background-normal-color, $primary_color);;
 			border-color: $primary_dark;
 			box-shadow: 0 1px 0 $primary_dark;
 		}
@@ -113,9 +121,9 @@
 		&:active,
 		&:focus {
 			color: $white;
-			background: adjust-color($red, $saturation: -15%, $lightness: -8% );
-			border-color: adjust-color($red, $saturation: -15%, $lightness: -8% );
-			box-shadow: 0 1px 0 adjust-color($red, $saturation: -15%, $lightness: -8% );
+			background: adjust-color($red, $saturation: -15%, $lightness: -8%);
+			border-color: adjust-color($red, $saturation: -15%, $lightness: -8%);
+			box-shadow: 0 1px 0 adjust-color($red, $saturation: -15%, $lightness: -8%);
 		}
 	}
 
