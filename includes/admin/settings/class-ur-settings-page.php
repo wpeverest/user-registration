@@ -134,6 +134,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 		 */
 		public function output_sections() {
 			global $current_section;
+			global $outer_section;
 
 			$sections = $this->get_sections();
 
@@ -183,8 +184,8 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 				if ( $show_section ) {
 					ob_start();
 					?>
-					<li <?php echo ( $current_section === $id ? ' class="current" ' : '' ); ?>>
-						<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) ); ?>" class="<?php echo( $current_section === $id ? 'current' : '' ); ?> ur-scroll-ui__item">
+					<li <?php echo ( ( $current_section === $id  || $outer_section === $id ) ? ' class="current" ' : '' ); ?>>
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) ); ?>" class="<?php echo( ( $current_section === $id  || $outer_section === $id ) ? 'current' : '' ); ?> ur-scroll-ui__item">	
 							<span class="timeline"></span>
 							<span class="submenu"><?php echo esc_html( $label ); ?></span>
 							<?php if ( $show_premium_icon ) : ?>

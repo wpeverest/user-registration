@@ -64,7 +64,7 @@ class UR_Admin_Settings {
 	public static function output() {
 		global $current_section, $current_tab;
 		global $current_section_part;
-
+		global $outer_section;
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
 		/**
@@ -238,6 +238,7 @@ class UR_Admin_Settings {
 		$current_tab          = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		$current_section      = empty( $_REQUEST['section'] ) ? apply_filters( 'user_registration_settings_' . $current_tab . '_default_section', '' ) : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		$current_section_part = empty( $_GET['part'] ) ? '' : sanitize_title( wp_unslash( $_GET['part'] ) );
+		$outer_section = empty( $_GET['from'] ) ? '' : sanitize_title( wp_unslash( $_GET['from'] ) );
 		/**
 		 * Filter to save settings actions
 		 *

@@ -343,7 +343,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 		public function email_notification_setting( $settings, $value ) {
 			$type_array = explode( '_email_notification', $value['type'] );
 			$type       = ! empty( $type_array ) ? ( str_replace( 'to_', '', $type_array[0] ) ) : '';
-
+			$from = 'to-' . $type;
 			$settings .= '<tr valign="top">';
 			$settings .= '<td class="ur_emails_wrapper" colspan="2">';
 			$settings .= '<table class="ur_emails widefat" cellspacing="0">';
@@ -380,7 +380,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				$status = ! ur_string_to_bool( get_option( 'user_registration_email_setting_disable_email', false ) ) ? ur_string_to_bool( get_option( 'user_registration_enable_' . $email->id, true ) ) : false;
 
 				$settings .= '<tr><td class="ur-email-settings-table">';
-				$settings .= '<a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_' . $email->id . '' ) ) .
+				$settings .= '<a href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&from=' . $from . '&section=ur_settings_' . $email->id . '' ) ) .
 							'">' . esc_html( $email->title ) . '</a>';
 				$settings .= ur_help_tip( $email->description );
 				$settings .= '</td>';
@@ -401,7 +401,7 @@ if ( ! class_exists( 'UR_Settings_Email' ) ) :
 				) . '"><span class="dashicons dashicons-visibility"></span></a>';
 				$settings .= '</td>';
 				$settings .= '<td class="ur-email-settings-table">';
-				$settings .= '<a class="button tips" data-tip="' . esc_attr__( 'Configure', 'user-registration' ) . '" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&section=ur_settings_' . $email->id . '' ) ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>';
+				$settings .= '<a class="button tips" data-tip="' . esc_attr__( 'Configure', 'user-registration' ) . '" href="' . esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=email&from=' . $from . '&section=ur_settings_' . $email->id . '' ) ) . '"><span class="dashicons dashicons-admin-generic"></span> </a>';
 				$settings .= '</td>';
 				$settings .= '</tr>';
 			}
