@@ -658,6 +658,10 @@ function urcr_set_elementor_content_restricted() {
 function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 	global $post;
 
+	if ( ! ur_check_module_activation( 'content-restriction' ) ) {
+		return false;
+	}
+	
 	if ( ! is_object( $target_post ) ) {
 		$target_post = $post;
 	}
