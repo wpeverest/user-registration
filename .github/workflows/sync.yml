@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - master
+            - prf_fixes_by_purshottam
         workflow_dispatch:
 jobs:
     sync:
