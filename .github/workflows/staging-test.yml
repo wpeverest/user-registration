@@ -25,10 +25,10 @@ jobs:
                 git config --global user.email "$MY_EMAIL"
                 git config --global user.name "$MY_USERNAME"
 
-            - name: Use Node.js 16.x
+            - name: Use Node.js 20.x
               uses: actions/setup-node@v2
               with:
-                node-version: 16.x
+                node-version: 20.x
 
             - name: Setup PHP v7.4
               uses: shivammathur/setup-php@v2
@@ -38,7 +38,7 @@ jobs:
 
             - name: NPM, Composer Install & NPM Build
               run: |
-                npm install --legacy-peer-deps
+                pnpm install
                 composer install
                 npm run build
                 composer install --no-dev
