@@ -55,7 +55,7 @@ jobs:
                 Srv_UsrName: ${{ secrets.QA_AUTOMATION_SERVER_USERNAME }}
                 Server_PASS: ${{ secrets.QA_AUTOMATION_SERVER_PASS }}
               run: |
-                sshpass -p "$Server_PASS" rsync -ahPz -e "ssh -o StrictHostKeyChecking=no" user-registration $Srv_UsrName@$Srv_IP:/home/master/applications/ycrdmckpsu/public_html/urqatest/wp-content/plugins
+                sshpass -p "$Server_PASS" rsync -ahPz -e "ssh -o StrictHostKeyChecking=no" user-registration $Srv_UsrName@$Srv_IP:/var/www/anup-urautomation.wp1.site/wp-content/plugins
 
             - name: Setup Chrome
               uses: browser-actions/setup-chrome@v1
