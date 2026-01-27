@@ -36,6 +36,10 @@ jobs:
                 php-version: '7.4'
                 extensions: cli, dev, curl, mbstring, xmlrpc
 
+            - name: Setup Pnpm
+              uses: pnpm/action-setup@v3
+              with:
+               version: 9
             - name: NPM, Composer Install & NPM Build
               run: |
                 pnpm install -g
