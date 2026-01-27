@@ -4531,6 +4531,21 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 						'feature_link' => 'https://wpuserregistration.com/features/woocommerce-integration/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
 					),
 				),
+				'sms-integration' => array(
+					'label'  => esc_html__( 'SMS Integration', 'user-registration' ),
+					'plugin' => 'user-registration-sms-integration',
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration - SMS Integration', 'user-registration' ),
+					'upsell' => array(
+						'excerpt' => 'Send important membership messages via SMS.',
+						'description' => array(
+							'Send custom SMS notifications using Twilio',
+							'Deliver OTPs for Two-Factor Authentication.',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/woocommerce-integration/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					),
+				),
+
 				'popup'           => array(
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'plugin' => 'user-registration-pro',

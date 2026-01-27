@@ -57,7 +57,7 @@ if ( ! class_exists( 'UR_Settings_Integration' ) ) {
             $sections[ 'salesforce' ] = __( 'Salesforce' , 'user-registration' );
             $sections[ 'geolocation' ] = __( 'Geolocation' , 'user-registration' );
             $sections[ 'woocommerce' ] = __( 'WooCommerce', 'user-registration' );
-            
+            $sections[ 'sms-integration' ] = __( 'SMS Integration', 'user-registration' );
             return $sections;
         }
         /**
