@@ -38,7 +38,7 @@ jobs:
 
             - name: NPM, Composer Install & NPM Build
               run: |
-                pnpm install
+                pnpm install -g
                 composer install
                 npm run build
                 composer install --no-dev
