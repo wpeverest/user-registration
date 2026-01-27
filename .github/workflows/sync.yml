@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - master
+            - ui-polishing-sid
         workflow_dispatch:
 jobs:
     sync:
