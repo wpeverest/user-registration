@@ -42,7 +42,7 @@ jobs:
                version: 9
             - name: NPM, Composer Install & NPM Build
               run: |
-                pnpm install -g
+                pnpm install
                 composer install
                 npm run build
                 composer install --no-dev
