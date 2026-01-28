@@ -722,23 +722,6 @@
       ],
       "released_date": "01/01/2024",
       "demo_video_url": ""
-    },
-    {
-      "title": "Payment History",
-      "slug": "user-registration-payment-history",
-      "name": "User Registration Payment History",
-      "image": "extensions-json/sections/icons/payment_history.png",
-      "excerpt": "Displays a transaction history for payments made during registration.",
-      "category": "E-Commerce",
-      "link": "https://docs.wpuserregistration.com/docs/user-registration-payment-history/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
-      "plan": [
-        "plus",
-        "professional",
-        "themegrill agency"
-      ],
-      "released_date": "01/01/2024",
-      "setting_url": "",
-      "demo_video_url": ""
     }
   ]
 }
