@@ -489,6 +489,7 @@ class MembershipService {
 		}
 		$response['status']  = $membership_field_exists;
 		$response['message'] = ! $membership_field_exists ? __( 'The selected page consist a User Registration & Membership Form but no membership field.' ) : '';
+		$response['disable_save_btn'] = 'no';
 
 		return $response;
 	}

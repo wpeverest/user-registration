@@ -713,6 +713,10 @@ class UR_Getting_Started {
 				wp_kses_post( $page['content'] )
 			);
 
+			if ( 'registration' === $key ) {
+				update_option( 'user_registration_member_registration_page_id', $post_id );
+			}
+
 			if ( 'login' === $key ) {
 				update_option( 'user_registration_login_options_login_redirect_url', $post_id );
 			}
