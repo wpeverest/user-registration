@@ -66,6 +66,7 @@ class UR_Admin_Settings {
 		global $current_section_part;
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$current_tab_for_assets = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 
 		/**
 		 * Action to output start settings
@@ -121,6 +122,41 @@ class UR_Admin_Settings {
 			})(jQuery);
 			"
 		);
+
+		if ( 'payment' === $current_tab_for_assets ) {
+			wp_enqueue_script( 'tippy' );
+			if ( ! wp_style_is( 'ur-membership-admin-style', 'registered' ) ) {
+				wp_register_style( 'ur-membership-admin-style', UR()->plugin_url() . '/assets/css/modules/membership/user-registration-membership-admin.css', array(), UR_VERSION );
+			}
+			wp_enqueue_style( 'ur-membership-admin-style' );
+			wp_add_inline_script(
+				'tippy',
+				'jQuery(document).ready(function() {
+					var el = document.querySelectorAll("[data-gate-content]");
+					if (el.length && typeof window.tippy !== "undefined") {
+						tippy.setDefaultProps({ maxWidth: "280px" });
+						el.forEach(function(ref) {
+							var placement = ref.getAttribute("data-gate-placement") || "right";
+							tippy(ref, {
+								content: function() {
+									var id = ref.getAttribute("data-gate-content");
+									var template = document.getElementById(id);
+									if (!template || !template.content) return "";
+									var div = document.createElement("div");
+									div.appendChild(template.content.cloneNode(true));
+									return div.innerHTML;
+								},
+								allowHTML: true,
+								interactive: true,
+								placement: placement,
+								inertia: true,
+								theme: "ur-gate"
+							});
+						});
+					}
+				});'
+			);
+		}
 
 		wp_add_inline_style(
 			'ur-snackbar',
@@ -564,15 +600,34 @@ class UR_Admin_Settings {
 							$settings .= '<div class="user-registration-card ur-mb-2' . $is_captcha . '" ' . esc_attr( $section_id ) . '>';
 						}
 
-						error_log( print_r( $settings, true ) );
 						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion' . $is_captcha_header . '">';
-						$settings .= '<div class="integration-detail">';
+						if ( ! UR_PRO_ACTIVE && ( 'free-mollie' === $section['id'] || 'free-authorize-net' === $section['id'] ) ) {
+							$settings .= '<div class="integration-detail upgradable-type">';
+						} else {
+
+							$settings .= '<div class="integration-detail ">';
+						}
 						$settings .= '<figure class="logo">';
 						$settings .= '<img src="' . UR()->plugin_url() . '/assets/images/settings-icons/' . $section['id'] . '.png" alt="' . $section['title'] . '">';
 						$settings .= '</figure>';
 						if ( ! empty( $section['title'] ) ) {
 							$settings .= '<h3 class="user-registration-card__title">' . esc_html( $section['title'] );
 							$settings .= '</h3>';
+						}
+						if ( ! UR_PRO_ACTIVE && ( 'free-mollie' === $section['id'] || 'free-authorize-net' === $section['id'] ) ) {
+							$result    = ' data-gate-content="ur-pro-' . $section['id'] . '"';
+							$settings .= '<img class="ur-pro-premium" data-feature-gate="tooltip" data-gate-placement="right" data-gate-interactive="true"' . $result . ' src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png" alt="' . $section['title'] . '">';
+							$settings .= '<template id="ur-pro-'.$section['id'].'">';
+							$settings .= '<div class="ur-feature">';
+							$settings .= '<div class="ur-feature__title">';
+							$settings .= esc_html__( $section['title'] . ' payment feature only available in Pro.', 'user-registration' );
+							$settings .= '</div>';
+							$settings .= '<a class="ur-feature__btn" href="https://wpuserregistration.com/upgrade/?utm_source=ur-membership-create&utm_medium=upgrade-link&utm-campaign=lite-version">';
+							$settings .= '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>';
+							$settings .= esc_html__( 'Upgrade to Pro', 'user-registration' );
+							$settings .= '</a>';
+							$settings .= '</div>';
+							$settings .= '</template>';
 						}
 						$settings .= '<span class="ur-connection-status ' . ( $is_connected ? 'ur-connection-status--active' : '' ) . '">';
 						$settings .= '</span>';

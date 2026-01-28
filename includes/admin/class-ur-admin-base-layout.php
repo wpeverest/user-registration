@@ -197,7 +197,7 @@ class UR_Base_Layout {
 				);
 			}
 
-			$video_url = '#';
+			$video_url = 'https://www.youtube.com/playlist?list=PLcrB6drBDePkshUw7r5BNVLRwpr8RaXyy';
 		}
 		?>
 		<div class="empty-list-table-container">
