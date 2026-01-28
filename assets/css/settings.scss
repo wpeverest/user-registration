@@ -99,7 +99,10 @@ body {
 			padding: $spacing_24px 0 0;
 			background: $grey-0;
 			border-right: $border_width solid $border-color;
-			height: calc(100svh + 58px);
+			// height: calc(100svh + 58px);
+			min-height: 100%;
+			max-height: 100%;
+			height: calc(100dvh + 42px);
 
 			&.collapsed {
 				max-width: 60px;
@@ -1774,11 +1777,11 @@ body {
 
 								&.active {
 									label {
-										color: #475bb2;
+										color: $primary_color;
 										opacity: 1;
 									}
 
-									border-color: #475bb2;
+									border-color: $primary_color;
 								}
 
 								label {
@@ -1802,6 +1805,11 @@ body {
 
 							&.user_registration-deactivate-license-key {
 								background: #f25656 !important;
+
+								&:focus {
+									outline: none;
+									box-shadow: none;
+								}
 							}
 						}
 
@@ -2335,14 +2343,61 @@ body {
 	content: "Connected";
 }
 
-.user-registration-settings-parts li {
-	padding: 2px 4px;
-	color: black !important;
-}
+.user-registration-settings-parts.subsubsub {
+	display: flex;
+	gap: $spacing_8px;
+	border-bottom: $border_width solid $border-color;
+	padding-bottom: 0;
+	margin: 0;
 
-.user-registration-settings-parts .current {
-	color: #475bb2;
-	border-bottom: 1px solid #475bb2;
+	li {
+		padding: 0;
+
+		a {
+			padding: $spacing_12px $spacing_16px;
+			font-size: 14px;
+			line-height: 18px;
+			font-weight: $medium;
+			background: transparent;
+			border: 0;
+			color: #666666;
+			cursor: pointer;
+			transition: all .3s ease;
+			margin: 0;
+			box-shadow: none;
+			position: relative;
+
+			&::before {
+				content: "";
+				position: absolute;
+				width: 100%;
+				height: 2px;
+				background: $primary_color;
+				opacity: 0;
+				bottom: 0;
+				left: 0;
+				transition: all .3s ease;
+			}
+
+			&:hover {
+				color: #222222;
+			}
+
+			&:focus {
+				outline: none;
+				box-shadow: none;
+				border: 0;
+			}
+
+			&.current {
+				color: $primary_color;
+
+				&::before {
+					opacity: 1;
+				}
+			}
+		}
+	}
 }
 
 /* Color picker styling */

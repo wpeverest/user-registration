@@ -401,6 +401,12 @@ class UR_Form_Field_Country extends UR_Form_Field {
 			return;
 		}
 
+		$isJson = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
+		if ( $isJson ) {
+			$country_data = json_decode( $value, true );
+			$value = ! empty( $value['country'] ) ? $value['country'] : '';
+		}
+		
 		if ( ! empty( $value ) && ! in_array( $value, $valid_countries, true ) ) {
 			$message = array(
 				/* translators: %s - validation message */
