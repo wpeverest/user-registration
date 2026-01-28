@@ -1954,25 +1954,22 @@
   transform: rotate(-90deg);
 }
 
+.tippy-content {
+  width: 235px;
+}
+
 .ur-membership-sync-to-email-marketing-addons.upgradable-type .user-registration-toggle-form {
   position: relative;
+  display: flex;
+  gap: 10px;
 }
-.ur-membership-sync-to-email-marketing-addons.upgradable-type .user-registration-toggle-form::before {
-  opacity: 1;
-  content: "";
-  background-image: url("../../../images/icons/ur-pro-icon.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100%;
-  display: block;
-  border-radius: 2px;
+.ur-membership-sync-to-email-marketing-addons.upgradable-type .user-registration-toggle-form .ur-premium-pro img {
   width: 18px;
   height: 18px;
-  margin-left: -38px;
-  margin-top: -2px;
 }
 .ur-membership-sync-to-email-marketing-addons.upgradable-type .user-registration-toggle-form .slider {
   cursor: default !important;
+  opacity: 0.5;
 }
 
 #ur-membership-main-fields .upgradable-type,

@@ -2019,30 +2019,27 @@
 	}
 }
 
+.tippy-content {
+	width: 235px;
+}
+
 .ur-membership-sync-to-email-marketing-addons {
 	&.upgradable-type {
 		.user-registration-toggle-form {
 			position: relative;
+			display: flex;
+			gap: 10px;
 
-			&::before {
-				opacity: 1;
-				content: "";
-				background-image: url("../../../images/icons/ur-pro-icon.png");
-				background-repeat: no-repeat;
-				background-position: center;
-				background-size: 100%;
-				// position: absolute;
-				// right: $spacing_12px;
-				display: block;
-				border-radius: $border_radius_2;
-				width: 18px;
-				height: 18px;
-				margin-left: -38px;
-				margin-top: -2px;
+			.ur-premium-pro {
+				img {
+					width: 18px;
+					height: 18px;
+				}
 			}
 
 			.slider {
 				cursor: default !important;
+				opacity: 0.5;
 			}
 		}
 

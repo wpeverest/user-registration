@@ -232,6 +232,23 @@
 								<?php echo $is_email_marketing_sync ? esc_attr( 'checked' ) : ''; ?>
 									>
 								<span class="slider round"></span>
+
+								<?php if (! UR_PRO_ACTIVE){ ?>
+									<span class="ur-premium-pro <?php echo ! UR_PRO_ACTIVE ? 'data-feature-gate="tooltip" data-gate-placement="right" data-gate-interactive="true" data-gate-content="ur-pro-email-marketing-addons"' : ''; ?>"> <img src="<?php echo UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' ?>" alt="" >  </span>
+								<?php } ?>
+								<?php if ( ! UR_PRO_ACTIVE ) : ?>
+									<template id="ur-pro-email-marketing-addons">
+									<div class="ur-feature">
+										<div class="ur-feature__title">
+											<?php esc_html_e( 'Override Email Marketing Setting Feature is only available in Pro.', 'user-registration' ); ?>
+										</div>
+									<a class="ur-feature__btn" href="https://wpuserregistration.com/upgrade/?utm_source=ur-membership-create&utm_medium=upgrade-link&utm-campaign=lite-version">
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>
+										<?php esc_html_e( 'Upgrade to Pro', 'user-registration' ); ?>
+									</a>
+									</div>
+								</template>
+								<?php endif; ?>
 							</span>
 						</div>
 					</div>
