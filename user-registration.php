@@ -291,7 +291,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 				}
 			}
 
-			if ( ( ur_check_module_activation( 'membership' ) || ur_check_module_activation( 'payments' ) ) && ur_check_module_activation( 'payment-history' ) ) {
+			if ( ( ur_check_module_activation( 'membership' ) || ur_check_module_activation( 'payments' ) ) ) {
 				include_once UR_ABSPATH . 'modules/payment-history/Orders.php';
 			}
 

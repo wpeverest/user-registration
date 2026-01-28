@@ -699,7 +699,7 @@ class UR_Modules {
 					return $status;
 				}
 
-				if ( in_array( $slug, array( 'userregistrationstripe', 'userregistrationauthorizenet' ) ) && ! in_array( 'user-registration-payment-history', $enabled_features ) ) {
+				if ( in_array( $slug, array( 'userregistrationstripe', 'userregistrationauthorizenet' ) ) ) {
 					$enabled_features[] = 'user-registration-payment-history';
 					update_option( 'user_registration_enabled_features', array_unique( $enabled_features ) );
 				}
@@ -770,7 +770,7 @@ class UR_Modules {
 		activate_plugin( $plugin );
 		$enabled_features = get_option( 'user_registration_enabled_features', array() );
 
-		if ( in_array( $slug, array( 'userregistrationstripe', 'userregistrationauthorizenet' ) ) && ! in_array( 'user-registration-payment-history', $enabled_features ) ) {
+		if ( in_array( $slug, array( 'userregistrationstripe', 'userregistrationauthorizenet' ) ) ) {
 			$enabled_features[] = 'user-registration-payment-history';
 			update_option( 'user_registration_enabled_features', $enabled_features );
 		}
