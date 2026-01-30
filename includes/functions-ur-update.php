@@ -452,3 +452,11 @@ function urm_update_50_option_migrate() {
 		}
 	}
 }
+
+function urm_update_511_option_migrate(){
+	if ( ! ur_check_module_activation( 'user-registration-payment-history' )  ) {
+		$enabled_features = get_option( 'user_registration_enabled_features', array() );
+		$enabled_features[] = 'user-registration-payment-history';
+		update_option( 'user_registration_enabled_features', $enabled_features );
+	}
+}

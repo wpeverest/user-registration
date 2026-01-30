@@ -31,28 +31,6 @@
       "released_date": "25/06/2018"
     },
     {
-      "title": "Payment History",
-      "slug": "user-registration-payment-history",
-      "name": "User Registration Membership - Payment History",
-      "image": "extensions-json/sections/icons/payment_history.png",
-      "excerpt": "Displays a transaction history for payments made during registration.",
-      "category": "E-Commerce",
-      "link": "https://docs.wpuserregistration.com/docs/user-registration-pro/?utm_source=dashboard-all-features&utm_medium=card-documentation-link",
-      "released_date": "20/06/2024",
-      "plan": [
-        "free"
-      ],
-      "setting_url": "",
-      "demo_video_url": "DuWX7i7eYsY",
-      "activation_requirements": [
-        "membership",
-        "pro",
-        "stripe",
-        "authorize-net",
-        "payments"
-      ]
-    },
-    {
       "title": "PayPal Payment",
       "slug": "user-registration-payments",
       "name": "User Registration Payments",

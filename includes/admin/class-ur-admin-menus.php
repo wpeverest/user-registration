@@ -553,21 +553,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 					);
 					add_action( 'load-' . $rules_page, array( $membership_obj, 'membership_initialization' ) );
 
-				// if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
-
-					// add_submenu_page(
-					// 'user-registration',
-					// __( 'All Plans', 'user-registration' ),
-					// '↳ ' . __( 'All Plans', 'user-registration' ),
-					// 'edit_posts',
-					// 'user-registration-membership',
-					// array(
-					// $this,
-					// 'render_membership_page',
-					// ),
-					// 3
-					// );
-
 					$membership_groups_repository = new MembershipGroupRepository();
 					$membership_groups            = $membership_groups_repository->get_all_membership_groups();
 					$group_installation_flag      = get_option( 'urm_group_module_installation_flag', false );
@@ -586,18 +571,6 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 						3
 					);
 				}
-
-					// $members = new Members();
-					// add_submenu_page(
-					// 'user-registration',
-					// __( 'Membership Members', 'user-registration' ),
-					// '↳ ' . __( 'Members', 'user-registration' ),
-					// 'manage_user_registration',
-					// 'user-registration-members',
-					// array( $members, 'render_members_page'),
-					// 4
-					// );
-				// }
 			}
 
 			$membership_rules_count = 0;
@@ -610,10 +583,8 @@ if ( ! class_exists( 'UR_Admin_Menus', false ) ) :
 				$content_rules->add_urcr_menus();
 			}
 
-			if ( ur_check_module_activation( 'payment-history' ) ) {
-				$orders_obj = new Orders();
-				$orders_obj->add_orders_menu();
-			}
+			$orders_obj = new Orders();
+			$orders_obj->add_orders_menu();
 
 			if ( ur_check_module_activation( 'membership' ) ) {
 				$subscription_obj = new Subscriptions();
