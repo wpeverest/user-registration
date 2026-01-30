@@ -146,7 +146,7 @@ class URCR_Content_Access_Rules {
 		$rules = array();
 
 		foreach ( $access_rules as $rule_post ) {
-			$rule_content = json_decode( $rule_post->post_content, true );
+			$rule_content = json_decode( urcr_fix_broken_rule_json( $rule_post->post_content ), true );
 
 			$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
 
