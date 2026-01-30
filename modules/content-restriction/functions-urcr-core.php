@@ -1722,6 +1722,7 @@ function urcr_fix_broken_rule_json( $json ) {
             $message = $matches[1];
 
             $message = str_replace( '\n', '', $message );
+            $message = str_replace( '\r', '', $message );
 
             $message = html_entity_decode( $message, ENT_QUOTES, 'UTF-8' );
 
