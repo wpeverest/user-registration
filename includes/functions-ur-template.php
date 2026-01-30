@@ -831,11 +831,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					}
 
 					$custom_attributes[] = 'data-allow_clear="true"';
-					$is_json             = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
+					$is_json             = is_string( $value ) && preg_match( '/^\{.*\}$/s', $value ) ? true : false;
 					if ( $is_json ) {
 						$value = json_decode( $value, true );
 					}
-					$country = is_array( $value ) ? $value['country'] : $value;
+					$country = is_array( $value ) && ! empty(  $value['country']) ? $value['country'] : $value;
 
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$selected_attribute = '';

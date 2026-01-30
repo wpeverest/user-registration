@@ -1714,3 +1714,25 @@ function urcr_migrated_global_rule() {
 
 	return ! empty( $posts ) ? json_decode( $posts[0]->post_content, true ) : array();
 }
+
+function urcr_fix_broken_rule_json( $json ) {
+    if ( ! is_string( $json ) || $json === '' ) {
+        return false;
+    }
+
+    $json = preg_replace_callback(
+        '/"message":"(.*?)","redirect_url"/s',
+        function ( $matches ) {
+            $message = $matches[1];
+
+            $message = str_replace( 'n', '', $message );
+
+            $message = html_entity_decode( $message, ENT_QUOTES, 'UTF-8' );
+
+            return '"message":"' . addslashes( $message ) . '","redirect_url"';
+        },
+        $json
+    );
+
+    return $json;
+}

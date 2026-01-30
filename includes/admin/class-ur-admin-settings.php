@@ -1897,6 +1897,10 @@ class UR_Admin_Settings {
 
 		// Save all options in our array.
 		foreach ( $update_options as $name => $value ) {
+			//sync membership 'user_registration_member_registration_page_id' with 'user_registration_registration_page_id'.
+			if ( 'user_registration_member_registration_page_id' === $name ) {
+				update_option( 'user_registration_registration_page_id', $value );
+			}
 			update_option( $name, $value );
 		}
 

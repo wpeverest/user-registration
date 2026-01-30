@@ -1654,10 +1654,20 @@
 								"</div>"
 						);
 
-					$this
-						.closest("form")
-						.find("input[name='save']")
-						.prop("disabled", true);
+						var disableSaveBtn = response.responseJSON.disable_save_btn;
+
+						if (typeof disableSaveBtn === "undefined") {
+							$this
+								.closest("form")
+								.find("input[name='save']")
+								.prop("disabled", true);
+
+						} else if (disableSaveBtn === "no") {
+							$this
+								.closest("form")
+								.find("input[name='save']")
+								.prop("disabled", false);
+						}
 				} else {
 					if (
 						$this
