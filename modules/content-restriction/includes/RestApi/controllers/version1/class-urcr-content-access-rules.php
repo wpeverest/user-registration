@@ -410,7 +410,7 @@ class URCR_Content_Access_Rules {
 			);
 		}
 
-		$content_rule_content = json_decode( $content_rule->post_content, true );
+		$content_rule_content = json_decode( urcr_fix_broken_rule_json($content_rule->post_content ), true );
 
 		if ( ! is_array( $content_rule_content ) ) {
 			$content_rule_content = array();
