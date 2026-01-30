@@ -359,6 +359,9 @@ class UR_Install {
 				'6.0'   => array(
 					'urm_update_50_option_migrate',
 				),
+				'6.1.1' => array(
+					'urm_update_511_option_migrate'
+				)
 			);
 		}
 
