@@ -1,6 +1,6 @@
-@import 'utility/mixins';
-@import './../../variables/variables';
-@import './../../components/button';
+@import "utility/mixins";
+@import "./../../variables/variables";
+@import "./../../components/button";
 
 #payment-detail-modal {
 	h2 {
@@ -123,7 +123,7 @@
 			color: white !important;
 			font-size: 14px !important;
 			border-radius: 4px;
-			transition: all .3s;
+			transition: all 0.3s;
 
 			&:hover {
 				background: #128b15;
@@ -132,14 +132,11 @@
 			&:after {
 				content: none;
 			}
-
-
 		}
 	}
 
 	a {
 		text-decoration: none !important;
-		;
 	}
 }
 
@@ -192,7 +189,6 @@
 	margin: 20px 0;
 }
 
-
 // Membership Admin Side Design Fix
 .user-registration {
 	.ur-membership-header {
@@ -210,14 +206,14 @@
 				img {
 					max-width: 36px !important;
 					padding: 18px 24px 18px 0;
-					border-right: 1px solid #E2E8F0;
+					border-right: 1px solid #e2e8f0;
 					margin-right: 28px;
 				}
 
 				a {
 					font-size: 16px !important;
 					line-height: 26px;
-					color: #64748B;
+					color: #64748b;
 					position: relative;
 					padding: 23px 20px;
 
@@ -229,11 +225,11 @@
 						position: absolute;
 						bottom: 0;
 						left: 0;
-						transition: all .3s;
+						transition: all 0.3s;
 					}
 
 					&.row-title {
-						color: #475BB2;
+						color: #475bb2;
 
 						&:after {
 							width: 100%;
@@ -260,11 +256,11 @@
 					font-size: 16px;
 					line-height: 26px;
 					font-weight: 500;
-					color: #64748B;
-					transition: all .3s;
+					color: #64748b;
+					transition: all 0.3s;
 
 					&:hover {
-						color: #475BB2;
+						color: #475bb2;
 					}
 				}
 			}
@@ -290,15 +286,15 @@
 
 			.ur-button-primary {
 				border-radius: 3px;
-				border-color: #475BB2;
-				background: #475BB2;
+				border-color: #475bb2;
+				background: #475bb2;
 				color: #ffffff;
 				padding: 8px 20px 8px 16px;
 				color: #ffffff;
 				font-size: 14px;
 				font-weight: 400;
 				line-height: 24px;
-				transition: all .3s;
+				transition: all 0.3s;
 
 				&:hover {
 					background: #38488e;
@@ -311,11 +307,11 @@
 			form {
 				gap: $spacing_16px;
 
-				>p {
+				> p {
 					display: none;
 				}
 
-				>div {
+				> div {
 					position: relative;
 
 					select {
@@ -337,7 +333,7 @@
 						&:focus {
 							box-shadow: none;
 							outline: none;
-							border-color: #475BB2;
+							border-color: #475bb2;
 						}
 					}
 
@@ -352,9 +348,9 @@
 					padding: 8px 14px;
 					font-size: 14px;
 					line-height: 20px;
-					color: #475BB2;
-					border-color: #475BB2;
-					background: #F6F7F7;
+					color: #475bb2;
+					border-color: #475bb2;
+					background: #f6f7f7;
 					font-weight: 500;
 				}
 			}
@@ -455,7 +451,7 @@
 				tbody {
 					tr {
 						&:nth-child(odd) {
-							background: #F8F8FA;
+							background: #f8f8fa;
 						}
 
 						td {
@@ -511,7 +507,7 @@
 									margin-bottom: 30px;
 
 									img {
-										width: 300px;
+										width: 270px;
 									}
 
 									h3 {
@@ -524,10 +520,42 @@
 									}
 
 									p {
-										color: #6B6B6B;
+										color: #6b6b6b;
 										font-size: 14px;
 										font-weight: 400;
 										line-height: 24px;
+									}
+
+									a {
+										display: flex;
+										justify-content: center;
+										align-items: center;
+										gap: 6px;
+										color: #6b6b6b;
+										font-size: 12px;
+										font-weight: 400;
+										line-height: 17px;
+										border-radius: 4px;
+										border: 1px solid #e1e1e1;
+										padding: 4px 10px;
+
+										&:focus {
+											outline: none;
+											box-shadow: none;
+										}
+
+										svg {
+											width: 14px;
+											height: 14px;
+											stroke: #6b6b6b;
+										}
+									}
+
+									.empty-list-table-subtext {
+										display: flex;
+										justify-content: center;
+										align-items: center;
+										gap: 6px;
 									}
 								}
 							}
@@ -537,7 +565,6 @@
 
 				tfoot {
 					tr {
-
 						td,
 						th {
 							border-top: $border_width solid $border_color;
@@ -577,7 +604,7 @@
 									margin-bottom: 30px;
 
 									img {
-										width: 300px;
+										width: 270px;
 									}
 
 									h3 {
@@ -590,10 +617,26 @@
 									}
 
 									p {
-										color: #6B6B6B;
+										color: #6b6b6b;
 										font-size: 14px;
 										font-weight: 400;
 										line-height: 24px;
+									}
+
+									a {
+										border: 1px solid red;
+										color: #6b6b6b;
+										font-size: 14px;
+										font-weight: 400;
+										line-height: 24px;
+										border-radius: 2px;
+									}
+
+									.empty-list-table-subtext {
+										display: flex;
+										justify-content: center;
+										align-items: center;
+										gap: 6px;
 									}
 								}
 							}
@@ -803,7 +846,7 @@
 										margin-bottom: 0;
 										border-radius: 4px;
 										border: 1px solid #e1e1e1;
-										background: #FFF;
+										background: #fff;
 										padding: 12px 14px;
 										cursor: pointer;
 
@@ -875,7 +918,6 @@
 								}
 							}
 						}
-
 					}
 
 					#ur-membership-plan-and-price-section {
@@ -901,7 +943,7 @@
 										margin-bottom: 0;
 										border-radius: 4px;
 										border: 1px solid #e1e1e1;
-										background: #FFF;
+										background: #fff;
 										padding: 12px 14px;
 										cursor: pointer;
 
@@ -959,7 +1001,7 @@
 
 									.ur-membership-upgrade-types {
 										width: 100%;
-										max-width: 220px;
+										max-width: 222px;
 										margin-bottom: 0;
 										border-radius: $border_radius_4;
 										border: $border_width solid $border-color;
@@ -1012,7 +1054,6 @@
 											cursor: not-allowed;
 
 											.ur-membership-type-title {
-
 												input[type="radio"],
 												.ur-membership-upgrade-type-full--label {
 													cursor: not-allowed;
@@ -1042,7 +1083,7 @@
 							}
 						}
 
-						>.user-registration-card {
+						> .user-registration-card {
 							padding: 0;
 							border: 0;
 							margin-top: 80px;
@@ -1052,7 +1093,6 @@
 					#ur-membership-upgrade-action:checked {
 						background: $primary_color;
 						border-color: $primary_color;
-
 					}
 
 					#paid-plan-container {
@@ -1111,7 +1151,6 @@
 
 						.trial-container {
 							&--wrapper {
-
 								.ur-label {
 									margin-bottom: 0;
 
@@ -1141,7 +1180,6 @@
 
 					#payment-gateway-container,
 					#ur-sync-to-email-marketing-container {
-
 						.user-registration-card {
 							border-radius: $border_radius_7;
 
@@ -1152,11 +1190,12 @@
 								}
 							}
 
-							&__body {}
+							&__body {
+							}
 						}
 					}
 
-					#ur-membership-team-fields{
+					#ur-membership-team-fields {
 						.ur-label {
 							margin-bottom: 0;
 
@@ -1192,7 +1231,7 @@
 				border: $border_width solid $border_color;
 				border-radius: $border_radius_5;
 				padding: $spacing_16px $spacing_20px;
-				transition: all .3s ease-in-out;
+				transition: all 0.3s ease-in-out;
 				cursor: pointer;
 				width: 100%;
 
@@ -1286,32 +1325,33 @@
 						}
 					}
 
-					&-sync-container {}
+					&-sync-container {
+					}
 				}
 			}
 		}
-		.ur-team-membership-content{
-			#user-registration-base-list-table-page{
+
+		.ur-team-membership-content {
+			#user-registration-base-list-table-page {
 				margin: 0;
 				padding: 0;
 				background: transparent;
 				border: none;
 
-				#membership-team-list{
-					.wp-list-table{
+				#membership-team-list {
+					.wp-list-table {
 						margin: 0;
 					}
 				}
 			}
 
-			hr{
+			hr {
 				display: block !important;
 			}
 		}
 	}
 
 	#user-registration-base-list-table-page {
-
 		.user-registration-base-list-table-form {
 			.tablenav {
 				&-pages {
@@ -1327,21 +1367,18 @@
 							&.status {
 								.ur-toggle-section {
 									.user-registration-toggle-form {
-
 										input {
-
-											&:checked+.slider {
+											&:checked + .slider {
 												background-color: $green;
 											}
 										}
-
 									}
 								}
 							}
 						}
 
 						&:nth-child(odd) {
-							background: #F8F8FA;
+							background: #f8f8fa;
 						}
 
 						&.no-items {
@@ -1356,7 +1393,7 @@
 									margin-bottom: 30px;
 
 									img {
-										width: 300px;
+										width: 270px;
 									}
 
 									h3 {
@@ -1369,7 +1406,7 @@
 									}
 
 									p {
-										color: #6B6B6B;
+										color: #6b6b6b;
 										font-size: 14px;
 										font-weight: 400;
 										line-height: 24px;
@@ -1385,7 +1422,6 @@
 				thead {
 					tr {
 						th {
-
 							&#title,
 							&#membership_price,
 							&#membership_type,
@@ -1397,7 +1433,6 @@
 							&#draggable {
 								width: 1%;
 							}
-
 						}
 					}
 				}
@@ -1405,7 +1440,7 @@
 				tbody {
 					tr {
 						&:nth-child(odd) {
-							background: #F8F8FA;
+							background: #f8f8fa;
 						}
 
 						td {
@@ -1450,7 +1485,7 @@
 									margin-bottom: 30px;
 
 									img {
-										width: 300px;
+										width: 270px;
 									}
 
 									h3 {
@@ -1463,10 +1498,43 @@
 									}
 
 									p {
-										color: #6B6B6B;
+										color: #6b6b6b;
 										font-size: 14px;
 										font-weight: 400;
 										line-height: 24px;
+										margin: 0;
+									}
+
+									a {
+										display: flex;
+										justify-content: center;
+										align-items: center;
+										gap: 6px;
+										color: #6b6b6b;
+										font-size: 12px;
+										font-weight: 400;
+										line-height: 17px;
+										border-radius: 4px;
+										border: 1px solid #e1e1e1;
+										padding: 4px 10px;
+
+										&:focus {
+											outline: none;
+											box-shadow: none;
+										}
+
+										svg {
+											width: 14px;
+											height: 14px;
+											stroke: #6b6b6b;
+										}
+									}
+
+									.empty-list-table-subtext {
+										display: flex;
+										justify-content: center;
+										align-items: center;
+										gap: 6px;
 									}
 								}
 							}
@@ -1476,7 +1544,6 @@
 
 				tfoot {
 					tr {
-
 						td,
 						th {
 							border-top: $border_width solid $border_color;
@@ -1524,9 +1591,9 @@
 							padding: 8px 14px;
 							font-size: 14px;
 							line-height: 20px;
-							color: #475BB2;
-							border-color: #475BB2;
-							background: #F6F7F7;
+							color: #475bb2;
+							border-color: #475bb2;
+							background: #f6f7f7;
 							font-weight: 500;
 						}
 					}
@@ -1574,7 +1641,7 @@
 										margin-bottom: 30px;
 
 										img {
-											width: 300px;
+											width: 270px;
 										}
 
 										h3 {
@@ -1587,7 +1654,7 @@
 										}
 
 										p {
-											color: #6B6B6B;
+											color: #6b6b6b;
 											font-size: 14px;
 											font-weight: 400;
 											line-height: 24px;
@@ -1607,19 +1674,21 @@
 				}
 			}
 
-			.wp-list-table.teams{
-				th{
-					&.column-team_leader{
+			.wp-list-table.teams {
+				th {
+					&.column-team_leader {
 						width: 20%;
 					}
 
-					&.column-members{
+					&.column-members {
 						width: 10%;
 					}
-					&.column-date{
+
+					&.column-date {
 						width: 20%;
 					}
 				}
+
 				tbody {
 					tr {
 						&.no-items {
@@ -1634,7 +1703,7 @@
 									margin-bottom: 30px;
 
 									img {
-										width: 300px;
+										width: 270px;
 									}
 
 									h3 {
@@ -1655,10 +1724,12 @@
 								}
 							}
 						}
-						td{
-							.row-actions{
+
+						td {
+							.row-actions {
 								align-items: center;
-								span{
+
+								span {
 									font-size: 12px;
 								}
 							}
@@ -1798,7 +1869,7 @@
 						border: $border_width solid $border-color;
 
 						&#select-plan-container {
-							background: #F8F8FA;
+							background: #f8f8fa;
 						}
 
 						&#plan-detail-container {
@@ -1934,7 +2005,6 @@
 	}
 }
 
-
 .user-registration-switch {
 	gap: 10px;
 
@@ -1946,6 +2016,33 @@
 		&.expand {
 			transform: rotate(-90deg);
 		}
+	}
+}
+
+.tippy-content {
+	width: 235px;
+}
+
+.ur-membership-sync-to-email-marketing-addons {
+	&.upgradable-type {
+		.user-registration-toggle-form {
+			position: relative;
+			display: flex;
+			gap: 10px;
+
+			.ur-premium-pro {
+				img {
+					width: 18px;
+					height: 18px;
+				}
+			}
+
+			.slider {
+				cursor: default !important;
+				opacity: 0.5;
+			}
+		}
+
 	}
 }
 
@@ -1962,7 +2059,7 @@
 	.ur-membership-type-title,
 	label,
 	.ur-membership-type-description {
-		opacity: 0.5;
+		opacity: 0.7;
 	}
 
 	&::before {
@@ -2210,7 +2307,6 @@
 				&#status {
 					width: 20%;
 				}
-
 			}
 
 			tbody {
@@ -2223,9 +2319,7 @@
 						}
 					}
 				}
-
 			}
-
 		}
 	}
 
@@ -2243,7 +2337,6 @@
 					.select2-search__field {
 						width: 100% !important;
 					}
-
 				}
 			}
 		}
@@ -2251,15 +2344,14 @@
 }
 
 .tooltipster-base.tooltipster-bottom {
-	margin-top: -30px
-		/* Adjust gap for bottom-positioned tooltips */
+	margin-top: -30px;
+	/* Adjust gap for bottom-positioned tooltips */
 }
 
 .wp-list-table {
 	&.memberships {
 		tfoot {
 			tr {
-
 				th,
 				td {
 					border-top: none;
@@ -2279,12 +2371,12 @@
 	}
 }
 
-#ur-team-pricing-container{
+#ur-team-pricing-container {
 	.ur-team-toggle-tabs {
 		display: inline-flex;
 		border-radius: 4px;
 		overflow: hidden;
-		background:$grey-25;
+		background: $grey-25;
 		padding: 4px;
 
 		label {
@@ -2311,54 +2403,55 @@
 
 	}
 
-	#ur-add-team-pricing-btn, .ur-add-tier-btn{
+	#ur-add-team-pricing-btn, .ur-add-tier-btn {
 		padding: 6px 16px;
 		font-size: 14px;
 
-		&:focus{
+		&:focus {
 			color: #2d3559;
 			background: rgb(222.4984029851, 224.3717109905, 232.8015970149);
 			border-color: rgb(222.4984029851, 224.3717109905, 232.8015970149);
 			box-shadow: 0 1px 0 rgb(222.4984029851, 224.3717109905, 232.8015970149);
 		}
 
-		&:hover{
+		&:hover {
 			background: transparent;
 			border-color: $primary_color;
 			color: $grey-400;
 		}
 	}
 
-	#ur-add-tier-btn{
+	#ur-add-tier-btn {
 		padding: 0 10px;
 	}
 
 
-	.ur-remove-team-pricing-btn, .ur-remove-tier-btn{
+	.ur-remove-team-pricing-btn, .ur-remove-tier-btn {
 		width: 34px;
-    	height: 34px;
+		height: 34px;
 		border: 1px solid #ffffff;
 		border-radius: 4px;
 		background: $grey-25;
 		box-shadow: none;
 		transition: all 0.3s ease-in-out;
 
-		span{
+		span {
 			color: #949494;
 		}
 
-		&:hover{
+		&:hover {
 			background: $redLight;
 			border-color: $deny_color;
-			span{
+
+			span {
 				color: $deny_color;
 			}
 		}
 	}
 
-	.ur-remove-tier-btn{
+	.ur-remove-tier-btn {
 		width: 40px;
-    	height: 40px;
+		height: 40px;
 	}
 }
 
@@ -2484,7 +2577,6 @@
 }
 
 .ur-membership-upgrade-container {
-
 	.ur-membership-upgrade-paths-info {
 		font-size: 13px;
 		color: #646970;
@@ -2531,5 +2623,52 @@
 		height: 42px;
 		background: #f0f0f0;
 		border: 1px dashed #ccc;
+	}
+}
+
+.tippy-box[data-theme="ur-gate"] {
+	background-color: white;
+	box-shadow: 0 6px 26px 0 rgba(10, 10, 10, 0.08);
+	color: black;
+
+	.tippy-arrow {
+		color: white;
+	}
+}
+
+.ur-feature {
+	padding: 12px;
+
+	&__btn {
+		display: inline-flex;
+		flex-shrink: 0;
+		gap: 0.5rem;
+		justify-content: center;
+		align-items: center;
+		border-radius: 4px;
+		outline-style: none;
+		font-size: 12px;
+		line-height: 1.25rem;
+		font-weight: 500;
+		white-space: nowrap;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		background: #ff8c39;
+		color: #fff;
+		border: none;
+		padding: 4px 8px;
+		cursor: pointer;
+		margin-top: 4px;
+
+		&:hover {
+			color: white;
+		}
+
+		svg {
+			pointer-events: none;
+			width: 16px;
+			height: 16px;
+			flex-shrink: 0;
+			fill: white;
+		}
 	}
 }

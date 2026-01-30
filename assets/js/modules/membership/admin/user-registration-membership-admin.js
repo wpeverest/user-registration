@@ -480,91 +480,93 @@
 					};
 				}
 
-					// team pricing
+				// team pricing
 				var is_team_pricing_enabled = form
-					.find('#ur-membership-team-pricing')
-					.is(':checked');
+					.find("#ur-membership-team-pricing")
+					.is(":checked");
 				if (is_team_pricing_enabled) {
 					post_meta_data.team_pricing = [];
 
-					$('#ur-team-pricing-container .ur-team-pricing-wrapper').each(
-						function () {
-							var teamWrapper = $(this);
-							var seatModel = teamWrapper
-								.find("input[name^='ur_seat_model']:checked")
-								.val();
-							var planType = teamWrapper
-								.find("input[name^='ur_team_plan_type']:checked")
-								.val();
-							var durationValue = teamWrapper
-								.find("input[name^='ur_team_duration_value']")
-								.val();
+					$(
+						"#ur-team-pricing-container .ur-team-pricing-wrapper"
+					).each(function () {
+						var teamWrapper = $(this);
+						var seatModel = teamWrapper
+							.find("input[name^='ur_seat_model']:checked")
+							.val();
+						var planType = teamWrapper
+							.find("input[name^='ur_team_plan_type']:checked")
+							.val();
+						var durationValue = teamWrapper
+							.find("input[name^='ur_team_duration_value']")
+							.val();
 
-							var durationPeriod = teamWrapper
-								.find("select[name^='ur_team_duration_period']")
+						var durationPeriod = teamWrapper
+							.find("select[name^='ur_team_duration_period']")
+							.val();
+
+						var teamName = teamWrapper
+							.find("input[name^='ur_team_name']")
+							.val();
+
+						var teamData = {
+							seat_model: seatModel,
+							team_name: teamName,
+							team_plan_type: planType,
+							team_duration_value: durationValue,
+							team_duration_period: durationPeriod
+						};
+
+						if (seatModel === "fixed") {
+							teamData.team_size = teamWrapper
+								.find("input[name^='ur_team_size']")
 								.val();
-
-							var teamName = teamWrapper
-								.find("input[name^='ur_team_name']")
+							teamData.team_price = teamWrapper
+								.find("input[name^='ur_team_pricing']")
 								.val();
+						} else {
+							teamData.minimum_seats = teamWrapper
+								.find("input[name^='ur_minimum_seats']")
+								.val();
+							teamData.maximum_seats = teamWrapper
+								.find("input[name^='ur_maximum_seats']")
+								.val();
+							var pricingModel = teamWrapper
+								.find("input[name^='ur_pricing_model']:checked")
+								.val();
+							teamData.pricing_model = pricingModel;
 
-							var teamData = {
-								seat_model: seatModel,
-								team_name: teamName,
-								team_plan_type: planType,
-								team_duration_value: durationValue,
-								team_duration_period: durationPeriod,
-							};
-
-							if (seatModel === 'fixed') {
-								teamData.team_size = teamWrapper
-									.find("input[name^='ur_team_size']")
-									.val();
-								teamData.team_price = teamWrapper
-									.find("input[name^='ur_team_pricing']")
+							if (pricingModel === "per_seat") {
+								teamData.per_seat_price = teamWrapper
+									.find("input[name^='ur_per_seat_pricing']")
 									.val();
 							} else {
-								teamData.minimum_seats = teamWrapper
-									.find("input[name^='ur_minimum_seats']")
-									.val();
-								teamData.maximum_seats = teamWrapper
-									.find("input[name^='ur_maximum_seats']")
-									.val();
-								var pricingModel = teamWrapper
-									.find("input[name^='ur_pricing_model']:checked")
-									.val();
-								teamData.pricing_model = pricingModel;
-
-								if (pricingModel === 'per_seat') {
-									teamData.per_seat_price = teamWrapper
-										.find("input[name^='ur_per_seat_pricing']")
+								var tiers = [];
+								var tierWrappers = teamWrapper.find(
+									".ur-team-tier-field-wrapper"
+								);
+								tierWrappers.each(function () {
+									var tierWrapper = $(this);
+									var tierData = {};
+									tierData.tier_from = tierWrapper
+										.find("input[name^='ur_tier_from']")
 										.val();
-								} else {
-									var tiers = [];
-									var tierWrappers = teamWrapper.find(
-										'.ur-team-tier-field-wrapper',
-									);
-									tierWrappers.each(function () {
-										var tierWrapper = $(this);
-										var tierData = {};
-										tierData.tier_from = tierWrapper
-											.find("input[name^='ur_tier_from']")
-											.val();
-										tierData.tier_to = tierWrapper
-											.find("input[name^='ur_tier_to']")
-											.val();
-										tierData.tier_per_seat_price = tierWrapper
-											.find("input[name^='ur_tier_per_seat_price']")
-											.val();
-										tiers.push(tierData);
-									});
-									teamData.tiers = tiers;
-								}
+									tierData.tier_to = tierWrapper
+										.find("input[name^='ur_tier_to']")
+										.val();
+									tierData.tier_per_seat_price = tierWrapper
+										.find(
+											"input[name^='ur_tier_per_seat_price']"
+										)
+										.val();
+									tiers.push(tierData);
+								});
+								teamData.tiers = tiers;
 							}
+						}
 
-							post_meta_data.team_pricing.push(teamData);
-						},
-					);
+						post_meta_data.team_pricing.push(teamData);
+					});
 				}
 			}
 
@@ -574,32 +576,35 @@
 			 * @since 5.0.0
 			 */
 			var localCurrencyEl = form.find(
-					'input[name="ur_membership_local_currency"]:checked'
-				);
+				'input[name="ur_membership_local_currency"]:checked'
+			);
 			post_meta_data.local_currency = {};
 			post_meta_data.local_currency.is_enable = localCurrencyEl.val();
 
 			if (localCurrencyEl.length && localCurrencyEl.val()) {
-
 				post_meta_data.local_currency.zones = {};
 
-				form.find('.ur-local-currency-card').each(function () {
+				form.find(".ur-local-currency-card").each(function () {
 					var $card = $(this);
-					var zoneId = $card.data('zone-id');
+					var zoneId = $card.data("zone-id");
 
 					var isEnabled = $card
-						.find('.ur-local-currency-toggle-input')
-						.is(':checked') ? 1 : 0;
+						.find(".ur-local-currency-toggle-input")
+						.is(":checked")
+						? 1
+						: 0;
 
 					var pricingMethod = $card
-						.find('.ur-local-currency-radio-group input[type="radio"]:checked')
+						.find(
+							'.ur-local-currency-radio-group input[type="radio"]:checked'
+						)
 						.val();
 
-					var manualPrice = '';
+					var manualPrice = "";
 
-					if (pricingMethod === 'manual') {
+					if (pricingMethod === "manual") {
 						manualPrice = $card
-							.find('.local-currency-manual-local-price')
+							.find(".local-currency-manual-local-price")
 							.val();
 					}
 
@@ -646,7 +651,7 @@
 				upgrade_action = $("#ur-membership-upgrade-action").is(
 					":checked"
 				),
-				team_pricing = $('#ur-membership-team-pricing').is(':checked'),
+				team_pricing = $("#ur-membership-team-pricing").is(":checked"),
 				no_errors = true;
 
 			var selectedPlanTypeEarly = $("#ur-membership-main-fields")
@@ -711,54 +716,61 @@
 						var $this = $(this);
 						var teamIndex = index + 1;
 
-						if ($this.val().trim() === '') {
+						if ($this.val().trim() === "") {
 							no_errors = false;
 							basic_error = true;
 							ur_membership_utils.show_failure_message(
 								ur_membership_data.labels.i18n_error +
-									'! Team ' +
+									"! Team " +
 									teamIndex +
-									': ' +
-									$this.data('key-name') +
-									' ' +
-									ur_membership_data.labels.i18n_field_is_required,
+									": " +
+									$this.data("key-name") +
+									" " +
+									ur_membership_data.labels
+										.i18n_field_is_required
 							);
-							$this.addClass('ur-membership-error');
+							$this.addClass("ur-membership-error");
 						} else {
-							$this.removeClass('ur-membership-error');
+							$this.removeClass("ur-membership-error");
 						}
 					});
 
 					// seat model validation
 					seat_models.each(function (index) {
 						var seatModel = $(this);
-						var wrapper = seatModel.closest('.ur-team-pricing-wrapper');
+						var wrapper = seatModel.closest(
+							".ur-team-pricing-wrapper"
+						);
 						var currentIndex = index + 1;
 						// fixed seats validation
-						if (seatModel.val() === 'fixed') {
-							var team_size = wrapper.find("input[name^='ur_team_size']");
-							var team_pricing = wrapper.find(
-								"input[name^='ur_team_pricing']",
+						if (seatModel.val() === "fixed") {
+							var team_size = wrapper.find(
+								"input[name^='ur_team_size']"
 							);
-							var teamSizeVal = parseInt(team_size.val(), 10) || 0;
-							var teamPricingVal = parseInt(team_pricing.val(), 10) || 0;
+							var team_pricing = wrapper.find(
+								"input[name^='ur_team_pricing']"
+							);
+							var teamSizeVal =
+								parseInt(team_size.val(), 10) || 0;
+							var teamPricingVal =
+								parseInt(team_pricing.val(), 10) || 0;
 							// team size validation
 							if (teamSizeVal <= 0) {
 								no_errors = false;
 								basic_error = true;
 								ur_membership_utils.show_failure_message(
 									ur_membership_data.labels.i18n_error +
-										'! Team ' +
+										"! Team " +
 										currentIndex +
-										': ' +
-										team_size.data('key-name') +
-										' ' +
+										": " +
+										team_size.data("key-name") +
+										" " +
 										ur_membership_data.labels
-											.i18n_valid_amount_field_validation,
+											.i18n_valid_amount_field_validation
 								);
-								team_size.addClass('ur-membership-error');
+								team_size.addClass("ur-membership-error");
 							} else {
-								team_size.removeClass('ur-membership-error');
+								team_size.removeClass("ur-membership-error");
 							}
 							// team pricing validation
 							if (teamPricingVal <= 0) {
@@ -766,82 +778,84 @@
 								basic_error = true;
 								ur_membership_utils.show_failure_message(
 									ur_membership_data.labels.i18n_error +
-										'! Team ' +
+										"! Team " +
 										currentIndex +
-										': ' +
-										team_pricing.data('key-name') +
-										' ' +
+										": " +
+										team_pricing.data("key-name") +
+										" " +
 										ur_membership_data.labels
-											.i18n_valid_amount_field_validation,
+											.i18n_valid_amount_field_validation
 								);
-								team_pricing.addClass('ur-membership-error');
+								team_pricing.addClass("ur-membership-error");
 							} else {
-								team_pricing.removeClass('ur-membership-error');
+								team_pricing.removeClass("ur-membership-error");
 							}
 						}
 						// variable seats validation
 						else {
 							// minimum and maximum seats validation
 							var minimum_seat = wrapper.find(
-									"input[name^='ur_minimum_seats']",
+									"input[name^='ur_minimum_seats']"
 								),
-								maximum_seat = wrapper.find("input[name^='ur_maximum_seats']");
+								maximum_seat = wrapper.find(
+									"input[name^='ur_maximum_seats']"
+								);
 
 							var minVal = parseInt(minimum_seat.val(), 10) || 0;
 							var maxVal = parseInt(maximum_seat.val(), 10) || 0;
-							minimum_seat.removeClass('ur-membership-error');
-							maximum_seat.removeClass('ur-membership-error');
+							minimum_seat.removeClass("ur-membership-error");
+							maximum_seat.removeClass("ur-membership-error");
 
 							if (minVal <= 0) {
 								no_errors = false;
 								basic_error = true;
 								ur_membership_utils.show_failure_message(
 									ur_membership_data.labels.i18n_error +
-										'! Team ' +
+										"! Team " +
 										currentIndex +
-										': ' +
-										minimum_seat.data('key-name') +
-										' ' +
+										": " +
+										minimum_seat.data("key-name") +
+										" " +
 										ur_membership_data.labels
-											.i18n_valid_amount_field_validation,
+											.i18n_valid_amount_field_validation
 								);
-								minimum_seat.addClass('ur-membership-error');
+								minimum_seat.addClass("ur-membership-error");
 							} else if (maxVal <= 0) {
 								no_errors = false;
 								basic_error = true;
 								ur_membership_utils.show_failure_message(
 									ur_membership_data.labels.i18n_error +
-										'! Team ' +
+										"! Team " +
 										currentIndex +
-										': ' +
-										maximum_seat.data('key-name') +
-										' ' +
+										": " +
+										maximum_seat.data("key-name") +
+										" " +
 										ur_membership_data.labels
-											.i18n_valid_amount_field_validation,
+											.i18n_valid_amount_field_validation
 								);
-								maximum_seat.addClass('ur-membership-error');
+								maximum_seat.addClass("ur-membership-error");
 							} else if (maxVal <= minVal) {
 								no_errors = false;
 								basic_error = true;
 								ur_membership_utils.show_failure_message(
 									ur_membership_data.labels.i18n_error +
-										'! Team ' +
+										"! Team " +
 										currentIndex +
-										': ' +
-										maximum_seat.data('key-name') +
-										' must be greater than ' +
-										minimum_seat.data('key-name'),
+										": " +
+										maximum_seat.data("key-name") +
+										" must be greater than " +
+										minimum_seat.data("key-name")
 								);
-								maximum_seat.addClass('ur-membership-error');
+								maximum_seat.addClass("ur-membership-error");
 							}
 
 							var pricing_model = wrapper.find(
-								"input[name^='ur_pricing_model']:checked",
+								"input[name^='ur_pricing_model']:checked"
 							);
 							// pricing model validation
-							if (pricing_model.val() === 'per_seat') {
+							if (pricing_model.val() === "per_seat") {
 								var per_seat_price = wrapper.find(
-									"input[name^='ur_per_seat_pricing']",
+									"input[name^='ur_per_seat_pricing']"
 								);
 								// per seat validation
 								if (per_seat_price.val() <= 0) {
@@ -849,136 +863,167 @@
 									basic_error = true;
 									ur_membership_utils.show_failure_message(
 										ur_membership_data.labels.i18n_error +
-											'! Team ' +
+											"! Team " +
 											currentIndex +
-											': ' +
-											per_seat_price.data('key-name') +
-											' ' +
+											": " +
+											per_seat_price.data("key-name") +
+											" " +
 											ur_membership_data.labels
-												.i18n_valid_amount_field_validation,
+												.i18n_valid_amount_field_validation
 									);
-									per_seat_price.addClass('ur-membership-error');
+									per_seat_price.addClass(
+										"ur-membership-error"
+									);
 								} else {
-									per_seat_price.removeClass('ur-membership-error');
+									per_seat_price.removeClass(
+										"ur-membership-error"
+									);
 								}
 							} else {
-								var tierWrappers = wrapper.find('.ur-team-tier-field-wrapper');
+								var tierWrappers = wrapper.find(
+									".ur-team-tier-field-wrapper"
+								);
 								tierWrappers.each(function (tierIndex) {
 									var tierWrapper = $(this);
 									var currentTierIndex = tierIndex + 1;
 									var isFirstTier = tierIndex === 0;
-									var isLastTier = tierIndex === tierWrappers.length - 1;
+									var isLastTier =
+										tierIndex === tierWrappers.length - 1;
 
 									// from, to and per_seat_price validation
 									var tier_from = tierWrapper.find(
-											"input[name^='ur_tier_from']",
+											"input[name^='ur_tier_from']"
 										),
-										tier_to = tierWrapper.find("input[name^='ur_tier_to']"),
+										tier_to = tierWrapper.find(
+											"input[name^='ur_tier_to']"
+										),
 										seat_price = tierWrapper.find(
-											"input[name^='ur_tier_per_seat_price']",
+											"input[name^='ur_tier_per_seat_price']"
 										);
 
-									var fromVal = parseInt(tier_from.val(), 10) || 0;
-									var toVal = parseInt(tier_to.val(), 10) || 0;
-									var seatPriceVal = parseInt(seat_price.val(), 10) || 0;
-									tier_from.removeClass('ur-membership-error');
-									tier_to.removeClass('ur-membership-error');
-									seat_price.removeClass('ur-membership-error');
+									var fromVal =
+										parseInt(tier_from.val(), 10) || 0;
+									var toVal =
+										parseInt(tier_to.val(), 10) || 0;
+									var seatPriceVal =
+										parseInt(seat_price.val(), 10) || 0;
+									tier_from.removeClass(
+										"ur-membership-error"
+									);
+									tier_to.removeClass("ur-membership-error");
+									seat_price.removeClass(
+										"ur-membership-error"
+									);
 
 									if (fromVal <= 0) {
 										no_errors = false;
 										basic_error = true;
 										ur_membership_utils.show_failure_message(
-											ur_membership_data.labels.i18n_error +
-												'! Team ' +
+											ur_membership_data.labels
+												.i18n_error +
+												"! Team " +
 												currentIndex +
-												' Tier ' +
+												" Tier " +
 												currentTierIndex +
-												': ' +
-												tier_from.data('key-name') +
-												' ' +
+												": " +
+												tier_from.data("key-name") +
+												" " +
 												ur_membership_data.labels
-													.i18n_valid_amount_field_validation,
+													.i18n_valid_amount_field_validation
 										);
-										tier_from.addClass('ur-membership-error');
+										tier_from.addClass(
+											"ur-membership-error"
+										);
 									} else if (toVal <= 0) {
 										no_errors = false;
 										basic_error = true;
 										ur_membership_utils.show_failure_message(
-											ur_membership_data.labels.i18n_error +
-												'! Team ' +
+											ur_membership_data.labels
+												.i18n_error +
+												"! Team " +
 												currentIndex +
-												' Tier ' +
+												" Tier " +
 												currentTierIndex +
-												': ' +
-												tier_to.data('key-name') +
-												' ' +
+												": " +
+												tier_to.data("key-name") +
+												" " +
 												ur_membership_data.labels
-													.i18n_valid_amount_field_validation,
+													.i18n_valid_amount_field_validation
 										);
-										tier_to.addClass('ur-membership-error');
+										tier_to.addClass("ur-membership-error");
 									} else if (toVal <= fromVal) {
 										no_errors = false;
 										basic_error = true;
 										ur_membership_utils.show_failure_message(
-											ur_membership_data.labels.i18n_error +
-												'! Team ' +
+											ur_membership_data.labels
+												.i18n_error +
+												"! Team " +
 												currentIndex +
-												' Tier ' +
+												" Tier " +
 												currentTierIndex +
-												': ' +
-												tier_to.data('key-name') +
-												' must be greater than ' +
-												tier_from.data('key-name'),
+												": " +
+												tier_to.data("key-name") +
+												" must be greater than " +
+												tier_from.data("key-name")
 										);
-										tier_to.addClass('ur-membership-error');
-									}else if (isFirstTier && fromVal !== minVal) {
+										tier_to.addClass("ur-membership-error");
+									} else if (
+										isFirstTier &&
+										fromVal !== minVal
+									) {
 										no_errors = false;
 										basic_error = true;
 										ur_membership_utils.show_failure_message(
-											ur_membership_data.labels.i18n_error +
-												'! Team ' +
+											ur_membership_data.labels
+												.i18n_error +
+												"! Team " +
 												currentIndex +
-												' Tier 1: ' +
-												tier_from.data('key-name') +
-												' must be equal to ' +
-												minimum_seat.data('key-name'),
+												" Tier 1: " +
+												tier_from.data("key-name") +
+												" must be equal to " +
+												minimum_seat.data("key-name")
 										);
-										tier_from.addClass('ur-membership-error');
-									}else if (isLastTier && toVal !== maxVal) {
+										tier_from.addClass(
+											"ur-membership-error"
+										);
+									} else if (isLastTier && toVal !== maxVal) {
 										no_errors = false;
 										basic_error = true;
 										ur_membership_utils.show_failure_message(
-											ur_membership_data.labels.i18n_error +
-												'! Team ' +
+											ur_membership_data.labels
+												.i18n_error +
+												"! Team " +
 												currentIndex +
-												' Tier ' +
+												" Tier " +
 												currentTierIndex +
-												': ' +
-												tier_to.data('key-name') +
-												' must be equal to ' +
-												maximum_seat.data('key-name'),
+												": " +
+												tier_to.data("key-name") +
+												" must be equal to " +
+												maximum_seat.data("key-name")
 										);
-										tier_to.addClass('ur-membership-error');
-									}else if (seatPriceVal <= 0) {
+										tier_to.addClass("ur-membership-error");
+									} else if (seatPriceVal <= 0) {
 										no_errors = false;
 										basic_error = true;
 										ur_membership_utils.show_failure_message(
-											ur_membership_data.labels.i18n_error +
-												'! Team ' +
+											ur_membership_data.labels
+												.i18n_error +
+												"! Team " +
 												currentIndex +
-												' Tier ' +
+												" Tier " +
 												currentTierIndex +
-												': ' +
-												seat_price.data('key-name') +
-												' ' +
+												": " +
+												seat_price.data("key-name") +
+												" " +
 												ur_membership_data.labels
-													.i18n_valid_amount_field_validation,
+													.i18n_valid_amount_field_validation
 										);
-										seat_price.addClass('ur-membership-error');
+										seat_price.addClass(
+											"ur-membership-error"
+										);
 									}
 
-									if(! no_errors){
+									if (!no_errors) {
 										return no_errors;
 									}
 								});
@@ -1479,7 +1524,9 @@
 				membership_duration_container_period = $(
 					"#ur-membership-duration-container"
 				),
-				team_pricing_container = $('#ur-membership-team-pricing-container'),
+				team_pricing_container = $(
+					"#ur-membership-team-pricing-container"
+				),
 				payment_notice = $("#ur-membership-payment-settings-notice");
 			var paidConfigured = payment_notice.data("paid-configured") === 1;
 			var subscriptionConfigured =
@@ -1489,8 +1536,8 @@
 			membership_duration_period.addClass("ur-d-none");
 			membership_duration_container_period.removeClass("ur-d-flex");
 			membership_duration_container_period.addClass("ur-d-none");
-			team_pricing_container.removeClass('ur-d-flex');
-			team_pricing_container.addClass('ur-d-none');
+			team_pricing_container.removeClass("ur-d-flex");
+			team_pricing_container.addClass("ur-d-none");
 			payment_notice.addClass("ur-d-none");
 			sub_container.show();
 			if ("free" !== val) {
@@ -1512,11 +1559,16 @@
 				}
 				pro_rate_settings.removeClass("ur-d-none");
 				plan_container.removeClass("ur-d-none");
-				team_pricing_container.addClass('ur-d-flex');
-				team_pricing_container.removeClass('ur-d-none');
-			}else{
-				$('input[name="ur_membership_local_currency"]').prop('checked', false);
-				$('input[name="ur_membership_local_currency"]').trigger( 'change' );
+				team_pricing_container.addClass("ur-d-flex");
+				team_pricing_container.removeClass("ur-d-none");
+			} else {
+				$('input[name="ur_membership_local_currency"]').prop(
+					"checked",
+					false
+				);
+				$('input[name="ur_membership_local_currency"]').trigger(
+					"change"
+				);
 			}
 		}
 	);
@@ -1739,172 +1791,183 @@
 		showStep($(this).data("step"));
 	});
 
-	$('#ur-membership-team-pricing').on('change', function () {
-		if ($(this).is(':checked')) {
-			$('#ur-team-pricing-container').show();
+	$("#ur-membership-team-pricing").on("change", function () {
+		if ($(this).is(":checked")) {
+			$("#ur-team-pricing-container").show();
 		} else {
-			$('#ur-team-pricing-container').hide();
+			$("#ur-team-pricing-container").hide();
 		}
 	});
 
-	$(document).on('change', 'input[name^="ur_seat_model"]', function () {
-		var wrapper = $(this).closest('.ur-team-pricing-wrapper');
+	$(document).on("change", 'input[name^="ur_seat_model"]', function () {
+		var wrapper = $(this).closest(".ur-team-pricing-wrapper");
 
-		if ($(this).val() === 'fixed') {
-			wrapper.find('.ur-team-fixed-seats-field').show();
-			wrapper.find('.ur-team-variable-seats-field').hide();
+		if ($(this).val() === "fixed") {
+			wrapper.find(".ur-team-fixed-seats-field").show();
+			wrapper.find(".ur-team-variable-seats-field").hide();
 		} else {
-			wrapper.find('.ur-team-fixed-seats-field').hide();
-			wrapper.find('.ur-team-variable-seats-field').show();
+			wrapper.find(".ur-team-fixed-seats-field").hide();
+			wrapper.find(".ur-team-variable-seats-field").show();
 		}
 	});
 
-	$(document).on('change', 'input[name^="ur_pricing_model"]', function () {
-		var wrapper = $(this).closest('.ur-team-pricing-wrapper');
-		if ($(this).val() === 'per_seat') {
-			wrapper.find('.ur-team-per-seats-field').show();
-			wrapper.find('.ur-team-tier-field').hide();
+	$(document).on("change", 'input[name^="ur_pricing_model"]', function () {
+		var wrapper = $(this).closest(".ur-team-pricing-wrapper");
+		if ($(this).val() === "per_seat") {
+			wrapper.find(".ur-team-per-seats-field").show();
+			wrapper.find(".ur-team-tier-field").hide();
 		} else {
-			wrapper.find('.ur-team-per-seats-field').hide();
-			wrapper.find('.ur-team-tier-field').show();
+			wrapper.find(".ur-team-per-seats-field").hide();
+			wrapper.find(".ur-team-tier-field").show();
 		}
 	});
 
 	var ur_team_pricing_template = $(
-		'#ur-team-pricing-container .ur-team-pricing-wrapper:first',
+		"#ur-team-pricing-container .ur-team-pricing-wrapper:first"
 	).clone();
 
 	var wrapperCounter = $(
-		'#ur-team-pricing-container .ur-team-pricing-wrapper',
+		"#ur-team-pricing-container .ur-team-pricing-wrapper"
 	).length;
-	$('#ur-add-team-pricing-btn').on('click', function (e) {
+	$("#ur-add-team-pricing-btn").on("click", function (e) {
 		e.preventDefault();
 		var newWrapper = ur_team_pricing_template.clone();
-		newWrapper.attr('data-pricing-wrapper-id', wrapperCounter);
-		newWrapper.find('[id]').each(function () {
-			var oldId = $(this).attr('id');
+		newWrapper.attr("data-pricing-wrapper-id", wrapperCounter);
+		newWrapper.find("[id]").each(function () {
+			var oldId = $(this).attr("id");
 			var newId;
 			// Handle bracket notation like ur_team_plan_type[0]
-			if (oldId.includes('[') && oldId.includes(']')) {
-				newId = oldId.replace(/\[\d+\]/, '_' + wrapperCounter);
+			if (oldId.includes("[") && oldId.includes("]")) {
+				newId = oldId.replace(/\[\d+\]/, "_" + wrapperCounter);
 			} else if (/_\d+$/.test(oldId)) {
 				// Handle underscore notation like ur_team_plan_type_0
-				newId = oldId.replace(/_\d+$/, '_' + wrapperCounter);
+				newId = oldId.replace(/_\d+$/, "_" + wrapperCounter);
 			} else {
 				// Handle hyphen notation like something-0
-				newId = oldId.replace(/-\d+$/, '-' + wrapperCounter);
+				newId = oldId.replace(/-\d+$/, "-" + wrapperCounter);
 			}
-			$(this).attr('id', newId);
+			$(this).attr("id", newId);
 		});
-		newWrapper.find('[name]').each(function () {
-			var oldName = $(this).attr('name');
+		newWrapper.find("[name]").each(function () {
+			var oldName = $(this).attr("name");
 			if (
-				oldName.includes('ur_tier_from') ||
-				oldName.includes('ur_tier_to') ||
-				oldName.includes('ur_tier_per_seat_price')
+				oldName.includes("ur_tier_from") ||
+				oldName.includes("ur_tier_to") ||
+				oldName.includes("ur_tier_per_seat_price")
 			) {
-				var fieldType = oldName.split('[')[0];
-				$(this).attr('name', fieldType + '[' + wrapperCounter + '][0]');
+				var fieldType = oldName.split("[")[0];
+				$(this).attr("name", fieldType + "[" + wrapperCounter + "][0]");
 			} else {
-				var baseName = oldName.replace(/\[\d*\]$/, '');
-				$(this).attr('name', baseName + '[' + wrapperCounter + ']');
+				var baseName = oldName.replace(/\[\d*\]$/, "");
+				$(this).attr("name", baseName + "[" + wrapperCounter + "]");
 			}
 		});
-		newWrapper.find('label[for]').each(function () {
-			var oldFor = $(this).attr('for');
+		newWrapper.find("label[for]").each(function () {
+			var oldFor = $(this).attr("for");
 			var newFor;
 			// Handle bracket notation like ur_team_plan_type[0]
-			if (oldFor.includes('[') && oldFor.includes(']')) {
-				newFor = oldFor.replace(/\[\d+\]/, '_' + wrapperCounter);
+			if (oldFor.includes("[") && oldFor.includes("]")) {
+				newFor = oldFor.replace(/\[\d+\]/, "_" + wrapperCounter);
 			} else if (/_\d+$/.test(oldFor)) {
 				// Handle underscore notation like ur_team_plan_type_0
-				newFor = oldFor.replace(/_\d+$/, '_' + wrapperCounter);
+				newFor = oldFor.replace(/_\d+$/, "_" + wrapperCounter);
 			} else {
 				// Handle hyphen notation like something-0
-				newFor = oldFor.replace(/-\d+$/, '-' + wrapperCounter);
+				newFor = oldFor.replace(/-\d+$/, "-" + wrapperCounter);
 			}
-			$(this).attr('for', newFor);
+			$(this).attr("for", newFor);
 		});
 
-		newWrapper.find('input').each(function () {
-			if ($(this).attr('type') === 'number') $(this).val('0');
-			if ($(this).attr('type') === 'text') $(this).val('');
-			if ($(this).attr('type') === 'radio') $(this).prop('checked', false);
+		newWrapper.find("input").each(function () {
+			if ($(this).attr("type") === "number") $(this).val("0");
+			if ($(this).attr("type") === "text") $(this).val("");
+			if ($(this).attr("type") === "radio")
+				$(this).prop("checked", false);
 		});
 		newWrapper
 			.find(
-				'input[name="ur_seat_model[' + wrapperCounter + ']"][value="fixed"]',
+				'input[name="ur_seat_model[' +
+					wrapperCounter +
+					']"][value="fixed"]'
 			)
-			.prop('checked', true);
+			.prop("checked", true);
 		newWrapper
 			.find(
 				'input[name="ur_pricing_model[' +
 					wrapperCounter +
-					']"][value="per_seat"]',
+					']"][value="per_seat"]'
 			)
-			.prop('checked', true);
+			.prop("checked", true);
 		newWrapper
 			.find(
 				'input[name="ur_team_plan_type[' +
 					wrapperCounter +
-					']"][value="one-time"]',
+					']"][value="one-time"]'
 			)
-			.prop('checked', true);
-		newWrapper.find('.ur-team-tier-field-wrapper:not(:first)').remove();
+			.prop("checked", true);
+		newWrapper.find(".ur-team-tier-field-wrapper:not(:first)").remove();
 		newWrapper
-			.find('.ur-team-tier-field-wrapper:first')
-			.attr('data-tier-wrapper-id', '0');
-		$('#ur-add-team-pricing-btn-wrapper').before(newWrapper);
+			.find(".ur-team-tier-field-wrapper:first")
+			.attr("data-tier-wrapper-id", "0");
+		$("#ur-add-team-pricing-btn-wrapper").before(newWrapper);
 		newWrapper
 			.find('input[name="ur_seat_model[' + wrapperCounter + ']"]:checked')
-			.trigger('change');
+			.trigger("change");
 		newWrapper
-			.find('input[name="ur_pricing_model[' + wrapperCounter + ']"]:checked')
-			.trigger('change');
+			.find(
+				'input[name="ur_pricing_model[' + wrapperCounter + ']"]:checked'
+			)
+			.trigger("change");
 		newWrapper
-			.find('input[name="ur_team_plan_type[' + wrapperCounter + ']"]:checked')
-			.trigger('change');
+			.find(
+				'input[name="ur_team_plan_type[' +
+					wrapperCounter +
+					']"]:checked'
+			)
+			.trigger("change");
 		wrapperCounter++;
 	});
 
-	$(document).on('click', '.ur-remove-team-pricing-btn', function () {
-		$(this).closest('.ur-team-pricing-wrapper ').remove();
+	$(document).on("click", ".ur-remove-team-pricing-btn", function () {
+		$(this).closest(".ur-team-pricing-wrapper ").remove();
 	});
 
 	// Toggle paid-plan-container based on team plan type
-	$(document).on('change', 'input[name^="ur_team_plan_type["]', function () {
-		var teamWrapper = $(this).closest('.ur-team-pricing-wrapper');
-		var paidPlanContainer = teamWrapper.find('#paid-plan-container');
+	$(document).on("change", 'input[name^="ur_team_plan_type["]', function () {
+		var teamWrapper = $(this).closest(".ur-team-pricing-wrapper");
+		var paidPlanContainer = teamWrapper.find("#paid-plan-container");
 		var selectedValue = $(this).val();
 
-		if ('subscription' === selectedValue) {
+		if ("subscription" === selectedValue) {
 			paidPlanContainer.show();
 		} else {
 			paidPlanContainer.hide();
 		}
 	});
 
-	$(document).on('click', '.ur-add-tier-btn', function (e) {
+	$(document).on("click", ".ur-add-tier-btn", function (e) {
 		e.preventDefault();
-		var teamWrapper = $(this).closest('.ur-team-pricing-wrapper');
-		var tierContainer = teamWrapper.find('.ur-team-tier-field');
-		var wrapperId = teamWrapper.attr('data-pricing-wrapper-id');
-		var newTierWrapper = $('.ur-team-tier-field-wrapper:first').clone();
-		var tierCounter = tierContainer.find('.ur-team-tier-field-wrapper').length;
-		newTierWrapper.attr('data-tier-wrapper-id', tierCounter);
-		newTierWrapper.find('input').each(function () {
-			var base = $(this).attr('name').split('[')[0];
+		var teamWrapper = $(this).closest(".ur-team-pricing-wrapper");
+		var tierContainer = teamWrapper.find(".ur-team-tier-field");
+		var wrapperId = teamWrapper.attr("data-pricing-wrapper-id");
+		var newTierWrapper = $(".ur-team-tier-field-wrapper:first").clone();
+		var tierCounter = tierContainer.find(
+			".ur-team-tier-field-wrapper"
+		).length;
+		newTierWrapper.attr("data-tier-wrapper-id", tierCounter);
+		newTierWrapper.find("input").each(function () {
+			var base = $(this).attr("name").split("[")[0];
 			$(this)
-				.attr('name', base + '[' + wrapperId + '][' + tierCounter + ']')
+				.attr("name", base + "[" + wrapperId + "][" + tierCounter + "]")
 				.val(0);
 		});
 
-		$(this).closest('.ur-add-tier-btn-wrapper').before(newTierWrapper);
+		$(this).closest(".ur-add-tier-btn-wrapper").before(newTierWrapper);
 		tierCounter++;
 	});
 
-	$(document).on('click', '.ur-remove-tier-btn', function () {
-		$(this).closest('.ur-team-tier-field-wrapper').remove();
+	$(document).on("click", ".ur-remove-tier-btn", function () {
+		$(this).closest(".ur-team-tier-field-wrapper").remove();
 	});
 
 	var $membershipTable = $("#membership-list tbody#the-list");
@@ -2088,111 +2151,134 @@
 		);
 	}
 
-	$( document ).on( 'change', '.ur-local-currency-toggle-input', function () {
-		var $el = $( this );
-		var $card = $el.closest( '.ur-local-currency-card' );
-		var $content = $card.find('.ur-local-currency-content');
-		var $collapseBtn = $card.find('.ur-local-currency-collapse-btn');
-		var zone_id =  $el.data( 'zone-id' );
+	$(document).on("change", ".ur-local-currency-toggle-input", function () {
+		var $el = $(this);
+		var $card = $el.closest(".ur-local-currency-card");
+		var $content = $card.find(".ur-local-currency-content");
+		var $collapseBtn = $card.find(".ur-local-currency-collapse-btn");
+		var zone_id = $el.data("zone-id");
 
-		if ( $( this ).is( ':checked' ) ) {
-			$content.removeClass('hidden');
-			$collapseBtn.addClass('collapsed');
+		if ($(this).is(":checked")) {
+			$content.removeClass("hidden");
+			$collapseBtn.addClass("collapsed");
 
 			data = {
-				'action' : 'user_registration_membership_validate_payment_currency',
-				'zone_id' : zone_id,
-				'security' : ur_membership_data.validate_payment_currency_nonce
-			}
+				action: "user_registration_membership_validate_payment_currency",
+				zone_id: zone_id,
+				security: ur_membership_data.validate_payment_currency_nonce
+			};
 
-		$.ajax({
+			$.ajax({
 				type: "post",
 				url: ur_membership_data.ajax_url,
 				data: data,
-				beforeSend: function( ){
+				beforeSend: function () {
 					var spinner = '<span class="ur-spinner is-active"></span>';
 
-					$el.closest( '.ur-local-currency-controls' ).append( spinner )
+					$el.closest(".ur-local-currency-controls").append(spinner);
 				},
-				success: function( response ){
-					$el.closest( '.ur-local-currency-controls' ).find( '.ur-spinner' ).remove();
+				success: function (response) {
+					$el.closest(".ur-local-currency-controls")
+						.find(".ur-spinner")
+						.remove();
 
-					if ( ! response.success ) {
-						$( document ).find( '.ur-local-currency-' + zone_id + '-message' ).removeClass( 'hidden' );
-						$( document ).find( '.ur-local-currency-' + zone_id + '-message' ).html( response.data.message );
+					if (!response.success) {
+						$(document)
+							.find(".ur-local-currency-" + zone_id + "-message")
+							.removeClass("hidden");
+						$(document)
+							.find(".ur-local-currency-" + zone_id + "-message")
+							.html(response.data.message);
 					}
 				}
 			});
-
 		} else {
-			$content.addClass('hidden');
-			$collapseBtn.removeClass('collapsed');
-			$( document ).find( '.ur-local-currency-' + zone_id + '-message' ).addClass( 'hidden' );
-			$( document ).find( '.ur-local-currency-' + zone_id + '-message' ).empty();
+			$content.addClass("hidden");
+			$collapseBtn.removeClass("collapsed");
+			$(document)
+				.find(".ur-local-currency-" + zone_id + "-message")
+				.addClass("hidden");
+			$(document)
+				.find(".ur-local-currency-" + zone_id + "-message")
+				.empty();
 		}
 	});
 
-	 $( '.ur-local-currency-toggle-input:checked' ).each( function () {
-		$( this ).trigger( 'change' );
+	$(".ur-local-currency-toggle-input:checked").each(function () {
+		$(this).trigger("change");
 	});
 
-	$( document ).on('click', '.ur-local-currency-collapse-btn', function ( e ) {
+	$(document).on("click", ".ur-local-currency-collapse-btn", function (e) {
 		e.preventDefault();
-		var $card = $( this ).closest('.ur-local-currency-card');
-		var $content = $card.find('.ur-local-currency-content');
-		var $toggle = $card.find('.ur-local-currency-toggle-input');
+		var $card = $(this).closest(".ur-local-currency-card");
+		var $content = $card.find(".ur-local-currency-content");
+		var $toggle = $card.find(".ur-local-currency-toggle-input");
 
-		if ( !$toggle.is(':checked') ) {
+		if (!$toggle.is(":checked")) {
 			return;
 		}
 
-		$content.toggleClass( 'hidden' );
-		$(this).toggleClass( 'collapsed' );
+		$content.toggleClass("hidden");
+		$(this).toggleClass("collapsed");
 	});
 
 	function urHandleLocalCurrencyPricingMethod($card) {
-		var $checkedRadio = $card.find('.ur-local-currency-radio-group input[type="radio"]:checked');
-		var $manualInput = $card.find('.local-currency-manual-local-price');
+		var $checkedRadio = $card.find(
+			'.ur-local-currency-radio-group input[type="radio"]:checked'
+		);
+		var $manualInput = $card.find(".local-currency-manual-local-price");
 
-		if ($checkedRadio.val() === 'manual') {
-			$manualInput.removeClass('hidden').show();
+		if ($checkedRadio.val() === "manual") {
+			$manualInput.removeClass("hidden").show();
 		} else {
-			$manualInput.addClass('hidden').hide();
+			$manualInput.addClass("hidden").hide();
 		}
 	}
 
-	$(document).on('change', '.ur-local-currency-radio-group input[type="radio"]', function () {
-		var $card = $(this).closest('.ur-local-currency-card');
-		urHandleLocalCurrencyPricingMethod($card);
-	});
+	$(document).on(
+		"change",
+		'.ur-local-currency-radio-group input[type="radio"]',
+		function () {
+			var $card = $(this).closest(".ur-local-currency-card");
+			urHandleLocalCurrencyPricingMethod($card);
+		}
+	);
 
-	$('.ur-local-currency-card').each(function () {
+	$(".ur-local-currency-card").each(function () {
 		urHandleLocalCurrencyPricingMethod($(this));
 	});
 
-	function urToggleLocalCurrencyCards( load = '' ) {
-		var $toggle = $('#ur-membership-local-currency-action');
-		var $cards  = $('.ur-local-currency-card');
+	function urToggleLocalCurrencyCards(load = "") {
+		var $toggle = $("#ur-membership-local-currency-action");
+		var $cards = $(".ur-local-currency-card");
 
-		if ( 'free' === $( 'input:radio[name=ur_membership_type]:checked' ).val() && '' === load ) {
-			$toggle.prop( 'checked', false );
+		if (
+			"free" ===
+				$("input:radio[name=ur_membership_type]:checked").val() &&
+			"" === load
+		) {
+			$toggle.prop("checked", false);
 			ur_membership_utils.show_failure_message(
-						ur_membership_data.local_currency_not_support_msg
-					);
+				ur_membership_data.local_currency_not_support_msg
+			);
 		}
 
-		if ($toggle.is(':checked')) {
+		if ($toggle.is(":checked")) {
 			$cards.show();
 		} else {
 			$cards.hide();
 		}
 	}
 
-	$(document).on('change', '#ur-membership-local-currency-action', function () {
-		urToggleLocalCurrencyCards();
-	});
+	$(document).on(
+		"change",
+		"#ur-membership-local-currency-action",
+		function () {
+			urToggleLocalCurrencyCards();
+		}
+	);
 
-	urToggleLocalCurrencyCards( 'load' );
+	urToggleLocalCurrencyCards("load");
 
 	$(document).on(
 		"change",
@@ -2300,13 +2386,19 @@
 
 						$listContainer.append(response.data.html);
 
-						if ('mailchimp' === addon && response.data?.tag_html) {
+						if ("mailchimp" === addon && response.data?.tag_html) {
 							var $tagContainer = $(
-								".urmc-sync-email-marketing-" + addon + "-list-tag-wrap"
+								".urmc-sync-email-marketing-" +
+									addon +
+									"-list-tag-wrap"
 							);
 
 							$tagContainer.find("select").each(function () {
-								if ($(this).hasClass("select2-hidden-accessible")) {
+								if (
+									$(this).hasClass(
+										"select2-hidden-accessible"
+									)
+								) {
 									$(this).select2("destroy");
 								}
 							});
@@ -2315,11 +2407,13 @@
 
 							$tagContainer.append(response.data.tag_html);
 
-							$tagContainer.find("select.ur-enhanced-select").select2({
-								width: "100%",
-								placeholder: "Select Tags",
-								allowClear: true
-							});
+							$tagContainer
+								.find("select.ur-enhanced-select")
+								.select2({
+									width: "100%",
+									placeholder: "Select Tags",
+									allowClear: true
+								});
 						}
 					}
 
@@ -2333,4 +2427,28 @@
 			});
 		}
 	);
+
+	const $popoverTemplate = $("[data-gate-content]");
+
+	if ($popoverTemplate.length && typeof window.tippy !== "undefined") {
+		tippy.setDefaultProps({ maxWidth: "280px" });
+		$popoverTemplate.each(function () {
+			const ref = this;
+			const placement = ref.getAttribute("data-gate-placement") || "right";
+			tippy(ref, {
+				content() {
+					const id = ref.getAttribute("data-gate-content");
+					const template = document.getElementById(id);
+					const div = document.createElement("div");
+					div.appendChild(template.content.cloneNode(true));
+					return div.innerHTML;
+				},
+				allowHTML: true,
+				interactive: true,
+				placement: placement,
+				inertia: true,
+				theme: "ur-gate"
+			});
+		});
+	}
 })(jQuery, window.ur_membership_localized_data);

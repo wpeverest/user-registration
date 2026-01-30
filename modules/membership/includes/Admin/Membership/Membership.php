@@ -77,6 +77,8 @@ class Membership {
 			return;
 		}
 
+		wp_enqueue_script( 'tippy' );
+
 		// Enqueue jQuery UI Sortable for drag-and-drop functionality
 		wp_enqueue_script( 'jquery-ui-sortable' );
 

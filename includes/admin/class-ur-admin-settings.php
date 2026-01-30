@@ -66,6 +66,7 @@ class UR_Admin_Settings {
 		global $current_section_part;
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$current_tab_for_assets = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 
 		/**
 		 * Action to output start settings
@@ -121,6 +122,41 @@ class UR_Admin_Settings {
 			})(jQuery);
 			"
 		);
+
+		if ( 'payment' === $current_tab_for_assets ) {
+			wp_enqueue_script( 'tippy' );
+			if ( ! wp_style_is( 'ur-membership-admin-style', 'registered' ) ) {
+				wp_register_style( 'ur-membership-admin-style', UR()->plugin_url() . '/assets/css/modules/membership/user-registration-membership-admin.css', array(), UR_VERSION );
+			}
+			wp_enqueue_style( 'ur-membership-admin-style' );
+			wp_add_inline_script(
+				'tippy',
+				'jQuery(document).ready(function() {
+					var el = document.querySelectorAll("[data-gate-content]");
+					if (el.length && typeof window.tippy !== "undefined") {
+						tippy.setDefaultProps({ maxWidth: "280px" });
+						el.forEach(function(ref) {
+							var placement = ref.getAttribute("data-gate-placement") || "right";
+							tippy(ref, {
+								content: function() {
+									var id = ref.getAttribute("data-gate-content");
+									var template = document.getElementById(id);
+									if (!template || !template.content) return "";
+									var div = document.createElement("div");
+									div.appendChild(template.content.cloneNode(true));
+									return div.innerHTML;
+								},
+								allowHTML: true,
+								interactive: true,
+								placement: placement,
+								inertia: true,
+								theme: "ur-gate"
+							});
+						});
+					}
+				});'
+			);
+		}
 
 		wp_add_inline_style(
 			'ur-snackbar',
@@ -419,6 +455,8 @@ class UR_Admin_Settings {
 	 * @param array $options Opens array to output.
 	 */
 	public static function output_fields( $options ) {
+
+		error_log( print_r( $options, true ) );
 		$settings = '';
 
 		if ( is_array( $options ) && ! empty( $options ) ) {
@@ -499,27 +537,27 @@ class UR_Admin_Settings {
 						$settings .= '</div>';
 
 						//Show upsell texts.
-						if( ! empty( $section[ 'upsell' ] ) ) {
-							$upsell_section = $section[ 'upsell' ];
-							$settings .= '<div class="user-registration-upsell">';
+						if ( ! empty( $section['upsell'] ) ) {
+							$upsell_section = $section['upsell'];
+							$settings      .= '<div class="user-registration-upsell">';
 							//excerpt.
-							if( ! empty( $upsell_section[ 'excerpt' ] ) ) {
+							if ( ! empty( $upsell_section['excerpt'] ) ) {
 								$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $upsell_section['excerpt'] ) ) . '</p>';
 							}
 							//descriptions.
-							if( ! empty( $upsell_section[ 'description' ] ) ) {
-								if( is_string( $upsell_section[ 'description'] ) ) {
+							if ( ! empty( $upsell_section['description'] ) ) {
+								if ( is_string( $upsell_section['description'] ) ) {
 									$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $upsell_section['excerpt'] ) ) . '</p>';
-								} elseif( is_array( $upsell_section[ 'description' ] ) ) {
+								} elseif ( is_array( $upsell_section['description'] ) ) {
 									$settings .= '<ul class="user-registration-upsell__description-list">';
-									foreach( $upsell_section[ 'description' ] as $description_text ) {
+									foreach ( $upsell_section['description'] as $description_text ) {
 										$settings .= '<li class="user-registration-upsell__description-list-item">' . $description_text . '</li>';
 									}
 									$settings .= '</ul>';
 								}
 							}
-							if( ! empty( $upsell_section[ 'feature_link' ] ) ) {
-								$settings .= '<a href="' . esc_url( $upsell_section[ 'feature_link' ] ) . '" class="user-registration-upsell__feature-link" target="_blank">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>';
+							if ( ! empty( $upsell_section['feature_link'] ) ) {
+								$settings .= '<a href="' . esc_url( $upsell_section['feature_link'] ) . '" class="user-registration-upsell__feature-link" target="_blank">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>';
 							}
 							$settings .= '</div>';
 						}
@@ -531,7 +569,6 @@ class UR_Admin_Settings {
 						if ( ! empty( $section['desc'] ) ) {
 							$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $section['desc'] ) ) . '</p>';
 						}
-
 
 						$settings .= '<div class="pt-0 pb-0 user-registration-card__body">';
 
@@ -562,14 +599,35 @@ class UR_Admin_Settings {
 						} else {
 							$settings .= '<div class="user-registration-card ur-mb-2' . $is_captcha . '" ' . esc_attr( $section_id ) . '>';
 						}
+
 						$settings .= '<div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-3 integration-header-info accordion' . $is_captcha_header . '">';
-						$settings .= '<div class="integration-detail">';
+						if ( ! UR_PRO_ACTIVE && ( 'free-mollie' === $section['id'] || 'free-authorize-net' === $section['id'] ) ) {
+							$settings .= '<div class="integration-detail upgradable-type">';
+						} else {
+
+							$settings .= '<div class="integration-detail ">';
+						}
 						$settings .= '<figure class="logo">';
 						$settings .= '<img src="' . UR()->plugin_url() . '/assets/images/settings-icons/' . $section['id'] . '.png" alt="' . $section['title'] . '">';
 						$settings .= '</figure>';
 						if ( ! empty( $section['title'] ) ) {
 							$settings .= '<h3 class="user-registration-card__title">' . esc_html( $section['title'] );
 							$settings .= '</h3>';
+						}
+						if ( ! UR_PRO_ACTIVE && ( 'free-mollie' === $section['id'] || 'free-authorize-net' === $section['id'] ) ) {
+							$result    = ' data-gate-content="ur-pro-' . $section['id'] . '"';
+							$settings .= '<img class="ur-pro-premium" data-feature-gate="tooltip" data-gate-placement="right" data-gate-interactive="true"' . $result . ' src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png" alt="' . $section['title'] . '">';
+							$settings .= '<template id="ur-pro-'.$section['id'].'">';
+							$settings .= '<div class="ur-feature">';
+							$settings .= '<div class="ur-feature__title">';
+							$settings .= esc_html__( $section['title'] . ' payment feature only available in Pro.', 'user-registration' );
+							$settings .= '</div>';
+							$settings .= '<a class="ur-feature__btn" href="https://wpuserregistration.com/upgrade/?utm_source=ur-membership-create&utm_medium=upgrade-link&utm-campaign=lite-version">';
+							$settings .= '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>';
+							$settings .= esc_html__( 'Upgrade to Pro', 'user-registration' );
+							$settings .= '</a>';
+							$settings .= '</div>';
+							$settings .= '</template>';
 						}
 						$settings .= '<span class="ur-connection-status ' . ( $is_connected ? 'ur-connection-status--active' : '' ) . '">';
 						$settings .= '</span>';
@@ -781,7 +839,7 @@ class UR_Admin_Settings {
 									}
 
 									foreach ( $color_states as $state => $state_data ) {
-										$state_id = $base_id . '_' . $state;
+										$state_id      = $base_id . '_' . $state;
 										$option_value  = isset( $saved_colors[ $state ] ) ? $saved_colors[ $state ] : ( isset( $state_data['default'] ) ? $state_data['default'] : '' );
 										$default_value = isset( $state_data['default'] ) ? $state_data['default'] : '';
 
@@ -1297,6 +1355,8 @@ class UR_Admin_Settings {
 											'bank',
 											'payment-settings',
 											'mollie',
+											'free-mollie',
+											'free-authorize-net',
 											'authorize-net',
 											'v2',
 											'v3',

@@ -427,13 +427,17 @@
 			});
 
 			$(document).on("click", ".urcr-content-type-option", function (e) {
+				// Prevent clicks on disabled options or Pro options
+				if (
+					$(this).hasClass("urcr-dropdown-option-disabled") ||
+					$(this).hasClass("urcr-pro-option-disabled") ||
+					$(this).attr("aria-disabled") === "true"
+				) {
+					e.preventDefault();
+					e.stopPropagation();
+					return false;
+				}
 				e.preventDefault();
-				// if (
-				// 	$(this).hasClass("urcr-dropdown-option-disabled") ||
-				// 	$(this).attr("aria-disabled") === "true"
-				// ) {
-				// 	return;
-				// }
 				var contentType = $(this).data("content-type");
 				self.addContentTarget(contentType);
 				$(".urcr-content-type-dropdown-menu")
@@ -445,12 +449,14 @@
 				"keydown",
 				".urcr-content-type-option",
 				function (e) {
-					// if (
-					// 	$(this).hasClass("urcr-dropdown-option-disabled") ||
-					// 	$(this).attr("aria-disabled") === "true"
-					// ) {
-					// 	return;
-					// }
+					// Prevent keyboard interaction on disabled options or Pro options
+					if (
+						$(this).hasClass("urcr-dropdown-option-disabled") ||
+						$(this).hasClass("urcr-pro-option-disabled") ||
+						$(this).attr("aria-disabled") === "true"
+					) {
+						return;
+					}
 					if (e.key === "Enter" || e.key === " ") {
 						e.preventDefault();
 						var contentType = $(this).data("content-type");
@@ -1841,6 +1847,7 @@
 					: "";
 				var disabledAttr = isDisabled ? 'aria-disabled="true"' : "";
 				var tabIndex = isDisabled ? "-1" : "0";
+
 				$dropdown.append(
 					'<span role="button" tabindex="' +
 						tabIndex +
@@ -1853,6 +1860,49 @@
 						"</span>"
 				);
 			});
+
+			if (!isPro) {
+				var pluginUrl = "";
+				var scripts = document.getElementsByTagName("script");
+				for (var i = 0; i < scripts.length; i++) {
+					if (
+						scripts[i].src &&
+						scripts[i].src.indexOf(
+							"urcr-membership-access-rules"
+						) !== -1
+					) {
+						pluginUrl = scripts[i].src.substring(
+							0,
+							scripts[i].src.indexOf("assets/js")
+						);
+						break;
+					}
+				}
+				$dropdown.append(
+					'<div class="urcr-dropdown-pro-title">' +
+						"<span>More in Pro </span>" +
+						'<img src="' +
+						pluginUrl +
+						'assets/images/icons/ur-pro-icon.png" alt="Pro" width="14" height="14" />' +
+						"</div>"
+				);
+
+				var proOptions = [
+					{ value: "post-type", label: "Post Type" },
+					{ value: "taxonomy", label: "Taxonomy" },
+					{ value: "file_downloads", label: "File Downloads" }
+				];
+
+				proOptions.forEach(function (proOpt) {
+					$dropdown.append(
+						'<span class="urcr-dropdown-option urcr-content-type-option urcr-pro-option urcr-pro-option-disabled" data-content-type="' +
+							proOpt.value +
+							'">' +
+							proOpt.label +
+							"</span>"
+					);
+				});
+			}
 
 			if ($dropdown.hasClass("ur-d-none")) {
 				$dropdown.removeClass("ur-d-none").addClass("ur-d-flex");

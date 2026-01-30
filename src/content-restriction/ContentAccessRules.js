@@ -12,6 +12,7 @@ import {
 	getURCRData,
 	isProAccess
 } from "./utils/localized-data";
+import apiFetch from "@wordpress/api-fetch";
 
 /* global _URCR_DASHBOARD_ */
 const { adminURL, assetsURL } =
@@ -95,16 +96,15 @@ const ContentAccessRules = () => {
 	const shouldShowMembershipTab =
 		hasMultipleMemberships && membershipRules.length > 1;
 	const shouldShowCustomTab = isContentRestrictionEnabled;
-	const shouldShowTabSwitcher =
-		isContentRestrictionEnabled && shouldShowMembershipTab;
+	const shouldShowTabSwitcher = shouldShowMembershipTab;
 
 	const currentRules = !isContentRestrictionEnabled
 		? shouldShowMembershipTab
 			? membershipRules
 			: []
 		: activeTab === "membership"
-		? membershipRules
-		: customRules;
+			? membershipRules
+			: customRules;
 
 	const [hasSetDefaultTab, setHasSetDefaultTab] = useState(false);
 	useEffect(() => {
@@ -267,6 +267,35 @@ const ContentAccessRules = () => {
 		setActiveTab("custom");
 	};
 
+	const [moduleStatus, setModuleStatus] = useState(
+		isContentRestrictionEnabled ? "inactive" : "active"
+	);
+
+	const activateAddon = async () => {
+		setModuleStatus("activating");
+		const formData = new FormData();
+		formData.append(
+			"action",
+			"user_registration_activate_dependent_module"
+		);
+		formData.append("security", urcrData.ajax_all_forms_nonce);
+		formData.append("slug", "content-restriction");
+		try {
+			const res = await apiFetch({
+				url: urcrData.ajax_url,
+				body: formData
+			});
+			if (res.success) {
+				setModuleStatus("active");
+				window.location.reload();
+			} else {
+				setModuleStatus("failed");
+			}
+		} catch {
+			setModuleStatus("failed");
+		}
+	};
+
 	if (isLoading) {
 		return (
 			<div className="user-registration-content-restriction-viewer">
@@ -325,19 +354,15 @@ const ContentAccessRules = () => {
 						>
 							{__("Membership Rules", "user-registration")}
 						</button>
-						{shouldShowCustomTab && (
-							<button
-								type="button"
-								className={`urcr-tab ${
-									activeTab === "custom"
-										? "urcr-tab-active"
-										: ""
-								}`}
-								onClick={() => setActiveTab("custom")}
-							>
-								{__("Custom Rules", "user-registration")}
-							</button>
-						)}
+						<button
+							type="button"
+							className={`urcr-tab ${
+								activeTab === "custom" ? "urcr-tab-active" : ""
+							}`}
+							onClick={() => setActiveTab("custom")}
+						>
+							{__("Custom Rules", "user-registration")}
+						</button>
 					</div>
 				)}
 
@@ -347,35 +372,110 @@ const ContentAccessRules = () => {
 					onCreateSuccess={handleRuleCreated}
 				/>
 
-				{currentRules.length === 0 ? (
-					<div className="user-registration-card ur-text-center urcr-no-rules">
-						<img
-							src={`${assetsURL || ""}images/empty-table.png`}
-							alt={__("No rules found", "user-registration")}
-						/>
-					</div>
-				) : (
-					<div className="urcr-rules-list">
-						{currentRules.map((rule) => (
-							<RuleCard
-								key={rule.id}
-								rule={rule}
-								isExpanded={expandedRules.has(rule.id)}
-								isSettingsOpen={openSettingsPanels.has(rule.id)}
-								isHighlighted={highlightedRuleId === rule.id}
-								onToggleExpand={() =>
-									handleToggleExpand(rule.id)
-								}
-								onToggleSettings={() =>
-									handleToggleSettings(rule.id)
-								}
-								onRuleUpdate={handleRuleUpdate}
-								onRuleStatusUpdate={handleRuleStatusUpdate}
-								onRuleDelete={handleRuleDelete}
-								onRuleDuplicate={handleRuleDuplicate}
+				{activeTab === "custom" && !isContentRestrictionEnabled ? (
+					<>
+						<div className="ur-feature ur-feature--locked">
+							<div
+								style={{ pointerEvents: "none" }}
+								dangerouslySetInnerHTML={{
+									__html: `<div class="user-registration-card ur-mb-2 urcr-rule-card " style="margin-bottom: 20px !important;" data-rule-id="26"><div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-5 integration-header-info accordion active"><div class="integration-detail urcr-integration-detail"><h3 class="user-registration-card__title">Access Control</h3><span class="urcr-separator"> | </span><span class="urcr-rule-id">ID: 26</span><span class="urcr-separator"> | </span><span class="urcr-status-label">Status :</span><div class="ur-toggle-section"><span class="user-registration-toggle-form"><input type="checkbox" checked=""><span class="slider round"></span></span></div></div><div class="integration-action urcr-integration-action"><div class="urcr-membership-tabs"><button class="urcr-tab-button urcr-tab-active" type="button">Rule</button><button class="urcr-tab-button " type="button">Settings</button></div><div class="urcr-menu-wrapper"><button class="urcr-menu-toggle button-link " type="button" aria-label="More options"><span class="dashicons dashicons-ellipsis"></span></button></div><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1 urcr-icon-active" style="transform: rotate(180deg); transition: transform 0.3s; cursor: pointer;"><polyline points="6 9 12 15 18 9"></polyline></svg></div></div><div class="user-registration-card__body ur-p-3 integration-body-info" style="display: block;"><div class="urcr-tab-content urcr-tab-content-active"><div class="urcr-rule-content-panel"><div class="urcr-content-group "><div class="urcr-rule-body ur-p-2"><div class="urcr-condition-row-parent"><div class="urcr-conditions-list "><div class="urcr-condition-wrapper"><div class="urcr-condition-row ur-d-flex ur-mt-2 ur-align-items-start"><div class="urcr-condition-only ur-d-flex ur-align-items-start"><div class="urcr-condition-selection-section ur-d-flex ur-align-items-center ur-g-4"><div class="urcr-condition-field-name"><select class="components-select-control__input urcr-condition-value-input"><option value="user_state">User State</option></select></div><div class="urcr-condition-operator"><span>is</span></div><div class="urcr-condition-value"><div class="urcr-checkbox-radio-group"><label class="urcr-checkbox-radio-option is-checked"><input type="radio" name="urcr-radio-user_state-x1768832321664" class="urcr-checkbox-radio-input" value="logged-in"><span class="urcr-checkbox-radio-label">Logged In</span></label><label class="urcr-checkbox-radio-option "><input type="radio" name="urcr-radio-user_state-x1768832321664" class="urcr-checkbox-radio-input" value="logged-out"><span class="urcr-checkbox-radio-label">Logged Out</span></label></div></div></div></div></div><button type="button" class="button button-link-delete" aria-label="Remove condition"><span class="dashicons dashicons-no-alt"></span></button></div></div><div class="urcr-target-selection-section ur-d-flex ur-align-items-start"><div class="urcr-condition-value-input-wrapper urcr-access-content"><div class="urcr-dropdown-wrapper urcr-access-control-dropdown-wrapper"><button type="button" class="urcr-dropdown-button urcr-access-control-button urcr-condition-value-input"><span class="urcr-dropdown-button-text">Access</span><span class="urcr-dropdown-button-arrow dashicons dashicons-arrow-down-alt2"></span></button></div></div><span class="urcr-arrow-icon" aria-hidden="true"></span><div class="ur-d-flex ur-flex-column"><div class="urcr-dropdown-wrapper urcr-content-dropdown-wrapper"><button type="button" class="urcr-dropdown-button button urcr-add-content-button"><span class="dashicons dashicons-plus-alt2"></span>Content</button></div></div></div></div><div class="urcr-buttons-wrapper" style="display: flex; gap: 10px; margin-top: 10px;"><div class="urcr-dropdown-wrapper urcr-condition-dropdown-wrapper"><button type="button" class="urcr-dropdown-button button urcr-add-condition-button"><span class="dashicons dashicons-plus-alt2"></span>Condition</button></div></div></div></div><div class="urcr-rule-actions"><button class="urcr-save-rule-btn button button-primary" type="button" data-rule-id="26">Save</button></div></div></div></div></div><div class="user-registration-card ur-mb-2 urcr-rule-card " data-rule-id="26"><div class="user-registration-card__header ur-d-flex ur-align-items-center ur-p-5 integration-header-info accordion active"><div class="integration-detail urcr-integration-detail"><h3 class="user-registration-card__title">Access Control</h3><span class="urcr-separator"> | </span><span class="urcr-rule-id">ID: 26</span><span class="urcr-separator"> | </span><span class="urcr-status-label">Status :</span><div class="ur-toggle-section"><span class="user-registration-toggle-form"><input type="checkbox" checked=""><span class="slider round"></span></span></div></div><div class="integration-action urcr-integration-action"><div class="urcr-membership-tabs"><button class="urcr-tab-button urcr-tab-active" type="button">Rule</button><button class="urcr-tab-button " type="button">Settings</button></div><div class="urcr-menu-wrapper"><button class="urcr-menu-toggle button-link " type="button" aria-label="More options"><span class="dashicons dashicons-ellipsis"></span></button></div><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1 urcr-icon-active" style="transform: rotate(180deg); transition: transform 0.3s; cursor: pointer;"><polyline points="6 9 12 15 18 9"></polyline></svg></div></div><div class="user-registration-card__body ur-p-3 integration-body-info" style="display: block;"><div class="urcr-tab-content urcr-tab-content-active"><div class="urcr-rule-content-panel"><div class="urcr-content-group "><div class="urcr-rule-body ur-p-2"><div class="urcr-condition-row-parent"><div class="urcr-conditions-list "><div class="urcr-condition-wrapper"><div class="urcr-condition-row ur-d-flex ur-mt-2 ur-align-items-start"><div class="urcr-condition-only ur-d-flex ur-align-items-start"><div class="urcr-condition-selection-section ur-d-flex ur-align-items-center ur-g-4"><div class="urcr-condition-field-name"><select class="components-select-control__input urcr-condition-value-input"><option value="user_state">User State</option></select></div><div class="urcr-condition-operator"><span>is</span></div><div class="urcr-condition-value"><div class="urcr-checkbox-radio-group"><label class="urcr-checkbox-radio-option is-checked"><input type="radio" name="urcr-radio-user_state-x1768832321664" class="urcr-checkbox-radio-input" value="logged-in"><span class="urcr-checkbox-radio-label">Logged In</span></label><label class="urcr-checkbox-radio-option "><input type="radio" name="urcr-radio-user_state-x1768832321664" class="urcr-checkbox-radio-input" value="logged-out"><span class="urcr-checkbox-radio-label">Logged Out</span></label></div></div></div></div></div><button type="button" class="button button-link-delete" aria-label="Remove condition"><span class="dashicons dashicons-no-alt"></span></button></div></div><div class="urcr-target-selection-section ur-d-flex ur-align-items-start"><div class="urcr-condition-value-input-wrapper urcr-access-content"><div class="urcr-dropdown-wrapper urcr-access-control-dropdown-wrapper"><button type="button" class="urcr-dropdown-button urcr-access-control-button urcr-condition-value-input"><span class="urcr-dropdown-button-text">Access</span><span class="urcr-dropdown-button-arrow dashicons dashicons-arrow-down-alt2"></span></button></div></div><span class="urcr-arrow-icon" aria-hidden="true"></span><div class="ur-d-flex ur-flex-column"><div class="urcr-dropdown-wrapper urcr-content-dropdown-wrapper"><button type="button" class="urcr-dropdown-button button urcr-add-content-button"><span class="dashicons dashicons-plus-alt2"></span>Content</button></div></div></div></div><div class="urcr-buttons-wrapper" style="display: flex; gap: 10px; margin-top: 10px;"><div class="urcr-dropdown-wrapper urcr-condition-dropdown-wrapper"><button type="button" class="urcr-dropdown-button button urcr-add-condition-button"><span class="dashicons dashicons-plus-alt2"></span>Condition</button></div></div></div></div><div class="urcr-rule-actions"><button class="urcr-save-rule-btn button button-primary" type="button" data-rule-id="26">Save</button></div></div></div></div></div>`
+								}}
 							/>
-						))}
-					</div>
+							<div className="ur-feature__overlay">
+								<div className="ur-feature__overlay-content">
+									<h3 className="ur-feature__title">
+										{__(
+											"Unlock Custom Rules",
+											"user-registration"
+										)}
+									</h3>
+									<div className="ur-feature__desc">
+										{__(
+											"Unlock the ability to add custom rules, based on various user attributes like Roles, User fields, Registration sources and More."
+										)}
+									</div>
+									{isProAccess() ? (
+										<button
+											disabled={
+												moduleStatus === "activating"
+											}
+											className="ur-feature__btn"
+										>
+											{__(
+												"Activate Addon",
+												"user-registration"
+											)}
+										</button>
+									) : (
+										<a className="ur-feature__btn" href="">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="24"
+												height="24"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												strokeWidth="2"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+											>
+												<path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path>
+												<path d="M5 21h14"></path>
+											</svg>
+											<span>
+												{__(
+													"Upgrade to Pro",
+													"user-registration"
+												)}
+											</span>
+										</a>
+									)}
+								</div>
+							</div>
+						</div>
+					</>
+				) : (
+					<>
+						{currentRules.length === 0 ? (
+							<div className="user-registration-card ur-text-center urcr-no-rules">
+								<img
+									src={`${assetsURL || ""}images/empty-table.png`}
+									alt={__(
+										"No rules found",
+										"user-registration"
+									)}
+								/>
+							</div>
+						) : (
+							<div className="urcr-rules-list">
+								{currentRules.map((rule) => (
+									<RuleCard
+										key={rule.id}
+										rule={rule}
+										isExpanded={expandedRules.has(rule.id)}
+										isSettingsOpen={openSettingsPanels.has(
+											rule.id
+										)}
+										isHighlighted={
+											highlightedRuleId === rule.id
+										}
+										onToggleExpand={() =>
+											handleToggleExpand(rule.id)
+										}
+										onToggleSettings={() =>
+											handleToggleSettings(rule.id)
+										}
+										onRuleUpdate={handleRuleUpdate}
+										onRuleStatusUpdate={
+											handleRuleStatusUpdate
+										}
+										onRuleDelete={handleRuleDelete}
+										onRuleDuplicate={handleRuleDuplicate}
+									/>
+								))}
+							</div>
+						)}
+					</>
 				)}
 			</div>
 		</div>
