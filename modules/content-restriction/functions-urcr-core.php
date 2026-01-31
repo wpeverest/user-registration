@@ -1299,7 +1299,7 @@ function urcr_migrate_post_page_restrictions() {
 		return array(); // No conditions to migrate
 	}
 
-	$timestamp = time() * 1000;
+	$timestamp = time() * 1001;
 
 	// Build logic_map
 	$logic_map = array(
@@ -1311,7 +1311,7 @@ function urcr_migrate_post_page_restrictions() {
 
 	// Build target_contents
 	$target_contents   = array();
-	$target_id_counter = $timestamp + 100;
+	$target_id_counter = $timestamp + 101;
 	$new_migrated_ids  = array();
 
 	if ( ! empty( $posts_by_type['wp_posts'] ) ) {
