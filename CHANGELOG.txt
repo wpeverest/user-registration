@@ -1,3 +1,16 @@
+= 5.1.1    - 02/2/2026 =
+* Fix      - Empty migrated rules showing up when toggling enabled/disabled state.
+* Fix      - Disabled content rules still being applied.
+* Fix      - Menu restriction blocking all website links.
+* Fix      - Getting country value while rendering form fields.
+* Fix      - My account CSS conflict with WooCommerce integration.
+* Fix      - Payment module hidden from the module area.
+* Fix      - File upload submission issue in my account page.
+* Fix      - Registration page not setting issue in advanced registration setup flow.
+* Fix      - Select 2 field design issue.
+* Fix      - Customize My account endpoint ordering issue.
+* Fix      - Google sheets integration not saving.
+
 = 5.1.0    - 26/01/2026 =
 * Feature  - SignUp button block.
 * Feature  - Masteriyo Integration.
