@@ -1299,7 +1299,7 @@ function urcr_migrate_post_page_restrictions() {
 		return array(); // No conditions to migrate
 	}
 
-	$timestamp = time() * 1000;
+	$timestamp = time() * 1001;
 
 	// Build logic_map
 	$logic_map = array(
@@ -1311,7 +1311,7 @@ function urcr_migrate_post_page_restrictions() {
 
 	// Build target_contents
 	$target_contents   = array();
-	$target_id_counter = $timestamp + 100;
+	$target_id_counter = $timestamp + 101;
 	$new_migrated_ids  = array();
 
 	if ( ! empty( $posts_by_type['wp_posts'] ) ) {
@@ -1711,25 +1711,3 @@ function urcr_migrated_global_rule() {
 	return ! empty( $posts ) ? json_decode( $posts[0]->post_content, true ) : array();
 }
 
-function urcr_fix_broken_rule_json( $json ) {
-    if ( ! is_string( $json ) || $json === '' ) {
-        return false;
-    }
-
-    $json = preg_replace_callback(
-        '/"message":"(.*?)","redirect_url"/s',
-        function ( $matches ) {
-            $message = $matches[1];
-
-            $message = str_replace( '\n', '', $message );
-            $message = str_replace( '\r', '', $message );
-
-            $message = html_entity_decode( $message, ENT_QUOTES, 'UTF-8' );
-
-            return '"message":"' . addslashes( $message ) . '","redirect_url"';
-        },
-        $json
-    );
-
-    return $json;
-}
