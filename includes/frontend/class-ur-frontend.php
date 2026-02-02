@@ -331,7 +331,7 @@ class UR_Frontend {
 			);
 		}
 
-		if ( 'membership' === $user_source || ( '' !== $payment_method && ( '' !== $ur_payment_subscription || 'paypal_standard' === $payment_method ) ) ) {
+		if ( 'membership' === $user_source || ( ! empty( $payment_method ) && ( ! empty( $ur_payment_subscription ) || 'paypal_standard' === $payment_method ) ) ) {
 			add_action( 'wp_loaded', array( $this, 'ur_add_membership_tab_endpoint' ) );
 			add_filter( 'user_registration_account_menu_items', array( $this, 'ur_membership_tab' ), 10, 1 );
 			add_action(
