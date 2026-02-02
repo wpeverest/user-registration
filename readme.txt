@@ -1,228 +1,237 @@
-=== User Registration & Membership – Custom Registration Form Builder, Custom Login Form, User Profile, Content Restriction & Membership Plugin  ===
+=== User Registration & Membership - Free & Paid Memberships, Subscriptions, Content Restriction, User Profile, Custom User Registration & Login Builder ===
 Contributors: WPEverest
-Tags: user registration, membership, user profile, registration form, login form,
+Tags: membership, subscription, content restriction, user profile, user registration
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 6.9
-Stable tag: 5.1.0
+Stable tag: 5.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Easily create membership sites, custom user registration form, custom login form & beautiful user profile page. Restrict content based on login status & user roles.
+Build membership sites with tiered plans, content restriction, drag-&-drop custom registration & login form builder, and built-in payment system.
 
 == Description ==
 
-**Easily create membership sites, custom user registration form, custom login form & beautiful user profile page. Restrict content based on login status & user roles.**
+==The Complete Membership Solution for WordPress ==
 
-Are you a beginner with absolutely zero coding skills? No problem! User Registration & Membership lets you create awesome membership websites and dynamic registration forms in minutes.
+Tired of juggling separate plugins for membership plans, user management, payment gateways, and user profile? 
 
-You can seamlessly integrate members into your website with the comprehensive membership ecosystem, featuring registration forms, membership groups, login forms, user profiles, content restriction, and a variety of other powerful tools.
+User Registration & Membership (URM) helps you monetize your site by creating membership plans and accepting payments for gated content. 
 
-This free, lightweight, and fully responsive plugin also includes a beautifully designed login form ready to use. It automatically creates a user profile account for registered members.
+* Membership: Build membership plans, setup billing, and manage user access in a single connected flow.
 
-And you can get started for FREE! The free plan provides you with all the core features to kick-start your own membership website.
+* Custom User Registration Forms: Design custom registration form and for your users with drag-and-drop form builder.  
 
-[youtube https://youtu.be/lrkXhZ7hS8g ]
+* Payment Integration: Monetize your membership site with one-time fee, recurring subscription, and upgrade paths. Accept subscription payments through Stripe, PayPal, and bank transfer. 
 
-[All Features](https://wpuserregistration.com/features/?utm_source=wporg&utm_medium=all-features-link&utm_campaign=ur-upgrade-to-pro) | [Documentation](https://docs.wpuserregistration.com/) | [Community](https://www.facebook.com/groups/userregistration/)
+* Content Restriction: Restrict complete site, or individual pages and posts by membership subscription.
 
-[Test User Registration & Membership Premium for Free ](https://userregistration.demoswp.net/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)
+[👉 Get Started Today](https://wpuserregistration.com/?utm_source=wporg&utm_medium=readme&utm_campaign=urm-free)
 
-### Create High-converting Registration Forms and Memberships websites with Our Feature-rich Plugin
-* **Powerful Custom Registration Forms:** Designing WordPress custom registration forms has never been easier. Simply drag and drop fields and visually create user register forms.
+[👉 Try Our Demo](https://userregistration.demoswp.net/?utm_source=wporg&utm_medium=readme&utm_campaign=try-demo)
 
-* **In-built Login Form:** No need to make a separate login form for users as you get an in-built login form with User Registration & Membership.
+==Complete Membership Solution==
 
-* **Easy Drag & Drop Builder:** Simply drag & drop the form fields into a blank slate & create a registration form in no time. Create membership forms or registration form as you wish. No code, no fuss.
+https://youtu.be/eNQSzJqSTt0
 
-* **Quick Form Preview:** Enables form functionality checking before publishing, improving UX.
+* __Membership Groups and Plans__: Create membership tiers with different access levels and benefits. Combine related plans into membership groups for organized front-end listing. 
 
-[youtube https://youtu.be/jbiBJdowxG0 ]
+* __Pre-Installed Membership Pages__: Launch your membership site in minutes instead of hours with professional pages ready to use or customize: Registration, Login, My Account, Lost Password, Reset Password, Pricing, and Thank You pages. 
 
-* **Versatile Membership Websites:** Use the User Registration & Membership plugin and create a full-fledged membership website. Create membership groups and plans with multiple tiers of content access and benefits, then, sell them to your website members for a recurring fee.
+* __Content Restriction__: Set restrictions globally, per page/post, or for specific content blocks within pages. Build complex access rules using membership plans, user roles, registration and login status. 
 
-* **Membership groups:** Combine related plans into a membership group and display them on the front end. The group helps you segment your members and deliver specialized content based on their interests.
+* __Membership Upgrade Path__: Define clear upgrade paths between membership tiers and let users switch seamlessly without interrupting their access or membership status. 
 
-* **Create Easy Content Restriction Rules:** Enable content restriction for members in posts, pages, & categories. You can also create advanced custom content access rules based on memberships, roles, capabilities, user state, & more.
+* __Masteriyo Course Integration__: Sell courses through memberships using our Masteriyo LMS integration. 
 
-[youtube https://youtu.be/eNQSzJqSTt0 ]
+* __10+ Membership Gutenberg Blocks__: Create custom membership pages using our custom blocks: registration, my account, membership pricing, buy now block etc.
 
-* **25 + Custom Form Fields Added to Default User Fields:** User Registration & Membership unlocks the limitations posed by the default WordPress fields while registering users. Use more than 25 custom form fields like Country, Privacy Policy, & Profile Picture to design any kind of form you need.
+* __Membership Analytics__: Quickly glance over total registration, approved users, and pending requests with dedicated analytics dashboard.
 
-* **Email Notifications:** Send customized email notifications to your users & admin after registration. Additionally, you can send notifications regarding payments & changes made to profile details as well.
+ __Custom User Registration__
 
-* **User Profile Account Page:** User Registration & Membership automatically creates a WordPress user profile account for all your registered users. Even better is the fact that you’re still in complete control of the customization of this page.
+[YouTube Video: https://youtu.be/jbiBJdowxG0/ ] 
 
-* **Global Search Settings:** Admins can search in the Global Settings to quickly access the required settings.
+* __Registration Form Builder__: Build custom WordPress registration forms. Drag fields onto the canvas, arrange them visually, and configure settings with simple clicks. 
 
-* **Strong Spam Protection:** Block spam attacks like fake registrations & spam submissions with our Google reCaptcha, honeypot, Cloudflare, Turnstile and custom captcha features like image, math and Q&A captcha.
+* __Login Form__: Start with a pre-built login form and customize it to your needs. Choose form styles, configure login methods, add CAPTCHA, and set login/logout redirects. 
 
-* **Assign User Roles & Capabilities:** Assign default WordPress user roles like Editor, Author, Subscriber, & more while creating registration forms.
+* __Live Form Preview__: Preview registration and login forms in real-time to ensure everything looks and functions properly. 
 
-* **Smart Tags:** Personalize email notifications with user-specific data.
+*  __Pre-built Form Templates__: Save hours of setup time with professionally designed registration form templates. Use them as-is or customize fields and styling to match your specific needs. View All Form Templates 
 
-* **AJAX Form Submission:** Provides seamless & fast form submissions without page reloading.
+* __Ajax Form Submission__: Say goodbye to slow form submissions that reload the entire page. Users get instant confirmation or error messages. 
 
-* **Gutenberg Support:** User Registration & Membership fully support the Block Editor. You can add login & registration forms to any page using the User Registration Block.
+* __User Role Assignment__: Assignment WordPress user roles (Administrator, Editor, Author, Contributor, Subscriber) to members during registration. 
 
-* **Form Templates:** Kickstart your registration process with our pre-designed form templates. Use as-it-is or modify it according to your needs.
+* __Flexible Approval Method__: Choose from auto-approval, email verification, and manual admin approval for new registration for quality control. 
 
-* **Easily Import/Export Forms:** If you own multiple websites, you don’t have to create registration forms from scratch every single time. You can save time by exporting & importing forms as JSON files, including form settings.
+__Payment and Monetization__
 
-* **[Premium] Track User Journey:** Get detailed information about the pages a user visited on your website & the time they spent on the pages.
+* __Multiple Revenue Modules__: Offer fixed-term memberships, recurring subscription or lifetime access.  
 
-* **[Premium] Login and Registration Popups:** Turn simple inline registration & login forms into popups for better user engagement & conversion.
+* __Trusted Payment Gateways__: Accept secure payment with trusted global payment gateways even in the free version:  
+  * __PayPal__
+  * __Stripe__ 
+ * __Bank Transfer__ 
 
-* **[Premium] User Registration Data in Graphs & Charts:** Receive accurate stats on every user registration form through graphs & charts.
+* __Payment History__: Comprehensive transaction tracking with payment status, date, gateway, and more. complete history accessible to admins and members.
 
-* **[Premium] Passwordless Login:** Enable user authentication through a secure email link, eliminating the need for passwords.
 
-### Add-ons & Integrations
+==User Registration & Membership PRO Features 
 
-* **[Premium] [Multi-Step Form:](https://wpuserregistration.com/features/multi-step-form/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Use multi-step forms that let you break long forms into multiple sections for a cleaner & more engaging presentation.
+__Membership and User Management__ 
 
-* **[Premium] [Customize My Account:](https://wpuserregistration.com/features/customize-my-account/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Manage the in-built My Account page by adding custom tabs as well as editing & deleting default tabs. User Registration also allows you to edit design elements of the page such as Color, Buttons, Navigation, & more.
+* Membership plans with tiered access control 
+*  Admin approval for new registrations 
+*  Member Directory with search filters searchable directories 
+* Role-based redirection after login
+* Profile completeness indicator 
+* Advanced content restriction with complex rules 
+* User journey tracking 
+* Payment history tracking 
+* Social Connect (Facebook, Google, Twitter, LinkedIn login) 
+* Profile Connect (sync with other plugins) 
+* Block simultaneous logins 
 
-* **[Premium] [WooCommerce Integration:](https://wpuserregistration.com/features/woocommerce-integration/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Integrate WooCommerce with our plugin & add WooCommerce Shipping/Billing Address fields to your user registration forms.
+__Advanced Content Restriction__
 
-* **[Premium] [Drag and Drop Multi File Upload:](https://wpuserregistration.com/features/file-uploads/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** The multiple file upload feature is perfect for collecting more than one document or image file. You only have to set the maximum file upload limit from the field options.
+* Content drop for membership content
+* URL-based restriction
+* File download protection
+* Conditional Content Restriction using AND, OR, and NOT logic.
 
-* **[Premium] [Set Fields Visibility:](https://wpuserregistration.com/features/field-visibility/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Hide specific user registration fields in the published forms & user profile page. You can decide whether the field is visible in the registration form, profile details, or both.
 
-* **[Premium] [Import Users:](https://wpuserregistration.com/features/import-users/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Import users to any registration form on your WordPress website. Just upload the CSV file with user information & map it with the registration form of your choice.
+__Registration Form Fields & Functionality__
 
-* **[Premium] [Frontend User Listing:](https://wpuserregistration.com/features/frontend-listing/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** List registered users in the front end to help visitors & users view the profile of all the listed members.
+ *  60+  form fields 
+ * Conditional logic (show/hide fields based on user input) 
+ * Multi-step forms with progress indicators 
+ * Conversational forms (chat-like layout) 
+ * Field visibility control 
+ * Form restriction by custom rules 
+ * Popup forms (modal display) 
+ * Calculations 
+ * Signature field 
+* Invite codes
+ * Repeater field (multiple entries per field group) 
+ * Save and Continue (save partial progress) 
+  
+
+__Monetization and Payment Processing__ 
+
+* Trial Period
+* Multiple memberships per user
+* Sell memberships to team
+* Authorize.net
+* Mollie integration 
+* Registration coupons and discounts 
+* Payment history dashboard 
+* Membership plan upgrades with pro-rated billing 
+* Discount coupon and codes
+* Tax and EU VAT
+* Sell in local currency
+* Invoice generation
+
+  
+
+__Security & Spam Protection__ 
+
+* Email verification 
+* Google reCAPTCHA (V2, V3) 
+* hCaptcha 
+* Cloudflare Turnstile 
+* Akismet
+* Honeypot spam protection 
+* SMS verification via Twilio 
+* Two-factor authentication (2FA) 
+* Auto-generated passwords 
+* Passwordless login 
+* Custom CAPTCHA field (math/Q&A) 
+* Whitelisted domains 
+
+  
+
+__Design & Customization__ 
+
+* Email customizer 
+* Customize My Account page 
+* Style Customizer (visual form designer) 
+* Email Templates 
+* Advanced styling options for forms 
+* Analytics & Tracking 
+* Advanced analytics dashboard 
+* User journey tracking 
+* Advanced user/form analytics 
+* Dashboard with views, submissions, conversions 
+
+
+
+
+__Advanced Features__ 
+
+* PDF form submission (auto-generate PDFs) 
+* Frontend post submission 
+* Bulk user import (CSV) 
+* Invite codes for registration 
+* Geolocation data collection 
+* Private admin notes 
+* Form access by user role 
+* Cloud storage (Google Drive, Dropbox) 
+
+  
+
+__Marketing and CRM Integrations__  
+
+* Custom Email Notifications
+* Mailchimp 
+* MailerLite 
+* MailPoet 
+* ActiveCampaign 
+* Klaviyo 
+* Brevo (formerly Sendinblue) 
+* Kit (formerly ConvertKit)  
+* Salesforce 
+* Zapier (5,000+ apps) 
+* Google Sheets
+* Webhooks 
+
+ [👉 Get User Registration & Membership Pro](https://wpuserregistration.com/pricing/?utm_source=wporg&utm_medium=readme&utm_campaign=pro_features&utm_content=get_pro) 
+
+==Know your way around user registration with our tutorials==
+
+* [How to Create a Membership Website in WordPress for Free (with Content Restriction)](https://wpuserregistration.com/blog/how-to-create-a-membership-website-in-wordpress/?utm_source=wporg&utm_medium=readme&utm_campaign=tutorials)
+* [How to Create a Custom User Profile Page in WordPress?](https://wpuserregistration.com/blog/create-user-profile-page-in-wordpress/?utm_source=wporg&utm_medium=readme&utm_campaign=tutorials)
+* [How to Create User Registration Form in WordPress Easily?](https://wpuserregistration.com/blog/create-user-registration-form-in-wordpress/?utm_source=wporg&utm_medium=readme&utm_campaign=tutorials)
+* [How to Register Users with an Invitation Code in WordPress?](https://wpuserregistration.com/blog/register-users-with-invitation-code/?utm_source=wporg&utm_medium=readme&utm_campaign=tutorials)
+* [How to Change Default WordPress Login URL to Custom URL?](https://wpuserregistration.com/blog/default-wordpress-login-page-url-change/?utm_source=wporg&utm_medium=readme&utm_campaign=tutorials)
+
+Get in Touch with us: [Official Community](https://www.facebook.com/groups/userregistration) | [Twitter](https://twitter.com/user_register) 
+
+__Explore More Products from Our Team__
 
-* **[Premium] [Style Customizer Tool:](https://wpuserregistration.com/features/style-customizer/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** You might find the default form template a bit boring. So, User Registration offers a live form designer for you to customize form elements like Field Styles, Form Wrapper, & Button Styles without writing any code.
-
-* **[Premium] [Invite Codes for Registration:](https://wpuserregistration.com/features/invite-codes/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** User Registration allows access to the registration page to only users with an invitation code. You can either create a code on your own or generate random codes.
-
-* **[Premium] [Two Factor Authentication:](https://wpuserregistration.com/features/two-factor-authentication/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** The Two Factor Authentication add-on, also known as 2FA, for providing OTP-based verification for the users for maintaining a secure site & preventing data breaching.
-
-* **[Premium] Collect Payments via Credit Cards & PayPal:** User Registration works flawlessly with both [PayPal](https://wpuserregistration.com/features/paypal/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) & [Credit Cards & Ideal Payments(Stripe)](https://wpuserregistration.com/features/stripe/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro), so you can easily receive payments during registration.
-
-* **[Premium] [Connect Registration Forms with 1000+ Services via Zapier:](https://wpuserregistration.com/features/zapier/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Zapier passes information to all the applications your registration forms are connected with. This helps you save time by automating tasks like collecting form responses, sending texts, & reminders.
-
-* **[Premium] Integrations with Email Marketing Services:** Promote your business with the correct email marketing tools like [Mailchimp](https://wpuserregistration.com/features/mailchimp/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) , [MailerLite](https://wpuserregistration.com/features/mailerlite/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro), [ActiveCampaign](https://wpuserregistration.com/features/activecampaign/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro) & [Klaviyo](https://wpuserregistration.com/features/klaviyo/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro).
-
-* **[Premium] [Collect Geolocation Data for Users:](https://wpuserregistration.com/features/geolocation/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** This premium add-on enables you to collect & save the geolocation data of users who register on your website. It’s easy to do this when you have fields like Country, City, & Postcode.
-
-* **[Premium] [LearnDash Integration:](https://wpuserregistration.com/features/learndash/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Integrating LearnDash with User Registration allows you to add a LearnDash course field in your registration form. This automatically enrolls the users into their specified LearnDash course.
-
-* **[Premium] [Smart Conditional Logic:](https://wpuserregistration.com/features/conditional-logic/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Personalize registration forms for users & make them more interactive with conditional logic.
-
-* **[Premium] [Save & Continue:](https://wpuserregistration.com/features/save-and-continue/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Users can save their progress on a registration form & come back to it later to submit the form.
-
-* **[Premium] [Personalized Communication with Private Notes:](https://wpuserregistration.com/features/private-notes/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)** Share important updates, personalized messages, etc., with users. Plus, users can respond to these notes with their queries & receive answers.
-
-* **[Premium] [Enable Form Restrictions:](https://wpuserregistration.com/features/form-restriction/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)**  Restrict access to your WordPress registration forms with custom conditions.
-
-And there’s more we haven’t listed here.
-
-👉 [Explore all features now!](https://wpuserregistration.com/features/?utm_source=wporg&utm_medium=link&utm_campaign=ur-upgrade-to-pro)
-
-### Who is User Registration & Membership for?
-* Online coaches
-* Schools & Universities
-* Ecommerce websites
-* Business agencies
-* Online magazines
-* Non-profit organizations
-* Online certification programs
-* Conference & seminar organizers
-* Content sellers
-* Workshops
-* Restaurants
-* Sports event organizers
-* Government offices
-* Job board websites
-* Forums
-* Medical institutions
-* Bloggers
-* Gym & yoga studios
-
-### Create Different Registration Form Types without Any Coding Skills
-* Employee Registration
-* Event Registration
-* JobSeeker Registration
-* Appointment Form
-* Membership Form
-* Document Application Form
-* Social Registration
-* Student Registration
-* WooCommerce Registration
-* Multi-Step Registration
-* Course Registration
-And many more...
-
-👉 [Explore all pre-built User Registration demos.](https://demo.wpeverest.com/user-registration/)
-
-### Know your way around user registration with our tutorials
-* [How to Create User Registration Form in WordPress Easily?](https://wpuserregistration.com/blog/create-user-registration-form-in-wordpress/)
-
-* [How to Create a Custom User Profile Page in WordPress?](https://wpuserregistration.com/blog/create-user-profile-page-in-wordpress/)
-
-* [How to Create a Multi-step Registration Form in WordPress?](https://wpuserregistration.com/blog/multi-step-registration-form/)
-
-* [How to Register Users with an Invitation Code in WordPress?](https://wpuserregistration.com/blog/register-users-with-invitation-code/)
-
-* [How to Create a Custom WooCommerce Registration Form Easily?](https://wpuserregistration.com/blog/woocommerce-registration-form/)
-
-* [How to Change Default WordPress Login URL to Custom URL?](https://wpuserregistration.com/blog/default-wordpress-login-page-url-change/)
-
-== Get in Touch with us  ==
-
-👉 [Facebook Group](https://www.facebook.com/groups/userregistration)
-
-👉 [Twitter](https://twitter.com/user_register)
-
-👉 [Youtube](https://www.youtube.com/@UserRegistration)
-
-== Explore More Products from Our Team ==
-
-Love User Registration & Membership? Why not check out more WordPress themes & plugins from us?
-
-* [Masteriyo](https://masteriyo.com/) – A Powerful & Easy WordPress LMS Plugin.
-
-* [Everest Forms](https://everestforms.net/) – The Best Form Builder Plugin for WordPress.
-
-* [BlockArt Blocks](https://wordpress.org/plugins/blockart-blocks/) – Free Gutenberg Custom Blocks Plugin.
-
-* [Magazine Blocks](https://wpblockart.com/magazine-blocks/) – Gutenberg Blocks Plugin to Build Magazine-style Sites.
-
-* [Zakra](https://zakratheme.com/) – Best WordPress Multipurpose Theme Powering 60K+ Websites.
-
-* [ThemeGrill](https://themegrill.com/wordpress-themes/free/) – Beautiful Free WordPress Themes for Every Niche.
 
 == Frequently Asked Questions ==
 
-= Do I need to have coding skills to use the User Registration and Membership Plugin? =
+= Is User Registration & Membership only for custom registration forms?
+No. User Registration & Membership is a full membership plugin. Registration and login are part of the system, but the core focus is managing memberships, payments, and content access from one place.
 
-No, you don't need any coding skills. One can simply drag and drop fields, arrange them and use built-in shortcodes to display the form.
+= Can I create memberships using the free plan?
+Yes. The free version of User Registration and Membership lets you create functional membership plans with payment support and content restriction. Paid plans add advanced features like recurring subscriptions, additional gateways, and automation.
 
-= Does the plugin work with any WordPress themes?
+= How long does it take to set up a membership site with URM?
+Most sites can set up a working membership flow in under 30 minutes. This includes creating a membership plan, setting up registration, and restricting content.
 
-Yes, the plugin is designed to work with any themes that have been coded following WordPress guidelines.
+= Who is User Registration & Membership built for?
+User Registration and Membership is designed for site owners running paid memberships, gated content, online communities, client portals, and course-based sites on WordPress.
 
-= How can admin access registered users data?
+= How do payments work for memberships?
+URM supports payments through Stripe, PayPal, and bank transfer, with additional gateways available in Pro. Payments stay connected to membership access, renewals, and upgrades automatically.
 
-All the users registered via the registration forms and their data can be accessed from the Users menu in the WordPress Dashboard.
+= Can I connect memberships with third-party marketing tools?
+Yes. User Registration & Membership integrates with popular email marketing services, including Mailchimp, MailerLite, ActiveCampaign, and Klaviyo.  
 
-= Can a user edit their profile informaton after registration?
-
-Yes, a registered user can access their profile details via the account page. One can create an [account profile page](https://docs.wpuserregistration.com/registration-form-and-login-form/how-to-show-account-profile/) for their user using the shortcode available.
-
-= Does the plugin come with a login form as well?
-
-Yes, the plugin has a shortcode for the login form.
-
-= Can I add custom fields to my registration forms?
-
-Yes, our form builder allows you to effortlessly add and arrange custom fields in your forms.
-
-= Is the User Registration and Membership plugin compatible with my version of WordPress?
-
-User Registration is updated regularly to ensure compatibility with the latest versions of WordPress. Please check the `Requires at least` and `Tested up to` fields in our `readme.txt` file to see if it's compatible with your version.
+Connect with thousands more services through Zapier. 
 
 = What should I do if User Registration and Membership is having problems?
 
@@ -257,6 +266,19 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 5.1.1    - 02/2/2026 =
+* Fix      - Empty migrated rules showing up when toggling enabled/disabled state.
+* Fix      - Disabled content rules still being applied.
+* Fix      - Menu restriction blocking all website links.
+* Fix      - Getting country value while rendering form fields.
+* Fix      - My account CSS conflict with WooCommerce integration.
+* Fix      - Payment module hidden from the module area.
+* Fix      - File upload submission issue in my account page.
+* Fix      - Registration page not setting issue in advanced registration setup flow.
+* Fix      - Select 2 field design issue.
+* Fix      - Customize My account endpoint ordering issue.
+* Fix      - Google sheets integration not saving.
 
 = 5.1.0    - 26/01/2026 =
 * Feature  - Buy now button block.
