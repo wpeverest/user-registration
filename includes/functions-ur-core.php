@@ -1541,7 +1541,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 				),
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'internal-page' ),
 				'tip'               => __( 'Decide where users go after completing registration.', 'user-registration' ),
-				'default_value'     => 'internal-page',
+				'default_value'     => ur_default_redirect_page ? 'internal-page' : 'no-redirection',
 				'custom_attributes' => array(),
 				'product'           => 'user-registration/user-registration.php',
 			),
