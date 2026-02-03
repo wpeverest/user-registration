@@ -1955,43 +1955,39 @@
 }
 
 .tippy-content {
-  width: 235px;
+  width: 280px;
+}
+.tippy-content .ur-feature__btn {
+  margin-top: 12px;
 }
 
-.ur-membership-sync-to-email-marketing-addons.upgradable-type .user-registration-toggle-form {
+.upgradable-type .user-registration-toggle-form {
   position: relative;
-  display: flex;
+  display: flex !important;
   gap: 10px;
 }
-.ur-membership-sync-to-email-marketing-addons.upgradable-type .user-registration-toggle-form .ur-premium-pro img {
-  width: 18px;
-  height: 18px;
+
+.ur-membership-sync-to-email-marketing-addons.upgradable-type label {
+  opacity: 0.7;
 }
 .ur-membership-sync-to-email-marketing-addons.upgradable-type .user-registration-toggle-form .slider {
   cursor: default !important;
   opacity: 0.5;
 }
 
-#ur-membership-main-fields .upgradable-type,
-#upgrade-settings-container .upgradable-type {
-  position: relative;
-  color: #bababa;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  flex-direction: row-reverse;
+.ur-premium-pro img {
+  width: 18px;
+  height: 18px;
 }
-#ur-membership-main-fields .upgradable-type .ur-membership-type-title,
-#ur-membership-main-fields .upgradable-type label,
-#ur-membership-main-fields .upgradable-type .ur-membership-type-description,
-#upgrade-settings-container .upgradable-type .ur-membership-type-title,
-#upgrade-settings-container .upgradable-type label,
-#upgrade-settings-container .upgradable-type .ur-membership-type-description {
-  opacity: 0.7;
+
+.upgradable-type label {
+  opacity: 0.7 !important;
 }
-#ur-membership-main-fields .upgradable-type::before,
-#upgrade-settings-container .upgradable-type::before {
+
+.ur-membership-types.upgradable-type, .ur-membership-upgrade-types.upgradable-type {
+  flex-direction: row-reverse !important;
+}
+.ur-membership-types.upgradable-type::before, .ur-membership-upgrade-types.upgradable-type::before {
   opacity: 1;
   content: "";
   background-image: url("../../../images/icons/ur-pro-icon.png");
@@ -2003,6 +1999,24 @@
   width: 18px;
   height: 18px;
   margin-left: auto;
+}
+
+#ur-membership-main-fields .upgradable-type,
+#upgrade-settings-container .upgradable-type {
+  position: relative;
+  color: #bababa;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+#ur-membership-main-fields .upgradable-type .ur-membership-type-title,
+#ur-membership-main-fields .upgradable-type label,
+#ur-membership-main-fields .upgradable-type .ur-membership-type-description,
+#upgrade-settings-container .upgradable-type .ur-membership-type-title,
+#upgrade-settings-container .upgradable-type label,
+#upgrade-settings-container .upgradable-type .ur-membership-type-description {
+  opacity: 0.7;
 }
 
 .urmg-loader {

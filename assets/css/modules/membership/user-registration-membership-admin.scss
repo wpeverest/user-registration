@@ -2020,22 +2020,29 @@
 }
 
 .tippy-content {
-	width: 235px;
+	width: 280px;
+
+	.ur-feature__btn {
+		margin-top: 12px;
+	}
+}
+
+.upgradable-type {
+	.user-registration-toggle-form {
+		position: relative;
+		display: flex !important;
+		gap: 10px;
+	}
 }
 
 .ur-membership-sync-to-email-marketing-addons {
 	&.upgradable-type {
-		.user-registration-toggle-form {
-			position: relative;
-			display: flex;
-			gap: 10px;
 
-			.ur-premium-pro {
-				img {
-					width: 18px;
-					height: 18px;
-				}
-			}
+		label {
+			opacity: 0.7;
+		}
+
+		.user-registration-toggle-form {
 
 			.slider {
 				cursor: default !important;
@@ -2043,6 +2050,39 @@
 			}
 		}
 
+	}
+}
+
+.ur-premium-pro {
+	img {
+		width: 18px;
+		height: 18px;
+	}
+}
+
+.upgradable-type {
+	label {
+		opacity: 0.7 !important;
+	}
+}
+
+.ur-membership-types, .ur-membership-upgrade-types {
+	&.upgradable-type {
+		flex-direction: row-reverse !important;
+
+		&::before {
+			opacity: 1;
+			content: "";
+			background-image: url("../../../images/icons/ur-pro-icon.png");
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: 100%;
+			display: block;
+			border-radius: $border_radius_2;
+			width: 18px;
+			height: 18px;
+			margin-left: auto;
+		}
 	}
 }
 
@@ -2054,28 +2094,11 @@
 	align-items: center;
 	justify-content: flex-end;
 	gap: 12px;
-	flex-direction: row-reverse;
 
 	.ur-membership-type-title,
 	label,
 	.ur-membership-type-description {
 		opacity: 0.7;
-	}
-
-	&::before {
-		opacity: 1;
-		content: "";
-		background-image: url("../../../images/icons/ur-pro-icon.png");
-		background-repeat: no-repeat;
-		background-position: center;
-		background-size: 100%;
-		// position: absolute;
-		// right: $spacing_12px;
-		display: block;
-		border-radius: $border_radius_2;
-		width: 18px;
-		height: 18px;
-		margin-left: auto;
 	}
 }
 

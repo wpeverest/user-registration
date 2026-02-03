@@ -1,8 +1,5 @@
 <?php
 
-use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
-use WPEverest\URMembership\Admin\Services\MembershipService;
-
 $return_url = admin_url( 'admin.php?page=user-registration-membership&action=list_groups' );
 
 $membership_group_service = new WPEverest\URMembership\Admin\Services\UpgradeMembershipService();
@@ -168,18 +165,16 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 								</div>
 							</div>
 						</div>
-						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px" >
+						<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3 <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>" style="gap:20px" >
 							<div class="ur-label" style="width: 62%;">
-								<span class="<?php echo UR_PRO_ACTIVE && urm_check_if_plus_and_above_plan() ? '' : 'upgradable-type'; ?>">
 									<label class="ur-membership-group-enable-multiple-memberships"
 										for="ur-membership-group-multiple-memberships">
 										<?php esc_html_e( 'Allow multiple memberships', 'user-registration' ); ?>
 										<span class="user-registration-help-tip tooltipstered"
 										data-tip="<?php echo esc_attr__( 'When enabled, users can hold multiple memberships from this group simultaneously.' ); ?>"></span>
 									</label>
-								</span>
 							</div>
-							<div class="ur-toggle-section m1-auto" style="width:100%">
+							<div class="ur-toggle-section m1-auto " style="width:100%">
 								<span class="user-registration-toggle-form">
 									<input
 									data-key-name="Allow multiple memberships"
@@ -191,6 +186,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 									<?php echo UR_PRO_ACTIVE && urm_check_if_plus_and_above_plan() ? '' : 'disabled'; ?>
 									>
 									<span class="slider round"></span>
+									<?php ur_render_premium_feature_gate();?>
 								</span>
 							</div>
 						</div>
@@ -198,15 +194,13 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 						$upgrade_style = ( ! isset( $membership_group['mode'] ) || ( isset( $membership_group['mode'] ) && ( empty( $membership_group['mode'] ) || 'upgrade' === $membership_group['mode'] ) ) ) ? '' : 'display:none;';
 						?>
 						<div class="ur-membership-enable-upgrade-container" style="<?php echo esc_attr( $upgrade_style ); ?>">
-							<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3" style="gap:20px">
+							<div class="ur-membership-input-container ur-d-flex ur-p-1 ur-mt-3  <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?>" style="gap:20px">
 								<div class="ur-label" style="width: 62%;">
-									<span class="<?php echo UR_PRO_ACTIVE && urm_check_if_plus_and_above_plan() ? '' : 'upgradable-type'; ?>">
 										<label class="ur-membership-group-enable-upgrade"
 												for="ur-membership-group-upgrade"><?php esc_html_e( 'Upgrade action', 'user-registration' ); ?>
 											<span class="user-registration-help-tip tooltipstered"
 													data-tip="<?php echo esc_attr__( 'Enable automatic upgrade paths between memberships in this group.' ); ?>"></span>
 										</label>
-									</span>
 								</div>
 								<div class="ur-toggle-section m1-auto" style="width:100%">
 									<span class="user-registration-toggle-form">
@@ -220,6 +214,7 @@ if ( ! empty( $membership_group['post_content'] ) ) {
 											<?php echo UR_PRO_ACTIVE && urm_check_if_plus_and_above_plan() ? '' : 'disabled'; ?>
 											>
 										<span class="slider round"></span>
+										<?php ur_render_premium_feature_gate(); ?>
 									</span>
 								</div>
 							</div>
