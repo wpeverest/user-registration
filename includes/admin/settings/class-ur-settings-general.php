@@ -114,17 +114,17 @@ if ( ! class_exists( 'UR_Settings_General' ) ) {
 									'css'      => '',
 									'desc_tip' => true,
 								),
-								array(
-									'title'    => __( 'Thank You Page', 'user-registration' ),
-									'desc'     => sprintf( __( 'Confirmation page shown after successful registration or membership purchase. Use it to welcome new members and provide next steps. Add the Thank You block or [%s] shortcode to this page.', 'user-registration' ), apply_filters( 'user_registration_membership_thank_you_shortcode_tag', 'user_registration_membership_thank_you' ) ),
-									//phpcs:ignore
-									'id'       => 'user_registration_thank_you_page_id',
-									'type'     => 'single_select_page',
-									'default'  => '',
-									'class'    => 'ur-enhanced-select-nostd',
-									'css'      => '',
-									'desc_tip' => true,
-								),
+							//                              array(
+							//                                  'title'    => __( 'Thank You Page', 'user-registration' ),
+							//                                  'desc'     => sprintf( __( 'Confirmation page shown after successful registration or membership purchase. Use it to welcome new members and provide next steps. Add the Thank You block or [%s] shortcode to this page.', 'user-registration' ), apply_filters( 'user_registration_membership_thank_you_shortcode_tag', 'user_registration_membership_thank_you' ) ),
+//									//phpcs:ignore
+//									'id'       => 'user_registration_thank_you_page_id',
+							//                                  'type'     => 'single_select_page',
+							//                                  'default'  => '',
+							//                                  'class'    => 'ur-enhanced-select-nostd',
+							//                                  'css'      => '',
+							//                                  'desc_tip' => true,
+							//                              ),
 							),
 						),
 					),
