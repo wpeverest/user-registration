@@ -106,9 +106,10 @@ class MembersService {
 	 */
 	public function prepare_members_data( $data, $context = 'admin' ) {
 		if ( 'frontend' === $context ) {
-			$membership    = new MembershipService();
-			$membership_id = isset( $data['membership'] ) ? absint( $data['membership'] ) : 0;
-			$data          = $membership->get_data( $membership_id );
+			$membership    		= new MembershipService();
+			$membership_id	 	= isset( $data['membership'] ) ? absint( $data['membership'] ) : 0;
+			$membership_details = $membership->get_membership_details( $membership_id );
+			$data['role']       = isset( $membership_details['role'] ) ? sanitize_text_field( $membership_details['role'] ) : 'subscriber';
 		}
 
 		$response         = array();

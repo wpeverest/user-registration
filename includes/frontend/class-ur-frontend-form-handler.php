@@ -330,7 +330,7 @@ class UR_Frontend_Form_Handler {
 		$current_language = isset( $_POST['registration_language'] ) ? ur_clean( $_POST['registration_language'] ) : $current_language; //phpcs:ignore.
 		update_user_meta( $user_id, 'ur_registered_language', $current_language );
 		$login_option   = ur_get_user_login_option( $user_id );
-		error_log( print_r( $_POST, true ) );
+
 		if( !empty( $_POST['membership_type'] ) ) {
 			update_user_meta( $user_id, 'urm_user_just_created', 'yes' );
 		}
