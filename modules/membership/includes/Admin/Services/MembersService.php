@@ -106,10 +106,8 @@ class MembersService {
 	 */
 	public function prepare_members_data( $data, $context = 'admin' ) {
 		if ( 'frontend' === $context ) {
-			$membership    		= new MembershipService();
-			$membership_id	 	= isset( $data['membership'] ) ? absint( $data['membership'] ) : 0;
-			$membership_details = $membership->get_membership_details( $membership_id );
-			$data['role']       = isset( $membership_details['role'] ) ? sanitize_text_field( $membership_details['role'] ) : 'subscriber';
+			$membership_detail  = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
+			$data['role']       = isset( $membership_detail['role'] ) ? sanitize_text_field( $membership_detail['role'] ) : 'subscriber';
 		}
 
 		$response         = array();
@@ -146,7 +144,7 @@ class MembersService {
 			'user_status'   => isset( $data['member_status'] ) ? absint( $data['member_status'] ) : 1,
 		);
 
-		if ( isset( $data['membership'] ) ) {
+		if ( ! empty( $data['membership'] ) ) {
 			$membership_details          = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
 			$membership_meta             = json_decode( $membership_details['meta_value'], true );
 			$response['role']            = isset( $membership_meta['role'] ) ? sanitize_text_field( $membership_meta['role'] ) : $response['role'];
