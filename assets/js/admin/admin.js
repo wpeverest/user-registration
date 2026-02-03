@@ -1318,11 +1318,11 @@ jQuery(function ($) {
 					$(
 						"#user_registration_form_setting_redirect_after_field"
 					).hide();
-					if (
-						user_registration_form_builder_data.form_has_membership_field
-					) {
-						show_membership_redirection_notice(form_row);
-					}
+					// if (
+					// 	user_registration_form_builder_data.form_has_membership_field
+					// ) {
+					// 	show_membership_redirection_notice(form_row);
+					// }
 					break;
 				case "previous-page":
 					$(
