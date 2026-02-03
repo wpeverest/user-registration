@@ -2,6 +2,7 @@
 
 namespace WPEverest\URMembership\Admin\Services;
 
+use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 
 class MembersService {
@@ -103,7 +104,13 @@ class MembersService {
 	 *
 	 * @return array
 	 */
-	public function prepare_members_data( $data ) {
+	public function prepare_members_data( $data, $context = 'admin' ) {
+		if ( 'frontend' === $context ) {
+			$membership    = new MembershipService();
+			$membership_id = isset( $data['membership'] ) ? absint( $data['membership'] ) : 0;
+			$data          = $membership->get_data( $membership_id );
+		}
+
 		$response         = array();
 		$response['role'] = isset( $data['role'] ) ? sanitize_text_field( $data['role'] ) : 'subscriber';
 
