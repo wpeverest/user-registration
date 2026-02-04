@@ -242,27 +242,24 @@ class MembersService {
 			$is_just_created = get_user_meta( $user_id, 'urm_user_just_created', true );
 		}
 
-		if ( ! empty( $is_just_created ) ) {
-			delete_user_meta( $user_id, 'urm_user_just_created' );
-			$remember = apply_filters( 'user_registration_autologin_remember_user', false );
-			$user = get_userdata( $user_id );
-			$user_email = $user->user_email;
-
-			$creds = array(
-				'user_login'    => $user_email,
-				'user_password' => $password,
-				'remember'      => $remember,
-			);
-
-			$user = wp_signon( $creds );
-
-			if ( is_wp_error( $user ) ) {
-				return false;
-			}
-			
-			return true;
-		} else {
+		if ( empty( $is_just_created ) || empty( $password ) ) {
 			return false;
 		}
+
+		$user = get_user_by( 'ID', $user_id );
+		if ( ! $user ) {
+			return false;
+		}
+
+		if ( ! wp_check_password( $password, $user->user_pass, $user_id ) ) {
+			return false;
+		}
+
+			delete_user_meta( $user_id, 'urm_user_just_created' );
+			wp_clear_auth_cookie();
+			$remember = apply_filters( 'user_registration_autologin_remember_user', false );
+			wp_set_auth_cookie( $user_id, $remember );
+			
+		return true;
 	}
 }
