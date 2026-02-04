@@ -113,7 +113,7 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 		global $wpdb;
 
 		if ( ! is_array( $ids ) ) {
-			return [];
+			$ids = explode( ',', $ids );
 		}
 
 		$ids = array_filter( array_map( 'absint', $ids ) );
