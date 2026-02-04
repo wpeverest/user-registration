@@ -247,8 +247,7 @@ class AJAX {
 
 			if ( ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $form_response['auto_login'] && 'free' == $data['payment_method'] ) {
 				$members_service = new MembersService();
-				$password        = isset( $data['password'] ) ? $data['password'] : '';
-				$logged_in       = $members_service->login_member( $member_id, true, $password );
+				$logged_in       = $members_service->login_member( $member_id, true );
 				if ( ! $logged_in ) {
 					wp_send_json_error(
 						array(
@@ -1103,12 +1102,9 @@ class AJAX {
 			}
 
 			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-			$data = apply_filters( 'user_registration_membership_before_register_member', isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() );
-
 			if ( ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $payment_status !== 'failed' ) {
 				$members_service = new MembersService();
-				$password        = isset( $data['password'] ) ? $data['password'] : '';
-				$logged_in       = $members_service->login_member( $member_id, true, $password );
+				$logged_in       = $members_service->login_member( $member_id, true );
 				if ( ! $logged_in ) {
 					wp_send_json_error(
 						array(
@@ -1317,8 +1313,6 @@ class AJAX {
 		$form_response       = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 		$stripe_subscription = $stripe_service->create_subscription( $customer_id, $payment_method_id, $member_id, $is_upgrading, $team_id );
 
-		$data = apply_filters( 'user_registration_membership_before_register_member', isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() );
-
 		if ( $stripe_subscription['status'] ) {
 			$subscription_status = isset( $stripe_subscription['subscription']->status )
 				? $stripe_subscription['subscription']->status
@@ -1328,8 +1322,7 @@ class AJAX {
 
 			if ( $subscription_is_active && ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $form_response['auto_login'] ) {
 				$members_service = new MembersService();
-				$password        = isset( $data['password'] ) ? $data['password'] : '';
-				$logged_in       = $members_service->login_member( $member_id, true, $password );
+				$logged_in       = $members_service->login_member( $member_id, true );
 				if ( ! $logged_in ) {
 					wp_send_json_error(
 						array(
@@ -2757,6 +2750,16 @@ class AJAX {
 	 * Fetch upgrade path for selected memberships in the group.
 	 */
 	public static function fetch_upgrade_path() {
+		ur_membership_verify_nonce( 'ur_membership_group' ); // nonce verification.
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Sorry, You do not have permission to set upgrade path.', 'user-registration' ),
+				)
+			);
+		}
+
 		if ( empty( $_POST['membership_ids'] ) ) {
 			wp_send_json_error(
 				array(
@@ -2765,9 +2768,9 @@ class AJAX {
 			);
 		}
 		$membership_upgrade_service = new UpgradeMembershipService();
-		$memberships                = isset( $_POST['membership_ids'] ) ? $_POST['membership_ids'] : '';
+		$membership_ids                = isset( $_POST['membership_ids'] ) ? $_POST['membership_ids'] : '';
 
-		if ( empty( $memberships ) ) {
+		if ( empty( $membership_ids ) ) {
 			return wp_send_json_error(
 				array(
 					'message' => __( 'Please select memberships.', 'user-registration' ),
@@ -2775,10 +2778,10 @@ class AJAX {
 			);
 
 		}
-		$memberships           = implode( ',', $memberships );
+		$membership_ids = array_filter( array_map( 'absint', $membership_ids ) );
 		$membership_repository = new MembershipRepository();
 
-		$memberships = $membership_repository->get_multiple_membership_by_ID( $memberships, false );
+		$memberships = $membership_repository->get_multiple_membership_by_ID( $membership_ids, false );
 
 		$upgrade_paths = $membership_upgrade_service->fetch_upgrade_paths( $memberships, 'manual' );
 
