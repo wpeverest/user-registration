@@ -2750,6 +2750,7 @@ class AJAX {
 	 * Fetch upgrade path for selected memberships in the group.
 	 */
 	public static function fetch_upgrade_path() {
+		ur_membership_verify_nonce( 'ur_membership_group' ); // nonce verification.
 		if ( empty( $_POST['membership_ids'] ) ) {
 			wp_send_json_error(
 				array(
