@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - master
+            - UR-4112-fix/critical-vul
         workflow_dispatch:
 jobs:
     sync:
