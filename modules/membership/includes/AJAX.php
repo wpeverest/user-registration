@@ -2751,6 +2751,15 @@ class AJAX {
 	 */
 	public static function fetch_upgrade_path() {
 		ur_membership_verify_nonce( 'ur_membership_group' ); // nonce verification.
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Sorry, You do not have permission to set upgrade path.', 'user-registration' ),
+				)
+			);
+		}
+
 		if ( empty( $_POST['membership_ids'] ) ) {
 			wp_send_json_error(
 				array(
