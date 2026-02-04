@@ -443,6 +443,8 @@ class PaypalService {
 		}
 
 		$login_option = ur_get_user_login_option( $member_id );
+		$data = apply_filters( 'user_registration_membership_before_register_member', isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() );
+
 		if ( 'auto_login' === $login_option ) {
 			$member_service = new MembersService();
 			$password        = isset( $data['password'] ) ? $data['password'] : '';

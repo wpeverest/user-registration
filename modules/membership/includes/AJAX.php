@@ -247,7 +247,8 @@ class AJAX {
 
 			if ( ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $form_response['auto_login'] && 'free' == $data['payment_method'] ) {
 				$members_service = new MembersService();
-				$logged_in       = $members_service->login_member( $member_id, true );
+				$password        = isset( $data['password'] ) ? $data['password'] : '';
+				$logged_in       = $members_service->login_member( $member_id, true, $password );
 				if ( ! $logged_in ) {
 					wp_send_json_error(
 						array(
@@ -1102,9 +1103,12 @@ class AJAX {
 			}
 
 			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
+			$data = apply_filters( 'user_registration_membership_before_register_member', isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() );
+
 			if ( ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $payment_status !== 'failed' ) {
 				$members_service = new MembersService();
-				$logged_in       = $members_service->login_member( $member_id, true );
+				$password        = isset( $data['password'] ) ? $data['password'] : '';
+				$logged_in       = $members_service->login_member( $member_id, true, $password );
 				if ( ! $logged_in ) {
 					wp_send_json_error(
 						array(
@@ -1320,9 +1324,12 @@ class AJAX {
 
 			$subscription_is_active = in_array( $subscription_status, array( 'active', 'trialing' ), true );
 
+			$data = apply_filters( 'user_registration_membership_before_register_member', isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() );
+
 			if ( $subscription_is_active && ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $form_response['auto_login'] ) {
 				$members_service = new MembersService();
-				$logged_in       = $members_service->login_member( $member_id, true );
+				$password        = isset( $data['password'] ) ? $data['password'] : '';
+				$logged_in       = $members_service->login_member( $member_id, true, $password );
 				if ( ! $logged_in ) {
 					wp_send_json_error(
 						array(
