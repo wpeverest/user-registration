@@ -459,6 +459,28 @@ class StripeService {
 			'status' => true,
 		);
 
+			$stripe_settings = self::get_stripe_settings();
+
+			if ( empty( $stripe_settings['secret_key'] ) ) {
+				$response['status']  = false;
+				$response['message'] = __( 'Stripe secret key is not configured.', 'user-registration' );
+
+				return $response;
+			}
+
+			\Stripe\Stripe::setApiKey( $stripe_settings['secret_key'] );
+
+			$pi_id = sanitize_text_field( ! empty( $data['payment_result']['paymentIntent']['id'] ) ? $data['payment_result']['paymentIntent']['id'] : '' );
+
+			$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
+
+			if ( $intent->status !== 'succeeded' ) {
+				$response['status']  = false;
+				$response['message'] = __( 'Payment not completed.', 'user-registration' );
+
+				return $response;
+			}
+
 		$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
 
 		if ( empty( $latest_order ) ) {
