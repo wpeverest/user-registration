@@ -3402,7 +3402,7 @@ if ( ! function_exists( 'ur_size_to_limit_length_migration_script' ) ) {
 	}
 }
 
-//add_action( 'user_registration_init', 'ur_redirect_thank_you_page_migration_script' );
+add_action( 'user_registration_init', 'ur_redirect_thank_you_page_migration_script' );
 
 if ( ! function_exists( 'ur_redirect_thank_you_page_migration_script' ) ) {
 
