@@ -332,7 +332,7 @@ class UR_Frontend_Form_Handler {
 		$login_option   = ur_get_user_login_option( $user_id );
 
 		if( !empty( $_POST['membership_type'] ) ) {
-			update_user_meta( $user_id, 'urm_user_just_created', time() );
+			update_user_meta( $user_id, 'urm_user_just_created', time() + 900 );
 		}
 	}
 }

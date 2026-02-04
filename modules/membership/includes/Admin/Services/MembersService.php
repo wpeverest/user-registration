@@ -237,12 +237,12 @@ class MembersService {
 	 * @return bool
 	 */
 	public function login_member( $user_id, $check_just_created ) {
-		$is_just_created = 'no';
+		$is_just_created = '';
 		if ( $check_just_created ) {
 			$is_just_created = get_user_meta( $user_id, 'urm_user_just_created', true );
 		}
 
-		if ( 'yes' === $is_just_created ) {
+		if ( ! empty( $is_just_created ) ) {
 			delete_user_meta( $user_id, 'urm_user_just_created' );
 			wp_clear_auth_cookie();
 			$remember = apply_filters( 'user_registration_autologin_remember_user', false );
