@@ -445,7 +445,8 @@ class PaypalService {
 		$login_option = ur_get_user_login_option( $member_id );
 		if ( 'auto_login' === $login_option ) {
 			$member_service = new MembersService();
-			$member_service->login_member( $member_id, true );
+			$password        = isset( $data['password'] ) ? $data['password'] : '';
+			$member_service->login_member( $member_id, true, $password );
 		}
 
 		update_user_meta( $member_id, 'urm_user_just_created', true );

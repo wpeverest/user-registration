@@ -236,7 +236,7 @@ class MembersService {
 	 *
 	 * @return bool
 	 */
-	public function login_member( $user_id, $check_just_created ) {
+	public function login_member( $user_id, $check_just_created, $password = '' ) {
 		$is_just_created = '';
 		if ( $check_just_created ) {
 			$is_just_created = get_user_meta( $user_id, 'urm_user_just_created', true );
@@ -244,10 +244,22 @@ class MembersService {
 
 		if ( ! empty( $is_just_created ) ) {
 			delete_user_meta( $user_id, 'urm_user_just_created' );
-			wp_clear_auth_cookie();
 			$remember = apply_filters( 'user_registration_autologin_remember_user', false );
-			wp_set_auth_cookie( $user_id, $remember );
+			$user = get_userdata( $user_id );
+			$user_email = $user->user_email;
 
+			$creds = array(
+				'user_login'    => $user_email,
+				'user_password' => $password,
+				'remember'      => $remember,
+			);
+
+			$user = wp_signon( $creds );
+
+			if ( is_wp_error( $user ) ) {
+				return false;
+			}
+			
 			return true;
 		} else {
 			return false;
