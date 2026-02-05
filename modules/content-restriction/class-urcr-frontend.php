@@ -51,22 +51,6 @@ class URCR_Frontend {
 	}
 
 	/**
-	 * Get all access rules with caching and recursion protection.
-	 *
-	 * @return array List of access rule posts.
-	 */
-	private function get_all_access_rules() {
-		global $wpdb;
-		return $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s",
-				'urcr_access_rule',
-				'publish'
-			)
-		);
-	}
-
-	/**
 	 * Disable Elementor element caching to ensure dynamic content works
 	 */
 	public function disable_elementor_element_cache() {
@@ -75,6 +59,7 @@ class URCR_Frontend {
 			\Elementor\Plugin::$instance->files_manager->clear_cache();
 		}
 	}
+
 	/**
 	 * Perform content restriction task.
 	 */
@@ -111,6 +96,359 @@ class URCR_Frontend {
 	}
 
 	/**
+	 * Perform basic restriction task for blogs.
+	 */
+	public function basic_restrictions_templates( $template, $post ) {
+		if ( is_super_admin() ) {
+			return $template;
+		}
+		if ( is_object( $post ) ) {
+			$post_id = absint( $post->ID );
+		} elseif ( is_array( $post ) && isset( $post['ID'] ) ) {
+			$post_id = absint( $post['ID'] );
+		} else {
+			// Handle other cases where $post doesn't contain the expected data structure.
+			$post_id = 0; // Or assign a default value as needed.
+		}
+
+		// Check shop page and get it's page id.
+		if ( function_exists( 'is_shop' ) ) {
+			$post_id = is_shop() ? wc_get_page_id( 'shop' ) : $post_id;
+		}
+
+		// Check if this page should be excluded from restriction
+		if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
+			return $template;
+		}
+
+		$allowed_roles       = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
+		$allowed_memberships = get_option( 'user_registration_content_restriction_allow_to_memberships' );
+
+		$current_user_role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
+
+		$get_meta_data_roles = get_post_meta( $post_id, 'urcr_meta_roles', $single = true );
+
+		$get_meta_data_allow_to = get_post_meta( $post_id, 'urcr_allow_to', $single = true );
+
+		$get_meta_data_checkbox = get_post_meta( $post_id, 'urcr_meta_checkbox', $single = true );
+
+		$override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', $single = true );
+
+		$is_membership_active         = ur_check_module_activation( 'membership' );
+		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
+
+		if ( $whole_site_access_restricted || $get_meta_data_checkbox ) {
+
+			if ( ! ur_string_to_bool( $override_global_settings ) ) {
+				if ( '0' == get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) {
+					if ( ! is_user_logged_in() ) {
+						$template = $this->urcr_restrict_contents_template( $template, $post );
+					}
+				} elseif ( '1' == get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
+					if ( is_array( $allowed_roles ) && in_array( $current_user_role, $allowed_roles ) ) {
+						return $template;
+					}
+					$template = $this->urcr_restrict_contents_template( $template, $post );
+
+				} elseif ( '2' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
+					if ( is_user_logged_in() ) {
+						$template = $this->urcr_restrict_contents_template( $template, $post );
+					}
+				} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
+					if ( $is_membership_active && is_array( $allowed_memberships ) && urm_check_user_membership_has_access( $allowed_memberships ) ) {
+						return $template;
+					}
+					$template = $this->urcr_restrict_contents_template( $template, $post );
+				}
+			} elseif ( $get_meta_data_allow_to == '0' ) {
+
+				if ( ! is_user_logged_in() ) {
+					$template = $this->urcr_restrict_contents_template( $template, $post );
+				}
+			} elseif ( $get_meta_data_allow_to == '1' ) {
+				if ( isset( $get_meta_data_roles ) && ! empty( $get_meta_data_roles ) ) {
+					if ( is_array( $get_meta_data_roles ) && in_array( $current_user_role, $get_meta_data_roles ) ) {
+						return $template;
+					}
+					$template = $this->urcr_restrict_contents_template( $template, $post );
+				}
+			} elseif ( $get_meta_data_allow_to === '2' ) {
+				if ( is_user_logged_in() ) {
+					$template = $this->urcr_restrict_contents_template( $template, $post );
+				}
+			} elseif ( $get_meta_data_allow_to === '3' ) {
+				if ( $is_membership_active && is_array( $allowed_memberships ) && urm_check_user_membership_has_access( $allowed_memberships ) ) {
+					return $template;
+				}
+				return $this->urcr_restrict_contents_template( $template, $post );
+			}
+		} elseif ( $get_meta_data_checkbox ) {
+			$this->basic_restrictions();
+		}
+		return $template;
+	}
+
+	/**
+	 * Basic Restriction Message Template
+	 *
+	 * @since 4.0
+	 *
+	 * @param  mixed $template Post Template.
+	 * @param  mixed $post Post. d
+	 */
+	public function urcr_restrict_contents_template( $template, $post ) {
+		$message = $this->message();
+
+		$this->urcr_apply_restriction_template_to_post( $post, $message );
+
+		// Return the original template so theme header/footer are preserved
+		return $template;
+	}
+
+	/**
+	 * Get content restriction message.
+	 *
+	 * @return string Content restriction message.
+	 */
+	public function message() {
+
+		$message = get_option( 'user_registration_content_restriction_message' );
+
+		if ( false === $message || empty( $message ) ) {
+			if ( class_exists( 'URCR_Admin_Assets' ) ) {
+				$message = URCR_Admin_Assets::get_default_message();
+			} else {
+				$message = '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
+<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
+<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
+<p>{{sign_up}} {{log_in}}</p>';
+			}
+		}
+
+		$message = apply_filters( 'user_registration_process_smart_tags', $message );
+
+		return '<span class="urcr-restrict-msg">' . $message . '</span>';
+	}
+
+	private function urcr_apply_restriction_template_to_post( $post, $message ) {
+		$login_page_id        = get_option( 'user_registration_login_page_id' );
+		$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
+
+		$login_url  = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
+		$signup_url = $registration_page_id ? get_permalink( $registration_page_id ) : ( $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url() );
+
+		if ( ! $registration_page_id ) {
+			$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
+			if ( $default_form_page_id ) {
+				$signup_url = get_permalink( $default_form_page_id );
+			}
+		}
+
+		// Check if this is a whole site restriction
+		$is_whole_site_restriction    = false;
+		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
+
+		if ( $whole_site_access_restricted ) {
+			$is_whole_site_restriction = true;
+		} else {
+			$access_rule_posts = get_posts(
+				array(
+					'numberposts' => -1,
+					'post_status' => 'publish',
+					'post_type'   => 'urcr_access_rule',
+				)
+			);
+
+			foreach ( $access_rule_posts as $access_rule_post ) {
+				$access_rule = json_decode( $access_rule_post->post_content, true );
+				if ( ur_string_to_bool( $access_rule['enabled'] ) && ! empty( $access_rule['target_contents'] ) ) {
+					$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
+					if ( in_array( 'whole_site', $types, true ) ) {
+						$is_whole_site_restriction = true;
+						break;
+					}
+				}
+			}
+		}
+
+		if ( $is_whole_site_restriction ) {
+			add_filter(
+				'body_class',
+				function ( $classes ) {
+					$classes[] = 'urcr-hide-page-title';
+					return $classes;
+				}
+			);
+		}
+
+		// Use base template to generate styled content
+		ob_start();
+		urcr_get_template(
+			'base-restriction-template.php',
+			array(
+				'message'    => $message,
+				'login_url'  => $login_url,
+				'signup_url' => $signup_url,
+			)
+		);
+		$styled_content = ob_get_clean();
+
+		if ( is_object( $post ) && isset( $post->ID ) ) {
+			$post->post_content = $styled_content;
+
+			// Add filter for elementor content.
+			add_filter(
+				'elementor/frontend/the_content',
+				function () use ( $styled_content ) {
+					if ( ! urcr_is_elementor_content_restricted() ) {
+						urcr_set_elementor_content_restricted();
+						return $styled_content;
+					}
+					return '';
+				}
+			);
+		}
+	}
+
+	/**
+	 * Perform content restriction task.
+	 */
+	public function basic_restrictions() {
+		global $post;
+		if ( is_super_admin() ) {
+			return;
+		}
+		$post_id = isset( $post->ID ) ? absint( $post->ID ) : 0;
+
+		// Check shop page and get it's page id.
+		if ( function_exists( 'is_shop' ) ) {
+			$post_id = is_shop() ? wc_get_page_id( 'shop' ) : $post_id;
+		}
+
+		// Check if this page should be excluded from restriction
+		if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
+			return;
+		}
+		$allowed_memberships = get_option( 'user_registration_content_restriction_allow_to_memberships' );
+
+		$allowed_roles = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
+
+		$current_user_role = is_user_logged_in() && ! empty( wp_get_current_user()->roles ) ? wp_get_current_user()->roles[0] : '';
+
+		$get_meta_data_roles = get_post_meta( $post_id, 'urcr_meta_roles', $single = true );
+
+		$get_meta_data_allow_to = get_post_meta( $post_id, 'urcr_allow_to', $single = true );
+
+		$override_global_settings  = get_post_meta( $post_id, 'urcr_meta_override_global_settings', $single = true );
+		$is_membership_active      = ur_check_module_activation( 'membership' );
+		$get_meta_data_memberships = get_post_meta( $post_id, 'urcr_meta_memberships', $single = true );
+
+		if ( ! ur_string_to_bool( $override_global_settings ) ) {
+			if ( '0' == get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) {
+
+				if ( ! is_user_logged_in() ) {
+					$this->urcr_apply_basic_restriction_template();
+				}
+				return $post;
+			} elseif ( '1' == get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
+				if ( is_array( $allowed_roles ) && in_array( $current_user_role, $allowed_roles ) ) {
+					return;
+				}
+				$this->urcr_apply_basic_restriction_template();
+			} elseif ( '2' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
+				if ( is_user_logged_in() ) {
+					$this->urcr_apply_basic_restriction_template();
+				}
+				return $post;
+			} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
+				if ( $is_membership_active && is_array( $allowed_memberships ) && urm_check_user_membership_has_access( $allowed_memberships ) ) {
+					return;
+				}
+				$this->urcr_apply_basic_restriction_template();
+			}
+		} elseif ( $get_meta_data_allow_to == '0' ) {
+			if ( ! is_user_logged_in() ) {
+				$this->urcr_apply_basic_restriction_template();
+			}
+			return $post;
+		} elseif ( $get_meta_data_allow_to == '1' ) {
+			if ( isset( $get_meta_data_roles ) && ! empty( $get_meta_data_roles ) ) {
+				if ( is_array( $get_meta_data_roles ) && in_array( $current_user_role, $get_meta_data_roles ) ) {
+					return;
+				}
+				$this->urcr_apply_basic_restriction_template();
+			}
+		} elseif ( $get_meta_data_allow_to === '2' ) {
+			if ( is_user_logged_in() ) {
+				$this->urcr_apply_basic_restriction_template();
+			}
+
+			return $post;
+		} elseif ( $get_meta_data_allow_to === '3' ) {
+			if ( $is_membership_active && is_array( $get_meta_data_memberships ) && urm_check_user_membership_has_access( $get_meta_data_memberships ) ) {
+				return $post;
+			}
+			$this->urcr_apply_basic_restriction_template();
+		}
+	}
+
+	/**
+	 * Apply basic restriction using base template (similar to urcr_apply_content_restriction).
+	 */
+	private function urcr_apply_basic_restriction_template() {
+		global $post;
+
+		// Check if this is a product page.
+		if ( get_post_type() == 'product' ) {
+			$this->restrict_products();
+		}
+
+		// Get message
+		$restricted_message      = get_post_meta( $post->ID, 'urcr_meta_content', true );
+		$override_global_message = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', true );
+		$message                 = ! empty( $restricted_message ) && $override_global_message ? wp_kses_post( $restricted_message ) : get_option( 'user_registration_content_restriction_message', '' );
+		$message                 = ( false === $message || empty( $message ) ) ? esc_html__( 'This content is restricted!', 'user-registration' ) : $message;
+		$message                 = apply_filters( 'user_registration_process_smart_tags', $message );
+		if ( function_exists( 'apply_shortcodes' ) ) {
+			$message = apply_shortcodes( $message );
+		} else {
+			$message = do_shortcode( $message );
+		}
+
+		$this->urcr_apply_restriction_template_to_post( $post, $message );
+	}
+
+	/**
+	 * Add and remove actions for WooCommerce pages and posts.
+	 *
+	 * @return void
+	 */
+	public function restrict_products() {
+
+		// Add restritction notice on products page.
+		add_action( 'woocommerce_after_single_product', array( $this, 'products_restriction_message' ), 10, 1 );
+
+		// Remove all actions before shop contents.
+		remove_all_actions( 'woocommerce_archive_description' );
+		remove_all_actions( 'woocommerce_before_shop_loop' );
+		remove_all_actions( 'woocommerce_before_shop_loop_item_title' );
+		remove_all_actions( 'woocommerce_before_shop_loop_item' );
+
+		// Add restriction notice on shop page.
+		add_action( 'woocommerce_before_shop_loop', array( $this, 'products_restriction_message' ), 10, 1 );
+
+		// Remove all actions after shop contents.
+		remove_all_actions( 'woocommerce_shop_loop_item_title' );
+		remove_all_actions( 'woocommerce_after_shop_loop_item_title' );
+		remove_all_actions( 'woocommerce_after_shop_loop_item' );
+
+		// Remove all
+		remove_all_actions( 'woocommerce_before_single_product_summary' );
+		remove_all_actions( 'woocommerce_single_product_summary' );
+		remove_all_actions( 'woocommerce_after_single_product_summary' );
+	}
+
+	/**
 	 * Check option is restriction enabled then show global message.
 	 *
 	 * @param mixed $element Section Element.
@@ -121,6 +459,7 @@ class URCR_Frontend {
 			echo '[urcr_restrict]';
 		}
 	}
+
 	/**
 	 * Check option is restriction enabled then show global message.
 	 *
@@ -133,6 +472,7 @@ class URCR_Frontend {
 			echo do_shortcode( $content_ur );
 		}
 	}
+
 	/**
 	 * Access Rule for whole site restriction.
 	 *
@@ -292,6 +632,68 @@ class URCR_Frontend {
 	}
 
 	/**
+	 * Get all access rules with caching and recursion protection.
+	 *
+	 * @return array List of access rule posts.
+	 */
+	private function get_all_access_rules() {
+		global $wpdb;
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s",
+				'urcr_access_rule',
+				'publish'
+			)
+		);
+	}
+
+	/**
+	 * Check access with Access Rules.
+	 */
+	public function check_access_with_access_rules() {
+		global $wp_query;
+		$access_rule_posts = $this->get_all_access_rules();
+
+		$posts           = $wp_query->posts;
+		$posts_length    = empty( $posts ) ? 0 : count( $posts );
+		$is_access_given = false;
+
+		foreach ( $access_rule_posts as $access_rule_post ) {
+			$access_rule = json_decode( $access_rule_post->post_content, true );
+
+			// Verify if required params are available.
+			if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
+				continue;
+			}
+			// Check if the logic map data is in array format.
+			if ( ! is_array( $access_rule['logic_map'] ) ) {
+				continue;
+			}
+			// Validate against empty variables.
+			if ( empty( $access_rule['logic_map']['conditions'] ) || empty( $access_rule['logic_map']['conditions'] ) ) {
+				continue;
+			}
+
+			if ( urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule ) ) {
+				for ( $i = 0; $i < $posts_length; $i++ ) {
+					$post      = $posts[ $i ];
+					$is_target = urcr_is_target_post( $access_rule['target_contents'], $post );
+
+					if ( true === $is_target ) {
+						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
+						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
+
+						if ( $should_allow_access && 'access' === $access_control ) {
+							$is_access_given = true;
+						}
+					}
+				}
+			}
+		}
+		return $is_access_given;
+	}
+
+	/**
 	 * Restrict Woocommerce Product Post_type
 	 *
 	 * @param mixed $template Template.
@@ -331,6 +733,101 @@ class URCR_Frontend {
 					return $template;
 				}
 				$template = $this->basic_restrictions_templates( $template, $posts );
+			}
+		}
+		return $template;
+	}
+
+	/**
+	 * Access Rules for woocommerce content restriction.
+	 *
+	 * @param mixed $template Template.
+	 * @param mixed $post Post Data.
+	 */
+	public function advanced_restriction_wc_with_access_rule( $template, $post ) {
+		if ( is_super_admin() ) {
+			return $template;
+		}
+
+		// Get post ID from post object
+		$post_id = null;
+		if ( is_object( $post ) && isset( $post->ID ) ) {
+			$post_id = absint( $post->ID );
+		} elseif ( is_array( $post ) && isset( $post['ID'] ) ) {
+			$post_id = absint( $post['ID'] );
+		}
+
+		$access_rule_posts         = $this->get_all_access_rules();
+		$is_whole_site_restriction = false;
+
+		foreach ( $access_rule_posts as $access_rule_post ) {
+			$access_rule = json_decode( $access_rule_post->post_content, true );
+
+			if ( ! $access_rule['enabled'] ) {
+				continue;
+			}
+			// Verify if required params are available.
+			if ( ! empty( $access_rule['target_contents'] ) ) {
+				$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
+				if ( in_array( 'whole_site', $types, true ) ) {
+					$is_whole_site_restriction = true;
+				}
+			}
+		}
+
+		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
+
+		// Check if this page should be excluded from whole site restriction
+		if ( ! empty( $post_id ) && function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
+			// If whole site restriction is active (via access rules or old option), skip restriction for excluded pages
+			if ( $is_whole_site_restriction || $whole_site_access_restricted ) {
+				return $template;
+			}
+		}
+
+		if ( ! $is_whole_site_restriction ) {
+			foreach ( $access_rule_posts as $access_rule_post ) {
+				$access_rule = json_decode( $access_rule_post->post_content, true );
+
+				// Verify if required params are available.
+				if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
+					continue;
+				}
+
+				// Check if the logic map data is in array format.
+				if ( ! is_array( $access_rule['logic_map'] ) ) {
+					continue;
+				}
+
+				// Validate against empty variables.
+				if ( empty( $access_rule['logic_map']['conditions'] ) || empty( $access_rule['logic_map']['conditions'] ) ) {
+					continue;
+				}
+
+				if ( urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule ) ) {
+					$is_target = urcr_is_target_post( $access_rule['target_contents'], $post );
+
+					if ( true === $is_target ) {
+						// Check if this page should be excluded from restriction
+						if ( ! empty( $post_id ) && function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
+							continue;
+						}
+
+						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
+						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
+						if ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
+							do_action( 'urcr_pre_content_restriction_applied', $access_rule, $post );
+
+							// Use urcr_apply_content_restriction to update post content instead of template
+							$is_applied = urcr_apply_content_restriction( $access_rule['actions'], $post );
+
+							do_action( 'urcr_post_content_restriction_applied', $access_rule, $post );
+
+							// Return the original template so normal theme structure is used
+							return $template;
+						}
+					}
+				}
 			}
 		}
 		return $template;
@@ -442,100 +939,6 @@ class URCR_Frontend {
 	}
 
 	/**
-	 * Access Rules for woocommerce content restriction.
-	 *
-	 * @param mixed $template Template.
-	 * @param mixed $post Post Data.
-	 */
-	public function advanced_restriction_wc_with_access_rule( $template, $post ) {
-		if ( is_super_admin() ) {
-			return $template;
-		}
-
-		// Get post ID from post object
-		$post_id = null;
-		if ( is_object( $post ) && isset( $post->ID ) ) {
-			$post_id = absint( $post->ID );
-		} elseif ( is_array( $post ) && isset( $post['ID'] ) ) {
-			$post_id = absint( $post['ID'] );
-		}
-
-		$access_rule_posts         = $this->get_all_access_rules();
-		$is_whole_site_restriction = false;
-
-		foreach ( $access_rule_posts as $access_rule_post ) {
-			$access_rule = json_decode( $access_rule_post->post_content, true );
-
-			if ( ! $access_rule['enabled'] ) {
-				continue;
-			}
-			// Verify if required params are available.
-			if ( ! empty( $access_rule['target_contents'] ) ) {
-				$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
-				if ( in_array( 'whole_site', $types, true ) ) {
-					$is_whole_site_restriction = true;
-				}
-			}
-		}
-
-		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
-
-		// Check if this page should be excluded from whole site restriction
-		if ( ! empty( $post_id ) && function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
-			// If whole site restriction is active (via access rules or old option), skip restriction for excluded pages
-			if ( $is_whole_site_restriction || $whole_site_access_restricted ) {
-				return $template;
-			}
-		}
-
-		if ( ! $is_whole_site_restriction ) {
-			foreach ( $access_rule_posts as $access_rule_post ) {
-				$access_rule = json_decode( $access_rule_post->post_content, true );
-
-				// Verify if required params are available.
-				if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
-					continue;
-				}
-
-				// Check if the logic map data is in array format.
-				if ( ! is_array( $access_rule['logic_map'] ) ) {
-					continue;
-				}
-
-				// Validate against empty variables.
-				if ( empty( $access_rule['logic_map']['conditions'] ) || empty( $access_rule['logic_map']['conditions'] ) ) {
-					continue;
-				}
-
-				if ( urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule ) ) {
-					$is_target = urcr_is_target_post( $access_rule['target_contents'], $post );
-
-					if ( true === $is_target ) {
-						// Check if this page should be excluded from restriction
-						if ( ! empty( $post_id ) && function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
-							continue;
-						}
-
-						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
-						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
-						if ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
-							do_action( 'urcr_pre_content_restriction_applied', $access_rule, $post );
-
-							// Use urcr_apply_content_restriction to update post content instead of template
-							$is_applied = urcr_apply_content_restriction( $access_rule['actions'], $post );
-
-							do_action( 'urcr_post_content_restriction_applied', $access_rule, $post );
-
-							// Return the original template so normal theme structure is used
-							return $template;
-						}
-					}
-				}
-			}
-		}
-		return $template;
-	}
-	/**
 	 * Restrict the WooCommerce Product Query by excluding a specific product category.
 	 *
 	 * @param WP_Query $q The WP_Query object.
@@ -642,6 +1045,7 @@ class URCR_Frontend {
 		}
 		$q->set( 'tax_query', $tax_query );
 	}
+
 	/**
 	 * Restrict the WooCommerce Product Visibility
 	 *
@@ -667,24 +1071,6 @@ class URCR_Frontend {
 	}
 
 	/**
-	 * Restrict the ability to purchase WooCommerce Product
-	 *
-	 * @param bool       $ret
-	 * @param WC_Product $product
-	 *
-	 * @access  public
-	 * @since  4.0
-	 * @return  bool
-	 */
-	public function is_wc_purchasable( $ret, $product ) {
-		if ( ! $ret ) {
-			return $ret;
-		}
-
-		return $this->ur_user_can_purchase_woocommerce_product( $product->get_id() );
-	}
-
-	/**
 	 * Determines whether or not a user is allowed to view a WooCommerce product.
 	 *
 	 * @param int $product_id ID of the WooCommerce product.
@@ -693,7 +1079,7 @@ class URCR_Frontend {
 	 * @return bool
 	 */
 	public function ur_user_can_view_woocommerce_product( $product_id ) {
-		$can_view                    = true;
+		$can_view = true;
 		if ( is_super_admin() ) {
 			return $can_view;
 		}
@@ -718,133 +1104,6 @@ class URCR_Frontend {
 		return $can_view;
 	}
 
-	/**
-	 * Determines whether or not a user is allowed to purchase a WooCommerce product.
-	 *
-	 * @param int $product_id ID of the WooCommerce product.
-	 *
-	 * @since 4.0
-	 * @return bool
-	 */
-	public function ur_user_can_purchase_woocommerce_product( $product_id ) {
-		$can_purchase                = true;
-		if ( is_super_admin() ) {
-			return $can_purchase;
-		}
-		$content_restriction_enabled = ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) );
-
-		if ( ! $content_restriction_enabled ) {
-			return $can_purchase;
-		}
-
-		if ( null !== $product_id ) {
-			$urcr_meta_override_global_settings = get_post_meta( $product_id, 'urcr_meta_override_global_settings', true );
-
-			if ( ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
-				$can_purchase = $this->wc_advanced_restriction_with_access_rule( $product_id );
-
-				return $can_purchase;
-			}
-
-			$can_purchase = $this->ur_basic_wc_product_restriction( $product_id );
-		}
-
-		return $can_purchase;
-	}
-
-	/**
-	 * Basic WooCommerce Product Restriction.
-	 *
-	 * @since 4.0
-	 */
-	public function ur_basic_wc_product_restriction( $product_id ) {
-		if ( is_super_admin() ) {
-			return true;
-		}
-		$allowed_roles = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
-
-		$current_user_role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
-
-		$get_meta_data_roles = get_post_meta( $product_id, 'urcr_meta_roles', $single = true );
-
-		$get_meta_data_allow_to = get_post_meta( $product_id, 'urcr_allow_to', $single = true );
-
-		$get_meta_data_checkbox = get_post_meta( $product_id, 'urcr_meta_checkbox', $single = true );
-
-		$taxonomies = get_post_taxonomies( $product_id );
-
-		$terms = array();
-
-		foreach ( $taxonomies as $taxonomy ) {
-			$term = wp_get_object_terms( $product_id, $taxonomy );
-			if ( ! is_wp_error( $term ) && ! empty( $term ) ) {
-				$term_ids             = wp_list_pluck( $term, 'term_id' );
-				$terms[ $product_id ] = $term_ids;
-			}
-		}
-
-		$args = array(
-			'post_type' => 'product',
-		);
-
-		$products = wp_list_pluck( get_posts( $args ), 'ID' );
-
-		$product_terms = array();
-
-		foreach ( $products as $product ) {
-			$product_taxonomies = get_post_taxonomies( $product );
-			foreach ( $product_taxonomies  as $taxonomy ) {
-				$product_term = wp_get_object_terms( $product, $taxonomy );
-				if ( ! is_wp_error( $product_term ) && ! empty( $product_term ) ) {
-					$term_ids                  = wp_list_pluck( $product_term, 'term_id' );
-					$product_terms[ $product ] = $term_ids;
-				}
-			}
-		}
-
-		$override_global_settings = get_post_meta( $product_id, 'urcr_meta_override_global_settings', $single = true );
-
-		if ( ur_string_to_bool( $get_meta_data_checkbox ) ) {
-
-			if ( ur_string_to_bool( $override_global_settings ) ) {
-				if ( '0' == $get_meta_data_allow_to ) {
-					if ( is_user_logged_in() ) {
-						return $result = $this->compareTaxonomy( $product_terms, $terms );
-					}
-				} elseif ( '1' === $get_meta_data_allow_to ) {
-					if ( is_array( $allowed_roles ) && in_array( $current_user_role, $get_meta_data_roles ) ) {
-						return $result = $this->compareTaxonomy( $product_terms, $terms );
-					}
-				} elseif ( '2' === $get_meta_data_allow_to ) {
-					if ( ! is_user_logged_in() ) {
-						return $result = $this->compareTaxonomy( $product_terms, $terms );
-					}
-				}
-			}
-		} else {
-			return true;
-		}
-	}
-
-	public function compareTaxonomy( $array1, $array2 ) {
-		$result = array();
-
-		foreach ( $array1 as $key => $value ) {
-			if ( array_key_exists( $key, $array2 ) ) {
-				if ( is_array( $value ) && is_array( $array2[ $key ] ) ) {
-					$nestedResult = $this->compareTaxonomy( $value, $array2[ $key ] );
-
-					if ( ! empty( $nestedResult ) ) {
-						$result[ $key ] = $nestedResult;
-					}
-				} elseif ( $value === $array2[ $key ] ) {
-					$result[ $key ] = $value;
-				}
-			}
-		}
-
-		return $result;
-	}
 	/**
 	 * Basic WooCommerce Product Restriction.
 	 *
@@ -943,6 +1202,153 @@ class URCR_Frontend {
 		}
 		return $can_view_purchase;
 	}
+
+	/**
+	 * Basic WooCommerce Product Restriction.
+	 *
+	 * @since 4.0
+	 */
+	public function ur_basic_wc_product_restriction( $product_id ) {
+		if ( is_super_admin() ) {
+			return true;
+		}
+		$allowed_roles = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
+
+		$current_user_role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
+
+		$get_meta_data_roles = get_post_meta( $product_id, 'urcr_meta_roles', $single = true );
+
+		$get_meta_data_allow_to = get_post_meta( $product_id, 'urcr_allow_to', $single = true );
+
+		$get_meta_data_checkbox = get_post_meta( $product_id, 'urcr_meta_checkbox', $single = true );
+
+		$taxonomies = get_post_taxonomies( $product_id );
+
+		$terms = array();
+
+		foreach ( $taxonomies as $taxonomy ) {
+			$term = wp_get_object_terms( $product_id, $taxonomy );
+			if ( ! is_wp_error( $term ) && ! empty( $term ) ) {
+				$term_ids             = wp_list_pluck( $term, 'term_id' );
+				$terms[ $product_id ] = $term_ids;
+			}
+		}
+
+		$args = array(
+			'post_type' => 'product',
+		);
+
+		$products = wp_list_pluck( get_posts( $args ), 'ID' );
+
+		$product_terms = array();
+
+		foreach ( $products as $product ) {
+			$product_taxonomies = get_post_taxonomies( $product );
+			foreach ( $product_taxonomies  as $taxonomy ) {
+				$product_term = wp_get_object_terms( $product, $taxonomy );
+				if ( ! is_wp_error( $product_term ) && ! empty( $product_term ) ) {
+					$term_ids                  = wp_list_pluck( $product_term, 'term_id' );
+					$product_terms[ $product ] = $term_ids;
+				}
+			}
+		}
+
+		$override_global_settings = get_post_meta( $product_id, 'urcr_meta_override_global_settings', $single = true );
+
+		if ( ur_string_to_bool( $get_meta_data_checkbox ) ) {
+
+			if ( ur_string_to_bool( $override_global_settings ) ) {
+				if ( '0' == $get_meta_data_allow_to ) {
+					if ( is_user_logged_in() ) {
+						return $result = $this->compareTaxonomy( $product_terms, $terms );
+					}
+				} elseif ( '1' === $get_meta_data_allow_to ) {
+					if ( is_array( $allowed_roles ) && in_array( $current_user_role, $get_meta_data_roles ) ) {
+						return $result = $this->compareTaxonomy( $product_terms, $terms );
+					}
+				} elseif ( '2' === $get_meta_data_allow_to ) {
+					if ( ! is_user_logged_in() ) {
+						return $result = $this->compareTaxonomy( $product_terms, $terms );
+					}
+				}
+			}
+		} else {
+			return true;
+		}
+	}
+
+	public function compareTaxonomy( $array1, $array2 ) {
+		$result = array();
+
+		foreach ( $array1 as $key => $value ) {
+			if ( array_key_exists( $key, $array2 ) ) {
+				if ( is_array( $value ) && is_array( $array2[ $key ] ) ) {
+					$nestedResult = $this->compareTaxonomy( $value, $array2[ $key ] );
+
+					if ( ! empty( $nestedResult ) ) {
+						$result[ $key ] = $nestedResult;
+					}
+				} elseif ( $value === $array2[ $key ] ) {
+					$result[ $key ] = $value;
+				}
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Restrict the ability to purchase WooCommerce Product
+	 *
+	 * @param bool       $ret
+	 * @param WC_Product $product
+	 *
+	 * @access  public
+	 * @since  4.0
+	 * @return  bool
+	 */
+	public function is_wc_purchasable( $ret, $product ) {
+		if ( ! $ret ) {
+			return $ret;
+		}
+
+		return $this->ur_user_can_purchase_woocommerce_product( $product->get_id() );
+	}
+
+	/**
+	 * Determines whether or not a user is allowed to purchase a WooCommerce product.
+	 *
+	 * @param int $product_id ID of the WooCommerce product.
+	 *
+	 * @since 4.0
+	 * @return bool
+	 */
+	public function ur_user_can_purchase_woocommerce_product( $product_id ) {
+		$can_purchase = true;
+		if ( is_super_admin() ) {
+			return $can_purchase;
+		}
+		$content_restriction_enabled = ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) );
+
+		if ( ! $content_restriction_enabled ) {
+			return $can_purchase;
+		}
+
+		if ( null !== $product_id ) {
+			$urcr_meta_override_global_settings = get_post_meta( $product_id, 'urcr_meta_override_global_settings', true );
+
+			if ( ! ur_string_to_bool( $urcr_meta_override_global_settings ) ) {
+				$can_purchase = $this->wc_advanced_restriction_with_access_rule( $product_id );
+
+				return $can_purchase;
+			}
+
+			$can_purchase = $this->ur_basic_wc_product_restriction( $product_id );
+		}
+
+		return $can_purchase;
+	}
+
 	/**
 	 * Perform content restriction task.
 	 */
@@ -1055,351 +1461,6 @@ class URCR_Frontend {
 		return $is_restriction_applied;
 	}
 
-	/**
-	 * Check access with Access Rules.
-	 */
-	public function check_access_with_access_rules() {
-		global $wp_query;
-		$access_rule_posts = $this->get_all_access_rules();
-
-		$posts           = $wp_query->posts;
-		$posts_length    = empty( $posts ) ? 0 : count( $posts );
-		$is_access_given = false;
-
-		foreach ( $access_rule_posts as $access_rule_post ) {
-			$access_rule = json_decode( $access_rule_post->post_content, true );
-
-			// Verify if required params are available.
-			if ( empty( $access_rule['logic_map'] ) || empty( $access_rule['target_contents'] ) || empty( $access_rule['actions'] ) ) {
-				continue;
-			}
-			// Check if the logic map data is in array format.
-			if ( ! is_array( $access_rule['logic_map'] ) ) {
-				continue;
-			}
-			// Validate against empty variables.
-			if ( empty( $access_rule['logic_map']['conditions'] ) || empty( $access_rule['logic_map']['conditions'] ) ) {
-				continue;
-			}
-
-			if ( urcr_is_access_rule_enabled( $access_rule ) && urcr_is_action_specified( $access_rule ) ) {
-				for ( $i = 0; $i < $posts_length; $i++ ) {
-					$post      = $posts[ $i ];
-					$is_target = urcr_is_target_post( $access_rule['target_contents'], $post );
-
-					if ( true === $is_target ) {
-						$should_allow_access = urcr_is_allow_access( $access_rule['logic_map'], $post );
-						$access_control      = isset( $access_rule['actions'][0]['access_control'] ) && ! empty( $access_rule['actions'][0]['access_control'] ) ? $access_rule['actions'][0]['access_control'] : 'access';
-
-						if ( $should_allow_access && 'access' === $access_control ) {
-							$is_access_given = true;
-						}
-					}
-				}
-			}
-		}
-		return $is_access_given;
-	}
-
-	/**
-	 * Perform basic restriction task for blogs.
-	 */
-	public function basic_restrictions_templates( $template, $post ) {
-		if ( is_super_admin() ) {
-			return $template;
-		}
-		if ( is_object( $post ) ) {
-			$post_id = absint( $post->ID );
-		} elseif ( is_array( $post ) && isset( $post['ID'] ) ) {
-			$post_id = absint( $post['ID'] );
-		} else {
-			// Handle other cases where $post doesn't contain the expected data structure.
-			$post_id = 0; // Or assign a default value as needed.
-		}
-
-		// Check shop page and get it's page id.
-		if ( function_exists( 'is_shop' ) ) {
-			$post_id = is_shop() ? wc_get_page_id( 'shop' ) : $post_id;
-		}
-
-		// Check if this page should be excluded from restriction
-		if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
-			return $template;
-		}
-
-		$allowed_roles       = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
-		$allowed_memberships = get_option( 'user_registration_content_restriction_allow_to_memberships' );
-
-		$current_user_role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
-
-		$get_meta_data_roles = get_post_meta( $post_id, 'urcr_meta_roles', $single = true );
-
-		$get_meta_data_allow_to = get_post_meta( $post_id, 'urcr_allow_to', $single = true );
-
-		$get_meta_data_checkbox = get_post_meta( $post_id, 'urcr_meta_checkbox', $single = true );
-
-		$override_global_settings = get_post_meta( $post_id, 'urcr_meta_override_global_settings', $single = true );
-
-		$is_membership_active         = ur_check_module_activation( 'membership' );
-		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
-
-		if ( $whole_site_access_restricted || $get_meta_data_checkbox ) {
-
-			if ( ! ur_string_to_bool( $override_global_settings ) ) {
-				if ( '0' == get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) {
-					if ( ! is_user_logged_in() ) {
-						$template = $this->urcr_restrict_contents_template( $template, $post );
-					}
-				} elseif ( '1' == get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-					if ( is_array( $allowed_roles ) && in_array( $current_user_role, $allowed_roles ) ) {
-						return $template;
-					}
-					$template = $this->urcr_restrict_contents_template( $template, $post );
-
-				} elseif ( '2' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-					if ( is_user_logged_in() ) {
-						$template = $this->urcr_restrict_contents_template( $template, $post );
-					}
-				} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-					if ( $is_membership_active && is_array( $allowed_memberships ) && urm_check_user_membership_has_access( $allowed_memberships ) ) {
-						return $template;
-					}
-					$template = $this->urcr_restrict_contents_template( $template, $post );
-				}
-			} elseif ( $get_meta_data_allow_to == '0' ) {
-
-				if ( ! is_user_logged_in() ) {
-					$template = $this->urcr_restrict_contents_template( $template, $post );
-				}
-			} elseif ( $get_meta_data_allow_to == '1' ) {
-				if ( isset( $get_meta_data_roles ) && ! empty( $get_meta_data_roles ) ) {
-					if ( is_array( $get_meta_data_roles ) && in_array( $current_user_role, $get_meta_data_roles ) ) {
-						return $template;
-					}
-					$template = $this->urcr_restrict_contents_template( $template, $post );
-				}
-			} elseif ( $get_meta_data_allow_to === '2' ) {
-				if ( is_user_logged_in() ) {
-					$template = $this->urcr_restrict_contents_template( $template, $post );
-				}
-			} elseif ( $get_meta_data_allow_to === '3' ) {
-				if ( $is_membership_active && is_array( $allowed_memberships ) && urm_check_user_membership_has_access( $allowed_memberships ) ) {
-					return $template;
-				}
-				return $this->urcr_restrict_contents_template( $template, $post );
-			}
-		} elseif ( $get_meta_data_checkbox ) {
-			$this->basic_restrictions();
-		}
-		return $template;
-	}
-
-
-	/**
-	 * Perform content restriction task.
-	 */
-	public function basic_restrictions() {
-		global $post;
-		if ( is_super_admin() ) {
-			return;
-		}
-		$post_id = isset( $post->ID ) ? absint( $post->ID ) : 0;
-
-		// Check shop page and get it's page id.
-		if ( function_exists( 'is_shop' ) ) {
-			$post_id = is_shop() ? wc_get_page_id( 'shop' ) : $post_id;
-		}
-
-		// Check if this page should be excluded from restriction
-		if ( function_exists( 'urcr_is_page_excluded' ) && urcr_is_page_excluded( $post_id ) ) {
-			return;
-		}
-		$allowed_memberships = get_option( 'user_registration_content_restriction_allow_to_memberships' );
-
-		$allowed_roles = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
-
-		$current_user_role = is_user_logged_in() && ! empty( wp_get_current_user()->roles ) ? wp_get_current_user()->roles[0] : '';
-
-		$get_meta_data_roles = get_post_meta( $post_id, 'urcr_meta_roles', $single = true );
-
-		$get_meta_data_allow_to = get_post_meta( $post_id, 'urcr_allow_to', $single = true );
-
-		$override_global_settings  = get_post_meta( $post_id, 'urcr_meta_override_global_settings', $single = true );
-		$is_membership_active      = ur_check_module_activation( 'membership' );
-		$get_meta_data_memberships = get_post_meta( $post_id, 'urcr_meta_memberships', $single = true );
-
-		if ( ! ur_string_to_bool( $override_global_settings ) ) {
-			if ( '0' == get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) {
-
-				if ( ! is_user_logged_in() ) {
-					$this->urcr_apply_basic_restriction_template();
-				}
-				return $post;
-			} elseif ( '1' == get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-				if ( is_array( $allowed_roles ) && in_array( $current_user_role, $allowed_roles ) ) {
-					return;
-				}
-				$this->urcr_apply_basic_restriction_template();
-			} elseif ( '2' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-				if ( is_user_logged_in() ) {
-					$this->urcr_apply_basic_restriction_template();
-				}
-				return $post;
-			} elseif ( '3' === get_option( 'user_registration_content_restriction_allow_access_to' ) ) {
-				if ( $is_membership_active && is_array( $allowed_memberships ) && urm_check_user_membership_has_access( $allowed_memberships ) ) {
-					return;
-				}
-				$this->urcr_apply_basic_restriction_template();
-			}
-		} elseif ( $get_meta_data_allow_to == '0' ) {
-			if ( ! is_user_logged_in() ) {
-				$this->urcr_apply_basic_restriction_template();
-			}
-			return $post;
-		} elseif ( $get_meta_data_allow_to == '1' ) {
-			if ( isset( $get_meta_data_roles ) && ! empty( $get_meta_data_roles ) ) {
-				if ( is_array( $get_meta_data_roles ) && in_array( $current_user_role, $get_meta_data_roles ) ) {
-					return;
-				}
-				$this->urcr_apply_basic_restriction_template();
-			}
-		} elseif ( $get_meta_data_allow_to === '2' ) {
-			if ( is_user_logged_in() ) {
-				$this->urcr_apply_basic_restriction_template();
-			}
-
-			return $post;
-		} elseif ( $get_meta_data_allow_to === '3' ) {
-			if ( $is_membership_active && is_array( $get_meta_data_memberships ) && urm_check_user_membership_has_access( $get_meta_data_memberships ) ) {
-				return $post;
-			}
-			$this->urcr_apply_basic_restriction_template();
-		}
-	}
-
-	/**
-	 * Apply basic restriction using base template (similar to urcr_apply_content_restriction).
-	 */
-	private function urcr_apply_basic_restriction_template() {
-		global $post;
-
-		// Check if this is a product page.
-		if ( get_post_type() == 'product' ) {
-			$this->restrict_products();
-		}
-
-		// Get message
-		$restricted_message      = get_post_meta( $post->ID, 'urcr_meta_content', true );
-		$override_global_message = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', true );
-		$message                 = ! empty( $restricted_message ) && $override_global_message ? wp_kses_post( $restricted_message ) : get_option( 'user_registration_content_restriction_message', '' );
-		$message                 = ( false === $message || empty( $message ) ) ? esc_html__( 'This content is restricted!', 'user-registration' ) : $message;
-		$message                 = apply_filters( 'user_registration_process_smart_tags', $message );
-		if ( function_exists( 'apply_shortcodes' ) ) {
-			$message = apply_shortcodes( $message );
-		} else {
-			$message = do_shortcode( $message );
-		}
-
-		$this->urcr_apply_restriction_template_to_post( $post, $message );
-	}
-
-	private function urcr_apply_restriction_template_to_post( $post, $message ) {
-		$login_page_id        = get_option( 'user_registration_login_page_id' );
-		$registration_page_id = get_option( 'user_registration_member_registration_page_id' );
-
-		$login_url  = $login_page_id ? get_permalink( $login_page_id ) : wp_login_url();
-		$signup_url = $registration_page_id ? get_permalink( $registration_page_id ) : ( $login_page_id ? get_permalink( $login_page_id ) : wp_registration_url() );
-
-		if ( ! $registration_page_id ) {
-			$default_form_page_id = get_option( 'user_registration_default_form_page_id' );
-			if ( $default_form_page_id ) {
-				$signup_url = get_permalink( $default_form_page_id );
-			}
-		}
-
-		// Check if this is a whole site restriction
-		$is_whole_site_restriction    = false;
-		$whole_site_access_restricted = ur_string_to_bool( get_option( 'user_registration_content_restriction_whole_site_access', false ) );
-
-		if ( $whole_site_access_restricted ) {
-			$is_whole_site_restriction = true;
-		} else {
-			$access_rule_posts = get_posts(
-				array(
-					'numberposts' => -1,
-					'post_status' => 'publish',
-					'post_type'   => 'urcr_access_rule',
-				)
-			);
-
-			foreach ( $access_rule_posts as $access_rule_post ) {
-				$access_rule = json_decode( $access_rule_post->post_content, true );
-				if ( ur_string_to_bool( $access_rule['enabled'] ) && ! empty( $access_rule['target_contents'] ) ) {
-					$types = wp_list_pluck( $access_rule['target_contents'], 'type' );
-					if ( in_array( 'whole_site', $types, true ) ) {
-						$is_whole_site_restriction = true;
-						break;
-					}
-				}
-			}
-		}
-
-		if ( $is_whole_site_restriction ) {
-			add_filter(
-				'body_class',
-				function ( $classes ) {
-					$classes[] = 'urcr-hide-page-title';
-					return $classes;
-				}
-			);
-		}
-
-		// Use base template to generate styled content
-		ob_start();
-		urcr_get_template(
-			'base-restriction-template.php',
-			array(
-				'message'    => $message,
-				'login_url'  => $login_url,
-				'signup_url' => $signup_url,
-			)
-		);
-		$styled_content = ob_get_clean();
-
-		if ( is_object( $post ) && isset( $post->ID ) ) {
-			$post->post_content = $styled_content;
-
-			// Add filter for elementor content.
-			add_filter(
-				'elementor/frontend/the_content',
-				function () use ( $styled_content ) {
-					if ( ! urcr_is_elementor_content_restricted() ) {
-						urcr_set_elementor_content_restricted();
-						return $styled_content;
-					}
-					return '';
-				}
-			);
-		}
-	}
-
-	/**
-	 * Basic Restriction Message Template
-	 *
-	 * @since 4.0
-	 *
-	 * @param  mixed $template Post Template.
-	 * @param  mixed $post Post. d
-	 */
-	public function urcr_restrict_contents_template( $template, $post ) {
-		$message = $this->message();
-
-		$this->urcr_apply_restriction_template_to_post( $post, $message );
-
-		// Return the original template so theme header/footer are preserved
-		return $template;
-	}
-
 	public function urcr_restrict_contents() {
 
 		global $post;
@@ -1467,61 +1528,6 @@ class URCR_Frontend {
 		if ( isset( $get_beaver_data ) && ! empty( $get_beaver_data ) ) {
 			remove_filter( 'the_content', 'FLBuilder::render_content' );
 		}
-	}
-
-	/**
-	 * Get content restriction message.
-	 *
-	 * @return string Content restriction message.
-	 */
-	public function message() {
-
-		$message = get_option( 'user_registration_content_restriction_message' );
-
-		if ( false === $message || empty( $message ) ) {
-			if ( class_exists( 'URCR_Admin_Assets' ) ) {
-				$message = URCR_Admin_Assets::get_default_message();
-			} else {
-				$message = '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
-<p>' . __( 'This content is available to members only.', 'user-registration' ) . '</p>
-<p>' . __( 'Sign up to unlock access or log in if you already have an account.', 'user-registration' ) . '</p>
-<p>{{sign_up}} {{log_in}}</p>';
-			}
-		}
-
-		$message = apply_filters( 'user_registration_process_smart_tags', $message );
-
-		return '<span class="urcr-restrict-msg">' . $message . '</span>';
-	}
-
-	/**
-	 * Add and remove actions for WooCommerce pages and posts.
-	 *
-	 * @return void
-	 */
-	public function restrict_products() {
-
-		// Add restritction notice on products page.
-		add_action( 'woocommerce_after_single_product', array( $this, 'products_restriction_message' ), 10, 1 );
-
-		// Remove all actions before shop contents.
-		remove_all_actions( 'woocommerce_archive_description' );
-		remove_all_actions( 'woocommerce_before_shop_loop' );
-		remove_all_actions( 'woocommerce_before_shop_loop_item_title' );
-		remove_all_actions( 'woocommerce_before_shop_loop_item' );
-
-		// Add restriction notice on shop page.
-		add_action( 'woocommerce_before_shop_loop', array( $this, 'products_restriction_message' ), 10, 1 );
-
-		// Remove all actions after shop contents.
-		remove_all_actions( 'woocommerce_shop_loop_item_title' );
-		remove_all_actions( 'woocommerce_after_shop_loop_item_title' );
-		remove_all_actions( 'woocommerce_after_shop_loop_item' );
-
-		// Remove all
-		remove_all_actions( 'woocommerce_before_single_product_summary' );
-		remove_all_actions( 'woocommerce_single_product_summary' );
-		remove_all_actions( 'woocommerce_after_single_product_summary' );
 	}
 
 	public function products_restriction_message() {
