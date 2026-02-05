@@ -1,13 +1,13 @@
-wpeverest/user-registration-pro@master:
-    - assets
-    - includes
-    - modules
-    - src
-    - templates
-    - .editorconfig
-    - .gitattributes
-    - .gitignore
-    - license.txt
-    - phpcs.xml
-    - uninstall.php
-    - wpml-config.xml
+wpeverest/user-registration-pro@UR-4132-admins-losing-access-when-whole-site-restriction-is-enabled:
+  - assets
+  - includes
+  - modules
+  - src
+  - templates
+  - .editorconfig
+  - .gitattributes
+  - .gitignore
+  - license.txt
+  - phpcs.xml
+  - uninstall.php
+  - wpml-config.xml
