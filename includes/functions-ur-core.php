@@ -412,6 +412,38 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 	}
 }
 
+if ( ! function_exists( 'ur_is_login_form_markup_rendered' ) ) {
+
+	/**
+	 * Check if the [user_registration_login] shortcode markup is present in the given or current content.
+	 *
+	 * Detects the actual rendered HTML (id="ur-frontend-form" and form class user-registration-form-login),
+	 * not just the shortcode string. Use this to know if the login form output is on the page.
+	 *
+	 * @param string $content Optional. HTML to check. If empty, uses current post content (processed by the_content).
+	 * @return bool True if the login form markup is present, false otherwise.
+	 */
+	function ur_is_login_form_markup_rendered( $content = '' ) {
+		if ( '' !== $content ) {
+			$html = $content;
+		} else {
+			if ( ! is_singular() && ! is_front_page() ) {
+				return false;
+			}
+			$post = get_post();
+			if ( ! $post || ! $post->post_content ) {
+				return false;
+			}
+			$html = apply_filters( 'the_content', $post->post_content );
+		}
+
+		$has_container = ( false !== strpos( $html, 'id="ur-frontend-form"' ) );
+		$has_login_form = ( false !== strpos( $html, 'user-registration-form-login' ) );
+
+		return $has_container && $has_login_form;
+	}
+}
+
 /**
  * Wrapper for ur_doing_it_wrong.
  *

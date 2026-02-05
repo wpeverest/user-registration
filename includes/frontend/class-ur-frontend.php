@@ -271,8 +271,6 @@ class UR_Frontend {
 		$matched        = 0;
 		$page_id        = 0;
 
-		error_log( print_r( $login_page, true ) );
-
 		if ( ( isset( $_POST['learndash-login-form'] ) || isset( $_POST['learndash-registration-form'] ) ) ) { //phpcs:ignore
 			return;
 		}
@@ -302,7 +300,23 @@ class UR_Frontend {
 				exit;
 			}
 
-			if ( 'register' === $action || 'login' === $action || 'lostpassword' === $action ) {
+			if ( 'register' === $action || 'lostpassword' === $action ) {
+				$myaccount_page = apply_filters( 'user_registration_myaccount_redirect_url', get_permalink( $page_id ), $page_id );
+				wp_safe_redirect( $myaccount_page );
+				exit;
+			} elseif ( 'login' === $action ) {
+				if ( function_exists( 'ur_is_login_form_markup_rendered' ) ) {
+					$target_post = get_post( $page_id );
+					if ( ! $target_post || empty( $target_post->post_content ) ) {
+						return;
+					}
+					$rendered_content = apply_filters( 'the_content', $target_post->post_content );
+
+					if ( ! ur_is_login_form_markup_rendered( $rendered_content ) ) {
+						return;
+					}
+				}
+
 				$myaccount_page = apply_filters( 'user_registration_myaccount_redirect_url', get_permalink( $page_id ), $page_id );
 				wp_safe_redirect( $myaccount_page );
 				exit;
