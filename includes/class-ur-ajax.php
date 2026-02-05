@@ -328,7 +328,7 @@ class UR_AJAX {
 				);
 			}
 
-			if ( is_admin() && isset( $_GET['page'] ) && 'user-registration-users' === $_GET['page'] && isset( $_GET['action'] ) && 'edit' === $_GET['action'] && ! empty( $pending_email ) ) {
+			if ( is_admin() && ! empty( $pending_email ) ) {
 				wp_update_user(
 					array(
 						'ID'         => $user_id,
