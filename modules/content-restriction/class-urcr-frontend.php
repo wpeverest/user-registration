@@ -271,8 +271,8 @@ class URCR_Frontend {
 					}
 				}
 
-				// If no rule granted access and we have a restriction rule, apply it
-				if ( null !== $restriction_rule ) {
+				// If no rule granted access and we have a restriction rule, apply it (unless user can bypass)
+				if ( null !== $restriction_rule && ! is_super_admin() ) {
 					do_action( 'urcr_pre_content_restriction_applied', $restriction_rule, $post );
 
 					urcr_apply_content_restriction( $restriction_rule['actions'], $post );
@@ -282,7 +282,7 @@ class URCR_Frontend {
 			} else {
 				$access_given = $this->check_access_with_access_rules();
 
-				if ( false === $access_given && $whole_site_access_restricted ) {
+				if ( false === $access_given && $whole_site_access_restricted && ! is_super_admin() ) {
 					$template = $this->basic_restrictions_templates( $template, $post );
 				}
 			}
@@ -448,6 +448,10 @@ class URCR_Frontend {
 	 * @param mixed $post Post Data.
 	 */
 	public function advanced_restriction_wc_with_access_rule( $template, $post ) {
+		if ( is_super_admin() ) {
+			return $template;
+		}
+
 		// Get post ID from post object
 		$post_id = null;
 		if ( is_object( $post ) && isset( $post->ID ) ) {
@@ -538,6 +542,9 @@ class URCR_Frontend {
 	 * @return void
 	 */
 	public function urcr_woocommerce_product_query( $q ) {
+		if ( is_super_admin() ) {
+			return;
+		}
 		global $post;
 
 		if ( function_exists( 'is_shop' ) ) {
@@ -649,7 +656,9 @@ class URCR_Frontend {
 		if ( ! $ret ) {
 			return $ret;
 		}
-
+		if ( is_super_admin() ) {
+			return true;
+		}
 		if ( current_user_can( 'edit_post', $product_id ) ) {
 			return true;
 		}
@@ -685,6 +694,9 @@ class URCR_Frontend {
 	 */
 	public function ur_user_can_view_woocommerce_product( $product_id ) {
 		$can_view                    = true;
+		if ( is_super_admin() ) {
+			return $can_view;
+		}
 		$content_restriction_enabled = ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) );
 
 		if ( ! $content_restriction_enabled ) {
@@ -716,6 +728,9 @@ class URCR_Frontend {
 	 */
 	public function ur_user_can_purchase_woocommerce_product( $product_id ) {
 		$can_purchase                = true;
+		if ( is_super_admin() ) {
+			return $can_purchase;
+		}
 		$content_restriction_enabled = ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) );
 
 		if ( ! $content_restriction_enabled ) {
@@ -743,7 +758,9 @@ class URCR_Frontend {
 	 * @since 4.0
 	 */
 	public function ur_basic_wc_product_restriction( $product_id ) {
-
+		if ( is_super_admin() ) {
+			return true;
+		}
 		$allowed_roles = get_option( 'user_registration_content_restriction_allow_to_roles', 'administrator' );
 
 		$current_user_role = is_user_logged_in() ? wp_get_current_user()->roles[0] : '';
@@ -834,6 +851,9 @@ class URCR_Frontend {
 	 * @since 4.0
 	 */
 	function wc_advanced_restriction_with_access_rule( $product_id ) {
+		if ( is_super_admin() ) {
+			return true;
+		}
 		$can_view_purchase = true;
 		$access_rule_posts = $this->get_all_access_rules();
 
@@ -1013,7 +1033,7 @@ class URCR_Frontend {
 				continue;
 			}
 
-			if ( null !== $restriction_rule ) {
+			if ( null !== $restriction_rule && ! is_super_admin() ) {
 				do_action( 'urcr_pre_content_restriction_applied', $restriction_rule, $post );
 
 				$is_applied = urcr_apply_content_restriction( $restriction_rule['actions'], $post );
@@ -1085,6 +1105,9 @@ class URCR_Frontend {
 	 * Perform basic restriction task for blogs.
 	 */
 	public function basic_restrictions_templates( $template, $post ) {
+		if ( is_super_admin() ) {
+			return $template;
+		}
 		if ( is_object( $post ) ) {
 			$post_id = absint( $post->ID );
 		} elseif ( is_array( $post ) && isset( $post['ID'] ) ) {
@@ -1177,6 +1200,9 @@ class URCR_Frontend {
 	 */
 	public function basic_restrictions() {
 		global $post;
+		if ( is_super_admin() ) {
+			return;
+		}
 		$post_id = isset( $post->ID ) ? absint( $post->ID ) : 0;
 
 		// Check shop page and get it's page id.
