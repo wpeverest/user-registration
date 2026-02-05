@@ -481,6 +481,8 @@ class StripeService {
 				return $response;
 			}
 
+			$payment_status =  $intent->status;
+
 		$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
 
 		if ( empty( $latest_order ) ) {
