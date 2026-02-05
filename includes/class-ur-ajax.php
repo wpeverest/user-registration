@@ -300,7 +300,7 @@ class UR_AJAX {
 				'profile_pic_id' => $profile_pic_id,
 			);
 
-			if ( $email_updated ) {
+			if ( $email_updated && ! is_admin() ) {
 				UR_Form_Handler::send_confirmation_email( $user, $pending_email, $form_id );
 				$response['oldUserEmail'] = $user->user_email;
 				/* translators: %s : user email */
@@ -324,6 +324,15 @@ class UR_AJAX {
 						__( 'There is a pending change of your email to <code>%1$s</code>. <a href="%2$s">Cancel</a>', 'user-registration' ),
 						$pending_email,
 						$cancel_url
+					)
+				);
+			}
+
+			if ( is_admin() && isset( $_GET['page'] ) && 'user-registration-users' === $_GET['page'] && isset( $_GET['action'] ) && 'edit' === $_GET['action'] && ! empty( $pending_email ) ) {
+				wp_update_user(
+					array(
+						'ID'         => $user_id,
+						'user_email' => $pending_email,
 					)
 				);
 			}
