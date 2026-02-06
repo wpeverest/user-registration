@@ -933,7 +933,6 @@ class UR_AJAX {
 
 		foreach ( $output as $key => $settings ) {
 			update_option( $key, $settings );
-			// Sync login_redirect_url with login_page_id on change.
 			if ( 'user_registration_login_options_login_redirect_url' === $key && is_numeric( $settings ) && ! empty( $settings ) ) {
 				update_option( 'user_registration_login_page_id', $settings );
 			}

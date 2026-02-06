@@ -9153,7 +9153,13 @@ if ( ! function_exists( 'ur_filter_login_form_settings_redirect_url_field' ) ) {
 					if ( $state['hide'] ) {
 						$settings['sections'][ $section_key ]['settings'][ $idx ]['display'] = 'none';
 					} elseif ( $state['show_notice'] ) {
-						$notice = __( 'It is recommended to use the same page as the global login page that is set here. This ensures no conflicts. The above page selector may be merged and removed in further updates.', 'user-registration' );
+						$settings_page_url = admin_url( 'admin.php?page=user-registration-settings&tab=general&section=pages' );
+						$notice_link       = '<a href="' . esc_url( $settings_page_url ) . '">' . esc_html__( 'here', 'user-registration' ) . '</a>';
+						$notice            = sprintf(
+							/* translators: %s: link to Login Page setting */
+							__( 'It is recommended to use the same page as the global login page that is set %s. This ensures no conflicts. The above page selector may be merged and removed in further updates.', 'user-registration' ),
+							$notice_link
+						);
 						$settings['sections'][ $section_key ]['settings'][ $idx ]['ur_notice_below'] = $notice;
 					}
 					return $settings;
@@ -9489,7 +9495,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 					$settings .= '</div>';
 					$settings .= '</div>';
 					if ( ! empty( $value['ur_notice_below'] ) ) {
-						$settings .= '<p class="ur-login-redirect-notice" style="font-size:13px; margin-top:0; color:#6b6b6b;">' . esc_html( $value['ur_notice_below'] ) . '</p>';
+						$settings .= '<p class=" ur-p-tag ur-login-redirect-notice" style="margin-bottom: 24px; padding: 10px 12px 10px 16px; font-weight: 400; color: #383838; border-radius: 4px; font-size: 14px; line-height: 22px; font-style: normal; border-left: 4px solid #475bb2; background: #f1f2f9;">' . wp_kses_post( $value['ur_notice_below'] ) . '</p>';
 					}
 					break;
 

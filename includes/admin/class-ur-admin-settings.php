@@ -1901,7 +1901,6 @@ class UR_Admin_Settings {
 			if ( 'user_registration_member_registration_page_id' === $name ) {
 				update_option( 'user_registration_registration_page_id', $value );
 			}
-			// Sync login_page_id with login_redirect_url on change.
 			if ( 'user_registration_login_page_id' === $name ) {
 				update_option( 'user_registration_login_options_login_redirect_url', $value );
 			}
