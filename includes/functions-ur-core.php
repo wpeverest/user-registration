@@ -9055,6 +9055,118 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_check_and_sync_login_page_redirect_options' ) ) {
+	/**
+	 * Check user_registration_login_page_id and user_registration_login_options_login_redirect_url,
+	 * migrate if needed, and return display state for the redirect URL option.
+	 *
+	 * @param bool $run_migration Whether to update options (migrate/sync). Default true. Set false to only get state.
+	 * @return array{ hide: bool, show_notice: bool, login_page_id: int|string, login_redirect_url: int|string }
+	 */
+	function ur_check_and_sync_login_page_redirect_options( $run_migration = true ) {
+		$login_page_id  = get_option( 'user_registration_login_page_id', '' );
+		$login_redirect = get_option( 'user_registration_login_options_login_redirect_url', '' );
+		$login_page_id  = is_numeric( $login_page_id ) ? absint( $login_page_id ) : '';
+		$login_redirect = is_numeric( $login_redirect ) ? absint( $login_redirect ) : $login_redirect;
+
+		if ( empty( $login_page_id ) && ! empty( $login_redirect ) ) {
+			if ( $run_migration ) {
+				update_option( 'user_registration_login_page_id', $login_redirect );
+			}
+			$login_page_id = $login_redirect;
+			return array(
+				'hide'             => true,
+				'show_notice'      => false,
+				'login_page_id'    => $login_page_id,
+				'login_redirect_url' => $login_redirect,
+			);
+		}
+
+		if ( empty( $login_redirect ) && ! empty( $login_page_id ) ) {
+			if ( $run_migration ) {
+				update_option( 'user_registration_login_options_login_redirect_url', $login_page_id );
+			}
+			$login_redirect = $login_page_id;
+			return array(
+				'hide'             => true,
+				'show_notice'      => false,
+				'login_page_id'    => $login_page_id,
+				'login_redirect_url' => $login_redirect,
+			);
+		}
+
+		$both_same  = ( (string) $login_page_id === (string) $login_redirect );
+		$both_empty = ( empty( $login_page_id ) && empty( $login_redirect ) );
+		if ( $both_same || $both_empty ) {
+			return array(
+				'hide'             => true,
+				'show_notice'      => false,
+				'login_page_id'    => $login_page_id,
+				'login_redirect_url' => $login_redirect,
+			);
+		}
+
+		return array(
+			'hide'             => false,
+			'show_notice'      => true,
+			'login_page_id'    => $login_page_id,
+			'login_redirect_url' => $login_redirect,
+		);
+	}
+}
+
+add_action( 'user_registration_init', 'ur_login_page_redirect_migration_run_once' );
+
+if ( ! function_exists( 'ur_login_page_redirect_migration_run_once' ) ) {
+	/**
+	 * Run login page / redirect URL check and sync once (migration).
+	 */
+	function ur_login_page_redirect_migration_run_once() {
+		if ( get_option( 'ur_login_page_redirect_sync_migrated', false ) ) {
+			return;
+		}
+		ur_check_and_sync_login_page_redirect_options( true );
+		update_option( 'ur_login_page_redirect_sync_migrated', true );
+	}
+}
+
+if ( ! function_exists( 'ur_filter_login_form_settings_redirect_url_field' ) ) {
+	/**
+	 * Filter login form settings: hide redirect URL field or add notice when it differs from global login page.
+	 *
+	 * @param array $settings Login form settings array.
+	 * @return array
+	 */
+	function ur_filter_login_form_settings_redirect_url_field( $settings ) {
+		$state = ur_check_and_sync_login_page_redirect_options( true );
+
+		if ( ! isset( $settings['sections'] ) || ! is_array( $settings['sections'] ) ) {
+			return $settings;
+		}
+
+		foreach ( $settings['sections'] as $section_key => $section ) {
+			if ( empty( $section['settings'] ) || ! is_array( $section['settings'] ) ) {
+				continue;
+			}
+			foreach ( $section['settings'] as $idx => $setting ) {
+				if ( isset( $setting['id'] ) && 'user_registration_login_options_login_redirect_url' === $setting['id'] ) {
+					if ( $state['hide'] ) {
+						$settings['sections'][ $section_key ]['settings'][ $idx ]['display'] = 'none';
+					} elseif ( $state['show_notice'] ) {
+						$notice        = __( 'Your value is not the same as the global Login page. Please make it the same; this option will be removed in a future version.', 'user-registration' );
+						$existing_desc = isset( $setting['desc'] ) ? $setting['desc'] . ' ' : '';
+						$settings['sections'][ $section_key ]['settings'][ $idx ]['desc'] = $existing_desc . '<span class="ur-notice ur-notice--warning" style="display:block;margin-top:8px;">' . esc_html( $notice ) . '</span>';
+					}
+					return $settings;
+				}
+			}
+		}
+
+		return $settings;
+	}
+}
+
+add_filter( 'user_registration_login_form_settings', 'ur_filter_login_form_settings_redirect_url_field', 20 );
 
 if ( ! function_exists( 'render_login_option_settings' ) ) {
 
@@ -9086,6 +9198,10 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 		foreach ( $section_settings as $key => $value ) {
 
 			if ( ! isset( $value['type'] ) ) {
+				continue;
+			}
+
+			if ( isset( $value['display'] ) && 'none' === $value['display'] ) {
 				continue;
 			}
 
