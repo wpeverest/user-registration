@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-09T07:34:08+00:00\n"
+"POT-Creation-Date: 2026-02-09T10:29:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -1521,7 +1521,8 @@ msgid "Temporary deactivation"
 msgstr ""
 
 #: includes/admin/class-ur-admin-deactivation-feedback.php:101
-#: includes/admin/class-ur-sdk-deactivation-feedback.php:102
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:106
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:171
 msgid "I no longer need the plugin"
 msgstr ""
 
@@ -2364,36 +2365,56 @@ msgstr ""
 msgid "Could not verify nonce"
 msgstr ""
 
-#: includes/admin/class-ur-sdk-deactivation-feedback.php:39
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:42
 msgid "Submit & Deactivate"
 msgstr ""
 
-#: includes/admin/class-ur-sdk-deactivation-feedback.php:49
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:52
 msgid "Skip & Deactivate"
 msgstr ""
 
-#: includes/admin/class-ur-sdk-deactivation-feedback.php:94
-msgid "Found bugs or errors"
-msgstr ""
-
-#: includes/admin/class-ur-sdk-deactivation-feedback.php:95
-msgid "What bugs did you run into?"
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:96
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:160
+msgid "Why are you parting ways with the URM plugin?"
 msgstr ""
 
 #: includes/admin/class-ur-sdk-deactivation-feedback.php:98
-msgid "Confusing to use"
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:163
+msgid "Found bugs or errors"
 msgstr ""
 
 #: includes/admin/class-ur-sdk-deactivation-feedback.php:99
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:164
+msgid "What bugs did you run into?"
+msgstr ""
+
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:102
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:167
+msgid "Too complex or confusing to use"
+msgstr ""
+
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:103
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:168
 msgid "What feature felt confusing?"
 msgstr ""
 
-#: includes/admin/class-ur-sdk-deactivation-feedback.php:106
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:110
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:175
 msgid "Other"
 msgstr ""
 
-#: includes/admin/class-ur-sdk-deactivation-feedback.php:107
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:111
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:176
 msgid "Tell us your reason"
+msgstr ""
+
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:145
+#: includes/admin/views/html-deactivation-popup.php:26
+msgid "Quick Feedback"
+msgstr ""
+
+#: includes/admin/class-ur-sdk-deactivation-feedback.php:146
+msgid "* By submitting this form, you will send us non-sensitive diagnostic data, site URL and email."
 msgstr ""
 
 #: includes/admin/functions-ur-admin.php:29
@@ -5773,10 +5794,6 @@ msgstr ""
 
 #: includes/admin/views/html-admin-settings.php:133
 msgid "Save Changes"
-msgstr ""
-
-#: includes/admin/views/html-deactivation-popup.php:26
-msgid "Quick Feedback"
 msgstr ""
 
 #. translators: %1$s HTML span tag. translators: %2$s HTML span closing tag.
