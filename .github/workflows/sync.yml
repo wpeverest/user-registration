@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - master
+            - UR-4147-fix/fatal-error-on-payment-history-page-get-order-detail-called-on-string
         workflow_dispatch:
 jobs:
     sync:
