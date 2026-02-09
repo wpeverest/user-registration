@@ -364,7 +364,7 @@ class OrdersListTable extends \UR_List_Table {
 		$decimals            = isset( $currency_info['decimals'] ) ? (int) $currency_info['decimals'] : 2;
 		$coupon_discount     = 0;
 
-		if ( $this->orders_repository instanceof OrdersRepository ) {
+		if ( $this->is_membership_active && $this->orders_repository instanceof OrdersRepository ) {
 			$order_detail     = $this->orders_repository->get_order_detail( $item['order_id'] ?? 0 );
 			if (  ! empty( $order_detail  ) ) {
 				$local_currency   = $this->orders_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' );
