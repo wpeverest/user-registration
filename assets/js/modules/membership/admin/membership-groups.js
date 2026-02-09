@@ -1111,7 +1111,8 @@
 							url: urmg_data.ajax_url,
 							data: {
 								action: "user_registration_membership_fetch_upgrade_path",
-								membership_ids: mergedUpgradeOrder
+								membership_ids: mergedUpgradeOrder,
+								security : urmg_data._nonce
 							},
 							success: function (response) {
 								if (response.success) {

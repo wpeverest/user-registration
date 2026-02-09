@@ -172,6 +172,7 @@ class UR_Frontend_Form_Handler {
 					}
 				}
 				elseif ( 'auto_login' === $login_option ) {
+					delete_user_meta( $user_id, 'urm_user_just_created' );
 					wp_clear_auth_cookie();
 					$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 					wp_set_auth_cookie( $user_id, $remember );
@@ -329,7 +330,10 @@ class UR_Frontend_Form_Handler {
 		$current_language = isset( $_POST['registration_language'] ) ? ur_clean( $_POST['registration_language'] ) : $current_language; //phpcs:ignore.
 		update_user_meta( $user_id, 'ur_registered_language', $current_language );
 		$login_option   = ur_get_user_login_option( $user_id );
-		update_user_meta( $user_id, 'urm_user_just_created', 'yes' );
+
+		if( !empty( $_POST['membership_type'] ) ) {
+			update_user_meta( $user_id, 'urm_user_just_created', time() + 900 );
+		}
 	}
 }
 

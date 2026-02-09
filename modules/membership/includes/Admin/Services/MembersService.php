@@ -2,6 +2,7 @@
 
 namespace WPEverest\URMembership\Admin\Services;
 
+use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
 use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 
 class MembersService {
@@ -103,7 +104,12 @@ class MembersService {
 	 *
 	 * @return array
 	 */
-	public function prepare_members_data( $data ) {
+	public function prepare_members_data( $data, $context = 'admin' ) {
+		if ( 'frontend' === $context ) {
+			$membership_detail  = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
+			$data['role']       = isset( $membership_detail['role'] ) ? sanitize_text_field( $membership_detail['role'] ) : 'subscriber';
+		}
+
 		$response         = array();
 		$response['role'] = isset( $data['role'] ) ? sanitize_text_field( $data['role'] ) : 'subscriber';
 
@@ -138,7 +144,7 @@ class MembersService {
 			'user_status'   => isset( $data['member_status'] ) ? absint( $data['member_status'] ) : 1,
 		);
 
-		if ( isset( $data['membership'] ) ) {
+		if ( ! empty( $data['membership'] ) ) {
 			$membership_details          = $this->membership_repository->get_single_membership_by_ID( absint( $data['membership'] ) );
 			$membership_meta             = json_decode( $membership_details['meta_value'], true );
 			$response['role']            = isset( $membership_meta['role'] ) ? sanitize_text_field( $membership_meta['role'] ) : $response['role'];
@@ -230,21 +236,30 @@ class MembersService {
 	 *
 	 * @return bool
 	 */
-	public function login_member( $user_id, $check_just_created ) {
-		$is_just_created = 'no';
+	public function login_member( $user_id, $check_just_created, $password = '' ) {
+		$is_just_created = '';
 		if ( $check_just_created ) {
 			$is_just_created = get_user_meta( $user_id, 'urm_user_just_created', true );
 		}
 
-		if ( 'yes' === $is_just_created ) {
+		if ( empty( $is_just_created ) || empty( $password ) ) {
+			return false;
+		}
+
+		$user = get_user_by( 'ID', $user_id );
+		if ( ! $user ) {
+			return false;
+		}
+
+		if ( ! wp_check_password( $password, $user->user_pass, $user_id ) ) {
+			return false;
+		}
+
 			delete_user_meta( $user_id, 'urm_user_just_created' );
 			wp_clear_auth_cookie();
 			$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 			wp_set_auth_cookie( $user_id, $remember );
-
-			return true;
-		} else {
-			return false;
-		}
+			
+		return true;
 	}
 }
