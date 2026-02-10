@@ -332,7 +332,13 @@ class UR_Frontend_Form_Handler {
 		$login_option   = ur_get_user_login_option( $user_id );
 
 		if( !empty( $_POST['membership_type'] ) ) {
-			update_user_meta( $user_id, 'urm_user_just_created', time() + 900 );
+			$hash = hash_hmac(
+				'sha256',
+				(string) $user_id,
+				wp_salt( 'auth' )
+			);
+
+			update_user_meta( $user_id, 'urm_user_just_created', $hash );
 		}
 	}
 }
