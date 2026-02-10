@@ -39,6 +39,7 @@ class UR_OXYGEN {
 		add_action( 'oxygen_add_plus_sections', array( $this, 'add_accordion_section' ) );
 		add_action( 'oxygen_add_plus_user-registration_section_content', array( $this, 'register_add_plus_subsections' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'custom_init' ) );
+		add_action( 'oxygen_enqueue_scripts', array( $this, 'enqueue_oxygen_editor_styles' ) );
 
 		$this->register_widgets();
 	}
@@ -60,12 +61,18 @@ class UR_OXYGEN {
 	 */
 	public function custom_init() {
 		wp_register_style( 'user-registration-general', UR()->plugin_url() . '/assets/css/user-registration.css', array(), UR()->version );
-		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array(), UR()->version );
 		wp_register_style( 'user-registration-my-account', UR()->plugin_url() . '/assets/css/my-account-layout.css', array(), UR()->version );
 
 		wp_enqueue_style( 'user-registration-general' );
-		wp_enqueue_style( 'user-registration-admin' );
 		wp_enqueue_style( 'user-registration-my-account' );
+	}
+
+	public function enqueue_oxygen_editor_styles() {
+		if ( ! isset( $_GET['ct_builder'] ) ) {
+			return; // not Oxygen panel
+		}
+		wp_register_style( 'user-registration-admin', UR()->plugin_url() . '/assets/css/admin.css', array(), UR()->version );
+		wp_enqueue_style( 'user-registration-admin' );
 	}
 
 	/**
