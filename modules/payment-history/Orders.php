@@ -72,8 +72,6 @@ class Orders {
 		$total_items = array_merge( $total_membership_items, $total_form_items );
 
 		if( count($total_items) > 0 ) {
-
-		// if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history' ) ) ) {
 			$orders_page = add_submenu_page(
 				'user-registration',
 				__( 'Payments', 'user-registration' ), // page title
@@ -87,7 +85,6 @@ class Orders {
 				5
 			);
 			add_action( 'load-' . $orders_page, array( $this, 'orders_initialization' ) );
-		// }
 		}
 	}
 

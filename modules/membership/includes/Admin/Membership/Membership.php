@@ -367,19 +367,6 @@ class Membership {
 		add_action( 'load-' . $rules_page, array( $this, 'membership_initialization' ) );
 
 		if ( isset( $_GET['page'] ) && in_array( $_GET['page'], array( 'user-registration-membership', 'user-registration-membership-groups', 'user-registration-members', 'user-registration-coupons', 'user-registration-content-restriction', 'member-payment-history', 'user-registration-team' ) ) ) {
-			// add_submenu_page(
-			// 'user-registration',
-			// __( 'All Plans', 'user-registration' ),
-			// '↳ ' . __( 'All Plans', 'user-registration' ),
-			// 'edit_posts',
-			// 'user-registration-membership',
-			// array(
-			// $this,
-			// 'render_membership_page',
-			// ),
-			// 3
-			// );
-
 			add_submenu_page(
 				'user-registration',
 				__( 'Membership Groups', 'user-registration' ),

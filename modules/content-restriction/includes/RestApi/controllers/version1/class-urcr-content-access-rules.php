@@ -146,7 +146,7 @@ class URCR_Content_Access_Rules {
 		$rules = array();
 
 		foreach ( $access_rules as $rule_post ) {
-			$rule_content = json_decode( $rule_post->post_content, true );
+			$rule_content = json_decode(  $rule_post->post_content, true );
 
 			$logic_map = isset( $rule_content['logic_map'] ) ? $rule_content['logic_map'] : array();
 
@@ -410,7 +410,7 @@ class URCR_Content_Access_Rules {
 			);
 		}
 
-		$content_rule_content = json_decode( $content_rule->post_content, true );
+		$content_rule_content = json_decode( $content_rule->post_content , true );
 
 		if ( ! is_array( $content_rule_content ) ) {
 			$content_rule_content = array();
@@ -419,7 +419,7 @@ class URCR_Content_Access_Rules {
 		$content_rule_content['enabled'] = $enabled;
 		$enabled_text                    = $enabled ? 'enabled' : 'disabled';
 
-		$content_rule->post_content = wp_json_encode( $content_rule_content );
+		$content_rule->post_content = wp_slash(wp_json_encode ($content_rule_content ));
 
 		$saved_post = wp_insert_post( $content_rule );
 
