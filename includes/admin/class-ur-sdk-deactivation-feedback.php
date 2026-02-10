@@ -2,9 +2,6 @@
 /**
  * User Registration - ThemeGrill SDK deactivation feedback
  *
- * Customizes the ThemeGrill SDK uninstall feedback popup for User Registration.
- * The actual popup is rendered and handled by the SDK (UninstallFeedback module).
- *
  * @package UserRegistration\Admin
  * @since   2.3.2
  */
@@ -19,7 +16,6 @@ if ( ! class_exists( 'UR_SDK_Deactivation_Feedback', false ) ) {
 	class UR_SDK_Deactivation_Feedback {
 
 		/**
-		 * Class constructor.
 		 * Registers filters to customize the ThemeGrill SDK deactivation popup for User Registration.
 		 */
 		public function __construct() {
@@ -27,13 +23,13 @@ if ( ! class_exists( 'UR_SDK_Deactivation_Feedback', false ) ) {
 			add_filter( 'user_registration_feedback_deactivate_button_cancel', array( $this, 'button_cancel_label' ) );
 			add_filter( 'user_registration_feedback_deactivate_options', array( $this, 'deactivate_options' ) );
 			add_filter( 'user_registration_feedback_deactivate_options_skip_randomize', '__return_true' );
-			add_filter( 'themegrill_sdk_labels', array( $this, 'deactivate_options_labels' ), 999, 1 );
+//			add_filter( 'themegrill_sdk_labels', array( $this, 'deactivate_options_labels' ), 999, 1 );
 			add_action( 'init', array( $this, 'patch_sdk_labels_after_init' ), 15 );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_popup_assets' ), 20 );
 		}
 
 		/**
-		 * Submit button label (matches previous popup wording).
+		 * Submit button label.
 		 *
 		 * @param string $label Default label.
 		 * @return string
@@ -43,7 +39,7 @@ if ( ! class_exists( 'UR_SDK_Deactivation_Feedback', false ) ) {
 		}
 
 		/**
-		 * Cancel / Skip button label (matches previous popup wording).
+		 * Cancel / Skip button label.
 		 *
 		 * @param string $label Default label.
 		 * @return string
@@ -53,11 +49,7 @@ if ( ! class_exists( 'UR_SDK_Deactivation_Feedback', false ) ) {
 		}
 
 		/**
-		 * Deactivation feedback options (structure only). Labels are set via themegrill_sdk_labels.
-		 * 1. Found bugs or errors [R] → What bugs did you run into? [IF]
-		 * 2. Confusing to use [R] → What feature felt confusing? [IF]
-		 * 3. I no longer need the plugin [R]
-		 * 4. Other [R] → Tell us your reason [IF] (SDK adds id999)
+		 * Deactivation feedback options. Labels are set via themegrill_sdk_labels.
 		 *
 		 * @param array $options Default plugin options (id3–id6).
 		 * @return array
@@ -73,7 +65,7 @@ if ( ! class_exists( 'UR_SDK_Deactivation_Feedback', false ) ) {
 					'type' => 'textarea',
 				),
 				'id5'   => array(
-					'id'   => 'I_no_longer_need_the_plugin',
+					'id' => 'I_no_longer_need_the_plugin',
 				),
 				'id999' => array(
 					'id'   => 'Other',
@@ -83,7 +75,7 @@ if ( ! class_exists( 'UR_SDK_Deactivation_Feedback', false ) ) {
 		}
 
 		/**
-		 * Labels for deactivation options (titles and placeholders).
+		 * Labels for deactivation options.
 		 *
 		 * @param array $labels ThemeGrill SDK labels.
 		 * @return array
@@ -93,16 +85,16 @@ if ( ! class_exists( 'UR_SDK_Deactivation_Feedback', false ) ) {
 				return $labels;
 			}
 
-			$labels['uninstall']['heading_plugin'] = __( 'Why are you parting ways with the URM plugin?', 'user-registration' );
-			$labels['uninstall']['options']['id3'] = array(
+			$labels['uninstall']['heading_plugin']   = __( 'Why are you parting ways with the URM plugin?', 'user-registration' );
+			$labels['uninstall']['options']['id3']   = array(
 				'title'       => __( 'Found bugs or errors', 'user-registration' ),
 				'placeholder' => __( 'What bugs did you run into?', 'user-registration' ),
 			);
-			$labels['uninstall']['options']['id4'] = array(
+			$labels['uninstall']['options']['id4']   = array(
 				'title'       => __( 'Too complex or confusing to use', 'user-registration' ),
 				'placeholder' => __( 'What feature felt confusing?', 'user-registration' ),
 			);
-			$labels['uninstall']['options']['id5'] = array(
+			$labels['uninstall']['options']['id5']   = array(
 				'title'       => __( 'I no longer need the plugin', 'user-registration' ),
 				'placeholder' => '',
 			);
@@ -140,8 +132,8 @@ if ( ! class_exists( 'UR_SDK_Deactivation_Feedback', false ) ) {
 				'urm-deactivation-popup',
 				'urmDeactivationPopup',
 				array(
-					'pluginUrl'    => ur()->plugin_url() . '/',
-					'logoUrl'      => ur()->plugin_url() . '/assets/images/logo.png',
+					'pluginUrl'     => ur()->plugin_url() . '/',
+					'logoUrl'       => ur()->plugin_url() . '/assets/images/logo.png',
 					'quickFeedback' => __( 'Quick Feedback', 'user-registration' ),
 					'disclaimer'    => __( '* By submitting this form, you will send us non-sensitive diagnostic data, site URL and email.', 'user-registration' ),
 				)

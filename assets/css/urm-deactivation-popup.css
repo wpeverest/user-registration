@@ -1,5 +1,5 @@
 /**
- * URM deactivation feedback popup - design override for ThemeGrill SDK popup
+ * URM deactivation feedback popup
  */
 
 #user-registration_uninstall_feedback_popup.urm-popup-styled {
@@ -156,11 +156,6 @@
 
 #user-registration_uninstall_feedback_popup.urm-popup-styled .popup--footer {
 	padding: 0 20px 20px;
-}
-
-#user-registration_uninstall_feedback_popup.urm-popup-styled .popup--footer .info-disclosure-link,
-#user-registration_uninstall_feedback_popup.urm-popup-styled .popup--footer .info-disclosure-content {
-	display: none !important;
 }
 
 #user-registration_uninstall_feedback_popup.urm-popup-styled .popup--footer .actions {
