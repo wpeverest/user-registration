@@ -9125,6 +9125,7 @@ if ( ! function_exists( 'ur_login_page_redirect_migration_run_once' ) ) {
 
 if ( ! function_exists( 'ur_filter_login_form_settings_redirect_url_field' ) ) {
 	/**
+	 * Hide the login redirect URL field in login form settings based on the state of login page and redirect URL options, and to show a notice if there is a conflict that needs to be resolved by the user.
 	 *
 	 * @param array $settings Login form settings array.
 	 * @return array
