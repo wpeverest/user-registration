@@ -244,7 +244,10 @@ class UR_Form_Handler {
 										update_user_meta( $user_id, $update_key, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 									}
 								} elseif ( isset( $field['type'] ) && 'repeater' === $field['type'] ) {
-									update_user_meta( $user_id, $update_key, $form_data[ $key ]->value ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+									$repeater_value = isset( $form_data[ $key ]->value ) ? $form_data[ $key ]->value : ( isset( $form_data[ $new_key ]->value ) ? $form_data[ $new_key ]->value : null );
+									if ( null !== $repeater_value ) {
+										update_user_meta( $user_id, $update_key, $repeater_value ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+									}
 								}
 							} elseif ( isset( $field['field_key'] ) &&'checkbox' === $field['field_key'] ) {
 								update_user_meta( $user_id, $update_key, '' );

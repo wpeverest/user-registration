@@ -2523,3 +2523,18 @@ td {
 .hidden {
 	display: none !important;
 }
+
+.ur-repeater-row {
+	.ur-repeater-row-title {
+		font-size: 14px;
+	}
+
+	.ur-form-grid {
+		gap: 16px !important;
+	}
+
+	.ur-repeater-label {
+		padding: 0;
+	}
+
+}

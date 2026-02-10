@@ -2141,6 +2141,26 @@ function ur_get_meta_key_label( $form_id ) {
 		}
 	}
 
+	// Also get repeater inner fields.
+	$form_row_data = ( $form_id ) ? get_post_meta( $form_id, 'user_registration_form_row_data', true ) : '';
+	$row_datas    = ! empty( $form_row_data ) ? json_decode( $form_row_data ) : array();
+	if ( ! empty( $row_datas ) && is_array( $row_datas ) ) {
+		foreach ( $row_datas as $row_data ) {
+			$row_data = is_array( $row_data ) ? (object) $row_data : $row_data;
+			if ( isset( $row_data->type ) && 'repeater' === $row_data->type && ! empty( $row_data->fields ) ) {
+				foreach ( $row_data->fields as $inner_field ) {
+					$inner_field  = is_array( $inner_field ) ? (object) $inner_field : $inner_field;
+					$gen          = isset( $inner_field->general_setting ) ? $inner_field->general_setting : null;
+					$inner_name   = ( $gen && isset( $gen->field_name ) ) ? $gen->field_name : ( isset( $inner_field->field_name ) ? $inner_field->field_name : '' );
+					$inner_label  = ( $gen && isset( $gen->label ) ) ? $gen->label : ( isset( $inner_field->label ) ? $inner_field->label : $inner_name );
+					if ( '' !== (string) $inner_name ) {
+						$key_label[ $inner_name ] = $inner_label;
+					}
+				}
+			}
+		}
+	}
+
 	/**
 	 * Filters the label for a meta key.
 	 *
@@ -2160,7 +2180,8 @@ function ur_get_meta_key_label( $form_id ) {
  * @since  1.5.0
  */
 function ur_get_user_extra_fields( $user_id, $action = '' ) {
-	$name_value = array();
+	$name_value          = array();
+	$repeater_export_keys = array();
 
 	$admin_profile = new UR_Admin_Profile();
 	$extra_data    = $admin_profile->get_user_meta_by_form_fields( $user_id );
@@ -2172,31 +2193,59 @@ function ur_get_user_extra_fields( $user_id, $action = '' ) {
 		$form_row_data     = get_post_meta( $form_id, 'user_registration_form_row_data', true );
 		$row_datas         = ! empty( $form_row_data ) ? json_decode( $form_row_data ) : array();
 
-		$repeaters = array();
 		if ( ! empty( $row_datas ) ) {
 			foreach ( $row_datas as $row_data ) {
 				if ( isset( $row_data->type ) && 'repeater' === $row_data->type ) {
 
-					if ( array_key_exists( 'user_registration_' . $row_data->field_name, $all_meta_for_user ) ) {
-						$repeater_rows = maybe_unserialize(
-							$all_meta_for_user[ 'user_registration_' .
-												$row_data->field_name ]
-						);
+					$repeater_meta_key = 'user_registration_' . $row_data->field_name;
+					if ( array_key_exists( $repeater_meta_key, $all_meta_for_user ) ) {
+						$raw_value     = $all_meta_for_user[ $repeater_meta_key ];
+						$repeater_rows = maybe_unserialize( $raw_value );
+						if ( ! is_array( $repeater_rows ) && is_string( $raw_value ) ) {
+							$decoded = json_decode( $raw_value, true );
+							$repeater_rows = is_array( $decoded ) ? $decoded : array();
+						}
+						if ( is_object( $repeater_rows ) && isset( $repeater_rows->value ) ) {
+							$repeater_rows = is_array( $repeater_rows->value ) ? $repeater_rows->value : array();
+						}
 
 						if ( ! empty( $repeater_rows ) ) {
 							foreach ( $repeater_rows as $fields ) {
-								foreach ( $fields as $field ) {
-									$field_value = $field->value;
-									$field_type  = isset( $field->field_type ) ? $field->field_type : '';
+								$fields = is_array( $fields ) ? $fields : (array) $fields;
+								foreach ( $fields as $field_key_or_index => $field ) {
+									$field_value = "";
+									$field_type  = '';
+									$field_name  = '';
+									$field_key   = '';
 
-									if ( in_array( $field_type, array( 'checkbox', 'multi-select' ), true ) ) {
-										$field_value = json_decode( $field_value, true );
+									// Row format from frontend: [ 'user_registration_fieldname' => value, ... ].
+									if ( is_string( $field_key_or_index ) && 0 === strpos( $field_key_or_index, 'user_registration_' ) ) {
+										$field_key   = $field_key_or_index;
+										$field_name  = str_replace( 'user_registration_', '', $field_key );
+										$field_value = $field;
+									} elseif ( is_object( $field ) && ( isset( $field->value ) || isset( $field->field_name ) ) ) {
+										$field_value = isset( $field->value ) ? $field->value : '';
+										$field_type  = isset( $field->field_type ) ? $field->field_type : '';
+										$field_name  = isset( $field->field_name ) ? $field->field_name : '';
+									} elseif ( is_array( $field ) && ( isset( $field['value'] ) || isset( $field['field_name'] ) ) ) {
+										$field_value = isset( $field['value'] ) ? $field['value'] : '';
+										$field_type  = isset( $field['field_type'] ) ? $field['field_type'] : '';
+										$field_name  = isset( $field['field_name'] ) ? $field['field_name'] : '';
+									}
+									if ( '' === $field_name && '' === $field_key ) {
+										continue;
+									}
+									if ( '' === $field_key ) {
+										$field_key = ( 0 === strpos( $field_name, 'user_registration_' ) ) ? $field_name : 'user_registration_' . $field_name;
 									}
 
-									$field_name  = $field->field_name;
+									if ( in_array( $field_type, array( 'checkbox', 'multi-select' ), true ) ) {
+										$field_value = is_string( $field_value ) ? json_decode( $field_value, true ) : $field_value;
+									}
+
 									$field_value = is_array( $field_value ) ? array( implode( ', ', $field_value ) ) : $field_value;
 
-									$field_key = 'user_registration_' . $field_name;
+									$repeater_export_keys[ $field_key ] = true;
 
 									if ( array_key_exists( $field_key, $all_meta_for_user ) ) {
 										$all_meta_for_user[ $field_key ] = is_array( $all_meta_for_user[ $field_key ] ) ? array_merge( $all_meta_for_user[ $field_key ], $field_value ) : ( $all_meta_for_user[ $field_key ] . ' - ' . $field_value );
@@ -2222,7 +2271,7 @@ function ur_get_user_extra_fields( $user_id, $action = '' ) {
 				$value = get_user_meta( $user_id, $field_key, true );
 			}
 
-			$field_key = str_replace( 'user_registration_', '', $field_key );
+			$field_key_normalized = str_replace( 'user_registration_', '', $field_key );
 
 			if ( is_serialized( $value ) ) {
 				$value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore.
@@ -2234,7 +2283,27 @@ function ur_get_user_extra_fields( $user_id, $action = '' ) {
 				}
 			}
 
-			$name_value[ $field_key ] = $value;
+			$name_value[ $field_key_normalized ] = $value;
+		}
+	}
+
+	// Add repeater inner fields which are not in form fields.
+	if ( 'export_users' === $action && ! empty( $repeater_export_keys ) ) {
+		foreach ( array_keys( $repeater_export_keys ) as $field_key ) {
+			$field_key_normalized = str_replace( 'user_registration_', '', $field_key );
+			if ( array_key_exists( $field_key_normalized, $name_value ) ) {
+				continue;
+			}
+			$value = isset( $all_meta_for_user[ $field_key ] ) ? $all_meta_for_user[ $field_key ] : get_user_meta( $user_id, $field_key, true );
+			if ( is_serialized( $value ) ) {
+				$value = unserialize( $value, array( 'allowed_classes' => false ) ); //phpcs:ignore.
+			}
+			if ( is_array( $value ) ) {
+				$value = implode( ',', $value );
+			} else {
+				$value = (string) $value;
+			}
+			$name_value[ $field_key_normalized ] = $value;
 		}
 	}
 
@@ -4697,14 +4766,14 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 						}
 						$description                               = esc_html__( 'You are currently using the free version of our plugin. Please upgrade to premium version to use this feature.', 'user-registration' );
 						$current_section_detail = $detail ? array_merge(
-								array(
-									'type'        => 'card',
-									'is_premium'  => true,
-									'title'       => $detail['label'],
-									'class'       => 'ur-upgrade--link',
-								),
-								$detail
-							) : array();
+							array(
+								'type'        => 'card',
+								'is_premium'  => true,
+								'title'       => $detail['label'],
+								'class'       => 'ur-upgrade--link',
+							),
+							$detail
+						) : array();
 
 						$settings['sections'][ str_replace( 'user-registration-', '', $detail['plugin'] ) ] = $current_section_detail ?? array();
 					}
@@ -5697,7 +5766,7 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			?>
 			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
 				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
-						style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+					   style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
 					<tbody>
 					<tr>
 						<td colspan="2" style="text-align: left;">
@@ -5730,14 +5799,14 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 		$current_screen   = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		$is_settings_page = $current_screen && 'user-registration_page_user-registration-settings' === $current_screen->id;
 		$is_email_action  = isset( $_REQUEST['action'] ) && (
-			'ur_send_test_email' === $_REQUEST['action'] ||
-			strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		);
+				'ur_send_test_email' === $_REQUEST['action'] ||
+				strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			);
 
 		// Only exclude CSS when on settings page displaying editor (not when sending emails).
 		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action &&
-							! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
-							! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
+							 ! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
+							 ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
 
 		// Responsive CSS styles for email template - only include when not in editor context.
 		$responsive_styles = '';
@@ -6926,7 +6995,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 
 						if ( isset( $advance_data['general_setting']->required ) ) {
 							if ( in_array( $single_item->field_key, ur_get_required_fields() )
-								|| ur_string_to_bool( $advance_data['general_setting']->required ) ) {
+								 || ur_string_to_bool( $advance_data['general_setting']->required ) ) {
 								$field['required']                      = true;
 								$field['custom_attributes']['required'] = 'required';
 							}
@@ -7241,14 +7310,14 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	 */
 	function ur_check_is_inactive() {
 		if ( ! ur_check_module_activation( 'membership' ) ||
-			current_user_can( 'manage_options' ) ||
-			( ! empty( $_POST['action'] ) && in_array(
-				$_POST['action'],
-				array(
-					'user_registration_membership_confirm_payment',
-					'user_registration_membership_create_stripe_subscription',
-				)
-			) )
+			 current_user_can( 'manage_options' ) ||
+			 ( ! empty( $_POST['action'] ) && in_array(
+					 $_POST['action'],
+					 array(
+						 'user_registration_membership_confirm_payment',
+						 'user_registration_membership_create_stripe_subscription',
+					 )
+				 ) )
 		) {
 			return;
 		}
@@ -9192,7 +9261,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 							cols="' . esc_attr( $value['cols'] ) . '"
 							placeholder="' . esc_attr( $value['placeholder'] ) . '"
 							' . esc_html( implode( ' ', $custom_attributes ) ) . '>'
-								. esc_textarea( $option_value ) . '</textarea>';
+								 . esc_textarea( $option_value ) . '</textarea>';
 					$settings .= '</div>';
 					$settings .= '</div>';
 					break;
@@ -10483,16 +10552,16 @@ if ( ! function_exists( 'urm_process_profile_fields' ) ) {
 					break;
 			}
 		}
-			if ( 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
-				$single_field[ $key ] = json_encode(
-					array(
-						'country' => sanitize_text_field( $single_field[ $key ] ),
-						'state'   => sanitize_text_field(
-							isset( $single_field[ $key . '_state' ] ) ? $single_field[ $key . '_state' ] : ''
-						),
-					)
-				);
-			}
+		if ( 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
+			$single_field[ $key ] = json_encode(
+				array(
+					'country' => sanitize_text_field( $single_field[ $key ] ),
+					'state'   => sanitize_text_field(
+						isset( $single_field[ $key . '_state' ] ) ? $single_field[ $key . '_state' ] : ''
+					),
+				)
+			);
+		}
 
 		/**
 		 * Action hook to perform validation of edit profile form.
@@ -11355,13 +11424,13 @@ if ( ! function_exists( 'ur_get_currencies' ) ) {
 	 */
 	function ur_get_currencies() {
 		$currencies = array_unique(
-			/**
-			 * Filters full list of currency codes.
-			 *
-			 * @since 6.0.0
-			 *
-			 * @param string[] $currencies Full list of currency codes.
-			 */
+		/**
+		 * Filters full list of currency codes.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param string[] $currencies Full list of currency codes.
+		 */
 			apply_filters(
 				'ur_currencies',
 				array(
