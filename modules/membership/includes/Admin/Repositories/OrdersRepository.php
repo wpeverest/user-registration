@@ -222,6 +222,27 @@ class OrdersRepository extends BaseRepository implements OrdersInterface {
 		return ! $result ? array() : $result;
 	}
 
+	/**
+	 * Get order by transaction ID (e.g. Stripe payment intent id).
+	 *
+	 * @param string $transaction_id Transaction ID.
+	 * @return array Order row or empty array if not found.
+	 */
+	public function get_order_by_transaction_id( $transaction_id ) {
+		if ( empty( $transaction_id ) ) {
+			return array();
+		}
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT * FROM $this->table WHERE transaction_id = %s LIMIT 1",
+				$transaction_id
+			),
+			ARRAY_A
+		);
+
+		return ! $result ? array() : $result;
+	}
+
 	public function get_all_delayed_orders( $date ) {
 		$sql = sprintf(
 			"
