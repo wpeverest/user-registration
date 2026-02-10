@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - UR-4112-fix/critical-vul
+            - UR-4134-fix/auto-approval-auto-login-option-not-working-in-case-of-pay-pal-payments
         workflow_dispatch:
 jobs:
     sync:
