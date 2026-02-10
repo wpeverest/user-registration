@@ -298,6 +298,7 @@ class UR_AJAX {
 			$response       = array(
 				'message'        => $message,
 				'profile_pic_id' => $profile_pic_id,
+				'email'			 => ! empty( $single_field['user_registration_user_email'] ) ? $single_field['user_registration_user_email'] : '',
 			);
 
 			if ( $email_updated && ! is_admin() ) {

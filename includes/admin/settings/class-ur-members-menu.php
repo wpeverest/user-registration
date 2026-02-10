@@ -1692,7 +1692,8 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 														);
 													} elseif ( 60 > strlen( $value ) ) {
 														printf(
-															'<input type="text" value="%s" disabled>',
+															'<input type="text" class="%s" value="%s" disabled>',
+															esc_attr( 'user_registration_edit_profile_' . $field_key ),
 															esc_attr( $value )
 														);
 													} else {
