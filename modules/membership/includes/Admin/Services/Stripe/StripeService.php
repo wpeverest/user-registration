@@ -1611,13 +1611,10 @@ class StripeService {
 
 		$this->members_subscription_repository->update(
 			$current_subscription['sub_id'],
-			array( 'status' => 'past_due' )
+			array( 'status' => 'pending' )
 		);
 
 		$member_id = $current_subscription['user_id'];
-		$retry_count = (int) get_user_meta( $member_id, 'urm_is_payment_retrying', true );
-		update_user_meta( $member_id, 'urm_is_payment_retrying', $retry_count + 1 );
-
 		PaymentGatewayLogging::log_webhook_processed(
 			'stripe',
 			'Invoice payment failed handled',
