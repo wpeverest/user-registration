@@ -158,6 +158,15 @@
 	padding: 0 20px 20px;
 }
 
+#user-registration_uninstall_feedback_popup.urm-popup-styled .popup--footer .actions a{
+	color: #475BB2;
+}
+
+#user-registration_uninstall_feedback_popup.urm-popup-styled .popup--footer .actions a:focus {
+	box-shadow: 0 0 0 0 #2271b1;
+	outline: 0 solid transparent;
+}
+
 #user-registration_uninstall_feedback_popup.urm-popup-styled .popup--footer .actions {
 	display: flex;
 	flex-wrap: wrap;

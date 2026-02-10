@@ -49,7 +49,7 @@
 			(window.urmDeactivationPopup &&
 				window.urmDeactivationPopup.disclaimer) ||
 			"* By submitting this form, you will send us non-sensitive diagnostic data, site URL and email.";
-		$body.append('<p class="urm-popup-disclaimer">' + disclaimer + "</p>");
+		// $body.append('<p class="urm-popup-disclaimer">' + disclaimer + "</p>");
 
 		var $close = $popup.find(".urm-popup-close");
 		var targetSelector =
