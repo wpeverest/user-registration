@@ -415,12 +415,10 @@ function ur_post_content_has_shortcode( $tag = '' ) {
 if ( ! function_exists( 'ur_is_login_form_markup_rendered' ) ) {
 
 	/**
-	 * Check if the [user_registration_login] shortcode markup is present in the given or current content.
 	 *
-	 * Detects the actual rendered HTML (id="ur-frontend-form" and form class user-registration-form-login),
-	 * not just the shortcode string. Use this to know if the login form output is on the page.
+	 * Detects the actual rendered HTML (id="ur-frontend-form" and form class user-registration-form-login).
 	 *
-	 * @param string $content Optional. HTML to check. If empty, uses current post content (processed by the_content).
+	 * @param string $content Optional. HTML to check. If empty, uses current post content.
 	 * @return bool True if the login form markup is present, false otherwise.
 	 */
 	function ur_is_login_form_markup_rendered( $content = '' ) {
@@ -9057,10 +9055,7 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 
 if ( ! function_exists( 'ur_check_and_sync_login_page_redirect_options' ) ) {
 	/**
-	 * Check user_registration_login_page_id and user_registration_login_options_login_redirect_url,
-	 * migrate if needed, and return display state for the redirect URL option.
-	 *
-	 * @param bool $run_migration Whether to update options (migrate/sync). Default true. Set false to only get state.
+	 * Check and sync login page and redirect URL options to ensure consistency and avoid conflicts.
 	 * @return array{ hide: bool, show_notice: bool, login_page_id: int|string, login_redirect_url: int|string }
 	 */
 	function ur_check_and_sync_login_page_redirect_options( $run_migration = true ) {
@@ -9118,9 +9113,7 @@ if ( ! function_exists( 'ur_check_and_sync_login_page_redirect_options' ) ) {
 add_action( 'user_registration_init', 'ur_login_page_redirect_migration_run_once' );
 
 if ( ! function_exists( 'ur_login_page_redirect_migration_run_once' ) ) {
-	/**
-	 * Run login page / redirect URL check and sync once (migration).
-	 */
+
 	function ur_login_page_redirect_migration_run_once() {
 		if ( get_option( 'ur_login_page_redirect_sync_migrated', false ) ) {
 			return;
@@ -9132,7 +9125,6 @@ if ( ! function_exists( 'ur_login_page_redirect_migration_run_once' ) ) {
 
 if ( ! function_exists( 'ur_filter_login_form_settings_redirect_url_field' ) ) {
 	/**
-	 * Filter login form settings: hide redirect URL field or add notice when it differs from global login page.
 	 *
 	 * @param array $settings Login form settings array.
 	 * @return array
