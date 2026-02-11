@@ -274,6 +274,8 @@ class AJAX {
 			if ( 'free' !== $data['payment_method'] ) {
 				$response['pg_data'] = $pg_data;
 			}
+			$form_id = function_exists( 'ur_get_form_id_by_userid' ) ? ur_get_form_id_by_userid( $member_id ) : 0;
+			$response['redirect_url'] = $form_id && function_exists( 'ur_get_form_redirect_url' ) ? ur_get_form_redirect_url( $form_id ) : '';
 			if ( in_array( $data['payment_method'], array( 'free', 'bank' ) ) ) {
 				delete_user_meta( $member_id, 'urm_user_just_created' );
 			}
@@ -1145,6 +1147,8 @@ class AJAX {
 				$membership_metas['post_title'] = $membership['post_title'];
 				$subscription_service->update_subscription_data_for_renewal( $member_subscription, $membership_metas );
 			}
+			$form_id_stripe = function_exists( 'ur_get_form_id_by_userid' ) ? ur_get_form_id_by_userid( $member_id ) : 0;
+			$response['redirect_url'] = $form_id_stripe && function_exists( 'ur_get_form_redirect_url' ) ? ur_get_form_redirect_url( $form_id_stripe ) : '';
 			wp_send_json_success(
 				$response
 			);
@@ -2334,6 +2338,11 @@ class AJAX {
 			}
 
 			$message = 'free' === $selected_pg ? __( 'Membership purchased successfully.', 'user-registration-membership' ) : __( 'New Order created, initializing payment...', 'user-registration-membership' );
+			$redirect_url = '';
+			if ( function_exists( 'ur_get_form_id_by_userid' ) && function_exists( 'ur_get_form_redirect_url' ) ) {
+				$form_id_for_redirect = ur_get_form_id_by_userid( $member_id );
+				$redirect_url        = $form_id_for_redirect ? ur_get_form_redirect_url( $form_id_for_redirect ) : '';
+			}
 			wp_send_json_success(
 				array(
 					'is_purchasing_multiple'   => true,
@@ -2344,6 +2353,7 @@ class AJAX {
 					'updated_membership_title' => $added_membership_title,
 					'message'                  => $message,
 					'selected_membership_id'   => $data['selected_membership_id'],
+					'redirect_url'             => $redirect_url,
 				)
 			);
 		}

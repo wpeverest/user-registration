@@ -219,9 +219,12 @@ if ( ! class_exists( 'Admin' ) ) :
 		}
 
 		public function update_redirect_url_for_membership( $redirect_url, $form_id ) {
-			$thank_you_page_id           = get_option( 'user_registration_thank_you_page_id' );
-			$login_option                = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_login_options' );
 			$redirect_after_registration = ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_redirect_after_registration' );
+
+			// No redirection must not be overridden by thank_you_page_id anywhere.
+			if ( 'no-redirection' === $redirect_after_registration ) {
+				return $redirect_url;
+			}
 
 			$form_data = ur_get_form_field_keys( $form_id );
 
@@ -239,6 +242,8 @@ if ( ! class_exists( 'Admin' ) ) :
 			if ( in_array( $redirect_after_registration, array( 'external-url', 'internal-page', 'previous-page' ) ) ) {
 				return $redirect_url;
 			}
+
+			return $redirect_url;
 		}
 
 		/**

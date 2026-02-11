@@ -306,23 +306,35 @@ if ( ! function_exists( 'ur_membership_get_currencies' ) ) {
 
 if ( ! function_exists( 'ur_membership_redirect_to_thank_you_page' ) ) {
 	/**
-	 * Redirect to thank you page
+	 * Redirect to thank you page (or my account when form has no-redirection).
 	 *
-	 * @param $member_id
-	 * @param $member_order
+	 * @param int   $member_id   Member user ID.
+	 * @param array $member_order Order data.
 	 *
 	 * @return void
 	 */
 	function ur_membership_redirect_to_thank_you_page( $member_id, $member_order ) {
+		$form_id = function_exists( 'ur_get_form_id_by_userid' ) ? ur_get_form_id_by_userid( $member_id ) : 0;
+		if ( $form_id ) {
+			$redirect_after = function_exists( 'ur_get_form_setting_by_key' ) ? ur_get_form_setting_by_key( $form_id, 'user_registration_form_setting_redirect_after_registration' ) : '';
+			if ( 'no-redirection' === $redirect_after ) {
+				wp_safe_redirect( ur_get_my_account_url() );
+				exit;
+			}
+		}
 
 		$thank_you_page = urm_get_thank_you_page();
-		$user           = get_userdata( $member_id );
-		$params         = array(
+		if ( empty( $thank_you_page ) ) {
+			wp_safe_redirect( ur_get_my_account_url() );
+			exit;
+		}
+		$user   = get_userdata( $member_id );
+		$params = array(
 			'username'       => $user->user_login,
 			'transaction_id' => empty( $member_order['transaction_id'] ) ? $member_order['ID'] : $member_order['transaction_id'],
 			'payment_type'   => 'paid',
 		);
-		$url            = $thank_you_page . '?' . http_build_query( $params );
+		$url    = $thank_you_page . '?' . http_build_query( $params );
 
 		wp_redirect( $url );
 		exit;
