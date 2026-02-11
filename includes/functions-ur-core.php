@@ -10514,35 +10514,6 @@ if ( ! function_exists( 'ur_find_pages_with_login_functionality' ) ) {
 	}
 }
 
-if ( ! function_exists( 'ur_find_page_with_registration_form' ) ) {
-	/**
-	 * Find a published page that contains [user_registration_form id="X"] shortcode or block.
-	 *
-	 * @return WP_Post|null First matching page or null.
-	 */
-	function ur_find_page_with_registration_form() {
-		global $wpdb;
-
-		$post_table = $wpdb->prefix . 'posts';
-
-		$page_id = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT ID FROM {$post_table} WHERE post_type = 'page' AND post_status = 'publish'
-				AND ( post_content LIKE %s OR post_content LIKE %s )
-				ORDER BY post_modified DESC LIMIT 1",
-				'%[user_registration_form id=%',
-				'%<!-- wp:user-registration/form%'
-			)
-		);
-
-		if ( $page_id ) {
-			return get_post( $page_id );
-		}
-
-		return null;
-	}
-}
-
 if ( ! function_exists( 'ur_get_login_page_info' ) ) {
 	/**
 	 * Get detailed information about login page options and available pages.
