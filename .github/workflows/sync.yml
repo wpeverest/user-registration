@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - master
+            - UR-3778-fix/user-email-update-issue
         workflow_dispatch:
 jobs:
     sync:
