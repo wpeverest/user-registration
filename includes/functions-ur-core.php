@@ -442,6 +442,35 @@ if ( ! function_exists( 'ur_is_login_form_markup_rendered' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ur_is_registration_form_markup_rendered' ) ) {
+
+	/**
+	 * Detects the actual rendered HTML of the registration form.
+	 *
+	 * @param string $content Optional. HTML to check. If empty, uses current post content.
+	 * @return bool True if the registration form markup is present, false otherwise.
+	 */
+	function ur_is_registration_form_markup_rendered( $content = '' ) {
+		if ( '' !== $content ) {
+			$html = $content;
+		} else {
+			if ( ! is_singular() && ! is_front_page() ) {
+				return false;
+			}
+			$post = get_post();
+			if ( ! $post || ! $post->post_content ) {
+				return false;
+			}
+			$html = apply_filters( 'the_content', $post->post_content );
+		}
+
+		$has_registration_container = ( false !== strpos( $html, 'id="user-registration-form-' ) || false !== strpos( $html, "id='user-registration-form-" ) );
+		$has_registration_form       = ( false !== strpos( $html, 'user-registration ur-frontend-form' ) );
+
+		return $has_registration_container && $has_registration_form;
+	}
+}
+
 /**
  * Wrapper for ur_doing_it_wrong.
  *
@@ -10482,6 +10511,35 @@ if ( ! function_exists( 'ur_find_pages_with_login_functionality' ) ) {
 		}
 
 		return array_values( $unique_pages );
+	}
+}
+
+if ( ! function_exists( 'ur_find_page_with_registration_form' ) ) {
+	/**
+	 * Find a published page that contains [user_registration_form id="X"] shortcode or block.
+	 *
+	 * @return WP_Post|null First matching page or null.
+	 */
+	function ur_find_page_with_registration_form() {
+		global $wpdb;
+
+		$post_table = $wpdb->prefix . 'posts';
+
+		$page_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT ID FROM {$post_table} WHERE post_type = 'page' AND post_status = 'publish'
+				AND ( post_content LIKE %s OR post_content LIKE %s )
+				ORDER BY post_modified DESC LIMIT 1",
+				'%[user_registration_form id=%',
+				'%<!-- wp:user-registration/form%'
+			)
+		);
+
+		if ( $page_id ) {
+			return get_post( $page_id );
+		}
+
+		return null;
 	}
 }
 

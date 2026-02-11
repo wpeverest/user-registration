@@ -287,6 +287,34 @@ class UR_Frontend {
 			}
 		}
 
+		$request_action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+		$current_action = ! empty( $action ) ? $action : $request_action;
+
+		if ( ! empty( $current_action ) && 'register' === $current_action ) {
+			$registration_page = null;
+			$member_registration_page_id = get_option( 'user_registration_member_registration_page_id', 0 );
+			if ( $member_registration_page_id ) {
+				$member_page = get_post( $member_registration_page_id );
+				if ( $member_page && 'publish' === $member_page->post_status && ( has_shortcode( $member_page->post_content, 'user_registration_form' ) || strpos( $member_page->post_content, '[user_registration_form id=' ) !== false ) ) {
+					$registration_page = $member_page;
+				}
+			}
+			if ( ! $registration_page && function_exists( 'ur_find_page_with_registration_form' ) ) {
+				$registration_page = ur_find_page_with_registration_form();
+			}
+
+			if ( $registration_page ) {
+				$rendered_content = apply_filters( 'the_content', $registration_page->post_content );
+				$has_markup       = function_exists( 'ur_is_registration_form_markup_rendered' ) && ur_is_registration_form_markup_rendered( $rendered_content );
+				$has_shortcode    = has_shortcode( $registration_page->post_content, 'user_registration_form' ) || strpos( $registration_page->post_content, '[user_registration_form id=' ) !== false;
+				if ( $has_markup || $has_shortcode ) {
+					$redirect_url = apply_filters( 'user_registration_register_redirect_url', get_permalink( $registration_page->ID ), $registration_page->ID );
+					wp_safe_redirect( $redirect_url );
+					exit;
+				}
+			}
+		}
+
 		if ( ! ( defined( 'UR_DISABLE_PREVENT_CORE_LOGIN' ) && true === UR_DISABLE_PREVENT_CORE_LOGIN ) && ur_option_checked( 'user_registration_login_options_prevent_core_login', false ) && 0 < absint( $matched ) ) {
 
 			// Redirect to core login reset password page on multisite.
