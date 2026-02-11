@@ -185,9 +185,8 @@
 				if ("" != originalRedirectUrl) {
 					return;
 				}
-			} else {
-				redirect_url = urmf_data.thank_you_page_url;
 			}
+			// When no-redirection is set, do not override with thank_you_page_url.
 			/**
 			 * Remove Spinner.
 			 */
@@ -644,11 +643,13 @@
 		 */
 		show_default_response: function (url, thank_you_data, timeout) {
 			timeout = timeout || 2000;
-			var thank_you_page_url = urmf_data.thank_you_page_url;
-
-			var url_params = $.param(thank_you_data).toString();
+			// When form has no-redirection, url may be empty; do not redirect to thank you page.
+			if (!url || url === "") {
+				return;
+			}
+			var url_params = $.param(thank_you_data || {}).toString();
 			window.setTimeout(function () {
-				window.location.replace(thank_you_page_url + '?' + url_params);
+				window.location.replace(url + (url_params ? "?" + url_params : ""));
 			}, timeout);
 		},
 		validate_coupon: function ($this) {
@@ -1617,9 +1618,15 @@
 					window.location.replace(response.data.redirect);
 					break;
 				case 'free':
-					var cleanUrl = window.location.origin + window.location.pathname;
-
-					window.location.replace(urmf_data.thank_you_page_url);
+					// When redirect_url is present use it (empty = no-redirection). Else fallback for backward compat.
+					var freeRedirectUrl =
+						response.data && "redirect_url" in response.data
+							? response.data.redirect_url
+							: urmf_data.thank_you_page_url;
+					if (freeRedirectUrl) {
+						window.location.replace(freeRedirectUrl);
+					}
+					break;
 
 				default:
 					ur_membership_ajax_utils.show_bank_response(
@@ -1889,8 +1896,12 @@
 									thank_you_data,
 								);
 							} else {
+								var stripeRedirectUrl =
+									response.data && response.data.redirect_url
+										? response.data.redirect_url
+										: urmf_data.thank_you_page_url;
 								ur_membership_ajax_utils.show_default_response(
-									urmf_data.thank_you_page_url,
+									stripeRedirectUrl || "",
 									{
 										username: prepare_members_data.username,
 										transaction_id:
