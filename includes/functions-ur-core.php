@@ -5106,7 +5106,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 
 			} else {
 
-				if ( in_array( 'administrator', $user->roles, true ) && ur_option_checked( 'user_registration_login_options_prevent_core_login', true ) ) {
+				if ( in_array( 'administrator', $user->roles, true ) && ur_option_checked( 'user_registration_login_options_prevent_core_login', false ) ) {
 					$redirect = admin_url();
 				} elseif ( ! empty( $post['redirect'] ) ) {
 					$redirect = esc_url_raw( wp_unslash( $post['redirect'] ) );
