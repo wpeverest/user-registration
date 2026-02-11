@@ -97,7 +97,7 @@ if ( ! class_exists( 'UR_SDK_Deactivation_Feedback', false ) ) {
 			);
 			$labels['uninstall']['options']['id5']   = array(
 				'title'       => __( 'I no longer need the plugin', 'user-registration' ),
-				'placeholder' => '',
+				'placeholder' => 'Anything we can improve on our end?',
 			);
 			$labels['uninstall']['options']['id999'] = array(
 				'title'       => __( 'Other', 'user-registration' ),
@@ -162,7 +162,7 @@ if ( ! class_exists( 'UR_SDK_Deactivation_Feedback', false ) ) {
 				),
 				'id5'   => array(
 					'title'       => __( 'I no longer need the plugin', 'user-registration' ),
-					'placeholder' => '',
+					'placeholder' => 'Anything we can improve on our end?',
 				),
 				'id999' => array(
 					'title'       => __( 'Other', 'user-registration' ),

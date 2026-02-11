@@ -40,7 +40,7 @@
 		var questionText = $h5.text().trim();
 		if (questionText) {
 			$body.prepend(
-				'<p class="urm-popup-question">:(\u0020' + questionText + "</p>"
+				'<p class="urm-popup-question">' + questionText + "</p>"
 			);
 		}
 		$h5.remove();
