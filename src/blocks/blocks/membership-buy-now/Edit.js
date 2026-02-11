@@ -13,8 +13,7 @@ import {
 	TextControl,
 	ToggleControl,
 	__experimentalToggleGroupControl as ToggleGroupControl,
-	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
-	__experimentalUnitControl as UnitControl
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption
 } from "@wordpress/components";
 
 import {
@@ -112,7 +111,7 @@ const Edit = (props) => {
 	const { attributes, setAttributes, clientId } = props;
 
 	const {
-		membershipType,
+		membershipId,
 		text,
 		width,
 		hoverTextColor,
@@ -240,7 +239,7 @@ const Edit = (props) => {
 	const membershipOptions = useMemo(() => {
 		if (!membershipList) return [];
 		return Object.values(membershipList).map((member, index) => ({
-			value: index,
+			value: member.ID,
 			label: member.title
 		}));
 	}, [membershipList]);
@@ -280,7 +279,7 @@ const Edit = (props) => {
 				<SelectControl
 					key="urm-select-membership-type"
 					label={__("Membership Plan", "user-registration")}
-					value={membershipType}
+					value={membershipId}
 					options={[
 						{
 							label: __(
@@ -291,7 +290,7 @@ const Edit = (props) => {
 						},
 						...membershipOptions
 					]}
-					onChange={(type) => setAttributes({ membershipType: type })}
+					onChange={(type) => setAttributes({ membershipId: type })}
 				/>
 
 				<ToggleControl

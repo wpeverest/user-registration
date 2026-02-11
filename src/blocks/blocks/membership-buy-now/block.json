@@ -86,7 +86,7 @@
     "clientId": {
       "type": "string"
     },
-    "membershipType": {
+    "membershipId": {
       "type": "string"
     },
     "openInNewTab": {
