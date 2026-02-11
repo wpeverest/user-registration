@@ -10483,7 +10483,7 @@ if ( ! function_exists( 'urm_process_profile_fields' ) ) {
 					break;
 			}
 		}
-			if ( 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
+		if ( isset( $field['field_key'] ) && 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
 				$single_field[ $key ] = json_encode(
 					array(
 						'country' => sanitize_text_field( $single_field[ $key ] ),
