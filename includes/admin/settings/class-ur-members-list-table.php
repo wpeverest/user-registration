@@ -1443,43 +1443,70 @@ if ( ! class_exists( 'User_Registration_Members_ListTable' ) ) {
 		}
 
 		/**
-		 * Searches the user on the basis of full name or name.
+		 * Searches the user on the basis of full name, first name, last name, or phone number.
 		 *
-		 * @since xx.xx.xx
-		 *
-		 * @param  object $query
+		 * @param object $query WP_User_Query instance.
 		 */
 		public function urm_search_user_on_name( $query ) {
 			global $wpdb;
 
 			if ( isset( $_REQUEST['s'], $_REQUEST['page'] ) && ! empty( $_REQUEST['s'] ) && 'user-registration-users' === $_REQUEST['page'] ) {
-				$usersearch = sanitize_text_field( $_REQUEST['s'] );
-
-				$user_extract = explode( ' ', $usersearch );
-				$usersearch   = $user_extract[0];
-
+				$usersearch  = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
 				$search_like = '%' . $wpdb->esc_like( $usersearch ) . '%';
 
-				$query->query_where .= " AND (
-					{$wpdb->users}.user_login LIKE '{$search_like}'
-					OR {$wpdb->users}.user_email LIKE '{$search_like}'
-					OR {$wpdb->users}.display_name LIKE '{$search_like}'
-					OR {$wpdb->users}.user_nicename LIKE '{$search_like}'
-					OR EXISTS (
-						SELECT *
+				$search_conditions = array();
+
+				$search_conditions[] = $wpdb->prepare( "({$wpdb->users}.user_login LIKE %s)", $search_like );
+				$search_conditions[] = $wpdb->prepare( "({$wpdb->users}.user_email LIKE %s)", $search_like );
+				$search_conditions[] = $wpdb->prepare( "({$wpdb->users}.display_name LIKE %s)", $search_like );
+				$search_conditions[] = $wpdb->prepare( "({$wpdb->users}.user_nicename LIKE %s)", $search_like );
+
+				$search_conditions[] = $wpdb->prepare(
+					"EXISTS (
+						SELECT 1
 						FROM {$wpdb->usermeta} um
 						WHERE um.user_id = {$wpdb->users}.ID
-						AND (
-							(um.meta_key IN ('first_name','last_name') AND um.meta_value LIKE '{$search_like}')
-							OR (um.meta_key LIKE 'user_registration\_%' AND um.meta_value LIKE '{$search_like}')
-							OR (um.meta_key LIKE 'display_name\_%' AND um.meta_value LIKE '{$search_like}')
-						)
-					)
-				)";
+						AND um.meta_key IN ('first_name', 'last_name', 'nickname')
+						AND um.meta_value LIKE %s
+					)",
+					$search_like
+				);
 
+				$search_conditions[] = $wpdb->prepare(
+					"EXISTS (
+						SELECT 1
+						FROM {$wpdb->usermeta} um
+						WHERE um.user_id = {$wpdb->users}.ID
+						AND um.meta_key LIKE %s
+						AND um.meta_value LIKE %s
+					)",
+					'user_registration_%',
+					$search_like
+				);
+
+				if ( preg_match( '/^[\d\s\-\+\(\)]+$/', $usersearch ) ) {
+					$search_conditions[] = $wpdb->prepare(
+						"EXISTS (
+							SELECT 1
+							FROM {$wpdb->usermeta} um
+							WHERE um.user_id = {$wpdb->users}.ID
+							AND um.meta_key LIKE %s
+							AND um.meta_value LIKE %s
+						)",
+						'phone_%',
+						$search_like
+					);
+				}
+
+				if ( ! empty( $search_conditions ) ) {
+					$pattern = "/AND\s*\(\s*(?:\w+\.)?(user_login|user_url|user_email|user_nicename|display_name)\s+LIKE\s+'[^']+'\s*(OR\s+(?:\w+\.)?(user_login|user_url|user_email|user_nicename|display_name)\s+LIKE\s+'[^']+'\s*)+\)/i";
+
+					$query->query_where = preg_replace( $pattern, '', $query->query_where );
+					$query->query_where .= ' AND (' . implode( ' OR ', $search_conditions ) . ')';
+				}
 			}
 
-			remove_action( 'pre_user_query', $this );
+			remove_action( 'pre_user_query', array( $this, 'urm_search_user_on_name' ) );
 		}
 
 		/**

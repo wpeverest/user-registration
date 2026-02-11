@@ -6700,9 +6700,9 @@ if ( ! function_exists( 'user_registration_validate_edit_profile_form_field_data
 
 			if ( 'user_email' === $single_form_field->field_key ) {
 				// Do not allow admin to update others email, case may change in future
-				if ( ! email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && $user_id !== get_current_user_id() ) {
-					ur_add_notice( esc_html__( 'Email field is not editable.', 'user-registration' ), 'error' );
-				}
+				// if ( ! email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && $user_id !== get_current_user_id() ) {
+				// 	ur_add_notice( esc_html__( 'Email field is not editable.', 'user-registration' ), 'error' );
+				// }
 				// Check if email already exists before updating user details.
 				if ( email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) !== $user_id ) {
 					ur_add_notice( esc_html__( 'Email already exists', 'user-registration' ), 'error' );
@@ -10552,16 +10552,16 @@ if ( ! function_exists( 'urm_process_profile_fields' ) ) {
 					break;
 			}
 		}
-		if ( 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
-			$single_field[ $key ] = json_encode(
-				array(
-					'country' => sanitize_text_field( $single_field[ $key ] ),
-					'state'   => sanitize_text_field(
-						isset( $single_field[ $key . '_state' ] ) ? $single_field[ $key . '_state' ] : ''
-					),
-				)
-			);
-		}
+			if ( isset( $field['field_key'] ) && 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
+				$single_field[ $key ] = json_encode(
+					array(
+						'country' => sanitize_text_field( $single_field[ $key ] ),
+						'state'   => sanitize_text_field(
+							isset( $single_field[ $key . '_state' ] ) ? $single_field[ $key . '_state' ] : ''
+						),
+					)
+				);
+			}
 
 		/**
 		 * Action hook to perform validation of edit profile form.
