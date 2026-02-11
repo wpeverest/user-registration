@@ -1515,8 +1515,10 @@
 				team_pricing_container.addClass('ur-d-flex');
 				team_pricing_container.removeClass('ur-d-none');
 			}else{
-				$('input[name="ur_membership_local_currency"]').prop('checked', false);
-				$('input[name="ur_membership_local_currency"]').trigger( 'change' );
+				if ( $('input[name="ur_membership_local_currency"]:checked').length ) {
+					$('input[name="ur_membership_local_currency"]').prop('checked', false);
+					$('input[name="ur_membership_local_currency"]').trigger('change');
+				}
 			}
 		}
 	);
