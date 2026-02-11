@@ -23,7 +23,7 @@ if ( ! class_exists( 'UR_SDK_Deactivation_Feedback', false ) ) {
 			add_filter( 'user_registration_feedback_deactivate_button_cancel', array( $this, 'button_cancel_label' ) );
 			add_filter( 'user_registration_feedback_deactivate_options', array( $this, 'deactivate_options' ) );
 			add_filter( 'user_registration_feedback_deactivate_options_skip_randomize', '__return_true' );
-//			add_filter( 'themegrill_sdk_labels', array( $this, 'deactivate_options_labels' ), 999, 1 );
+			//          add_filter( 'themegrill_sdk_labels', array( $this, 'deactivate_options_labels' ), 999, 1 );
 			add_action( 'init', array( $this, 'patch_sdk_labels_after_init' ), 15 );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_popup_assets' ), 20 );
 		}
@@ -65,7 +65,8 @@ if ( ! class_exists( 'UR_SDK_Deactivation_Feedback', false ) ) {
 					'type' => 'textarea',
 				),
 				'id5'   => array(
-					'id' => 'I_no_longer_need_the_plugin',
+					'id'   => 'no_longer_needed',
+					'type' => 'textarea',
 				),
 				'id999' => array(
 					'id'   => 'Other',
