@@ -14,7 +14,14 @@
 
 	var user_registration_form_validator = {
 		$user_registration: user_registration_form_selector,
-		init: function () {
+		init: function ( context ) {
+			if ( 'menu-restriction-popup' === context ) {
+				this.$user_registration = $(
+					"#URCR-Restriction-Modal .user-registration.ur-frontend-form > form"
+				);
+			}else{
+				this.$user_registration = user_registration_form_selector;
+			}
 			this.add_validation_methods();
 			this.load_validation();
 			this.init_inputMask();
@@ -713,4 +720,34 @@
 	$(window).on("user_registration_repeater_modified", function () {
 		user_registration_form_validator.init();
 	});
+
+
+	/**
+	 * Support form validation if menu restriction contain the form shortcode on message.
+	 *
+	 * @since xx.xx.xx
+	 */
+	var dialog = $("#URCR-Restriction-Modal");
+
+	if ( dialog.length || typeof MutationObserver !== 'undefined') {
+		if ( $( document ).find( "#URCR-Restriction-Modal .user-registration.ur-frontend-form > form" ) ) {
+			var observer = new MutationObserver(function (mutations) {
+				for (var i = 0; i < mutations.length; i++) {
+					if (mutations[i].attributeName === 'open') {
+
+						if (dialog.is('[open]') ) {
+							user_registration_form_validator.init( 'menu-restriction-popup' );
+						}else{
+							user_registration_form_validator.init();
+						}
+					}
+				}
+			});
+
+			observer.observe(dialog[0], {
+				attributes: true
+			});
+		}
+	}
+
 })(jQuery);

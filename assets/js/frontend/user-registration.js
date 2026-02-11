@@ -2619,7 +2619,7 @@
 			// Initialize the flatpickr when the document is ready to be manipulated.
 			$(document).ready(function () {
 				// Handle user registration form submit event.
-				$(".ur-submit-button").on("click", function () {
+				$( document ).on( "click", ".ur-submit-button" , function () {
 					$(this).closest("form.register").ur_form_submission();
 				});
 
