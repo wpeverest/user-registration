@@ -887,6 +887,11 @@ jQuery(function ($) {
 								) {
 									type = "success";
 								}
+
+								if( typeof response.data.email != undefined && '' != response.data.email ){
+									$( document ).find( '.user_registration_edit_profile_user_email' ).val( response.data.email );
+								}
+								
 								var individual_field_message = false;
 								if (typeof response.data.message === "object") {
 									$.each(

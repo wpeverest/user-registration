@@ -54,6 +54,7 @@ class UR_Admin_Assets {
 
 		wp_register_style( 'tooltipster', UR()->plugin_url() . '/assets/css/tooltipster/tooltipster.bundle.min.css', array(), UR_VERSION );
 		wp_register_style( 'tooltipster-borderless-theme', UR()->plugin_url() . '/assets/css/tooltipster/tooltipster-sideTip-borderless.min.css', array(), UR_VERSION );
+		wp_register_style( 'ur-toast', UR()->plugin_url() . '/assets/css/ur-toast.css', array(), UR_VERSION );
 
 		// Add RTL support for admin styles.
 		wp_style_add_data( 'user-registration-menu', 'rtl', 'replace' );
@@ -250,8 +251,9 @@ class UR_Admin_Assets {
 				'download_failed'              => esc_html__( 'Download Failed. Please download and activate addon manually.', 'user-registration' ),
 				'download_successful_title'    => esc_html__( 'Installation Successful.', 'user-registration' ),
 				'download_successful_message'  => esc_html__( 'Addons have been Installed and Activated. You have to reload the page.', 'user-registration' ),
-				'save_changes_text'            => esc_html__( 'Save Changes and Reload', 'user-registration' ),
-				'reload_text'                  => esc_html__( 'Just Reload', 'user-registration' ),
+				'i18n_activation_success'      => esc_html__( 'Successfully activated. Reloading...', 'user-registration' ),
+				//              'save_changes_text'            => esc_html__( 'Save Changes and Reload', 'user-registration' ),
+				'reload_text' => esc_html__( 'Ok', 'user-registration' ),
 			)
 		);
 

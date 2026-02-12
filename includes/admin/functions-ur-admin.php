@@ -332,6 +332,9 @@ function ur_create_page( $slug, $option = '', $page_title = '', $page_content = 
 	if ( $valid_page_found ) {
 		if ( $option ) {
 			update_option( $option, $valid_page_found );
+			if ( 'user_registration_login_page_id' === $option ) {
+				update_option( 'user_registration_login_options_login_redirect_url', $valid_page_found );
+			}
 		}
 
 		return $valid_page_found;
@@ -369,6 +372,9 @@ function ur_create_page( $slug, $option = '', $page_title = '', $page_content = 
 
 	if ( $option ) {
 		update_option( $option, $page_id );
+		if ( 'user_registration_login_page_id' === $option ) {
+			update_option( 'user_registration_login_options_login_redirect_url', $page_id );
+		}
 	}
 
 	return $page_id;
@@ -1191,6 +1197,7 @@ if ( ! function_exists( 'user_registration_set_login_page' ) ) {
 
 			if ( isset( $data['is_login'] ) && ur_string_to_bool( $data['is_login'] ) ) {
 				update_option( 'user_registration_login_page_id', $post_id );
+				update_option( 'user_registration_login_options_login_redirect_url', $post_id );
 				update_option( 'ur_login_page_processed', true );
 				UR_Admin_Embed_Wizard::delete_meta();
 			}

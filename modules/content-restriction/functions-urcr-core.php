@@ -251,7 +251,7 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 							}
 
 							if ( ! in_array( $target['taxonomy'], (array) $post_taxonomies ) ) {
-								return - 1;
+								break;
 							}
 
 							/**
@@ -262,13 +262,13 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 							$post_status = apply_filters( 'user_registration_membership_post_taxonomy_status', '' );
 
 							if ( ! empty( $post_status ) && isset( $target_post->post_status ) && $target_post->post_status === $post_status ) {
-								return - 1;
+								break;
 							}
 
 							$terms = get_the_terms( $target_post, $target['taxonomy'] );
 
 							if ( empty( $terms ) || is_wp_error( $terms ) ) {
-								return - 1;
+								break;
 							}
 
 							foreach ( $terms as $term ) {
