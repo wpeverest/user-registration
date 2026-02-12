@@ -544,7 +544,7 @@ class OrdersListTable extends \UR_List_Table {
 
 		<div class="module" style="display: flex; gap: 10px">
 			<select name="payment_for" id="user-registration-pro-payment-type-filters">
-				<option value="" <?php echo ( '' === $payment_for_request || 'all_payments' === $payment_for_request ) ? 'selected=selected' : ''; ?>><?php echo esc_html__( 'All Payments', 'user-registration' ); ?></option>
+				<option value="" <?php echo ( '' === $payment_for_request ) ? 'selected=selected' : ''; ?>><?php echo esc_html__( 'All Payments', 'user-registration' ); ?></option>
 				<option value="forms"
 					<?php echo 'forms' === $payment_for_request ? 'selected=selected' : ''; ?>>
 					<?php echo esc_html__( 'Forms', 'user-registration' ); ?></option>
