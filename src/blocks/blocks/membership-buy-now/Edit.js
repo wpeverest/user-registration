@@ -131,6 +131,7 @@ const Edit = (props) => {
 	const borderRadius = border?.radius;
 	const borderStyle = border?.style;
 	const [membershipList, setMembershipList] = useState(null);
+	const [prevBorderWidth, setPrevBorderWidth] = useState(null);
 	const blockProps = useBlockProps();
 
 	const [themeColors] = useSettings("color.palette.theme");
@@ -202,7 +203,7 @@ const Edit = (props) => {
 					...style,
 					border: {
 						...border,
-						width: "1px"
+						width: prevBorderWidth ?? "1px"
 					}
 				};
 			}
@@ -234,6 +235,7 @@ const Edit = (props) => {
 			}
 
 			if (borderWidth) {
+				setPrevBorderWidth(borderWidth);
 				updates.style = {
 					...style,
 					border: {

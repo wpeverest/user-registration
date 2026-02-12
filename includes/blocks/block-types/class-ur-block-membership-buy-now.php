@@ -21,9 +21,12 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 
 	/** Parse preset color */
 	private function parse_preset_color( $value ) {
+
 		if ( strpos( $value, 'var:preset|color|' ) !== false ) {
 			$slug = str_replace( 'var:preset|color|', '', $value );
 			return 'var(--wp--preset--color--' . $slug . ')';
+		} else if(  strpos( $value, 'accent-' !== false )  ) {
+			return 'var(--wp--preset--color--' . $value . ')';
 		}
 		return $value;
 	}
@@ -278,7 +281,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 		$members_repository      = new MembersRepository();
 		$membership_repository      = new MembershipRepository();
 		$membership_service      = new MembershipService();
-		$current_plan = true;
+		$current_plan = false;
 		$button_text = ! empty( $attr['text'] ) ? esc_html__( sanitize_text_field( $attr['text'] ), 'user-registration' ) : __( 'Buy Now', 'user-registration' );
 
 		if ( $current_user_id ) {
@@ -315,7 +318,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 
 		$html .= '<div ' . $wrapper_attributes . '>';
 		$html .= '<div style="width:' . esc_attr( $attr['width'] ) . ';">';
-		$html .= '<a class="buynow-link" href="' . esc_url( $registration_page_url ) . '" ' . $link_extra_attributes . ' >';
+		$html .= '<a class="buynow-link" href="' . esc_url( $registration_page_url ) . '" ' . $link_extra_attributes . ' style="text-decoration:none;">';
 		$html .= '<button type="button" class="' . esc_attr( $button_classes ) . '" style="' . esc_attr( $button_style ) . '" ' . ( empty( $registration_page_url ) || $current_plan ? 'disabled' : '' ) . '>';
 		$html .= '<span class="label">' . esc_html( $button_text ) . '</span>';
 		$html .= '</button>';
