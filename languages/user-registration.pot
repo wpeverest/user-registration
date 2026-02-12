@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-12T07:22:49+00:00\n"
+"POT-Creation-Date: 2026-02-12T12:32:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: user-registration\n"
@@ -977,7 +977,7 @@ msgstr ""
 #: includes/admin/settings/class-ur-users-menu.php:218
 #: includes/admin/settings/class-ur-users-menu.php:233
 #: includes/class-ur-frontend-scripts.php:593
-#: includes/frontend/class-ur-frontend.php:750
+#: includes/frontend/class-ur-frontend.php:754
 #: modules/membership/includes/Admin/Members/Members.php:170
 #: modules/membership/includes/Admin/Membership/Membership.php:1021
 #: modules/membership/includes/Admin/MembershipGroups/MembershipGroups.php:73
@@ -8984,23 +8984,23 @@ msgstr ""
 msgid "Subscriptions"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:629
+#: includes/frontend/class-ur-frontend.php:631
 msgid "Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your upgraded membership will be activated. Kindly wait for the admin's confirmation."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:630
+#: includes/frontend/class-ur-frontend.php:632
 msgid "Please complete the payment using the bank details provided by the admin. <br> Your membership will be renewed once the payment is verified. Kindly wait for the admin's confirmation."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:631
+#: includes/frontend/class-ur-frontend.php:633
 msgid "Please complete the payment using the bank details provided by the admin. <br> Once the payment is verified, your new membership will be activated. Kindly wait for the admin's confirmation."
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:748
+#: includes/frontend/class-ur-frontend.php:752
 msgid "Reactivate"
 msgstr ""
 
-#: includes/frontend/class-ur-frontend.php:752
+#: includes/frontend/class-ur-frontend.php:756
 msgid "Change Payment"
 msgstr ""
 
@@ -11125,7 +11125,7 @@ msgstr ""
 #: includes/RestApi/controllers/version1/class-ur-gutenberg-blocks.php:304
 #: modules/content-restriction/admin/class-urcr-admin-meta-boxes.php:235
 #: modules/content-restriction/class-urcr-frontend.php:1311
-#: modules/content-restriction/class-urcr-shortcodes.php:55
+#: modules/content-restriction/class-urcr-shortcodes.php:58
 msgid "This content is restricted!"
 msgstr ""
 
@@ -11793,7 +11793,7 @@ msgstr ""
 msgid "Parent content access rule"
 msgstr ""
 
-#: modules/content-restriction/class-urcr-shortcodes.php:184
+#: modules/content-restriction/class-urcr-shortcodes.php:187
 msgid "This content is restricted1!"
 msgstr ""
 

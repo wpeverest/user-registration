@@ -281,6 +281,9 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 * Fix      - Warnings shown during renewal process.
 * Fix      - Warnings shown during membership cancellation process.
 * Fix      - Admin styles loading in the frontend when using Oxygen builder.
+* Fix      - Undefined error in redirection url after renewal.
+* Tweak    - Notice design update for registration page selection in settings.
+
 
 = 5.1.1    - 02/2/2026 =
 * Fix      - Empty migrated rules showing up when toggling enabled/disabled state.
