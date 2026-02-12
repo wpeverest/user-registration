@@ -41,6 +41,9 @@ class URCR_Shortcodes {
 
 		$enable_disable = ur_string_to_bool( get_option( 'user_registration_content_restriction_enable', true ) );
 		if ( $enable_disable ) {
+			if ( function_exists( 'is_super_admin' ) && is_super_admin() ) {
+				return do_shortcode( $content );
+			}
 			$global_migrated = get_option( 'urcr_global_restriction_migrated', false );
 
 			$override_global_settings = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', $single = true );
