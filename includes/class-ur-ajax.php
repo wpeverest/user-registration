@@ -866,15 +866,17 @@ class UR_AJAX {
 			array_filter(
 				$settings_data,
 				function ( $item ) {
-					return $item['option'] !== 'user_registration_form_setting_general_advanced';
+					return isset( $item['option'] ) && $item['option'] !== 'user_registration_form_setting_general_advanced';
 				}
 			)
 		);
 
-		$output = array_combine(
-			array_column( $settings_data, 'option' ),
-			array_column( $settings_data, 'value' )
-		);
+		$output = array();
+		foreach ( $settings_data as $item ) {
+			if ( isset( $item['option'] ) ) {
+				$output[ $item['option'] ] = isset( $item['value'] ) ? $item['value'] : '';
+			}
+		}
 
 		do_action( 'user_registration_validation_before_login_form_save', $output );
 
@@ -890,8 +892,14 @@ class UR_AJAX {
 
 		if ( ur_string_to_bool( $output['user_registration_login_options_prevent_core_login'] ) ) {
 
-			if ( ( is_numeric( $output['user_registration_login_options_login_redirect_url'] ) ) && ! empty( $output['user_registration_login_options_login_redirect_url'] ) ) {
-				$is_page_my_account_page = ur_find_my_account_in_page( sanitize_text_field( wp_unslash( $output['user_registration_login_options_login_redirect_url'] ) ) );
+			$login_redirect_value = isset( $output['user_registration_login_options_login_redirect_url'] ) ? $output['user_registration_login_options_login_redirect_url'] : '';
+			if ( empty( $login_redirect_value ) || ! is_numeric( $login_redirect_value ) ) {
+				$login_redirect_value = get_option( 'user_registration_login_options_login_redirect_url', '' );
+			}
+			$login_redirect_page_id = absint( $login_redirect_value );
+
+			if ( $login_redirect_page_id > 0 ) {
+				$is_page_my_account_page = ur_find_my_account_in_page( $login_redirect_page_id );
 				if ( ! $is_page_my_account_page ) {
 					wp_send_json_error(
 						array(
@@ -942,6 +950,22 @@ class UR_AJAX {
 		}
 
 		foreach ( $output as $key => $settings ) {
+			if ( 'user_registration_login_options_login_redirect_url' === $key ) {
+				if ( ! is_numeric( $settings ) || empty( $settings ) ) {
+					$settings = get_option( 'user_registration_login_options_login_redirect_url', '' );
+				}
+				if ( is_numeric( $settings ) && ! empty( $settings ) ) {
+					update_option( 'user_registration_login_page_id', $settings );
+				}
+			}
+			if ( 'user_registration_login_page_id' === $key ) {
+				if ( ! is_numeric( $settings ) || empty( $settings ) ) {
+					$settings = get_option( 'user_registration_login_page_id', '' );
+				}
+				if ( is_numeric( $settings ) && ! empty( $settings ) ) {
+					update_option( 'user_registration_login_options_login_redirect_url', $settings );
+				}
+			}
 			update_option( $key, $settings );
 		}
 
@@ -1019,6 +1043,7 @@ class UR_AJAX {
 			);
 			if ( $is_login ) {
 				update_option( 'user_registration_login_page_id', $id );
+				update_option( 'user_registration_login_options_login_redirect_url', $id );
 			}
 			wp_send_json_success( $url );
 		}
