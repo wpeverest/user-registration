@@ -272,7 +272,7 @@ class URCR_Frontend {
 				}
 
 				// If no rule granted access and we have a restriction rule, apply it
-				if ( null !== $restriction_rule ) {
+				if ( null !== $restriction_rule && ! is_super_admin() ) {
 					do_action( 'urcr_pre_content_restriction_applied', $restriction_rule, $post );
 
 					urcr_apply_content_restriction( $restriction_rule['actions'], $post );
@@ -282,7 +282,7 @@ class URCR_Frontend {
 			} else {
 				$access_given = $this->check_access_with_access_rules();
 
-				if ( false === $access_given && $whole_site_access_restricted ) {
+				if ( false === $access_given && $whole_site_access_restricted && ! is_super_admin() ) {
 					$template = $this->basic_restrictions_templates( $template, $post );
 				}
 			}
