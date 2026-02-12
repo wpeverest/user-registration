@@ -96,10 +96,8 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 		}
 		$background = $this->parse_preset_color( $background_raw );
 
-
 		$text_hover_color    = isset( $attr['hoverTextColor'] ) ? $attr['hoverTextColor'] : '';
 		$text_hover_bg_color = isset( $attr['hoverBgColor'] ) ? $attr['hoverBgColor'] : '';
-
 
 		$border_color_raw = '';
 		if ( isset( $attr['borderColor'] ) && ! empty( $attr['borderColor'] ) ) {
@@ -175,7 +173,7 @@ class UR_Block_Membership_Buy_Now extends UR_Block_Abstract {
 		if ( $border_color ) {
 			$button_style .= 'border-color:' . $border_color . ';';
 		}
-		if ( $border_width ) {
+		if ( $border_width && strpos( $button_classes, 'is-style-outline' ) !== false ) {
 			$button_style .= 'border-width:' . $border_width . ';border-style:' . $border_style . ';';
 		}
 
