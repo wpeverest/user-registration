@@ -442,35 +442,6 @@ if ( ! function_exists( 'ur_is_login_form_markup_rendered' ) ) {
 	}
 }
 
-if ( ! function_exists( 'ur_is_registration_form_markup_rendered' ) ) {
-
-	/**
-	 * Detects the actual rendered HTML of the registration form.
-	 *
-	 * @param string $content Optional. HTML to check. If empty, uses current post content.
-	 * @return bool True if the registration form markup is present, false otherwise.
-	 */
-	function ur_is_registration_form_markup_rendered( $content = '' ) {
-		if ( '' !== $content ) {
-			$html = $content;
-		} else {
-			if ( ! is_singular() && ! is_front_page() ) {
-				return false;
-			}
-			$post = get_post();
-			if ( ! $post || ! $post->post_content ) {
-				return false;
-			}
-			$html = apply_filters( 'the_content', $post->post_content );
-		}
-
-		$has_registration_container = ( false !== strpos( $html, 'id="user-registration-form-' ) || false !== strpos( $html, "id='user-registration-form-" ) );
-		$has_registration_form       = ( false !== strpos( $html, 'user-registration ur-frontend-form' ) );
-
-		return $has_registration_container && $has_registration_form;
-	}
-}
-
 /**
  * Wrapper for ur_doing_it_wrong.
  *
