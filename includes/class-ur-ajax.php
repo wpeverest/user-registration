@@ -1995,6 +1995,10 @@ class UR_AJAX {
 					'user_registration_stripe_test_mode',
 					'user_registration_stripe_live_publishable_key',
 					'user_registration_stripe_live_secret_key',
+					'user_registration_stripe_webhook_id_test',
+					'user_registration_stripe_webhook_secret_test',
+					'user_registration_stripe_webhook_id_live',
+					'user_registration_stripe_webhook_secret_live',
 				);
 				break;
 			case 'bank':
