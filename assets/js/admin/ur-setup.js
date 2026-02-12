@@ -520,7 +520,6 @@ jQuery(function ($) {
 					}
 				}).then(function (result) {
 					if (result.isConfirmed) {
-						// Save and Reload button (commented out)
 						// $(".ur_save_form_action_button").trigger("click");
 						if (
 							url.indexOf("mailchimp") < 1 ||
@@ -617,7 +616,6 @@ jQuery(function ($) {
 				button_text + ' <span class="ur-spinner is-active"></span>'
 			).prop("disabled", true);
 
-			// After install phase, show "Activating..." (backend does both in one request)
 			if (node.hasClass("user-registration-settings-addon-install")) {
 				setTimeout(function () {
 					if ($btn.length && $btn.prop("disabled")) {
@@ -831,7 +829,6 @@ jQuery(function ($) {
 					' <span class="ur-spinner is-active"></span>'
 			).prop("disabled", true);
 
-			// After install phase, show "Activating..."
 			setTimeout(function () {
 				if ($btn.length && $btn.prop("disabled")) {
 					$btn.html(
