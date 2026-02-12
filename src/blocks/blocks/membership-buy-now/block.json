@@ -76,17 +76,15 @@
     },
     "spacing": {
       "__experimentalSkipSerialization": true,
-      "margin": true,
-      "__experimentalDefaultControls": {
-        "padding": true
-      }
+      "margin": false,
+      "padding": true
     }
   },
   "attributes": {
     "clientId": {
       "type": "string"
     },
-    "membershipType": {
+    "membershipId": {
       "type": "string"
     },
     "openInNewTab": {
@@ -99,7 +97,7 @@
     },
     "width": {
       "type": "string",
-      "default": ""
+      "default": "25%"
     },
     "justifyContent": {
       "type": "string",
@@ -111,19 +109,6 @@
     "backgroundColor": {
       "type": "string",
       "default": "#475bb2"
-    },
-    "borderWidth": {
-      "type": "string"
-    },
-    "borderColor": {
-      "type": "string"
-    },
-    "borderStyle": {
-      "type": "string",
-      "default": "solid"
-    },
-    "borderRadius": {
-      "type": "string"
     },
     "hoverTextColor": {
       "type": "string",
@@ -140,6 +125,17 @@
     "savedHoverBgColor": {
       "type": "string",
       "default": ""
+    },
+    "style": {
+      "type": "object",
+      "default": {
+        "border": {
+          "color": "#000000",
+          "width": "1px",
+          "radius": "5px",
+          "style": "solid"
+        }
+      }
     }
   },
   "editorScript": "user-registration-blocks-editor",
