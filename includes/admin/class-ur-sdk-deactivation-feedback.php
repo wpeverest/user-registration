@@ -107,9 +107,6 @@ if ( ! class_exists( 'UR_SDK_Deactivation_Feedback', false ) ) {
 			return $labels;
 		}
 
-		/**
-		 * Enqueue CSS and JS for URM deactivation popup design (plugins screen only).
-		 */
 		public function enqueue_popup_assets() {
 			$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 			if ( ! $screen || ! in_array( $screen->id, array( 'plugins', 'plugins-network' ), true ) ) {
