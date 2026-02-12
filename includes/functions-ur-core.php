@@ -4503,6 +4503,20 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 						'feature_link' => ' https://wpuserregistration.com/features/pdf-form-submission/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
 					),
 				),
+				'sms-integration'  => array(
+					'label'  => esc_html__( 'SMS Integration', 'user-registration' ),
+					'plugin' => 'user-registration-sms-integration',
+					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
+					'name'   => esc_html__( 'User Registration SMS Integration', 'user-registration' ),
+					'upsell' => array(
+						'excerpt'    => 'Send SMS OTP for login and verification via Twilio.',
+						'description' => array(
+							'Connect with Twilio for SMS delivery',
+							'Enable OTP-based login and registration verification',
+						),
+						'feature_link' => 'https://wpuserregistration.com/features/sms-integration/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
+					),
+				),
 				'google-sheets'   => array(
 					'label'  => esc_html__( 'Google Sheets', 'user-registration' ),
 					'plugin' => 'user-registration-google-sheets',
@@ -4677,9 +4691,13 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 							$description = sprintf( __( 'You have been subscribed to %s plan. Please upgrade to higher plans to use this feature.', 'user-registration' ), ucfirst( $license_plan ) );
 							$button_text = esc_html__( 'Upgrade Plan', 'user-registration' );
 
-							$settings['sections'][ $detail['plugin'] ] = array(
-								'title'       => $detail['label'],
-								'before_desc' => $description,
+							$settings['sections'][ $detail['plugin'] ] = array_merge(
+								$detail,
+								array(
+									'type'        => 'card',
+									'title'       => $detail['label'],
+									'before_desc' => $description,
+								)
 							);
 						} else {
 							$plugin_name = $detail['name'];
@@ -4706,19 +4724,23 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 							);
 							$button_title = sprintf( esc_html__( '%s Addon', 'user-registration' ), $action );
 
-							$settings['sections'][ $detail['plugin'] ] = array(
-								'is_premium'  => false,
-								'title'       => $detail['label'],
-								'before_desc' => $description,
-								'settings'    => array(
-									array(
-										'id'    => 'ur-install-addon__button',
-										'type'  => 'button',
-										'class' => $button_class,
-										'attrs' => $button_attrs,
-										'title' => $button_title,
+							$settings['sections'][ $detail['plugin'] ] = array_merge(
+								$detail,
+								array(
+									'type'        => 'card',
+									'is_premium'  => false,
+									'title'       => $detail['label'],
+									'before_desc' => $description,
+									'settings'    => array(
+										array(
+											'id'    => 'ur-install-addon__button',
+											'type'  => 'button',
+											'class' => $button_class,
+											'attrs' => $button_attrs,
+											'title' => $button_title,
+										),
 									),
-								),
+								)
 							);
 						}
 					} else {
@@ -4755,7 +4777,41 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 								'data-type' => 'feature',
 								'data-name' => $detail['name'],
 							);
-							$button_title = esc_html__( 'Activate Feature', 'user-registration' );
+							$button_title = esc_html__( 'Activate Addon', 'user-registration' );
+
+							$settings['sections']['premium_setting_section']['before_desc'] = $description;
+							$settings['sections']['premium_setting_section']['desc']        = false;
+							$settings['sections']['premium_setting_section']['settings']    = array(
+								array(
+									'id'    => 'ur-activate-feature__button',
+									'type'  => 'button',
+									'class' => $button_class,
+									'attrs' => $button_attrs,
+									'title' => $button_title,
+								),
+							);
+							return $settings;
+						}
+					}
+
+					if ( 'sms-integration' === $current_section ) {
+						$feature_slug       = 'user-registration-sms-integration';
+						$is_feature_enabled = ur_check_module_activation( 'sms-integration' );
+
+						if ( in_array( $license_plan, $detail['plan'], true ) && $is_feature_enabled ) {
+							unset( $settings['sections']['premium_setting_section'] );
+							return $settings;
+						}
+
+						if ( in_array( $license_plan, $detail['plan'], true ) && ! $is_feature_enabled ) {
+							$description  = esc_html__( 'Please activate the SMS Integration feature to use this functionality.', 'user-registration' );
+							$button_class = 'user-registration-settings-feature-activate';
+							$button_attrs = array(
+								'data-slug' => $feature_slug,
+								'data-type' => 'feature',
+								'data-name' => $detail['name'],
+							);
+							$button_title = esc_html__( 'Activate Addon', 'user-registration' );
 
 							$settings['sections']['premium_setting_section']['before_desc'] = $description;
 							$settings['sections']['premium_setting_section']['desc']        = false;
@@ -4784,7 +4840,7 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 					} else {
 						$plugin_name = $detail['name'];
 						$action      = '';
-						if ( 'user-registration-email-custom-email' === $detail['plugin'] ) {
+						if ( 'user-registration-email-custom-email' === $detail['plugin'] || 'user-registration-sms-integration' === $detail['plugin'] ) {
 							$action = 'Activate';
 						} elseif ( file_exists( WP_PLUGIN_DIR . '/' . $detail['plugin'] ) ) {
 							if ( ! is_plugin_active( $detail['plugin'] . '/' . $detail['plugin'] . '.php' ) ) {
@@ -5727,7 +5783,7 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			?>
 			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
 				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
-						style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+					   style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
 					<tbody>
 					<tr>
 						<td colspan="2" style="text-align: left;">
@@ -5760,14 +5816,14 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 		$current_screen   = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		$is_settings_page = $current_screen && 'user-registration_page_user-registration-settings' === $current_screen->id;
 		$is_email_action  = isset( $_REQUEST['action'] ) && (
-			'ur_send_test_email' === $_REQUEST['action'] ||
-			strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		);
+				'ur_send_test_email' === $_REQUEST['action'] ||
+				strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			);
 
 		// Only exclude CSS when on settings page displaying editor (not when sending emails).
 		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action &&
-							! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
-							! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
+							 ! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
+							 ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
 
 		// Responsive CSS styles for email template - only include when not in editor context.
 		$responsive_styles = '';
@@ -6956,7 +7012,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 
 						if ( isset( $advance_data['general_setting']->required ) ) {
 							if ( in_array( $single_item->field_key, ur_get_required_fields() )
-								|| ur_string_to_bool( $advance_data['general_setting']->required ) ) {
+								 || ur_string_to_bool( $advance_data['general_setting']->required ) ) {
 								$field['required']                      = true;
 								$field['custom_attributes']['required'] = 'required';
 							}
@@ -7271,14 +7327,14 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	 */
 	function ur_check_is_inactive() {
 		if ( ! ur_check_module_activation( 'membership' ) ||
-			current_user_can( 'manage_options' ) ||
-			( ! empty( $_POST['action'] ) && in_array(
-				$_POST['action'],
-				array(
-					'user_registration_membership_confirm_payment',
-					'user_registration_membership_create_stripe_subscription',
-				)
-			) )
+			 current_user_can( 'manage_options' ) ||
+			 ( ! empty( $_POST['action'] ) && in_array(
+					 $_POST['action'],
+					 array(
+						 'user_registration_membership_confirm_payment',
+						 'user_registration_membership_create_stripe_subscription',
+					 )
+				 ) )
 		) {
 			return;
 		}
@@ -9158,7 +9214,7 @@ if ( ! function_exists( 'ur_filter_login_form_settings_redirect_url_field' ) ) {
 						$settings_page_url = admin_url( 'admin.php?page=user-registration-settings&tab=general&section=pages' );
 						$notice_link       = '<a href="' . esc_url( $settings_page_url ) . '">' . esc_html__( 'here', 'user-registration' ) . '</a>';
 						$notice            = sprintf(
-							/* translators: %s: link to Login Page setting */
+						/* translators: %s: link to Login Page setting */
 							__( 'It is recommended to use the same page as the global login page that is set %s. This ensures no conflicts. The above page selector may be merged and removed in further updates.', 'user-registration' ),
 							$notice_link
 						);
@@ -9347,7 +9403,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 							cols="' . esc_attr( $value['cols'] ) . '"
 							placeholder="' . esc_attr( $value['placeholder'] ) . '"
 							' . esc_html( implode( ' ', $custom_attributes ) ) . '>'
-								. esc_textarea( $option_value ) . '</textarea>';
+								 . esc_textarea( $option_value ) . '</textarea>';
 					$settings .= '</div>';
 					$settings .= '</div>';
 					break;
@@ -10641,16 +10697,16 @@ if ( ! function_exists( 'urm_process_profile_fields' ) ) {
 					break;
 			}
 		}
-			if ( isset( $field['field_key'] ) && 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
-				$single_field[ $key ] = json_encode(
-					array(
-						'country' => sanitize_text_field( $single_field[ $key ] ),
-						'state'   => sanitize_text_field(
-							isset( $single_field[ $key . '_state' ] ) ? $single_field[ $key . '_state' ] : ''
-						),
-					)
-				);
-			}
+		if ( isset( $field['field_key'] ) && 'country' === $field['field_key'] && isset( $single_field[ $key ] ) ) {
+			$single_field[ $key ] = json_encode(
+				array(
+					'country' => sanitize_text_field( $single_field[ $key ] ),
+					'state'   => sanitize_text_field(
+						isset( $single_field[ $key . '_state' ] ) ? $single_field[ $key . '_state' ] : ''
+					),
+				)
+			);
+		}
 
 		/**
 		 * Action hook to perform validation of edit profile form.
@@ -11513,13 +11569,13 @@ if ( ! function_exists( 'ur_get_currencies' ) ) {
 	 */
 	function ur_get_currencies() {
 		$currencies = array_unique(
-			/**
-			 * Filters full list of currency codes.
-			 *
-			 * @since 6.0.0
-			 *
-			 * @param string[] $currencies Full list of currency codes.
-			 */
+		/**
+		 * Filters full list of currency codes.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param string[] $currencies Full list of currency codes.
+		 */
 			apply_filters(
 				'ur_currencies',
 				array(
