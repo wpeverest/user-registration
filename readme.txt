@@ -3,8 +3,8 @@ Contributors: WPEverest
 Tags: membership, subscription, content restriction, user profile, user registration
 Requires at least: 5.5
 Requires PHP: 7.4
-Tested up to: 6.9
-Stable tag: 5.1.1
+Tested up to: 6.9.1
+Stable tag: 5.1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -32,7 +32,7 @@ User Registration & Membership (URM) helps you monetize your site by creating me
 
 ==Complete Membership Solution==
 
-https://youtu.be/eNQSzJqSTt0
+https://youtu.be/czohMTVfLrw
 
 * __Membership Groups and Plans__: Create membership tiers with different access levels and benefits. Combine related plans into membership groups for organized front-end listing. 
 
@@ -50,7 +50,7 @@ https://youtu.be/eNQSzJqSTt0
 
  __Custom User Registration__
 
-[YouTube Video: https://youtu.be/jbiBJdowxG0/ ] 
+[YouTube Video: https://youtu.be/jbiBJdowxG0 ] 
 
 * __Registration Form Builder__: Build custom WordPress registration forms. Drag fields onto the canvas, arrange them visually, and configure settings with simple clicks. 
 
@@ -208,8 +208,6 @@ __Marketing and CRM Integrations__
 
 Get in Touch with us: [Official Community](https://www.facebook.com/groups/userregistration) | [Twitter](https://twitter.com/user_register) 
 
-__Explore More Products from Our Team__
-
 
 == Frequently Asked Questions ==
 
@@ -266,6 +264,26 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 5.1.2    - 12/02/2026 =
+* Security - Arbitrary code execution through shortcode.
+* Enhance  - Default WordPress login form is no longer forced.
+* Enhance  - Default filter set to All for payments table.
+* Enhance  - Added support for other search parameters on Members table.
+* Enhance  - Deactivation reason pop up update.
+* Fix      - Menu restriction rule causing rules after it to not work.
+* Fix      - Admins losing access to the site when a Whole site restriction was enabled.
+* Fix      - Content Restriction CSS not loading due to missing styles.
+* Fix      - My account layout conflicts with WooCommerce my account sync.
+* Fix      - Unable to edit member emails from the admin side.
+* Fix      - Local currency notice displaying upon free plan creation.
+* Fix      - Profile picture upload area going blank upon image update.
+* Fix      - Warnings shown during renewal process.
+* Fix      - Warnings shown during membership cancellation process.
+* Fix      - Admin styles loading in the frontend when using Oxygen builder.
+* Fix      - Undefined error in redirection url after renewal.
+* Tweak    - Notice design update for registration page selection in settings.
+
 
 = 5.1.1    - 02/2/2026 =
 * Fix      - Empty migrated rules showing up when toggling enabled/disabled state.
@@ -970,27 +988,8 @@ information and activities.
 
 
 == Upgrade Notice ==
-= 5.0.4 =
-##Important: Version 5.0 is a major update with significant improvements
-We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
-Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)
 
-= 5.0.3 =
-##Important: Version 5.0 is a major update with significant improvements
-We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
-Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)
-
-= 5.0.2 =
-##Important: Version 5.0 is a major update with significant improvements
-We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
-Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)
-
-= 5.0.1 =
-##Important: Version 5.0 is a major update with significant improvements
-We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
-Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)
-
-= 5.0 =
-##Important: Version 5.0 is a major update with significant improvements
+= 5.1.2 =
+##Important: Version 5.0 and above is a major update with significant improvements
 We strongly recommend backing up your site before updating. This update includes architectural changes that make your membership management more powerful and easier to use.
 Read the full blog post to see what’s new: [User Registration & Membership v5.0](https://wpuserregistration.com/blog/user-registration-membership-pro-6/)

@@ -1665,12 +1665,13 @@
 						}
 
 						$this
-							.closest(".user-registration-global-settings--field")
-							.append(
-								"<div id='message' class='" + className +  " inline' style='" + inlineStyle + "'>" +
-									response.responseJSON.message +
-									"</div>"
-							);
+						.closest(".user-registration-global-settings--field")
+						.append(
+							"<div id='message' class='" + className +  " inline' style='" + inlineStyle + "'>" +
+								response.responseJSON.message +
+								"</div>"
+						);
+
 				} else {
 					if (
 						$this
@@ -2656,6 +2657,6 @@
 	});
 	$(document).ready(function () {
 		$(".urm_toggle_pg_status").trigger("change");
-		$( "#user_registration_member_registration_page_id, #user_registration_thank_you_page_id" ).trigger( 'change' );
+		$( "#user_registration_member_registration_page_id, #user_registration_thank_you_page_id").trigger( 'change' );
 	});
 })(jQuery);

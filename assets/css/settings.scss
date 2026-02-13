@@ -1745,10 +1745,21 @@ body {
 
 						}
 
-						&:has( .error ):not( :has( .error.settings-page-notice ) )  {
+						&:has(.error):not(:has(.error.settings-page-notice))  {
 							.select2-container--focus {
 								.select2-selection {
 									border-color: #f34c4c !important;
+								}
+							}
+
+							.select2-selection__rendered {
+								border: 0 !important;
+							}
+						}
+						&:has(.error.settings-page-notice) {
+							.select2-container--focus {
+								.select2-selection {
+									border-color: #475bb2 !important;
 								}
 							}
 
