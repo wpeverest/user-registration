@@ -2169,7 +2169,7 @@
 	};
 	var register_events = {
 		init: function () {
-			$('input[name="urm_payment_method"]').on('change', function () {
+			$( document ).on('change','input[name="urm_payment_method"]' , function () {
 				var selected_method = $(this).val(),
 					stripe_container = $('.stripe-container'),
 					stripe_error_container = $('#stripe-errors');
