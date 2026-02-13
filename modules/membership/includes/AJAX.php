@@ -139,7 +139,6 @@ class AJAX {
 			);
 		}
 		if ( empty( $data['payment_method'] ) ) {
-			wp_delete_user( $member_id );
 			wp_send_json_error(
 				array(
 					'message' => __( 'Payment method is required.', 'user-registration' ),
@@ -235,8 +234,9 @@ class AJAX {
 		$data['email'] = $response['member_email'];
 		$pg_data       = array();
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
-			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
+			update_user_meta( $member_id, 'urm_user_just_created', true );
 
+			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
 			$form_response    = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 			$ur_authorize_net = array( 'ur_authorize_net' => ! empty( $form_response['ur_authorize_net'] ) ? $form_response['ur_authorize_net'] : array() );
 			$data             = array_merge( $data, $ur_authorize_net );

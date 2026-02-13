@@ -447,8 +447,7 @@ class PaypalService {
 			$member_service = new MembersService();
 			$member_service->login_member( $member_id, true );
 		}
-
-		update_user_meta( $member_id, 'urm_user_just_created', true );
+		delete_user_meta( $member_id, 'urm_user_just_created' );
 		ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 	}
 
@@ -976,6 +975,7 @@ class PaypalService {
 			);
 			$email_service->send_email( $email_data, 'payment_retry_failed' );
 		}
+		delete_user_meta( $member_id, 'urm_user_just_created' );
 	}
 
 	/**

@@ -1568,6 +1568,8 @@ class StripeService {
 				'membership_type'     => $membership_type,
 			)
 		);
+		delete_user_meta( $member_id, 'urm_user_just_created' );
+
 	}
 
 	public function handle_failed_invoice( $event, $subscription_id ) {
@@ -1624,6 +1626,8 @@ class StripeService {
 				'member_id'       => $member_id,
 			)
 		);
+		delete_user_meta( $member_id, 'urm_user_just_created' );
+
 	}
 
 	public function handle_failed_payment_intent( $event ) {
@@ -1658,6 +1662,8 @@ class StripeService {
 				)
 			);
 		}
+		delete_user_meta( $order['user_id'], 'urm_user_just_created' );
+
 	}
 
 	public function validate_setup() {
