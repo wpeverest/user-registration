@@ -619,6 +619,8 @@ class UR_Frontend {
 					$membership_process            = urm_get_membership_process( $user_id );
 
 					$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $membership['post_id'] ] );
+					$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $membership['post_id'], $membership_process['multiple'] );
+					$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $membership['post_id'], $membership_process['renew'] );
 
 					$last_order = $members_order_repository->get_member_orders( $user_id );
 					$bank_data  = array();
@@ -636,6 +638,8 @@ class UR_Frontend {
 					$data = array(
 						'membership'        => $membership,
 						'is_upgrading'      => $is_upgrading,
+						'is_purchasing_multiple'      => $is_purchasing_multiple,
+						'is_renewing'      => $is_renewing,
 						'bank_data'         => $bank_data,
 						'renewal_behaviour' => get_option( 'user_registration_renewal_behaviour', 'automatic' ),
 						'subscription_data' => $subscription_data,

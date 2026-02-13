@@ -1726,12 +1726,40 @@ body {
 								position: relative;
 								top: 1px;
 							}
+
+							&.settings-page-notice {
+								color: #475bb2 !important;
+
+								&::before {
+									content: "";
+									background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23475bb2' viewBox='0 0 24 24'%3E%3Cpath d='M20.182 12a8.182 8.182 0 1 0-16.364 0 8.182 8.182 0 0 0 16.364 0ZM22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10Z'/%3E%3Cpath d='M11.091 12V8.363a.91.91 0 1 1 1.818 0V12a.91.91 0 1 1-1.818 0Zm.917 2.727.092.005a.91.91 0 0 1 0 1.809l-.092.004H12a.91.91 0 1 1 0-1.818h.008Z'/%3E%3C/svg%3E");
+									background-repeat: no-repeat;
+									background-size: 100%;
+									background-position: center;
+									width: 18px;
+									height: 18px;
+									position: relative;
+									top: 1px;
+								}
+							}
+
 						}
 
-						&:has(.error) {
+						&:has(.error):not(:has(.error.settings-page-notice))  {
 							.select2-container--focus {
 								.select2-selection {
 									border-color: #f34c4c !important;
+								}
+							}
+
+							.select2-selection__rendered {
+								border: 0 !important;
+							}
+						}
+						&:has(.error.settings-page-notice) {
+							.select2-container--focus {
+								.select2-selection {
+									border-color: #475bb2 !important;
 								}
 							}
 
