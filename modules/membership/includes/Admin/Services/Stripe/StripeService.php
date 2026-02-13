@@ -1204,7 +1204,7 @@ class StripeService {
 				$this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
 
 				$response['subscription'] = $subscription;
-				$response['message']      = __( 'New member has been successfully created with successful stripe subscription.' );
+				$response['message']      = __( 'New member has been successfully created with successful stripe subscription.', 'user-registration' );
 				$response['status']       = true;
 			} elseif ( 'incomplete' === $subscription_status ) {
 				PaymentGatewayLogging::log_general(
