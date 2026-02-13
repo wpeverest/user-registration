@@ -74,6 +74,125 @@ class StripeService {
 		);
 	}
 
+	/**
+	 * Create webhook endpoint in Stripe for a given mode.
+	 *
+	 * @param string $mode 'test' or 'live'.
+	 * @return array
+	 */
+	public static function create_webhook( $mode ) {
+		if ( ! class_exists( 'Stripe\Stripe' ) ) {
+			require_once plugin_dir_path( __FILE__ ) . 'lib/stripe-php/init.php';
+		}
+		$secret_key = get_option( 'user_registration_stripe_' . $mode . '_secret_key', '' );
+		if ( empty( $secret_key ) ) {
+			return array(
+				'success' => false,
+				'message' => 'No API key configured for ' . $mode . ' mode',
+			);
+		}
+
+		$webhook_id_option     = 'user_registration_stripe_webhook_id_' . $mode;
+		$webhook_secret_option = 'user_registration_stripe_webhook_secret_' . $mode;
+		$existing_webhook_id   = get_option( $webhook_id_option, '' );
+
+		if ( ! empty( $existing_webhook_id ) ) {
+			try {
+				\Stripe\Stripe::setApiKey( $secret_key );
+				$webhook = \Stripe\WebhookEndpoint::retrieve( $existing_webhook_id );
+				if ( $webhook && $webhook->id ) {
+					return array(
+						'success'     => true,
+						'message'     => 'Webhook already exists for ' . $mode . ' mode',
+						'webhook_id'  => $webhook->id,
+						'mode'        => $mode,
+					);
+				}
+			} catch ( \Exception $e ) {
+				delete_option( $webhook_id_option );
+				delete_option( $webhook_secret_option );
+			}
+		}
+
+		try {
+			\Stripe\Stripe::setApiKey( $secret_key );
+			$webhook_url = rest_url( 'user-registration/stripe-webhook' );
+			$webhook     = \Stripe\WebhookEndpoint::create(
+				array(
+					'url'            => $webhook_url,
+					'enabled_events' => array(
+						'checkout.session.completed',
+						'payment_intent.succeeded',
+						'payment_intent.payment_failed',
+						'invoice.paid',
+						'invoice.payment_failed',
+						'customer.subscription.created',
+						'customer.subscription.updated',
+						'customer.subscription.deleted',
+					),
+					'api_version'    => '2023-10-16',
+				)
+			);
+
+			$signing_secret = isset( $webhook->secret ) ? $webhook->secret : ( isset( $webhook->signing_secret ) ? $webhook->signing_secret : '' );
+			if ( ! empty( $signing_secret ) ) {
+				update_option( $webhook_secret_option, $signing_secret );
+			}
+			update_option( $webhook_id_option, $webhook->id );
+
+			return array(
+				'success'        => true,
+				'message'        => 'Webhook created successfully for ' . $mode . ' mode',
+				'webhook_id'     => $webhook->id,
+				'webhook_secret' => $signing_secret,
+				'mode'           => $mode,
+			);
+		} catch ( ApiErrorException $e ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Webhook creation failed',
+				array(
+					'error_code'    => 'WEBHOOK_CREATE_FAILED',
+					'error_message' => $e->getMessage(),
+					'mode'          => $mode,
+				)
+			);
+			return array(
+				'success' => false,
+				'message' => $e->getMessage(),
+				'mode'    => $mode,
+			);
+		}
+	}
+
+	/**
+	 * Ensure webhook exists for current mode (for backwards compatibility on first payment).
+	 */
+	public static function ensure_webhook_for_current_mode() {
+		$settings = self::get_stripe_settings();
+		$mode     = isset( $settings['mode'] ) ? $settings['mode'] : 'test';
+		$secret   = get_option( 'user_registration_stripe_webhook_secret_' . $mode, '' );
+		if ( ! empty( $secret ) ) {
+			return;
+		}
+		$legacy = get_option( 'user_registration_stripe_webhook_secret', '' );
+		if ( ! empty( $legacy ) ) {
+			return;
+		}
+		$result = self::create_webhook( $mode );
+		if ( ! empty( $result['success'] ) ) {
+			PaymentGatewayLogging::log_general(
+				'stripe',
+				'Webhook created on first payment',
+				'notice',
+				array(
+					'event_type' => 'webhook_ensure',
+					'mode'       => $mode,
+				)
+			);
+		}
+	}
+
 	public function create_stripe_product_and_price( $post_data, $meta_data, $should_create_new_price ) {
 
 		$products      = \Stripe\Product::all();
@@ -164,6 +283,7 @@ class StripeService {
 	}
 
 	public function process_stripe_payment( $payment_data, $response_data ) {
+		self::ensure_webhook_for_current_mode();
 		$currency   = get_option( 'user_registration_payment_currency', 'USD' );
 		$user_email = $response_data['email'];
 		$member_id  = $response_data['member_id'];
@@ -675,7 +795,7 @@ class StripeService {
 	}
 
 	public function create_subscription( $customer_id, $payment_method_id, $member_id, $is_upgrading, $team_id ) {
-
+		self::ensure_webhook_for_current_mode();
 		$member_order     = $this->members_orders_repository->get_member_orders( $member_id );
 		$membership       = $this->membership_repository->get_single_membership_by_ID( $member_order['item_id'] );
 		$membership_metas = wp_unslash( json_decode( $membership['meta_value'], true ) );
@@ -1320,6 +1440,12 @@ class StripeService {
 			case 'invoice.payment_succeeded':
 				$this->handle_succeeded_invoice( $event, $subscription_id );
 				break;
+			case 'invoice.payment_failed':
+				$this->handle_failed_invoice( $event, $subscription_id );
+				break;
+			case 'payment_intent.payment_failed':
+				$this->handle_failed_payment_intent( $event );
+				break;
 			default:
 				break;
 		}
@@ -1442,6 +1568,96 @@ class StripeService {
 				'membership_type'     => $membership_type,
 			)
 		);
+	}
+
+	public function handle_failed_invoice( $event, $subscription_id ) {
+		PaymentGatewayLogging::log_webhook_received(
+			'stripe',
+			'Invoice payment failed webhook received',
+			array(
+				'webhook_type'    => 'invoice.payment_failed',
+				'subscription_id' => $subscription_id,
+				'event_id'        => isset( $event['id'] ) ? $event['id'] : 'unknown',
+			)
+		);
+
+		if ( empty( $subscription_id ) ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Subscription ID is empty in invoice.payment_failed webhook',
+				array(
+					'error_code'   => 'NULL_SUBSCRIPTION_ID',
+					'webhook_type' => 'invoice.payment_failed',
+				)
+			);
+
+			return;
+		}
+
+		$current_subscription = $this->members_subscription_repository->get_membership_by_subscription_id( $subscription_id, true );
+
+		if ( empty( $current_subscription ) ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Subscription not found for subscription ID',
+				array(
+					'error_code'      => 'SUBSCRIPTION_NOT_FOUND',
+					'subscription_id' => $subscription_id,
+				)
+			);
+
+			return;
+		}
+
+		$this->members_subscription_repository->update(
+			$current_subscription['sub_id'],
+			array( 'status' => 'pending' )
+		);
+
+		$member_id = $current_subscription['user_id'];
+		PaymentGatewayLogging::log_webhook_processed(
+			'stripe',
+			'Invoice payment failed handled',
+			array(
+				'subscription_id' => $subscription_id,
+				'sub_id'          => $current_subscription['sub_id'],
+				'member_id'       => $member_id,
+			)
+		);
+	}
+
+	public function handle_failed_payment_intent( $event ) {
+		$payment_intent = isset( $event['data']['object'] ) ? $event['data']['object'] : array();
+		$payment_intent_id = isset( $payment_intent['id'] ) ? $payment_intent['id'] : '';
+
+		PaymentGatewayLogging::log_webhook_received(
+			'stripe',
+			'Payment intent payment failed webhook received',
+			array(
+				'webhook_type'       => 'payment_intent.payment_failed',
+				'payment_intent_id'  => $payment_intent_id,
+				'event_id'           => isset( $event['id'] ) ? $event['id'] : 'unknown',
+			)
+		);
+
+		if ( empty( $payment_intent_id ) ) {
+			return;
+		}
+
+		$order = $this->orders_repository->get_order_by_transaction_id( $payment_intent_id );
+
+		$order_id = ( ! empty( $order ) && isset( $order['ID'] ) ) ? $order['ID'] : ( isset( $order['id'] ) ? $order['id'] : null );
+		if ( $order_id ) {
+			$this->orders_repository->update( $order_id, array( 'status' => 'failed' ) );
+			PaymentGatewayLogging::log_webhook_processed(
+				'stripe',
+				'Order marked as failed for failed payment intent',
+				array(
+					'order_id'          => $order_id,
+					'payment_intent_id' => $payment_intent_id,
+				)
+			);
+		}
 	}
 
 	public function validate_setup() {

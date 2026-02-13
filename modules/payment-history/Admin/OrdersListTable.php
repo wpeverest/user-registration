@@ -65,11 +65,37 @@ class OrdersListTable extends \UR_List_Table {
 		$this->prepare_column_headers();
 		$per_page     = $this->get_items_per_page( $this->per_page_option );
 		$current_page = $this->get_pagenum();
-		$payment_for  = isset( $_REQUEST['payment_for'] ) && ! empty( $_REQUEST['payment_for'] ) ? $_REQUEST['payment_for'] : ( $this->is_membership_active ? 'memberships' : 'forms' );
+		$payment_for  = isset( $_REQUEST['payment_for'] ) && ! empty( $_REQUEST['payment_for'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['payment_for'] ) ) : '';
+
+		$total_items = array();
+		if ( '' === $payment_for ) {
+			$args_forms = $this->prepare_query_args( 'forms', 999999, 1 );
+			$form_items = $this->get_user_payments( $args_forms );
+			$membership_items = array();
+			if ( $this->is_membership_active && $this->orders_repository ) {
+				$args_memberships = $this->prepare_query_args( 'memberships', 999999, 1 );
+				$membership_items = $this->orders_repository->get_all( $args_memberships );
+			}
+			$total_items = array_merge( $form_items, is_array( $membership_items ) ? $membership_items : array() );
+			usort( $total_items, function ( $a, $b ) {
+				$t_a = ! empty( $a['created_at'] ) ? strtotime( $a['created_at'] ) : 0;
+				$t_b = ! empty( $b['created_at'] ) ? strtotime( $b['created_at'] ) : 0;
+				return $t_b - $t_a;
+			} );
+			$total_count = count( $total_items );
+			$this->items = array_slice( $total_items, ( $current_page - 1 ) * $per_page, $per_page );
+			$this->set_pagination_args(
+				array(
+					'total_items' => $total_count,
+					'per_page'    => $per_page,
+					'total_pages' => ceil( $total_count / $per_page ),
+				)
+			);
+			return;
+		}
 
 		$args = $this->prepare_query_args( $payment_for, $per_page, $current_page );
 
-		$total_items = array();
 		if ( $payment_for === 'memberships' ) {
 			$total_items = $this->orders_repository->get_all( $args );
 		} else {
@@ -364,11 +390,17 @@ class OrdersListTable extends \UR_List_Table {
 		$decimals            = isset( $currency_info['decimals'] ) ? (int) $currency_info['decimals'] : 2;
 		$coupon_discount     = 0;
 
-		$order_detail     = $this->orders_repository->get_order_detail( $item['order_id'] ?? 0 );
-		$order_repository = new OrdersRepository();
-		$local_currency   = $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' );
-
-		$currency = ! empty( $local_currency['meta_value'] ) ? $local_currency['meta_value'] : $currency;
+		$order_id = $item['order_id'] ?? 0;
+		if ( ! empty( $order_id ) && $this->orders_repository ) {
+			$order_detail   = $this->orders_repository->get_order_detail( $order_id );
+			$order_repository = new OrdersRepository();
+			$local_currency = ! empty( $order_detail['order_id'] ) ? $order_repository->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' ) : null;
+			if ( ! empty( $local_currency['meta_value'] ) ) {
+				$currency = $local_currency['meta_value'];
+			}
+		} elseif ( ! empty( $item['currency'] ) ) {
+			$currency = $item['currency'];
+		}
 		$symbol = ur_get_currency_symbol( $currency );
 
 		if ( isset( $item['subscription_id'] ) ) {
@@ -506,22 +538,21 @@ class OrdersListTable extends \UR_List_Table {
 	 * @since 4.1
 	 */
 	public function display_advance_filter() {
-		$is_membership_active = $this->is_membership_active;
-		$show_membership      = ( isset( $_REQUEST['payment_for'] ) && 'memberships' == $_REQUEST['payment_for'] || ( ! isset( $_REQUEST['payment_for'] ) && $this->is_membership_active !== null ) );
-
+		$payment_for_request = isset( $_REQUEST['payment_for'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['payment_for'] ) ) : '';
+		$show_membership     = ( 'memberships' === $payment_for_request );
 		?>
 
 		<div class="module" style="display: flex; gap: 10px">
 			<select name="payment_for" id="user-registration-pro-payment-type-filters">
-				<option value="" selected><?php echo esc_html__( 'Select Module', 'user-registration' ); ?></option>
+				<option value="" <?php echo ( '' === $payment_for_request ) ? 'selected=selected' : ''; ?>><?php echo esc_html__( 'All Payments', 'user-registration' ); ?></option>
 				<option value="forms"
-					<?php echo isset( $_REQUEST['payment_for'] ) && 'forms' == $_REQUEST['payment_for'] ? 'selected=selected' : ''; ?>>
+					<?php echo 'forms' === $payment_for_request ? 'selected=selected' : ''; ?>>
 					<?php echo esc_html__( 'Forms', 'user-registration' ); ?></option>
 				<?php
 				if ( $this->is_membership_active ) :
 					?>
 				<option value="memberships"
-					<?php echo ( isset( $_REQUEST['payment_for'] ) && 'memberships' == $_REQUEST['payment_for'] ) || ! isset( $_REQUEST['payment_for'] ) ? 'selected=selected' : ''; ?>>
+					<?php echo 'memberships' === $payment_for_request ? 'selected=selected' : ''; ?>>
 					<?php echo esc_html__( 'Membership', 'user-registration' ); ?></option>
 					<?php
 								endif;
@@ -546,7 +577,7 @@ class OrdersListTable extends \UR_List_Table {
 		</div>
 
 		<div class="module-box" id="user-registration-pro-forms-filters-container"
-			style="display:<?php echo ! $show_membership && $_REQUEST['payment_for'] == 'forms' ? 'flex' : 'none'; ?>; gap: 10px;">
+			style="display:<?php echo ! $show_membership && 'forms' === $payment_for_request ? 'flex' : 'none'; ?>; gap: 10px;">
 			<select name="form_id" id="user-registration-pro-forms-filter">
 				<option value=""><?php echo esc_html__( 'All Forms', 'user-registration' ); ?></option>
 				<?php
@@ -565,7 +596,7 @@ class OrdersListTable extends \UR_List_Table {
 			<select name="payment_method" id="user_registration_pro_users_form_filter">
 				<option value=""><?php echo esc_html__( 'All Gateway', 'user-registration' ); ?></option>
 				<?php
-								$options = ( isset( $_REQUEST['payment_for'] ) && 'membership' == $_REQUEST['payment_for'] ) ? get_option( 'ur_membership_payment_gateways' ) : get_option( 'ur_payment_gateways' );
+								$options = ( 'memberships' === $payment_for_request ) ? get_option( 'ur_membership_payment_gateways' ) : get_option( 'ur_payment_gateways' );
 
 				foreach ( $options as $id => $form ) {
 					$selected = isset( $_REQUEST['payment_method'] ) && $id == $_REQUEST['payment_method'] ? 'selected=selected' : '';
