@@ -47,7 +47,7 @@
   },
   "require-dev": {
     "jolicode/jolinotif": "2.3.0",
-    "phpunit/phpunit": "^5 || ^7",
+    "phpunit/phpunit": "^8.5.52",
     "psr/container": "1.0.0",
     "roots/wordpress": "5.8.0",
     "spatie/phpunit-watcher": "1.8.3",
