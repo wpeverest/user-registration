@@ -590,9 +590,7 @@ class StripeService {
 
 			\Stripe\Stripe::setApiKey( $stripe_settings['secret_key'] );
 
-			$pi_id = sanitize_text_field( ! empty( $data['payment_result']['paymentIntent']['id'] ) ? $data['payment_result']['paymentIntent']['id'] : '' );
-
-			$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
+			$intent = \Stripe\PaymentIntent::retrieve( $transaction_id );
 
 			if ( $intent->status !== 'succeeded' ) {
 				$response['status']  = false;
@@ -604,6 +602,13 @@ class StripeService {
 			$payment_status =  $intent->status;
 
 		$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
+
+		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id ) ) {
+			$response['status']  = false;
+			$response['message'] = __( 'Duplicate transaction id.', 'user-registration' );
+
+			return $response;
+		}
 
 		if ( empty( $latest_order ) ) {
 			PaymentGatewayLogging::log_error(
