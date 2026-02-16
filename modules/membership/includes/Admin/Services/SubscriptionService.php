@@ -823,6 +823,7 @@ class SubscriptionService {
 			),
 			array( 'source' => 'urm-membership-crons' )
 		);
+	}
 
 	/**
 	 * Prepares subscription data for upgrading a membership.
