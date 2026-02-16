@@ -778,40 +778,42 @@
 		},
 
 		calculate_total: function ($this) {
-			var urm_calculated_total = $this.data('urm-pg-calculated-amount');
-			var subTotalInput = $('#ur-membership-subtotal');
-			var taxInput = $('#ur-membership-tax');
-			var couponInput = $('#ur-membership-coupons');
-			var localCurrency = '';
+			var urm_calculated_total = $this.data("urm-pg-calculated-amount");
+			var subTotalInput = $this.closest( '#ur-membership-registration').find("#ur-membership-subtotal");
+			var taxInput = $this.closest( '#ur-membership-registration').find("#ur-membership-tax");
+			var couponInput = $this.closest( '#ur-membership-registration').find("#ur-membership-coupons");
+			var localCurrency = "";
 			var currency = urmf_data.currency_symbol;
 
 			subTotal = urm_calculated_total;
 
-			if ($this.data('local-currency')) {
-				localCurrency = $this.data('local-currency');
+			if ($this.data("local-currency")) {
+				localCurrency = $this.data("local-currency");
 				currency = register_events.decodeHtmlEntity(
-					urmf_data.local_currencies_symbol[localCurrency] || currency,
+					urmf_data.local_currencies_symbol[localCurrency] || currency
 				);
 			}
 
-			var total_input = $('#ur-membership-total'),
-				discount_amount = $this.data('ur-discount-amount'),
+			var total_input = $this.closest( '#ur-membership-registration').find("#ur-membership-total"),
+				discount_amount = $this.data("ur-discount-amount"),
 				total =
-					discount_amount !== undefined && discount_amount !== ''
+					discount_amount !== undefined && discount_amount !== ""
 						? urm_calculated_total - discount_amount
 						: urm_calculated_total,
-				upgrade_type = $this.data('urm-upgrade-type');
+				upgrade_type = $this.data("urm-upgrade-type");
 
-			var total_label = $('.urm-membership-total-value').find(
-				'.ur_membership_input_label',
+			var total_label = $this.closest( '#ur-membership-registration').find(".urm-membership-total-value").find(
+				".ur_membership_input_label"
 			);
 
-			if (total_label.find('.user-registration-badge').length > 0) {
-				total_label.find('.user-registration-badge').remove();
+			if (total_label.find(".user-registration-badge").length > 0) {
+				total_label.find(".user-registration-badge").remove();
 			}
 			if (upgrade_type) {
 				total_label.append(
-					'<span class="user-registration-badge">' + upgrade_type + '</span>',
+					'<span class="user-registration-badge">' +
+						upgrade_type +
+						"</span>"
 				);
 			}
 
@@ -820,20 +822,38 @@
 					$this,
 					total,
 					subTotal,
-					discount_amount,
+					discount_amount
 				);
 
 			total = parseFloat(total).toFixed(2);
-			if ('left' === urmf_data.curreny_pos) {
-				total_input.text(currency + parseFloat( totalDetails.total ).toFixed(2));
-				subTotalInput.text(currency + parseFloat( totalDetails.subTotal ).toFixed(2));
-				taxInput.text(currency + parseFloat( totalDetails.taxAmount ).toFixed(2));
-				couponInput.text(currency + parseFloat( totalDetails.discountAmount ).toFixed(2));
+			if ("left" === urmf_data.curreny_pos) {
+				total_input.text(
+					currency + parseFloat(totalDetails.total).toFixed(2)
+				);
+				subTotalInput.text(
+					currency + parseFloat(totalDetails.subTotal).toFixed(2)
+				);
+				taxInput.text(
+					currency + parseFloat(totalDetails.taxAmount).toFixed(2)
+				);
+				couponInput.text(
+					currency +
+						parseFloat(totalDetails.discountAmount).toFixed(2)
+				);
 			} else {
-				total_input.text( parseFloat( totalDetails.total ).toFixed(2) + currency);
-				subTotalInput.text( parseFloat( totalDetails.subTotal ).toFixed(2) + currency);
-				taxInput.text( parseFloat( totalDetails.taxAmount ).toFixed(2) + currency);
-				couponInput.text( parseFloat( totalDetails.discountAmount ).toFixed(2) + currency);
+				total_input.text(
+					parseFloat(totalDetails.total).toFixed(2) + currency
+				);
+				subTotalInput.text(
+					parseFloat(totalDetails.subTotal).toFixed(2) + currency
+				);
+				taxInput.text(
+					parseFloat(totalDetails.taxAmount).toFixed(2) + currency
+				);
+				couponInput.text(
+					parseFloat(totalDetails.discountAmount).toFixed(2) +
+						currency
+				);
 			}
 		},
 		upgrade_membership: function (
@@ -2210,16 +2230,25 @@
 				// clear coupon total notice
 				$('#total-input-notice').text('');
 
-				var urm_payment_gateways = $(this).data('urm-pg'),
-					urm_payment_type = $(this).data('urm-pg-type'),
-					urm_pg_container = $('.ur_payment_gateway_container'),
+				$el = $( this );
+				var dialog = $("#URCR-Restriction-Modal");
+
+
+				if ( dialog.is('[open]') ) {
+					$el = dialog.find( 'input[name="urm_membership"]:checked' );
+					console.log($el);
+				}
+
+				var urm_payment_gateways = $el.data('urm-pg'),
+					urm_payment_type = $el.data('urm-pg-type'),
+					urm_pg_container = $el.closest( '#ur-membership-registration').find('.ur_payment_gateway_container'),
 					urm_pg_inputs = urm_pg_container.find('input'),
 					urm_hidden_pg_containers = $('.urm_hidden_payment_container'),
-					stripe_container = $('.stripe-container'),
-					stripe_error_container = $('#stripe-errors'),
-					upgrade_error_container = $('#upgrade-membership-notice'),
-					urm_default_pg = $(this).data('urm-default-pg'),
-					hasCouponLink = $(this).data('has-coupon-link');
+					stripe_container = $el.closest( '#ur-membership-registration').find('.stripe-container'),
+					stripe_error_container = $el.closest( '#ur-membership-registration').find('#stripe-errors'),
+					upgrade_error_container = $el.closest( '#ur-membership-registration').find('#upgrade-membership-notice'),
+					urm_default_pg = $el.data('urm-default-pg'),
+					hasCouponLink = $el.data('has-coupon-link');
 				if ('yes' === hasCouponLink) {
 					$(document).find('#ur_coupon_container').show();
 				} else {
@@ -2236,7 +2265,7 @@
 
 				//Selects a default payment gateway. Needs to be updated for translation.
 				if (urm_default_pg && urm_default_pg.toLowerCase() === urm_default_pg) {
-					$(this)
+					$el
 						.closest('#ur-membership-registration')
 						.find('#ur-membership-' + urm_default_pg)
 						.prop('checked', true)
@@ -2293,7 +2322,7 @@
 						$(lone_pg[0]).prop('checked', true);
 						lone_pg.trigger('change');
 					}
-					ur_membership_ajax_utils.calculate_total($(this));
+					ur_membership_ajax_utils.calculate_total( $el );
 				} else {
 					stripe_container.addClass('urm-d-none');
 				}
