@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 
 /** @param {import('grunt')} grunt */
 module.exports = function (grunt) {
@@ -236,6 +237,18 @@ module.exports = function (grunt) {
 		shell: {
 			composerProd: {
 				command: "composer install --no-dev --optimize-autoloader"
+			},
+			composerDev: {
+				command: "composer install --no-dev"
+			},
+			pnpmInstall: {
+				command: "pnpm install"
+			},
+			pnpmBuild: {
+				command: "pnpm run build"
+			},
+			pnpmBuildNoMakepot: {
+				command: "pnpm run build:no-makepot"
 			}
 		}
 	});
@@ -249,6 +262,35 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-contrib-watch");
 	grunt.loadNpmTasks("grunt-contrib-compress");
 	grunt.loadNpmTasks("grunt-shell");
+
+	// When --clear-all is passed: remove chunks/, vendor/, composer.lock (run before release/release:dev)
+	grunt.registerTask("cleanAllIfRequested", function () {
+		if (!grunt.option("clear-all")) {
+			return;
+		}
+		const base = process.cwd();
+		const targets = [
+			path.join(base, "chunks"),
+			path.join(base, "vendor"),
+			path.join(base, "composer.lock")
+		];
+		targets.forEach((target) => {
+			try {
+				const stat = fs.statSync(target);
+				if (stat.isDirectory()) {
+					fs.rmSync(target, { recursive: true });
+					grunt.log.writeln("Cleaned: " + target);
+				} else {
+					fs.unlinkSync(target);
+					grunt.log.writeln("Cleaned: " + target);
+				}
+			} catch (err) {
+				if (err.code !== "ENOENT") {
+					grunt.warn("clean-all: " + err.message);
+				}
+			}
+		});
+	});
 
 	grunt.registerTask("default", ["terser"]);
 
@@ -268,14 +310,25 @@ module.exports = function (grunt) {
 		"concat"
 	]);
 
+	// Production release: composer prod, pnpm install, grunt css, grunt js, pnpm run build, compress
 	grunt.registerTask("release", [
+		"cleanAllIfRequested",
 		"shell:composerProd",
-		"sass",
-		"rtlcss",
-		"cssmin",
-		"concat",
-		"terser",
+		"shell:pnpmInstall",
+		"css",
+		"js",
+		"shell:pnpmBuild",
 		"compress:withVersion"
+	]);
+
+	// Development build: composer --no-dev, pnpm install, grunt css, grunt js, pnpm run build (no makepot, no compress)
+	grunt.registerTask("release:dev", [
+		"cleanAllIfRequested",
+		"shell:composerDev",
+		"shell:pnpmInstall",
+		"css",
+		"js",
+		"shell:pnpmBuildNoMakepot"
 	]);
 
 	grunt.registerTask("dev", ["watch"]);
