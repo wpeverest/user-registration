@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - ui-polishing-sid
+            - UR-4113-membership-fields-shouldnt-be-draggable-when-there-is-no-membership-plans
         workflow_dispatch:
 jobs:
     sync:
