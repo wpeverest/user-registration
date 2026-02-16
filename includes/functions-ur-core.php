@@ -649,6 +649,34 @@ function ur_get_one_time_draggable_fields() {
 }
 
 /**
+ * Check if membership is available for the form builder (at least one group or one active membership).
+ * Used to allow or lock the membership field: "Show all Memberships" needs active memberships;
+ * "Select a group" needs membership groups.
+ *
+ * @return bool
+ */
+function ur_has_membership_available() {
+	if ( ! ur_check_module_activation( 'membership' ) ) {
+		return false;
+	}
+	// Check membership groups (for "Select a group" option).
+	$has_groups = false;
+	if ( class_exists( 'WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository' ) ) {
+		$repository = new \WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository();
+		$groups     = $repository->get_all_membership_groups();
+		$has_groups = ! empty( $groups );
+	}
+	// Check active memberships (for "Show all Memberships" option).
+	$has_memberships = false;
+	if ( class_exists( 'WPEverest\URMembership\Admin\Services\MembershipService' ) ) {
+		$service         = new \WPEverest\URMembership\Admin\Services\MembershipService();
+		$memberships     = $service->list_active_memberships();
+		$has_memberships = ! empty( $memberships );
+	}
+	return $has_groups || $has_memberships;
+}
+
+/**
  * Get fields excluding in profile tab
  *
  * @return array
