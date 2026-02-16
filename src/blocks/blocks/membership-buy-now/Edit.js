@@ -13,8 +13,7 @@ import {
 	TextControl,
 	ToggleControl,
 	__experimentalToggleGroupControl as ToggleGroupControl,
-	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
-	__experimentalUnitControl as UnitControl
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption
 } from "@wordpress/components";
 
 import {
@@ -112,29 +111,34 @@ const Edit = (props) => {
 	const { attributes, setAttributes, clientId } = props;
 
 	const {
-		membershipType,
+		membershipId,
 		text,
 		width,
 		hoverTextColor,
 		hoverBgColor,
 		backgroundColor,
 		textColor,
-		borderColor,
-		borderRadius,
-		borderWidth,
-		borderStyle,
 		openInNewTab,
 		savedBackgroundColor,
-		savedHoverBgColor
+		savedHoverBgColor,
+		style = {}
 	} = attributes;
 
+	const border = style?.border || {};
+
+	const borderColor = border?.color;
+	const borderWidth = border?.width;
+	const borderRadius = border?.radius;
+	const borderStyle = border?.style;
 	const [membershipList, setMembershipList] = useState(null);
+	const [prevBorderWidth, setPrevBorderWidth] = useState(null);
 	const blockProps = useBlockProps();
 
 	const [themeColors] = useSettings("color.palette.theme");
 
 	const isOutlineStyle =
 		blockProps.className?.includes("is-style-outline") || false;
+	const isFillStyle = !isOutlineStyle;
 
 	const prevIsOutlineRef = useRef(isOutlineStyle);
 
@@ -185,7 +189,23 @@ const Edit = (props) => {
 			}
 
 			if (!borderColor) {
-				updates.borderColor = "#000000";
+				updates.style = {
+					...style,
+					border: {
+						...border,
+						color: "#000000"
+					}
+				};
+			}
+
+			if (!borderWidth) {
+				updates.style = {
+					...style,
+					border: {
+						...border,
+						width: prevBorderWidth ?? "1px"
+					}
+				};
 			}
 
 			if (Object.keys(updates).length > 0) {
@@ -205,7 +225,24 @@ const Edit = (props) => {
 			}
 
 			if (borderColor) {
-				updates.borderColor = "";
+				updates.style = {
+					...style,
+					border: {
+						...border,
+						color: ""
+					}
+				};
+			}
+
+			if (borderWidth) {
+				setPrevBorderWidth(borderWidth);
+				updates.style = {
+					...style,
+					border: {
+						...border,
+						width: ""
+					}
+				};
 			}
 
 			if (Object.keys(updates).length > 0) {
@@ -218,21 +255,31 @@ const Edit = (props) => {
 	}, [isOutlineStyle]);
 
 	useEffect(() => {
-		const editorWrapper = document.querySelector(
-			".interface-interface-skeleton"
-		);
+		const selector = '[data-wp-component="BorderBoxControl"]';
 
-		if (editorWrapper) {
-			if (isOutlineStyle) {
-				editorWrapper.classList.remove("urm-hide-border-panel");
-			} else {
-				editorWrapper.classList.add("urm-hide-border-panel");
+		const toggleClass = () => {
+			const borderBox = document.querySelector(selector);
+
+			if (!borderBox) {
+				return;
 			}
-		}
+
+			if (!isOutlineStyle) {
+				borderBox.classList.add("urm-hide-border-panel");
+			} else {
+				borderBox.classList.remove("urm-hide-border-panel");
+			}
+		};
+
+		toggleClass();
+
+		const interval = setInterval(toggleClass, 250);
 
 		return () => {
-			if (editorWrapper) {
-				editorWrapper.classList.remove("urm-hide-border-panel");
+			clearInterval(interval);
+			const borderBox = document.querySelector(selector);
+			if (borderBox) {
+				borderBox.classList.remove("urm-hide-border-panel");
 			}
 		};
 	}, [isOutlineStyle]);
@@ -240,7 +287,7 @@ const Edit = (props) => {
 	const membershipOptions = useMemo(() => {
 		if (!membershipList) return [];
 		return Object.values(membershipList).map((member, index) => ({
-			value: index,
+			value: member.ID,
 			label: member.title
 		}));
 	}, [membershipList]);
@@ -269,61 +316,70 @@ const Edit = (props) => {
 			</div>
 		);
 	}
-
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody
 					title={__("Settings", "user-registration")}
 					initialOpen={true}
-				></PanelBody>
-				<SelectControl
-					key="urm-select-membership-type"
-					label={__("Membership Plan", "user-registration")}
-					value={membershipType}
-					options={[
-						{
-							label: __(
-								"Select a membership...",
-								"user-registration"
-							),
-							value: ""
-						},
-						...membershipOptions
-					]}
-					onChange={(type) => setAttributes({ membershipType: type })}
-				/>
-
-				<ToggleControl
-					className="urm-buynow-open-new-tab"
-					__nextHasNoMarginBottom
-					label={__("Open in a new tab", "user-registration")}
-					checked={openInNewTab}
-					onChange={(value) => setAttributes({ openInNewTab: value })}
-				/>
-
-				<TextControl
-					label={__("Button Text", "user-registration")}
-					value={text}
-					onChange={(value) => setAttributes({ text: value })}
-				/>
-
-				<ToggleGroupControl
-					label={__("Width", "user-registration")}
-					value={width}
-					onChange={(value) => setAttributes({ width: value })}
-					isBlock
 				>
-					<ToggleGroupControlOption value="25%" label="25%" />
-					<ToggleGroupControlOption value="50%" label="50%" />
-					<ToggleGroupControlOption value="75%" label="75%" />
-					<ToggleGroupControlOption value="100%" label="100%" />
-				</ToggleGroupControl>
+					<SelectControl
+						key="urm-select-membership-type"
+						label={__("Membership Plan", "user-registration")}
+						value={membershipId}
+						options={[
+							{
+								label: __(
+									"Select a membership...",
+									"user-registration"
+								),
+								value: ""
+							},
+							...membershipOptions
+						]}
+						onChange={(type) =>
+							setAttributes({
+								membershipId: type
+							})
+						}
+					/>
+					<ToggleControl
+						className="urm-buynow-open-new-tab"
+						__nextHasNoMarginBottom
+						label={__("Open in a new tab", "user-registration")}
+						checked={openInNewTab}
+						onChange={(value) =>
+							setAttributes({
+								openInNewTab: value
+							})
+						}
+					/>
+					<TextControl
+						label={__("Button Text", "user-registration")}
+						value={text}
+						onChange={(value) => setAttributes({ text: value })}
+					/>
 
-				<JustifyControl
-					value={attributes.justifyContent}
-					onChange={(val) => setAttributes({ justifyContent: val })}
-				/>
+					<ToggleGroupControl
+						label={__("Width", "user-registration")}
+						value={width}
+						onChange={(value) => setAttributes({ width: value })}
+						isBlock
+					>
+						<ToggleGroupControlOption value="25%" label="25%" />
+						<ToggleGroupControlOption value="50%" label="50%" />
+						<ToggleGroupControlOption value="75%" label="75%" />
+						<ToggleGroupControlOption value="100%" label="100%" />
+					</ToggleGroupControl>
+					<JustifyControl
+						value={attributes.justifyContent}
+						onChange={(val) =>
+							setAttributes({
+								justifyContent: val
+							})
+						}
+					/>
+				</PanelBody>
 			</InspectorControls>
 
 			<InspectorControls group="color">
@@ -338,7 +394,11 @@ const Edit = (props) => {
 					<ColorControl
 						label={__("Background Color", "user-registration")}
 						colorValue={backgroundColor}
-						onChange={(c) => setAttributes({ backgroundColor: c })}
+						onChange={(c) =>
+							setAttributes({
+								backgroundColor: c
+							})
+						}
 						themeColors={themeColors}
 					/>
 				)}
@@ -359,7 +419,6 @@ const Edit = (props) => {
 					/>
 				)}
 			</InspectorControls>
-
 			{!!hoverCss && <style>{hoverCss}</style>}
 
 			<div {...blockProps}>

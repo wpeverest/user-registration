@@ -465,6 +465,8 @@ class EmailService {
 	 * @return bool|mixed|void
 	 */
 	public function send_membership_cancellation_email_admin( $data ) {
+		$user_id = absint( $data['member_id'] );
+		$form_id = ur_get_form_id_by_userid( $user_id );
 		if ( ! $this->validate_email_fields( $data ) || ! self::is_membership_email_enabled( 'user_registration_enable_membership_cancellation_admin_email' ) ) {
 			return false;
 		}

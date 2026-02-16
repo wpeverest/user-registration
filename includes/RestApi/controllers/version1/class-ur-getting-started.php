@@ -656,7 +656,7 @@ class UR_Getting_Started {
 	 */
 	protected static function install_initial_pages( $membership_type = 'normal' ) {
 		update_option( 'users_can_register', true );
-		update_option( 'user_registration_login_options_prevent_core_login', true );
+		update_option( 'user_registration_login_options_prevent_core_login', false );
 
 		include_once untrailingslashit( plugin_dir_path( UR_PLUGIN_FILE ) ) . '/includes/admin/functions-ur-admin.php';
 

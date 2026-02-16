@@ -1612,9 +1612,17 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 													}
 												} elseif ( 'country' === $field_key ) {
 													$value         = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
-													$country_class = ur_load_form_field_class( $field_key );
-													$countries     = $country_class::get_instance()->get_country();
-													$value         = isset( $countries[ $value ] ) ? $countries[ $value ] : $value;
+													$isJson = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
+													if ( $isJson ) {
+														$country_data = json_decode( $value, true );
+														$country_code = isset( $country_data['country'] ) ? $country_data['country'] : '';
+														$state_code   = isset( $country_data['state'] ) ? $country_data['state'] : '';
+														$value = ur_format_country_field_data( $country_code, $state_code );
+													} else {
+														$country_class = ur_load_form_field_class( $field_key );
+														$countries     = $country_class::get_instance()->get_country();
+														$value         = isset( $countries[ $value ] ) ? $countries[ $value ] : $value;
+													}
 												} elseif ( 'signature' === $field_key ) {
 													$value = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
 													$value = wp_get_attachment_url( $value );
@@ -1692,7 +1700,8 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 														);
 													} elseif ( 60 > strlen( $value ) ) {
 														printf(
-															'<input type="text" value="%s" disabled>',
+															'<input type="text" class="%s" value="%s" disabled>',
+															esc_attr( 'user_registration_edit_profile_' . $field_key ),
 															esc_attr( $value )
 														);
 													} else {

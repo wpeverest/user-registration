@@ -298,9 +298,10 @@ class UR_AJAX {
 			$response       = array(
 				'message'        => $message,
 				'profile_pic_id' => $profile_pic_id,
+				'email'			 => ! empty( $single_field['user_registration_user_email'] ) ? $single_field['user_registration_user_email'] : '',
 			);
 
-			if ( $email_updated ) {
+			if ( $email_updated && ! is_admin() ) {
 				UR_Form_Handler::send_confirmation_email( $user, $pending_email, $form_id );
 				$response['oldUserEmail'] = $user->user_email;
 				/* translators: %s : user email */
@@ -324,6 +325,15 @@ class UR_AJAX {
 						__( 'There is a pending change of your email to <code>%1$s</code>. <a href="%2$s">Cancel</a>', 'user-registration' ),
 						$pending_email,
 						$cancel_url
+					)
+				);
+			}
+
+			if ( is_admin() && ! empty( $pending_email ) ) {
+				wp_update_user(
+					array(
+						'ID'         => $user_id,
+						'user_email' => $pending_email,
 					)
 				);
 			}
@@ -701,7 +711,7 @@ class UR_AJAX {
 			if ( ! isset( $_POST['data'] ) || ( isset( $_POST['data'] ) && gettype( wp_unslash( $_POST['data'] ) ) != 'array' ) ) { //phpcs:ignore
 				throw new Exception( __( 'post data not set', 'user-registration' ) );
 			} elseif ( ! isset( $_POST['data']['form_data'] )
-						|| ( isset( $_POST['data']['form_data'] )
+			           || ( isset( $_POST['data']['form_data'] )
 			                && gettype( wp_unslash( $_POST['data']['form_data'] ) ) != 'string' ) ) { //phpcs:ignore
 				$logger->critical(
 					__( 'post data not set', 'user-registration' ),
@@ -856,15 +866,17 @@ class UR_AJAX {
 			array_filter(
 				$settings_data,
 				function ( $item ) {
-					return $item['option'] !== 'user_registration_form_setting_general_advanced';
+					return isset( $item['option'] ) && $item['option'] !== 'user_registration_form_setting_general_advanced';
 				}
 			)
 		);
 
-		$output = array_combine(
-			array_column( $settings_data, 'option' ),
-			array_column( $settings_data, 'value' )
-		);
+		$output = array();
+		foreach ( $settings_data as $item ) {
+			if ( isset( $item['option'] ) ) {
+				$output[ $item['option'] ] = isset( $item['value'] ) ? $item['value'] : '';
+			}
+		}
 
 		do_action( 'user_registration_validation_before_login_form_save', $output );
 
@@ -880,8 +892,14 @@ class UR_AJAX {
 
 		if ( ur_string_to_bool( $output['user_registration_login_options_prevent_core_login'] ) ) {
 
-			if ( ( is_numeric( $output['user_registration_login_options_login_redirect_url'] ) ) && ! empty( $output['user_registration_login_options_login_redirect_url'] ) ) {
-				$is_page_my_account_page = ur_find_my_account_in_page( sanitize_text_field( wp_unslash( $output['user_registration_login_options_login_redirect_url'] ) ) );
+			$login_redirect_value = isset( $output['user_registration_login_options_login_redirect_url'] ) ? $output['user_registration_login_options_login_redirect_url'] : '';
+			if ( empty( $login_redirect_value ) || ! is_numeric( $login_redirect_value ) ) {
+				$login_redirect_value = get_option( 'user_registration_login_options_login_redirect_url', '' );
+			}
+			$login_redirect_page_id = absint( $login_redirect_value );
+
+			if ( $login_redirect_page_id > 0 ) {
+				$is_page_my_account_page = ur_find_my_account_in_page( $login_redirect_page_id );
 				if ( ! $is_page_my_account_page ) {
 					wp_send_json_error(
 						array(
@@ -932,6 +950,22 @@ class UR_AJAX {
 		}
 
 		foreach ( $output as $key => $settings ) {
+			if ( 'user_registration_login_options_login_redirect_url' === $key ) {
+				if ( ! is_numeric( $settings ) || empty( $settings ) ) {
+					$settings = get_option( 'user_registration_login_options_login_redirect_url', '' );
+				}
+				if ( is_numeric( $settings ) && ! empty( $settings ) ) {
+					update_option( 'user_registration_login_page_id', $settings );
+				}
+			}
+			if ( 'user_registration_login_page_id' === $key ) {
+				if ( ! is_numeric( $settings ) || empty( $settings ) ) {
+					$settings = get_option( 'user_registration_login_page_id', '' );
+				}
+				if ( is_numeric( $settings ) && ! empty( $settings ) ) {
+					update_option( 'user_registration_login_options_login_redirect_url', $settings );
+				}
+			}
 			update_option( $key, $settings );
 		}
 
@@ -1009,6 +1043,7 @@ class UR_AJAX {
 			);
 			if ( $is_login ) {
 				update_option( 'user_registration_login_page_id', $id );
+				update_option( 'user_registration_login_options_login_redirect_url', $id );
 			}
 			wp_send_json_success( $url );
 		}
@@ -1525,7 +1560,12 @@ class UR_AJAX {
 		$install_status = install_plugin_install_status( $api );
 
 		if ( current_user_can( 'activate_plugin', $install_status['file'] ) && is_plugin_inactive( $install_status['file'] ) ) {
-			if ( isset( $_POST['page'] ) && 'user-registration-membership_page_add-new-registration' === $_POST['page'] ) {
+			$current_page = isset( $_POST['page'] ) ? sanitize_text_field( wp_unslash( $_POST['page'] ) ) : '';
+			$auto_activate_pages = array(
+				'user-registration-membership_page_add-new-registration',
+				'user-registration-membership_page_user-registration-settings',
+			);
+			if ( in_array( $current_page, $auto_activate_pages, true ) ) {
 				activate_plugin( $install_status['file'] );
 			} else {
 				$status['activateUrl'] =
@@ -1960,6 +2000,10 @@ class UR_AJAX {
 					'user_registration_stripe_test_mode',
 					'user_registration_stripe_live_publishable_key',
 					'user_registration_stripe_live_secret_key',
+					'user_registration_stripe_webhook_id_test',
+					'user_registration_stripe_webhook_secret_test',
+					'user_registration_stripe_webhook_id_live',
+					'user_registration_stripe_webhook_secret_live',
 				);
 				break;
 			case 'bank':
@@ -2240,20 +2284,20 @@ class UR_AJAX {
 		$membership_field_name = 'membership_field_' . ur_get_random_number();
 
 		$post_content = $is_membership
-		? '[[[' .
-			'{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"},' .
-			'{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"},' .
-			'{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"},' .
-			'{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}' .
-		'],[' .
-			'{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","required":"false","hide_label":"false","membership_listing_option":"all","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}' .
-		']]]'
-		: '[[[' .
-			'{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"},' .
-			'{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"},' .
-			'{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"},' .
-			'{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}' .
-		']]]';
+			? '[[[' .
+			  '{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"},' .
+			  '{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"},' .
+			  '{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"},' .
+			  '{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}' .
+			  '],[' .
+			  '{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' . $membership_field_name . '","required":"false","hide_label":"false","membership_listing_option":"all","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}' .
+			  ']]]'
+			: '[[[' .
+			  '{"field_key":"user_login","general_setting":{"label":"Username","description":"","field_name":"user_login","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":"","username_length":"","username_character":"1"},"icon":"ur-icon ur-icon-user"},' .
+			  '{"field_key":"user_email","general_setting":{"label":"User Email","description":"","field_name":"user_email","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-email"},' .
+			  '{"field_key":"user_pass","general_setting":{"label":"User Password","description":"","field_name":"user_pass","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password"},' .
+			  '{"field_key":"user_confirm_password","general_setting":{"label":"Confirm Password","description":"","field_name":"user_confirm_password","placeholder":"","required":"1","hide_label":"false"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-password-confirm"}' .
+			  ']]]';
 
 		$default_post_id = wp_insert_post(
 			array(
@@ -2299,9 +2343,9 @@ class UR_AJAX {
 		}
 
 		$membership_field_json =
-		'{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' .
-		$membership_field_name .
-		'","required":"false","hide_label":"false","membership_listing_option":"all","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}';
+			'{"field_key":"membership","general_setting":{"label":"Membership Field","description":"","field_name":"' .
+			$membership_field_name .
+			'","required":"false","hide_label":"false","membership_listing_option":"all","membership_group":"0"},"advance_setting":{"custom_class":""},"icon":"ur-icon ur-icon-membership-field"}';
 
 		if ( substr( $content, -3 ) === ']]]' ) {
 			$content = substr( $content, 0, -3 ) . '],[' . $membership_field_json . ']]]';
