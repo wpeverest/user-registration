@@ -488,10 +488,8 @@ if ( ! class_exists( 'Admin' ) ) :
 			$installed_version = get_option( 'ur_membership_db_version', '0.0.0' );
 
 			if ( version_compare( $installed_version, '1.0.0', '<' ) ) {
-				if ( defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE ) {
-					self::on_activation();
-					update_option( 'ur_membership_db_version', '1.0.0' );
-				}
+				self::on_activation();
+				update_option( 'ur_membership_db_version', '1.0.0' );
 			}
 		}
 
