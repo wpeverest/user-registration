@@ -75,6 +75,19 @@ class StripeService {
 	}
 
 	/**
+	 * Event types handled in handle_webhook(). Used as default for webhook registration so they stay in sync.
+	 *
+	 * @return string[]
+	 */
+	public static function get_handled_webhook_events() {
+		return array(
+			'invoice.payment_succeeded',
+			'invoice.payment_failed',
+			'payment_intent.payment_failed',
+		);
+	}
+
+	/**
 	 * Create webhook endpoint in Stripe for a given mode.
 	 *
 	 * @param string $mode 'test' or 'live'.
@@ -116,20 +129,13 @@ class StripeService {
 
 		try {
 			\Stripe\Stripe::setApiKey( $secret_key );
-			$webhook_url = rest_url( 'user-registration/stripe-webhook' );
-			$webhook     = \Stripe\WebhookEndpoint::create(
+			$webhook_url   = rest_url( 'user-registration/stripe-webhook' );
+			$default_events = self::get_handled_webhook_events();
+			$enabled_events = apply_filters( 'urm_stripe_webhook_enabled_events', $default_events, $mode );
+			$webhook       = \Stripe\WebhookEndpoint::create(
 				array(
 					'url'            => $webhook_url,
-					'enabled_events' => array(
-						'checkout.session.completed',
-						'payment_intent.succeeded',
-						'payment_intent.payment_failed',
-						'invoice.paid',
-						'invoice.payment_failed',
-						'customer.subscription.created',
-						'customer.subscription.updated',
-						'customer.subscription.deleted',
-					),
+					'enabled_events' => array_values( array_filter( (array) $enabled_events ) ),
 					'api_version'    => '2023-10-16',
 				)
 			);
