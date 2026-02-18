@@ -73,12 +73,12 @@ class OrderService {
 		if ( ! isset( $data['order_id'] ) ) {
 			$this->response['status']  = false;
 			$this->response['code']    = 422;
-			$this->response['message'] = __( 'Field Order ID is required.' );
+			$this->response['message'] = __( 'Field Order ID is required.', 'user-registration' );
 
 		} elseif ( $data['order_id'] == 0 && ! isset( $data['user_id'] ) ) {
 			$this->response['status']  = false;
 			$this->response['code']    = 422;
-			$this->response['message'] = __( 'Field User ID is required.' );
+			$this->response['message'] = __( 'Field User ID is required.', 'user-registration' );
 		}
 
 		return $this->response;

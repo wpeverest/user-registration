@@ -75,7 +75,7 @@ class StripeService {
 	}
 
 	/**
-	 * Event types handled in handle_webhook(). Used as default for webhook registration so they stay in sync.
+	 * Default for webhook registration.
 	 *
 	 * @return string[]
 	 */
@@ -1210,7 +1210,7 @@ class StripeService {
 				$this->sendEmail( $member_order['ID'], $member_subscription, $membership_metas, $member_id, $response );
 
 				$response['subscription'] = $subscription;
-				$response['message']      = __( 'New member has been successfully created with successful stripe subscription.' );
+				$response['message']      = __( 'New member has been successfully created with successful stripe subscription.', 'user-registration' );
 				$response['status']       = true;
 			} elseif ( 'incomplete' === $subscription_status ) {
 				PaymentGatewayLogging::log_general(
