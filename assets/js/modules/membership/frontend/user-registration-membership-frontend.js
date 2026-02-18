@@ -131,6 +131,48 @@
 			this.toggleNotice();
 		},
 
+		/**
+		 * Show error in same #ur-submit-message-node as normal form (same markup as form-registration.php).
+		 *
+		 * @param {number} form_id - Form ID.
+		 * @param {string|Array} message - Error message(s).
+		 */
+		show_form_failure_message: function (form_id, message) {
+			var $form = $("#user-registration-form-" + form_id);
+			if (!$form.length) {
+				ur_membership_frontend_utils.show_failure_message(
+					Array.isArray(message) ? message.join(" ") : message,
+				);
+				return;
+			}
+			$form.find(".ur-message").remove();
+			var messages = Array.isArray(message) ? message : [message];
+			var listHtml = '<ul class="ur-error-list">';
+			messages.forEach(function (msg) {
+				var text = typeof msg === "string" ? msg : msg && msg.message ? msg.message : "";
+				if (text) {
+					listHtml += "<li>" + text.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</li>";
+				}
+			});
+			listHtml += "</ul>";
+			var svgIcon =
+				'<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 35 35" fill="none">' +
+				'<g clip-path="url(#clip0_8269_857)">' +
+				'<path d="M10.4979 24.6391C14.4408 28.5063 20.7721 28.445 24.6394 24.5022C28.5066 20.5593 28.4453 14.2279 24.5025 10.3607C20.5596 6.49343 14.2283 6.55472 10.361 10.4976C6.49374 14.4404 6.55503 20.7718 10.4979 24.6391Z" stroke="#F25656" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>' +
+				'<path d="M20.3008 14.6445L14.699 20.3559" stroke="#F25656" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>' +
+				'<path d="M14.6445 14.6992L20.3559 20.301" stroke="#F25656" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>' +
+				"</g>" +
+				'<defs><clipPath id="clip0_8269_857">' +
+				'<rect width="24" height="24" fill="white" transform="translate(17.3359 0.530273) rotate(44.4454)"></rect>' +
+				"</clipPath></defs></svg>";
+			var wrapper = $(
+				'<div class="ur-message user-registration-error" id="ur-submit-message-node"/>',
+			);
+			wrapper.append(svgIcon).append(listHtml);
+			$form.find("form").append(wrapper);
+			$(window).scrollTop($form.find(".ur-button-container").offset().top);
+		},
+
 		show_success_message: function (message) {
 			$(".notice-container .notice_red")
 				.removeClass("notice_red")
@@ -220,6 +262,7 @@
 				(action === "register" || null === action)
 			) {
 				$registration_form.find("form")[0].reset();
+				$registration_form.find(".ur-message").remove();
 				var wrapper = $(
 					'<div class="ur-message user-registration-message" id="ur-submit-message-node"/>'
 				);
@@ -530,6 +573,12 @@
 								form_response,
 							);
 						} else {
+							ur_membership_frontend_utils.show_form_failure_message(
+								form_response.form_id,
+								response.data && response.data.message
+									? response.data.message
+									: urmf_data.labels.i18n_error,
+							);
 							ur_membership_frontend_utils.show_failure_message(
 								response.data.message,
 							);
@@ -537,9 +586,13 @@
 						}
 					},
 					failure: function (xhr, statusText) {
-						ur_membership_frontend_utils.show_failure_message(
-							urmf_data.labels.network_error + '(' + statusText + ')',
+						var msg =
+							urmf_data.labels.network_error + " (" + statusText + ")";
+						ur_membership_frontend_utils.show_form_failure_message(
+							form_response.form_id,
+							msg,
 						);
+						ur_membership_frontend_utils.show_failure_message(msg);
 						form_object.hide_loader(form_response.form_id);
 					},
 					complete: function () {
@@ -595,14 +648,14 @@
 					window.location.replace(response.data.pg_data.payment_url);
 					break;
 				default:
-					ur_membership_frontend_utils.show_success_message(
-						response.data.message,
-					);
+					// ur_membership_frontend_utils.show_success_message(
+					// 	response.data.message,
+					// );
+					// Show success in same #ur-submit-message-node as normal form (do not hide)
 					ur_membership_frontend_utils.show_form_success_message(
 						form_response,
 						{
 							username: prepare_members_data.username,
-							context: 'hide_message',
 						},
 					);
 					break;
