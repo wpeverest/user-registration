@@ -485,22 +485,22 @@
 					// 	];
 					// }
 					// validation for empty membership group.
-					if (
-						$('[data-field="membership_group"]').length &&
-						$('[data-field="membership_group"]').val() == "0" &&
-						$('[data-field="membership_listing_option"]').val() ===
-							"group"
-					) {
-						data.data["empty_membership_group_status"] = [
-							{
-								validation_status: false,
-								validation_message:
-									user_registration_form_builder_data
-										.i18n_admin
-										.i18n_prompt_no_membership_group_selected
-							}
-						];
-					}
+					// if (
+					// 	$('[data-field="membership_group"]').length &&
+					// 	$('[data-field="membership_group"]').val() == "0" &&
+					// 	$('[data-field="membership_listing_option"]').val() ===
+					// 		"group"
+					// ) {
+					// 	data.data["empty_membership_group_status"] = [
+					// 		{
+					// 			validation_status: false,
+					// 			validation_message:
+					// 				user_registration_form_builder_data
+					// 					.i18n_admin
+					// 					.i18n_prompt_no_membership_group_selected
+					// 		}
+					// 	];
+					// }
 					if (
 						data.data.payment_field_present &&
 						$(".ur-selected-inputs").find(
