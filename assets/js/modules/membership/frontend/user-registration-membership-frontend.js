@@ -622,14 +622,10 @@
 					window.location.replace(response.data.pg_data.payment_url);
 					break;
 				default:
-					ur_membership_frontend_utils.show_success_message(
-						response.data.message
-					);
 					ur_membership_frontend_utils.show_form_success_message(
 						form_response,
 						{
-							username: prepare_members_data.username,
-							context: "hide_message"
+							username: prepare_members_data.username
 						}
 					);
 					break;
