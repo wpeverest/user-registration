@@ -132,11 +132,41 @@
 		},
 
 		show_success_message: function (message) {
-			$(".notice-container .notice_red")
-				.removeClass("notice_red")
-				.addClass("notice_blue");
-			$(".notice_message").text(message);
-			this.toggleNotice();
+			var $registration_form = $(".ur-frontend-form").first(),
+				$form = $registration_form.length
+					? $registration_form.find("form.register")
+					: $();
+
+			if ($form.length) {
+				$registration_form.find("#ur-submit-message-node").remove();
+				$registration_form
+					.find(".ur-submit-button")
+					.find("span")
+					.removeClass("ur-front-spinner");
+				$registration_form
+					.find(".ur-submit-button")
+					.prop("disabled", false);
+
+				var wrapper = $(
+					'<div class="ur-message user-registration-message" id="ur-submit-message-node"/>'
+				);
+				wrapper.append(
+					$('<ul class=""/>').append($("<li/>").text(message))
+				);
+				$form.append(wrapper);
+				$(window).scrollTop(
+					$registration_form
+						.find(".ur-button-container")
+						.offset().top
+				);
+				$(".notice-container").removeClass("active");
+			} else {
+				$(".notice-container .notice_red")
+					.removeClass("notice_red")
+					.addClass("notice_blue");
+				$(".notice_message").text(message);
+				this.toggleNotice();
+			}
 		},
 		show_form_success_message: function (form_response, thank_you_data) {
 			var response_data = form_response.data,
