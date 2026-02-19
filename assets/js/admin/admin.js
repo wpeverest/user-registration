@@ -1323,7 +1323,7 @@ jQuery(function ($) {
 				// ) {
 				// 	show_membership_redirection_notice(form_row);
 				// }
-				// break;
+				break;
 				case "previous-page":
 					$(
 						"#user_registration_form_setting_redirect_after_field"
