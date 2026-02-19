@@ -81,7 +81,7 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 
 			if ( ! empty( $form_id ) ) {
 
-				$redirect_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
+				$redirect_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'internal-page' );
 
 				switch ( $redirect_option ) {
 					case 'no-redirection':
@@ -89,7 +89,7 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 						break;
 
 					case 'internal-page':
-						$selected_page = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', '' );
+						$selected_page = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', get_option( 'user_registration_thank_you_page_id', '' ) );
 
 						if ( ! empty( $selected_page ) ) {
 							$page_url     = get_permalink( $selected_page );
