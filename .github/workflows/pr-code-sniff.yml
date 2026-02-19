@@ -34,8 +34,8 @@ jobs:
       - name: Run code sniff
         continue-on-error: true
         run: |
-          chmod u+x ./tests/bin/phpcs.sh
-          ./tests/bin/phpcs.sh "${{ github.event.pull_request.base.sha }}" "${{ github.event.after }}"
+          ./vendor/bin/phpcs --report=checkstyle --report-file=./phpcs-report.xml -s -p . || true
 
       - name: Show PHPCS results in PR
+        if: hashFiles('./phpcs-report.xml') != ''
         run: cs2pr ./phpcs-report.xml

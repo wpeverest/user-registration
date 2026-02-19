@@ -32,7 +32,8 @@
     "phpunit-test": "phpunit --verbose",
     "typecheck": "tsc --noEmit",
     "qa-setup":"composer install --no-dev && pnpm install",
-    "qa-build": "wp-scripts build --node-env=production --mode=production && grunt release"
+    "qa-build": "wp-scripts build --node-env=production --mode=production && grunt release",
+    "sonar": "docker run --rm -e SONAR_HOST_URL=\"http://host.docker.internal:9000\" -e SONAR_TOKEN=\"%SONAR_TOKEN%\" -v \"%cd%:/usr/src\" sonarsource/sonar-scanner-cli"
   },
   "devDependencies": {
     "@lodder/grunt-postcss": "^3.1.1",
