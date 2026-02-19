@@ -226,6 +226,9 @@
 				.find("span")
 				.removeClass("ur-front-spinner");
 
+			$registration_form.find("form")[0].reset();
+			$registration_form.find(".user-registration-error").remove();
+
 			/**
 			 * Append Success Message according to login option.
 			 */
