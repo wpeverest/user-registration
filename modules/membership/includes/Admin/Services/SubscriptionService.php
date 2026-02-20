@@ -1219,4 +1219,77 @@ class SubscriptionService {
 
 		return $expiry_date <= $today;
 	}
+
+	/**
+	 * Callback for missed payment check.
+	 */
+	public function daily_membership_missed_payment_check() {
+
+		$last_synced = time();
+		// if ($last_synced <= 0) {
+			$last_synced = time() - DAY_IN_SECONDS;
+		// }
+
+		$now = time();
+
+		$this->urm_backfill_missed_payment_events($last_synced);
+
+		// update_option('urm_last_missed_payment_check_sync_time', $now);
+	}
+
+	public function urm_backfill_missed_payment_events($last_synced) {
+		$stripe_service = new StripeService();
+
+		$events = \Stripe\Event::all([
+			'types'   => ['invoice.payment_succeeded', 'invoice.paid'],
+			'created' => [
+				'gte' => $last_synced,
+			],
+			'limit' => '100'
+		]);
+
+		foreach ($events->data as $event) {
+			$invoice = $event->data->object;
+			$subscription_id  = $invoice->subscription ?? null;
+			$payment_intent_id = $invoice->payment_intent ?? null;
+			$membership_subscription = $this->members_subscription_repository->get_subscription_by_subscription_id_meta( $subscription_id );
+
+			if( ! empty( $membership_subscription ) ) {
+				$payment = $this->orders_repository->get_order_by_transaction_id( $payment_intent_id );
+
+				if( empty( $payment ) ) {
+					$payment = $this->orders_repository->get_order_by_transaction_id( $subscription_id );
+
+					if( empty($payment) ) {
+						$subscription = $this->members_subscription_repository->retrieve( $membership_subscription['ID'] );
+						$payment_intent = \Stripe\PaymentIntent::retrieve( $payment_intent_id );
+						$paid_amount = $payment_intent->amount_received / 100; // Convert from cents to dollars
+
+						$order_data = array(
+							'orders_data'      => array(
+								'user_id'         => absint( $subscription['user_id'] ),
+								'item_id'         => $subscription['item_id'],
+								'subscription_id' => $subscription['ID'],
+								'created_by'      => $subscription['user_id'],
+								'transaction_id'  => $subscription_id,
+								'payment_method'  => 'stripe',
+								'total_amount'    => $paid_amount,
+								'status'          => 'completed',
+								'order_type'      => 'subscription',
+								'trial_status'    => 'off',
+								'notes'           => 'Backfilled order for missed payment event',
+							),
+							'orders_meta_data' => array(
+								array(
+									'meta_key'   => 'is_admin_created',
+									'meta_value' => false,
+								),
+							),
+						);
+						$this->orders_repository->create( $order_data );
+					}
+				}
+			}
+		}
+	}
 }
