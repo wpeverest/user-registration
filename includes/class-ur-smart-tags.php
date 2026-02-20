@@ -169,8 +169,9 @@ class UR_Smart_Tags {
 
 			if ( ! empty( $values['context'] ) && 'thank_you_page' == $values['context'] ) {
 				$subscription_service = new SubscriptionService();
-				$user_data['member_id'] = $values['member_id'];
-				$user_data['context']   = $values['context'];
+				$user_data['member_id']       = $values['member_id'];
+				$user_data['context']        = $values['context'];
+				$user_data['transaction_id'] = ! empty( $values['transaction_id'] ) ? $values['transaction_id'] : '';
 				$values      = array(
 					'membership_tags' => $subscription_service->get_membership_plan_details( $user_data )
 				);

@@ -202,7 +202,16 @@
 					}
 				}, timeout);
 			}
-			if ("undefined" !== typeof redirect_url && redirect_url !== "") {
+	
+			var has_thank_you_params =
+				thank_you_data &&
+				typeof thank_you_data === "object" &&
+				Object.keys(thank_you_data).length > 0;
+			if (
+				"undefined" !== typeof redirect_url &&
+				redirect_url !== "" &&
+				!has_thank_you_params
+			) {
 				$(document).trigger(
 					"user_registration_frontend_before_redirect_url",
 					[redirect_url]
@@ -215,7 +224,8 @@
 				if ("" != originalRedirectUrl) {
 					return;
 				}
-			} else {
+			}
+			if ("undefined" === typeof redirect_url || redirect_url === "") {
 				redirect_url = urmf_data.thank_you_page_url;
 			}
 			/**
@@ -661,6 +671,9 @@
 					ur_membership_frontend_utils.show_form_success_message(
 						form_response,
 						{
+							transaction_id: response.data.transaction_id || "",
+							payment_type: "unpaid",
+							info: "Free",
 							username: prepare_members_data.username,
 							context: "hide_message"
 						}
@@ -706,7 +719,10 @@
 		 */
 		show_default_response: function (url, thank_you_data, timeout) {
 			timeout = timeout || 2000;
-			var thank_you_page_url = urmf_data.thank_you_page_url;
+			var thank_you_page_url =
+				url && String(url).trim() !== ""
+					? url
+					: urmf_data.thank_you_page_url;
 
 			var url_params = $.param(thank_you_data).toString();
 			window.setTimeout(function () {
