@@ -5014,6 +5014,15 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 				}
 			}
 
+			if ( 'previous-page' === get_option( 'user_registration_login_options_redirect_after_login', 'no' ) ) {
+				if ( ! empty( $post['previous_page'] ) ) {
+					$referer = $post['previous_page'];
+					if ( $referer && false === strpos( $referer, 'wp-login.php' ) && $referer !== get_permalink() ) {
+						$post['redirect'] = $referer;
+					}
+				}
+			}
+
 			// Handles the role based redirection.
 			if ( ur_string_to_bool( get_option( 'user_registration_pro_role_based_redirection', false ) ) ) {
 				$registration_redirect = get_option( 'ur_pro_settings_redirection_after_login', array() );
