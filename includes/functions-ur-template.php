@@ -1362,7 +1362,6 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 			$form_id   = ur_get_form_id_by_userid( $user_id );
 			$user_data = get_userdata( $user_id );
 			$user_data = $user_data->data;
-
 			$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 
 			if ( ! empty( $form_data_array ) ) {
