@@ -1,0 +1,55 @@
+name: Pre-release
+on:
+  release:
+    types: [prereleased]
+  workflow_dispatch:
+jobs:
+  build:
+    name: Build and save ZIP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set env
+        id: vars
+        run: |
+          if [[ -n "${{ github.event.release.tag_name }}" ]]; then
+            echo "tag=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+            echo "ref=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=dev-$(date +%Y%m%d-%H%M)" >> $GITHUB_OUTPUT
+            echo "ref=${GITHUB_REF#refs/heads/}-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        id: build
+        uses: wpeverest/action-build@4.0.2
+        with:
+          generate-zip: true
+
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: user-registration-${{ steps.vars.outputs.tag }}.zip
+          path: ${{ steps.build.outputs.zip_path }}
+          retention-days: 30
+
+      - name: Upload ZIP to release (pre-release only)
+        if: github.event_name == 'release' && github.event.release.prerelease == true
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.build.outputs.zip_path }}
+          asset_name: user-registration-${{ github.event.repository.name }}.zip
+          asset_content_type: application/zip

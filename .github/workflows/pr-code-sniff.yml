@@ -3,7 +3,6 @@ on: pull_request
 jobs:
   test:
     name: Code sniff (PHP 7.4, WP Latest)
-    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -31,11 +30,30 @@ jobs:
       - name: Setup and install composer
         run: composer install
 
+      - name: Get changed PHP files
+        id: changed
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }} --depth=1
+          git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD -- '*.php' > changed-php.txt || true
+          if [ -s changed-php.txt ]; then
+            echo "count=$(wc -l < changed-php.txt)" >> $GITHUB_OUTPUT
+            echo "Files to sniff:"
+            cat changed-php.txt
+          else
+            echo "count=0" >> $GITHUB_OUTPUT
+            echo "No PHP files changed in this PR"
+          fi
+
       - name: Run code sniff
+        if: steps.changed.outputs.count != '0'
         continue-on-error: true
         run: |
-          ./vendor/bin/phpcs --report=checkstyle --report-file=./phpcs-report.xml -s -p . || true
+          ./vendor/bin/phpcs --report=checkstyle --report-file=./phpcs-report.xml -s -p --file-list=changed-php.txt || true
+
+      - name: Run code sniff (no PHP changes)
+        if: steps.changed.outputs.count == '0'
+        run: echo "Skipping PHPCS - no PHP files changed."
 
       - name: Show PHPCS results in PR
-        if: hashFiles('./phpcs-report.xml') != ''
+        if: steps.changed.outputs.count != '0' && hashFiles('./phpcs-report.xml') != ''
         run: cs2pr ./phpcs-report.xml
