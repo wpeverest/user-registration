@@ -1435,14 +1435,25 @@ class StripeService {
 		if ( isset( $event['id'] ) ) {
 			try {
 				$event_id = sanitize_text_field( $event['id'] );
-				$event    = (array) \Stripe\Event::retrieve( $event_id );
+				$retrieved_event    = (array) \Stripe\Event::retrieve( $event_id );
 			} catch ( \Exception $e ) {
+				PaymentGatewayLogging::log_webhook_received(
+					'stripe',
+					$e->getMessage(),
+					array(
+						'webhook_type'    => 'invoice.payment_failed',
+						'subscription_id' => $subscription_id,
+						'event_id'        => $event['id'] ?? 'unknown',
+					)
+				);
+
 				die();
 			}
 		} else {
 			die();
 		}
 		switch ( $event['type'] ) {
+			case 'invoice.paid':
 			case 'invoice.payment_succeeded':
 				$this->handle_succeeded_invoice( $event, $subscription_id );
 				break;
