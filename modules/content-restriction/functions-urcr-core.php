@@ -580,7 +580,7 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 													! empty( $membership['post_id'] ) &&
 													(int) $membership['post_id'] === (int) $team_membership_id &&
 													! empty( $membership['status'] ) &&
-													'active' === $membership['status'] &&
+													in_array( $membership['status'], array( 'active', 'trial' ), true ) &&
 													in_array( $membership['post_id'], $sources, true )
 												) {
 													return true;
@@ -594,7 +594,7 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 
 						if ( ! empty( $user_membership ) && is_array( $user_membership ) ) {
 							foreach ( $user_membership as $membership ) {
-								if ( ! empty( $membership['status'] ) && 'active' === $membership['status'] ) {
+								if ( ! empty( $membership['status'] ) && in_array( $membership['status'], array( 'active', 'trial' ), true ) ) {
 									if ( ! empty( $membership['post_id'] ) && in_array( $membership['post_id'], $sources, true ) ) {
 										return true;
 									}

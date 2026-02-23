@@ -106,7 +106,7 @@ class URCR_Shortcodes {
 						if ( ! empty( $sub['item_id'] ) ) {
 							$current_user_membership[] = $sub['item_id'];
 						}
-						if ( ! empty( $sub['status'] ) && 'active' === $sub['status'] ) {
+						if ( ! empty( $sub['status'] ) && in_array( $sub['status'], array( 'active', 'trial' ), true ) ) {
 							$is_user_membership_active = true;
 						}
 					}
