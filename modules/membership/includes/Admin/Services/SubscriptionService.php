@@ -1223,13 +1223,13 @@ class SubscriptionService {
 	/**
 	 * Callback for missed payment check.
 	 */
-	public function daily_membership_missed_payment_check() {
+	public function membership_missed_payment_check() {
 
     	$last_synced = (int) get_option( 'urm_last_missed_payment_events_check_sync_time', 0 );
 		$now = time();
 
-		if ( $last_synced <= 0 || $last_synced > $now ) {
-			$last_synced = $now - HOUR_IN_SECONDS;
+		if ( $last_synced <= 0 ) {
+			$last_synced = $now - 30 * DAY_IN_SECONDS; // fallback to 30 days back if no previous sync time found, to avoid missing old events.
 		}
 
     	$this->urm_backfill_missed_payment_events( $last_synced, $now );
