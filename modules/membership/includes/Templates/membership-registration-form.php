@@ -527,7 +527,7 @@
 						>
 						<span class="ur-membership-duration">
 						<img
-							src="<?php echo esc_url( plugins_url( 'assets/images/settings-icons/membership-field/' . strtolower( $g ) . '-logo.png', UR_PLUGIN_FILE ) ); ?>"
+							src="<?php echo esc_url( apply_filters( 'user_registration_membership_payment_gateway_logo_url', plugins_url( 'assets/images/settings-icons/membership-field/' . strtolower( $g ) . '-logo.png', UR_PLUGIN_FILE ), $g, $gateway ) ); ?>"
 							alt="<?php echo esc_attr( $gateway ); ?>"
 							class="ur-membership-payment-gateway-logo"
 							width="<?php echo isset( $width_map[ strtolower( $g ) ] ) ? $width_map[ strtolower( $g ) ] : '60px'; ?>"
