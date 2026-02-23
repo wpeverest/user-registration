@@ -56,6 +56,9 @@ $redirect_btn_url  = ! empty( $attributes['redirect_page_id'] )
 				$values['member_id'] = $user->ID;
 				$values['email']     = $user->user_email;
 				$values['context']   = 'thank_you_page';
+				if ( ! empty( $transaction_id ) ) {
+					$values['transaction_id'] = $transaction_id;
+				}
 
 				$main_content = apply_filters( 'user_registration_process_smart_tags', $main_content, $values );
 			}

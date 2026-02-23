@@ -132,11 +132,41 @@
 		},
 
 		show_success_message: function (message) {
-			$(".notice-container .notice_red")
-				.removeClass("notice_red")
-				.addClass("notice_blue");
-			$(".notice_message").text(message);
-			this.toggleNotice();
+			var $registration_form = $(".ur-frontend-form").first(),
+				$form = $registration_form.length
+					? $registration_form.find("form.register")
+					: $();
+
+			if ($form.length) {
+				$registration_form.find("#ur-submit-message-node").remove();
+				$registration_form
+					.find(".ur-submit-button")
+					.find("span")
+					.removeClass("ur-front-spinner");
+				$registration_form
+					.find(".ur-submit-button")
+					.prop("disabled", false);
+
+				var wrapper = $(
+					'<div class="ur-message user-registration-message" id="ur-submit-message-node"/>'
+				);
+				wrapper.append(
+					$('<ul class=""/>').append($("<li/>").text(message))
+				);
+				$form.append(wrapper);
+				$(window).scrollTop(
+					$registration_form
+						.find(".ur-button-container")
+						.offset().top
+				);
+				$(".notice-container").removeClass("active");
+			} else {
+				$(".notice-container .notice_red")
+					.removeClass("notice_red")
+					.addClass("notice_blue");
+				$(".notice_message").text(message);
+				this.toggleNotice();
+			}
 		},
 		show_form_success_message: function (form_response, thank_you_data) {
 			var response_data = form_response.data,
@@ -172,7 +202,16 @@
 					}
 				}, timeout);
 			}
-			if ("undefined" !== typeof redirect_url && redirect_url !== "") {
+	
+			var has_thank_you_params =
+				thank_you_data &&
+				typeof thank_you_data === "object" &&
+				Object.keys(thank_you_data).length > 0;
+			if (
+				"undefined" !== typeof redirect_url &&
+				redirect_url !== "" &&
+				!has_thank_you_params
+			) {
 				$(document).trigger(
 					"user_registration_frontend_before_redirect_url",
 					[redirect_url]
@@ -185,7 +224,8 @@
 				if ("" != originalRedirectUrl) {
 					return;
 				}
-			} else {
+			}
+			if ("undefined" === typeof redirect_url || redirect_url === "") {
 				redirect_url = urmf_data.thank_you_page_url;
 			}
 			/**
@@ -195,6 +235,9 @@
 				.find(".ur-submit-button")
 				.find("span")
 				.removeClass("ur-front-spinner");
+
+			$registration_form.find("form")[0].reset();
+			$registration_form.find(".user-registration-error").remove();
 
 			/**
 			 * Append Success Message according to login option.
@@ -628,6 +671,9 @@
 					ur_membership_frontend_utils.show_form_success_message(
 						form_response,
 						{
+							transaction_id: response.data.transaction_id || "",
+							payment_type: "unpaid",
+							info: "Free",
 							username: prepare_members_data.username,
 							context: "hide_message"
 						}
@@ -673,7 +719,10 @@
 		 */
 		show_default_response: function (url, thank_you_data, timeout) {
 			timeout = timeout || 2000;
-			var thank_you_page_url = urmf_data.thank_you_page_url;
+			var thank_you_page_url =
+				url && String(url).trim() !== ""
+					? url
+					: urmf_data.thank_you_page_url;
 
 			var url_params = $.param(thank_you_data).toString();
 			window.setTimeout(function () {

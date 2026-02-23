@@ -197,7 +197,7 @@ class Frontend {
 				'currency_symbol'                  => $symbol,
 				'curreny_pos'                      => isset( $currencies[ $currency ]['symbol_pos'] ) ? $currencies[ $currency ]['symbol_pos'] : 'left',
 				'membership_registration_page_url' => $redirect_page_url,
-				'thank_you_page_url'               => $thank_you_page,
+				'thank_you_page_url'               => '',
 				'membership_endpoint_url'          => $membership_endpoint_url,
 				'stripe_publishable_key'           => $stripe_settings['publishable_key'],
 				'membership_gateways'              => get_option( 'ur_membership_payment_gateways', array() ),

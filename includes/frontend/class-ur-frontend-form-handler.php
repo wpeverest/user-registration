@@ -181,7 +181,7 @@ class UR_Frontend_Form_Handler {
 				$success_params['form_login_option']       = ! ur_string_to_bool( get_option( 'user_registration_enable_email_confirmation', true ) ) && 'email_confirmation' === $login_option ?  'email_confirmation' : $login_option;
 
 				$redirect_timeout = (int) ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ) * 1000;
-				$redirect_after_registration = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
+				$redirect_after_registration = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'internal-page' );
 				$success_params['redirect_timeout'] = "no-redirection" !== $redirect_after_registration ? apply_filters( 'user_registration_hold_success_message_before_redirect', $redirect_timeout ) : 0;
 
 				$redirect_url = ur_get_form_redirect_url( $form_id );
