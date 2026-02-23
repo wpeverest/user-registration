@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - UR-3707-new-redirection-after-registration-and-thank-you-page-settings-merge
+            - ui-polishing-sid
         workflow_dispatch:
 jobs:
     sync:
