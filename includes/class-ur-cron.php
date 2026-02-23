@@ -91,8 +91,8 @@ class UR_Cron {
 			wp_schedule_event( time(), 'daily', 'urm_daily_payment_retry_check' );
 		}
 
-		if ( UR_PRO_ACTIVE && ! wp_next_scheduled( 'urm_daily_missed_payment_check' ) ) {
-			wp_schedule_event( time(), 'daily', 'urm_daily_missed_payment_check' );
+		if ( UR_PRO_ACTIVE && ! wp_next_scheduled( 'urm_daily_missed_payment_events_check' ) ) {
+			wp_schedule_event( time(), 'daily', 'urm_daily_missed_payment_events_check' );
 		}
 
 	}

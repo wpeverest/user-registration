@@ -1225,69 +1225,45 @@ class SubscriptionService {
 	 */
 	public function daily_membership_missed_payment_check() {
 
-		$last_synced = time();
-		// if ($last_synced <= 0) {
-			$last_synced = time() - DAY_IN_SECONDS;
-		// }
-
+    	$last_synced = (int) get_option( 'urm_last_missed_payment_events_check_sync_time', 0 );
 		$now = time();
 
-		$this->urm_backfill_missed_payment_events($last_synced);
+		if ( $last_synced <= 0 || $last_synced > $now ) {
+			$last_synced = $now - HOUR_IN_SECONDS;
+		}
 
-		// update_option('urm_last_missed_payment_check_sync_time', $now);
+    	$this->urm_backfill_missed_payment_events( $last_synced, $now );
+
+		update_option('urm_last_missed_payment_events_check_sync_time', $now);
 	}
 
-	public function urm_backfill_missed_payment_events($last_synced) {
-		$stripe_service = new StripeService();
+	/**
+	 * Backfill missed payment events from payment providers.
+	 *
+	 * This method fetches payment provider events for subscription updates and payment successes that occurred between the last synced time and now. It then processes these events to update the local subscription records and create any missing payment records in the database.
+	 *
+	 * @param int $last_synced The timestamp of the last successful sync, used to fetch events that occurred after this time.
+	 * @param int|null $now The current timestamp, used to limit the events fetched. If null, it defaults to the current time.
+	 * @return void
+	 */
+	public function urm_backfill_missed_payment_events($last_synced, $now = null) {
+		if ( $now === null ) {
+			$now = time();
+		}
 
-		$events = \Stripe\Event::all([
-			'types'   => ['invoice.payment_succeeded', 'invoice.paid'],
-			'created' => [
-				'gte' => $last_synced,
-			],
-			'limit' => '100'
-		]);
+		$payment_gateways = get_option( 'ur_membership_payment_gateways', array() );
 
-		foreach ($events->data as $event) {
-			$invoice = $event->data->object;
-			$subscription_id  = $invoice->subscription ?? null;
-			$payment_intent_id = $invoice->payment_intent ?? null;
-			$membership_subscription = $this->members_subscription_repository->get_subscription_by_subscription_id_meta( $subscription_id );
-
-			if( ! empty( $membership_subscription ) ) {
-				$payment = $this->orders_repository->get_order_by_transaction_id( $payment_intent_id );
-
-				if( empty( $payment ) ) {
-					$payment = $this->orders_repository->get_order_by_transaction_id( $subscription_id );
-
-					if( empty($payment) ) {
-						$subscription = $this->members_subscription_repository->retrieve( $membership_subscription['ID'] );
-						$payment_intent = \Stripe\PaymentIntent::retrieve( $payment_intent_id );
-						$paid_amount = $payment_intent->amount_received / 100; // Convert from cents to dollars
-
-						$order_data = array(
-							'orders_data'      => array(
-								'user_id'         => absint( $subscription['user_id'] ),
-								'item_id'         => $subscription['item_id'],
-								'subscription_id' => $subscription['ID'],
-								'created_by'      => $subscription['user_id'],
-								'transaction_id'  => $subscription_id,
-								'payment_method'  => 'stripe',
-								'total_amount'    => $paid_amount,
-								'status'          => 'completed',
-								'order_type'      => 'subscription',
-								'trial_status'    => 'off',
-								'notes'           => 'Backfilled order for missed payment event',
-							),
-							'orders_meta_data' => array(
-								array(
-									'meta_key'   => 'is_admin_created',
-									'meta_value' => false,
-								),
-							),
-						);
-						$this->orders_repository->create( $order_data );
-					}
+		if( ! empty( $payment_gateways ) ) {
+			foreach ( $payment_gateways as $gateway_key => $gateway_details ) {
+				switch ( $gateway_key ) {
+					case 'stripe':
+						$stripe_service = new StripeService();
+						$stripe_service->run_missed_subscription_backfill( $last_synced );
+						$stripe_service->run_missed_payment_backfill( $last_synced );
+						break;
+					default:
+						do_action( 'urm_fetch_and_process_missed_payment_events_for_gateway', $gateway_key, $last_synced, $now );
+						break;
 				}
 			}
 		}
