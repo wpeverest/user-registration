@@ -1,5 +1,4 @@
 name: Draft-release
-
 on:
   workflow_dispatch:
   push:
