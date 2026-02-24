@@ -116,4 +116,19 @@ class MembersOrderRepository extends BaseRepository implements MembersOrderInter
 		}
 		return false;
 	}
+
+	public function does_transaction_id_exists( $transaction_id ) {
+		global $wpdb;
+
+		$result = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT id FROM {$this->table} WHERE transaction_id = %s LIMIT 1",
+				$transaction_id
+			)
+		);
+
+		return ! empty( $result );
+	}
+
+
 }

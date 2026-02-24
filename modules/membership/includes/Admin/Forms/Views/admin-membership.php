@@ -99,7 +99,7 @@ $field_label = esc_html( $this->get_general_setting_data( 'label' ) );
 	</div>
 	<div class="ur-field" data-field-key="membership">
 		<span class="empty-urmg-label"<?php echo $empty_label_style; ?>>
-			<?php esc_html_e( 'Please select a membership group.', 'user-registration' ); ?>
+			<?php esc_html_e( 'No memberships found. Please create one or more memberships.', 'user-registration' ); ?>
 		</span>
 		<span class="urmg-loader"></span>
 		<div class="urmg-container">

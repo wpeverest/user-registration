@@ -443,9 +443,12 @@ class PaypalService {
 		}
 
 		$login_option = ur_get_user_login_option( $member_id );
+		$data = apply_filters( 'user_registration_membership_before_register_member', isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() );
+
 		if ( 'auto_login' === $login_option ) {
 			$member_service = new MembersService();
-			$member_service->login_member( $member_id, true );
+			$password        = isset( $data['password'] ) ? $data['password'] : '';
+			$member_service->login_member( $member_id, true, $password );
 		}
 		delete_user_meta( $member_id, 'urm_user_just_created' );
 		ur_membership_redirect_to_thank_you_page( $member_id, $member_order );

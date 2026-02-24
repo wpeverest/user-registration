@@ -282,11 +282,14 @@
 		 */
 		prepare_members_data: function () {
 			var user_data = {},
-				form_inputs = $("#ur-membership-registration").find(
-					"input.ur_membership_input_class"
+				form_inputs = $('#ur-membership-registration').find(
+					'input.ur_membership_input_class',
+				),
+				password = $( document ).find(
+					'input#user_pass',
 				);
-			form_inputs =
-				ur_membership_frontend_utils.convert_to_array(form_inputs);
+
+			form_inputs = ur_membership_frontend_utils.convert_to_array(form_inputs);
 			form_inputs.forEach(function (item) {
 				var $this = $(item);
 				if ($this.attr("name") !== undefined) {
@@ -299,8 +302,9 @@
 			});
 			var membership_input = $('input[name="urm_membership"]:checked');
 			user_data.membership = membership_input.val();
-			user_data.payment_method = "free";
-			if (membership_input.data("urm-pg-type") !== "free") {
+			user_data.payment_method = 'free';
+			user_data.password = password.val();
+			if (membership_input.data('urm-pg-type') !== 'free') {
 				user_data.payment_method = $(
 					'input[name="urm_payment_method"]:checked'
 				).val();
@@ -2296,7 +2300,7 @@
 	};
 	var register_events = {
 		init: function () {
-			$('input[name="urm_payment_method"]').on('change', function () {
+			$( document ).on('change', 'input[name="urm_payment_method"]', function () {
 				var selected_method = $(this).val(),
 					stripe_container = $('.stripe-container'),
 					stripe_error_container = $('#stripe-errors');
@@ -3195,4 +3199,26 @@
 	$(document).ready(function () {
 		$('#ur-local-currency-switch-currency').trigger('change');
 	});
+
+
+	var dialog = $("#URCR-Restriction-Modal");
+
+	if ( dialog.length || typeof MutationObserver !== 'undefined') {
+		if ( $( document ).find( "#URCR-Restriction-Modal .user-registration.ur-frontend-form > form" ) ) {
+			var observer = new MutationObserver(function (mutations) {
+				for (var i = 0; i < mutations.length; i++) {
+					if (mutations[i].attributeName === 'open') {
+
+						if (dialog.is('[open]') ) {
+							register_events.init();
+						}
+					}
+				}
+			});
+
+			observer.observe(dialog[0], {
+				attributes: true
+			});
+		}
+	}
 })(jQuery, window.ur_membership_frontend_localized_data);
