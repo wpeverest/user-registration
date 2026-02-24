@@ -377,7 +377,7 @@ wp_enqueue_style( 'ur-frontend-small-screen' );
 				?>
 				<input type="hidden" name="ur-registration-language" value="<?php echo esc_attr( $current_language ); ?>"/>
 				<input type="hidden" name="ur-user-form-id" value="<?php echo absint( $form_id ); ?>"/>
-				<input type="hidden" name="ur-redirect-url" value="<?php echo esc_url( ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url ) ); ?>"/>
+				<input type="hidden" name="ur-redirect-url" value="<?php echo ! empty( $redirect_url ) ? esc_url( ur_string_translation( $form_id, 'user_registration_form_setting_redirect_options', $redirect_url ) ) : ''; ?>"/>
 				<?php wp_nonce_field( 'ur_frontend_form_id-' . $form_id, 'ur_frontend_form_nonce', false ); ?>
 
 				<?php

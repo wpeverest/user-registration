@@ -11,6 +11,7 @@
   "main": "Gruntfile.js",
   "scripts": {
     "build": "pnpm exec grunt && pnpm run makepot && wp-scripts build --node-env=production --mode=production",
+    "build:no-makepot": "pnpm exec grunt && wp-scripts build --node-env=production --mode=production",
     "build:pro": "cross-env UR_PRO=true pnpm run build",
     "dev": "wp-scripts start --node-env=development --mode=development",
     "dev:pro": "cross-env UR_PRO=true pnpm run dev",
@@ -31,7 +32,8 @@
     "phpunit-test": "phpunit --verbose",
     "typecheck": "tsc --noEmit",
     "qa-setup":"composer install --no-dev && pnpm install",
-    "qa-build": "wp-scripts build --node-env=production --mode=production && grunt release"
+    "qa-build": "wp-scripts build --node-env=production --mode=production && grunt release",
+    "sonar": "docker run --rm -e SONAR_HOST_URL=\"https://sonarqube.themegrill.com/\" -e SONAR_TOKEN=\"%SONAR_TOKEN%\" -v \"%cd%:/usr/src\" sonarsource/sonar-scanner-cli"
   },
   "devDependencies": {
     "@lodder/grunt-postcss": "^3.1.1",
