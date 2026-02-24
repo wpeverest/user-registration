@@ -1,6 +1,5 @@
 name: Draft-release
 on:
-  workflow_dispatch:
   push:
     branches:
       - master
@@ -26,7 +25,7 @@ jobs:
         run: |
           STABLE_TAG=$(grep -E '^Stable tag:' readme.txt | sed -E 's/^Stable tag:[[:space:]]*//' | tr -d '\r')
           echo "stable_tag=$STABLE_TAG" >> $GITHUB_OUTPUT
-          echo "tag_name=v${STABLE_TAG}" >> $GITHUB_OUTPUT
+          echo "tag_name=${STABLE_TAG}" >> $GITHUB_OUTPUT
 
           # Extract latest changelog block (first version block under == Changelog ==)
           CHANGELOG_BLOCK=$(awk '
@@ -43,7 +42,7 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
           echo "Stable tag: $STABLE_TAG"
-          echo "Tag name: v$STABLE_TAG"
+          echo "Tag name: $STABLE_TAG"
           echo "Latest changelog:"
           echo "$CHANGELOG_BLOCK"
 
@@ -100,9 +99,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.check-tag.outputs.tag_name }}
-          name: ${{ needs.check-tag.outputs.tag_name }}
+          name: v${{ needs.check-tag.outputs.tag_name }}
           body: |
-            Changelogs for the release of ${{ needs.check-tag.outputs.tag_name }}
+            Changelogs for the release of v${{ needs.check-tag.outputs.tag_name }}
 
             ```
             ${{ needs.check-tag.outputs.changelog }}
