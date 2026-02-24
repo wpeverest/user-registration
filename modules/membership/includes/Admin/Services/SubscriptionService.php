@@ -1229,7 +1229,7 @@ class SubscriptionService {
 		$now = time();
 
 		if ( $last_synced <= 0 ) {
-			$last_synced = $now - 30 * DAY_IN_SECONDS; // fallback to 30 days back if no previous sync time found, to avoid missing old events.
+			$last_synced = $now - 3 * MONTH_IN_SECONDS; // fallback to 3 months back if no previous sync time found, to avoid missing old events.
 		}
 
     	$this->urm_backfill_missed_payment_events( $last_synced, $now );

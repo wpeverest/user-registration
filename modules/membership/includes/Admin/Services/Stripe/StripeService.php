@@ -1166,7 +1166,7 @@ class StripeService {
 					$member_order['ID'],
 					array(
 						'status'         => $status,
-						'transaction_id' => $subscription->id,
+						'transaction_id' => $subscription->latest_invoice->payment_intent->id,
 					)
 				);
 
@@ -2182,35 +2182,36 @@ class StripeService {
 
 				if( empty( $payment ) ) {
 					$payment = $this->orders_repository->get_order_by_transaction_id( $subscription_id );
+					$this->orders_repository->delete( $payment['ID'] );
 
-					if( empty($payment) ) {
-						$subscription = $this->members_subscription_repository->retrieve( $membership_subscription['ID'] );
-						$payment_intent = \Stripe\PaymentIntent::retrieve( $payment_intent_id );
-						$paid_amount = $payment_intent->amount_received / 100; // Convert from cents to dollars
+					$subscription = $this->members_subscription_repository->retrieve( $membership_subscription['ID'] );
+					$payment_intent = \Stripe\PaymentIntent::retrieve( $payment_intent_id );
+					$paid_amount = $payment_intent->amount_received / 100; // Convert from cents to dollars
+					$created_at = gmdate( 'Y-m-d H:i:s', $invoice->created );
 
-						$order_data = array(
-							'orders_data'      => array(
-								'user_id'         => absint( $subscription['user_id'] ),
-								'item_id'         => $subscription['item_id'],
-								'subscription_id' => $subscription['ID'],
-								'created_by'      => $subscription['user_id'],
-								'transaction_id'  => $subscription_id,
-								'payment_method'  => 'stripe',
-								'total_amount'    => $paid_amount,
-								'status'          => 'completed',
-								'order_type'      => 'subscription',
-								'trial_status'    => 'off',
-								'notes'           => 'Backfilled order for missed payment event',
+					$order_data = array(
+						'orders_data'      => array(
+							'user_id'         => absint( $subscription['user_id'] ),
+							'item_id'         => $subscription['item_id'],
+							'subscription_id' => $subscription['ID'],
+							'created_by'      => $subscription['user_id'],
+							'transaction_id'  => $payment_intent_id,
+							'payment_method'  => 'stripe',
+							'total_amount'    => $paid_amount,
+							'status'          => 'completed',
+							'order_type'      => 'subscription',
+							'trial_status'    => 'off',
+							'notes'           => 'Backfilled order for missed payment event',
+							'created_at'      => $created_at,
+						),
+						'orders_meta_data' => array(
+							array(
+								'meta_key'   => 'is_admin_created',
+								'meta_value' => false,
 							),
-							'orders_meta_data' => array(
-								array(
-									'meta_key'   => 'is_admin_created',
-									'meta_value' => false,
-								),
-							),
-						);
-						$this->orders_repository->create( $order_data );
-					}
+						),
+					);
+					$this->orders_repository->create( $order_data );
 				}
 			}
 		}
