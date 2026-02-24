@@ -579,7 +579,36 @@ class StripeService {
 			'status' => true,
 		);
 
+			$stripe_settings = self::get_stripe_settings();
+
+			if ( empty( $stripe_settings['secret_key'] ) ) {
+				$response['status']  = false;
+				$response['message'] = __( 'Stripe secret key is not configured.', 'user-registration' );
+
+				return $response;
+			}
+
+			\Stripe\Stripe::setApiKey( $stripe_settings['secret_key'] );
+
+			$intent = \Stripe\PaymentIntent::retrieve( $transaction_id );
+
+			if ( $intent->status !== 'succeeded' ) {
+				$response['status']  = false;
+				$response['message'] = __( 'Payment not completed.', 'user-registration' );
+
+				return $response;
+			}
+
+			$payment_status =  $intent->status;
+
 		$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
+
+		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id ) ) {
+			$response['status']  = false;
+			$response['message'] = __( 'Duplicate transaction id.', 'user-registration' );
+
+			return $response;
+		}
 
 		if ( empty( $latest_order ) ) {
 			PaymentGatewayLogging::log_error(

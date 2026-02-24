@@ -99,7 +99,8 @@ class Database {
 					  FOREIGN KEY (created_by) REFERENCES $users_table(ID) ON UPDATE NO ACTION,
 					  INDEX idx_user_id (user_id),
 					  INDEX idx_created_by (created_by),
-					  INDEX idx_order_type (order_type)
+					  INDEX idx_order_type (order_type),
+					  INDEX idx_transaction_id (transaction_id)
 					) $collate;
 					"
 		);

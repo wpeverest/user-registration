@@ -2296,7 +2296,7 @@
 	};
 	var register_events = {
 		init: function () {
-			$('input[name="urm_payment_method"]').on('change', function () {
+			$( document ).on('change', 'input[name="urm_payment_method"]', function () {
 				var selected_method = $(this).val(),
 					stripe_container = $('.stripe-container'),
 					stripe_error_container = $('#stripe-errors');
@@ -3195,4 +3195,26 @@
 	$(document).ready(function () {
 		$('#ur-local-currency-switch-currency').trigger('change');
 	});
+
+
+	var dialog = $("#URCR-Restriction-Modal");
+
+	if ( dialog.length || typeof MutationObserver !== 'undefined') {
+		if ( $( document ).find( "#URCR-Restriction-Modal .user-registration.ur-frontend-form > form" ) ) {
+			var observer = new MutationObserver(function (mutations) {
+				for (var i = 0; i < mutations.length; i++) {
+					if (mutations[i].attributeName === 'open') {
+
+						if (dialog.is('[open]') ) {
+							register_events.init();
+						}
+					}
+				}
+			});
+
+			observer.observe(dialog[0], {
+				attributes: true
+			});
+		}
+	}
 })(jQuery, window.ur_membership_frontend_localized_data);
