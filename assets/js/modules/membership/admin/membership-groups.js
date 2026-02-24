@@ -130,8 +130,8 @@
 			post_meta_data.mode = multiple_enabled
 				? "multiple"
 				: upgrade_enabled
-					? "upgrade"
-					: "";
+				? "upgrade"
+				: "";
 
 			if ("upgrade" === post_meta_data.mode) {
 				post_meta_data.upgrade_type = $(
@@ -469,38 +469,38 @@
 			$(document).on(
 				"user_registration_admin_before_form_submit",
 				function (event, data) {
-					if (
-						$('[data-field="membership_listing_option"]').val() ===
-							"all" &&
-						$(".urmg-container input").length < 1
-					) {
-						data.data["empty_membership_status"] = [
-							{
-								validation_status: false,
-								validation_message:
-									user_registration_form_builder_data
-										.i18n_admin
-										.i18n_prompt_no_membership_available
-							}
-						];
-					}
+					// if (
+					// 	$('[data-field="membership_listing_option"]').val() ===
+					// 		"all" &&
+					// 	$(".urmg-container input").length < 1
+					// ) {
+					// 	data.data["empty_membership_status"] = [
+					// 		{
+					// 			validation_status: false,
+					// 			validation_message:
+					// 				user_registration_form_builder_data
+					// 					.i18n_admin
+					// 					.i18n_prompt_no_membership_available
+					// 		}
+					// 	];
+					// }
 					// validation for empty membership group.
-					if (
-						$('[data-field="membership_group"]').length &&
-						$('[data-field="membership_group"]').val() == "0" &&
-						$('[data-field="membership_listing_option"]').val() ===
-							"group"
-					) {
-						data.data["empty_membership_group_status"] = [
-							{
-								validation_status: false,
-								validation_message:
-									user_registration_form_builder_data
-										.i18n_admin
-										.i18n_prompt_no_membership_group_selected
-							}
-						];
-					}
+					// if (
+					// 	$('[data-field="membership_group"]').length &&
+					// 	$('[data-field="membership_group"]').val() == "0" &&
+					// 	$('[data-field="membership_listing_option"]').val() ===
+					// 		"group"
+					// ) {
+					// 	data.data["empty_membership_group_status"] = [
+					// 		{
+					// 			validation_status: false,
+					// 			validation_message:
+					// 				user_registration_form_builder_data
+					// 					.i18n_admin
+					// 					.i18n_prompt_no_membership_group_selected
+					// 		}
+					// 	];
+					// }
 					if (
 						data.data.payment_field_present &&
 						$(".ur-selected-inputs").find(
@@ -953,8 +953,8 @@
 							image_file = gateway_images[gateway_key] || "",
 							image_url = image_file
 								? plugin_url +
-									"/assets/images/settings-icons/membership-field/" +
-									image_file
+								  "/assets/images/settings-icons/membership-field/" +
+								  image_file
 								: "";
 
 						html +=
@@ -1056,8 +1056,8 @@
 			membership_mode = multiple_enabled
 				? "multiple"
 				: upgrade_enabled
-					? "upgrade"
-					: "";
+				? "upgrade"
+				: "";
 
 			if ("upgrade" === membership_mode) {
 				var upgrade_path = $(

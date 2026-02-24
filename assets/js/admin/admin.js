@@ -56,7 +56,8 @@ jQuery(function ($) {
 		if (
 			$(this).hasClass("ur-one-time-draggable-disabled") ||
 			$(this).hasClass("ur-membership-payment-field-disabled") ||
-			$(this).hasClass("ur-membership-field-disabled")
+			$(this).hasClass("ur-membership-field-disabled") ||
+			$(this).hasClass("ur-no-membership-available")
 		) {
 			var title =
 				icon +
@@ -73,6 +74,9 @@ jQuery(function ($) {
 			} else if ($(this).hasClass("ur-membership-field-disabled")) {
 				message =
 					user_registration_form_builder_data.form_membership_field_disabled_message;
+			} else if ($(this).hasClass("ur-no-membership-available")) {
+				message =
+					user_registration_form_builder_data.i18n_admin.i18n_prompt_no_membership_available;
 			} else {
 				message =
 					user_registration_form_builder_data.form_one_time_draggable_fields_locked_message.replace(
