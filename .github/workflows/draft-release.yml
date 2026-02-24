@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - UR-update-build
+      - master
 permissions:
   contents: write
 
