@@ -57,7 +57,8 @@ jobs:
 
           # Case-insensitive comparison: commit message must match "Final version bump to v{stable_tag} for public release."
           COMMIT_LOWER=$(echo "$COMMIT_MSG" | tr '[:upper:]' '[:lower:]')
-          if [ "$COMMIT_LOWER" != "$EXPECTED_MSG" ]; then
+          EXPECTED_LOWER=$(echo "$EXPECTED_MSG" | tr '[:upper:]' '[:lower:]')
+          if [ "$COMMIT_LOWER" != "$EXPECTED_LOWER" ]; then
             echo "::error::Commit message does not match. Expected: '$EXPECTED_MSG' (case-insensitive), got: '$COMMIT_MSG'"
             exit 1
           fi
