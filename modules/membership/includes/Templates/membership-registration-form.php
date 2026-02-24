@@ -513,6 +513,7 @@
 					'bank'   => '40px',
 				);
 				foreach ( get_option( 'ur_membership_payment_gateways' ) as $g => $gateway ) :
+					error_log( print_r( $gateway, true ) );
 					?>
 					<label class="ur_membership_input_label ur-label"
 							for="ur-membership-<?php echo esc_attr( strtolower( $g ) ); ?>">

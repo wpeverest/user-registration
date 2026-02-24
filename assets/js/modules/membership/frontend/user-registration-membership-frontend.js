@@ -2344,6 +2344,8 @@
 				var urm_payment_gateways = $(this).data('urm-pg'),
 					urm_payment_type = $(this).data('urm-pg-type'),
 					urm_pg_container = $('.ur_payment_gateway_container'),
+					$form_context = $(this).closest('#ur-membership-registration, .membership-upgrade-container'),
+					urm_pg_container_scoped = $form_context.length ? $form_context.find('.ur_payment_gateway_container') : urm_pg_container,
 					urm_pg_inputs = urm_pg_container.find('input'),
 					urm_hidden_pg_containers = $('.urm_hidden_payment_container'),
 					stripe_container = $('.stripe-container'),
@@ -2419,10 +2421,15 @@
 						}
 					});
 
-					if (urm_pg_container.find('input:visible').length === 1) {
-						var lone_pg = urm_pg_container.find('input:visible');
-						$(lone_pg[0]).prop('checked', true);
-						lone_pg.trigger('change');
+					var visible_pg_labels = urm_pg_container_scoped.find(
+						'label[for^="ur-membership-"]'
+					).not('.urm-d-none');
+					if (visible_pg_labels.length === 1) {
+						var lone_input_id = visible_pg_labels.attr('for');
+						urm_pg_container_scoped
+							.find('input#' + lone_input_id)
+							.prop('checked', true)
+							.trigger('change');
 					}
 					ur_membership_ajax_utils.calculate_total($(this));
 				} else {
