@@ -2424,12 +2424,25 @@
 					var visible_pg_labels = urm_pg_container_scoped.find(
 						'label[for^="ur-membership-"]'
 					).not('.urm-d-none');
+					var $pg_title_span = urm_pg_container_scoped.find(
+						'span.ur_membership_input_label.ur-label.required, span.ur-upgrade-label.ur-label.required'
+					);
 					if (visible_pg_labels.length === 1) {
 						var lone_input_id = visible_pg_labels.attr('for');
 						urm_pg_container_scoped
 							.find('input#' + lone_input_id)
 							.prop('checked', true)
 							.trigger('change');
+						if ($pg_title_span.length && !$pg_title_span.data('original-pg-label')) {
+							$pg_title_span.data('original-pg-label', $pg_title_span.text());
+						}
+						$pg_title_span.text('Payment Gateway');
+					} else {
+						if ($pg_title_span.length) {
+							$pg_title_span.text(
+								$pg_title_span.data('original-pg-label') || 'Select Payment Gateway'
+							);
+						}
 					}
 					ur_membership_ajax_utils.calculate_total($(this));
 				} else {
