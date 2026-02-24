@@ -26,8 +26,8 @@
 					&.is-active {
 						a {
 							border-color: var(
-									--ur-primary-color,
-									$primary_color
+								--ur-primary-color,
+								$primary_color
 							);
 						}
 					}
@@ -258,7 +258,8 @@
 								label {
 									display: block;
 									border-radius: 3px;
-									padding: $spacing_8px $spacing_12px $spacing_8px $spacing_34px;
+									padding: $spacing_8px $spacing_12px
+										$spacing_8px $spacing_34px;
 									border: 1px solid #999999;
 									cursor: pointer;
 									font-size: 14px;
@@ -286,18 +287,23 @@
 										width: 0;
 										height: 0;
 										border: none;
-										transition: 0.1s width cubic-bezier(
-												0.075,
-												0.82,
-												0.165,
-												1
-										) 0s,
-										0.3s width cubic-bezier(
-												0.075,
-												0.82,
-												0.165,
-												2
-										) 0.1s;
+										transition:
+											0.1s width
+												cubic-bezier(
+													0.075,
+													0.82,
+													0.165,
+													1
+												)
+												0s,
+											0.3s width
+												cubic-bezier(
+													0.075,
+													0.82,
+													0.165,
+													2
+												)
+												0.1s;
 									}
 								}
 
@@ -692,7 +698,8 @@
 				#membership-error-div {
 					width: 100%;
 					text-align: left;
-					padding: $spacing_8px $spacing_12px $spacing_8px $spacing_16px;
+					padding: $spacing_8px $spacing_12px $spacing_8px
+						$spacing_16px;
 					font-size: 14px;
 					font-weight: $medium;
 					display: none;
@@ -1022,30 +1029,30 @@
 
 							&.urm-profile-action-toggle {
 								color: var(
-										--ur-button-text-normal-color,
-										$white
+									--ur-button-text-normal-color,
+									$white
 								);
 								background: var(
-										--ur-button-background-normal-color,
-										$primary_color
+									--ur-button-background-normal-color,
+									$primary_color
 								);
 								border-color: var(
-										--ur-button-background-normal-color,
-										$primary_color
+									--ur-button-background-normal-color,
+									$primary_color
 								);
 
 								&:hover {
 									color: var(
-											--ur-button-text-hover-color,
-											$white
+										--ur-button-text-hover-color,
+										$white
 									);
 									background: var(
-											--ur-button-background-hover-color,
-											darken($primary_color, 5%)
+										--ur-button-background-hover-color,
+										darken($primary_color, 5%)
 									);
 									border-color: var(
-											--ur-button-background-hover-color,
-											$primary_color
+										--ur-button-background-hover-color,
+										$primary_color
 									);
 								}
 							}
@@ -1164,22 +1171,22 @@
 								border-radius: $border_radius_4;
 								border: 0;
 								background: var(
-										--ur-button-background-normal-color,
-										$primary_color
+									--ur-button-background-normal-color,
+									$primary_color
 								);
 								color: var(
-										--ur-button-text-normal-color,
-										$white
+									--ur-button-text-normal-color,
+									$white
 								);
 
 								&:hover {
 									background: var(
-											--ur-button-background-hover-color,
-											$primary_color
+										--ur-button-background-hover-color,
+										$primary_color
 									);
 									color: var(
-											--ur-button-text-hover-color,
-											$white
+										--ur-button-text-hover-color,
+										$white
 									);
 								}
 							}
@@ -1239,13 +1246,14 @@
 													height: 38px;
 													padding: 0 $spacing_12px;
 													border-radius: $border_radius_4;
-													border: $border_width solid #e1e1e1;
+													border: $border_width solid
+														#e1e1e1;
 													background: $grey-0;
 
 													&:focus {
 														border-color: var(
-																--ur-primary-color,
-																$primary_color
+															--ur-primary-color,
+															$primary_color
 														);
 													}
 												}
@@ -1267,23 +1275,24 @@
 
 										.user-registration-Button.button {
 											background: var(
+												--ur-button-background-normal-color,
+												$primary_color
+											);
+											border: $border_width solid
+												var(
 													--ur-button-background-normal-color,
 													$primary_color
-											);
-											border: $border_width solid var(
-													--ur-button-background-normal-color,
-													$primary_color
-											);
+												);
 											border-radius: $border_radius_4;
 
 											&:hover {
 												background: var(
-														--ur-button-background-hover-color,
-														#38488e
+													--ur-button-background-hover-color,
+													#38488e
 												);
 												border-color: var(
-														--ur-button-background-hover-color,
-														#38488e
+													--ur-button-background-hover-color,
+													#38488e
 												);
 											}
 										}
@@ -1438,22 +1447,23 @@
 													&::after {
 														content: "";
 														background: darken(
-																$primary_color,
-																5%
+															$primary_color,
+															5%
 														);
 														width: 0px;
 														height: 1.5px;
 														position: absolute;
 														bottom: -2px;
 														left: 0;
-														transition: all 0.3s ease-in-out;
+														transition: all 0.3s
+															ease-in-out;
 													}
 
 													&:hover {
 														background: transparent;
 														color: darken(
-																$primary_color,
-																5%
+															$primary_color,
+															5%
 														);
 
 														&::after {
@@ -1655,7 +1665,8 @@
 
 													.menu-trigger {
 														padding: 0;
-														border: $border_width solid transparent;
+														border: $border_width
+															solid transparent;
 														border-radius: 3px;
 														background: transparent;
 														width: 24px;
@@ -1670,7 +1681,8 @@
 															width: 18px;
 															height: 18px;
 															fill: #4e4e4e;
-															transition: all 0.3s ease;
+															transition: all 0.3s
+																ease;
 														}
 
 														&:hover {
@@ -1687,10 +1699,13 @@
 														flex-direction: column;
 														z-index: 50;
 														background: #fff;
-														border: 1px solid #d1d5db;
-														box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+														border: 1px solid
+															#d1d5db;
+														box-shadow: 0 4px 16px
+															rgba(0, 0, 0, 0.12);
 														opacity: 1;
-														transition: all 0.15s ease;
+														transition: all 0.15s
+															ease;
 														min-width: 210px;
 														border-radius: 4px;
 														padding: 8px;
@@ -1702,7 +1717,8 @@
 														a {
 															color: #4b5563;
 															text-decoration: none;
-															transition: all 0.15s ease;
+															transition: all
+																0.15s ease;
 															font-size: 14px;
 															line-height: 20px;
 															font-weight: 400;
@@ -1738,7 +1754,8 @@
 											justify-content: center;
 											text-decoration: none;
 											gap: $spacing_6px;
-											padding: 0 $spacing_16px 0 $spacing_14px;
+											padding: 0 $spacing_16px 0
+												$spacing_14px;
 											background: $white;
 											border: 1.5px solid #dee2e6;
 											border-radius: $border_radius_4;
@@ -1843,7 +1860,10 @@
 								button {
 									font-size: 20px;
 									padding: 8px 16px;
-									background-color: var(--ur-button-background-normal-color, $primary_color);
+									background-color: var(
+										--ur-button-background-normal-color,
+										$primary_color
+									);
 									color: white;
 
 									&:disabled {
@@ -1869,14 +1889,13 @@
 										text-transform: none;
 									}
 								}
-
 							}
 
 							.ur-invited-email-wrapper {
 								display: flex;
 								align-items: center;
 								gap: 10px;
-								background: #F8F8FA;
+								background: #f8f8fa;
 								padding: 12px;
 								margin-top: 8px;
 								border-radius: 8px;
@@ -1889,7 +1908,7 @@
 									background: white;
 									font-size: 14px;
 									border-radius: 6px;
-									color: #4A5568;
+									color: #4a5568;
 
 									.dashicons-no-alt {
 										cursor: pointer;
@@ -2022,7 +2041,8 @@
 							transition: all 0.3s;
 
 							a {
-								padding: $spacing_12px $spacing_12px $spacing_12px $spacing_20px;
+								padding: $spacing_12px $spacing_12px
+									$spacing_12px $spacing_20px;
 								border-radius: $border_radius_4;
 								border-left: 3px solid transparent;
 								color: #4e4e4e;
@@ -2040,8 +2060,8 @@
 								a {
 									background: #f0f0f0;
 									color: var(
-											--ur-primary-color,
-											$primary_color
+										--ur-primary-color,
+										$primary_color
 									);
 								}
 							}
@@ -2049,12 +2069,12 @@
 							&.is-active {
 								a {
 									color: var(
-											--ur-primary-color,
-											$primary_color
+										--ur-primary-color,
+										$primary_color
 									);
 									background: var(
-											--ur-primary-light,
-											$blue-50
+										--ur-primary-light,
+										$blue-50
 									);
 								}
 							}
@@ -2230,36 +2250,36 @@ body {
 }
 
 .rtl
-#user-registration.vertical
-.user-registration-MyAccount-content__header
-h1,
+	#user-registration.vertical
+	.user-registration-MyAccount-content__header
+	h1,
 .rtl
-.ur-frontend-form.login
-.ur-form-row
-.ur-form-grid
-.user-registration-form-row
-label,
+	.ur-frontend-form.login
+	.ur-form-row
+	.ur-form-grid
+	.user-registration-form-row
+	label,
 .rtl .ur-frontend-form .ur-form-row .ur-form-grid label.ur-label,
 .rtl .ur-frontend-form .ur-form-row .ur-form-grid legend.ur-label,
 .rtl .user-registration-logout-swal2-container .swal2-header .swal2-title,
 .rtl
-.user-registration-logout-swal2-container
-.swal2-header
-.swal2-content
-.swal2-content,
+	.user-registration-logout-swal2-container
+	.swal2-header
+	.swal2-content
+	.swal2-content,
 .rtl
-.user-registration-MyAccount-content
-table.user-registration-email__entries
-td {
+	.user-registration-MyAccount-content
+	table.user-registration-email__entries
+	td {
 	text-align: right;
 }
 
 .rtl
-#user-registration
-.user-registration-MyAccount-content
-.user-registration-membership-content
-.membership-row
-.membership-label {
+	#user-registration
+	.user-registration-MyAccount-content
+	.user-registration-membership-content
+	.membership-row
+	.membership-label {
 	min-width: 0px;
 }
 
@@ -2327,6 +2347,7 @@ td {
 		}
 
 		&.existing-users {
+			display: block;
 			&::before {
 				content: "👤";
 			}
