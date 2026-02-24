@@ -51,7 +51,7 @@ jobs:
         run: |
           COMMIT_MSG=$(echo "${{ github.event.head_commit.message }}" | head -1)
           STABLE_TAG="${{ steps.readme.outputs.stable_tag }}"
-          EXPECTED_MSG="final version bump to v${STABLE_TAG} for public release."
+          EXPECTED_MSG="Final version bump to v${STABLE_TAG} for public release."
           echo "Commit message: $COMMIT_MSG"
           echo "Expected (case-insensitive): $EXPECTED_MSG"
 
