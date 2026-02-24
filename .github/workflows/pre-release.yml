@@ -1,31 +1,127 @@
 name: Pre-release
+
 on:
-  release:
-    types: [prereleased]
   workflow_dispatch:
+  push:
+    branches:
+      - master
+permissions:
+  contents: write
+
 jobs:
-  build:
-    name: Build and save ZIP
+  check-tag:
+    name: Check commit, tag and readme
     runs-on: ubuntu-latest
+    outputs:
+      tag_name: ${{ steps.readme.outputs.tag_name }}
+      changelog: ${{ steps.readme.outputs.changelog }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: master
 
-      - name: Set env
-        id: vars
+      - name: Get stable tag and changelog from readme.txt
+        id: readme
         run: |
-          if [[ -n "${{ github.event.release.tag_name }}" ]]; then
-            echo "tag=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
-            echo "ref=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-          else
-            echo "tag=dev-$(date +%Y%m%d-%H%M)" >> $GITHUB_OUTPUT
-            echo "ref=${GITHUB_REF#refs/heads/}-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          fi
+          STABLE_TAG=$(grep -E '^Stable tag:' readme.txt | sed -E 's/^Stable tag:[[:space:]]*//' | tr -d '\r')
+          echo "stable_tag=$STABLE_TAG" >> $GITHUB_OUTPUT
+          echo "tag_name=v${STABLE_TAG}" >> $GITHUB_OUTPUT
 
-      - name: Setup Pnpm
-        uses: pnpm/action-setup@v3
+          # Extract latest changelog block (first version block under == Changelog ==)
+          CHANGELOG_BLOCK=$(awk '
+            /== Changelog ==/ { in_changelog=1; next }
+            in_changelog && /^= [0-9]+\.[0-9]+\.[0-9]+/ {
+              if (count++) exit
+              print
+              next
+            }
+            in_changelog && count>0 { print }
+          ' readme.txt)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_BLOCK" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+          echo "Stable tag: $STABLE_TAG"
+          echo "Tag name: v$STABLE_TAG"
+          echo "Latest changelog:"
+          echo "$CHANGELOG_BLOCK"
+
+      - name: Verify commit message matches readme stable tag
+        run: |
+          COMMIT_MSG=$(echo "${{ github.event.head_commit.message }}" | head -1)
+          STABLE_TAG="${{ steps.readme.outputs.stable_tag }}"
+          EXPECTED_MSG="final version bump to v${STABLE_TAG} for public release."
+          echo "Commit message: $COMMIT_MSG"
+          echo "Expected (case-insensitive): $EXPECTED_MSG"
+
+          # Case-insensitive comparison: commit message must match "Final version bump to v{stable_tag} for public release."
+          COMMIT_LOWER=$(echo "$COMMIT_MSG" | tr '[:upper:]' '[:lower:]')
+          if [ "$COMMIT_LOWER" != "$EXPECTED_MSG" ]; then
+            echo "::error::Commit message does not match. Expected: '$EXPECTED_MSG' (case-insensitive), got: '$COMMIT_MSG'"
+            exit 1
+          fi
+          echo "Commit message matches. Proceeding with pre-release."
+
+      - name: Check if tag already exists
+        run: |
+          set -e
+          TAG_NAME="${{ steps.readme.outputs.tag_name }}"
+          if git ls-remote --exit-code origin "refs/tags/$TAG_NAME" >/dev/null 2>&1; then
+            echo "::error::Tag $TAG_NAME already exists on remote. Update the Stable tag in readme.txt and try again."
+            exit 1
+          fi
+          echo "Tag $TAG_NAME does not exist; continuing."
+
+  create-draft-release:
+    name: Create tag and draft release
+    runs-on: ubuntu-latest
+    needs: check-tag
+    if: success()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: master
+
+      - name: Create and push tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          TAG_NAME="${{ needs.check-tag.outputs.tag_name }}"
+          git tag -a "$TAG_NAME" -m "Pre-release $TAG_NAME"
+          git push origin "$TAG_NAME"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.check-tag.outputs.tag_name }}
+          name: ${{ needs.check-tag.outputs.tag_name }}
+          body: |
+            Changelogs for the release of ${{ needs.check-tag.outputs.tag_name }}
+
+            ```
+            ${{ needs.check-tag.outputs.changelog }}
+            ```
+          draft: true
+          latest: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
           version: 9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install
@@ -36,20 +132,32 @@ jobs:
         with:
           generate-zip: true
 
-      - name: Upload ZIP artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload release asset to draft
+        uses: softprops/action-gh-release@v2
         with:
-          name: user-registration-${{ steps.vars.outputs.tag }}.zip
-          path: ${{ steps.build.outputs.zip_path }}
-          retention-days: 30
-
-      - name: Upload ZIP to release (pre-release only)
-        if: github.event_name == 'release' && github.event.release.prerelease == true
-        uses: actions/upload-release-asset@v1
+          tag_name: ${{ needs.check-tag.outputs.tag_name }}
+          files: ${{ steps.build.outputs.zip_path }}
+          draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ steps.build.outputs.zip_path }}
-          asset_name: ${{ github.event.repository.name }}.zip
-          asset_content_type: application/zip
+
+      - name: Cleanup release and tag on failure
+        if: failure()
+        run: |
+          TAG_NAME="${{ needs.check-tag.outputs.tag_name }}"
+          REPO="${{ github.repository }}"
+          echo "Job failed; deleting release and tag $TAG_NAME..."
+          # Delete the release (by tag) - ignore 404 if release was not created yet
+          RELEASE_ID=$(curl -sS -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${REPO}/releases/tags/${TAG_NAME}" | jq -r '.id // empty')
+          if [ -n "$RELEASE_ID" ]; then
+            curl -sS -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
+              "https://api.github.com/repos/${REPO}/releases/${RELEASE_ID}" || true
+            echo "Deleted release $RELEASE_ID"
+          fi
+          # Delete the tag (ignore 404 if tag was not pushed)
+          curl -sS -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${REPO}/git/refs/tags/${TAG_NAME}" || true
+          echo "Cleanup finished for tag $TAG_NAME"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
