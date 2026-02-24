@@ -208,7 +208,6 @@ __Marketing and CRM Integrations__
 
 Get in Touch with us: [Official Community](https://www.facebook.com/groups/userregistration) | [Twitter](https://twitter.com/user_register)
 
-
 == Frequently Asked Questions ==
 
 = Is User Registration & Membership only for custom registration forms?

@@ -451,7 +451,7 @@ class PaypalService {
 			$member_service->login_member( $member_id, true, $password );
 		}
 
-		update_user_meta( $member_id, 'urm_user_just_created', true );
+		delete_user_meta( $member_id, 'urm_user_just_created' );
 		ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 	}
 

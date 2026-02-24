@@ -590,7 +590,9 @@ class StripeService {
 
 			\Stripe\Stripe::setApiKey( $stripe_settings['secret_key'] );
 
-			$intent = \Stripe\PaymentIntent::retrieve( $transaction_id );
+			$pi_id = sanitize_text_field( ! empty( $data['payment_result']['paymentIntent']['id'] ) ? $data['payment_result']['paymentIntent']['id'] : '' );
+
+			$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
 
 			if ( $intent->status !== 'succeeded' ) {
 				$response['status']  = false;

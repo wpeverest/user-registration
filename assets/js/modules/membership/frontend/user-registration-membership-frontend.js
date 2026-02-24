@@ -282,11 +282,14 @@
 		 */
 		prepare_members_data: function () {
 			var user_data = {},
-				form_inputs = $("#ur-membership-registration").find(
-					"input.ur_membership_input_class"
+				form_inputs = $('#ur-membership-registration').find(
+					'input.ur_membership_input_class',
+				),
+				password = $( document ).find(
+					'input#user_pass',
 				);
-			form_inputs =
-				ur_membership_frontend_utils.convert_to_array(form_inputs);
+
+			form_inputs = ur_membership_frontend_utils.convert_to_array(form_inputs);
 			form_inputs.forEach(function (item) {
 				var $this = $(item);
 				if ($this.attr("name") !== undefined) {
@@ -299,8 +302,9 @@
 			});
 			var membership_input = $('input[name="urm_membership"]:checked');
 			user_data.membership = membership_input.val();
-			user_data.payment_method = "free";
-			if (membership_input.data("urm-pg-type") !== "free") {
+			user_data.payment_method = 'free';
+			user_data.password = password.val();
+			if (membership_input.data('urm-pg-type') !== 'free') {
 				user_data.payment_method = $(
 					'input[name="urm_payment_method"]:checked'
 				).val();

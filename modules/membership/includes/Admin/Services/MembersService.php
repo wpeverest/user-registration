@@ -237,12 +237,7 @@ class MembersService {
 	 * @return bool
 	 */
 	public function login_member( $user_id, $check_just_created, $password = '' ) {
-		$is_just_created = '';
-		if ( $check_just_created ) {
-			$is_just_created = get_user_meta( $user_id, 'urm_user_just_created', true );
-		}
-
-		if ( empty( $is_just_created ) || empty( $password ) ) {
+		if ( empty( $user_id ) ) {
 			return false;
 		}
 
@@ -251,15 +246,38 @@ class MembersService {
 			return false;
 		}
 
-		if ( ! wp_check_password( $password, $user->user_pass, $user_id ) ) {
-			return false;
+		$saved_hash = '';
+		if ( $check_just_created ) {
+			$saved_hash = get_user_meta( $user_id, 'urm_user_just_created', true );
 		}
 
-			delete_user_meta( $user_id, 'urm_user_just_created' );
-			wp_clear_auth_cookie();
-			$remember = apply_filters( 'user_registration_autologin_remember_user', false );
-			wp_set_auth_cookie( $user_id, $remember );
-			
+		if ( empty( $password ) ) {
+
+			if ( empty( $saved_hash ) ) {
+				return false;
+			}
+
+			$expected_hash = hash_hmac(
+				'sha256',
+				(string) $user_id,
+				wp_salt( 'auth' )
+			);
+
+			if ( ! hash_equals( $expected_hash, $saved_hash ) ) {
+				return false;
+			}
+		} else {
+
+			if ( ! wp_check_password( $password, $user->user_pass, $user_id ) ) {
+				return false;
+			}
+		}
+
+		delete_user_meta( $user_id, 'urm_user_just_created' );
+		wp_clear_auth_cookie();
+		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
+		wp_set_auth_cookie( $user_id, $remember );
+
 		return true;
 	}
 }
