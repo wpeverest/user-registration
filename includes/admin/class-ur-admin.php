@@ -333,7 +333,7 @@ class UR_Admin {
 		include_once __DIR__ . '/class-ur-admin-user-list-manager.php';
 		include_once UR_ABSPATH . 'includes' . UR_DS . 'admin' . UR_DS . 'class-ur-admin-assets.php';
 		include_once __DIR__ . '/class-ur-admin-form-templates.php';
-		include_once __DIR__ . '/class-ur-admin-deactivation-feedback.php';
+		include_once __DIR__ . '/class-ur-sdk-deactivation-feedback.php';
 
 		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -574,7 +574,7 @@ class UR_Admin {
 
 			if ( 'ur-template-refresh' === $action && ! empty( $templates ) ) {
 				if ( empty( $_GET['ur-template-nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['ur-template-nonce'] ) ), 'refresh' ) ) {
-					wp_die( esc_html_e( 'Could not verify nonce', 'user-registration' ) );
+					wp_die( esc_html__( 'Could not verify nonce', 'user-registration' ) );
 				}
 
 				foreach ( array( 'ur_pro_license_plan', 'ur_template_section_list' ) as $transient ) {

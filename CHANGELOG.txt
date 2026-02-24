@@ -1,3 +1,22 @@
+= 5.1.2    - 12/02/2026 =
+* Security - Arbitrary code execution through shortcode.
+* Enhance  - Default WordPress login form is no longer forced.
+* Enhance  - Default filter set to All for payments table.
+* Enhance  - Added support for other search parameters on Members table.
+* Enhance  - Deactivation reason pop up update.
+* Fix      - Menu restriction rule causing rules after it to not work.
+* Fix      - Admins losing access to the site when a Whole site restriction was enabled.
+* Fix      - Content Restriction CSS not loading due to missing styles.
+* Fix      - My account layout conflicts with WooCommerce my account sync.
+* Fix      - Unable to edit member emails from the admin side.
+* Fix      - Local currency notice displaying upon free plan creation.
+* Fix      - Profile picture upload area going blank upon image update.
+* Fix      - Warnings shown during renewal process.
+* Fix      - Warnings shown during membership cancellation process.
+* Fix      - Admin styles loading in the frontend when using Oxygen builder.
+* Fix      - Undefined error in redirection url after renewal.
+* Tweak    - Notice design update for registration page selection in settings.
+
 = 5.1.1    - 02/2/2026 =
 * Fix      - Empty migrated rules showing up when toggling enabled/disabled state.
 * Fix      - Disabled content rules still being applied.

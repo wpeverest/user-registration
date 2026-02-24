@@ -320,7 +320,7 @@
 												data-maximum-seats="<?php echo esc_attr( $team['maximum_seats'] ?? '' ); ?>"
 												data-pricing-model="<?php echo esc_attr( $team['pricing_model'] ?? '' ); ?>"
 												data-per-seat-price="<?php echo esc_attr( $team['per_seat_price'] ?? '' ); ?>"
-												data-price-tiers="<?php echo esc_attr( wp_json_encode( $team['tiers'] ?? [] ) ); ?>"
+												data-price-tiers="<?php echo esc_attr( wp_json_encode( $team['tiers'] ?? array() ) ); ?>"
 												>
 												<div class="urm-team-pricing-tier-details">
 													<div>
@@ -484,10 +484,10 @@
 		<?php endif; ?>
 		<div class="urm-membership-total-value">
 			<label class="ur_membership_input_label ur-label"
-					for="ur-membership-total"><?php echo esc_html__( 'Total', 'user-registration' ); ?></label>
+					for="ur-membership-total"><?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_total', esc_html__( 'Total', 'user-registration' ) ); ?></label>
 			<span class="ur_membership_input_class"
 					id="ur-membership-total"
-					data-key-name="<?php echo esc_html__( 'Total', 'user-registration' ); ?>"
+					data-key-name="<?php echo apply_filters( 'user_registration_membership_subscription_payment_gateway_total', esc_html__( 'Total', 'user-registration' ) ); ?>"
 					disabled
 			>
 				<?php echo ceil( 0 ); ?>
@@ -527,7 +527,7 @@
 						>
 						<span class="ur-membership-duration">
 						<img
-							src="<?php echo esc_url( plugins_url( 'assets/images/settings-icons/membership-field/' . strtolower( $g ) . '-logo.png', UR_PLUGIN_FILE ) ); ?>"
+							src="<?php echo esc_url( apply_filters( 'user_registration_membership_payment_gateway_logo_url', plugins_url( 'assets/images/settings-icons/membership-field/' . strtolower( $g ) . '-logo.png', UR_PLUGIN_FILE ), $g, $gateway ) ); ?>"
 							alt="<?php echo esc_attr( $gateway ); ?>"
 							class="ur-membership-payment-gateway-logo"
 							width="<?php echo isset( $width_map[ strtolower( $g ) ] ) ? $width_map[ strtolower( $g ) ] : '60px'; ?>"

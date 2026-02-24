@@ -273,11 +273,11 @@ class MembersService {
 			}
 		}
 
-			delete_user_meta( $user_id, 'urm_user_just_created' );
-			wp_clear_auth_cookie();
-			$remember = apply_filters( 'user_registration_autologin_remember_user', false );
-			wp_set_auth_cookie( $user_id, $remember );
-			
+		delete_user_meta( $user_id, 'urm_user_just_created' );
+		wp_clear_auth_cookie();
+		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
+		wp_set_auth_cookie( $user_id, $remember );
+
 		return true;
 	}
 }
