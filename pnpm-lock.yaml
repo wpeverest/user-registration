@@ -166,8 +166,8 @@ importers:
         specifier: ^3.7.1
         version: 3.7.1
       lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
+        specifier: ^4.17.23
+        version: 4.17.23
       lodash.debounce:
         specifier: ^4.0.8
         version: 4.0.8
@@ -5378,11 +5378,11 @@ packages:
 
   glob@7.1.7:
     resolution: {integrity: sha512-OvD9ENzPLbegENnYP5UUfJIirTg4+XwMWGaQfQTY0JenxNvvIKP3U3/tAQSPIu/lHxXYSZmpXlUHeqAIdKzBLQ==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   global-modules@0.2.3:
     resolution: {integrity: sha512-JeXuCbvYzYXcwE6acL9V2bAOeSIGl4dD+iwLY9iUx2VBJJ80R18HCn+JCwHM9Oegdfya3lEkGCdaRkSyc10hDA==}
@@ -6434,8 +6434,8 @@ packages:
   lodash.uniq@4.5.0:
     resolution: {integrity: sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==}
 
-  lodash@4.17.21:
-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+  lodash@4.17.23:
+    resolution: {integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==}
 
   log-symbols@4.1.0:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
@@ -13710,7 +13710,7 @@ snapshots:
 
   async@2.6.4:
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.17.23
 
   async@3.2.6: {}
 
@@ -15681,7 +15681,7 @@ snapshots:
   globule@1.3.4:
     dependencies:
       glob: 7.1.7
-      lodash: 4.17.21
+      lodash: 4.17.23
       minimatch: 3.0.8
 
   good-listener@1.2.2:
@@ -15709,7 +15709,7 @@ snapshots:
       adm-zip: 0.5.16
       archiver: 5.3.2
       chalk: 4.1.2
-      lodash: 4.17.21
+      lodash: 4.17.23
       pretty-bytes: 5.6.0
       stream-buffers: 3.0.3
 
@@ -15729,7 +15729,7 @@ snapshots:
     dependencies:
       async: 2.6.4
       gaze: 1.1.3
-      lodash: 4.17.21
+      lodash: 4.17.23
       tiny-lr: 1.1.1
     transitivePeerDependencies:
       - supports-color
@@ -15739,14 +15739,14 @@ snapshots:
   grunt-legacy-log-utils@2.1.0:
     dependencies:
       chalk: 4.1.2
-      lodash: 4.17.21
+      lodash: 4.17.23
 
   grunt-legacy-log@3.0.0:
     dependencies:
       colors: 1.1.2
       grunt-legacy-log-utils: 2.1.0
       hooker: 0.2.3
-      lodash: 4.17.21
+      lodash: 4.17.23
 
   grunt-legacy-util@2.0.1:
     dependencies:
@@ -15754,7 +15754,7 @@ snapshots:
       exit: 0.1.2
       getobject: 1.0.2
       hooker: 0.2.3
-      lodash: 4.17.21
+      lodash: 4.17.23
       underscore.string: 3.3.6
       which: 2.0.2
 
@@ -16922,7 +16922,7 @@ snapshots:
 
   lodash.uniq@4.5.0: {}
 
-  lodash@4.17.21: {}
+  lodash@4.17.23: {}
 
   log-symbols@4.1.0:
     dependencies:
@@ -19322,7 +19322,7 @@ snapshots:
     dependencies:
       axios: 1.13.2
       joi: 18.0.2
-      lodash: 4.17.21
+      lodash: 4.17.23
       minimist: 1.2.8
       rxjs: 7.8.2
     transitivePeerDependencies:
