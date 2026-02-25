@@ -1048,8 +1048,21 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 		 * @since 4.1
 		 */
 		public function render_members_view_page() {
-			$user_id = sanitize_text_field( wp_unslash( $_REQUEST['user_id'] ) );
-			$user    = get_userdata( $user_id );
+			// Verify nonce using the same action used in single_row()
+			if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce(
+				sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ),
+				'bulk-users'
+			) ) {
+				wp_die( esc_html__( 'Security check failed.', 'user-registration' ) );
+			}
+
+			$user_id = isset( $_REQUEST['user_id'] ) ? absint( $_REQUEST['user_id'] ) : 0;
+
+			if ( empty( $user_id ) ) {
+				return;
+			}
+
+			$user = get_userdata( $user_id );
 
 			if ( ! $user ) {
 				$redirect = admin_url( 'admin.php?page=user-registration-users' );
@@ -1151,11 +1164,25 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 				$display_name = $user->user_login;
 			}
 
+			$allowed_avatar_html = array(
+				'img' => array(
+					'src'      => true,
+					'srcset'   => true,
+					'alt'      => true,
+					'width'    => true,
+					'height'   => true,
+					'class'    => true,
+					'id'       => true,
+					'loading'  => true,
+					'decoding' => true,
+				),
+			);
+
 			?>
 			<div class="sidebar-box">
 				<div class="user-profile">
 					<div class="user-avatar">
-						<?php echo $avatar; ?>
+						<?php echo wp_kses( $avatar, $allowed_avatar_html ); ?>
 					</div>
 					<div class="user-login">
 						<p  class="user-display-name"><?php echo esc_html( $display_name ); ?> </p>
@@ -1611,13 +1638,13 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 														$value = implode( ',', $values );
 													}
 												} elseif ( 'country' === $field_key ) {
-													$value         = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+													$value  = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
 													$isJson = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
 													if ( $isJson ) {
 														$country_data = json_decode( $value, true );
 														$country_code = isset( $country_data['country'] ) ? $country_data['country'] : '';
 														$state_code   = isset( $country_data['state'] ) ? $country_data['state'] : '';
-														$value = ur_format_country_field_data( $country_code, $state_code );
+														$value        = ur_format_country_field_data( $country_code, $state_code );
 													} else {
 														$country_class = ur_load_form_field_class( $field_key );
 														$countries     = $country_class::get_instance()->get_country();
