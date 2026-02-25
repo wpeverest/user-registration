@@ -148,7 +148,7 @@ class UR_Base_Layout {
 		?>
 			<input type="search" id="<?php echo esc_attr( $search_id ); ?>" name="s"
 					value="<?php echo esc_attr( $_GET['s'] ?? '' ); ?>"
-					placeholder="<?php echo esc_attr( $placeholder ); ?> ..."
+					placeholder="<?php echo esc_attr( $placeholder ); ?>..."
 					autocomplete="off">
 			<button type="submit" id="search-submit">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
