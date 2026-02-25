@@ -4628,7 +4628,7 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 							),
 						),
 						'dropbox'      => array(
-							'label'  => esc_html__( 'Dropbox', 'user-registration' ),
+							'label'  => esc_html__( 'Cloud Storage', 'user-registration' ),
 							'plugin' => 'user-registration-cloud-storage',
 							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
