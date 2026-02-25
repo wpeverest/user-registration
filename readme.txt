@@ -264,7 +264,7 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
-= 5.1.3    - 2/24/2026 =
+= 5.1.3    - 24/02/2026 =
 * Enhance  - Membership field not draggable when no membership plans created, notice is shown.
 * Fix      - Missing Content restriction CSS file error.
 * Fix      - Auto approval and auto login not working incase of PayPal payments.

@@ -12,13 +12,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        id: build
+        uses: wpeverest/action-build@4.0.2
+
       - name: Delete existing SVN tag if exists
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         run: |
           sudo apt-get install -y subversion
-          
+
           TAG_VERSION="${{ github.event.release.tag_name }}"
           TAG_VERSION="${TAG_VERSION#v}"
           SVN_TAG_URL="https://plugins.svn.wordpress.org/user-registration/tags/${TAG_VERSION}"
