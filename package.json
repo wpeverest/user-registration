@@ -1,7 +1,7 @@
 {
   "name": "user-registration",
   "title": "User Registration",
-  "version": "5.1.2",
+  "version": "5.1.3",
   "homepage": "https://wpuserregistration.com/",
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
     "test-unit-php": "wp-env run phpunit 'phpunit --configuration=/var/www/html/wp-content/plugins/user-registration/phpunit.xml.dist --verbose'",
     "phpunit-test": "phpunit --verbose",
     "typecheck": "tsc --noEmit",
-    "qa-setup":"composer install --no-dev && pnpm install",
+    "qa-setup": "composer install --no-dev && pnpm install",
     "qa-build": "wp-scripts build --node-env=production --mode=production && grunt release",
     "sonar": "docker run --rm -e SONAR_HOST_URL=\"https://sonarqube.themegrill.com/\" -e SONAR_TOKEN=\"%SONAR_TOKEN%\" -v \"%cd%:/usr/src\" sonarsource/sonar-scanner-cli"
   },

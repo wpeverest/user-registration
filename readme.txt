@@ -4,7 +4,7 @@ Tags: membership, subscription, content restriction, user profile, user registra
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 6.9.1
-Stable tag: 5.1.2
+Stable tag: 5.1.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -50,7 +50,7 @@ https://youtu.be/czohMTVfLrw
 
  __Custom User Registration__
 
-[YouTube Video: https://youtu.be/jbiBJdowxG0 ]
+https://youtu.be/jbiBJdowxG0
 
 * __Registration Form Builder__: Build custom WordPress registration forms. Drag fields onto the canvas, arrange them visually, and configure settings with simple clicks.
 
@@ -263,6 +263,18 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+= 5.1.3    - 2/24/2026 =
+* Enhance  - Membership field not draggable when no membership plans created, notice is shown.
+* Fix      - Missing Content restriction CSS file error.
+* Fix      - Auto approval and auto login not working incase of PayPal payments.
+* Fix      - Missing connection indicators for integration add-ons.
+* Fix      - Content restriction template appearing twice when using Elementor.
+* Fix      - Insecure Direct Object Reference to Unauthenticated Limited User Deletion
+* Fix      - Unauthenticated Privilege Escalation via Membership Registration.
+* Fix      - Authentication Bypass fix.
+* Fix      - Authenticated SQL injection via membership ids fix.
+* Fix      - Missing authorization to unauthenticated payment bypass.
 
 = 5.1.2    - 12/02/2026 =
 * Security - Arbitrary code execution through shortcode.
