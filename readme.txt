@@ -4,7 +4,7 @@ Tags: membership, subscription, content restriction, user profile, user registra
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 6.9.1
-Stable tag: 5.1.3
+Stable tag: 5.1.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -263,6 +263,10 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+
+= 5.1.4    - 25/02/2026 =
+* Fix - Updated .org deploy code
 
 = 5.1.3    - 24/02/2026 =
 * Enhance  - Membership field not draggable when no membership plans created, notice is shown.
