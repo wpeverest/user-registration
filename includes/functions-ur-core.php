@@ -8,8 +8,10 @@
  * @version 1.0.0
  */
 
+use WPEverest\URMembership\Admin\Repositories\MembershipRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 use WPEverest\URMembership\Admin\Services\MembershipService;
+use WPEverest\URMembership\Admin\Services\Stripe\StripeService;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -11866,5 +11868,91 @@ if ( ! function_exists( 'ur_format_country_field_data' ) ) {
 		$value = implode( ', ', $final );
 
 		return $value;
+	}
+}
+
+add_action( 'urm_save_stripe_payment_section', 'user_registration_create_product_and_price_for_stripe' );
+
+if( ! function_exists( 'user_registration_create_product_and_price_for_stripe' ) ) {
+	/**
+	 * Create product and price in Stripe for all the subscription type memberships which are created before the stripe payment gateway integration.
+	 *
+	 * @param array $data The data array.
+	 */
+	function user_registration_create_product_and_price_for_stripe( $data ) {
+		$stripe_service = new StripeService();
+		$membership_repository = new MembershipRepository();
+		$memberships       = $membership_repository->get_all_memberships_without_status_filter();
+
+		foreach( $memberships as $membership ) {
+			$membership_metas = $membership['meta_value'] ?? array();
+
+			if( !empty( $membership_metas ) && isset( $membership_metas['type']) && $membership_metas['type'] === 'subscription' ) {
+				$stripe_product_details = $membership_metas['payment_gateways']['stripe'] ?? array();
+				$product_id = $stripe_product_details['product_id'] ?? '';
+				$price_id   = $stripe_product_details['price_id'] ?? '';
+				$product_name = $membership['post_title'] ?? __( 'Membership Plan', 'user-registration' );
+				$amount       = $membership_metas['amount'] ?? 0;
+				$currency     = get_option( 'user_registration_payment_currency', 'USD' );
+				$subscription_value    = $membership_metas['subscription']['value'];
+				$subscription_duration = $membership_metas['subscription']['duration'];
+
+				$products      = \Stripe\Product::all();
+				$membership_id = $membership['ID'];
+
+				$product_exists = array_filter(
+					$products->data,
+					function ( $item, $key ) use ( $membership_id ) {
+						if ( isset( $item['metadata']['membership_id'] ) ) {
+							return $item['metadata']['membership_id'] == $membership_id;
+						}
+					},
+					ARRAY_FILTER_USE_BOTH
+				);
+
+				if( count( $product_exists ) <= 0 ) {
+					// Create product and price in Stripe
+					if ( empty( $product_id  ) ) {
+						$product = \Stripe\Product::create(
+							array(
+								'name'        => $product_name,
+								'description' => 'N/A',
+								'metadata'    => array(
+									'membership_id' => $membership['ID'],
+								),
+							)
+						);
+
+						$stripe_product_details['product_id']                         = $product->id;
+						$membership_metas['payment_gateways']['stripe']['product_id'] = $stripe_product_details['product_id'];
+					}
+
+					if ( empty( $price_id  ) ) {
+						if ( in_array( $currency, array( 'JPY', 'KRW', 'VND', 'CLP', 'IDR' ), true ) ) {
+							$amount = (int) round( $amount );
+						} else {
+							$amount = (int) round( $amount * 100 );
+						}
+
+						$dynamic_price = \Stripe\Price::create(
+							array(
+								'unit_amount' => $amount,
+								'currency'    => $currency,
+								'recurring'   => array(
+									'interval'       => $subscription_duration,
+									'interval_count' => intval( $subscription_value ),
+								),
+								'product'     => $stripe_product_details['product_id'],
+							)
+						);
+
+						$stripe_product_details['price_id']                         = $dynamic_price->id;
+						$membership_metas['payment_gateways']['stripe']['price_id'] = $stripe_product_details['price_id'];
+					}
+
+					update_post_meta( $membership['ID'], 'ur_membership', wp_json_encode( $membership_metas ) );
+				}
+			}
+		}
 	}
 }

@@ -913,49 +913,6 @@ class StripeService {
 
 		$stripe_product_details = $membership_metas['payment_gateways']['stripe'] ?? array();
 
-		$products      = \Stripe\Product::all();
-		$membership_id = $membership['ID'];
-
-		$product_exists = array_filter(
-			$products->data,
-			function ( $item, $key ) use ( $membership_id ) {
-				if ( isset( $item['metadata']['membership_id'] ) ) {
-					return $item['metadata']['membership_id'] == $membership_id;
-				}
-			},
-			ARRAY_FILTER_USE_BOTH
-		);
-
-		if ( ! isset( $stripe_product_details['price_id'] ) || ! isset( $stripe_product_details['product_id'] ) || count( $product_exists ) <= 0 ) {
-			PaymentGatewayLogging::log_error(
-				'stripe',
-				'Price or product not configured - New product is creating.',
-				array(
-					'error_code'      => 'MISSING_STRIPE_CONFIG',
-					'member_id'       => $member_id,
-					'membership_type' => $membership_type,
-				)
-			);
-
-			$product = \Stripe\Product::create(
-				array(
-					'name'        => $membership['post_title'],
-					'description' => 'N/A',
-					'metadata'    => array(
-						'membership_id' => $membership['ID'],
-					),
-				)
-			);
-
-			$stripe_product_details['product_id']                         = $product->id;
-			$membership_metas['payment_gateways']['stripe']['product_id'] = $stripe_product_details['product_id'];
-			update_post_meta( $membership['ID'], 'ur_membership', wp_json_encode( $membership_metas ) );
-
-			// $response['status']  = false;
-			// $response['message'] = __( 'Stripe subscription failed, price or product not found', 'user-registration' );
-
-			// return $response;
-		}
 		try {
 
 			$order_detail     = $this->orders_repository->get_order_detail( $member_order['ID'] );
@@ -976,20 +933,6 @@ class StripeService {
 			} else {
 				$total_amount = (int) round( $total_amount * 100 );
 			}
-
-			$dynamic_price = \Stripe\Price::create(
-				array(
-					'unit_amount' => $total_amount,
-					'currency'    => $currency,
-					'recurring'   => array(
-						'interval'       => $subscription_duration,
-						'interval_count' => intval( $subscription_value ),
-					),
-					'product'     => $stripe_product_details['product_id'],
-				)
-			);
-
-			$stripe_product_details['price_id'] = ! empty( $dynamic_price->id ) ? $dynamic_price->id : $stripe_product_details['price_id'];
 
 			$customer       = \Stripe\Customer::retrieve( $customer_id );
 			$payment_method = \Stripe\PaymentMethod::retrieve( $payment_method_id );
