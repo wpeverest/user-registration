@@ -652,7 +652,7 @@ class MembershipService {
 				$stripe_service           = new StripeService();
 				$args                     = $data;
 				$args['membership_id']    = $new_membership_id;
-				$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $args['post_data'], $meta_data, false );
+				$stripe_price_and_product = $stripe_service->sync_product_and_price_in_stripe( $args['post_data'] );
 
 				if ( ! empty( $stripe_price_and_product['success'] ) && $stripe_price_and_product['success'] ) {
 					$meta_data['payment_gateways']['stripe']['product_id'] = $stripe_price_and_product['price']->product;
