@@ -454,7 +454,7 @@ if ( ! function_exists( 'ur_is_login_form_markup_rendered' ) ) {
  * @since  1.0.0
  */
 function ur_doing_it_wrong( $function, $message, $version ) {
-	$message .= ' Backtrace: ' . wp_debug_backtrace_summary();
+	$message .= ' Backtrace: ' . wp_debug_backtrace_summary(); // PHPCS:Ignore WordPress.PHP.DevelopmentFunctions.error_log_backtrace_summary -- Backtrace is added to the message for better debugging and error tracking.
 
 	if ( defined( 'DOING_AJAX' ) ) {
 		/**
@@ -465,7 +465,7 @@ function ur_doing_it_wrong( $function, $message, $version ) {
 		 * @param string $version The version when the incorrect usage was introduced.
 		 */
 		do_action( 'doing_it_wrong_run', $function, $message, $version );
-		error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." );
+		error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." ); // PHPCS:Ignore WordPress.PHP.DevelopmentFunctions.error_log -- Error log is used to log the incorrect usage of the function for debugging purposes.
 	} else {
 		_doing_it_wrong( esc_html( $function ), esc_html( $message ), esc_html( $version ) );
 	}
@@ -2019,6 +2019,7 @@ function ur_get_all_user_registration_form( $post_count = -1 ) {
  *
  * @param string $context Recaptcha context.
  * @param string $recaptcha_enabled Is Recaptcha enabled.
+ * @param int $form_id Form ID.
  *
  * @return string
  */
@@ -2079,8 +2080,8 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 	}
 
 	if ( $recaptcha_enabled ) {
-		// Don't enqueue scripts for test_captcha context (admin settings)
-		// Admin settings will handle script loading via JavaScript
+		// Don't enqueue scripts for test_captcha context (admin settings).
+		// Admin settings will handle script loading via JavaScript.
 		if ( 'test_captcha' !== $context ) {
 			wp_enqueue_script( 'ur-recaptcha' );
 			wp_enqueue_script( $enqueue_script );
@@ -2094,14 +2095,14 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 			'theme_mode'        => $theme_mod,
 		);
 		$ur_recaptcha_slug = 'ur_' . strtolower( $recaptcha_type ) . '_recaptcha_code';
-		if ( $recaptcha_type === 'v2' ) {
+		if ( 'v2' === $recaptcha_type ) {
 			$ur_recaptcha_slug = 'ur_recaptcha_code';
 		}
 
 		if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
 			?>
-			<script id="<?php echo esc_attr( $enqueue_script ); ?>_<?php echo $rc_counter; ?>">
-				const <?php echo $ur_recaptcha_slug; ?> = <?php echo wp_json_encode( $ur_recaptcha_code ); ?>
+			<script id="<?php echo esc_attr( $enqueue_script ); ?>_<?php echo esc_attr( $rc_counter ); ?>">
+				const <?php echo $ur_recaptcha_slug; ?> = <?php echo wp_json_encode( $ur_recaptcha_code ); ?> // PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			</script>
 			<?php
 		} else {
