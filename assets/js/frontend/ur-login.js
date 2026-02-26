@@ -121,13 +121,11 @@ jQuery(function ($) {
 									.find(".user-registration-message")
 									.remove();
 
+								var $errorUl = $('<ul class="user-registration-error"></ul>');
+								$errorUl.html(res.data.message);
 								$this
 									.closest(".ur-frontend-form")
-									.prepend(
-										'<ul class="user-registration-error">' +
-											res.data.message +
-											"</ul>"
-									);
+									.prepend($errorUl);
 							} else {
 								if (res.data.status) {
 									$this
@@ -140,13 +138,11 @@ jQuery(function ($) {
 										.find(".user-registration-message")
 										.remove();
 
-									$this
-										.closest(".ur-frontend-form")
-										.prepend(
-											'<ul class="user-registration-message">' +
-												res.data.message +
-												"</ul>"
-										);
+									var $msgUl = $('<ul class="user-registration-message"></ul>');
+								$msgUl.html(res.data.message);
+								$this
+									.closest(".ur-frontend-form")
+									.prepend($msgUl);
 
 									$this
 										.closest("#user-registration")

@@ -371,8 +371,8 @@ class UR_Shortcode_My_Account {
 					return ur_get_template(
 						'myaccount/form-reset-password.php',
 						array(
-							'key'                       => $rp_key,
-							'login'                     => $rp_login,
+							'key'                       => esc_attr( $rp_key ),
+							'login'                     => esc_attr( $rp_login ),
 							'enable_strong_password'    => $enable_strong_password,
 							'minimum_password_strength' => $minimum_password_strength,
 						)
@@ -523,8 +523,8 @@ class UR_Shortcode_My_Account {
 				return ur_get_template(
 					'myaccount/form-reset-password.php',
 					array(
-						'key'                       => $rp_key,
-						'login'                     => $rp_login,
+						'key'                       => esc_attr( $rp_key ),
+						'login'                     => esc_attr( $rp_login ),
 						'enable_strong_password'    => $enable_strong_password,
 						'minimum_password_strength' => $minimum_password_strength,
 					)

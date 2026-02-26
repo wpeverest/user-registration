@@ -477,9 +477,9 @@ function ur_doing_it_wrong( $function, $message, $version ) {
  * @param integer $expire Expiry of the cookie.
  * @param string  $secure Whether the cookie should be served only over https.
  */
-function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
+function ur_setcookie( $name, $value, $expire = 0, $secure = false, $httponly = true ) {
 	if ( ! headers_sent() ) {
-		setcookie( $name, $value, $expire, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, $secure );
+		setcookie( $name, $value, $expire, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, $secure, $httponly );
 	} elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 		headers_sent( $file, $line );
 		trigger_error( "{$name} cookie cannot be set - headers already sent by {$file} on line {$line}", E_USER_NOTICE ); //phpcs:ignore.
@@ -3324,7 +3324,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 					if ( $install_status['file'] === 'user-registration-pro/user-registration.php' ) {
 						$status['plugin'] = 'user-registration-pro/user-registration.php';
 						if ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
-							setcookie( 'urm_license_status', 'pro_activated', time() + 300, '/', '', false, false );
+							setcookie( 'urm_license_status', 'pro_activated', time() + 300, '/', '', false, true );
 						}
 						activate_plugin( $install_status['file'] );
 					}

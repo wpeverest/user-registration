@@ -1218,7 +1218,11 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 					admin_url( 'admin.php?page=user-registration-users&view_user&action=edit' ),
 				);
 				$active_class = '';
-				if ( isset( $_GET['action'] ) && 'edit' == $_GET['action'] ) {
+
+				// phpcs:disable WordPress.Security.NonceVerification.Recommended
+				$action = isset( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '';
+
+				if ( 'edit' === $action ) {
 					$active_class = 'active';
 				}
 				// $actions['edit'] = sprintf(
@@ -1261,7 +1265,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 
 					$actions['approve'] = sprintf(
 						'<a href="%s">%s <p>%s</p></a>',
-						$approve_link,
+						esc_url( $approve_link ),
 						'<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 							<path fill="#000" fill-rule="evenodd" d="M8.5 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm-5 3a5 5 0 1 1 10 0 5 5 0 0 1-10 0Zm-2.036 8.464A5 5 0 0 1 5 14h7a5 5 0 0 1 5 5v2a1 1 0 1 1-2 0v-2a3 3 0 0 0-3-3H5a3 3 0 0 0-3 3v2a1 1 0 1 1-2 0v-2a5 5 0 0 1 1.464-3.536Zm22.243-5.757a1 1 0 0 0-1.414-1.414L19 11.586l-1.293-1.293a1 1 0 1 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4Z" clip-rule="evenodd"/>
 						</svg>',
@@ -1273,7 +1277,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 
 					$actions['deny'] = sprintf(
 						'<a href="%s" class="urm-deny">%s <span>%s</span></a>',
-						$deny_link,
+						esc_url( $deny_link ),
 						'<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 							<path fill="#F25656" fill-rule="evenodd" d="M6 7a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm3-5a5 5 0 1 0 0 10A5 5 0 0 0 9 2ZM6 14a5 5 0 0 0-5 5v2a1 1 0 1 0 2 0v-2a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v2a1 1 0 1 0 2 0v-2a5 5 0 0 0-5-5H6Zm10.293-6.707a1 1 0 0 1 1.414 0L19.5 9.086l1.793-1.793a1 1 0 1 1 1.414 1.414L20.914 10.5l1.793 1.793a1 1 0 0 1-1.414 1.414L19.5 11.914l-1.793 1.793a1 1 0 0 1-1.414-1.414l1.793-1.793-1.793-1.793a1 1 0 0 1 0-1.414Z" clip-rule="evenodd"/>
 						</svg>',
@@ -1293,7 +1297,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 
 				$actions['request_password_reset'] = sprintf(
 					'<a href="%s" rel="noreferrer noopener" target="_blank">%s <p>%s</p></a>',
-					$password_reset_link,
+					esc_url( $password_reset_link ),
 					'<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 						<path fill="#000" fill-rule="evenodd" d="M12 2h-.004a10.75 10.75 0 0 0-7.431 3.021l-.012.012L4 5.586V3a1 1 0 1 0-2 0v5a.997.997 0 0 0 1 1h5a1 1 0 0 0 0-2H5.414l.547-.547A8.75 8.75 0 0 1 12.001 4 8 8 0 1 1 4 12a1 1 0 1 0-2 0A10 10 0 1 0 12 2Z" clip-rule="evenodd"/>
 					</svg>',
@@ -1318,7 +1322,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 					);
 					$actions['disable_user'] = sprintf(
 						'<a href="%s" >%s <p>%s</p></a>',
-						$enable_link,
+						esc_url( $enable_link ),
 						'<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 						<path fill="#000" fill-rule="evenodd" d="M12 2h-.004a10.75 10.75 0 0 0-7.431 3.021l-.012.012L4 5.586V3a1 1 0 1 0-2 0v5a.997.997 0 0 0 1 1h5a1 1 0 0 0 0-2H5.414l.547-.547A8.75 8.75 0 0 1 12.001 4 8 8 0 1 1 4 12a1 1 0 1 0-2 0A10 10 0 1 0 12 2Z" clip-rule="evenodd"/>
 					</svg>
@@ -1381,7 +1385,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 
 				$actions['delete'] = sprintf(
 					'<a class="urm-deny" href="%s" rel="noreferrer noopener" target="_blank" data-wp-delete-url="%s">%s<span>%s</span></a>',
-					$delete_link,
+					esc_url( $delete_link ),
 					esc_url_raw( $wp_delete_url ),
 					'<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
 						<g clip-path="url(#clip0_3735_144)">
@@ -1405,7 +1409,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 					<ul>
 						<?php
 						foreach ( $actions as $key => $action_link ) {
-							echo '<li id="user-registration-user-action-' . $key . '">' . $action_link . '</li>';
+							echo '<li id="user-registration-user-action-' . esc_attr( $key ) . '">' . wp_kses_post( $action_link ) . '</li>';
 						}
 						?>
 					</ul>
