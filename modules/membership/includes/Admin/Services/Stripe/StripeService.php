@@ -115,10 +115,10 @@ class StripeService {
 				$webhook = \Stripe\WebhookEndpoint::retrieve( $existing_webhook_id );
 				if ( $webhook && $webhook->id ) {
 					return array(
-						'success'     => true,
-						'message'     => 'Webhook already exists for ' . $mode . ' mode',
-						'webhook_id'  => $webhook->id,
-						'mode'        => $mode,
+						'success'    => true,
+						'message'    => 'Webhook already exists for ' . $mode . ' mode',
+						'webhook_id' => $webhook->id,
+						'mode'       => $mode,
 					);
 				}
 			} catch ( \Exception $e ) {
@@ -129,10 +129,10 @@ class StripeService {
 
 		try {
 			\Stripe\Stripe::setApiKey( $secret_key );
-			$webhook_url   = rest_url( 'user-registration/stripe-webhook' );
+			$webhook_url    = rest_url( 'user-registration/stripe-webhook' );
 			$default_events = self::get_handled_webhook_events();
 			$enabled_events = apply_filters( 'urm_stripe_webhook_enabled_events', $default_events, $mode );
-			$webhook       = \Stripe\WebhookEndpoint::create(
+			$webhook        = \Stripe\WebhookEndpoint::create(
 				array(
 					'url'            => $webhook_url,
 					'enabled_events' => array_values( array_filter( (array) $enabled_events ) ),
@@ -224,8 +224,8 @@ class StripeService {
 
 		$membership_metas = $membership['meta_value'] ?? array();
 
-		if( !is_array( $membership_metas ) ) {
-			$membership_metas = json_decode($membership_metas, true);
+		if ( ! is_array( $membership_metas ) ) {
+			$membership_metas = json_decode( $membership_metas, true );
 		}
 
 		if ( empty( $membership_metas['type'] ) ) {
@@ -244,27 +244,29 @@ class StripeService {
 		$price_id    = $stripe_meta['price_id'] ?? '';
 
 		$amount_in_stripe = $this->calculate_stripe_amount( $amount, $currency );
-		$product = null;
+		$product          = null;
 
 		// Ensure Product Exists
-        if ( ! empty( $product_id ) ) {
-            try {
-                $product = \Stripe\Product::retrieve( $product_id );
-            } catch ( \Stripe\Exception\InvalidRequestException $e ) {
-                $product = null;
-            }
-        }
+		if ( ! empty( $product_id ) ) {
+			try {
+				$product = \Stripe\Product::retrieve( $product_id );
+			} catch ( \Stripe\Exception\InvalidRequestException $e ) {
+				$product = null;
+			}
+		}
 
-        if ( ! $product ) {
-            $product = \Stripe\Product::create([
-                'name'     => $product_name,
-                'metadata' => [
-                    'membership_id' => $membership_id,
-                ],
-            ]);
-        }
+		if ( ! $product ) {
+			$product = \Stripe\Product::create(
+				array(
+					'name'     => $product_name,
+					'metadata' => array(
+						'membership_id' => $membership_id,
+					),
+				)
+			);
+		}
 
-        $product_id = $product->id;
+		$product_id = $product->id;
 
 		// Ensure Price Exists / Is Correct
 		$price_id = $this->ensure_price_in_stripe(
@@ -277,7 +279,7 @@ class StripeService {
 		);
 
 		// Update meta
-		if( ! isset( $membership_metas['payment_gateways']['stripe'] ) || !is_array( $membership_metas['payment_gateways']['stripe'] ) ) {
+		if ( ! isset( $membership_metas['payment_gateways']['stripe'] ) || ! is_array( $membership_metas['payment_gateways']['stripe'] ) ) {
 			$membership_metas['payment_gateways']['stripe'] = array();
 		}
 
@@ -290,7 +292,7 @@ class StripeService {
 			wp_json_encode( $membership_metas )
 		);
 
-		return [ 'success' => true ];
+		return array( 'success' => true );
 	}
 
 	public function process_stripe_payment( $payment_data, $response_data ) {
@@ -592,12 +594,12 @@ class StripeService {
 
 			$stripe_settings = self::get_stripe_settings();
 
-			if ( empty( $stripe_settings['secret_key'] ) ) {
-				$response['status']  = false;
-				$response['message'] = __( 'Stripe secret key is not configured.', 'user-registration' );
+		if ( empty( $stripe_settings['secret_key'] ) ) {
+			$response['status']  = false;
+			$response['message'] = __( 'Stripe secret key is not configured.', 'user-registration' );
 
-				return $response;
-			}
+			return $response;
+		}
 
 			\Stripe\Stripe::setApiKey( $stripe_settings['secret_key'] );
 
@@ -605,14 +607,14 @@ class StripeService {
 
 			$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
 
-			if ( $intent->status !== 'succeeded' ) {
-				$response['status']  = false;
-				$response['message'] = __( 'Payment not completed.', 'user-registration' );
+		if ( $intent->status !== 'succeeded' ) {
+			$response['status']  = false;
+			$response['message'] = __( 'Payment not completed.', 'user-registration' );
 
-				return $response;
-			}
+			return $response;
+		}
 
-			$payment_status =  $intent->status;
+			$payment_status = $intent->status;
 
 		$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
 
@@ -1413,8 +1415,8 @@ class StripeService {
 		// Verify that the event was sent by Stripe
 		if ( isset( $event['id'] ) ) {
 			try {
-				$event_id = sanitize_text_field( $event['id'] );
-				$retrieved_event    = (array) \Stripe\Event::retrieve( $event_id );
+				$event_id        = sanitize_text_field( $event['id'] );
+				$retrieved_event = (array) \Stripe\Event::retrieve( $event_id );
 			} catch ( \Exception $e ) {
 				PaymentGatewayLogging::log_webhook_received(
 					'stripe',
@@ -1565,7 +1567,6 @@ class StripeService {
 			)
 		);
 		delete_user_meta( $member_id, 'urm_user_just_created' );
-
 	}
 
 	public function handle_failed_invoice( $event, $subscription_id ) {
@@ -1623,20 +1624,19 @@ class StripeService {
 			)
 		);
 		delete_user_meta( $member_id, 'urm_user_just_created' );
-
 	}
 
 	public function handle_failed_payment_intent( $event ) {
-		$payment_intent = isset( $event['data']['object'] ) ? $event['data']['object'] : array();
+		$payment_intent    = isset( $event['data']['object'] ) ? $event['data']['object'] : array();
 		$payment_intent_id = isset( $payment_intent['id'] ) ? $payment_intent['id'] : '';
 
 		PaymentGatewayLogging::log_webhook_received(
 			'stripe',
 			'Payment intent payment failed webhook received',
 			array(
-				'webhook_type'       => 'payment_intent.payment_failed',
-				'payment_intent_id'  => $payment_intent_id,
-				'event_id'           => isset( $event['id'] ) ? $event['id'] : 'unknown',
+				'webhook_type'      => 'payment_intent.payment_failed',
+				'payment_intent_id' => $payment_intent_id,
+				'event_id'          => isset( $event['id'] ) ? $event['id'] : 'unknown',
 			)
 		);
 
@@ -1659,7 +1659,6 @@ class StripeService {
 			);
 		}
 		delete_user_meta( $order['user_id'], 'urm_user_just_created' );
-
 	}
 
 	public function validate_setup() {
@@ -2106,13 +2105,13 @@ class StripeService {
 	/**
 	 * Calculate the amount to be sent to Stripe based on the currency and amount.
 	 *
-	 * @param int $amount The amount in the standard currency format (e.g., 10.00 for $10).
+	 * @param int    $amount The amount in the standard currency format (e.g., 10.00 for $10).
 	 * @param string $currency The currency code (e.g., 'USD', 'JPY').
 	 * @return int The amount in the smallest currency unit (e.g., cents for USD).
 	 */
 	private function calculate_stripe_amount( $amount, $currency ) {
 
-		$zero_decimal = [ 'JPY', 'KRW', 'VND', 'CLP', 'IDR' ];
+		$zero_decimal = array( 'JPY', 'KRW', 'VND', 'CLP', 'IDR' );
 
 		if ( in_array( strtoupper( $currency ), $zero_decimal, true ) ) {
 			return (int) round( $amount );
@@ -2127,9 +2126,9 @@ class StripeService {
 	 * @param string $type The type of the price, e.g., 'paid' or 'subscription'.
 	 * @param string $product_id The Stripe product ID to which the price is associated.
 	 * @param string $price_id The existing Stripe price ID, if any.
-	 * @param int $amount The amount for the price in the standard currency format (e.g., 10.00 for $10).
+	 * @param int    $amount The amount for the price in the standard currency format (e.g., 10.00 for $10).
 	 * @param string $currency The currency code (e.g., 'USD', 'JPY').
-	 * @param array $membership_metas The membership metadata which may contain subscription details.
+	 * @param array  $membership_metas The membership metadata which may contain subscription details.
 	 * @return void
 	 */
 	private function ensure_price_in_stripe(
@@ -2196,15 +2195,15 @@ class StripeService {
 			$existing_price->unit_amount !== $amount
 		);
 
-		if( empty( $existing_price->recurring ) && $type === 'subscription' ) {
+		if ( empty( $existing_price->recurring ) && $type === 'subscription' ) {
 			// If price is not recurring but type is subscription, we need to create a new price.
 			$needs_new = $needs_new || true;
-		} else if( ! empty( $existing_price->recurring ) && $type !== 'subscription' ) {
+		} elseif ( ! empty( $existing_price->recurring ) && $type !== 'subscription' ) {
 			// If price is not recurring but type is subscription, we need to create a new price.
 			$needs_new = $needs_new || true;
-		} else if( ! empty( $existing_price->recurring ) && $type === 'subscription' ) {
+		} elseif ( ! empty( $existing_price->recurring ) && $type === 'subscription' ) {
 			// If price is recurring but interval or interval count has been updated, we need to create a new price.
-			 $needs_new = $needs_new || $existing_price->recurring->interval !== $interval ||
+			$needs_new = $needs_new || $existing_price->recurring->interval !== $interval ||
 				$existing_price->recurring->interval_count !== $interval_count;
 		}
 
@@ -2225,12 +2224,12 @@ class StripeService {
 	/**
 	 * Create a new price in Stripe for the given product with the specified details.
 	 *
-	 * @param string $type The type of the price, e.g., 'paid' or 'subscription'.
-	 * @param string $product_id The Stripe product ID to which the price will be associated.
-	 * @param int $amount The amount for the price in the standard currency format (e.g., 10.00 for $10).
-	 * @param string $currency The currency code (e.g., 'USD', 'JPY').
+	 * @param string      $type The type of the price, e.g., 'paid' or 'subscription'.
+	 * @param string      $product_id The Stripe product ID to which the price will be associated.
+	 * @param int         $amount The amount for the price in the standard currency format (e.g., 10.00 for $10).
+	 * @param string      $currency The currency code (e.g., 'USD', 'JPY').
 	 * @param string|null $interval The interval for recurring prices (e.g., 'month', 'year').
-	 * @param integer $interval_count The number of intervals between billing cycles.
+	 * @param integer     $interval_count The number of intervals between billing cycles.
 	 * @return string The ID of the newly created Stripe price.
 	 */
 	private function create_price_in_stripe(
@@ -2242,17 +2241,17 @@ class StripeService {
 		$interval_count = 1
 	) {
 
-		$data = [
+		$data = array(
 			'unit_amount' => $amount,
 			'currency'    => $currency,
 			'product'     => $product_id,
-		];
+		);
 
 		if ( $type === 'subscription' ) {
-			$data['recurring'] = [
+			$data['recurring'] = array(
 				'interval'       => $interval,
 				'interval_count' => $interval_count,
-			];
+			);
 		}
 
 		$price = \Stripe\Price::create( $data );

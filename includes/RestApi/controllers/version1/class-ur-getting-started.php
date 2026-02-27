@@ -1596,7 +1596,7 @@ class UR_Getting_Started {
 	 *
 	 * @param \WP_REST_Request $request Request instance.
 	 * @return \WP_REST_Response
-     * @throws \Exception When Stripe credential validation fails.
+	 * @throws \Exception When Stripe credential validation fails.
 	 */
 	public static function save_payment_settings( $request ) {
 		$offline_payment = isset( $request['offline_payment'] ) ? (bool) $request['offline_payment'] : false;

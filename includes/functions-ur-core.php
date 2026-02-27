@@ -465,7 +465,9 @@ function ur_doing_it_wrong( $function, $message, $version ) {
 		 * @param string $version The version when the incorrect usage was introduced.
 		 */
 		do_action( 'doing_it_wrong_run', $function, $message, $version );
-		error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." ); // PHPCS:Ignore WordPress.PHP.DevelopmentFunctions.error_log -- Error log is used to log the incorrect usage of the function for debugging purposes.
+
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." );
 	} else {
 		_doing_it_wrong( esc_html( $function ), esc_html( $message ), esc_html( $version ) );
 	}
@@ -2019,7 +2021,7 @@ function ur_get_all_user_registration_form( $post_count = -1 ) {
  *
  * @param string $context Recaptcha context.
  * @param string $recaptcha_enabled Is Recaptcha enabled.
- * @param int $form_id Form ID.
+ * @param int    $form_id Form ID.
  *
  * @return string
  */
@@ -2102,7 +2104,7 @@ function ur_get_recaptcha_node( $context, $recaptcha_enabled = false, $form_id =
 		if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
 			?>
 			<script id="<?php echo esc_attr( $enqueue_script ); ?>_<?php echo esc_attr( $rc_counter ); ?>">
-				const <?php echo $ur_recaptcha_slug; ?> = <?php echo wp_json_encode( $ur_recaptcha_code ); ?> // PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				const <?php echo $ur_recaptcha_slug; // PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> = <?php echo wp_json_encode( $ur_recaptcha_code ); ?>
 			</script>
 			<?php
 		} else {
@@ -2211,7 +2213,8 @@ function ur_get_meta_key_label( $form_id ) {
 /**
  * Get all user registration fields of the user by querying to database.
  *
- * @param int $user_id User ID.
+ * @param int    $user_id User ID.
+ * @param string $action The action being performed (e.g., 'export_users').
  *
  * @return array
  * @since  1.5.0
@@ -2272,7 +2275,7 @@ function ur_get_user_extra_fields( $user_id, $action = '' ) {
 	$form_fields = isset( array_column( $extra_data, 'fields' )[0] ) ? array_column( $extra_data, 'fields' )[0] : array(); //phpcs:ignore.
 	if ( ! empty( $form_fields ) ) {
 		foreach ( $form_fields as $field_key => $field_data ) {
-			// For repeator export
+			// For repeator export.
 			if ( 'export_users' === $action ) {
 				$value = isset( $all_meta_for_user[ $field_key ] ) ? $all_meta_for_user[ $field_key ] : get_user_meta( $user_id, $field_key, true );
 			} else {
@@ -2861,8 +2864,8 @@ function ur_parse_name_values_for_smart_tags( $user_id, $form_id, $valid_form_da
 		}
 
 		if ( isset( $form_data->extra_params['field_key'] ) && 'country' === $form_data->extra_params['field_key'] && '' !== $form_data->value ) {
-			$isJson = preg_match( '/^\{.*\}$/s', $form_data->value ) ? true : false;
-			if ( $isJson ) {
+			$is_json = preg_match( '/^\{.*\}$/s', $form_data->value ) ? true : false;
+			if ( $is_json ) {
 				$country_data = json_decode( $form_data->value, true );
 				$country_code = isset( $country_data['country'] ) ? $country_data['country'] : '';
 				$state_code   = isset( $country_data['state'] ) ? $country_data['state'] : '';
@@ -2981,7 +2984,7 @@ if ( ! function_exists( 'user_registration_get_form_fields_for_dropdown' ) ) {
 		$field_array    = array();
 		if ( isset( $get_all_fields ) ) {
 			foreach ( $get_all_fields as $key => $field ) {
-				if ( $field['field_key'] === 'phone' ) {
+				if ( 'phone' === $field['field_key'] ) {
 					$field_array[ $key ] = $field['label'];
 				}
 			}
@@ -3324,7 +3327,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 
 			if ( current_user_can( 'activate_plugin', $install_status['file'] ) ) {
 				if ( is_plugin_inactive( $install_status['file'] ) ) {
-					if ( $install_status['file'] === 'user-registration-pro/user-registration.php' ) {
+					if ( 'user-registration-pro/user-registration.php' === $install_status['file'] ) {
 						$status['plugin'] = 'user-registration-pro/user-registration.php';
 						if ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
 							setcookie( 'urm_license_status', 'pro_activated', time() + 300, '/', '', false, false );
@@ -3444,7 +3447,7 @@ if ( ! function_exists( 'ur_size_to_limit_length_migration_script' ) ) {
 							}
 						}
 					}
-					$post_content       = json_encode( $post_content_array );
+					$post_content       = wp_json_encode( $post_content_array );
 					$post->post_content = $post_content;
 				}
 				wp_update_post( $post );
@@ -3844,7 +3847,7 @@ if ( ! function_exists( 'ur_get_license_plan' ) ) {
 			include_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		if ( $license_key /*&& is_plugin_active( 'user-registration-pro/user-registration.php' ) */ ) {
+		if ( $license_key ) {
 			$license_data = get_transient( 'ur_pro_license_plan' );
 
 			if ( false === $license_data ) {
@@ -3933,8 +3936,6 @@ if ( ! function_exists( 'ur_file_get_contents' ) ) {
 				return $response;
 			}
 		}
-
-		return;
 	}
 }
 
@@ -4530,14 +4531,14 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 						'feature_link' => ' https://wpuserregistration.com/features/pdf-form-submission/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
 					),
 				),
-				'sms-integration'  => array(
+				'sms-integration' => array(
 					'label'  => esc_html__( 'SMS Integration', 'user-registration' ),
 					'plugin' => 'user-registration-sms-integration',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration SMS Integration', 'user-registration' ),
 					'upsell' => array(
-						'excerpt'    => 'Send SMS OTP for login and verification via Twilio.',
-						'description' => array(
+						'excerpt'      => 'Send SMS OTP for login and verification via Twilio.',
+						'description'  => array(
 							'Connect with Twilio for SMS delivery',
 							'Enable OTP-based login and registration verification',
 						),
@@ -5810,7 +5811,7 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			?>
 			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
 				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
-					   style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+						style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
 					<tbody>
 					<tr>
 						<td colspan="2" style="text-align: left;">
@@ -5849,8 +5850,8 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 
 		// Only exclude CSS when on settings page displaying editor (not when sending emails).
 		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action &&
-							 ! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
-							 ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
+							! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
+							! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
 
 		// Responsive CSS styles for email template - only include when not in editor context.
 		$responsive_styles = '';
@@ -6746,7 +6747,7 @@ if ( ! function_exists( 'user_registration_validate_edit_profile_form_field_data
 			if ( 'user_email' === $single_form_field->field_key ) {
 				// Do not allow admin to update others email, case may change in future
 				// if ( ! email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && $user_id !== get_current_user_id() ) {
-				// 	ur_add_notice( esc_html__( 'Email field is not editable.', 'user-registration' ), 'error' );
+				// ur_add_notice( esc_html__( 'Email field is not editable.', 'user-registration' ), 'error' );
 				// }
 				// Check if email already exists before updating user details.
 				if ( email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) !== $user_id ) {
@@ -7040,7 +7041,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 
 						if ( isset( $advance_data['general_setting']->required ) ) {
 							if ( in_array( $single_item->field_key, ur_get_required_fields() )
-								 || ur_string_to_bool( $advance_data['general_setting']->required ) ) {
+								|| ur_string_to_bool( $advance_data['general_setting']->required ) ) {
 								$field['required']                      = true;
 								$field['custom_attributes']['required'] = 'required';
 							}
@@ -7355,14 +7356,14 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	 */
 	function ur_check_is_inactive() {
 		if ( ! ur_check_module_activation( 'membership' ) ||
-			 current_user_can( 'manage_options' ) ||
-			 ( ! empty( $_POST['action'] ) && in_array(
-					 $_POST['action'],
-					 array(
-						 'user_registration_membership_confirm_payment',
-						 'user_registration_membership_create_stripe_subscription',
-					 )
-				 ) )
+			current_user_can( 'manage_options' ) ||
+			( ! empty( $_POST['action'] ) && in_array(
+				$_POST['action'],
+				array(
+					'user_registration_membership_confirm_payment',
+					'user_registration_membership_create_stripe_subscription',
+				)
+			) )
 		) {
 			return;
 		}
@@ -9149,6 +9150,7 @@ if ( ! function_exists( 'get_login_form_settings' ) ) {
 if ( ! function_exists( 'ur_check_and_sync_login_page_redirect_options' ) ) {
 	/**
 	 * Check and sync login page and redirect URL options to ensure consistency and avoid conflicts.
+	 *
 	 * @return array{ hide: bool, show_notice: bool, login_page_id: int|string, login_redirect_url: int|string }
 	 */
 	function ur_check_and_sync_login_page_redirect_options( $run_migration = true ) {
@@ -9431,7 +9433,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 							cols="' . esc_attr( $value['cols'] ) . '"
 							placeholder="' . esc_attr( $value['placeholder'] ) . '"
 							' . esc_html( implode( ' ', $custom_attributes ) ) . '>'
-								 . esc_textarea( $option_value ) . '</textarea>';
+								. esc_textarea( $option_value ) . '</textarea>';
 					$settings .= '</div>';
 					$settings .= '</div>';
 					break;
@@ -11874,19 +11876,19 @@ if ( ! function_exists( 'ur_format_country_field_data' ) ) {
 
 add_action( 'urm_save_stripe_payment_section', 'user_registration_create_product_and_price_for_stripe' );
 
-if( ! function_exists( 'user_registration_create_product_and_price_for_stripe' ) ) {
+if ( ! function_exists( 'user_registration_create_product_and_price_for_stripe' ) ) {
 	/**
 	 * Create product and price in Stripe for all the subscription type memberships which are created before the stripe payment gateway integration.
 	 *
 	 * @param array $data The data array.
 	 */
 	function user_registration_create_product_and_price_for_stripe( $data ) {
-		$stripe_service = new StripeService();
+		$stripe_service        = new StripeService();
 		$membership_repository = new MembershipRepository();
-		$memberships       = $membership_repository->get_all_memberships_without_status_filter();
+		$memberships           = $membership_repository->get_all_memberships_without_status_filter();
 
-		foreach( $memberships as $membership ) {
-			$stripe_service->sync_product_and_price_in_stripe($membership);
+		foreach ( $memberships as $membership ) {
+			$stripe_service->sync_product_and_price_in_stripe( $membership );
 		}
 	}
 }

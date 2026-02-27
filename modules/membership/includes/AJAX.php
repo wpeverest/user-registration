@@ -234,7 +234,7 @@ class AJAX {
 		$data['email'] = $response['member_email'];
 		$pg_data       = array();
 		if ( 'free' !== $data['payment_method'] && $response['status'] ) {
-			$payment_service = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
+			$payment_service  = new PaymentService( $data['payment_method'], $data['membership'], $data['email'] );
 			$form_response    = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
 			$ur_authorize_net = array( 'ur_authorize_net' => ! empty( $form_response['ur_authorize_net'] ) ? $form_response['ur_authorize_net'] : array() );
 			$data             = array_merge( $data, $ur_authorize_net );
@@ -338,10 +338,10 @@ class AJAX {
 			$meta_data = json_decode( $data['post_meta_data']['ur_membership']['meta_value'], true );
 
 			if ( $is_stripe_enabled && 'free' !== $meta_data['type'] ) {
-				$stripe_service           = new StripeService();
-				$data['membership_id']    = $new_membership_ID;
-				$membership_repository        = new MembershipRepository();
-				$membership = $membership_repository->get_single_membership_by_ID( $new_membership_ID );
+				$stripe_service        = new StripeService();
+				$data['membership_id'] = $new_membership_ID;
+				$membership_repository = new MembershipRepository();
+				$membership            = $membership_repository->get_single_membership_by_ID( $new_membership_ID );
 				$stripe_service->sync_product_and_price_in_stripe( $membership );
 			}
 
@@ -427,17 +427,21 @@ class AJAX {
 
 			if ( $is_stripe_enabled && 'free' !== $meta_data['type'] ) {
 				$stripe_service = new StripeService();
-				$stripe_result = $stripe_service->sync_product_and_price_in_stripe([
-					'ID'         => $updated_ID,
-					'post_title' => $data['post_data']['post_title'],
-					'meta_value' => $meta_data,
-				]);
+				$stripe_result  = $stripe_service->sync_product_and_price_in_stripe(
+					array(
+						'ID'         => $updated_ID,
+						'post_title' => $data['post_data']['post_title'],
+						'meta_value' => $meta_data,
+					)
+				);
 
 				if ( empty( $stripe_result['success'] ) ) {
-					wp_send_json_error([
-						'message' => $stripe_result['message']
-							?? __( 'Could not update product/price in Stripe.', 'user-registration' ),
-					]);
+					wp_send_json_error(
+						array(
+							'message' => $stripe_result['message']
+								?? __( 'Could not update product/price in Stripe.', 'user-registration' ),
+						)
+					);
 				}
 			}
 
@@ -1029,7 +1033,7 @@ class AJAX {
 			}
 
 			$form_response = isset( $_POST['form_response'] ) ? (array) json_decode( wp_unslash( $_POST['form_response'] ), true ) : array();
-			$data = apply_filters( 'user_registration_membership_before_register_member', isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() );
+			$data          = apply_filters( 'user_registration_membership_before_register_member', isset( $_POST['members_data'] ) ? (array) json_decode( wp_unslash( $_POST['members_data'] ), true ) : array() );
 			if ( ! empty( $form_response ) && isset( $form_response['auto_login'] ) && $payment_status !== 'failed' ) {
 				$members_service = new MembersService();
 				$password        = isset( $data['password'] ) ? $data['password'] : '';
@@ -2699,7 +2703,7 @@ class AJAX {
 			);
 		}
 		$membership_upgrade_service = new UpgradeMembershipService();
-		$membership_ids                = isset( $_POST['membership_ids'] ) ? $_POST['membership_ids'] : '';
+		$membership_ids             = isset( $_POST['membership_ids'] ) ? $_POST['membership_ids'] : '';
 
 		if ( empty( $membership_ids ) ) {
 			return wp_send_json_error(
@@ -2709,7 +2713,7 @@ class AJAX {
 			);
 
 		}
-		$membership_ids = array_filter( array_map( 'absint', $membership_ids ) );
+		$membership_ids        = array_filter( array_map( 'absint', $membership_ids ) );
 		$membership_repository = new MembershipRepository();
 
 		$memberships = $membership_repository->get_multiple_membership_by_ID( $membership_ids, false );

@@ -106,11 +106,11 @@ class MembershipService {
 						$team_name = 'Team-#' . $team_index;
 					}
 					$team_id = wp_insert_post(
-						[
+						array(
 							'post_type'   => 'ur_membership_team',
 							'post_title'  => $team_name,
 							'post_status' => 'publish',
-						]
+						)
 					);
 
 					if ( 0 === $team_id ) {
@@ -487,8 +487,8 @@ class MembershipService {
 				$membership_field_exists = true;
 			}
 		}
-		$response['status']  = $membership_field_exists;
-		$response['message'] = ! $membership_field_exists ? __( 'The selected page consist a User Registration & Membership Form but no membership field.' ) : '';
+		$response['status']           = $membership_field_exists;
+		$response['message']          = ! $membership_field_exists ? __( 'The selected page consist a User Registration & Membership Form but no membership field.' ) : '';
 		$response['disable_save_btn'] = 'no';
 
 		return $response;
