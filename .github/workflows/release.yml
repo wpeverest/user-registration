@@ -1,0 +1,60 @@
+name: Deploy to wordpress.org
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    name: Deploy to WordPress.org
+    if: github.event.release.prerelease != true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        id: build
+        uses: wpeverest/action-build@4.0.2
+
+      - name: Delete existing SVN tag if exists
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        run: |
+          sudo apt-get install -y subversion
+
+          TAG_VERSION="${{ github.event.release.tag_name }}"
+          TAG_VERSION="${TAG_VERSION#v}"
+          SVN_TAG_URL="https://plugins.svn.wordpress.org/user-registration/tags/${TAG_VERSION}"
+
+          echo "Checking for tag at: $SVN_TAG_URL"
+
+          HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" -L --max-redirs 5 "$SVN_TAG_URL")
+          echo "HTTP Status: $HTTP_STATUS"
+
+          if [ "$HTTP_STATUS" = "200" ] || [ "$HTTP_STATUS" = "301" ]; then
+            echo "Tag ${TAG_VERSION} exists, deleting..."
+            svn delete "$SVN_TAG_URL" \
+              --username "$SVN_USERNAME" \
+              --password "$SVN_PASSWORD" \
+              --no-auth-cache \
+              --non-interactive \
+              -m "Removing incomplete tag ${TAG_VERSION} for redeployment"
+            echo "Tag deleted successfully."
+          else
+            echo "Tag ${TAG_VERSION} does not exist (HTTP $HTTP_STATUS), skipping delete."
+          fi
+      - name: WordPress Plugin Deploy
+        uses: 10up/action-wordpress-plugin-deploy@master
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: user-registration

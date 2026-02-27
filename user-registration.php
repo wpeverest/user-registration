@@ -4,7 +4,7 @@
  * Plugin Name: User Registration & Membership
  * Plugin URI: https://wpuserregistration.com/
  * Description: The most flexible User Registration and Membership plugin for WordPress.
- * Version: 5.1.2 
+ * Version: 5.1.4
  * Author: WPEverest
  * Author URI: https://wpuserregistration.com
  * Text Domain: user-registration
@@ -37,7 +37,7 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '5.1.2';
+		public $version = '5.1.4';
 
 		/**
 		 * Session instance.
@@ -169,6 +169,8 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 			$this->define( 'UR_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 			$this->define( 'UR_VERSION', $this->version );
 			$this->define( 'UR_TEMPLATE_DEBUG_MODE', false );
+			$this->define( 'UR_TEMPLATE_PATH', UR_ABSPATH . 'templates/' );
+			$this->define( 'UR_ASSET_PATH', plugins_url( 'assets/', UR_PLUGIN_FILE ) );
 			$this->define( 'UR_FORM_PATH', UR_ABSPATH . 'includes' . UR_DS . 'form' . UR_DS );
 			$this->define( 'UR_SESSION_CACHE_GROUP', 'ur_session_id' );
 			$this->define( 'UR_PRO_ACTIVE', false );
@@ -210,6 +212,44 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 		 * Includes.
 		 */
 		private function includes() {
+
+			if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+				require_once __DIR__ . '/vendor/autoload.php';
+			} else {
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+						sprintf(
+							/* translators: 1: composer command. 2: plugin directory */
+							esc_html__( 'Your installation of the User Registration is incomplete. Please run %1$s within the %2$s directory.', 'user-registration' ),
+							'`composer install`',
+							'`' . esc_html( str_replace( ABSPATH, '', __DIR__ ) ) . '`'
+						)
+					);
+				}
+
+				/**
+				 * Outputs an admin notice if composer install has not been ran.
+				 */
+				add_action(
+					'admin_notices',
+					function () {
+						?>
+					<div class="notice notice-error">
+						<p>
+							<?php
+							printf(
+								/* translators: 1: composer command. 2: plugin directory */
+								esc_html__( 'Your installation of the  User Registration is incomplete. Please run %1$s within the %2$s directory.', 'user-registration' ),
+								'<code>composer install</code>',
+								'<code>' . esc_html( str_replace( ABSPATH, '', __DIR__ ) ) . '</code>'
+							);
+							?>
+						</p>
+					</div>
+						<?php
+					}
+				);
+			}
 
 			/**
 			 * Class autoloader.
@@ -293,12 +333,6 @@ if ( ! class_exists( 'UserRegistration' ) ) :
 
 			if ( ( ur_check_module_activation( 'membership' ) || ur_check_module_activation( 'payments' ) ) ) {
 				include_once UR_ABSPATH . 'modules/payment-history/Orders.php';
-			}
-
-			// Check if there are membership rules (>= 2)
-			$membership_rules_count = 0;
-			if ( function_exists( 'ur_get_membership_rules_count' ) ) {
-				$membership_rules_count = ur_get_membership_rules_count();
 			}
 
 			include_once UR_ABSPATH . 'modules/content-restriction/user-registration-content-restriction.php';

@@ -649,6 +649,30 @@ function ur_get_one_time_draggable_fields() {
 }
 
 /**
+ * Check if membership is available for the form builder (at least one group or one active membership).
+ *
+ * @return bool
+ */
+function ur_has_membership_available() {
+	if ( ! ur_check_module_activation( 'membership' ) ) {
+		return false;
+	}
+	$has_groups = false;
+	if ( class_exists( 'WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository' ) ) {
+		$repository = new \WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository();
+		$groups     = $repository->get_all_membership_groups();
+		$has_groups = ! empty( $groups );
+	}
+	$has_memberships = false;
+	if ( class_exists( 'WPEverest\URMembership\Admin\Services\MembershipService' ) ) {
+		$service         = new \WPEverest\URMembership\Admin\Services\MembershipService();
+		$memberships     = $service->list_active_memberships();
+		$has_memberships = ! empty( $memberships );
+	}
+	return $has_groups || $has_memberships;
+}
+
+/**
  * Get fields excluding in profile tab
  *
  * @return array
@@ -6372,6 +6396,7 @@ if ( ! function_exists( 'ur_automatic_user_login' ) ) {
 	 * @since 3.1.5
 	 */
 	function ur_automatic_user_login( $user ) {
+		delete_user_meta( $user->ID, 'urm_user_just_created' );
 		wp_clear_auth_cookie();
 		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 		wp_set_auth_cookie( $user->ID, $remember );
