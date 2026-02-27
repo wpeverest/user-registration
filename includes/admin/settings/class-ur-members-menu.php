@@ -452,7 +452,14 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 								if ( ! current_user_can( 'delete_user', $id ) ) {
 									$user = get_userdata( $id );
 
-									$this->errors[] = new WP_Error( 'edit_users', __( "Sorry, you are not allowed to delete the user $user->user_login.", 'user-registration' ) );
+									$this->errors[] = new WP_Error(
+										'edit_users',
+										sprintf(
+										/* translators: %s: Username */
+											esc_html__( 'Sorry, you are not allowed to delete the user %s.', 'user-registration' ),
+											esc_html( $user->user_login )
+										)
+									);
 									continue;
 								}
 
@@ -526,7 +533,7 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 							}
 
 							$editable_roles = get_editable_roles();
-							$role           = $_REQUEST['new_role'];
+							$role           = isset( $_REQUEST['new_role'] ) ? sanitize_key( $_REQUEST['new_role'] ) : '';
 
 							if ( ! $role || empty( $editable_roles[ $role ] ) ) {
 								$this->errors[] = new WP_Error( 'edit_users', __( 'Sorry, you are not allowed to give users that role.', 'user-registration' ) );
@@ -541,7 +548,14 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 								$user = get_userdata( $id );
 
 								if ( ! current_user_can( 'promote_user', $id ) ) {
-									$this->errors[] = new WP_Error( 'edit_users', "Sorry, you are not allowed to change role for user {$user->user_login}." );
+									$this->errors[] = new WP_Error(
+										'edit_users',
+										sprintf(
+										/* translators: %s: Username */
+											esc_html__( 'Sorry, you are not allowed to change role for user %s.', 'user-registration' ),
+											esc_html( $user->user_login )
+										)
+									);
 								}
 
 								// If the user doesn't already belong to the blog, bail.
@@ -2010,9 +2024,20 @@ if ( ! class_exists( 'User_Registration_Members_Menu' ) ) {
 			}
 
 			if ( 'error' === $this->notice_data['type'] ) {
-				echo '<div class="notice ur-toaster ur-users-notice notice-error is-dismissible"><p>' . esc_html( $this->notice_data['error']->get_error_message() ) . '</p></div>';
+				$error = $this->notice_data['error'];
 
+				if ( ! is_wp_error( $error ) ) {
+					$this->notice_data = array();
+					return;
+				}
+
+				$message = $error->get_error_message();
+
+				echo '<div class="notice ur-toaster ur-users-notice notice-error is-dismissible"><p>'
+					. esc_html( $message )
+					. '</p></div>';
 			}
+
 			$this->notice_data = array();
 		}
 	}

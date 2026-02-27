@@ -161,7 +161,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 
 		if ( $this->activate_license( $license_key ) ) {
 			if ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
-				setcookie( 'urm_license_status', 'license_activated', time() + 300, '/', '', false, true );
+				setcookie( 'urm_license_status', 'license_activated', time() + 300, '/', '', is_ssl(), true );
 			}
 			wp_redirect( remove_query_arg( array( 'deactivated_license', $this->plugin_slug . '_deactivate_license' ), add_query_arg( 'activated_license', $this->plugin_slug ) ) );
 			exit;
@@ -349,7 +349,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			$activate_results = json_decode(
 				UR_Updater_Key_API::activate(
 					array(
-						'license' => $license_key,
+						'license' => sanitize_text_field( $license_key ),
 					)
 				)
 			);
@@ -360,7 +360,8 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 			if ( ! empty( $activate_results ) && is_object( $activate_results ) ) {
 
 				if ( isset( $activate_results->error_code ) ) {
-					throw new Exception( $activate_results->error );
+					throw new Exception( sanitize_text_field( $activate_results->error ) );
+
 				} elseif ( false === $activate_results->success ) {
 					switch ( $activate_results->error ) {
 						case 'expired':
@@ -395,7 +396,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 							break;
 
 						case 'license_not_activable':
-							$error_msg = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'user-registration' );
+							$error_msg = esc_html__( 'The key you entered belongs to a bundle, please use the product specific license key.', 'user-registration' );
 							break;
 
 						default:
@@ -408,7 +409,7 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 					throw new Exception( wp_kses_post( sprintf( __( '<strong>Activation error:</strong> %s', 'user-registration' ), wp_kses_post( $error_msg ) ) ) );
 
 				} elseif ( 'valid' === $activate_results->license ) {
-					$this->api_key = $license_key;
+					$this->api_key = sanitize_text_field( $license_key );
 					$this->errors  = array();
 
 					update_option( $this->plugin_slug . '_license_key', $this->api_key );
@@ -423,7 +424,9 @@ class UR_Plugin_Updater extends UR_Plugin_Updates {
 					);
 
 					if ( ! empty( $license_data->item_name ) ) {
-						$license_data->item_plan = trim( strtolower( str_replace( 'LifeTime', '', str_replace( 'User Registration', '', $license_data->item_name ) ) ) );
+						$license_data->item_plan = sanitize_text_field(
+							trim( strtolower( str_replace( 'LifeTime', '', str_replace( 'User Registration', '', $license_data->item_name ) ) ) )
+						);
 						set_transient( 'ur_pro_license_plan', $license_data, WEEK_IN_SECONDS );
 					}
 

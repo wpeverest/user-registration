@@ -279,8 +279,8 @@ class UR_Email_Confirmation {
 									</div>
 								</div>';
 
-						setcookie( 'urm_toast_content', $toast_content, time() + 5, '/', '', false, true );
-						setcookie( 'urm_toast_success_message', $toast_success_message, time() + 5, '/', '', false, true );
+						setcookie( 'urm_toast_content', $toast_content, time() + 5, '/', '', is_ssl(), true );
+						setcookie( 'urm_toast_success_message', $toast_success_message, time() + 5, '/', '', is_ssl(), true );
 
 						add_filter( 'login_message', array( $this, 'custom_registration_message' ) );
 						add_filter( 'user_registration_login_form_before_notice', array( $this, 'custom_registration_message' ) );

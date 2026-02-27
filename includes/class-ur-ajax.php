@@ -650,6 +650,11 @@ class UR_AJAX {
 		try {
 			check_ajax_referer( 'user_input_dropped_nonce', 'security' );
 
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'error' => __( 'You do not have permission.', 'user-registration' ) ) );
+				wp_die( -1 );
+			}
+
 			$form_field_id = ( isset( $_POST['form_field_id'] ) ) ? sanitize_key( wp_unslash( $_POST['form_field_id'] ) ) : null;
 
 			if ( null == $form_field_id || '' == $form_field_id ) {
@@ -657,6 +662,12 @@ class UR_AJAX {
 			}
 
 			$class_file_name = str_replace( 'user_registration_', '', $form_field_id );
+
+			// Validate $class_file_name contains only safe characters (already enforced by sanitize_key, but double-check).
+			if ( ! preg_match( '/^[a-z0-9_\-]+$/', $class_file_name ) ) {
+				throw new Exception( 'Invalid form field identifier' );
+			}
+
 			$class_name      = ur_load_form_field_class( $class_file_name );
 
 			if ( empty( $class_name ) ) {

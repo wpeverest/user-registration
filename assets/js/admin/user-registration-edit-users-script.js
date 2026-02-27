@@ -57,7 +57,7 @@ jQuery(function ($) {
 						if (response.success && response.data.has_state && '' !== response.data.state) {
 							var $select = $('<select class="ur-field-address-state select ur-frontend-field"></select>');
 							$select.attr('name', fieldId + '_state');
-							$select.append($(response.data.state).filter('option'));
+							$select.append($($.parseHTML(response.data.state, null, false)).filter('option'));
 							$stateElement = $select;
 						} else {
 							var $input = $('<input type="text" class="ur-field-address-state input-text ur-frontend-field"/>');
