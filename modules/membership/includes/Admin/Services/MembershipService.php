@@ -106,11 +106,11 @@ class MembershipService {
 						$team_name = 'Team-#' . $team_index;
 					}
 					$team_id = wp_insert_post(
-						[
+						array(
 							'post_type'   => 'ur_membership_team',
 							'post_title'  => $team_name,
 							'post_status' => 'publish',
-						]
+						)
 					);
 
 					if ( 0 === $team_id ) {
@@ -487,8 +487,8 @@ class MembershipService {
 				$membership_field_exists = true;
 			}
 		}
-		$response['status']  = $membership_field_exists;
-		$response['message'] = ! $membership_field_exists ? __( 'The selected page consist a User Registration & Membership Form but no membership field.' ) : '';
+		$response['status']           = $membership_field_exists;
+		$response['message']          = ! $membership_field_exists ? __( 'The selected page consist a User Registration & Membership Form but no membership field.' ) : '';
 		$response['disable_save_btn'] = 'no';
 
 		return $response;
@@ -652,7 +652,7 @@ class MembershipService {
 				$stripe_service           = new StripeService();
 				$args                     = $data;
 				$args['membership_id']    = $new_membership_id;
-				$stripe_price_and_product = $stripe_service->create_stripe_product_and_price( $args['post_data'], $meta_data, false );
+				$stripe_price_and_product = $stripe_service->sync_product_and_price_in_stripe( $args['post_data'] );
 
 				if ( ! empty( $stripe_price_and_product['success'] ) && $stripe_price_and_product['success'] ) {
 					$meta_data['payment_gateways']['stripe']['product_id'] = $stripe_price_and_product['price']->product;

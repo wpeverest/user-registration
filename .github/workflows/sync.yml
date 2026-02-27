@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - ui-polishing-sid
+            - UR-4172-fix/price-created-on-every-registration-in-stripe
         workflow_dispatch:
 jobs:
     sync:

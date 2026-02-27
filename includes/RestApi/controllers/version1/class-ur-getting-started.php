@@ -677,7 +677,11 @@ class UR_Getting_Started {
 			'title'         => esc_html__( 'Registration Form', 'user-registration' ),
 			'page_url'      => admin_url( 'admin.php?page=add-new-registration&edit-registration=' . $normal_form_id ),
 			'page_url_text' => esc_html__( 'View Form', 'user-registration' ),
-			'page_slug'     => sprintf( esc_html__( 'Form Id: %s', 'user-registration' ), $normal_form_id ),
+			'page_slug'     => sprintf(
+				/* translators: %s: Form ID. */
+				esc_html__( 'Form Id: %s', 'user-registration' ),
+				$normal_form_id
+			),
 			'status'        => 'enabled',
 			'status_label'  => esc_html__( 'Ready to use', 'user-registration' ),
 		);
@@ -912,6 +916,7 @@ class UR_Getting_Started {
 					'index'   => $index,
 					'name'    => isset( $membership['name'] ) ? $membership['name'] : '',
 					'message' => sprintf(
+						/* translators: 1: Membership plan type 2: Allowed membership plan types. */
 						__( 'Invalid membership type: %1$s. Only %2$s memberships are allowed based on your selection.', 'user-registration' ),
 						$plan_type,
 						implode( ' or ', $allowed_types )
@@ -1591,6 +1596,7 @@ class UR_Getting_Started {
 	 *
 	 * @param \WP_REST_Request $request Request instance.
 	 * @return \WP_REST_Response
+	 * @throws \Exception When Stripe credential validation fails.
 	 */
 	public static function save_payment_settings( $request ) {
 		$offline_payment = isset( $request['offline_payment'] ) ? (bool) $request['offline_payment'] : false;
@@ -1618,7 +1624,9 @@ class UR_Getting_Started {
 
 		$offline_configured = true;
 		if ( $offline_payment ) {
-			$offline_configured = ! empty( trim( wp_strip_all_tags( $bank_details ) ) );
+			$sanitized_bank_details = trim( wp_strip_all_tags( $bank_details ) );
+			$offline_configured     = ! empty( $sanitized_bank_details );
+
 			if ( ! $offline_configured ) {
 				$configuration_needed[] = array(
 					'gateway'      => 'offline',
@@ -1734,24 +1742,13 @@ class UR_Getting_Started {
 						continue;
 					}
 
-					try {
-						$post_data = array(
-							'ID'           => $membership_id,
-							'post_title'   => $post->post_title,
-							'post_content' => $post->post_content,
-						);
+					$post_data = array(
+						'ID'           => $membership_id,
+						'post_title'   => $post->post_title,
+						'post_content' => $post->post_content,
+					);
 
-						$stripe_result = $stripe_service->create_stripe_product_and_price( $post_data, $meta, false );
-
-						if ( isset( $stripe_result['success'] ) && ur_string_to_bool( $stripe_result['success'] ) ) {
-							$meta['payment_gateways']['stripe']               = array();
-							$meta['payment_gateways']['stripe']['product_id'] = $stripe_result['price']->product;
-							$meta['payment_gateways']['stripe']['price_id']   = $stripe_result['price']->id;
-							update_post_meta( $membership_id, 'ur_membership', wp_json_encode( $meta ) );
-						}
-					} catch ( \Exception $e ) {
-						continue;
-					}
+					user_registration_create_product_and_price_for_stripe( $post_data );
 				}
 			} catch ( \Exception $e ) {
 
