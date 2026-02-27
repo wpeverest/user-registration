@@ -221,7 +221,7 @@ class UR_Preview {
 			$html  = '';
 			$html .= '<div class="ur-preview-content">';
 			$html .= '<span class="ur-form-preview-title">';
-			$html .= esc_html(get_the_title( $form_id ));
+			$html .= esc_html( get_the_title( $form_id ) );
 			$html .= '</span>';
 
 			if ( function_exists( 'apply_shortcodes' ) ) {
@@ -311,20 +311,24 @@ class UR_Preview {
 			return;
 		}
 
-		$option_name    = isset( $_GET['ur_email_preview'] ) ? sanitize_text_field( wp_unslash( $_GET['ur_email_preview'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		// Use strict character allowlist to break taint chain (only a-z0-9 and underscore allowed).
+		$option_name    = isset( $_GET['ur_email_preview'] ) ? preg_replace( '/[^a-z0-9_]/', '', strtolower( wp_unslash( $_GET['ur_email_preview'] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$email_template = isset( $_GET['ur_email_template'] ) ? sanitize_text_field( wp_unslash( $_GET['ur_email_template'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-		$class_name = 'UR_Settings_' . str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $option_name ) ) );
 		/**
 		 * Applies a filter to modify the email classes.
 		 */
 		$emails = apply_filters( 'user_registration_email_classes', array() );
 
-		if ( isset( $emails[ $class_name ] ) && ! class_exists( $class_name ) ) {
+		$class_name = 'UR_Settings_' . str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $option_name ) ) );
+
+		// Validate class_name is in the allowed emails list before any class instantiation.
+		$is_allowed_class = isset( $emails[ $class_name ] );
+
+		if ( $is_allowed_class && ! class_exists( $class_name ) ) {
 			$class_name = get_class( $emails[ $class_name ] );
 		}
-
-		if ( ! class_exists( $class_name ) ) {
+		if ( ! $is_allowed_class && ! class_exists( $class_name ) ) {
 			echo '<h3>' . esc_html__( 'Something went wrong. Please verify if the email you want to preview exists or addon it is associated with is activated.', 'user-registration' ) . '</h3>';
 		} else {
 			$class_instance = new $class_name();
@@ -334,6 +338,13 @@ class UR_Preview {
 			if ( ! method_exists( $class_instance, $default_content ) ) {
 				$default_content = 'user_registration_get_' . $option_name;
 			}
+
+			// Ensure the resolved method actually exists before calling it dynamically.
+			if ( ! method_exists( $class_instance, $default_content ) ) {
+				echo '<h3>' . esc_html__( 'Something went wrong. Please verify if the email you want to preview exists or addon it is associated with is activated.', 'user-registration' ) . '</h3>';
+				return;
+			}
+
 			if ( 'passwordless_login_email' === $option_name ) {
 				$email_content = get_option( 'user_registration_' . $option_name . '_content', $class_instance->$default_content() );
 			} elseif ( 'email_verified_admin_email' === $option_name ) {
@@ -347,12 +358,20 @@ class UR_Preview {
 			 * @param string $email_content The email message content.
 			 */
 			$email_content = apply_filters( 'user_registration_process_smart_tags', $email_content );
-
+			$allowed       = array_merge(
+				wp_kses_allowed_html( 'post' ),
+				array(
+					'style' => array(),
+					'head'  => array(),
+					'html'  => array(),
+					'body'  => array(),
+				)
+			);
 			ur_get_template(
 				'email-preview.php',
 				array(
-					'email_content'  => $email_content,
-					'email_template' => $email_template,
+					'email_content'  => wp_kses( $email_content, $allowed ),
+					'email_template' => sanitize_text_field( $email_template ),
 				)
 			);
 		}

@@ -47,7 +47,7 @@ $redirect_btn_url  = ! empty( $attributes['redirect_page_id'] )
 		<div class="ur-message">
 			<p>
 			<?php
-				$username = isset( $_GET['username'] ) ? $_GET['username'] : '';
+				$username = isset( $_GET['username'] ) ? sanitize_text_field( wp_unslash( $_GET['username'] ) ) : '';
 
 				$values = array();
 
@@ -59,14 +59,14 @@ $redirect_btn_url  = ! empty( $attributes['redirect_page_id'] )
 
 				$main_content = apply_filters( 'user_registration_process_smart_tags', $main_content, $values );
 			}
-				echo $main_content;
+				echo wp_kses_post( $main_content );
 			?>
 			</p>
 
 			<?php if ( $show_bank_details && ! empty( $bank_data ) ) : ?>
 				<div class="ur-bank-details">
 					<p class="ur-bank-details-title" ><?php echo __( 'Bank Details :') ?></p>
-					<?php echo $bank_data; ?>
+					<?php echo wp_kses_post( $bank_data ); ?>
 				</div>
 			<?php endif; ?>
 		</div>

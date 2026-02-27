@@ -42,7 +42,7 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 		public function prepare_items() {
 			global $role, $usersearch, $wpdb;
 
-			$usersearch = isset( $_REQUEST['s'] ) ? wp_unslash( trim( $_REQUEST['s'] ) ) : ''; //phpcs:ignore
+			$usersearch = isset( $_REQUEST['s'] ) ? sanitize_text_field( wp_unslash( trim( $_REQUEST['s'] ) ) ) : ''; //phpcs:ignore
 
 			$users_per_page = $this->get_items_per_page( 'user_registration-membership_page_user_registration_users_per_page' );
 
@@ -72,11 +72,12 @@ if ( ! class_exists( 'MembersListTable' ) ) {
 			}
 
 			if ( isset( $_REQUEST['orderby'] ) ) {
-				$args['orderby'] = wp_unslash( $_REQUEST['orderby'] );
+				$args['orderby'] = sanitize_key( wp_unslash( $_REQUEST['orderby'] ) );
 			}
 
 			if ( isset( $_REQUEST['order'] ) ) {
-				$args['order'] = wp_unslash( $_REQUEST['order'] );
+				$order = strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) );
+				$args['order'] = in_array( $order, array( 'ASC', 'DESC' ), true ) ? $order : 'ASC';
 			}
 
 			/**

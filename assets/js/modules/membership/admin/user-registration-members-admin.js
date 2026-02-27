@@ -492,14 +492,11 @@
 				$(document)
 					.find(".urm-membership-subscription-status > span")
 					.remove();
+				var $statusSpan = $('<span class="user-registration-badge user-registration-badge--pending"></span>');
+				$statusSpan.text(membershipDetails.membership_detail.subscription_status);
 				$(document)
 					.find(".urm-membership-subscription-status")
-					.append(
-						'<span class="user-registration-badge user-registration-badge--pending">' +
-							membershipDetails.membership_detail
-								.subscription_status +
-							"</span>"
-					);
+					.append($statusSpan);
 				$(document)
 					.find(".urm-membership-expiry-date")
 					.text(membershipDetails.membership_detail.expiration_on);

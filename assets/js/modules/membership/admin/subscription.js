@@ -331,7 +331,9 @@
 				return;
 			}
 
-			var $newItems = $(response.data.html).find(
+			var $parsed = $("<div>").html(response.data.html);
+			$parsed.find("script").remove();
+			var $newItems = $parsed.find(
 				".ur-subscription__event"
 			);
 

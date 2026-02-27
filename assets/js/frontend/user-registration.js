@@ -100,7 +100,7 @@
 			 * @since 4.2.1
 			 */
 			ur_remove_cookie: function (cookie_key) {
-				document.cookie = cookie_key + "=; Max-Age=-99999999; path=/";
+				document.cookie = cookie_key + "=; Max-Age=-99999999; path=/" + (window.location.protocol === 'https:' ? '; Secure' : '') + "; SameSite=Strict";
 			}
 		};
 
@@ -1993,7 +1993,7 @@
 										}
 									} catch (e) {
 										message.append(
-											"<li>" + e.message + "</li>"
+											$("<li></li>").text(e.message)
 										);
 									}
 
@@ -2556,7 +2556,7 @@
 											}
 										} catch (e) {
 											message.append(
-												"<li>" + e.message + "</li>"
+												$("<li></li>").text(e.message)
 											);
 										}
 
@@ -3171,18 +3171,20 @@
 
 			},
 			success: function (response) {
-				var html = '';
+				var $stateElement;
 
 				if (response.success && response.data.has_state && '' !== response.data.state) {
-					html += '<select class="ur-field-address-state select ur-frontend-field" name="' + fieldId + '_state">';
-					html += response.data.state;
-					html += '</select>';
+					var $select = $('<select class="ur-field-address-state select ur-frontend-field"></select>');
+					$select.attr('name', fieldId + '_state');
+					$select.append($($.parseHTML(response.data.state, null, false)).filter('option'));
+					$stateElement = $select;
 				} else {
-					html += '<input type="text" class="ur-field-address-state input-text ur-frontend-field" name="' + fieldId + '_state"/>';
+					var $input = $('<input type="text" class="ur-field-address-state input-text ur-frontend-field"/>');
+					$input.attr('name', fieldId + '_state');
+					$stateElement = $input;
 				}
 
 				$( document ).find( '.ur-front-spinner' ).remove();
-				var $stateElement = $( html );
 
 				$stateWrapper.append( $stateElement );
 			}

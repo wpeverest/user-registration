@@ -1,6 +1,6 @@
 (function ($, wp) {
 	var $document = $(document);
-	(__ = wp.i18n.__), (_x = wp.i18n._x), (sprintf = wp.i18n.sprintf);
+	((__ = wp.i18n.__), (_x = wp.i18n._x), (sprintf = wp.i18n.sprintf));
 
 	if (
 		$(".user-registration").find(".user-registration-form-template-wrapper")
@@ -1107,13 +1107,10 @@ jQuery(function ($) {
 					type: "POST",
 					async: false
 				}).done(function (response) {
-					$target
-						.closest(".ur-template")
-						.append(
-							"<div class='user-registration-template-addons' style='display:none'>" +
-								response.data.html +
-								"</div>"
-						);
+					var $target_div =
+						"<div class='user-registration-template-addons' style='display:none'></div>";
+					$target_div.text(response.data.html);
+					$target.closest(".ur-template").append($target_div);
 					if (response.data.activate) {
 						$(
 							".user-registration-builder-setup .swal2-confirm"
