@@ -62,6 +62,11 @@ class Membership {
 			$parent_file  = 'user-registration';
 			$submenu_file = 'user-registration-membership';
 		}
+
+		if ( isset( $_GET['page'] ) && 'user-registration-membership' === $_GET['page'] && isset( $_GET['action'] ) && 'list_groups' === $_GET['action'] ) {
+			$parent_file  = 'user-registration';
+			$submenu_file = 'user-registration-membership&action=list_groups';
+		}
 	}
 
 	/**
