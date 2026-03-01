@@ -77,7 +77,7 @@ const ContentAccessRules = () => {
 	// Get rule ID from URL params
 	useEffect(() => {
 		const urlParams = new URLSearchParams(window.location.search);
-		const ruleId = urlParams.get("id");
+		const ruleId = urlParams.get("focus") || urlParams.get("id");
 		if (ruleId) {
 			const ruleIdNum = parseInt(ruleId, 10);
 			if (!isNaN(ruleIdNum)) {
@@ -247,7 +247,7 @@ const ContentAccessRules = () => {
 								...(rule.content || {}),
 								enabled
 							}
-						}
+					  }
 					: rule
 			)
 		);
