@@ -8,6 +8,7 @@ import {
 import {
 	__experimentalBoxControl as BoxControl,
 	Button,
+	CheckboxControl,
 	ColorPalette,
 	Dropdown,
 	Flex,
@@ -212,6 +213,7 @@ const Edit = (props) => {
 	const {
 		id,
 		group_id,
+		selected_membership_ids,
 		type,
 		button_text,
 		columnNumber,
@@ -231,6 +233,7 @@ const Edit = (props) => {
 	} = attributes;
 
 	const [groupList, setGroupList] = useState("");
+	const [membershipList, setMembershipList] = useState(null);
 
 	const useProps = useBlockProps();
 	const blockName = metadata.name;
@@ -244,7 +247,7 @@ const Edit = (props) => {
 		});
 	};
 
-	// Fetch groups only
+	// Fetch groups and membership list
 	const fetchData = async () => {
 		try {
 			if (!groupList) {
@@ -255,6 +258,22 @@ const Edit = (props) => {
 				});
 				if (res.success) {
 					setGroupList(res.group_lists);
+				}
+			}
+			if (membershipList === null) {
+				const res = await apiFetch({
+					path: `user-registration/v1/gutenberg-blocks/membership-list`,
+					method: "GET",
+					headers: { "X-WP-Nonce": urRestApiNonce }
+				});
+				if (res?.success && res.membership_list) {
+					setMembershipList(
+						Array.isArray(res.membership_list)
+							? res.membership_list
+							: Object.values(res.membership_list || {})
+					);
+				} else {
+					setMembershipList([]);
 				}
 			}
 		} catch (e) {
@@ -366,6 +385,13 @@ const Edit = (props) => {
 						options={[
 							{
 								label: __(
+									"Choose Memberships",
+									"user-registration"
+								),
+								value: "selected-memberships"
+							},
+							{
+								label: __(
 									"All memberships",
 									"user-registration"
 								),
@@ -378,26 +404,111 @@ const Edit = (props) => {
 						__next40pxDefaultSize
 					/>
 
-					<div className="ur-membership-listing-config-link">
-						<a
-							className="ur-membership-listing-config-link"
-							href={membership_group_url}
-							target="__blank"
-							rel="noreferrer"
-						>
-							{__(
-								"Configure groups from here",
-								"user-registration"
-							)}
-						</a>
-					</div>
+					{group_id === "selected-memberships" &&
+						membershipList &&
+						membershipList.length > 0 && (
+							<div
+								className="ur-membership-listing-selected-memberships"
+								style={{
+									marginTop: "12px",
+									marginBottom: "12px"
+								}}
+							>
+								<label className="components-base-control__label">
+									{__(
+										"Select memberships to display",
+										"user-registration"
+									)}
+								</label>
+								<div
+									className="ur-membership-listing-multiselect"
+									style={{
+										marginTop: "8px",
+										maxHeight: "200px",
+										overflowY: "auto",
+										border: "1px solid #ddd",
+										borderRadius: "2px",
+										padding: "8px"
+									}}
+								>
+									{membershipList.map((membership) => {
+										const membershipId = Number(
+											membership.ID
+										);
+										const label =
+											membership.title ||
+											membership.post_title ||
+											`#${membershipId}`;
+										const isChecked =
+											Array.isArray(
+												selected_membership_ids
+											) &&
+											selected_membership_ids.includes(
+												membershipId
+											);
+										return (
+											<CheckboxControl
+												key={membershipId}
+												label={label}
+												checked={isChecked}
+												onChange={(checked) => {
+													const next = checked
+														? [
+																...(selected_membership_ids ||
+																	[]),
+																membershipId
+														  ]
+														: (
+																selected_membership_ids ||
+																[]
+														  ).filter(
+																(id) =>
+																	id !==
+																	membershipId
+														  );
+													setAttributes({
+														selected_membership_ids:
+															next
+													});
+												}}
+											/>
+										);
+									})}
+								</div>
+							</div>
+						)}
 
-					<ToggleControl
-						__nextHasNoMarginBottom
-						label={__("Open in a new tab", "user-registration")}
-						checked={openInNewTab}
-						onChange={(v) => setAttributes({ openInNewTab: v })}
-					/>
+					{groupList &&
+						group_id !== "" &&
+						group_id !== "selected-memberships" && (
+							<>
+								<div className="ur-membership-listing-config-link">
+									<a
+										className="ur-membership-listing-config-link"
+										href={membership_group_url}
+										target="__blank"
+										rel="noreferrer"
+									>
+										{__(
+											"Configure groups from here",
+											"user-registration"
+										)}
+									</a>
+								</div>
+
+								<ToggleControl
+									__nextHasNoMarginBottom
+									label={__(
+										"Open in a new tab",
+										"user-registration"
+									)}
+									checked={openInNewTab}
+									onChange={(v) =>
+										setAttributes({ openInNewTab: v })
+									}
+								/>
+							</>
+						)}
 
 					{"list" !== type && (
 						<ToggleControl
