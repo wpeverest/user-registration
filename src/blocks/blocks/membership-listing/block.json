@@ -46,6 +46,10 @@
       "type": "string",
       "default": ""
     },
+    "selected_membership_ids": {
+      "type": "array",
+      "default": []
+    },
     "type": {
       "type": "string",
       "default": "list"
