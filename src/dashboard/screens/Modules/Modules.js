@@ -356,9 +356,13 @@ const Modules = () => {
 		}, 300) // Reduced debounce time for better responsiveness
 	);
 
-	const handleSearchInputChange = (e) => {
+	const handleSearchInputChange = (e) => { 
 		const val = e.target.value;
-		setState((prev) => ({ ...prev, searchItem: val }));
+		setState((prev) => ({
+			...prev,
+			searchItem: val,
+			selectedCategory: val.length >= 3 ? "All" : prev.selectedCategory
+		}));
 		searchItemRef.current = val;
 
 		// Only search if at least 3 characters are typed
