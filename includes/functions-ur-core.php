@@ -4758,7 +4758,6 @@ if ( ! function_exists( 'ur_get_premium_settings_tab' ) ) {
 							/* translators: %s: Addon Name. */
 							$description = sprintf( __( 'Please %1$s %2$s addon to use this feature.', 'user-registration' ), $action, ucwords( str_replace( '-', ' ', $detail['plugin'] ) ) );
 
-							// $button = '<a href="#" class="user-registration-settings-addon-' . strtolower( $action ) . '" data-slug="' . $detail['plugin'] . '" data-name="' . $plugin_name . '">' . sprintf( esc_html__( '%s Addon', 'user-registration' ), $action ) . '</a>';
 							$button_class = 'user-registration-settings-addon-' . strtolower( $action );
 							$button_attrs = array(
 								'data-slug' => $detail['plugin'],
@@ -5234,7 +5233,7 @@ if ( ! function_exists( 'ur_process_login' ) ) {
 					wp_send_json_success( array( 'message' => $redirect ) );
 					wp_send_json( $user );
 				} else {
-					wp_redirect( wp_validate_redirect( $redirect, $redirect ) );
+					wp_redirect( wp_validate_redirect( $redirect, $redirect ) ); // phpcs:ignore
 					exit;
 				}
 
@@ -5867,8 +5866,8 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 		$is_preview       = isset( $_GET['ur_email_preview'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$current_screen   = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		$is_settings_page = $current_screen && 'user-registration_page_user-registration-settings' === $current_screen->id;
-		$is_email_action  = isset( $_REQUEST['action'] ) && (
-				'ur_send_test_email' === $_REQUEST['action'] ||
+		$is_email_action  = isset( $_REQUEST['action'] ) && ( // phpcs:ignore
+				'ur_send_test_email' === $_REQUEST['action'] || // phpcs:ignore
 				strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore
 			);
 
