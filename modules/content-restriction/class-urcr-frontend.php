@@ -522,8 +522,21 @@ class URCR_Frontend {
 						if ( ( true === $should_allow_access && 'restrict' === $access_control ) || ( false == $should_allow_access && 'access' === $access_control ) ) {
 							do_action( 'urcr_pre_content_restriction_applied', $access_rule, $post );
 
-							// Use urcr_apply_content_restriction to update post content instead of template
-							$is_applied = urcr_apply_content_restriction( $access_rule['actions'], $post );
+							/**
+							 * Allows integration plugins to handle restriction for pages that don't use
+							 * $post->post_content (e.g. WooCommerce archives). Return true to skip the
+							 * default urcr_apply_content_restriction() call.
+							 *
+							 * @since x.x.x
+							 * @param bool  $handled     Whether restriction was already handled. Default false.
+							 * @param array $access_rule The current access rule array.
+							 * @param mixed $post        The target post/page object.
+							 */
+							$restriction_handled = apply_filters( 'urcr_restrict_page', false, $access_rule, $post );
+
+							if ( ! $restriction_handled ) {
+								urcr_apply_content_restriction( $access_rule['actions'], $post );
+							}
 
 							do_action( 'urcr_post_content_restriction_applied', $access_rule, $post );
 
@@ -536,6 +549,7 @@ class URCR_Frontend {
 		}
 		return $template;
 	}
+
 	/**
 	 * Restrict the WooCommerce Product Query by excluding a specific product category.
 	 *
@@ -698,7 +712,7 @@ class URCR_Frontend {
 	 * @return bool
 	 */
 	public function ur_user_can_view_woocommerce_product( $product_id ) {
-		$can_view                    = true;
+		$can_view = true;
 
 		if ( is_super_admin() ) {
 			return $can_view;
@@ -733,7 +747,7 @@ class URCR_Frontend {
 	 * @return bool
 	 */
 	public function ur_user_can_purchase_woocommerce_product( $product_id ) {
-		$can_purchase                = true;
+		$can_purchase = true;
 
 		if ( is_super_admin() ) {
 			return $can_purchase;
@@ -1059,7 +1073,7 @@ class URCR_Frontend {
 
 		if ( ! $is_restriction_applied && UR_PRO_ACTIVE && ur_check_module_activation( 'content-drip' ) ) {
 
-			//apply content dripping.
+			// apply content dripping.
 			$frontend = new WPEverest\URM\ContentDrip\Frontend();
 			return $frontend->apply_content_drip();
 		}
