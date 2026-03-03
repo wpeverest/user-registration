@@ -2626,7 +2626,12 @@ img.tips {
 		}
 
 		.tooltipster-content a {
-			color: #9ef01a !important;
+			color: #475bb2 !important;
+
+			&:focus{
+				outline: none;
+				box-shadow: 0 0 0 0 transparentize($primary_color, 0.5);
+			}
 		}
 	}
 
