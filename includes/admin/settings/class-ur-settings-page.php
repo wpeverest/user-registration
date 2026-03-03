@@ -134,7 +134,29 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 		 */
 		public function output_sections() {
 			global $current_section;
-
+			
+			$active_section = $current_section;
+	
+			if ( 'email' === $this->id && is_string( $current_section ) && 0 === strpos( $current_section, 'ur_settings_' ) && method_exists( $this, 'get_emails' ) ) {
+				$emails = $this->get_emails();
+				if ( is_array( $emails ) ) {
+					foreach ( $emails as $email ) {
+						if ( ! isset( $email->id, $email->receiver ) ) {
+							continue;
+						}
+						if ( 'ur_settings_' . $email->id !== $current_section ) {
+							continue;
+						}
+						$receiver = strtolower( $email->receiver );
+						if ( 'admin' === $receiver ) {
+							$active_section = 'to-admin';
+						} elseif ( 'user' === $receiver ) {
+							$active_section = 'to-user';
+						}
+						break;
+					}
+				}
+			}
 			$sections = $this->get_sections();
 
 			if ( empty( $sections ) ) {
@@ -183,8 +205,8 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 				if ( $show_section ) {
 					ob_start();
 					?>
-					<li <?php echo ( $current_section === $id ? ' class="current" ' : '' ); ?>>
-						<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) ); ?>" class="<?php echo( $current_section === $id ? 'current' : '' ); ?> ur-scroll-ui__item">
+					<li <?php echo ( $active_section === $id ? ' class="current" ' : '' ); ?>>
+						<a href="<?php echo esc_url( admin_url( 'admin.php?page=user-registration-settings&tab=' . $this->id . '&section=' . sanitize_title( $id ) ) ); ?>" class="<?php echo( $active_section === $id ? 'current' : '' ); ?> ur-scroll-ui__item">
 							<span class="timeline"></span>
 							<span class="submenu"><?php echo esc_html( $label ); ?></span>
 							<?php if ( $show_premium_icon ) : ?>
