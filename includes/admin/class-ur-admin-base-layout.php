@@ -49,10 +49,6 @@ class UR_Base_Layout {
 			$total_items = (int) $table->get_pagination_arg( 'total_items' );
 		}
 
-		$is_searching = isset( $_GET['s'] ) && '' !== trim( wp_unslash( $_GET['s'] ) );
-
-		$show_search = ( $total_items > 10 ) || $is_searching;
-
 		$is_membership_page = isset( $_GET['page'] ) && 'user-registration-membership' === $_GET['page'] && ! isset( $_GET['action'] ) ? true : false;
 
 		?>
