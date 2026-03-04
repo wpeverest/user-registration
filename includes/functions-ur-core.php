@@ -263,9 +263,8 @@ function ur_bool_to_string( $bool ) {
  * @param string $default_path Default path of template provided(default: '').
  */
 function ur_get_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
-	if ( ! empty( $args ) && is_array( $args ) ) {
-		extract( $args ); // phpcs:ignore.
-	}
+	// NOTE: extract() is intentionally deferred to the isolated closure below to prevent
+	// $args from overriding $template_name or other path-related variables.
 
 	$located = ur_locate_template( $template_name, $template_path, $default_path );
 
@@ -279,41 +278,88 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
 	 */
 	$located = apply_filters( 'ur_get_template', $located, $template_name, $args, $template_path, $default_path );
 
+	// 🔒 Use realpath() to resolve symlinks and '..' components before validation.
+	$real_located = realpath( $located );
+
+	// Plugin templates directory.
+	$real_plugin_path = realpath( UR_ABSPATH . 'templates' );
+
+	// Theme override directories (child + parent).
+	$real_child_path  = realpath( get_stylesheet_directory() . '/user-registration' );
+	$real_parent_path = realpath( get_template_directory() . '/user-registration' );
+
+	$path_allowed = false;
+	if ( false !== $real_located && false !== $real_plugin_path && 0 === strpos( $real_located, $real_plugin_path . DIRECTORY_SEPARATOR ) ) {
+		$path_allowed = true;
+	}
+	if ( ! $path_allowed && false !== $real_located && false !== $real_child_path && 0 === strpos( $real_located, $real_child_path . DIRECTORY_SEPARATOR ) ) {
+		$path_allowed = true;
+	}
+	if ( ! $path_allowed && false !== $real_located && false !== $real_parent_path && 0 === strpos( $real_located, $real_parent_path . DIRECTORY_SEPARATOR ) ) {
+		$path_allowed = true;
+	}
+
+	if ( ! $path_allowed ) {
+		_doing_it_wrong(
+			__FUNCTION__,
+			esc_html__( 'Template path is not allowed.', 'user-registration' ),
+			'1.0'
+		);
+		return;
+	}
+
 	if ( ! file_exists( $located ) ) {
-		_doing_it_wrong( __FUNCTION__, sprintf( '<code>%s</code> does not exist.', esc_html( $located ) ), '1.0' );
+		_doing_it_wrong(
+			__FUNCTION__,
+			sprintf( '<code>%s</code> does not exist.', esc_html( $located ) ),
+			'1.0'
+		);
 
 		return;
 	}
 
 	ob_start();
+
 	/**
 	 * Executes an action before including a template part.
 	 *
 	 * @param string $template_name Name of the template part.
 	 * @param string $template_path Path to the template part.
-	 * @param string $located Path to the located template file.
-	 * @param array $args Additional arguments passed to the template part.
+	 * @param string $located       Path to the located template file.
+	 * @param array  $args          Additional arguments passed to the template part.
 	 */
 	do_action( 'user_registration_before_template_part', $template_name, $template_path, $located, $args );
 
-	include $located;
+	// Isolated closure: extract() runs inside a separate scope so it cannot override
+	// $located or any other path-related variable in the outer function.
+	// EXTR_SKIP prevents the closure's own parameters from being overridden.
+	( function ( $ur_template_file, $ur_template_args ) {
+		if ( ! empty( $ur_template_args ) && is_array( $ur_template_args ) ) {
+			extract( $ur_template_args, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+		}
+		include $ur_template_file; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
+	} )( $located, $args );
+
 	/**
 	 * Executes an action after including a template part.
 	 *
 	 * @param string $template_name Name of the template part.
 	 * @param string $template_path Path to the template part.
-	 * @param string $located Path to the located template file.
-	 * @param array $args Additional arguments passed to the template part.
+	 * @param string $located       Path to the located template file.
+	 * @param array  $args          Additional arguments passed to the template part.
 	 */
 	do_action( 'user_registration_after_template_part', $template_name, $template_path, $located, $args );
+
 	$template_content = ob_get_clean();
+
 	/**
 	 * Filter hook to process the smart tags in the template content.
 	 *
 	 * @param string $template_content The template content.
 	 */
 	$template_content = apply_filters( 'user_registration_process_smart_tags', $template_content, array(), array() );
-	echo $template_content;  // phpcs:ignore.
+
+	echo $template_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -477,9 +523,12 @@ function ur_doing_it_wrong( $function, $message, $version ) {
  * @param integer $expire Expiry of the cookie.
  * @param string  $secure Whether the cookie should be served only over https.
  */
-function ur_setcookie( $name, $value, $expire = 0, $secure = false ) {
+function ur_setcookie( $name, $value, $expire = 0, $secure = null, $httponly = true ) {
+	if ( null === $secure ) {
+		$secure = is_ssl();
+	}
 	if ( ! headers_sent() ) {
-		setcookie( $name, $value, $expire, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, $secure );
+		setcookie( $name, $value, $expire, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, $secure, $httponly );
 	} elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 		headers_sent( $file, $line );
 		trigger_error( "{$name} cookie cannot be set - headers already sent by {$file} on line {$line}", E_USER_NOTICE ); //phpcs:ignore.
@@ -1127,6 +1176,12 @@ function ur_load_form_field_class( $class_key ) {
 	$class_path = apply_filters( 'user_registration_form_field_' . $class_key . '_path', $class_path );
 	/* Backward Compat since 1.4.0 */
 	if ( null != $class_path && file_exists( $class_path ) ) {
+		// Validate the resolved path to prevent directory traversal.
+		$real_class_path = realpath( $class_path );
+		$real_base_path  = realpath( UR_FORM_PATH );
+		if ( false === $real_class_path || false === $real_base_path || 0 !== strpos( $real_class_path, $real_base_path . DIRECTORY_SEPARATOR ) ) {
+			return '';
+		}
 		$class_name = 'UR_' . join( '_', array_map( 'ucwords', $exploded_class ) );
 		if ( ! class_exists( $class_name ) ) {
 			include_once $class_path;
@@ -3324,7 +3379,7 @@ if ( ! function_exists( 'ur_install_extensions' ) ) {
 					if ( $install_status['file'] === 'user-registration-pro/user-registration.php' ) {
 						$status['plugin'] = 'user-registration-pro/user-registration.php';
 						if ( ! is_plugin_active( 'user-registration-pro/user-registration.php' ) ) {
-							setcookie( 'urm_license_status', 'pro_activated', time() + 300, '/', '', false, false );
+							setcookie( 'urm_license_status', 'pro_activated', time() + 300, '/', '', is_ssl(), true );
 						}
 						activate_plugin( $install_status['file'] );
 					}
@@ -4527,14 +4582,14 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 						'feature_link' => ' https://wpuserregistration.com/features/pdf-form-submission/?utm_source=wp-admin&utm_medium=settings&utm_campaign=learn-more',
 					),
 				),
-				'sms-integration'  => array(
+				'sms-integration' => array(
 					'label'  => esc_html__( 'SMS Integration', 'user-registration' ),
 					'plugin' => 'user-registration-sms-integration',
 					'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 					'name'   => esc_html__( 'User Registration SMS Integration', 'user-registration' ),
 					'upsell' => array(
-						'excerpt'    => 'Send SMS OTP for login and verification via Twilio.',
-						'description' => array(
+						'excerpt'      => 'Send SMS OTP for login and verification via Twilio.',
+						'description'  => array(
 							'Connect with Twilio for SMS delivery',
 							'Enable OTP-based login and registration verification',
 						),
@@ -5807,7 +5862,7 @@ if ( ! function_exists( 'user_registration_process_email_content' ) ) {
 			?>
 			<div class="user-registration-email-body" style="padding: 100px 0; background-color: #ebebeb;">
 				<table class="user-registration-email" border="0" cellpadding="0" cellspacing="0"
-					   style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
+						style="width: <?php echo esc_attr( $email_body_width ); ?>; margin: 0 auto; background: #ffffff; padding: 30px 30px 26px; border: 0.4px solid #d3d3d3; border-radius: 11px; font-family: 'Segoe UI', sans-serif; ">
 					<tbody>
 					<tr>
 						<td colspan="2" style="text-align: left;">
@@ -5846,8 +5901,8 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 
 		// Only exclude CSS when on settings page displaying editor (not when sending emails).
 		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action &&
-							 ! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
-							 ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
+							! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
+							! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
 
 		// Responsive CSS styles for email template - only include when not in editor context.
 		$responsive_styles = '';
@@ -6743,7 +6798,7 @@ if ( ! function_exists( 'user_registration_validate_edit_profile_form_field_data
 			if ( 'user_email' === $single_form_field->field_key ) {
 				// Do not allow admin to update others email, case may change in future
 				// if ( ! email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && $user_id !== get_current_user_id() ) {
-				// 	ur_add_notice( esc_html__( 'Email field is not editable.', 'user-registration' ), 'error' );
+				//  ur_add_notice( esc_html__( 'Email field is not editable.', 'user-registration' ), 'error' );
 				// }
 				// Check if email already exists before updating user details.
 				if ( email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) && email_exists( sanitize_text_field( wp_unslash( $single_field_value ) ) ) !== $user_id ) {
@@ -7037,7 +7092,7 @@ if ( ! function_exists( 'user_registration_edit_profile_row_template' ) ) {
 
 						if ( isset( $advance_data['general_setting']->required ) ) {
 							if ( in_array( $single_item->field_key, ur_get_required_fields() )
-								 || ur_string_to_bool( $advance_data['general_setting']->required ) ) {
+								|| ur_string_to_bool( $advance_data['general_setting']->required ) ) {
 								$field['required']                      = true;
 								$field['custom_attributes']['required'] = 'required';
 							}
@@ -7352,14 +7407,14 @@ if ( ! function_exists( 'ur_check_is_inactive' ) ) {
 	 */
 	function ur_check_is_inactive() {
 		if ( ! ur_check_module_activation( 'membership' ) ||
-			 current_user_can( 'manage_options' ) ||
-			 ( ! empty( $_POST['action'] ) && in_array(
-					 $_POST['action'],
-					 array(
-						 'user_registration_membership_confirm_payment',
-						 'user_registration_membership_create_stripe_subscription',
-					 )
-				 ) )
+			current_user_can( 'manage_options' ) ||
+			( ! empty( $_POST['action'] ) && in_array(
+				$_POST['action'],
+				array(
+					'user_registration_membership_confirm_payment',
+					'user_registration_membership_create_stripe_subscription',
+				)
+			) )
 		) {
 			return;
 		}
@@ -9428,7 +9483,7 @@ if ( ! function_exists( 'render_login_option_settings' ) ) {
 							cols="' . esc_attr( $value['cols'] ) . '"
 							placeholder="' . esc_attr( $value['placeholder'] ) . '"
 							' . esc_html( implode( ' ', $custom_attributes ) ) . '>'
-								 . esc_textarea( $option_value ) . '</textarea>';
+								. esc_textarea( $option_value ) . '</textarea>';
 					$settings .= '</div>';
 					$settings .= '</div>';
 					break;

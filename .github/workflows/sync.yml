@@ -2,7 +2,7 @@ name: Sync Files To Pro
 on:
     push:
         branches:
-            - master
+            - UR-4225-fix/triage-snyk-vulnerability-report-findings
         workflow_dispatch:
 jobs:
     sync:

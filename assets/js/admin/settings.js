@@ -826,7 +826,9 @@
 		function () {
 			var $url = $("#user_registration_login_options_prevent_core_login");
 
-			$("#user_registration_login_options_login_redirect_url").closest(".single_select_page").toggle();
+			$("#user_registration_login_options_login_redirect_url")
+				.closest(".single_select_page")
+				.toggle();
 			$("#user_registration_login_options_login_redirect_url").prop(
 				"required",
 				function () {
@@ -1393,8 +1395,15 @@
 
 			localStorage.setItem("isSidebarEnabled", isCheckboxChecked);
 
+			var isSecure = window.location.protocol === "https:";
+			var cookieAttributes =
+				"; path=/" +
+				(isSecure ? "; Secure" : "") + // Secure only over HTTPS
+				"; SameSite=" +
+				(isSecure ? "Strict" : "Lax"); // Strict on prod, Lax on dev
+
 			document.cookie =
-				"isSidebarEnabled=" + isCheckboxChecked + "; path=/;";
+				"isSidebarEnabled=" + isCheckboxChecked + cookieAttributes;
 
 			if (isCheckboxChecked) {
 				$("body")
@@ -1646,32 +1655,34 @@
 			type: "POST",
 			complete: function (response) {
 				if (response.responseJSON.status === false) {
-						var disableSaveBtn = response.responseJSON.disable_save_btn;
-						var className = 'error';
-						var inlineStyle = "padding:10px;";
+					var disableSaveBtn = response.responseJSON.disable_save_btn;
+					var className = "error";
+					var inlineStyle = "padding:10px;";
 
-						if (typeof disableSaveBtn === "undefined") {
-							$this
-								.closest("form")
-								.find("input[name='save']")
-								.prop("disabled", true);
-
-						} else if (disableSaveBtn === "no") {
-							className += ' settings-page-notice';
-							$this
-								.closest("form")
-								.find("input[name='save']")
-								.prop("disabled", false);
-						}
-
+					if (typeof disableSaveBtn === "undefined") {
 						$this
+							.closest("form")
+							.find("input[name='save']")
+							.prop("disabled", true);
+					} else if (disableSaveBtn === "no") {
+						className += " settings-page-notice";
+						$this
+							.closest("form")
+							.find("input[name='save']")
+							.prop("disabled", false);
+					}
+
+					$this
 						.closest(".user-registration-global-settings--field")
 						.append(
-							"<div id='message' class='" + className +  " inline' style='" + inlineStyle + "'>" +
+							"<div id='message' class='" +
+								className +
+								" inline' style='" +
+								inlineStyle +
+								"'>" +
 								response.responseJSON.message +
 								"</div>"
 						);
-
 				} else {
 					if (
 						$this
@@ -2202,7 +2213,11 @@
 	 * Deletes the cookie values.
 	 */
 	function ur_remove_cookie(cookie_key) {
-		document.cookie = cookie_key + "=; Max-Age=-99999999; path=/";
+		document.cookie =
+			cookie_key +
+			"=; Max-Age=-99999999; path=/" +
+			(window.location.protocol === "https:" ? "; Secure" : "") +
+			"; SameSite=Strict";
 	}
 
 	$(document).on(
@@ -2609,9 +2624,13 @@
 			var $modeSelector = $(gatewayMap[gatewayToggleId]);
 
 			if ($modeSelector.length > 0) {
-				if (gatewayToggleId === 'user_registration_paypal_enabled') {
-					var value =  $("#user_registration_global_paypal_mode").length > 0 && $("#user_registration_global_paypal_mode").val() ? $("#user_registration_global_paypal_mode").val() : 'test';
-					$modeSelector.val( value );
+				if (gatewayToggleId === "user_registration_paypal_enabled") {
+					var value =
+						$("#user_registration_global_paypal_mode").length > 0 &&
+						$("#user_registration_global_paypal_mode").val()
+							? $("#user_registration_global_paypal_mode").val()
+							: "test";
+					$modeSelector.val(value);
 				}
 				setTimeout(function () {
 					$modeSelector.trigger("change");
@@ -2657,6 +2676,8 @@
 	});
 	$(document).ready(function () {
 		$(".urm_toggle_pg_status").trigger("change");
-		$( "#user_registration_member_registration_page_id, #user_registration_thank_you_page_id").trigger( 'change' );
+		$(
+			"#user_registration_member_registration_page_id, #user_registration_thank_you_page_id"
+		).trigger("change");
 	});
 })(jQuery);
