@@ -1219,4 +1219,53 @@ class SubscriptionService {
 
 		return $expiry_date <= $today;
 	}
+
+	/**
+	 * Callback for missed payment check.
+	 */
+	public function membership_missed_payment_check() {
+
+    	$last_synced = (int) get_option( 'urm_last_missed_payment_events_check_sync_time', 0 );
+		$now = time();
+
+		if ( $last_synced <= 0 ) {
+			$last_synced = $now - 3 * MONTH_IN_SECONDS; // fallback to 3 months back if no previous sync time found, to avoid missing old events.
+		}
+
+    	$this->urm_backfill_missed_payment_events( $last_synced, $now );
+
+		update_option('urm_last_missed_payment_events_check_sync_time', $now);
+	}
+
+	/**
+	 * Backfill missed payment events from payment providers.
+	 *
+	 * This method fetches payment provider events for subscription updates and payment successes that occurred between the last synced time and now. It then processes these events to update the local subscription records and create any missing payment records in the database.
+	 *
+	 * @param int $last_synced The timestamp of the last successful sync, used to fetch events that occurred after this time.
+	 * @param int|null $now The current timestamp, used to limit the events fetched. If null, it defaults to the current time.
+	 * @return void
+	 */
+	public function urm_backfill_missed_payment_events($last_synced, $now = null) {
+		if ( $now === null ) {
+			$now = time();
+		}
+
+		$payment_gateways = get_option( 'ur_membership_payment_gateways', array() );
+
+		if( ! empty( $payment_gateways ) ) {
+			foreach ( $payment_gateways as $gateway_key => $gateway_details ) {
+				switch ( $gateway_key ) {
+					case 'stripe':
+						$stripe_service = new StripeService();
+						$stripe_service->run_missed_subscription_backfill( $last_synced );
+						$stripe_service->run_missed_payment_backfill( $last_synced );
+						break;
+					default:
+						do_action( 'urm_fetch_and_process_missed_payment_events_for_gateway', $gateway_key, $last_synced, $now );
+						break;
+				}
+			}
+		}
+	}
 }
