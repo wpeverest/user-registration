@@ -1975,6 +1975,8 @@
 			cursor: "move",
 			opacity: 0.8,
 			placeholder: "ur-sortable-placeholder",
+			axis: "y",
+			containment: $membershipTable,
 			helper: function (e, tr) {
 				// Capture initial order before the drag starts affecting the DOM
 				// Get order from all rows in their original positions
