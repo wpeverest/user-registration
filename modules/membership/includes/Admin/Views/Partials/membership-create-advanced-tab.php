@@ -82,6 +82,8 @@
 			<?php
 			$is_upgrade_enabled = isset( $membership_details['upgrade_settings']['upgrade_action'] ) && true == $membership_details['upgrade_settings']['upgrade_action'];
 			$is_upgrade_allowed = true;
+			$membership_count  = is_array( $memberships ) ? count( $memberships ) : 0;
+			$can_set_upgrade   = $membership_count >= 2;
 
 			if ( isset( $_GET['post_id'] ) ) {
 				$membership_group_repository = new WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository();
@@ -109,14 +111,24 @@
 							<input data-key-name="Upgrade Action" id="ur-membership-upgrade-action" type="checkbox"
 									class="user-registration-switch__control hide-show-check enabled"
 									<?php echo $is_upgrade_enabled ? 'checked' : ''; ?>
+									<?php echo ! $can_set_upgrade ? 'disabled' : ''; ?>
 									name="ur_membership_upgrade_action" style="width: 100%; text-align: left">
 							<span class="slider round"></span>
 						</span>
 					</div>
 				</div>
+				<?php if ( ! $can_set_upgrade ) : ?>
+				<div class="ur-membership-upgrade-action-notice ur-mt-2" style="margin-top: 12px; padding: 8px; background: #f8f9fc; border: 1px solid #475bb2; border-radius: 6px; color: #383838; font-size: 14px; line-height: 1.5;">
+					<?php
+					$create_membership_url = admin_url( 'admin.php?page=user-registration-membership' );
+					echo esc_html__( 'Please create more memberships to set an upgrade action.', 'user-registration' );
+					?>
+					<a href="<?php echo esc_url( $create_membership_url ); ?>" style="color: #2271b1; text-decoration: underline;"><?php esc_html_e( 'Create membership', 'user-registration' ); ?></a>
+				</div>
+				<?php endif; ?>
 
 				<!-- Upgrade Settings Container -->
-				<div id="upgrade-settings-container" class="ur-membership-selection-container" style="<?php echo true === $is_upgrade_enabled ? '' : 'display: none'; ?>">
+				<div id="upgrade-settings-container" class="ur-membership-selection-container" style="<?php echo ( $can_set_upgrade && true === $is_upgrade_enabled ) ? '' : 'display: none'; ?>">
 					<!-- Membership Upgrade Path Field -->
 					<div class="ur-membership-input-container ur-d-flex ur-align-items-center" style="gap:20px;">
 						<div class="ur-label" style="width: 30%; margin-bottom: 0;">
