@@ -78,6 +78,7 @@ class MembershipService {
 	 *               or an error message and status on failure.
 	 */
 	public function create_membership_order_and_subscription( $data ) {
+
 		try {
 			$this->members_repository->wpdb()->query( 'START TRANSACTION' ); // Start the transaction.
 			$members_data = $this->members_service->prepare_members_data( $data, 'frontend' );
@@ -106,11 +107,11 @@ class MembershipService {
 						$team_name = 'Team-#' . $team_index;
 					}
 					$team_id = wp_insert_post(
-						[
+						array(
 							'post_type'   => 'ur_membership_team',
 							'post_title'  => $team_name,
 							'post_status' => 'publish',
-						]
+						)
 					);
 
 					if ( 0 === $team_id ) {
@@ -487,8 +488,8 @@ class MembershipService {
 				$membership_field_exists = true;
 			}
 		}
-		$response['status']  = $membership_field_exists;
-		$response['message'] = ! $membership_field_exists ? __( 'The selected page consist a User Registration & Membership Form but no membership field.' ) : '';
+		$response['status']           = $membership_field_exists;
+		$response['message']          = ! $membership_field_exists ? __( 'The selected page consist a User Registration & Membership Form but no membership field.' ) : '';
 		$response['disable_save_btn'] = 'no';
 
 		return $response;
@@ -902,12 +903,14 @@ class MembershipService {
 				$delayed_until                = '';
 
 				if ( $subscription_service->is_user_membership_expired( $current_user_id, $current_membership_id ) ) {
-					$chargeable_amount    = $upgrade_service->calculate_chargeable_amount(
+					$chargeable_amount               = $upgrade_service->calculate_chargeable_amount(
 						$selected_membership_amount,
 						$current_membership_amount,
 						$upgrade_type
 					);
-					$membership['amount'] = $chargeable_amount;
+					$membership['calculated_amount'] = $chargeable_amount;
+				} else {
+					$membership['calculated_amount'] = $upgrade_details['chargeable_amount'] ?? $selected_membership_amount;
 				}
 			}
 			unset( $membership );
