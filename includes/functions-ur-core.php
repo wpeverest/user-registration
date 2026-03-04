@@ -9913,7 +9913,7 @@ if ( ! function_exists( 'ur_register_endpoints_translations' ) ) {
 				'lost-password'   => get_endpoint_translation( 'lost-password', $ur_vars['lost-password'], $language ),
 				'user-logout'     => get_endpoint_translation( 'user-logout', $ur_vars['user-logout'], $language ),
 			);
-			$query_vars = apply_filters( 'wcml_register_endpoints_query_vars', $query_vars, $ur_vars, $this );
+			$query_vars = apply_filters( 'wcml_register_endpoints_query_vars', $query_vars, $ur_vars, UR()->query );
 
 			$query_vars             = array_merge( $ur_vars, $query_vars );
 			UR()->query->query_vars = $query_vars;
