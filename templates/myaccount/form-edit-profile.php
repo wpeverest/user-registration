@@ -70,7 +70,7 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 	if ( ! $is_edit_action ) {
 		?>
 		<div class="user-registration-MyAccount-content__header-buttons">
-			<a href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-profile' ) . '?action="edit"' ); ?>" class="user-registration-Button button-secondary urm-profile-action-toggle"><?php esc_html_e( 'Edit Profile', 'user-registration' ); ?></a>
+			<a href="<?php echo esc_url( add_query_arg( 'action', 'edit', ur_get_account_endpoint_url( 'edit-profile' ) ) ); ?>" class="user-registration-Button button-secondary urm-profile-action-toggle"><?php esc_html_e( 'Edit Profile', 'user-registration' ); ?></a>
 			<a href="<?php echo esc_url( ur_get_account_endpoint_url( 'edit-password' ) ); ?>" class="user-registration-Button button-secondary urm-profile-change-password-btn"><?php esc_html_e( 'Change Password', 'user-registration' ); ?></a>
 		</div>
 		<?php
