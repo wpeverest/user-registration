@@ -223,9 +223,10 @@ if ( ! class_exists( 'Hooks' ) ) :
 				echo '</div></div>';
 				return;
 			} elseif ( CourseAccessMode::NEED_REGISTRATION === $course->get_access_mode() ) {
-					echo '<div class="masteriyo-single-course-stats urm-masteriyo-membership-list">';
-					echo '<span>' . esc_html__( 'This course is not associated with any membership.', 'user-registration' ) . '</span><br />';
-					echo '</div>';
+				echo '<div class="masteriyo-single-course-stats urm-masteriyo-membership-list">';
+				echo '<span>' . esc_html__( 'This course is not associated with any membership.', 'user-registration' ) . '</span><br />';
+				echo '</div>';
+				echo '<style>.masteriyo-enroll-btn{display:none !important;}</style>';
 			} else {
 				return;
 			}
