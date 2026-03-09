@@ -809,7 +809,8 @@ class AJAX {
 			);
 		}
 		$members_ids        = wp_unslash( $_POST['members_ids'] );
-		$members_ids        = implode( ',', json_decode( $members_ids, true ) );
+		$members_ids        = array_map( 'absint', (array) json_decode( $members_ids, true ) );
+		$members_ids        = implode( ',', $members_ids );
 		$members_repository = new MembersRepository();
 		$deleted            = $members_repository->delete_multiple( $members_ids );
 		if ( $deleted ) {

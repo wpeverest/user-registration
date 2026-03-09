@@ -238,8 +238,8 @@ class Orders {
 	</div>
 	<hr>
 	<form method="get" id="ur-membership-payment-history-form">
-		<input type="hidden" name="page" value="<?php echo $this->page; ?>" />
-		<input type="hidden" name="action" value="<?php echo $_GET['action']; ?>" />
+		<input type="hidden" name="page" value="<?php echo esc_attr( $this->page ); ?>" />
+		<input type="hidden" name="action" value="<?php echo isset( $_GET['action'] ) ? esc_attr( sanitize_text_field( wp_unslash( $_GET['action'] ) ) ) : ''; ?>" />
 		<div>
 			<strong>Important Note:</strong>
 			This form is intended only to record missed payments for tracking purposes. Adding a payment here does not

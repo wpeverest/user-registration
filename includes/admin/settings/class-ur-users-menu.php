@@ -169,16 +169,16 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 				'user-registration-pro-users',
 				'urUsersl10n',
 				array(
-					'user_registration_form_data_save'  => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
+					'user_registration_form_data_save'     => wp_create_nonce( 'user_registration_form_data_save_nonce' ),
 					'user_registration_profile_details_save' => wp_create_nonce( 'user_registration_profile_details_save_nonce' ),
 					'user_registration_profile_picture_upload_nonce' => wp_create_nonce( 'user_registration_profile_picture_upload_nonce' ),
 					'user_registration_profile_picture_remove_nonce' => wp_create_nonce( 'user_registration_profile_picture_remove_nonce' ),
-					'login_option'                      => get_option( 'user_registration_general_setting_login_options' ),
-					'recaptcha_type'                    => get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
+					'login_option'                         => get_option( 'user_registration_general_setting_login_options' ),
+					'recaptcha_type'                       => get_option( 'user_registration_captcha_setting_recaptcha_version', 'v2' ),
 					'user_registration_profile_picture_uploading' => esc_html__( 'Uploading...', 'user-registration' ),
 					'user_registration_profile_picture_removing' => esc_html__( 'Removing...', 'user-registration' ),
-					'ajax_submission_on_edit_profile'   => ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ),
-					'ursL10n'                           => array(
+					'ajax_submission_on_edit_profile'      => ur_option_checked( 'user_registration_ajax_form_submission_on_edit_profile', false ),
+					'ursL10n'                              => array(
 						'user_successfully_saved'     => get_option( 'user_registration_successful_form_submission_message_manual_registation', esc_html__( 'User successfully registered.', 'user-registration' ) ),
 						'user_under_approval'         => get_option( 'user_registration_successful_form_submission_message_admin_approval', esc_html__( 'User registered. Wait until admin approves your registration.', 'user-registration' ) ),
 						'user_email_pending'          => get_option( 'user_registration_successful_form_submission_message_email_confirmation', esc_html__( 'User registered. Verify your email by clicking on the link sent to your email.', 'user-registration' ) ),
@@ -189,26 +189,26 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 						'i18n_discount_total_zero'    => esc_html__( 'Discounted amount cannot be less than or equals to Zero. Please adjust your coupon code.', 'user-registration' ),
 						'password_strength_error'     => esc_html__( 'Password strength is not strong enough', 'user-registration' ),
 					),
-					'ajax_form_submit_error'            => esc_html__( 'Something went wrong while submitting form through AJAX request. Please contact site administrator.', 'user-registration' ),
-					'ajax_url'                          => admin_url( 'admin-ajax.php' ),
-					'change_column_nonce'               => wp_create_nonce( 'ur-users-column-change' ),
-					'user_registration_edit_user_nonce' => wp_create_nonce( 'user_registration_profile_details_save_nonce' ),
-					'message_required_fields'           => get_option( 'user_registration_form_submission_error_message_required_fields', esc_html__( 'This field is required.', 'user-registration' ) ),
-					'message_email_fields'              => get_option( 'user_registration_form_submission_error_message_email', esc_html__( 'Please enter a valid email address.', 'user-registration' ) ),
-					'message_url_fields'                => get_option( 'user_registration_form_submission_error_message_website_URL', esc_html__( 'Please enter a valid URL.', 'user-registration' ) ),
-					'message_number_fields'             => get_option( 'user_registration_form_submission_error_message_number', esc_html__( 'Please enter a valid number.', 'user-registration' ) ),
-					'message_confirm_password_fields'   => get_option( 'user_registration_form_submission_error_message_confirm_password', esc_html__( 'Password and confirm password not matched.', 'user-registration' ) ),
-					'message_min_words_fields'          => get_option( 'user_registration_form_submission_error_message_min_words', esc_html__( 'Please enter at least %qty% words.', 'user-registration' ) ),
-					'message_validate_phone_number'     => get_option( 'user_registration_form_submission_error_message_phone_number', esc_html__( 'Please enter a valid phone number.', 'user-registration' ) ),
-					'message_username_character_fields' => get_option( 'user_registration_form_submission_error_message_disallow_username_character', esc_html__( 'Please enter a valid username.', 'user-registration' ) ),
-					'message_confirm_email_fields'      => get_option( 'user_registration_form_submission_error_message_confirm_email', esc_html__( 'Email and confirm email not matched.', 'user-registration' ) ),
-					'message_confirm_number_field_max'  => esc_html__( 'Please enter a value less than or equal to %qty%.', 'user-registration' ),
-					'message_confirm_number_field_min'  => esc_html__( 'Please enter a value greater than or equal to %qty%.', 'user-registration' ),
-					'message_confirm_number_field_step' => esc_html__( 'Please enter a multiple of %qty%.', 'user-registration' ),
-					'form_required_fields'              => ur_get_required_fields(),
-					'edit_user_set_new_password'        => esc_html__( 'Set New Password', 'user-registration' ),
-					'is_payment_compatible'             => true,
-					'delete_prompt'                     => array(
+					'ajax_form_submit_error'               => esc_html__( 'Something went wrong while submitting form through AJAX request. Please contact site administrator.', 'user-registration' ),
+					'ajax_url'                             => admin_url( 'admin-ajax.php' ),
+					'change_column_nonce'                  => wp_create_nonce( 'ur-users-column-change' ),
+					'user_registration_edit_user_nonce'    => wp_create_nonce( 'user_registration_profile_details_save_nonce' ),
+					'message_required_fields'              => get_option( 'user_registration_form_submission_error_message_required_fields', esc_html__( 'This field is required.', 'user-registration' ) ),
+					'message_email_fields'                 => get_option( 'user_registration_form_submission_error_message_email', esc_html__( 'Please enter a valid email address.', 'user-registration' ) ),
+					'message_url_fields'                   => get_option( 'user_registration_form_submission_error_message_website_URL', esc_html__( 'Please enter a valid URL.', 'user-registration' ) ),
+					'message_number_fields'                => get_option( 'user_registration_form_submission_error_message_number', esc_html__( 'Please enter a valid number.', 'user-registration' ) ),
+					'message_confirm_password_fields'      => get_option( 'user_registration_form_submission_error_message_confirm_password', esc_html__( 'Password and confirm password not matched.', 'user-registration' ) ),
+					'message_min_words_fields'             => get_option( 'user_registration_form_submission_error_message_min_words', esc_html__( 'Please enter at least %qty% words.', 'user-registration' ) ),
+					'message_validate_phone_number'        => get_option( 'user_registration_form_submission_error_message_phone_number', esc_html__( 'Please enter a valid phone number.', 'user-registration' ) ),
+					'message_username_character_fields'    => get_option( 'user_registration_form_submission_error_message_disallow_username_character', esc_html__( 'Please enter a valid username.', 'user-registration' ) ),
+					'message_confirm_email_fields'         => get_option( 'user_registration_form_submission_error_message_confirm_email', esc_html__( 'Email and confirm email not matched.', 'user-registration' ) ),
+					'message_confirm_number_field_max'     => esc_html__( 'Please enter a value less than or equal to %qty%.', 'user-registration' ),
+					'message_confirm_number_field_min'     => esc_html__( 'Please enter a value greater than or equal to %qty%.', 'user-registration' ),
+					'message_confirm_number_field_step'    => esc_html__( 'Please enter a multiple of %qty%.', 'user-registration' ),
+					'form_required_fields'                 => ur_get_required_fields(),
+					'edit_user_set_new_password'           => esc_html__( 'Set New Password', 'user-registration' ),
+					'is_payment_compatible'                => true,
+					'delete_prompt'                        => array(
 						'icon'                   => plugins_url( 'assets/images/users/delete-user-red.svg', UR_PLUGIN_FILE ),
 						'title'                  => __( 'Delete User', 'user-registration' ),
 						'confirm_message_single' => __( 'Are you sure you want to delete this user?', 'user-registration' ),
@@ -424,7 +424,8 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 		 */
 		public function render_single_user_details() {
 
-			$user_id = sanitize_text_field( wp_unslash( $_REQUEST['user_id'] ) );
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended
+			$user_id = absint( wp_unslash( $_REQUEST['user_id'] ) );
 			$user    = get_userdata( $user_id );
 
 			if ( ! $user ) {
@@ -503,14 +504,26 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 		 * @return void
 		 */
 		public function render_user_profile( $user_id ) {
-			$user   = get_userdata( $user_id );
-			$avatar = get_avatar( $user_id, 900 );
-
+			$user                = get_userdata( $user_id );
+			$avatar              = get_avatar( $user_id, 900 );
+			$allowed_avatar_html = array(
+				'img' => array(
+					'src'      => true,
+					'srcset'   => true,
+					'alt'      => true,
+					'width'    => true,
+					'height'   => true,
+					'class'    => true,
+					'id'       => true,
+					'loading'  => true,
+					'decoding' => true,
+				),
+			);
 			?>
 			<div class="sidebar-box">
 				<div class="user-profile">
 					<div class="user-avatar">
-						<?php echo $avatar; ?>
+						<?php echo wp_kses( $avatar, $allowed_avatar_html ); ?>
 					</div>
 					<p class="user-login">@<?php echo esc_html( $user->user_login ); ?> </p>
 				</div>
@@ -586,7 +599,7 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 
 					$actions['approve'] = sprintf(
 						'<a href="%s">%s <p>%s</p></a>',
-						$approve_link,
+						esc_url( $approve_link ),
 						'<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 							<path fill="#000" fill-rule="evenodd" d="M8.5 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm-5 3a5 5 0 1 1 10 0 5 5 0 0 1-10 0Zm-2.036 8.464A5 5 0 0 1 5 14h7a5 5 0 0 1 5 5v2a1 1 0 1 1-2 0v-2a3 3 0 0 0-3-3H5a3 3 0 0 0-3 3v2a1 1 0 1 1-2 0v-2a5 5 0 0 1 1.464-3.536Zm22.243-5.757a1 1 0 0 0-1.414-1.414L19 11.586l-1.293-1.293a1 1 0 1 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4Z" clip-rule="evenodd"/>
 						</svg>',
@@ -598,7 +611,7 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 
 					$actions['deny'] = sprintf(
 						'<a href="%s">%s <p>%s</p></a>',
-						$deny_link,
+						esc_url( $deny_link ),
 						'<svg xmlns="http://www.w3.org/2000/svg" fill="#fff4f4" viewBox="0 0 24 24">
 							<path fill="#000" fill-rule="evenodd" d="M6 7a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm3-5a5 5 0 1 0 0 10A5 5 0 0 0 9 2ZM6 14a5 5 0 0 0-5 5v2a1 1 0 1 0 2 0v-2a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v2a1 1 0 1 0 2 0v-2a5 5 0 0 0-5-5H6Zm10.293-6.707a1 1 0 0 1 1.414 0L19.5 9.086l1.793-1.793a1 1 0 1 1 1.414 1.414L20.914 10.5l1.793 1.793a1 1 0 0 1-1.414 1.414L19.5 11.914l-1.793 1.793a1 1 0 0 1-1.414-1.414l1.793-1.793-1.793-1.793a1 1 0 0 1 0-1.414Z" clip-rule="evenodd"/>
 						</svg>',
@@ -618,7 +631,7 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 
 				$actions['request_password_reset'] = sprintf(
 					'<a href="%s" rel="noreferrer noopener" target="_blank">%s <p>%s</p></a>',
-					$password_reset_link,
+					esc_url( $password_reset_link ),
 					'<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 						<path fill="#000" fill-rule="evenodd" d="M12 2h-.004a10.75 10.75 0 0 0-7.431 3.021l-.012.012L4 5.586V3a1 1 0 1 0-2 0v5a.997.997 0 0 0 1 1h5a1 1 0 0 0 0-2H5.414l.547-.547A8.75 8.75 0 0 1 12.001 4 8 8 0 1 1 4 12a1 1 0 1 0-2 0A10 10 0 1 0 12 2Z" clip-rule="evenodd"/>
 					</svg>',
@@ -643,7 +656,7 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 					);
 					$actions['disable_user'] = sprintf(
 						'<a href="%s" >%s <p>%s</p></a>',
-						$enable_link,
+						esc_url( $enable_link ),
 						'<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 						<path fill="#000" fill-rule="evenodd" d="M12 2h-.004a10.75 10.75 0 0 0-7.431 3.021l-.012.012L4 5.586V3a1 1 0 1 0-2 0v5a.997.997 0 0 0 1 1h5a1 1 0 0 0 0-2H5.414l.547-.547A8.75 8.75 0 0 1 12.001 4 8 8 0 1 1 4 12a1 1 0 1 0-2 0A10 10 0 1 0 12 2Z" clip-rule="evenodd"/>
 					</svg>
@@ -697,7 +710,7 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 
 				$actions['delete'] = sprintf(
 					'<a href="%s" rel="noreferrer noopener" target="_blank" data-wp-delete-url="%s">%s <p>%s</p></a>',
-					$delete_link,
+					esc_url( $delete_link ),
 					esc_url_raw( $wp_delete_url ),
 					'<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 						<path fill="#000" fill-rule="evenodd" d="M9.293 3.293A1 1 0 0 1 10 3h4a1 1 0 0 1 1 1v1H9V4a1 1 0 0 1 .293-.707ZM7 5V4a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1h4a1 1 0 1 1 0 2h-1v13a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7H3a1 1 0 0 1 0-2h4Zm1 2h10v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7h2Zm2 3a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0v-6a1 1 0 0 1 1-1Zm5 7v-6a1 1 0 1 0-2 0v6a1 1 0 1 0 2 0Z" clip-rule="evenodd"/>
@@ -715,7 +728,7 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 					<ul>
 						<?php
 						foreach ( $actions as $key => $action_link ) {
-							echo '<li id="user-registration-user-action-' . $key . '">' . $action_link . '</li>';
+							echo '<li id="user-registration-user-action-' . esc_attr( $key ) . '">' . wp_kses_post( $action_link ) . '</li>';
 						}
 						?>
 					</ul>
@@ -805,6 +818,27 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 			 */
 			$extra_details = apply_filters( 'user_registration_single_user_view_extra_details', $extra_details, $user );
 
+			$allowed_svg = array(
+				'svg'  => array(
+					'xmlns'   => true,
+					'fill'    => true,
+					'viewbox' => true,
+					'width'   => true,
+					'height'  => true,
+					'class'   => true,
+				),
+				'path' => array(
+					'fill'            => true,
+					'fill-rule'       => true,
+					'clip-rule'       => true,
+					'd'               => true,
+					'stroke'          => true,
+					'stroke-width'    => true,
+					'stroke-linecap'  => true,
+					'stroke-linejoin' => true,
+				),
+			);
+
 			if ( ! empty( $extra_details ) ) :
 				?>
 				<div class="sidebar-box" id="user-registration-user-view-extra-details">
@@ -815,7 +849,7 @@ if ( ! class_exists( 'User_Registration_Users_Menu' ) ) {
 							printf(
 								'<li id="%s">%s<p><span>%s:&nbsp;</span><span class="%s">%s</span></p></li>',
 								esc_attr( 'user-registration-user-extra-detail-' . $id ),
-								isset( $data['icon'] ) ? $data['icon'] : '',
+								wp_kses( isset( $data['icon'] ) ? $data['icon'] : '', $allowed_svg ),
 								esc_html( $data['title'] ),
 								isset( $data['class'] ) ? esc_attr( $data['class'] ) : '',
 								esc_html( $data['value'] )
