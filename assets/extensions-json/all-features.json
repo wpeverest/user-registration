@@ -138,7 +138,7 @@
         "professional",
         "themegrill agency"
       ],
-      "setting_url": "admin.php?page=user-registration-settings&tab=integration",
+      "setting_url": "admin.php?page=user-registration-settings&tab=integration&section=sms-integration",
       "demo_video_url": "-iUMcr03FP8"
     },
     {

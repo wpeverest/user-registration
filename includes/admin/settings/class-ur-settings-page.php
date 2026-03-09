@@ -189,7 +189,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 							<span class="submenu"><?php echo esc_html( $label ); ?></span>
 							<?php if ( $show_premium_icon ) : ?>
 								<img style="width: 14px; height: 14px;margin-left: 4px;" src="<?php echo UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png'; ?>" />
-								<?php
+							<?php
 							endif;
 							?>
 						</a>
@@ -245,7 +245,6 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			$title   = ucwords( str_replace( '-', ' ', $current_section ?? '' ) );
 			$setting = ucwords( str_replace( '_', ' ', $current_tab ?? '' ) );
 
-
 			$default = array(
 				'title'    => '',
 				'sections' => array(),
@@ -253,32 +252,37 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 
 			$premium_settings_sections = array(
 				'premium_setting_section' => array(
-					'type'        => 'card',
-					'is_premium'  => true,
-					'title'       => $title,
-					'class'       => 'ur-upgrade--link',
+					'type'       => 'card',
+					'is_premium' => true,
+					'title'      => $title,
+					'class'      => 'ur-upgrade--link',
 
 				),
 			);
 
 			$premium_tab_settings = ur_premium_settings_tab();
 
-			foreach( $premium_tab_settings as $tab_key => $tab_value ) {
+			foreach ( $premium_tab_settings as $tab_key => $tab_value ) {
+				if ( $tab_key !== $current_tab ) {
+					continue;
+				}
 				if ( isset( $tab_value[ $current_section ]['is_collection'] ) ) {
-					foreach( $tab_value[ $current_section ]['collections'] as $current_tab_key => $current_tab_value ) {
-						$default['sections'][$current_tab_key] = array_merge( $premium_settings_sections['premium_setting_section'] , $current_tab_value );
+					foreach ( $tab_value[ $current_section ]['collections'] as $current_tab_key => $current_tab_value ) {
+						$default['sections'][ $current_tab_key ] = array_merge( $premium_settings_sections['premium_setting_section'], $current_tab_value );
 					}
 				} else {
-					foreach( $tab_value as $section_key => $section_value ) {
+					foreach ( $tab_value as $section_key => $section_value ) {
 						if ( $section_key === $current_section ) {
-							$default['sections'][$section_key] = array_merge( $premium_settings_sections['premium_setting_section'] , $section_value );
+							$default['sections']['premium_setting_section'] = array_merge( $premium_settings_sections['premium_setting_section'], $section_value );
 						}
 					}
 				}
 			}
 
-			if( empty( $default['sections'] ) ) {
-				$default['sections'] = array_merge( $default['sections'], array(
+			if ( empty( $default['sections'] ) ) {
+				$default['sections'] = array_merge(
+					$default['sections'],
+					array(
 						'premium_setting_section' => array(
 							'type'        => 'card',
 							'is_premium'  => true,
@@ -291,7 +295,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 				);
 			}
 
-			$settings =  apply_filters(
+			$settings = apply_filters(
 				'user_registration_upgrade_to_pro_setting',
 				$default
 			);

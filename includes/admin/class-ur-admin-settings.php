@@ -88,6 +88,7 @@ class UR_Admin_Settings {
 			true
 		);
 		wp_enqueue_script( 'ur-setup' );
+		wp_enqueue_style( 'ur-toast' );
 		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
 			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), UR_VERSION );
 		}
@@ -300,7 +301,7 @@ class UR_Admin_Settings {
 
 			// $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
 			// if( $is_pro_active ) {
-				$settings[] = include 'settings/class-ur-settings-integration.php';
+			$settings[] = include 'settings/class-ur-settings-integration.php';
 			// }
 
 			$settings[] = include 'settings/class-ur-settings-security.php';
@@ -499,39 +500,41 @@ class UR_Admin_Settings {
 						$settings .= '</div>';
 
 						//Show upsell texts.
-						if( ! empty( $section[ 'upsell' ] ) ) {
-							$upsell_section = $section[ 'upsell' ];
-							$settings .= '<div class="user-registration-upsell">';
+						if ( ! empty( $section['upsell'] ) ) {
+							$upsell_section = $section['upsell'];
+							$settings      .= '<div class="user-registration-upsell">';
 							//excerpt.
-							if( ! empty( $upsell_section[ 'excerpt' ] ) ) {
+							if ( ! empty( $upsell_section['excerpt'] ) ) {
 								$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $upsell_section['excerpt'] ) ) . '</p>';
 							}
 							//descriptions.
-							if( ! empty( $upsell_section[ 'description' ] ) ) {
-								if( is_string( $upsell_section[ 'description'] ) ) {
+							if ( ! empty( $upsell_section['description'] ) ) {
+								if ( is_string( $upsell_section['description'] ) ) {
 									$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $upsell_section['excerpt'] ) ) . '</p>';
-								} elseif( is_array( $upsell_section[ 'description' ] ) ) {
+								} elseif ( is_array( $upsell_section['description'] ) ) {
 									$settings .= '<ul class="user-registration-upsell__description-list">';
-									foreach( $upsell_section[ 'description' ] as $description_text ) {
+									foreach ( $upsell_section['description'] as $description_text ) {
 										$settings .= '<li class="user-registration-upsell__description-list-item">' . $description_text . '</li>';
 									}
 									$settings .= '</ul>';
 								}
 							}
-							if( ! empty( $upsell_section[ 'feature_link' ] ) ) {
-								$settings .= '<a href="' . esc_url( $upsell_section[ 'feature_link' ] ) . '" class="user-registration-upsell__feature-link" target="_blank">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>';
+
+							$license_data = ur_get_license_plan();
+							$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
+							if ( empty( $license_plan ) && ! empty( $upsell_section['feature_link'] ) ) {
+								$settings .= '<a href="' . esc_url( $upsell_section['feature_link'] ) . '" class="user-registration-upsell__feature-link" target="_blank">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>';
 							}
 							$settings .= '</div>';
 						}
 
 						if ( ! empty( $section['before_desc'] ) ) {
-							$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $section['before_desc'] ) ) . '</p>';
+							//                          $settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $section['before_desc'] ) ) . '</p>';
 						}
 
 						if ( ! empty( $section['desc'] ) ) {
 							$settings .= '<p class="ur-p-tag">' . wptexturize( wp_kses_post( $section['desc'] ) ) . '</p>';
 						}
-
 
 						$settings .= '<div class="pt-0 pb-0 user-registration-card__body">';
 
@@ -781,7 +784,7 @@ class UR_Admin_Settings {
 									}
 
 									foreach ( $color_states as $state => $state_data ) {
-										$state_id = $base_id . '_' . $state;
+										$state_id      = $base_id . '_' . $state;
 										$option_value  = isset( $saved_colors[ $state ] ) ? $saved_colors[ $state ] : ( isset( $state_data['default'] ) ? $state_data['default'] : '' );
 										$default_value = isset( $state_data['default'] ) ? $state_data['default'] : '';
 
@@ -827,7 +830,7 @@ class UR_Admin_Settings {
 											cols="' . esc_attr( $value['cols'] ) . '"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
 											' . esc_html( implode( ' ', $custom_attributes ) ) . '>'
-												. esc_textarea( $option_value ) . '</textarea>';
+									             . esc_textarea( $option_value ) . '</textarea>';
 									$settings .= '</div>';
 									$settings .= '</div>';
 									break;
@@ -1281,14 +1284,14 @@ class UR_Admin_Settings {
 										)
 									);
 									$show_reset_key_button = ( $is_connected && in_array(
-										$section_id,
-										array(
-											'v2',
-											'v3',
-											'hCaptcha',
-											'cloudflare',
-										)
-									) );
+											$section_id,
+											array(
+												'v2',
+												'v3',
+												'hCaptcha',
+												'cloudflare',
+											)
+										) );
 									if ( in_array(
 										$section_id,
 										array(
@@ -1900,6 +1903,9 @@ class UR_Admin_Settings {
 			//sync membership 'user_registration_member_registration_page_id' with 'user_registration_registration_page_id'.
 			if ( 'user_registration_member_registration_page_id' === $name ) {
 				update_option( 'user_registration_registration_page_id', $value );
+			}
+			if ( 'user_registration_login_page_id' === $name ) {
+				update_option( 'user_registration_login_options_login_redirect_url', $value );
 			}
 			update_option( $name, $value );
 		}

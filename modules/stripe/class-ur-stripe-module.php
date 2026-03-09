@@ -173,13 +173,30 @@ class User_Registration_Stripe_Module {
 	/**
 	 * save_section_settings
 	 *
-	 * @param $form_data
-	 *
+	 * @param array $form_data Form data.
 	 * @return void
 	 */
 	public function save_section_settings( $form_data ) {
 		$section = $this->raw_settings();
 		ur_save_settings_options( $section, $form_data );
+		if ( ! class_exists( 'WPEverest\URMembership\Admin\Services\Stripe\StripeService' ) ) {
+			return;
+		}
+		foreach ( array( 'test', 'live' ) as $mode ) {
+			$secret = get_option( 'user_registration_stripe_' . $mode . '_secret_key', '' );
+			if ( empty( $secret ) ) {
+				continue;
+			}
+			$result = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::create_webhook( $mode );
+			if ( ! empty( $result['success'] ) && class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
+				\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
+					'stripe',
+					'Webhook created or verified for ' . $mode . ' mode',
+					'notice',
+					array( 'event_type' => 'webhook_save', 'mode' => $mode )
+				);
+			}
+		}
 	}
 }
 

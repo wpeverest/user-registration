@@ -1230,7 +1230,7 @@
 					"#user_registration_login_options_prevent_core_login"
 				);
 
-				$(".single_select_page").toggle();
+				$("#user_registration_login_options_login_redirect_url").closest(".single_select_page").toggle();
 				$("#user_registration_login_options_login_redirect_url").prop(
 					"required",
 					function () {
