@@ -133,15 +133,6 @@ function ur_get_account_menu_items() {
 		'user-logout'   => __( 'Logout', 'user-registration' ),
 	);
 
-	$user_id = get_current_user_id();
-	$form_id = ur_get_form_id_by_userid( $user_id );
-
-	$profile = user_registration_form_data( $user_id, $form_id );
-
-	// if ( count( $profile ) < 1 ) {
-	// unset( $items['edit-profile'] );
-	// }
-
 	// Remove missing endpoints.
 	foreach ( $endpoints as $endpoint_id => $endpoint ) {
 		if ( empty( $endpoint ) ) {
