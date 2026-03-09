@@ -268,6 +268,9 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
 
 	$located = ur_locate_template( $template_name, $template_path, $default_path );
 
+	// Snapshot the trusted resolved path BEFORE the filter can modify it.
+	$trusted_located = realpath( $located );
+
 	/** Allow 3rd party plugin filter template file from their plugin.
 	 *
 	 * @param string $located Template locate.
@@ -278,17 +281,23 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
 	 */
 	$located = apply_filters( 'ur_get_template', $located, $template_name, $args, $template_path, $default_path );
 
-	// 🔒 Use realpath() to resolve symlinks and '..' components before validation.
+	// Use realpath() to resolve symlinks and '..' components before validation.
 	$real_located = realpath( $located );
 
-	// Plugin templates directory.
-	$real_plugin_path = realpath( UR_ABSPATH . 'templates' );
+	// Derive the plugin's templates/ root from the pre-filter trusted path.
+	// This works for every plugin/addon without needing any *_ABSPATH constant.
+	$templates_marker = DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR;
+	$templates_pos    = ( false !== $trusted_located ) ? strpos( $trusted_located, $templates_marker ) : false;
+	$real_plugin_path = ( false !== $templates_pos )
+		? realpath( substr( $trusted_located, 0, $templates_pos + strlen( $templates_marker ) - 1 ) )
+		: false;
 
-	// Theme override directories (child + parent).
+	// Theme override directories (child + parent) — only if /user-registration/ subfolder exists.
 	$real_child_path  = realpath( get_stylesheet_directory() . '/user-registration' );
 	$real_parent_path = realpath( get_template_directory() . '/user-registration' );
 
 	$path_allowed = false;
+
 	if ( false !== $real_located && false !== $real_plugin_path && 0 === strpos( $real_located, $real_plugin_path . DIRECTORY_SEPARATOR ) ) {
 		$path_allowed = true;
 	}
@@ -314,7 +323,6 @@ function ur_get_template( $template_name, $args = array(), $template_path = '', 
 			sprintf( '<code>%s</code> does not exist.', esc_html( $located ) ),
 			'1.0'
 		);
-
 		return;
 	}
 
