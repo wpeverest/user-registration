@@ -102,11 +102,11 @@
 				?>
 				<div class="ur-membership-selection-container ur-d-flex ur-mt-2 ur-align-items-center" style="gap:20px;">
 					<div class="ur-label">
-						<label class="ur-membership-enable-upgrade-action" for="ur-membership-upgrade-action">
+						<label class="ur-membership-enable-upgrade-action" for="ur-membership-upgrade-action" <?php echo ! $can_set_upgrade ? 'style="opacity: 0.7;"' : ''; ?>>
 							<?php esc_html_e( 'Upgrade Action :', 'user-registration' ); ?>
 						</label>
 					</div>
-					<div class="ur-toggle-section m1-auto">
+					<div class="ur-toggle-section m1-auto" <?php echo ! $can_set_upgrade ? 'style="flex-direction: column; align-items: flex-start;"' : ''; ?> >
 						<span class="user-registration-toggle-form">
 							<input data-key-name="Upgrade Action" id="ur-membership-upgrade-action" type="checkbox"
 									class="user-registration-switch__control hide-show-check enabled"
@@ -115,17 +115,17 @@
 									name="ur_membership_upgrade_action" style="width: 100%; text-align: left">
 							<span class="slider round"></span>
 						</span>
+						<?php if ( ! $can_set_upgrade ) : ?>
+							<div class="ur-membership-upgrade-action-notice" style="padding: 6px; background: #f8f9fc; border: 1px solid #475bb2; border-radius: 6px; color: #383838; font-size: 13px; line-height: 1.5;">
+								<?php
+								$create_membership_url = admin_url( 'admin.php?page=user-registration-membership' );
+								echo esc_html__( 'Please create more memberships to set an upgrade action.', 'user-registration' );
+								?>
+								<a href="<?php echo esc_url( $create_membership_url ); ?>" target="_blank" rel="noopener noreferrer" style="color: #2271b1; text-decoration: underline;"><?php esc_html_e( 'Create a Membership', 'user-registration' ); ?></a>
+							</div>
+						<?php endif; ?>
 					</div>
 				</div>
-				<?php if ( ! $can_set_upgrade ) : ?>
-				<div class="ur-membership-upgrade-action-notice ur-mt-2" style="margin-top: 12px; padding: 8px; background: #f8f9fc; border: 1px solid #475bb2; border-radius: 6px; color: #383838; font-size: 14px; line-height: 1.5;">
-					<?php
-					$create_membership_url = admin_url( 'admin.php?page=user-registration-membership' );
-					echo esc_html__( 'Please create more memberships to set an upgrade action.', 'user-registration' );
-					?>
-					<a href="<?php echo esc_url( $create_membership_url ); ?>" style="color: #2271b1; text-decoration: underline;"><?php esc_html_e( 'Create membership', 'user-registration' ); ?></a>
-				</div>
-				<?php endif; ?>
 
 				<!-- Upgrade Settings Container -->
 				<div id="upgrade-settings-container" class="ur-membership-selection-container" style="<?php echo ( $can_set_upgrade && true === $is_upgrade_enabled ) ? '' : 'display: none'; ?>">
