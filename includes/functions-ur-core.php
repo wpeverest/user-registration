@@ -3428,7 +3428,7 @@ if ( ! function_exists( 'ur_size_to_limit_length_migration_script' ) ) {
 	}
 }
 
-if ( ! ur_string_to_bool( get_option( 'urm_is_new_installation' ) ) ){
+if ( ! ur_string_to_bool( get_option( 'urm_is_new_installation', false ) ) ) {
 	add_action( 'user_registration_init', 'ur_redirect_thank_you_page_migration_script' );
 }
 
@@ -3441,7 +3441,7 @@ if ( ! function_exists( 'ur_redirect_thank_you_page_migration_script' ) ) {
 		}
 
 		$thank_you_page_id = get_option( 'user_registration_thank_you_page_id', '' );
-		
+
 		error_log( print_r( $thank_you_page_id, true ) );
 
 		$posts = get_posts(
