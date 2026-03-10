@@ -318,27 +318,27 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 							?>
 							</h2>
 							<?php
-								$is_profile_pic_on_form = ! ur_option_checked( 'user_registration_disable_profile_picture', false );
-								if ( $is_profile_pic_on_form ) {
-									?>
+							$is_profile_pic_on_form = ! ur_option_checked( 'user_registration_disable_profile_picture', false );
+							if ( $is_profile_pic_on_form ) {
+								?>
 									<div class="user-registration-profile-header">
 										<div class="user-registration-img-container" style="width:100%">
-											<?php
-											$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
-											$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
+										<?php
+										$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
+										$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 
-											if ( is_numeric( $profile_picture_url ) ) {
-												$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
-											}
+										if ( is_numeric( $profile_picture_url ) ) {
+											$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
+										}
 
-											$profile_picture_url = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user_id );
-											$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-											?>
+										$profile_picture_url = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user_id );
+										$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+										?>
 											<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
 										</div>
 									</div>
 								<?php
-								}
+							}
 							?>
 							<?php
 								$user            = get_userdata( $user_id );
@@ -442,13 +442,13 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 														$value = implode( ',', $values );
 													}
 												} elseif ( 'country' === $field_key ) {
-													$value         = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
+													$value   = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
 													$is_json = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
 													if ( $is_json ) {
 														$country_data = json_decode( $value, true );
 														$country_code = isset( $country_data['country'] ) ? $country_data['country'] : '';
 														$state_code   = isset( $country_data['state'] ) ? $country_data['state'] : '';
-														$value = ur_format_country_field_data( $country_code, $state_code );
+														$value        = ur_format_country_field_data( $country_code, $state_code );
 													} else {
 														$country_class = ur_load_form_field_class( $field_key );
 														$countries     = $country_class::get_instance()->get_country();
