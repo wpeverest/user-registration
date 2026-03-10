@@ -2682,7 +2682,7 @@ img.tips {
 
 	&:not(.no-icon) {
 		&::after {
-			background-image: url(../images/settings-icons/information.svg) !important;
+			background-image: url(../images/settings-icons/information2.svg) !important;
 			content: "";
 			background-repeat: no-repeat !important;
 			background-size: 100% !important;
@@ -7273,7 +7273,7 @@ body {
 .tooltipster-sidetip {
 	.tooltipster-box {
 		background-color: #fff !important;
-		max-width: 220px;
+		max-width: 300px;
 		box-shadow: 0 6px 24px 0 rgba(10, 10, 10, 0.1);
 		padding: 16px 18px;
 
@@ -7289,6 +7289,12 @@ body {
 		height: 8px;
 		margin-left: -8px;
 		width: 16px;
+	}
+
+	&.tooltipster-base.tooltipster-sidetip.tooltipster-borderless {
+		max-width: 300px !important;
+		width: auto !important;
+		height: auto !important;
 	}
 
 	&.tooltipster-base .tooltipster-arrow .tooltipster-arrow-uncropped .tooltipster-arrow-border {

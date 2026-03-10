@@ -306,7 +306,7 @@ const MessageAction = ({
 
 				$helpTips.tooltipster({
 					theme: "tooltipster-borderless",
-					maxWidth: 200,
+					maxWidth: 300,
 					multiple: true,
 					interactive: true,
 					position: "bottom",

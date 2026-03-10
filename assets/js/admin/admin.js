@@ -2158,7 +2158,7 @@ function ur_init_tooltips($elements, options) {
 	if (undefined !== $elements && null !== $elements && "" !== $elements) {
 		var args = {
 			theme: "tooltipster-borderless",
-			maxWidth: 200,
+			maxWidth: 300,
 			multiple: true,
 			interactive: true,
 			position: "bottom",
