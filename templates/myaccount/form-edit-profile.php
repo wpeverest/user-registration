@@ -103,16 +103,14 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 							$urm_my_account_layout = get_option( 'user_registration_my_account_layout', 'vertical' );
 
 							if ( 'horizontal' === $urm_my_account_layout ) {
-								esc_html_e(
-									/**
-									 * Filter to modify the profile detail title.
-									 *
-									 * @param string Profile detail title content.
-									 * @return string modified profile detail title.
-									 */
-									apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ),
-									'user-registration'
-								); //PHPCS:ignore
+								/**
+								 * Filter to modify the profile detail title.
+								 *
+								 * @param string Profile detail title content.
+								 * @return string modified profile detail title.
+								 */
+								$profile_detail_title = apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) );
+								echo esc_html( $profile_detail_title );
 							}
 							?>
 							</h2>
