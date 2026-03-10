@@ -21,24 +21,29 @@ add_action( 'template_redirect', 'ur_template_redirect' );
  */
 function ur_template_redirect() {
 	global $wp;
-	if ( isset( $wp->query_vars['user-logout'] )
-		|| ( isset( $wp->query_vars['name'] ) && 'user-logout' === $wp->query_vars['name'] )
-			&& ! empty( $_REQUEST['_wpnonce'] )
-		   && wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
-		// Logout.
-		$redirect_url = str_replace( '/user-logout', '', $wp->request );
-		/**
-		 * Filter the redirect after logout url.
-		 *
-		 * @param string $redirect_url The redirect url.
-		 */
 
-		// Check if external url is present in URL.
-		if ( isset( $_GET['redirect_to_on_logout'] ) ) {
-			wp_logout();
-			wp_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to_on_logout'] ) ) );
+	if ( ( isset( $wp->query_vars['user-logout'] )
+		|| ( isset( $wp->query_vars['name'] ) && 'user-logout' === $wp->query_vars['name'] ) )
+			&& ! empty( $_REQUEST['_wpnonce'] )
+			&& wp_verify_nonce( $_REQUEST['_wpnonce'], 'user-logout' ) ) { //PHPCS:ignore;
+
+		$redirect_url = str_replace( '/user-logout', '', $wp->request );
+
+		if ( isset( $_GET['redirect_to_on_logout'] ) && isset( $_GET['redirect_sig'] ) ) {
+			$requested_redirect = esc_url_raw( wp_unslash( $_GET['redirect_to_on_logout'] ) );
+			$provided_sig       = sanitize_text_field( wp_unslash( $_GET['redirect_sig'] ) );
+
+			if ( ur_verify_redirect_signature( $requested_redirect, $provided_sig ) ) {
+				wp_logout();
+				wp_redirect( $requested_redirect ); //PHPCS:ignore;
+			} else {
+				// Signature invalid or missing — attacker-crafted URL, reject it.
+				wp_logout();
+				wp_safe_redirect( home_url() );
+			}
 			exit;
 		}
+
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', $redirect_url );
 		wp_logout();
 		wp_safe_redirect( ur_get_page_permalink( $redirect_url ) );
@@ -51,10 +56,66 @@ function ur_template_redirect() {
 		 * @param string $redirect_url The redirect url.
 		 */
 		$redirect_url = apply_filters( 'user_registration_redirect_after_logout', esc_url_raw( ur_get_page_permalink( 'user-logout' ) ) );
-		// Redirect to the correct logout endpoint.
-		wp_safe_redirect( urldecode( $redirect_url ) );
+		wp_safe_redirect( $redirect_url );
 		exit;
 	}
+}
+
+/**
+ * Generate a signed logout redirect URL.
+ *
+ * Use this in your code wherever you build the logout link.
+ * The signature is an HMAC-SHA256 of the redirect URL using
+ * WordPress's AUTH_KEY as the secret — never exposed to the client.
+ *
+ * Example:
+ *   $logout_url = ur_generate_signed_logout_url( 'https://patrowl.io/dashboard' );
+ *   // Produces:
+ *   // https://example.com/?user-logout=1
+ *   //   &redirect_to_on_logout=https%3A%2F%2Fpatrowl.io%2Fdashboard
+ *   //   &redirect_sig=<hmac>
+ *   //   &_wpnonce=<nonce>
+ *
+ * @param string $redirect_url The external (or internal) URL to redirect to after logout.
+ * @return string Signed logout URL.
+ */
+function ur_generate_signed_logout_url( $redirect_url ) {
+	$sig = ur_generate_redirect_signature( $redirect_url );
+
+	return add_query_arg(
+		array(
+			'user-logout'           => '1',
+			'redirect_to_on_logout' => rawurlencode( $redirect_url ),
+			'redirect_sig'          => $sig,
+			'_wpnonce'              => wp_create_nonce( 'user-logout' ),
+		),
+		ur_get_page_permalink( 'myaccount' )
+	);
+}
+
+/**
+ * Generate an HMAC-SHA256 signature for a redirect URL.
+ *
+ * @param string $redirect_url The URL to sign.
+ * @return string Hex-encoded HMAC signature.
+ */
+function ur_generate_redirect_signature( $redirect_url ) {
+	return hash_hmac( 'sha256', $redirect_url, wp_salt( 'auth' ) );
+}
+
+/**
+ * Verify that a redirect URL matches its provided signature.
+ *
+ * Uses hash_equals() for timing-safe comparison to prevent
+ * timing side-channel attacks.
+ *
+ * @param string $redirect_url The URL to verify.
+ * @param string $provided_sig The signature provided in the request.
+ * @return bool True if signature is valid, false otherwise.
+ */
+function ur_verify_redirect_signature( $redirect_url, $provided_sig ) {
+	$expected_sig = ur_generate_redirect_signature( $redirect_url );
+	return hash_equals( $expected_sig, $provided_sig );
 }
 
 if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
@@ -835,7 +896,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					if ( $is_json ) {
 						$value = json_decode( $value, true );
 					}
-					$country = is_array( $value ) && ! empty(  $value['country']) ? $value['country'] : $value;
+					$country = is_array( $value ) && ! empty( $value['country'] ) ? $value['country'] : $value;
 
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$selected_attribute = '';
@@ -846,7 +907,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . $selected_attribute . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
 					$state_enabled = ! empty( $args['enable_state'] ) && '1' == $args['enable_state'];
-					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="ur-field-address-country select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '" data-state-enabled="' . $state_enabled . '">
+					$field        .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="ur-field-address-country select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '" data-state-enabled="' . $state_enabled . '">
 					' . $options . '
 					</select>';
 
@@ -858,7 +919,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					if ( $state_enabled ) {
 						$field .= '<label for="' . $args['id'] . '" class="ur-label ur-state-label">' . __( 'State', 'user-registration' ) . '</label>';
 						$field .= '<span class="input-wrapper ur-field-address-state-outer-wrapper">';
-						if ( isset($value['state'], $states[ $value['state']  ] ) ) {
+						if ( isset( $value['state'], $states[ $value['state'] ] ) ) {
 							$field .= '<select id="' . esc_attr( $args['id'] ) . '_state" class="ur-field-address-state select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . $args['id'] . '_state">';
 							foreach ( $states as $state_key => $state_name ) {
 								$state_selected_attribute = '';
@@ -868,7 +929,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 								$field .= '<option value="' . esc_attr( trim( $state_key ) ) . '" ' . $state_selected_attribute . '>' . esc_attr( trim( $state_name ) ) . '</option>';
 							}
 							$field .= '</select>';
-						}else {
+						} else {
 							$field .= '<input type="text" class="ur-field-address-state input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . $args['id'] . '_state" value="' . esc_attr( ! empty( $value['state'] ) ? $value['state'] : '' ) . '" />';
 						}
 						$field .= '</span>';
@@ -1358,10 +1419,10 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 		}
 
 		if ( ur_string_to_bool( get_option( 'urm_is_new_installation', false ) ) ) {
-			$user_id   = get_current_user_id();
-			$form_id   = ur_get_form_id_by_userid( $user_id );
-			$user_data = get_userdata( $user_id );
-			$user_data = $user_data->data;
+			$user_id         = get_current_user_id();
+			$form_id         = ur_get_form_id_by_userid( $user_id );
+			$user_data       = get_userdata( $user_id );
+			$user_data       = $user_data->data;
 			$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 			if ( ! empty( $form_data_array ) ) {
 				// No endpoint found? Default to dashboard.
@@ -1573,8 +1634,7 @@ function ur_check_external_url( $url ) {
 	if ( in_array( $url, $all_page_slug, true ) ) {
 		$redirect_url = site_url( $url );
 	} else {
-		$redirect_url = ur_get_page_permalink( 'myaccount' );
-		$redirect_url = add_query_arg( 'redirect_to_on_logout', $url, $redirect_url );
+		$redirect_url = ur_generate_signed_logout_url( $url );
 	}
 
 	return $redirect_url;
