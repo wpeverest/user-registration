@@ -33,8 +33,14 @@ class UR_Block_Membership_Listing extends UR_Block_Abstract {
 		$attr       = $this->attributes;
 		$parameters = array();
 
-		$button_text            = isset( $attr['button_text'] ) ? sanitize_text_field( $attr['button_text'] ) : '';
-		$group_id               = isset( $attr['group_id'] ) ? $attr['group_id'] : '';
+		$button_text     = isset( $attr['button_text'] ) ? sanitize_text_field( $attr['button_text'] ) : '';
+		$group_id        = isset( $attr['group_id'] ) ? $attr['group_id'] : '';
+		$new_group_id    = isset( $attr['new_group_id'] ) ? $attr['new_group_id'] : '';
+		$effective_group = $group_id;
+
+		if ( 'choose-group' === $group_id && '' !== $new_group_id ) {
+			$effective_group = $new_group_id;
+		}
 		$selected_membership_ids = isset( $attr['selected_membership_ids'] ) && is_array( $attr['selected_membership_ids'] ) ? array_map( 'absint', $attr['selected_membership_ids'] ) : array();
 		$uuid                   = isset( $attr['id'] ) ? sanitize_text_field( $attr['id'] ) : ur_generate_random_key();
 		$redirection_page_id = isset( $attr['redirection_page_id'] ) ? absint( $attr['redirection_page_id'] ) : 0;
@@ -59,8 +65,8 @@ class UR_Block_Membership_Listing extends UR_Block_Abstract {
 
 		return ShortCodes::membership_listing(
 			array(
-				'id'                    => $group_id,
-				'group_id'              => $group_id,
+				'id'                    => $effective_group,
+				'group_id'              => $effective_group,
 				'selected_membership_ids' => $selected_membership_ids,
 				'uuid'                  => $uuid,
 				'button_text'           => $button_text,

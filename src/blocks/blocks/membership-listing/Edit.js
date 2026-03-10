@@ -213,6 +213,7 @@ const Edit = (props) => {
 	const {
 		id,
 		group_id,
+		new_group_id,
 		selected_membership_ids,
 		type,
 		button_text,
@@ -308,6 +309,22 @@ const Edit = (props) => {
 	}, []);
 
 	useEffect(() => {
+		const hasLegacyNumericGroup =
+			group_id &&
+			group_id !== "selected-memberships" &&
+			group_id !== "choose-group" &&
+			group_id !== "" &&
+			!new_group_id;
+
+		if (hasLegacyNumericGroup) {
+			setAttributes({
+				group_id: "choose-group",
+				new_group_id: group_id
+			});
+		}
+	}, [group_id, new_group_id, setAttributes]);
+
+	useEffect(() => {
 		if (!id) {
 			setAttributes({ id: generateUUID() });
 		}
@@ -377,18 +394,25 @@ const Edit = (props) => {
 				<PanelBody title={__("Group Settings", "user-registration")}>
 					<SelectControl
 						key="ur-gutenberg-group-id"
-						value={group_id}
+						value={group_id || ""}
 						label={__(
-							"Select Membership Group",
+							"Membership Display Options",
 							"user-registration"
 						)}
 						options={[
 							{
 								label: __(
-									"Choose Memberships",
+									"Select Memberships",
 									"user-registration"
 								),
 								value: "selected-memberships"
+							},
+							{
+								label: __(
+									"Select Membership Group",
+									"user-registration"
+								),
+								value: "choose-group"
 							},
 							{
 								label: __(
@@ -396,13 +420,47 @@ const Edit = (props) => {
 									"user-registration"
 								),
 								value: ""
-							},
-							...mapOptions(groupList)
+							}
 						]}
-						onChange={(gid) => setAttributes({ group_id: gid })}
+						onChange={(gid) => {
+							const next = { group_id: gid };
+
+							// Reset selected group when switching away from choose-group
+							if (gid !== "choose-group") {
+								next.new_group_id = "";
+							}
+
+							setAttributes(next);
+						}}
 						__nextHasNoMarginBottom={true}
 						__next40pxDefaultSize
 					/>
+
+					{group_id === "choose-group" && groupList && (
+						<SelectControl
+							key="ur-gutenberg-group-id-secondary"
+							value={new_group_id || ""}
+							label={__(
+								"Select Membership Group",
+								"user-registration"
+							)}
+							options={[
+								{
+									label: __(
+										"Select a Group",
+										"user-registration"
+									),
+									value: ""
+								},
+								...mapOptions(groupList || {})
+							]}
+							onChange={(gid) =>
+								setAttributes({ new_group_id: gid })
+							}
+							__nextHasNoMarginBottom={true}
+							__next40pxDefaultSize
+						/>
+					)}
 
 					{group_id === "selected-memberships" &&
 						membershipList &&
