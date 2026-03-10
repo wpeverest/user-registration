@@ -744,18 +744,24 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 
 			$target_post->post_content = $styled_content;
 
-			add_filter(
-				'elementor/frontend/the_content',
-				function () use ( $styled_content ) {
-					if ( ! urcr_is_elementor_content_restricted() ) {
-						urcr_set_elementor_content_restricted();
+			if( class_exists( 'Elementor\Plugin' ) ) {
+				add_filter(
+					'elementor/frontend/the_content',
+					function () use ( $styled_content ) {
+						if ( ! urcr_is_elementor_content_restricted() ) {
+							urcr_set_elementor_content_restricted();
 
-						return $styled_content;
+							return $styled_content;
+						}
+
+						return '';
 					}
+				);
 
-					return '';
+				if( $is_whole_site_restriction ) {
+					$target_post->post_content = '';
 				}
-			);
+			}
 
 			return true;
 		} elseif ( 'redirect' === $action['type'] ) {
@@ -1710,4 +1716,3 @@ function urcr_migrated_global_rule() {
 
 	return ! empty( $posts ) ? json_decode( $posts[0]->post_content, true ) : array();
 }
-

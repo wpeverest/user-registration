@@ -104,7 +104,7 @@ class MembersController {
 		if ( $validation['status'] ) {
 			$this->members->wpdb()->query( 'START TRANSACTION' ); // Start the transaction.
 			try {
-				$members_data = $members_service->prepare_members_data( $data );
+				$members_data = $members_service->prepare_members_data( $data, 'frontend' );
 
 				$member = $this->members->create( $members_data ); // first create the member themselves.
 				if ( $member->ID ) {

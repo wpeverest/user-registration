@@ -44,10 +44,16 @@
 		<exclude-pattern>includes/class-user-registration.php</exclude-pattern>
 	</rule>
 
-	<!-- Custom rule properties -->
+	<!-- Use non-deprecated replacement for Squiz.WhiteSpace.LanguageConstructSpacing -->
+	<rule ref="Generic.WhiteSpace.LanguageConstructSpacing"/>
+	<exclude name="Squiz.WhiteSpace.LanguageConstructSpacing"/>
+
+	<!-- Custom rule properties (array properties use element nodes per PHPCS 3.3+) -->
 	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<property name="text_domain" type="array" value="user-registration" />
+			<property name="text_domain" type="array">
+				<element value="user-registration"/>
+			</property>
 		</properties>
 	</rule>
 

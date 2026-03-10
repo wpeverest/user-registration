@@ -80,7 +80,7 @@ class MembershipService {
 	public function create_membership_order_and_subscription( $data ) {
 		try {
 			$this->members_repository->wpdb()->query( 'START TRANSACTION' ); // Start the transaction.
-			$members_data = $this->members_service->prepare_members_data( $data );
+			$members_data = $this->members_service->prepare_members_data( $data, 'frontend' );
 			$member       = get_user_by( 'login', $data['username'] );
 
 			// update user source and add membership_role

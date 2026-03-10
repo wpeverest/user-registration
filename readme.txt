@@ -4,7 +4,7 @@ Tags: membership, subscription, content restriction, user profile, user registra
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 6.9.1
-Stable tag: 5.1.2
+Stable tag: 5.1.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -14,15 +14,15 @@ Build membership sites with tiered plans, content restriction, drag-&-drop custo
 
 ==The Complete Membership Solution for WordPress ==
 
-Tired of juggling separate plugins for membership plans, user management, payment gateways, and user profile? 
+Tired of juggling separate plugins for membership plans, user management, payment gateways, and user profile?
 
-User Registration & Membership (URM) helps you monetize your site by creating membership plans and accepting payments for gated content. 
+User Registration & Membership (URM) helps you monetize your site by creating membership plans and accepting payments for gated content.
 
 * Membership: Build membership plans, setup billing, and manage user access in a single connected flow.
 
-* Custom User Registration Forms: Design custom registration form and for your users with drag-and-drop form builder.  
+* Custom User Registration Forms: Design custom registration form and for your users with drag-and-drop form builder.
 
-* Payment Integration: Monetize your membership site with one-time fee, recurring subscription, and upgrade paths. Accept subscription payments through Stripe, PayPal, and bank transfer. 
+* Payment Integration: Monetize your membership site with one-time fee, recurring subscription, and upgrade paths. Accept subscription payments through Stripe, PayPal, and bank transfer.
 
 * Content Restriction: Restrict complete site, or individual pages and posts by membership subscription.
 
@@ -34,15 +34,15 @@ User Registration & Membership (URM) helps you monetize your site by creating me
 
 https://youtu.be/czohMTVfLrw
 
-* __Membership Groups and Plans__: Create membership tiers with different access levels and benefits. Combine related plans into membership groups for organized front-end listing. 
+* __Membership Groups and Plans__: Create membership tiers with different access levels and benefits. Combine related plans into membership groups for organized front-end listing.
 
-* __Pre-Installed Membership Pages__: Launch your membership site in minutes instead of hours with professional pages ready to use or customize: Registration, Login, My Account, Lost Password, Reset Password, Pricing, and Thank You pages. 
+* __Pre-Installed Membership Pages__: Launch your membership site in minutes instead of hours with professional pages ready to use or customize: Registration, Login, My Account, Lost Password, Reset Password, Pricing, and Thank You pages.
 
-* __Content Restriction__: Set restrictions globally, per page/post, or for specific content blocks within pages. Build complex access rules using membership plans, user roles, registration and login status. 
+* __Content Restriction__: Set restrictions globally, per page/post, or for specific content blocks within pages. Build complex access rules using membership plans, user roles, registration and login status.
 
-* __Membership Upgrade Path__: Define clear upgrade paths between membership tiers and let users switch seamlessly without interrupting their access or membership status. 
+* __Membership Upgrade Path__: Define clear upgrade paths between membership tiers and let users switch seamlessly without interrupting their access or membership status.
 
-* __Masteriyo Course Integration__: Sell courses through memberships using our Masteriyo LMS integration. 
+* __Masteriyo Course Integration__: Sell courses through memberships using our Masteriyo LMS integration.
 
 * __10+ Membership Gutenberg Blocks__: Create custom membership pages using our custom blocks: registration, my account, membership pricing, buy now block etc.
 
@@ -50,49 +50,49 @@ https://youtu.be/czohMTVfLrw
 
  __Custom User Registration__
 
-[YouTube Video: https://youtu.be/jbiBJdowxG0 ] 
+https://youtu.be/jbiBJdowxG0
 
-* __Registration Form Builder__: Build custom WordPress registration forms. Drag fields onto the canvas, arrange them visually, and configure settings with simple clicks. 
+* __Registration Form Builder__: Build custom WordPress registration forms. Drag fields onto the canvas, arrange them visually, and configure settings with simple clicks.
 
-* __Login Form__: Start with a pre-built login form and customize it to your needs. Choose form styles, configure login methods, add CAPTCHA, and set login/logout redirects. 
+* __Login Form__: Start with a pre-built login form and customize it to your needs. Choose form styles, configure login methods, add CAPTCHA, and set login/logout redirects.
 
-* __Live Form Preview__: Preview registration and login forms in real-time to ensure everything looks and functions properly. 
+* __Live Form Preview__: Preview registration and login forms in real-time to ensure everything looks and functions properly.
 
-*  __Pre-built Form Templates__: Save hours of setup time with professionally designed registration form templates. Use them as-is or customize fields and styling to match your specific needs. View All Form Templates 
+*  __Pre-built Form Templates__: Save hours of setup time with professionally designed registration form templates. Use them as-is or customize fields and styling to match your specific needs. View All Form Templates
 
-* __Ajax Form Submission__: Say goodbye to slow form submissions that reload the entire page. Users get instant confirmation or error messages. 
+* __Ajax Form Submission__: Say goodbye to slow form submissions that reload the entire page. Users get instant confirmation or error messages.
 
-* __User Role Assignment__: Assignment WordPress user roles (Administrator, Editor, Author, Contributor, Subscriber) to members during registration. 
+* __User Role Assignment__: Assignment WordPress user roles (Administrator, Editor, Author, Contributor, Subscriber) to members during registration.
 
-* __Flexible Approval Method__: Choose from auto-approval, email verification, and manual admin approval for new registration for quality control. 
+* __Flexible Approval Method__: Choose from auto-approval, email verification, and manual admin approval for new registration for quality control.
 
 __Payment and Monetization__
 
-* __Multiple Revenue Modules__: Offer fixed-term memberships, recurring subscription or lifetime access.  
+* __Multiple Revenue Modules__: Offer fixed-term memberships, recurring subscription or lifetime access.
 
-* __Trusted Payment Gateways__: Accept secure payment with trusted global payment gateways even in the free version:  
+* __Trusted Payment Gateways__: Accept secure payment with trusted global payment gateways even in the free version:
   * __PayPal__
-  * __Stripe__ 
- * __Bank Transfer__ 
+  * __Stripe__
+ * __Bank Transfer__
 
 * __Payment History__: Comprehensive transaction tracking with payment status, date, gateway, and more. complete history accessible to admins and members.
 
 
-==User Registration & Membership PRO Features 
+==User Registration & Membership PRO Features
 
-__Membership and User Management__ 
+__Membership and User Management__
 
-* Membership plans with tiered access control 
-*  Admin approval for new registrations 
-*  Member Directory with search filters searchable directories 
+* Membership plans with tiered access control
+*  Admin approval for new registrations
+*  Member Directory with search filters searchable directories
 * Role-based redirection after login
-* Profile completeness indicator 
-* Advanced content restriction with complex rules 
-* User journey tracking 
-* Payment history tracking 
-* Social Connect (Facebook, Google, Twitter, LinkedIn login) 
-* Profile Connect (sync with other plugins) 
-* Block simultaneous logins 
+* Profile completeness indicator
+* Advanced content restriction with complex rules
+* User journey tracking
+* Payment history tracking
+* Social Connect (Facebook, Google, Twitter, LinkedIn login)
+* Profile Connect (sync with other plugins)
+* Block simultaneous logins
 
 __Advanced Content Restriction__
 
@@ -104,99 +104,99 @@ __Advanced Content Restriction__
 
 __Registration Form Fields & Functionality__
 
- *  60+  form fields 
- * Conditional logic (show/hide fields based on user input) 
- * Multi-step forms with progress indicators 
- * Conversational forms (chat-like layout) 
- * Field visibility control 
- * Form restriction by custom rules 
- * Popup forms (modal display) 
- * Calculations 
- * Signature field 
+ *  60+  form fields
+ * Conditional logic (show/hide fields based on user input)
+ * Multi-step forms with progress indicators
+ * Conversational forms (chat-like layout)
+ * Field visibility control
+ * Form restriction by custom rules
+ * Popup forms (modal display)
+ * Calculations
+ * Signature field
 * Invite codes
- * Repeater field (multiple entries per field group) 
- * Save and Continue (save partial progress) 
-  
+ * Repeater field (multiple entries per field group)
+ * Save and Continue (save partial progress)
 
-__Monetization and Payment Processing__ 
+
+__Monetization and Payment Processing__
 
 * Trial Period
 * Multiple memberships per user
 * Sell memberships to team
 * Authorize.net
-* Mollie integration 
-* Registration coupons and discounts 
-* Payment history dashboard 
-* Membership plan upgrades with pro-rated billing 
+* Mollie integration
+* Registration coupons and discounts
+* Payment history dashboard
+* Membership plan upgrades with pro-rated billing
 * Discount coupon and codes
 * Tax and EU VAT
 * Sell in local currency
 * Invoice generation
 
-  
 
-__Security & Spam Protection__ 
 
-* Email verification 
-* Google reCAPTCHA (V2, V3) 
-* hCaptcha 
-* Cloudflare Turnstile 
+__Security & Spam Protection__
+
+* Email verification
+* Google reCAPTCHA (V2, V3)
+* hCaptcha
+* Cloudflare Turnstile
 * Akismet
-* Honeypot spam protection 
-* SMS verification via Twilio 
-* Two-factor authentication (2FA) 
-* Auto-generated passwords 
-* Passwordless login 
-* Custom CAPTCHA field (math/Q&A) 
-* Whitelisted domains 
-
-  
-
-__Design & Customization__ 
-
-* Email customizer 
-* Customize My Account page 
-* Style Customizer (visual form designer) 
-* Email Templates 
-* Advanced styling options for forms 
-* Analytics & Tracking 
-* Advanced analytics dashboard 
-* User journey tracking 
-* Advanced user/form analytics 
-* Dashboard with views, submissions, conversions 
+* Honeypot spam protection
+* SMS verification via Twilio
+* Two-factor authentication (2FA)
+* Auto-generated passwords
+* Passwordless login
+* Custom CAPTCHA field (math/Q&A)
+* Whitelisted domains
 
 
 
+__Design & Customization__
 
-__Advanced Features__ 
+* Email customizer
+* Customize My Account page
+* Style Customizer (visual form designer)
+* Email Templates
+* Advanced styling options for forms
+* Analytics & Tracking
+* Advanced analytics dashboard
+* User journey tracking
+* Advanced user/form analytics
+* Dashboard with views, submissions, conversions
 
-* PDF form submission (auto-generate PDFs) 
-* Frontend post submission 
-* Bulk user import (CSV) 
-* Invite codes for registration 
-* Geolocation data collection 
-* Private admin notes 
-* Form access by user role 
-* Cloud storage (Google Drive, Dropbox) 
 
-  
 
-__Marketing and CRM Integrations__  
+
+__Advanced Features__
+
+* PDF form submission (auto-generate PDFs)
+* Frontend post submission
+* Bulk user import (CSV)
+* Invite codes for registration
+* Geolocation data collection
+* Private admin notes
+* Form access by user role
+* Cloud storage (Google Drive, Dropbox)
+
+
+
+__Marketing and CRM Integrations__
 
 * Custom Email Notifications
-* Mailchimp 
-* MailerLite 
-* MailPoet 
-* ActiveCampaign 
-* Klaviyo 
-* Brevo (formerly Sendinblue) 
-* Kit (formerly ConvertKit)  
-* Salesforce 
-* Zapier (5,000+ apps) 
+* Mailchimp
+* MailerLite
+* MailPoet
+* ActiveCampaign
+* Klaviyo
+* Brevo (formerly Sendinblue)
+* Kit (formerly ConvertKit)
+* Salesforce
+* Zapier (5,000+ apps)
 * Google Sheets
-* Webhooks 
+* Webhooks
 
- [👉 Get User Registration & Membership Pro](https://wpuserregistration.com/pricing/?utm_source=wporg&utm_medium=readme&utm_campaign=pro_features&utm_content=get_pro) 
+ [👉 Get User Registration & Membership Pro](https://wpuserregistration.com/pricing/?utm_source=wporg&utm_medium=readme&utm_campaign=pro_features&utm_content=get_pro)
 
 ==Know your way around user registration with our tutorials==
 
@@ -206,8 +206,7 @@ __Marketing and CRM Integrations__
 * [How to Register Users with an Invitation Code in WordPress?](https://wpuserregistration.com/blog/register-users-with-invitation-code/?utm_source=wporg&utm_medium=readme&utm_campaign=tutorials)
 * [How to Change Default WordPress Login URL to Custom URL?](https://wpuserregistration.com/blog/default-wordpress-login-page-url-change/?utm_source=wporg&utm_medium=readme&utm_campaign=tutorials)
 
-Get in Touch with us: [Official Community](https://www.facebook.com/groups/userregistration) | [Twitter](https://twitter.com/user_register) 
-
+Get in Touch with us: [Official Community](https://www.facebook.com/groups/userregistration) | [Twitter](https://twitter.com/user_register)
 
 == Frequently Asked Questions ==
 
@@ -227,9 +226,9 @@ User Registration and Membership is designed for site owners running paid member
 URM supports payments through Stripe, PayPal, and bank transfer, with additional gateways available in Pro. Payments stay connected to membership access, renewals, and upgrades automatically.
 
 = Can I connect memberships with third-party marketing tools?
-Yes. User Registration & Membership integrates with popular email marketing services, including Mailchimp, MailerLite, ActiveCampaign, and Klaviyo.  
+Yes. User Registration & Membership integrates with popular email marketing services, including Mailchimp, MailerLite, ActiveCampaign, and Klaviyo.
 
-Connect with thousands more services through Zapier. 
+Connect with thousands more services through Zapier.
 
 = What should I do if User Registration and Membership is having problems?
 
@@ -264,6 +263,22 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 21. User Account Page –  Vertical Layout
 
 == Changelog ==
+
+
+= 5.1.4    - 25/02/2026 =
+* Fix - Updated .org deploy code
+
+= 5.1.3    - 24/02/2026 =
+* Enhance  - Membership field not draggable when no membership plans created, notice is shown.
+* Fix      - Missing Content restriction CSS file error.
+* Fix      - Auto approval and auto login not working incase of PayPal payments.
+* Fix      - Missing connection indicators for integration add-ons.
+* Fix      - Content restriction template appearing twice when using Elementor.
+* Fix      - Insecure Direct Object Reference to Unauthenticated Limited User Deletion
+* Fix      - Unauthenticated Privilege Escalation via Membership Registration.
+* Fix      - Authentication Bypass fix.
+* Fix      - Authenticated SQL injection via membership ids fix.
+* Fix      - Missing authorization to unauthenticated payment bypass.
 
 = 5.1.2    - 12/02/2026 =
 * Security - Arbitrary code execution through shortcode.

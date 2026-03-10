@@ -75,6 +75,19 @@ class StripeService {
 	}
 
 	/**
+	 * Default for webhook registration.
+	 *
+	 * @return string[]
+	 */
+	public static function get_handled_webhook_events() {
+		return array(
+			'invoice.payment_succeeded',
+			'invoice.payment_failed',
+			'payment_intent.payment_failed',
+		);
+	}
+
+	/**
 	 * Create webhook endpoint in Stripe for a given mode.
 	 *
 	 * @param string $mode 'test' or 'live'.
@@ -102,10 +115,10 @@ class StripeService {
 				$webhook = \Stripe\WebhookEndpoint::retrieve( $existing_webhook_id );
 				if ( $webhook && $webhook->id ) {
 					return array(
-						'success'     => true,
-						'message'     => 'Webhook already exists for ' . $mode . ' mode',
-						'webhook_id'  => $webhook->id,
-						'mode'        => $mode,
+						'success'    => true,
+						'message'    => 'Webhook already exists for ' . $mode . ' mode',
+						'webhook_id' => $webhook->id,
+						'mode'       => $mode,
 					);
 				}
 			} catch ( \Exception $e ) {
@@ -116,20 +129,13 @@ class StripeService {
 
 		try {
 			\Stripe\Stripe::setApiKey( $secret_key );
-			$webhook_url = rest_url( 'user-registration/stripe-webhook' );
-			$webhook     = \Stripe\WebhookEndpoint::create(
+			$webhook_url    = rest_url( 'user-registration/stripe-webhook' );
+			$default_events = self::get_handled_webhook_events();
+			$enabled_events = apply_filters( 'urm_stripe_webhook_enabled_events', $default_events, $mode );
+			$webhook        = \Stripe\WebhookEndpoint::create(
 				array(
 					'url'            => $webhook_url,
-					'enabled_events' => array(
-						'checkout.session.completed',
-						'payment_intent.succeeded',
-						'payment_intent.payment_failed',
-						'invoice.paid',
-						'invoice.payment_failed',
-						'customer.subscription.created',
-						'customer.subscription.updated',
-						'customer.subscription.deleted',
-					),
+					'enabled_events' => array_values( array_filter( (array) $enabled_events ) ),
 					'api_version'    => '2023-10-16',
 				)
 			);
@@ -579,7 +585,39 @@ class StripeService {
 			'status' => true,
 		);
 
+		$stripe_settings = self::get_stripe_settings();
+
+		if ( empty( $stripe_settings['secret_key'] ) ) {
+			$response['status']  = false;
+			$response['message'] = __( 'Stripe secret key is not configured.', 'user-registration' );
+
+			return $response;
+		}
+
+		\Stripe\Stripe::setApiKey( $stripe_settings['secret_key'] );
+		$pi_id = sanitize_text_field( ! empty( $data['payment_result']['paymentIntent']['id'] ) ? $data['payment_result']['paymentIntent']['id'] : '' );
+
+		if ( ! empty( $pi_id ) ) {
+			$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
+
+			if ( $intent->status !== 'succeeded' ) {
+				$response['status']  = false;
+				$response['message'] = __( 'Payment not completed.', 'user-registration' );
+
+				return $response;
+			}
+
+			$payment_status = $intent->status;
+		}
+
 		$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
+
+		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id ) ) {
+			$response['status']  = false;
+			$response['message'] = __( 'Duplicate transaction id.', 'user-registration' );
+
+			return $response;
+		}
 
 		if ( empty( $latest_order ) ) {
 			PaymentGatewayLogging::log_error(
@@ -1428,15 +1466,26 @@ class StripeService {
 		// Verify that the event was sent by Stripe
 		if ( isset( $event['id'] ) ) {
 			try {
-				$event_id = sanitize_text_field( $event['id'] );
-				$event    = (array) \Stripe\Event::retrieve( $event_id );
+				$event_id        = sanitize_text_field( $event['id'] );
+				$retrieved_event = (array) \Stripe\Event::retrieve( $event_id );
 			} catch ( \Exception $e ) {
+				PaymentGatewayLogging::log_webhook_received(
+					'stripe',
+					$e->getMessage(),
+					array(
+						'webhook_type'    => 'invoice.payment_failed',
+						'subscription_id' => $subscription_id,
+						'event_id'        => $event['id'] ?? 'unknown',
+					)
+				);
+
 				die();
 			}
 		} else {
 			die();
 		}
 		switch ( $event['type'] ) {
+			case 'invoice.paid':
 			case 'invoice.payment_succeeded':
 				$this->handle_succeeded_invoice( $event, $subscription_id );
 				break;
@@ -1568,6 +1617,7 @@ class StripeService {
 				'membership_type'     => $membership_type,
 			)
 		);
+		delete_user_meta( $member_id, 'urm_user_just_created' );
 	}
 
 	public function handle_failed_invoice( $event, $subscription_id ) {
@@ -1624,19 +1674,20 @@ class StripeService {
 				'member_id'       => $member_id,
 			)
 		);
+		delete_user_meta( $member_id, 'urm_user_just_created' );
 	}
 
 	public function handle_failed_payment_intent( $event ) {
-		$payment_intent = isset( $event['data']['object'] ) ? $event['data']['object'] : array();
+		$payment_intent    = isset( $event['data']['object'] ) ? $event['data']['object'] : array();
 		$payment_intent_id = isset( $payment_intent['id'] ) ? $payment_intent['id'] : '';
 
 		PaymentGatewayLogging::log_webhook_received(
 			'stripe',
 			'Payment intent payment failed webhook received',
 			array(
-				'webhook_type'       => 'payment_intent.payment_failed',
-				'payment_intent_id'  => $payment_intent_id,
-				'event_id'           => isset( $event['id'] ) ? $event['id'] : 'unknown',
+				'webhook_type'      => 'payment_intent.payment_failed',
+				'payment_intent_id' => $payment_intent_id,
+				'event_id'          => isset( $event['id'] ) ? $event['id'] : 'unknown',
 			)
 		);
 
@@ -1658,6 +1709,7 @@ class StripeService {
 				)
 			);
 		}
+		delete_user_meta( $order['user_id'], 'urm_user_just_created' );
 	}
 
 	public function validate_setup() {

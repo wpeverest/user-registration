@@ -325,11 +325,14 @@
 		 */
 		prepare_members_data: function () {
 			var user_data = {},
-				form_inputs = $("#ur-membership-registration").find(
-					"input.ur_membership_input_class"
+				form_inputs = $('#ur-membership-registration').find(
+					'input.ur_membership_input_class',
+				),
+				password = $( document ).find(
+					'input#user_pass',
 				);
-			form_inputs =
-				ur_membership_frontend_utils.convert_to_array(form_inputs);
+
+			form_inputs = ur_membership_frontend_utils.convert_to_array(form_inputs);
 			form_inputs.forEach(function (item) {
 				var $this = $(item);
 				if ($this.attr("name") !== undefined) {
@@ -342,8 +345,9 @@
 			});
 			var membership_input = $('input[name="urm_membership"]:checked');
 			user_data.membership = membership_input.val();
-			user_data.payment_method = "free";
-			if (membership_input.data("urm-pg-type") !== "free") {
+			user_data.payment_method = 'free';
+			user_data.password = password.val();
+			if (membership_input.data('urm-pg-type') !== 'free') {
 				user_data.payment_method = $(
 					'input[name="urm_payment_method"]:checked'
 				).val();
@@ -2345,7 +2349,7 @@
 	};
 	var register_events = {
 		init: function () {
-			$('input[name="urm_payment_method"]').on('change', function () {
+			$( document ).on('change', 'input[name="urm_payment_method"]', function () {
 				var selected_method = $(this).val(),
 					stripe_container = $('.stripe-container'),
 					stripe_error_container = $('#stripe-errors');
@@ -2389,6 +2393,8 @@
 				var urm_payment_gateways = $(this).data('urm-pg'),
 					urm_payment_type = $(this).data('urm-pg-type'),
 					urm_pg_container = $('.ur_payment_gateway_container'),
+					$form_context = $(this).closest('#ur-membership-registration, .membership-upgrade-container'),
+					urm_pg_container_scoped = $form_context.length ? $form_context.find('.ur_payment_gateway_container') : urm_pg_container,
 					urm_pg_inputs = urm_pg_container.find('input'),
 					urm_hidden_pg_containers = $('.urm_hidden_payment_container'),
 					stripe_container = $('.stripe-container'),
@@ -2464,10 +2470,28 @@
 						}
 					});
 
-					if (urm_pg_container.find('input:visible').length === 1) {
-						var lone_pg = urm_pg_container.find('input:visible');
-						$(lone_pg[0]).prop('checked', true);
-						lone_pg.trigger('change');
+					var visible_pg_labels = urm_pg_container_scoped.find(
+						'label[for^="ur-membership-"]'
+					).not('.urm-d-none');
+					var $pg_title_span = urm_pg_container_scoped.find(
+						'span.ur_membership_input_label.ur-label.required, span.ur-upgrade-label.ur-label.required'
+					);
+					if (visible_pg_labels.length === 1) {
+						var lone_input_id = visible_pg_labels.attr('for');
+						urm_pg_container_scoped
+							.find('input#' + lone_input_id)
+							.prop('checked', true)
+							.trigger('change');
+						if ($pg_title_span.length && !$pg_title_span.data('original-pg-label')) {
+							$pg_title_span.data('original-pg-label', $pg_title_span.text());
+						}
+						$pg_title_span.text('Payment Gateway');
+					} else {
+						if ($pg_title_span.length) {
+							$pg_title_span.text(
+								$pg_title_span.data('original-pg-label') || 'Select Payment Gateway'
+							);
+						}
 					}
 					ur_membership_ajax_utils.calculate_total($(this));
 				} else {
@@ -3244,4 +3268,26 @@
 	$(document).ready(function () {
 		$('#ur-local-currency-switch-currency').trigger('change');
 	});
+
+
+	var dialog = $("#URCR-Restriction-Modal");
+
+	if ( dialog.length || typeof MutationObserver !== 'undefined') {
+		if ( $( document ).find( "#URCR-Restriction-Modal .user-registration.ur-frontend-form > form" ) ) {
+			var observer = new MutationObserver(function (mutations) {
+				for (var i = 0; i < mutations.length; i++) {
+					if (mutations[i].attributeName === 'open') {
+
+						if (dialog.is('[open]') ) {
+							register_events.init();
+						}
+					}
+				}
+			});
+
+			observer.observe(dialog[0], {
+				attributes: true
+			});
+		}
+	}
 })(jQuery, window.ur_membership_frontend_localized_data);
