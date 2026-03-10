@@ -649,6 +649,30 @@ function ur_get_one_time_draggable_fields() {
 }
 
 /**
+ * Check if membership is available for the form builder (at least one group or one active membership).
+ *
+ * @return bool
+ */
+function ur_has_membership_available() {
+	if ( ! ur_check_module_activation( 'membership' ) ) {
+		return false;
+	}
+	$has_groups = false;
+	if ( class_exists( 'WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository' ) ) {
+		$repository = new \WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository();
+		$groups     = $repository->get_all_membership_groups();
+		$has_groups = ! empty( $groups );
+	}
+	$has_memberships = false;
+	if ( class_exists( 'WPEverest\URMembership\Admin\Services\MembershipService' ) ) {
+		$service         = new \WPEverest\URMembership\Admin\Services\MembershipService();
+		$memberships     = $service->list_active_memberships();
+		$has_memberships = ! empty( $memberships );
+	}
+	return $has_groups || $has_memberships;
+}
+
+/**
  * Get fields excluding in profile tab
  *
  * @return array
@@ -4604,7 +4628,7 @@ if ( ! function_exists( 'ur_premium_settings_tab' ) ) {
 							),
 						),
 						'dropbox'      => array(
-							'label'  => esc_html__( 'Dropbox', 'user-registration' ),
+							'label'  => esc_html__( 'Cloud Storage', 'user-registration' ),
 							'plugin' => 'user-registration-cloud-storage',
 							'plan'   => array( 'personal', 'plus', 'professional', 'themegrill agency' ),
 							'name'   => esc_html__( 'User Registration Cloud Storage', 'user-registration' ),
@@ -5811,88 +5835,85 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 	 */
 	function ur_wrap_email_body_content( $body_content ) {
 		// Check if we're in editor context - exclude CSS when displaying editor on settings page.
-		// Include CSS for preview, email sending, cron, CLI, and AJAX email actions.
-		$is_preview       = isset( $_GET['ur_email_preview'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$is_preview       = isset( $_GET['ur_email_preview'] );
 		$current_screen   = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		$is_settings_page = $current_screen && 'user-registration_page_user-registration-settings' === $current_screen->id;
 		$is_email_action  = isset( $_REQUEST['action'] ) && (
 				'ur_send_test_email' === $_REQUEST['action'] ||
-				strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				false !== strpos( $_REQUEST['action'], 'email' )
 			);
 
-		// Only exclude CSS when on settings page displaying editor (not when sending emails).
 		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action &&
 							 ! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
 							 ! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
 
-		// Responsive CSS styles for email template - only include when not in editor context.
 		$responsive_styles = '';
 		if ( ! $is_editor_context ) {
-			$responsive_styles = '<style type="text/css">
-	/* Responsive Email Styles - Scoped to email wrapper only */
-	@media only screen and (max-width: 600px) {
-		.email-wrapper-outer {
-			padding: 20px 0 !important;
-		}
-		.email-wrapper-inner {
-			width: 100% !important;
-			max-width: 100% !important;
-			margin: 0 !important;
-			border-radius: 0 !important;
-		}
-		.email-header {
-			padding: 20px 15px !important;
-			border-radius: 0 !important;
-		}
-		.email-body {
-			padding: 25px 15px !important;
-		}
-		.email-footer {
-			padding: 20px 15px !important;
-		}
-		.email-logo img {
-			max-width: 150px !important;
-			max-height: 50px !important;
-		}
-		.email-header-text {
-			font-size: 16px !important;
-			margin-top: 10px !important;
-		}
-		.email-footer p {
-			font-size: 12px !important;
-		}
-		.email-footer a {
-			font-size: 13px !important;
-		}
-	}
-	@media only screen and (max-width: 480px) {
-		.email-wrapper-outer {
-			padding: 10px 0 !important;
-		}
-		.email-header {
-			padding: 15px 10px !important;
-		}
-		.email-body {
-			padding: 20px 10px !important;
-		}
-		.email-footer {
-			padding: 15px 10px !important;
-		}
-		.email-logo img {
-			max-width: 120px !important;
-			max-height: 40px !important;
-		}
-		.email-header-text {
-			font-size: 14px !important;
-		}
-	}
-</style>';
+			$responsive_styles = '<div style="display:none!important;visibility:hidden;opacity:0;color:transparent;height:0;width:0;line-height:0;font-size:0;overflow:hidden;mso-hide:all;">
+		<style type="text/css">
+			@media only screen and (max-width: 600px) {
+				.email-wrapper-outer {
+					padding: 20px 0 !important;
+				}
+				.email-wrapper-inner {
+					width: 100% !important;
+					max-width: 100% !important;
+					margin: 0 !important;
+					border-radius: 0 !important;
+				}
+				.email-header {
+					padding: 20px 15px !important;
+					border-radius: 0 !important;
+				}
+				.email-body {
+					padding: 25px 15px !important;
+				}
+				.email-footer {
+					padding: 20px 15px !important;
+				}
+				.email-logo img {
+					max-width: 150px !important;
+					max-height: 50px !important;
+				}
+				.email-header-text {
+					font-size: 16px !important;
+					margin-top: 10px !important;
+				}
+				.email-footer p {
+					font-size: 12px !important;
+				}
+				.email-footer a {
+					font-size: 13px !important;
+				}
+			}
+			@media only screen and (max-width: 480px) {
+				.email-wrapper-outer {
+					padding: 10px 0 !important;
+				}
+				.email-header {
+					padding: 15px 10px !important;
+				}
+				.email-body {
+					padding: 20px 10px !important;
+				}
+				.email-footer {
+					padding: 15px 10px !important;
+				}
+				.email-logo img {
+					max-width: 120px !important;
+					max-height: 40px !important;
+				}
+				.email-header-text {
+					font-size: 14px !important;
+				}
+			}
+		</style>
+		</div>';
 		}
 
-		// Check if this is a preview and set width to 600px.
 		$is_preview  = isset( $_GET['ur_email_preview'] ) && 'email_template_option' === sanitize_text_field( wp_unslash( $_GET['ur_email_preview'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$email_width = $is_preview ? '600px' : 'unset';
-		$max_width   = $is_preview ? '600px' : '600px'; // Max width for better readability on all devices.
+		$max_width   = '600px';
 
 		return $responsive_styles . '
 	<div class="email-wrapper-outer" style="font-family: Arial, sans-serif; padding: 100px 0;">
@@ -5920,26 +5941,19 @@ if ( ! function_exists( 'ur_unwrap_email_body_content' ) ) {
 		// Remove style tags (including those with type="text/css").
 		$content = preg_replace( '/<style[^>]*>.*?<\/style>/is', '', $content );
 
-		// Check if content contains email wrapper structure.
 		if ( strpos( $content, 'email-wrapper-outer' ) !== false || strpos( $content, 'email-body' ) !== false ) {
-			// Pattern to match: <div...class="...email-body...">CONTENT</div> followed by closing divs
-			// Use a pattern that matches the email-body div and extracts its content.
 			if ( preg_match( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>(.*)<\/div>\s*<\/div>\s*<\/div>/is', $content, $matches ) ) {
 				$content = $matches[1];
 			} elseif ( preg_match( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>(.*?)<\/div>/is', $content, $matches ) ) {
-				// Fallback: just get content from email-body div (may have nested divs).
 				$content = $matches[1];
 			} else {
-				// Last resort: Remove wrapper divs manually.
 				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-wrapper-outer[^"\']*["\'][^>]*>/is', '', $content );
 				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-wrapper-inner[^"\']*["\'][^>]*>/is', '', $content );
 				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>/is', '', $content );
-				// Remove closing divs at the end (up to 3 closing divs).
 				$content = preg_replace( '/(<\/div>\s*){1,3}\s*$/is', '', $content );
 			}
 		}
 
-		// Clean up any extra whitespace.
 		$content = trim( $content );
 
 		return $content;
@@ -6363,6 +6377,7 @@ if ( ! function_exists( 'ur_automatic_user_login' ) ) {
 	 * @since 3.1.5
 	 */
 	function ur_automatic_user_login( $user ) {
+		delete_user_meta( $user->ID, 'urm_user_just_created' );
 		wp_clear_auth_cookie();
 		$remember = apply_filters( 'user_registration_autologin_remember_user', false );
 		wp_set_auth_cookie( $user->ID, $remember );

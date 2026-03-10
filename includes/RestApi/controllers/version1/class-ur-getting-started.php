@@ -1065,6 +1065,7 @@ class UR_Getting_Started {
 		$meta = array(
 			'payment_gateways' => array(),
 			'amount'           => $amount,
+			'role'             => 'subscriber',
 		);
 
 		if ( 'free' === $type_input ) {

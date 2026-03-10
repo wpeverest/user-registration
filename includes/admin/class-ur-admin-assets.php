@@ -380,6 +380,7 @@ class UR_Admin_Assets {
 				'form_one_time_draggable_fields_locked_message' => esc_html__( '%field% field can be used only one time in the form.', 'user-registration' ),
 				'form_membership_payment_fields_disabled_message' => esc_html__( 'Payment fields cannot be used alongside the membership field.', 'user-registration' ),
 				'form_membership_field_disabled_message'   => esc_html__( 'Membership field cannot be used alongside the payment fields.', 'user-registration' ),
+				'form_has_membership_available'             => function_exists( 'ur_has_membership_available' ) ? ur_has_membership_available() : false,
 				/* translators: %field%: Field Text */
 				'form_membership_payment_settings_disabled_title' => esc_html__( '%field% setting is disabled.', 'user-registration' ),
 				'form_membership_payment_settings_disabled_message' => esc_html__( 'Payment setting is not available when membership field is present in the form.', 'user-registration' ),
