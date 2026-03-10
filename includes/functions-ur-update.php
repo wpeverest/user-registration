@@ -452,3 +452,30 @@ function urm_update_50_option_migrate() {
 		}
 	}
 }
+
+/**
+ * Migrate global thank you page to per-form redirect settings (v5.1.5).
+ *
+ * @return void
+ */
+function ur_update_515_redirect_thank_you_page_migrate() {
+
+	$thank_you_page_id = get_option( 'user_registration_thank_you_page_id', '' );
+
+	$posts = get_posts(
+		array(
+			'post_type'      => 'user_registration',
+			'posts_per_page' => -1,
+			'post_status'    => 'any',
+		)
+	);
+
+	foreach ( $posts as $post ) {
+		if ( empty( $thank_you_page_id ) || ! get_post_status( $thank_you_page_id ) ) {
+			update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
+		} else {
+			update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'internal-page' );
+			update_post_meta( $post->ID, 'user_registration_form_setting_redirect_page', $thank_you_page_id );
+		}
+	}
+}

@@ -3428,40 +3428,6 @@ if ( ! function_exists( 'ur_size_to_limit_length_migration_script' ) ) {
 	}
 }
 
-
-add_action( 'user_registration_init', 'ur_redirect_thank_you_page_migration_script' );
-
-if ( ! function_exists( 'ur_redirect_thank_you_page_migration_script' ) ) {
-
-	function ur_redirect_thank_you_page_migration_script() {
-
-		if ( get_option( 'ur_redirect_thank_you_page_migrated', false ) ) {
-			return;
-		}
-
-		$thank_you_page_id = get_option( 'user_registration_thank_you_page_id', '' );
-
-		$posts = get_posts(
-			array(
-				'post_type'      => 'user_registration',
-				'posts_per_page' => -1,
-				'post_status'    => 'any',
-			)
-		);
-
-		foreach ( $posts as $post ) {
-			if ( empty( $thank_you_page_id ) || ! get_post_status( $thank_you_page_id ) ) {
-				update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
-			} else {
-				update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'internal-page' );
-				update_post_meta( $post->ID, 'user_registration_form_setting_redirect_page', $thank_you_page_id );
-			}
-		}
-
-		update_option( 'ur_redirect_thank_you_page_migrated', true );
-	}
-}
-
 add_action( 'delete_user', 'ur_delete_user_files_on_user_delete', 10, 3 );
 
 if ( ! function_exists( 'ur_delete_user_files_on_user_delete' ) ) {
