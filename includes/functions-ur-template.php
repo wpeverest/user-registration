@@ -835,7 +835,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					if ( $is_json ) {
 						$value = json_decode( $value, true );
 					}
-					$country = is_array( $value ) && ! empty(  $value['country']) ? $value['country'] : $value;
+					$country = is_array( $value ) && ! empty( $value['country'] ) ? $value['country'] : $value;
 
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$selected_attribute = '';
@@ -846,7 +846,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 						$options .= '<option value="' . esc_attr( trim( $option_key ) ) . '" ' . $selected_attribute . '>' . esc_attr( trim( $option_text ) ) . '</option>';
 					}
 					$state_enabled = ! empty( $args['enable_state'] ) && '1' == $args['enable_state'];
-					$field .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="ur-field-address-country select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '" data-state-enabled="' . $state_enabled . '">
+					$field        .= '<select data-rules="' . esc_attr( $rules ) . '" data-id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="ur-field-address-country select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '" data-state-enabled="' . $state_enabled . '">
 					' . $options . '
 					</select>';
 
@@ -858,7 +858,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					if ( $state_enabled ) {
 						$field .= '<label for="' . $args['id'] . '" class="ur-label ur-state-label">' . __( 'State', 'user-registration' ) . '</label>';
 						$field .= '<span class="input-wrapper ur-field-address-state-outer-wrapper">';
-						if ( isset($value['state'], $states[ $value['state']  ] ) ) {
+						if ( isset( $value['state'], $states[ $value['state'] ] ) ) {
 							$field .= '<select id="' . esc_attr( $args['id'] ) . '_state" class="ur-field-address-state select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . $args['id'] . '_state">';
 							foreach ( $states as $state_key => $state_name ) {
 								$state_selected_attribute = '';
@@ -868,7 +868,7 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 								$field .= '<option value="' . esc_attr( trim( $state_key ) ) . '" ' . $state_selected_attribute . '>' . esc_attr( trim( $state_name ) ) . '</option>';
 							}
 							$field .= '</select>';
-						}else {
+						} else {
 							$field .= '<input type="text" class="ur-field-address-state input-text ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" name="' . $args['id'] . '_state" value="' . esc_attr( ! empty( $value['state'] ) ? $value['state'] : '' ) . '" />';
 						}
 						$field .= '</span>';
@@ -1052,6 +1052,12 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 		// End switch().
 		if ( $args['description'] ) {
 			$field .= '<span class="description">' . $args['description'] . '</span>';
+		}
+
+		if ( isset( $args['notice'] ) && ! empty( $args['notice'] ) ) {
+			$notice_type    = isset( $args['notice']['type'] ) ? $args['notice']['type'] : 'info';
+			$notice_message = isset( $args['notice']['message'] ) ? $args['notice']['message'] : '';
+			$field         .= '<span class="ur-settings-notice ur-settings-notice--' . $notice_type . '">' . $notice_message . '</span>';
 		}
 
 		if ( ! empty( $field ) ) {
@@ -1358,10 +1364,10 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 		}
 
 		if ( ur_string_to_bool( get_option( 'urm_is_new_installation', false ) ) ) {
-			$user_id   = get_current_user_id();
-			$form_id   = ur_get_form_id_by_userid( $user_id );
-			$user_data = get_userdata( $user_id );
-			$user_data = $user_data->data;
+			$user_id         = get_current_user_id();
+			$form_id         = ur_get_form_id_by_userid( $user_id );
+			$user_data       = get_userdata( $user_id );
+			$user_data       = $user_data->data;
 			$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
 			if ( ! empty( $form_data_array ) ) {
 				// No endpoint found? Default to dashboard.
@@ -1814,6 +1820,12 @@ if ( ! function_exists( 'user_registration_form_settings_field' ) ) {
 
 				if ( $args['description'] ) {
 					$field .= '<span class="description">' . $args['description'] . '</span>';
+				}
+
+				if ( isset( $args['notice'] ) && ! empty( $args['notice'] ) ) {
+					$notice_type    = isset( $args['notice']['type'] ) ? $args['notice']['type'] : 'info';
+					$notice_message = isset( $args['notice']['message'] ) ? $args['notice']['message'] : '';
+					$field         .= '<span class="ur-settings-notice ur-settings-notice--' . $notice_type . '">' . $notice_message . '</span>';
 				}
 
 				$field .= '</div>';

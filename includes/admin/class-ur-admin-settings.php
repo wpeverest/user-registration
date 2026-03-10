@@ -656,6 +656,13 @@ class UR_Admin_Settings {
 							$field_description = self::get_field_description( $value );
 							extract( $field_description ); // phpcs:ignore
 
+							$notice_field = '';
+							if ( isset( $value['notice'] ) && ! empty( $value['notice'] ) ) {
+								$notice_type    = isset( $value['notice']['type'] ) ? $value['notice']['type'] : 'info';
+								$notice_message = isset( $value['notice']['message'] ) ? $value['notice']['message'] : '';
+								$notice_field   = '<span class="ur-settings-notice ur-settings-notice--' . $notice_type . '">' . $notice_message . '</span>';
+							}
+
 							// Display condition/dependency handling.
 							$display_condition_data  = self::get_display_condition_attributes( $value );
 							$display_condition_attrs = $display_condition_data['attrs'];
@@ -1215,6 +1222,7 @@ class UR_Admin_Settings {
 									$settings .= '</div>';
 									$settings .= wp_kses_post( $description );
 									$settings .= wp_kses_post( $desc_field );
+									$settings .= wp_kses_post( $notice_field );
 									$settings .= '</div>';
 									$settings .= '</div>';
 									break;
