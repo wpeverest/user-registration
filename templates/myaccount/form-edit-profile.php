@@ -250,7 +250,7 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 									$row_cl_map_attr = is_array( $row_cl_map ) ? wp_json_encode( $row_cl_map ) : $row_cl_map;
 
 									ob_start();
-									echo '<div class="ur-form-row" data-row-id="' . esc_attr( (string) $row_id ) . '" data-conditional-logic-enabled="' . esc_attr( $row_cl_enabled ) . '" data-conditional-logic-map="' . esc_attr( $row_cl_map_attr ) . '">';
+									echo '<div class="ur-form-row" data-row-id="' . esc_attr( $row_id ) . '" data-conditional-logic-enabled="' . esc_attr( $row_cl_enabled ) . '" data-conditional-logic-map="' . esc_attr( $row_cl_map_attr ) . '">';
 									user_registration_edit_profile_row_template( $data, $profile );
 									echo '</div>';
 									$row_template = ob_get_clean();
@@ -318,27 +318,27 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 							?>
 							</h2>
 							<?php
-							$is_profile_pic_on_form = ! ur_option_checked( 'user_registration_disable_profile_picture', false );
-							if ( $is_profile_pic_on_form ) {
-								?>
-								<div class="user-registration-profile-header">
-									<div class="user-registration-img-container" style="width:100%">
-										<?php
-										$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
-										$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
+								$is_profile_pic_on_form = ! ur_option_checked( 'user_registration_disable_profile_picture', false );
+								if ( $is_profile_pic_on_form ) {
+									?>
+									<div class="user-registration-profile-header">
+										<div class="user-registration-img-container" style="width:100%">
+											<?php
+											$gravatar_image      = get_avatar_url( get_current_user_id(), $args = null );
+											$profile_picture_url = get_user_meta( get_current_user_id(), 'user_registration_profile_pic_url', true );
 
-										if ( is_numeric( $profile_picture_url ) ) {
-											$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
-										}
+											if ( is_numeric( $profile_picture_url ) ) {
+												$profile_picture_url = wp_get_attachment_url( $profile_picture_url );
+											}
 
-										$profile_picture_url = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user_id );
-										$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
-										?>
-										<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
+											$profile_picture_url = apply_filters( 'user_registration_profile_picture_url', $profile_picture_url, $user_id );
+											$image               = ( ! empty( $profile_picture_url ) ) ? $profile_picture_url : $gravatar_image;
+											?>
+											<img class="profile-preview" alt="profile-picture" src="<?php echo esc_url( $image ); ?>" style='max-width:96px; max-height:96px;' >
+										</div>
 									</div>
-								</div>
-							<?php
-							}
+								<?php
+								}
 							?>
 							<?php
 								$user            = get_userdata( $user_id );
@@ -371,7 +371,7 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 									}
 
 									if ( ! $ignore ) {
-										echo '<div class="ur-form-row" data-row-id=' . $row_id . '>';
+										echo '<div class="ur-form-row" data-row-id="' . esc_attr( $row_id ) . '">';
 										echo '<div class="ur-form-grid">';
 
 										foreach ( $row_data as $grid_key => $grid_data ) {
@@ -443,8 +443,8 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 													}
 												} elseif ( 'country' === $field_key ) {
 													$value         = get_user_meta( $user->ID, 'user_registration_' . $field_name, true );
-													$isJson = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
-													if ( $isJson ) {
+													$is_json = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
+													if ( $is_json ) {
 														$country_data = json_decode( $value, true );
 														$country_code = isset( $country_data['country'] ) ? $country_data['country'] : '';
 														$state_code   = isset( $country_data['state'] ) ? $country_data['state'] : '';
