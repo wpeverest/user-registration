@@ -3441,6 +3441,8 @@ if ( ! function_exists( 'ur_redirect_thank_you_page_migration_script' ) ) {
 		}
 
 		$thank_you_page_id = get_option( 'user_registration_thank_you_page_id', '' );
+		
+		error_log( print_r( $thank_you_page_id, true ) );
 
 		$posts = get_posts(
 			array(
