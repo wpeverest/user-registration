@@ -113,7 +113,7 @@
 									<?php echo $is_upgrade_enabled ? 'checked' : ''; ?>
 									<?php echo ! $can_set_upgrade ? 'disabled' : ''; ?>
 									name="ur_membership_upgrade_action" style="width: 100%; text-align: left">
-							<span class="slider round"></span>
+							<span class="slider round" <?php echo ! $can_set_upgrade ? 'style="opacity: 0.7;"' : ''; ?>></span>
 						</span>
 						<?php if ( ! $can_set_upgrade ) : ?>
 							<div class="ur-membership-upgrade-action-notice" style="padding: 6px; background: #f8f9fc; border: 1px solid #475bb2; border-radius: 6px; color: #383838; font-size: 13px; line-height: 1.5;">
@@ -121,7 +121,7 @@
 								$create_membership_url = admin_url( 'admin.php?page=user-registration-membership' );
 								echo esc_html__( 'Please create more memberships to set an upgrade action.', 'user-registration' );
 								?>
-								<a href="<?php echo esc_url( $create_membership_url ); ?>" target="_blank" rel="noopener noreferrer" style="color: #2271b1; text-decoration: underline;"><?php esc_html_e( 'Create a Membership', 'user-registration' ); ?></a>
+								<a href="<?php echo esc_url( $create_membership_url ); ?>" rel="noopener noreferrer" style="color: #2271b1; text-decoration: underline;"><?php esc_html_e( 'Create a Membership', 'user-registration' ); ?></a>
 							</div>
 						<?php endif; ?>
 					</div>
