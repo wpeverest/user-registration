@@ -3428,7 +3428,7 @@ if ( ! function_exists( 'ur_size_to_limit_length_migration_script' ) ) {
 	}
 }
 
-if ( ! ur_string_to_bool( get_option( 'urm_is_new_installation' ) )() ){
+if ( ! ur_string_to_bool( get_option( 'urm_is_new_installation' ) ) ){
 	add_action( 'user_registration_init', 'ur_redirect_thank_you_page_migration_script' );
 }
 
