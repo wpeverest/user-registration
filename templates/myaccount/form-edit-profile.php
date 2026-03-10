@@ -110,7 +110,9 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 									 * @param string Profile detail title content.
 									 * @return string modified profile detail title.
 									 */
-									apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ) ); //PHPCS:ignore
+									apply_filters( 'user_registation_profile_detail_title', __( 'Profile Detail', 'user-registration' ) ),
+									'user-registration'
+								); //PHPCS:ignore
 							}
 							?>
 							</h2>
@@ -228,7 +230,8 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 								foreach ( $form_data_array as $index => $data ) {
 									$row_id = ( ! empty( $row_ids ) ) ? absint( $row_ids[ $index ] ) : $index;
 
-									$row_cl_props = '';
+									$row_cl_enabled = '';
+									$row_cl_map     = '';
 
 									// If the conditional logic addon is installed.
 									if ( class_exists( 'UserRegistrationConditionalLogic' ) ) {
@@ -242,13 +245,14 @@ if ( isset( $_GET['action'] ) && 'edit' === $_GET['action'] ) {
 
 												$row_cl_enabled = ur_string_to_bool( $individual_row_data->conditional_logic_enabled ) ? ur_string_to_bool( $individual_row_data->conditional_logic_enabled ) : '';
 												$row_cl_map     = isset( $individual_row_data->cl_map ) ? $individual_row_data->cl_map : array();
-												$row_cl_props   = sprintf( 'data-conditional-logic-enabled="%s" data-conditional-logic-map="%s"', esc_attr( $row_cl_enabled ), esc_attr( $row_cl_map ) );
 											}
 										}
 									}
 
+									$row_cl_map_attr = is_array( $row_cl_map ) ? wp_json_encode( $row_cl_map ) : $row_cl_map;
+
 									ob_start();
-									echo '<div class="ur-form-row" data-row-id=' . $row_id . ' ' . $row_cl_props . '>';
+									echo '<div class="ur-form-row" data-row-id="' . esc_attr( (string) $row_id ) . '" data-conditional-logic-enabled="' . esc_attr( $row_cl_enabled ) . '" data-conditional-logic-map="' . esc_attr( $row_cl_map_attr ) . '">';
 									user_registration_edit_profile_row_template( $data, $profile );
 									echo '</div>';
 									$row_template = ob_get_clean();
