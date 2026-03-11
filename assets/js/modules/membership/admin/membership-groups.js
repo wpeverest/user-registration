@@ -324,6 +324,12 @@
 				"change",
 				"#ur-setting-form .ur-general-setting-membership_active_memberships select",
 				function () {
+					var val = $(this).val();
+					// Sync value to grid item so it is saved when form is submitted
+					var $gridSelect = $(".ur-item-active .ur-general-setting-membership_active_memberships select");
+					if ($gridSelect.length && val != null) {
+						$gridSelect.val(Array.isArray(val) ? val : [].concat(val));
+					}
 					membership_group_object.fetch_selected_memberships();
 				}
 			);
