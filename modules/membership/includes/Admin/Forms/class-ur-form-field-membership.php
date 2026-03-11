@@ -167,6 +167,16 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 			if ( isset( $args['membership_listing_option'] ) && 'group' === $args['membership_listing_option'] ) {
 				$membership_group_service = new MembershipGroupService();
 				$memberships              = $membership_group_service->get_group_memberships( $args['membership_group'] );
+			} elseif ( isset( $args['membership_listing_option'] ) && 'selected' === $args['membership_listing_option'] ) {
+				$membership_service = new MembershipService();
+				$all_memberships    = $membership_service->list_active_memberships();
+				$selected_ids      = isset( $args['membership_active_memberships'] ) ? $args['membership_active_memberships'] : array();
+				$selected_ids      = is_array( $selected_ids ) ? $selected_ids : (array) maybe_unserialize( $selected_ids );
+				$selected_ids      = array_filter( array_map( 'absint', $selected_ids ) );
+				$memberships       = array_values( array_filter( $all_memberships, function ( $m ) use ( $selected_ids ) {
+					$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
+					return $id && in_array( $id, $selected_ids, true );
+				} ) );
 			} else {
 				$membership_service = new MembershipService();
 				$memberships        = $membership_service->list_active_memberships();
