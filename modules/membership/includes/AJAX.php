@@ -72,6 +72,7 @@ class AJAX {
 			'cancel_upcoming_subscription' => false,
 			'fetch_upgradable_memberships' => false,
 			'get_group_memberships'        => false,
+			'get_selected_memberships'     => false,
 			'create_membership_group'      => false,
 			'delete_membership_group'      => false,
 			'delete_membership_groups'     => false,
@@ -1624,6 +1625,63 @@ class AJAX {
 				)
 			);
 		}
+		wp_send_json_success(
+			array(
+				'plans' => $membership_plans,
+			)
+		);
+	}
+
+	/**
+	 * get_selected_memberships
+	 *
+	 * Returns membership plans for a list of selected membership IDs.
+	 *
+	 * @return void
+	 */
+	public static function get_selected_memberships() {
+		ur_membership_verify_nonce( 'ur_membership_group' );
+
+		if ( ! isset( $_POST['membership_ids'] ) || ! is_array( $_POST['membership_ids'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'No memberships selected.', 'user-registration' ),
+				)
+			);
+		}
+
+		$raw_ids      = array_map( 'intval', (array) $_POST['membership_ids'] );
+		$selected_ids = array_filter( $raw_ids );
+
+		if ( empty( $selected_ids ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'No valid memberships selected.', 'user-registration' ),
+				)
+			);
+		}
+
+		$membership_service = new MembershipService();
+		$all_memberships    = $membership_service->list_active_memberships();
+
+		$membership_plans = array_values(
+			array_filter(
+				$all_memberships,
+				function ( $m ) use ( $selected_ids ) {
+					$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
+					return $id && in_array( $id, $selected_ids, true );
+				}
+			)
+		);
+
+		if ( empty( $membership_plans ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'No memberships found for the current selection.', 'user-registration' ),
+				)
+			);
+		}
+
 		wp_send_json_success(
 			array(
 				'plans' => $membership_plans,
