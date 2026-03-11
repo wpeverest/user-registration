@@ -474,10 +474,17 @@
 					),
 					group_select_field = $(
 						"#ur-setting-form .ur-general-setting-membership_group"
+					),
+					active_memberships_field = $(
+						"#ur-setting-form .ur-general-setting-membership_active_memberships"
 					);
-				group_select_field.show();
-				if (membership_listing_option_field.val() === "all") {
-					group_select_field.hide();
+				var val = membership_listing_option_field.val();
+				group_select_field.hide();
+				active_memberships_field.hide();
+				if (val === "group") {
+					group_select_field.show();
+				} else if (val === "selected") {
+					active_memberships_field.show();
 				}
 			});
 			$(document).on(
