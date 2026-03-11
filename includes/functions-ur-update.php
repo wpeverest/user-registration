@@ -461,6 +461,10 @@ function urm_update_50_option_migrate() {
  */
 function ur_update_515_redirect_thank_you_page_migrate() {
 
+	if ( ! function_exists( 'ur_check_module_activation' ) || ! ur_check_module_activation( 'membership' ) ) {
+		return;
+	}
+
 	$thank_you_page_id = get_option( 'user_registration_thank_you_page_id', '' );
 
 	$posts = get_posts(
