@@ -4052,6 +4052,21 @@
 							.find("a.nav-tab")
 							.removeClass("active");
 						$(this).addClass("active");
+
+						$(".ur-multiselect").each(function () {
+							var $el = $(this);
+							if ($el.hasClass("select2-hidden-accessible")) {
+								try {
+									$el.select2("destroy");
+								} catch (e) {}
+							}
+							$el.select2();
+							var $wrap = $el.closest(".ur-general-setting");
+							if ($wrap.length) {
+								var $containers = $wrap.find(".select2-container");
+								$containers.slice(1).remove();
+							}
+						});
 					}
 				);
 				$(".ur-tabs").tabs();
