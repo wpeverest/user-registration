@@ -22,10 +22,13 @@ class User_Registration_Stripe_Module {
 		if ( is_admin() ) {
 			// Filter for global settings.
 			add_filter( 'user_registration_payment_settings', array( $this, 'get_stripe_settings' ) );
-			add_filter( 'urm_validate_stripe_payment_section_before_update', array(
-				$this,
-				'validate_stripe_section'
-			) );
+			add_filter(
+				'urm_validate_stripe_payment_section_before_update',
+				array(
+					$this,
+					'validate_stripe_section',
+				)
+			);
 			add_action( 'urm_save_stripe_payment_section', array( $this, 'save_section_settings' ), 10, 1 );
 		}
 	}
@@ -39,7 +42,7 @@ class User_Registration_Stripe_Module {
 		$stripe_enabled = get_option( 'user_registration_stripe_enabled', '' );
 
 		// Determine default toggle value based on urm_is_new_installation option
-		$stripe_toggle_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false ));
+		$stripe_toggle_default = ur_string_to_bool( get_option( 'urm_is_new_installation', false ) );
 
 		return array(
 			'id'           => 'stripe',
@@ -55,7 +58,7 @@ class User_Registration_Stripe_Module {
 					'desc'     => __( 'Enable Stripe payment gateway.', 'user-registration' ),
 					'id'       => 'user_registration_stripe_enabled',
 					'desc_tip' => true,
-					'default'  => ($stripe_enabled) ? $stripe_enabled : $stripe_toggle_default,
+					'default'  => ( $stripe_enabled ) ? $stripe_enabled : $stripe_toggle_default,
 					'class'    => 'urm_toggle_pg_status',
 				),
 				array(
@@ -106,7 +109,7 @@ class User_Registration_Stripe_Module {
 					'title' => __( 'Save', 'user-registration' ),
 					'id'    => 'user_registration_stripe_save_settings',
 					'type'  => 'button',
-					'class' => 'payment-settings-btn'
+					'class' => 'payment-settings-btn',
 				),
 			),
 		);
@@ -135,10 +138,10 @@ class User_Registration_Stripe_Module {
 	public function validate_stripe_section( $form_data ) {
 		$changed  = false;
 		$response = array(
-			'status' => true,
+			'status'    => true,
 			'connected' => true,
 		);
-		if( isset( $form_data['user_registration_stripe_enabled'] ) && ! $form_data['user_registration_stripe_enabled'] ) {
+		if ( isset( $form_data['user_registration_stripe_enabled'] ) && ! $form_data['user_registration_stripe_enabled'] ) {
 			return $response;
 		}
 		foreach ( $form_data as $k => $data ) {
@@ -154,20 +157,34 @@ class User_Registration_Stripe_Module {
 			$publishable_key = $form_data[ sprintf( 'user_registration_stripe_%s_publishable_key', $mode ) ];
 			$secret_key      = $form_data[ sprintf( 'user_registration_stripe_%s_secret_key', $mode ) ];
 
+			if ( empty( $secret_key ) ) {
+				$response['status']  = false;
+				$response['message'] = esc_html__( 'Stripe secret key is missing.', 'user-registration' );
+				return $response;
+			}
+
+			// Detect mode from key
+			if ( strpos( $secret_key, 'sk_test_' ) === 0 ) {
+
+				if ( 'live' === $mode ) {
+					$response['status']  = false;
+					$response['message'] = esc_html__( 'Test key used while Live mode is selected.', 'user-registration' );
+					return $response;
+				}
+			}
+
 			\Stripe\Stripe::setApiKey( $secret_key ); // Replace with your actual key
 
 			try {
-				$customers = \Stripe\Customer::all( [ 'limit' => 1 ] );
+				$customers = \Stripe\Customer::all( array( 'limit' => 1 ) );
 			} catch ( \Stripe\Exception\AuthenticationException $e ) {
-				$response['status']  = false;
-				$response['connected']  = false;
-				$response['message'] = 'Invalid stripe credentials';
+				$response['status']    = false;
+				$response['connected'] = false;
+				$response['message']   = 'Invalid stripe credentials';
 			}
 		}
 
 		return $response;
-
-
 	}
 
 	/**
@@ -193,7 +210,10 @@ class User_Registration_Stripe_Module {
 					'stripe',
 					'Webhook created or verified for ' . $mode . ' mode',
 					'notice',
-					array( 'event_type' => 'webhook_save', 'mode' => $mode )
+					array(
+						'event_type' => 'webhook_save',
+						'mode'       => $mode,
+					)
 				);
 			}
 		}
