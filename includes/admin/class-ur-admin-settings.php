@@ -198,8 +198,6 @@ class UR_Admin_Settings {
 				'i18n'                                 => array(
 					'advanced_logic_rules_exist_error'   => esc_html__( 'Remove all rules with advance logics first before disabling.', 'user-registration' ),
 					'advanced_logic_check_error'         => esc_html__( 'An error occurred while checking for advanced logic rules.', 'user-registration' ),
-					'advanced_logic_rules_exist_error'   => esc_html__( 'Remove all rules with advance logics first before disabling.', 'user-registration' ),
-					'advanced_logic_check_error'         => esc_html__( 'An error occurred while checking for advanced logic rules.', 'user-registration' ),
 					'captcha_success'                    => esc_html__( 'Captcha Test Successful !', 'user-registration' ),
 					'captcha_reset_title'                => esc_html__( 'Reset Keys', 'user-registration' ),
 					'payment_reset_title'                => esc_html__( 'Reset Details', 'user-registration' ),
@@ -267,7 +265,7 @@ class UR_Admin_Settings {
 		 *
 		 * @param array Array of settings page
 		 */
-		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() );
+		$tabs = apply_filters( 'user_registration_settings_tabs_array', array() ); // phpcs:ignore
 
 		$GLOBALS['hide_save_button'] = false;
 		if ( 'import_export' === $current_tab ) {
@@ -298,11 +296,7 @@ class UR_Admin_Settings {
 			$settings[] = include 'settings/class-ur-settings-email.php';
 			$settings[] = include 'settings/class-ur-settings-registration-login.php';
 			$settings[] = include 'settings/class-ur-settings-my-account.php';
-
-			// $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
-			// if( $is_pro_active ) {
 			$settings[] = include 'settings/class-ur-settings-integration.php';
-			// }
 
 			$settings[] = include 'settings/class-ur-settings-security.php';
 			$settings[] = include 'settings/class-ur-settings-advanced.php';
@@ -339,7 +333,7 @@ class UR_Admin_Settings {
 		$flag = apply_filters( 'user_registration_settings_prevent_default_login', $_REQUEST );
 
 		if ( $flag && is_bool( $flag ) ) {
-			if ( $current_tab !== 'license' ) {
+			if ( 'license' !== $current_tab ) {
 				self::add_message( esc_html__( 'Your settings have been saved.', 'user-registration' ) );
 			}
 
@@ -403,6 +397,7 @@ class UR_Admin_Settings {
 	 * Add an error.
 	 *
 	 * @param string $text Text.
+	 * @param string $type Error Type.
 	 */
 	public static function add_error( $text, $type = '' ) {
 		if ( ! empty( $type ) ) {
@@ -469,25 +464,25 @@ class UR_Admin_Settings {
 						if ( ! empty( $section['title'] ) ) {
 							$settings .= '<div class="user-registration-card__header-wrapper">';
 							if ( isset( $section['back_link'] ) ) {
-								$settings .= $section['back_link']; // removed kses since the inputs are sanitized in the function ur_back_link itself
+								$settings .= $section['back_link']; // removed kses since the inputs are sanitized in the function ur_back_link itself.
 							}
 							$settings .= '<h3 class="user-registration-card__title">';
 							$settings .= esc_html( ucwords( $section['title'] ) );
 
 							if ( isset( $section['is_premium'] ) && $section['is_premium'] ) {
-								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' . '" /></div>';
+								$settings .= '<div style="margin-right: 4px;display: inline-block;width: 16px; height: 16px;" ><img style="width: 100%;height:100%;" src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png" /></div>';
 							}
 							$settings .= '</h3>';
 
 							if ( ! empty( $section['button'] ) ) {
 								if ( isset( $section['button']['button_type'] ) && 'upgrade_link' === $section['button']['button_type'] ) {
-									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="ur-upgrade--link" target="_blank">' . '<span>' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span></a>';
+									$settings .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="ur-upgrade--link" target="_blank"><span>' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span></a>';
 								} else {
 									$button_class  = isset( $section['button']['button_class'] ) ? esc_attr( $section['button']['button_class'] ) : 'user_registration_smart_tags_used';
 									$button_type   = isset( $section['button']['button_type'] ) ? $section['button']['button_type'] : '';
 									$button_target = ( 'ur-add-new-custom-email' === $button_type ) ? '' : 'target="_blank"';
 									$external_icon = ( 'ur-add-new-custom-email' === $button_type ) ? '' : '<span class="dashicons dashicons-external"></span>';
-									$settings     .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="' . $button_class . '" style="min-width:90px;" ' . $button_target . '>' . '<span style="text-decoration: underline;">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span>' . $external_icon . '</a>';
+									$settings     .= '<a href="' . ( isset( $section['button']['button_link'] ) ? $section['button']['button_link'] : '#' ) . '" class="' . $button_class . '" style="min-width:90px;" ' . $button_target . '><span style="text-decoration: underline;">' . ( isset( $section['button']['button_text'] ) ? $section['button']['button_text'] : '' ) . '</span>' . $external_icon . '</a>';
 								}
 							}
 							$settings .= '</div>';
@@ -499,15 +494,15 @@ class UR_Admin_Settings {
 
 						$settings .= '</div>';
 
-						//Show upsell texts.
+						// Show upsell texts.
 						if ( ! empty( $section['upsell'] ) ) {
 							$upsell_section = $section['upsell'];
 							$settings      .= '<div class="user-registration-upsell">';
-							//excerpt.
+							// excerpt.
 							if ( ! empty( $upsell_section['excerpt'] ) ) {
 								$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $upsell_section['excerpt'] ) ) . '</p>';
 							}
-							//descriptions.
+							// descriptions.
 							if ( ! empty( $upsell_section['description'] ) ) {
 								if ( is_string( $upsell_section['description'] ) ) {
 									$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $upsell_section['excerpt'] ) ) . '</p>';
@@ -526,10 +521,6 @@ class UR_Admin_Settings {
 								$settings .= '<a href="' . esc_url( $upsell_section['feature_link'] ) . '" class="user-registration-upsell__feature-link" target="_blank">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>';
 							}
 							$settings .= '</div>';
-						}
-
-						if ( ! empty( $section['before_desc'] ) ) {
-							//                          $settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $section['before_desc'] ) ) . '</p>';
 						}
 
 						if ( ! empty( $section['desc'] ) ) {
@@ -837,7 +828,7 @@ class UR_Admin_Settings {
 											cols="' . esc_attr( $value['cols'] ) . '"
 											placeholder="' . esc_attr( $value['placeholder'] ) . '"
 											' . esc_html( implode( ' ', $custom_attributes ) ) . '>'
-									             . esc_textarea( $option_value ) . '</textarea>';
+												. esc_textarea( $option_value ) . '</textarea>';
 									$settings .= '</div>';
 									$settings .= '</div>';
 									break;
@@ -1292,14 +1283,14 @@ class UR_Admin_Settings {
 										)
 									);
 									$show_reset_key_button = ( $is_connected && in_array(
-											$section_id,
-											array(
-												'v2',
-												'v3',
-												'hCaptcha',
-												'cloudflare',
-											)
-										) );
+										$section_id,
+										array(
+											'v2',
+											'v3',
+											'hCaptcha',
+											'cloudflare',
+										)
+									) );
 									if ( in_array(
 										$section_id,
 										array(
@@ -1908,7 +1899,7 @@ class UR_Admin_Settings {
 
 		// Save all options in our array.
 		foreach ( $update_options as $name => $value ) {
-			//sync membership 'user_registration_member_registration_page_id' with 'user_registration_registration_page_id'.
+			// sync membership 'user_registration_member_registration_page_id' with 'user_registration_registration_page_id'.
 			if ( 'user_registration_member_registration_page_id' === $name ) {
 				update_option( 'user_registration_registration_page_id', $value );
 			}
