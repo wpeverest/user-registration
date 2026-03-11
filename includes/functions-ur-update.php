@@ -485,7 +485,10 @@ function ur_update_515_redirect_thank_you_page_migrate() {
 			update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
 		} else {
 			update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'internal-page' );
-			update_post_meta( $post->ID, 'user_registration_form_setting_redirect_page', $thank_you_page_id );
+			
+			if ( empty( get_post_meta( $post->ID, 'user_registration_form_setting_redirect_page', true ) ) ) {
+				update_post_meta( $post->ID, 'user_registration_form_setting_redirect_page', $thank_you_page_id );
+			}
 		}
 	}
 }
