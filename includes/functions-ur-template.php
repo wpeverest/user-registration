@@ -81,7 +81,7 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 
 			if ( ! empty( $form_id ) ) {
 
-				$redirect_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'internal-page' );
+				$redirect_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', ur_get_default_redirect_after_registration( $form_id ) );
 
 				switch ( $redirect_option ) {
 					case 'no-redirection':

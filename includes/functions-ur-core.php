@@ -1200,6 +1200,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			$ur_enabled_captchas[ $key ] = $value;
 		}
 	}
+	$redirect_after_registration_default = ur_get_default_redirect_after_registration( $form_id );
 	$arguments = array(
 		'form_id'      => $form_id,
 		'setting_data' => array(
@@ -1348,9 +1349,9 @@ function ur_admin_form_settings_fields( $form_id ) {
 						'previous-page'  => __( 'Previous Page', 'user-registration' ),
 					)
 				),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'internal-page' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', $redirect_after_registration_default ),
 				'tip'               => __( 'Decide where users go after completing registration.', 'user-registration' ),
-				'default_value'     => 'internal-page',
+				'default_value'     => $redirect_after_registration_default,
 				'custom_attributes' => array(),
 				'product'           => 'user-registration/user-registration.php',
 			),
@@ -1724,6 +1725,27 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 	}
 
 	return $default;
+}
+
+if ( ! function_exists( 'ur_get_default_redirect_after_registration' ) ) {
+	/**
+	 * Get default redirect-after-registration value for a form.
+	 * Returns 'internal-page' if the form has a membership field, otherwise 'no-redirection'.
+	 *
+	 * @param int $form_id Form ID.
+	 * @return string 'internal-page' or 'no-redirection'
+	 * @since 1.0.1
+	 */
+	function ur_get_default_redirect_after_registration( $form_id ) {
+		if ( ! $form_id ) {
+			return 'no-redirection';
+		}
+		$form_post = get_post( $form_id );
+		if ( $form_post && isset( $form_post->post_content ) && false !== strpos( $form_post->post_content, '"field_key":"membership"' ) ) {
+			return 'internal-page';
+		}
+		return 'no-redirection';
+	}
 }
 
 /**
