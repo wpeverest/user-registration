@@ -11938,7 +11938,7 @@ if ( ! function_exists( 'ur_format_country_field_data' ) ) {
 	}
 }
 
-add_action( 'urm_save_stripe_payment_section', 'user_registration_create_product_and_price_for_stripe' );
+add_action( 'user_registration_after_stripe_settings_updated', 'user_registration_create_product_and_price_for_stripe' );
 
 if ( ! function_exists( 'user_registration_create_product_and_price_for_stripe' ) ) {
 	/**
