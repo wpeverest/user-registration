@@ -33,6 +33,8 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 
 		/**
 		 * List of sections.
+		 *
+		 * @var array
 		 */
 		protected $sections = array();
 
@@ -59,6 +61,8 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 
 		/**
 		 * Get default section.
+		 *
+		 * @param string $default_section Default Section.
 		 */
 		public function get_default_section( $default_section ) {
 			return $this->get_sections() ? array_key_first( $this->get_sections() ) : $default_section;
@@ -109,7 +113,6 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			/**
 			 * Backward compatibility: previous settings section.
 			 */
-			// $settings = apply_filters( 'user_registration_' . $this->id . '_settings', $settings );
 			return $settings;
 		}
 
@@ -134,9 +137,9 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 		 */
 		public function output_sections() {
 			global $current_section;
-			
+
 			$active_section = $current_section;
-	
+
 			if ( 'email' === $this->id && is_string( $current_section ) && 0 === strpos( $current_section, 'ur_settings_' ) && method_exists( $this, 'get_emails' ) ) {
 				$emails = $this->get_emails();
 				if ( is_array( $emails ) ) {
@@ -186,7 +189,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 						if ( isset( $premium_tab[ $id ]['plugin'] ) && is_plugin_active( $premium_tab[ $id ]['plugin'] . '/' . $premium_tab[ $id ]['plugin'] . '.php' ) && ( in_array( $premium_tab[ $id ]['plugin'], $tab_slugs ) || in_array( $id, $tab_slugs ) || in_array( $id_bc, $tab_slugs ) ) ) {
 							$show_section = false;
 						}
-						//woocommerce compatibility.
+						// woocommerce compatibility.
 						if ( 'woocommerce' === $id && ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
 							$show_section = false;
 						}
@@ -210,25 +213,37 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 							<span class="timeline"></span>
 							<span class="submenu"><?php echo esc_html( $label ); ?></span>
 							<?php if ( $show_premium_icon ) : ?>
-								<img style="width: 14px; height: 14px;margin-left: 4px;" src="<?php echo UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png'; ?>" />
-							<?php
+								<img style="width: 14px; height: 14px;margin-left: 4px;" src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' ); ?>" />
+								<?php
 							endif;
 							?>
 						</a>
 					</li>
 					<?php
-					echo ob_get_clean();
+					echo ob_get_clean(); // phpcs:ignore
 				}
 			}
 
 			echo '</ul>';
 		}
+
+		/**
+		 * Get section parts.
+		 *
+		 * @return array
+		 */
 		public function get_section_parts() {
 			return apply_filters(
 				'user_registration_get_section_parts_' . $this->id,
-				array(),
+				array()
 			);
 		}
+
+		/**
+		 * Output section parts.
+		 *
+		 * @return void
+		 */
 		public function output_section_parts() {
 			global $current_section;
 			global $current_section_part;
@@ -247,7 +262,7 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 					</a>
 				</li>
 				<?php
-				echo ob_get_clean();
+				echo ob_get_clean(); // phpcs:ignore
 			}
 
 			echo '</ul>';
@@ -260,6 +275,11 @@ if ( ! class_exists( 'UR_Settings_Page', false ) ) :
 			UR_Admin_Settings::output_fields( $settings );
 		}
 
+		/**
+		 * Upgrade to pro settings.
+		 *
+		 * @return array
+		 */
 		public function upgrade_to_pro_setting() {
 			global $current_section;
 			global $current_tab;
