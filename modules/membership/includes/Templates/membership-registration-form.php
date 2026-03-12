@@ -538,6 +538,15 @@
 			</div>
 			<span id="payment-gateway-notice" class="notice_red"></span>
 		</div>
+		<?php
+		$bank_details = get_option( 'user_registration_global_bank_details', '' );
+		if ( ! empty( $bank_details ) ) :
+			?>
+			<div id="ur-bank-details-container" class="ur-bank-details" style="display:none;">
+				<p class="ur-bank-details-title"><?php esc_html_e( 'Bank Details :', 'user-registration' ); ?></p>
+				<?php echo wp_kses_post( $bank_details ); ?>
+			</div>
+		<?php endif; ?>
 	</div>
 	<div class="ur_membership_frontend_input_container">
 		<div class="stripe-container urm-d-none">
@@ -571,4 +580,25 @@
 	?>
 
 </div>
-<!--user order successful section-->
+
+<script type="text/javascript">
+	(function( $ ) {
+		function urToggleBankDetails() {
+			var selectedMethod = $( 'input[name="urm_payment_method"]:checked' ).val();
+			var $container     = $( '#ur-bank-details-container' );
+
+			if ( ! $container.length ) {
+				return;
+			}
+
+			if ( selectedMethod === 'bank' ) {
+				$container.show();
+			} else {
+				$container.hide();
+			}
+		}
+
+		$( document ).on( 'change', 'input[name="urm_payment_method"]', urToggleBankDetails );
+		$( document ).ready( urToggleBankDetails );
+	})( jQuery );
+</script>
