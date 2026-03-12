@@ -10391,7 +10391,6 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 			'has_default_form'                  => ! empty( $default_form_post ),
 			'missing_pages'                     => $missing_pages_data,
 			'test_email_sent'                   => get_option( 'user_registration_successful_test_mail', false ),
-			'wordpress_login_handled'           => ( get_option( 'user_registration_login_options_prevent_core_login', false ) == true ) || ( get_option( 'user_registration_default_wordpress_login_skipped', false ) == true ),
 			'spam_protection_handled'           => ur_string_to_bool( get_option( 'user_registration_captcha_setting_v2_connection_status', false ) ) || ur_string_to_bool( get_option( 'user_registration_spam_protection_skipped', false ) ),
 			'payment_setup_handled'             => $payment_setup_handled,
 			'payment_connections'               => $payment_connections,
@@ -10624,7 +10623,6 @@ if ( ! function_exists( 'ur_site_assistant_config_count' ) ) {
 			! $site_assistant_data['has_default_form'],
 			! empty( $site_assistant_data['missing_pages'] ),
 			! $site_assistant_data['test_email_sent'],
-			! $site_assistant_data['wordpress_login_handled'],
 			! $site_assistant_data['spam_protection_handled'],
 			! $site_assistant_data['payment_setup_handled'],
 		);
