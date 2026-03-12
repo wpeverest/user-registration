@@ -52,12 +52,12 @@ class UR_Base_Layout {
 			$total_items = (int) $table->get_pagination_arg( 'total_items' );
 		}
 
-		$search_param  = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
-		$is_searching  = '' !== trim( $search_param );
+		$search_param = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : '';
+		$is_searching = '' !== trim( $search_param );
 
 		$show_search = ( $total_items > 10 ) || $is_searching;
 
-		$is_membership_page = isset( $_GET['page'] ) && 'user-registration-membership' === $_GET['page'] && ! isset( $_GET['action'] ) ? true : false;
+		$is_membership_page = isset( $_GET['page'] ) && 'user-registration-membership' == $_GET['page'] && ! isset( $_GET['action'] ) ? true : false;
 
 		?>
 		<div id="user-registration-base-list-table-page" class="<?php echo esc_attr( $data['class'] ); ?>">
@@ -93,7 +93,7 @@ class UR_Base_Layout {
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $data['add_page_key'] ) ); ?>" class="page-title-action <?php echo esc_attr( $external_class ); ?>" <?php echo wp_kses_post( $inline_attr ); ?>>
 						<?php echo esc_html( $data['add_new_label'] ); ?>
 					</a>
-				<?php
+					<?php
 				elseif ( ! empty( $data['add_new_action'] ) ) :
 					?>
 					<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $data['page'] . '&action=' . $data['add_new_action'] ) ); ?>" class="page-title-action <?php echo esc_attr( $external_class ); ?>" <?php echo wp_kses_post( $inline_attr ); ?>>
@@ -113,7 +113,7 @@ class UR_Base_Layout {
 						<?php
 					}
 					?>
-				<?php
+					<?php
 				endif;
 				?>
 			</div>
@@ -127,7 +127,7 @@ class UR_Base_Layout {
 						}
 						?>
 					</div>
-				<?php
+					<?php
 				endif;
 				?>
 				<?php
