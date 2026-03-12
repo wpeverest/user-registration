@@ -85,7 +85,7 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 				'options'     => array(
 					'all'   => 'Show all Memberships.',
 					'group' => 'Select a group',
-					'selected' => 'Select active memberships',
+					'selected' => 'Select memberships',
 				),
 			),
 			'membership_group'          => array(
