@@ -11,6 +11,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        id: build
+        uses: wpeverest/action-build@4.0.2
+
       - name: Delete existing SVN tag if exists
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
