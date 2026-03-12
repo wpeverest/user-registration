@@ -368,6 +368,7 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
         }
         public function get_bank_transfer_settings() {
             $bank_transfer_enabled = get_option( 'user_registration_bank_enabled', '' );
+            $show_bank_details_on_form = get_option( 'user_registration_show_bank_details_on_form', false );
 
             // Determine default toggle value based on urm_is_new_installation option
             $bank_toggle_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false ));
@@ -388,6 +389,15 @@ if ( ! class_exists( 'UR_Settings_Payment' ) ) {
                         'default'  => ($bank_transfer_enabled) ? $bank_transfer_enabled : !$bank_toggle_default,
                         'class'    => 'urm_toggle_pg_status',
                     ),
+	                array(
+		                'type'     => 'toggle',
+		                'title'    => __( 'Show Bank Details in Form', 'user-registration' ),
+		                'desc'     => __( 'This option will show the bank details in registration form when bank transfer is selected.', 'user-registration' ),
+		                'id'       => 'user_registration_show_bank_details_on_form',
+		                'desc_tip' => true,
+		                'default'  => $show_bank_details_on_form,
+		                'class'    => 'urm_toggle_pg_show_bank_details_on_form' ,
+	                ),
                     array(
                         'title'    => __( 'Enter your details', 'user-registration' ),
                         'desc'     => __( 'Field to add necessary bank details which will be shown to users after successful payment using the bank option during checkout.', 'user-registration' ),

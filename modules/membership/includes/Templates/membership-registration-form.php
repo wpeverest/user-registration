@@ -540,7 +540,8 @@
 		</div>
 		<?php
 		$bank_details = get_option( 'user_registration_global_bank_details', '' );
-		if ( ! empty( $bank_details ) ) :
+		$show_bank_details_on_form = get_option( 'user_registration_show_bank_details_on_form', false);
+		if ( ! empty( $bank_details ) && $show_bank_details_on_form ) :
 			?>
 			<div id="ur-bank-details-container" class="ur-bank-details" style="display:none;">
 				<p class="ur-bank-details-title"><?php esc_html_e( 'Bank Details :', 'user-registration' ); ?></p>
