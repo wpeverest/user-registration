@@ -60,7 +60,7 @@
 						<div class="trial-container--wrapper ur-d-flex ur-mt-6 ur-align-items-center" style="gap:20px;">
 							<div class="ur-label" style="width: 23%">
 								<label class="ur-membership-trial-status" for="ur-membership-trial-duration">
-									<?php esc_html_e( 'Trial Period Duration', 'user - registration' ); ?>
+									<?php esc_html_e( 'Trial Period Duration', 'user-registration' ); ?>
 									<span style="color:red">*</span>
 								</label>
 							</div>
