@@ -12,12 +12,13 @@
  * @version   5.0.0
  * @since     5.0.0
  */
+
 if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 	/**
 	 * UR_Settings_Membership Class
 	 */
 	class UR_Settings_Membership extends UR_Settings_Page {
-		private static $_instance = null;
+		private static $_instance = null; // phpcs:ignore
 		/**
 		 * Constructor.
 		 */
@@ -27,6 +28,12 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 			parent::__construct();
 			$this->handle_hooks();
 		}
+
+		/**
+		 * Singleton class instance.
+		 *
+		 * @return UR_Settings_Membership
+		 */
 		public static function get_instance() {
 			if ( null === self::$_instance ) {
 				self::$_instance = new self();
@@ -35,14 +42,18 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 		}
 		/**
 		 * Register hooks for submenus and section UI.
+		 *
 		 * @return void
 		 */
 		public function handle_hooks() {
 			add_filter( "user_registration_get_sections_{$this->id}", array( $this, 'get_sections_callback' ), 1, 1 );
 			add_filter( "user_registration_get_settings_{$this->id}", array( $this, 'get_settings_callback' ), 1, 1 );
 		}
+
 		/**
 		 * Filter to provide sections submenu for membership settings.
+		 *
+		 * @param array $sections Settings section.
 		 */
 		public function get_sections_callback( $sections ) {
 			$sections['general']       = __( 'General', 'user-registration' );
@@ -50,8 +61,12 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 
 			return $sections;
 		}
+
 		/**
 		 * Filter to provide sections UI for membership settings.
+		 *
+		 * @param array $settings Settings array.
+		 * @return array
 		 */
 		public function get_settings_callback( $settings ) {
 			global $current_section;
@@ -70,6 +85,7 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 								'title'    => __( 'General', 'user-registration' ),
 								'type'     => 'card',
 								'desc'     => sprintf(
+									/* translators: %s - Admin URL for membership page settings */
 									__( '<strong>Membership page setting has moved.</strong> Configure your membership page <a href="%s">here</a>.', 'user-registration' ),
 									admin_url( 'admin.php?page=user-registration-settings&tab=general&section=pages' )
 								),
@@ -99,8 +115,13 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 			return $settings;
 		}
 
+		/**
+		 * Content restriction settings.
+		 *
+		 * @return array
+		 */
 		public function urcr_settings() {
-			// Build sections array
+			// Build sections array.
 			$sections = array();
 
 			$default_message = '<h3>' . __( 'Membership Required', 'user-registration' ) . '</h3>
@@ -135,8 +156,12 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 				),
 			);
 			$is_new_installation                                        = ur_string_to_bool( get_option( 'urm_is_new_installation', '' ) );
-			if ( $is_new_installation ) {
-				$sections['user_registration_content_restriction_settings']['desc'] = sprintf( __( '<strong>The Global Restriction setting has moved.</strong> You can now manage it <a href="%1$s" target="_blank" style="text-decoration: underline;" >here.</a>', 'user-registration' ), esc_url_raw( $content_rule_url ) );
+			if ( ! $is_new_installation ) {
+				$sections['user_registration_content_restriction_settings']['desc'] = sprintf(
+					/* translators: %s - Content rule URL */
+					__( '<strong>The Global Restriction setting has moved.</strong> You can now manage it <a href="%1$s" target="_blank" style="text-decoration: underline;" >here.</a>', 'user-registration' ),
+					esc_url_raw( $content_rule_url )
+				);
 			}
 
 			return apply_filters(
@@ -151,5 +176,5 @@ if ( ! class_exists( 'UR_Settings_Membership' ) ) {
 	}
 }
 
-//Backward Compatibility.
+// Backward Compatibility.
 return method_exists( 'UR_Settings_Membership', 'get_instance' ) ? UR_Settings_Membership::get_instance() : new UR_Settings_Membership();
