@@ -1,6 +1,7 @@
 <?php
 /**
  * Base Page class for pages.
+ * @package UserRegistration
  */
 
 use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
@@ -9,6 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Base Layout class for pages.
+ * @package UserRegistration
+ */
 class UR_Base_Layout {
 	/**
 	 * Render a standard list-table page layout for a given WP_List_Table instance.
@@ -135,8 +140,8 @@ class UR_Base_Layout {
 	/**
 	 * Display Search Input with button
 	 *
-	 * @param $search_id
-	 * @param $placeholder
+	 * @param string $search_id    HTML id attribute for the search input.
+	 * @param string $placeholder Placeholder text for the search input (ellipsis is appended).
 	 *
 	 * @return void
 	 */
