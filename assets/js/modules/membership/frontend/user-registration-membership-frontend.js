@@ -1061,16 +1061,14 @@
 					".ur-membership-period-span"
 				);
 
-				// Parse duration assuming text like "10 every Month" or "10 every 3 Months".
+				// Parse duration assuming text.
 				var oldText = $span.text();
 				var durationPart = "";
 				var everyIndex = oldText.toLowerCase().indexOf(" every ");
 
 				if (everyIndex !== -1) {
-					// Keep everything from "every ..." onwards.
 					durationPart = oldText.substring(everyIndex).trim();
 				} else {
-					// Fallback: drop the first "amount" token and keep the rest.
 					durationPart = oldText.replace(/^[^\s]+\s*/, "").trim();
 				}
 

@@ -205,10 +205,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 									<span class="ur-membership-duration">
 										<?php
 										if ( $membership['time'] || $membership['subscription'] ) {
-											$duration_text = ( 'subscription' === $membership['type'] )
-												? $membership['subscription']['value'] . ' ' . ucfirst( $membership['subscription']['duration'] )
-												: $membership['time'];
-											echo esc_html( ' / ' . $duration_text );
+											echo ' every ' . ( 'subscription' === $membership['type'] ? esc_html( $membership['subscription']['value'] ) . ' ' . esc_html( ucfirst( $membership['subscription']['duration'] ) ) : esc_html( $membership['time'] ) ); }
 										}
 										?>
 									</span>
