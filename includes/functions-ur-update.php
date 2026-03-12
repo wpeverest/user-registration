@@ -484,11 +484,17 @@ function ur_update_515_redirect_thank_you_page_migrate() {
 		if ( empty( $thank_you_page_id ) || ! get_post_status( $thank_you_page_id ) ) {
 			update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
 		} else {
-			update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'internal-page' );
-			
-			if ( empty( get_post_meta( $post->ID, 'user_registration_form_setting_redirect_page', true ) ) ) {
+			if ( 'no-redirection' === ( get_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', true ) ) ) {
+				update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'internal-page' );
 				update_post_meta( $post->ID, 'user_registration_form_setting_redirect_page', $thank_you_page_id );
+			} else {
+				update_post_meta( $post->ID, 'user_registration_form_setting_redirect_after_registration', 'internal-page' );
+
+				if ( empty( get_post_meta( $post->ID, 'user_registration_form_setting_redirect_page', true ) ) ) {
+					update_post_meta( $post->ID, 'user_registration_form_setting_redirect_page', $thank_you_page_id );
+				}
 			}
+
 		}
 	}
 }
