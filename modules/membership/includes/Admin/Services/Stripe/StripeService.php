@@ -595,22 +595,61 @@ class StripeService {
 		}
 
 		\Stripe\Stripe::setApiKey( $stripe_settings['secret_key'] );
+
 		$pi_id = sanitize_text_field( ! empty( $data['payment_result']['paymentIntent']['id'] ) ? $data['payment_result']['paymentIntent']['id'] : '' );
 
-		if ( ! empty( $pi_id ) ) {
-			$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
+		if ( empty( $pi_id ) ) {
+			$pi_id = sanitize_text_field( ! empty( $data['payment_result']['latest_invoice']['payment_intent']['id'] ) ? $data['payment_result']['latest_invoice']['payment_intent']['id'] : '' );
+		}
 
-			if ( $intent->status !== 'succeeded' ) {
-				$response['status']  = false;
-				$response['message'] = __( 'Payment not completed.', 'user-registration' );
-
+		if ( empty( $pi_id ) ) {
+			$existing_order = $this->members_orders_repository->get_member_orders( $member_id );
+			if ( ! empty( $existing_order ) && 'completed' === $existing_order['status'] ) {
+				$response['status']  = true;
+				$response['message'] = __( 'Payment already verified.', 'user-registration' );
 				return $response;
 			}
 
-			$payment_status = $intent->status;
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Payment confirmation rejected: missing PaymentIntent ID',
+				array(
+					'error_code' => 'MISSING_PAYMENT_INTENT',
+					'member_id'  => $member_id,
+				)
+			);
+			$response['status']  = false;
+			$response['message'] = __( 'Payment verification failed: missing payment identifier.', 'user-registration' );
+			return $response;
 		}
 
+		$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
+
+		if ( $intent->status !== 'succeeded' ) {
+			$response['status']  = false;
+			$response['message'] = __( 'Payment not completed.', 'user-registration' );
+			return $response;
+		}
+
+		$payment_status = $intent->status;
+
 		$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
+
+		if ( ! empty( $latest_order ) && 'stripe' !== $latest_order['payment_method'] ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Payment method mismatch: order payment method is not stripe',
+				array(
+					'error_code'     => 'PAYMENT_METHOD_MISMATCH',
+					'member_id'      => $member_id,
+					'order_id'       => $latest_order['ID'],
+					'payment_method' => $latest_order['payment_method'],
+				)
+			);
+			$response['status']  = false;
+			$response['message'] = __( 'Invalid payment method for this order.', 'user-registration' );
+			return $response;
+		}
 
 		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id ) ) {
 			$response['status']  = false;
@@ -962,15 +1001,15 @@ class StripeService {
 			$order_detail     = $this->orders_repository->get_order_detail( $member_order['ID'] );
 			$order_repository = new OrdersRepository();
 			$local_currency   = $order_repository
-			->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' );
+				->get_order_meta_by_order_id_and_meta_key( $order_detail['order_id'], 'local_currency' );
 
 			$currency = ! empty( $local_currency['meta_value'] )
-			? strtoupper( $local_currency['meta_value'] )
-			: strtoupper( get_option( 'user_registration_payment_currency', 'USD' ) );
+				? strtoupper( $local_currency['meta_value'] )
+				: strtoupper( get_option( 'user_registration_payment_currency', 'USD' ) );
 
 			$total_amount = ! empty( $member_order['total_amount'] )
-			? (float) $member_order['total_amount']
-			: 0.0;
+				? (float) $member_order['total_amount']
+				: 0.0;
 
 			if ( in_array( $currency, array( 'JPY', 'KRW', 'VND', 'CLP', 'IDR' ), true ) ) {
 				$total_amount = (int) round( $total_amount );
