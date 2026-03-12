@@ -5,8 +5,7 @@
  * @class    URCR_Shortcodes
  * @version  4.0
  * @package  UserRegistrationContentRestriction/Classes
- * @category Class
- * @author   WPEverest
+ * @package Class
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,9 +15,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * URCR_Shortcodes Class
  */
-
 class URCR_Shortcodes {
 
+	/**
+	 * Constructor.
+	 * @return void
+	 * @access public
+	 */
 	public function __construct() {
 		add_shortcode( 'urcr_restrict', array( $this, 'urcr_restrict_shortcode' ) );
 	}
@@ -88,7 +91,7 @@ class URCR_Shortcodes {
 
 			$roles = isset( $atts['access_role'] ) ? trim( $atts['access_role'] ) : '';
 
-			if ( isset( $atts['access_all_roles'], $atts['enable_content_restriction'] ) && ! empty( $atts['access_all_roles'] ) && $atts['enable_content_restriction'] == true ) {
+			if ( isset( $atts['access_all_roles'], $atts['enable_content_restriction'] ) && ! empty( $atts['access_all_roles'] ) && true == $atts['enable_content_restriction'] ) {
 				$roles = trim( $atts['access_all_roles'] );
 			}
 
@@ -106,7 +109,7 @@ class URCR_Shortcodes {
 						if ( ! empty( $sub['item_id'] ) ) {
 							$current_user_membership[] = $sub['item_id'];
 						}
-						if ( ! empty( $sub['status'] ) && 'active' === $sub['status'] ) {
+						if ( ! empty( $sub['status'] ) && in_array( $sub['status'], array( 'active', 'trial' ), true ) ) {
 							$is_user_membership_active = true;
 						}
 					}
@@ -116,7 +119,7 @@ class URCR_Shortcodes {
 			if ( empty( $roles ) ) {
 				$override_global_settings = get_post_meta( $post->ID, 'urcr_meta_override_global_settings', $single = true );
 
-				if ( $override_global_settings !== 'on' ) {
+				if ( 'on' !== $override_global_settings ) {
 
 					if ( '0' == get_option( 'user_registration_content_restriction_allow_access_to', '0' ) ) {
 						if ( is_user_logged_in() ) {
@@ -178,8 +181,9 @@ class URCR_Shortcodes {
 				$memberships_roles
 			);
 
-			if ( $override_global_settings === 'on' ) {
-				$message = ! empty( get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) ) ? get_post_meta( $post->ID, 'urcr_meta_content', $single = true ) : '';
+			if ( 'on' === $override_global_settings ) {
+				$urcr_meta_content = get_post_meta( $post->ID, 'urcr_meta_content', true );
+				$message = ! empty( $urcr_meta_content ) ? $urcr_meta_content : '';
 			} elseif ( isset( $atts['enable_content_restriction'] ) && $atts['enable_content_restriction'] === 'true' ) {
 				$message = isset( $atts['message'] ) ? wp_kses_post( html_entity_decode( $atts['message'] ) ) : $message;
 			}
