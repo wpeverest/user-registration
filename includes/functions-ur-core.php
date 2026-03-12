@@ -1200,6 +1200,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 			$ur_enabled_captchas[ $key ] = $value;
 		}
 	}
+	$redirect_after_registration_default = ur_get_default_redirect_after_registration( $form_id );
 	$arguments = array(
 		'form_id'      => $form_id,
 		'setting_data' => array(
@@ -1322,6 +1323,79 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_user_role', get_option( 'user_registration_form_setting_default_user_role', 'subscriber' ) ),
 				'tip'               => __( 'Pick what role new users will have after they sign up.', 'user-registration' ),
 				'default_value'     => get_option( 'user_registration_form_setting_default_user_role', 'subscriber' ),
+				'product'           => 'user-registration/user-registration.php',
+			),
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Redirect After Registration', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_redirect_after_registration',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				/**
+				 * Filters the redirection options after user registration.
+				 *
+				 * @param array $redirection_options An associative array where keys represent
+				 *                                   the option values, and values represent the labels
+				 *                                   for the redirection options.
+				 */
+				'options'           => apply_filters(
+					'user_registration_redirect_after_registration_options',
+					array(
+						'no-redirection' => __( 'No Redirection', 'user-registration' ),
+						'internal-page'  => __( 'Internal Page', 'user-registration' ),
+						'external-url'   => __( 'External URL', 'user-registration' ),
+						'previous-page'  => __( 'Previous Page', 'user-registration' ),
+					)
+				),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', $redirect_after_registration_default ),
+				'tip'               => __( 'Decide where users go after completing registration.', 'user-registration' ),
+				'default_value'     => $redirect_after_registration_default,
+				'custom_attributes' => array(),
+				'product'           => 'user-registration/user-registration.php',
+			),
+			array(
+				'type'              => 'number',
+				'label'             => __( 'Delay Before Redirect ( Seconds )', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_redirect_after',
+				'class'             => array( 'ur-input-field' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'min'               => '0',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ),
+				'tip'               => __( 'How many seconds to wait before sending the user to another page.', 'user-registration' ),
+				'default_value'     => '2',
+				'product'           => 'user-registration/user-registration.php',
+			),
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Redirect to Page', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_redirect_page',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => ur_get_all_pages(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', get_option( 'user_registration_thank_you_page_id', '' ) ),
+				'tip'               => __( 'Pick the page users will see after signing up.', 'user-registration' ),
+				'default_value'     => get_option( 'user_registration_thank_you_page_id', '' ),
+				'custom_attributes' => array(),
+				'product'           => 'user-registration/user-registration.php',
+			),
+			array(
+				'type'              => 'text',
+				'label'             => __( 'Redirect URL', 'user-registration' ),
+				'id'                => 'user_registration_form_setting_redirect_options',
+				'class'             => array( 'ur-input-field' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'tip'               => __( 'Set the URL of the page users should be sent to after signing up.', 'user-registration' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),
+				// Getting redirect options from global settings for backward compatibility.
+				'default_value'     => get_option( 'user_registration_general_setting_redirect_options', '' ),
 				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
@@ -1564,79 +1638,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'description' => ur_check_akismet_installation(),
 				'product'     => 'user-registration/user-registration.php',
 			),
-			array(
-				'type'              => 'select',
-				'label'             => __( 'Redirect After Registration', 'user-registration' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_form_setting_redirect_after_registration',
-				'class'             => array( 'ur-enhanced-select' ),
-				'input_class'       => array(),
-				/**
-				 * Filters the redirection options after user registration.
-				 *
-				 * @param array $redirection_options An associative array where keys represent
-				 *                                   the option values, and values represent the labels
-				 *                                   for the redirection options.
-				 */
-				'options'           => apply_filters(
-					'user_registration_redirect_after_registration_options',
-					array(
-						'no-redirection' => __( 'No Redirection', 'user-registration' ),
-						'internal-page'  => __( 'Internal Page', 'user-registration' ),
-						'external-url'   => __( 'External URL', 'user-registration' ),
-						'previous-page'  => __( 'Previous Page', 'user-registration' ),
-					)
-				),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' ),
-				'tip'               => __( 'Decide where users go after completing registration.', 'user-registration' ),
-				'default_value'     => 'no-redirection',
-				'custom_attributes' => array(),
-				'product'           => 'user-registration/user-registration.php',
-			),
-			array(
-				'type'              => 'number',
-				'label'             => __( 'Delay Before Redirect ( Seconds )', 'user-registration' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_form_setting_redirect_after',
-				'class'             => array( 'ur-input-field' ),
-				'input_class'       => array(),
-				'custom_attributes' => array(),
-				'min'               => '0',
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ),
-				'tip'               => __( 'How many seconds to wait before sending the user to another page.', 'user-registration' ),
-				'default_value'     => '2',
-				'product'           => 'user-registration/user-registration.php',
-			),
-			array(
-				'type'              => 'select',
-				'label'             => __( 'Redirect to Page', 'user-registration' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_form_setting_redirect_page',
-				'class'             => array( 'ur-enhanced-select' ),
-				'input_class'       => array(),
-				'options'           => ur_get_all_pages(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', '' ),
-				'tip'               => __( 'Pick the page users will see after signing up.', 'user-registration' ),
-				'default_value'     => '',
-				'custom_attributes' => array(),
-				'product'           => 'user-registration/user-registration.php',
-			),
-			array(
-				'type'              => 'text',
-				'label'             => __( 'Redirect URL', 'user-registration' ),
-				'id'                => 'user_registration_form_setting_redirect_options',
-				'class'             => array( 'ur-input-field' ),
-				'input_class'       => array(),
-				'custom_attributes' => array(),
-				'tip'               => __( 'Set the URL of the page users should be sent to after signing up.', 'user-registration' ),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),
-				// Getting redirect options from global settings for backward compatibility.
-				'default_value'     => get_option( 'user_registration_general_setting_redirect_options', '' ),
-				'product'           => 'user-registration/user-registration.php',
-			),
 		),
 	);
 
@@ -1724,6 +1725,27 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 	}
 
 	return $default;
+}
+
+if ( ! function_exists( 'ur_get_default_redirect_after_registration' ) ) {
+	/**
+	 * Get default redirect-after-registration value for a form.
+	 * Returns 'internal-page' if the form has a membership field, otherwise 'no-redirection'.
+	 *
+	 * @param int $form_id Form ID.
+	 * @return string 'internal-page' or 'no-redirection'
+	 * @since 1.0.1
+	 */
+	function ur_get_default_redirect_after_registration( $form_id ) {
+		if ( ! $form_id ) {
+			return 'no-redirection';
+		}
+		$form_post = get_post( $form_id );
+		if ( $form_post && isset( $form_post->post_content ) && false !== strpos( $form_post->post_content, '"field_key":"membership"' ) ) {
+			return 'internal-page';
+		}
+		return 'no-redirection';
+	}
 }
 
 /**

@@ -302,23 +302,33 @@ class SubscriptionService {
 		$symbol     = $currencies[ $currency ]['symbol'];
 
 		$subscription_id = '';
+		$member_order    = null;
+
+		if ( ! empty( $data['context'] ) && 'thank_you_page' === $data['context'] && ! empty( $data['transaction_id'] ) ) {
+			$order_by_txn = $this->orders_repository->get_order_by_transaction_id( $data['transaction_id'] );
+			if ( ! empty( $order_by_txn ) && ! empty( $order_by_txn['ID'] ) ) {
+				$member_order = $order_by_txn;
+			}
+		}
+
+		if ( empty( $member_order ) ) {
+			$member_order = $this->members_orders_repository->get_member_orders( $data['member_id'] );
+		}
 
 		if ( isset( $data['subscription']['ID'] ) ) {
 			$subscription_id = $data['subscription']['ID'] ?? 0;
 		} else {
-			$members_order_repository = new MembersOrderRepository();
-			$last_order               = $members_order_repository->get_member_orders( $data['member_id'] );
-			$subscription_id          = ! empty( $last_order ) ? $last_order['subscription_id'] : '';
+			$subscription_id = ! empty( $member_order ) ? ( $member_order['subscription_id'] ?? '' ) : '';
 		}
 
 		$subscription  = $this->members_subscription_repository->get_subscription_by_subscription_id( $subscription_id );
-		$membership_id = isset( $data['membership'] ) ? $data['membership'] : $subscription['item_id'];
+		$membership_id = isset( $data['membership'] ) ? $data['membership'] : ( isset( $subscription['item_id'] ) ? $subscription['item_id'] : 0 );
 		$membership    = $this->membership_repository->get_single_membership_by_ID( $membership_id );
 
 		$membership_metas               = wp_unslash( json_decode( $membership['meta_value'], true ) );
 		$membership_metas['post_title'] = $membership['post_title'];
-		$member_order                   = $this->members_orders_repository->get_member_orders( $data['member_id'] );
-		$order                          = $this->orders_repository->get_order_detail( $member_order['ID'] );
+		$member_order                   = $member_order ? $member_order : $this->members_orders_repository->get_member_orders( $data['member_id'] );
+		$order                          = ! empty( $member_order['ID'] ) ? $this->orders_repository->get_order_detail( $member_order['ID'] ) : array();
 		$total                          = $order['total_amount'];
 		$membership_tab_url             = esc_url( ur_get_my_account_url() . 'ur-membership' );
 

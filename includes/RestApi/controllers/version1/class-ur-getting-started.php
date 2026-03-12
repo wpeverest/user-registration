@@ -633,6 +633,10 @@ class UR_Getting_Started {
 
 			if ( ! empty( $page['option'] ) ) {
 				update_option( $page['option'], $post_id );
+				if ( 'user_registration_thank_you_page_id' === $page['option'] && $existing_form_id ) {
+					update_post_meta( $existing_form_id, 'user_registration_form_setting_redirect_after_registration', 'internal-page' );
+					update_post_meta( $existing_form_id, 'user_registration_form_setting_redirect_page', $post_id );
+				}
 			}
 
 			$page_details[ get_post_field( 'post_name', $post_id ) ] = array(
