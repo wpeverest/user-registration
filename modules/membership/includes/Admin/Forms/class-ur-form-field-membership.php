@@ -84,8 +84,8 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 				'default'     => 'all',
 				'options'     => array(
 					'all'   => 'Show all Memberships.',
-					'group' => 'Select a group',
-					'selected' => 'Select memberships',
+					'group' => 'Select a Group',
+					'selected' => 'Select Memberships',
 				),
 			),
 			'membership_group'          => array(
@@ -102,7 +102,7 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 				'setting_id'  => 'membership_active_memberships',
 				'name'        => 'membership_active_memberships',
 				'type'        => 'multiselect',
-				'label'       => __( 'Select memberships to display', 'user-registration' ),
+				'label'       => __( 'Select Memberships To Display', 'user-registration' ),
 				'placeholder' => __( 'Select memberships to display.', 'user-registration' ),
 				'required'    => 1,
 				'tip'         => __( 'Choose specific active memberships to display in the form.', 'user-registration' ),
