@@ -6,7 +6,10 @@
  * @var array  $memberships Available memberships
  * @var array  $membership_details Membership details data
  * @var bool   $is_editing Whether editing existing membership
+ *
+ * @package   UserRegistration
  */
+
 ?>
 	<div class="user-registration-card__body">
 		<div id="ur-membership-plan-and-price-section">
@@ -22,12 +25,12 @@
 						<select data-key-name="<?php echo esc_html__( 'Role', 'user-registration' ); ?>"
 								id="ur-input-type-membership-role" class="user-membership-enhanced-select2">
 							<?php
-							foreach ( $roles as $k => $role ) :
+							foreach ( $roles as $k => $role ) : // phpcs:ignore
 								$selected = ( isset( $membership_details['role'] ) && $k === $membership_details['role'] )
 									? 'selected="selected"'
 									: ( ( 'subscriber' === $k && ! isset( $membership_details['role'] ) ) ? 'selected="selected"' : '' );
 								?>
-								<option <?php echo $selected; ?> value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $role ); ?></option>
+								<option <?php echo esc_attr( $selected ); ?> value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $role ); ?></option>
 							<?php endforeach; ?>
 						</select>
 					</div>
@@ -82,13 +85,13 @@
 			<?php
 			$is_upgrade_enabled = isset( $membership_details['upgrade_settings']['upgrade_action'] ) && true == $membership_details['upgrade_settings']['upgrade_action'];
 			$is_upgrade_allowed = true;
-			$membership_count  = is_array( $memberships ) ? count( $memberships ) : 0;
-			$can_set_upgrade   = $membership_count >= 2;
+			$membership_count   = is_array( $memberships ) ? count( $memberships ) : 0;
+			$can_set_upgrade    = $membership_count >= 2;
 
-			if ( isset( $_GET['post_id'] ) ) {
+			if ( isset( $_GET['post_id'] ) ) { // phpcs:ignore
 				$membership_group_repository = new WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository();
 				$membership_group_service    = new WPEverest\URMembership\Admin\Services\MembershipGroupService();
-				$membership_group_id         = $membership_group_repository->get_membership_group_by_membership_id( absint( $_GET['post_id'] ?? 0 ) );
+				$membership_group_id         = $membership_group_repository->get_membership_group_by_membership_id( absint( $_GET['post_id'] ?? 0 ) ); // phpcs:ignore
 
 				if ( isset( $membership_group_id['ID'] ) ) {
 					$multiple_memberships_allowed = $membership_group_service->check_if_multiple_memberships_allowed( $membership_group_id['ID'] );
@@ -148,13 +151,13 @@
 									? $upgrade_path_raw
 									: ( ! empty( $upgrade_path_raw ) ? explode( ',', $upgrade_path_raw ) : array() );
 
-									foreach ( $memberships as $k => $m ) :
-										if ( isset( $_GET['post_id'] ) && $_GET['post_id'] == $m['ID'] ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+									foreach ( $memberships as $key => $membership ) :
+										if ( isset( $_GET['post_id'] ) && $_GET['post_id'] == $membership['ID'] ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 											continue;
 										}
-										$selected = ( $upgrade_path ) && in_array( $m['ID'], $upgrade_path, true ) ? 'selected="selected"' : '';
+										$selected = ( $upgrade_path ) && in_array( $membership['ID'], $upgrade_path, true ) ? 'selected="selected"' : '';
 										?>
-										<option <?php echo $selected; ?> value="<?php echo esc_attr( $m['ID'] ); ?>"><?php echo esc_html( $m['title'] ); ?></option>
+										<option <?php echo esc_attr( $selected ); ?> value="<?php echo esc_attr( $membership['ID'] ); ?>"><?php echo esc_html( $membership['title'] ); ?></option>
 									<?php endforeach; ?>
 								</select>
 							</div>
@@ -163,10 +166,10 @@
 
 					<!-- Membership Upgrade Path Type -->
 					<div class="urm-upgrade-path-type-container ur-d-flex ur-mt-6 ur-align-items-center"
-						data-key-name="<?php echo __( 'Upgrade Type', 'user-registration' ); ?>" style="gap:20px;">
+						data-key-name="<?php echo esc_attr__( 'Upgrade Type', 'user-registration' ); ?>" style="gap:20px;">
 						<div class="ur-label" style="width: 30%">
 							<label for="ur-membership-upgrade-type-full">
-								<?php echo __( 'Upgrade Type', 'user-registration' ); ?>
+								<?php echo esc_attr__( 'Upgrade Type', 'user-registration' ); ?>
 								<span style="color:red">*</span> :
 							</label>
 						</div>
@@ -175,10 +178,10 @@
 								<!-- Full Amount Upgrade -->
 								<label class="ur-membership-upgrade-types" for="ur-membership-upgrade-type-full">
 									<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
-										<input data-key-name="<?php echo __( 'Upgrade Type', 'user-registration' ); ?>"
+										<input data-key-name="<?php echo esc_attr__( 'Upgrade Type', 'user-registration' ); ?>"
 												id="ur-membership-upgrade-type-full" type="radio" value="full"
 												name="ur_membership_upgrade_type" style="margin: 0"
-												<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && $membership_details['upgrade_settings']['upgrade_type'] == 'full' ) ) ? 'checked' : ( ! $is_editing ? 'checked' : '' ); ?>
+												<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && 'full' == $membership_details['upgrade_settings']['upgrade_type'] ) ) ? 'checked' : ( ! $is_editing ? 'checked' : '' ); ?>
 												required>
 										<label class="ur-membership-upgrade-type-full--label" for="ur-membership-upgrade-type-full">
 											<b class="user-registration-image-label"><?php esc_html_e( 'Full Amount Upgrade', 'user-registration' ); ?></b>
@@ -186,11 +189,11 @@
 									</div>
 								</label>
 								<!-- Pro Rata Type -->
-								<label class="ur-membership-upgrade-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?> <?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'free' ? 'ur-d-none' : ''; ?>" for="ur-membership-upgrade-type-pro-rata">
+								<label class="ur-membership-upgrade-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?> <?php echo isset( $membership_details['type'] ) && 'free' === $membership_details['type'] ? 'ur-d-none' : ''; ?>" for="ur-membership-upgrade-type-pro-rata">
 									<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
 										<input data-key-name="Upgrade Type" id="ur-membership-upgrade-type-pro-rata"
 												type="radio" value="pro-rata" name="ur_membership_upgrade_type" style="margin: 0"
-												<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && $membership_details['upgrade_settings']['upgrade_type'] == 'pro-rata' ) ) ? 'checked' : ''; ?>
+												<?php echo ( ( isset( $membership_details['upgrade_settings']['upgrade_type'] ) && 'pro-rata' === $membership_details['upgrade_settings']['upgrade_type'] ) ) ? 'checked' : ''; ?>
 												<?php echo ! UR_PRO_ACTIVE ? 'disabled' : ''; ?> required>
 										<label class="ur-membership-upgrade-type-full--label" for="ur-membership-upgrade-type-pro-rata">
 											<b class="user-registration-image-label"><?php esc_html_e( 'Proration Upgrade', 'user-registration' ); ?></b>
@@ -238,16 +241,16 @@
 
 				<?php
 				ur_render_email_marketing_sync_settings( $membership_details );
-					endif;
+			endif;
 
-					/**
-					 * Local Currency Settings Render.
-					 *
-					 * @since 6.1.0
-					 */
-					if ( UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) && class_exists('WPEverest\URMembership\Local_Currency\Admin\CoreFunctions')):
-						WPEverest\URMembership\Local_Currency\Admin\CoreFunctions::ur_render_local_currency_settings( $membership_details );
-					endif;
+			/**
+			 * Local Currency Settings Render.
+			 *
+			 * @since 6.1.0
+			 */
+			if ( UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) && class_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions' ) ) :
+				WPEverest\URMembership\Local_Currency\Admin\CoreFunctions::ur_render_local_currency_settings( $membership_details );
+				endif;
 			?>
 		</div>
 	</div>
