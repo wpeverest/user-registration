@@ -3932,3 +3932,37 @@ body.user-registration-page {
 	gap: 16px;
 	align-items: center;
 }
+
+.user-registration-profile-header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	flex-direction: column;
+	margin-bottom: 20px;
+	margin-bottom: 25px;
+
+	.user-registration-img-container {
+		width: 100px;
+	}
+
+	h3 {
+		font-size: 22px;
+		font-weight: 400;
+		margin-bottom: 5px;
+	}
+
+	header {
+		p,
+		.button-group {
+			margin-bottom: 10px;
+		}
+
+		.profile-pic-remove {
+			margin-right: 10px;
+		}
+	}
+
+	.user-registration-nick-name {
+		color: $color_gray_two;
+	}
+}
