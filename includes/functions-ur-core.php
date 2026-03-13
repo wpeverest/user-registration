@@ -384,6 +384,67 @@ function ur_help_tip( $tip, $allow_html = false, $classname = 'user-registration
 	return sprintf( '<span class="%s" data-tip="%s"></span>', $classname, $tip );
 }
 
+function ur_render_premium_feature_gate_template( $args = array() ) {
+	if ( UR_PRO_ACTIVE ) {
+		return;
+	}
+
+	$args = wp_parse_args(
+		$args,
+		array(
+			'template_id' => 'ur-pro-feature',
+			'utm_source'  => 'ur-membership-create',
+		)
+	);
+	if ( empty( $args['upgrade_url'] ) ) {
+		$args['upgrade_url'] = 'https://wpuserregistration.com/upgrade/?utm_source=' . esc_attr( $args['utm_source'] ) . '&utm_medium=upgrade-link&utm-campaign=lite-version';
+	}
+
+	static $rendered_templates = array();
+	if ( in_array( $args['template_id'], $rendered_templates, true ) ) {
+		return;
+	}
+	$rendered_templates[] = $args['template_id'];
+	?>
+	<template id="<?php echo esc_attr( $args['template_id'] ); ?>">
+		<div class="ur-feature">
+			<div class="ur-feature__title">
+				<?php esc_html_e( 'You have run into a premium feature, please upgrade to URM Pro', 'user-registration' ); ?>
+			</div>
+			<a class="ur-feature__btn" href="<?php echo esc_url( $args['upgrade_url'] ); ?>">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>
+				<?php esc_html_e( 'Upgrade to Pro', 'user-registration' ); ?>
+			</a>
+		</div>
+	</template>
+	<?php
+}
+
+function ur_render_premium_feature_gate( $args = array() ) {
+	if ( UR_PRO_ACTIVE ) {
+		return;
+	}
+
+	$args                = wp_parse_args(
+		$args,
+		array(
+			'template_id'     => 'ur-pro-feature',
+			'utm_source'      => 'ur-membership-create',
+			'render_template' => true,
+		)
+	);
+	$args['upgrade_url'] = 'https://wpuserregistration.com/upgrade/?utm_source=' . esc_attr( $args['utm_source'] ) . '&utm_medium=upgrade-link&utm-campaign=lite-version';
+
+	if ( ! empty( $args['render_template'] ) ) {
+		ur_render_premium_feature_gate_template( $args );
+	}
+
+	$gate_attrs = 'data-feature-gate="tooltip" data-gate-placement="right" data-gate-interactive="true" data-gate-content="' . esc_attr( $args['template_id'] ) . '"';
+	?>
+	<span class="ur-premium-pro" <?php echo $gate_attrs; ?>><img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' ); ?>" alt="" /></span>
+	<?php
+}
+
 /**
  * Checks whether the content passed contains a specific short code.
  *
@@ -1205,7 +1266,7 @@ function ur_admin_form_settings_fields( $form_id ) {
 		}
 	}
 	$redirect_after_registration_default = ur_get_default_redirect_after_registration( $form_id );
-	$arguments = array(
+	$arguments                           = array(
 		'form_id'      => $form_id,
 		'setting_data' => array(
 			array(

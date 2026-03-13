@@ -80,17 +80,35 @@ class Analytics {
 			return;
 		}
 
+		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
+			wp_register_style(
+				'ur-snackbar',
+				UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css',
+				array(),
+				constant( 'UR_VERSION' )
+			);
+		}
+		wp_enqueue_style( 'ur-snackbar' );
+
+		wp_enqueue_style( 'sweetalert2' );
+
 		if ( ! wp_style_is( 'ur-core-builder-style', 'registered' ) ) {
 			wp_register_style(
 				'ur-core-builder-style',
 				UR()->plugin_url() . '/assets/css/admin.css',
 				array(),
-				UR_VERSION
+				constant( 'UR_VERSION' )
 			);
 		}
 		wp_enqueue_style( 'ur-core-builder-style' );
 
 		$asset = require $asset_file;
+
+		wp_register_script( 'ur-snackbar', UR()->plugin_url() . '/assets/js/ur-snackbar/ur-snackbar' . $suffix . '.js', array(), constant( 'UR_VERSION' ), true );
+		wp_enqueue_script( 'ur-snackbar' );
+
+		wp_enqueue_script( 'ur-feature-gate' );
+		wp_enqueue_style( 'ur-feature-gate' );
 
 		wp_enqueue_script(
 			'ur-analytics',

@@ -486,6 +486,7 @@ class URCR_Admin_Assets {
 				'membership'              => __( 'Membership', 'user-registration' ),
 				'membership_rule_title'   => __( 'Membership Access Rule', 'user-registration' ),
 				'all_content_types_added' => __( 'All content types have been added', 'user-registration' ),
+				'ajax_all_forms_nonce'    => wp_create_nonce( 'all-forms-ajax-nonce' ),
 			),
 			'is_drip_content'                        => ur_check_module_activation( 'content-drip' ),
 			'is_masteriyo'                           => ur_check_module_activation( 'masteriyo-course-integration' ),
