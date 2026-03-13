@@ -252,6 +252,54 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 
 == Changelog ==
 
+= 5.1.5    - -/03/2026 =
+
+* Feature  - Feature to show bank details directly within the form.
+* Feature  - Payment fetch cron added for better subscription sync with Stripe.
+
+* Enhance  - Better search for addons page.
+* Enhance  - Better UI/UX for the Membership field. 
+* Enhance  - Addition of Members Directory to the content rules.
+* Enhance  - Addition of navigational UI to better find plugin features.
+* Enhance  - Improved price transparency for prorated membership upgrades.
+* Enhance  - Updated tooltips and navigational popups throughout the plugin.
+* Enhance  - Individual membership selection in membership field and pricing block.
+* Enhance  - Proper notice in memberhip upgrades when there is just a single membership.
+
+* Refactor - Removed / refactored old setup assistent steps.
+* Refactor - Edits for subscriptions now reflected in Stripe too.
+* Refactor - Added filter hook to customize payment gateway logos.
+* Refactor - No longer hiding search bars on tables after 10+ entries.
+* Refactor - No longer hiding subscriptions and payments tab at the start.
+* Refactor - Pricing previews made more readable and clear for membership plans.
+* Refactor - Added price check in stripe to avoid multiple prices in same product.
+* Refactor - Thank you page and form redirection settings have been merged for consistency.
+
+* Fix      - Added proper capability checks.
+* Fix      - Missing .css file throwing errors.
+* Fix      - Create subscription table, excessive gap.
+* Fix      - Raw CSS showing for certain email platforms.
+* Fix      - Membership fields draggable outside of bounds.
+* Fix      - Trial members unable to access member content.
+* Fix      - File downloads backend redirection link issue.
+* Fix      - Redundant content restriction message removed.
+* Fix      - UI issues in nested menus for the setting areas.
+* Fix      - File downloads not working in local environments.
+* Fix      - License deactivating upon temporary deactivation.
+* Fix      - Redirect to previous page after login not working.
+* Fix      - Design issues in backend for change password block.
+* Fix      - Missing connection indicators for mailing integrations.
+* Fix      - Edit profile failing when permalinks were set to plain.
+* Fix      - Email settings container showing irrelevant notice messages.
+* Fix      - Content restriction block styles and shortcode not rendering.
+* Fix      - Login | Logout option not working properly with certain themes.
+* Fix      - URM shortcode contents appearing twice when used with Elementor.
+* Fix      - Stripe registrations encountering fatal error in some instances.
+* Fix      - Auto Approval and auto login not working in case of PayPal payments.
+* Fix      - Masteriyo course unassigned to membership still showing sign up button.
+* Fix      - Fatal error when upgrading from one-time payment to subscription plan with stripe.
+* Fix      - Legacy my account dashboard content visible in profile details tab on some old instances.
+
 = 5.1.4    - 25/02/2026 =
 * Fix - Updated .org deploy code
 
