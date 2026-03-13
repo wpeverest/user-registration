@@ -202,12 +202,17 @@ if ( ! class_exists( 'Hooks' ) ) :
 										class="membership-amount">
 										<?php echo esc_html( sprintf( '%s%.2f', $symbol, $membership['amount'] ) ); ?>
 									</span>
-									<span class="ur-membership-duration">
+									<?php
+									$is_lifetime_listing = ( 'subscription' !== $membership['type'] && $time && false !== stripos( (string) $time, 'lifetime' ) )
+														   || ( isset( $membership['period'] ) && false !== stripos( (string) $membership['period'], 'lifetime' ) );
+									if ( ! $is_lifetime_listing && ( $time || isset( $membership['period'] ) ) ) :
+										?>
+										<span class="ur-membership-duration">
 										<?php
-										if ( $membership['time'] || $membership['subscription'] ) {
-											echo ' every ' . ( 'subscription' === $membership['type'] ? esc_html( $membership['subscription']['value'] ) . ' ' . esc_html( ucfirst( $membership['subscription']['duration'] ) ) : esc_html( $membership['time'] ) ); }
+										echo ' every ' . ( 'subscription' === $membership['type'] ? esc_html( ucfirst( trim( strtolower( explode( 'every', $membership['period'] )[1] ?? '' ) ) ) ) : esc_html( $time ) );
 										?>
 									</span>
+									<?php endif; ?>
 								</div>
 							<?php } else { ?>
 								<div class="ur-membership-amount-wrapper">
