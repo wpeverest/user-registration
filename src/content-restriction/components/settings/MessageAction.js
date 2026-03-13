@@ -37,13 +37,13 @@ const MessageAction = ({
 	useEffect(() => {
 		const wasUsingGlobal = prevUseGlobalMessageRef.current;
 
-		if (shouldShowGlobalMessageOption && useGlobalMessage && !wasUsingGlobal) {
+		if (
+			shouldShowGlobalMessageOption &&
+			useGlobalMessage &&
+			!wasUsingGlobal
+		) {
 			const cleanupEditor = () => {
-				if (
-					typeof wp !== "undefined" &&
-					wp.editor &&
-					window.tinymce
-				) {
+				if (typeof wp !== "undefined" && wp.editor && window.tinymce) {
 					const tinymceEditor = window.tinymce.get(editorId);
 					if (tinymceEditor) {
 						try {
@@ -54,8 +54,7 @@ const MessageAction = ({
 							}
 							wp.editor.remove(editorId);
 							editorInitializedRef.current = false;
-						} catch (error) {
-						}
+						} catch (error) {}
 					}
 				}
 			};
@@ -70,7 +69,10 @@ const MessageAction = ({
 		}
 
 		const wasUsingGlobal = prevUseGlobalMessageRef.current;
-		const switchingToCustom = shouldShowGlobalMessageOption && !useGlobalMessage && wasUsingGlobal;
+		const switchingToCustom =
+			shouldShowGlobalMessageOption &&
+			!useGlobalMessage &&
+			wasUsingGlobal;
 
 		if (editorInitializedRef.current && !switchingToCustom) {
 			prevUseGlobalMessageRef.current = useGlobalMessage;
@@ -89,7 +91,10 @@ const MessageAction = ({
 			if (savedContentRef.current) {
 				contentToUse = savedContentRef.current;
 			} else {
-				const defaultMessage = getURCRData("membership_default_message", "");
+				const defaultMessage = getURCRData(
+					"membership_default_message",
+					""
+				);
 				if (defaultMessage) {
 					contentToUse = defaultMessage;
 					if (onMessageChangeRef.current) {
@@ -119,13 +124,16 @@ const MessageAction = ({
 				return;
 			}
 
-			if (switchingToCustom && window.tinymce && window.tinymce.get(editorId)) {
+			if (
+				switchingToCustom &&
+				window.tinymce &&
+				window.tinymce.get(editorId)
+			) {
 				try {
 					wp.editor.remove(editorId);
 					editorInitializedRef.current = false;
 					editorInitializingRef.current = false;
-				} catch (error) {
-				}
+				} catch (error) {}
 			}
 
 			if (window.tinymce && window.tinymce.get(editorId)) {
@@ -147,7 +155,11 @@ const MessageAction = ({
 
 			if (editorElement && contentToUse) {
 				editorElement.value = contentToUse;
-				if (switchingToCustom && savedContentRef.current && onMessageChangeRef.current) {
+				if (
+					switchingToCustom &&
+					savedContentRef.current &&
+					onMessageChangeRef.current
+				) {
 					onMessageChangeRef.current(savedContentRef.current);
 				}
 			}
@@ -170,7 +182,10 @@ const MessageAction = ({
 						setup: (editor) => {
 							if (contentToUse && editor) {
 								editor.on("init", () => {
-									if (contentToUse && editor.getContent() !== contentToUse) {
+									if (
+										contentToUse &&
+										editor.getContent() !== contentToUse
+									) {
 										editor.setContent(contentToUse);
 									}
 								});
@@ -181,7 +196,10 @@ const MessageAction = ({
 							editorInitializingRef.current = false;
 							prevUseGlobalMessageRef.current = useGlobalMessage;
 							if (isMountedRef.current) {
-								if (contentToUse && editor.getContent() !== contentToUse) {
+								if (
+									contentToUse &&
+									editor.getContent() !== contentToUse
+								) {
 									editor.setContent(contentToUse);
 								}
 
@@ -196,9 +214,12 @@ const MessageAction = ({
 
 									editor.on("change keyup", () => {
 										if (isMountedRef.current) {
-											const content = wp.editor.getContent(editorId);
+											const content =
+												wp.editor.getContent(editorId);
 											if (onMessageChangeRef.current) {
-												onMessageChangeRef.current(content);
+												onMessageChangeRef.current(
+													content
+												);
 											}
 										}
 									});
@@ -220,13 +241,12 @@ const MessageAction = ({
 			}
 
 			const editorElement = document.getElementById(editorId);
-			if (
-				!editorElement ||
-				typeof wp === "undefined" ||
-				!wp.editor
-			) {
+			if (!editorElement || typeof wp === "undefined" || !wp.editor) {
 				if (attempt < 3) {
-					initTimerRef.current = setTimeout(() => attemptInit(attempt + 1), attempt === 0 ? 100 : attempt === 1 ? 300 : 500);
+					initTimerRef.current = setTimeout(
+						() => attemptInit(attempt + 1),
+						attempt === 0 ? 100 : attempt === 1 ? 300 : 500
+					);
 				}
 				return;
 			}
@@ -243,7 +263,7 @@ const MessageAction = ({
 			}
 			editorInitializingRef.current = false;
 		};
-		}, [editorId, rule.id, shouldShowGlobalMessageOption, useGlobalMessage]);
+	}, [editorId, rule.id, shouldShowGlobalMessageOption, useGlobalMessage]);
 
 	useEffect(() => {
 		return () => {
@@ -252,11 +272,7 @@ const MessageAction = ({
 			editorInitializingRef.current = false;
 
 			const cleanupEditor = () => {
-				if (
-					typeof wp !== "undefined" &&
-					wp.editor &&
-					window.tinymce
-				) {
+				if (typeof wp !== "undefined" && wp.editor && window.tinymce) {
 					const tinymceEditor = window.tinymce.get(editorId);
 					if (tinymceEditor) {
 						try {
@@ -265,8 +281,7 @@ const MessageAction = ({
 								onMessageChangeRef.current(currentContent);
 							}
 							wp.editor.remove(editorId);
-						} catch (error) {
-						}
+						} catch (error) {}
 					}
 				}
 			};
@@ -291,7 +306,7 @@ const MessageAction = ({
 
 				$helpTips.tooltipster({
 					theme: "tooltipster-borderless",
-					maxWidth: 200,
+					maxWidth: 300,
 					multiple: true,
 					interactive: true,
 					position: "bottom",
@@ -339,7 +354,9 @@ const MessageAction = ({
 									name={`message-type-${rule.id}`}
 									value="global"
 									checked={useGlobalMessage}
-									onChange={() => onUseGlobalMessageChange(true)}
+									onChange={() =>
+										onUseGlobalMessageChange(true)
+									}
 									className="urcr-checkbox-radio-input"
 								/>
 								<span className="urcr-checkbox-radio-label">
@@ -347,6 +364,26 @@ const MessageAction = ({
 										"Use global restriction message",
 										"user-registration"
 									)}
+
+									<span
+										className="user-registration-help-tip user-cr-registration-help"
+										style={{
+											marginLeft: "4px"
+										}}
+										data-tip={(() => {
+											const settingsUrl = getURCRData(
+												"content_restriction_settings_url",
+												""
+											);
+											const link = settingsUrl
+												? `<a href="${settingsUrl}">Content Restriction Settings</a>`
+												: "Content Restriction Settings";
+											return __(
+												"Show visitors the default restricted message. Customize it in %s.",
+												"user-registration"
+											).replace("%s", link);
+										})()}
+									/>
 								</span>
 							</label>
 							<label
@@ -359,7 +396,9 @@ const MessageAction = ({
 									name={`message-type-${rule.id}`}
 									value="custom"
 									checked={!useGlobalMessage}
-									onChange={() => onUseGlobalMessageChange(false)}
+									onChange={() =>
+										onUseGlobalMessageChange(false)
+									}
 									className="urcr-checkbox-radio-input"
 								/>
 								<span className="urcr-checkbox-radio-label">
@@ -373,9 +412,7 @@ const MessageAction = ({
 			{!useGlobalMessage && (
 				<div className="urcr-title-body-pair urcr-rule-action-input-container urcrra-message-input-container ur-form-group">
 					<label className="urcr-label-container ur-col-4">
-						<span className="urcr-target-content-label">
-
-						</span>
+						<span className="urcr-target-content-label"></span>
 					</label>
 					<div className="urcr-body">
 						<div className="wp-media-buttons">
@@ -389,11 +426,17 @@ const MessageAction = ({
 										wp.editor &&
 										window.tinymce
 									) {
-										const editor = window.tinymce.get(editorId);
+										const editor =
+											window.tinymce.get(editorId);
 										if (editor) {
-											editor.execCommand("mceInsertContent", false, tag);
+											editor.execCommand(
+												"mceInsertContent",
+												false,
+												tag
+											);
 											editor.fire("change");
-											const content = wp.editor.getContent(editorId);
+											const content =
+												wp.editor.getContent(editorId);
 											if (onMessageChange) {
 												onMessageChange(content);
 											}
@@ -430,5 +473,3 @@ const MessageAction = ({
 };
 
 export default MessageAction;
-
-

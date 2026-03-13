@@ -184,7 +184,11 @@
 							value="<?php echo esc_attr( $membership['ID'] ); ?>"
 							data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
 							data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
-							data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['amount'] ); ?>"
+							data-urm-membership-amount="<?php echo esc_attr( $membership['amount'] ); ?>"
+							data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['calculated_amount'] ); ?>"
+							<?php
+							echo isset( $_GET['action'] ) && 'upgrade' === $_GET['action'] && $membership['amount'] > $membership['calculated_amount'] ? 'data-urm-upgrade-type="' . esc_attr__( 'Prorated', 'user-registration' ) . '"' : '';
+							?>
 							data-urm-default-pg="<?php echo $urm_default_pg; ?>"
 							data-urm-local-currency-details = "<?php echo esc_attr( json_encode( $enabled_zones ) ); ?>"
 							data-urm-converted-amount = "<?php echo esc_attr( $converted_amount ); ?>"
@@ -234,7 +238,7 @@
 										value="<?php echo esc_attr( $membership['ID'] ); ?>"
 										data-urm-pg='<?php echo esc_attr( ( $membership['active_payment_gateways'] ?? '' ) ); ?>'
 										data-urm-pg-type="<?php echo esc_attr( $membership['type'] ); ?>"
-										data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['amount'] ); ?>"
+										data-urm-pg-calculated-amount="<?php echo esc_attr( $membership['calculated_amount'] ); ?>"
 										data-has-coupon-link="<?php echo esc_attr( in_array( $membership['ID'], $membership_ids_link_with_coupons ) ? 'yes' : 'no' ); ?>"
 										data-urm-default-pg="<?php echo $urm_default_pg; ?>"
 									<?php echo isset( $_GET['membership_id'] ) && ! empty( $_GET['membership_id'] ) && $_GET['membership_id'] == $membership['ID'] ? 'checked' : ''; ?>

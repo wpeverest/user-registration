@@ -2626,7 +2626,12 @@ img.tips {
 		}
 
 		.tooltipster-content a {
-			color: #9ef01a !important;
+			color: #475bb2 !important;
+
+			&:focus{
+				outline: none;
+				box-shadow: 0 0 0 0 transparentize($primary_color, 0.5);
+			}
 		}
 	}
 
@@ -2677,7 +2682,7 @@ img.tips {
 
 	&:not(.no-icon) {
 		&::after {
-			background-image: url(../images/settings-icons/information.svg) !important;
+			background-image: url(../images/settings-icons/information2.svg) !important;
 			content: "";
 			background-repeat: no-repeat !important;
 			background-size: 100% !important;
@@ -7268,7 +7273,7 @@ body {
 .tooltipster-sidetip {
 	.tooltipster-box {
 		background-color: #fff !important;
-		max-width: 220px;
+		max-width: 300px;
 		box-shadow: 0 6px 24px 0 rgba(10, 10, 10, 0.1);
 		padding: 16px 18px;
 
@@ -7284,6 +7289,12 @@ body {
 		height: 8px;
 		margin-left: -8px;
 		width: 16px;
+	}
+
+	&.tooltipster-base.tooltipster-sidetip.tooltipster-borderless {
+		max-width: 300px !important;
+		width: auto !important;
+		height: auto !important;
 	}
 
 	&.tooltipster-base .tooltipster-arrow .tooltipster-arrow-uncropped .tooltipster-arrow-border {
@@ -10101,5 +10112,27 @@ body.user-registration-page {
 	&.ui-add-disabled {
 		opacity: 0.5;
 		cursor: not-allowed;
+	}
+}
+
+.ur-settings-notice {
+	margin: 0;
+	padding: 10px;
+	font-weight: $medium;
+	border: 1px solid #c3c4c7;
+	border-left-color: #475bb2;
+	border-left-width: 4px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+
+	&--error {
+		border-left-color: #ff4f55;
+	}
+
+	&--success {
+		border-left-color: #4cc741;
+	}
+
+	&--warning {
+		border-left-color: #ffc700;
 	}
 }
