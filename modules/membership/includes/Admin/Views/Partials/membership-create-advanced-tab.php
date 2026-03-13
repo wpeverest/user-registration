@@ -189,7 +189,7 @@
 									</div>
 								</label>
 								<!-- Pro Rata Type -->
-								<label class="ur-membership-upgrade-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?> <?php echo isset( $membership_details['type'] ) && 'free' === $membership_details['type'] ? 'ur-d-none' : ''; ?>" for="ur-membership-upgrade-type-pro-rata">
+								<label class="ur-membership-upgrade-types <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?> <?php echo isset( $membership_details['type'] ) && $membership_details['type'] == 'free' ? 'ur-d-none' : ''; ?>" for="ur-membership-upgrade-type-pro-rata" <?php echo ! UR_PRO_ACTIVE ? 'data-feature-gate="tooltip" data-gate-placement="right" data-gate-interactive="true" data-gate-content="ur-pro-proration-content"' : ''; ?>>
 									<div class="ur-membership-type-title ur-d-flex ur-align-items-center">
 										<input data-key-name="Upgrade Type" id="ur-membership-upgrade-type-pro-rata"
 												type="radio" value="pro-rata" name="ur_membership_upgrade_type" style="margin: 0"
@@ -200,16 +200,23 @@
 										</label>
 									</div>
 								</label>
+								<?php
+								ur_render_premium_feature_gate_template(
+									array(
+										'template_id' => 'ur-pro-proration-content',
+									)
+								);
+								?>
 							</div>
 						</div>
 					</div>
 				</div>
 				<?php
 			}
-			if ( UR_PRO_ACTIVE && function_exists( 'ur_render_email_marketing_sync_settings' ) ) :
-				?>
+
+			?>
 				<!-- Sync Membership to email marketing addons. -->
-				<div class="ur-membership-sync-to-email-marketing-addons">
+				<div class="ur-membership-sync-to-email-marketing-addons <?php echo ! UR_PRO_ACTIVE ? 'upgradable-type' : ''; ?> ">
 					<div class="ur-membership-selection-container ur-d-flex ur-mt-2 ur-align-items-center"
 						style="gap:20px;">
 						<div class="ur-label" style="width: 30%">
@@ -228,29 +235,36 @@
 									data-key-name="Sync Email Marketing Action"
 									id="ur-membership-email-marketing-sync-action" type="checkbox"
 									class="user-registration-switch__control hide-show-check enabled"
-
+									<?php echo ! UR_PRO_ACTIVE ? 'disabled' : ''; ?>
 									name="ur_membership_email_marketing_sync_action"
 									style="width: 100%; text-align: left"
 								<?php echo $is_email_marketing_sync ? esc_attr( 'checked' ) : ''; ?>
 									>
 								<span class="slider round"></span>
+
+								<?php
+								if ( ! UR_PRO_ACTIVE ) {
+									ur_render_premium_feature_gate();
+								}
+								?>
 							</span>
 						</div>
 					</div>
 				</div>
 
 				<?php
-				ur_render_email_marketing_sync_settings( $membership_details );
-			endif;
+				if ( UR_PRO_ACTIVE && function_exists( 'ur_render_email_marketing_sync_settings' ) ) {
+					ur_render_email_marketing_sync_settings( $membership_details );
+				}
 
-			/**
-			 * Local Currency Settings Render.
-			 *
-			 * @since 6.1.0
-			 */
-			if ( UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) && class_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions' ) ) :
-				WPEverest\URMembership\Local_Currency\Admin\CoreFunctions::ur_render_local_currency_settings( $membership_details );
-				endif;
-			?>
+				/**
+				 * Local Currency Settings Render.
+				 *
+				 * @since 6.1.0
+				 */
+				if ( UR_PRO_ACTIVE && ur_check_module_activation( 'local-currency' ) && class_exists( 'WPEverest\URMembership\Local_Currency\Admin\CoreFunctions' ) ) :
+					WPEverest\URMembership\Local_Currency\Admin\CoreFunctions::ur_render_local_currency_settings( $membership_details );
+					endif;
+				?>
 		</div>
 	</div>
