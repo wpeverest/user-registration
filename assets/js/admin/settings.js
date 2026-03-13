@@ -826,7 +826,7 @@
 		function () {
 			var $url = $("#user_registration_login_options_prevent_core_login");
 
-			$(".single_select_page").toggle();
+			$("#user_registration_login_options_login_redirect_url").closest(".single_select_page").toggle();
 			$("#user_registration_login_options_login_redirect_url").prop(
 				"required",
 				function () {
@@ -1646,18 +1646,32 @@
 			type: "POST",
 			complete: function (response) {
 				if (response.responseJSON.status === false) {
-					$this
+						var disableSaveBtn = response.responseJSON.disable_save_btn;
+						var className = 'error';
+						var inlineStyle = "padding:10px;";
+
+						if (typeof disableSaveBtn === "undefined") {
+							$this
+								.closest("form")
+								.find("input[name='save']")
+								.prop("disabled", true);
+
+						} else if (disableSaveBtn === "no") {
+							className += ' settings-page-notice';
+							$this
+								.closest("form")
+								.find("input[name='save']")
+								.prop("disabled", false);
+						}
+
+						$this
 						.closest(".user-registration-global-settings--field")
 						.append(
-							"<div id='message' class='error inline' style='padding:10px;'>" +
+							"<div id='message' class='" + className +  " inline' style='" + inlineStyle + "'>" +
 								response.responseJSON.message +
 								"</div>"
 						);
 
-					$this
-						.closest("form")
-						.find("input[name='save']")
-						.prop("disabled", true);
 				} else {
 					if (
 						$this
@@ -2643,5 +2657,6 @@
 	});
 	$(document).ready(function () {
 		$(".urm_toggle_pg_status").trigger("change");
+		$( "#user_registration_member_registration_page_id, #user_registration_thank_you_page_id").trigger( 'change' );
 	});
 })(jQuery);

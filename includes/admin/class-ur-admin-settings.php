@@ -65,7 +65,7 @@ class UR_Admin_Settings {
 		global $current_section, $current_tab;
 		global $current_section_part;
 
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$suffix                 = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		$current_tab_for_assets = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 
 		/**
@@ -89,6 +89,7 @@ class UR_Admin_Settings {
 			true
 		);
 		wp_enqueue_script( 'ur-setup' );
+		wp_enqueue_style( 'ur-toast' );
 		if ( ! wp_style_is( 'ur-snackbar', 'registered' ) ) {
 			wp_register_style( 'ur-snackbar', UR()->plugin_url() . '/assets/css/ur-snackbar/ur-snackbar.css', array(), UR_VERSION );
 		}
@@ -336,7 +337,7 @@ class UR_Admin_Settings {
 
 			// $is_pro_active = is_plugin_active( 'user-registration-pro/user-registration.php' );
 			// if( $is_pro_active ) {
-				$settings[] = include 'settings/class-ur-settings-integration.php';
+			$settings[] = include 'settings/class-ur-settings-integration.php';
 			// }
 
 			$settings[] = include 'settings/class-ur-settings-security.php';
@@ -536,15 +537,15 @@ class UR_Admin_Settings {
 
 						$settings .= '</div>';
 
-						//Show upsell texts.
+						// Show upsell texts.
 						if ( ! empty( $section['upsell'] ) ) {
 							$upsell_section = $section['upsell'];
 							$settings      .= '<div class="user-registration-upsell">';
-							//excerpt.
+							// excerpt.
 							if ( ! empty( $upsell_section['excerpt'] ) ) {
 								$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $upsell_section['excerpt'] ) ) . '</p>';
 							}
-							//descriptions.
+							// descriptions.
 							if ( ! empty( $upsell_section['description'] ) ) {
 								if ( is_string( $upsell_section['description'] ) ) {
 									$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $upsell_section['excerpt'] ) ) . '</p>';
@@ -556,14 +557,17 @@ class UR_Admin_Settings {
 									$settings .= '</ul>';
 								}
 							}
-							if ( ! empty( $upsell_section['feature_link'] ) ) {
+
+							$license_data = ur_get_license_plan();
+							$license_plan = ! empty( $license_data->item_plan ) ? $license_data->item_plan : false;
+							if ( empty( $license_plan ) && ! empty( $upsell_section['feature_link'] ) ) {
 								$settings .= '<a href="' . esc_url( $upsell_section['feature_link'] ) . '" class="user-registration-upsell__feature-link" target="_blank">' . esc_html__( 'Learn More', 'user-registration' ) . '</a>';
 							}
 							$settings .= '</div>';
 						}
 
 						if ( ! empty( $section['before_desc'] ) ) {
-							$settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $section['before_desc'] ) ) . '</p>';
+							// $settings .= '<p style="font-size: 14px;">' . wptexturize( wp_kses_post( $section['before_desc'] ) ) . '</p>';
 						}
 
 						if ( ! empty( $section['desc'] ) ) {
@@ -617,7 +621,7 @@ class UR_Admin_Settings {
 						if ( ! UR_PRO_ACTIVE && ( 'free-mollie' === $section['id'] || 'free-authorize-net' === $section['id'] ) ) {
 							$result    = ' data-gate-content="ur-pro-' . $section['id'] . '"';
 							$settings .= '<img class="ur-pro-premium" data-feature-gate="tooltip" data-gate-placement="right" data-gate-interactive="true"' . $result . ' src="' . UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png" alt="' . $section['title'] . '">';
-							$settings .= '<template id="ur-pro-'.$section['id'].'">';
+							$settings .= '<template id="ur-pro-' . $section['id'] . '">';
 							$settings .= '<div class="ur-feature">';
 							$settings .= '<div class="ur-feature__title">';
 							$settings .= esc_html__( $section['title'] . ' payment feature only available in Pro.', 'user-registration' );
@@ -1957,6 +1961,13 @@ class UR_Admin_Settings {
 
 		// Save all options in our array.
 		foreach ( $update_options as $name => $value ) {
+			// sync membership 'user_registration_member_registration_page_id' with 'user_registration_registration_page_id'.
+			if ( 'user_registration_member_registration_page_id' === $name ) {
+				update_option( 'user_registration_registration_page_id', $value );
+			}
+			if ( 'user_registration_login_page_id' === $name ) {
+				update_option( 'user_registration_login_options_login_redirect_url', $value );
+			}
 			update_option( $name, $value );
 		}
 

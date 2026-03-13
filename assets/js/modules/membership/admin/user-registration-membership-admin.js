@@ -1270,9 +1270,11 @@
 
 		/**
 		 * called to update an existing membership
-		 * @param $this
+		 * @param {jQuery} $this Save button element.
+		 * @param {Object} [options] Optional. onSuccess callback after successful save.
 		 */
-		update_membership: function ($this) {
+		update_membership: function ($this, options) {
+			options = options || {};
 			ur_membership_utils.toggleSaveButtons(true);
 			ur_membership_utils.append_spinner($this);
 			if (this.validate_membership_form()) {
@@ -1305,6 +1307,9 @@
 							ur_membership_utils.show_success_message(
 								response.data.message
 							);
+							if ("function" === typeof options.onSuccess) {
+								options.onSuccess();
+							}
 						} else {
 							ur_membership_utils.show_failure_message(
 								response.data.message
@@ -1559,16 +1564,13 @@
 				}
 				pro_rate_settings.removeClass("ur-d-none");
 				plan_container.removeClass("ur-d-none");
-				team_pricing_container.addClass("ur-d-flex");
-				team_pricing_container.removeClass("ur-d-none");
-			} else {
-				$('input[name="ur_membership_local_currency"]').prop(
-					"checked",
-					false
-				);
-				$('input[name="ur_membership_local_currency"]').trigger(
-					"change"
-				);
+				team_pricing_container.addClass('ur-d-flex');
+				team_pricing_container.removeClass('ur-d-none');
+			}else{
+				if ( $('input[name="ur_membership_local_currency"]:checked').length ) {
+					$('input[name="ur_membership_local_currency"]').prop('checked', false);
+					$('input[name="ur_membership_local_currency"]').trigger('change');
+				}
 			}
 		}
 	);
@@ -1606,6 +1608,32 @@
 			ur_membership_request_utils.update_membership($this);
 		} else {
 			ur_membership_request_utils.create_membership($this);
+		}
+	});
+
+	// Auto-save before opening "Create a Membership" link so changes are not lost.
+	$(document).on("click", ".ur-membership-upgrade-action-notice a[href*=\"user-registration-membership\"]", function (e) {
+		var href = $(this).attr("href");
+		if (!href) {
+			return;
+		}
+		if (
+			ur_membership_data.membership_id &&
+			ur_membership_data.membership_id !== ""
+		) {
+			e.preventDefault();
+			var $btn = $(".ur-membership-save-btn");
+			if ($btn.find(".ur-spinner.is-active").length) {
+				ur_membership_utils.show_failure_message(
+					ur_membership_data.labels.i18n_previous_save_action_ongoing
+				);
+				return;
+			}
+			ur_membership_request_utils.update_membership($btn, {
+				onSuccess: function () {
+					window.open(href, "_blank", "noopener,noreferrer");
+				}
+			});
 		}
 	});
 
@@ -2036,6 +2064,8 @@
 			cursor: "move",
 			opacity: 0.8,
 			placeholder: "ur-sortable-placeholder",
+			axis: "y",
+			containment: $membershipTable,
 			helper: function (e, tr) {
 				// Capture initial order before the drag starts affecting the DOM
 				// Get order from all rows in their original positions

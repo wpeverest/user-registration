@@ -1,6 +1,6 @@
 (function ($, wp) {
 	var $document = $(document);
-	((__ = wp.i18n.__), (_x = wp.i18n._x), (sprintf = wp.i18n.sprintf));
+	(__ = wp.i18n.__), (_x = wp.i18n._x), (sprintf = wp.i18n.sprintf);
 
 	if (
 		$(".user-registration").find(".user-registration-form-template-wrapper")
@@ -481,15 +481,17 @@ jQuery(function ($) {
 						ur_setup_params.i18n_activating_text +
 						"</span>",
 					allowOutsideClick: false,
-					confirmButtonText: ur_setup_params.save_changes_text,
-					showDenyButton: true,
-					denyButtonText: ur_setup_params.reload_text,
-					denyButtonColor: "#DD6B55",
+					// confirmButtonText: ur_setup_params.save_changes_text,
+					confirmButtonText: ur_setup_params.reload_text,
+					showDenyButton: false,
+					// denyButtonText: ur_setup_params.reload_text,
+					// denyButtonColor: "#DD6B55",
 					didOpen: function () {
 						var confirmButton = Swal.getConfirmButton(),
 							confirmButtonText = confirmButton.textContent,
 							actions = Swal.getActions();
 
+						confirmButton.style.maxWidth = "100px";
 						$(actions).find(".swal2-deny").hide();
 						confirmButton.disabled = true;
 						confirmButton.innerHTML =
@@ -518,20 +520,19 @@ jQuery(function ($) {
 					}
 				}).then(function (result) {
 					if (result.isConfirmed) {
-						$(".ur_save_form_action_button").trigger("click");
-
+						// $(".ur_save_form_action_button").trigger("click");
 						if (
 							url.indexOf("mailchimp") < 1 ||
 							url.indexOf("file-upload") < 1
 						) {
-							location.reload();
+							ur_setup_actions.show_toast_and_reload();
 						}
 					} else if (result.isDenied) {
 						if (
 							url.indexOf("mailchimp") < 1 ||
 							url.indexOf("file-upload") < 1
 						) {
-							location.reload();
+							ur_setup_actions.show_toast_and_reload();
 						}
 					}
 				});
@@ -602,16 +603,29 @@ jQuery(function ($) {
 		},
 		install_addon_from_settings: function (node) {
 			wp.updates.maybeRequestFilesystemCredentials(event);
-			var button_text = this.$button_install;
+			var button_text = ur_setup_params.i18n_activating + "...";
+			var $btn = $(node).closest("button").length
+				? $(node).closest("button")
+				: $(node);
 
 			if (node.hasClass("user-registration-settings-addon-install")) {
-				button_text = ur_setup_params.i18n_installing;
+				button_text = ur_setup_params.i18n_installing + "...";
 			}
 
-			$(node)
-				.html(button_text + '<div class="ur-spinner"></div>')
-				.closest("button")
-				.prop("disabled", true);
+			$btn.html(
+				button_text + ' <span class="ur-spinner is-active"></span>'
+			).prop("disabled", true);
+
+			if (node.hasClass("user-registration-settings-addon-install")) {
+				setTimeout(function () {
+					if ($btn.length && $btn.prop("disabled")) {
+						$btn.html(
+							ur_setup_params.i18n_activating +
+								'... <span class="ur-spinner is-active"></span>'
+						);
+					}
+				}, 2000);
+			}
 
 			// Add it to the queue.
 			wp.updates.queue.push({
@@ -640,40 +654,7 @@ jQuery(function ($) {
 						});
 					} else {
 						if (0 === wp.updates.queue.length) {
-							Swal.fire({
-								customClass:
-									"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-settings-swal2",
-								icon: "success",
-								title:
-									'<span class="user-registration-swal2-modal__title">' +
-									ur_setup_params.download_successful_title +
-									"</span>",
-								text: $(node).hasClass(
-									"user-registration-settings-addon-activate"
-								)
-									? ur_setup_params.download_successful_message.replace(
-											" installed and",
-											""
-										)
-									: ur_setup_params.download_successful_message.replace(
-											" Activated",
-											""
-										),
-								allowOutsideClick: false,
-								confirmButtonText:
-									ur_setup_params.save_changes_text,
-								showCancelButton: true,
-								cancelButtonText: ur_setup_params.reload_text,
-								cancelButtonColor: "#DD6B55"
-							}).then(function (result) {
-								if (result.isConfirmed) {
-									$(".user-registration-settings-container")
-										.find("input[name='save']")
-										.trigger("click");
-								} else {
-									location.reload();
-								}
-							});
+							ur_setup_actions.show_toast_and_reload();
 						}
 					}
 				}
@@ -681,6 +662,57 @@ jQuery(function ($) {
 
 			// Check the queue, now that the event handlers have been added.
 			wp.updates.queueChecker();
+		},
+		show_toast_and_reload: function (redirectUrl) {
+			$(window).off("beforeunload");
+			window.onbeforeunload = null;
+			var reloadingText =
+				ur_setup_params.i18n_reloading || "Reloading...";
+			$("button:disabled .ur-spinner.is-active")
+				.closest("button")
+				.html(
+					reloadingText +
+						' <span class="ur-spinner is-active"></span>'
+				);
+			var message =
+				ur_setup_params.i18n_activation_success ||
+				"Successfully activated.";
+			var container = document.querySelector(
+				".ur-admin-settings-toast-container"
+			);
+			if (!container) {
+				container = document.createElement("div");
+				container.className = "ur-admin-settings-toast-container";
+				document.body.appendChild(container);
+			}
+			var noticeId =
+				"ur-admin-settings-toast-" +
+				Date.now() +
+				"-" +
+				Math.random().toString(36).substr(2, 9);
+			var toast = document.createElement("div");
+			toast.id = noticeId;
+			toast.className =
+				"ur-admin-settings-toast ur-admin-settings-toast--success";
+			toast.innerHTML =
+				'<div class="ur-admin-settings-toast__icon"><span class="dashicons dashicons-yes-alt"></span></div>' +
+				'<div class="ur-admin-settings-toast__message"></div>' +
+				'<button type="button" class="ur-admin-settings-toast__close" aria-label="Dismiss">' +
+				'<span class="dashicons dashicons-no-alt"></span></button>';
+			toast.querySelector(
+				".ur-admin-settings-toast__message"
+			).textContent = message;
+			container.appendChild(toast);
+			requestAnimationFrame(function () {
+				toast.classList.add("ur-admin-settings-toast--show");
+			});
+			setTimeout(function () {
+				if (redirectUrl) {
+					window.location.href = redirectUrl;
+				} else {
+					location.reload();
+				}
+			}, 1500);
 		},
 		activate_feature_from_settings: function (node) {
 			var $node = $(node);
@@ -696,7 +728,7 @@ jQuery(function ($) {
 			$node
 				.html(
 					ur_setup_params.i18n_activating +
-						'<div class="ur-spinner"></div>'
+						'... <span class="ur-spinner is-active"></span>'
 				)
 				.closest("button")
 				.prop("disabled", true);
@@ -722,26 +754,18 @@ jQuery(function ($) {
 				},
 				success: function (response) {
 					if (response.success) {
-						Swal.fire({
-							customClass:
-								"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-settings-swal2",
-							icon: "success",
-							title:
-								'<span class="user-registration-swal2-modal__title">' +
-								(response.message ||
-									ur_setup_params.download_successful_title) +
-								"</span>",
-							text:
-								response.message ||
-								ur_setup_params.download_successful_message,
-							allowOutsideClick: false,
-							confirmButtonText: ur_setup_params.i18n_ok || "OK",
-							showCancelButton: false
-						}).then(function (result) {
-							if (result.isConfirmed) {
-								location.reload();
-							}
-						});
+						if (
+							slug === "user-registration-sms-integration" ||
+							slug === "sms-integration"
+						) {
+							var url = new URL(window.location.href);
+							url.searchParams.delete("section");
+							ur_setup_actions.show_toast_and_reload(
+								url.toString()
+							);
+						} else {
+							ur_setup_actions.show_toast_and_reload();
+						}
 					} else {
 						Swal.fire({
 							customClass:
@@ -795,14 +819,24 @@ jQuery(function ($) {
 		install_addon_from_builder: function (node) {
 			wp.updates.maybeRequestFilesystemCredentials(event);
 
-			ur_setup_actions.$button_install = ur_setup_params.i18n_installing;
-			$(node)
-				.html(
-					ur_setup_actions.$button_install +
-						'<div class="ur-spinner"></div>'
-				)
-				.closest("button")
-				.prop("disabled", true);
+			var $btn = $(node).closest("button").length
+				? $(node).closest("button")
+				: $(node);
+			ur_setup_actions.$button_install =
+				ur_setup_params.i18n_installing + "...";
+			$btn.html(
+				ur_setup_actions.$button_install +
+					' <span class="ur-spinner is-active"></span>'
+			).prop("disabled", true);
+
+			setTimeout(function () {
+				if ($btn.length && $btn.prop("disabled")) {
+					$btn.html(
+						ur_setup_params.i18n_activating +
+							'... <span class="ur-spinner is-active"></span>'
+					);
+				}
+			}, 2000);
 
 			if ($(node).data("name").indexOf(", and")) {
 				var addon_name = $(node).data("name").split(", and"),
@@ -848,32 +882,7 @@ jQuery(function ($) {
 						});
 					} else {
 						if (0 === wp.updates.queue.length) {
-							Swal.fire({
-								customClass:
-									"user-registration-swal2-modal user-registration-swal2-modal--center user-registration-locked-field",
-								icon: "success",
-								width: "auto",
-								title:
-									'<span class="user-registration-swal2-modal__title">' +
-									ur_setup_params.download_successful_title +
-									"</span>",
-								text: ur_setup_params.download_successful_message,
-								allowOutsideClick: false,
-								confirmButtonText:
-									ur_setup_params.save_changes_text,
-								showCancelButton: true,
-								cancelButtonText: ur_setup_params.reload_text,
-								cancelButtonColor: "#DD6B55"
-							}).then(function (result) {
-								if (result.isConfirmed) {
-									$(".ur_save_form_action_button").trigger(
-										"click"
-									);
-									location.reload();
-								} else {
-									location.reload();
-								}
-							});
+							ur_setup_actions.show_toast_and_reload();
 						}
 					}
 				}

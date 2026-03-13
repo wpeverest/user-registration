@@ -1,6 +1,7 @@
 <?php
 /**
  * Base Page class for pages.
+ * @package UserRegistration
  */
 
 use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
@@ -9,6 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Base Layout class for pages.
+ * @package UserRegistration
+ */
 class UR_Base_Layout {
 	/**
 	 * Render a standard list-table page layout for a given WP_List_Table instance.
@@ -48,10 +53,6 @@ class UR_Base_Layout {
 		if ( is_object( $table ) && method_exists( $table, 'get_pagination_arg' ) ) {
 			$total_items = (int) $table->get_pagination_arg( 'total_items' );
 		}
-
-		$is_searching = isset( $_GET['s'] ) && '' !== trim( wp_unslash( $_GET['s'] ) );
-
-		$show_search = ( $total_items > 10 ) || $is_searching;
 
 		$is_membership_page = isset( $_GET['page'] ) && 'user-registration-membership' === $_GET['page'] && ! isset( $_GET['action'] ) ? true : false;
 
@@ -139,8 +140,8 @@ class UR_Base_Layout {
 	/**
 	 * Display Search Input with button
 	 *
-	 * @param $search_id
-	 * @param $placeholder
+	 * @param string $search_id    HTML id attribute for the search input.
+	 * @param string $placeholder Placeholder text for the search input (ellipsis is appended).
 	 *
 	 * @return void
 	 */
@@ -148,7 +149,7 @@ class UR_Base_Layout {
 		?>
 			<input type="search" id="<?php echo esc_attr( $search_id ); ?>" name="s"
 					value="<?php echo esc_attr( $_GET['s'] ?? '' ); ?>"
-					placeholder="<?php echo esc_attr( $placeholder ); ?> ..."
+					placeholder="<?php echo esc_attr( $placeholder ); ?>..."
 					autocomplete="off">
 			<button type="submit" id="search-submit">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

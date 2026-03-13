@@ -22,24 +22,27 @@ class User_Registration_Stripe_Module {
 		if ( is_admin() ) {
 			// Filter for global settings.
 			add_filter( 'user_registration_payment_settings', array( $this, 'get_stripe_settings' ) );
-			add_filter( 'urm_validate_stripe_payment_section_before_update', array(
-				$this,
-				'validate_stripe_section'
-			) );
+			add_filter(
+				'urm_validate_stripe_payment_section_before_update',
+				array(
+					$this,
+					'validate_stripe_section',
+				)
+			);
 			add_action( 'urm_save_stripe_payment_section', array( $this, 'save_section_settings' ), 10, 1 );
 		}
 	}
 
 	/**
-	 * raw_settings
+	 * Raw Settings.
 	 *
 	 * @return array
 	 */
 	public function raw_settings() {
 		$stripe_enabled = get_option( 'user_registration_stripe_enabled', '' );
 
-		// Determine default toggle value based on urm_is_new_installation option
-		$stripe_toggle_default = ur_string_to_bool(get_option( 'urm_is_new_installation', false ));
+		// Determine default toggle value based on urm_is_new_installation option.
+		$stripe_toggle_default = ur_string_to_bool( get_option( 'urm_is_new_installation', false ) );
 
 		return array(
 			'id'           => 'stripe',
@@ -55,7 +58,7 @@ class User_Registration_Stripe_Module {
 					'desc'     => __( 'Enable Stripe payment gateway.', 'user-registration' ),
 					'id'       => 'user_registration_stripe_enabled',
 					'desc_tip' => true,
-					'default'  => ($stripe_enabled) ? $stripe_enabled : $stripe_toggle_default,
+					'default'  => ( $stripe_enabled ) ? $stripe_enabled : $stripe_toggle_default,
 					'class'    => 'urm_toggle_pg_status',
 				),
 				array(
@@ -106,7 +109,7 @@ class User_Registration_Stripe_Module {
 					'title' => __( 'Save', 'user-registration' ),
 					'id'    => 'user_registration_stripe_save_settings',
 					'type'  => 'button',
-					'class' => 'payment-settings-btn'
+					'class' => 'payment-settings-btn',
 				),
 			),
 		);
@@ -125,20 +128,20 @@ class User_Registration_Stripe_Module {
 	}
 
 	/**
-	 * validate_stripe_section
+	 * Validate stripe keys.
 	 *
-	 * @param $form_data
+	 * @param array $form_data Form data with stripe creds.
 	 *
 	 * @return true[]
-	 * @throws \Stripe\Exception\ApiErrorException
+	 * @throws \Stripe\Exception\ApiErrorException Api Error Exception.
 	 */
 	public function validate_stripe_section( $form_data ) {
 		$changed  = false;
 		$response = array(
-			'status' => true,
+			'status'    => true,
 			'connected' => true,
 		);
-		if( isset( $form_data['user_registration_stripe_enabled'] ) && ! $form_data['user_registration_stripe_enabled'] ) {
+		if ( isset( $form_data['user_registration_stripe_enabled'] ) && ! $form_data['user_registration_stripe_enabled'] ) {
 			return $response;
 		}
 		foreach ( $form_data as $k => $data ) {
@@ -154,32 +157,52 @@ class User_Registration_Stripe_Module {
 			$publishable_key = $form_data[ sprintf( 'user_registration_stripe_%s_publishable_key', $mode ) ];
 			$secret_key      = $form_data[ sprintf( 'user_registration_stripe_%s_secret_key', $mode ) ];
 
-			\Stripe\Stripe::setApiKey( $secret_key ); // Replace with your actual key
+			\Stripe\Stripe::setApiKey( $secret_key );
 
 			try {
-				$customers = \Stripe\Customer::all( [ 'limit' => 1 ] );
+				$customers = \Stripe\Customer::all( array( 'limit' => 1 ) );
 			} catch ( \Stripe\Exception\AuthenticationException $e ) {
-				$response['status']  = false;
-				$response['connected']  = false;
-				$response['message'] = 'Invalid stripe credentials';
+				$response['status']    = false;
+				$response['connected'] = false;
+				$response['message']   = 'Invalid stripe credentials';
 			}
 		}
 
 		return $response;
-
-
 	}
 
 	/**
-	 * save_section_settings
+	 * Save stripe section settings.
 	 *
-	 * @param $form_data
-	 *
+	 * @param array $form_data Form data.
 	 * @return void
 	 */
 	public function save_section_settings( $form_data ) {
 		$section = $this->raw_settings();
 		ur_save_settings_options( $section, $form_data );
+		if ( ! class_exists( 'WPEverest\URMembership\Admin\Services\Stripe\StripeService' ) ) {
+			return;
+		}
+		foreach ( array( 'test', 'live' ) as $mode ) {
+			$secret = get_option( 'user_registration_stripe_' . $mode . '_secret_key', '' );
+			if ( empty( $secret ) ) {
+				continue;
+			}
+			$result = \WPEverest\URMembership\Admin\Services\Stripe\StripeService::create_webhook( $mode );
+			if ( ! empty( $result['success'] ) && class_exists( 'WPEverest\URMembership\Admin\Services\PaymentGatewayLogging' ) ) {
+				\WPEverest\URMembership\Admin\Services\PaymentGatewayLogging::log_general(
+					'stripe',
+					'Webhook created or verified for ' . $mode . ' mode',
+					'notice',
+					array(
+						'event_type' => 'webhook_save',
+						'mode'       => $mode,
+					)
+				);
+			}
+		}
+
+		do_action( 'user_registration_after_stripe_settings_updated', $form_data );
 	}
 }
 

@@ -228,7 +228,7 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 					    LEFT JOIN $this->users_table wu ON wums.user_id = wu.ID
 					    LEFT JOIN $this->posts_table wp ON wums.item_id = wp.ID
 						WHERE wums.status = 'active'
-						AND wums.expiry_date < '%s'
+						AND wums.expiry_date <= '%s'
 						",
 			$check_date
 		);
@@ -307,5 +307,18 @@ class MembersSubscriptionRepository extends BaseRepository implements MembersSub
 		$result = $this->wpdb()->get_results( $sql, ARRAY_A );
 
 		return ! $result ? array() : $result;
+	}
+
+	public function get_subscription_by_subscription_id_meta( $subscription_id ) {
+		$result = $this->wpdb()->get_row(
+			$this->wpdb()->prepare(
+				"SELECT wums.* FROM {$this->table} wums
+				WHERE wums.subscription_id = %s",
+				$subscription_id
+			),
+			ARRAY_A
+		);
+
+		return $result ? $result : false;
 	}
 }

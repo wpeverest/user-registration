@@ -111,31 +111,46 @@ class MembershipRepository extends BaseRepository implements MembershipInterface
 
 	public function get_multiple_membership_by_ID( $ids, $order = true ) {
 		global $wpdb;
+
+		if ( ! is_array( $ids ) ) {
+			$ids = explode( ',', $ids );
+		}
+
+		$ids = array_filter( array_map( 'absint', $ids ) );
+
+		if ( empty( $ids ) ) {
+			return [];
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+
 		$sql = "
-				SELECT wpp.ID,
-				       wpp.post_title,
-				       wpp.post_content,
-				       wpp.post_status,
-				       wpp.post_type,
-				       wpm.meta_value
-				FROM $this->table wpp
-				         JOIN $this->posts_meta_table wpm on wpm.post_id = wpp.ID
-				WHERE wpm.meta_key = 'ur_membership'
-				  AND wpp.post_type = 'ur_membership'
-				  AND wpp.post_status = 'publish'
-				AND wpp.ID IN ($ids)
+			SELECT wpp.ID,
+				wpp.post_title,
+				wpp.post_content,
+				wpp.post_status,
+				wpp.post_type,
+				wpm.meta_value
+			FROM {$this->table} wpp
+			INNER JOIN {$this->posts_meta_table} wpm
+				ON wpm.post_id = wpp.ID
+			WHERE wpm.meta_key = 'ur_membership'
+			AND wpp.post_type = 'ur_membership'
+			AND wpp.post_status = 'publish'
+			AND wpp.ID IN ($placeholders)
 		";
 
 		if ( $order ) {
-			$sql .= 'ORDER BY 1 DESC';
+			$sql .= ' ORDER BY wpp.ID DESC';
+			$query_args = $ids;
 		} else {
-			$sql .= " ORDER BY FIELD(wpp.ID, $ids)";
+			$sql .= " ORDER BY FIELD(wpp.ID, $placeholders)";
+			$query_args = array_merge( $ids, $ids );
 		}
 
-		$memberships = $wpdb->get_results(
-			$sql,
-			ARRAY_A
-		);
+		$query = $wpdb->prepare( $sql, $query_args );
+
+		$memberships = $wpdb->get_results( $query, ARRAY_A );
 
 		$membership_service = new MembershipService();
 		return $membership_service->prepare_membership_data( $memberships );

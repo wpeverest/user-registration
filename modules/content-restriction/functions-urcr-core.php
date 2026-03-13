@@ -251,7 +251,7 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 							}
 
 							if ( ! in_array( $target['taxonomy'], (array) $post_taxonomies ) ) {
-								return - 1;
+								break;
 							}
 
 							/**
@@ -262,13 +262,13 @@ function urcr_is_target_post( $targets = array(), $target_post = null ) {
 							$post_status = apply_filters( 'user_registration_membership_post_taxonomy_status', '' );
 
 							if ( ! empty( $post_status ) && isset( $target_post->post_status ) && $target_post->post_status === $post_status ) {
-								return - 1;
+								break;
 							}
 
 							$terms = get_the_terms( $target_post, $target['taxonomy'] );
 
 							if ( empty( $terms ) || is_wp_error( $terms ) ) {
-								return - 1;
+								break;
 							}
 
 							foreach ( $terms as $term ) {
@@ -580,7 +580,7 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 													! empty( $membership['post_id'] ) &&
 													(int) $membership['post_id'] === (int) $team_membership_id &&
 													! empty( $membership['status'] ) &&
-													'active' === $membership['status'] &&
+													in_array( $membership['status'], array( 'active', 'trial' ), true ) &&
 													in_array( $membership['post_id'], $sources, true )
 												) {
 													return true;
@@ -594,7 +594,7 @@ function urcr_is_allow_access( $logic_map = array(), $target_post = null ) {
 
 						if ( ! empty( $user_membership ) && is_array( $user_membership ) ) {
 							foreach ( $user_membership as $membership ) {
-								if ( ! empty( $membership['status'] ) && 'active' === $membership['status'] ) {
+								if ( ! empty( $membership['status'] ) && in_array( $membership['status'], array( 'active', 'trial' ), true ) ) {
 									if ( ! empty( $membership['post_id'] ) && in_array( $membership['post_id'], $sources, true ) ) {
 										return true;
 									}
@@ -744,18 +744,24 @@ function urcr_apply_content_restriction( $actions, &$target_post = null ) {
 
 			$target_post->post_content = $styled_content;
 
-			add_filter(
-				'elementor/frontend/the_content',
-				function () use ( $styled_content ) {
-					if ( ! urcr_is_elementor_content_restricted() ) {
-						urcr_set_elementor_content_restricted();
+			if( class_exists( 'Elementor\Plugin' ) ) {
+				add_filter(
+					'elementor/frontend/the_content',
+					function () use ( $styled_content ) {
+						if ( ! urcr_is_elementor_content_restricted() ) {
+							urcr_set_elementor_content_restricted();
 
-						return $styled_content;
+							return $styled_content;
+						}
+
+						return '';
 					}
+				);
 
-					return '';
+				if( $is_whole_site_restriction ) {
+					$target_post->post_content = '';
 				}
-			);
+			}
 
 			return true;
 		} elseif ( 'redirect' === $action['type'] ) {
@@ -1299,7 +1305,7 @@ function urcr_migrate_post_page_restrictions() {
 		return array(); // No conditions to migrate
 	}
 
-	$timestamp = time() * 1000;
+	$timestamp = time() * 1001;
 
 	// Build logic_map
 	$logic_map = array(
@@ -1311,7 +1317,7 @@ function urcr_migrate_post_page_restrictions() {
 
 	// Build target_contents
 	$target_contents   = array();
-	$target_id_counter = $timestamp + 100;
+	$target_id_counter = $timestamp + 101;
 	$new_migrated_ids  = array();
 
 	if ( ! empty( $posts_by_type['wp_posts'] ) ) {

@@ -200,6 +200,11 @@
 				</select>
 			</div>
 
+
+			<?php
+			do_action( 'ur_membership_team_membership', $membership, $membership_details );
+			?>
+
 			<!-- Payment Settings Notice -->
 			<div id="ur-membership-payment-settings-notice"
 				class="
@@ -229,10 +234,6 @@
 		if ( ! $is_new_installation ) :
 			require __DIR__ . '/membership-admin-payments.php';
 		endif;
-		?>
-
-		<?php
-			do_action( 'ur_membership_team_membership', $membership, $membership_details );
 		?>
 	</div>
 </div>

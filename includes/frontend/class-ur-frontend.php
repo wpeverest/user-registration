@@ -19,12 +19,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package UserRegistration/Frontend
  */
 
-use WPEverest\URMembership\Frontend\Frontend;
 use WPEverest\URMembership\Admin\Repositories\MembersOrderRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersRepository;
 use WPEverest\URMembership\Admin\Repositories\MembersSubscriptionRepository;
 use WPEverest\URMembership\Admin\Repositories\OrdersRepository;
 use WPEverest\URMembership\Admin\Services\MembershipService;
+use WPEverest\URMembership\Frontend\Frontend;
+
 class UR_Frontend {
 
 	/**
@@ -46,6 +47,18 @@ class UR_Frontend {
 		add_filter( 'user_registration_login_redirect', array( $this, 'login_redirect' ), 10, 2 );
 		add_filter( 'user_registration_redirect_after_logout', array( $this, 'logout_redirect' ), 10, 1 );
 		add_action( 'init', array( $this, 'ur_register_payment_tab_if_eligible' ) );
+	}
+
+	/**
+	 * Set instance.
+	 */
+	public static function instance() {
+		// If the single instance hasn't been set, set it now.
+		if ( is_null( self::$_instance ) ) {
+			self::$_instance = new self();
+		}
+
+		return self::$_instance;
 	}
 
 	/**
@@ -121,7 +134,7 @@ class UR_Frontend {
 		if ( $user_id > 0 ) {
 			$user_meta    = get_userdata( $user_id );
 			$user_roles   = $user_meta->roles;
-			$option_roles = get_option( 'user_registration_general_setting_disabled_user_roles', array('subscriber') );
+			$option_roles = get_option( 'user_registration_general_setting_disabled_user_roles', array( 'subscriber' ) );
 
 			if ( ! is_array( $option_roles ) ) {
 				$option_roles = array();
@@ -135,18 +148,6 @@ class UR_Frontend {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Set instance.
-	 */
-	public static function instance() {
-		// If the single instance hasn't been set, set it now.
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();
-		}
-
-		return self::$_instance;
 	}
 
 	/**
@@ -274,15 +275,40 @@ class UR_Frontend {
 			return;
 		}
 
-		if ( ! empty( $login_page ) ) {
+		if ( ! empty( $login_page ) && 'publish' === $login_page->post_status ) {
 			$matched = ur_find_my_account_in_page( $login_page->ID );
 			if ( $matched > 0 ) {
 				$page_id = $login_page->ID;
 			}
-		} elseif ( ! empty( $myaccount_page ) && 0 !== $page_id ) {
+		} elseif ( ! empty( $myaccount_page ) && 'publish' === $myaccount_page->post_status && 0 !== $page_id ) {
 			$matched = ur_find_my_account_in_page( $myaccount_page->ID );
 			if ( $matched > 0 ) {
 				$page_id = $myaccount_page->ID;
+			}
+		}
+
+		// Check if the request is for registration action.
+		$request_action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+		$current_action = ! empty( $action ) ? $action : $request_action;
+
+		if ( ! empty( $current_action ) && 'register' === $current_action ) {
+			$registration_page           = null;
+			$member_registration_page_id = get_option( 'user_registration_member_registration_page_id', 0 );
+			if ( $member_registration_page_id ) {
+				$member_page = get_post( $member_registration_page_id );
+				if ( $member_page && 'publish' === $member_page->post_status && ( has_shortcode( $member_page->post_content, 'user_registration_form' ) || strpos( $member_page->post_content, '[user_registration_form id=' ) !== false ) ) {
+					$registration_page = $member_page;
+				}
+			}
+
+			if ( $registration_page ) {
+					$redirect_url = apply_filters( 'user_registration_register_redirect_url', get_permalink( $registration_page->ID ), $registration_page->ID );
+					wp_safe_redirect( $redirect_url );
+					exit;
+			} else {
+					$url_404 = apply_filters( 'user_registration_register_404_redirect_url', home_url( '/404-not-found/' ) );
+					wp_safe_redirect( $url_404, 302 );
+					exit;
 			}
 		}
 
@@ -299,7 +325,27 @@ class UR_Frontend {
 				exit;
 			}
 
-			if ( 'register' === $action || 'login' === $action || 'lostpassword' === $action ) {
+			$should_redirect = false;
+			if ( 'register' === $action || 'lostpassword' === $action ) {
+				$should_redirect = true;
+			} elseif ( 'login' === $action ) {
+				if ( function_exists( 'ur_is_login_form_markup_rendered' ) ) {
+					$target_post = get_post( $page_id );
+					if ( ! $target_post || empty( $target_post->post_content ) ) {
+						return;
+					}
+
+					$rendered_content = apply_filters( 'the_content', $target_post->post_content );
+
+					if ( ! ur_is_login_form_markup_rendered( $rendered_content ) ) {
+						return;
+					}
+				}
+
+				$should_redirect = true;
+			}
+
+			if ( $should_redirect ) {
 				$myaccount_page = apply_filters( 'user_registration_myaccount_redirect_url', get_permalink( $page_id ), $page_id );
 				wp_safe_redirect( $myaccount_page );
 				exit;
@@ -331,7 +377,7 @@ class UR_Frontend {
 			);
 		}
 
-		if ( 'membership' === $user_source || ( '' !== $payment_method && ( '' !== $ur_payment_subscription || 'paypal_standard' === $payment_method ) ) ) {
+		if ( 'membership' === $user_source || ( ! empty( $payment_method ) && ( ! empty( $ur_payment_subscription ) || 'paypal_standard' === $payment_method ) ) ) {
 			add_action( 'wp_loaded', array( $this, 'ur_add_membership_tab_endpoint' ) );
 			add_filter( 'user_registration_account_menu_items', array( $this, 'ur_membership_tab' ), 10, 1 );
 			add_action(
@@ -376,7 +422,7 @@ class UR_Frontend {
 			return array_merge( $items, $new_items );
 		}
 
-		$position++;
+		++$position;
 
 		$return_items  = array_slice( $items, 0, $position, true );
 		$return_items += $new_items;
@@ -427,26 +473,6 @@ class UR_Frontend {
 	}
 
 	/**
-	 * Add Membership tab endpoint.
-	 */
-	public function ur_add_payments_tab_endpoint() {
-		$mask = Ur()->query->get_endpoints_mask();
-
-		add_rewrite_endpoint( 'urm-payments', $mask );
-		flush_rewrite_rules();
-	}
-
-	/**
-	 * Add Membership tab endpoint.
-	 */
-	public function ur_add_membership_tab_endpoint() {
-		$mask = Ur()->query->get_endpoints_mask();
-
-		add_rewrite_endpoint( 'ur-membership', $mask );
-		flush_rewrite_rules();
-	}
-
-	/**
 	 * @param $args
 	 *
 	 * @return array
@@ -462,8 +488,8 @@ class UR_Frontend {
 		}
 
 		$meta_value = get_user_meta( $user_id, 'ur_payment_invoices', true );
-		if ( 'membership' !== $user_source  ) {
-			if( ! empty( $meta_value ) && is_array( $meta_value ) ) {
+		if ( 'membership' !== $user_source ) {
+			if ( ! empty( $meta_value ) && is_array( $meta_value ) ) {
 				foreach ( $meta_value as $values ) {
 					$total_items[] = array(
 						'user_id'        => $user_id,
@@ -478,9 +504,9 @@ class UR_Frontend {
 					);
 				}
 			} else {
-				$u_data            = get_userdata($user_id);
-				$user_registered       = $u_data->user_registered;
-				$total_items[] = array(
+				$u_data          = get_userdata( $user_id );
+				$user_registered = $u_data->user_registered;
+				$total_items[]   = array(
 					'user_id'        => $user_id,
 					'transaction_id' => '',
 					'post_title'     => __( 'Product/Service', 'user-registration' ),
@@ -488,8 +514,8 @@ class UR_Frontend {
 					'created_at'     => date( 'Y-m-d', strtotime( $user_registered ) ),
 					'type'           => 'paid',
 					'payment_method' => str_replace( '_', ' ', get_user_meta( $user_id, 'ur_payment_method', true ) ),
-					'total_amount'   => get_user_meta( $user_id, 'ur_payment_total_amount', true),
-					'currency'       => get_user_meta( $user_id, 'ur_payment_currency', true),
+					'total_amount'   => get_user_meta( $user_id, 'ur_payment_total_amount', true ),
+					'currency'       => get_user_meta( $user_id, 'ur_payment_currency', true ),
 				);
 			}
 		}
@@ -511,6 +537,26 @@ class UR_Frontend {
 		}
 
 		return array();
+	}
+
+	/**
+	 * Add Membership tab endpoint.
+	 */
+	public function ur_add_payments_tab_endpoint() {
+		$mask = Ur()->query->get_endpoints_mask();
+
+		add_rewrite_endpoint( 'urm-payments', $mask );
+		flush_rewrite_rules();
+	}
+
+	/**
+	 * Add Membership tab endpoint.
+	 */
+	public function ur_add_membership_tab_endpoint() {
+		$mask = Ur()->query->get_endpoints_mask();
+
+		add_rewrite_endpoint( 'ur-membership', $mask );
+		flush_rewrite_rules();
 	}
 
 	/**
@@ -573,6 +619,8 @@ class UR_Frontend {
 					$membership_process            = urm_get_membership_process( $user_id );
 
 					$is_upgrading = ! empty( $membership_process['upgrade'] ) && isset( $membership_process['upgrade'][ $membership['post_id'] ] );
+					$is_purchasing_multiple = ! empty( $membership_process['multiple'] ) && in_array( $membership['post_id'], $membership_process['multiple'] );
+					$is_renewing            = ! empty( $membership_process['renew'] ) && in_array( $membership['post_id'], $membership_process['renew'] );
 
 					$last_order = $members_order_repository->get_member_orders( $user_id );
 					$bank_data  = array();
@@ -590,6 +638,8 @@ class UR_Frontend {
 					$data = array(
 						'membership'        => $membership,
 						'is_upgrading'      => $is_upgrading,
+						'is_purchasing_multiple'      => $is_purchasing_multiple,
+						'is_renewing'      => $is_renewing,
 						'bank_data'         => $bank_data,
 						'renewal_behaviour' => get_option( 'user_registration_renewal_behaviour', 'automatic' ),
 						'subscription_data' => $subscription_data,
@@ -622,9 +672,9 @@ class UR_Frontend {
 						$data['period'] = $amount;
 					}
 
-					$subscription_last_order = $orders_repository->get_order_by_subscription($membership['subscription_id']);
+					$subscription_last_order = $orders_repository->get_order_by_subscription( $membership['subscription_id'] );
 					if ( ! empty( $subscription_last_order ) && $subscription_last_order['status'] === 'completed' ) {
-						$data = apply_filters('user_registration_membership_add_team_data_if_exists',$data, $subscription_last_order );
+						$data = apply_filters( 'user_registration_membership_add_team_data_if_exists', $data, $subscription_last_order );
 					}
 
 					array_push( $membership_data, $data );
@@ -718,10 +768,10 @@ class UR_Frontend {
 				$payment_details['form_type'] = 'normal';
 
 				if ( 'paypal_standard' === $payment_method ) {
-					if( ur_string_to_bool( get_user_meta( $user_id, 'ur_payment_subscription', true ) ) ) {
+					if ( ur_string_to_bool( get_user_meta( $user_id, 'ur_payment_subscription', true ) ) ) {
 						array_push( $membership_data, $payment_details );
-						}
-					} else {
+					}
+				} else {
 					array_push( $membership_data, $payment_details );
 				}
 			}

@@ -81,7 +81,7 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 
 			if ( ! empty( $form_id ) ) {
 
-				$redirect_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' );
+				$redirect_option = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', ur_get_default_redirect_after_registration( $form_id ) );
 
 				switch ( $redirect_option ) {
 					case 'no-redirection':
@@ -89,11 +89,13 @@ if ( ! function_exists( 'ur_get_form_redirect_url' ) ) {
 						break;
 
 					case 'internal-page':
-						$selected_page = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', '' );
+						$selected_page = ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', get_option( 'user_registration_thank_you_page_id', '' ) );
 
-						if ( ! empty( $selected_page ) ) {
+						if ( ! empty( $selected_page ) && 'no-redirection' !== $selected_page ) {
 							$page_url     = get_permalink( $selected_page );
 							$redirect_url = $page_url;
+						} else {
+							$redirect_url = '';
 						}
 
 						break;
@@ -831,11 +833,11 @@ if ( ! function_exists( 'user_registration_form_field' ) ) {
 					}
 
 					$custom_attributes[] = 'data-allow_clear="true"';
-					$is_json             = preg_match( '/^\{.*\}$/s', $value ) ? true : false;
+					$is_json             = is_string( $value ) && preg_match( '/^\{.*\}$/s', $value ) ? true : false;
 					if ( $is_json ) {
 						$value = json_decode( $value, true );
 					}
-					$country = is_array( $value ) ? $value['country'] : $value;
+					$country = is_array( $value ) && ! empty(  $value['country']) ? $value['country'] : $value;
 
 					foreach ( $args['options'] as $option_key => $option_text ) {
 						$selected_attribute = '';
@@ -1362,9 +1364,7 @@ if ( ! function_exists( 'user_registration_account_content' ) ) {
 			$form_id   = ur_get_form_id_by_userid( $user_id );
 			$user_data = get_userdata( $user_id );
 			$user_data = $user_data->data;
-
 			$form_data_array = ( $form_id ) ? UR()->form->get_form( $form_id, array( 'content_only' => true ) ) : array();
-
 			if ( ! empty( $form_data_array ) ) {
 				// No endpoint found? Default to dashboard.
 				ur_get_template(
