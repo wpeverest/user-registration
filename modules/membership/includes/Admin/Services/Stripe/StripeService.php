@@ -654,8 +654,7 @@ class StripeService {
 
 		\Stripe\Stripe::setApiKey( $stripe_settings['secret_key'] );
 
-		$pi_id = sanitize_text_field( ! empty( $data['payment_result']['paymentIntent']['id'] ) ? $data['payment_result']['paymentIntent']['id'] : '' );
-
+		$pi_id = sanitize_text_field( $transaction_id );
 		if ( empty( $pi_id ) ) {
 			$pi_id = sanitize_text_field( ! empty( $data['payment_result']['latest_invoice']['payment_intent']['id'] ) ? $data['payment_result']['latest_invoice']['payment_intent']['id'] : '' );
 		}
@@ -686,6 +685,7 @@ class StripeService {
 		if ( $intent->status !== 'succeeded' ) {
 			$response['status']  = false;
 			$response['message'] = __( 'Payment not completed.', 'user-registration' );
+
 			return $response;
 		}
 
@@ -2439,7 +2439,7 @@ class StripeService {
 
 		return $price->id;
   }
-  
+
   /**
 	 * Backfill missed subscription update record.
 	 *
