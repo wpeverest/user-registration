@@ -653,22 +653,65 @@ class StripeService {
 		}
 
 		\Stripe\Stripe::setApiKey( $stripe_settings['secret_key'] );
-		$pi_id = sanitize_text_field( ! empty( $data['payment_result']['paymentIntent']['id'] ) ? $data['payment_result']['paymentIntent']['id'] : '' );
 
-		if ( ! empty( $pi_id ) ) {
-			$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
+		$pi_id = sanitize_text_field( $transaction_id );
 
-			if ( $intent->status !== 'succeeded' ) {
-				$response['status']  = false;
-				$response['message'] = __( 'Payment not completed.', 'user-registration' );
+		if ( empty( $pi_id ) ) {
+			$pi_id = sanitize_text_field( ! empty( $data['payment_result']['latest_invoice']['payment_intent']['id'] ) ? $data['payment_result']['latest_invoice']['payment_intent']['id'] : '' );
+		}
 
+		if ( empty( $pi_id ) ) {
+			$existing_order = $this->members_orders_repository->get_member_orders( $member_id );
+			if ( ! empty( $existing_order ) && 'completed' === $existing_order['status'] ) {
+				$response['status']  = true;
+				$response['message'] = __( 'Payment already verified.', 'user-registration' );
 				return $response;
 			}
 
-			$payment_status = $intent->status;
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Payment confirmation rejected: missing PaymentIntent ID',
+				array(
+					'error_code' => 'MISSING_PAYMENT_INTENT',
+					'member_id'  => $member_id,
+				)
+			);
+			$response['status']  = false;
+			$response['message'] = __( 'Payment verification failed: missing payment identifier.', 'user-registration' );
+			return $response;
 		}
 
-		$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
+		$intent = \Stripe\PaymentIntent::retrieve( $pi_id );
+
+		if ( $intent->status !== 'succeeded' ) {
+			$response['status']  = false;
+			$response['message'] = __( 'Payment not completed.', 'user-registration' );
+			return $response;
+		}
+
+		$payment_status = $intent->status;
+
+		$latest_order = $this->orders_repository->get_order_by_transaction_id( $intent->id );
+		if ( empty( $latest_order ) ) {
+			$latest_order = $this->members_orders_repository->get_member_orders( $member_id );
+		}
+		$latest_order = is_array( $latest_order ) ? $latest_order : ( $latest_order ? (array) $latest_order : array() );
+
+		if ( ! empty( $latest_order ) && 'stripe' !== $latest_order['payment_method'] ) {
+			PaymentGatewayLogging::log_error(
+				'stripe',
+				'Payment method mismatch: order payment method is not stripe',
+				array(
+					'error_code'     => 'PAYMENT_METHOD_MISMATCH',
+					'member_id'      => $member_id,
+					'order_id'       => $latest_order['ID'],
+					'payment_method' => $latest_order['payment_method'],
+				)
+			);
+			$response['status']  = false;
+			$response['message'] = __( 'Invalid payment method for this order.', 'user-registration' );
+			return $response;
+		}
 
 		if ( $this->members_orders_repository->does_transaction_id_exists( $transaction_id ) ) {
 			$response['status']  = false;
