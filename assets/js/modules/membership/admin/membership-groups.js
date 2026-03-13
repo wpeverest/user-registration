@@ -252,18 +252,24 @@
 					var $this = $(this),
 						group_select_field = $(
 							"#ur-setting-form .ur-general-setting-membership_group"
+						),
+						active_memberships_field = $(
+							"#ur-setting-form .ur-general-setting-membership_active_memberships"
 						);
 					group_select_field
 						.hide()
 						.find("select")
 						.prop("selectedIndex", 0)
 						.trigger("change");
+					active_memberships_field.hide();
 					$(
 						".ur-general-setting-membership_listing_option select"
 					).val($this.val());
 
 					if ($this.val() === "group") {
 						group_select_field.show();
+					} else if ($this.val() === "selected") {
+						active_memberships_field.show();
 					} else {
 						membership_group_object.fetch_memberships(-1);
 					}
@@ -311,6 +317,20 @@
 						group_id
 					);
 					membership_group_object.fetch_memberships(group_id);
+				}
+			);
+			// listen for changes in the active memberships multiselect
+			$(document).on(
+				"change",
+				"#ur-setting-form .ur-general-setting-membership_active_memberships select",
+				function () {
+					var val = $(this).val();
+					// Sync value to grid item so it is saved when form is submitted
+					var $gridSelect = $(".ur-item-active .ur-general-setting-membership_active_memberships select");
+					if ($gridSelect.length && val != null) {
+						$gridSelect.val(Array.isArray(val) ? val : [].concat(val));
+					}
+					membership_group_object.fetch_selected_memberships();
 				}
 			);
 			// listen for clicks on the membership group save button
@@ -460,10 +480,17 @@
 					),
 					group_select_field = $(
 						"#ur-setting-form .ur-general-setting-membership_group"
+					),
+					active_memberships_field = $(
+						"#ur-setting-form .ur-general-setting-membership_active_memberships"
 					);
-				group_select_field.show();
-				if (membership_listing_option_field.val() === "all") {
-					group_select_field.hide();
+				var val = membership_listing_option_field.val();
+				group_select_field.hide();
+				active_memberships_field.hide();
+				if (val === "group") {
+					group_select_field.show();
+				} else if (val === "selected") {
+					active_memberships_field.show();
 				}
 			});
 			$(document).on(
@@ -822,6 +849,66 @@
 							membership_group_object.handle_membership_by_group_success_response(
 								response.data,
 								group_id
+							);
+						} else {
+							empty_urmg.text(
+								user_registration_form_builder_data.i18n_admin
+									.i18n_prompt_no_membership_available
+							);
+							empty_urmg.show();
+						}
+					},
+					failure: function (xhr, statusText) {},
+					complete: function () {
+						membership_group_object.remove_spinner(
+							loader_container
+						);
+					}
+				}
+			);
+		},
+		/**
+		 * Fetch memberships based on explicitly selected membership IDs.
+		 *
+		 * This mirrors fetch_memberships() but uses membership_active_memberships
+		 * multiselect instead of a group selection.
+		 */
+		fetch_selected_memberships: function () {
+			var loader_container = $(".urmg-loader"),
+				urmg_container = $(".urmg-container"),
+				empty_urmg = $(".empty-urmg-label"),
+				$select = $(
+					"#ur-setting-form .ur-general-setting-membership_active_memberships select"
+				),
+				membership_ids = $select.val() || [];
+
+			urmg_container.empty();
+
+			if (!membership_ids.length) {
+				empty_urmg.text(
+					user_registration_form_builder_data.i18n_admin
+						.i18n_prompt_no_membership_available
+				);
+				empty_urmg.show();
+				return;
+			}
+
+			// hide memberships and label
+			empty_urmg.hide();
+			// append spinner
+			membership_group_object.append_spinner(loader_container);
+
+			membership_group_object.send_data(
+				{
+					action: "user_registration_membership_get_selected_memberships",
+					membership_ids: membership_ids
+				},
+				{
+					success: function (response) {
+						if (response.success) {
+							membership_group_object.handle_membership_by_group_success_response(
+								response.data,
+								-1
 							);
 						} else {
 							empty_urmg.text(

@@ -276,18 +276,28 @@ class UR_Captcha_Conflict_Manager {
 
 		foreach ( $scripts->queue as $handle ) {
 			// Skip User Registration scripts
+			if ( ! isset( $scripts->registered[ $handle ] ) ) {
+				continue;
+			}
+
+			$registered_handle = $scripts->registered[ $handle ]->handle;
 			if (
-				! isset( $scripts->registered[ $handle ] ) ||
-				false !== strpos( $scripts->registered[ $handle ]->handle, 'ur-' ) ||
-				false !== strpos( $scripts->registered[ $handle ]->handle, 'user-registration' )
+				! is_string( $registered_handle ) ||
+				false !== strpos( $registered_handle, 'ur-' ) ||
+				false !== strpos( $registered_handle, 'user-registration' )
 			) {
 				continue;
 			}
 
+			$script_src = $scripts->registered[ $handle ]->src;
+			if ( ! is_string( $script_src ) ) {
+				continue;
+			}
+
 			foreach ( $captcha_urls as $url ) {
-				if ( false !== strpos( $scripts->registered[ $handle ]->src, $url ) ) {
+				if ( false !== strpos( $script_src, $url ) ) {
 					ur_get_logger()->notice(
-						sprintf( __( 'Removing generic captcha script: %s (src: %s)', 'user-registration' ), $handle, $scripts->registered[ $handle ]->src ),
+						sprintf( __( 'Removing generic captcha script: %s (src: %s)', 'user-registration' ), $handle, $script_src ),
 						array( 'source' => 'ur-captcha-logs' )
 					);
 					wp_dequeue_script( $handle );
