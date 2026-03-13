@@ -226,7 +226,7 @@ body.user-registration {
 		max-width: 100%;
 	}
 
-	>div {
+	> div {
 		&:not(:last-of-type) {
 			margin-bottom: 24px;
 		}
@@ -234,7 +234,7 @@ body.user-registration {
 }
 
 .ur-payments__main-content {
-	>div {
+	> div {
 		&:not(:last-of-type) {
 			margin-bottom: 24px;
 		}
@@ -413,7 +413,7 @@ body.user-registration {
 }
 
 .ur-payments__fields-content {
-	>div {
+	> div {
 		&:not(:last-of-type) {
 			margin-bottom: 30px;
 		}
@@ -635,7 +635,7 @@ body.user-registration {
 }
 
 .ur-payments__item-info {
-	>.ur-payments__section-content {
+	> .ur-payments__section-content {
 		display: block;
 	}
 }
@@ -647,7 +647,7 @@ body.user-registration {
 }
 
 .ur-payments__section-column {
-	>div {
+	> div {
 		&:not(:last-of-type) {
 			margin-bottom: 20px;
 		}
@@ -658,7 +658,7 @@ body.user-registration {
 	display: flex;
 	flex-direction: column;
 
-	>div {
+	> div {
 		&:not(:last-of-type) {
 			margin-bottom: 8px;
 		}

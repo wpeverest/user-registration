@@ -124,6 +124,7 @@ class MembershipService {
 	 *               or an error message and status on failure.
 	 */
 	public function create_membership_order_and_subscription( $data ) {
+
 		try {
 			// Start the transaction.
 			$this->members_repository->wpdb()->query( 'START TRANSACTION' );
@@ -1024,12 +1025,14 @@ class MembershipService {
 				$delayed_until                = ''; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 
 				if ( $subscription_service->is_user_membership_expired( $current_user_id, $current_membership_id ) ) {
-					$chargeable_amount    = $upgrade_service->calculate_chargeable_amount(
+					$chargeable_amount               = $upgrade_service->calculate_chargeable_amount(
 						$selected_membership_amount,
 						$current_membership_amount,
 						$upgrade_type
 					);
-					$membership['amount'] = $chargeable_amount;
+					$membership['calculated_amount'] = $chargeable_amount;
+				} else {
+					$membership['calculated_amount'] = $upgrade_details['chargeable_amount'] ?? $selected_membership_amount;
 				}
 			}
 			unset( $membership );
