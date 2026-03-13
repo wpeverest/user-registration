@@ -145,11 +145,13 @@ if ( ! class_exists( 'Hooks' ) ) :
 		/**
 		 * Adds membership block text inside the course sidebar.
 		 *
-		 * @return void
+		 * @param mixed $course Course object.
+		 * @return string
 		 */
 		public function add_single_course_sidebar_content1( $course ) {
 
-			$layout = masteriyo_get_setting( 'single_course.display.template.layout' ) ?? 'default';
+			$setting = masteriyo_get_setting( 'single_course.display.template.layout' );
+			$layout = null !== $setting ? $setting : 'default';
 			if ( masteriyo_is_single_course_page() && 'layout1' === $layout ) {
 				$this->add_single_course_sidebar_content( $course );
 			}
@@ -159,6 +161,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 		/**
 		 * Adds membership block text inside the course sidebar.
 		 *
+		 * @param mixed $course Course object.
 		 * @return void
 		 */
 		public function add_single_course_sidebar_content( $course ) {
@@ -202,7 +205,7 @@ if ( ! class_exists( 'Hooks' ) ) :
 									<span class="ur-membership-duration">
 										<?php
 										if ( $membership['time'] || $membership['subscription'] ) {
-											echo ' / ' . ( 'subscription' === $membership['type'] ? esc_html( $membership['subscription']['value'] ) . ' ' . esc_html( ucfirst( $membership['subscription']['duration'] ) ) : esc_html( $membership['time'] ) ); }
+											echo ' every ' . ( 'subscription' === $membership['type'] ? esc_html( $membership['subscription']['value'] ) . ' ' . esc_html( ucfirst( $membership['subscription']['duration'] ) ) : esc_html( $membership['time'] ) ); }
 										?>
 									</span>
 								</div>
@@ -223,9 +226,10 @@ if ( ! class_exists( 'Hooks' ) ) :
 				echo '</div></div>';
 				return;
 			} elseif ( CourseAccessMode::NEED_REGISTRATION === $course->get_access_mode() ) {
-					echo '<div class="masteriyo-single-course-stats urm-masteriyo-membership-list">';
-					echo '<span>' . esc_html__( 'This course is not associated with any membership.', 'user-registration' ) . '</span><br />';
-					echo '</div>';
+				echo '<div class="masteriyo-single-course-stats urm-masteriyo-membership-list">';
+				echo '<span>' . esc_html__( 'This course is not associated with any membership.', 'user-registration' ) . '</span><br />';
+				echo '</div>';
+				echo '<style>.masteriyo-enroll-btn{display:none !important;}</style>';
 			} else {
 				return;
 			}

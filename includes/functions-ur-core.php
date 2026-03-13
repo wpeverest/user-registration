@@ -384,6 +384,67 @@ function ur_help_tip( $tip, $allow_html = false, $classname = 'user-registration
 	return sprintf( '<span class="%s" data-tip="%s"></span>', $classname, $tip );
 }
 
+function ur_render_premium_feature_gate_template( $args = array() ) {
+	if ( UR_PRO_ACTIVE ) {
+		return;
+	}
+
+	$args = wp_parse_args(
+		$args,
+		array(
+			'template_id' => 'ur-pro-feature',
+			'utm_source'  => 'ur-membership-create',
+		)
+	);
+	if ( empty( $args['upgrade_url'] ) ) {
+		$args['upgrade_url'] = 'https://wpuserregistration.com/upgrade/?utm_source=' . esc_attr( $args['utm_source'] ) . '&utm_medium=upgrade-link&utm-campaign=lite-version';
+	}
+
+	static $rendered_templates = array();
+	if ( in_array( $args['template_id'], $rendered_templates, true ) ) {
+		return;
+	}
+	$rendered_templates[] = $args['template_id'];
+	?>
+	<template id="<?php echo esc_attr( $args['template_id'] ); ?>">
+		<div class="ur-feature">
+			<div class="ur-feature__title">
+				<?php esc_html_e( 'You have run into a premium feature, please upgrade to URM Pro', 'user-registration' ); ?>
+			</div>
+			<a class="ur-feature__btn" href="<?php echo esc_url( $args['upgrade_url'] ); ?>">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>
+				<?php esc_html_e( 'Upgrade to Pro', 'user-registration' ); ?>
+			</a>
+		</div>
+	</template>
+	<?php
+}
+
+function ur_render_premium_feature_gate( $args = array() ) {
+	if ( UR_PRO_ACTIVE ) {
+		return;
+	}
+
+	$args                = wp_parse_args(
+		$args,
+		array(
+			'template_id'     => 'ur-pro-feature',
+			'utm_source'      => 'ur-membership-create',
+			'render_template' => true,
+		)
+	);
+	$args['upgrade_url'] = 'https://wpuserregistration.com/upgrade/?utm_source=' . esc_attr( $args['utm_source'] ) . '&utm_medium=upgrade-link&utm-campaign=lite-version';
+
+	if ( ! empty( $args['render_template'] ) ) {
+		ur_render_premium_feature_gate_template( $args );
+	}
+
+	$gate_attrs = 'data-feature-gate="tooltip" data-gate-placement="right" data-gate-interactive="true" data-gate-content="' . esc_attr( $args['template_id'] ) . '"';
+	?>
+	<span class="ur-premium-pro" <?php echo $gate_attrs; ?>><img src="<?php echo esc_url( UR()->plugin_url() . '/assets/images/icons/ur-pro-icon.png' ); ?>" alt="" /></span>
+	<?php
+}
+
 /**
  * Checks whether the content passed contains a specific short code.
  *
@@ -1204,7 +1265,8 @@ function ur_admin_form_settings_fields( $form_id ) {
 			$ur_enabled_captchas[ $key ] = $value;
 		}
 	}
-	$arguments = array(
+	$redirect_after_registration_default = ur_get_default_redirect_after_registration( $form_id );
+	$arguments                           = array(
 		'form_id'      => $form_id,
 		'setting_data' => array(
 			array(
@@ -1326,6 +1388,79 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_default_user_role', get_option( 'user_registration_form_setting_default_user_role', 'subscriber' ) ),
 				'tip'               => __( 'Pick what role new users will have after they sign up.', 'user-registration' ),
 				'default_value'     => get_option( 'user_registration_form_setting_default_user_role', 'subscriber' ),
+				'product'           => 'user-registration/user-registration.php',
+			),
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Redirect After Registration', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_redirect_after_registration',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				/**
+				 * Filters the redirection options after user registration.
+				 *
+				 * @param array $redirection_options An associative array where keys represent
+				 *                                   the option values, and values represent the labels
+				 *                                   for the redirection options.
+				 */
+				'options'           => apply_filters(
+					'user_registration_redirect_after_registration_options',
+					array(
+						'no-redirection' => __( 'No Redirection', 'user-registration' ),
+						'internal-page'  => __( 'Internal Page', 'user-registration' ),
+						'external-url'   => __( 'External URL', 'user-registration' ),
+						'previous-page'  => __( 'Previous Page', 'user-registration' ),
+					)
+				),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', $redirect_after_registration_default ),
+				'tip'               => __( 'Decide where users go after completing registration.', 'user-registration' ),
+				'default_value'     => $redirect_after_registration_default,
+				'custom_attributes' => array(),
+				'product'           => 'user-registration/user-registration.php',
+			),
+			array(
+				'type'              => 'number',
+				'label'             => __( 'Delay Before Redirect ( Seconds )', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_redirect_after',
+				'class'             => array( 'ur-input-field' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'min'               => '0',
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ),
+				'tip'               => __( 'How many seconds to wait before sending the user to another page.', 'user-registration' ),
+				'default_value'     => '2',
+				'product'           => 'user-registration/user-registration.php',
+			),
+			array(
+				'type'              => 'select',
+				'label'             => __( 'Redirect to Page', 'user-registration' ),
+				'description'       => '',
+				'required'          => false,
+				'id'                => 'user_registration_form_setting_redirect_page',
+				'class'             => array( 'ur-enhanced-select' ),
+				'input_class'       => array(),
+				'options'           => ur_get_all_pages(),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', get_option( 'user_registration_thank_you_page_id', '' ) ),
+				'tip'               => __( 'Pick the page users will see after signing up.', 'user-registration' ),
+				'default_value'     => get_option( 'user_registration_thank_you_page_id', '' ),
+				'custom_attributes' => array(),
+				'product'           => 'user-registration/user-registration.php',
+			),
+			array(
+				'type'              => 'text',
+				'label'             => __( 'Redirect URL', 'user-registration' ),
+				'id'                => 'user_registration_form_setting_redirect_options',
+				'class'             => array( 'ur-input-field' ),
+				'input_class'       => array(),
+				'custom_attributes' => array(),
+				'tip'               => __( 'Set the URL of the page users should be sent to after signing up.', 'user-registration' ),
+				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),
+				// Getting redirect options from global settings for backward compatibility.
+				'default_value'     => get_option( 'user_registration_general_setting_redirect_options', '' ),
 				'product'           => 'user-registration/user-registration.php',
 			),
 			array(
@@ -1568,79 +1703,6 @@ function ur_admin_form_settings_fields( $form_id ) {
 				'description' => ur_check_akismet_installation(),
 				'product'     => 'user-registration/user-registration.php',
 			),
-			array(
-				'type'              => 'select',
-				'label'             => __( 'Redirect After Registration', 'user-registration' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_form_setting_redirect_after_registration',
-				'class'             => array( 'ur-enhanced-select' ),
-				'input_class'       => array(),
-				/**
-				 * Filters the redirection options after user registration.
-				 *
-				 * @param array $redirection_options An associative array where keys represent
-				 *                                   the option values, and values represent the labels
-				 *                                   for the redirection options.
-				 */
-				'options'           => apply_filters(
-					'user_registration_redirect_after_registration_options',
-					array(
-						'no-redirection' => __( 'No Redirection', 'user-registration' ),
-						'internal-page'  => __( 'Internal Page', 'user-registration' ),
-						'external-url'   => __( 'External URL', 'user-registration' ),
-						'previous-page'  => __( 'Previous Page', 'user-registration' ),
-					)
-				),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after_registration', 'no-redirection' ),
-				'tip'               => __( 'Decide where users go after completing registration.', 'user-registration' ),
-				'default_value'     => 'no-redirection',
-				'custom_attributes' => array(),
-				'product'           => 'user-registration/user-registration.php',
-			),
-			array(
-				'type'              => 'number',
-				'label'             => __( 'Delay Before Redirect ( Seconds )', 'user-registration' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_form_setting_redirect_after',
-				'class'             => array( 'ur-input-field' ),
-				'input_class'       => array(),
-				'custom_attributes' => array(),
-				'min'               => '0',
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_after', '2' ),
-				'tip'               => __( 'How many seconds to wait before sending the user to another page.', 'user-registration' ),
-				'default_value'     => '2',
-				'product'           => 'user-registration/user-registration.php',
-			),
-			array(
-				'type'              => 'select',
-				'label'             => __( 'Redirect to Page', 'user-registration' ),
-				'description'       => '',
-				'required'          => false,
-				'id'                => 'user_registration_form_setting_redirect_page',
-				'class'             => array( 'ur-enhanced-select' ),
-				'input_class'       => array(),
-				'options'           => ur_get_all_pages(),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_page', '' ),
-				'tip'               => __( 'Pick the page users will see after signing up.', 'user-registration' ),
-				'default_value'     => '',
-				'custom_attributes' => array(),
-				'product'           => 'user-registration/user-registration.php',
-			),
-			array(
-				'type'              => 'text',
-				'label'             => __( 'Redirect URL', 'user-registration' ),
-				'id'                => 'user_registration_form_setting_redirect_options',
-				'class'             => array( 'ur-input-field' ),
-				'input_class'       => array(),
-				'custom_attributes' => array(),
-				'tip'               => __( 'Set the URL of the page users should be sent to after signing up.', 'user-registration' ),
-				'default'           => ur_get_single_post_meta( $form_id, 'user_registration_form_setting_redirect_options', get_option( 'user_registration_general_setting_redirect_options', '' ) ),
-				// Getting redirect options from global settings for backward compatibility.
-				'default_value'     => get_option( 'user_registration_general_setting_redirect_options', '' ),
-				'product'           => 'user-registration/user-registration.php',
-			),
 		),
 	);
 
@@ -1728,6 +1790,27 @@ function ur_get_single_post_meta( $post_id, $meta_key, $default = null ) {
 	}
 
 	return $default;
+}
+
+if ( ! function_exists( 'ur_get_default_redirect_after_registration' ) ) {
+	/**
+	 * Get default redirect-after-registration value for a form.
+	 * Returns 'internal-page' if the form has a membership field, otherwise 'no-redirection'.
+	 *
+	 * @param int $form_id Form ID.
+	 * @return string 'internal-page' or 'no-redirection'
+	 * @since 1.0.1
+	 */
+	function ur_get_default_redirect_after_registration( $form_id ) {
+		if ( ! $form_id ) {
+			return 'no-redirection';
+		}
+		$form_post = get_post( $form_id );
+		if ( $form_post && isset( $form_post->post_content ) && false !== strpos( $form_post->post_content, '"field_key":"membership"' ) ) {
+			return 'internal-page';
+		}
+		return 'no-redirection';
+	}
 }
 
 /**
@@ -5862,8 +5945,7 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 	 */
 	function ur_wrap_email_body_content( $body_content ) {
 		// Check if we're in editor context - exclude CSS when displaying editor on settings page.
-		// Include CSS for preview, email sending, cron, CLI, and AJAX email actions.
-		$is_preview       = isset( $_GET['ur_email_preview'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$is_preview       = isset( $_GET['ur_email_preview'] );
 		$current_screen   = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		$is_settings_page = $current_screen && 'user-registration_page_user-registration-settings' === $current_screen->id;
 		$is_email_action  = isset( $_REQUEST['action'] ) && ( // phpcs:ignore
@@ -5871,79 +5953,77 @@ if ( ! function_exists( 'ur_wrap_email_body_content' ) ) {
 				strpos( $_REQUEST['action'], 'email' ) !== false // phpcs:ignore
 			);
 
-		// Only exclude CSS when on settings page displaying editor (not when sending emails).
 		$is_editor_context = is_admin() && ! $is_preview && $is_settings_page && ! $is_email_action &&
 							! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) &&
 							! ( defined( 'DOING_AJAX' ) && DOING_AJAX && $is_email_action );
 
-		// Responsive CSS styles for email template - only include when not in editor context.
 		$responsive_styles = '';
 		if ( ! $is_editor_context ) {
-			$responsive_styles = '<style type="text/css">
-	/* Responsive Email Styles - Scoped to email wrapper only */
-	@media only screen and (max-width: 600px) {
-		.email-wrapper-outer {
-			padding: 20px 0 !important;
-		}
-		.email-wrapper-inner {
-			width: 100% !important;
-			max-width: 100% !important;
-			margin: 0 !important;
-			border-radius: 0 !important;
-		}
-		.email-header {
-			padding: 20px 15px !important;
-			border-radius: 0 !important;
-		}
-		.email-body {
-			padding: 25px 15px !important;
-		}
-		.email-footer {
-			padding: 20px 15px !important;
-		}
-		.email-logo img {
-			max-width: 150px !important;
-			max-height: 50px !important;
-		}
-		.email-header-text {
-			font-size: 16px !important;
-			margin-top: 10px !important;
-		}
-		.email-footer p {
-			font-size: 12px !important;
-		}
-		.email-footer a {
-			font-size: 13px !important;
-		}
-	}
-	@media only screen and (max-width: 480px) {
-		.email-wrapper-outer {
-			padding: 10px 0 !important;
-		}
-		.email-header {
-			padding: 15px 10px !important;
-		}
-		.email-body {
-			padding: 20px 10px !important;
-		}
-		.email-footer {
-			padding: 15px 10px !important;
-		}
-		.email-logo img {
-			max-width: 120px !important;
-			max-height: 40px !important;
-		}
-		.email-header-text {
-			font-size: 14px !important;
-		}
-	}
-</style>';
+			$responsive_styles = '<div style="display:none!important;visibility:hidden;opacity:0;color:transparent;height:0;width:0;line-height:0;font-size:0;overflow:hidden;mso-hide:all;">
+		<style type="text/css">
+			@media only screen and (max-width: 600px) {
+				.email-wrapper-outer {
+					padding: 20px 0 !important;
+				}
+				.email-wrapper-inner {
+					width: 100% !important;
+					max-width: 100% !important;
+					margin: 0 !important;
+					border-radius: 0 !important;
+				}
+				.email-header {
+					padding: 20px 15px !important;
+					border-radius: 0 !important;
+				}
+				.email-body {
+					padding: 25px 15px !important;
+				}
+				.email-footer {
+					padding: 20px 15px !important;
+				}
+				.email-logo img {
+					max-width: 150px !important;
+					max-height: 50px !important;
+				}
+				.email-header-text {
+					font-size: 16px !important;
+					margin-top: 10px !important;
+				}
+				.email-footer p {
+					font-size: 12px !important;
+				}
+				.email-footer a {
+					font-size: 13px !important;
+				}
+			}
+			@media only screen and (max-width: 480px) {
+				.email-wrapper-outer {
+					padding: 10px 0 !important;
+				}
+				.email-header {
+					padding: 15px 10px !important;
+				}
+				.email-body {
+					padding: 20px 10px !important;
+				}
+				.email-footer {
+					padding: 15px 10px !important;
+				}
+				.email-logo img {
+					max-width: 120px !important;
+					max-height: 40px !important;
+				}
+				.email-header-text {
+					font-size: 14px !important;
+				}
+			}
+		</style>
+		</div>';
 		}
 
-		// Check if this is a preview and set width to 600px.
 		$is_preview  = isset( $_GET['ur_email_preview'] ) && 'email_template_option' === sanitize_text_field( wp_unslash( $_GET['ur_email_preview'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$email_width = $is_preview ? '600px' : 'unset';
-		$max_width   = $is_preview ? '600px' : '600px'; // Max width for better readability on all devices.
+		$max_width   = '600px';
 
 		return $responsive_styles . '
 	<div class="email-wrapper-outer" style="font-family: Arial, sans-serif; padding: 100px 0;">
@@ -5971,26 +6051,19 @@ if ( ! function_exists( 'ur_unwrap_email_body_content' ) ) {
 		// Remove style tags (including those with type="text/css").
 		$content = preg_replace( '/<style[^>]*>.*?<\/style>/is', '', $content );
 
-		// Check if content contains email wrapper structure.
 		if ( strpos( $content, 'email-wrapper-outer' ) !== false || strpos( $content, 'email-body' ) !== false ) {
-			// Pattern to match: <div...class="...email-body...">CONTENT</div> followed by closing divs
-			// Use a pattern that matches the email-body div and extracts its content.
 			if ( preg_match( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>(.*)<\/div>\s*<\/div>\s*<\/div>/is', $content, $matches ) ) {
 				$content = $matches[1];
 			} elseif ( preg_match( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>(.*?)<\/div>/is', $content, $matches ) ) {
-				// Fallback: just get content from email-body div (may have nested divs).
 				$content = $matches[1];
 			} else {
-				// Last resort: Remove wrapper divs manually.
 				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-wrapper-outer[^"\']*["\'][^>]*>/is', '', $content );
 				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-wrapper-inner[^"\']*["\'][^>]*>/is', '', $content );
 				$content = preg_replace( '/<div[^>]*class=["\'][^"\']*email-body[^"\']*["\'][^>]*>/is', '', $content );
-				// Remove closing divs at the end (up to 3 closing divs).
 				$content = preg_replace( '/(<\/div>\s*){1,3}\s*$/is', '', $content );
 			}
 		}
 
-		// Clean up any extra whitespace.
 		$content = trim( $content );
 
 		return $content;
@@ -10443,7 +10516,6 @@ if ( ! function_exists( 'ur_get_site_assistant_data' ) ) {
 			'has_default_form'                  => ! empty( $default_form_post ),
 			'missing_pages'                     => $missing_pages_data,
 			'test_email_sent'                   => get_option( 'user_registration_successful_test_mail', false ),
-			'wordpress_login_handled'           => ( get_option( 'user_registration_login_options_prevent_core_login', false ) == true ) || ( get_option( 'user_registration_default_wordpress_login_skipped', false ) == true ),
 			'spam_protection_handled'           => ur_string_to_bool( get_option( 'user_registration_captcha_setting_v2_connection_status', false ) ) || ur_string_to_bool( get_option( 'user_registration_spam_protection_skipped', false ) ),
 			'payment_setup_handled'             => $payment_setup_handled,
 			'payment_connections'               => $payment_connections,
@@ -10676,7 +10748,6 @@ if ( ! function_exists( 'ur_site_assistant_config_count' ) ) {
 			! $site_assistant_data['has_default_form'],
 			! empty( $site_assistant_data['missing_pages'] ),
 			! $site_assistant_data['test_email_sent'],
-			! $site_assistant_data['wordpress_login_handled'],
 			! $site_assistant_data['spam_protection_handled'],
 			! $site_assistant_data['payment_setup_handled'],
 		);
@@ -11938,7 +12009,7 @@ if ( ! function_exists( 'ur_format_country_field_data' ) ) {
 	}
 }
 
-add_action( 'urm_save_stripe_payment_section', 'user_registration_create_product_and_price_for_stripe' );
+add_action( 'user_registration_after_stripe_settings_updated', 'user_registration_create_product_and_price_for_stripe' );
 
 if ( ! function_exists( 'user_registration_create_product_and_price_for_stripe' ) ) {
 	/**

@@ -70,6 +70,7 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 			return $settings;
 		}
 		$membership_group_service = new MembershipGroupService();
+		$membership_service       = new MembershipService();
 
 		$membership_settings = array(
 			'membership_listing_option' => array(
@@ -83,7 +84,8 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 				'default'     => 'all',
 				'options'     => array(
 					'all'   => 'Show all Memberships.',
-					'group' => 'Select a group',
+					'group' => 'Select a Group',
+					'selected' => 'Select Memberships',
 				),
 			),
 			'membership_group'          => array(
@@ -96,6 +98,16 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 				'tip'         => __( "Choose an existing membership group from the dropdown, or create a new one <a href='?page=user-registration-membership&action=add_groups'>here</a>.", 'user-registration' ),
 				'options'     => array( 0 => 'Select a Membership Group.' ) + $membership_group_service->get_membership_groups(),
 			),
+			'membership_active_memberships' => array(
+				'setting_id'  => 'membership_active_memberships',
+				'name'        => 'membership_active_memberships',
+				'type'        => 'multiselect',
+				'label'       => __( 'Select Memberships To Display', 'user-registration' ),
+				'placeholder' => __( 'Select memberships to display.', 'user-registration' ),
+				'required'    => 1,
+				'tip'         => __( 'Choose specific active memberships to display in the form.', 'user-registration' ),
+				'options'     => $this->format_memberships_as_options( $membership_service->list_active_memberships() ),
+			),
 
 		);
 
@@ -106,6 +118,29 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 		return $settings;
 	}
 
+	/**
+	 * Format membership list for multiselect options (id => label).
+	 *
+	 * Matches the format expected by abstract-ur-form-field multiselect:
+	 * foreach ( $setting_value['options'] as $key => $val ) → option value="$key", label $val.
+	 *
+	 * @param array $memberships List from list_active_memberships() (items with ID, title).
+	 * @return array Associative array of membership_id => label.
+	 */
+	private function format_memberships_as_options( $memberships ) {
+		$options = array();
+		if ( ! is_array( $memberships ) ) {
+			return $options;
+		}
+		foreach ( $memberships as $m ) {
+			$id    = isset( $m['ID'] ) ? $m['ID'] : ( isset( $m['id'] ) ? $m['id'] : null );
+			$label = isset( $m['title'] ) ? $m['title'] : ( isset( $m['post_title'] ) ? $m['post_title'] : (string) $id );
+			if ( null !== $id && '' !== $label ) {
+				$options[ $id ] = $label;
+			}
+		}
+		return $options;
+	}
 
 	/**
 	 * Get Registered admin fields.
@@ -132,6 +167,16 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 			if ( isset( $args['membership_listing_option'] ) && 'group' === $args['membership_listing_option'] ) {
 				$membership_group_service = new MembershipGroupService();
 				$memberships              = $membership_group_service->get_group_memberships( $args['membership_group'] );
+			} elseif ( isset( $args['membership_listing_option'] ) && 'selected' === $args['membership_listing_option'] ) {
+				$membership_service = new MembershipService();
+				$all_memberships    = $membership_service->list_active_memberships();
+				$selected_ids      = isset( $args['membership_active_memberships'] ) ? $args['membership_active_memberships'] : array();
+				$selected_ids      = is_array( $selected_ids ) ? $selected_ids : (array) maybe_unserialize( $selected_ids );
+				$selected_ids      = array_filter( array_map( 'absint', $selected_ids ) );
+				$memberships       = array_values( array_filter( $all_memberships, function ( $m ) use ( $selected_ids ) {
+					$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
+					return $id && in_array( $id, $selected_ids, true );
+				} ) );
 			} else {
 				$membership_service = new MembershipService();
 				$memberships        = $membership_service->list_active_memberships();

@@ -342,7 +342,7 @@ class PaypalService {
 		$is_renewing         = ! empty( $membership_process['renew'] ) && in_array( $member_order['item_id'], $membership_process['renew'] );
 
 		if ( 'completed' === $member_order['status'] ) {
-			ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
+			 ur_membership_redirect_to_thank_you_page( $member_id, $member_order );
 		}
 
 		$is_order_updated = $this->members_orders_repository->update( $member_order['ID'], array( 'status' => 'completed' ) );
