@@ -2202,13 +2202,37 @@
 					}
 				});
 				// For membership field: read membership_active_memberships from live #ur-setting-form so multiselect value is saved
-				var field_key = $single_item.find(".ur-field").attr("data-field-key");
-				if (field_key === "membership" && $single_item.hasClass("ur-item-active")) {
-					var $activeSelect = $("#ur-setting-form .ur-general-setting-membership_active_memberships select");
+				var field_key = $single_item
+					.find(".ur-field")
+					.attr("data-field-key");
+				if (
+					field_key === "membership" &&
+					$single_item.hasClass("ur-item-active")
+				) {
+					var $activeSelect = $(
+						"#ur-setting-form .ur-general-setting-membership_active_memberships select"
+					);
 					if ($activeSelect.length) {
 						var liveVal = $activeSelect.val();
 						general_setting_data.membership_active_memberships =
-							liveVal != null && Array.isArray(liveVal) ? liveVal : (liveVal ? [].concat(liveVal) : []);
+							liveVal != null && Array.isArray(liveVal)
+								? liveVal
+								: liveVal
+								? [].concat(liveVal)
+								: [];
+					}
+					var $showBankToggle = $(
+						"#ur-setting-form .ur-general-setting-user_registration_show_bank_details_on_form input.ur-general-setting-field"
+					);
+					if ($showBankToggle.length) {
+						general_setting_data.user_registration_show_bank_details_on_form =
+							$showBankToggle.is(":checked");
+						if (
+							!general_setting_data.user_registration_show_bank_details_on_form
+						) {
+							general_setting_data.user_registration_show_bank_details_on_form =
+								"false";
+						}
 					}
 				}
 				return general_setting_data;
@@ -4073,7 +4097,8 @@
 							$el.select2();
 							var $wrap = $el.closest(".ur-general-setting");
 							if ($wrap.length) {
-								var $containers = $wrap.find(".select2-container");
+								var $containers =
+									$wrap.find(".select2-container");
 								$containers.slice(1).remove();
 							}
 						});

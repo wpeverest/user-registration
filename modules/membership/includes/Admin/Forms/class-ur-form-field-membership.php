@@ -73,7 +73,16 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 		$membership_service       = new MembershipService();
 
 		$membership_settings = array(
-			'membership_listing_option' => array(
+			'user_registration_show_bank_details_on_form' => array(
+				'setting_id' => 'user_registration_show_bank_details_on_form',
+				'name'       => 'user_registration_show_bank_details_on_form',
+				'type'       => 'toggle',
+				'label'      => __( 'Show Bank Details in Form', 'user-registration' ),
+				'required'   => 1,
+				'tip'        => __( 'This option will show the bank details in registration form when bank transfer is selected.', 'user-registration' ),
+				'default'    => false,
+			),
+			'membership_listing_option'                   => array(
 				'setting_id'  => 'membership_listing_option',
 				'name'        => 'membership_listing_option',
 				'type'        => 'select',
@@ -83,12 +92,12 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 				'tip'         => __( 'Choose how you want the memberships to be listed in the form.', 'user-registration' ),
 				'default'     => 'all',
 				'options'     => array(
-					'all'   => 'Show all Memberships.',
-					'group' => 'Select a Group',
+					'all'      => 'Show all Memberships.',
+					'group'    => 'Select a Group',
 					'selected' => 'Select Memberships',
 				),
 			),
-			'membership_group'          => array(
+			'membership_group'                            => array(
 				'setting_id'  => 'membership_group',
 				'name'        => 'membership_group',
 				'type'        => 'select',
@@ -98,7 +107,7 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 				'tip'         => __( "Choose an existing membership group from the dropdown, or create a new one <a href='?page=user-registration-membership&action=add_groups'>here</a>.", 'user-registration' ),
 				'options'     => array( 0 => 'Select a Membership Group.' ) + $membership_group_service->get_membership_groups(),
 			),
-			'membership_active_memberships' => array(
+			'membership_active_memberships'               => array(
 				'setting_id'  => 'membership_active_memberships',
 				'name'        => 'membership_active_memberships',
 				'type'        => 'multiselect',
@@ -170,13 +179,18 @@ class UR_Form_Field_Membership extends UR_Form_Field {
 			} elseif ( isset( $args['membership_listing_option'] ) && 'selected' === $args['membership_listing_option'] ) {
 				$membership_service = new MembershipService();
 				$all_memberships    = $membership_service->list_active_memberships();
-				$selected_ids      = isset( $args['membership_active_memberships'] ) ? $args['membership_active_memberships'] : array();
-				$selected_ids      = is_array( $selected_ids ) ? $selected_ids : (array) maybe_unserialize( $selected_ids );
-				$selected_ids      = array_filter( array_map( 'absint', $selected_ids ) );
-				$memberships       = array_values( array_filter( $all_memberships, function ( $m ) use ( $selected_ids ) {
-					$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
-					return $id && in_array( $id, $selected_ids, true );
-				} ) );
+				$selected_ids       = isset( $args['membership_active_memberships'] ) ? $args['membership_active_memberships'] : array();
+				$selected_ids       = is_array( $selected_ids ) ? $selected_ids : (array) maybe_unserialize( $selected_ids );
+				$selected_ids       = array_filter( array_map( 'absint', $selected_ids ) );
+				$memberships        = array_values(
+					array_filter(
+						$all_memberships,
+						function ( $m ) use ( $selected_ids ) {
+							$id = isset( $m['ID'] ) ? (int) $m['ID'] : ( isset( $m['id'] ) ? (int) $m['id'] : 0 );
+							return $id && in_array( $id, $selected_ids, true );
+						}
+					)
+				);
 			} else {
 				$membership_service = new MembershipService();
 				$memberships        = $membership_service->list_active_memberships();
