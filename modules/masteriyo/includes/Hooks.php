@@ -203,6 +203,10 @@ if ( ! class_exists( 'Hooks' ) ) :
 										<?php echo esc_html( sprintf( '%s%.2f', $symbol, $membership['amount'] ) ); ?>
 									</span>
 									<?php
+									$time = '';
+									if ( 'paid' === $membership['type'] ) {
+										$time = esc_html__( 'lifetime', 'user-registration' );
+									}
 									$is_lifetime_listing = ( 'subscription' !== $membership['type'] && $time && false !== stripos( (string) $time, 'lifetime' ) )
 														   || ( isset( $membership['period'] ) && false !== stripos( (string) $membership['period'], 'lifetime' ) );
 									if ( ! $is_lifetime_listing && ( $time || isset( $membership['period'] ) ) ) :
