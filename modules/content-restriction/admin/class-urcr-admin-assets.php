@@ -456,6 +456,7 @@ class URCR_Admin_Assets {
 			'ur_form_data'                           => $ur_forms,
 			'shortcodes'                             => $shortcodes_list,
 			'content_rule_url'                       => admin_url( 'admin.php?page=user-registration-content-restriction&action=add_new_urcr_content_access_rule' ),
+			'content_restriction_settings_url'           => admin_url( 'admin.php?page=user-registration-settings&tab=membership&section=content-rules' ),
 			'memberships'                            => $formatted_memberships,
 			'is_pro'                                 => defined( 'UR_PRO_ACTIVE' ) && UR_PRO_ACTIVE,
 			'content_type_options'                   => $content_type_options,
