@@ -1,6 +1,7 @@
 <?php
 /**
  * Base Page class for pages.
+ * @package UserRegistration
  */
 
 use WPEverest\URMembership\Admin\Repositories\MembershipGroupRepository;
@@ -9,6 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Base Layout class for pages.
+ * @package UserRegistration
+ */
 class UR_Base_Layout {
 	/**
 	 * Render a standard list-table page layout for a given WP_List_Table instance.
@@ -48,10 +53,6 @@ class UR_Base_Layout {
 		if ( is_object( $table ) && method_exists( $table, 'get_pagination_arg' ) ) {
 			$total_items = (int) $table->get_pagination_arg( 'total_items' );
 		}
-
-		$is_searching = isset( $_GET['s'] ) && '' !== trim( wp_unslash( $_GET['s'] ) );
-
-		$show_search = ( $total_items > 10 ) || $is_searching;
 
 		$is_membership_page = isset( $_GET['page'] ) && 'user-registration-membership' === $_GET['page'] && ! isset( $_GET['action'] ) ? true : false;
 
@@ -139,8 +140,8 @@ class UR_Base_Layout {
 	/**
 	 * Display Search Input with button
 	 *
-	 * @param $search_id
-	 * @param $placeholder
+	 * @param string $search_id    HTML id attribute for the search input.
+	 * @param string $placeholder Placeholder text for the search input (ellipsis is appended).
 	 *
 	 * @return void
 	 */
@@ -182,18 +183,35 @@ class UR_Base_Layout {
 				esc_html( $type )
 			);
 
-			$secondary_message = sprintf(
-			/* translators: %s: type */
-				__( 'Please add %s and you’re good to go.', 'user-registration' ),
-				esc_html( strtolower( $type ) )
-			);
+			if ( 'Memberships' === $type ) {
+				$secondary_message = sprintf(
+				/* translators: %s: type */
+					__( 'Need help setting up your %s?', 'user-registration' ),
+					esc_html( strtolower( $type ) )
+				);
+			} else {
+
+				$secondary_message = sprintf(
+				/* translators: %s: type */
+					__( 'Please add %s and you’re good to go.', 'user-registration' ),
+					esc_html( strtolower( $type ) )
+				);
+			}
+
+			$video_url = 'https://www.youtube.com/playlist?list=PLcrB6drBDePkshUw7r5BNVLRwpr8RaXyy';
 		}
 		?>
 		<div class="empty-list-table-container">
 			<img src="<?php echo esc_url( $image_url ); ?>" alt="">
 			<h3><?php echo esc_html( $primary_message ); ?></h3>
-			<p><?php echo wp_kses_post( $secondary_message ); ?></p>
-		</div>
+			<div class="empty-list-table-subtext">
+				<p><?php echo wp_kses_post( $secondary_message ); ?></p>
+				<?php if ( ! empty( $video_url && 'Memberships' === $type ) ) : ?>
+					<a class="empty-video-url" href="<?php echo esc_url( $video_url ); ?>"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+						<?php echo 'Watch Tutorials'; ?></a>
+				<?php endif; ?>
+			</div>
+			</div>
 			<?php
 	}
 }
