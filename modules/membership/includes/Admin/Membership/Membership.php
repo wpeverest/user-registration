@@ -62,6 +62,15 @@ class Membership {
 			$parent_file  = 'user-registration';
 			$submenu_file = 'user-registration-membership';
 		}
+
+		if (
+			isset( $_GET['page'], $_GET['action'] )
+			&& 'user-registration-membership' === $_GET['page']
+			&& in_array( $_GET['action'], array( 'list_groups', 'add_groups' ), true )
+		) {
+			$parent_file  = 'user-registration';
+			$submenu_file = 'user-registration-membership&action=list_groups';
+		}
 	}
 
 	/**
@@ -76,6 +85,8 @@ class Membership {
 		if ( empty( $_GET['page'] ) || 'user-registration-membership' !== $_GET['page'] ) {
 			return;
 		}
+
+		wp_enqueue_script( 'tippy' );
 
 		// Enqueue jQuery UI Sortable for drag-and-drop functionality
 		wp_enqueue_script( 'jquery-ui-sortable' );

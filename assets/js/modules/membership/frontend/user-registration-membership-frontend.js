@@ -132,11 +132,41 @@
 		},
 
 		show_success_message: function (message) {
-			$(".notice-container .notice_red")
-				.removeClass("notice_red")
-				.addClass("notice_blue");
-			$(".notice_message").text(message);
-			this.toggleNotice();
+			var $registration_form = $(".ur-frontend-form").first(),
+				$form = $registration_form.length
+					? $registration_form.find("form.register")
+					: $();
+
+			if ($form.length) {
+				$registration_form.find("#ur-submit-message-node").remove();
+				$registration_form
+					.find(".ur-submit-button")
+					.find("span")
+					.removeClass("ur-front-spinner");
+				$registration_form
+					.find(".ur-submit-button")
+					.prop("disabled", false);
+
+				var wrapper = $(
+					'<div class="ur-message user-registration-message" id="ur-submit-message-node"/>'
+				);
+				wrapper.append(
+					$('<ul class=""/>').append($("<li/>").text(message))
+				);
+				$form.append(wrapper);
+				$(window).scrollTop(
+					$registration_form
+						.find(".ur-button-container")
+						.offset().top
+				);
+				$(".notice-container").removeClass("active");
+			} else {
+				$(".notice-container .notice_red")
+					.removeClass("notice_red")
+					.addClass("notice_blue");
+				$(".notice_message").text(message);
+				this.toggleNotice();
+			}
 		},
 		show_form_success_message: function (form_response, thank_you_data) {
 			var response_data = form_response.data,
@@ -172,7 +202,16 @@
 					}
 				}, timeout);
 			}
-			if ("undefined" !== typeof redirect_url && redirect_url !== "") {
+	
+			var has_thank_you_params =
+				thank_you_data &&
+				typeof thank_you_data === "object" &&
+				Object.keys(thank_you_data).length > 0;
+			if (
+				"undefined" !== typeof redirect_url &&
+				redirect_url !== "" &&
+				!has_thank_you_params
+			) {
 				$(document).trigger(
 					"user_registration_frontend_before_redirect_url",
 					[redirect_url]
@@ -185,7 +224,8 @@
 				if ("" != originalRedirectUrl) {
 					return;
 				}
-			} else {
+			}
+			if ("undefined" === typeof redirect_url || redirect_url === "") {
 				redirect_url = urmf_data.thank_you_page_url;
 			}
 			/**
@@ -195,6 +235,9 @@
 				.find(".ur-submit-button")
 				.find("span")
 				.removeClass("ur-front-spinner");
+
+			$registration_form.find("form")[0].reset();
+			$registration_form.find(".user-registration-error").remove();
 
 			/**
 			 * Append Success Message according to login option.
@@ -632,6 +675,9 @@
 					ur_membership_frontend_utils.show_form_success_message(
 						form_response,
 						{
+							transaction_id: response.data.transaction_id || "",
+							payment_type: "unpaid",
+							info: "Free",
 							username: prepare_members_data.username,
 							context: "hide_message"
 						}
@@ -677,7 +723,10 @@
 		 */
 		show_default_response: function (url, thank_you_data, timeout) {
 			timeout = timeout || 2000;
-			var thank_you_page_url = urmf_data.thank_you_page_url;
+			var thank_you_page_url =
+				url && String(url).trim() !== ""
+					? url
+					: urmf_data.thank_you_page_url;
 
 			var url_params = $.param(thank_you_data).toString();
 			window.setTimeout(function () {
@@ -2344,6 +2393,8 @@
 				var urm_payment_gateways = $(this).data('urm-pg'),
 					urm_payment_type = $(this).data('urm-pg-type'),
 					urm_pg_container = $('.ur_payment_gateway_container'),
+					$form_context = $(this).closest('#ur-membership-registration, .membership-upgrade-container'),
+					urm_pg_container_scoped = $form_context.length ? $form_context.find('.ur_payment_gateway_container') : urm_pg_container,
 					urm_pg_inputs = urm_pg_container.find('input'),
 					urm_hidden_pg_containers = $('.urm_hidden_payment_container'),
 					stripe_container = $('.stripe-container'),
@@ -2419,10 +2470,28 @@
 						}
 					});
 
-					if (urm_pg_container.find('input:visible').length === 1) {
-						var lone_pg = urm_pg_container.find('input:visible');
-						$(lone_pg[0]).prop('checked', true);
-						lone_pg.trigger('change');
+					var visible_pg_labels = urm_pg_container_scoped.find(
+						'label[for^="ur-membership-"]'
+					).not('.urm-d-none');
+					var $pg_title_span = urm_pg_container_scoped.find(
+						'span.ur_membership_input_label.ur-label.required, span.ur-upgrade-label.ur-label.required'
+					);
+					if (visible_pg_labels.length === 1) {
+						var lone_input_id = visible_pg_labels.attr('for');
+						urm_pg_container_scoped
+							.find('input#' + lone_input_id)
+							.prop('checked', true)
+							.trigger('change');
+						if ($pg_title_span.length && !$pg_title_span.data('original-pg-label')) {
+							$pg_title_span.data('original-pg-label', $pg_title_span.text());
+						}
+						$pg_title_span.text('Payment Gateway');
+					} else {
+						if ($pg_title_span.length) {
+							$pg_title_span.text(
+								$pg_title_span.data('original-pg-label') || 'Select Payment Gateway'
+							);
+						}
 					}
 					ur_membership_ajax_utils.calculate_total($(this));
 				} else {
